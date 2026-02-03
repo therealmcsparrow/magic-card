@@ -78,6 +78,29 @@ export const formEditorStyles = css`
     min-width: 50px;
   }
 
+  /* Row collapse toggle */
+  .mc-row-header-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .mc-row-header-toggle:hover {
+    color: var(--primary-color, #6366f1);
+  }
+
+  .mc-row-header .mc-chevron {
+    font-size: 0.625rem;
+    transition: transform 0.2s;
+    color: var(--secondary-text-color, #6b7280);
+  }
+
+  .mc-row-header .mc-chevron.open {
+    transform: rotate(90deg);
+  }
+
   .mc-row-layout-select {
     flex: 1;
     max-width: 100px;

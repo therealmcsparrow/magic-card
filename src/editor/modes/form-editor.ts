@@ -24,6 +24,7 @@ export class FormEditor extends LitElement {
 
   @state() private _editorState?: EditorState;
   @state() private _expandedSections = new Set<string>(['card']);
+  @state() private _collapsedRows = new Set<number>();
   @state() private _dragOver: { type: string; index: number; colIndex?: number } | null = null;
 
   private _unsubscribe?: () => void;
@@ -192,10 +193,11 @@ export class FormEditor extends LitElement {
     selectedPath: EditorPath | null,
   ): TemplateResult {
     const isDragOver = this._dragOver?.type === 'row' && this._dragOver?.index === ri;
+    const isCollapsed = this._collapsedRows.has(ri);
 
     return html`
       <div
-        class="mc-row-item ${isDragOver ? 'drag-over' : ''}"
+        class="mc-row-item ${isDragOver ? 'drag-over' : ''} ${isCollapsed ? 'collapsed' : ''}"
         data-row="${ri}"
         draggable="true"
         @dragstart=${(e: DragEvent) => this._onRowDragStart(e, ri)}
@@ -208,8 +210,14 @@ export class FormEditor extends LitElement {
           <span class="mc-drag-handle" title="Drag to reorder">
             <ha-icon icon="mdi:drag" style="--mdc-icon-size:16px"></ha-icon>
           </span>
-          <ha-icon icon="mdi:view-sequential" style="--mdc-icon-size:16px"></ha-icon>
-          <span class="mc-label">Row ${ri + 1}</span>
+          <span
+            class="mc-row-header-toggle"
+            @click=${() => this._toggleRow(ri)}
+          >
+            <span class="mc-chevron ${isCollapsed ? '' : 'open'}">&#9654;</span>
+            <ha-icon icon="mdi:view-sequential" style="--mdc-icon-size:16px"></ha-icon>
+            <span class="mc-label">Row ${ri + 1}</span>
+          </span>
           <div class="mc-row-layout-select">
             ${renderSelectField('', row.layout, [
               { label: '1 Col', value: '1' },
@@ -234,9 +242,13 @@ export class FormEditor extends LitElement {
             <ha-icon icon="mdi:delete-outline" style="--mdc-icon-size:16px"></ha-icon>
           </button>
         </div>
-        <div class="mc-row-body">
-          ${row.columns.map((col, ci) => this._renderColumn(col, ri, ci, selectedPath))}
-        </div>
+        ${isCollapsed
+          ? nothing
+          : html`
+            <div class="mc-row-body">
+              ${row.columns.map((col, ci) => this._renderColumn(col, ri, ci, selectedPath))}
+            </div>
+          `}
       </div>
     `;
   }
@@ -348,6 +360,15 @@ export class FormEditor extends LitElement {
       this._expandedSections.delete(id);
     } else {
       this._expandedSections.add(id);
+    }
+    this.requestUpdate();
+  }
+
+  private _toggleRow(ri: number): void {
+    if (this._collapsedRows.has(ri)) {
+      this._collapsedRows.delete(ri);
+    } else {
+      this._collapsedRows.add(ri);
     }
     this.requestUpdate();
   }

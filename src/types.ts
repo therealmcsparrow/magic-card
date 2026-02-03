@@ -455,6 +455,7 @@ export interface VideoBgModuleConfig extends CardModule {
 
 export interface CustomCardModuleConfig extends CardModule {
   type: 'custom-card';
+  name?: string;
   card_type?: string;
   card_config?: Record<string, unknown>;
   card_config_yaml?: string;
