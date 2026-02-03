@@ -1,6 +1,15 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
+// Static CodeMirror imports - bundled into main file
+import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from '@codemirror/view';
+import { EditorState } from '@codemirror/state';
+import { yaml as yamlLang } from '@codemirror/lang-yaml';
+import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { searchKeymap } from '@codemirror/search';
+import { autocompletion } from '@codemirror/autocomplete';
+
 // CodeMirror integration - uses light DOM to avoid measurement issues
 @customElement('mc-yaml-codemirror')
 export class YamlCodeMirror extends LitElement {
@@ -9,7 +18,7 @@ export class YamlCodeMirror extends LitElement {
 
   @query('.cm-host') private _host?: HTMLDivElement;
 
-  private _view?: unknown; // EditorView
+  private _view?: EditorView;
   private _initialized = false;
 
   // Use light DOM for CodeMirror
@@ -21,32 +30,14 @@ export class YamlCodeMirror extends LitElement {
     return html`<div class="cm-host" style="border:1px solid var(--divider-color,#e5e7eb);border-radius:8px;overflow:hidden;min-height:200px"></div>`;
   }
 
-  protected async firstUpdated(): Promise<void> {
+  protected firstUpdated(): void {
     if (this._initialized) return;
     this._initialized = true;
 
     try {
-      const [
-        { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter },
-        { EditorState },
-        { yaml: yamlLang },
-        { defaultKeymap, history, historyKeymap },
-        { oneDark },
-        { searchKeymap },
-        { autocompletion },
-      ] = await Promise.all([
-        import('@codemirror/view'),
-        import('@codemirror/state'),
-        import('@codemirror/lang-yaml'),
-        import('@codemirror/commands'),
-        import('@codemirror/theme-one-dark'),
-        import('@codemirror/search'),
-        import('@codemirror/autocomplete'),
-      ]);
-
       if (!this._host) return;
 
-      const updateListener = EditorView.updateListener.of((update: { docChanged: boolean; state: { doc: { toString: () => string } } }) => {
+      const updateListener = EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const newValue = update.state.doc.toString();
           this.dispatchEvent(
@@ -79,14 +70,14 @@ export class YamlCodeMirror extends LitElement {
         parent: this._host,
       });
     } catch (err) {
-      console.warn('CodeMirror failed to load, falling back to textarea', err);
+      console.warn('CodeMirror failed to initialize', err);
     }
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    if (this._view && typeof (this._view as { destroy: () => void }).destroy === 'function') {
-      (this._view as { destroy: () => void }).destroy();
+    if (this._view) {
+      this._view.destroy();
     }
     this._view = undefined;
     this._initialized = false;

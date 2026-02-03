@@ -35,10 +35,10 @@ module.exports = (env, argv) => {
       ],
     },
     devtool: isProduction ? false : 'source-map',
-    optimization: isProduction
-      ? {
-          minimize: true,
-          minimizer: [
+    optimization: {
+      minimize: isProduction,
+      minimizer: isProduction
+        ? [
             new TerserPlugin({
               terserOptions: {
                 output: {
@@ -47,9 +47,12 @@ module.exports = (env, argv) => {
               },
               extractComments: false,
             }),
-          ],
-        }
-      : undefined,
+          ]
+        : [],
+      // Disable code splitting - bundle everything into one file for HA custom cards
+      splitChunks: false,
+      runtimeChunk: false,
+    },
     devServer: {
       port: 5050,
       static: {
