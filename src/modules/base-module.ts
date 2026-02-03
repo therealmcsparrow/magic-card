@@ -17,6 +17,7 @@ import {
   renderSelectField,
   renderToggleField,
   renderEntityField,
+  renderServiceField,
   renderNumberField,
   renderColorField,
   renderUnitField,
@@ -335,8 +336,8 @@ export abstract class BaseMagicModule implements MagicModule {
           : nothing}
         ${currentAction.action === 'perform-action'
           ? html`
-              ${renderTextField('Service', currentAction.service, (v) =>
-                onChange({ ...currentAction, service: v }),
+              ${renderServiceField('Service', currentAction.service, (v) =>
+                onChange({ ...currentAction, service: v }), hass,
               )}
             `
           : nothing}

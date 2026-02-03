@@ -7,6 +7,8 @@ import { editorStyles } from '../magic-card-editor.styles';
 // Ensure custom form components are registered
 import './color-picker';
 import './unit-field';
+import './entity-picker';
+import './service-picker';
 
 // Tab configuration with icons
 const TAB_CONFIG: Record<EditorTab, { label: string; icon: string }> = {
