@@ -48,6 +48,7 @@ export class MagicCardEditor extends LitElement {
 
   private _stateManager!: EditorStateManager;
   private _unsubscribe?: () => void;
+  private _pendingConfig?: MagicCardConfig;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -64,6 +65,12 @@ export class MagicCardEditor extends LitElement {
     this._unsubscribe = this._stateManager.subscribe((state) => {
       this._editorState = state;
     });
+
+    // Apply config that was set before connectedCallback
+    if (this._pendingConfig) {
+      this._stateManager.setConfig(this._pendingConfig);
+      this._pendingConfig = undefined;
+    }
   }
 
   disconnectedCallback(): void {
@@ -75,6 +82,9 @@ export class MagicCardEditor extends LitElement {
   setConfig(config: MagicCardConfig): void {
     if (this._stateManager) {
       this._stateManager.setConfig(config);
+    } else {
+      // Store config to apply when connected
+      this._pendingConfig = config;
     }
   }
 

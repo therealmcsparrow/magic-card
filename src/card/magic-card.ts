@@ -24,8 +24,8 @@ export class MagicCard extends LitElement {
   @state()
   private _config?: MagicCardConfig;
 
-  static getConfigElement(): string {
-    return EDITOR_TAG;
+  static getConfigElement(): HTMLElement {
+    return document.createElement(EDITOR_TAG);
   }
 
   static getStubConfig(): MagicCardConfig {
