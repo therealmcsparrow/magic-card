@@ -24,6 +24,7 @@ import './components/color-picker';
 import './components/unit-field';
 import './components/entity-picker';
 import './components/service-picker';
+import './components/icon-picker';
 import './components/settings-modal';
 
 @customElement(EDITOR_TAG)

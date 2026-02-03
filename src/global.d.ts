@@ -20,6 +20,7 @@ declare global {
     'mc-module-selector': import('./editor/panels/module-selector').ModuleSelector;
     'mc-tree-node': import('./editor/components/tree-node').TreeNode;
     'mc-color-picker': import('./editor/components/color-picker').ColorPicker;
+    'mc-icon-picker': import('./editor/components/icon-picker').IconPicker;
   }
 }
 

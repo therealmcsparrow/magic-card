@@ -9,6 +9,7 @@ import {
   renderToggleField,
   renderEntityField,
   renderSelectField,
+  renderIconField,
 } from '../../utils/form-utils';
 
 class ButtonModule extends BaseMagicModule {
@@ -80,7 +81,7 @@ class ButtonModule extends BaseMagicModule {
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Label', c.label, (v) => onChange({ ...c, label: v }))}
-        ${renderTextField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))}
+        ${renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))}
         ${renderSelectField(
           'Button Style',
           c.button_style,

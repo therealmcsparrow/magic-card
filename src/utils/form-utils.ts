@@ -153,12 +153,10 @@ export function renderIconField(
   return html`
     <div class="mc-field">
       <label class="mc-field-label">${label}</label>
-      <div class="mc-icon-field">
-        <ha-icon-picker
-          .value=${value || ''}
-          @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
-        ></ha-icon-picker>
-      </div>
+      <mc-icon-picker
+        .value=${value || ''}
+        @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
+      ></mc-icon-picker>
     </div>
   `;
 }
