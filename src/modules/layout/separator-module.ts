@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, SeparatorModuleConfig, EditorTab } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderSelectField } from '../../utils/form-utils';
+import { renderTextField, renderSelectField, renderColorField } from '../../utils/form-utils';
 
 class SeparatorModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -66,7 +66,7 @@ class SeparatorModule extends BaseMagicModule {
           { label: 'Dotted', value: 'dotted' },
           { label: 'None', value: 'none' },
         ], (v) => onChange({ ...c, separator_style: v as SeparatorModuleConfig['separator_style'] }))}
-        ${renderTextField('Color', c.separator_color, (v) => onChange({ ...c, separator_color: v }))}
+        ${renderColorField('Color', c.separator_color, (v) => onChange({ ...c, separator_color: v }))}
         ${renderTextField('Width', c.separator_width, (v) => onChange({ ...c, separator_width: v }))}
       </div>
     `;

@@ -1,4 +1,5 @@
 import { nothing, TemplateResult, html } from 'lit';
+import '../editor/components/color-picker';
 
 export function renderTextField(
   label: string,
@@ -90,6 +91,23 @@ export function renderEntityField(
         placeholder="entity_id"
         @input=${(e: InputEvent) => onChange((e.target as HTMLInputElement).value)}
       />
+    </div>
+  `;
+}
+
+export function renderColorField(
+  label: string,
+  value: string | undefined,
+  onChange: (value: string) => void,
+): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <label class="mc-field-label">${label}</label>
+      <mc-color-picker
+        .value=${value || ''}
+        .label=${label}
+        @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
+      ></mc-color-picker>
     </div>
   `;
 }

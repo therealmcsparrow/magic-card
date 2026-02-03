@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, GraphsModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderNumberField, renderToggleField, renderEntityField, renderTextField } from '../../utils/form-utils';
+import { renderNumberField, renderToggleField, renderEntityField, renderTextField, renderColorField } from '../../utils/form-utils';
 
 class GraphsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -71,10 +71,10 @@ class GraphsModule extends BaseMagicModule {
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
         ${renderNumberField('Hours to Show', c.hours_to_show, (v) => onChange({ ...c, hours_to_show: v }), { min: 1, max: 168 })}
         ${renderNumberField('Points per Hour', c.points_per_hour, (v) => onChange({ ...c, points_per_hour: v }), { min: 1, max: 60 })}
-        ${renderTextField('Line Color', c.line_color, (v) => onChange({ ...c, line_color: v }))}
+        ${renderColorField('Line Color', c.line_color, (v) => onChange({ ...c, line_color: v }))}
         ${renderNumberField('Line Width', c.line_width, (v) => onChange({ ...c, line_width: v }), { min: 1, max: 10 })}
         ${renderToggleField('Fill', c.fill, (v) => onChange({ ...c, fill: v }))}
-        ${renderTextField('Fill Color', c.fill_color, (v) => onChange({ ...c, fill_color: v }))}
+        ${renderColorField('Fill Color', c.fill_color, (v) => onChange({ ...c, fill_color: v }))}
         ${renderToggleField('Show Points', c.show_points, (v) => onChange({ ...c, show_points: v }))}
         ${renderToggleField('Show Labels', c.show_labels, (v) => onChange({ ...c, show_labels: v }))}
       </div>

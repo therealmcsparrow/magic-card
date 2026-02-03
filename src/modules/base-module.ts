@@ -18,6 +18,7 @@ import {
   renderToggleField,
   renderEntityField,
   renderNumberField,
+  renderColorField,
 } from '../utils/form-utils';
 
 export abstract class BaseMagicModule implements MagicModule {
@@ -239,8 +240,8 @@ export abstract class BaseMagicModule implements MagicModule {
 
         <div class="mc-section">
           <div class="mc-section-header">Colors</div>
-          ${renderTextField('Color', design.color, (v) => updateDesign({ color: v }))}
-          ${renderTextField('Background', design.background, (v) =>
+          ${renderColorField('Color', design.color, (v) => updateDesign({ color: v }))}
+          ${renderColorField('Background', design.background, (v) =>
             updateDesign({ background: v }),
           )}
           ${renderTextField('Opacity', design.opacity, (v) => updateDesign({ opacity: v }))}

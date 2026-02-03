@@ -19,6 +19,7 @@ declare global {
     'mc-tree-editor': import('./editor/modes/tree-editor').TreeEditor;
     'mc-module-selector': import('./editor/panels/module-selector').ModuleSelector;
     'mc-tree-node': import('./editor/components/tree-node').TreeNode;
+    'mc-color-picker': import('./editor/components/color-picker').ColorPicker;
   }
 }
 

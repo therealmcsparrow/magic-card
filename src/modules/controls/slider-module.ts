@@ -10,6 +10,7 @@ import {
   renderEntityField,
   renderSelectField,
   renderNumberField,
+  renderColorField,
 } from '../../utils/form-utils';
 
 class SliderModule extends BaseMagicModule {
@@ -102,8 +103,8 @@ class SliderModule extends BaseMagicModule {
           ],
           (v) => onChange({ ...c, direction: v as SliderModuleConfig['direction'] }),
         )}
-        ${renderTextField('Slider Color', c.slider_color, (v) => onChange({ ...c, slider_color: v }))}
-        ${renderTextField('Track Color', c.track_color, (v) => onChange({ ...c, track_color: v }))}
+        ${renderColorField('Slider Color', c.slider_color, (v) => onChange({ ...c, slider_color: v }))}
+        ${renderColorField('Track Color', c.track_color, (v) => onChange({ ...c, track_color: v }))}
         ${renderTextField('Thumb Size', c.thumb_size, (v) => onChange({ ...c, thumb_size: v }))}
       </div>
     `;

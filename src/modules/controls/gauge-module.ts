@@ -10,6 +10,7 @@ import {
   renderEntityField,
   renderSelectField,
   renderNumberField,
+  renderColorField,
 } from '../../utils/form-utils';
 
 class GaugeModule extends BaseMagicModule {
@@ -214,7 +215,7 @@ class GaugeModule extends BaseMagicModule {
                 <div class="mc-severity-item" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
                   ${renderNumberField('From', s.from, (v) => updateSeverity(i, 'from', v))}
                   ${renderNumberField('To', s.to, (v) => updateSeverity(i, 'to', v))}
-                  ${renderTextField('Color', s.color, (v) => updateSeverity(i, 'color', v))}
+                  ${renderColorField('Color', s.color, (v) => updateSeverity(i, 'color', v))}
                   <button class="mc-btn-icon" @click=${() => removeSeverity(i)}>&times;</button>
                 </div>
               `,

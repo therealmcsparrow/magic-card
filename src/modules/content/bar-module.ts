@@ -10,6 +10,7 @@ import {
   renderEntityField,
   renderSelectField,
   renderNumberField,
+  renderColorField,
 } from '../../utils/form-utils';
 
 class BarModule extends BaseMagicModule {
@@ -104,8 +105,8 @@ class BarModule extends BaseMagicModule {
         ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }))}
         ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }))}
         ${renderTextField('Bar Height', c.bar_height, (v) => onChange({ ...c, bar_height: v }))}
-        ${renderTextField('Bar Color', c.bar_color, (v) => onChange({ ...c, bar_color: v }))}
-        ${renderTextField('Bar Background', c.bar_background, (v) =>
+        ${renderColorField('Bar Color', c.bar_color, (v) => onChange({ ...c, bar_color: v }))}
+        ${renderColorField('Bar Background', c.bar_background, (v) =>
           onChange({ ...c, bar_background: v }),
         )}
         ${renderToggleField('Show Value', c.show_value, (v) => onChange({ ...c, show_value: v }))}

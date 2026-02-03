@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, IconModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderToggleField, renderEntityField } from '../../utils/form-utils';
+import { renderTextField, renderToggleField, renderEntityField, renderColorField } from '../../utils/form-utils';
 
 class IconModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -58,7 +58,7 @@ class IconModule extends BaseMagicModule {
           ? renderTextField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))
           : nothing}
         ${renderTextField('Size', c.size, (v) => onChange({ ...c, size: v }))}
-        ${renderTextField('Color', c.icon_color, (v) => onChange({ ...c, icon_color: v }))}
+        ${renderColorField('Color', c.icon_color, (v) => onChange({ ...c, icon_color: v }))}
       </div>
     `;
   }
