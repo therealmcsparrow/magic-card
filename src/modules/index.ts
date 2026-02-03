@@ -32,3 +32,4 @@ import './advanced/clock-module';
 import './advanced/weather-module';
 import './advanced/forecast-module';
 import './advanced/video-bg-module';
+import './advanced/custom-card-module';

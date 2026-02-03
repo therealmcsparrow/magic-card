@@ -118,7 +118,8 @@ export type ModuleType =
   | 'clock'
   | 'weather'
   | 'forecast'
-  | 'video-bg';
+  | 'video-bg'
+  | 'custom-card';
 
 export type ModuleCategory = 'content' | 'controls' | 'layout' | 'advanced';
 
@@ -450,6 +451,13 @@ export interface VideoBgModuleConfig extends CardModule {
   autoplay?: boolean;
   loop?: boolean;
   muted?: boolean;
+}
+
+export interface CustomCardModuleConfig extends CardModule {
+  type: 'custom-card';
+  card_type?: string;
+  card_config?: Record<string, unknown>;
+  card_config_yaml?: string;
 }
 
 // ── Event types ──
