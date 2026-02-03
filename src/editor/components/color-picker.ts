@@ -81,18 +81,18 @@ export class ColorPicker extends LitElement {
       justify-content: center;
       width: 36px;
       height: 36px;
-      border: 1px solid var(--divider-color, #e5e7eb);
+      border: 1px solid var(--primary-color, #6366f1);
       border-radius: 6px;
-      background: var(--card-background-color, #fff);
+      background: color-mix(in srgb, var(--primary-color, #6366f1) 10%, var(--card-background-color, #fff));
       cursor: pointer;
-      color: var(--secondary-text-color, #6b7280);
+      color: var(--primary-color, #6366f1);
       transition: all 0.15s;
       flex-shrink: 0;
     }
 
     .mc-color-btn:hover {
-      background: var(--divider-color, #e5e7eb);
-      color: var(--primary-text-color, #1a1a2e);
+      background: var(--primary-color, #6366f1);
+      color: white;
     }
 
     /* Modal Overlay */
