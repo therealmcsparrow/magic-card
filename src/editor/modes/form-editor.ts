@@ -5,7 +5,7 @@ import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles } from '../magic-card-editor.styles';
 import { formEditorStyles } from './form-editor.styles';
-import { renderTextField, renderSelectField } from '../../utils/form-utils';
+import { renderTextField, renderSelectField, renderColorField } from '../../utils/form-utils';
 
 @customElement('mc-form-editor')
 export class FormEditor extends LitElement {
@@ -60,7 +60,7 @@ export class FormEditor extends LitElement {
         ${expanded
           ? html`
               <div class="mc-card-section-body">
-                ${renderTextField('Background', config.background, (v) =>
+                ${renderColorField('Background', config.background, (v) =>
                   this.stateManager.updateConfig({ ...config, background: v }),
                 )}
                 ${renderTextField('Border Radius', config.border_radius, (v) =>
@@ -101,6 +101,13 @@ export class FormEditor extends LitElement {
           ], (v) => this.stateManager.updateRow(ri, { layout: v }))}
           <button
             class="mc-btn-icon"
+            @click=${() => this.stateManager.addColumn(ri)}
+            title="Add column"
+          >
+            <ha-icon icon="mdi:table-column-plus-after" style="--mdc-icon-size:16px"></ha-icon>
+          </button>
+          <button
+            class="mc-btn-icon"
             @click=${() => this.stateManager.deleteRow(ri)}
             title="Delete row"
           >
@@ -120,10 +127,22 @@ export class FormEditor extends LitElement {
     ci: number,
     selectedPath: EditorPath | null,
   ): TemplateResult {
+    const row = this._editorState?.config.rows[ri];
+    const canDeleteColumn = row && row.columns.length > 1;
+
     return html`
       <div class="mc-col-item">
         <div class="mc-col-header">
           <span class="mc-label">Column ${ci + 1}</span>
+          ${canDeleteColumn ? html`
+            <button
+              class="mc-btn-icon mc-btn-small"
+              @click=${() => this.stateManager.deleteColumn(ri, ci)}
+              title="Delete column"
+            >
+              &times;
+            </button>
+          ` : nothing}
         </div>
         ${col.modules.map((mod, mi) => {
           const isSelected =

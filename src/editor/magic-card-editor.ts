@@ -27,6 +27,9 @@ import './tabs/design-tab';
 // Import panels
 import './panels/module-selector';
 
+// Import components
+import './components/color-picker';
+
 @customElement(EDITOR_TAG)
 export class MagicCardEditor extends LitElement {
   static styles = editorStyles;

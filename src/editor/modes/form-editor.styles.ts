@@ -100,6 +100,17 @@ export const formEditorStyles = css`
     flex: 1;
   }
 
+  .mc-col-header .mc-btn-small {
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+
+  .mc-col-header:hover .mc-btn-small {
+    opacity: 1;
+  }
+
   /* Module item */
   .mc-module-item {
     display: flex;

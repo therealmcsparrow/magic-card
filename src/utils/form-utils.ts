@@ -1,5 +1,4 @@
 import { nothing, TemplateResult, html } from 'lit';
-import '../editor/components/color-picker';
 
 export function renderTextField(
   label: string,
