@@ -16,7 +16,7 @@
   "tabs": {
     "general": "General",
     "actions": "Actions",
-    "logic": "Logic",
+    "conditions": "Conditions",
     "design": "Design"
   },
   "modules": {

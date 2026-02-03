@@ -2,7 +2,7 @@ import { TemplateResult, html } from 'lit';
 import { CardModule, HomeAssistant, DesignConfig } from '../types';
 import { ModuleRegistry } from '../modules/module-registry';
 import { designToStyle } from '../utils/css-utils';
-import { LogicService } from './logic-service';
+import { ConditionsService } from './conditions-service';
 
 export class ModuleRenderer {
   static render(
@@ -10,7 +10,7 @@ export class ModuleRenderer {
     hass?: HomeAssistant,
   ): TemplateResult {
     // Check display conditions
-    if (hass && !LogicService.evaluate(module.display, hass)) {
+    if (hass && !ConditionsService.evaluate(module.display, hass)) {
       return html``;
     }
 

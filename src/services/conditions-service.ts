@@ -1,11 +1,11 @@
 import { DisplayConfig, DisplayCondition, HomeAssistant } from '../types';
 
-export class LogicService {
+export class ConditionsService {
   static evaluate(display: DisplayConfig | undefined, hass: HomeAssistant | undefined): boolean {
     if (!display?.conditions?.length) return true;
     if (!hass) return true;
 
-    const results = display.conditions.map((cond) => LogicService.evaluateCondition(cond, hass));
+    const results = display.conditions.map((cond) => ConditionsService.evaluateCondition(cond, hass));
 
     return display.mode === 'any' ? results.some(Boolean) : results.every(Boolean);
   }
@@ -13,11 +13,11 @@ export class LogicService {
   static evaluateCondition(cond: DisplayCondition, hass: HomeAssistant): boolean {
     switch (cond.type) {
       case 'state':
-        return LogicService.evaluateStateCondition(cond, hass);
+        return ConditionsService.evaluateStateCondition(cond, hass);
       case 'attribute':
-        return LogicService.evaluateAttributeCondition(cond, hass);
+        return ConditionsService.evaluateAttributeCondition(cond, hass);
       case 'time':
-        return LogicService.evaluateTimeCondition(cond);
+        return ConditionsService.evaluateTimeCondition(cond);
       case 'template':
         return true; // Template evaluation is async, handled by TemplateService
       default:

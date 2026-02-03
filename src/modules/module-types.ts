@@ -37,7 +37,7 @@ export interface MagicModule {
     onChange: (updated: CardModule) => void,
   ): TemplateResult;
 
-  renderLogicTab?(
+  renderConditionsTab?(
     config: CardModule,
     hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,

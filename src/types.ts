@@ -247,7 +247,7 @@ export interface ConfirmationConfig {
 
 export type EditorMode = 'form' | 'yaml' | 'tree';
 
-export type EditorTab = 'general' | 'actions' | 'logic' | 'design';
+export type EditorTab = 'general' | 'actions' | 'conditions' | 'design';
 
 export interface EditorPath {
   rowIndex?: number;

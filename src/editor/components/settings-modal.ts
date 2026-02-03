@@ -15,7 +15,7 @@ import './icon-picker';
 const TAB_CONFIG: Record<EditorTab, { label: string; icon: string }> = {
   general: { label: 'General', icon: 'mdi:cog' },
   actions: { label: 'Actions', icon: 'mdi:gesture-tap' },
-  logic: { label: 'Conditions', icon: 'mdi:filter-outline' },
+  conditions: { label: 'Conditions', icon: 'mdi:filter-outline' },
   design: { label: 'Design', icon: 'mdi:palette' },
 };
 
@@ -236,9 +236,9 @@ export class SettingsModal extends LitElement {
         return handler.renderActionsTab
           ? handler.renderActionsTab(this.module, this.hass, onChange)
           : html`<p>No actions available</p>`;
-      case 'logic':
-        return handler.renderLogicTab
-          ? handler.renderLogicTab(this.module, this.hass, onChange)
+      case 'conditions':
+        return handler.renderConditionsTab
+          ? handler.renderConditionsTab(this.module, this.hass, onChange)
           : html`<p>No conditions available</p>`;
       case 'design':
         return handler.renderDesignTab

@@ -4,8 +4,8 @@ import { CardModule, HomeAssistant } from '../../types';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles } from '../magic-card-editor.styles';
 
-@customElement('mc-logic-tab')
-export class LogicTab extends LitElement {
+@customElement('mc-conditions-tab')
+export class ConditionsTab extends LitElement {
   static styles = editorStyles;
 
   @property({ attribute: false }) module?: CardModule;
@@ -18,10 +18,10 @@ export class LogicTab extends LitElement {
     }
 
     const handler = ModuleRegistry.get(this.module.type);
-    if (!handler?.renderLogicTab) {
-      return html`<p>No logic options for this module</p>`;
+    if (!handler?.renderConditionsTab) {
+      return html`<p>No conditions options for this module</p>`;
     }
 
-    return handler.renderLogicTab(this.module, this.hass, this.onChange);
+    return handler.renderConditionsTab(this.module, this.hass, this.onChange);
   }
 }

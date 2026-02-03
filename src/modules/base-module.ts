@@ -37,7 +37,7 @@ export abstract class BaseMagicModule implements MagicModule {
   ): TemplateResult;
 
   getAvailableTabs(): EditorTab[] {
-    return ['general', 'actions', 'logic', 'design'];
+    return ['general', 'actions', 'conditions', 'design'];
   }
 
   validate(_config: CardModule): string[] {
@@ -78,7 +78,7 @@ export abstract class BaseMagicModule implements MagicModule {
     `;
   }
 
-  renderLogicTab(
+  renderConditionsTab(
     config: CardModule,
     hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,

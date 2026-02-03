@@ -56,7 +56,7 @@ class CustomCardModule extends BaseMagicModule {
   }>();
 
   getAvailableTabs(): EditorTab[] {
-    return ['general', 'logic', 'design'];
+    return ['general', 'conditions', 'design'];
   }
 
   createDefault(): CustomCardModuleConfig {
