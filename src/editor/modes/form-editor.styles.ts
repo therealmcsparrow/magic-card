@@ -126,6 +126,23 @@ export const formEditorStyles = css`
     background: color-mix(in srgb, var(--primary-color, #6366f1) 20%, transparent);
   }
 
+  /* Sortable fallback (for Shadow DOM support) */
+  .sortable-fallback {
+    opacity: 0.8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .sortable-drag {
+    opacity: 1;
+    background: var(--card-background-color, #fff);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Chosen state while dragging */
+  .sortable-chosen {
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 10%, transparent);
+  }
+
   /* Column */
   .mc-col-item {
     flex: 1;

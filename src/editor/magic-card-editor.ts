@@ -204,43 +204,31 @@ export class MagicCardEditor extends LitElement {
 
     const { selectedPath } = this._editorState!;
 
+    const handleChange = (updated: CardModule) => {
+      if (selectedPath?.rowIndex !== undefined &&
+          selectedPath?.columnIndex !== undefined &&
+          selectedPath?.moduleIndex !== undefined) {
+        this._stateManager.updateModule(
+          selectedPath.rowIndex,
+          selectedPath.columnIndex,
+          selectedPath.moduleIndex,
+          updated,
+        );
+      }
+    };
+
     return html`
       <mc-settings-modal
         .module=${selectedModule}
         .hass=${this.hass}
         .open=${true}
+        .onChange=${handleChange}
         @close=${() => {
           this._showSettingsModal = false;
           this._stateManager.setSelectedPath(null);
         }}
-        .setOnChange=${(fn: (updated: CardModule) => void) => {
-          // This is a bit hacky but works to pass the onChange handler
-        }}
       ></mc-settings-modal>
     `;
-  }
-
-  private _getSettingsModal(): import('./components/settings-modal').SettingsModal | null {
-    return this.shadowRoot?.querySelector('mc-settings-modal') ?? null;
-  }
-
-  protected updated(): void {
-    const modal = this._getSettingsModal();
-    if (modal && this._editorState?.selectedPath) {
-      const { selectedPath } = this._editorState;
-      modal.setOnChange((updated: CardModule) => {
-        if (selectedPath?.rowIndex !== undefined &&
-            selectedPath?.columnIndex !== undefined &&
-            selectedPath?.moduleIndex !== undefined) {
-          this._stateManager.updateModule(
-            selectedPath.rowIndex,
-            selectedPath.columnIndex,
-            selectedPath.moduleIndex,
-            updated,
-          );
-        }
-      });
-    }
   }
 
   private _renderModuleSelectorDialog(): TemplateResult {

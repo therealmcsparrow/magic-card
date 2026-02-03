@@ -2,6 +2,11 @@ import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant, EditorTab } from '../../types';
 import { ModuleRegistry } from '../../modules/module-registry';
+import { editorStyles } from '../magic-card-editor.styles';
+
+// Ensure custom form components are registered
+import './color-picker';
+import './unit-field';
 
 // Tab configuration with icons
 const TAB_CONFIG: Record<EditorTab, { label: string; icon: string }> = {
@@ -11,9 +16,13 @@ const TAB_CONFIG: Record<EditorTab, { label: string; icon: string }> = {
   design: { label: 'Design', icon: 'mdi:palette' },
 };
 
+export type ModuleChangeCallback = (updated: CardModule) => void;
+
 @customElement('mc-settings-modal')
 export class SettingsModal extends LitElement {
-  static styles = css`
+  static styles = [
+    editorStyles,
+    css`
     :host {
       display: block;
     }
@@ -151,19 +160,14 @@ export class SettingsModal extends LitElement {
     .mc-btn-primary:hover {
       filter: brightness(1.1);
     }
-  `;
+  `];
 
   @property({ attribute: false }) module?: CardModule;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: Boolean }) open = false;
+  @property({ attribute: false }) onChange?: ModuleChangeCallback;
 
   @state() private _activeTab: EditorTab = 'general';
-
-  private _onModuleChange?: (updated: CardModule) => void;
-
-  setOnChange(fn: (updated: CardModule) => void): void {
-    this._onModuleChange = fn;
-  }
 
   private _close(): void {
     this.dispatchEvent(new CustomEvent('close', { bubbles: true, composed: true }));
@@ -218,9 +222,9 @@ export class SettingsModal extends LitElement {
     tab: EditorTab,
     handler: import('../../modules/module-types').MagicModule,
   ): TemplateResult {
-    if (!this.module || !this._onModuleChange) return html``;
+    if (!this.module || !this.onChange) return html`<p>Loading...</p>`;
 
-    const onChange = this._onModuleChange;
+    const onChange = this.onChange;
 
     switch (tab) {
       case 'general':

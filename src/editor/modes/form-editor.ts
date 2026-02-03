@@ -56,6 +56,9 @@ export class FormEditor extends LitElement {
           handle: '.mc-drag-handle',
           animation: 150,
           ghostClass: 'mc-sortable-ghost',
+          forceFallback: true,  // Required for Shadow DOM
+          fallbackOnBody: false,
+          draggable: '.mc-row-item',
           onEnd: (evt) => {
             if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
               this.stateManager.moveRow(evt.oldIndex, evt.newIndex);
@@ -67,15 +70,15 @@ export class FormEditor extends LitElement {
 
     // Sortable for modules in each column
     this.shadowRoot?.querySelectorAll('.mc-modules-container').forEach((container) => {
-      const rowIdx = parseInt(container.getAttribute('data-row') || '0');
-      const colIdx = parseInt(container.getAttribute('data-col') || '0');
-
       this._sortableInstances.push(
         Sortable.create(container as HTMLElement, {
           group: 'modules',
           handle: '.mc-module-drag',
           animation: 150,
           ghostClass: 'mc-sortable-ghost',
+          forceFallback: true,  // Required for Shadow DOM
+          fallbackOnBody: false,
+          draggable: '.mc-module-item',
           onEnd: (evt) => {
             const fromRow = parseInt(evt.from.getAttribute('data-row') || '0');
             const fromCol = parseInt(evt.from.getAttribute('data-col') || '0');
