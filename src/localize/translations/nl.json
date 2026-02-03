@@ -1,0 +1,67 @@
+{
+  "card": {
+    "name": "Magic Card",
+    "description": "Een volledig open-source multi-module kaart"
+  },
+  "editor": {
+    "mode_form": "Formulier",
+    "mode_yaml": "YAML",
+    "mode_tree": "Boom",
+    "add_row": "Rij toevoegen",
+    "add_module": "Module toevoegen",
+    "delete": "Verwijderen",
+    "undo": "Ongedaan maken",
+    "redo": "Opnieuw"
+  },
+  "tabs": {
+    "general": "Algemeen",
+    "actions": "Acties",
+    "logic": "Logica",
+    "design": "Ontwerp"
+  },
+  "modules": {
+    "text": "Tekst",
+    "icon": "Icoon",
+    "info": "Info",
+    "image": "Afbeelding",
+    "markdown": "Markdown",
+    "bar": "Balk",
+    "graphs": "Grafiek",
+    "camera": "Camera",
+    "button": "Knop",
+    "slider": "Schuifregelaar",
+    "spinbox": "Spinbox",
+    "dropdown": "Dropdown",
+    "light": "Lamp",
+    "gauge": "Meter",
+    "horizontal": "Horizontaal",
+    "vertical": "Verticaal",
+    "tabs": "Tabbladen",
+    "separator": "Scheidingslijn",
+    "clock": "Klok",
+    "weather": "Weer",
+    "forecast": "Weersvoorspelling",
+    "video-bg": "Video achtergrond"
+  },
+  "actions_config": {
+    "tap_action": "Tik actie",
+    "hold_action": "Vasthoud actie",
+    "double_tap_action": "Dubbeltik actie",
+    "action_none": "Geen",
+    "action_more_info": "Meer info",
+    "action_toggle": "Schakel",
+    "action_navigate": "Navigeer",
+    "action_url": "URL",
+    "action_perform_action": "Actie uitvoeren",
+    "action_assist": "Assistent"
+  },
+  "conditions": {
+    "mode_every": "Alle condities (EN)",
+    "mode_any": "Elke conditie (OF)",
+    "type_state": "Status",
+    "type_attribute": "Attribuut",
+    "type_time": "Tijd",
+    "type_template": "Template",
+    "add_condition": "Conditie toevoegen"
+  }
+}

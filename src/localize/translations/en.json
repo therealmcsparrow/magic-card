@@ -1,0 +1,67 @@
+{
+  "card": {
+    "name": "Magic Card",
+    "description": "A fully open-source multi-module card"
+  },
+  "editor": {
+    "mode_form": "Form",
+    "mode_yaml": "YAML",
+    "mode_tree": "Tree",
+    "add_row": "Add Row",
+    "add_module": "Add Module",
+    "delete": "Delete",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+  "tabs": {
+    "general": "General",
+    "actions": "Actions",
+    "logic": "Logic",
+    "design": "Design"
+  },
+  "modules": {
+    "text": "Text",
+    "icon": "Icon",
+    "info": "Info",
+    "image": "Image",
+    "markdown": "Markdown",
+    "bar": "Bar",
+    "graphs": "Graph",
+    "camera": "Camera",
+    "button": "Button",
+    "slider": "Slider",
+    "spinbox": "Spinbox",
+    "dropdown": "Dropdown",
+    "light": "Light",
+    "gauge": "Gauge",
+    "horizontal": "Horizontal",
+    "vertical": "Vertical",
+    "tabs": "Tabs",
+    "separator": "Separator",
+    "clock": "Clock",
+    "weather": "Weather",
+    "forecast": "Forecast",
+    "video-bg": "Video Background"
+  },
+  "actions_config": {
+    "tap_action": "Tap Action",
+    "hold_action": "Hold Action",
+    "double_tap_action": "Double Tap Action",
+    "action_none": "None",
+    "action_more_info": "More Info",
+    "action_toggle": "Toggle",
+    "action_navigate": "Navigate",
+    "action_url": "URL",
+    "action_perform_action": "Perform Action",
+    "action_assist": "Assist"
+  },
+  "conditions": {
+    "mode_every": "All conditions (AND)",
+    "mode_any": "Any condition (OR)",
+    "type_state": "State",
+    "type_attribute": "Attribute",
+    "type_time": "Time",
+    "type_template": "Template",
+    "add_condition": "Add Condition"
+  }
+}
