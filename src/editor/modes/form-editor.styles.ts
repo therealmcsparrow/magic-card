@@ -120,27 +120,33 @@ export const formEditorStyles = css`
     cursor: grabbing;
   }
 
-  /* Sortable ghost */
-  .mc-sortable-ghost {
-    opacity: 0.4;
-    background: color-mix(in srgb, var(--primary-color, #6366f1) 20%, transparent);
-  }
-
-  /* Sortable fallback (for Shadow DOM support) */
-  .sortable-fallback {
-    opacity: 0.8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .sortable-drag {
-    opacity: 1;
-    background: var(--card-background-color, #fff);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Chosen state while dragging */
-  .sortable-chosen {
+  /* Drag and drop states */
+  .mc-row-item.dragging,
+  .mc-module-item.dragging {
+    opacity: 0.5;
     background: color-mix(in srgb, var(--primary-color, #6366f1) 10%, transparent);
+  }
+
+  .mc-row-item.drag-over {
+    border-color: var(--primary-color, #6366f1);
+    border-style: dashed;
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 8%, transparent);
+  }
+
+  .mc-module-item.drag-over {
+    border-color: var(--primary-color, #6366f1);
+    border-style: dashed;
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 15%, transparent);
+  }
+
+  .mc-modules-container {
+    min-height: 40px;
+    transition: background 0.15s;
+  }
+
+  .mc-modules-container:empty {
+    border: 1px dashed var(--divider-color, #e5e7eb);
+    border-radius: 6px;
   }
 
   /* Column */

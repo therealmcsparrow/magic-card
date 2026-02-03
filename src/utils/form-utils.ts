@@ -84,15 +84,25 @@ export function renderEntityField(
 ): TemplateResult {
   // Use Home Assistant's entity picker if available
   if (hass) {
+    const hassObj = hass as { states: Record<string, unknown> };
+    const entities = Object.keys(hassObj.states || {}).sort();
+
     return html`
       <div class="mc-field">
         <label class="mc-field-label">${label}</label>
-        <ha-entity-picker
-          .hass=${hass}
-          .value=${value || ''}
-          @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
-          allow-custom-entity
-        ></ha-entity-picker>
+        <div class="mc-entity-field">
+          <input
+            type="text"
+            list="mc-entities-${label.replace(/\s+/g, '-')}"
+            .value=${value || ''}
+            placeholder="Select or type entity_id"
+            @input=${(e: InputEvent) => onChange((e.target as HTMLInputElement).value)}
+            @change=${(e: Event) => onChange((e.target as HTMLInputElement).value)}
+          />
+          <datalist id="mc-entities-${label.replace(/\s+/g, '-')}">
+            ${entities.map(entity => html`<option value=${entity}></option>`)}
+          </datalist>
+        </div>
       </div>
     `;
   }

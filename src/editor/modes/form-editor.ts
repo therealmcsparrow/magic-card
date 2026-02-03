@@ -6,7 +6,14 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles } from '../magic-card-editor.styles';
 import { formEditorStyles } from './form-editor.styles';
 import { renderTextField, renderSelectField, renderColorField, renderUnitField } from '../../utils/form-utils';
-import Sortable from 'sortablejs';
+
+// Drag state for native HTML5 drag and drop
+interface DragState {
+  type: 'row' | 'module';
+  rowIndex: number;
+  colIndex?: number;
+  moduleIndex?: number;
+}
 
 @customElement('mc-form-editor')
 export class FormEditor extends LitElement {
@@ -17,9 +24,10 @@ export class FormEditor extends LitElement {
 
   @state() private _editorState?: EditorState;
   @state() private _expandedSections = new Set<string>(['card']);
+  @state() private _dragOver: { type: string; index: number; colIndex?: number } | null = null;
 
   private _unsubscribe?: () => void;
-  private _sortableInstances: Sortable[] = [];
+  private _dragState: DragState | null = null;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -33,68 +41,98 @@ export class FormEditor extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._unsubscribe?.();
-    this._destroySortables();
   }
 
-  protected updated(): void {
-    this._initSortables();
+  // Native drag and drop handlers for rows
+  private _onRowDragStart(e: DragEvent, rowIndex: number): void {
+    this._dragState = { type: 'row', rowIndex };
+    e.dataTransfer!.effectAllowed = 'move';
+    e.dataTransfer!.setData('text/plain', JSON.stringify(this._dragState));
+    (e.target as HTMLElement).classList.add('dragging');
   }
 
-  private _destroySortables(): void {
-    this._sortableInstances.forEach(s => s.destroy());
-    this._sortableInstances = [];
+  private _onRowDragEnd(e: DragEvent): void {
+    (e.target as HTMLElement).classList.remove('dragging');
+    this._dragState = null;
+    this._dragOver = null;
   }
 
-  private _initSortables(): void {
-    this._destroySortables();
+  private _onRowDragOver(e: DragEvent, rowIndex: number): void {
+    if (!this._dragState || this._dragState.type !== 'row') return;
+    e.preventDefault();
+    e.dataTransfer!.dropEffect = 'move';
+    this._dragOver = { type: 'row', index: rowIndex };
+  }
 
-    // Sortable for rows
-    const rowsContainer = this.shadowRoot?.querySelector('.mc-rows-container');
-    if (rowsContainer) {
-      this._sortableInstances.push(
-        Sortable.create(rowsContainer as HTMLElement, {
-          handle: '.mc-drag-handle',
-          animation: 150,
-          ghostClass: 'mc-sortable-ghost',
-          forceFallback: true,  // Required for Shadow DOM
-          fallbackOnBody: false,
-          draggable: '.mc-row-item',
-          onEnd: (evt) => {
-            if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
-              this.stateManager.moveRow(evt.oldIndex, evt.newIndex);
-            }
-          },
-        })
-      );
+  private _onRowDragLeave(): void {
+    this._dragOver = null;
+  }
+
+  private _onRowDrop(e: DragEvent, toIndex: number): void {
+    e.preventDefault();
+    if (!this._dragState || this._dragState.type !== 'row') return;
+
+    const fromIndex = this._dragState.rowIndex;
+    if (fromIndex !== toIndex) {
+      this.stateManager.moveRow(fromIndex, toIndex);
     }
+    this._dragState = null;
+    this._dragOver = null;
+  }
 
-    // Sortable for modules in each column
-    this.shadowRoot?.querySelectorAll('.mc-modules-container').forEach((container) => {
-      this._sortableInstances.push(
-        Sortable.create(container as HTMLElement, {
-          group: 'modules',
-          handle: '.mc-module-drag',
-          animation: 150,
-          ghostClass: 'mc-sortable-ghost',
-          forceFallback: true,  // Required for Shadow DOM
-          fallbackOnBody: false,
-          draggable: '.mc-module-item',
-          onEnd: (evt) => {
-            const fromRow = parseInt(evt.from.getAttribute('data-row') || '0');
-            const fromCol = parseInt(evt.from.getAttribute('data-col') || '0');
-            const toRow = parseInt(evt.to.getAttribute('data-row') || '0');
-            const toCol = parseInt(evt.to.getAttribute('data-col') || '0');
+  // Native drag and drop handlers for modules
+  private _onModuleDragStart(e: DragEvent, rowIndex: number, colIndex: number, moduleIndex: number): void {
+    this._dragState = { type: 'module', rowIndex, colIndex, moduleIndex };
+    e.dataTransfer!.effectAllowed = 'move';
+    e.dataTransfer!.setData('text/plain', JSON.stringify(this._dragState));
+    (e.target as HTMLElement).classList.add('dragging');
+    e.stopPropagation();
+  }
 
-            if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
-              this.stateManager.moveModule(
-                fromRow, fromCol, evt.oldIndex,
-                toRow, toCol, evt.newIndex
-              );
-            }
-          },
-        })
-      );
-    });
+  private _onModuleDragEnd(e: DragEvent): void {
+    (e.target as HTMLElement).classList.remove('dragging');
+    this._dragState = null;
+    this._dragOver = null;
+  }
+
+  private _onModuleDragOver(e: DragEvent, rowIndex: number, colIndex: number, moduleIndex: number): void {
+    if (!this._dragState || this._dragState.type !== 'module') return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer!.dropEffect = 'move';
+    this._dragOver = { type: 'module', index: moduleIndex, colIndex };
+  }
+
+  private _onContainerDragOver(e: DragEvent, rowIndex: number, colIndex: number): void {
+    if (!this._dragState || this._dragState.type !== 'module') return;
+    e.preventDefault();
+    e.dataTransfer!.dropEffect = 'move';
+  }
+
+  private _onModuleDrop(e: DragEvent, toRow: number, toCol: number, toIndex: number): void {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!this._dragState || this._dragState.type !== 'module') return;
+
+    const { rowIndex: fromRow, colIndex: fromCol, moduleIndex: fromIndex } = this._dragState;
+    if (fromRow !== toRow || fromCol !== toCol || fromIndex !== toIndex) {
+      this.stateManager.moveModule(fromRow, fromCol!, fromIndex!, toRow, toCol, toIndex);
+    }
+    this._dragState = null;
+    this._dragOver = null;
+  }
+
+  private _onContainerDrop(e: DragEvent, toRow: number, toCol: number): void {
+    e.preventDefault();
+    if (!this._dragState || this._dragState.type !== 'module') return;
+
+    const { rowIndex: fromRow, colIndex: fromCol, moduleIndex: fromIndex } = this._dragState;
+    const modules = this._editorState?.config.rows[toRow]?.columns[toCol]?.modules || [];
+    const toIndex = modules.length;
+
+    this.stateManager.moveModule(fromRow, fromCol!, fromIndex!, toRow, toCol, toIndex);
+    this._dragState = null;
+    this._dragOver = null;
   }
 
   protected render(): TemplateResult {
@@ -153,8 +191,19 @@ export class FormEditor extends LitElement {
     ri: number,
     selectedPath: EditorPath | null,
   ): TemplateResult {
+    const isDragOver = this._dragOver?.type === 'row' && this._dragOver?.index === ri;
+
     return html`
-      <div class="mc-row-item" data-row="${ri}">
+      <div
+        class="mc-row-item ${isDragOver ? 'drag-over' : ''}"
+        data-row="${ri}"
+        draggable="true"
+        @dragstart=${(e: DragEvent) => this._onRowDragStart(e, ri)}
+        @dragend=${(e: DragEvent) => this._onRowDragEnd(e)}
+        @dragover=${(e: DragEvent) => this._onRowDragOver(e, ri)}
+        @dragleave=${() => this._onRowDragLeave()}
+        @drop=${(e: DragEvent) => this._onRowDrop(e, ri)}
+      >
         <div class="mc-row-header">
           <span class="mc-drag-handle" title="Drag to reorder">
             <ha-icon icon="mdi:drag" style="--mdc-icon-size:16px"></ha-icon>
@@ -216,7 +265,13 @@ export class FormEditor extends LitElement {
             </button>
           ` : nothing}
         </div>
-        <div class="mc-modules-container" data-row="${ri}" data-col="${ci}">
+        <div
+          class="mc-modules-container"
+          data-row="${ri}"
+          data-col="${ci}"
+          @dragover=${(e: DragEvent) => this._onContainerDragOver(e, ri, ci)}
+          @drop=${(e: DragEvent) => this._onContainerDrop(e, ri, ci)}
+        >
           ${col.modules.map((mod, mi) => {
             const isSelected =
               selectedPath?.rowIndex === ri &&
@@ -224,10 +279,18 @@ export class FormEditor extends LitElement {
               selectedPath?.moduleIndex === mi;
 
             const handler = ModuleRegistry.get(mod.type);
+            const isDragOver = this._dragOver?.type === 'module' &&
+              this._dragOver?.index === mi &&
+              this._dragOver?.colIndex === ci;
 
             return html`
               <div
-                class="mc-module-item ${isSelected ? 'selected' : ''}"
+                class="mc-module-item ${isSelected ? 'selected' : ''} ${isDragOver ? 'drag-over' : ''}"
+                draggable="true"
+                @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, ri, ci, mi)}
+                @dragend=${(e: DragEvent) => this._onModuleDragEnd(e)}
+                @dragover=${(e: DragEvent) => this._onModuleDragOver(e, ri, ci, mi)}
+                @drop=${(e: DragEvent) => this._onModuleDrop(e, ri, ci, mi)}
                 @click=${() =>
                   this.stateManager.setSelectedPath({
                     rowIndex: ri,

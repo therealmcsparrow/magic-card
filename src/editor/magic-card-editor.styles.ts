@@ -216,6 +216,27 @@ export const editorStyles = css`
     font-style: italic;
   }
 
+  .mc-entity-field {
+    position: relative;
+  }
+
+  .mc-entity-field input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--mc-editor-border);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: var(--mc-editor-bg);
+    color: var(--mc-editor-text);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+  }
+
+  .mc-entity-field input:focus {
+    border-color: var(--mc-editor-primary);
+  }
+
   /* Buttons */
   .mc-btn {
     padding: 8px 16px;
