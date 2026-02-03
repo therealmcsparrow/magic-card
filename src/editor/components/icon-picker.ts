@@ -177,7 +177,7 @@ export class IconPicker extends LitElement {
       ${this._showModal ? this._renderModal() : ''}
     `;
   }
-
+  
   private _renderModal(): TemplateResult {
     return html`
       <div class="mc-picker-overlay" @click=${this._closeModal}>
