@@ -95,13 +95,13 @@ class BarModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as BarModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }))}
         ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }))}
         ${renderTextField('Bar Height', c.bar_height, (v) => onChange({ ...c, bar_height: v }))}

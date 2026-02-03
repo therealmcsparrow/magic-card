@@ -58,13 +58,13 @@ class InfoModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as InfoModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }))}
         ${renderToggleField('Show Name', c.show_name, (v) => onChange({ ...c, show_name: v }))}
         ${renderToggleField('Show State', c.show_state, (v) => onChange({ ...c, show_state: v }))}

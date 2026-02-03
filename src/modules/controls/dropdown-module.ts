@@ -72,7 +72,7 @@ class DropdownModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as DropdownModuleConfig;
@@ -97,7 +97,7 @@ class DropdownModule extends BaseMagicModule {
 
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }))}
 
         <div class="mc-section">

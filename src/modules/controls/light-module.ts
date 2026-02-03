@@ -119,13 +119,13 @@ class LightModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as LightModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderToggleField('Show Brightness', c.show_brightness, (v) =>
           onChange({ ...c, show_brightness: v }),
         )}

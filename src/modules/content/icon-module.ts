@@ -44,13 +44,13 @@ class IconModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as IconModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderToggleField('Use Entity Icon', c.use_entity_icon, (v) =>
           onChange({ ...c, use_entity_icon: v }),
         )}

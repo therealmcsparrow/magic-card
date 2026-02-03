@@ -79,13 +79,13 @@ class SpinboxModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as SpinboxModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }))}
         ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }))}
         ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }))}

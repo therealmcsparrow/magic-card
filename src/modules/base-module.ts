@@ -19,6 +19,7 @@ import {
   renderEntityField,
   renderNumberField,
   renderColorField,
+  renderUnitField,
 } from '../utils/form-utils';
 
 export abstract class BaseMagicModule implements MagicModule {
@@ -44,7 +45,7 @@ export abstract class BaseMagicModule implements MagicModule {
 
   renderActionsTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const actions = config.actions as ActionsConfig | undefined;
@@ -60,16 +61,16 @@ export abstract class BaseMagicModule implements MagicModule {
       <div class="mc-tab-content">
         <div class="mc-section">
           <div class="mc-section-header">Tap Action</div>
-          ${this._renderActionConfig(actions?.tap_action, (a) => updateAction('tap_action', a))}
+          ${this._renderActionConfig(actions?.tap_action, (a) => updateAction('tap_action', a), hass)}
         </div>
         <div class="mc-section">
           <div class="mc-section-header">Hold Action</div>
-          ${this._renderActionConfig(actions?.hold_action, (a) => updateAction('hold_action', a))}
+          ${this._renderActionConfig(actions?.hold_action, (a) => updateAction('hold_action', a), hass)}
         </div>
         <div class="mc-section">
           <div class="mc-section-header">Double Tap Action</div>
           ${this._renderActionConfig(actions?.double_tap_action, (a) =>
-            updateAction('double_tap_action', a),
+            updateAction('double_tap_action', a), hass,
           )}
         </div>
       </div>
@@ -78,7 +79,7 @@ export abstract class BaseMagicModule implements MagicModule {
 
   renderLogicTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const display = config.display as DisplayConfig | undefined;
@@ -142,7 +143,7 @@ export abstract class BaseMagicModule implements MagicModule {
                 ${cond.type === 'state' || cond.type === 'attribute'
                   ? html`
                       ${renderEntityField('Entity', cond.entity, (v) =>
-                        updateCondition(cond.id, { entity: v }),
+                        updateCondition(cond.id, { entity: v }), hass,
                       )}
                       ${cond.type === 'attribute'
                         ? renderTextField('Attribute', cond.attribute, (v) =>
@@ -190,7 +191,10 @@ export abstract class BaseMagicModule implements MagicModule {
           )}
         </div>
 
-        <button class="mc-btn mc-btn-secondary" @click=${addCondition}>Add Condition</button>
+        <button class="mc-btn mc-btn-secondary" @click=${addCondition}>
+          <ha-icon icon="mdi:plus" style="--mdc-icon-size:16px"></ha-icon>
+          Add Condition
+        </button>
       </div>
     `;
   }
@@ -213,7 +217,7 @@ export abstract class BaseMagicModule implements MagicModule {
       <div class="mc-tab-content">
         <div class="mc-section">
           <div class="mc-section-header">Typography</div>
-          ${renderTextField('Font Size', design.font_size, (v) => updateDesign({ font_size: v }))}
+          ${renderUnitField('Font Size', design.font_size, (v) => updateDesign({ font_size: v }))}
           ${renderSelectField(
             'Font Weight',
             design.font_weight,
@@ -249,14 +253,14 @@ export abstract class BaseMagicModule implements MagicModule {
 
         <div class="mc-section">
           <div class="mc-section-header">Spacing</div>
-          ${renderTextField('Padding', design.padding, (v) => updateDesign({ padding: v }))}
-          ${renderTextField('Margin', design.margin, (v) => updateDesign({ margin: v }))}
+          ${renderUnitField('Padding', design.padding, (v) => updateDesign({ padding: v }))}
+          ${renderUnitField('Margin', design.margin, (v) => updateDesign({ margin: v }))}
         </div>
 
         <div class="mc-section">
           <div class="mc-section-header">Borders</div>
           ${renderTextField('Border', design.border, (v) => updateDesign({ border: v }))}
-          ${renderTextField('Border Radius', design.border_radius, (v) =>
+          ${renderUnitField('Border Radius', design.border_radius, (v) =>
             updateDesign({ border_radius: v }),
           )}
           ${renderTextField('Box Shadow', design.box_shadow, (v) =>
@@ -266,8 +270,12 @@ export abstract class BaseMagicModule implements MagicModule {
 
         <div class="mc-section">
           <div class="mc-section-header">Size</div>
-          ${renderTextField('Width', design.width, (v) => updateDesign({ width: v }))}
-          ${renderTextField('Height', design.height, (v) => updateDesign({ height: v }))}
+          ${renderUnitField('Width', design.width, (v) => updateDesign({ width: v }))}
+          ${renderUnitField('Height', design.height, (v) => updateDesign({ height: v }))}
+          ${renderUnitField('Min Width', design.min_width, (v) => updateDesign({ min_width: v }))}
+          ${renderUnitField('Min Height', design.min_height, (v) => updateDesign({ min_height: v }))}
+          ${renderUnitField('Max Width', design.max_width, (v) => updateDesign({ max_width: v }))}
+          ${renderUnitField('Max Height', design.max_height, (v) => updateDesign({ max_height: v }))}
         </div>
 
         <div class="mc-section">
@@ -290,6 +298,7 @@ export abstract class BaseMagicModule implements MagicModule {
   private _renderActionConfig(
     action: ActionConfig | undefined,
     onChange: (action: ActionConfig) => void,
+    hass?: HomeAssistant,
   ): TemplateResult {
     const currentAction = action || { action: 'none' as ActionType };
 
@@ -309,6 +318,11 @@ export abstract class BaseMagicModule implements MagicModule {
           ],
           (v) => onChange({ ...currentAction, action: v as ActionType }),
         )}
+        ${currentAction.action === 'more-info' || currentAction.action === 'toggle'
+          ? renderEntityField('Entity', currentAction.entity, (v) =>
+              onChange({ ...currentAction, entity: v }), hass,
+            )
+          : nothing}
         ${currentAction.action === 'navigate'
           ? renderTextField('Navigation Path', currentAction.navigation_path, (v) =>
               onChange({ ...currentAction, navigation_path: v }),

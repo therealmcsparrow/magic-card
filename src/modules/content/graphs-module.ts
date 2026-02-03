@@ -62,13 +62,13 @@ class GraphsModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as GraphsModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderNumberField('Hours to Show', c.hours_to_show, (v) => onChange({ ...c, hours_to_show: v }), { min: 1, max: 168 })}
         ${renderNumberField('Points per Hour', c.points_per_hour, (v) => onChange({ ...c, points_per_hour: v }), { min: 1, max: 60 })}
         ${renderColorField('Line Color', c.line_color, (v) => onChange({ ...c, line_color: v }))}

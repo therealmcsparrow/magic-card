@@ -72,13 +72,13 @@ class ButtonModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as ButtonModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Label', c.label, (v) => onChange({ ...c, label: v }))}
         ${renderTextField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))}
         ${renderSelectField(

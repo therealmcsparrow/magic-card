@@ -1,34 +1,28 @@
-import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
+import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   MagicCardConfig,
   HomeAssistant,
   EditorState,
   EditorMode,
-  EditorTab,
   CardModule,
 } from '../types';
 import { EDITOR_TAG } from '../utils/constants';
 import { editorStyles } from './magic-card-editor.styles';
 import { EditorStateManager } from './state/editor-state';
-import { ModuleRegistry } from '../modules/module-registry';
 
 // Import editor modes
 import './modes/form-editor';
 import './modes/yaml-editor';
 import './modes/tree-editor';
 
-// Import editor tabs
-import './tabs/general-tab';
-import './tabs/actions-tab';
-import './tabs/logic-tab';
-import './tabs/design-tab';
-
 // Import panels
 import './panels/module-selector';
 
 // Import components
 import './components/color-picker';
+import './components/unit-field';
+import './components/settings-modal';
 
 @customElement(EDITOR_TAG)
 export class MagicCardEditor extends LitElement {
@@ -49,6 +43,9 @@ export class MagicCardEditor extends LitElement {
   @state()
   private _moduleSelectorTarget?: { rowIndex: number; colIndex: number };
 
+  @state()
+  private _showSettingsModal = false;
+
   private _stateManager!: EditorStateManager;
   private _unsubscribe?: () => void;
   private _pendingConfig?: MagicCardConfig;
@@ -67,6 +64,10 @@ export class MagicCardEditor extends LitElement {
 
     this._unsubscribe = this._stateManager.subscribe((state) => {
       this._editorState = state;
+      // Auto-open modal when module is selected
+      if (state.selectedPath?.moduleIndex !== undefined) {
+        this._showSettingsModal = true;
+      }
     });
 
     // Apply config that was set before connectedCallback
@@ -96,16 +97,15 @@ export class MagicCardEditor extends LitElement {
       return html`<div class="mc-editor">Loading...</div>`;
     }
 
-    const { editorMode, selectedPath } = this._editorState;
-    const selectedModule = this._stateManager.getSelectedModule();
+    const { editorMode } = this._editorState;
 
     return html`
       <div class="mc-editor">
         ${this._renderModeSwitcher(editorMode)}
         ${this._renderToolbar()}
         ${this._renderEditorMode(editorMode)}
-        ${selectedModule ? this._renderSettingsPanel(selectedModule) : nothing}
         ${this._showModuleSelector ? this._renderModuleSelectorDialog() : nothing}
+        ${this._renderSettingsModal()}
       </div>
     `;
   }
@@ -163,7 +163,8 @@ export class MagicCardEditor extends LitElement {
           @click=${() => this._stateManager.addRow('1')}
           title="Add Row"
         >
-          + Row
+          <ha-icon icon="mdi:table-row-plus-after" style="--mdc-icon-size:16px"></ha-icon>
+          Add Row
         </button>
       </div>
     `;
@@ -197,79 +198,48 @@ export class MagicCardEditor extends LitElement {
     }
   }
 
-  private _renderSettingsPanel(module: CardModule): TemplateResult {
-    const handler = ModuleRegistry.get(module.type);
-    if (!handler) return html``;
+  private _renderSettingsModal(): TemplateResult {
+    const selectedModule = this._stateManager?.getSelectedModule();
+    if (!selectedModule || !this._showSettingsModal) return html``;
 
-    const availableTabs = handler.getAvailableTabs();
-    const { activeTab, selectedPath } = this._editorState!;
-    const currentTab = availableTabs.includes(activeTab) ? activeTab : availableTabs[0];
-
-    const onModuleChange = (updated: CardModule) => {
-      if (selectedPath?.rowIndex !== undefined &&
-          selectedPath?.columnIndex !== undefined &&
-          selectedPath?.moduleIndex !== undefined) {
-        this._stateManager.updateModule(
-          selectedPath.rowIndex,
-          selectedPath.columnIndex,
-          selectedPath.moduleIndex,
-          updated,
-        );
-      }
-    };
+    const { selectedPath } = this._editorState!;
 
     return html`
-      <div class="mc-settings-panel">
-        <div class="mc-settings-header">
-          <ha-icon icon=${handler.metadata.icon} style="--mdc-icon-size:18px"></ha-icon>
-          ${handler.metadata.name}
-          <span class="mc-toolbar-spacer"></span>
-          <button class="mc-btn-icon" @click=${() => this._stateManager.setSelectedPath(null)}>
-            &times;
-          </button>
-        </div>
-
-        <div class="mc-settings-tabs">
-          ${availableTabs.map(
-            (tab) => html`
-              <button
-                class="mc-settings-tab ${currentTab === tab ? 'active' : ''}"
-                @click=${() => this._stateManager.setActiveTab(tab)}
-              >
-                ${tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            `,
-          )}
-        </div>
-
-        <div class="mc-settings-content">
-          ${this._renderTabContent(currentTab, module, handler, onModuleChange)}
-        </div>
-      </div>
+      <mc-settings-modal
+        .module=${selectedModule}
+        .hass=${this.hass}
+        .open=${true}
+        @close=${() => {
+          this._showSettingsModal = false;
+          this._stateManager.setSelectedPath(null);
+        }}
+        .setOnChange=${(fn: (updated: CardModule) => void) => {
+          // This is a bit hacky but works to pass the onChange handler
+        }}
+      ></mc-settings-modal>
     `;
   }
 
-  private _renderTabContent(
-    tab: EditorTab,
-    module: CardModule,
-    handler: import('../modules/module-types').MagicModule,
-    onChange: (updated: CardModule) => void,
-  ): TemplateResult {
-    switch (tab) {
-      case 'general':
-        return handler.renderGeneralTab(module, this.hass, onChange);
-      case 'actions':
-        return handler.renderActionsTab
-          ? handler.renderActionsTab(module, this.hass, onChange)
-          : html`<p>No actions available</p>`;
-      case 'logic':
-        return handler.renderLogicTab
-          ? handler.renderLogicTab(module, this.hass, onChange)
-          : html`<p>No logic available</p>`;
-      case 'design':
-        return handler.renderDesignTab
-          ? handler.renderDesignTab(module, this.hass, onChange)
-          : html`<p>No design options</p>`;
+  private _getSettingsModal(): import('./components/settings-modal').SettingsModal | null {
+    return this.shadowRoot?.querySelector('mc-settings-modal') ?? null;
+  }
+
+  protected updated(): void {
+    const modal = this._getSettingsModal();
+    if (modal && this._editorState?.selectedPath) {
+      const { selectedPath } = this._editorState;
+      modal.setOnChange((updated: CardModule) => {
+        if (selectedPath?.rowIndex !== undefined &&
+            selectedPath?.columnIndex !== undefined &&
+            selectedPath?.moduleIndex !== undefined) {
+          this._stateManager.updateModule(
+            selectedPath.rowIndex,
+            selectedPath.columnIndex,
+            selectedPath.moduleIndex,
+            updated,
+          );
+        }
+      });
     }
   }
 

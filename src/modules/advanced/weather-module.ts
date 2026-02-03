@@ -52,13 +52,13 @@ class WeatherModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as WeatherModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Weather Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Weather Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderToggleField('Show Temperature', c.show_temperature, (v) => onChange({ ...c, show_temperature: v }))}
         ${renderToggleField('Show Condition', c.show_condition, (v) => onChange({ ...c, show_condition: v }))}
         ${renderToggleField('Show Forecast', c.show_forecast, (v) => onChange({ ...c, show_forecast: v }))}

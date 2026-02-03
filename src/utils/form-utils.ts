@@ -46,7 +46,7 @@ export function renderSelectField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      <label class="mc-field-label">${label}</label>
+      ${label ? html`<label class="mc-field-label">${label}</label>` : nothing}
       <select @change=${(e: Event) => onChange((e.target as HTMLSelectElement).value)}>
         ${options.map(
           (opt) =>
@@ -80,7 +80,24 @@ export function renderEntityField(
   label: string,
   value: string | undefined,
   onChange: (value: string) => void,
+  hass?: unknown,
 ): TemplateResult {
+  // Use Home Assistant's entity picker if available
+  if (hass) {
+    return html`
+      <div class="mc-field">
+        <label class="mc-field-label">${label}</label>
+        <ha-entity-picker
+          .hass=${hass}
+          .value=${value || ''}
+          @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
+          allow-custom-entity
+        ></ha-entity-picker>
+      </div>
+    `;
+  }
+
+  // Fallback to text input
   return html`
     <div class="mc-field">
       <label class="mc-field-label">${label}</label>
@@ -107,6 +124,40 @@ export function renderColorField(
         .label=${label}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-color-picker>
+    </div>
+  `;
+}
+
+export function renderUnitField(
+  label: string,
+  value: string | undefined,
+  onChange: (value: string) => void,
+): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <label class="mc-field-label">${label}</label>
+      <mc-unit-field
+        .value=${value || ''}
+        @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
+      ></mc-unit-field>
+    </div>
+  `;
+}
+
+export function renderIconField(
+  label: string,
+  value: string | undefined,
+  onChange: (value: string) => void,
+): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <label class="mc-field-label">${label}</label>
+      <div class="mc-icon-field">
+        <ha-icon-picker
+          .value=${value || ''}
+          @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
+        ></ha-icon-picker>
+      </div>
     </div>
   `;
 }

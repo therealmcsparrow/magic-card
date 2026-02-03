@@ -73,13 +73,13 @@ class ForecastModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as ForecastModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Weather Entity', c.entity, (v) => onChange({ ...c, entity: v }))}
+        ${renderEntityField('Weather Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderSelectField('Forecast Type', c.forecast_type, [
           { label: 'Daily', value: 'daily' },
           { label: 'Hourly', value: 'hourly' },

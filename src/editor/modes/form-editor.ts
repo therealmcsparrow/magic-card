@@ -5,7 +5,8 @@ import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles } from '../magic-card-editor.styles';
 import { formEditorStyles } from './form-editor.styles';
-import { renderTextField, renderSelectField, renderColorField } from '../../utils/form-utils';
+import { renderTextField, renderSelectField, renderColorField, renderUnitField } from '../../utils/form-utils';
+import Sortable from 'sortablejs';
 
 @customElement('mc-form-editor')
 export class FormEditor extends LitElement {
@@ -18,6 +19,7 @@ export class FormEditor extends LitElement {
   @state() private _expandedSections = new Set<string>(['card']);
 
   private _unsubscribe?: () => void;
+  private _sortableInstances: Sortable[] = [];
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -31,6 +33,65 @@ export class FormEditor extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._unsubscribe?.();
+    this._destroySortables();
+  }
+
+  protected updated(): void {
+    this._initSortables();
+  }
+
+  private _destroySortables(): void {
+    this._sortableInstances.forEach(s => s.destroy());
+    this._sortableInstances = [];
+  }
+
+  private _initSortables(): void {
+    this._destroySortables();
+
+    // Sortable for rows
+    const rowsContainer = this.shadowRoot?.querySelector('.mc-rows-container');
+    if (rowsContainer) {
+      this._sortableInstances.push(
+        Sortable.create(rowsContainer as HTMLElement, {
+          handle: '.mc-drag-handle',
+          animation: 150,
+          ghostClass: 'mc-sortable-ghost',
+          onEnd: (evt) => {
+            if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
+              this.stateManager.moveRow(evt.oldIndex, evt.newIndex);
+            }
+          },
+        })
+      );
+    }
+
+    // Sortable for modules in each column
+    this.shadowRoot?.querySelectorAll('.mc-modules-container').forEach((container) => {
+      const rowIdx = parseInt(container.getAttribute('data-row') || '0');
+      const colIdx = parseInt(container.getAttribute('data-col') || '0');
+
+      this._sortableInstances.push(
+        Sortable.create(container as HTMLElement, {
+          group: 'modules',
+          handle: '.mc-module-drag',
+          animation: 150,
+          ghostClass: 'mc-sortable-ghost',
+          onEnd: (evt) => {
+            const fromRow = parseInt(evt.from.getAttribute('data-row') || '0');
+            const fromCol = parseInt(evt.from.getAttribute('data-col') || '0');
+            const toRow = parseInt(evt.to.getAttribute('data-row') || '0');
+            const toCol = parseInt(evt.to.getAttribute('data-col') || '0');
+
+            if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
+              this.stateManager.moveModule(
+                fromRow, fromCol, evt.oldIndex,
+                toRow, toCol, evt.newIndex
+              );
+            }
+          },
+        })
+      );
+    });
   }
 
   protected render(): TemplateResult {
@@ -40,7 +101,9 @@ export class FormEditor extends LitElement {
     return html`
       <div class="mc-form">
         ${this._renderCardSection(config)}
-        ${config.rows.map((row, ri) => this._renderRow(row, ri, selectedPath))}
+        <div class="mc-rows-container">
+          ${config.rows.map((row, ri) => this._renderRow(row, ri, selectedPath))}
+        </div>
       </div>
     `;
   }
@@ -63,16 +126,16 @@ export class FormEditor extends LitElement {
                 ${renderColorField('Background', config.background, (v) =>
                   this.stateManager.updateConfig({ ...config, background: v }),
                 )}
-                ${renderTextField('Border Radius', config.border_radius, (v) =>
+                ${renderUnitField('Border Radius', config.border_radius, (v) =>
                   this.stateManager.updateConfig({ ...config, border_radius: v }),
                 )}
-                ${renderTextField('Padding', config.padding, (v) =>
+                ${renderUnitField('Padding', config.padding, (v) =>
                   this.stateManager.updateConfig({ ...config, padding: v }),
                 )}
                 ${renderTextField('Box Shadow', config.box_shadow, (v) =>
                   this.stateManager.updateConfig({ ...config, box_shadow: v }),
                 )}
-                ${renderTextField('Card Height', config.card_height, (v) =>
+                ${renderUnitField('Card Height', config.card_height, (v) =>
                   this.stateManager.updateConfig({ ...config, card_height: v }),
                 )}
               </div>
@@ -88,30 +151,35 @@ export class FormEditor extends LitElement {
     selectedPath: EditorPath | null,
   ): TemplateResult {
     return html`
-      <div class="mc-row-item">
+      <div class="mc-row-item" data-row="${ri}">
         <div class="mc-row-header">
+          <span class="mc-drag-handle" title="Drag to reorder">
+            <ha-icon icon="mdi:drag" style="--mdc-icon-size:16px"></ha-icon>
+          </span>
           <ha-icon icon="mdi:view-sequential" style="--mdc-icon-size:16px"></ha-icon>
           <span class="mc-label">Row ${ri + 1}</span>
-          ${renderSelectField('', row.layout, [
-            { label: '1 Col', value: '1' },
-            { label: '1-1', value: '1-1' },
-            { label: '1-2', value: '1-2' },
-            { label: '2-1', value: '2-1' },
-            { label: '1-1-1', value: '1-1-1' },
-          ], (v) => this.stateManager.updateRow(ri, { layout: v }))}
+          <div class="mc-row-layout-select">
+            ${renderSelectField('', row.layout, [
+              { label: '1 Col', value: '1' },
+              { label: '1-1', value: '1-1' },
+              { label: '1-2', value: '1-2' },
+              { label: '2-1', value: '2-1' },
+              { label: '1-1-1', value: '1-1-1' },
+            ], (v) => this.stateManager.updateRow(ri, { layout: v }))}
+          </div>
           <button
-            class="mc-btn-icon"
+            class="mc-btn-icon mc-btn-add-col"
             @click=${() => this.stateManager.addColumn(ri)}
             title="Add column"
           >
             <ha-icon icon="mdi:table-column-plus-after" style="--mdc-icon-size:16px"></ha-icon>
           </button>
           <button
-            class="mc-btn-icon"
+            class="mc-btn-icon mc-btn-delete"
             @click=${() => this.stateManager.deleteRow(ri)}
             title="Delete row"
           >
-            &times;
+            <ha-icon icon="mdi:delete-outline" style="--mdc-icon-size:16px"></ha-icon>
           </button>
         </div>
         <div class="mc-row-body">
@@ -133,6 +201,7 @@ export class FormEditor extends LitElement {
     return html`
       <div class="mc-col-item">
         <div class="mc-col-header">
+          <ha-icon icon="mdi:view-column" style="--mdc-icon-size:14px"></ha-icon>
           <span class="mc-label">Column ${ci + 1}</span>
           ${canDeleteColumn ? html`
             <button
@@ -140,50 +209,56 @@ export class FormEditor extends LitElement {
               @click=${() => this.stateManager.deleteColumn(ri, ci)}
               title="Delete column"
             >
-              &times;
+              <ha-icon icon="mdi:close" style="--mdc-icon-size:12px"></ha-icon>
             </button>
           ` : nothing}
         </div>
-        ${col.modules.map((mod, mi) => {
-          const isSelected =
-            selectedPath?.rowIndex === ri &&
-            selectedPath?.columnIndex === ci &&
-            selectedPath?.moduleIndex === mi;
+        <div class="mc-modules-container" data-row="${ri}" data-col="${ci}">
+          ${col.modules.map((mod, mi) => {
+            const isSelected =
+              selectedPath?.rowIndex === ri &&
+              selectedPath?.columnIndex === ci &&
+              selectedPath?.moduleIndex === mi;
 
-          const handler = ModuleRegistry.get(mod.type);
+            const handler = ModuleRegistry.get(mod.type);
 
-          return html`
-            <div
-              class="mc-module-item ${isSelected ? 'selected' : ''}"
-              @click=${() =>
-                this.stateManager.setSelectedPath({
-                  rowIndex: ri,
-                  columnIndex: ci,
-                  moduleIndex: mi,
-                })}
-            >
-              <span class="mc-module-item-icon">
-                <ha-icon
-                  icon=${handler?.metadata.icon || 'mdi:puzzle'}
-                  style="--mdc-icon-size:16px"
-                ></ha-icon>
-              </span>
-              <span class="mc-module-item-name">
-                ${handler?.metadata.name || mod.type}
-              </span>
-              <span class="mc-module-item-type">${mod.type}</span>
-              <button
-                class="mc-btn-icon"
-                @click=${(e: Event) => {
-                  e.stopPropagation();
-                  this.stateManager.deleteModule(ri, ci, mi);
-                }}
+            return html`
+              <div
+                class="mc-module-item ${isSelected ? 'selected' : ''}"
+                @click=${() =>
+                  this.stateManager.setSelectedPath({
+                    rowIndex: ri,
+                    columnIndex: ci,
+                    moduleIndex: mi,
+                  })}
               >
-                &times;
-              </button>
-            </div>
-          `;
-        })}
+                <span class="mc-module-drag" title="Drag to reorder">
+                  <ha-icon icon="mdi:drag" style="--mdc-icon-size:14px"></ha-icon>
+                </span>
+                <span class="mc-module-item-icon">
+                  <ha-icon
+                    icon=${handler?.metadata.icon || 'mdi:puzzle'}
+                    style="--mdc-icon-size:16px"
+                  ></ha-icon>
+                </span>
+                <span class="mc-module-item-name">
+                  ${handler?.metadata.name || mod.type}
+                </span>
+                <span class="mc-module-item-type">${mod.type}</span>
+                <button
+                  class="mc-btn-icon mc-btn-small"
+                  @click=${(e: Event) => {
+                    e.stopPropagation();
+                    this.stateManager.deleteModule(ri, ci, mi);
+                  }}
+                  title="Delete module"
+                >
+                  <ha-icon icon="mdi:close" style="--mdc-icon-size:12px"></ha-icon>
+                </button>
+              </div>
+            `;
+          })}
+        </div>
         <button
           class="mc-add-module-btn"
           @click=${() =>
@@ -195,7 +270,8 @@ export class FormEditor extends LitElement {
               }),
             )}
         >
-          + Add Module
+          <ha-icon icon="mdi:plus" style="--mdc-icon-size:14px"></ha-icon>
+          Add Module
         </button>
       </div>
     `;

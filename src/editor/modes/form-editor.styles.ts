@@ -11,6 +11,12 @@ export const formEditorStyles = css`
     gap: 8px;
   }
 
+  .mc-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   /* Card-level settings */
   .mc-card-section {
     border: 1px solid var(--divider-color, #e5e7eb);
@@ -69,21 +75,67 @@ export const formEditorStyles = css`
   }
 
   .mc-row-header .mc-label {
+    min-width: 50px;
+  }
+
+  .mc-row-layout-select {
     flex: 1;
+    max-width: 100px;
+  }
+
+  .mc-row-layout-select .mc-field {
+    margin: 0;
+  }
+
+  .mc-row-layout-select select {
+    padding: 4px 8px;
+    font-size: 0.75rem;
   }
 
   .mc-row-body {
     padding: 8px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    gap: 8px;
+  }
+
+  /* Drag handles */
+  .mc-drag-handle,
+  .mc-module-drag {
+    cursor: grab;
+    color: var(--secondary-text-color, #6b7280);
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 4px;
+  }
+
+  .mc-drag-handle:hover,
+  .mc-module-drag:hover {
+    background: var(--divider-color, #e5e7eb);
+    color: var(--primary-text-color, #1a1a2e);
+  }
+
+  .mc-drag-handle:active,
+  .mc-module-drag:active {
+    cursor: grabbing;
+  }
+
+  /* Sortable ghost */
+  .mc-sortable-ghost {
+    opacity: 0.4;
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 20%, transparent);
   }
 
   /* Column */
   .mc-col-item {
+    flex: 1;
     border: 1px dashed var(--divider-color, #e5e7eb);
     border-radius: 6px;
     padding: 8px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .mc-col-header {
@@ -93,7 +145,6 @@ export const formEditorStyles = css`
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--secondary-text-color, #6b7280);
-    margin-bottom: 6px;
   }
 
   .mc-col-header .mc-label {
@@ -101,27 +152,33 @@ export const formEditorStyles = css`
   }
 
   .mc-col-header .mc-btn-small {
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-    opacity: 0.5;
+    opacity: 0;
+    transition: opacity 0.15s;
   }
 
-  .mc-col-header:hover .mc-btn-small {
+  .mc-col-item:hover .mc-col-header .mc-btn-small {
     opacity: 1;
+  }
+
+  .mc-modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 20px;
   }
 
   /* Module item */
   .mc-module-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     padding: 8px 10px;
     border: 1px solid var(--divider-color, #e5e7eb);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.15s;
     font-size: 0.8125rem;
+    background: var(--card-background-color, #fff);
   }
 
   .mc-module-item:hover {
@@ -141,6 +198,9 @@ export const formEditorStyles = css`
   .mc-module-item-name {
     flex: 1;
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mc-module-item-type {
@@ -151,12 +211,21 @@ export const formEditorStyles = css`
     border-radius: 4px;
   }
 
+  .mc-module-item .mc-btn-small {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .mc-module-item:hover .mc-btn-small {
+    opacity: 1;
+  }
+
   .mc-add-module-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 6px;
+    padding: 8px;
     border: 1px dashed var(--divider-color, #e5e7eb);
     border-radius: 6px;
     background: none;
@@ -170,5 +239,49 @@ export const formEditorStyles = css`
   .mc-add-module-btn:hover {
     border-color: var(--primary-color, #6366f1);
     color: var(--primary-color, #6366f1);
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 5%, transparent);
+  }
+
+  /* Button variants */
+  .mc-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    cursor: pointer;
+    color: var(--secondary-text-color, #6b7280);
+    transition: all 0.15s;
+  }
+
+  .mc-btn-icon:hover {
+    background: var(--divider-color, #e5e7eb);
+    color: var(--primary-text-color, #1a1a2e);
+  }
+
+  .mc-btn-small {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mc-btn-add-col {
+    color: var(--success-color, #22c55e);
+  }
+
+  .mc-btn-add-col:hover {
+    background: color-mix(in srgb, var(--success-color, #22c55e) 15%, transparent);
+    color: var(--success-color, #22c55e);
+  }
+
+  .mc-btn-delete {
+    color: var(--error-color, #ef4444);
+  }
+
+  .mc-btn-delete:hover {
+    background: color-mix(in srgb, var(--error-color, #ef4444) 15%, transparent);
+    color: var(--error-color, #ef4444);
   }
 `;
