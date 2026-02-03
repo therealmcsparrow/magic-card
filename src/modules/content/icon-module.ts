@@ -55,7 +55,7 @@ class IconModule extends BaseMagicModule {
           onChange({ ...c, use_entity_icon: v }),
         )}
         ${!c.use_entity_icon
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass)
           : nothing}
         ${renderTextField('Size', c.size, (v) => onChange({ ...c, size: v }))}
       </div>

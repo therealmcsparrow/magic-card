@@ -81,7 +81,7 @@ class ButtonModule extends BaseMagicModule {
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Label', c.label, (v) => onChange({ ...c, label: v }))}
-        ${renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))}
+        ${renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass)}
         ${renderSelectField(
           'Button Style',
           c.button_style,

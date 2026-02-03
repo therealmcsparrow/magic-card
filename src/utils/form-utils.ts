@@ -149,11 +149,13 @@ export function renderIconField(
   label: string,
   value: string | undefined,
   onChange: (value: string) => void,
+  hass?: unknown,
 ): TemplateResult {
   return html`
     <div class="mc-field">
       <label class="mc-field-label">${label}</label>
       <mc-icon-picker
+        .hass=${hass}
         .value=${value || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
       ></mc-icon-picker>
