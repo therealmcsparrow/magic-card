@@ -2885,8 +2885,9 @@
       text-align: center;
       color: var(--secondary-text-color, #757575);
     }
-  `,ui([be({attribute:!1})],hi.prototype,"hass",void 0),ui([be({type:String})],hi.prototype,"value",void 0),ui([be({type:String})],hi.prototype,"label",void 0),ui([ye()],hi.prototype,"_showModal",void 0),ui([ye()],hi.prototype,"_searchQuery",void 0),hi=ui([fe("mc-service-picker")],hi);var mi=function(e,t,r,i){var o,n=arguments.length,a=n<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(n<3?o(a):n>3?o(t,r,a):o(t,r))||a);return n>3&&a&&Object.defineProperty(t,r,a),a};let fi=class extends he{constructor(){super(...arguments),this.value="",this.label="Icon",this._showModal=!1}_openModal(){this._showModal=!0}_closeModal(){this._showModal=!1}_selectIcon(e){const t=e.detail.value;this.value!==t&&(this.value=t,this.dispatchEvent(new CustomEvent("value-changed",{detail:{value:t},bubbles:!0,composed:!0}))),this._closeModal()}_onInputChange(e){const t=e.target.value;this.value=t,this.dispatchEvent(new CustomEvent("value-changed",{detail:{value:t},bubbles:!0,composed:!0}))}render(){return V`
+  `,ui([be({attribute:!1})],hi.prototype,"hass",void 0),ui([be({type:String})],hi.prototype,"value",void 0),ui([be({type:String})],hi.prototype,"label",void 0),ui([ye()],hi.prototype,"_showModal",void 0),ui([ye()],hi.prototype,"_searchQuery",void 0),hi=ui([fe("mc-service-picker")],hi);var mi=function(e,t,r,i){var o,n=arguments.length,a=n<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(n<3?o(a):n>3?o(t,r,a):o(t,r))||a);return n>3&&a&&Object.defineProperty(t,r,a),a};let fi=class extends he{constructor(){super(...arguments),this.value="",this.label="Icon",this._showModal=!1,this._searchQuery=""}_openModal(){this._showModal=!0,this._searchQuery=""}_closeModal(){this._showModal=!1}_selectIcon(e){const t=e.detail.value;this.value!==t&&(this.value=t,this.dispatchEvent(new CustomEvent("value-changed",{detail:{value:t},bubbles:!0,composed:!0}))),this._closeModal()}_onInputChange(e){const t=e.target.value;this.value=t,this.dispatchEvent(new CustomEvent("value-changed",{detail:{value:t},bubbles:!0,composed:!0}))}render(){return V`
       <div class="mc-picker-row">
+        ${this.value?V`<div class="mc-picker-preview"><ha-icon .icon=${this.value}></ha-icon></div>`:""}
         <input
           type="text"
           class="mc-picker-input"
@@ -2901,7 +2902,7 @@
       </div>
 
       ${this._showModal?this._renderModal():""}
-    `}_renderModal(){return V`
+    `}_handleSearchChange(e){this._searchQuery=e.detail.value}_renderModal(){return V`
       <div class="mc-picker-overlay" @click=${this._closeModal}>
         <div class="mc-picker-modal" @click=${e=>e.stopPropagation()}>
           <div class="mc-picker-header">
@@ -2909,10 +2910,18 @@
             <span class="mc-picker-title">Select Icon</span>
             <button class="mc-picker-close" @click=${this._closeModal}>&times;</button>
           </div>
+          <div class="mc-picker-search">
+            <ha-icon-picker
+                .hass=${this.hass}
+                @value-changed=${this._handleSearchChange}
+                .label=$"Search icons"}
+            ></ha-icon-picker>
+          </div>
           <ha-icon-picker
             .hass=${this.hass}
             .value=${this.value}
             .label=${this.label}
+            .search=${this._searchQuery}
             @value-changed=${this._selectIcon}
           ></ha-icon-picker>
         </div>
@@ -2932,7 +2941,7 @@
       flex: 1;
       padding: 8px 12px;
       border: 1px solid var(--divider-color, #e0e0e0);
-      border-radius: 6px;
+      border-radius: 0 6px 6px 0;
       font-size: 0.875rem;
       background: var(--card-background-color, #fff);
       color: var(--primary-text-color, #212121);
@@ -2941,6 +2950,20 @@
       min-width: 0;
       box-sizing: border-box;
     }
+
+    .mc-picker-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        flex-shrink: 0;
+        border: 1px solid var(--divider-color, #e0e0e0);
+        border-right: none;
+        border-radius: 6px 0 0 6px;
+        color: var(--primary-color, #6366f1);
+        --mdc-icon-size: 22px;
+    }
+
 
     .mc-picker-input:focus {
       border-color: var(--primary-color, #03a9f4);
@@ -2984,15 +3007,15 @@
     }
 
     .mc-picker-modal {
-      background: var(--card-background-color, #fff);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      width: 420px;
-      max-width: 100%;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+        background: var(--card-background-color, #fff);
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        width: 800px;
+        max-width: 100%;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     .mc-picker-header {
@@ -3033,7 +3056,26 @@
     .mc-picker-close:hover {
       background: var(--divider-color, #e0e0e0);
     }
-  `,mi([be({attribute:!1})],fi.prototype,"hass",void 0),mi([be({type:String})],fi.prototype,"value",void 0),mi([be({type:String})],fi.prototype,"label",void 0),mi([ye()],fi.prototype,"_showModal",void 0),fi=mi([fe("mc-icon-picker")],fi);var gi=function(e,t,r,i){var o,n=arguments.length,a=n<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(n<3?o(a):n>3?o(t,r,a):o(t,r))||a);return n>3&&a&&Object.defineProperty(t,r,a),a};const vi={general:{label:"General",icon:"mdi:cog"},actions:{label:"Actions",icon:"mdi:gesture-tap"},conditions:{label:"Conditions",icon:"mdi:filter-outline"},design:{label:"Design",icon:"mdi:palette"}};let bi=class extends he{constructor(){super(...arguments),this.open=!1,this._activeTab="general"}_close(){this.dispatchEvent(new CustomEvent("close",{bubbles:!0,composed:!0}))}render(){if(!this.open||!this.module)return V``;const e=_e.get(this.module.type);if(!e)return V``;const t=e.getAvailableTabs(),r=t.includes(this._activeTab)?this._activeTab:t[0];return V`
+
+    .mc-picker-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    }
+
+    .mc-picker-search input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--divider-color, #e0e0e0);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .mc-picker-search input:focus {
+      border-color: var(--primary-color, #03a9f4);
+    }
+  `,mi([be({attribute:!1})],fi.prototype,"hass",void 0),mi([be({type:String})],fi.prototype,"value",void 0),mi([be({type:String})],fi.prototype,"label",void 0),mi([ye()],fi.prototype,"_showModal",void 0),mi([ye()],fi.prototype,"_searchQuery",void 0),fi=mi([fe("mc-icon-picker")],fi);var gi=function(e,t,r,i){var o,n=arguments.length,a=n<3?t:null===i?i=Object.getOwnPropertyDescriptor(t,r):i;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)a=Reflect.decorate(e,t,r,i);else for(var s=e.length-1;s>=0;s--)(o=e[s])&&(a=(n<3?o(a):n>3?o(t,r,a):o(t,r))||a);return n>3&&a&&Object.defineProperty(t,r,a),a};const vi={general:{label:"General",icon:"mdi:cog"},actions:{label:"Actions",icon:"mdi:gesture-tap"},conditions:{label:"Conditions",icon:"mdi:filter-outline"},design:{label:"Design",icon:"mdi:palette"}};let bi=class extends he{constructor(){super(...arguments),this.open=!1,this._activeTab="general"}_close(){this.dispatchEvent(new CustomEvent("close",{bubbles:!0,composed:!0}))}render(){if(!this.open||!this.module)return V``;const e=_e.get(this.module.type);if(!e)return V``;const t=e.getAvailableTabs(),r=t.includes(this._activeTab)?this._activeTab:t[0];return V`
       <div class="mc-modal-overlay" @click=${this._close}>
         <div class="mc-modal" @click=${e=>e.stopPropagation()}>
           <div class="mc-modal-header">

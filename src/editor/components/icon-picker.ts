@@ -1,5 +1,6 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { HomeAssistant } from '../../types';
 
 @customElement('mc-icon-picker')
 export class IconPicker extends LitElement {
@@ -18,7 +19,7 @@ export class IconPicker extends LitElement {
       flex: 1;
       padding: 8px 12px;
       border: 1px solid var(--divider-color, #e0e0e0);
-      border-radius: 6px;
+      border-radius: 0 6px 6px 0;
       font-size: 0.875rem;
       background: var(--card-background-color, #fff);
       color: var(--primary-text-color, #212121);
@@ -27,6 +28,20 @@ export class IconPicker extends LitElement {
       min-width: 0;
       box-sizing: border-box;
     }
+
+    .mc-picker-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        flex-shrink: 0;
+        border: 1px solid var(--divider-color, #e0e0e0);
+        border-right: none;
+        border-radius: 6px 0 0 6px;
+        color: var(--primary-color, #6366f1);
+        --mdc-icon-size: 22px;
+    }
+
 
     .mc-picker-input:focus {
       border-color: var(--primary-color, #03a9f4);
@@ -70,15 +85,15 @@ export class IconPicker extends LitElement {
     }
 
     .mc-picker-modal {
-      background: var(--card-background-color, #fff);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      width: 420px;
-      max-width: 100%;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+        background: var(--card-background-color, #fff);
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        width: 800px;
+        max-width: 100%;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     .mc-picker-header {
@@ -119,16 +134,37 @@ export class IconPicker extends LitElement {
     .mc-picker-close:hover {
       background: var(--divider-color, #e0e0e0);
     }
+
+    .mc-picker-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--divider-color, #e0e0e0);
+    }
+
+    .mc-picker-search input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--divider-color, #e0e0e0);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .mc-picker-search input:focus {
+      border-color: var(--primary-color, #03a9f4);
+    }
   `;
 
-  @property({ attribute: false }) hass?: unknown;
+  @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) label = 'Icon';
 
   @state() private _showModal = false;
+  @state() private _searchQuery = '';
 
   private _openModal(): void {
     this._showModal = true;
+    this._searchQuery = '';
   }
 
   private _closeModal(): void {
@@ -161,6 +197,7 @@ export class IconPicker extends LitElement {
   protected render(): TemplateResult {
     return html`
       <div class="mc-picker-row">
+        ${this.value ? html`<div class="mc-picker-preview"><ha-icon .icon=${this.value}></ha-icon></div>` : ''}
         <input
           type="text"
           class="mc-picker-input"
@@ -177,7 +214,11 @@ export class IconPicker extends LitElement {
       ${this._showModal ? this._renderModal() : ''}
     `;
   }
-  
+
+  private _handleSearchChange(ev: CustomEvent) {
+    this._searchQuery = ev.detail.value;
+  }
+
   private _renderModal(): TemplateResult {
     return html`
       <div class="mc-picker-overlay" @click=${this._closeModal}>
@@ -187,10 +228,18 @@ export class IconPicker extends LitElement {
             <span class="mc-picker-title">Select Icon</span>
             <button class="mc-picker-close" @click=${this._closeModal}>&times;</button>
           </div>
+          <div class="mc-picker-search">
+            <ha-icon-picker
+                .hass=${this.hass}
+                @value-changed=${this._handleSearchChange}
+                .label=$"Search icons"}
+            ></ha-icon-picker>
+          </div>
           <ha-icon-picker
             .hass=${this.hass}
             .value=${this.value}
             .label=${this.label}
+            .search=${this._searchQuery}
             @value-changed=${this._selectIcon}
           ></ha-icon-picker>
         </div>
