@@ -3278,7 +3278,6 @@
         ${Pe("Use Entity Icon",i.use_entity_icon,e=>r({...i,use_entity_icon:e}))}
         ${i.use_entity_icon?K:Oe("Icon",i.icon,e=>r({...i,icon:e}))}
         ${Oe("Size",i.size,e=>r({...i,size:e}))}
-        ${Ne("Color",i.icon_color,e=>r({...i,icon_color:e}))}
       </div>
     `}});_e.register(new class extends bi{constructor(){super(...arguments),this.metadata={type:"info",name:"Info",description:"Display entity name, state, and attributes",category:"content",icon:"mdi:information-outline"}}createDefault(){return{id:Ce("info"),type:"info",show_name:!0,show_state:!0,show_unit:!0}}renderPreview(e,t){const r=e,i=r.entity&&t?t.states[r.entity]:void 0,o=i?.attributes.friendly_name||r.entity||"No entity",n=i?t.formatEntityState(i):"—";return V`
       <div class="mc-module mc-info">

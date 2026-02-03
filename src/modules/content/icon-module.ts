@@ -58,10 +58,9 @@ class IconModule extends BaseMagicModule {
           ? renderTextField('Icon', c.icon, (v) => onChange({ ...c, icon: v }))
           : nothing}
         ${renderTextField('Size', c.size, (v) => onChange({ ...c, size: v }))}
-        ${renderColorField('Color', c.icon_color, (v) => onChange({ ...c, icon_color: v }))}
       </div>
     `;
   }
 }
-
+/*         ${renderColorField('Color', c.icon_color, (v) => onChange({ ...c, icon_color: v }))}  */
 ModuleRegistry.register(new IconModule());
