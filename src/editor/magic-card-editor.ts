@@ -33,6 +33,7 @@ import './components/icon-picker';
 import './components/settings-modal';
 import './components/card-picker';
 import './components/media-picker';
+import './components/template-picker';
 
 @customElement(EDITOR_TAG)
 export class MagicCardEditor extends LitElement {
@@ -58,6 +59,9 @@ export class MagicCardEditor extends LitElement {
 
   @state()
   private _showCardSettingsModal = false;
+
+  @state()
+  private _showTemplatePicker: 'create' | 'link' | null = null;
 
   private _stateManager!: EditorStateManager;
   private _unsubscribe?: () => void;
@@ -119,6 +123,7 @@ export class MagicCardEditor extends LitElement {
         ${this._renderEditorMode(editorMode)}
         ${this._showCardSettingsModal ? this._renderCardSettingsModal() : nothing}
         ${this._showModuleSelector ? this._renderModuleSelectorDialog() : nothing}
+        ${this._showTemplatePicker ? this._renderTemplatePicker() : nothing}
         ${this._renderSettingsModal()}
       </div>
     `;
@@ -172,6 +177,20 @@ export class MagicCardEditor extends LitElement {
           <ha-icon icon="mdi:redo" style="--mdc-icon-size:18px"></ha-icon>
         </button>
         <span class="mc-toolbar-spacer"></span>
+        <button
+          class="mc-toolbar-btn"
+          @click=${() => { this._showTemplatePicker = 'create'; }}
+          title="Create Template"
+        >
+          <ha-icon icon="mdi:file-document-plus-outline" style="--mdc-icon-size:18px"></ha-icon>
+        </button>
+        <button
+          class="mc-toolbar-btn"
+          @click=${() => { this._showTemplatePicker = 'link'; }}
+          title="Load Template"
+        >
+          <ha-icon icon="mdi:file-document-multiple-outline" style="--mdc-icon-size:18px"></ha-icon>
+        </button>
         <button
           class="mc-btn mc-btn-secondary"
           @click=${() => this._stateManager.addRow('1')}
@@ -285,6 +304,22 @@ export class MagicCardEditor extends LitElement {
       ></mc-module-selector>
     `;
   }
+
+  private _renderTemplatePicker(): TemplateResult {
+    return html`
+      <mc-template-picker
+        .mode=${this._showTemplatePicker!}
+        .config=${this._editorState!.config}
+        @close=${() => { this._showTemplatePicker = null; }}
+        @template-selected=${this._onTemplateSelected}
+      ></mc-template-picker>
+    `;
+  }
+
+  private _onTemplateSelected = (e: CustomEvent) => {
+    this._stateManager.updateConfig(e.detail.config);
+    this._showTemplatePicker = null;
+  };
 
   private _onAddModule = (e: CustomEvent) => {
     this._moduleSelectorTarget = e.detail;

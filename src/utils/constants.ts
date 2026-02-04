@@ -12,6 +12,8 @@ export const EDITOR_DEBOUNCE_MS = 200;
 export const UNDO_STACK_LIMIT = 50;
 export const TEMPLATE_CACHE_TTL_MS = 1000;
 
+export const TEMPLATES_STORAGE_KEY = 'magic-card-templates';
+
 export const MODULE_CATEGORIES = ['content', 'controls', 'layout', 'advanced'] as const;
 
 export const BREAKPOINTS = {
