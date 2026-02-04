@@ -401,32 +401,22 @@ export class ColorPicker extends LitElement {
       border-top: 1px solid var(--divider-color, #e5e7eb);
     }
 
-    .mc-btn {
-      padding: 8px 16px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      transition: all 0.15s;
+    .action-btn {
+        border-radius: 6px;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
     }
 
-    .mc-btn-primary {
-      background: var(--primary-color, #6366f1);
-      color: white;
+    .save-btn {
+        background-color: #4CAF50;
+        color: white;
     }
 
-    .mc-btn-primary:hover {
-      filter: brightness(1.1);
-    }
-
-    .mc-btn-secondary {
-      background: var(--divider-color, #e5e7eb);
-      color: var(--primary-text-color, #1a1a2e);
-    }
-
-    .mc-btn-secondary:hover {
-      filter: brightness(0.95);
+    .cancel-btn {
+        background-color: #f44336;
+        color: white;
     }
   `;
 
@@ -618,7 +608,7 @@ export class ColorPicker extends LitElement {
     this._isOpen = false;
   }
 
-  private _applyColor(): void {
+  private _handleSave(): void {
     this._emitChange();
     this._closeModal();
   }
@@ -759,7 +749,10 @@ export class ColorPicker extends LitElement {
         <div class="mc-modal" @click=${(e: Event) => e.stopPropagation()}>
           <div class="mc-modal-header">
             <span class="mc-modal-title">Color Picker</span>
-            <button class="mc-modal-close" @click=${this._closeModal}>&times;</button>
+            <div>
+                <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+                <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
+            </div>
           </div>
 
           <div class="mc-modal-body">
@@ -891,11 +884,6 @@ export class ColorPicker extends LitElement {
                 <button class="mc-add-saved-btn" @click=${this._addSavedColor} title="Save current color">+</button>
               </div>
             </div>
-          </div>
-
-          <div class="mc-modal-footer">
-            <button class="mc-btn mc-btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button class="mc-btn mc-btn-primary" @click=${this._applyColor}>Apply</button>
           </div>
         </div>
       </div>

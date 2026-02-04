@@ -376,12 +376,6 @@ export class EntityPicker extends LitElement {
                     <span class="mc-picker-item-state">${entity.state}</span>
                   </div>
                 `)
-              : html`<div class.mc-picker-item-name">${entity.name}</div>
-                      <div class="mc-picker-item-id">${entity.id}</div>
-                    </div>
-                    <span class="mc-picker-item-state">${entity.state}</span>
-                  </div>
-                `)
               : html`<div class="mc-picker-empty">No entities found</div>`
             }
           </div>
