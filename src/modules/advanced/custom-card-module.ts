@@ -45,9 +45,6 @@ class CustomCardModule extends BaseMagicModule {
     hash: string;
   }>();
 
-  // Track active configure modals
-  private _configureModalOpen = new Set<string>();
-
   // Cache editor elements keyed by module ID
   private _editorCache = new Map<string, {
     editor: HTMLElement | null;
@@ -227,7 +224,6 @@ class CustomCardModule extends BaseMagicModule {
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as CustomCardModuleConfig;
-    const isModalOpen = this._configureModalOpen.has(c.id);
 
     return html`
       <div class="mc-tab-content">
@@ -236,132 +232,45 @@ class CustomCardModule extends BaseMagicModule {
           An optional label to help you identify this card in the editor.
         </div>
         ${renderCardField('Card Type', c.card_type, (v) => {
-          // Clear editor cache when card type changes //
           this._editorCache.delete(c.id);
           onChange({ ...c, card_type: v });
         })}
         ${c.card_type
           ? html`
-            <button
-              class="mc-configure-btn"
-              @click=${() => {
-                this._configureModalOpen.add(c.id);
-                // Force re-render by dispatching a no-op change
-                onChange({ ...c });
-              }}
-            >
-              <ha-icon icon="mdi:cog" style="--mdc-icon-size: 18px;"></ha-icon>
-              Configure Card
-            </button>
+            <div class="mc-card-editor-section">
+              <div class="mc-card-editor-header">
+                <ha-icon icon="mdi:cog" style="--mdc-icon-size: 16px;"></ha-icon>
+                Card Configuration
+              </div>
+              <div class="mc-card-editor-body">
+                ${until(
+                  this._renderEditorContent(c, hass, onChange),
+                  html`<div class="mc-editor-loading">Loading editor...</div>`,
+                )}
+              </div>
+            </div>
           `
           : nothing}
       </div>
-      ${isModalOpen ? this._renderConfigureModal(c, hass, onChange) : nothing}
       <style>
-        .mc-configure-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 16px;
+        .mc-card-editor-section {
           border: 1px solid var(--divider-color, #e5e7eb);
           border-radius: 8px;
-          background: color-mix(in srgb, var(--primary-color, #6366f1) 8%, transparent);
-          color: var(--primary-color, #6366f1);
-          cursor: pointer;
-          font-size: 0.875rem;
-          font-weight: 500;
-          transition: all 0.15s;
-          width: 100%;
-          justify-content: center;
-        }
-        .mc-configure-btn:hover {
-          background: color-mix(in srgb, var(--primary-color, #6366f1) 14%, transparent);
-          border-color: var(--primary-color, #6366f1);
-        }
-        .mc-configure-modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 99999;
-          padding: 16px;
-        }
-        .mc-configure-modal {
-          background: var(--card-background-color, #fff);
-          border-radius: 12px;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-          width: 500px;
-          max-width: 100%;
-          max-height: 85vh;
-          display: flex;
-          flex-direction: column;
           overflow: hidden;
         }
-        .mc-configure-modal-header {
+        .mc-card-editor-header {
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 16px 20px;
-          border-bottom: 1px solid var(--divider-color, #e5e7eb);
-          background: color-mix(in srgb, var(--primary-color, #6366f1) 8%, transparent);
-        }
-        .mc-configure-modal-header ha-icon {
-          color: var(--primary-color, #6366f1);
-          --mdc-icon-size: 24px;
-        }
-        .mc-configure-modal-title {
-          flex: 1;
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: var(--primary-text-color, #1a1a2e);
-        }
-        .mc-configure-modal-close {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border: none;
-          background: none;
-          cursor: pointer;
-          color: var(--secondary-text-color, #6b7280);
-          border-radius: 6px;
-          font-size: 1.5rem;
-          line-height: 1;
-        }
-        .mc-configure-modal-close:hover {
-          background: var(--divider-color, #e5e7eb);
-          color: var(--primary-text-color, #1a1a2e);
-        }
-        .mc-configure-modal-body {
-          flex: 1;
-          overflow-y: auto;
-          padding: 20px;
-        }
-        .mc-configure-modal-footer {
-          display: flex;
-          justify-content: flex-end;
           gap: 8px;
-          padding: 16px 20px;
-          border-top: 1px solid var(--divider-color, #e5e7eb);
+          padding: 10px 12px;
+          font-size: 0.8125rem;
+          font-weight: 600;
+          color: var(--primary-color, #6366f1);
+          background: color-mix(in srgb, var(--primary-color, #6366f1) 6%, transparent);
+          border-bottom: 1px solid var(--divider-color, #e5e7eb);
         }
-        .mc-configure-modal-footer .mc-btn {
-          padding: 10px 20px;
-          border-radius: 6px;
-          border: none;
-          cursor: pointer;
-          font-size: 0.875rem;
-          font-weight: 500;
-          transition: all 0.15s;
-        }
-        .mc-configure-modal-footer .mc-btn-primary {
-          background: var(--primary-color, #6366f1);
-          color: white;
-        }
-        .mc-configure-modal-footer .mc-btn-primary:hover {
-          filter: brightness(1.1);
+        .mc-card-editor-body {
+          padding: 16px;
         }
         .mc-yaml-fallback textarea {
           width: 100%;
@@ -389,39 +298,6 @@ class CustomCardModule extends BaseMagicModule {
           font-size: 0.875rem;
         }
       </style>
-    `;
-  }
-
-  private _renderConfigureModal(
-    config: CustomCardModuleConfig,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-  ): TemplateResult {
-    const closeModal = () => {
-      this._configureModalOpen.delete(config.id);
-      // Trigger re-render
-      onChange({ ...config });
-    };
-
-    return html`
-      <div class="mc-configure-modal-overlay" @click=${closeModal}>
-        <div class="mc-configure-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-configure-modal-header">
-            <ha-icon icon="mdi:card-plus-outline"></ha-icon>
-            <span class="mc-configure-modal-title">Configure: ${config.card_type}</span>
-            <button class="mc-configure-modal-close" @click=${closeModal}>&times;</button>
-          </div>
-          <div class="mc-configure-modal-body">
-            ${until(
-              this._renderEditorContent(config, hass, onChange),
-              html`<div class="mc-editor-loading">Loading editor...</div>`,
-            )}
-          </div>
-          <div class="mc-configure-modal-footer">
-            <button class="mc-btn mc-btn-primary" @click=${closeModal}>Done</button>
-          </div>
-        </div>
-      </div>
     `;
   }
 
