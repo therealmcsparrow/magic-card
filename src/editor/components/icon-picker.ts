@@ -142,6 +142,12 @@ export class IconPicker extends LitElement {
       border-color: var(--primary-color, #03a9f4);
     }
 
+    .mc-picker-list {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
     .action-btn {
         border-radius: 6px;
         padding: 8px 12px;
@@ -191,6 +197,7 @@ export class IconPicker extends LitElement {
 
   private _selectIcon(e: CustomEvent): void {
     this._selectedIcon = e.detail.value;
+    this._searchQuery = e.detail.value;
   }
 
   private _onInputChange(e: InputEvent): void {
@@ -224,8 +231,8 @@ export class IconPicker extends LitElement {
     `;
   }
 
-  private _handleSearchChange(ev: CustomEvent) {
-    this._searchQuery = ev.detail.value;
+  private _handleSearchChange(ev: Event) {
+    this._searchQuery = (ev.target as HTMLInputElement).value;
   }
 
   private _renderModal(): TemplateResult {
@@ -243,19 +250,21 @@ export class IconPicker extends LitElement {
             </div>
           </div>
           <div class="mc-picker-search">
+            <input
+                type="text"
+                placeholder="Search icons..."
+               .value=${this._searchQuery}
+               @input=${this._handleSearchChange}
+            />
+          </div>
+          <div class="mc-picker-list">
             <ha-icon-picker
-                .hass=${this.hass}
-                @value-changed=${this._handleSearchChange}
-                .label=${"Search icons"}
+              .hass=${this.hass}
+              .value=${this._selectedIcon}
+              .search=${this._searchQuery}
+              @value-changed=${this._selectIcon}
             ></ha-icon-picker>
           </div>
-          <ha-icon-picker
-            .hass=${this.hass}
-            .value=${this.value}
-            .label=${this.label}
-            .search=${this._searchQuery}
-            @value-changed=${this._selectIcon}
-          ></ha-icon-picker>
         </div>
       </div>
     `;
