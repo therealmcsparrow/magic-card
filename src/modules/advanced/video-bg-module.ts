@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, VideoBgModuleConfig, EditorTab } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderToggleField } from '../../utils/form-utils';
+import { renderToggleField, renderMediaField } from '../../utils/form-utils';
 
 class VideoBgModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -56,14 +56,14 @@ class VideoBgModule extends BaseMagicModule {
 
   renderGeneralTab(
     config: CardModule,
-    _hass: HomeAssistant | undefined,
+    hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
   ): TemplateResult {
     const c = config as VideoBgModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderTextField('Video URL', c.url, (v) => onChange({ ...c, url: v }))}
-        ${renderTextField('Poster Image URL', c.poster, (v) => onChange({ ...c, poster: v }))}
+        ${renderMediaField('Video URL', c.url, (v) => onChange({ ...c, url: v }), hass, 'video')}
+        ${renderMediaField('Poster Image URL', c.poster, (v) => onChange({ ...c, poster: v }), hass, 'image')}
         ${renderToggleField('Autoplay', c.autoplay, (v) => onChange({ ...c, autoplay: v }))}
         ${renderToggleField('Loop', c.loop, (v) => onChange({ ...c, loop: v }))}
         ${renderToggleField('Muted', c.muted, (v) => onChange({ ...c, muted: v }))}

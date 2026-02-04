@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, ImageModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderToggleField, renderEntityField, renderSelectField } from '../../utils/form-utils';
+import { renderTextField, renderToggleField, renderEntityField, renderSelectField, renderMediaField } from '../../utils/form-utils';
 
 class ImageModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -73,7 +73,7 @@ class ImageModule extends BaseMagicModule {
           onChange({ ...c, entity_picture: v }),
         )}
         ${!c.entity_picture
-          ? renderTextField('Image URL', c.image, (v) => onChange({ ...c, image: v }))
+          ? renderMediaField('Image URL', c.image, (v) => onChange({ ...c, image: v }), hass, 'image')
           : nothing}
         ${renderTextField('Aspect Ratio', c.aspect_ratio, (v) =>
           onChange({ ...c, aspect_ratio: v }),

@@ -49,7 +49,7 @@ class CameraModule extends BaseMagicModule {
     const c = config as CameraModuleConfig;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Camera Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
+        ${renderEntityField('Camera Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, 'camera')}
         ${renderTextField('Aspect Ratio', c.aspect_ratio, (v) => onChange({ ...c, aspect_ratio: v }))}
         ${renderToggleField('Show Controls', c.show_controls, (v) => onChange({ ...c, show_controls: v }))}
       </div>

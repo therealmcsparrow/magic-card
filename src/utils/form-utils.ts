@@ -179,3 +179,23 @@ export function renderCardField(
     </div>
   `;
 }
+
+export function renderMediaField(
+  label: string,
+  value: string | undefined,
+  onChange: (value: string) => void,
+  hass?: unknown,
+  mediaType?: 'image' | 'video' | '',
+): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <label class="mc-field-label">${label}</label>
+      <mc-media-picker
+        .hass=${hass}
+        .value=${value || ''}
+        .mediaType=${mediaType || ''}
+        @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
+      ></mc-media-picker>
+    </div>
+  `;
+}

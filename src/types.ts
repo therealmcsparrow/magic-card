@@ -45,6 +45,24 @@ export interface HassLocale {
   time_format: string;
 }
 
+// ── Media Source types ──
+
+export interface MediaBrowseItem {
+  title: string;
+  media_class: string;
+  media_content_type: string;
+  media_content_id: string;
+  can_play: boolean;
+  can_expand: boolean;
+  thumbnail: string | null;
+  children?: MediaBrowseItem[];
+}
+
+export interface MediaResolveResult {
+  url: string;
+  mime_type: string;
+}
+
 // ── Card Configuration ──
 
 export interface MagicCardConfig {

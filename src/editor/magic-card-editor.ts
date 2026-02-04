@@ -32,6 +32,7 @@ import './components/service-picker';
 import './components/icon-picker';
 import './components/settings-modal';
 import './components/card-picker';
+import './components/media-picker';
 
 @customElement(EDITOR_TAG)
 export class MagicCardEditor extends LitElement {

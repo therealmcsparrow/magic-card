@@ -39,7 +39,7 @@ export class UnitField extends LitElement {
       border: 1px solid var(--divider-color, #e5e7eb);
       border-radius: 0 6px 6px 0;
       font-size: 0.75rem;
-      background: var(--divider-color, #e5e7eb);
+      background: var(--card-background-color, #e5e7eb);
       color: var(--primary-text-color, #1a1a2e);
       outline: none;
       cursor: pointer;
