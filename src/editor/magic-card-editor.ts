@@ -7,6 +7,11 @@ import {
   EditorMode,
   CardModule,
 } from '../types';
+import {
+  renderTextField,
+  renderColorField,
+  renderUnitField,
+} from '../utils/form-utils';
 import { EDITOR_TAG } from '../utils/constants';
 import { editorStyles } from './magic-card-editor.styles';
 import { EditorStateManager } from './state/editor-state';
@@ -48,6 +53,9 @@ export class MagicCardEditor extends LitElement {
 
   @state()
   private _showSettingsModal = false;
+
+  @state()
+  private _showCardSettingsModal = false;
 
   private _stateManager!: EditorStateManager;
   private _unsubscribe?: () => void;
@@ -109,6 +117,7 @@ export class MagicCardEditor extends LitElement {
         ${this._renderEditorMode(editorMode)}
         ${this._showModuleSelector ? this._renderModuleSelectorDialog() : nothing}
         ${this._renderSettingsModal()}
+        ${this._showCardSettingsModal ? this._renderCardSettingsModal() : nothing}
       </div>
     `;
   }
@@ -181,6 +190,7 @@ export class MagicCardEditor extends LitElement {
             .stateManager=${this._stateManager}
             .hass=${this.hass}
             @add-module=${this._onAddModule}
+            @open-card-settings=${() => { this._showCardSettingsModal = true; }}
           ></mc-form-editor>
         `;
       case 'yaml':
@@ -231,6 +241,37 @@ export class MagicCardEditor extends LitElement {
           this._stateManager.setSelectedPath(null);
         }}
       ></mc-settings-modal>
+    `;
+  }
+
+  private _renderCardSettingsModal(): TemplateResult {
+    const config = this._editorState!.config;
+    const updateConfig = (updates: Partial<MagicCardConfig>) => {
+      this._stateManager.updateConfig({ ...config, ...updates });
+    };
+
+    return html`
+      <div class="mc-modal-overlay" @click=${() => { this._showCardSettingsModal = false; }}>
+        <div class="mc-modal" @click=${(e: Event) => e.stopPropagation()}>
+          <div class="mc-modal-header">
+            <ha-icon icon="mdi:card-outline"></ha-icon>
+            <span class="mc-modal-title">Card Settings</span>
+            <button class="mc-modal-close" @click=${() => { this._showCardSettingsModal = false; }}>&times;</button>
+          </div>
+          <div class="mc-modal-body">
+            <div class="mc-tab-content">
+              ${renderColorField('Background', config.background, (v) => updateConfig({ background: v }))}
+              ${renderUnitField('Border Radius', config.border_radius, (v) => updateConfig({ border_radius: v }))}
+              ${renderUnitField('Padding', config.padding, (v) => updateConfig({ padding: v }))}
+              ${renderTextField('Box Shadow', config.box_shadow, (v) => updateConfig({ box_shadow: v }))}
+              ${renderUnitField('Card Height', config.card_height, (v) => updateConfig({ card_height: v }))}
+            </div>
+          </div>
+          <div class="mc-modal-footer">
+            <button class="mc-btn mc-btn-primary" @click=${() => { this._showCardSettingsModal = false; }}>Done</button>
+          </div>
+        </div>
+      </div>
     `;
   }
 

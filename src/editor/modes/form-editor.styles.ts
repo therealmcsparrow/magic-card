@@ -17,44 +17,31 @@ export const formEditorStyles = css`
     gap: 8px;
   }
 
-  /* Card-level settings */
-  .mc-card-section {
-    border: 1px solid var(--divider-color, #e5e7eb);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .mc-card-section-header {
+  /* Card header with name + settings button */
+  .mc-card-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--divider-color, #e5e7eb);
+    border-radius: 8px;
     background: color-mix(in srgb, var(--primary-color, #6366f1) 6%, transparent);
-    cursor: pointer;
-    user-select: none;
-    font-size: 0.8125rem;
-    font-weight: 600;
   }
 
-  .mc-card-section-header:hover {
-    background: color-mix(in srgb, var(--primary-color, #6366f1) 10%, transparent);
+  .mc-card-name-input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary-text-color, #1a1a2e);
+    outline: none;
+    padding: 4px 0;
   }
 
-  .mc-card-section-header .mc-chevron {
-    transition: transform 0.2s;
-    margin-left: auto;
-  }
-
-  .mc-card-section-header .mc-chevron.open {
-    transform: rotate(90deg);
-  }
-
-  .mc-card-section-body {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    border-top: 1px solid var(--divider-color, #e5e7eb);
+  .mc-card-name-input::placeholder {
+    color: var(--secondary-text-color, #6b7280);
+    font-weight: 400;
   }
 
   /* Row */

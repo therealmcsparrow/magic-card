@@ -39,13 +39,13 @@ class SliderModule extends BaseMagicModule {
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
     const min = c.min ?? 0;
     const max = c.max ?? 100;
-    const step = c.step ?? 1;
     const currentValue = entity
       ? c.attribute
         ? Number(entity.attributes[c.attribute] ?? min)
         : Number(entity.state)
       : Math.round((min + max) / 2);
     const isVertical = c.direction === 'vertical';
+    const percentage = max > min ? (currentValue - min) / (max - min) : 0;
 
     return html`
       <div
@@ -58,19 +58,13 @@ class SliderModule extends BaseMagicModule {
           ${isVertical ? 'height: 120px;' : 'width: 100%;'}
         "
       >
-        <input
-          type="range"
-          .value=${String(currentValue)}
-          min=${min}
-          max=${max}
-          step=${step}
-          style="
-            flex: 1;
-            accent-color: ${c.slider_color || 'var(--primary-color, #03a9f4)'};
-            ${isVertical ? 'writing-mode: vertical-lr; direction: rtl; height: 100%;' : 'width: 100%;'}
-            ${c.track_color ? `background: ${c.track_color};` : ''}
-          "
-        />
+        <div
+          class="mc-tile-slider ${isVertical ? 'mc-tile-slider--vertical' : ''}"
+          style="--slider-value: ${percentage}; --mc-slider-color: ${c.slider_color || 'var(--primary-color, #03a9f4)'}; ${c.track_color ? `--mc-slider-background: ${c.track_color};` : ''}"
+        >
+          <div class="mc-tile-slider-background"></div>
+          <div class="mc-tile-slider-bar"></div>
+        </div>
         ${c.show_value
           ? html`<span class="mc-slider-value" style="font-size: 14px; min-width: 36px; text-align: center;">
               ${currentValue}

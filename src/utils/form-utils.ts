@@ -80,6 +80,7 @@ export function renderEntityField(
   value: string | undefined,
   onChange: (value: string) => void,
   hass?: unknown,
+  domain?: string,
 ): TemplateResult {
   return html`
     <div class="mc-field">
@@ -87,6 +88,7 @@ export function renderEntityField(
       <mc-entity-picker
         .hass=${hass}
         .value=${value || ''}
+        .domain=${domain || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-entity-picker>
     </div>

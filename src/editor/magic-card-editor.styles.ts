@@ -312,4 +312,83 @@ export const editorStyles = css`
     border: 1px solid var(--mc-editor-border);
     border-radius: 6px;
   }
+
+  /* Card Settings Modal */
+  .mc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 16px;
+  }
+
+  .mc-modal {
+    background: var(--card-background-color, #fff);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    width: 480px;
+    max-width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .mc-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--divider-color, #e5e7eb);
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 8%, transparent);
+  }
+
+  .mc-modal-header ha-icon {
+    color: var(--primary-color, #6366f1);
+    --mdc-icon-size: 24px;
+  }
+
+  .mc-modal-title {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-text-color, #1a1a2e);
+  }
+
+  .mc-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--secondary-text-color, #6b7280);
+    border-radius: 6px;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .mc-modal-close:hover {
+    background: var(--divider-color, #e5e7eb);
+    color: var(--primary-text-color, #1a1a2e);
+  }
+
+  .mc-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  .mc-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--divider-color, #e5e7eb);
+  }
 `;

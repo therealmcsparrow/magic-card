@@ -165,29 +165,69 @@ export const magicCardStyles = css`
     background: var(--mc-border);
   }
 
-  .mc-slider-container {
+  .mc-tile-slider {
+    position: relative;
     width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .mc-slider {
-    flex: 1;
-    -webkit-appearance: none;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--mc-border);
-    outline: none;
-  }
-
-  .mc-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--mc-primary);
+    height: 40px;
+    border-radius: 12px;
+    overflow: hidden;
     cursor: pointer;
+  }
+
+  .mc-tile-slider--vertical {
+    width: 40px;
+    height: 100%;
+  }
+
+  .mc-tile-slider-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--mc-slider-background, var(--disabled-color, #9e9e9e));
+    opacity: 0.2;
+  }
+
+  .mc-tile-slider-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--mc-slider-color, var(--primary-color, #03a9f4));
+    border-radius: 12px;
+    transform: translate3d(calc((var(--slider-value, 0) - 1) * 100%), 0, 0);
+    transition: transform 180ms ease-in-out, background-color 180ms ease-in-out;
+  }
+
+  .mc-tile-slider-bar::after {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 5px;
+    margin: auto;
+    height: 50%;
+    width: 4px;
+    border-radius: 4px;
+    background-color: white;
+  }
+
+  .mc-tile-slider--vertical .mc-tile-slider-bar {
+    top: auto;
+    bottom: 0;
+    transform: translate3d(0, calc((1 - var(--slider-value, 0)) * 100%), 0);
+  }
+
+  .mc-tile-slider--vertical .mc-tile-slider-bar::after {
+    top: 5px;
+    right: 0;
+    left: 0;
+    bottom: auto;
+    width: 50%;
+    height: 4px;
   }
 
   .mc-slider-value {

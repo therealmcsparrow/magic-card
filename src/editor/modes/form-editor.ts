@@ -5,7 +5,7 @@ import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles } from '../magic-card-editor.styles';
 import { formEditorStyles } from './form-editor.styles';
-import { renderTextField, renderSelectField, renderColorField, renderUnitField } from '../../utils/form-utils';
+import { renderSelectField } from '../../utils/form-utils';
 
 // Drag state for native HTML5 drag and drop
 interface DragState {
@@ -23,7 +23,6 @@ export class FormEditor extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
 
   @state() private _editorState?: EditorState;
-  @state() private _expandedSections = new Set<string>(['card']);
   @state() private _collapsedRows = new Set<number>();
   @state() private _dragOver: { type: string; index: number; colIndex?: number } | null = null;
 
@@ -151,38 +150,27 @@ export class FormEditor extends LitElement {
   }
 
   private _renderCardSection(config: MagicCardConfig): TemplateResult {
-    const expanded = this._expandedSections.has('card');
     return html`
-      <div class="mc-card-section">
-        <div
-          class="mc-card-section-header"
-          @click=${() => this._toggleSection('card')}
+      <div class="mc-card-header">
+        <ha-icon icon="mdi:card-outline" style="--mdc-icon-size:18px; color: var(--primary-color, #6366f1);"></ha-icon>
+        <input
+          class="mc-card-name-input"
+          type="text"
+          placeholder="Card name"
+          .value=${config.name || ''}
+          @input=${(e: InputEvent) =>
+            this.stateManager.updateConfig({ ...config, name: (e.target as HTMLInputElement).value })}
+        />
+        <button
+          class="mc-btn-icon"
+          @click=${() =>
+            this.dispatchEvent(
+              new CustomEvent('open-card-settings', { bubbles: true, composed: true }),
+            )}
+          title="Card settings"
         >
-          <ha-icon icon="mdi:card-outline" style="--mdc-icon-size:18px"></ha-icon>
-          Card Settings
-          <span class="mc-chevron ${expanded ? 'open' : ''}">&#9654;</span>
-        </div>
-        ${expanded
-          ? html`
-              <div class="mc-card-section-body">
-                ${renderColorField('Background', config.background, (v) =>
-                  this.stateManager.updateConfig({ ...config, background: v }),
-                )}
-                ${renderUnitField('Border Radius', config.border_radius, (v) =>
-                  this.stateManager.updateConfig({ ...config, border_radius: v }),
-                )}
-                ${renderUnitField('Padding', config.padding, (v) =>
-                  this.stateManager.updateConfig({ ...config, padding: v }),
-                )}
-                ${renderTextField('Box Shadow', config.box_shadow, (v) =>
-                  this.stateManager.updateConfig({ ...config, box_shadow: v }),
-                )}
-                ${renderUnitField('Card Height', config.card_height, (v) =>
-                  this.stateManager.updateConfig({ ...config, card_height: v }),
-                )}
-              </div>
-            `
-          : nothing}
+          <ha-icon icon="mdi:cog" style="--mdc-icon-size:18px"></ha-icon>
+        </button>
       </div>
     `;
   }
@@ -353,15 +341,6 @@ export class FormEditor extends LitElement {
         </button>
       </div>
     `;
-  }
-
-  private _toggleSection(id: string): void {
-    if (this._expandedSections.has(id)) {
-      this._expandedSections.delete(id);
-    } else {
-      this._expandedSections.add(id);
-    }
-    this.requestUpdate();
   }
 
   private _toggleRow(ri: number): void {

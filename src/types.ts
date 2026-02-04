@@ -49,6 +49,7 @@ export interface HassLocale {
 
 export interface MagicCardConfig {
   type: string;
+  name?: string;
   rows: RowConfig[];
   background?: string;
   border_radius?: string;
