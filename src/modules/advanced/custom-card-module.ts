@@ -173,13 +173,16 @@ class CustomCardModule extends BaseMagicModule {
       // Wait for the element to be defined/upgraded
       await customElements.whenDefined(cardElement.localName);
 
-      const constructor = cardElement.constructor as { getConfigElement?: () => HTMLElement };
+      const constructor = cardElement.constructor as {
+        getConfigElement?: () => HTMLElement | Promise<HTMLElement>;
+      };
       if (typeof constructor.getConfigElement !== 'function') {
         this._editorCache.set(config.id, { editor: null, cardType, attempted: true });
         return null;
       }
 
-      const editor = constructor.getConfigElement();
+      // getConfigElement is async in HA - always await
+      const editor = await constructor.getConfigElement();
 
       // Wait for the editor element to upgrade if it has a custom tag
       if (editor.localName?.includes('-')) {
