@@ -252,6 +252,7 @@ export class EntityPicker extends LitElement {
 
   private _selectEntity(entityId: string): void {
     this._selectedEntityId = entityId;
+    this._searchQuery = entityId;
   }
 
   private _onInputChange(e: InputEvent): void {
