@@ -3996,9 +3996,9 @@
         ${this._renderModeSwitcher(e)}
         ${this._renderToolbar()}
         ${this._renderEditorMode(e)}
+        ${this._showCardSettingsModal?this._renderCardSettingsModal():K}
         ${this._showModuleSelector?this._renderModuleSelectorDialog():K}
         ${this._renderSettingsModal()}
-        ${this._showCardSettingsModal?this._renderCardSettingsModal():K}
       </div>
     `}_renderModeSwitcher(e){return Y`
       <div class="mc-mode-switcher">
@@ -4418,7 +4418,7 @@
         ${Ie("Button Style",r.button_style,[{label:"Default",value:"default"},{label:"Outline",value:"outline"},{label:"Flat",value:"flat"},{label:"Icon Only",value:"icon-only"}],e=>i({...r,button_style:e}))}
         ${Ee("Show State",r.show_state,e=>i({...r,show_state:e}))}
       </div>
-    `}});_e.register(new class extends Ar{constructor(){super(...arguments),this.metadata={type:"slider",name:"Slider",description:"Range slider for controlling numeric values",category:"controls",icon:"mdi:tune-vertical"}}createDefault(){return{id:Ce("slider"),type:"slider",min:0,max:100,step:1,show_value:!0,direction:"horizontal"}}renderPreview(e,t){const i=e,r=i.entity&&t?t.states[i.entity]:void 0,o=i.min??0,n=i.max??100,a=r?i.attribute?Number(r.attributes[i.attribute]??o):Number(r.state):Math.round((o+n)/2),s="vertical"===i.direction;return Y`
+    `}});_e.register(new class extends Ar{constructor(){super(...arguments),this.metadata={type:"slider",name:"Slider",description:"Range slider for controlling numeric values",category:"controls",icon:"mdi:tune-vertical"}}createDefault(){return{id:Ce("slider"),type:"slider",min:0,max:100,step:1,show_value:!0,direction:"horizontal"}}_createSliderHandler(e,t,i){const r="vertical"===i.direction,o=i.min??0,n=i.max??100,a=i.step??1;return s=>{s.stopPropagation();const c=s.currentTarget;c.setPointerCapture(s.pointerId);const l=e=>{const t=c.getBoundingClientRect();return r?Math.max(0,Math.min(1,1-(e.clientY-t.top)/t.height)):Math.max(0,Math.min(1,(e.clientX-t.left)/t.width))};c.style.setProperty("--slider-value",String(l(s)));const d=e=>{c.style.setProperty("--slider-value",String(l(e)))},p=r=>{c.removeEventListener("pointermove",d),c.removeEventListener("pointerup",p);const s=l(r),u=o+s*(n-o),m=Math.round(u/a)*a;this._callEntityService(e,t,m,i.attribute)};c.addEventListener("pointermove",d),c.addEventListener("pointerup",p)}}_callEntityService(e,t,i,r){const o=t.split(".")[0];switch(o){case"input_number":case"number":default:e.callService(o,"set_value",{entity_id:t,value:i});break;case"light":r&&"brightness"!==r?"color_temp"===r&&e.callService("light","turn_on",{entity_id:t,color_temp:Math.round(i)}):e.callService("light","turn_on",{entity_id:t,brightness_pct:Math.round(i)});break;case"fan":e.callService("fan","set_percentage",{entity_id:t,percentage:Math.round(i)});break;case"cover":e.callService("cover","set_cover_position",{entity_id:t,position:Math.round(i)});break;case"media_player":e.callService("media_player","volume_set",{entity_id:t,volume_level:i/100});break;case"climate":e.callService("climate","set_temperature",{entity_id:t,temperature:i})}}renderPreview(e,t){const i=e,r=i.entity&&t?t.states[i.entity]:void 0,o=i.min??0,n=i.max??100,a=r?i.attribute?Number(r.attributes[i.attribute]??o):Number(r.state):Math.round((o+n)/2),s="vertical"===i.direction,c=n>o?(a-o)/(n-o):0,l=i.entity&&t?this._createSliderHandler(t,i.entity,i):void 0;return Y`
       <div
         class="mc-module mc-slider"
         style="
@@ -4431,7 +4431,9 @@
       >
         <div
           class="mc-tile-slider ${s?"mc-tile-slider--vertical":""}"
-          style="--slider-value: ${n>o?(a-o)/(n-o):0}; --mc-slider-color: ${i.slider_color||"var(--primary-color, #03a9f4)"}; ${i.track_color?`--mc-slider-background: ${i.track_color};`:""}"
+          style="--slider-value: ${c}; --mc-slider-color: ${i.slider_color||"var(--primary-color, #03a9f4)"}; ${i.track_color?`--mc-slider-background: ${i.track_color};`:""} touch-action: none;"
+          @pointerdown=${l}
+          @click=${e=>e.stopPropagation()}
         >
           <div class="mc-tile-slider-background"></div>
           <div class="mc-tile-slider-bar"></div>
@@ -4954,4 +4956,4 @@ show_state: true"
           The <code>type</code> key is set automatically from Card Type. Do not include it here.
         </div>
       </div>
-    `}validate(e){const t=[];return e.card_type||t.push("Card type is required"),t}}),window.customCards=window.customCards||[],window.customCards.push({type:e,name:"Magic Card",description:"A fully open-source multi-module card with advanced editor",preview:!0,documentationURL:"https://github.com/your-repo/magic-card"}),console.info("%c MAGIC-CARD %c v0.0.99-beta2 ","color: white; background: #6366f1; font-weight: bold; padding: 2px 6px; border-radius: 4px 0 0 4px;","color: #6366f1; background: #e0e7ff; font-weight: bold; padding: 2px 6px; border-radius: 0 4px 4px 0;")})();
+    `}validate(e){const t=[];return e.card_type||t.push("Card type is required"),t}}),window.customCards=window.customCards||[],window.customCards.push({type:e,name:"Magic Card",description:"A fully open-source multi-module card with advanced editor",preview:!0,documentationURL:"https://github.com/your-repo/magic-card"}),console.info("%c MAGIC-CARD %c v0.0.99-beta3 ","color: white; background: #6366f1; font-weight: bold; padding: 2px 6px; border-radius: 4px 0 0 4px;","color: #6366f1; background: #e0e7ff; font-weight: bold; padding: 2px 6px; border-radius: 0 4px 4px 0;")})();

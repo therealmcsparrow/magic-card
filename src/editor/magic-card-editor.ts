@@ -117,9 +117,9 @@ export class MagicCardEditor extends LitElement {
         ${this._renderModeSwitcher(editorMode)}
         ${this._renderToolbar()}
         ${this._renderEditorMode(editorMode)}
+        ${this._showCardSettingsModal ? this._renderCardSettingsModal() : nothing}
         ${this._showModuleSelector ? this._renderModuleSelectorDialog() : nothing}
         ${this._renderSettingsModal()}
-        ${this._showCardSettingsModal ? this._renderCardSettingsModal() : nothing}
       </div>
     `;
   }
