@@ -362,9 +362,6 @@ export interface ButtonModuleConfig extends CardModule {
 
 export interface SliderModuleConfig extends CardModule {
   type: 'slider';
-  min?: number;
-  max?: number;
-  step?: number;
   attribute?: string;
   show_value?: boolean;
   slider_color?: string;

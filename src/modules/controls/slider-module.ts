@@ -1,7 +1,7 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, SliderModuleConfig } from '../../types';
+import { CardModule, HomeAssistant, HassEntity, SliderModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import {
@@ -9,7 +9,6 @@ import {
   renderToggleField,
   renderEntityField,
   renderSelectField,
-  renderNumberField,
   renderColorField,
 } from '../../utils/form-utils';
 
@@ -26,23 +25,70 @@ class SliderModule extends BaseMagicModule {
     return {
       id: generateId('slider'),
       type: 'slider',
-      min: 0,
-      max: 100,
-      step: 1,
       show_value: true,
       direction: 'horizontal',
     };
+  }
+
+  private _getEntityLimits(
+    entity: HassEntity | undefined,
+    attribute?: string,
+  ): { min: number; max: number; step: number } {
+    if (!entity) return { min: 0, max: 100, step: 1 };
+
+    const domain = entity.entity_id.split('.')[0];
+    const attrs = entity.attributes;
+
+    switch (domain) {
+      case 'input_number':
+      case 'number':
+        return {
+          min: Number(attrs.min ?? 0),
+          max: Number(attrs.max ?? 100),
+          step: Number(attrs.step ?? 1),
+        };
+      case 'light':
+        if (attribute === 'color_temp') {
+          return {
+            min: Number(attrs.min_mireds ?? 153),
+            max: Number(attrs.max_mireds ?? 500),
+            step: 1,
+          };
+        }
+        return { min: 0, max: 100, step: 1 };
+      case 'fan':
+        return {
+          min: 0,
+          max: 100,
+          step: Number(attrs.percentage_step ?? 1),
+        };
+      case 'cover':
+        return { min: 0, max: 100, step: 1 };
+      case 'media_player':
+        return { min: 0, max: 100, step: 1 };
+      case 'climate':
+        return {
+          min: Number(attrs.min_temp ?? 7),
+          max: Number(attrs.max_temp ?? 35),
+          step: Number(attrs.target_temp_step ?? 0.5),
+        };
+      default:
+        return {
+          min: Number(attrs.min ?? 0),
+          max: Number(attrs.max ?? 100),
+          step: Number(attrs.step ?? 1),
+        };
+    }
   }
 
   private _createSliderHandler(
     hass: HomeAssistant,
     entityId: string,
     config: SliderModuleConfig,
+    limits: { min: number; max: number; step: number },
   ): (e: PointerEvent) => void {
     const isVertical = config.direction === 'vertical';
-    const min = config.min ?? 0;
-    const max = config.max ?? 100;
-    const step = config.step ?? 1;
+    const { min, max, step } = limits;
 
     return (e: PointerEvent) => {
       e.stopPropagation();
@@ -118,8 +164,7 @@ class SliderModule extends BaseMagicModule {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as SliderModuleConfig;
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
-    const min = c.min ?? 0;
-    const max = c.max ?? 100;
+    const { min, max } = this._getEntityLimits(entity, c.attribute);
     const currentValue = entity
       ? c.attribute
         ? Number(entity.attributes[c.attribute] ?? min)
@@ -128,8 +173,9 @@ class SliderModule extends BaseMagicModule {
     const isVertical = c.direction === 'vertical';
     const percentage = max > min ? (currentValue - min) / (max - min) : 0;
 
+    const limits = this._getEntityLimits(entity, c.attribute);
     const handlePointerDown = c.entity && hass
-      ? this._createSliderHandler(hass, c.entity, c)
+      ? this._createSliderHandler(hass, c.entity, c, limits)
       : undefined;
 
     return html`
@@ -171,9 +217,6 @@ class SliderModule extends BaseMagicModule {
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass)}
         ${renderTextField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }))}
-        ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }))}
-        ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }))}
-        ${renderNumberField('Step', c.step, (v) => onChange({ ...c, step: v }), { min: 0.01, step: 0.01 })}
         ${renderToggleField('Show Value', c.show_value, (v) => onChange({ ...c, show_value: v }))}
         ${renderSelectField(
           'Direction',
