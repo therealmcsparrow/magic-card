@@ -236,7 +236,7 @@ class CustomCardModule extends BaseMagicModule {
           An optional label to help you identify this card in the editor.
         </div>
         ${renderCardField('Card Type', c.card_type, (v) => {
-          // Clear editor cache when card type changes
+          // Clear editor cache when card type changes //
           this._editorCache.delete(c.id);
           onChange({ ...c, card_type: v });
         })}
