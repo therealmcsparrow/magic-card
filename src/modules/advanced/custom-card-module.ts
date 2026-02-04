@@ -5,7 +5,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, CustomCardModuleConfig, EditorTab } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField } from '../../utils/form-utils';
+import { renderTextField, renderCardField } from '../../utils/form-utils';
 import { toYaml, fromYaml } from '../../utils/yaml-utils';
 
 // Cache card helpers singleton
@@ -235,15 +235,11 @@ class CustomCardModule extends BaseMagicModule {
         <div class="mc-field-hint" style="margin-top: -4px; margin-bottom: 8px;">
           An optional label to help you identify this card in the editor.
         </div>
-        ${renderTextField('Card Type', c.card_type, (v) => {
+        ${renderCardField('Card Type', c.card_type, (v) => {
           // Clear editor cache when card type changes
           this._editorCache.delete(c.id);
           onChange({ ...c, card_type: v });
         })}
-        <div class="mc-field-hint" style="margin-top: -4px; margin-bottom: 8px;">
-          Built-in: entities, button, gauge, markdown, etc.<br>
-          Custom: custom:mushroom-light-card, custom:mini-graph-card, etc.
-        </div>
         ${c.card_type
           ? html`
             <button

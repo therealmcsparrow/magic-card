@@ -163,3 +163,19 @@ export function renderIconField(
     </div>
   `;
 }
+
+export function renderCardField(
+  label: string,
+  value: string | undefined,
+  onChange: (value: string) => void,
+): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <label class="mc-field-label">${label}</label>
+      <mc-card-picker
+        .value=${value || ''}
+        @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
+      ></mc-card-picker>
+    </div>
+  `;
+}
