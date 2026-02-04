@@ -83,12 +83,19 @@ export class EntityPicker extends LitElement {
     }
 
     .mc-picker-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--divider-color, #e0e0e0);
-      background: color-mix(in srgb, var(--primary-color, #03a9f4) 8%, transparent);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--divider-color, #e0e0e0);
+        background: color-mix(in srgb, var(--primary-color, #03a9f4) 8%, transparent);
+    }
+    
+    .mc-picker-header-start {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .mc-picker-header ha-icon {
@@ -101,24 +108,6 @@ export class EntityPicker extends LitElement {
       font-size: 1rem;
       font-weight: 600;
       color: var(--primary-text-color, #212121);
-    }
-
-    .mc-picker-close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: var(--secondary-text-color, #757575);
-      border-radius: 6px;
-      font-size: 1.25rem;
-    }
-
-    .mc-picker-close:hover {
-      background: var(--divider-color, #e0e0e0);
     }
 
     .mc-picker-search {
@@ -212,6 +201,24 @@ export class EntityPicker extends LitElement {
       text-align: center;
       color: var(--secondary-text-color, #757575);
     }
+
+    .action-btn {
+        border-radius: 6px;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .save-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .cancel-btn {
+        background-color: #f44336;
+        color: white;
+    }
   `;
 
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -221,8 +228,10 @@ export class EntityPicker extends LitElement {
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
+  @state() private _selectedEntityId = '';
 
   private _openModal(): void {
+    this._selectedEntityId = this.value;
     this._showModal = true;
     this._searchQuery = '';
   }
@@ -231,14 +240,18 @@ export class EntityPicker extends LitElement {
     this._showModal = false;
   }
 
-  private _selectEntity(entityId: string): void {
-    this.value = entityId;
+  private _handleSave(): void {
+    this.value = this._selectedEntityId;
     this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: { value: entityId },
+      detail: { value: this._selectedEntityId },
       bubbles: true,
       composed: true,
     }));
     this._closeModal();
+  }
+
+  private _selectEntity(entityId: string): void {
+    this._selectedEntityId = entityId;
   }
 
   private _onInputChange(e: InputEvent): void {
@@ -332,9 +345,14 @@ export class EntityPicker extends LitElement {
       <div class="mc-picker-overlay" @click=${this._closeModal}>
         <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
           <div class="mc-picker-header">
-            <ha-icon icon="mdi:form-select"></ha-icon>
-            <span class="mc-picker-title">Select Entity</span>
-            <button class="mc-picker-close" @click=${this._closeModal}>&times;</button>
+            <div class="mc-picker-header-start">
+                <ha-icon icon="mdi:form-select"></ha-icon>
+                <span class="mc-picker-title">Select Entity</span>
+            </div>
+            <div>
+                <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+                <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
+            </div>
           </div>
           <div class="mc-picker-search">
             <input
@@ -353,6 +371,12 @@ export class EntityPicker extends LitElement {
                     </div>
                     <div class="mc-picker-item-content">
                       <div class="mc-picker-item-name">${entity.name}</div>
+                      <div class="mc-picker-item-id">${entity.id}</div>
+                    </div>
+                    <span class="mc-picker-item-state">${entity.state}</span>
+                  </div>
+                `)
+              : html`<div class.mc-picker-item-name">${entity.name}</div>
                       <div class="mc-picker-item-id">${entity.id}</div>
                     </div>
                     <span class="mc-picker-item-state">${entity.state}</span>

@@ -2914,7 +2914,7 @@
             <ha-icon-picker
                 .hass=${this.hass}
                 @value-changed=${this._handleSearchChange}
-                .label=$"Search icons"}
+                .label=${"Search icons"}
             ></ha-icon-picker>
           </div>
           <ha-icon-picker
@@ -2951,6 +2951,10 @@
       box-sizing: border-box;
     }
 
+    .mc-picker-input:focus {
+      border-color: var(--primary-color, #03a9f4);
+    }
+    
     .mc-picker-preview {
         display: flex;
         align-items: center;
@@ -2962,11 +2966,6 @@
         border-radius: 6px 0 0 6px;
         color: var(--primary-color, #6366f1);
         --mdc-icon-size: 22px;
-    }
-
-
-    .mc-picker-input:focus {
-      border-color: var(--primary-color, #03a9f4);
     }
 
     .mc-picker-btn {

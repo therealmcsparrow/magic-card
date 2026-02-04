@@ -29,6 +29,10 @@ export class IconPicker extends LitElement {
       box-sizing: border-box;
     }
 
+    .mc-picker-input:focus {
+      border-color: var(--primary-color, #03a9f4);
+    }
+    
     .mc-picker-preview {
         display: flex;
         align-items: center;
@@ -40,11 +44,6 @@ export class IconPicker extends LitElement {
         border-radius: 6px 0 0 6px;
         color: var(--primary-color, #6366f1);
         --mdc-icon-size: 22px;
-    }
-
-
-    .mc-picker-input:focus {
-      border-color: var(--primary-color, #03a9f4);
     }
 
     .mc-picker-btn {
@@ -97,12 +96,19 @@ export class IconPicker extends LitElement {
     }
 
     .mc-picker-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--divider-color, #e0e0e0);
-      background: color-mix(in srgb, var(--primary-color, #03a9f4) 8%, transparent);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--divider-color, #e0e0e0);
+        background: color-mix(in srgb, var(--primary-color, #03a9f4) 8%, transparent);
+    }
+    
+    .mc-picker-header-start {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .mc-picker-header ha-icon {
@@ -115,24 +121,6 @@ export class IconPicker extends LitElement {
       font-size: 1rem;
       font-weight: 600;
       color: var(--primary-text-color, #212121);
-    }
-
-    .mc-picker-close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: var(--secondary-text-color, #757575);
-      border-radius: 6px;
-      font-size: 1.25rem;
-    }
-
-    .mc-picker-close:hover {
-      background: var(--divider-color, #e0e0e0);
     }
 
     .mc-picker-search {
@@ -153,6 +141,24 @@ export class IconPicker extends LitElement {
     .mc-picker-search input:focus {
       border-color: var(--primary-color, #03a9f4);
     }
+
+    .action-btn {
+        border-radius: 6px;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .save-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .cancel-btn {
+        background-color: #f44336;
+        color: white;
+    }
   `;
 
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -161,8 +167,10 @@ export class IconPicker extends LitElement {
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
+  @state() private _selectedIcon = '';
 
   private _openModal(): void {
+    this._selectedIcon = this.value;
     this._showModal = true;
     this._searchQuery = '';
   }
@@ -171,17 +179,18 @@ export class IconPicker extends LitElement {
     this._showModal = false;
   }
 
-  private _selectIcon(e: CustomEvent): void {
-    const icon = e.detail.value;
-    if (this.value !== icon) {
-        this.value = icon;
-        this.dispatchEvent(new CustomEvent('value-changed', {
-            detail: { value: icon },
-            bubbles: true,
-            composed: true,
-        }));
-    }
+  private _handleSave(): void {
+    this.value = this._selectedIcon;
+    this.dispatchEvent(new CustomEvent('value-changed', {
+      detail: { value: this._selectedIcon },
+      bubbles: true,
+      composed: true,
+    }));
     this._closeModal();
+  }
+
+  private _selectIcon(e: CustomEvent): void {
+    this._selectedIcon = e.detail.value;
   }
 
   private _onInputChange(e: InputEvent): void {
@@ -224,15 +233,20 @@ export class IconPicker extends LitElement {
       <div class="mc-picker-overlay" @click=${this._closeModal}>
         <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
           <div class="mc-picker-header">
-            <ha-icon icon="mdi:emoticon-outline"></ha-icon>
-            <span class="mc-picker-title">Select Icon</span>
-            <button class="mc-picker-close" @click=${this._closeModal}>&times;</button>
+            <div class="mc-picker-header-start">
+                <ha-icon icon="mdi:emoticon-outline"></ha-icon>
+                <span class="mc-picker-title">Select Icon</span>
+            </div>
+            <div>
+                <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+                <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
+            </div>
           </div>
           <div class="mc-picker-search">
             <ha-icon-picker
                 .hass=${this.hass}
                 @value-changed=${this._handleSearchChange}
-                .label=$"Search icons"}
+                .label=${"Search icons"}
             ></ha-icon-picker>
           </div>
           <ha-icon-picker
