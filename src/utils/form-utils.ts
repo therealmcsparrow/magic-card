@@ -67,11 +67,10 @@ export function renderToggleField(
   return html`
     <div class="mc-field mc-field-toggle">
       <label class="mc-field-label">${label}</label>
-      <input
-        type="checkbox"
+      <ha-switch
         .checked=${value ?? false}
         @change=${(e: Event) => onChange((e.target as HTMLInputElement).checked)}
-      />
+      ></ha-switch>
     </div>
   `;
 }

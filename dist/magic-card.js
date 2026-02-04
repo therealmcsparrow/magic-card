@@ -1088,11 +1088,10 @@
   `}function Pe(e,t,r){return V`
     <div class="mc-field mc-field-toggle">
       <label class="mc-field-label">${e}</label>
-      <input
-        type="checkbox"
+      <ha-switch
         .checked=${t??!1}
         @change=${e=>r(e.target.checked)}
-      />
+      ></ha-switch>
     </div>
   `}function Re(e,t,r,i){return V`
     <div class="mc-field">
