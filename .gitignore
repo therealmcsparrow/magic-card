@@ -1,0 +1,6 @@
+node_modules/
+nul
+
+# Ignore all build artifacts except the HACS-distributed bundle
+dist/*
+!dist/magic-card.js
