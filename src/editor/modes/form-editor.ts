@@ -1,10 +1,11 @@
 import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant, MagicCardConfig, EditorState, EditorPath } from '../../types';
+import { HomeAssistant, MagicCardConfig, EditorState, EditorPath, RowConfig, ColumnConfig } from '../../types';
 import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorStyles, formEditorStyles } from '../../css/css';
 import { renderUnitField, renderBoxField } from '../../utils/form-utils';
+import '../components/design-panel';
 
 import '../components/box-field';
 
@@ -32,7 +33,7 @@ export class FormEditor extends LitElement {
   @state() private _collapsedRows = new Set<number>();
   @state() private _collapsedCols = new Set<string>();
   @state() private _dragOver: { type: string; index: number; colIndex?: number } | null = null;
-  @state() private _rowSettingsIndex: number | null = null;
+  @state() private _rowSettings: { rowIndex: number; colIndex?: number; tab: 'general' | 'design' | 'conditions' | 'actions' } | null = null;
 
   private _unsubscribe?: () => void;
   private _dragState: DragState | null = null;
@@ -280,6 +281,16 @@ export class FormEditor extends LitElement {
     return this._equalWeights(colCount);
   }
 
+  private _renderLayoutBar(row: RowConfig): TemplateResult {
+    const colCount = row.columns.length;
+    const weights = this._layoutToWeights(row.layout || this._layoutFromWeights(this._equalWeights(colCount)), colCount);
+    return html`
+      <span class="mc-layout-bar" aria-label="Layout: ${row.layout || 'balanced'}">
+        ${weights.map((w) => html`<span class="mc-layout-bar-seg" style="flex:${w}"></span>`)}
+      </span>
+    `;
+  }
+
   private _renderLayoutGrid(ri: number, row: import('../../types').RowConfig): TemplateResult {
     const colCount = row.columns.length;
     const options = this._getLayoutOptions(colCount);
@@ -335,7 +346,7 @@ export class FormEditor extends LitElement {
               </div>
             `}
       </div>
-      ${this._rowSettingsIndex !== null ? this._renderRowSettingsModal() : nothing}
+      ${this._rowSettings ? this._renderContainerSettingsModal() : nothing}
     `;
   }
 
@@ -404,7 +415,7 @@ export class FormEditor extends LitElement {
         @drop=${(e: DragEvent) => this._onRowDrop(e, ri)}
       >
         <div
-          class="mc-row-header ${this._rowSettingsIndex === ri ? 'selected' : ''}"
+          class="mc-row-header ${this._rowSettings?.rowIndex === ri ? 'selected' : ''}"
           tabindex="0"
           @keydown=${(e: KeyboardEvent) => this._onRowHeaderKeyDown(e, ri)}
           aria-label=${`Row ${ri + 1}. Press Alt+ArrowUp or Alt+ArrowDown to reorder.`}
@@ -420,10 +431,13 @@ export class FormEditor extends LitElement {
           </span>
           <span
             class="mc-row-header-toggle"
-            @click=${() => { this._rowSettingsIndex = ri; }}
+            @click=${() => { this._rowSettings = { rowIndex: ri, colIndex: undefined, tab: 'general' }; }}
           >
             <ha-icon icon="mdi:view-sequential" style="--mdc-icon-size:16px"></ha-icon>
             <span class="mc-label">Row ${ri + 1}</span>
+            <span class="mc-row-layout-bar" title="Column layout">
+              ${this._renderLayoutBar(row)}
+            </span>
           </span>
           <button
             class="mc-btn-icon mc-btn-add-col"
@@ -440,8 +454,8 @@ export class FormEditor extends LitElement {
             <ha-icon icon="mdi:delete-outline" style="--mdc-icon-size:16px"></ha-icon>
           </button>
           <button
-            class="mc-btn-icon"
-            @click=${() => { this._rowSettingsIndex = ri; }}
+            class="mc-btn-icon mc-btn-settings"
+            @click=${() => { this._rowSettings = { rowIndex: ri, colIndex: undefined, tab: 'general' }; }}
             title="Row settings"
           >
             <ha-icon icon="mdi:cog" style="--mdc-icon-size:16px"></ha-icon>
@@ -481,27 +495,35 @@ export class FormEditor extends LitElement {
         <div class="mc-col-header">
           <span
             class="mc-col-header-toggle"
-            @click=${() => this._toggleCol(ri, ci)}
+            @click=${() => { this._rowSettings = { rowIndex: ri, colIndex: ci, tab: 'general' }; }}
           >
             <ha-icon icon="mdi:view-column" style="--mdc-icon-size:14px"></ha-icon>
-            <span class="mc-label">Column ${ci + 1}</span>
+            <span class="mc-label">Col ${ci + 1}</span>
+            ${col.modules.length > 0 ? html`<span class="mc-col-badge">${col.modules.length}</span>` : nothing}
+          </span>
+          <button
+            class="mc-btn-icon mc-btn-small mc-btn-settings"
+            @click=${() => { this._rowSettings = { rowIndex: ri, colIndex: ci, tab: 'general' }; }}
+            title="Column settings"
+          >
+            <ha-icon icon="mdi:cog" style="--mdc-icon-size:12px"></ha-icon>
+          </button>
+          <span
+            class="mc-col-collapse-btn"
+            @click=${() => this._toggleCol(ri, ci)}
+            title="${isColCollapsed ? 'Expand' : 'Collapse'}"
+          >
+            <ha-icon icon="${isColCollapsed ? 'mdi:chevron-right' : 'mdi:chevron-down'}" style="--mdc-icon-size:12px"></ha-icon>
           </span>
           ${canDeleteColumn ? html`
             <button
-              class="mc-btn-icon mc-btn-small"
+              class="mc-btn-icon mc-btn-small mc-btn-delete"
               @click=${() => this.stateManager.deleteColumn(ri, ci)}
               title="Delete column"
             >
               <ha-icon icon="mdi:close" style="--mdc-icon-size:12px"></ha-icon>
             </button>
           ` : nothing}
-          <span
-            class="mc-col-collapse-btn"
-            @click=${() => this._toggleCol(ri, ci)}
-            title="${isColCollapsed ? 'Expand' : 'Collapse'}"
-          >
-            <span class="mc-chevron ${isColCollapsed ? '' : 'open'}">&#9654;</span>
-          </span>
         </div>
         <div
           class="mc-modules-container"
@@ -580,29 +602,319 @@ export class FormEditor extends LitElement {
     `;
   }
 
-  private _renderRowSettingsModal(): TemplateResult {
-    const ri = this._rowSettingsIndex!;
-    const row = this._editorState?.config.rows[ri];
+  private _renderContainerSettingsModal(): TemplateResult {
+    if (!this._rowSettings) return html``;
+    const { rowIndex, colIndex } = this._rowSettings;
+    const row = this._editorState?.config.rows[rowIndex];
     if (!row) return html``;
 
+    const isCol = colIndex !== undefined;
+    const column = isCol ? row.columns[colIndex] : null;
+    const isCollapsed = isCol
+      ? this._collapsedCols.has(`${rowIndex}:${colIndex}`)
+      : this._collapsedRows.has(rowIndex);
+
+    const title = isCol ? `Column ${colIndex! + 1} Settings` : `Row ${rowIndex + 1} Settings`;
+    const icon = isCol ? 'mdi:view-column' : 'mdi:view-sequential';
+
+    const tabs: Array<{ id: 'general' | 'design' | 'conditions' | 'actions'; label: string; icon: string }> = [
+      { id: 'general', label: 'General', icon: 'mdi:cog' },
+      { id: 'design', label: 'Design', icon: 'mdi:palette' },
+      { id: 'conditions', label: 'Conditions', icon: 'mdi:filter-outline' },
+      ...(!isCol ? [{ id: 'actions' as const, label: 'Actions', icon: 'mdi:gesture-tap' }] : []),
+    ];
+
     return html`
-      <div class="mc-modal-overlay" @click=${() => { this._rowSettingsIndex = null; }}>
-        <div class="mc-modal mc-modal-sm" @click=${(e: Event) => e.stopPropagation()}>
+      <div class="mc-modal-overlay" @click=${() => { this._rowSettings = null; }}>
+        <div class="mc-modal" @click=${(e: Event) => e.stopPropagation()}>
           <div class="mc-modal-header">
-            <ha-icon icon="mdi:view-sequential"></ha-icon>
-            <span class="mc-modal-title">Row ${ri + 1} Settings</span>
-            <button class="mc-modal-close" @click=${() => { this._rowSettingsIndex = null; }}>&times;</button>
+            <ha-icon icon=${icon}></ha-icon>
+            <span class="mc-modal-title">${title}</span>
+            <button class="mc-modal-close" @click=${() => { this._rowSettings = null; }}>&times;</button>
+          </div>
+          <div class="mc-modal-tabs">
+            ${tabs.map(t => html`
+              <button
+                class="mc-modal-tab ${this._rowSettings!.tab === t.id ? 'active' : ''}"
+                @click=${() => { this._rowSettings = { ...this._rowSettings!, tab: t.id }; }}
+              >
+                <ha-icon icon=${t.icon} style="--mdc-icon-size:16px"></ha-icon>
+                ${t.label}
+              </button>
+            `)}
           </div>
           <div class="mc-modal-body">
-            <div class="mc-tab-content">
-              ${this._renderLayoutGrid(ri, row)}
-              ${renderUnitField('Gap', row.gap, (v) => this.stateManager.updateRow(ri, { gap: v }))}
-              ${renderBoxField('Padding', row.padding, (v) => this.stateManager.updateRow(ri, { padding: v }), 'padding')}
-            </div>
+            ${this._rowSettings.tab === 'general' ? this._renderContainerGeneralTab(row, column, rowIndex, colIndex) : nothing}
+            ${this._rowSettings.tab === 'design' ? this._renderContainerDesignTab(row, column, rowIndex, colIndex) : nothing}
+            ${this._rowSettings.tab === 'conditions' ? this._renderContainerConditionsTab(row, column, rowIndex, colIndex) : nothing}
+            ${!isCol && this._rowSettings!.tab === 'actions' ? this._renderContainerActionsTab(row, column, rowIndex, colIndex) : nothing}
           </div>
           <div class="mc-modal-footer">
-            <button class="mc-btn mc-btn-primary" @click=${() => { this._rowSettingsIndex = null; }}>Done</button>
+            <button class="mc-btn mc-btn-primary" @click=${() => { this._rowSettings = null; }}>Done</button>
           </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderContainerGeneralTab(
+    row: RowConfig,
+    column: ColumnConfig | null,
+    ri: number,
+    ci: number | undefined,
+  ): TemplateResult {
+    if (column) {
+      // Column general: vertical align, gap, padding
+      return html`
+        <div class="mc-tab-content">
+          <div class="mc-field">
+            <label>Vertical Align</label>
+            <select
+              .value=${column.vertical_align || 'start'}
+              @change=${(e: Event) => {
+                const val = (e.target as HTMLSelectElement).value as 'start' | 'center' | 'end' | 'stretch';
+                this.stateManager.updateColumn(ri, ci!, { vertical_align: val });
+              }}
+            >
+              <option value="start">Top</option>
+              <option value="center">Center</option>
+              <option value="end">Bottom</option>
+              <option value="stretch">Stretch</option>
+            </select>
+          </div>
+          ${renderUnitField('Gap', column.gap, (v) => this.stateManager.updateColumn(ri, ci!, { gap: v }))}
+          ${renderBoxField('Padding', column.padding, (v) => this.stateManager.updateColumn(ri, ci!, { padding: v }), 'padding')}
+        </div>
+      `;
+    }
+    // Row general: layout, gap, padding
+    return html`
+      <div class="mc-tab-content">
+        ${this._renderLayoutGrid(ri, row)}
+        ${renderUnitField('Gap', row.gap, (v) => this.stateManager.updateRow(ri, { gap: v }))}
+        ${renderBoxField('Padding', row.padding, (v) => this.stateManager.updateRow(ri, { padding: v }), 'padding')}
+      </div>
+    `;
+  }
+
+  private _renderContainerDesignTab(
+    row: RowConfig,
+    column: ColumnConfig | null,
+    ri: number,
+    ci: number | undefined,
+  ): TemplateResult {
+    const design = column ? (column.design || {}) : (row.design || {});
+    const onChange = (updates: Record<string, unknown>) => {
+      if (column) {
+        this.stateManager.updateColumn(ri, ci!, { design: { ...column.design, ...updates } } as unknown as import('../../types').ColumnConfig);
+      } else {
+        this.stateManager.updateRow(ri, { design: { ...row.design, ...updates } } as unknown as import('../../types').RowConfig);
+      }
+    };
+    return html`
+      <mc-design-panel
+        .design=${design}
+        .hass=${this.hass}
+        .onChange=${onChange}
+      ></mc-design-panel>
+    `;
+  }
+
+  private _renderContainerConditionsTab(
+    row: RowConfig,
+    column: ColumnConfig | null,
+    ri: number,
+    ci: number | undefined,
+  ): TemplateResult {
+    const display = column ? (column.display || {}) : (row.display || {});
+    const displayConditions = display.conditions || [];
+    const displayMode = display.mode || 'every';
+    const config = this._editorState?.config;
+
+    return html`
+      <div class="mc-tab-content">
+        <div class="mc-mode-help">When conditions are not met, this ${column ? 'column' : 'row'} is hidden.</div>
+        ${displayConditions.length > 1 ? html`
+          <div class="mc-field">
+            <label>Condition Mode</label>
+            <select
+              .value=${displayMode}
+              @change=${(e: Event) => {
+                const val = (e.target as HTMLSelectElement).value as 'every' | 'any';
+                const updates = column
+                  ? { display: { ...column.display, mode: val } }
+                  : { display: { ...row.display, mode: val } };
+                if (column) {
+                  this.stateManager.updateColumn(ri, ci!, updates as unknown as ColumnConfig);
+                } else {
+                  this.stateManager.updateRow(ri, updates as unknown as RowConfig);
+                }
+              }}
+            >
+              <option value="every">All conditions (AND)</option>
+              <option value="any">Any condition (OR)</option>
+            </select>
+          </div>
+        ` : nothing}
+        <div class="mc-conditions-list">
+          ${displayConditions.map((cond: import('../../types').DisplayCondition, idx: number) => this._renderDisplayConditionRow(cond, idx, (updates) => {
+            const conditions = [...displayConditions];
+            conditions[idx] = { ...conditions[idx], ...updates };
+            const updates2 = column
+              ? { display: { ...column.display, conditions } }
+              : { display: { ...row.display, conditions } };
+            if (column) {
+              this.stateManager.updateColumn(ri, ci!, updates2 as unknown as ColumnConfig);
+            } else {
+              this.stateManager.updateRow(ri, updates2 as unknown as RowConfig);
+            }
+          }, () => {
+            const conditions = displayConditions.filter((_: import('../../types').DisplayCondition, i: number) => i !== idx);
+            const updates2 = column
+              ? { display: { ...column.display, conditions: conditions.length ? conditions : undefined } }
+              : { display: { ...row.display, conditions: conditions.length ? conditions : undefined } };
+            if (column) {
+              this.stateManager.updateColumn(ri, ci!, updates2 as unknown as ColumnConfig);
+            } else {
+              this.stateManager.updateRow(ri, updates2 as unknown as RowConfig);
+            }
+          }))}
+        </div>
+        <button class="mc-btn mc-btn-secondary" @click=${() => {
+          const newCond: import('../../types').DisplayCondition = { id: `cond-${Date.now()}`, type: 'state', entity: '', state: '' };
+          const conditions = [...displayConditions, newCond];
+          const updates2 = column
+            ? { display: { ...column.display, conditions } }
+            : { display: { ...row.display, conditions } };
+          if (column) {
+            this.stateManager.updateColumn(ri, ci!, updates2 as unknown as ColumnConfig);
+          } else {
+            this.stateManager.updateRow(ri, updates2 as unknown as RowConfig);
+          }
+        }}>
+          <ha-icon icon="mdi:plus" style="--mdc-icon-size:14px"></ha-icon>
+          Add Condition
+        </button>
+      </div>
+    `;
+  }
+
+  private _renderDisplayConditionRow(
+    cond: import('../../types').DisplayCondition,
+    idx: number,
+    onChange: (updates: Partial<import('../../types').DisplayCondition>) => void,
+    onRemove: () => void,
+  ): TemplateResult {
+    return html`
+      <div class="mc-condition-item">
+        <div class="mc-field">
+          <label>Type</label>
+          <select .value=${cond.type} @change=${(e: Event) => onChange({ type: (e.target as HTMLSelectElement).value as import('../../types').DisplayCondition['type'] })}>
+            <option value="state">State</option>
+            <option value="attribute">Attribute</option>
+            <option value="time">Time</option>
+            <option value="template">Template</option>
+          </select>
+        </div>
+        ${cond.type === 'state' || cond.type === 'attribute' ? html`
+          <div class="mc-field">
+            <label>Entity</label>
+            <input type="text" .value=${cond.entity || ''} @input=${(e: InputEvent) => onChange({ entity: (e.target as HTMLInputElement).value })} placeholder="sensor.temp" />
+          </div>
+          ${cond.type === 'attribute' ? html`
+            <div class="mc-field">
+              <label>Attribute</label>
+              <input type="text" .value=${cond.attribute || ''} @input=${(e: InputEvent) => onChange({ attribute: (e.target as HTMLInputElement).value })} />
+            </div>
+          ` : nothing}
+          <div class="mc-field">
+            <label>State equals</label>
+            <input type="text" .value=${cond.state || ''} @input=${(e: InputEvent) => onChange({ state: (e.target as HTMLInputElement).value })} />
+          </div>
+          <div class="mc-field">
+            <label>State not equals</label>
+            <input type="text" .value=${cond.state_not || ''} @input=${(e: InputEvent) => onChange({ state_not: (e.target as HTMLInputElement).value })} />
+          </div>
+        ` : nothing}
+        ${cond.type === 'time' ? html`
+          <div class="mc-field">
+            <label>After (HH:MM)</label>
+            <input type="time" .value=${cond.after || ''} @input=${(e: InputEvent) => onChange({ after: (e.target as HTMLInputElement).value })} />
+          </div>
+          <div class="mc-field">
+            <label>Before (HH:MM)</label>
+            <input type="time" .value=${cond.before || ''} @input=${(e: InputEvent) => onChange({ before: (e.target as HTMLInputElement).value })} />
+          </div>
+        ` : nothing}
+        ${cond.type === 'template' ? html`
+          <div class="mc-field">
+            <label>Template</label>
+            <textarea rows="3" .value=${cond.template || ''} @input=${(e: InputEvent) => onChange({ template: (e.target as HTMLInputElement).value })}></textarea>
+          </div>
+        ` : nothing}
+        <button class="mc-btn-icon" @click=${onRemove} title="Remove condition">
+          <ha-icon icon="mdi:close" style="--mdc-icon-size:14px"></ha-icon>
+        </button>
+      </div>
+    `;
+  }
+
+  private _renderContainerActionsTab(
+    row: RowConfig,
+    column: ColumnConfig | null,
+    ri: number,
+    ci: number | undefined,
+  ): TemplateResult {
+    // Actions tab only available for rows, not columns
+    const actions = row.actions || {};
+
+    return html`
+      <div class="mc-tab-content">
+        <div class="mc-mode-help">Define tap/hold/double-tap actions for this ${column ? 'column' : 'row'}.</div>
+        <div class="mc-field">
+          <label>Tap Action</label>
+          <select .value=${actions.tap_action?.action || 'none'} @change=${(e: Event) => {
+            const action = (e.target as HTMLSelectElement).value;
+            const updates = { actions: { ...row.actions, tap_action: action === 'none' ? undefined : { action } } };
+            this.stateManager.updateRow(ri, updates as unknown as RowConfig);
+          }}>
+            <option value="none">None</option>
+            <option value="toggle">Toggle</option>
+            <option value="perform-action">Perform Action</option>
+            <option value="navigate">Navigate</option>
+            <option value="url">URL</option>
+            <option value="more-info">More Info</option>
+          </select>
+        </div>
+                <div class="mc-field">
+          <label>Hold Action</label>
+          <select .value=${actions.hold_action?.action || 'none'} @change=${(e: Event) => {
+            const action = (e.target as HTMLSelectElement).value;
+            const updates = { actions: { ...row.actions, hold_action: action === 'none' ? undefined : { action } } };
+            this.stateManager.updateRow(ri, updates as unknown as RowConfig);
+          }}>
+            <option value="none">None</option>
+            <option value="toggle">Toggle</option>
+            <option value="perform-action">Perform Action</option>
+            <option value="navigate">Navigate</option>
+            <option value="url">URL</option>
+            <option value="more-info">More Info</option>
+          </select>
+        </div>
+        <div class="mc-field">
+          <label>Double Tap Action</label>
+          <select .value=${actions.double_tap_action?.action || 'none'} @change=${(e: Event) => {
+            const action = (e.target as HTMLSelectElement).value;
+            const updates = { actions: { ...row.actions, double_tap_action: action === 'none' ? undefined : { action } } };
+            this.stateManager.updateRow(ri, updates as unknown as RowConfig);
+          }}>
+            <option value="none">None</option>
+            <option value="toggle">Toggle</option>
+            <option value="perform-action">Perform Action</option>
+            <option value="navigate">Navigate</option>
+            <option value="url">URL</option>
+            <option value="more-info">More Info</option>
+          </select>
         </div>
       </div>
     `;

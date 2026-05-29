@@ -4095,6 +4095,52 @@ export const formEditorStyles = css`
     align-items: center;
     gap: 6px;
   }
+
+  /* Layout bar in row header */
+  .mc-row-layout-bar {
+    display: flex;
+    gap: 2px;
+    margin-left: 8px;
+    height: 12px;
+    align-items: center;
+    padding: 0 6px;
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 8%, transparent);
+    border-radius: 4px;
+  }
+
+  .mc-layout-bar {
+    display: flex;
+    gap: 2px;
+    height: 8px;
+    min-width: 32px;
+  }
+
+  .mc-layout-bar-seg {
+    border-radius: 2px;
+    background: var(--primary-color, #6366f1);
+    opacity: 0.5;
+    min-width: 3px;
+  }
+
+  /* Settings button on row/col header */
+  .mc-btn-settings {
+    color: var(--mc-text-secondary);
+  }
+
+  .mc-btn-settings:hover {
+    color: var(--primary-color, #6366f1);
+    background: color-mix(in srgb, var(--primary-color, #6366f1) 12%, transparent);
+  }
+
+  /* Column badge */
+  .mc-col-badge {
+    font-size: 0.625rem;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--success-color, #22c55e) 20%, transparent);
+    color: color-mix(in srgb, var(--success-color, #22c55e) 80%, var(--secondary-text-color));
+  }
 `;
 
 /* ================================================================== */

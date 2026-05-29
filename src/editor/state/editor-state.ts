@@ -179,6 +179,12 @@ export class EditorStateManager {
     this.updateConfig(config);
   }
 
+  updateColumn(rowIndex: number, colIndex: number, updates: Partial<ColumnConfig>): void {
+    const config = deepClone(this.state.config);
+    config.rows[rowIndex].columns[colIndex] = { ...config.rows[rowIndex].columns[colIndex], ...updates };
+    this.updateConfig(config);
+  }
+
   // ── Module Operations ──
 
   addModule(rowIndex: number, colIndex: number, type: ModuleType): void {
