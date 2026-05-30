@@ -1,6 +1,48 @@
+# Dependencies
 node_modules/
-nul
 
-# Ignore all build artifacts except the HACS-distributed bundle
-dist/*
+# Build output
+dist/
 !dist/magic-card.js
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+Thumbs.db:encryptable
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific
+nul
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+*.bak
+
+# TypeScript
+*.tsbuildinfo
+
+# Test coverage
+coverage/
