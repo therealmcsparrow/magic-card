@@ -1088,7 +1088,7 @@
   .mc-linked-popup {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
     margin-top: 4px;
     background: var(--card-background-color, #fff);
     border: 1px solid var(--mc-border);
@@ -8389,4 +8389,4 @@ show_state: true"
           The <code>type</code> key is set automatically from Card Type. Do not include it here.
         </div>
       </div>
-    `}validate(e){const t=[];return e.card_type||t.push("Card type is required"),t}}),window.customCards=window.customCards||[],window.customCards.push({type:n,name:"Magic Card",description:"A fully open-source multi-module card with advanced editor",preview:!0,documentationURL:"https://github.com/therealmcsparrow/magic-card"}),console.info("%c MAGIC-CARD %c v0.0.6-beta ","color: white; background: #6366f1; font-weight: bold; padding: 2px 6px; border-radius: 4px 0 0 4px;","color: #6366f1; background: #e0e7ff; font-weight: bold; padding: 2px 6px; border-radius: 0 4px 4px 0;")})();
+    `}validate(e){const t=[];return e.card_type||t.push("Card type is required"),t}}),window.customCards=window.customCards||[],window.customCards.push({type:n,name:"Magic Card",description:"A fully open-source multi-module card with advanced editor",preview:!0,documentationURL:"https://github.com/therealmcsparrow/magic-card"}),console.info("%c MAGIC-CARD %c v0.0.7-beta ","color: white; background: #6366f1; font-weight: bold; padding: 2px 6px; border-radius: 4px 0 0 4px;","color: #6366f1; background: #e0e7ff; font-weight: bold; padding: 2px 6px; border-radius: 0 4px 4px 0;")})();

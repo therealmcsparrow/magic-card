@@ -1016,7 +1016,7 @@ const editorLocalStyles = css`
   .mc-linked-popup {
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
     margin-top: 4px;
     background: var(--card-background-color, #fff);
     border: 1px solid var(--mc-border);
