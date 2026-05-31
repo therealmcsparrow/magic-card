@@ -339,7 +339,14 @@ export class FormEditor extends LitElement {
           ? this._renderEmptyState()
           : html`
               <div class="mc-kbd-hint">
-                Keyboard: <kbd>Alt</kbd> + <kbd>Arrow</kbd> to move rows/modules, <kbd>Enter</kbd> to edit.
+                <span>Keyboard: <kbd>Alt</kbd> + <kbd>Arrow</kbd> to move rows/modules, <kbd>Enter</kbd> to edit.</span>
+                <button
+                  class="mc-btn mc-btn-secondary mc-btn-compact"
+                  @click=${() => this.dispatchEvent(new CustomEvent('request-add-row', { bubbles: true, composed: true }))}
+                >
+                  <ha-icon icon="mdi:table-row-plus-after" style="--mdc-icon-size:14px"></ha-icon>
+                  Add Row
+                </button>
               </div>
               <div class="mc-rows-container">
                 ${config.rows.map((row, ri) => this._renderRow(row, ri, selectedPath))}

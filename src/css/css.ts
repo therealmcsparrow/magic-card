@@ -971,9 +971,8 @@ const editorLocalStyles = css`
   .mc-linked-indicator {
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 32px;
+    gap: 6px;
+    padding: 4px 10px;
     height: 32px;
     color: var(--mc-primary);
     background: var(--mc-primary-light);
@@ -981,6 +980,15 @@ const editorLocalStyles = css`
     cursor: pointer;
     transition: all 0.15s;
     border: none;
+    font-size: var(--ha-font-size-s, 0.875rem);
+    font-weight: 500;
+  }
+
+  .mc-toolbar-template-name {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .mc-linked-indicator:hover {
@@ -3593,8 +3601,18 @@ export const formEditorStyles = css`
   }
 
   .mc-kbd-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: var(--ha-font-size-xs, 0.75rem);
     color: var(--secondary-text-color, #6b7280);
+  }
+
+  .mc-kbd-hint > span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
   }
 
   .mc-kbd-hint kbd {

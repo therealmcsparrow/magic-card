@@ -268,6 +268,44 @@ export class MagicCardEditor extends LitElement {
   private _renderToolbar(): TemplateResult {
     return html`
       <div class="mc-editor-toolbar">
+        ${this._linkedTemplate
+          ? html`
+              <div class="mc-toolbar-linked-container">
+                <button
+                  type="button"
+                  class="mc-linked-indicator"
+                  title="Linked to template '${this._linkedTemplate}'"
+                  aria-label="Open template link details"
+                  @click=${() => { this._showLinkedPopup = !this._showLinkedPopup; }}
+                >
+                  <ha-icon icon="mdi:link-variant" style="--mdc-icon-size:18px"></ha-icon>
+                  <span class="mc-toolbar-template-name">${this._linkedTemplate}</span>
+                  ${this._getTotalNotSyncedCount() > 0 ? html`
+                    <span class="mc-linked-badge">${this._getTotalNotSyncedCount()}</span>
+                  ` : nothing}
+                </button>
+                ${this._showLinkedPopup ? this._renderLinkedPopup() : nothing}
+              </div>
+            `
+          : html`
+              <button
+                class="mc-toolbar-btn"
+                @click=${() => { this._showTemplatePicker = 'create'; }}
+                title="Create Template"
+              >
+                <ha-icon icon="mdi:file-document-plus-outline" style="--mdc-icon-size:18px"></ha-icon>
+                Create
+              </button>
+              <button
+                class="mc-toolbar-btn"
+                @click=${() => { this._showTemplatePicker = 'link'; }}
+                title="Load Template"
+              >
+                <ha-icon icon="mdi:file-document-multiple-outline" style="--mdc-icon-size:18px"></ha-icon>
+                Load
+              </button>
+            `}
+        <span class="mc-toolbar-spacer"></span>
         <button
           class="mc-toolbar-btn"
           ?disabled=${!this._stateManager.canUndo()}
@@ -283,49 +321,6 @@ export class MagicCardEditor extends LitElement {
           title="Redo"
         >
           <ha-icon icon="mdi:redo" style="--mdc-icon-size:18px"></ha-icon>
-        </button>
-        <span class="mc-toolbar-spacer"></span>
-        ${this._linkedTemplate
-          ? html`
-              <div class="mc-toolbar-linked-container">
-                <button
-                  type="button"
-                  class="mc-linked-indicator"
-                  title="Linked to template '${this._linkedTemplate}'"
-                  aria-label="Open template link details"
-                  @click=${() => { this._showLinkedPopup = !this._showLinkedPopup; }}
-                >
-                  <ha-icon icon="mdi:link-variant" style="--mdc-icon-size:18px"></ha-icon>
-                  ${this._getTotalNotSyncedCount() > 0 ? html`
-                    <span class="mc-linked-badge">${this._getTotalNotSyncedCount()}</span>
-                  ` : nothing}
-                </button>
-                ${this._showLinkedPopup ? this._renderLinkedPopup() : nothing}
-              </div>
-            `
-          : html`
-              <button
-                class="mc-toolbar-btn"
-                @click=${() => { this._showTemplatePicker = 'create'; }}
-                title="Create Template"
-              >
-                <ha-icon icon="mdi:file-document-plus-outline" style="--mdc-icon-size:18px"></ha-icon>
-              </button>
-              <button
-                class="mc-toolbar-btn"
-                @click=${() => { this._showTemplatePicker = 'link'; }}
-                title="Load Template"
-              >
-                <ha-icon icon="mdi:file-document-multiple-outline" style="--mdc-icon-size:18px"></ha-icon>
-              </button>
-            `}
-        <button
-          class="mc-btn mc-btn-secondary"
-          @click=${() => this._handleAddRow()}
-          title="Add Row"
-        >
-          <ha-icon icon="mdi:table-row-plus-after" style="--mdc-icon-size:16px"></ha-icon>
-          Add Row
         </button>
       </div>
       ${this._showSyncDialog ? this._renderSyncDialog() : nothing}
