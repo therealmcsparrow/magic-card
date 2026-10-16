@@ -6,7 +6,7 @@ import { animationDocList } from '../utils/custom-animations';
 import { EDITOR_TAG } from '../utils/constants';
 import { editorSystem } from '../css/editor-system';
 import { EditorStateManager } from './state/editor-state';
-import { clearNotSynced, stripForTemplate } from './state/template-sync';
+import { clearNotSynced, countNotSynced, stripForTemplate } from './state/template-sync';
 import { selectionFromKey, selectionToPath } from './studio/selection';
 import { PickerDialogController } from './components/picker-parts';
 import type { ChildStep } from '../utils/module-path';
@@ -340,8 +340,13 @@ update all linked cards with this structural change?</p><div class="actions">
       const json = new Map(saved.map((d) => [d.id, JSON.stringify(d)]));
       const own = animationDocList(c.custom_animations);
       const keep = own.filter((d) => c.hidden_animations?.includes(d.id as string) || json.get(d.id) !== JSON.stringify(d));
-      if (c.template === name && keep.length < own.length && !c.not_synced?.includes('custom_animations'))
-        m.updateConfig({ ...c, custom_animations: keep.length ? keep : undefined }, false);
+      const prune = c.template === name && keep.length < own.length && !c.not_synced?.includes('custom_animations');
+      // the template now equals the card: its override markers go, in the same step (hidden ids stay)
+      if (c.template !== name || (!prune && !countNotSynced(c) && !c.not_synced)) return;
+      const next = clearNotSynced(c);
+      if (c.hidden_animations) next.hidden_animations = c.hidden_animations;
+      if (prune) next.custom_animations = keep.length ? keep : undefined;
+      m.updateConfig(next);
     } catch (err) {
       console.warn('Magic Card Editor: Failed to save template', name, err);
     }
