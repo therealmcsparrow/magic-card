@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.03 (2026-10-16)
+
+### Fixes
+-   Animate icon: a This icon animation made on a module that held an edited copy of a My animations animation was stored under the copy's id, so the panel showed no parts and the next icon change removed the animation. It now gets its own id and follows the icon. A library animation picked over such a copy also gets its own id, and Make a copy of such a copy stays a My animations copy.
+
 ## 2026.10.02 (2026-10-16)
 
 ### Editor
