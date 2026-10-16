@@ -4,12 +4,14 @@ import { validateAnimationDoc } from '../../../anim-studio/model';
 import '../../../anim-studio/model-v2';
 import type { IconAnimatorHost } from './loader';
 import type { AnimatedIconPick } from './animated-icon-grid';
+import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { cardState, patchCard } from './card-request';
 import {
   cardIds,
   iconEntry,
   newQuickId,
   referenceCount,
+  storedDoc,
   removeInlineDoc,
   upsertInlineDoc,
   withQuickEntry,
@@ -64,4 +66,18 @@ export function pickAnimatedIcon(
   write(pick.entry.icon, id);
   patchCard(from, (c) => upsertInlineDoc(c, doc, h.customIds(c)), true);
   return true;
+}
+
+/**
+ * The grid tile the module's icon entry stands for: a library reference gives its document id, a
+ * quick document gives `lib:<entry id>` when its name is a built-in entry's, else ''.
+ */
+export function currentIconPick(h: IconAnimatorHost, from: EventTarget, module: CardModule): string {
+  const ie = iconEntry(h.readAnimations(module.design ?? {}));
+  if (!ie) return '';
+  if (!ie.quick) return ie.id;
+  const sm = cardState(from);
+  const name = sm && storedDoc(sm.getConfig(), sm.getState().templateAnimations, ie.id)?.doc.name;
+  const hit = ICON_LIBRARY.find((e) => e.name === name);
+  return hit ? `lib:${hit.id}` : '';
 }

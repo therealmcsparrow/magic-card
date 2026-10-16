@@ -56,6 +56,7 @@ export const followIcons = (sm: CardState, prev: MagicCardConfig, next: MagicCar
     .catch(() => {});
 
 let pending: Promise<boolean> | undefined;
+let chunk: typeof import('./icon-animator-entry') | undefined;
 
 /** Load the chunk once and define <mc-icon-animator>; false when it cannot load (retried next time). */
 export function loadIconAnimator(): Promise<boolean> {
@@ -63,6 +64,7 @@ export function loadIconAnimator(): Promise<boolean> {
   // counts as a failure too: the panel goes back to its button and says so
   pending ??= import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
     .then((m) => {
+      chunk = m;
       m.defineIconAnimator(host);
       m.defineAnimatedIconGrid(host);
       return true;
@@ -85,3 +87,7 @@ export const applyAnimatedIconPick = (
   import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
     .then((m) => m.pickAnimatedIcon(host, from, module, onModule, pick))
     .catch(() => false);
+
+/** The grid tile on the module now (after loadIconAnimator resolved; '' before). */
+export const currentIconPick = (from: EventTarget, module: CardModule): string =>
+  chunk?.currentIconPick(host, from, module) ?? '';

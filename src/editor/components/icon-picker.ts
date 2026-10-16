@@ -1,10 +1,11 @@
 import { LitElement, html, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant } from '../../types';
+import { CardModule, HomeAssistant } from '../../types';
 import { pickerStyles, iconPickerStyles } from '../../css/css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { applyAnimatedIconPick, currentIconPick, loadIconAnimator } from './icon-animator/loader';
 import { IconListItem, iconDisplayName, isIconId, loadIconList, searchIcons } from '../../utils/icon-list';
 
 /** Most rows the list renders at once (MDI alone has 7000+ icons): refine the search for the rest. */
@@ -23,6 +24,8 @@ export class IconPicker extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) label = 'Icon';
+  /** Set on the icon field of icon, info and button modules: adds the Animated icons tab. */
+  @property({ attribute: false }) animated?: { module: CardModule; onModule: (m: CardModule) => void };
 
   private _modalCtrl = new ModalDragResizeController(this);
   private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
@@ -33,8 +36,60 @@ export class IconPicker extends LitElement {
   @state() private _icons: IconListItem[] | null = null;
   /** Keyboard-highlighted row (index into the rendered rows). */
   @state() private _active = -1;
+  @state() private _tab: 'icons' | 'animated' = 'icons';
+  /** The chunk behind the Animated icons tab: loading, loaded or failed. */
+  @state() private _chunk: 'loading' | 'ok' | 'failed' = 'loading';
+
+  private async _setTab(tab: 'icons' | 'animated', focus = false): Promise<void> {
+    this._tab = tab;
+    if (focus) void this.updateComplete.then(() => (this.shadowRoot?.querySelector('[role=tab][aria-selected=true]') as HTMLElement | null)?.focus());
+    if (tab === 'animated' && this._chunk !== 'ok') {
+      this._chunk = 'loading';
+      this._chunk = (await loadIconAnimator()) ? 'ok' : 'failed';
+    }
+  }
+
+  private _onTabKeydown(e: KeyboardEvent): void {
+    const to = { ArrowRight: 'animated', ArrowLeft: 'icons', Home: 'icons', End: 'animated' }[e.key];
+    if (!to) return;
+    e.preventDefault();
+    void this._setTab(to as 'icons' | 'animated', true);
+  }
+
+  private _onAnimatedPick(e: CustomEvent): void {
+    const a = this.animated;
+    if (!a) return;
+    e.stopPropagation();
+    void applyAnimatedIconPick(this, a.module, a.onModule, e.detail);
+    this._closeModal();
+  }
+
+  private _renderTabs(): TemplateResult {
+    return html`
+      <div class="seg" role="tablist" aria-label="Icon source">
+        ${(['icons', 'animated'] as const).map((t) => html`
+          <button type="button" role="tab" aria-selected=${this._tab === t ? 'true' : 'false'}
+            tabindex=${this._tab === t ? '0' : '-1'} @click=${() => this._setTab(t)} @keydown=${this._onTabKeydown}
+          >${t === 'icons' ? 'Icons' : 'Animated icons'}</button>
+        `)}
+      </div>
+    `;
+  }
+
+  private _renderAnimated(): TemplateResult {
+    const a = this.animated!;
+    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">Loading…</div>`;
+    if (this._chunk === 'failed') {
+      return html`<div class="mc-picker-empty">The animated icons could not be loaded. Try again.
+        <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>Retry</button></div>`;
+    }
+    const m = a.module as CardModule & { entity?: string };
+    return html`<mc-animated-icon-grid .hass=${this.hass} .icon=${this.value} .entity=${m.entity ?? ''}
+      .current=${currentIconPick(this, a.module)} @animated-icon-pick=${this._onAnimatedPick}></mc-animated-icon-grid>`;
+  }
 
   private _openModal(): void {
+    this._tab = 'icons';
     this._selectedIcon = this.value;
     this._searchQuery = '';
     this._active = -1;
@@ -166,11 +221,14 @@ export class IconPicker extends LitElement {
     const { rows, total } = this._rows();
     const activeId = this._active >= 0 && this._active < rows.length ? `mc-icon-opt-${this._active}` : undefined;
     const selected = this._selectedIcon.trim().toLowerCase();
+    const grid = !!this.animated && this._tab === 'animated';
 
     return html`
       <dialog class="mc-picker-overlay" aria-label="Select icon" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
         <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
           ${renderPickerHeader('Select icon', this._modalCtrl, () => this._closeModal())}
+          ${this.animated ? this._renderTabs() : ''}
+          ${grid ? html`<div class="mc-picker-list">${this._renderAnimated()}</div>` : html`
           <div class="mc-picker-search">
             ${renderPickerSearch('Search icons', this._searchQuery, (v) => this._onSearch(v), {
               onKeydown: (e) => this._onSearchKeydown(e),
@@ -205,12 +263,12 @@ export class IconPicker extends LitElement {
             ${total > rows.length
               ? html`<div class="mc-picker-more">Showing ${rows.length} of ${total}. Refine the search to see more.</div>`
               : ''}
-          </div>
+          </div>`}
           <div class="mc-picker-footer">
-            <button type="button" class="btn btn-text clear" @click=${this._handleClear}>Clear</button>
+            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>Clear</button>`}
             <span class="spacer"></span>
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
+            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>`}
           </div>
           ${renderResizeHandle(this._modalCtrl)}
         </div>

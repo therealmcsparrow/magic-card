@@ -100,7 +100,7 @@ class ButtonModule extends BaseMagicModule {
           ? renderToggleField('Use entity icon', c.use_entity_icon, (v) => onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)
           : nothing}
         ${!(c.use_entity_icon && c.entity) && c.icon !== 'svg'
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx)
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: c.entity,

@@ -1,6 +1,6 @@
 import { nothing, TemplateResult, html } from 'lit';
 import { SyncContext, isNotSynced, hasTemplate as ctxHasTemplate, getFullPath } from './sync-path';
-import { HomeAssistant } from '../types';
+import { CardModule, HomeAssistant } from '../types';
 import '../editor/components/sync-indicator';
 import '../editor/components/attribute-picker';
 import '../editor/components/box-field';
@@ -412,12 +412,14 @@ export function renderIconField(
   hass?: unknown,
   propertyName?: string,
   syncContext?: SyncContext,
+  animated?: { module: CardModule; onModule: (m: CardModule) => void },
 ): TemplateResult {
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
       <mc-icon-picker
         .hass=${hass}
+        .animated=${animated}
         .value=${value || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
       ></mc-icon-picker>
