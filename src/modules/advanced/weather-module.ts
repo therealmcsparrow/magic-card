@@ -1,6 +1,5 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { hasIconFx, renderIcon } from '../../icons/render-icon';
-import { animatedIconsNote, renderIconFxEditor } from '../../editor/components/icon-fx-editor';
 import { weatherIconSvg } from '../../icons/weather-icons';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
@@ -8,8 +7,7 @@ import type { ModuleDependencies } from '../../services/card-dependencies';
 import { CardModule, ForecastModuleConfig, HassEntity, HomeAssistant, WeatherModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderEntityField, renderNumberField, renderFieldHint } from '../../utils/form-utils';
-import { supportedForecastTypes, weatherIcon } from '../../utils/weather';
+import { weatherIcon } from '../../utils/weather';
 import { formatNumber } from '../../utils/locale-format';
 
 const isNight = (hass: HomeAssistant | undefined): boolean => hass?.states?.['sun.sun']?.state === 'below_horizon';
@@ -97,34 +95,6 @@ class WeatherModule extends BaseMagicModule {
           </div>
         </div>
         ${forecast ?? nothing}
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as WeatherModuleConfig;
-    const entity = c.entity ? hass?.states[c.entity] : undefined;
-    const types = entity ? supportedForecastTypes(entity) : [];
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Weather entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, 'weather', 'entity', syncCtx)}
-        ${renderToggleField('Show temperature', c.show_temperature !== false, (v) => onChange({ ...c, show_temperature: v }), 'show_temperature', syncCtx)}
-        ${renderToggleField('Show condition', c.show_condition !== false, (v) => onChange({ ...c, show_condition: v }), 'show_condition', syncCtx)}
-        ${renderToggleField('Animated icons', c.animated_icons !== false, (v) => onChange({ ...c, animated_icons: v }), 'animated_icons', syncCtx, 'Animated weather icons instead of static ones')}
-        ${c.animated_icons !== false ? renderFieldHint(animatedIconsNote(c.icon_fx)) : renderIconFxEditor(c, hass, onChange, { entity: c.entity, icon: '', syncCtx })}
-        ${renderToggleField('Show forecast', c.show_forecast, (v) => onChange({ ...c, show_forecast: v }), 'show_forecast', syncCtx)}
-        ${c.show_forecast
-          ? renderNumberField('Forecast days', c.forecast_days, (v) => onChange({ ...c, forecast_days: v }), { min: 1, max: 14 }, 'forecast_days', syncCtx)
-          : nothing}
-        ${c.show_forecast && entity && types.length && !types.includes('daily')
-          ? renderFieldHint('This entity has no daily forecast; its first forecast type is shown. The Forecast module offers more options.')
-          : nothing}
       </div>
     `;
   }

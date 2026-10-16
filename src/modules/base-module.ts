@@ -18,7 +18,7 @@ export abstract class BaseMagicModule implements MagicModule {
 
   abstract renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult;
 
-  /** Content modules: their General tab is a ModuleEditor in the registry. This delegation goes in T1.5d. */
+  /** Every module's General tab is a ModuleEditor in the registry. This delegation goes in T1.5d. */
   renderGeneralTab(
     config: CardModule,
     hass: HomeAssistant | undefined,
@@ -28,8 +28,9 @@ export abstract class BaseMagicModule implements MagicModule {
     return moduleEditors.render('general', config, hass, onChange, template);
   }
 
+  /** The tabs listed by the module's editor (module-editor 1.0.0). This delegation goes in T1.5d. */
   getAvailableTabs(): EditorTab[] {
-    return ['general', 'actions', 'conditions', 'design'];
+    return moduleEditors.tabs(this.metadata.type);
   }
 
   validate(_config: CardModule): string[] {

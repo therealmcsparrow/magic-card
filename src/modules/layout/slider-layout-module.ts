@@ -6,7 +6,6 @@ import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot, visibleChildren } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
-import { renderNumberField, renderToggleField } from '../../utils/form-utils';
 import './mc-swiper';
 import type { McSwiperOptions } from './mc-swiper';
 
@@ -86,35 +85,6 @@ class SliderLayoutModule extends BaseMagicModule {
       </mc-swiper>
     `;
   }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as SliderLayoutModuleConfig;
-
-    return html`
-      <div class="mc-tab-content">
-        ${renderToggleField('Pagination', c.pagination !== false, (v: boolean) => onChange({ ...c, pagination: v }), 'pagination', syncCtx)}
-        ${renderToggleField('Navigation', c.navigation !== false, (v: boolean) => onChange({ ...c, navigation: v }), 'navigation', syncCtx)}
-        ${renderNumberField('Slides per view', c.slides_per_view ?? 1, (v) => onChange({ ...c, slides_per_view: v > 0 ? v : 1 }),
-          { min: 1, max: 6, step: 0.1 }, 'slides_per_view', syncCtx)}
-        ${renderNumberField('Space between slides (px)', c.space_between ?? 8, (v) => onChange({ ...c, space_between: v >= 0 ? v : 0 }),
-          { min: 0, step: 1 }, 'space_between', syncCtx)}
-        ${renderToggleField('Loop', c.loop, (v: boolean) => onChange({ ...c, loop: v }), 'loop', syncCtx,
-          'After the last slide, go back to the first one')}
-        ${renderToggleField('Autoplay', c.autoplay, (v: boolean) => onChange({ ...c, autoplay: v }), 'autoplay', syncCtx)}
-        ${c.autoplay
-          ? renderNumberField('Autoplay delay (ms)', c.autoplay_delay ?? 5000, (v) => onChange({ ...c, autoplay_delay: v }),
-            { min: 1000, step: 500 }, 'autoplay_delay', syncCtx)
-          : nothing}
-      </div>
-    `;
-  }
-
 }
 
 ModuleRegistry.register(new SliderLayoutModule());

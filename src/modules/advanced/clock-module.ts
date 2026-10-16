@@ -1,10 +1,9 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, ClockModuleConfig, EditorTab } from '../../types';
+import { CardModule, HomeAssistant, ClockModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderTextField, renderSelectField, renderFieldHint } from '../../utils/form-utils';
 import { dateTimeFormat, localeLanguage, localeTimeZone, uses12h } from '../../utils/locale-format';
 import { tickingText } from '../../utils/ticking-text';
 
@@ -15,17 +14,10 @@ const DATE_PRESETS: Record<string, Intl.DateTimeFormatOptions> = {
   long: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
   numeric: { year: 'numeric', month: 'numeric', day: 'numeric' },
 };
-const ISO = 'iso';
-const CUSTOM_DEFAULT = 'ddd D MMM YYYY';
+export const ISO = 'iso';
 
 /** A preset name (own keys only: 'constructor' is a pattern, not a preset). */
-const isPreset = (f: string): boolean => Object.prototype.hasOwnProperty.call(DATE_PRESETS, f);
-
-/**
- * Clocks whose editor is in custom pattern mode. Only the date format select switches modes: a
- * pattern being typed may be empty or spell a preset name for a moment without the field going away.
- */
-const customPatternIds = new Set<string>();
+export const isPreset = (f: string): boolean => Object.prototype.hasOwnProperty.call(DATE_PRESETS, f);
 
 /**
  * A formatter for the user's language with Unicode extensions (Gregorian calendar, Latin digits),
@@ -94,7 +86,7 @@ const PATTERN_TOKENS = /\[([^\]]*)\]|YYYY|YY|MMMM|MMM|MM|M|dddd|ddd|DD|D/g;
  * A stored `date_format` as the clock uses it: empty is `short`, the old `full` is `long`, a value
  * without any token or [text] (an old preset name, a typo) is `short` instead of shown literally.
  */
-function dateFormatOf(format: string | undefined): string {
+export function dateFormatOf(format: string | undefined): string {
   const f = (format ?? '').trim();
   if (f === 'full') return 'long';
   if (isPreset(f) || f === ISO) return f;
@@ -130,10 +122,6 @@ class ClockModule extends BaseMagicModule {
     icon: 'mdi:clock-outline',
   };
 
-  getAvailableTabs(): EditorTab[] {
-    return ['general', 'conditions', 'design'];
-  }
-
   // No format_12h: a new clock follows the user's profile (12 / 24 hour).
   createDefault(): ClockModuleConfig {
     return {
@@ -156,62 +144,6 @@ class ClockModule extends BaseMagicModule {
       <div class="mc-module mc-clock">
         <span class="mc-clock-time">${tickingText(() => formatClockTime(new Date(), c, hass), every)}</span>
         ${c.show_date !== false ? html`<span class="mc-clock-date">${tickingText(() => formatClockDate(new Date(), c.date_format, hass), 60_000)}</span>` : nothing}
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as ClockModuleConfig;
-    const timeFormat = c.format_12h === undefined ? 'auto' : c.format_12h ? '12' : '24';
-    const dateFormat = dateFormatOf(c.date_format);
-    const custom = customPatternIds.has(c.id) || !(isPreset(dateFormat) || dateFormat === ISO);
-    const now = new Date();
-    const sample = (f: string) => formatClockDate(now, f, hass);
-    return html`
-      <div class="mc-tab-content">
-        ${renderSelectField('Time format', timeFormat, [
-          { label: `Automatic (${uses12h(hass) ? '12-hour' : '24-hour'}, from your profile)`, value: 'auto' },
-          { label: '12-hour', value: '12' },
-          { label: '24-hour', value: '24' },
-        ], (v) => {
-          const next = { ...c };
-          if (v === 'auto') delete next.format_12h;
-          else next.format_12h = v === '12';
-          onChange(next);
-        }, 'format_12h', syncCtx)}
-        ${renderToggleField('Show seconds', c.show_seconds, (v) => onChange({ ...c, show_seconds: v }), 'show_seconds', syncCtx)}
-        ${renderToggleField('Show date', c.show_date !== false, (v) => onChange({ ...c, show_date: v }), 'show_date', syncCtx)}
-        ${c.show_date !== false
-          ? html`
-            ${renderSelectField('Date format', custom ? 'custom' : dateFormat, [
-              { label: `Short (${sample('short')})`, value: 'short' },
-              { label: `Medium (${sample('medium')})`, value: 'medium' },
-              { label: `Long (${sample('long')})`, value: 'long' },
-              { label: `Numeric (${sample('numeric')})`, value: 'numeric' },
-              { label: `ISO (${sample(ISO)})`, value: ISO },
-              { label: 'Custom pattern', value: 'custom' },
-            ], (v) => {
-              if (v === 'custom') customPatternIds.add(c.id);
-              else customPatternIds.delete(c.id);
-              onChange({ ...c, date_format: v === 'custom' ? CUSTOM_DEFAULT : v });
-            }, 'date_format', syncCtx)}
-            ${custom
-              ? html`
-                ${renderTextField('Date pattern', c.date_format, (v) => {
-                  customPatternIds.add(c.id);
-                  onChange({ ...c, date_format: v });
-                }, 'date_format', syncCtx, { mono: true })}
-                ${renderFieldHint('YYYY year, MMMM / MMM month name, MM / M month, DD / D day, dddd / ddd weekday. Text in [brackets] is kept as is.')}
-              `
-              : nothing}
-          `
-          : nothing}
       </div>
     `;
   }

@@ -1,28 +1,21 @@
-import { html, TemplateResult, nothing } from 'lit';
+import { html, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HassEntity, HomeAssistant, SpinboxModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import {
-  renderEntityField,
-  renderNumberField,
-  renderAttributeField,
-  renderFieldHint,
-} from '../../utils/form-utils';
 import { formatControlValue, numericControl, runServiceCall, snapValue } from '../../utils/entity-control';
 import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
 import { stopControlEvent } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 
-const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
 /**
  * A thermostat in a range mode (heat_cool) has no single target temperature: its low / high ends,
  * when the spinbox shows the target temperature.
  */
-function climateRange(stateObj: HassEntity | undefined, attribute: string | undefined): [number, number] | undefined {
+export function climateRange(stateObj: HassEntity | undefined, attribute: string | undefined): [number, number] | undefined {
   if (!stateObj?.entity_id.startsWith('climate.') || (attribute && attribute !== 'temperature')) return undefined;
   const a = stateObj.attributes || {};
   const low = typeof a.target_temp_low === 'number' ? a.target_temp_low : undefined;
@@ -104,34 +97,6 @@ class SpinboxModule extends BaseMagicModule {
           @pointerup=${stopControlEvent}
           @keydown=${stopControlEvent}
         >+</button>
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as SpinboxModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
-    const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
-        ${stateObj && own?.readOnly
-          ? renderFieldHint('This value can only be shown: the entity (or this attribute) cannot be set from a spinbox.')
-          : nothing}
-        ${climateRange(stateObj, c.attribute)
-          ? renderFieldHint('The thermostat keeps a range (low / high): pick target_temp_low or target_temp_high as the attribute to set one end.')
-          : nothing}
-        ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: optional(v) }), { optional: true, placeholder: own ? String(own.min) : '0' }, 'min', syncCtx)}
-        ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: optional(v) }), { optional: true, placeholder: own ? String(own.max) : '100' }, 'max', syncCtx)}
-        ${renderNumberField('Step', c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
-        ${renderFieldHint("Empty: the entity's own range and step. Min and max can only narrow that range; a step that is not a multiple of the entity's step is replaced by the entity's.")}
       </div>
     `;
   }

@@ -4,13 +4,6 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HassEntity, HomeAssistant, DropdownModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import {
-  renderTextField,
-  renderEntityField,
-  renderAttributeField,
-  renderFieldHint,
-  renderFieldHead,
-} from '../../utils/form-utils';
 import { runServiceCall, ServiceCall } from '../../utils/entity-control';
 import { selectValue } from '../../utils/select-value';
 import { stopControlEvent } from '../../utils/slider-track';
@@ -55,7 +48,7 @@ const ADAPTERS: Record<string, Record<string, SelectAdapter>> = {
 
 const DEFAULT_ATTRIBUTE: Record<string, string> = { fan: 'preset_mode', light: 'effect', media_player: 'source', water_heater: 'operation_mode', humidifier: 'mode' };
 
-function adapterFor(stateObj: HassEntity, attribute: string | undefined): SelectAdapter | undefined {
+export function adapterFor(stateObj: HassEntity, attribute: string | undefined): SelectAdapter | undefined {
   const byDomain = ADAPTERS[stateObj.entity_id.split('.')[0]];
   if (!byDomain) return undefined;
   if (attribute) return byDomain[attribute];
@@ -68,10 +61,10 @@ export function dropdownAttributes(entityId: string | undefined): string[] {
   return Object.keys(ADAPTERS[entityId.split('.')[0]] ?? {}).filter(Boolean);
 }
 
-type Option = { label: string; value: string };
+export type DropdownOption = { label: string; value: string };
 
 /** The values the entity accepts: its option list, or the custom options for free text entities. */
-function validOptions(stateObj: HassEntity | undefined, ad: SelectAdapter | undefined, custom: Option[]): string[] {
+export function validOptions(stateObj: HassEntity | undefined, ad: SelectAdapter | undefined, custom: DropdownOption[]): string[] {
   if (!stateObj || !ad) return [];
   if (!ad.list) return custom.map((o) => o.value);
   const raw = stateObj.attributes?.[ad.list];
@@ -79,14 +72,14 @@ function validOptions(stateObj: HassEntity | undefined, ad: SelectAdapter | unde
 }
 
 /** The dummy options new dropdowns were created with before: they hide the entity's own options. */
-const isOldDefault = (options: Option[]): boolean =>
+const isOldDefault = (options: DropdownOption[]): boolean =>
   options.length === 3 && options.every((o, i) => o.label === `Option ${i + 1}` && o.value === `option_${i + 1}`);
 
 /**
  * Configured options; YAML may list plain strings (`options: [a, b]`). Exactly the old dummy
  * default triple counts as none, so the entity's own options show.
  */
-function normalizeOptions(options: DropdownModuleConfig['options']): Option[] {
+export function normalizeOptions(options: DropdownModuleConfig['options']): DropdownOption[] {
   if (!Array.isArray(options)) return [];
   const list = options
     .map((o) => (typeof o === 'string' || typeof o === 'number'
@@ -94,7 +87,7 @@ function normalizeOptions(options: DropdownModuleConfig['options']): Option[] {
       : o && typeof o === 'object'
         ? { label: String(o.label ?? o.value ?? ''), value: String(o.value ?? o.label ?? '') }
         : undefined))
-    .filter((o): o is Option => !!o && o.value !== '');
+    .filter((o): o is DropdownOption => !!o && o.value !== '');
   return isOldDefault(list) ? [] : list;
 }
 
@@ -136,7 +129,7 @@ class DropdownModule extends BaseMagicModule {
     const unavailable = !!stateObj && (stateObj.state === 'unavailable' || stateObj.state === 'unknown');
 
     // Custom options relabel / pick from the entity's options; without an entity they are a static list.
-    let options: Array<Option & { disabled?: boolean }>;
+    let options: Array<DropdownOption & { disabled?: boolean }>;
     if (custom.length) {
       options = custom.map((o) => ({ ...o, disabled: !!stateObj && (!ad || !valid.includes(o.value)) }));
     } else if (stateObj && ad) {
@@ -198,70 +191,6 @@ class DropdownModule extends BaseMagicModule {
             : html`<option disabled ?selected=${!stateObj}>No options</option>`}
           ${stateObj && options.length ? selectValue(known ? current! : '') : nothing}
         </select>
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as DropdownModuleConfig;
-    const options = normalizeOptions(c.options);
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
-    const ad = stateObj ? adapterFor(stateObj, c.attribute) : undefined;
-    const valid = validOptions(stateObj, ad, options);
-    const write = (next: Option[]) => onChange({ ...c, options: next.length ? next : undefined });
-
-    const addOption = () => {
-      const unused = valid.find((v) => !options.some((o) => o.value === v));
-      // not option_N: three of those would read as the old dummy defaults
-      const value = unused ?? `value_${options.length + 1}`;
-      write([...options, { label: unused ?? `Option ${options.length + 1}`, value }]);
-    };
-    const removeOption = (index: number) => write(options.filter((_, i) => i !== index));
-    const updateOption = (index: number, key: 'label' | 'value', val: string) =>
-      write(options.map((opt, i) => (i === index ? { ...opt, [key]: val } : opt)));
-
-    const attrs = dropdownAttributes(c.entity);
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${attrs.length
-          ? renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)
-          : nothing}
-        ${attrs.length
-          ? renderFieldHint(`Sets ${attrs.join(', ')}; empty: ${stateObj?.entity_id.startsWith('climate.') ? 'the HVAC mode' : attrs[0]}.`)
-          : nothing}
-        ${stateObj && !ad
-          ? renderFieldHint('This entity has no options a dropdown can set (use an input select, select, input text or text with custom options, climate, fan, light, media player, water heater or humidifier).')
-          : nothing}
-
-        <div class="mc-section">
-          <div class="mc-field">${renderFieldHead('Custom options', 'options', syncCtx)}</div>
-          ${renderFieldHint(
-            "Leave empty to offer the entity's own options. Custom options rename or pick from them; a value the entity does not offer is shown disabled.",
-            'mc-field-hint-with-margin',
-          )}
-          <div class="mc-options-list">
-            ${options.map(
-              (opt, i) => html`
-                <div class="mc-option-item mc-option-row">
-                  ${renderTextField('Label', opt.label, (v) => updateOption(i, 'label', v))}
-                  ${renderTextField('Value', opt.value, (v) => updateOption(i, 'value', v))}
-                  <button type="button" class="mc-btn-icon" aria-label="Remove option" title="Remove option" @click=${() => removeOption(i)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
-                </div>
-                ${stateObj && ad && opt.value && !valid.includes(opt.value)
-                  ? renderFieldHint(`"${opt.value}" is not one of the entity's options.`)
-                  : nothing}
-              `,
-            )}
-          </div>
-          <button type="button" class="mc-btn mc-btn-secondary" @click=${addOption}>Add option</button>
-        </div>
       </div>
     `;
   }
