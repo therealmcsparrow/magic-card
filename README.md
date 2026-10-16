@@ -343,7 +343,7 @@ design:
 -   Leave the timing fields empty to use the animation's own values. Anything you set (`duration`, `delay`, `easing`, `iterations`, `direction`, `color`, `strength`, `target`, `trigger`) overrides it, as with presets. `intensity` is the amplitude in %, where 100 plays it as drawn.
 -   `target` is optional. Without it the animation moves what it was built for: the element or the module's icon.
 -   `entity` is for animations with state clips or value bindings: the entity they read instead of the module's (the editor's Entity for states and values).
--   Edit in animation studio under the entry opens the studio at that animation. It opens in a new tab, or in place when you are already in the Magic Card Utils panel.
+-   The icon picker of the Icon, Info and Button modules has an Animated icons tab with your saved icon animations and the 107 built-in ones. A click sets the icon and its animation in one step.
 -   When you edit an animation in the studio, every card that uses it updates live.
 
 Sharing a card. The YAML only holds the reference. To share a card with someone who does not have your animations, open the YAML view and use Copy YAML with Embed my animations on. This adds a `custom_animations:` list with the documents the card uses, including the steps of sequences. A card plays its embedded copy whenever the library lacks that id, for example on another Home Assistant or without the integration. Without the library or an embedded copy, the reference plays nothing and the editor says why.

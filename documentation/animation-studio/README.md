@@ -25,7 +25,7 @@ Older Magic Card versions without the animation runtime ignore the newer fields 
 
 -   Open the Magic Card Utils panel in the sidebar and go to its Animations tab.
 -   Open one animation directly with `?animation=<id>` on the panel URL, for example `/magic-card-utils?animation=doorbell-wiggle`.
--   In the card editor, an animation from the library has an Edit in animation studio link under its entry. It opens the panel at that animation in a new browser tab, or in the same tab when you are already in the panel.
+-   The card editor has no link to the studio. In the card editor, the icon picker's Animated icons tab and the Animations list use your saved animations. See [Using animations in cards](using-in-cards.md).
 
 The studio starts on the library. Opening an animation switches to the editor, and the URL keeps `?animation=<id>` in step with the open animation.
 

@@ -3,10 +3,10 @@
 Animations from the library work like the built-in presets. You add them to a module, row, column or the card in the same Animations list, and they combine with presets on the same element.
 
 -   [My animations in the picker](#my-animations-in-the-picker)
+-   [Animated icons in the icon picker](#animated-icons-in-the-icon-picker)
 -   [The entry](#the-entry)
 -   [YAML](#yaml)
 -   [Overrides](#overrides)
--   [Edit in animation studio](#edit-in-animation-studio)
 -   [Live updates](#live-updates)
 -   [Sharing a card](#sharing-a-card)
 -   [What happens without the integration](#what-happens-without-the-integration)
@@ -16,6 +16,30 @@ Animations from the library work like the built-in presets. You add them to a mo
 The Animations list is in the Design tab, Transitions & animations section (see [Animations](../design/animations.md)). Its Preset select starts with a My animations group that lists the library by name. The group only shows when the library has answered and holds at least one animation.
 
 Picking an animation from My animations writes `preset: custom:<id>` and clears the entry's Duration, Delay, Easing, Repeat, Direction, Intensity, Strength and Target, so the animation's own values apply. Play, State value and Color stay. If the previous preset had switched Play to On tap (Tap ripple, Press), Play goes back to Always.
+
+## Animated icons in the icon picker
+
+The icon field of the Icon, Info and Button modules has an icon picker with two tabs: Icons, the usual list, and Animated icons. The Light module has no icon field, so it has no tab and keeps [Animate icon](../design/quick-icon-animator.md).
+
+Animated icons is a grid of tiles that play their animation while they are on screen. It has a search field ("Search icons") and a domain filter. The grid has two sections:
+
+-   My animations lists the icon animations you saved in the Magic Card Utils library. It shows only when the library is available and holds at least one icon animation.
+-   Icon library lists the 107 built-in animations. Matches for the module's icon and entity come first. Show all (107) lists every entry, and Show matches only goes back.
+
+The module's current animated icon is highlighted. A click on a tile sets the module's icon and its animation in one undo step and closes the picker.
+
+What a click writes depends on the section:
+
+| Section | Entry | Stored in the card |
+| --- | --- | --- |
+| Icon library | `anim-icon-N` with `preset: custom:quick-icon-…`, target icon | The animation, in `custom_animations`. It works without the integration. |
+| My animations | `anim-icon-N` with `preset: custom:<id>`, target icon | Nothing. Later edits in the studio reach the card. Copy YAML with Embed my animations on covers sharing. |
+
+A module has one animated icon. Picking another replaces it. Entries you added by hand in the Animations list have other ids and are never touched.
+
+When the module's icon changes in the editor, a library animation is removed. See [When the module's icon changes](../design/quick-icon-animator.md#when-the-modules-icon-changes).
+
+Without the animator file `magic-card-icon-animator.js` next to `magic-card.js`, the tab shows "The animated icons could not be loaded. Try again."
 
 ## The entry
 
@@ -34,7 +58,7 @@ An entry with an animation from the library shows:
 | The preset's parameter | Particles based on a preset | Labelled by the preset, for example "Particles" |
 | Entity for states and values | Animations with state clips or value bindings | The entity the clips and bindings read. Empty uses the module's entity. |
 
-Under the fields are Reset to animation, which clears the overrides again, and Edit in animation studio.
+Under the fields is Reset to animation, which clears the overrides again. The card editor has no link to the studio, so edits to the animation itself happen in the Magic Card Utils panel.
 
 ## YAML
 
@@ -76,10 +100,6 @@ Fields you set on the entry win over the animation's own values. Fields you leav
 | `entity` | Animations with state clips or value bindings: the entity they read instead of the module's. In the editor: Entity for states and values. See [The driving entity](states-and-values.md#the-driving-entity). |
 
 An On tap animation set to repeat forever plays once per tap, as with presets.
-
-## Edit in animation studio
-
-Edit in animation studio opens the Magic Card Utils panel at `/magic-card-utils?animation=<id>`. It opens in a new browser tab, or in the same tab when you are already in the panel (for example while editing a template there).
 
 ## Live updates
 
