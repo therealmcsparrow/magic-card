@@ -106,8 +106,8 @@ export class MagicCardEditor extends LitElement {
     this.addEventListener('template-unlink', this._unlinkTemplate);
     this.addEventListener('open-studio', () => this.openStudio());
     this.addEventListener('studio-close', this._closeStudio);
-    // the Design tab's quick icon animator (lazy chunk) reads the selected module and writes the
-    // card's custom_animations through the state manager (icon-animator/card-request.ts)
+    // the icon picker's Animated icons tab and follow-icon (lazy chunk) read the selected module and
+    // write the card's custom_animations through the state manager (icon-animator/card-request.ts)
     this.addEventListener('mc-card-bridge', (e) => {
       const d = (e as CustomEvent<CardRequestDetail | undefined>).detail;
       e.stopPropagation();
@@ -335,12 +335,12 @@ update all linked cards with this structural change?</p><div class="actions">
       this._tpl.set(name, saved.length ? saved : undefined);
       this._sync(m.getState());
       // the card's copies now equal to the template's go (a hidden id keeps its copy: the template's
-      // is not played here); a card that plays only its own keeps them all
+      // is not played here)
       const c = m.getConfig();
       const json = new Map(saved.map((d) => [d.id, JSON.stringify(d)]));
       const own = animationDocList(c.custom_animations);
       const keep = own.filter((d) => c.hidden_animations?.includes(d.id as string) || json.get(d.id) !== JSON.stringify(d));
-      const prune = c.template === name && keep.length < own.length && !c.not_synced?.includes('custom_animations');
+      const prune = c.template === name && keep.length < own.length;
       // the template now equals the card: its override markers go, in the same step (hidden ids stay)
       if (c.template !== name || (!prune && !countNotSynced(c) && !c.not_synced)) return;
       const next = clearNotSynced(c);
