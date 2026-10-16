@@ -78,7 +78,7 @@ export class IconPicker extends LitElement {
 
   private _renderAnimated(): TemplateResult {
     const a = this.animated!;
-    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">Loading…</div>`;
+    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">Loadingâ€¦</div>`;
     if (this._chunk === 'failed') {
       return html`<div class="mc-picker-empty">The animated icons could not be loaded. Try again.
         <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>Retry</button></div>`;
@@ -228,7 +228,7 @@ export class IconPicker extends LitElement {
         <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
           ${renderPickerHeader('Select icon', this._modalCtrl, () => this._closeModal())}
           ${this.animated ? this._renderTabs() : ''}
-          ${grid ? html`<div class="mc-picker-list">${this._renderAnimated()}</div>` : html`
+          ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           <div class="mc-picker-search">
             ${renderPickerSearch('Search icons', this._searchQuery, (v) => this._onSearch(v), {
               onKeydown: (e) => this._onSearchKeydown(e),
