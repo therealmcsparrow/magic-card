@@ -7,12 +7,7 @@ import { readAnimations } from '../../../utils/animation';
 import { entityIcon } from '../../../utils/entity-icon';
 import { animationLibrary } from '../../../services/animation-library';
 import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';
-import {
-  animationStudioUrl,
-  customAnimationIds,
-  inAnimationStudioPanel,
-  onAnimationStudioLink,
-} from '../../../utils/custom-animations';
+import { customAnimationIds } from '../../../utils/custom-animations';
 
 /*
  * The quick icon animator (Design tab, "Animate icon") lives in a lazy editor chunk,
@@ -36,9 +31,6 @@ export const host = {
   library: animationLibrary,
   resolveIcon: resolveIconGeometry,
   setIcon: setIconGeometry,
-  studioUrl: animationStudioUrl,
-  inStudio: inAnimationStudioPanel,
-  studioLink: onAnimationStudioLink,
   customIds: customAnimationIds,
 };
 export type IconAnimatorHost = typeof host;

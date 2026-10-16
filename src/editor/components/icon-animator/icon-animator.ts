@@ -1105,16 +1105,8 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
           ${
             id && status !== 'none'
               ? html`<div class="field">
-                  <a
-                    class="btn btn-text btn-sm studio-link"
-                    href=${h.studioUrl(id)}
-                    target=${h.inStudio() ? '_self' : '_blank'}
-                    rel="noopener"
-                    @click=${(e: MouseEvent) => h.studioLink(e, id)}
-                    ><ha-icon icon="mdi:open-in-new"></ha-icon>Open in animation studio</a
-                  >
                   <p class="help">
-                    To keep it in My animations, import this card's YAML there (Magic Card Utils).
+                    To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils.
                   </p>
                 </div>`
               : nothing
