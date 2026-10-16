@@ -20,7 +20,7 @@ Without `icon_fx` the icon renders exactly as before, as a normal Home Assistant
 | Icon | Under the icon field. With an entity, Icon when on and Icon when off sit above the group. |
 | Button | Under the icon field, the same as Icon |
 | Info | Under the icon field, while Show icon is on |
-| Light | After the light's toggles (it has no icon field) |
+| Light | Under the icon field |
 | Tabs | Once a tab has an icon. The effects apply to every tab icon. |
 | Weather, Forecast | While Animated icons is off (`animated_icons: false`) |
 

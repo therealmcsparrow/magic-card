@@ -15,6 +15,7 @@ A light control: an icon that toggles the light, its name and state, and the con
 | Label | Key | Type / values | Default | Effect |
 | --- | --- | --- | --- | --- |
 | Entity | `entity` | `light.*` | none | The light. |
+| Icon | `icon` | `mdi:` icon | none | Replaces the light's own icon. Empty keeps the entity icon (a bulb without one). The picker has the Icons and Animated icons tabs, like the Icon module. |
 | Show brightness | `show_brightness` | boolean | `true` | A brightness slider, 0 to 100 %. |
 | Show color temp | `show_color_temp` | boolean | `false` | A colour temperature slider in kelvin. |
 | Show color picker | `show_color` | boolean | `false` | A colour input. |
@@ -24,6 +25,7 @@ A light control: an icon that toggles the light, its name and state, and the con
 
 ## Behaviour
 
+-   Pick an animated icon in the Icon field and it plays on the light's icon. When you change the icon later, the animation follows it or is removed, as on the other modules. See [Icon animations in cards](../../design/quick-icon-animator.md).
 -   Tap the icon to turn the light on or off. The icon uses the light's own colour while it is on. A design text colour overrides it.
 -   The line under the name shows the brightness while a dimmable light is on, otherwise the light's state.
 -   Each control only appears when the light supports it (from its colour modes and effect list). The editor notes a control that is switched on but hidden for this light.

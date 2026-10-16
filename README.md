@@ -209,7 +209,7 @@ Every module accepts `entity` where it makes sense, plus `design`, `actions` and
 | `slider` | Sets a number, a light brightness and similar | `entity`, `attribute`, `min`, `max`, `step`, `show_value`, `slider_color`, `track_color`, `direction` |
 | `spinbox` | Plus and minus buttons for a number | `entity`, `attribute`, `min`, `max`, `step` |
 | `dropdown` | Select from options | `entity`, `attribute`, `options` (a list of `{label, value}` or plain strings; empty uses the entity's own options) |
-| `light` | Light controls | `entity`, `show_brightness`, `show_color_temp`, `show_color`, `show_effect`, `compact` |
+| `light` | Light controls | `entity`, `show_brightness`, `show_color_temp`, `show_color`, `show_effect`, `compact`, `icon` |
 | `gauge` | A gauge | `entity`, `attribute`, `min`, `max`, `gauge_style` (`half`, `full`, `quarter`), `needle`, `show_name`, `show_unit`, `decimals`, `severity` |
 
 `severity` is a list of colour ranges, for example `[{ from: 0, color: red }, { from: 30, color: green }]`. The range with the highest `from` at or below the value applies.
@@ -356,7 +356,7 @@ Icons are animated through the icon picker's Animated icons tab and the animatio
 -   To split a module's icon into parts, give each part a preset or export an animated SVG file, use the animation studio in Magic Card Utils. Saved icon animations show in the Animated icons tab under My animations.
 -   An animation of the module's own icon follows that icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts. A library animation is removed instead.
 
-The Light module has no icon field. Its icon plays an animation from My animations with Target set to Icon in the Animations list. The Animated icons tab is a separate file, `magic-card-icon-animator.js`, loaded only when you open it. See [Icon animations in cards](documentation/design/quick-icon-animator.md).
+The Light module's Icon field is optional: empty keeps the light's own icon. The Animated icons tab is a separate file, `magic-card-icon-animator.js`, loaded only when you open it. See [Icon animations in cards](documentation/design/quick-icon-animator.md).
 
 ## Animation studio
 
@@ -690,8 +690,7 @@ The Icon, Button, Info, Light, Tabs, Weather and Forecast modules can draw their
 
 In the editor they are the Icon effects group of the General tab:
 
-- Icon, Button and Info: under the icon field (Info only while Show icon is on). With an entity, Icon when on and Icon when off sit next to it.
-- Light: it has no icon field, so the group comes after the light's toggles.
+- Icon, Button, Info and Light: under the icon field (Info only while Show icon is on). With an entity, Icon when on and Icon when off sit next to it.
 - Tabs: the group shows once a tab has an icon. The effects apply to every tab icon.
 - Weather and Forecast: the group shows while Animated icons is off. Animated icons replace the effects; any `icon_fx` you set is kept and comes back when you turn Animated icons off.
 
