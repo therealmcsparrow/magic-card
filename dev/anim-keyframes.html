@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Keyframe timeline harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --text-primary-color:#fff; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  /* the studio's bottom panel (wide) or inspector column (narrow) */
+  #panel { box-sizing:border-box; width:var(--w); margin:16px; padding:16px; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; }
+  /* the studio's right column: the key inspector of the selected keys */
+  #insp { box-sizing:border-box; width:320px; margin:0 16px 16px; padding:0 16px; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; }
+</style>
+</head>
+<body>
+  <div id="panel"></div>
+  <div id="insp"></div>
+  <script src="./shims.js"></script>
+  <script src="../.harness-build/anim-keyframes/anim-keyframes.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    document.documentElement.dataset.theme = params.get('theme') || 'light';
+    document.documentElement.style.setProperty('--w', `${params.get('w') || 920}px`);
+    const DOCS = {
+      bounce: {
+        id: 'bounce-in', name: 'Bounce in', kind: 'keyframes', duration: 1.6, easing: 'ease-in-out', iterations: 'infinite',
+        target: 'icon', origin: 'bottom', version: 1,
+        keyframes: [
+          { at: 0, transform: { y: -40, scale: 0.6, rotate: -12 }, opacity: 0, blur: 6, easing: 'ease-out' },
+          { at: 35, transform: { y: 0, scale: 1.08 }, opacity: 1, blur: 0, shadow: '0px 0px 16px 2px var(--mc-anim-c)', easing: 'spring' },
+          { at: 55, transform: { scale_x: 1.12, scale_y: 0.9 }, filter: 'brightness(1.3)' },
+          { at: 70, transform: { rotate: 8, scale: 1, scale_x: 1, scale_y: 1 }, color: 'var(--mc-anim-c)', easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.2)' },
+          { at: 100, transform: { y: 0, rotate: 0, scale: 1 }, opacity: 1, shadow: '0px 0px 0px 0px transparent', color: '#ffffff', filter: 'none' },
+        ],
+      },
+      pulse: {
+        id: 'pulse', name: 'Pulse', kind: 'keyframes', duration: 2, easing: 'ease-in-out', iterations: 'infinite', target: 'element', origin: 'center', version: 1,
+        keyframes: [{ at: 0, transform: { scale: 1 } }, { at: 50, transform: { scale: 1.1 } }, { at: 100, transform: { scale: 1 } }],
+      },
+      empty: {
+        id: 'blank', name: 'Blank', kind: 'keyframes', duration: 2, easing: 'ease', iterations: 'infinite', target: 'element', origin: 'center', version: 1,
+        keyframes: [{ at: 0 }, { at: 100 }],
+      },
+    };
+    const el = document.createElement('mc-anim-keyframes-editor');
+    el.doc = DOCS[params.get('doc') || 'bounce'];
+    el.time = Number(params.get('t') || 0.42);
+    const events = [];
+    el.addEventListener('doc-change', (e) => { events.push({ type: 'doc-change', label: e.detail.label, transient: !!e.detail.transient }); el.doc = e.detail.doc; });
+    el.addEventListener('seek', (e) => { events.push({ type: 'seek', time: e.detail.time }); el.time = e.detail.time; });
+    // the key inspector, wired like the studio: selections go both ways, edits update both
+    const insp = document.createElement('mc-anim-key-inspector');
+    insp.doc = el.doc;
+    insp.selection = { kind: 'none' };
+    const select = (s) => { insp.selection = s; el.studioSelection = s; };
+    const selections = [];
+    el.addEventListener('selection-change', (e) => { selections.push(e.detail.selection); select(e.detail.selection); });
+    el.addEventListener('doc-change', (e) => { insp.doc = e.detail.doc; });
+    insp.addEventListener('doc-change', (e) => { events.push({ type: 'doc-change', label: e.detail.label, transient: !!e.detail.transient }); el.doc = e.detail.doc; insp.doc = e.detail.doc; });
+    insp.addEventListener('selection-change', (e) => select(e.detail.selection));
+    document.getElementById('panel').appendChild(el);
+    document.getElementById('insp').appendChild(insp);
+    window.__kf = { el, insp, events, selections, root: () => el.shadowRoot, inspRoot: () => insp.shadowRoot, DOCS };
+  </script>
+</body>
+</html>

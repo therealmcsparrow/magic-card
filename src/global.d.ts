@@ -1,7 +1,12 @@
 import { HomeAssistant } from './types';
 
 declare global {
+  /** webpack's public path (chunk URLs); set from import.meta.url in src/index.ts. */
+  var __webpack_public_path__: string;
+
   interface Window {
+    /** Contract read by the magic-card-utils panel: `apiVersion` 1 is the current one. */
+    MagicCard?: { version: string; apiVersion: number; [key: string]: unknown };
     customCards?: Array<{
       type: string;
       name: string;
@@ -14,11 +19,8 @@ declare global {
   interface HTMLElementTagNameMap {
     'magic-card': import('./card/magic-card').MagicCard;
     'magic-card-editor': import('./editor/magic-card-editor').MagicCardEditor;
-    'mc-form-editor': import('./editor/modes/form-editor').FormEditor;
     'mc-yaml-editor': import('./editor/modes/yaml-editor').YamlEditor;
-    'mc-tree-editor': import('./editor/modes/tree-editor').TreeEditor;
     'mc-module-selector': import('./editor/panels/module-selector').ModuleSelector;
-    'mc-tree-node': import('./editor/components/tree-node').TreeNode;
     'mc-color-picker': import('./editor/components/color-picker').ColorPicker;
     'mc-icon-picker': import('./editor/components/icon-picker').IconPicker;
   }

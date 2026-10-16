@@ -6,7 +6,6 @@
   "editor": {
     "mode_form": "Formulier",
     "mode_yaml": "YAML",
-    "mode_tree": "Boom",
     "add_row": "Rij toevoegen",
     "add_module": "Module toevoegen",
     "delete": "Verwijderen",
@@ -16,7 +15,7 @@
   "tabs": {
     "general": "Algemeen",
     "actions": "Acties",
-    "conditions": "Conditionsa",
+    "conditions": "Condities",
     "design": "Ontwerp"
   },
   "modules": {
@@ -63,5 +62,12 @@
     "type_time": "Tijd",
     "type_template": "Template",
     "add_condition": "Conditie toevoegen"
+  },
+  "forecast": {
+    "day": "Dag {n}",
+    "no_forecast": "Deze entiteit heeft geen weersverwachting",
+    "not_available": "Weersverwachting niet beschikbaar: {error}",
+    "no_data": "Geen weersverwachting",
+    "unavailable": "Niet beschikbaar"
   }
 }

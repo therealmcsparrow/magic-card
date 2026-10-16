@@ -1,18 +1,21 @@
-import { LitElement, html, TemplateResult, nothing } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
 
 @customElement('mc-attribute-picker')
 export class AttributePicker extends LitElement {
-  static styles = [pickerStyles];
+  static styles = [editorSystem, pickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) entityId = '';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -53,15 +56,6 @@ export class AttributePicker extends LitElement {
     }));
   }
 
-  private _clearValue(): void {
-    this.value = '';
-    this.dispatchEvent(new CustomEvent('value-changed', {
-      detail: { value: '' },
-      bubbles: true,
-      composed: true,
-    }));
-  }
-
   private _getAttributes(): Array<{ name: string; value: string }> {
     if (!this.hass || !this.entityId) return [];
     const entity = this.hass.states[this.entityId];
@@ -89,38 +83,40 @@ export class AttributePicker extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const attrValue = this._getAttributeValue();
+    const entity = this.hass && this.entityId ? this.hass.states[this.entityId] : undefined;
+    const names = entity ? Object.keys(entity.attributes).sort((a, b) => a.localeCompare(b)) : [];
 
+    // Mockup: a plain select, "State (no attribute)" first. Without a known entity, a text field.
+    if (!names.length) {
+      return html`
+        <input
+          type="text"
+          class="input mono"
+          .value=${this.value}
+          placeholder="attribute"
+          aria-label="Attribute"
+          spellcheck="false"
+          @input=${this._onInputChange}
+        />
+        ${this._showModal ? this._renderModal() : ''}
+      `;
+    }
+    const options = this.value && !names.includes(this.value) ? [this.value, ...names] : names;
     return html`
-      <div class="mc-picker-row">
-        ${this.value && attrValue !== null
-          ? html`
-            <div class="mc-picker-entity-info" @click=${this._openModal} title=${this.value}>
-              <div class="mc-picker-entity-icon">
-                <ha-icon icon="mdi:tag-text-outline"></ha-icon>
-              </div>
-              <div class="mc-picker-entity-details">
-                <div class="mc-picker-entity-name">${this.value}</div>
-                <div class="mc-picker-entity-id">${attrValue}</div>
-              </div>
-            </div>
-          `
-          : html`
-            <input
-              type="text"
-              class="mc-picker-input"
-              .value=${this.value}
-              placeholder="attribute"
-              @input=${this._onInputChange}
-            />
-          `
-        }
-        <button class="mc-picker-btn" @click=${this._openModal}>
-          <ha-icon icon="mdi:format-list-bulleted"></ha-icon>
-          Select
-        </button>
+      <div class="select">
+        <select
+          class="input"
+          aria-label="Attribute"
+          .value=${this.value}
+          @change=${(e: Event) => {
+            this._onInputChange(e as InputEvent);
+          }}
+        >
+          <option value="" ?selected=${!this.value}>State (no attribute)</option>
+          ${options.map((n) => html`<option value=${n} ?selected=${n === this.value}>${n}</option>`)}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
-
       ${this._showModal ? this._renderModal() : ''}
     `;
   }
@@ -129,54 +125,39 @@ export class AttributePicker extends LitElement {
     const attributes = this._getAttributes();
 
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-picker-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <div class="mc-picker-header-start">
-              <ha-icon icon="mdi:format-list-bulleted"></ha-icon>
-              <span class="mc-picker-title">Select Attribute</span>
-            </div>
-            <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-              <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-            </button>
-            <button class="mc-modal-close" @click=${this._closeModal}>&times;</button>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Select attribute" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Select attribute', this._modalCtrl, () => this._closeModal())}
           <div class="mc-picker-search">
-            <input
-              type="text"
-              placeholder="Search attributes..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => { this._searchQuery = (e.target as HTMLInputElement).value; }}
-            />
+            ${renderPickerSearch('Search attributes', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list">
+          <div class="mc-picker-list" role="listbox" aria-label="Attributes">
             ${attributes.length > 0
               ? attributes.map(attr => html`
-                  <div class="mc-picker-item ${this._selectedAttribute === attr.name ? 'selected' : ''}"
-                       @click=${() => this._selectAttribute(attr.name)}>
-                    <div class="mc-picker-item-icon">
-                      <ha-icon icon="mdi:tag-text-outline"></ha-icon>
-                    </div>
-                    <div class="mc-picker-item-content">
-                      <div class="mc-picker-item-name">${attr.name}</div>
-                    </div>
-                    <span class="mc-picker-item-state">${attr.value.length > 30 ? attr.value.slice(0, 30) + '...' : attr.value}</span>
-                  </div>
+                  <button
+                    type="button"
+                    role="option"
+                    class="mc-picker-item"
+                    aria-selected=${this._selectedAttribute === attr.name ? 'true' : 'false'}
+                    @click=${() => this._selectAttribute(attr.name)}
+                  >
+                    <span class="mc-picker-item-icon"><ha-icon icon="mdi:tag-text-outline"></ha-icon></span>
+                    <span class="mc-picker-item-content">
+                      <span class="mc-picker-item-name">${attr.name}</span>
+                      <span class="mc-picker-item-id">${attr.value.length > 60 ? attr.value.slice(0, 60) + '...' : attr.value}</span>
+                    </span>
+                  </button>
                 `)
               : html`<div class="mc-picker-empty">No attributes found</div>`
             }
           </div>
           <div class="mc-picker-footer">
-            <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
-            <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
           </div>
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 }

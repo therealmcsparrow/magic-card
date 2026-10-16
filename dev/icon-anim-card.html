@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Icon library on cards (0.0.34, track I)</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --state-icon-color:#44739e; --text-primary-color:#fff; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); --state-icon-color:#9fbcd9; color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  main { display:grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap:12px; padding:12px; }
+  main.sheet { --cols: 10; gap:6px; padding:6px; }
+  main.strip { grid-template-columns: 130px repeat(8, 72px); gap:4px; padding:6px; align-items:center; }
+  main.strip .lbl { font-size:11px; color:var(--secondary-text-color); }
+  .cell h3 { margin:0 0 4px; font-size:0.6875rem; font-weight:500; color:var(--secondary-text-color); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .svgs { display:flex; flex-wrap:wrap; gap:12px; padding:12px; }
+  .svgs figure { margin:0; display:grid; gap:4px; justify-items:center; font-size:11px; color:var(--secondary-text-color); }
+  .svgs img { width:72px; height:72px; color:#03a9f4; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:8px; padding:6px; }
+</style>
+</head>
+<body>
+  <main id="cards"></main>
+  <div class="svgs" id="svgs"></div>
+  <script src="./shims.js"></script>
+  <script defer src="../.harness-build/icon-anim/icon-anim.js"></script>
+  <script type="module" src="../.harness-build/magic-card.js"></script>
+  <script defer src="./icon-anim-card.js"></script>
+</body>
+</html>

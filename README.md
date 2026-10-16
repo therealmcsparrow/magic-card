@@ -6,40 +6,957 @@
 [![GitHub Last Commit][last-commit-badge]][last-commit-url]
 [![GitHub Issues][issues-badge]][issues-url]
 
-A fully open-source Home Assistant Lovelace custom card with an advanced multi-mode configuration editor. Create beautiful, modular dashboards with 22+ content, control, layout, and advanced modules.
+Magic Card is a Home Assistant Lovelace custom card that you build from rows, columns and modules. A visual editor (a pane editor and a full-screen Studio) lets you set up the structure, styling, animations, rings and conditions without writing YAML, and the YAML stays editable at any time.
 
-<!-- Add a screenshot or GIF of the card and editor in action -->
+This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples. Changes are listed in the [changelog](CHANGELOG.md).
 
 ## Features
 
--   **Three Editor Modes**: A visual **Form Mode**, a powerful side-by-side **YAML Mode** with real-time sync, and a Figma-style **Tree Mode** for layout management.
--   **22+ Modules**: Build anything you can imagine with a rich library of modules for content, controls, and layout.
--   **Display Conditions**: Show or hide any module based on entity states, attributes, time, or complex Jinja2 templates.
--   **Advanced Actions**: Configure tap, hold, and double-tap gestures to call services, navigate, toggle entities, and more.
--   **Powerful Design System**: Apply fine-grained styling to every module, including colors, fonts, spacing, shadows, and even animations.
--   **Responsive Layouts**: Design dashboards that adapt to different screen sizes.
--   **Undo/Redo & Live Preview**: Edit with confidence.
+-   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, and the row module has the layout presets, column widths and per-column settings of a card row.
+-   25 module types for content, controls, layout and advanced use (see [Modules](#modules)).
+-   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
+-   Studio: a full-screen editor with layers, a clickable live canvas, device widths and keyboard shortcuts.
+-   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules.
+-   More than 100 preset animations, several per element, with play conditions.
+-   Animate icon: make an icon's parts move from the Design tab, with a library of 107 ready-made icon animations or one-click part presets. The card stores the result itself, so it needs no integration.
+-   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
+-   Value rings and animated rings that follow the border radius. A ring on a `timer` entity counts down live.
+-   Shapes: squircle, pill, circle, hexagon, octagon, notched corners, ticket, wave edge and blob outlines, with the border and ring drawn along them.
+-   Value backgrounds: a tank that fills up to an entity value, or a faint history sparkline behind the content.
+-   Flow lines: animated lines with moving dots between two modules (solar to house to grid), driven by an entity value.
+-   Seasonal scenes: snow, falling leaves, Christmas lights, fireworks, bats and more, picked by date or by hand, or driven by the weather and the sun.
+-   Icon effects: liquid fill, device animations, line draw, morphing state icons, duotone and gradient colours, and your own SVG icons.
+-   Tap, hold and double-tap actions, including opening and closing pop-ups.
+-   Display conditions on cards, rows, columns and modules (state, attribute, time, template).
+-   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
+-   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
 
 ## Installation
 
-### HACS (Home Assistant Community Store) - Recommended
+### HACS (recommended)
 
-1.  Ensure you have [HACS](https://hacs.xyz/) installed.
-2.  Go to HACS > Frontend.
-3.  Click the 3-dots menu in the top right and select "Custom repositories."
-4.  Add the URL for this repository (`https://github.com/therealmcsparrow/magic-card`) and select the "Lovelace" category.
-5.  Click "Add", then find "Magic Card" in the list and install it.
-6.  In your Home Assistant UI settings, add the resource: `url: /hacsfiles/magic-card/magic-card.js` and `type: module`.
+1.  Install [HACS](https://hacs.xyz/) if you do not have it.
+2.  Open HACS, then Frontend.
+3.  Open the three-dot menu and choose Custom repositories.
+4.  Add `https://github.com/therealmcsparrow/magic-card` with the category Lovelace (called Dashboard in newer HACS versions).
+5.  Find Magic Card in the list and download it.
+6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-### Manual Installation
+HACS also downloads `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` into the same folder. Magic Card loads them from there when they are needed.
 
-1.  Download `magic-card.js` from the [latest release](https://github.com/therealmcsparrow/magic-card/releases).7
-2.  Place the file in your `config/www` directory.
-3.  In your Home Assistant UI settings, add the resource: `url: /local/magic-card.js` and `type: module`.
+### Manual
 
-## Getting Started
+1.  Download `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` from the [latest release](https://github.com/therealmcsparrow/magic-card/releases).
+2.  Copy them together to `config/www/`.
+3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-Add the card to your dashboard with a basic configuration:
+`magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open Animate icon; dashboards never load it. Keep all four next to `magic-card.js`.
+
+### Loading
+
+`magic-card.js` must be loaded as a JavaScript module (`type: module`). HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work: the card does not appear. Change the resource type to JavaScript module under Settings, Dashboards, Resources.
+
+### Updating
+
+Update through HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
+
+## The editor
+
+Add the card from the card picker ("Magic Card") or use `type: custom:magic-card` in YAML. A new card starts with one row, one column and a text module.
+
+### Pane editor
+
+The editor in the card dialog has these parts:
+
+-   Form / YAML switch. Form edits through fields, YAML edits the raw config. Both show the same config.
+-   Template bar. Shows whether the card is linked to a template (see [Templates](#templates)).
+-   Open studio button.
+-   Structure outline. The card, its rows, their columns and the modules in each column, including children of layout modules. Click an item to select it. Add row adds a row with one column, Add module adds a module to a column, and Add column is in a row's three-dot menu.
+
+    Layout modules are filled in the outline. Children of horizontal, vertical and slider layouts sit under the module with an Add module row. A tabs module shows one item per tab and a row module one item per column, each with its children and an Add module row, followed by Add tab or Add column. Selecting a tab edits its label and icon; selecting a row-module column gives it General, Conditions and Design tabs like a card column. The General tab of a layout module holds only its own settings.
+-   Inspector. Edits the selected item. Its tabs depend on the item:
+
+    | Selected | Tabs |
+    | --- | --- |
+    | Card | General, Design, Conditions, Flows |
+    | Row | General, Actions, Conditions, Design |
+    | Column | General, Conditions, Design |
+    | Module | General, Actions, Conditions, Design |
+
+    General holds the item's own options, Actions the tap, hold and double-tap actions, Conditions the display conditions (on the card it also holds the conditional appearance rules), and Design the styling, animations and ring. The card's Flows tab holds its flow lines.
+-   Undo and redo buttons for every change (up to 50 steps). The keyboard shortcuts only work in the studio. The history is lost when Home Assistant's card dialog closes.
+
+The three-dot menus in the outline:
+
+-   Row: Add column, Duplicate row, Copy design, Paste design, Merge pasted design, Move up, Move down, Delete row.
+-   Column: Add module, Copy design, Paste design, Merge pasted design, Delete column (not available for the last column).
+-   Module: Edit, Move up, Move down, Move to (another column or layout slot), Duplicate, Copy design, Paste design, Merge pasted design, Delete. Layout modules also have Add module, Add tab (tabs) or Add column (row).
+-   Tab: Add module, Rename, Move up, Move down, Delete tab (asks first when the tab holds modules; not available for the last tab).
+-   Row-module column: Add module, Copy design, Paste design, Merge pasted design, Delete column (asks first when the column holds modules; not available for the last column).
+
+Keyboard in the outline: Up, Down, Home and End move focus between items, and Enter or Space selects the focused item. Right expands a collapsed row, or moves to the first column of an expanded row. Left collapses a row, or moves from a column or module to its parent. Delete removes the focused module (or tab or row-module column), Alt+Up and Alt+Down move a module, tab or row, F2 renames a tab, and the Menu key (or Shift+F10) opens the three-dot menu.
+
+### Studio
+
+Open it with Open studio. It is a full-screen dialog with:
+
+-   Layers on the left: the same outline as the pane editor, with an Add module row under every column. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas.
+-   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas. The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
+-   The inspector on the right, with the same tabs as in the pane editor.
+-   A device width switch: Phone (360 px), Tablet (560 px) and Desktop (760 px).
+-   The Form and YAML switch, the template bar, and undo and redo buttons.
+
+A floating bar next to the selected module moves it up or down, duplicates it, deletes it, or adds a flow line from it: choose Add flow from here, then click the module the flow goes to (Escape cancels). The new flow opens in Card settings, Flows. Click a flow line on the canvas to select it there; the selected flow is highlighted on the canvas. Connecting on the canvas needs a mouse or touch; with a keyboard, use the Flows tab in Card settings.
+
+Keyboard shortcuts:
+
+| Shortcut | Action |
+| --- | --- |
+| Ctrl/Cmd+Z | Undo (not while typing in a field) |
+| Ctrl/Cmd+Y or Ctrl/Cmd+Shift+Z | Redo |
+| Alt+Up / Alt+Down | Move the selected module up or down (canvas focused) |
+| Delete or Backspace | Delete the selected module (canvas focused) |
+| Ctrl/Cmd+D | Duplicate the selected module (canvas focused) |
+| Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. |
+| Arrow keys, Home, End in Layers | Move between items |
+
+The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Escape in Layers, the inspector or the top bar closes the studio.
+
+### Templates
+
+A template is a saved copy of a card that other cards can link to. The template bar offers:
+
+-   Create template from this card saves the card under a name.
+-   Load template replaces the card's whole config with the template and links the card to it, after asking for confirmation. Only Home Assistant's per-card keys and other keys the template does not manage (such as `card_mod`) are kept. Undo brings the old config back. The Load template window can also rename and delete templates; delete has no confirmation.
+-   A linked card shows the template name and either the number of local overrides or "In sync".
+-   Fields you change on a linked card become overrides (recorded in `not_synced` lists) and stay local. Everything else follows the template, so editing the template updates every linked card.
+-   The template's own animations (`custom_animations`) play on every linked card. They merge with the card's own documents by id: a card document with the same id replaces the template's on that card, `hidden_animations` leaves single ones out, and `custom_animations` in `not_synced` makes the card use only its own. The card's Design tab lists them with Hide, Show and Use template.
+-   Re-sync clears the local overrides and hidden animations and takes the template's values again.
+-   Save to template writes the card's content back to the template. If saving fails, the error only appears in the browser console.
+-   Add row on a linked card asks whether to update the linked cards as well.
+-   Unlink from template detaches the card. The template animations it played become its own.
+
+See [Templates](documentation/editor/templates.md) for the details.
+
+Settings that Home Assistant keeps for a single card (`grid_options`, `layout_options`, `visibility`, `view_layout`) are never part of a template.
+
+Templates are stored by the `magic_card_utils` backend integration (WebSocket commands `magic_card_utils/get_templates`, `save_template` and `delete_template`). Without it, templates cannot be loaded or saved.
+
+### Copy and paste design
+
+Rows, columns and modules have Copy design, Paste design and Merge pasted design in their three-dot menu, and Copy design and Paste design at the top of the Design tab (Paste design there opens a menu with Replace design and Merge into design). The card's own Design tab has no copy or paste. Paste either replaces the target's design or merges into it. The copy is kept in the browser and also placed on the system clipboard as YAML, so you can paste between cards and dialogs.
+
+## Card structure
+
+```
+card
+ └─ rows[]            layout, gap, padding, design, display
+     └─ columns[]     vertical_align, gap, padding, design, display
+         └─ modules[] type, entity, design, actions, display, module options
+```
+
+-   A row places its columns in a grid. `layout` is a list of relative widths joined by dashes, one number per column (`1`, `1-1`, `1-2`, `2-1`, `1-1-1`, `1-2-1`, `3-1-1`, and so on). A layout that does not match the column count falls back to equal columns. A value that is not numbers and dashes is used as the CSS `grid-template-columns` of the row, for example `120px 1fr`. `gap` and `padding` are CSS lengths.
+-   A column stacks its modules vertically. `vertical_align` is `start`, `center`, `end` or `stretch`.
+-   A module is one element. Every module has `type`, an optional `entity`, and the shared keys `design`, `actions` and `display`.
+-   Layout modules hold more modules: `horizontal` and `vertical` have `modules`, `row` has `columns[].modules`, `tabs` has `tabs[].modules`, and `slider-layout` shows each child in `modules` as a slide. They nest to any depth, and every child supports design, actions and conditions as well. A `row` module works like a card row: `layout`, `column_widths`, `gap` and `padding` on the module, and `id`, `gap`, `padding`, `vertical_align`, `display` and `design` on each column. Older row modules keep working.
+-   `id` fields on rows, columns and modules are optional in YAML. The card generates stable ids when they are missing.
+
+Card-level options:
+
+| Key | Description |
+| --- | --- |
+| `rows` | The rows (required) |
+| `name` | Name shown in the editor |
+| `use_page_theme` | `false` to use a card-only theme (default `true`) |
+| `theme` | Theme name when `use_page_theme` is `false` |
+| `background`, `background_image` | Card background |
+| `border_radius`, `padding`, `box_shadow` | Card shape and spacing |
+| `card_height` | Minimum height of the card |
+| `overflow` | `visible`, `hidden` or `auto` |
+| `css` | Free CSS for the card's content, applied after the fields above (Custom CSS in the card's Design tab) |
+| `hover` | Design values applied while the pointer is over the card's content (see [Design](#design)) |
+| `display` | Display conditions for the whole card |
+| `conditional_appearance` | Rules that override the card appearance while their conditions match |
+| `animations`, `ring` | Card-level animations and ring (see below) |
+| `shape`, `shape_options` | Card outline shape (see [Shapes](#shapes)) |
+| `value_background` | Fill or sparkline behind the card's rows (see [Value backgrounds](#value-backgrounds)) |
+| `popup` | Pop-up mode (see below) |
+| `flows` | Animated flow lines between modules (see [Flow lines](#flow-lines)) |
+| `template`, `not_synced` | Template link and local overrides |
+
+## Modules
+
+Every module accepts `entity` where it makes sense, plus `design`, `actions` and `display`. Clock, separator, video-bg and custom-card have no Actions tab in the editor, but actions written in YAML still work on them. The camera, light, weather and forecast entity pickers only list entities of their own domain. On/off options that a new module starts with switched on are also on when the key is missing from YAML (for example `bar.show_value`, `graphs.fill`, `gauge.needle`, `clock.show_date`, `slider-layout.pagination`). Set them to `false` to turn them off. The info module shows name and state when both `show_name` and `show_state` are missing. If only one of them is set, the missing one is off, as in older configs. The tables list the options each module reads.
+
+### Content
+
+| `type` | What it does | Key options |
+| --- | --- | --- |
+| `text` | Static text, a template or an entity value | `text`, `use_template` (Jinja in `text`), `use_entity`, `entity`, `attribute`, `entity_display` (`state`, `name`, `name_state`) |
+| `icon` | An icon | `icon`, `size`, `icon_color`, `use_entity_icon`, `use_entity_color`, `entity` |
+| `info` | Name, state and unit of an entity | `entity`, `attribute`, `show_name`, `show_state`, `show_unit`, `show_icon`, `icon`, `prefix`, `suffix`, `secondary_info` (an attribute name) |
+| `image` | An image from a URL, media or an entity | `image`, `entity`, `entity_picture`, `attribute`, `aspect_ratio` (`16:9`, `1.5`, `56.25%`), `fit` (`contain`, `cover`, `fill`, `none`) |
+| `markdown` | Markdown with templates | `content`, `entity`, `attribute` |
+| `bar` | A progress bar | `entity`, `attribute`, `min`, `max`, `severity` (colour ranges), `decimals`, `bar_height`, `bar_color`, `bar_background`, `show_value`, `direction` (`horizontal`, `vertical`) |
+| `graphs` | A history line graph | `entity`, `attribute`, `hours_to_show`, `points_per_hour` (empty draws every recorded change), `line_color`, `line_width`, `fill`, `fill_color`, `show_points`, `show_labels` |
+| `camera` | A camera stream or snapshot | `entity`, `camera_view` (`live`, `snapshot`; without the key it shows a snapshot, new modules get `live`), `refresh_interval` (seconds), `show_controls`, `aspect_ratio` |
+
+### Controls
+
+| `type` | What it does | Key options |
+| --- | --- | --- |
+| `button` | A button that runs its actions | `label`, `icon`, `entity`, `use_entity_icon`, `use_entity_color`, `show_state`, `attribute`, `button_style` (`default`, `outline`, `flat`, `icon-only`) |
+| `slider` | Sets a number, a light brightness and similar | `entity`, `attribute`, `min`, `max`, `step`, `show_value`, `slider_color`, `track_color`, `direction` |
+| `spinbox` | Plus and minus buttons for a number | `entity`, `attribute`, `min`, `max`, `step` |
+| `dropdown` | Select from options | `entity`, `attribute`, `options` (a list of `{label, value}` or plain strings; empty uses the entity's own options) |
+| `light` | Light controls | `entity`, `show_brightness`, `show_color_temp`, `show_color`, `show_effect`, `compact` |
+| `gauge` | A gauge | `entity`, `attribute`, `min`, `max`, `gauge_style` (`half`, `full`, `quarter`), `needle`, `show_name`, `show_unit`, `decimals`, `severity` |
+
+`severity` is a list of colour ranges, for example `[{ from: 0, color: red }, { from: 30, color: green }]`. The range with the highest `from` at or below the value applies.
+
+### Layout
+
+| `type` | What it does | Key options |
+| --- | --- | --- |
+| `horizontal` | Children side by side | `modules`, `gap`, `align`, `justify` (`start`, `center`, `end`, `space-between`, `space-around`) |
+| `vertical` | Children stacked | `modules`, `gap`, `align` (`start`, `center`, `end`, `stretch`) |
+| `row` | A grid of columns inside a column, like a card row | `columns` (each with `modules`, and optionally `id`, `gap`, `padding`, `vertical_align`, `display`, `design`), `layout`, `column_widths`, `gap`, `padding` |
+| `tabs` | Tabbed content | `tabs` (a list of `{ label, icon, modules }`), `active_tab` (index), `tab_style` (`default`, `pills`, `underline`) |
+| `separator` | A divider line | `direction`, `separator_style` (`solid`, `dashed`, `dotted`, `none`), `separator_color`, `separator_width` |
+| `slider-layout` | A swipeable carousel, one child per slide | `modules`, `pagination`, `navigation`, `slides_per_view`, `space_between` (px), `loop` (rewinds from the last slide to the first), `autoplay`, `autoplay_delay` (ms) |
+
+### Advanced
+
+| `type` | What it does | Key options |
+| --- | --- | --- |
+| `clock` | Current time and date | `format_12h` (unset follows your profile), `show_seconds`, `show_date`, `date_format` (`short`, `medium`, `long`, `numeric`, `iso`, or a pattern of tokens such as `YYYY`, `MMMM`, `dddd` and `[text]`) |
+| `weather` | Current weather | `entity` (a weather entity), `show_temperature`, `show_condition`, `show_forecast`, `forecast_days`, `animated_icons` (on for new modules; existing cards without the key keep static icons) |
+| `forecast` | A forecast list | `entity`, `forecast_type` (`daily`, `hourly`, `twice_daily`), `num_forecasts`, `show_temperature`, `show_precipitation`, `show_wind`, `animated_icons` (on for new modules; existing cards without the key keep static icons) |
+| `video-bg` | A video | `url`, `poster`, `fit` (`cover`, `contain`), `autoplay`, `loop`, `muted` (on by default) |
+| `custom-card` | Embeds another Lovelace card | `card_type` (for example `custom:button-card`, or a built-in type such as `entities`), `card_config` (that card's config), `name` |
+
+## Design
+
+Every card, row, column and module has a Design tab. Values are stored under `design:` (the card stores a few of them directly, see the card options above). Keys are CSS property names with underscores, for example `border_radius` or `font_size`.
+
+The sections sit in four headed groups in one list. Layout and Style start open, Effects and Advanced start folded, and a group that holds a value opens anyway. Each heading shows how many values the group sets. The card's own Design tab is a shorter form of card fields (see the card options above).
+
+-   Layout
+    -   Spacing and box model: margin, padding, width, height, min and max sizes, box sizing.
+    -   Positioning and layout: position, offsets, display, visibility, opacity, z-index, overflow, float, cursor, pointer events.
+    -   Flexbox and CSS grid properties.
+-   Style
+    -   Backgrounds: background, colour, image (including media browser items), position, size, repeat, attachment, clip, origin, backdrop filter.
+    -   Borders and outlines: border (all sides and per side), width, style, colour, radius, outline, box shadow, plus border length (below).
+    -   Typography: font family, size, weight and style, colour, alignment, decoration, transform, shadow, line height, letter and word spacing, white space, word break. The font picker offers system fonts and Google Fonts. A Google Font the card uses (in a design or in custom CSS) is loaded from `fonts.googleapis.com` once per page, in weights 300, 400, 500 and 700 where the family has them (so bold is a real bold face), and the browser needs internet access for it. Loading a font sends a request to Google, a third party, from every device that shows the card. Roboto is never loaded, because Home Assistant already ships it.
+    -   Shape (see [Shapes](#shapes)).
+    -   Value background (see [Value backgrounds](#value-backgrounds)).
+-   Effects
+    -   Ring (see [Ring](#ring)).
+    -   Transitions and animations: the preset animation list, plain transition and transform properties, filter.
+-   Advanced
+    -   Lists and tables.
+    -   Custom CSS: free CSS applied to that element only (`design.css`).
+
+A search field at the top filters the properties. While you search, every group with a match is open and the others are hidden.
+
+Border length. `border_length` (`%` or `px`; a bare number is `%`) shortens each drawn border side to a line of that length, for accent lines. `border_length_align` (`start`, `center`, `end`) positions the line and `border_length_sides` (`top`, `right`, `bottom`, `left`) draws it on one side only. Without a border, the line is drawn as 2px solid in the border colour.
+
+Per-side values. Margin, padding and border radius edit all four sides (or corners), each with its own unit (`px`, `em`, `rem`, `%`, `vw`, `vh`). A link button keeps the sides equal. Different sides are stored as keys such as `padding_top`, `padding_left` and `border_top_left_radius`, which override the shorthand.
+
+Entity colour. In a colour field (`color`, `background_color`, `border_color`, `outline_color`, animation colours, ring colours) the value `entity` uses the colour Home Assistant gives the module's entity in its current state (a light's own colour when it is on). `entity 20%` is the same colour at 20% opacity. This works for the domains Home Assistant colours by state (light, switch, climate, cover and so on). Sensors have no state colour. `background` is a plain text property, so use `background_color` for an entity colour.
+
+Reset, copy and paste. Each field has a reset button, each group a button that clears its values, and the top of the tab has Copy design and Paste design (replace or merge).
+
+Hover. Pick Hover under "Editing design for" to set values that apply while the pointer is over a module, column or row. They are stored under `design.hover` with the same keys as the design (custom CSS included) and win over the default design and matching rules. Animations, rings, shapes, value backgrounds and border length are not available on hover. The card has its own `hover` key, applied to its content; edit it in the Hover section of the card's Design tab. Add a `transition` to the default design for a smooth change; with reduced motion the change is immediate. On a shaped element the hover border colour recolours the shape's outline and the hover shadow replaces the shape's shadow, as long as the default design has a border or a shadow to start from. With border length, the hover border colour recolours the short lines. Hover values are applied with `!important`, so a hover `transform` or `opacity` also overrides a running animation preset that animates them. A declaration written with `!important` in the default design's custom CSS still wins over hover.
+
+Conditional design rules. In the Design tab, pick Add conditional rule next to "Editing design for". A rule has a name, conditions (the same types as display conditions), a match mode (`every` or `any`) and its own design. While the conditions match, the rule's values override the default design. Rules apply in order and later rules win. On a module, a condition without `entity` uses the module's entity (unless `use_module_entity: false`). A rule without conditions, or with a condition that is not filled in yet (such as a state condition without an entity), changes nothing.
+
+```yaml
+design:
+  background_color: "#1e1e1e"
+  conditional:
+    - id: rule-on
+      name: Light on
+      mode: every
+      conditions:
+        - id: c1
+          type: state
+          entity: light.desk
+          state: "on"
+      design:
+        background_color: entity 25%
+```
+
+## Animations
+
+Animations are presets that the card renders itself, not CSS keyframes you write. They are listed under `design.animations` (or `animations` on the card).
+
+-   An element can have several animations. Presets that animate different properties combine (for example `float` with `glow-pulse`). Two presets that animate the same property (two rotations, say) do not combine, and the later one wins.
+-   Each entry has an `id` and a `preset`, and optional fields. Unset fields use the preset's defaults.
+
+| Field | Meaning |
+| --- | --- |
+| `preset` | Preset id (list below) |
+| `target` | `module` (the whole module, default) or `icon` (only the icon; the editor offers it for icon, button, light and weather modules, and it also works on info in YAML). Cards, rows and columns animate themselves. |
+| `trigger` | Play condition: `always` (default), `entity_on` (while the entity is active), `state` (while the entity state equals `state`), `tap` (plays once from the pointer position on every tap) |
+| `trigger_entity` | Entity read by the play condition. Default: the module's entity. Required on cards, rows and columns, which have none. |
+| `state` | State value for `trigger: state` |
+| `color` | Colour of glows, particles and coloured filters. Accepts `entity` and `entity 30%`. Falls back to the design colour, then the entity colour, then the theme accent. |
+| `duration`, `delay` | CSS times, for example `2s` or `600ms` |
+| `easing` | `linear`, `ease`, `ease-in`, `ease-out`, `ease-in-out`, `spring`, `smooth`, `snap`, or a `cubic-bezier()` or `steps()` function |
+| `iterations` | `infinite` or a number |
+| `direction` | `normal`, `reverse`, `alternate`, `alternate-reverse` |
+| `intensity` | Preset-specific amount: degrees, scale in %, pixels or a particle count |
+| `strength` | 0 to 100: how strongly the colour is painted (glow and particle presets), default 100 |
+
+"Entity is on" uses Home Assistant's idea of active, so a cover that is not closed or a person who is home counts as on. A `tap` animation set to repeat forever plays once instead.
+
+Presets, grouped as in the editor:
+
+-   Glow and pulse: `breathe`, `glow-pulse`, `halo-ripple`, `aura`, `heartbeat`
+-   Motion: `spin`, `fast-spin`, `sway`, `wobble`, `shake-alert`, `rumble`, `float`, `pendulum`, `orbit`, `coin-spin`, `rotate-3d`, `squash-stretch`, `wiggle`, `shadow-lift`
+-   Playful: `bounce`, `jello`, `rubber-band`, `tada`, `swing`, `flip`, `pop`, `head-shake`
+-   Light and colour: `shine-sweep`, `blink`, `neon-flicker`, `rainbow-hue`, `glitch`, `fade-pulse`, `holographic-shimmer`, `scanline`, `twinkle`, `spotlight`
+-   Rings and sweeps: `ping`, `ripple-rings`, `radar-sweep`, `conic-border-spin`, `breathing-border`
+-   Borders: `border-snake`, `neon-border`, `power-flow`, `marching-ants`
+-   Weather and device: `flame-flicker`, `steam-rise`, `bubbles`, `snow-fall`, `rain-fall`, `liquid-wave`, `storm-flash`
+-   Scenes: `fireflies`, `confetti`, `falling-leaves`, `lightning`, `ocean-waves`, `sun-rays`, `heat-shimmer`, `wind-lines`, `drip`, `equalizer-bars`, `charging-stripes`, `orbit-dots`, `typing-dots`
+-   Backgrounds: `aurora`, `lava-lamp`, `plasma-gradient`, `gradient-flow`, `color-cycle-bg`, `starfield`, `meteor-shower`, `bokeh`, `matrix-rain`, `smoke`, `clouds-drift`, `water-ripple`, `fireworks`
+-   Seasonal: `winter`, `spring`, `summer`, `autumn`, `christmas`, `new_year`, `valentine`, `easter`, `halloween`, `weather`, `daynight`, `snow`, `rain`, `storm`, `sun`, `clouds`, `fog`, `wind`, `night`, `dusk` (see [Seasonal scenes](#seasonal-scenes))
+-   Interaction: `tap-ripple`, `press` (both play when the pointer goes down, also on elements without a tap action)
+
+### My animations
+
+With the [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration installed, you can build your own animations in its animation studio (the sidebar panel, Animations tab). They are stored in Home Assistant and shared by every card. Each one is keyframes, particles, a path or a sequence.
+
+In the card editor they appear at the top of the Preset list, under My animations. The group only shows when the integration answers and has at least one animation. A card refers to one as `custom:<id>`:
+
+```yaml
+design:
+  animations:
+    - id: a1
+      preset: custom:doorbell-wiggle
+      trigger: entity_on
+```
+
+-   Leave the timing fields empty to use the animation's own values. Anything you set (`duration`, `delay`, `easing`, `iterations`, `direction`, `color`, `strength`, `target`, `trigger`) overrides it, as with presets. `intensity` is the amplitude in %, where 100 plays it as drawn.
+-   `target` is optional. Without it the animation moves what it was built for: the element or the module's icon.
+-   `entity` is for animations with state clips or value bindings: the entity they read instead of the module's (the editor's Entity for states and values).
+-   Edit in animation studio under the entry opens the studio at that animation. It opens in a new tab, or in place when you are already in the Magic Card Utils panel.
+-   When you edit an animation in the studio, every card that uses it updates live.
+
+Sharing a card. The YAML only holds the reference. To share a card with someone who does not have your animations, open the YAML view and use Copy YAML with Embed my animations on. This adds a `custom_animations:` list with the documents the card uses, including the steps of sequences. A card plays its embedded copy whenever the library lacks that id, for example on another Home Assistant or without the integration. Without the library or an embedded copy, the reference plays nothing and the editor says why.
+
+### Animate icon
+
+On Icon, Button, Info and Light modules, the Design tab has an Animate icon button under the Animations list. It opens a small animator with a live preview:
+
+-   Library: ready-made animations from the icon library, starting with the ones for the module's icon and entity domain.
+-   This icon: split the module's icon into parts and give each part a preset (Swing, Ring, Spin, Pulse, Bounce, Draw on, Wave and more) with its timing and intensity.
+-   Apply adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils. Remove takes both away again.
+-   A This icon animation follows the module's icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts.
+-   Export the animation as an animated SVG file, or open it in the animation studio after importing the card's YAML there.
+
+Tabs and weather modules do not offer it. The animator is a separate file, `magic-card-icon-animator.js`, loaded only when you open it. See [Animate icon](documentation/design/quick-icon-animator.md).
+
+## Animation studio
+
+The animation studio is a full-screen editor for your own animations. It runs in the sidebar panel of the [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration (2026.10.04 or newer), on the Animations tab, and loads `magic-card-animation-studio.js` from the same folder as your `magic-card.js` resource. Every release attaches that file.
+
+-   Four kinds: keyframes on a timeline with an easing curve editor, particles (dots, icons, emoji or your own SVG), motion along a path you draw on the preview, and sequences of animations one after another.
+-   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. It works on a tablet.
+-   A timeline with a group of lanes per target, zoom up to 1000%, snapping, multi-select and group drag, easing per property, and copy and paste between lanes and targets.
+-   Icon parts: split an icon into its shapes, group and merge them, set pivots, and animate each part, with draw-on and motion paths. A part preset's pivot shows on the stage and in the inspector, where you can move it or reset it to the part's own.
+-   Icon animations: New animation, then Icon animation…, splits any icon for you, or starts from one of 107 animations in the icon library (search, a domain filter and live thumbnails). Part presets animate a part, group or shape with one click, with parameters for duration share, delay, intensity and direction.
+-   Animated SVG: Save as icon also exports the animation as a looping SVG file, with CSS keyframes and a SMIL fallback.
+-   Drawing: pen, line, rectangle, ellipse and freehand tools with snapping. Shapes animate like parts. Save the result as an SVG icon for any card, or import an SVG file.
+-   Card parts: move a module's name, state, icon and background separately.
+-   States and values: play something else per entity state, with a cut, crossfade or finish-cycle transition, and tie rotation, position, scale, opacity, draw-on, colour or speed to an entity value. A capsule on the stage previews states and values.
+-   A live preview on a real Magic Card: icon, button, text or card tile, light or dark card, speed, play, pause and scrub, and a reduced-motion preview.
+-   A library with search, duplicate, rename, delete and YAML export and import. Customise a preset turns any built-in preset into your own animation.
+-   Undo and redo, a warning before you leave unsaved changes, and keyboard shortcuts.
+
+Cards load the extra code for icon parts, shapes, card parts, clips and bindings from `magic-card-anim-runtime.js`, only when an animation on the page uses them. Keep that file next to `magic-card.js` (see [Installation](#installation)). The resource must be a JavaScript module (see [Loading](#loading)).
+
+The [animation studio documentation](documentation/animation-studio/README.md) covers every part, including the [YAML format](documentation/animation-studio/yaml.md) of an animation.
+
+## Ring
+
+A ring is an SVG outline drawn along the element's border. It follows the rendered border radius, so it fits a rounded card or a pill. Set it under `design.ring` for a module, row or column, or `ring` on the card. In the editor it is the Ring section, under Effects in the Design tab.
+
+`mode` is `value`, `animated`, or not set (off).
+
+Value mode fills the outline up to `(value - min) / (max - min)` of an entity.
+
+| Key | Meaning |
+| --- | --- |
+| `entity`, `attribute` | The value. Default: the module's entity. Required on cards, rows and columns. |
+| `min`, `max` | Range, default 0 to 100. Each is a number or `{ entity, attribute }`, which reads that entity's numeric state or attribute and falls back to the default when it cannot. |
+| `timer_fill` | On a `timer` entity: `remaining` (default, the ring empties as time runs out) or `elapsed` (it fills up) |
+| `thresholds` | Colour by value, for example `[{ from: 20, color: orange }]`. The highest `from` at or below the value wins. On a timer they read the remaining percentage. |
+| `transition` | Fill transition time, default `1s` |
+
+A value ring on a `timer` entity follows the timer: the time left against its duration, moving every second while it runs and is on screen, still while paused, empty while idle. `min`, `max` and `attribute` do not apply to it. The Info module shows a timer's time left as a live countdown, and the Text module does with `entity_display: remaining`.
+
+Animated mode draws a moving stroke.
+
+| Key | Meaning |
+| --- | --- |
+| `animation` | `snake` (default), `pulse`, `full`, `dots` (chase dots), `dashes` (marching ants) |
+| `length` | Snake length in % of the outline (default 25) |
+| `speed` | Time of one lap or pulse, default `3s` |
+
+Shared options:
+
+| Key | Meaning |
+| --- | --- |
+| `width` | Stroke width in px (default 3) |
+| `color`, `track_color` | Stroke colour and background track colour. Both accept `entity`. |
+| `track_opacity` | 0 to 100, opacity of the track |
+| `start` | `top`, `top-left`, `right`, `bottom`, `left` |
+| `direction` | `cw` or `ccw` |
+| `linecap` | `round` or `butt` |
+| `glow` | Glow blur in px (0 is off) |
+| `position` | `inside`, `center`, `outside`. On the card itself `outside` is drawn inside, because the card clips its edge. |
+| `trigger`, `trigger_entity`, `state` | Show the ring only while a condition holds: `always`, `entity_on` or `state` |
+
+## Shapes
+
+A shape replaces the rectangle of a module, row, column or the card with another outline. Set `design.shape` (on the card: `shape`) and, if you like, `design.shape_options`. In the editor it is the Shape section, under Style in the Design tab: pick a tile, then adjust the options of that shape.
+
+| `shape` | Outline | Options |
+| --- | --- | --- |
+| `squircle` | Rounded rectangle with smooth corners | `corner`, `smoothing` |
+| `pill` | Fully rounded ends | none |
+| `circle` | Circle or ellipse that fills the box | none |
+| `hexagon` | Points at the ends of the long side | `corner` (how far the slanted sides reach in) |
+| `octagon` | Corners cut like a regular octagon | `corner` |
+| `notch` | Small cut corners (16px by default) | `corner` |
+| `ticket` | Half-circle cutouts on the left and right | `corner` |
+| `wave` | One or all edges as a wave | `edge`, `amplitude`, `waves`, `animate` |
+| `blob` | An irregular round shape | `seed`, `wobble`, `animate` |
+| `none` | No shape (also the default) | none |
+
+| Option | Meaning |
+| --- | --- |
+| `corner` | Corner size, cut or cutout size. A px number, `16px`, or `%` of the shorter side. |
+| `smoothing` | Squircle corners, 0 to 1: 1 is rounder, 0 is squarer (default 0.6) |
+| `edge` | Wave edge: `top`, `right`, `bottom` (default), `left` or `all` |
+| `amplitude` | Wave height in px or % (default 8px) |
+| `waves` | Number of waves along the edge (default 3) |
+| `seed` | Blob: any number gives its own outline (default 7) |
+| `wobble` | Blob irregularity, 0 to 1 (default 0.25) |
+| `animate` | `true`: the wave flows or the blob morphs slowly. Paused off-screen and with reduced motion. |
+
+Things to know:
+
+-   A shape wins over `border_radius`.
+-   The border (width, style, colour), border length and the ring follow the shape. A ring on a shaped element is always drawn inside.
+-   Content gets extra padding so text stays clear of cut corners and waves.
+-   `box_shadow` becomes a drop shadow along the shape. Only the first shadow is used.
+-   The shape clips anything that pops out of a module, such as a dropdown list or a tooltip.
+-   A pop-up card keeps a rectangular surface while it is open.
+-   Known limitation: a shaped module with a `box_shadow` sits in a wrapper that draws the shadow, so a `%` width or a grid placement applies inside that wrapper.
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: info
+            entity: sensor.living_room_temperature
+            design:
+              background_color: "#1e88e533"
+              border_width: 2px
+              border_color: "#1e88e5"
+              shape: notch
+              shape_options:
+                corner: 14px
+```
+
+## Value backgrounds
+
+A value background draws the value of an entity behind an element's content: a tank that fills up to the value, or a faint sparkline of its history. Set it under `design.value_background` for a module, row or column, or `value_background` on the card. In the editor it is the Value background section, under Style in the Design tab: pick Off, Fill or Sparkline.
+
+| Key | Meaning |
+| --- | --- |
+| `type` | `fill` or `sparkline`. Without a type nothing is drawn. `none` turns off a value background that a template or the default design sets. |
+| `entity`, `attribute` | The value. Default: the module's entity. Required on cards, rows and columns. |
+| `min`, `max` | Fill range, default 0 to 100. A sparkline uses the range of its data unless you set them. |
+| `color` | Fill or line colour. Default: the theme accent. Accepts `entity` and `entity 30%` (the state colour of the value's entity). |
+| `opacity` | Fill opacity (default `25%`), or the opacity of the area under a sparkline at its bottom edge (default `18%`). Also `0.25` or `25`. |
+| `direction` | Fill only: `up` (default), `down`, `left` or `right` |
+| `wave` | Fill only: `false` turns off the moving wave on the surface |
+| `hours` | Sparkline only: history window, default 24, at most 168 |
+| `line_width` | Sparkline only: line width in px, default 1.5 |
+| `area` | Sparkline only: `false` draws the line without the area under it |
+| `smoothing` | Sparkline only: `false` draws straight segments |
+
+An unavailable or non-numeric value shows an empty tank with a faint hatch. A value at the minimum shows an empty tank with a thin line along its floor. A sparkline sits in the lower part of the element, about 65% of its height, and its area fades out towards the top. When the live value is unavailable, the sparkline holds the last recorded value as a dashed line. A sparkline without history, or with history that fails to load, draws nothing. The sparkline line stays faint (45%) so text over it stays readable. You can change that with the `--mc-value-bg-line-opacity` CSS variable. Sparklines share the history fetches of graphs modules for the same entity and window, and only fetch while they are on screen. The wave stops for reduced motion and while the element is off-screen.
+
+An open pop-up does not show the card's own value background. Like a shape, a value background can make a dropdown list or tooltip of that module render under its neighbours.
+
+The background follows the element's border radius or shape:
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: info
+            entity: sensor.water_tank
+            design:
+              shape: squircle
+              value_background:
+                type: fill
+                color: "#29b6f6"
+                opacity: 35%
+          - type: info
+            entity: sensor.living_room_temperature
+            design:
+              value_background:
+                type: sparkline
+                hours: 12
+                min: 15
+                max: 25
+```
+
+## Seasonal scenes
+
+A seasonal scene fills a card with snow, blossom, falling leaves, fireworks, bats and the like. `seasonal: auto` picks the scene from the date, so a card looks festive at the right time of year without further setup. In the editor it is the Seasonal group of the card's Design tab.
+
+```yaml
+type: custom:magic-card
+seasonal: auto
+rows:
+  - columns:
+      - modules:
+          - type: info
+            entity: sensor.living_room_temperature
+```
+
+With `auto`, a holiday wins over the season. Outside the holidays the card shows the meteorological season: winter is December to February, spring March to May, and so on. Set `hemisphere: south` to flip the seasons.
+
+| Scene | Particles | Border decorations | Shown by auto |
+| --- | --- | --- | --- |
+| `winter` | Snowflakes | Frost in the corners, icicles along the top | December to February |
+| `spring` | Blossom petals | A flowering vine round the bottom-left corner | March to May |
+| `summer` | Sun glow, butterflies | | June to August |
+| `autumn` | Falling leaves, a little drizzle | | September to November |
+| `christmas` | Snow and twinkling stars | Christmas lights along the border | 1 to 26 December |
+| `new_year` | Fireworks and confetti | | 31 December and 1 January |
+| `valentine` | Rising hearts | | 14 February |
+| `easter` | Petals and bobbing eggs | | Palm Sunday to Easter Monday |
+| `halloween` | Bats and low fog | A cobweb in the top-right corner, a pumpkin at the bottom | 24 to 31 October |
+| `weather` | Follows `weather_entity`: snow, rain, a thunderstorm, sun, clouds, fog or wind | | Never |
+| `daynight` | Follows `sun.sun`: stars and fireflies at night, a warm glow at dusk and dawn, nothing by day | | Never |
+
+| Key | Meaning |
+| --- | --- |
+| `scene` | A scene from the table, `auto` (default) or `none`. `seasonal: christmas` is short for `seasonal: { scene: christmas }`, and `seasonal: true` for auto. |
+| `layer` | `back` (default) draws the scene behind the content. `front` draws it over the content, dimmed. Taps still reach the content. |
+| `intensity` | How many particles, `50%` by default. `100%` is 24, the most a scene draws. A plain number from 0 to 1 is a fraction, so `0.7` means 70%. Larger numbers are percentages (`70` is 70%), and `1%` with the percent sign stays 1%. |
+| `decorations` | `false` turns off the border decorations |
+| `entity` | Off switch: while this entity is `off` the scene is hidden. Use one `input_boolean` on all your cards to turn the decorations off everywhere at once. |
+| `weather_entity` | The `weather` entity for the `weather` scene |
+| `hemisphere` | `north` (default) or `south`, in any case |
+| `combine` | More scenes drawn together with the main one, for example `[daynight]` for stars at night during winter |
+| `calendar` | The holiday dates auto uses, as `MM-DD..MM-DD` (inclusive). A range can run over the new year, like `12-31..01-01`. `easter: auto` (default) works out Palm Sunday to Easter Monday for each year. `off` skips a holiday. An invalid range is ignored and the default dates apply. |
+
+```yaml
+type: custom:magic-card
+seasonal:
+  scene: auto
+  intensity: 70%
+  entity: input_boolean.festive
+  hemisphere: north
+  combine: [daynight]
+  calendar:
+    christmas: 12-06..12-26
+    valentine: "off"
+rows:
+  - columns:
+      - modules:
+          - type: text
+            text: Living room
+          - type: info
+            entity: sensor.living_room_temperature
+```
+
+Border decorations follow the card's border radius or shape. The content moves in so the decorations never cover it: Christmas lights keep 20 px free on every side, icicles 20 px at the top, the pumpkin 30 px at the bottom and the vine about 20 px at the bottom and left. Frost and the cobweb are faint corner backdrops that stay behind the content. Small elements drop the decorations that don't fit. Lights twinkle; the other decorations are still.
+
+Every scene is also an animation preset in the Seasonal group, so a single module, row or column can have one (`animations: - preset: christmas`). `intensity` is the density in percent, `strength` the opacity and `decorations: false` turns off the border decorations. The `weather` preset follows the module's weather entity, or the weather entity picked as `trigger_entity`. The `daynight` preset follows `sun.sun`. The other presets are fixed scenes that don't change with the date.
+
+```yaml
+type: custom:magic-card
+rows:
+  - layout: 1-1
+    columns:
+      - modules:
+          - type: weather
+            entity: weather.home
+            design:
+              animations:
+                - preset: weather
+      - modules:
+          - type: button
+            entity: light.christmas_tree
+            design:
+              animations:
+                - preset: christmas
+                  intensity: 40
+```
+
+A card draws at most 60 seasonal particles in total. Its own scene gets its share first. When the seasonal presets on its modules, rows and columns ask for more than what is left, each of them is scaled down by the same factor. Thunderstorm flashes don't stack: a layer inside an element that already flashes skips its own flash, and at most five layers per card flash, which keeps a card under three flashes a second.
+
+Auto goes by the date in the time zone your Home Assistant profile shows times in. With the profile set to the server's time zone, the scene changes at the server's midnight.
+
+Particles pause while a card is off-screen. With reduced motion a scene is a still picture. A card without `seasonal` and without seasonal presets is not affected at all. While you edit a card, the Seasonal group has a Preview date: the card in the editor shows auto on that day. The preview date is never saved.
+
+## Flow lines
+
+A flow is an animated line between two modules of the same card, like an energy flow from solar to the house and the grid. Dots run along the line. With an entity, the speed and width follow its value, the line idles at or below `min`, and a negative value runs the dots the other way (grid import and export). Lines follow the layout when the card resizes, and cards without `flows` are unchanged.
+
+Flows connect modules by their `id`, so give the modules you connect an `id`. The editor does this for you: in Card settings, open the Flows tab, choose Add flow and pick the From and To modules (every module is listed, modules inside layout modules too), or in the studio select a module and choose Add flow from here in its floating bar. A module without an id gets one when you pick it. On a card linked to a template, a module that comes from the template without an id can't be picked: give it an id in the template first. Deleting a module removes its flows in the same undoable step.
+
+```yaml
+type: custom:magic-card
+rows:
+  - layout: 1-1-1
+    columns:
+      - modules:
+          - id: solar
+            type: info
+            entity: sensor.solar_power
+            show_icon: true
+            icon: mdi:solar-power
+      - modules:
+          - id: house
+            type: info
+            entity: sensor.house_power
+            show_icon: true
+            icon: mdi:home
+      - modules:
+          - id: grid
+            type: info
+            entity: sensor.grid_power
+            show_icon: true
+            icon: mdi:transmission-tower
+flows:
+  - id: solar-house
+    from: solar
+    to: house
+    entity: sensor.solar_power
+    max: 5000
+    color: "#f9a825"
+    label: value
+  - id: grid-house
+    from: grid
+    to: house
+    entity: sensor.grid_power   # negative = export: the dots run from house to grid
+    max: 5000
+    route: straight
+```
+
+`from`, `to` and usually `entity` are enough; everything else has a default.
+
+| Key | Meaning |
+| --- | --- |
+| `id` | Stable id of the flow (the editor generates one) |
+| `from`, `to` | Module ids of the start and end module. A flow to an unknown or hidden module is not drawn. |
+| `from_side`, `to_side` | `auto` (default: the facing sides), `top`, `right`, `bottom`, `left` |
+| `route` | `curve` (default), `straight`, `elbow` (right angles with rounded corners) |
+| `entity`, `attribute` | Value source. Without an entity the line always flows at `speed`. |
+| `min` | At or below this value (as a magnitude) the line idles: no dots, `idle_color`. Default 0. |
+| `max` | Value at which speed and width reach their maximum (default 1000) |
+| `reverse_negative` | A negative value runs the dots from `to` to `from` (default `true`) |
+| `color` | Line and dot colour (default the theme's primary colour). `entity` uses the state colour of the flow's entity, or of the From module's entity when the flow has none; `entity 40%` is that colour at 40% opacity. |
+| `idle_color` | Line colour while idle. `30%` is `color` at 30% opacity. Default: the secondary text colour at 50%. |
+| `width`, `scale_width` | Line width in px (default 3); with `scale_width` (default `true`) it grows to twice the width at `max` |
+| `dots`, `dot_size` | Dots on the line at once, 0 to 8 (default 3; 0 = moving dashes), and their size in px (default 6) |
+| `speed`, `min_speed` | Seconds for a dot to travel the line at `max` (default 2) and just above `min` (default 8) |
+| `glow` | Glow around the dots in px (default 0) |
+| `label`, `label_template` | `none` (default), `value` (the formatted entity value) or `template` (a Jinja template) at the middle of the line |
+| `label_position` | `auto` (default: on the line when it has room, else beside it), `line`, `side` or `hidden` |
+| `show_when` | `always` (default) or `flowing` (hide the line while idle) |
+| `layer` | `back` (default: behind module content) or `front` (over it; never blocks taps) |
+
+A back-layer line also runs under a layout module's own background (a Horizontal or Vertical stack with a background) and under a Slider module. Use `layer: front` for a flow that has to show over those.
+
+With reduced motion turned on in the system, a flow is a static line with an arrowhead in the flow direction.
+
+## Icon effects
+
+The Icon, Button, Info, Light, Tabs, Weather and Forecast modules can draw their icon with effects. Set them under `icon_fx` on the module. Without `icon_fx` the icon renders exactly as before.
+
+In the editor they are the Icon effects group of the General tab:
+
+- Icon, Button and Info: under the icon field (Info only while Show icon is on). With an entity, Icon when on and Icon when off sit next to it.
+- Light: it has no icon field, so the group comes after the light's toggles.
+- Tabs: the group shows once a tab has an icon. The effects apply to every tab icon.
+- Weather and Forecast: the group shows while Animated icons is off. Animated icons replace the effects; any `icon_fx` you set is kept and comes back when you turn Animated icons off.
+
+| Key | Meaning |
+| --- | --- |
+| `fill` | Liquid fill by a value. `entity` and `attribute` (default: the module's entity), `min` and `max` (default 0 to 100), `color`, `empty_color` (opacity of the empty icon such as `25%`, or a colour), `wave` (default `true`), `direction` (`up`, `down`, `left`, `right`). `fill: {}` uses all defaults. |
+| `device` | `auto` picks an animation from the entity: a fan spins faster at a higher speed, a light glows in its colour, a thermostat shows a flame while heating and snow while cooling, a washer drum turns, a cover swings while it moves, a playing media player shows an equalizer, and an alarm pulses. Or force one of `spin`, `glow`, `flame`, `drum`, `swing`, `pulse`, `snow`, `shake`, `eq`; a forced animation pauses while the entity is off or unavailable. |
+| `draw` | Line draw: `load`, `change` (when the icon changes or the entity turns on or off) or `loop`. `draw_duration` defaults to `1.2s`. |
+| `morph` | `true` morphs between `icon_on` and `icon_off` when the entity turns on or off. Icons with a different number of parts cross-fade. |
+| `colors` | `style`: `solid` (default), `duotone`, `gradient` or `value`. `primary`, `secondary` (a colour or a share of the primary such as `40%`), `gradient` (a list of colours) and `angle`. `value` picks the colour along `gradient` by the fill's value (its entity, `min` and `max`); without a fill it uses the module's entity on a 0 to 100 scale. Colours accept `entity`. |
+
+`icon_on` and `icon_off` set the icon while the entity is on or off, with or without a morph.
+
+Your own SVG: set `icon: svg` and paste the markup under `svg`, or use Custom SVG in the editor (paste or upload, up to 32 KB). Scripts, event handlers, `foreignObject` and external references are removed, and the editor refuses an SVG that contains them. `<use>` and `<image>` aren't supported: they are removed too, and the editor refuses them. Styles (`<style>` and `style="…"`) are removed, so classes styled in a `<style>` block (as Illustrator exports them) lose their colours; the editor accepts the SVG with a warning. Use `fill` attributes instead. Parts with `fill="currentColor"` take the icon colour, parts with `class="mc-accent"` take `icon_fx.colors.secondary`. All effects work on the SVG's shapes.
+
+Icons from third-party packs work when the pack provides the icon shape. Multi-colour logos and icons that can't be loaded show as they are, without effects; the editor says so. With reduced motion turned on, nothing moves, but the fill level and colours still show.
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: icon
+            entity: sensor.phone_battery
+            icon: mdi:battery
+            size: 48px
+            icon_fx:
+              fill:
+                min: 0
+                max: 100
+              colors:
+                style: value
+                gradient: ['#f44336', '#ffc107', '#4caf50']
+          - type: icon
+            entity: fan.bedroom
+            icon: mdi:fan
+            size: 48px
+            icon_fx:
+              device: auto
+          - type: button
+            entity: lock.front_door
+            icon_on: mdi:lock
+            icon_off: mdi:lock-open-variant
+            icon_fx:
+              morph: true
+```
+
+## Actions
+
+The Actions tab of a module sets `tap_action`, `hold_action` and `double_tap_action` under `actions`. A module without an action stays inert, and so does an action missing what it needs (a `navigate` without a path, a `toggle` without any entity, and so on). If a double-tap action is set, a single tap waits briefly for a possible second tap. With the keyboard, Enter or Space taps, Shift+Enter holds and Ctrl+Enter double-taps.
+
+| `action` | Fields | Result |
+| --- | --- | --- |
+| `none` | | Nothing |
+| `toggle` | `entity` | Toggles the entity (the module entity by default) |
+| `more-info` | `entity` | Opens the more-info dialog |
+| `navigate` | `navigation_path` | Goes to a dashboard path, for example `/lovelace/lights`, or to `#kitchen` to open a pop-up (quote it in YAML: `"#kitchen"`, or it is read as a comment) |
+| `perform-action` | `service` (`domain.service`), `data` (including `entity_id`) | Calls a Home Assistant action. `perform_action` and `target` are not read, so put the entity in `data`. Confirmation is not supported. |
+| `url` | `url_path` | Opens an `http` or `https` URL in a new tab |
+| `assist` | | Opens Assist |
+| `popup` | `hash` | Opens the Magic Card pop-up with that ID |
+| `close-popup` | | Closes the open pop-up |
+| `fire-dom-event` | `data` | Fires an `ll-custom` event (YAML only) |
+
+`toggle` and `more-info` use the action's own `entity` when it is set. Without one they fall back to the module's entity, unless `use_module_entity: false` is set. `haptic` (`success`, `warning`, `failure`, `light`, `medium`, `heavy`, `selection`) sends a haptic event, used by the companion app. Rows have the same Actions tab (stored under the row's `actions`). A row action runs when the row is tapped outside a module that has its own action or control, so module actions win. A row has no entity of its own, so `toggle` and `more-info` need the action's `entity`. Screen readers still read the row's content as usual. The row only takes keyboard focus (Enter or Space taps) when nothing inside it is interactive; otherwise use the modules' own controls. Columns have no actions.
+
+## Display conditions
+
+Conditions show or hide a card, row, column or module. They live under `display`:
+
+```yaml
+display:
+  mode: every        # every = all must match (default), any = one is enough
+  conditions:
+    - id: c1
+      type: state
+      entity: person.me
+      state: home
+```
+
+| `type` | Fields | Met when |
+| --- | --- | --- |
+| `state` | `entity`, then `state` or `state_not`, or `above` and `below` for numbers | The entity state matches. A missing entity does not match. `above` and `below` are ignored when `state` or `state_not` is set. |
+| `attribute` | `entity`, `attribute`, then `state`, `state_not`, `above`, `below` | The attribute value matches |
+| `time` | `after`, `before` (`HH:MM`) | The current time is at or after `after` and before `before`, in the browser's local time. A range cannot cross midnight (`22:00` to `06:00` never matches). |
+| `template` | `template` (Jinja) | The template renders true, yes, on, enable or a non-zero number |
+
+Template conditions use Home Assistant's template engine, for example `{{ is_state('sun.sun', 'below_horizon') and states('sensor.lux') | float < 50 }}`. A condition with no entity (or an empty template) counts as met. In the editor canvas, hidden items stay visible and are marked as hidden.
+
+The same condition types drive conditional design rules and conditional card appearance. Animation and ring play conditions use the simpler options always, entity on and state equals.
+
+## Pop-ups
+
+Any Magic Card can be a pop-up. It then takes no room on the dashboard and opens over it.
+
+1.  In the card's General tab, turn on Show as pop-up and set an ID (letters, digits, `-` and `_`, no spaces, case-sensitive).
+2.  Open it from any button with a Navigate action to `#<id>`, or with the Open pop-up action and the same ID.
+
+```yaml
+popup:
+  enabled: true
+  hash: kitchen
+  title: Kitchen
+  style: sheet
+```
+
+| Key | Meaning |
+| --- | --- |
+| `enabled` | Turns pop-up mode on |
+| `hash` | The pop-up ID. The pop-up is open while the page URL ends in `#<hash>`. |
+| `title` | Header text and accessible name |
+| `style` | `sheet` (bottom sheet, default) or `dialog` (centred) |
+| `width` | Maximum width, default `600px` |
+| `max_height` | Maximum height, default `90vh` |
+| `backdrop_blur` | Backdrop blur, default `8px` |
+| `backdrop_opacity` | Backdrop darkness from 0 to 1, default `0.4` |
+| `show_close` | Close button in the header, default `true` |
+| `auto_close` | Close after this many seconds without interaction (0 or unset: off) |
+| `open_on` | `{ entity, state }`. Opens when the entity changes to that state (any change when `state` is empty). |
+| `close_on` | `{ entity, state }`. Closes in the same way. |
+
+Behaviour:
+
+-   The card's `border_radius` shapes the pop-up surface. The pop-up content is the card's rows, so design, animations and conditions work as usual.
+-   It closes with the close button, a click on the backdrop, Escape, a downward swipe on the sheet header, the browser back button, the auto close timer, a `close_on` trigger, or a Close pop-up action (also from a button inside the pop-up).
+-   Only one Magic Card pop-up is open at a time. Loading a page whose URL ends in `#<id>` opens it right away.
+-   Triggers react to a change of state. The first state received after loading does not open it, and attribute-only updates are ignored.
+-   In the editors the card stays visible inline. The pop-up settings have a Preview pop-up button that opens the real pop-up, and a button that copies the navigation path.
+
+## YAML examples
+
+A simple card with a row and modules:
+
+```yaml
+type: custom:magic-card
+name: Living room
+rows:
+  - layout: "1-1"
+    gap: 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:sofa
+            size: 32px
+          - type: text
+            text: Living room
+      - modules:
+          - type: info
+            entity: sensor.living_room_temperature
+            show_name: false
+            show_state: true
+            show_unit: true
+          - type: bar
+            entity: sensor.living_room_humidity
+            min: 0
+            max: 100
+```
+
+A button with an entity colour background and an animation:
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: button
+            entity: light.desk
+            label: Desk lamp
+            use_entity_icon: true
+            use_entity_color: true
+            actions:
+              tap_action:
+                action: toggle
+              hold_action:
+                action: more-info
+            design:
+              background_color: entity 20%
+              border_radius: 16px
+              padding: 12px
+              animations:
+                - id: glow
+                  preset: glow-pulse
+                  trigger: entity_on
+                  color: entity
+                  duration: 2s
+                  intensity: 16
+                  strength: 60
+```
+
+A value ring (filter life):
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: info
+            entity: sensor.purifier_filter_life
+            show_name: true
+            show_state: true
+            design:
+              padding: 16px
+              border_radius: 24px
+              ring:
+                mode: value
+                min: 0
+                max: 100
+                width: 4
+                linecap: round
+                start: top
+                track_color: entity 20%
+                thresholds:
+                  - from: 0
+                    color: red
+                  - from: 20
+                    color: orange
+                  - from: 50
+                    color: green
+```
+
+A pop-up card and a button that opens it. The first card is the pop-up:
+
+```yaml
+type: custom:magic-card
+popup:
+  enabled: true
+  hash: kitchen
+  title: Kitchen
+  style: sheet
+rows:
+  - columns:
+      - modules:
+          - type: light
+            entity: light.kitchen
+            show_brightness: true
+          - type: button
+            label: Close
+            icon: mdi:close
+            actions:
+              tap_action:
+                action: close-popup
+```
+
+The second card holds the button:
+
+```yaml
+type: custom:magic-card
+rows:
+  - columns:
+      - modules:
+          - type: button
+            label: Kitchen
+            icon: mdi:silverware-fork-knife
+            actions:
+              tap_action:
+                action: popup
+                hash: kitchen
+```
+
+A Navigate action with `navigation_path: "#kitchen"` opens the same pop-up.
+
+A conditional design rule:
 
 ```yaml
 type: custom:magic-card
@@ -47,41 +964,60 @@ rows:
   - columns:
       - modules:
           - type: text
-            text: Hello World!
-          - type: icon
-            icon: mdi:home
+            use_entity: true
+            entity: sensor.washing_machine_status
+            design:
+              padding: 12px
+              border_radius: 12px
+              background_color: "#2b2b2b"
+              conditional:
+                - id: rule-running
+                  name: Running
+                  mode: every
+                  conditions:
+                    - id: c1
+                      type: state
+                      entity: sensor.washing_machine_status
+                      state: running
+                  design:
+                    background_color: "#1b5e20"
+                    color: white
 ```
 
-## Module Overview
+## Compatibility
 
-Magic Card comes packed with over 22 modules across 4 categories:
+-   Home Assistant 2024.8.0 or newer (`hacs.json`).
+-   Sections view: the card supplies no fixed size, so the Layout tab of the card (`grid_options`) controls its columns and rows as usual. A live pop-up asks for a full-width, auto-height cell with no minimum rows and takes itself out of the flow. The older `layout_options` are supported as well.
+-   The `grid_options`, `layout_options`, `visibility` and `view_layout` keys that Home Assistant stores in the card config are kept when you edit the card or link it to a template.
 
--   **Content**: `text`, `icon`, `info`, `image`, `markdown`, `bar`, `graphs`, `camera`
--   **Controls**: `button`, `slider`, `spinbox`, `dropdown`, `gauge`, `light`
--   **Layout**: `horizontal`, `vertical`, `tabs`, `separator`
--   **Advanced**: `clock`, `weather`, `forecast`, `custom-card`, `video-bg`
+## Troubleshooting
 
-For a detailed reference of all card and module options, please see the [Advanced Configuration Guide](docs/CONFIGURATION.md) (Note: A more detailed guide could be created here).
+-   A new option or the editor looks outdated. The browser still runs an old copy. Hard refresh (Ctrl+Shift+R) and, in the companion app, clear the frontend cache. Open the browser console and look for the line `MAGIC-CARD v<version>` to see which version is loaded. It must match the version you installed.
+-   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
+-   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
+-   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
+-   Animate icon, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has five files: `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
+-   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
 ## Development
 
--   **Prerequisites**: Node.js 16+ and npm.
--   **Install Dependencies**: `npm install`
--   **Run Dev Server**: `npm run dev` (serves on `http://localhost:5050`)
--   **Build for Production**: `npm run build`
-
-## UX Documentation
-
--   **Optimization Plan**: [docs/UX_OPTIMIZATION_PLAN.md](docs/UX_OPTIMIZATION_PLAN.md)
--   **Validation Checklist**: [docs/UX_TEST_CHECKLIST.md](docs/UX_TEST_CHECKLIST.md)
+-   Prerequisites: Node.js 16+ and npm.
+-   Install dependencies: `npm install`
+-   Run dev server: `npm run dev` (serves on `http://localhost:5050`)
+-   Build for production: `npm run build`
+-   Tests: `npm test`
 
 ## Contributing
 
-This is an open-source project and contributions are welcome! Feel free to open an issue or submit a pull request.
+This is an open-source project and contributions are welcome. Open an issue or submit a pull request.
 
 ## Support
 
 For issues, feature requests, or questions, please [create an issue on GitHub][issues-url].
+
+## Credits
+
+The icon library and the icon shapes built into the animation studio and Animate icon come from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## License
 

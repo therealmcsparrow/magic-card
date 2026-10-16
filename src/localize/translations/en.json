@@ -6,9 +6,8 @@
   "editor": {
     "mode_form": "Form",
     "mode_yaml": "YAML",
-    "mode_tree": "Tree",
-    "add_row": "Add Row",
-    "add_module": "Add Module",
+    "add_row": "Add row",
+    "add_module": "Add module",
     "delete": "Delete",
     "undo": "Undo",
     "redo": "Redo"
@@ -41,18 +40,18 @@
     "clock": "Clock",
     "weather": "Weather",
     "forecast": "Forecast",
-    "video-bg": "Video Background"
+    "video-bg": "Video background"
   },
   "actions_config": {
-    "tap_action": "Tap Action",
-    "hold_action": "Hold Action",
-    "double_tap_action": "Double Tap Action",
+    "tap_action": "Tap action",
+    "hold_action": "Hold action",
+    "double_tap_action": "Double tap action",
     "action_none": "None",
-    "action_more_info": "More Info",
+    "action_more_info": "More info",
     "action_toggle": "Toggle",
     "action_navigate": "Navigate",
     "action_url": "URL",
-    "action_perform_action": "Perform Action",
+    "action_perform_action": "Perform action",
     "action_assist": "Assist"
   },
   "conditions": {
@@ -62,6 +61,13 @@
     "type_attribute": "Attribute",
     "type_time": "Time",
     "type_template": "Template",
-    "add_condition": "Add Condition"
+    "add_condition": "Add condition"
+  },
+  "forecast": {
+    "day": "Day {n}",
+    "no_forecast": "This entity has no forecast",
+    "not_available": "Forecast not available: {error}",
+    "no_data": "No forecast data",
+    "unavailable": "Unavailable"
   }
 }

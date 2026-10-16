@@ -2,8 +2,12 @@ import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { MagicCardConfig, HomeAssistant } from '../../types';
 import { deepClone } from '../../utils/deep-merge';
+import { cardInstanceKeys } from '../../services/template-merge';
+import { stripForTemplate } from '../state/template-sync';
 import { pickerStyles, templatePickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
 
 interface TemplateEntry {
   config: Omit<MagicCardConfig, 'type'> & { type?: string };
@@ -14,9 +18,10 @@ type TemplateStore = Record<string, TemplateEntry>;
 
 @customElement('mc-template-picker')
 export class TemplatePicker extends LitElement {
-  static styles = [pickerStyles, templatePickerStyles];
+  static styles = [editorSystem, pickerStyles, templatePickerStyles];
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._close());
 
   @property({ type: String }) mode: 'create' | 'link' = 'create';
   @property({ attribute: false }) config?: MagicCardConfig;
@@ -106,7 +111,7 @@ export class TemplatePicker extends LitElement {
 
   private _close(): void {
     this._modalCtrl.reset();
-    this.dispatchEvent(new CustomEvent('close', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('mc-picker-close', { bubbles: true, composed: true }));
   }
 
   private async _handleCreateSave(): Promise<void> {
@@ -126,7 +131,8 @@ export class TemplatePicker extends LitElement {
       return;
     }
 
-    const cloned = deepClone(this.config) as unknown as Record<string, unknown>;
+    // the card's content only: no template link, overrides or HA's per-card grid_options / visibility
+    const cloned = stripForTemplate(this.config);
     const entry: TemplateEntry = {
       config: cloned as unknown as TemplateEntry['config'],
     };
@@ -156,7 +162,11 @@ export class TemplatePicker extends LitElement {
     const entry = this._templates[name];
     if (!entry) return;
 
-    const config = deepClone(entry.config) as unknown as Record<string, unknown>;
+    // the template's content, plus what HA keeps for this card (grid_options, visibility, ...)
+    const config = {
+      ...(deepClone(entry.config) as unknown as Record<string, unknown>),
+      ...(this.config ? cardInstanceKeys(this.config) : {}),
+    };
     config['type'] = 'custom:magic-card';
     config['template'] = name;
 
@@ -239,51 +249,47 @@ export class TemplatePicker extends LitElement {
   }
 
   protected render(): TemplateResult {
+    const title = this.mode === 'create' ? 'Create template' : 'Load template';
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._close(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
+      <dialog class="mc-picker-overlay" aria-label=${title} @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._close(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._close())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader(title, this._modalCtrl, () => this._close())}
           ${this.mode === 'create' ? this._renderCreate() : this._renderLink()}
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 
   private _renderCreate(): TemplateResult {
     return html`
-      <div class="mc-picker-header"
-           @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-           @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-        <div class="mc-picker-header-start">
-          <ha-icon icon="mdi:file-document-plus-outline"></ha-icon>
-          <span class="mc-picker-title">Create Template</span>
-        </div>
-        <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-          <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-        </button>
-        <button class="mc-modal-close" @click=${this._close}>&times;</button>
-      </div>
       <div class="mc-template-form">
-        <input
-          type="text"
-          placeholder="Template name"
-          .value=${this._templateName}
-          @input=${(e: InputEvent) => {
-            this._templateName = (e.target as HTMLInputElement).value;
-            this._error = '';
-            this._showOverwrite = false;
-          }}
-        />
-        <textarea
-          placeholder="Description (optional)"
-          .value=${this._templateDescription}
-          @input=${(e: InputEvent) => {
-            this._templateDescription = (e.target as HTMLTextAreaElement).value;
-          }}
-        ></textarea>
-        ${this._error ? html`<div class="mc-template-error">${this._error}</div>` : nothing}
+        <div class="field">
+          <div class="field-head"><label for="tpl-name">Template name</label></div>
+          <input
+            id="tpl-name"
+            class="input"
+            type="text"
+            .value=${this._templateName}
+            @input=${(e: InputEvent) => {
+              this._templateName = (e.target as HTMLInputElement).value;
+              this._error = '';
+              this._showOverwrite = false;
+            }}
+          />
+        </div>
+        <div class="field">
+          <div class="field-head"><label for="tpl-desc">Description (optional)</label></div>
+          <textarea
+            id="tpl-desc"
+            class="input"
+            .value=${this._templateDescription}
+            @input=${(e: InputEvent) => {
+              this._templateDescription = (e.target as HTMLTextAreaElement).value;
+            }}
+          ></textarea>
+        </div>
+        ${this._error ? html`<div class="mc-template-error" role="alert">${this._error}</div>` : nothing}
         ${this._showOverwrite
           ? html`
               <div class="mc-template-overwrite">
@@ -293,10 +299,10 @@ export class TemplatePicker extends LitElement {
           : nothing}
       </div>
       <div class="mc-picker-footer">
-        <button class="action-btn cancel-btn" @click=${this._close}>Cancel</button>
+        <button type="button" class="btn btn-secondary" @click=${this._close}>Cancel</button>
         ${this._showOverwrite
-          ? html`<button class="action-btn overwrite-btn" ?disabled=${this._saving} @click=${this._handleCreateSave}>Overwrite</button>`
-          : html`<button class="action-btn save-btn" ?disabled=${!this._templateName.trim() || this._saving} @click=${this._handleCreateSave}>Save</button>`}
+          ? html`<button type="button" class="btn btn-primary" ?disabled=${this._saving} @click=${this._handleCreateSave}>Overwrite</button>`
+          : html`<button type="button" class="btn btn-primary" ?disabled=${!this._templateName.trim() || this._saving} @click=${this._handleCreateSave}>Save</button>`}
       </div>
     `;
   }
@@ -304,29 +310,38 @@ export class TemplatePicker extends LitElement {
   private _renderEditForm(): TemplateResult {
     return html`
       <div class="mc-template-edit-form">
-        <input
-          type="text"
-          placeholder="Template name"
-          .value=${this._editName}
-          @input=${(e: InputEvent) => {
-            this._editName = (e.target as HTMLInputElement).value;
-            this._error = '';
-          }}
-          @click=${(e: Event) => e.stopPropagation()}
-        />
-        <textarea
-          placeholder="Description (optional)"
-          .value=${this._editDescription}
-          @input=${(e: InputEvent) => {
-            this._editDescription = (e.target as HTMLTextAreaElement).value;
-          }}
-          @click=${(e: Event) => e.stopPropagation()}
-        ></textarea>
-        ${this._error ? html`<div class="mc-template-error">${this._error}</div>` : nothing}
+        <div class="field">
+          <div class="field-head"><label for="tpl-edit-name">Template name</label></div>
+          <input
+            id="tpl-edit-name"
+            class="input"
+            type="text"
+            .value=${this._editName}
+            @input=${(e: InputEvent) => {
+              this._editName = (e.target as HTMLInputElement).value;
+              this._error = '';
+            }}
+            @click=${(e: Event) => e.stopPropagation()}
+          />
+        </div>
+        <div class="field">
+          <div class="field-head"><label for="tpl-edit-desc">Description (optional)</label></div>
+          <textarea
+            id="tpl-edit-desc"
+            class="input"
+            .value=${this._editDescription}
+            @input=${(e: InputEvent) => {
+              this._editDescription = (e.target as HTMLTextAreaElement).value;
+            }}
+            @click=${(e: Event) => e.stopPropagation()}
+          ></textarea>
+        </div>
+        ${this._error ? html`<div class="mc-template-error" role="alert">${this._error}</div>` : nothing}
         <div class="mc-template-edit-actions">
-          <button class="action-btn cancel-btn" @click=${this._cancelEdit}>Cancel</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${this._cancelEdit}>Cancel</button>
           <button
-            class="action-btn save-btn"
+            type="button"
+            class="btn btn-primary btn-sm"
             ?disabled=${!this._editName.trim() || this._saving}
             @click=${this._saveEdit}
           >
@@ -339,47 +354,14 @@ export class TemplatePicker extends LitElement {
 
   private _renderLink(): TemplateResult {
     if (this._loading) {
-      return html`
-        <div class="mc-picker-header"
-             @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-             @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-          <div class="mc-picker-header-start">
-            <ha-icon icon="mdi:file-document-multiple-outline"></ha-icon>
-            <span class="mc-picker-title">Load Template</span>
-          </div>
-          <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-            <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-          </button>
-          <button class="mc-modal-close" @click=${this._close}>&times;</button>
-        </div>
-        <div class="mc-picker-loading">Loading templates...</div>
-      `;
+      return html`<div class="mc-picker-loading">Loading templates...</div>`;
     }
 
     const names = this._getFilteredTemplates();
 
     return html`
-      <div class="mc-picker-header"
-           @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-           @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-        <div class="mc-picker-header-start">
-          <ha-icon icon="mdi:file-document-multiple-outline"></ha-icon>
-          <span class="mc-picker-title">Load Template</span>
-        </div>
-        <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-          <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-        </button>
-        <button class="mc-modal-close" @click=${this._close}>&times;</button>
-      </div>
       <div class="mc-picker-search">
-        <input
-          type="text"
-          placeholder="Search templates..."
-          .value=${this._searchQuery}
-          @input=${(e: InputEvent) => {
-            this._searchQuery = (e.target as HTMLInputElement).value;
-          }}
-        />
+        ${renderPickerSearch('Search templates', this._searchQuery, (v) => { this._searchQuery = v; })}
       </div>
       ${this._confirmLoad
         ? html`
@@ -388,8 +370,8 @@ export class TemplatePicker extends LitElement {
                 Load "${this._confirmLoad}"? This will replace your current config.
               </div>
               <div class="mc-template-confirm-actions">
-                <button class="action-btn save-btn" @click=${() => this._handleLoadConfirm(this._confirmLoad!)}>Confirm</button>
-                <button class="action-btn cancel-btn" @click=${() => { this._confirmLoad = null; }}>Cancel</button>
+                <button type="button" class="btn btn-secondary btn-sm" @click=${() => { this._confirmLoad = null; }}>Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" @click=${() => this._handleLoadConfirm(this._confirmLoad!)}>Load</button>
               </div>
             </div>
           `
@@ -399,20 +381,31 @@ export class TemplatePicker extends LitElement {
         ${names.length > 0
           ? names.map(
               (name) => html`
-                <div class="mc-picker-item" @click=${() => { this._confirmLoad = name; }}>
-                  <div class="mc-picker-item-icon">
-                    <ha-icon icon="mdi:file-document-outline"></ha-icon>
-                  </div>
-                  <div class="mc-picker-item-content">
-                    <div class="mc-picker-item-name">${name}</div>
+                <div
+                  class="mc-picker-item ${this._confirmLoad === name ? 'selected' : ''}"
+                  role="button"
+                  tabindex="0"
+                  @click=${() => { this._confirmLoad = name; }}
+                  @keydown=${(e: KeyboardEvent) => {
+                    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      this._confirmLoad = name;
+                    }
+                  }}
+                >
+                  <span class="mc-picker-item-icon"><ha-icon icon="mdi:file-document-outline"></ha-icon></span>
+                  <span class="mc-picker-item-content">
+                    <span class="mc-picker-item-name">${name}</span>
                     ${this._templates[name]?.description
-                      ? html`<div class="mc-picker-item-meta">${this._templates[name].description}</div>`
+                      ? html`<span class="mc-picker-item-meta">${this._templates[name].description}</span>`
                       : nothing}
-                  </div>
-                  <div class="mc-picker-item-actions">
+                  </span>
+                  <span class="mc-picker-item-actions">
                     <button
-                      class="mc-template-edit-btn"
+                      type="button"
+                      class="icon-btn sm"
                       title="Edit template"
+                      aria-label=${`Edit template ${name}`}
                       @click=${(e: Event) => {
                         e.stopPropagation();
                         this._startEdit(name);
@@ -421,8 +414,10 @@ export class TemplatePicker extends LitElement {
                       <ha-icon icon="mdi:pencil-outline"></ha-icon>
                     </button>
                     <button
-                      class="mc-template-delete-btn"
+                      type="button"
+                      class="icon-btn sm danger"
                       title="Delete template"
+                      aria-label=${`Delete template ${name}`}
                       @click=${(e: Event) => {
                         e.stopPropagation();
                         this._handleDelete(name);
@@ -430,14 +425,14 @@ export class TemplatePicker extends LitElement {
                     >
                       <ha-icon icon="mdi:delete-outline"></ha-icon>
                     </button>
-                  </div>
+                  </span>
                 </div>
               `,
             )
           : html`<div class="mc-picker-empty">No templates saved</div>`}
       </div>
       <div class="mc-picker-footer">
-        <button class="action-btn cancel-btn" @click=${this._close}>Cancel</button>
+        <button type="button" class="btn btn-secondary" @click=${this._close}>Cancel</button>
       </div>
     `;
   }

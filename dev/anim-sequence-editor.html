@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sequence editor harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --text-primary-color:#fff; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  /* the studio's inspector column (or the wide bottom panel) */
+  #pane { box-sizing:border-box; width:var(--w); margin:16px; padding:16px; background:var(--card-background-color);
+    border:1px solid var(--divider-color); border-radius:12px; overflow:auto; max-height:calc(100vh - 32px); }
+  #pane h2 { margin:0 0 16px; font-size:1rem; font-weight:500; }
+</style>
+</head>
+<body>
+  <section id="pane"><h2>Steps</h2></section>
+  <script src="./shims.js"></script>
+  <!-- the bundle holds the card (a module script since the lazy runtime chunk); the page script runs after it -->
+  <script type="module" src="../.harness-build/anim-sequence/sequence.js"></script>
+  <script type="module">
+    const params = new URLSearchParams(location.search);
+    document.documentElement.dataset.theme = params.get('theme') || 'light';
+    document.documentElement.style.setProperty('--w', `${params.get('w') || 360}px`);
+    const v = (raw) => { const r = window.__seqDev.validateAnimationDoc(raw); if (!r.ok) throw new Error(JSON.stringify(r.errors)); return r.doc; };
+    const LIBRARY = Object.fromEntries([
+      { id: 'bell', name: 'Doorbell wiggle', kind: 'keyframes', duration: 1.2, target: 'icon', keyframes: [{ at: 0, transform: { rotate: 0 } }, { at: 50, transform: { rotate: 10 } }, { at: 100, transform: { rotate: 0 } }] },
+      { id: 'rocket', name: 'Rocket path', kind: 'path', duration: 2, path: { d: 'M0 0 C 20 -30 40 30 60 0', units: 'px', subject: 'element' } },
+      { id: 'hearts', name: 'Hearts', kind: 'particles', duration: 3, particles: { shape: { emoji: '💖' }, count: 4, direction: 'rise' } },
+      { id: 'comet', name: 'Comet trail', kind: 'path', duration: 2, path: { d: 'M0 0 L 50 0', units: 'px', subject: 'particles' } },
+      { id: 'wave', name: 'Row wave', kind: 'sequence', steps: [{ animation: 'pop' }] },
+    ].map((d) => [d.id, v(d)]));
+    const CASES = {
+      default: { id: 'intro', name: 'Doorbell intro', kind: 'sequence', loop: true, stagger: { children: false, delay: 0.15 }, steps: [
+        { animation: 'pop', delay: 0, repeat: 1 },
+        { animation: 'custom:bell', delay: 0.3, repeat: 2 },
+        { animation: 'wiggle', delay: 0.2, duration: 0.8, repeat: 1 },
+        { animation: 'custom:gone', delay: 0, repeat: 1 },
+        { animation: 'custom:rocket', delay: 0.5, repeat: 1 },
+      ] },
+      stagger: { id: 'rowwave', name: 'Row wave', kind: 'sequence', loop: false, stagger: { children: true, delay: 0.2 }, steps: [
+        { animation: 'pop', delay: 0, repeat: 1 },
+        { animation: 'custom:hearts', delay: 0, repeat: 1 },
+        { animation: 'custom:comet', delay: 0, repeat: 1 },
+        { animation: 'heartbeat', delay: 0.4, repeat: 3 },
+      ] },
+      full: { id: 'long', name: 'Long', kind: 'sequence', steps: Array.from({ length: 20 }, (_, i) => ({ animation: ['pop', 'wiggle', 'custom:bell', 'heartbeat'][i % 4], delay: i % 3 ? 0.1 : 0, repeat: 1 })) },
+    };
+    const el = document.createElement('mc-anim-sequence-editor');
+    el.library = LIBRARY;
+    el.doc = v(CASES[params.get('case') || 'default']);
+    el.time = Number(params.get('time') ?? 0.4);
+    window.__seq = { el, events: [], LIBRARY };
+    // as the studio shell does: every edit becomes the new doc
+    el.addEventListener('doc-change', (e) => { window.__seq.events.push(e.detail); el.doc = e.detail.doc; });
+    document.getElementById('pane').appendChild(el);
+  </script>
+</body>
+</html>

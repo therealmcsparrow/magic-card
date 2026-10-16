@@ -1,4 +1,6 @@
 import { DisplayConfig, DisplayCondition, HomeAssistant } from '../types';
+import { currentRenderContext } from './render-context';
+import { templateResultTruthy } from './template-controller';
 
 export class ConditionsService {
   static evaluate(display: DisplayConfig | undefined, hass: HomeAssistant | undefined): boolean {
@@ -10,6 +12,36 @@ export class ConditionsService {
     return display.mode === 'any' ? results.some(Boolean) : results.every(Boolean);
   }
 
+  /**
+   * Whether a condition is filled in enough to decide anything: a state / attribute condition needs
+   * its entity (an attribute one its attribute too), a template one its template, a time one a bound.
+   */
+  static isComplete(cond: DisplayCondition | undefined): boolean {
+    if (!cond || typeof cond !== 'object') return false;
+    switch (cond.type) {
+      case 'state':
+        return !!cond.entity?.trim();
+      case 'attribute':
+        return !!cond.entity?.trim() && !!cond.attribute?.trim();
+      case 'template':
+        return !!cond.template?.trim();
+      case 'time':
+        return !!cond.after?.trim() || !!cond.before?.trim();
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * A design / appearance rule is active when it has conditions, all of them complete, and they
+   * match. A rule still being set up (no conditions, or one without its entity) changes nothing.
+   */
+  static ruleMatches(rule: { conditions?: DisplayCondition[]; mode?: 'every' | 'any' }, hass: HomeAssistant | undefined): boolean {
+    const conditions = rule.conditions;
+    if (!Array.isArray(conditions) || !conditions.length || !conditions.every((c) => ConditionsService.isComplete(c))) return false;
+    return ConditionsService.evaluate({ conditions, mode: rule.mode }, hass);
+  }
+
   static evaluateCondition(cond: DisplayCondition, hass: HomeAssistant): boolean {
     switch (cond.type) {
       case 'state':
@@ -19,10 +51,21 @@ export class ConditionsService {
       case 'time':
         return ConditionsService.evaluateTimeCondition(cond);
       case 'template':
-        return true; // Template evaluation is async, handled by TemplateService
+        return ConditionsService.evaluateTemplateCondition(cond);
       default:
         return true;
     }
+  }
+
+  /**
+   * Met when the template renders truthy (true / yes / on / enable or a non-zero number). The result
+   * comes from the render_template subscription of the card being rendered; until it arrives, on
+   * error, or outside a card render it is not met. An empty template is not configured yet: met.
+   */
+  private static evaluateTemplateCondition(cond: DisplayCondition): boolean {
+    if (!cond.template?.trim()) return true;
+    const result = currentRenderContext()?.template(cond.template);
+    return result?.status === 'ok' && templateResultTruthy(result.result);
   }
 
   private static evaluateStateCondition(cond: DisplayCondition, hass: HomeAssistant): boolean {

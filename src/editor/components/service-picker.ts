@@ -2,7 +2,9 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles, servicePickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
 
 interface ServiceInfo {
   domain: string;
@@ -13,13 +15,14 @@ interface ServiceInfo {
 
 @customElement('mc-service-picker')
 export class ServicePicker extends LitElement {
-  static styles = [pickerStyles, servicePickerStyles];
+  static styles = [editorSystem, pickerStyles, servicePickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) label = 'Service';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -138,17 +141,25 @@ export class ServicePicker extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="mc-picker-row">
+      <div class="with-icon with-action">
+        <ha-icon icon="mdi:cog-outline"></ha-icon>
         <input
           type="text"
-          class="mc-picker-input"
+          class="input mono"
           .value=${this.value}
           placeholder="domain.service"
+          aria-label=${this.label}
+          spellcheck="false"
           @input=${this._onInputChange}
         />
-        <button class="mc-picker-btn" @click=${this._openModal}>
-          <ha-icon icon="mdi:cog-play"></ha-icon>
-          Select
+        <button
+          type="button"
+          class="icon-btn sm field-action browse"
+          aria-label="Browse services"
+          title="Browse services"
+          @click=${this._openModal}
+        >
+          <ha-icon icon="mdi:magnify"></ha-icon>
         </button>
       </div>
 
@@ -160,57 +171,45 @@ export class ServicePicker extends LitElement {
     const groupedServices = this._getFilteredServices();
 
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-picker-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <ha-icon icon="mdi:cog-play"></ha-icon>
-            <span class="mc-picker-title">Select Service</span>
-            <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-              <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-            </button>
-            <button class="mc-picker-close" @click=${this._closeModal}>&times;</button>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Select service" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Select service', this._modalCtrl, () => this._closeModal())}
           <div class="mc-picker-search">
-            <input
-              type="text"
-              placeholder="Search services..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => { this._searchQuery = (e.target as HTMLInputElement).value; }}
-            />
+            ${renderPickerSearch('Search services', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list">
+          <div class="mc-picker-list" role="listbox" aria-label="Services">
             ${groupedServices.length > 0
               ? groupedServices.map(group => html`
                   <div class="mc-picker-domain">${group.domain}</div>
                   ${group.services.map(service => html`
-                    <div
+                    <button
+                      type="button"
+                      role="option"
                       class="mc-picker-item"
+                      aria-selected=${this.value === `${service.domain}.${service.service}` ? 'true' : 'false'}
                       @click=${() => this._selectService(`${service.domain}.${service.service}`)}
                     >
-                      <div class="mc-picker-item-icon">
-                        <ha-icon icon=${this._domainIcon(service.domain)}></ha-icon>
-                      </div>
-                      <div class="mc-picker-item-content">
-                        <div class="mc-picker-item-name">${service.name}</div>
-                        <div class="mc-picker-item-id">${service.domain}.${service.service}</div>
+                      <span class="mc-picker-item-icon"><ha-icon icon=${this._domainIcon(service.domain)}></ha-icon></span>
+                      <span class="mc-picker-item-content">
+                        <span class="mc-picker-item-name">${service.name}</span>
+                        <span class="mc-picker-item-id">${service.domain}.${service.service}</span>
                         ${service.description
-                          ? html`<div class="mc-picker-item-desc">${service.description}</div>`
+                          ? html`<span class="mc-picker-item-desc">${service.description}</span>`
                           : ''
                         }
-                      </div>
-                    </div>
+                      </span>
+                    </button>
                   `)}
                 `)
               : html`<div class="mc-picker-empty">No services found</div>`
             }
           </div>
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          <div class="mc-picker-footer">
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+          </div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 }

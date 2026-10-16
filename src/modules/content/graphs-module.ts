@@ -1,25 +1,21 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, svg, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, GraphsModuleConfig } from '../../types';
+import { CardModule, HomeAssistant, GraphsModuleConfig, HassEntity } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderNumberField, renderToggleField, renderEntityField, renderAttributeField, renderTextField, renderColorField } from '../../utils/form-utils';
-import { SyncContext } from '../../utils/sync-path';
+import { renderNumberField, renderToggleField, renderEntityField, renderAttributeField, renderColorField, renderFieldHint } from '../../utils/form-utils';
+import type { ModuleDependencies } from '../../services/card-dependencies';
+import { currentRenderContext } from '../../services/render-context';
+import { entityDisplayName, entityNumber, formatEntityValue } from '../../utils/entity-value';
+import { downsample, getHistory, type HistorySample } from '../../services/history-cache';
 
-interface CachedHistory {
-  points: number[];
-  timestamp: number;
-  entityId: string;
-  hours: number;
-}
+export { clearHistoryCache, downsample, historyRequest, parseHistory } from '../../services/history-cache';
+export type { HistorySample } from '../../services/history-cache';
 
-/** Cache history data to avoid refetching on every render. Key: moduleId */
-const _historyCache = new Map<string, CachedHistory>();
-/** Track in-flight fetches to avoid duplicate requests. Key: moduleId */
-const _pendingFetches = new Set<string>();
-
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const SVG_W = 200;
+const SVG_H = 60;
+const PAD = 4;
 
 class GraphsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -43,141 +39,96 @@ class GraphsModule extends BaseMagicModule {
     };
   }
 
-  private _fetchHistory(
-    hass: HomeAssistant,
-    moduleId: string,
-    entityId: string,
-    hours: number,
-    attribute?: string,
-  ): void {
-    if (_pendingFetches.has(moduleId)) return;
-    _pendingFetches.add(moduleId);
-
-    const endTime = new Date();
-    const startTime = new Date(endTime.getTime() - hours * 3600000);
-
-    hass
-      .callWS<Record<string, Array<{ s: string; a: Record<string, unknown>; lu: number }>>>({
-        type: 'history/history_during_period',
-        start_time: startTime.toISOString(),
-        end_time: endTime.toISOString(),
-        entity_ids: [entityId],
-        minimal_response: true,
-        significant_changes_only: true,
-      })
-      .then((result) => {
-        const states = result[entityId] || [];
-        const points = states
-          .map((s) => {
-            const val = attribute ? Number(s.a?.[attribute]) : Number(s.s);
-            return isNaN(val) ? null : val;
-          })
-          .filter((v): v is number => v !== null);
-
-        _historyCache.set(moduleId, {
-          points,
-          timestamp: Date.now(),
-          entityId,
-          hours,
-        });
-      })
-      .catch((err) => {
-        console.warn('magic-card: failed to fetch history for', entityId, err);
-      })
-      .finally(() => {
-        _pendingFetches.delete(moduleId);
-      });
+  /** Re-check every minute so the history is refetched soon after the cache expires (entity unchanged or not). */
+  getDependencies(config: CardModule): ModuleDependencies {
+    return config.entity ? { refreshInterval: 60_000 } : {};
   }
 
-  private _buildPath(points: number[], width: number, height: number): string {
-    if (points.length === 0) return '';
-    const min = Math.min(...points);
-    const max = Math.max(...points);
-    const range = max - min || 1;
-    const padding = 4;
-    const graphH = height - padding * 2;
+  /** The samples to draw (fetched history + the current value), or why there are none. */
+  private _series(c: GraphsModuleConfig, hass: HomeAssistant | undefined, hours: number):
+    | { status: 'ok'; points: HistorySample[]; start: number; end: number }
+    | { status: 'none' | 'loading' | 'error' | 'empty' } {
+    if (!c.entity) return { status: 'none' };
+    if (!hass) return { status: 'loading' };
+    const attribute = c.attribute || undefined;
+    // The card rendering this graph paints again once the history arrives.
+    const cached = getHistory(hass, c.entity, hours, attribute, currentRenderContext()?.requestUpdate);
+    if (!cached) return { status: 'loading' };
+    // a failed refetch keeps the samples fetched before: those are still drawn
+    if (cached.error && !cached.samples.length) return { status: 'error' };
 
-    return points
-      .map((v, i) => {
-        const x = points.length === 1 ? width / 2 : (i / (points.length - 1)) * width;
-        const y = padding + graphH - ((v - min) / range) * graphH;
-        return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(' ');
+    const end = Date.now();
+    const start = end - hours * 3600_000;
+    const samples = cached.samples.map((s) => ({ t: Math.max(s.t, start), v: s.v })).filter((s) => s.t <= end);
+    const current = entityNumber(hass.states[c.entity], attribute);
+    if (current !== undefined) samples.push({ t: end, v: current });
+    const pph = Number(c.points_per_hour);
+    const points = pph > 0 ? downsample(samples, start, end, pph) : samples;
+    // A single bucket / sample still spans the window: the value did not change.
+    if (points.length === 1 && samples.length > 1) points.push({ t: end, v: points[0].v });
+    return points.length > 1 ? { status: 'ok', points, start, end } : { status: 'empty' };
+  }
+
+  private _coords(points: HistorySample[], start: number, end: number): Array<{ x: number; y: number }> {
+    // A loop, not Math.min(...values): spreading a long raw history overflows the call stack.
+    let min = Infinity;
+    let max = -Infinity;
+    for (const p of points) {
+      if (p.v < min) min = p.v;
+      if (p.v > max) max = p.v;
+    }
+    const range = max - min;
+    const span = end - start || 1;
+    const graphH = SVG_H - PAD * 2;
+    return points.map((p) => ({
+      x: ((p.t - start) / span) * SVG_W,
+      y: range ? PAD + graphH - ((p.v - min) / range) * graphH : SVG_H / 2,
+    }));
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as GraphsModuleConfig;
     const color = c.line_color || 'var(--mc-primary)';
     const fillColor = c.fill_color || 'var(--mc-primary)';
-    const hours = c.hours_to_show || 24;
-    const svgW = 200;
-    const svgH = 60;
+    const hours = Number(c.hours_to_show) > 0 ? Number(c.hours_to_show) : 24;
+    const series = this._series(c, hass, hours);
+    const entity: HassEntity | undefined = c.entity ? hass?.states[c.entity] : undefined;
 
-    // Try to get cached history data
-    let points: number[] | null = null;
-    if (c.entity && hass) {
-      const cached = _historyCache.get(c.id);
-      const isStale =
-        !cached ||
-        cached.entityId !== c.entity ||
-        cached.hours !== hours ||
-        Date.now() - cached.timestamp > CACHE_TTL_MS;
-
-      if (isStale) {
-        this._fetchHistory(hass, c.id, c.entity, hours, c.attribute);
-      }
-      if (cached && cached.entityId === c.entity) {
-        points = cached.points;
-      }
+    let body: TemplateResult;
+    if (series.status === 'ok') {
+      const pts = this._coords(series.points, series.start, series.end);
+      const line = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const first = pts[0];
+      const last = pts[pts.length - 1];
+      const area = `${line} L${last.x.toFixed(1)},${SVG_H} L${first.x.toFixed(1)},${SVG_H} Z`;
+      body = html`<svg viewBox="0 0 ${SVG_W} ${SVG_H}" preserveAspectRatio="none" style="height: 60px" role="img"
+        aria-label=${`${entity ? entityDisplayName(hass, entity) : c.entity}: last ${hours} hours`}>
+        ${c.fill !== false ? svg`<path class="mc-graphs-fill" d=${area} fill=${fillColor} opacity="0.15" />` : nothing}
+        <path class="mc-graphs-line" d=${line} fill="none" stroke=${color} stroke-width=${c.line_width || 2}
+          vector-effect="non-scaling-stroke" stroke-linejoin="round" />
+        ${c.show_points ? pts.map((p) => svg`<circle cx=${p.x} cy=${p.y} r="3" fill=${color} />`) : nothing}
+      </svg>`;
+    } else {
+      const text = {
+        none: 'No entity',
+        loading: 'Loading history…',
+        error: 'History unavailable',
+        empty: 'No numeric history',
+      }[series.status];
+      body = html`<div class="mc-graphs-empty" data-status=${series.status} style="height: 60px">${text}</div>`;
     }
 
-    // Render real data or placeholder
-    const hasData = points !== null && points.length > 1;
-    const dataPoints = hasData ? points : null;
-    const linePath = dataPoints ? this._buildPath(dataPoints, svgW, svgH) : 'M0,50 Q30,30 60,35 T120,20 T200,30';
-    const fillPath = dataPoints
-      ? `${this._buildPath(dataPoints, svgW, svgH)} L${svgW},${svgH} L0,${svgH} Z`
-      : 'M0,50 Q30,30 60,35 T120,20 T200,30 L200,60 L0,60 Z';
-
-    // Build point circles from real data
-    const pointCircles = dataPoints && c.show_points
-      ? dataPoints.map((v, i) => {
-          const min = Math.min(...dataPoints);
-          const max = Math.max(...dataPoints);
-          const range = max - min || 1;
-          const x = dataPoints.length === 1 ? svgW / 2 : (i / (dataPoints.length - 1)) * svgW;
-          const y = 4 + (svgH - 8) - ((v - min) / range) * (svgH - 8);
-          return { x, y };
-        })
-      : [];
-
+    let value = '';
+    if (entity) value = formatEntityValue(hass, entity, c.attribute || undefined).text;
     return html`
       <div class="mc-module mc-graphs">
-        <svg viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none" style="height: 60px">
-          ${c.fill
-            ? html`<path d="${fillPath}" fill="${fillColor}" opacity="0.15" />`
-            : ''}
-          <path d="${linePath}"
-            fill="none" stroke="${color}" stroke-width="${c.line_width || 2}" />
-          ${c.show_points && !hasData
-            ? html`
-                <circle cx="0" cy="50" r="3" fill="${color}" />
-                <circle cx="60" cy="35" r="3" fill="${color}" />
-                <circle cx="120" cy="20" r="3" fill="${color}" />
-                <circle cx="200" cy="30" r="3" fill="${color}" />
-              `
-            : ''}
-          ${pointCircles.map(
-            (p) => html`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${color}" />`
-          )}
-        </svg>
-        ${c.show_labels
+        ${body}
+        ${c.show_labels !== false
           ? html`<div class="mc-graphs-label">
-              ${c.entity || 'No entity'} &mdash; ${hours}h
-              ${!c.entity ? '' : !hasData ? html` <span style="opacity:0.5">(loading...)</span>` : ''}
+              <span class="mc-graphs-name">${entity ? entityDisplayName(hass, entity) : c.entity || 'No entity'}${c.attribute ? ` · ${(entity && hass?.formatEntityAttributeName?.(entity, c.attribute)) || c.attribute}` : ''}</span>
+              <span class="mc-graphs-meta">${value ? `${value} · ` : ''}${hours}h</span>
             </div>`
-          : ''}
+          : nothing}
       </div>
     `;
   }
@@ -193,15 +144,21 @@ class GraphsModule extends BaseMagicModule {
     return html`
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-        ${renderNumberField('Hours to Show', c.hours_to_show, (v) => onChange({ ...c, hours_to_show: v }), { min: 1, max: 168 }, 'hours_to_show', syncCtx)}
-        ${renderNumberField('Points per Hour', c.points_per_hour, (v) => onChange({ ...c, points_per_hour: v }), { min: 1, max: 60 }, 'points_per_hour', syncCtx)}
-        ${renderColorField('Line Color', c.line_color, (v) => onChange({ ...c, line_color: v }), 'line_color', syncCtx)}
-        ${renderNumberField('Line Width', c.line_width, (v) => onChange({ ...c, line_width: v }), { min: 1, max: 10 }, 'line_width', syncCtx)}
-        ${renderToggleField('Fill', c.fill, (v) => onChange({ ...c, fill: v }), 'fill', syncCtx)}
-        ${renderColorField('Fill Color', c.fill_color, (v) => onChange({ ...c, fill_color: v }), 'fill_color', syncCtx)}
-        ${renderToggleField('Show Points', c.show_points, (v) => onChange({ ...c, show_points: v }), 'show_points', syncCtx)}
-        ${renderToggleField('Show Labels', c.show_labels, (v) => onChange({ ...c, show_labels: v }), 'show_labels', syncCtx)}
+        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
+        ${renderNumberField('Hours to show', c.hours_to_show, (v) => onChange({ ...c, hours_to_show: v }), { min: 1, max: 168 }, 'hours_to_show', syncCtx)}
+        ${c.attribute && Number(c.hours_to_show) > 48
+          ? renderFieldHint('An attribute graph loads every recorded state with all its attributes; long periods can load slowly.')
+          : nothing}
+        ${renderNumberField('Points per hour', c.points_per_hour, (v) => onChange({ ...c, points_per_hour: Number.isFinite(v) && v > 0 ? v : undefined }),
+          { min: 0.1, max: 60, step: 0.1, optional: true, placeholder: 'Every change' }, 'points_per_hour', syncCtx)}
+        ${renderFieldHint('Values are averaged per period (2 = every 30 minutes). Empty draws every recorded change.')}
+        ${renderColorField('Line color', c.line_color, (v) => onChange({ ...c, line_color: v }), 'line_color', syncCtx)}
+        ${renderNumberField('Line width', c.line_width, (v) => onChange({ ...c, line_width: v }), { min: 1, max: 10 }, 'line_width', syncCtx)}
+        ${renderToggleField('Fill', c.fill !== false, (v) => onChange({ ...c, fill: v }), 'fill', syncCtx)}
+        ${c.fill !== false ? renderColorField('Fill color', c.fill_color, (v) => onChange({ ...c, fill_color: v }), 'fill_color', syncCtx) : nothing}
+        ${renderToggleField('Show points', c.show_points, (v) => onChange({ ...c, show_points: v }), 'show_points', syncCtx)}
+        ${renderToggleField('Show labels', c.show_labels !== false, (v) => onChange({ ...c, show_labels: v }), 'show_labels', syncCtx,
+          'Name, current value and time span under the graph.')}
       </div>
     `;
   }

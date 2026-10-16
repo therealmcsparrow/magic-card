@@ -4,13 +4,31 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { MODULE_CATEGORIES } from '../../utils/constants';
 import { MagicModuleMetadata } from '../../modules/module-types';
 import { ModuleCategory } from '../../types';
-import { componentControlStyles, moduleSelectorStyles } from '../../css/css';
+import { pickerStyles, moduleSelectorStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
+import { renderPickerSearch, PickerDialogController } from '../components/picker-parts';
+
+type CategoryFilter = 'all' | ModuleCategory;
+
+const CATEGORY_LABELS: Record<string, string> = {
+  content: 'Content',
+  controls: 'Controls',
+  layout: 'Layout',
+  advanced: 'Advanced',
+};
 
 @customElement('mc-module-selector')
 export class ModuleSelector extends LitElement {
-  static styles = [componentControlStyles, moduleSelectorStyles];
+  static styles = [editorSystem, pickerStyles, moduleSelectorStyles];
+
+  private _dialogCtrl = new PickerDialogController(this, () => this._onClose());
 
   @state() private _searchQuery = '';
+  @state() private _category: CategoryFilter = 'all';
+
+  protected firstUpdated(): void {
+    this.shadowRoot?.querySelector<HTMLInputElement>('.mc-picker-search input')?.focus();
+  }
 
   protected render(): TemplateResult {
     const modules = this._searchQuery
@@ -19,6 +37,7 @@ export class ModuleSelector extends LitElement {
 
     const grouped = new Map<ModuleCategory, MagicModuleMetadata[]>();
     for (const cat of MODULE_CATEGORIES) {
+      if (this._category !== 'all' && this._category !== cat) continue;
       const items = modules
         .filter((m) => m.metadata.category === cat)
         .map((m) => m.metadata);
@@ -27,50 +46,61 @@ export class ModuleSelector extends LitElement {
       }
     }
 
+    const filters: CategoryFilter[] = ['all', ...MODULE_CATEGORIES];
+
     return html`
-      <div class="mc-selector-overlay" @click=${this._onOverlayClick}>
+      <dialog class="mc-picker-overlay" aria-label="Add module" @click=${this._onOverlayClick}>
         <div
-          class="mc-selector-dialog"
+          class="mc-picker-modal"
           @click=${(e: Event) => e.stopPropagation()}
           @keydown=${this._onDialogKeyDown}
         >
-          <div class="mc-selector-header">
-            <h3>Add Module</h3>
-            <button class="mc-btn-icon" @click=${this._onClose}>&times;</button>
+          <div class="mc-picker-header">
+            <h2 class="mc-picker-title">Add module</h2>
+            <button type="button" class="icon-btn" aria-label="Close" title="Close" @click=${this._onClose}>
+              <ha-icon icon="mdi:close"></ha-icon>
+            </button>
           </div>
-          <div class="mc-selector-search-wrap">
-            <input
-              class="mc-selector-search"
-              type="text"
-              placeholder="Search modules..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => {
-                this._searchQuery = (e.target as HTMLInputElement).value;
-              }}
-              autofocus
-            />
+          <div class="mc-picker-search">
+            ${renderPickerSearch('Search modules', this._searchQuery, (v) => { this._searchQuery = v; })}
+            <div class="seg full" role="radiogroup" aria-label="Module category">
+              ${filters.map(
+                (f) => html`
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked=${this._category === f ? 'true' : 'false'}
+                    @click=${() => { this._category = f; }}
+                  >
+                    ${f === 'all' ? 'All' : CATEGORY_LABELS[f] ?? f}
+                  </button>
+                `,
+              )}
+            </div>
           </div>
-          <div class="mc-selector-body">
+          <div class="mc-picker-list">
             ${grouped.size === 0 ? html`
-              <div class="mc-selector-empty">No modules match "${this._searchQuery}".</div>
+              <div class="mc-picker-empty">
+                ${this._searchQuery ? `No modules match "${this._searchQuery}".` : 'No modules in this category.'}
+              </div>
             ` : Array.from(grouped.entries()).map(
               ([category, items]) => html`
-                <div class="mc-selector-category">${category}</div>
+                ${this._category === 'all'
+                  ? html`<div class="mc-picker-category">${CATEGORY_LABELS[category] ?? category}</div>`
+                  : ''}
                 ${items.map(
                   (meta) => html`
                     <button
                       type="button"
-                      class="mc-selector-item"
+                      class="mc-picker-item"
                       @click=${() => this._onSelect(meta)}
                       aria-label=${`Add ${meta.name} module`}
                     >
-                      <div class="mc-selector-item-icon">
-                        <ha-icon icon=${meta.icon}></ha-icon>
-                      </div>
-                      <div class="mc-selector-item-info">
-                        <div class="mc-selector-item-name">${meta.name}</div>
-                        <div class="mc-selector-item-desc">${meta.description}</div>
-                      </div>
+                      <span class="mc-picker-item-icon"><ha-icon icon=${meta.icon}></ha-icon></span>
+                      <span class="mc-picker-item-content">
+                        <span class="mc-picker-item-name">${meta.name}</span>
+                        <span class="mc-picker-item-desc">${meta.description}</span>
+                      </span>
                     </button>
                   `,
                 )}
@@ -78,7 +108,7 @@ export class ModuleSelector extends LitElement {
             )}
           </div>
         </div>
-      </div>
+      </dialog>
     `;
   }
 
@@ -93,16 +123,17 @@ export class ModuleSelector extends LitElement {
   }
 
   private _onClose(): void {
-    this.dispatchEvent(new CustomEvent('close', { bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent('mc-picker-close', { bubbles: true, composed: true }));
   }
 
-  private _onOverlayClick(): void {
-    this._onClose();
+  private _onOverlayClick(e: Event): void {
+    if (this._dialogCtrl.isBackdropClick(e)) this._onClose();
   }
 
   private _onDialogKeyDown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       e.preventDefault();
+      e.stopPropagation();
       this._onClose();
     }
   }

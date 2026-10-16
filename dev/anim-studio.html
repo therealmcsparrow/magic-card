@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Magic Card animation studio harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --text-primary-color:#fff; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); color-scheme: dark; }
+  html, body { height:100%; margin:0; }
+  body { font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); }
+  /* like the magic-card-utils panel: the studio fills the panel below HA's toolbar */
+  magic-card-animation-studio { display:block; height:100vh; }
+</style>
+</head>
+<body>
+  <script src="./shims.js"></script>
+  <script type="module" src="../.harness-build/magic-card.js"></script>
+  <script defer src="../.harness-build/magic-card-animation-studio.js"></script>
+  <!-- icon animator dev bundle (scripts/scenarios-0034-i.mjs builds it; missing: ignored) -->
+  <script defer src="../.harness-build/icon-anim/icon-anim.js"></script>
+  <script defer src="./anim-studio.js"></script>
+</body>
+</html>

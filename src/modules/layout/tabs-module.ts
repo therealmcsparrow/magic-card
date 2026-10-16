@@ -1,20 +1,14 @@
 import { html, nothing, TemplateResult } from 'lit';
+import { hasIconFx, renderIcon } from '../../icons/render-icon';
+import { renderIconFxEditor } from '../../editor/components/icon-fx-editor';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
+import { renderChildModule, renderEmptySlot } from '../render-module';
+import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
 import { renderSelectField } from '../../utils/form-utils';
-import { getModuleTypeOptions, renderChildModuleEditor } from '../../utils/layout-editor';
-
-/** Track which tab is active in preview (keyed by module id) */
-const _activeTabMap = new Map<string, number>();
-
-/** Track which tab is being edited in the editor (keyed by module id) */
-const _editorTabMap = new Map<string, number>();
-
-/** Track which child module is expanded for editing (keyed by "moduleId:tabIdx:childIdx") */
-const _expandedChildMap = new Map<string, boolean>();
 
 class TabsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -41,42 +35,63 @@ class TabsModule extends BaseMagicModule {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as TabsModuleConfig;
     const tabs = c.tabs || [];
-    const activeIdx = _activeTabMap.get(c.id) ?? c.active_tab ?? 0;
+    const ctx = currentRenderContext();
+    // Per card and per module (keyed by its path), so two cards or two tabs modules never share it.
+    const state = ctx?.uiState?.<number>('active-tab');
+    const clamp = (i: unknown) =>
+      Math.min(Math.max(0, Math.trunc(Number(i)) || 0), Math.max(tabs.length - 1, 0));
+    // Studio canvas: the tab that holds the selected child is shown.
+    const activeIdx = clamp(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0);
     const activeTab = tabs[activeIdx];
 
-    const onTabClick = (i: number) => (e: Event) => {
+    const select = (i: number) => (e: Event) => {
       e.stopPropagation();
-      _activeTabMap.set(c.id, i);
-      (e.target as HTMLElement).dispatchEvent(
-        new CustomEvent('mc-request-update', { bubbles: true, composed: true }),
-      );
+      if (!state || !ctx || i === activeIdx) return;
+      state.set(i);
+      ctx.requestUpdate();
+    };
+    // Switching a tab is not a tap on the tabs module itself (its own actions stay on the wrapper).
+    const stop = (e: Event) => e.stopPropagation();
+    const onKeydown = (e: KeyboardEvent) => {
+      e.stopPropagation();
+      const next = { ArrowRight: activeIdx + 1, ArrowLeft: activeIdx - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (next === undefined || !tabs.length) return;
+      e.preventDefault();
+      const i = (next + tabs.length) % tabs.length;
+      select(i)(e);
+      const header = (e.currentTarget as HTMLElement).parentElement;
+      queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[i]?.focus());
     };
 
     return html`
       <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'}>
-        <div class="mc-tabs-header">
+        <div class="mc-tabs-header" role="tablist">
           ${tabs.map(
             (tab, i) => html`
-              <button class="mc-tab-button ${i === activeIdx ? 'active' : ''}"
-                @click=${onTabClick(i)}>
-                ${tab.icon ? html`<ha-icon icon=${tab.icon}></ha-icon>` : ''}
-                ${tab.label}
+              <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}"
+                aria-selected=${i === activeIdx ? 'true' : 'false'}
+                tabindex=${i === activeIdx ? 0 : -1}
+                @click=${select(i)} @pointerdown=${stop} @pointerup=${stop} @keydown=${onKeydown}>
+                ${tab?.icon
+                  ? hasIconFx(c.icon_fx)
+                    ? renderIcon({ icon: tab.icon, hass, fx: c.icon_fx, svg: c.svg })
+                    : html`<ha-icon icon=${tab.icon}></ha-icon>`
+                  : nothing}
+                ${tab?.label ?? ''}
               </button>
             `,
           )}
         </div>
-        <div class="mc-tabs-content">
+        <div class="mc-tabs-content" role="tabpanel">
           ${activeTab?.modules?.length
-            ? activeTab.modules.map((child) => {
-                const mod = ModuleRegistry.get(child.type);
-                return mod ? mod.renderPreview(child, hass) : html`<span class="mc-error">?</span>`;
-              })
-            : html`<span class="mc-placeholder-text">Empty tab</span>`}
+            ? activeTab.modules.map((child, i) => renderChildModule(child, hass, i, activeIdx))
+            : renderEmptySlot('Empty tab')}
         </div>
       </div>
     `;
   }
 
+  /** The module's own settings; tabs, their labels, icons and modules are managed in the tree. */
   renderGeneralTab(
     config: CardModule,
     hass: HomeAssistant | undefined,
@@ -86,120 +101,24 @@ class TabsModule extends BaseMagicModule {
     const syncCtx = this._buildSyncContext(config, template);
     const c = config as TabsModuleConfig;
     const tabs = c.tabs || [];
-    const editorActiveIdx = _editorTabMap.get(c.id) ?? 0;
-    const clampedIdx = Math.min(editorActiveIdx, Math.max(tabs.length - 1, 0));
-    const activeTabData = tabs[clampedIdx];
-    const moduleTypes = getModuleTypeOptions();
 
     return html`
       <div class="mc-tab-content">
-        ${renderSelectField('Tab Style', c.tab_style, [
+        ${renderSelectField('Tab style', c.tab_style, [
           { label: 'Default', value: 'default' },
           { label: 'Pills', value: 'pills' },
           { label: 'Underline', value: 'underline' },
         ], (v) => onChange({ ...c, tab_style: v as TabsModuleConfig['tab_style'] }), 'tab_style', syncCtx)}
-
-        <!-- Tab label list -->
-        <div class="mc-section">
-          <div class="mc-section-header">Tabs</div>
-          ${tabs.map(
-            (tab, i) => html`
-              <div class="mc-field mc-inline-field-row">
-                <input type="text" .value=${tab.label}
-                  @input=${(e: InputEvent) => {
-                    const newTabs = [...tabs];
-                    newTabs[i] = { ...newTabs[i], label: (e.target as HTMLInputElement).value };
-                    onChange({ ...c, tabs: newTabs });
-                  }} />
-                <button class="mc-btn-icon" @click=${() => {
-                  const newTabs = tabs.filter((_, idx) => idx !== i);
-                  if (clampedIdx >= newTabs.length && newTabs.length > 0) {
-                    _editorTabMap.set(c.id, newTabs.length - 1);
-                  }
-                  onChange({ ...c, tabs: newTabs });
-                }}>&times;</button>
-              </div>
-            `,
-          )}
-          <button class="mc-btn mc-btn-secondary" @click=${() => {
-            const newTabs = [...tabs, { label: `Tab ${tabs.length + 1}`, modules: [] }];
-            onChange({ ...c, tabs: newTabs });
-          }}>Add Tab</button>
-        </div>
-
-        <!-- Per-tab child module management -->
-        ${tabs.length > 0
-          ? html`
-            <div class="mc-section">
-              <div class="mc-section-header">Tab Content</div>
-              <div class="mc-tabs-header mc-editor-tab-switcher">
-                ${tabs.map(
-                  (tab, i) => html`
-                    <button
-                      class="mc-tab-button ${i === clampedIdx ? 'active' : ''}"
-                      @click=${() => { _editorTabMap.set(c.id, i); onChange({ ...c }); }}
-                    >${tab.label}</button>
-                  `,
-                )}
-              </div>
-              ${activeTabData
-                ? this._renderChildModuleList(c, clampedIdx, hass, onChange, moduleTypes, template)
-                : nothing}
-            </div>
-          `
+        ${tabs.length > 1
+          ? renderSelectField('Default tab', String(Math.min(c.active_tab ?? 0, tabs.length - 1)),
+            tabs.map((t, i) => ({ label: t.label || `Tab ${i + 1}`, value: String(i) })),
+            (v) => onChange({ ...c, active_tab: Number(v) }), 'active_tab', syncCtx)
           : nothing}
+        ${tabs.some((t) => t.icon)
+          ? renderIconFxEditor(c, hass, onChange, { icon: tabs.find((t) => t.icon)?.icon ?? '', syncCtx })
+          : nothing}
+        <p class="help">Add, rename and order tabs, and add their modules, in the structure tree.</p>
       </div>
-    `;
-  }
-
-  private _renderChildModuleList(
-    c: TabsModuleConfig,
-    tabIdx: number,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    moduleTypes: Array<{ label: string; value: string }>,
-    template?: string,
-  ): TemplateResult {
-    const tab = c.tabs![tabIdx];
-    const children = tab.modules || [];
-
-    const updateChildren = (newModules: CardModule[]) => {
-      const newTabs = [...(c.tabs || [])];
-      newTabs[tabIdx] = { ...newTabs[tabIdx], modules: newModules };
-      onChange({ ...c, tabs: newTabs });
-    };
-
-    const removeChild = (childIdx: number) => {
-      updateChildren(children.filter((_, i) => i !== childIdx));
-    };
-
-    const updateChild = (childIdx: number, updated: CardModule) => {
-      const newModules = [...children];
-      newModules[childIdx] = updated;
-      updateChildren(newModules);
-    };
-
-    const addChild = (type: string) => {
-      const newMod = ModuleRegistry.createDefault(type as any);
-      if (newMod) {
-        updateChildren([...children, newMod]);
-      }
-    };
-
-    return html`
-      ${renderChildModuleEditor({
-        ownerId: c.id,
-        scopeId: `tab-${tabIdx}`,
-        children,
-        hass,
-        template,
-        expandedState: _expandedChildMap,
-        moduleTypes,
-        onRefresh: () => onChange({ ...c }),
-        onRemoveChild: removeChild,
-        onUpdateChild: updateChild,
-        onAddChild: addChild,
-      })}
     `;
   }
 }

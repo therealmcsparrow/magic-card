@@ -1,14 +1,23 @@
+// Lazy chunks (magic-card-anim-runtime.js) load next to this file, wherever HA serves it from
+// (/hacsfiles/magic-card/, /local/...): a module script has no document.currentScript, so webpack's
+// automatic public path cannot find it. Imports are hoisted and run before this line; that is fine
+// because nothing loads a chunk while the modules evaluate (only after a card renders).
+__webpack_public_path__ = new URL('.', import.meta.url).href;
+
 import { VERSION } from './version';
 import { CARD_TAG, EDITOR_TAG, CARD_NAME, CARD_DESCRIPTION } from './utils/constants';
 
 // Card
 import './card/magic-card';
+import './card/mc-seasonal';
+import './card/mc-seasonal-deco';
 
 // Editor
 import './editor/magic-card-editor';
 
 // Modules - self-register on import
 import './modules';
+import { publishContract } from './utils/window-contract';
 
 // Register with Home Assistant
 window.customCards = window.customCards || [];
@@ -19,6 +28,9 @@ window.customCards.push({
   preview: true,
   documentationURL: 'https://github.com/therealmcsparrow/magic-card',
 });
+
+// Contract for the magic-card-utils panel (merged, so other keys on an existing object survive)
+publishContract();
 
 console.info(
   `%c MAGIC-CARD %c v${VERSION} `,

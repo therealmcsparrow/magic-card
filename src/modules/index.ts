@@ -12,7 +12,6 @@ import './content/markdown-module';
 import './content/bar-module';
 import './content/graphs-module';
 import './content/camera-module';
-import './content/slider-module';
 
 // Control modules
 import './controls/button-module';
