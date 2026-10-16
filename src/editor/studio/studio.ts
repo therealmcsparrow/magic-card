@@ -406,6 +406,8 @@ export class Studio extends LitElement {
       }
       .inspector {
         border-left: 1px solid var(--mc-divider);
+        overflow: hidden;
+        scroll-padding-top: var(--mc-insp-head-h, 0px);
       }
       .panel-title {
         display: flex;
@@ -467,6 +469,11 @@ export class Studio extends LitElement {
           display: inline-grid;
         }
       }
+      @media (max-height: 480px) {
+        .inspector {
+          overflow-y: auto;
+        }
+      }
       @media (max-width: 640px) {
         .workspace {
           grid-template-columns: minmax(0, 1fr);
@@ -482,6 +489,9 @@ export class Studio extends LitElement {
           border-left: 0;
           border-top: 1px solid var(--mc-divider);
           overflow: visible;
+        }
+        .workspace {
+          scroll-padding-top: var(--mc-insp-head-h, 0px);
         }
         .layers {
           max-width: 100%;
