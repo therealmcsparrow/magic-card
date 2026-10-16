@@ -23,7 +23,7 @@ Icon animations play on the main icon of these modules, at any depth inside layo
 -   Info
 -   Light
 
-The Icon, Button and Info modules have the Animated icons tab in their icon picker. The Light module has no icon field. To animate its icon, save an icon animation in the studio, add an entry in the Animations list of its Design tab, pick the animation from the My animations group and set Target to Icon.
+The Icon, Button, Info and Light modules have the Animated icons tab in their icon picker. The Light module's Icon field is optional. While it is empty the module shows the light's own icon, and an animation you add by hand in the Animations list still plays on it with Target set to Icon.
 
 Tabs and Weather modules cannot play icon animations.
 

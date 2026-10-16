@@ -865,6 +865,8 @@ export interface DropdownModuleConfig extends CardModule {
 
 export interface LightModuleConfig extends CardModule, IconFxKeys {
   type: 'light';
+  /** Own icon; empty shows the light's entity icon (mdi:lightbulb without one). */
+  icon?: string;
   show_brightness?: boolean;
   show_color_temp?: boolean;
   show_color?: boolean;

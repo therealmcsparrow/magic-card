@@ -19,7 +19,7 @@ Picking an animation from My animations writes `preset: custom:<id>` and clears 
 
 ## Animated icons in the icon picker
 
-The icon field of the Icon, Info and Button modules has an icon picker with two tabs: Icons, the usual list, and Animated icons. The Light module has no icon field, so it has no tab. Its icon plays an animation from My animations through the Animations list, with Target set to Icon. See [Icon animations in cards](../design/quick-icon-animator.md#which-modules).
+The icon field of the Icon, Info, Button and Light modules has an icon picker with two tabs: Icons, the usual list, and Animated icons. On the Light module the field is optional: empty keeps the light's own icon, and a picked icon replaces it. An animation from My animations can also be added through the Animations list, with Target set to Icon. See [Icon animations in cards](../design/quick-icon-animator.md#which-modules).
 
 Animated icons is a grid of tiles that play their animation while they are on screen. It has a search field ("Search icons") and a domain filter. The grid has two sections:
 

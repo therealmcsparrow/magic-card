@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HassEntity, HomeAssistant, LightModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderEntityField, renderFieldHint } from '../../utils/form-utils';
+import { renderToggleField, renderEntityField, renderFieldHint, renderIconField } from '../../utils/form-utils';
 import {
   lightBrightnessPct,
   lightKelvin,
@@ -109,10 +109,11 @@ class LightModule extends BaseMagicModule {
     const effect = stateObj?.attributes?.effect as string | undefined;
 
     const icon = renderIcon({
-      icon: 'mdi:lightbulb',
+      icon: c.icon && c.icon !== 'svg' ? c.icon : 'mdi:lightbulb',
       entity: c.entity,
       hass,
-      useEntityIcon: true,
+      // an own icon replaces the light's entity icon; empty keeps it
+      useEntityIcon: !c.icon || c.icon === 'svg',
       className: 'mc-anim-icon',
       part: 'icon',
       fx: c.icon_fx,
@@ -295,10 +296,13 @@ class LightModule extends BaseMagicModule {
         'show_effect', syncCtx)}
         ${lacks(c.show_effect, !stateObj || supportsEffect(stateObj), 'effects')}
         ${renderToggleField('Compact mode', c.compact, (v) => onChange({ ...c, compact: v }), 'compact', syncCtx)}
-        ${renderFieldHint('Tap the icon to turn the light on or off.')}
+        ${renderFieldHint("Tap the icon to turn the light on or off. Leave Icon empty to show the light's own icon.")}
+        ${c.icon !== 'svg'
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: c.entity,
-          icon: entityIcon(hass, c.entity) || 'mdi:lightbulb',
+          icon: c.icon || entityIcon(hass, c.entity) || 'mdi:lightbulb',
           allowStateIcons: !!c.entity,
           syncCtx,
         })}
