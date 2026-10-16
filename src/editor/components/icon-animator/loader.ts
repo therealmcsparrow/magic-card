@@ -63,6 +63,7 @@ export function loadIconAnimator(): Promise<boolean> {
   pending ??= import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
     .then((m) => {
       m.defineIconAnimator(host);
+      m.defineAnimatedIconGrid(host);
       return true;
     })
     .catch((err: unknown) => {

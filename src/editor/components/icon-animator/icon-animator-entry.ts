@@ -4,4 +4,5 @@
  * and lets "This icon" animations follow their module's icon (follow-icon.ts).
  */
 export { defineIconAnimator, ICON_ANIMATOR_TAG } from './icon-animator';
+export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-grid';
 export { followIcons } from './follow-icon';
