@@ -1,58 +1,132 @@
-import { LitElement, html, css, nothing, type PropertyValues, type TemplateResult } from 'lit';
+import { LitElement, html, css, svg, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { live } from 'lit/directives/live.js';
 import { editorSystem } from '../../css/editor-system';
 import { animationStyles } from '../../css/animations';
 import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../../utils/animation';
 import { intensityLabel } from '../../utils/animation-presets';
 import type { DesignConfig, HomeAssistant } from '../../types';
+import { DEFAULT_GEOMETRY, type BakedLoop, type BuiltinShape, type ParticleMode, type ParticleSlotV2, type ParticlesSim, type Range, type SubEmitter, type WeightedShape } from '../../contracts/particles-v2';
 import { compileAnimationDoc, easingCss } from '../compile';
-import { ANIMATION_CAPS, PARTICLE_DIRECTIONS, type AnimationDoc, type ParticleDirection, type ParticleShape, type ParticlesSpec } from '../model';
+import { ANIMATION_CAPS, type AnimationDoc, type ParticleShape, type ParticlesSpec } from '../model';
 import {
+  COLLIDERS,
   COMMON_EMOJI,
-  DIRECTION_LABELS,
+  COMPASS,
+  FLOWS,
+  FLOW_LABELS,
   LIMITS,
+  MAX_SHAPES,
+  PHYSICS_SCALE,
   SHAPE_DEFAULTS,
-  SHAPE_SOURCES,
+  SHAPE_KINDS,
+  V2_LIMITS,
+  anyCollider,
+  bakeSpec,
   basePreset,
+  childrenSummary,
+  colliderOn,
+  collisionsSummary,
   convertPresetParticles,
+  defaultChildren,
+  editSim,
   emojiError,
+  flowSpreadLabel,
   fromDocColor,
+  getStudioParticles,
+  isBuiltinKind,
   isEntityDocColor,
   limitNumber,
+  limitV2,
+  newSeed,
+  nextShape,
+  orderRange,
   patchParticles,
+  periodOf,
+  physicsSummary,
   presetIntensity,
   presetKind,
-  shapeSource,
+  setFlow,
+  setGravity,
+  setMode,
+  setShapes,
+  setSpin,
+  setWind,
+  shapeKind,
+  shapeLabel,
+  shapeShare,
+  shownShapes,
+  shuffleSeed,
   sizeRange,
-  spreadLabel,
+  spinPerLoop,
   svgError,
   toDocColor,
   validIcon,
+  variationSummary,
+  viewSim,
+  windOf,
   withPresetIntensity,
-  withShape,
-  type ShapeSource,
+  type ColliderId,
+  type ShapeKind,
+  type V2LimitKey,
 } from './particles-utils';
+import './draw-svg-dialog';
+import type { AnimSvgDialog } from './draw-svg-dialog';
 
 /**
  * The particle layers of `anim`, as the card renders them (card-decorations.ts renderAnimFx). The
  * studio bundle must not define the card's elements: mc-ring / mc-seasonal are used by tag only
- * (the card bundle, loaded first, defines them).
+ * (the card bundle, loaded first, defines them). A v2 slot may carry its own built-in shape
+ * (`data-s`) or symbol (particles-v2 ParticleSlotV2).
  */
 function renderFx(anim: ResolvedAnimations): TemplateResult {
-  const symbol = (s: FxLayer['symbol']) => (!s ? nothing : 'icon' in s ? html`<ha-icon .icon=${s.icon}></ha-icon>` : s.text);
+  const symbol = (s: FxLayer['symbol'] | ParticleSlotV2['symbol']) => (!s ? nothing : 'icon' in s ? html`<ha-icon .icon=${s.icon}></ha-icon>` : s.text);
   return html`${anim.fx.map((l) =>
     l.seasonal
       ? html`<mc-seasonal class="mc-anim-seasonal" data-fx=${l.preset} .scenes=${l.seasonal.scenes} .intensity=${l.seasonal.intensity} .seed=${`pv|${l.preset}`}></mc-seasonal>`
       : l.ring
         ? html`<mc-ring class="mc-anim-ring" data-fx=${l.preset} style=${l.style} .ring=${l.ring}></mc-ring>`
-        : html`<span class="mc-anim-fx" data-fx=${l.preset} ?data-front=${l.front} style=${l.style} aria-hidden="true">${l.particles.map(
-            (p) => html`<i style="--mc-anim-x: ${p.x}%; --mc-anim-phase: ${p.phase}; --mc-anim-k: ${p.k}${p.style ? `; ${p.style}` : ''}">${symbol(l.symbol)}</i>`,
+        : html`<span class="mc-anim-fx" data-fx=${l.preset} ?data-front=${l.front} style=${l.style} aria-hidden="true">${(l.particles as ParticleSlotV2[]).map(
+            (p) =>
+              html`<i data-s=${p.shape ?? nothing} style="--mc-anim-x: ${p.x}%; --mc-anim-phase: ${p.phase}; --mc-anim-k: ${p.k}${p.style ? `; ${p.style}` : ''}"
+                >${symbol(p.symbol ?? l.symbol)}</i
+              >`,
           )}</span>`,
   )}`;
 }
 
+/** The built-in shapes as 24px glyphs in the current colour (shape tiles and chips). */
+const GLYPHS: Record<BuiltinShape, TemplateResult> = {
+  circle: svg`<circle cx="12" cy="12" r="7"></circle>`,
+  square: svg`<rect x="5" y="5" width="14" height="14" rx="1.5"></rect>`,
+  triangle: svg`<path d="M12 4l8 15H4z"></path>`,
+  star: svg`<path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.2l7.1-.6z"></path>`,
+  heart: svg`<path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"></path>`,
+  ring: svg`<circle cx="12" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="3"></circle>`,
+  line: svg`<path d="M6 19L18 5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>`,
+  spark: svg`<path d="M12 2l2 8 8 2-8 2-2 8-2-8-8-2 8-2z"></path>`,
+};
+
+function glyph(kind: ShapeKind): TemplateResult {
+  if (isBuiltinKind(kind)) return html`<svg class="glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${GLYPHS[kind]}</svg>`;
+  return html`<ha-icon class="glyph" icon=${SHAPE_KINDS.find((k) => k.id === kind)!.icon!}></ha-icon>`;
+}
+
+/** What a chip shows for its shape: an emoji as itself, the rest as their glyph. */
+const chipFace = (s: WeightedShape['shape']): TemplateResult =>
+  'emoji' in s ? html`<span class="emo" aria-hidden="true">${s.emoji}</span>` : 'icon' in s ? html`<ha-icon class="glyph" icon=${s.icon}></ha-icon>` : glyph(shapeKind(s));
+
 /** Colours offered by "Add colour", in turn (one not in the list yet). */
 const NEW_COLORS = ['#ef4444', '#eab308', '#22c55e', '#3b82f6', '#ec4899', '#ffffff', '#f97316', '#8b5cf6'];
+
+/** The verbatim Live simulation warning (P2-1). */
+export const LIVE_WARNING =
+  'Live simulation runs on every dashboard that shows this card and uses more CPU, especially on wall tablets. Animated SVG export plays the baked loop instead.';
+
+/** A bake slower than this shows "Baking…" while the next one runs. */
+const SLOW_BAKE_MS = 150;
+
+type SectorId = 'variation' | 'physics' | 'collisions' | 'children';
 
 export interface DocChangeDetail {
   doc: AnimationDoc;
@@ -61,13 +135,15 @@ export interface DocChangeDetail {
 }
 
 /**
- * The particle designer of the animation studio (contract: .superpowers/sdd/anim-studio/
- * editor-contract.md): what each particle is (a dot, an icon, an emoji or an own SVG), how many and
- * how they move (direction, speed, spread, gravity, spin), their size range, colours, fade and
- * layer, with a live mini preview on the card's own particle layer. A document based on a built-in
- * preset (particles.preset) shows that preset and its parameter, and can be converted to custom
- * particles. Never mutates `.doc`: every edit is one `doc-change` { doc, label } (text and the
- * gravity slider send transient changes while editing, then one final change).
+ * The particle designer of the animation studio (particles v2, contract src/contracts/particles-
+ * v2.ts; design .company/work/animation-studio-upgrade/design/p2-particles-editor.md). Open
+ * sections: Mode (Baked loop / Live simulation), Shape (a weighted mix of up to 4 shapes),
+ * Movement (13 flows, loop and particle speed, spread) and Look. Closed sections with a live
+ * summary: Variation (seed, spin, delay, lifetime), Physics, Collisions and Child particles. A
+ * 2026.10.03 document opens unchanged as a Baked loop; see particles-utils.ts for when an edit adds
+ * `sim`. A document based on a built-in preset (particles.preset) shows that preset and can be
+ * converted to custom particles. Never mutates `.doc`: every edit is one `doc-change` { doc, label }
+ * (text and sliders send transient changes while editing, then one final change).
  */
 @customElement('mc-anim-particles-editor')
 export class AnimParticlesEditor extends LitElement {
@@ -78,17 +154,31 @@ export class AnimParticlesEditor extends LitElement {
   @property({ attribute: false }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /** The last shape of each source, so switching back restores it. */
-  @state() private _shapes: Partial<Record<ShapeSource, ParticleShape>> = {};
+  /** The last icon / emoji / SVG used, so switching a chip back restores it. */
+  @state() private _shapes: Partial<Record<'icon' | 'emoji' | 'svg', ParticleShape>> = {};
   /** Text being edited that the model does not accept yet (with its error). */
   @state() private _svgDraft?: string;
   @state() private _emojiDraft?: string;
   /** Selected colour chip (its picker is open under the chips). */
   @state() private _color = -1;
+  /** Selected shape chip (its editor is open under the chips). */
+  @state() private _chip = 0;
   @state() private _paused = false;
+  /** Open closed-by-default sections (per editor session, never saved). */
+  @state() private _open: Partial<Record<SectorId, boolean>> = {};
+  /** Stats of the last bake (with the particles module only). */
+  @state() private _stats?: BakedLoop['stats'];
+  @state() private _baking = false;
 
+  /** The seed a v1 document's first v2 edit writes (and the one shown until then). */
+  private _seed = newSeed();
   /** A transient edit is open (text, slider): its final change still has to be sent. */
-  private _open?: { doc: AnimationDoc; label: string };
+  private _pending?: { doc: AnimationDoc; label: string };
+  private _bakeMs = 0;
+  private _bakeToken = 0;
+  /** The preview layer the particles module was applied to (released when it goes). */
+  private _applied?: HTMLElement;
+  private _liveCss = new Map<string, string>();
 
   static styles = [
     editorSystem,
@@ -115,8 +205,9 @@ export class AnimParticlesEditor extends LitElement {
       .form > .group {
         padding-bottom: 20px;
       }
-      .form > .group:last-child {
-        padding-bottom: 0;
+      .form > .group:last-child,
+      .form > .sectors {
+        margin-bottom: 0;
       }
       .group-head h3 {
         color: var(--mc-text);
@@ -186,7 +277,94 @@ export class AnimParticlesEditor extends LitElement {
         }
       }
 
+      /* ── mode ── */
+      .note.is-warn {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin: 0;
+        padding: 10px 12px;
+        border-radius: var(--mc-radius);
+        background: var(--mc-warn-tint);
+        border: 1px solid color-mix(in srgb, var(--mc-warn-ink) 40%, transparent);
+        color: var(--mc-text);
+        font-size: 0.8125rem;
+        line-height: 1.4;
+      }
+      .note.is-warn ha-icon {
+        flex: none;
+        --mdc-icon-size: 18px;
+        color: var(--mc-warn-ink);
+      }
+      .mode-status > .help {
+        margin: 0;
+      }
+
       /* ── shape ── */
+      .glyph {
+        width: 18px;
+        height: 18px;
+        --mdc-icon-size: 18px;
+      }
+      .schips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .schip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        height: 32px;
+        min-width: 32px;
+        padding: 0 8px;
+        border-radius: 16px;
+        border: 1px solid var(--mc-field-border);
+        background: var(--mc-surface);
+        color: var(--mc-text);
+        font-size: 0.75rem;
+        font-variant-numeric: tabular-nums;
+        justify-content: center;
+      }
+      .schip .emo {
+        font-size: 1rem;
+        line-height: 1;
+      }
+      .schip[aria-pressed='true'] {
+        border-color: var(--mc-accent);
+        box-shadow: 0 0 0 1px var(--mc-accent);
+      }
+      .schip.add {
+        border-style: dashed;
+        color: var(--mc-text-2);
+        --mdc-icon-size: 18px;
+      }
+      .schip.add:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .chip-edit {
+        display: grid;
+        gap: 12px;
+        padding: 12px;
+        border: 1px solid var(--mc-divider);
+        border-radius: var(--mc-radius-lg);
+      }
+      .chip-edit-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 24px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+      }
+      .chip-edit-head > span {
+        flex: 1;
+      }
+      .chip-edit-head .icon-btn {
+        margin: -4px -6px -4px 0;
+      }
       .emoji-grid {
         display: grid;
         grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -256,8 +434,9 @@ export class AnimParticlesEditor extends LitElement {
         border-color: var(--mc-error-ink);
       }
 
-      /* ── direction tiles ── */
-      .dirs {
+      /* ── tiles (flows, shapes) ── */
+      .dirs,
+      .shapes {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
@@ -266,6 +445,8 @@ export class AnimParticlesEditor extends LitElement {
         display: grid;
         gap: 4px;
         justify-items: center;
+        align-content: center;
+        min-height: 44px;
         padding: 6px 4px 6px;
         min-width: 0;
         border-radius: var(--mc-radius);
@@ -275,6 +456,12 @@ export class AnimParticlesEditor extends LitElement {
         font-size: 0.75rem;
         font-weight: 500;
         transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
+      }
+      .dir > span:last-child {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .dir:hover {
         border-color: var(--mc-field-border);
@@ -310,14 +497,22 @@ export class AnimParticlesEditor extends LitElement {
       .dir-pv i:nth-child(1) { --n: 0; }
       .dir-pv i:nth-child(2) { --n: 1; }
       .dir-pv i:nth-child(3) { --n: 2; }
-      .dir-pv.fall i, .dir-pv.rise i { left: calc(25% + var(--n) * 25%); }
-      .dir-pv.fall i { --a: pv-fall; top: 0; }
-      .dir-pv.rise i { --a: pv-rise; top: 0; }
-      .dir-pv.drift i { --a: pv-drift; left: 0; top: calc(30% + var(--n) * 20%); animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
-      .dir-pv.burst i, .dir-pv.orbit i, .dir-pv.spiral i { left: 50%; top: 50%; }
+      .dir-pv.fall i, .dir-pv.rise i, .dir-pv.zigzag i, .dir-pv.rain i { left: calc(25% + var(--n) * 25%); top: 0; }
+      .dir-pv.fall i { --a: pv-fall; }
+      .dir-pv.rise i { --a: pv-rise; }
+      .dir-pv.zigzag i { --a: pv-zigzag; animation-duration: 2.2s; animation-delay: calc(var(--n) * -0.73s); }
+      .dir-pv.rain i { --a: pv-rain; width: 2px; height: 7px; border-radius: 1px; animation-duration: 0.9s; animation-delay: calc(var(--n) * -0.3s); }
+      .dir-pv.drift i, .dir-pv.wave i { left: 0; top: calc(30% + var(--n) * 20%); animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
+      .dir-pv.drift i { --a: pv-drift; }
+      .dir-pv.wave i { --a: pv-wave; }
+      .dir-pv.burst i, .dir-pv.orbit i, .dir-pv.spiral i, .dir-pv.vortex i, .dir-pv.explode i { left: 50%; top: 50%; }
       .dir-pv.burst i { --a: pv-burst; animation-delay: calc(var(--n) * -0.15s); animation-timing-function: ease-out; }
       .dir-pv.orbit i { --a: pv-orbit; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
       .dir-pv.spiral i { --a: pv-spiral; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
+      .dir-pv.vortex i { --a: pv-vortex; animation-duration: 2.4s; animation-delay: calc(var(--n) * -0.8s); }
+      .dir-pv.explode i { top: 30%; --a: pv-explode; animation-duration: 2s; animation-delay: calc(var(--n) * -0.1s); }
+      .dir-pv.fountain i { left: 50%; top: 100%; --a: pv-fountain; animation-duration: 1.8s; }
+      .dir-pv.wander i { left: calc(25% + var(--n) * 25%); top: 50%; --a: pv-wander; animation-duration: 3s; animation-delay: calc(var(--n) * -1s); }
       @keyframes pv-fall {
         from { translate: 0 -4px; opacity: 0; }
         20%, 80% { opacity: 1; }
@@ -333,10 +528,47 @@ export class AnimParticlesEditor extends LitElement {
         20%, 80% { opacity: 1; }
         to { translate: 80px 0; opacity: 0; }
       }
+      @keyframes pv-wave {
+        0% { translate: -4px 0; opacity: 0; }
+        20% { opacity: 1; }
+        25% { translate: 18px -6px; }
+        50% { translate: 38px 0; }
+        75% { translate: 58px 6px; }
+        80% { opacity: 1; }
+        100% { translate: 80px 0; opacity: 0; }
+      }
+      @keyframes pv-zigzag {
+        0% { translate: 0 -4px; opacity: 0; }
+        20% { opacity: 1; }
+        25% { translate: 6px 6px; }
+        50% { translate: -6px 16px; }
+        75% { translate: 6px 26px; }
+        80% { opacity: 1; }
+        100% { translate: 0 38px; opacity: 0; }
+      }
+      @keyframes pv-rain {
+        from { translate: 6px -8px; opacity: 0; }
+        15%, 85% { opacity: 1; }
+        to { translate: -6px 38px; opacity: 0; }
+      }
       @keyframes pv-burst {
         from { transform: rotate(calc(var(--n) * 120deg)) translateY(0); opacity: 0; }
         10%, 60% { opacity: 1; }
         to { transform: rotate(calc(var(--n) * 120deg)) translateY(-15px); opacity: 0; }
+      }
+      @keyframes pv-explode {
+        0% { translate: 0 0; opacity: 0; }
+        10% { opacity: 1; }
+        35% { translate: calc((var(--n) - 1) * 16px) -8px; }
+        85% { opacity: 1; }
+        100% { translate: calc((var(--n) - 1) * 24px) 26px; opacity: 0; }
+      }
+      @keyframes pv-fountain {
+        0% { translate: 0 0; opacity: 0; }
+        10% { opacity: 1; }
+        45% { translate: calc((var(--n) - 1) * 10px) -30px; }
+        85% { opacity: 1; }
+        100% { translate: calc((var(--n) - 1) * 20px) 0; opacity: 0; }
       }
       @keyframes pv-orbit {
         from { transform: rotate(0deg) translateY(-11px); }
@@ -346,6 +578,26 @@ export class AnimParticlesEditor extends LitElement {
         from { transform: rotate(0deg) translateY(0); opacity: 0; }
         25%, 75% { opacity: 1; }
         to { transform: rotate(540deg) translateY(-15px); opacity: 0; }
+      }
+      @keyframes pv-vortex {
+        from { transform: rotate(0deg) translateY(-15px); opacity: 0; }
+        25%, 75% { opacity: 1; }
+        to { transform: rotate(540deg) translateY(0); opacity: 0; }
+      }
+      @keyframes pv-wander {
+        0%, 100% { translate: 0 0; opacity: 0.3; }
+        25% { translate: 8px -6px; opacity: 1; }
+        50% { translate: -4px 6px; opacity: 0.5; }
+        75% { translate: 6px 4px; opacity: 1; }
+      }
+      .shape-tile {
+        min-height: 52px;
+        --mdc-icon-size: 22px;
+      }
+      .shape-tile .glyph {
+        width: 22px;
+        height: 22px;
+        --mdc-icon-size: 22px;
       }
       @media (prefers-reduced-motion: reduce) {
         .dir-pv i {
@@ -367,11 +619,8 @@ export class AnimParticlesEditor extends LitElement {
       }
       .slider {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr);
         align-items: center;
-        gap: 8px;
-        font-size: 0.75rem;
-        color: var(--mc-text-2);
         min-height: 32px;
       }
       .slider input[type='range'] {
@@ -383,6 +632,12 @@ export class AnimParticlesEditor extends LitElement {
         font-size: 0.75rem;
         color: var(--mc-text-2);
         font-variant-numeric: tabular-nums;
+      }
+      .seg.compass button {
+        padding: 0;
+        min-width: 32px;
+        flex: 1;
+        --mdc-icon-size: 18px;
       }
 
       /* ── colours ── */
@@ -454,6 +709,47 @@ export class AnimParticlesEditor extends LitElement {
         margin: -4px -6px -4px 0;
       }
 
+      /* ── closed sections ── */
+      .sector-btn .nm {
+        display: grid;
+        gap: 2px;
+      }
+      .sector-btn .ssum {
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: var(--mc-text-2);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .seed-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .seed-row .input {
+        flex: 1;
+        min-width: 0;
+      }
+      .checks {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px 12px;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 32px;
+        font-size: 0.8125rem;
+      }
+      .check input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        accent-color: var(--mc-accent-fill);
+      }
+
       /* ── preset-based ── */
       .preset-card {
         display: grid;
@@ -511,10 +807,16 @@ export class AnimParticlesEditor extends LitElement {
           height: 180px;
         }
       }
-      /* a wide form (the bottom panel): the direction tiles in one row */
+      /* a wide form (the bottom panel): more tiles per row */
       @container form (min-width: 480px) {
         .dirs {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+        .shapes {
           grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+        .checks {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
     `,
@@ -523,20 +825,30 @@ export class AnimParticlesEditor extends LitElement {
   // ── events ──
 
   private _emit(doc: AnimationDoc, label: string, transient = false): void {
-    if (this.disabled) return;
-    if (transient) this._open = { doc, label };
-    else this._open = undefined;
+    if (this.disabled || doc === this.doc) return;
+    if (transient) this._pending = { doc, label };
+    else this._pending = undefined;
     const detail: DocChangeDetail = transient ? { doc, label, transient: true } : { doc, label };
     this.dispatchEvent(new CustomEvent<DocChangeDetail>('doc-change', { detail, bubbles: true, composed: true }));
   }
 
   /** Close an open transient edit with its final change (the last accepted document). */
   private _settle(): void {
-    if (this._open) this._emit(this._open.doc, this._open.label);
+    if (this._pending) {
+      const { doc, label } = this._pending;
+      this._pending = undefined;
+      if (this.disabled) return;
+      this.dispatchEvent(new CustomEvent<DocChangeDetail>('doc-change', { detail: { doc, label }, bubbles: true, composed: true }));
+    }
   }
 
   private get _p(): ParticlesSpec | undefined {
     return this.doc?.kind === 'particles' ? this.doc.particles : undefined;
+  }
+
+  /** The simulation the fields show (a v1 document read as one). */
+  private get _sim(): ParticlesSim {
+    return viewSim(this.doc!, this._seed);
   }
 
   private _patch(patch: Partial<ParticlesSpec>, label: string, transient = false): void {
@@ -544,20 +856,32 @@ export class AnimParticlesEditor extends LitElement {
     this._emit(patchParticles(this.doc, patch), label, transient);
   }
 
+  /** A v2-only edit (adds `sim` to a v1 document). */
+  private _editSim(fn: (s: ParticlesSim) => ParticlesSim, label: string, transient = false): void {
+    if (!this.doc) return;
+    this._emit(editSim(this.doc, this._seed, fn), label, transient);
+  }
+
   protected willUpdate(changed: PropertyValues<this>): void {
     if (changed.has('doc')) {
-      const shape = this._p?.shape;
-      if (shape) this._shapes = { ...this._shapes, [shapeSource(shape)]: shape };
-      const n = this._p?.colors.length ?? 0;
-      if (this._color >= n) this._color = n - 1;
-      // a document from outside (undo, another document): drop drafts of the old one
       const prev = changed.get('doc') as AnimationDoc | undefined;
+      // a document from outside (undo, another document): drop drafts of the old one
       if (prev && prev.id !== this.doc?.id) {
         this._svgDraft = undefined;
         this._emojiDraft = undefined;
-        this._shapes = shape ? { [shapeSource(shape)]: shape } : {};
+        this._shapes = {};
         this._color = -1;
+        this._chip = 0;
+        this._seed = newSeed();
+        this._stats = undefined;
       }
+      if (this._p && !this._p.preset) {
+        for (const w of this._sim.shapes) if (!('builtin' in w.shape)) this._shapes = { ...this._shapes, [shapeKind(w.shape)]: w.shape };
+        const chips = shownShapes(this._sim).length;
+        if (this._chip >= chips) this._chip = chips - 1;
+      }
+      const n = this._p?.colors.length ?? 0;
+      if (this._color >= n) this._color = n - 1;
     }
   }
 
@@ -574,6 +898,7 @@ export class AnimParticlesEditor extends LitElement {
       } as unknown as DesignConfig;
       return { anim: resolveAnimations(design), css: '' };
     }
+    // a v2 document compiles its v1 fallback until compile.ts has the particles compiler (T2.4)
     const c = compileAnimationDoc(doc);
     if (!c.layer || !c.name) return { css: '' };
     const cycle = +(doc.duration / c.layer.speed).toFixed(3);
@@ -597,10 +922,78 @@ export class AnimParticlesEditor extends LitElement {
 
   private _previewCss = '';
 
-  protected updated(): void {
+  protected updated(changed: PropertyValues<this>): void {
     // the compiled rules live in this shadow root only (no shared sheet: the editor has no global state)
     const el = this.renderRoot.querySelector<HTMLStyleElement>('style[data-pv]');
     if (el && el.textContent !== this._previewCss) el.textContent = this._previewCss;
+    if (changed.has('doc')) this._scheduleBake();
+    this._applyModule();
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._release();
+    this._bakeToken++;
+  }
+
+  /** With the particles module: bake once the edits settle, for the size stats under the preview. */
+  private _scheduleBake(): void {
+    const m = getStudioParticles();
+    const spec = this.doc && this._p?.sim && !this._p.preset ? bakeSpec(this.doc) : undefined;
+    const token = ++this._bakeToken;
+    if (!m || !spec) {
+      this._stats = undefined;
+      this._baking = false;
+      return;
+    }
+    if (this._bakeMs > SLOW_BAKE_MS) this._baking = true;
+    const doc = this.doc!;
+    setTimeout(() => {
+      if (token !== this._bakeToken) return;
+      const t0 = performance.now();
+      try {
+        this._stats = m.bake({ spec, period: periodOf(doc), geometry: DEFAULT_GEOMETRY }).stats;
+      } catch {
+        this._stats = undefined;
+      }
+      this._bakeMs = performance.now() - t0;
+      this._baking = false;
+    }, 0);
+  }
+
+  /** With the particles module: hand the preview layer of a v2 document to it (re-bake, Live engine); Pause releases Live. */
+  private _applyModule(): void {
+    const m = getStudioParticles();
+    const spec = this.doc && this._p?.sim && !this._p.preset ? bakeSpec(this.doc) : undefined;
+    const layer = this.renderRoot.querySelector<HTMLElement>('.stage .mc-anim-fx') ?? undefined;
+    if (this._applied && this._applied !== layer) this._release();
+    if (!m || !spec || !layer || (this._paused && spec.sim.mode === 'live')) {
+      this._release();
+      return;
+    }
+    const reducedMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    try {
+      m.apply(layer, {
+        useCss: (name, rules) => {
+          this._liveCss.set(name, rules);
+          const s = this.renderRoot.querySelector<HTMLStyleElement>('style[data-live]');
+          if (s) s.textContent = [...this._liveCss.values()].join('\n');
+        },
+        reducedMotion,
+        content: () => this.renderRoot.querySelector('.stage-module') ?? undefined,
+        docId: this.doc!.id,
+        spec,
+        period: periodOf(this.doc!),
+      });
+      this._applied = layer;
+    } catch {
+      /* the module logs its own errors */
+    }
+  }
+
+  private _release(): void {
+    if (this._applied) getStudioParticles()?.release(this._applied);
+    this._applied = undefined;
   }
 
   private _renderPreview(): TemplateResult {
@@ -608,9 +1001,15 @@ export class AnimParticlesEditor extends LitElement {
     this._previewCss = rules;
     const p = this._p!;
     const preset = basePreset(this.doc!);
-    const sum = p.preset
+    const sim = p.preset ? undefined : this._sim;
+    const sum = !sim
       ? `${preset?.name ?? p.preset} · ${this.doc!.duration} s`
-      : `${p.count} ${p.count === 1 ? 'particle' : 'particles'} · ${DIRECTION_LABELS[p.direction].toLowerCase()} · ${+(this.doc!.duration / p.speed).toFixed(2)} s per cycle`;
+      : this._baking
+        ? 'Baking…'
+        : `${p.count} ${p.count === 1 ? 'particle' : 'particles'} · ${FLOW_LABELS[sim.flow].toLowerCase()} · ${sim.mode === 'live' ? 'live' : `${+periodOf(this.doc!).toFixed(2)} s loop`}`;
+    const capped = !!sim && !!this._stats?.capped;
+    const warn = !!sim && !capped && !!this._stats?.warn;
+    const canExport = !!sim && !!getStudioParticles();
     return html`<div class="preview">
       <div class="stage" data-mc-anim-fx ?data-paused=${this._paused} aria-hidden="true">
         <div class="stage-module"><ha-icon icon="mdi:lightbulb-outline"></ha-icon><span>Living room</span></div>
@@ -618,6 +1017,17 @@ export class AnimParticlesEditor extends LitElement {
       </div>
       <div class="preview-foot">
         <span class="sum">${sum}</span>
+        ${capped ? html`<span class="chip is-warn trimmed">Trimmed</span>` : nothing}
+        ${canExport
+          ? html`<button type="button" class="icon-btn sm export" aria-label="Animated SVG" title="Save as animated SVG" ?disabled=${this.disabled} @click=${this._openExport}>
+              <ha-icon icon="mdi:motion-play-outline"></ha-icon>
+            </button>`
+          : nothing}
+        ${sim
+          ? html`<button type="button" class="icon-btn sm shuffle" aria-label="Shuffle" title="Shuffle: new random paths" ?disabled=${this.disabled} @click=${this._shuffle}>
+              <ha-icon icon="mdi:dice-5-outline"></ha-icon>
+            </button>`
+          : nothing}
         <button
           type="button"
           class="icon-btn sm pause"
@@ -629,24 +1039,35 @@ export class AnimParticlesEditor extends LitElement {
           <ha-icon icon=${this._paused ? 'mdi:play' : 'mdi:pause'}></ha-icon>
         </button>
       </div>
+      ${capped ? html`<p class="help cap-note">This loop hit the size limit, so it shows fewer particles. Lower the count or the child particles.</p>` : nothing}
+      ${warn ? html`<p class="help cap-note">This loop is large, so it takes longer to load on wall tablets. Lower the count or the child particles.</p>` : nothing}
       <p class="help reduced-note">Reduced motion is on, so the preview stays still.</p>
+      ${canExport ? html`<mc-anim-svg-dialog .doc=${this.doc}></mc-anim-svg-dialog>` : nothing}
     </div>`;
   }
 
-  // ── shape ──
+  private _shuffle = (): void => {
+    if (this.doc) this._emit(shuffleSeed(this.doc, this._seed), 'Shuffle');
+  };
 
-  private _pickSource(src: ShapeSource): void {
-    const p = this._p;
-    if (!p || shapeSource(p.shape) === src) return;
-    this._svgDraft = undefined;
-    this._emojiDraft = undefined;
-    const shape = src === 'dot' ? undefined : (this._shapes[src] ?? SHAPE_DEFAULTS[src]);
-    this._emit(withShape(this.doc!, shape), src === 'dot' ? 'Use dots' : `Use ${src === 'svg' ? 'an own SVG' : `an ${src}`}`);
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLButtonElement>(`.shape-seg [data-src="${src}"]`)?.focus());
+  private _openExport = (): void => {
+    this.renderRoot.querySelector<AnimSvgDialog>('mc-anim-svg-dialog')?.openExport(true);
+  };
+
+  // ── keyboard ──
+
+  /** Columns a tile grid renders with (its container query decides), for Up / Down. */
+  private _cols(grid: Element | null): number {
+    if (!grid || typeof getComputedStyle !== 'function') return 3;
+    const t = getComputedStyle(grid).gridTemplateColumns || '';
+    const rep = /^repeat\((\d+)/.exec(t);
+    if (rep) return +rep[1];
+    const n = t.split(/\s+/).filter((x) => /px$/.test(x)).length;
+    return n || 3;
   }
 
   private _radioKeys(e: KeyboardEvent, ids: readonly string[], current: string, pick: (id: string) => void, grid = 0): void {
-    const i = ids.indexOf(current);
+    const i = Math.max(0, ids.indexOf(current));
     let j: number;
     if (e.key === 'ArrowRight') j = i + 1;
     else if (e.key === 'ArrowLeft') j = i - 1;
@@ -660,35 +1081,210 @@ export class AnimParticlesEditor extends LitElement {
     pick(ids[j]);
   }
 
-  private _renderShape(p: ParticlesSpec): TemplateResult {
-    const src = shapeSource(p.shape);
-    return html`<section class="group" aria-labelledby="h-shape">
-      <div class="group-head"><h3 id="h-shape">Shape</h3></div>
+  private _focus(selector: string): void {
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>(selector)?.focus());
+  }
+
+  // ── mode ──
+
+  private _pickMode(mode: ParticleMode, focus = false): void {
+    if (this.doc) this._emit(setMode(this.doc, this._seed, mode), mode === 'live' ? 'Use live simulation' : 'Use baked loop');
+    if (focus) this._focus(`.mode-seg [data-mode="${mode}"]`);
+  }
+
+  private _renderMode(sim: ParticlesSim): TemplateResult {
+    const modes: Array<[ParticleMode, string, string]> = [
+      ['baked', 'Baked loop', 'mdi:repeat'],
+      ['live', 'Live simulation', 'mdi:pulse'],
+    ];
+    return html`<section class="group" aria-labelledby="h-mode">
+      <div class="group-head"><h3 id="h-mode">Mode</h3></div>
       <div
-        class="seg full shape-seg"
+        class="seg full mode-seg"
         role="radiogroup"
-        aria-label="Particle shape"
-        @keydown=${(e: KeyboardEvent) => this._radioKeys(e, SHAPE_SOURCES.map((s) => s.id), src, (id) => this._pickSource(id as ShapeSource))}
+        aria-label="Simulation"
+        @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ['baked', 'live'], sim.mode, (id) => this._pickMode(id as ParticleMode, true))}
       >
-        ${SHAPE_SOURCES.map(
-          (s) => html`<button
+        ${modes.map(
+          ([id, label, icon]) => html`<button
             type="button"
             role="radio"
-            data-src=${s.id}
-            aria-checked=${s.id === src ? 'true' : 'false'}
-            tabindex=${s.id === src ? 0 : -1}
-            @click=${() => this._pickSource(s.id)}
+            data-mode=${id}
+            aria-checked=${sim.mode === id ? 'true' : 'false'}
+            tabindex=${sim.mode === id ? 0 : -1}
+            @click=${() => this._pickMode(id)}
           >
-            <ha-icon icon=${s.icon}></ha-icon>${s.label}
+            <ha-icon icon=${icon}></ha-icon>${label}
           </button>`,
         )}
       </div>
-      ${src === 'icon' ? this._renderIcon(p) : src === 'emoji' ? this._renderEmoji(p) : src === 'svg' ? this._renderSvg(p) : html`<p class="help">Round dots in the particle colours.</p>`}
+      <div class="mode-status" role="status">
+        ${sim.mode === 'live'
+          ? html`<p class="note is-warn live-warning"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${LIVE_WARNING}</span></p>`
+          : html`<p class="help">The studio works out every particle's path once and plays it as a loop. Light on dashboards.</p>`}
+      </div>
     </section>`;
   }
 
-  private _renderIcon(p: ParticlesSpec): TemplateResult {
-    const value = p.shape && 'icon' in p.shape ? p.shape.icon : '';
+  // ── shape ──
+
+  private _chips(): WeightedShape[] {
+    return shownShapes(this._sim);
+  }
+
+  private _setShapes(shapes: WeightedShape[], label: string, transient = false): void {
+    if (this.doc) this._emit(setShapes(this.doc, this._seed, shapes), label, transient);
+  }
+
+  /** Chip `i` becomes `shape` (weight kept). */
+  private _setChip(i: number, shape: WeightedShape['shape'], label: string, transient = false): void {
+    const shapes = this._chips().map((w, j) => (j === i ? { shape, weight: w.weight } : w));
+    this._setShapes(shapes, label, transient);
+  }
+
+  /** The shape a tile kind starts as (own shapes: the last one used, else the default). */
+  private _shapeFor(kind: ShapeKind): WeightedShape['shape'] {
+    if (isBuiltinKind(kind)) return { builtin: kind };
+    return this._shapes[kind] ?? SHAPE_DEFAULTS[kind];
+  }
+
+  private _pickKind(kind: ShapeKind, focus = false): void {
+    const cur = this._chips()[this._chip];
+    if (cur && shapeKind(cur.shape) !== kind) {
+      this._svgDraft = undefined;
+      this._emojiDraft = undefined;
+      this._setChip(this._chip, this._shapeFor(kind), `Use ${SHAPE_KINDS.find((k) => k.id === kind)!.label.toLowerCase()}`);
+    }
+    if (focus) this._focus(`.shapes.main [data-kind="${kind}"]`);
+  }
+
+  private _addShape(): void {
+    const chips = this._chips();
+    if (chips.length >= MAX_SHAPES) return;
+    this._chip = chips.length;
+    this._setShapes([...chips, { shape: nextShape(chips), weight: 1 }], 'Add shape');
+  }
+
+  private _removeShape(i: number): void {
+    const chips = this._chips();
+    if (chips.length <= 1) return;
+    this._chip = Math.max(0, Math.min(i, chips.length - 2));
+    this._setShapes(
+      chips.filter((_, j) => j !== i),
+      'Remove shape',
+    );
+    this._focus(`.schip[data-i="${this._chip}"]`);
+  }
+
+  private _shapeGrid(kind: ShapeKind | undefined, cls: string, label: string, pick: (k: ShapeKind, focus: boolean) => void): TemplateResult {
+    const ids = SHAPE_KINDS.map((k) => k.id);
+    const current = kind ?? ids[0];
+    return html`<div
+      class="shapes ${cls}"
+      role="radiogroup"
+      aria-label=${label}
+      @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ids, current, (id) => pick(id as ShapeKind, true), this._cols(e.currentTarget as Element))}
+    >
+      ${SHAPE_KINDS.map(
+        (k) => html`<button
+          type="button"
+          class="dir shape-tile"
+          role="radio"
+          data-kind=${k.id}
+          aria-checked=${k.id === kind ? 'true' : 'false'}
+          tabindex=${k.id === current ? 0 : -1}
+          @click=${() => pick(k.id, false)}
+        >
+          ${glyph(k.id)}<span>${k.label}</span>
+        </button>`,
+      )}
+    </div>`;
+  }
+
+  private _renderShape(): TemplateResult {
+    const chips = this._chips();
+    const sel = Math.min(this._chip, chips.length - 1);
+    const cur = chips[sel];
+    const kind = shapeKind(cur.shape);
+    const mixed = chips.length > 1;
+    const full = chips.length >= MAX_SHAPES;
+    return html`<section class="group" aria-labelledby="h-shape">
+      <div class="group-head"><h3 id="h-shape">Shape</h3></div>
+      <div class="schips" role="group" aria-label="Shape mix">
+        ${chips.map(
+          (w, i) => html`<button
+            type="button"
+            class="schip"
+            data-i=${i}
+            aria-pressed=${i === sel ? 'true' : 'false'}
+            aria-label=${`Shape ${i + 1}: ${shapeLabel(w.shape)}${mixed ? `, weight ${w.weight}` : ''}`}
+            title=${shapeLabel(w.shape)}
+            @click=${() => (this._chip = i)}
+            @keydown=${(e: KeyboardEvent) => {
+              if ((e.key === 'Delete' || e.key === 'Backspace') && mixed) {
+                e.preventDefault();
+                this._removeShape(i);
+              }
+            }}
+          >
+            ${chipFace(w.shape)}${mixed ? html`<span>${w.weight}</span>` : nothing}
+          </button>`,
+        )}
+        <button type="button" class="schip add" aria-label="Add shape" title=${full ? `At most ${MAX_SHAPES} shapes` : 'Add shape'} ?disabled=${full} @click=${() => this._addShape()}>
+          <ha-icon icon="mdi:plus"></ha-icon>
+        </button>
+      </div>
+      <div class="chip-edit">
+        <div class="chip-edit-head">
+          <span>Shape ${sel + 1}</span>
+          ${mixed
+            ? html`<button type="button" class="icon-btn sm danger remove-shape" aria-label=${`Remove shape ${sel + 1}`} title="Remove shape" @click=${() => this._removeShape(sel)}>
+                <ha-icon icon="mdi:delete-outline"></ha-icon>
+              </button>`
+            : nothing}
+        </div>
+        ${this._shapeGrid(kind, 'main', `Shape ${sel + 1}`, (k, focus) => this._pickKind(k, focus))}
+        ${kind === 'icon' ? this._renderIcon(cur.shape) : kind === 'emoji' ? this._renderEmoji(cur.shape) : kind === 'svg' ? this._renderSvg(cur.shape) : nothing}
+        ${mixed ? this._renderWeight(chips, sel) : nothing}
+      </div>
+      ${mixed ? nothing : html`<p class="help">Add a shape to mix shapes. Each one gets a weight.</p>`}
+    </section>`;
+  }
+
+  private _renderWeight(chips: WeightedShape[], i: number): TemplateResult {
+    const w = chips[i].weight;
+    return html`<div class="field">
+      <div class="field-head"><label for="f-weight">Weight</label></div>
+      <input
+        id="f-weight"
+        class="input"
+        type="number"
+        inputmode="numeric"
+        min=${V2_LIMITS.weight.min}
+        max=${V2_LIMITS.weight.max}
+        step="1"
+        .value=${live(String(w))}
+        aria-describedby="h-weight"
+        @change=${(e: Event) => {
+          const input = e.target as HTMLInputElement;
+          const n = limitV2('weight', input.value);
+          if (n === undefined || n === w) {
+            input.value = String(w);
+            return;
+          }
+          input.value = String(n);
+          this._setShapes(
+            chips.map((c, j) => (j === i ? { shape: c.shape, weight: n } : c)),
+            'Change weight',
+          );
+        }}
+      />
+      <p class="help" id="h-weight">About ${shapeShare(chips, i)}% of particles</p>
+    </div>`;
+  }
+
+  private _renderIcon(shape: WeightedShape['shape']): TemplateResult {
+    const value = 'icon' in shape ? shape.icon : '';
     return html`<div class="field">
       <div class="field-head"><span class="lbl" id="l-icon">Icon</span></div>
       <mc-icon-picker
@@ -699,18 +1295,18 @@ export class AnimParticlesEditor extends LitElement {
         @value-changed=${(e: CustomEvent) => {
           e.stopPropagation();
           const v = String(e.detail.value ?? '').trim();
-          if (validIcon(v) && v !== value) this._emit(withShape(this.doc!, { icon: v }), 'Change icon');
+          if (validIcon(v) && v !== value) this._setChip(this._chip, { icon: v }, 'Change icon');
         }}
       ></mc-icon-picker>
     </div>`;
   }
 
-  private _renderEmoji(p: ParticlesSpec): TemplateResult {
-    const value = p.shape && 'emoji' in p.shape ? p.shape.emoji : '';
+  private _renderEmoji(shape: WeightedShape['shape']): TemplateResult {
+    const value = 'emoji' in shape ? shape.emoji : '';
     const text = this._emojiDraft ?? value;
     const err = this._emojiDraft !== undefined ? emojiError(this._emojiDraft) : undefined;
     const set = (v: string, label: string, transient: boolean) => {
-      if (!emojiError(v) && v.trim() !== this._lastEmoji()) this._emit(withShape(this.doc!, { emoji: v.trim() }), label, transient);
+      if (!emojiError(v) && v.trim() !== this._lastEmoji()) this._setChip(this._chip, { emoji: v.trim() }, label, transient);
     };
     return html`<div class="field">
       <div class="field-head"><label for="f-emoji">Emoji or symbol</label></div>
@@ -745,7 +1341,7 @@ export class AnimParticlesEditor extends LitElement {
             aria-label=${`Use ${em}`}
             @click=${() => {
               this._emojiDraft = undefined;
-              if (em !== value) this._emit(withShape(this.doc!, { emoji: em }), 'Change emoji');
+              if (em !== value) this._setChip(this._chip, { emoji: em }, 'Change emoji');
             }}
           >
             ${em}
@@ -756,15 +1352,16 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _lastEmoji(): string {
-    const s = this._p?.shape;
+    const s = this._chips()[this._chip]?.shape;
     return s && 'emoji' in s ? s.emoji : '';
   }
 
-  private _renderSvg(p: ParticlesSpec): TemplateResult {
-    const value = p.shape && 'svg' in p.shape ? p.shape.svg : '';
+  private _renderSvg(shape: WeightedShape['shape']): TemplateResult {
+    const value = 'svg' in shape ? shape.svg : '';
     const text = this._svgDraft ?? value;
     const err = this._svgDraft !== undefined ? svgError(this._svgDraft) : undefined;
-    const c = compileAnimationDoc(this.doc!);
+    // the mask the card uses for this SVG (compiled as a one-shape v1 layer)
+    const c = compileAnimationDoc({ ...this.doc!, particles: { ...this._p!, sim: undefined, shape: { svg: value } } });
     const mask = /mask: (url\("[^"]*"\))/.exec(c.css)?.[1];
     return html`<div class="field">
       <div class="field-head"><label for="f-svg">Own SVG</label></div>
@@ -780,7 +1377,7 @@ export class AnimParticlesEditor extends LitElement {
           @input=${(e: InputEvent) => {
             const v = (e.target as HTMLTextAreaElement).value;
             this._svgDraft = v;
-            if (!svgError(v) && v !== value) this._emit(withShape(this.doc!, { svg: v }), 'Edit SVG', true);
+            if (!svgError(v) && v !== value) this._setChip(this._chip, { svg: v }, 'Edit SVG', true);
           }}
           @change=${() => {
             if (this._svgDraft !== undefined && !svgError(this._svgDraft)) this._svgDraft = undefined;
@@ -798,9 +1395,9 @@ export class AnimParticlesEditor extends LitElement {
 
   // ── movement ──
 
-  private _pickDirection(d: ParticleDirection, focus = false): void {
-    if (this._p?.direction !== d) this._patch({ direction: d }, 'Change direction');
-    if (focus) void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLButtonElement>(`.dir[data-dir="${d}"]`)?.focus());
+  private _pickFlow(f: ParticlesSim['flow'], focus = false): void {
+    if (this.doc && this._sim.flow !== f) this._emit(setFlow(this.doc, this._seed, f), 'Change flow');
+    if (focus) this._focus(`.dir[data-dir="${f}"]`);
   }
 
   private _number(key: 'count' | 'speed', id: string, value: number, label: string): TemplateResult {
@@ -827,7 +1424,7 @@ export class AnimParticlesEditor extends LitElement {
     />`;
   }
 
-  private _unit(key: 'spin' | 'spread', id: string, value: number, unit: string, label: string, def: number): TemplateResult {
+  private _unit(key: 'spread', id: string, value: number, unit: string, label: string, def: number): TemplateResult {
     return html`<mc-unit-field
       .inputId=${id}
       .value=${`${value}${unit}`}
@@ -849,72 +1446,150 @@ export class AnimParticlesEditor extends LitElement {
     ></mc-unit-field>`;
   }
 
-  private _renderMovement(p: ParticlesSpec): TemplateResult {
-    const g = p.gravity;
-    const gText = g === 0 ? 'None' : `${Math.abs(g).toFixed(1)} ${g > 0 ? 'down' : 'up'}`;
+  /**
+   * A From / To pair of number inputs (`scale`: shown = stored × scale). A From above To is swapped.
+   * Labels the inputs "Lowest …" / "Highest …".
+   */
+  private _range(id: string, label: string, noun: string, value: Range, key: V2LimitKey, set: (r: Range) => void, opts: { scale?: number; help?: string } = {}): TemplateResult {
+    const scale = opts.scale ?? 1;
+    const shown: Range = [+(value[0] * scale).toFixed(2), +(value[1] * scale).toFixed(2)];
+    const step = V2_LIMITS[key].step;
+    return html`<div class="field">
+      <div class="field-head"><span class="lbl" id=${`l-${id}`}>${label}</span></div>
+      <div class="pair" role="group" aria-labelledby=${`l-${id}`}>
+        ${([0, 1] as const).map(
+          (end) => html`<div>
+            <label class="sub-lbl" for=${`f-${id}-${end}`}>${end === 0 ? 'From' : 'To'}</label>
+            <input
+              id=${`f-${id}-${end}`}
+              class="input"
+              type="number"
+              inputmode="decimal"
+              min=${V2_LIMITS[key].min}
+              max=${V2_LIMITS[key].max}
+              step=${step}
+              aria-label=${`${end === 0 ? 'Lowest' : 'Highest'} ${noun}`}
+              .value=${live(String(shown[end]))}
+              @change=${(e: Event) => {
+                const input = e.target as HTMLInputElement;
+                const n = limitV2(key, input.value);
+                if (n === undefined) {
+                  input.value = String(shown[end]);
+                  return;
+                }
+                const next = orderRange(end === 0 ? [n, shown[1]] : [shown[0], n]);
+                if (next[0] === shown[0] && next[1] === shown[1]) {
+                  input.value = String(shown[end]);
+                  return;
+                }
+                set([+(next[0] / scale).toFixed(4), +(next[1] / scale).toFixed(4)]);
+              }}
+            />
+          </div>`,
+        )}
+      </div>
+      ${opts.help ? html`<p class="help">${opts.help}</p>` : nothing}
+    </div>`;
+  }
+
+  /** One 0-1 slider: transient changes while dragging, one final change. */
+  private _slider(id: string, label: string, unit: number, text: string, onValue: (n: number, transient: boolean) => void, opts: { help?: string; disabled?: boolean } = {}): TemplateResult {
+    return html`<div class="field">
+      <div class="field-head"><label for=${id}>${label}</label><span class="val">${text}</span></div>
+      <div class="slider">
+        <input
+          id=${id}
+          type="range"
+          min="0"
+          max="1"
+          step=${V2_LIMITS.unit.step}
+          .value=${live(String(unit))}
+          aria-valuetext=${text}
+          ?disabled=${opts.disabled}
+          @input=${(e: Event) => {
+            const n = limitV2('unit', (e.target as HTMLInputElement).value);
+            if (n !== undefined) onValue(n, true);
+          }}
+          @change=${() => this._settle()}
+        />
+      </div>
+      ${opts.help ? html`<p class="help">${opts.help}</p>` : nothing}
+    </div>`;
+  }
+
+  private _renderMovement(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
     return html`<section class="group" aria-labelledby="h-move">
       <div class="group-head"><h3 id="h-move">Movement</h3></div>
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-dir">Direction</span></div>
+        <div class="field-head"><span class="lbl" id="l-dir">Flow</span></div>
         <div
           class="dirs"
           role="radiogroup"
           aria-labelledby="l-dir"
-          @keydown=${(e: KeyboardEvent) => this._radioKeys(e, PARTICLE_DIRECTIONS, p.direction, (id) => this._pickDirection(id as ParticleDirection, true), 3)}
+          @keydown=${(e: KeyboardEvent) => this._radioKeys(e, FLOWS, sim.flow, (id) => this._pickFlow(id as ParticlesSim['flow'], true), this._cols(e.currentTarget as Element))}
         >
-          ${PARTICLE_DIRECTIONS.map(
+          ${FLOWS.map(
             (d) => html`<button
               type="button"
               class="dir"
               role="radio"
               data-dir=${d}
-              aria-checked=${d === p.direction ? 'true' : 'false'}
-              tabindex=${d === p.direction ? 0 : -1}
-              @click=${() => this._pickDirection(d)}
+              aria-checked=${d === sim.flow ? 'true' : 'false'}
+              tabindex=${d === sim.flow ? 0 : -1}
+              title=${FLOW_LABELS[d]}
+              @click=${() => this._pickFlow(d)}
             >
               <span class="dir-pv ${d}" aria-hidden="true"><i></i><i></i><i></i></span>
-              <span>${DIRECTION_LABELS[d]}</span>
+              <span>${FLOW_LABELS[d]}</span>
             </button>`,
           )}
         </div>
       </div>
       <div class="pair">
         <div class="field">
-          <div class="field-head"><label for="f-speed">Speed (×)</label></div>
+          <div class="field-head"><label for="f-speed">Loop speed (×)</label></div>
           ${this._number('speed', 'f-speed', p.speed, 'Change speed')}
         </div>
         <div class="field">
-          <div class="field-head"><label for="f-spread">${spreadLabel(p.direction)}</label></div>
+          <div class="field-head"><label for="f-spread">${flowSpreadLabel(sim.flow)}</label></div>
           ${this._unit('spread', 'f-spread', p.spread, '%', 'Change spread', 100)}
         </div>
       </div>
-      <div class="field">
-        <div class="field-head"><label for="f-gravity">Gravity</label><span class="val">${gText}</span></div>
-        <div class="slider">
-          <span aria-hidden="true">Up</span>
-          <input
-            id="f-gravity"
-            type="range"
-            min=${LIMITS.gravity.min}
-            max=${LIMITS.gravity.max}
-            step=${LIMITS.gravity.step}
-            .value=${String(g)}
-            aria-valuetext=${gText}
-            @input=${(e: Event) => {
-              const n = limitNumber('gravity', (e.target as HTMLInputElement).value);
-              if (n !== undefined && n !== this._p?.gravity) this._patch({ gravity: n }, 'Change gravity', true);
-            }}
-            @change=${() => this._settle()}
-          />
-          <span aria-hidden="true">Down</span>
-        </div>
-      </div>
-      <div class="field">
-        <div class="field-head"><label for="f-spin">Spin per cycle</label></div>
-        ${this._unit('spin', 'f-spin', p.spin, 'deg', 'Change spin', 0)}
-        <p class="help">Every other particle turns the other way.</p>
-      </div>
+      ${sim.flow === 'rain' ? this._renderWind(sim) : nothing}
+      ${this._range('pspeed', 'Particle speed (% per s)', 'speed', sim.ranges.speed, 'pspeed', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, speed: r } }), 'Change particle speed'), {
+        help: 'Each particle picks a speed in this range. 100 crosses the card in one second.',
+      })}
     </section>`;
+  }
+
+  /** Rain only: the wind angle, written as the gravity direction (Lead ruling, no contract field). */
+  private _renderWind(sim: ParticlesSim): TemplateResult {
+    const w = windOf(sim.physics.gravity.angle);
+    return html`<div class="field">
+      <div class="field-head"><label for="f-wind">Wind angle (deg)</label></div>
+      <input
+        id="f-wind"
+        class="input"
+        type="number"
+        inputmode="numeric"
+        min=${V2_LIMITS.wind.min}
+        max=${V2_LIMITS.wind.max}
+        step=${V2_LIMITS.wind.step}
+        .value=${live(String(w))}
+        aria-describedby="h-wind"
+        @change=${(e: Event) => {
+          const input = e.target as HTMLInputElement;
+          const n = limitV2('wind', input.value);
+          if (n === undefined || n === w) {
+            input.value = String(w);
+            return;
+          }
+          input.value = String(n);
+          this._emit(setWind(this.doc!, this._seed, n), 'Change wind angle');
+        }}
+      />
+      <p class="help" id="h-wind">Negative blows the rain to the left, positive to the right. It sets the gravity direction.</p>
+    </div>`;
   }
 
   // ── look ──
@@ -931,7 +1606,7 @@ export class AnimParticlesEditor extends LitElement {
     else this._patch({ size }, 'Change size');
   }
 
-  private _renderLook(p: ParticlesSpec): TemplateResult {
+  private _renderLook(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
     return html`<section class="group" aria-labelledby="h-look">
       <div class="group-head"><h3 id="h-look">Look</h3></div>
       <div class="pair">
@@ -968,7 +1643,7 @@ export class AnimParticlesEditor extends LitElement {
         <div class="pair" role="group" aria-labelledby="l-size">
           ${([0, 1] as const).map(
             (end) => html`<div>
-              <label class="sub-lbl" for=${`f-size-${end}`}>${end === 0 ? 'Smallest' : 'Largest'}</label>
+              <label class="sub-lbl" for=${`f-size-${end}`}>${end === 0 ? 'From' : 'To'}</label>
               <mc-unit-field
                 compact
                 .inputId=${`f-size-${end}`}
@@ -986,12 +1661,13 @@ export class AnimParticlesEditor extends LitElement {
           )}
         </div>
       </div>
+      ${this._range('opacity', 'Opacity (%)', 'opacity', sim.ranges.opacity, 'opacity', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, opacity: r } }), 'Change opacity'), { scale: 100 })}
       ${this._renderColors(p)}
       <div class="switch-row">
         <span class="txt" id="l-fade">Fade in and out<p class="help">Particles appear and vanish softly.</p></span>
         <button
           type="button"
-          class="switch"
+          class="switch fade"
           role="switch"
           aria-labelledby="l-fade"
           aria-checked=${p.fade ? 'true' : 'false'}
@@ -1003,7 +1679,7 @@ export class AnimParticlesEditor extends LitElement {
 
   private _pickLayer(l: ParticlesSpec['layer'], focus = false): void {
     if (this._p?.layer !== l) this._patch({ layer: l }, l === 'front' ? 'Particles in front' : 'Particles behind');
-    if (focus) void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLButtonElement>(`.layer-seg [data-layer="${l}"]`)?.focus());
+    if (focus) this._focus(`.layer-seg [data-layer="${l}"]`);
   }
 
   private _addColor(): void {
@@ -1090,6 +1766,354 @@ export class AnimParticlesEditor extends LitElement {
     </div>`;
   }
 
+  // ── closed sections ──
+
+  private _sector(id: SectorId, icon: string, name: string, summary: string, body: () => TemplateResult): TemplateResult {
+    const open = !!this._open[id];
+    return html`<div class="sector" data-sector=${id}>
+      <button
+        type="button"
+        class="sector-btn"
+        aria-expanded=${open ? 'true' : 'false'}
+        aria-controls=${open ? `sb-${id}` : nothing}
+        @click=${() => (this._open = { ...this._open, [id]: !open })}
+      >
+        <ha-icon icon=${icon}></ha-icon>
+        <span class="nm">${name}<span class="sr-only">, </span><span class="ssum">${summary}</span></span>
+        <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
+      </button>
+      ${open ? html`<div class="sector-body" id=${`sb-${id}`}>${body()}</div>` : nothing}
+    </div>`;
+  }
+
+  private _renderVariation(sim: ParticlesSim): TemplateResult {
+    const doc = this.doc!;
+    return html`<div class="field">
+        <div class="field-head"><label for="f-seed">Seed</label></div>
+        <div class="seed-row">
+          <input
+            id="f-seed"
+            class="input"
+            type="number"
+            inputmode="numeric"
+            min="0"
+            max=${V2_LIMITS.seed.max}
+            step="1"
+            .value=${live(String(sim.seed))}
+            aria-describedby="h-seed"
+            @change=${(e: Event) => {
+              const input = e.target as HTMLInputElement;
+              const n = limitV2('seed', input.value);
+              if (n === undefined || (n === sim.seed && !!this._p?.sim)) {
+                input.value = String(sim.seed);
+                return;
+              }
+              this._editSim((s) => ({ ...s, seed: n }), 'Change seed');
+            }}
+          />
+          <button type="button" class="btn btn-secondary btn-sm shuffle-seed" @click=${this._shuffle}><ha-icon icon="mdi:dice-5-outline"></ha-icon>Shuffle</button>
+        </div>
+        <p class="help" id="h-seed">The same seed gives the same loop every time.</p>
+      </div>
+      ${this._range('spin', 'Spin per loop (deg)', 'spin', spinPerLoop(doc, sim), 'spin', (r) => this._emit(setSpin(doc, this._seed, r), 'Change spin'), {
+        help: 'Each particle turns the way it picks, left or right.',
+      })}
+      ${this._range('delay', 'Start delay (s)', 'start delay', sim.ranges.delay, 'delay', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, delay: r } }), 'Change start delay'))}
+      ${this._range('life', 'Lifetime (s)', 'lifetime', sim.ranges.lifetime, 'lifetime', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, lifetime: r } }), 'Change lifetime'), {
+        help: 'A baked loop keeps lifetimes inside one loop.',
+      })}`;
+  }
+
+  private _pickGravityAngle(angle: number, focus = false): void {
+    const sim = this._sim;
+    const unit = sim.physics.gravity.strength / PHYSICS_SCALE.gravity;
+    if (this.doc && angle !== sim.physics.gravity.angle) this._emit(setGravity(this.doc, this._seed, angle, unit), 'Change gravity direction');
+    if (focus) this._focus(`.compass [data-angle="${angle}"]`);
+  }
+
+  private _renderPhysics(sim: ParticlesSim): TemplateResult {
+    const g = sim.physics.gravity;
+    const gUnit = +(g.strength / PHYSICS_SCALE.gravity).toFixed(2);
+    const dragUnit = +(sim.physics.drag / PHYSICS_SCALE.drag).toFixed(2);
+    const turbUnit = +(sim.physics.turbulence.strength / PHYSICS_SCALE.turbulence).toFixed(2);
+    const angles = COMPASS.map((c) => String(c.angle));
+    const onCompass = COMPASS.some((c) => c.angle === g.angle);
+    return html`${this._slider('f-grav', 'Gravity', gUnit, gUnit ? gUnit.toFixed(2) : 'None', (n, t) => this._emit(setGravity(this.doc!, this._seed, g.angle, n), 'Change gravity', t))}
+      <div class="field">
+        <div class="field-head"><span class="lbl" id="l-gdir">Gravity direction</span></div>
+        <div
+          class="seg full compass"
+          role="radiogroup"
+          aria-labelledby="l-gdir"
+          @keydown=${(e: KeyboardEvent) => this._radioKeys(e, angles, String(g.angle), (id) => this._pickGravityAngle(+id, true))}
+        >
+          ${COMPASS.map(
+            (c, i) => html`<button
+              type="button"
+              role="radio"
+              data-angle=${c.angle}
+              aria-checked=${c.angle === g.angle ? 'true' : 'false'}
+              aria-label=${c.name}
+              title=${c.name}
+              tabindex=${c.angle === g.angle || (!onCompass && i === 0) ? 0 : -1}
+              @click=${() => this._pickGravityAngle(c.angle)}
+            >
+              <ha-icon icon=${c.icon}></ha-icon>
+            </button>`,
+          )}
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-head"><label for="f-gangle">Angle (deg)</label></div>
+        <input
+          id="f-gangle"
+          class="input"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          max="359"
+          step="1"
+          .value=${live(String(g.angle))}
+          aria-describedby="h-gangle"
+          @change=${(e: Event) => {
+            const input = e.target as HTMLInputElement;
+            const n = limitV2('angle', input.value);
+            if (n === undefined || n === g.angle) {
+              input.value = String(g.angle);
+              return;
+            }
+            this._emit(setGravity(this.doc!, this._seed, n, gUnit), 'Change gravity direction');
+          }}
+        />
+        <p class="help" id="h-gangle">0 pulls down, 90 left, 180 up, 270 right.</p>
+      </div>
+      ${this._slider(
+        'f-drag',
+        'Drag',
+        dragUnit,
+        dragUnit.toFixed(2),
+        (n, t) => this._editSim((s) => ({ ...s, physics: { ...s.physics, drag: +(n * PHYSICS_SCALE.drag).toFixed(2) } }), 'Change drag', t),
+        { help: 'Slows particles down over time.' },
+      )}
+      ${this._slider(
+        'f-turb',
+        'Turbulence',
+        turbUnit,
+        turbUnit.toFixed(2),
+        (n, t) => this._editSim((s) => ({ ...s, physics: { ...s.physics, turbulence: { ...s.physics.turbulence, strength: +(n * PHYSICS_SCALE.turbulence).toFixed(2) } } }), 'Change turbulence', t),
+        { help: 'Adds random swirls to the motion.' },
+      )}`;
+  }
+
+  private _setCollider(id: ColliderId, on: boolean): void {
+    this._editSim((s) => ({ ...s, colliders: { ...s.colliders, ...(id === 'content' ? { content: on ? 'icon' : 'none' } : { [id]: on }) } }), on ? 'Turn collider on' : 'Turn collider off');
+  }
+
+  private _renderCollisions(sim: ParticlesSim): TemplateResult {
+    const c = sim.colliders;
+    const any = anyCollider(c);
+    return html`<div class="checks" role="group" aria-label="Collide with">
+        ${COLLIDERS.map(
+          (k) => html`<label class="check">
+            <input type="checkbox" data-collider=${k.id} .checked=${colliderOn(c, k.id)} @change=${(e: Event) => this._setCollider(k.id, (e.target as HTMLInputElement).checked)} />
+            ${k.label}
+          </label>`,
+        )}
+      </div>
+      ${c.content !== 'none'
+        ? html`<div class="field">
+            <div class="field-head"><span class="lbl">Content box</span></div>
+            <div
+              class="seg full content-seg"
+              role="radiogroup"
+              aria-label="Content box"
+              @keydown=${(e: KeyboardEvent) =>
+                this._radioKeys(e, ['icon', 'text'], c.content, (id) => {
+                  if (id !== c.content) this._editSim((s) => ({ ...s, colliders: { ...s.colliders, content: id as 'icon' | 'text' } }), 'Change content box');
+                  this._focus(`.content-seg [data-content="${id}"]`);
+                })}
+            >
+              ${(['icon', 'text'] as const).map(
+                (k) => html`<button
+                  type="button"
+                  role="radio"
+                  data-content=${k}
+                  aria-checked=${c.content === k ? 'true' : 'false'}
+                  tabindex=${c.content === k ? 0 : -1}
+                  @click=${() => c.content !== k && this._editSim((s) => ({ ...s, colliders: { ...s.colliders, content: k } }), 'Change content box')}
+                >
+                  ${k === 'icon' ? 'Icon' : 'Text'}
+                </button>`,
+              )}
+            </div>
+            <p class="help">The box of the card's icon or of its text.</p>
+          </div>`
+        : nothing}
+      ${this._slider(
+        'f-bounce',
+        'Bounce',
+        sim.physics.bounce,
+        sim.physics.bounce.toFixed(2),
+        (n, t) => this._editSim((s) => ({ ...s, physics: { ...s.physics, bounce: n } }), 'Change bounce', t),
+        { help: '0 stops on impact, 1 bounces back at full speed.', disabled: !any },
+      )}`;
+  }
+
+  private _child(patch: Partial<SubEmitter>, label: string): void {
+    this._editSim((s) => (s.children ? { ...s, children: { ...s.children, ...patch } } : s), label);
+  }
+
+  private _renderChildren(sim: ParticlesSim): TemplateResult {
+    const ch = sim.children;
+    const any = anyCollider(sim.colliders);
+    const sw = html`<div class="switch-row">
+      <span class="txt" id="l-children">Spawn child particles<p class="help">Children burst out from the point where they spawn.</p></span>
+      <button
+        type="button"
+        class="switch children"
+        role="switch"
+        aria-labelledby="l-children"
+        aria-checked=${ch ? 'true' : 'false'}
+        @click=${() => {
+          if (ch) {
+            this._editSim((s) => {
+              const { children: _c, ...rest } = s;
+              void _c;
+              return rest;
+            }, 'Turn child particles off');
+          } else this._editSim((s) => ({ ...s, children: defaultChildren(s) }), 'Turn child particles on');
+        }}
+      ></button>
+    </div>`;
+    if (!ch) return sw;
+    const triggers: Array<[SubEmitter['trigger'], string]> = [
+      ['collision', 'On collision'],
+      ['death', 'At end of life'],
+    ];
+    const pickTrigger = (t: SubEmitter['trigger'], focus = false) => {
+      if (t === 'collision' && !any) return;
+      if (t !== ch.trigger) this._child({ trigger: t, at: undefined }, 'Change child trigger');
+      if (focus) this._focus(`.trigger-seg [data-trigger="${t}"]`);
+    };
+    const kind = shapeKind(ch.shapes[0]?.shape ?? { builtin: 'circle' });
+    const parentColours = !ch.colors.length;
+    return html`${sw}
+      <div class="field">
+        <div class="field-head"><span class="lbl" id="l-trigger">Spawn</span></div>
+        <div
+          class="seg full trigger-seg"
+          role="radiogroup"
+          aria-labelledby="l-trigger"
+          @keydown=${(e: KeyboardEvent) => this._radioKeys(e, any ? ['collision', 'death'] : ['death'], ch.trigger, (id) => pickTrigger(id as SubEmitter['trigger'], true))}
+        >
+          ${triggers.map(
+            ([id, label]) => html`<button
+              type="button"
+              role="radio"
+              data-trigger=${id}
+              aria-checked=${ch.trigger === id ? 'true' : 'false'}
+              tabindex=${ch.trigger === id || (ch.trigger === 'time' && id === 'death') ? 0 : -1}
+              ?disabled=${id === 'collision' && !any}
+              @click=${() => pickTrigger(id)}
+            >
+              ${label}
+            </button>`,
+          )}
+        </div>
+        ${!any ? html`<p class="help">Turn on a collider first.</p>` : nothing}
+        ${ch.trigger === 'time' ? html`<p class="help">Spawns ${ch.at ?? 0} s after birth (set in YAML).</p>` : nothing}
+      </div>
+      <div class="field">
+        <div class="field-head"><label for="f-ccount">Count per spawn</label></div>
+        <input
+          id="f-ccount"
+          class="input"
+          type="number"
+          inputmode="numeric"
+          min="1"
+          max=${V2_LIMITS.childCount.max}
+          step="1"
+          .value=${live(String(ch.count))}
+          @change=${(e: Event) => {
+            const input = e.target as HTMLInputElement;
+            const n = limitV2('childCount', input.value);
+            if (n === undefined || n === ch.count) {
+              input.value = String(ch.count);
+              return;
+            }
+            input.value = String(n);
+            this._child({ count: n }, 'Change child count');
+          }}
+        />
+      </div>
+      <div class="field">
+        <div class="field-head"><span class="lbl">Child shape</span></div>
+        ${this._shapeGrid(kind, 'child', 'Child shape', (k, focus) => {
+          if (k !== kind) {
+            const own = this._sim.shapes.find((w) => shapeKind(w.shape) === k)?.shape;
+            this._child({ shapes: [{ shape: own ?? this._shapeFor(k), weight: 1 }] }, 'Change child shape');
+          }
+          if (focus) this._focus(`.shapes.child [data-kind="${k}"]`);
+        })}
+      </div>
+      ${this._range('csize', 'Size (px)', 'child size', ch.size, 'childSize', (r) => this._child({ size: r }, 'Change child size'))}
+      ${this._range('cspeed', 'Speed (% per s)', 'child speed', ch.ranges.speed, 'pspeed', (r) => this._child({ ranges: { ...ch.ranges, speed: r } }, 'Change child speed'))}
+      <div class="field">
+        <div class="field-head"><label for="f-clife">Lifetime (s)</label></div>
+        <input
+          id="f-clife"
+          class="input"
+          type="number"
+          inputmode="decimal"
+          min=${V2_LIMITS.childLife.min}
+          max=${V2_LIMITS.childLife.max}
+          step="0.1"
+          .value=${live(String(ch.ranges.lifetime[1]))}
+          @change=${(e: Event) => {
+            const input = e.target as HTMLInputElement;
+            const n = limitV2('childLife', input.value);
+            if (n === undefined || (n === ch.ranges.lifetime[0] && n === ch.ranges.lifetime[1])) {
+              input.value = String(ch.ranges.lifetime[1]);
+              return;
+            }
+            this._child({ ranges: { ...ch.ranges, lifetime: [n, n] } }, 'Change child lifetime');
+          }}
+        />
+      </div>
+      <div class="switch-row">
+        <span class="txt" id="l-ccolors">Use the parent's colours</span>
+        <button
+          type="button"
+          class="switch child-colors"
+          role="switch"
+          aria-labelledby="l-ccolors"
+          aria-checked=${parentColours ? 'true' : 'false'}
+          @click=${() => this._child({ colors: parentColours ? [this._p?.colors[0] ?? '#ffffff'] : [] }, parentColours ? 'Own child colour' : "Use the parent's colours")}
+        ></button>
+      </div>
+      ${parentColours
+        ? nothing
+        : html`<mc-color-picker
+            allowEntity
+            label="Child colour"
+            .value=${fromDocColor(ch.colors[0])}
+            @value-changed=${(e: CustomEvent) => {
+              e.stopPropagation();
+              const v = toDocColor(String(e.detail.value ?? ''));
+              if (v && v !== ch.colors[0]) this._child({ colors: [v] }, 'Change child colour');
+            }}
+          ></mc-color-picker>`}`;
+  }
+
+  private _renderSectors(sim: ParticlesSim): TemplateResult {
+    return html`<div class="sectors">
+      ${this._sector('variation', 'mdi:dice-multiple-outline', 'Variation', variationSummary(this.doc!, sim), () => this._renderVariation(sim))}
+      ${this._sector('physics', 'mdi:weight', 'Physics', physicsSummary(sim), () => this._renderPhysics(sim))}
+      ${this._sector('collisions', 'mdi:arrow-collapse-down', 'Collisions', collisionsSummary(sim), () => this._renderCollisions(sim))}
+      ${this._sector('children', 'mdi:creation-outline', 'Child particles', childrenSummary(sim), () => this._renderChildren(sim))}
+    </div>`;
+  }
+
   // ── preset-based ──
 
   private _renderPreset(p: ParticlesSpec): TemplateResult {
@@ -1130,7 +2154,7 @@ export class AnimParticlesEditor extends LitElement {
         <ha-icon icon="mdi:creation-outline"></ha-icon>Convert to custom particles
       </button>
       <p class="help">
-        Swaps the preset for your own particles: shape, direction, size and colours become editable.
+        Swaps the preset for your own particles: shape, movement, size and colours become editable.
         ${preset && preset.particles === 'count' && !preset.ring && !preset.seasonal ? 'The look changes a little.' : "They replace the preset's look."}
       </p>
     </section>`;
@@ -1139,7 +2163,7 @@ export class AnimParticlesEditor extends LitElement {
   private _convert = (): void => {
     if (!this.doc) return;
     this._emit(convertPresetParticles(this.doc), 'Convert to custom particles');
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLButtonElement>('.shape-seg [aria-checked="true"]')?.focus());
+    this._focus('.mode-seg [aria-checked="true"]');
   };
 
   // ── render ──
@@ -1149,19 +2173,21 @@ export class AnimParticlesEditor extends LitElement {
     if (!this.doc || !p) {
       return html`<div class="empty"><ha-icon icon="mdi:shimmer"></ha-icon><p>Open a particles animation to design its particles.</p></div>`;
     }
+    const sim = p.preset ? undefined : this._sim;
     return html`<style data-pv></style>
+      <style data-live></style>
       <div class="wrap">
         ${this._renderPreview()}
         <div class="form" ?inert=${this.disabled} @focusout=${this._onFocusOut}>
-          ${p.preset ? this._renderPreset(p) : html`${this._renderShape(p)}${this._renderMovement(p)}${this._renderLook(p)}`}
+          ${!sim ? this._renderPreset(p) : html`${this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim)}${this._renderLook(p, sim)}${this._renderSectors(sim)}`}
         </div>
       </div>`;
   }
 
-  /** Leaving a text field without a change event (Escape, a re-render) still closes its edit. */
+  /** Leaving a text field or slider without a change event (Escape, a re-render) still closes its edit. */
   private _onFocusOut = (e: FocusEvent): void => {
     const t = e.target as HTMLElement;
-    if (this._open && (t.id === 'f-svg' || t.id === 'f-emoji' || t.id === 'f-gravity')) this._settle();
+    if (this._pending && ['f-svg', 'f-emoji', 'f-grav', 'f-drag', 'f-turb', 'f-bounce'].includes(t.id)) this._settle();
   };
 }
 
