@@ -9,7 +9,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ### Performance
 -   Dashboards load about 45 % less code. The card editor is now a separate file, `magic-card-editor.js`, that loads when you edit a card or open the animation studio. `magic-card.js` shrinks from 1.26 MB to 0.68 MB.
 -   A new file, `magic-card-editor.js`, ships next to `magic-card.js`. With a manual install, copy it to the same folder. If it cannot be loaded, Home Assistant opens its YAML editor for the card instead.
--   After an update, hard refresh once. If the editor file and `magic-card.js` come from different versions, the editor asks you to reload the page.
+-   After an update, hard refresh once. If the editor file and `magic-card.js` come from different versions, Home Assistant opens the YAML editor and the browser console asks you to reload the page.
 
 ## 2026.10.03 (2026-10-16)
 
