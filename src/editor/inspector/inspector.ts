@@ -15,6 +15,7 @@ import type {
 import type { EditorStateManager } from '../state/editor-state';
 import type { SyncContext } from '../../utils/sync-path';
 import { ModuleRegistry } from '../../modules/module-registry';
+import { moduleEditors } from '../modules';
 import { hasColumnWidths } from '../../utils/column-widths';
 import { editorStyles } from '../../css/editor-css';
 import {
@@ -208,6 +209,11 @@ export class Inspector extends LitElement {
     if (sel.kind === 'slot' && this._state && layoutModuleAt(this._state.config, sel)?.type === 'tabs') return ['general'];
     if (sel.kind !== 'module') return KIND_TABS[sel.kind];
     const mod = this._module(sel);
+    if (mod && moduleEditors.get(mod.type)) {
+      const listed = moduleEditors.tabs(mod.type);
+      return MODULE_TAB_ORDER.filter((t) => listed.includes(t));
+    }
+    // Temporary fallback until every module has a ModuleEditor (T1.5c); removed in T1.5d.
     const handler = mod ? ModuleRegistry.get(mod.type) : undefined;
     if (!handler) return ['general'];
     const available = handler.getAvailableTabs();
@@ -549,6 +555,8 @@ export class Inspector extends LitElement {
     }
     const none = (what: string) => html`<p class="help">No ${what} for this module.</p>`;
     const body = withEditorKey(selectionKey(sel), () => {
+      if (moduleEditors.get(mod.type)) return moduleEditors.render(tab, mod, this.hass, onChange, template);
+      // Temporary fallback until every module has a ModuleEditor (T1.5c); removed in T1.5d.
       switch (tab) {
         case 'actions':
           return handler.renderActionsTab ? handler.renderActionsTab(mod, this.hass, onChange, template) : none('actions');

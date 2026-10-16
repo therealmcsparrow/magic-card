@@ -1,20 +1,15 @@
-import { html, TemplateResult } from 'lit';
+import { TemplateResult } from 'lit';
 import { MagicModule, MagicModuleMetadata } from './module-types';
-import {
-  CardModule,
-  HomeAssistant,
-  EditorTab,
-  ActionsConfig,
-  ActionConfig,
-  DisplayConfig,
-  DisplayCondition,
-  DesignConfig,
-} from '../types';
-import { generateId } from '../utils/id-generator';
+import { CardModule, HomeAssistant, EditorTab } from '../types';
 import { SyncContext } from '../utils/sync-path';
-import { renderActionGroups } from '../editor/components/action-editor';
-import { renderConditionsList } from '../editor/inspector/conditions-list';
-import '../editor/components/design-panel';
+import {
+  buildSyncContext,
+  syncedOnChange,
+  renderDefaultActionsTab,
+  renderDefaultConditionsTab,
+  renderDefaultDesignTab,
+} from '../editor/modules/base-editor';
+import { moduleEditors } from '../editor/modules/registry';
 
 export abstract class BaseMagicModule implements MagicModule {
   abstract readonly metadata: MagicModuleMetadata;
@@ -23,12 +18,15 @@ export abstract class BaseMagicModule implements MagicModule {
 
   abstract renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult;
 
-  abstract renderGeneralTab(
+  /** Content modules: their General tab is a ModuleEditor in the registry. This delegation goes in T1.5d. */
+  renderGeneralTab(
     config: CardModule,
     hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
     template?: string,
-  ): TemplateResult;
+  ): TemplateResult {
+    return moduleEditors.render('general', config, hass, onChange, template);
+  }
 
   getAvailableTabs(): EditorTab[] {
     return ['general', 'actions', 'conditions', 'design'];
@@ -38,16 +36,9 @@ export abstract class BaseMagicModule implements MagicModule {
     return [];
   }
 
-  /**
-   * Build a SyncContext for this module from the template name and module config.
-   */
+  /** Build a SyncContext for this module from the template name and module config. */
   protected _buildSyncContext(config: CardModule, template?: string): SyncContext | undefined {
-    if (!template) return undefined;
-    return {
-      templateName: template,
-      notSynced: (config.not_synced || []) as string[],
-      basePath: '',
-    };
+    return buildSyncContext(config, template);
   }
 
   /**
@@ -59,50 +50,17 @@ export abstract class BaseMagicModule implements MagicModule {
     onChange: (updated: CardModule) => void,
     template?: string,
   ): (propertyPath: string, updated: CardModule) => void {
-    return (propertyPath: string, updated: CardModule) => {
-      if (template) {
-        const currentNotSynced = new Set((config.not_synced || []) as string[]);
-        currentNotSynced.add(propertyPath);
-        (updated as any).not_synced = Array.from(currentNotSynced);
-      }
-      onChange(updated);
-    };
+    return syncedOnChange(config, onChange, template);
   }
 
+  // The default tabs live in the editor chunk (src/editor/modules/base-editor.ts); these delegations go in T1.5d.
   renderActionsTab(
     config: CardModule,
     hass: HomeAssistant | undefined,
     onChange: (updated: CardModule) => void,
     template?: string,
   ): TemplateResult {
-    const actions = config.actions as ActionsConfig | undefined;
-    const syncCtx = this._buildSyncContext(config, template);
-
-    const updateAction = (key: keyof ActionsConfig, action: ActionConfig) => {
-      const updated = {
-        ...config,
-        actions: { ...actions, [key]: action },
-      };
-      if (template) {
-        const currentNotSynced = new Set((config.not_synced || []) as string[]);
-        // Mark the specific action property as not synced
-        for (const [prop, val] of Object.entries(action)) {
-          if (val !== undefined) {
-            currentNotSynced.add(`actions.${key}.${prop}`);
-          }
-        }
-        (updated as any).not_synced = Array.from(currentNotSynced);
-      }
-      onChange(updated);
-    };
-
-    const actionSyncCtx = (key: string): SyncContext | undefined => {
-      if (!syncCtx) return undefined;
-      return { ...syncCtx, basePath: `actions.${key}` };
-    };
-
-    // one group per gesture (icon heading), a single "Action" select, then the fields that action needs
-    return renderActionGroups(actions, updateAction, hass, config.entity, (key) => actionSyncCtx(key));
+    return renderDefaultActionsTab(config, hass, onChange, template);
   }
 
   renderConditionsTab(
@@ -111,53 +69,7 @@ export abstract class BaseMagicModule implements MagicModule {
     onChange: (updated: CardModule) => void,
     template?: string,
   ): TemplateResult {
-    const display = config.display as DisplayConfig | undefined;
-    const conditions = display?.conditions || [];
-    const mode = display?.mode || 'every';
-    const syncCtx = this._buildSyncContext(config, template);
-
-    const updateDisplay = (updates: Partial<DisplayConfig>) => {
-      onChange({
-        ...config,
-        display: { ...display, ...updates },
-      });
-    };
-
-    const addCondition = () => {
-      const newCondition: DisplayCondition = {
-        id: generateId('cond'),
-        type: 'state',
-        entity: '',
-        state: '',
-      };
-      updateDisplay({ conditions: [...conditions, newCondition] });
-    };
-
-    const removeCondition = (index: number) => {
-      updateDisplay({ conditions: conditions.filter((_c, i) => i !== index) });
-    };
-
-    const updateCondition = (index: number, updates: Partial<DisplayCondition>) => {
-      updateDisplay({
-        conditions: conditions.map((c, i) => (i === index ? { ...c, ...updates } : c)),
-      });
-    };
-
-    const condSyncCtx = syncCtx ? { ...syncCtx, basePath: 'display' } : undefined;
-
-    return renderConditionsList(
-      conditions,
-      mode,
-      {
-        onAdd: addCondition,
-        onUpdate: updateCondition,
-        onRemove: removeCondition,
-        onMode: (m) => updateDisplay({ mode: m }),
-      },
-      hass,
-      condSyncCtx,
-      'module',
-    );
+    return renderDefaultConditionsTab(config, hass, onChange, template);
   }
 
   renderDesignTab(
@@ -166,49 +78,6 @@ export abstract class BaseMagicModule implements MagicModule {
     onChange: (updated: CardModule) => void,
     template?: string,
   ): TemplateResult {
-    const design = (config.design as DesignConfig) || {};
-    const hasTemplate = !!template;
-    const notSynced = (config.not_synced || []) as string[];
-
-    const updateDesign = (updates: Record<string, unknown>) => {
-      const newDesign = { ...design } as Record<string, unknown>;
-      const updatedConfig = { ...config };
-
-      // Handle sync control
-      if (updates._markNotSynced) {
-        // one design key, or several (a section reset / paste)
-        const names = ([] as string[]).concat(updates._markNotSynced as string | string[]);
-        const currentNotSynced = new Set(config.not_synced || []);
-        for (const name of names) currentNotSynced.add(`design.${name}`);
-        (updatedConfig as any).not_synced = Array.from(currentNotSynced);
-        delete updates._markNotSynced;
-      }
-
-      if (updates._markSynced) {
-        const propertyName = updates._markSynced as string;
-        const path = `design.${propertyName}`;
-        const currentNotSynced = new Set(config.not_synced || []);
-        currentNotSynced.delete(path);
-        (updatedConfig as any).not_synced = Array.from(currentNotSynced);
-        delete updates._markSynced;
-      }
-
-      for (const [key, value] of Object.entries(updates)) {
-        if (value === undefined || value === '') delete newDesign[key];
-        else newDesign[key] = value;
-      }
-
-      onChange({ ...updatedConfig, design: newDesign as DesignConfig });
-    };
-
-    return html`<mc-design-panel
-      .design=${design}
-      .hass=${hass}
-      .hasTemplate=${hasTemplate}
-      .notSynced=${notSynced}
-      .moduleEntity=${config.entity || ''}
-      .moduleType=${config.type || ''}
-      .onChange=${updateDesign}
-    ></mc-design-panel>`;
+    return renderDefaultDesignTab(config, hass, onChange, template);
   }
 }

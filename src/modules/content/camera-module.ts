@@ -1,10 +1,9 @@
-import { html, nothing, TemplateResult } from 'lit';
+import { html, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, CameraModuleConfig, HassEntity } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderToggleField, renderEntityField, renderSegField, renderNumberField, renderFieldHint } from '../../utils/form-utils';
 import { invalidateDependencyCache, type DependencyContext, type ModuleDependencies } from '../../services/card-dependencies';
 import { currentRenderContext } from '../../services/render-context';
 import { cssAspectRatio, resolveMediaUrl, withRefreshParam } from '../../utils/media';
@@ -12,7 +11,7 @@ import { entityDisplayName, isUnavailable } from '../../utils/entity-value';
 import { getCardHelpers } from '../advanced/custom-card-module';
 
 const STREAM_TAG = 'ha-camera-stream';
-const DEFAULT_REFRESH_S = 10;
+export const DEFAULT_REFRESH_S = 10;
 const LOAD_TIMEOUT_MS = 10_000;
 
 let _streamLoad: Promise<void> | undefined;
@@ -139,38 +138,6 @@ class CameraModule extends BaseMagicModule {
     `;
   }
 
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const c = config as CameraModuleConfig;
-    const syncCtx = this._buildSyncContext(config, template);
-    const live = c.camera_view === 'live';
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Camera entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, 'camera', 'entity', syncCtx)}
-        ${renderSegField('View', live ? 'live' : 'snapshot', [
-          { label: 'Live', value: 'live' },
-          { label: 'Snapshot', value: 'snapshot' },
-        ], (v) => onChange({ ...c, camera_view: v as CameraModuleConfig['camera_view'] }), 'camera_view', syncCtx)}
-        ${live
-          ? html`
-              ${renderToggleField('Show controls', c.show_controls !== false, (v) => onChange({ ...c, show_controls: v }), 'show_controls', syncCtx,
-                'Play, pause, sound and full screen on the live stream.')}
-              ${renderFieldHint('The studio canvas shows a snapshot; the dashboard plays the stream (muted).')}
-            `
-          : nothing}
-        ${renderNumberField(live ? 'Snapshot refresh (seconds)' : 'Refresh every (seconds)', c.refresh_interval,
-          (v) => onChange({ ...c, refresh_interval: Number.isFinite(v) && v > 0 ? v : undefined }),
-          { min: 1, max: 3600, optional: true, placeholder: String(DEFAULT_REFRESH_S) }, 'refresh_interval', syncCtx)}
-        ${live ? renderFieldHint('Used until the stream player is available.') : nothing}
-        ${renderTextField('Aspect ratio', c.aspect_ratio === undefined ? undefined : String(c.aspect_ratio),
-          (v) => onChange({ ...c, aspect_ratio: v }), 'aspect_ratio', syncCtx, { placeholder: '16:9' })}
-      </div>
-    `;
-  }
 }
 
 ModuleRegistry.register(new CameraModule());

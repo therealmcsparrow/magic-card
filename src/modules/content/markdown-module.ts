@@ -10,12 +10,6 @@ import { generateId } from '../../utils/id-generator';
 import { sanitizeHtml, escapeHtml } from '../../utils/sanitize-html';
 import { currentRenderContext } from '../../services/render-context';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
-import {
-  renderEntityField,
-  renderAttributeField,
-  renderTextareaField,
-  renderFieldHint,
-} from '../../utils/form-utils';
 
 marked.setOptions({
   breaks: true,
@@ -116,32 +110,6 @@ class MarkdownModule extends BaseMagicModule {
     }
   }
 
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const c = config as MarkdownModuleConfig;
-    const syncCtx = this._buildSyncContext(config, template);
-    return html`
-      <div class="mc-tab-content">
-        ${renderTextareaField(
-          'Content',
-          c.content,
-          (v) => onChange({ ...c, content: v }),
-          { rows: 6, placeholder: '**Bold**, _italic_, `code`' },
-          'content',
-          syncCtx,
-        )}
-        ${renderFieldHint(
-          "Markdown with Home Assistant templates, e.g. {{ states('sensor.temperature') }}. With an entity set, {{ states(entity) }} shows its state.",
-        )}
-        ${renderEntityField('Entity (for templates)', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-      </div>
-    `;
-  }
 
   hints(config: CardModule): string[] {
     return (config as MarkdownModuleConfig).content ? [] : ['Markdown content is required'];

@@ -4,7 +4,6 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, ImageModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderToggleField, renderEntityField, renderAttributeField, renderSelectField, renderMediaField, renderFieldHint } from '../../utils/form-utils';
 import { cssAspectRatio, mediaSrc, resolveMediaUrl } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
@@ -86,45 +85,6 @@ class ImageModule extends BaseMagicModule {
     `;
   }
 
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const c = config as ImageModuleConfig;
-    const syncCtx = this._buildSyncContext(config, template);
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${!c.attribute
-          ? renderToggleField('Use entity picture', c.entity_picture, (v) =>
-              onChange({ ...c, entity_picture: v }), 'entity_picture', syncCtx,
-              "Shows the entity's picture (person, image, camera, media player).")
-          : nothing}
-        ${renderAttributeField('Image from attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
-        ${c.entity && c.attribute ? renderFieldHint('The attribute holds the image URL; it replaces the entity picture and the image URL.') : nothing}
-        ${!c.entity_picture && !(c.entity && c.attribute)
-          ? renderMediaField('Image URL', c.image, (v) => onChange({ ...c, image: v }), hass, 'image', 'image', syncCtx)
-          : nothing}
-        ${renderTextField('Aspect ratio', c.aspect_ratio === undefined ? undefined : String(c.aspect_ratio), (v) =>
-          onChange({ ...c, aspect_ratio: v }), 'aspect_ratio', syncCtx, { placeholder: '16:9' })}
-        ${c.aspect_ratio !== undefined && c.aspect_ratio !== '' && cssAspectRatio(c.aspect_ratio, '') === ''
-          ? renderFieldHint('Use a ratio like 16:9, 4/3, 1.5 or 56.25%. 16:9 is used until then.')
-          : nothing}
-        ${renderSelectField(
-          'Fit',
-          c.fit,
-          [
-            { label: 'Cover', value: 'cover' },
-            { label: 'Contain', value: 'contain' },
-            { label: 'Fill', value: 'fill' },
-            { label: 'None', value: 'none' },
-          ],
-          (v) => onChange({ ...c, fit: v as ImageModuleConfig['fit'] }), 'fit', syncCtx)}
-      </div>
-    `;
-  }
 
   hints(config: CardModule): string[] {
     // No image yet is not an error: the preview shows the image-off placeholder.
