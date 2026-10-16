@@ -32,7 +32,9 @@ import type { IconAnimatorHost } from './loader';
 import type { AnimatedIconPick } from './animated-icon-grid';
 import { cardState, patchCard } from './card-request';
 import { FOLLOW_NOTES, LIVE, svgGeometry } from './follow-icon';
+import { referenceMine } from './animated-icon-pick';
 import {
+  MINE_PREFIX,
   cardIds,
   referenceCount,
   storedDoc,
@@ -62,12 +64,21 @@ interface ExportResult {
 /**
  * A split of the module's own icon (not a library entry): its drawing embedded (`rig.svg`), or its
  * icon id (`rig.icon`) when the drawing is over the own-icon size cap. The validator allows only
- * one of the two, so a library document is told apart by its name.
+ * one of the two, so a library document is told apart by its name, a copy of a My animations
+ * document by its id (MINE_PREFIX).
  */
 function isOwnDoc(doc: AnimationDoc, icon: string): boolean {
   const rig = doc.rig;
-  if (!rig || ICON_LIBRARY.some((e) => e.name === doc.name)) return false;
+  if (!rig || doc.id.startsWith(MINE_PREFIX) || ICON_LIBRARY.some((e) => e.name === doc.name))
+    return false;
   return rig.svg ? true : rig.icon === icon;
+}
+
+/** Both documents valid and the same once validated (leniently, as the card reads them). */
+function sameDoc(a: unknown, b: unknown): boolean {
+  const x = validateAnimationDoc(a, { v2: 'lenient' });
+  const y = validateAnimationDoc(b, { v2: 'lenient' });
+  return x.ok && y.ok && JSON.stringify(x.doc) === JSON.stringify(y.doc);
 }
 
 /** Default icons of the modules when neither the module nor its entity sets one. */
@@ -408,16 +419,26 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       const ie = iconEntry(this._list());
       if (ie?.quick) return ie.id;
       // a My animations document is never overwritten: a picked animation gets a new id
-      if (this._doc && this._doc.id !== ie?.id) return this._doc.id;
+      if (this._doc && this._doc.id !== ie?.id && !h.library.get(this._doc.id)) return this._doc.id;
       return this._newId();
     }
 
     /** A new id, unique in the card (inline documents, references) and in the library. */
-    private _newId(): string {
+    private _newId(kind?: 'mine'): string {
       const lib = h.library.status === 'ready' ? h.library.list().map((d) => d.id) : [];
       const config = this._config();
       const tpl = cardState(this)?.getState().templateAnimations;
-      return newQuickId([...cardIds(config, config ? h.customIds(config) : [], tpl), ...lib]);
+      return newQuickId(
+        [...cardIds(config, config ? h.customIds(config) : [], tpl), ...lib],
+        undefined,
+        kind,
+      );
+    }
+
+    /** The working document is My animations document `_mine` as the library holds it. */
+    private _isMine(doc: AnimationDoc | undefined): boolean {
+      const lib = this._mine ? h.library.get(this._mine) : undefined;
+      return !!doc && !!lib && doc.id === lib.id && sameDoc(doc, lib);
     }
 
     private _matches(): LibraryEntry[] {
@@ -552,10 +573,23 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       }
       let doc = this._validDoc();
       if (!doc) return;
-      // a document other modules play (carried over, duplicated) is never taken over by a module
-      // that has no entry yet: it gets its own copy
       const ie = iconEntry(this._list());
-      if (
+      if (this._mine && doc.id === this._mine) {
+        // a My animations document as the library holds it: the entry references it, nothing stored
+        if (this._isMine(doc)) {
+          referenceMine(h, this, this._list(), doc.id, (list) => this.onAnimations(list));
+          this._doc = doc;
+          this._msg = 'Applied from My animations.';
+          this.requestUpdate();
+          return;
+        }
+        // changed here: the card's own copy (a MINE_PREFIX id: it goes with the icon, never follows it)
+        const keep =
+          ie?.quick && ie.id.startsWith(MINE_PREFIX) && referenceCount(this._config(), ie.id) <= 1;
+        doc = { ...doc, id: keep ? ie.id : this._newId('mine') };
+      } else if (
+        // a document other modules play (carried over, duplicated) is never taken over by a module
+        // that has no entry yet: it gets its own copy
         (!ie || !ie.quick) &&
         (doc.id === ie?.id || (!ie && referenceCount(this._config(), doc.id) > 0))
       )
@@ -580,19 +614,26 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       this.requestUpdate();
     }
 
-    /** applied: the stored copy equals the working document; changed: applied, then edited. */
-    private _status(config: MagicCardConfig | undefined): 'none' | 'applied' | 'changed' | 'ref' {
+    /**
+     * applied: the stored copy equals the working document; changed: applied, then edited (or
+     * another animation picked); ref: a My animations reference whose document is the working one
+     * as the library holds it (or there is none); lost: a reference the library does not hold.
+     */
+    private _status(
+      config: MagicCardConfig | undefined,
+    ): 'none' | 'applied' | 'changed' | 'ref' | 'lost' {
       const ie = iconEntry(this._list());
-      if (ie && !ie.quick) return 'ref';
+      if (ie && !ie.quick) {
+        const lib = h.library.get(ie.id);
+        // a library still loading: no verdict yet
+        if (!lib && !this._doc) return ['ready', 'unavailable'].includes(h.library.status) ? 'lost' : 'ref';
+        return !this._doc || (this._doc.id === ie.id && sameDoc(this._doc, lib)) ? 'ref' : 'changed';
+      }
       const q = ie;
       const stored = q && config ? this._stored(config, q.id)?.doc : undefined;
       if (!q || !stored) return 'none';
       if (!this._doc) return 'applied';
-      const v = validateAnimationDoc(this._doc, { v2: 'lenient' });
-      const s = validateAnimationDoc(stored, { v2: 'lenient' });
-      return v.ok && s.ok && JSON.stringify(v.doc) === JSON.stringify(s.doc)
-        ? 'applied'
-        : 'changed';
+      return sameDoc(this._doc, stored) ? 'applied' : 'changed';
     }
 
     // ── export ──
@@ -793,11 +834,14 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       else this._pickMine(p.doc);
     }
 
-    /** A My animations document: a copy under this module's id, stored inline on Apply. */
+    /**
+     * A My animations document, under its library id: Apply references it, or stores a copy of
+     * its own once it is changed here.
+     */
     private _pickMine(doc: AnimationDoc): void {
       const v = validateAnimationDoc(doc, { v2: 'lenient' });
       if (!v.ok) return;
-      this._doc = { ...v.doc, id: this._id() };
+      this._doc = v.doc;
       this._mine = doc.id;
       this._entry = '';
       this._mode = 'library';
@@ -1024,10 +1068,13 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
                     ? html`<span class="chip is-accent status">Applied</span>`
                     : status === 'changed'
                       ? html`<span class="chip is-warn status">Changed, not applied</span>`
-                      : html`<span class="chip status">Not applied</span>`
+                      : status === 'lost'
+                        ? html`<span class="chip is-warn status">Not found</span>`
+                        : html`<span class="chip status">Not applied</span>`
                 }
                 ${q && this._stored(config, q.id)?.template ? html`<span class="chip from-template">From template</span>` : nothing}
                 ${status === 'ref' ? html`<p class="help">From My animations.</p>` : nothing}
+                ${status === 'lost' ? html`<p class="help missing">${ie!.id}: not found in My animations.</p>` : nothing}
               </div>
             </div>
           </div>
@@ -1053,7 +1100,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
             <button
               type="button"
               class="btn btn-primary btn-sm apply"
-              ?disabled=${!doc || !config}
+              ?disabled=${!doc || !config || status === 'ref'}
               @click=${() => this._apply()}
             >
               <ha-icon icon="mdi:check"></ha-icon>${status === 'none' ? 'Apply' : 'Update'}
@@ -1103,7 +1150,8 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
               : nothing
           }
           ${
-            id && status !== 'none'
+            // the card's own document only (a My animations reference is already there)
+            id && q && status !== 'none'
               ? html`<div class="field">
                   <p class="help">
                     To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils.
