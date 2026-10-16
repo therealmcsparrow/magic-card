@@ -4,7 +4,6 @@ import {
   HomeAssistant,
   ModuleCategory,
   ModuleType,
-  EditorTab,
 } from '../types';
 import type { DependencyContext, ModuleDependencies } from '../services/card-dependencies';
 
@@ -25,36 +24,6 @@ export interface MagicModule {
     config: CardModule,
     hass?: HomeAssistant,
   ): TemplateResult;
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult;
-
-  renderActionsTab?(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult;
-
-  renderConditionsTab?(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult;
-
-  renderDesignTab?(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult;
-
-  getAvailableTabs(): EditorTab[];
 
   /** Configuration errors (contradictory or malformed options): shown inline in place of the module. */
   validate(config: CardModule): string[];

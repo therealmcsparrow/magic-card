@@ -35,6 +35,3 @@ import './advanced/weather-module';
 import './advanced/forecast-module';
 import './advanced/video-bg-module';
 import './advanced/custom-card-module';
-
-// Module editors (General tabs of the content modules). Temporary until T1.5d/T1.5e move them to the editor chunk.
-import '../editor/modules/index';
