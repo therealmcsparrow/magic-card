@@ -39,7 +39,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
    */
   class Thumb extends h.LitElement {
     static properties = {
-      build: { attribute: false },
+      source: { attribute: false },
       icon: { attribute: false },
       hass: { attribute: false },
       _visible: { state: true },
@@ -76,7 +76,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       `,
     ];
 
-    build?: () => AnimationDoc;
+    /** The library entry or document to play: a stable object, so a re-render keeps the built card. */
+    source?: LibraryEntry | AnimationDoc;
     icon = '';
     hass?: unknown;
     private _visible = typeof IntersectionObserver === 'undefined';
@@ -102,13 +103,13 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     }
 
     protected willUpdate(changed: PropertyValues): void {
-      if (changed.has('build') || changed.has('icon')) this._card = undefined;
+      if (changed.has('source') || changed.has('icon')) this._card = undefined;
       if (this._card) {
         if (changed.has('hass') && this.hass) this._card.hass = this.hass;
         return;
       }
-      if (!this._visible || !this.build || !customElements.get('magic-card')) return;
-      const doc = this.build();
+      if (!this._visible || !this.source || !customElements.get('magic-card')) return;
+      const doc = 'build' in this.source ? this.source.build() : this.source;
       const card = document.createElement('magic-card') as CardElement;
       try {
         card.setConfig({
@@ -284,10 +285,10 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       this.dispatchEvent(new CustomEvent('animated-icon-pick', { detail: pick, bubbles: true, composed: true }));
     }
 
-    private _tile(id: string, name: string, icon: string, label: string, build: () => AnimationDoc, pick: AnimatedIconPick): TemplateResult {
+    private _tile(id: string, name: string, icon: string, label: string, source: LibraryEntry | AnimationDoc, pick: AnimatedIconPick): TemplateResult {
       return html`<li>
         <button type="button" class="entry" data-id=${id} title="${name} (${icon})" aria-pressed=${id === this.current ? 'true' : 'false'} @click=${() => this._emit(pick)}>
-          <mc-animated-icon-thumb .build=${build} .icon=${icon} .hass=${this.hass}></mc-animated-icon-thumb>
+          <mc-animated-icon-thumb .source=${source} .icon=${icon} .hass=${this.hass}></mc-animated-icon-thumb>
           <span class="nm">${name}</span>
           <span class="dm">${label}</span>
         </button>
@@ -335,7 +336,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           ? html`<section aria-labelledby="aig-mine">
               <h3 id="aig-mine">My animations</h3>
               <ul class="grid" role="list">
-                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, 'My animation', () => d, { kind: 'mine', doc: d }))}
+                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, 'My animation', d, { kind: 'mine', doc: d }))}
               </ul>
             </section>`
           : nothing}
@@ -344,7 +345,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
               <h3 id="aig-lib">Icon library</h3>
               ${intro}
               <ul class="grid" role="list">
-                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain), () => e.build(), { kind: 'library', entry: e }))}
+                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain), e, { kind: 'library', entry: e }))}
               </ul>
               ${toggle}
             </section>`
