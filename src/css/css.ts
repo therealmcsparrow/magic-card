@@ -1249,10 +1249,8 @@ const magicCardLocalStyles = css`
     box-sizing: border-box;
   }
 
-  /* Editor canvas: modules/rows/columns hidden by display conditions stay selectable */
-  .mc-module-wrapper[data-mc-hidden],
-  .mc-row[data-mc-hidden],
-  .mc-column[data-mc-hidden] {
+  /* Editor canvas: rows, columns, modules and tabs hidden (Hide or display conditions) stay selectable */
+  [data-mc-hidden] {
     opacity: 0.45;
   }
 
