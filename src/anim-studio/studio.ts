@@ -2,7 +2,7 @@ import { LitElement, html, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
-import { ANIMATION_GROUPS, ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
+import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { docFromPreset, presetDocId } from './from-preset';
 import { ANIMATION_CAPS, ANIMATION_KINDS, newAnimationDoc, validateAnimationDoc, type AnimationDoc, type AnimationKind, type FieldError } from './model';
@@ -27,6 +27,9 @@ import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
 import { TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
 import { docSizeError } from './editors/draw-utils';
+import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
+import { builtinTileSources } from './preset-grid';
+import { loadPresetCatalogue } from './preset-catalogue-loader';
 
 /*
  * The animation studio: `<magic-card-animation-studio>`, a full-screen surface with the library
@@ -265,6 +268,9 @@ export class AnimationStudio extends LitElement {
   @state() private _import?: ImportResult & { done?: string };
   @state() private _importText = '';
   @state() private _presetQuery = '';
+  /** Catalogue presets once the chunk has loaded (preset-catalogue 1.1.0); undefined until then. */
+  @state() private _catalogue?: CataloguePreset[];
+  @state() private _catalogueFailed = false;
   @state() private _customRepeat = false;
   /** What is selected in the editor (keys, a target, a stage tool): drives the inspector. */
   @state() private _selection: StudioSelection = NO_SELECTION;
@@ -507,6 +513,51 @@ export class AnimationStudio extends LitElement {
       const first = next.rig?.parts[0]?.id;
       if (from === 'icon' && first) this._selection = { kind: 'target', target: `part:${first}`, targets: [`part:${first}`] };
     });
+  }
+
+  /** The "Customise a preset" dialog; loads the preset catalogue chunk (built-ins show meanwhile). */
+  private _openPresets(): void {
+    this._presetQuery = '';
+    this._dialog = { type: 'presets' };
+    if (this._catalogue) return;
+    this._catalogueFailed = false;
+    void loadPresetCatalogue().then((m) => {
+      if (m) this._catalogue = m.CATALOGUE;
+      else this._catalogueFailed = true;
+    });
+  }
+
+  /** A tile's pick (preset-pick): what the old chip did; catalogue presets copy their document. */
+  private _pickPreset(e: Event): void {
+    e.stopPropagation();
+    const source = ((e as CustomEvent<PresetPickDetail>).detail ?? {}).source as PresetTileSource | undefined;
+    if (!source) return;
+    if (source.kind === 'builtin') return this._customise(source.id);
+    let built: AnimationDoc;
+    try {
+      built = structuredClone(source.entry.build());
+    } catch (err) {
+      this._say(`This preset could not be opened: ${errorText(err).message}`);
+      return;
+    }
+    const doc: AnimationDoc = { ...built, id: uniqueId(presetDocId(source.entry.id), this._taken) };
+    this._dialog = undefined;
+    this._guard(() => this._openDoc(doc, true));
+  }
+
+  private _sourcesFor?: { catalogue?: CataloguePreset[]; list: PresetTileSource[] };
+  /** The tiles' sources: built-ins, then catalogue presets; one stable list per catalogue (tiles keep their cards). */
+  private _presetSources(): PresetTileSource[] {
+    if (!this._sourcesFor || this._sourcesFor.catalogue !== this._catalogue)
+      this._sourcesFor = { catalogue: this._catalogue, list: [...builtinTileSources(), ...(this._catalogue ?? []).map((entry) => ({ kind: 'catalogue' as const, entry }))] };
+    return this._sourcesFor.list;
+  }
+
+  /** Clear search (no results): empty the field and put focus back in it. */
+  private async _clearPresetSearch(): Promise<void> {
+    this._presetQuery = '';
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<HTMLInputElement>('input.preset-search')?.focus();
   }
 
   private _customise(presetId: string): void {
@@ -919,8 +970,7 @@ export class AnimationStudio extends LitElement {
           data-kind="preset"
           @click=${() => {
             this._menu = false;
-            this._presetQuery = '';
-            this._dialog = { type: 'presets' };
+            this._openPresets();
           }}
         >
           <ha-icon icon="mdi:auto-fix"></ha-icon>
@@ -1046,10 +1096,7 @@ export class AnimationStudio extends LitElement {
         <button
           type="button"
           class="starter"
-          @click=${() => {
-            this._presetQuery = '';
-            this._dialog = { type: 'presets' };
-          }}
+          @click=${() => this._openPresets()}
         >
           <ha-icon icon="mdi:auto-fix"></ha-icon><span class="mi-t">From a preset</span><span class="mi-s">Customise one of ${ANIMATION_PRESETS.length}</span>
         </button>
@@ -2000,9 +2047,9 @@ export class AnimationStudio extends LitElement {
   private _renderDialog(): TemplateResult | typeof nothing {
     const dg = this._dialog;
     if (!dg) return nothing;
-    const shell = (label: string, body: TemplateResult, wide = false) =>
+    const shell = (label: string, body: TemplateResult, wide: boolean | 'xwide' = false) =>
       html`<dialog
-        class="dlg ${wide ? 'wide' : ''}"
+        class="dlg ${wide === 'xwide' ? 'xwide' : wide ? 'wide' : ''}"
         aria-label=${label}
         @cancel=${(e: Event) => {
           e.preventDefault();
@@ -2165,11 +2212,6 @@ export class AnimationStudio extends LitElement {
           true,
         );
       case 'presets': {
-        const q = this._presetQuery.trim().toLowerCase();
-        const groups = ANIMATION_GROUPS.map((g) => ({
-          g,
-          items: ANIMATION_PRESETS.filter((p) => p.group === g && (!q || `${p.name} ${p.id}`.toLowerCase().includes(q))),
-        })).filter((x) => x.items.length);
         return shell(
           'Customise a preset',
           html`<h2>Customise a preset</h2>
@@ -2186,25 +2228,20 @@ export class AnimationStudio extends LitElement {
                 @input=${(e: InputEvent) => (this._presetQuery = (e.target as HTMLInputElement).value)}
               />
             </div>
-            <div class="preset-list">
-              ${
-                groups.length
-                  ? groups.map(
-                      (x) =>
-                        html`<div class="pg" role="group" aria-label=${x.g}>
-                          <h3>${x.g}</h3>
-                          <div class="pg-items">
-                            ${x.items.map((p) => html`<button type="button" class="preset" data-preset=${p.id} @click=${() => this._customise(p.id)}>${p.name}</button>`)}
-                          </div>
-                        </div>`,
-                    )
-                  : html`<p class="no-results">No presets match "${this._presetQuery}".</p>`
-              }
-            </div>
+            <mc-preset-grid
+              class="preset-list"
+              .sources=${this._presetSources()}
+              .query=${this._presetQuery}
+              .hass=${this.hass}
+              .lookup=${this._lookup}
+              .notice=${this._catalogueFailed ? 'More presets could not load. The built-in presets still work.' : ''}
+              @preset-pick=${(e: Event) => this._pickPreset(e)}
+              @preset-clear-search=${() => void this._clearPresetSearch()}
+            ></mc-preset-grid>
             <div class="dlg-actions">
               <button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>
             </div>`,
-          true,
+          'xwide',
         );
       }
     }

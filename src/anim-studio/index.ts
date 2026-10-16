@@ -3,6 +3,7 @@ import './public-path';
 import { AnimationStudio } from './studio';
 import { AnimationStage } from './studio-stage';
 import { AnimationThumb } from './studio-thumb';
+import { PRESET_GRID_TAG, PRESET_THUMB_TAG, PresetGrid, PresetThumb } from './preset-grid';
 // The kind editors define their own elements (mc-anim-*-editor, mc-anim-bezier-editor,
 // mc-anim-path-overlay; see editor-slots.ts). They use the card bundle's mc-unit-field /
 // mc-color-picker by tag only, never importing them.
@@ -38,6 +39,8 @@ export const STUDIO_ELEMENTS: Array<[string, CustomElementConstructor]> = [
   ['magic-card-animation-studio', AnimationStudio],
   ['mcas-stage', AnimationStage],
   ['mcas-thumb', AnimationThumb],
+  [PRESET_GRID_TAG, PresetGrid],
+  [PRESET_THUMB_TAG, PresetThumb],
 ];
 
 for (const [tag, ctor] of STUDIO_ELEMENTS) if (!customElements.get(tag)) customElements.define(tag, ctor);
