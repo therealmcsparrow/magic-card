@@ -36,7 +36,7 @@ import {
   referenceCount,
   storedDoc,
   newQuickId,
-  quickEntry,
+  iconEntry,
   removeInlineDoc,
   upsertInlineDoc,
   withQuickEntry,
@@ -259,6 +259,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     private _mode: Mode = 'library';
     private _doc?: AnimationDoc;
     private _entry = '';
+    private _unsubLib?: () => void;
     private _all = false;
     private _part = '';
     private _preset = PART_PRESETS[0]?.id ?? '';
@@ -318,18 +319,25 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     }
 
     protected willUpdate(): void {
-      const q = quickEntry(this._list());
+      const ie = iconEntry(this._list());
+      const q = ie?.quick ? ie : undefined;
+      // a My animations reference: its library document (the key changes once the library has it)
+      const ref = ie && !ie.quick ? h.library.get(ie.id) : undefined;
       const mod = this._moduleKey();
-      const key = mod + (q?.id ?? '');
+      const key = mod + (ie?.id ?? '') + (ref ? '+' : '');
       if (key === this._key) return;
       const sameModule = this._key.startsWith(mod);
       this._key = key;
       // the same module after Apply / Remove / undo of either: keep working on the same document
-      if (sameModule && this._doc && (!q || this._doc.id === q.id)) return;
+      if (sameModule && this._doc && (!ie || this._doc.id === ie.id) && !(ref && !q)) return;
       // the module's applied animation, when the card holds it; else a fresh start
-      const stored = q ? this._stored(this._config(), q.id)?.doc : undefined;
+      const stored = q ? this._stored(this._config(), q.id)?.doc : ref;
       const v = stored ? validateAnimationDoc(stored, { v2: 'lenient' }) : undefined;
-      if (v?.ok) {
+      if (v?.ok && ref) {
+        this._doc = v.doc;
+        this._mode = 'library';
+        this._entry = '';
+      } else if (v?.ok) {
         this._doc = v.doc;
         // it followed the module's new icon: say so once
         const note = FOLLOW_NOTES.get(v.doc.id);
@@ -368,6 +376,11 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     connectedCallback(): void {
       super.connectedCallback();
       LIVE.add(this);
+      // a My animations reference loads its document once the library has it
+      this._unsubLib = h.library.subscribe(() => {
+        const ie = iconEntry(this._list());
+        if (ie && !ie.quick) this.requestUpdate();
+      });
     }
 
     /** The stored document followed the module's icon (follow-icon.ts): load it again. */
@@ -379,6 +392,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     disconnectedCallback(): void {
       super.disconnectedCallback();
       LIVE.delete(this);
+      this._unsubLib?.();
       this._card?.remove();
       this._card = undefined;
       this._previewJson = '';
@@ -388,9 +402,10 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
 
     /** The id this module's animation is stored under (the applied one, else a new unique id). */
     private _id(): string {
-      const q = quickEntry(this._list());
-      if (q) return q.id;
-      if (this._doc) return this._doc.id;
+      const ie = iconEntry(this._list());
+      if (ie?.quick) return ie.id;
+      // a My animations document is never overwritten: a picked animation gets a new id
+      if (this._doc && this._doc.id !== ie?.id) return this._doc.id;
       return this._newId();
     }
 
@@ -534,7 +549,11 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       if (!doc) return;
       // a document other modules play (carried over, duplicated) is never taken over by a module
       // that has no entry yet: it gets its own copy
-      if (!quickEntry(this._list()) && referenceCount(this._config(), doc.id) > 0)
+      const ie = iconEntry(this._list());
+      if (
+        (!ie || !ie.quick) &&
+        (doc.id === ie?.id || (!ie && referenceCount(this._config(), doc.id) > 0))
+      )
         doc = { ...doc, id: this._newId() };
       const stored = doc;
       // module edit first (its own undo step), the card's inline copy folded into the same step
@@ -546,17 +565,21 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     }
 
     private _remove(): void {
-      const q = quickEntry(this._list());
-      if (!q || !this._config()) return;
+      const ie = iconEntry(this._list());
+      if (!ie || !this._config()) return;
       this.onAnimations(withoutQuickEntry(this._list()));
-      patchCard(this, (c) => removeInlineDoc(c, q.id, h.customIds(c)), true);
+      if (ie.quick) patchCard(this, (c) => removeInlineDoc(c, ie.id, h.customIds(c)), true);
+      // the library document is not this module's to keep working on
+      else if (this._doc?.id === ie.id) this._doc = undefined;
       this._msg = 'Removed from this module.';
       this.requestUpdate();
     }
 
     /** applied: the stored copy equals the working document; changed: applied, then edited. */
-    private _status(config: MagicCardConfig | undefined): 'none' | 'applied' | 'changed' {
-      const q = quickEntry(this._list());
+    private _status(config: MagicCardConfig | undefined): 'none' | 'applied' | 'changed' | 'ref' {
+      const ie = iconEntry(this._list());
+      if (ie && !ie.quick) return 'ref';
+      const q = ie;
       const stored = q && config ? this._stored(config, q.id)?.doc : undefined;
       if (!q || !stored) return 'none';
       if (!this._doc) return 'applied';
@@ -980,7 +1003,8 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       const config = this._config();
       const status = this._status(config);
       const doc = this._doc;
-      const q = quickEntry(this._list());
+      const ie = iconEntry(this._list());
+      const q = ie?.quick ? ie : undefined;
       const id = doc?.id ?? q?.id;
       // other design entries playing this module's document (a duplicated module, copied YAML)
       const shared = q && doc?.id === q.id ? referenceCount(config, q.id) - 1 : 0;
@@ -1004,13 +1028,14 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
               <span class="name">${doc?.name ?? 'No animation yet'}</span>
               <div>
                 ${
-                  status === 'applied'
+                  status === 'applied' || status === 'ref'
                     ? html`<span class="chip is-accent status">Applied</span>`
                     : status === 'changed'
                       ? html`<span class="chip is-warn status">Changed, not applied</span>`
                       : html`<span class="chip status">Not applied</span>`
                 }
                 ${q && this._stored(config, q.id)?.template ? html`<span class="chip from-template">From template</span>` : nothing}
+                ${status === 'ref' ? html`<p class="help">From My animations.</p>` : nothing}
               </div>
             </div>
           </div>
@@ -1042,7 +1067,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
               <ha-icon icon="mdi:check"></ha-icon>${status === 'none' ? 'Apply' : 'Update'}
             </button>
             ${
-              q
+              ie
                 ? html`<button
                     type="button"
                     class="btn btn-text btn-sm danger-text remove"
