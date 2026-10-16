@@ -14,8 +14,9 @@ import type { AnimationDoc, LaneId } from '../anim-studio/model';
  * derivation in src/icon-anim/style.ts). Placement is unchanged: the studio's lazy chunk
  * magic-card-icon-library.js and the card editor's lazy chunk magic-card-icon-animator.js. Never
  * magic-card.js: a card stores the derived document inline and plays it like any other.
- * Consumers: the icon animator (Animate icon), the animated icon grid (icon picker tab), the
- * studio's icon start (Living only in this run).
+ * Consumers: the animated icon grid (the icon picker's Animated icons tab, the only place the
+ * Style control lives; the Animate icon panel was removed in T0.2) and the studio's icon start
+ * (Living only in this run).
  */
 
 export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.0';
@@ -92,9 +93,9 @@ export const GLOW_FALLBACK = '#ffb300';
  * - `library_icon`: the entry id the inline document was derived from. currentIconPick reads it
  *   first and falls back to the old name match for 2026.10.03 configs.
  * - `icon_style`: 'quiet' | 'glow'; absent means 'living' (so existing configs mean Living).
- * Changing the Style rebuilds the inline document in place (same id) from library_icon. Animate
- * icon's Apply after a manual edit removes both fields: the document is now the user's own and the
- * Style control hides for it.
+ * Changing the Style (icon picker, Animated icons tab) rebuilds the inline document in place (same
+ * id) from library_icon. When the document is edited by hand (for example in the animation studio)
+ * both fields are removed: the document is now the user's own and the Style control hides for it.
  */
 export interface LibraryPickFields {
   library_icon?: string;
