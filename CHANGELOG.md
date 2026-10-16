@@ -4,6 +4,14 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Editor
+-   Animated icons tab in the icon picker of the Icon, Info and Button modules: a grid of moving tiles with search and a domain filter, with My animations (your saved icon animations from Magic Card Utils) above the 107 built-in ones. A click sets the icon and its animation in one undo step. The Light module keeps Animate icon.
+-   Animate icon shows the same tile grid in place of the Library chips. An animation from My animations shows as Applied with "From My animations." and a Remove button.
+-   A library animation is removed when the module's icon changes in the editor, after the icon has stayed the same for about a second. One undo brings it back.
+-   Removed the Edit in animation studio link from the Animations list and the Open in animation studio link from Animate icon. They left the card editor and lost unsaved changes. To edit an animation further, import the card's YAML in Magic Card Utils.
+
 ## 2026.10.01 (2026-10-16)
 
 The first public release. It covers everything built since the initial build.

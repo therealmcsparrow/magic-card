@@ -114,4 +114,4 @@ A preset only writes keys. Everything else in the studio still works on the resu
 -   Draw shapes and animate them the same way. See [Drawing](drawing.md).
 -   Add state clips or value bindings. See [States and values](states-and-values.md).
 
-Save the animation to keep it in the library, then use it on a card as `preset: custom:<id>`. See [Using animations in cards](using-in-cards.md). For quick results without the studio, the card editor's [Animate icon](../design/quick-icon-animator.md) uses the same presets and library.
+Save the animation to keep it in the library, then use it on a card as `preset: custom:<id>`. See [Using animations in cards](using-in-cards.md). Saved icon animations also show in the Animated icons tab of the card editor's icon picker. See [Animated icons in the icon picker](using-in-cards.md#animated-icons-in-the-icon-picker). For quick results without the studio, the card editor's [Animate icon](../design/quick-icon-animator.md) uses the same presets and library.
