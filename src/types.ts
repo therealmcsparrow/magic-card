@@ -284,6 +284,10 @@ export interface RowConfig {
   display?: DisplayConfig;
   design?: DesignConfig;
   actions?: ActionsConfig;
+  /** Studio Hide: not shown on the dashboard (the studio shows it dimmed). */
+  hidden?: boolean;
+  /** Editor-only layer name (tree and canvas labels); never shown on the dashboard. */
+  editor_name?: string;
   not_synced?: string[]; // Property paths that are not synced for this row
 }
 
@@ -295,6 +299,10 @@ export interface ColumnConfig {
   vertical_align?: 'start' | 'center' | 'end' | 'stretch';
   display?: DisplayConfig;
   design?: DesignConfig;
+  /** Studio Hide: not shown on the dashboard (the studio shows it dimmed). */
+  hidden?: boolean;
+  /** Editor-only layer name (tree and canvas labels); never shown on the dashboard. */
+  editor_name?: string;
   not_synced?: string[]; // Property paths that are not synced for this column
 }
 
@@ -308,6 +316,10 @@ export interface CardModule {
   display?: DisplayConfig;
   design?: DesignConfig;
   actions?: ActionsConfig;
+  /** Studio Hide: not shown on the dashboard (the studio shows it dimmed). */
+  hidden?: boolean;
+  /** Editor-only layer name (tree and canvas labels); never shown on the dashboard. */
+  editor_name?: string;
   not_synced?: string[]; // Property paths that are not synced for this module
   [key: string]: unknown; // Module-specific properties
 }
@@ -489,6 +501,12 @@ export interface AnimationConfig {
   decorations?: boolean;
   /** Custom animations with clips / bindings: the driving entity instead of the module's. */
   entity?: string;
+  /**
+   * Editor metadata of an icon library pick (contract icon-library LibraryPickFields): the library
+   * entry the inline document was derived from, and its Style (absent: Living). The card ignores both.
+   */
+  library_icon?: string;
+  icon_style?: 'quiet' | 'glow';
 }
 
 export type RingMode = 'value' | 'animated';
@@ -911,6 +929,10 @@ export interface NestedColumnConfig {
   vertical_align?: 'start' | 'center' | 'end' | 'stretch';
   display?: DisplayConfig;
   design?: DesignConfig;
+  /** Studio Hide: not shown on the dashboard (the studio shows it dimmed). */
+  hidden?: boolean;
+  /** Editor-only layer name (tree and canvas labels); never shown on the dashboard. */
+  editor_name?: string;
 }
 
 export interface RowModuleConfig extends CardModule {
@@ -929,6 +951,8 @@ export interface TabsModuleConfig extends CardModule, IconFxKeys {
     label: string;
     icon?: string;
     modules: CardModule[];
+    /** Studio Hide: the tab is left out on the dashboard. */
+    hidden?: boolean;
   }>;
   active_tab?: number;
   tab_style?: 'default' | 'pills' | 'underline';

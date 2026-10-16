@@ -32,8 +32,9 @@ class TabsModule extends BaseMagicModule {
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as TabsModuleConfig;
-    const tabs = c.tabs || [];
     const ctx = currentRenderContext();
+    // a hidden tab is left out on the dashboard; the studio shows it dimmed
+    const tabs = (c.tabs || []).filter((t) => ctx?.editMode || !t?.hidden);
     // Per card and per module (keyed by its path), so two cards or two tabs modules never share it.
     const state = ctx?.uiState?.<number>('active-tab');
     const clamp = (i: unknown) =>
@@ -66,7 +67,7 @@ class TabsModule extends BaseMagicModule {
         <div class="mc-tabs-header" role="tablist">
           ${tabs.map(
             (tab, i) => html`
-              <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}"
+              <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}" data-mc-hidden=${tab?.hidden ? '' : nothing}
                 aria-selected=${i === activeIdx ? 'true' : 'false'}
                 tabindex=${i === activeIdx ? 0 : -1}
                 @click=${select(i)} @pointerdown=${stop} @pointerup=${stop} @keydown=${onKeydown}>

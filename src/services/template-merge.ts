@@ -7,6 +7,19 @@ import { animationDocList } from '../utils/custom-animations';
 /** Module keys whose absence is a local value: overridden without a value, the template's is dropped. */
 const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg']);
 
+/**
+ * A linked card's own Hide and layer name of a row, column or module (not_synced marks them): kept,
+ * or (marked without a value) dropped (mutates `item`, a clone).
+ */
+function keepLocal(item: object, local: object, marks: Set<string>): void {
+  for (const k of ['hidden', 'editor_name']) {
+    if (!marks.has(k)) continue;
+    const v = (local as Record<string, unknown>)[k];
+    if (v === undefined) delete (item as Record<string, unknown>)[k];
+    else (item as Record<string, unknown>)[k] = v;
+  }
+}
+
 /** Card-level keys a linked card can override (mark not_synced) instead of taking the template's. */
 export const CARD_SYNC_KEYS = [
   'use_page_theme', 'theme',
@@ -170,6 +183,7 @@ export function mergeTemplateWithOverrides(
       }
       if (rowNotSynced.has('gap') && localRow.gap !== undefined) row.gap = localRow.gap;
       if (rowNotSynced.has('padding') && localRow.padding !== undefined) row.padding = localRow.padding;
+      keepLocal(row, localRow, rowNotSynced);
     }
 
     const templateColIds = new Set((row.columns || []).map(c => c.id).filter(Boolean));
@@ -185,6 +199,7 @@ export function mergeTemplateWithOverrides(
         if (colNotSynced.has('gap') && localCol.gap !== undefined) col.gap = localCol.gap;
         if (colNotSynced.has('padding') && localCol.padding !== undefined) col.padding = localCol.padding;
         if (colNotSynced.has('vertical_align') && localCol.vertical_align !== undefined) col.vertical_align = localCol.vertical_align;
+        keepLocal(col, localCol, colNotSynced);
       }
 
       const templateModIds = new Set((col.modules || []).map(m => m.id).filter(Boolean));
@@ -195,6 +210,7 @@ export function mergeTemplateWithOverrides(
         if (localMod) {
           const modNotSynced = new Set((localMod.not_synced || []) as string[]);
           if (modNotSynced.size > 0) (mod as Record<string, unknown>).not_synced = [...modNotSynced];
+          keepLocal(mod, localMod, modNotSynced);
 
           // Content fields: only override if not synced
           const contentKeys = [

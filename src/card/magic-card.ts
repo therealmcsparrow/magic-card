@@ -302,7 +302,7 @@ export class MagicCard extends LitElement {
       const parent = this._pathStack[this._pathStack.length - 1];
       return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
     },
-    childHidden: (child) => !this.editMode && this._isHiddenByDisplay(child.display),
+    childHidden: (child) => !this.editMode && this._isHidden(child),
     uiState: <T>(key: string) => {
       const id = `${this._pathStack[this._pathStack.length - 1] ?? ''}#${key}`;
       return {
@@ -930,12 +930,13 @@ export class MagicCard extends LitElement {
     return parts.join('; ');
   }
 
-  private _isHiddenByDisplay(display: DisplayConfig | undefined): boolean {
-    return !!display?.conditions?.length && !this._evaluateDisplay(display);
+  /** Hidden on the dashboard: `hidden: true` (the studio's Hide) or its display conditions. */
+  private _isHidden({ hidden, display }: { hidden?: unknown; display?: DisplayConfig }): boolean {
+    return !!hidden || (!!display?.conditions?.length && !this._evaluateDisplay(display));
   }
 
   private _renderRow(row: RowConfig, ri: number): TemplateResult {
-    const hidden = this._isHiddenByDisplay(row.display);
+    const hidden = this._isHidden(row);
     if (hidden && !this.editMode) {
       return html``;
     }
@@ -987,7 +988,7 @@ export class MagicCard extends LitElement {
 
   /** A card column, or (`nested`: the row module's path) a row module's column. */
   private _renderColumn(col: ColumnConfig, ri: number, ci: number, nested?: string): TemplateResult {
-    const hidden = this._isHiddenByDisplay(col.display);
+    const hidden = this._isHidden(col);
     if (hidden && !this.editMode) {
       return html``;
     }
@@ -1032,7 +1033,7 @@ export class MagicCard extends LitElement {
    * the path "row.col.module/slot.index/..." (see RenderContext.renderChild).
    */
   private _renderModule(mod: CardModule, path: string): TemplateResult {
-    const hidden = this._isHiddenByDisplay(mod.display);
+    const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;
     }
