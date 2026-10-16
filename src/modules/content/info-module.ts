@@ -121,7 +121,7 @@ class InfoModule extends BaseMagicModule {
           : nothing}
         ${renderToggleField('Show icon', c.show_icon, (v) => onChange({ ...c, show_icon: v }), 'show_icon', syncCtx)}
         ${c.show_icon && c.icon !== 'svg'
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx)
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${c.show_icon
           ? renderIconFxEditor(c, hass, onChange, {

@@ -75,7 +75,7 @@ class IconModule extends BaseMagicModule {
           onChange({ ...c, use_entity_color: v }), 'use_entity_color', syncCtx,
           "Colors the icon like Home Assistant does for this entity's state.")}
         ${!c.use_entity_icon && c.icon !== 'svg'
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx)
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: c.entity,
