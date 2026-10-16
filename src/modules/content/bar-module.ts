@@ -4,17 +4,8 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, BarModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import {
-  renderUnitField,
-  renderToggleField,
-  renderEntityField,
-  renderAttributeField,
-  renderSelectField,
-  renderNumberField,
-  renderColorField,
-} from '../../utils/form-utils';
 import { entityNumber, formatEntityValue } from '../../utils/entity-value';
-import { rangeColor, renderColorRangesField } from '../../utils/color-ranges';
+import { rangeColor } from '../../utils/color-ranges';
 
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -89,43 +80,6 @@ class BarModule extends BaseMagicModule {
     `;
   }
 
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const c = config as BarModuleConfig;
-    const syncCtx = this._buildSyncContext(config, template);
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-        ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }), undefined, 'min', syncCtx)}
-        ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }), undefined, 'max', syncCtx)}
-        ${renderUnitField('Bar height', c.bar_height, (v) => onChange({ ...c, bar_height: v || undefined }), 'bar_height', syncCtx, '8')}
-        ${renderColorField('Bar color', c.bar_color, (v) => onChange({ ...c, bar_color: v }), 'bar_color', syncCtx)}
-        ${renderColorField('Bar background', c.bar_background, (v) =>
-          onChange({ ...c, bar_background: v }), 'bar_background', syncCtx)}
-        ${renderColorRangesField('Color ranges', c.severity, (v) => onChange({ ...c, severity: v }), {
-          min: c.min ?? 0, max: c.max ?? 100, propertyName: 'severity', syncCtx,
-          help: 'The bar takes the color of the highest range at or below the value; the bar color applies below the first range.',
-        })}
-        ${renderToggleField('Show value', c.show_value !== false, (v) => onChange({ ...c, show_value: v }), 'show_value', syncCtx)}
-        ${c.show_value !== false
-          ? renderNumberField('Decimals', c.decimals, (v) => onChange({ ...c, decimals: Number.isFinite(v) ? v : undefined }), { min: 0, max: 6, optional: true, placeholder: 'Automatic' }, 'decimals', syncCtx)
-          : nothing}
-        ${renderSelectField(
-          'Direction',
-          c.direction,
-          [
-            { label: 'Horizontal', value: 'horizontal' },
-            { label: 'Vertical', value: 'vertical' },
-          ],
-          (v) => onChange({ ...c, direction: v as BarModuleConfig['direction'] }), 'direction', syncCtx)}
-      </div>
-    `;
-  }
 
   validate(config: CardModule): string[] {
     const errors: string[] = [];
