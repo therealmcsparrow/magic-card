@@ -38,7 +38,7 @@ Moving a tab keeps Default tab on the same tab. After a delete, Default tab is c
 ## Behaviour
 
 -   Clicking a tab switches the content. This does not trigger the tabs module's own actions.
--   Tab icons cannot play icon animations, so the Design tab has no [Animate icon](../../design/quick-icon-animator.md) for a Tabs module.
+-   Tab icons cannot play [icon animations](../../design/quick-icon-animator.md).
 -   With a tab button focused, the left and right arrow keys move between tabs (wrapping round), Home goes to the first and End to the last.
 -   The card remembers the selected tab in memory only. It is not saved: a card that loads again starts at `active_tab`.
 -   In the studio, selecting a child on the canvas or in the layers shows the tab that holds it. Selecting a tab in the layers shows that tab and frames the whole Tabs module.

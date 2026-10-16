@@ -18,7 +18,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Studio: a full-screen editor with layers, a clickable live canvas, device widths and keyboard shortcuts.
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules.
 -   More than 100 preset animations, several per element, with play conditions.
--   Animate icon: make an icon's parts move from the Design tab, with a library of 107 ready-made icon animations or one-click part presets. The card stores the result itself, so it needs no integration.
+-   Animated icons: pick one of 107 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. The card stores the result itself, so it needs no integration.
 -   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
 -   Value rings and animated rings that follow the border radius. A ring on a `timer` entity counts down live.
 -   Shapes: squircle, pill, circle, hexagon, octagon, notched corners, ticket, wave edge and blob outlines, with the border and ring drawn along them.
@@ -50,7 +50,7 @@ HACS also downloads `magic-card-anim-runtime.js`, `magic-card-animation-studio.j
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-`magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open Animate icon; dashboards never load it. Keep all four next to `magic-card.js`.
+`magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open the icon picker's Animated icons tab; dashboards never load it. Keep all four next to `magic-card.js`.
 
 ### Loading
 
@@ -348,17 +348,15 @@ design:
 
 Sharing a card. The YAML only holds the reference. To share a card with someone who does not have your animations, open the YAML view and use Copy YAML with Embed my animations on. This adds a `custom_animations:` list with the documents the card uses, including the steps of sequences. A card plays its embedded copy whenever the library lacks that id, for example on another Home Assistant or without the integration. Without the library or an embedded copy, the reference plays nothing and the editor says why.
 
-### Animate icon
+### Icon animations
 
-On Icon, Button, Info and Light modules, the Design tab has an Animate icon button under the Animations list. It opens a small animator with a live preview:
+Icons are animated through the icon picker's Animated icons tab and the animation studio. The Design tab no longer has an Animate icon button. Cards that use an animation made with it keep playing it.
 
--   Library: ready-made animations from the icon library, starting with the ones for the module's icon and entity domain.
--   This icon: split the module's icon into parts and give each part a preset (Swing, Ring, Spin, Pulse, Bounce, Draw on, Wave and more) with its timing and intensity.
--   Apply adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils. Remove takes both away again.
--   A This icon animation follows the module's icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts.
--   Export the animation as an animated SVG file, or open it in the animation studio after importing the card's YAML there.
+-   A pick from the icon library adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils.
+-   To split a module's icon into parts, give each part a preset or export an animated SVG file, use the animation studio in Magic Card Utils. Saved icon animations show in the Animated icons tab under My animations.
+-   An animation of the module's own icon follows that icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts. A library animation is removed instead.
 
-Tabs and weather modules do not offer it. The animator is a separate file, `magic-card-icon-animator.js`, loaded only when you open it. See [Animate icon](documentation/design/quick-icon-animator.md).
+The Light module has no icon field. Its icon plays an animation from My animations with Target set to Icon in the Animations list. The Animated icons tab is a separate file, `magic-card-icon-animator.js`, loaded only when you open it. See [Icon animations in cards](documentation/design/quick-icon-animator.md).
 
 ## Animation studio
 
@@ -996,7 +994,7 @@ rows:
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   Animate icon, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has five files: `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
+-   The Animated icons tab, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has five files: `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
 ## Development
@@ -1022,7 +1020,7 @@ If you like Magic Card and want to support its development:
 
 ## Credits
 
-The icon library and the icon shapes built into the animation studio and Animate icon come from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+The icon library and the icon shapes built into the animation studio and the Animated icons tab come from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ### Special thanks
 

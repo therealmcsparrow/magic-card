@@ -42,7 +42,7 @@ import {
  * document with the same id (an override of the template's, like Apply on that card).
  *
  * A library animation (a stored built-in document, a My animations reference the icon picker
- * set, or Animate icon's edited copy of a My animations document) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
+ * set, or an edited copy of a My animations document made by the former Animate icon panel) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
  * is removed instead, with its quick document when nothing else plays it. The tile pick that set it
  * changes the icon and the document in one action: nothing is removed then.
  */

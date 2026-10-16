@@ -18,7 +18,7 @@ The card itself has a shorter Design tab: background colour and image, border ra
 - [Entity colours](entity-colours.md): the `entity` colour value
 - [Conditional design](conditional-design.md): rules that change the design while conditions match
 - [Animations](animations.md): the preset animation list
-- [Animate icon](quick-icon-animator.md): make a module's icon move in parts, from the icon library or with part presets, and export it as an animated SVG
+- [Icon animations in cards](quick-icon-animator.md): animated icons from the icon picker and the studio, and what happens when the module's icon changes
 - [Ring](ring.md): value ring and animated ring
 - [Shapes](shapes.md): squircle, hexagon, wave, blob and other outlines instead of the rectangle
 - [Value backgrounds](value-backgrounds.md): a tank fill or a history sparkline behind the content

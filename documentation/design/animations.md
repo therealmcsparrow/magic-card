@@ -6,7 +6,7 @@ With the Magic Card Utils integration you can also build your own animations in 
 
 In the editor they are the Animations list at the top of the Transitions & animations section of the [Design tab](README.md), in the Effects group. On the card they are in the card's Design tab (see [Card options](../card/README.md)).
 
-On Icon, Button, Info and Light modules, the Animate icon button under the list makes the icon move in parts: pick an animation from the icon library, or split the icon and give each part a preset such as Swing, Spin or Draw on. It needs no integration, because the card stores the animation in its own `custom_animations`. See [Animate icon](quick-icon-animator.md).
+To make a module's icon move in parts, pick an animation in the icon picker's Animated icons tab, or build one in the animation studio and pick it from My animations. A pick from the icon library needs no integration, because the card stores the animation in its own `custom_animations`. See [Icon animations in cards](quick-icon-animator.md).
 
 ## Contents
 

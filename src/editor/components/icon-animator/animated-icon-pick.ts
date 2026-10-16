@@ -19,14 +19,14 @@ import {
 } from './quick-model';
 
 /*
- * Writes a tile picked in the icon picker's Animated icons tab like Animate icon's Apply: the module
+ * Writes a tile picked in the icon picker's Animated icons tab: the module
  * edit first (its own undo step), the card's `custom_animations` change folded into that step.
  */
 
 /**
  * The icon entry of `list` pointed at My animations document `id` (nothing stored): `write` gets
  * the new list, then the module's previous quick document goes unless something still plays it.
- * Shared by a My animations tile and Animate icon's Apply of an unchanged My animations document.
+ * Used by a My animations tile.
  */
 export function referenceMine(
   h: IconAnimatorHost,

@@ -6,7 +6,7 @@ import type { IconAnimatorHost } from './loader';
 /*
  * The animated icon grid (lazy chunk magic-card-icon-animator.js): live moving tiles for the user's
  * own icon animations (My animations) and the built-in icon library, with search and a domain
- * filter. Shared by the icon picker's "Animated icons" tab and the Animate icon panel; it only
+ * filter. Used by the icon picker's "Animated icons" tab; it only
  * emits `animated-icon-pick`, the caller writes the choice.
  */
 

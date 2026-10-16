@@ -7,10 +7,11 @@ import {
 } from '../../../anim-studio/model';
 
 /*
- * The quick icon animator's config edits (pure). Apply stores the document inline in the card's
+ * Config edits for icon animations stored in the card (pure; the icon picker's Animated icons tab,
+ * follow-icon, and cards made with the former Animate icon panel). A pick stores the document inline in the card's
  * `custom_animations` (the card editor cannot write the Magic Card Utils library) and points one
  * design animation entry of the module at it: `{ preset: 'custom:<id>', target: 'icon' }`.
- * Its documents use ids starting with `quick-`, which is how the animator finds its own entry again.
+ * Its documents use ids starting with `quick-`, which is how the editor finds its own entry again.
  * Imports nothing from magic-card.js but anim-studio/model (see loader.ts): the ids a card references
  * (customAnimationIds) come in as arguments.
  */
@@ -18,7 +19,7 @@ import {
 export const QUICK_PREFIX = 'quick-';
 
 /**
- * An edited copy of a My animations document (Animate icon's Apply after a change): a library
+ * An edited copy of a My animations document (made by the former Animate icon panel): a library
  * animation, never a split of the module's own icon, so it does not follow the icon (it goes).
  */
 export const MINE_PREFIX = `${QUICK_PREFIX}mine-`;
