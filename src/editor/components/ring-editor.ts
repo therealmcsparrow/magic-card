@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationTrigger, ColorRange, HomeAssistant, RingConfig, ValueBound } from '../../types';
 import { editorSystem } from '../../css/editor-system';
 import { RING_DEFAULTS } from '../../utils/ring';
-import { renderColorRangesField } from '../../utils/color-ranges';
+import { renderColorRangesField } from './color-ranges-field';
 import { fieldReset } from './field-reset';
 import { isTimer } from '../../utils/timer';
 

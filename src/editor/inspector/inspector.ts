@@ -209,15 +209,9 @@ export class Inspector extends LitElement {
     if (sel.kind === 'slot' && this._state && layoutModuleAt(this._state.config, sel)?.type === 'tabs') return ['general'];
     if (sel.kind !== 'module') return KIND_TABS[sel.kind];
     const mod = this._module(sel);
-    if (mod && moduleEditors.get(mod.type)) {
-      const listed = moduleEditors.tabs(mod.type);
-      return MODULE_TAB_ORDER.filter((t) => listed.includes(t));
-    }
-    // Temporary fallback until every module has a ModuleEditor (T1.5c); removed in T1.5d.
-    const handler = mod ? ModuleRegistry.get(mod.type) : undefined;
-    if (!handler) return ['general'];
-    const available = handler.getAvailableTabs();
-    return MODULE_TAB_ORDER.filter((t) => available.includes(t));
+    if (!mod) return ['general'];
+    const listed = moduleEditors.tabs(mod.type);
+    return MODULE_TAB_ORDER.filter((t) => listed.includes(t));
   }
 
   private _activeTab(sel: Selection, tabs: EditorTab[]): EditorTab {
@@ -524,8 +518,7 @@ export class Inspector extends LitElement {
   private _renderModule(config: MagicCardConfig, sel: Extract<Selection, { kind: 'module' }>, tab: EditorTab): TemplateResult {
     const mod = this._module(sel);
     if (!mod) return html``;
-    const handler = ModuleRegistry.get(mod.type);
-    if (!handler) {
+    if (!ModuleRegistry.get(mod.type)) {
       return html`
         <div class="empty">
           <ha-icon icon="mdi:puzzle-remove-outline"></ha-icon>
@@ -553,21 +546,7 @@ export class Inspector extends LitElement {
       const updateTop = wrapOnChangeWithSync(top, (m: CardModule) => sm.replaceModule(sel.row, sel.col, sel.module, m));
       onChange = (m: CardModule) => updateTop(replaceDescendant(top, sel.child!, m));
     }
-    const none = (what: string) => html`<p class="help">No ${what} for this module.</p>`;
-    const body = withEditorKey(selectionKey(sel), () => {
-      if (moduleEditors.get(mod.type)) return moduleEditors.render(tab, mod, this.hass, onChange, template);
-      // Temporary fallback until every module has a ModuleEditor (T1.5c); removed in T1.5d.
-      switch (tab) {
-        case 'actions':
-          return handler.renderActionsTab ? handler.renderActionsTab(mod, this.hass, onChange, template) : none('actions');
-        case 'conditions':
-          return handler.renderConditionsTab ? handler.renderConditionsTab(mod, this.hass, onChange, template) : none('conditions');
-        case 'design':
-          return handler.renderDesignTab ? handler.renderDesignTab(mod, this.hass, onChange, template) : none('design options');
-        default:
-          return handler.renderGeneralTab(mod, this.hass, onChange, template);
-      }
-    });
+    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template));
     return html`${this._renderChildListSync(config, sel)}${body}`;
   }
 

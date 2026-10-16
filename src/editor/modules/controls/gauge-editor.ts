@@ -8,7 +8,7 @@ import {
   renderSelectField,
   renderNumberField,
 } from '../../../utils/form-utils';
-import { renderColorRangesField } from '../../../utils/color-ranges';
+import { renderColorRangesField } from '../../components/color-ranges-field';
 import { buildSyncContext } from '../base-editor';
 
 export const gaugeEditor: ModuleEditor = {
