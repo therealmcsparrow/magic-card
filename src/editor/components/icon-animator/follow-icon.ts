@@ -18,6 +18,7 @@ import type { IconAnimatorHost } from './loader';
 import type { CardState } from './card-request';
 import {
   cardIds,
+  QUICK_PREFIX,
   iconEntry,
   newQuickId,
   quickEntry,
@@ -354,8 +355,7 @@ function arm(h: FollowHost, sm: CardState, map: Map<string, Pending>, w: Pending
       return;
     }
     map.delete(w.key);
-    if (w.drop) return drop(h, sm, w);
-    void follow(h, sm, w).then((wait) => {
+    void (w.drop ? drop : follow)(h, sm, w).then((wait) => {
       if (wait && !map.has(w.key)) arm(h, sm, map, w);
     });
   }, FOLLOW_DELAY_MS);
@@ -376,10 +376,9 @@ export function followIcons(
 ): void {
   let map = waiting.get(sm);
   if (!map) waiting.set(sm, (map = new Map()));
-  for (const c of iconChanges(prev, next)) {
-    const key = `${JSON.stringify(c.path)} ${c.id}`;
-    const p = map.get(key);
-    if (!p && !followsIcon(played(sm, next, c.id), c.from, c.to)) continue;
+  const m = map;
+  // (re)start the wait of `c`: the burst keeps its first icon and document, its last edit
+  const wait = (key: string, c: IconChange, p: Pending | undefined, drop?: boolean) => {
     const entry: Pending = p ?? {
       key,
       path: c.path,
@@ -389,28 +388,28 @@ export function followIcons(
       last: next,
       timer: undefined as unknown as Pending['timer'],
       waits: 0,
+      drop,
     };
     entry.last = next;
     entry.waits = 0;
-    arm(h, sm, map, entry);
+    arm(h, sm, m, entry);
+  };
+  for (const c of iconChanges(prev, next)) {
+    const key = `${JSON.stringify(c.path)} ${c.id}`;
+    const p = map.get(key);
+    if (p || followsIcon(played(sm, next, c.id), c.from, c.to)) wait(key, c, p);
   }
   for (const c of libraryIconChanges(prev, next, sm.getState().templateAnimations)) {
     const key = `drop ${JSON.stringify(c.path)} ${c.id}`;
-    const entry: Pending = map.get(key) ?? {
-      key,
-      path: c.path,
-      id: c.id,
-      from: c.from,
-      doc: JSON.stringify(played(sm, prev, c.id)),
-      last: next,
-      timer: undefined as unknown as Pending['timer'],
-      waits: 0,
-      drop: true,
-    };
-    entry.last = next;
-    entry.waits = 0;
-    arm(h, sm, map, entry);
+    wait(key, c, map.get(key), true);
   }
+}
+
+/** An icon's shape (Home Assistant's icon sets, else the bundled mdi paths); undefined when it cannot load. */
+async function shapeOf(h: FollowHost, ref: string): Promise<IconGeometry | undefined> {
+  let g = await h.resolveIcon(ref, { timeoutMs: 1500 }).catch(() => undefined);
+  if (!g && (g = mdiGeometry(ref))) h.setIcon(ref, g);
+  return g;
 }
 
 /** The note after a library animation went with its module's old icon. */
@@ -418,16 +417,31 @@ export const DROP_NOTE = "The animated icon was removed because the module's ico
 
 /**
  * One module's library animation goes once its icon settled on another (nothing when it went back
- * to the icon it had, or when the entry or its document changed meanwhile: a tile pick rewrote it).
- * The entry is removed (a template-linked module's list becomes its own) and its quick document
- * with it when nothing else plays it; a document the template supplies stays the template's.
- * Folded into the burst's last undo step while the card is still as that edit left it, like follow.
+ * to the icon it had, to an icon whose shape cannot load, or when the entry or its document changed
+ * meanwhile: a tile pick rewrote it). The entry is removed (a template-linked module's list becomes
+ * its own) and its quick document with it when nothing else plays it; a document the template
+ * supplies stays the template's. Folded into the burst's last undo step while the card is still as
+ * that edit left it, like follow. True: the editor was detached once the shape was in (the caller
+ * waits for it to come back).
  */
-function drop(h: FollowHost, sm: CardState, w: Pending): void {
-  const c = sm.getConfig();
-  const m = at(c, w.path);
-  if (!m || entryOf(m)?.id !== w.id || explicitIcon(m) === w.from) return;
-  if (JSON.stringify(played(sm, c, w.id)) !== w.doc) return;
+async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean | void> {
+  const live = () => {
+    const c = sm.getConfig();
+    const m = at(c, w.path);
+    const ok =
+      !!m &&
+      entryOf(m)?.id === w.id &&
+      explicitIcon(m) !== w.from &&
+      JSON.stringify(played(sm, c, w.id)) === w.doc;
+    return { c, ok, to: m ? explicitIcon(m) : '' };
+  };
+  const first = live();
+  if (!first.ok) return;
+  // like follow: an icon whose shape cannot load (a half-typed id) keeps the animation; Clear drops
+  if (first.to && !(await shapeOf(h, first.to))) return;
+  if (sm.attached === false) return true;
+  const { c, ok, to } = live();
+  if (!ok || to !== first.to) return;
   let config = JSON.parse(JSON.stringify(c)) as MagicCardConfig;
   const mod = at(config, w.path)!;
   const design = { ...(mod.design as Record<string, unknown>) };
@@ -438,7 +452,9 @@ function drop(h: FollowHost, sm: CardState, w: Pending): void {
   const marks = (mod.not_synced ?? []) as string[];
   if (config.template && !marks.includes('design.animations'))
     mod.not_synced = [...marks, 'design.animations'];
-  config = removeInlineDoc(config, w.id, h.customIds(config));
+  // a My animations reference stores nothing of its own: an inline document with the library id
+  // (Copy YAML's embedded animations) is the user's and stays
+  if (w.id.startsWith(QUICK_PREFIX)) config = removeInlineDoc(config, w.id, h.customIds(config));
   sm.updateConfig(config, JSON.stringify(c) !== JSON.stringify(w.last));
   for (const a of LIVE) a.followed();
   document
@@ -467,11 +483,7 @@ async function follow(h: FollowHost, sm: CardState, w: Pending): Promise<boolean
   if (!followsIcon(raw, from, to)) return;
   const v = validateAnimationDoc(raw, { v2: 'lenient' });
   if (!v.ok || !v.doc.rig) return;
-  const shape = async (ref: string) => {
-    let g = await h.resolveIcon(ref, { timeoutMs: 1500 }).catch(() => undefined);
-    if (!g && (g = mdiGeometry(ref))) h.setIcon(ref, g);
-    return g;
-  };
+  const shape = (ref: string) => shapeOf(h, ref);
   const g = await shape(to);
   if (!g) return;
   const rig = v.doc.rig;
