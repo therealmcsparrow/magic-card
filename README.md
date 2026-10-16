@@ -1015,6 +1015,11 @@ This is an open-source project and contributions are welcome. Open an issue or s
 
 For issues, feature requests, or questions, please [create an issue on GitHub][issues-url].
 
+If you like Magic Card and want to support its development:
+
+-   Ko-fi: <https://ko-fi.com/mcsparrow>
+-   PayPal: `info@mcsparrow.eu`
+
 ## Credits
 
 The icon library and the icon shapes built into the animation studio and Animate icon come from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
