@@ -1019,6 +1019,16 @@ For issues, feature requests, or questions, please [create an issue on GitHub][i
 
 The icon library and the icon shapes built into the animation studio and Animate icon come from [Material Design Icons](https://pictogrammers.com/library/mdi/) by Pictogrammers, licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
+### Special thanks
+
+Special thanks to [Anas Box](https://www.youtube.com/@anasbox). His YouTube videos taught me how to animate cards in Home Assistant, and a lot of the animation work in Magic Card started there. If his videos have helped you too, you can support him here:
+
+-   Patreon: <https://patreon.com/AnasBox>
+-   YouTube membership: <https://www.youtube.com/@anasbox/join>
+-   PayPal: <https://paypal.me/anasboxsupport>
+-   Buy Me a Coffee: <https://buymeacoffee.com/anasbox>
+-   Ko-fi: <https://ko-fi.com/anasbox>
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
