@@ -1,0 +1,701 @@
+import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
+import { editorSystem } from '../../css/editor-system';
+import { animationConflicts, applyPreset, newAnimation, resetToPreset } from '../../utils/animation';
+import {
+  ANIMATION_GROUPS,
+  ANIMATION_PRESETS,
+  DEFAULT_STRENGTH,
+  EASINGS,
+  getAnimationPreset,
+  hasStrength,
+  intensityLabel,
+} from '../../utils/animation-presets';
+import { generateId } from '../../utils/id-generator';
+import { isSceneId, sceneDecorations } from '../../utils/seasonal-scenes';
+import type { AnimationPreset } from '../../utils/animation-presets';
+import { animationLibrary, type LibraryHass } from '../../services/animation-library';
+import { CUSTOM_PREFIX, customRefId, isCustomRef, type AnimationDoc } from '../../anim-studio/model';
+import { animationStudioUrl, inAnimationStudioPanel, onAnimationStudioLink } from '../../utils/custom-animations';
+
+import './color-picker';
+import './unit-field';
+import './entity-picker';
+
+const TRIGGERS: Array<{ value: AnimationTrigger; label: string; entity?: boolean }> = [
+  { value: 'always', label: 'Always' },
+  { value: 'entity_on', label: 'While entity is on', entity: true },
+  { value: 'state', label: 'While state equals…', entity: true },
+  { value: 'tap', label: 'On tap' },
+];
+
+const DIRECTIONS: Array<{ value: AnimationDirection; label: string }> = [
+  { value: 'normal', label: 'Normal' },
+  { value: 'reverse', label: 'Reverse' },
+  { value: 'alternate', label: 'Alternate' },
+  { value: 'alternate-reverse', label: 'Alternate reverse' },
+];
+
+const REPEATS = ['infinite', '1', '2', '3', '5'];
+
+/**
+ * The design's preset animations: one condition-style block per entry (preset, target, play,
+ * colour, strength, timing, intensity), "Add animation" below. Choosing a preset writes its values into the
+ * fields; "Reset to preset" restores them. A muted note marks an entry that overrides an earlier
+ * one on the same element and channel.
+ */
+@customElement('mc-animation-list')
+export class AnimationList extends LitElement {
+  static styles = [
+    editorSystem,
+    css`
+      :host {
+        display: block;
+        min-width: 0;
+      }
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+      .cond-head .n .sub {
+        font-weight: 400;
+        color: var(--mc-text-2);
+      }
+      .foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 4px 8px;
+      }
+      a.btn {
+        text-decoration: none;
+      }
+    `,
+  ];
+
+  @property({ attribute: false }) animations: AnimationConfig[] = [];
+  /** The module has an icon hook: show Target. */
+  @property({ type: Boolean }) allowIcon = false;
+  @property({ attribute: false }) hass?: HomeAssistant;
+  /** The module's entity: what Play reads when an entry sets no entity of its own. */
+  @property({ type: String }) defaultEntity = '';
+  /** Card / row / column: no default entity, so entity Play options need "Entity for play condition". */
+  @property({ type: Boolean }) requireTriggerEntity = false;
+  /** The Color field offers the module entity's state colour (`entity` / `entity N%`). */
+  @property({ type: Boolean }) allowEntityColor = false;
+  @property({ type: String }) entityColor = '';
+  @property({ attribute: false }) onChange?: (list: AnimationConfig[]) => void;
+
+  /** Entries whose Repeat select is on "Custom" (a count outside the shortcuts). */
+  @state() private _custom = new Set<string>();
+  /** The library's change counter: a new value re-renders ("My animations"). */
+  @state() private _libVersion = 0;
+
+  private _unsubLibrary?: () => void;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this._unsubLibrary ??= animationLibrary.subscribe(() => {
+      this._libVersion = animationLibrary.version;
+    });
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._unsubLibrary?.();
+    this._unsubLibrary = undefined;
+  }
+
+  protected willUpdate(changed: PropertyValues): void {
+    // the picker needs the library: one shared fetch / subscription per page (lazy)
+    if (changed.has('hass')) animationLibrary.ensure(this.hass as unknown as LibraryHass | undefined);
+  }
+
+  /** "My animations": the library's documents, only once it answered. */
+  private _mine(): AnimationDoc[] {
+    return animationLibrary.status === 'ready' ? animationLibrary.list() : [];
+  }
+
+  /** The library document of a `custom:<id>` preset. */
+  private _doc(preset: string): AnimationDoc | undefined {
+    return isCustomRef(preset) && animationLibrary.status === 'ready' ? animationLibrary.get(customRefId(preset)) : undefined;
+  }
+
+  private _write(list: AnimationConfig[]): void {
+    this.onChange?.(list);
+  }
+
+  private _update(index: number, next: AnimationConfig): void {
+    this._write(this.animations.map((a, i) => (i === index ? next : a)));
+  }
+
+  private _patch(index: number, patch: Partial<AnimationConfig>): void {
+    const next = { ...this.animations[index], ...patch } as Record<string, unknown>;
+    for (const [k, v] of Object.entries(patch)) if (v === undefined || v === '') delete next[k];
+    this._update(index, next as unknown as AnimationConfig);
+  }
+
+  private _add(): void {
+    this._write([...this.animations, newAnimation(ANIMATION_PRESETS[0].id, generateId('anim'))]);
+  }
+
+  private _remove(index: number): void {
+    this._write(this.animations.filter((_a, i) => i !== index));
+  }
+
+  private _field(label: string, control: TemplateResult, forId?: string): TemplateResult {
+    return html`
+      <div class="field">
+        <div class="field-head">${forId ? html`<label for=${forId}>${label}</label>` : html`<span class="lbl">${label}</span>`}</div>
+        ${control}
+      </div>
+    `;
+  }
+
+  private _select(
+    id: string,
+    value: string,
+    options: Array<{ value: string; label: string; disabled?: boolean }>,
+    onPick: (v: string) => void,
+  ): TemplateResult {
+    return html`
+      <div class="select">
+        <select class="input" id=${id} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
+          ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value} ?disabled=${!!o.disabled}>${o.label}</option>`)}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>
+    `;
+  }
+
+  private _presetSelect(id: string, index: number, value: string): TemplateResult {
+    const mine = this._mine();
+    const known = !!getAnimationPreset(value) || !!this._doc(value);
+    const unknown = isCustomRef(value) ? `${customRefId(value)} (not found)` : `${value} (unknown)`;
+    return html`
+      <div class="select">
+        <select
+          class="input"
+          id=${id}
+          @change=${(e: Event) => this._update(index, applyPreset(this.animations[index], (e.target as HTMLSelectElement).value))}
+        >
+          ${known ? nothing : html`<option value=${value} selected>${unknown}</option>`}
+          ${mine.length
+            ? html`<optgroup label="My animations">
+                ${mine.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${d.name}</option>`)}
+              </optgroup>`
+            : nothing}
+          ${ANIMATION_GROUPS.map(
+            (g) => html`<optgroup label=${g}>
+              ${ANIMATION_PRESETS.filter((p) => p.group === g).map(
+                (p) => html`<option value=${p.id} ?selected=${p.id === value}>${p.name}</option>`,
+              )}
+            </optgroup>`,
+          )}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>
+    `;
+  }
+
+  private _target(index: number, a: AnimationConfig, fallback: 'module' | 'icon' = 'module'): TemplateResult {
+    const opts = [
+      { value: 'module', label: 'Module' },
+      { value: 'icon', label: 'Icon' },
+    ];
+    const current = a.target === 'icon' || a.target === 'module' ? a.target : fallback;
+    const pick = (v: string) => this._patch(index, { target: v as AnimationConfig['target'] });
+    const onKey = (e: KeyboardEvent) => {
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+      e.preventDefault();
+      const next = current === 'module' ? 'icon' : 'module';
+      const group = e.currentTarget as HTMLElement;
+      pick(next);
+      requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
+    };
+    return html`
+      <div class="seg full" role="radiogroup" aria-label="Target" @keydown=${onKey}>
+        ${opts.map((o) => {
+          const on = o.value === current;
+          return html`<button
+            type="button"
+            role="radio"
+            data-val=${o.value}
+            aria-checked=${on ? 'true' : 'false'}
+            tabindex=${on ? '0' : '-1'}
+            @click=${() => pick(o.value)}
+          >${o.label}</button>`;
+        })}
+      </div>
+    `;
+  }
+
+  private _repeat(index: number, a: AnimationConfig, id: string, def?: 'infinite' | number): TemplateResult {
+    const it = a.iterations ?? def ?? getAnimationPreset(a.preset)?.defaults.iterations ?? 'infinite';
+    const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
+    const opts = [...REPEATS.map((r) => ({ value: r, label: r === 'infinite' ? 'Infinite' : r })), { value: 'custom', label: 'Custom' }];
+    const onPick = (v: string) => {
+      const next = new Set(this._custom);
+      if (v === 'custom') {
+        next.add(a.id);
+        this._custom = next;
+        if (it === 'infinite') this._patch(index, { iterations: 10 });
+        return;
+      }
+      next.delete(a.id);
+      this._custom = next;
+      this._patch(index, { iterations: v === 'infinite' ? 'infinite' : Number(v) });
+    };
+    return this._field('Repeat', this._select(id, custom ? 'custom' : String(it), opts, onPick), id);
+  }
+
+  /**
+   * A seasonal preset (its own timing and colours): preset, play, density, strength and, for scenes
+   * with border decorations, the Decorations switch.
+   */
+  private _seasonalBlock(a: AnimationConfig, index: number, note: string | undefined, p: AnimationPreset): TemplateResult {
+    const id = (k: string) => `an-${index}-${k}`;
+    const trigger = a.trigger ?? 'always';
+    const scene = p.seasonal;
+    const deco = isSceneId(scene) && sceneDecorations([scene]).length > 0;
+    const decoOn = a.decorations !== false;
+    const help =
+      scene === 'weather'
+        ? "Follows a weather entity: the module's, or the one picked as Entity for play condition."
+        : scene === 'daynight'
+          ? 'Stars and fireflies at night, a warm glow at dusk and dawn (sun.sun), nothing by day.'
+          : '';
+    return html`
+      <div class="cond">
+        <div class="cond-head">
+          <span class="n">Animation ${index + 1} <span class="sub">· ${p.name}</span></span>
+          <button type="button" class="icon-btn sm danger" aria-label="Delete animation ${index + 1}" title="Delete animation" @click=${() => this._remove(index)}>
+            <ha-icon icon="mdi:delete-outline"></ha-icon>
+          </button>
+        </div>
+        ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
+        ${this._field('Preset', this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+        ${help ? html`<p class="help">${help}</p>` : nothing}
+        ${this._play(index, a, trigger, id('play'))}
+        <div class="two">
+          ${this._field(
+            'Density (%)',
+            html`<input
+              class="input"
+              id=${id('int')}
+              type="number"
+              min="0"
+              max="100"
+              step="5"
+              .value=${String(a.intensity ?? p.defaults.intensity)}
+              @input=${(e: InputEvent) => {
+                const v = (e.target as HTMLInputElement).value;
+                this._patch(index, { intensity: v === '' ? undefined : Number(v) });
+              }}
+            />`,
+            id('int'),
+          )}
+          ${this._field(
+            'Strength (%)',
+            html`<input
+              class="input"
+              id=${id('strength')}
+              type="number"
+              min="0"
+              max="100"
+              step="5"
+              .value=${String(a.strength ?? DEFAULT_STRENGTH)}
+              @input=${(e: InputEvent) => {
+                const v = (e.target as HTMLInputElement).value;
+                this._patch(index, { strength: v === '' ? undefined : Number(v) });
+              }}
+            />`,
+            id('strength'),
+          )}
+        </div>
+        ${deco
+          ? html`<div class="switch-row">
+              <div class="txt">
+                Border decorations
+                <p class="help">Drawn along the border; the content keeps clear of them.</p>
+              </div>
+              <button
+                type="button"
+                class="switch"
+                role="switch"
+                aria-checked=${decoOn ? 'true' : 'false'}
+                aria-label="Border decorations"
+                @click=${() => this._patch(index, { decorations: decoOn ? false : undefined })}
+              ></button>
+            </div>`
+          : nothing}
+        <div class="foot">
+          <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
+            <ha-icon icon="mdi:restore"></ha-icon>Reset to preset
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  private _block(a: AnimationConfig, index: number, note: string | undefined): TemplateResult {
+    if (isCustomRef(a.preset)) return this._customBlock(a, index, note);
+    const p = getAnimationPreset(a.preset);
+    if (p?.seasonal) return this._seasonalBlock(a, index, note, p);
+    const d = p?.defaults;
+    const id = (k: string) => `an-${index}-${k}`;
+    const trigger = a.trigger ?? 'always';
+    const it = a.iterations ?? d?.iterations ?? 'infinite';
+    const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
+    const easing = a.easing ?? d?.easing ?? 'ease';
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: e.label }));
+    if (!EASINGS.some((e) => e.id === easing)) easingOpts.push({ value: easing, label: easing });
+
+    return html`
+      <div class="cond">
+        <div class="cond-head">
+          <span class="n">Animation ${index + 1} <span class="sub">· ${p?.name ?? a.preset}</span></span>
+          <button
+            type="button"
+            class="icon-btn sm danger"
+            aria-label="Delete animation ${index + 1}"
+            title="Delete animation"
+            @click=${() => this._remove(index)}
+          >
+            <ha-icon icon="mdi:delete-outline"></ha-icon>
+          </button>
+        </div>
+        ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
+        ${this._field('Preset', this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+        ${this.allowIcon ? this._field('Target', this._target(index, a)) : nothing}
+        ${this._play(index, a, trigger, id('play'))}
+        ${trigger === 'state'
+          ? this._field(
+              'State value',
+              html`<input
+                class="input"
+                id=${id('state')}
+                type="text"
+                .value=${a.state || ''}
+                @input=${(e: InputEvent) => this._patch(index, { state: (e.target as HTMLInputElement).value })}
+              />`,
+              id('state'),
+            )
+          : nothing}
+        ${this._field(
+          'Color',
+          html`<mc-color-picker
+            .value=${a.color || ''}
+            .label=${'Animation color'}
+            .allowEntity=${this.allowEntityColor}
+            .entityColor=${this.entityColor}
+            @value-changed=${(e: CustomEvent) => this._patch(index, { color: e.detail.value })}
+          ></mc-color-picker>`,
+        )}
+        ${p && hasStrength(p)
+          ? this._field(
+              'Strength (%)',
+              html`<input
+                class="input"
+                id=${id('strength')}
+                type="number"
+                min="0"
+                max="100"
+                step="5"
+                .value=${String(a.strength ?? DEFAULT_STRENGTH)}
+                @input=${(e: InputEvent) => {
+                  const v = (e.target as HTMLInputElement).value;
+                  this._patch(index, { strength: v === '' ? undefined : Number(v) });
+                }}
+              />`,
+              id('strength'),
+            )
+          : nothing}
+        <div class="two">
+          ${this._field('Duration', this._time(index, 'duration', a.duration ?? d?.duration, d?.duration))}
+          ${this._field('Delay', this._time(index, 'delay', a.delay ?? d?.delay, d?.delay))}
+        </div>
+        <div class="two">
+          ${this._field('Easing', this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
+          ${this._repeat(index, a, id('repeat'))}
+        </div>
+        ${custom
+          ? this._field(
+              'Repeat count',
+              html`<input
+                class="input"
+                id=${id('count')}
+                type="number"
+                min="1"
+                step="1"
+                .value=${typeof it === 'number' ? String(it) : ''}
+                @input=${(e: InputEvent) => {
+                  const n = Number((e.target as HTMLInputElement).value);
+                  if (Number.isFinite(n) && n > 0) this._patch(index, { iterations: n });
+                }}
+              />`,
+              id('count'),
+            )
+          : nothing}
+        <div class="two">
+          ${this._field(
+            'Direction',
+            this._select(id('dir'), a.direction ?? d?.direction ?? 'normal', DIRECTIONS, (v) => this._patch(index, { direction: v as AnimationDirection })),
+            id('dir'),
+          )}
+          ${p
+            ? this._field(
+                intensityLabel(p),
+                html`<input
+                  class="input"
+                  id=${id('int')}
+                  type="number"
+                  min=${p.intensity.min}
+                  max=${p.intensity.max}
+                  step=${p.intensity.step ?? 1}
+                  .value=${String(a.intensity ?? p.defaults.intensity)}
+                  @input=${(e: InputEvent) => {
+                    const v = (e.target as HTMLInputElement).value;
+                    this._patch(index, { intensity: v === '' ? undefined : Number(v) });
+                  }}
+                />`,
+                id('int'),
+              )
+            : nothing}
+        </div>
+        ${p
+          ? html`<div class="foot">
+              <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
+                <ha-icon icon="mdi:restore"></ha-icon>Reset to preset
+              </button>
+            </div>`
+          : nothing}
+      </div>
+    `;
+  }
+
+  /** A number field writing `key` (empty removes it). */
+  private _number(index: number, key: 'intensity' | 'strength', id: string, value: number | undefined, placeholder: string, min: number, max: number, step: number): TemplateResult {
+    return html`<input
+      class="input"
+      id=${id}
+      type="number"
+      min=${min}
+      max=${max}
+      step=${step}
+      placeholder=${placeholder}
+      .value=${value === undefined ? '' : String(value)}
+      @input=${(e: InputEvent) => {
+        const v = (e.target as HTMLInputElement).value;
+        this._patch(index, { [key]: v === '' ? undefined : Number(v) });
+      }}
+    />`;
+  }
+
+  /** Why a `custom:` entry has no document here. */
+  private _missingHelp(): string {
+    switch (animationLibrary.status) {
+      case 'unavailable':
+        return 'Not found. My animations needs the Magic Card Utils integration; the card plays its embedded copy if it has one.';
+      case 'ready':
+        return 'Not found in My animations. The card plays its embedded copy if it has one.';
+      default:
+        return 'Loading My animations…';
+    }
+  }
+
+  /**
+   * An animation from the library (`custom:<id>`): the preset fields, its own values as the defaults
+   * (empty fields follow the document), and "Edit in animation studio".
+   */
+  private _customBlock(a: AnimationConfig, index: number, note: string | undefined): TemplateResult {
+    const doc = this._doc(a.preset);
+    const ref = customRefId(a.preset);
+    const id = (k: string) => `an-${index}-${k}`;
+    const trigger = a.trigger ?? 'always';
+    const head = html`
+      <div class="cond-head">
+        <span class="n">Animation ${index + 1} <span class="sub">· ${doc?.name ?? ref}</span></span>
+        <button type="button" class="icon-btn sm danger" aria-label="Delete animation ${index + 1}" title="Delete animation" @click=${() => this._remove(index)}>
+          <ha-icon icon="mdi:delete-outline"></ha-icon>
+        </button>
+      </div>
+      ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
+      ${this._field('Preset', this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+    `;
+    if (!doc) {
+      return html`<div class="cond">
+        ${head}
+        <p class="help">${ref.startsWith('quick-') ? 'Made with Animate icon below.' : this._missingHelp()}</p>
+        ${this._play(index, a, trigger, id('play'))}
+      </div>`;
+    }
+
+    const layer = doc.kind === 'particles' || (doc.kind === 'path' && doc.path?.subject === 'particles');
+    const base = doc.particles?.preset ? getAnimationPreset(doc.particles.preset) : undefined;
+    const easing = a.easing ?? doc.easing;
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: e.label }));
+    if (!EASINGS.some((e) => e.id === easing)) easingOpts.push({ value: easing, label: easing });
+    const it = a.iterations ?? doc.iterations;
+    const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
+    const amplitude = !layer && doc.kind !== 'sequence';
+    const docTarget = doc.kind === 'path' ? (doc.path?.subject === 'icon' ? 'icon' : 'module') : doc.target === 'icon' ? 'icon' : 'module';
+
+    return html`
+      <div class="cond">
+        ${head}
+        ${this.allowIcon && !layer ? this._field('Target', this._target(index, a, docTarget)) : nothing}
+        ${this._play(index, a, trigger, id('play'))}
+        ${doc.clips?.length || doc.bindings?.length
+          ? this._field(
+              'Entity for states and values',
+              html`<mc-entity-picker
+                .hass=${this.hass}
+                .value=${a.entity || ''}
+                .label=${'Entity for states and values'}
+                .placeholder=${this.defaultEntity ? `Module entity (${this.defaultEntity})` : 'entity_id'}
+                @value-changed=${(e: CustomEvent) => this._patch(index, { entity: e.detail.value })}
+              ></mc-entity-picker>`,
+            )
+          : nothing}
+        ${trigger === 'state'
+          ? this._field(
+              'State value',
+              html`<input
+                class="input"
+                id=${id('state')}
+                type="text"
+                .value=${a.state || ''}
+                @input=${(e: InputEvent) => this._patch(index, { state: (e.target as HTMLInputElement).value })}
+              />`,
+              id('state'),
+            )
+          : nothing}
+        ${doc.kind === 'sequence'
+          ? nothing
+          : this._field(
+              'Color',
+              html`<mc-color-picker
+                .value=${a.color || ''}
+                .label=${'Animation color'}
+                .allowEntity=${this.allowEntityColor}
+                .entityColor=${this.entityColor}
+                @value-changed=${(e: CustomEvent) => this._patch(index, { color: e.detail.value })}
+              ></mc-color-picker>`,
+            )}
+        ${doc.kind === 'sequence'
+          ? nothing
+          : this._field('Strength (%)', this._number(index, 'strength', id('strength'), a.strength, String(DEFAULT_STRENGTH), 0, 100, 5), id('strength'))}
+        <div class="two">
+          ${this._field('Duration', this._time(index, 'duration', a.duration, `${doc.duration}s`))}
+          ${this._field('Delay', this._time(index, 'delay', a.delay, '0s'))}
+        </div>
+        <div class="two">
+          ${this._field('Easing', this._select(id('easing'), easing, easingOpts, (v) => this._patch(index, { easing: v })), id('easing'))}
+          ${this._repeat(index, a, id('repeat'), doc.iterations)}
+        </div>
+        ${custom
+          ? this._field(
+              'Repeat count',
+              html`<input
+                class="input"
+                id=${id('count')}
+                type="number"
+                min="1"
+                step="1"
+                .value=${typeof it === 'number' ? String(it) : ''}
+                @input=${(e: InputEvent) => {
+                  const n = Number((e.target as HTMLInputElement).value);
+                  if (Number.isFinite(n) && n > 0) this._patch(index, { iterations: n });
+                }}
+              />`,
+              id('count'),
+            )
+          : nothing}
+        <div class="two">
+          ${this._field(
+            'Direction',
+            this._select(id('dir'), a.direction ?? doc.direction ?? 'normal', DIRECTIONS, (v) => this._patch(index, { direction: v as AnimationDirection })),
+            id('dir'),
+          )}
+          ${amplitude
+            ? this._field('Amplitude (%)', this._number(index, 'intensity', id('int'), a.intensity, '100', 0, 400, 5), id('int'))
+            : base
+              ? this._field(
+                  intensityLabel(base),
+                  this._number(index, 'intensity', id('int'), a.intensity, String(doc.particles?.intensity ?? base.defaults.intensity), base.intensity.min, base.intensity.max, base.intensity.step ?? 1),
+                  id('int'),
+                )
+              : nothing}
+        </div>
+        <div class="foot">
+          <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
+            <ha-icon icon="mdi:restore"></ha-icon>Reset to animation
+          </button>
+          <a
+            class="btn btn-text btn-sm studio-link"
+            href=${animationStudioUrl(doc.id)}
+            target=${inAnimationStudioPanel() ? '_self' : '_blank'}
+            rel="noopener"
+            @click=${(e: MouseEvent) => onAnimationStudioLink(e, doc.id)}
+          >
+            <ha-icon icon="mdi:open-in-new"></ha-icon>Edit in animation studio
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * "Entity for play condition" (default: the module's entity) and Play. Without any entity the
+   * options that read one are disabled (card / row / column until an entity is picked).
+   */
+  private _play(index: number, a: AnimationConfig, trigger: string, playId: string): TemplateResult {
+    const hasEntity = !!(a.trigger_entity || (!this.requireTriggerEntity && this.defaultEntity));
+    const opts = TRIGGERS.map((t) => ({ ...t, disabled: !!t.entity && !hasEntity && t.value !== trigger }));
+    return html`
+      ${this._field(
+        'Entity for play condition',
+        html`<mc-entity-picker
+          .hass=${this.hass}
+          .value=${a.trigger_entity || ''}
+          .label=${this.defaultEntity && !this.requireTriggerEntity ? `Module entity (${this.defaultEntity})` : 'Entity for play condition'}
+          @value-changed=${(e: CustomEvent) => this._patch(index, { trigger_entity: e.detail.value })}
+        ></mc-entity-picker>`,
+      )}
+      ${this._field(
+        'Play',
+        this._select(playId, trigger, opts, (v) => this._patch(index, { trigger: v as AnimationTrigger })),
+        playId,
+      )}
+      ${!hasEntity && trigger !== 'always' && TRIGGERS.find((t) => t.value === trigger)?.entity
+        ? html`<p class="help">Pick an entity: this condition never plays without one.</p>`
+        : nothing}
+    `;
+  }
+
+  private _time(index: number, key: 'duration' | 'delay', value: string | undefined, placeholder: string | undefined): TemplateResult {
+    return html`<mc-unit-field
+      .value=${value ?? ''}
+      .label=${key === 'duration' ? 'Duration' : 'Delay'}
+      .units=${['s', 'ms']}
+      .placeholder=${(placeholder ?? '0s').replace(/m?s$/, '')}
+      @value-changed=${(e: CustomEvent) => this._patch(index, { [key]: e.detail.value })}
+    ></mc-unit-field>`;
+  }
+
+  protected render(): TemplateResult {
+    const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon });
+    return html`
+      <div class="list">
+        ${this.animations.map((a, i) => this._block(a, i, notes[i]))}
+        <div>
+          <button type="button" class="btn btn-text btn-sm" @click=${() => this._add()}>
+            <ha-icon icon="mdi:plus"></ha-icon>Add animation
+          </button>
+        </div>
+      </div>
+    `;
+  }
+}

@@ -8,10 +8,25 @@ import {
   renderTextField,
   renderToggleField,
   renderEntityField,
-  renderSelectField,
   renderAttributeField,
+  renderIconField,
 } from '../../utils/form-utils';
-import { SyncContext } from '../../utils/sync-path';
+import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
+import { renderIcon } from '../../icons/render-icon';
+import { renderIconFxEditor } from '../../editor/components/icon-fx-editor';
+import { entityIcon } from '../../utils/entity-icon';
+import { entityStateColor } from '../../utils/entity-color';
+import { timerCountdown } from '../../utils/timer';
+import { countdown } from '../../utils/timer-countdown';
+
+/**
+ * Name and state toggles: both on when neither key is set (new YAML, like the default). Once one is
+ * set, a missing other key is off, as in configs from before the defaults.
+ */
+function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolean } {
+  if (c.show_name === undefined && c.show_state === undefined) return { name: true, state: true };
+  return { name: !!c.show_name, state: !!c.show_state };
+}
 
 class InfoModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -36,24 +51,50 @@ class InfoModule extends BaseMagicModule {
     const c = config as InfoModuleConfig;
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
 
-    const name = entity?.attributes.friendly_name || c.entity || 'No entity';
-    const state = entity ? hass!.formatEntityState(entity) : '—';
+    // With both off and no secondary info the module would be empty: it shows the state.
+    let { name: showName, state: showState } = infoToggles(c);
+    if (!showName && !showState && !c.secondary_info) showState = true;
+    if (!showName && !showState && !entity) showName = true;
 
+    const name = entity ? entityDisplayName(hass, entity) : c.entity || 'No entity';
+    let state: string | ReturnType<typeof countdown> = '—';
+    if (entity && !c.attribute && timerCountdown(entity) !== undefined) {
+      // an active / paused timer: its remaining time, counting down live
+      state = countdown(entity);
+    } else if (entity) {
+      const v = formatEntityValue(hass, entity, c.attribute || undefined);
+      state = c.show_unit === false ? v.value : v.text;
+    }
+    const secondary = entity && c.secondary_info ? formatEntityValue(hass, entity, c.secondary_info).text : '';
+
+    const lines = html`
+      ${showName ? html`<span class="mc-info-name" data-mc-part="name">${name}</span>` : nothing}
+      ${showState
+        ? html`<span class="mc-info-state" data-mc-part="state">${c.prefix || ''}${state}${c.suffix || ''}</span>`
+        : nothing}
+      ${secondary ? html`<span class="mc-info-secondary">${secondary}</span>` : nothing}
+    `;
+    if (!c.show_icon) return html`<div class="mc-module mc-info">${lines}</div>`;
+
+    // icon: the configured one, else the entity's (as HA picks it), in its state colour unless a design colour is set
+    const icon = renderIcon({
+      icon: c.icon || 'mdi:information-outline',
+      entity: c.entity,
+      hass,
+      useEntityIcon: !c.icon,
+      className: 'mc-anim-icon',
+      part: 'icon',
+      fx: c.icon_fx,
+      iconOn: c.icon_on,
+      iconOff: c.icon_off,
+      svg: c.svg,
+      fallbackIcon: 'mdi:information-outline',
+    });
+    const color = entity ? entityStateColor(entity) : undefined;
     return html`
-      <div class="mc-module mc-info">
-        ${c.show_name ? html`<span class="mc-info-name">${name}</span>` : nothing}
-        ${c.show_state
-          ? html`<span class="mc-info-state">
-              ${c.prefix || ''}${c.attribute && entity
-                ? String(entity.attributes[c.attribute] ?? '—')
-                : state}${c.suffix || ''}
-            </span>`
-          : nothing}
-        ${c.secondary_info && entity
-          ? html`<span class="mc-info-secondary"
-              >${String(entity.attributes[c.secondary_info] ?? '')}</span
-            >`
-          : nothing}
+      <div class="mc-module mc-info mc-info--icon">
+        <span class="mc-info-icon" style=${color ? `color: var(--mc-design-color, ${color})` : nothing}>${icon}</span>
+        <div class="mc-info-text">${lines}</div>
       </div>
     `;
   }
@@ -66,16 +107,34 @@ class InfoModule extends BaseMagicModule {
   ): TemplateResult {
     const c = config as InfoModuleConfig;
     const syncCtx = this._buildSyncContext(config, template);
+    const shown = infoToggles(c);
+    // A toggle writes both keys, so switching one off never switches the other (a missing key) off.
     return html`
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
         ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-        ${renderToggleField('Show Name', c.show_name, (v) => onChange({ ...c, show_name: v }), 'show_name', syncCtx)}
-        ${renderToggleField('Show State', c.show_state, (v) => onChange({ ...c, show_state: v }), 'show_state', syncCtx)}
-        ${renderToggleField('Show Unit', c.show_unit, (v) => onChange({ ...c, show_unit: v }), 'show_unit', syncCtx)}
+        ${renderToggleField('Show name', shown.name, (v) => onChange({ ...c, show_name: v, show_state: shown.state }), 'show_name', syncCtx)}
+        ${renderToggleField('Show state', shown.state, (v) => onChange({ ...c, show_name: shown.name, show_state: v }), 'show_state', syncCtx,
+          !shown.name && !shown.state && !c.secondary_info ? 'With nothing else shown, the state is shown anyway.' : undefined)}
+        ${shown.state
+          ? renderToggleField('Show unit', c.show_unit !== false, (v) => onChange({ ...c, show_unit: v }), 'show_unit', syncCtx)
+          : nothing}
+        ${renderToggleField('Show icon', c.show_icon, (v) => onChange({ ...c, show_icon: v }), 'show_icon', syncCtx)}
+        ${c.show_icon && c.icon !== 'svg'
+          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx)
+          : nothing}
+        ${c.show_icon
+          ? renderIconFxEditor(c, hass, onChange, {
+              entity: c.entity,
+              icon: c.icon || entityIcon(hass, c.entity) || 'mdi:information-outline',
+              allowSvg: true,
+              allowStateIcons: !!c.entity,
+              syncCtx,
+            })
+          : nothing}
         ${renderTextField('Prefix', c.prefix, (v) => onChange({ ...c, prefix: v }), 'prefix', syncCtx)}
         ${renderTextField('Suffix', c.suffix, (v) => onChange({ ...c, suffix: v }), 'suffix', syncCtx)}
-        ${renderAttributeField('Secondary Info', c.secondary_info, (v) =>
+        ${renderAttributeField('Secondary info', c.secondary_info, (v) =>
           onChange({ ...c, secondary_info: v }), hass, c.entity, 'secondary_info', syncCtx)}
       </div>
     `;

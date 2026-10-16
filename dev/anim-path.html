@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Magic Card path motion editor harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --state-icon-color:#44739e; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); --state-icon-color:#7ab1e0; color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  .wrap { display:flex; gap:0; min-height:100vh; }
+  .wrap.wide { flex-direction:column; }
+  /* the studio stage: dotted canvas, the preview card centred */
+  .stage { flex:1; min-width:0; display:grid; place-items:center; padding:56px 24px;
+    background-color:color-mix(in srgb, var(--primary-text-color) 6%, var(--primary-background-color));
+    background-image:radial-gradient(color-mix(in srgb, var(--primary-text-color) 16%, transparent) 1px, transparent 1px); background-size:16px 16px; }
+  .frame { position:relative; width:360px; }
+  .card { display:flex; align-items:center; gap:14px; padding:18px 16px; min-height:84px; box-sizing:border-box;
+    background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; }
+  .card .icon { width:44px; height:44px; border-radius:50%; display:grid; place-items:center; flex:none;
+    background:color-mix(in srgb, var(--state-icon-color) 18%, transparent); color:var(--state-icon-color); --mdc-icon-size:26px; }
+  .card .nm { font-weight:500; font-size:0.95rem; }
+  .card .st { color:var(--secondary-text-color); font-size:0.85rem; margin-top:2px; }
+  .card .bar { height:6px; border-radius:3px; background:var(--secondary-background-color); margin-top:10px; width:180px; overflow:hidden; }
+  .card .bar i { display:block; height:100%; width:62%; background:var(--state-icon-color); }
+  /* like the studio stage's overlay slot: exactly over the card */
+  .overlay { position:absolute; inset:0; }
+  .inspector { width:var(--w, 360px); flex:none; box-sizing:border-box; padding:16px; background:var(--card-background-color);
+    border-left:1px solid var(--divider-color); overflow:auto; max-height:100vh; }
+  .wide .inspector { width:var(--w, 900px); border-left:0; border-top:1px solid var(--divider-color); max-height:none; margin:0 auto; }
+  .inspector h2 { margin:0 0 16px; font-size:1rem; font-weight:500; }
+</style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <div class="stage">
+      <div class="frame" id="frame">
+        <div class="card">
+          <div class="icon"><ha-icon icon="mdi:robot-vacuum"></ha-icon></div>
+          <div><div class="nm">Robot vacuum</div><div class="st">Cleaning · kitchen</div><div class="bar"><i></i></div></div>
+        </div>
+        <mc-anim-path-overlay class="overlay" id="overlay"></mc-anim-path-overlay>
+      </div>
+    </div>
+    <aside class="inspector" id="inspector">
+      <h2>Path</h2>
+      <mc-anim-path-editor id="editor"></mc-anim-path-editor>
+    </aside>
+  </div>
+  <script src="./shims.js"></script>
+  <script src="../.harness-build/anim-path/anim-path.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      document.documentElement.dataset.theme = params.get('theme') || 'light';
+      if (params.get('layout') === 'wide') document.getElementById('wrap').classList.add('wide');
+      if (params.get('w')) document.getElementById('inspector').style.setProperty('--w', `${params.get('w')}px`);
+      const overlay = document.getElementById('overlay');
+      const editor = document.getElementById('editor');
+      const frame = document.getElementById('frame');
+      const ap = window.__ap;
+      ap.changes = [];
+      /** Like the shell: the doc goes to both, every doc-change comes back in. */
+      ap.setDoc = (doc) => {
+        ap.doc = doc;
+        overlay.doc = doc;
+        editor.doc = doc;
+      };
+      ap.load = (path, extra = {}) => {
+        const base = ap.newAnimationDoc('path', 'demo', 'Demo path');
+        ap.setDoc({ ...base, ...extra, path: { ...base.path, units: 'percent', ...path } });
+      };
+      for (const el of [overlay, editor]) {
+        el.addEventListener('doc-change', (e) => {
+          ap.changes.push({ label: e.detail.label, transient: !!e.detail.transient, d: e.detail.doc.path.d });
+          ap.setDoc(e.detail.doc);
+        });
+      }
+      const sync = () => {
+        const r = frame.getBoundingClientRect();
+        overlay.stageRect = { width: Math.round(r.width), height: Math.round(r.height) };
+      };
+      new ResizeObserver(sync).observe(frame);
+      sync();
+      overlay.time = Number(params.get('time') ?? 0.3);
+      ap.overlay = overlay;
+      ap.editor = editor;
+      ap.load({ d: ap.templatePath('figure-8') });
+    })();
+  </script>
+</body>
+</html>

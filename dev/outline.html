@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Magic Card structure outline harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  .wrap { display:flex; gap:24px; padding:24px; align-items:flex-start; }
+  .box { background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; padding:16px; }
+  .box h2 { margin:0 0 12px; font-size:1rem; font-weight:500; }
+  #layers { width:280px; max-height:760px; overflow:auto; }
+  #pane { width:480px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="box" id="layers"><h2>Layers</h2></section>
+    <section class="box" id="pane"><h2>Structure</h2></section>
+    <section class="box" id="empty" style="width:280px"><h2>Empty card</h2></section>
+  </div>
+  <script src="./shims.js"></script>
+  <script src="../.harness-build/outline/outline.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    document.documentElement.dataset.theme = params.get('theme') || 'light';
+    const config = {
+      type: 'custom:magic-card', name: 'Living Room', template: 'room-card', not_synced: [],
+      rows: [
+        { id: 'r1', layout: '1-1', columns: [
+          { id: 'c1', modules: [
+            { id: 'm1', type: 'icon', entity: 'light.living_room', icon: 'mdi:sofa-outline' },
+            { id: 'm2', type: 'text', text: 'Living Room' } ] },
+          { id: 'c2', modules: [
+            { id: 'm3', type: 'button', entity: 'light.living_room', label: 'Toggle', not_synced: ['label'] },
+            { id: 'm4', type: 'info', entity: 'sensor.living_room_temperature_corrected_average' } ] } ] },
+        { id: 'r2', layout: '2-1', columns: [
+          { id: 'c3', modules: [ { id: 'm5', type: 'slider', entity: 'light.living_room' } ] },
+          { id: 'c4', modules: [] } ] },
+        { id: 'r3', layout: '1', columns: [ { id: 'c5', modules: [
+          { id: 'm6', type: 'graphs', entity: 'sensor.living_room_temperature' } ] } ] },
+      ],
+    };
+    const { EditorStateManager } = window.__mcOutline;
+    const sm = new EditorStateManager(() => {});
+    sm.setConfig(config);
+    sm.setSelectedPath({ rowIndex: 0, columnIndex: 1, moduleIndex: 0 });
+    const mk = (variant, mgr) => { const el = document.createElement('mc-structure-outline'); el.variant = variant; el.stateManager = mgr; return el; };
+    document.getElementById('layers').appendChild(mk('layers', sm));
+    document.getElementById('pane').appendChild(mk('pane', sm));
+    const emptySm = new EditorStateManager(() => {});
+    emptySm.setConfig({ type: 'custom:magic-card', rows: [] });
+    document.getElementById('empty').appendChild(mk('layers', emptySm));
+    document.addEventListener('add-module', (e) => console.log('add-module', JSON.stringify(e.detail)));
+    document.addEventListener('request-add-row', () => console.log('request-add-row'));
+    window.__outline = { sm };
+  </script>
+</body>
+</html>

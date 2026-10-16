@@ -1,12 +1,59 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
+import { editorSystem } from '../../css/editor-system';
 import './unit-field';
-import { boxFieldStyles, componentControlStyles } from '../../css/css';
 
+type Side = 'top' | 'right' | 'bottom' | 'left';
+
+const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
+/** Same units as mc-unit-field (auto, calc(…) and var(…) are its "Custom" values). */
+const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'];
+
+const SIDE_META: Record<Side, { label: string; icon: string }> = {
+  top: { label: 'Top', icon: 'mdi:border-top-variant' },
+  right: { label: 'Right', icon: 'mdi:border-right-variant' },
+  bottom: { label: 'Bottom', icon: 'mdi:border-bottom-variant' },
+  left: { label: 'Left', icon: 'mdi:border-left-variant' },
+};
+
+const CORNER_META: Record<Side, { label: string; icon: string }> = {
+  top: { label: 'Top left', icon: 'mdi:border-top-variant' },
+  right: { label: 'Top right', icon: 'mdi:border-right-variant' },
+  bottom: { label: 'Bottom right', icon: 'mdi:border-bottom-variant' },
+  left: { label: 'Bottom left', icon: 'mdi:border-left-variant' },
+};
+
+/**
+ * Four-side value (padding / margin / border radius): a 2x2 grid where every side is a compact
+ * mc-unit-field (number + unit, written on commit; Custom for auto / calc(…)), and a
+ * "Same on all sides" link toggle in the foot row.
+ */
 @customElement('mc-box-field')
 export class BoxField extends LitElement {
-  static styles = [componentControlStyles, boxFieldStyles];
+  static styles = [
+    editorSystem,
+    css`
+      :host {
+        display: block;
+        min-width: 0;
+        container-type: inline-size;
+      }
+      .box {
+        display: grid;
+        gap: 8px;
+      }
+      .box-foot .btn[aria-pressed='true'] {
+        background: var(--mc-accent-tint);
+      }
+      /* the 2x2 holds down to ~200px of field width (studio inspector, 360px pane); one column only below */
+      @container (max-width: 200px) {
+        .box-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    `,
+  ];
 
   @property({ attribute: false }) design: DesignConfig = {};
   @property({ attribute: false }) onChange!: (updates: Record<string, unknown>) => void;
@@ -18,116 +65,80 @@ export class BoxField extends LitElement {
     // Handle border-radius special naming
     if (baseName === 'border_radius') {
       const suffixMap: Record<string, string> = {
-        'top': 'border_top_left_radius',
-        'right': 'border_top_right_radius',
-        'bottom': 'border_bottom_right_radius',
-        'left': 'border_bottom_left_radius',
+        top: 'border_top_left_radius',
+        right: 'border_top_right_radius',
+        bottom: 'border_bottom_right_radius',
+        left: 'border_bottom_left_radius',
       };
       return suffixMap[suffix] || `${baseName}_${suffix}`;
     }
     return `${baseName}_${suffix}`;
   }
 
-  private _getValue(suffix: 'top' | 'right' | 'bottom' | 'left'): string {
-    const key = this._getSuffixKey(this.baseName, suffix);
-    const design = this.design as Record<string, unknown>;
-
-    // If shorthand is present, use it.
-    if (this.design[this.baseName]) {
-      const parts = String(this.design[this.baseName]).split(' ');
-      if (parts.length === 1) return parts[0];
-      if (parts.length === 2) {
-        return (suffix === 'top' || suffix === 'bottom') ? parts[0] : parts[1];
-      }
-      if (parts.length === 3) {
-        if (suffix === 'top') return parts[0];
-        if (suffix === 'right' || suffix === 'left') return parts[1];
-        if (suffix === 'bottom') return parts[2];
-      }
-      if (parts.length === 4) {
-        if (suffix === 'top') return parts[0];
-        if (suffix === 'right') return parts[1];
-        if (suffix === 'bottom') return parts[2];
-        if (suffix === 'left') return parts[3];
-      }
-    }
-
-    return (design[key] as string) || '';
+  /** Sides from the CSS shorthand (1–4 values, mixed units allowed), or undefined when there is none. */
+  private _shorthandSides(): Record<Side, string> | undefined {
+    const raw = String(this.design[this.baseName] ?? '').trim();
+    if (!raw) return undefined;
+    const [t, r = t, b = t, l = r] = raw.split(/\s+/);
+    return { top: t, right: r, bottom: b, left: l };
   }
 
-  private _handleValueChange(
-    position: 'top' | 'right' | 'bottom' | 'left',
-    value: string,
-  ) {
-    const updates: Record<string, unknown> = {};
+  private _getValue(side: Side): string {
+    const sh = this._shorthandSides();
+    if (sh) return sh[side];
+    const v = (this.design as Record<string, unknown>)[this._getSuffixKey(this.baseName, side)];
+    return v === undefined || v === null ? '' : String(v);
+  }
 
-    const topKey = this._getSuffixKey(this.baseName, 'top');
-    const rightKey = this._getSuffixKey(this.baseName, 'right');
-    const bottomKey = this._getSuffixKey(this.baseName, 'bottom');
-    const leftKey = this._getSuffixKey(this.baseName, 'left');
-    const baseKey = this.baseName;
-
-    // Clear shorthand before applying longhand
-    updates[baseKey] = undefined;
-
-    if (this._linked && position === 'top') {
-      // When linked, changing the master (top) value updates all
-      updates[topKey] = value;
-      updates[rightKey] = value;
-      updates[bottomKey] = value;
-      updates[leftKey] = value;
-    } else if (!this._linked) {
-      // When not linked, only update the specific field
-      const key = this._getSuffixKey(this.baseName, position);
-      updates[key] = value;
+  /**
+   * Write sides as longhands and clear the shorthand. Untouched sides that came from a shorthand
+   * are re-emitted (when non-empty) so clearing the shorthand never drops them.
+   */
+  private _emitSides(values: Partial<Record<Side, string>>): void {
+    const updates: Record<string, unknown> = { [this.baseName]: undefined };
+    const sh = this._shorthandSides();
+    for (const side of SIDES) {
+      if (values[side] !== undefined) updates[this._getSuffixKey(this.baseName, side)] = values[side];
+      else if (sh?.[side]) updates[this._getSuffixKey(this.baseName, side)] = sh[side];
     }
-    // If linked and not top, ignore the change (field is disabled)
-
     this.onChange(updates);
   }
 
-  private _toggleLink() {
+  /** A side's committed value (number + unit, or a custom value; '' = cleared): every side when linked. */
+  private _handleSideChange(position: Side, value: string): void {
+    if (this._linked) this._emitSides({ top: value, right: value, bottom: value, left: value });
+    else this._emitSides({ [position]: value });
+  }
+
+  private _toggleLink(): void {
     this._linked = !this._linked;
-
-    // When linking, set all values to the top value
-    if (this._linked) {
-      const masterValue = this._getValue('top');
-      if (masterValue) {
-        const updates: Record<string, unknown> = {};
-        updates[this.baseName] = undefined;
-        updates[this._getSuffixKey(this.baseName, 'top')] = masterValue;
-        updates[this._getSuffixKey(this.baseName, 'right')] = masterValue;
-        updates[this._getSuffixKey(this.baseName, 'bottom')] = masterValue;
-        updates[this._getSuffixKey(this.baseName, 'left')] = masterValue;
-        this.onChange(updates);
-      }
+    if (!this._linked) return;
+    // Linking copies the top side (value and unit) to all sides.
+    const master = this._getValue('top');
+    if (master && SIDES.some((side) => this._getValue(side) !== master)) {
+      this._emitSides({ top: master, right: master, bottom: master, left: master });
     }
   }
 
-  private _getLabel(position: 'top' | 'right' | 'bottom' | 'left'): string {
-    if (this.baseName === 'border_radius') {
-      const labelMap: Record<string, string> = {
-        'top': 'TL',
-        'right': 'TR',
-        'bottom': 'BR',
-        'left': 'BL',
-      };
-      return labelMap[position] || position;
-    }
-    return position.charAt(0).toUpperCase();
-  }
-
-  private _renderInput(position: 'top' | 'right' | 'bottom' | 'left') {
-    const isDisabled = this._linked && position !== 'top';
-    const displayValue = this._linked ? this._getValue('top') : this._getValue(position);
-
+  private _renderSide(position: Side): TemplateResult {
+    const meta = this.baseName === 'border_radius' ? CORNER_META[position] : SIDE_META[position];
+    const source: Side = this._linked ? 'top' : position;
     return html`
-      <div class="mc-box-input ${isDisabled ? 'disabled' : ''}">
-        <label>${this._getLabel(position)}</label>
+      <div class="box-side">
+        <span class="box-side-label" @click=${() => this.renderRoot.querySelector<HTMLElement>(`mc-unit-field[data-side="${position}"]`)?.focus()}>
+          <ha-icon icon=${meta.icon}></ha-icon>${meta.label}
+        </span>
         <mc-unit-field
-          .value=${displayValue}
-          ?disabled=${isDisabled}
-          @value-changed=${(e: CustomEvent) => this._handleValueChange(position, e.detail.value)}
+          compact
+          data-side=${position}
+          .inputId=${`side-${position}`}
+          .label=${meta.label}
+          .units=${UNITS}
+          .value=${this._getValue(source)}
+          @value-changed=${(e: CustomEvent) => {
+            e.stopPropagation();
+            this._handleSideChange(position, String(e.detail.value ?? ''));
+          }}
         ></mc-unit-field>
       </div>
     `;
@@ -135,22 +146,17 @@ export class BoxField extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="mc-box-field">
-        <div class="mc-box-toolbar">
+      <div class="box">
+        <div class="box-grid">${SIDES.map((side) => this._renderSide(side))}</div>
+        <div class="box-foot">
           <button
-            class="mc-box-link-btn ${this._linked ? 'linked' : ''}"
-            title="${this._linked ? 'Unlink values' : 'Link values'}"
+            type="button"
+            class="btn btn-text btn-sm"
+            aria-pressed=${this._linked ? 'true' : 'false'}
             @click=${this._toggleLink}
           >
-            <ha-icon icon="${this._linked ? 'mdi:link' : 'mdi:link-off'}"></ha-icon>
-            <span>${this._linked ? 'Linked' : 'Per side'}</span>
+            <ha-icon icon="mdi:link-variant"></ha-icon>Same on all sides
           </button>
-        </div>
-        <div class="mc-box-inputs">
-          ${this._renderInput('top')}
-          ${this._renderInput('right')}
-          ${this._renderInput('bottom')}
-          ${this._renderInput('left')}
         </div>
       </div>
     `;

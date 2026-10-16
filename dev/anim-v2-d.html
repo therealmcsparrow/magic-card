@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Card parts (animation studio v2, D1)</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --state-icon-color:#44739e; --text-primary-color:#fff; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); --state-icon-color:#9fbcd9; color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  main { display:grid; grid-template-columns: 240px minmax(0, 1fr); gap:16px; padding:16px; align-items:start; }
+  .layers { display:grid; gap:12px; }
+  .layers section { background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; padding:8px; }
+  .layers h2 { margin:4px 10px 8px; font-size:0.8125rem; font-weight:500; color:var(--secondary-text-color); }
+  .cards { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; }
+  .cards h3 { margin:0 0 6px; font-size:0.75rem; font-weight:500; color:var(--secondary-text-color); }
+</style>
+</head>
+<body>
+  <main>
+    <div class="layers" id="layers"></div>
+    <div class="cards" id="cards"></div>
+  </main>
+  <script src="./shims.js"></script>
+  <script type="module" src="../.harness-build/magic-card.js"></script>
+  <script defer src="../.harness-build/anim-v2-d/anim-v2-d.js"></script>
+  <script defer src="./anim-v2-d.js"></script>
+</body>
+</html>

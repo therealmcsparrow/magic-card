@@ -40,19 +40,22 @@ export class ConfigValidator {
         }
 
         col.modules.forEach((mod, mi) => {
+          if (!mod || typeof mod !== 'object') {
+            errors.push(`Row ${ri}, Col ${ci}, Module ${mi}: must be an object`);
+            return;
+          }
           if (!mod.type) {
-            errors.push(`Row ${ri}, Col ${ci}, Module ${mi}: missing type`);
+            warnings.push(`Row ${ri}, Col ${ci}, Module ${mi}: missing type`);
             return;
           }
 
+          // A module's own validation errors are shown inside that module, never fatal for the card.
           if (!ModuleRegistry.has(mod.type as ModuleType)) {
             warnings.push(`Row ${ri}, Col ${ci}, Module ${mi}: unknown type "${mod.type}"`);
           } else {
             const module = ModuleRegistry.get(mod.type as ModuleType);
-            if (module) {
-              const moduleErrors = module.validate(mod);
-              errors.push(...moduleErrors.map((e) => `Row ${ri}, Col ${ci}, Module ${mi} (${mod.type}): ${e}`));
-            }
+            const moduleErrors = module ? module.validate(mod) : [];
+            warnings.push(...moduleErrors.map((e) => `Row ${ri}, Col ${ci}, Module ${mi} (${mod.type}): ${e}`));
           }
         });
       });

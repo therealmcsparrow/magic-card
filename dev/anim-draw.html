@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Magic Card drawing tools harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047;
+    --state-icon-color:#44739e; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); --state-icon-color:#7ab1e0; color-scheme: dark; }
+  html, body { height:100%; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); overflow:hidden; }
+  /* like the studio v2 grid: layers | stage | inspector */
+  .wrap { display:grid; grid-template-columns:240px minmax(0,1fr) 320px; height:100vh; }
+  aside { box-sizing:border-box; padding:16px; background:var(--card-background-color); overflow:auto; min-height:0; }
+  aside.layers { border-right:1px solid var(--divider-color); padding:12px 8px; }
+  aside.inspector { border-left:1px solid var(--divider-color); }
+  aside h2 { margin:0 0 12px; padding:0 8px; font-size:0.8125rem; font-weight:500; color:var(--secondary-text-color); }
+  aside.inspector h2 { padding:0; }
+  .stage { position:relative; min-width:0; min-height:0; display:grid; place-items:center;
+    background-color:color-mix(in srgb, var(--primary-text-color) 6%, var(--primary-background-color));
+    background-image:radial-gradient(color-mix(in srgb, var(--primary-text-color) 16%, transparent) 1px, transparent 1px); background-size:16px 16px; }
+  .frame { position:relative; width:min(420px, calc(100% - 48px)); aspect-ratio:1; }
+  .card { position:absolute; inset:0; display:grid; place-items:center; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; }
+  .card svg.icon { width:62%; height:62%; color:var(--state-icon-color); }
+  .card svg.icon path { fill:currentColor; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <aside class="layers"><h2>Shapes</h2><mc-anim-shapes-layers id="layers"></mc-anim-shapes-layers></aside>
+    <div class="stage" id="stage">
+      <div class="frame" id="frame">
+        <div class="card"><svg class="icon" id="icon" viewBox="0 0 24 24" aria-hidden="true"><path id="bell"></path></svg></div>
+        <mc-anim-draw-overlay id="overlay"></mc-anim-draw-overlay>
+      </div>
+      <mc-anim-draw-toolbar id="toolbar"></mc-anim-draw-toolbar>
+    </div>
+    <aside class="inspector"><h2>Inspector</h2><mc-anim-shape-inspector id="inspector"></mc-anim-shape-inspector></aside>
+  </div>
+  <script src="./shims.js"></script>
+  <script src="../.harness-build/anim-draw/anim-draw.js"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      document.documentElement.dataset.theme = params.get('theme') || 'light';
+      const dr = window.__dr;
+      document.getElementById('bell').setAttribute('d', dr.BELL);
+      const panels = ['overlay', 'toolbar', 'inspector', 'layers'].map((id) => document.getElementById(id));
+      const [overlay, toolbar, inspector, layers] = panels;
+      dr.overlay = overlay; dr.toolbar = toolbar; dr.inspector = inspector; dr.layers = layers;
+      dr.changes = [];
+      dr.sels = [];
+      overlay.pieces = dr.pieces;
+      overlay.preview = true; // no real card on this page: the overlay draws the shapes
+      toolbar.pieces = dr.pieces;
+      /** Like the shell: the doc and the selection go to every panel, their events come back in. */
+      dr.setDoc = (doc) => { dr.doc = doc; for (const p of panels) p.doc = doc; };
+      dr.setSel = (sel) => { dr.sel = sel; for (const p of panels) p.selection = sel; };
+      for (const p of panels) {
+        p.addEventListener('doc-change', (e) => { dr.changes.push({ label: e.detail.label, transient: !!e.detail.transient }); dr.setDoc(e.detail.doc); });
+        p.addEventListener('selection-change', (e) => { dr.sels.push(e.detail.selection); dr.setSel(e.detail.selection); });
+      }
+      const frame = document.getElementById('frame');
+      const icon = document.getElementById('icon');
+      const sync = () => {
+        const f = frame.getBoundingClientRect();
+        const i = icon.getBoundingClientRect();
+        overlay.stage = { rect: { width: Math.round(f.width), height: Math.round(f.height) }, scale: 1,
+          subject: { x: i.left - f.left, y: i.top - f.top, width: i.width, height: i.height }, viewBox: [0, 0, 24, 24] };
+      };
+      new ResizeObserver(sync).observe(frame);
+      sync();
+      dr.load = (shapes = [], extra = {}) => {
+        const base = dr.newAnimationDoc('keyframes', 'bell_doodle', 'Bell doodle');
+        dr.setDoc({ ...base, ...extra, rig: { parts: [], shapes } });
+      };
+      dr.sample = () => [
+        { id: 'halo', name: 'Halo', d: dr.ellipsePath(12, 11, 10, 10), stroke: '#ff9800', stroke_width: 0.75, linecap: 'round', layer: 'under' },
+        { id: 'badge', name: 'Badge', d: dr.ellipsePath(18.5, 5.5, 3, 3), fill: '#e91e63', layer: 'over' },
+        { id: 'tag', name: 'Tag', d: dr.rectPath(2, 14.5, 6, 3.5, 1), fill: 'entity', stroke: 'currentColor', stroke_width: 0.5, layer: 'over' },
+      ];
+      dr.load([]);
+      dr.setSel({ kind: 'none' });
+    })();
+  </script>
+</body>
+</html>

@@ -5,6 +5,8 @@ export const CARD_DESCRIPTION = 'A fully open-source multi-module card with adva
 
 export const DEFAULT_LAYOUT = '1';
 export const DEFAULT_GAP = '8px';
+/** Gap between the modules of a row module's column without its own gap (the gap these columns always had). */
+export const NESTED_COLUMN_GAP = 'var(--mc-gap)';
 export const DEFAULT_PADDING = '16px';
 export const DEFAULT_BORDER_RADIUS = '12px';
 
@@ -21,3 +23,9 @@ export const BREAKPOINTS = {
   lg: 1024,
   xl: 1280,
 } as const;
+
+/**
+ * How far (px) a pointer may move between down and up and still be a tap / hold on a module. The
+ * slider layout uses the same value as Swiper's drag threshold, so a move is either a tap or a swipe.
+ */
+export const TAP_MOVE_TOLERANCE_PX = 10;

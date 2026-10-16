@@ -1,19 +1,25 @@
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { entityIcon } from '../../utils/entity-icon';
 
 @customElement('mc-entity-picker')
 export class EntityPicker extends LitElement {
-  static styles = [pickerStyles];
+  static styles = [editorSystem, pickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) label = 'Entity';
+  /** Shown while empty (e.g. the default it falls back to). */
+  @property({ type: String }) placeholder = 'entity_id';
   @property({ type: String }) domain = '';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -67,7 +73,7 @@ export class EntityPicker extends LitElement {
         id,
         name: (entity.attributes.friendly_name as string) || id,
         state: this.hass!.formatEntityState(entity),
-        icon: (entity.attributes.icon as string) || this._domainIcon(id.split('.')[0]),
+        icon: entityIcon(this.hass, id) || this._domainIcon(id.split('.')[0]),
       }))
       .filter(e => {
         if (!this._searchQuery) return true;
@@ -79,13 +85,19 @@ export class EntityPicker extends LitElement {
     return entities.slice(0, 100);
   }
 
-  private _getEntityInfo(): { name: string; icon: string } | null {
+  private _getEntityInfo(): { name: string; icon: string; state: string; stateText: string } | null {
     if (!this.hass || !this.value) return null;
     const stateObj = this.hass.states[this.value];
     if (!stateObj) return null;
     const name = (stateObj.attributes.friendly_name as string) || this.value;
-    const icon = (stateObj.attributes.icon as string) || this._domainIcon(this.value.split('.')[0]);
-    return { name, icon };
+    const icon = entityIcon(this.hass, this.value) || this._domainIcon(this.value.split('.')[0]);
+    return { name, icon, state: stateObj.state, stateText: this.hass.formatEntityState(stateObj) };
+  }
+
+  private _dotClass(state: string): string {
+    if (state === 'unavailable' || state === 'unknown') return 'dot is-unavailable';
+    if (state === 'off' || state === 'closed' || state === 'not_home' || state === 'idle') return 'dot is-off';
+    return 'dot';
   }
 
   private _domainIcon(domain: string): string {
@@ -120,36 +132,40 @@ export class EntityPicker extends LitElement {
 
   protected render(): TemplateResult {
     const entityInfo = this._getEntityInfo();
+    const icon = entityInfo?.icon || (this.value.includes('.') ? this._domainIcon(this.value.split('.')[0]) : 'mdi:shape-outline');
 
+    // Mockup: an editable mono entity id with the entity's icon, a browse button inside the field,
+    // and a status line (dot · friendly name · state) under it.
     return html`
-      <div class="mc-picker-row">
-        ${entityInfo
-          ? html`
-            <div class="mc-picker-entity-info" @click=${this._openModal} title=${this.value}>
-              <div class="mc-picker-entity-icon">
-                <ha-icon icon=${entityInfo.icon}></ha-icon>
-              </div>
-              <div class="mc-picker-entity-details">
-                <div class="mc-picker-entity-name">${entityInfo.name}</div>
-                <div class="mc-picker-entity-id">${this.value}</div>
-              </div>
-            </div>
-          `
-          : html`
-            <input
-              type="text"
-              class="mc-picker-input"
-              .value=${this.value}
-              placeholder="entity_id"
-              @input=${this._onInputChange}
-            />
-          `
-        }
-        <button class="mc-picker-btn" @click=${this._openModal}>
-          <ha-icon icon="mdi:form-select"></ha-icon>
-          Select
+      <div class="with-icon with-action">
+        <ha-icon icon=${icon}></ha-icon>
+        <input
+          type="text"
+          class="input mono"
+          .value=${this.value}
+          placeholder=${this.placeholder}
+          aria-label=${this.label}
+          spellcheck="false"
+          @input=${this._onInputChange}
+        />
+        <button
+          type="button"
+          class="icon-btn sm field-action browse"
+          aria-label="Browse entities"
+          title="Browse entities"
+          @click=${this._openModal}
+        >
+          <ha-icon icon="mdi:magnify"></ha-icon>
         </button>
       </div>
+      ${entityInfo
+        ? html`
+            <p class="entity-meta">
+              <span class=${this._dotClass(entityInfo.state)}></span>
+              <span>${entityInfo.name} · ${entityInfo.stateText}</span>
+            </p>
+          `
+        : ''}
 
       ${this._showModal ? this._renderModal() : ''}
     `;
@@ -159,55 +175,40 @@ export class EntityPicker extends LitElement {
     const entities = this._getFilteredEntities();
 
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-picker-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <div class="mc-picker-header-start">
-                <ha-icon icon="mdi:form-select"></ha-icon>
-                <span class="mc-picker-title">Select Entity</span>
-            </div>
-            <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-              <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-            </button>
-            <button class="mc-modal-close" @click=${this._closeModal}>&times;</button>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Select entity" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Select entity', this._modalCtrl, () => this._closeModal())}
           <div class="mc-picker-search">
-            <input
-              type="text"
-              placeholder="Search entities..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => { this._searchQuery = (e.target as HTMLInputElement).value; }}
-            />
+            ${renderPickerSearch('Search entities', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list">
+          <div class="mc-picker-list" role="listbox" aria-label="Entities">
             ${entities.length > 0
               ? entities.map(entity => html`
-                  <div class="mc-picker-item ${this._selectedEntityId === entity.id ? 'selected' : ''}"
-                       @click=${() => this._selectEntity(entity.id)}>
-                    <div class="mc-picker-item-icon">
-                      <ha-icon icon=${entity.icon}></ha-icon>
-                    </div>
-                    <div class="mc-picker-item-content">
-                      <div class="mc-picker-item-name">${entity.name}</div>
-                      <div class="mc-picker-item-id">${entity.id}</div>
-                    </div>
-                    <span class="mc-picker-item-state">${entity.state}</span>
-                  </div>
+                  <button
+                    type="button"
+                    role="option"
+                    class="mc-picker-item"
+                    aria-selected=${this._selectedEntityId === entity.id ? 'true' : 'false'}
+                    @click=${() => this._selectEntity(entity.id)}
+                  >
+                    <span class="mc-picker-item-icon"><ha-icon icon=${entity.icon}></ha-icon></span>
+                    <span class="mc-picker-item-content">
+                      <span class="mc-picker-item-name">${entity.name}</span>
+                      <span class="mc-picker-item-id">${entity.id}</span>
+                    </span>
+                    <span class="chip">${entity.state}</span>
+                  </button>
                 `)
               : html`<div class="mc-picker-empty">No entities found</div>`
             }
           </div>
           <div class="mc-picker-footer">
-            <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
-            <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
           </div>
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 }

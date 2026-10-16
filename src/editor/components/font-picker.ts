@@ -2,7 +2,10 @@ import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles, fontPickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { GOOGLE_FONTS, loadGoogleFonts } from '../../utils/google-fonts';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
 
 interface FontOption {
   name: string;
@@ -25,38 +28,15 @@ const LOCAL_FONTS: FontOption[] = [
   { name: 'Impact', family: 'Impact, sans-serif', category: 'Sans-serif', isLocal: true },
 ];
 
-// Popular Google Fonts
-const GOOGLE_FONTS: FontOption[] = [
-  { name: 'Roboto', family: 'Roboto, sans-serif', category: 'Sans-serif' },
-  { name: 'Open Sans', family: '"Open Sans", sans-serif', category: 'Sans-serif' },
-  { name: 'Lato', family: 'Lato, sans-serif', category: 'Sans-serif' },
-  { name: 'Montserrat', family: 'Montserrat, sans-serif', category: 'Sans-serif' },
-  { name: 'Oswald', family: 'Oswald, sans-serif', category: 'Sans-serif' },
-  { name: 'Source Sans Pro', family: '"Source Sans Pro", sans-serif', category: 'Sans-serif' },
-  { name: 'Raleway', family: 'Raleway, sans-serif', category: 'Sans-serif' },
-  { name: 'PT Sans', family: '"PT Sans", sans-serif', category: 'Sans-serif' },
-  { name: 'Merriweather', family: 'Merriweather, serif', category: 'Serif' },
-  { name: 'Playfair Display', family: '"Playfair Display", serif', category: 'Serif' },
-  { name: 'Lora', family: 'Lora, serif', category: 'Serif' },
-  { name: 'PT Serif', family: '"PT Serif", serif', category: 'Serif' },
-  { name: 'Noto Sans', family: '"Noto Sans", sans-serif', category: 'Sans-serif' },
-  { name: 'Ubuntu', family: 'Ubuntu, sans-serif', category: 'Sans-serif' },
-  { name: 'Poppins', family: 'Poppins, sans-serif', category: 'Sans-serif' },
-  { name: 'Nunito', family: 'Nunito, sans-serif', category: 'Sans-serif' },
-  { name: 'Inconsolata', family: 'Inconsolata, monospace', category: 'Monospace' },
-  { name: 'Fira Code', family: '"Fira Code", monospace', category: 'Monospace' },
-  { name: 'Source Code Pro', family: '"Source Code Pro", monospace', category: 'Monospace' },
-  { name: 'Dancing Script', family: '"Dancing Script", cursive', category: 'Cursive' },
-];
-
 @customElement('mc-font-picker')
 export class FontPicker extends LitElement {
-  static styles = [pickerStyles, fontPickerStyles];
+  static styles = [editorSystem, pickerStyles, fontPickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -94,8 +74,7 @@ export class FontPicker extends LitElement {
       return;
     }
 
-    // If it's a Google Font, we need to add the @import statement to custom CSS
-    // But for now, we'll just set the font-family value
+    // the card loads a Google Font it uses (src/utils/google-fonts.ts)
     const value = this._selectedFont.family;
     this.value = value;
     this.dispatchEvent(new CustomEvent('value-changed', {
@@ -108,6 +87,8 @@ export class FontPicker extends LitElement {
   }
 
   private _getFilteredFonts(): FontOption[] {
+    // the Google tab previews each font in its own face
+    if (this._activeTab === 'google') loadGoogleFonts(GOOGLE_FONTS.map((f) => f.name));
     const fonts = this._activeTab === 'local' ? LOCAL_FONTS : GOOGLE_FONTS;
 
     if (!this._searchQuery) return fonts;
@@ -139,83 +120,70 @@ export class FontPicker extends LitElement {
       <div class="mc-picker-row">
         <input
           type="text"
-          class="mc-picker-input"
+          class="input"
           .value=${this.value}
           placeholder="Font family"
+          aria-label="Font family"
           @input=${this._onInputChange}
         />
-        <button class="mc-picker-btn" @click=${this._openModal}>
-          <ha-icon icon="mdi:format-font"></ha-icon>
-          Browse
-        </button>
+        <button type="button" class="btn btn-secondary" @click=${this._openModal}>Browse</button>
       </div>
       ${this._showModal ? this._renderModal() : nothing}
     `;
+  }
+
+  private _setTab(tab: 'local' | 'google'): void {
+    this._activeTab = tab;
+    this._searchQuery = '';
   }
 
   private _renderModal(): TemplateResult {
     const fonts = this._getFilteredFonts();
 
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-picker-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <div class="mc-picker-header-start">
-              <ha-icon icon="mdi:format-font"></ha-icon>
-              <span class="mc-picker-title">Select Font</span>
-            </div>
-            <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-              <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-            </button>
-            <button class="mc-modal-close" @click=${this._closeModal}>&times;</button>
-          </div>
-
-          <div class="mc-modal-tabs">
-            <button
-              class="mc-modal-tab ${this._activeTab === 'local' ? 'active' : ''}"
-              @click=${() => { this._activeTab = 'local'; this._searchQuery = ''; }}
-            >
-              <ha-icon icon="mdi:desktop-classic"></ha-icon>
-              Local Fonts
-            </button>
-            <button
-              class="mc-modal-tab ${this._activeTab === 'google' ? 'active' : ''}"
-              @click=${() => { this._activeTab = 'google'; this._searchQuery = ''; }}
-            >
-              <ha-icon icon="mdi:google"></ha-icon>
-              Google Fonts
-            </button>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Select font" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Select font', this._modalCtrl, () => this._closeModal())}
 
           <div class="mc-picker-search">
-            <input
-              type="text"
-              placeholder="Search fonts..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => { this._searchQuery = (e.target as HTMLInputElement).value; }}
-            />
+            <div class="seg full" role="tablist" aria-label="Font source">
+              <button
+                type="button"
+                role="tab"
+                aria-selected=${this._activeTab === 'local' ? 'true' : 'false'}
+                @click=${() => this._setTab('local')}
+              >
+                <ha-icon icon="mdi:desktop-classic"></ha-icon>
+                Local fonts
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected=${this._activeTab === 'google' ? 'true' : 'false'}
+                @click=${() => this._setTab('google')}
+              >
+                <ha-icon icon="mdi:google"></ha-icon>
+                Google Fonts
+              </button>
+            </div>
+            ${renderPickerSearch('Search fonts', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
 
           ${this._selectedFont ? this._renderPreview() : nothing}
 
-          <div class="mc-picker-list">
+          <div class="mc-picker-list" role="listbox" aria-label="Fonts">
             ${fonts.length > 0
               ? fonts.map((font) => this._renderFontItem(font))
               : html`<div class="mc-picker-empty">No fonts found</div>`
             }
           </div>
           <div class="mc-picker-footer">
-            <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
-            <button class="action-btn save-btn" @click=${this._handleSave} ?disabled=${!this._selectedFont}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedFont}>Save</button>
           </div>
-
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 
@@ -235,21 +203,20 @@ export class FontPicker extends LitElement {
     const isSelected = this._selectedFont?.name === font.name;
 
     return html`
-      <div class="mc-picker-item ${isSelected ? 'selected' : ''}" @click=${() => this._selectFont(font)}>
-        <div class="mc-picker-item-icon">
-          <ha-icon icon=${this._getFontIcon(font.category)}></ha-icon>
-        </div>
-        <div class="mc-picker-item-content">
-          <div class="mc-picker-item-name" style="font-family: ${font.family}">
-            ${font.name}
-          </div>
-          <div class="mc-picker-item-id">${font.category}</div>
-        </div>
-        ${font.isLocal
-          ? html`<span class="mc-picker-item-badge">Local</span>`
-          : html`<span class="mc-picker-item-badge" style="background: #4285f4; color: white;">Google</span>`
-        }
-      </div>
+      <button
+        type="button"
+        role="option"
+        class="mc-picker-item"
+        aria-selected=${isSelected ? 'true' : 'false'}
+        @click=${() => this._selectFont(font)}
+      >
+        <span class="mc-picker-item-icon"><ha-icon icon=${this._getFontIcon(font.category)}></ha-icon></span>
+        <span class="mc-picker-item-content">
+          <span class="mc-picker-item-name" style="font-family: ${font.family}">${font.name}</span>
+          <span class="mc-picker-item-meta">${font.category}</span>
+        </span>
+        <span class="chip">${font.isLocal ? 'Local' : 'Google'}</span>
+      </button>
     `;
   }
 }

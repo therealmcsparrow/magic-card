@@ -3,27 +3,36 @@ import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, SliderLayoutModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
+import { renderChildModule, renderEmptySlot, visibleChildren } from '../render-module';
+import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField } from '../../utils/form-utils';
-import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { createRef, ref } from 'lit/directives/ref.js';
-import { ModuleRenderer } from '../../services/module-renderer';
-import { getModuleTypeOptions, renderChildModuleEditor } from '../../utils/layout-editor';
+import { renderNumberField, renderToggleField } from '../../utils/form-utils';
+import './mc-swiper';
+import type { McSwiperOptions } from './mc-swiper';
 
-/** Track which child module is expanded for editing (keyed by "moduleId:childIdx") */
-const _expandedChildMap = new Map<string, boolean>();
+/** Swiper options from the module config; unset keys keep the defaults (1 slide, 8 px gap). */
+export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): McSwiperOptions {
+  const spv = Number(c.slides_per_view);
+  const gap = Number(c.space_between);
+  const delay = Number(c.autoplay_delay);
+  return {
+    slidesPerView: Number.isFinite(spv) && spv > 0 ? spv : 1,
+    spaceBetween: Number.isFinite(gap) && gap >= 0 ? gap : 8,
+    rewind: !!c.loop,
+    pagination: c.pagination !== false,
+    navigation: c.navigation !== false,
+    autoplay: c.autoplay ? (Number.isFinite(delay) && delay >= 1000 ? delay : 5000) : 0,
+    editMode,
+  };
+}
 
 class SliderLayoutModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider-layout',
-    name: 'Slider Layout',
+    name: 'Slider layout',
     description: 'Arrange child modules in a slider',
     category: 'layout',
-    icon: 'mdi:view-carousel',
+    icon: 'mdi:view-carousel-outline',
   };
 
   createDefault(): SliderLayoutModuleConfig {
@@ -36,70 +45,45 @@ class SliderLayoutModule extends BaseMagicModule {
     };
   }
 
-  renderCard(config: CardModule, hass: HomeAssistant): TemplateResult {
-    const c = config as SliderLayoutModuleConfig;
-    const children = c.modules || [];
-    const swiperRef = createRef<HTMLDivElement>();
-
-    const swiperClass = `swiper-${c.id}`;
-
-    setTimeout(() => {
-      const swiperElement = swiperRef.value;
-      if (swiperElement && !(swiperElement as any).swiper) {
-        new Swiper(swiperElement as HTMLElement, {
-          modules: [Navigation, Pagination],
-          pagination: c.pagination ? { el: '.swiper-pagination' } : false,
-          navigation: c.navigation ? { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' } : false,
-        });
-      }
-    });
-
-    return html`
-      <div class="mc-module mc-slider">
-        <div class="swiper ${swiperClass}" ${ref(swiperRef)}>
-          <div class="swiper-wrapper">
-            ${children.map((child) => html`
-              <div class="swiper-slide">
-                ${ModuleRenderer.render(child, hass)}
-              </div>
-            `)}
-          </div>
-          ${c.pagination ? html`<div class="swiper-pagination"></div>` : ''}
-          ${c.navigation ? html`
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-          ` : ''}
-        </div>
-      </div>
-    `;
-  }
-
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as SliderLayoutModuleConfig;
     const children = c.modules || [];
+    if (!children.length) {
+      return html`<div class="mc-module mc-slider-layout">${renderEmptySlot('Empty slider')}</div>`;
+    }
+    const ctx = currentRenderContext();
+    const configured = sliderOptions(c, !!ctx?.editMode);
+    // children hidden by their display conditions get no (empty) slide and no pagination bullet
+    const slides = visibleChildren(children);
+    if (!slides.length) return html``;
+    const multi = slides.length > 1;
+    // arrows / bullets only with 2+ slides; a change re-creates Swiper with (or without) them
+    const options = { ...configured, navigation: configured.navigation && multi, pagination: configured.pagination && multi };
+    const selected = ctx?.selectedChild?.()?.index;
+    const activeIndex = selected === undefined ? undefined : Math.max(0, slides.findIndex((s) => s.index === selected));
+    // Slider controls are not a tap on the slider module (its own actions stay on its wrapper).
+    const stop = (e: Event) => e.stopPropagation();
 
     return html`
-      <div class="mc-module mc-slider" style="padding: 16px; border: 1px dashed #ccc; position: relative;">
-        <div style="display: flex; gap: 8px; overflow: hidden;">
-            ${children.length > 0
-              ? children.map((child) => {
-                  const mod = ModuleRegistry.get(child.type);
-                  return html`
-                    <div style="flex-shrink: 0; width: 100px; height: 100px; border: 1px solid #eee; display: flex; align-items: center; justify-content: center;">
-                        ${mod ? mod.renderPreview(child, hass) : html`<span class="mc-error">?</span>`}
-                    </div>
-                  `;
-                })
-              : html`<span style="color:var(--mc-text-secondary);font-size:0.75rem">Empty slider</span>`}
+      <mc-swiper class="mc-module mc-slider-layout" .options=${options} .activeIndex=${activeIndex}>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            ${slides.map(({ child, index }) => html`
+              <div class="swiper-slide">${renderChildModule(child, hass, index)}</div>
+            `)}
+          </div>
         </div>
-        ${c.navigation ? html`
-            <div style="position: absolute; top: 50%; left: 8px; transform: translateY(-50%);">&#10094;</div>
-            <div style="position: absolute; top: 50%; right: 8px; transform: translateY(-50%);">&#10095;</div>
-        ` : ''}
-        ${c.pagination ? html`<div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px;">
-            ${children.map(() => html`<div style="width: 8px; height: 8px; border-radius: 50%; background: #ccc;"></div>`)}
-        </div>` : ''}
-      </div>
+        ${options.navigation
+          ? html`
+            <button type="button" class="mc-slider-nav mc-slider-prev" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label="Previous slide">
+              <ha-icon icon="mdi:chevron-left"></ha-icon>
+            </button>
+            <button type="button" class="mc-slider-nav mc-slider-next" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label="Next slide">
+              <ha-icon icon="mdi:chevron-right"></ha-icon>
+            </button>`
+          : nothing}
+        ${options.pagination ? html`<div class="mc-slider-pagination" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop}></div>` : nothing}
+      </mc-swiper>
     `;
   }
 
@@ -111,68 +95,26 @@ class SliderLayoutModule extends BaseMagicModule {
   ): TemplateResult {
     const syncCtx = this._buildSyncContext(config, template);
     const c = config as SliderLayoutModuleConfig;
-    const children = c.modules || [];
-    const moduleTypes = getModuleTypeOptions();
 
     return html`
       <div class="mc-tab-content">
-        ${renderToggleField('Pagination', c.pagination, (v: boolean) => onChange({ ...c, pagination: v }), 'pagination', syncCtx)}
-        ${renderToggleField('Navigation', c.navigation, (v: boolean) => onChange({ ...c, navigation: v }), 'navigation', syncCtx)}
-
-        <div class="mc-section">
-          <div class="mc-section-header">Slides (${children.length})</div>
-          ${this._renderChildModuleList(c, hass, onChange, moduleTypes, template)}
-        </div>
+        ${renderToggleField('Pagination', c.pagination !== false, (v: boolean) => onChange({ ...c, pagination: v }), 'pagination', syncCtx)}
+        ${renderToggleField('Navigation', c.navigation !== false, (v: boolean) => onChange({ ...c, navigation: v }), 'navigation', syncCtx)}
+        ${renderNumberField('Slides per view', c.slides_per_view ?? 1, (v) => onChange({ ...c, slides_per_view: v > 0 ? v : 1 }),
+          { min: 1, max: 6, step: 0.1 }, 'slides_per_view', syncCtx)}
+        ${renderNumberField('Space between slides (px)', c.space_between ?? 8, (v) => onChange({ ...c, space_between: v >= 0 ? v : 0 }),
+          { min: 0, step: 1 }, 'space_between', syncCtx)}
+        ${renderToggleField('Loop', c.loop, (v: boolean) => onChange({ ...c, loop: v }), 'loop', syncCtx,
+          'After the last slide, go back to the first one')}
+        ${renderToggleField('Autoplay', c.autoplay, (v: boolean) => onChange({ ...c, autoplay: v }), 'autoplay', syncCtx)}
+        ${c.autoplay
+          ? renderNumberField('Autoplay delay (ms)', c.autoplay_delay ?? 5000, (v) => onChange({ ...c, autoplay_delay: v }),
+            { min: 1000, step: 500 }, 'autoplay_delay', syncCtx)
+          : nothing}
       </div>
     `;
   }
 
-  private _renderChildModuleList(
-    c: SliderLayoutModuleConfig,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    moduleTypes: Array<{ label: string; value: string }>,
-    template?: string,
-  ): TemplateResult {
-    const children = c.modules || [];
-
-    const updateChildren = (newModules: CardModule[]) => {
-      onChange({ ...c, modules: newModules });
-    };
-
-    const removeChild = (childIdx: number) => {
-      updateChildren(children.filter((_, i) => i !== childIdx));
-    };
-
-    const updateChild = (childIdx: number, updated: CardModule) => {
-      const newModules = [...children];
-      newModules[childIdx] = updated;
-      updateChildren(newModules);
-    };
-
-    const addChild = (type: string) => {
-      const newMod = ModuleRegistry.createDefault(type as any);
-      if (newMod) updateChildren([...children, newMod]);
-    };
-
-    return html`
-      ${renderChildModuleEditor({
-        ownerId: c.id,
-        scopeId: 'slides',
-        children,
-        hass,
-        template,
-        expandedState: _expandedChildMap,
-        moduleTypes,
-        onRefresh: () => onChange({ ...c }),
-        onRemoveChild: removeChild,
-        onUpdateChild: updateChild,
-        onAddChild: addChild,
-        addButtonLabel: 'Add Slide',
-        getItemLabel: (_child, index, moduleName) => `${moduleName} (Slide ${index + 1})`,
-      })}
-    `;
-  }
 }
 
 ModuleRegistry.register(new SliderLayoutModule());

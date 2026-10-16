@@ -8,22 +8,33 @@ import '../editor/components/box-field';
 /**
  * Render a field label with optional sync indicator.
  */
-function renderLabel(
+export function renderFieldHead(
   label: string,
   propertyName?: string,
   syncContext?: SyncContext,
+  options?: { forId?: string; reset?: TemplateResult | typeof nothing },
 ): TemplateResult {
   const showSync = propertyName && syncContext && ctxHasTemplate(syncContext);
+  const reset = options?.reset ?? nothing;
   if (!showSync) {
-    return html`<label class="mc-field-label">${label}</label>`;
+    return html`<div class="field-head"><label for=${options?.forId ?? nothing}>${label}</label>${reset}</div>`;
   }
 
-  const isSynced = !isNotSynced(syncContext!, propertyName!);
-  const fullPath = getFullPath(syncContext!, propertyName!);
-
   return html`
-    <label class="mc-field-label">
-      ${label}
+    <div class="field-head">
+      <label for=${options?.forId ?? nothing}>${label}</label>
+      ${reset}
+      ${renderSyncMark(propertyName!, syncContext!)}
+    </div>
+  `;
+}
+
+/** The template sync indicator of a module field (fires field-sync-toggle); nothing without a template. */
+export function renderSyncMark(propertyName: string, syncContext: SyncContext): TemplateResult | typeof nothing {
+  if (!ctxHasTemplate(syncContext)) return nothing;
+  const isSynced = !isNotSynced(syncContext, propertyName);
+  const fullPath = getFullPath(syncContext, propertyName);
+  return html`
       <mc-sync-indicator
         .synced=${isSynced}
         .hasTemplate=${true}
@@ -38,7 +49,6 @@ function renderLabel(
           (e.target as HTMLElement).dispatchEvent(event);
         }}
       ></mc-sync-indicator>
-    </label>
   `;
 }
 
@@ -117,12 +127,16 @@ export function renderTextField(
   onChange: (value: string) => void,
   propertyName?: string,
   syncContext?: SyncContext,
+  options?: { placeholder?: string; mono?: boolean },
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <input
+        class="input ${options?.mono ? 'mono' : ''}"
         type="text"
+        spellcheck=${options?.mono ? 'false' : nothing}
+        placeholder=${options?.placeholder ?? nothing}
         .value=${value || ''}
         @input=${(e: InputEvent) => onChange((e.target as HTMLInputElement).value)}
       />
@@ -140,8 +154,9 @@ export function renderTextareaField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <textarea
+        class="input"
         .value=${value || ''}
         rows=${String(options?.rows ?? 4)}
         placeholder=${options?.placeholder ?? nothing}
@@ -155,20 +170,26 @@ export function renderNumberField(
   label: string,
   value: number | undefined,
   onChange: (value: number) => void,
-  options?: { min?: number; max?: number; step?: number },
+  options?: { min?: number; max?: number; step?: number; placeholder?: string; optional?: boolean },
   propertyName?: string,
   syncContext?: SyncContext,
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <input
+        class="input"
         type="number"
         .value=${String(value ?? '')}
         min=${options?.min ?? nothing}
         max=${options?.max ?? nothing}
         step=${options?.step ?? nothing}
-        @input=${(e: InputEvent) => onChange(Number((e.target as HTMLInputElement).value))}
+        placeholder=${options?.placeholder ?? nothing}
+        @input=${(e: InputEvent) => {
+          const raw = (e.target as HTMLInputElement).value;
+          // optional: an emptied field reports NaN (the caller removes the key), not 0
+          onChange(options?.optional && raw.trim() === '' ? NaN : Number(raw));
+        }}
       />
     </div>
   `;
@@ -181,18 +202,75 @@ export function renderSelectField(
   onChange: (value: string) => void,
   propertyName?: string,
   syncContext?: SyncContext,
+  opts?: { disabled?: boolean },
 ): TemplateResult {
   return html`
     <div class="mc-field">
-     ${label ? renderLabel(label, propertyName, syncContext) : nothing}
-      <select @change=${(e: Event) => onChange((e.target as HTMLSelectElement).value)}>
-        ${options.map(
-          (opt) =>
-            html`<option value=${opt.value} ?selected=${value === opt.value}>
-              ${opt.label}
-            </option>`,
-        )}
-      </select>
+      ${label ? renderFieldHead(label, propertyName, syncContext) : nothing}
+      <div class="select">
+        <select
+          class="input"
+          aria-label=${label || nothing}
+          ?disabled=${!!opts?.disabled}
+          @change=${(e: Event) => onChange((e.target as HTMLSelectElement).value)}
+        >
+          ${options.map(
+            (opt) =>
+              html`<option value=${opt.value} ?selected=${value === opt.value}>${opt.label}</option>`,
+          )}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Single choice among a few short options as the one segmented control (`.seg` radiogroup),
+ * e.g. Button style. Arrow / Home / End keys move the choice.
+ */
+export function renderSegField(
+  label: string,
+  value: string | undefined,
+  options: Array<{ label: string; value: string }>,
+  onChange: (value: string) => void,
+  propertyName?: string,
+  syncContext?: SyncContext,
+): TemplateResult {
+  const current = options.some((o) => o.value === value) ? value : options[0]?.value;
+  const onKey = (e: KeyboardEvent) => {
+    const idx = options.findIndex((o) => o.value === current);
+    const map: Record<string, number> = {
+      ArrowRight: (idx + 1) % options.length,
+      ArrowDown: (idx + 1) % options.length,
+      ArrowLeft: (idx - 1 + options.length) % options.length,
+      ArrowUp: (idx - 1 + options.length) % options.length,
+      Home: 0,
+      End: options.length - 1,
+    };
+    const next = map[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    const group = e.currentTarget as HTMLElement;
+    onChange(options[next].value);
+    requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${options[next].value}"]`)?.focus());
+  };
+  return html`
+    <div class="mc-field">
+      ${renderFieldHead(label, propertyName, syncContext)}
+      <div class="seg full" role="radiogroup" aria-label=${label} @keydown=${onKey}>
+        ${options.map((o) => {
+          const on = o.value === current;
+          return html`<button
+            type="button"
+            role="radio"
+            data-val=${o.value}
+            aria-checked=${on ? 'true' : 'false'}
+            tabindex=${on ? '0' : '-1'}
+            @click=${() => onChange(o.value)}
+          >${o.label}</button>`;
+        })}
+      </div>
     </div>
   `;
 }
@@ -203,14 +281,22 @@ export function renderToggleField(
   onChange: (value: boolean) => void,
   propertyName?: string,
   syncContext?: SyncContext,
+  help?: string,
 ): TemplateResult {
   return html`
-    <div class="mc-field mc-field-toggle">
-      ${renderLabel(label, propertyName, syncContext)}
-      <ha-switch
-        .checked=${value ?? false}
-        @change=${(e: Event) => onChange((e.target as HTMLInputElement).checked)}
-      ></ha-switch>
+    <div class="switch-row">
+      <div class="txt">
+        ${renderFieldHead(label, propertyName, syncContext)}
+        ${help ? html`<p class="help">${help}</p>` : nothing}
+      </div>
+      <button
+        type="button"
+        class="switch"
+        role="switch"
+        aria-checked=${value ? 'true' : 'false'}
+        aria-label=${label}
+        @click=${() => onChange(!value)}
+      ></button>
     </div>
   `;
 }
@@ -226,7 +312,7 @@ export function renderEntityField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-entity-picker
         .hass=${hass}
         .value=${value || ''}
@@ -247,7 +333,7 @@ export function renderServiceField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-service-picker
         .hass=${hass}
         .value=${value || ''}
@@ -266,7 +352,7 @@ export function renderColorField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-color-picker
         .value=${value || ''}
         .label=${label}
@@ -282,12 +368,15 @@ export function renderUnitField(
   onChange: (value: string) => void,
   propertyName?: string,
   syncContext?: SyncContext,
+  placeholder?: string,
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-unit-field
         .value=${value || ''}
+        .label=${label}
+        .placeholder=${placeholder || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-unit-field>
     </div>
@@ -305,7 +394,7 @@ export function renderBoxField(
   const design = { [baseName]: value || '' } as Record<string, unknown>;
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-box-field
         .design=${design}
         .onChange=${(updates: Record<string, unknown>) =>
@@ -326,7 +415,7 @@ export function renderIconField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-icon-picker
         .hass=${hass}
         .value=${value || ''}
@@ -345,7 +434,7 @@ export function renderCardField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-card-picker
         .value=${value || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
@@ -365,7 +454,7 @@ export function renderMediaField(
 ): TemplateResult {
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-media-picker
         .hass=${hass}
         .value=${value || ''}
@@ -397,7 +486,7 @@ export function renderAttributeField(
 
   return html`
     <div class="mc-field">
-      ${renderLabel(label, propertyName, syncContext)}
+      ${renderFieldHead(label, propertyName, syncContext)}
       <mc-attribute-picker
         .hass=${hass}
         .value=${value || ''}

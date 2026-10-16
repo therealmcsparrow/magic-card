@@ -1,11 +1,32 @@
 import { html, TemplateResult, nothing } from 'lit';
+import { hasIconFx, renderIcon } from '../../icons/render-icon';
+import { animatedIconsNote, renderIconFxEditor } from '../../editor/components/icon-fx-editor';
+import { weatherIconSvg } from '../../icons/weather-icons';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, ForecastModuleConfig } from '../../types';
+import { CardModule, HomeAssistant, HassEntity, ForecastModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderEntityField, renderAttributeField, renderNumberField, renderSelectField } from '../../utils/form-utils';
-import { SyncContext } from '../../utils/sync-path';
+import { renderToggleField, renderEntityField, renderNumberField, renderSelectField, renderFieldHint } from '../../utils/form-utils';
+import { currentRenderContext } from '../../services/render-context';
+import { localize } from '../../localize/localize';
+import { dateTimeFormat, formatNumber, uses12h } from '../../utils/locale-format';
+import {
+  ForecastItem,
+  ForecastType,
+  supportedForecastTypes,
+  weatherForecast,
+  weatherIcon,
+  windDirection,
+} from '../../utils/weather';
+
+const TYPE_LABELS: Record<ForecastType, string> = { daily: 'Daily', hourly: 'Hourly', twice_daily: 'Twice daily' };
+
+type Localize = (key: string) => string;
+
+function num(v: unknown): number | undefined {
+  return typeof v === 'number' && Number.isFinite(v) ? v : undefined;
+}
 
 class ForecastModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -13,7 +34,7 @@ class ForecastModule extends BaseMagicModule {
     name: 'Forecast',
     description: 'Display weather forecast data',
     category: 'advanced',
-    icon: 'mdi:calendar-week',
+    icon: 'mdi:calendar-week-outline',
   };
 
   createDefault(): ForecastModuleConfig {
@@ -25,49 +46,123 @@ class ForecastModule extends BaseMagicModule {
       show_temperature: true,
       show_precipitation: true,
       show_wind: false,
+      animated_icons: true,
     };
+  }
+
+  /** No entity yet, or the forecast has not arrived: the "Day 1..N / --°" skeleton. */
+  private _placeholder(count: number): TemplateResult {
+    return html`
+      <div class="mc-module mc-forecast">
+        ${Array.from({ length: count }).map(
+          (_, i) => html`
+            <div class="mc-forecast-item">
+              <span class="mc-forecast-label">${localize('forecast.day').replace('{n}', String(i + 1))}</span>
+              <ha-icon icon="mdi:weather-partly-cloudy"></ha-icon>
+              <span class="mc-forecast-temp">--°</span>
+            </div>
+          `,
+        )}
+      </div>
+    `;
+  }
+
+  private _message(text: string, cls = 'mc-forecast-empty'): TemplateResult {
+    return html`<div class="mc-module mc-forecast ${cls}">${text}</div>`;
+  }
+
+  /** Weekday (daily), hour (hourly) or weekday + day / night (twice daily), in the user's locale. */
+  private _label(item: ForecastItem, type: ForecastType, hass: HomeAssistant | undefined): TemplateResult | string {
+    const date = new Date(item.datetime);
+    if (Number.isNaN(date.getTime())) return '';
+    if (type === 'hourly') {
+      const h12 = uses12h(hass);
+      return dateTimeFormat(hass, { hour: 'numeric', ...(h12 ? { hourCycle: 'h12' } : { hourCycle: 'h23', minute: '2-digit' }) }).format(date);
+    }
+    const weekday = dateTimeFormat(hass, { weekday: 'short' }).format(date);
+    if (type !== 'twice_daily' || item.is_daytime === undefined) return weekday;
+    const localize = (hass as { localize?: Localize } | undefined)?.localize;
+    const part = item.is_daytime
+      ? localize?.('ui.card.weather.day') || 'Day'
+      : localize?.('ui.card.weather.night') || 'Night';
+    return html`${weekday}<br />${part}`;
+  }
+
+  /** Translated condition name (HA formats a weather state with the entity's translations). */
+  private _conditionName(entity: HassEntity, condition: string | undefined, hass: HomeAssistant | undefined): string {
+    if (!condition) return '';
+    try {
+      return hass?.formatEntityState?.(entity, condition) || condition;
+    } catch {
+      return condition;
+    }
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as ForecastModuleConfig;
+    const count = Math.max(1, Math.round(c.num_forecasts || 5));
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
-    const forecast = (entity?.attributes.forecast as Array<Record<string, unknown>>) || [];
-    const items = forecast.slice(0, c.num_forecasts || 5);
+    if (!entity) return this._placeholder(count);
 
-    if (!items.length) {
-      return html`
-        <div class="mc-module mc-forecast">
-          ${Array.from({ length: c.num_forecasts || 5 }).map(
-            (_, i) => html`
-              <div class="mc-forecast-item">
-                <span class="mc-forecast-label">Day ${i + 1}</span>
-                <ha-icon icon="mdi:weather-partly-cloudy"></ha-icon>
-                <span class="mc-forecast-temp">--°</span>
-              </div>
-            `,
-          )}
-        </div>
-      `;
+    const result = weatherForecast(entity, c.forecast_type, currentRenderContext());
+    if (result.status === 'pending') return this._placeholder(count);
+    if (result.status === 'unavailable') {
+      let state = '';
+      try {
+        state = hass?.formatEntityState?.(entity) ?? '';
+      } catch {
+        // the translated state is optional
+      }
+      return this._message(state || localize('forecast.unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
     }
+    if (result.status === 'none') return this._message(localize('forecast.no_forecast'));
+    if (result.status === 'error') return this._message(localize('forecast.not_available').replace('{error}', result.error));
+
+    const items = result.forecast.slice(0, count);
+    if (!items.length) return this._message(localize('forecast.no_data'));
+
+    const a = entity.attributes;
+    const units = hass?.config?.unit_system;
+    const tempUnit = String(a.temperature_unit ?? units?.temperature ?? '°');
+    const precipUnit = String(a.precipitation_unit ?? units?.accumulated_precipitation ?? 'mm');
+    const windUnit = String(a.wind_speed_unit ?? units?.wind_speed ?? '');
+    const temp = (v: number) => `${formatNumber(hass, v)}${tempUnit}`;
 
     return html`
-      <div class="mc-module mc-forecast">
-        ${items.map(
-          (item) => html`
-            <div class="mc-forecast-item">
-              <span class="mc-forecast-label">
-                ${item.datetime ? new Date(item.datetime as string).toLocaleDateString(undefined, { weekday: 'short' }) : ''}
-              </span>
-              <ha-icon icon="mdi:weather-partly-cloudy"></ha-icon>
-              ${c.show_temperature
-                ? html`<span class="mc-forecast-temp">${item.temperature ?? '--'}°</span>`
+      <div class="mc-module mc-forecast" data-forecast-type=${result.type}>
+        ${items.map((item) => {
+          // Like HA's forecast card: night icons only for items marked as night (twice daily).
+          const night = item.is_daytime === false;
+          const condition = this._conditionName(entity, item.condition, hass);
+          const high = num(item.temperature);
+          const low = num(item.templow);
+          const precip = num(item.precipitation);
+          const probability = num(item.precipitation_probability);
+          const wind = num(item.wind_speed);
+          const animated = c.animated_icons !== false && item.condition
+            ? weatherIconSvg(item.condition, { night, label: condition || undefined })
+            : undefined;
+          return html`
+            <div class="mc-forecast-item" title=${condition || nothing}>
+              <span class="mc-forecast-label">${this._label(item, result.type, hass)}</span>
+              ${animated ?? (hasIconFx(c.icon_fx)
+                ? renderIcon({ icon: weatherIcon(item.condition, night), entity: c.entity, hass, fx: c.icon_fx, svg: c.svg, ariaLabel: condition || undefined })
+                : html`<ha-icon icon=${weatherIcon(item.condition, night)} aria-label=${condition || nothing} role=${condition ? 'img' : nothing}></ha-icon>`)}
+              ${c.show_temperature !== false
+                ? html`<span class="mc-forecast-temp">${high !== undefined ? temp(high) : '--°'}</span>
+                    ${low !== undefined ? html`<span class="mc-forecast-templow">${temp(low)}</span>` : nothing}`
                 : nothing}
-              ${c.show_precipitation && item.precipitation !== undefined
-                ? html`<span class="mc-forecast-label">${item.precipitation}mm</span>`
+              ${c.show_precipitation !== false && precip !== undefined
+                ? html`<span class="mc-forecast-label mc-forecast-precip">${formatNumber(hass, precip)} ${precipUnit}</span>`
+                : c.show_precipitation !== false && probability !== undefined
+                  ? html`<span class="mc-forecast-label mc-forecast-precip">${formatNumber(hass, probability, 0)} %</span>`
+                  : nothing}
+              ${c.show_wind && wind !== undefined
+                ? html`<span class="mc-forecast-label mc-forecast-wind">${formatNumber(hass, wind)}${windUnit ? ` ${windUnit}` : ''}${item.wind_bearing !== undefined && item.wind_bearing !== null ? ` ${windDirection(item.wind_bearing)}` : ''}</span>`
                 : nothing}
             </div>
-          `,
-        )}
+          `;
+        })}
       </div>
     `;
   }
@@ -80,18 +175,26 @@ class ForecastModule extends BaseMagicModule {
   ): TemplateResult {
     const syncCtx = this._buildSyncContext(config, template);
     const c = config as ForecastModuleConfig;
+    const entity = c.entity ? hass?.states[c.entity] : undefined;
+    const supported = entity ? supportedForecastTypes(entity) : [];
+    const current = c.forecast_type ?? 'daily';
+    const fallback = entity && supported.length && !supported.includes(current) ? supported[0] : undefined;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Weather Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-        ${renderSelectField('Forecast Type', c.forecast_type, [
-          { label: 'Daily', value: 'daily' },
-          { label: 'Hourly', value: 'hourly' },
-        ], (v) => onChange({ ...c, forecast_type: v as 'daily' | 'hourly' }), 'forecast_type', syncCtx)}
-        ${renderNumberField('Number of Forecasts', c.num_forecasts, (v) => onChange({ ...c, num_forecasts: v }), { min: 1, max: 10 }, 'num_forecasts', syncCtx)}
-        ${renderToggleField('Show Temperature', c.show_temperature, (v) => onChange({ ...c, show_temperature: v }), 'show_temperature', syncCtx)}
-        ${renderToggleField('Show Precipitation', c.show_precipitation, (v) => onChange({ ...c, show_precipitation: v }), 'show_precipitation', syncCtx)}
-        ${renderToggleField('Show Wind', c.show_wind, (v) => onChange({ ...c, show_wind: v }), 'show_wind', syncCtx)}
+        ${renderEntityField('Weather entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, 'weather', 'entity', syncCtx)}
+        ${renderSelectField('Forecast type', current, (['daily', 'hourly', 'twice_daily'] as ForecastType[]).map((t) => ({
+          label: entity && supported.length && !supported.includes(t) ? `${TYPE_LABELS[t]} (not provided by this entity)` : TYPE_LABELS[t],
+          value: t,
+        })), (v) => onChange({ ...c, forecast_type: v as ForecastType }), 'forecast_type', syncCtx)}
+        ${fallback
+          ? renderFieldHint(`This entity has no ${TYPE_LABELS[current].toLowerCase()} forecast; ${TYPE_LABELS[fallback].toLowerCase()} is shown.`)
+          : nothing}
+        ${renderNumberField('Number of forecasts', c.num_forecasts, (v) => onChange({ ...c, num_forecasts: v }), { min: 1, max: 48 }, 'num_forecasts', syncCtx)}
+        ${renderToggleField('Animated icons', c.animated_icons !== false, (v) => onChange({ ...c, animated_icons: v }), 'animated_icons', syncCtx, 'Animated weather icons instead of static ones')}
+        ${c.animated_icons !== false ? renderFieldHint(animatedIconsNote(c.icon_fx)) : renderIconFxEditor(c, hass, onChange, { entity: c.entity, icon: '', syncCtx })}
+        ${renderToggleField('Show temperature', c.show_temperature !== false, (v) => onChange({ ...c, show_temperature: v }), 'show_temperature', syncCtx)}
+        ${renderToggleField('Show precipitation', c.show_precipitation !== false, (v) => onChange({ ...c, show_precipitation: v }), 'show_precipitation', syncCtx)}
+        ${renderToggleField('Show wind', c.show_wind, (v) => onChange({ ...c, show_wind: v }), 'show_wind', syncCtx)}
       </div>
     `;
   }

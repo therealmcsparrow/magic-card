@@ -1,7 +1,11 @@
 import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { modalStyles, colorPickerStyles } from '../../css/css';
+import { pickerStyles, colorPickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { parseEntityColor } from '../../utils/entity-color';
+import './unit-field';
 
 const STORAGE_KEY = 'magic-card-saved-colors';
 const MAX_SAVED_COLORS = 12;
@@ -28,10 +32,14 @@ interface HSVA {
 
 @customElement('mc-color-picker')
 export class ColorPicker extends LitElement {
-  static styles = [modalStyles, colorPickerStyles];
+  static styles = [editorSystem, pickerStyles, colorPickerStyles];
 
   @property({ type: String }) value = '';
   @property({ type: String }) label = '';
+  /** Offer the "Entity color" toggle (a module design with an entity): the value becomes `entity` / `entity N%`. */
+  @property({ type: Boolean }) allowEntity = false;
+  /** The entity's live state colour (CSS), shown in the swatch while the entity colour is used. */
+  @property({ type: String }) entityColor = '';
 
   @state() private _isOpen = false;
   @state() private _hsva: HSVA = { h: 0, s: 100, v: 100, a: 1 };
@@ -39,6 +47,7 @@ export class ColorPicker extends LitElement {
   @state() private _hexInput = '';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
   private _dragging: 'area' | 'hue' | 'opacity' | null = null;
 
   connectedCallback(): void {
@@ -322,28 +331,81 @@ export class ColorPicker extends LitElement {
     );
   }
 
+  private _emitValue(value: string): void {
+    this.dispatchEvent(new CustomEvent('value-changed', { bubbles: true, composed: true, detail: { value } }));
+  }
+
+  private _renderEntityToggle(on: boolean): TemplateResult | typeof nothing {
+    if (!this.allowEntity) return nothing;
+    return html`<button
+      type="button"
+      class="icon-btn entity-toggle"
+      aria-pressed=${on ? 'true' : 'false'}
+      aria-label=${`Entity color for ${(this.label || 'color').toLowerCase()}`}
+      title="Use the entity's state color"
+      @click=${() => this._emitValue(on ? '' : 'entity')}
+    >
+      <ha-icon icon="mdi:palette-swatch-variant"></ha-icon>
+    </button>`;
+  }
+
+  /** The field while it uses the entity colour: live swatch, read-only name, opacity. */
+  private _renderEntity(opacity: number): TemplateResult {
+    const base = this.entityColor || 'currentColor';
+    const preview = opacity >= 100 ? base : `color-mix(in srgb, ${base} ${opacity}%, transparent)`;
+    const name = this.label || 'color';
+    return html`
+      <div class="color">
+        <button type="button" class="swatch" disabled aria-label=${`${name}: entity color`} title="The entity's state color">
+          <span class="swatch-fill"><span style="background: ${preview}"></span></span>
+        </button>
+        <input class="input" type="text" readonly .value=${'Entity color'} aria-label=${name} />
+        ${this._renderEntityToggle(true)}
+      </div>
+      <div class="field entity-opacity">
+        <div class="field-head"><span class="lbl">Opacity</span></div>
+        <mc-unit-field
+          .value=${opacity >= 100 ? '' : `${opacity}%`}
+          .label=${`${name} opacity`}
+          .units=${['%']}
+          placeholder="100"
+          @value-changed=${(e: CustomEvent) => {
+            e.stopPropagation();
+            const n = parseFloat(String(e.detail.value));
+            this._emitValue(Number.isFinite(n) && n >= 0 && n < 100 ? `entity ${n}%` : 'entity');
+          }}
+        ></mc-unit-field>
+      </div>
+    `;
+  }
+
   protected render(): TemplateResult {
+    const entity = this.allowEntity ? parseEntityColor(this.value) : undefined;
+    if (entity) return this._renderEntity(entity.opacity);
     const displayColor = this.value || 'transparent';
+    const name = this.label || 'color';
 
     return html`
-      <div class="mc-color-field">
-        <div
-          class="mc-color-preview"
+      <div class="color">
+        <button
+          type="button"
+          class="swatch"
+          aria-label=${`Pick ${name.toLowerCase()}`}
+          title="Open color picker"
           @click=${this._openModal}
-          title="Click to open color picker"
         >
-          <div class="mc-color-preview-inner" style="background: ${displayColor}"></div>
-        </div>
+          <span class="swatch-fill"><span style="background: ${displayColor}"></span></span>
+        </button>
         <input
-          class="mc-color-text"
+          class="input mono"
           type="text"
+          spellcheck="false"
           .value=${this.value || ''}
-          placeholder=${this.label || 'Color value'}
+          placeholder="#rrggbb or var(--name)"
+          aria-label=${name}
           @input=${this._handleTextInput}
         />
-        <button class="mc-color-btn" @click=${this._openModal} title="Open color picker">
-          <ha-icon icon="mdi:palette" style="--mdc-icon-size: 18px"></ha-icon>
-        </button>
+        ${this._renderEntityToggle(false)}
       </div>
       ${this._isOpen ? this._renderModal() : nothing}
     `;
@@ -357,20 +419,11 @@ export class ColorPicker extends LitElement {
       : this._hsvaToRgbaString(this._hsva);
 
     return html`
-      <div class="mc-modal-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-modal-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <span class="mc-modal-title">Color Picker</span>
-            <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-              <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-            </button>
-            <button class="mc-modal-close" @click=${this._closeModal}>&times;</button>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Color picker" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Color picker', this._modalCtrl, () => this._closeModal())}
 
-          <div class="mc-modal-body">
-            <!-- Color Area -->
+          <div class="mc-color-body">
             <div
               class="mc-color-area"
               style="background: ${hueColor}"
@@ -385,7 +438,6 @@ export class ColorPicker extends LitElement {
               ></div>
             </div>
 
-            <!-- Hue Slider -->
             <div class="mc-slider-row">
               <span class="mc-slider-label">H</span>
               <div
@@ -400,8 +452,10 @@ export class ColorPicker extends LitElement {
                 ></div>
               </div>
               <input
-                class="mc-slider-value"
+                class="input"
                 type="text"
+                inputmode="numeric"
+                aria-label="Hue"
                 .value=${Math.round(this._hsva.h).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
@@ -411,7 +465,6 @@ export class ColorPicker extends LitElement {
               />
             </div>
 
-            <!-- Opacity Slider -->
             <div class="mc-slider-row">
               <span class="mc-slider-label">A</span>
               <div
@@ -430,8 +483,10 @@ export class ColorPicker extends LitElement {
                 ></div>
               </div>
               <input
-                class="mc-slider-value"
+                class="input"
                 type="text"
+                inputmode="numeric"
+                aria-label="Opacity percent"
                 .value=${Math.round(this._hsva.a * 100).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
@@ -441,73 +496,82 @@ export class ColorPicker extends LitElement {
               />
             </div>
 
-            <!-- Input Row -->
             <div class="mc-input-row">
-              <div class="mc-input-group" style="flex: 2">
-                <span class="mc-input-label">Hex</span>
-                <input
-                  class="mc-input-field"
-                  type="text"
-                  .value=${this._hexInput}
-                  @input=${this._handleHexInput}
-                />
-              </div>
-              <div class="mc-input-group">
-                <span class="mc-input-label">R</span>
-                <input class="mc-input-field" type="text" .value=${rgb.r.toString()} readonly />
-              </div>
-              <div class="mc-input-group">
-                <span class="mc-input-label">G</span>
-                <input class="mc-input-field" type="text" .value=${rgb.g.toString()} readonly />
-              </div>
-              <div class="mc-input-group">
-                <span class="mc-input-label">B</span>
-                <input class="mc-input-field" type="text" .value=${rgb.b.toString()} readonly />
-              </div>
+              <label class="field">
+                <span class="lbl">Hex</span>
+                <input class="input" type="text" spellcheck="false" .value=${this._hexInput} @input=${this._handleHexInput} />
+              </label>
+              <label class="field">
+                <span class="lbl">R</span>
+                <input class="input" type="text" .value=${rgb.r.toString()} readonly />
+              </label>
+              <label class="field">
+                <span class="lbl">G</span>
+                <input class="input" type="text" .value=${rgb.g.toString()} readonly />
+              </label>
+              <label class="field">
+                <span class="lbl">B</span>
+                <input class="input" type="text" .value=${rgb.b.toString()} readonly />
+              </label>
             </div>
 
-            <!-- Presets -->
             <div class="mc-color-section">
               <span class="mc-color-section-header">Presets</span>
               <div class="mc-color-grid">
                 ${PRESET_COLORS.map((color) => html`
-                  <div
+                  <button
+                    type="button"
                     class="mc-color-swatch ${color.startsWith('var(') ? 'var-color' : ''}"
                     style="background: ${color}"
-                    @click=${() => this._selectPreset(color)}
                     title=${color}
-                  >${color.startsWith('var(') ? 'var' : ''}</div>
+                    aria-label=${color}
+                    @click=${() => this._selectPreset(color)}
+                  >${color.startsWith('var(') ? 'var' : ''}</button>
                 `)}
               </div>
             </div>
 
-            <!-- Saved Colors -->
             <div class="mc-color-section">
-              <span class="mc-color-section-header">Saved Colors</span>
+              <span class="mc-color-section-header">Saved colors</span>
               <div class="mc-saved-colors">
                 ${this._savedColors.map((color) => html`
-                  <div
-                    class="mc-saved-swatch"
-                    style="background: ${color}"
-                    @click=${() => this._selectPreset(color)}
-                    title=${color}
-                  >
-                    <button class="mc-remove-btn" @click=${(e: Event) => this._removeSavedColor(color, e)}>&times;</button>
+                  <div class="mc-saved-swatch" style="background: ${color}">
+                    <button
+                      type="button"
+                      class="mc-saved-pick"
+                      title=${color}
+                      aria-label=${`Use ${color}`}
+                      @click=${() => this._selectPreset(color)}
+                    ></button>
+                    <button
+                      type="button"
+                      class="mc-remove-btn"
+                      aria-label=${`Remove ${color}`}
+                      @click=${(e: Event) => this._removeSavedColor(color, e)}
+                    >
+                      <ha-icon icon="mdi:close"></ha-icon>
+                    </button>
                   </div>
                 `)}
-                <button class="mc-add-saved-btn" @click=${this._addSavedColor} title="Save current color">+</button>
+                <button
+                  type="button"
+                  class="icon-btn sm"
+                  title="Save current color"
+                  aria-label="Save current color"
+                  @click=${this._addSavedColor}
+                >
+                  <ha-icon icon="mdi:plus"></ha-icon>
+                </button>
               </div>
             </div>
           </div>
-          <div class="mc-modal-footer">
-            <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
-            <button class="action-btn save-btn" @click=${this._handleSave}>Save</button>
+          <div class="mc-picker-footer">
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
           </div>
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 }

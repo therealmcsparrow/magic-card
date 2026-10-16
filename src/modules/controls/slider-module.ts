@@ -1,7 +1,7 @@
 import { html, TemplateResult, nothing } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, DesignConfig, HomeAssistant, HassEntity, SliderModuleConfig } from '../../types';
+import { CardModule, DesignConfig, HomeAssistant, SliderModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import {
@@ -9,9 +9,24 @@ import {
   renderEntityField,
   renderSelectField,
   renderAttributeField,
+  renderNumberField,
+  renderColorField,
+  renderFieldHint,
 } from '../../utils/form-utils';
-import { SyncContext } from '../../utils/sync-path';
+import { formatControlValue, numericControl, runServiceCall } from '../../utils/entity-control';
+import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
+import { renderTrack } from '../../utils/slider-track';
+import { currentRenderContext } from '../../services/render-context';
+import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 
+const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
+
+/**
+ * Slider for an entity's numeric value. Per domain (see numericControl): input_number / number
+ * value, light brightness or colour temperature (kelvin), fan speed, cover position or tilt, valve
+ * position, media player volume, climate / water heater target temperature, humidifier humidity.
+ * Other entities (sensors) are shown read-only. The service call goes out after release.
+ */
 class SliderModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider',
@@ -30,240 +45,51 @@ class SliderModule extends BaseMagicModule {
     };
   }
 
-  private _toNumber(value: unknown): number | undefined {
-    if (typeof value === 'number' && Number.isFinite(value)) return value;
-    if (typeof value === 'string') {
-      const parsed = Number(value);
-      if (Number.isFinite(parsed)) return parsed;
-    }
-    return undefined;
-  }
-
-  private _clamp(value: number, min: number, max: number): number {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  private _getCurrentValue(
-    entity: HassEntity | undefined,
-    attribute: string | undefined,
-    limits: { min: number; max: number },
-  ): number {
-    const { min, max } = limits;
-    if (!entity) return Math.round((min + max) / 2);
-
-    const attrs = entity.attributes as Record<string, unknown>;
-    const domain = entity.entity_id.split('.')[0];
-
-    // Explicit attribute always has priority.
-    if (attribute) {
-      const attrNum = this._toNumber(attrs[attribute]);
-      if (attrNum !== undefined) return this._clamp(attrNum, min, max);
-    }
-
-    let value: number | undefined;
-    switch (domain) {
-      case 'light': {
-        // Prefer brightness level when no specific attribute is selected.
-        const brightness = this._toNumber(attrs.brightness);
-        const brightnessPct = this._toNumber(attrs.brightness_pct);
-        if (brightnessPct !== undefined) value = brightnessPct;
-        else if (brightness !== undefined) value = Math.round((brightness / 255) * 100);
-        break;
-      }
-      case 'fan':
-        value = this._toNumber(attrs.percentage);
-        break;
-      case 'cover':
-        value = this._toNumber(attrs.current_position);
-        break;
-      case 'media_player': {
-        const volume = this._toNumber(attrs.volume_level);
-        value = volume !== undefined ? Math.round(volume * 100) : undefined;
-        break;
-      }
-      case 'climate':
-        value = this._toNumber(attrs.temperature);
-        break;
-      default:
-        value = undefined;
-    }
-
-    if (value === undefined) {
-      value = this._toNumber(entity.state);
-    }
-
-    if (value === undefined) {
-      return Math.round((min + max) / 2);
-    }
-
-    return this._clamp(value, min, max);
-  }
-
-  private _getEntityLimits(
-    entity: HassEntity | undefined,
-    attribute?: string,
-  ): { min: number; max: number; step: number } {
-    if (!entity) return { min: 0, max: 100, step: 1 };
-
-    const domain = entity.entity_id.split('.')[0];
-    const attrs = entity.attributes;
-
-    switch (domain) {
-      case 'input_number':
-      case 'number':
-        return {
-          min: Number(attrs.min ?? 0),
-          max: Number(attrs.max ?? 100),
-          step: Number(attrs.step ?? 1),
-        };
-      case 'light':
-        if (attribute === 'color_temp') {
-          return {
-            min: Number(attrs.min_mireds ?? 153),
-            max: Number(attrs.max_mireds ?? 500),
-            step: 1,
-          };
-        }
-        return { min: 0, max: 100, step: 1 };
-      case 'fan':
-        return {
-          min: 0,
-          max: 100,
-          step: Number(attrs.percentage_step ?? 1),
-        };
-      case 'cover':
-        return { min: 0, max: 100, step: 1 };
-      case 'media_player':
-        return { min: 0, max: 100, step: 1 };
-      case 'climate':
-        return {
-          min: Number(attrs.min_temp ?? 7),
-          max: Number(attrs.max_temp ?? 35),
-          step: Number(attrs.target_temp_step ?? 0.5),
-        };
-      default:
-        return {
-          min: Number(attrs.min ?? 0),
-          max: Number(attrs.max ?? 100),
-          step: Number(attrs.step ?? 1),
-        };
-    }
-  }
-
-  private _createSliderHandler(
-    hass: HomeAssistant,
-    entityId: string,
-    config: SliderModuleConfig,
-    limits: { min: number; max: number; step: number },
-  ): (e: PointerEvent) => void {
-    const isVertical = config.direction === 'vertical';
-    const { min, max, step } = limits;
-
-    return (e: PointerEvent) => {
-      e.stopPropagation();
-      const slider = e.currentTarget as HTMLElement;
-      slider.setPointerCapture(e.pointerId);
-
-      const calcPct = (evt: PointerEvent) => {
-        const rect = slider.getBoundingClientRect();
-        if (isVertical) {
-          return Math.max(0, Math.min(1, 1 - (evt.clientY - rect.top) / rect.height));
-        }
-        return Math.max(0, Math.min(1, (evt.clientX - rect.left) / rect.width));
-      };
-
-      slider.style.setProperty('--slider-value', String(calcPct(e)));
-
-      const onMove = (evt: PointerEvent) => {
-        slider.style.setProperty('--slider-value', String(calcPct(evt)));
-      };
-
-      const onUp = (evt: PointerEvent) => {
-        slider.removeEventListener('pointermove', onMove);
-        slider.removeEventListener('pointerup', onUp);
-        const pct = calcPct(evt);
-        const raw = min + pct * (max - min);
-        const value = Math.round(raw / step) * step;
-        this._callEntityService(hass, entityId, value, config.attribute);
-      };
-
-      slider.addEventListener('pointermove', onMove);
-      slider.addEventListener('pointerup', onUp);
-    };
-  }
-
-  private _callEntityService(
-    hass: HomeAssistant,
-    entityId: string,
-    value: number,
-    attribute?: string,
-  ): void {
-    const domain = entityId.split('.')[0];
-
-    switch (domain) {
-      case 'input_number':
-      case 'number':
-        hass.callService(domain, 'set_value', { entity_id: entityId, value });
-        break;
-      case 'light':
-        if (!attribute || attribute === 'brightness') {
-          hass.callService('light', 'turn_on', { entity_id: entityId, brightness_pct: Math.round(value) });
-        } else if (attribute === 'color_temp') {
-          hass.callService('light', 'turn_on', { entity_id: entityId, color_temp: Math.round(value) });
-        }
-        break;
-      case 'fan':
-        hass.callService('fan', 'set_percentage', { entity_id: entityId, percentage: Math.round(value) });
-        break;
-      case 'cover':
-        hass.callService('cover', 'set_cover_position', { entity_id: entityId, position: Math.round(value) });
-        break;
-      case 'media_player':
-        hass.callService('media_player', 'volume_set', { entity_id: entityId, volume_level: value / 100 });
-        break;
-      case 'climate':
-        hass.callService('climate', 'set_temperature', { entity_id: entityId, temperature: value });
-        break;
-      default:
-        hass.callService(domain, 'set_value', { entity_id: entityId, value });
-        break;
-    }
-  }
-
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as SliderModuleConfig;
-    const entity = c.entity && hass ? hass.states[c.entity] : undefined;
-    const limits = this._getEntityLimits(entity, c.attribute);
-    const { min, max, step } = limits;
-    const currentValue = this._getCurrentValue(entity, c.attribute, limits);
+    const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
     const isVertical = c.direction === 'vertical';
-    const percentage = this._clamp(max > min ? (currentValue - min) / (max - min) : 0, 0, 1);
     const design = (c.design || {}) as DesignConfig;
-    const sliderColor = (design.color as string | undefined) || c.slider_color || 'var(--primary-color, #03a9f4)';
-    const trackColor = (design.background as string | undefined) || c.track_color;
-    const displayValue = step < 1 ? String(Math.round(currentValue / step) * step) : String(Math.round(currentValue));
+    // the module's own colours beat the design colours (like the icon colour of the icon module)
+    const sliderColor = c.slider_color || (design.color as string | undefined) || 'var(--primary-color, #03a9f4)';
+    const trackColor = c.track_color || (design.background as string | undefined);
+    const style = `--mc-slider-color: ${sliderColor}; ${trackColor ? `--mc-slider-background: ${trackColor};` : ''}`;
+    const ctrl = stateObj ? numericControl(hass, stateObj, c.attribute, { min: c.min, max: c.max, step: c.step }) : undefined;
 
-    const handlePointerDown = c.entity && hass
-      ? this._createSliderHandler(hass, c.entity, c, limits)
-      : undefined;
+    const key = controlKey(c.entity, c.attribute, 'slider');
+    const value = ctrl ? pendingValue(key, ctrl.value) ?? ctrl.value : undefined;
+    const ctx = currentRenderContext();
+    const valueText = ctrl && value !== undefined
+      ? formatControlValue(hass, ctrl, value)
+      : stateObj
+        ? formatEntityValue(hass, stateObj).text
+        : '';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : 'Slider';
+
+    const track = renderTrack({
+      value,
+      min: ctrl?.min ?? c.min ?? 0,
+      max: ctrl?.max ?? c.max ?? 100,
+      step: ctrl?.step ?? c.step ?? 1,
+      vertical: isVertical,
+      disabled: !ctrl || ctrl.readOnly || !hass,
+      label: name,
+      valueText,
+      style,
+      onCommit: (v) => {
+        if (!ctrl?.call || !hass) return;
+        const call = ctrl.call;
+        setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent)), () => ctx?.requestUpdate(), 300);
+      },
+    });
 
     return html`
       <div
         class="mc-module mc-slider mc-slider-container ${isVertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'}"
       >
-        <div
-          class="mc-tile-slider ${isVertical ? 'mc-tile-slider--vertical' : ''}"
-          style="--slider-value: ${percentage}; --mc-slider-color: ${sliderColor}; ${trackColor ? `--mc-slider-background: ${trackColor};` : ''} touch-action: none;"
-          @pointerdown=${handlePointerDown}
-          @click=${(e: Event) => e.stopPropagation()}
-        >
-          <div class="mc-tile-slider-background"></div>
-          <div class="mc-tile-slider-bar"></div>
-        </div>
-        ${c.show_value
-          ? html`<span class="mc-slider-value">
-              ${displayValue}
-            </span>`
+        ${track}
+        ${c.show_value !== false && stateObj
+          ? html`<span class="mc-slider-value">${valueText}</span>`
           : nothing}
       </div>
     `;
@@ -277,11 +103,20 @@ class SliderModule extends BaseMagicModule {
   ): TemplateResult {
     const syncCtx = this._buildSyncContext(config, template);
     const c = config as SliderModuleConfig;
+    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
+    const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
     return html`
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
-        ${renderToggleField('Show Value', c.show_value, (v) => onChange({ ...c, show_value: v }), 'show_value', syncCtx)}
+        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
+        ${stateObj && own?.readOnly
+          ? renderFieldHint('This value can only be shown: the entity (or this attribute) cannot be set from a slider.')
+          : nothing}
+        ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: optional(v) }), { optional: true, placeholder: own ? String(own.min) : '0' }, 'min', syncCtx)}
+        ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: optional(v) }), { optional: true, placeholder: own ? String(own.max) : '100' }, 'max', syncCtx)}
+        ${renderNumberField('Step', c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
+        ${renderFieldHint("Empty: the entity's own range and step. Min and max can only narrow that range.")}
+        ${renderToggleField('Show value', c.show_value !== false, (v) => onChange({ ...c, show_value: v }), 'show_value', syncCtx)}
         ${renderSelectField(
           'Direction',
           c.direction,
@@ -293,8 +128,17 @@ class SliderModule extends BaseMagicModule {
           'direction',
           syncCtx,
         )}
+        ${renderColorField('Slider color', c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx)}
+        ${renderColorField('Track color', c.track_color, (v) => onChange({ ...c, track_color: v || undefined }), 'track_color', syncCtx)}
       </div>
     `;
+  }
+
+  validate(config: CardModule): string[] {
+    const c = config as SliderModuleConfig;
+    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return ['Min must be less than max'];
+    if (c.step !== undefined && !(c.step > 0)) return ['Step must be greater than 0'];
+    return [];
   }
 }
 

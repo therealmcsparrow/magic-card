@@ -1,14 +1,31 @@
-import { LitElement, html, TemplateResult, nothing } from 'lit';
+import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { DisplayCondition, HomeAssistant } from '../../types';
 
 import './entity-picker';
 import './attribute-picker';
-import { componentControlStyles, conditionRowStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
+
+const CONDITION_TYPES: Array<{ value: DisplayCondition['type']; label: string }> = [
+  { value: 'state', label: 'State' },
+  { value: 'attribute', label: 'Attribute' },
+  { value: 'time', label: 'Time' },
+  { value: 'template', label: 'Template' },
+];
 
 @customElement('mc-condition-row')
 export class ConditionRow extends LitElement {
-  static styles = [componentControlStyles, conditionRowStyles];
+  static styles = [
+    editorSystem,
+    css`
+      :host {
+        display: block;
+      }
+      .cond-head .select {
+        flex: 1;
+      }
+    `,
+  ];
 
   @property({ attribute: false }) condition?: DisplayCondition;
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -21,21 +38,46 @@ export class ConditionRow extends LitElement {
     const c = this.condition;
 
     return html`
-      <div class="mc-cond">
-        <div class="mc-cond-header">
-          <span class="mc-cond-type">${c.type}</span>
-          <select @change=${(e: Event) => this.onChange?.({ type: (e.target as HTMLSelectElement).value as DisplayCondition['type'] })}>
-            <option value="state" ?selected=${c.type === 'state'}>State</option>
-            <option value="attribute" ?selected=${c.type === 'attribute'}>Attribute</option>
-            <option value="time" ?selected=${c.type === 'time'}>Time</option>
-            <option value="template" ?selected=${c.type === 'template'}>Template</option>
-          </select>
-          <button class="mc-cond-remove" @click=${() => this.onRemove?.()}>&times;</button>
+      <div class="cond">
+        <div class="cond-head">
+          <div class="select">
+            <select
+              class="input"
+              aria-label="Condition type"
+              @change=${(e: Event) => this.onChange?.({ type: (e.target as HTMLSelectElement).value as DisplayCondition['type'] })}
+            >
+              ${CONDITION_TYPES.map(
+                (t) => html`<option value=${t.value} ?selected=${c.type === t.value}>${t.label}</option>`,
+              )}
+            </select>
+            <ha-icon icon="mdi:chevron-down"></ha-icon>
+          </div>
+          <button
+            type="button"
+            class="icon-btn sm danger"
+            aria-label="Remove condition"
+            title="Remove condition"
+            @click=${() => this.onRemove?.()}
+          >
+            <ha-icon icon="mdi:delete-outline"></ha-icon>
+          </button>
         </div>
-        <div class="mc-cond-fields">
-          ${this._renderFields(c)}
-        </div>
+        ${this._renderFields(c)}
       </div>
+    `;
+  }
+
+  private _textField(label: string, value: string | undefined, onInput: (v: string) => void, type = 'text'): TemplateResult {
+    return html`
+      <label class="field">
+        <span class="field-head"><span class="lbl">${label}</span></span>
+        <input
+          class="input"
+          type=${type}
+          .value=${value || ''}
+          @input=${(e: InputEvent) => onInput((e.target as HTMLInputElement).value)}
+        />
+      </label>
     `;
   }
 
@@ -48,23 +90,23 @@ export class ConditionRow extends LitElement {
         return html`
           ${this.moduleEntity
             ? html`
-                <div class="mc-cond-entity-toggle">
-                  <label>
-                    <input
-                      type="checkbox"
-                      .checked=${useModuleEntity}
-                      @change=${(e: Event) =>
-                        this.onChange?.({ use_module_entity: (e.target as HTMLInputElement).checked })}
-                    />
-                    Use module entity
-                  </label>
+                <div class="switch-row">
+                  <span class="txt">Use module entity</span>
+                  <button
+                    type="button"
+                    class="switch"
+                    role="switch"
+                    aria-checked=${useModuleEntity ? 'true' : 'false'}
+                    aria-label="Use module entity"
+                    @click=${() => this.onChange?.({ use_module_entity: !useModuleEntity })}
+                  ></button>
                 </div>
               `
             : nothing}
           ${!useModuleEntity || !this.moduleEntity
             ? html`
-                <div class="mc-cond-field full">
-                  <label>Entity</label>
+                <div class="field">
+                  <div class="field-head"><span class="lbl">Entity</span></div>
                   <mc-entity-picker
                     .hass=${this.hass}
                     .value=${c.entity || ''}
@@ -75,8 +117,8 @@ export class ConditionRow extends LitElement {
             : nothing}
           ${c.type === 'attribute'
             ? html`
-                <div class="mc-cond-field full">
-                  <label>Attribute</label>
+                <div class="field">
+                  <div class="field-head"><span class="lbl">Attribute</span></div>
                   <mc-attribute-picker
                     .hass=${this.hass}
                     .value=${c.attribute || ''}
@@ -86,40 +128,31 @@ export class ConditionRow extends LitElement {
                 </div>
               `
             : nothing}
-          <div class="mc-cond-field">
-            <label>Equals</label>
-            <input type="text" .value=${c.state || ''}
-              @input=${(e: InputEvent) => this.onChange?.({ state: (e.target as HTMLInputElement).value })} />
-          </div>
-          <div class="mc-cond-field">
-            <label>Not equals</label>
-            <input type="text" .value=${c.state_not || ''}
-              @input=${(e: InputEvent) => this.onChange?.({ state_not: (e.target as HTMLInputElement).value })} />
+          <div class="two">
+            ${this._textField('Equals', c.state, (v) => this.onChange?.({ state: v }))}
+            ${this._textField('Not equals', c.state_not, (v) => this.onChange?.({ state_not: v }))}
           </div>
         `;
       }
       case 'time':
         return html`
-          <div class="mc-cond-field">
-            <label>After</label>
-            <input type="time" .value=${c.after || ''}
-              @input=${(e: InputEvent) => this.onChange?.({ after: (e.target as HTMLInputElement).value })} />
-          </div>
-          <div class="mc-cond-field">
-            <label>Before</label>
-            <input type="time" .value=${c.before || ''}
-              @input=${(e: InputEvent) => this.onChange?.({ before: (e.target as HTMLInputElement).value })} />
+          <div class="two">
+            ${this._textField('After', c.after, (v) => this.onChange?.({ after: v }), 'time')}
+            ${this._textField('Before', c.before, (v) => this.onChange?.({ before: v }), 'time')}
           </div>
         `;
       case 'template':
         return html`
-          <div class="mc-cond-field full">
-            <label>Template</label>
-            <textarea .value=${c.template || ''} rows="3" placeholder="{{ states('sensor.example') == 'on' }}"
+          <label class="field">
+            <span class="field-head"><span class="lbl">Template</span></span>
+            <textarea
+              class="input"
+              rows="3"
+              placeholder="{{ states('sensor.example') == 'on' }}"
+              .value=${c.template || ''}
               @input=${(e: InputEvent) => this.onChange?.({ template: (e.target as HTMLTextAreaElement).value })}
-              class="mc-cond-template"
             ></textarea>
-          </div>
+          </label>
         `;
       default:
         return html``;

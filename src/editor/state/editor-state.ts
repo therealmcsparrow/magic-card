@@ -8,13 +8,62 @@ import {
   RowConfig,
   ColumnConfig,
   ModuleType,
+  DesignConfig,
+  NestedColumnConfig,
+  RowModuleConfig,
 } from '../../types';
 import { UndoRedoStack } from './undo-redo';
+import { followIcons } from '../components/icon-animator/loader';
+import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
+
+/** `{ ...obj, ...patch }` without the keys the patch sets to undefined. */
+function withPatch<T extends object>(obj: T, patch: object): T {
+  const out = { ...obj, ...patch } as Record<string, unknown>;
+  for (const [k, v] of Object.entries(patch)) if (v === undefined) delete out[k];
+  return out as T;
+}
+
+/** New ids for a copied module and everything nested in it (mutates: callers pass a clone). */
+function giveFreshIds(mod: CardModule): void {
+  if (!mod || typeof mod !== 'object') return;
+  mod.id = generateId(mod.type);
+  const rec = mod as Record<string, unknown>;
+  if (mod.type === 'row' && Array.isArray(rec.columns)) {
+    for (const col of rec.columns as Array<{ id?: string }>) if (col && typeof col === 'object' && col.id) col.id = generateId('col');
+  }
+  for (const slot of childSlots(mod) ?? []) for (const child of slot) giveFreshIds(child);
+}
 import { ModuleRegistry } from '../../modules/module-registry';
 import { debounce } from '../../utils/debounce';
 import { EDITOR_DEBOUNCE_MS } from '../../utils/constants';
+import { clampSelection, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
+import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
+import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
+import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
+import { flowKeys } from '../../utils/flow';
+import type { ModuleSelection } from '../studio/selection';
+
+/** A module (or a layout child below it: `child`), column or row, by index. */
+export interface DesignTarget {
+  row: number;
+  col?: number;
+  module?: number;
+  child?: readonly ChildStep[];
+  /** With `module`: a column (slot) of that row module. */
+  slot?: number;
+}
+
+/** A layout module as the slot operations edit it (tabs or row module fields). */
+type TabEntry = { label?: string; icon?: string; modules: CardModule[] };
+type LayoutRec = CardModule & {
+  tabs?: TabEntry[];
+  columns?: NestedColumnConfig[];
+  layout?: string;
+  column_widths?: string[];
+  active_tab?: number;
+};
 
 type StateListener = (state: EditorState) => void;
 
@@ -22,7 +71,9 @@ export class EditorStateManager {
   private state: EditorState;
   private undoRedo = new UndoRedoStack<MagicCardConfig>();
   private listeners: Set<StateListener> = new Set();
-  private dispatchConfigChanged: ((config: MagicCardConfig) => void) & { cancel: () => void };
+  private dispatchConfigChanged: ((config: MagicCardConfig) => void) & { cancel: () => void; flush: () => void };
+  /** False while the card editor is detached: pending icon follows wait (follow-icon.ts). */
+  attached = true;
 
   constructor(private fireEvent: (config: MagicCardConfig) => void) {
     this.state = {
@@ -60,48 +111,146 @@ export class EditorStateManager {
     return this.state.config;
   }
 
+  /** The selected module, a nested layout child included. */
   getSelectedModule(): CardModule | null {
-    const path = this.state.selectedPath;
-    if (
-      path?.rowIndex === undefined ||
-      path?.columnIndex === undefined ||
-      path?.moduleIndex === undefined
-    )
-      return null;
+    return moduleAt(this.state.config, selectionFromPath(this.state.selectedPath)) ?? null;
+  }
 
-    return (
-      this.state.config.rows[path.rowIndex]?.columns[path.columnIndex]?.modules[
-        path.moduleIndex
-      ] ?? null
-    );
+  /**
+   * The list holding a module and its index in it: a column's modules, or for a nested child
+   * (`child` steps below the top-level module) the slot of its layout module. On a cloned config.
+   */
+  private _moduleList(
+    config: MagicCardConfig,
+    rowIndex: number,
+    colIndex: number,
+    moduleIndex: number,
+    child?: readonly ChildStep[],
+  ): { list: CardModule[]; index: number } | undefined {
+    const top = config.rows[rowIndex]?.columns[colIndex]?.modules;
+    if (!top) return undefined;
+    if (!child?.length) return { list: top, index: moduleIndex };
+    const parent = descendantAt(top[moduleIndex], child.slice(0, -1));
+    const last = child[child.length - 1];
+    const list = parent ? mutableSlot(parent, last.slot) : undefined;
+    return list ? { list, index: last.index } : undefined;
+  }
+
+  /** selectedPath with its last step (the module itself) set to `index`. */
+  private _pathWithIndex(rowIndex: number, colIndex: number, moduleIndex: number, child: readonly ChildStep[] | undefined, index: number): EditorPath {
+    if (!child?.length) return { rowIndex, columnIndex: colIndex, moduleIndex: index };
+    const chain = child.map((s) => ({ ...s }));
+    chain[chain.length - 1].index = index;
+    return { rowIndex, columnIndex: colIndex, moduleIndex, childPath: chain };
+  }
+
+  /**
+   * Template-linked card: a change to a layout's children (any depth) overrides the top-level layout
+   * module's whole child list, the same as editing a child in the inspector (mutates: a clone).
+   */
+  private _markChildList(config: MagicCardConfig, rowIndex: number, colIndex: number, moduleIndex: number): void {
+    if (!config.template) return;
+    const top = config.rows[rowIndex]?.columns[colIndex]?.modules[moduleIndex];
+    const key = childListKey(top);
+    if (!top || !key) return;
+    const marks = (top.not_synced || []) as string[];
+    if (!marks.includes(key)) top.not_synced = [...marks, key];
   }
 
   // ── Config Management ──
 
+  /** Keep selectedPath valid for the current config. */
+  private _clampedPath(config: MagicCardConfig, path: EditorPath | null): EditorPath | null {
+    return selectionToPath(clampSelection(config, selectionFromPath(path)));
+  }
+
+  /** The selected flow key while that flow still exists in `config`, else null. */
+  private _liveFlow(config: MagicCardConfig): string | null {
+    const key = this.state.selectedFlow ?? null;
+    return key && flowKeys(Array.isArray(config.flows) ? config.flows : []).includes(key) ? key : null;
+  }
+
   setConfig(config: MagicCardConfig): void {
-    this.state = { ...this.state, config: deepClone(config), isDirty: false };
+    const next = deepClone(config);
+    this.state = {
+      ...this.state,
+      config: next,
+      isDirty: false,
+      selectedPath: this._clampedPath(next, this.state.selectedPath),
+      selectedFlow: this._liveFlow(next),
+    };
+    this.notify();
+  }
+
+  /** The linked template's custom animations (fetched with the template; undefined when none). */
+  setTemplateAnimations(docs: Array<Record<string, unknown>> | undefined): void {
+    this.state = { ...this.state, templateAnimations: docs };
     this.notify();
   }
 
   updateConfig(config: MagicCardConfig, recordUndo = true): void {
+    const prev = this.state.config;
     if (recordUndo) {
       this.undoRedo.push(this.state.config);
     }
-    this.state = { ...this.state, config: deepClone(config), isDirty: true };
+    const next = deepClone(config);
+    this.state = {
+      ...this.state,
+      config: next,
+      isDirty: true,
+      selectedPath: this._clampedPath(next, this.state.selectedPath),
+      selectedFlow: this._liveFlow(next),
+    };
     this.notify();
     this.dispatchConfigChanged(this.state.config);
+    // "This icon" animations (the card's or its template's) follow their module's new icon (lazy
+    // icon animator chunk, loaded only when a module plays a quick custom:quick-* document)
+    if ((prev.custom_animations || this.state.templateAnimations) && JSON.stringify(next.rows).includes('custom:quick-'))
+      followIcons(this, prev, next);
   }
 
   // ── Editor State ──
 
-  setEditorMode(mode: EditorMode): void {
-    this.state = { ...this.state, editorMode: mode };
+  setEditorMode(mode: EditorMode | string): void {
+    this.state = { ...this.state, editorMode: mode === 'yaml' ? 'yaml' : 'form' };
     this.notify();
   }
 
   setSelectedPath(path: EditorPath | null): void {
-    this.state = { ...this.state, selectedPath: path };
+    const selectedPath = this._clampedPath(this.state.config, path);
+    this.state = { ...this.state, selectedPath, selectedFlow: selectedPath ? null : this.state.selectedFlow };
     this.notify();
+  }
+
+  // ── Flows ──
+
+  /** Select a flow by its key (canvas highlight, Card settings → Flows); the card becomes the selection. */
+  selectFlow(key: string | null): void {
+    this.state = { ...this.state, selectedFlow: key, selectedPath: key ? null : this.state.selectedPath };
+    this.notify();
+  }
+
+  /**
+   * A new flow from one module to another (studio connect mode), one undo step: modules without an id
+   * get one. The new flow is selected. Undefined (no change) when both ends are the same module.
+   */
+  addFlow(from: ModuleSelection, to: ModuleSelection): string | undefined {
+    const config = deepClone(this.state.config);
+    const a = ensureModuleId(config, from);
+    const b = ensureModuleId(config, to);
+    if (!a || !b || a === b) return undefined;
+    const flow = { ...newFlow(), from: a, to: b };
+    config.flows = [...(Array.isArray(config.flows) ? config.flows : []), flow];
+    markFlowsOverridden(config);
+    this.updateConfig(config);
+    this.selectFlow(flow.id);
+    return flow.id;
+  }
+
+  /** updateConfig after an edit that may have removed modules: their flows go in the same step. */
+  private _commitRemoval(config: MagicCardConfig): void {
+    pruneFlows(this.state.config, config);
+    this.updateConfig(config);
   }
 
   setActiveTab(tab: EditorTab): void {
@@ -135,8 +284,7 @@ export class EditorStateManager {
   deleteRow(rowIndex: number): void {
     const config = deepClone(this.state.config);
     config.rows.splice(rowIndex, 1);
-    this.state.selectedPath = null;
-    this.updateConfig(config);
+    this._commitRemoval(config);
   }
 
   moveRow(fromIndex: number, toIndex: number): void {
@@ -153,6 +301,48 @@ export class EditorStateManager {
     this.updateConfig(config);
   }
 
+  /**
+   * Apply a column layout preset ("2-1", "1-1-1", ...). Missing columns are added empty;
+   * surplus columns are removed and their modules move into the last remaining column (to the left).
+   */
+  setRowLayout(rowIndex: number, layout: string): void {
+    const config = deepClone(this.state.config);
+    const row = config.rows[rowIndex];
+    if (!row) return;
+    applyRowLayout(row, layout, () => ({ id: generateId('col'), modules: [] }));
+    this._markRowLocal(config, row, 'layout', 'column_widths');
+    this.updateConfig(config);
+  }
+
+  /**
+   * Set (or with `undefined` remove) a row's column widths, optionally with a new layout preset, as
+   * one undo step. A template-linked card keeps them as a local override (not_synced); removing them
+   * without a layout (the field's reset) syncs them with the template again.
+   * `coalesce`: fold into the previous undo step (arrow key repeats).
+   */
+  setColumnWidths(rowIndex: number, widths: string[] | undefined, layout?: string, coalesce = false): void {
+    const config = deepClone(this.state.config);
+    const row = config.rows[rowIndex];
+    if (!row) return;
+    if (widths?.length) row.column_widths = [...widths];
+    else delete row.column_widths;
+    if (layout) row.layout = layout;
+    if (widths?.length || layout) this._markRowLocal(config, row, 'column_widths', ...(layout ? ['layout'] : []));
+    else if (row.not_synced?.includes('column_widths')) {
+      row.not_synced = row.not_synced.filter((k) => k !== 'column_widths');
+      if (!row.not_synced.length) delete row.not_synced;
+    }
+    this.updateConfig(config, !coalesce);
+  }
+
+  /** Template-linked card: mark row keys as local overrides (mutates: a clone). */
+  private _markRowLocal(config: MagicCardConfig, row: RowConfig, ...keys: string[]): void {
+    if (!config.template) return;
+    const marks = row.not_synced || [];
+    const add = keys.filter((k) => !marks.includes(k));
+    if (add.length) row.not_synced = [...marks, ...add];
+  }
+
   // ── Column Operations ──
 
   addColumn(rowIndex: number): void {
@@ -162,7 +352,14 @@ export class EditorStateManager {
       id: generateId('col'),
       modules: [],
     });
-    row.layout = this._equalLayout(row.columns.length);
+    // custom widths keep theirs (the new column gets 1fr); a preset layout is re-equalised
+    if (Array.isArray(row.column_widths) && row.column_widths.length) {
+      row.column_widths = [...columnWidthsList(row.column_widths, row.columns.length - 1), '1fr'];
+      this._markRowLocal(config, row, 'column_widths');
+    } else {
+      delete row.column_widths;
+      row.layout = this._equalLayout(row.columns.length);
+    }
     this.updateConfig(config);
   }
 
@@ -174,9 +371,67 @@ export class EditorStateManager {
       config.rows.splice(rowIndex, 1);
     } else {
       row.layout = this._equalLayout(row.columns.length);
+      if (Array.isArray(row.column_widths) && row.column_widths.length) {
+        const widths = columnWidthsList(row.column_widths, row.columns.length + 1);
+        widths.splice(colIndex, 1);
+        // one column left: widths mean nothing (and no field could reset them)
+        if (row.columns.length < 2) delete row.column_widths;
+        else row.column_widths = widths;
+        this._markRowLocal(config, row, 'column_widths');
+      }
     }
-    this.state.selectedPath = null;
+    this._commitRemoval(config);
+  }
+
+  updateColumn(rowIndex: number, colIndex: number, updates: Partial<ColumnConfig>): void {
+    const config = deepClone(this.state.config);
+    config.rows[rowIndex].columns[colIndex] = { ...config.rows[rowIndex].columns[colIndex], ...updates };
     this.updateConfig(config);
+  }
+
+  // ── Design copy / paste ──
+
+  private _designItem(config: MagicCardConfig, t: DesignTarget): RowConfig | ColumnConfig | CardModule | undefined {
+    const row = config.rows[t.row];
+    const col = t.col !== undefined ? row?.columns[t.col] : undefined;
+    if (t.module !== undefined) {
+      const mod = descendantAt(col?.modules[t.module], t.child ?? []);
+      if (t.slot === undefined) return mod;
+      return mod?.type === 'row' ? (mod as RowModuleConfig).columns?.[t.slot] as ColumnConfig | undefined : undefined;
+    }
+    return t.col !== undefined ? col : row;
+  }
+
+  /** Copy the target's design to the design clipboard (src/utils/design-clipboard.ts). */
+  copyDesign(target: DesignTarget): void {
+    copyDesign(this._designItem(this.state.config, target)?.design as DesignConfig | undefined);
+  }
+
+  /**
+   * Paste the clipboard design onto the target (one undo step). On a template-linked card it is an
+   * override: a module marks each changed design key, a row / column its whole design.
+   */
+  pasteDesign(target: DesignTarget, mode: PasteMode): boolean {
+    const clip = readDesignClipboard();
+    if (!clip) return false;
+    const config = deepClone(this.state.config);
+    const item = this._designItem(config, target) as (RowConfig | ColumnConfig | CardModule) & { not_synced?: string[] };
+    if (!item) return false;
+    const before = (item.design || {}) as Record<string, unknown>;
+    const next = pastedDesign(item.design as DesignConfig | undefined, clip, mode) as Record<string, unknown>;
+    item.design = next as DesignConfig;
+    if (config.template && target.module !== undefined && (target.child?.length || target.slot !== undefined)) {
+      this._markChildList(config, target.row, target.col!, target.module);
+    } else if (config.template) {
+      const marks = new Set(item.not_synced || []);
+      if (target.module === undefined) marks.add('design');
+      else
+        for (const k of new Set([...Object.keys(before), ...Object.keys(next)]))
+          if (JSON.stringify(before[k]) !== JSON.stringify(next[k])) marks.add(`design.${k}`);
+      item.not_synced = [...marks];
+    }
+    this.updateConfig(config);
+    return true;
   }
 
   // ── Module Operations ──
@@ -193,11 +448,35 @@ export class EditorStateManager {
     this.setSelectedPath({ rowIndex, columnIndex: colIndex, moduleIndex });
   }
 
-  deleteModule(rowIndex: number, colIndex: number, moduleIndex: number): void {
+  deleteModule(rowIndex: number, colIndex: number, moduleIndex: number, child?: readonly ChildStep[]): void {
     const config = deepClone(this.state.config);
+    if (child?.length) {
+      const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+      if (!at || !at.list[at.index]) return;
+      at.list.splice(at.index, 1);
+      this._markChildList(config, rowIndex, colIndex, moduleIndex);
+      // Select a sibling, or once the slot is empty its tab / column (tree node), else the layout module.
+      const up = child.slice(0, -1);
+      const owner = descendantAt(config.rows[rowIndex].columns[colIndex].modules[moduleIndex], up);
+      this.state = { ...this.state, selectedPath: at.list.length
+        ? this._pathWithIndex(rowIndex, colIndex, moduleIndex, child, Math.min(at.index, at.list.length - 1))
+        : hasSlotNodes(owner)
+          ? this._slotPath(rowIndex, colIndex, moduleIndex, up, child[child.length - 1].slot)
+          : { rowIndex, columnIndex: colIndex, moduleIndex, ...(up.length ? { childPath: up.map((s) => ({ ...s })) } : {}) } };
+      this._commitRemoval(config);
+      return;
+    }
     config.rows[rowIndex].columns[colIndex].modules.splice(moduleIndex, 1);
-    this.state.selectedPath = null;
-    this.updateConfig(config);
+    const sel = this.state.selectedPath;
+    if (
+      sel?.rowIndex === rowIndex &&
+      sel.columnIndex === colIndex &&
+      sel.moduleIndex !== undefined &&
+      sel.moduleIndex > moduleIndex
+    ) {
+      this.state = { ...this.state, selectedPath: { ...sel, moduleIndex: sel.moduleIndex - 1 } };
+    }
+    this._commitRemoval(config);
   }
 
   updateModule(
@@ -205,11 +484,26 @@ export class EditorStateManager {
     colIndex: number,
     moduleIndex: number,
     updates: Partial<CardModule>,
+    child?: readonly ChildStep[],
   ): void {
     const config = deepClone(this.state.config);
-    const mod = config.rows[rowIndex].columns[colIndex].modules[moduleIndex];
-    config.rows[rowIndex].columns[colIndex].modules[moduleIndex] = { ...mod, ...updates };
-    this.updateConfig(config);
+    const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+    if (!at || !at.list[at.index]) return;
+    at.list[at.index] = { ...at.list[at.index], ...updates };
+    // A layout's child list edit can remove modules: their flows go in the same step.
+    this._commitRemoval(config);
+  }
+
+  /**
+   * Replace a module with its edited version (a module editor's onChange gives the whole module):
+   * a key the editor removed is removed, where updateModule's merge would keep the old value.
+   */
+  replaceModule(rowIndex: number, colIndex: number, moduleIndex: number, next: CardModule, child?: readonly ChildStep[]): void {
+    const config = deepClone(this.state.config);
+    const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+    if (!at || !at.list[at.index]) return;
+    at.list[at.index] = deepClone(next);
+    this._commitRemoval(config);
   }
 
   moveModule(
@@ -226,12 +520,330 @@ export class EditorStateManager {
     this.updateConfig(config);
   }
 
+  duplicateModule(rowIndex: number, colIndex: number, moduleIndex: number, child?: readonly ChildStep[]): void {
+    const config = deepClone(this.state.config);
+    const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+    if (!at || !at.list[at.index]) return;
+    const copy = deepClone(at.list[at.index]);
+    giveFreshIds(copy);
+    at.list.splice(at.index + 1, 0, copy);
+    if (child?.length) this._markChildList(config, rowIndex, colIndex, moduleIndex);
+    this.state = { ...this.state, selectedPath: this._pathWithIndex(rowIndex, colIndex, moduleIndex, child, at.index + 1) };
+    this.updateConfig(config);
+  }
+
+  duplicateRow(rowIndex: number): void {
+    const config = deepClone(this.state.config);
+    const copy = deepClone(config.rows[rowIndex]);
+    copy.id = generateId('row');
+    for (const col of copy.columns) {
+      col.id = generateId('col');
+      for (const mod of col.modules) giveFreshIds(mod);
+    }
+    config.rows.splice(rowIndex + 1, 0, copy);
+    this.state = { ...this.state, selectedPath: { rowIndex: rowIndex + 1 } };
+    this.updateConfig(config);
+  }
+
+  moveModuleBy(rowIndex: number, colIndex: number, moduleIndex: number, delta: -1 | 1, child?: readonly ChildStep[]): boolean {
+    if (child?.length) {
+      const config = deepClone(this.state.config);
+      const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+      const to = (at?.index ?? -1) + delta;
+      if (!at || !at.list[at.index] || to < 0 || to >= at.list.length) return false;
+      const [mod] = at.list.splice(at.index, 1);
+      at.list.splice(to, 0, mod);
+      this._markChildList(config, rowIndex, colIndex, moduleIndex);
+      this.state = { ...this.state, selectedPath: this._pathWithIndex(rowIndex, colIndex, moduleIndex, child, to) };
+      this.updateConfig(config);
+      return true;
+    }
+    const mods = this.state.config.rows[rowIndex]?.columns[colIndex]?.modules;
+    const to = moduleIndex + delta;
+    if (!mods || to < 0 || to >= mods.length) return false;
+    this.state = { ...this.state, selectedPath: { rowIndex, columnIndex: colIndex, moduleIndex: to } };
+    this.moveModule(rowIndex, colIndex, moduleIndex, rowIndex, colIndex, to);
+    return true;
+  }
+
+  /** Move a top-level module to the end of another column (one undo step); the selection follows it. */
+  moveModuleToColumn(rowIndex: number, colIndex: number, moduleIndex: number, toRow: number, toCol: number): boolean {
+    const rows = this.state.config.rows;
+    const target = rows[toRow]?.columns[toCol];
+    if (!rows[rowIndex]?.columns[colIndex]?.modules?.[moduleIndex] || !target) return false;
+    if (rowIndex === toRow && colIndex === toCol) return false;
+    const config = deepClone(this.state.config);
+    const [mod] = config.rows[rowIndex].columns[colIndex].modules.splice(moduleIndex, 1);
+    const dest = config.rows[toRow].columns[toCol];
+    if (!Array.isArray(dest.modules)) dest.modules = [];
+    dest.modules.push(mod);
+    this.state = { ...this.state, selectedPath: { rowIndex: toRow, columnIndex: toCol, moduleIndex: dest.modules.length - 1 } };
+    this.updateConfig(config);
+    return true;
+  }
+
+  /**
+   * Move a layout child to the end of another slot (column / tab) of the same layout module (one undo
+   * step); the selection follows it.
+   */
+  moveChildToSlot(rowIndex: number, colIndex: number, moduleIndex: number, child: readonly ChildStep[], slot: number): boolean {
+    if (!child.length) return false;
+    const last = child[child.length - 1];
+    if (last.slot === slot) return false;
+    const config = deepClone(this.state.config);
+    const at = this._moduleList(config, rowIndex, colIndex, moduleIndex, child);
+    const parent = descendantAt(config.rows[rowIndex]?.columns[colIndex]?.modules[moduleIndex], child.slice(0, -1));
+    const dest = parent ? mutableSlot(parent, slot) : undefined;
+    if (!at || !at.list[at.index] || !dest) return false;
+    const [mod] = at.list.splice(at.index, 1);
+    dest.push(mod);
+    this._markChildList(config, rowIndex, colIndex, moduleIndex);
+    const chain = child.map((s) => ({ ...s }));
+    chain[chain.length - 1] = { slot, index: dest.length - 1 };
+    this.state = { ...this.state, selectedPath: { rowIndex, columnIndex: colIndex, moduleIndex, childPath: chain } };
+    this.updateConfig(config);
+    return true;
+  }
+
+  // ── Layout slots (tabs, row-module columns) ──
+
+  /** The layout module at row/col/module/child in a cloned config. */
+  private _layoutIn(config: MagicCardConfig, row: number, col: number, module: number, child?: readonly ChildStep[]): LayoutRec | undefined {
+    return descendantAt(config.rows[row]?.columns[col]?.modules?.[module], child ?? []) as LayoutRec | undefined;
+  }
+
+  /**
+   * Edit a layout module in place (one undo step, flows of removed modules pruned). Template-linked:
+   * a nested layout overrides its top-level module's child list; a top-level one marks `keys` (its
+   * child list key and / or own keys like layout, column_widths). A row module's columns get ids.
+   * `fn` returns false for no change; `select` is the selection afterwards.
+   */
+  private _editLayout(
+    at: [number, number, number, (readonly ChildStep[] | undefined)?],
+    keys: string[] | ((layout: CardModule) => string[]),
+    fn: (layout: LayoutRec) => boolean | void,
+    select?: (layout: LayoutRec) => EditorPath | null,
+    coalesce = false,
+  ): void {
+    const [row, col, module, child] = at;
+    const config = deepClone(this.state.config);
+    const layout = this._layoutIn(config, row, col, module, child);
+    if (!layout || fn(layout) === false) return;
+    if (layout.type === 'row' && Array.isArray(layout.columns)) {
+      for (const c of layout.columns) if (c && typeof c === 'object' && !c.id) c.id = generateId('col');
+    }
+    if (config.template) {
+      if (child?.length) this._markChildList(config, row, col, module);
+      else {
+        const marks = (layout.not_synced || []) as string[];
+        const add = (typeof keys === 'function' ? keys(layout as CardModule) : keys).filter((k) => !marks.includes(k));
+        if (add.length) layout.not_synced = [...marks, ...add];
+      }
+    }
+    if (select) this.state = { ...this.state, selectedPath: select(layout) };
+    pruneFlows(this.state.config, config);
+    this.updateConfig(config, !coalesce);
+  }
+
+  private _slotPath(row: number, col: number, module: number, child: readonly ChildStep[] | undefined, slot: number): EditorPath {
+    return { rowIndex: row, columnIndex: col, moduleIndex: module, ...(child?.length ? { childPath: child.map((s) => ({ ...s })) } : {}), slotIndex: slot };
+  }
+
+  /** Add a new module of `type` to a layout's slot (tab, row-module column, 0 for flat layouts) and select it. */
+  addChildModule(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, type: string): void {
+    const created = ModuleRegistry.createDefault(type as ModuleType);
+    if (!created) return;
+    let index = -1;
+    this._editLayout([row, col, module, child], (l) => [childListKey(l)!], (layout) => {
+      const list = mutableSlot(layout as CardModule, slot);
+      if (!list) return false;
+      index = list.push(created) - 1;
+    }, () => ({ rowIndex: row, columnIndex: col, moduleIndex: module, childPath: [...(child ?? []).map((s) => ({ ...s })), { slot, index }] }));
+  }
+
+  private _tabsEdit(at: [number, number, number, (readonly ChildStep[] | undefined)?], fn: (tabs: TabEntry[], layout: LayoutRec) => boolean | void, select?: (layout: LayoutRec) => EditorPath | null): void {
+    this._editLayout(at, ['tabs'], (layout) => {
+      if (layout.type !== 'tabs') return false;
+      if (!Array.isArray(layout.tabs)) layout.tabs = [];
+      return fn(layout.tabs, layout);
+    }, select);
+  }
+
+  addTab(row: number, col: number, module: number, child?: ChildStep[]): void {
+    this._tabsEdit([row, col, module, child], (tabs) => {
+      tabs.push({ label: `Tab ${tabs.length + 1}`, modules: [] });
+    }, (l) => this._slotPath(row, col, module, child, l.tabs!.length - 1));
+  }
+
+  renameTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, label: string): void {
+    this.updateTab(row, col, module, child, slot, { label });
+  }
+
+  /** Patch a tab (label, icon); undefined removes a key. A blank label keeps the tab's label (else "Tab N"). */
+  updateTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, patch: { label?: string; icon?: string }): void {
+    this._tabsEdit([row, col, module, child], (tabs) => {
+      if (!tabs[slot]) return false;
+      if ('label' in patch && !patch.label?.trim()) {
+        const label = tabs[slot].label?.trim() ? tabs[slot].label : `Tab ${slot + 1}`;
+        if (label === tabs[slot].label && Object.keys(patch).length === 1) return false;
+        patch = { ...patch, label };
+      }
+      tabs[slot] = withPatch(tabs[slot], patch);
+    });
+  }
+
+  moveTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, delta: -1 | 1): void {
+    const to = slot + delta;
+    this._tabsEdit([row, col, module, child], (tabs, layout) => {
+      if (!tabs[slot] || to < 0 || to >= tabs.length) return false;
+      const [tab] = tabs.splice(slot, 1);
+      tabs.splice(to, 0, tab);
+      // the default tab stays on the same tab
+      const active = Number(layout.active_tab ?? 0);
+      if (active === slot) layout.active_tab = to;
+      else if (active === to) layout.active_tab = slot;
+    }, () => this._slotPath(row, col, module, child, to));
+  }
+
+  /** Delete a tab and its modules (their flows go in the same step; never the only tab); the next tab is selected. */
+  deleteTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number): void {
+    this._tabsEdit([row, col, module, child], (tabs, layout) => {
+      if (!tabs[slot] || tabs.length <= 1) return false;
+      tabs.splice(slot, 1);
+      const active = Number(layout.active_tab ?? 0);
+      if (active > slot) layout.active_tab = active - 1;
+      if (Number(layout.active_tab ?? 0) >= tabs.length) {
+        if (tabs.length > 1) layout.active_tab = tabs.length - 1;
+        else delete layout.active_tab;
+      }
+    }, (l) => (l.tabs!.length
+      ? this._slotPath(row, col, module, child, Math.min(slot, l.tabs!.length - 1))
+      : { rowIndex: row, columnIndex: col, moduleIndex: module, ...(child?.length ? { childPath: child.map((s) => ({ ...s })) } : {}) }));
+  }
+
+  private _rowEdit(at: [number, number, number, (readonly ChildStep[] | undefined)?], keys: string[] | ((layout: CardModule) => string[]), fn: (cols: NestedColumnConfig[], layout: LayoutRec) => boolean | void, select?: (layout: LayoutRec) => EditorPath | null, coalesce = false): void {
+    this._editLayout(at, keys, (layout) => {
+      if (layout.type !== 'row') return false;
+      if (!Array.isArray(layout.columns)) layout.columns = [];
+      return fn(layout.columns, layout);
+    }, select, coalesce);
+  }
+
+  /** Add an empty column to a row module (custom widths get 1fr; a preset is re-equalised) and select it. */
+  addNestedColumn(row: number, col: number, module: number, child?: ChildStep[]): void {
+    this._rowEdit([row, col, module, child], ['columns', 'layout', 'column_widths'], (cols, layout) => {
+      cols.push({ id: generateId('col'), modules: [] });
+      if (Array.isArray(layout.column_widths) && layout.column_widths.length) {
+        layout.column_widths = [...columnWidthsList(layout.column_widths, cols.length - 1), '1fr'];
+      } else {
+        delete layout.column_widths;
+        layout.layout = this._equalLayout(cols.length);
+      }
+    }, (l) => this._slotPath(row, col, module, child, l.columns!.length - 1));
+  }
+
+  /** Delete a row-module column and its modules (never the last column). */
+  deleteNestedColumn(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number): void {
+    this._rowEdit([row, col, module, child], ['columns', 'layout', 'column_widths'], (cols, layout) => {
+      if (cols.length <= 1 || !cols[slot]) return false;
+      cols.splice(slot, 1);
+      layout.layout = this._equalLayout(cols.length);
+      if (Array.isArray(layout.column_widths) && layout.column_widths.length) {
+        const widths = columnWidthsList(layout.column_widths, cols.length + 1);
+        widths.splice(slot, 1);
+        if (cols.length < 2) delete layout.column_widths;
+        else layout.column_widths = widths;
+      }
+    }, (l) => this._slotPath(row, col, module, child, Math.min(slot, l.columns!.length - 1)));
+  }
+
+  /**
+   * Move a row-module column one place left / right (Alt+Up/Down, Move up/down). Its modules, design
+   * and other keys move with it, and so does its width: the `column_widths` entry, else its part of
+   * the preset ("2-1" becomes "1-2") or custom grid layout. The moved column is selected.
+   */
+  moveNestedColumn(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, delta: -1 | 1): void {
+    const to = slot + delta;
+    const keys = ['columns'];
+    this._rowEdit([row, col, module, child], () => keys, (cols, layout) => {
+      if (slot < 0 || slot >= cols.length || to < 0 || to >= cols.length) return false;
+      const swap = <T>(list: T[]) => {
+        [list[slot], list[to]] = [list[to], list[slot]];
+      };
+      swap(cols);
+      if (Array.isArray(layout.column_widths) && layout.column_widths.length) {
+        const widths = columnWidthsList(layout.column_widths, cols.length);
+        swap(widths);
+        layout.column_widths = widths;
+        keys.push('column_widths');
+      } else if (typeof layout.layout === 'string') {
+        const preset = /^\d+(?:-\d+)*$/.test(layout.layout);
+        const parts = preset ? layout.layout.split('-') : layout.layout.trim().split(/\s+/);
+        if (parts.length === cols.length) {
+          swap(parts);
+          const next = parts.join(preset ? '-' : ' ');
+          if (next !== layout.layout) {
+            layout.layout = next;
+            keys.push('layout');
+          }
+        }
+      }
+    }, () => this._slotPath(row, col, module, child, to));
+  }
+
+  /**
+   * A preset layout for a row module, like setRowLayout: surplus columns' modules move to the last kept column.
+   * Template-linked card: like the General tab, `columns` is marked only when the column count changes,
+   * `layout` when it changes, and `column_widths` always (the preset drops the widths: a local override).
+   */
+  setNestedRowLayout(row: number, col: number, module: number, child: ChildStep[] | undefined, layout: string): void {
+    const keys = ['column_widths'];
+    this._rowEdit([row, col, module, child], () => keys, (cols, mod) => {
+      const count = cols.length;
+      const before = mod.layout;
+      applyRowLayout({ ...mod, columns: cols }, layout, () => ({ id: generateId('col'), modules: [] }));
+      mod.layout = layout;
+      delete mod.column_widths;
+      if (before !== layout) keys.push('layout');
+      if (cols.length !== count) keys.push('columns');
+    });
+  }
+
+  /** A row module's column widths (undefined removes them), like setColumnWidths. */
+  setNestedColumnWidths(row: number, col: number, module: number, child: ChildStep[] | undefined, widths: string[] | undefined, layout?: string, coalesce = false): void {
+    const set = !!widths?.length || !!layout;
+    this._rowEdit([row, col, module, child], set ? ['column_widths', ...(layout ? ['layout'] : [])] : [], (_cols, mod) => {
+      if (widths?.length) mod.column_widths = [...widths];
+      else delete mod.column_widths;
+      if (layout) mod.layout = layout;
+      // the widths field's reset on a top-level row module: synced with the template again
+      if (!set && !child?.length && Array.isArray(mod.not_synced)) {
+        mod.not_synced = mod.not_synced.filter((k: string) => k !== 'column_widths');
+        if (!mod.not_synced.length) delete mod.not_synced;
+      }
+    }, undefined, coalesce);
+  }
+
+  /** Patch a row-module column (gap, padding, vertical_align, display, design); undefined removes a key. */
+  updateNestedColumn(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, patch: Partial<NestedColumnConfig>): void {
+    this._rowEdit([row, col, module, child], ['columns'], (cols) => {
+      if (!cols[slot]) return false;
+      cols[slot] = withPatch(cols[slot], patch);
+    });
+  }
+
   // ── Undo / Redo ──
 
   undo(): void {
     const prev = this.undoRedo.undo(this.state.config);
     if (prev) {
-      this.state = { ...this.state, config: prev, isDirty: true };
+      this.state = {
+        ...this.state,
+        config: prev,
+        isDirty: true,
+        selectedPath: this._clampedPath(prev, this.state.selectedPath),
+        selectedFlow: this._liveFlow(prev),
+      };
       this.notify();
       this.dispatchConfigChanged(prev);
     }
@@ -240,7 +852,13 @@ export class EditorStateManager {
   redo(): void {
     const next = this.undoRedo.redo(this.state.config);
     if (next) {
-      this.state = { ...this.state, config: next, isDirty: true };
+      this.state = {
+        ...this.state,
+        config: next,
+        isDirty: true,
+        selectedPath: this._clampedPath(next, this.state.selectedPath),
+        selectedFlow: this._liveFlow(next),
+      };
       this.notify();
       this.dispatchConfigChanged(next);
     }
@@ -255,6 +873,11 @@ export class EditorStateManager {
   }
 
   // ── Cleanup ──
+
+  /** Send a pending (debounced) config-changed right away. */
+  flush(): void {
+    this.dispatchConfigChanged.flush();
+  }
 
   destroy(): void {
     this.dispatchConfigChanged.cancel();

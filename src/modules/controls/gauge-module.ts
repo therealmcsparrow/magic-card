@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, svg, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, GaugeModuleConfig } from '../../types';
@@ -13,7 +13,8 @@ import {
   renderNumberField,
   renderColorField,
 } from '../../utils/form-utils';
-import { SyncContext } from '../../utils/sync-path';
+import { entityDisplayName, entityNumber, formatEntityValue } from '../../utils/entity-value';
+import { rangeColor, renderColorRangesField } from '../../utils/color-ranges';
 
 class GaugeModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -21,7 +22,7 @@ class GaugeModule extends BaseMagicModule {
     name: 'Gauge',
     description: 'Arc gauge for displaying numeric sensor values',
     category: 'controls',
-    icon: 'mdi:gauge',
+    icon: 'mdi:speedometer',
   };
 
   createDefault(): GaugeModuleConfig {
@@ -32,56 +33,88 @@ class GaugeModule extends BaseMagicModule {
       max: 100,
       needle: true,
       gauge_style: 'half',
+      show_name: true,
     };
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as GaugeModuleConfig;
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
-    const min = c.min ?? 0;
-    const max = c.max ?? 100;
-    const rawValue = entity ? Number(entity.state) : Math.round((min + max) / 2);
-    const value = Math.max(min, Math.min(max, rawValue));
-    const pct = ((value - min) / (max - min)) * 100;
+    const min = Number.isFinite(Number(c.min)) ? Number(c.min) : 0;
+    const max = Number.isFinite(Number(c.max)) ? Number(c.max) : 100;
+    const attribute = c.attribute || undefined;
 
-    const color = this._getSeverityColor(value, c.severity) || 'var(--primary-color, #03a9f4)';
+    // No entity yet: a preview at the midpoint. An entity without a number (unavailable, "on", a
+    // missing attribute): an empty arc with the entity's state as text.
+    let num: number | undefined;
+    let valueText: string;
+    let unit = '';
+    if (!c.entity) {
+      num = Math.round((min + max) / 2);
+      valueText = String(num);
+    } else if (!entity) {
+      num = undefined;
+      valueText = '—';
+    } else {
+      num = entityNumber(entity, attribute);
+      if (num === undefined && attribute && entity.attributes[attribute] === undefined) {
+        valueText = hass!.formatEntityState?.(entity, 'unavailable') || 'Unavailable';
+      } else {
+        const v = formatEntityValue(hass, entity, attribute, { decimals: c.decimals });
+        valueText = num === undefined ? v.text : v.value;
+        unit = num === undefined || c.show_unit === false ? '' : v.unit;
+      }
+    }
+    const unavailable = num === undefined;
+    const value = unavailable ? min : Math.max(min, Math.min(max, num!));
+    const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+    // Ranges see the clamped value, so a value past max (or below min) keeps the edge range's colour.
+    const color = rangeColor(unavailable ? undefined : value, c.severity) || 'var(--primary-color, #03a9f4)';
+    const name = c.show_name === false ? '' : entity ? entityDisplayName(hass, entity) : c.entity || '';
+    const label = `${name ? `${name}: ` : ''}${valueText}${unit ? ` ${unit}` : ''}`;
+    const text = (x: number, y: number, size: number, anchor = 'middle') => svg`
+      <text class="mc-gauge-text" data-mc-part="state" x=${x} y=${y} text-anchor=${anchor} font-size=${unavailable ? Math.min(size, 10) : size} font-weight="600" fill="currentColor">
+        ${valueText}${unit ? svg`<tspan class="mc-gauge-unit" font-size=${Math.round(size * 0.55)} font-weight="400" dx="1">${unit}</tspan>` : nothing}
+      </text>`;
+    const needle = (cx: number, cy: number, x: number, y: number) =>
+      c.needle !== false && !unavailable
+        ? svg`<line x1=${cx} y1=${cy} x2=${x} y2=${y} stroke=${color} stroke-width="2" stroke-linecap="round" />
+            <circle cx=${cx} cy=${cy} r="3" fill=${color} />`
+        : nothing;
+    const wrap = (style: string, body: TemplateResult) => html`
+      <div
+        class="mc-module mc-gauge mc-gauge--${style}${unavailable && c.entity ? ' mc-gauge--unavailable' : ''}"
+        style="text-align: center;"
+        role="meter"
+        aria-valuemin=${min}
+        aria-valuemax=${max}
+        aria-valuenow=${unavailable ? nothing : value}
+        aria-valuetext=${label}
+      >
+        ${body}
+        ${name ? html`<div class="mc-gauge-name" data-mc-part="name">${name}</div>` : nothing}
+      </div>
+    `;
 
-    const isHalf = c.gauge_style === 'half' || !c.gauge_style;
-    const isFull = c.gauge_style === 'full';
-    const isQuarter = c.gauge_style === 'quarter';
-
-    if (isFull) {
-      const angle = (pct / 100) * 360;
+    if (c.gauge_style === 'full') {
+      const angle = Math.min((pct / 100) * 360, 359.99);
       const rad = (angle - 90) * (Math.PI / 180);
-      const r = 40;
-      const cx = 50;
-      const cy = 50;
-      const endX = cx + r * Math.cos(rad);
-      const endY = cy + r * Math.sin(rad);
+      const endX = 50 + 40 * Math.cos(rad);
+      const endY = 50 + 40 * Math.sin(rad);
       const largeArc = angle > 180 ? 1 : 0;
-
-      return html`
-        <div class="mc-module mc-gauge mc-gauge--full" style="text-align: center;">
-          <svg viewBox="0 0 100 100" width="120" height="120">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
-            ${pct > 0
-              ? html`<path
-                  d="M 50 10 A 40 40 0 ${largeArc} 1 ${endX} ${endY}"
-                  fill="none"
-                  stroke=${color}
-                  stroke-width="8"
-                  stroke-linecap="round"
-                />`
-              : ''}
-            <text x="50" y="54" text-anchor="middle" font-size="16" font-weight="600" fill="currentColor">
-              ${value}
-            </text>
-          </svg>
-        </div>
-      `;
+      return wrap('full', html`
+        <svg viewBox="0 0 100 100" width="120" height="120">
+          <circle data-mc-part="background" cx="50" cy="50" r="40" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
+          ${pct > 0
+            ? svg`<path d="M 50 10 A 40 40 0 ${largeArc} 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`
+            : nothing}
+          ${needle(50, 50, 50 + 30 * Math.cos(rad), 50 + 30 * Math.sin(rad))}
+          ${text(50, c.needle !== false && !unavailable ? 74 : 54, 16)}
+        </svg>
+      `);
     }
 
-    if (isQuarter) {
+    if (c.gauge_style === 'quarter') {
       const angle = (pct / 100) * 90;
       const startRad = -90 * (Math.PI / 180);
       const endRad = (-90 + angle) * (Math.PI / 180);
@@ -92,79 +125,36 @@ class GaugeModule extends BaseMagicModule {
       const startY = cy + r * Math.sin(startRad);
       const endX = cx + r * Math.cos(endRad);
       const endY = cy + r * Math.sin(endRad);
-
-      return html`
-        <div class="mc-module mc-gauge mc-gauge--quarter" style="text-align: center;">
-          <svg viewBox="0 0 100 100" width="120" height="120">
-            <path d="M 10 46 A 44 44 0 0 1 54 90" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
-            ${pct > 0
-              ? html`<path
-                  d="M ${startX} ${startY} A ${r} ${r} 0 0 1 ${endX} ${endY}"
-                  fill="none"
-                  stroke=${color}
-                  stroke-width="8"
-                  stroke-linecap="round"
-                />`
-              : ''}
-            <text x="20" y="80" text-anchor="start" font-size="18" font-weight="600" fill="currentColor">
-              ${value}
-            </text>
-          </svg>
-        </div>
-      `;
+      return wrap('quarter', html`
+        <svg viewBox="0 0 100 100" width="120" height="120">
+          <path data-mc-part="background" d="M 10 46 A 44 44 0 0 1 54 90" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
+          ${pct > 0
+            ? svg`<path d="M ${startX} ${startY} A ${r} ${r} 0 0 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`
+            : nothing}
+          ${needle(cx, cy, cx + 34 * Math.cos(endRad), cy + 34 * Math.sin(endRad))}
+          ${text(c.needle !== false && !unavailable ? 60 : 20, c.needle !== false && !unavailable ? 40 : 80, 18, 'start')}
+        </svg>
+      `);
     }
 
-    // Default: half gauge (semicircle)
+    // Default: half gauge (semicircle). With a needle the value sits under the pivot, between min and max.
+    const withNeedle = c.needle !== false && !unavailable;
     const angle = (pct / 100) * 180;
     const rad = (180 + angle) * (Math.PI / 180);
-    const r = 40;
-    const cx = 50;
-    const cy = 55;
-    const endX = cx + r * Math.cos(rad);
-    const endY = cy + r * Math.sin(rad);
-    const largeArc = angle > 180 ? 1 : 0;
-
-    return html`
-      <div class="mc-module mc-gauge mc-gauge--half" style="text-align: center;">
-        <svg viewBox="0 0 100 70" width="140" height="100">
-          <path
-            d="M 10 55 A 40 40 0 0 1 90 55"
-            fill="none"
-            stroke="var(--divider-color, #e0e0e0)"
-            stroke-width="8"
-            stroke-linecap="round"
-          />
-          ${pct > 0
-            ? html`<path
-                d="M 10 55 A 40 40 0 ${largeArc} 1 ${endX} ${endY}"
-                fill="none"
-                stroke=${color}
-                stroke-width="8"
-                stroke-linecap="round"
-              />`
-            : ''}
-          ${c.needle
-            ? html`
-                <line
-                  x1="50"
-                  y1="55"
-                  x2=${endX}
-                  y2=${endY}
-                  stroke=${color}
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <circle cx="50" cy="55" r="3" fill=${color} />
-              `
-            : ''}
-          <text x="50" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="currentColor">
-            ${value}
-          </text>
-          <text x="10" y="68" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6">${min}</text>
-          <text x="90" y="68" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6">${max}</text>
-        </svg>
-      </div>
-    `;
+    const endX = 50 + 40 * Math.cos(rad);
+    const endY = 55 + 40 * Math.sin(rad);
+    return wrap('half', html`
+      <svg viewBox="0 0 100 ${withNeedle ? 76 : 70}" width="140" height=${withNeedle ? 109 : 100}>
+        <path data-mc-part="background" d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" stroke-linecap="round" />
+        ${pct > 0
+          ? svg`<path d="M 10 55 A 40 40 0 0 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`
+          : nothing}
+        ${needle(50, 55, endX, endY)}
+        ${text(50, withNeedle ? 75 : 50, 14)}
+        <text x="10" y="68" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6">${min}</text>
+        <text x="90" y="68" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6">${max}</text>
+      </svg>
+    `);
   }
 
   renderGeneralTab(
@@ -175,25 +165,6 @@ class GaugeModule extends BaseMagicModule {
   ): TemplateResult {
     const syncCtx = this._buildSyncContext(config, template);
     const c = config as GaugeModuleConfig;
-    const severity = c.severity || [];
-
-    const addSeverity = () => {
-      const newSeverity = [...severity, { from: 0, to: 100, color: '#4caf50' }];
-      onChange({ ...c, severity: newSeverity });
-    };
-
-    const removeSeverity = (index: number) => {
-      const newSeverity = severity.filter((_, i) => i !== index);
-      onChange({ ...c, severity: newSeverity });
-    };
-
-    const updateSeverity = (index: number, key: 'from' | 'to' | 'color', val: string | number) => {
-      const newSeverity = severity.map((s, i) =>
-        i === index ? { ...s, [key]: val } : s,
-      );
-      onChange({ ...c, severity: newSeverity });
-    };
-
     return html`
       <div class="mc-tab-content">
         ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
@@ -201,7 +172,7 @@ class GaugeModule extends BaseMagicModule {
         ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: v }), undefined, 'min', syncCtx)}
         ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: v }), undefined, 'max', syncCtx)}
         ${renderSelectField(
-          'Gauge Style',
+          'Gauge style',
           c.gauge_style,
           [
             { label: 'Half (semicircle)', value: 'half' },
@@ -212,39 +183,23 @@ class GaugeModule extends BaseMagicModule {
           'gauge_style',
           syncCtx,
         )}
-        ${renderToggleField('Show Needle', c.needle, (v) => onChange({ ...c, needle: v }), 'needle', syncCtx)}
-
-        <div class="mc-section">
-          <div class="mc-section-header">Severity Ranges</div>
-          <div class="mc-severity-list">
-            ${severity.map(
-              (s, i) => html`
-                <div class="mc-severity-item" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                  ${renderNumberField('From', s.from, (v) => updateSeverity(i, 'from', v))}
-                  ${renderNumberField('To', s.to, (v) => updateSeverity(i, 'to', v))}
-                  ${renderColorField('Color', s.color, (v) => updateSeverity(i, 'color', v))}
-                  <button class="mc-btn-icon" @click=${() => removeSeverity(i)}>&times;</button>
-                </div>
-              `,
-            )}
-          </div>
-          <button class="mc-btn mc-btn-secondary" @click=${addSeverity}>Add Severity Range</button>
-        </div>
+        ${renderToggleField('Show needle', c.needle !== false, (v) => onChange({ ...c, needle: v }), 'needle', syncCtx)}
+        ${renderToggleField('Show name', c.show_name !== false, (v) => onChange({ ...c, show_name: v }), 'show_name', syncCtx)}
+        ${renderToggleField('Show unit', c.show_unit !== false, (v) => onChange({ ...c, show_unit: v }), 'show_unit', syncCtx)}
+        ${renderNumberField('Decimals', c.decimals, (v) => onChange({ ...c, decimals: Number.isFinite(v) ? v : undefined }),
+          { min: 0, max: 6, optional: true, placeholder: 'Automatic' }, 'decimals', syncCtx)}
+        ${renderColorRangesField('Color ranges', c.severity, (v) => onChange({ ...c, severity: v }), {
+          min: c.min ?? 0, max: c.max ?? 100, propertyName: 'severity', syncCtx,
+          help: 'The arc takes the color of the highest range at or below the value.',
+        })}
       </div>
     `;
   }
 
-  private _getSeverityColor(
-    value: number,
-    severity?: Array<{ from: number; to: number; color: string }>,
-  ): string | undefined {
-    if (!severity || severity.length === 0) return undefined;
-    for (const s of severity) {
-      if (value >= s.from && value <= s.to) {
-        return s.color;
-      }
-    }
-    return undefined;
+  validate(config: CardModule): string[] {
+    const c = config as GaugeModuleConfig;
+    if (c.min !== undefined && c.max !== undefined && Number(c.min) >= Number(c.max)) return ['Min must be less than max'];
+    return [];
   }
 }
 

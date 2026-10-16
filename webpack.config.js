@@ -5,9 +5,26 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {
-    entry: './src/index.ts',
+    // Two bundles: the card, and the animation studio the magic-card-utils panel loads (it defines
+    // only its own elements). The card's v2 animation runtime is a lazy chunk
+    // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
+    // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
+    // (magic-card-icon-library.js, public path: src/anim-studio/public-path.ts). The release uploads
+    // dist/*.js and HACS installs them all.
+    entry: {
+      'magic-card': './src/index.ts',
+      'magic-card-animation-studio': './src/anim-studio/index.ts',
+    },
     output: {
-      filename: 'magic-card.js',
+      filename: '[name].js',
+      // the query busts caches when the chunk changes (HACS' ?hacstag= only reaches the entry URL)
+      chunkFilename: 'magic-card-[name].js?v=[contenthash:8]',
+      // set at run time (src/index.ts, src/anim-studio/public-path.ts); '' keeps webpack's document.currentScript probe out
+      publicPath: '',
+      // chunks are ES modules loaded with native import() (smallest loader; works from the module
+      // script HA loads magic-card.js as); the entries stay plain scripts
+      chunkLoading: 'import',
+      chunkFormat: 'module',
       path: path.resolve(__dirname, 'dist'),
       clean: true,
     },
@@ -23,6 +40,11 @@ module.exports = (env, argv) => {
     },
     module: {
       rules: [
+        {
+          // keep import.meta.url as written (it is the entry's own URL at run time, not the source path)
+          test: /\.ts$/,
+          parser: { importMeta: false },
+        },
         {
           test: /\.ts$/,
           use: 'ts-loader',
@@ -43,14 +65,15 @@ module.exports = (env, argv) => {
             new TerserPlugin({
               terserOptions: {
                 output: {
-                  comments: false,
+                  // only the Material Design Icons attribution (src/icon-anim/mdi-paths.ts, Apache-2.0)
+                  comments: (_node, comment) => /^!\s*Material Design Icons/.test(comment.value),
                 },
               },
               extractComments: false,
             }),
           ]
         : [],
-      // Disable code splitting - bundle everything into one file for HA custom cards
+      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk
       splitChunks: false,
       runtimeChunk: false,
     },

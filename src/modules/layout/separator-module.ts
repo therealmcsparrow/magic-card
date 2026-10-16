@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, SeparatorModuleConfig, EditorTab } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderTextField, renderSelectField, renderColorField } from '../../utils/form-utils';
+import { renderUnitField, renderSelectField, renderColorField } from '../../utils/form-utils';
 import { SyncContext } from '../../utils/sync-path';
 
 class SeparatorModule extends BaseMagicModule {
@@ -70,7 +70,7 @@ class SeparatorModule extends BaseMagicModule {
           { label: 'None', value: 'none' },
         ], (v) => onChange({ ...c, separator_style: v as SeparatorModuleConfig['separator_style'] }), 'separator_style', syncCtx)}
         ${renderColorField('Color', c.separator_color, (v) => onChange({ ...c, separator_color: v }), 'separator_color', syncCtx)}
-        ${renderTextField('Width', c.separator_width, (v) => onChange({ ...c, separator_width: v }), 'separator_width', syncCtx)}
+        ${renderUnitField('Width', c.separator_width, (v) => onChange({ ...c, separator_width: v || undefined }), 'separator_width', syncCtx, '1')}
       </div>
     `;
   }

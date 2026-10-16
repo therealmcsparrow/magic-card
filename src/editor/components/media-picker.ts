@@ -1,8 +1,10 @@
-import { LitElement, html, TemplateResult, nothing } from 'lit';
+import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant, MediaBrowseItem, MediaResolveResult } from '../../types';
+import { HomeAssistant, MediaBrowseItem } from '../../types';
 import { pickerStyles, mediaPickerStyles } from '../../css/css';
+import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
 
 interface BreadcrumbEntry {
   title: string;
@@ -11,13 +13,14 @@ interface BreadcrumbEntry {
 
 @customElement('mc-media-picker')
 export class MediaPicker extends LitElement {
-  static styles = [pickerStyles, mediaPickerStyles];
+  static styles = [editorSystem, pickerStyles, mediaPickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) mediaType: 'image' | 'video' | '' = '';
 
   private _modalCtrl = new ModalDragResizeController(this);
+  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -93,27 +96,14 @@ export class MediaPicker extends LitElement {
     this._selectedItem = item;
   }
 
-  private async _handleSave(): Promise<void> {
-    if (!this._selectedItem || !this.hass) {
-      this._closeModal();
-      return;
-    }
-
-    try {
-      const result = await this.hass.callWS<MediaResolveResult>({
-        type: 'media_source/resolve_media',
-        media_content_id: this._selectedItem.media_content_id,
-      });
-      const value = `url('${result.url}')`;
-      this.value = value;
-      this.dispatchEvent(new CustomEvent('value-changed', {
-        detail: { value },
-        bubbles: true,
-        composed: true,
-      }));
-    } catch {
-      // Fallback: use media_content_id as value
-      const value = `url('${this._selectedItem.media_content_id}')`;
+  /**
+   * Stores the item's media-source id: the card resolves it while rendering (a resolved URL carries
+   * a signature that expires, so it cannot be stored).
+   */
+  private _handleSave(): void {
+    const item = this._selectedItem;
+    if (item) {
+      const value = item.media_content_id;
       this.value = value;
       this.dispatchEvent(new CustomEvent('value-changed', {
         detail: { value },
@@ -121,7 +111,6 @@ export class MediaPicker extends LitElement {
         composed: true,
       }));
     }
-
     this._closeModal();
   }
 
@@ -167,17 +156,25 @@ export class MediaPicker extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="mc-picker-row">
+      <div class="with-icon with-action">
+        <ha-icon icon=${this.mediaType === 'video' ? 'mdi:video-outline' : 'mdi:image-outline'}></ha-icon>
         <input
           type="text"
-          class="mc-picker-input"
+          class="input"
           .value=${this.value}
-          placeholder="URL or media path"
+          placeholder="/local/images/background.jpg"
+          aria-label="Media URL or path"
+          spellcheck="false"
           @input=${this._onInputChange}
         />
-        <button class="mc-picker-btn" @click=${this._openModal}>
-          <ha-icon icon="mdi:folder-search"></ha-icon>
-          Browse
+        <button
+          type="button"
+          class="icon-btn sm field-action browse"
+          aria-label="Browse media"
+          title="Browse media"
+          @click=${this._openModal}
+        >
+          <ha-icon icon="mdi:folder-open-outline"></ha-icon>
         </button>
       </div>
       ${this._showModal ? this._renderModal() : ''}
@@ -188,35 +185,17 @@ export class MediaPicker extends LitElement {
     const items = this._getFilteredItems();
 
     return html`
-      <div class="mc-picker-overlay" @click=${() => { if (!this._modalCtrl.consumeDragFlag()) this._closeModal(); }}>
-        <div class="mc-picker-modal" @click=${(e: Event) => e.stopPropagation()}>
-          <div class="mc-picker-header"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleHeaderPointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleHeaderTouchStart(e)}>
-            <div class="mc-picker-header-start">
-              <ha-icon icon="mdi:folder-search"></ha-icon>
-              <span class="mc-picker-title">Select Media</span>
-            </div>
-            <div class="mc-picker-header-end">
-              <button class="mc-modal-maximize-btn" @click=${() => this._modalCtrl.toggleMaximize()}>
-                <ha-icon icon=${this._modalCtrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-              </button>
-              <button class="mc-picker-close" @click=${this._closeModal} aria-label="Close">&times;</button>
-            </div>
-          </div>
+      <dialog class="mc-picker-overlay" aria-label="Select media" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
+        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
+          ${renderPickerHeader('Select media', this._modalCtrl, () => this._closeModal())}
 
           ${this._renderBreadcrumbs()}
 
           <div class="mc-picker-search">
-            <input
-              type="text"
-              placeholder="Filter items..."
-              .value=${this._searchQuery}
-              @input=${(e: InputEvent) => { this._searchQuery = (e.target as HTMLInputElement).value; }}
-            />
+            ${renderPickerSearch('Filter items', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
 
-          <div class="mc-picker-list">
+          <div class="mc-picker-list" role="listbox" aria-label="Media">
             ${this._loading
               ? html`<div class="mc-picker-loading">Loading...</div>`
               : this._error
@@ -227,14 +206,12 @@ export class MediaPicker extends LitElement {
             }
           </div>
           <div class="mc-picker-footer">
-            <button class="action-btn cancel-btn" @click=${this._closeModal}>Cancel</button>
-            <button class="action-btn save-btn" @click=${this._handleSave} ?disabled=${!this._selectedItem}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>Save</button>
           </div>
-          <div class="mc-modal-resize-handle"
-               @pointerdown=${(e: PointerEvent) => this._modalCtrl.handleResizePointerDown(e)}
-               @touchstart=${(e: TouchEvent) => this._modalCtrl.handleResizeTouchStart(e)}></div>
+          ${renderResizeHandle(this._modalCtrl)}
         </div>
-      </div>
+      </dialog>
     `;
   }
 
@@ -242,18 +219,18 @@ export class MediaPicker extends LitElement {
     if (this._breadcrumbs.length <= 1) return html``;
 
     return html`
-      <div class="mc-picker-breadcrumbs">
+      <nav class="mc-picker-breadcrumbs" aria-label="Media folders">
         ${this._breadcrumbs.map((entry, i) => {
           const isLast = i === this._breadcrumbs.length - 1;
           if (isLast) {
-            return html`<span class="mc-breadcrumb-current">${entry.title}</span>`;
+            return html`<span class="mc-breadcrumb-current" aria-current="page">${entry.title}</span>`;
           }
           return html`
-            <button class="mc-breadcrumb" @click=${() => this._navigateToBreadcrumb(i)}>${entry.title}</button>
-            <span class="mc-breadcrumb-sep">&rsaquo;</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => this._navigateToBreadcrumb(i)}>${entry.title}</button>
+            <ha-icon icon="mdi:chevron-right"></ha-icon>
           `;
         })}
-      </div>
+      </nav>
     `;
   }
 
@@ -270,19 +247,25 @@ export class MediaPicker extends LitElement {
     };
 
     return html`
-      <div class="mc-picker-item ${isSelected ? 'selected' : ''}" @click=${handleClick}>
+      <button
+        type="button"
+        role="option"
+        class="mc-picker-item"
+        aria-selected=${isSelected ? 'true' : 'false'}
+        @click=${handleClick}
+      >
         ${item.thumbnail
           ? html`<img class="mc-picker-item-thumb" src=${item.thumbnail} alt="" />`
-          : html`<div class="mc-picker-item-icon"><ha-icon icon=${icon}></ha-icon></div>`
+          : html`<span class="mc-picker-item-icon"><ha-icon icon=${icon}></ha-icon></span>`
         }
-        <div class="mc-picker-item-content">
-          <div class="mc-picker-item-name">${item.title}</div>
-        </div>
+        <span class="mc-picker-item-content">
+          <span class="mc-picker-item-name">${item.title}</span>
+        </span>
         ${item.can_expand
-          ? html`<ha-icon icon="mdi:chevron-right" style="color:var(--secondary-text-color);--mdc-icon-size:20px"></ha-icon>`
-          : html`<span class="mc-picker-item-badge">${item.media_class}</span>`
+          ? html`<ha-icon class="mc-picker-item-chev" icon="mdi:chevron-right"></ha-icon>`
+          : html`<span class="chip">${item.media_class}</span>`
         }
-      </div>
+      </button>
     `;
   }
 }
