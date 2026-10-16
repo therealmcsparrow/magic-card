@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
-import type { MagicCardConfig } from '../../../types';
+import type { AnimatedIconPick } from './animated-icon-grid';
+import type { CardModule, MagicCardConfig } from '../../../types';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-system';
 import { readAnimations } from '../../../utils/animation';
@@ -73,3 +74,14 @@ export function loadIconAnimator(): Promise<boolean> {
     });
   return pending;
 }
+
+/** A tile of the icon picker's Animated icons tab: write it (animated-icon-pick.ts). */
+export const applyAnimatedIconPick = (
+  from: EventTarget,
+  module: CardModule,
+  onModule: (m: CardModule) => void,
+  pick: AnimatedIconPick,
+): Promise<boolean> =>
+  import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
+    .then((m) => m.pickAnimatedIcon(host, from, module, onModule, pick))
+    .catch(() => false);

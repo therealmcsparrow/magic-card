@@ -6,3 +6,4 @@
 export { defineIconAnimator, ICON_ANIMATOR_TAG } from './icon-animator';
 export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-grid';
 export { followIcons } from './follow-icon';
+export { pickAnimatedIcon } from './animated-icon-pick';
