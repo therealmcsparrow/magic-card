@@ -9,6 +9,7 @@ import { cardState, patchCard } from './card-request';
 import {
   cardIds,
   iconEntry,
+  MINE_PREFIX,
   newQuickId,
   referenceCount,
   storedDoc,
@@ -77,7 +78,7 @@ export function pickAnimatedIcon(
   const tpl = sm.getState().templateAnimations;
   const lib = h.library.status === 'ready' ? h.library.list().map((d) => d.id) : [];
   const id =
-    ie?.quick && referenceCount(config, ie.id) <= 1
+    ie?.quick && !ie.id.startsWith(MINE_PREFIX) && referenceCount(config, ie.id) <= 1
       ? ie.id
       : newQuickId([...cardIds(config, h.customIds(config), tpl), ...lib]);
   const v = validateAnimationDoc(

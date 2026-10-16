@@ -417,7 +417,9 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     /** The id this module's animation is stored under (the applied one, else a new unique id). */
     private _id(): string {
       const ie = iconEntry(this._list());
-      if (ie?.quick) return ie.id;
+      // a My animations copy (MINE_PREFIX) keeps its id only for itself (see _apply): a split or a
+      // library entry gets a quick-icon id, so it is told apart from the copy
+      if (ie?.quick && !ie.id.startsWith(MINE_PREFIX)) return ie.id;
       // a My animations document is never overwritten: a picked animation gets a new id
       if (this._doc && this._doc.id !== ie?.id && !h.library.get(this._doc.id)) return this._doc.id;
       return this._newId();
@@ -551,7 +553,12 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
 
     /** Make the working document a copy under a new id (Apply then leaves the shared one alone). */
     private _copyDoc(): void {
-      if (this._doc) this._doc = { ...this._doc, id: this._newId() };
+      // the copy keeps its kind: a My animations copy stays one (it goes with the icon)
+      if (this._doc)
+        this._doc = {
+          ...this._doc,
+          id: this._newId(this._doc.id.startsWith(MINE_PREFIX) ? 'mine' : undefined),
+        };
     }
 
     // ── apply / remove ──
