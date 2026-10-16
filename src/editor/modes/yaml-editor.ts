@@ -2,7 +2,7 @@ import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, EditorState, MagicCardConfig } from '../../types';
 import { EditorStateManager } from '../state/editor-state';
-import { editorStyles, yamlEditorStyles } from '../../css/css';
+import { editorStyles, yamlEditorStyles } from '../../css/editor-css';
 import { editorPrimitives, editorTokens } from '../../css/editor-system';
 import { animationLibrary, inlineAnimations, type LibraryHass } from '../../services/animation-library';
 import { customAnimationIds, embedCustomAnimations } from '../../utils/custom-animations';

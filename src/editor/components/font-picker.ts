@@ -1,7 +1,7 @@
 import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
-import { pickerStyles, fontPickerStyles } from '../../css/css';
+import { pickerStyles, fontPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { GOOGLE_FONTS, loadGoogleFonts } from '../../utils/google-fonts';

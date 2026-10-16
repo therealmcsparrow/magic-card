@@ -4,7 +4,7 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { MODULE_CATEGORIES } from '../../utils/constants';
 import { MagicModuleMetadata } from '../../modules/module-types';
 import { ModuleCategory } from '../../types';
-import { pickerStyles, moduleSelectorStyles } from '../../css/css';
+import { pickerStyles, moduleSelectorStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { renderPickerSearch, PickerDialogController } from '../components/picker-parts';
 
