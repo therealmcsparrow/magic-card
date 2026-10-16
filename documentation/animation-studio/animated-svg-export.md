@@ -15,7 +15,6 @@ A keyframes animation of an icon can be saved as a standalone SVG file that play
 | --- | --- |
 | Animation studio, Draw toolbar | Save as icon, then Animated SVG in the switch at the top of the window ("Icon" is the still icon). See [Own icons](own-icons.md#save-as-icon). |
 | Animation studio, Part presets panel | The Animated SVG button opens Save as icon straight on Animated SVG. See [Icon animations](icon-mode.md#remove-motion). |
-| Card editor, Animate icon | The Animated SVG section, with Copy and Download. See [Animate icon](../design/quick-icon-animator.md#animated-svg). |
 
 In the studio the Icon / Animated SVG switch also works with the arrow keys, Home and End.
 
@@ -57,8 +56,6 @@ The file is drawn in `currentColor`:
 -   as an image (`<img src="…svg">`), there is no text colour, so it is black.
 
 In the studio, the Colour field writes a fixed colour into the file. Without one it reads "Colour: currentColor" with the note "Black in an <img>, the text colour inline." Pick a colour and the file gets it as a `color` attribute; Use currentColor takes it out again. The preview shows a file without a colour in the theme's icon colour.
-
-The card editor's Animate icon has no colour field. To give its file a fixed colour, add a `color` attribute to the `<svg>` element, for example `<svg … class="mc-anim …" color="#44739e">`.
 
 Entity colours and theme variables have no meaning outside Home Assistant. Parts with those colours are drawn in `currentColor` too.
 

@@ -111,7 +111,7 @@ On a linked card, the card's Design tab has a Template animations section under 
 
 The sync indicator next to the section title keeps the whole list local (`custom_animations` in `not_synced`). The section then says "This card uses only its own custom_animations."
 
-In [Animate icon](../design/quick-icon-animator.md), an animation that comes from the template shows a From template tag. Apply or Update stores the card's own version under the same id, so only that document changes on this card.
+When an [icon animation](../design/quick-icon-animator.md#template-linked-cards) that comes from the template follows the module's new icon, the card stores its own version under the same id, so only that document changes on this card.
 
 ## Re-sync
 

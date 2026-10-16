@@ -526,7 +526,7 @@ export class AnimationList extends LitElement {
     if (!doc) {
       return html`<div class="cond">
         ${head}
-        <p class="help">${ref.startsWith('quick-') ? 'Made with Animate icon below.' : this._missingHelp()}</p>
+        <p class="help">${ref.startsWith('quick-') ? 'An animated icon stored in this card.' : this._missingHelp()}</p>
         ${this._play(index, a, trigger, id('play'))}
       </div>`;
     }

@@ -23,7 +23,6 @@ import { fieldReset } from './field-reset';
 import { MenuPopover } from './menu-popover';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
-import { QUICK_ANIMATOR_MODULES, loadIconAnimator } from './icon-animator/loader';
 
 import './color-picker';
 import './unit-field';
@@ -210,8 +209,6 @@ export class DesignPanel extends LitElement {
   @state() private _searchQuery = '';
   @state() private _activeView: 'default' | string = 'default';
   @state() private _pasteMenu = false;
-  /** The quick icon animator is open (its lazy chunk loads on first open; the animator closes it). */
-  @state() private _qa = 0;
   private _pastePop = new MenuPopover(this, {
     menu: () => this.shadowRoot?.querySelector<HTMLElement>('.design-clip .menu'),
     onClose: () => {
@@ -336,25 +333,6 @@ export class DesignPanel extends LitElement {
     }
     if (this.hasTemplate) updates._markNotSynced = 'animations';
     this.onChange(updates);
-  }
-
-  /**
-   * "Animate icon" (modules with an icon, Default view): a loader stub. The animator is the lazy
-   * chunk magic-card-icon-animator.js (<mc-icon-animator>); it reads this panel (design, hass,
-   * moduleType, moduleEntity), writes through _handleAnimationsChange and closes itself with _qa
-   * (icon-animator.ts PanelLike). _qa: 0 closed, 1 loading, 2 open, 3 the chunk failed (the status
-   * line stays mounted for screen readers).
-   */
-  private _quickAnimator(): TemplateResult | typeof nothing {
-    if (this._activeView !== 'default' || !QUICK_ANIMATOR_MODULES.includes(this.moduleType)) return nothing;
-    const qa = this._qa;
-    // one line: the template's text is in magic-card.js as written
-    return html`${qa === 2 ? html`<mc-icon-animator .panel=${this} .design=${this.design}></mc-icon-animator>` : html`<div><button type="button" class="btn btn-text btn-sm qa-open" ?disabled=${qa === 1} @click=${this._openQa}><ha-icon icon="mdi:creation"></ha-icon>${qa === 1 ? 'Loading…' : 'Animate icon'}</button></div>`}<p class="help" role="status">${qa === 3 ? 'The icon animator could not be loaded. Try again.' : ''}</p>`;
-  }
-
-  private _openQa(): void {
-    this._qa = 1;
-    loadIconAnimator().then((ok) => (this._qa = ok ? 2 : 3));
   }
 
   /** Writes a whole-object design key (the ring) to the default view or the active rule. */
@@ -659,7 +637,6 @@ export class DesignPanel extends LitElement {
               .entityColor=${this._entityColor}
               .onChange=${(list: AnimationConfig[]) => this._handleAnimationsChange(list)}
             ></mc-animation-list>
-            ${this._quickAnimator()}
           `,
           syncIndicator,
         );

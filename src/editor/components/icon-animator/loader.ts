@@ -10,8 +10,8 @@ import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source
 import { customAnimationIds } from '../../../utils/custom-animations';
 
 /*
- * The quick icon animator (Design tab, "Animate icon") lives in a lazy editor chunk,
- * dist/magic-card-icon-animator.js, loaded next to magic-card.js on first use (public path:
+ * The icon picker's Animated icons tab (its grid, its picks) and the follow-icon edits live in a lazy
+ * editor chunk, dist/magic-card-icon-animator.js, loaded next to magic-card.js on first use (public path:
  * src/index.ts). Dashboards never load it. Part of magic-card.js: keep it tiny.
  *
  * The chunk gets the card bundle's modules it needs from `host` instead of importing them: a module
@@ -35,9 +35,6 @@ export const host = {
 };
 export type IconAnimatorHost = typeof host;
 
-/** Modules whose main icon can play an icon animation (renderIcon `part: 'icon'`, the rig hook). */
-export const QUICK_ANIMATOR_MODULES = ['icon', 'button', 'info', 'light'];
-
 /**
  * After an edit of a card with icon animation entries (editor-state updateConfig): "This icon"
  * animations follow their module's new icon, library ones go, in the chunk (follow-icon.ts).
@@ -50,14 +47,13 @@ export const followIcons = (sm: CardState, prev: MagicCardConfig, next: MagicCar
 let pending: Promise<boolean> | undefined;
 let chunk: typeof import('./icon-animator-entry') | undefined;
 
-/** Load the chunk once and define <mc-icon-animator>; false when it cannot load (retried next time). */
+/** Load the chunk once and define <mc-animated-icon-grid>; false when it cannot load (retried next time). */
 export function loadIconAnimator(): Promise<boolean> {
   // a chunk that loads but cannot define the element (an older card with a newer cached chunk)
-  // counts as a failure too: the panel goes back to its button and says so
+  // counts as a failure too
   pending ??= import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
     .then((m) => {
       chunk = m;
-      m.defineIconAnimator(host);
       m.defineAnimatedIconGrid(host);
       return true;
     })

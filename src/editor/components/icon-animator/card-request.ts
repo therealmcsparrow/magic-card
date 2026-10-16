@@ -1,8 +1,8 @@
 import type { CardModule, MagicCardConfig } from '../../../types';
 
 /*
- * The Design tab edits one module; the quick icon animator (lazy chunk) also reads the selected
- * module and writes the card's `custom_animations`. Its composed `mc-card-bridge` event reaches the
+ * The Design tab edits one module; the icon picker's Animated icons tab and the follow-icon edits
+ * (lazy chunk) also read the selected module and write the card's `custom_animations`. Its composed `mc-card-bridge` event reaches the
  * card editor (magic-card-editor.ts), whose listener hands over its state manager synchronously.
  * The editor side is that one listener: nothing else of this lives in magic-card.js.
  */

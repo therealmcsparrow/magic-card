@@ -18,7 +18,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [YAML](yaml/README.md) | The full config tree, value syntax, templates, YAML mode, troubleshooting and complete copy-paste examples |
 | [Card, rows and columns](card/README.md) | Card-level, row and column options, actions, display conditions, conditional appearance and pop-up mode |
 | [Modules](modules/README.md) | Every module type and its options, one page per module |
-| [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations, Animate icon and rings, including timer rings |
+| [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations, icon animations and rings, including timer rings |
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
 
@@ -27,4 +27,4 @@ This folder documents the Magic Card editor and every option the card supports. 
 -   New to the card: read [Pane editor](editor/README.md), then [Studio](studio/README.md).
 -   Writing YAML by hand: start with [YAML](yaml/README.md), then [Card, rows and columns](card/README.md) and [Modules](modules/README.md).
 -   Styling: [Design](design/README.md) and [Icon effects](icon-effects/README.md).
--   Your own animations: [Animation studio](animation-studio/README.md). To make an icon's parts move, start with [Icon animations](animation-studio/icon-mode.md), or with [Animate icon](design/quick-icon-animator.md) in the card editor. [Icon parts](animation-studio/parts.md) covers the details. To react to an entity, read [States and values](animation-studio/states-and-values.md).
+-   Your own animations: [Animation studio](animation-studio/README.md). To make an icon's parts move, start with [Icon animations](animation-studio/icon-mode.md), or with the icon picker's Animated icons tab in the card editor (see [Icon animations in cards](design/quick-icon-animator.md)). [Icon parts](animation-studio/parts.md) covers the details. To react to an entity, read [States and values](animation-studio/states-and-values.md).

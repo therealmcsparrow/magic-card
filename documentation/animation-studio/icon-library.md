@@ -14,7 +14,7 @@ The icon library is built into the studio and the card editor. It is separate fr
 ## Where to find it
 
 -   In the studio: New animation, then Icon animation…, under Or start from the icon library. See [Icon animations](icon-mode.md#start-from-the-icon-library).
--   In the card editor: Animate icon in a module's Design tab, under Library. There the entries that fit the module's icon and entity come first. See [Animate icon](../design/quick-icon-animator.md#library).
+-   In the card editor: the Animated icons tab of a module's icon picker. There the entries that fit the module's icon and entity come first. See [Animated icons in the icon picker](using-in-cards.md#animated-icons-in-the-icon-picker).
 
 ## Browsing and search
 

@@ -160,7 +160,7 @@ rows:                              # required (a list, may be empty)
 | `display` | object | | See [Display conditions](#display-conditions). |
 | `conditional_appearance` | list | | See [Conditional appearance](#conditional-appearance). |
 | `animations` | list | | See [Animations](#animations). The card has no entity, so play conditions need `trigger_entity`. |
-| `custom_animations` | list or map | | Animation documents for `preset: custom:<id>`, used when the animation library lacks the id. A map is keyed by id, and each document still needs its own `id`. Format: [Animation YAML](../animation-studio/yaml.md), with the keys in [Animation documents](#animation-documents). The Design tab's [Animate icon](../design/quick-icon-animator.md) stores its animations here, with ids starting `quick-icon-`. |
+| `custom_animations` | list or map | | Animation documents for `preset: custom:<id>`, used when the animation library lacks the id. A map is keyed by id, and each document still needs its own `id`. Format: [Animation YAML](../animation-studio/yaml.md), with the keys in [Animation documents](#animation-documents). The icon picker's [Animated icons](../design/quick-icon-animator.md) tab stores its animations here, with ids starting `quick-icon-`. |
 | `hidden_animations` | list | | Template-linked card: ids of the template's `custom_animations` this card leaves out. See [Template link](#template-link). |
 | `ring` | object | | See [Ring](#ring). `position: outside` is drawn inside on the card. |
 | `shape` | string | | Outline of the card. See [Shape](#shape). Wins over `border_radius`. |
