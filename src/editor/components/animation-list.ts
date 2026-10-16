@@ -17,7 +17,6 @@ import { isSceneId, sceneDecorations } from '../../utils/seasonal-scenes';
 import type { AnimationPreset } from '../../utils/animation-presets';
 import { animationLibrary, type LibraryHass } from '../../services/animation-library';
 import { CUSTOM_PREFIX, customRefId, isCustomRef, type AnimationDoc } from '../../anim-studio/model';
-import { animationStudioUrl, inAnimationStudioPanel, onAnimationStudioLink } from '../../utils/custom-animations';
 
 import './color-picker';
 import './unit-field';
@@ -507,7 +506,7 @@ export class AnimationList extends LitElement {
 
   /**
    * An animation from the library (`custom:<id>`): the preset fields, its own values as the defaults
-   * (empty fields follow the document), and "Edit in animation studio".
+   * (empty fields follow the document).
    */
   private _customBlock(a: AnimationConfig, index: number, note: string | undefined): TemplateResult {
     const doc = this._doc(a.preset);
@@ -633,15 +632,6 @@ export class AnimationList extends LitElement {
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._update(index, resetToPreset(a))}>
             <ha-icon icon="mdi:restore"></ha-icon>Reset to animation
           </button>
-          <a
-            class="btn btn-text btn-sm studio-link"
-            href=${animationStudioUrl(doc.id)}
-            target=${inAnimationStudioPanel() ? '_self' : '_blank'}
-            rel="noopener"
-            @click=${(e: MouseEvent) => onAnimationStudioLink(e, doc.id)}
-          >
-            <ha-icon icon="mdi:open-in-new"></ha-icon>Edit in animation studio
-          </a>
         </div>
       </div>
     `;

@@ -1,34 +1,9 @@
 import { CUSTOM_PREFIX, customRefId, isCustomRef, type AnimationDoc } from '../anim-studio/model';
 
 /*
- * Card-editor helpers for animations from the library (`preset: custom:<id>`): the animation studio
- * link and the export that embeds the documents a card uses (`custom_animations`, the inline fallback
- * a card reads when the library lacks an id, so shared YAML keeps working on another install).
+ * Card-editor helper for animations from the library (`preset: custom:<id>`): the export that embeds
+ * the documents a card uses (`custom_animations`, the inline fallback a card reads when the library lacks an id, so shared YAML keeps working on another install).
  */
-
-/** The magic-card-utils sidebar panel (its `frontend_url_path`), which hosts the animation studio. */
-export const ANIMATION_STUDIO_PATH = '/magic-card-utils';
-
-/** The studio at one animation: `/magic-card-utils?animation=<id>`. */
-export function animationStudioUrl(id: string): string {
-  return `${ANIMATION_STUDIO_PATH}?animation=${encodeURIComponent(id)}`;
-}
-
-/** Whether the page is the magic-card-utils panel (its template editor mounts the card editor). */
-export function inAnimationStudioPanel(path = typeof location !== 'undefined' ? location.pathname : ''): boolean {
-  return path === ANIMATION_STUDIO_PATH || path.startsWith(`${ANIMATION_STUDIO_PATH}/`);
-}
-
-/**
- * Inside the panel: navigate in place the way HA does (history + `location-changed`), so the panel
- * switches to its Animations tab. Elsewhere the link's own `target="_blank"` opens a new tab.
- */
-export function onAnimationStudioLink(e: MouseEvent, id: string): void {
-  if (!inAnimationStudioPanel() || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
-  e.preventDefault();
-  history.pushState(null, '', animationStudioUrl(id));
-  window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
-}
 
 /** Every `custom:<id>` a card config references (design animations at any level), in order. */
 export function customAnimationIds(config: unknown): string[] {
