@@ -683,6 +683,10 @@ export const studioStyles: CSSResult[] = [
     dialog.dlg.wide {
       width: min(640px, calc(100vw - 32px));
     }
+    /* the preset tile grid: 6 tiles of 136px across */
+    dialog.dlg.xwide {
+      width: min(880px, calc(100vw - 32px));
+    }
     dialog.dlg[open] {
       display: grid;
       gap: 12px;
@@ -728,37 +732,8 @@ export const studioStyles: CSSResult[] = [
     .ok {
       color: var(--mc-text) !important;
     }
-    .preset-list {
-      display: grid;
-      gap: 12px;
-      max-height: min(52vh, 460px);
-      overflow: auto;
-      padding-right: 4px;
-    }
-    .pg h3 {
-      margin: 0 0 6px;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--mc-text-2);
-    }
-    .pg-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .preset {
-      min-height: 32px;
-      padding: 0 12px;
-      border: 1px solid var(--mc-divider);
-      border-radius: 9999px;
-      background: var(--mc-surface);
-      color: var(--mc-text);
-      font-size: 0.8125rem;
-    }
-    .preset:hover {
-      background: var(--mc-accent-tint);
-      border-color: transparent;
-      color: var(--mc-accent-ink);
+    mc-preset-grid.preset-list {
+      min-height: 0;
     }
 
     .toast {
