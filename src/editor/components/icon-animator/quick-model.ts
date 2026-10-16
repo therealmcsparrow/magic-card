@@ -34,6 +34,25 @@ export function quickEntry(
   return index < 0 ? undefined : { index, entry: list[index], id: customRefId(list[index].preset) };
 }
 
+/** The animation entries the icon picker's animated icons tab writes (`anim-icon-N`). */
+export const ICON_ENTRY_RE = /^anim-icon-\d+$/;
+
+/**
+ * The module's icon animation entry: the first `custom:quick-*` entry (a document stored in the
+ * card, `quick: true`), else the first picker entry (`anim-icon-N`) pointing at a library document.
+ * Hand-added `custom:` entries with other ids are not the picker's and stay untouched.
+ */
+export function iconEntry(
+  list: AnimationConfig[],
+): { index: number; entry: AnimationConfig; id: string; quick: boolean } | undefined {
+  const q = quickEntry(list);
+  if (q) return { ...q, quick: true };
+  const index = list.findIndex((a) => ICON_ENTRY_RE.test(String(a.id)) && isCustomRef(a.preset));
+  return index < 0
+    ? undefined
+    : { index, entry: list[index], id: customRefId(list[index].preset), quick: false };
+}
+
 /** The card's inline documents as a list (YAML may hold a list or an id-keyed map). */
 export function inlineDocs(
   config: { custom_animations?: unknown } | undefined,
@@ -98,12 +117,12 @@ export const cardIds = (config: MagicCardConfig | undefined, refs: string[], tpl
 ];
 
 /**
- * The animation list with the quick entry pointing at `id`: the existing quick entry keeps its
+ * The animation list with the icon entry (quick or picker library reference) pointing at `id`: it keeps its
  * other fields (play condition, colour...), else a new entry on the icon is appended.
  */
 export function withQuickEntry(list: AnimationConfig[], id: string): AnimationConfig[] {
   const preset = CUSTOM_PREFIX + id;
-  const q = quickEntry(list);
+  const q = iconEntry(list);
   if (q) return list.map((a, i) => (i === q.index ? { ...a, preset, target: 'icon' } : a));
   const taken = new Set(list.map((a) => a.id));
   let n = 1;
@@ -111,9 +130,9 @@ export function withQuickEntry(list: AnimationConfig[], id: string): AnimationCo
   return [...list, { id: `anim-icon-${n}`, preset, target: 'icon', trigger: 'always' }];
 }
 
-/** The animation list without the quick entry. */
+/** The animation list without the icon entry (quick or picker library reference). */
 export function withoutQuickEntry(list: AnimationConfig[]): AnimationConfig[] {
-  const q = quickEntry(list);
+  const q = iconEntry(list);
   return q ? list.filter((_a, i) => i !== q.index) : list;
 }
 
