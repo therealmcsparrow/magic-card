@@ -1,4 +1,4 @@
-import type { CardModule } from '../../../types';
+import type { AnimationConfig, CardModule } from '../../../types';
 import { validateAnimationDoc } from '../../../anim-studio/model';
 // v2 checking (rig, tracks) in validateAnimationDoc: this chunk validates what a pick stores
 import '../../../anim-studio/model-v2';
@@ -23,9 +23,28 @@ import {
  */
 
 /**
+ * The icon entry of `list` pointed at My animations document `id` (nothing stored): `write` gets
+ * the new list, then the module's previous quick document goes unless something still plays it.
+ * Shared by a My animations tile and Animate icon's Apply of an unchanged My animations document.
+ */
+export function referenceMine(
+  h: IconAnimatorHost,
+  from: EventTarget,
+  list: AnimationConfig[],
+  id: string,
+  write: (list: AnimationConfig[]) => void,
+): void {
+  const ie = iconEntry(list);
+  write(withQuickEntry(list, id));
+  if (ie?.quick) patchCard(from, (c) => removeInlineDoc(c, ie.id, h.customIds(c)), true);
+}
+
+/**
  * Built-in tile: the library document is stored inline under a `quick-icon-*` id (the module's own
  * when no other module plays it) and the module gets the tile's icon. My animations tile: the entry
- * points at the library document, nothing is stored, and the module's previous quick document goes.
+ * points at the library document, nothing is stored, and the module's previous quick document goes;
+ * the module's icon changes only when the document names one. On a template-linked card the
+ * module's animation list is marked not_synced (the General tab's sync wrapper skips `design`).
  * False outside the card editor (nothing written) or when the document is not valid.
  */
 export function pickAnimatedIcon(
@@ -41,13 +60,17 @@ export function pickAnimatedIcon(
   const design = module.design ?? {};
   const list = h.readAnimations(design);
   const ie = iconEntry(list);
-  const prev = ie?.quick ? ie.id : undefined;
-  const write = (icon: string, id: string): void =>
-    onModule({ ...module, icon, design: { ...design, animations: withQuickEntry(list, id) } });
+  const marks = (module.not_synced ?? []) as string[];
+  const write = (icon: string | undefined, animations: AnimationConfig[]): void => {
+    const next: CardModule = { ...module, design: { ...design, animations } };
+    if (icon) next.icon = icon;
+    if (config.template && !marks.includes('design.animations'))
+      next.not_synced = [...marks, 'design.animations'];
+    onModule(next);
+  };
 
   if (pick.kind === 'mine') {
-    write(pick.doc.rig?.icon ?? String(module.icon ?? ''), pick.doc.id);
-    if (prev) patchCard(from, (c) => removeInlineDoc(c, prev, h.customIds(c)), true);
+    referenceMine(h, from, list, pick.doc.id, (l) => write(pick.doc.rig?.icon, l));
     return true;
   }
 
@@ -63,7 +86,7 @@ export function pickAnimatedIcon(
   );
   if (!v.ok) return false;
   const doc = v.doc;
-  write(pick.entry.icon, id);
+  write(pick.entry.icon, withQuickEntry(list, id));
   patchCard(from, (c) => upsertInlineDoc(c, doc, h.customIds(c)), true);
   return true;
 }

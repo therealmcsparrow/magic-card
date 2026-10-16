@@ -18,6 +18,12 @@ import {
 export const QUICK_PREFIX = 'quick-';
 
 /**
+ * An edited copy of a My animations document (Animate icon's Apply after a change): a library
+ * animation, never a split of the module's own icon, so it does not follow the icon (it goes).
+ */
+export const MINE_PREFIX = `${QUICK_PREFIX}mine-`;
+
+/**
  * The card's key the animator writes. On a template-linked card the card's documents merge with the
  * template's by id (template-merge.ts): Apply adds this card's own version, the rest stays synced.
  */
@@ -74,11 +80,18 @@ export const inlineDoc = (
   id: string,
 ): Record<string, unknown> | undefined => inlineDocs(config).find((d) => d.id === id);
 
-/** A new quick document id, unique against `taken` (inline ids, library ids, references). */
-export function newQuickId(taken: Iterable<string>, rand: () => number = Math.random): string {
+/**
+ * A new quick document id, unique against `taken` (inline ids, library ids, references); `kind`
+ * 'mine' gives a MINE_PREFIX id.
+ */
+export function newQuickId(
+  taken: Iterable<string>,
+  rand: () => number = Math.random,
+  kind: 'icon' | 'mine' = 'icon',
+): string {
   const used = new Set(taken);
   for (let n = 0; ; n++) {
-    const id = `${QUICK_PREFIX}icon-${
+    const id = `${QUICK_PREFIX}${kind}-${
       n < 32
         ? Math.floor(rand() * 36 ** 6)
             .toString(36)

@@ -78,7 +78,10 @@ export const applyAnimatedIconPick = (
 ): Promise<boolean> =>
   import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
     .then((m) => m.pickAnimatedIcon(host, from, module, onModule, pick))
-    .catch(() => false);
+    .catch((err: unknown) => {
+      console.warn('Magic Card:', err);
+      return false;
+    });
 
 /** The grid tile on the module now (after loadIconAnimator resolved; '' before). */
 export const currentIconPick = (from: EventTarget, module: CardModule): string =>

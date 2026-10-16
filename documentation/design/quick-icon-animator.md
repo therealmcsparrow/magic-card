@@ -56,7 +56,9 @@ Show all (107) lists every entry, and Show matches only goes back. When nothing 
 
 Click a tile to load it into the preview. Library animations carry their own copy of the icon's shapes (`rig.svg`), so they look the same whatever version of the Material Design Icons Home Assistant ships, and the card needs no icon lookup to play them. The animation always draws that copy in place of the module's icon. When the entry was made for another icon, the animator says so: "Plays its own mdi:fan drawing in place of the module's icon."
 
-When the module's animated icon is a My animations reference, the animator shows it as Applied with "From My animations." and a Remove button. Apply of another animation replaces it, so a module never holds two.
+Apply of a My animations tile points the module at that animation in the library and stores nothing in the card, as the icon picker does. The animator says "Applied from My animations." Later changes in the studio reach the card. When you change the animation first, for example its duration, Apply stores the changed version in the card's `custom_animations` under an id starting with `quick-mine-`. That copy stays a library animation: it does not follow the module's icon, and an icon change removes it.
+
+When the module's animated icon is a My animations reference, the animator shows it as Applied with "From My animations." and a Remove button. Update stays off until you pick another animation or change this one. When the library is loaded but no longer holds the animation, the chip reads Not found and the animator says "lib-a: not found in My animations." with the animation's id. Apply of another animation replaces the reference, so a module never holds two.
 
 ## This icon
 
@@ -102,10 +104,11 @@ The animation follows only while the card editor is open. If the editor closes w
 
 ### Library animations
 
-A library animation (from the Icon library or My animations) draws its own icon, so it would keep drawing the old icon over the new one. It is removed instead. When you give the module another icon in the card editor (the icon picker, Clear, or the card editor's YAML mode), the animation goes once the icon has stayed the same for about a second and the new icon resolves. Home Assistant shows "The animated icon was removed because the module's icon changed." One undo brings it back.
+A library animation (from the Icon library or My animations) draws its own icon, so it would keep drawing the old icon over the new one. It is removed instead. When you give the module another icon in the card editor (the icon picker, Clear, or the card editor's YAML mode), the animation goes once the icon has stayed the same for about a second and the new icon resolves. Turning on the entity's icon or switching to an own SVG counts as an icon change too and removes the animation. An icon id that cannot be loaded, such as `mdi:fa` on the way to `mdi:fan`, removes nothing: the editor waits for the next change, and going back to the icon the module had keeps the animation. Home Assistant shows "The animated icon was removed because the module's icon changed." One undo brings it back.
 
 -   A This icon animation is not affected. It follows the icon as described above.
 -   Changes that do not come from the editor, such as raw dashboard YAML or template sync, leave the animation as it is.
+-   A changed copy of a My animations animation (`quick-mine-…`) is removed the same way, with its stored document.
 -   When the removed animation was a My animations reference, an embedded copy of it in `custom_animations` stays.
 -   Entries you added by hand in the Animations list are never removed.
 
@@ -186,7 +189,7 @@ The file goes through the same safety check as the studio's export. When there i
 
 ## Editing further
 
-The animator stores the animation in the card, not in the Magic Card Utils library, and the card editor has no link to the studio. To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils. The animator reminds you: "To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils." See [Import YAML](../animation-studio/library.md#import-yaml).
+The animator stores the animation in the card, not in the Magic Card Utils library, and the card editor has no link to the studio. To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils. The animator reminds you: "To edit it further or keep it in My animations, import this card's YAML in Magic Card Utils." It leaves the note out for a My animations reference, which is already in the library. See [Import YAML](../animation-studio/library.md#import-yaml).
 
 ## Template-linked cards
 

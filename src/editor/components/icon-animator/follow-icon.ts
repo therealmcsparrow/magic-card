@@ -18,6 +18,7 @@ import type { IconAnimatorHost } from './loader';
 import type { CardState } from './card-request';
 import {
   cardIds,
+  MINE_PREFIX,
   QUICK_PREFIX,
   iconEntry,
   newQuickId,
@@ -40,8 +41,8 @@ import {
  * template-linked card a document the template supplies follows too: the result is the card's own
  * document with the same id (an override of the template's, like Apply on that card).
  *
- * A library animation (a stored built-in document, or a My animations reference the icon picker
- * set) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
+ * A library animation (a stored built-in document, a My animations reference the icon picker
+ * set, or Animate icon's edited copy of a My animations document) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
  * is removed instead, with its quick document when nothing else plays it. The tile pick that set it
  * changes the icon and the document in one action: nothing is removed then.
  */
@@ -126,7 +127,8 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
 /**
  * The modules whose library animation goes (`tpl`: the linked template's documents): the same icon
  * entry in `prev` and `next` (place, type, preset) playing a built-in document (its name is an
- * ICON_LIBRARY entry's) or a My animations reference, and an own icon that changed, Clear included.
+ * ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
+ * changed, Clear included.
  */
 export function libraryIconChanges(
   prev: MagicCardConfig,
@@ -139,8 +141,9 @@ export function libraryIconChanges(
     const old = before.get(key)?.m;
     const e = entryOf(m)!;
     if (!old || old.type !== m.type || old.id !== m.id || entryOf(old)?.id !== e.id) continue;
-    const name = e.quick && storedDoc(next, tpl, e.id)?.doc.name;
-    if (e.quick && !ICON_LIBRARY.some((x) => x.name === name)) continue;
+    const mine = e.id.startsWith(MINE_PREFIX);
+    const name = e.quick && !mine && storedDoc(next, tpl, e.id)?.doc.name;
+    if (e.quick && !mine && !ICON_LIBRARY.some((x) => x.name === name)) continue;
     const from = explicitIcon(old);
     const to = explicitIcon(m);
     if (from !== to) out.push({ path, from, to, id: e.id });
@@ -150,7 +153,8 @@ export function libraryIconChanges(
 
 /**
  * A stored document that follows the module's icon: a split of the module's own icon ("This icon",
- * not a library entry) whose drawing is embedded or names the old icon. Raw, as stored.
+ * not a library entry nor a My animations copy) whose drawing is embedded or names the old icon.
+ * Raw, as stored.
  */
 export function followsIcon(
   raw: Record<string, unknown> | undefined,
@@ -158,7 +162,13 @@ export function followsIcon(
   to: string,
 ): boolean {
   const rig = raw?.rig as Partial<Rig> | undefined;
-  if (!raw || !rig || typeof rig !== 'object' || ICON_LIBRARY.some((e) => e.name === raw.name))
+  if (
+    !raw ||
+    !rig ||
+    typeof rig !== 'object' ||
+    String(raw.id).startsWith(MINE_PREFIX) ||
+    ICON_LIBRARY.some((e) => e.name === raw.name)
+  )
     return false;
   if (typeof rig.svg === 'string') return true;
   return typeof rig.icon === 'string' && rig.icon !== to && (!from || rig.icon === from);
@@ -328,6 +338,8 @@ interface Pending {
   waits: number;
   /** A library animation: removed (drop) instead of followed. */
   drop?: boolean;
+  /** Bumped by every arm: a drop still running when its module changed again is superseded. */
+  gen: number;
 }
 
 const waiting = new WeakMap<CardState, Map<string, Pending>>();
@@ -348,15 +360,22 @@ const MAX_WAITS = 120;
 function arm(h: FollowHost, sm: CardState, map: Map<string, Pending>, w: Pending): void {
   clearTimeout(w.timer);
   map.set(w.key, w);
+  const gen = ++w.gen;
   w.timer = setTimeout(() => {
     if (sm.attached === false) {
       if (w.waits++ < MAX_WAITS) arm(h, sm, map, w);
       else map.delete(w.key);
       return;
     }
-    map.delete(w.key);
+    // a drop stays in the map while it runs: a change meanwhile re-arms it from the burst's first
+    // icon (a half-typed id still loading, then the old id back, drops nothing)
+    if (!w.drop) map.delete(w.key);
     void (w.drop ? drop : follow)(h, sm, w).then((wait) => {
-      if (wait && !map.has(w.key)) arm(h, sm, map, w);
+      if (w.drop ? map.get(w.key) !== w || w.gen !== gen : map.has(w.key)) return;
+      // parked: the next icon change of the module re-arms it, still from the burst's first icon
+      if (wait === 'park') return;
+      if (wait) arm(h, sm, map, w);
+      else map.delete(w.key);
     });
   }, FOLLOW_DELAY_MS);
 }
@@ -389,6 +408,7 @@ export function followIcons(
       timer: undefined as unknown as Pending['timer'],
       waits: 0,
       drop,
+      gen: 0,
     };
     entry.last = next;
     entry.waits = 0;
@@ -401,7 +421,9 @@ export function followIcons(
   }
   for (const c of libraryIconChanges(prev, next, sm.getState().templateAnimations)) {
     const key = `drop ${JSON.stringify(c.path)} ${c.id}`;
-    wait(key, c, map.get(key), true);
+    // a parked wait whose document changed since (Update) starts over from this change
+    const p = map.get(key);
+    wait(key, c, p && p.doc === JSON.stringify(played(sm, prev, c.id)) ? p : undefined, true);
   }
 }
 
@@ -417,14 +439,15 @@ export const DROP_NOTE = "The animated icon was removed because the module's ico
 
 /**
  * One module's library animation goes once its icon settled on another (nothing when it went back
- * to the icon it had, to an icon whose shape cannot load, or when the entry or its document changed
- * meanwhile: a tile pick rewrote it). The entry is removed (a template-linked module's list becomes
+ * to the icon it had, or when the entry or its document changed meanwhile: a tile pick rewrote it).
+ * An icon whose shape cannot load (a half-typed id) parks the wait ('park'): the next change of the
+ * icon goes on from the icon before the burst, so typing the old id back drops nothing. The entry is removed (a template-linked module's list becomes
  * its own) and its quick document with it when nothing else plays it; a document the template
  * supplies stays the template's. Folded into the burst's last undo step while the card is still as
  * that edit left it, like follow. True: the editor was detached once the shape was in (the caller
  * waits for it to come back).
  */
-async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean | void> {
+async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean | 'park' | void> {
   const live = () => {
     const c = sm.getConfig();
     const m = at(c, w.path);
@@ -438,7 +461,7 @@ async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean |
   const first = live();
   if (!first.ok) return;
   // like follow: an icon whose shape cannot load (a half-typed id) keeps the animation; Clear drops
-  if (first.to && !(await shapeOf(h, first.to))) return;
+  if (first.to && !(await shapeOf(h, first.to))) return 'park';
   if (sm.attached === false) return true;
   const { c, ok, to } = live();
   if (!ok || to !== first.to) return;
