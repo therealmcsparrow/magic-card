@@ -187,7 +187,8 @@ function envelope(p: Particle, age: number, fade: boolean, period: number): numb
   return Math.max(0, Math.min(1, age / ramp, (p.life - age) / ramp));
 }
 
-function sample(w: World, p: Particle): Sample {
+/** The particle as drawn now (rotation, opacity envelope); shared by the bake and the live engine. */
+export function sample(w: World, p: Particle): Sample {
   let rotate = p.spin * p.age;
   if (p.flow?.align && (p.vx || p.vy)) rotate += (Math.atan2(-p.vx, p.vy) * 180) / Math.PI;
   return { age: p.age, x: p.x, y: p.y, rotate, opacity: p.peak * envelope(p, p.age, w.spec.fade, w.period), scale: 1 };
