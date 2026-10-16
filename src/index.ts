@@ -5,15 +5,15 @@
 __webpack_public_path__ = new URL('.', import.meta.url).href;
 
 import { VERSION } from './version';
-import { CARD_TAG, EDITOR_TAG, CARD_NAME, CARD_DESCRIPTION } from './utils/constants';
+import { CARD_TAG, CARD_NAME, CARD_DESCRIPTION } from './utils/constants';
 
 // Card
 import './card/magic-card';
 import './card/mc-seasonal';
 import './card/mc-seasonal-deco';
 
-// Editor
-import './editor/magic-card-editor';
+// Editor: a lazy chunk (magic-card-editor.js), loaded by MagicCard.getConfigElement() and
+// window.MagicCard.loadEditor() through src/utils/editor-loader.ts, never imported here
 
 // Modules - self-register on import
 import './modules';

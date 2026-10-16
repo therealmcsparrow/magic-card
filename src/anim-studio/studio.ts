@@ -290,6 +290,8 @@ export class AnimationStudio extends LitElement {
   /** Collapsed inspector sections. */
   @state() private _collapsed = readCollapsed();
   private _ro?: ResizeObserver;
+  /** loadEditor() was asked for (once per element). */
+  private _editorRequested = false;
   private _splitDrag?: { pointerId: number };
   /** A rail button opened the layers column: bring this panel's section into view. */
   private _revealPanel?: string;
@@ -380,6 +382,13 @@ export class AnimationStudio extends LitElement {
     // a new animation left unsaved last time (a known one is offered when it opens)
     const draft = this._doc || this._dialog ? undefined : readDraft(draftKey());
     if (draft) this._dialog = { type: 'restore', draft, isNew: true };
+    // mc-unit-field, mc-color-picker and mc-icon-picker (used by tag) live in the card's lazy editor
+    // chunk; ask magic-card.js for it once (module-editor 1.0.0). Until they are defined the fields
+    // stay plain, and the icon start shows its text fallback.
+    if (!this._editorRequested && window.MagicCard?.loadEditor) {
+      this._editorRequested = true;
+      void window.MagicCard.loadEditor();
+    }
     // kind editors and panels defined later (their own files) replace the placeholders
     for (const tag of [...Object.values(KIND_EDITORS).map((x) => x.tag), PATH_OVERLAY_TAG, ...PANELS.map((p) => p.tag)]) {
       if (!editorDefined(tag)) void customElements.whenDefined(tag).then(() => this.requestUpdate());

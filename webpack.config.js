@@ -1,12 +1,19 @@
 const path = require('path');
+const fs = require('fs');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+
+// The release src/version.ts holds, as a literal for the editor chunk's EDITOR_VERSION: the chunk must
+// carry its own copy so a cached magic-card.js from another release notices (src/utils/editor-loader.ts)
+const buildVersion = () => /VERSION\s*=\s*["']([^"']+)["']/.exec(fs.readFileSync(path.resolve(__dirname, 'src/version.ts'), 'utf8'))?.[1];
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {
     // Two bundles: the card, and the animation studio the magic-card-utils panel loads (it defines
-    // only its own elements). The card's v2 animation runtime is a lazy chunk
+    // only its own elements). The card editor is a lazy chunk (magic-card-editor.js, ADR 0007,
+    // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
     // (magic-card-icon-library.js, public path: src/anim-studio/public-path.ts). The release uploads
@@ -56,7 +63,7 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [],
+    plugins: [new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) })],
     devtool: isProduction ? false : 'source-map',
     optimization: {
       minimize: isProduction,

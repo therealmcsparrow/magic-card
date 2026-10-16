@@ -32,6 +32,7 @@ import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
 import { resolveAnimations, type ResolvedV2 } from '../utils/animation';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
+import { loadEditor } from '../utils/editor-loader';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
@@ -351,7 +352,9 @@ export class MagicCard extends LitElement {
     idle: () => this._popup.hidden && !this._popup.isOpen,
   });
 
-  static getConfigElement(): HTMLElement {
+  /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
+  static async getConfigElement(): Promise<HTMLElement> {
+    if (!(await loadEditor())) throw new Error('Magic Card: the visual editor could not be loaded.');
     return document.createElement(EDITOR_TAG);
   }
 
