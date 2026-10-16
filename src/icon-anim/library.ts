@@ -1,210 +1,39 @@
-import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, RigGroup, RigPart, RigShape, TargetRef, Track } from '../anim-studio/model';
-import type { IconGeometry } from '../icons/icon-source';
-import { splitIcon, type SplitPiece } from '../icons/icon-split';
-import { anchorOf, piecesBox, type Anchor } from './icon-doc';
-import { mdiGeometry } from './mdi-paths';
+import type { LibraryEntry } from '../contracts/icon-library';
+import { entryOf, fillIn, flame, flash, fold, k, rise, fall, rollUp, SPIN, swingBelow, t, type Spec } from './library/build';
 import { presetKeyframes } from './part-presets';
+import { CCTV_HEAD_BODY, CCTV_HEAD_HOOD, CCTV_MOUNT } from './library/rigs';
+import { FIRE_AND_CLEANING } from './library/fire-cleaning';
+import { SEASONAL } from './library/seasonal';
+import { HOME } from './library/home';
+import { LIGHTS } from './library/lights';
+import { NATURE } from './library/nature';
 
 /*
- * The animated icon library (icon animator core): ready animations for the icons of most Home
- * Assistant domains. Each entry builds a normal keyframes document with a rig and one track per
- * moving part; the studio edits it like any other document. The rig's source is the icon's own
- * geometry embedded as SVG (`rig.svg`, the bundled MDI path of mdi-paths.ts), and the parts name
- * pieces of that SVG: a card plays it through the rig runtime without resolving any icon, so a
- * dashboard never depends on Home Assistant's MDI version for the piece numbering. A few icons whose
- * moving piece MDI draws in one outline with the rest (the lock's shackle) embed paths cut from the
- * MDI path instead (`own`).
+ * The animated icon library (icon animator core, contract icon-library 1.2.0): ready animations for
+ * the icons of most Home Assistant domains, plus pseudo-domain categories (animal, seasonal, maker,
+ * household) for icons no domain fits. Each entry builds a normal keyframes document with a rig and
+ * one track per moving part; the studio edits it like any other document. The rig's source is the
+ * icon's own geometry embedded as SVG (`rig.svg`, the bundled MDI path of mdi-paths.ts), and the
+ * parts name pieces of that SVG: a card plays it through the rig runtime without resolving any
+ * icon, so a dashboard never depends on Home Assistant's MDI version for the piece numbering. Icons
+ * whose moving piece MDI draws in one outline with the rest (the lock's shackle, the cctv head)
+ * embed paths cut from the MDI path instead (`own`, see library/rigs.ts).
  *
+ * This file holds the 2026.10.03 entries; the P4 entries (brand artist's p4-spec.json) live in the
+ * category files under library/, the builder and motion helpers in library/build.ts.
  * Lives in the studio bundle and the lazy icon animator chunk only, never in magic-card.js.
  */
 
-export interface LibraryEntry {
-  id: string;
-  name: string;
-  /** Home Assistant domain the entry suits first (others are in `tags`). */
-  domain: string;
-  icon: string;
-  tags: string[];
-  build(): AnimationDoc;
-}
-
-// ── builder ──
-
-type Pivot = Anchor | [number, number];
-type PartDef = [name: string, from: number[], pivot?: Pivot];
-type GroupDef = [name: string, parts: string[], pivot?: Pivot];
-
-interface Spec {
-  id: string;
-  name: string;
-  domain: string;
-  icon: string;
-  tags: string[];
-  /** s per cycle. */
-  duration: number;
-  parts: Record<string, PartDef>;
-  groups?: Record<string, GroupDef>;
-  shapes?: RigShape[];
-  /** Own source paths (filled, 24 x 24) instead of the MDI icon: one piece per path. */
-  own?: string[];
-  tracks: (t: Tracks) => void;
-}
-
-interface Tracks {
-  /** A part preset's keyframes on a target (merged with keys already there, later wins per at). */
-  preset(target: TargetRef, presetId: string, params?: Record<string, number>): void;
-  /** Own keyframes (padded to 0 % and 100 % with the nearest key). */
-  keys(target: TargetRef, keys: AnimationKeyframe[]): void;
-  /** A motion path in viewBox units around the rest position. */
-  path(target: TargetRef, d: string): void;
-}
-
-const k = (at: number, v: Omit<AnimationKeyframe, 'at'> = {}): AnimationKeyframe => ({ at, ...v });
-const t = (at: number, transform: KeyframeTransform, v: Omit<AnimationKeyframe, 'at' | 'transform'> = {}): AnimationKeyframe => ({ at, transform, ...v });
-
-/** Sorted keys with copies (no easing) of the first and last key at 0 % and 100 % when missing. */
-export function padKeys(keys: AnimationKeyframe[]): AnimationKeyframe[] {
-  const out = [...keys].sort((a, b) => a.at - b.at);
-  const bare = (x: AnimationKeyframe, at: number): AnimationKeyframe => {
-    const c = { ...x, at };
-    delete c.easing;
-    delete c.easings;
-    return c;
-  };
-  if (out.length && out[0].at > 0) out.unshift(bare(out[0], 0));
-  if (out.length && out[out.length - 1].at < 100) out.push(bare(out[out.length - 1], 100));
-  return out;
-}
-
-/** The embedded source: filled paths in the 24 x 24 MDI viewBox (one element each). */
-export const svgOf = (paths: string[]): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">${paths.map((d) => `<path d="${d}"/>`).join('')}</svg>`;
-
-function build(spec: Spec): AnimationDoc {
-  const geometry: IconGeometry | undefined = spec.own ? { paths: spec.own, viewBox: '0 0 24 24' } : mdiGeometry(spec.icon);
-  const source = spec.own ?? geometry?.paths ?? [];
-  const pieces: SplitPiece[] = geometry ? splitIcon(geometry) : [];
-  const pivotOf = (from: number[], p: Pivot | undefined): [number, number] | undefined => {
-    if (Array.isArray(p)) return p;
-    const box = p ? piecesBox(pieces, from) : undefined;
-    return box ? anchorOf(box, p) : undefined;
-  };
-  const parts: RigPart[] = Object.entries(spec.parts).map(([id, [name, from, pivot]]) => {
-    const origin = pivotOf(from, pivot);
-    return { id, name, from, ...(origin ? { origin } : {}) };
-  });
-  const groups: RigGroup[] = Object.entries(spec.groups ?? {}).map(([id, [name, members, pivot]]) => {
-    const origin = pivotOf(
-      members.flatMap((m) => spec.parts[m]?.[1] ?? []),
-      pivot,
-    );
-    return { id, name, parts: members, ...(origin ? { origin } : {}) };
-  });
-  const tracks: Track[] = [];
-  const trackOf = (target: TargetRef): Track => {
-    let tr = tracks.find((x) => x.target === target);
-    if (!tr) tracks.push((tr = { target, keyframes: [] }));
-    return tr;
-  };
-  const merge = (target: TargetRef, keys: AnimationKeyframe[]) => {
-    const tr = trackOf(target);
-    const byAt = new Map(tr.keyframes.map((x) => [x.at, x]));
-    for (const x of keys) byAt.set(x.at, { ...byAt.get(x.at), ...x });
-    tr.keyframes = padKeys([...byAt.values()]);
-  };
-  spec.tracks({
-    preset: (target, id, params) => merge(target, presetKeyframes(id, params)),
-    keys: (target, keys) => merge(target, keys),
-    path: (target, d) => {
-      trackOf(target).path = { d };
-    },
-  });
-  return {
-    id: spec.id,
-    name: spec.name,
-    kind: 'keyframes',
-    duration: spec.duration,
-    easing: 'ease-in-out',
-    iterations: 'infinite',
-    target: 'icon',
-    origin: 'center',
-    version: 1,
-    // the parts' tracks carry the motion: one still key keeps the element track valid and empty
-    keyframes: [k(0, { opacity: 1 })],
-    rig: {
-      svg: svgOf(source),
-      parts,
-      ...(groups.length ? { groups } : {}),
-      ...(spec.shapes?.length ? { shapes: spec.shapes } : {}),
-    },
-    tracks,
-  };
-}
-
-// ── motion helpers ──
-
-/** Rises from below and fades away (steam, heat, mist), starting at `at` %, over `span` %. */
-const rise = (at: number, span = 60, dy = -3): AnimationKeyframe[] =>
-  padKeys([
-    t(at, { y: 1 }, { opacity: 0, easing: 'ease-out' }),
-    t(at + span * 0.4, { y: -0.4 }, { opacity: 1, easing: 'ease-in' }),
-    t(at + span, { y: dy }, { opacity: 0 }),
-  ]);
-
-/** Falls `dy` units from its place and fades out (drops), starting at `at` % over `span` %. */
-const fall = (at: number, span = 50, dy = 3, from = -1.5): AnimationKeyframe[] =>
-  padKeys([
-    t(at, { y: from }, { opacity: 0, easing: 'ease-in' }),
-    t(at + span * 0.2, { y: from + (dy - from) * 0.12 }, { opacity: 1, easing: 'ease-in' }),
-    t(at + span * 0.85, { y: dy * 0.85 }, { opacity: 1, easing: 'ease-out' }),
-    t(at + span, { y: dy }, { opacity: 0 }),
-  ]);
-
-/** Fades in at `at` %, stays until `out` %, fades out by 100 % (a bar of a filling level). */
-const fillIn = (at: number, out = 85): AnimationKeyframe[] => [k(0, { opacity: 0.15 }), k(at, { opacity: 0.15, easing: 'ease-out' }), k(at + 8, { opacity: 1 }), k(out, { opacity: 1, easing: 'ease-in' }), k(100, { opacity: 0.15 })];
-
-/** Quick flashes (lightning) in the first `span` %. */
-const flash = (at = 0, color?: string): AnimationKeyframe[] => {
-  const c = color ? { color } : {};
-  return padKeys([
-    k(at, { opacity: 1, ...c, easing: 'linear' }),
-    k(at + 6, { opacity: 0.15, easing: 'linear' }),
-    k(at + 10, { opacity: 1, ...c, easing: 'linear' }),
-    k(at + 16, { opacity: 0.2, easing: 'linear' }),
-    k(at + 20, { opacity: 1, ...c, easing: 'linear' }),
-  ]);
-};
-
-/** Flame colours, alternating per key. */
-const FLAME = ['#ff6d00', '#ffab00'];
-const flame = (intensity: number, delay = 0, share = 100): AnimationKeyframe[] =>
-  presetKeyframes('flicker', { intensity, delay, share }).map((x, i, all) => ({ ...x, color: FLAME[i === all.length - 1 ? 0 : i % 2] }));
-
-/** Open, hold, close (garage door slats, shutters): `y` moves up to `to`, fading out; `order` staggers. */
-const rollUp = (dy: number, order: number): AnimationKeyframe[] => [
-  t(0, { y: 0 }, { opacity: 1 }),
-  t(8 + order * 5, { y: 0 }, { opacity: 1, easing: 'ease-in-out' }),
-  t(34 + order * 5, { y: dy }, { opacity: 0 }),
-  t(66 - order * 5, { y: dy }, { opacity: 0, easing: 'ease-in-out' }),
-  t(92 - order * 5, { y: 0 }, { opacity: 1 }),
-  t(100, { y: 0 }, { opacity: 1 }),
-];
-
-/** A swing on an axis (doors, curtains): scale_x closes to `to` and back. */
-const fold = (to: number, extra: KeyframeTransform = {}): AnimationKeyframe[] => [
-  t(0, { scale_x: 1 }),
-  t(12, { scale_x: 1 }, { easing: 'ease-in-out' }),
-  t(42, { scale_x: to, ...extra }),
-  t(62, { scale_x: to, ...extra }, { easing: 'ease-in-out' }),
-  t(90, { scale_x: 1 }),
-  t(100, { scale_x: 1 }),
-];
-
-const SPIN = (n = 1) => [t(0, { rotate: 0 }, { easing: 'linear' }), t(100, { rotate: 360 * n })];
+export type { LibraryEntry } from '../contracts/icon-library';
+export { padKeys, svgOf } from './library/build';
 
 // ── the library ──
 
 const LOCK_BODY = 'M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H18Z M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17Z';
 const LOCK_SHACKLE = 'M7,8V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H15V6A3,3 0 0,0 12,3A3,3 0 0,0 9,6V8Z';
+
+/** The clappers hang from the bell mouth (y 18), 3 units above their own top edge (y 21). */
+const CLAPPER_DROP = 3;
 
 const SPECS: Spec[] = [
   // ── light ──
@@ -1026,11 +855,11 @@ const SPECS: Spec[] = [
     icon: 'mdi:bell-ring',
     tags: ['event', 'binary_sensor', 'doorbell', 'bell', 'notification', 'ring'],
     duration: 1.8,
-    parts: { body: ['Bell', [0]], clapper: ['Clapper', [1], [12, 18]], wave_r: ['Right wave', [2]], wave_l: ['Left wave', [3]] },
+    parts: { body: ['Bell', [0]], clapper: ['Clapper', [1], 'top'], wave_r: ['Right wave', [2]], wave_l: ['Left wave', [3]] },
     groups: { bell: ['Bell and clapper', ['body', 'clapper'], [12, 2]], waves: ['Sound waves', ['wave_r', 'wave_l']] },
     tracks: (x) => {
       x.preset('group:bell', 'ring', { share: 70, intensity: 1 });
-      x.preset('part:clapper', 'ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 });
+      x.keys('part:clapper', swingBelow(presetKeyframes('ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 }), CLAPPER_DROP));
       x.preset('group:waves', 'draw-loop', { share: 80, delay: 5 });
     },
   },
@@ -1041,11 +870,11 @@ const SPECS: Spec[] = [
     icon: 'mdi:bell-alert',
     tags: ['event', 'notification', 'alert', 'bell', 'update'],
     duration: 1.8,
-    parts: { mark: ['Exclamation', [0]], dot: ['Dot', [1]], body: ['Bell', [2]], clapper: ['Clapper', [3], [12, 18]] },
+    parts: { mark: ['Exclamation', [0]], dot: ['Dot', [1]], body: ['Bell', [2]], clapper: ['Clapper', [3], 'top'] },
     groups: { bell: ['Bell and clapper', ['body', 'clapper'], [12, 2]], alert: ['Exclamation mark', ['mark', 'dot'], 'center'] },
     tracks: (x) => {
       x.preset('group:bell', 'ring', { share: 70 });
-      x.preset('part:clapper', 'ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 });
+      x.keys('part:clapper', swingBelow(presetKeyframes('ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 }), CLAPPER_DROP));
       x.preset('group:alert', 'blink', { share: 60, delay: 30 });
     },
   },
@@ -1136,8 +965,11 @@ const SPECS: Spec[] = [
     icon: 'mdi:cctv',
     tags: ['camera', 'cctv', 'security', 'surveillance'],
     duration: 5,
-    parts: { mount: ['Mount', [0]], camera: ['Camera', [1], [9, 15]] },
-    tracks: (x) => x.keys('part:camera', [t(0, { rotate: 0 }), t(10, { rotate: 0 }, { easing: 'ease-in-out' }), t(40, { rotate: -14 }), t(55, { rotate: -14 }, { easing: 'ease-in-out' }), t(85, { rotate: 6 }), t(100, { rotate: 0 })]),
+    // P4-2: MDI draws the camera, its arm and the wall bracket in one outline, so the rig is cut
+    // (library/rigs.ts): the mount stays still, the head (body and hood) pans around the joint.
+    own: [CCTV_MOUNT, CCTV_HEAD_BODY, CCTV_HEAD_HOOD],
+    parts: { mount: ['Mount', [0]], head: ['Camera head', [1, 2], [16, 13]] },
+    tracks: (x) => x.keys('part:head', [t(0, { rotate: 0 }), t(10, { rotate: 0 }, { easing: 'ease-in-out' }), t(40, { rotate: -12 }), t(55, { rotate: -12 }, { easing: 'ease-in-out' }), t(85, { rotate: 8 }), t(100, { rotate: 0 })]),
   },
   {
     id: 'camera-snapshot',
@@ -1635,14 +1467,7 @@ const SPECS: Spec[] = [
 ];
 
 /** The library: ready icon animations for the icons of most Home Assistant domains. */
-export const ICON_LIBRARY: LibraryEntry[] = SPECS.map((s) => ({
-  id: s.id,
-  name: s.name,
-  domain: s.domain,
-  icon: s.icon,
-  tags: s.tags,
-  build: () => build(s),
-}));
+export const ICON_LIBRARY: LibraryEntry[] = [...SPECS, ...LIGHTS, ...HOME, ...FIRE_AND_CLEANING, ...SEASONAL, ...NATURE].map(entryOf);
 
 /** The library's domains, in first-seen order. */
 export const LIBRARY_DOMAINS: string[] = [...new Set(ICON_LIBRARY.map((e) => e.domain))];
