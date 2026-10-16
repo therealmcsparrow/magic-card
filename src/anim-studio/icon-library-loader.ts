@@ -1,5 +1,5 @@
 /*
- * The icon library (107 animated icons and their MDI shapes) is the largest part of the studio, so
+ * The icon library (192 animated icons and their MDI shapes) is the largest part of the studio, so
  * it is a lazy chunk, magic-card-icon-library.js, loaded next to the studio bundle (public path:
  * public-path.ts) when the icon animation start opens. Nothing else in the studio imports it.
  */
