@@ -1,6 +1,6 @@
 import { LitElement, html, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { pickerStyles, colorPickerStyles } from '../../css/css';
+import { pickerStyles, colorPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderResizeHandle, PickerDialogController } from './picker-parts';

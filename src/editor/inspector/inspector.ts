@@ -16,7 +16,7 @@ import type { EditorStateManager } from '../state/editor-state';
 import type { SyncContext } from '../../utils/sync-path';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { hasColumnWidths } from '../../utils/column-widths';
-import { editorStyles } from '../../css/css';
+import { editorStyles } from '../../css/editor-css';
 import {
   ModuleSelection,
   Selection,

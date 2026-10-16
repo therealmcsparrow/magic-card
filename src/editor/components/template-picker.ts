@@ -4,7 +4,7 @@ import { MagicCardConfig, HomeAssistant } from '../../types';
 import { deepClone } from '../../utils/deep-merge';
 import { cardInstanceKeys } from '../../services/template-merge';
 import { stripForTemplate } from '../state/template-sync';
-import { pickerStyles, templatePickerStyles } from '../../css/css';
+import { pickerStyles, templatePickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';

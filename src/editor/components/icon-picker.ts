@@ -1,7 +1,7 @@
 import { LitElement, html, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant } from '../../types';
-import { pickerStyles, iconPickerStyles } from '../../css/css';
+import { pickerStyles, iconPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
