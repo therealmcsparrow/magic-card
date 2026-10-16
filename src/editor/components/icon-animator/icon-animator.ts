@@ -29,6 +29,7 @@ import {
 import { mdiGeometry } from '../../../icon-anim/mdi-paths';
 import { splitIcon } from '../../../icons/icon-split';
 import type { IconAnimatorHost } from './loader';
+import type { AnimatedIconPick } from './animated-icon-grid';
 import { cardState, patchCard } from './card-request';
 import { FOLLOW_NOTES, LIVE, svgGeometry } from './follow-icon';
 import {
@@ -118,7 +119,6 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
       _mode: { state: true },
       _doc: { state: true },
       _entry: { state: true },
-      _all: { state: true },
       _part: { state: true },
       _preset: { state: true },
       _params: { state: true },
@@ -260,7 +260,8 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     private _doc?: AnimationDoc;
     private _entry = '';
     private _unsubLib?: () => void;
-    private _all = false;
+    /** The My animations document the working one came from (a pick, or the module's reference). */
+    private _mine = '';
     private _part = '';
     private _preset = PART_PRESETS[0]?.id ?? '';
     private _params: Record<string, number> = {};
@@ -337,6 +338,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
         this._doc = v.doc;
         this._mode = 'library';
         this._entry = '';
+        this._mine = ie!.id;
       } else if (v?.ok) {
         this._doc = v.doc;
         // it followed the module's new icon: say so once
@@ -352,6 +354,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
         this._entry = '';
         this._mode = this._matches().length ? 'library' : 'own';
       }
+      if (!(v?.ok && ref)) this._mine = '';
       this._part = '';
     }
 
@@ -427,6 +430,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     private _pickEntry(e: LibraryEntry): void {
       const built = e.build();
       this._entry = e.id;
+      this._mine = '';
       this._doc = { ...built, id: this._id(), name: e.name };
       this._msg = '';
     }
@@ -447,6 +451,7 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
         return;
       }
       this._entry = '';
+      this._mine = '';
       // the drawing goes into the document (rig.svg): the parts never depend on the icon version a
       // dashboard resolves (an icon over the 32 KB cap keeps its id)
       this._doc = iconAnimationDoc(
@@ -768,48 +773,35 @@ export function defineIconAnimator(h: IconAnimatorHost): void {
     }
 
     private _library(): TemplateResult {
-      const matches = this._matches();
-      const shown = this._all || !matches.length ? ICON_LIBRARY : matches;
       const picked = ICON_LIBRARY.find((e) => e.id === this._entry);
+      // the tile on the module now: the library entry, else the My animations document it plays
+      const current = this._entry ? `lib:${this._entry}` : this._mine;
       return html`
-        ${
-          matches.length
-            ? nothing
-            : html`<p class="help">
-                No library animation matches
-                ${this.icon}${this._domain ? ` or ${this._domain}` : ''}; showing all of them.
-              </p>`
-        }
-        <div class="chips lib" role="group" aria-label="Library animations">
-          ${shown.map(
-            (e) =>
-              html`<button
-                type="button"
-                class="chip"
-                data-entry=${e.id}
-                aria-pressed=${e.id === this._entry ? 'true' : 'false'}
-                title=${e.icon}
-                @click=${() => this._pickEntry(e)}
-              >
-                <ha-icon icon=${e.icon}></ha-icon>${e.name}
-              </button>`,
-          )}
-        </div>
-        ${
-          matches.length && matches.length < ICON_LIBRARY.length
-            ? html`<div>
-                <button
-                  type="button"
-                  class="btn btn-text btn-sm"
-                  @click=${() => (this._all = !this._all)}
-                >
-                  ${this._all ? 'Show matches only' : `Show all (${ICON_LIBRARY.length})`}
-                </button>
-              </div>`
-            : nothing
-        }
+        <mc-animated-icon-grid
+          .hass=${this.hass}
+          .icon=${this.icon}
+          .entity=${this.moduleEntity}
+          .current=${current}
+          @animated-icon-pick=${(e: CustomEvent<AnimatedIconPick>) => this._onPick(e.detail)}
+        ></mc-animated-icon-grid>
         ${picked && picked.icon !== this.icon ? html`<p class="help">Plays its own ${picked.icon} drawing in place of the module's icon.</p>` : nothing}
       `;
+    }
+
+    private _onPick(p: AnimatedIconPick): void {
+      if (p.kind === 'library') this._pickEntry(p.entry);
+      else this._pickMine(p.doc);
+    }
+
+    /** A My animations document: a copy under this module's id, stored inline on Apply. */
+    private _pickMine(doc: AnimationDoc): void {
+      const v = validateAnimationDoc(doc, { v2: 'lenient' });
+      if (!v.ok) return;
+      this._doc = { ...v.doc, id: this._id() };
+      this._mine = doc.id;
+      this._entry = '';
+      this._mode = 'library';
+      this._msg = '';
     }
 
     private _own(): TemplateResult {
