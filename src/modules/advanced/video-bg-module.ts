@@ -2,10 +2,9 @@ import { html, TemplateResult, nothing, PropertyValues, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HomeAssistant, VideoBgModuleConfig, EditorTab } from '../../types';
+import { CardModule, HomeAssistant, VideoBgModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderMediaField, renderSegField, renderFieldHint } from '../../utils/form-utils';
 import { mediaSrc } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
@@ -126,10 +125,6 @@ class VideoBgModule extends BaseMagicModule {
     icon: 'mdi:video-outline',
   };
 
-  getAvailableTabs(): EditorTab[] {
-    return ['general', 'conditions', 'design'];
-  }
-
   createDefault(): VideoBgModuleConfig {
     return {
       id: generateId('video-bg'),
@@ -165,33 +160,6 @@ class VideoBgModule extends BaseMagicModule {
           .srcId=${mediaSourceId(c.url)}
           .posterId=${mediaSourceId(c.poster)}
         ></mc-bg-video>
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as VideoBgModuleConfig;
-    return html`
-      <div class="mc-tab-content">
-        ${renderFieldHint('Plays behind the other modules in the same column or layout. On its own in a column it shows at its own size.')}
-        ${renderMediaField('Video URL', c.url, (v) => onChange({ ...c, url: v }), hass, 'video', 'url', syncCtx)}
-        ${renderMediaField('Poster image URL', c.poster, (v) => onChange({ ...c, poster: v }), hass, 'image', 'poster', syncCtx)}
-        ${renderFieldHint('Shown until the video plays, and instead of it when it cannot play.')}
-        ${renderSegField('Fit', c.fit ?? 'cover', [
-          { label: 'Cover', value: 'cover' },
-          { label: 'Contain', value: 'contain' },
-        ], (v) => onChange({ ...c, fit: v as VideoBgModuleConfig['fit'] }), 'fit', syncCtx)}
-        ${renderToggleField('Autoplay', c.autoplay !== false, (v) => onChange({ ...c, autoplay: v }), 'autoplay', syncCtx,
-          'Plays while the card is visible (not with reduced motion).')}
-        ${renderToggleField('Loop', c.loop !== false, (v) => onChange({ ...c, loop: v }), 'loop', syncCtx)}
-        ${renderToggleField('Muted', c.muted !== false, (v) => onChange({ ...c, muted: v }), 'muted', syncCtx,
-          'Browsers only autoplay muted videos.')}
       </div>
     `;
   }

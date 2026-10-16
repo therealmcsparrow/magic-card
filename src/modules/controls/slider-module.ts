@@ -4,22 +4,12 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, DesignConfig, HomeAssistant, SliderModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import {
-  renderToggleField,
-  renderEntityField,
-  renderSelectField,
-  renderAttributeField,
-  renderNumberField,
-  renderColorField,
-  renderFieldHint,
-} from '../../utils/form-utils';
 import { formatControlValue, numericControl, runServiceCall } from '../../utils/entity-control';
 import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
 import { renderTrack } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 
-const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
 /**
  * Slider for an entity's numeric value. Per domain (see numericControl): input_number / number
@@ -91,45 +81,6 @@ class SliderModule extends BaseMagicModule {
         ${c.show_value !== false && stateObj
           ? html`<span class="mc-slider-value">${valueText}</span>`
           : nothing}
-      </div>
-    `;
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as SliderModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
-    const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField('Attribute', c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
-        ${stateObj && own?.readOnly
-          ? renderFieldHint('This value can only be shown: the entity (or this attribute) cannot be set from a slider.')
-          : nothing}
-        ${renderNumberField('Min', c.min, (v) => onChange({ ...c, min: optional(v) }), { optional: true, placeholder: own ? String(own.min) : '0' }, 'min', syncCtx)}
-        ${renderNumberField('Max', c.max, (v) => onChange({ ...c, max: optional(v) }), { optional: true, placeholder: own ? String(own.max) : '100' }, 'max', syncCtx)}
-        ${renderNumberField('Step', c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
-        ${renderFieldHint("Empty: the entity's own range and step. Min and max can only narrow that range.")}
-        ${renderToggleField('Show value', c.show_value !== false, (v) => onChange({ ...c, show_value: v }), 'show_value', syncCtx)}
-        ${renderSelectField(
-          'Direction',
-          c.direction,
-          [
-            { label: 'Horizontal', value: 'horizontal' },
-            { label: 'Vertical', value: 'vertical' },
-          ],
-          (v) => onChange({ ...c, direction: v as SliderModuleConfig['direction'] }),
-          'direction',
-          syncCtx,
-        )}
-        ${renderColorField('Slider color', c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx)}
-        ${renderColorField('Track color', c.track_color, (v) => onChange({ ...c, track_color: v || undefined }), 'track_color', syncCtx)}
       </div>
     `;
   }

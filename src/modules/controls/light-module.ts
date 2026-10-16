@@ -4,7 +4,6 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HassEntity, HomeAssistant, LightModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { renderToggleField, renderEntityField, renderFieldHint, renderIconField } from '../../utils/form-utils';
 import {
   lightBrightnessPct,
   lightKelvin,
@@ -17,8 +16,6 @@ import {
 } from '../../utils/entity-control';
 import { entityStateColor } from '../../utils/entity-color';
 import { renderIcon } from '../../icons/render-icon';
-import { renderIconFxEditor } from '../../editor/components/icon-fx-editor';
-import { entityIcon } from '../../utils/entity-icon';
 import { entityDisplayName, formatFixed } from '../../utils/entity-value';
 import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
 import { renderTrack, stopControlEvent } from '../../utils/slider-track';
@@ -41,7 +38,7 @@ function lightHex(stateObj: HassEntity | undefined): string {
   return m ? `#${hex2(+m[1])}${hex2(+m[2])}${hex2(+m[3])}` : '#ffffff';
 }
 
-function supportsEffect(stateObj: HassEntity): boolean {
+export function supportsEffect(stateObj: HassEntity): boolean {
   const list = stateObj.attributes?.effect_list;
   return Array.isArray(list) && list.length > 0 && (Number(stateObj.attributes?.supported_features ?? FEATURE_EFFECT) & FEATURE_EFFECT) !== 0;
 }
@@ -263,51 +260,6 @@ class LightModule extends BaseMagicModule {
     } catch {
       return effect;
     }
-  }
-
-  renderGeneralTab(
-    config: CardModule,
-    hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    const syncCtx = this._buildSyncContext(config, template);
-    const c = config as LightModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
-    const lacks = (on: boolean | undefined, ok: boolean, what: string) =>
-      on && stateObj && !ok ? renderFieldHint(`This light has no ${what}; the control is hidden.`) : nothing;
-    return html`
-      <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, 'light', 'entity', syncCtx)}
-        ${renderToggleField('Show brightness', c.show_brightness !== false, (v) =>
-          onChange({ ...c, show_brightness: v }),
-        'show_brightness', syncCtx)}
-        ${lacks(c.show_brightness !== false, !stateObj || lightSupportsBrightness(stateObj), 'brightness')}
-        ${renderToggleField('Show color temp', c.show_color_temp, (v) =>
-          onChange({ ...c, show_color_temp: v }),
-        'show_color_temp', syncCtx)}
-        ${lacks(c.show_color_temp, !stateObj || lightSupportsColorTemp(stateObj), 'color temperature')}
-        ${renderToggleField('Show color picker', c.show_color, (v) =>
-          onChange({ ...c, show_color: v }),
-        'show_color', syncCtx)}
-        ${lacks(c.show_color, !stateObj || lightSupportsColor(stateObj), 'colors')}
-        ${renderToggleField('Show effects', c.show_effect, (v) =>
-          onChange({ ...c, show_effect: v }),
-        'show_effect', syncCtx)}
-        ${lacks(c.show_effect, !stateObj || supportsEffect(stateObj), 'effects')}
-        ${renderToggleField('Compact mode', c.compact, (v) => onChange({ ...c, compact: v }), 'compact', syncCtx)}
-        ${renderFieldHint("Tap the icon to turn the light on or off. Leave Icon empty to show the light's own icon.")}
-        ${c.icon !== 'svg'
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
-          : nothing}
-        ${renderIconFxEditor(c, hass, onChange, {
-          entity: c.entity,
-          icon: c.icon || entityIcon(hass, c.entity) || 'mdi:lightbulb',
-          allowStateIcons: !!c.entity,
-          syncCtx,
-        })}
-      </div>
-    `;
   }
 
   // No entity yet is not an error: the preview shows a generic, inert light until one is picked.

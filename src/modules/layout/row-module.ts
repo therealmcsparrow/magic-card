@@ -8,7 +8,6 @@ import { currentRenderContext } from '../../services/render-context';
 import { DEFAULT_GAP, NESTED_COLUMN_GAP } from '../../utils/constants';
 import { rowGridTemplate } from '../../utils/column-widths';
 import { generateId } from '../../utils/id-generator';
-import { renderRowModuleGeneral } from '../../editor/inspector/container-settings';
 
 class RowModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -46,16 +45,6 @@ class RowModule extends BaseMagicModule {
             ?? html`<div class="mc-column" data-valign=${col.vertical_align || nothing} style=${`gap: ${col.gap || NESTED_COLUMN_GAP}`}>${(col.modules || []).map((child, i) => renderChildModule(child, hass, i, ci))}</div>`))}
       </div>
     `;
-  }
-
-  /** Layout, widths, gap, padding like a card row; columns and their modules are managed in the tree. */
-  renderGeneralTab(
-    config: CardModule,
-    _hass: HomeAssistant | undefined,
-    onChange: (updated: CardModule) => void,
-    template?: string,
-  ): TemplateResult {
-    return renderRowModuleGeneral(config as RowModuleConfig, onChange, this._buildSyncContext(config, template));
   }
 }
 
