@@ -124,8 +124,6 @@ export class Inspector extends LitElement {
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
-    this._ro?.disconnect();
-    this._ro = undefined;
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -149,43 +147,18 @@ export class Inspector extends LitElement {
   }
 
   private _scrollKey = '';
-  private _ro?: ResizeObserver;
 
-  /** Studio: a tab switch or new selection starts at the top; the body gets the scroll cue and keyboard access. */
+  /** Studio: a tab switch or new selection starts at the top of the (only) scrolling body. */
   private _syncScroller(): void {
-    if (this.variant !== 'studio') return;
-    const root = this.shadowRoot;
-    const body = root?.querySelector<HTMLElement>('.insp-body');
-    const head = root?.querySelector<HTMLElement>('.insp-head');
-    if (!body || !head) return;
+    const body = this.shadowRoot?.querySelector<HTMLElement>('.insp-body');
+    if (!body) return;
     const sel = this._selection();
     const key = `${this._state?.selectedPath ?? ''}|${this._activeTab(sel, this._tabsFor(sel))}`;
     if (key !== this._scrollKey) {
-      const first = this._scrollKey === '';
       this._scrollKey = key;
       body.scrollTop = 0;
-      body.classList.remove('scrolled');
-      // Stacked layout: the head is sticky, so put the body top directly under it.
-      if (!first && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 640px)').matches
-        && this.getBoundingClientRect().top < 0) this.scrollIntoView?.({ block: 'start' });
-    }
-    if (body.scrollHeight > body.clientHeight + 1) body.setAttribute('tabindex', '0');
-    else body.removeAttribute('tabindex');
-    if (!this._ro && typeof ResizeObserver !== 'undefined') {
-      this._ro = new ResizeObserver(() => {
-        const h = this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.offsetHeight ?? 0;
-        // The workspace scroller (outside this shadow root) reads this for scroll-padding-top.
-        this.style.setProperty('--mc-insp-head-h', `${h}px`);
-        this.parentElement?.parentElement?.style.setProperty('--mc-insp-head-h', `${h}px`);
-      });
-      this._ro.observe(head);
     }
   }
-
-  private _onBodyScroll = (e: Event): void => {
-    const el = e.currentTarget as HTMLElement;
-    el.classList.toggle('scrolled', el.scrollTop > 0);
-  };
 
   private _subscribe(): void {
     this._unsubscribe?.();
@@ -376,7 +349,7 @@ export class Inspector extends LitElement {
             })}
           </div>
         </div>
-        <div class="insp-body" role="tabpanel" id="panel-${tab}" aria-labelledby="tab-${tab}" @scroll=${this._onBodyScroll}>
+        <div class="insp-body" role="tabpanel" id="panel-${tab}" aria-labelledby="tab-${tab}">
           ${this._renderBody(config, sel, tab)}
         </div>
       </div>
@@ -450,7 +423,7 @@ export class Inspector extends LitElement {
       <div class="insp-id">
         <span class="ico k-${s.kind === 'slot' ? 'column' : s.kind}"><ha-icon icon=${icon}></ha-icon></span>
         <div class="txt">
-          <h2 title=${title}>${title}</h2>
+          <h2>${title}</h2>
           <p class="path">${path}</p>
         </div>
       </div>
@@ -644,14 +617,14 @@ export class Inspector extends LitElement {
         align-content: start;
         min-width: 0;
       }
-      /* studio: the head and tabs stay put, only the body scrolls (wide); sticky when stacked (narrow) */
-      :host([variant='studio']) {
+      /* studio: head and tabs stay put, only the body scrolls; sticky when stacked */
+      :host([variant='studio']),
+      :host([variant='studio']) .insp {
         height: 100%;
       }
       :host([variant='studio']) .insp {
         display: flex;
         flex-direction: column;
-        height: 100%;
       }
       :host([variant='studio']) .insp-head {
         flex: none;
@@ -662,41 +635,21 @@ export class Inspector extends LitElement {
         min-height: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
-        align-content: start;
       }
-      :host([variant='studio']) .insp-body.scrolled {
-        box-shadow: inset 0 4px 8px -6px rgba(0, 0, 0, 0.2);
-      }
-      :host([variant='studio']) .insp-id h2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      @media (max-width: 640px) {
+      @media (max-width: 640px), (max-height: 480px) {
         :host([variant='studio']),
         :host([variant='studio']) .insp {
           height: auto;
         }
+        :host([variant='studio']) .insp-body {
+          overflow: visible;
+        }
+      }
+      @media (max-width: 640px) {
         :host([variant='studio']) .insp-head {
           position: sticky;
           top: 0;
           z-index: 2;
-        }
-        :host([variant='studio']) .insp-body {
-          overflow: visible;
-        }
-      }
-      @media (max-height: 480px) {
-        :host([variant='studio']),
-        :host([variant='studio']) .insp {
-          height: auto;
-        }
-        :host([variant='studio']) .insp-head {
-          position: static;
-        }
-        :host([variant='studio']) .insp-body {
-          overflow: visible;
         }
       }
       :host([variant='pane']) .insp-head {

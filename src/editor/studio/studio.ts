@@ -407,7 +407,6 @@ export class Studio extends LitElement {
       .inspector {
         border-left: 1px solid var(--mc-divider);
         overflow: hidden;
-        scroll-padding-top: var(--mc-insp-head-h, 0px);
       }
       .panel-title {
         display: flex;
@@ -489,9 +488,6 @@ export class Studio extends LitElement {
           border-left: 0;
           border-top: 1px solid var(--mc-divider);
           overflow: visible;
-        }
-        .workspace {
-          scroll-padding-top: var(--mc-insp-head-h, 0px);
         }
         .layers {
           max-width: 100%;
