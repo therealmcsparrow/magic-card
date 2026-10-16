@@ -3,6 +3,7 @@ import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { EASING_LANE_IDS, type Binding, type Clip, type EasingLaneId, type Rig, type Track } from './model-v2-core';
+import type { ParticlesSim } from '../contracts/particles-v2';
 
 export * from './model-v2-core';
 
@@ -96,6 +97,11 @@ export interface ParticlesSpec {
   /** -1..1: pulls particles down (positive) or up; accelerates falls. */
   gravity: number;
   layer: 'back' | 'front';
+  /**
+   * v2 (particles-v2 contract): the simulation. Without it the spec is v1 and compiles as before;
+   * with it the fields above stay the v1 fallback. Kept as stored until the particles chunk checks it.
+   */
+  sim?: ParticlesSim;
 }
 
 export interface PathSpec {
@@ -436,7 +442,7 @@ function checkParticleLook(c: Checker, o: Record<string, unknown>, path: string,
   return { ...(shape ? { shape } : {}), count, size, colors };
 }
 
-function checkParticles(c: Checker, raw: unknown, path: string): ParticlesSpec | undefined {
+function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean): ParticlesSpec | undefined {
   const o = c.obj(raw, path);
   if (!o) return undefined;
   const d = DEFAULT_PARTICLES;
@@ -456,8 +462,30 @@ function checkParticles(c: Checker, raw: unknown, path: string): ParticlesSpec |
     const n = c.num(o, 'intensity', `${path}.intensity`, -100000, 100000);
     if (n !== undefined) out.intensity = n;
   }
+  // v2 `sim`: as stored without the particles validator (the card before its chunk); else checked
+  // (strict: errors fail the doc; lenient: the cleaned sim, or none so the v1 fallback plays)
+  if (o.sim !== undefined && o.sim !== null && (lenient ? new Checker() : c).obj(o.sim, `${path}.sim`)) {
+    if (!particlesValidator) out.sim = o.sim as ParticlesSim;
+    else {
+      const r = particlesValidator(o.sim, lenient ? 'lenient' : 'strict');
+      if (!lenient) c.errors.push(...r.errors);
+      if (r.sim && (lenient || !r.errors.length)) out.sim = r.sim;
+    }
+  }
   return out;
 }
+
+/** Checks a raw `particles.sim` (particles-v2 ParticlesModule.validateSim; error paths `particles.sim.*`). */
+export type ParticlesValidator = (raw: unknown, mode: 'strict' | 'lenient') => { sim?: ParticlesSim; errors: FieldError[] };
+let particlesValidator: ParticlesValidator | undefined;
+
+/** Turn on `particles.sim` checking in validateAnimationDoc (the particles chunk and the studio call this). */
+export function useParticlesValidator(fn: ParticlesValidator | undefined): void {
+  particlesValidator = fn;
+}
+
+/** The document plays a v2 simulation, which only the particles chunk can compile (a preset-based doc ignores `sim`). */
+export const docNeedsParticles = (doc: AnimationDoc): boolean => doc.kind === 'particles' && !!doc.particles?.sim && !doc.particles.preset;
 
 function checkPath(c: Checker, raw: unknown, path: string): PathSpec | undefined {
   const o = c.obj(raw, path);
@@ -593,7 +621,7 @@ export function validateAnimationDoc(input: unknown, opts: ValidateOptions = {})
     }
     case 'particles':
       if (o.particles === undefined) c.err('particles', 'Required.');
-      else doc.particles = checkParticles(c, o.particles, 'particles');
+      else doc.particles = checkParticles(c, o.particles, 'particles', opts.v2 === 'lenient');
       break;
     case 'path':
       if (o.path === undefined) c.err('path', 'Required.');
