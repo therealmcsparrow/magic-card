@@ -47,8 +47,8 @@ export type IconAnimatorHost = typeof host;
 export const QUICK_ANIMATOR_MODULES = ['icon', 'button', 'info', 'light'];
 
 /**
- * After an edit of a card with inline animations (editor-state updateConfig): "This icon"
- * animations follow their module's new icon, in the chunk (follow-icon.ts).
+ * After an edit of a card with icon animation entries (editor-state updateConfig): "This icon"
+ * animations follow their module's new icon, library ones go, in the chunk (follow-icon.ts).
  */
 export const followIcons = (sm: CardState, prev: MagicCardConfig, next: MagicCardConfig): void =>
   void import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')

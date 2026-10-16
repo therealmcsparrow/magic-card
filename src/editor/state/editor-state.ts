@@ -203,10 +203,9 @@ export class EditorStateManager {
     };
     this.notify();
     this.dispatchConfigChanged(this.state.config);
-    // "This icon" animations (the card's or its template's) follow their module's new icon (lazy
-    // icon animator chunk, loaded only when a module plays a quick custom:quick-* document)
-    if ((prev.custom_animations || this.state.templateAnimations) && JSON.stringify(next.rows).includes('custom:quick-'))
-      followIcons(this, prev, next);
+    // "This icon" animations follow their module's new icon, library ones go (lazy icon animator
+    // chunk, loaded only when a module plays a custom:quick-* document or has an anim-icon-N entry)
+    if (/"(custom:quick-|anim-icon-)/.test(JSON.stringify(next.rows))) followIcons(this, prev, next);
   }
 
   // ── Editor State ──
