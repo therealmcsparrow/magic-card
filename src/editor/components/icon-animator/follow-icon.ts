@@ -18,11 +18,14 @@ import type { IconAnimatorHost } from './loader';
 import type { CardState } from './card-request';
 import {
   cardIds,
+  iconEntry,
   newQuickId,
   quickEntry,
   referenceCount,
+  removeInlineDoc,
   storedDoc,
   upsertInlineDoc,
+  withoutQuickEntry,
 } from './quick-model';
 
 /*
@@ -31,10 +34,15 @@ import {
  * module's own icon changes and then stays put for a second, its quick document is split again from the new icon: parts keep their
  * place by piece index (Part 1 stays Part 1), parts the new icon does not have go with their tracks,
  * bindings and empty groups, pivots move with their part's box, and the new drawing is embedded like
- * Apply does. Library animations, documents of other modules, icons cleared back to the entity's
+ * Apply does. Library animations (see below), documents of other modules, icons cleared back to the entity's
  * icon and icons whose shape cannot be loaded (a half-typed id in YAML) are left alone. On a
  * template-linked card a document the template supplies follows too: the result is the card's own
  * document with the same id (an override of the template's, like Apply on that card).
+ *
+ * A library animation (a stored built-in document, or a My animations reference the icon picker
+ * set) draws its own copy of an icon, so after the same settled icon change (Clear too) its entry
+ * is removed instead, with its quick document when nothing else plays it. The tile pick that set it
+ * changes the icon and the document in one action: nothing is removed then.
  */
 
 /** An own SVG (a document's `rig.svg`) as icon geometry, like icon-source builds it. */
@@ -68,21 +76,27 @@ export interface IconChange {
   id: string;
 }
 
-const quickOf = (m: Record<string, unknown>): string | undefined => {
+/** The module's icon entry (iconEntry: its quick document, else a picker library reference). */
+const entryOf = (m: Record<string, unknown>) => {
   const list = (m.design as { animations?: unknown } | undefined)?.animations;
   return Array.isArray(list)
-    ? quickEntry(list.filter((a) => !!a && typeof a === 'object'))?.id
+    ? iconEntry(list.filter((a) => !!a && typeof a === 'object'))
     : undefined;
 };
 
-/** Every object with a quick animation entry (modules at any depth), by path. */
+const quickOf = (m: Record<string, unknown>): string | undefined => {
+  const e = entryOf(m);
+  return e?.quick ? e.id : undefined;
+};
+
+/** Every object with an icon animation entry (modules at any depth), by path. */
 function quickModules(config: unknown): Map<string, { path: Path; m: Record<string, unknown> }> {
   const out = new Map<string, { path: Path; m: Record<string, unknown> }>();
   const walk = (node: unknown, path: Path) => {
     if (!node || typeof node !== 'object') return;
     if (Array.isArray(node)) return node.forEach((x, i) => walk(x, [...path, i]));
     const m = node as Record<string, unknown>;
-    if (typeof m.type === 'string' && quickOf(m)) out.set(JSON.stringify(path), { path, m });
+    if (typeof m.type === 'string' && entryOf(m)) out.set(JSON.stringify(path), { path, m });
     for (const [k, v] of Object.entries(m))
       if (k !== 'custom_animations' && k !== 'design') walk(v, [...path, k]);
   };
@@ -99,11 +113,36 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
   const out: IconChange[] = [];
   for (const [key, { path, m }] of quickModules(next)) {
     const old = before.get(key)?.m;
-    const id = quickOf(m)!;
+    const id = quickOf(m);
     const to = explicitIcon(m);
-    if (!old || old.type !== m.type || old.id !== m.id || quickOf(old) !== id || !to) continue;
+    if (!id || !old || old.type !== m.type || old.id !== m.id || quickOf(old) !== id || !to) continue;
     const from = explicitIcon(old);
     if (from !== to) out.push({ path, from, to, id });
+  }
+  return out;
+}
+
+/**
+ * The modules whose library animation goes (`tpl`: the linked template's documents): the same icon
+ * entry in `prev` and `next` (place, type, preset) playing a built-in document (its name is an
+ * ICON_LIBRARY entry's) or a My animations reference, and an own icon that changed, Clear included.
+ */
+export function libraryIconChanges(
+  prev: MagicCardConfig,
+  next: MagicCardConfig,
+  tpl?: unknown,
+): IconChange[] {
+  const before = quickModules(prev);
+  const out: IconChange[] = [];
+  for (const [key, { path, m }] of quickModules(next)) {
+    const old = before.get(key)?.m;
+    const e = entryOf(m)!;
+    if (!old || old.type !== m.type || old.id !== m.id || entryOf(old)?.id !== e.id) continue;
+    const name = e.quick && storedDoc(next, tpl, e.id)?.doc.name;
+    if (e.quick && !ICON_LIBRARY.some((x) => x.name === name)) continue;
+    const from = explicitIcon(old);
+    const to = explicitIcon(m);
+    if (from !== to) out.push({ path, from, to, id: e.id });
   }
   return out;
 }
@@ -286,6 +325,8 @@ interface Pending {
   timer: ReturnType<typeof setTimeout>;
   /** Delays spent waiting for a detached editor. */
   waits: number;
+  /** A library animation: removed (drop) instead of followed. */
+  drop?: boolean;
 }
 
 const waiting = new WeakMap<CardState, Map<string, Pending>>();
@@ -313,6 +354,7 @@ function arm(h: FollowHost, sm: CardState, map: Map<string, Pending>, w: Pending
       return;
     }
     map.delete(w.key);
+    if (w.drop) return drop(h, sm, w);
     void follow(h, sm, w).then((wait) => {
       if (wait && !map.has(w.key)) arm(h, sm, map, w);
     });
@@ -323,7 +365,8 @@ function arm(h: FollowHost, sm: CardState, map: Map<string, Pending>, w: Pending
  * After an edit (`prev` to `next`): a module whose own icon changed has its quick document follow
  * the new icon once the icon stayed put for FOLLOW_DELAY_MS. A burst of edits (bell, bel, bell-ring
  * typed in YAML) follows once, from the icon and document before the burst to the final icon, so
- * parts are pruned only against that one.
+ * parts are pruned only against that one. A library animation is dropped the same way, once after
+ * the burst.
  */
 export function followIcons(
   h: FollowHost,
@@ -351,6 +394,56 @@ export function followIcons(
     entry.waits = 0;
     arm(h, sm, map, entry);
   }
+  for (const c of libraryIconChanges(prev, next, sm.getState().templateAnimations)) {
+    const key = `drop ${JSON.stringify(c.path)} ${c.id}`;
+    const entry: Pending = map.get(key) ?? {
+      key,
+      path: c.path,
+      id: c.id,
+      from: c.from,
+      doc: JSON.stringify(played(sm, prev, c.id)),
+      last: next,
+      timer: undefined as unknown as Pending['timer'],
+      waits: 0,
+      drop: true,
+    };
+    entry.last = next;
+    entry.waits = 0;
+    arm(h, sm, map, entry);
+  }
+}
+
+/** The note after a library animation went with its module's old icon. */
+export const DROP_NOTE = "The animated icon was removed because the module's icon changed.";
+
+/**
+ * One module's library animation goes once its icon settled on another (nothing when it went back
+ * to the icon it had, or when the entry or its document changed meanwhile: a tile pick rewrote it).
+ * The entry is removed (a template-linked module's list becomes its own) and its quick document
+ * with it when nothing else plays it; a document the template supplies stays the template's.
+ * Folded into the burst's last undo step while the card is still as that edit left it, like follow.
+ */
+function drop(h: FollowHost, sm: CardState, w: Pending): void {
+  const c = sm.getConfig();
+  const m = at(c, w.path);
+  if (!m || entryOf(m)?.id !== w.id || explicitIcon(m) === w.from) return;
+  if (JSON.stringify(played(sm, c, w.id)) !== w.doc) return;
+  let config = JSON.parse(JSON.stringify(c)) as MagicCardConfig;
+  const mod = at(config, w.path)!;
+  const design = { ...(mod.design as Record<string, unknown>) };
+  const list = withoutQuickEntry(design.animations as never);
+  if (list.length) design.animations = list;
+  else delete design.animations;
+  mod.design = design;
+  const marks = (mod.not_synced ?? []) as string[];
+  if (config.template && !marks.includes('design.animations'))
+    mod.not_synced = [...marks, 'design.animations'];
+  config = removeInlineDoc(config, w.id, h.customIds(config));
+  sm.updateConfig(config, JSON.stringify(c) !== JSON.stringify(w.last));
+  for (const a of LIVE) a.followed();
+  document
+    .querySelector('home-assistant')
+    ?.dispatchEvent(new CustomEvent('hass-notification', { detail: { message: DROP_NOTE } }));
 }
 
 /**
