@@ -8,6 +8,7 @@ import { V2_CAPS, type RigShape } from '../model-v2';
 import { checkExportSvg, exportRigSvg, importSvgFile, rigFromSvgIcon, svgFileName, useInCardYaml, type ExportPiece } from '../svg-export';
 import { addShape, docSizeError, isFilled, isStroked, paintOrder, rigIds } from './draw-utils';
 import { ANIMATED_SVG_WARN_BYTES, animatedSvgFileName, checkAnimatedSvg, exportAnimatedSvg, geometryFromPieces } from '../../icon-anim/animated-svg';
+import { bakedParticlesSvg } from './particles-utils';
 
 /*
  * The own-icon dialog of the drawing tools (a native modal <dialog>, so it sits in the top layer
@@ -15,6 +16,7 @@ import { ANIMATED_SVG_WARN_BYTES, animatedSvgFileName, checkAnimatedSvg, exportA
  * Use in card (YAML for `icon: svg` + `svg:`), or as an animated SVG (CSS keyframes plus a SMIL
  * fallback, looping; Copy SVG, Download .svg); "Import SVG" previews a file's shapes and adds them
  * to the rig, or makes the file the rig's source icon. Emits doc-change like every panel.
+ * A particles document exports only as an animated SVG: its baked loop (particles-v2 bakedSvg).
  */
 
 const kb = (n: number): string => `${(n / 1024).toFixed(n < 10240 ? 1 : 0)} KB`;
@@ -296,7 +298,7 @@ export class AnimSvgDialog extends LitElement {
   /** Open "Save as icon" (`animated`: on the animated SVG). */
   openExport(animated = false): void {
     this._mode = 'export';
-    this._format = animated ? 'animated' : 'still';
+    this._format = animated || this._isParticles ? 'animated' : 'still';
     this._manual = undefined;
     this._status = '';
     this._error = '';
@@ -321,6 +323,10 @@ export class AnimSvgDialog extends LitElement {
     return !!this.renderRoot.querySelector('dialog')?.open;
   }
 
+  private get _isParticles(): boolean {
+    return this.doc?.kind === 'particles';
+  }
+
   /** The exported SVG text of the current document. */
   get exportText(): string {
     return this._export().text;
@@ -342,9 +348,11 @@ export class AnimSvgDialog extends LitElement {
   private _animated(): { text: string; warnings: string[]; error?: string; url: string } {
     const m = this._animMemo;
     if (m && m.doc === this.doc && m.pieces === this.pieces && m.viewBox === this.viewBox && m.smil === this._smil && m.color === this._color) return m;
-    const r = this.doc
-      ? exportAnimatedSvg(this.doc, geometryFromPieces(this.pieces, this.viewBox), { smil: this._smil, ...(this._color ? { color: this._color } : {}) })
-      : { svg: '', warnings: [] };
+    const r = !this.doc
+      ? { svg: '', warnings: [] }
+      : this._isParticles
+        ? bakedParticlesSvg(this.doc)
+        : exportAnimatedSvg(this.doc, geometryFromPieces(this.pieces, this.viewBox), { smil: this._smil, ...(this._color ? { color: this._color } : {}) });
     const error = r.svg ? checkAnimatedSvg(r.svg) : (r.warnings[0] ?? 'Nothing to export yet.');
     const warnings = r.svg ? r.warnings : r.warnings.slice(1);
     // an <img> plays the file as it is, isolated from the page (scripts never run in an image)
@@ -535,13 +543,15 @@ export class AnimSvgDialog extends LitElement {
     const size = bytes(text);
     return html`
       <div class="body">
-        ${this._renderFormat()}
+        ${this._isParticles ? nothing : this._renderFormat()}
         <div class="top">
           <div class="preview">${url ? html`<img class="anim" src=${url} alt="" />` : html`<ha-icon icon="mdi:image-off-outline"></ha-icon>`}</div>
           <div class="facts">
-            <span>A looping SVG file of the animation</span>
+            <span>${this._isParticles ? 'A looping SVG file of the baked particles' : 'A looping SVG file of the animation'}</span>
             <span class="muted">${kb(size)}${size > ANIMATED_SVG_WARN_BYTES ? ', large' : ''}</span>
-            <span class="muted">Browsers play its CSS keyframes; the SMIL copy plays where CSS animation is missing.</span>
+            ${this._isParticles
+              ? html`<span class="muted">Browsers play its CSS keyframes.</span>`
+              : html`<span class="muted">Browsers play its CSS keyframes; the SMIL copy plays where CSS animation is missing.</span>
             <div class="color-row">
               <label class="check">
                 <input type="color" class="color" .value=${this._color || '#03a9f4'} @input=${(e: Event) => (this._color = (e.target as HTMLInputElement).value)} />
@@ -555,6 +565,7 @@ export class AnimSvgDialog extends LitElement {
               <input type="checkbox" class="smil" .checked=${this._smil} @change=${(e: Event) => (this._smil = (e.target as HTMLInputElement).checked)} />
               SMIL fallback
             </label>
+            `}
             ${warnings.length ? html`<ul class="warn">${warnings.map((w) => html`<li>${w}</li>`)}</ul>` : nothing}
             ${error ? html`<p class="error" role="alert">${error}</p>` : nothing}
           </div>
@@ -689,7 +700,7 @@ export class AnimSvgDialog extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const title = this._mode === 'export' ? 'Save as icon' : 'Import SVG';
+    const title = this._mode === 'import' ? 'Import SVG' : this._isParticles ? 'Animated SVG' : 'Save as icon';
     return html`<dialog aria-labelledby="svg-dlg-title" @close=${() => (this._status = '')} @cancel=${() => (this._status = '')}>
       <header>
         <h2 id="svg-dlg-title">${title}</h2>
