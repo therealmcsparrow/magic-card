@@ -5,8 +5,11 @@ declare global {
   var __webpack_public_path__: string;
 
   interface Window {
-    /** Contract read by the magic-card-utils panel: `apiVersion` 1 is the current one. */
-    MagicCard?: { version: string; apiVersion: number; [key: string]: unknown };
+    /**
+     * Contract read by the magic-card-utils panel: `apiVersion` 1 is the current one. `loadEditor`
+     * loads the editor chunk (true once its elements are defined); the animation studio calls it.
+     */
+    MagicCard?: { version: string; apiVersion: number; loadEditor?: () => Promise<boolean>; [key: string]: unknown };
     customCards?: Array<{
       type: string;
       name: string;
