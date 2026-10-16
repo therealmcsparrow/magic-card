@@ -42,15 +42,15 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` into the same folder. Magic Card loads them from there when they are needed.
+HACS also downloads `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` into the same folder. Magic Card loads them from there when they are needed.
 
 ### Manual
 
-1.  Download `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` from the [latest release](https://github.com/therealmcsparrow/magic-card/releases).
+1.  Download `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` from the [latest release](https://github.com/therealmcsparrow/magic-card/releases).
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-`magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open the icon picker's Animated icons tab; dashboards never load it. Keep all four next to `magic-card.js`.
+`magic-card-editor.js` holds the card editor and is loaded when you edit a card or open the animation studio; dashboards never load it. `magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open the icon picker's Animated icons tab; dashboards never load it. Keep all five next to `magic-card.js`.
 
 ### Loading
 
@@ -993,7 +993,7 @@ rows:
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The Animated icons tab, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has five files: `magic-card.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has seven files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js` and `magic-card-preset-catalogue.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
 ## Development

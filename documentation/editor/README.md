@@ -20,6 +20,12 @@ In YAML mode only the head, the template bar and the YAML editor are shown.
 
 The thumbnail in the studio panel draws each row with its column widths and one bar per module. The selected top-level module is drawn in the accent colour.
 
+## The editor file
+
+The editor is its own file, `magic-card-editor.js`, next to `magic-card.js`. Dashboards never load it. It loads the first time you open a card editor, and the animation studio asks for it too, so both always find the editor parts they need.
+
+If the file is missing or cannot be loaded, Home Assistant falls back to its YAML editor for the card, and the browser console says why. After an update, hard refresh the page. When the editor file and `magic-card.js` come from different versions, the console asks you to reload.
+
 ## Pages
 
 -   [Form and YAML](form-and-yaml.md): the two editing modes and how YAML edits are applied.
