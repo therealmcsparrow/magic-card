@@ -2,6 +2,7 @@
 // Caps = byte sizes of the 2026.10.06 production build (the three git-tracked files match HEAD). Raise a cap only on purpose, in the same PR.
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const CAPS = {
   'magic-card.js': 683958,
@@ -15,7 +16,7 @@ const CAPS = {
   'magic-card-anim-runtime.js': 38672,
 };
 
-const dir = new URL('../dist/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const dir = fileURLToPath(new URL('../dist/', import.meta.url));
 const files = readdirSync(dir).filter((f) => f.endsWith('.js'));
 let failed = false;
 
@@ -23,7 +24,7 @@ for (const f of files) {
   const size = statSync(join(dir, f)).size;
   const cap = CAPS[f];
   if (cap === undefined) {
-    console.error(`FAIL ${f}: ${size} B, no cap defined (add it to tools/check-dist-size.mjs)`);
+    console.error(`FAIL ${f}: ${size} B, new file with no size cap. Add an entry for it to CAPS in tools/check-dist-size.mjs (its byte size from a production build) in the same PR`);
     failed = true;
   } else if (size > cap) {
     console.error(`FAIL ${f}: ${size} B > cap ${cap} B (+${size - cap} B)`);
