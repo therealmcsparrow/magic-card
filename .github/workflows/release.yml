@@ -24,16 +24,25 @@ jobs:
 
       - run: npm ci
 
+      - name: Third-party notices up to date
+        run: npm run notices -- --check
+
       - run: npm run build
 
+      - name: Committed dist matches the build
+        run: |
+          if ! git diff --quiet -- dist src/version.ts; then
+            git diff --stat -- dist src/version.ts
+            echo "::error::dist/ or src/version.ts in the tagged commit differs from a fresh build. Run npm run build, commit dist/ and tag again."
+            exit 1
+          fi
+
       - name: Dist size budget
-        run: node tools/check-dist-size.mjs
+        run: npm run size
 
       - name: Generate CycloneDX SBOM (production dependencies)
-        # exact tool version; install scripts off so nothing runs with the write token in scope
-        env:
-          npm_config_ignore_scripts: "true"
-        run: npx --yes @cyclonedx/cyclonedx-npm@6.0.1 --omit dev --output-format JSON --output-file sbom.cdx.json
+        # the tool is a pinned devDependency, installed from the lockfile by npm ci
+        run: npm run sbom
 
       - name: Create Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3

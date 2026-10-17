@@ -47,9 +47,14 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Third-party notices up to date
+        run: npm run notices -- --check
       - run: npm run build
       - name: Dist size budget
-        run: node tools/check-dist-size.mjs
+        run: npm run size
+      - name: Committed dist matches the build
+        # a warning here; the release workflow fails on it. Rebuild and commit dist/ in the release commit.
+        run: git diff --quiet -- dist src/version.ts || echo "::warning::dist/ or src/version.ts differs from a fresh build. Run npm run build and commit dist/ before tagging a release."
 
   audit:
     name: Dependency audit (production)

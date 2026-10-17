@@ -6,6 +6,9 @@
   "scripts": {
     "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "build": "webpack --mode production",
+    "size": "node tools/check-dist-size.mjs",
+    "notices": "node tools/third-party-notices.mjs",
+    "sbom": "cyclonedx-npm --omit dev --output-format JSON --output-file sbom.cdx.json",
     "dev": "webpack serve --mode development",
     "watch": "webpack --mode development --watch",
     "lint": "eslint \"src/**/*.ts\"",
@@ -31,6 +34,7 @@
     "swiper": "^14.3.0"
   },
   "devDependencies": {
+    "@cyclonedx/cyclonedx-npm": "6.0.1",
     "@eslint/js": "^10.0.1",
     "@mdi/js": "^7.4.47",
     "css-loader": "^7.1.5",

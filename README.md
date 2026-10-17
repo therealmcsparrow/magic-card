@@ -1051,7 +1051,7 @@ For issues, feature requests, or questions, please [create an issue on GitHub][i
 If you like Magic Card and want to support its development:
 
 -   Ko-fi: <https://ko-fi.com/mcsparrow>
--   PayPal: `info@mcsparrow.eu`
+-   PayPal: <https://www.paypal.biz/therealmcsparrow>
 
 ## Credits
 
