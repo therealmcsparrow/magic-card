@@ -82,3 +82,6 @@ export const applyAnimatedIconPick = (
 /** The grid tile on the module now (after loadIconAnimator resolved; '' before). */
 export const currentIconPick = (from: EventTarget, module: CardModule): string =>
   chunk?.currentIconPick(host, from, module) ?? '';
+
+/** The Style of the module's library icon (after loadIconAnimator resolved; Living before). */
+export const currentIconStyle = (module: CardModule): string => chunk?.currentIconStyle(host, module) ?? 'living';

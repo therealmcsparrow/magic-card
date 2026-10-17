@@ -7,6 +7,7 @@ import { SEASONAL } from './library/seasonal';
 import { HOME } from './library/home';
 import { LIGHTS } from './library/lights';
 import { NATURE } from './library/nature';
+import { STYLE_HINTS } from './library/style-hints';
 
 /*
  * The animated icon library (icon animator core, contract icon-library 1.2.0): ready animations for
@@ -1467,7 +1468,7 @@ const SPECS: Spec[] = [
 ];
 
 /** The library: ready icon animations for the icons of most Home Assistant domains. */
-export const ICON_LIBRARY: LibraryEntry[] = [...SPECS, ...LIGHTS, ...HOME, ...FIRE_AND_CLEANING, ...SEASONAL, ...NATURE].map(entryOf);
+export const ICON_LIBRARY: LibraryEntry[] = [...SPECS, ...LIGHTS, ...HOME, ...FIRE_AND_CLEANING, ...SEASONAL, ...NATURE].map((s) => entryOf(s, STYLE_HINTS[s.id]));
 
 /** The library's domains, in first-seen order. */
 export const LIBRARY_DOMAINS: string[] = [...new Set(ICON_LIBRARY.map((e) => e.domain))];

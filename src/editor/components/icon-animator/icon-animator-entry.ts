@@ -7,4 +7,4 @@
  */
 export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-grid';
 export { followIcons } from './follow-icon';
-export { pickAnimatedIcon, currentIconPick } from './animated-icon-pick';
+export { pickAnimatedIcon, currentIconPick, currentIconStyle } from './animated-icon-pick';

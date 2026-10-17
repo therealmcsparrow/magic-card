@@ -9,6 +9,7 @@ Earlier releases had an Animate icon button in the Design tab, under the Animati
 
 -   [Which modules](#which-modules)
 -   [Animations already on a card](#animations-already-on-a-card)
+-   [Styles: Quiet, Living and Glow](#styles-quiet-living-and-glow)
 -   [When the module's icon changes](#when-the-modules-icon-changes)
 -   [What the card stores](#what-the-card-stores)
 -   [Template-linked cards](#template-linked-cards)
@@ -32,6 +33,20 @@ Tabs and Weather modules cannot play icon animations.
 An animation the picker or the former Animate icon stored in the card is an entry in the module's Animations list with a `custom:quick-icon-…` preset. The list shows "An animated icon stored in this card." under it. You can change its play condition, colour and timing there, or delete it. The card plays its own copy, also on a Home Assistant without the integration.
 
 To pick another one, open the icon picker's Animated icons tab and click a tile. The new pick replaces the old one, so a module never holds two. To change the parts or the motion of an animation stored in the card, import the card's YAML in the animation studio. See [Import YAML](../animation-studio/library.md#import-yaml).
+
+## Styles: Quiet, Living and Glow
+
+Every animation in the Icon library plays in three Styles. The Style switch sits next to the Icon library heading in the Animated icons tab. The tiles play in the Style you choose, and the tile you click is stored in that Style.
+
+-   Quiet moves one part of the icon a little, and more slowly. The rest of the icon stays still and colour changes are left out. A turning part, such as fan blades, keeps turning at half speed. Use it on dashboards where a lot of moving icons would distract.
+-   Living is the full animation as it was drawn. It is the default.
+-   Glow is the full animation with a soft outline around the lit part of the icon (the flame, the bulb, the rays) that slowly brightens and fades. The lit parts take the glow colour. Glow uses no blur or filter, so a wall tablet does no extra work beyond one more outline per icon.
+
+The glow colour is the animation entry's Color field. Without one it is the icon's theme colour: amber for fire, pale yellow for lights, light blue for cleaning, and so on. An icon without a theme glows in a lighter shade of its own colour. On a light theme the glow colour is darker and the outline is left out, so the icon stays readable on a white card. This follows Home Assistant's light or dark mode.
+
+When the module already plays an animation from the Icon library, switching the Style in the tab changes that animation at once and the picker stays open. Animations from My animations have no Style: the switch only affects the Icon library tiles. Animations picked before this release play as Living. To give one of them another Style, open the tab and choose it.
+
+The Jack-o'-lantern lights up behind its face in Glow only.
 
 ## When the module's icon changes
 
@@ -110,9 +125,12 @@ rows:
                   preset: custom:quick-icon-k3x9pa
                   target: icon
                   trigger: always
+                  library_icon: fan-spin
+                  icon_style: quiet # left out for Living
 ```
 
 -   The document id starts with `quick-icon-` followed by six random letters and digits, unique on the card. The entry id is `anim-icon-1` (or the next free number).
+-   `library_icon` names the Icon library animation the document was made from, and `icon_style` its Style (`quiet` or `glow`; Living writes nothing). Only the editor reads them. The card plays the stored document, which is already in the chosen Style. Switching the Style rewrites that document under the same id.
 -   A pick from My animations writes the same entry with `preset: custom:<id>` and stores nothing in the card.
 -   `custom_animations` keeps the form it already has, a list or a map.
 -   The card editor never writes to the Magic Card Utils library. The card plays the stored copy, also on a Home Assistant without the integration. See [Using animations in cards](../animation-studio/using-in-cards.md#what-happens-without-the-integration).
