@@ -297,9 +297,9 @@ export class McteGroupPreview extends LitElement {
       min-height: 44px;
       padding: 0 16px;
       border-radius: 8px;
-      border: 1px solid var(--primary-color, #1a73e8);
+      border: 1px solid var(--mc-accent-ink, #0276ab);
       background: transparent;
-      color: var(--primary-color, #1a73e8);
+      color: var(--mc-accent-ink, #0276ab);
       font: inherit;
       cursor: pointer;
     }
@@ -308,7 +308,7 @@ export class McteGroupPreview extends LitElement {
       cursor: progress;
     }
     .btn:focus-visible {
-      outline: 3px solid var(--primary-color, #1a73e8);
+      outline: 3px solid var(--mc-focus, #0276ab);
       outline-offset: 2px;
     }
     .status:empty {

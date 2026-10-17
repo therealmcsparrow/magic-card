@@ -349,7 +349,7 @@ export class McteThemePreview extends LitElement {
     }
     .seg {
       display: inline-flex;
-      border: 1px solid var(--divider-color, #c9ced6);
+      border: 1px solid var(--mc-field-border, #767676);
       border-radius: 8px;
       overflow: hidden;
     }
@@ -364,11 +364,11 @@ export class McteThemePreview extends LitElement {
       cursor: pointer;
     }
     .seg button.on {
-      background: var(--primary-color, #1a73e8);
-      color: var(--text-primary-color, #fff);
+      background: var(--mc-accent-fill, #0276ab);
+      color: var(--mc-on-accent, #fff);
     }
     .seg button:focus-visible {
-      outline: 3px solid var(--primary-color, #1a73e8);
+      outline: 3px solid var(--mc-focus, #0276ab);
       outline-offset: -3px;
     }
     .chip {
@@ -401,7 +401,7 @@ export class McteThemePreview extends LitElement {
       font-family: var(--primary-font-family, Roboto, sans-serif);
     }
     .stage:focus-visible {
-      outline: 3px solid #1a73e8;
+      outline: 3px solid var(--mc-focus, #0276ab);
       outline-offset: 2px;
     }
     .strip {

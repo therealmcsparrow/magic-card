@@ -7,18 +7,20 @@ import { css } from 'lit';
  */
 export const base = css`
   :host {
-    --mc-accent: var(--primary-color, #03a9f4);
-    --mc-accent-ink: color-mix(in srgb, var(--primary-color, #03a9f4) 60%, var(--primary-text-color, #212121));
-    --mc-accent-fill: color-mix(in srgb, var(--primary-color, #03a9f4) 70%, #000);
+    /* The editor's own accent: fixed, so it never follows HA's or the draft's primary (a11y S1). */
+    --mc-accent: #0276ab;
+    --mc-focus: color-mix(in srgb, #0276ab 65%, var(--primary-text-color, #212121));
+    --mc-accent-ink: color-mix(in srgb, #0276ab 60%, var(--primary-text-color, #212121));
+    --mc-accent-fill: #0276ab;
     --mc-on-accent: #fff;
-    --mc-accent-tint: color-mix(in srgb, var(--primary-color, #03a9f4) 12%, transparent);
+    --mc-accent-tint: color-mix(in srgb, #0276ab 12%, transparent);
     --mc-surface: var(--card-background-color, #fff);
     --mc-surface-2: var(--secondary-background-color, #f2f3f5);
     --mc-ground: var(--primary-background-color, #fafafa);
     --mc-text: var(--primary-text-color, #212121);
     --mc-text-2: var(--secondary-text-color, #5f6368);
     --mc-divider: var(--divider-color, rgba(0, 0, 0, 0.12));
-    --mc-field-border: color-mix(in srgb, var(--primary-text-color, #212121) 40%, transparent);
+    --mc-field-border: color-mix(in srgb, var(--primary-text-color, #212121) 60%, transparent);
     --mc-warn-ink: color-mix(in srgb, var(--warning-color, #ff9800) 45%, var(--primary-text-color, #212121));
     --mc-warn-tint: color-mix(in srgb, var(--warning-color, #ff9800) 12%, transparent);
     --mc-error-ink: color-mix(in srgb, var(--error-color, #db4437) 75%, var(--primary-text-color, #212121));
@@ -32,7 +34,7 @@ export const base = css`
     --mc-radius-lg: 12px;
     font-family: inherit;
     color: var(--mc-text);
-    caret-color: var(--mc-accent);
+    caret-color: var(--mc-focus);
   }
   *,
   *::before,
@@ -90,7 +92,7 @@ export const base = css`
     color: inherit;
   }
   :focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus);
     outline-offset: 2px;
   }
   .seg :focus-visible {
@@ -407,6 +409,7 @@ export const base = css`
     bottom: 16px;
     transform: translateX(-50%);
     z-index: 5;
+    white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -417,6 +420,14 @@ export const base = css`
     color: var(--mc-surface);
     box-shadow: var(--mc-shadow-float);
     font-size: 0.875rem;
+  }
+  .toast.over-bar {
+    bottom: 88px;
+  }
+  .toast span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .toast button {
     color: inherit;

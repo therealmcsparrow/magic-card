@@ -155,7 +155,7 @@ export class McThemeTrialBar extends LitElement {
     if (this._short) {
       return html`<div class="pill round ${this._edge}" role="region" aria-label="Theme trial">
         <span class="sr" role="status">${text}</span>
-        <button type="button" class="round-btn" aria-label="Revert theme trial" @click=${() => stopTrial('revert')}>${this._icon()}</button>
+        <button type="button" class="round-btn" aria-label="Revert theme trial" title="Revert theme trial" @click=${() => stopTrial('revert')}>${this._undoIcon()} Revert</button>
       </div>`;
     }
     return html`<div class="pill ${this._edge}" role="region" aria-label="Theme trial">
@@ -175,6 +175,12 @@ export class McThemeTrialBar extends LitElement {
         </button>
       </span>
     </div>`;
+  }
+
+  private _undoIcon(): TemplateResult {
+    return html`<svg class="ico" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62A7.96 7.96 0 0 1 12.5 10c3.54 0 6.55 2.31 7.6 5.5l2.37-.78A10.5 10.5 0 0 0 12.5 8Z" />
+    </svg>`;
   }
 
   private _icon(): TemplateResult {
@@ -229,8 +235,7 @@ export class McThemeTrialBar extends LitElement {
     }
     .pill.round {
       padding: 0;
-      border-radius: 50%;
-      width: 44px;
+      border-radius: 22px;
       height: 44px;
       left: auto;
       right: 16px;
@@ -272,12 +277,13 @@ export class McThemeTrialBar extends LitElement {
       text-decoration: none;
     }
     .round-btn {
-      width: 44px;
       height: 44px;
-      padding: 0;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
+      padding: 0 14px;
+      border-radius: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
     }
     button:focus-visible {
       outline: 3px solid #ffd54f;

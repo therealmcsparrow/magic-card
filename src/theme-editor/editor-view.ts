@@ -26,6 +26,7 @@ import {
 } from './util';
 import type { Scope } from './util';
 import type { FieldCtx, FieldHint, FieldRow } from './field-group';
+import type { McteRawRows } from './raw-rows';
 import type { SaveReason } from './save-bar';
 import './field-group';
 import './preview';
@@ -57,6 +58,19 @@ interface Banner {
   message: string;
   actions: Array<{ label: string; run: () => void }>;
 }
+
+/** The page variables the editor's own chrome reads; pinned while a trial runs so the chrome stays on the HA theme. */
+const PIN_BASE = [
+  'card-background-color',
+  'secondary-background-color',
+  'primary-background-color',
+  'primary-text-color',
+  'secondary-text-color',
+  'divider-color',
+  'warning-color',
+  'error-color',
+  'success-color',
+];
 
 interface Toast {
   text: string;
@@ -119,6 +133,8 @@ export class McteEditorView extends LitElement {
     _dlgError: { state: true },
     _rewriteAck: { state: true },
     _previewDoc: { state: true },
+    _rawPending: { state: true },
+    _usedLink: { state: true },
   };
 
   draft!: Draft;
@@ -161,6 +177,9 @@ export class McteEditorView extends LitElement {
   private _dlgError = '';
   private _rewriteAck = false;
   private _previewDoc: ThemeDoc = {};
+  private _rawPending = false;
+  private _usedLink = false;
+  private _pinned = new Set<string>();
 
   private _ro?: ResizeObserver;
   private _stackRo?: ResizeObserver;
@@ -181,7 +200,15 @@ export class McteEditorView extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this._trial = getTrial();
-    this._unsub = subscribeTrial((s) => (this._trial = s));
+    this._unsub = subscribeTrial((s, reason) => {
+      const was = !!this._trial;
+      this._trial = s;
+      if (s) return;
+      this._unpin();
+      // The bar closed under the pointer or keyboard: put focus back where the trial was started.
+      if (was && reason === 'revert') void this.updateComplete.then(() => this._focusTrialButton());
+    });
+    if (!this._trial) this._unpin();
     if (typeof ResizeObserver !== 'undefined') {
       this._ro = new ResizeObserver(([e]) => {
         const r = e.contentRect;
@@ -190,6 +217,26 @@ export class McteEditorView extends LitElement {
       });
       this._ro.observe(this);
     }
+  }
+
+  /** Keeps the editor's chrome on the HA theme while a trial applies the draft to the whole page (Marco F8, a11y). */
+  private _pin(doc: ThemeDoc): void {
+    const cs = getComputedStyle(this);
+    for (const k of [...PIN_BASE, ...Object.keys(resolveTheme(doc, browserMode(this.hass)))]) {
+      if (this._pinned.has(k)) continue;
+      this._pinned.add(k);
+      this.style.setProperty(`--${k}`, cs.getPropertyValue(`--${k}`).trim() || 'initial');
+    }
+  }
+
+  private _unpin(): void {
+    for (const k of this._pinned) this.style.removeProperty(`--${k}`);
+    this._pinned.clear();
+  }
+
+  private _focusTrialButton(): void {
+    const el = this.renderRoot.querySelector<HTMLElement>('.btn.try') ?? this.renderRoot.querySelector<HTMLElement>('.more');
+    if (el && (!document.activeElement || document.activeElement === document.body)) el.focus();
   }
 
   disconnectedCallback(): void {
@@ -224,18 +271,26 @@ export class McteEditorView extends LitElement {
     this._rewriteAck = false;
     this._previewDoc = cloneDoc(d.doc);
     this._wasDirty = false;
+    this._rawPending = false;
+    this._usedLink = false;
     this._computeHints(true);
     if (d.from) this._say(`Editing ${SCOPE_LABEL[this._scope]}. Created from ${d.from}.`);
   }
 
   protected updated(changed: PropertyValues): void {
+    if (changed.has('draft') && this.draft) {
+      // A theme just opened (Create, a deep link): focus would otherwise be lost with the view that held it.
+      void this.updateComplete.then(() => {
+        if (!document.activeElement || document.activeElement === document.body) this.renderRoot.querySelector<HTMLElement>('.tname')?.focus();
+      });
+    }
     if (changed.has('_dlg') && this._dlg) {
       openDialog(this.renderRoot);
       if (this._dlg === 'rename') this.renderRoot.querySelector<HTMLInputElement>('#rename')?.focus();
     }
     this._syncStrip();
     if (changed.has('_doc') || changed.has('_mode')) this._queueHints();
-    if (changed.has('_doc') || changed.has('_saved') || changed.has('_baseline')) {
+    if (changed.has('_doc') || changed.has('_saved') || changed.has('_baseline') || changed.has('_rawPending')) {
       const dirty = this._needsPrompt;
       if (dirty !== this._wasDirty) {
         this._wasDirty = dirty;
@@ -265,7 +320,7 @@ export class McteEditorView extends LitElement {
 
   /** True when leaving would lose work worth asking about. */
   private get _needsPrompt(): boolean {
-    return isDirty(this._saved ?? this._baseline, this._doc);
+    return isDirty(this._saved ?? this._baseline, this._doc) || this._rawPending;
   }
 
   private get _isNew(): boolean {
@@ -306,11 +361,14 @@ export class McteEditorView extends LitElement {
   // ── edits ──
 
   private _edit(next: ThemeDoc): void {
+    // A read-only theme (several themes in one file, !secret, a subfolder) can never be saved: no edits.
+    if (!this.draft.editable) return;
     this._doc = next;
     this._usedMsg = '';
     this._savedAt = '';
     this._banner = null;
     this._previewDoc = heldBackDoc(next, this._previewDoc, docErrors(next, kindOf));
+    if (isTrialActive()) this._pin(next);
     updateTrial(next);
   }
 
@@ -320,8 +378,13 @@ export class McteEditorView extends LitElement {
       this._edit(removeVar(this._doc, name, mode));
       return;
     }
-    if (this._scope === 'shared') this._touched = new Set(this._touched).add(name);
+    this._touched = new Set(this._touched).add(name);
     this._edit(setVar(this._doc, name, value, mode));
+  }
+
+  private _onMoveShared(name: string, value: string): void {
+    this._edit(setVar(removeVar(this._doc, name, this._scope === 'shared' ? undefined : this._scope), name, value));
+    this._say(`Moved ${entryByName(name)?.label ?? name} to Shared. Light and Dark both use it.`);
   }
 
   private _onReset(name: string): void {
@@ -341,8 +404,12 @@ export class McteEditorView extends LitElement {
     let d = this._doc;
     const mode = this._scope === 'shared' ? undefined : this._scope;
     for (const e of entries) {
-      d = setVar(d, e.name, e.value, mode);
-      if (!mode) this._touched = new Set(this._touched).add(e.name);
+      try {
+        d = setVar(d, e.name, e.value, mode);
+      } catch {
+        continue; // a name that is an object internal; the raw row refuses these before it gets here
+      }
+      this._touched = new Set(this._touched).add(e.name);
       const group = entryByName(e.name)?.group ?? 'other';
       this._open = new Set(this._open).add(group);
     }
@@ -516,8 +583,13 @@ export class McteEditorView extends LitElement {
   // ── leaving ──
 
   private _back(): void {
-    if (this._needsPrompt) this._openDlg('discard');
-    else this._leave();
+    if (this._needsPrompt) {
+      this._openDlg('discard');
+      return;
+    }
+    // Nothing to lose: leaving also ends a trial of this theme, so no Revert bar is left behind.
+    if (isTrialActive() && getTrial()?.name === this._name) stopTrial('discard');
+    this._leave();
   }
 
   private _leave(): void {
@@ -532,8 +604,61 @@ export class McteEditorView extends LitElement {
 
   // ── save ──
 
-  private async _saveClick(): Promise<void> {
-    if (this._reason || this._saving) return;
+  /** Save pressed while it is off: say why and take the user to the cause (a tap has no hover). */
+  private _explainBlocked(): void {
+    this._afterSave = null;
+    const r = this._reason;
+    if (!r) return;
+    if (r.action === 'fix') {
+      this._jumpToFirstError();
+      return;
+    }
+    this._say(r.text);
+    if (r.action === 'recheck') {
+      this._panel = 'vars';
+      void this.updateComplete.then(() => this.renderRoot.querySelector('mcte-include-notice')?.scrollIntoView({ block: 'nearest' }));
+    }
+  }
+
+  private _rawRows(): McteRawRows | null {
+    return this.renderRoot.querySelector<McteRawRows>('mcte-raw-rows');
+  }
+
+  /** A half-filled "Add any variable" row would be lost by a save: warn first instead. */
+  private _warnRawPending(): void {
+    this._afterSave = null;
+    const dismiss = { label: 'Cancel', run: () => (this._banner = null) };
+    this._banner = {
+      kind: 'warn',
+      title: 'A variable is typed but not added',
+      message: 'The Add any variable row still holds text. Add it to the theme before saving, or save without it.',
+      actions: [
+        { label: 'Add it and save', run: () => void this._addPendingAndSave() },
+        { label: 'Save without it', run: () => ((this._banner = null), void this._saveClick(true)) },
+        dismiss,
+      ],
+    };
+    this._panel = 'vars';
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.banner .title')?.focus());
+  }
+
+  private async _addPendingAndSave(): Promise<void> {
+    this._banner = null;
+    if (!this._rawRows()?.addPending()) return;
+    await this.updateComplete;
+    await this._saveClick();
+  }
+
+  private async _saveClick(skipRaw = false): Promise<void> {
+    if (this._saving) return;
+    if (this._reason) {
+      this._explainBlocked();
+      return;
+    }
+    if (!skipRaw && this._rawRows()?.hasPending) {
+      this._warnRawPending();
+      return;
+    }
     if (!this._isNew && this._file && !this._rewriteAck) {
       this._openDlg('first-save');
       return;
@@ -556,12 +681,8 @@ export class McteEditorView extends LitElement {
       this._usedMsg = '';
       this._rewriteAck = true;
       if (isTrialActive()) stopTrial('saved');
-      this._showToast({
-        text: res.loaded
-          ? `Saved ${this._name} and reloaded themes. Screens that use this theme update now, including wall tablets.`
-          : `Saved ${this._name}.`,
-        action: { label: 'Use this theme', run: () => this._use() },
-      });
+      // The header's status row shows "Saved hh:mm" and "Use this theme"; this is for screen readers.
+      this._say(res.loaded ? `Saved ${this._name} and reloaded themes. Screens that use this theme update now.` : `Saved ${this._name}.`);
       if (!res.loaded) {
         this._banner = {
           kind: 'warn',
@@ -675,6 +796,7 @@ export class McteEditorView extends LitElement {
 
   private _use(): void {
     const ok = useTheme(this._name);
+    this._usedLink = !ok;
     this._usedMsg = ok
       ? `Now using ${this._name} for your user.`
       : `Pick ${this._name} in your profile to use it.`;
@@ -703,6 +825,7 @@ export class McteEditorView extends LitElement {
       stopTrial('revert');
       return;
     }
+    this._pin(this._doc);
     startTrial({ name: this._name, doc: this._doc, hass: this.hass });
   }
 
@@ -757,8 +880,12 @@ export class McteEditorView extends LitElement {
   }
 
   private _tryHelp(): string {
-    const mode = browserMode(this.hass);
-    return `Applies to this browser tab only. Open a dashboard to see it. The Revert button stays at the edge of the screen. It uses your browser's current mode (${mode}). To try ${mode === 'dark' ? 'light' : 'dark'}, switch your profile to ${mode === 'dark' ? 'light' : 'dark'}.`;
+    return `Applies to this browser tab only. Open a dashboard to see it. Uses your current mode (${browserMode(this.hass)}).`;
+  }
+
+  private _tryTip(): string {
+    const other = browserMode(this.hass) === 'dark' ? 'light' : 'dark';
+    return `${this._tryHelp()} The Revert button stays at the edge of the screen. To try ${other}, switch your profile to ${other}.`;
   }
 
   private _tryButton(inMenu = false): TemplateResult {
@@ -769,6 +896,7 @@ export class McteEditorView extends LitElement {
       role=${inMenu ? 'menuitem' : 'button'}
       aria-pressed=${ifDefined(inMenu ? undefined : on ? 'true' : 'false')}
       aria-describedby="try-help"
+      title=${this._tryTip()}
       @click=${() => this._toggleTrial()}
     >
       ${icon('eye')} ${on ? 'Stop trying' : 'Try on dashboard'}
@@ -789,7 +917,7 @@ export class McteEditorView extends LitElement {
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
             <button type="button" role="menuitem" class="mi" @click=${() => this._openDlg('yaml')}>Show YAML</button>
             <button type="button" role="menuitem" class="mi" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say('Copied YAML'), (this._menu = false)))}>Copy YAML</button>
-            ${this._hasModes
+            ${this._hasModes && this.draft.editable
               ? html`<button type="button" role="menuitem" class="mi" @click=${() => this._copyMode('light', 'dark')}>Copy Light to Dark</button>
                   <button type="button" role="menuitem" class="mi" @click=${() => this._copyMode('dark', 'light')}>Copy Dark to Light</button>`
               : nothing}
@@ -799,44 +927,59 @@ export class McteEditorView extends LitElement {
     </div>`;
   }
 
+  /** One status row under the controls: why Save is off, the saved line and what "Use this theme" did. Its height is reserved so nothing below it moves. */
+  private _statusLine(): TemplateResult {
+    const r = this._reason;
+    const showReason = r && !this._saving && !(r.quiet && this._savedAt);
+    const showSaved = this._savedAt && (!r || r.quiet);
+    return html`<div class="line">
+      ${showReason
+        ? html`<span class="help reason">${r.text}</span>${r.action
+            ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => (r.action === 'fix' ? this._jumpToFirstError() : fire(this, 'mcte-recheck'))}>${r.actionLabel}</button>`
+            : nothing}`
+        : nothing}
+      ${showSaved
+        ? html`<span class="help saved" role="status">Saved ${this._savedAt}</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>Use this theme</button>`
+        : nothing}
+      ${this._usedMsg
+        ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">Open your profile</a>` : nothing}`
+        : nothing}
+    </div>`;
+  }
+
   private _header(): TemplateResult {
     const compact = this._w < 640;
     return html`<header class="hdr">
       <div class="left">
         <button type="button" class="btn btn-text back" @click=${() => this._back()}>${icon('back')} Themes</button>
-        <h2 class="tname">${this._name}</h2>
+        <h2 class="tname" tabindex="-1">${this._name}</h2>
         <div class="chips">${this._chips()}</div>
       </div>
-      <div class="mid">
-        ${this._hasModes
-          ? html`<span class="lbl sr-only" id="edit-lbl">Editing</span>
-              <mcte-mode-switch
-                label="Edit variables for"
-                .value=${this._scope}
-                .options=${[
-                  { value: 'shared', label: 'Shared' },
-                  { value: 'light', label: 'Light' },
-                  { value: 'dark', label: 'Dark' },
-                ]}
-                @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
-              ></mcte-mode-switch>`
-          : this.draft.editable
-            ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>Add light and dark modes</button>`
-            : nothing}
-        ${compact ? nothing : this._tryButton()}
-      </div>
       <div class="right">
-        <mcte-save-bar
-          .reason=${this._reason}
-          .saving=${this._saving}
-          .savedAt=${this._savedAt}
-          .usedMessage=${this._usedMsg}
-          ?show-shortcut=${true}
-          @mcte-save=${() => void this._saveClick()}
-          @mcte-use=${() => this._use()}
-          @mcte-reason-action=${(e: CustomEvent) => (e.detail.action === 'fix' ? this._jumpToFirstError() : fire(this, 'mcte-recheck'))}
-        ></mcte-save-bar>
+        <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
+      </div>
+      <div class="row2">
+        <div class="ctrls">
+          ${this._hasModes
+            ? html`<span class="lbl sr-only" id="edit-lbl">Editing</span>
+                <mcte-mode-switch
+                  label="Edit variables for"
+                  .value=${this._scope}
+                  .options=${[
+                    { value: 'shared', label: 'Shared' },
+                    { value: 'light', label: 'Light' },
+                    { value: 'dark', label: 'Dark' },
+                  ]}
+                  @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
+                ></mcte-mode-switch>`
+            : this.draft.editable
+              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>Add light and dark modes</button>`
+              : nothing}
+          ${compact ? nothing : this._tryButton()}
+        </div>
+        ${this._statusLine()}
       </div>
       ${compact ? nothing : html`<p class="help tryhelp" id="try-help">${this._tryHelp()}</p>`}
     </header>`;
@@ -894,6 +1037,7 @@ export class McteEditorView extends LitElement {
         @mcte-set=${(e: CustomEvent) => (e.stopPropagation(), this._onSet(e.detail.name, e.detail.value))}
         @mcte-reset=${(e: CustomEvent) => (e.stopPropagation(), this._onReset(e.detail.name))}
         @mcte-set-modes=${(e: CustomEvent) => (e.stopPropagation(), this._onSetModes(e.detail.name, e.detail.value, e.detail.modes))}
+        @mcte-move-shared=${(e: CustomEvent) => (e.stopPropagation(), this._onMoveShared(e.detail.name, e.detail.value))}
         @mcte-copy=${(e: CustomEvent) => (e.stopPropagation(), this._copyKey(e.detail.text, e.detail.what))}
       ></mcte-field-group>`;
     };
@@ -950,6 +1094,7 @@ export class McteEditorView extends LitElement {
             .existing=${new Set(Object.keys((this._scope === 'shared' ? this._doc : (this._doc.modes?.[this._scope] ?? {})) as object))}
             .prefill=${this._rawPrefill}
             @mcte-add=${(e: CustomEvent) => (e.stopPropagation(), this._onAdd(e.detail.entries))}
+            @mcte-raw-pending=${(e: CustomEvent) => (e.stopPropagation(), (this._rawPending = !!e.detail.pending))}
           ></mcte-raw-rows>`
         : nothing}
     `;
@@ -966,18 +1111,18 @@ export class McteEditorView extends LitElement {
 
   private _strip(): TemplateResult {
     return html`<div class="strip">
-      <div class="strip-bar">
-        <button type="button" class="btn btn-text btn-sm" aria-expanded=${this._stripOpen ? 'true' : 'false'} @click=${() => (this._stripOpen = !this._stripOpen)}>
-          ${this._stripOpen ? 'Hide live strip' : 'Show live strip'}
-        </button>
-        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>Open preview</button>
-      </div>
       ${this._stripOpen
         ? html`<div class="strip-sample" inert aria-hidden="true">
             <div class="mini-tile"><span class="dot"></span><span><b>Living room</b><br /><small>On</small></span></div>
             <span class="mini-btn">Button</span>
           </div>`
         : nothing}
+      <div class="strip-bar">
+        <button type="button" class="btn btn-text btn-sm" aria-expanded=${this._stripOpen ? 'true' : 'false'} @click=${() => (this._stripOpen = !this._stripOpen)}>
+          ${this._stripOpen ? 'Hide live strip' : 'Show live strip'}
+        </button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>Open preview</button>
+      </div>
     </div>`;
   }
 
@@ -1006,8 +1151,8 @@ export class McteEditorView extends LitElement {
             @mcte-change=${(e: CustomEvent) => (this._panel = e.detail.value)}
           ></mcte-mode-switch>
         </div>
-        ${this._panel === 'vars' ? this._strip() : nothing}
       </div>
+      ${this._panel === 'vars' ? this._strip() : nothing}
       <div class="panes">
         <section id="panel-vars" class="pane" role="tabpanel" aria-label="Variables" ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
         <section id="panel-preview" class="pane" role="tabpanel" aria-label="Preview" ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
@@ -1054,13 +1199,13 @@ export class McteEditorView extends LitElement {
     if (!this.draft) return html``;
     const layout = this._layout;
     return html`
-      <div class="root ${layout} ${this._sticky ? 'is-sticky' : ''}" @keydown=${this._onKey}>
+      <div class="root ${layout} ${this._sticky ? 'is-sticky' : ''} ${this._h < SHORT ? 'short' : ''}" @keydown=${this._onKey}>
         ${layout === 'wide' ? html`<div class="stack">${this._header()}</div>` : nothing}
         ${this._body()}
       </div>
       <p class="sr-only" role="status">${this._msg}</p>
       ${this._toast
-        ? html`<div class="toast" role="status" @mouseenter=${() => (this._toastPaused = true)} @mouseleave=${() => ((this._toastPaused = false), this._startToastTimer())} @focusin=${() => (this._toastPaused = true)} @focusout=${() => ((this._toastPaused = false), this._startToastTimer())}>
+        ? html`<div class="toast ${this._trial ? 'over-bar' : ''}" role="status" @mouseenter=${() => (this._toastPaused = true)} @mouseleave=${() => ((this._toastPaused = false), this._startToastTimer())} @focusin=${() => (this._toastPaused = true)} @focusout=${() => ((this._toastPaused = false), this._startToastTimer())}>
             <span>${this._toast.text}</span>
             ${this._toast.action ? html`<button type="button" @click=${() => this._toast?.action?.run()}>${this._toast.action.label}</button>` : nothing}
             <button type="button" aria-label="Dismiss" @click=${() => (this._toast = null)}>${icon('close')}</button>
@@ -1120,18 +1265,53 @@ export class McteEditorView extends LitElement {
         flex-wrap: wrap;
         gap: 6px;
       }
-      .mid {
+      .left {
+        flex: 1 1 0;
+      }
+      .row2 {
+        flex: 1 0 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 16px;
+      }
+      .ctrls {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
       }
-      .right {
+      .line {
+        flex: 1 1 200px;
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px 8px;
+        min-height: 40px;
+      }
+      a.btn {
+        text-decoration: none;
+      }
+      /* Short viewports (200% zoom on a laptop): the long hint is read through the Try button's description only. */
+      .short .tryhelp {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .short .hdr {
+        padding: 4px 12px;
+        gap: 4px 12px;
+      }
+      .right {
+        display: flex;
         gap: 8px;
         align-items: center;
         justify-content: flex-end;
+        flex: none;
       }
       .tryhelp {
         flex: 1 0 100%;
@@ -1235,22 +1415,36 @@ export class McteEditorView extends LitElement {
         color: var(--mc-text-2);
       }
       .strip {
-        padding: 0 12px 8px;
+        flex: none;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        padding: 6px 12px;
+        background: var(--mc-surface);
+        border-bottom: 1px solid var(--mc-divider);
+      }
+      .strip {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 12px;
       }
       .strip-bar {
         display: flex;
-        justify-content: space-between;
-        gap: 8px;
+        gap: 4px;
+        flex: none;
+        margin-left: auto;
       }
       .strip-sample {
+        flex: 1 1 220px;
         display: flex;
         gap: 12px;
         align-items: center;
-        padding: 8px 12px;
+        padding: 4px 12px;
         border-radius: var(--mc-radius-lg);
         background: var(--lovelace-background, var(--primary-background-color));
         color: var(--primary-text-color);
-        min-height: 56px;
+        min-height: 44px;
       }
       .mini-tile {
         display: flex;
