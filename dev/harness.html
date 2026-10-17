@@ -32,8 +32,12 @@
   </ha-mock-dialog>
   <script src="./shims.js"></script>
   <script type="module" src="../.harness-build/magic-card.js"></script>
-  <script defer src="./harness.js"></script>
-  <script defer src="./harness-b6.js"></script>
-  <script defer src="./harness-popup.js"></script>
+  <!-- the editor is a lazy chunk: load it before the harness scripts create magic-card-editor -->
+  <script type="module">
+    await window.MagicCard.loadEditor();
+    for (const src of ['./harness.js', './harness-b6.js', './harness-popup.js']) {
+      await new Promise((r) => { const s = document.createElement('script'); s.src = src; s.onload = r; document.body.append(s); });
+    }
+  </script>
 </body>
 </html>
