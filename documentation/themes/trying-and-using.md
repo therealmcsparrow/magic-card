@@ -38,7 +38,7 @@ When a trial ends, the dashboard returns to your own theme, and a short message 
 
 A trial uses the light and dark values of the theme you are editing. When Home Assistant switches between light and dark, the dashboard switches with it. This includes Auto, where the mode follows your system. The dashboard then shows that mode's values. This works while you look at a dashboard, with the editor closed.
 
-A value your profile theme sets and the trial theme does not goes back to Home Assistant's default, so values from your own theme do not show through. Home Assistant's own dark defaults stay as they are. The browser's form controls and scrollbars follow the mode as well.
+A value your profile theme sets and the trial theme does not goes back to Home Assistant's default for the current mode, light or dark, so values from your own theme do not show through. Home Assistant's own dark defaults stay as they are. The browser's form controls and scrollbars follow the mode as well.
 
 ## Revert
 
