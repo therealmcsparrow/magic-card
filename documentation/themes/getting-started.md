@@ -29,7 +29,7 @@ Each row shows the theme name and whether the file is editable. Read-only files 
 1.  Click **New theme** in the list.
 2.  Under **Start from**, choose one of three starting points:
     -   **Blank**: an empty theme. Tick **Light and dark modes** if you want separate `light` and `dark` blocks from the start.
-    -   **A preset**: one of five starters, listed below. The preset's name fills the name field. Change it if you like.
+    -   **A preset**: one of 45 starting points, in two groups, Original and Inspired by. Search by name, palette or style, or use Show to filter by group. The [theme examples](examples/README.md) page has a screenshot of each one. The preset's name fills the name field. Change it if you like.
     -   **An installed theme**: copies the variables of a theme Home Assistant has loaded, or of a file in `/config/themes`. The original is not changed. Built-in Home Assistant themes expose only some of their variables.
 3.  Type a name. Names use lowercase letters, digits, hyphens and underscores. They start with a letter or a digit and are at most 64 characters long. The names `default` and `backend-selected` are reserved.
 4.  Click **Create theme**, or **Create from** and the preset name.
@@ -38,15 +38,19 @@ The editor opens with the fields filled in and the preview showing the theme.
 
 ## Presets
 
-| Preset | Look |
-| --- | --- |
-| Paper | A clean light theme with a calm blue |
-| Midnight OLED | Pure black, for wall tablets with OLED screens |
-| Ember | Warm paper with terracotta |
-| Contrast | High contrast with strong edges |
-| Frost | Glass: blurred, translucent cards on a soft gradient |
+The create dialog offers 45 presets in two groups. Original has 25 themes, including the five starters from earlier releases: Paper, Midnight OLED, Ember, Contrast and Frost. Inspired by has 20 themes that draw on well-known editor and web palettes, such as Nord, Dracula, Solarized and Tokyo Night. Their colour values are our own, not the official palettes, and each one credits the palette it draws on.
 
-Each preset sets its values for light and dark, the text on primary colours, and the state colours. The text colours in every preset were checked for contrast. Presets are starting points you can change.
+The [theme examples](examples/README.md) page shows every preset with a screenshot of its light and dark modes.
+
+Each preset sets a light and a dark mode, including the text on primary colours and the state colours. In every mode, the text, the secondary text, the text on the primary colour and the state colours reach a contrast of at least 4.5 to 1. Presets are starting points you can change.
+
+### Loading and failure
+
+The presets load the first time you open the create dialog. The Themes tab opens without them.
+
+While they load, the dialog shows Loading presets, and Create stays off until a preset is picked. Blank and An installed theme work during loading.
+
+If the presets cannot load, the dialog shows "Presets could not load" with a Try again button. Click Try again to request the presets again. If it keeps failing, reload the page. Blank and An installed theme still work.
 
 ## Edit and save
 

@@ -6,7 +6,7 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 
 ## Requirements
 
--   Magic Card 2026.10.06 or newer, added as a dashboard resource of type JavaScript module. The Themes tab loads `magic-card-theme-editor.js` from the same folder as `magic-card.js`. HACS installs it there.
+-   Magic Card 2026.10.07 or newer, added as a dashboard resource of type JavaScript module. The Themes tab loads `magic-card-theme-editor.js` from the same folder as `magic-card.js`, and `magic-card-theme-presets.js` when you open the create dialog. HACS installs both there.
 -   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration, version 2026.10.08 or newer.
 -   An admin user. The panel is only in the sidebar of admin users, and saving or deleting a theme needs an admin.
 -   The include lines in `configuration.yaml`, described in [Getting started](getting-started.md#add-the-include-lines).
@@ -14,6 +14,7 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 ## Pages
 
 -   [Getting started](getting-started.md): the include lines, opening the Themes tab, creating a theme from blank, a preset or an installed theme, and saving.
+-   [Theme examples](examples/README.md): all 45 presets, each with a screenshot of its light and dark modes, and the credit for the palettes they draw on.
 -   [Variables and groups](variables.md): the Home Assistant groups, the Magic Card group, the third-party card groups, the raw row, colour, size and gradient fields.
 -   [Light, dark and Shared](modes.md): the `modes` blocks, the Shared, Light and Dark scope, previewing each mode, and the warnings about values that have no effect.
 -   [Try, revert and use](trying-and-using.md): Try on dashboard, Revert, and Use this theme.

@@ -28,6 +28,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | Folder | Covers |
 | --- | --- |
 | [Card gallery](gallery/README.md) | Sixty complete cards with screenshots and YAML, twenty of them animated: weather, climate, energy, lights, media, security, appliances, garden, seasonal and more |
+| [Theme examples](themes/examples/README.md) | The 45 theme presets of the theme editor, each with a screenshot of its light and dark modes |
 
 ## Where to start
 

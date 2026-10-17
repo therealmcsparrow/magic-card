@@ -20,7 +20,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules.
 -   More than 100 preset animations, several per element, with play conditions, plus 46 themed catalogue presets (see [Catalogue presets](#catalogue-presets)).
 -   Animated icons: pick one of 192 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. Each ready-made one plays in a Quiet, Living or Glow style. The card stores the result itself, so it needs no integration.
--   Theme editor: create and edit Home Assistant themes in the Magic Card Utils Themes tab, with a live preview beside the fields, light and dark modes, presets, and a Try on dashboard button that shows a theme in your browser tab until you revert it. Needs the Magic Card Utils integration, version 2026.10.08 or newer. See [Themes](documentation/themes/README.md).
+-   Theme editor: create and edit Home Assistant themes in the Magic Card Utils Themes tab, with a live preview beside the fields, light and dark modes, 45 presets in two groups (see the [theme examples](documentation/themes/examples/README.md) for a screenshot of each), and a Try on dashboard button that shows a theme in your browser tab until you revert it. Needs the Magic Card Utils integration, version 2026.10.08 or newer. See [Themes](documentation/themes/README.md).
 -   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start from a preset in a grid of live tiles, start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
 -   Particles with physics, built in the animation studio: 13 flows, a weighted mix of shapes, gravity in any direction, drag, turbulence, collisions with the card's edges and its icon or text, and child particles that spawn on a hit or at the end of a particle's life. A particle layer plays as a baked loop, so the dashboard runs no script for it, or as a live simulation.
 -   Value rings and animated rings that follow the border radius, starting from any of eight points. A ring on a `timer` entity counts down live.
@@ -47,11 +47,11 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the eight other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js` and `magic-card-theme-editor.js`. Magic Card loads them from there when they are needed.
+HACS also downloads the nine other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js` and `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. Magic Card loads them from there when they are needed.
 
 ### Manual
 
-1.  Download the nine files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases): `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js` and `magic-card-theme-editor.js`.
+1.  Download the ten files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases): `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`.
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
@@ -67,8 +67,9 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-icon-animator.js` | The card editor, when you open the icon picker's Animated icons tab. Dashboards never load it. |
 | `magic-card-preset-catalogue.js` | The card editor's Animations list and the animation studio's Customise a preset window. Dashboards never load it. |
 | `magic-card-theme-editor.js` | The Themes tab in the Magic Card Utils panel. Dashboards and the card editor never load it. |
+| `magic-card-theme-presets.js` | The Themes tab's create dialog, when it opens, for the 45 presets. Dashboards and the card editor never load it. |
 
-Keep all nine files in one folder.
+Keep all ten files in one folder.
 
 ### Loading
 
