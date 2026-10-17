@@ -6,10 +6,10 @@ This folder documents the Magic Card editor and every option the card supports. 
 
 | Folder | Covers |
 | --- | --- |
-| [Pane editor](editor/README.md) | The editor in the card dialog: Form and YAML modes, the structure outline (also where layout modules get their children, tabs and columns), its menus and keyboard, undo and redo, templates and the animations a template shares with linked cards, copy and paste design |
-| [Studio](studio/README.md) | The full-screen editor: layers, the live canvas, selection, device widths, the floating bar, adding flows on the canvas, keyboard shortcuts |
+| [Pane editor](editor/README.md) | The editor in the card dialog: Form and YAML modes, the structure outline (also where layout modules get their children, tabs and columns), item menus (copy YAML, copy and paste modules, wrap in a layout, hide on the dashboard, rename) and keyboard, undo and redo, templates and the animations a template shares with linked cards, copy and paste design |
+| [Studio](studio/README.md) | The full-screen editor: layers, the live canvas, selection, the canvas width that follows the dashboard view, item menus on the canvas, the floating bar, adding flows on the canvas, keyboard shortcuts |
 | [Inspector](inspector/README.md) | The settings panel for the selected card, row, column, module, tab or row-module column, tab by tab |
-| [Animation studio](animation-studio/README.md) | Your own keyframe, particle, path and sequence animations: the library, icon animations with part presets, the icon library, animated SVG export, the editor with layers, stage, timeline and inspector, icon parts, drawing, own SVG icons, card parts, state clips and value bindings, using them in cards and their YAML format. Needs the Magic Card Utils integration. |
+| [Animation studio](animation-studio/README.md) | Your own keyframe, particle, path and sequence animations: the library with live preset tiles, particles with physics, collisions and child particles, icon animations with part presets, the icon library, animated SVG export, the editor with layers, stage, timeline and inspector, icon parts, drawing, own SVG icons, card parts, state clips and value bindings, using them in cards and their YAML format. Needs the Magic Card Utils integration. |
 
 ## Options reference
 
@@ -18,7 +18,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [YAML](yaml/README.md) | The full config tree, value syntax, templates, YAML mode, troubleshooting and complete copy-paste examples |
 | [Card, rows and columns](card/README.md) | Card-level, row and column options, actions, display conditions, conditional appearance and pop-up mode |
 | [Modules](modules/README.md) | Every module type and its options, one page per module |
-| [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations, icon animations and rings, including timer rings |
+| [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations and catalogue presets, icon animations with their Quiet, Living and Glow styles, and rings, including timer rings |
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
 

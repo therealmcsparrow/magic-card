@@ -123,9 +123,9 @@ Save to template writes the card's current content to the linked template. The o
 
 The template's `custom_animations` are saved with this card's own versions and additions. Documents hidden on this card stay in the template. This also holds for a card with `custom_animations` in `not_synced`: its documents are added to the template's and none of the template's are dropped.
 
-After saving, the card's own copies that now match the template are removed from the card, so they show as From template again and follow later changes to the template. A copy whose id is hidden on this card stays. A card with `custom_animations` in `not_synced` keeps all of its own.
+After a successful save the card equals the template, so the editor clears its overrides: every `not_synced` list goes and the template bar shows In sync. `hidden_animations` stays, so animations you hid on this card stay hidden. The card's own copies that now match the template are removed from the card, so they show as From template again and follow later changes to the template. A copy whose id is hidden on this card stays. This also holds for a card with `custom_animations` in `not_synced`: its documents are now in the template, so the card drops its copies and the marker.
 
-If saving fails, nothing is shown in the editor. The error is written to the browser console.
+If saving fails, nothing changes on the card and nothing is shown in the editor. The error is written to the browser console.
 
 ## Unlink from template
 

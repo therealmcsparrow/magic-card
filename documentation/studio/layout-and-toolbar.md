@@ -31,6 +31,8 @@ From left to right:
 
 On screens 1180 px wide or less, the side panels narrow to 220 px and 320 px.
 
+The inspector's header and tab bar stay at the top of its panel; only the settings below them scroll. A tab switch or a new selection starts the settings at the top. See [Inspector header](../inspector/README.md#header).
+
 The inspector tabs depend on what is selected:
 
 | Selected | Tabs |
@@ -45,7 +47,7 @@ The inspector tabs depend on what is selected:
 | Screen width | Layout |
 | --- | --- |
 | 900 px or less | Layers is hidden. The Layers button in the top bar opens it as a panel over the canvas. Escape closes it and returns focus to the Layers button. Edit in a module's three-dot menu also closes it. |
-| 640 px or less | One column: the canvas on top (at least 320 px high) and the inspector below it. The whole workspace scrolls. |
+| 640 px or less | One column: the canvas on top (at least 320 px high) and the inspector below it. The whole workspace scrolls, and the inspector's header and tabs stick to the top of the screen while you scroll through its settings (not on screens 480 px high or less). |
 
 Layers always starts hidden when the Studio opens on a narrow screen.
 

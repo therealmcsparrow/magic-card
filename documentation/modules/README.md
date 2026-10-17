@@ -120,7 +120,7 @@ When a module is selected, the [Inspector](../inspector/README.md) shows these t
 | Conditions | All modules | Display conditions |
 | Design | All modules | The design panel |
 
-Fields in the General tab use the shared pickers: an entity picker (filtered to one domain for the camera, light, weather and forecast modules), an attribute picker that lists the attributes of the chosen entity, an icon picker (on the Icon, Info and Button modules it also has an Animated icons tab, see [Animated icons in the icon picker](../animation-studio/using-in-cards.md#animated-icons-in-the-icon-picker)), a colour field, a unit field (a number with `px`, `em`, `rem`, `%`, `vw` or `vh`, or a custom CSS value; clearing it removes the key, so the default applies), and a media field with a browse button for Home Assistant's media browser.
+Fields in the General tab use the shared pickers: an entity picker (filtered to one domain for the camera, light, weather and forecast modules), an attribute picker that lists the attributes of the chosen entity, an icon picker (on the Icon, Info, Button and Light modules it also has an Animated icons tab, see [Animated icons in the icon picker](../animation-studio/using-in-cards.md#animated-icons-in-the-icon-picker)), a colour field, a unit field (a number with `px`, `em`, `rem`, `%`, `vw` or `vh`, or a custom CSS value; clearing it removes the key, so the default applies), and a media field with a browse button for Home Assistant's media browser.
 
 ## Adding a module
 

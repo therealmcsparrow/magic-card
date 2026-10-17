@@ -37,6 +37,10 @@ The top of the inspector shows what is selected:
 
 The `Row N`, `Column N`, parent layout and tab or column parts of the path are buttons. Click one to select that item.
 
+An item with a layer name shows that name as its title. An item hidden on the dashboard adds "Hidden on dashboard" to the line under the title. See [Item menus](../editor/item-menus.md#rename).
+
+In the Studio, the header and the tab bar stay at the top of the inspector and only the settings below them scroll. Switching tabs or selecting another item starts the settings at the top. On a screen 640 px wide or less, where the whole workspace scrolls, the header sticks to the top of the screen while you scroll through the inspector. On a screen 480 px high or less nothing is pinned. In the pane editor the inspector scrolls with the rest of the card dialog.
+
 ## Tabs per selection
 
 | Selection | Tabs |

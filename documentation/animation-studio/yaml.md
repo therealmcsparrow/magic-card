@@ -128,6 +128,71 @@ particles:
 | `layer` | string | `back` | `back` (behind the content) or `front` (over it) |
 | `preset` | string | | A built-in particle, ring, scene or seasonal preset id. The animation then draws that preset: only `intensity`, the colour and the timing are used, and the fields above are ignored. |
 | `intensity` | number | The preset's | The preset's parameter, with `preset` only |
+| `sim` | object | | The newer particle settings (below). Without it the fields above describe the whole layer. |
+
+### Simulation (`sim`)
+
+The studio writes `sim` when you use a setting the fields above cannot hold: a shape mix, one of the newer flows, a range, physics, a collider, child particles or Live simulation. The fields above then stay as the simpler version that older Magic Card versions play, and `count`, `size`, `colors`, `fade`, `spread`, `layer` and `speed` still apply to the layer.
+
+```yaml
+particles:
+  count: 20
+  direction: fall
+  size: [4, 8]
+  colors: ["#ffffff"]
+  sim:
+    engine: 1
+    mode: baked
+    seed: 4021
+    flow: fall
+    shapes:
+      - shape: { builtin: circle }
+        weight: 3
+      - shape: { builtin: star }
+        weight: 1
+    ranges:
+      speed: [20, 40]
+      lifetime: [3, 5]
+    physics:
+      gravity: { angle: 0, strength: 40 }
+      drag: 0.5
+      bounce: 0.3
+    colliders:
+      floor: true
+    children:
+      trigger: collision
+      count: 4
+      shapes:
+        - shape: { builtin: spark }
+          weight: 1
+      size: [2, 3]
+      ranges:
+        speed: [30, 60]
+        lifetime: [0.5, 0.5]
+```
+
+Units: speeds are in % of the layer's shorter side per second (gravity and turbulence strength in % per second squared), times in seconds, angles in degrees. Missing fields take the defaults in the table.
+
+| Key | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `engine` | number | | Required. `1`. A card that does not know the engine plays the simpler version. |
+| `mode` | string | `baked` | `baked` (worked out once, played as CSS) or `live` (simulated on the dashboard) |
+| `seed` | whole number | `0` | 0 to 4294967295. The same seed gives the same paths. |
+| `flow` | string | | Required. `fall`, `rise`, `drift`, `burst`, `orbit`, `spiral`, `fountain`, `explode`, `wave`, `vortex`, `zigzag`, `rain` or `wander`. The studio shows `vortex` as Swirl and `wander` as Fireflies. |
+| `shapes` | list | `[]` | Up to 6 entries of `shape` and `weight` (above 0, relative to the others). A shape is one of `builtin` (`circle`, `square`, `triangle`, `star`, `heart`, `ring`, `line`, `spark`), `icon`, `emoji` or `svg`, as for `shape` above. Empty: round dots. The studio offers up to 4. |
+| `ranges.speed` | `[min, max]` | `[20, 40]` | 0 to 1000 |
+| `ranges.spin` | `[min, max]` | `[0, 0]` | -3600 to 3600, degrees per second. Each particle also picks left or right. |
+| `ranges.delay` | `[min, max]` | `[0, 2]` | 0 to 6000. The start offset inside the loop. |
+| `ranges.lifetime` | `[min, max]` | `[2, 2]` | 0.01 to 600. A baked loop keeps lifetimes inside one loop. |
+| `ranges.opacity` | `[min, max]` | `[1, 1]` | 0 to 1 |
+| `physics.gravity` | object | `{ angle: 0, strength: 0 }` | `angle` -360 to 360 (0 down, 90 left, 180 up, 270 right), `strength` 0 to 1000 |
+| `physics.drag` | number | `0` | 0 to 20, per second |
+| `physics.turbulence` | object | `{ strength: 0, scale: 20 }` | `strength` 0 to 1000, `scale` (the size of the swirls) 0.1 to 1000 |
+| `physics.bounce` | number | `0.5` | 0 to 1. The share of speed kept on a hit. |
+| `colliders` | object | all off | `floor`, `ceiling`, `left`, `right` (booleans) and `content` (`none`, `icon` or `text`) |
+| `children` | object | | Child particles, one level only. `trigger` (required: `collision`, `death`, or `time` with `at` in seconds), `count` (1 to 8, default 3), `shapes`, `size` (px, default `[4, 6]`), `colors` (empty: the parent's colour), `ranges` (`speed`, `lifetime`, `opacity`, `spin`), `cone` (0 to 360 degrees, default 360), `inherit` (0 to 1, the share of the parent's speed, default 0) and an optional `physics` that overrides the parent's. |
+
+A layer holds at most 60 particles and 160 with their children.
 
 ## Path
 
