@@ -135,7 +135,7 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
   } catch (err) {
     if (!logged) {
       logged = true;
-      console.warn('Magic Card: a particle layer could not be set up; it keeps its simple fallback.', err);
+      console.warn('Magic Card: a particle layer could not be set up; it plays its simple version.', err);
     }
   }
 }

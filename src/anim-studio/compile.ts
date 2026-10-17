@@ -544,18 +544,32 @@ export function useParticlesCompiler(fn: ParticlesCompiler | undefined, check?: 
 
 /** A v2 particles document through the chunk's compiler; undefined (the v1 fallback plays) when its `sim` is unusable. */
 function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
+  if (failedSims.has(doc.id)) return undefined;
   let out = simCache.get(doc);
   const p = doc.particles!;
-  const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient').sim;
-  if (sim) {
-    const spec: ParticlesSpecV2 = { ...p, sim };
-    const period = doc.duration / p.speed;
-    // aspect 0: the slot pool only; the chunk's apply bakes once the layer is measured
-    const v = particlesCompiler!(doc.id, spec, period, { aspect: 0 });
-    simCache.set(doc, (out = { kind: 'particles', name: v.name, css: v.css, layer: { front: v.front, particles: v.slots, speed: p.speed }, sim: { docId: doc.id, spec, period } }));
+  try {
+    const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient').sim;
+    if (sim) {
+      const spec: ParticlesSpecV2 = { ...p, sim };
+      const period = doc.duration / p.speed;
+      // aspect 0: the slot pool only; the chunk's apply bakes once the layer is measured
+      const v = particlesCompiler!(doc.id, spec, period, { aspect: 0 });
+      simCache.set(doc, (out = { kind: 'particles', name: v.name, css: v.css, layer: { front: v.front, particles: v.slots, speed: p.speed }, sim: { docId: doc.id, spec, period } }));
+    }
+  } catch {
+    failedSims.add(doc.id);
   }
   return out;
 }
+
+const failedSims = new Set<string>();
+
+/**
+ * The particles chunk could not set up a layer of document `id` (the card saw apply fail): until the
+ * page reloads the document compiles its v1 fallback (FALLBACK_DIRECTION, first own shape), as when the
+ * chunk cannot load. A compiler that throws does the same.
+ */
+export const particlesFailed = (id: string): void => void failedSims.add(id);
 
 /** Compiles a document's v2 data (compile-v2.ts compileV2, registered when that file loads). */
 export type V2Compiler = (doc: AnimationDoc, opts: CompileOptions) => CompiledV2;
