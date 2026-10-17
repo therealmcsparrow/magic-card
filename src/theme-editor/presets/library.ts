@@ -1,13 +1,14 @@
-import type { ThemeDoc, ThemePreset, ThemePresetLibrary } from '../../contracts/theme-editor';
+import type { ThemeDoc, ThemePreset, ThemePresetGroup, ThemePresetLibrary } from '../../contracts/theme-editor';
 
 /*
- * The preset library (Contract theme-presets 1.0.0, ADR 0014): 45 themes, each with a light and a
+ * The preset library (Contract theme-presets 1.1.0, ADR 0014 and 0015): 57 themes, each with a light and a
  * dark mode, in one lazy chunk (magic-card-theme-presets.js) that the create dialog loads on first
  * open. Only `import type` here: Node can load this file with type stripping, and the chunk holds
  * no UI code. The first 5 are the original starters (ids and values unchanged since 2026.10.06).
  * Inspired presets use their own colours and names; the credit names the palette that sparked them.
  * Every mode passes 4.5 to 1 for text, secondary text, text on primary and the state colours
- * (tests/theme-presets.contract.test.ts). Order: display order within a group.
+ * (tests/theme-presets.contract.test.ts). Order: display order within a group; groups are contiguous
+ * (original, inspired, genre). The 12 genre presets (Sci-fi & fantasy) carry `tags`, never a franchise term.
  */
 
 type Mode = Record<string, string>;
@@ -49,48 +50,21 @@ const doc = (light: Mode, dark: Mode, root: Mode = {}): ThemeDoc => ({
   modes: { light, dark },
 });
 
+/**
+ * A plain preset (ADR 0015): its 14 base colours (7 light, then 7 dark) as one 84-character string of
+ * 6-digit hex, unpacked here into the same resolved objects the long form gives. The `more` argument adds note,
+ * inspiredBy or tags; `dark` overrides state colours in the dark mode only.
+ */
+const P = (id: string, name: string, group: ThemePresetGroup, blurb: string, hex: string, more: Partial<ThemePreset> = {}, dark: Mode = {}): ThemePreset => {
+  const c = (hex.match(/.{6}/g) as string[]).map((h) => '#' + h);
+  return { id, name, group, blurb, ...more, doc: doc(mode(c.slice(0, 7)), mode(c.slice(7), true, dark)) };
+};
+
 const PRESETS: ThemePreset[] = [
-  {
-    id: 'paper',
-    name: 'Paper',
-    group: 'original',
-    blurb: 'Clean light with a calm blue.',
-    doc: doc(
-      mode(['#1d5fd1', '#c2410c', '#f5f6f8', '#ffffff', '#1b1f24', '#5a626c', '#e1e4e8']),
-      mode(['#7aa7ff', '#ff9d66', '#14171c', '#1d2128', '#eceff3', '#a2a9b3', '#2c323b'], true),
-    ),
-  },
-  {
-    id: 'midnight-oled',
-    name: 'Midnight OLED',
-    group: 'original',
-    blurb: 'Pure black for wall tablets.',
-    note: 'Pure black in dark mode only. Keep the screen in dark mode.',
-    doc: doc(
-      mode(['#0a6fb5', '#b45309', '#f4f4f6', '#ffffff', '#111111', '#55555d', '#dcdce0']),
-      mode(['#4cc2ff', '#ffb454', '#000000', '#0b0b0d', '#f2f2f2', '#9a9aa2', '#1f1f24'], true),
-    ),
-  },
-  {
-    id: 'ember',
-    name: 'Ember',
-    group: 'original',
-    blurb: 'Warm paper and terracotta.',
-    doc: doc(
-      mode(['#b93a0b', '#0f766e', '#faf5ee', '#fffdf9', '#2b2118', '#6b5a4a', '#eadfce']),
-      mode(['#fb923c', '#5eead4', '#1c1511', '#261d17', '#f6ebdd', '#bfa98f', '#3a2d23'], true),
-    ),
-  },
-  {
-    id: 'contrast',
-    name: 'Contrast',
-    group: 'original',
-    blurb: 'High contrast, strong edges.',
-    doc: doc(
-      mode(['#0000cc', '#b00020', '#ffffff', '#ffffff', '#000000', '#2b2b2b', '#000000']),
-      mode(['#ffe500', '#00e5ff', '#000000', '#000000', '#ffffff', '#e6e6e6', '#ffffff'], true),
-    ),
-  },
+  P('paper', 'Paper', 'original', 'Clean light with a calm blue.', '1d5fd1c2410cf5f6f8ffffff1b1f245a626ce1e4e87aa7ffff9d6614171c1d2128eceff3a2a9b32c323b'),
+  P('midnight-oled', 'Midnight OLED', 'original', 'Pure black for wall tablets.', '0a6fb5b45309f4f4f6ffffff11111155555ddcdce04cc2ffffb4540000000b0b0df2f2f29a9aa21f1f24', { note: 'Pure black in dark mode only. Keep the screen in dark mode.' }),
+  P('ember', 'Ember', 'original', 'Warm paper and terracotta.', 'b93a0b0f766efaf5eefffdf92b21186b5a4aeadfcefb923c5eead41c1511261d17f6ebddbfa98f3a2d23'),
+  P('contrast', 'Contrast', 'original', 'High contrast, strong edges.', '0000ccb00020ffffffffffff0000002b2b2b000000ffe50000e5ff000000000000ffffffe6e6e6ffffff'),
   {
     id: 'frost',
     name: 'Frost',
@@ -99,206 +73,35 @@ const PRESETS: ThemePreset[] = [
     note: 'Uses blur and transparency. Can be slow on old tablets.',
     doc: doc(
       mode(
-        [
-          '#2a58b5',
-          '#a23b8c',
-          '#dfe9f7',
-          'rgba(255, 255, 255, 0.65)',
-          '#1a2233',
-          '#4a566b',
-          'rgba(26, 34, 51, 0.14)',
-        ],
+        ['#2a58b5', '#a23b8c', '#dfe9f7', 'rgba(255, 255, 255, 0.65)', '#1a2233', '#4a566b', 'rgba(26, 34, 51, 0.14)'],
         false,
         { 'lovelace-background': 'linear-gradient(135deg, #dfe9f7, #f3e8f8)' },
       ),
       mode(
-        [
-          '#8fb4ff',
-          '#f0a3e0',
-          '#0f1b33',
-          'rgba(255, 255, 255, 0.08)',
-          '#eef2fb',
-          '#aab4c8',
-          'rgba(255, 255, 255, 0.14)',
-        ],
+        ['#8fb4ff', '#f0a3e0', '#0f1b33', 'rgba(255, 255, 255, 0.08)', '#eef2fb', '#aab4c8', 'rgba(255, 255, 255, 0.14)'],
         true,
         { 'lovelace-background': 'linear-gradient(135deg, #0f1b33, #2a1740)' },
       ),
       { 'ha-card-backdrop-filter': 'blur(12px)' },
     ),
   },
-  {
-    id: 'slate',
-    name: 'Slate',
-    group: 'original',
-    blurb: 'Neutral blue-grey for any room.',
-    doc: doc(
-      mode(['#3d5a73', '#b4562b', '#f1f3f5', '#ffffff', '#1c2329', '#52606c', '#dde2e6']),
-      mode(['#9ab8d1', '#f0a67a', '#15191d', '#1d2227', '#e8ecef', '#a3adb6', '#2b3239'], true),
-    ),
-  },
-  {
-    id: 'sand',
-    name: 'Sand',
-    group: 'original',
-    blurb: 'Warm neutral stone and clay.',
-    doc: doc(
-      mode(['#8a5a2b', '#3f7a6e', '#f4eee4', '#fffbf5', '#2e2a24', '#645b4e', '#e6dccc']),
-      mode(['#d9b382', '#7cc4b4', '#1a1713', '#24201a', '#efe8dc', '#b5a995', '#352f26'], true),
-    ),
-  },
-  {
-    id: 'forest',
-    name: 'Forest',
-    group: 'original',
-    blurb: 'Deep greens with an amber spark.',
-    doc: doc(
-      mode(['#2f6b3f', '#a35a14', '#eef3ec', '#fbfdfa', '#17261b', '#4a5d4e', '#d5e0d3']),
-      mode(['#7bc98a', '#e5b567', '#0f1a13', '#16241a', '#e3efe5', '#a1b8a5', '#243629'], true),
-    ),
-  },
-  {
-    id: 'ocean',
-    name: 'Ocean',
-    group: 'original',
-    blurb: 'Teal depths and coral.',
-    doc: doc(
-      mode(['#0b6a8a', '#c2492f', '#eaf3f7', '#fbfeff', '#0f2530', '#46606d', '#cfe0e8']),
-      mode(['#5ac8e8', '#ff9a85', '#08161e', '#0f212b', '#e2f1f6', '#9fbac6', '#1b3541'], true),
-    ),
-  },
-  {
-    id: 'desert',
-    name: 'Desert',
-    group: 'original',
-    blurb: 'Terracotta, dust and oasis teal.',
-    doc: doc(
-      mode(['#a8431c', '#1f7a7a', '#f8efe4', '#fffaf3', '#33231a', '#6a5444', '#ead9c4']),
-      mode(['#f0956a', '#62c4c0', '#1e1511', '#2a1e18', '#f7e9dc', '#c3a891', '#402e24'], true),
-    ),
-  },
-  {
-    id: 'arcade',
-    name: 'Arcade',
-    group: 'original',
-    blurb: 'Neon magenta and cyan, 80s cabinet.',
-    doc: doc(
-      mode(['#a3109b', '#0a7a86', '#f7f1ff', '#ffffff', '#1a0f33', '#55477a', '#e1d3f5']),
-      mode(['#ff4fd8', '#3df5ff', '#0b0620', '#150c33', '#f5f0ff', '#b9a9e8', '#2e1a66'], true),
-    ),
-  },
-  {
-    id: 'cassette',
-    name: 'Cassette',
-    group: 'original',
-    blurb: 'Faded tape-deck red and cream.',
-    doc: doc(
-      mode(['#c0392b', '#1d6b8a', '#f3e9d2', '#fbf4e3', '#2c2418', '#6a5a40', '#dccfae']),
-      mode(['#ff8a5b', '#5fd0c7', '#1d1a14', '#29251c', '#f1e7cf', '#bfb28f', '#3d372a'], true),
-    ),
-  },
-  {
-    id: 'sorbet',
-    name: 'Sorbet',
-    group: 'original',
-    blurb: 'Pastel raspberry and mint.',
-    doc: doc(
-      mode(['#b83d6a', '#278471', '#fff4f6', '#ffffff', '#3a2430', '#6d5160', '#f3dce2']),
-      mode(['#ffa3c2', '#8eead2', '#2a1c22', '#35242c', '#ffeef3', '#d6b4c1', '#4a3540'], true),
-    ),
-  },
-  {
-    id: 'lavender-mist',
-    name: 'Lavender Mist',
-    group: 'original',
-    blurb: 'Pastel lilac and rose.',
-    doc: doc(
-      mode(['#6b4fc0', '#b45582', '#f5f2fc', '#ffffff', '#2a2340', '#5d5578', '#e3ddf3']),
-      mode(['#c3b1ff', '#ffb7d5', '#1d1930', '#272240', '#f0ecff', '#bab3d8', '#3a3360'], true),
-    ),
-  },
-  {
-    id: 'hi-vis',
-    name: 'Hi-Vis',
-    group: 'original',
-    blurb: 'High contrast green on black, strong edges.',
-    doc: doc(
-      mode(['#006400', '#8a0000', '#ffffff', '#ffffff', '#000000', '#262626', '#000000']),
-      mode(['#39ff14', '#ffea00', '#000000', '#000000', '#ffffff', '#f0f0f0', '#39ff14'], true),
-    ),
-  },
-  {
-    id: 'ink',
-    name: 'Ink',
-    group: 'original',
-    blurb: 'Black and white, nothing in between.',
-    doc: doc(
-      mode(['#000000', '#b00020', '#f2f2f2', '#ffffff', '#000000', '#1f1f1f', '#000000']),
-      mode(['#ffffff', '#ff9100', '#0a0a0a', '#000000', '#ffffff', '#e0e0e0', '#ffffff'], true),
-    ),
-  },
-  {
-    id: 'spring',
-    name: 'Spring',
-    group: 'original',
-    blurb: 'Fresh leaf green and blossom pink.',
-    doc: doc(
-      mode(['#2f7d32', '#c2185b', '#f4faee', '#ffffff', '#1f2e1c', '#4f6549', '#dcebd0']),
-      mode(['#9be07a', '#ff9ec7', '#121c10', '#1a2a17', '#eaf6e3', '#a8c29f', '#2a4025'], true),
-    ),
-  },
-  {
-    id: 'summer',
-    name: 'Summer',
-    group: 'original',
-    blurb: 'Sky blue and sun yellow.',
-    doc: doc(
-      mode(['#0a76c2', '#b25e00', '#fff9e6', '#fffdf5', '#1c2a33', '#4e5f6b', '#f0e4b8']),
-      mode(['#ffd23f', '#4fc3f7', '#0e2233', '#15324a', '#fff7da', '#b3c7d6', '#24506f'], true),
-    ),
-  },
-  {
-    id: 'autumn',
-    name: 'Autumn',
-    group: 'original',
-    blurb: 'Rust, olive and warm paper.',
-    doc: doc(
-      mode(['#9c3d10', '#5c6b1a', '#f7ece0', '#fff8f0', '#321d12', '#6b4e3d', '#e9d3bd']),
-      mode(['#f4a259', '#c9d46a', '#1f130d', '#2c1c13', '#f8e8d8', '#cdae95', '#46301f'], true),
-    ),
-  },
-  {
-    id: 'winter',
-    name: 'Winter',
-    group: 'original',
-    blurb: 'Icy blue with a violet touch.',
-    doc: doc(
-      mode(['#1b6a94', '#7a3f8f', '#edf2f7', '#ffffff', '#14202c', '#4b5b6b', '#d3dde7']),
-      mode(['#b6e3ff', '#d9c2ff', '#0e1620', '#162230', '#eaf3fb', '#a8b9ca', '#263a4f'], true),
-    ),
-  },
-  {
-    id: 'oled-amber',
-    name: 'OLED Amber',
-    group: 'original',
-    blurb: 'Pure black with amber, for wall tablets.',
-    note: 'Pure black in dark mode only. Keep the screen in dark mode.',
-    doc: doc(
-      mode(['#8a5200', '#a63a00', '#f6f1e8', '#ffffff', '#1c1812', '#5a5245', '#e4dccc']),
-      mode(['#ffb000', '#ff6e40', '#000000', '#0a0a0a', '#f5efe6', '#a89f90', '#1c1a16'], true),
-    ),
-  },
-  {
-    id: 'oled-green',
-    name: 'OLED Green',
-    group: 'original',
-    blurb: 'Pure black with terminal green, for wall tablets.',
-    note: 'Pure black in dark mode only. Keep the screen in dark mode.',
-    doc: doc(
-      mode(['#17683a', '#0b6478', '#eff5f1', '#ffffff', '#102016', '#4b6154', '#d6e3da']),
-      mode(['#3ddc84', '#6ee7f9', '#000000', '#090c0a', '#e8f5ec', '#93a89a', '#16201a'], true),
-    ),
-  },
+  P('slate', 'Slate', 'original', 'Neutral blue-grey for any room.', '3d5a73b4562bf1f3f5ffffff1c232952606cdde2e69ab8d1f0a67a15191d1d2227e8ecefa3adb62b3239'),
+  P('sand', 'Sand', 'original', 'Warm neutral stone and clay.', '8a5a2b3f7a6ef4eee4fffbf52e2a24645b4ee6dcccd9b3827cc4b41a171324201aefe8dcb5a995352f26'),
+  P('forest', 'Forest', 'original', 'Deep greens with an amber spark.', '2f6b3fa35a14eef3ecfbfdfa17261b4a5d4ed5e0d37bc98ae5b5670f1a1316241ae3efe5a1b8a5243629'),
+  P('ocean', 'Ocean', 'original', 'Teal depths and coral.', '0b6a8ac2492feaf3f7fbfeff0f253046606dcfe0e85ac8e8ff9a8508161e0f212be2f1f69fbac61b3541'),
+  P('desert', 'Desert', 'original', 'Terracotta, dust and oasis teal.', 'a8431c1f7a7af8efe4fffaf333231a6a5444ead9c4f0956a62c4c01e15112a1e18f7e9dcc3a891402e24'),
+  P('arcade', 'Arcade', 'original', 'Neon magenta and cyan, 80s cabinet.', 'a3109b0a7a86f7f1ffffffff1a0f3355477ae1d3f5ff4fd83df5ff0b0620150c33f5f0ffb9a9e82e1a66'),
+  P('cassette', 'Cassette', 'original', 'Faded tape-deck red and cream.', 'c0392b1d6b8af3e9d2fbf4e32c24186a5a40dccfaeff8a5b5fd0c71d1a1429251cf1e7cfbfb28f3d372a'),
+  P('sorbet', 'Sorbet', 'original', 'Pastel raspberry and mint.', 'b83d6a278471fff4f6ffffff3a24306d5160f3dce2ffa3c28eead22a1c2235242cffeef3d6b4c14a3540'),
+  P('lavender-mist', 'Lavender Mist', 'original', 'Pastel lilac and rose.', '6b4fc0b45582f5f2fcffffff2a23405d5578e3ddf3c3b1ffffb7d51d1930272240f0ecffbab3d83a3360'),
+  P('hi-vis', 'Hi-Vis', 'original', 'High contrast green on black, strong edges.', '0064008a0000ffffffffffff00000026262600000039ff14ffea00000000000000fffffff0f0f039ff14'),
+  P('ink', 'Ink', 'original', 'Black and white, nothing in between.', '000000b00020f2f2f2ffffff0000001f1f1f000000ffffffff91000a0a0a000000ffffffe0e0e0ffffff'),
+  P('spring', 'Spring', 'original', 'Fresh leaf green and blossom pink.', '2f7d32c2185bf4faeeffffff1f2e1c4f6549dcebd09be07aff9ec7121c101a2a17eaf6e3a8c29f2a4025'),
+  P('summer', 'Summer', 'original', 'Sky blue and sun yellow.', '0a76c2b25e00fff9e6fffdf51c2a334e5f6bf0e4b8ffd23f4fc3f70e223315324afff7dab3c7d624506f'),
+  P('autumn', 'Autumn', 'original', 'Rust, olive and warm paper.', '9c3d105c6b1af7ece0fff8f0321d126b4e3de9d3bdf4a259c9d46a1f130d2c1c13f8e8d8cdae9546301f'),
+  P('winter', 'Winter', 'original', 'Icy blue with a violet touch.', '1b6a947a3f8fedf2f7ffffff14202c4b5b6bd3dde7b6e3ffd9c2ff0e1620162230eaf3fba8b9ca263a4f'),
+  P('oled-amber', 'OLED Amber', 'original', 'Pure black with amber, for wall tablets.', '8a5200a63a00f6f1e8ffffff1c18125a5245e4dcccffb000ff6e400000000a0a0af5efe6a89f901c1a16', { note: 'Pure black in dark mode only. Keep the screen in dark mode.' }),
+  P('oled-green', 'OLED Green', 'original', 'Pure black with terminal green, for wall tablets.', '17683a0b6478eff5f1ffffff1020164b6154d6e3da3ddc846ee7f9000000090c0ae8f5ec93a89a16201a', { note: 'Pure black in dark mode only. Keep the screen in dark mode.' }),
   {
     id: 'glass-aqua',
     name: 'Glass Aqua',
@@ -307,28 +110,12 @@ const PRESETS: ThemePreset[] = [
     note: 'Uses blur and transparency. Can be slow on old tablets.',
     doc: doc(
       mode(
-        [
-          '#0a6e86',
-          '#b0457a',
-          '#d9f0f2',
-          'rgba(255, 255, 255, 0.6)',
-          '#0d2a33',
-          '#3f5f6a',
-          'rgba(13, 42, 51, 0.14)',
-        ],
+        ['#0a6e86', '#b0457a', '#d9f0f2', 'rgba(255, 255, 255, 0.6)', '#0d2a33', '#3f5f6a', 'rgba(13, 42, 51, 0.14)'],
         false,
         { 'lovelace-background': 'linear-gradient(135deg, #d9f0f2, #e3ecfb)' },
       ),
       mode(
-        [
-          '#6fe0f0',
-          '#ffa6c9',
-          '#062a33',
-          'rgba(255, 255, 255, 0.08)',
-          '#e9fbff',
-          '#a8c8d0',
-          'rgba(255, 255, 255, 0.14)',
-        ],
+        ['#6fe0f0', '#ffa6c9', '#062a33', 'rgba(255, 255, 255, 0.08)', '#e9fbff', '#a8c8d0', 'rgba(255, 255, 255, 0.14)'],
         true,
         { 'lovelace-background': 'linear-gradient(135deg, #062a33, #1a2450)' },
       ),
@@ -343,28 +130,12 @@ const PRESETS: ThemePreset[] = [
     note: 'Uses blur and transparency. Can be slow on old tablets.',
     doc: doc(
       mode(
-        [
-          '#a8326a',
-          '#1d6f8f',
-          '#fbe3ec',
-          'rgba(255, 255, 255, 0.62)',
-          '#2e1623',
-          '#664553',
-          'rgba(46, 22, 35, 0.14)',
-        ],
+        ['#a8326a', '#1d6f8f', '#fbe3ec', 'rgba(255, 255, 255, 0.62)', '#2e1623', '#664553', 'rgba(46, 22, 35, 0.14)'],
         false,
         { 'lovelace-background': 'linear-gradient(135deg, #fbe3ec, #efe3fb)' },
       ),
       mode(
-        [
-          '#ff9cc4',
-          '#8fd8ff',
-          '#2a1020',
-          'rgba(255, 255, 255, 0.08)',
-          '#ffeef5',
-          '#d2adbd',
-          'rgba(255, 255, 255, 0.14)',
-        ],
+        ['#ff9cc4', '#8fd8ff', '#2a1020', 'rgba(255, 255, 255, 0.08)', '#ffeef5', '#d2adbd', 'rgba(255, 255, 255, 0.14)'],
         true,
         { 'lovelace-background': 'linear-gradient(135deg, #2a1020, #2b1a47)' },
       ),
@@ -379,300 +150,50 @@ const PRESETS: ThemePreset[] = [
     note: 'Uses blur and transparency. Can be slow on old tablets.',
     doc: doc(
       mode(
-        [
-          '#3f4a5a',
-          '#a04a1c',
-          '#e6e8ec',
-          'rgba(255, 255, 255, 0.6)',
-          '#171a1f',
-          '#4a525e',
-          'rgba(23, 26, 31, 0.14)',
-        ],
+        ['#3f4a5a', '#a04a1c', '#e6e8ec', 'rgba(255, 255, 255, 0.6)', '#171a1f', '#4a525e', 'rgba(23, 26, 31, 0.14)'],
         false,
         { 'lovelace-background': 'linear-gradient(135deg, #e6e8ec, #d9dde5)' },
       ),
       mode(
-        [
-          '#c3ccd9',
-          '#ffb074',
-          '#14161a',
-          'rgba(255, 255, 255, 0.07)',
-          '#f0f2f5',
-          '#aab2be',
-          'rgba(255, 255, 255, 0.14)',
-        ],
+        ['#c3ccd9', '#ffb074', '#14161a', 'rgba(255, 255, 255, 0.07)', '#f0f2f5', '#aab2be', 'rgba(255, 255, 255, 0.14)'],
         true,
         { 'lovelace-background': 'linear-gradient(135deg, #14161a, #262b33)' },
       ),
       { 'ha-card-backdrop-filter': 'blur(12px)' },
     ),
   },
-  {
-    id: 'ayu',
-    name: 'Ayu Mirage',
-    group: 'inspired',
-    blurb: 'Amber on blue-grey mirage.',
-    inspiredBy: { name: 'Ayu', author: 'Ike Ku', url: 'https://github.com/ayu-theme/ayu-colors' },
-    doc: doc(
-      mode(['#a85a00', '#197cac', '#fafafa', '#ffffff', '#3b4048', '#5f6670', '#e3e5e8']),
-      mode(['#ffcc66', '#73d0ff', '#1f2430', '#272d38', '#cccac2', '#9ca0ab', '#343b4a'], true),
-    ),
-  },
-  {
-    id: 'catppuccin',
-    name: 'Catppuccin Latte & Mocha',
-    group: 'inspired',
-    blurb: 'Soft pastel accents, latte by day and mocha by night.',
-    inspiredBy: { name: 'Catppuccin', author: 'Catppuccin', url: 'https://catppuccin.com' },
-    doc: doc(
-      mode(['#1e66f5', '#8839ef', '#eff1f5', '#ffffff', '#4c4f69', '#5c5f77', '#ccd0da']),
-      mode(['#89b4fa', '#f5c2e7', '#1e1e2e', '#313244', '#cdd6f4', '#a6adc8', '#45475a'], true),
-    ),
-  },
-  {
-    id: 'cobalt2',
-    name: 'Cobalt Gold',
-    group: 'inspired',
-    blurb: 'Cobalt blue with a gold primary.',
-    inspiredBy: { name: 'Cobalt2', author: 'Wes Bos', url: 'https://github.com/wesbos/cobalt2' },
-    doc: doc(
-      mode(['#0b5394', '#b15a00', '#eef4f9', '#ffffff', '#122738', '#44596b', '#cfdce8']),
-      mode(['#ffc600', '#9effff', '#15232d', '#193549', '#ffffff', '#b9cbd8', '#234e6d'], true),
-    ),
-  },
-  {
-    id: 'dracula',
-    name: 'Dracula Night',
-    group: 'inspired',
-    blurb: 'Purple and pink on deep indigo.',
-    inspiredBy: { name: 'Dracula', author: 'Zeno Rocha', url: 'https://draculatheme.com' },
-    doc: doc(
-      mode(['#6a3fc0', '#b0306f', '#f8f8f2', '#ffffff', '#1f1f2e', '#565a75', '#e2e0ea']),
-      mode(['#bd93f9', '#ff79c6', '#282a36', '#343746', '#f8f8f2', '#b9bfd8', '#44475a'], true),
-    ),
-  },
-  {
-    id: 'everforest',
-    name: 'Everforest Moss',
-    group: 'inspired',
-    blurb: 'Soft green forest tones, easy on the eyes.',
-    inspiredBy: {
-      name: 'Everforest',
-      author: 'sainnhe',
-      url: 'https://github.com/sainnhe/everforest',
-    },
-    doc: doc(
-      mode(['#5a7a1f', '#b8562e', '#fdf6e3', '#fffbef', '#3c4841', '#5c6a72', '#e6e2cc']),
-      mode(['#a7c080', '#e69875', '#2d353b', '#343f44', '#d3c6aa', '#aeb8a6', '#475258'], true),
-    ),
-  },
-  {
-    id: 'github',
-    name: 'GitHub Light & Dark',
-    group: 'inspired',
-    blurb: 'Clean Primer blues and neutral greys.',
-    inspiredBy: { name: 'GitHub Primer', author: 'GitHub', url: 'https://primer.style' },
-    doc: doc(
-      mode(['#0969da', '#bf3989', '#f6f8fa', '#ffffff', '#1f2328', '#59636e', '#d1d9e0']),
-      mode(['#58a6ff', '#f778ba', '#0d1117', '#161b22', '#e6edf3', '#9198a1', '#30363d'], true),
-    ),
-  },
-  {
-    id: 'gruvbox',
-    name: 'Gruvbox Retro',
-    group: 'inspired',
-    blurb: 'Warm retro browns with a teal link.',
-    inspiredBy: {
-      name: 'Gruvbox',
-      author: 'Pavel Pertsev',
-      url: 'https://github.com/morhetz/gruvbox',
-    },
-    doc: doc(
-      mode(['#076678', '#af3a03', '#fbf1c7', '#f9f5d7', '#3c3836', '#665c54', '#d5c4a1']),
-      mode(['#83a598', '#fe8019', '#282828', '#3c3836', '#ebdbb2', '#bdae93', '#504945'], true),
-    ),
-  },
-  {
-    id: 'kanagawa',
-    name: 'Kanagawa Wave',
-    group: 'inspired',
-    blurb: 'Ukiyo-e indigo and parchment.',
-    inspiredBy: {
-      name: 'Kanagawa',
-      author: 'rebelot',
-      url: 'https://github.com/rebelot/kanagawa.nvim',
-    },
-    doc: doc(
-      mode(['#4d699b', '#a65800', '#f2ecbc', '#f7f2cf', '#43436c', '#5d5d7a', '#d5cea3']),
-      mode(['#7e9cd8', '#ffa066', '#1f1f28', '#2a2a37', '#dcd7ba', '#a8a48b', '#363646'], true),
-    ),
-  },
-  {
-    id: 'material',
-    name: 'Material Violet',
-    group: 'inspired',
-    blurb: 'Material baseline purple with teal.',
-    inspiredBy: { name: 'Material Design', author: 'Google', url: 'https://m3.material.io' },
-    doc: doc(
-      mode(['#6200ee', '#018382', '#fafafa', '#ffffff', '#212121', '#5f5f5f', '#e0e0e0']),
-      mode(['#bb86fc', '#03dac6', '#121212', '#1e1e1e', '#e6e6e6', '#b0b0b0', '#2c2c2c'], true),
-    ),
-  },
-  {
-    id: 'monokai',
-    name: 'Monokai Lime',
-    group: 'inspired',
-    blurb: 'Lime and magenta on charcoal.',
-    inspiredBy: { name: 'Monokai', author: 'Wimer Hazenberg', url: 'https://monokai.pro' },
-    doc: doc(
-      mode(['#4d7a0a', '#c2185b', '#f5f5ef', '#ffffff', '#272822', '#5e5c4d', '#e1e0d4']),
-      mode(['#a6e22e', '#fa4d8b', '#1e1f1c', '#272822', '#f8f8f2', '#b0ad98', '#3e3d32'], true),
-    ),
-  },
-  {
-    id: 'night-owl',
-    name: 'Night Owl Navy',
-    group: 'inspired',
-    blurb: 'Deep navy with soft periwinkle.',
-    inspiredBy: {
-      name: 'Night Owl',
-      author: 'Sarah Drasner',
-      url: 'https://github.com/sdras/night-owl-vscode-theme',
-    },
-    doc: doc(
-      mode(['#3a60b0', '#994cc3', '#f0f0f0', '#fbfbfb', '#403f53', '#5a5970', '#d9d9d9']),
-      mode(['#82aaff', '#c792ea', '#011627', '#0b2942', '#d6deeb', '#99a8c4', '#1d3b53'], true),
-    ),
-  },
-  {
-    id: 'nightfox',
-    name: 'Nightfox & Dayfox',
-    group: 'inspired',
-    blurb: 'Dusky blue night, warm fox-white day.',
-    inspiredBy: {
-      name: 'Nightfox',
-      author: 'EdenEast',
-      url: 'https://github.com/EdenEast/nightfox.nvim',
-    },
-    doc: doc(
-      mode(['#2848a9', '#955f61', '#f6f2ee', '#fffcf8', '#3d2b5a', '#5f5870', '#e4dcd4']),
-      mode(['#719cd6', '#dbc074', '#192330', '#212e3f', '#cdcecf', '#a0a7b3', '#2b3b51'], true),
-    ),
-  },
-  {
-    id: 'nord',
-    name: 'Nord Frost',
-    group: 'inspired',
-    blurb: 'Cool arctic blues on polar night.',
-    inspiredBy: { name: 'Nord', author: 'Arctic Ice Studio', url: 'https://www.nordtheme.com' },
-    doc: doc(
-      mode(['#3b6a8f', '#a0613a', '#eceff4', '#f8f9fb', '#2e3440', '#4c566a', '#d8dee9']),
-      mode(['#88c0d0', '#ebcb8b', '#2e3440', '#3b4252', '#eceff4', '#b8c2d4', '#4c566a'], true, {
-        'error-color': '#ff9a90',
-      }),
-    ),
-  },
-  {
-    id: 'one-dark',
-    name: 'One Dark Pro',
-    group: 'inspired',
-    blurb: 'Familiar editor greys with a bright blue.',
-    inspiredBy: { name: 'One Dark', author: 'Atom', url: 'https://github.com/atom/atom' },
-    doc: doc(
-      mode(['#3b66c9', '#a626a4', '#eef0f4', '#fafafa', '#383a42', '#5b5f6b', '#dcdfe4']),
-      mode(['#61afef', '#c678dd', '#21252b', '#282c34', '#abb2bf', '#959eae', '#3e4451'], true),
-    ),
-  },
-  {
-    id: 'poimandres',
-    name: 'Poimandres Mint',
-    group: 'inspired',
-    blurb: 'Mint and sky on ink.',
-    inspiredBy: {
-      name: 'Poimandres',
-      author: 'drcmda',
-      url: 'https://github.com/drcmda/poimandres-theme',
-    },
-    doc: doc(
-      mode(['#00695c', '#3f6fb5', '#f4f7f9', '#ffffff', '#1b1e28', '#4f5d70', '#d9e1e8']),
-      mode(['#5de4c7', '#add7ff', '#1b1e28', '#252b37', '#e4f0fb', '#a6accd', '#303340'], true),
-    ),
-  },
-  {
-    id: 'rose-pine',
-    name: 'Rose Pine Bloom',
-    group: 'inspired',
-    blurb: 'Muted rose and iris, calm and low contrast.',
-    inspiredBy: { name: 'Rosé Pine', author: 'Rosé Pine', url: 'https://rosepinetheme.com' },
-    doc: doc(
-      mode(['#7a5aa6', '#a75c71', '#faf4ed', '#fffaf3', '#575279', '#675f80', '#dfdad9']),
-      mode(['#c4a7e7', '#ebbcba', '#191724', '#1f1d2e', '#e0def4', '#a09cb8', '#26233a'], true),
-    ),
-  },
-  {
-    id: 'solarized',
-    name: 'Solarized Glow',
-    group: 'inspired',
-    blurb: 'Balanced low-glare cream and teal.',
-    inspiredBy: {
-      name: 'Solarized',
-      author: 'Ethan Schoonover',
-      url: 'https://ethanschoonover.com/solarized/',
-    },
-    doc: doc(
-      mode(['#1c6ea4', '#9e6900', '#fdf6e3', '#fffdf5', '#073642', '#476268', '#eee8d5']),
-      mode(['#4aa3e0', '#bc9519', '#002b36', '#073642', '#eee8d5', '#a0b0b0', '#17505e'], true),
-    ),
-  },
-  {
-    id: 'synthwave',
-    name: 'Synthwave Sunset',
-    group: 'inspired',
-    blurb: 'Hot pink and cyan on dark purple.',
-    inspiredBy: {
-      name: 'Synthwave 84',
-      author: 'Robb Owen',
-      url: 'https://github.com/robb0wen/synthwave-vscode',
-    },
-    doc: doc(
-      mode(['#b3158a', '#0b7f87', '#fbf4ff', '#ffffff', '#2b2140', '#5e5078', '#e7d9f3']),
-      mode(['#ff7edb', '#36f9f6', '#241b2f', '#2a2139', '#f4eefc', '#bcb0d0', '#3d3358'], true),
-    ),
-  },
-  {
-    id: 'tokyo-night',
-    name: 'Tokyo Night Lights',
-    group: 'inspired',
-    blurb: 'Neon-lit city blues and violets.',
-    inspiredBy: {
-      name: 'Tokyo Night',
-      author: 'enkia',
-      url: 'https://github.com/enkia/tokyo-night-vscode-theme',
-    },
-    doc: doc(
-      mode(['#3b5fcf', '#8a45e0', '#e1e2e7', '#f2f3f7', '#1f2335', '#4a5272', '#c4c8da']),
-      mode(['#7aa2f7', '#bb9af7', '#1a1b26', '#24283b', '#c0caf5', '#9aa5ce', '#3b4261'], true),
-    ),
-  },
-  {
-    id: 'zenburn',
-    name: 'Zenburn Calm',
-    group: 'inspired',
-    blurb: 'Low-contrast sage on soft grey.',
-    inspiredBy: {
-      name: 'Zenburn',
-      author: 'Jani Nurminen',
-      url: 'https://github.com/jnurmine/Zenburn',
-    },
-    doc: doc(
-      mode(['#3e6b3e', '#a34a4a', '#f3f1e7', '#fffdf4', '#3f3f3f', '#5a5a50', '#dedccc']),
-      mode(['#8fb28f', '#e0aeae', '#3f3f3f', '#4a4a4a', '#dcdccc', '#cfcfbf', '#5f5f5f'], true, {
-        'error-color': '#ffaaa2',
-        'info-color': '#94cbff',
-        'success-color': '#a3dba7',
-      }),
-    ),
-  },
+  P('ayu', 'Ayu Mirage', 'inspired', 'Amber on blue-grey mirage.', 'a85a00197cacfafafaffffff3b40485f6670e3e5e8ffcc6673d0ff1f2430272d38cccac29ca0ab343b4a', { inspiredBy: { name: 'Ayu', author: 'Ike Ku', url: 'https://github.com/ayu-theme/ayu-colors' } }),
+  P('catppuccin', 'Catppuccin Latte & Mocha', 'inspired', 'Soft pastel accents, latte by day and mocha by night.', '1e66f58839efeff1f5ffffff4c4f695c5f77ccd0da89b4faf5c2e71e1e2e313244cdd6f4a6adc845475a', { inspiredBy: { name: 'Catppuccin', author: 'Catppuccin', url: 'https://catppuccin.com' } }),
+  P('cobalt2', 'Cobalt Gold', 'inspired', 'Cobalt blue with a gold primary.', '0b5394b15a00eef4f9ffffff12273844596bcfdce8ffc6009effff15232d193549ffffffb9cbd8234e6d', { inspiredBy: { name: 'Cobalt2', author: 'Wes Bos', url: 'https://github.com/wesbos/cobalt2' } }),
+  P('dracula', 'Dracula Night', 'inspired', 'Purple and pink on deep indigo.', '6a3fc0b0306ff8f8f2ffffff1f1f2e565a75e2e0eabd93f9ff79c6282a36343746f8f8f2b9bfd844475a', { inspiredBy: { name: 'Dracula', author: 'Zeno Rocha', url: 'https://draculatheme.com' } }),
+  P('everforest', 'Everforest Moss', 'inspired', 'Soft green forest tones, easy on the eyes.', '5a7a1fb8562efdf6e3fffbef3c48415c6a72e6e2cca7c080e698752d353b343f44d3c6aaaeb8a6475258', { inspiredBy: { name: 'Everforest', author: 'sainnhe', url: 'https://github.com/sainnhe/everforest' } }),
+  P('github', 'GitHub Light & Dark', 'inspired', 'Clean Primer blues and neutral greys.', '0969dabf3989f6f8faffffff1f232859636ed1d9e058a6fff778ba0d1117161b22e6edf39198a130363d', { inspiredBy: { name: 'GitHub Primer', author: 'GitHub', url: 'https://primer.style' } }),
+  P('gruvbox', 'Gruvbox Retro', 'inspired', 'Warm retro browns with a teal link.', '076678af3a03fbf1c7f9f5d73c3836665c54d5c4a183a598fe80192828283c3836ebdbb2bdae93504945', { inspiredBy: { name: 'Gruvbox', author: 'Pavel Pertsev', url: 'https://github.com/morhetz/gruvbox' } }),
+  P('kanagawa', 'Kanagawa Wave', 'inspired', 'Ukiyo-e indigo and parchment.', '4d699ba65800f2ecbcf7f2cf43436c5d5d7ad5cea37e9cd8ffa0661f1f282a2a37dcd7baa8a48b363646', { inspiredBy: { name: 'Kanagawa', author: 'rebelot', url: 'https://github.com/rebelot/kanagawa.nvim' } }),
+  P('material', 'Material Violet', 'inspired', 'Material baseline purple with teal.', '6200ee018382fafafaffffff2121215f5f5fe0e0e0bb86fc03dac61212121e1e1ee6e6e6b0b0b02c2c2c', { inspiredBy: { name: 'Material Design', author: 'Google', url: 'https://m3.material.io' } }),
+  P('monokai', 'Monokai Lime', 'inspired', 'Lime and magenta on charcoal.', '4d7a0ac2185bf5f5efffffff2728225e5c4de1e0d4a6e22efa4d8b1e1f1c272822f8f8f2b0ad983e3d32', { inspiredBy: { name: 'Monokai', author: 'Wimer Hazenberg', url: 'https://monokai.pro' } }),
+  P('night-owl', 'Night Owl Navy', 'inspired', 'Deep navy with soft periwinkle.', '3a60b0994cc3f0f0f0fbfbfb403f535a5970d9d9d982aaffc792ea0116270b2942d6deeb99a8c41d3b53', { inspiredBy: { name: 'Night Owl', author: 'Sarah Drasner', url: 'https://github.com/sdras/night-owl-vscode-theme' } }),
+  P('nightfox', 'Nightfox & Dayfox', 'inspired', 'Dusky blue night, warm fox-white day.', '2848a9955f61f6f2eefffcf83d2b5a5f5870e4dcd4719cd6dbc074192330212e3fcdcecfa0a7b32b3b51', { inspiredBy: { name: 'Nightfox', author: 'EdenEast', url: 'https://github.com/EdenEast/nightfox.nvim' } }),
+  P('nord', 'Nord Frost', 'inspired', 'Cool arctic blues on polar night.', '3b6a8fa0613aeceff4f8f9fb2e34404c566ad8dee988c0d0ebcb8b2e34403b4252eceff4b8c2d44c566a', { inspiredBy: { name: 'Nord', author: 'Arctic Ice Studio', url: 'https://www.nordtheme.com' } }, { 'error-color': '#ff9a90' }),
+  P('one-dark', 'One Dark Pro', 'inspired', 'Familiar editor greys with a bright blue.', '3b66c9a626a4eef0f4fafafa383a425b5f6bdcdfe461afefc678dd21252b282c34abb2bf959eae3e4451', { inspiredBy: { name: 'One Dark', author: 'Atom', url: 'https://github.com/atom/atom' } }),
+  P('poimandres', 'Poimandres Mint', 'inspired', 'Mint and sky on ink.', '00695c3f6fb5f4f7f9ffffff1b1e284f5d70d9e1e85de4c7add7ff1b1e28252b37e4f0fba6accd303340', { inspiredBy: { name: 'Poimandres', author: 'drcmda', url: 'https://github.com/drcmda/poimandres-theme' } }),
+  P('rose-pine', 'Rose Pine Bloom', 'inspired', 'Muted rose and iris, calm and low contrast.', '7a5aa6a75c71faf4edfffaf3575279675f80dfdad9c4a7e7ebbcba1917241f1d2ee0def4a09cb826233a', { inspiredBy: { name: 'Rosé Pine', author: 'Rosé Pine', url: 'https://rosepinetheme.com' } }),
+  P('solarized', 'Solarized Glow', 'inspired', 'Balanced low-glare cream and teal.', '1c6ea49e6900fdf6e3fffdf5073642476268eee8d54aa3e0bc9519002b36073642eee8d5a0b0b017505e', { inspiredBy: { name: 'Solarized', author: 'Ethan Schoonover', url: 'https://ethanschoonover.com/solarized/' } }),
+  P('synthwave', 'Synthwave Sunset', 'inspired', 'Hot pink and cyan on dark purple.', 'b3158a0b7f87fbf4ffffffff2b21405e5078e7d9f3ff7edb36f9f6241b2f2a2139f4eefcbcb0d03d3358', { inspiredBy: { name: 'Synthwave 84', author: 'Robb Owen', url: 'https://github.com/robb0wen/synthwave-vscode' } }),
+  P('tokyo-night', 'Tokyo Night Lights', 'inspired', 'Neon-lit city blues and violets.', '3b5fcf8a45e0e1e2e7f2f3f71f23354a5272c4c8da7aa2f7bb9af71a1b2624283bc0caf59aa5ce3b4261', { inspiredBy: { name: 'Tokyo Night', author: 'enkia', url: 'https://github.com/enkia/tokyo-night-vscode-theme' } }),
+  P('zenburn', 'Zenburn Calm', 'inspired', 'Low-contrast sage on soft grey.', '3e6b3ea34a4af3f1e7fffdf43f3f3f5a5a50dedccc8fb28fe0aeae3f3f3f4a4a4adcdccccfcfbf5f5f5f', { inspiredBy: { name: 'Zenburn', author: 'Jani Nurminen', url: 'https://github.com/jnurmine/Zenburn' } }, { 'error-color': '#ffaaa2', 'info-color': '#94cbff', 'success-color': '#a3dba7' }),
+  P('amber-console', 'Amber Console', 'genre', 'Lilac and amber on near-black, like a retro starship console.', '5b4fa89a4600efeaf4fbf8fd1d183050476bd9d0e6b4a4ece8963c05060d1a1828f0ecfab3acd03a3664', { tags: 'sci-fi space night' }),
+  P('cobalt-prism', 'Cobalt Prism', 'genre', 'Ultramarine blue with an orange spark, sleek and futuristic.', '2f43b8b55200e3edf8f6f9fd0f223644596ecfdeeeb0a6faf09a45050d1a102036e6f3ff9db7d1243e66', { tags: 'sci-fi hologram space' }),
+  P('deep-survey', 'Deep Survey', 'genre', 'Clean off-white panels with a navy ink blue and a burnt orange accent.', '2a2f7ac2410ce9eceff7f8fa14181d4a5563d3d8deb9b0f0e8944f0d1014171b21e8ebf0a9b2bf2c333d', { tags: 'sci-fi explorer space' }),
+  P('dust-duel', 'Dust Duel', 'genre', 'Warm desert sand with indigo blue and a red accent.', '3a3f9eb02a1af4e9d3fbf3e22f241866553de2d3b4b4a8eee2705d1c16102a2118f5ead6c4b192463a2a', { tags: 'sci-fi space' }),
+  P('frontier-freighter', 'Frontier Freighter', 'genre', 'Weathered teal with worn rust and brass, warm and a little scruffy.', '1f6f6a8a3f1cefe6d6faf4e82b231b5f5444dccfb65fb3a8d98b4f1a161326201beee3d0b9a98f41372d', { tags: 'sci-fi western space calm' }),
+  P('neon-rain', 'Neon Rain', 'genre', 'Magenta and cyan neon on a dark city night.', '9c1a8a097a94e8ebf4f8f9fd1a1a2e4d5070d0d4e6c98bc452c9dc070b14111a26e8f1fa9fb2c826394f', { tags: 'sci-fi cyberpunk noir' }),
+  P('ochre-basin', 'Ochre Basin', 'genre', 'Sun-baked yellow-brown ochre by day, deep indigo night in the dark mode.', '3d3a9a8f5a00f2e4c4faf0d62a20105e4d2ce0cf9f9a98eed9a4410f14261a2038f6ecd2c2b9922f3a63', { tags: 'sci-fi arid desert' }),
+  P('orbital-forge', 'Orbital Forge', 'genre', 'Industrial steel blue-grey with a safety orange accent.', '46596ba64300e4e6e8f5f6f71b1f2350585fcbd0d49fb3c4e07d3c0c0e101b1e22ecedeea8afb5363b41', { tags: 'sci-fi space' }),
+  P('ashen-keep', 'Ashen Keep', 'genre', 'Grey stone and iron with one deep red accent, calm and wintry.', '4a55638c1f2be7e5e2f5f4f2201e1e55504fcfcbc7aab4bfd6606a1213151c1e21ecebeaaeaaa834373b', { tags: 'fantasy medieval winter low-glare night' }),
+  P('candlelit-cloister', 'Candlelit Cloister', 'genre', 'Plum and old gold on parchment; plum-black at night.', '5b2a5e8a6212f1e6d2faf1de2a1a1a5f4a40ddcbaac9a0d6e3b95a120d141e1620f3e6d3c0ab9e3a2a3a', { tags: 'fantasy magic cozy wine' }),
+  P('crimson-pines', 'Crimson Pines', 'genre', 'Cold steel blue-grey with a red accent under a dark pine forest.', '44556a8e1c1ce9ebeaf6f7f61a1f1d4b5551d0d5d29fb4c8dc6c660f151318211ee6ece9a3b0aa2c3a35', { tags: 'fantasy dusk' }),
+  P('silverleaf-glade', 'Silverleaf Glade', 'genre', 'Silver-teal leaves with touches of gold, calm and airy.', '2a62708a6a10edf1eef9fbfa1c26224a5a55d2dcd88fbcc4e0c06810161519211fe6eeeba7b7b12d3a36', { tags: 'fantasy forest elegant low-glare night' }),
 ];
 
-export const THEME_PRESET_LIBRARY: ThemePresetLibrary = { version: '1.0.0', presets: PRESETS };
+export const THEME_PRESET_LIBRARY: ThemePresetLibrary = { version: '1.1.0', presets: PRESETS };

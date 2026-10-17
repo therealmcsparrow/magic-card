@@ -26,6 +26,16 @@ export interface PickerEvents {
   filter: (f: string) => void;
 }
 
+/** Group order, Show labels, headings and search words (the contract's ThemePresetGroupInfo, kept here so the chunk imports nothing at run time). */
+const GROUPS = [
+  { id: 'original', label: 'Original', search: 'original' },
+  { id: 'inspired', label: 'Inspired by', search: 'inspired by' },
+  { id: 'genre', label: 'Sci-fi & fantasy', search: 'genre' },
+] as const;
+const SUGGESTIONS = ['sci-fi', 'fantasy', 'neon', 'desert', 'forest'];
+const DISCLAIMER = 'Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.';
+const flat = (s: string): string => s.replace(/[\s-]/g, '');
+
 const colours = (p: ThemePreset, m: 'light' | 'dark'): Record<string, string> => (p.doc.modes?.[m] ?? {}) as Record<string, string>;
 
 function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
@@ -47,7 +57,10 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
 
 const search = (v: PickerView): ThemePreset[] => {
   const q = v.query.trim().toLowerCase();
-  return v.lib.presets.filter((p) => !q || `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.group === 'inspired' ? 'inspired by' : p.group}`.toLowerCase().includes(q));
+  return v.lib.presets.filter((p) => {
+    const hay = `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.tags ?? ''} ${GROUPS.find((g) => g.id === p.group)?.search}`.toLowerCase();
+    return !q || hay.includes(q) || flat(hay).includes(flat(q));
+  });
 };
 const shownOf = (v: PickerView): ThemePreset[] => search(v).filter((p) => v.filter === 'all' || p.group === v.filter);
 
@@ -84,26 +97,30 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
       <mcte-mode-switch
         label="Show"
         .value=${v.filter}
-        .options=${[
-          { value: 'all', label: `All ${found.length}` },
-          { value: 'original', label: `Original ${count('original')}` },
-          { value: 'inspired', label: `Inspired by ${count('inspired')}` },
-        ]}
+        .options=${[{ value: 'all', label: `All ${found.length}` }, ...GROUPS.map((g) => ({ value: g.id, label: `${g.label} ${count(g.id)}` }))]}
         @mcte-change=${(e: CustomEvent) => ev.filter(e.detail.value)}
       ></mcte-mode-switch>
     </div>
     <div class="plist" role="radiogroup" aria-label="Preset">
       ${shown.length
-        ? (['original', 'inspired'] as const).map((g) => {
-            const items = shown.filter((p) => p.group === g);
+        ? GROUPS.map((g) => {
+            const items = shown.filter((p) => p.group === g.id);
+            const part = (title: string, list: ThemePreset[]): TemplateResult | typeof nothing =>
+              list.length ? html`<h4>${title} <span class="help">${list.length}</span></h4><div class="presets">${list.map((p) => card(p, p === sel, ev))}</div>` : nothing;
             return items.length
-              ? html`<h3>${g === 'original' ? 'Original' : 'Inspired by'} <span class="help">${items.length}</span></h3>
-                  <div class="presets">${items.map((p) => card(p, p === sel, ev))}</div>`
+              ? html`<h3>${g.label} <span class="help">${items.length}</span></h3>
+                  ${g.id === 'genre'
+                    ? html`<p class="help dis">${DISCLAIMER}</p>
+                        ${part('Sci-fi', items.filter((p) => p.tags?.startsWith('sci-fi')))} ${part('Fantasy', items.filter((p) => p.tags?.startsWith('fantasy')))}`
+                    : html`<div class="presets">${items.map((p) => card(p, p === sel, ev))}</div>`}`
               : nothing;
           })
-        : html`<p class="help">
-            No preset matches "${v.query}". <button type="button" class="btn btn-text btn-sm" @click=${() => (ev.query(''), ev.filter('all'))}>Clear search</button>
-          </p>`}
+        : html`<p class="help">No preset matches "${v.query}".</p>
+            ${v.filter === 'all' || v.filter === 'genre'
+              ? html`<p class="help">Presets use genre and colour words, not titles. Try one of these:</p>
+                  <div class="sug">${SUGGESTIONS.map((w) => html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => ev.query(w)}>${w}</button>`)}</div>`
+              : nothing}
+            <p><button type="button" class="btn btn-text btn-sm" @click=${() => (ev.query(''), ev.filter('all'))}>Clear search</button></p>`}
     </div>
     ${sel && !shown.includes(sel) ? html`<p class="help">Selected: ${sel.name}</p>` : nothing}
   </div>`;
@@ -122,6 +139,22 @@ export const pickerStyles = css`
     display: grid;
     gap: 8px;
     align-content: start;
+  }
+  .plist h4 {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--mc-text-2);
+  }
+  .dis {
+    font-size: 0.875rem;
+  }
+  .sug button {
+    min-height: 44px;
+  }
+  .sug {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .plist h3 {
     font-size: 0.875rem;
