@@ -19,7 +19,6 @@ import {
   type SubEmitter,
   type WeightedShape,
 } from '../../contracts/particles-v2';
-import { buildColliders, hasColliders } from '../../particles/colliders';
 
 /*
  * Pure helpers of the particle designer (particles-editor.ts): the shape source, colour values
@@ -461,8 +460,8 @@ export function setWind(doc: AnimationDoc, seed: number, wind: number): Animatio
   return setGravity(doc, seed, (360 - w) % 360, unit);
 }
 
-/** Some collider is on (the simulator's own test; the content box counts as measured). */
-export const anyCollider = (c: ParticleColliders): boolean => hasColliders(buildColliders(c, { aspect: 1, content: { x: 0, y: 0, w: 100, h: 100 } }, 100, 100));
+/** Some collider is on (an edge, or the content box, which the card measures). */
+export const anyCollider = (c: ParticleColliders): boolean => c.floor || c.ceiling || c.left || c.right || c.content !== 'none';
 
 /** "Spawn child particles" turned on: sparks that burst out where they spawn. */
 export function defaultChildren(sim: ParticlesSim): SubEmitter {

@@ -1194,9 +1194,13 @@ export class MagicCard extends LitElement {
         ...sim,
         reducedMotion: reduced,
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
-        // content collider: `icon` = the module's icon hook (none: off), `text` = its content
+        // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
+        // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)
         useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + name.slice(name.lastIndexOf('-g')) : name, name, css),
-        content: () => w.querySelector(sim.spec.sim.colliders.content === 'icon' ? '.mc-anim-icon' : '*') as Element,
+        content: () =>
+          sim.spec.sim.colliders.content === 'icon'
+            ? [...w.querySelectorAll('.mc-anim-icon')].find((e) => e.closest('.mc-module-wrapper') === w)
+            : (w.querySelector(':scope>:not([aria-hidden])') ?? undefined),
       });
     }
     for (const el of this._pApplied) if (!seen.has(el)) pm.release(el);

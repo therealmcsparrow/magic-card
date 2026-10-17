@@ -101,7 +101,7 @@ export interface CompiledAnimation {
    */
   v2?: CompiledV2;
   /**
-   * particles v2, compiled by the particles chunk (useParticlesCompiler) for the default geometry:
+   * particles v2, compiled by the particles chunk (useParticlesCompiler) as its unbaked slot pool:
    * what the card hands to ParticlesModule.apply after the render (`spec.sim` checked lenient).
    */
   sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period'>;
@@ -550,7 +550,8 @@ function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
   if (sim) {
     const spec: ParticlesSpecV2 = { ...p, sim };
     const period = doc.duration / p.speed;
-    const v = particlesCompiler!(doc.id, spec, period, { aspect: 2 });
+    // aspect 0: the slot pool only; the chunk's apply bakes once the layer is measured
+    const v = particlesCompiler!(doc.id, spec, period, { aspect: 0 });
     simCache.set(doc, (out = { kind: 'particles', name: v.name, css: v.css, layer: { front: v.front, particles: v.slots, speed: p.speed }, sim: { docId: doc.id, spec, period } }));
   }
   return out;

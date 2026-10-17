@@ -1556,8 +1556,8 @@ export class AnimParticlesEditor extends LitElement {
         </div>
       </div>
       ${sim.flow === 'rain' ? this._renderWind(sim) : nothing}
-      ${this._range('pspeed', 'Particle speed (% per s)', 'speed', sim.ranges.speed, 'pspeed', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, speed: r } }), 'Change particle speed'), {
-        help: 'Each particle picks a speed in this range. 100 crosses the card in one second.',
+      ${this._range('pspeed', 'Particle speed (% of short side/s)', 'speed', sim.ranges.speed, 'pspeed', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, speed: r } }), 'Change particle speed'), {
+        help: "Each particle picks a speed in this range, measured in % of the card's shorter side per second. At 100, a particle crosses a square card in one second.",
       })}
     </section>`;
   }
@@ -2057,7 +2057,7 @@ export class AnimParticlesEditor extends LitElement {
         })}
       </div>
       ${this._range('csize', 'Size (px)', 'child size', ch.size, 'childSize', (r) => this._child({ size: r }, 'Change child size'))}
-      ${this._range('cspeed', 'Speed (% per s)', 'child speed', ch.ranges.speed, 'pspeed', (r) => this._child({ ranges: { ...ch.ranges, speed: r } }, 'Change child speed'))}
+      ${this._range('cspeed', 'Speed (% of short side/s)', 'child speed', ch.ranges.speed, 'pspeed', (r) => this._child({ ranges: { ...ch.ranges, speed: r } }, 'Change child speed'))}
       <div class="field">
         <div class="field-head"><label for="f-clife">Lifetime (s)</label></div>
         <input
