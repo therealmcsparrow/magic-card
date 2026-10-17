@@ -62,6 +62,36 @@ export function layoutModuleAt(config: MagicCardConfig, sel: Selection): CardMod
   return sel.kind === 'slot' ? moduleAt(config, parentSelection(sel)) : undefined;
 }
 
+/**
+ * The object a selection points at: the card config, a row, a column, a module, or a tab /
+ * row-module column (slot) entry. Undefined when it does not exist.
+ */
+export function itemAt(config: MagicCardConfig, sel: Selection): Record<string, unknown> | undefined {
+  switch (sel.kind) {
+    case 'card': return config as unknown as Record<string, unknown>;
+    case 'row': return config.rows?.[sel.row] as unknown as Record<string, unknown> | undefined;
+    case 'column': return config.rows?.[sel.row]?.columns?.[sel.col] as unknown as Record<string, unknown> | undefined;
+    case 'module': return moduleAt(config, sel);
+    case 'slot': {
+      const owner = layoutModuleAt(config, sel) as Record<string, unknown> | undefined;
+      const list = owner?.type === 'tabs' ? owner.tabs : owner?.type === 'row' ? owner.columns : undefined;
+      const entry = Array.isArray(list) ? list[sel.slot] : undefined;
+      return entry && typeof entry === 'object' ? entry : undefined;
+    }
+  }
+}
+
+/** The editor-only layer name (`editor_name`) of an item, trimmed; undefined when it has none. */
+export function layerName(item: unknown): string | undefined {
+  const v = item && typeof item === 'object' ? (item as { editor_name?: unknown }).editor_name : undefined;
+  return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+}
+
+/** Whether an item carries the studio's Hide flag (`hidden: true`). */
+export function isHiddenItem(item: unknown): boolean {
+  return !!item && typeof item === 'object' && (item as { hidden?: unknown }).hidden === true;
+}
+
 /** `data-mc-path` of a module selection in the studio canvas ("row.col.module/slot.index/..."). */
 export function modulePathAttr(sel: ModuleSelection): string {
   const top = `${sel.row}.${sel.col}.${sel.module}`;
@@ -183,13 +213,13 @@ export function childCrumbs(config: MagicCardConfig, sel: ModuleSelection): Arra
   const out: Array<{ label: string; target: ModuleSelection }> = [];
   let cur = config.rows[sel.row].columns[sel.col].modules[sel.module];
   const chain = sel.child ?? [];
-  out.push({ label: moduleDisplayName(cur), target: moduleSelection(sel.row, sel.col, sel.module) });
+  out.push({ label: layerName(cur) ?? moduleDisplayName(cur), target: moduleSelection(sel.row, sel.col, sel.module) });
   for (const [i, step] of chain.entries()) {
     const slot = slotLabel(cur, step.slot);
     const next = childSlots(cur)?.[step.slot]?.[step.index];
     if (!next || typeof next !== 'object') break;
     cur = next;
-    const name = moduleDisplayName(cur);
+    const name = layerName(cur) ?? moduleDisplayName(cur);
     out.push({ label: slot ? `${slot} · ${name}` : name, target: moduleSelection(sel.row, sel.col, sel.module, chain.slice(0, i + 1)) });
   }
   return out;
@@ -231,12 +261,12 @@ export function describeSelection(config: MagicCardConfig, sel: Selection): Sele
   const cardTitle = config.name?.trim() || 'Card';
   const s = clampSelection(config, sel);
   if (s.kind === 'card') return { title: cardTitle, icon: 'mdi:card-outline', crumbs: [cardTitle] };
-  const rowLabel = `Row ${s.row + 1}`;
+  const rowLabel = layerName(config.rows[s.row]) ?? `Row ${s.row + 1}`;
   if (s.kind === 'row') {
     return { title: rowLabel, icon: 'mdi:view-sequential-outline', crumbs: [cardTitle, rowLabel],
       subtitle: hasColumnWidths(config.rows[s.row]) ? 'Custom widths' : `Layout ${config.rows[s.row].layout || '1'}` };
   }
-  const colLabel = `Column ${s.col + 1}`;
+  const colLabel = layerName(config.rows[s.row].columns[s.col]) ?? `Column ${s.col + 1}`;
   if (s.kind === 'column') {
     const n = config.rows[s.row].columns[s.col].modules?.length ?? 0;
     return { title: colLabel, icon: 'mdi:view-column-outline', crumbs: [cardTitle, rowLabel, colLabel],
@@ -248,7 +278,7 @@ export function describeSelection(config: MagicCardConfig, sel: Selection): Sele
     const list = childSlots(mod)?.[s.slot];
     // a tab / column (or its layout) that is gone, e.g. a hover over a canvas a step behind the config
     if (!mod || !list || !hasSlotNodes(mod)) return { title: mod?.type === 'tabs' ? 'Tab' : 'Column', icon: 'mdi:view-column-outline', crumbs: [cardTitle, rowLabel, colLabel] };
-    const title = slotLabel(mod, s.slot)!;
+    const title = (mod.type === 'row' ? layerName((mod as { columns?: unknown[] }).columns?.[s.slot]) : undefined) ?? slotLabel(mod, s.slot)!;
     const n = list.length;
     const tabIcon = (mod as { tabs?: Array<{ icon?: string }> }).tabs?.[s.slot]?.icon;
     return {
@@ -261,7 +291,7 @@ export function describeSelection(config: MagicCardConfig, sel: Selection): Sele
   const mod = moduleAt(config, s);
   // a module that is gone (or a YAML entry that is not a module)
   if (!mod || typeof mod !== 'object') return { title: 'Module', icon: 'mdi:puzzle-outline', crumbs: [cardTitle, rowLabel, colLabel] };
-  const name = moduleDisplayName(mod);
+  const name = layerName(mod) ?? moduleDisplayName(mod);
   return {
     title: name,
     icon: ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline',

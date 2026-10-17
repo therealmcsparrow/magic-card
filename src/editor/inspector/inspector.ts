@@ -31,6 +31,9 @@ import {
   countModules,
   describeSelection,
   moduleLabel,
+  isHiddenItem,
+  itemAt,
+  layerName,
   selectionFromPath,
   selectionKey,
   selectionToPath,
@@ -402,7 +405,8 @@ export class Inspector extends LitElement {
           break;
         }
         const label = moduleLabel(mod);
-        if (label) title = `${info.title} · ${label}`;
+        // a layer name stands on its own; else "<Type> · <label>"
+        if (label && !layerName(mod)) title = `${info.title} · ${label}`;
         const entity = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : '';
         // A layout child: its layout modules (with tab / column) lead back up, e.g. "Row 1 · Column 1 · Tabs · Living".
         const parents = childCrumbs(config, s).slice(0, -1);
@@ -424,7 +428,9 @@ export class Inspector extends LitElement {
         <span class="ico k-${s.kind === 'slot' ? 'column' : s.kind}"><ha-icon icon=${icon}></ha-icon></span>
         <div class="txt">
           <h2>${title}</h2>
-          <p class="path">${path}</p>
+          <p class="path">${path}${isHiddenItem(itemAt(config, s))
+            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>Hidden on dashboard</span>`
+            : nothing}</p>
         </div>
       </div>
     `;
@@ -702,6 +708,12 @@ export class Inspector extends LitElement {
       }
       .path .mono {
         font-size: 0.75rem;
+      }
+      .path .hidden-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        --mdc-icon-size: 14px;
       }
       /* path segments navigate up, but read as the mockup's plain path text */
       .crumb {

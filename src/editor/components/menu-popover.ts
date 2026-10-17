@@ -23,6 +23,14 @@ const GAP = 4;
 const EDGE = 8;
 const ITEMS = '[role="menuitem"]:not([disabled])';
 
+/** Where a context menu opens: a viewport point (pointer) and the element focus returns to. */
+export interface MenuOpenAt {
+  /** Viewport point (right-click, long-press); without it the menu sits at the trigger's rect. */
+  point?: { x: number; y: number };
+  /** Focus goes back here on Escape / Tab (default: the trigger). */
+  returnFocus?: HTMLElement;
+}
+
 /**
  * One overflow / action menu of an editor element.
  *
@@ -34,12 +42,14 @@ const ITEMS = '[role="menuitem"]:not([disabled])';
  * offset by the dialog's origin and clipped away. Popovers opened later also stack above the
  * studio's modal <dialog>.
  *
- * Handles: positioning from the trigger rect (flips up when there is no room below), keyboard
- * navigation (ArrowUp/Down, Home/End, Escape with stopPropagation, Tab closes), outside-pointer
- * close via composedPath, following scroll in every enclosing shadow root, close on resize.
+ * Handles: positioning from the trigger rect or a pointer point (flips up when there is no room
+ * below), keyboard navigation (ArrowUp/Down, Home/End, first-letter type-ahead, Escape with
+ * stopPropagation, Tab closes and returns focus to the origin), outside-pointer close via
+ * composedPath, following scroll in every enclosing shadow root, close on resize.
  */
 export class MenuPopover implements ReactiveController {
   trigger: HTMLElement | null = null;
+  private _at: MenuOpenAt = {};
   private _shown: HTMLElement | null = null;
   private _scrollRoots: EventTarget[] = [];
   private _raf = 0;
@@ -68,8 +78,17 @@ export class MenuPopover implements ReactiveController {
       this.close(true);
       return;
     }
+    this.openAt(trigger);
+  }
+
+  /**
+   * Open as a context menu (no toggle): at `at.point` when given (else at the trigger's rect); focus
+   * returns to `at.returnFocus` (else the trigger). A menu already open closes first.
+   */
+  openAt(trigger: HTMLElement, at: MenuOpenAt = {}): void {
     if (this.trigger) this.close(false);
     this.trigger = trigger;
+    this._at = at;
     document.addEventListener('pointerdown', this._onOutside, true);
     window.addEventListener('resize', this._onResize);
     this._scrollRoots = scrollRoots(trigger);
@@ -80,7 +99,9 @@ export class MenuPopover implements ReactiveController {
   close(restoreFocus: boolean): void {
     const trigger = this.trigger;
     if (!trigger) return;
+    const back = this._at.returnFocus ?? trigger;
     this.trigger = null;
+    this._at = {};
     document.removeEventListener('pointerdown', this._onOutside, true);
     window.removeEventListener('resize', this._onResize);
     for (const r of this._scrollRoots) r.removeEventListener('scroll', this._onScroll, true);
@@ -97,7 +118,7 @@ export class MenuPopover implements ReactiveController {
     }
     this.opts.onClose?.();
     this.host.requestUpdate();
-    if (restoreFocus && trigger.isConnected) trigger.focus();
+    if (restoreFocus && back.isConnected) back.focus({ preventScroll: true });
   }
 
   /** Keyboard handling for the menu element (@keydown on it). */
@@ -109,16 +130,30 @@ export class MenuPopover implements ReactiveController {
       return;
     }
     if (e.key === 'Tab') {
-      this.close(false);
+      // from a top-layer menu the next Tab stop is unpredictable: back to where the menu came from
+      e.preventDefault();
+      this.close(true);
+      return;
+    }
+    const items = Array.from(this.opts.menu()?.querySelectorAll<HTMLElement>(ITEMS) || []);
+    const active = (this.host.shadowRoot?.activeElement ?? document.activeElement) as HTMLElement | null;
+    const i = active ? items.indexOf(active) : -1;
+    // type-ahead: the next item starting with the typed letter
+    if (e.key.length === 1 && /\S/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const k = e.key.toLowerCase();
+      const n = items.length;
+      const hit = Array.from({ length: n }, (_, d) => items[(i + 1 + d) % n]).find((b) => b.textContent?.trim().toLowerCase().startsWith(k));
+      if (hit) {
+        e.preventDefault();
+        e.stopPropagation();
+        hit.focus();
+      }
       return;
     }
     if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
     e.stopPropagation();
-    const items = Array.from(this.opts.menu()?.querySelectorAll<HTMLElement>(ITEMS) || []);
     if (!items.length) return;
-    const active = (this.host.shadowRoot?.activeElement ?? document.activeElement) as HTMLElement | null;
-    const i = active ? items.indexOf(active) : -1;
     let next = 0;
     if (e.key === 'ArrowDown') next = i < 0 ? 0 : (i + 1) % items.length;
     else if (e.key === 'ArrowUp') next = i < 0 ? items.length - 1 : (i - 1 + items.length) % items.length;
@@ -133,7 +168,8 @@ export class MenuPopover implements ReactiveController {
     if (!el || !t) return;
     const popover = supportsPopover();
     if (!popover && !this.opts.fixedFallback) return;
-    const r = t.getBoundingClientRect();
+    const p = this._at.point;
+    const r = p ? ({ left: p.x, right: p.x, top: p.y, bottom: p.y } as DOMRect) : t.getBoundingClientRect();
     const vw = window.innerWidth || document.documentElement.clientWidth || 0;
     const vh = window.innerHeight || document.documentElement.clientHeight || 0;
     el.style.maxHeight = '';
@@ -146,7 +182,7 @@ export class MenuPopover implements ReactiveController {
     if (vh > 0 && h > room) el.style.maxHeight = `${Math.max(120, room)}px`;
     const height = Math.min(h, vh > 0 ? Math.max(120, room) : h);
     const top = up ? Math.max(EDGE, r.top - GAP - height) : r.bottom + GAP;
-    let left = this.opts.align === 'end' ? r.right - w : r.left;
+    let left = this.opts.align === 'end' && !p ? r.right - w : r.left;
     if (vw > 0) left = Math.min(left, vw - w - EDGE);
     left = Math.max(EDGE, left);
     Object.assign(el.style, { top: `${Math.round(top)}px`, left: `${Math.round(left)}px`, right: 'auto', bottom: 'auto' });
@@ -173,7 +209,8 @@ export class MenuPopover implements ReactiveController {
   }
 
   private _onOutside = (e: Event): void => {
-    if (this._inMenu(e) || (this.trigger && e.composedPath().includes(this.trigger))) return;
+    // a context menu (point) closes on any press outside it, its trigger included
+    if (this._inMenu(e) || (!this._at.point && this.trigger && e.composedPath().includes(this.trigger))) return;
     this.close(false);
   };
 
@@ -186,6 +223,8 @@ export class MenuPopover implements ReactiveController {
     this._raf = requestAnimationFrame(() => {
       const t = this.trigger;
       if (!t) return;
+      // a menu opened at the pointer stays where it was put (it no longer points at anything after a scroll)
+      if (this._at.point) return this.close(false);
       const r = t.getBoundingClientRect();
       const vh = window.innerHeight || 0;
       if (!t.isConnected || (vh && (r.bottom < 0 || r.top > vh))) this.close(false);

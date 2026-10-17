@@ -6,10 +6,14 @@ import type { MagicCard } from '../../card/magic-card';
 import { CARD_TAG } from '../../utils/constants';
 import { editorSystem } from '../../css/editor-system';
 import { placeFloatBar } from './float-bar';
+import { ItemMenu, LongPress, itemMenuStyles } from './item-menu';
 import {
   ModuleSelection,
   Selection,
   describeSelection,
+  isHiddenItem,
+  itemAt,
+  layoutModuleAt,
   modulePathAttr,
   moduleAt,
   parentSelection,
@@ -253,6 +257,30 @@ export class StudioCanvas extends LitElement {
    * burst: any other change in between (undo, a drag, an edit) starts a new step.
    */
   private _lastKeyResize: { row: string; i: number; t: number; config: MagicCardConfig | undefined } | null = null;
+  /** Copy / paste feedback in the status capsule at the canvas foot (3 s). */
+  @state() private _status = '';
+  private _statusTimer = 0;
+  /** The same item menus as the Layers tree: right-click, long-press, Shift+F10, the Menu key. */
+  private _itemMenu = new ItemMenu(this, {
+    surface: 'canvas',
+    focusSelection: () => this.focusCanvas(),
+    rename: (sel) => this._requestRename(sel),
+    status: (message) => this.showStatus(message),
+    connect: (sel) => {
+      this._select(sel);
+      this._startConnect();
+    },
+  });
+  private _longPress = new LongPress((path, x, y) => this._contextAt(path, x, y));
+
+  /** Show a short status ("Row 2 YAML copied") in the capsule at the canvas foot, announced politely. */
+  showStatus(message: string): void {
+    this._status = message;
+    clearTimeout(this._statusTimer);
+    this._statusTimer = window.setTimeout(() => {
+      this._status = '';
+    }, 3000);
+  }
 
   /** Focus the keyboard surface of the canvas. */
   focusCanvas(): void {
@@ -275,6 +303,9 @@ export class StudioCanvas extends LitElement {
     this._ro = undefined;
     window.removeEventListener('resize', this._queuePlace);
     this._endColumnDrag(false);
+    this._itemMenu.close(false);
+    this._longPress.cancel();
+    clearTimeout(this._statusTimer);
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -301,6 +332,11 @@ export class StudioCanvas extends LitElement {
     for (const type of BLOCKED) host.addEventListener(type, this._block, true);
     host.addEventListener('click', this._onCardClick, true);
     host.addEventListener('keydown', this._onCardKeydown, true);
+    // long-press (touch) opens the item menu; capture: the card host swallows pointer events
+    const canvas = this.shadowRoot!.querySelector<HTMLElement>('.canvas')!;
+    canvas.addEventListener('pointerdown', this._onLongDown, true);
+    canvas.addEventListener('pointermove', this._longPress.move, true);
+    for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._longPress.cancel, true);
     for (const type of HA_ACTION_EVENTS) host.addEventListener(type, this._stop);
     host.appendChild(card);
     this._observe();
@@ -361,6 +397,15 @@ export class StudioCanvas extends LitElement {
 
   private _block = (e: Event): void => {
     if (inPopupPreview(e)) return;
+    if (e.type === 'contextmenu') {
+      // the item under the pointer gets its menu; Shift+right-click keeps the browser's menu
+      e.stopPropagation();
+      if (!(e as MouseEvent).shiftKey) {
+        e.preventDefault();
+        this._onContext(e as MouseEvent);
+      }
+      return;
+    }
     if (e.type === 'pointerdown' || e.type === 'mousedown') this.focusCanvas();
     e.stopPropagation();
     // Touch/pointer keep their default: cancelling would block canvas scrolling and the tap's click.
@@ -375,6 +420,7 @@ export class StudioCanvas extends LitElement {
     if (inPopupPreview(e)) return;
     e.stopPropagation();
     e.preventDefault();
+    if (this._longPress.justFired) return; // the click that ends a long-press
     const target = selectionFromEvent(e.composedPath()) ?? { kind: 'card' };
     if (this._connectFrom) {
       // Connect mode: another module ends the flow; anything else keeps waiting.
@@ -450,6 +496,7 @@ export class StudioCanvas extends LitElement {
 
   private _onGroundClick = (e: MouseEvent): void => {
     if (e.composedPath().some((t) => t instanceof HTMLElement && t.classList.contains('float-bar'))) return;
+    if (this._longPress.justFired) return;
     if (this._connectFrom) {
       this._connectFrom = null;
       return;
@@ -469,9 +516,15 @@ export class StudioCanvas extends LitElement {
     }
     const sel = this._sel;
     const mod = (e.ctrlKey || e.metaKey) && !e.altKey;
-    if (sel.kind === 'module' && e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+    const arrow = e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') ? (e.key === 'ArrowUp' ? -1 : 1) : 0;
+    if (sel.kind === 'module' && arrow) {
       e.preventDefault();
-      this._op(e.key === 'ArrowUp' ? 'up' : 'down');
+      this._op(arrow < 0 ? 'up' : 'down');
+    } else if ((sel.kind === 'row' || sel.kind === 'slot') && arrow) {
+      e.preventDefault();
+      this._moveBy(sel, arrow);
+    } else if (!this._connectFrom && this._keyboardMenu(e, sel)) {
+      e.preventDefault();
     } else if (sel.kind === 'module' && (e.key === 'Delete' || e.key === 'Backspace') && !mod) {
       e.preventDefault();
       this._op('delete');
@@ -484,6 +537,86 @@ export class StudioCanvas extends LitElement {
       this._select(parentSelection(sel, this._state?.config));
     }
   };
+
+  /** Alt+Up / Down on a selected row or tab / row-module column (the module case is _op). */
+  private _moveBy(sel: Selection, delta: -1 | 1): void {
+    const sm = this.stateManager;
+    const config = this._state?.config;
+    if (!sm || !config) return;
+    if (sel.kind === 'row') {
+      const to = sel.row + delta;
+      if (to < 0 || to >= config.rows.length) return;
+      sm.moveRow(sel.row, to);
+      sm.setSelectedPath({ rowIndex: to });
+    } else if (sel.kind === 'slot') {
+      const owner = layoutModuleAt(config, sel);
+      const child = sel.child?.map((s) => ({ ...s }));
+      if (owner?.type === 'tabs') sm.moveTab(sel.row, sel.col, sel.module, child, sel.slot, delta);
+      else if (owner?.type === 'row') sm.moveNestedColumn(sel.row, sel.col, sel.module, child, sel.slot, delta);
+    }
+  }
+
+  /**
+   * Shift+F10 / Menu key (the selection's menu, under its frame; the card's at the device's top-left),
+   * F2, Ctrl+D, Delete on rows / columns / tabs: shared with the Layers tree (ItemMenu.shortcut).
+   */
+  private _keyboardMenu(e: KeyboardEvent, sel: Selection): boolean {
+    const root = this.shadowRoot;
+    const canvas = root?.querySelector<HTMLElement>('.canvas');
+    const frame = root?.querySelector<HTMLElement>('.sel-frame');
+    const device = root?.querySelector<HTMLElement>('.device');
+    if (!canvas) return false;
+    if (sel.kind === 'card' || !frame || frame.hidden) {
+      const r = (device ?? canvas).getBoundingClientRect();
+      return this._itemMenu.shortcut(e, sel, device ?? canvas, { point: { x: r.left, y: r.top }, returnFocus: canvas });
+    }
+    return this._itemMenu.shortcut(e, sel, frame, { returnFocus: canvas });
+  }
+
+  // ── context menu ──
+
+  /** Right-click on the card: the item under the pointer (as a click would select it). */
+  private _onContext(e: MouseEvent): void {
+    this._longPress.cancel();
+    if (this._longPress.justFired) return; // Android's own contextmenu after our long-press
+    this._contextAt(e.composedPath(), e.clientX, e.clientY);
+  }
+
+  /** Right-click on the dotted ground: the card's menu (the float bar: the selection's). */
+  private _onGroundContext = (e: MouseEvent): void => {
+    const path = e.composedPath();
+    if (e.shiftKey || inPopupPreview(e)) return;
+    e.preventDefault();
+    if (this._longPress.justFired) return;
+    if (path.some((t) => t instanceof HTMLElement && t.classList.contains('col-handle'))) return;
+    const onBar = path.some((t) => t instanceof HTMLElement && t.classList.contains('float-bar'));
+    this._openContext(onBar ? this._sel : { kind: 'card' }, e.clientX, e.clientY);
+  };
+
+  private _onLongDown = (e: PointerEvent): void => {
+    const path = e.composedPath();
+    if (inPopupPreview(e) || path.some((t) => t instanceof HTMLElement && (t.classList.contains('col-handle') || t.classList.contains('float-bar')))) return;
+    this._longPress.down(e);
+  };
+
+  private _contextAt(path: EventTarget[], x: number, y: number): void {
+    this._openContext(selectionFromEvent(path) ?? { kind: 'card' }, x, y);
+  }
+
+  /** Select the item, then open its menu at the pointer. In connect mode nothing opens. */
+  private _openContext(sel: Selection, x: number, y: number): void {
+    const canvas = this.shadowRoot?.querySelector<HTMLElement>('.canvas');
+    if (!canvas || this._connectFrom || !this.stateManager) return;
+    this._select(sel);
+    this.focusCanvas();
+    this._itemMenu.open(sel, canvas, { point: { x, y }, returnFocus: canvas });
+  }
+
+  /** Rename from the canvas: the studio opens the Layers field; focus comes back here afterwards. */
+  private _requestRename(sel: Selection): void {
+    const canvas = this.shadowRoot?.querySelector<HTMLElement>('.canvas');
+    this.dispatchEvent(new CustomEvent('mc-rename-request', { bubbles: true, composed: true, detail: { sel, returnFocus: canvas } }));
+  }
 
   private _op(op: 'up' | 'down' | 'duplicate' | 'delete'): void {
     const sm = this.stateManager;
@@ -872,7 +1005,8 @@ export class StudioCanvas extends LitElement {
     const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? `, shown at ${this._fillPx} px` : '';
     const sel = this._sel;
     const config = s?.config;
-    const label = config ? describeSelection(config, sel).title : '';
+    const hidden = !!config && isHiddenItem(itemAt(config, sel));
+    const label = config ? `${describeSelection(config, sel).title}${hidden ? ' · hidden' : ''}` : '';
     // Position of the module in its list: a column, or a layout module's slot for a nested child.
     let index = 0;
     let count = 0;
@@ -899,6 +1033,7 @@ export class StudioCanvas extends LitElement {
         aria-label="Canvas, ${label} selected"
         aria-describedby=${this._connectFrom ? 'connect-hint' : 'canvas-hint'}
         @click=${this._onGroundClick}
+        @contextmenu=${this._onGroundContext}
         @keydown=${this._onKeydown}
         @scroll=${this._queuePlace}
         @pointermove=${this._onPointerMove}
@@ -955,13 +1090,17 @@ export class StudioCanvas extends LitElement {
           : 'Click the module to connect to. Escape cancels.'
         : ''}</p>
       <p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
-        Click a module to select it. <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd> moves it, <kbd>Del</kbd> removes it.
+        Click a module to select it. <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd> moves it, <kbd>Del</kbd> removes it,
+        <kbd>Shift</kbd> + <kbd>F10</kbd> opens its menu.
       </p>
+      <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
+      ${this._itemMenu.render()}
     `;
   }
 
   static styles = [
     editorSystem,
+    itemMenuStyles,
     css`
       :host {
         position: relative;
@@ -1019,6 +1158,36 @@ export class StudioCanvas extends LitElement {
       }
       .card-host {
         cursor: default;
+        /* no iOS callout or text selection on a long-press (it opens the item menu) */
+        -webkit-touch-callout: none;
+        user-select: none;
+      }
+      /* copy / paste feedback: a capsule at the canvas foot (like the connect hint), 3 s */
+      .status-capsule {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 6;
+        max-width: calc(100% - 32px);
+        margin: 0;
+        padding: 6px 12px;
+        border-radius: 10px;
+        background: var(--mc-surface);
+        border: 1px solid var(--mc-divider);
+        box-shadow: var(--mc-shadow-float);
+        font-size: 0.8125rem;
+        color: var(--mc-text);
+        overflow-wrap: anywhere;
+      }
+      .status-capsule:not([data-on]) {
+        /* stays in the tree (a live region must exist before it changes), out of sight */
+        clip-path: inset(50%);
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
       }
       .canvas.connecting .card-host {
         cursor: crosshair;

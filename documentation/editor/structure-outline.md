@@ -5,7 +5,7 @@ The structure outline shows the card as a tree: the card, its rows, the columns 
 -   [Items](#items)
 -   [Layout modules in the tree](#layout-modules-in-the-tree)
 -   [Selecting](#selecting)
--   [Three-dot menus](#three-dot-menus)
+-   [Item menus](#item-menus)
 -   [Keyboard](#keyboard)
 -   [Drag and drop](#drag-and-drop)
 -   [Pane and Layers differences](#pane-and-layers-differences)
@@ -22,6 +22,10 @@ The structure outline shows the card as a tree: the card, its rows, the columns 
 | Layout child | A module inside a layout module, nested under it. See [Layout modules in the tree](#layout-modules-in-the-tree). |
 | Tab | One item per tab of a Tabs module: the tab's icon and label, and the number of modules in it. |
 | Row-module column | One item per column of a Row module: "Column 1", a glyph of the module's column widths with this column's bar marked, and the number of modules in it. |
+
+A row, column, module or row-module column with a layer name shows that name in place of the default one ("Header" for "Row 1"). See [Rename](item-menus.md#rename).
+
+An item hidden on the dashboard has a greyed-out name and an eye-off icon after it. See [Hide on dashboard](item-menus.md#hide-on-dashboard).
 
 A module with local template overrides has a small dot with the tooltip "Has local overrides". See [Templates](templates.md).
 
@@ -54,85 +58,17 @@ See [Tabs and row-module columns](../inspector/tabs-and-nested-columns.md).
 
 When something else selects an item (the Studio canvas, a breadcrumb in the inspector, undo), the outline expands a collapsed row that holds it and scrolls the item into view.
 
-## Three-dot menus
+## Item menus
 
-Rows, columns, modules (including layout children), tabs and row-module columns have a three-dot button. Its menu:
+Every item has a menu: right-click it, long-press it on a touch screen, press Shift+F10 or the Menu key, or use its three-dot button (the card item has none). The full list of items per kind is in [Item menus](item-menus.md).
 
-### Row
+What the menu actions do to the tree:
 
-| Item | Action |
-| --- | --- |
-| Add column | Adds an empty column at the end. A row with a layout preset gets equal widths; a row with its own column widths keeps them and the new column gets `1fr`. The new column is not selected. |
-| Duplicate row | Inserts a copy below, with new ids for the row, its columns and modules. The copy is selected. |
-| Copy design | Copies the row's design. |
-| Paste design | Replaces the row's design with the copied one. Disabled until a design is copied. |
-| Merge pasted design | Merges the copied design into the row's design. Disabled until a design is copied. |
-| Move up | Moves the row up. Disabled on the first row. |
-| Move down | Moves the row down. Disabled on the last row. |
-| Delete row | Removes the row and everything in it. There is no confirmation; use undo. |
+-   Moving a tab keeps the default tab (`active_tab`) on the same tab. After a tab is deleted, the neighbouring tab is selected.
+-   A moved row-module column takes its width, design and modules with it. Its entry in `column_widths` moves along, or, without column widths, its part of the layout (`2-1` becomes `1-2`). The moved column stays selected.
+-   Deleting a row, column, module, tab or row-module column also removes the flow lines that pointed at the modules that were removed, in the same undo step. See [Flows](../flows/README.md).
 
-### Column
-
-| Item | Action |
-| --- | --- |
-| Add module | Opens the Add module picker for this column. |
-| Copy design, Paste design, Merge pasted design | As for rows. |
-| Delete column | Removes the column and its modules. A row with a layout preset gets equal widths; a row with its own column widths loses that column's width (all widths go when one column is left). Disabled when it is the row's only column. |
-
-### Module
-
-| Item | Action |
-| --- | --- |
-| Edit | Selects the module and moves focus to the inspector. In the Studio on a narrow screen it also closes the Layers overlay. |
-| Add module | Horizontal, Vertical and Slider layout modules. Opens the Add module picker; the new module goes at the end of the layout. |
-| Add tab | Tabs modules. Adds a tab at the end and selects it. |
-| Add column | Row modules. Adds an empty column at the end and selects it. |
-| Move up | Moves the module up within its column (or within its tab or column of a layout module). Disabled on the first. |
-| Move down | Moves it down. Disabled on the last. |
-| Move to… | Opens a second list in the same menu. For a top-level module: every other column of the card ("Row 2 · Column 1"). For a layout child: the other tabs or columns of its layout module. The module goes to the end of the target. Back returns to the main list. Disabled when there is no other target. |
-| Duplicate | Inserts a copy below, with new ids (nested children included). The copy is selected. |
-| Copy design, Paste design, Merge pasted design | As for rows. |
-| Delete | Removes the module. There is no confirmation; use undo. |
-
-### Tab
-
-| Item | Action |
-| --- | --- |
-| Add module | Opens the Add module picker for this tab. |
-| Rename | Turns the tab's label into a text field in the tree. Enter, or moving focus away, keeps the new label. Escape drops it. |
-| Move up | Moves the tab one place towards the start of the tab bar. Disabled on the first tab. |
-| Move down | Moves the tab one place towards the end. Disabled on the last tab. |
-| Delete tab | Removes the tab and its modules. A tab that holds modules asks first, in the same menu: "Delete tab "Lights" and its 2 modules?", with Cancel and Delete tab. An empty tab is deleted straight away. Disabled on the only tab, with the tooltip "A tabs module needs one tab". |
-
-Moving a tab keeps the default tab (`active_tab`) on the same tab. After a delete, the neighbouring tab is selected.
-
-### Row-module column
-
-| Item | Action |
-| --- | --- |
-| Add module | Opens the Add module picker for this column. |
-| Copy design, Paste design, Merge pasted design | As for rows, on the column's own design. |
-| Move up | Moves the column one place to the left. Disabled on the first column. |
-| Move down | Moves the column one place to the right. Disabled on the last column. |
-| Delete column | Removes the column and its modules. A column that holds modules asks first, in the same menu, as a tab does. Disabled on the only column, with the tooltip "A row needs one column". |
-
-A moved column takes its width, design and modules with it. Its entry in `column_widths` moves along, or, without column widths, its part of the layout (`2-1` becomes `1-2`). The moved column stays selected.
-
-Deleting a row, column, module, tab or row-module column also removes the flow lines that pointed at the modules that were removed, in the same undo step. See [Flows](../flows/README.md).
-
-Paste and merge are explained in [Copy and paste design](copy-paste-design.md).
-
-### Menu keyboard
-
-| Key | Action |
-| --- | --- |
-| Down / Up | Next / previous item (wraps) |
-| Home / End | First / last item |
-| Enter or Space | Run the focused item |
-| Escape | Close the menu and return focus to the three-dot button |
-| Tab | Close the menu |
-
-Clicking outside the menu closes it.
+Paste and merge of designs are explained in [Copy and paste design](copy-paste-design.md).
 
 ## Keyboard
 
@@ -148,14 +84,16 @@ Arrow keys only move focus. Press Enter or Space to select the focused item.
 | Left | row | Collapse the row |
 | Left | column, module, tab or row-module column | Focus the parent item. For a child of a Tabs or Row module, the parent is its tab or column. |
 | Enter or Space | any item | Select it |
-| Delete or Backspace | module | Delete the focused module |
+| Delete or Backspace | module or row | Delete it |
+| Delete or Backspace | column | Delete it. On the row's only column, its menu opens with Delete disabled and the reason in its tooltip. |
 | Delete or Backspace | tab or row-module column | Delete it when it is empty. When it holds modules, its menu opens on the delete question. On the only tab or column, its menu opens with Delete disabled and the reason in its tooltip. |
-| F2 | tab | Rename the tab in the tree (double-click does the same) |
+| F2 | any item | Rename it in the tree (double-click does the same). See [Rename](item-menus.md#rename). |
+| Ctrl+D | module or row | Duplicate it |
 | Alt+Up / Alt+Down | module | Move the module up / down within its column, tab or layout |
 | Alt+Up / Alt+Down | tab | Move the tab up / down in the tab order |
 | Alt+Up / Alt+Down | row-module column | Move the column left / right, with its width, design and modules |
 | Alt+Up / Alt+Down | row | Move the row up / down |
-| Menu key, or Shift+F10 | row, column, module, tab or row-module column | Open its three-dot menu |
+| Menu key, or Shift+F10 | any item | Open its menu below the three-dot button (the card's below the item). Escape returns focus to the item. |
 
 After a move, delete or duplicate, focus follows the module (or goes to a neighbour, or to its column or tab when that is empty).
 

@@ -4,8 +4,7 @@ import { CardModule, EditorState, RowConfig, RowModuleConfig, TabsModuleConfig }
 import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorSystem } from '../../css/editor-system';
-import { readDesignClipboard } from '../../utils/design-clipboard';
-import { MenuPopover } from '../components/menu-popover';
+import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
 import {
@@ -14,8 +13,6 @@ import {
   selectionFromPath,
   selectionKey,
   selectionToPath,
-  moduleDisplayName,
-  moduleLabel,
   ENTITY_RE,
   breakableId,
   moduleAt,
@@ -25,9 +22,12 @@ import {
   clampSelection,
   slotSelection,
   layoutModuleAt,
+  itemAt,
+  isHiddenItem,
+  layerName,
 } from './selection';
 import type { SlotSelection } from './selection';
-import { ChildStep, childSlots, descendantAt, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import { ChildStep, childSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
 
 type DragState =
   | { type: 'row'; row: number }
@@ -37,17 +37,6 @@ type DragState =
 type DropTarget =
   | { type: 'row'; index: number }
   | { type: 'module'; row: number; col: number; index: number };
-
-interface OpenMenu {
-  kind: 'row' | 'column' | 'module' | 'slot';
-  row: number;
-  col?: number;
-  module?: number;
-  child?: ChildStep[];
-  /** kind 'slot': the tab / row-module column. */
-  slot?: number;
-  trigger: HTMLElement;
-}
 
 type ModuleSel = Extract<Selection, { kind: 'module' }>;
 
@@ -78,10 +67,7 @@ export class StructureOutline extends LitElement {
   @state() private _state?: EditorState;
   @state() private _collapsed = new Set<string>();
   @state() private _focusKey: string | null = null;
-  @state() private _menu: OpenMenu | null = null;
-  /** Module menu: its main list or the "Move to…" targets (second level in the same popover). */
-  @state() private _menuView: 'main' | 'move' | 'confirm' = 'main';
-  /** Key of the tab being renamed inline. */
+  /** Key of the item being renamed inline (any kind: layer name, tab label, card name). */
   @state() private _renaming: string | null = null;
   @state() private _drop: DropTarget | null = null;
 
@@ -91,16 +77,26 @@ export class StructureOutline extends LitElement {
   private _drag: DragState | null = null;
   private _ignoreClickUntil = 0;
   private _lastSelKey = '';
-  private _menuFocusFirst = false;
-  private _menuPop = new MenuPopover(this, {
-    menu: () => this.shadowRoot?.querySelector<HTMLElement>('.menu'),
-    onClose: () => {
-      this._menu = null;
-      this._menuView = 'main';
+  /** Where focus goes after an inline rename asked for by someone else (the canvas). */
+  private _renameReturn: HTMLElement | null = null;
+  /** The context menu of every tree item (⋮, right-click, long-press, Shift+F10, Menu key). */
+  private _itemMenu = new ItemMenu(this, {
+    surface: 'tree',
+    focusSelection: () => this._focusSelection(),
+    rename: (sel) => this.startRename(selectionKey(sel)),
+    status: (message) => this._status(message),
+    deleteModule: (sel) => this._deleteModule(sel),
+    deleteRow: (row) => {
+      this.stateManager?.deleteRow(row);
+      this._pendingFocus = row > 0 ? selectionKey({ kind: 'row', row: row - 1 }) : 'card';
+      this.requestUpdate();
     },
-    align: 'end',
-    fixedFallback: true,
+    moveRow: (from, to) => {
+      this._moveRow(from, to);
+      this._focusSelection();
+    },
   });
+  private _longPress = new LongPress((path, x, y) => this._contextAt(path, x, y));
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -112,7 +108,8 @@ export class StructureOutline extends LitElement {
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
-    this._closeMenu(false);
+    this._itemMenu.close(false);
+    this._longPress.cancel();
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -124,11 +121,6 @@ export class StructureOutline extends LitElement {
     if (rename && this.shadowRoot?.activeElement !== rename) {
       rename.focus();
       rename.select();
-    }
-    if (this._menuFocusFirst) {
-      this._menuFocusFirst = false;
-      this._menuPop.position();
-      this.shadowRoot?.querySelector<HTMLElement>('.menu [role="menuitem"]:not([disabled])')?.focus({ preventScroll: true });
     }
     if (this._pendingFocus) {
       const key = this._pendingFocus;
@@ -259,17 +251,57 @@ export class StructureOutline extends LitElement {
     this._focusSelection();
   }
 
-  private _commitRename(sel: SlotSelection, value: string): void {
+  /**
+   * Rename an item inline: the card's name, a tab's label, else its editor-only layer name. The row
+   * holding it opens; `returnFocus` (the canvas) gets focus back after Enter / Escape.
+   */
+  startRename(key: string, returnFocus?: HTMLElement): void {
+    const sel = selectionFromKey(key);
+    if (sel.kind !== 'card' && sel.kind !== 'row') this._setCollapsed(sel.row, false);
+    this._renameReturn = returnFocus ?? null;
+    this._focusKey = key;
+    this._renaming = key;
+  }
+
+  /** The name an item shows without a layer name ("Row 2", "Column 1", "Button · Toggle"). */
+  private _defaultLabel(sel: Selection): string | undefined {
+    const config = this._state?.config;
+    if (!config) return undefined;
+    if (sel.kind === 'row') return `Row ${sel.row + 1}`;
+    if (sel.kind === 'column') return `Column ${sel.col + 1}`;
+    if (sel.kind === 'slot') return `Column ${sel.slot + 1}`;
+    const mod = sel.kind === 'module' ? moduleAt(config, sel) : undefined;
+    return mod ? moduleTitle({ ...mod, editor_name: undefined }) : undefined;
+  }
+
+  /** The text the rename field starts with: what the item shows now. */
+  private _renameValue(sel: Selection): string {
+    const config = this._state?.config;
+    if (!config) return '';
+    const item = itemAt(config, sel);
+    if (sel.kind === 'card') return config.name ?? '';
+    if (sel.kind === 'slot' && layoutModuleAt(config, sel)?.type === 'tabs') return String(item?.label ?? '');
+    return layerName(item) ?? this._defaultLabel(sel) ?? '';
+  }
+
+  private _commitRename(sel: Selection, value: string): void {
     if (this._renaming !== selectionKey(sel)) return;
     this._renaming = null;
-    const label = value.trim(); // blank keeps the tab's label
-    const tab = (this._state && layoutModuleAt(this._state.config, sel) as { tabs?: Array<{ label?: string }> } | undefined)?.tabs?.[sel.slot];
-    if (tab && label && label !== (tab.label ?? '')) this.stateManager?.renameTab(sel.row, sel.col, sel.module, sel.child, sel.slot, label);
-    this._pendingFocus = selectionKey(sel);
+    this.stateManager?.setLayerName(sel, value, this._defaultLabel(sel));
+    this._afterRename(sel);
+  }
+
+  private _afterRename(sel: Selection): void {
+    const back = this._renameReturn;
+    this._renameReturn = null;
+    if (back?.isConnected) {
+      this.updateComplete.then(() => back.focus({ preventScroll: true }));
+      this._fire('mc-rename-done');
+    } else this._pendingFocus = selectionKey(sel);
     this.requestUpdate();
   }
 
-  private _onRenameKeydown(e: KeyboardEvent, sel: SlotSelection): void {
+  private _onRenameKeydown(e: KeyboardEvent, sel: Selection): void {
     e.stopPropagation();
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -277,8 +309,62 @@ export class StructureOutline extends LitElement {
     } else if (e.key === 'Escape') {
       e.preventDefault();
       this._renaming = null;
-      this._pendingFocus = selectionKey(sel);
+      this._afterRename(sel);
     }
+  }
+
+  /** The inline rename field in place of an item's name. */
+  private _renderRename(sel: Selection, label: string): TemplateResult {
+    return html`<input class="rename" aria-label=${label} .value=${this._renameValue(sel)}
+      @click=${(e: Event) => e.stopPropagation()}
+      @keydown=${(e: KeyboardEvent) => this._onRenameKeydown(e, sel)}
+      @blur=${(e: Event) => this._commitRename(sel, (e.target as HTMLInputElement).value)} />`;
+  }
+
+  /** "Hidden on dashboard" mark after an item's name. */
+  private _hiddenMark(item: unknown): TemplateResult | typeof nothing {
+    return isHiddenItem(item)
+      ? html`<ha-icon class="hid-ico" icon="mdi:eye-off-outline" title="Hidden on dashboard"></ha-icon><span class="sr-only">Hidden on dashboard</span>`
+      : nothing;
+  }
+
+  /** Copy / paste feedback: the studio's status capsule (Layers), else HA's toast (pane in HA's dialog). */
+  private _status(message: string): void {
+    if (this.variant === 'layers') this._fire('mc-status', { message });
+    else document.querySelector('home-assistant')?.dispatchEvent(new CustomEvent('hass-notification', { detail: { message } }));
+  }
+
+  // ── context menu: right-click, long-press ──
+
+  /** The tree item on an event path, with its ⋮ button (the menu's anchor for the keyboard). */
+  private _itemOnPath(path: EventTarget[]): HTMLElement | null {
+    for (const t of path) {
+      if (t === this) return null;
+      if (t instanceof HTMLElement && t.getAttribute('role') === 'treeitem') return t;
+    }
+    return null;
+  }
+
+  /** Right-click (and Android's long-press): select the item, open its menu at the pointer. */
+  private _onContextMenu = (e: MouseEvent): void => {
+    const path = e.composedPath();
+    // the browser menu stays in text fields (rename) and with Shift
+    if (e.shiftKey || isEditable(path[0])) return;
+    const item = this._itemOnPath(path);
+    if (!item) return;
+    e.preventDefault();
+    this._longPress.cancel();
+    if (this._longPress.justFired) return;
+    this._contextAt(path, e.clientX, e.clientY);
+  };
+
+  private _contextAt(path: EventTarget[], x: number, y: number): void {
+    const item = this._itemOnPath(path);
+    if (!item || !this.stateManager) return;
+    const sel = selectionFromKey(item.dataset.key || 'card');
+    this._select(sel);
+    this._ignoreClickUntil = Date.now() + 400;
+    this._itemMenu.open(sel, item, { point: { x, y }, returnFocus: item });
   }
 
   /** Number of tabs / columns of the slot's layout module. */
@@ -330,7 +416,7 @@ export class StructureOutline extends LitElement {
     if (isEditable(origin)) return;
 
     // An open menu handles its own keys (MenuPopover.onKeydown on the menu element).
-    if (this._menu) return;
+    if (this._itemMenu.isOpen) return;
 
     const item = origin instanceof Element ? (origin.closest('[role="treeitem"]') as HTMLElement | null) : null;
     // Keys only act on tree items themselves, not on the caret/overflow buttons beside them.
@@ -406,38 +492,15 @@ export class StructureOutline extends LitElement {
         if (sel.kind === 'module') {
           handled();
           this._deleteModule(sel);
-        } else if (sel.kind === 'slot') {
-          handled();
-          const trigger = item.closest('.line')?.querySelector<HTMLElement>(':scope > .more');
-          // the only tab / column: the menu, whose Delete is disabled with the reason;
-          // a tab / column holding modules asks first (the menu's confirm view), like the ⋮ menu
-          if (this._slotTotal(sel) <= 1 && trigger) this._openSlotMenu(sel, trigger);
-          else if (this._slotCount(sel) && trigger) this._openSlotMenu(sel, trigger, 'confirm');
-          else if (this._slotTotal(sel) > 1) this._deleteSlot(sel);
+          return;
         }
-        return;
-      case 'F2':
-        if (sel.kind === 'slot' && this._state && layoutModuleAt(this._state.config, sel)?.type === 'tabs') {
-          handled();
-          this._renaming = key;
-          this._focusKey = key;
-        }
-        return;
-      case 'ContextMenu':
-      case 'F10':
-        if (e.key === 'ContextMenu' || e.shiftKey) {
-          const trigger = item.parentElement?.querySelector<HTMLElement>(':scope > .more');
-          if (trigger) {
-            handled();
-            if (sel.kind === 'module') this._openModuleMenu(sel, trigger);
-            else if (sel.kind === 'slot') this._openSlotMenu(sel, trigger);
-            else if (sel.kind === 'row' || sel.kind === 'column') this._openMenu(sel.kind, sel.row, sel.kind === 'column' ? sel.col : undefined, trigger);
-          }
-        }
-        return;
+        break;
       default:
-        return;
+        break;
     }
+    // F2, Ctrl+D, Delete on rows / columns / tabs, Shift+F10 and the Menu key: the same as the canvas
+    const anchor = item.parentElement?.querySelector<HTMLElement>(':scope > .more') ?? item;
+    if (this._itemMenu.shortcut(e, sel, anchor, { returnFocus: item })) handled();
   }
 
   /** Move a module (or layout child) by one within its column / slot; focus follows it. */
@@ -479,60 +542,20 @@ export class StructureOutline extends LitElement {
 
   // ── menus ──
 
-  private _openMenu(kind: 'row' | 'column', row: number, col: number | undefined, trigger: HTMLElement): void {
-    if (this._menu && this._menu.trigger === trigger) {
-      this._closeMenu(true);
-      return;
-    }
-    this._menuPop.close(false);
-    this._menuView = 'main';
-    this._menu = { kind, row, col, trigger };
-    this._menuPop.open(trigger);
+  /** The ⋮ button: the item's menu (toggle), anchored to the button. */
+  private _openMenuFor(sel: Selection, e: Event): void {
+    this._itemMenu.open(sel, e.currentTarget as HTMLElement);
   }
 
-  private _openModuleMenu(sel: ModuleSel, trigger: HTMLElement): void {
-    if (this._menu && this._menu.trigger === trigger) {
-      this._closeMenu(true);
-      return;
-    }
-    this._menuPop.close(false);
-    this._menuView = 'main';
-    const child = sel.child?.map((s) => ({ ...s }));
-    this._menu = { kind: 'module', row: sel.row, col: sel.col, module: sel.module, child, trigger };
-    this._menuPop.open(trigger);
-  }
-
-  private _openSlotMenu(sel: SlotSelection, trigger: HTMLElement, view: 'main' | 'confirm' = 'main'): void {
-    if (this._menu && this._menu.trigger === trigger) {
-      this._closeMenu(true);
-      return;
-    }
-    this._menuPop.close(false);
-    this._menuView = view;
-    this._menu = { kind: 'slot', row: sel.row, col: sel.col, module: sel.module, child: sel.child?.map((s) => ({ ...s })), slot: sel.slot, trigger };
-    this._menuPop.open(trigger);
-  }
-
-  /** Switch the open menu between its main list and a second level ("Move to…" targets, delete confirm). */
-  private _setMenuView(view: 'main' | 'move' | 'confirm'): void {
-    this._menuView = view;
-    this._menuFocusFirst = true;
-  }
-
-  private _closeMenu(restoreFocus: boolean): void {
-    if (this._menuPop.isOpen) this._menuPop.close(restoreFocus);
-    else this._menu = null;
-  }
-
-  private _menuAction(fn: () => void): void {
-    this._closeMenu(true);
-    fn();
+  private _menuOpenFor(sel: Selection): boolean {
+    return this._itemMenu.openKey === selectionKey(sel);
   }
 
   // ── drag and drop (ported from form-editor) ──
 
   private _onRowDragStart(e: DragEvent, row: number): void {
-    this._closeMenu(false);
+    this._itemMenu.close(false);
+    this._longPress.cancel();
     this._drag = { type: 'row', row };
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = 'move';
@@ -543,7 +566,8 @@ export class StructureOutline extends LitElement {
   }
 
   private _onModuleDragStart(e: DragEvent, row: number, col: number, module: number): void {
-    this._closeMenu(false);
+    this._itemMenu.close(false);
+    this._longPress.cancel();
     this._drag = { type: 'module', row, col, module };
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = 'move';
@@ -644,9 +668,19 @@ export class StructureOutline extends LitElement {
     const focusKey = this._resolveFocusKey(selKey);
     const cardName = this._state?.config.name?.trim() || 'Card';
     const card = this._itemAttrs('card', selKey, focusKey);
+    const renamingCard = this._renaming === 'card';
 
     return html`
-      <div class="outline-root" @keydown=${this._onKeydown}>
+      <div
+        class="outline-root"
+        @keydown=${this._onKeydown}
+        @contextmenu=${this._onContextMenu}
+        @pointerdown=${this._longPress.down}
+        @pointermove=${this._longPress.move}
+        @pointerup=${this._longPress.cancel}
+        @pointercancel=${this._longPress.cancel}
+        @dragstart=${this._longPress.cancel}
+      >
         <ul
           class="tree"
           role="tree"
@@ -664,9 +698,10 @@ export class StructureOutline extends LitElement {
                 aria-selected=${card.current ? 'true' : 'false'}
                 aria-current=${card.current ? 'true' : nothing}
                 @click=${this._onItemClick}
+                @dblclick=${() => this.startRename('card')}
               >
                 <ha-icon icon="mdi:card-outline"></ha-icon>
-                <span class="text"><span class="name">${cardName}</span></span>
+                ${renamingCard ? this._renderRename({ kind: 'card' }, 'Card name') : html`<span class="text"><span class="name">${cardName}</span></span>`}
               </div>
             </div>
           </li>
@@ -690,7 +725,7 @@ export class StructureOutline extends LitElement {
                 </button>
               </div>
             `}
-        ${this._renderMenu()}
+        ${this._itemMenu.render()}
       </div>
     `;
   }
@@ -729,7 +764,10 @@ export class StructureOutline extends LitElement {
     const drop = this._drop;
     const lineBefore = drop?.type === 'row' && drop.index === ri;
     const lineAfter = drop?.type === 'row' && ri === this._rows.length - 1 && drop.index === ri + 1;
-    const menuOpen = this._menu?.kind === 'row' && this._menu.row === ri;
+    const sel: Selection = { kind: 'row', row: ri };
+    const menuOpen = this._menuOpenFor(sel);
+    const name = layerName(row) ?? `Row ${ri + 1}`;
+    const renaming = this._renaming === key;
 
     return html`
       <li
@@ -754,6 +792,7 @@ export class StructureOutline extends LitElement {
             role="treeitem"
             aria-level="2"
             data-key=${key}
+            data-hidden=${isHiddenItem(row) ? '' : nothing}
             tabindex=${a.tab}
             aria-expanded=${open ? 'true' : 'false'}
             aria-selected=${a.current ? 'true' : 'false'}
@@ -762,18 +801,22 @@ export class StructureOutline extends LitElement {
             @dragstart=${(e: DragEvent) => this._onRowDragStart(e, ri)}
             @dragend=${this._onDragEnd}
             @click=${this._onItemClick}
+            @dblclick=${() => this.startRename(key)}
           >
-            ${this.variant === 'pane'
-              ? html`${this._renderGlyph(row)}<span class="text"><span class="name">Row ${ri + 1} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span></span>`
-              : html`<span class="text"><span class="name">Row ${ri + 1}</span></span>${this._renderGlyph(row)}`}
+            ${renaming
+              ? this._renderRename(sel, 'Row name')
+              : this.variant === 'pane'
+                ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span></span>`
+                : html`<span class="text"><span class="name">${name}</span></span>${this._renderGlyph(row)}`}
+            ${this._hiddenMark(row)}
           </div>
           <button
             type="button"
             class="icon-btn sm more"
-            aria-label="Row ${ri + 1} actions"
+            aria-label="${name} actions"
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
-            @click=${(e: Event) => this._openMenu('row', ri, undefined, e.currentTarget as HTMLElement)}
+            @click=${(e: Event) => this._openMenuFor(sel, e)}
           >
             <ha-icon icon="mdi:dots-vertical"></ha-icon>
           </button>
@@ -800,7 +843,10 @@ export class StructureOutline extends LitElement {
     const n = modules.length;
     const drop = this._drop;
     const dropHere = drop?.type === 'module' && drop.row === ri && drop.col === ci ? drop.index : -1;
-    const menuOpen = this._menu?.kind === 'column' && this._menu.row === ri && this._menu.col === ci;
+    const sel: Selection = { kind: 'column', row: ri, col: ci };
+    const menuOpen = this._menuOpenFor(sel);
+    const col = this._rows[ri]?.columns[ci];
+    const name = layerName(col) ?? `Column ${ci + 1}`;
 
     return html`
       <li role="none" class="col">
@@ -810,12 +856,15 @@ export class StructureOutline extends LitElement {
             role="treeitem"
             aria-level="3"
             data-key=${key}
+            data-hidden=${isHiddenItem(col) ? '' : nothing}
             tabindex=${a.tab}
             aria-selected=${a.current ? 'true' : 'false'}
             aria-current=${a.current ? 'true' : nothing}
             @click=${this._onItemClick}
+            @dblclick=${() => this.startRename(key)}
           >
-            <span class="text"><span class="name">Column ${ci + 1}</span></span>
+            ${this._renaming === key ? this._renderRename(sel, 'Column name') : html`<span class="text"><span class="name">${name}</span></span>`}
+            ${this._hiddenMark(col)}
             <span class="chip is-count">${n}<span class="sr-only"> module${n === 1 ? '' : 's'}</span></span>
           </div>
           <button
@@ -824,7 +873,7 @@ export class StructureOutline extends LitElement {
             aria-label="Row ${ri + 1} column ${ci + 1} actions"
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
-            @click=${(e: Event) => this._openMenu('column', ri, ci, e.currentTarget as HTMLElement)}
+            @click=${(e: Event) => this._openMenuFor(sel, e)}
           >
             <ha-icon icon="mdi:dots-vertical"></ha-icon>
           </button>
@@ -898,11 +947,11 @@ export class StructureOutline extends LitElement {
     selKey: string,
     focusKey: string,
   ): TemplateResult {
-    const key = selectionKey({ kind: 'module', row: ri, col: ci, module: mi });
+    const sel = moduleSelection(ri, ci, mi) as ModuleSel;
+    const key = selectionKey(sel);
     const a = this._itemAttrs(key, selKey, focusKey);
     const icon = ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline';
-    // Mockup: "<Type> · <label>" with the entity id (mono) under it.
-    const label = moduleLabel(mod);
+    // Mockup: "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
     const overrides = !!mod.not_synced?.length;
     const before = dropHere === mi;
@@ -921,24 +970,29 @@ export class StructureOutline extends LitElement {
             role="treeitem"
             aria-level="4"
             data-key=${key}
+            data-hidden=${isHiddenItem(mod) ? '' : nothing}
             tabindex=${a.tab}
             aria-selected=${a.current ? 'true' : 'false'}
             aria-current=${a.current ? 'true' : nothing}
-            draggable="true"
+            draggable=${this._renaming === key ? 'false' : 'true'}
             @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, ri, ci, mi)}
             @dragend=${this._onDragEnd}
             @click=${this._onItemClick}
+            @dblclick=${() => this.startRename(key)}
           >
             <ha-icon icon=${icon}></ha-icon>
-            <span class="text">
-              <span class="name">${moduleDisplayName(mod)}${label ? ` · ${label}` : ''}</span>
-              ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : nothing}
-            </span>
+            ${this._renaming === key
+              ? this._renderRename(sel, 'Module name')
+              : html`<span class="text">
+                  <span class="name">${moduleTitle(mod)}</span>
+                  ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : nothing}
+                </span>`}
+            ${this._hiddenMark(mod)}
             ${overrides
               ? html`<span class="ovr-dot" title="Has local overrides"></span><span class="sr-only">Has local overrides</span>`
               : nothing}
           </div>
-          ${this._renderModuleMore(mod, moduleSelection(ri, ci, mi) as ModuleSel, a.tab)}
+          ${this._renderModuleMore(mod, sel, a.tab)}
         </div>
         ${this._renderChildren(mod, ri, ci, mi, [], 5, selKey, focusKey)}
       </li>
@@ -976,11 +1030,11 @@ export class StructureOutline extends LitElement {
         const sel = slotSelection(ri, ci, mi, chain, slot);
         const key = selectionKey(sel);
         const a = this._itemAttrs(key, selKey, focusKey);
-        const label = slotLabel(parent, slot)!;
+        const entry = this._state ? itemAt(this._state.config, sel) : undefined;
+        const label = (isTabs ? undefined : layerName(entry)) ?? slotLabel(parent, slot)!;
         const icon = isTabs ? (parent as TabsModuleConfig).tabs?.[slot]?.icon || 'mdi:tab' : '';
         const n = list.length;
-        const m = this._menu;
-        const menuOpen = m?.kind === 'slot' && selectionKey(slotSelection(m.row, m.col ?? 0, m.module ?? 0, m.child, m.slot ?? 0)) === key;
+        const menuOpen = this._menuOpenFor(sel);
         const renaming = this._renaming === key;
         return html`
           <li role="none" class="col slot">
@@ -990,18 +1044,18 @@ export class StructureOutline extends LitElement {
                 role="treeitem"
                 aria-level=${level}
                 data-key=${key}
+                data-hidden=${isHiddenItem(entry) ? '' : nothing}
                 tabindex=${a.tab}
                 aria-selected=${a.current ? 'true' : 'false'}
                 aria-current=${a.current ? 'true' : nothing}
                 @click=${this._onItemClick}
-                @dblclick=${isTabs ? () => { this._renaming = key; } : nothing}
+                @dblclick=${() => this.startRename(key)}
               >
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
-                  ? html`<input class="rename" aria-label="Tab name" .value=${(parent as TabsModuleConfig).tabs?.[slot]?.label ?? ''}
-                      @keydown=${(e: KeyboardEvent) => this._onRenameKeydown(e, sel)}
-                      @blur=${(e: Event) => this._commitRename(sel, (e.target as HTMLInputElement).value)} />`
+                  ? this._renderRename(sel, isTabs ? 'Tab name' : 'Column name')
                   : html`<span class="text"><span class="name">${label}</span></span>`}
+                ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
                 <span class="chip is-count">${n}<span class="sr-only"> module${n === 1 ? '' : 's'}</span></span>
               </div>
@@ -1012,7 +1066,7 @@ export class StructureOutline extends LitElement {
                 aria-label="${label} actions"
                 aria-haspopup="menu"
                 aria-expanded=${menuOpen ? 'true' : 'false'}
-                @click=${(e: Event) => this._openSlotMenu(sel, e.currentTarget as HTMLElement)}
+                @click=${(e: Event) => this._openMenuFor(sel, e)}
               >
                 <ha-icon icon="mdi:dots-vertical"></ha-icon>
               </button>
@@ -1040,7 +1094,7 @@ export class StructureOutline extends LitElement {
     const key = selectionKey(sel);
     const a = this._itemAttrs(key, selKey, focusKey);
     const icon = ModuleRegistry.get(child.type)?.metadata.icon || 'mdi:puzzle-outline';
-    const label = moduleLabel(child);
+    const title = moduleTitle(child);
     const sub = typeof child.entity === 'string' && ENTITY_RE.test(child.entity) ? child.entity : undefined;
     return html`
       <li role="none" class="mod child">
@@ -1050,17 +1104,22 @@ export class StructureOutline extends LitElement {
             role="treeitem"
             aria-level=${level}
             data-key=${key}
-            title=${this.variant === 'layers' ? `${moduleDisplayName(child)}${label ? ` · ${label}` : ''}${sub ? ` · ${sub}` : ''}` : nothing}
+            data-hidden=${isHiddenItem(child) ? '' : nothing}
+            title=${this.variant === 'layers' ? `${title}${sub ? ` · ${sub}` : ''}` : nothing}
             tabindex=${a.tab}
             aria-selected=${a.current ? 'true' : 'false'}
             aria-current=${a.current ? 'true' : nothing}
             @click=${this._onItemClick}
+            @dblclick=${() => this.startRename(key)}
           >
             <ha-icon icon=${icon}></ha-icon>
-            <span class="text">
-              <span class="name">${moduleDisplayName(child)}${label ? ` · ${label}` : ''}</span>
-              ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : nothing}
-            </span>
+            ${this._renaming === key
+              ? this._renderRename(sel, 'Module name')
+              : html`<span class="text">
+                  <span class="name">${title}</span>
+                  ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : nothing}
+                </span>`}
+            ${this._hiddenMark(child)}
           </div>
           ${this._renderModuleMore(child, sel, a.tab)}
         </div>
@@ -1080,16 +1139,14 @@ export class StructureOutline extends LitElement {
     `;
   }
 
-  /** "Text · Kitchen": a module's name as its outline item shows it. */
+  /** "Text · Kitchen" (or its layer name): a module's name as its outline item shows it. */
   private _moduleName(mod: CardModule): string {
-    const label = moduleLabel(mod);
-    return `${moduleDisplayName(mod)}${label ? ` · ${label}` : ''}`;
+    return moduleTitle(mod);
   }
 
   /** A module item's ⋮ (in the tab order only beside the roving tree item). */
   private _renderModuleMore(mod: CardModule, sel: ModuleSel, tab: number): TemplateResult {
-    const m = this._menu;
-    const open = m?.kind === 'module' && selectionKey(this._menuSelection(m)) === selectionKey(sel);
+    const open = this._menuOpenFor(sel);
     return html`
       <button
         type="button"
@@ -1098,204 +1155,16 @@ export class StructureOutline extends LitElement {
         aria-label="Module options for ${this._moduleName(mod)}"
         aria-haspopup="menu"
         aria-expanded=${open ? 'true' : 'false'}
-        @click=${(e: Event) => this._openModuleMenu(sel, e.currentTarget as HTMLElement)}
+        @click=${(e: Event) => this._openMenuFor(sel, e)}
       >
         <ha-icon icon="mdi:dots-vertical"></ha-icon>
       </button>
     `;
   }
 
-  private _menuSelection(m: OpenMenu): ModuleSel {
-    return moduleSelection(m.row, m.col ?? 0, m.module ?? 0, m.child) as ModuleSel;
-  }
-
-  /** Number of modules in the list holding `sel` (its column, or its slot of the layout module). */
-  private _siblingCount(sel: ModuleSel): number {
-    const top = this._rows[sel.row]?.columns[sel.col]?.modules;
-    if (!sel.child?.length) return top?.length ?? 0;
-    const parent = descendantAt(top?.[sel.module], sel.child.slice(0, -1));
-    return childSlots(parent)?.[sel.child[sel.child.length - 1].slot]?.length ?? 0;
-  }
-
-  /** "Move to…" targets: the card's other columns, or for a layout child the other slots of its layout. */
-  private _moveTargets(sel: ModuleSel): Array<{ label: string; run: () => void }> {
-    const sm = this.stateManager;
-    if (!sm) return [];
-    const rows = this._rows;
-    const child = sel.child;
-    if (child?.length) {
-      const parent = descendantAt(rows[sel.row]?.columns[sel.col]?.modules?.[sel.module], child.slice(0, -1));
-      const slots = parent ? childSlots(parent) : undefined;
-      const current = child[child.length - 1].slot;
-      if (!parent || !slots) return [];
-      return slots.flatMap((_, slot) => (slot === current ? [] : [{
-        label: slotLabel(parent, slot) ?? `Slot ${slot + 1}`,
-        run: () => sm.moveChildToSlot(sel.row, sel.col, sel.module, child, slot),
-      }]));
-    }
-    return rows.flatMap((row, r) => row.columns.flatMap((_, c) => (r === sel.row && c === sel.col ? [] : [{
-      label: `Row ${r + 1} · Column ${c + 1}`,
-      run: () => sm.moveModuleToColumn(sel.row, sel.col, sel.module, r, c),
-    }])));
-  }
-
-  private _renderMenu(): TemplateResult | typeof nothing {
-    const m = this._menu;
-    const sm = this.stateManager;
-    if (!m || !sm) return nothing;
-    const rows = this._rows;
-    const row = rows[m.row];
-    if (!row) return nothing;
-
-    type ItemOpts = { disabled?: boolean; danger?: boolean; title?: string; keepOpen?: boolean };
-    const item = (icon: string, label: string, fn: () => void, opts: ItemOpts = {}) => html`
-      <button
-        type="button"
-        role="menuitem"
-        class=${opts.danger ? 'danger' : ''}
-        title=${opts.title ?? nothing}
-        ?disabled=${opts.disabled}
-        @click=${() => (opts.keepOpen ? fn() : this._menuAction(fn))}
-      >
-        <ha-icon icon=${icon}></ha-icon>${label}
-      </button>
-    `;
-
-    const r = m.row;
-    // copy / paste of the row's, column's or module's design (src/utils/design-clipboard.ts)
-    const target = m.kind === 'row' ? { row: r }
-      : m.kind === 'column' ? { row: r, col: m.col! }
-      : { row: r, col: m.col!, module: m.module!, child: m.child, ...(m.kind === 'slot' ? { slot: m.slot } : {}) };
-    const noClip = !readDesignClipboard();
-    const pasteOpts = { disabled: noClip, title: noClip ? 'Copy a design first' : undefined };
-    const design = html`
-      <hr />
-      ${item('mdi:content-copy', 'Copy design', () => sm.copyDesign(target))}
-      ${item('mdi:content-paste', 'Paste design', () => sm.pasteDesign(target, 'replace'), pasteOpts)}
-      ${item('mdi:set-merge', 'Merge pasted design', () => sm.pasteDesign(target, 'merge'), pasteOpts)}
-    `;
-    if (m.kind === 'slot') {
-      const sel = slotSelection(r, m.col!, m.module!, m.child, m.slot!);
-      const owner = this._state ? layoutModuleAt(this._state.config, sel) : undefined;
-      const slots = childSlots(owner);
-      if (!owner || !slots?.[sel.slot]) return nothing;
-      const name = slotLabel(owner, sel.slot)!;
-      const n = slots[sel.slot].length;
-      const isTabs = owner.type === 'tabs';
-      const ownerSel = parentSelection(sel) as ModuleSel;
-      const del = () => this._deleteSlot(sel);
-      const what = isTabs ? 'tab' : 'column';
-      const only = slots.length <= 1;
-      const deleteItem = item('mdi:delete-outline', `Delete ${what}`, n ? () => this._setMenuView('confirm') : del, {
-        danger: true,
-        keepOpen: !!n,
-        disabled: only,
-        title: only ? `${isTabs ? 'A tabs module' : 'A row'} needs one ${what}` : undefined,
-      });
-      const moveItems = html`
-        ${item('mdi:arrow-up', 'Move up', () => this._moveSlot(sel, -1), { disabled: sel.slot <= 0 })}
-        ${item('mdi:arrow-down', 'Move down', () => this._moveSlot(sel, 1), { disabled: sel.slot >= slots.length - 1 })}
-      `;
-      const body = this._menuView === 'confirm'
-        ? html`
-            <p class="menu-note">Delete ${isTabs ? 'tab' : 'column'} "${name}" and its ${n} module${n === 1 ? '' : 's'}?</p>
-            ${item('mdi:arrow-left', 'Cancel', () => this._setMenuView('main'), { keepOpen: true })}
-            ${item('mdi:delete-outline', `Delete ${isTabs ? 'tab' : 'column'}`, del, { danger: true })}
-          `
-        : isTabs
-          ? html`
-              ${item('mdi:plus', 'Add module', () => this._addChild(ownerSel, sel.slot))}
-              ${item('mdi:pencil-outline', 'Rename', () => { this._select(sel); this._renaming = selectionKey(sel); })}
-              <hr />
-              ${moveItems}
-              <hr />
-              ${deleteItem}
-            `
-          : html`
-              ${item('mdi:plus', 'Add module', () => this._addChild(ownerSel, sel.slot))}
-              ${design}
-              <hr />
-              ${moveItems}
-              <hr />
-              ${deleteItem}
-            `;
-      return html`<div class="menu" role="menu" aria-label="${name} actions" @keydown=${this._menuPop.onKeydown}>${body}</div>`;
-    }
-    if (m.kind === 'module') {
-      const sel = this._menuSelection(m);
-      const mod = this._state ? moduleAt(this._state.config, sel) : undefined;
-      if (!mod) return nothing;
-      const targets = this._moveTargets(sel);
-      const index = sel.child?.length ? sel.child[sel.child.length - 1].index : sel.module;
-      const body = this._menuView === 'move'
-        ? html`
-            ${item('mdi:arrow-left', 'Back', () => this._setMenuView('main'), { keepOpen: true })}
-            <hr />
-            ${targets.map((t) => item('mdi:arrow-right', t.label, () => {
-              t.run();
-              this._focusSelection();
-            }))}
-          `
-        : html`
-            ${item('mdi:pencil-outline', 'Edit', () => {
-              this._select(sel);
-              this._fire('mc-edit-module', { path: selectionToPath(sel) });
-            })}
-            ${mod.type === 'tabs' || mod.type === 'row'
-              ? item(mod.type === 'tabs' ? 'mdi:tab-plus' : 'mdi:table-column-plus-after', mod.type === 'tabs' ? 'Add tab' : 'Add column',
-                () => this._addSlot(sel, mod.type))
-              : hasSlotNodes(mod) || !childSlots(mod)
-                ? nothing
-                : item('mdi:plus', 'Add module', () => this._addChild(sel, 0))}
-            <hr />
-            ${item('mdi:arrow-up', 'Move up', () => this._moveModuleBy(sel, -1), { disabled: index <= 0 })}
-            ${item('mdi:arrow-down', 'Move down', () => this._moveModuleBy(sel, 1), { disabled: index >= this._siblingCount(sel) - 1 })}
-            ${item('mdi:folder-move-outline', 'Move to…', () => this._setMenuView('move'), {
-              keepOpen: true,
-              disabled: !targets.length,
-              title: targets.length ? undefined : 'No other column to move to',
-            })}
-            ${item('mdi:content-duplicate', 'Duplicate', () => {
-              sm.duplicateModule(sel.row, sel.col, sel.module, sel.child);
-              this._focusSelection();
-            })}
-            ${design}
-            <hr />
-            ${item('mdi:delete-outline', 'Delete', () => this._deleteModule(sel), { danger: true })}
-          `;
-      const label = `Module options for ${this._moduleName(mod)}`;
-      return html`<div class="menu" role="menu" aria-label=${label} @keydown=${this._menuPop.onKeydown}>${body}</div>`;
-    }
-    const body = m.kind === 'row'
-      ? html`
-          ${item('mdi:table-column-plus-after', 'Add column', () => sm.addColumn(r))}
-          ${item('mdi:content-duplicate', 'Duplicate row', () => sm.duplicateRow(r))}
-          ${design}
-          <hr />
-          ${item('mdi:arrow-up', 'Move up', () => this._moveRow(r, r - 1), { disabled: r === 0 })}
-          ${item('mdi:arrow-down', 'Move down', () => this._moveRow(r, r + 1), { disabled: r >= rows.length - 1 })}
-          <hr />
-          ${item('mdi:delete-outline', 'Delete row', () => {
-            sm.deleteRow(r);
-            this._pendingFocus = r > 0 ? selectionKey({ kind: 'row', row: r - 1 }) : 'card';
-          }, { danger: true })}
-        `
-      : html`
-          ${item('mdi:plus', 'Add module', () => this._addModule(r, m.col!))}
-          ${design}
-          <hr />
-          ${item('mdi:delete-outline', 'Delete column', () => sm.deleteColumn(r, m.col!), {
-            danger: true,
-            disabled: row.columns.length <= 1,
-          })}
-        `;
-
-    const label = m.kind === 'row' ? `Row ${r + 1} actions` : `Row ${r + 1} column ${(m.col ?? 0) + 1} actions`;
-    return html`<div class="menu" role="menu" aria-label=${label} @keydown=${this._menuPop.onKeydown}>${body}</div>`;
-  }
-
   static styles = [
     editorSystem,
+    itemMenuStyles,
     css`
       :host {
         display: block;
@@ -1544,14 +1413,18 @@ export class StructureOutline extends LitElement {
 
       .menu {
         position: fixed;
-        min-width: 200px;
       }
-      .menu-note {
-        margin: 4px 8px 8px;
-        max-width: 240px;
-        font-size: 0.8125rem;
+      /* hidden on the dashboard: quieter name and an eye-off mark */
+      .item[data-hidden] .name {
         color: var(--mc-text-2);
-        overflow-wrap: anywhere;
+      }
+      .item > ha-icon.hid-ico {
+        --mdc-icon-size: 16px;
+        color: var(--mc-text-2);
+      }
+      /* no iOS callout on a long-press (it opens the item menu) */
+      .item {
+        -webkit-touch-callout: none;
       }
       /* tab name, renamed in place */
       input.rename {
@@ -1597,20 +1470,6 @@ export class StructureOutline extends LitElement {
       :host([variant='layers']) .slot > ul {
         padding-left: 4px;
         margin-left: 12px;
-      }
-      .menu button {
-        width: 100%;
-        font-size: 0.875rem;
-        color: var(--mc-text);
-      }
-      .menu button:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-        background: transparent;
-      }
-      .menu button.danger,
-      .menu button.danger ha-icon {
-        color: var(--mc-error-ink);
       }
 
       /* Narrow pane (phone dialog): reclaim indentation so entity ids keep their width. */

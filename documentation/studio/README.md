@@ -17,6 +17,7 @@ When the Studio closes, focus returns to the Open studio button. The Studio keep
 -   [Canvas width](device-widths.md): Narrow, Wide and Panel, matched to the dashboard view.
 -   [Canvas and selection](canvas-and-selection.md): clicking (also the columns of Row modules), hovering, selection colours and how the live card behaves on the canvas.
 -   [Floating bar](floating-bar.md): the module toolbar next to the selection.
+-   [Item menus](../editor/item-menus.md): right-click, long-press or Shift+F10 on the canvas and in Layers; copy YAML, copy and paste modules, wrap in a layout, hide on the dashboard, rename, reset to template.
 -   [Column resize](column-resize.md): dragging column widths of rows and Row modules on the canvas, with the mouse or the keyboard.
 -   [Flows on the canvas](flows-on-canvas.md): adding and selecting flow lines.
 -   [Keyboard shortcuts](keyboard-shortcuts.md): every shortcut, Escape and focus.

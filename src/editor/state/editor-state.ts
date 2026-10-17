@@ -25,6 +25,13 @@ function withPatch<T extends object>(obj: T, patch: object): T {
   return out as T;
 }
 
+/** Remove not_synced from a module and every nested layout child (mutates: a clone). */
+function dropMarks(mod: CardModule): void {
+  if (!mod || typeof mod !== 'object') return;
+  delete mod.not_synced;
+  for (const slot of childSlots(mod) ?? []) for (const child of slot) dropMarks(child);
+}
+
 /** New ids for a copied module and everything nested in it (mutates: callers pass a clone). */
 function giveFreshIds(mod: CardModule): void {
   if (!mod || typeof mod !== 'object') return;
@@ -38,12 +45,13 @@ function giveFreshIds(mod: CardModule): void {
 import { ModuleRegistry } from '../../modules/module-registry';
 import { debounce } from '../../utils/debounce';
 import { EDITOR_DEBOUNCE_MS } from '../../utils/constants';
-import { clampSelection, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
+import { clampSelection, itemAt, layoutModuleAt, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
 import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
+import { copyModuleToClipboard, readModuleClipboard } from './module-clipboard';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
 import { flowKeys } from '../../utils/flow';
-import type { ModuleSelection } from '../studio/selection';
+import type { ModuleSelection, Selection } from '../studio/selection';
 
 /** A module (or a layout child below it: `child`), column or row, by index. */
 export interface DesignTarget {
@@ -204,8 +212,10 @@ export class EditorStateManager {
     this.notify();
     this.dispatchConfigChanged(this.state.config);
     // "This icon" animations follow their module's new icon, library ones go (lazy icon animator
-    // chunk, loaded only when a module plays a custom:quick-* document or has an anim-icon-N entry)
-    if (/"(custom:quick-|anim-icon-)/.test(JSON.stringify(next.rows))) followIcons(this, prev, next);
+    // chunk, loaded only when a module plays a custom:quick-* document or has an anim-icon-N entry);
+    // there also catalogue copies (custom:cat-*) nothing plays any more go
+    const cat = (c: MagicCardConfig) => JSON.stringify(c).includes('"custom:cat-');
+    if (/"(custom:quick-|anim-icon-)/.test(JSON.stringify(next.rows)) || cat(prev) || cat(next)) followIcons(this, prev, next);
   }
 
   // ── Editor State ──
@@ -600,6 +610,180 @@ export class EditorStateManager {
     const chain = child.map((s) => ({ ...s }));
     chain[chain.length - 1] = { slot, index: dest.length - 1 };
     this.state = { ...this.state, selectedPath: { rowIndex, columnIndex: colIndex, moduleIndex, childPath: chain } };
+    this.updateConfig(config);
+    return true;
+  }
+
+  // ── Item menu: hide, layer name, module clipboard, wrap, reset (studio context menus) ──
+
+  /**
+   * Edit the object a selection points at in a clone (one undo step). Template-linked card: a top-level
+   * row, column or module marks `key` (not_synced); a layout child or a tab / row-module column marks
+   * its top-level layout module's child list. `fn` returns false for no change.
+   */
+  private _editItem(sel: Selection, key: string, fn: (item: Record<string, unknown>) => boolean | void): boolean {
+    const config = deepClone(this.state.config);
+    const item = itemAt(config, sel);
+    if (!item || fn(item) === false) return false;
+    if (config.template && sel.kind !== 'card') {
+      if (sel.kind === 'slot' || (sel.kind === 'module' && sel.child?.length)) this._markChildList(config, sel.row, sel.col, sel.module);
+      else {
+        const marks = (item.not_synced || []) as string[];
+        if (!marks.includes(key)) item.not_synced = [...marks, key];
+      }
+    }
+    this.updateConfig(config);
+    return true;
+  }
+
+  /** Studio Hide / Show: `hidden: true` leaves the item out on the dashboard (not for the card). */
+  setHidden(sel: Selection, hidden: boolean): boolean {
+    if (sel.kind === 'card') return false;
+    return this._editItem(sel, 'hidden', (item) => {
+      if ((item.hidden === true) === hidden) return false;
+      if (hidden) item.hidden = true;
+      else delete item.hidden;
+    });
+  }
+
+  /**
+   * Rename from the tree or canvas: the card's `name`, a tab's visible label (blank keeps it), else the
+   * editor-only layer name `editor_name` (blank, or the item's default label, removes it).
+   */
+  setLayerName(sel: Selection, name: string, defaultLabel?: string): boolean {
+    const v = name.trim();
+    if (sel.kind === 'card') {
+      return this._editItem(sel, 'name', (c) => {
+        if ((c.name ?? '') === v) return false;
+        if (v) c.name = v;
+        else delete c.name;
+      });
+    }
+    if (sel.kind === 'slot' && layoutModuleAt(this.state.config, sel)?.type === 'tabs') {
+      const tab = itemAt(this.state.config, sel);
+      if (!v || !tab || tab.label === v) return false;
+      this.renameTab(sel.row, sel.col, sel.module, sel.child?.map((s) => ({ ...s })), sel.slot, v);
+      return true;
+    }
+    const next = v && v !== defaultLabel ? v : undefined;
+    return this._editItem(sel, 'editor_name', (item) => {
+      if (item.editor_name === next) return false;
+      if (next) item.editor_name = next;
+      else delete item.editor_name;
+    });
+  }
+
+  /** Copy module: the module (with its children) to the module clipboard. */
+  copyModule(sel: Selection): CardModule | undefined {
+    const mod = moduleAt(this.state.config, sel);
+    return mod ? copyModuleToClipboard(mod) : undefined;
+  }
+
+  /**
+   * Paste the clipboard module (new ids) after a module, or at the end of a column or of a tab /
+   * row-module column. The pasted module is selected. False when nothing (valid) was copied.
+   */
+  pasteModule(sel: Selection): boolean {
+    const clip = readModuleClipboard();
+    if (!clip) return false;
+    const mod = deepClone(clip);
+    giveFreshIds(mod);
+    const config = deepClone(this.state.config);
+    let path: EditorPath;
+    if (sel.kind === 'module') {
+      const at = this._moduleList(config, sel.row, sel.col, sel.module, sel.child);
+      if (!at || !at.list[at.index]) return false;
+      at.list.splice(at.index + 1, 0, mod);
+      if (sel.child?.length) this._markChildList(config, sel.row, sel.col, sel.module);
+      path = this._pathWithIndex(sel.row, sel.col, sel.module, sel.child, at.index + 1);
+    } else if (sel.kind === 'column') {
+      const col = config.rows[sel.row]?.columns[sel.col];
+      if (!col) return false;
+      if (!Array.isArray(col.modules)) col.modules = [];
+      path = { rowIndex: sel.row, columnIndex: sel.col, moduleIndex: col.modules.push(mod) - 1 };
+    } else if (sel.kind === 'slot') {
+      const layout = this._layoutIn(config, sel.row, sel.col, sel.module, sel.child);
+      const list = layout ? mutableSlot(layout, sel.slot) : undefined;
+      if (!list) return false;
+      const index = list.push(mod) - 1;
+      this._markChildList(config, sel.row, sel.col, sel.module);
+      path = {
+        rowIndex: sel.row,
+        columnIndex: sel.col,
+        moduleIndex: sel.module,
+        childPath: [...(sel.child ?? []).map((s) => ({ ...s })), { slot: sel.slot, index }],
+      };
+    } else {
+      return false;
+    }
+    this.state = { ...this.state, selectedPath: path };
+    this.updateConfig(config);
+    return true;
+  }
+
+  /**
+   * Wrap a module (or a layout child, in place) in a new layout module of `type` (vertical, horizontal,
+   * row, tabs, slider-layout): the module becomes the only child of its first slot. The layout is selected.
+   */
+  wrapInLayout(sel: Selection, type: string): boolean {
+    if (sel.kind !== 'module') return false;
+    const wrapper = ModuleRegistry.createDefault(type as ModuleType);
+    // a layout's first slot (undefined for modules without children); no extra dashboard export needed
+    const slot = wrapper ? mutableSlot(wrapper, 0) : undefined;
+    if (!wrapper || !slot) return false;
+    const config = deepClone(this.state.config);
+    const at = this._moduleList(config, sel.row, sel.col, sel.module, sel.child);
+    if (!at || !at.list[at.index]) return false;
+    slot.splice(0, slot.length, at.list[at.index]);
+    at.list[at.index] = wrapper;
+    if (sel.child?.length) this._markChildList(config, sel.row, sel.col, sel.module);
+    this.state = { ...this.state, selectedPath: this._pathWithIndex(sel.row, sel.col, sel.module, sel.child, at.index) };
+    this.updateConfig(config);
+    return true;
+  }
+
+  /**
+   * What Reset to template clears on a template-linked card: a row's, column's or top-level module's
+   * overrides; for a layout child, tab or row-module column its layout's child list. Undefined when
+   * the card is not linked or nothing is overridden.
+   */
+  private _resetTarget(config: MagicCardConfig, sel: Selection): { item: Record<string, unknown>; key?: string } | undefined {
+    if (!config.template || sel.kind === 'card') return undefined;
+    if (sel.kind === 'slot' || (sel.kind === 'module' && sel.child?.length)) {
+      const top = config.rows[sel.row]?.columns[sel.col]?.modules?.[sel.module];
+      const key = childListKey(top);
+      return top && key && (top.not_synced as string[] | undefined)?.includes(key) ? { item: top, key } : undefined;
+    }
+    const item = itemAt(config, sel);
+    if (!item) return undefined;
+    const own = (item.not_synced as string[] | undefined)?.length;
+    // children of an old config may carry marks of their own: those go too
+    const nested = sel.kind === 'module' && JSON.stringify(childSlots(item as CardModule) ?? []).includes('"not_synced"');
+    return own || nested ? { item } : undefined;
+  }
+
+  /** Whether the item has template overrides that Reset to template would clear. */
+  hasOverrides(sel: Selection): boolean {
+    return !!this._resetTarget(this.state.config, sel);
+  }
+
+  /**
+   * Reset to template: the item's overrides go (one undo step); the editor then re-merges the template
+   * (`mc-template-reapply`) so the template's values come back. False when there was nothing to reset.
+   */
+  resetItem(sel: Selection): boolean {
+    const config = deepClone(this.state.config);
+    const t = this._resetTarget(config, sel);
+    if (!t) return false;
+    if (t.key) {
+      const left = (t.item.not_synced as string[]).filter((k) => k !== t.key);
+      if (left.length) t.item.not_synced = left;
+      else delete t.item.not_synced;
+    } else if (sel.kind === 'module') {
+      dropMarks(t.item as CardModule);
+    } else {
+      delete t.item.not_synced;
+    }
     this.updateConfig(config);
     return true;
   }
