@@ -4,14 +4,23 @@ import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 /*
  * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js (ADR 0014), loaded
  * next to the editor bundle (public path: ../public-path.ts) when the create dialog first opens.
- * A load that takes over 8 s counts as failed (a stalled request would hang for minutes). Memoised while pending and once loaded; a failure clears the memo so "Try again" asks again.
+ * A load that takes over 8 s counts as failed (a stalled request would hang for minutes).
+ * Memoised while pending and once loaded; a failure or timeout clears the memo so "Try again" can
+ * call import() again. What that retry does depends on why the last attempt ended:
+ * - after a load error, webpack has dropped the chunk's request, so the retry asks for the chunk
+ *   under a new URL (see `real` below);
+ * - after the 8 s timeout, the original request is still in flight and webpack hands back that
+ *   same promise, so no new request is sent: Try again waits on the stalled request and either
+ *   gets it or times out again 8 s later.
+ * The failure message tells the user to reload the page if it keeps failing.
  */
 export type PresetChunk = typeof Chunk;
 type Importer = () => Promise<PresetChunk>;
 
 declare const __webpack_require__: { u: (id: unknown) => string } | undefined;
 let tries = 0;
-// Chrome and Safari remember a failed import() of a URL, so every retry asks for the chunk under a new one
+// Chrome and Safari remember a failed import() of a URL, so every call after the first rewrites the
+// chunk URL. webpack only reads it when it starts a new request (after a real load error).
 const real: Importer = () => {
   if (tries++ && typeof __webpack_require__ !== 'undefined') {
     const u = __webpack_require__.u;

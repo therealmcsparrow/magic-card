@@ -206,9 +206,10 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * - `THEME_PRESET_LIBRARY: ThemePresetLibrary`, re-exported from presets/library.ts. library.ts has
  *   no runtime import at all (`import type` only), so Node can load it with type stripping
  *   (tools/theme-example-shots.mjs, the gallery script).
- * - `renderPicker` and `pickerStyles` (with the types PickerView and PickerEvents), re-exported from
- *   presets/picker.ts: a template function and a stylesheet, no custom element. The picker sits in
- *   the chunk because the entry has a byte cap and nothing of it is needed before the dialog opens.
+ * - `renderPicker`, `pickerStatus` and `pickerStyles` (with the types PickerView and PickerEvents),
+ *   re-exported from presets/picker.ts: a template function, the text for the dialog's status
+ *   region, and a stylesheet; no custom element. The picker sits in the chunk because the entry has
+ *   a byte cap and nothing of it is needed before the dialog opens.
  * The picker exports are internal to the theme-editor Module: loader and chunk ship from the same
  * build (the content hash ties them), so their shape is not versioned and may change with the
  * entry. Only THEME_PRESET_LIBRARY is checked at load time.
@@ -217,12 +218,20 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *
  * Consumer: src/theme-editor/presets/loader.ts, the module's only import(). loadPresetLibrary()
  * resolves to the chunk module (type PresetChunk). It starts on the first open of the create
- * dialog (never when the panel or editor opens), is memoised while pending and once loaded, and on
- * failure clears the memo and rejects so "Try again" re-requests. It rejects too when
- * THEME_PRESET_LIBRARY.version is not major 1 or `presets` is not a non-empty array.
- * Retry: browsers cache a failed native import() per URL, so every request after the first asks
- * for the chunk under a new URL (`&r=<n>` appended to the `?v=` query through webpack's chunk-URL
- * function). Outside a webpack build (tests) no URL is rewritten.
+ * dialog (never when the panel or editor opens) and is memoised while pending and once loaded. It
+ * rejects when the import fails, when it has not settled after 8 s, or when
+ * THEME_PRESET_LIBRARY.version is not major 1 or `presets` is not a non-empty array; every
+ * rejection clears the memo so "Try again" calls import() again.
+ * Retry: browsers cache a failed native import() per URL, so every import() call after the first
+ * rewrites the chunk URL (`&r=<n>` appended to the `?v=` query through webpack's chunk-URL
+ * function). webpack reads that URL only when it starts a new request, and it keeps the chunk's
+ * in-flight request until that request fails. So:
+ * - after a load error, Try again requests the chunk under a new URL;
+ * - after the 8 s timeout, the stalled request is still in flight and webpack returns it again:
+ *   Try again sends no new request, waits on the same one, and either gets the chunk when it
+ *   arrives or times out again 8 s later.
+ * The failure message says "If it keeps failing, reload the page"; a reload is the way out of a
+ * request that never ends. Outside a webpack build (tests) no URL is rewritten.
  *
  * Data rules (tests/theme-presets.contract.test.ts):
  * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
