@@ -15,9 +15,10 @@
  *   magic-card.js for the editor chunk with `window.MagicCard.loadEditor()` (module-editor 1.0.0)
  *   and uses those elements by tag.
  * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/ and `lit`
- *   (types from src/contracts/ are fine). Exactly one dynamic import(): the preset library chunk
- *   (THEME_PRESETS_CHUNK_FILE, section "theme presets" below, ADR 0014). Its public path is set by
- *   src/theme-editor/public-path.ts, the entry's first import. magic-card.js is untouched (+0 B).
+ *   (types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
+ *   holds the preset library and the create dialog's picker (THEME_PRESETS_CHUNK_FILE, section
+ *   "theme presets" below, ADR 0014). Its public path is set by src/theme-editor/public-path.ts,
+ *   the entry's first import. magic-card.js is untouched (+0 B).
  *   The panel still imports one file; it never loads the preset chunk itself.
  * - Version check: the panel reads `customElements.get(THEME_EDITOR_TAG).contractVersion` and
  *   accepts major 1. A missing file or element means "update Magic Card to 2026.10.06 or newer".
@@ -196,22 +197,32 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
 // ── theme presets (Contract theme-presets 1.0.0, ADR 0014) ──
 
 /**
- * The preset library: every editor preset (the 5 starters and 40 more, 45 in all) lives in one lazy
- * webpack chunk of the theme editor entry, webpackChunkName THEME_PRESETS_CHUNK, emitted as
- * dist/THEME_PRESETS_CHUNK_FILE (served with `?v=<contenthash>`, next to the entry). The entry holds
- * no preset data.
+ * The preset chunk: every editor preset (the 5 starters and 40 more, 45 in all) and the create
+ * dialog's picker live in one lazy webpack chunk of the theme editor entry, webpackChunkName
+ * THEME_PRESETS_CHUNK, emitted as dist/THEME_PRESETS_CHUNK_FILE (served with `?v=<contenthash>`,
+ * next to the entry). The entry holds no preset data and no picker markup or styles.
  *
- * Provider: src/theme-editor/presets/chunk.ts (the chunk root). It re-exports
- * `THEME_PRESET_LIBRARY: ThemePresetLibrary` from presets/library.ts, which has no runtime import at
- * all (`import type` only), so Node can load it with type stripping (tools/theme-example-shots.mjs).
- * The chunk also holds the create dialog's picker (presets/picker.ts: `renderPicker` and
- * `pickerStyles`, a template function and a stylesheet, no custom element), because the entry has a
- * byte cap and nothing of the picker is needed before the dialog opens. lit, icons.ts and
- * <mcte-mode-switch> are shared with the entry, not copied.
+ * Provider: src/theme-editor/presets/chunk.ts, the chunk root. Its export surface is:
+ * - `THEME_PRESET_LIBRARY: ThemePresetLibrary`, re-exported from presets/library.ts. library.ts has
+ *   no runtime import at all (`import type` only), so Node can load it with type stripping
+ *   (tools/theme-example-shots.mjs, the gallery script).
+ * - `renderPicker` and `pickerStyles` (with the types PickerView and PickerEvents), re-exported from
+ *   presets/picker.ts: a template function and a stylesheet, no custom element. The picker sits in
+ *   the chunk because the entry has a byte cap and nothing of it is needed before the dialog opens.
+ * The picker exports are internal to the theme-editor Module: loader and chunk ship from the same
+ * build (the content hash ties them), so their shape is not versioned and may change with the
+ * entry. Only THEME_PRESET_LIBRARY is checked at load time.
+ * The chunk shares lit, icons.ts and <mcte-mode-switch> with the entry; it never bundles its own
+ * lit copy and never defines a custom element.
+ *
  * Consumer: src/theme-editor/presets/loader.ts, the module's only import(). loadPresetLibrary()
- * starts on the first open of the create dialog (never when the panel or editor opens), is
- * memoised while pending and once loaded, and on failure clears the memo and rejects so "Try again"
- * re-requests. It rejects too when `version` is not major 1 or `presets` is not a non-empty array.
+ * resolves to the chunk module (type PresetChunk). It starts on the first open of the create
+ * dialog (never when the panel or editor opens), is memoised while pending and once loaded, and on
+ * failure clears the memo and rejects so "Try again" re-requests. It rejects too when
+ * THEME_PRESET_LIBRARY.version is not major 1 or `presets` is not a non-empty array.
+ * Retry: browsers cache a failed native import() per URL, so every request after the first asks
+ * for the chunk under a new URL (`&r=<n>` appended to the `?v=` query through webpack's chunk-URL
+ * function). Outside a webpack build (tests) no URL is rewritten.
  *
  * Data rules (tests/theme-presets.contract.test.ts):
  * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
