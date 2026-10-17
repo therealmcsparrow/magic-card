@@ -157,6 +157,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       };
       fire(this, 'mc-theme-select', { name: r.name });
     } catch (e) {
+      this.selectedName = null;
       this._say(`Could not open ${name}. ${(e as Error).message ?? ''}`.trim());
       fire(this, 'mc-theme-select', { name: null });
     }
@@ -164,6 +165,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
 
   private _create(d: CreateDetail): void {
     this._opened = null;
+    this.selectedName = null;
     this._draft = { name: d.name, doc: d.doc, saved: null, editable: true, from: d.from };
     fire(this, 'mc-theme-select', { name: null });
   }
@@ -172,6 +174,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     this._draft = undefined;
     this._dirty = false;
     this._opened = null;
+    // The deep link was handled. Left set, the next list load would open it again (Back would not leave).
+    this.selectedName = null;
     fire(this, 'mc-theme-select', { name: null });
     void this._loadList();
   }
@@ -198,7 +202,10 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
           fire(this, 'mc-theme-select', { name: e.detail.name });
           void this._loadList();
         }}
-        @mcte-rename=${(e: CustomEvent) => this._draft && (this._draft = { ...this._draft, name: e.detail.name })}
+        @mcte-rename=${(e: CustomEvent) => {
+          // Same draft object: a new one would make the editor reload its document and drop the edits.
+          if (this._draft) this._draft.name = e.detail.name;
+        }}
         @mcte-deleted=${(e: CustomEvent) => {
           this._say(`Deleted ${e.detail.name}.`);
           this._close();

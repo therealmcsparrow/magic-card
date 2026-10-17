@@ -16,7 +16,10 @@ export interface DocError {
 
 const MODES: readonly string[] = ['light', 'dark'];
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
-const MAX_VALUE_LENGTH = 4096;
+/** The backend's MAX_VALUE_CHARS and bad-character rule (theme_files.py), so the inline error comes before the save error. */
+const MAX_VALUE_LENGTH = 4000;
+// eslint-disable-next-line no-control-regex
+const BAD_CHARS_RE = /[\u0000-\u0008\u000b-\u001f\u007f]/;
 
 type Bag<T> = Record<string, T>;
 const isRecord = (v: unknown): v is Bag<unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -153,7 +156,8 @@ export function validateValue(kind: FieldKind, value: ThemeValue): string | null
   if (typeof value === 'number' && !Number.isFinite(value)) return kind === 'number' ? 'Enter a number.' : 'Enter a value.';
   const v = String(value).trim();
   if (!v) return 'Enter a value.';
-  if (v.length > MAX_VALUE_LENGTH) return 'This value is too long.';
+  if (v.length > MAX_VALUE_LENGTH) return `This value is longer than ${MAX_VALUE_LENGTH} characters.`;
+  if (BAD_CHARS_RE.test(v)) return 'This value has a control character. Remove it.';
   if (kind === 'text') return null;
   if (/[;{}]/.test(v) || !balanced(v)) return 'Remove ; { } and unmatched brackets from the value.';
   const isVar = VAR_RE.test(v);

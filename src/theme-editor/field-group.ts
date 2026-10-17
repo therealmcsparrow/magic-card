@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import type { CatalogueEntry, CatalogueGroup } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { icon } from './icons';
@@ -39,6 +40,7 @@ export interface FieldCtx {
 const GRADIENT_MSG = 'This variable takes a single colour. Gradients work in Card background and Dashboard background.';
 const COLOUR_MSG = 'This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.';
 const modeLabel = (m: ThemeMode): string => (m === 'light' ? 'Light' : 'Dark');
+const isColour = (entry: CatalogueEntry): boolean => entry.kind === 'color' || entry.kind === 'background';
 
 /** The text under a field for an error from model.validateValue (colour fields lead with the picker). */
 export const fieldErrorText = (entry: CatalogueEntry, message: string): string => {
@@ -85,6 +87,35 @@ export class McteFieldGroup extends LitElement {
     for (const t of this._timers.values()) clearTimeout(t);
     this._timers.clear();
     super.disconnectedCallback();
+  }
+
+  protected updated(): void {
+    this._markPickers();
+  }
+
+  /**
+   * The colour picker owns its textbox (another shadow root), so an error cannot be linked by id. Set
+   * aria-invalid and an aria-description on that textbox instead, once the picker has drawn it.
+   */
+  private _markPickers(): void {
+    for (const f of this.renderRoot.querySelectorAll<HTMLElement>('.field')) {
+      const picker = f.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-color-picker');
+      if (!picker) continue;
+      const apply = (): void => {
+        const input = picker.shadowRoot?.querySelector<HTMLInputElement>('input[type="text"]');
+        if (!input) return;
+        const err = f.querySelector('.help.error span')?.textContent;
+        if (err) {
+          input.setAttribute('aria-invalid', 'true');
+          input.setAttribute('aria-description', err);
+        } else {
+          input.removeAttribute('aria-invalid');
+          input.removeAttribute('aria-description');
+        }
+      };
+      apply();
+      void picker.updateComplete?.then(apply);
+    }
   }
 
   /** The id of a field's focus target, for "jump to the first problem". */
@@ -139,12 +170,11 @@ export class McteFieldGroup extends LitElement {
   private _control(row: FieldRow, shown: string, own: boolean, err: string | undefined, label: string): TemplateResult {
     const { entry } = row;
     const name = entry.name;
-    if (entry.kind === 'color' || entry.kind === 'background') {
+    if (isColour(entry) && !this.ctx.readOnly) {
       return html`<mc-color-picker
         .value=${shown}
         .label=${label}
         .gradient=${entry.kind === 'background' ? 'css' : ''}
-        ?disabled=${this.ctx.readOnly}
         @value-changed=${(e: CustomEvent) => {
           e.stopPropagation();
           this._commit(name, String(e.detail?.value ?? ''), shown, own);
@@ -152,8 +182,11 @@ export class McteFieldGroup extends LitElement {
       ></mc-color-picker>`;
     }
     const rgb = entry.kind === 'rgb' && !err && shown ? shown : '';
+    // A read-only theme shows its colours as text with a swatch; the picker is for editing only.
+    const look = isColour(entry) && shown ? shown : '';
     return html`<div class="ctl">
       ${rgb ? html`<span class="swatch" style="background:rgb(${rgb})" aria-hidden="true"></span>` : nothing}
+      ${look ? html`<span class="swatch" style=${styleMap({ background: look })} aria-hidden="true"></span>` : nothing}
       <input
         id="in-${name}"
         class="input mono"
@@ -197,6 +230,32 @@ export class McteFieldGroup extends LitElement {
     </div>`;
   }
 
+  /** True for a non-colour variable that only one mode sets: the other mode gets nothing (Ruben: sizes land in one mode). */
+  private _onlyIn(row: FieldRow, name: string): ThemeMode | null {
+    const { doc, scope, hasModes } = this.ctx;
+    if (!hasModes || scope === 'shared' || isColour(row.entry) || row.entry.kind === 'rgb') return null;
+    if (row.custom && /color|background/.test(name)) return null;
+    if (ownValue(doc, scope, name) === undefined || ownValue(doc, 'shared', name) !== undefined) return null;
+    return overriddenIn(doc, scope, name).length ? null : scope;
+  }
+
+  private _modeOnly(name: string, value: string, scope: ThemeMode): TemplateResult | typeof nothing {
+    const key = `${name}:only:${scope}`;
+    if (!this.ctx.touched.has(name) || this._kept.has(key)) return nothing;
+    const other: ThemeMode = scope === 'light' ? 'dark' : 'light';
+    return html`<div class="callout is-warn" role="group" aria-label="Value set in one mode only">
+      ${icon('alert')}
+      <div class="body">
+        <p>Only ${modeLabel(scope)} gets this value. ${modeLabel(other)} keeps the default.</p>
+        <div class="actions">
+          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-set-modes', { name, value, modes: [other] })}>Set in both</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${() => fire(this, 'mcte-move-shared', { name, value })}>Move to Shared</button>
+          <button type="button" class="btn btn-text btn-sm" @click=${() => (this._kept = new Set(this._kept).add(key))}>Keep in ${modeLabel(scope)} only</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
   private _field(row: FieldRow): TemplateResult {
     const { entry, custom } = row;
     const name = entry.name;
@@ -217,15 +276,17 @@ export class McteFieldGroup extends LitElement {
       scope === 'shared' && others.length
         ? others.map((m) => `${modeLabel(m)} ${ownValue(doc, m, name)}`).join(', ')
         : '';
-    return html`<div class="field" id="f-${name}" data-state=${state}>
+    const only = this._onlyIn(row, name);
+    return html`<div class="field ${err ? 'bad' : ''}" id="f-${name}" data-state=${state}>
       <div class="head">
-        ${entry.kind === 'color' || entry.kind === 'background'
+        ${isColour(entry) && !this.ctx.readOnly
           ? html`<span class="lbl" id="lbl-${name}">${label}</span>`
           : html`<label class="lbl ${custom ? 'mono' : ''}" for="in-${name}">${label}</label>`}
         <span class="status help">${statusText}</span>
         ${custom ? html`<span class="chip">Custom</span>` : nothing}
         ${row.follows ? html`<span class="chip">Home Assistant variable</span>` : nothing}
         ${others.length ? html`<span class="chip">Also set in ${others.map(modeLabel).join(' and ')}</span>` : nothing}
+        ${only ? html`<span class="chip is-warn">Only in ${modeLabel(only)}</span>` : nothing}
         ${own && !this.ctx.readOnly
           ? html`<button type="button" class="icon-btn sm reset" aria-label="Remove ${label} from ${scopeName}" title="Remove from ${scopeName}" @click=${() => fire(this, 'mcte-reset', { name })}>
               ${icon('reset')}
@@ -244,7 +305,7 @@ export class McteFieldGroup extends LitElement {
       ${hint
         ? html`<p class="help hint ${hint.ok === false ? 'bad' : ''}" aria-live="polite">${hint.ok === null ? icon('info') : icon(hint.ok ? 'check' : 'alert')}<span>${hint.text}</span></p>`
         : nothing}
-      ${this._noEffect(name, shown)}
+      ${this._noEffect(name, shown)} ${only ? this._modeOnly(name, shown, only) : nothing}
     </div>`;
   }
 
@@ -325,6 +386,9 @@ export class McteFieldGroup extends LitElement {
         border-bottom: 1px solid var(--mc-divider);
         scroll-margin-top: var(--stack-h, 0px);
         min-width: 0;
+      }
+      .field.bad {
+        box-shadow: inset 4px 0 0 var(--mc-error-ink);
       }
       .field:last-child {
         border-bottom: 0;

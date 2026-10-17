@@ -14,31 +14,25 @@ export interface SaveReason {
 }
 
 /**
- * <mcte-save-bar>: the Save button, the visible reason when it is off, and the persistent line after
- * a clean save (design 8 and 16.4). Save is `aria-disabled`, never `disabled`, so focus stays.
- * Events: `mcte-save`, `mcte-use` (Use this theme), `mcte-reason-action` { action }.
+ * <mcte-save-bar>: the Save button (design 8 and 16.4). It is `aria-disabled`, never `disabled`, so focus
+ * stays, and a press while it is off still fires `mcte-save` so the editor can say why and take the
+ * user to the cause (a touch user has no hover). The reason line and the "Saved" line are the editor's
+ * status row; this button only carries the reason as its description.
+ * Event: `mcte-save`.
  */
 export class McteSaveBar extends LitElement {
   static properties: PropertyDeclarations = {
     reason: { attribute: false },
     saving: { type: Boolean },
-    savedAt: {},
-    usedMessage: {},
-    canUse: { type: Boolean },
     showShortcut: { type: Boolean, attribute: 'show-shortcut' },
   };
 
   reason: SaveReason | null = null;
   saving = false;
-  /** "14:02" after a clean save, until the next edit. */
-  savedAt = '';
-  /** The message shown after "Use this theme". */
-  usedMessage = '';
-  canUse = true;
   showShortcut = false;
 
   private _save(): void {
-    if (this.reason || this.saving) return;
+    if (this.saving) return;
     fire(this, 'mcte-save');
   }
 
@@ -49,22 +43,8 @@ export class McteSaveBar extends LitElement {
   protected render(): TemplateResult {
     const off = !!this.reason || this.saving;
     return html`
-      <div class="line">
-        ${this.reason && !this.saving && !(this.reason.quiet && this.savedAt)
-          ? html`<span class="help reason" id="reason">${this.reason.text}</span>${this.reason.action
-              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => fire(this, 'mcte-reason-action', { action: this.reason?.action })}>
-                  ${this.reason.actionLabel}
-                </button>`
-              : nothing}`
-          : nothing}
-        ${this.savedAt && (!this.reason || this.reason.quiet)
-          ? html`<span class="help saved" role="status">Saved ${this.savedAt}</span>${this.canUse
-              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => fire(this, 'mcte-use')}>Use this theme</button>`
-              : nothing}`
-          : nothing}
-        ${this.usedMessage ? html`<span class="help" role="status">${this.usedMessage}</span>` : nothing}
-      </div>
       ${this.showShortcut ? html`<span class="help kbd" aria-hidden="true">Ctrl+S</span>` : nothing}
+      ${this.reason ? html`<span class="sr-only" id="reason">${this.reason.text}</span>` : nothing}
       <button
         type="button"
         class="btn btn-primary save"
@@ -86,15 +66,6 @@ export class McteSaveBar extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-      .line {
-        display: inline-flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 4px 8px;
-        justify-content: flex-end;
       }
       .kbd {
         display: none;

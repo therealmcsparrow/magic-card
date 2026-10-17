@@ -51,10 +51,13 @@ export class McteIncludeNotice extends LitElement {
         <h3 class="title">One setup step before you can save</h3>
         <p>${INTRO[s.state] ?? INTRO.unknown}</p>
         <pre class="code" tabindex="0" aria-label="Lines to add to configuration.yaml">${s.hint}</pre>
-        <p>
-          Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then
-          restart Home Assistant. Already have a frontend: section? Add only the themes line under it.
-        </p>
+        <details>
+          <summary>Where do I add these lines?</summary>
+          <p>
+            Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then
+            restart Home Assistant. Already have a frontend: section? Add only the themes line under it.
+          </p>
+        </details>
         <div class="actions">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${icon('copy')} Copy lines</button>
           <button type="button" class="btn btn-secondary btn-sm" aria-disabled=${this.checking ? 'true' : 'false'} @click=${() => !this.checking && fire(this, 'mcte-recheck')}>
@@ -76,6 +79,14 @@ export class McteIncludeNotice extends LitElement {
       }
       a.btn {
         text-decoration: none;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 0.875rem;
+        color: var(--mc-accent-ink);
+      }
+      details p {
+        margin-top: 6px;
       }
     `,
   ];

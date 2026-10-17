@@ -26,7 +26,14 @@ interface Mode {
   [extra: string]: string;
 }
 
-const mode = (m: string[]): Mode => ({
+/*
+ * Text on the primary colour (filled buttons, app header) and the four state colours are set in every
+ * mode, so they hold 4.5 to 1 against the primary and the card (tests/theme-editor-fix1).
+ */
+const STATES_LIGHT = { 'error-color': '#b3261e', 'warning-color': '#8a4b00', 'info-color': '#0b66a8', 'success-color': '#1b6e2f' };
+const STATES_DARK = { 'error-color': '#ff8a80', 'warning-color': '#ffb74d', 'info-color': '#64b5f6', 'success-color': '#81c784' };
+
+const mode = (m: string[], dark = false): Mode => ({
   'primary-color': m[0],
   'accent-color': m[1],
   'primary-background-color': m[2],
@@ -34,6 +41,9 @@ const mode = (m: string[]): Mode => ({
   'primary-text-color': m[4],
   'secondary-text-color': m[5],
   'divider-color': m[6],
+  'text-primary-color': dark ? '#000000' : '#ffffff',
+  'app-header-text-color': dark ? '#000000' : '#ffffff',
+  ...(dark ? STATES_DARK : STATES_LIGHT),
 });
 
 const FROST_LIGHT = 'linear-gradient(135deg, #dfe9f7, #f3e8f8)';
@@ -47,8 +57,8 @@ export const PRESETS: Preset[] = [
     doc: {
       'ha-card-border-radius': '16px',
       modes: {
-        light: mode(['#1d5fd1', '#d9480f', '#f5f6f8', '#ffffff', '#1b1f24', '#5a626c', '#e1e4e8']),
-        dark: mode(['#7aa7ff', '#ff9d66', '#14171c', '#1d2128', '#eceff3', '#a2a9b3', '#2c323b']),
+        light: mode(['#1d5fd1', '#c2410c', '#f5f6f8', '#ffffff', '#1b1f24', '#5a626c', '#e1e4e8']),
+        dark: mode(['#7aa7ff', '#ff9d66', '#14171c', '#1d2128', '#eceff3', '#a2a9b3', '#2c323b'], true),
       },
     },
   },
@@ -60,7 +70,7 @@ export const PRESETS: Preset[] = [
     doc: {
       'ha-card-border-radius': '16px',
       modes: {
-        dark: mode(['#4cc2ff', '#ffb454', '#000000', '#0b0b0d', '#f2f2f2', '#9a9aa2', '#1f1f24']),
+        dark: mode(['#4cc2ff', '#ffb454', '#000000', '#0b0b0d', '#f2f2f2', '#9a9aa2', '#1f1f24'], true),
         light: mode(['#0a6fb5', '#b45309', '#f4f4f6', '#ffffff', '#111111', '#55555d', '#dcdce0']),
       },
     },
@@ -73,7 +83,7 @@ export const PRESETS: Preset[] = [
       'ha-card-border-radius': '16px',
       modes: {
         light: mode(['#b93a0b', '#0f766e', '#faf5ee', '#fffdf9', '#2b2118', '#6b5a4a', '#eadfce']),
-        dark: mode(['#fb923c', '#5eead4', '#1c1511', '#261d17', '#f6ebdd', '#bfa98f', '#3a2d23']),
+        dark: mode(['#fb923c', '#5eead4', '#1c1511', '#261d17', '#f6ebdd', '#bfa98f', '#3a2d23'], true),
       },
     },
   },
@@ -85,7 +95,7 @@ export const PRESETS: Preset[] = [
       'ha-card-border-radius': '16px',
       modes: {
         light: mode(['#0000cc', '#b00020', '#ffffff', '#ffffff', '#000000', '#2b2b2b', '#000000']),
-        dark: mode(['#ffe500', '#00e5ff', '#000000', '#000000', '#ffffff', '#e6e6e6', '#ffffff']),
+        dark: mode(['#ffe500', '#00e5ff', '#000000', '#000000', '#ffffff', '#e6e6e6', '#ffffff'], true),
       },
     },
   },
@@ -103,7 +113,7 @@ export const PRESETS: Preset[] = [
           'lovelace-background': FROST_LIGHT,
         },
         dark: {
-          ...mode(['#8fb4ff', '#f0a3e0', '#0f1b33', 'rgba(255, 255, 255, 0.08)', '#eef2fb', '#aab4c8', 'rgba(255, 255, 255, 0.14)']),
+          ...mode(['#8fb4ff', '#f0a3e0', '#0f1b33', 'rgba(255, 255, 255, 0.08)', '#eef2fb', '#aab4c8', 'rgba(255, 255, 255, 0.14)'], true),
           'lovelace-background': FROST_DARK,
         },
       },

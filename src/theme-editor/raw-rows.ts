@@ -11,6 +11,14 @@ export interface RawEntry {
   value: string;
 }
 
+const NOT_NAMES = new Set(['constructor', 'prototype', '__proto__']);
+
+/** True for a name the raw row takes (the catalogue rule, minus the words that are object internals). */
+const okName = (name: string): boolean => THEME_VAR_RE.test(name) && !NOT_NAMES.has(name);
+
+/** A pasted value without its closing `;` (CSS and YAML both end lines with one). */
+export const cleanRawValue = (value: string): string => value.trim().replace(/(?:\s*;)+\s*$/, '');
+
 /** `--name: value;` or `name: value` lines (comments and blank lines skipped). Lines that do not fit come back in `failed`. */
 export function parseRawLines(text: string): { entries: RawEntry[]; failed: string[] } {
   const entries: RawEntry[] = [];
@@ -23,9 +31,9 @@ export function parseRawLines(text: string): { entries: RawEntry[]; failed: stri
       failed.push(line);
       continue;
     }
-    const value = m[2].replace(/^(['"])(.*)\1$/, '$2');
+    const value = cleanRawValue(m[2]).replace(/^(['"])(.*)\1$/, '$2');
     const bad = rawValueError(m[1], value);
-    if (bad || !THEME_VAR_RE.test(m[1])) failed.push(line);
+    if (bad || !okName(m[1])) failed.push(line);
     else entries.push({ name: m[1], value });
   }
   return { entries, failed };
@@ -33,7 +41,7 @@ export function parseRawLines(text: string): { entries: RawEntry[]; failed: stri
 
 /** The liberal check for the raw row, plus the catalogue kind when the name is known. */
 export function rawValueError(name: string, value: string): string | null {
-  const v = value.trim();
+  const v = cleanRawValue(value);
   if (!v) return 'Enter a value.';
   if (/[\r\n]/.test(v)) return 'Use a single line.';
   if (/[;{}]/.test(v)) return 'Remove ; { } from the value.';
@@ -56,6 +64,16 @@ export class McteRawRows extends LitElement {
     _status: { state: true },
   };
 
+  /** True while the row holds text that was not added yet. */
+  get hasPending(): boolean {
+    return !!(this._name.trim() || this._value.trim());
+  }
+
+  /** Adds what is typed, as the Add button does. False (with the reason shown) when it cannot be added. */
+  addPending(): boolean {
+    return this._add();
+  }
+
   scopeLabel = 'Shared';
   existing: ReadonlySet<string> = new Set();
   /** Set by "Add {query} as a variable": the name field takes it and gets the focus. */
@@ -77,30 +95,37 @@ export class McteRawRows extends LitElement {
     return this._name.trim().replace(/^--/, '');
   }
 
-  private _add(): void {
+  private _add(): boolean {
     const name = this._cleanName;
     if (!name) {
       this._error = 'Enter a name.';
       this._focus('#raw-name');
-      return;
+      return false;
     }
-    if (!THEME_VAR_RE.test(name)) {
-      this._error = 'Use letters, numbers, hyphens and underscores.';
+    if (!okName(name)) {
+      this._error = 'Use letters, numbers, hyphens and underscores. This name is not allowed.';
       this._focus('#raw-name');
-      return;
+      return false;
     }
     const bad = rawValueError(name, this._value);
     if (bad) {
       this._error = bad;
       this._focus('#raw-value');
-      return;
+      return false;
     }
-    fire(this, 'mcte-add', { entries: [{ name, value: this._value.trim() }] });
+    fire(this, 'mcte-add', { entries: [{ name, value: cleanRawValue(this._value) }] });
     this._status = `Added ${name} to ${this.scopeLabel}`;
     this._name = '';
     this._value = '';
     this._error = '';
+    this._pending();
     this._focus('#raw-name');
+    return true;
+  }
+
+  /** Tells the editor whether the row holds text that is not added yet (Save and Back warn about it). */
+  private _pending(): void {
+    fire(this, 'mcte-raw-pending', { pending: this.hasPending });
   }
 
   private _focus(sel: string): void {
@@ -117,6 +142,7 @@ export class McteRawRows extends LitElement {
     this._error = failed.length ? `Could not read: ${failed.join(' | ')}` : '';
     this._name = '';
     this._value = '';
+    this._pending();
   }
 
   private _key(e: KeyboardEvent): void {
@@ -143,9 +169,9 @@ export class McteRawRows extends LitElement {
               autocomplete="off"
               placeholder="--my-variable"
               aria-invalid=${this._error ? 'true' : 'false'}
-              aria-describedby="raw-help"
+              aria-describedby="raw-help raw-error"
               .value=${this._name}
-              @input=${(e: Event) => ((this._name = (e.target as HTMLInputElement).value), (this._error = ''))}
+              @input=${(e: Event) => ((this._name = (e.target as HTMLInputElement).value), (this._error = ''), this._pending())}
               @paste=${this._paste}
               @keydown=${this._key}
             />
@@ -161,8 +187,9 @@ export class McteRawRows extends LitElement {
                 autocomplete="off"
                 placeholder="#ff00aa"
                 aria-invalid=${this._error ? 'true' : 'false'}
+                aria-describedby="raw-error"
                 .value=${this._value}
-                @input=${(e: Event) => ((this._value = (e.target as HTMLInputElement).value), (this._error = ''))}
+                @input=${(e: Event) => ((this._value = (e.target as HTMLInputElement).value), (this._error = ''), this._pending())}
                 @keydown=${this._key}
               />
             </div>
@@ -174,7 +201,7 @@ export class McteRawRows extends LitElement {
             ? `This variable already exists in ${this.scopeLabel}. Add will replace its value.`
             : 'Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.'}
         </p>
-        ${this._error ? html`<p class="help error" role="alert"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"></path></svg>${this._error}</p>` : nothing}
+        ${this._error ? html`<p class="help error" id="raw-error" role="alert"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"></path></svg>${this._error}</p>` : nothing}
         <p class="help" role="status">${this._status}</p>
       </div>
     `;
