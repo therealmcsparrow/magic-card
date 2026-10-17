@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/therealmcsparrow/magic-card/main/images/magic-card-icon.png" width="160" alt="Magic Card logo"></p>
+
 # Magic Card
 
 [![HACS][hacs-badge]][hacs-url]
