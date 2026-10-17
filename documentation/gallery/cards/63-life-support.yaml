@@ -1,5 +1,5 @@
 # Life support: a panel board with a four-colour stripe, the room temperature in a breathing halo and three air bars with a status word each.
-# The halo breathes every 6 s, and every 3 s while the heating is running.
+# The halo breathes every 6 s, and every 3 s while the heating or cooling is running.
 # It uses theme colours only, so it follows the dashboard's theme.
 # Entities: climate.living_room, sensor.co2, sensor.indoor_humidity, sensor.pm25
 type: custom:magic-card
@@ -39,7 +39,8 @@ rows:
               conditional:
                 - id: working
                   name: Heating or cooling
-                  conditions: [{ type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating }]
+                  mode: any
+                  conditions: [{ type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating }, { type: attribute, entity: climate.living_room, attribute: hvac_action, state: cooling }]
                   design:
                     animations:
                       - { id: halo, preset: aura, color: var(--accent-color), strength: 55, intensity: 22, duration: 3s }

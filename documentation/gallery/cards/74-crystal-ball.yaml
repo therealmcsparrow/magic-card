@@ -34,15 +34,14 @@ rows:
               animations:
                 - { id: mist, preset: smoke, color: "#cbbcff", strength: 40, intensity: 4, duration: 6s }
                 - { id: glow, preset: aura, color: "#8b6cf0", strength: 60, intensity: 26, duration: 6s }
-                - { id: sparks, preset: twinkle, color: "#ffffff", intensity: 5, duration: 6s }
             modules:
               - type: text
                 use_template: true
-                text: "{{ state_attr('calendar.family','start_time')[11:16] }}"
+                text: "{{ (state_attr('calendar.family','start_time') or '')[11:16] or '--:--' }}"
                 design: { text_align: center, font_size: 40px, font_weight: "700", color: "#f4f0ff", line_height: "1.05", font_family: "Georgia, 'Iowan Old Style', serif" }
               - type: text
                 use_template: true
-                text: "{{ as_timestamp(state_attr('calendar.family','start_time')) | timestamp_custom('%a %-d %b') }}"
+                text: "{{ as_timestamp(state_attr('calendar.family','start_time'), none) | timestamp_custom('%a %-d %b') if state_attr('calendar.family','start_time') else 'Nothing planned' }}"
                 design: { text_align: center, font_size: 12px, color: "#e0d8ff", text_transform: uppercase, letter_spacing: 1.5px }
               - type: text
                 use_entity: true

@@ -60,7 +60,7 @@ rows:
           - type: horizontal
             align: center
             justify: center
-            design: &tile { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
             actions:
               tap_action: { action: perform-action, service: media_player.media_previous_track, data: { entity_id: media_player.living_room } }
             modules:
@@ -87,7 +87,7 @@ rows:
           - type: horizontal
             align: center
             justify: center
-            design: *tile
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
             actions:
               tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }
             modules:
