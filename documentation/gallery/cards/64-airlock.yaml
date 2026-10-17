@@ -1,4 +1,4 @@
-# Airlock: a round hatch for the front door lock. Tap the hatch while the door is unlocked to lock it. While it is locked, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
+# Airlock: a round hatch for the front door lock. Tap the hatch only while the door is unlocked to lock it. In any other state, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
 # The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 # Entities: lock.front_door, binary_sensor.front_door
 type: custom:magic-card
@@ -39,7 +39,7 @@ rows:
               box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
-            display: { conditions: [{ type: state, entity: lock.front_door, state_not: locked }] }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
             actions:
               tap_action: { action: perform-action, service: lock.lock, data: { entity_id: lock.front_door } }
               hold_action: { action: more-info, entity: lock.front_door }
@@ -88,7 +88,7 @@ rows:
               box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
-            display: { conditions: [{ type: state, entity: lock.front_door, state: locked }] }
+            display: { conditions: [{ type: state, entity: lock.front_door, state_not: unlocked }] }
             actions:
               tap_action: { action: more-info, entity: lock.front_door }
               hold_action: { action: more-info, entity: lock.front_door }

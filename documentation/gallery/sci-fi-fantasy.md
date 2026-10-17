@@ -636,7 +636,7 @@ rows:
 
 ## Airlock
 
-A round hatch for the front door lock. Tap the hatch while the door is unlocked to lock it. While it is locked, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact. The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
+A round hatch for the front door lock. Tap the hatch only while the door is unlocked to lock it. In any other state, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact. The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 
 ![Airlock](images/64-airlock.png)
 
@@ -645,7 +645,7 @@ Entities: `lock.front_door`, `binary_sensor.front_door`
 File: [cards/64-airlock.yaml](cards/64-airlock.yaml)
 
 ```yaml
-# Airlock: a round hatch for the front door lock. Tap the hatch while the door is unlocked to lock it. While it is locked, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
+# Airlock: a round hatch for the front door lock. Tap the hatch only while the door is unlocked to lock it. In any other state, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
 # The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 # Entities: lock.front_door, binary_sensor.front_door
 type: custom:magic-card
@@ -686,7 +686,7 @@ rows:
               box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
-            display: { conditions: [{ type: state, entity: lock.front_door, state_not: locked }] }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
             actions:
               tap_action: { action: perform-action, service: lock.lock, data: { entity_id: lock.front_door } }
               hold_action: { action: more-info, entity: lock.front_door }
@@ -735,7 +735,7 @@ rows:
               box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
-            display: { conditions: [{ type: state, entity: lock.front_door, state: locked }] }
+            display: { conditions: [{ type: state, entity: lock.front_door, state_not: unlocked }] }
             actions:
               tap_action: { action: more-info, entity: lock.front_door }
               hold_action: { action: more-info, entity: lock.front_door }
@@ -2284,7 +2284,7 @@ rows:
 
 ## Castle gate
 
-An arched portcullis for the front door lock. The bars are down while the door is locked and lift when it is unlocked. Tap the gate to lock or unlock. The padlock plate turns from the accent colour to the success colour. It uses theme colours only, so it follows the dashboard's theme.
+An arched portcullis for the front door lock. The bars are down while the door is locked and lift when it is unlocked. Tap the gate while it is unlocked to lock it. In any other state a tap opens the lock's own dialog, so unlocking is a deliberate second step. Hold the gate for the same dialog. The padlock plate turns from the accent colour to the success colour. The gate is two tiles that look the same, and the lock state decides which one shows. It uses theme colours only, so it follows the dashboard's theme.
 
 Shot with the Ashen Keep theme preset in dark mode. See [theme examples](../themes/examples/README.md#ashen-keep). With another theme the card uses that theme's colours.
 
@@ -2296,7 +2296,8 @@ File: [cards/73-castle-gate.yaml](cards/73-castle-gate.yaml)
 
 ```yaml
 # Castle gate: an arched portcullis for the front door lock. The bars are down while the door is locked and lift when it is unlocked.
-# Tap the gate to lock or unlock. The padlock plate turns from the accent colour to the success colour.
+# Tap the gate while it is unlocked to lock it. In any other state a tap opens the lock's own dialog, so unlocking is a deliberate second step. Hold the gate for the same dialog. The padlock plate turns from the accent colour to the success colour.
+# The gate is two tiles that look the same, and the lock state decides which one shows.
 # It uses theme colours only, so it follows the dashboard's theme.
 # Entities: lock.front_door
 type: custom:magic-card
@@ -2336,8 +2337,62 @@ rows:
               box_sizing: border-box
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
             actions:
-              tap_action: { action: toggle, entity: lock.front_door }
+              tap_action: { action: perform-action, service: lock.lock, data: { entity_id: lock.front_door } }
+              hold_action: { action: more-info, entity: lock.front_door }
+            modules:
+              - type: separator
+                separator_style: none
+                design:
+                  position: absolute
+                  top: 0px
+                  left: -1px
+                  width: 200px
+                  height: 100%
+                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 7px, var(--accent-color) 7px, var(--accent-color) 13px, transparent 13px, transparent 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
+                  opacity: "0.85"
+                  transition: height 0.4s
+                  conditional:
+                    - { id: open, name: Unlocked, conditions: [{ type: state, entity: lock.front_door, state: unlocked }], design: { height: 40px } }
+              - type: icon
+                entity: lock.front_door
+                icon: mdi:lock
+                icon_on: mdi:lock
+                icon_off: mdi:lock-open-variant
+                size: 36px
+                design:
+                  position: relative
+                  margin_top: 78px
+                  width: 78px
+                  height: 78px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  color: var(--card-background-color)
+                  background_color: var(--accent-color)
+                  box_shadow: "0 0 0 7px var(--card-background-color), 0 10px 22px rgba(0,0,0,0.35)"
+                  conditional:
+                    - { id: open, name: Unlocked, conditions: [{ type: state, state: unlocked }], design: { background_color: var(--success-color) } }
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              position: relative
+              width: 210px
+              height: 230px
+              margin: 0 auto
+              overflow: hidden
+              border_radius: 105px 105px 8px 8px
+              border: "6px solid var(--secondary-text-color)"
+              background_color: "color-mix(in srgb, var(--primary-text-color) 5%, var(--card-background-color))"
+              box_sizing: border-box
+              transition: transform 0.15s
+              hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state_not: unlocked }] }
+            actions:
+              tap_action: { action: more-info, entity: lock.front_door }
               hold_action: { action: more-info, entity: lock.front_door }
             modules:
               - type: separator
@@ -2387,7 +2442,7 @@ rows:
             design: { text_align: center, font_size: 20px, font_weight: "700", color: var(--primary-text-color), font_family: "Georgia, 'Iowan Old Style', serif" }
             display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
           - type: text
-            text: Tap the gate to lift or lower the bars
+            text: Tap the open gate to lower the bars
             design: { text_align: center, font_size: 12px, color: var(--secondary-text-color) }
 ```
 
@@ -2448,9 +2503,8 @@ rows:
                 text: "{{ as_timestamp(state_attr('calendar.family','start_time'), none) | timestamp_custom('%a %-d %b') if state_attr('calendar.family','start_time') else 'Nothing planned' }}"
                 design: { text_align: center, font_size: 12px, color: "#e0d8ff", text_transform: uppercase, letter_spacing: 1.5px }
               - type: text
-                use_entity: true
-                entity: calendar.family
-                attribute: message
+                use_template: true
+                text: "{{ state_attr('calendar.family','message') or 'Free day' }}"
                 design: { text_align: center, font_size: 17px, font_weight: "700", color: "#f4f0ff", line_height: "1.2", margin_top: 8px }
   - id: stand
     padding: 0
@@ -2483,9 +2537,8 @@ rows:
                 size: 16px
                 design: { color: "#b9a8f0" }
               - type: text
-                use_entity: true
-                entity: calendar.family
-                attribute: location
+                use_template: true
+                text: "{{ state_attr('calendar.family','location') or 'No location' }}"
                 design: { font_size: 13px, color: "#d9d0f7" }
 ```
 
