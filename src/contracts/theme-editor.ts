@@ -212,7 +212,7 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *   no runtime import at all (`import type` only), so Node can load it with type stripping
  *   (tools/theme-example-shots.mjs, the gallery script). It exports the resolved objects below,
  *   never the packed source form.
- * - `renderPicker`, `pickerStatus` and `pickerStyles` (with the types PickerView and PickerEvents),
+ * - `renderPicker`, `pickerStatus`, `pickerSelection` and `pickerStyles` (with the types PickerView and PickerEvents),
  *   re-exported from presets/picker.ts: a template function, the text for the dialog's status
  *   region, and a stylesheet; no custom element. The picker sits in the chunk because the entry has
  *   a byte cap and nothing of it is needed before the dialog opens.
@@ -239,9 +239,10 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * The failure message says "If it keeps failing, reload the page"; a reload is the way out of a
  * request that never ends. Outside a webpack build (tests) no URL is rewritten.
  *
- * Picker (1.1.0): Show offers All, Original, Inspired by, Sci-fi & fantasy (THEME_PRESET_GROUPS
- * order, each with its count); headings follow the same order and labels. Search matches name,
- * blurb, inspiredBy.name, tags and the group's search word (THEME_PRESET_GROUPS[].search).
+ * Picker (1.1.0): Show offers All, Original, Inspired by, Sci-fi & fantasy (ThemePresetGroupInfo
+ * order, kept in the picker's GROUPS, each with its count); headings follow the same order and
+ * labels. Search matches name, blurb, inspiredBy.name, tags and the group's search word
+ * (ThemePresetGroupInfo.search).
  *
  * Data rules (tests/theme-presets.contract.test.ts):
  * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
@@ -249,11 +250,15 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *   values as 2026.10.06). All 45 presets of 1.0.0 stay as 2026.10.08 shipped them (fixture).
  *   Ids are never renamed; a rename needs an alias and a CHANGELOG line.
  * - `group` 'inspired' requires `inspiredBy`; 'original' and 'genre' must not have it.
- * - `group` 'genre' requires `tags` whose first word is 'sci-fi' or 'fantasy'. No genre preset
- *   names a franchise or an in-universe term: id, name, blurb, note and tags hold no term from the
- *   blocked list (tests/fixtures/franchise-blocked-terms.json, from legal 02-legal.md). The check
- *   lowercases, strips everything but a-z and 0-9, and looks for each stripped term as a substring.
- *   It runs over every preset, not only genre ones.
+ * - `group` 'genre' requires `tags` whose first word is 'sci-fi' or 'fantasy'. No preset names a
+ *   franchise or an in-universe term: id, name, blurb, note, tags and keywords (when a preset or
+ *   the designer source file carries them) hold no term from the blocked list
+ *   (tests/fixtures/franchise-blocked-terms.json, from legal 02-legal.md; its `match` field is the
+ *   rule of record). The check is word-level: field and term are lowercased and split into words
+ *   on /[^a-z0-9]+/. A term hits when its words appear consecutively in the field's words, the
+ *   last one matching as a prefix (dune hits dunes), or when the term's words joined (bladerunner)
+ *   equal or prefix one field word. It is not a substring check: "strong" (tron) and "visit hours"
+ *   (sith) pass. It runs over every preset, not only genre ones.
  * - `tags`: lowercase words split by single spaces, at most 40 characters.
  * - `doc` is a ThemeDoc with modes.light and modes.dark. Each mode sets primary-color,
  *   accent-color, primary-background-color, card-background-color, primary-text-color,
@@ -264,7 +269,7 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *   over every gradient stop) and on primary-background-color; text-primary-color and
  *   app-header-text-color on primary-color; the four state colours and accent-color on the card.
  * - Order in `presets` is display order within a group; groups are contiguous, in
- *   THEME_PRESET_GROUPS order (original, inspired, genre).
+ *   ThemePresetGroupInfo order (original, inspired, genre).
  */
 export const THEME_PRESETS_VERSION = '1.1.0';
 export const THEME_PRESETS_CHUNK = 'theme-presets';
