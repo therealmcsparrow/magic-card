@@ -36,7 +36,8 @@ export function animFlashes(anim: ResolvedAnimations | undefined): boolean {
 
 /**
  * Decorative layers of the animations, one per entry: particle layers (steam, bubbles, snow, ...)
- * or, for ring presets, an mc-ring along the outline. "On tap" layers carry data-tap. Seasonal
+ * or, for ring presets, an mc-ring along the outline. "On tap" layers carry data-tap. A particles v2
+ * layer carries data-p and its apply context (`mcSim`), and per slot its shape (data-s) or symbol. Seasonal
  * layers take their particles from the card's `budget` (scaled down when the card has too many).
  */
 export function renderAnimFx(
@@ -56,8 +57,8 @@ export function renderAnimFx(
             : nothing}`
       : l.ring
       ? html`<mc-ring class="mc-anim-ring" data-fx=${l.preset} ?data-tap=${!!l.tap} style=${l.style} .ring=${l.ring} .shape=${shape}></mc-ring>`
-      : html`<span class="mc-anim-fx" data-fx=${l.preset} ?data-front=${l.front} ?data-tap=${!!l.tap} style=${l.style} aria-hidden="true">${l.particles.map(
-          (p) => html`<i style="--mc-anim-x: ${p.x}%; --mc-anim-phase: ${p.phase}; --mc-anim-k: ${p.k}${p.style ? `; ${p.style}` : ''}">${particleSymbol(l.symbol)}</i>`,
+      : html`<span class="mc-anim-fx" data-fx=${l.preset} ?data-front=${l.front} ?data-tap=${!!l.tap} ?data-p=${!!l.sim} .mcSim=${l.sim} style=${l.style} aria-hidden="true">${l.particles.map(
+          (p) => html`<i data-s=${p.shape ?? nothing} style="--mc-anim-x: ${p.x}%; --mc-anim-phase: ${p.phase}; --mc-anim-k: ${p.k}${p.style ? `; ${p.style}` : ''}">${particleSymbol(p.symbol ?? l.symbol)}</i>`,
         )}</span>`;
   })}`;
 }

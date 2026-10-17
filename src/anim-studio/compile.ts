@@ -2,9 +2,11 @@ import { toCubicSubpaths, type Cubic, type Pt } from '../icons/path-math';
 import { sanitizeSvg } from '../icons/svg-sanitize';
 import { EASINGS, getAnimationPreset } from '../utils/animation-presets';
 import type { CompiledV2 } from './compile-v2';
+import type { ParticleSlotV2, ParticlesApplyCtx, ParticlesCompiler, ParticlesModule, ParticlesSpecV2 } from '../contracts/particles-v2';
 import { presetFrames } from './css-keyframes';
 import {
   customRefId,
+  docNeedsParticles,
   docNeedsRuntime,
   isCustomRef,
   type EasingLaneId,
@@ -41,7 +43,8 @@ export interface ParticleSlot {
 
 export interface CompiledLayer {
   front: boolean;
-  particles: ParticleSlot[];
+  /** v2 slots may carry their own built-in shape or symbol (particles-v2 ParticleSlotV2). */
+  particles: ParticleSlotV2[];
   /** Content of each particle: an icon or a text symbol (emoji); an SVG shape is a CSS mask. */
   symbol?: { icon: string } | { text: string };
   /** Cycle length factor (particles.speed): the layer runs `duration / speed`. */
@@ -97,6 +100,13 @@ export interface CompiledAnimation {
    * loaded (compile-v2.ts: the studio, and the card once its runtime chunk has loaded).
    */
   v2?: CompiledV2;
+  /**
+   * particles v2, compiled by the particles chunk (useParticlesCompiler) for the default geometry:
+   * what the card hands to ParticlesModule.apply after the render (`spec.sim` checked lenient).
+   */
+  sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period'>;
+  /** particles v2 without the chunk's compiler: `layer` is the v1 fallback, the chunk is wanted. */
+  needsParticles?: true;
 }
 
 export interface CompileOptions {
@@ -510,9 +520,40 @@ const cache = new WeakMap<AnimationDoc, CompiledAnimation>();
  * sequences are compiled on every call (their steps may reference other documents).
  */
 export function compileAnimationDoc(doc: AnimationDoc, opts: CompileOptions = {}): CompiledAnimation {
-  const base = compileBase(doc, opts);
+  const sim = !opts.reducedMotion && docNeedsParticles(doc);
+  let base = (sim && compileSim(doc)) || compileBase(doc, opts);
+  if (sim && !particlesCompiler) base = { ...base, needsParticles: true };
   // v2 data depend on the lookup (clip recursion guard), so they are added per call, never cached
   return v2Compiler && docNeedsRuntime(doc) ? { ...base, v2: v2Compiler(doc, opts) } : base;
+}
+
+let particlesCompiler: ParticlesCompiler | undefined;
+let checkSim: ParticlesModule['validateSim'] | undefined;
+let simCache = new WeakMap<AnimationDoc, CompiledAnimation>();
+
+/**
+ * Turn on particles v2 (particles-v2 ParticlesCompiler; the card's particles loader and the studio
+ * call this). `check` re-checks `sim` lenient (documents validated before the chunk arrived keep it
+ * as stored); without it nothing compiles. Until then a v2 document compiles its v1 fallback and flags `needsParticles`.
+ */
+export function useParticlesCompiler(fn: ParticlesCompiler | undefined, check?: ParticlesModule['validateSim']): void {
+  particlesCompiler = fn;
+  checkSim = check;
+  simCache = new WeakMap();
+}
+
+/** A v2 particles document through the chunk's compiler; undefined (the v1 fallback plays) when its `sim` is unusable. */
+function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
+  let out = simCache.get(doc);
+  const p = doc.particles!;
+  const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient').sim;
+  if (sim) {
+    const spec: ParticlesSpecV2 = { ...p, sim };
+    const period = doc.duration / p.speed;
+    const v = particlesCompiler!(doc.id, spec, period, { aspect: 2 });
+    simCache.set(doc, (out = { kind: 'particles', name: v.name, css: v.css, layer: { front: v.front, particles: v.slots, speed: p.speed }, sim: { docId: doc.id, spec, period } }));
+  }
+  return out;
 }
 
 /** Compiles a document's v2 data (compile-v2.ts compileV2, registered when that file loads). */

@@ -30,8 +30,9 @@ import {
   } from '../utils/css-utils';
 import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
-import { resolveAnimations, type ResolvedV2 } from '../utils/animation';
+import { resolveAnimations, type FxLayer, type ResolvedV2 } from '../utils/animation';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
+import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
 import { loadEditor } from '../utils/editor-loader';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
@@ -62,8 +63,8 @@ import { PopupController } from './popup-controller';
 import { EditorPlace, navigateToPopup, popupCoordinator } from './popup-coordinator';
 import { animationLibrary, inlineAnimations } from '../services/animation-library';
 import type { AnimationDoc } from '../anim-studio/model';
-import { adoptAnimationSheet } from './custom-anim-sheet';
-import { stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
+import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
+import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
 
 interface TemplateEntry {
   config: Omit<MagicCardConfig, 'type'> & { type?: string };
@@ -230,6 +231,10 @@ export class MagicCard extends LitElement {
   private _v2Need = false;
   /** The runtime chunk is loading for this card. */
   private _v2Waiting = false;
+  /** This render plays a particles v2 document (load the chunk, apply its layers). */
+  private _pNeed = false;
+  /** Particle layers the particles chunk was applied to (released when they leave). */
+  private _pApplied = new Set<HTMLElement>();
   /**
    * `preset: custom:<id>` documents: the library (started lazily, here), then the card's inline
    * `custom_animations`. Cards without custom references never call this, so they cost nothing.
@@ -534,6 +539,7 @@ export class MagicCard extends LitElement {
     if (this._customRendered) adoptAnimationSheet(this.renderRoot as ShadowRoot);
     if (this._customRendered || this._sequences.size) syncSequences(this.renderRoot, this._sequences);
     if (this._v2Need || this._v2Applied.size) this._syncRuntime();
+    if (this._pNeed || this._pApplied.size) this._syncParticles();
     if (this._readThemeShadow) {
       // a shaped card's clip would cut off ha-card's box-shadow: the theme's, drawn as a drop-shadow
       const theme = boxShadowToDropShadow(getComputedStyle(this).getPropertyValue('--ha-card-box-shadow'));
@@ -655,6 +661,8 @@ export class MagicCard extends LitElement {
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
     this._v2Applied = new Set();
+    for (const el of this._pApplied) particlesIfLoaded()?.release(el);
+    this._pApplied = new Set();
     this._cancelPendingRegister();
     this._reconcileInstanceRegistration();
   }
@@ -702,6 +710,7 @@ export class MagicCard extends LitElement {
     this._customRendered = false;
     this._v2Render = [];
     this._v2Need = false;
+    this._pNeed = false;
     this._templates.begin();
     this._subscriptions.begin();
     this._media.begin();
@@ -1107,6 +1116,7 @@ export class MagicCard extends LitElement {
    */
   private _v2(anim: ReturnType<typeof resolveAnimations>, stateObj?: HassEntity, entityId?: string): number | undefined {
     if (anim?.needsRuntime) this._v2Need = true;
+    if (anim?.needsParticles) this._pNeed = true;
     return anim?.v2 ? this._v2Render.push({ entries: anim.v2, stateObj, entityId }) - 1 : undefined;
   }
 
@@ -1161,6 +1171,36 @@ export class MagicCard extends LitElement {
       else rt.release(el);
     }
     this._v2Applied = seen;
+  }
+
+  /**
+   * particles v2 after a render: load the chunk the first time (render again when it arrives; the v1
+   * fallback plays meanwhile or when it fails), then apply each v2 layer (re-bake for its size, live
+   * engine, reduced motion still frame) and release the layers that are gone.
+   */
+  private _syncParticles(): void {
+    const pm = particlesIfLoaded();
+    if (!pm) {
+      void loadParticles().then((m) => m && this.isConnected && this.requestUpdate());
+      return;
+    }
+    const reduced = reducedMotion();
+    const seen = new Set<HTMLElement>();
+    for (const el of this.renderRoot.querySelectorAll<HTMLElement & { mcSim: NonNullable<FxLayer['sim']> }>('.mc-anim-fx[data-p]')) {
+      const sim = el.mcSim;
+      const w = el.parentElement!;
+      seen.add(el);
+      pm.apply(el, {
+        ...sim,
+        reducedMotion: reduced,
+        // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
+        // content collider: `icon` = the module's icon hook (none: off), `text` = its content
+        useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + name.slice(name.lastIndexOf('-g')) : name, name, css),
+        content: () => w.querySelector(sim.spec.sim.colliders.content === 'icon' ? '.mc-anim-icon' : '*') as Element,
+      });
+    }
+    for (const el of this._pApplied) if (!seen.has(el)) pm.release(el);
+    this._pApplied = seen;
   }
 
   /** The theme is dark (seasonal decorations soften their frost). */

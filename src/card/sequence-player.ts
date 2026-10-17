@@ -35,7 +35,7 @@ export function registerSequence(run: SequenceRun): string {
 
 export const sequenceRun = (key: string): SequenceRun | undefined => registry.get(key);
 
-const reducedMotion = (): boolean => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+export const reducedMotion = (): boolean => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** Children a stagger runs on: content, not the decorative layers (aria-hidden, mc-* elements). */
 const contentChildren = (el: Element): HTMLElement[] =>
