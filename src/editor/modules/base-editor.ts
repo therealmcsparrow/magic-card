@@ -150,10 +150,8 @@ export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, 
     }
 
     if (updates._markSynced) {
-      const propertyName = updates._markSynced as string;
-      const path = `design.${propertyName}`;
       const currentNotSynced = new Set(config.not_synced || []);
-      currentNotSynced.delete(path);
+      for (const name of ([] as string[]).concat(updates._markSynced as string | string[])) currentNotSynced.delete(`design.${name}`);
       updatedConfig.not_synced = Array.from(currentNotSynced);
       delete updates._markSynced;
     }
