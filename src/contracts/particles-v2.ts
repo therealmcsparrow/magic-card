@@ -2,7 +2,8 @@ import type { ParticleShape, ParticleDirection, ParticlesSpec } from '../anim-st
 import type { ParticleSlot } from '../anim-studio/compile';
 
 /*
- * Contract: particles model v2, bake simulator, live engine. Version 1.0.0 (Architect-owned).
+ * Contract: particles model v2, bake simulator, live engine. Version 1.0.1 (Architect-owned).
+ * 1.0.1: documentation only (units text and field comments). No type, constant or behaviour change.
  *
  * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js;
  * the studio bundle imports src/particles/index.ts directly).
@@ -22,8 +23,29 @@ import type { ParticleSlot } from '../anim-studio/compile';
  * - `sim.engine` pins simulator behaviour. A change that alters baked output for the same input
  *   adds engine 2 and keeps engine 1 producing what it produced. Never change engine 1's output.
  *
- * Units: s, deg; positions in % of the particle layer (x of its width, y of its height);
- * velocities in % per s; accelerations in % per s^2; particle size in px (as v1).
+ * Units (pinned as engine 1 implements them, src/particles/sim.ts; 1.0.1 corrects the 1.0.0 text,
+ * which said "% per s" of width / height):
+ * - Time in s, angles in deg.
+ * - World unit u: 1 u = 1 % of the layer's SHORTER side, so motion is round on any aspect. A layer of
+ *   aspect a (width / height) is 100a x 100 u when a >= 1, else 100 x 100/a u (aspect 2: 200 x 100 u).
+ * - Speeds (ranges.speed, child speed) are u per s; gravity strength, turbulence strength and flow
+ *   forces are u per s^2. On a wide card 10 u/s moves 10 % of the HEIGHT per s, which is
+ *   10 / aspect % of the width per s. They are not % of width / height.
+ * - Drag is 1/s: v *= exp(-drag * dt) per fixed step. Unit-free.
+ * - Turbulence scale is the noise feature size in u (values below 1 act as 1). The field drifts at
+ *   0.6 lattice cells per s.
+ * - bounce, inherit, opacity and weights are unit-free shares (0-1, or relative).
+ * - Positions that leave the sim (BakedStop x, y) are % of the layer's width (x) and height (y),
+ *   x / W * 100 and y / H * 100 with W, H the layer in u. Content collider boxes
+ *   (BakeGeometry.content) are likewise % of the layer's width and height.
+ * - spread (the v1 field, 0-100) is a share of the spawn edge: of the width for fall and rise, of the
+ *   height for drift and wave. Rain, fountain, orbit and vortex scale it their own way (flows.ts;
+ *   orbit and vortex use it as a ring radius in u: max(5, spread/2) and max(10, spread/2)).
+ * - Particle size is px (as v1). Collisions turn it into a radius of size / 2 / 120 * 100 u, as if the
+ *   layer's shorter side were 120 px (REF_PX). The drawn size does not scale with the layer.
+ * - Lifetime is clamped to [2/60 s, min(20 s, period - 2/60 s)]; persistent flows (orbit, wander)
+ *   live the whole period when the period is at most 20 s. delay wraps modulo the period.
+ * - The fixed step is PARTICLES_V2_CAPS.dt (1/60 s), semi-implicit Euler.
  *
  * Live engine rules (P2-3): one shared requestAnimationFrame loop for all live layers on the page;
  * a layer steps only while on screen (src/icons/offscreen.ts watchOffscreen) and the page is
@@ -31,7 +53,7 @@ import type { ParticleSlot } from '../anim-studio/compile';
  * the loop. Baked layers register nothing per frame.
  */
 
-export const PARTICLES_CONTRACT_VERSION = '1.0.0';
+export const PARTICLES_CONTRACT_VERSION = '1.0.1';
 export const PARTICLES_ENGINE = 1 as const;
 
 export type ParticleMode = 'baked' | 'live';
@@ -70,7 +92,7 @@ export interface WeightedShape {
 export type Range = [number, number];
 
 export interface ParticleRanges {
-  /** Initial speed, % per s. */
+  /** Initial speed, world units per s (1 u = 1 % of the layer's shorter side). */
   speed: Range;
   /** deg per s; each particle also draws its sign. */
   spin: Range;
@@ -83,11 +105,11 @@ export interface ParticleRanges {
 }
 
 export interface ParticlePhysics {
-  /** Direction deg (0 = down, 90 = left, 180 = up, 270 = right) and strength, % per s^2. */
+  /** Direction deg (0 = down, 90 = left, 180 = up, 270 = right) and strength, world units per s^2. */
   gravity: { angle: number; strength: number };
   /** Air resistance, 1/s (0 = none). */
   drag: number;
-  /** Noise force: strength % per s^2; scale = feature size, % of the layer. */
+  /** Noise force: strength world units per s^2; scale = feature size in world units (% of the layer's shorter side, min 1). */
   turbulence: { strength: number; scale: number };
   /** Kept share of the velocity on a collider hit, 0-1. */
   bounce: number;
@@ -100,7 +122,7 @@ export interface ParticleColliders {
   ceiling: boolean;
   left: boolean;
   right: boolean;
-  /** The element's icon or text box (measured on the dashboard: BakeGeometry.content). */
+  /** The element's icon or text box (measured on the dashboard: BakeGeometry.content, % of the layer's width and height). */
   content: ContentCollider;
 }
 
@@ -171,7 +193,7 @@ export const PARTICLES_V2_CAPS = {
  */
 export interface BakeGeometry {
   aspect: number;
-  /** Content collider box in % of the layer; missing: the content collider is off for this bake. */
+  /** Content collider box in % of the layer's width (x, w) and height (y, h); missing: the content collider is off for this bake. */
   content?: { x: number; y: number; w: number; h: number };
 }
 export const DEFAULT_GEOMETRY: BakeGeometry = { aspect: 2 };
@@ -183,7 +205,7 @@ export interface BakeInput {
   geometry: BakeGeometry;
 }
 
-/** One stop of a baked element; t in 0-1 of the period. */
+/** One stop of a baked element; t in 0-1 of the period; x, y in % of the layer's width and height. */
 export interface BakedStop {
   t: number;
   x: number;
