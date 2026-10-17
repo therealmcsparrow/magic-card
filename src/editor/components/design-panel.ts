@@ -35,6 +35,7 @@ import './animation-list';
 import './ring-editor';
 import './shape-editor';
 import './value-bg-editor';
+import { parseGradient } from '../../utils/gradient';
 
 /** Mockup placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
@@ -269,13 +270,33 @@ export class DesignPanel extends LitElement {
   }
 
   private _getValue(key: string): string {
-    return (this._getActiveDesign()[key] as string) || '';
+    const rec = this._getActiveDesign();
+    // a gradient in the `background` shorthand shows as the Background color's Gradient
+    if (key === 'background_color' && !rec.background_color && parseGradient(rec.background)) return rec.background as string;
+    return (rec[key] as string) || '';
+  }
+
+  /** Background color edit: a gradient goes to the `background` shorthand, a solid to background_color. */
+  private _handleBackgroundColor(value: string): void {
+    const rec = this._getActiveDesign();
+    const gradient = !!parseGradient(value);
+    const updates: Record<string, unknown> = gradient
+      ? { background: value, background_color: undefined }
+      : { background_color: value || undefined, ...(parseGradient(rec.background) ? { background: undefined } : {}) };
+    const sub = this._sub();
+    if (sub) {
+      sub.write({ ...sub.design, ...updates });
+      return;
+    }
+    if (this.hasTemplate) updates._markNotSynced = ['background_color', 'background'];
+    this.onChange(updates);
   }
 
   /** Whether a property has a value in the edited design (a box field: shorthand or any side). */
   private _isSet(p: CssPropertyDef): boolean {
     const rec = this._getActiveDesign();
     if (p.type === 'animations') return readAnimations(rec as DesignConfig).length > 0;
+    if (p.key === 'background_color' && this._getValue(p.key)) return true;
     // an empty object (a linked row's `shape_options: {}` marker) is not a value
     const empty = (v: unknown) => v === undefined || v === '' || (!!v && typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
     return propertyKeys(p.key).some((k) => !empty(rec[k]));
@@ -283,6 +304,7 @@ export class DesignPanel extends LitElement {
 
   /** Design keys a property owns: a box field's sides, the animation list with its legacy keys. */
   private _keysOf(p: CssPropertyDef): string[] {
+    if (p.key === 'background_color' && this._getValue(p.key) !== (this._getActiveDesign().background_color || '')) return ['background_color', 'background'];
     return p.type === 'animations' ? Object.keys(animationsUpdate([])) : propertyKeys(p.key);
   }
 
@@ -376,10 +398,10 @@ export class DesignPanel extends LitElement {
   private _handleSyncToggle(propertyName: string, currentlySynced: boolean): void {
     if (currentlySynced) {
       // Mark as not synced (propertyName is already the key like "background_color")
-      this.onChange({ _markNotSynced: propertyName });
+      this.onChange({ _markNotSynced: propertyName === 'background_color' ? ['background_color', 'background'] : propertyName });
     } else {
       // Re-sync this property
-      this.onChange({ _markSynced: propertyName });
+      this.onChange({ _markSynced: propertyName === 'background_color' ? ['background_color', 'background'] : propertyName });
     }
   }
 
@@ -746,9 +768,10 @@ export class DesignPanel extends LitElement {
               .label=${p.label}
               .allowEntity=${this._allowEntityColor}
               .entityColor=${this._entityColor}
-              .gradient=${p.key === 'color' && this.target === 'module' ? 'css' : ''}
+              .gradient=${p.key === 'background_color' || (p.key === 'color' && this.target === 'module') ? 'css' : ''}
               .gradientNote=${p.key === 'color' ? 'Text uses this gradient as its fill. Older tablets show the first color.' : ''}
-              @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
+              @value-changed=${(e: CustomEvent) =>
+                p.key === 'background_color' ? this._handleBackgroundColor(e.detail.value) : this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-color-picker>
           `,
           syncIndicator,
