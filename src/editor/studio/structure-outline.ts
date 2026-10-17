@@ -284,17 +284,20 @@ export class StructureOutline extends LitElement {
     return layerName(item) ?? this._defaultLabel(sel) ?? '';
   }
 
-  private _commitRename(sel: Selection, value: string): void {
+  private _commitRename(sel: Selection, value: string, blurred = false): void {
     if (this._renaming !== selectionKey(sel)) return;
     this._renaming = null;
     this.stateManager?.setLayerName(sel, value, this._defaultLabel(sel));
-    this._afterRename(sel);
+    this._afterRename(sel, blurred);
   }
 
-  private _afterRename(sel: Selection): void {
+  /** Focus returns to the canvas after Enter / Escape, not after a blur (the user clicked elsewhere). */
+  private _afterRename(sel: Selection, blurred = false): void {
     const back = this._renameReturn;
     this._renameReturn = null;
-    if (back?.isConnected) {
+    if (blurred) {
+      if (back?.isConnected) this._fire('mc-rename-done');
+    } else if (back?.isConnected) {
       this.updateComplete.then(() => back.focus({ preventScroll: true }));
       this._fire('mc-rename-done');
     } else this._pendingFocus = selectionKey(sel);
@@ -318,7 +321,7 @@ export class StructureOutline extends LitElement {
     return html`<input class="rename" aria-label=${label} .value=${this._renameValue(sel)}
       @click=${(e: Event) => e.stopPropagation()}
       @keydown=${(e: KeyboardEvent) => this._onRenameKeydown(e, sel)}
-      @blur=${(e: Event) => this._commitRename(sel, (e.target as HTMLInputElement).value)} />`;
+      @blur=${(e: Event) => this._commitRename(sel, (e.target as HTMLInputElement).value, true)} />`;
   }
 
   /** "Hidden on dashboard" mark after an item's name. */
@@ -865,6 +868,7 @@ export class StructureOutline extends LitElement {
           >
             ${this._renaming === key ? this._renderRename(sel, 'Column name') : html`<span class="text"><span class="name">${name}</span></span>`}
             ${this._hiddenMark(col)}
+            ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title="Own module list: not synced with the template. Reset column restores it."></ha-icon><span class="sr-only">Own module list, not synced with the template</span>` : nothing}
             <span class="chip is-count">${n}<span class="sr-only"> module${n === 1 ? '' : 's'}</span></span>
           </div>
           <button
@@ -1418,7 +1422,8 @@ export class StructureOutline extends LitElement {
       .item[data-hidden] .name {
         color: var(--mc-text-2);
       }
-      .item > ha-icon.hid-ico {
+      .item > ha-icon.hid-ico,
+      .item > ha-icon.own-ico {
         --mdc-icon-size: 16px;
         color: var(--mc-text-2);
       }

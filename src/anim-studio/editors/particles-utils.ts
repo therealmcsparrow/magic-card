@@ -564,6 +564,7 @@ export function bakedParticlesSvg(doc: AnimationDoc): { svg: string; warnings: s
   const loop = m.bake({ spec, period: periodOf(doc), geometry: DEFAULT_GEOMETRY });
   const warnings: string[] = [];
   if (spec.sim.mode === 'live') warnings.push('Live simulation exports as its baked loop.');
+  if (loop.elements.some((e) => 'icon' in e.shape || 'emoji' in e.shape)) warnings.push('Icon and emoji particles export as dots.');
   if (loop.stats.capped) warnings.push('The loop hit the size limit, so the file shows fewer particles.');
   const w = 200;
   return { svg: m.bakedSvg(loop, { width: w, height: Math.round(w / DEFAULT_GEOMETRY.aspect) }), warnings };
