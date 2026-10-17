@@ -103,10 +103,10 @@ These fields show in both modes.
 | --- | --- | --- | --- |
 | Width (px) | `width` | 0.5 to 40 | `3` |
 | Glow (px) | `glow` | 0 to 40, blur of a glow around the stroke | `0` (off) |
-| Color | `color` | Any CSS colour, `entity`, `entity N%` | The theme's primary colour |
+| Color | `color` | Any CSS colour, `entity`, `entity N%`, or a linear gradient | The theme's primary colour |
 | Track color | `track_color` | Any CSS colour, `entity`, `entity N%` | No track |
 | Track opacity (%) | `track_opacity` | 0 to 100 | 100 |
-| Start | `start` | `top` (Top center), `top-left`, `right`, `bottom`, `left` | `top` |
+| Start | `start` | `top` (Top), `top-right`, `right`, `bottom-right`, `bottom`, `bottom-left`, `left`, `top-left` | `top` |
 | Direction | `direction` | `cw` (Clockwise), `ccw` (Counter-clockwise) | `cw` |
 | Caps | `linecap` | `round`, `butt` (Flat) | `round` |
 | Position | `position` | `inside`, `center`, `outside` | `inside` |
@@ -117,6 +117,8 @@ These fields show in both modes.
 - A shaped element is clipped to its shape, so its ring is always drawn inside, whatever Position says. Inside a cut or rounded corner, the ring keeps an even distance from the outline. Start picks the point of the shape nearest to that position.
 - An open pop-up has a rectangular surface, so the ring of a shaped pop-up card follows the border radius there.
 - `entity` colours use the module entity's state colour. The editor offers them on modules with an entity. See [Entity colours](entity-colours.md).
+- A gradient colour paints the stroke along the gradient. Rings read linear gradients only, so a radial one is drawn as a linear one. Thresholds, the track and the glow stay solid. See [Gradients](gradients.md).
+- Start sets the point where the stroke begins. The corner starts (Top right, Bottom right, Bottom left and Top left) sit in the middle of a rounded corner, or on the corner itself when the corner is sharp. The stroke runs from there in the chosen direction and closes on the same point.
 
 ## Show condition
 

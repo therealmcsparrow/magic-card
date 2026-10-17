@@ -16,6 +16,7 @@ The card itself has a shorter Design tab: background colour and image, border ra
 - [Lists and tables](lists-tables.md)
 - [Custom CSS](custom-css.md)
 - [Entity colours](entity-colours.md): the `entity` colour value
+- [Gradients](gradients.md): solid or gradient colours, where gradients work and their limits
 - [Conditional design](conditional-design.md): rules that change the design while conditions match
 - [Animations](animations.md): the preset animation list
 - [Icon animations in cards](quick-icon-animator.md): animated icons from the icon picker and the studio, and what happens when the module's icon changes
@@ -74,7 +75,7 @@ design:
 From top to bottom:
 
 1. Copy design and Paste design (see [Copy and paste](#copy-and-paste)).
-2. Editing design for: Default, Hover, or one of the conditional rules. Add conditional rule creates a new one. See [Hover](hover.md) and [Conditional design](conditional-design.md).
+2. Editing design for: Default, Hover, or one of the conditional rules. Add conditional rule creates a new one. See [Hover](hover.md) and [Conditional design](conditional-design.md). The card's Design tab uses the same picker, and a card rule can set its ring, shape, value background and seasonal scene. See [Card Design tab](../inspector/card-design.md).
 3. A search field, "Search CSS properties, e.g. padding". It matches the field label, the CSS property name and the YAML key, including the per-side keys of margin, padding and border radius (searching `padding_top` finds Padding). Searching `css` or `custom css` finds Custom CSS.
 4. The sections, sorted into four headed groups in one list.
 
@@ -124,6 +125,7 @@ A colour field has a swatch, a text input and, on a module with an entity, an en
 - The swatch opens the Color picker dialog: a saturation and brightness area, an H (hue) slider, an A (opacity) slider with a percentage, a Hex input and R, G, B readouts. Presets has 24 colours and 8 Home Assistant theme variables (`--primary-color`, `--accent-color`, `--primary-text-color`, `--secondary-text-color`, `--card-background-color`, `--divider-color`, `--success-color`, `--error-color`). Saved colors keeps up to 12 colours in this browser: the plus button saves the current colour, the cross on a swatch removes it. Save writes the colour, Cancel leaves it unchanged.
 - The picker writes hex (`#rrggbb`, or `#rrggbbaa` below 100% opacity). A theme preset is written as `var(--name)`.
 - The entity colour button (a palette icon) switches the field to the entity's state colour. See [Entity colours](entity-colours.md).
+- Some colour fields also offer Solid or Gradient. Gradients are CSS gradient strings, and the limits per field are on the [Gradients](gradients.md) page.
 
 ### Font family
 

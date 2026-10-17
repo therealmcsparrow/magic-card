@@ -28,7 +28,7 @@ The hover design is removed once its last value is cleared.
 
 ### The card
 
-The card's Design tab has a Hover section near the end, with the help line "Applied while the pointer is over the card, on top of the fields above." It holds the same search, groups and sections as an element's Hover view, without copy and paste or rules. The section's reset button removes `hover`.
+On the card, pick Hover under "Editing design for" at the top of the Design tab. The help line reads "Applied while the pointer is over the card, on top of the fields above." It holds the same search, groups and sections as an element's Hover view, without copy and paste or rules. The section's reset button removes `hover`.
 
 ## How hover applies
 

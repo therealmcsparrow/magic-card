@@ -19,7 +19,7 @@ Shows one icon. It can follow an entity: use the icon Home Assistant picks for t
 | Use entity color | `use_entity_color` | boolean | `false` | Colours the icon like Home Assistant does for the entity's current state. |
 | Icon | `icon` | icon name, for example `mdi:lamp` | `mdi:help` | The icon. `svg` draws your own SVG, see [Icon effects](../../icon-effects/README.md). |
 | Icon effects | `icon_fx`, `icon_on`, `icon_off`, `svg` | mapping, icon names, SVG markup | none | Liquid fill, device animation, line draw, morph, colours, icons per state. See [Icon effects](../../icon-effects/README.md). |
-| Icon color | `icon_color` | colour | inherited | The icon colour. |
+| Icon color | `icon_color` | colour or linear gradient | inherited | The icon colour. A gradient is drawn across the icon. See [Gradients](../../design/gradients.md). |
 | Size | `size` | CSS size, for example `32px` | `24px` | The icon size. |
 
 ## Colour order

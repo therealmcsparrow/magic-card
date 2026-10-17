@@ -4,6 +4,22 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.05 (2026-10-17)
+
+Card design rules, gradient colours, new ring starts and dropdowns for the long lists.
+
+### New
+-   Card Design tab: "Editing design for" picks Default, Hover or a rule, as it does on modules. A rule can change the card's ring, shape, shape options, value background and seasonal scene while its conditions match. The rules are the same as the conditional appearance rules on the Conditions tab, and that tab still lists them.
+-   Gradients: a colour field offers Solid or Gradient. Choose a linear or radial gradient, an angle for a linear one, and two to five colours. Gradients work on card and module backgrounds, the value background fill, the ring stroke, the icon colour and the text colour of text, info and markdown modules.
+-   Gradient limits: ring and icon gradients are linear only. Ring thresholds, the track and the glow, the sparkline and the wave stay solid. A background gradient is not offered with a background image or with a background that is not a gradient. Where a browser cannot draw a gradient on text, the text shows its first colour. See the [gradients page](documentation/design/gradients.md).
+-   Ring start has eight positions: Top, Top right, Right, Bottom right, Bottom, Bottom left, Left and Top left. Top right, Bottom right and Bottom left are new, and "Top center" is now "Top". Saved cards keep working.
+-   The animation studio's Part presets are one Preset dropdown instead of a grid of buttons.
+
+### Improved
+-   The card Design tab is grouped under headings, like the module design panel. Shape and Seasonal are dropdowns. Value background type and Ring mode stay as buttons.
+-   Hover on the card moved into the "Editing design for" picker.
+-   Existing solid colours and existing YAML load and render unchanged.
+
 ## 2026.10.04 (2026-10-17)
 
 Each release now has eight files. Three are new: `magic-card-editor.js`, `magic-card-particles.js` and `magic-card-preset-catalogue.js`. HACS installs them with the card. With a manual install, copy all eight to the same folder. After the update, hard refresh once.

@@ -47,6 +47,7 @@ Type is a segmented control: Off, Fill or Sparkline. Once a type is picked, the 
 - On a module, Entity is labelled "Module entity (entity id)" and the help line reads "Empty uses the module entity (entity id)." Rows, columns and the card have no entity. Without one the section shows "Pick an entity: a value background without one draws nothing."
 - Attribute shows once the entity has attributes.
 - Color offers the entity colour button when there is an entity.
+- The fill colour can be a gradient. The hatch, the floor, the wave and the sparkline use its first colour. See [Gradients](gradients.md).
 
 Value background isn't available in the [Hover](hover.md) view.
 

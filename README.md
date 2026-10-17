@@ -22,7 +22,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Animated icons: pick one of 192 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. Each ready-made one plays in a Quiet, Living or Glow style. The card stores the result itself, so it needs no integration.
 -   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start from a preset in a grid of live tiles, start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
 -   Particles with physics, built in the animation studio: 13 flows, a weighted mix of shapes, gravity in any direction, drag, turbulence, collisions with the card's edges and its icon or text, and child particles that spawn on a hit or at the end of a particle's life. A particle layer plays as a baked loop, so the dashboard runs no script for it, or as a live simulation.
--   Value rings and animated rings that follow the border radius. A ring on a `timer` entity counts down live.
+-   Value rings and animated rings that follow the border radius, starting from any of eight points. A ring on a `timer` entity counts down live.
 -   Shapes: squircle, pill, circle, hexagon, octagon, notched corners, ticket, wave edge and blob outlines, with the border and ring drawn along them.
 -   Value backgrounds: a tank that fills up to an entity value, or a faint history sparkline behind the content.
 -   Flow lines: animated lines with moving dots between two modules (solar to house to grid), driven by an entity value.
@@ -30,6 +30,8 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Icon effects: liquid fill, device animations, line draw, morphing state icons, duotone and gradient colours, and your own SVG icons.
 -   Tap, hold and double-tap actions, including opening and closing pop-ups.
 -   Display conditions on cards, rows, columns and modules (state, attribute, time, template).
+-   Card design rules: a rule can change the card's ring, shape, value background or seasonal scene while its conditions match.
+-   Gradients for backgrounds, rings, icons and text, written as CSS gradients. See [Gradients](documentation/design/gradients.md).
 -   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
 -   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
 

@@ -34,14 +34,14 @@ rows:
 
 ## In the editor
 
-The section shows a grid of tiles, one per shape, each with a small preview. None comes first. The selected tile previews the current options. Arrow keys move between the tiles, and Home and End jump to the first and last.
+Shape is a dropdown. None comes first, then the shapes in the groups Rounded, Cut corners and Organic. A small preview shows the chosen shape.
 
-- Picking a tile writes `shape` and keeps the options that shape reads. Options the new shape doesn't read are removed.
+- Picking a shape writes `shape` and keeps the options that shape reads. Options the new shape doesn't read are removed.
 - None removes `shape` and `shape_options`. On a template-linked card it writes `shape: none` instead, so the template's shape stays off. In a [conditional rule](conditional-design.md) over a shaped Default design it does the same.
-- The options of the picked shape show under the tiles. Each set option has a reset button, and the field reset of the section removes the shape and its options together.
+- The options of the picked shape show under the dropdown. Each set option has a reset button, and the field reset of the section removes the shape and its options together.
 - Length options (Corner size, Cut size, Cutout size, Side cut, Wave height) are unit fields with `px` and `%`. Help line: "In px, or % of the shorter side."
 
-Hints under the tiles say what changes:
+Hints under the dropdown say what changes:
 
 - "The shape replaces Border radius here." (when a border radius is set)
 - "Box shadow follows the shape as a drop shadow (first shadow only)." (when a box shadow is set)

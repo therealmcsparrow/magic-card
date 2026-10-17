@@ -53,7 +53,7 @@ The library is a separate file, `magic-card-icon-library.js`, next to `magic-car
 
 ## Part presets
 
-The Part presets panel is in the inspector when a keyframes animation has a part, group or drawn shape selected (on the stage, in the parts list or on the timeline). It shows "One click animates the selection; fine-tune the keys on the timeline." and a grid of presets. Each button has a tooltip that says what it does.
+The Part presets panel is in the inspector when a keyframes animation has a part, group or drawn shape selected (on the stage, in the parts list or on the timeline). It shows "One click animates the selection; fine-tune the keys on the timeline." and a Preset dropdown with the presets. Choose a preset from the dropdown to apply it. The box shows the active preset.
 
 | Preset | What it does | Parameters |
 | --- | --- | --- |

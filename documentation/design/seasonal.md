@@ -76,7 +76,7 @@ Any other state (`exceptional`, `unavailable` and so on) draws nothing. `daynigh
 
 | UI label | YAML key | Values | Default |
 | --- | --- | --- | --- |
-| Scene tiles | `scene` | A scene from the table, `auto` or `none` | `auto` |
+| Scene | `scene` | A scene from the table, `auto` or `none` | `auto` |
 | Layer | `layer` | `back` (Behind content), `front` (Over content) | `back` |
 | Intensity | `intensity` | `0%` to `100%` | `50%` |
 | Border decorations | `decorations` | `true`, `false` | `true` |
@@ -125,7 +125,7 @@ Frost and the cobweb are faint corner backdrops behind the content and keep no s
 
 ## In the editor
 
-The Seasonal section starts with a grid of scene tiles: Auto, the scenes, Weather, Day and night and None. The Auto tile shows what auto picks today, for example "Today: Autumn". Arrow keys move between the tiles.
+The Seasonal section starts with a Scene dropdown. Auto comes first, then the groups Seasons, Holidays and Live (Weather and Day and night), with None last. The Auto option shows what auto picks today, for example "Auto (today: Autumn)".
 
 - None removes `seasonal`. On a template-linked card it writes `seasonal: none`, so the template's scene stays off.
 - Picking a scene removes it from Combine with.
@@ -140,7 +140,7 @@ With a scene picked, the section shows:
 - Hemisphere, North or South, while auto is in use. Help line: "South flips the seasons."
 - Combine with: a chip per scene, on or off. Help line: "Extra scenes layered on top, like Day and night during winter."
 - Holiday dates, a collapsible block while auto is in use. It shows "N changed" when you changed dates. Each holiday has a text field with its default as placeholder; Easter has a switch for the automatic dates. A value that isn't valid shows "Use MM-DD..MM-DD, like 12-01..12-26, or off." and isn't saved.
-- Preview date, while auto is in use. The card in the editor shows auto on that day, and the Auto tile reads "Preview: …". Help line: "Shows Auto on another day in this preview only. Not saved."
+- Preview date, while auto is in use. The card in the editor shows auto on that day, and the Auto option reads "Auto (preview: …)". Help line: "Shows Auto on another day in this preview only. Not saved."
 
 ## Seasonal presets
 

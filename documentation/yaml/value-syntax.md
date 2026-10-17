@@ -69,6 +69,8 @@ Theme variables need `var(--name)`. A bare name such as `primary-color` is not a
 
 Ring, flow, animation, icon effect and value background colours are checked before use. They accept the forms above and the math functions (`calc`, `min`, `max`, `clamp`), but no `url()` and no other CSS. An unsafe or unknown value falls back to the default colour. Design colour keys (`color`, `background_color`, `border_color`, `outline_color`) and module colour keys (`icon_color`, `bar_color`, `slider_color` and so on) are passed to CSS as they are, so invalid CSS there simply has no effect.
 
+A gradient in a ring, value background or icon colour is checked stop by stop, and an invalid one is ignored. See [Gradients](../design/gradients.md).
+
 ## Entity colour
 
 `entity` is the colour Home Assistant gives the entity in its current state: a light's own colour when it is on, the theme's active or inactive state colour otherwise. `entity 30%` is that colour at 30% opacity.
