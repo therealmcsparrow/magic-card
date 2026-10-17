@@ -9,7 +9,7 @@ import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, set
 import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { base } from './styles';
-import { getTrial, isTrialActive, startTrial, stopTrial, subscribeTrial, updateTrial, useTheme } from './trial';
+import { getTrial, isTrialActive, startTrial, stopTrial, subscribeTrial, syncTrialMode, updateTrial, useTheme } from './trial';
 import type { TrialState } from './trial';
 import {
   allKeys,
@@ -249,6 +249,7 @@ export class McteEditorView extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('draft') && this.draft) this._load(this.draft);
+    if (changed.has('hass') && isTrialActive() && getTrial()?.name === this._name) syncTrialMode(this._doc, this.hass);
   }
 
   private _load(d: Draft): void {
@@ -826,7 +827,7 @@ export class McteEditorView extends LitElement {
       return;
     }
     this._pin(this._doc);
-    startTrial({ name: this._name, doc: this._doc, hass: this.hass });
+    startTrial({ name: this._name, doc: this._doc, hass: this.hass, baseline: this._baseline });
   }
 
   // ── keyboard ──
