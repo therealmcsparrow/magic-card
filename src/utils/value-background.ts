@@ -1,5 +1,6 @@
 import type { HomeAssistant, ValueBackgroundConfig } from '../types';
 import { colour, entityLevel, share } from '../icons/icon-fx';
+import { parseGradient } from './gradient';
 import { chainPath } from './shape-path';
 import { bucketWindow } from '../services/history-cache';
 
@@ -15,6 +16,8 @@ export interface ResolvedValueBackground {
   /** Fill: 0..1 of the current value between min and max; undefined = no value (a hatched empty tank). Not set for a sparkline. */
   level?: number;
   color: string;
+  /** The fill's gradient (CSS string) when the colour is one: `color` is its first stop. */
+  paint?: string;
   /** Fill opacity / sparkline area opacity, 0..1. */
   opacity: number;
   direction: ValueBgDirection;
@@ -74,9 +77,11 @@ export function resolveValueBackground(
   const min = num(cfg.min);
   const max = num(cfg.max);
   const fill = cfg.type === 'fill';
+  const gradient = parseGradient(cfg.color);
   const out: ResolvedValueBackground = {
     type: cfg.type,
-    color: colour(cfg.color, stateObj) ?? VALUE_BG_DEFAULTS.color,
+    color: gradient?.stops[0] ?? colour(cfg.color, stateObj) ?? VALUE_BG_DEFAULTS.color,
+    paint: gradient && cfg.color,
     opacity: share(cfg.opacity) ?? (fill ? VALUE_BG_DEFAULTS.opacity : VALUE_BG_DEFAULTS.areaOpacity),
     direction: DIRECTIONS.includes(cfg.direction as ValueBgDirection) ? (cfg.direction as ValueBgDirection) : 'up',
     wave: cfg.wave !== false,
