@@ -361,13 +361,13 @@ Ultramarine blue with an orange spark, sleek and futuristic.
 
 ## Deep Survey
 
-Clean off-white panels with a navy ink blue and a burnt orange accent.
+Off-white panels, burnt orange accent: navy ink by day, denim blue at night.
 
 ![Deep Survey preview, light and dark modes side by side](images/deep-survey.webp)
 
 ## Dust Duel
 
-Warm desert sand with indigo blue and a red accent.
+Desert sand with a red accent: indigo blue by day, sand-gold by night.
 
 ![Dust Duel preview, light and dark modes side by side](images/dust-duel.webp)
 
@@ -379,13 +379,13 @@ Weathered teal with worn rust and brass, warm and a little scruffy.
 
 ## Neon Rain
 
-Magenta and cyan neon on a dark city night.
+Hot magenta and electric cyan neon on a dark city night.
 
 ![Neon Rain preview, light and dark modes side by side](images/neon-rain.webp)
 
 ## Ochre Basin
 
-Sun-baked yellow-brown ochre by day, deep indigo night in the dark mode.
+Sun-baked ochre by day; at night an ochre glow on deep indigo.
 
 ![Ochre Basin preview, light and dark modes side by side](images/ochre-basin.webp)
 
