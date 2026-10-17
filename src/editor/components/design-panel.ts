@@ -48,6 +48,9 @@ function unitPlaceholder(key: string, design: Record<string, unknown>): string {
 }
 
 /** The "Editing design for" value of the hover design (`design.hover`). */
+/** Module types whose text is painted straight on the module, so a gradient text fill stays legible. */
+export const TEXT_GRADIENT_MODULES = ['text', 'info', 'markdown'];
+
 const HOVER_VIEW = '__hover__';
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
@@ -153,10 +156,10 @@ export class DesignPanel extends LitElement {
         padding: 0 8px 0 4px;
         border: 0;
         border-radius: var(--mc-radius);
-        background: transparent;
+        background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
         text-align: left;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
         color: var(--mc-text);
       }
       .dgroup-btn:hover {
@@ -274,6 +277,23 @@ export class DesignPanel extends LitElement {
     // a gradient in the `background` shorthand shows as the Background color's Gradient
     if (key === 'background_color' && !rec.background_color && parseGradient(rec.background)) return rec.background as string;
     return (rec[key] as string) || '';
+  }
+
+  /**
+   * Why the Background color stays Solid, or '' when Gradient is offered. A gradient is written to the
+   * `background` shorthand, so it must not replace another shorthand or sit under a background image,
+   * and a rule view cannot clear the Default's solid color.
+   */
+  private _bgGradientBlock(): string {
+    const rec = this._getActiveDesign();
+    const base = this.design as Record<string, unknown>;
+    const sub = !!this._sub();
+    if (parseGradient(this._getValue('background_color'))) return '';
+    const shorthand = rec.background ?? (sub ? base.background : undefined);
+    if (shorthand && !parseGradient(shorthand as string)) return 'Gradient needs an empty Background field. Clear it to use a gradient here.';
+    if (rec.background_image || (sub && base.background_image)) return 'A background image replaces a gradient here. Remove the image to use a gradient.';
+    if (sub && base.background_color) return 'Default sets a solid color, so a rule cannot swap it for a gradient. Clear the Default color first.';
+    return '';
   }
 
   /** Background color edit: a gradient goes to the `background` shorthand, a solid to background_color. */
@@ -760,7 +780,8 @@ export class DesignPanel extends LitElement {
           p.help,
         );
 
-      case 'color':
+      case 'color': {
+        const bgBlock = p.key === 'background_color' ? this._bgGradientBlock() : '';
         return field(
           html`
             <mc-color-picker
@@ -768,14 +789,17 @@ export class DesignPanel extends LitElement {
               .label=${p.label}
               .allowEntity=${this._allowEntityColor}
               .entityColor=${this._entityColor}
-              .gradient=${p.key === 'background_color' || (p.key === 'color' && this.target === 'module') ? 'css' : ''}
+              .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
               .gradientNote=${p.key === 'color' ? 'Text uses this gradient as its fill. Older tablets show the first color.' : ''}
               @value-changed=${(e: CustomEvent) =>
                 p.key === 'background_color' ? this._handleBackgroundColor(e.detail.value) : this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-color-picker>
           `,
           syncIndicator,
+          undefined,
+          bgBlock || undefined,
         );
+      }
 
       case 'image':
         return field(

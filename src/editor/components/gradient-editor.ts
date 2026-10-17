@@ -111,6 +111,9 @@ export class GradientEditor extends LitElement {
       .row > .lbl {
         flex: 0 0 auto;
         min-width: 48px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: var(--mc-text);
       }
       .row > .seg,
       .row > input[type='range'] {
@@ -301,14 +304,14 @@ export class GradientEditor extends LitElement {
         <div class="actions">
           <button
             type="button"
-            class="btn-text sm"
+            class="btn btn-text btn-sm"
             title=${n >= MAX_STOPS ? `Up to ${MAX_STOPS} stops` : 'Add stop'}
             ?disabled=${n >= MAX_STOPS || this.disabled}
             @click=${this._add}
           >
             <ha-icon icon="mdi:plus"></ha-icon> Add stop
           </button>
-          <button type="button" class="btn-text sm" ?disabled=${this.disabled} @click=${() => this._emit({ ...g, stops: [...g.stops].reverse() })}>
+          <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => this._emit({ ...g, stops: [...g.stops].reverse() })}>
             <ha-icon icon="mdi:swap-horizontal"></ha-icon> Reverse
           </button>
         </div>

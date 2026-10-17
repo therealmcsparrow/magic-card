@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult, nothing } from 'lit';
+import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles, colorPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
@@ -35,7 +35,20 @@ interface HSVA {
 
 @customElement('mc-color-picker')
 export class ColorPicker extends LitElement {
-  static styles = [editorSystem, pickerStyles, colorPickerStyles];
+  static styles = [
+    editorSystem,
+    pickerStyles,
+    colorPickerStyles,
+    css`
+      mc-gradient-editor + .help,
+      .help + .help {
+        margin-top: 6px;
+      }
+      .help:empty {
+        display: none;
+      }
+    `,
+  ];
 
   @property({ type: String }) value = '';
   @property({ type: String }) label = '';
