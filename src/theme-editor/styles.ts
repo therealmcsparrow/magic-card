@@ -240,8 +240,8 @@ export const base = css`
     font-weight: 500;
   }
   @media (forced-colors: active) {
-    .seg [aria-checked='true'],
-    .seg [aria-selected='true'] {
+    .seg button[aria-checked='true'],
+    .seg button[aria-selected='true'] {
       background: Highlight;
       color: HighlightText;
     }
