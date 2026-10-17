@@ -4,6 +4,20 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+Maintenance. The card itself does not change.
+
+### Changed
+-   The PayPal link in the README goes to <https://www.paypal.biz/therealmcsparrow>.
+-   `THIRD-PARTY-NOTICES.md` is generated from the licence files of the bundled packages (`npm run notices`) and no longer lists versions, so it stays correct when packages are updated. Each release's `sbom.cdx.json` has the versions.
+
+### Project
+-   Size budgets: `magic-card.js` may be up to 688,067 bytes (B1 + 8,192), about 4 KB more than today. Each lazy file may grow 5 % over its 2026.10.07 size.
+-   The release workflow fails when the committed `dist/` files differ from a fresh build. Validate shows a warning for it on every push.
+-   The SBOM tool is a pinned development dependency, so the lockfile covers it.
+-   `.gitattributes` keeps LF line endings on every OS, so a build on Windows no longer shows `dist/` as changed.
+
 ## 2026.10.07 (2026-10-17)
 
 The theme editor starts from 45 presets now, in two groups, and the documentation has a screenshot of each one.

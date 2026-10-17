@@ -1,0 +1,2 @@
+# Keep LF in the working copy on every OS, so a fresh build matches the committed dist/ byte for byte
+* text=auto eol=lf

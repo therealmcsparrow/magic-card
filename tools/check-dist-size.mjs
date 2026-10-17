@@ -1,20 +1,24 @@
-// Fails when a built dist/*.js grows past its cap, or when an unlisted .js file appears.
-// Caps = byte sizes of the 2026.10.07 production build (the three git-tracked files match HEAD). Raise a cap only on purpose, in the same PR.
+// Fails when a built dist/*.js grows past its budget, or when an unlisted .js file appears.
+// Budgets, set by the CEO on 2026-10-17 (sizes then in comments):
+// - magic-card.js, which every dashboard loads: B1 + 8,192 B (B1 = 679,875 B, the 2026.10.04 baseline).
+// - lazy chunks: the 2026.10.07 size + 5 %, rounded up to 1 KiB.
+// Raise a budget only on purpose, in the same PR. A new chunk gets the same +5 % rule.
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const B1 = 679_875;
 const CAPS = {
-  'magic-card.js': 683958,
-  'magic-card-animation-studio.js': 858558,
-  'magic-card-editor.js': 647655,
-  'magic-card-icon-animator.js': 222240,
-  'magic-card-icon-library.js': 171507,
-  'magic-card-particles.js': 33080,
-  'magic-card-preset-catalogue.js': 22797,
-  'magic-card-theme-editor.js': 163837,
-  'magic-card-theme-presets.js': 19878,
-  'magic-card-anim-runtime.js': 38672,
+  'magic-card.js': B1 + 8_192, // 683,958
+  'magic-card-animation-studio.js': 902_144, // 858,558
+  'magic-card-editor.js': 680_960, // 647,655
+  'magic-card-icon-animator.js': 233_472, // 222,240
+  'magic-card-icon-library.js': 180_224, // 171,507
+  'magic-card-particles.js': 34_816, // 33,080
+  'magic-card-preset-catalogue.js': 24_576, // 22,797
+  'magic-card-theme-editor.js': 172_032, // 163,837
+  'magic-card-theme-presets.js': 21_504, // 19,878
+  'magic-card-anim-runtime.js': 40_960, // 38,672
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));
@@ -25,7 +29,7 @@ for (const f of files) {
   const size = statSync(join(dir, f)).size;
   const cap = CAPS[f];
   if (cap === undefined) {
-    console.error(`FAIL ${f}: ${size} B, new file with no size cap. Add an entry for it to CAPS in tools/check-dist-size.mjs (its byte size from a production build) in the same PR`);
+    console.error(`FAIL ${f}: ${size} B, new file with no size cap. Add an entry for it to CAPS in tools/check-dist-size.mjs (its production size + 5 %, rounded up to 1 KiB) in the same PR`);
     failed = true;
   } else if (size > cap) {
     console.error(`FAIL ${f}: ${size} B > cap ${cap} B (+${size - cap} B)`);
