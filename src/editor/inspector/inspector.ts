@@ -159,8 +159,11 @@ export class Inspector extends LitElement {
     const sel = this._selection();
     const key = `${this._state?.selectedPath ?? ''}|${this._activeTab(sel, this._tabsFor(sel))}`;
     if (key !== this._scrollKey) {
+      const switched = this._scrollKey !== '';
       this._scrollKey = key;
       body.scrollTop = 0;
+      // Narrow or short layout: the page scrolls, not the body, so bring the panel's head into view.
+      if (switched && getComputedStyle(body).overflowY === 'visible') this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.scrollIntoView?.({ block: 'nearest' });
     }
   }
 
@@ -352,7 +355,7 @@ export class Inspector extends LitElement {
             })}
           </div>
         </div>
-        <div class="insp-body" role="tabpanel" id="panel-${tab}" aria-labelledby="tab-${tab}">
+        <div class="insp-body" role="tabpanel" tabindex="0" id="panel-${tab}" aria-labelledby="tab-${tab}">
           ${this._renderBody(config, sel, tab)}
         </div>
       </div>
@@ -638,7 +641,7 @@ export class Inspector extends LitElement {
           overflow: visible;
         }
       }
-      @media (max-width: 640px) {
+      @media (max-width: 640px) and (min-height: 481px) {
         :host([variant='studio']) .insp-head {
           position: sticky;
           top: 0;

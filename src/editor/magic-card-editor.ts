@@ -197,7 +197,7 @@ export class MagicCardEditor extends LitElement {
     const config = sm?.getConfig();
     const col = (e as CustomEvent<{ resetColumn?: ItemSelection } | undefined>).detail?.resetColumn;
     if (!config?.template) return;
-    const prepare = col ? () => (sm.resetItem(col, true) ? sm.getConfig() : undefined) : undefined;
+    const prepare = col ? () => (sm.ownsModuleList(col) && sm.resetItem(col, true) ? sm.getConfig() : undefined) : undefined;
     this._fetchAndApplyTemplate(config.template, config, prepare).then((ok) => {
       if (col && !ok) this._notify('Could not load the template, so the column was not reset.');
     });

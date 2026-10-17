@@ -520,10 +520,10 @@ export class ItemMenu implements ReactiveController {
         : `Reset ${name} to the template? Your changes to it are lost.`);
     }
     const targets = this._moveTargets(config, sel);
-    if (this.view === 'move') return { label: `Module options for ${name}`, groups: [[back], targets] };
+    if (this.view === 'move') return { label: `${name} actions`, groups: [[back], targets] };
     if (this.view === 'wrap') {
       return {
-        label: `Module options for ${name}`,
+        label: `${name} actions`,
         groups: [[back], WRAP_TYPES.map((type) => {
           const meta = ModuleRegistry.get(type)?.metadata;
           return { icon: meta?.icon || 'mdi:view-grid-outline', label: meta?.name || type, run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
@@ -548,7 +548,7 @@ export class ItemMenu implements ReactiveController {
     }] : [];
     const where = nested ? describeSelection(config, parentSelection(sel, config)).title : `Row ${sel.row + 1} · Column ${sel.col + 1}`;
     return {
-      label: `Module options for ${name}`,
+      label: `${name} actions`,
       groups: [
         [{ icon: 'mdi:pencil-outline', label: 'Edit', run: () => this._edit(sel), focus: 'none' }, ...add, ...connect, rename],
         [
@@ -594,8 +594,8 @@ export class ItemMenu implements ReactiveController {
     const model = this.isOpen && sel && sm ? this._model(sm.getConfig(), sel) : null;
     const groups = model?.groups.filter((g) => g.length) ?? [];
     const menu = model
-      ? html`<div class="menu item-menu" role="menu" aria-label=${model.label} @keydown=${this._pop.onKeydown}>
-          ${model.note ? html`<p class="menu-note">${model.note}</p>` : nothing}
+      ? html`<div class="menu item-menu" role="menu" aria-label=${model.label} aria-describedby=${model.note ? 'menu-note' : nothing} @keydown=${this._pop.onKeydown}>
+          ${model.note ? html`<p class="menu-note" id="menu-note">${model.note}</p>` : nothing}
           ${groups.map((g, i) => html`${i ? html`<hr />` : nothing}${g.map((e) => this._renderEntry(e))}`)}
         </div>`
       : nothing;
