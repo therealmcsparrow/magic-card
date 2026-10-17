@@ -17,7 +17,7 @@ Eighty complete cards to copy and adapt, from a weather card to a Christmas coun
 | [Garden and outdoors](garden-outdoors.md) | Plant care, Pool, Bin day, Garden irrigation, Aquarium |
 | [Seasonal](seasonal.md) | Autumn garden, Halloween porch, Christmas countdown |
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
-| [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Bard's hall, Quest board |
+| [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board |
 
 ## Animated cards
 
@@ -59,7 +59,7 @@ On thirty-five of the cards something moves, so their pictures are short recordi
 | [Rune ward](sci-fi-fantasy.md#rune-ward) | Sci-fi and fantasy |
 | [Weather tower](sci-fi-fantasy.md#weather-tower) | Sci-fi and fantasy |
 | [Herb garden](sci-fi-fantasy.md#herb-garden) | Sci-fi and fantasy |
-| [Bard's hall](sci-fi-fantasy.md#bards-hall) | Sci-fi and fantasy |
+| [Minstrel hall](sci-fi-fantasy.md#minstrel-hall) | Sci-fi and fantasy |
 
 ## Before you paste
 

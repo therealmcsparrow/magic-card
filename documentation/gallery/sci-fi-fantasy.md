@@ -24,7 +24,7 @@ Starship consoles, space stations, enchanted forests and castle keeps, in a card
     -   [Weather tower](#weather-tower)
     -   [Dragon hoard](#dragon-hoard)
     -   [Herb garden](#herb-garden)
-    -   [Bard's hall](#bards-hall)
+    -   [Minstrel hall](#minstrel-hall)
     -   [Quest board](#quest-board)
 
 ## Reactor core
@@ -3111,22 +3111,22 @@ rows:
             bar_background: "#2a1d12"
 ```
 
-## Bard's hall
+## Minstrel hall
 
 A stage with three arched alcoves, one per speaker. Tap an alcove to play or pause that room. A playing alcove glows and shows bouncing bars, a paused one stays dark. The thin bar is the volume.
 
-![Bard's hall](images/79-bards-hall.webp)
+![Minstrel hall](images/79-minstrel-hall.webp)
 
 Entities: `media_player.kitchen`, `media_player.living_room`, `media_player.bedroom`
 
-File: [cards/79-bards-hall.yaml](cards/79-bards-hall.yaml)
+File: [cards/79-minstrel-hall.yaml](cards/79-minstrel-hall.yaml)
 
 ```yaml
-# Bard's hall: a stage with three arched alcoves, one per speaker. Tap an alcove to play or pause that room.
+# Minstrel hall: a stage with three arched alcoves, one per speaker. Tap an alcove to play or pause that room.
 # A playing alcove glows and shows bouncing bars, a paused one stays dark. The thin bar is the volume.
 # Entities: media_player.kitchen, media_player.living_room, media_player.bedroom
 type: custom:magic-card
-name: Bard's hall
+name: Minstrel hall
 background: "linear-gradient(170deg, #3a1220 0%, #230a14 100%)"
 border_radius: 26px
 padding: 20px
@@ -3138,7 +3138,7 @@ rows:
     columns:
       - modules:
           - type: text
-            text: Bard's hall
+            text: Minstrel hall
             design: { font_size: 22px, font_weight: "700", color: "#fbeee0", font_family: "Georgia, 'Iowan Old Style', serif" }
       - vertical_align: center
         modules:
