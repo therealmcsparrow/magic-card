@@ -8,7 +8,9 @@ import { VERSION } from '../version';
  *
  * Memoised while it loads or once it has loaded. A failure (offline, file missing, or a chunk from
  * another release next to a cached magic-card.js) resolves false, is logged, and the next call tries
- * again.
+ * again. The retry is not verified against a failed fetch: webpack forgets a failed chunk, but a
+ * browser may keep the failed module request for that URL until the page reloads, so the warning
+ * tells the user to reload.
  */
 
 interface EditorChunk {
@@ -33,7 +35,7 @@ export function loadEditor(): Promise<boolean> {
       m.EDITOR_VERSION === VERSION
         ? true
         : fail(`Magic Card was updated, reload the page (magic-card.js ${VERSION}, magic-card-editor.js ${m.EDITOR_VERSION}).`),
-    (err: unknown) => fail('Magic Card: the editor (magic-card-editor.js) could not be loaded.', err),
+    (err: unknown) => fail('Magic Card: the editor (magic-card-editor.js) could not be loaded, reload the page.', err),
   );
   return pending;
 }

@@ -123,7 +123,7 @@ export class AnimIconThumb extends LitElement {
 
 /*
  * The start of an icon animation (studio "New animation" > "Icon animation"): pick an icon (the
- * card bundle's mc-icon-picker by tag, a text field until it is defined) and it is split into parts
+ * editor chunk's mc-icon-picker by tag, a text field until it is defined) and it is split into parts
  * right away, ready for part presets; or start from the animated icon library (search, domain
  * filter, live thumbnails; the library is a lazy chunk, icon-library-loader.ts). Emits `icon-start { doc, from: 'icon' | 'library' }` (bubbling,
  * composed); the studio opens the document as a new animation.

@@ -217,7 +217,7 @@ Every module has these. The module-specific keys are in [Modules](../modules/REA
 
 A module with a missing or unknown `type` shows an error in its own place. The rest of the card keeps rendering.
 
-Modules that draw an icon (`icon`, `button`, `info`, `light`, `tabs`, `weather`, `forecast`) also take `icon_fx`, `icon_on`, `icon_off` and `svg`. See [Icon effects](#icon-effects).
+Modules that draw an icon (`icon`, `button`, `info`, `light`, `tabs`, `weather`, `forecast`) also take `icon_fx`, `icon_on` and `icon_off`. `svg` is for `icon`, `button` and `info`; the Light module has no Custom SVG switch. See [Icon effects](#icon-effects).
 
 ## Layout modules and their children
 

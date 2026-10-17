@@ -17,7 +17,7 @@ import {
   type Timeline,
 } from './sequence-utils';
 
-// mc-unit-field comes from the card bundle (always loaded first); the studio bundle must not define it.
+// mc-unit-field comes from the editor chunk (loaded through window.MagicCard.loadEditor); the studio bundle must not define it.
 
 /** Where the step picker writes: a new step, or the animation of step `index`. */
 type PickTarget = { mode: 'add' } | { mode: 'step'; index: number };

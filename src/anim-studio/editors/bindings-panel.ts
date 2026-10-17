@@ -19,7 +19,7 @@ import {
   withProperty,
 } from './bindings-utils';
 
-// mc-color-picker comes from the card bundle (always loaded first); the studio bundle must not define it.
+// mc-color-picker comes from the editor chunk (loaded through window.MagicCard.loadEditor); the studio bundle must not define it.
 
 /*
  * Value bindings (studio inspector, a target selected): bind a property of the selected target to

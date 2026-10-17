@@ -102,7 +102,7 @@ interface DragState {
  * selected key's values and easing are edited in the key inspector (key-inspector.ts), which the
  * studio shows in its right column: this editor emits `selection-change`.
  *
- * Uses <mc-unit-field> and <mc-color-picker> from the card bundle through the key inspector.
+ * Uses <mc-unit-field> and <mc-color-picker> from the editor chunk through the key inspector.
  *
  * Contract (src/anim-studio/editors, see the studio shell): `.doc` is never mutated; every edit emits
  * `doc-change` { doc, label } (bubbles, composed), drags emit transient ones and a final one on

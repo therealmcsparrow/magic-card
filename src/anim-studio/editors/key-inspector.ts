@@ -52,7 +52,7 @@ import {
  *
  * Panel contract (slots.ts): .doc .hass .library .time .disabled .selection .tile .stage; emits
  * doc-change { doc, label, transient? }, selection-change { selection } (a key moved or picked).
- * Uses <mc-unit-field> and <mc-color-picker> from the card bundle (by tag).
+ * Uses <mc-unit-field> and <mc-color-picker> from the editor chunk (by tag).
  */
 
 interface NumField {

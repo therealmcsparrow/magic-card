@@ -353,7 +353,7 @@ export class PresetGrid extends LitElement {
               Clear search
             </button>
           </div>`}
-      ${this.notice ? html`<p class="notice" role="status">${this.notice}</p>` : nothing}
+      <p class="notice" role="status" ?hidden=${!this.notice}>${this.notice}</p>
     `;
   }
 

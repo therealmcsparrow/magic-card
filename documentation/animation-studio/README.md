@@ -10,7 +10,7 @@ The library is shared by every card in your Home Assistant. A card refers to an 
 
 -   The [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration, version 2026.10.04 or newer. It stores the library and hosts the studio in its sidebar panel.
 -   Magic Card added as a dashboard resource of type JavaScript module (`type: module`). HACS and the Home Assistant resource editor add it that way. A resource added as `type: js` does not work.
--   The files `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-anim-runtime.js` in the same folder as your `magic-card.js` resource. Each Magic Card release attaches them, and HACS installs them with the card. With a manual install, copy them next to `magic-card.js`.
+-   The files `magic-card-animation-studio.js`, `magic-card-editor.js`, `magic-card-icon-library.js` and `magic-card-anim-runtime.js` in the same folder as your `magic-card.js` resource. Each Magic Card release attaches them, and HACS installs them with the card. With a manual install, copy them next to `magic-card.js`.
     -   The panel loads the studio from `magic-card-animation-studio.js`.
     -   The studio loads `magic-card-icon-library.js` when you open the Icon animation window, and shows Loading icon library… until it is there. Without the file the window says the icon library could not be loaded and offers Try again. Starting from an icon still works. See [Start from the icon library](icon-mode.md#start-from-the-icon-library).
     -   Cards load `magic-card-anim-runtime.js` only when an animation uses icon parts, drawn shapes, card parts, state clips or value bindings. Without the file those cards still play the rest of the animation.
