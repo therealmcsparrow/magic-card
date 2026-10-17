@@ -90,6 +90,8 @@ rows:                              # required (a list, may be empty)
     gap: 8px                       # space between columns; default 8px
     padding: 0px
     display: {}                    # display conditions for the row
+    hidden: true                   # left out on the dashboard (the studio shows it dimmed)
+    editor_name: Header            # name in the editor's tree and canvas only
     design: {}                     # see Design
     actions:                       # run on a tap outside the row's modules
       tap_action: { action: navigate, navigation_path: "#kitchen" }
@@ -108,6 +110,7 @@ rows:                              # required (a list, may be empty)
             entity: light.desk     # most modules
             attribute: brightness  # read an attribute instead of the state (where supported)
             display: {}
+            editor_name: Desk lamp # also on columns, row-module columns; hidden: true works here too
             design: {}
             actions:
               tap_action: { action: toggle }
@@ -183,9 +186,11 @@ Rows are stacked with a 10px gap. Detail: [Card, rows and columns](../card/READM
 | `gap` | string | `8px` | Space between columns. |
 | `padding` | string | | CSS padding. |
 | `display` | object | | Display conditions. |
+| `hidden` | boolean | `false` | `true` leaves the row out on the dashboard. The studio still shows it, dimmed. Set by Hide on dashboard in the item menu. |
+| `editor_name` | string | | A name for the row in the editor's structure tree, canvas labels and inspector. Never shown on the dashboard. Set by Rename. |
 | `design` | object | | See [Design](#design). |
 | `actions` | object | | `tap_action`, `hold_action`, `double_tap_action`, as on a module. They run when the row is tapped outside a module with its own action or control. A row has no entity, so `toggle` and `more-info` need the action's `entity`. See [Actions](#actions). |
-| `not_synced` | list | | Template-linked card: `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`. |
+| `not_synced` | list | | Template-linked card: `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`, `hidden`, `editor_name`. |
 
 ## Columns
 
@@ -197,8 +202,10 @@ Rows are stacked with a 10px gap. Detail: [Card, rows and columns](../card/READM
 | `padding` | string | | |
 | `vertical_align` | string | `start` | `start`, `center`, `end`, `stretch`. |
 | `display` | object | | Display conditions. |
+| `hidden` | boolean | `false` | `true` leaves the column out on the dashboard (it takes no space). The studio shows it dimmed. |
+| `editor_name` | string | | Editor-only name, as on a row. |
 | `design` | object | | See [Design](#design). |
-| `not_synced` | list | | Template-linked card: `design`, `gap`, `padding`, `vertical_align`. |
+| `not_synced` | list | | Template-linked card: `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name`. |
 
 ## Shared module keys
 
@@ -211,6 +218,8 @@ Every module has these. The module-specific keys are in [Modules](../modules/REA
 | `entity` | string | Entity id. Most modules read it; layout modules and `separator` ignore it. |
 | `attribute` | string | Reads this attribute instead of the state, on modules that support it. |
 | `display` | object | Display conditions. A condition without `entity` counts as met (it does not fall back to the module's entity). |
+| `hidden` | boolean | `true` leaves the module out on the dashboard, as if its display conditions failed. The studio shows it dimmed. Works on layout children too. |
+| `editor_name` | string | Editor-only name. The structure tree, canvas labels and inspector show it in place of "Type · label". The card never shows it, so `label`, `text` and `name` stay what the dashboard shows. |
 | `design` | object | See [Design](#design). |
 | `actions` | object | See [Actions](#actions). |
 | `not_synced` | list | Template-linked card only. |
@@ -228,7 +237,7 @@ Children are full modules: they take `id`, `entity`, `design`, `actions`, `displ
 | `horizontal` | `modules: [...]` | `gap`, `align` (`start`, `center`, `end`, `stretch`), `justify` (`start`, `center`, `end`, `space-between`, `space-around`) |
 | `vertical` | `modules: [...]` | `gap`, `align` |
 | `row` | `columns: [{ modules: [...] }, ...]`, see [Row module columns](#row-module-columns) | `layout` (same syntax as a card row), `column_widths` (one width per column, wins over `layout`, as on a card row), `gap` (default `8px`), `padding` |
-| `tabs` | `tabs: [{ label, icon, modules: [...] }, ...]` | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`) |
+| `tabs` | `tabs: [{ label, icon, hidden, modules: [...] }, ...]`; a tab with `hidden: true` is left out on the dashboard (`active_tab` then counts the shown tabs) | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`) |
 | `slider-layout` | `modules: [...]`, one slide each | `pagination`, `navigation`, `slides_per_view` (default 1), `space_between` (px, default 8), `loop`, `autoplay`, `autoplay_delay` (ms, default 5000) |
 
 A child hidden by its display conditions is left out. A slider then builds no empty slide for it.
@@ -247,6 +256,8 @@ Each entry of a row module's `columns` takes the keys of a card column:
 | `padding` | string | | |
 | `vertical_align` | string | `start` | `start`, `center`, `end`, `stretch`. |
 | `display` | object | | Display conditions. A hidden column takes no space. |
+| `hidden` | boolean | `false` | `true` leaves the column out on the dashboard. |
+| `editor_name` | string | | Editor-only name, as on a card column. |
 | `design` | object | | See [Design](#design). |
 
 A row-module column has no `not_synced` of its own: on a template-linked card, changes to it override the row module's `columns` list. Row modules whose columns have only `modules` (no `column_widths` or `padding`) render with equal columns and the default gap. Detail: [Row](../modules/layout/row.md).
@@ -751,9 +762,9 @@ Detail: [Card, rows and columns](../card/README.md).
 | `not_synced` | card | Card keys kept local: `use_page_theme`, `theme`, `background`, `background_image`, `border_radius`, `padding`, `box_shadow`, `card_height`, `overflow`, `css`, `hover`, `animations`, `ring`, `shape` (with `shape_options`), `value_background`, `seasonal`, `popup`, `flows`. `name`, `display` and `conditional_appearance` always come from the template. |
 | `not_synced` | card | `custom_animations`: the card uses only its own `custom_animations` and none of the template's. |
 | `hidden_animations` | card | Ids of template animation documents this card leaves out. Each item is an id string; any other value hides nothing. A document of the card's own with that id still plays. A template's own `hidden_animations` has no effect. |
-| `not_synced` | row | `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`. `column_widths` or `actions` listed without a local value removes the template's. |
-| `not_synced` | column | `design`, `gap`, `padding`, `vertical_align` |
-| `not_synced` | module | Content keys (`text`, `icon`, `entity`, `image`, `content`, `label`, `attribute`, `prefix`, `suffix`, `url`, `service`, `service_data`, `data`, `use_entity`, `entity_display`, `use_entity_icon`, `use_entity_color`, `icon_color`, `size`, `icon_fx`, `icon_on`, `icon_off`, `svg`, `animated_icons`), the child list (`modules`, `columns` or `tabs`), on a row module also `layout`, `column_widths`, `gap` and `padding`, `design` or `design.<key>` (`design.shape` covers `shape_options` too), `actions` or `actions.<name>` |
+| `not_synced` | row | `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`, `hidden`, `editor_name`. `column_widths` or `actions` listed without a local value removes the template's. So does `hidden` or `editor_name` listed without a local value. |
+| `not_synced` | column | `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name` |
+| `not_synced` | module | Content keys (`text`, `icon`, `entity`, `image`, `content`, `label`, `attribute`, `prefix`, `suffix`, `url`, `service`, `service_data`, `data`, `use_entity`, `entity_display`, `use_entity_icon`, `use_entity_color`, `icon_color`, `size`, `icon_fx`, `icon_on`, `icon_off`, `svg`, `animated_icons`), `hidden`, `editor_name`, the child list (`modules`, `columns` or `tabs`), on a row module also `layout`, `column_widths`, `gap` and `padding`, `design` or `design.<key>` (`design.shape` covers `shape_options` too), `actions` or `actions.<name>` |
 
 A linked card's `custom_animations` is merged with the template's by id. The card plays the template's documents in the template's order. A document of the card's own with the same id replaces the template's version of that one, and the card's other documents come after the template's. When an id appears twice on one side, the first one counts.
 

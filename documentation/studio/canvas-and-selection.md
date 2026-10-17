@@ -3,6 +3,7 @@
 The canvas draws one live copy of the card with your Home Assistant data. You select rows, columns and modules by clicking them on the card.
 
 -   [Clicking](#clicking)
+-   [Right-click and long-press](#right-click-and-long-press)
 -   [Hover](#hover)
 -   [Selection frame and colours](#selection-frame-and-colours)
 -   [The live card on the canvas](#the-live-card-on-the-canvas)
@@ -26,7 +27,13 @@ A click selects the innermost item under the pointer:
 
 To reach a parent from a selected module, press Escape (module, then column, row, card), or use the breadcrumbs in the inspector header. A child of a Tabs or Row module goes to its tab or row-module column first, then to the layout module. See [Keyboard shortcuts](keyboard-shortcuts.md).
 
-The hint under the canvas reads "Click a module to select it. Alt + Up/Down moves it, Del removes it."
+The hint under the canvas reads "Click a module to select it. Alt + Up/Down moves it, Del removes it, Shift + F10 opens its menu."
+
+## Right-click and long-press
+
+Right-click selects what a click would select and opens its menu at the pointer. On the dotted background it opens the card's menu. On a touch screen, hold a finger still on the card for half a second. Shift+right-click keeps the browser's own menu. The menus are the same as in Layers; see [Item menus](../editor/item-menus.md).
+
+Copy and paste actions confirm in a small message at the foot of the canvas ("Row 2 YAML copied"), which screen readers announce.
 
 ## Hover
 
@@ -67,7 +74,7 @@ Module-specific behaviour is described in [Modules](../modules/README.md).
 
 ## Hidden, empty and nested items
 
--   Display conditions do not hide anything on the canvas. Rows, columns and modules whose conditions are not met are drawn at reduced opacity and can still be selected. Card-level display conditions are ignored on the canvas. See [Inspector](../inspector/README.md).
+-   Display conditions and Hide on dashboard do not hide anything on the canvas. Rows, columns, modules and tabs whose conditions are not met, or that are hidden on the dashboard, are drawn at reduced opacity and can still be selected. The name tag of a hidden item ends in "· hidden". Card-level display conditions are ignored on the canvas. See [Inspector](../inspector/README.md).
 -   An empty column is drawn as a dashed box at least 40 px high, so you can click it.
 -   An empty slot of a layout module shows placeholder text.
 -   Tabs and Slider layouts: when you select a child that sits in another tab or slide (in Layers or by undo), the canvas switches to the tab or slide that holds it.

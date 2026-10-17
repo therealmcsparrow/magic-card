@@ -29,7 +29,8 @@ If the file is missing or cannot be loaded, Home Assistant falls back to its YAM
 ## Pages
 
 -   [Form and YAML](form-and-yaml.md): the two editing modes and how YAML edits are applied.
--   [Structure outline](structure-outline.md): items, layout modules with their tabs and columns, selection, the three-dot menus, keyboard and drag and drop.
+-   [Structure outline](structure-outline.md): items, layout modules with their tabs and columns, selection, item menus, keyboard and drag and drop.
+-   [Item menus](item-menus.md): the menu of every item (right-click, long-press, Shift+F10, three-dot button): copy YAML, copy and paste modules, wrap in a layout, hide on the dashboard, rename, reset to template.
 -   [Adding rows, columns and modules](adding-structure.md): the add buttons, children, tabs and columns of layout modules, and the Add module picker.
 -   [Undo and redo](undo-redo.md): what is recorded and how long the history lasts.
 -   [Templates](templates.md): create, load, overrides, template animations, re-sync, save and unlink.

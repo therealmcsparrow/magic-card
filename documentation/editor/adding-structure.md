@@ -63,7 +63,7 @@ Each Add module opens the [Add module picker](#the-add-module-picker) for that p
 
 A new tab is called "Tab N" (its position) and is empty. A new row-module column is empty and goes at the end. Its widths change as for a card row: a module with a layout preset gets equal widths, and a module with its own `column_widths` keeps them and gives the new column `1fr`. The new tab or column is selected.
 
-The last tab of a Tabs module and the last column of a Row module cannot be deleted. See [Structure outline](structure-outline.md#three-dot-menus) for renaming, moving and deleting tabs and columns.
+The last tab of a Tabs module and the last column of a Row module cannot be deleted. See [Item menus](item-menus.md#tab) for renaming, moving and deleting tabs and columns.
 
 The layout modules are described in [Layout modules](../modules/layout/README.md).
 

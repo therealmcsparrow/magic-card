@@ -3,6 +3,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { EditorMode, EditorState, HomeAssistant } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
 import type { Inspector } from '../inspector/inspector';
+import type { StructureOutline } from './structure-outline';
+import type { Selection } from './selection';
+import { selectionKey } from './selection';
 import { editorSystem } from '../../css/editor-system';
 import type { StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
@@ -58,6 +61,8 @@ export class Studio extends LitElement {
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
   private _focusSel: string | null = null;
+  /** The Layers overlay was opened for a rename from the canvas (it closes again afterwards). */
+  private _layersForRename = false;
 
   get inspector(): Inspector | null {
     return this.shadowRoot?.querySelector('mc-inspector') ?? null;
@@ -136,6 +141,29 @@ export class Studio extends LitElement {
   private _onEditModule = (): void => {
     if (this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) this._showLayers = false;
     this.inspector?.focusInspector();
+  };
+
+  /** Rename from the canvas menu: the Layers field (the overlay opens when narrow); focus returns to the canvas. */
+  private _onRenameRequest = async (e: Event): Promise<void> => {
+    const d = (e as CustomEvent<{ sel: Selection; returnFocus?: HTMLElement }>).detail;
+    if (!d) return;
+    if (!this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) {
+      this._showLayers = true;
+      this._layersForRename = true;
+    }
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<StructureOutline>('mc-structure-outline')?.startRename(selectionKey(d.sel), d.returnFocus);
+  };
+
+  private _onRenameDone = (): void => {
+    if (this._layersForRename) this._showLayers = false;
+    this._layersForRename = false;
+  };
+
+  /** Copy / paste feedback from the Layers menus goes to the canvas status capsule. */
+  private _onStatus = (e: Event): void => {
+    const message = (e as CustomEvent<{ message: string }>).detail?.message;
+    if (message) this.shadowRoot?.querySelector<StudioCanvas>('mc-studio-canvas')?.showStatus(message);
   };
 
   // ── dialog events ──
@@ -301,11 +329,13 @@ export class Studio extends LitElement {
                     <h2>Layers</h2>
                     <span class="chip is-count">${mods} module${mods === 1 ? '' : 's'}</span>
                   </div>
-                  <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}></mc-structure-outline>
+                  <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}
+                    @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
                 </nav>
                 <div class="center">
                   ${mode === 'form'
-                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} @mc-match-view=${this._onMatchView}></mc-studio-canvas>`
+                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} @mc-match-view=${this._onMatchView}
+                        @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}></mc-studio-canvas>`
                     : html`
                         <div class="center-alt">
                           <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>

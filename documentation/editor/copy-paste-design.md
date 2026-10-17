@@ -11,7 +11,7 @@ You can copy the design of a row, column or module and paste it onto another row
 
 | Place | Items |
 | --- | --- |
-| Three-dot menu of a row, column or module in the outline or Layers | Copy design, Paste design, Merge pasted design |
+| The [item menu](item-menus.md) of a row, column, module or row-module column (outline, Layers or the Studio canvas) | Copy design, Paste design, Merge pasted design |
 | Top of the Design tab of a row, column or module | Copy design, and Paste design with a menu: Replace design, Merge into design |
 
 The paste items are disabled until something has been copied; their tooltip says "Copy a design first". In the Design tab, a short status ("Design copied", "Design pasted") confirms the action.
