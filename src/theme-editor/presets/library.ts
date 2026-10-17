@@ -186,14 +186,14 @@ const PRESETS: ThemePreset[] = [
   P('cobalt-prism', 'Cobalt Prism', 'genre', 'Ultramarine blue with an orange spark, sleek and futuristic.', '2438c8b55200e3edf8f6f9fd0f223644596ecfdeee6e8de6f09a45050d1a102036e6f3ff9db7d1243e66', { tags: 'sci-fi hologram space' }),
   P('deep-survey', 'Deep Survey', 'genre', 'Off-white panels, burnt orange accent: navy ink by day, denim blue at night.', '2a2f7ac2410ce9eceff7f8fa14181d4a5563d3d8de637c9ee8944f0d1014171b21e8ebf0a9b2bf2c333d', { tags: 'sci-fi explorer space' }),
   P('dust-duel', 'Dust Duel', 'genre', 'Red-clay desert, brick header, red accent; sand-gold by night.', '581c12b02a1af0d8c8faeadf2f241866503ddfc3aecdb582e2705d1c16102a2118f5ead6c4b192463a2a', { tags: 'sci-fi space' }),
-  P('frontier-freighter', 'Frontier Freighter', 'genre', 'Weathered teal with worn rust and brass, warm and a little scruffy.', '1f6f6a8a3f1cefe6d6faf4e82b231b5f5444dccfb65fb3a8d98b4f1a161326201beee3d0b9a98f41372d', { tags: 'sci-fi western space calm' }),
+  P('frontier-freighter', 'Frontier Freighter', 'genre', 'Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.', '8667538a3f1cefe6d6faf4e82b231b5f5444dccfb65fb3a8d98b4f1a161326201beee3d0b9a98f41372d', { tags: 'sci-fi western space calm' }),
   P('neon-rain', 'Neon Rain', 'genre', 'Hot magenta and electric cyan neon on a dark city night.', 'b0159c097a94e8ebf4f8f9fd1a1a2e4d5070d0d4e6d480c23ee6f7070a1c111635eaf2ff9fb2d82b3b78', { tags: 'sci-fi cyberpunk noir' }),
   P('ochre-basin', 'Ochre Basin', 'genre', 'Sun-baked ochre, olive header; at night an ochre glow on deep indigo.', '4a4a1c8f5a00eed890f8ecbc2a20105e4d2cd8c070b08a109aa6f20f14261a2038f6ecd2c2b9922f3a63', { tags: 'sci-fi arid desert' }),
-  P('orbital-smelter', 'Orbital Smelter', 'genre', 'Furnace-brown and steel-grey with a coolant-cyan accent; copper at night.', '3814080b6b80cdd2d7eceff21b1f23454d55b4bcc3d9894f4cc3d913181d222a32ecedeea8b0b83a444d', { tags: 'sci-fi space' }),
+  P('orbital-smelter', 'Orbital Smelter', 'genre', 'Deep petrol and steel-grey with a coolant-cyan accent; copper at night.', '0a5b740b6b80cdd2d7eceff21b1f23454d55b4bcc3d9894f4cc3d913181d222a32ecedeea8b0b83a444d', { tags: 'sci-fi space' }),
   P('ashen-keep', 'Ashen Keep', 'genre', 'Charcoal iron and pale limestone; deep red accent, coral at night.', '30323a8c1f2be4e1daf6f4ef201e1e55504fcbc6bca49894e0707a16161825252aecebeaaeaaa83b3b41', { tags: 'fantasy medieval winter low-glare night' }),
   P('candlelit-cloister', 'Candlelit Cloister', 'genre', 'Plum and old gold on parchment; wine-black at night.', '5b2a5e8a6212f1e6d2faf1de2a1a1a5f4a40ddcbaad6a3b8e3b95a1b0d122e1822f3e6d3c0ab9e4a2a38', { tags: 'fantasy magic cozy wine' }),
   P('crimson-pines', 'Crimson Pines', 'genre', 'Oxblood red over a dark pine forest, moss-green panels, green-black nights.', '7b22301f6b4ad5e0d3f1f6ee18211b44534ab8c8b8c474886fbf8f0a120d16241be6ece9a3b0aa2c4034', { tags: 'fantasy dusk' }),
-  P('silverleaf-glade', 'Silverleaf Glade', 'genre', 'Silver-teal leaves and gold touches by day; sage green by night.', '2850688a6a10edf1eef9fbfa1c26224a5a55d2dcd8709078e0c06810161519211fe6eeeba7b7b12d3a36', { tags: 'fantasy forest elegant low-glare night' }),
+  P('silverleaf-glade', 'Silverleaf Glade', 'genre', 'Silvered jade leaves and gold touches by day; sage green by night.', '1a7f698a6a10edf1eef9fbfa1c26224a5a55d2dcd8709078e0c06810161519211fe6eeeba7b7b12d3a36', { tags: 'fantasy forest elegant low-glare night' }),
 ];
 
 export const THEME_PRESET_LIBRARY: ThemePresetLibrary = { version: '1.1.0', presets: PRESETS };

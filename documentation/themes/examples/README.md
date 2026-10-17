@@ -373,7 +373,7 @@ Red-clay desert, brick header, red accent; sand-gold by night.
 
 ## Frontier Freighter
 
-Weathered teal with worn rust and brass, warm and a little scruffy.
+Saddle tan and rust on sandy cream, a little scruffy; weathered teal at night.
 
 ![Frontier Freighter preview, light and dark modes side by side](images/frontier-freighter.webp)
 
@@ -391,7 +391,7 @@ Sun-baked ochre, olive header; at night an ochre glow on deep indigo.
 
 ## Orbital Smelter
 
-Furnace-brown and steel-grey with a coolant-cyan accent; copper at night.
+Deep petrol and steel-grey with a coolant-cyan accent; copper at night.
 
 ![Orbital Smelter preview, light and dark modes side by side](images/orbital-smelter.webp)
 
@@ -415,7 +415,7 @@ Oxblood red over a dark pine forest, moss-green panels, green-black nights.
 
 ## Silverleaf Glade
 
-Silver-teal leaves and gold touches by day; sage green by night.
+Silvered jade leaves and gold touches by day; sage green by night.
 
 ![Silverleaf Glade preview, light and dark modes side by side](images/silverleaf-glade.webp)
 
