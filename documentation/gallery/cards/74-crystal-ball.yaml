@@ -44,9 +44,8 @@ rows:
                 text: "{{ as_timestamp(state_attr('calendar.family','start_time'), none) | timestamp_custom('%a %-d %b') if state_attr('calendar.family','start_time') else 'Nothing planned' }}"
                 design: { text_align: center, font_size: 12px, color: "#e0d8ff", text_transform: uppercase, letter_spacing: 1.5px }
               - type: text
-                use_entity: true
-                entity: calendar.family
-                attribute: message
+                use_template: true
+                text: "{{ state_attr('calendar.family','message') or 'Free day' }}"
                 design: { text_align: center, font_size: 17px, font_weight: "700", color: "#f4f0ff", line_height: "1.2", margin_top: 8px }
   - id: stand
     padding: 0
@@ -79,7 +78,6 @@ rows:
                 size: 16px
                 design: { color: "#b9a8f0" }
               - type: text
-                use_entity: true
-                entity: calendar.family
-                attribute: location
+                use_template: true
+                text: "{{ state_attr('calendar.family','location') or 'No location' }}"
                 design: { font_size: 13px, color: "#d9d0f7" }
