@@ -1,0 +1,162 @@
+# Energy flow: solar, grid, home and battery, with animated power lines between them.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power,
+#           sensor.battery_power, sensor.home_battery, sensor.energy_today
+type: custom:magic-card
+name: Energy
+background: "linear-gradient(180deg, #0f1724 0%, #0b111b 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Energy now
+            design: { font_size: 17px, font_weight: "600", color: "#e6edf7" }
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            design:
+              padding: 5px 12px
+              border_radius: 999px
+              background_color: "rgba(255,209,102,0.12)"
+            modules:
+              - type: icon
+                icon: mdi:solar-power-variant
+                size: 16px
+                design: { color: "#ffd166" }
+              - type: text
+                use_entity: true
+                entity: sensor.energy_today
+                design: { font_size: 12px, font_weight: "600", color: "#ffd166" }
+              - type: text
+                text: today
+                design: { font_size: 12px, color: "#b8a26a" }
+  - id: top
+    layout: "1-1-1"
+    columns:
+      - modules: []
+      - modules:
+          - id: solar
+            type: vertical
+            align: center
+            gap: 6px
+            modules:
+              - type: icon
+                icon: mdi:white-balance-sunny
+                size: 30px
+                design:
+                  color: "#ffd166"
+                  width: 64px
+                  height: 64px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  border: "2px solid #ffd166"
+                  background_color: "rgba(255,209,102,0.10)"
+                  box_shadow: "0 0 24px rgba(255,209,102,0.25)"
+                  animations:
+                    - { preset: fast-spin, target: icon, duration: 24s }
+              - type: text
+                use_entity: true
+                entity: sensor.solar_power
+                design: &val { font_size: 14px, font_weight: "700", color: "#e6edf7" }
+      - modules: []
+  - id: middle
+    layout: "1-1-1"
+    padding: 22px 0 0
+    columns:
+      - modules:
+          - id: grid
+            type: vertical
+            align: center
+            gap: 6px
+            modules:
+              - type: icon
+                icon: mdi:transmission-tower
+                size: 28px
+                design:
+                  color: "#8ecae6"
+                  width: 64px
+                  height: 64px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  border: "2px solid #8ecae6"
+                  background_color: "rgba(142,202,230,0.10)"
+                  box_shadow: "0 0 24px rgba(142,202,230,0.2)"
+              - type: text
+                use_entity: true
+                entity: sensor.grid_power
+                design: *val
+              - type: text
+                text: Exporting
+                design: &sub { font_size: 11px, color: "#7b8aa0", margin_top: -4px }
+      - modules:
+          - id: house
+            type: vertical
+            align: center
+            gap: 6px
+            modules:
+              - type: icon
+                icon: mdi:home-variant
+                size: 36px
+                design:
+                  color: "#ffffff"
+                  width: 80px
+                  height: 80px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  border: "2px solid #6ee7b7"
+                  background_color: "rgba(110,231,183,0.12)"
+                  box_shadow: "0 0 30px rgba(110,231,183,0.3)"
+              - type: text
+                use_entity: true
+                entity: sensor.house_power
+                design: *val
+              - type: text
+                text: Using
+                design: *sub
+      - modules:
+          - id: battery
+            type: vertical
+            align: center
+            gap: 6px
+            modules:
+              - type: icon
+                entity: sensor.home_battery
+                icon: mdi:battery
+                size: 30px
+                icon_fx:
+                  fill: { color: "#c084fc", empty_color: 25% }
+                design:
+                  color: "#c084fc"
+                  width: 64px
+                  height: 64px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  border: "2px solid #c084fc"
+                  background_color: "rgba(192,132,252,0.10)"
+                  box_shadow: "0 0 24px rgba(192,132,252,0.22)"
+              - type: text
+                use_entity: true
+                entity: sensor.home_battery
+                design: *val
+              - type: text
+                text: Charging
+                design: *sub
+flows:
+  - { id: solar-house, from: solar, to: house, entity: sensor.solar_power, max: 5000, color: "#ffd166", glow: 6, dots: 3, route: straight }
+  - { id: house-grid, from: house, to: grid, entity: sensor.grid_power, max: 5000, color: "#8ecae6", glow: 6, route: straight, reverse_negative: false }
+  - { id: house-battery, from: house, to: battery, entity: sensor.battery_power, max: 3000, color: "#c084fc", glow: 6, route: straight }

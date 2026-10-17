@@ -1,0 +1,97 @@
+# Weather hero: a sky gradient with the current conditions, then a 5-day strip.
+# Entities: weather.home, sensor.outdoor_temperature
+type: custom:magic-card
+name: Weather
+background: "linear-gradient(160deg, #3a7bd5 0%, #5b9df0 45%, #8ec5fc 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 18px 40px rgba(58, 123, 213, 0.35)"
+css: "color: #ffffff;"
+rows:
+  - id: now
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Amsterdam
+            design:
+              font_size: 15px
+              font_weight: "500"
+              opacity: "0.85"
+              letter_spacing: 0.5px
+          - type: text
+            use_entity: true
+            entity: weather.home
+            attribute: temperature
+            design:
+              font_size: 64px
+              font_weight: "200"
+              line_height: "1"
+              letter_spacing: -2px
+          - type: text
+            use_entity: true
+            entity: weather.home
+            design:
+              font_size: 17px
+              font_weight: "500"
+      - vertical_align: center
+        modules:
+          - type: weather
+            entity: weather.home
+            show_temperature: false
+            show_condition: false
+            animated_icons: true
+            design:
+              css: "--mc-icon-size-xl: 112px;"
+              filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.18))"
+  - id: details
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            modules:
+              - type: info
+                entity: weather.home
+                attribute: humidity
+                show_name: false
+                show_icon: true
+                icon: mdi:water-percent
+                design: &pill
+                  flex: "1"
+                  padding: 8px 8px
+                  css: "--mc-icon-size-lg: 18px; --mc-gap-md: 6px; --mc-font-size-xl: 14px;"
+                  white_space: nowrap
+                  border_radius: 14px
+                  background_color: "rgba(255,255,255,0.18)"
+                  backdrop_filter: blur(6px)
+                  font_size: 13px
+                  color: "#ffffff"
+              - type: info
+                entity: weather.home
+                attribute: wind_speed
+                show_name: false
+                show_icon: true
+                icon: mdi:weather-windy
+                design: *pill
+              - type: info
+                entity: sensor.outdoor_temperature
+                show_name: false
+                show_icon: true
+                icon: mdi:thermometer
+                design: *pill
+  - id: forecast
+    columns:
+      - modules:
+          - type: forecast
+            entity: weather.home
+            forecast_type: daily
+            num_forecasts: 4
+            show_precipitation: false
+            design:
+              css: "--mc-forecast-icon-size: 30px; justify-content: space-between;"
+              padding: 10px 4px
+              border_radius: 18px
+              background_color: "rgba(255,255,255,0.14)"
+              color: "#ffffff"

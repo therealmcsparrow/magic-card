@@ -22,6 +22,7 @@ rows:
 | [YAML mode](yaml-mode.md) | How the editor applies YAML, validation and error messages, what it keeps and changes, round trips with Form mode, template-linked cards, legacy keys |
 | [Troubleshooting](troubleshooting.md) | Common mistakes and their fixes |
 | [Examples](examples/README.md) | Thirteen complete cards to copy and adapt |
+| [Card gallery](../gallery/README.md) | Sixty more cards with screenshots and recordings, grouped by topic |
 
 ## Related
 

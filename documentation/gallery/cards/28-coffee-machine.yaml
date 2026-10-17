@@ -1,0 +1,108 @@
+# Coffee machine: a steaming cup while it's on, boiler temperature, cups today,
+# and one big brew button.
+# Entities: switch.coffee_machine, sensor.coffee_boiler, sensor.coffee_count
+type: custom:magic-card
+name: Coffee
+background: "linear-gradient(160deg, #fffaf5 0%, #f6ebe1 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 14px 34px rgba(120, 53, 15, 0.16)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 16px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: switch.coffee_machine
+            icon: mdi:coffee
+            size: 40px
+            design:
+              color: "#78350f"
+              width: 80px
+              height: 80px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: squircle
+              background: "linear-gradient(145deg, #fde7cf, #f5cba7)"
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Espresso machine
+            design: { font_size: 13px, font_weight: "600", color: "#a16207" }
+          - type: text
+            text: Ready to brew
+            design: { font_size: 22px, font_weight: "800", color: "#451a03" }
+          - type: horizontal
+            gap: 12px
+            modules:
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:thermometer
+                    size: 15px
+                    design: { color: "#c2410c" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.coffee_boiler
+                    design: { font_size: 13px, font_weight: "700", color: "#78350f" }
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:cup-outline
+                    size: 15px
+                    design: { color: "#c2410c" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.coffee_count
+                    design: { font_size: 13px, font_weight: "700", color: "#78350f" }
+                  - type: text
+                    text: today
+                    design: { font_size: 13px, color: "#a16207" }
+  - id: brew
+    layout: "2-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 13px
+              border_radius: 18px
+              background: "linear-gradient(135deg, #92400e, #451a03)"
+              box_shadow: "0 10px 22px rgba(120,53,15,0.35)"
+            actions:
+              tap_action: { action: perform-action, service: script.brew_espresso }
+            modules:
+              - type: icon
+                icon: mdi:coffee-to-go
+                size: 20px
+                design: { color: "#fde7cf" }
+              - type: text
+                text: Brew espresso
+                design: { font_size: 14px, font_weight: "800", color: "#fffaf5" }
+      - modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            justify: center
+            design:
+              padding: 13px
+              border_radius: 18px
+              background_color: "#f5e6d8"
+            actions:
+              tap_action: { action: toggle, entity: switch.coffee_machine }
+            modules:
+              - type: icon
+                icon: mdi:power
+                size: 20px
+                design: { color: "#92400e" }

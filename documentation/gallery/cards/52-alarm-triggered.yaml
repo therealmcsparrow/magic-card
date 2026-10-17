@@ -1,0 +1,86 @@
+# Alarm triggered: a shaking shield over pinging rings, a red neon border and a pulsing disarm button. Calm and grey once the alarm is disarmed.
+# Entities: alarm_control_panel.backyard, binary_sensor.patio_motion, siren.outdoor
+type: custom:magic-card
+name: Alarm
+background: "linear-gradient(170deg, #2a0a0a 0%, #160505 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 50px rgba(220, 38, 38, 0.35)"
+animations:
+  - { id: neon, preset: neon-border, trigger: state, trigger_entity: alarm_control_panel.backyard, state: triggered, color: "#ef4444", intensity: 12 }
+rows:
+  - id: shield
+    padding: 6px 0 0
+    columns:
+      - modules:
+          - type: icon
+            entity: alarm_control_panel.backyard
+            icon: mdi:shield-alert
+            size: 54px
+            design:
+              color: "#fecaca"
+              width: 120px
+              height: 120px
+              margin: 0 auto
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background: "radial-gradient(circle, #dc2626 0%, #7f1d1d 100%)"
+              animations:
+                - { id: ping, preset: ping, trigger: state, state: triggered, color: "#f87171", strength: 80, intensity: 120 }
+                - { id: shake, preset: shake-alert, target: icon, trigger: state, state: triggered, intensity: 4 }
+  - id: text
+    padding: 14px 0 0
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Intruder alarm
+            design: { text_align: center, font_size: 22px, font_weight: "800", color: "#ffffff" }
+          - type: horizontal
+            gap: 6px
+            justify: center
+            align: center
+            modules:
+              - type: icon
+                entity: binary_sensor.patio_motion
+                icon: mdi:motion-sensor
+                size: 16px
+                design:
+                  color: "#fca5a5"
+                  animations:
+                    - { id: blink, preset: blink, trigger: entity_on, intensity: 70 }
+              - type: text
+                text: Motion on the patio · 21:14
+                design: { font_size: 13px, color: "#fca5a5" }
+  - id: actions
+    column_widths: [auto, 1fr]
+    gap: 10px
+    padding: 16px 0 0
+    columns:
+      - modules:
+          - type: icon
+            entity: siren.outdoor
+            icon: mdi:alarm-light
+            size: 22px
+            icon_fx:
+              device: auto
+            design: { color: "#fca5a5", padding: 13px, border_radius: 16px, background_color: "rgba(239,68,68,0.14)" }
+            actions:
+              tap_action: { action: toggle, entity: siren.outdoor }
+      - modules:
+          - type: text
+            text: Disarm
+            design:
+              text_align: center
+              padding: 14px
+              border_radius: 16px
+              font_size: 15px
+              font_weight: "800"
+              color: "#7f1d1d"
+              background_color: "#ffffff"
+              animations:
+                - { id: glow, preset: glow-pulse, color: "#ef4444", strength: 80, intensity: 18, duration: 1.2s }
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_disarm, data: { entity_id: alarm_control_panel.backyard } }

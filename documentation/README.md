@@ -22,9 +22,16 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
 
+## Examples
+
+| Folder | Covers |
+| --- | --- |
+| [Card gallery](gallery/README.md) | Sixty complete cards with screenshots and YAML, twenty of them animated: weather, climate, energy, lights, media, security, appliances, garden, seasonal and more |
+
 ## Where to start
 
 -   New to the card: read [Pane editor](editor/README.md), then [Studio](studio/README.md).
 -   Writing YAML by hand: start with [YAML](yaml/README.md), then [Card, rows and columns](card/README.md) and [Modules](modules/README.md).
+-   Looking for ideas: browse the [Card gallery](gallery/README.md) and copy a card.
 -   Styling: [Design](design/README.md) and [Icon effects](icon-effects/README.md).
 -   Your own animations: [Animation studio](animation-studio/README.md). To make an icon's parts move, start with [Icon animations](animation-studio/icon-mode.md), or with the icon picker's Animated icons tab in the card editor (see [Icon animations in cards](design/quick-icon-animator.md)). [Icon parts](animation-studio/parts.md) covers the details. To react to an entity, read [States and values](animation-studio/states-and-values.md).

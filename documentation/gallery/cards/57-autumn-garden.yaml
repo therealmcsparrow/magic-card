@@ -1,0 +1,107 @@
+# Autumn garden: the card's autumn scene drops leaves and a little drizzle over the garden lights, the rain today and a leaf vacuum switch.
+# `seasonal: autumn` keeps the scene all year. Use `seasonal: auto` to follow the calendar instead.
+# Entities: light.garden, sensor.outdoor_temperature, sensor.rain_today, switch.leaf_vacuum
+type: custom:magic-card
+name: Autumn garden
+background: "linear-gradient(165deg, #7c2d12 0%, #451a03 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 18px 40px rgba(124, 45, 18, 0.4)"
+seasonal:
+  scene: autumn
+  intensity: 70%
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Garden
+            design: { font_size: 24px, font_weight: "800", color: "#fff7ed" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.outdoor_temperature
+                design: { font_size: 13px, font_weight: "700", color: "#fed7aa" }
+              - type: text
+                text: ·
+                design: { font_size: 13px, color: "#fdba74" }
+              - type: icon
+                icon: mdi:weather-rainy
+                size: 15px
+                design: { color: "#fdba74" }
+              - type: text
+                use_entity: true
+                entity: sensor.rain_today
+                design: { font_size: 13px, color: "#fed7aa" }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:leaf-maple
+            size: 44px
+            design:
+              color: "#fb923c"
+              animations:
+                - { id: sway, preset: pendulum, target: icon, intensity: 18 }
+  - id: tiles
+    layout: "1-1"
+    gap: 10px
+    padding: 18px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 8px
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "rgba(255,237,213,0.12)"
+              border: "1px solid rgba(253,186,116,0.25)"
+            actions:
+              tap_action: { action: toggle, entity: light.garden }
+            modules:
+              - type: icon
+                entity: light.garden
+                icon: mdi:outdoor-lamp
+                size: 28px
+                icon_fx:
+                  device: auto
+                design: { color: "#fcd34d" }
+              - type: text
+                text: Path lights
+                design: { font_size: 14px, font_weight: "800", color: "#fff7ed" }
+              - type: text
+                use_entity: true
+                entity: light.garden
+                design: { font_size: 12px, color: "#fdba74" }
+      - modules:
+          - type: vertical
+            gap: 8px
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "rgba(255,237,213,0.12)"
+              border: "1px solid rgba(253,186,116,0.25)"
+            actions:
+              tap_action: { action: toggle, entity: switch.leaf_vacuum }
+            modules:
+              - type: icon
+                entity: switch.leaf_vacuum
+                icon_on: mdi:leaf-circle
+                icon_off: mdi:leaf
+                size: 28px
+                icon_fx:
+                  morph: true
+                  draw: change
+                design: { color: "#fdba74" }
+              - type: text
+                text: Leaf vacuum
+                design: { font_size: 14px, font_weight: "800", color: "#fff7ed" }
+              - type: text
+                use_entity: true
+                entity: switch.leaf_vacuum
+                design: { font_size: 12px, color: "#fdba74" }

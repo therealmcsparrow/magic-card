@@ -1,0 +1,124 @@
+# Device batteries: a big phone battery that fills with the charge (liquid wave),
+# and mini bars for the watch and earbuds.
+# Entities: sensor.phone_battery, binary_sensor.phone_charging,
+#           sensor.watch_battery, sensor.earbuds_battery
+type: custom:magic-card
+name: Batteries
+background: "linear-gradient(145deg, #0f2027 0%, #203a43 55%, #2c5364 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 18px 40px rgba(15, 32, 39, 0.5)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 18px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: sensor.phone_battery
+            icon: mdi:battery
+            size: 96px
+            icon_fx:
+              fill:
+                color: "#4ade80"
+                empty_color: 16%
+                wave: true
+            design:
+              color: "#4ade80"
+              filter: "drop-shadow(0 0 16px rgba(74,222,128,0.35))"
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Pixel 9
+            design: { font_size: 14px, color: "#9ec5d3", font_weight: "600" }
+          - type: text
+            use_entity: true
+            entity: sensor.phone_battery
+            design: { font_size: 48px, font_weight: "800", color: "#ffffff", line_height: "1.05", letter_spacing: -1px }
+          - type: horizontal
+            gap: 6px
+            align: center
+            display:
+              conditions: [{ type: state, entity: binary_sensor.phone_charging, state: "on" }]
+            modules:
+              - type: icon
+                icon: mdi:lightning-bolt
+                size: 16px
+                design:
+                  color: "#facc15"
+                  filter: "drop-shadow(0 0 6px rgba(250,204,21,0.7))"
+                  animations: [{ preset: fade-pulse, duration: 1.8s, intensity: 40 }]
+              - type: text
+                text: Charging
+                design: { font_size: 13px, font_weight: "600", color: "#facc15" }
+  - id: others
+    padding: 14px 0 0
+    design:
+      border_top: "1px solid rgba(255,255,255,0.08)"
+    layout: "1-1"
+    gap: 16px
+    columns:
+      - gap: 6px
+        modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:watch-variant
+                    size: 16px
+                    design: { color: "#9ec5d3" }
+                  - type: text
+                    text: Watch
+                    design: { font_size: 13px, color: "#cfe3ea" }
+              - type: text
+                use_entity: true
+                entity: sensor.watch_battery
+                design: { font_size: 13px, font_weight: "700", color: "#ffffff" }
+          - type: bar
+            entity: sensor.watch_battery
+            show_value: false
+            bar_height: 6px
+            bar_background: "rgba(255,255,255,0.1)"
+            severity:
+              - { from: 0, color: "#f87171" }
+              - { from: 20, color: "#fbbf24" }
+              - { from: 50, color: "#4ade80" }
+            design: { border_radius: 999px }
+      - gap: 6px
+        modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:earbuds
+                    size: 16px
+                    design: { color: "#9ec5d3" }
+                  - type: text
+                    text: Earbuds
+                    design: { font_size: 13px, color: "#cfe3ea" }
+              - type: text
+                use_entity: true
+                entity: sensor.earbuds_battery
+                design: { font_size: 13px, font_weight: "700", color: "#ffffff" }
+          - type: bar
+            entity: sensor.earbuds_battery
+            show_value: false
+            bar_height: 6px
+            bar_background: "rgba(255,255,255,0.1)"
+            severity:
+              - { from: 0, color: "#f87171" }
+              - { from: 20, color: "#fbbf24" }
+              - { from: 50, color: "#4ade80" }
+            design: { border_radius: 999px }

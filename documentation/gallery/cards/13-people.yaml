@@ -1,0 +1,111 @@
+# Who's home: round avatars with a coloured presence ring and a status pill.
+# Avatars come from the person entities' pictures.
+# Entities: person.anna, person.ben, person.lisa
+type: custom:magic-card
+name: People
+background: "#ffffff"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 14px 34px rgba(99, 102, 241, 0.14)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - modules:
+          - type: text
+            text: Who's home
+            design: { font_size: 17px, font_weight: "800", color: "#1e1b4b" }
+      - modules:
+          - type: text
+            text: 1 of 3
+            design: { font_size: 12px, font_weight: "700", color: "#6366f1", padding: 3px 10px, border_radius: 999px, background_color: "#eef2ff" }
+  - id: people
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 8px
+            actions:
+              tap_action: { action: more-info, entity: person.anna }
+            modules:
+              - type: image
+                entity: person.anna
+                entity_picture: true
+                aspect_ratio: "1"
+                design:
+                  width: 76px
+                  border_radius: 50%
+                  css: "outline: 3px solid #22c55e; outline-offset: 3px;"
+              - type: text
+                text: Anna
+                design: &name { font_size: 14px, font_weight: "700", color: "#1e1b4b" }
+              - type: text
+                use_entity: true
+                entity: person.anna
+                design:
+                  font_size: 11px
+                  font_weight: "700"
+                  padding: 2px 10px
+                  border_radius: 999px
+                  color: "#15803d"
+                  background_color: "#dcfce7"
+      - modules:
+          - type: vertical
+            align: center
+            gap: 8px
+            actions:
+              tap_action: { action: more-info, entity: person.ben }
+            modules:
+              - type: image
+                entity: person.ben
+                entity_picture: true
+                aspect_ratio: "1"
+                design:
+                  width: 76px
+                  border_radius: 50%
+                  filter: grayscale(0.7)
+                  opacity: "0.75"
+                  css: "outline: 3px solid #cbd5e1; outline-offset: 3px;"
+              - type: text
+                text: Ben
+                design: *name
+              - type: text
+                use_entity: true
+                entity: person.ben
+                design: &away
+                  font_size: 11px
+                  font_weight: "700"
+                  padding: 2px 10px
+                  border_radius: 999px
+                  color: "#64748b"
+                  background_color: "#f1f5f9"
+      - modules:
+          - type: vertical
+            align: center
+            gap: 8px
+            actions:
+              tap_action: { action: more-info, entity: person.lisa }
+            modules:
+              - type: image
+                entity: person.lisa
+                entity_picture: true
+                aspect_ratio: "1"
+                design:
+                  width: 76px
+                  border_radius: 50%
+                  css: "outline: 3px solid #f59e0b; outline-offset: 3px;"
+              - type: text
+                text: Lisa
+                design: *name
+              - type: text
+                use_entity: true
+                entity: person.lisa
+                design:
+                  font_size: 11px
+                  font_weight: "700"
+                  padding: 2px 10px
+                  border_radius: 999px
+                  color: "#b45309"
+                  background_color: "#fef3c7"

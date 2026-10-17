@@ -1,0 +1,134 @@
+# Plant care: soil moisture per plant as coloured bars. Dry plants turn their row red.
+# Entities: sensor.monstera_moisture, sensor.ficus_moisture,
+#           sensor.basil_moisture, sensor.calathea_moisture
+type: custom:magic-card
+name: Plants
+background: "linear-gradient(170deg, #fbfdf7 0%, #f1f7ea 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 14px 34px rgba(63, 98, 18, 0.14)"
+rows:
+  - id: head
+    column_widths: [auto, 1fr]
+    gap: 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:sprout
+            size: 24px
+            design:
+              color: "#ffffff"
+              width: 44px
+              height: 44px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: squircle
+              background: "linear-gradient(135deg, #84cc16, #4d7c0f)"
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Plant care
+            design: { font_size: 17px, font_weight: "800", color: "#1a2e05" }
+          - type: text
+            text: 1 plant needs water
+            design: { font_size: 12px, font_weight: "600", color: "#dc2626" }
+  - id: list
+    columns:
+      - gap: 12px
+        modules:
+          - type: vertical
+            gap: 6px
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: text
+                    text: 🌿 Monstera
+                    design: &plant { font_size: 14px, font_weight: "700", color: "#365314" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.monstera_moisture
+                    design: &pct { font_size: 13px, font_weight: "700", color: "#4d7c0f" }
+              - type: bar
+                entity: sensor.monstera_moisture
+                show_value: false
+                bar_height: 8px
+                bar_background: "#e2ecd5"
+                severity: &moist
+                  - { from: 0, color: "#ef4444" }
+                  - { from: 20, color: "#f59e0b" }
+                  - { from: 30, color: "#65a30d" }
+                  - { from: 70, color: "#0ea5e9" }
+                design: { border_radius: 999px }
+          - type: vertical
+            gap: 6px
+            design:
+              padding: 8px 10px
+              margin: 0 -10px
+              border_radius: 14px
+              background_color: "#fef2f2"
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: text
+                    text: 🪴 Ficus · water me
+                    design: { font_size: 14px, font_weight: "700", color: "#b91c1c" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.ficus_moisture
+                    design: { font_size: 13px, font_weight: "700", color: "#dc2626" }
+              - type: bar
+                entity: sensor.ficus_moisture
+                show_value: false
+                bar_height: 8px
+                bar_background: "#fde2e2"
+                severity: *moist
+                design: { border_radius: 999px }
+          - type: vertical
+            gap: 6px
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: text
+                    text: 🌱 Basil
+                    design: *plant
+                  - type: text
+                    use_entity: true
+                    entity: sensor.basil_moisture
+                    design: *pct
+              - type: bar
+                entity: sensor.basil_moisture
+                show_value: false
+                bar_height: 8px
+                bar_background: "#e2ecd5"
+                severity: *moist
+                design: { border_radius: 999px }
+          - type: vertical
+            gap: 6px
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: text
+                    text: 🍃 Calathea
+                    design: *plant
+                  - type: text
+                    use_entity: true
+                    entity: sensor.calathea_moisture
+                    design: *pct
+              - type: bar
+                entity: sensor.calathea_moisture
+                show_value: false
+                bar_height: 8px
+                bar_background: "#e2ecd5"
+                severity: *moist
+                design: { border_radius: 999px }

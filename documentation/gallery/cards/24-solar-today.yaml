@@ -1,0 +1,56 @@
+# Solar today: big production number, live power, and a 24-hour graph.
+# Entities: sensor.energy_today, sensor.solar_power
+type: custom:magic-card
+name: Solar
+background: "linear-gradient(165deg, #fffdf6 0%, #fff6dc 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 14px 34px rgba(217, 119, 6, 0.16)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Solar today
+            design: { font_size: 13px, font_weight: "700", color: "#b45309", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: sensor.energy_today
+            design: { font_size: 40px, font_weight: "800", color: "#422006", letter_spacing: -1px, line_height: "1.1" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:flash
+                size: 15px
+                design: { color: "#d97706" }
+              - type: text
+                use_entity: true
+                entity: sensor.solar_power
+                design: { font_size: 13px, font_weight: "700", color: "#d97706" }
+              - type: text
+                text: right now
+                design: { font_size: 13px, color: "#a16207" }
+      - modules:
+          - type: icon
+            icon: mdi:white-balance-sunny
+            size: 44px
+            design:
+              color: "#f59e0b"
+              filter: "drop-shadow(0 0 12px rgba(245,158,11,0.55))"
+              animations: [{ preset: fast-spin, duration: 30s }]
+  - id: graph
+    columns:
+      - modules:
+          - type: graphs
+            entity: sensor.solar_power
+            hours_to_show: 24
+            points_per_hour: 2
+            line_color: "#f59e0b"
+            fill_color: "#f59e0b"
+            fill: true
+            show_labels: false
+            design: { margin: 0 -6px }

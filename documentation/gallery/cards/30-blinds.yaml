@@ -1,0 +1,86 @@
+# Blinds: a window that fills from the top with the closed share, the position,
+# and open / stop / close buttons.
+# Entities: cover.living_blinds
+type: custom:magic-card
+name: Blinds
+background: "#ffffff"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 14px 34px rgba(30, 41, 59, 0.12)"
+rows:
+  - id: main
+    column_widths: [96px, 1fr]
+    gap: 18px
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:white-balance-sunny
+            size: 30px
+            design:
+              color: "#f59e0b"
+              height: 120px
+              display: flex
+              align_items: flex-end
+              justify_content: center
+              padding_bottom: 12px
+              border_radius: 18px
+              border: "3px solid #cbd5e1"
+              background: "linear-gradient(180deg, #bae6fd, #e0f2fe)"
+              value_background:
+                type: fill
+                entity: cover.living_blinds
+                attribute: current_position
+                min: 100
+                max: 0
+                direction: down
+                color: "#64748b"
+                opacity: 75%
+                wave: false
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            text: Living room blinds
+            design: { font_size: 13px, font_weight: "600", color: "#64748b" }
+          - type: horizontal
+            gap: 4px
+            align: end
+            modules:
+              - type: text
+                use_entity: true
+                entity: cover.living_blinds
+                attribute: current_position
+                design: { font_size: 40px, font_weight: "800", color: "#0f172a", line_height: "1" }
+              - type: text
+                text: "% open"
+                design: { font_size: 14px, color: "#64748b", padding_bottom: 4px }
+          - type: horizontal
+            gap: 8px
+            design: { margin_top: 8px }
+            modules:
+              - type: icon
+                icon: mdi:arrow-up
+                size: 20px
+                design: &btn
+                  color: "#0f172a"
+                  width: 44px
+                  height: 40px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 12px
+                  background_color: "#f1f5f9"
+                actions:
+                  tap_action: { action: perform-action, service: cover.open_cover, data: { entity_id: cover.living_blinds } }
+              - type: icon
+                icon: mdi:stop
+                size: 20px
+                design: *btn
+                actions:
+                  tap_action: { action: perform-action, service: cover.stop_cover, data: { entity_id: cover.living_blinds } }
+              - type: icon
+                icon: mdi:arrow-down
+                size: 20px
+                design: *btn
+                actions:
+                  tap_action: { action: perform-action, service: cover.close_cover, data: { entity_id: cover.living_blinds } }

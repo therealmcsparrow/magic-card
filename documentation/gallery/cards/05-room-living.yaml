@@ -1,0 +1,178 @@
+# Room card: room name with climate readings, and light tiles that glow when on.
+# Tap a tile to toggle that light.
+# Entities: sensor.indoor_temperature, sensor.indoor_humidity,
+#           light.living_room, light.desk, light.hallway
+type: custom:magic-card
+name: Living room
+background: "#ffffff"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 12px 32px rgba(30, 41, 59, 0.12)"
+rows:
+  - id: head
+    column_widths: [auto, 1fr]
+    gap: 14px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:sofa-outline
+            size: 28px
+            design:
+              color: "#d97706"
+              width: 56px
+              height: 56px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: squircle
+              background: "linear-gradient(135deg, #fef3c7, #fde68a)"
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            text: Living room
+            design: { font_size: 19px, font_weight: "700", color: "#0f172a" }
+          - type: horizontal
+            gap: 14px
+            align: center
+            modules:
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:thermometer
+                    size: 16px
+                    design: { color: "#f97316" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.indoor_temperature
+                    design: { font_size: 13px, font_weight: "500", color: "#64748b" }
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: icon
+                    icon: mdi:water-outline
+                    size: 16px
+                    design: { color: "#0ea5e9" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.indoor_humidity
+                    design: { font_size: 13px, font_weight: "500", color: "#64748b" }
+  - id: lights
+    layout: "1-1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 10px
+            design: &tile
+              padding: 14px
+              border_radius: 20px
+              background_color: "#f1f5f9"
+              transition: background 0.3s, box-shadow 0.3s
+              conditional:
+                - id: lit
+                  name: Light on
+                  conditions: [{ type: state, entity: light.living_room, state: "on" }]
+                  design:
+                    background: "linear-gradient(140deg, #fde68a, #fbbf24)"
+                    box_shadow: "0 10px 22px rgba(251,191,36,0.38)"
+            actions:
+              tap_action: { action: toggle, entity: light.living_room }
+              hold_action: { action: more-info, entity: light.living_room }
+            modules:
+              - type: icon
+                entity: light.living_room
+                icon: mdi:ceiling-light
+                size: 24px
+                design:
+                  color: "#94a3b8"
+                  conditional:
+                    - { id: lit, name: On, conditions: [{ type: state, state: "on" }], design: { color: "#78350f" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Ceiling
+                    design: { font_size: 14px, font_weight: "700", color: "#1e293b" }
+                  - type: text
+                    use_entity: true
+                    entity: light.living_room
+                    design: { font_size: 12px, color: "#64748b" }
+      - modules:
+          - type: vertical
+            gap: 10px
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#f1f5f9"
+              transition: background 0.3s, box-shadow 0.3s
+              conditional:
+                - id: lit
+                  name: Light on
+                  conditions: [{ type: state, entity: light.desk, state: "on" }]
+                  design:
+                    background: "linear-gradient(140deg, #fde68a, #fbbf24)"
+                    box_shadow: "0 10px 22px rgba(251,191,36,0.38)"
+            actions:
+              tap_action: { action: toggle, entity: light.desk }
+              hold_action: { action: more-info, entity: light.desk }
+            modules:
+              - type: icon
+                entity: light.desk
+                icon: mdi:desk-lamp
+                size: 24px
+                design:
+                  color: "#94a3b8"
+                  conditional:
+                    - { id: lit, name: On, conditions: [{ type: state, state: "on" }], design: { color: "#78350f" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Desk
+                    design: { font_size: 14px, font_weight: "700", color: "#1e293b" }
+                  - type: text
+                    use_entity: true
+                    entity: light.desk
+                    design: { font_size: 12px, color: "#64748b" }
+      - modules:
+          - type: vertical
+            gap: 10px
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#f1f5f9"
+              transition: background 0.3s, box-shadow 0.3s
+              conditional:
+                - id: lit
+                  name: Light on
+                  conditions: [{ type: state, entity: light.hallway, state: "on" }]
+                  design:
+                    background: "linear-gradient(140deg, #fde68a, #fbbf24)"
+                    box_shadow: "0 10px 22px rgba(251,191,36,0.38)"
+            actions:
+              tap_action: { action: toggle, entity: light.hallway }
+              hold_action: { action: more-info, entity: light.hallway }
+            modules:
+              - type: icon
+                entity: light.hallway
+                icon: mdi:wall-sconce-round
+                size: 24px
+                design:
+                  color: "#94a3b8"
+                  conditional:
+                    - { id: lit, name: On, conditions: [{ type: state, state: "on" }], design: { color: "#78350f" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Hallway
+                    design: { font_size: 14px, font_weight: "700", color: "#1e293b" }
+                  - type: text
+                    use_entity: true
+                    entity: light.hallway
+                    design: { font_size: 12px, color: "#64748b" }

@@ -1,0 +1,178 @@
+# Home server: CPU, memory and disk rings, temperature, uptime and network speeds.
+# Rings change colour as the load climbs.
+# Entities: sensor.server_cpu, sensor.server_ram, sensor.server_disk,
+#           sensor.server_temp, sensor.server_uptime, sensor.net_down, sensor.net_up
+type: custom:magic-card
+name: Server
+background: "linear-gradient(160deg, #0c1222 0%, #080c17 100%)"
+border_radius: 24px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+css: "font-family: 'JetBrains Mono', monospace;"
+rows:
+  - id: head
+    column_widths: [auto, 1fr, auto]
+    gap: 10px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:server
+            size: 20px
+            design: { color: "#22d3ee" }
+      - vertical_align: center
+        modules:
+          - type: text
+            text: homelab-01
+            design: { font_size: 15px, font_weight: "700", color: "#e2e8f0" }
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 8px
+                design: { color: "#22c55e", filter: "drop-shadow(0 0 4px #22c55e)" }
+              - type: text
+                text: online
+                design: { font_size: 12px, color: "#22c55e" }
+  - id: rings
+    layout: "1-1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 92px
+              height: 92px
+              margin: 0 auto
+              justify_content: center
+              shape: circle
+              background_color: "rgba(255,255,255,0.03)"
+              ring:
+                mode: value
+                entity: sensor.server_cpu
+                width: 6
+                glow: 6
+                track_color: "rgba(255,255,255,0.06)"
+                thresholds: &load
+                  - { from: 0, color: "#22d3ee" }
+                  - { from: 70, color: "#f59e0b" }
+                  - { from: 90, color: "#ef4444" }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.server_cpu
+                design: &big { font_size: 18px, font_weight: "700", color: "#f1f5f9" }
+              - type: text
+                text: CPU
+                design: &small { font_size: 10px, color: "#64748b", letter_spacing: 1.5px }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 92px
+              height: 92px
+              margin: 0 auto
+              justify_content: center
+              shape: circle
+              background_color: "rgba(255,255,255,0.03)"
+              ring:
+                mode: value
+                entity: sensor.server_ram
+                width: 6
+                glow: 6
+                track_color: "rgba(255,255,255,0.06)"
+                thresholds: *load
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.server_ram
+                design: *big
+              - type: text
+                text: RAM
+                design: *small
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 92px
+              height: 92px
+              margin: 0 auto
+              justify_content: center
+              shape: circle
+              background_color: "rgba(255,255,255,0.03)"
+              ring:
+                mode: value
+                entity: sensor.server_disk
+                width: 6
+                glow: 6
+                track_color: "rgba(255,255,255,0.06)"
+                thresholds: *load
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.server_disk
+                design: *big
+              - type: text
+                text: DISK
+                design: *small
+  - id: stats
+    padding: 6px 0 0
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - gap: 8px
+        modules:
+          - type: horizontal
+            justify: space-between
+            design: &line { padding: 8px 12px, border_radius: 12px, background_color: "rgba(255,255,255,0.04)" }
+            modules:
+              - type: text
+                text: ↓ down
+                design: { font_size: 12px, color: "#22d3ee" }
+              - type: text
+                use_entity: true
+                entity: sensor.net_down
+                design: &stat { font_size: 12px, font_weight: "700", color: "#e2e8f0" }
+          - type: horizontal
+            justify: space-between
+            design: *line
+            modules:
+              - type: text
+                text: ↑ up
+                design: { font_size: 12px, color: "#a78bfa" }
+              - type: text
+                use_entity: true
+                entity: sensor.net_up
+                design: *stat
+      - gap: 8px
+        modules:
+          - type: horizontal
+            justify: space-between
+            design: *line
+            modules:
+              - type: text
+                text: temp
+                design: { font_size: 12px, color: "#f59e0b" }
+              - type: text
+                use_entity: true
+                entity: sensor.server_temp
+                design: *stat
+          - type: horizontal
+            justify: space-between
+            design: *line
+            modules:
+              - type: text
+                text: uptime
+                design: { font_size: 12px, color: "#22c55e" }
+              - type: text
+                use_entity: true
+                entity: sensor.server_uptime
+                design: *stat

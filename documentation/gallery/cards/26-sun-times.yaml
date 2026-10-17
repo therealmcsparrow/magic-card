@@ -1,0 +1,82 @@
+# Sunrise and sunset: a dawn-to-dusk gradient with the times and the day length.
+# Entities: sensor.sunrise, sensor.sunset, sensor.day_length
+type: custom:magic-card
+name: Sun
+background: "linear-gradient(180deg, #1e3a8a 0%, #7c3aed 45%, #f472b6 75%, #fdba74 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 44px rgba(124, 58, 237, 0.3)"
+rows:
+  - id: head
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Daylight
+            design: { font_size: 13px, font_weight: "700", color: "rgba(255,255,255,0.75)", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: sensor.day_length
+            design: { font_size: 30px, font_weight: "800", color: "#ffffff" }
+  - id: sun
+    padding: 18px 0 8px
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:white-balance-sunny
+            size: 48px
+            design:
+              color: "#fde68a"
+              margin: 0 auto
+              border_radius: 50%
+              filter: "drop-shadow(0 0 22px rgba(253,230,138,0.9))"
+              animations: [{ preset: glow-pulse, color: "#fde68a", intensity: 20, duration: 4s }]
+  - id: times
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: &glass
+              padding: 12px
+              border_radius: 18px
+              background_color: "rgba(255,255,255,0.16)"
+              backdrop_filter: blur(8px)
+              border: "1px solid rgba(255,255,255,0.25)"
+            modules:
+              - type: icon
+                icon: mdi:weather-sunset-up
+                size: 26px
+                design: { color: "#fde68a" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Sunrise
+                    design: &lab { font_size: 11px, color: "rgba(255,255,255,0.8)" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.sunrise
+                    design: &time { font_size: 19px, font_weight: "800", color: "#ffffff" }
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: *glass
+            modules:
+              - type: icon
+                icon: mdi:weather-sunset-down
+                size: 26px
+                design: { color: "#fed7aa" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Sunset
+                    design: *lab
+                  - type: text
+                    use_entity: true
+                    entity: sensor.sunset
+                    design: *time

@@ -18,4 +18,6 @@ Complete cards you can paste into the code editor and adapt. Replace the entity 
 | [Shaped card with a value background](shaped-value-background.md) | A squircle card filled to a tank level, a hexagon tile with a history sparkline, column widths |
 | [Seasonal scene](seasonal-scene.md) | A date-driven scene with day and night, an off switch, own holiday dates, a seasonal preset on one button |
 
+The [Card gallery](../../gallery/README.md) has sixty more cards, each with a screenshot or a short recording.
+
 The shorter examples in the [main README](../../../README.md#yaml-examples) cover a single feature each.
