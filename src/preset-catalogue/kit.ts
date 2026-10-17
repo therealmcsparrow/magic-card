@@ -207,7 +207,7 @@ export interface EntryInput {
   /** The mini card's icon in the tile. */
   icon: string;
   tags: string[];
-  /** Still tile until hover / focus (P1-3): scenes with child particles, icon particles or many elements. */
+  /** Still tile until hover / focus (P1-3): scenes with icon particles or more than 40 baked elements (tested). */
   heavy?: boolean;
   doc: (id: string, name: string) => AnimationDoc;
 }
