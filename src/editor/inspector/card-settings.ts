@@ -39,6 +39,7 @@ import '../components/popup-settings';
 import '../components/flows-editor';
 import '../components/seasonal-editor';
 import '../components/design-panel';
+import '../components/condition-row';
 
 /** Write one top-level card property (marks it not_synced when the card is linked to a template). */
 export type CardUpdate = (propertyName: keyof MagicCardConfig, value: unknown) => void;
@@ -124,6 +125,34 @@ export function renderCardGeneral(
   `;
 }
 
+/** Which design the card Design tab edits ('default', '__hover__' or a rule id) and which groups the user toggled; owned by the inspector so it survives re-renders. */
+export interface DesignViewState {
+  view: string;
+  set: (view: string) => void;
+  open: ReadonlyMap<string, boolean>;
+  toggle: (group: string, open: boolean) => void;
+}
+
+const HOVER_VIEW = '__hover__';
+const NO_VIEW: DesignViewState = { view: 'default', set: () => {}, open: new Map(), toggle: () => {} };
+
+type Ov = Record<string, unknown>;
+
+/** The design keys a rule can hold beyond the legacy appearance fields (counted on the Conditions tab). */
+const DESIGN_KEYS = ['ring', 'shape', 'value_background', 'seasonal'];
+
+/** Where a field reads and writes: the card itself (Default) or one rule's overrides. */
+interface DesignSource {
+  rule: boolean;
+  get: (key: string) => unknown;
+  /** undefined, '' and null remove the key. */
+  set: (key: string, value: unknown) => void;
+  many: (updates: Ov) => void;
+  sync?: SyncContext;
+}
+
+const isSet = (v: unknown) => v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && !v.length);
+
 export function renderCardDesign(
   config: MagicCardConfig,
   update: CardUpdate,
@@ -132,122 +161,255 @@ export function renderCardDesign(
   patch?: CardPatch,
   templateDocs?: Array<Record<string, unknown>>,
   write?: (next: MagicCardConfig) => void,
+  design: DesignViewState = NO_VIEW,
+  openTab?: (tab: string) => void,
 ): TemplateResult {
-  const writeShape = (p: ShapePatch) => {
-    if (patch) patch({ shape: p.shape, shape_options: p.shape_options }, 'shape');
-    else {
-      update('shape', p.shape);
-      update('shape_options', p.shape_options);
-    }
+  const rules = config.conditional_appearance || [];
+  const hover = design.view === HOVER_VIEW;
+  const rule = rules.find((r) => r.id === design.view);
+  const writeRules = (next: ConditionalCardAppearance[]) => update('conditional_appearance', next);
+  const addRule = () => {
+    const id = generateId('appr');
+    writeRules([...rules, { id, name: `Rule ${rules.length + 1}`, conditions: [], mode: 'every', overrides: {} }]);
+    design.set(id);
   };
-  return html`
-    <div class="group">
-      ${renderColorField('Background color', config.background, (v) => update('background', v), 'background', syncCtx)}
-      ${renderMediaField('Background image', config.background_image, (v) => update('background_image', v), hass, 'image', 'background_image', syncCtx)}
-      <div class="two">
-        ${renderUnitField('Border radius', config.border_radius, (v) => update('border_radius', v), 'border_radius', syncCtx)}
-        ${renderUnitField('Card height', config.card_height, (v) => update('card_height', v), 'card_height', syncCtx, 'auto')}
-      </div>
-      ${renderBoxField('Padding', config.padding, (v) => update('padding', v), 'padding', 'padding', syncCtx)}
-      ${renderTextField('Box shadow', config.box_shadow, (v) => update('box_shadow', v), 'box_shadow', syncCtx, {
-        placeholder: 'Theme default',
-        mono: true,
-      })}
-    </div>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Animations', 'animations', syncCtx)}
-        <mc-animation-list
-          .animations=${readAnimations({ animations: config.animations })}
-          .hass=${hass}
-          .requireTriggerEntity=${true}
-          .onChange=${(list: AnimationConfig[]) => update('animations', list.length ? list : undefined)}
-        ></mc-animation-list>
-      </div>
-    </section>
-    ${write ? renderTemplateAnimations(config, templateDocs, write, syncCtx) : nothing}
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Ring', 'ring', syncCtx)}
-        <mc-ring-editor
-          .ring=${config.ring}
-          .hass=${hass}
-          .requireEntity=${true}
-          .clipped=${true}
-          .onChange=${(ring: RingConfig | undefined) => update('ring', ring)}
-        ></mc-ring-editor>
-      </div>
-    </section>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Shape', 'shape', syncCtx)}
-        <mc-shape-editor
-          .shape=${config.shape}
-          .options=${config.shape_options}
-          .explicitNone=${!!config.template}
-          .target=${'card'}
-          .hasRadius=${!!config.border_radius}
-          .hasShadow=${!!config.box_shadow}
-          .popup=${config.popup?.enabled === true}
-          .onChange=${writeShape}
-        ></mc-shape-editor>
-      </div>
-    </section>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Value background', 'value_background', syncCtx)}
-        <mc-value-bg-editor
-          .value=${config.value_background}
-          .hass=${hass}
-          .explicitNone=${!!config.template}
-          .onChange=${(vb: ValueBackgroundConfig | undefined) => update('value_background', vb)}
-        ></mc-value-bg-editor>
-      </div>
-    </section>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Seasonal', 'seasonal', syncCtx)}
-        <mc-seasonal-editor
-          .value=${config.seasonal}
-          .hass=${hass}
-          .explicitNone=${!!config.template}
-          .onChange=${(next: SeasonalSetting | undefined) => update('seasonal', next)}
-        ></mc-seasonal-editor>
-      </div>
-    </section>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Hover', 'hover', syncCtx, {
-          reset: fieldReset('Hover', !!config.hover, () => update('hover', undefined)),
-        })}
-        <p class="help">Applied while the pointer is over the card, on top of the fields above.</p>
-      </div>
-      <mc-design-panel
-        class="card-hover"
-        .design=${{ hover: config.hover } as DesignConfig}
-        .hass=${hass}
+  const updateRule = (patchRule: Partial<ConditionalCardAppearance>) =>
+    writeRules(rules.map((r) => (r === rule ? { ...r, ...patchRule } : r)));
+
+  const ov = (rule?.overrides || {}) as Ov;
+  const applyOv = (updates: Ov) => {
+    const next: Ov = { ...ov };
+    for (const [k, v] of Object.entries(updates)) {
+      if (!isSet(v)) delete next[k];
+      else next[k] = v;
+    }
+    updateRule({ overrides: next as CardAppearanceOverrides });
+  };
+  const src: DesignSource = rule
+    ? { rule: true, get: (k) => ov[k], set: (k, v) => applyOv({ [k]: v }), many: applyOv }
+    : {
+        rule: false,
+        get: (k) => (config as unknown as Ov)[k],
+        set: (k, v) => update(k as keyof MagicCardConfig, v),
+        many: (u) => {
+          if (patch) patch(u as never, 'shape');
+          else for (const [k, v] of Object.entries(u)) update(k as keyof MagicCardConfig, v);
+        },
+        sync: syncCtx,
+      };
+  const sc = src.sync;
+  const lbl = (label: string, key: string, forId?: string) =>
+    renderFieldHead(label, key, sc, { forId, reset: src.rule ? fieldReset(label, key in ov, () => src.set(key, undefined)) : undefined });
+  const unset = (key: string) =>
+    src.rule && !(key in ov) ? html`<p class="help">Not set in this rule: Default applies.</p>` : nothing;
+
+  const str = (k: string) => src.get(k) as string | undefined;
+  const fields: Record<string, () => TemplateResult | typeof nothing> = {
+    card_height: () => renderUnitField('Card height', str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto'),
+    padding: () => renderBoxField('Padding', str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc),
+    background: () => renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc),
+    background_image: () =>
+      renderMediaField('Background image', str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc),
+    border_radius: () => renderUnitField('Border radius', str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc),
+    box_shadow: () =>
+      renderTextField('Box shadow', str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: 'Theme default', mono: true }),
+    shape: () => html`<div class="field">
+      ${lbl('Shape', 'shape')}
+      <mc-shape-editor
+        .shape=${src.get('shape') as never}
+        .options=${src.get('shape_options') as never}
+        .explicitNone=${src.rule ? !!config.shape : !!config.template}
         .target=${'card'}
-        .hoverOnly=${true}
-        .onChange=${(u: Record<string, unknown>) => update('hover', u.hover)}
-      ></mc-design-panel>
-    </section>
-    <section class="group">
-      <div class="field">
-        ${renderFieldHead('Custom CSS', 'css', syncCtx, {
-          forId: 'card-css',
-          reset: fieldReset('Custom CSS', !!config.css, () => update('css', undefined)),
-        })}
-        <textarea
-          class="input mono"
-          id="card-css"
-          rows="4"
-          spellcheck="false"
-          placeholder="Applied to the card's content, e.g. letter-spacing: 0.5px"
-          .value=${config.css || ''}
-          @input=${(e: InputEvent) => update('css', (e.target as HTMLTextAreaElement).value || undefined)}
-        ></textarea>
+        .hasRadius=${!!(src.get('border_radius') || (src.rule && config.border_radius))}
+        .hasShadow=${!!(src.get('box_shadow') || (src.rule && config.box_shadow))}
+        .popup=${config.popup?.enabled === true}
+        .onChange=${(p: ShapePatch) => src.many({ shape: p.shape, shape_options: p.shape_options })}
+      ></mc-shape-editor>
+      ${unset('shape')}
+    </div>`,
+    value_background: () => html`<div class="field">
+      ${lbl('Value background', 'value_background')}
+      <mc-value-bg-editor
+        .value=${src.get('value_background') as ValueBackgroundConfig | undefined}
+        .hass=${hass}
+        .explicitNone=${src.rule ? !!config.value_background : !!config.template}
+        .onChange=${(vb: ValueBackgroundConfig | undefined) => src.set('value_background', vb)}
+      ></mc-value-bg-editor>
+      ${unset('value_background')}
+    </div>`,
+    ring: () => html`<div class="field">
+      ${lbl('Ring', 'ring')}
+      <mc-ring-editor
+        .ring=${src.get('ring') as RingConfig | undefined}
+        .hass=${hass}
+        .requireEntity=${true}
+        .clipped=${true}
+        .onChange=${(ring: RingConfig | undefined) => src.set('ring', ring === undefined && src.rule && config.ring ? {} : ring)}
+      ></mc-ring-editor>
+      ${unset('ring')}
+    </div>`,
+    seasonal: () => html`<div class="field">
+      ${lbl('Seasonal', 'seasonal')}
+      <mc-seasonal-editor
+        .value=${src.get('seasonal') as SeasonalSetting | undefined}
+        .hass=${hass}
+        .explicitNone=${src.rule ? !!config.seasonal : !!config.template}
+        .onChange=${(next: SeasonalSetting | undefined) => src.set('seasonal', next)}
+      ></mc-seasonal-editor>
+      ${unset('seasonal')}
+    </div>`,
+    animations: () =>
+      src.rule
+        ? nothing
+        : html`<div class="field">
+            ${renderFieldHead('Animations', 'animations', syncCtx)}
+            <mc-animation-list
+              .animations=${readAnimations({ animations: config.animations })}
+              .hass=${hass}
+              .requireTriggerEntity=${true}
+              .onChange=${(list: AnimationConfig[]) => update('animations', list.length ? list : undefined)}
+            ></mc-animation-list>
+          </div>`,
+    template_animations: () => (src.rule || !write ? nothing : renderTemplateAnimations(config, templateDocs, write, syncCtx)),
+    css: () =>
+      src.rule
+        ? nothing
+        : html`<div class="field">
+            ${renderFieldHead('Custom CSS', 'css', syncCtx, {
+              forId: 'card-css',
+              reset: fieldReset('Custom CSS', !!config.css, () => update('css', undefined)),
+            })}
+            <textarea
+              class="input mono"
+              id="card-css"
+              rows="4"
+              spellcheck="false"
+              placeholder="Applied to the card's content, e.g. letter-spacing: 0.5px"
+              .value=${config.css || ''}
+              @input=${(e: InputEvent) => update('css', (e.target as HTMLTextAreaElement).value || undefined)}
+            ></textarea>
+          </div>`,
+  };
+  // [group id, name, open by default, [field, counted key][]]
+  const groups: Array<[string, string, boolean, Array<[string, string?]>]> = [
+    ['layout', 'Layout', true, [['card_height', 'card_height'], ['padding', 'padding']]],
+    [
+      'style',
+      'Style',
+      true,
+      [['background', 'background'], ['background_image', 'background_image'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
+    ],
+    ['effects', 'Effects', false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
+    ['advanced', 'Advanced', false, [['css', 'css']]],
+  ];
+  const renderGroup = ([id, name, defaultOpen, entries]: (typeof groups)[number]) => {
+    const body = entries.map(([f]) => fields[f]()).filter((t) => t !== nothing);
+    if (!body.length) return nothing;
+    const count = entries.filter(([, k]) => k && isSet(src.get(k))).length;
+    const open = design.open.get(id) ?? (defaultOpen || count > 0);
+    return html`<section class="dgroup" data-group=${id}>
+      <button type="button" class="dgroup-btn" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`dg-${id}`} @click=${() => design.toggle(id, !open)}>
+        <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
+        <span class="nm">${name}</span>
+        ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
+      </button>
+      <div class="dgroup-body" id=${`dg-${id}`} ?hidden=${!open}>${body}</div>
+    </section>`;
+  };
+
+  const n = rules.length;
+  const help = hover
+    ? 'Applied while the pointer is over this card, on top of Default and matching rules.'
+    : n
+      ? `${n} conditional rule${n === 1 ? '' : 's'}. Same rules as the Conditions tab. Rules override Default only while their conditions match. A later rule wins over an earlier one.`
+      : 'Add a rule to change the look when conditions match.';
+  const mode = rule?.mode === 'any' ? 'any' : 'every';
+  const conditions = rule?.conditions || [];
+  const picker = html`<div class="rule-pick">
+    <div class="field">
+      <div class="field-head"><label for="design-view">Editing design for</label></div>
+      <div class="select">
+        <select class="input" id="design-view" aria-describedby="design-view-help" @change=${(e: Event) => design.set((e.target as HTMLSelectElement).value)}>
+          <option value="default" ?selected=${!hover && !rule}>Default</option>
+          <option value=${HOVER_VIEW} ?selected=${hover}>Hover</option>
+          ${rules.map((r, i) => html`<option value=${r.id} ?selected=${r === rule}>Rule: ${r.name || `Rule ${i + 1}`}</option>`)}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
-    </section>
+      <p class="help" id="design-view-help">${help}</p>
+    </div>
+    <div class="rule-actions">
+      <button type="button" class="btn btn-text btn-sm" @click=${addRule}><ha-icon icon="mdi:plus"></ha-icon>Add conditional rule</button>
+      ${n && openTab
+        ? html`<button type="button" class="btn btn-text btn-sm" data-open-tab="conditions" @click=${() => openTab('conditions')}>Open Conditions</button>`
+        : nothing}
+    </div>
+  </div>`;
+
+  const ruleBox = rule
+    ? html`<div class="rule">
+        <div class="rule-head">
+          <h3>Rule</h3>
+          <button
+            type="button"
+            class="btn btn-text btn-sm danger-text"
+            @click=${() => {
+              writeRules(rules.filter((r) => r !== rule));
+              design.set('default');
+            }}
+          ><ha-icon icon="mdi:delete-outline"></ha-icon>Delete rule</button>
+        </div>
+        <div class="field">
+          <div class="field-head"><label for="rule-name">Rule name</label></div>
+          <input class="input" id="rule-name" type="text" placeholder="Rule name" .value=${rule.name || ''} @input=${(e: InputEvent) => updateRule({ name: (e.target as HTMLInputElement).value })} />
+        </div>
+        <div class="field">
+          <div class="field-head"><span class="lbl">Match</span></div>
+          <div class="seg full" role="radiogroup" aria-label="Condition match">
+            ${(['every', 'any'] as const).map(
+              (m) => html`<button type="button" role="radio" aria-checked=${mode === m ? 'true' : 'false'} @click=${() => updateRule({ mode: m })}>${m === 'every' ? 'All match (AND)' : 'Any matches (OR)'}</button>`,
+            )}
+          </div>
+        </div>
+        <div class="rule-conds">
+          ${conditions.length
+            ? conditions.map(
+                (cond, i) => html`<mc-condition-row
+                  .condition=${cond}
+                  .hass=${hass}
+                  .onChange=${(u: Partial<DisplayCondition>) => updateRule({ conditions: conditions.map((c, j) => (j === i ? { ...c, ...u } : c)) })}
+                  .onRemove=${() => updateRule({ conditions: conditions.filter((_c, j) => j !== i) })}
+                ></mc-condition-row>`,
+              )
+            : html`<p class="help">No conditions yet. The rule applies once a condition is added and matches.</p>`}
+          <div>
+            <button type="button" class="btn btn-secondary btn-sm" @click=${() => updateRule({ conditions: [...conditions, newCondition()] })}>
+              <ha-icon icon="mdi:plus"></ha-icon>Add condition
+            </button>
+          </div>
+        </div>
+      </div>`
+    : nothing;
+
+  return html`
+    <div class="design-tab">
+      ${picker} ${ruleBox}
+      ${hover
+        ? html`<section class="group">
+            <div class="field">
+              ${renderFieldHead('Hover', 'hover', syncCtx, { reset: fieldReset('Hover', !!config.hover, () => update('hover', undefined)) })}
+            </div>
+            <mc-design-panel
+              class="card-hover"
+              .design=${{ hover: config.hover } as DesignConfig}
+              .hass=${hass}
+              .target=${'card'}
+              .hoverOnly=${true}
+              .onChange=${(u: Record<string, unknown>) => update('hover', u.hover)}
+            ></mc-design-panel>
+          </section>`
+        : html`<div class="dgroups">${groups.map(renderGroup)}</div>`}
+    </div>
   `;
 }
 
@@ -287,6 +449,7 @@ function renderConditionalAppearance(
   hass: HomeAssistant | undefined,
   themeOptions: ThemeOption[],
   rulesState: RulesState,
+  openTab?: (tab: string) => void,
 ): TemplateResult {
   const rules = config.conditional_appearance || [];
   const writeRules = (next: ConditionalCardAppearance[]) => update('conditional_appearance', next);
@@ -303,6 +466,9 @@ function renderConditionalAppearance(
   const updateRule = (id: string, patch: Partial<ConditionalCardAppearance>) =>
     writeRules(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
+  const designLink = openTab
+    ? html`<div><button type="button" class="btn btn-text btn-sm" data-open-tab="design" @click=${() => openTab('design')}>Open Design</button></div>`
+    : nothing;
   return html`
     <section class="group">
       <div class="group-head">
@@ -312,6 +478,7 @@ function renderConditionalAppearance(
       ${rules.length
         ? html`
             <p class="help">Override appearance fields while conditions match. Rules apply in order; later rules win.</p>
+            ${designLink}
             ${rules.map((rule) => renderAppearanceRule(rule, hass, themeOptions, rulesState, updateRule, removeRule))}
             <div>
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
@@ -323,7 +490,8 @@ function renderConditionalAppearance(
             <div class="empty">
               <ha-icon icon="mdi:palette-swatch-outline"></ha-icon>
               <strong>No appearance rules</strong>
-              <p>Change card fields, like background color, while conditions match.</p>
+              <p>Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.</p>
+              ${designLink}
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
                 <ha-icon icon="mdi:plus"></ha-icon>Add appearance rule
               </button>
@@ -353,6 +521,7 @@ function renderAppearanceRule(
     updateRule(rule.id, { overrides: next as CardAppearanceOverrides });
   };
   const usePageTheme = overrides.use_page_theme;
+  const designCount = DESIGN_KEYS.filter((k) => k in overrides).length;
 
   return html`
     <div class="cond rule">
@@ -376,6 +545,7 @@ function renderAppearanceRule(
           @input=${(e: InputEvent) => updateRule(rule.id, { name: (e.target as HTMLInputElement).value })}
         />
         <span class="chip is-count">${conditions.length} cond.</span>
+        ${designCount ? html`<span class="chip">+ ${designCount} design field${designCount === 1 ? '' : 's'}</span>` : nothing}
         <button
           type="button"
           class="icon-btn sm danger"
@@ -471,12 +641,13 @@ export function renderCardConditions(
   update: CardUpdate,
   themeOptions: ThemeOption[],
   rulesState: RulesState,
+  openTab?: (tab: string) => void,
 ): TemplateResult {
   const display: DisplayConfig = config.display || {};
   const conditions = display.conditions || [];
   const updateDisplay = (patch: Partial<DisplayConfig>) => writeDisplay({ ...display, ...patch });
   return html`
-    ${renderConditionalAppearance(config, update, hass, themeOptions, rulesState)}
+    ${renderConditionalAppearance(config, update, hass, themeOptions, rulesState, openTab)}
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:eye-outline"></ha-icon>
