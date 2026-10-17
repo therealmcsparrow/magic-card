@@ -26,7 +26,7 @@ Icon animations play on the main icon of these modules, at any depth inside layo
 
 The Icon, Button, Info and Light modules have the Animated icons tab in their icon picker. The Light module's Icon field is optional. While it is empty the module shows the light's own icon, and an animation you add by hand in the Animations list still plays on it with Target set to Icon.
 
-Tabs and Weather modules cannot play icon animations.
+A Weather module also plays icon animations, but it has no Animated icons tab. Add one by hand in its Animations list with Target set to Icon. Tabs modules cannot play icon animations.
 
 ## Animations already on a card
 

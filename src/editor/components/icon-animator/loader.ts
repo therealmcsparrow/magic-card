@@ -4,7 +4,6 @@ import type { CardModule, MagicCardConfig } from '../../../types';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-system';
 import { readAnimations } from '../../../utils/animation';
-import { entityIcon } from '../../../utils/entity-icon';
 import { animationLibrary } from '../../../services/animation-library';
 import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';
 import { customAnimationIds } from '../../../utils/custom-animations';
@@ -27,7 +26,6 @@ export const host = {
   css,
   editorSystem,
   readAnimations,
-  entityIcon,
   library: animationLibrary,
   resolveIcon: resolveIconGeometry,
   setIcon: setIconGeometry,

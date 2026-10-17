@@ -5,7 +5,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 // The release src/version.ts holds, as a literal for the editor chunk's EDITOR_VERSION: the chunk must
 // carry its own copy so a cached magic-card.js from another release notices (src/utils/editor-loader.ts)
-const buildVersion = () => /VERSION\s*=\s*["']([^"']+)["']/.exec(fs.readFileSync(path.resolve(__dirname, 'src/version.ts'), 'utf8'))?.[1];
+const buildVersion = () => {
+  const v = /VERSION\s*=\s*["']([^"']+)["']/.exec(fs.readFileSync(path.resolve(__dirname, 'src/version.ts'), 'utf8'))?.[1];
+  if (!v) throw new Error('webpack.config.js: could not read VERSION from src/version.ts');
+  return v;
+};
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
