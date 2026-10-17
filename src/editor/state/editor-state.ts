@@ -49,6 +49,8 @@ import { clampSelection, itemAt, layoutModuleAt, moduleAt, selectionFromPath, se
 import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
 import { copyModuleToClipboard, docPool, pasteAnimations, readModuleClip, referencedDocs } from './module-clipboard';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
+import { withTemplateAnimations } from '../../services/template-merge';
+import { animationLibrary } from '../../services/animation-library';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
 import { flowKeys } from '../../utils/flow';
@@ -675,13 +677,21 @@ export class EditorStateManager {
   }
 
   /**
+   * The inline documents a card plays: its own, and on a linked card the template's it does not leave
+   * out (hidden_animations, or custom_animations in not_synced: only its own), as the card merges them.
+   */
+  private _playedDocs(config: MagicCardConfig): unknown {
+    return withTemplateAnimations(config, this.state.templateAnimations).custom_animations;
+  }
+
+  /**
    * Copy module: the module (with its children) to the module clipboard, with the inline animation
    * documents it plays (the card's own, else the linked template's).
    */
   copyModule(sel: Selection): CardModule | undefined {
     const mod = moduleAt(this.state.config, sel);
     if (!mod) return undefined;
-    const pool = docPool(this.state.templateAnimations, this.state.config.custom_animations);
+    const pool = docPool(this._playedDocs(this.state.config));
     return copyModuleToClipboard(mod, referencedDocs(mod, pool));
   }
 
@@ -697,7 +707,9 @@ export class EditorStateManager {
     const config = deepClone(this.state.config);
     // the documents it plays that this card lacks (renamed on a clash), in the same undo step
     const own = animationDocList(config.custom_animations);
-    const add = pasteAnimations(mod, clip.docs, docPool(this.state.templateAnimations, config.custom_animations), customAnimationIds(config));
+    // new ids stay clear of the card's ids, its references and the animation library's
+    const taken = [...customAnimationIds(config), ...animationLibrary.list().map((d) => d.id)];
+    const add = pasteAnimations(mod, clip.docs, docPool(this._playedDocs(config)), taken);
     if (add.length) config.custom_animations = [...own, ...add] as typeof config.custom_animations;
     let path: EditorPath;
     if (sel.kind === 'module') {
