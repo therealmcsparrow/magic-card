@@ -15,8 +15,8 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {
-    // Two bundles: the card, and the animation studio the magic-card-utils panel loads (it defines
-    // only its own elements). The card editor is a lazy chunk (magic-card-editor.js, ADR 0007,
+    // Three bundles: the card, the animation studio and the theme editor the magic-card-utils panel
+    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js, ADR 0007,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
@@ -25,6 +25,7 @@ module.exports = (env, argv) => {
     entry: {
       'magic-card': './src/index.ts',
       'magic-card-animation-studio': './src/anim-studio/index.ts',
+      'magic-card-theme-editor': './src/theme-editor/index.ts',
     },
     output: {
       filename: '[name].js',
