@@ -210,6 +210,8 @@ export class MagicCard extends LitElement {
 
   @state()
   private _resolvedConfig?: MagicCardConfig;
+  /** The last render's config with the matching conditional_appearance rules applied (a rule can set `seasonal`). */
+  private _look?: MagicCardConfig;
 
   /** A shaped card without its own box_shadow: the theme's card shadow as a drop-shadow (read after render). */
   @state()
@@ -349,7 +351,7 @@ export class MagicCard extends LitElement {
   private readonly _seasonalBudget = new SeasonalBudget();
   /** The card's seasonal scene (config `seasonal`): resolution, midnight timer, editor preview date. */
   private readonly _seasonal = new CardSeasonal(this, {
-    config: () => (this._resolvedConfig ?? this._config)?.seasonal,
+    config: () => (this._look ?? this._resolvedConfig ?? this._config)?.seasonal,
     hass: () => this.hass,
     editorPreview: () => {
       const place = this._editorPlace();
@@ -740,7 +742,7 @@ export class MagicCard extends LitElement {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
     }
 
-    const resolved = this._resolveCardAppearance(config);
+    const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
     // the card's own animations: motion / glow on ha-card, particle layers inside the content
     const anim = resolveAnimations({ animations: resolved.animations }, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
