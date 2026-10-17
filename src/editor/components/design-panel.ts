@@ -746,6 +746,8 @@ export class DesignPanel extends LitElement {
               .label=${p.label}
               .allowEntity=${this._allowEntityColor}
               .entityColor=${this._entityColor}
+              .gradient=${p.key === 'color' && this.target === 'module' ? 'css' : ''}
+              .gradientNote=${p.key === 'color' ? 'Text uses this gradient as its fill. Older tablets show the first color.' : ''}
               @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-color-picker>
           `,

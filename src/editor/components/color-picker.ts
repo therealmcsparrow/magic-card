@@ -5,6 +5,9 @@ import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderResizeHandle, PickerDialogController } from './picker-parts';
 import { parseEntityColor } from '../../utils/entity-color';
+import { parseGradient } from '../../utils/gradient';
+import { safeColor } from '../../utils/animation';
+import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
 import './unit-field';
 
 const STORAGE_KEY = 'magic-card-saved-colors';
@@ -41,6 +44,12 @@ export class ColorPicker extends LitElement {
   /** The entity's live state colour (CSS), shown in the swatch while the entity colour is used. */
   @property({ type: String }) entityColor = '';
 
+  /** Offer a Solid | Gradient switch: 'linear' (angle only, ring and icon) or 'css' (linear and radial). */
+  @property({ type: String }) gradient: '' | 'linear' | 'css' = '';
+  /** A hint under the gradient editor (for example how text and icons use it). */
+  @property({ type: String }) gradientNote = '';
+
+  @state() private _status = '';
   @state() private _isOpen = false;
   @state() private _hsva: HSVA = { h: 0, s: 100, v: 100, a: 1 };
   @state() private _savedColors: string[] = [];
@@ -379,9 +388,63 @@ export class ColorPicker extends LitElement {
     `;
   }
 
+  private _toSolid(g: GradientModel): void {
+    this._status = 'Switched to Solid. Undo brings the gradient back.';
+    this._emitValue(g.stops[0]);
+  }
+
+  private _toGradient(): void {
+    const old = parseGradient(this.value);
+    const cur = safeColor(this.value);
+    const first = cur && !parseEntityColor(cur) ? cur : 'var(--primary-color)';
+    const second = first === 'var(--accent-color)' ? '#ffffff' : 'var(--accent-color)';
+    const g: GradientModel = old
+      ? { radial: old.radial && this.gradient === 'css', angle: old.angle, stops: old.stops.slice(0, MAX_STOPS) }
+      : { radial: false, angle: 135, stops: [first, second] };
+    this._status = old ? 'Gradient replaced with the editor version.' : 'Gradient created from your color.';
+    this._emitValue(gradientToString(g));
+  }
+
+  private _renderMode(g: GradientModel | undefined): TemplateResult {
+    const name = this.label || 'color';
+    return html`${renderSeg(
+      `${name} mode`,
+      g ? 'gradient' : 'solid',
+      [
+        { value: 'solid', label: 'Solid' },
+        { value: 'gradient', label: 'Gradient' },
+      ],
+      (v) => {
+        if (v === 'solid' && g) this._toSolid(g);
+        else if (v === 'gradient' && !g) this._toGradient();
+      },
+    )}`;
+  }
+
   protected render(): TemplateResult {
     const entity = this.allowEntity ? parseEntityColor(this.value) : undefined;
-    if (entity) return this._renderEntity(entity.opacity);
+    const g = this.gradient ? editableGradient(this.value, this.gradient === 'css') : undefined;
+    const custom = !!this.gradient && !g && /gradient\(/i.test(this.value);
+    const body = entity ? this._renderEntity(entity.opacity) : g ? this._renderGradient(g) : this._renderSolid();
+    return html`
+      ${this.gradient ? this._renderMode(g) : nothing}
+      ${body}
+      ${custom ? html`<div class="help">This is custom gradient CSS. Choose Gradient to replace it with the editor's version.</div>` : nothing}
+      ${g && this.gradientNote ? html`<div class="help">${this.gradientNote}</div>` : nothing}
+      ${this.gradient ? html`<div class="help" role="status" aria-live="polite">${this._status}</div>` : nothing}
+    `;
+  }
+
+  private _renderGradient(g: GradientModel): TemplateResult {
+    return html`<mc-gradient-editor
+      .model=${g}
+      .label=${this.label || 'color'}
+      .allowRadial=${this.gradient === 'css'}
+      @value-changed=${() => (this._status = '')}
+    ></mc-gradient-editor>`;
+  }
+
+  private _renderSolid(): TemplateResult {
     const displayColor = this.value || 'transparent';
     const name = this.label || 'color';
 

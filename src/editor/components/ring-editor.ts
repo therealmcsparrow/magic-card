@@ -217,6 +217,7 @@ export class RingEditor extends LitElement {
       .label=${label}
       .allowEntity=${this.allowEntityColor}
       .entityColor=${this.entityColor}
+      .gradient=${key === 'color' ? 'linear' : ''}
       @value-changed=${(e: CustomEvent) => this._set({ [key]: e.detail.value })}
     ></mc-color-picker>`;
   }
