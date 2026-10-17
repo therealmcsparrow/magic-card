@@ -6,6 +6,7 @@ import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
+import { browserMode } from './util';
 
 /*
  * The preview stage (Contract theme-editor 1.0.0, "Preview isolation"). Every resolved variable of
@@ -123,8 +124,6 @@ export class ScopedVars {
 
 type SampleState = HTMLElement | 'loading' | 'error' | 'no-entity';
 
-const darkNow = (hass: unknown): boolean => !!(hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode;
-
 /**
  * The preview area: mode switch, stage with fake header and sidebar, real HA cards and a Magic Card.
  * Properties: `doc` (the draft ThemeDoc), `mode` ('light' | 'dark'; defaults to the browser's mode),
@@ -151,7 +150,7 @@ export class McteThemePreview extends LitElement {
   };
 
   private get _mode(): ThemeMode {
-    return this.mode ?? (darkNow(this.hass) ? 'dark' : 'light');
+    return this.mode ?? browserMode(this.hass);
   }
 
   connectedCallback(): void {

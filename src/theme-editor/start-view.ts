@@ -120,7 +120,11 @@ export class McteStartView extends LitElement {
     const hassThemes = hassOf(this.hass).themes?.themes ?? {};
     const byName = new Map<string, boolean>();
     for (const [k, v] of Object.entries(hassThemes)) byName.set(k, !!(v as { modes?: unknown } | undefined)?.modes);
-    for (const f of this.files) byName.set(f.name, f.has_modes);
+    for (const f of this.files) {
+      // An unreadable file reports has_modes false whatever it holds; HA's loaded copy knows better.
+      if (f.reason && byName.has(f.name)) continue;
+      byName.set(f.name, f.has_modes);
+    }
     return [...byName].map(([name, modes]) => ({ name, modes })).sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -237,7 +241,9 @@ export class McteStartView extends LitElement {
       this._busy = true;
       this._createError = '';
       try {
-        if (file && this.backend) doc = cloneDoc((await this.backend.get(file.name)).theme);
+        const got = file && this.backend ? await this.backend.get(file.name) : undefined;
+        // An unreadable file (aliases, several themes) comes back empty: HA's loaded copy is the source then.
+        if (got && !got.reason && Object.keys(got.theme ?? {}).length) doc = cloneDoc(got.theme);
         else doc = docFromHass(hassOf(this.hass).themes?.themes?.[this._installed]);
       } catch (e) {
         this._busy = false;
