@@ -1,0 +1,94 @@
+# Castle gate: an arched portcullis for the front door lock. The bars are down while the door is locked and lift when it is unlocked.
+# Tap the gate to lock or unlock. The padlock plate turns from the accent colour to the success colour.
+# It uses theme colours only, so it follows the dashboard's theme.
+# Entities: lock.front_door
+type: custom:magic-card
+name: Castle gate
+border_radius: 26px
+padding: 22px
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - modules:
+          - type: text
+            text: Castle gate
+            design: { font_size: 22px, font_weight: "700", color: var(--primary-text-color), font_family: "Georgia, 'Iowan Old Style', serif" }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: lock.front_door
+            design: { font_size: 11px, font_weight: "700", color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1.5px }
+  - id: gate
+    padding: 16px 0 4px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              position: relative
+              width: 210px
+              height: 230px
+              margin: 0 auto
+              overflow: hidden
+              border_radius: 105px 105px 8px 8px
+              border: "6px solid var(--secondary-text-color)"
+              background_color: "color-mix(in srgb, var(--primary-text-color) 5%, var(--card-background-color))"
+              box_sizing: border-box
+              transition: transform 0.15s
+              hover: { transform: scale(1.01) }
+            actions:
+              tap_action: { action: toggle, entity: lock.front_door }
+              hold_action: { action: more-info, entity: lock.front_door }
+            modules:
+              - type: separator
+                separator_style: none
+                design:
+                  position: absolute
+                  top: 0px
+                  left: 0px
+                  width: 100%
+                  height: 100%
+                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 14px, var(--accent-color) 14px, var(--accent-color) 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
+                  opacity: "0.85"
+                  transition: height 0.4s
+                  conditional:
+                    - { id: open, name: Unlocked, conditions: [{ type: state, entity: lock.front_door, state: unlocked }], design: { height: 40px } }
+              - type: icon
+                entity: lock.front_door
+                icon: mdi:lock
+                icon_on: mdi:lock
+                icon_off: mdi:lock-open-variant
+                size: 36px
+                design:
+                  position: relative
+                  margin_top: 78px
+                  width: 78px
+                  height: 78px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  color: var(--card-background-color)
+                  background_color: var(--accent-color)
+                  box_shadow: "0 0 0 7px var(--card-background-color), 0 10px 22px rgba(0,0,0,0.35)"
+                  conditional:
+                    - { id: open, name: Unlocked, conditions: [{ type: state, state: unlocked }], design: { background_color: var(--success-color) } }
+  - id: caption
+    padding: 12px 0 0
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Gate barred
+            design: { text_align: center, font_size: 20px, font_weight: "700", color: var(--primary-text-color), font_family: "Georgia, 'Iowan Old Style', serif" }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: locked }] }
+          - type: text
+            text: Gate open
+            design: { text_align: center, font_size: 20px, font_weight: "700", color: var(--primary-text-color), font_family: "Georgia, 'Iowan Old Style', serif" }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
+          - type: text
+            text: Tap the gate to lift or lower the bars
+            design: { text_align: center, font_size: 12px, color: var(--secondary-text-color) }

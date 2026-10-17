@@ -1,0 +1,181 @@
+# Life support: a panel board with a four-colour stripe, the room temperature in a breathing halo and three air bars with a status word each.
+# The halo breathes every 6 s, and every 3 s while the heating is running.
+# It uses theme colours only, so it follows the dashboard's theme.
+# Entities: climate.living_room, sensor.co2, sensor.indoor_humidity, sensor.pm25
+type: custom:magic-card
+name: Life support
+border_radius: 20px
+padding: 0px
+overflow: hidden
+rows:
+  - id: stripe
+    layout: "1-1-1-1"
+    gap: 0px
+    columns:
+      - modules: [{ type: separator, separator_style: none, design: { height: 8px, background_color: var(--primary-color) } }]
+      - modules: [{ type: separator, separator_style: none, design: { height: 8px, background_color: var(--accent-color) } }]
+      - modules: [{ type: separator, separator_style: none, design: { height: 8px, background_color: var(--warning-color) } }]
+      - modules: [{ type: separator, separator_style: none, design: { height: 8px, background_color: var(--info-color) } }]
+  - id: panel
+    column_widths: [150px, 1fr]
+    gap: 22px
+    padding: 20px 22px 22px
+    columns:
+      - vertical_align: center
+        gap: 6px
+        modules:
+          - type: text
+            text: Living room
+            design: { font_size: 12px, font_weight: "700", color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1.5px }
+          - type: vertical
+            gap: 0px
+            align: center
+            design:
+              padding: 18px 8px
+              border_radius: 50%
+              background_color: "color-mix(in srgb, var(--info-color) 10%, var(--card-background-color))"
+              animations:
+                - { id: halo, preset: aura, color: var(--info-color), strength: 55, intensity: 22, duration: 6s }
+              conditional:
+                - id: working
+                  name: Heating or cooling
+                  conditions: [{ type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating }]
+                  design:
+                    animations:
+                      - { id: halo, preset: aura, color: var(--accent-color), strength: 55, intensity: 22, duration: 3s }
+            modules:
+              - type: text
+                use_entity: true
+                entity: climate.living_room
+                attribute: current_temperature
+                design: { font_size: 40px, font_weight: "800", color: var(--primary-text-color), line_height: "1.05" }
+              - type: text
+                text: now
+                design: { font_size: 11px, color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1.5px }
+          - type: horizontal
+            gap: 6px
+            align: center
+            justify: center
+            modules:
+              - type: icon
+                icon: mdi:target
+                size: 16px
+                design: { color: var(--primary-color) }
+              - type: text
+                use_entity: true
+                entity: climate.living_room
+                attribute: temperature
+                design: { font_size: 14px, font_weight: "700", color: var(--primary-text-color) }
+              - type: text
+                use_entity: true
+                entity: climate.living_room
+                attribute: hvac_action
+                design: { font_size: 12px, color: var(--secondary-text-color) }
+      - vertical_align: center
+        gap: 16px
+        modules:
+          - type: vertical
+            gap: 5px
+            modules:
+              - type: horizontal
+                gap: 8px
+                align: center
+                modules:
+                  - type: text
+                    text: CO2
+                    design: { font_size: 12px, font_weight: "700", color: var(--secondary-text-color), flex: "1", text_transform: uppercase, letter_spacing: 1px }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.co2
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+              - type: text
+                text: Good
+                design: { font_size: 12px, font_weight: "800", color: var(--success-color) }
+                display: { conditions: [{ type: state, entity: sensor.co2, below: 800 }] }
+              - type: text
+                text: Watch
+                design: { font_size: 12px, font_weight: "800", color: var(--warning-color) }
+                display: { conditions: [{ type: state, entity: sensor.co2, above: 799.99, below: 1200 }] }
+              - type: text
+                text: Poor
+                design: { font_size: 12px, font_weight: "800", color: var(--error-color) }
+                display: { conditions: [{ type: state, entity: sensor.co2, above: 1199.99 }] }
+              - type: bar
+                entity: sensor.co2
+                min: 0
+                max: 1500
+                bar_height: 8px
+                show_value: false
+                bar_color: var(--success-color)
+                bar_background: var(--divider-color)
+                severity: [{ from: 0, color: var(--success-color) }, { from: 800, color: var(--warning-color) }, { from: 1200, color: var(--error-color) }]
+          - type: vertical
+            gap: 5px
+            modules:
+              - type: horizontal
+                gap: 8px
+                align: center
+                modules:
+                  - type: text
+                    text: Humidity
+                    design: { font_size: 12px, font_weight: "700", color: var(--secondary-text-color), flex: "1", text_transform: uppercase, letter_spacing: 1px }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.indoor_humidity
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+              - type: text
+                text: Dry
+                design: { font_size: 12px, font_weight: "800", color: var(--warning-color) }
+                display: { conditions: [{ type: state, entity: sensor.indoor_humidity, below: 30 }] }
+              - type: text
+                text: Good
+                design: { font_size: 12px, font_weight: "800", color: var(--success-color) }
+                display: { conditions: [{ type: state, entity: sensor.indoor_humidity, above: 29.99, below: 60 }] }
+              - type: text
+                text: Humid
+                design: { font_size: 12px, font_weight: "800", color: var(--info-color) }
+                display: { conditions: [{ type: state, entity: sensor.indoor_humidity, above: 59.99 }] }
+              - type: bar
+                entity: sensor.indoor_humidity
+                min: 0
+                max: 100
+                bar_height: 8px
+                show_value: false
+                bar_color: var(--success-color)
+                bar_background: var(--divider-color)
+                severity: [{ from: 0, color: var(--warning-color) }, { from: 30, color: var(--success-color) }, { from: 60, color: var(--info-color) }]
+          - type: vertical
+            gap: 5px
+            modules:
+              - type: horizontal
+                gap: 8px
+                align: center
+                modules:
+                  - type: text
+                    text: PM2.5
+                    design: { font_size: 12px, font_weight: "700", color: var(--secondary-text-color), flex: "1", text_transform: uppercase, letter_spacing: 1px }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.pm25
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+              - type: text
+                text: Good
+                design: { font_size: 12px, font_weight: "800", color: var(--success-color) }
+                display: { conditions: [{ type: state, entity: sensor.pm25, below: 15 }] }
+              - type: text
+                text: Watch
+                design: { font_size: 12px, font_weight: "800", color: var(--warning-color) }
+                display: { conditions: [{ type: state, entity: sensor.pm25, above: 14.99, below: 35 }] }
+              - type: text
+                text: Poor
+                design: { font_size: 12px, font_weight: "800", color: var(--error-color) }
+                display: { conditions: [{ type: state, entity: sensor.pm25, above: 34.99 }] }
+              - type: bar
+                entity: sensor.pm25
+                min: 0
+                max: 50
+                bar_height: 8px
+                show_value: false
+                bar_color: var(--success-color)
+                bar_background: var(--divider-color)
+                severity: [{ from: 0, color: var(--success-color) }, { from: 15, color: var(--warning-color) }, { from: 35, color: var(--error-color) }]
