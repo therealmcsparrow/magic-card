@@ -5,7 +5,6 @@ import {
   type BakeGeometry,
   type CompiledParticlesV2,
   type ParticlesApplyCtx,
-  type ParticleSlotV2,
   type ParticlesSpecV2,
 } from '../contracts/particles-v2';
 import { bake, quantizeGeometry } from './bake';
@@ -18,6 +17,10 @@ import { SHAPES_CSS, SHAPES_KEY } from './shapes';
  * Compiling a v2 spec for one geometry (the ParticlesCompiler the card registers) and the after-render
  * step (apply / release). Bakes are cached per document (name base) with up to
  * PARTICLES_V2_CAPS.geometryVariants geometries each, least recently used dropped.
+ * Every variant renders the same slots: the full pool of liveLayout (parents, then
+ * min(parents x children per parent, elements cap - parents) child slots), so a re-bake for another
+ * geometry only swaps the layer's name and rules, never its DOM. Geometry aspect 0 (the card's render,
+ * before the layer is measured) compiles that pool without baking; apply bakes for the measured size.
  */
 
 interface Entry {
@@ -44,15 +47,15 @@ function entryFor(docId: string, spec: ParticlesSpecV2, period: number, geometry
     return hit;
   }
   const front = spec.layer === 'front';
+  const layout = liveLayout(spec, period);
   let entry: Entry;
   if (spec.sim.mode === 'live') {
-    const layout = liveLayout(spec, period);
     const { css, slots } = liveCss(layout.looks, name, docId);
     const capped = Math.floor(spec.count) > PARTICLES_V2_CAPS.parents || layout.children < layout.parents * childCount(spec.sim.children);
     entry = { compiled: { mode: 'live', name, css, slots, front, stats: { elements: slots.length, stops: 0, bytes: css.length, capped, warn: false } } };
   } else {
     const loop = bake({ spec, period, geometry: g });
-    const { css, slots } = bakedCss(loop, name, docId);
+    const { css, slots } = bakedCss(loop, name, docId, layout.looks);
     entry = { compiled: { mode: 'baked', name, css, slots, front, stats: loop.stats }, loop };
   }
   if (!variants) {
@@ -65,9 +68,15 @@ function entryFor(docId: string, spec: ParticlesSpecV2, period: number, geometry
   return entry;
 }
 
-/** particles-v2 ParticlesCompiler: the layer of a v2 spec for one geometry (cached). */
+/**
+ * particles-v2 ParticlesCompiler: the layer of a v2 spec for one geometry (cached). Aspect 0: the
+ * unbaked pool (`-g0`, static slot rules only, nothing moves until apply), no bake at render time.
+ */
 export function compileParticles(docId: string, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry): CompiledParticlesV2 {
-  return entryFor(docId, spec, period, geometry).compiled;
+  if (geometry.aspect > 0) return entryFor(docId, spec, period, geometry).compiled;
+  const name = `${layerBase(docId, spec, period)}-g0`;
+  const { css, slots } = liveCss(liveLayout(spec, period).looks, name, docId);
+  return { mode: spec.sim.mode, name, css, slots, front: spec.layer === 'front', stats: { elements: slots.length, stops: 0, bytes: css.length, capped: false, warn: false } };
 }
 
 /** The layer's quantised geometry from the page; undefined while it has no size (hidden, not laid out). */
@@ -82,20 +91,6 @@ function measure(layer: HTMLElement, ctx: ParticlesApplyCtx): BakeGeometry | und
     }
   }
   return quantizeGeometry(g);
-}
-
-/**
- * After a swap to another geometry's bake, the slots that differ (children depend on which parents
- * hit what) take the new built-in shape. Parents never differ: their looks come from the seed alone.
- */
-function patchSlots(layer: HTMLElement, slots: ParticleSlotV2[]): void {
-  const items = layer.children;
-  for (let k = 0; k < items.length && k < slots.length; k++) {
-    const s = slots[k].shape;
-    if (s) {
-      if (items[k].getAttribute('data-s') !== s) items[k].setAttribute('data-s', s);
-    } else if (items[k].hasAttribute('data-s')) items[k].removeAttribute('data-s');
-  }
 }
 
 /** Reduced motion: one frame from the middle of the loop (baked) or after a short run (live), held still. */
@@ -123,10 +118,10 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     const measured = measure(layer, ctx);
     const g = measured ?? DEFAULT_GEOMETRY;
     const e = entryFor(docId, spec, period, g);
-    if (measured && layer.getAttribute('data-fx') !== e.compiled.name) {
+    // the render's unbaked pool (or another geometry's bake): this size's rules; the slots stay
+    if (layer.getAttribute('data-fx') !== e.compiled.name) {
       ctx.useCss(e.compiled.name, e.compiled.css);
       layer.setAttribute('data-fx', e.compiled.name);
-      patchSlots(layer, e.compiled.slots);
     }
     if (ctx.reducedMotion) {
       stopLive(layer);

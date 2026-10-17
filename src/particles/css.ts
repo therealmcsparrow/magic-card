@@ -87,11 +87,17 @@ export function layerCss(name: string, docId: string, looks: SlotLook[], keyfram
 
 const lookOf = (e: BakedElement): SlotLook => ({ shape: e.shape, size: e.size, ...(e.color !== undefined ? { color: e.color } : {}) });
 
-/** A baked loop as layer CSS and its slots (particles-v2 ParticlesModule.bakedCss). Stops as bake.stopDecl writes them (stats.bytes counts these). */
-export function bakedCss(loop: BakedLoop, name: string, docId: string): { css: string; slots: ParticleSlotV2[] } {
-  const looks = loop.elements.map(lookOf);
+/**
+ * A baked loop as layer CSS and its slots (particles-v2 ParticlesModule.bakedCss). Stops as
+ * bake.stopDecl writes them (stats.bytes counts these). `pool` (the card: liveLayout's looks): the
+ * slots are the whole pool and element k takes pool look k, as in the live engine, so the slots never
+ * change between geometries (a bake with fewer children leaves the rest of the pool unanimated, at
+ * the base opacity 0).
+ */
+export function bakedCss(loop: BakedLoop, name: string, docId: string, pool?: SlotLook[]): { css: string; slots: ParticleSlotV2[] } {
+  const looks = loop.elements.map((e, k) => pool?.[k] ?? lookOf(e));
   const css = layerCss(name, docId, looks, (k) => loop.elements[k].stops.map(stopDecl).join(''));
-  return { css, slots: looks.map(slotOf) };
+  return { css, slots: (pool ?? looks).map(slotOf) };
 }
 
 /** The live layer's static rules (shapes, sizes, colours) and its slots. */
