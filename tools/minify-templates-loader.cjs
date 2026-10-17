@@ -7,7 +7,9 @@
  *   css also drops the leading zero of decimals (0.5 becomes .5).
  *   html`...` parts: any run of two or more whitespace characters becomes one space (HTML collapses
  *             them the same way), and whitespace between two tags goes when one of them is a block
- *             element. Parts holding <pre or <textarea are left alone.
+ *             element, and so does whitespace between a block tag and a ${} (leading and trailing
+ *             space of a block never shows), and whitespace before the > that ends a tag.
+ *             Parts holding <pre or <textarea are left alone.
  */
 const ts = require('typescript');
 
@@ -23,11 +25,17 @@ const minCss = (t) =>
 
 // Whitespace between two tags is dropped when one of them is a block element (it would collapse there anyway).
 const BLOCK = new Set(['div', 'p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'header', 'section', 'form', 'dialog']);
+const B = [...BLOCK].join('|');
+const edgeOpen = new RegExp('(</?(?:' + B + ')\\b[^<>]*>)\\s+$', 'i');
+const edgeClose = new RegExp('^\\s+(?=</?(?:' + B + ')\\b)', 'i');
 const minHtml = (t) =>
   /<pre|<textarea/i.test(t)
     ? t
     : t
         .replace(/\s{2,}/g, ' ')
+        .replace(/(["'])\s+>/g, '$1>')
+        .replace(edgeOpen, '$1')
+        .replace(edgeClose, '')
         .replace(/(<\/?([a-z][a-z0-9-]*)[^<>]*>)\s+(?=<\/?([a-z][a-z0-9-]*))/gi, (all, tag, a, b) => (BLOCK.has(a.toLowerCase()) || BLOCK.has(b.toLowerCase()) ? tag : all));
 
 function minify(source, fileName = 'x.ts') {

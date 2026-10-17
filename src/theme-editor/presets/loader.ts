@@ -4,7 +4,7 @@ import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 /*
  * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js (ADR 0014), loaded
  * next to the editor bundle (public path: ../public-path.ts) when the create dialog first opens.
- * Memoised while pending and once loaded; a failure clears the memo so "Try again" asks again.
+ * A load that takes over 8 s counts as failed (a stalled request would hang for minutes). Memoised while pending and once loaded; a failure clears the memo so "Try again" asks again.
  */
 export type PresetChunk = typeof Chunk;
 type Importer = () => Promise<PresetChunk>;
@@ -35,7 +35,7 @@ const sane = (lib: ThemePresetLibrary | undefined): boolean =>
 
 /** Load the chunk once; rejects when it cannot load or its library is not a major 1 one. */
 export function loadPresetLibrary(): Promise<PresetChunk> {
-  pending ??= importer()
+  pending ??= new Promise<PresetChunk>((ok, no) => (setTimeout(no, 8000, Error('timed out')), importer().then(ok, no)))
     .then((m) => {
       if (!sane(m?.THEME_PRESET_LIBRARY)) throw new Error('unexpected preset library');
       return (loaded = m);

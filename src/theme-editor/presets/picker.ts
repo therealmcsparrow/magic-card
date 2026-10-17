@@ -34,7 +34,7 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     return html`<span style="background:${v['lovelace-background'] ?? v['primary-background-color']}"><i class="c" style="background:${v['card-background-color']}"></i><i class="d" style="background:${v['primary-color']}"></i></span>`;
   };
   return html`<label class="preset ${on ? 'on' : ''}">
-    <input class="sr-only" type="radio" name="preset" value=${p.id} .checked=${on} @change=${() => ev.select(p.id)} />
+    <input class="pin" type="radio" name="preset" value=${p.id} .checked=${on} @change=${() => ev.select(p.id)} />
     <span class="pv" aria-hidden="true"
       ><span class="sw">${half('light')}${half('dark')}</span
       ><span class="ac" style="background:linear-gradient(90deg,${colours(p, 'light')['accent-color']} 50%,${colours(p, 'dark')['accent-color']} 50%)"></span
@@ -42,16 +42,26 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     <span class="pn">${p.name}${on ? icon('check') : nothing}</span>
     <span class="help">${p.blurb}</span>
     ${p.inspiredBy ? html`<span class="help">Inspired by ${p.inspiredBy.name}</span>` : nothing} ${on && p.note ? html`<span class="help">${p.note}</span>` : nothing}
-    <span class="sr-only">Light and dark</span>
   </label>`;
+}
+
+const search = (v: PickerView): ThemePreset[] => {
+  const q = v.query.trim().toLowerCase();
+  return v.lib.presets.filter((p) => !q || `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.group === 'inspired' ? 'inspired by' : p.group}`.toLowerCase().includes(q));
+};
+const shownOf = (v: PickerView): ThemePreset[] => search(v).filter((p) => v.filter === 'all' || p.group === v.filter);
+
+/** The text of the dialog's live region ("12 presets shown"); the region itself lives in the start view. */
+export function pickerStatus(v: PickerView): string {
+  const n = shownOf(v).length;
+  return `${n} ${n === 1 ? 'preset' : 'presets'} shown`;
 }
 
 /** Search, filter and the grouped cards for the current view. */
 export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
-  const q = v.query.trim().toLowerCase();
-  const found = v.lib.presets.filter((p) => !q || `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.group === 'inspired' ? 'inspired by' : p.group}`.toLowerCase().includes(q));
+  const found = search(v);
   const count = (g: string): number => found.filter((p) => p.group === g).length;
-  const shown = found.filter((p) => v.filter === 'all' || p.group === v.filter);
+  const shown = shownOf(v);
   const sel = v.lib.presets.find((p) => p.id === v.selected);
   return html`<div class="pl">
     <div class="pbar">
@@ -82,8 +92,7 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
         @mcte-change=${(e: CustomEvent) => ev.filter(e.detail.value)}
       ></mcte-mode-switch>
     </div>
-    <p class="sr-only" role="status">${shown.length} ${shown.length === 1 ? 'preset' : 'presets'} shown</p>
-    <div class="plist" role="radiogroup" aria-labelledby="start-lbl">
+    <div class="plist" role="radiogroup" aria-label="Preset">
       ${shown.length
         ? (['original', 'inspired'] as const).map((g) => {
             const items = shown.filter((p) => p.group === g);
@@ -96,7 +105,7 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
             No preset matches "${v.query}". <button type="button" class="btn btn-text btn-sm" @click=${() => (ev.query(''), ev.filter('all'))}>Clear search</button>
           </p>`}
     </div>
-    ${sel && !shown.includes(sel) ? html`<p class="help" role="status">Selected: ${sel.name}</p>` : nothing}
+    ${sel && !shown.includes(sel) ? html`<p class="help">Selected: ${sel.name}</p>` : nothing}
   </div>`;
 }
 
@@ -133,6 +142,25 @@ export const pickerStyles = css`
       padding: 2px;
     }
   }
+  /* The sheet (under 600 px) has a sticky footer of up to three rows: keep a focused card above it */
+  @media (max-width: 599px) {
+    .pin {
+      scroll-margin-block: 8px 136px;
+    }
+  }
+  /* Short screens: the whole dialog scrolls, nothing nests and nothing sticks */
+  @media (max-height: 499px) {
+    .plist {
+      max-height: none;
+      overflow: visible;
+    }
+    dialog .foot {
+      position: static;
+    }
+    .pin {
+      scroll-margin-block: 8px;
+    }
+  }
   @media (max-width: 899px) {
     .presets {
       grid-template-columns: repeat(2, 1fr);
@@ -154,6 +182,15 @@ export const pickerStyles = css`
     border-radius: var(--mc-radius-lg);
     cursor: pointer;
     background: var(--mc-surface);
+  }
+  .pin {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
   }
   .preset.on {
     outline: 2px solid var(--mc-accent);
