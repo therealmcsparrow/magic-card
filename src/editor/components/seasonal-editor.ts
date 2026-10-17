@@ -94,59 +94,33 @@ export class SeasonalEditor extends LitElement {
         display: grid;
         gap: 16px;
       }
-      .tiles {
+      .pick {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-        grid-auto-rows: 1fr;
+        grid-template-columns: auto 1fr;
         gap: 8px;
+        align-items: center;
+        container-type: inline-size;
       }
-      .tile {
+      .pick .select {
+        min-width: 0;
+      }
+      .scene-ico {
         display: grid;
-        justify-items: center;
-        align-content: center;
-        gap: 4px;
-        min-height: 64px;
-        padding: 8px 4px 6px;
-        border: 1px solid var(--mc-field-border);
-        border-radius: var(--mc-radius);
-        background: var(--mc-surface);
-        color: var(--mc-text-2);
-        font: inherit;
-        font-size: 0.75rem;
-        line-height: 1.3;
-        text-align: center;
-        cursor: pointer;
-        transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
-      }
-      .tile:hover {
-        background: var(--mc-surface-2);
-        border-color: var(--mc-text-2);
-      }
-      .tile:focus-visible {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: 2px;
-      }
-      .tile[aria-checked='true'] {
-        border-color: var(--mc-accent);
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
         background: var(--mc-accent-tint);
         color: var(--mc-accent-ink);
-        box-shadow: 0 0 0 1px var(--mc-accent);
+        --mdc-icon-size: 20px;
       }
-      .tile ha-icon {
-        --mdc-icon-size: 22px;
-      }
-      .tile span {
-        max-width: 100%;
-      }
-      .tile .today {
-        font-size: 0.6875rem;
-        color: var(--mc-text-2);
-      }
-      .tile[aria-checked='true'] .today {
-        color: inherit;
-      }
-      .tile.auto {
-        grid-column: span 2;
+      @container (max-width: 259px) {
+        .pick {
+          grid-template-columns: 1fr;
+        }
+        .scene-ico {
+          display: none;
+        }
       }
       .chips {
         display: flex;
@@ -182,11 +156,6 @@ export class SeasonalEditor extends LitElement {
       .date-row .input {
         flex: 1;
         min-width: 0;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .tile {
-          transition: none;
-        }
       }
     `,
   ];
@@ -256,26 +225,6 @@ export class SeasonalEditor extends LitElement {
     this._write({ ...this._cfg, scene, combine });
   }
 
-  private _onTileKey(e: KeyboardEvent): void {
-    const grid = e.currentTarget as HTMLElement;
-    const i = SEASONAL_TILES.findIndex((t) => t.value === this._scene);
-    const n = SEASONAL_TILES.length;
-    const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length);
-    const steps: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols };
-    let next: number;
-    if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = n - 1;
-    else if (e.key in steps) {
-      next = i + steps[e.key];
-      if (Math.abs(steps[e.key]) === 1) next = (next + n) % n;
-      else if (next < 0 || next >= n) next = i;
-    } else return;
-    e.preventDefault();
-    const value = SEASONAL_TILES[next].value;
-    if (next !== i) this._pick(value);
-    requestAnimationFrame(() => this.renderRoot.querySelector<HTMLElement>(`.tile[data-scene="${value}"]`)?.focus());
-  }
-
   /** What auto shows on the preview date (else today). */
   private _today(): string {
     const d = seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
@@ -283,22 +232,24 @@ export class SeasonalEditor extends LitElement {
     return SCENES[scene]?.label ?? LABEL[scene] ?? scene;
   }
 
-  private _tile(t: SceneTile, current: SeasonalSceneSetting): TemplateResult {
-    const on = t.value === current;
-    const auto = t.value === 'auto';
-    return html`<button
-      type="button"
-      class="tile ${auto ? 'auto' : ''}"
-      role="radio"
-      data-scene=${t.value}
-      aria-checked=${on ? 'true' : 'false'}
-      tabindex=${on ? '0' : '-1'}
-      @click=${() => this._pick(t.value)}
-    >
-      <ha-icon icon=${t.icon} aria-hidden="true"></ha-icon>
-      <span>${t.label}</span>
-      ${auto ? html`<span class="today">${this._preview ? 'Preview' : 'Today'}: ${this._today()}</span>` : nothing}
-    </button>`;
+  private _picker(current: SeasonalSceneSetting): TemplateResult {
+    const opt = (t: SceneTile) =>
+      html`<option value=${t.value} ?selected=${t.value === current}>${t.value === 'auto' ? `Auto (${this._preview ? 'preview' : 'today'}: ${this._today()})` : t.label}</option>`;
+    const tile = (v: string) => SEASONAL_TILES.find((t) => t.value === v)!;
+    const group = (label: string, values: string[]) => html`<optgroup label=${label}>${values.map((v) => opt(tile(v)))}</optgroup>`;
+    return html`<div class="pick">
+      <span class="scene-ico" aria-hidden="true"><ha-icon icon=${tile(current).icon}></ha-icon></span>
+      <div class="select">
+        <select class="input" id="seasonal-scene" aria-label="Seasonal scene" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as SeasonalSceneSetting)}>
+          ${opt(tile('auto'))}
+          ${group('Seasons', ['winter', 'spring', 'summer', 'autumn'])}
+          ${group('Holidays', ['christmas', 'new_year', 'valentine', 'easter', 'halloween'])}
+          ${group('Live', ['weather', 'daynight'])}
+          ${opt(tile('none'))}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>
+    </div>`;
   }
 
   private _field(label: string, key: keyof SeasonalConfig | undefined, control: TemplateResult, forId?: string, help?: TemplateResult | string): TemplateResult {
@@ -503,6 +454,12 @@ export class SeasonalEditor extends LitElement {
     </div>`;
   }
 
+  protected updated(): void {
+    // options inside an optgroup do not always take `selected`: set the value after render
+    const sel = this.renderRoot.querySelector<HTMLSelectElement>('select#seasonal-scene');
+    if (sel && sel.value !== this._scene) sel.value = this._scene;
+  }
+
   protected render(): TemplateResult {
     const scene = this._scene;
     const cfg = this._cfg;
@@ -513,9 +470,7 @@ export class SeasonalEditor extends LitElement {
     const weather = settings.includes('weather');
     return html`
       <div class="seasonal-ed">
-        <div class="tiles" role="radiogroup" aria-label="Seasonal scene" @keydown=${this._onTileKey}>
-          ${SEASONAL_TILES.map((t) => this._tile(t, scene))}
-        </div>
+        ${this._picker(scene)}
         ${on
           ? html`
               ${this._field('Layer', 'layer', this._seg('Layer', cfg.layer === 'front' ? 'front' : 'back', LAYERS, (v) => this._set({ layer: v === 'front' ? 'front' : undefined })), undefined, cfg.layer === 'front' ? 'Over the content, dimmed. Taps still reach the content.' : undefined)}

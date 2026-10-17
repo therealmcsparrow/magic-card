@@ -27,11 +27,14 @@ const ANIMATIONS: Opt[] = [
   { value: 'dashes', label: 'Marching ants' },
 ];
 const STARTS: Opt[] = [
-  { value: 'top', label: 'Top center' },
-  { value: 'top-left', label: 'Top left' },
+  { value: 'top', label: 'Top' },
+  { value: 'top-right', label: 'Top right' },
   { value: 'right', label: 'Right' },
+  { value: 'bottom-right', label: 'Bottom right' },
   { value: 'bottom', label: 'Bottom' },
+  { value: 'bottom-left', label: 'Bottom left' },
   { value: 'left', label: 'Left' },
+  { value: 'top-left', label: 'Top left' },
 ];
 const DIRECTIONS: Opt[] = [
   { value: 'cw', label: 'Clockwise' },
