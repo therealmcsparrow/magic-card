@@ -17,7 +17,7 @@ From left to right:
 | Card name | The card's name, or "Untitled card". |
 | Template bar | A compact template bar: the template name and override count, or a No template button. See [Templates](../editor/templates.md). |
 | Form / YAML | Switches the editor mode. Shared with the pane editor. |
-| Device width | Phone, Tablet, Desktop. Hidden in YAML mode. See [Device widths](device-widths.md). |
+| Canvas width | Narrow, Wide, Panel. Follows the dashboard view. Hidden in YAML mode. See [Canvas width](device-widths.md). |
 | Undo, Redo | Same as Ctrl+Z and Ctrl+Y. Disabled when there is nothing to undo or redo. |
 | Done | Closes the Studio. |
 
@@ -51,7 +51,7 @@ Layers always starts hidden when the Studio opens on a narrow screen.
 
 ## YAML mode
 
-In YAML mode the canvas is replaced by Home Assistant's YAML editor, centred and at most 760 px wide. Layers and the inspector stay, and the device width switch is hidden. YAML edits work as in the pane. See [Form and YAML](../editor/form-and-yaml.md).
+In YAML mode the canvas is replaced by Home Assistant's YAML editor, centred and at most 760 px wide. Layers and the inspector stay, and the canvas width switch is hidden. YAML edits work as in the pane. See [Form and YAML](../editor/form-and-yaml.md).
 
 ## Sync with the pane editor
 

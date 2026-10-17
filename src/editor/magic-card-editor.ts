@@ -246,7 +246,7 @@ export class MagicCardEditor extends LitElement {
     const overlays = this._renderOverlays(this._editorState);
     return html`<mc-pane-editor .stateManager=${this._stateManager} .hass=${this.hass}></mc-pane-editor>
 ${this._studioMounted
-  ? html`<mc-studio .stateManager=${this._stateManager} .hass=${this.hass} .open=${this._studioOpen}>${this._studioOpen ? overlays : nothing}</mc-studio>`
+  ? html`<mc-studio .stateManager=${this._stateManager} .hass=${this.hass} .lovelace=${this.lovelace} .open=${this._studioOpen}>${this._studioOpen ? overlays : nothing}</mc-studio>`
   : nothing}
 ${this._studioOpen ? nothing : overlays}`;
   }
