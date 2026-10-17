@@ -1,14 +1,17 @@
 import type { AnimationDoc, LaneId } from '../anim-studio/model';
 
 /*
- * Contract: animated icon library. Version 1.2.0 (Architect-owned).
+ * Contract: animated icon library. Version 1.2.1 (Architect-owned).
  *
  * 1.0.0 is what shipped in 2026.10.03 (src/icon-anim/library.ts LibraryEntry, ICON_LIBRARY,
  * LIBRARY_DOMAINS, libraryFor, searchLibrary). 1.1.0 is additive: `domain` may also be one of
  * LIBRARY_CATEGORIES for icons without a Home Assistant domain, and every entry must pass the
  * split rules below. 1.2.0 is additive: every entry plays in three Styles (Quiet, Living, Glow),
  * all derived from its one Living rig by styleDoc() (ADR 0006), plus the card-entry fields that
- * record a library pick. library.ts re-exports LibraryEntry from here.
+ * record a library pick. 1.2.1 (patch, Lead ruling in fix round 1 of T4.2): the Style text below
+ * now describes the derivation as built (hero choice, spins, accents, card-aware colours, the
+ * styleDoc options, the hand-edit rule); no type or export changed. library.ts re-exports
+ * LibraryEntry from here.
  *
  * Implementation: module `icon-library` (src/icon-anim/library.ts and its data files, the style
  * derivation in src/icon-anim/style.ts). Placement is unchanged: the studio's lazy chunk
@@ -19,7 +22,7 @@ import type { AnimationDoc, LaneId } from '../anim-studio/model';
  * (Living only in this run).
  */
 
-export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.0';
+export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.1';
 
 /** Pseudo-domains for icons no Home Assistant domain fits (the filter shows them like domains). */
 export const LIBRARY_CATEGORIES = ['animal', 'seasonal', 'transport', 'maker', 'workplace', 'household'] as const;
@@ -32,11 +35,13 @@ export const DEFAULT_ICON_STYLE: IconStyle = 'living';
 
 /** Optional per-entry hints for the derivation. Without them the defaults below apply. */
 export interface IconStyleHints {
-  /** Quiet: the one part and lane that keep moving (default: the first part track, its first lane in QUIET_LANE_ORDER). */
+  /** Quiet: the one target and lane that keep moving (default: chosen as described at styleDoc). */
   quiet?: { part?: string; lane?: Extract<LaneId, 'rotate' | 'x' | 'y' | 'scale' | 'opacity'> };
   /**
-   * Glow: up to GLOW_CAPS.halos part ids that get a halo (default: the first part with a track),
-   * and the glow colour (default: the theme glow of the entry's category, else GLOW_FALLBACK).
+   * Glow: `parts` = the accent list (part or group ids, `shape:<id>` for a drawn shape): the parts
+   * that carry light, fire, heat, energy, signal or magic. They take the glow colour; halos go on
+   * some of them (see styleDoc). `color` = the theme's glow colour on dark cards (default
+   * GLOW_FALLBACK); its light-card partner comes from the brand artist's theme_on_light table.
    */
   glow?: { parts?: string[]; color?: string };
 }
@@ -57,26 +62,49 @@ export interface LibraryEntry {
 }
 
 /**
- * styleDoc(entry, style): pure, deterministic, in src/icon-anim/style.ts. 'living' returns
- * entry.build() unchanged. The result must pass validateAnimationDoc strict and stay under
- * ANIMATION_CAPS (one test runs every entry x every style).
+ * styleDoc(entry, style, opts?): pure, deterministic, in src/icon-anim/style.ts. `opts.id` is the
+ * document id (default entry.id), `opts.color` the user's glow colour (the animation entry's Color,
+ * read when the user picks). 'living' returns entry.build() with that id. The result must pass
+ * validateAnimationDoc strict and stay under ANIMATION_CAPS (one test runs every entry x style).
  *
- * Quiet (derived from Living):
- * - Only one track keeps moving (hints.quiet.part, else the first part track); every other part,
- *   group and shape track and the top-level keyframes are dropped. Shapes stay, still.
- * - That track keeps one lane (hints.quiet.lane, else the first of QUIET_LANE_ORDER it animates);
- *   its offsets are scaled by QUIET.amplitude around the rest value and clamped to QUIET caps.
- * - duration x QUIET.slowdown; easing 'ease-in-out' per keyframe; event rests (last 40 %) kept.
+ * Quiet (derived from Living; the brand artist's p4-spec.json `styles.quiet`):
+ * - Only one track keeps moving and keeps one lane. Hero: hints.quiet.part, else a spin (a rotate
+ *   track turning whole turns), else the target with the largest peak displacement in icon units
+ *   (flips rank last; within 10 % the larger box wins, so a group beats its members). Lane:
+ *   hints.quiet.lane, else the hero's largest channel (ties: QUIET_LANE_ORDER, then scale_x/y and
+ *   skew). Nothing moving: the deepest opacity, then draw, change; only colour: the first colour track.
+ * - Every other track, the top-level keyframes, clips and bindings are dropped. Shapes stay, still.
+ * - Offsets scale by min(QUIET.amplitude, 0.3 units / peak) around the rest value, clamped to
+ *   QUIET (skew like rotate); opacity and draw become 0.7 + 0.3 x value. A spin is not scaled: it
+ *   keeps its whole turns at half speed (duration x 2).
+ * - duration max(x QUIET.slowdown, 1.6 s); the document and every key ease 'ease-in-out', except
+ *   linear keys (spins, sampled curves), which stay linear; every key keeps its place.
  *
- * Glow (derived from Living):
- * - Living as is, plus one halo RigShape per glow part (at most GLOW_CAPS.halos), id
- *   `glow-<part id>`, layer 'under', d = the part's geometry (its own path, or its subpaths cut from
- *   the icon), fill 'none', stroke = glow colour, stroke_width GLOW.stroke, linecap 'round',
- *   origin = the part's origin.
- * - A track on `shape:glow-<part id>` copies the part's transform keyframes (so the halo moves with
- *   it) and adds an opacity lane GLOW.opacity[0] -> [1] -> [0] over the cycle.
+ * Glow (derived from Living; `styles.glow`):
+ * - Living's motion as is. Accent targets (hints.glow.parts) take the glow colour as `fill`
+ *   (shapes) or as a constant colour lane on their track (a target with its own colour keys, such
+ *   as flames, keeps them).
+ * - Halos: at most GLOW_CAPS.halos RigShapes `glow-<target id>`, layer 'under', d = the target's
+ *   geometry (its subpaths cut from the icon), fill 'none', stroke = the halo colour (below),
+ *   stroke_width GLOW.stroke, linecap 'round', origin = the target's pivot. The largest accent
+ *   part or group gets one; a second only when there are exactly two accents of similar size
+ *   (half the area or more). No accent part: the first part with a track.
+ * - A track on `shape:glow-<id>` copies the motion of the target (its transform and draw keys and
+ *   path; a part that holds still in a moving group copies the group, with the group's pivot) and
+ *   adds an opacity lane GLOW.opacity[0] -> [1] -> [0] over the cycle.
+ * - Glow-only shapes (the jack-o'-lantern's face light) are added in the glow colour, under the
+ *   parts, moving and fading with their part.
+ * - Colour, fixed when picked: opts.color (a plain #hex or rgb() colour), else the theme pair, else
+ *   GLOW_FALLBACK's pair. Light or dark is the card background's brightness, read in CSS with a
+ *   relative colour (`rgb(from <background> ...)`) from --mc-glow-bg (set by the editor's tiles),
+ *   else --ha-card-background, else --card-background-color: the variables Home Assistant's light
+ *   and dark mode set, so no card code runs and a theme change applies at once. Dark card: the
+ *   glow colour, halo in it. Light card (brightness above about 0.6): the darker colour (the
+ *   theme_on_light partner, or 70 % of the user's colour) and transparent halos. A browser
+ *   without relative colours draws no halo and no accent colour: Glow then looks like Living.
  * - No CSS filter or blur anywhere (tablet CPU; the brand artist's objection to direction C).
- * - An existing accent RigShape (baubles, laser spark) takes the glow colour as fill.
+ * - Not built (they need code on the dashboard, against the CEO's pick-time ruling): the brand's
+ *   radial bloom, glow only while the entity is active, and the 2:1 contrast step.
  * - Reduced motion: the card's existing rule holds the rest pose; the halo stays at GLOW.opacity[0].
  */
 export const QUIET_LANE_ORDER = ['rotate', 'y', 'x', 'scale', 'opacity'] as const;
@@ -94,8 +122,11 @@ export const GLOW_FALLBACK = '#ffb300';
  *   first and falls back to the old name match for 2026.10.03 configs.
  * - `icon_style`: 'quiet' | 'glow'; absent means 'living' (so existing configs mean Living).
  * Changing the Style (icon picker, Animated icons tab) rebuilds the inline document in place (same
- * id) from library_icon. When the document is edited by hand (for example in the animation studio)
- * both fields are removed: the document is now the user's own and the Style control hides for it.
+ * id) from library_icon. The entry counts as a library pick only while its stored document equals
+ * styleDoc(entry, icon_style ?? 'living', { id }) (ignoring `name` and the picked glow colour). A
+ * document edited by hand (YAML, the animation studio) is the user's own: no tile is marked and the
+ * Style switch does not rebuild it, it follows the module's icon like any own animation, and the
+ * editor removes both fields when it next writes that module (an icon follow or a new pick).
  */
 export interface LibraryPickFields {
   library_icon?: string;

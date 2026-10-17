@@ -42,9 +42,13 @@ Every animation in the Icon library plays in three Styles. The Style switch sits
 -   Living is the full animation as it was drawn. It is the default.
 -   Glow is the full animation with a soft outline around the lit part of the icon (the flame, the bulb, the rays) that slowly brightens and fades. The lit parts take the glow colour. Glow uses no blur or filter, so a wall tablet does no extra work beyond one more outline per icon.
 
-The glow colour is the animation entry's Color field. Without one it is the icon's theme colour: amber for fire, pale yellow for lights, light blue for cleaning, and so on. An icon without a theme glows in a lighter shade of its own colour. On a light theme the glow colour is darker and the outline is left out, so the icon stays readable on a white card. This follows Home Assistant's light or dark mode.
+The glow colour is set when you pick the icon or its Style. It is the animation entry's Color field, if that holds a plain colour such as `#ffa000` or `rgb(255, 160, 0)`. Otherwise it is the icon's theme colour: amber for fire, pale yellow for lights, light blue for cleaning, and so on. Icons without a theme glow amber. If you change Color later, click the tile again to use the new colour.
+
+The card checks how light its background is. On a dark card (Home Assistant's dark mode) the icon glows in that colour with the outline. On a light card the colour is darker and there is no outline, so the icon stays readable on white. This follows a theme change without picking again. The check reads the theme's card background (`--ha-card-background`, else `--card-background-color`). It runs in CSS, so browsers without CSS relative colours (Chrome and Android WebView before 119, Safari before 16.4) show Glow like Living.
 
 When the module already plays an animation from the Icon library, switching the Style in the tab changes that animation at once and the picker stays open. Animations from My animations have no Style: the switch only affects the Icon library tiles. Animations picked before this release play as Living. To give one of them another Style, open the tab and choose it.
+
+An animation you changed by hand, for example in the card's YAML or in the animation studio, is your own from then on. The tab marks no tile for it, and switching the Style leaves it alone. When the module's icon changes, it follows the new icon like an animation of the module's own icon instead of being removed. At that point the editor also removes its `library_icon` and `icon_style`. Renaming the animation does not count as a change.
 
 The Jack-o'-lantern lights up behind its face in Glow only.
 
@@ -130,7 +134,7 @@ rows:
 ```
 
 -   The document id starts with `quick-icon-` followed by six random letters and digits, unique on the card. The entry id is `anim-icon-1` (or the next free number).
--   `library_icon` names the Icon library animation the document was made from, and `icon_style` its Style (`quiet` or `glow`; Living writes nothing). Only the editor reads them. The card plays the stored document, which is already in the chosen Style. Switching the Style rewrites that document under the same id.
+-   `library_icon` names the Icon library animation the document was made from, and `icon_style` its Style (`quiet` or `glow`; Living writes nothing). Only the editor reads them. The card plays the stored document, which is already in the chosen Style. Switching the Style rewrites that document under the same id. Once the document is edited by hand, the editor no longer treats it as a library pick.
 -   A pick from My animations writes the same entry with `preset: custom:<id>` and stores nothing in the card.
 -   `custom_animations` keeps the form it already has, a list or a map.
 -   The card editor never writes to the Magic Card Utils library. The card plays the stored copy, also on a Home Assistant without the integration. See [Using animations in cards](../animation-studio/using-in-cards.md#what-happens-without-the-integration).

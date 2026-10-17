@@ -25,7 +25,7 @@ const STYLE_LABELS: Record<IconStyle, string> = { quiet: 'Quiet', living: 'Livin
 const STYLE_HELP: Record<IconStyle, string> = {
   quiet: 'Quiet: one part moves a little, slower. For calm dashboards.',
   living: 'Living: the full animation, as drawn.',
-  glow: "Glow: the full animation with a soft halo in the animation's colour, else the theme's.",
+  glow: "Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.",
 };
 const isStyle = (v: unknown): v is IconStyle => (ICON_STYLES as readonly unknown[]).includes(v);
 
@@ -77,6 +77,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           background-size: 8px 8px;
           color: var(--state-icon-color, #44739e);
           --mdc-icon-size: 40px;
+          /* Glow reads light or dark from the card background; the tile card is transparent on this */
+          --mc-glow-bg: var(--mc-canvas, var(--card-background-color, #fff));
         }
         magic-card {
           display: block;
