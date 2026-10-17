@@ -5,8 +5,8 @@ import { join } from 'node:path';
 
 const CAPS = {
   'magic-card.js': 683958,
-  'magic-card-animation-studio.js': 857763,
-  'magic-card-editor.js': 646860,
+  'magic-card-animation-studio.js': 858558,
+  'magic-card-editor.js': 647655,
   'magic-card-icon-animator.js': 222240,
   'magic-card-icon-library.js': 171507,
   'magic-card-particles.js': 33080,

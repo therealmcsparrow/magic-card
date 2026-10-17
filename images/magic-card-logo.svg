@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 850" width="100%" height="100%">
+  <defs>
+    <style>
+      .brand-text {
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 92px;
+        letter-spacing: 2px;
+      }
+    </style>
+
+    <!-- Background & Frame Gradients -->
+    <linearGradient id="outerBorderGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1c6eb5" />
+      <stop offset="50%" stop-color="#154785" />
+      <stop offset="100%" stop-color="#0d133a" />
+    </linearGradient>
+
+    <linearGradient id="innerBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ce0ff" />
+      <stop offset="55%" stop-color="#3898ff" />
+      <stop offset="100%" stop-color="#9b4dff" />
+    </linearGradient>
+
+    <linearGradient id="cardBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#102554" />
+      <stop offset="50%" stop-color="#19194a" />
+      <stop offset="100%" stop-color="#11092e" />
+    </linearGradient>
+
+    <!-- Magical Swirl Gradients -->
+    <linearGradient id="purpleSwirl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38b6ff" stop-opacity="0" />
+      <stop offset="30%" stop-color="#9d4edd" />
+      <stop offset="70%" stop-color="#f72585" />
+      <stop offset="100%" stop-color="#7209b7" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="cyanSwirl" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#72efdd" stop-opacity="0" />
+      <stop offset="40%" stop-color="#64dfdf" />
+      <stop offset="70%" stop-color="#4ea8de" />
+      <stop offset="100%" stop-color="#5e60ce" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="wandBodyGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a0b3b" />
+      <stop offset="50%" stop-color="#2c499c" />
+      <stop offset="100%" stop-color="#5ce1e6" />
+    </linearGradient>
+
+    <linearGradient id="wandBorderGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7b2cbf" />
+      <stop offset="60%" stop-color="#4ea8de" />
+      <stop offset="100%" stop-color="#80ffdb" />
+    </linearGradient>
+
+    <!-- Text Galaxy Gradient -->
+    <linearGradient id="magicTextGrad" x1="0%" y1="0%" x2="100%" y2="20%">
+      <stop offset="0%" stop-color="#1d1849" />
+      <stop offset="28%" stop-color="#7b2cbf" />
+      <stop offset="42%" stop-color="#e0aaff" />
+      <stop offset="55%" stop-color="#5e60ce" />
+      <stop offset="78%" stop-color="#48cae4" />
+      <stop offset="100%" stop-color="#1b265e" />
+    </linearGradient>
+
+    <!-- Glow Filters -->
+    <filter id="magicGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18" result="blur1" />
+      <feGaussianBlur stdDeviation="6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Clip Path for Inside Card -->
+    <clipPath id="cardInnerClip">
+      <rect x="256" y="166" width="288" height="398" rx="16" />
+    </clipPath>
+
+    <!-- Sparkle Star Template -->
+    <g id="sparkle">
+      <path d="M 0,-18 Q 0,0 18,0 Q 0,0 0,18 Q 0,0 -18,0 Q 0,0 0,-18 Z" fill="#ffffff" />
+    </g>
+  </defs>
+
+  <!-- ================= CARD ICON ================= -->
+  <g id="card-logo">
+    <!-- Outer Card Base -->
+    <rect x="235" y="145" width="330" height="440" rx="30" fill="url(#outerBorderGrad)" />
+
+    <!-- Inner Card Background -->
+    <rect x="253" y="163" width="294" height="404" rx="19" fill="url(#cardBgGrad)" />
+
+    <!-- Clipped Magical Contents -->
+    <g clip-path="url(#cardInnerClip)">
+      
+      <!-- Ambient Center Glow -->
+      <circle cx="425" cy="315" r="110" fill="#38b6ff" opacity="0.25" filter="url(#magicGlow)" />
+      <circle cx="380" cy="380" r="90" fill="#9d4edd" opacity="0.2" filter="url(#magicGlow)" />
+
+      <!-- Swirling Energy Ribbons -->
+      <!-- Left Purple/Pink Swirl -->
+      <path d="M 410,180 C 310,260 260,380 340,460 C 400,520 490,460 530,360" fill="none" stroke="url(#purpleSwirl)" stroke-width="18" stroke-linecap="round" filter="url(#softGlow)" />
+      <path d="M 390,210 C 310,280 280,380 345,445 C 395,495 470,450 510,375" fill="none" stroke="#ff70a6" stroke-width="4" stroke-linecap="round" opacity="0.8" />
+
+      <!-- Right Cyan/Green Swirl -->
+      <path d="M 310,490 C 390,515 485,465 520,350 C 535,300 520,240 490,200" fill="none" stroke="url(#cyanSwirl)" stroke-width="16" stroke-linecap="round" filter="url(#softGlow)" />
+      <path d="M 340,475 C 405,490 480,445 505,355" fill="none" stroke="#a8ffed" stroke-width="5" stroke-linecap="round" opacity="0.9" />
+
+      <!-- Secondary Bottom Blue Swirl -->
+      <path d="M 290,535 C 380,550 470,490 525,405" fill="none" stroke="#38b6ff" stroke-width="6" stroke-linecap="round" opacity="0.5" />
+
+      <!-- Home Assistant Circuit Nodes (Top Right) -->
+      <g stroke="#72efdd" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)">
+        <!-- Center Branch -->
+        <line x1="422" y1="312" x2="500" y2="205" stroke-width="10" />
+        <circle cx="500" cy="205" r="18" fill="#72efdd" stroke="none" />
+        
+        <!-- Left Branch -->
+        <path d="M 432,298 L 452,270 L 436,245" fill="none" stroke-width="9" />
+        <circle cx="436" cy="245" r="14" fill="#72efdd" stroke="none" />
+
+        <!-- Right Branch -->
+        <path d="M 442,308 L 480,282 L 508,288" fill="none" stroke-width="9" />
+        <circle cx="508" cy="288" r="14" fill="#72efdd" stroke="none" />
+      </g>
+
+      <!-- Magic Wand Burst -->
+      <polygon points="420,315 435,280 428,310 460,295 432,318 465,330 430,326 445,358 420,330 398,358 412,326 380,325 412,315 395,288" fill="#ffffff" filter="url(#magicGlow)" />
+      <circle cx="422" cy="316" r="24" fill="#ffffff" filter="url(#magicGlow)" />
+
+      <!-- Magic Wand -->
+      <g transform="rotate(35 422 316)">
+        <!-- Wand Outer Border -->
+        <rect x="406" y="300" width="32" height="235" rx="16" fill="url(#wandBodyGrad)" stroke="url(#wandBorderGrad)" stroke-width="5" />
+        <!-- Wand Glowing Tip -->
+        <rect x="411" y="305" width="22" height="38" rx="10" fill="#ffffff" />
+        <!-- Wand Inner Highlight -->
+        <line x1="416" y1="352" x2="416" y2="515" stroke="#72efdd" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+        <!-- Wand Internal Sparkles -->
+        <circle cx="422" cy="435" r="2.5" fill="#ffffff" opacity="0.8" />
+        <circle cx="424" cy="485" r="3" fill="#ffffff" opacity="0.9" />
+        <circle cx="418" cy="512" r="2" fill="#ffffff" opacity="0.7" />
+      </g>
+
+      <!-- Star Sparkles & Magic Dust -->
+      <use href="#sparkle" transform="translate(290, 200) scale(1.2)" />
+      <use href="#sparkle" transform="translate(322, 342) scale(1.0)" />
+      <use href="#sparkle" transform="translate(505, 342) scale(0.9)" />
+      <use href="#sparkle" transform="translate(460, 382) scale(0.65)" />
+      <use href="#sparkle" transform="translate(422, 412) scale(0.65)" />
+      <use href="#sparkle" transform="translate(342, 302) scale(0.45)" />
+      <use href="#sparkle" transform="translate(388, 235) scale(0.55)" />
+
+      <!-- Glowing Dots -->
+      <g fill="#ffffff" opacity="0.9">
+        <circle cx="366" cy="272" r="4.5" />
+        <circle cx="395" cy="295" r="3" />
+        <circle cx="348" cy="378" r="3" />
+        <circle cx="455" cy="355" r="3.5" />
+        <circle cx="485" cy="318" r="3.5" />
+        <circle cx="466" cy="196" r="3.5" />
+        <circle cx="395" cy="202" r="2" />
+        <circle cx="285" cy="260" r="3" fill="#ff70a6" />
+        <circle cx="282" cy="410" r="2.5" />
+        <circle cx="328" cy="528" r="2.5" fill="#ff70a6" />
+      </g>
+    </g>
+
+    <!-- Inner Glowing Neon Frame (with notched corner for HA House) -->
+    <rect x="253" y="163" width="294" height="404" rx="19" fill="none" stroke="url(#innerBorderGrad)" stroke-width="7" />
+
+    <!-- Bottom-Right Home Assistant House Badge -->
+    <g>
+      <!-- House Pentagon Shape -->
+      <path d="M 480,567 L 480,528 L 510,500 L 540,528 L 540,567 Z" fill="#48cae4" />
+      <!-- Dark Mini Circuit Tree Inside House -->
+      <g stroke="#11092e" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <line x1="510" y1="564" x2="510" y2="522" />
+        <path d="M 510,550 L 496,538" />
+        <path d="M 510,544 L 524,532" />
+      </g>
+      <circle cx="510" cy="522" r="4.5" fill="#11092e" />
+      <circle cx="496" cy="538" r="4.5" fill="#11092e" />
+      <circle cx="524" cy="532" r="4.5" fill="#11092e" />
+    </g>
+  </g>
+
+  <!-- ================= TYPOGRAPHY ================= -->
+  <g id="logo-text" transform="translate(400, 695)" text-anchor="middle">
+    <text class="brand-text">
+      <tspan fill="url(#magicTextGrad)">MAGIC </tspan>
+      <tspan fill="#11113a">CARD</tspan>
+    </text>
+  </g>
+</svg>
