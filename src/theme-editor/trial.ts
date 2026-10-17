@@ -1,7 +1,7 @@
 import { THEME_TRIAL_BAR_TAG, TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
-import { previewVars, validateValue } from './model';
+import { hexToRgb, previewVars, validateValue } from './model';
 import { HA_DARK_DEFAULTS } from './dark-defaults';
 import { readHaDefaults } from './preview';
 import { browserMode, docFromHass, hassOf } from './util';
@@ -101,6 +101,18 @@ function profileKeys(hass: unknown, mode: ThemeMode): string[] {
 }
 
 /**
+ * The value a key goes back to. Dark mode: the dark table, and for `rgb-<base>` the triplet of the dark
+ * default of `<base>` (HA derives it the same way). Then the stylesheet's light value, then `initial`.
+ */
+function resetValue(key: string, mode: ThemeMode, defaults: Record<string, string>): string {
+  if (mode === 'dark') {
+    const dark = HA_DARK_DEFAULTS[key] ?? (key.startsWith('rgb-') ? hexToRgb(HA_DARK_DEFAULTS[key.slice(4)] ?? '') : undefined);
+    if (dark) return dark;
+  }
+  return defaults[key] || 'initial';
+}
+
+/**
  * The draft over a reset of every key the profile's active theme sets that the draft lacks. A reset goes
  * to HA's default for the mode (dark table in dark mode, the stylesheet's light value otherwise), and to
  * `initial` when HA has no default for the key.
@@ -108,7 +120,7 @@ function profileKeys(hass: unknown, mode: ThemeMode): string[] {
 function withReset(vars: Record<string, string>, mode: ThemeMode): Record<string, string> {
   const defaults = readHaDefaults();
   const out: Record<string, string> = {};
-  for (const key of profileKeys(lastHass, mode)) if (!(key in vars)) out[key] = (mode === 'dark' && HA_DARK_DEFAULTS[key]) || defaults[key] || 'initial';
+  for (const key of profileKeys(lastHass, mode)) if (!(key in vars)) out[key] = resetValue(key, mode, defaults);
   return { ...out, ...vars };
 }
 
