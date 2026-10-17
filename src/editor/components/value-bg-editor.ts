@@ -232,6 +232,7 @@ export class ValueBgEditor extends LitElement {
           .label=${fill ? 'Fill color' : 'Line color'}
           .allowEntity=${!!entity}
           .entityColor=${entityStateColor(stateObj) ?? 'currentColor'}
+          .gradient=${fill ? 'css' : ''}
           @value-changed=${(e: CustomEvent) => this._set({ color: e.detail.value })}
         ></mc-color-picker>`,
       )}

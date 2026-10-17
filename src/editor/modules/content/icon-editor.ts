@@ -29,7 +29,7 @@ export const iconEditor: ModuleEditor = {
           allowStateIcons: !!c.entity,
           syncCtx,
         })}
-        ${renderColorField('Icon color', c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx)}
+        ${renderColorField('Icon color', c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', 'The icon uses this gradient as its fill. Older tablets show the first color.')}
         ${c.use_entity_color && c.icon_color
           ? renderFieldHint('Use entity color wins while the entity has a state color; this color applies otherwise.')
           : nothing}

@@ -349,6 +349,9 @@ export function renderColorField(
   onChange: (value: string) => void,
   propertyName?: string,
   syncContext?: SyncContext,
+  /** Offer Solid | Gradient: 'linear' (angle only) or 'css' (linear and radial). Default: solid only. */
+  gradient: '' | 'linear' | 'css' = '',
+  gradientNote = '',
 ): TemplateResult {
   return html`
     <div class="mc-field">
@@ -356,6 +359,8 @@ export function renderColorField(
       <mc-color-picker
         .value=${value || ''}
         .label=${label}
+        .gradient=${gradient}
+        .gradientNote=${gradientNote}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-color-picker>
     </div>
