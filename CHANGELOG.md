@@ -4,6 +4,21 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+Maintenance. The card itself does not change: `magic-card.js` is byte for byte the same size.
+
+### Changed
+-   js-yaml 5.5.0 and webpack 5.112.0, plus patch updates to the development tools. The editor and studio files grow by 795 bytes each.
+-   Releases include `sbom.cdx.json`, a list of the packages in the card in CycloneDX format, and `THIRD-PARTY-NOTICES.md` with the licences of the code bundled into the card (lit, marked, js-yaml, swiper and Material Design Icons).
+-   The README shows the Magic Card logo, which HACS shows on the card's page.
+-   Removed sortablejs, which nothing used.
+
+### Project
+-   The Validate workflow passes again. It no longer runs Hassfest, which only applies to integrations. It now checks lint, the build, the size of every dist file and the production dependencies for known vulnerabilities.
+-   Workflows run on Node 24 and pin every action to a commit.
+-   SECURITY.md explains how to report a vulnerability privately. Dependabot checks npm packages and workflow actions once a month.
+
 ## 2026.10.06 (2026-10-17)
 
 A theme editor for Home Assistant themes, in the Themes tab of the Magic Card Utils panel. Edit a theme with a live preview beside the fields, and try it on your dashboard before you save it.
