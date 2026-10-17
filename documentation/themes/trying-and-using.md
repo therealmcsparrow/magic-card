@@ -34,6 +34,12 @@ When a trial ends, the dashboard returns to your own theme, and a short message 
 -   The editor's own colours stay the same during a trial, so you can keep reading the fields.
 -   The preview in the editor can still differ from the real dashboard. Cards use their own shadow DOM and may draw some parts differently. Use **Try on dashboard** to check the real look.
 
+## Light and dark during a trial
+
+A trial uses the light and dark values of the theme you are editing. When Home Assistant switches between light and dark, the dashboard switches with it. This includes Auto, where the mode follows your system. The dashboard then shows that mode's values.
+
+A value the theme does not set goes back to Home Assistant's default, so values from your own theme do not show through. The browser's form controls and scrollbars follow the mode as well.
+
 ## Revert
 
 **Revert** returns the current tab to your own theme. It changes nothing else: the draft in the editor stays as it is, and the saved file stays as it is. Click **Try on dashboard** again to keep trying.

@@ -4,6 +4,16 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   Imported themes keep their light and dark values in the theme editor. The Light and Dark switch works again, and the picker labels such a theme "Light + dark" instead of "Same in light and dark".
+-   Files that Home Assistant can read but the editor cannot, such as files with YAML anchors and aliases (`&anchor` and `*alias`) or files with several themes, now open from Home Assistant's copy of the theme. The file itself does not change and stays read only.
+-   Try on dashboard follows light and dark. When Home Assistant switches mode, including Auto when the system switches, the dashboard switches too and uses the theme's own values for that mode.
+-   Try on dashboard shows Home Assistant's default for every value the theme does not set, so values from your own profile theme no longer show through.
+-   Try on dashboard tells the browser which mode it is in, so form controls and scrollbars match the theme.
+-   Try on dashboard keeps imported values as the file has them. An imported gradient background shows instead of being dropped.
+
 ## 2026.10.08 (2026-10-17)
 
 Maintenance. The card itself does not change.
