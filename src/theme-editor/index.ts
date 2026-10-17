@@ -1,4 +1,11 @@
 import { THEME_EDITOR_TAG } from '../contracts/theme-editor';
+import { McteEditorView } from './editor-view';
+import { McteFieldGroup } from './field-group';
+import { McteIncludeNotice } from './include-notice';
+import { McteModeSwitch } from './mode-switch';
+import { McteRawRows } from './raw-rows';
+import { McteSaveBar } from './save-bar';
+import { McteStartView } from './start-view';
 import { MagicCardThemeEditor } from './theme-editor';
 
 /*
@@ -8,7 +15,16 @@ import { MagicCardThemeEditor } from './theme-editor';
  * Imports: lit, src/contracts/ and this folder only; no dynamic imports.
  */
 
-export const THEME_EDITOR_ELEMENTS: Array<[string, CustomElementConstructor]> = [[THEME_EDITOR_TAG, MagicCardThemeEditor]];
+export const THEME_EDITOR_ELEMENTS: Array<[string, CustomElementConstructor]> = [
+  ['mcte-mode-switch', McteModeSwitch],
+  ['mcte-include-notice', McteIncludeNotice],
+  ['mcte-save-bar', McteSaveBar],
+  ['mcte-raw-rows', McteRawRows],
+  ['mcte-field-group', McteFieldGroup],
+  ['mcte-start-view', McteStartView],
+  ['mcte-editor-view', McteEditorView],
+  [THEME_EDITOR_TAG, MagicCardThemeEditor],
+];
 
 for (const [tag, ctor] of THEME_EDITOR_ELEMENTS) if (!customElements.get(tag)) customElements.define(tag, ctor);
 

@@ -62,6 +62,10 @@ module.exports = (env, argv) => {
           use: 'ts-loader',
           exclude: /node_modules/,
         },
+        // theme editor chunk (160 KB cap): shrink css`` / html`` template text in production builds
+        ...(isProduction
+          ? [{ test: /\.ts$/, include: path.resolve(__dirname, 'src/theme-editor'), enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          : []),
         {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
