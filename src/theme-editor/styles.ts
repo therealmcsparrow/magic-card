@@ -239,6 +239,13 @@ export const base = css`
     color: var(--mc-on-accent);
     font-weight: 500;
   }
+  @media (forced-colors: active) {
+    .seg [aria-checked='true'],
+    .seg [aria-selected='true'] {
+      background: Highlight;
+      color: HighlightText;
+    }
+  }
   @media (pointer: coarse) {
     .seg button {
       min-height: 44px;

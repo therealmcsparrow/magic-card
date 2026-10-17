@@ -6,11 +6,15 @@ import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEn
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { icon } from './icons';
 import { cloneDoc } from './model';
+import type { PickerView } from './presets/picker';
 import { loadPresetLibrary, presetLibraryIfLoaded, type PresetChunk } from './presets/loader';
 import { base } from './styles';
 import { docFromHass, fire, hassOf, nameError, slugName, uniqueName } from './util';
 import './include-notice';
 import './mode-switch';
+
+const note = (t: string, id?: string): TemplateResult => html`<p class="help error" id=${ifDefined(id)} role="alert">${icon('alert')}<span>${t}</span></p>`;
+const skeleton = html`<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
 
 export type StartKind = 'blank' | 'preset' | 'installed';
 
@@ -150,12 +154,16 @@ export class McteStartView extends LitElement {
   }
 
   /** The preset chunk loads on the first open of the dialog (and again on "Try again"). */
-  private _loadLib(): void {
+  private _loadLib(again = false): void {
     const cached = presetLibraryIfLoaded();
     if (cached) return this._gotLib(cached);
     this._libState = 'loading';
     loadPresetLibrary().then(
-      (l) => this._gotLib(l),
+      (l) => {
+        this._gotLib(l);
+        // the Try again button is gone now: hand focus to the selected card, not to nothing
+        if (again) void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.pin:checked')?.focus());
+      },
       () => (this._libState = 'error'),
     );
   }
@@ -270,22 +278,23 @@ export class McteStartView extends LitElement {
   private _presetPicker(): TemplateResult {
     const c = this._chunk;
     if (this._libState === 'loading') {
-      return html`<div class="pl" aria-busy="true"><p class="help" role="status">Loading presets</p><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+      return html`<div class="pl" aria-busy="true"><p class="help">Loading presets</p>${skeleton}</div>`;
     }
     if (!c) {
       return html`<div class="pl">
-        <div class="help error" role="alert">${icon('alert')}<span>Presets could not load. Check your connection and try again. If it keeps failing, reload the page.</span></div>
-        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._loadLib()}>Try again</button>
+        ${note('Presets could not load. Check your connection and try again. If it keeps failing, reload the page.')}
+        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._loadLib(true)}>Try again</button>
       </div>`;
     }
-    return c.renderPicker(
-      { lib: c.THEME_PRESET_LIBRARY, selected: this._preset, query: this._pq, filter: this._pf },
-      {
+    return c.renderPicker(this._view(c), {
         select: (id) => ((this._preset = id), this._prefill()),
         query: (q) => (this._pq = q),
         filter: (f) => (this._pf = f),
-      },
-    );
+    });
+  }
+
+  private _view(c: PresetChunk): PickerView {
+    return { lib: c.THEME_PRESET_LIBRARY, selected: this._preset, query: this._pq, filter: this._pf };
   }
 
   private _createDialog(): TemplateResult {
@@ -311,6 +320,7 @@ export class McteStartView extends LitElement {
               this._prefill();
             }}
           ></mcte-mode-switch>
+          <p class="sr-only" role="status">${this._kind !== 'preset' ? '' : this._libState === 'loading' ? 'Loading presets' : this._chunk ? this._chunk.pickerStatus(this._view(this._chunk)) : ''}</p>
           ${this._kind === 'preset' ? this._presetPicker() : nothing}
           ${this._kind === 'blank'
             ? html`<p class="help">An empty theme. Add only the variables you want to change.</p>
@@ -368,10 +378,10 @@ export class McteStartView extends LitElement {
               @blur=${() => (this._nameTouched = true)}
             />
             ${nameMsg
-              ? html`<p class="help error" id="name-help" role="alert">${icon('alert')}<span>${nameMsg}</span></p>`
+              ? note(nameMsg, 'name-help')
               : html`<p class="help" id="name-help">Lowercase letters, numbers, hyphens and underscores. Used as the file name.</p>`}
           </div>
-          ${this._createError ? html`<p class="help error" role="alert">${icon('alert')}<span>${this._createError}</span></p>` : nothing}
+          ${this._createError ? note(this._createError) : nothing}
         </div>`, html`
           ${reason ? html`<span class="help" id="why">${reason}</span>` : nothing}
           <button type="button" class="btn btn-text" @click=${() => this._closeDlg()}>Cancel</button>
@@ -411,7 +421,7 @@ export class McteStartView extends LitElement {
     return dialog(
       `Delete ${f.name}?`,
       html`<p>This removes /config/${f.file}${others ? ` and the other ${others} ${others === 1 ? 'theme' : 'themes'} in that file` : ''}. Screens that use it, such as wall tablets, switch to the default theme.</p>
-        ${this._deleteError ? html`<p class="help error" role="alert">${icon('alert')}<span>${this._deleteError}</span></p>` : nothing}`,
+        ${this._deleteError ? note(this._deleteError) : nothing}`,
       html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>Cancel</button>
         <button type="button" class="btn btn-danger" @click=${() => void this._doDelete()}>Delete</button>`,
       () => (this._dlg = null),
@@ -441,7 +451,7 @@ export class McteStartView extends LitElement {
 
   private _list(): TemplateResult {
     if (this.phase === 'loading') {
-      return html`<div aria-busy="true"><p class="sr-only" role="status">Loading themes</p><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+      return html`<div aria-busy="true"><p class="sr-only" role="status">Loading themes</p>${skeleton}</div>`;
     }
     if (this.phase === 'error') {
       return html`<div class="empty" role="alert">
