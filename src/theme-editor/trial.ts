@@ -2,6 +2,7 @@ import { THEME_TRIAL_BAR_TAG, TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
+import { HA_DARK_DEFAULTS } from './dark-defaults';
 import { readHaDefaults } from './preview';
 import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
@@ -99,11 +100,15 @@ function profileKeys(hass: unknown, mode: ThemeMode): string[] {
   return raw ? Object.keys(previewVars(docFromHass(raw), mode)) : [];
 }
 
-/** The draft over a reset of every key the profile's active theme sets that the draft lacks. */
+/**
+ * The draft over a reset of every key the profile's active theme sets that the draft lacks. A reset goes
+ * to HA's default for the mode (dark table in dark mode, the stylesheet's light value otherwise), and to
+ * `initial` when HA has no default for the key.
+ */
 function withReset(vars: Record<string, string>, mode: ThemeMode): Record<string, string> {
   const defaults = readHaDefaults();
   const out: Record<string, string> = {};
-  for (const key of profileKeys(lastHass, mode)) if (!(key in vars)) out[key] = defaults[key] || 'initial';
+  for (const key of profileKeys(lastHass, mode)) if (!(key in vars)) out[key] = (mode === 'dark' && HA_DARK_DEFAULTS[key]) || defaults[key] || 'initial';
   return { ...out, ...vars };
 }
 
@@ -259,6 +264,7 @@ export function stopTrial(reason: TrialEnd = 'revert'): void {
   applied = new Map();
   baselineDoc = undefined;
   lastDoc = undefined;
+  lastHass = undefined;
   barEl?.remove();
   barEl = null;
   announce(TRIAL_END_TEXT[reason]);
