@@ -367,7 +367,7 @@ Off-white panels, burnt orange accent: navy ink by day, denim blue at night.
 
 ## Dust Duel
 
-Desert sand with a red accent: indigo blue by day, sand-gold by night.
+Red-clay desert, indigo header, red accent; sand-gold by night.
 
 ![Dust Duel preview, light and dark modes side by side](images/dust-duel.webp)
 
@@ -391,25 +391,25 @@ Sun-baked ochre by day; at night an ochre glow on deep indigo.
 
 ## Orbital Smelter
 
-Industrial steel blue-grey with a safety orange accent.
+Furnace-brown header on gunmetal steel with a coolant-cyan accent.
 
 ![Orbital Smelter preview, light and dark modes side by side](images/orbital-smelter.webp)
 
 ## Ashen Keep
 
-Grey stone and iron with one deep red accent, calm and wintry.
+Charcoal iron and pale limestone with one deep red accent, calm and wintry.
 
 ![Ashen Keep preview, light and dark modes side by side](images/ashen-keep.webp)
 
 ## Candlelit Cloister
 
-Plum and old gold on parchment; plum-black at night.
+Plum and old gold on parchment; wine-black at night.
 
 ![Candlelit Cloister preview, light and dark modes side by side](images/candlelit-cloister.webp)
 
 ## Crimson Pines
 
-Cold steel blue-grey with a red accent under a dark pine forest.
+Oxblood red over a dark pine forest, moss-green panels, green-black nights.
 
 ![Crimson Pines preview, light and dark modes side by side](images/crimson-pines.webp)
 
