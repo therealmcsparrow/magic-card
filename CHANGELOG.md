@@ -4,6 +4,27 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.06 (2026-10-17)
+
+A theme editor for Home Assistant themes, in the Themes tab of the Magic Card Utils panel. Edit a theme with a live preview beside the fields, and try it on your dashboard before you save it.
+
+Each release now has nine files. One is new: `magic-card-theme-editor.js`, which the Themes tab loads. HACS installs it with the card. With a manual install, copy all nine to the same folder, then hard refresh. The Themes tab needs Magic Card Utils 2026.10.08 or newer.
+
+### New
+-   Themes tab in Magic Card Utils: create a theme from blank, from one of five presets (Paper, Midnight OLED, Ember, Contrast and Frost) or as a copy of an installed theme. Save writes `/config/themes/<name>.yaml` and reloads Home Assistant's themes, so the theme shows in its list without a restart.
+-   Variables in groups: the Home Assistant groups, a Magic Card group, and groups for Tile card, Mushroom, Bubble Card, Ultra Card and button-card. A group whose card is not installed stays editable and says that its preview is not available.
+-   Light and dark modes with a shared base. Preview each mode, and get a warning when a value has no effect in a mode.
+-   Colour, size and gradient fields, and a raw row for any variable name.
+-   Try on dashboard shows the draft in this browser tab, with a Revert bar. Nothing is saved until you save.
+-   Use this theme selects the saved theme for your user.
+-   When the include lines are missing from `configuration.yaml`, the Themes tab shows them. Saving waits until they are in place. The editor never edits `configuration.yaml`.
+-   Read-only theme files open for viewing, with Copy to edit.
+
+### Known limits
+-   Comments are removed when a file is saved. The editor asks once before the first rewrite.
+-   A file that uses YAML aliases (`&anchor` and `*alias`) is read only.
+-   Magic Card's own `--mc-*` variables cannot be themed yet. The card sets them itself.
+
 ## 2026.10.05 (2026-10-17)
 
 Card design rules, gradient colours, new ring starts and dropdowns for the long lists.
