@@ -67,6 +67,8 @@ const magicCardLocalStyles = css`
     overflow-wrap: break-word;
   }
 
+  @supports (-webkit-background-clip:text){.mc-module-wrapper[style*=--mc-text-paint]>.mc-module{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.mc-module-wrapper[style*=--mc-text-paint] .mc-module-wrapper{-webkit-text-fill-color:currentColor}}
+
   .mc-text {
     font-size: var(--mc-font-size, inherit);
   }

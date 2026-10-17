@@ -921,7 +921,8 @@ export class MagicCard extends LitElement {
     if (c.background) backgroundParts.push(c.background);
 
     if (backgroundParts.length > 0) {
-      parts.push(`background: ${backgroundParts.join(' ')}`);
+      // two layers (an image under a gradient): a space-joined pair is dropped by the browser
+      parts.push(`background: ${backgroundParts.join(', ')}`);
     }
 
     if (backgroundImage) {
