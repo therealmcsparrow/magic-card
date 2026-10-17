@@ -86,7 +86,7 @@ export class IconPicker extends LitElement {
     }
     const m = a.module as CardModule & { entity?: string };
     return html`<mc-animated-icon-grid .hass=${this.hass} .icon=${this.value} .entity=${m.entity ?? ''}
-      .current=${currentIconPick(this, a.module)} .iconStyle=${currentIconStyle(a.module)} @animated-icon-pick=${this._onAnimatedPick}></mc-animated-icon-grid>`;
+      .current=${currentIconPick(this, a.module)} .iconStyle=${currentIconStyle(this, a.module)} @animated-icon-pick=${this._onAnimatedPick}></mc-animated-icon-grid>`;
   }
 
   private _openModal(): void {

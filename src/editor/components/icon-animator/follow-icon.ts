@@ -15,6 +15,8 @@ import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { mdiGeometry } from '../../../icon-anim/mdi-paths';
 import { RIG_PART_CAP, piecesBox, svgFromGeometry } from '../../../icon-anim/icon-doc';
 import type { IconAnimatorHost } from './loader';
+import { handEdited, libraryPickOf, withoutPickFields } from './library-pick';
+import type { AnimationConfig } from '../../../types';
 import type { CardState } from './card-request';
 import {
   cardIds,
@@ -110,7 +112,7 @@ function quickModules(config: unknown): Map<string, { path: Path; m: Record<stri
  * The modules whose own icon changed from `prev` to `next` (same place, type and quick document):
  * set or changed to another icon. An icon cleared back to the entity's is not a change here.
  */
-export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconChange[] {
+export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig, tpl?: unknown): IconChange[] {
   const before = quickModules(prev);
   const out: IconChange[] = [];
   for (const [key, { path, m }] of quickModules(next)) {
@@ -118,8 +120,10 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
     const id = quickOf(m);
     const to = explicitIcon(m);
     if (!id || !old || old.type !== m.type || old.id !== m.id || quickOf(old) !== id || !to) continue;
-    // a library pick (library_icon): never re-split, it goes (libraryIconChanges)
-    if (entryOf(m)?.entry.library_icon) continue;
+    // a library pick (library_icon, document as derived): never re-split, it goes (libraryIconChanges);
+    // edited by hand since, it is the user's own and follows
+    const e = entryOf(m)!;
+    if (libraryPickOf(e.entry, storedDoc(next, tpl, id)?.doc)) continue;
     const from = explicitIcon(old);
     if (from !== to) out.push({ path, from, to, id });
   }
@@ -129,7 +133,8 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
 /**
  * The modules whose library animation goes (`tpl`: the linked template's documents): the same icon
  * entry in `prev` and `next` (place, type, preset) playing a built-in document (its entry has
- * `library_icon`, or its name is an ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
+ * `library_icon` and the document is still the derived one, or, without the field, its name is an
+ * ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
  * changed, Clear included.
  */
 export function libraryIconChanges(
@@ -145,7 +150,11 @@ export function libraryIconChanges(
     if (!old || old.type !== m.type || old.id !== m.id || entryOf(old)?.id !== e.id) continue;
     const mine = e.id.startsWith(MINE_PREFIX);
     const name = e.quick && !mine && storedDoc(next, tpl, e.id)?.doc.name;
-    if (e.quick && !mine && !e.entry.library_icon && !ICON_LIBRARY.some((x) => x.name === name)) continue;
+    const raw = e.quick && !mine ? storedDoc(next, tpl, e.id)?.doc : undefined;
+    // a library pick goes; one edited by hand since is the user's own (it follows: iconChanges)
+    if (e.quick && !mine && e.entry.library_icon && ICON_LIBRARY.some((x) => x.id === e.entry.library_icon)) {
+      if (!libraryPickOf(e.entry, raw)) continue;
+    } else if (e.quick && !mine && !ICON_LIBRARY.some((x) => x.name === name)) continue;
     const from = explicitIcon(old);
     const to = explicitIcon(m);
     if (from !== to) out.push({ path, from, to, id: e.id });
@@ -156,12 +165,13 @@ export function libraryIconChanges(
 /**
  * A stored document that follows the module's icon: a split of the module's own icon ("This icon",
  * not a library entry nor a My animations copy) whose drawing is embedded or names the old icon.
- * Raw, as stored.
+ * Raw, as stored. `own`: a library pick edited by hand, the user's own whatever its name.
  */
 export function followsIcon(
   raw: Record<string, unknown> | undefined,
   from: string,
   to: string,
+  own = false,
 ): boolean {
   const rig = raw?.rig as Partial<Rig> | undefined;
   if (
@@ -169,7 +179,7 @@ export function followsIcon(
     !rig ||
     typeof rig !== 'object' ||
     String(raw.id).startsWith(MINE_PREFIX) ||
-    ICON_LIBRARY.some((e) => e.name === raw.name)
+    (!own && ICON_LIBRARY.some((e) => e.name === raw.name))
   )
     return false;
   if (typeof rig.svg === 'string') return true;
@@ -304,6 +314,16 @@ const at = (config: unknown, path: Path): Record<string, unknown> | undefined =>
     config,
   ) as Record<string, unknown> | undefined;
 
+/** The card with the icon entry of the module at `path` without its library pick fields. */
+function withoutPickFieldsAt(config: MagicCardConfig, path: Path): MagicCardConfig {
+  const out = JSON.parse(JSON.stringify(config)) as MagicCardConfig;
+  const m = at(out, path);
+  const list = (m?.design as { animations?: AnimationConfig[] } | undefined)?.animations;
+  const q = Array.isArray(list) ? quickEntry(list) : undefined;
+  if (list && q) list[q.index] = withoutPickFields(list[q.index]);
+  return out;
+}
+
 /** The card with the quick entry of the modules at `paths` playing `id` (the module keeps its other fields). */
 function withQuickId(config: MagicCardConfig, paths: Path[], id: string): MagicCardConfig {
   const out = JSON.parse(JSON.stringify(config)) as MagicCardConfig;
@@ -416,12 +436,14 @@ export function followIcons(
     entry.waits = 0;
     arm(h, sm, m, entry);
   };
-  for (const c of iconChanges(prev, next)) {
+  const tpl = sm.getState().templateAnimations;
+  for (const c of iconChanges(prev, next, tpl)) {
     const key = `${JSON.stringify(c.path)} ${c.id}`;
     const p = map.get(key);
-    if (p || followsIcon(played(sm, next, c.id), c.from, c.to)) wait(key, c, p);
+    const raw = played(sm, next, c.id);
+    if (p || followsIcon(raw, c.from, c.to, handEdited(entryOf(at(next, c.path)!)?.entry, raw))) wait(key, c, p);
   }
-  for (const c of libraryIconChanges(prev, next, sm.getState().templateAnimations)) {
+  for (const c of libraryIconChanges(prev, next, tpl)) {
     const key = `drop ${JSON.stringify(c.path)} ${c.id}`;
     // a parked wait whose document changed since (Update) starts over from this change
     const p = map.get(key);
@@ -505,7 +527,9 @@ async function follow(h: FollowHost, sm: CardState, w: Pending): Promise<boolean
   const to = first.m ? explicitIcon(first.m) : '';
   if (!first.ok || !to || to === from) return;
   const raw = played(sm, first.c, id);
-  if (!followsIcon(raw, from, to)) return;
+  // a library pick edited by hand follows like the user's own animation, and loses its pick fields
+  const own = handEdited(entryOf(first.m!)?.entry, raw);
+  if (!followsIcon(raw, from, to, own)) return;
   const v = validateAnimationDoc(raw, { v2: 'lenient' });
   if (!v.ok || !v.doc.rig) return;
   const shape = (ref: string) => shapeOf(h, ref);
@@ -532,6 +556,7 @@ async function follow(h: FollowHost, sm: CardState, w: Pending): Promise<boolean
   const valid = validateAnimationDoc({ ...doc, id: docId }, { v2: 'strict' });
   if (!valid.ok) return;
   config = upsertInlineDoc(config, valid.doc, h.customIds(config));
+  if (own) config = withoutPickFieldsAt(config, path);
   const note = followNote(to, removed);
   FOLLOW_NOTES.set(docId, note);
   sm.updateConfig(config, JSON.stringify(now.c) !== JSON.stringify(w.last));

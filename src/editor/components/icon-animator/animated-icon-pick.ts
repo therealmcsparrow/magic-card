@@ -8,6 +8,7 @@ import { ICON_LIBRARY } from '../../../icon-anim/library';
 import { styleDoc } from '../../../icon-anim/style';
 import { DEFAULT_ICON_STYLE, type IconStyle } from '../../../contracts/icon-library';
 import { cardState, patchCard } from './card-request';
+import { handEdited, libraryPickOf, withoutPickFields as plainEntry } from './library-pick';
 import {
   cardIds,
   iconEntry,
@@ -24,18 +25,14 @@ import {
  * Writes a tile picked in the icon picker's Animated icons tab: the module
  * edit first (its own undo step), the card's `custom_animations` change folded into that step.
  * A library tile stores the entry's document in the picked Style (icon-anim/style.ts) and records
- * `library_icon` / `icon_style` on the icon entry (contract icon-library LibraryPickFields).
+ * `library_icon` / `icon_style` on the icon entry (contract icon-library LibraryPickFields), its
+ * Glow colour read from the entry's Color. A document edited by hand since (library-pick.ts) is not
+ * a library pick any more: no tile is marked and a Style change leaves it alone.
  */
 
 /** The icon entry without the library pick fields (a My animations pick, a hand-made document). */
 const withoutPickFields = (list: AnimationConfig[], index: number): AnimationConfig[] =>
-  list.map((a, i) => {
-    if (i !== index) return a;
-    const rest = { ...a };
-    delete rest.library_icon;
-    delete rest.icon_style;
-    return rest;
-  });
+  list.map((a, i) => (i === index ? plainEntry(a) : a));
 
 /** The icon entry recording which library entry and Style its document came from (Living: no field). */
 function withPickFields(list: AnimationConfig[], entryId: string, style: IconStyle): AnimationConfig[] {
@@ -105,13 +102,15 @@ export function pickAnimatedIcon(
   }
 
   const tpl = sm.getState().templateAnimations;
+  // a Style change never overwrites a document the user edited by hand
+  if (pick.restyle && ie?.quick && handEdited(ie.entry, storedDoc(config, tpl, ie.id)?.doc)) return false;
   const lib = h.library.status === 'ready' ? h.library.list().map((d) => d.id) : [];
   const id =
     ie?.quick && !ie.id.startsWith(MINE_PREFIX) && referenceCount(config, ie.id) <= 1
       ? ie.id
       : newQuickId([...cardIds(config, h.customIds(config), tpl), ...lib]);
   const style = pick.style ?? DEFAULT_ICON_STYLE;
-  const v = validateAnimationDoc({ ...styleDoc(pick.entry, style, id), name: pick.entry.name }, { v2: 'strict' });
+  const v = validateAnimationDoc({ ...styleDoc(pick.entry, style, { id, color: ie?.entry.color }), name: pick.entry.name }, { v2: 'strict' });
   if (!v.ok) return false;
   const doc = v.doc;
   write(pick.entry.icon, withPickFields(withQuickEntry(list, id), pick.entry.id, style));
@@ -119,29 +118,39 @@ export function pickAnimatedIcon(
   return true;
 }
 
+/** The module's quick icon entry and the document it plays (undefined outside the card editor). */
+function quickPlayed(h: IconAnimatorHost, from: EventTarget, module: CardModule) {
+  const ie = iconEntry(h.readAnimations(module.design ?? {}));
+  const sm = cardState(from);
+  if (!ie?.quick || !sm) return undefined;
+  return { ie, raw: storedDoc(sm.getConfig(), sm.getState().templateAnimations, ie.id)?.doc };
+}
+
 /**
  * The grid tile the module's icon entry stands for: a library reference gives its document id, a
- * quick document gives `lib:<entry id>` from its `library_icon`, else (2026.10.03 configs) when its
- * name is a built-in entry's; '' otherwise.
+ * quick document gives `lib:<entry id>` while it is still that entry's derived document
+ * (`library_icon`), else, for 2026.10.03 configs without the field, when its name is a built-in
+ * entry's; '' otherwise (also for a document edited by hand).
  */
 export function currentIconPick(h: IconAnimatorHost, from: EventTarget, module: CardModule): string {
   const ie = iconEntry(h.readAnimations(module.design ?? {}));
   if (!ie) return '';
   if (!ie.quick) return ie.id;
-  const lib = ie.entry.library_icon;
-  if (lib && ICON_LIBRARY.some((e) => e.id === lib)) return `lib:${lib}`;
-  const sm = cardState(from);
-  const name = sm && storedDoc(sm.getConfig(), sm.getState().templateAnimations, ie.id)?.doc.name;
-  const hit = ICON_LIBRARY.find((e) => e.name === name);
+  const q = quickPlayed(h, from, module);
+  if (!q) return '';
+  if (q.ie.entry.library_icon && ICON_LIBRARY.some((e) => e.id === q.ie.entry.library_icon)) {
+    const pick = libraryPickOf(q.ie.entry, q.raw);
+    return pick ? `lib:${pick.lib.id}` : '';
+  }
+  const hit = ICON_LIBRARY.find((e) => e.name === q.raw?.name);
   return hit ? `lib:${hit.id}` : '';
 }
 
 /**
- * The Style of the module's library icon (its entry's `icon_style`; absent: Living, which is also
- * what a 2026.10.03 pick or any other icon animation reads as).
+ * The Style of the module's library icon (its entry's `icon_style` while the document is still the
+ * derived one; Living otherwise, which is also what a 2026.10.03 pick reads as).
  */
-export function currentIconStyle(h: IconAnimatorHost, module: CardModule): IconStyle {
-  const ie = iconEntry(h.readAnimations(module.design ?? {}));
-  const s = ie?.quick ? ie.entry.icon_style : undefined;
-  return s === 'quiet' || s === 'glow' ? s : DEFAULT_ICON_STYLE;
+export function currentIconStyle(h: IconAnimatorHost, from: EventTarget, module: CardModule): IconStyle {
+  const q = quickPlayed(h, from, module);
+  return (q && libraryPickOf(q.ie.entry, q.raw)?.style) ?? DEFAULT_ICON_STYLE;
 }

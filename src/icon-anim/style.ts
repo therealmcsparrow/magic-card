@@ -9,6 +9,7 @@ import type {
 import {
   GLOW,
   GLOW_CAPS,
+  GLOW_FALLBACK,
   QUIET,
   QUIET_LANE_ORDER,
   type IconStyle,
@@ -19,7 +20,7 @@ import { pathBox, splitIcon, unionBox, type SplitPiece } from '../icons/icon-spl
 import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
 
 /*
- * Icon Styles (module icon-library, contract icon-library 1.2.0, ADR 0006): every library entry
+ * Icon Styles (module icon-library, contract icon-library 1.2.1, ADR 0006): every library entry
  * plays as Quiet, Living or Glow, all derived from its one Living rig when the user picks it in the
  * card editor. The card stores the result inline and plays it like any other document, so neither
  * magic-card.js nor the runtime chunk knows about Styles. Pure and deterministic.
@@ -31,7 +32,8 @@ import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
  * f = min(QUIET.amplitude, 0.3 units / peak) and are clamped to QUIET; opacity becomes 0.7..1. A spin
  * keeps turning at half speed. Every other track, the colour, draw and path lanes and the top-level
  * keyframes go: the rest holds its drawn pose. Duration: max(x QUIET.slowdown, 1.6 s); keys keep
- * their place, eased ease-in-out (linear keys stay linear: sampled curves).
+ * their place, eased ease-in-out (linear keys stay linear: sampled curves and spins), and so is the
+ * document.
  *
  * Glow (direction C, `styles.glow`): Living plus a lit accent layer, no filter or blur anywhere.
  * - Accent targets (hints.glow.parts: part or group ids, `shape:<id>` for drawn shapes) take the
@@ -44,10 +46,11 @@ import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
  *   parts the first part with a track gets the halo.
  * - Glow-only shapes (GLOW_SHAPES: the jack-o'-lantern's face light) are added lit, moving with
  *   their part.
- * - Colour: the entry's Color field (`--mcc-<id>-c`, set by the card from the animation entry) else
- *   the theme pair: the theme's glow on dark cards, its darker theme_on_light colour on light cards
- *   (CSS light-dark(), which follows Home Assistant's colour scheme). An entry without a theme
- *   derives both from the icon colour. Halos are transparent on light cards.
+ * - Colour (fixed when picked, CEO ruling): the entry's Color field (a plain colour), else the theme
+ *   pair, else GLOW_FALLBACK's. Light or dark is the card background's brightness, read by CSS
+ *   relative colour from the theme's card background variables (cardSwitch), so it follows Home
+ *   Assistant's dark mode and a theme change without any card code. On light cards the colour is
+ *   the darker one and halos are transparent.
  */
 
 const SPEC_PEAK = 0.3;
@@ -158,15 +161,21 @@ type Geometry = ReturnType<typeof geometryOf>;
 
 const clone = (doc: AnimationDoc): AnimationDoc => structuredClone(doc);
 
-/** The derived document of a library entry in a Style, with id `id` (default the entry's). */
+/** styleDoc options: the document id (default the entry's) and the user's glow colour (the entry's Color). */
+export interface StyleOptions {
+  id?: string;
+  color?: string;
+}
+
+/** The derived document of a library entry in a Style. */
 export function styleDoc(
   entry: LibraryEntry,
   style: IconStyle,
-  id: string = entry.id,
+  opts: StyleOptions = {},
 ): AnimationDoc {
-  const living = { ...entry.build(), id };
+  const living = { ...entry.build(), id: opts.id ?? entry.id };
   if (style === 'quiet') return quietDoc(living, entry.styles);
-  if (style === 'glow') return glowDoc(living, entry.id, entry.styles);
+  if (style === 'glow') return glowDoc(living, entry.id, entry.styles, opts.color);
   return living;
 }
 
@@ -263,6 +272,8 @@ function quietDoc(doc: AnimationDoc, hints: IconStyleHints | undefined): Animati
   const geo = geometryOf(out);
   const hero = heroLane(out, geo, hints);
   out.keyframes = [{ at: 0, opacity: 1 }];
+  // no overshoot left anywhere: keys without their own easing use the document's
+  out.easing = 'ease-in-out';
   delete out.bindings;
   delete out.clips;
   out.duration = r3(Math.max(out.duration * QUIET.slowdown, MIN_DURATION));
@@ -313,21 +324,72 @@ function quietDoc(doc: AnimationDoc, hints: IconStyleHints | undefined): Animati
 
 // ── Glow ──
 
-const DERIVED_DARK = 'color-mix(in srgb, currentColor 45%, white)';
-const DERIVED_LIGHT = 'color-mix(in srgb, currentColor 65%, black)';
+type Rgb = [number, number, number];
 
-/** The glow colours: the fill (accents, glow shapes) and the halo stroke. */
-function glowPaint(docId: string, hint: string | undefined): { fill: string; halo: string } {
-  const own = `--mcc-${docId}-c`;
-  const dark = hint ?? DERIVED_DARK;
-  const light = hint
-    ? (GLOW_ON_LIGHT[hint.toLowerCase()] ?? `color-mix(in srgb, ${hint} 70%, black)`)
-    : DERIVED_LIGHT;
+/** A custom property that, when set, stands in for the card background (the editor's tiles set it). */
+export const GLOW_BG_VAR = '--mc-glow-bg';
+
+/** A #rgb / #rrggbb / rgb() colour as channels 0..255; undefined for anything else (names, var()). */
+export function parseRgb(c: string | undefined): Rgb | undefined {
+  const v = (c ?? '').trim().toLowerCase();
+  let m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/.exec(v);
+  if (m) {
+    const h = m[1].length === 3 ? [...m[1]].map((x) => x + x).join('') : m[1];
+    return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as Rgb;
+  }
+  m =
+    /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)\s*(?:[,/]\s*[\d.]+%?\s*)?\)$/.exec(
+      v,
+    );
+  return m ? ([1, 2, 3].map((i) => Math.min(255, Math.round(Number(m![i])))) as Rgb) : undefined;
+}
+
+/**
+ * How light the card is, 0 (dark) to 1 (light), from the card background's channels in a relative
+ * colour: the sRGB-weighted brightness of GLOW_BG_VAR, else --ha-card-background, else
+ * --card-background-color (what Home Assistant's light and dark mode set), with a narrow ramp
+ * around 152 of 255 (a relative luminance of about 0.4: the brand artist's light-card line).
+ */
+// (r*.2126 + g*.7152 + b*.0722 - 152) / 16, written without a bare bracket (safeCssValue allows
+// function brackets only)
+const LIGHTNESS = 'clamp(0,r*.0133+g*.0447+b*.0045-9.5,1)';
+const BG = `var(${GLOW_BG_VAR},var(--ha-card-background,var(--card-background-color,#fff)))`;
+
+/** A colour that is `dark` on a dark card and `light` on a light one ([r, g, b, alpha]). */
+export function cardSwitch(dark: [...Rgb, number], light: [...Rgb, number]): string {
+  const ch = (i: number): string => {
+    const d = dark[i];
+    const k = Math.round((light[i] - d) * 1000) / 1000;
+    return k ? `calc(${d}${k < 0 ? '-' : '+'}${Math.abs(k)}*${LIGHTNESS})` : String(d);
+  };
+  return `rgb(from ${BG} ${ch(0)} ${ch(1)} ${ch(2)} / ${ch(3)})`;
+}
+
+/**
+ * The glow colours, fixed when picked: the user's colour (the entry's Color, when it is a plain
+ * colour) on dark cards and 70 % of it towards black on light ones, else the theme pair (the hint's
+ * glow colour and its theme_on_light colour), else GLOW_FALLBACK's pair. Accents and glow shapes
+ * take `fill`; the halo stroke is the dark colour on dark cards and transparent on light ones.
+ */
+function glowPaint(
+  hint: string | undefined,
+  user: string | undefined,
+): { fill: string; halo: string } {
+  const own = parseRgb(user);
+  const theme = (hint ?? GLOW_FALLBACK).toLowerCase();
+  const dark = own ?? parseRgb(theme) ?? (parseRgb(GLOW_FALLBACK) as Rgb);
+  const light = own
+    ? (own.map((v) => Math.round(v * 0.7)) as Rgb)
+    : (parseRgb(GLOW_ON_LIGHT[theme]) ?? (dark.map((v) => Math.round(v * 0.7)) as Rgb));
   return {
-    fill: `var(${own}, light-dark(${light}, ${dark}))`,
-    halo: `light-dark(transparent, var(${own}, ${dark}))`,
+    fill: cardSwitch([...dark, 1], [...light, 1]),
+    halo: cardSwitch([...dark, 1], [...dark, 0]),
   };
 }
+
+/** Glow paint values (fill and halo) in a document: they differ only by the colour picked. */
+export const isGlowPaint = (v: unknown): boolean =>
+  typeof v === 'string' && v.startsWith(`rgb(from ${BG} `);
 
 const hasTransform = (t: Track | undefined): boolean =>
   !!t &&
@@ -390,12 +452,13 @@ function glowDoc(
   doc: AnimationDoc,
   entryId: string,
   hints: IconStyleHints | undefined,
+  user: string | undefined,
 ): AnimationDoc {
   const out = clone(doc);
   const rig = out.rig;
   if (!rig) return out;
   const geo = geometryOf(out);
-  const paint = glowPaint(out.id, hints?.glow?.color);
+  const paint = glowPaint(hints?.glow?.color, user);
   const trackOf = (ref: TargetRef | undefined) =>
     ref ? out.tracks?.find((t) => t.target === ref) : undefined;
   const accents = [
