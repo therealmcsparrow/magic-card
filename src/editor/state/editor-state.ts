@@ -773,11 +773,20 @@ export class EditorStateManager {
     return !!this._resetTarget(this.state.config, sel);
   }
 
+  /** A column of a linked card whose module list is the card's own (`modules` marked, Wrap in layout). */
+  ownsModuleList(sel: Selection): boolean {
+    if (sel.kind !== 'column' || !this.state.config.template) return false;
+    return !!this.state.config.rows[sel.row]?.columns[sel.col]?.not_synced?.includes('modules');
+  }
+
   /**
    * Reset to template: the item's overrides go (one undo step); the editor then re-merges the template
    * (`mc-template-reapply`) so the template's values come back. False when there was nothing to reset.
+   * A column that owns its module list also drops its modules, so only with `withOwnList`: the editor
+   * calls that once the template was fetched (until then, and when the fetch fails, nothing changes).
    */
-  resetItem(sel: Selection): boolean {
+  resetItem(sel: Selection, withOwnList = false): boolean {
+    if (this.ownsModuleList(sel) && !withOwnList) return false;
     const config = deepClone(this.state.config);
     const t = this._resetTarget(config, sel);
     if (!t) return false;
@@ -788,10 +797,9 @@ export class EditorStateManager {
     } else if (sel.kind === 'module') {
       dropMarks(t.item as CardModule);
     } else {
-      // a column whose module list was the card's own (Wrap in layout): the template's list again.
-      // The re-merge (mc-template-reapply) fills it from the template; kept local modules would come
-      // back as additions next to the template's.
-      if (sel.kind === 'column' && (t.item.not_synced as string[]).includes('modules')) t.item.modules = [];
+      // a column that owned its module list: the template's list again (the re-merge right after fills
+      // it); kept local modules would come back as additions next to the template's
+      if (withOwnList && sel.kind === 'column') t.item.modules = [];
       delete t.item.not_synced;
     }
     this.updateConfig(config);
