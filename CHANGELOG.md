@@ -4,7 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.10 (2026-10-18)
+
+The Sci-fi & fantasy presets no longer look alike. A release still has ten files.
 
 ### Changed
 -   Eight Sci-fi & fantasy presets got their own colours so they no longer look alike: Orbital Smelter, Ashen Keep and Crimson Pines were nearly the same, and Dust Duel, Ochre Basin, Candlelit Cloister, Silverleaf Glade and Frontier Freighter were close to their neighbours. Within the group, no two presets share a similar header colour in light or in dark. The preset ids and names are unchanged. Themes you already created from these presets stay as they were.
