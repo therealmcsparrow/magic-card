@@ -3,5 +3,5 @@
  * that shows it. Only presets/loader.ts imports this file.
  */
 export { THEME_PRESET_LIBRARY } from './library';
-export { renderPicker, pickerStatus, pickerStyles } from './picker';
+export { renderPicker, pickerStatus, pickerSelection, pickerStyles } from './picker';
 export type { PickerView, PickerEvents } from './picker';
