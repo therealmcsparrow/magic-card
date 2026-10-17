@@ -126,9 +126,12 @@ export function readModuleClipboard(): CardModule | undefined {
 
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 
-/** A new document id like `id` ("quick-icon-1a2b3c" -> "quick-icon-9z8y7x"), not in `taken`. */
+/**
+ * A new document id like `id`, not in `taken`: a quick id keeps its prefix ("quick-icon-1a2b3c" ->
+ * "quick-icon-9z8y7x"); any other id gets a 6-character word appended ("my-button-9z8y7x").
+ */
 function freshDocId(id: string, taken: Set<string>): string {
-  const base = id.replace(/-[a-z0-9]{6}$/, '').slice(0, 56);
+  const base = (id.startsWith('quick-') ? id.replace(/-[a-z0-9]{6}$/, '') : id).slice(0, 56);
   for (;;) {
     const next = `${base}-${Math.floor(Math.random() * 36 ** 6).toString(36).padStart(6, '0')}`;
     if (!taken.has(next)) return next;
