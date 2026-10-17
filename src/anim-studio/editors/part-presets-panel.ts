@@ -87,6 +87,14 @@ export class AnimPartPresets extends LitElement {
     emitDoc(this, next, `Preset: ${preset.name}`, transient);
   }
 
+  private _pickPreset(select: HTMLSelectElement, applied?: { preset: string; params: Record<string, number> }): void {
+    const preset = PART_PRESETS.find((p) => p.id === select.value);
+    if (!preset) return;
+    this._apply(preset, applied?.preset === preset.id ? applied.params : {});
+    // the cap was hit: show the previous value again
+    if (this._applied.get(this._key)?.preset !== preset.id) select.value = applied?.preset ?? '';
+  }
+
   private _clear(): void {
     if (!this.doc) return;
     const next = this._targets.reduce((d, t) => clearPartMotion(d, t), this.doc);
@@ -148,6 +156,12 @@ export class AnimPartPresets extends LitElement {
     </div>`;
   }
 
+  protected updated(): void {
+    const sel = this.renderRoot.querySelector<HTMLSelectElement>('select#pp-preset');
+    const want = this._applied.get(this._key)?.preset ?? '';
+    if (sel && sel.value !== want) sel.value = want;
+  }
+
   protected render(): TemplateResult {
     const d = this.doc;
     const targets = this._targets;
@@ -158,20 +172,22 @@ export class AnimPartPresets extends LitElement {
     const pieces = this._geom ? piecesOf(this._geom) : [];
     return html`
       <p class="help">${targets.length > 1 ? `${targets.length} targets selected: a preset plays on each (Wave: one after another).` : 'One click animates the selection; fine-tune the keys on the timeline.'}</p>
-      <div class="grid" role="group" aria-label="Part presets">
-        ${PART_PRESETS.map(
-          (p) => html`<button
-            type="button"
-            class="preset ${active?.id === p.id ? 'is-active' : ''}"
-            data-preset=${p.id}
-            title=${p.help ?? p.name}
-            aria-pressed=${active?.id === p.id ? 'true' : 'false'}
+      <div class="field">
+        <div class="field-head"><label for="pp-preset">Preset</label></div>
+        <div class="select">
+          <select
+            class="input"
+            id="pp-preset"
+            aria-describedby=${active?.help ? 'pp-preset-help' : nothing}
             ?disabled=${this.disabled}
-            @click=${() => this._apply(p, active?.id === p.id ? applied!.params : {})}
+            @change=${(e: Event) => this._pickPreset(e.target as HTMLSelectElement, applied)}
           >
-            <ha-icon icon=${p.icon ?? 'mdi:motion-play-outline'}></ha-icon><span>${p.name}</span>
-          </button>`,
-        )}
+            <option value="" ?selected=${!active} ?disabled=${!!active} ?hidden=${!!active}>Choose a preset</option>
+            ${PART_PRESETS.map((p) => html`<option value=${p.id} data-preset=${p.id} ?selected=${active?.id === p.id}>${p.name}</option>`)}
+          </select>
+          <ha-icon icon="mdi:chevron-down"></ha-icon>
+        </div>
+        ${active?.help ? html`<p class="help" id="pp-preset-help">${active.help}</p>` : nothing}
       </div>
       ${active ? this._renderParams(active, applied!.params) : nothing}
       <div class="actions">
@@ -196,45 +212,6 @@ export class AnimPartPresets extends LitElement {
       }
       .help {
         margin: 0;
-      }
-      .grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-      .preset {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        min-height: 32px;
-        padding: 0 10px 0 8px;
-        border-radius: 16px;
-        border: 1px solid var(--mc-divider, var(--divider-color, rgba(0, 0, 0, 0.12)));
-        background: var(--mc-surface, var(--card-background-color, #fff));
-        color: var(--mc-text, var(--primary-text-color, #212121));
-        font: inherit;
-        font-size: 0.8125rem;
-        line-height: 1.2;
-        white-space: nowrap;
-        cursor: pointer;
-      }
-      .preset ha-icon {
-        --mdc-icon-size: 18px;
-        color: var(--mc-text-2, var(--secondary-text-color, #5f6368));
-      }
-      .preset:hover:not(:disabled) {
-        border-color: color-mix(in srgb, var(--primary-color, #03a9f4) 60%, transparent);
-      }
-      .preset.is-active {
-        border-color: var(--primary-color, #03a9f4);
-        background: color-mix(in srgb, var(--primary-color, #03a9f4) 12%, var(--mc-surface, var(--card-background-color, #fff)));
-      }
-      .preset.is-active ha-icon {
-        color: color-mix(in srgb, var(--primary-color, #03a9f4) 80%, var(--primary-text-color, #212121));
-      }
-      .preset:focus-visible {
-        outline: 2px solid var(--primary-color, #03a9f4);
-        outline-offset: 2px;
       }
       .params {
         display: grid;

@@ -35,6 +35,12 @@ export const SHAPE_TILES: ShapeTile[] = [
   { kind: 'blob', label: 'Blob', options: ['seed', 'wobble', 'animate'] },
 ];
 
+const SHAPE_GROUPS: Array<[string, ShapeKind[]]> = [
+  ['Rounded', ['squircle', 'pill', 'circle']],
+  ['Cut corners', ['hexagon', 'octagon', 'notch', 'ticket']],
+  ['Organic', ['wave', 'blob']],
+];
+
 const EDGES: Array<{ value: NonNullable<ShapeOptions['edge']>; label: string }> = [
   { value: 'top', label: 'Top' },
   { value: 'right', label: 'Right' },
@@ -109,8 +115,8 @@ const randomSeed = (not?: unknown): number => {
 };
 
 /**
- * The Shape section (design of a card, row, column or module): a grid of shape tiles (None first,
- * a radio group with arrow keys) and the options of the picked shape. Writes `shape` and
+ * The Shape section (design of a card, row, column or module): a select of shapes (None first,
+ * grouped) with a small preview, and the options of the picked shape. Writes `shape` and
  * `shape_options` together; None removes both (on a template-linked card it writes `shape: none`,
  * so the template's shape stays off here).
  */
@@ -127,62 +133,38 @@ export class ShapeEditor extends LitElement {
         display: grid;
         gap: 16px;
       }
-      .tiles {
+      .pick {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+        grid-template-columns: 1fr auto;
         gap: 8px;
+        align-items: center;
+        container-type: inline-size;
       }
-      .tile {
-        display: grid;
-        justify-items: center;
-        align-content: center;
-        gap: 4px;
-        min-height: 64px;
-        padding: 8px 4px 6px;
-        border: 1px solid var(--mc-field-border);
-        border-radius: var(--mc-radius);
-        background: var(--mc-surface);
-        color: var(--mc-text-2);
-        font: inherit;
-        font-size: 0.75rem;
-        line-height: 1.3;
-        cursor: pointer;
-        transition: border-color 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
+      .pick .select {
+        min-width: 0;
       }
-      .tile:hover {
-        background: var(--mc-surface-2);
-        border-color: var(--mc-text-2);
-      }
-      .tile:focus-visible {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: 2px;
-      }
-      .tile[aria-checked='true'] {
-        border-color: var(--mc-accent);
-        background: var(--mc-accent-tint);
-        color: var(--mc-accent-ink);
-        box-shadow: 0 0 0 1px var(--mc-accent);
-      }
-      .tile svg {
-        width: 40px;
-        height: 28px;
+      .preview {
+        width: 56px;
+        height: 40px;
         overflow: visible;
+        color: var(--mc-text-2);
+        background: var(--mc-surface-2);
+        border-radius: var(--mc-radius);
       }
-      .tile path {
+      .preview path {
         fill: color-mix(in srgb, currentColor 14%, transparent);
         stroke: currentColor;
         stroke-width: 1.5;
         stroke-linejoin: round;
       }
-      .tile .none-mark {
+      .preview .none-mark {
         fill: none;
         stroke-dasharray: 3 3;
       }
-      .tile span {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+      @container (max-width: 259px) {
+        .pick {
+          grid-template-columns: 1fr;
+        }
       }
       .seed {
         display: flex;
@@ -198,11 +180,6 @@ export class ShapeEditor extends LitElement {
       }
       .hints .help {
         margin: 0;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .tile {
-          transition: none;
-        }
       }
     `,
   ];
@@ -256,46 +233,23 @@ export class ShapeEditor extends LitElement {
     this.onChange?.({ shape: kind, shape_options: this._clean(kind, { ...this._opts, ...patch }) });
   }
 
-  private _onTileKey(e: KeyboardEvent): void {
-    const grid = e.currentTarget as HTMLElement;
-    const i = SHAPE_TILES.findIndex((t) => t.kind === this._kind);
-    const n = SHAPE_TILES.length;
-    const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length);
-    const steps: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols };
-    let next: number;
-    if (e.key === 'Home') next = 0;
-    else if (e.key === 'End') next = n - 1;
-    else if (e.key in steps) {
-      next = i + steps[e.key];
-      // left / right wrap around; up / down stop at the edges
-      if (Math.abs(steps[e.key]) === 1) next = (next + n) % n;
-      else if (next < 0 || next >= n) next = i;
-    } else return;
-    e.preventDefault();
-    const kind = SHAPE_TILES[next].kind;
-    if (next !== i) this._pick(kind);
-    requestAnimationFrame(() => this.renderRoot.querySelector<HTMLElement>(`.tile[data-kind="${kind}"]`)?.focus());
-  }
-
-  private _tile(t: ShapeTile, current: ShapeKind): TemplateResult {
-    const on = t.kind === current;
-    const d = t.kind === 'none' ? '' : previewPath(t.kind, on ? this._opts : {});
-    return html`<button
-      type="button"
-      class="tile"
-      role="radio"
-      data-kind=${t.kind}
-      aria-checked=${on ? 'true' : 'false'}
-      tabindex=${on ? '0' : '-1'}
-      @click=${() => this._pick(t.kind)}
-    >
-      <svg viewBox="0 0 ${PREVIEW_W} ${PREVIEW_H}" aria-hidden="true">
-        ${t.kind === 'none'
-          ? svg`<path class="none-mark" d="M2 2H38V26H2Z"></path>`
-          : svg`<path d=${d}></path>`}
+  private _picker(kind: ShapeKind): TemplateResult {
+    const opt = (t: ShapeTile) => html`<option value=${t.kind} ?selected=${t.kind === kind}>${t.label}</option>`;
+    const group = (label: string, kinds: ShapeKind[]) =>
+      html`<optgroup label=${label}>${kinds.map((k) => opt(SHAPE_TILES.find((t) => t.kind === k)!))}</optgroup>`;
+    const d = kind === 'none' ? '' : previewPath(kind, this._opts);
+    return html`<div class="pick">
+      <div class="select">
+        <select class="input" id="shape-kind" aria-label="Shape" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as ShapeKind)}>
+          ${opt(SHAPE_TILES[0])}
+          ${SHAPE_GROUPS.map(([label, kinds]) => group(label, kinds))}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>
+      <svg class="preview" viewBox="-8 -6 ${PREVIEW_W + 16} ${PREVIEW_H + 12}" aria-hidden="true">
+        ${kind === 'none' ? svg`<path class="none-mark" d="M2 2H38V26H2Z"></path>` : svg`<path d=${d}></path>`}
       </svg>
-      <span>${t.label}</span>
-    </button>`;
+    </div>`;
   }
 
   private _field(label: string, key: OptionKey | undefined, control: TemplateResult, forId?: string, help?: string): TemplateResult {
@@ -459,13 +413,17 @@ export class ShapeEditor extends LitElement {
     return html`<div class="hints">${hints.map((h) => html`<p class="help">${h}</p>`)}</div>`;
   }
 
+  protected updated(): void {
+    // options inside an optgroup do not always take `selected`: set the value after render
+    const sel = this.renderRoot.querySelector<HTMLSelectElement>('select#shape-kind');
+    if (sel && sel.value !== this._kind) sel.value = this._kind;
+  }
+
   protected render(): TemplateResult {
     const kind = this._kind;
     return html`
       <div class="shape-ed">
-        <div class="tiles" role="radiogroup" aria-label="Shape" @keydown=${this._onTileKey}>
-          ${SHAPE_TILES.map((t) => this._tile(t, kind))}
-        </div>
+        ${this._picker(kind)}
         ${this._hints(kind)}
         ${this._options(kind)}
       </div>
