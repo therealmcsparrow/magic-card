@@ -70,7 +70,7 @@ The editor does change the config when you use Form mode:
 
 You can switch between Form and YAML at any time. Form mode reads the config you wrote. Keys that have no field in Form mode stay in the config untouched, for example `fire-dom-event` data or `layout_options`.
 
-These keys have fields in Form mode: the card's `css` (Custom CSS in the card's Design tab), `hover` (the Hover section of the card's Design tab), `design.hover` (Hover under "Editing design for"), row `actions` (the row's Actions tab) and `column_widths` (width fields and drag handles between columns). The Shape, Value background and Seasonal sections edit `shape`, `value_background` and `seasonal`. The Seasonal section's Preview date is never saved.
+These keys have fields in Form mode: the card's `css` (Custom CSS in the card's Design tab), `hover` (Hover under "Editing design for" on the card's Design tab), `design.hover` (Hover under "Editing design for" on an element), row `actions` (the row's Actions tab) and `column_widths` (width fields and drag handles between columns). The Shape, Value background and Seasonal fields edit `shape`, `value_background` and `seasonal`. The Seasonal section's Preview date is never saved.
 
 Form mode needs `id` values only for conditional design rules and conditional appearance rules: give each rule a unique `id` if you want to edit it there.
 

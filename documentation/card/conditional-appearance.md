@@ -24,10 +24,16 @@ Conditional appearance changes card fields, like the background or the theme, wh
 | `padding` | `padding` |
 | `box_shadow` | `box_shadow` |
 | `card_height` | `card_height` |
+| `ring` | The whole ring. `{}` turns the Default ring off while the rule matches. |
+| `shape`, `shape_options` | The shape and its options. `shape: none` turns the Default shape off. |
+| `value_background` | The whole value background. `{ type: none }` turns it off. |
+| `seasonal` | The seasonal scene. `none` turns it off. |
 | `use_page_theme` | `use_page_theme`. Set `false` to switch to a card theme. |
 | `theme` | `theme`. Only used together with `use_page_theme: false` (in the rule or on the card). |
 
 Values have the same format as the card keys in [Card options](card-options.md). Empty values are ignored, so a field you leave out keeps the card's own setting.
+
+A rule replaces each key as a whole, so a rule's `ring` replaces the whole Default ring. Animations and custom CSS cannot be set by a rule. The card's hover design still applies on top of every matching rule.
 
 ## Order
 

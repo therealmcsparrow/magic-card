@@ -39,6 +39,8 @@ design:
 
 `color` sets the text colour of the element and everything inside it. It also reaches module parts that set their own colour (a button label, an info value) and the module's icon. An icon colour set on the module itself (such as `icon_color`) still wins for the icon.
 
+On text, info and markdown modules, `color` can be a gradient. Other modules, rows, columns and the hover view use its first colour. See [Gradients](gradients.md).
+
 `color` is also the fallback colour of [animations](animations.md) on the element.
 
 On a module with an entity, `color: entity` uses the entity's state colour. See [Entity colours](entity-colours.md).

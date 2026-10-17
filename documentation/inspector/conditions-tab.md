@@ -68,4 +68,6 @@ The appearance overrides below only apply for fields you set. A blank field keep
 | Box shadow | `box_shadow` | CSS `box-shadow` | Replaces the card shadow. |
 | Card height | `card_height` | CSS length | Replaces the minimum height. |
 
+Ring, shape, value background and seasonal rules are set in the card's Design tab, under Editing design for. Each rule here shows a count of them, such as "+ 3 design fields", and editing the rule keeps them.
+
 Rules are also applied in the editor preview, so you see the result while the conditions match. The YAML form is in [Conditional appearance](../card/conditional-appearance.md).

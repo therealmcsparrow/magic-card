@@ -34,6 +34,7 @@ design:
 ## Background colour and image
 
 - `background_color` accepts an entity colour; `background` does not, because it is a free text property. Use `background_color: entity 20%` for a tint in the entity's colour. See [Entity colours](entity-colours.md).
+- A gradient is set on `background`, the shorthand, with the Gradient option of Background color. The editor then removes `background_color`. Gradient rules and limits are on the [Gradients](gradients.md) page.
 - `background` is a shorthand: it resets the other background keys that come before it in CSS. The card writes `background` first, then `background_color`, `background_image` and the rest, so the specific keys win.
 - `background_color` (or `background` when there is no colour) also reaches the surfaces that some modules draw themselves (button, dropdown, slider, bar track, image).
 - A browsed image is stored as its `media-source://` id and resolved when the card renders. Until it resolves, no image is drawn.
