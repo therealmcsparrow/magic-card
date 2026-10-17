@@ -2,8 +2,16 @@ import type { ParticleShape, ParticleDirection, ParticlesSpec } from '../anim-st
 import type { ParticleSlot } from '../anim-studio/compile';
 
 /*
- * Contract: particles model v2, bake simulator, live engine. Version 1.0.1 (Architect-owned).
+ * Contract: particles model v2, bake simulator, live engine. Version 1.1.0 (Architect-owned).
  * 1.0.1: documentation only (units text and field comments). No type, constant or behaviour change.
+ * 1.1.0: additive. It describes the compiler after fix round 1 (T2.4, commit 3685f15). Engine 1
+ * output is unchanged. Types: one new interface (ParticleSlotLook) and one optional parameter.
+ * - BakeGeometry.aspect 0 is the "unmeasured" geometry: the unbaked full slot pool, no bake.
+ * - A 'baked' CompiledParticlesV2 may carry static rules only (no keyframes) until the layer is measured.
+ * - CompiledParticlesV2.slots is the full slot pool at every geometry, so a re-bake never changes the DOM.
+ * - ParticlesModule.bakedCss takes an optional `pool`.
+ * - The card's first render is unmeasured (`-g0`); `apply` bakes once for the measured size.
+ * An implementation that follows 1.0.x and bakes aspect 0 at 0.25 does not fit the card's render path.
  *
  * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js;
  * the studio bundle imports src/particles/index.ts directly).
@@ -51,9 +59,19 @@ import type { ParticleSlot } from '../anim-studio/compile';
  * a layer steps only while on screen (src/icons/offscreen.ts watchOffscreen) and the page is
  * visible; release() or disconnect stops it; reduced motion draws one still frame and never starts
  * the loop. Baked layers register nothing per frame.
+ *
+ * Render sequence on the card (1.1.0):
+ * 1. Render: the compiler runs with geometry `{ aspect: 0 }` (the layer has no size yet). It returns
+ *    the unbaked pool under `<base>-g0`: static slot rules, no keyframes, no bake. The slots sit at
+ *    the base opacity 0 and `animation:none`, so the first paint shows nothing and nothing flashes.
+ * 2. After render: `apply` measures the layer, bakes once for the quantised geometry (cached per
+ *    document, up to PARTICLES_V2_CAPS.geometryVariants), swaps `data-fx` to that variant's name and
+ *    adds its rules. The DOM slots do not change. A layer that cannot be measured bakes DEFAULT_GEOMETRY.
+ * 3. A later size change repeats step 2 only.
+ * So a card costs one bake per geometry. The pool is the same at every step.
  */
 
-export const PARTICLES_CONTRACT_VERSION = '1.0.1';
+export const PARTICLES_CONTRACT_VERSION = '1.1.0';
 export const PARTICLES_ENGINE = 1 as const;
 
 export type ParticleMode = 'baked' | 'live';
@@ -190,6 +208,14 @@ export const PARTICLES_V2_CAPS = {
 /**
  * The layer the bake simulates in, quantised so near-equal cards share one bake: aspect
  * (width / height) to 0.25 steps clamped to [0.25, 8]; content box edges to 5 %.
+ *
+ * Unmeasured (1.1.0): `aspect` 0 (any value <= 0) is not a size. It is valid only as input to a
+ * ParticlesCompiler and means "the layer has not been measured yet". The compiler returns the
+ * unbaked full slot pool under the name `<base>-g0` and does not bake, so the 0.25 clamp does not
+ * apply to it. `bake()` itself still quantises and clamps as above, and the card never calls it with
+ * aspect 0. The card's render uses aspect 0 (the layer has no size before layout); `apply` measures
+ * and bakes once. DEFAULT_GEOMETRY (aspect 2) is what `apply` bakes when the layer stays
+ * unmeasurable (hidden, not laid out).
  */
 export interface BakeGeometry {
   aspect: number;
@@ -253,18 +279,44 @@ export interface ParticleSlotV2 extends ParticleSlot {
   symbol?: { icon: string } | { text: string };
 }
 
+/** What one slot looks like (1.1.0): the same for a baked element and a pool entry. */
+export interface ParticleSlotLook {
+  shape: WeightedShape['shape'];
+  /** px. */
+  size: number;
+  color?: string;
+}
+
 export interface CompiledParticlesV2 {
+  /** The spec's mode. An unmeasured (aspect 0) 'baked' layer keeps mode 'baked' while its css is static (see css). */
   mode: ParticleMode;
-  /** data-fx / keyframes prefix for this geometry: `mcc-<id>-<hash>-g<geometryKey>`. */
+  /** data-fx / keyframes prefix for this geometry: `mcc-<id>-<hash>-g<geometryKey>`; unmeasured: `...-g0`. */
   name: string;
-  /** Baked: the layer's rules and keyframes. Live: only the static slot rules (shapes, sizes). */
+  /**
+   * Measured baked: the layer's rules and keyframes. Live: only the static slot rules (shapes, sizes).
+   * Unmeasured (aspect 0), either mode (1.1.0): only the static slot rules, no keyframes and
+   * `animation:none`, until `apply` swaps in the measured bake. A consumer must not assume that a
+   * 'baked' result has keyframes.
+   */
   css: string;
+  /**
+   * 1.1.0: always the full slot pool of the spec: the parents, then
+   * min(parents x children per parent, PARTICLES_V2_CAPS.elements - parents) child slots. It is the
+   * same pool at every geometry (measured or not) and in both modes, so a re-bake for another size
+   * changes only the rules and the layer's `data-fx`, never the DOM. A bake with fewer elements than
+   * slots leaves the rest unanimated (base opacity 0). Baked: element k takes pool look k (shape,
+   * size, colour); the collision radius still comes from the bake's own draw of that element.
+   */
   slots: ParticleSlotV2[];
   front: boolean;
+  /** Unmeasured: elements = slots.length, stops 0, bytes = css length, capped and warn false. */
   stats: BakedLoop['stats'];
 }
 
-/** Compile hook the chunk registers in compile.ts (useParticlesCompiler, like useV2Compiler). */
+/**
+ * Compile hook the chunk registers in compile.ts (useParticlesCompiler, like useV2Compiler).
+ * `geometry.aspect` 0 = unmeasured: the unbaked pool, no bake (see BakeGeometry).
+ */
 export type ParticlesCompiler = (docId: string, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry) => CompiledParticlesV2;
 
 // ── runtime (after render) ──
@@ -289,14 +341,20 @@ export interface ParticlesModule {
   /** Strict (studio) or lenient (card: bad entries dropped) check of a raw `sim`; error paths `particles.sim.*`. */
   validateSim(raw: unknown, mode: 'strict' | 'lenient'): { sim?: ParticlesSim; errors: Array<{ path: string; message: string }> };
   bake: Bake;
-  /** A baked loop as layer CSS (the card). */
-  bakedCss(loop: BakedLoop, name: string, docId: string): { css: string; slots: ParticleSlotV2[] };
+  /**
+   * A baked loop as layer CSS (the card). Optional `pool` (1.1.0): the spec's full slot looks. With
+   * it, `slots` is the whole pool (not one per baked element) and element k takes pool look k. Without
+   * it, one slot per baked element (export, tests).
+   */
+  bakedCss(loop: BakedLoop, name: string, docId: string, pool?: ParticleSlotLook[]): { css: string; slots: ParticleSlotV2[] };
   /** A baked loop as standalone animated SVG markup (studio export, P2-6; live documents export their bake). */
   bakedSvg(loop: BakedLoop, opts: { width: number; height: number; background?: string }): string;
   /**
    * After each render, per fx layer of a v2 document: measures the layer, re-bakes when the
    * quantised geometry differs from the compiled one (swaps the layer's data-fx name), and in live
    * mode starts the engine. Idempotent per render. Never throws (logs once).
+   * The render before it is unmeasured (`-g0`, no bake); apply bakes once for the measured geometry,
+   * or DEFAULT_GEOMETRY when the layer has no size.
    */
   apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void;
   /** The layer left the DOM or the card disconnected: stop and forget it. */
