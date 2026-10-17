@@ -200,6 +200,8 @@ export function mergeTemplateWithOverrides(
         if (colNotSynced.has('padding') && localCol.padding !== undefined) col.padding = localCol.padding;
         if (colNotSynced.has('vertical_align') && localCol.vertical_align !== undefined) col.vertical_align = localCol.vertical_align;
         keepLocal(col, localCol, colNotSynced);
+        // the column's module list as one override (Wrap in layout of a template module): the card's own
+        if (colNotSynced.has('modules') && Array.isArray(localCol.modules)) return { ...col, modules: deepClone(localCol.modules) };
       }
 
       const templateModIds = new Set((col.modules || []).map(m => m.id).filter(Boolean));

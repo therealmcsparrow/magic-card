@@ -205,7 +205,7 @@ Rows are stacked with a 10px gap. Detail: [Card, rows and columns](../card/READM
 | `hidden` | boolean | `false` | `true` leaves the column out on the dashboard (it takes no space). The studio shows it dimmed. |
 | `editor_name` | string | | Editor-only name, as on a row. |
 | `design` | object | | See [Design](#design). |
-| `not_synced` | list | | Template-linked card: `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name`. |
+| `not_synced` | list | | Template-linked card: `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name`, `modules`. |
 
 ## Shared module keys
 
@@ -237,7 +237,7 @@ Children are full modules: they take `id`, `entity`, `design`, `actions`, `displ
 | `horizontal` | `modules: [...]` | `gap`, `align` (`start`, `center`, `end`, `stretch`), `justify` (`start`, `center`, `end`, `space-between`, `space-around`) |
 | `vertical` | `modules: [...]` | `gap`, `align` |
 | `row` | `columns: [{ modules: [...] }, ...]`, see [Row module columns](#row-module-columns) | `layout` (same syntax as a card row), `column_widths` (one width per column, wins over `layout`, as on a card row), `gap` (default `8px`), `padding` |
-| `tabs` | `tabs: [{ label, icon, hidden, modules: [...] }, ...]`; a tab with `hidden: true` is left out on the dashboard (`active_tab` then counts the shown tabs) | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`) |
+| `tabs` | `tabs: [{ label, icon, hidden, modules: [...] }, ...]`; a tab with `hidden: true` is left out on the dashboard (`active_tab` still counts every tab; when it names a hidden tab, the first shown tab opens) | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`) |
 | `slider-layout` | `modules: [...]`, one slide each | `pagination`, `navigation`, `slides_per_view` (default 1), `space_between` (px, default 8), `loop`, `autoplay`, `autoplay_delay` (ms, default 5000) |
 
 A child hidden by its display conditions is left out. A slider then builds no empty slide for it.
@@ -763,7 +763,7 @@ Detail: [Card, rows and columns](../card/README.md).
 | `not_synced` | card | `custom_animations`: the card uses only its own `custom_animations` and none of the template's. |
 | `hidden_animations` | card | Ids of template animation documents this card leaves out. Each item is an id string; any other value hides nothing. A document of the card's own with that id still plays. A template's own `hidden_animations` has no effect. |
 | `not_synced` | row | `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`, `hidden`, `editor_name`. `column_widths` or `actions` listed without a local value removes the template's. So does `hidden` or `editor_name` listed without a local value. |
-| `not_synced` | column | `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name` |
+| `not_synced` | column | `design`, `gap`, `padding`, `vertical_align`, `hidden`, `editor_name`, `modules` (the column's whole module list is the card's own; Wrap in layout sets it) |
 | `not_synced` | module | Content keys (`text`, `icon`, `entity`, `image`, `content`, `label`, `attribute`, `prefix`, `suffix`, `url`, `service`, `service_data`, `data`, `use_entity`, `entity_display`, `use_entity_icon`, `use_entity_color`, `icon_color`, `size`, `icon_fx`, `icon_on`, `icon_off`, `svg`, `animated_icons`), `hidden`, `editor_name`, the child list (`modules`, `columns` or `tabs`), on a row module also `layout`, `column_widths`, `gap` and `padding`, `design` or `design.<key>` (`design.shape` covers `shape_options` too), `actions` or `actions.<name>` |
 
 A linked card's `custom_animations` is merged with the template's by id. The card plays the template's documents in the template's order. A document of the card's own with the same id replaces the template's version of that one, and the card's other documents come after the template's. When an id appears twice on one side, the first one counts.

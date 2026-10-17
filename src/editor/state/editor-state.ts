@@ -737,6 +737,12 @@ export class EditorStateManager {
     slot.splice(0, slot.length, at.list[at.index]);
     at.list[at.index] = wrapper;
     if (sel.child?.length) this._markChildList(config, sel.row, sel.col, sel.module);
+    else if (config.template) {
+      // the template merge matches top-level modules by id: the column's module list becomes this
+      // card's own, else the template module would come back in its old place next to the wrapper
+      const col = config.rows[sel.row].columns[sel.col];
+      if (!col.not_synced?.includes('modules')) col.not_synced = [...(col.not_synced || []), 'modules'];
+    }
     this.state = { ...this.state, selectedPath: this._pathWithIndex(sel.row, sel.col, sel.module, sel.child, at.index) };
     this.updateConfig(config);
     return true;
@@ -782,6 +788,10 @@ export class EditorStateManager {
     } else if (sel.kind === 'module') {
       dropMarks(t.item as CardModule);
     } else {
+      // a column whose module list was the card's own (Wrap in layout): the template's list again.
+      // The re-merge (mc-template-reapply) fills it from the template; kept local modules would come
+      // back as additions next to the template's.
+      if (sel.kind === 'column' && (t.item.not_synced as string[]).includes('modules')) t.item.modules = [];
       delete t.item.not_synced;
     }
     this.updateConfig(config);
