@@ -288,9 +288,15 @@ export class McteStartView extends LitElement {
     }
     return c.renderPicker(this._view(c), {
         select: (id) => ((this._preset = id), this._prefill()),
-        query: (q) => (this._pq = q),
-        filter: (f) => (this._pf = f),
+        query: (q, f) => ((this._pq = q), f && (this._pf = f), this._follow(c)),
+        filter: (f) => ((this._pf = f), this._follow(c)),
     });
+  }
+
+  /** The selection follows the visible list, so the footer never names a preset the list does not show. */
+  private _follow(c: PresetChunk): void {
+    this._preset = c.pickerSelection(this._view(c));
+    this._prefill();
   }
 
   private _view(c: PresetChunk): PickerView {

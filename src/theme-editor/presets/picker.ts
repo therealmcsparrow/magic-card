@@ -22,7 +22,8 @@ export interface PickerView {
 
 export interface PickerEvents {
   select: (id: string) => void;
-  query: (q: string) => void;
+  /** Set the search; `filter` also sets the Show chip in the same step. */
+  query: (q: string, filter?: string) => void;
   filter: (f: string) => void;
 }
 
@@ -67,7 +68,13 @@ const shownOf = (v: PickerView): ThemePreset[] => search(v).filter((p) => v.filt
 /** The text of the dialog's live region ("12 presets shown"); the region itself lives in the start view. */
 export function pickerStatus(v: PickerView): string {
   const n = shownOf(v).length;
-  return `${n} ${n === 1 ? 'preset' : 'presets'} shown`;
+  return `${n} ${n === 1 ? 'preset' : 'presets'} shown${n ? '' : `. Try ${SUGGESTIONS.slice(0, -1).join(', ')} or ${SUGGESTIONS[SUGGESTIONS.length - 1]}.`}`;
+}
+
+/** The id the dialog should have selected: the current one while it is in the list, else the first shown, else none. */
+export function pickerSelection(v: PickerView): string {
+  const shown = shownOf(v);
+  return shown.some((p) => p.id === v.selected) ? v.selected : (shown[0]?.id ?? '');
 }
 
 /** Search, filter and the grouped cards for the current view. */
@@ -76,6 +83,13 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
   const count = (g: string): number => found.filter((p) => p.group === g).length;
   const shown = shownOf(v);
   const sel = v.lib.presets.find((p) => p.id === v.selected);
+  // with no match at all, counts of 0 on every chip read like "no presets exist": leave them off
+  const num = (n: number): string => (found.length ? ` ${n}` : '');
+  // Move focus to the search field before the list re-renders: the button that was pressed is about to go.
+  const again = (e: Event, q: string): void => {
+    ((e.currentTarget as HTMLElement).getRootNode() as ShadowRoot | Document).getElementById?.('pq')?.focus();
+    ev.query(q, 'all');
+  };
   return html`<div class="pl">
     <div class="pbar">
       <label class="sr-only" for="pq">Search presets</label>
@@ -97,7 +111,7 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
       <mcte-mode-switch
         label="Show"
         .value=${v.filter}
-        .options=${[{ value: 'all', label: `All ${found.length}` }, ...GROUPS.map((g) => ({ value: g.id, label: `${g.label} ${count(g.id)}` }))]}
+        .options=${[{ value: 'all', label: `All${num(found.length)}` }, ...GROUPS.map((g) => ({ value: g.id, label: `${g.label}${num(count(g.id))}` }))]}
         @mcte-change=${(e: CustomEvent) => ev.filter(e.detail.value)}
       ></mcte-mode-switch>
     </div>
@@ -116,13 +130,10 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
               : nothing;
           })
         : html`<p class="help">No preset matches "${v.query}".</p>
-            ${v.filter === 'all' || v.filter === 'genre'
-              ? html`<p class="help">Presets use genre and colour words, not titles. Try one of these:</p>
-                  <div class="sug">${SUGGESTIONS.map((w) => html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => ev.query(w)}>${w}</button>`)}</div>`
-              : nothing}
-            <p><button type="button" class="btn btn-text btn-sm" @click=${() => (ev.query(''), ev.filter('all'))}>Clear search</button></p>`}
+            <p class="help">Presets use genre and colour words, not titles. Try one of these:</p>
+            <div class="sug">${SUGGESTIONS.map((w) => html`<button type="button" class="btn btn-secondary btn-sm" @click=${(e: Event) => again(e, w)}>${w}</button>`)}</div>
+            <p><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => again(e, '')}>Clear search</button></p>`}
     </div>
-    ${sel && !shown.includes(sel) ? html`<p class="help">Selected: ${sel.name}</p>` : nothing}
   </div>`;
 }
 
@@ -141,9 +152,10 @@ export const pickerStyles = css`
     align-content: start;
   }
   .plist h4 {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: var(--mc-text-2);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--mc-text);
+    margin-block: 4px 0;
   }
   .dis {
     font-size: 0.875rem;
@@ -171,6 +183,7 @@ export const pickerStyles = css`
     }
     .plist {
       max-height: min(52vh, 520px);
+      min-height: min(52vh, 320px);
       overflow: auto;
       padding: 2px;
     }
@@ -185,6 +198,7 @@ export const pickerStyles = css`
   @media (max-height: 499px) {
     .plist {
       max-height: none;
+      min-height: 0;
       overflow: visible;
     }
     dialog .foot {
