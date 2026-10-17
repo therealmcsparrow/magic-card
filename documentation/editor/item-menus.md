@@ -124,7 +124,11 @@ Browsers only allow the clipboard on secure pages. Home Assistant opened over pl
 
 ## Copy and paste a module
 
-Copy module keeps the module in the browser (like the design clipboard), so you can paste it in another card or another dialog. It also puts the module's YAML on the system clipboard, for a card's YAML editor or another browser.
+Copy module keeps the module in the browser (like the design clipboard), so you can paste it in another card or another dialog. It also puts the module's YAML on the system clipboard, for a card's YAML editor or another browser, and replaces whatever the system clipboard held.
+
+The module's animations come along. Animations stored in the card (animated icons, catalogue presets, your own documents in `custom_animations`, also those a linked card plays from its template) are copied with the module. On paste, the target card gets the ones it does not have yet. If it already has a different animation under the same id, the pasted one gets a new id and the module points at it. A catalogue preset (`cat-` id) the target already holds in another version uses the target's copy. Animations from the animation library are shared by every card on the install and are not copied. The YAML on the system clipboard holds the module only.
+
+A copied module that fails its own checks (for example a slider whose minimum is above its maximum) cannot be pasted; fix it and copy it again.
 
 Paste module after inserts it after the module whose menu you used. Paste module on a column, tab or row-module column adds it at the end. On a template-linked card a module pasted next to a template module shows at the end of its column on the dashboard, as a duplicate does, because the card adds its own modules after the template's. The pasted module gets new ids, children included, and is selected. Pasting into a layout of a template-linked card marks that layout's child list as a local change.
 

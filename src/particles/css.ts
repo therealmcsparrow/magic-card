@@ -1,6 +1,7 @@
 import type { BakedElement, BakedLoop, BakedStop, BakeGeometry, ParticleSlotV2, ParticlesSpecV2, WeightedShape } from '../contracts/particles-v2';
 import { docVar, hashString, svgMaskUrl } from '../anim-studio/compile';
 import { sanitizeSvg } from '../icons/svg-sanitize';
+import { safeCssValue } from '../anim-studio/model';
 import { stopDecl } from './bake';
 
 /*
@@ -73,7 +74,9 @@ export function layerCss(name: string, docId: string, looks: SlotLook[], keyfram
   looks.forEach((l, k) => {
     if ('svg' in l.shape) masks.set(l.shape.svg, [...(masks.get(l.shape.svg) ?? []), k]);
     const anim = keyframes ? `animation-name:${kf}${k};` : '';
-    out.push(`${L}>i:nth-child(${k + 1}){${anim}--mcc-sz:${r2(l.size)}px${l.color ? `;--mcc-pc:${l.color}` : ''}}`);
+    // a colour that is not a plain CSS colour is dropped (callers validate, but this is a contract API)
+    const color = l.color ? safeCssValue(l.color, 'color') : undefined;
+    out.push(`${L}>i:nth-child(${k + 1}){${anim}--mcc-sz:${r2(l.size)}px${color ? `;--mcc-pc:${color}` : ''}}`);
     if (keyframes) out.push(`@keyframes ${kf}${k}{${keyframes(k)}}`);
   });
   // own SVG shapes: always through the sanitiser (never raw markup in a rule); unusable: a dot
