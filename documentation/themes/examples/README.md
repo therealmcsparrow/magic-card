@@ -389,11 +389,11 @@ Sun-baked ochre by day; at night an ochre glow on deep indigo.
 
 ![Ochre Basin preview, light and dark modes side by side](images/ochre-basin.webp)
 
-## Orbital Forge
+## Orbital Smelter
 
 Industrial steel blue-grey with a safety orange accent.
 
-![Orbital Forge preview, light and dark modes side by side](images/orbital-forge.webp)
+![Orbital Smelter preview, light and dark modes side by side](images/orbital-smelter.webp)
 
 ## Ashen Keep
 

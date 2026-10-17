@@ -7,7 +7,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### New
--   The theme editor's create dialog offers 57 presets, up from 45. The 12 new ones form a third group, Sci-fi & fantasy: Amber Console, Ashen Keep, Candlelit Cloister, Cobalt Prism, Crimson Pines, Deep Survey, Dust Duel, Frontier Freighter, Neon Rain, Ochre Basin, Orbital Forge and Silverleaf Glade.
+-   The theme editor's create dialog offers 57 presets, up from 45. The 12 new ones form a third group, Sci-fi & fantasy: Amber Console, Ashen Keep, Candlelit Cloister, Cobalt Prism, Crimson Pines, Deep Survey, Dust Duel, Frontier Freighter, Neon Rain, Ochre Basin, Orbital Smelter and Silverleaf Glade.
 -   Show has a Sci-fi & fantasy option. The group shows the same notice as on the theme examples page.
 -   When a search finds no preset, the dialog suggests five words to try: sci-fi, fantasy, neon, desert and forest. Each one finds presets under All and under Sci-fi & fantasy.
 -   The theme editor's preview shows the theme's accent colour as a small chip labelled Accent, in the Controls card.
