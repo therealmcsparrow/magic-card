@@ -278,7 +278,7 @@ export class McteStartView extends LitElement {
   private _presetPicker(): TemplateResult {
     const c = this._chunk;
     if (this._libState === 'loading') {
-      return html`<div class="pl" aria-busy="true"><p class="help">Loading presets</p>${skeleton}</div>`;
+      return html`<div class="pl" aria-busy="true"><p class="help" aria-hidden="true">Loading presets</p>${skeleton}</div>`;
     }
     if (!c) {
       return html`<div class="pl">
