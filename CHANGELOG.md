@@ -4,6 +4,22 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.07 (2026-10-17)
+
+The theme editor starts from 45 presets now, in two groups, and the documentation has a screenshot of each one.
+
+Each release now has ten files. One is new: `magic-card-theme-presets.js`, which the create dialog loads when it opens. HACS installs it with the card. With a manual install, copy all ten to the same folder, then hard refresh.
+
+### New
+-   The create dialog of the Themes tab lists 45 presets, up from 5. Original has 25: the five from 2026.10.06 and 20 new ones, such as Glass Aqua, OLED Green and Summer. Inspired by has 20 palettes, such as Nord, Dracula, Solarized and Tokyo Night, each with its own colour values.
+-   Search presets by name, palette or style, and use Show to switch between All, Original and Inspired by.
+-   Every light and dark mode passes 4.5 to 1 for text, secondary text, text on the primary colour and the state colours.
+-   [Theme examples](documentation/themes/examples/README.md): a screenshot of each preset, light and dark side by side.
+
+### Improved
+-   The presets load the first time you open the create dialog. While they load, the dialog says so. If they cannot load, it says so and offers Try again. Blank and An installed theme work in every state.
+-   The OLED presets note that dark mode is pure black, and the glass presets note that blur and transparency can be slow on old tablets.
+
 ## 2026.10.06 (2026-10-17)
 
 A theme editor for Home Assistant themes, in the Themes tab of the Magic Card Utils panel. Edit a theme with a live preview beside the fields, and try it on your dashboard before you save it.
