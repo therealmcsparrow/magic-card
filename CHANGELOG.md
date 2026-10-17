@@ -7,7 +7,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### Changed
--   Six Sci-fi & fantasy presets got their own colours so they no longer look alike: Orbital Smelter, Ashen Keep and Crimson Pines were nearly the same, and Dust Duel, Ochre Basin and Candlelit Cloister were close to their neighbours. The preset ids and names are unchanged. Themes you already created from these presets stay as they were.
+-   Seven Sci-fi & fantasy presets got their own colours so they no longer look alike: Orbital Smelter, Ashen Keep and Crimson Pines were nearly the same, and Dust Duel, Ochre Basin, Candlelit Cloister and Silverleaf Glade were close to their neighbours. Within the group, no two presets share a similar header colour in light or in dark. The preset ids and names are unchanged. Themes you already created from these presets stay as they were.
 
 ## 2026.10.09 (2026-10-17)
 

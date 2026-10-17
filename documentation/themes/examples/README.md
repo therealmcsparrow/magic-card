@@ -367,7 +367,7 @@ Off-white panels, burnt orange accent: navy ink by day, denim blue at night.
 
 ## Dust Duel
 
-Red-clay desert, indigo header, red accent; sand-gold by night.
+Red-clay desert, brick header, red accent; sand-gold by night.
 
 ![Dust Duel preview, light and dark modes side by side](images/dust-duel.webp)
 
@@ -385,19 +385,19 @@ Hot magenta and electric cyan neon on a dark city night.
 
 ## Ochre Basin
 
-Sun-baked ochre by day; at night an ochre glow on deep indigo.
+Sun-baked ochre, olive header; at night an ochre glow on deep indigo.
 
 ![Ochre Basin preview, light and dark modes side by side](images/ochre-basin.webp)
 
 ## Orbital Smelter
 
-Furnace-brown header on gunmetal steel with a coolant-cyan accent.
+Furnace-brown and steel-grey with a coolant-cyan accent; copper at night.
 
 ![Orbital Smelter preview, light and dark modes side by side](images/orbital-smelter.webp)
 
 ## Ashen Keep
 
-Charcoal iron and pale limestone with one deep red accent, calm and wintry.
+Charcoal iron and pale limestone; deep red accent, coral at night.
 
 ![Ashen Keep preview, light and dark modes side by side](images/ashen-keep.webp)
 
@@ -415,7 +415,7 @@ Oxblood red over a dark pine forest, moss-green panels, green-black nights.
 
 ## Silverleaf Glade
 
-Silver-teal leaves with touches of gold, calm and airy.
+Silver-teal leaves and gold touches by day; sage green by night.
 
 ![Silverleaf Glade preview, light and dark modes side by side](images/silverleaf-glade.webp)
 
