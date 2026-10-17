@@ -1,11 +1,12 @@
-import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
+import { LitElement, html, css, nothing, adoptStyles, PropertyValues, TemplateResult } from 'lit';
+import type { CSSResultOrNative } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEntry } from '../contracts/theme-editor';
+import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { icon } from './icons';
 import { cloneDoc } from './model';
-import { PRESETS } from './presets';
+import { loadPresetLibrary, presetLibraryIfLoaded, type PresetChunk } from './presets/loader';
 import { base } from './styles';
 import { docFromHass, fire, hassOf, nameError, slugName, uniqueName } from './util';
 import './include-notice';
@@ -52,6 +53,10 @@ export class McteStartView extends LitElement {
     _dlg: { state: true },
     _kind: { state: true },
     _preset: { state: true },
+    _chunk: { state: true },
+    _libState: { state: true },
+    _pq: { state: true },
+    _pf: { state: true },
     _installed: { state: true },
     _installedQuery: { state: true },
     _listOpen: { state: true },
@@ -80,7 +85,11 @@ export class McteStartView extends LitElement {
   private _dlg: 'create' | 'delete' | null = null;
   // create dialog
   private _kind: StartKind = 'preset';
-  private _preset = PRESETS[0].id;
+  private _preset = '';
+  private _chunk: PresetChunk | undefined;
+  private _libState: 'loading' | 'ready' | 'error' = 'loading';
+  private _pq = '';
+  private _pf = 'all';
   private _installed = '';
   private _installedQuery = '';
   private _listOpen = false;
@@ -123,7 +132,9 @@ export class McteStartView extends LitElement {
   openCreate(opts: { kind?: StartKind; installed?: string } = {}): void {
     this._opener = (this.renderRoot.querySelector('.new') as HTMLElement | null) ?? null;
     this._kind = opts.kind ?? 'preset';
-    this._preset = PRESETS[0].id;
+    this._preset = '';
+    this._pq = '';
+    this._pf = 'all';
     this._installed = opts.installed ?? '';
     this._installedQuery = opts.installed ?? '';
     this._listOpen = false;
@@ -133,15 +144,40 @@ export class McteStartView extends LitElement {
     this._createError = '';
     this._busy = false;
     this._name = '';
+    this._loadLib();
     this._prefill();
     this._dlg = 'create';
+  }
+
+  /** The preset chunk loads on the first open of the dialog (and again on "Try again"). */
+  private _loadLib(): void {
+    const cached = presetLibraryIfLoaded();
+    if (cached) return this._gotLib(cached);
+    this._libState = 'loading';
+    loadPresetLibrary().then(
+      (l) => this._gotLib(l),
+      () => (this._libState = 'error'),
+    );
+  }
+
+  private _gotLib(c: PresetChunk): void {
+    // the picker's styles come with the chunk: adopt them next to the view's own
+    adoptStyles(this.renderRoot as ShadowRoot, [...((this.constructor as typeof McteStartView).styles as CSSResultOrNative[]), c.pickerStyles]);
+    this._chunk = c;
+    this._libState = 'ready';
+    this._preset ||= c.THEME_PRESET_LIBRARY.presets[0].id;
+    this._prefill();
+  }
+
+  private get _sel(): ThemePreset | undefined {
+    return this._chunk?.THEME_PRESET_LIBRARY.presets.find((p) => p.id === this._preset);
   }
 
   private _prefill(): void {
     if (this._typedName) return;
     const taken = this._taken;
     const seed =
-      this._kind === 'preset' ? slugName(PRESETS.find((p) => p.id === this._preset)?.name ?? '') : this._kind === 'installed' && this._installed ? `${this._installed}_copy` : 'my-theme';
+      this._kind === 'preset' ? slugName(this._sel?.name ?? '') : this._kind === 'installed' && this._installed ? `${this._installed}_copy` : 'my-theme';
     this._name = uniqueName(slugName(seed) || 'my-theme', taken);
   }
 
@@ -165,6 +201,7 @@ export class McteStartView extends LitElement {
 
   private get _createReason(): string {
     if (this._kind === 'installed' && !this._installed) return 'Pick a theme to copy';
+    if (this._kind === 'preset' && !this._sel) return this._libState === 'loading' ? 'Presets are still loading' : 'Pick a preset to start from';
     return '';
   }
 
@@ -180,7 +217,7 @@ export class McteStartView extends LitElement {
     let doc: ThemeDoc;
     let from: string;
     if (this._kind === 'preset') {
-      const p = PRESETS.find((x) => x.id === this._preset) ?? PRESETS[0];
+      const p = this._sel!;
       doc = cloneDoc(p.doc);
       from = p.name;
     } else if (this._kind === 'blank') {
@@ -230,35 +267,34 @@ export class McteStartView extends LitElement {
     }
   }
 
-  private _presetCards(): TemplateResult {
-    return html`<div class="presets" role="radiogroup" aria-label="Preset">
-      ${PRESETS.map((p) => {
-        const on = this._preset === p.id;
-        const strip = (m: 'light' | 'dark'): TemplateResult => {
-          const v = (p.doc.modes?.[m] ?? {}) as Record<string, string>;
-          return html`<span class="strip" style="background:${v['primary-background-color']}">
-            <i style="background:${v['primary-color']}"></i><i style="background:${v['accent-color']}"></i>
-            <i class="card" style="background:${v['card-background-color']};color:${v['primary-text-color']}">Aa</i>
-          </span>`;
-        };
-        return html`<label class="preset ${on ? 'on' : ''}">
-          <input class="sr-only" type="radio" name="preset" value=${p.id} .checked=${on} @change=${() => ((this._preset = p.id), this._prefill())} />
-          <span class="pv" aria-hidden="true">${strip('light')}${strip('dark')}</span>
-          <span class="pn">${p.name}${on ? icon('check') : nothing}</span>
-          <span class="help">${p.blurb}</span>
-          ${p.note ? html`<span class="help">${p.note}</span>` : nothing}
-        </label>`;
-      })}
-    </div>`;
+  private _presetPicker(): TemplateResult {
+    const c = this._chunk;
+    if (this._libState === 'loading') {
+      return html`<div class="pl" aria-busy="true"><p class="help" role="status">Loading presets</p><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>`;
+    }
+    if (!c) {
+      return html`<div class="pl">
+        <div class="help error" role="alert">${icon('alert')}<span>Presets could not load. Check your connection and try again. If it keeps failing, reload the page.</span></div>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._loadLib()}>Try again</button>
+      </div>`;
+    }
+    return c.renderPicker(
+      { lib: c.THEME_PRESET_LIBRARY, selected: this._preset, query: this._pq, filter: this._pf },
+      {
+        select: (id) => ((this._preset = id), this._prefill()),
+        query: (q) => (this._pq = q),
+        filter: (f) => (this._pf = f),
+      },
+    );
   }
 
   private _createDialog(): TemplateResult {
-    const preset = PRESETS.find((p) => p.id === this._preset) ?? PRESETS[0];
+    const preset = this._sel;
     const q = this._installedQuery.trim().toLowerCase();
     const options = this._installedNames.filter((o) => !q || o.name.toLowerCase().includes(q) || this._installed === o.name);
     const nameMsg = this._nameTouched ? this._nameMsg : '';
     const reason = this._createReason;
-    const label = this._kind === 'preset' ? `Create from ${preset.name}` : 'Create theme';
+    const label = this._kind === 'preset' && preset ? `Create from ${preset.name}` : 'Create theme';
     return dialog('New theme', html`<div class="grid">
           <span class="lbl" id="start-lbl">Start from</span>
           <mcte-mode-switch
@@ -275,7 +311,7 @@ export class McteStartView extends LitElement {
               this._prefill();
             }}
           ></mcte-mode-switch>
-          ${this._kind === 'preset' ? this._presetCards() : nothing}
+          ${this._kind === 'preset' ? this._presetPicker() : nothing}
           ${this._kind === 'blank'
             ? html`<p class="help">An empty theme. Add only the variables you want to change.</p>
                 <label class="switch-row"><input type="checkbox" .checked=${this._modes} @change=${(e: Event) => (this._modes = (e.target as HTMLInputElement).checked)} /> Light and dark modes</label>
@@ -528,79 +564,10 @@ export class McteStartView extends LitElement {
         border-radius: var(--mc-radius-lg);
         background: var(--mc-surface-2);
       }
-      .presets {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      @media (max-width: 599px) {
-        .presets {
-          grid-template-columns: repeat(2, 1fr);
+      @media (min-width: 600px) {
+        dialog:has(.pl) {
+          width: min(960px, calc(100vw - 32px));
         }
-      }
-      @media (max-width: 359px) {
-        .presets {
-          grid-template-columns: 1fr;
-        }
-      }
-      .preset {
-        position: relative;
-        display: grid;
-        gap: 4px;
-        align-content: start;
-        min-height: 96px;
-        padding: 8px;
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius-lg);
-        cursor: pointer;
-        background: var(--mc-surface);
-      }
-      .preset.on {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: -1px;
-      }
-      .preset:has(input:focus-visible) {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: 2px;
-      }
-      .pv {
-        display: grid;
-        gap: 2px;
-      }
-      .strip {
-        display: flex;
-        gap: 3px;
-        padding: 3px;
-        border-radius: 6px;
-        border: 1px solid var(--mc-divider);
-        align-items: center;
-      }
-      .strip i {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: block;
-      }
-      .strip i.card {
-        flex: 1;
-        width: auto;
-        height: 16px;
-        border-radius: 4px;
-        font-size: 0.6875rem;
-        font-style: normal;
-        line-height: 16px;
-        text-align: center;
-      }
-      .pn {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-weight: 500;
-        font-size: 0.875rem;
-      }
-      .pn .ico {
-        width: 16px;
-        height: 16px;
       }
       .grid {
         display: grid;

@@ -15,8 +15,10 @@
  *   magic-card.js for the editor chunk with `window.MagicCard.loadEditor()` (module-editor 1.0.0)
  *   and uses those elements by tag.
  * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/ and `lit`
- *   (types from src/contracts/ are fine) and no dynamic import(): the entry is one file, there is
- *   no public path to set, and magic-card.js is untouched (+0 B).
+ *   (types from src/contracts/ are fine). Exactly one dynamic import(): the preset library chunk
+ *   (THEME_PRESETS_CHUNK_FILE, section "theme presets" below, ADR 0014). Its public path is set by
+ *   src/theme-editor/public-path.ts, the entry's first import. magic-card.js is untouched (+0 B).
+ *   The panel still imports one file; it never loads the preset chunk itself.
  * - Version check: the panel reads `customElements.get(THEME_EDITOR_TAG).contractVersion` and
  *   accepts major 1. A missing file or element means "update Magic Card to 2026.10.06 or newer".
  */
@@ -190,3 +192,73 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
  */
 export const PREVIEW_RULES_VERSION = '1.0.0';
 export const TRIAL_STYLE_ID = 'mc-theme-trial';
+
+// ── theme presets (Contract theme-presets 1.0.0, ADR 0014) ──
+
+/**
+ * The preset library: every editor preset (the 5 starters and 40 more, 45 in all) lives in one lazy
+ * webpack chunk of the theme editor entry, webpackChunkName THEME_PRESETS_CHUNK, emitted as
+ * dist/THEME_PRESETS_CHUNK_FILE (served with `?v=<contenthash>`, next to the entry). The entry holds
+ * no preset data.
+ *
+ * Provider: src/theme-editor/presets/chunk.ts (the chunk root). It re-exports
+ * `THEME_PRESET_LIBRARY: ThemePresetLibrary` from presets/library.ts, which has no runtime import at
+ * all (`import type` only), so Node can load it with type stripping (tools/theme-example-shots.mjs).
+ * The chunk also holds the create dialog's picker (presets/picker.ts: `renderPicker` and
+ * `pickerStyles`, a template function and a stylesheet, no custom element), because the entry has a
+ * byte cap and nothing of the picker is needed before the dialog opens. lit, icons.ts and
+ * <mcte-mode-switch> are shared with the entry, not copied.
+ * Consumer: src/theme-editor/presets/loader.ts, the module's only import(). loadPresetLibrary()
+ * starts on the first open of the create dialog (never when the panel or editor opens), is
+ * memoised while pending and once loaded, and on failure clears the memo and rejects so "Try again"
+ * re-requests. It rejects too when `version` is not major 1 or `presets` is not a non-empty array.
+ *
+ * Data rules (tests/theme-presets.contract.test.ts):
+ * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
+ *   The 5 starter ids stay: paper, midnight-oled, ember, contrast, frost (group 'original', same
+ *   values as 2026.10.06).
+ * - `group` 'inspired' requires `inspiredBy`; 'original' must not have it.
+ * - `doc` is a ThemeDoc with modes.light and modes.dark. Each mode sets primary-color,
+ *   accent-color, primary-background-color, card-background-color, primary-text-color,
+ *   secondary-text-color, divider-color, text-primary-color, app-header-text-color, error-color,
+ *   warning-color, info-color, success-color. Other keys are free (lovelace-background,
+ *   ha-card-border-radius, ha-card-backdrop-filter, ...). The model's docErrors(doc) is empty.
+ * - Contrast >= 4.5:1 in every mode: primary and secondary text on the card (translucent cards
+ *   over every gradient stop) and on primary-background-color; text-primary-color and
+ *   app-header-text-color on primary-color; the four state colours and accent-color on the card.
+ * - Order in `presets` is display order within a group; groups show 'original' first.
+ */
+export const THEME_PRESETS_VERSION = '1.0.0';
+export const THEME_PRESETS_CHUNK = 'theme-presets';
+export const THEME_PRESETS_CHUNK_FILE = 'magic-card-theme-presets.js';
+
+export type ThemePresetGroup = 'original' | 'inspired';
+
+/** Credit for a palette-inspired preset. Values are our own, tuned for contrast; the name credits the source. */
+export interface ThemePresetCredit {
+  /** Palette name as its authors write it, e.g. "Nord", "Catppuccin Mocha". */
+  name: string;
+  /** Palette authors, e.g. "Arctic Ice Studio". Shown in the docs gallery. */
+  author?: string;
+  /** Palette home page (https only). Docs gallery link; the editor shows plain text, no link. */
+  url?: string;
+}
+
+export interface ThemePreset {
+  id: string;
+  /** Display name and the seed of the new theme's file name. */
+  name: string;
+  /** One short line under the name. */
+  blurb: string;
+  /** Optional extra line (cost or behaviour to know before picking it). */
+  note?: string;
+  group: ThemePresetGroup;
+  inspiredBy?: ThemePresetCredit;
+  doc: ThemeDoc;
+}
+
+export interface ThemePresetLibrary {
+  /** THEME_PRESETS_VERSION of the chunk that was built. */
+  version: string;
+  presets: readonly ThemePreset[];
+}
