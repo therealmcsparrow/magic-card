@@ -2,19 +2,32 @@ import type { PropertyValues, TemplateResult } from 'lit';
 import type { AnimationDoc } from '../../../anim-studio/model';
 import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, type LibraryEntry } from '../../../icon-anim/library';
 import type { IconAnimatorHost } from './loader';
+import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contracts/icon-library';
+import { styleDoc } from '../../../icon-anim/style';
 
 /*
  * The animated icon grid (lazy chunk magic-card-icon-animator.js): live moving tiles for the user's
  * own icon animations (My animations) and the built-in icon library, with search and a domain
  * filter. Used by the icon picker's "Animated icons" tab; it only
- * emits `animated-icon-pick`, the caller writes the choice.
+ * emits `animated-icon-pick`, the caller writes the choice. The Style control (Quiet / Living / Glow)
+ * sits on the Icon library: its tiles preview in that Style and a pick stores it; changing it while
+ * the module plays a library icon restyles that icon at once (`restyle`: the picker stays open).
+ * My animations tiles have no Style.
  */
 
 export const ANIMATED_ICON_GRID_TAG = 'mc-animated-icon-grid';
 const THUMB_TAG = 'mc-animated-icon-thumb';
 
 /** What a tile stands for: a built-in library entry, or one of the user's own documents. */
-export type AnimatedIconPick = { kind: 'library'; entry: LibraryEntry } | { kind: 'mine'; doc: AnimationDoc };
+export type AnimatedIconPick = { kind: 'library'; entry: LibraryEntry; style?: IconStyle; restyle?: boolean } | { kind: 'mine'; doc: AnimationDoc };
+
+const STYLE_LABELS: Record<IconStyle, string> = { quiet: 'Quiet', living: 'Living', glow: 'Glow' };
+const STYLE_HELP: Record<IconStyle, string> = {
+  quiet: 'Quiet: one part moves a little, slower. For calm dashboards.',
+  living: 'Living: the full animation, as drawn.',
+  glow: "Glow: the full animation with a soft halo in the animation's colour, else the theme's.",
+};
+const isStyle = (v: unknown): v is IconStyle => (ICON_STYLES as readonly unknown[]).includes(v);
 
 /** The library documents that are icon animations (they carry a rig). */
 export const mineIconDocs = (list: AnimationDoc[]): AnimationDoc[] => list.filter((d) => !!d.rig);
@@ -41,6 +54,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     static properties = {
       source: { attribute: false },
       icon: { attribute: false },
+      iconStyle: { attribute: false },
       hass: { attribute: false },
       _visible: { state: true },
     };
@@ -79,6 +93,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     /** The library entry or document to play: a stable object, so a re-render keeps the built card. */
     source?: LibraryEntry | AnimationDoc;
     icon = '';
+    /** The Style a library entry previews in. */
+    iconStyle: IconStyle = DEFAULT_ICON_STYLE;
     hass?: unknown;
     private _visible = typeof IntersectionObserver === 'undefined';
     private _card?: CardElement;
@@ -103,13 +119,13 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     }
 
     protected willUpdate(changed: PropertyValues): void {
-      if (changed.has('source') || changed.has('icon')) this._card = undefined;
+      if (changed.has('source') || changed.has('icon') || changed.has('iconStyle')) this._card = undefined;
       if (this._card) {
         if (changed.has('hass') && this.hass) this._card.hass = this.hass;
         return;
       }
       if (!this._visible || !this.source || !customElements.get('magic-card')) return;
-      const doc = 'build' in this.source ? this.source.build() : this.source;
+      const doc = 'build' in this.source ? styleDoc(this.source, this.iconStyle) : this.source;
       const card = document.createElement('magic-card') as CardElement;
       try {
         card.setConfig({
@@ -148,6 +164,8 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       icon: {},
       entity: {},
       current: {},
+      iconStyle: {},
+      _style: { state: true },
       _query: { state: true },
       _domain: { state: true },
       _all: { state: true },
@@ -231,6 +249,21 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           font-size: 0.6875rem;
           color: var(--mc-text-2, var(--secondary-text-color, #5f6368));
         }
+        .lib-head {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+        .style {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .style .lbl {
+          font-size: 0.8125rem;
+        }
       `,
     ];
 
@@ -240,6 +273,9 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     entity = '';
     /** The tile that is on the module now: a My animations document id, or `lib:<entry id>`. */
     current = '';
+    /** The Style of the module's library icon (the control's start value). */
+    iconStyle = '';
+    private _style: IconStyle = DEFAULT_ICON_STYLE;
     private _query = '';
     private _domain = '';
     private _all = false;
@@ -257,6 +293,7 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     }
 
     protected willUpdate(changed: PropertyValues): void {
+      if (changed.has('iconStyle')) this._style = isStyle(this.iconStyle) ? this.iconStyle : DEFAULT_ICON_STYLE;
       if (changed.has('hass') && this.hass) h.library.ensure(this.hass as Parameters<typeof h.library.ensure>[0]);
     }
 
@@ -285,10 +322,51 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
       this.dispatchEvent(new CustomEvent('animated-icon-pick', { detail: pick, bubbles: true, composed: true }));
     }
 
-    private _tile(id: string, name: string, icon: string, label: string, source: LibraryEntry | AnimationDoc, pick: AnimatedIconPick): TemplateResult {
+    /** A new Style: the tiles preview it; the module's library icon (if any) is rebuilt in it. */
+    private _setStyle(style: IconStyle): void {
+      if (style === this._style) return;
+      this._style = style;
+      const cur = this.current.startsWith('lib:') ? ICON_LIBRARY.find((e) => `lib:${e.id}` === this.current) : undefined;
+      if (cur) this._emit({ kind: 'library', entry: cur, style, restyle: true });
+    }
+
+    private _styleControl(): TemplateResult {
+      const onKey = (e: KeyboardEvent) => {
+        const i = ICON_STYLES.indexOf(this._style);
+        const n = ICON_STYLES.length;
+        const to = ({ ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: n - 1 } as Record<string, number>)[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        const next = ICON_STYLES[(to + n) % n];
+        const group = e.currentTarget as HTMLElement;
+        this._setStyle(next);
+        void this.updateComplete.then(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
+      };
+      return html`<div class="style">
+        <span class="lbl" id="aig-style">Style</span>
+        <div class="seg" role="radiogroup" aria-labelledby="aig-style" aria-describedby="aig-style-help" @keydown=${onKey}>
+          ${ICON_STYLES.map((s) => {
+            const on = s === this._style;
+            return html`<button type="button" role="radio" data-val=${s} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => this._setStyle(s)}>
+              ${STYLE_LABELS[s]}
+            </button>`;
+          })}
+        </div>
+      </div>`;
+    }
+
+    private _tile(
+      id: string,
+      name: string,
+      icon: string,
+      label: string,
+      source: LibraryEntry | AnimationDoc,
+      pick: AnimatedIconPick,
+      style: IconStyle = DEFAULT_ICON_STYLE,
+    ): TemplateResult {
       return html`<li>
         <button type="button" class="entry" data-id=${id} title="${name} (${icon})" aria-pressed=${id === this.current ? 'true' : 'false'} @click=${() => this._emit(pick)}>
-          <mc-animated-icon-thumb .source=${source} .icon=${icon} .hass=${this.hass}></mc-animated-icon-thumb>
+          <mc-animated-icon-thumb .source=${source} .icon=${icon} .iconStyle=${style} .hass=${this.hass}></mc-animated-icon-thumb>
           <span class="nm">${name}</span>
           <span class="dm">${label}</span>
         </button>
@@ -342,10 +420,14 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
           : nothing}
         ${builtIns.length
           ? html`<section aria-labelledby="aig-lib">
-              <h3 id="aig-lib">Icon library</h3>
+              <div class="lib-head">
+                <h3 id="aig-lib">Icon library</h3>
+                ${this._styleControl()}
+              </div>
+              <p class="help" id="aig-style-help">${STYLE_HELP[this._style]}</p>
               ${intro}
               <ul class="grid" role="list">
-                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain), e, { kind: 'library', entry: e }))}
+                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain), e, { kind: 'library', entry: e, style: this._style }, this._style))}
               </ul>
               ${toggle}
             </section>`

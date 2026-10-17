@@ -1,5 +1,5 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, RigGroup, RigPart, RigShape, TargetRef, Track } from '../../anim-studio/model';
-import type { LibraryEntry } from '../../contracts/icon-library';
+import type { IconStyleHints, LibraryEntry } from '../../contracts/icon-library';
 import type { IconGeometry } from '../../icons/icon-source';
 import { splitIcon, type SplitPiece } from '../../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor } from '../icon-doc';
@@ -189,8 +189,8 @@ export const fold = (to: number, extra: KeyframeTransform = {}): AnimationKeyfra
 
 export const SPIN = (n = 1) => [t(0, { rotate: 0 }, { easing: 'linear' }), t(100, { rotate: 360 * n })];
 
-/** The library entry of a spec (a fresh document per build(), so editing one never changes the library). */
-export const entryOf = (s: Spec): LibraryEntry => ({ id: s.id, name: s.name, domain: s.domain, icon: s.icon, tags: s.tags, build: () => build(s) });
+/** The library entry of a spec (a fresh document per build(), so editing one never changes the library), with its Style hints. */
+export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({ id: s.id, name: s.name, domain: s.domain, icon: s.icon, tags: s.tags, build: () => build(s), ...(styles ? { styles } : {}) });
 
 const r3 = (v: number): number => Math.round(v * 1000) / 1000;
 type Channel = Exclude<keyof KeyframeTransform, 'axis'>;

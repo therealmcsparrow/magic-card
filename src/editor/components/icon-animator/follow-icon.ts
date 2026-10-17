@@ -118,6 +118,8 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
     const id = quickOf(m);
     const to = explicitIcon(m);
     if (!id || !old || old.type !== m.type || old.id !== m.id || quickOf(old) !== id || !to) continue;
+    // a library pick (library_icon): never re-split, it goes (libraryIconChanges)
+    if (entryOf(m)?.entry.library_icon) continue;
     const from = explicitIcon(old);
     if (from !== to) out.push({ path, from, to, id });
   }
@@ -126,8 +128,8 @@ export function iconChanges(prev: MagicCardConfig, next: MagicCardConfig): IconC
 
 /**
  * The modules whose library animation goes (`tpl`: the linked template's documents): the same icon
- * entry in `prev` and `next` (place, type, preset) playing a built-in document (its name is an
- * ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
+ * entry in `prev` and `next` (place, type, preset) playing a built-in document (its entry has
+ * `library_icon`, or its name is an ICON_LIBRARY entry's), a My animations reference or copy (MINE_PREFIX), and an own icon that
  * changed, Clear included.
  */
 export function libraryIconChanges(
@@ -143,7 +145,7 @@ export function libraryIconChanges(
     if (!old || old.type !== m.type || old.id !== m.id || entryOf(old)?.id !== e.id) continue;
     const mine = e.id.startsWith(MINE_PREFIX);
     const name = e.quick && !mine && storedDoc(next, tpl, e.id)?.doc.name;
-    if (e.quick && !mine && !ICON_LIBRARY.some((x) => x.name === name)) continue;
+    if (e.quick && !mine && !e.entry.library_icon && !ICON_LIBRARY.some((x) => x.name === name)) continue;
     const from = explicitIcon(old);
     const to = explicitIcon(m);
     if (from !== to) out.push({ path, from, to, id: e.id });

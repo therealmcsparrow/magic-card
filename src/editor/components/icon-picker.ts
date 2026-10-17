@@ -5,7 +5,7 @@ import { pickerStyles, iconPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { ModalDragResizeController } from '../controllers/modal-drag-resize';
 import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
-import { applyAnimatedIconPick, currentIconPick, loadIconAnimator } from './icon-animator/loader';
+import { applyAnimatedIconPick, currentIconPick, currentIconStyle, loadIconAnimator } from './icon-animator/loader';
 import { IconListItem, iconDisplayName, isIconId, loadIconList, searchIcons } from '../../utils/icon-list';
 
 /** Most rows the list renders at once (MDI alone has 7000+ icons): refine the search for the rest. */
@@ -61,7 +61,8 @@ export class IconPicker extends LitElement {
     if (!a) return;
     e.stopPropagation();
     void applyAnimatedIconPick(this, a.module, a.onModule, e.detail);
-    this._closeModal();
+    // a new Style for the module's library icon: the picker stays open
+    if (!(e.detail as { restyle?: boolean }).restyle) this._closeModal();
   }
 
   private _renderTabs(): TemplateResult {
@@ -85,7 +86,7 @@ export class IconPicker extends LitElement {
     }
     const m = a.module as CardModule & { entity?: string };
     return html`<mc-animated-icon-grid .hass=${this.hass} .icon=${this.value} .entity=${m.entity ?? ''}
-      .current=${currentIconPick(this, a.module)} @animated-icon-pick=${this._onAnimatedPick}></mc-animated-icon-grid>`;
+      .current=${currentIconPick(this, a.module)} .iconStyle=${currentIconStyle(a.module)} @animated-icon-pick=${this._onAnimatedPick}></mc-animated-icon-grid>`;
   }
 
   private _openModal(): void {
