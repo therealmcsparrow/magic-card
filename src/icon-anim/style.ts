@@ -352,7 +352,7 @@ export function parseRgb(c: string | undefined): Rgb | undefined {
  */
 // (r*.2126 + g*.7152 + b*.0722 - 152) / 16, written without a bare bracket (safeCssValue allows
 // function brackets only)
-const LIGHTNESS = 'clamp(0,r*.0133+g*.0447+b*.0045-9.5,1)';
+const LIGHTNESS = 'clamp(0, r * 0.0133 + g * 0.0447 + b * 0.0045 - 9.5, 1)';
 const BG = `var(${GLOW_BG_VAR},var(--ha-card-background,var(--card-background-color,#fff)))`;
 
 /** A colour that is `dark` on a dark card and `light` on a light one ([r, g, b, alpha]). */
@@ -360,7 +360,8 @@ export function cardSwitch(dark: [...Rgb, number], light: [...Rgb, number]): str
   const ch = (i: number): string => {
     const d = dark[i];
     const k = Math.round((light[i] - d) * 1000) / 1000;
-    return k ? `calc(${d}${k < 0 ? '-' : '+'}${Math.abs(k)}*${LIGHTNESS})` : String(d);
+    // CSS needs whitespace around + and - in math functions (else `255-245` is two numbers)
+    return k ? `calc(${d} ${k < 0 ? '-' : '+'} ${Math.abs(k)} * ${LIGHTNESS})` : String(d);
   };
   return `rgb(from ${BG} ${ch(0)} ${ch(1)} ${ch(2)} / ${ch(3)})`;
 }
