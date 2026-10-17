@@ -1,0 +1,104 @@
+# 3D printer: job progress in a ring, file name, time left and temperatures.
+# Entities: sensor.printer_progress, sensor.printer_time_left, sensor.printer_file,
+#           sensor.printer_nozzle, sensor.printer_bed
+type: custom:magic-card
+name: 3D printer
+background: "linear-gradient(160deg, #1a1d23 0%, #121418 100%)"
+border_radius: 24px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 18px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 104px
+              height: 104px
+              justify_content: center
+              shape: circle
+              background_color: "#20242c"
+              ring:
+                mode: value
+                entity: sensor.printer_progress
+                width: 8
+                glow: 8
+                color: "#f97316"
+                track_color: "rgba(255,255,255,0.06)"
+            modules:
+              - type: icon
+                icon: mdi:printer-3d-nozzle
+                size: 22px
+                design: { color: "#fdba74" }
+              - type: text
+                use_entity: true
+                entity: sensor.printer_progress
+                design: { font_size: 20px, font_weight: "800", color: "#ffffff" }
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Prusa MK4 · Printing
+            design: { font_size: 12px, font_weight: "700", color: "#f97316", text_transform: uppercase, letter_spacing: 1px }
+          - type: text
+            use_entity: true
+            entity: sensor.printer_file
+            design: { font_size: 17px, font_weight: "800", color: "#f8fafc", font_family: "'JetBrains Mono', monospace" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:timer-outline
+                size: 15px
+                design: { color: "#94a3b8" }
+              - type: text
+                use_entity: true
+                entity: sensor.printer_time_left
+                design: { font_size: 13px, font_weight: "600", color: "#cbd5e1" }
+              - type: text
+                text: left
+                design: { font_size: 13px, color: "#64748b" }
+  - id: temps
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            design: &cell { padding: 10px 12px, border_radius: 14px, background_color: "#1c2027", border: "1px solid rgba(249,115,22,0.15)" }
+            modules:
+              - type: icon
+                icon: mdi:printer-3d-nozzle-heat
+                size: 18px
+                design: { color: "#fb923c", animations: [{ preset: heat-shimmer }] }
+              - type: text
+                text: Nozzle
+                design: &lab { font_size: 12px, color: "#94a3b8", flex: "1" }
+              - type: text
+                use_entity: true
+                entity: sensor.printer_nozzle
+                design: &val { font_size: 14px, font_weight: "800", color: "#f8fafc" }
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            design: *cell
+            modules:
+              - type: icon
+                icon: mdi:radiator
+                size: 18px
+                design: { color: "#fbbf24" }
+              - type: text
+                text: Bed
+                design: *lab
+              - type: text
+                use_entity: true
+                entity: sensor.printer_bed
+                design: *val

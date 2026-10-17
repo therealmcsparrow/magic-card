@@ -1,0 +1,120 @@
+# Network: matrix rain behind the header, data flowing between the router and the internet in both directions, and sparklines of the last hours.
+# Entities: sensor.net_down, sensor.net_up, sensor.wan_ping, sensor.connected_devices
+type: custom:magic-card
+name: Network
+background: "#04110a"
+border_radius: 24px
+padding: 0px
+box_shadow: "0 18px 40px rgba(0, 0, 0, 0.6)"
+css: "font-family: 'Cascadia Code', Consolas, monospace;"
+rows:
+  - id: head
+    padding: 18px 20px
+    design:
+      background: "linear-gradient(180deg, rgba(34,197,94,0.10), rgba(34,197,94,0))"
+      animations:
+        - { id: matrix, preset: matrix-rain, color: "#22c55e", strength: 35, intensity: 12 }
+    column_widths: [auto, 1fr, auto]
+    gap: 0px
+    columns:
+      - vertical_align: center
+        modules:
+          - id: router
+            type: icon
+            icon: mdi:router-wireless
+            size: 26px
+            design:
+              color: "#4ade80"
+              width: 54px
+              height: 54px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 16px
+              border: "1px solid rgba(74,222,128,0.4)"
+              background_color: "rgba(4,17,10,0.85)"
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.wan_ping
+            design: { text_align: center, font_size: 12px, color: "#86efac", margin_top: 34px }
+      - vertical_align: center
+        modules:
+          - id: internet
+            type: icon
+            icon: mdi:web
+            size: 26px
+            design:
+              color: "#4ade80"
+              width: 54px
+              height: 54px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 16px
+              border: "1px solid rgba(74,222,128,0.4)"
+              background_color: "rgba(4,17,10,0.85)"
+              animations:
+                - { id: orbit, preset: orbit-dots, color: "#4ade80", strength: 90, intensity: 3 }
+  - id: speeds
+    layout: "1-1"
+    gap: 10px
+    padding: 4px 16px 16px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              padding: 12px 14px 20px
+              border_radius: 16px
+              background_color: "rgba(34,197,94,0.06)"
+              value_background: { type: sparkline, entity: sensor.net_down, hours: 12, color: "#22c55e", opacity: 30% }
+            modules:
+              - type: text
+                text: ↓ download
+                design: &lbl { font_size: 11px, color: "#4d7c5f" }
+              - type: text
+                use_entity: true
+                entity: sensor.net_down
+                design: &val { font_size: 18px, font_weight: "700", color: "#dcfce7" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              padding: 12px 14px 20px
+              border_radius: 16px
+              background_color: "rgba(34,197,94,0.06)"
+              value_background: { type: sparkline, entity: sensor.net_up, hours: 12, color: "#a3e635", opacity: 30% }
+            modules:
+              - type: text
+                text: ↑ upload
+                design: *lbl
+              - type: text
+                use_entity: true
+                entity: sensor.net_up
+                design: *val
+  - id: foot
+    padding: 0 20px 16px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 9px
+                design:
+                  color: "#22c55e"
+                  animations:
+                    - { id: blink, preset: fade-pulse, target: icon, duration: 1.4s }
+              - type: text
+                use_entity: true
+                entity: sensor.connected_devices
+                design: { font_size: 12px, color: "#86efac" }
+              - type: text
+                text: devices online
+                design: { font_size: 12px, color: "#4d7c5f" }
+flows:
+  - { id: down, from: internet, to: router, entity: sensor.net_down, max: 1000, color: "#22c55e", width: 2, dots: 4, dot_size: 5, glow: 6, route: straight }

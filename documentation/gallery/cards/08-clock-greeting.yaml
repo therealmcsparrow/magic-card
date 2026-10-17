@@ -1,0 +1,81 @@
+# Clock and greeting: a large clock on frosted glass over a dusk gradient.
+# The time and greeting are Home Assistant templates (they update every minute).
+# Entities: weather.home, sensor.outdoor_temperature
+type: custom:magic-card
+name: Clock
+background: "linear-gradient(135deg, #ff9a8b 0%, #ff6a88 45%, #a35bd6 100%)"
+border_radius: 30px
+padding: 10px
+box_shadow: "0 20px 44px rgba(255, 106, 136, 0.35)"
+rows:
+  - id: glass
+    padding: 22px
+    design:
+      border_radius: 24px
+      background_color: "rgba(255,255,255,0.16)"
+      backdrop_filter: blur(10px)
+      border: "1px solid rgba(255,255,255,0.35)"
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            use_template: true
+            text: "{{ 'Good morning' if now().hour < 12 else 'Good afternoon' if now().hour < 18 else 'Good evening' }}, Anna"
+            design: { font_size: 16px, font_weight: "600", color: "rgba(255,255,255,0.92)" }
+          - type: text
+            use_template: true
+            text: "{{ now().strftime('%H:%M') }}"
+            design:
+              font_size: 76px
+              font_weight: "200"
+              color: "#ffffff"
+              letter_spacing: -3px
+              line_height: "1.05"
+              font_variant: tabular-nums
+          - type: text
+            use_template: true
+            text: "{{ now().strftime('%A %-d %B') }}"
+            design: { font_size: 15px, color: "rgba(255,255,255,0.85)" }
+          - type: horizontal
+            gap: 10px
+            design: { margin_top: 16px }
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                design: &chip
+                  padding: 6px 12px
+                  border_radius: 999px
+                  background_color: "rgba(255,255,255,0.2)"
+                modules:
+                  - type: icon
+                    icon: mdi:weather-partly-cloudy
+                    size: 18px
+                    design: { color: "#ffffff" }
+                  - type: text
+                    use_entity: true
+                    entity: weather.home
+                    design: { font_size: 13px, font_weight: "600", color: "#ffffff" }
+              - type: horizontal
+                gap: 6px
+                align: center
+                design: *chip
+                modules:
+                  - type: icon
+                    icon: mdi:thermometer
+                    size: 18px
+                    design: { color: "#ffffff" }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.outdoor_temperature
+                    design: { font_size: 13px, font_weight: "600", color: "#ffffff" }
+      - vertical_align: start
+        modules:
+          - type: weather
+            entity: weather.home
+            show_temperature: false
+            show_condition: false
+            design:
+              css: "--mc-icon-size-xl: 84px;"
+              filter: "drop-shadow(0 10px 18px rgba(120,30,90,0.25))"

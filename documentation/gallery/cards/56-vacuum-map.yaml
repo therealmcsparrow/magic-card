@@ -1,0 +1,99 @@
+# Robot vacuum map: the robot drives a cleaning pattern across a little floor plan while it cleans, leaving a sparkle behind.
+# The route is a path animation stored in the card. It plays while the vacuum is cleaning.
+# Entities: vacuum.robot, sensor.vacuum_area, sensor.vacuum_time
+type: custom:magic-card
+name: Robot vacuum
+background: "#ffffff"
+border_radius: 28px
+padding: 18px
+box_shadow: "0 16px 36px rgba(15, 118, 110, 0.16)"
+custom_animations:
+  vacuum-route:
+    name: Vacuum route
+    kind: path
+    duration: 8
+    easing: linear
+    iterations: infinite
+    path:
+      d: "M0 0 L250 0 L250 34 L0 34 L0 68 L250 68 L250 100 L0 100 L0 0"
+      units: px
+      subject: icon
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Robbie is cleaning
+            design: { font_size: 17px, font_weight: "800", color: "#134e4a" }
+          - type: text
+            text: Living room · Turbo
+            design: { font_size: 12px, color: "#5f7c79" }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: vacuum.robot
+            attribute: battery_level
+            design: { font_size: 12px, font_weight: "800", color: "#0f766e", padding: 4px 10px, border_radius: 999px, background_color: "#ccfbf1" }
+  - id: map
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            align: start
+            design:
+              height: 150px
+              padding: 14px
+              border_radius: 20px
+              border: "2px solid #99f6e4"
+              background: "radial-gradient(circle, #cbd5e1 1px, transparent 1.5px) 0 0 / 16px 16px, linear-gradient(160deg, #f0fdfa, #ecfeff)"
+              animations:
+                - { id: sparkle, preset: twinkle, color: "#14b8a6", strength: 60, intensity: 6 }
+            modules:
+              - type: icon
+                entity: vacuum.robot
+                icon: mdi:robot-vacuum
+                size: 28px
+                design:
+                  color: "#0f766e"
+                  filter: "drop-shadow(0 4px 6px rgba(15,118,110,0.35))"
+                  animations:
+                    - { id: route, preset: custom:vacuum-route, target: icon, trigger: entity_on }
+  - id: stats
+    layout: "1-1-1"
+    gap: 8px
+    padding: 12px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.vacuum_area
+                design: &val { font_size: 16px, font_weight: "800", color: "#134e4a" }
+              - type: text
+                text: Cleaned
+                design: &lbl { font_size: 11px, color: "#5f7c79" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.vacuum_time
+                design: *val
+              - type: text
+                text: Running
+                design: *lbl
+      - modules:
+          - type: text
+            text: Dock
+            design: { text_align: center, padding: 9px, border_radius: 14px, font_size: 13px, font_weight: "800", color: "#ffffff", background: "linear-gradient(135deg, #14b8a6, #0f766e)" }
+            actions:
+              tap_action: { action: perform-action, service: vacuum.return_to_base, data: { entity_id: vacuum.robot } }

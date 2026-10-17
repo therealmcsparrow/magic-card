@@ -1,0 +1,77 @@
+# Kitchen timer: a countdown inside a ring that empties as the timer runs.
+# Entities: timer.pasta
+type: custom:magic-card
+name: Timer
+background: "#ffffff"
+border_radius: 30px
+padding: 22px
+box_shadow: "0 14px 34px rgba(234, 88, 12, 0.16)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:pasta
+                size: 20px
+                design: { color: "#ea580c" }
+              - type: text
+                text: Pasta
+                design: { font_size: 17px, font_weight: "800", color: "#431407" }
+      - vertical_align: center
+        modules:
+          - type: text
+            text: 12 min
+            design: { font_size: 12px, font_weight: "700", color: "#ea580c", padding: 3px 10px, border_radius: 999px, background_color: "#fff7ed" }
+  - id: ring
+    padding: 6px 0
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 190px
+              height: 190px
+              margin: 0 auto
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle, #fff7ed 0%, #ffedd5 100%)"
+              ring:
+                mode: value
+                entity: timer.pasta
+                timer_fill: remaining
+                width: 12
+                glow: 6
+                color: "#f97316"
+                track_color: "#fed7aa"
+            modules:
+              - type: text
+                use_entity: true
+                entity: timer.pasta
+                entity_display: remaining
+                design: { font_size: 44px, font_weight: "800", color: "#431407", font_variant: tabular-nums, letter_spacing: -1px }
+              - type: text
+                text: remaining
+                design: { font_size: 12px, color: "#c2410c", text_transform: uppercase, letter_spacing: 1.5px }
+  - id: actions
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: text
+            text: Pause
+            design: { text_align: center, padding: 11px, border_radius: 16px, font_size: 14px, font_weight: "800", color: "#c2410c", background_color: "#fff7ed" }
+            actions:
+              tap_action: { action: perform-action, service: timer.pause, data: { entity_id: timer.pasta } }
+      - modules:
+          - type: text
+            text: "+1 min"
+            design: { text_align: center, padding: 11px, border_radius: 16px, font_size: 14px, font_weight: "800", color: "#ffffff", background: "linear-gradient(135deg, #fb923c, #ea580c)", box_shadow: "0 8px 18px rgba(234,88,12,0.3)" }
+            actions:
+              tap_action: { action: perform-action, service: timer.change, data: { entity_id: timer.pasta, duration: "00:01:00" } }

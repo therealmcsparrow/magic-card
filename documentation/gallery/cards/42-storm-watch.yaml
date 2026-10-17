@@ -1,0 +1,122 @@
+# Storm watch: a live weather scene with rain and lightning behind the current conditions and three storm readings.
+# The scene follows the weather entity, so the card shows sun, clouds, snow or a night sky on other days.
+# Entities: weather.garden, sensor.rain_rate, sensor.wind_gust, sensor.lightning_distance
+type: custom:magic-card
+name: Storm watch
+background: "linear-gradient(170deg, #1e293b 0%, #0f172a 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 20px 44px rgba(2, 6, 23, 0.6)"
+seasonal:
+  scene: weather
+  weather_entity: weather.garden
+  intensity: 80%
+rows:
+  - id: now
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:alert
+                size: 15px
+                design:
+                  color: "#fb923c"
+                  animations:
+                    - { id: blink, preset: blink, duration: 1.6s, intensity: 70 }
+              - type: text
+                text: Code orange until 22:00
+                design: { font_size: 12px, font_weight: "700", color: "#fdba74", letter_spacing: 0.4px }
+          - type: text
+            use_entity: true
+            entity: weather.garden
+            attribute: temperature
+            design: { font_size: 56px, font_weight: "200", color: "#f8fafc", line_height: "1.05", letter_spacing: -2px }
+          - type: text
+            use_entity: true
+            entity: weather.garden
+            design: { font_size: 16px, font_weight: "600", color: "#cbd5e1" }
+      - vertical_align: center
+        modules:
+          - type: weather
+            entity: weather.garden
+            show_temperature: false
+            show_condition: false
+            animated_icons: true
+            design:
+              css: "--mc-icon-size-xl: 104px;"
+  - id: stats
+    layout: "1-1-1"
+    gap: 8px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: &stat
+              padding: 10px 6px
+              border_radius: 16px
+              background_color: "rgba(15,23,42,0.55)"
+              border: "1px solid rgba(148,163,184,0.18)"
+              backdrop_filter: blur(6px)
+            modules:
+              - type: icon
+                icon: mdi:weather-pouring
+                size: 20px
+                design:
+                  color: "#60a5fa"
+                  animations:
+                    - { id: drip, preset: bounce, target: icon, intensity: 3, duration: 1.2s }
+              - type: text
+                use_entity: true
+                entity: sensor.rain_rate
+                design: &val { font_size: 15px, font_weight: "700", color: "#f1f5f9" }
+              - type: text
+                text: Rain
+                design: &lbl { font_size: 11px, color: "#94a3b8" }
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: *stat
+            modules:
+              - type: icon
+                icon: mdi:weather-windy
+                size: 20px
+                design:
+                  color: "#a5f3fc"
+                  animations:
+                    - { id: sway, preset: sway, target: icon, intensity: 12, duration: 1.4s }
+              - type: text
+                use_entity: true
+                entity: sensor.wind_gust
+                design: *val
+              - type: text
+                text: Gusts
+                design: *lbl
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: *stat
+            modules:
+              - type: icon
+                icon: mdi:flash
+                size: 20px
+                design:
+                  color: "#facc15"
+                  animations:
+                    - { id: flicker, preset: neon-flicker, target: icon, color: "#facc15", intensity: 10 }
+              - type: text
+                use_entity: true
+                entity: sensor.lightning_distance
+                design: *val
+              - type: text
+                text: Lightning
+                design: *lbl

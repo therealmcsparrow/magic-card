@@ -1,0 +1,122 @@
+# Aquarium: fish swim back and forth through a tank with waves and bubbles, above the water temperature, pH and a spinning filter.
+# The swim is a keyframes animation stored in the card; the two fish play it at different speeds.
+# Entities: sensor.aquarium_temperature, sensor.aquarium_ph, switch.aquarium_pump, switch.aquarium_light
+type: custom:magic-card
+name: Aquarium
+background: "#ffffff"
+border_radius: 28px
+padding: 16px
+box_shadow: "0 16px 36px rgba(8, 145, 178, 0.2)"
+custom_animations:
+  fish-swim:
+    name: Fish swim
+    kind: keyframes
+    duration: 8
+    easing: ease-in-out
+    iterations: infinite
+    keyframes:
+      - { at: 0, transform: { x: 0, y: 0, scale_x: 1 } }
+      - { at: 22, transform: { x: 120, y: -8, scale_x: 1 } }
+      - { at: 46, transform: { x: 240, y: 4, scale_x: 1 } }
+      - { at: 50, transform: { x: 240, y: 4, scale_x: -1 } }
+      - { at: 74, transform: { x: 120, y: 10, scale_x: -1 } }
+      - { at: 96, transform: { x: 0, y: 0, scale_x: -1 } }
+      - { at: 100, transform: { x: 0, y: 0, scale_x: 1 } }
+rows:
+  - id: tank
+    columns:
+      - modules:
+          - type: vertical
+            gap: 6px
+            align: start
+            design:
+              height: 160px
+              padding: 26px 16px 0
+              border_radius: 20px
+              background: "linear-gradient(180deg, #67e8f9 0%, #0891b2 60%, #155e75 100%)"
+              animations:
+                - { id: waves, preset: ocean-waves, color: "#a5f3fc", strength: 35, intensity: 25 }
+                - { id: bubbles, preset: bubbles, color: "#ecfeff", strength: 70, intensity: 8 }
+                - { id: rays, preset: spotlight, strength: 30 }
+            modules:
+              - type: icon
+                icon: mdi:fish
+                size: 32px
+                design:
+                  color: "#fb923c"
+                  animations:
+                    - { id: swim, preset: custom:fish-swim, target: icon }
+              - type: icon
+                icon: mdi:fish
+                size: 24px
+                design:
+                  color: "#fde047"
+                  margin_left: 40px
+                  animations:
+                    - { id: swim, preset: custom:fish-swim, target: icon, duration: 11s, delay: -3s }
+              - type: icon
+                icon: mdi:sprout
+                size: 30px
+                design:
+                  color: "#22c55e"
+                  margin_left: 230px
+                  margin_top: -8px
+                  animations:
+                    - { id: sway, preset: sway, target: icon, intensity: 10, duration: 3s }
+  - id: stats
+    layout: "1-1-1"
+    gap: 8px
+    padding: 12px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: &stat { padding: 10px 6px, border_radius: 16px, background_color: "#ecfeff" }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.aquarium_temperature
+                design: &val { font_size: 16px, font_weight: "800", color: "#164e63" }
+              - type: text
+                text: Water
+                design: &lbl { font_size: 11px, color: "#5b8a96" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: *stat
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.aquarium_ph
+                design: *val
+              - type: text
+                text: pH
+                design: *lbl
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: *stat
+            actions:
+              tap_action: { action: toggle, entity: switch.aquarium_pump }
+            modules:
+              - type: horizontal
+                gap: 5px
+                align: center
+                modules:
+                  - type: icon
+                    entity: switch.aquarium_pump
+                    icon: mdi:fan
+                    size: 16px
+                    icon_fx:
+                      device: spin
+                    design: { color: "#0891b2" }
+                  - type: text
+                    use_entity: true
+                    entity: switch.aquarium_pump
+                    design: *val
+              - type: text
+                text: Filter
+                design: *lbl

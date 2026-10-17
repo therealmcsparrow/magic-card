@@ -1,0 +1,129 @@
+# Robot vacuum: status with orbiting dots while cleaning, battery, area and time,
+# and start / dock buttons.
+# Entities: vacuum.robot, sensor.vacuum_area, sensor.vacuum_time
+type: custom:magic-card
+name: Vacuum
+background: "linear-gradient(155deg, #1b1530 0%, #120e22 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 18px 40px rgba(76, 29, 149, 0.3)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 16px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: vacuum.robot
+            icon: mdi:robot-vacuum
+            size: 40px
+            design:
+              color: "#c4b5fd"
+              width: 84px
+              height: 84px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle at 50% 35%, #2e2152 0%, #1d1535 100%)"
+              animations:
+                - { preset: orbit-dots, color: "#a78bfa", trigger: state, state: cleaning, duration: 2.4s }
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Robbie
+            design: { font_size: 13px, font_weight: "600", color: "#9d8ec9" }
+          - type: text
+            use_entity: true
+            entity: vacuum.robot
+            design: { font_size: 26px, font_weight: "800", color: "#f5f3ff" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:battery-80
+                size: 16px
+                design: { color: "#4ade80" }
+              - type: text
+                use_entity: true
+                entity: vacuum.robot
+                attribute: battery_level
+                design: { font_size: 13px, font_weight: "700", color: "#4ade80" }
+              - type: text
+                text: "· Turbo"
+                design: { font_size: 13px, color: "#9d8ec9" }
+  - id: stats
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: &stat { padding: 10px 14px, border_radius: 16px, background_color: "rgba(255,255,255,0.05)" }
+            modules:
+              - type: text
+                text: Area
+                design: &lab { font_size: 11px, color: "#9d8ec9", text_transform: uppercase, letter_spacing: 1px }
+              - type: text
+                use_entity: true
+                entity: sensor.vacuum_area
+                design: &num { font_size: 18px, font_weight: "800", color: "#f5f3ff" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: *stat
+            modules:
+              - type: text
+                text: Time
+                design: *lab
+              - type: text
+                use_entity: true
+                entity: sensor.vacuum_time
+                design: *num
+  - id: actions
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 12px
+              border_radius: 16px
+              background: "linear-gradient(135deg, #8b5cf6, #6d28d9)"
+              box_shadow: "0 10px 22px rgba(139,92,246,0.35)"
+            actions:
+              tap_action: { action: perform-action, service: vacuum.pause, data: { entity_id: vacuum.robot } }
+            modules:
+              - type: icon
+                icon: mdi:pause
+                size: 20px
+                design: { color: "#ffffff" }
+              - type: text
+                text: Pause
+                design: { font_size: 14px, font_weight: "700", color: "#ffffff" }
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.06)"
+              border: "1px solid rgba(196,181,253,0.2)"
+            actions:
+              tap_action: { action: perform-action, service: vacuum.return_to_base, data: { entity_id: vacuum.robot } }
+            modules:
+              - type: icon
+                icon: mdi:home-import-outline
+                size: 20px
+                design: { color: "#c4b5fd" }
+              - type: text
+                text: Dock
+                design: { font_size: 14px, font_weight: "700", color: "#c4b5fd" }

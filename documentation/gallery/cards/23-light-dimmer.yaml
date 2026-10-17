@@ -1,0 +1,84 @@
+# Light dimmer: a glowing bulb in the light's own colour and a wide brightness slider.
+# Tap the bulb to toggle.
+# Entities: light.desk
+type: custom:magic-card
+name: Desk lamp
+background: "radial-gradient(130% 120% at 15% 0%, #2a1840 0%, #15101f 60%, #0f0c16 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 18px 40px rgba(124, 58, 237, 0.25)"
+rows:
+  - id: head
+    column_widths: [auto, 1fr, auto]
+    gap: 14px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: light.desk
+            icon: mdi:lightbulb
+            size: 30px
+            use_entity_color: true
+            design:
+              color: entity
+              width: 58px
+              height: 58px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background_color: "rgba(180,90,255,0.18)"
+              box_shadow: "0 0 30px rgba(180,90,255,0.45)"
+            actions:
+              tap_action: { action: toggle }
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Desk lamp
+            design: { font_size: 17px, font_weight: "800", color: "#f5f0ff" }
+          - type: text
+            text: Purple haze
+            design: { font_size: 13px, color: "#a78bfa" }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: light.desk
+            design: { font_size: 13px, font_weight: "700", color: "#f5f0ff", padding: 4px 10px, border_radius: 999px, background_color: "rgba(255,255,255,0.08)" }
+  - id: slider
+    columns:
+      - modules:
+          - type: slider
+            entity: light.desk
+            show_value: false
+            slider_color: "#b45aff"
+            design: { css: "filter: drop-shadow(0 0 10px rgba(180,90,255,0.45));" }
+  - id: presets
+    layout: "1-1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: separator
+            separator_style: none
+            design: { height: 30px, border_radius: 12px, background_color: "#ffb36b", border: "2px solid rgba(255,255,255,0.08)" }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.desk, color_temp_kelvin: 2700 } }
+      - modules:
+          - type: separator
+            separator_style: none
+            design: { height: 30px, border_radius: 12px, background_color: "#f5f5ff", border: "2px solid rgba(255,255,255,0.08)" }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.desk, color_temp_kelvin: 6000 } }
+      - modules:
+          - type: separator
+            separator_style: none
+            design: { height: 30px, border_radius: 12px, background_color: "#b45aff", border: "2px solid #ffffff", box_shadow: "0 0 14px rgba(180,90,255,0.6)" }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.desk, rgb_color: [180, 90, 255] } }
+      - modules:
+          - type: separator
+            separator_style: none
+            design: { height: 30px, border_radius: 12px, background_color: "#22d3ee", border: "2px solid rgba(255,255,255,0.08)" }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.desk, rgb_color: [34, 211, 238] } }

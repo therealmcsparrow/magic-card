@@ -1,0 +1,121 @@
+# Now playing: album art, title and artist, transport controls and a volume slider.
+# Entities: media_player.living_room
+type: custom:magic-card
+name: Now playing
+background: "linear-gradient(150deg, #3b1e5e 0%, #1a0b2e 55%, #0d0618 100%)"
+border_radius: 28px
+padding: 18px
+box_shadow: "0 20px 44px rgba(91, 33, 182, 0.35)"
+rows:
+  - id: art
+    column_widths: [120px, 1fr]
+    gap: 16px
+    columns:
+      - modules:
+          - type: image
+            entity: media_player.living_room
+            entity_picture: true
+            aspect_ratio: "1"
+            design:
+              border_radius: 18px
+              box_shadow: "0 12px 28px rgba(0,0,0,0.5)"
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:speaker
+                size: 14px
+                design: { color: "#c4b5fd" }
+              - type: text
+                text: Living room
+                design: { font_size: 11px, color: "#c4b5fd", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_title
+            design: { font_size: 22px, font_weight: "700", color: "#ffffff", line_height: "1.15" }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_artist
+            design: { font_size: 14px, color: "#d8ccf5" }
+  - id: controls
+    padding: 4px 6px
+    columns:
+      - modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:shuffle-variant
+                size: 22px
+                design: { color: "#8b7bb5", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.shuffle_set, data: { entity_id: media_player.living_room, shuffle: true } }
+              - type: icon
+                icon: mdi:skip-previous
+                size: 30px
+                design: { color: "#ffffff", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_previous_track, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:pause
+                size: 30px
+                design:
+                  color: "#1a0b2e"
+                  width: 62px
+                  height: 62px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#ffffff"
+                  box_shadow: "0 8px 26px rgba(167,139,250,0.55)"
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:skip-next
+                size: 30px
+                design: { color: "#ffffff", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:repeat
+                size: 22px
+                design: { color: "#8b7bb5", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.repeat_set, data: { entity_id: media_player.living_room, repeat: all } }
+  - id: volume
+    column_widths: [auto, 1fr, auto]
+    gap: 12px
+    padding: 0 6px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:volume-low
+            size: 18px
+            design: { color: "#8b7bb5" }
+      - vertical_align: center
+        modules:
+          - type: bar
+            entity: media_player.living_room
+            attribute: volume_level
+            min: 0
+            max: 1
+            show_value: false
+            bar_height: 6px
+            bar_color: "#c4b5fd"
+            bar_background: "rgba(255,255,255,0.12)"
+            design: { border_radius: 999px }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:volume-high
+            size: 18px
+            design: { color: "#8b7bb5" }

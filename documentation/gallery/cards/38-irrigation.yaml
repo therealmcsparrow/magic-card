@@ -1,0 +1,128 @@
+# Garden irrigation: soil moisture and rain today, and a toggle per zone.
+# Running zones turn blue with a ripple.
+# Entities: switch.zone_lawn, switch.zone_beds, switch.zone_hedge,
+#           sensor.soil_moisture, sensor.rain_today
+type: custom:magic-card
+name: Irrigation
+background: "linear-gradient(170deg, #ffffff 0%, #f0fbf5 100%)"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 14px 34px rgba(5, 150, 105, 0.14)"
+rows:
+  - id: head
+    column_widths: [1fr, auto, auto]
+    gap: 8px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Irrigation
+            design: { font_size: 17px, font_weight: "800", color: "#064e3b" }
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 4px
+            align: center
+            design: &chip { padding: 4px 10px, border_radius: 999px, background_color: "#ecfdf5" }
+            modules:
+              - type: icon
+                icon: mdi:water-percent
+                size: 14px
+                design: { color: "#059669" }
+              - type: text
+                use_entity: true
+                entity: sensor.soil_moisture
+                design: { font_size: 12px, font_weight: "700", color: "#065f46" }
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 4px
+            align: center
+            design: *chip
+            modules:
+              - type: icon
+                icon: mdi:weather-rainy
+                size: 14px
+                design: { color: "#0284c7" }
+              - type: text
+                use_entity: true
+                entity: sensor.rain_today
+                design: { font_size: 12px, font_weight: "700", color: "#075985" }
+  - id: zones
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design:
+              padding: 14px 6px
+              border_radius: 20px
+              background_color: "#f1f5f4"
+              conditional:
+                - id: running
+                  name: Running
+                  conditions: [{ type: state, entity: switch.zone_lawn, state: "on" }]
+                  design: { background: "linear-gradient(160deg, #38bdf8, #0284c7)", box_shadow: "0 10px 22px rgba(2,132,199,0.3)" }
+            actions:
+              tap_action: { action: toggle, entity: switch.zone_lawn }
+            modules:
+              - type: icon
+                entity: switch.zone_lawn
+                icon: mdi:sprinkler-variant
+                size: 28px
+                design:
+                  color: "#64748b"
+                  conditional:
+                    - { id: "on", name: "On", conditions: [{ type: state, state: "on" }], design: { color: "#ffffff" } }
+                  animations: [{ preset: water-ripple, trigger: entity_on, color: "#e0f2fe" }]
+              - type: text
+                text: Lawn
+                design:
+                  font_size: 13px
+                  font_weight: "800"
+                  color: "#334155"
+                  conditional:
+                    - { id: "on", name: "On", conditions: [{ type: state, entity: switch.zone_lawn, state: "on" }], design: { color: "#ffffff" } }
+              - type: text
+                text: 12 min left
+                display:
+                  conditions: [{ type: state, entity: switch.zone_lawn, state: "on" }]
+                design: { font_size: 11px, color: "#e0f2fe" }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design: &zone { padding: 14px 6px, border_radius: 20px, background_color: "#f1f5f4" }
+            actions:
+              tap_action: { action: toggle, entity: switch.zone_beds }
+            modules:
+              - type: icon
+                icon: mdi:flower-tulip-outline
+                size: 28px
+                design: { color: "#64748b" }
+              - type: text
+                text: Flower beds
+                design: &zname { font_size: 13px, font_weight: "800", color: "#334155" }
+              - type: text
+                text: "Next 06:00"
+                design: &znext { font_size: 11px, color: "#94a3b8" }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design: *zone
+            actions:
+              tap_action: { action: toggle, entity: switch.zone_hedge }
+            modules:
+              - type: icon
+                icon: mdi:pine-tree
+                size: 28px
+                design: { color: "#64748b" }
+              - type: text
+                text: Hedge
+                design: *zname
+              - type: text
+                text: "Next 06:20"
+                design: *znext

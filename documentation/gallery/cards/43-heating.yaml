@@ -1,0 +1,104 @@
+# Heating: the fire icon flickers like a flame while the thermostat heats, inside a temperature ring that glows and breathes.
+# The flame comes from the icon's Auto device animation, so it stops by itself when the heating goes idle.
+# Entities: climate.living_room
+type: custom:magic-card
+name: Heating
+background: "linear-gradient(170deg, #3a1a0e 0%, #1f0d06 100%)"
+border_radius: 30px
+padding: 22px
+box_shadow: "0 20px 44px rgba(124, 45, 18, 0.45)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Living room
+            design: { font_size: 17px, font_weight: "700", color: "#fff7ed" }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: climate.living_room
+            attribute: hvac_action
+            design: { font_size: 12px, font_weight: "700", color: "#fdba74", padding: 4px 10px, border_radius: 999px, background_color: "rgba(251,146,60,0.16)" }
+  - id: dial
+    padding: 18px 0 10px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 2px
+            design:
+              width: 196px
+              height: 196px
+              margin: 0 auto
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle, #4a200f 0%, #2a1108 100%)"
+              ring:
+                mode: value
+                entity: climate.living_room
+                attribute: current_temperature
+                min: 10
+                max: 30
+                width: 10
+                glow: 10
+                track_color: "rgba(251,146,60,0.14)"
+                thresholds:
+                  - { from: 10, color: "#38bdf8" }
+                  - { from: 18, color: "#fb923c" }
+                  - { from: 24, color: "#ef4444" }
+              animations:
+                - { id: aura, preset: aura, trigger: state, trigger_entity: climate.living_room, state: heat, color: "#f97316", strength: 45, intensity: 22 }
+                - { id: steam, preset: steam-rise, color: "#fed7aa", strength: 35, intensity: 4 }
+            modules:
+              - type: icon
+                entity: climate.living_room
+                icon: mdi:fire
+                size: 36px
+                icon_fx:
+                  device: auto
+                design: { color: "#fb923c" }
+              - type: text
+                use_entity: true
+                entity: climate.living_room
+                attribute: current_temperature
+                design: { font_size: 44px, font_weight: "300", color: "#ffffff", line_height: "1", letter_spacing: -1px }
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: text
+                    text: "Heating to"
+                    design: { font_size: 12px, color: "#fdba74" }
+                  - type: text
+                    use_entity: true
+                    entity: climate.living_room
+                    attribute: temperature
+                    design: { font_size: 12px, font_weight: "700", color: "#fdba74" }
+  - id: buttons
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:minus
+            size: 22px
+            design: &round
+              color: "#fed7aa"
+              padding: 12px
+              display: flex
+              justify_content: center
+              border_radius: 18px
+              background_color: "rgba(251,146,60,0.12)"
+            actions:
+              tap_action: { action: perform-action, service: climate.set_temperature, data: { entity_id: climate.living_room, temperature: 21 } }
+      - modules:
+          - type: icon
+            icon: mdi:plus
+            size: 22px
+            design: *round
+            actions:
+              tap_action: { action: perform-action, service: climate.set_temperature, data: { entity_id: climate.living_room, temperature: 22 } }

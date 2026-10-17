@@ -1,0 +1,143 @@
+# Ringing doorbell: the bell swings and its sound waves draw on while someone is at the door, with ripples behind it.
+# The bell is an icon animation stored in the card, so it plays without the Magic Card Utils integration.
+# Entities: binary_sensor.front_doorbell, camera.front_door, lock.front_door
+type: custom:magic-card
+name: Doorbell
+background: "linear-gradient(165deg, #2e2152 0%, #1a1233 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 44px rgba(76, 29, 149, 0.4)"
+custom_animations:
+  bell-ring:
+    name: Bell ring
+    kind: keyframes
+    duration: 1.6
+    iterations: infinite
+    target: icon
+    rig:
+      icon: mdi:bell-ring
+      parts:
+        - { id: bell, name: Bell, from: [0], origin: [12, 3] }
+        - { id: clapper, name: Clapper, from: [1], origin: [12, 18] }
+        - { id: wave-r, name: Right wave, from: [2] }
+        - { id: wave-l, name: Left wave, from: [3] }
+    tracks:
+      - target: part:bell
+        keyframes:
+          - { at: 0, transform: { rotate: 0 } }
+          - { at: 8, transform: { rotate: 16 } }
+          - { at: 18, transform: { rotate: -14 } }
+          - { at: 28, transform: { rotate: 10 } }
+          - { at: 38, transform: { rotate: -6 } }
+          - { at: 48, transform: { rotate: 0 } }
+          - { at: 100, transform: { rotate: 0 } }
+      - target: part:clapper
+        keyframes:
+          - { at: 0, transform: { x: 0 } }
+          - { at: 10, transform: { x: 2.2 } }
+          - { at: 20, transform: { x: -2.2 } }
+          - { at: 30, transform: { x: 1.4 } }
+          - { at: 40, transform: { x: -0.8 } }
+          - { at: 50, transform: { x: 0 } }
+          - { at: 100, transform: { x: 0 } }
+      - target: part:wave-r
+        keyframes:
+          - { at: 0, draw: 0, opacity: 0 }
+          - { at: 6, draw: 0, opacity: 1 }
+          - { at: 30, draw: 1, opacity: 1 }
+          - { at: 70, draw: 1, opacity: 0 }
+          - { at: 100, draw: 0, opacity: 0 }
+      - target: part:wave-l
+        keyframes:
+          - { at: 0, draw: 0, opacity: 0 }
+          - { at: 6, draw: 0, opacity: 1 }
+          - { at: 30, draw: 1, opacity: 1 }
+          - { at: 70, draw: 1, opacity: 0 }
+          - { at: 100, draw: 0, opacity: 0 }
+rows:
+  - id: bell
+    padding: 10px 0 4px
+    columns:
+      - modules:
+          - type: icon
+            entity: binary_sensor.front_doorbell
+            icon: mdi:bell-ring
+            size: 58px
+            design:
+              color: "#fbbf24"
+              width: 132px
+              height: 132px
+              margin: 0 auto
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background: "radial-gradient(circle, rgba(251,191,36,0.22) 0%, rgba(251,191,36,0.04) 70%)"
+              animations:
+                - id: ring
+                  preset: custom:bell-ring
+                  target: icon
+                  trigger: entity_on
+                - id: ripples
+                  preset: ripple-rings
+                  trigger: entity_on
+                  color: "#fbbf24"
+                  strength: 70
+                  intensity: 3
+  - id: text
+    gap: 4px
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Someone's at the door
+            design: { text_align: center, font_size: 21px, font_weight: "700", color: "#ffffff" }
+          - type: text
+            text: Front door · just now
+            design: { text_align: center, font_size: 13px, color: "#b8a9e0" }
+  - id: actions
+    layout: "1-1"
+    gap: 10px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            justify: center
+            align: center
+            design: &btn
+              padding: 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.08)"
+            actions:
+              tap_action: { action: more-info, entity: camera.front_door }
+            modules:
+              - type: icon
+                icon: mdi:cctv
+                size: 18px
+                design: { color: "#e9e3ff" }
+              - type: text
+                text: Camera
+                design: { font_size: 14px, font_weight: "700", color: "#e9e3ff" }
+      - modules:
+          - type: horizontal
+            gap: 8px
+            justify: center
+            align: center
+            design:
+              padding: 12px
+              border_radius: 16px
+              background: "linear-gradient(135deg, #fbbf24, #f59e0b)"
+              box_shadow: "0 8px 20px rgba(245,158,11,0.35)"
+              animations:
+                - { id: pulse, preset: glow-pulse, color: "#fbbf24", strength: 60, intensity: 12 }
+            actions:
+              tap_action: { action: perform-action, service: lock.unlock, data: { entity_id: lock.front_door } }
+            modules:
+              - type: icon
+                icon: mdi:lock-open-variant
+                size: 18px
+                design: { color: "#3b2300" }
+              - type: text
+                text: Unlock
+                design: { font_size: 14px, font_weight: "800", color: "#3b2300" }

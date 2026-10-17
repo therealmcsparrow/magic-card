@@ -1,0 +1,81 @@
+# Dishwasher: the icon tumbles like a drum while it washes, steam rises from the top, and a ring round the card fills with the progress.
+# Entities: sensor.dishwasher_state, sensor.dishwasher_progress, sensor.dishwasher_remaining
+type: custom:magic-card
+name: Dishwasher
+background: "#ffffff"
+border_radius: 30px
+padding: 22px
+box_shadow: "0 16px 36px rgba(15, 23, 42, 0.14)"
+ring:
+  mode: value
+  entity: sensor.dishwasher_progress
+  width: 5
+  glow: 6
+  color: "#0ea5e9"
+  track_color: "#e0f2fe"
+rows:
+  - id: drum
+    columns:
+      - modules:
+          - type: icon
+            entity: sensor.dishwasher_state
+            icon: mdi:dishwasher
+            size: 56px
+            icon_fx:
+              device: auto
+              colors: { style: duotone, primary: "#0369a1", secondary: "#7dd3fc" }
+            design:
+              width: 128px
+              height: 128px
+              margin: 0 auto
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: squircle
+              background: "linear-gradient(160deg, #f0f9ff, #e0f2fe)"
+              animations:
+                - { id: steam, preset: steam-rise, color: "#94a3b8", strength: 60, intensity: 5 }
+                - { id: bubbles, preset: bubbles, color: "#38bdf8", strength: 50, intensity: 5 }
+  - id: text
+    padding: 14px 0 0
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.dishwasher_state
+            design: { text_align: center, font_size: 22px, font_weight: "800", color: "#0f172a" }
+          - type: text
+            text: Eco 50° · ready at 20:31
+            design: { text_align: center, font_size: 13px, color: "#64748b" }
+  - id: stats
+    layout: "1-1"
+    gap: 10px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: &stat { padding: 10px, border_radius: 16px, background_color: "#f1f5f9" }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.dishwasher_progress
+                design: &val { font_size: 17px, font_weight: "800", color: "#0369a1" }
+              - type: text
+                text: Done
+                design: &lbl { font_size: 11px, color: "#64748b" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: *stat
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.dishwasher_remaining
+                design: *val
+              - type: text
+                text: To go
+                design: *lbl

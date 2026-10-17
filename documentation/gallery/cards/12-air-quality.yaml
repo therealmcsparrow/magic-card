@@ -1,0 +1,122 @@
+# Air quality: an index gauge with colour bands, three pollutant readings and a
+# 24-hour CO2 sparkline behind the bottom tile.
+# Entities: sensor.aqi, sensor.co2, sensor.pm25, sensor.voc
+type: custom:magic-card
+name: Air quality
+background: "linear-gradient(170deg, #10231d 0%, #0b1714 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Air quality
+            design: { font_size: 17px, font_weight: "700", color: "#ecfdf5" }
+          - type: text
+            text: Living room · Good
+            design: { font_size: 13px, color: "#6ee7b7" }
+      - modules:
+          - type: icon
+            icon: mdi:leaf
+            size: 22px
+            design:
+              color: "#6ee7b7"
+              width: 40px
+              height: 40px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background_color: "rgba(110,231,183,0.12)"
+  - id: gauge
+    columns:
+      - modules:
+          - type: gauge
+            entity: sensor.aqi
+            min: 0
+            max: 200
+            gauge_style: half
+            needle: false
+            show_name: false
+            show_unit: false
+            severity:
+              - { from: 0, color: "#34d399" }
+              - { from: 50, color: "#facc15" }
+              - { from: 100, color: "#fb923c" }
+              - { from: 150, color: "#f87171" }
+            design: { color: "#ecfdf5", max_width: 240px, margin: 0 auto }
+  - id: readings
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: &cell
+              padding: 10px 6px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.05)"
+            modules:
+              - type: text
+                text: CO₂
+                design: &lab { font_size: 11px, color: "#7fa596", text_transform: uppercase, letter_spacing: 1px }
+              - type: text
+                use_entity: true
+                entity: sensor.co2
+                design: &num { font_size: 15px, font_weight: "700", color: "#ecfdf5" }
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: *cell
+            modules:
+              - type: text
+                text: PM2.5
+                design: *lab
+              - type: text
+                use_entity: true
+                entity: sensor.pm25
+                design: *num
+      - modules:
+          - type: vertical
+            gap: 2px
+            align: center
+            design: *cell
+            modules:
+              - type: text
+                text: VOC
+                design: *lab
+              - type: text
+                use_entity: true
+                entity: sensor.voc
+                design: *num
+  - id: trend
+    columns:
+      - modules:
+          - type: horizontal
+            justify: space-between
+            align: start
+            design:
+              height: 70px
+              padding: 10px 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.03)"
+              value_background:
+                type: sparkline
+                entity: sensor.co2
+                hours: 24
+                color: "#34d399"
+                opacity: 22%
+                line_width: 2
+            modules:
+              - type: text
+                text: CO₂ · 24 h
+                design: { font_size: 12px, color: "#7fa596" }
+              - type: text
+                text: max 812 ppm
+                design: { font_size: 12px, color: "#7fa596" }

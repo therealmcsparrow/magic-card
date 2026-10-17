@@ -1,0 +1,100 @@
+# Party mode: a plasma background, a spinning conic border, the light cycling through the rainbow and an equalizer that bounces while music plays.
+# Entities: light.party, media_player.living_room
+type: custom:magic-card
+name: Party mode
+background: "#120a1f"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 20px 50px rgba(217, 70, 239, 0.3)"
+animations:
+  - { id: plasma, preset: plasma-gradient, strength: 45 }
+  - { id: border, preset: conic-border-spin, intensity: 2, strength: 90 }
+rows:
+  - id: head
+    column_widths: [auto, 1fr]
+    gap: 14px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: light.party
+            icon: mdi:party-popper
+            size: 30px
+            design:
+              color: "#ffffff"
+              width: 58px
+              height: 58px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 18px
+              background: "linear-gradient(135deg, #f0abfc, #8b5cf6)"
+              animations:
+                - { id: hue, preset: rainbow-hue, duration: 4s }
+                - { id: tada, preset: tada, target: icon, intensity: 8 }
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Party mode
+            design: { font_size: 22px, font_weight: "900", color: "#ffffff", letter_spacing: -0.5px }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: text
+                use_entity: true
+                entity: media_player.living_room
+                attribute: media_title
+                design: { font_size: 13px, font_weight: "600", color: "#f5d0fe" }
+              - type: text
+                text: ·
+                design: { font_size: 13px, color: "#a78bfa" }
+              - type: text
+                use_entity: true
+                entity: media_player.living_room
+                attribute: media_artist
+                design: { font_size: 13px, color: "#c4b5fd" }
+  - id: eq
+    padding: 16px 0 12px
+    columns:
+      - modules:
+          - type: separator
+            separator_style: none
+            design:
+              height: 56px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.05)"
+              animations:
+                - { id: bars, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: "#f0abfc", strength: 85, intensity: 12 }
+  - id: scenes
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: text
+            text: Disco
+            design: &pill { text_align: center, padding: 10px, border_radius: 14px, font_size: 13px, font_weight: "800", color: "#ffffff", background_color: "rgba(255,255,255,0.08)" }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.party, effect: Disco } }
+      - modules:
+          - type: text
+            text: Rainbow
+            design:
+              text_align: center
+              padding: 10px
+              border_radius: 14px
+              font_size: 13px
+              font_weight: "800"
+              color: "#1a0b2e"
+              background: "linear-gradient(90deg, #f472b6, #facc15, #4ade80, #60a5fa, #c084fc)"
+              animations:
+                - { id: shine, preset: shine-sweep, intensity: 60, duration: 2s }
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.party, effect: Rainbow } }
+      - modules:
+          - type: text
+            text: Strobe
+            design: *pill
+            actions:
+              tap_action: { action: perform-action, service: light.turn_on, data: { entity_id: light.party, effect: Strobe } }
