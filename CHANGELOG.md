@@ -6,10 +6,39 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
-### Performance
--   Dashboards load about 45 % less code. The card editor is now a separate file, `magic-card-editor.js`, that loads when you edit a card or open the animation studio. `magic-card.js` shrinks from 1.26 MB to 0.68 MB.
--   A new file, `magic-card-editor.js`, ships next to `magic-card.js`. With a manual install, copy it to the same folder. If it cannot be loaded, Home Assistant opens its YAML editor for the card instead.
--   After an update, hard refresh once. If the editor file and `magic-card.js` come from different versions, Home Assistant opens the YAML editor and the browser console asks you to reload the page.
+Each release now has eight files. Three are new: `magic-card-editor.js`, `magic-card-particles.js` and `magic-card-preset-catalogue.js`. HACS installs them with the card. With a manual install, copy all eight to the same folder. After the update, hard refresh once.
+
+### New
+-   Particles in the animation studio can do much more. Pick Baked loop (the default) or Live simulation. A baked loop works out every particle's path once and plays it as CSS, so a dashboard runs no script for it. Live simulation runs the physics on every dashboard that shows the card, only while the card is on screen. The studio warns that it uses more CPU, especially on wall tablets.
+-   Seven new particle flows: Fountain, Explode and fall, Wave, Swirl, Zigzag, Rain (with a Wind angle) and Fireflies, next to Fall, Rise, Drift, Burst, Orbit and Spiral.
+-   Eight built-in particle shapes (Circle, Square, Triangle, Star, Heart, Ring, Streak and Spark) next to an icon, an emoji or your own SVG. Mix up to four shapes and give each a weight. The editor shows the share each one gets.
+-   Ranges for particle speed, opacity, spin, start delay and lifetime: each particle picks its own value between From and To. A seed makes the loop the same every time, and Shuffle picks new random paths.
+-   Physics for particles: gravity in any direction, drag and turbulence. Particles can collide with the floor, the ceiling, the left and right edges and the card's icon or text box, with a bounce setting. Child particles spawn on a collision or at the end of a particle's life.
+-   Particle speeds are in % of the card's shorter side per second, so a motion looks the same on wide and narrow cards.
+-   A particles animation exports as an animated SVG of its baked loop. Icon and emoji particles export as dots.
+-   46 catalogue presets in seven themes: Fire & heat, Cleaning, Christmas, Halloween, Valentine, Home automation, and Light & colour. Among them are snow that settles on the floor, a leak that drips and splashes, soap bubbles that pop and New Year fireworks. They are in the animation studio and in the card editor's Preset list. A pick in the card editor stores the animation in the card as `cat-<id>`, so it plays without Magic Card Utils.
+-   Customise a preset in the animation studio shows every preset as a tile with a live mini card. Search also matches the group names. Tiles off screen stay still, and tap presets and heavy scenes play on hover or focus.
+-   The icon library grows from 107 to 192 animations: more lights, fire, cleaning, home automation, seasonal icons, and new Animal, Household, Maker and Seasonal categories.
+-   A Style switch in the icon picker's Animated icons tab plays library icons Quiet (one part moves, a little and slowly), Living (the full animation) or Glow (a soft outline round the lit part that follows light and dark themes).
+-   Item menus on the card, rows, columns, modules, layout children, tabs and row-module columns. Open them with a right-click, a long-press, Shift+F10 or the Menu key, in the tree and on the Studio canvas. New items: Copy YAML, Rename, Hide on dashboard, Copy module, Paste module after, Wrap in layout and Reset to template.
+-   Hide on dashboard sets `hidden: true`: the dashboard leaves the item out and the editor shows it dimmed. Rename gives a row, column or module a layer name (`editor_name`) that only the editor shows.
+-   A copied module pastes into another card too. Its YAML also goes to the system clipboard.
+-   The Studio canvas width follows the dashboard view: Narrow (400 px) for masonry, the card's share of a section for sections, Wide (800 px) for a sidebar view's main column, Panel for a panel view. Narrow, Wide and Panel replace Phone, Tablet and Desktop, and Match view returns to the detected width.
+-   The Light module has an optional Icon field with the full icon picker, Animated icons included. Empty keeps the light's own icon.
+-   The documentation has a [card gallery](documentation/gallery/README.md) of sixty cards with screenshots and YAML, twenty of them animated.
+
+### Improved
+-   Dashboards load about 46% less code. The card editor is now a separate file, `magic-card-editor.js`, that loads when you edit a card or open the animation studio. `magic-card.js` shrinks from 1.25 MB to 0.68 MB.
+-   If `magic-card-editor.js` cannot be loaded, Home Assistant opens its YAML editor for the card. If the editor file and `magic-card.js` come from different versions, Home Assistant opens the YAML editor and the browser console asks you to reload the page.
+-   The particle physics live in `magic-card-particles.js`, which only cards with such a particle animation load. While it loads, or when it is missing, the card plays a simpler version of the layer.
+-   The catalogue presets live in `magic-card-preset-catalogue.js`, which only the card editor and the animation studio load.
+-   In the Studio, the inspector's header and tabs stay at the top while its settings scroll. A tab switch starts the settings at the top.
+-   The Animate icon button and panel are gone from the Design tab and the Studio. Pick animated icons in the icon picker's Animated icons tab, and split an icon into parts or export an animated SVG in the animation studio. Cards that use an animation made with Animate icon keep playing it.
+-   Particle animations made with 2026.10.03 open and play unchanged.
+
+### Fixed
+-   Save to template left the card's overrides in place. After a successful save the card now shows In sync. Template animations hidden on the card stay hidden, and a failed save changes nothing.
+-   Security camera in the icon library: only the camera head pans now. The wall mount stays still.
 
 ## 2026.10.03 (2026-10-16)
 

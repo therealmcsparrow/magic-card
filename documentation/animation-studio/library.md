@@ -51,12 +51,21 @@ A new animation is not in the library until you save it. The editor marks it wit
 
 ## Customise a preset
 
-Customise a preset… (or From a preset on the empty page) opens a window with every built-in preset, grouped as in the card editor's animation picker, and a search field. Picking one opens it in the editor as a new animation:
+Customise a preset… (or From a preset on the empty page) opens a window with every preset as a tile. Each tile holds a small Magic Card (icon, name and background) that plays the preset, with its glow, border or particles. The tiles are grouped as in the card editor's Preset list: the built-in groups first, then the catalogue themes (Fire & heat, Cleaning, Christmas, Halloween, Valentine and Home automation). Catalogue presets in Light & colour sit in the built-in Light & colour group. Each heading shows how many tiles it holds.
 
--   Motion presets (rotation, position, scale, opacity, filter and glow) become keyframes animations. The keyframes are the preset's own at its default intensity, so you can edit every value.
--   Particle, ring, scene and seasonal presets become particles animations based on that preset. They keep the preset's look; you edit its parameter (count, width, density and so on), the colour and the timing. See [Particles based on a preset](particles.md#particles-based-on-a-preset).
+-   Search presets filters the tiles by name, id and group name, and for catalogue presets also by their tags. With several words, every word has to match. Groups without a match are hidden. When nothing matches, the window says "No presets match "…"" with a Clear search button.
+-   Only tiles on screen play. Tap presets (marked Tap) and heavy scenes, such as the seasonal scenes, stay still until you hover or focus the tile. The play button in the corner of such a tile plays it once, which helps on a touch screen.
+-   With reduced motion turned on, every tile stays still.
+-   Click a tile, or press Enter or Space on a focused one, to open the preset in the editor as a new animation.
+-   The catalogue comes from `magic-card-preset-catalogue.js`. If it cannot load, the window says "More presets could not load. The built-in presets still work."
 
-The name is the preset's name and the id is the preset id with `-custom`, for example `spin-custom`. Duration, easing, repeat, direction and transform origin are taken from the preset.
+What the new animation holds depends on the preset:
+
+-   Built-in motion presets (rotation, position, scale, opacity, filter and glow) become keyframes animations. The keyframes are the preset's own at its default intensity, so you can edit every value.
+-   Built-in particle, ring, scene and seasonal presets become particles animations based on that preset. They keep the preset's look; you edit its parameter (count, width, density and so on), the colour and the timing. See [Particles based on a preset](particles.md#particles-based-on-a-preset).
+-   Catalogue presets open as the full animation they are, keyframes or particles, with every setting editable.
+
+The name is the preset's name and the id is the preset id with `-custom`, for example `spin-custom` or `fire-sparkler-custom`. A built-in preset also passes on its duration, easing, repeat, direction and transform origin.
 
 ## Duplicate
 

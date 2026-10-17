@@ -17,7 +17,7 @@ A picker window opens on top of the editor. Close it with:
 
 ## Icon picker tabs
 
-The icon picker of the Icon, Info and Button modules has two tabs, Icons and Animated icons. Animated icons shows moving tiles of your saved icon animations and the built-in ones. See [Animated icons in the icon picker](../animation-studio/using-in-cards.md#animated-icons-in-the-icon-picker).
+The icon picker of the Icon, Info, Button and Light modules has two tabs, Icons and Animated icons. Animated icons shows moving tiles of your saved icon animations and the built-in ones. See [Animated icons in the icon picker](../animation-studio/using-in-cards.md#animated-icons-in-the-icon-picker).
 
 ## Moving and resizing
 

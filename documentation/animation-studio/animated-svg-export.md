@@ -1,6 +1,6 @@
 # Animated SVG export
 
-A keyframes animation of an icon can be saved as a standalone SVG file that plays by itself and loops. Use it outside Home Assistant: on a web page, in a README, in another app that shows SVG images. Inside Magic Card you do not need it, because cards play the animation directly.
+A keyframes animation of an icon can be saved as a standalone SVG file that plays by itself and loops. A particles animation can be saved the same way; see [Particles](particles.md#animated-svg-export). Use it outside Home Assistant: on a web page, in a README, in another app that shows SVG images. Inside Magic Card you do not need it, because cards play the animation directly.
 
 -   [Where to export](#where-to-export)
 -   [The Animated SVG view](#the-animated-svg-view)
@@ -73,7 +73,7 @@ A file has no entity and no card around it, so some parts of an animation cannot
 | 3D turns play flat in the SMIL fallback. | A key turns around the X or Y axis. The SMIL copy cannot. |
 | The file is N KB, larger than 256 KB. | The export still works; the file is just large. |
 
-Only keyframes animations export. Particles, paths and sequences do not.
+From this view only keyframes animations export. A particles animation has its own Animated SVG button under the particle preview, which saves its baked loop (see [Animated SVG export](particles.md#animated-svg-export) on the Particles page). Paths and sequences do not export.
 
 ## Using the file
 

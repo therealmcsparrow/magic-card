@@ -21,11 +21,11 @@ A light control: an icon that toggles the light, its name and state, and the con
 | Show color picker | `show_color` | boolean | `false` | A colour input. |
 | Show effects | `show_effect` | boolean | `false` | A select with the light's effects. |
 | Compact mode | `compact` | boolean | `false` | Only the icon and the name, without the state line. |
-| Icon effects | `icon_fx`, `icon_on`, `icon_off`, `svg` | | none | See [Icon effects](../../icon-effects/README.md). |
+| Icon effects | `icon_fx`, `icon_on`, `icon_off` | | none | See [Icon effects](../../icon-effects/README.md). |
 
 ## Behaviour
 
--   Pick an animated icon in the Icon field and it plays on the light's icon. When you change the icon later, the animation follows it or is removed, as on the other modules. See [Icon animations in cards](../../design/quick-icon-animator.md).
+-   Pick an animated icon in the Icon field and it plays on the light's icon. Library icons come in a Quiet, Living or Glow style. When you change the icon later, the animation follows it or is removed, as on the other modules. See [Icon animations in cards](../../design/quick-icon-animator.md).
 -   Tap the icon to turn the light on or off. The icon uses the light's own colour while it is on. A design text colour overrides it.
 -   The line under the name shows the brightness while a dimmable light is on, otherwise the light's state.
 -   Each control only appears when the light supports it (from its colour modes and effect list). The editor notes a control that is switched on but hidden for this light.

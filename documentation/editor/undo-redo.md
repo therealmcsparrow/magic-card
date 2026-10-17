@@ -23,7 +23,7 @@ Repeated actions on a column width handle are folded into one step:
 
 Not recorded:
 
--   Selection, the inspector tab, collapsed rows, the Form / YAML mode and the Studio device width.
+-   Selection, the inspector tab, collapsed rows, the Form / YAML mode and the Studio canvas width.
 -   Merging a linked template into the card when the editor opens or after a re-sync.
 
 Making a new change clears the redo steps.

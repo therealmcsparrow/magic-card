@@ -15,11 +15,13 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, and the row module has the layout presets, column widths and per-column settings of a card row.
 -   25 module types for content, controls, layout and advanced use (see [Modules](#modules)).
 -   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
--   Studio: a full-screen editor with layers, a clickable live canvas, device widths and keyboard shortcuts.
+-   Studio: a full-screen editor with layers, a clickable live canvas and keyboard shortcuts. The canvas is Narrow, Wide or Panel wide, picked from the dashboard view the card sits in.
+-   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Copy its YAML, copy and paste a module (also into another card), wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules.
--   More than 100 preset animations, several per element, with play conditions.
--   Animated icons: pick one of 107 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. The card stores the result itself, so it needs no integration.
--   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
+-   More than 100 preset animations, several per element, with play conditions, plus 46 themed catalogue presets (see [Catalogue presets](#catalogue-presets)).
+-   Animated icons: pick one of 192 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. Each ready-made one plays in a Quiet, Living or Glow style. The card stores the result itself, so it needs no integration.
+-   Animation studio: build your own keyframe, particle, path and sequence animations with a live preview, and use them on any card (needs the Magic Card Utils integration). Start from a preset in a grid of live tiles, start an icon animation from any icon or from the icon library, animate its parts with presets, export it as an animated SVG, draw shapes, animate a module's name, state and background separately, and drive animations from entity states and values.
+-   Particles with physics, built in the animation studio: 13 flows, a weighted mix of shapes, gravity in any direction, drag, turbulence, collisions with the card's edges and its icon or text, and child particles that spawn on a hit or at the end of a particle's life. A particle layer plays as a baked loop, so the dashboard runs no script for it, or as a live simulation.
 -   Value rings and animated rings that follow the border radius. A ring on a `timer` entity counts down live.
 -   Shapes: squircle, pill, circle, hexagon, octagon, notched corners, ticket, wave edge and blob outlines, with the border and ring drawn along them.
 -   Value backgrounds: a tank that fills up to an entity value, or a faint history sparkline behind the content.
@@ -42,15 +44,27 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` into the same folder. Magic Card loads them from there when they are needed.
+HACS also downloads the seven other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js` and `magic-card-preset-catalogue.js`. Magic Card loads them from there when they are needed.
 
 ### Manual
 
-1.  Download `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js` and `magic-card-icon-animator.js` from the [latest release](https://github.com/therealmcsparrow/magic-card/releases).
+1.  Download the eight files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases): `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js` and `magic-card-preset-catalogue.js`.
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-`magic-card-editor.js` holds the card editor and is loaded when you edit a card or open the animation studio; dashboards never load it. `magic-card-anim-runtime.js` is loaded by cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. `magic-card-animation-studio.js` is loaded by the animation studio, and the studio loads `magic-card-icon-library.js` when you start an icon animation. `magic-card-icon-animator.js` is loaded by the card editor when you open the icon picker's Animated icons tab; dashboards never load it. Keep all five next to `magic-card.js`.
+Only `magic-card.js` is a resource. The other files load from the same folder when something needs them:
+
+| File | Loaded by |
+| --- | --- |
+| `magic-card-editor.js` | The card editor, when you edit a card, and the animation studio. Dashboards never load it. |
+| `magic-card-anim-runtime.js` | Cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. |
+| `magic-card-particles.js` | Cards that play a particles animation with the newer particle settings (physics, collisions, child particles, shape mixes). Until it loads, or when it is missing, the card plays a simpler version of the same layer. |
+| `magic-card-animation-studio.js` | The animation studio in Magic Card Utils. |
+| `magic-card-icon-library.js` | The animation studio, when you start an icon animation. |
+| `magic-card-icon-animator.js` | The card editor, when you open the icon picker's Animated icons tab. Dashboards never load it. |
+| `magic-card-preset-catalogue.js` | The card editor's Animations list and the animation studio's Customise a preset window. Dashboards never load it. |
+
+Keep all eight files in one folder.
 
 ### Loading
 
@@ -86,15 +100,17 @@ The editor in the card dialog has these parts:
     General holds the item's own options, Actions the tap, hold and double-tap actions, Conditions the display conditions (on the card it also holds the conditional appearance rules), and Design the styling, animations and ring. The card's Flows tab holds its flow lines.
 -   Undo and redo buttons for every change (up to 50 steps). The keyboard shortcuts only work in the studio. The history is lost when Home Assistant's card dialog closes.
 
-The three-dot menus in the outline:
+Every item in the outline has a menu. Right-click it, long-press it on a touch screen, press Shift+F10 or the Menu key, or use its three-dot button. The same menu opens on the Studio canvas. Next to the add, duplicate, move, delete and design copy and paste items, it has:
 
--   Row: Add column, Duplicate row, Copy design, Paste design, Merge pasted design, Move up, Move down, Delete row.
--   Column: Add module, Copy design, Paste design, Merge pasted design, Delete column (not available for the last column).
--   Module: Edit, Move up, Move down, Move to (another column or layout slot), Duplicate, Copy design, Paste design, Merge pasted design, Delete. Layout modules also have Add module, Add tab (tabs) or Add column (row).
--   Tab: Add module, Rename, Move up, Move down, Delete tab (asks first when the tab holds modules; not available for the last tab).
--   Row-module column: Add module, Copy design, Paste design, Merge pasted design, Delete column (asks first when the column holds modules; not available for the last column).
+-   Copy YAML: the item's YAML on the clipboard.
+-   Rename: a layer name (`editor_name`) for a row, column or module. Only the editor shows it, in the tree, on the canvas and in the inspector. Renaming a tab changes its label, and renaming the card changes its `name`.
+-   Hide on dashboard: sets `hidden: true`. The dashboard leaves the item out, and the editor shows it dimmed with an eye-off mark.
+-   Copy module, Paste module after and Wrap in layout (Vertical, Horizontal, Row, Tabs or Slider layout) on modules. A copied module also pastes into another card.
+-   Reset to template, on a template-linked card.
 
-Keyboard in the outline: Up, Down, Home and End move focus between items, and Enter or Space selects the focused item. Right expands a collapsed row, or moves to the first column of an expanded row. Left collapses a row, or moves from a column or module to its parent. Delete removes the focused module (or tab or row-module column), Alt+Up and Alt+Down move a module, tab or row, F2 renames a tab, and the Menu key (or Shift+F10) opens the three-dot menu.
+See [Item menus](documentation/editor/item-menus.md) for the full list per item.
+
+Keyboard in the outline: Up, Down, Home and End move focus between items, and Enter or Space selects the focused item. Right expands a collapsed row, or moves to the first column of an expanded row. Left collapses a row, or moves from a column or module to its parent. Delete removes the focused item (a row's only column and a Tabs module's only tab stay), Alt+Up and Alt+Down move a module, tab or row, Ctrl+D duplicates a module or row, F2 renames any item, and the Menu key (or Shift+F10) opens its menu.
 
 ### Studio
 
@@ -102,8 +118,8 @@ Open it with Open studio. It is a full-screen dialog with:
 
 -   Layers on the left: the same outline as the pane editor, with an Add module row under every column. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas.
 -   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas. The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
--   The inspector on the right, with the same tabs as in the pane editor.
--   A device width switch: Phone (360 px), Tablet (560 px) and Desktop (760 px).
+-   The inspector on the right, with the same tabs as in the pane editor. Its header and tab bar stay at the top while the settings below them scroll, and a tab switch starts the settings at the top.
+-   A canvas width switch: Narrow (400 px), Wide (800 px) and Panel (the whole canvas). When the Studio opens it picks the width that matches the dashboard view: masonry, sections (scaled to the card's columns), panel or sidebar. Pick another width to override it, and Match view to go back. See [Canvas width](documentation/studio/device-widths.md).
 -   The Form and YAML switch, the template bar, and undo and redo buttons.
 
 A floating bar next to the selected module moves it up or down, duplicates it, deletes it, or adds a flow line from it: choose Add flow from here, then click the module the flow goes to (Escape cancels). The new flow opens in Card settings, Flows. Click a flow line on the canvas to select it there; the selected flow is highlighted on the canvas. Connecting on the canvas needs a mouse or touch; with a keyboard, use the Flows tab in Card settings.
@@ -114,9 +130,11 @@ Keyboard shortcuts:
 | --- | --- |
 | Ctrl/Cmd+Z | Undo (not while typing in a field) |
 | Ctrl/Cmd+Y or Ctrl/Cmd+Shift+Z | Redo |
-| Alt+Up / Alt+Down | Move the selected module up or down (canvas focused) |
-| Delete or Backspace | Delete the selected module (canvas focused) |
-| Ctrl/Cmd+D | Duplicate the selected module (canvas focused) |
+| Alt+Up / Alt+Down | Move the selected module, row, tab or row-module column (canvas focused) |
+| Delete or Backspace | Delete the selected module, row or column (canvas focused) |
+| Ctrl/Cmd+D | Duplicate the selected module or row (canvas focused) |
+| Shift+F10 or the Menu key | Open the selection's item menu (canvas focused) |
+| F2 | Rename the selection in Layers (canvas focused) |
 | Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. |
 | Arrow keys, Home, End in Layers | Move between items |
 
@@ -132,7 +150,7 @@ A template is a saved copy of a card that other cards can link to. The template 
 -   Fields you change on a linked card become overrides (recorded in `not_synced` lists) and stay local. Everything else follows the template, so editing the template updates every linked card.
 -   The template's own animations (`custom_animations`) play on every linked card. They merge with the card's own documents by id: a card document with the same id replaces the template's on that card, `hidden_animations` leaves single ones out, and `custom_animations` in `not_synced` makes the card use only its own. The card's Design tab lists them with Hide, Show and Use template.
 -   Re-sync clears the local overrides and hidden animations and takes the template's values again.
--   Save to template writes the card's content back to the template. If saving fails, the error only appears in the browser console.
+-   Save to template writes the card's content back to the template. After a successful save the card's overrides are cleared and the bar shows "In sync". Template animations hidden on this card stay hidden. If saving fails, nothing changes and the error only appears in the browser console.
 -   Add row on a linked card asks whether to update the linked cards as well.
 -   Unlink from template detaches the card. The template animations it played become its own.
 
@@ -144,7 +162,7 @@ Templates are stored by the `magic_card_utils` backend integration (WebSocket co
 
 ### Copy and paste design
 
-Rows, columns and modules have Copy design, Paste design and Merge pasted design in their three-dot menu, and Copy design and Paste design at the top of the Design tab (Paste design there opens a menu with Replace design and Merge into design). The card's own Design tab has no copy or paste. Paste either replaces the target's design or merges into it. The copy is kept in the browser and also placed on the system clipboard as YAML, so you can paste between cards and dialogs.
+Rows, columns and modules have Copy design, Paste design and Merge pasted design in their item menu, and Copy design and Paste design at the top of the Design tab (Paste design there opens a menu with Replace design and Merge into design). The card's own Design tab has no copy or paste. Paste either replaces the target's design or merges into it. The copy is kept in the browser and also placed on the system clipboard as YAML, so you can paste between cards and dialogs.
 
 ## Card structure
 
@@ -160,6 +178,7 @@ card
 -   A module is one element. Every module has `type`, an optional `entity`, and the shared keys `design`, `actions` and `display`.
 -   Layout modules hold more modules: `horizontal` and `vertical` have `modules`, `row` has `columns[].modules`, `tabs` has `tabs[].modules`, and `slider-layout` shows each child in `modules` as a slide. They nest to any depth, and every child supports design, actions and conditions as well. A `row` module works like a card row: `layout`, `column_widths`, `gap` and `padding` on the module, and `id`, `gap`, `padding`, `vertical_align`, `display` and `design` on each column. Older row modules keep working.
 -   `id` fields on rows, columns and modules are optional in YAML. The card generates stable ids when they are missing.
+-   `hidden: true` on a row, column, module, tab or row-module column leaves it out on the dashboard. `editor_name` gives a row, column or module a layer name that only the editor shows. See [Item menus](documentation/editor/item-menus.md#hide-on-dashboard).
 
 Card-level options:
 
@@ -326,6 +345,12 @@ Presets, grouped as in the editor:
 -   Seasonal: `winter`, `spring`, `summer`, `autumn`, `christmas`, `new_year`, `valentine`, `easter`, `halloween`, `weather`, `daynight`, `snow`, `rain`, `storm`, `sun`, `clouds`, `fog`, `wind`, `night`, `dusk` (see [Seasonal scenes](#seasonal-scenes))
 -   Interaction: `tap-ripple`, `press` (both play when the pointer goes down, also on elements without a tap action)
 
+### Catalogue presets
+
+The Preset list also offers 46 catalogue presets in seven themes: Fire & heat, Cleaning, Christmas, Halloween, Valentine, Home automation, and Light & colour. The Light & colour ones join the built-in Light & colour group, and each other theme has its own group. They include snow that settles on the card's floor, a leak that drips and splashes, soap bubbles that pop and New Year fireworks.
+
+A catalogue preset is a complete animation. When you pick one, the editor copies it into the card's `custom_animations` as `cat-<id>`, and the entry plays it as `preset: custom:cat-<id>`. The card plays its own copy, so it works without Magic Card Utils. The editor removes a copy once no entry plays it. The catalogue is a separate file, `magic-card-preset-catalogue.js`, that the card editor and the animation studio load. Dashboards never load it. See [Catalogue presets](documentation/design/animations.md#catalogue-presets).
+
 ### My animations
 
 With the [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration installed, you can build your own animations in its animation studio (the sidebar panel, Animations tab). They are stored in Home Assistant and shared by every card. Each one is keyframes, particles, a path or a sequence.
@@ -343,7 +368,7 @@ design:
 -   Leave the timing fields empty to use the animation's own values. Anything you set (`duration`, `delay`, `easing`, `iterations`, `direction`, `color`, `strength`, `target`, `trigger`) overrides it, as with presets. `intensity` is the amplitude in %, where 100 plays it as drawn.
 -   `target` is optional. Without it the animation moves what it was built for: the element or the module's icon.
 -   `entity` is for animations with state clips or value bindings: the entity they read instead of the module's (the editor's Entity for states and values).
--   The icon picker of the Icon, Info and Button modules has an Animated icons tab with your saved icon animations and the 107 built-in ones. A click sets the icon and its animation in one step.
+-   The icon picker of the Icon, Info, Button and Light modules has an Animated icons tab with your saved icon animations and the 192 built-in ones. A click sets the icon and its animation in one step.
 -   When you edit an animation in the studio, every card that uses it updates live.
 
 Sharing a card. The YAML only holds the reference. To share a card with someone who does not have your animations, open the YAML view and use Copy YAML with Embed my animations on. This adds a `custom_animations:` list with the documents the card uses, including the steps of sequences. A card plays its embedded copy whenever the library lacks that id, for example on another Home Assistant or without the integration. Without the library or an embedded copy, the reference plays nothing and the editor says why.
@@ -353,6 +378,7 @@ Sharing a card. The YAML only holds the reference. To share a card with someone 
 Icons are animated through the icon picker's Animated icons tab and the animation studio. The Design tab no longer has an Animate icon button. Cards that use an animation made with it keep playing it.
 
 -   A pick from the icon library adds an entry `preset: custom:quick-icon-…` with `target: icon` to the module and stores the animation in the card's `custom_animations`, so it plays without Magic Card Utils.
+-   The Style switch above the icon library tiles plays them Quiet (one part moves, a little and slowly), Living (the full animation, the default) or Glow (the full animation with a soft outline round the lit part). The tile you click is stored in that Style.
 -   To split a module's icon into parts, give each part a preset or export an animated SVG file, use the animation studio in Magic Card Utils. Saved icon animations show in the Animated icons tab under My animations.
 -   An animation of the module's own icon follows that icon: give the module another icon in the editor and, about a second later, the animation moves onto the new icon's parts. A library animation is removed instead.
 
@@ -362,20 +388,22 @@ The Light module's Icon field is optional: empty keeps the light's own icon. The
 
 The animation studio is a full-screen editor for your own animations. It runs in the sidebar panel of the [Magic Card Utils](https://github.com/therealmcsparrow/magic-card-utils) integration (2026.10.04 or newer), on the Animations tab, and loads `magic-card-animation-studio.js` from the same folder as your `magic-card.js` resource. Every release attaches that file.
 
--   Four kinds: keyframes on a timeline with an easing curve editor, particles (dots, icons, emoji or your own SVG), motion along a path you draw on the preview, and sequences of animations one after another.
+-   Four kinds: keyframes on a timeline with an easing curve editor, particles, motion along a path you draw on the preview, and sequences of animations one after another.
+-   Particles: a mix of up to four shapes with weights (circle, square, triangle, star, heart, ring, streak, spark, an icon, an emoji or your own SVG), 13 flows, ranges for speed, size, opacity, spin, start delay and lifetime, and a seed with a Shuffle button for new random paths. Physics adds gravity in any direction, drag and turbulence, collisions with the card's edges or its icon or text, and child particles that spawn on a hit or at the end of a particle's life.
+-   Baked loop or Live simulation: a baked loop works out every path once in the studio and plays it as CSS, so dashboards run no script for it. Live simulation runs the physics on every dashboard that shows the card and uses more CPU. It runs only while the card is on screen.
 -   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. It works on a tablet.
 -   A timeline with a group of lanes per target, zoom up to 1000%, snapping, multi-select and group drag, easing per property, and copy and paste between lanes and targets.
 -   Icon parts: split an icon into its shapes, group and merge them, set pivots, and animate each part, with draw-on and motion paths. A part preset's pivot shows on the stage and in the inspector, where you can move it or reset it to the part's own.
--   Icon animations: New animation, then Icon animation…, splits any icon for you, or starts from one of 107 animations in the icon library (search, a domain filter and live thumbnails). Part presets animate a part, group or shape with one click, with parameters for duration share, delay, intensity and direction.
--   Animated SVG: Save as icon also exports the animation as a looping SVG file, with CSS keyframes and a SMIL fallback.
+-   Icon animations: New animation, then Icon animation…, splits any icon for you, or starts from one of 192 animations in the icon library (search, a domain filter and live thumbnails). Part presets animate a part, group or shape with one click, with parameters for duration share, delay, intensity and direction.
+-   Animated SVG: Save as icon also exports the animation as a looping SVG file, with CSS keyframes and a SMIL fallback. A particles animation exports its baked loop from the Animated SVG button under the particle preview. Icon and emoji particles become dots in the file.
 -   Drawing: pen, line, rectangle, ellipse and freehand tools with snapping. Shapes animate like parts. Save the result as an SVG icon for any card, or import an SVG file.
 -   Card parts: move a module's name, state, icon and background separately.
 -   States and values: play something else per entity state, with a cut, crossfade or finish-cycle transition, and tie rotation, position, scale, opacity, draw-on, colour or speed to an entity value. A capsule on the stage previews states and values.
 -   A live preview on a real Magic Card: icon, button, text or card tile, light or dark card, speed, play, pause and scrub, and a reduced-motion preview.
--   A library with search, duplicate, rename, delete and YAML export and import. Customise a preset turns any built-in preset into your own animation.
+-   A library with search, duplicate, rename, delete and YAML export and import. Customise a preset shows every built-in and catalogue preset as a live mini card, grouped by theme, with a search that also matches the group names. A click turns the preset into your own animation.
 -   Undo and redo, a warning before you leave unsaved changes, and keyboard shortcuts.
 
-Cards load the extra code for icon parts, shapes, card parts, clips and bindings from `magic-card-anim-runtime.js`, only when an animation on the page uses them. Keep that file next to `magic-card.js` (see [Installation](#installation)). The resource must be a JavaScript module (see [Loading](#loading)).
+Cards load the extra code for icon parts, shapes, card parts, clips and bindings from `magic-card-anim-runtime.js`, and the particle physics from `magic-card-particles.js`, only when an animation on the page uses them. Keep those files next to `magic-card.js` (see [Installation](#installation)). The resource must be a JavaScript module (see [Loading](#loading)).
 
 The [animation studio documentation](documentation/animation-studio/README.md) covers every part, including the [YAML format](documentation/animation-studio/yaml.md) of an animation.
 
@@ -993,7 +1021,8 @@ rows:
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The card editor, the Animated icons tab, the animation studio or its icon library cannot be loaded. A file next to `magic-card.js` is missing. Each release has seven files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js` and `magic-card-preset-catalogue.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has eight files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js` and `magic-card-preset-catalogue.js`. With a manual install, copy all of them to the same folder, then hard refresh. The icon library window has a Try again button once the file is there.
+-   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
 ## Development

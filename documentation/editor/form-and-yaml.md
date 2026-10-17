@@ -19,7 +19,7 @@ YAML mode replaces the outline and inspector with Home Assistant's YAML editor. 
 -   Invalid YAML is not applied. Home Assistant's YAML editor shows the error.
 -   `type` cannot be changed here. Whatever you type, the card keeps `type: custom:magic-card`.
 
-In the Studio, YAML mode replaces the canvas with the YAML editor and hides the device width switch. Layers and the inspector stay. See [Studio layout](../studio/layout-and-toolbar.md#yaml-mode).
+In the Studio, YAML mode replaces the canvas with the YAML editor and hides the canvas width switch. Layers and the inspector stay. See [Studio layout](../studio/layout-and-toolbar.md#yaml-mode).
 
 For the config keys themselves, see [YAML](../yaml/README.md).
 
