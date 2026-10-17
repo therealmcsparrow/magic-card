@@ -9,10 +9,11 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ### Fixed
 -   Imported themes keep their light and dark values in the theme editor. The Light and Dark switch works again, and the picker labels such a theme "Light + dark" instead of "Same in light and dark".
 -   Files that Home Assistant can read but the editor cannot, such as files with YAML anchors and aliases (`&anchor` and `*alias`) or files with several themes, now open from Home Assistant's copy of the theme. The file itself does not change and stays read only.
--   Try on dashboard follows light and dark. When Home Assistant switches mode, including Auto when the system switches, the dashboard switches too and uses the theme's own values for that mode.
--   Try on dashboard shows Home Assistant's default for every value the theme does not set, so values from your own profile theme no longer show through.
+-   Try on dashboard follows light and dark, also while you look at a dashboard with the editor closed. When Home Assistant switches mode, including Auto when the system switches, the dashboard switches too and uses the theme's own values for that mode.
+-   Try on dashboard shows Home Assistant's default for every value your profile theme sets and the trial theme does not, so values from your own profile theme no longer show through. Home Assistant's own dark defaults stay.
 -   Try on dashboard tells the browser which mode it is in, so form controls and scrollbars match the theme.
--   Try on dashboard keeps imported values as the file has them. An imported gradient background shows instead of being dropped.
+-   Try on dashboard keeps imported values as the file has them. An imported gradient background shows instead of being dropped, and card-mod values still reach the dashboard.
+-   Copying an installed theme uses its file whenever the file holds values, also for a file in a subfolder. If neither the file nor Home Assistant has the values, the editor shows an error instead of an empty copy.
 
 ## 2026.10.08 (2026-10-17)
 
