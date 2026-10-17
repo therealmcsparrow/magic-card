@@ -5,6 +5,7 @@ import {
   isCustomRef,
   type AnimationDoc,
 } from '../../../anim-studio/model';
+import { CATALOGUE_DOC_PREFIX } from '../../../contracts/preset-catalogue';
 
 /*
  * Config edits for icon animations stored in the card (pure; the icon picker's Animated icons tab,
@@ -153,7 +154,7 @@ export function withoutQuickEntry(list: AnimationConfig[]): AnimationConfig[] {
 type Inline = MagicCardConfig['custom_animations'];
 
 /**
- * The inline documents without the animator's own (`quick-*`) ones nothing references any more
+ * The inline documents without the animator's own (`quick-*`) and catalogue picks (`cat-*`) nothing references any more
  * (`refs`: the card's custom ids), except `keep`; `also`: one more unreferenced id to drop.
  */
 function pruned(raw: Inline, refs: string[], keep?: string, also?: string): Inline | undefined {
@@ -162,7 +163,7 @@ function pruned(raw: Inline, refs: string[], keep?: string, also?: string): Inli
     typeof id === 'string' &&
     id !== keep &&
     !used.has(id) &&
-    (id.startsWith(QUICK_PREFIX) || id === also);
+    (id.startsWith(QUICK_PREFIX) || id.startsWith(CATALOGUE_DOC_PREFIX) || id === also);
   if (Array.isArray(raw)) {
     const list = raw.filter((d) => !drop(d?.id));
     return list.length ? list : undefined;

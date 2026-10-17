@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import type { AnimatedIconPick } from './animated-icon-grid';
-import type { CardModule, MagicCardConfig } from '../../../types';
+import type { AnimationConfig, CardModule, MagicCardConfig } from '../../../types';
+import type { CataloguePreset } from '../../../contracts/preset-catalogue';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-system';
 import { readAnimations } from '../../../utils/animation';
@@ -35,11 +36,15 @@ export type IconAnimatorHost = typeof host;
 
 /**
  * After an edit of a card with icon animation entries (editor-state updateConfig): "This icon"
- * animations follow their module's new icon, library ones go, in the chunk (follow-icon.ts).
+ * animations follow their module's new icon, library ones go, in the chunk (follow-icon.ts); inline
+ * catalogue copies nothing plays any more go (catalogue-pick.ts).
  */
 export const followIcons = (sm: CardState, prev: MagicCardConfig, next: MagicCardConfig): void =>
   void import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
-    .then((m) => m.followIcons(host, sm, prev, next))
+    .then((m) => {
+      m.followIcons(host, sm, prev, next);
+      m.pruneCatalogue(host, sm);
+    })
     .catch(() => {});
 
 let pending: Promise<boolean> | undefined;
@@ -83,3 +88,20 @@ export const currentIconPick = (from: EventTarget, module: CardModule): string =
 
 /** The Style of the module's library icon (after loadIconAnimator resolved; Living before). */
 export const currentIconStyle = (from: EventTarget, module: CardModule): string => chunk?.currentIconStyle(host, from, module) ?? 'living';
+
+/**
+ * A catalogue preset picked in the Animations dropdown (preset-catalogue 1.1.0): `list` goes to
+ * `write`, the document is stored inline (catalogue-pick.ts). False when nothing was written.
+ */
+export const applyCataloguePick = (
+  from: EventTarget,
+  entry: CataloguePreset,
+  list: AnimationConfig[],
+  write: (list: AnimationConfig[]) => void,
+): Promise<boolean> =>
+  import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
+    .then((m) => m.pickCatalogue(host, from, entry, list, write))
+    .catch((err: unknown) => {
+      console.warn('Magic Card:', err);
+      return false;
+    });
