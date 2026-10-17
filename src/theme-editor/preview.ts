@@ -1,11 +1,13 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
+import { browserMode } from './util';
 
 /*
  * The preview stage (Contract theme-editor 1.0.0, "Preview isolation"). Every resolved variable of
@@ -30,6 +32,8 @@ export function readHaDefaults(doc: Document = document, fresh = false): Bag {
   if (defaultsCache && !fresh) return defaultsCache;
   const out: Bag = {};
   for (const sheet of Array.from(doc.styleSheets ?? [])) {
+    // the trial's own values are not HA's defaults
+    if ((sheet.ownerNode as Element | null)?.id === TRIAL_STYLE_ID || (doc.getElementById(TRIAL_STYLE_ID) as HTMLStyleElement | null)?.sheet === sheet) continue;
     let rules: CSSRuleList;
     try {
       rules = sheet.cssRules;
@@ -123,8 +127,6 @@ export class ScopedVars {
 
 type SampleState = HTMLElement | 'loading' | 'error' | 'no-entity';
 
-const darkNow = (hass: unknown): boolean => !!(hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode;
-
 /**
  * The preview area: mode switch, stage with fake header and sidebar, real HA cards and a Magic Card.
  * Properties: `doc` (the draft ThemeDoc), `mode` ('light' | 'dark'; defaults to the browser's mode),
@@ -151,7 +153,7 @@ export class McteThemePreview extends LitElement {
   };
 
   private get _mode(): ThemeMode {
-    return this.mode ?? (darkNow(this.hass) ? 'dark' : 'light');
+    return this.mode ?? browserMode(this.hass);
   }
 
   connectedCallback(): void {

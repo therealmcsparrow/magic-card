@@ -48,3 +48,11 @@ A non-colour value, such as a size, that is set in one mode only shows a chip th
 The callout offers **Set in both**, **Move to Shared** and **Keep in Dark only**. Colour values do not get this callout, because a colour usually belongs to one mode only.
 
 The warnings only check what you set. They do not change the file.
+
+## Imported themes
+
+When you copy an installed theme, the editor keeps its light and dark values. This holds for files that use YAML anchors and aliases (`&anchor` and `*alias`), and for files that hold several themes. The editor uses the file whenever it holds the theme's values, also for a file in a subfolder. When the file has none, it reads the theme as Home Assistant loaded it. If neither has the values, the editor says so and creates no copy. The file itself stays read only.
+
+## Try on dashboard
+
+Try on dashboard shows a theme's light values in light mode and its dark values in dark mode. It switches when Home Assistant switches mode. A flat theme looks the same in both modes. See [Light and dark during a trial](trying-and-using.md#light-and-dark-during-a-trial).
