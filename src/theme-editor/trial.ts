@@ -2,6 +2,8 @@ import { THEME_TRIAL_BAR_TAG, TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
+import { pageThemeKeys, readHaDefaults } from './preview';
+import { browserMode } from './util';
 import './trial-bar';
 
 /*
@@ -47,6 +49,7 @@ let styleEl: HTMLStyleElement | null = null;
 let decl: CSSStyleDeclaration | null = null;
 let barEl: HTMLElement | null = null;
 let idleTimer: ReturnType<typeof setTimeout> | undefined;
+let baselineDoc: ThemeDoc | undefined;
 let applied = new Map<string, string>();
 const listeners = new Set<Listener>();
 
@@ -64,20 +67,31 @@ const notify = (reason?: TrialEnd): void => {
   for (const fn of [...listeners]) fn(snapshot, reason);
 };
 
-const browserMode = (hass: unknown): ThemeMode => ((hass as { themes?: { darkMode?: boolean } } | undefined)?.themes?.darkMode ? 'dark' : 'light');
-
-/** The valid variables of the draft for a mode, plus how many were left out. */
-function trialVars(doc: ThemeDoc, mode: ThemeMode): { vars: Record<string, string>; skipped: number } {
+/**
+ * The variables of the draft for a mode, plus how many were left out. Values typed in the editor are
+ * validated; values that equal the imported or saved baseline pass unchanged, as HA applies them.
+ */
+function trialVars(doc: ThemeDoc, mode: ThemeMode, baseline?: ThemeDoc): { vars: Record<string, string>; skipped: number } {
   const vars: Record<string, string> = {};
+  const known = baseline ? previewVars(baseline, mode) : undefined;
   let skipped = 0;
   for (const [k, v] of Object.entries(previewVars(doc, mode))) {
-    if (!k.startsWith('rgb-') && validateValue(kindOf(k) ?? 'text', v) !== null) {
+    const typed = known !== undefined && known[k] !== v && validateValue(kindOf(k) ?? 'text', v) !== null;
+    if (!k.startsWith('rgb-') && (typed || /[;{}]/.test(v))) {
       skipped++;
       continue;
     }
     vars[k] = v;
   }
   return { vars, skipped };
+}
+
+/** The draft over a reset of every key the active profile theme sets that the draft lacks. */
+function withReset(vars: Record<string, string>): Record<string, string> {
+  const defaults = readHaDefaults();
+  const out: Record<string, string> = {};
+  for (const key of pageThemeKeys()) if (!(key in vars)) out[key] = defaults[key] || 'initial';
+  return { ...out, ...vars };
 }
 
 function ensureStyle(): CSSStyleDeclaration | null {
@@ -93,9 +107,11 @@ function ensureStyle(): CSSStyleDeclaration | null {
   return decl;
 }
 
-function writeVars(vars: Record<string, string>): void {
+function writeVars(draftVars: Record<string, string>, mode: ThemeMode): void {
   const style = ensureStyle();
   if (!style) return;
+  style.setProperty('color-scheme', mode, 'important');
+  const vars = withReset(draftVars);
   for (const key of [...applied.keys()]) {
     if (!(key in vars)) {
       style.removeProperty(`--${key}`);
@@ -133,9 +149,9 @@ const onSetTheme = (): void => stopTrial('theme-changed');
  * Starts a trial with the draft (or updates one that is running, keeping its name). The draft is
  * resolved for the browser's current mode, not the editor's preview mode.
  */
-export function startTrial(opts: { name: string; doc: ThemeDoc; hass?: unknown }): TrialState {
-  const mode = state?.mode ?? browserMode(opts.hass);
-  const { vars, skipped } = trialVars(opts.doc, mode);
+export function startTrial(opts: { name: string; doc: ThemeDoc; hass?: unknown; baseline?: ThemeDoc }): TrialState {
+  const mode = opts.hass === undefined ? (state?.mode ?? 'light') : browserMode(opts.hass);
+  const { vars, skipped } = trialVars(opts.doc, mode, opts.baseline);
   const fresh = state === null;
   state = {
     name: opts.name,
@@ -143,7 +159,8 @@ export function startTrial(opts: { name: string; doc: ThemeDoc; hass?: unknown }
     editorUrl: state?.editorUrl ?? `${location.pathname}${location.search}`,
     skipped,
   };
-  writeVars(vars);
+  baselineDoc = opts.baseline;
+  writeVars(vars, mode);
   armIdle();
   if (fresh) {
     document.addEventListener('settheme', onSetTheme, true);
@@ -157,10 +174,21 @@ export function startTrial(opts: { name: string; doc: ThemeDoc; hass?: unknown }
 /** Pushes an edited draft to the dashboard. No-op when no trial runs. Counts as an edit for the idle timer. */
 export function updateTrial(doc: ThemeDoc): void {
   if (!state) return;
-  const { vars, skipped } = trialVars(doc, state.mode);
+  const { vars, skipped } = trialVars(doc, state.mode, baselineDoc);
   state = { ...state, skipped };
-  writeVars(vars);
+  writeVars(vars, state.mode);
   armIdle();
+  notify();
+}
+
+/** Follows a change of the browser's mode (hass.themes.darkMode) without counting as an edit. */
+export function syncTrialMode(doc: ThemeDoc, hass: unknown): void {
+  if (!state) return;
+  const mode = browserMode(hass);
+  if (mode === state.mode) return;
+  const { vars, skipped } = trialVars(doc, mode, baselineDoc);
+  state = { ...state, mode, skipped };
+  writeVars(vars, mode);
   notify();
 }
 
@@ -174,6 +202,7 @@ export function stopTrial(reason: TrialEnd = 'revert'): void {
   styleEl = null;
   decl = null;
   applied = new Map();
+  baselineDoc = undefined;
   barEl?.remove();
   barEl = null;
   announce(TRIAL_END_TEXT[reason]);
