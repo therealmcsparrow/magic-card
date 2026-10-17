@@ -33,6 +33,7 @@ import { rowGridTemplate } from '../utils/column-widths';
 import { resolveAnimations, type FxLayer, type ResolvedV2 } from '../utils/animation';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
+import { particlesFailed } from '../anim-studio/compile';
 import { loadEditor } from '../utils/editor-loader';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
@@ -1202,6 +1203,11 @@ export class MagicCard extends LitElement {
             ? [...w.querySelectorAll('.mc-anim-icon')].find((e) => e.closest('.mc-module-wrapper') === w)
             : (w.querySelector(':scope>:not([aria-hidden])') ?? undefined),
       });
+      // apply always swaps the unbaked pool (-g0) for a bake: still -g0 means setup failed, so the v1 fallback plays
+      if (el.dataset.fx!.endsWith('-g0')) {
+        particlesFailed(sim.docId);
+        this.requestUpdate();
+      }
     }
     for (const el of this._pApplied) if (!seen.has(el)) pm.release(el);
     this._pApplied = seen;
