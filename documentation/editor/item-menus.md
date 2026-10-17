@@ -39,7 +39,7 @@ Shortcuts that work in both the tree and on the canvas are shown on the right of
 | --- | --- |
 | Edit card settings | Selects the card and moves focus to the inspector. |
 | Add row | Adds an empty row at the end, the same as the Add row button. |
-| Rename | Renames the card (its `name`). |
+| Rename | Renames the card (its `name`). On a template-linked card the name comes from the template, so a rename there does not last. |
 | Copy YAML | Copies the whole card as the YAML editor shows it. |
 | Reset card to template… | Template-linked card only. Asks first, then drops every local override of the card, the same as Re-sync in the template bar (see [Templates](templates.md#re-sync)). Disabled when nothing differs from the template. |
 
@@ -70,7 +70,7 @@ Shortcuts that work in both the tree and on the canvas are shown on the right of
 | Reset column to template… | Template-linked card only. |
 | Delete column | Removes the column and its modules. Disabled on the row's only column, with the reason "A row needs one column". |
 
-Columns have no move items. Change their order through the row's layout or column widths.
+Columns have no move items.
 
 ## Module
 
@@ -126,11 +126,13 @@ Browsers only allow the clipboard on secure pages. Home Assistant opened over pl
 
 Copy module keeps the module in the browser (like the design clipboard), so you can paste it in another card or another dialog. It also puts the module's YAML on the system clipboard, for a card's YAML editor or another browser.
 
-Paste module after inserts it after the module whose menu you used. Paste module on a column, tab or row-module column adds it at the end. The pasted module gets new ids, children included, and is selected. Pasting into a layout of a template-linked card marks that layout's child list as a local change.
+Paste module after inserts it after the module whose menu you used. Paste module on a column, tab or row-module column adds it at the end. On a template-linked card a module pasted next to a template module shows at the end of its column on the dashboard, as a duplicate does, because the card adds its own modules after the template's. The pasted module gets new ids, children included, and is selected. Pasting into a layout of a template-linked card marks that layout's child list as a local change.
 
 ## Wrap in layout
 
 Wrap in layout opens a second list in the same menu: Vertical, Horizontal, Row, Tabs and Slider layout. The module moves into a new layout module of that type, in its first slot (the first column of a Row, the first tab of Tabs), and the new layout module takes its place and is selected. Back returns to the main list. Undo removes the layout again.
+
+On a template-linked card, wrapping a module directly in a column makes that column's module list the card's own (`modules` in the column's `not_synced`). Template changes to that column's modules then stop reaching this card until you use Reset column to template…, which gives the column the template's modules again.
 
 ## Hide on dashboard
 
@@ -141,6 +143,7 @@ The editor keeps showing hidden items so you can still edit them:
 -   In the tree the name is greyed out and an eye-off icon follows it. Screen readers hear "Hidden on dashboard".
 -   On the canvas the item is drawn at reduced opacity, like an item whose display conditions are not met, and its name tag ends in "· hidden".
 -   The inspector header adds "Hidden on dashboard".
+-   Home Assistant's dashboard edit mode also shows hidden items dimmed, as it does for items hidden by display conditions.
 
 Show on dashboard removes the flag. On a template-linked card, hiding a row, column or module is a local change of this card. YAML: [Config schema](../yaml/schema.md).
 

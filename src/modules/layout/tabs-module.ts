@@ -33,14 +33,15 @@ class TabsModule extends BaseMagicModule {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as TabsModuleConfig;
     const ctx = currentRenderContext();
-    // a hidden tab is left out on the dashboard; the studio shows it dimmed
-    const tabs = (c.tabs || []).filter((t) => ctx?.editMode || !t?.hidden);
+    const tabs = c.tabs || [];
+    // the tabs shown, by their index in `tabs`: a hidden tab is left out on the dashboard (the studio
+    // shows it dimmed); active_tab and the stored tab keep counting every tab, like the editor
+    const shown = tabs.flatMap((t, i) => (ctx?.editMode || !t?.hidden ? [i] : []));
     // Per card and per module (keyed by its path), so two cards or two tabs modules never share it.
     const state = ctx?.uiState?.<number>('active-tab');
-    const clamp = (i: unknown) =>
-      Math.min(Math.max(0, Math.trunc(Number(i)) || 0), Math.max(tabs.length - 1, 0));
-    // Studio canvas: the tab that holds the selected child is shown.
-    const activeIdx = clamp(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0);
+    // Studio canvas: the tab that holds the selected child is shown. A hidden or missing tab: the first shown.
+    const want = Math.trunc(Number(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0));
+    const activeIdx = shown.includes(want) ? want : shown[0] ?? 0;
     const activeTab = tabs[activeIdx];
 
     const select = (i: number) => (e: Event) => {
@@ -53,20 +54,23 @@ class TabsModule extends BaseMagicModule {
     const stop = (e: Event) => e.stopPropagation();
     const onKeydown = (e: KeyboardEvent) => {
       e.stopPropagation();
-      const next = { ArrowRight: activeIdx + 1, ArrowLeft: activeIdx - 1, Home: 0, End: tabs.length - 1 }[e.key];
-      if (next === undefined || !tabs.length) return;
+      const n = shown.length;
+      const at = shown.indexOf(activeIdx);
+      const next = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: n - 1 }[e.key];
+      if (next === undefined || !n) return;
       e.preventDefault();
-      const i = (next + tabs.length) % tabs.length;
-      select(i)(e);
+      const p = (next + n) % n;
+      select(shown[p])(e);
       const header = (e.currentTarget as HTMLElement).parentElement;
-      queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[i]?.focus());
+      queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[p]?.focus());
     };
 
     return html`
       <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'}>
         <div class="mc-tabs-header" role="tablist">
-          ${tabs.map(
-            (tab, i) => html`
+          ${shown.map((i) => {
+            const tab = tabs[i];
+            return html`
               <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}" data-mc-hidden=${tab?.hidden ? '' : nothing}
                 aria-selected=${i === activeIdx ? 'true' : 'false'}
                 tabindex=${i === activeIdx ? 0 : -1}
@@ -78,8 +82,8 @@ class TabsModule extends BaseMagicModule {
                   : nothing}
                 ${tab?.label ?? ''}
               </button>
-            `,
-          )}
+            `;
+          })}
         </div>
         <div class="mc-tabs-content" role="tabpanel">
           ${activeTab?.modules?.length
