@@ -16,6 +16,7 @@ import {
 import { animationName, compileAnimationDoc, docVar } from '../anim-studio/compile';
 import type { CompiledV2 } from '../anim-studio/compile-v2';
 import type { RuntimeHints } from '../anim-runtime/types';
+import type { BuiltinShape, ParticlesApplyCtx } from '../contracts/particles-v2';
 import { runtimeIfLoaded } from './anim-runtime-loader';
 import { customRefId, docNeedsRuntime, isCustomRef, type AnimationDoc } from '../anim-studio/model';
 import { useAnimationCss } from '../card/custom-anim-sheet';
@@ -275,6 +276,10 @@ export interface Particle {
   k: number;
   /** Custom particles: per-particle custom properties (size, colour...). */
   style?: string;
+  /** particles v2: this particle's built-in shape (`data-s`). */
+  shape?: BuiltinShape;
+  /** particles v2: this particle's icon / text symbol (overrides the layer's). */
+  symbol?: { icon: string } | { text: string };
 }
 
 export interface FxLayer {
@@ -291,6 +296,8 @@ export interface FxLayer {
   seasonal?: SeasonalFx;
   /** Custom particles: the content of each particle (an icon or a text symbol). */
   symbol?: { icon: string } | { text: string };
+  /** particles v2 compiled by the particles chunk: the card applies the layer after the render. */
+  sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period'>;
 }
 
 export interface SeasonalFx {
@@ -336,6 +343,8 @@ export interface ResolvedAnimations {
   seq?: string;
   /** A resolved document needs the lazy v2 runtime (src/utils/anim-runtime-loader.ts). */
   needsRuntime?: boolean;
+  /** A particles v2 document plays here: the card loads the particles chunk / applies its layers (src/utils/particles-loader.ts). */
+  needsParticles?: boolean;
   /**
    * The documents with compiled v2 data, in entry order (the card hands each to runtime.apply);
    * empty until the runtime chunk has loaded (it brings the v2 compiler).
@@ -397,7 +406,7 @@ export function resolveAnimations(
   const fx: FxLayer[] = [];
   const seq: string[] = [];
   const v2: ResolvedV2[] = [];
-  const runtime = { need: false };
+  const runtime = { need: false, p: false };
 
   for (let e of readAnimations(design)) {
     if (isCustomRef(e.preset)) {
@@ -492,6 +501,7 @@ export function resolveAnimations(
     ...(lists.t.length ? { tap: true } : {}),
     ...(seq.length ? { seq: seq.join(' ') } : {}),
     ...(runtime.need ? { needsRuntime: true } : {}),
+    ...(runtime.p ? { needsParticles: true } : {}),
     ...(v2.length ? { v2, run: [...new Set(v2.map((x) => x.run))].join(' ') } : {}),
   };
 }
@@ -503,7 +513,7 @@ interface CustomCtx {
   fx: FxLayer[];
   seq: string[];
   v2: ResolvedV2[];
-  runtime: { need: boolean };
+  runtime: { need: boolean; p: boolean };
   allowIcon: boolean;
   custom?: CustomAnimationLookup;
   stateObj?: HassEntity;
@@ -587,6 +597,7 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
   useAnimationCss(doc.id, c.name, c.css);
 
   if (c.layer) {
+    if (c.sim || c.needsParticles) ctx.runtime.p = true;
     const cycle = `${+(seconds(dur) / c.layer.speed).toFixed(3)}s`;
     ctx.fx.push({
       preset: c.name,
@@ -594,6 +605,7 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
       style: [`--mc-fx-anim: ${c.name} ${cycle} ${tail}`, `--mc-fx-dur: ${cycle}`, `--mc-fx-delay: ${delay}`, ...own].join('; '),
       particles: c.layer.particles,
       ...(c.layer.symbol ? { symbol: c.layer.symbol } : {}),
+      sim: c.sim,
       ...(tap ? { tap } : {}),
     });
     return undefined;

@@ -128,7 +128,7 @@ export const animationStyles = css`
     .mc-anim-fx > i {
       animation: none !important;
     }
-    .mc-anim-fx,
+    .mc-anim-fx:not([data-p]),
     .mc-anim-ring {
       display: none;
     }

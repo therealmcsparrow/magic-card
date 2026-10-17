@@ -28,6 +28,14 @@ import './editors/stage-sim';
 // icon animator (0.0.34): part presets, the icon animation start with the icon library
 import './editors/part-presets-panel';
 import './editors/icon-start';
+// particles v2: the studio bundle imports the particles module directly (no chunk): bake stats,
+// Live preview and the animated SVG export, and the preview compiles the simulation
+import { particles, compile } from '../particles';
+import { useStudioParticles } from './editors/particles-utils';
+import { useParticlesCompiler } from './compile';
+
+useStudioParticles(particles);
+useParticlesCompiler(compile, particles.validateSim);
 
 /*
  * Entry of dist/magic-card-animation-studio.js (loaded by the magic-card-utils panel, never by a
