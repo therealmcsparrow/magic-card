@@ -2,6 +2,7 @@ import { DesignConfig, DisplayCondition, HomeAssistant } from '../types';
 import { BOX_LONGHANDS, buildDesignToCssMap, CSS_SECTORS } from './css-properties';
 import { ConditionsService } from '../services/conditions-service';
 import { entityColorCss, isEntityColor } from './entity-color';
+import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
@@ -82,9 +83,11 @@ export function designToStyle(input?: DesignConfig): string {
 
   const parts: string[] = [];
   const rec = design as Record<string, unknown>;
+  // a gradient colour: text paints it (--mc-text-paint), everything else reads its first stop
+  const gradient = parseGradient(design.color)?.stops[0];
 
   for (const [key, cssProperty] of Object.entries(ALL_CSS_MAP)) {
-    let value = rec[key];
+    let value = gradient && key === 'color' ? gradient : rec[key];
     if (typeof value === 'string' && IMAGE_KEYS.has(key)) value = mediaCssImage(undefined, value);
     if (value !== undefined && typeof value === 'string' && value !== '') {
       parts.push(`${cssProperty}: ${value}`);
@@ -97,7 +100,8 @@ export function designToStyle(input?: DesignConfig): string {
   // Module text that sets its own colour (button label, info value, ...) reads this, so the
   // design colour reaches it; descendants without a colour of their own inherit `color` as usual.
   if (typeof design.color === 'string' && design.color !== '') {
-    parts.push(`--mc-design-color: ${design.color}`);
+    parts.push(`--mc-design-color: ${gradient ?? design.color}`);
+    if (gradient) parts.push(`--mc-text-paint: ${design.color}`);
     // HA's ha-icon fills with var(--icon-primary-color, currentcolor); a theme that sets that var would
     // keep icons off the design colour. currentColor resolves per icon, so an explicit icon colour
     // (icon_color, state colour rules using --mc-design-color) still decides what the icon paints.
