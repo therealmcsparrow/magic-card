@@ -47,7 +47,8 @@ import { debounce } from '../../utils/debounce';
 import { EDITOR_DEBOUNCE_MS } from '../../utils/constants';
 import { clampSelection, itemAt, layoutModuleAt, moduleAt, selectionFromPath, selectionToPath } from '../studio/selection';
 import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutableSlot } from '../../utils/module-path';
-import { copyModuleToClipboard, readModuleClipboard } from './module-clipboard';
+import { copyModuleToClipboard, docPool, pasteAnimations, readModuleClip, referencedDocs } from './module-clipboard';
+import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
 import { flowKeys } from '../../utils/flow';
@@ -673,10 +674,15 @@ export class EditorStateManager {
     });
   }
 
-  /** Copy module: the module (with its children) to the module clipboard. */
+  /**
+   * Copy module: the module (with its children) to the module clipboard, with the inline animation
+   * documents it plays (the card's own, else the linked template's).
+   */
   copyModule(sel: Selection): CardModule | undefined {
     const mod = moduleAt(this.state.config, sel);
-    return mod ? copyModuleToClipboard(mod) : undefined;
+    if (!mod) return undefined;
+    const pool = docPool(this.state.templateAnimations, this.state.config.custom_animations);
+    return copyModuleToClipboard(mod, referencedDocs(mod, pool));
   }
 
   /**
@@ -684,11 +690,15 @@ export class EditorStateManager {
    * row-module column. The pasted module is selected. False when nothing (valid) was copied.
    */
   pasteModule(sel: Selection): boolean {
-    const clip = readModuleClipboard();
+    const clip = readModuleClip();
     if (!clip) return false;
-    const mod = deepClone(clip);
+    const mod = deepClone(clip.module);
     giveFreshIds(mod);
     const config = deepClone(this.state.config);
+    // the documents it plays that this card lacks (renamed on a clash), in the same undo step
+    const own = animationDocList(config.custom_animations);
+    const add = pasteAnimations(mod, clip.docs, docPool(this.state.templateAnimations, config.custom_animations), customAnimationIds(config));
+    if (add.length) config.custom_animations = [...own, ...add] as typeof config.custom_animations;
     let path: EditorPath;
     if (sel.kind === 'module') {
       const at = this._moduleList(config, sel.row, sel.col, sel.module, sel.child);
