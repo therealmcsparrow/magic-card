@@ -13,22 +13,31 @@ jobs:
     name: Build and Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
 
       - run: npm run build
 
+      - name: Dist size budget
+        run: node tools/check-dist-size.mjs
+
+      - name: Generate CycloneDX SBOM (production dependencies)
+        run: npx --yes @cyclonedx/cyclonedx-npm@6.0.1 --omit dev --output-format JSON --output-file sbom.cdx.json
+
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           # the card (HACS installs every .js asset), its lazy chunks (magic-card-anim-runtime.js) and
-          # the animation studio the magic-card-utils panel loads
-          files: dist/*.js
+          # the animation studio the magic-card-utils panel loads; plus the SBOM and licence notices
+          files: |
+            dist/*.js
+            sbom.cdx.json
+            THIRD-PARTY-NOTICES.md
           fail_on_unmatched_files: true
           generate_release_notes: true
