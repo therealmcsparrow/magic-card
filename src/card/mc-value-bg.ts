@@ -87,7 +87,7 @@ export class McValueBg extends LitElement {
     .liquid {
       position: absolute;
       inset: 0;
-      background: var(--mc-vb-color);
+      background: var(--mc-vb-paint);
       transition: transform 600ms ease-in-out;
     }
     .wave {
@@ -296,7 +296,7 @@ export class McValueBg extends LitElement {
     const wave = v.wave && level > 0 && level < 0.99;
     const empty = v.level === undefined;
     return html`${empty ? html`<div class="hatch" style="--mc-vb-color: ${v.color}"></div>` : nothing}
-      <div class="fill" data-dir=${v.direction} style="--mc-vb-color: ${v.color}">
+      <div class="fill" data-dir=${v.direction} style="--mc-vb-color: ${v.color}; --mc-vb-paint: ${v.paint ?? v.color}">
         ${!empty && level <= 0 ? html`<div class="floor"></div>` : nothing}
         <div class="liquid" style="opacity: ${v.opacity}; transform: translateY(${r2((1 - level) * 100)}%)">
           ${wave
