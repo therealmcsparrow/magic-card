@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/therealmcsparrow/magic-card/main/images/magic-card-icon.png" width="160" alt="Magic Card logo"></p>
+
 # Magic Card
 
 [![HACS][hacs-badge]][hacs-url]
@@ -47,7 +49,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the nine other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js` and `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. Magic Card loads them from there when they are needed.
+HACS also downloads the nine other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. Magic Card loads them from there when they are needed.
 
 ### Manual
 
@@ -1026,7 +1028,7 @@ rows:
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has nine files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js` and `magic-card-theme-editor.js`. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has ten files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
@@ -1068,6 +1070,8 @@ Special thanks to [Anas Box](https://www.youtube.com/@anasbox). His YouTube vide
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+The release bundles third-party software under its own licences. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
 [hacs-url]: https://hacs.xyz/
