@@ -194,18 +194,24 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 export const PREVIEW_RULES_VERSION = '1.0.0';
 export const TRIAL_STYLE_ID = 'mc-theme-trial';
 
-// ── theme presets (Contract theme-presets 1.0.0, ADR 0014) ──
+// ── theme presets (Contract theme-presets 1.1.0, ADR 0014, ADR 0015) ──
 
 /**
- * The preset chunk: every editor preset (the 5 starters and 40 more, 45 in all) and the create
- * dialog's picker live in one lazy webpack chunk of the theme editor entry, webpackChunkName
- * THEME_PRESETS_CHUNK, emitted as dist/THEME_PRESETS_CHUNK_FILE (served with `?v=<contenthash>`,
- * next to the entry). The entry holds no preset data and no picker markup or styles.
+ * The preset chunk: every editor preset (25 original, 20 inspired, 12 genre: 57 in all) and the
+ * create dialog's picker live in one lazy webpack chunk of the theme editor entry,
+ * webpackChunkName THEME_PRESETS_CHUNK, emitted as dist/THEME_PRESETS_CHUNK_FILE (served with
+ * `?v=<contenthash>`, next to the entry). The entry holds no preset data and no picker markup or
+ * styles.
+ *
+ * Changes in 1.1.0 (additive; the loader accepts any major 1): group 'genre' ("Sci-fi & fantasy"
+ * in the UI) and the optional `tags` field. Every 1.0.0 preset keeps its id, name, blurb, note,
+ * group, credit and resolved doc (deep-equal), whatever the source encoding (ADR 0015).
  *
  * Provider: src/theme-editor/presets/chunk.ts, the chunk root. Its export surface is:
  * - `THEME_PRESET_LIBRARY: ThemePresetLibrary`, re-exported from presets/library.ts. library.ts has
  *   no runtime import at all (`import type` only), so Node can load it with type stripping
- *   (tools/theme-example-shots.mjs, the gallery script).
+ *   (tools/theme-example-shots.mjs, the gallery script). It exports the resolved objects below,
+ *   never the packed source form.
  * - `renderPicker`, `pickerStatus` and `pickerStyles` (with the types PickerView and PickerEvents),
  *   re-exported from presets/picker.ts: a template function, the text for the dialog's status
  *   region, and a stylesheet; no custom element. The picker sits in the chunk because the entry has
@@ -233,11 +239,22 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * The failure message says "If it keeps failing, reload the page"; a reload is the way out of a
  * request that never ends. Outside a webpack build (tests) no URL is rewritten.
  *
+ * Picker (1.1.0): Show offers All, Original, Inspired by, Sci-fi & fantasy (THEME_PRESET_GROUPS
+ * order, each with its count); headings follow the same order and labels. Search matches name,
+ * blurb, inspiredBy.name, tags and the group's search word (THEME_PRESET_GROUPS[].search).
+ *
  * Data rules (tests/theme-presets.contract.test.ts):
  * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
  *   The 5 starter ids stay: paper, midnight-oled, ember, contrast, frost (group 'original', same
- *   values as 2026.10.06).
- * - `group` 'inspired' requires `inspiredBy`; 'original' must not have it.
+ *   values as 2026.10.06). All 45 presets of 1.0.0 stay as 2026.10.08 shipped them (fixture).
+ *   Ids are never renamed; a rename needs an alias and a CHANGELOG line.
+ * - `group` 'inspired' requires `inspiredBy`; 'original' and 'genre' must not have it.
+ * - `group` 'genre' requires `tags` whose first word is 'sci-fi' or 'fantasy'. No genre preset
+ *   names a franchise or an in-universe term: id, name, blurb, note and tags hold no term from the
+ *   blocked list (tests/fixtures/franchise-blocked-terms.json, from legal 02-legal.md). The check
+ *   lowercases, strips everything but a-z and 0-9, and looks for each stripped term as a substring.
+ *   It runs over every preset, not only genre ones.
+ * - `tags`: lowercase words split by single spaces, at most 40 characters.
  * - `doc` is a ThemeDoc with modes.light and modes.dark. Each mode sets primary-color,
  *   accent-color, primary-background-color, card-background-color, primary-text-color,
  *   secondary-text-color, divider-color, text-primary-color, app-header-text-color, error-color,
@@ -246,13 +263,27 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * - Contrast >= 4.5:1 in every mode: primary and secondary text on the card (translucent cards
  *   over every gradient stop) and on primary-background-color; text-primary-color and
  *   app-header-text-color on primary-color; the four state colours and accent-color on the card.
- * - Order in `presets` is display order within a group; groups show 'original' first.
+ * - Order in `presets` is display order within a group; groups are contiguous, in
+ *   THEME_PRESET_GROUPS order (original, inspired, genre).
  */
-export const THEME_PRESETS_VERSION = '1.0.0';
+export const THEME_PRESETS_VERSION = '1.1.0';
 export const THEME_PRESETS_CHUNK = 'theme-presets';
 export const THEME_PRESETS_CHUNK_FILE = 'magic-card-theme-presets.js';
 
-export type ThemePresetGroup = 'original' | 'inspired';
+export type ThemePresetGroup = 'original' | 'inspired' | 'genre';
+
+/**
+ * Group order, Show labels, headings and search words. Type-level here; the picker keeps its own
+ * copy of the values (src/contracts/ is types plus constants and the chunk must not pull in more).
+ * original: "Original" / search "original"; inspired: "Inspired by" / "inspired by";
+ * genre: "Sci-fi & fantasy" / "genre" (the words sci-fi and fantasy come from each preset's tags,
+ * so "fantasy" finds only the fantasy ones).
+ */
+export interface ThemePresetGroupInfo {
+  id: ThemePresetGroup;
+  label: string;
+  search: string;
+}
 
 /** Credit for a palette-inspired preset. Values are our own, tuned for contrast; the name credits the source. */
 export interface ThemePresetCredit {
@@ -274,6 +305,8 @@ export interface ThemePreset {
   note?: string;
   group: ThemePresetGroup;
   inspiredBy?: ThemePresetCredit;
+  /** 1.1.0: extra search words, lowercase, space separated. Required for 'genre' (first word sci-fi or fantasy). Never shown, never a franchise term. */
+  tags?: string;
   doc: ThemeDoc;
 }
 
