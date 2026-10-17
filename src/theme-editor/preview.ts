@@ -295,6 +295,7 @@ export class McteThemePreview extends LitElement {
                   <button class="b-secondary" tabindex="-1">Secondary</button>
                   <button class="b-text" tabindex="-1">Text</button>
                   <span class="switch" aria-hidden="true"></span>
+                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>Accent</span>
                   <span class="field">Text field</span>
                   <span class="slider" aria-hidden="true"><i></i></span>
                 </div>
@@ -547,6 +548,22 @@ export class McteThemePreview extends LitElement {
       border-radius: 7px;
       background: var(--switch-checked-track-color, var(--primary-color));
       opacity: 0.8;
+    }
+    .accent-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border: 1px solid var(--accent-color);
+      border-radius: 999px;
+      color: var(--accent-color);
+      font-size: 0.85em;
+    }
+    .accent-chip .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-color);
     }
     .field {
       padding: 6px 10px;
