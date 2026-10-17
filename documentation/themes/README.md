@@ -14,7 +14,7 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 ## Pages
 
 -   [Getting started](getting-started.md): the include lines, opening the Themes tab, creating a theme from blank, a preset or an installed theme, and saving.
--   [Theme examples](examples/README.md): all 45 presets, each with a screenshot of its light and dark modes, and the credit for the palettes they draw on.
+-   [Theme examples](examples/README.md): all 57 presets, in three groups, each with a screenshot of its light and dark modes. The Inspired by presets credit the palette they draw on.
 -   [Variables and groups](variables.md): the Home Assistant groups, the Magic Card group, the third-party card groups, the raw row, colour, size and gradient fields.
 -   [Light, dark and Shared](modes.md): the `modes` blocks, the Shared, Light and Dark scope, previewing each mode, and the warnings about values that have no effect.
 -   [Try, revert and use](trying-and-using.md): Try on dashboard, Revert, and Use this theme.
