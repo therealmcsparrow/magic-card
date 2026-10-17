@@ -2,6 +2,7 @@ import type { ColorRange, HassEntity, RingAnimation, RingConfig, RingPosition, R
 import { animationTriggerActive, cssTime, safeColor } from './animation';
 import { rangeColor } from './color-ranges';
 import { entityColorCss } from './entity-color';
+import { parseGradient } from './gradient';
 import { entityNumber } from './entity-value';
 import { isTimer, timerFraction, timerProgress } from './timer';
 import { resolveBound } from './value-bound';
@@ -41,6 +42,8 @@ export interface ResolvedRing {
   fill: number;
   animation?: RingAnimation;
   color: string;
+  /** The gradient (CSS string) when the colour is one: `color` is its first stop. */
+  paint?: string;
   track?: string;
   width: number;
   linecap: 'round' | 'butt';
@@ -108,7 +111,8 @@ export function resolveRing(
   if (ring.trigger !== 'tap' && !animationTriggerActive(ring, own, ctx.states)) return undefined;
 
   let fill = 1;
-  let color = colour(ring.color);
+  const gradient = parseGradient(ring.color);
+  let color = gradient ? gradient.stops[0] : colour(ring.color);
   let timer: RingTimer | undefined;
   if (ring.mode === 'value') {
     const id = ring.entity || ctx.defaultEntity;
@@ -145,6 +149,7 @@ export function resolveRing(
     fill,
     ...(ring.mode === 'animated' ? { animation: pick(ring.animation, ANIMATIONS, RING_DEFAULTS.animation) } : {}),
     color,
+    paint: gradient && ring.color,
     ...(track ? { track } : {}),
     width: clamp(num(ring.width) ?? RING_DEFAULTS.width, 0.5, 40),
     linecap: ring.linecap === 'butt' ? 'butt' : 'round',

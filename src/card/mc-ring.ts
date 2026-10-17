@@ -2,6 +2,7 @@ import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } f
 import { customElement, property, state } from 'lit/decorators.js';
 import { readRadii, ringPath, shapeRingPath } from '../utils/ring-path';
 import type { ResolvedShape } from './mc-shape';
+import { linearGradientSvg, parseGradient } from '../utils/gradient';
 import { ResolvedRing, ringInset, ringStroke, ringTimerTick } from '../utils/ring';
 import { TimerTick } from '../utils/timer';
 
@@ -221,10 +222,13 @@ export class McRing extends LitElement {
       : ringPath(b.w, b.h, b.radii, opts);
     const s = ringStroke(r, !!this._media?.matches);
     if (!d) return nothing;
+    // a gradient ring (until a threshold or a timer tick moves the colour off its first stop)
+    const g = parseGradient(r.paint);
+    const paint = g?.stops[0] === r.color ? g : undefined;
     const glow = r.glow > 0 ? `; filter: drop-shadow(0 0 ${r.glow}px ${r.color})` : '';
     const style = [
       `--mc-ring-w: ${r.width}px`,
-      `stroke: ${r.color}`,
+      `stroke: ${paint ? 'url(#g)' : r.color}`,
       `stroke-width: ${r.width}px`,
       `stroke-linecap: ${s.linecap}`,
       `stroke-dasharray: ${s.dasharray}`,
@@ -237,6 +241,7 @@ export class McRing extends LitElement {
     // The track is a nested template inside <svg>: svg``, or its <path> is an HTML element that draws nothing.
     const box = `top: ${-b.top}px; left: ${-b.left}px; width: ${b.w}px; height: ${b.h}px${r.opacity !== undefined ? `; opacity: ${r.opacity}` : ''}`;
     return html`<svg style=${box} viewBox="0 0 ${b.w} ${b.h}" preserveAspectRatio="none" focusable="false">
+      ${paint ? linearGradientSvg('g', paint.angle, paint.stops, { x: 0, y: 0, w: b.w, h: b.h }) : nothing}
       ${r.track ? svg`<path d=${d} pathLength="100" style="stroke: ${r.track}; stroke-width: ${r.width}px"></path>` : nothing}
       <path d=${d} pathLength="100" style="${style}${glow}" @animationend=${this._onEnd}></path>
     </svg>`;

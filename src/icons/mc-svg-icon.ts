@@ -8,6 +8,7 @@ import { IconGeometry, StrokeShape, onIconGeometry, peekIconGeometry, peekSvgMar
 import { iconBaseStyles } from './icon-css';
 import { offscreenObserver, __resetOffscreenObserverForTests } from './offscreen';
 import { resolveIconFx, ResolvedIconFx } from './icon-fx';
+import { linearGradientSvg } from '../utils/gradient';
 import { interpolate, matchShapes } from './path-math';
 
 let uidSeq = 0;
@@ -630,17 +631,7 @@ export class McSvgIcon extends LitElement {
    * liquid's static paint rect, share one gradient at the right angle on non-square boxes too.
    */
   private _gradient(fx: ResolvedIconFx, box: Box): SVGTemplateResult {
-    const stops = fx.colors.stops ?? [];
-    const a = (fx.colors.angle * Math.PI) / 180;
-    const sin = Math.sin(a);
-    const cos = Math.cos(a);
-    const half = (Math.abs(box.w * sin) + Math.abs(box.h * cos)) / 2;
-    const cx = box.x + box.w / 2;
-    const cy = box.y + box.h / 2;
-    return svg`<linearGradient id=${`${this._uid}-grad`} gradientUnits="userSpaceOnUse"
-      x1=${r3(cx - sin * half)} y1=${r3(cy + cos * half)} x2=${r3(cx + sin * half)} y2=${r3(cy - cos * half)}>
-      ${stops.map((c, i) => svg`<stop offset=${r3(stops.length > 1 ? i / (stops.length - 1) : 0)} stop-color=${c}></stop>`)}
-    </linearGradient>`;
+    return linearGradientSvg(`${this._uid}-grad`, fx.colors.angle, fx.colors.stops ?? [], box);
   }
 
   /**
