@@ -1,14 +1,14 @@
 # Theme examples
 
-The theme editor's create dialog offers 45 presets. Each one sets a full light and dark theme, so you can start from it and change the colours. This page shows every preset with a screenshot of its light and dark modes side by side, taken from the editor's own preview.
+The theme editor's create dialog offers 57 presets. Each one sets a full light and dark theme, so you can start from it and change the colours. This page shows every preset with a screenshot of its light and dark modes side by side, taken from the editor's own preview.
 
-Presets in the Original group are our own designs. Presets in the Inspired by group draw on a well-known editor or web palette. Their colour values are our own, not the official palette, and each one credits the palette it draws on.
+Presets in the Original group are our own designs. Presets in the Inspired by group draw on a well-known editor or web palette. Their colour values are our own, not the official palette, and each one credits the palette it draws on. Presets in the Sci-fi & fantasy group are our own designs too.
 
 ## Start from a preset
 
 1.  Open the **Themes** tab in the Magic Card Utils panel and click **New theme**.
 2.  Under **Start from**, choose **A preset**. The list loads the first time you open the dialog. While it loads, the dialog says **Loading presets**.
-3.  Find a preset. Type in the search field to match a name, palette or style. Use **Show** to switch between **All**, **Original** and **Inspired by**.
+3.  Find a preset. Type in the search field to match a name, palette or style. Use **Show** to switch between **All**, **Original**, **Inspired by** and **Sci-fi & fantasy**.
 4.  Click a preset. The card shows its credit under Inspired by, and a note where the preset needs one. The editor preview shows the preset.
 5.  The name field fills with the preset name. Change it if you like.
 6.  Click **Create from** and the preset name.
@@ -342,6 +342,82 @@ Low-contrast sage on soft grey.
 Inspired by [Zenburn](https://github.com/jnurmine/Zenburn). Own colour values, not the official palette.
 
 ![Zenburn Calm preview, light and dark modes side by side](images/zenburn.webp)
+
+## Sci-fi & fantasy
+
+Some presets take a mood from well-known science-fiction and fantasy worlds. They are independent colour schemes made by the Magic Card project. They are not made, licensed, sponsored or endorsed by any rights holder, and all trademarks belong to their owners.
+
+## Amber Console
+
+Lilac and amber on near-black, like a retro starship console.
+
+![Amber Console preview, light and dark modes side by side](images/amber-console.webp)
+
+## Cobalt Prism
+
+Ultramarine blue with an orange spark, sleek and futuristic.
+
+![Cobalt Prism preview, light and dark modes side by side](images/cobalt-prism.webp)
+
+## Deep Survey
+
+Clean off-white panels with a navy ink blue and a burnt orange accent.
+
+![Deep Survey preview, light and dark modes side by side](images/deep-survey.webp)
+
+## Dust Duel
+
+Warm desert sand with indigo blue and a red accent.
+
+![Dust Duel preview, light and dark modes side by side](images/dust-duel.webp)
+
+## Frontier Freighter
+
+Weathered teal with worn rust and brass, warm and a little scruffy.
+
+![Frontier Freighter preview, light and dark modes side by side](images/frontier-freighter.webp)
+
+## Neon Rain
+
+Magenta and cyan neon on a dark city night.
+
+![Neon Rain preview, light and dark modes side by side](images/neon-rain.webp)
+
+## Ochre Basin
+
+Sun-baked yellow-brown ochre by day, deep indigo night in the dark mode.
+
+![Ochre Basin preview, light and dark modes side by side](images/ochre-basin.webp)
+
+## Orbital Forge
+
+Industrial steel blue-grey with a safety orange accent.
+
+![Orbital Forge preview, light and dark modes side by side](images/orbital-forge.webp)
+
+## Ashen Keep
+
+Grey stone and iron with one deep red accent, calm and wintry.
+
+![Ashen Keep preview, light and dark modes side by side](images/ashen-keep.webp)
+
+## Candlelit Cloister
+
+Plum and old gold on parchment; plum-black at night.
+
+![Candlelit Cloister preview, light and dark modes side by side](images/candlelit-cloister.webp)
+
+## Crimson Pines
+
+Cold steel blue-grey with a red accent under a dark pine forest.
+
+![Crimson Pines preview, light and dark modes side by side](images/crimson-pines.webp)
+
+## Silverleaf Glade
+
+Silver-teal leaves with touches of gold, calm and airy.
+
+![Silverleaf Glade preview, light and dark modes side by side](images/silverleaf-glade.webp)
 
 ## More
 
