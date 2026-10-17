@@ -16,6 +16,7 @@ To make a module's icon move in parts, pick an animation in the icon picker's An
 - [Play conditions](#play-conditions)
 - [Colour and strength](#colour-and-strength)
 - [Presets](#presets)
+- [Catalogue presets](#catalogue-presets)
 - [Reduced motion](#reduced-motion)
 - [Older configs](#older-configs)
 
@@ -155,6 +156,8 @@ These play a short move followed by a rest, so they read as attention cues.
 
 ### Light and colour
 
+The Preset select adds the catalogue's light presets to this group, see [Light and colour (catalogue)](#light-and-colour-catalogue).
+
 | Preset | Name | Duration | Intensity |
 | --- | --- | --- | --- |
 | `shine-sweep` | Shine sweep (layer, front) | 3s | Shine (%) 45, 0 to 100 |
@@ -291,6 +294,104 @@ These start with Play set to On tap and play once.
 | --- | --- | --- | --- |
 | `tap-ripple` | Tap ripple (layer, front) | 0.6s | Brightness (%) 35, 0 to 100 |
 | `press` | Press | 0.3s | Depth (%) 6, 0 to 30 |
+
+## Catalogue presets
+
+The Preset select also lists the preset catalogue: ready-made animations in themed groups. They load with the editor, so the list can take a moment to show them. If they cannot load, the select shows the built-in presets only. Light and colour presets from the catalogue appear in the built-in Light & colour group; every other theme has its own group after the built-in ones.
+
+A catalogue preset is a full animation document. When you pick one, the editor copies that document into the card's `custom_animations` as `cat-<id>`, and the entry plays it as `preset: custom:cat-<id>`. The card plays the copy itself, so it works without the Magic Card Utils integration and dashboards never load the catalogue. Two entries that pick the same preset share one copy. When no entry plays a copy any more, the editor removes it. A card keeps its copy as it is, so later changes to the catalogue don't reach cards that already use a preset.
+
+The fields work like those of an animation from My animations: empty fields follow the document. Plays says what moves: the module's icon, the whole element, or a particle layer drawn inside the element. All particle presets are baked loops. Duration is the document's own.
+
+A module entry that plays Hearth flicker looks like this. The editor writes the copy under `custom_animations` at the top of the card when you pick the preset.
+
+```yaml
+design:
+  animations:
+    - id: fire
+      preset: custom:cat-fire-hearth-flicker
+```
+
+### Fire and heat
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-fire-hearth-flicker` | Hearth flicker | Icon | 1.3s |
+| `custom:cat-fire-heating-up` | Heating up | Icon | 2.4s |
+| `custom:cat-fire-rising-embers` | Rising embers | Particle layer | 3s |
+| `custom:cat-fire-licking-flames` | Licking flames | Particle layer | 1.6s |
+| `custom:cat-fire-chimney-smoke` | Chimney smoke | Particle layer | 4s |
+| `custom:cat-fire-sparkler` | Sparkler | Particle layer | 2s |
+
+### Cleaning
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-clean-soap-bubbles-pop` | Soap bubbles that pop | Particle layer | 4s |
+| `custom:cat-clean-fresh-sparkle` | Fresh sparkle | Particle layer | 2.4s |
+| `custom:cat-clean-robot-vacuum-glide` | Robot vacuum glide | Icon | 2.4s |
+| `custom:cat-clean-washer-spin-cycle` | Washer spin cycle | Icon | 1.6s |
+| `custom:cat-clean-dishwasher-steam` | Dishwasher steam | Particle layer | 3.2s |
+| `custom:cat-clean-spray-mist` | Spray mist | Particle layer | 1.8s |
+| `custom:cat-clean-wipe-clean` | Wipe clean | Icon | 2s |
+
+### Christmas
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-xmas-snow-settle` | Snow that settles | Particle layer | 8s |
+| `custom:cat-xmas-new-year-fireworks` | New Year fireworks | Particle layer | 3.2s |
+| `custom:cat-xmas-jingle-bell` | Jingle bell | Icon | 2.4s |
+| `custom:cat-xmas-bauble-sway` | Bauble sway | Icon | 3s |
+| `custom:cat-xmas-present-hop` | Present hop | Icon | 2.4s |
+| `custom:cat-xmas-golden-star-shower` | Golden star shower | Particle layer | 3.2s |
+| `custom:cat-xmas-fairy-lights` | Fairy light glow | Icon | 3s |
+
+### Halloween
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-halloween-bat-flight` | Bat flight | Particle layer | 4s |
+| `custom:cat-halloween-ghost-float` | Ghost float | Icon | 3.6s |
+| `custom:cat-halloween-jack-o-lantern-glow` | Jack-o'-lantern glow | Icon | 2.6s |
+| `custom:cat-halloween-creeping-fog` | Creeping fog | Particle layer | 8s |
+| `custom:cat-halloween-bubbling-cauldron` | Bubbling cauldron | Particle layer | 2.8s |
+| `custom:cat-halloween-spider-drop` | Spider drop | Icon | 3.6s |
+| `custom:cat-halloween-skull-chatter` | Skull chatter | Icon | 2.8s |
+
+### Valentine
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-valentine-lub-dub` | Lub-dub heartbeat | Icon | 1.2s |
+| `custom:cat-valentine-floating-hearts` | Floating hearts | Particle layer | 3s |
+| `custom:cat-valentine-heart-burst` | Heart burst | Particle layer | 2.4s |
+| `custom:cat-valentine-falling-petals` | Falling petals | Particle layer | 4s |
+| `custom:cat-valentine-blush-glow` | Blush glow | Element | 3s |
+| `custom:cat-valentine-cupid-sparkle` | Cupid sparkle | Particle layer | 3s |
+
+### Home automation
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-home-leak-drip-splash` | Leak drip & splash | Particle layer | 2.4s |
+| `custom:cat-home-fan-running` | Fan running | Icon | 1.2s |
+| `custom:cat-home-doorbell-ring` | Doorbell ring | Icon | 3s |
+| `custom:cat-home-motion-detected` | Motion detected | Icon | 2s |
+| `custom:cat-home-mail-arrived` | Mail arrived | Icon | 3s |
+| `custom:cat-home-energy-flow` | Energy flow | Particle layer | 4s |
+| `custom:cat-home-garden-sprinkler` | Garden sprinkler | Particle layer | 2s |
+
+### Light and colour (catalogue)
+
+| Preset | Name | Plays | Duration |
+| --- | --- | --- | --- |
+| `custom:cat-light-lamp-breathe` | Lamp breathe | Icon | 3.2s |
+| `custom:cat-light-lamp-switch-on` | Lamp switch-on | Icon | 2.4s |
+| `custom:cat-light-sunbeam-dust` | Sunbeam dust | Particle layer | 4s |
+| `custom:cat-light-candlelight` | Candlelight | Element | 2.8s |
+| `custom:cat-light-sunrise-warm-up` | Sunrise warm-up | Icon | 4s |
+| `custom:cat-light-party-sparkle` | Party sparkle | Particle layer | 3s |
 
 ## Reduced motion
 

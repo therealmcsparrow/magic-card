@@ -8,3 +8,4 @@
 export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-grid';
 export { followIcons } from './follow-icon';
 export { pickAnimatedIcon, currentIconPick, currentIconStyle } from './animated-icon-pick';
+export { pickCatalogue, pruneCatalogue } from './catalogue-pick';

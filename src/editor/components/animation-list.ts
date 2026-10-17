@@ -16,7 +16,12 @@ import { generateId } from '../../utils/id-generator';
 import { isSceneId, sceneDecorations } from '../../utils/seasonal-scenes';
 import type { AnimationPreset } from '../../utils/animation-presets';
 import { animationLibrary, type LibraryHass } from '../../services/animation-library';
-import { CUSTOM_PREFIX, customRefId, isCustomRef, type AnimationDoc } from '../../anim-studio/model';
+import { CUSTOM_PREFIX, customRefId, isCustomRef, validateAnimationDoc, type AnimationDoc } from '../../anim-studio/model';
+import type { CataloguePreset } from '../../contracts/preset-catalogue';
+import type { CardState } from './icon-animator/card-request';
+import { loadCatalogue } from './preset-catalogue-loader';
+import { applyCataloguePick } from './icon-animator/loader';
+import { animationDocList } from '../../utils/custom-animations';
 
 import './color-picker';
 import './unit-field';
@@ -38,11 +43,27 @@ const DIRECTIONS: Array<{ value: AnimationDirection; label: string }> = [
 
 const REPEATS = ['infinite', '1', '2', '3', '5'];
 
+/** The built-in group catalogue 'Light & colour' presets join (preset-catalogue 1.1.0). */
+const LIGHT_GROUP = 'Light & colour';
+/**
+ * The contract's CATALOGUE_DOC_PREFIX. Not imported: the icon animator chunk imports the contract,
+ * and a module both share stops being scope-hoisted (tests/preset-catalogue-card.test.ts checks
+ * the two match).
+ */
+export const CAT_PREFIX = 'cat-';
+const catRef = (entryId: string) => `${CUSTOM_PREFIX}${CAT_PREFIX}${entryId}`;
+
+/** Catalogue documents built for field defaults, per entry id (build() is fresh on every call). */
+const built = new Map<string, AnimationDoc>();
+/** Inline catalogue copies as read for field defaults, per stored object. */
+const read = new WeakMap<object, AnimationDoc | undefined>();
+
 /**
  * The design's preset animations: one condition-style block per entry (preset, target, play,
  * colour, strength, timing, intensity), "Add animation" below. Choosing a preset writes its values into the
  * fields; "Reset to preset" restores them. A muted note marks an entry that overrides an earlier
- * one on the same element and channel.
+ * one on the same element and channel. The preset dropdown also lists the preset catalogue (lazy
+ * chunk, ADR 0005): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
  */
 @customElement('mc-animation-list')
 export class AnimationList extends LitElement {
@@ -90,6 +111,8 @@ export class AnimationList extends LitElement {
   @state() private _custom = new Set<string>();
   /** The library's change counter: a new value re-renders ("My animations"). */
   @state() private _libVersion = 0;
+  /** The preset catalogue, once its chunk loaded (built-ins only until then, or when it fails). */
+  @state() private _catalogue?: CataloguePreset[];
 
   private _unsubLibrary?: () => void;
 
@@ -98,6 +121,10 @@ export class AnimationList extends LitElement {
     this._unsubLibrary ??= animationLibrary.subscribe(() => {
       this._libVersion = animationLibrary.version;
     });
+    if (!this._catalogue)
+      void loadCatalogue().then((m) => {
+        if (m) this._catalogue = m.CATALOGUE;
+      });
   }
 
   disconnectedCallback(): void {
@@ -116,9 +143,64 @@ export class AnimationList extends LitElement {
     return animationLibrary.status === 'ready' ? animationLibrary.list() : [];
   }
 
-  /** The library document of a `custom:<id>` preset. */
+  /**
+   * The document of a `custom:<id>` preset: the library's; for a catalogue pick (`cat-*`) else the
+   * copy stored in the card, else the catalogue entry's own.
+   */
   private _doc(preset: string): AnimationDoc | undefined {
-    return isCustomRef(preset) && animationLibrary.status === 'ready' ? animationLibrary.get(customRefId(preset)) : undefined;
+    if (!isCustomRef(preset)) return undefined;
+    const id = customRefId(preset);
+    const lib = animationLibrary.status === 'ready' ? animationLibrary.get(id) : undefined;
+    if (lib || !id.startsWith(CAT_PREFIX)) return lib;
+    const raw = this._stored(id);
+    if (raw) {
+      if (!read.has(raw)) {
+        const v = validateAnimationDoc(raw, { v2: 'lenient' });
+        read.set(raw, v.ok ? v.doc : undefined);
+      }
+      return read.get(raw);
+    }
+    const entry = this._catEntry(preset);
+    if (entry && !built.has(entry.id)) built.set(entry.id, entry.build());
+    return entry && built.get(entry.id);
+  }
+
+  /**
+   * The card's stored document `id` (the card editor's state, asked like the icon animator's
+   * card-request.ts does): its own, else on a linked card the template's unless hidden or local.
+   */
+  private _stored(id: string): Record<string, unknown> | undefined {
+    const detail: { sm?: CardState } = {};
+    this.dispatchEvent(new CustomEvent('mc-card-bridge', { bubbles: true, composed: true, detail }));
+    const c = detail.sm?.getConfig();
+    const own = animationDocList(c?.custom_animations).find((d) => d.id === id);
+    if (own || !c?.template || c.not_synced?.includes('custom_animations') || c.hidden_animations?.includes(id)) return own;
+    return animationDocList(detail.sm?.getState().templateAnimations).find((d) => d.id === id);
+  }
+
+  /** The catalogue entry a `custom:cat-<entry id>` preset plays (once the catalogue loaded). */
+  private _catEntry(preset: string): CataloguePreset | undefined {
+    return this._catalogue?.find((e) => catRef(e.id) === preset);
+  }
+
+  /**
+   * The Preset dropdown's pick: a catalogue preset is stored in the card first (icon animator
+   * chunk); when that cannot happen (outside the card editor, chunk failed) nothing changes.
+   */
+  private _pickPreset(index: number, select: HTMLSelectElement): void {
+    const was = this.animations[index]?.preset ?? '';
+    const list = this.animations.map((a, i) => (i === index ? applyPreset(a, select.value) : a));
+    const entry = this._catEntry(select.value);
+    if (!entry) return this._write(list);
+    void applyCataloguePick(this, entry, list, (l) => this._write(l)).then((ok) => {
+      if (!ok) select.value = was;
+    });
+  }
+
+  private _catOptions(group: string, value: string): TemplateResult[] {
+    return (this._catalogue ?? [])
+      .filter((e) => e.group === group)
+      .map((e) => html`<option value=${catRef(e.id)} ?selected=${catRef(e.id) === value}>${e.name}</option>`);
   }
 
   private _write(list: AnimationConfig[]): void {
@@ -170,14 +252,20 @@ export class AnimationList extends LitElement {
 
   private _presetSelect(id: string, index: number, value: string): TemplateResult {
     const mine = this._mine();
-    const known = !!getAnimationPreset(value) || !!this._doc(value);
-    const unknown = isCustomRef(value) ? `${customRefId(value)} (not found)` : `${value} (unknown)`;
+    const cat = isCustomRef(value) && customRefId(value).startsWith(CAT_PREFIX);
+    const known = !!getAnimationPreset(value) || !!this._catEntry(value) || (!cat && !!this._doc(value));
+    // a stored catalogue pick reads as its id until the catalogue loaded (or when it is not in it)
+    const unknown = cat
+      ? this._doc(value)?.name ?? customRefId(value)
+      : isCustomRef(value)
+        ? `${customRefId(value)} (not found)`
+        : `${value} (unknown)`;
     return html`
       <div class="select">
         <select
           class="input"
           id=${id}
-          @change=${(e: Event) => this._update(index, applyPreset(this.animations[index], (e.target as HTMLSelectElement).value))}
+          @change=${(e: Event) => this._pickPreset(index, e.target as HTMLSelectElement)}
         >
           ${known ? nothing : html`<option value=${value} selected>${unknown}</option>`}
           ${mine.length
@@ -190,8 +278,15 @@ export class AnimationList extends LitElement {
               ${ANIMATION_PRESETS.filter((p) => p.group === g).map(
                 (p) => html`<option value=${p.id} ?selected=${p.id === value}>${p.name}</option>`,
               )}
+              ${g === LIGHT_GROUP ? this._catOptions(g, value) : nothing}
             </optgroup>`,
           )}
+          ${this._catalogue
+            ? // the catalogue comes in CATALOGUE_GROUPS order
+              [...new Set(this._catalogue.map((e) => e.group))].filter((g) => g !== LIGHT_GROUP).map(
+                (g) => html`<optgroup label=${g}>${this._catOptions(g, value)}</optgroup>`,
+              )
+            : nothing}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
@@ -526,7 +621,13 @@ export class AnimationList extends LitElement {
     if (!doc) {
       return html`<div class="cond">
         ${head}
-        <p class="help">${ref.startsWith('quick-') ? 'An animated icon stored in this card.' : this._missingHelp()}</p>
+        <p class="help">
+          ${ref.startsWith('quick-')
+            ? 'An animated icon stored in this card.'
+            : ref.startsWith(CAT_PREFIX)
+              ? 'A preset stored in this card.'
+              : this._missingHelp()}
+        </p>
         ${this._play(index, a, trigger, id('play'))}
       </div>`;
     }
