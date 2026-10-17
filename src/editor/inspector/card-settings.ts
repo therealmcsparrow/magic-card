@@ -205,14 +205,14 @@ export function renderCardDesign(
 
   const str = (k: string) => src.get(k) as string | undefined;
   const fields: Record<string, () => TemplateResult | typeof nothing> = {
-    card_height: () => renderUnitField('Card height', str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto'),
-    padding: () => renderBoxField('Padding', str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc),
-    background: () => renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc, 'css'),
+    card_height: () => html`${renderUnitField('Card height', str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
+    padding: () => html`${renderBoxField('Padding', str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
+    background: () => html`${renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
     background_image: () =>
-      renderMediaField('Background image', str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc),
-    border_radius: () => renderUnitField('Border radius', str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc),
+      html`${renderMediaField('Background image', str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
+    border_radius: () => html`${renderUnitField('Border radius', str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc)}${unset('border_radius')}`,
     box_shadow: () =>
-      renderTextField('Box shadow', str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: 'Theme default', mono: true }),
+      html`${renderTextField('Box shadow', str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: 'Theme default', mono: true })}${unset('box_shadow')}`,
     shape: () => html`<div class="field">
       ${lbl('Shape', 'shape')}
       <mc-shape-editor

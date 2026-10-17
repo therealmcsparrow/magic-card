@@ -213,6 +213,10 @@ export class AnimPartPresets extends LitElement {
       .help {
         margin: 0;
       }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
       .params {
         display: grid;
         gap: 10px;
@@ -235,6 +239,7 @@ export class AnimPartPresets extends LitElement {
         display: flex;
         align-items: center;
         gap: 8px;
+        margin-top: 4px;
       }
       .grow {
         flex: 1;

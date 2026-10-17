@@ -140,6 +140,9 @@ export class Inspector extends LitElement {
 
   protected updated(): void {
     this._syncScroller();
+    // the card Design tab's "Editing design for" select follows the state (?selected alone does not move it)
+    const view = this.shadowRoot?.querySelector<HTMLSelectElement>('select#design-view');
+    if (view && view.value !== this._designView && [...view.options].some((o) => o.value === this._designView)) view.value = this._designView;
     const tab = this.shadowRoot?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
     if (!tab) return;
     // Keep the active tab visible in the horizontally scrolling tablist (without scrolling the page).
@@ -825,10 +828,10 @@ export class Inspector extends LitElement {
         padding: 0 8px 0 4px;
         border: 0;
         border-radius: var(--mc-radius);
-        background: transparent;
+        background: color-mix(in srgb, var(--mc-surface-2) 55%, transparent);
         text-align: left;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
         color: var(--mc-text);
       }
       .dgroup-btn:hover {
