@@ -1,0 +1,149 @@
+# Weather tower: a stone tower with a window per fact (temperature, wind, humidity) and a flag on top, standing in a sky that drifts with clouds.
+# The flag sways at a breezy pace. The condition icon and the big temperature sit in the sky.
+# It uses theme colours only, so it follows the dashboard's theme.
+# Entities: weather.home
+type: custom:magic-card
+name: Weather tower
+border_radius: 26px
+padding: 20px
+rows:
+  - id: scene
+    column_widths: [150px, 1fr]
+    gap: 14px
+    columns:
+      - vertical_align: end
+        gap: 0px
+        modules:
+          - type: icon
+            icon: svg
+            svg: '<svg viewBox="0 0 64 64"><path d="M10 4 V62" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M12 6 L56 18 L12 32 Z" fill="currentColor"/></svg>'
+            size: 52px
+            design:
+              color: var(--accent-color)
+              margin: 0 0 -8px 14px
+              animations:
+                - { id: wave, preset: sway, target: icon, intensity: 8, duration: 2.5s }
+          - type: separator
+            separator_style: none
+            design:
+              height: 14px
+              margin: 0 6px
+              background: "repeating-linear-gradient(90deg, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 0px, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 18px, transparent 18px, transparent 28px)"
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              height: 58px
+              box_sizing: border-box
+              padding: 0 10px
+              background_color: "color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color))"
+              border_top: "2px solid var(--divider-color)"
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design:
+                  padding: 6px 12px
+                  border_radius: 18px 18px 4px 4px
+                  background_color: var(--card-background-color)
+                  border: "2px solid var(--secondary-text-color)"
+                modules:
+                  - type: icon
+                    icon: mdi:thermometer
+                    size: 16px
+                    design: { color: var(--primary-color) }
+                  - type: text
+                    use_entity: true
+                    entity: weather.home
+                    attribute: temperature
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              height: 58px
+              box_sizing: border-box
+              padding: 0 10px
+              background_color: "color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color))"
+              border_top: "2px solid var(--divider-color)"
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design:
+                  padding: 6px 12px
+                  border_radius: 18px 18px 4px 4px
+                  background_color: var(--card-background-color)
+                  border: "2px solid var(--secondary-text-color)"
+                modules:
+                  - type: icon
+                    icon: mdi:weather-windy
+                    size: 16px
+                    design: { color: var(--primary-color) }
+                  - type: text
+                    use_entity: true
+                    entity: weather.home
+                    attribute: wind_speed
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              height: 58px
+              box_sizing: border-box
+              padding: 0 10px
+              background_color: "color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color))"
+              border_top: "2px solid var(--divider-color)"
+            modules:
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design:
+                  padding: 6px 12px
+                  border_radius: 18px 18px 4px 4px
+                  background_color: var(--card-background-color)
+                  border: "2px solid var(--secondary-text-color)"
+                modules:
+                  - type: icon
+                    icon: mdi:water-percent
+                    size: 16px
+                    design: { color: var(--primary-color) }
+                  - type: text
+                    use_entity: true
+                    entity: weather.home
+                    attribute: humidity
+                    design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 4px
+            design:
+              height: 238px
+              padding: 28px 12px 0
+              box_sizing: border-box
+              border_radius: 18px
+              overflow: hidden
+              background: "linear-gradient(180deg, color-mix(in srgb, var(--primary-color) 22%, var(--card-background-color)), color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color)))"
+              animations:
+                - { id: clouds, preset: clouds-drift, color: var(--card-background-color), strength: 90, intensity: 3, duration: 5s }
+            modules:
+              - type: icon
+                entity: weather.home
+                use_entity_icon: true
+                size: 56px
+                design: { color: var(--primary-color) }
+              - type: text
+                use_entity: true
+                entity: weather.home
+                attribute: temperature
+                design: { text_align: center, font_size: 40px, font_weight: "800", color: var(--primary-text-color), line_height: "1.05" }
+              - type: text
+                use_entity: true
+                entity: weather.home
+                design: { text_align: center, font_size: 13px, font_weight: "700", color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1.5px }

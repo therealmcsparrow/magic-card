@@ -1,8 +1,8 @@
 # Card gallery
 
-Sixty complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
+Eighty complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
 
-![All sixty cards](images/all-cards.png)
+![All eighty cards](images/all-cards.png)
 
 ## Pages
 
@@ -17,10 +17,11 @@ Sixty complete cards to copy and adapt, from a weather card to a Christmas count
 | [Garden and outdoors](garden-outdoors.md) | Plant care, Pool, Bin day, Garden irrigation, Aquarium |
 | [Seasonal](seasonal.md) | Autumn garden, Halloween porch, Christmas countdown |
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
+| [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Bard's hall, Quest board |
 
 ## Animated cards
 
-On twenty of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
+On thirty-five of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
 
 | Card | Page |
 | --- | --- |
@@ -44,6 +45,21 @@ On twenty of the cards something moves, so their pictures are short recordings t
 | [Aquarium](garden-outdoors.md#aquarium) | Garden and outdoors |
 | [Halloween porch](seasonal.md#halloween-porch) | Seasonal |
 | [Christmas countdown](seasonal.md#christmas-countdown) | Seasonal |
+| [Reactor core](sci-fi-fantasy.md#reactor-core) | Sci-fi and fantasy |
+| [Shield grid](sci-fi-fantasy.md#shield-grid) | Sci-fi and fantasy |
+| [Life support](sci-fi-fantasy.md#life-support) | Sci-fi and fantasy |
+| [Star chart](sci-fi-fantasy.md#star-chart) | Sci-fi and fantasy |
+| [Comms array](sci-fi-fantasy.md#comms-array) | Sci-fi and fantasy |
+| [Grow bay](sci-fi-fantasy.md#grow-bay) | Sci-fi and fantasy |
+| [Cargo bay](sci-fi-fantasy.md#cargo-bay) | Sci-fi and fantasy |
+| [Orbital weather](sci-fi-fantasy.md#orbital-weather) | Sci-fi and fantasy |
+| [Cauldron](sci-fi-fantasy.md#cauldron) | Sci-fi and fantasy |
+| [Enchanted lanterns](sci-fi-fantasy.md#enchanted-lanterns) | Sci-fi and fantasy |
+| [Crystal ball](sci-fi-fantasy.md#crystal-ball) | Sci-fi and fantasy |
+| [Rune ward](sci-fi-fantasy.md#rune-ward) | Sci-fi and fantasy |
+| [Weather tower](sci-fi-fantasy.md#weather-tower) | Sci-fi and fantasy |
+| [Herb garden](sci-fi-fantasy.md#herb-garden) | Sci-fi and fantasy |
+| [Bard's hall](sci-fi-fantasy.md#bards-hall) | Sci-fi and fantasy |
 
 ## Before you paste
 
@@ -53,6 +69,7 @@ On twenty of the cards something moves, so their pictures are short recordings t
 -   The pictures were taken with sample states. Your values, names and icons will differ.
 -   Many animations only play in a given state, for example while a light is on or a vacuum is cleaning. The notes under each card say which.
 -   With reduced motion turned on in your system, the animations stand still.
+-   A few cards were shot with a theme preset. The note under each of them names the preset and links to its page in the theme examples.
 
 ## Related
 

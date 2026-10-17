@@ -1,0 +1,221 @@
+# Mainframe: a server rack with four slots for CPU, memory, disk and temperature, each with a 20-segment load bar and an LED.
+# Bars and LEDs turn amber past 75 % (70 degrees for the temperature) and red past 90 % (85 degrees).
+# Entities: sensor.server_cpu, sensor.server_ram, sensor.server_disk, sensor.server_temp
+type: custom:magic-card
+name: Mainframe
+background: "#121316"
+border_radius: 18px
+padding: 14px
+box_shadow: "0 22px 48px rgba(0,0,0,0.6)"
+rows:
+  - id: rack
+    column_widths: [16px, 1fr, 16px]
+    gap: 12px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { height: 100%, min_height: 250px, border_radius: 4px, background: "linear-gradient(90deg, #3a3f47, #23272d)", box_shadow: "inset 0 0 0 1px rgba(255,255,255,0.06)" }
+            modules: []
+      - gap: 8px
+        modules:
+          - type: text
+            text: Mainframe
+            design: { font_size: 11px, font_weight: "700", color: "#8d96a0", text_transform: uppercase, letter_spacing: 2.5px, padding: 2px 4px 4px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: horizontal
+            gap: 12px
+            align: center
+            design: { padding: 12px 14px, border_radius: 8px, background_color: "#1c1f24", border: "1px solid #2a2e35", box_shadow: "inset 0 1px 0 rgba(255,255,255,0.04)" }
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design:
+                  color: "#4dd8ff"
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_cpu, above: 74.99 }], design: { color: "#ffb020" } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_cpu, above: 89.99 }], design: { color: "#ff5a5a" } }
+              - type: text
+                text: CPU
+                design: { font_size: 12px, font_weight: "700", color: "#c8d0d8", width: 40px, letter_spacing: 1.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+              - type: vertical
+                gap: 0px
+                design:
+                  position: relative
+                  flex: "1"
+                  height: 14px
+                  border_radius: 3px
+                  background_color: "#0d0f12"
+                  overflow: hidden
+                  value_background:
+                    type: fill
+                    entity: sensor.server_cpu
+                    direction: right
+                    min: 0
+                    max: 100
+                    color: "#4dd8ff"
+                    opacity: 100%
+                    wave: false
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_cpu, above: 74.99 }], design: { value_background: { type: fill, entity: sensor.server_cpu, direction: right, min: 0, max: 100, color: "#ffb020", opacity: 100%, wave: false } } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_cpu, above: 89.99 }], design: { value_background: { type: fill, entity: sensor.server_cpu, direction: right, min: 0, max: 100, color: "#ff5a5a", opacity: 100%, wave: false } } }
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      position: absolute
+                      inset: 0
+                      background: "repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 2px), #0d0f12 calc(5% - 2px), #0d0f12 5%)"
+              - type: text
+                use_entity: true
+                entity: sensor.server_cpu
+                design: { font_size: 13px, font_weight: "700", color: "#f1f4f7", width: 52px, text_align: right, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: horizontal
+            gap: 12px
+            align: center
+            design: { padding: 12px 14px, border_radius: 8px, background_color: "#1c1f24", border: "1px solid #2a2e35", box_shadow: "inset 0 1px 0 rgba(255,255,255,0.04)" }
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design:
+                  color: "#4dd8ff"
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_ram, above: 74.99 }], design: { color: "#ffb020" } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_ram, above: 89.99 }], design: { color: "#ff5a5a" } }
+              - type: text
+                text: MEM
+                design: { font_size: 12px, font_weight: "700", color: "#c8d0d8", width: 40px, letter_spacing: 1.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+              - type: vertical
+                gap: 0px
+                design:
+                  position: relative
+                  flex: "1"
+                  height: 14px
+                  border_radius: 3px
+                  background_color: "#0d0f12"
+                  overflow: hidden
+                  value_background:
+                    type: fill
+                    entity: sensor.server_ram
+                    direction: right
+                    min: 0
+                    max: 100
+                    color: "#4dd8ff"
+                    opacity: 100%
+                    wave: false
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_ram, above: 74.99 }], design: { value_background: { type: fill, entity: sensor.server_ram, direction: right, min: 0, max: 100, color: "#ffb020", opacity: 100%, wave: false } } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_ram, above: 89.99 }], design: { value_background: { type: fill, entity: sensor.server_ram, direction: right, min: 0, max: 100, color: "#ff5a5a", opacity: 100%, wave: false } } }
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      position: absolute
+                      inset: 0
+                      background: "repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 2px), #0d0f12 calc(5% - 2px), #0d0f12 5%)"
+              - type: text
+                use_entity: true
+                entity: sensor.server_ram
+                design: { font_size: 13px, font_weight: "700", color: "#f1f4f7", width: 52px, text_align: right, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: horizontal
+            gap: 12px
+            align: center
+            design: { padding: 12px 14px, border_radius: 8px, background_color: "#1c1f24", border: "1px solid #2a2e35", box_shadow: "inset 0 1px 0 rgba(255,255,255,0.04)" }
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design:
+                  color: "#4dd8ff"
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_disk, above: 74.99 }], design: { color: "#ffb020" } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_disk, above: 89.99 }], design: { color: "#ff5a5a" } }
+              - type: text
+                text: DISK
+                design: { font_size: 12px, font_weight: "700", color: "#c8d0d8", width: 40px, letter_spacing: 1.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+              - type: vertical
+                gap: 0px
+                design:
+                  position: relative
+                  flex: "1"
+                  height: 14px
+                  border_radius: 3px
+                  background_color: "#0d0f12"
+                  overflow: hidden
+                  value_background:
+                    type: fill
+                    entity: sensor.server_disk
+                    direction: right
+                    min: 0
+                    max: 100
+                    color: "#4dd8ff"
+                    opacity: 100%
+                    wave: false
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_disk, above: 74.99 }], design: { value_background: { type: fill, entity: sensor.server_disk, direction: right, min: 0, max: 100, color: "#ffb020", opacity: 100%, wave: false } } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_disk, above: 89.99 }], design: { value_background: { type: fill, entity: sensor.server_disk, direction: right, min: 0, max: 100, color: "#ff5a5a", opacity: 100%, wave: false } } }
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      position: absolute
+                      inset: 0
+                      background: "repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 2px), #0d0f12 calc(5% - 2px), #0d0f12 5%)"
+              - type: text
+                use_entity: true
+                entity: sensor.server_disk
+                design: { font_size: 13px, font_weight: "700", color: "#f1f4f7", width: 52px, text_align: right, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: horizontal
+            gap: 12px
+            align: center
+            design: { padding: 12px 14px, border_radius: 8px, background_color: "#1c1f24", border: "1px solid #2a2e35", box_shadow: "inset 0 1px 0 rgba(255,255,255,0.04)" }
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design:
+                  color: "#4dd8ff"
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_temp, above: 69.99 }], design: { color: "#ffb020" } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_temp, above: 84.99 }], design: { color: "#ff5a5a" } }
+              - type: text
+                text: TEMP
+                design: { font_size: 12px, font_weight: "700", color: "#c8d0d8", width: 40px, letter_spacing: 1.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+              - type: vertical
+                gap: 0px
+                design:
+                  position: relative
+                  flex: "1"
+                  height: 14px
+                  border_radius: 3px
+                  background_color: "#0d0f12"
+                  overflow: hidden
+                  value_background:
+                    type: fill
+                    entity: sensor.server_temp
+                    direction: right
+                    min: 20
+                    max: 100
+                    color: "#4dd8ff"
+                    opacity: 100%
+                    wave: false
+                  conditional:
+                    - { id: warm, name: Warning, conditions: [{ type: state, entity: sensor.server_temp, above: 69.99 }], design: { value_background: { type: fill, entity: sensor.server_temp, direction: right, min: 20, max: 100, color: "#ffb020", opacity: 100%, wave: false } } }
+                    - { id: hot, name: Critical, conditions: [{ type: state, entity: sensor.server_temp, above: 84.99 }], design: { value_background: { type: fill, entity: sensor.server_temp, direction: right, min: 20, max: 100, color: "#ff5a5a", opacity: 100%, wave: false } } }
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      position: absolute
+                      inset: 0
+                      background: "repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 2px), #0d0f12 calc(5% - 2px), #0d0f12 5%)"
+              - type: text
+                use_entity: true
+                entity: sensor.server_temp
+                design: { font_size: 13px, font_weight: "700", color: "#f1f4f7", width: 52px, text_align: right, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { height: 100%, min_height: 250px, border_radius: 4px, background: "linear-gradient(90deg, #3a3f47, #23272d)", box_shadow: "inset 0 0 0 1px rgba(255,255,255,0.06)" }
+            modules: []

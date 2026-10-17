@@ -1,0 +1,215 @@
+# Grow bay: three glass tubes show the soil moisture of three plants, with bubbles in the full ones and an amber pulse on a dry one.
+# A tube under 25 % turns amber and loses its bubbles. The status line says when the ficus needs water.
+# Entities: sensor.monstera_moisture, sensor.basil_moisture, sensor.ficus_moisture
+type: custom:magic-card
+name: Grow bay
+background: "linear-gradient(170deg, #08302e 0%, #051c1b 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0,0,0,0.5)"
+rows:
+  - id: head
+    padding: 0 0 14px
+    columns:
+      - modules:
+          - type: text
+            text: Grow bay
+            design: { font_size: 12px, font_weight: "700", color: "#7ff0df", text_transform: uppercase, letter_spacing: 2px }
+  - id: tubes
+    layout: "1-1-1"
+    gap: 14px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 170px
+              border_radius: 36px 36px 22px 22px
+              border: "2px solid #3fd0c0"
+              background_color: "rgba(255,255,255,0.06)"
+              overflow: hidden
+              value_background:
+                type: fill
+                entity: sensor.monstera_moisture
+                color: "#36c6f0"
+                opacity: 65%
+                wave: false
+              animations:
+                - { id: bubbles, preset: bubbles, color: "#e6fbff", strength: 80, intensity: 3, duration: 4s }
+              conditional:
+                - id: dry
+                  name: Dry
+                  conditions: [{ type: state, entity: sensor.monstera_moisture, below: 25 }]
+                  design:
+                    border: "2px solid #ffb020"
+                    value_background: { type: fill, entity: sensor.monstera_moisture, color: "#ffb020", opacity: 55%, wave: false }
+                    animations:
+                      - { id: warn, preset: breathing-border, color: "#ffb020", intensity: 4, duration: 2s }
+            modules:
+              - type: icon
+                icon: mdi:leaf
+                size: 22px
+                design: { color: "#7ff0df", width: 42px, height: 42px, margin_top: 12px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#06201f", box_shadow: "0 0 0 2px rgba(63,208,192,0.35)" }
+          - type: vertical
+            align: center
+            gap: 0px
+            design: { padding: 10px 0 0 }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.monstera_moisture
+                design: { font_size: 22px, font_weight: "800", color: "#e9fffb" }
+              - type: text
+                use_entity: true
+                entity: sensor.monstera_moisture
+                entity_display: name
+                design: { font_size: 12px, color: "#8cc9c2", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: text
+                text: Dry
+                design: { font_size: 11px, font_weight: "800", color: "#ffb020", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid #ffb020", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.monstera_moisture, below: 25 }] }
+              - type: text
+                text: Fine
+                design: { font_size: 11px, font_weight: "800", color: "#7ff0df", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid rgba(127,240,223,0.5)", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.monstera_moisture, above: 24.99 }] }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 170px
+              border_radius: 36px 36px 22px 22px
+              border: "2px solid #3fd0c0"
+              background_color: "rgba(255,255,255,0.06)"
+              overflow: hidden
+              value_background:
+                type: fill
+                entity: sensor.basil_moisture
+                color: "#36c6f0"
+                opacity: 65%
+                wave: false
+              animations:
+                - { id: bubbles, preset: bubbles, color: "#e6fbff", strength: 80, intensity: 3, duration: 4s }
+              conditional:
+                - id: dry
+                  name: Dry
+                  conditions: [{ type: state, entity: sensor.basil_moisture, below: 25 }]
+                  design:
+                    border: "2px solid #ffb020"
+                    value_background: { type: fill, entity: sensor.basil_moisture, color: "#ffb020", opacity: 55%, wave: false }
+                    animations:
+                      - { id: warn, preset: breathing-border, color: "#ffb020", intensity: 4, duration: 2s }
+            modules:
+              - type: icon
+                icon: mdi:sprout
+                size: 22px
+                design: { color: "#7ff0df", width: 42px, height: 42px, margin_top: 12px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#06201f", box_shadow: "0 0 0 2px rgba(63,208,192,0.35)" }
+          - type: vertical
+            align: center
+            gap: 0px
+            design: { padding: 10px 0 0 }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.basil_moisture
+                design: { font_size: 22px, font_weight: "800", color: "#e9fffb" }
+              - type: text
+                use_entity: true
+                entity: sensor.basil_moisture
+                entity_display: name
+                design: { font_size: 12px, color: "#8cc9c2", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: text
+                text: Dry
+                design: { font_size: 11px, font_weight: "800", color: "#ffb020", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid #ffb020", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.basil_moisture, below: 25 }] }
+              - type: text
+                text: Fine
+                design: { font_size: 11px, font_weight: "800", color: "#7ff0df", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid rgba(127,240,223,0.5)", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.basil_moisture, above: 24.99 }] }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 170px
+              border_radius: 36px 36px 22px 22px
+              border: "2px solid #3fd0c0"
+              background_color: "rgba(255,255,255,0.06)"
+              overflow: hidden
+              value_background:
+                type: fill
+                entity: sensor.ficus_moisture
+                color: "#36c6f0"
+                opacity: 65%
+                wave: false
+              animations:
+                - { id: bubbles, preset: bubbles, color: "#e6fbff", strength: 80, intensity: 3, duration: 4s }
+              conditional:
+                - id: dry
+                  name: Dry
+                  conditions: [{ type: state, entity: sensor.ficus_moisture, below: 25 }]
+                  design:
+                    border: "2px solid #ffb020"
+                    value_background: { type: fill, entity: sensor.ficus_moisture, color: "#ffb020", opacity: 55%, wave: false }
+                    animations:
+                      - { id: warn, preset: breathing-border, color: "#ffb020", intensity: 4, duration: 2s }
+            modules:
+              - type: icon
+                icon: mdi:flower-tulip
+                size: 22px
+                design: { color: "#7ff0df", width: 42px, height: 42px, margin_top: 12px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#06201f", box_shadow: "0 0 0 2px rgba(63,208,192,0.35)" }
+          - type: vertical
+            align: center
+            gap: 0px
+            design: { padding: 10px 0 0 }
+            modules:
+              - type: text
+                use_entity: true
+                entity: sensor.ficus_moisture
+                design: { font_size: 22px, font_weight: "800", color: "#e9fffb" }
+              - type: text
+                use_entity: true
+                entity: sensor.ficus_moisture
+                entity_display: name
+                design: { font_size: 12px, color: "#8cc9c2", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: text
+                text: Dry
+                design: { font_size: 11px, font_weight: "800", color: "#ffb020", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid #ffb020", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.ficus_moisture, below: 25 }] }
+              - type: text
+                text: Fine
+                design: { font_size: 11px, font_weight: "800", color: "#7ff0df", margin_top: 4px, padding: 2px 10px, border_radius: 999px, border: "1px solid rgba(127,240,223,0.5)", text_transform: uppercase, letter_spacing: 1px }
+                display: { conditions: [{ type: state, entity: sensor.ficus_moisture, above: 24.99 }] }
+  - id: status
+    padding: 16px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 10px, border_radius: 14px, background_color: "rgba(255,176,32,0.14)" }
+            display: { conditions: [{ type: state, entity: sensor.ficus_moisture, below: 25 }] }
+            modules:
+              - type: icon
+                icon: mdi:water-alert
+                size: 18px
+                design: { color: "#ffb020" }
+              - type: text
+                text: Ficus needs water
+                design: { font_size: 13px, font_weight: "700", color: "#ffd48a" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 10px, border_radius: 14px, background_color: "rgba(127,240,223,0.12)" }
+            display: { conditions: [{ type: state, entity: sensor.ficus_moisture, above: 24.99 }] }
+            modules:
+              - type: icon
+                icon: mdi:check-circle-outline
+                size: 18px
+                design: { color: "#7ff0df" }
+              - type: text
+                text: All plants are fine
+                design: { font_size: 13px, font_weight: "700", color: "#bff7ef" }
