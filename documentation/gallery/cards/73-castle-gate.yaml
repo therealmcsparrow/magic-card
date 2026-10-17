@@ -48,10 +48,10 @@ rows:
                 design:
                   position: absolute
                   top: 0px
-                  left: 0px
-                  width: 100%
+                  left: -1px
+                  width: 200px
                   height: 100%
-                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 14px, var(--accent-color) 14px, var(--accent-color) 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
+                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 7px, var(--accent-color) 7px, var(--accent-color) 13px, transparent 13px, transparent 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
                   opacity: "0.85"
                   transition: height 0.4s
                   conditional:

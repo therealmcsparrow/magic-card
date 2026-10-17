@@ -27,7 +27,8 @@ rows:
             separator_style: none
             design:
               height: 14px
-              margin: 0 6px
+              width: 130px
+              margin: 0 auto
               background: "repeating-linear-gradient(90deg, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 0px, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 18px, transparent 18px, transparent 28px)"
           - type: horizontal
             gap: 8px

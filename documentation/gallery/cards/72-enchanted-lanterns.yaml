@@ -20,8 +20,9 @@ rows:
       - modules:
           - type: separator
             separator_style: none
-            design: { height: 8px, border_radius: 4px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)" }
+            design: { height: 8px, border_radius: 4px 4px 0 0, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)" }
   - id: lanterns
+    design: { margin_top: -8px }
     layout: "1-1-1-1"
     gap: 10px
     columns:
@@ -31,8 +32,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -91,8 +92,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -151,8 +152,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -211,8 +212,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)

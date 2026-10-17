@@ -1,5 +1,5 @@
 # Orbital weather: the weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath.
-# Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle when it is clear.
+# Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle in the sky in every weather.
 # Entities: weather.harbor
 type: custom:magic-card
 name: Orbital weather

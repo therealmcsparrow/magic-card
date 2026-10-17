@@ -177,7 +177,7 @@ rows:
 
 ## Shield grid
 
-A honeycomb of hex cells for the doors and the hallway motion sensor. A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is armed. It uses theme colours only, so it follows the dashboard's theme.
+A honeycomb of hex cells for the doors and the hallway motion sensor. A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is set to armed home. It uses theme colours only, so it follows the dashboard's theme.
 
 Shot with the Cobalt Prism theme preset in dark mode. See [theme examples](../themes/examples/README.md#cobalt-prism). With another theme the card uses that theme's colours.
 
@@ -189,7 +189,7 @@ File: [cards/62-shield-grid.yaml](cards/62-shield-grid.yaml)
 
 ```yaml
 # Shield grid: a honeycomb of hex cells for the doors and the hallway motion sensor.
-# A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is armed.
+# A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is set to armed home.
 # It uses theme colours only, so it follows the dashboard's theme.
 # Entities: alarm_control_panel.home, binary_sensor.front_door, binary_sensor.back_door, binary_sensor.hall_motion
 type: custom:magic-card
@@ -439,7 +439,7 @@ rows:
 
 ## Life support
 
-A panel board with a four-colour stripe, the room temperature in a breathing halo and three air bars with a status word each. The halo breathes every 6 s, and every 3 s while the heating is running. It uses theme colours only, so it follows the dashboard's theme.
+A panel board with a four-colour stripe, the room temperature in a breathing halo and three air bars with a status word each. The halo breathes every 6 s, and every 3 s while the heating or cooling is running. It uses theme colours only, so it follows the dashboard's theme.
 
 Shot with the Deep Survey theme preset in light mode. See [theme examples](../themes/examples/README.md#deep-survey). With another theme the card uses that theme's colours.
 
@@ -451,7 +451,7 @@ File: [cards/63-life-support.yaml](cards/63-life-support.yaml)
 
 ```yaml
 # Life support: a panel board with a four-colour stripe, the room temperature in a breathing halo and three air bars with a status word each.
-# The halo breathes every 6 s, and every 3 s while the heating is running.
+# The halo breathes every 6 s, and every 3 s while the heating or cooling is running.
 # It uses theme colours only, so it follows the dashboard's theme.
 # Entities: climate.living_room, sensor.co2, sensor.indoor_humidity, sensor.pm25
 type: custom:magic-card
@@ -491,7 +491,8 @@ rows:
               conditional:
                 - id: working
                   name: Heating or cooling
-                  conditions: [{ type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating }]
+                  mode: any
+                  conditions: [{ type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating }, { type: attribute, entity: climate.living_room, attribute: hvac_action, state: cooling }]
                   design:
                     animations:
                       - { id: halo, preset: aura, color: var(--accent-color), strength: 55, intensity: 22, duration: 3s }
@@ -635,7 +636,7 @@ rows:
 
 ## Airlock
 
-A round hatch for the front door lock. Tap the hatch to unlock the door, and hold it for the lock's details. Two lamps show the latch and the door contact. The hatch is one tile. Replace the two entities with your own lock and door sensor.
+A round hatch for the front door lock. Tap the hatch while the door is unlocked to lock it. While it is locked, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact. The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 
 ![Airlock](images/64-airlock.png)
 
@@ -644,8 +645,8 @@ Entities: `lock.front_door`, `binary_sensor.front_door`
 File: [cards/64-airlock.yaml](cards/64-airlock.yaml)
 
 ```yaml
-# Airlock: a round hatch for the front door lock. Tap the hatch to unlock the door, and hold it for the lock's details. Two lamps show the latch and the door contact.
-# The hatch is one tile. Replace the two entities with your own lock and door sensor.
+# Airlock: a round hatch for the front door lock. Tap the hatch while the door is unlocked to lock it. While it is locked, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
+# The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
 # Entities: lock.front_door, binary_sensor.front_door
 type: custom:magic-card
 name: Airlock
@@ -685,8 +686,58 @@ rows:
               box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
               transition: transform 0.15s
               hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state_not: locked }] }
             actions:
-              tap_action: { action: perform-action, service: lock.unlock, data: { entity_id: lock.front_door } }
+              tap_action: { action: perform-action, service: lock.lock, data: { entity_id: lock.front_door } }
+              hold_action: { action: more-info, entity: lock.front_door }
+            modules:
+              - type: vertical
+                align: center
+                justify: center
+                gap: 0px
+                design:
+                  width: 150px
+                  height: 150px
+                  padding: 33px
+                  box_sizing: border-box
+                  border_radius: 50%
+                  background: "conic-gradient(from 20deg, #c9d1d9, #7d8793, #c9d1d9, #6d7782, #c9d1d9, #7d8793, #c9d1d9)"
+                  box_shadow: "inset 0 0 0 5px #5c6671, inset 0 0 0 7px rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.4)"
+                modules:
+                  - type: icon
+                    entity: lock.front_door
+                    icon: mdi:lock
+                    icon_on: mdi:lock
+                    icon_off: mdi:lock-open-variant
+                    size: 56px
+                    design:
+                      color: "#1b2128"
+                      width: 84px
+                      height: 84px
+                      display: flex
+                      align_items: center
+                      justify_content: center
+                      border_radius: 50%
+                      background: "radial-gradient(circle, #e1e7ed 0%, #aab4bf 100%)"
+                      box_shadow: "inset 0 2px 6px rgba(0,0,0,0.3)"
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 220px
+              height: 220px
+              margin: 0 auto
+              padding: 35px
+              box_sizing: border-box
+              border_radius: 50%
+              background: "radial-gradient(circle closest-side, #aab4bf 0 76%, transparent 76%), repeating-conic-gradient(from 22.5deg, #2a313a 0deg 7deg, #8e99a5 7deg 45deg)"
+              box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
+              transition: transform 0.15s
+              hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: locked }] }
+            actions:
+              tap_action: { action: more-info, entity: lock.front_door }
               hold_action: { action: more-info, entity: lock.front_door }
             modules:
               - type: vertical
@@ -1071,7 +1122,7 @@ rows:
           - type: horizontal
             align: center
             justify: center
-            design: &tile { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
             actions:
               tap_action: { action: perform-action, service: media_player.media_previous_track, data: { entity_id: media_player.living_room } }
             modules:
@@ -1098,7 +1149,7 @@ rows:
           - type: horizontal
             align: center
             justify: center
-            design: *tile
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
             actions:
               tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }
             modules:
@@ -1364,14 +1415,14 @@ A roll-up door of steel slats inside a hazard-striped frame. The door rises with
 
 ![Cargo bay](images/68-cargo-bay.webp)
 
-Entities: `cover.cargo_door`
+Entities: `cover.workshop_door`
 
 File: [cards/68-cargo-bay.yaml](cards/68-cargo-bay.yaml)
 
 ```yaml
 # Cargo bay: a roll-up door of steel slats inside a hazard-striped frame. The door rises with the cover position.
 # While the door moves, an amber beacon blinks and dashes run around the opening. Open, stop and close are one tap each.
-# Entities: cover.cargo_door
+# Entities: cover.workshop_door
 type: custom:magic-card
 name: Cargo bay
 background: "#1d2024"
@@ -1399,7 +1450,7 @@ rows:
                 - id: moving
                   name: Moving
                   mode: any
-                  conditions: [{ type: state, entity: cover.cargo_door, state: opening }, { type: state, entity: cover.cargo_door, state: closing }]
+                  conditions: [{ type: state, entity: cover.workshop_door, state: opening }, { type: state, entity: cover.workshop_door, state: closing }]
                   design:
                     color: "#ffb020"
                     animations:
@@ -1425,7 +1476,7 @@ rows:
                   box_shadow: "inset 0 0 0 2px #0f1215"
                   value_background:
                     type: fill
-                    entity: cover.cargo_door
+                    entity: cover.workshop_door
                     attribute: current_position
                     color: "#0d1013"
                     opacity: 100%
@@ -1437,7 +1488,7 @@ rows:
                     width: 3
                     color: "#ffb020"
                     trigger: state
-                    trigger_entity: cover.cargo_door
+                    trigger_entity: cover.workshop_door
                     state: opening
                 modules: []
       - vertical_align: center
@@ -1445,7 +1496,7 @@ rows:
         modules:
           - type: text
             use_entity: true
-            entity: cover.cargo_door
+            entity: cover.workshop_door
             attribute: current_position
             design: { font_size: 30px, font_weight: "800", color: "#f3f5f7", line_height: "1.05" }
           - type: text
@@ -1453,7 +1504,7 @@ rows:
             design: { font_size: 11px, color: "#a9b1ba", text_transform: uppercase, letter_spacing: 1.5px }
           - type: text
             use_entity: true
-            entity: cover.cargo_door
+            entity: cover.workshop_door
             design: { font_size: 14px, font_weight: "800", color: "#ffb020", margin_top: 8px, text_transform: uppercase, letter_spacing: 1.2px }
   - id: actions
     layout: "1-1-1"
@@ -1465,9 +1516,9 @@ rows:
             align: center
             justify: center
             gap: 6px
-            design: &tile { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
             actions:
-              tap_action: { action: perform-action, service: cover.open_cover, data: { entity_id: cover.cargo_door } }
+              tap_action: { action: perform-action, service: cover.open_cover, data: { entity_id: cover.workshop_door } }
             modules:
               - type: icon
                 icon: mdi:arrow-up
@@ -1481,9 +1532,9 @@ rows:
             align: center
             justify: center
             gap: 6px
-            design: *tile
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
             actions:
-              tap_action: { action: perform-action, service: cover.stop_cover, data: { entity_id: cover.cargo_door } }
+              tap_action: { action: perform-action, service: cover.stop_cover, data: { entity_id: cover.workshop_door } }
             modules:
               - type: icon
                 icon: mdi:stop
@@ -1497,9 +1548,9 @@ rows:
             align: center
             justify: center
             gap: 6px
-            design: *tile
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
             actions:
-              tap_action: { action: perform-action, service: cover.close_cover, data: { entity_id: cover.cargo_door } }
+              tap_action: { action: perform-action, service: cover.close_cover, data: { entity_id: cover.workshop_door } }
             modules:
               - type: icon
                 icon: mdi:arrow-down
@@ -1512,7 +1563,7 @@ rows:
 
 ## Orbital weather
 
-The weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath. Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle when it is clear.
+The weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath. Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle in the sky in every weather.
 
 ![Orbital weather](images/69-orbital-weather.webp)
 
@@ -1522,7 +1573,7 @@ File: [cards/69-orbital-weather.yaml](cards/69-orbital-weather.yaml)
 
 ```yaml
 # Orbital weather: the weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath.
-# Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle when it is clear.
+# Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle in the sky in every weather.
 # Entities: weather.harbor
 type: custom:magic-card
 name: Orbital weather
@@ -1983,8 +2034,9 @@ rows:
       - modules:
           - type: separator
             separator_style: none
-            design: { height: 8px, border_radius: 4px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)" }
+            design: { height: 8px, border_radius: 4px 4px 0 0, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)" }
   - id: lanterns
+    design: { margin_top: -8px }
     layout: "1-1-1-1"
     gap: 10px
     columns:
@@ -1994,8 +2046,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -2054,8 +2106,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -2114,8 +2166,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -2174,8 +2226,8 @@ rows:
             gap: 0px
             design:
               height: 196px
-              border_radius: 16px
-              border_width: 1px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
               border_style: solid
               border_color: var(--divider-color)
               background_color: var(--card-background-color)
@@ -2293,10 +2345,10 @@ rows:
                 design:
                   position: absolute
                   top: 0px
-                  left: 0px
-                  width: 100%
+                  left: -1px
+                  width: 200px
                   height: 100%
-                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 14px, var(--accent-color) 14px, var(--accent-color) 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
+                  background: "repeating-linear-gradient(90deg, transparent 0px, transparent 7px, var(--accent-color) 7px, var(--accent-color) 13px, transparent 13px, transparent 20px), repeating-linear-gradient(0deg, transparent 0px, transparent 52px, var(--accent-color) 52px, var(--accent-color) 58px)"
                   opacity: "0.85"
                   transition: height 0.4s
                   conditional:
@@ -2386,15 +2438,14 @@ rows:
               animations:
                 - { id: mist, preset: smoke, color: "#cbbcff", strength: 40, intensity: 4, duration: 6s }
                 - { id: glow, preset: aura, color: "#8b6cf0", strength: 60, intensity: 26, duration: 6s }
-                - { id: sparks, preset: twinkle, color: "#ffffff", intensity: 5, duration: 6s }
             modules:
               - type: text
                 use_template: true
-                text: "{{ state_attr('calendar.family','start_time')[11:16] }}"
+                text: "{{ (state_attr('calendar.family','start_time') or '')[11:16] or '--:--' }}"
                 design: { text_align: center, font_size: 40px, font_weight: "700", color: "#f4f0ff", line_height: "1.05", font_family: "Georgia, 'Iowan Old Style', serif" }
               - type: text
                 use_template: true
-                text: "{{ as_timestamp(state_attr('calendar.family','start_time')) | timestamp_custom('%a %-d %b') }}"
+                text: "{{ as_timestamp(state_attr('calendar.family','start_time'), none) | timestamp_custom('%a %-d %b') if state_attr('calendar.family','start_time') else 'Nothing planned' }}"
                 design: { text_align: center, font_size: 12px, color: "#e0d8ff", text_transform: uppercase, letter_spacing: 1.5px }
               - type: text
                 use_entity: true
@@ -2597,7 +2648,8 @@ rows:
             separator_style: none
             design:
               height: 14px
-              margin: 0 6px
+              width: 130px
+              margin: 0 auto
               background: "repeating-linear-gradient(90deg, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 0px, color-mix(in srgb, var(--secondary-text-color) 22%, var(--card-background-color)) 18px, transparent 18px, transparent 28px)"
           - type: horizontal
             gap: 8px
@@ -3038,7 +3090,7 @@ rows:
       - vertical_align: center
         modules:
           - type: icon
-            icon: mdi:lute
+            icon: mdi:music-clef-treble
             size: 24px
             design: { color: "#d9b45a" }
   - id: alcoves
@@ -3093,6 +3145,8 @@ rows:
               - type: separator
                 separator_style: none
                 design:
+                  position: relative
+                  left: 5px
                   width: 100%
                   height: 52px
                   margin_top: 10px
@@ -3146,6 +3200,8 @@ rows:
               - type: separator
                 separator_style: none
                 design:
+                  position: relative
+                  left: 5px
                   width: 100%
                   height: 52px
                   margin_top: 10px
@@ -3199,6 +3255,8 @@ rows:
               - type: separator
                 separator_style: none
                 design:
+                  position: relative
+                  left: 5px
                   width: 100%
                   height: 52px
                   margin_top: 10px

@@ -1,5 +1,5 @@
 # Shield grid: a honeycomb of hex cells for the doors and the hallway motion sensor.
-# A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is armed.
+# A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is set to armed home.
 # It uses theme colours only, so it follows the dashboard's theme.
 # Entities: alarm_control_panel.home, binary_sensor.front_door, binary_sensor.back_door, binary_sensor.hall_motion
 type: custom:magic-card
