@@ -1,5 +1,6 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { TRIAL_STYLE_ID } from '../contracts/theme-editor';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { kindOf } from './catalogue';
 import { previewVars, validateValue } from './model';
@@ -31,6 +32,8 @@ export function readHaDefaults(doc: Document = document, fresh = false): Bag {
   if (defaultsCache && !fresh) return defaultsCache;
   const out: Bag = {};
   for (const sheet of Array.from(doc.styleSheets ?? [])) {
+    // the trial's own values are not HA's defaults
+    if ((sheet.ownerNode as Element | null)?.id === TRIAL_STYLE_ID || (doc.getElementById(TRIAL_STYLE_ID) as HTMLStyleElement | null)?.sheet === sheet) continue;
     let rules: CSSRuleList;
     try {
       rules = sheet.cssRules;

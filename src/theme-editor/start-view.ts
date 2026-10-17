@@ -242,9 +242,15 @@ export class McteStartView extends LitElement {
       this._createError = '';
       try {
         const got = file && this.backend ? await this.backend.get(file.name) : undefined;
-        // An unreadable file (aliases, several themes) comes back empty: HA's loaded copy is the source then.
-        if (got && !got.reason && Object.keys(got.theme ?? {}).length) doc = cloneDoc(got.theme);
+        // A non-empty theme means the file parsed, whatever the reason says (subfolder, name mismatch, ...).
+        // An empty one (aliases, several themes) falls back to the copy HA loaded.
+        if (got && Object.keys(got.theme ?? {}).length) doc = cloneDoc(got.theme);
         else doc = docFromHass(hassOf(this.hass).themes?.themes?.[this._installed]);
+        if (!Object.keys(doc).length) {
+          this._busy = false;
+          this._createError = `Could not read ${this._installed}. Neither its file nor Home Assistant has its values. Reload the themes and try again.`;
+          return;
+        }
       } catch (e) {
         this._busy = false;
         this._createError = `Could not read ${this._installed}. ${(e as Error).message ?? ''}`.trim();

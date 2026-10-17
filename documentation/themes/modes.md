@@ -51,7 +51,7 @@ The warnings only check what you set. They do not change the file.
 
 ## Imported themes
 
-When you copy an installed theme, the editor keeps its light and dark values. This holds for files that use YAML anchors and aliases (`&anchor` and `*alias`), and for files that hold several themes. In those cases the editor reads the theme as Home Assistant loaded it. The file itself stays read only.
+When you copy an installed theme, the editor keeps its light and dark values. This holds for files that use YAML anchors and aliases (`&anchor` and `*alias`), and for files that hold several themes. The editor uses the file whenever it holds the theme's values, also for a file in a subfolder. When the file has none, it reads the theme as Home Assistant loaded it. If neither has the values, the editor says so and creates no copy. The file itself stays read only.
 
 ## Try on dashboard
 
