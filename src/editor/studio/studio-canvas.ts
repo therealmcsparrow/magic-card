@@ -24,6 +24,7 @@ import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
 import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from '../../utils/column-widths';
 import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
+import { CanvasWidth, OPTION_LABELS, autoWidth } from './view-detect';
 
 /** A card row or a row module whose column gutters get resize handles. */
 interface ResizeTarget {
@@ -59,14 +60,6 @@ interface ColumnDrag {
 
 /** Key presses on the same gutter this close together (or held down) are one undo step. */
 const KEY_COALESCE_MS = 500;
-
-export type StudioDevice = 'phone' | 'tablet' | 'desktop';
-
-export const DEVICES: Record<StudioDevice, { label: string; width: number; icon: string }> = {
-  phone: { label: 'Phone', width: 360, icon: 'mdi:cellphone' },
-  tablet: { label: 'Tablet', width: 560, icon: 'mdi:tablet' },
-  desktop: { label: 'Desktop', width: 760, icon: 'mdi:monitor' },
-};
 
 /** Events the canvas swallows before they reach the live card (module previews may call services). */
 const BLOCKED = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'dblclick', 'contextmenu', 'keyup'];
@@ -230,7 +223,9 @@ export function layoutSpace(inner: HTMLElement): (r: DOMRect) => { top: number; 
 export class StudioCanvas extends LitElement {
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
-  @property() device: StudioDevice = 'phone';
+  @property({ attribute: false }) width: CanvasWidth = autoWidth({ kind: 'masonry', reason: '' });
+  /** The drawn width, measured (Panel's label, and "shown at" when the window is narrower). */
+  @state() private _fillPx = 0;
 
   @state() private _state?: EditorState;
   @state() private _hoverLabel = '';
@@ -538,9 +533,15 @@ export class StudioCanvas extends LitElement {
     const wait = card ? card.updateComplete : Promise.resolve(true);
     wait.then(() => requestAnimationFrame(() => {
       this._placeQueued = false;
+      this._measureFill();
       this._place();
     }));
   };
+
+  private _measureFill(): void {
+    const w = Math.round(this.shadowRoot?.querySelector<HTMLElement>('.device')?.clientWidth ?? 0);
+    if (w !== this._fillPx) this._fillPx = w;
+  }
 
   private _rectOf(sel: Selection): DOMRect | null {
     const card = this._card;
@@ -866,7 +867,9 @@ export class StudioCanvas extends LitElement {
 
   protected render(): TemplateResult {
     const s = this._state;
-    const dev = DEVICES[this.device] || DEVICES.phone;
+    const wd = this.width;
+    const shown = wd.px ?? this._fillPx;
+    const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? `, shown at ${this._fillPx} px` : '';
     const sel = this._sel;
     const config = s?.config;
     const label = config ? describeSelection(config, sel).title : '';
@@ -902,8 +905,10 @@ export class StudioCanvas extends LitElement {
         @pointerleave=${this._onPointerLeave}
       >
         <div class="canvas-inner">
-          <div class="device" style="--device-w:${dev.width}px" @transitionend=${this._queuePlace}>
-            <div class="device-label"><span>${dev.label} · ${dev.width} px</span><span>Live data</span></div>
+          <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
+            <div class="device-label"><span>${OPTION_LABELS[wd.option]}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
+              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>Match view</button>`
+              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}Live data</span></div>
             ${this._cardError
               ? html`<p class="card-error" role="status">Preview not updated: ${this._cardError}</p>`
               : nothing}
@@ -990,9 +995,19 @@ export class StudioCanvas extends LitElement {
         align-items: center;
       }
       .device {
-        width: var(--device-w, 360px);
+        width: var(--device-w, 400px);
         max-width: 100%;
         transition: width 0.22s ease-out;
+      }
+      /* panel view: HA draws the card without its border */
+      .device.borderless {
+        --ha-card-border-width: 0;
+      }
+      .device-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-align: right;
       }
       .device-label {
         display: flex;

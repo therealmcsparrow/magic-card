@@ -4,7 +4,8 @@ import type { EditorMode, EditorState, HomeAssistant } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
 import type { Inspector } from '../inspector/inspector';
 import { editorSystem } from '../../css/editor-system';
-import { DEVICES, StudioCanvas, StudioDevice } from './studio-canvas';
+import type { StudioCanvas } from './studio-canvas';
+import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
 import { countModules } from './selection';
 
 import './studio-canvas';
@@ -17,7 +18,6 @@ const MODES: Array<{ id: EditorMode; label: string }> = [
   { id: 'form', label: 'Form' },
   { id: 'yaml', label: 'YAML' },
 ];
-const DEVICE_IDS = Object.keys(DEVICES) as StudioDevice[];
 
 function isTyping(e: Event): boolean {
   const t = e.composedPath()[0];
@@ -46,9 +46,13 @@ export class Studio extends LitElement {
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: Boolean }) open = false;
+  /** The dashboard config HA gives the card editor (views); read to match the canvas width to the view. */
+  @property({ attribute: false }) lovelace?: unknown;
 
   @state() private _state?: EditorState;
-  @state() private _device: StudioDevice = 'phone';
+  @state() private _view: DetectedView = { kind: 'unknown', reason: "Couldn't tell the view type" };
+  /** The user's pick; null = follow the view. Lives as long as this dialog. */
+  @state() private _override: CanvasWidthOption | null = null;
   @state() private _showLayers = false;
 
   private _unsubscribe?: () => void;
@@ -77,7 +81,23 @@ export class Studio extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('stateManager') && this.stateManager !== this._subscribedTo) this._subscribe();
+    // The view is read when the studio opens, and again when `lovelace` arrives later.
+    if ((changed.has('open') && this.open) || changed.has('lovelace')) this._detect();
   }
+
+  private _detect(): void {
+    const card = this.stateManager?.getState().config as unknown as Record<string, unknown> | undefined;
+    this._view = detectView(this.lovelace, window.location.pathname, card);
+  }
+
+  private get _width(): CanvasWidth {
+    return this._override ? overrideWidth(this._override, this._view) : autoWidth(this._view);
+  }
+
+  private _onMatchView = (): void => {
+    this._override = null;
+    this._focusSel = '.devices [aria-checked="true"]';
+  };
 
   private _subscribe(): void {
     this._unsubscribe?.();
@@ -172,11 +192,16 @@ export class Studio extends LitElement {
     this.stateManager?.setEditorMode(MODES[next].id);
   }
 
+  private _setWidth(id: CanvasWidthOption): void {
+    // The checked option is already what is drawn: choosing it changes nothing.
+    if (id !== this._width.option) this._override = id;
+  }
+
   private _onDeviceKeydown(e: KeyboardEvent): void {
-    const next = rovingIndex(e.key, DEVICE_IDS.indexOf(this._device), DEVICE_IDS.length);
+    const next = rovingIndex(e.key, OPTION_IDS.indexOf(this._width.option), OPTION_IDS.length);
     if (next === undefined) return;
     e.preventDefault();
-    this._device = DEVICE_IDS[next];
+    this._setWidth(OPTION_IDS[next]);
     this._focusSel = '.devices [aria-checked="true"]';
   }
 
@@ -221,19 +246,18 @@ export class Studio extends LitElement {
             })}
           </div>
           <div class="seg devices" role="radiogroup" aria-label="Canvas width" ?hidden=${mode !== 'form'}>
-            ${DEVICE_IDS.map((id) => {
-              const d = DEVICES[id];
-              const on = id === this._device;
+            ${OPTION_IDS.map((id) => {
+              const on = id === this._width.option;
               return html`<button
                 type="button"
                 role="radio"
                 aria-checked=${on ? 'true' : 'false'}
                 tabindex=${on ? '0' : '-1'}
-                aria-label="${d.label}, ${d.width} pixels"
-                title="${d.label} - ${d.width} px"
-                @click=${() => { this._device = id; }}
+                aria-label=${OPTION_NAMES[id]}
+                title=${OPTION_NAMES[id]}
+                @click=${() => this._setWidth(id)}
                 @keydown=${this._onDeviceKeydown}
-              ><ha-icon icon=${d.icon}></ha-icon></button>`;
+              >${OPTION_LABELS[id]}</button>`;
             })}
           </div>
         </div>
@@ -281,7 +305,7 @@ export class Studio extends LitElement {
                 </nav>
                 <div class="center">
                   ${mode === 'form'
-                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .device=${this._device}></mc-studio-canvas>`
+                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} @mc-match-view=${this._onMatchView}></mc-studio-canvas>`
                     : html`
                         <div class="center-alt">
                           <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>

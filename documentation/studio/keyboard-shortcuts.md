@@ -73,7 +73,7 @@ The Layers panel uses the structure outline keys: arrow keys, Home and End to mo
 | Control | Keys |
 | --- | --- |
 | Form / YAML | Right / Left switch mode (wraps), Home / End go to the first / last |
-| Device width | Right / Left change the width (wraps), Home / End go to Phone / Desktop |
+| Canvas width | Right / Left change the width (wraps), Home / End go to Narrow / Panel |
 
 ## Focus
 
