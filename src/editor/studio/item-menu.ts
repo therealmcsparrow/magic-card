@@ -400,6 +400,8 @@ export class ItemMenu implements ReactiveController {
       note,
       groups: [[cancel, { icon: 'mdi:backup-restore', label: 'Reset', danger: true, focus: 'selection', run: () => {
         if (sel.kind === 'card') this._fire('template-resync');
+        // a column owning its module list resets only after the editor fetched the template
+        else if (sm.ownsModuleList(sel)) this._fire('mc-template-reapply', { resetColumn: sel });
         else if (sm.resetItem(sel)) this._fire('mc-template-reapply');
       } } as Entry]],
     });

@@ -42,7 +42,8 @@ class TabsModule extends BaseMagicModule {
     // Studio canvas: the tab that holds the selected child is shown. A hidden or missing tab: the first shown.
     const want = Math.trunc(Number(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0));
     const activeIdx = shown.includes(want) ? want : shown[0] ?? 0;
-    const activeTab = tabs[activeIdx];
+    // every tab hidden: no content either
+    const activeTab = shown.length ? tabs[activeIdx] : undefined;
 
     const select = (i: number) => (e: Event) => {
       e.stopPropagation();

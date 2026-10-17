@@ -8,6 +8,7 @@ import { editorSystem } from '../css/editor-system';
 import { EditorStateManager } from './state/editor-state';
 import { clearNotSynced, countNotSynced, stripForTemplate } from './state/template-sync';
 import { selectionFromKey, selectionToPath } from './studio/selection';
+import type { Selection as ItemSelection } from './studio/selection';
 import { PickerDialogController } from './components/picker-parts';
 import type { ChildStep } from '../utils/module-path';
 import type { PaneEditor } from './studio/pane-editor';
@@ -185,12 +186,31 @@ export class MagicCardEditor extends LitElement {
     this.shadowRoot?.querySelector<PaneEditor>('mc-pane-editor')?.focusStudioButton();
   };
 
-  /** An override was reset (e.g. a layout's child list): re-merge the template to restore its values. */
+  /**
+   * An override was reset (e.g. a layout's child list): re-merge the template to restore its values.
+   * `resetColumn` (a column owning its module list): the reset itself waits for the template, so a
+   * failed fetch or a template that is gone leaves the column as it was, with a notice.
+   */
   private _onTemplateReapply = (e: Event): void => {
     e.stopPropagation();
-    const config = this._stateManager?.getConfig();
-    if (config?.template) this._fetchAndApplyTemplate(config.template, config);
+    const sm = this._stateManager;
+    const config = sm?.getConfig();
+    const col = (e as CustomEvent<{ resetColumn?: ItemSelection } | undefined>).detail?.resetColumn;
+    if (!config?.template) return;
+    const prepare = col ? () => (sm.resetItem(col, true) ? sm.getConfig() : undefined) : undefined;
+    this._fetchAndApplyTemplate(config.template, config, prepare).then((ok) => {
+      if (col && !ok) this._notify('Could not load the template, so the column was not reset.');
+    });
   };
+
+  /** A short message: the Studio's status capsule while it is open, else Home Assistant's toast. */
+  private _notify(message: string): void {
+    const canvas = this._studioOpen
+      ? this.shadowRoot?.querySelector<Studio>('mc-studio')?.shadowRoot?.querySelector<HTMLElement & { showStatus?(m: string): void }>('mc-studio-canvas')
+      : null;
+    if (canvas?.showStatus) canvas.showStatus(message);
+    else document.querySelector('home-assistant')?.dispatchEvent(new CustomEvent('hass-notification', { detail: { message } }));
+  }
 
   /**
    * The card config keeps only its own custom_animations; the linked template's are editor state
@@ -227,13 +247,22 @@ export class MagicCardEditor extends LitElement {
     return this._tpl.get(name);
   }
 
-  private async _fetchAndApplyTemplate(name: string, local: MagicCardConfig): Promise<void> {
-    if (!this.hass) return;
+  /**
+   * Fetch the template and merge it over `local`. `prepare` runs once the template is there and gives
+   * the config to merge (undefined: stop). Resolves true when the merge was applied.
+   */
+  private async _fetchAndApplyTemplate(name: string, local: MagicCardConfig, prepare?: () => MagicCardConfig | undefined): Promise<boolean> {
+    if (!this.hass) return false;
     try {
       const entry = (await this._templates())[name];
-      if (entry) this._stateManager.setConfig(mergeTemplateWithOverrides(entry.config as MagicCardConfig, local, true));
+      if (!entry) return false;
+      const base = prepare ? prepare() : local;
+      if (!base) return false;
+      this._stateManager.setConfig(mergeTemplateWithOverrides(entry.config as MagicCardConfig, base, true));
+      return true;
     } catch (err) {
       console.warn('Magic Card Editor: Failed to fetch template', name, err);
+      return false;
     }
   }
 
