@@ -1068,6 +1068,8 @@ Special thanks to [Anas Box](https://www.youtube.com/@anasbox). His YouTube vide
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+The release bundles third-party software under its own licences. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
 [hacs-url]: https://hacs.xyz/
 [version-badge]: https://img.shields.io/github/package-json/v/therealmcsparrow/magic-card
