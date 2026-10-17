@@ -4,7 +4,9 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.09 (2026-10-17)
+
+Twelve sci-fi and fantasy presets for the theme editor, twenty sci-fi and fantasy cards in the gallery, and a fix for imported themes that lost their light and dark values. A release still has ten files.
 
 ### New
 -   The theme editor's create dialog offers 57 presets, up from 45. The 12 new ones form a third group, Sci-fi & fantasy: Amber Console, Ashen Keep, Candlelit Cloister, Cobalt Prism, Crimson Pines, Deep Survey, Dust Duel, Frontier Freighter, Neon Rain, Ochre Basin, Orbital Smelter and Silverleaf Glade.
