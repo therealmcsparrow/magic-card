@@ -1,3 +1,4 @@
+import { svg, SVGTemplateResult } from 'lit';
 import { safeColor } from './animation';
 
 /*
@@ -27,4 +28,22 @@ export function parseGradient(v: unknown): Gradient | undefined {
   const stops = a.map((s) => safeColor(s.replace(/(\s+-?[\d.]+[a-z%]*)+\s*$/i, '')));
   if (a.length < 2 || a.length > 8 || !stops.every(Boolean)) return undefined;
   return { radial: m[1] === 'radial', angle: /deg$/.test(head) ? parseFloat(head) : 180, stops: stops as string[] };
+}
+
+const r3 = (n: number) => +n.toFixed(3);
+
+/**
+ * An SVG linearGradient in user space over `box`, like CSS `linear-gradient(<angle>deg, ...)` on that
+ * box (the same angle on non-square boxes); the stops are spaced evenly.
+ */
+export function linearGradientSvg(id: string, angle: number, stops: string[], box: { x: number; y: number; w: number; h: number }): SVGTemplateResult {
+  const a = (angle * Math.PI) / 180;
+  const sin = Math.sin(a);
+  const cos = Math.cos(a);
+  const half = (Math.abs(box.w * sin) + Math.abs(box.h * cos)) / 2;
+  const cx = box.x + box.w / 2;
+  const cy = box.y + box.h / 2;
+  return svg`<linearGradient id=${id} gradientUnits="userSpaceOnUse" x1=${r3(cx - sin * half)} y1=${r3(cy + cos * half)} x2=${r3(cx + sin * half)} y2=${r3(cy - cos * half)}>${stops.map(
+    (c, i) => svg`<stop offset=${r3(stops.length > 1 ? i / (stops.length - 1) : 0)} stop-color=${c}></stop>`,
+  )}</linearGradient>`;
 }
