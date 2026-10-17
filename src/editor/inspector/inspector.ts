@@ -46,6 +46,7 @@ import {
   CardPatch,
   FlowsState,
   RulesState,
+  DesignViewState,
   cardThemeOptions,
   renderCardConditions,
   renderCardDesign,
@@ -111,6 +112,9 @@ export class Inspector extends LitElement {
   @state() private _tabs: Record<Kind, EditorTab> = { card: 'general', row: 'general', column: 'general', module: 'general', slot: 'general' };
   @state() private _expandedRules = new Set<string>();
   @state() private _expandedFlows = new Set<string>();
+  /** Card Design tab: which design is edited (Default, Hover or a rule id) and the groups the user toggled. */
+  @state() private _designView = 'default';
+  @state() private _designOpen = new Map<string, boolean>();
 
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
@@ -291,6 +295,19 @@ export class Inspector extends LitElement {
         const next = new Set(this._expandedRules);
         next.delete(id);
         set(next);
+      },
+    };
+  }
+
+  private get _designState(): DesignViewState {
+    return {
+      view: this._designView,
+      set: (v) => {
+        this._designView = v;
+      },
+      open: this._designOpen,
+      toggle: (id, open) => {
+        this._designOpen = new Map(this._designOpen).set(id, open);
       },
     };
   }
@@ -488,7 +505,7 @@ export class Inspector extends LitElement {
       sm.updateConfig(next as unknown as MagicCardConfig);
     };
     if (tab === 'design') {
-      return renderCardDesign(config, update, syncCtx, this.hass, patch, sm.getState().templateAnimations, (next) => sm.updateConfig(next));
+      return renderCardDesign(config, update, syncCtx, this.hass, patch, sm.getState().templateAnimations, (next) => sm.updateConfig(next), this._designState, (t) => this.setTab(t));
     }
     if (tab === 'conditions') {
       return renderCardConditions(
@@ -499,6 +516,7 @@ export class Inspector extends LitElement {
         update,
         cardThemeOptions(this.hass),
         this._rulesState,
+        (t) => this.setTab(t),
       );
     }
     if (tab === 'flows') {
@@ -741,6 +759,104 @@ export class Inspector extends LitElement {
       .cond-list {
         display: grid;
         gap: 12px;
+      }
+      .design-tab {
+        display: grid;
+        gap: 20px;
+      }
+      .rule-pick {
+        display: grid;
+        gap: 8px;
+      }
+      .rule-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+      }
+      @media (min-height: 520px) {
+        .rule-pick {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          padding-bottom: 12px;
+          background: var(--mc-surface);
+          border-bottom: 1px solid var(--mc-divider);
+        }
+      }
+      .rule-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .rule-head h3 {
+        margin: 0;
+        flex: 1;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      .danger-text {
+        color: var(--mc-error-ink);
+      }
+      .rule-conds {
+        display: grid;
+        gap: 12px;
+      }
+      .design-tab > .rule {
+        display: grid;
+        gap: 16px;
+        padding: 12px;
+        border: 1px solid var(--mc-divider);
+        border-radius: var(--mc-radius-lg);
+      }
+      .dgroups {
+        display: grid;
+        gap: 12px;
+      }
+      .dgroup {
+        display: grid;
+        gap: 8px;
+      }
+      .dgroup-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-height: 40px;
+        padding: 0 8px 0 4px;
+        border: 0;
+        border-radius: var(--mc-radius);
+        background: transparent;
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--mc-text);
+      }
+      .dgroup-btn:hover {
+        background: var(--mc-surface-2);
+      }
+      .dgroup-btn .nm {
+        flex: 1;
+        min-width: 0;
+      }
+      .dgroup-btn .chev {
+        --mdc-icon-size: 20px;
+        color: var(--mc-text-2);
+        transition: transform 0.15s ease-out;
+      }
+      .dgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(-90deg);
+      }
+      .dgroup-body {
+        display: grid;
+        gap: 16px;
+      }
+      .dgroup-body[hidden] {
+        display: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .dgroup-btn .chev {
+          transition: none;
+        }
       }
       .rule {
         background: color-mix(in srgb, var(--mc-surface-2) 40%, transparent);

@@ -271,6 +271,12 @@ export interface CardAppearanceOverrides {
   card_height?: string;
   use_page_theme?: boolean;
   theme?: string;
+  /** Design rules (ADR 0008): each key replaces the card's own value while the rule matches. `{}`, `none` or `type: none` switch it off. */
+  ring?: RingConfig;
+  shape?: ShapeKind;
+  shape_options?: ShapeOptions;
+  value_background?: ValueBackgroundConfig;
+  seasonal?: SeasonalSetting;
 }
 
 export interface RowConfig {
