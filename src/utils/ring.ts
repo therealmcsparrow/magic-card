@@ -31,7 +31,7 @@ export const RING_DOTS = 12;
 
 
 const ANIMATIONS: RingAnimation[] = ['snake', 'pulse', 'full', 'dots', 'dashes'];
-const STARTS: RingStart[] = ['top', 'top-left', 'right', 'bottom', 'left'];
+const STARTS: RingStart[] = ['top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left'];
 const POSITIONS: RingPosition[] = ['inside', 'center', 'outside'];
 const DEFAULT_COLOR = 'var(--primary-color, #03a9f4)';
 

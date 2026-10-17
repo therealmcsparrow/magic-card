@@ -566,7 +566,7 @@ export interface ValueBackgroundConfig {
   smoothing?: boolean;
 }
 
-export type RingStart ='top' | 'top-left' | 'right' | 'bottom' | 'left';
+export type RingStart = 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left' | 'left' | 'top-left';
 export type RingPosition = 'inside' | 'center' | 'outside';
 
 /**

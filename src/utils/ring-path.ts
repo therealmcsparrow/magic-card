@@ -203,7 +203,8 @@ function side(group: string, from: Pt, to: Pt): Seg[] {
  * Index in the clockwise loop where each start position begins: [top 2nd half, TR 1, TR 2,
  * right 1, right 2, BR 1, BR 2, bottom 1, bottom 2, BL 1, BL 2, left 1, left 2, TL 1, TL 2, top 1st half].
  */
-const START_INDEX: Record<RingStart, number> = { top: 0, right: 4, bottom: 8, left: 12, 'top-left': 14 };
+/** Every ring start, clockwise from the top: eighth turn i begins at loop index 2 * i. */
+const RING_STARTS: RingStart[] = ['top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left'];
 
 /**
  * The outline path of a w x h border box with these radii. Empty for an empty box. Radii are
@@ -231,7 +232,7 @@ export function ringPath(w: number, h: number, radii: Radii, opts: RingPathOptio
     ...corner('tl', { x: x0 + r.tl.x, y: y0 + r.tl.y }, r.tl, 180),
     top[0],
   ];
-  const i = START_INDEX[opts.start ?? 'top'] ?? 0;
+  const i = 2 * Math.max(0, RING_STARTS.indexOf(opts.start ?? 'top'));
   let segs = [...loop.slice(i), ...loop.slice(0, i)];
   const ccw = opts.direction === 'ccw';
   if (ccw) segs = segs.reverse().map((s) => ({ ...s, from: s.to, to: s.from }));
@@ -263,22 +264,6 @@ export function ringPath(w: number, h: number, radii: Radii, opts: RingPathOptio
   return parts.join(' ');
 }
 
-/** Where a ring's start sits on a w x h box (the outline point nearest to it starts the path). */
-function startTarget(start: RingStart | undefined, w: number, h: number): { x: number; y: number } {
-  switch (start) {
-    case 'right':
-      return { x: w, y: h / 2 };
-    case 'bottom':
-      return { x: w / 2, y: h };
-    case 'left':
-      return { x: 0, y: h / 2 };
-    case 'top-left':
-      return { x: 0, y: 0 };
-    default:
-      return { x: w / 2, y: 0 };
-  }
-}
-
 /**
  * The outline of a shaped w x h border box (src/utils/shape-path.ts) for a ring or a border stroke:
  * the shape moved inward by `inset` (a true offset for cut / rounded corners: shapeInsetPath;
@@ -298,7 +283,9 @@ export function shapeRingPath(kind: ShapeKind, w: number, h: number, options: Sh
     base = o && translateOutline(o, d, d);
   }
   if (!base) return '';
-  let o = restartOutline(base, startTarget(opts.start, w, h));
+  // the start's point on the box: the eighth turn i is at angle i * 45deg clockwise from the top
+  const a = (Math.max(0, RING_STARTS.indexOf(opts.start ?? 'top')) * Math.PI) / 4;
+  let o = restartOutline(base, { x: (w * (1 + Math.round(Math.sin(a)))) / 2, y: (h * (1 - Math.round(Math.cos(a)))) / 2 });
   if (opts.direction === 'ccw') o = reverseOutline(o);
   return outlinePath(o);
 }
