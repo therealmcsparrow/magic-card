@@ -207,7 +207,7 @@ export function renderCardDesign(
   const fields: Record<string, () => TemplateResult | typeof nothing> = {
     card_height: () => renderUnitField('Card height', str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto'),
     padding: () => renderBoxField('Padding', str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc),
-    background: () => renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc),
+    background: () => renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc, 'css'),
     background_image: () =>
       renderMediaField('Background image', str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc),
     border_radius: () => renderUnitField('Border radius', str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc),
@@ -576,7 +576,7 @@ function renderAppearanceRule(
               )}
               <div class="sub-head">Appearance overrides</div>
               <p class="help">Only fields you set override. Leave blank to fall through to the base settings.</p>
-              ${renderColorField('Background color', overrides.background, (v) => updateOverride('background', v))}
+              ${renderColorField('Background color', overrides.background, (v) => updateOverride('background', v), undefined, undefined, 'css')}
               ${renderMediaField('Background image', overrides.background_image, (v) => updateOverride('background_image', v), hass, 'image')}
               ${renderToggleField('Override dashboard theme', usePageTheme === false, (v) => updateOverride('use_page_theme', v ? false : undefined))}
               ${usePageTheme === false
