@@ -132,7 +132,7 @@ Paste module after inserts it after the module whose menu you used. Paste module
 
 Wrap in layout opens a second list in the same menu: Vertical, Horizontal, Row, Tabs and Slider layout. The module moves into a new layout module of that type, in its first slot (the first column of a Row, the first tab of Tabs), and the new layout module takes its place and is selected. Back returns to the main list. Undo removes the layout again.
 
-On a template-linked card, wrapping a module directly in a column makes that column's module list the card's own (`modules` in the column's `not_synced`). Template changes to that column's modules then stop reaching this card until you use Reset column to template…, which gives the column the template's modules again.
+On a template-linked card, wrapping a module directly in a column makes that column's module list the card's own (`modules` in the column's `not_synced`). Template changes to that column's modules then stop reaching this card until you use Reset column to template…, which gives the column the template's modules again. If the template cannot be loaded at that moment, the column stays as it is and a message says so.
 
 ## Hide on dashboard
 
