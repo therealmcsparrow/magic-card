@@ -56,18 +56,6 @@ export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   return S.boolNone;
 }
 
-/** The line under the buttons: the left-out note, and the reason or hint. */
-export function boolHelp(st: BoolState): string[] {
-  const out: string[] = [];
-  if (st.leftOut) out.push(S.boolLeftOut(st.leftOut, st.lockedOnly));
-  const r = boolReason(st, 'subtract');
-  const rc = boolReason(st, 'union');
-  if (rc) out.push(rc);
-  else if (st.merge) out.push(S.boolMerge);
-  if (r && r !== rc) out.push(r);
-  return out;
-}
-
 export function operandsOf(st: BoolState): BooleanOperand[] {
   return st.operands.map((s) => ({ paths: s.paths, fillRule: s.rule }));
 }

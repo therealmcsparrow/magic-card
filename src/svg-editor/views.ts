@@ -286,11 +286,27 @@ function startPanel(ed: McSvgEditor): TemplateResult {
   </div>`;
 }
 
+/** Drag the window by its header (not the buttons); reset by maximizing. */
+function startDrag(e: PointerEvent): void {
+  if ((e.target as HTMLElement).closest('button') || e.button) return;
+  const h = e.currentTarget as HTMLElement;
+  const w = h.parentElement as HTMLElement;
+  const [x0, y0] = [e.clientX - (parseFloat(w.style.getPropertyValue('--dx')) || 0), e.clientY - (parseFloat(w.style.getPropertyValue('--dy')) || 0)];
+  const mv = (m: PointerEvent): void => (w.style.setProperty('--dx', `${m.clientX - x0}px`), w.style.setProperty('--dy', `${m.clientY - y0}px`));
+  h.setPointerCapture(e.pointerId);
+  h.addEventListener('pointermove', mv);
+  h.addEventListener('pointerup', () => h.removeEventListener('pointermove', mv), { once: true });
+}
+
 /** The start choices as a modal dialog in the top layer, styled like the editor's picker windows. */
 function startDialog(ed: McSvgEditor): TemplateResult {
   return html`<dialog class="start-dlg" aria-labelledby="start-h" @cancel=${(e: Event) => (e.preventDefault(), ed.closeStart())} @click=${(e: Event) => e.target === e.currentTarget && ed.closeStart()}>
-    <div class="start-win">
-      <div class="start-head"><h2 id="start-h">${S.startTitle}</h2><button type="button" class="icon-btn" aria-label=${S.close} title=${S.close} @click=${() => ed.closeStart()}>${glyph('close', 20)}</button></div>
+    <div class=${`start-win${ed.startMax ? ' max' : ''}`}>
+      <div class="start-head" @pointerdown=${startDrag}>
+        <h2 id="start-h">${S.startTitle}</h2>
+        <button type="button" class="icon-btn" aria-label=${ed.startMax ? S.restore : S.maximize} title=${ed.startMax ? S.restore : S.maximize} aria-pressed=${aria(ed.startMax)} @click=${() => (ed.startMax = !ed.startMax)}>${glyph(ed.startMax ? 'min' : 'max', 18)}</button>
+        <button type="button" class="icon-btn" aria-label=${S.close} title=${S.close} @click=${() => ed.closeStart()}>${glyph('close', 20)}</button>
+      </div>
       ${startPanel(ed)}
     </div>
   </dialog>`;
@@ -562,6 +578,7 @@ function layersPanel(ed: McSvgEditor): TemplateResult {
     ${ed.doc.shapes.length ? layerTree(ed) : html`<p class="help">${S.layersEmpty}</p>`}
     <div class="acts">
       ${btn(S.groupAdd, 'group', () => ed.group(), { disabled: ed.sel.length < 2 || blocked })}${btn(S.duplicate, 'copy', () => ed.duplicate(), { disabled: !some, keys: 'Control+D' })}${btn(S.remove, 'trash', () => ed.deleteSelected(), { disabled: !some })}
+      ${btn(S.selectAll, 'fit', () => ed.select(ed.doc.shapes.map((x) => x.id)), { keys: 'Control+A' })}<button type="button" class="b icon" aria-label=${S.moveTo} title=${S.moveTo} aria-haspopup="menu" aria-expanded=${aria(!!ed.menu && ed.menu.opener.getAttribute('aria-label') === S.moveTo)} aria-disabled=${one ? nothing : 'true'} @click=${(e: Event) => one && ed.moveMenuOpen(e.currentTarget as HTMLElement)}>${glyph('up', 18)}${glyph('down', 18)}</button>
       ${btn(S.moveUp, 'up', () => one && ed.reorder(one, 1), { disabled: !one })}${btn(S.moveDown, 'down', () => one && ed.reorder(one, -1), { disabled: !one })}
     </div>
     ${blocked ? html`<p class="help">${S.groupDepth}</p>` : nothing}

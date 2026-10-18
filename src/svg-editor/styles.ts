@@ -386,7 +386,18 @@ export const editorStyles: CSSResult[] = [
       border-radius: 16px;
       box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1);
     }
+    .start-win {
+      transform: translate(var(--dx, 0), var(--dy, 0));
+    }
+    .start-win.max {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      transform: none;
+    }
     .start-head {
+      cursor: grab;
+      user-select: none;
       display: flex;
       align-items: center;
       gap: 4px;

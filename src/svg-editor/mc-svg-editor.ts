@@ -56,7 +56,7 @@ import {
   type Paint,
   type Shape,
 } from './model';
-import { endDrag, stepOrder, groupBlocked, type DragState } from './layers';
+import { endDrag, stepOrder, groupBlocked, moveMenu, type DragState } from './layers';
 import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
@@ -109,7 +109,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'startMax', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -190,6 +190,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   startMode?: 'icon' | 'paste';
   /** The start dialog is open (over a blank editor first, or from New). */
   startOpen = false;
+  startMax = false;
   /** New was pressed with unsaved changes: the Start over question is showing. */
   newAsk = false;
   private startReturn?: HTMLElement;
@@ -550,6 +551,14 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.menu = { items, at: d.client, touch: d.source === 'touch', opener: this.canvas()! };
   };
 
+  /** The layer "Move to…" entries, opened from the Layers panel button. */
+  moveMenuOpen(b: HTMLElement): void {
+    const items = moveMenu(this)?.items;
+    if (!items) return;
+    const r = b.getBoundingClientRect();
+    this.menu = { items, at: [r.left, r.bottom], touch: false, opener: b };
+  }
+
   xferMenu(b: HTMLElement): void {
     const r = b.getBoundingClientRect();
     this.menu = { items: xferItems(this), at: [r.left, r.bottom], touch: false, opener: b, key: 'xfer' };
@@ -599,7 +608,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const id = (e as CustomEvent<{ id: string }>).detail.id;
     runMenu(this, id, row);
     if (id.startsWith('x:')) return;
-    this.updateComplete.then(() => (row?.isConnected && (row.classList.contains('row') || row.classList.contains('tb-menu')) ? row : this.canvas())?.focus({ preventScroll: true }));
+    this.updateComplete.then(() => (row?.isConnected && (row.classList.contains('row') || row.tagName === 'BUTTON') ? row : this.canvas())?.focus({ preventScroll: true }));
   };
 
   onMenuClose = (): void => {
@@ -1149,6 +1158,9 @@ export class McSvgEditor extends LitElement implements StageHost {
       } else if (code === 'KeyY') {
         e.preventDefault();
         this.redo();
+      } else if (code === 'KeyA') {
+        e.preventDefault();
+        this.select(this.doc.shapes.map((x) => x.id));
       } else if (code === 'KeyD') {
         e.preventDefault();
         this.duplicate();
