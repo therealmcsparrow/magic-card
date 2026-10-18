@@ -470,7 +470,8 @@ function defaultBorderStyle(rec: Record<string, unknown>): string | undefined {
  */
 function designBorderVars(own: Record<string, unknown>, look: ControlLook): string[] {
   if (!BORDER_KEYS.some((k) => nonEmpty(own[k]))) return [];
-  const rec = look.base ? { ...(look.base as Record<string, unknown>), ...own } : own;
+  // the base design goes through the same conversions as the design itself (numbers to px, entity colours)
+  const rec = look.base ? { ...(resolveEntityColors(designNumbersToCss(look.base)) as Record<string, unknown>), ...own } : own;
   type F = { width?: string; style?: string; color?: string };
   const all = nonEmpty(rec.border);
   const fromShort = (v: string): F => {
