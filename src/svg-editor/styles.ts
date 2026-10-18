@@ -86,9 +86,11 @@ export const editorStyles: CSSResult[] = [
       display: flex;
       align-items: center;
       gap: 8px;
+      min-width: 0;
     }
     .topbar .nm-field .name {
-      width: 180px;
+      flex: 0 1 180px;
+      min-width: 96px;
       max-width: 40vw;
     }
 

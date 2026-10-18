@@ -703,6 +703,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.setDoc(doc);
     this.syncPen();
     this.commit(label, merge);
+    // a short window (a phone, or 200 % zoom) cannot spare the module notice once the user has started drawing
+    if (this.module && (this.layout === 'compact' || this.layout === 'stacked')) this.noticeGone = true;
   }
 
   undo(): void {
@@ -1801,7 +1803,18 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   // ── render ──
 
+  /** Where focus was when a window (Save to library, Export, ...) opened: it goes back there when the window goes away. */
+  private dlgReturn?: HTMLElement;
+
   protected updated(changed: PropertyValues): void {
+    if (changed.has('dlg') && changed.get('dlg') && !this.dlg) {
+      // the window left the page by state, not through its own close(): nothing else puts focus back
+      const a = deepActive();
+      if (!a || a === document.body || !this.renderRoot.contains(a) && !this.contains(a)) {
+        const back = this.dlgReturn?.isConnected ? this.dlgReturn : this.renderRoot.querySelector<HTMLElement>('.topbar [data-act=save-library]');
+        back?.focus({ preventScroll: true });
+      }
+    }
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
     this.openOverlays();
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
@@ -1826,6 +1839,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('hass') && this.hass) setI18nLocale(this.hass as LocaleHassLike);
+    if (changed.has('dlg') && this.dlg && !changed.get('dlg')) this.dlgReturn = deepActive();
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
     if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
   }

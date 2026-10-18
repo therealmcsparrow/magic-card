@@ -226,11 +226,13 @@ function topBar(ed: McSvgEditor): TemplateResult {
   const needLib = ed.libraryMissing && !ed.mcu;
   const sm = ed.layout === 'stacked';
   const z = sm ? 'sm' : 'md';
+  // narrow windows (and 200 % zoom): the title is read by screen readers only, secondary buttons keep their glyph and lose the word, so the bar needs two rows at most
+  const tight = ed.layout === 'compact' || sm;
   const why = ed.mcu && edit && !ed.doc.name.trim() ? t('Give the icon a name.') : blocked;
   return html`<header class="topbar">
-    ${button({ label: ed.mcu ? t('Close') : t('Back to card editor'), glyph: 'arrowLeft', variant: 'secondary', size: z, onClick: () => ed.back() })}
-    <h1 class="title">${t('Icon editor')}</h1>
-    ${edit ? button({ label: t('Start from…'), glyph: 'fileOutline', variant: 'secondary', size: z, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) }) : nothing}
+    ${button({ label: ed.mcu ? t('Close') : t('Back to card editor'), glyph: 'arrowLeft', variant: 'secondary', size: z, iconOnly: tight, onClick: () => ed.back() })}
+    <h1 class=${tight ? 'title sr' : 'title'}>${t('Icon editor')}</h1>
+    ${edit ? button({ label: t('Start from…'), glyph: 'fileOutline', variant: 'secondary', size: z, iconOnly: tight, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) }) : nothing}
     ${edit
       ? html`<div class="nm-field">
           <div class="name"
@@ -243,9 +245,9 @@ function topBar(ed: McSvgEditor): TemplateResult {
     ${edit
       ? html`${ed.layout === 'compact' ? btn(ed.panel === 'layers' ? t('Layers') : t('Library'), undefined, () => (ed.overlay = !ed.overlay), { text: true, size: z, pressed: ed.overlay }) : nothing}
           ${btn(t('Undo'), 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z', size: z })}${btn(t('Redo'), 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z', size: z })}
-          <span class=${`chip meter${zone}`} title=${t('Size of the icon markup in your dashboard')}>${t('{size} / 32 KB · {c, plural, one {# point} other {# points}}', { size: o.error === 'empty' ? 0 : used, c: o.points })}${o.bytes >= 4096 && !zone ? html` · ${t('Heavy for wall tablets')}` : nothing}</span>
-          ${button({ label: t('Export / Import'), variant: 'secondary', size: z, haspopup: 'menu', expanded: ed.menu?.key === 'xfer', onClick: (e) => ed.xferMenu(e.currentTarget as HTMLElement) })}
-          ${ed.mcu ? nothing : html`<button type="button" class=${`btn btn-secondary${sm ? ' btn-sm' : ''}`} aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} aria-keyshortcuts="Control+S" @click=${() => !needLib && ed.openSave()}>${t('Save to library')}</button>`}
+          <span class=${`chip meter${zone}`} title=${t('Size of the icon markup in your dashboard')}>${t('{size} / 32 KB · {c, plural, one {# point} other {# points}}', { size: o.error === 'empty' ? 0 : used, c: o.points })}${o.bytes >= 4096 && !zone && !tight ? html` · ${t('Heavy for wall tablets')}` : nothing}</span>
+          ${button({ label: t('Export / Import'), glyph: tight ? 'swapVertical' : undefined, iconOnly: tight, variant: 'secondary', size: z, haspopup: 'menu', expanded: ed.menu?.key === 'xfer', onClick: (e) => ed.xferMenu(e.currentTarget as HTMLElement) })}
+          ${ed.mcu ? nothing : html`<button type="button" data-act="save-library" class=${`btn btn-secondary${sm ? ' btn-sm' : ''}`} aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} aria-keyshortcuts="Control+S" @click=${() => !needLib && ed.openSave()}>${t('Save to library')}</button>`}
           ${needLib ? html`<span id="lib-hint" class="sr">${t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.')}</span>` : nothing}
           <button type="button" class=${`btn btn-primary${sm ? ' btn-sm' : ''}`} aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} aria-keyshortcuts="Control+Enter" title=${why ?? nothing} @click=${() => ed.done()}>${glyph('check', 18)}${ed.mcu ? t('Save') : t('Done')}</button>
           ${why ? html`<span id="done-why" class="sr">${why}</span>` : nothing}

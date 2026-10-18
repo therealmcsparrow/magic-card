@@ -1,5 +1,6 @@
 import type { Box, EditPath, PathData, PrimitiveKind, Pt } from '../contracts/path-model';
 import { flatten, parsePath } from '../path/core';
+import { t } from './i18n';
 import { MAX_GROUP_DEPTH, type SvgArrange, type TreePlace } from '../contracts/svg-editor';
 import { D, E, T } from './bind';
 
@@ -72,9 +73,25 @@ export function newShape(type: ShapeType, paths: EditPath[], over: Partial<Shape
   return { id: uid(), name: '', type, paths, fill: 'main', stroke: 'none', width: 2, cap: 'round', join: 'round', rule: 'nonzero', ...over };
 }
 
-const NAMES: Record<ShapeType, string> = { path: 'Path', rect: 'Rectangle', ellipse: 'Ellipse', line: 'Line', polygon: 'Polygon', star: 'Star' };
+/** The default layer name of a new shape, in the language of the editor ("Path 1", "Pad 1"). */
+const baseName = (type: ShapeType): string => {
+  switch (type) {
+    case 'rect':
+      return t('Rectangle');
+    case 'ellipse':
+      return t('Ellipse');
+    case 'line':
+      return t('Line');
+    case 'polygon':
+      return t('Polygon');
+    case 'star':
+      return t('Star');
+    default:
+      return t('Path');
+  }
+};
 export function nameFor(d: Doc, type: ShapeType, plain?: string): string {
-  const base = plain ?? NAMES[type];
+  const base = plain ?? baseName(type);
   const used = new Set(d.shapes.map((s) => s.name));
   if (plain && !used.has(plain)) return plain;
   for (let i = plain ? 2 : 1; ; i++) if (!used.has(`${base} ${i}`)) return `${base} ${i}`;
