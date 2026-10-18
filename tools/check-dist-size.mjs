@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 const B2 = 471_856;
 const CAPS = {
   'magic-card.js': B2 + 8_192, // 480,048
-  'magic-card-animation-studio.js': 902_144, // 858,558
+  'magic-card-animation-studio.js': 994_304, // 971 KiB, CEO-approved 2026-10-18 (epic F + UI kit + i18n; ratchets in I11)
   'magic-card-editor.js': 805_888, // 787 KiB, CEO-approved 2026-10-18 (UI kit + i18n; ratchets to measured + 5% in I11)
   'magic-card-icon-animator.js': 233_472, // 222,240
   'magic-card-icon-library.js': 180_224, // 171,507
