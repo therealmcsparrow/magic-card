@@ -24,12 +24,12 @@ export function closeDialog(root: ParentNode): void {
 }
 
 /**
- * One window of the ui kit: title, body and a footer of buttons. Phones get the bottom sheet, never a full screen (CEO D8).
+ * One window of the ui kit: title, body and a footer of buttons, movable, resizable and maximisable on a desktop. Phones get the bottom sheet (no grips), never a full screen (CEO D8).
  * `close` runs when the window closes (Esc, scrim, the X, Cancel). With `submit` the window sits inside a <form>, so a
  * submit button in the footer and Enter in a field both reach it.
  */
 export function dialog(title: string, body: unknown, foot: unknown, close: () => void, submit?: (e: Event) => void, size: 's' | 'm' | 'l' | 'xl' = 'm'): TemplateResult {
-  const win = html`<mc-ui-window variant="sheet" size=${size} heading=${title} closeLabel="Close" @mc-window-close=${close}>
+  const win = html`<mc-ui-window variant="sheet" size=${size} heading=${title} closeLabel="Close" movable resizable maximizable moveLabel="Move window" resizeLabel="Resize window" maximizeLabel="Maximise" restoreLabel="Restore size" @mc-window-close=${close}>
     <div class="dlg">${body}</div>
     ${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}
   </mc-ui-window>`;
