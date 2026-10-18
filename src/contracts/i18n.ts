@@ -239,7 +239,7 @@ export const I18N_MODULES = {
   'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'pending', slice: 'I3', dashboard: false },
   'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
   'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
-  'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], tables: 'inline', status: 'pending', slice: 'I5', dashboard: false },
+  'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], tables: 'inline', status: 'complete', slice: 'I5', dashboard: false },
   transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'complete', slice: 'I6', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'pending', slice: 'I7', dashboard: false },
   'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'pending', slice: 'I7', dashboard: false },
