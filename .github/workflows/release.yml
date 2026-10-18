@@ -55,3 +55,6 @@ jobs:
             THIRD-PARTY-NOTICES.md
           fail_on_unmatched_files: true
           generate_release_notes: true
+          # a tag with a hyphen (2026.10.11-beta.1, -rc.1) is a real pre-release and never takes the Latest badge
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          make_latest: ${{ !contains(github.ref_name, '-') }}

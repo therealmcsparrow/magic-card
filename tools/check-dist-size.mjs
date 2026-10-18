@@ -1,15 +1,17 @@
 // Fails when a built dist/*.js grows past its budget, or when an unlisted .js file appears.
 // Budgets, set by the CEO on 2026-10-17 (sizes then in comments):
-// - magic-card.js, which every dashboard loads: B1 + 8,192 B (B1 = 679,875 B, the 2026.10.04 baseline).
+// - magic-card.js, which every dashboard loads: B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
+//   epic D (swiper, marked, the seasonal decorations and six rare modules moved into lazy chunks); CEO decision 2026-10-18.
+//   B1 = 679,875 B was the 2026.10.04 baseline.
 // - lazy chunks: the 2026.10.07 size + 5 %, rounded up to 1 KiB.
 // Raise a budget only on purpose, in the same PR. A new chunk gets the same +5 % rule.
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const B1 = 679_875;
+const B2 = 471_856;
 const CAPS = {
-  'magic-card.js': B1 + 8_192, // 683,958
+  'magic-card.js': B2 + 8_192, // 480,048
   'magic-card-animation-studio.js': 902_144, // 858,558
   'magic-card-editor.js': 680_960, // 647,655
   'magic-card-icon-animator.js': 233_472, // 222,240
