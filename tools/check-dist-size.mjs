@@ -43,6 +43,8 @@ const CAPS = {
   'magic-card-modules-extra.js': 24_576, // 24 KiB (D3, measured 23,139 + 5 %); ceiling 44 KiB
   // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
   'magic-card-svg-booleans.js': 9_216, // 9 KiB (7,884)
+  // path tools (T37, ADR 0027): 17,784 B measured (production build under a parent that holds lit; webpack stats list only src/path-tools/* and the contract, no lit, core.ts or booleans code) + 5 %, rounded up to 1 KiB; ceiling 20,480 B (PATH_TOOLS_CEILING_BYTES). Only emitted once the SVG editor chunk imports src/path-tools/loader.ts (T38); until then this entry reports "missing from dist".
+  'magic-card-path-tools.js': 19_456, // 19 KiB (17,784)
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));
