@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { editorPrimitives, editorTokens } from '../css/editor-system';
+import { editorTokens } from '../css/editor-system';
+import { editorPrimitives } from '../ui-kit/css/primitives';
 import { fold } from '../i18n/fold';
 import { locale, t as tl } from '../i18n/labels';
 import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, type AnimationGroup } from '../utils/animation-presets';

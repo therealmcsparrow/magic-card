@@ -7,7 +7,7 @@ import { freeId, listShapes, saveShape, slug, type Listing } from '../custom/lib
 import { applyShapePatch, openShapeEditor, type ShapeWrite } from '../custom/shape-host';
 import { cardStateOf } from '../custom/bridge';
 import { openLibrary } from '../custom/library-sheet';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { SHAPE_DEFAULTS, shapePath } from '../../utils/shape-path';
 import { fieldReset } from './field-reset';
 

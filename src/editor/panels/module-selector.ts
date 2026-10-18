@@ -6,7 +6,7 @@ import { MODULE_CATEGORIES } from '../../utils/constants';
 import { MagicModuleMetadata } from '../../modules/module-types';
 import { ModuleCategory } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from '../components/picker-parts';
 import { t, m, fold, type MessageId } from '../i18n';
 

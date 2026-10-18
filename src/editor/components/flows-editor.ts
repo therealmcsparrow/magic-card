@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { FlowConfig, HomeAssistant, MagicCardConfig } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { FLOW_DEFAULTS, flowKeys, flowModuleEntities } from '../../utils/flow';
 import { deepClone } from '../../utils/deep-merge';
 import { entityStateColor } from '../../utils/entity-color';

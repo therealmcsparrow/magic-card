@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg, nothing, type PropertyValues, type TemplateResult, type SVGTemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { toCubicSubpaths } from '../../path/core';
 import { entityColorCss } from '../../utils/entity-color';
 import type { AnimationDoc } from '../model';

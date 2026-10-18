@@ -1,6 +1,6 @@
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { t } from '../i18n';
 
 const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'] as const;

@@ -2,7 +2,7 @@ import { LitElement, html, css, svg, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { entityColorCss } from '../../utils/entity-color';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { AnimationDoc } from '../model';
 import type { RigShape } from '../model-v2';
 import { LayerRows, layerRowStyles } from './layer-row';

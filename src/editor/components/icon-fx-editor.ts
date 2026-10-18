@@ -2,7 +2,7 @@ import { t as lt } from '../../i18n/labels';
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant, IconColorsConfig, IconFillConfig, IconFxConfig, IconFxKeys } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { entityStateColor } from '../../utils/entity-color';
 import { hasIconFx } from '../../icons/render-icon';
 import { autoDeviceAnim, autoDeviceRule } from '../../icons/device-anim';

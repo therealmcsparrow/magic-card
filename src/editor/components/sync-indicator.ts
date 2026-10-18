@@ -1,6 +1,6 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { t } from '../i18n';
 
 @customElement('mc-sync-indicator')

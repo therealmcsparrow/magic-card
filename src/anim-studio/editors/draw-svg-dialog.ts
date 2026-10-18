@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg, nothing, type TemplateResult, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { UiWindowElement } from '../../contracts/ui-kit';
 import { seg } from '../../ui-kit/templates/choice';
 import { deepActive, studioWindow } from '../window';

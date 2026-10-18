@@ -1,5 +1,7 @@
 import { css, CSSResult, unsafeCSS } from 'lit';
-import { editorPrimitives, editorTokens } from '../css/editor-system';
+import { editorTokens } from '../css/editor-system';
+import { editorPrimitives } from '../ui-kit/css/primitives';
+import { kitTopbar } from '../ui-kit/css/extras';
 
 /** The stage and the timeline each keep at least this height (px); studio.ts SPLIT_MIN_PX. */
 const SPLIT_MIN_PX = 160;
@@ -8,6 +10,7 @@ const SPLIT_MIN_PX = 160;
 export const studioStyles: CSSResult[] = [
   editorTokens,
   editorPrimitives,
+  kitTopbar,
   css`
     :host {
       display: block;
@@ -33,19 +36,6 @@ export const studioStyles: CSSResult[] = [
       min-height: 0;
     }
 
-    /* topbar (like the card studio) */
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px 12px;
-      min-height: 56px;
-      padding: 8px 16px;
-      background: var(--mc-surface);
-      border-bottom: 1px solid var(--mc-divider);
-      position: relative;
-      z-index: 6;
-    }
     .grp {
       display: flex;
       align-items: center;

@@ -2,7 +2,7 @@ import { t as lt } from '../../i18n/labels';
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalSceneSetting, SeasonalSetting } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { autoScene, combineList, DEFAULT_CALENDAR, hemisphereOf, normalizeSeasonal, parseRange, SEASONAL_PICKS, zonedDay } from '../../utils/seasonal';
 import { SEASONAL_PREVIEW_EVENT } from '../../utils/seasonal-preview';
 import { SCENES } from '../../utils/seasonal-scenes';

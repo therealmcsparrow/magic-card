@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { AnimationDoc } from '../model';
 import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { DEFAULT_SIM, simAttributes, simNeeds, simNumericState, simulates, type PreviewChangeDetail } from './states-sim';

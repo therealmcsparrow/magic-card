@@ -6,7 +6,8 @@ import type { Inspector } from '../inspector/inspector';
 import type { StructureOutline } from './structure-outline';
 import type { Selection } from './selection';
 import { selectionKey } from './selection';
-import { editorSystem } from '../../css/editor-system';
+import { kitTopbar } from '../../ui-kit/css/extras';
+import { editorSystem } from '../../css/editor-stack';
 import type { StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
 import { countModules } from './selection';
@@ -356,6 +357,7 @@ export class Studio extends LitElement {
 
   static styles = [
     editorSystem,
+    kitTopbar,
     css`
       :host {
         display: contents;
@@ -400,18 +402,6 @@ export class Studio extends LitElement {
         }
       }
 
-      /* topbar */
-      .topbar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px 12px;
-        padding: 8px 12px;
-        background: var(--mc-surface);
-        border-bottom: 1px solid var(--mc-divider);
-        position: relative;
-        z-index: 6;
-      }
       .grp {
         display: flex;
         align-items: center;

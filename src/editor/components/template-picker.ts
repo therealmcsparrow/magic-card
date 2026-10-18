@@ -5,7 +5,7 @@ import { deepClone } from '../../utils/deep-merge';
 import { cardInstanceKeys } from '../../services/template-merge';
 import { stripForTemplate } from '../state/template-sync';
 import { pickerStyles, templatePickerStyles } from '../../css/editor-css';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { t } from '../i18n';
 

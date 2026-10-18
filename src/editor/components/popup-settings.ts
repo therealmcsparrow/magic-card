@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, PopupConfig, PopupTrigger } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, popupHashError } from '../../utils/popup';
 import { popupCoordinator } from '../../card/popup-coordinator';
 import { fieldReset } from './field-reset';

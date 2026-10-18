@@ -1,7 +1,7 @@
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationTrigger, ColorRange, HomeAssistant, RingConfig, ValueBound } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { RING_DEFAULTS } from '../../utils/ring';
 import { renderColorRangesField } from './color-ranges-field';
 import { fieldReset } from './field-reset';

@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, EditorState, RowConfig, RowModuleConfig, TabsModuleConfig } from '../../types';
 import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';

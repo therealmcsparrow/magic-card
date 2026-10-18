@@ -1,6 +1,6 @@
 import { css } from 'lit';
 import { mcVariables } from './tokens';
-import { editorSystem } from './editor-system';
+import { editorSystem } from '../css/editor-stack';
 
 export const componentControlStyles = css`
   :host {

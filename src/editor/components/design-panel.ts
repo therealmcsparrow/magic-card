@@ -17,7 +17,7 @@ import {
 } from '../../utils/css-properties';
 import { t as lt } from '../../i18n/labels';
 import type { MessageId } from '../../contracts/i18n';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
 import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../utils/animation';

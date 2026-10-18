@@ -1,6 +1,6 @@
 import { LitElement, html, css, svg, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { LayerView } from '../../contracts/studio-layers';
 import { lockBanner, lockBannerStyles } from './lock-banner';
 import { ANIMATION_CAPS, type AnimationDoc, type PathSpec } from '../model';

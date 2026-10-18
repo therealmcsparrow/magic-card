@@ -4,7 +4,7 @@ import { DisplayCondition, HomeAssistant } from '../../types';
 
 import './entity-picker';
 import './attribute-picker';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { t, m, type MessageId } from '../i18n';
 
 const CONDITION_TYPES: Array<{ value: DisplayCondition['type']; label: MessageId }> = [

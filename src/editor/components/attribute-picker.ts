@@ -2,7 +2,7 @@ import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { t } from '../i18n';
 

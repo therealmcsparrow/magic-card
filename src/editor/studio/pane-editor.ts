@@ -2,7 +2,7 @@ import { LitElement, html, css, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { EditorMode, EditorState, HomeAssistant, MagicCardConfig } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { effectiveWidths, widthWeights } from '../../utils/column-widths';
 import { countModules, selectionFromPath } from './selection';
 import type { Inspector } from '../inspector/inspector';

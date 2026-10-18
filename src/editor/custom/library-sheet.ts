@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { UiWindowElement } from '../../contracts/ui-kit';
 import type { IconData, TransferItem, TransferKind } from '../../contracts/preset-transfer';
 import type { HomeAssistant, MagicCardConfig } from '../../types';

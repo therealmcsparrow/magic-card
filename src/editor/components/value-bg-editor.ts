@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { HomeAssistant, ValueBackgroundConfig } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { VALUE_BG_DEFAULTS } from '../../utils/value-background';
 import { entityStateColor } from '../../utils/entity-color';
 import { share } from '../../icons/icon-fx';

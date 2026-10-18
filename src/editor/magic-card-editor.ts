@@ -4,7 +4,7 @@ import { MagicCardConfig, HomeAssistant, EditorState } from '../types';
 import { mergeTemplateWithOverrides, withTemplateAnimations } from '../services/template-merge';
 import { animationDocList } from '../utils/custom-animations';
 import { EDITOR_TAG } from '../utils/constants';
-import { editorSystem } from '../css/editor-system';
+import { editorSystem } from '../css/editor-stack';
 import { EditorStateManager } from './state/editor-state';
 import { clearNotSynced, countNotSynced, stripForTemplate } from './state/template-sync';
 import { selectionFromKey, selectionToPath } from './studio/selection';

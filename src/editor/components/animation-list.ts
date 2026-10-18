@@ -2,7 +2,7 @@ import { t as lt } from '../../i18n/labels';
 import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { animationConflicts, applyPreset, newAnimation, resetToPreset } from '../../utils/animation';
 import {
   ANIMATION_GROUPS,

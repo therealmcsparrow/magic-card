@@ -1,7 +1,8 @@
 import { LitElement, html, css, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
-import { editorPrimitives, editorTokens } from '../../css/editor-system';
+import { editorTokens } from '../../css/editor-system';
+import { editorPrimitives } from '../../ui-kit/css/primitives';
 import { resolveIconGeometry } from '../../icons/icon-source';
 import { iconDisplayName } from '../../utils/icon-list';
 import type { AnimationDoc } from '../model';

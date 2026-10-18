@@ -3,7 +3,7 @@ import type { AnimatedIconPick } from './animated-icon-grid';
 import type { AnimationConfig, CardModule, MagicCardConfig } from '../../../types';
 import type { CataloguePreset } from '../../../contracts/preset-catalogue';
 import type { CardState } from './card-request';
-import { editorSystem } from '../../../css/editor-system';
+import { editorSystem } from '../../../css/editor-stack';
 import { readAnimations } from '../../../utils/animation';
 import { animationLibrary } from '../../../services/animation-library';
 import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';

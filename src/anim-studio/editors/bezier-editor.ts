@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { t as tl } from '../../i18n/labels';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { validEasing } from '../model';
 import { BEZIER_PRESETS, bezierOf, clampBezier, easingFromBezier, easingLabel, type Bezier } from './keyframes-utils';
 import { t, m, type MessageId } from '../i18n';

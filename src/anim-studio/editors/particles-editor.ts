@@ -2,7 +2,7 @@ import { LitElement, html, css, svg, nothing, type PropertyValues, type Template
 import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { t as tl } from '../../i18n/labels';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { seg } from '../../ui-kit/templates/choice';
 import type { LayerView } from '../../contracts/studio-layers';
 import { emitterIds, isLocked } from '../layer-view';

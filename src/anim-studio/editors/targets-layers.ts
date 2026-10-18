@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { AnimationDoc, TargetRef } from '../model';
 import { LayerRows, layerRowStyles } from './layer-row';
 import { laneName, selectLane, trackRows, tracksOpen } from './lane-rows';

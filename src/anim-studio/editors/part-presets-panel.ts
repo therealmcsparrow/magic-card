@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorPrimitives, editorTokens } from '../../css/editor-system';
+import { editorTokens } from '../../css/editor-system';
+import { editorPrimitives } from '../../ui-kit/css/primitives';
 import type { AnimationDoc, TargetRef } from '../model';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import type { PreviewTile } from '../tiles';

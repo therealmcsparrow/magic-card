@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import './unit-field';
 import { t, m, type MessageId } from '../i18n';
 

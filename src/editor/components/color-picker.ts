@@ -1,7 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles, colorPickerStyles } from '../../css/editor-css';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { renderPickerWindow, PickerWindowController } from './picker-parts';
 import { parseEntityColor } from '../../utils/entity-color';
 import { parseGradient } from '../../utils/gradient';

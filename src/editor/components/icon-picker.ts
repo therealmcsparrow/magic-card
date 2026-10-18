@@ -2,7 +2,7 @@ import { LitElement, html, css, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant } from '../../types';
 import { pickerStyles, iconPickerStyles } from '../../css/editor-css';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { applyAnimatedIconPick, currentIconPick, currentIconStyle, loadIconAnimator } from './icon-animator/loader';
 import { IconListItem, iconDisplayName, isIconId, loadIconList, searchIcons } from '../../utils/icon-list';

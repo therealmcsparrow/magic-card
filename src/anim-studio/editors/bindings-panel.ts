@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { HomeAssistant } from '../../types';
 import type { AnimationDoc } from '../model';
 import type { BindProperty, Binding, TargetRef } from '../model-v2-core';

@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { safeCssValue, type AnimationDoc } from '../model';
 import type { RigShape, TargetRef } from '../model-v2';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';

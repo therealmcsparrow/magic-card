@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, MagicCardConfig } from '../../types';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { collectNotSynced } from '../state/template-sync';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { t, tx } from '../i18n';

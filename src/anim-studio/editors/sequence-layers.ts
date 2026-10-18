@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { AnimationDoc } from '../model';
 import type { LayerKey, LayerView, LayersDensity } from '../../contracts/studio-layers';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';

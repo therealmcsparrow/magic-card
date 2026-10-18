@@ -4,7 +4,7 @@ import type { EditorState, HomeAssistant, MagicCardConfig, RowModuleConfig } fro
 import type { EditorStateManager } from '../state/editor-state';
 import type { MagicCard } from '../../card/magic-card';
 import { CARD_TAG } from '../../utils/constants';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import { placeFloatBar } from './float-bar';
 import { ItemMenu, LongPress, itemMenuStyles } from './item-menu';
 import {

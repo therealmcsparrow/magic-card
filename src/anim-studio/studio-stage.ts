@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { editorPrimitives, editorTokens } from '../css/editor-system';
+import { editorTokens } from '../css/editor-system';
+import { editorPrimitives } from '../ui-kit/css/primitives';
 import { compileAnimationDoc } from './compile';
 import type { AnimationDoc } from './model';
 import { previewConfig } from './studio-model';

@@ -500,7 +500,7 @@ export class McteStartView extends LitElement {
 
   private _row(f: ThemeFileEntry): TemplateResult {
     const multi = this.files.filter((x) => x.file === f.file).length > 1;
-    return html`<li class="row">
+    return html`<li class="theme-item">
       <div class="top">
         <button type="button" class="title" @click=${() => fire(this, 'mcte-open', { name: f.name })}>${f.name}</button>
         <span class="chip">${f.has_modes ? t('Light + dark') : t('Same in light and dark')}</span>
@@ -544,7 +544,7 @@ export class McteStartView extends LitElement {
             <input id="q" class="input" type="search" placeholder=${t('Search themes')} .value=${this._query} @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)} />
           </div>`
         : nothing}
-      ${rows.length ? html`<ul class="rows">${rows.map((f) => this._row(f))}</ul>` : html`<p class="help">${t('No theme called {query}.', { query: this._query })}</p>`}
+      ${rows.length ? html`<ul class="theme-list">${rows.map((f) => this._row(f))}</ul>` : html`<p class="help">${t('No theme called {query}.', { query: this._query })}</p>`}
     `;
   }
 
@@ -601,14 +601,14 @@ export class McteStartView extends LitElement {
         font-size: 1.375rem;
         font-weight: 500;
       }
-      .rows {
+      .theme-list {
         list-style: none;
         margin: 0;
         padding: 0;
         display: grid;
         gap: 8px;
       }
-      .row {
+      .theme-item {
         display: grid;
         gap: 6px;
         padding: 12px;

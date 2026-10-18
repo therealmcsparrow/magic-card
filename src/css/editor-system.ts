@@ -1,10 +1,8 @@
 import { css, CSSResult } from 'lit';
-import { editorPrimitives } from '../ui-kit/css/primitives';
-import { editorLegacy } from '../ui-kit/css/legacy';
 
 /* ================================================================== */
 /*  STUDIO EDITOR DESIGN SYSTEM                                        */
-/*  One shared stylesheet for every editor component:                  */
+/*  Core: the editor tokens only (primitives and legacy live in src/ui-kit/css, editorSystem in css/editor-stack.ts): */
 /*    static styles = [editorSystem, css`...own small css...`]         */
 /*  Colors come only from HA theme variables (with fallbacks).         */
 /* ================================================================== */
@@ -74,8 +72,3 @@ export const editorTokens: CSSResult = css`
     }
   }
 `;
-
-/* editorPrimitives and editorLegacy moved to the ui-kit Module (ADR 0030); re-exported until UI10. */
-export { editorPrimitives, editorLegacy };
-
-export const editorSystem: CSSResult[] = [editorTokens, editorPrimitives, editorLegacy];

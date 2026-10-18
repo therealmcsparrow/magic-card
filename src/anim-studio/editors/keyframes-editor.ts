@@ -1,6 +1,6 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../../css/editor-system';
+import { editorSystem } from '../../css/editor-stack';
 import type { UiMenuElement, UiMenuEntry, UiMenuPick } from '../../contracts/ui-kit';
 import '../kit';
 import type { AnimationDoc, AnimationKeyframe, TargetRef } from '../model';
