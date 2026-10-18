@@ -233,9 +233,13 @@ export class AnimParticlesEditor extends LitElement {
       }
       .form {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: 0;
         min-width: 0;
         container: form / inline-size;
+      }
+      .form > * {
+        min-width: 0;
       }
       .form > .group {
         padding-bottom: 20px;
@@ -325,8 +329,14 @@ export class AnimParticlesEditor extends LitElement {
         min-width: 0;
         display: flex;
       }
-      .em-tabs .seg {
+      .em-tabs .seg,
+      .placement .seg {
+        flex-wrap: wrap;
         max-width: 100%;
+      }
+      .placement .seg > button {
+        flex: 1 1 0;
+        white-space: normal;
       }
       .em-tabs .seg > button {
         max-width: 160px;

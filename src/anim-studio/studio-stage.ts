@@ -654,6 +654,8 @@ export class AnimationStage extends LitElement {
       /* tile, theme and reduced motion: right-aligned, wrapping as one group when the stage is narrow */
       .view {
         display: inline-flex;
+        flex-wrap: wrap;
+        max-width: 100%;
         align-items: center;
         gap: 8px;
         margin-left: auto;
