@@ -1,11 +1,19 @@
+import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
+
 /*
- * Contract: theme editor host. Version 1.0.0 (Architect-owned).
+ * Contract: theme editor host. Version 1.1.0 (Architect-owned).
+ *
+ * 1.1.0 (2026-10-18, epic C, additive; the panel's major-1 check still passes): optional
+ * ThemeBackend.presets (My theme presets, mcu-library 1.0.0 r3), "Save as my preset", the
+ * "My presets" picker group (theme-presets 1.2.0), and export / import through the transfer
+ * chunk (preset-transfer 1.0.0) reached via window.MagicCard (no new import() in this entry).
  *
  * Implementation: module `theme-editor` (src/theme-editor/, webpack entry
  * dist/magic-card-theme-editor.js). Consumer: the Magic Card Utils panel's "Themes" tab
  * (magic-card-utils: custom_components/magic_card_utils/www/magic_card_utils_panel.js).
  * Backend it talks to (through the panel's adapter only): Contract theme-files 1.0.0
- * (magic-card-utils: custom_components/magic_card_utils/themes_contract.py).
+ * (magic-card-utils: custom_components/magic_card_utils/themes_contract.py) and (1.1.0) the
+ * theme_presets commands of mcu-library 1.0.0 r3 (library_contract.py).
  *
  * Loading (same pattern as the animation studio entry):
  * - The panel resolves magic-card.js from `lovelace/resources`, loads it (_ensureMagicCard), then
@@ -20,11 +28,35 @@
  *   "theme presets" below, ADR 0014). Its public path is set by src/theme-editor/public-path.ts,
  *   the entry's first import. magic-card.js is untouched (+0 B).
  *   The panel still imports one file; it never loads the preset chunk itself.
+ * - (1.1.0) Export / import: after loadEditor() resolves true, `window.MagicCard.loadTransfer()`
+ *   (module-editor 1.1.0) resolves the transfer chunk (preset-transfer 1.0.0); the editor uses its
+ *   functions and <mc-transfer-panel> by tag, host 'theme-editor', kinds ['theme']. This is not an
+ *   import() of this entry, so the one-import() rule holds and the entry bundles no YAML parser.
+ *   When loadTransfer is missing (an older magic-card.js next to a newer entry cannot happen: same
+ *   build) or rejects, Export / Import show the load error with "Try again".
  * - Version check: the panel reads `customElements.get(THEME_EDITOR_TAG).contractVersion` and
  *   accepts major 1. A missing file or element means "update Magic Card to 2026.10.06 or newer".
+ *
+ * (1.1.0) My theme presets:
+ * - "Save as my preset" (editor view, next to Save; enabled when backend.presets exists): a dialog
+ *   with name (seeded from the theme name), optional description (the blurb) and author; saves
+ *   { id: slug of the name made unique against the list, name, description?, author?, doc } where
+ *   doc is a deep copy of the draft ThemeDoc as it is (unsaved edits included, key order kept).
+ *   Creating a theme from that preset yields a deep-equal ThemeDoc.
+ * - The create dialog lists them first under "My presets" (picker group 'mine'), then the
+ *   built-in groups. Each My preset has a "More" menu in the entry: Rename, Export, Delete
+ *   (confirm). Built-in presets get Export too.
+ * - Without backend.presets (older Magic Card Utils): no "My presets" group, "Save as my preset"
+ *   hidden; Export still works; Import then opens a single theme item as a new unsaved theme
+ *   ("Create from file") and refuses lists with "Update Magic Card Utils to keep theme presets".
+ * - Import (with presets): every valid item is saved as a My preset after the clash choice; a
+ *   single item also offers "Open as new theme". Imported values with external references and
+ *   card-mod-* keys are KEPT and listed in the import warning (preset-transfer 1.0.0, CEO
+ *   2026-10-18). The editor runs docErrors on an imported doc before it opens it, as for any doc.
+ * - "Copy as HA theme" (Export menu): haThemeYaml(name, doc) to the clipboard.
  */
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.0.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.1.0';
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';
@@ -117,7 +149,7 @@ export interface ThemeSaveResult {
   loaded: boolean;
 }
 
-/** Error codes (theme-files 1.0.0). The adapter rejects with an Error carrying `code` and optional `errors`. */
+/** Error codes (theme-files 1.0.0; 1.1.0 adds mcu-library's library_full). The adapter rejects with an Error carrying `code` and optional `errors`. */
 export type ThemeErrorCode =
   | 'invalid_format'
   | 'not_found'
@@ -128,6 +160,7 @@ export type ThemeErrorCode =
   | 'too_large'
   | 'save_failed'
   | 'read_failed'
+  | 'library_full'
   | 'unauthorized';
 
 export interface ThemeBackendError extends Error {
@@ -136,11 +169,20 @@ export interface ThemeBackendError extends Error {
   errors?: Array<{ path: string; message: string }>;
 }
 
+/** (1.1.0) My theme presets, on mcu-library 1.0.0 r3 theme_presets_* commands. */
+export interface ThemePresetStore {
+  list(): Promise<SavedThemePreset[]>;
+  save(preset: SavedThemePresetInput, baseUpdatedAt?: string): Promise<SavedThemePreset>;
+  remove(id: string): Promise<void>;
+}
+
 export interface ThemeBackend {
   list(): Promise<ThemeList>;
   get(name: string): Promise<ThemeGetResult>;
   save(req: ThemeSaveRequest): Promise<ThemeSaveResult>;
   remove(name: string): Promise<void>;
+  /** (1.1.0) Present when Magic Card Utils stores theme presets; absent on older versions. */
+  presets?: ThemePresetStore;
 }
 
 // ── element surface ──
@@ -194,7 +236,7 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 export const PREVIEW_RULES_VERSION = '1.0.0';
 export const TRIAL_STYLE_ID = 'mc-theme-trial';
 
-// ── theme presets (Contract theme-presets 1.1.0, ADR 0014, ADR 0015) ──
+// ── theme presets (Contract theme-presets 1.2.0, ADR 0014, ADR 0015, ADR 0022) ──
 
 /**
  * The preset chunk: every editor preset (25 original, 20 inspired, 12 genre: 57 in all) and the
@@ -206,6 +248,15 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * Changes in 1.1.0 (additive; the loader accepts any major 1): group 'genre' ("Sci-fi & fantasy"
  * in the UI) and the optional `tags` field. Every 1.0.0 preset keeps its id, name, blurb, note,
  * group, credit and resolved doc (deep-equal), whatever the source encoding (ADR 0015).
+ *
+ * Changes in 1.2.0 (additive, epic C): group 'mine' ("My presets"), first in the picker when the
+ * user has any. Its items are SavedThemePresets mapped by the entry to ThemePreset (id, name,
+ * blurb = description ?? '', group 'mine', doc) and handed to the picker in PickerView; the
+ * built-in library never contains 'mine' (data rule) and its 57 presets are unchanged. Search
+ * covers My presets by name and blurb. Swatch rule for 'mine': a swatch value that matches
+ * EXTERNAL_REF_RE (preset-transfer 1.0.0) is never put into a style; the swatch falls back to
+ * primary-background-color, then to no background, so opening the picker never contacts another
+ * host. My presets get no contrast or data-rule check (they are the user's own).
  *
  * Provider: src/theme-editor/presets/chunk.ts, the chunk root. Its export surface is:
  * - `THEME_PRESET_LIBRARY: ThemePresetLibrary`, re-exported from presets/library.ts. library.ts has
@@ -242,14 +293,16 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * Picker (1.1.0): Show offers All, Original, Inspired by, Sci-fi & fantasy (ThemePresetGroupInfo
  * order, kept in the picker's GROUPS, each with its count); headings follow the same order and
  * labels. Search matches name, blurb, inspiredBy.name, tags and the group's search word
- * (ThemePresetGroupInfo.search).
+ * (ThemePresetGroupInfo.search). (1.2.0) "My presets" (search word "my") comes before Original in
+ * Show and in the headings, and only when the list is not empty.
  *
  * Data rules (tests/theme-presets.contract.test.ts):
  * - `id` matches /^[a-z0-9]+(-[a-z0-9]+)*$/ and is unique; `name` is unique (case-insensitive).
  *   The 5 starter ids stay: paper, midnight-oled, ember, contrast, frost (group 'original', same
  *   values as 2026.10.06). All 45 presets of 1.0.0 stay as 2026.10.08 shipped them (fixture).
  *   Ids are never renamed; a rename needs an alias and a CHANGELOG line.
- * - `group` 'inspired' requires `inspiredBy`; 'original' and 'genre' must not have it.
+ * - `group` 'inspired' requires `inspiredBy`; 'original' and 'genre' must not have it. (1.2.0)
+ *   No built-in preset has group 'mine'.
  * - `group` 'genre' requires `tags` whose first word is 'sci-fi' or 'fantasy'. No preset names a
  *   franchise or an in-universe term: id, name, blurb, note, tags and keywords (when a preset or
  *   the designer source file carries them) hold no term from the blocked list
@@ -258,7 +311,8 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *   on /[^a-z0-9]+/. A term hits when its words appear consecutively in the field's words, the
  *   last one matching as a prefix (dune hits dunes), or when the term's words joined (bladerunner)
  *   equal or prefix one field word. It is not a substring check: "strong" (tron) and "visit hours"
- *   (sith) pass. It runs over every preset, not only genre ones.
+ *   (sith) pass. It runs over every preset, not only genre ones. (The rule covers built-ins only;
+ *   users' own presets and imported files are their content.)
  * - `tags`: lowercase words split by single spaces, at most 40 characters.
  * - `doc` is a ThemeDoc with modes.light and modes.dark. Each mode sets primary-color,
  *   accent-color, primary-background-color, card-background-color, primary-text-color,
@@ -271,18 +325,18 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * - Order in `presets` is display order within a group; groups are contiguous, in
  *   ThemePresetGroupInfo order (original, inspired, genre).
  */
-export const THEME_PRESETS_VERSION = '1.1.0';
+export const THEME_PRESETS_VERSION = '1.2.0';
 export const THEME_PRESETS_CHUNK = 'theme-presets';
 export const THEME_PRESETS_CHUNK_FILE = 'magic-card-theme-presets.js';
 
-export type ThemePresetGroup = 'original' | 'inspired' | 'genre';
+export type ThemePresetGroup = 'mine' | 'original' | 'inspired' | 'genre';
 
 /**
  * Group order, Show labels, headings and search words. Type-level here; the picker keeps its own
  * copy of the values (src/contracts/ is types plus constants and the chunk must not pull in more).
- * original: "Original" / search "original"; inspired: "Inspired by" / "inspired by";
- * genre: "Sci-fi & fantasy" / "genre" (the words sci-fi and fantasy come from each preset's tags,
- * so "fantasy" finds only the fantasy ones).
+ * (1.2.0) mine: "My presets" / search "my"; original: "Original" / search "original"; inspired:
+ * "Inspired by" / "inspired by"; genre: "Sci-fi & fantasy" / "genre" (the words sci-fi and fantasy
+ * come from each preset's tags, so "fantasy" finds only the fantasy ones).
  */
 export interface ThemePresetGroupInfo {
   id: ThemePresetGroup;

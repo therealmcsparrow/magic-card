@@ -1,8 +1,9 @@
 import type { TemplateResult } from 'lit';
 import type { CardModule, EditorTab, HomeAssistant, ModuleType } from '../types';
+import type { TransferChunk } from './preset-transfer';
 
 /*
- * Contract: per-module editors. Version 1.0.0 (Architect-owned). ADR 0007.
+ * Contract: per-module editors. Version 1.1.0 (Architect-owned). ADR 0007, ADR 0022.
  *
  * Seam: dashboard module classes (src/modules/**) keep metadata, createDefault, renderPreview,
  * validate, hints, migrate and getDependencies. Settings tabs are ModuleEditor entries in the editor
@@ -26,17 +27,28 @@ import type { CardModule, EditorTab, HomeAssistant, ModuleType } from '../types'
  *   false, so HA falls back to its YAML editor. getStubConfig stays synchronous in magic-card.js.
  * - Window contract, additive: `window.MagicCard.loadEditor` (apiVersion stays 1). The studio bundle
  *   uses it to get STUDIO_EDITOR_TAGS, still by tag.
+ * - (1.1.0, additive, epic C) When the editor chunk evaluates it sets
+ *   `window.MagicCard.loadTransfer: () => Promise<TransferChunk>` (preset-transfer 1.0.0), which
+ *   calls src/editor/transfer-loader.ts. magic-card.js gains no code for it (+0 B): the property
+ *   exists only after loadEditor() resolved true. The theme editor and animation studio entries
+ *   use it, so the transfer chunk is loaded by the magic-card.js runtime and shares its modules.
+ *   apiVersion stays 1.
  *
  * Types only (0 B), apart from the constants below.
  */
 
-export const MODULE_EDITOR_CONTRACT = '1.0.0';
+export const MODULE_EDITOR_CONTRACT = '1.1.0';
+
+/** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
+export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];
 
 /** Tabs of a module whose editor lists none. */
 export const DEFAULT_MODULE_TABS: readonly EditorTab[] = ['general', 'actions', 'conditions', 'design'];
 
-/** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
-export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];
+/** (1.1.0) What the editor chunk adds to window.MagicCard. */
+export interface MagicCardEditorWindowAdditions {
+  loadTransfer: () => Promise<TransferChunk>;
+}
 
 export type ModuleTabRender = (
   config: CardModule,
