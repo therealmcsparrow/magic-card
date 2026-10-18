@@ -1,5 +1,6 @@
 import { loadSvgEditorChunk } from '../../svg-editor/loader';
 import { loadShapeEditorChunk } from '../../shape-editor/loader';
+import { loadTransfer } from '../transfer-loader';
 
 /*
  * window.MagicCard.loadSvgEditor() / loadShapeEditor() (svg-editor 1.0.0, additive, apiVersion stays 1):
@@ -9,7 +10,9 @@ import { loadShapeEditorChunk } from '../../shape-editor/loader';
  */
 export const loadSvgEditor = loadSvgEditorChunk;
 export const loadShapeEditor = loadShapeEditorChunk;
+/** (module-editor 1.1.0) window.MagicCard.loadTransfer(): the preset transfer chunk, see transfer-loader.ts. */
+export { loadTransfer };
 
 if (typeof window !== 'undefined') {
-  window.MagicCard = { ...window.MagicCard, loadSvgEditor, loadShapeEditor } as NonNullable<Window['MagicCard']>;
+  window.MagicCard = { ...window.MagicCard, loadSvgEditor, loadShapeEditor, loadTransfer } as NonNullable<Window['MagicCard']>;
 }
