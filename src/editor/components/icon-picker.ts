@@ -75,6 +75,15 @@ export class IconPicker extends LitElement {
         flex: 1 1 100%;
         margin: 0;
       }
+      /* short screens (200 % zoom, a phone on its side): the quiet install tip makes way for the list */
+      @media (max-height: 560px) {
+        .mc-picker-footer .help:not(.error) {
+          display: none;
+        }
+        .mc-picker-stack {
+          min-height: 0;
+        }
+      }
     `,
   ];
 

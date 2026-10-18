@@ -1004,7 +1004,7 @@ const pickerLocalStyles = css`
      and the body scrolls where the screen is too short (200 % zoom) instead of squeezing the list away. */
   .mc-picker-stack {
     display: flex;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     flex-direction: column;
     min-height: 24rem;
   }
