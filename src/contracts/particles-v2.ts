@@ -17,6 +17,18 @@ import type { ParticleSlot } from '../anim-studio/compile';
  * the CEO's answer "placement per emitter"): multiple emitters, each in front of or behind the card
  * content. Additive; engine stays 1. PARTICLES_CONTRACT_VERSION moves to '1.2.0' in task F-P1, when
  * the chunk implements it; until then the chunk is 1.1.0 and these types are unused.
+ * Revised 2026-10-18 after spikes F-S1 (67) and F-S2 (65), still additive, still 1.2.0:
+ * - validateSim takes an optional `spec` (count, layer), so the document-wide parent cap is checked
+ *   where the sim is validated; the compiler's emitter plan still trims as a safety net.
+ * - A `layer` equal to ParticlesSpec.layer is valid and means the same as a missing one; the validator
+ *   no longer normalises it (the studio's ops never write it).
+ * - Lenient: a missing, malformed or duplicate extra emitter id is replaced by a generated `e<n>`;
+ *   a broken `children` drops only the children, for every emitter (as for the primary). Invariant:
+ *   lenient output always passes strict.
+ * - CompiledParticlesV2.emitterSlots: each emitter's part and slot range, for the studio's stage hide
+ *   rule (studio-layers section 3a). Hiding an emitter is no longer an opacity [0, 0] document edit.
+ * - bakedCss keeps its signature; per-part rules stay internal to the chunk (apply.ts / css.ts).
+ *
  * - ParticlesSim gets optional `emitters` (ParticleEmitter[], 1..PARTICLES_V2_CAPS.emitters - 1 extra
  *   emitters), `id` and `name`. The sim's own fields plus the spec's count / size / colors / fade /
  *   spread are emitter 0, "the primary emitter". A sim without `emitters` (or with an empty list,
@@ -26,7 +38,8 @@ import type { ParticleSlot } from '../anim-studio/compile';
  *   emitter. The studio writes ParticleEmitter.layer only when it differs from ParticlesSpec.layer
  *   (and removes it when equal), so a document whose emitters all sit on one side stores no `layer`
  *   on its extras. When the primary changes side, the studio rewrites the extras' `layer` so they
- *   keep their own side (one undo step).
+ *   keep their own side (one undo step). A stored `layer` equal to ParticlesSpec.layer (hand-edited
+ *   YAML) is valid, behaves as missing and is kept as stored.
  * - Parts: a document renders AT MOST TWO particle layers, never one per emitter.
  *   Part 0 = the emitters on ParticlesSpec.layer's side (always holds the primary), in array order.
  *   Part 1 = the emitters on the other side, in array order; it exists only when at least one
@@ -38,19 +51,26 @@ import type { ParticleSlot } from '../anim-studio/compile';
  *   last (top). Across parts the card's z-order decides (back under the content, front over it).
  *   The document's slot pool and BakedLoop.elements are [part 0 emitters, then part 1 emitters], each
  *   emitter's block in array order: [e parents, e children] (within an emitter as 1.1.0). So part 0 is
- *   a prefix of the pool, part 1 the rest (BakedLoop.parts gives the cut).
+ *   a prefix of the pool, part 1 the rest (BakedLoop.parts gives the cut). Each emitter's block is
+ *   contiguous (CompiledParticlesV2.emitterSlots).
  * - Each emitter simulates on its own: its own seed (primary: sim.seed), its own children stream
  *   (deriveSeed(seed, 2) baked, deriveSeed(seed, 5) live layout). Emitters do not collide with each
- *   other. So removing, hiding (opacity [0, 0]), reordering or moving one emitter to the other side
- *   never changes another's motion.
+ *   other. So removing, reordering or moving one emitter to the other side never changes another's
+ *   motion, and hiding one in the studio (a stage rule over its slot range) changes nothing baked.
  * - Budgets per DOCUMENT (both parts together) stay the 1.1.0 numbers: parents of all emitters
- *   <= PARTICLES_V2_CAPS.parents (strict: error at `particles.sim.emitters`; lenient: counts trimmed
- *   from the last emitter down); elements of all emitters <= PARTICLES_V2_CAPS.elements; child slots
+ *   <= PARTICLES_V2_CAPS.parents; elements of all emitters <= PARTICLES_V2_CAPS.elements; child slots
  *   (elements - all parents) are split over the emitters with children in proportion to their
- *   parents (floor, remainders to the lowest emitter first); maxBytes is split the same way over
- *   emitters by element count and covers the CSS of both parts together. With one emitter these
- *   rules give exactly the 1.1.0 numbers. Splitting into two parts adds one layer element (a span),
- *   never slots.
+ *   parents (floor, remainders to the lowest emitter first, clamped to what the emitter wants);
+ *   maxBytes is split the same way over emitters by element count (never by bytes, so one emitter's
+ *   CSS size never moves another's stops) and covers the CSS of both parts together. With one
+ *   emitter these rules give exactly the 1.1.0 numbers. Splitting into two parts adds one layer
+ *   element (a span), never slots.
+ *   Where the parent cap is enforced (revision after F-S1): validateSim with `spec` checks
+ *   spec.count + all extras' counts (strict: error at `particles.sim.emitters`; lenient: extras'
+ *   counts trimmed from the last emitter down, an extra trimmed to 0 is dropped). Without `spec` it
+ *   checks the extras' own sum against PARTICLES_V2_CAPS.parents - 1. The compiler's emitter plan
+ *   (emitters.ts) always applies the lenient trim with the real spec, so the bound holds on every path.
+ *   model.ts (Core) does not check emitters.
  * - One bake per geometry per document: both parts share it (they fill the same wrapper, so they
  *   measure the same). Each part is applied, released and (live) stepped as its own layer; a live
  *   part steps only its own emitters' simulations.
@@ -64,18 +84,25 @@ import type { ParticleSlot } from '../anim-studio/compile';
  *   on ParticlesSpec.layer. An older chunk (1.1.0) drops `emitters`, `id` and `name` (its validator
  *   builds a new object) and plays emitter 0. An older card with this chunk ignores `other` and plays
  *   part 0. No document migration, no AnimationDoc.version change.
- * - Validation (validateSim): each extra emitter is checked by the same per-field rules as the
- *   primary, error paths `particles.sim.emitters[i].*`; count 1..PARTICLES_V2_CAPS.parents (integer),
- *   size / colors / fade / spread as ParticlesSpec; `layer` 'front' | 'back' or missing (strict: error;
- *   lenient: the field is dropped, the emitter follows ParticlesSpec.layer; a `layer` equal to
- *   ParticlesSpec.layer is dropped in both modes). Lenient: a broken extra emitter is dropped as a
- *   whole (the others play); more than the cap: the rest are dropped. Strict: every problem is an error.
- *   `id`: 1-16 of [a-z0-9-], unique within the sim (strict error on a duplicate; lenient: the later
- *   duplicate's id is dropped). `name`: trimmed text, at most 40 characters.
+ * - Validation (validateSim). Every extra emitter is checked by the primary's per-field rules, error
+ *   paths `particles.sim.emitters[i].*`; count 1..PARTICLES_V2_CAPS.parents (integer), size / colors /
+ *   fade / spread as ParticlesSpec; `layer` 'front' | 'back' or missing (strict: error; lenient: the
+ *   field is dropped, the emitter follows ParticlesSpec.layer). Strict: every problem is an error.
+ *   Lenient, same outcome for the primary and the extras (revision after F-S1):
+ *   - a broken `children` drops only `children`; the emitter plays without them;
+ *   - any other broken field of an extra drops that extra as a whole (the others play); more than
+ *     the cap: the rest are dropped; the parent trim as above.
+ *   `id`: 1-16 of [a-z0-9-], unique within the sim (the primary's `sim.id` included). Strict: error on
+ *   a missing, malformed or duplicate id. Lenient: such an id is replaced by `e<n>`, n the smallest
+ *   positive integer whose `e<n>` is not yet used in the sim, assigned in array order after drops
+ *   (deterministic). A malformed `sim.id` is dropped in lenient mode (the studio shows 'main').
+ *   `name`: trimmed text, at most 40 characters (lenient: cut to 40).
+ *   Lenient output always passes strict with the same `spec`.
  * - ids are written by the studio only once a document has two or more emitters, so a single-emitter
  *   document saved by the 1.2.0 studio is byte-identical to one saved before.
  *
- * Card side of the parts (Core change, task F-C1; magic-card.js budget +1,024 B, estimate 300-500 B):
+ * Card side of the parts (Core change, task F-C1; magic-card.js budget +1,024 B, measured +230 B in
+ * spike F-S1):
  * - compile.ts compileSim: CompiledAnimation.css = part 0 css + part 1 css (unmeasured pools);
  *   CompiledAnimation gets optional `split: { name, layer: CompiledLayer, sim }` from
  *   CompiledParticlesV2.other, with sim.part = 1. Absent when there is no part 1.
@@ -86,12 +113,12 @@ import type { ParticleSlot } from '../anim-studio/compile';
  *   parts at z-index auto (css/animations.ts unchanged); both are clipped by the wrapper as before;
  *   "On tap" restarts both (tap-fx.ts unchanged).
  * - card/magic-card.ts _syncParticles: the stylesheet key gains `o` for part 1. card-decorations.ts,
- *   the loaders and the stylesheet do not change.
+ *   the loaders and the stylesheet do not change. The card ignores emitterSlots.
  *
- * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js;
- * the studio bundle imports src/particles/index.ts directly).
+ * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js, cap
+ * 38,912 B since 2026-10-18; the studio bundle imports src/particles/index.ts directly).
  * Consumers: the card (src/utils/animation.ts, src/card/*) only through src/utils/particles-loader.ts,
- * the particles editor and the studio's animated SVG export.
+ * the particles editor, the studio's stage hide (emitterSlots) and the studio's animated SVG export.
  *
  * Compatibility (P2-9):
  * - A ParticlesSpec without `sim` is a v1 (2026.10.03) spec. It compiles through the existing
@@ -250,7 +277,7 @@ export interface SubEmitter {
  * colliders) are the document's, never per emitter.
  */
 export interface ParticleEmitter {
-  /** Stable key for the studio (layer view state, selection): 1-16 of [a-z0-9-], unique within the sim. */
+  /** Stable key for the studio (layer view state, selection): 1-16 of [a-z0-9-], unique within the sim. Lenient validation generates `e<n>` for a missing or bad one. */
   id: string;
   /** Shown in the layers list; missing: the flow's label (numbered when two emitters share it). At most 40 characters. */
   name?: string;
@@ -427,6 +454,23 @@ export interface CompiledParticlesPart {
   front: boolean;
 }
 
+/**
+ * 1.2.0 revision after F-S2 (2026-10-18): one emitter's slots in its part's layer. Its block is
+ * contiguous: parents at nth-child first+1 .. first+parents, then children at
+ * first+parents+1 .. first+parents+children. Counts are the pool shares after the budget split
+ * (what the DOM holds), not what the bake filled. Independent of geometry.
+ */
+export interface CompiledEmitterSlots {
+  /** 0 = the primary, i = sim.emitters[i - 1] of the VALIDATED sim. */
+  index: number;
+  /** 0: in CompiledParticlesV2's own layer; 1: in `other`. */
+  part: 0 | 1;
+  /** 0-based offset of the emitter's first slot within its part's slots. */
+  first: number;
+  parents: number;
+  children: number;
+}
+
 export interface CompiledParticlesV2 {
   /** The spec's mode. An unmeasured (aspect 0) 'baked' layer keeps mode 'baked' while its css is static (see css). */
   mode: ParticleMode;
@@ -454,6 +498,14 @@ export interface CompiledParticlesV2 {
   front: boolean;
   /** 1.2.0 revision: part 1, present only when at least one emitter is on the other side. */
   other?: CompiledParticlesPart;
+  /**
+   * 1.2.0 revision after F-S2: every emitter of the validated sim (one entry for a single-emitter
+   * document), in index order. Optional in the type only so the 1.1.0 chunk still compiles; a 1.2.0
+   * chunk always sets it, at every geometry and in both modes. Used by the studio's stage hide
+   * (studio-layers section 3a); the card ignores it. Not part of css, slots or names, so the F-P0
+   * goldens are unaffected.
+   */
+  emitterSlots?: CompiledEmitterSlots[];
   /** Unmeasured: elements = slots.length, stops 0, bytes = css length, capped and warn false. 1.2.0: the whole document. */
   stats: BakedLoop['stats'];
 }
@@ -486,15 +538,19 @@ export interface ParticlesApplyCtx {
  */
 export interface ParticlesModule {
   version: typeof PARTICLES_CONTRACT_VERSION;
-  /** Strict (studio) or lenient (card: bad entries dropped) check of a raw `sim`; error paths `particles.sim.*`. */
-  validateSim(raw: unknown, mode: 'strict' | 'lenient'): { sim?: ParticlesSim; errors: Array<{ path: string; message: string }> };
+  /**
+   * Strict (studio) or lenient (card: bad entries dropped) check of a raw `sim`; error paths
+   * `particles.sim.*`. 1.2.0 revision: optional `spec` (the primary's count and side) enables the
+   * document-wide parent cap (see the header); the studio always passes it, the compiler too.
+   */
+  validateSim(raw: unknown, mode: 'strict' | 'lenient', spec?: Pick<ParticlesSpec, 'count' | 'layer'>): { sim?: ParticlesSim; errors: Array<{ path: string; message: string }> };
   bake: Bake;
   /**
    * A baked loop as layer CSS (the card). Optional `pool` (1.1.0): the spec's full slot looks. With
    * it, `slots` is the whole pool (not one per baked element) and element k takes pool look k. Without
    * it, one slot per baked element (export, tests). 1.2.0: with `pool`, an element takes pool look
    * `element.slot` (equal to k for one emitter). Renders the whole document as one layer; the card's
-   * per-part rules come from the compiler and apply.
+   * per-part rules come from the compiler and apply (internal arguments, not part of this contract).
    */
   bakedCss(loop: BakedLoop, name: string, docId: string, pool?: ParticleSlotLook[]): { css: string; slots: ParticleSlotV2[] };
   /** A baked loop as standalone animated SVG markup (studio export, P2-6; live documents export their bake). 1.2.0: back part first, then front. */
