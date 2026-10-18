@@ -25,6 +25,9 @@ const CAPS = {
   // draw.ts (6.2 KB) is in this chunk by contract and is the main reason it is over. The chunk is only emitted
   // once an editor chunk imports src/path-canvas/loader.ts; until then this entry reports "missing from dist".
   'magic-card-path-canvas.js': 45_056, // 44 KiB by CEO decision (ADR 0019); measured below
+  // SVG editor (T10): the architect's ceiling of 96 KiB, ADR 0019. Like the canvas chunk it is only emitted once the card-editor
+  // chunk imports src/svg-editor/loader.ts (T11); until then this entry reports "missing from dist".
+  'magic-card-svg-editor.js': 98_304, // 96 KiB
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));

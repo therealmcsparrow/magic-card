@@ -63,9 +63,9 @@ module.exports = (env, argv) => {
           use: 'ts-loader',
           exclude: /node_modules/,
         },
-        // theme editor chunk (160 KB cap) and path canvas chunk (40 KiB cap): shrink css`` / html`` template text in production builds
+        // theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap) and SVG editor chunk (96 KiB cap): shrink css`` / html`` template text in production builds
         ...(isProduction
-          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
         {
           test: /\.css$/,

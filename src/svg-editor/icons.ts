@@ -1,0 +1,53 @@
+import { html, type TemplateResult } from 'lit';
+
+/* The editor's own glyphs: 24 x 24 outlines drawn with currentColor, so they follow the button colour. */
+
+const G = {
+  select: 'M6 3l12 8-5.5 1.3L10 18z',
+  node: 'M5 19L19 5M3 17h4v4H3zM17 3h4v4h-4z',
+  pen: 'M4 20l1-5L16 4l4 4L9 19zM14 6l4 4',
+  rect: 'M4 6h16v12H4z',
+  ellipse: 'M4 12a8 6 0 1 0 16 0a8 6 0 1 0-16 0',
+  line: 'M5 19L19 5',
+  polygon: 'M12 3l2.5 6.5H21l-5 4 2 7-6-4-6 4 2-7-5-4h6.5z',
+  free: 'M3 15c3-8 6 4 9-3s6-3 9 0',
+  hand: 'M8 13V6a1.5 1.5 0 0 1 3 0v5m0-1V4.5a1.5 1.5 0 0 1 3 0V11m0-3a1.5 1.5 0 0 1 3 0v6c0 4-2 6-5 6s-4-1-6-4l-2-4a1.5 1.5 0 0 1 2.5-1.5L8 14',
+  undo: 'M4 9h10a5 5 0 0 1 0 10H8M4 9l4-4M4 9l4 4',
+  redo: 'M20 9H10a5 5 0 0 0 0 10h6M20 9l-4-4M20 9l-4 4',
+  eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9.5a2.5 2.5 0 1 0 .01 0z',
+  eyeOff: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM3 3l18 18',
+  lock: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3',
+  unlock: 'M6 11h12v9H6zM8 11V8a4 4 0 0 1 7.5-1.5',
+  plus: 'M12 5v14M5 12h14',
+  minus: 'M5 12h14',
+  fit: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
+  grid: 'M4 4h16v16H4zM4 12h16M12 4v16',
+  snap: 'M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4z',
+  up: 'M12 19V5M6 11l6-6 6 6',
+  down: 'M12 5v14M6 13l6 6 6-6',
+  left: 'M19 12H5M11 6l-6 6 6 6',
+  right: 'M5 12h14M13 6l6 6-6 6',
+  back: 'M15 5l-7 7 7 7',
+  close: 'M6 6l12 12M18 6L6 18',
+  help: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17v.5',
+  file: 'M6 3h8l4 4v14H6zM14 3v4h4',
+  paste: 'M9 4h6v3H9zM7 5H5v16h14V5h-2',
+  blank: 'M4 4h16v16H4z',
+  iconpick: 'M12 3l2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.4l6-.9z',
+  library: 'M5 4h4v16H5zM11 4h4v16h-4zM17 6l3 .8-3.5 13-3-.8',
+  group: 'M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4M9 9h6v6H9z',
+  copy: 'M8 8h12v12H8zM4 16V4h12',
+  trash: 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13',
+  rotL: 'M5 12a7 7 0 1 0 2-5M5 4v4h4',
+  rotR: 'M19 12a7 7 0 1 1-2-5M19 4v4h-4',
+  flipH: 'M12 3v18M8 7L3 12l5 5zM16 7l5 5-5 5z',
+  flipV: 'M3 12h18M7 8l5-5 5 5zM7 16l5 5 5-5z',
+  link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
+  save: 'M5 4h12l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6',
+  check: 'M5 12.5l4.5 4.5L19 7',
+} as const;
+
+export type GlyphName = keyof typeof G;
+
+export const glyph = (n: GlyphName, size = 20): TemplateResult =>
+  html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;

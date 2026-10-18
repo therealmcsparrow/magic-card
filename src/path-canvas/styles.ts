@@ -40,6 +40,13 @@ export const canvasStyles: CSSResult[] = [
     :host([hidden]) {
       display: none;
     }
+    /* The host draws the artwork and the ground underneath (SVG editor): the frame and the ground are see-through. */
+    :host([underlay]) {
+      background: none;
+    }
+    :host([underlay]) .frame {
+      fill: transparent;
+    }
     :host(:focus-visible) {
       outline: 2px solid var(--pc-accent);
       outline-offset: 2px;
