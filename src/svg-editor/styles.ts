@@ -578,11 +578,22 @@ export const editorStyles: CSSResult[] = [
     }
     .float {
       align-self: flex-start;
+      flex-wrap: wrap;
+      max-width: 100%;
       gap: 2px;
       padding: 2px;
       background: var(--mc-surface);
       border-radius: 10px;
       box-shadow: var(--mc-shadow-float);
+    }
+    .vsep {
+      align-self: stretch;
+      width: 1px;
+      margin: 4px 4px;
+      background: var(--mc-divider);
+    }
+    .float .tb-menu {
+      padding: 0 8px;
     }
     .zoom {
       min-width: 4ch;

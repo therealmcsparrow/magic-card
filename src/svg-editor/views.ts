@@ -4,15 +4,13 @@ import type { TransferItem } from '../contracts/preset-transfer';
 import { toPathString } from '../path/core';
 import { D, E } from './bind';
 import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
-import type { BooleanOp } from '../contracts/path-booleans';
-import { HA_SECONDARY_OPACITY, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange } from '../contracts/svg-editor';
-import { boolHelp, boolReason } from './combine';
+import { HA_SECONDARY_OPACITY, type SvgArrange } from '../contracts/svg-editor';
 import { haWarns } from './ha';
 import { groupBlocked, layerTree, subject } from './layers';
 import { glyph, type GlyphName } from './icons';
 import { byId, isOff, round2, shapeBox, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
-import { PATH_BUTTONS, apply, cancel, change, openTool, panelState, ptReason } from './pathtools';
+import { apply, cancel, change, panelState } from './pathtools';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
 import { S } from './strings';
@@ -163,7 +161,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
     ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
-    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.xfer ? S.xferMenu : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
+    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? S.xferMenu : ed.menu.key ? ed.menu.opener.textContent!.trim() : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
   </div>`;
@@ -205,7 +203,7 @@ function topBar(ed: McSvgEditor): TemplateResult {
       ? html`${ed.layout === 'compact' ? btn(ed.panel === 'layers' ? S.layers : S.library, undefined, () => (ed.overlay = !ed.overlay), { text: true, cls: 'ghost', pressed: ed.overlay }) : nothing}
           ${btn(S.undo, 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z' })}${btn(S.redo, 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z' })}
           <span class=${`chip meter ${zone}`} title=${S.meterTip}>${o.error === 'empty' ? '0.0' : used} / 32 KB · ${S.points(o.points)}${o.bytes >= 4096 && !zone ? html` · ${S.heavy}` : nothing}</span>
-          <button type="button" class="b xfer-btn" aria-haspopup="menu" aria-expanded=${aria(!!ed.menu?.xfer)} @click=${(e: Event) => ed.xferMenu(e.currentTarget as HTMLElement)}><span>${S.xferMenu}</span></button>
+          <button type="button" class="b xfer-btn" aria-haspopup="menu" aria-expanded=${aria(ed.menu?.key === 'xfer')} @click=${(e: Event) => ed.xferMenu(e.currentTarget as HTMLElement)}><span>${S.xferMenu}</span></button>
           ${ed.mcu ? nothing : html`<button type="button" class="b" aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} @click=${() => !needLib && ed.openSave()} aria-keyshortcuts="Control+S"><span>${S.saveLib}</span></button>`}
           ${needLib ? html`<span id="lib-hint" class="sr">${S.libMissing}</span>` : nothing}
           <button type="button" class="b primary" aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} title=${why ?? nothing} @click=${() => ed.done()} aria-keyshortcuts="Control+Enter"><span>${ed.mcu ? S.saveGo : S.done}</span></button>
@@ -453,6 +451,8 @@ function floatBar(ed: McSvgEditor): TemplateResult {
     ${btn(S.zoomOut, 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(S.zoomIn, 'plus', () => ed.zoomBy(1.25), { keys: '=' })}${btn(S.zoomFit, 'fit', () => ed.fitView(), { keys: '0' })}
     <button type="button" class="b pv-toggle" aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}><span>${S.preview}</span></button>
     ${btn(S.gridToggle(ed.grid), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true, tip: S.gridOn })}${btn(S.snapOn, 'snap', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
+    <span class="vsep" role="separator" aria-orientation="vertical"></span>
+    ${(['align', 'combine', 'path'] as const).map((k) => html`<button type="button" class="b tb-menu" data-menu=${k} aria-haspopup="menu" aria-expanded=${aria(ed.menu?.key === k)} aria-busy=${(k === 'combine' && ed.boolBusy) || (k === 'path' && ed.ptBusy) ? 'true' : nothing} @click=${(e: Event) => ed.toolMenu(k, e.currentTarget as HTMLElement)}><span>${k === 'combine' && ed.boolBusy ? S.boolWorking : k === 'align' ? S.alignTitle : k === 'combine' ? S.boolOps.union : S.ptTitle}</span></button>`)}
   </div>`;
 }
 
@@ -641,7 +641,6 @@ function documentSection(ed: McSvgEditor): TemplateResult {
       <p class="help">${S.noneSelected}</p>
       ${dualSwitch(ed)}
       ${gridChips(ed)}
-      ${placeRow(ed)}
       ${chk(S.safeArea, ed.safe, (v) => { ed.safe = v; ed.checks(); })}
       ${chk(S.nudgePad, ed.nudgePad, (v) => (ed.nudgePad = v))}
     </section>
@@ -653,45 +652,9 @@ function documentSection(ed: McSvgEditor): TemplateResult {
     </section>`;
 }
 
-const BOOL_GLYPH: Record<BooleanOp, string> = {
-  union: 'M12 8A5 5 0 1 0 12 16A5 5 0 1 0 12 8Z',
-  subtract: 'M12 8A5 5 0 1 0 12 16A5 5 0 0 1 12 8ZM12 8A5 5 0 1 1 12 16',
-  intersect: 'M12 8A5 5 0 0 0 12 16A5 5 0 0 0 12 8Z',
-  exclude: 'M12 8A5 5 0 1 0 12 16A5 5 0 0 1 12 8ZM12 8A5 5 0 1 1 12 16A5 5 0 0 0 12 8Z',
-};
-const BOOL_OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
-
-/** A button of the Combine and Path grids: unavailable ones stay focusable (the reason is text under the grid). */
-const opBtn = (op: string, label: string, off: unknown, busy: boolean, on: () => void, gl?: TemplateResult): TemplateResult =>
-  html`<button type="button" class=${`b${off ? ' is-off' : ''}`} aria-disabled=${off ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} data-op=${op} @click=${on}>${gl ?? nothing}<span>${label}</span></button>`;
-
-function boolSection(ed: McSvgEditor): TemplateResult {
-  const st = ed.boolean;
-  const lines = boolHelp(st);
-  return html`<section class="grp-s bool" aria-labelledby="bo-h">
-    <h4 id="bo-h">${S.boolTitle}</h4>
-    <div class="bool-grid">
-      ${BOOL_OPS.map((o) =>
-        opBtn(o, ed.boolBusy === o ? S.boolWorking : S.boolOps[o], boolReason(st, o) || ed.boolBusy, ed.boolBusy === o, () => void ed.runBoolean(o), svg`<svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.6"></path></svg>`),
-      )}
-    </div>
-    <p class="help">${S.boolHint}</p>
-    ${lines.map((l) => html`<p class="help">${l}</p>`)}
-  </section>`;
-}
-
 function pathSection(ed: McSvgEditor): TemplateResult {
-  const p = ed.pt;
-  if (p)
-    return p.c.renderPanel(panelState(p), { change: (x) => change(ed, x), apply: () => apply(ed), cancel: () => cancel(ed) }) as TemplateResult;
-  const why = PATH_BUTTONS.map((t) => ptReason(ed, t));
-  return html`<section class="grp-s pt-sec" aria-labelledby="pt-h">
-    <h4 id="pt-h">${S.ptTitle}</h4>
-    <div class="bool-grid">
-      ${PATH_BUTTONS.map((t, i) => opBtn(t, S.ptName[t], why[i] || ed.ptBusy, ed.ptBusy === t, () => void openTool(ed, t)))}
-    </div>
-    ${[...new Set(why)].map((l) => (l ? html`<p class="help">${l}</p>` : nothing))}
-  </section>`;
+  const p = ed.pt!;
+  return p.c.renderPanel(panelState(p), { change: (x) => change(ed, x), apply: () => apply(ed), cancel: () => cancel(ed) }) as TemplateResult;
 }
 
 function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
@@ -704,42 +667,6 @@ function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
 /** A button that stays focusable when unavailable; the editor says why when it is pressed. */
 function abtn(label: string, g: GlyphName, on: () => void, off: boolean, text = false): TemplateResult {
   return html`<button type="button" class="b" aria-label=${text ? nothing : label} title=${text ? nothing : label} aria-disabled=${off ? 'true' : nothing} @click=${on}>${glyph(g, 18)}${text ? html`<span>${label}</span>` : nothing}</button>`;
-}
-
-const EDGES: Array<[SvgAlignEdge, GlyphName]> = [['left', 'alignL'], ['centre', 'alignC'], ['right', 'alignR'], ['top', 'alignT'], ['middle', 'alignM'], ['bottom', 'alignB']];
-
-function alignSection(ed: McSvgEditor): TemplateResult {
-  const { items, leftOut } = ed.items;
-  const many = items.length >= 2;
-  const items3 = items.length >= 3;
-  const targets: Array<[SvgAlignTarget, string]> = [['selection', S.alignTargets.selection], ['canvas', S.alignTargets.canvas], ['safe', S.alignTargets.safe]];
-  const cur = ed.alignBase;
-  const offT = (k: SvgAlignTarget): string | undefined => (k === 'selection' && !many ? S.alignNeedTwo : k === 'safe' && !ed.safeOn ? S.safeHidden : undefined);
-  const pickT = (k: SvgAlignTarget): void => {
-    const why = offT(k);
-    if (why) ed.say(why);
-    else ed.alignTarget = k;
-  };
-  const reason = offT('selection') ?? offT('safe');
-  return html`<section class="grp-s" aria-labelledby="al-h">
-    <h4 id="al-h">${S.alignTitle}</h4>
-    <div class="seg" role="radiogroup" aria-label=${S.alignRel}>
-      ${targets.map(([k, text]) => html`<button type="button" role="radio" aria-checked=${aria(k === cur)} aria-disabled=${offT(k) ? 'true' : nothing} tabindex=${k === cur ? 0 : -1} @click=${() => pickT(k)} @keydown=${(e: KeyboardEvent) => segKey(e, targets, k, pickT)}>${text}</button>`)}
-    </div>
-    <div class="acts">${EDGES.map(([e, g]) => abtn(S.alignEdge[e], g, () => ed.align(e), !items.length))}</div>
-    <div class="acts">${abtn(S.distH, 'distH', () => ed.distribute('h'), !items3)}${abtn(S.distV, 'distV', () => ed.distribute('v'), !items3)}</div>
-    <p class="help">${items3 ? S.distHelp : S.alignNeedThree}</p>
-    ${reason ? html`<p class="help">${reason}</p>` : nothing}
-    ${leftOut ? html`<p class="help">${S.boolLeftOut(leftOut, false)}</p>` : nothing}
-  </section>`;
-}
-
-function placeRow(ed: McSvgEditor): TemplateResult {
-  const none = !ed.safeOn;
-  return html`<div class="acts place">
-      ${abtn(S.placeCentre, 'alignC', () => ed.place('centre'), false, true)}${abtn(S.placeFit, 'fit', () => ed.place('fit'), none, true)}${abtn(S.placeMatch, 'snap', () => ed.place('match'), none, true)}
-    </div>
-    <p class="help">${none ? S.safeHidden : S.placeMatchHelp}</p>`;
 }
 
 function arrangeRow(ed: McSvgEditor): TemplateResult {
@@ -757,7 +684,6 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       <h3 id="sh-h">${one ? one.name : S.shapes(sel.length)}</h3>
       ${one ? html`<label class="f"><span>${S.rename}</span><input type="text" .value=${one.name} @change=${(e: Event) => ed.renameShape(one.id, (e.target as HTMLInputElement).value)} /></label>` : nothing}
     </section>
-    ${alignSection(ed)}
     <section class="grp-s" aria-labelledby="ps-h">
       <h4 id="ps-h">${S.posSize}</h4>
       <div class="grid2">
@@ -770,10 +696,8 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
         ${btn(S.rotMinus, 'rotL', () => ed.rotate(-15), off)}${btn(S.rotPlus, 'rotR', () => ed.rotate(15), off)}${btn(S.rotCcw, 'rot90L', () => ed.rotate(-90), off)}${btn(S.rotCw, 'rot90R', () => ed.rotate(90), off)}
         ${btn(S.flipH, 'flipH', () => ed.flip('h'), { ...off, keys: 'Shift+H' })}${btn(S.flipV, 'flipV', () => ed.flip('v'), { ...off, keys: 'Shift+V' })}
       </div>
-      ${placeRow(ed)}
     </section>
-    ${boolSection(ed)}
-    ${pathSection(ed)}
+    ${ed.pt ? pathSection(ed) : nothing}
     ${one && (one.type === 'rect' || one.type === 'polygon' || one.type === 'star')
       ? html`<section class="grp-s" aria-labelledby="to-h"><h4 id="to-h">${S.typeOptions}</h4>
           ${one.type === 'rect' ? numField(S.radiusField, one.r ?? 0, (n) => ed.option({ r: Math.max(0, n) }), { min: 0 }) : numField(S.sidesField, one.sides ?? 5, (n) => ed.option({ sides: Math.min(24, Math.max(3, Math.round(n))) }), { min: 3, max: 24, step: 1 })}

@@ -57,7 +57,7 @@ import {
   type Shape,
 } from './model';
 import { endDrag, stepOrder, groupBlocked, type DragState } from './layers';
-import { emptyMenu, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
+import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
 import { S } from './strings';
@@ -204,7 +204,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   noticeGone = false;
 
   /** The open "Shape actions" menu. */
-  menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener: HTMLElement; xfer?: boolean };
+  menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener: HTMLElement; key?: 'xfer' | 'align' | 'combine' | 'path' };
   private press?: { x: number; y: number; t: ReturnType<typeof setTimeout> };
   private menuAt = 0;
   private tk = '';
@@ -507,7 +507,13 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   xferMenu(b: HTMLElement): void {
     const r = b.getBoundingClientRect();
-    this.menu = { items: xferItems(this), at: [r.left, r.bottom], touch: false, opener: b, xfer: true };
+    this.menu = { items: xferItems(this), at: [r.left, r.bottom], touch: false, opener: b, key: 'xfer' };
+  }
+
+  /** A canvas toolbar menu: Align, Combine or Path. */
+  toolMenu(key: 'align' | 'combine' | 'path', b: HTMLElement): void {
+    const r = b.getBoundingClientRect();
+    this.menu = { items: key === 'align' ? alignItems(this, true) : key === 'combine' ? combineItems(this) : pathItems(this), at: [r.left, r.bottom], touch: false, opener: b, key };
   }
 
   /** A layer row opens the menu; the row's shape is selected first unless it is in the selection already. */
@@ -548,7 +554,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const id = (e as CustomEvent<{ id: string }>).detail.id;
     runMenu(this, id, row);
     if (id.startsWith('x:')) return;
-    this.updateComplete.then(() => (row?.classList.contains('row') && row.isConnected ? row : this.canvas())?.focus({ preventScroll: true }));
+    this.updateComplete.then(() => (row?.isConnected && (row.classList.contains('row') || row.classList.contains('tb-menu')) ? row : this.canvas())?.focus({ preventScroll: true }));
   };
 
   onMenuClose = (): void => {
