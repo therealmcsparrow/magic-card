@@ -1,6 +1,7 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import type { UiWindowElement } from '../contracts/ui-kit';
 import './kit';
+import { t } from './i18n';
 
 /** The focused element, looking through open shadow roots. */
 export function deepActive(): HTMLElement | null {
@@ -48,14 +49,14 @@ export function studioWindow(o: StudioWindow, body: unknown, footer?: unknown): 
     variant=${o.variant ?? 'sheet'}
     size=${o.size ?? nothing}
     heading=${o.heading}
-    closeLabel="Close"
+    closeLabel=${t('Close')}
     ?movable=${!alert}
     ?resizable=${!alert}
     ?maximizable=${!alert}
-    moveLabel="Move window"
-    resizeLabel="Resize window"
-    maximizeLabel="Maximise"
-    restoreLabel="Restore size"
+    moveLabel=${t('Move window')}
+    resizeLabel=${t('Resize window')}
+    maximizeLabel=${t('Maximise')}
+    restoreLabel=${t('Restore size')}
     initialFocus=${o.initialFocus ?? nothing}
     .dismissible=${o.dismissible ?? !alert}
     @mc-window-close=${(e: Event) => {

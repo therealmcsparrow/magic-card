@@ -34,6 +34,7 @@ import {
   trackOf,
   ungroup,
 } from './parts-model';
+import { t, m } from '../i18n';
 
 /*
  * Icon parts in the Layers column (studio slot 'layers', track B2). Splits the icon into parts
@@ -182,7 +183,7 @@ export class AnimPartsLayers extends LitElement {
     const own = !this._resplit && d.rig?.svg ? d.rig.svg : undefined;
     const ref = own ? sourceIcon(d, this.tile) : this._icon.trim() || sourceIcon(d, this.tile);
     if (!own && !/^[a-z0-9_-]+:[a-z0-9_-]+$/i.test(ref)) {
-      this._error = 'Use an icon id like mdi:bell-ring.';
+      this._error = t('Use an icon id like mdi:bell-ring.');
       return;
     }
     this._busy = true;
@@ -192,19 +193,19 @@ export class AnimPartsLayers extends LitElement {
       // another document opened while the icon loaded: the split is not for it
       if (this.doc?.id !== d.id) return;
       if (!g) {
-        this._error = 'This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.';
+        this._error = t('This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.');
         return;
       }
       const pieces = piecesOf(g);
       if (!pieces.length) {
-        this._error = 'This icon has no shapes to split.';
+        this._error = t('This icon has no shapes to split.');
         return;
       }
       const next = splitInto(this.doc ?? d, pieces, own ? { svg: own } : { icon: ref });
       const n = next.rig?.parts.length ?? 0;
       const capped = pieces.length > V2_CAPS.parts;
-      this._notice = capped ? `The icon has ${pieces.length} shapes: the first ${V2_CAPS.parts} became parts (the most a rig holds), the rest stay at rest.` : '';
-      this._change(next, 'Split icon', `Split into ${n} part${n === 1 ? '' : 's'}${capped ? ` (the first ${V2_CAPS.parts})` : ''}`);
+      this._notice = capped ? t('The icon has {count} shapes: the first {parts} became parts (the most a rig holds), the rest stay at rest.', { count: pieces.length, parts: V2_CAPS.parts }) : '';
+      this._change(next, 'Split icon', capped ? t('Split into {count, plural, one {# part} other {# parts}} (the first {parts})', { count: n, parts: V2_CAPS.parts }) : t('Split into {count, plural, one {# part} other {# parts}}', { count: n }));
       this._confirm = false;
       this._resplit = false;
       this._select([]);
@@ -224,7 +225,7 @@ export class AnimPartsLayers extends LitElement {
     }
     const r = groupParts(d, this._sel);
     if (!r.id) return;
-    this._change(r.doc, 'Group parts', `Grouped ${partIdsOf(d, this._sel).length} parts`);
+    this._change(r.doc, 'Group parts', t('Grouped {count} parts', { count: partIdsOf(d, this._sel).length }));
     this._select([groupRef(r.id)]);
   }
 
@@ -238,7 +239,7 @@ export class AnimPartsLayers extends LitElement {
       members.push(...(d.rig?.groups?.find((x) => `group:${x.id}` === g)?.parts ?? []).map(partRef));
       next = ungroup(next, g.slice(6));
     }
-    this._change(next, 'Ungroup', groups.length > 1 ? 'Groups removed' : 'Group removed');
+    this._change(next, 'Ungroup', groups.length > 1 ? t('Groups removed') : t('Group removed'));
     this._select(members);
   }
 
@@ -247,7 +248,7 @@ export class AnimPartsLayers extends LitElement {
     if (!d || this.disabled || this._lockedSel()) return;
     const r = mergeParts(d, this._sel);
     if (!r.id) return;
-    this._change(r.doc, 'Merge parts', 'Parts merged');
+    this._change(r.doc, 'Merge parts', t('Parts merged'));
     this._select([partRef(r.id)]);
   }
 
@@ -257,7 +258,7 @@ export class AnimPartsLayers extends LitElement {
     if (!d || !part || this.disabled || this._lockedSel()) return;
     const r = splitPart(d, part.slice(5));
     if (r.ids.length < 2) return;
-    this._change(r.doc, 'Split part', `Split into ${r.ids.length} parts`);
+    this._change(r.doc, 'Split part', t('Split into {count} parts', { count: r.ids.length }));
     this._select(r.ids.map(partRef));
   }
 
@@ -275,8 +276,8 @@ export class AnimPartsLayers extends LitElement {
     if (this._list.refuseLocked(part, targetName(d, part))) return;
     const next = movePart(d, part.slice(5), by);
     if (next !== d) {
-      this._change(next, 'Move part', by > 0 ? 'Moved up: drawn on top' : 'Moved down: drawn underneath');
-      this._list.announce(`${targetName(d, part)} moved ${by > 0 ? 'up' : 'down'}`);
+      this._change(next, 'Move part', by > 0 ? t('Moved up: drawn on top') : t('Moved down: drawn underneath'));
+      this._list.announce(t('{name} moved {direction}', { name: targetName(d, part), direction: by > 0 ? t('up') : t('down') }));
     }
   }
 
@@ -293,7 +294,7 @@ export class AnimPartsLayers extends LitElement {
     this._renaming = undefined;
     const d = this.doc;
     if (!d || !name.trim() || name.trim() === targetName(d, ref) || this._list.refuseLocked(ref, targetName(d, ref))) return;
-    this._change(renameTarget(d, ref, name), 'Rename part', 'Renamed');
+    this._change(renameTarget(d, ref, name), 'Rename part', t('Renamed'));
   }
 
   // ── events ──
@@ -373,14 +374,14 @@ export class AnimPartsLayers extends LitElement {
     const own = !!d.rig?.svg && !this._resplit;
     return html`<div class="source">
       ${own
-        ? html`<p class="help">The parts come from the document's own SVG, one part per shape.</p>`
+        ? html`<p class="help">${t("The parts come from the document's own SVG, one part per shape.")}</p>`
         : editorDefined('mc-icon-picker')
           ? html`<div class="field">
-              <div class="field-head"><span class="lbl" id="pl-icon-l">Icon to split</span></div>
+              <div class="field-head"><span class="lbl" id="pl-icon-l">${t('Icon to split')}</span></div>
               <mc-icon-picker
                 .hass=${this.hass}
                 .value=${this._icon}
-                label="Icon to split"
+                label=${t('Icon to split')}
                 aria-labelledby="pl-icon-l"
                 @value-changed=${(e: CustomEvent) => {
                   e.stopPropagation();
@@ -392,7 +393,7 @@ export class AnimPartsLayers extends LitElement {
               ></mc-icon-picker>
             </div>`
           : html`<div class="field">
-            <div class="field-head"><label for="pl-icon">Icon to split</label></div>
+            <div class="field-head"><label for="pl-icon">${t('Icon to split')}</label></div>
             <input
               id="pl-icon"
               class="input mono"
@@ -411,7 +412,7 @@ export class AnimPartsLayers extends LitElement {
       ${this._error ? html`<p class="help error" role="alert">${this._error}</p>` : nothing}
       <div class="actions">
         <button type="button" class="btn ${rigged ? 'btn-secondary' : 'btn-primary'} btn-sm" ?disabled=${this.disabled || this._busy} @click=${() => void this._split()}>
-          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? 'Splitting…' : this._confirm ? `Replace ${d.rig?.parts.length ?? 0} parts` : rigged ? 'Split again' : 'Split icon'}
+          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? t('Splitting…') : this._confirm ? t('Replace {count} parts', { count: d.rig?.parts.length ?? 0 }) : rigged ? t('Split again') : t('Split icon')}
         </button>
         ${rigged
           ? html`<button
@@ -423,11 +424,11 @@ export class AnimPartsLayers extends LitElement {
                 this._error = '';
               }}
             >
-              Cancel
+              ${t('Cancel')}
             </button>`
           : nothing}
       </div>
-      ${this._confirm ? html`<p class="help">Splitting again replaces the parts, their groups and their keys.</p>` : nothing}
+      ${this._confirm ? html`<p class="help">${t('Splitting again replaces the parts, their groups and their keys.')}</p>` : nothing}
     </div>`;
   }
 
@@ -445,19 +446,19 @@ export class AnimPartsLayers extends LitElement {
       key: row.ref,
       name: row.name,
       icon: ICONS[row.kind],
-      note: row.kind === 'part' && row.count > 1 ? `${row.count} shapes` : undefined,
-      badge: row.keys ? `${row.keys} key${row.keys === 1 ? '' : 's'}` : undefined,
+      note: row.kind === 'part' && row.count > 1 ? t('{count} shapes', { count: row.count }) : undefined,
+      badge: row.keys ? t('{count, plural, one {# key} other {# keys}}', { count: row.keys }) : undefined,
       level: row.level,
       expanded: row.kind === 'group' ? !this._collapsed.has(gid) : open,
       selected: sel.includes(row.ref) && !(open && row.kind === 'part' && this.selection.kind === 'keys'),
       renamable: true,
-      up: row.kind === 'part' ? { ok: !this.disabled && order >= 0 && order < parts.length - 1 && !lockedRow, label: `Move ${row.name} up (drawn on top)`, menu: 'Move up (drawn on top)' } : undefined,
-      down: row.kind === 'part' ? { ok: !this.disabled && order > 0 && !lockedRow, label: `Move ${row.name} down (drawn underneath)`, menu: 'Move down' } : undefined,
+      up: row.kind === 'part' ? { ok: !this.disabled && order >= 0 && order < parts.length - 1 && !lockedRow, label: t('Move {name} up (drawn on top)', { name: row.name }), menu: t('Move up (drawn on top)') } : undefined,
+      down: row.kind === 'part' ? { ok: !this.disabled && order > 0 && !lockedRow, label: t('Move {name} down (drawn underneath)', { name: row.name }), menu: t('Move down') } : undefined,
       renaming:
         this._renaming === row.ref
           ? html`<input
               class="input rename"
-              aria-label="Name"
+              aria-label=${t('Name')}
               .value=${row.name}
               maxlength="80"
               @click=${(e: Event) => e.stopPropagation()}
@@ -479,7 +480,7 @@ export class AnimPartsLayers extends LitElement {
     if (row.kind === 'group') {
       if (!lanes || this._collapsed.has(gid)) return [item];
       const tOpen = !!tracksOpen(d, this.layerView ?? EMPTY_LAYER_VIEW, row.ref, row.ref);
-      const head = this._list.row({ key: `tracks:${row.ref}`, name: 'Tracks (combined, no order)', bare: true, level: 2, expanded: tOpen, selected: false, toggles: [], describe: `keyframe tracks of ${row.name}` });
+      const head = this._list.row({ key: `tracks:${row.ref}`, name: t('Tracks (combined, no order)'), bare: true, level: 2, expanded: tOpen, selected: false, toggles: [], describe: t('keyframe tracks of {name}', { name: row.name }) });
       return tOpen ? [item, head, ...trackRows(this._list, d, this.selection, row.ref, 3)] : [item, head];
     }
     return open ? [item, ...trackRows(this._list, d, this.selection, row.ref, row.level === 2 ? 3 : 2)] : [item];
@@ -499,28 +500,28 @@ export class AnimPartsLayers extends LitElement {
     return html`<div class="parts" @keydown=${this._onKey}>
       ${!rigged || this._resplit || this._confirm
         ? html`${!rigged
-              ? html`<p class="lead">Split the icon to animate its shapes one by one: a bell's clapper, a fan's blades.</p>`
+              ? html`<p class="lead">${t("Split the icon to animate its shapes one by one: a bell's clapper, a fan's blades.")}</p>`
               : nothing}${this._renderSource(rigged)}`
         : nothing}
       ${rigged
-        ? html`<div class="bar" role="toolbar" aria-label="Part actions">
-              ${this._iconBtn('mdi:group', 'Group', () => this._group(), !groupBlocker(d, sel), 'Ctrl+G')}
-              ${this._iconBtn('mdi:ungroup', 'Ungroup', () => this._ungroup(), sel.some((r) => r.startsWith('group:')), 'Ctrl+Shift+G')}
-              ${this._iconBtn('mdi:set-merge', 'Merge parts', () => this._merge(), mergeable)}
-              ${this._iconBtn('mdi:call-split', 'Split back into shapes', () => this._splitBack(), splittable)}
-              ${this._iconBtn('mdi:arrow-up', 'Move up (drawn on top)', () => this._move(1), order >= 0 && order < d.rig!.parts.length - 1, 'Alt+ArrowUp')}
-              ${this._iconBtn('mdi:arrow-down', 'Move down (drawn underneath)', () => this._move(-1), order > 0, 'Alt+ArrowDown')}
+        ? html`<div class="bar" role="toolbar" aria-label=${t('Part actions')}>
+              ${this._iconBtn('mdi:group', t('Group'), () => this._group(), !groupBlocker(d, sel), t('Ctrl+G'))}
+              ${this._iconBtn('mdi:ungroup', t('Ungroup'), () => this._ungroup(), sel.some((r) => r.startsWith('group:')), t('Ctrl+Shift+G'))}
+              ${this._iconBtn('mdi:set-merge', t('Merge parts'), () => this._merge(), mergeable)}
+              ${this._iconBtn('mdi:call-split', t('Split back into shapes'), () => this._splitBack(), splittable)}
+              ${this._iconBtn('mdi:arrow-up', t('Move up (drawn on top)'), () => this._move(1), order >= 0 && order < d.rig!.parts.length - 1, t('Alt+ArrowUp'))}
+              ${this._iconBtn('mdi:arrow-down', t('Move down (drawn underneath)'), () => this._move(-1), order > 0, t('Alt+ArrowDown'))}
             </div>
-            <ul class="tree" aria-label="Icon parts">
+            <ul class="tree" aria-label=${t('Icon parts')}>
               ${rows.map((r) => this._renderRow(r, rows, sel))}
             </ul>
             ${this._notice ? html`<p class="help notice" role="note">${this._notice}</p>` : nothing}
-            <p class="help">Click a part to animate it on the timeline. Shift or Ctrl adds to the selection; double-click or F2 renames. H hides, S solos, L locks (preview only).</p>
+            <p class="help">${t('Click a part to animate it on the timeline. Shift or Ctrl adds to the selection; double-click or F2 renames. H hides, S solos, L locks (preview only).')}</p>
             ${this._resplit || this._confirm
               ? nothing
               : html`<div>
                   <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => ((this._resplit = true), (this._confirm = false))}>
-                    <ha-icon icon="mdi:scissors-cutting"></ha-icon>Split again
+                    <ha-icon icon="mdi:scissors-cutting"></ha-icon>${t('Split again')}
                   </button>
                 </div>`}`
         : nothing}
@@ -583,7 +584,7 @@ export class AnimPartsLayers extends LitElement {
 registerPanel({
   tag: 'mc-anim-parts-layers',
   place: 'layers',
-  title: 'Icon parts',
+  title: m('Icon parts'),
   order: 20,
   when: (doc) => doc.kind === 'keyframes',
 });

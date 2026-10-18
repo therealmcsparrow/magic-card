@@ -18,6 +18,7 @@ import {
 } from '../contracts/icon-library';
 import { pathBox, splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
 import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
+import { t } from './i18n';
 
 /*
  * Icon Styles (module icon-library, contract icon-library 1.2.1, ADR 0006): every library entry
@@ -524,7 +525,7 @@ function glowDoc(
     }
     addedShapes.push({
       id,
-      name: 'Glow halo',
+      name: t('Glow halo'),
       d,
       fill: 'none',
       stroke: paint.halo,

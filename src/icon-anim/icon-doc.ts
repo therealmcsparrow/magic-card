@@ -1,6 +1,7 @@
 import type { AnimationDoc, Rig, RigPart } from '../anim-studio/model';
 import type { IconGeometry } from '../icons/icon-source';
 import { splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
+import { t } from '../i18n/labels';
 
 /*
  * Icon animation documents (icon animator core, shared by the studio's icon mode and the Design
@@ -22,7 +23,7 @@ export type Box = [number, number, number, number];
  */
 export function iconAnimationDoc(icon: string, geometry: IconGeometry, id: string, name: string, opts: { embed?: boolean } = {}): AnimationDoc {
   const pieces = splitIcon(geometry);
-  const parts: RigPart[] = pieces.slice(0, RIG_PART_CAP).map((p, i) => ({ id: `part-${i + 1}`, name: `Part ${i + 1}`, from: [p.index] }));
+  const parts: RigPart[] = pieces.slice(0, RIG_PART_CAP).map((p, i) => ({ id: `part-${i + 1}`, name: t('Part {n}', { n: i + 1 }), from: [p.index] }));
   const svg = opts.embed ? svgFromGeometry(geometry) : undefined;
   const rig: Rig = svg ? { svg, parts } : { icon, parts };
   return {

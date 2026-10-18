@@ -1,4 +1,5 @@
 import type { HomeAssistant } from '../types';
+import type { MessageId } from './i18n';
 import type { AnimationDoc, TargetRef } from './model';
 import type { PreviewTile } from './tiles';
 
@@ -96,8 +97,8 @@ export interface PanelSpec {
   place: 'layers' | 'inspector' | 'stage-tool' | 'timeline';
   /** Shown for this document and selection. */
   when: (doc: AnimationDoc, sel: StudioSelection) => boolean;
-  /** Section title (sentence case). */
-  title: string;
+  /** Section title (sentence case), an m() mark that the studio resolves with t(). */
+  title: MessageId;
   /** Lower first; equal orders keep their registration order. */
   order: number;
   /**

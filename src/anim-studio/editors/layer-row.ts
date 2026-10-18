@@ -5,6 +5,7 @@ import '../kit';
 import { EMPTY_LAYER_VIEW, LAYER_TOGGLES, type LayerKey, type LayerToggle, type LayerView, type LayerViewChangeDetail, type LayersDensity } from '../../contracts/studio-layers';
 import type { AnimationDoc } from '../model';
 import { hideReason, isLocked, markedBelow, parentKey, toggleLayer } from '../layer-view';
+import { t, m, type MessageId } from '../i18n';
 
 /*
  * The shared layer row and its keyboard model (contract studio-layers.ts sections 4 and 5, design 08).
@@ -76,13 +77,18 @@ export interface LayerHost extends ReactiveControllerHost, HTMLElement {
   updateComplete: Promise<boolean>;
 }
 
-const TOGGLE_TEXT: Record<LayerToggle, { name: string; tip: [string, string]; key: string; icon: [string, string]; on: string }> = {
-  hide: { name: 'Hide in preview', tip: ['Hide in preview (not saved)', 'Show in preview'], key: 'H', icon: ['mdi:eye-outline', 'mdi:eye-off-outline'], on: 'hidden in the preview' },
-  solo: { name: 'Solo in preview', tip: ['Solo in preview (hides the others, not saved)', 'End solo'], key: 'S', icon: ['mdi:radiobox-blank', 'mdi:radiobox-marked'], on: 'solo' },
-  lock: { name: 'Lock', tip: ['Lock', 'Unlock'], key: 'L', icon: ['mdi:lock-open-variant-outline', 'mdi:lock-outline'], on: 'locked' },
+const TOGGLE_TEXT: Record<LayerToggle, { name: MessageId; tip: [MessageId, MessageId]; key: string; icon: [string, string] }> = {
+  hide: { name: m('Hide in preview'), tip: [m('Hide in preview (not saved)'), m('Show in preview')], key: 'H', icon: ['mdi:eye-outline', 'mdi:eye-off-outline'] },
+  solo: { name: m('Solo in preview'), tip: [m('Solo in preview (hides the others, not saved)'), m('End solo')], key: 'S', icon: ['mdi:radiobox-blank', 'mdi:radiobox-marked'] },
+  lock: { name: m('Lock'), tip: [m('Lock'), m('Unlock')], key: 'L', icon: ['mdi:lock-open-variant-outline', 'mdi:lock-outline'] },
 };
 const TOGGLES: LayerToggle[] = ['hide', 'solo', 'lock'];
-const SAYS: Record<LayerToggle, [string, string]> = { hide: ['hidden in the preview', 'shown in the preview'], solo: ['soloed in the preview', 'no longer soloed'], lock: ['locked', 'unlocked'] };
+/** What the live region says after a toggle, with the row's name. */
+const SAYS: Record<LayerToggle, [MessageId, MessageId]> = {
+  hide: [m('{name} hidden in the preview'), m('{name} shown in the preview')],
+  solo: [m('{name} soloed in the preview'), m('{name} no longer soloed')],
+  lock: [m('{name} locked'), m('{name} unlocked')],
+};
 
 // ── the column: one tab stop, arrows across the lists ──
 
@@ -156,7 +162,7 @@ export class LayerRows implements ReactiveController {
   /** Say "X is locked" when it is; true then. */
   refuseLocked(key: LayerKey, name: string): boolean {
     if (!this.locked(key)) return false;
-    this.announce(`${name} is locked. Unlock it in Layers.`);
+    this.announce(t('{name} is locked. Unlock it in Layers.', { name }));
     return true;
   }
 
@@ -169,7 +175,7 @@ export class LayerRows implements ReactiveController {
   toggle(key: LayerKey, name: string, kind: LayerToggle): void {
     const next = toggleLayer(this.view, key, kind);
     const on = next[kind === 'hide' ? 'hidden' : kind === 'solo' ? 'solo' : 'locked'].includes(key);
-    this.announce(`${name} ${SAYS[kind][on ? 0 : 1]}`, next);
+    this.announce(t(SAYS[kind][on ? 0 : 1], { name }), next);
   }
 
   /** Focus a row (or one of its buttons) once it is rendered, also in another panel of the column. */
@@ -286,15 +292,15 @@ export class LayerRows implements ReactiveController {
         const m = dir === 'up' ? r.up : r.down;
         if (!m) continue;
         const base = m.menu ?? m.label;
-        const reason = lock ? 'Locked' : !m.ok ? (dir === 'up' ? 'Already at the top' : 'Already at the bottom') : undefined;
-        out.push({ id: `move-${dir}`, icon: dir === 'up' ? 'mdi:arrow-up' : 'mdi:arrow-down', label: lock ? base.replace(/ \(.*\)$/, '') : base, reason, keys: dir === 'up' ? 'Alt+Up' : 'Alt+Down', run: () => this._move(r, dir, 'menu') });
+        const reason = lock ? t('Locked') : !m.ok ? (dir === 'up' ? t('Already at the top') : t('Already at the bottom')) : undefined;
+        out.push({ id: `move-${dir}`, icon: dir === 'up' ? 'mdi:arrow-up' : 'mdi:arrow-down', label: lock ? base.replace(/ \(.*\)$/, '') : base, reason, keys: dir === 'up' ? t('Alt+Up') : t('Alt+Down'), run: () => this._move(r, dir, 'menu') });
       }
     }
-    if (r.renamable && this.actions.rename) out.push({ id: 'rename', icon: 'mdi:rename-outline', label: 'Rename', reason: lock ? 'Locked' : undefined, keys: 'F2', run: () => this._rename(r) });
+    if (r.renamable && this.actions.rename) out.push({ id: 'rename', icon: 'mdi:rename-outline', label: t('Rename'), reason: lock ? t('Locked') : undefined, keys: 'F2', run: () => this._rename(r) });
     const view = this.view;
     TOGGLES.filter((k) => this._toggles(r).includes(k)).forEach((k, i) => {
       const on = view[k === 'hide' ? 'hidden' : k === 'solo' ? 'solo' : 'locked'].includes(r.key);
-      out.push({ id: k, icon: on ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline', label: TOGGLE_TEXT[k].name, checked: on, keys: TOGGLE_TEXT[k].key, separatorBefore: i === 0 && out.length > 0, run: () => this.toggle(r.key, r.name, k) });
+      out.push({ id: k, icon: on ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline', label: t(TOGGLE_TEXT[k].name), checked: on, keys: TOGGLE_TEXT[k].key, separatorBefore: i === 0 && out.length > 0, run: () => this.toggle(r.key, r.name, k) });
     });
     return out;
   }
@@ -304,7 +310,7 @@ export class LayerRows implements ReactiveController {
     return html`<mc-ui-menu
       .items=${entries}
       .align=${'end' as const}
-      label=${`Layer actions, ${r.name}`}
+      label=${t('Layer actions, {name}', { name: r.name })}
       @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
         e.stopPropagation();
         const hit = entries.find((x) => x.id === e.detail.id);
@@ -337,22 +343,22 @@ export class LayerRows implements ReactiveController {
     const below = doc && r.expanded === false ? markedBelow(doc, view, r.key) : 0;
     const said = [
       r.describe,
-      why?.kind === 'self' && 'hidden in the preview',
-      why?.kind === 'solo' && 'hidden because another layer is soloed',
-      why?.kind === 'parent' && `hidden because ${name(why.by)} is hidden`,
+      why?.kind === 'self' && t('hidden in the preview'),
+      why?.kind === 'solo' && t('hidden because another layer is soloed'),
+      why?.kind === 'parent' && t('hidden because {name} is hidden', { name: name(why.by) }),
       soloed && 'solo',
       lockedSelf && 'locked',
-      lockedVia && 'locked because the layer it belongs to is locked',
-      below > 0 && `${below} hidden below`,
+      lockedVia && t('locked because the layer it belongs to is locked'),
+      below > 0 && t('{below} hidden below', { below }),
     ].filter(Boolean);
     const id = `ld${this._n++}`;
     const locked = lockedSelf || lockedVia;
     const btn = (k: LayerToggle): TemplateResult => {
       const on = (k === 'hide' ? why?.kind === 'self' : k === 'solo' ? soloed : lockedSelf) as boolean;
       const soft = !on && (k === 'hide' ? !!why : k === 'lock' ? lockedVia : false);
-      const t = TOGGLE_TEXT[k];
-      return html`<button type="button" class="icon-btn xs lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t.name} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? 'Hide in preview: the layer rests at its normal value' : t.tip[on ? 1 : 0]} @click=${() => this.toggle(r.key, r.name, k)}>
-        <ha-icon icon=${t.icon[on || soft ? 1 : 0]}></ha-icon>
+      const tt = TOGGLE_TEXT[k];
+      return html`<button type="button" class="icon-btn xs lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t(tt.name)} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? t('Hide in preview: the layer rests at its normal value') : t(tt.tip[on ? 1 : 0])} @click=${() => this.toggle(r.key, r.name, k)}>
+        <ha-icon icon=${tt.icon[on || soft ? 1 : 0]}></ha-icon>
       </button>`;
     };
     const mv = (dir: 'up' | 'down'): TemplateResult | typeof nothing => {
@@ -370,14 +376,14 @@ export class LayerRows implements ReactiveController {
       <div class="lr-in">
         ${r.expanded === undefined
           ? html`<span class="lcaret-space"></span>`
-          : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? `Collapse ${r.name}` : `Expand ${r.name}`} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
+          : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? t('Collapse {name}', { name: r.name }) : t('Expand {name}', { name: r.name })} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
               <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
             </button>`}
         <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${(r.title ?? r.name) + (r.badge && !r.title ? ` (${r.badge})` : '')} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
           ${r.thumb ?? (r.bare ? nothing : html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`)}
           ${r.renaming ? nothing : html`<span class="nm"><span class="nm-t">${r.name}</span>${r.note ? html`<small>${r.note}</small>` : nothing}</span>`}
           ${r.badge ? html`<span class="lbadge">${r.badge}</span>` : nothing}
-          ${below > 0 ? html`<span class="lbadge warn" aria-hidden="true">${below} hidden</span>` : nothing}
+          ${below > 0 ? html`<span class="lbadge warn" aria-hidden="true">${t('{below} hidden', { below })}</span>` : nothing}
         </button>
         ${r.renaming ? html`<div class="lrename">${r.renaming}</div>` : nothing}
         <span class="lst" aria-hidden="true">
@@ -385,7 +391,7 @@ export class LayerRows implements ReactiveController {
         </span>
         ${full}
         ${hasMenu
-          ? html`<button type="button" class="icon-btn xs lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${`Layer actions, ${r.name}`} title="Layer actions" @click=${() => this._toggleMenu(r.key)} @keydown=${(e: KeyboardEvent) => {
+          ? html`<button type="button" class="icon-btn xs lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${t('Layer actions, {name}', { name: r.name })} title=${t('Layer actions')} @click=${() => this._toggleMenu(r.key)} @keydown=${(e: KeyboardEvent) => {
               if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 this._openMenu(r.key);

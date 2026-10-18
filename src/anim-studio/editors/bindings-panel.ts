@@ -18,6 +18,7 @@ import {
   withBindings,
   withProperty,
 } from './bindings-utils';
+import { t, m, type MessageId } from '../i18n';
 
 // mc-color-picker comes from the editor chunk (loaded through window.MagicCard.loadEditor); the studio bundle must not define it.
 
@@ -29,11 +30,13 @@ import {
  * it. `.doc` is never mutated: every edit emits `doc-change` { doc, label }.
  */
 
-const CARD_TARGET_NAMES: Record<string, string> = { element: 'Element', icon: 'Icon', name: 'Name', state: 'State', background: 'Background' };
+const CARD_TARGET_NAMES: Record<string, MessageId> = { element: m('Element'), icon: m('Icon'), name: m('Name'), state: m('State'), background: m('Background') };
+/** The card target in a sentence ("Drive the icon from ..."). */
+const CARD_TARGET_PHRASE: Record<string, MessageId> = { element: m('the element'), icon: m('the icon'), name: m('the name'), state: m('the state'), background: m('the background') };
 
 /** The selected target's display name. */
 export function targetName(doc: AnimationDoc | undefined, target: TargetRef): string {
-  if (CARD_TARGET_NAMES[target]) return CARD_TARGET_NAMES[target];
+  if (CARD_TARGET_NAMES[target]) return t(CARD_TARGET_NAMES[target]);
   const m = /^(part|group|shape):(.+)$/.exec(target);
   if (!m) return target;
   const list = m[1] === 'part' ? doc?.rig?.parts : m[1] === 'group' ? doc?.rig?.groups : doc?.rig?.shapes;
@@ -80,14 +83,14 @@ export class AnimBindingsPanel extends LitElement {
     const b = newBinding(target);
     this._write([...list, b], 'Add value binding');
     this._focusAfter = `.bind[data-i="${list.length}"] select.prop`;
-    this._announce = `Binding added: ${bindInfo(b.property).label}.`;
+    this._announce = t('Binding added: {property}.', { property: t(bindInfo(b.property).label) });
   }
 
   private _remove(index: number): void {
     const list = (this.doc?.bindings ?? []).filter((_b, i) => i !== index);
     this._write(list, 'Delete value binding');
     this._focusAfter = '.add';
-    this._announce = 'Binding deleted.';
+    this._announce = t('Binding deleted.');
   }
 
   /** Whether an Attribute value can be written; keeps the field's error state. */
@@ -145,19 +148,19 @@ export class AnimBindingsPanel extends LitElement {
         this._patch(index, { ...b, output: out }, 'Change binding colours');
       };
       return html`<div class="field">
-          <div class="field-head"><span class="lbl">From colour</span></div>
-          <mc-color-picker .value=${from} .label=${'From colour'} @value-changed=${(e: CustomEvent) => pick(0, e.detail.value)}></mc-color-picker>
+          <div class="field-head"><span class="lbl">${t('From colour')}</span></div>
+          <mc-color-picker .value=${from} .label=${t('From colour')} @value-changed=${(e: CustomEvent) => pick(0, e.detail.value)}></mc-color-picker>
         </div>
         <div class="field">
-          <div class="field-head"><span class="lbl">To colour</span></div>
-          <mc-color-picker .value=${to} .label=${'To colour'} @value-changed=${(e: CustomEvent) => pick(1, e.detail.value)}></mc-color-picker>
+          <div class="field-head"><span class="lbl">${t('To colour')}</span></div>
+          <mc-color-picker .value=${to} .label=${t('To colour')} @value-changed=${(e: CustomEvent) => pick(1, e.detail.value)}></mc-color-picker>
         </div>`;
     }
     const [a, c] = b.output as [number, number];
     const unit = info.unit ? ` (${info.unit})` : '';
     return html`<div class="pair">
-      ${this._num(`${id}-from`, `From${unit}`, a, info.step, (n) => this._patch(index, { ...b, output: [n, c] }, 'Change binding output'))}
-      ${this._num(`${id}-to`, `To${unit}`, c, info.step, (n) => this._patch(index, { ...b, output: [a, n] }, 'Change binding output'))}
+      ${this._num(`${id}-from`, t('From{unit}', { unit }), a, info.step, (n) => this._patch(index, { ...b, output: [n, c] }, 'Change binding output'))}
+      ${this._num(`${id}-to`, t('To{unit}', { unit }), c, info.step, (n) => this._patch(index, { ...b, output: [a, n] }, 'Change binding output'))}
     </div>`;
   }
 
@@ -170,13 +173,13 @@ export class AnimBindingsPanel extends LitElement {
     const bad = this._badAttr.has(index);
     return html`<li class="cond bind" data-i=${index}>
       <div class="cond-head">
-        <span class="n">Binding ${n + 1} <span class="sub">· ${info.label}</span></span>
-        <button type="button" class="icon-btn sm danger del" aria-label="Delete binding ${n + 1}" title="Delete binding" ?disabled=${this.disabled} @click=${() => this._remove(index)}>
+        <span class="n">${t('Binding {n}', { n: n + 1 })} <span class="sub">· ${t(info.label)}</span></span>
+        <button type="button" class="icon-btn sm danger del" aria-label=${t('Delete binding {n}', { n: n + 1 })} title=${t('Delete binding')} ?disabled=${this.disabled} @click=${() => this._remove(index)}>
           <ha-icon icon="mdi:delete-outline"></ha-icon>
         </button>
       </div>
       <div class="field">
-        <div class="field-head"><label for="${id}-p">Property</label></div>
+        <div class="field-head"><label for="${id}-p">${t('Property')}</label></div>
         <div class="select">
           <select
             class="input prop"
@@ -185,21 +188,21 @@ export class AnimBindingsPanel extends LitElement {
             ?disabled=${this.disabled}
             @change=${(e: Event) => this._patch(index, withProperty(b, (e.target as HTMLSelectElement).value as BindProperty), 'Change bound property')}
           >
-            ${props.map((p) => html`<option value=${p.id} ?selected=${p.id === b.property}>${p.label}</option>`)}
+            ${props.map((p) => html`<option value=${p.id} ?selected=${p.id === b.property}>${t(p.label)}</option>`)}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>
-        <p class="help" id="${id}-ph">${info.hint}</p>
+        <p class="help" id="${id}-ph">${t(info.hint)}</p>
       </div>
       <fieldset>
-        <legend>Entity value</legend>
+        <legend>${t('Entity value')}</legend>
         <div class="field">
-          <div class="field-head"><label for="${id}-a">Attribute</label></div>
+          <div class="field-head"><label for="${id}-a">${t('Attribute')}</label></div>
           <input
             class="input mono"
             id="${id}-a"
             type="text"
-            placeholder="state"
+            placeholder=${t('state')}
             autocomplete="off"
             spellcheck="false"
             aria-describedby="${id}-ah"
@@ -217,18 +220,18 @@ export class AnimBindingsPanel extends LitElement {
             }}
           />
           <p class="help ${bad ? 'error' : ''}" id="${id}-ah">
-            ${bad ? 'Attribute names use letters, digits, _ . and - (no spaces).' : 'Empty reads the state. For example percentage (fan) or brightness (light).'}
+            ${bad ? t('Attribute names use letters, digits, _ . and - (no spaces).') : t('Empty reads the state. For example percentage (fan) or brightness (light).')}
           </p>
         </div>
         <div class="pair">
-          ${this._num(`${id}-min`, 'Min', b.input.min, 1, (v) => this._patch(index, { ...b, input: { ...b.input, min: v } }, 'Change binding range'))}
-          ${this._num(`${id}-max`, 'Max', b.input.max, 1, (v) => this._patch(index, { ...b, input: { ...b.input, max: v } }, 'Change binding range'))}
+          ${this._num(`${id}-min`, t('Min'), b.input.min, 1, (v) => this._patch(index, { ...b, input: { ...b.input, min: v } }, 'Change binding range'))}
+          ${this._num(`${id}-max`, t('Max'), b.input.max, 1, (v) => this._patch(index, { ...b, input: { ...b.input, max: v } }, 'Change binding range'))}
         </div>
       </fieldset>
       <fieldset>
-        <legend>Output</legend>
+        <legend>${t('Output')}</legend>
         ${this._output(b, index)}
-        ${this._num(`${id}-s`, 'Smoothing (s)', b.smoothing ?? 0, 0.1, (v) => {
+        ${this._num(`${id}-s`, t('Smoothing (s)'), b.smoothing ?? 0, 0.1, (v) => {
           const next = { ...b };
           if (v > 0) next.smoothing = Math.min(10, v);
           else delete next.smoothing;
@@ -245,20 +248,20 @@ export class AnimBindingsPanel extends LitElement {
     if (!target || !this.doc) return html``;
     const mine = bindingsOf(this.doc, target);
     const full = !canAddBinding(this.doc);
-    const name = CARD_TARGET_NAMES[target] ? `the ${CARD_TARGET_NAMES[target].toLowerCase()}` : `“${targetName(this.doc, target)}”`;
+    const name = CARD_TARGET_PHRASE[target] ? t(CARD_TARGET_PHRASE[target]) : `“${targetName(this.doc, target)}”`;
     return html`
       <div class="wrap">
         <p class="help lead">
           ${mine.length
-            ? html`The entity’s value drives ${name}. Preview it with the value slider on the stage.`
-            : html`Drive ${name} from the entity’s value: rotation speed from a fan’s percentage, a fill from a battery level.`}
+            ? html`${t('The entity’s value drives {name}. Preview it with the value slider on the stage.', { name })}`
+            : html`${t('Drive {name} from the entity’s value: rotation speed from a fan’s percentage, a fill from a battery level.', { name })}`}
         </p>
         ${mine.length ? html`<ol class="binds">${mine.map((x, n) => this._binding(x.b, x.index, n))}</ol>` : nothing}
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm add" ?disabled=${this.disabled || full} @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>Add value binding
+            <ha-icon icon="mdi:plus"></ha-icon>${t('Add value binding')}
           </button>
-          ${full ? html`<span class="help">At most ${BINDINGS_MAX} bindings per animation.</span>` : nothing}
+          ${full ? html`<span class="help">${t('At most {max} bindings per animation.', { max: BINDINGS_MAX })}</span>` : nothing}
         </div>
         <div class="sr-only" role="status" aria-live="polite">${this._announce}</div>
       </div>
@@ -325,7 +328,7 @@ registerPanel({
   tag: 'mc-anim-bindings-panel',
   place: 'inspector',
   when: (doc, sel) => doc.kind === 'keyframes' && sel.kind === 'target' && !!selectedTarget(sel),
-  title: 'Value bindings',
+  title: m('Value bindings'),
   order: 60,
 });
 

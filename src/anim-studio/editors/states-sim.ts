@@ -2,6 +2,7 @@ import type { HassEntity } from '../../types';
 import type { AnimationDoc } from '../model';
 import type { Binding, ClipWhen } from '../model-v2-core';
 import type { PreviewChangeDetail } from '../slots';
+import { t } from '../i18n';
 
 /*
  * The preview's simulated entity: the studio has no real entity behind the preview card, so its
@@ -65,7 +66,7 @@ export function simEntity(sim: Partial<PreviewSim>): HassEntity {
   return {
     entity_id: SIM_ENTITY,
     state: sim.state ?? DEFAULT_SIM.state,
-    attributes: { friendly_name: 'Preview', ...(sim.attributes ?? {}) },
+    attributes: { friendly_name: t('Preview'), ...(sim.attributes ?? {}) },
     last_changed: now,
     last_updated: now,
     context: { id: 'mc-studio-preview', parent_id: null, user_id: null },
@@ -89,9 +90,9 @@ export function applyPreviewChange(sim: PreviewSim, d: PreviewChangeDetail): Pre
 
 /** A clip condition in words ("State is on", "Value above 20"). */
 export function whenLabel(w: ClipWhen): string {
-  if ('state' in w) return `State is ${w.state}`;
-  if ('state_not' in w) return `State is not ${w.state_not}`;
-  if ('entity_on' in w) return w.entity_on ? 'Entity is on' : 'Entity is off';
-  if ('above' in w) return `Value above ${w.above}`;
-  return `Value below ${w.below}`;
+  if ('state' in w) return t('State is {state}', { state: w.state });
+  if ('state_not' in w) return t('State is not {state_not}', { state_not: w.state_not });
+  if ('entity_on' in w) return w.entity_on ? t('Entity is on') : t('Entity is off');
+  if ('above' in w) return t('Value above {above}', { above: w.above });
+  return t('Value below {below}', { below: w.below });
 }

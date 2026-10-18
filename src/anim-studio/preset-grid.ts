@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { editorPrimitives, editorTokens } from '../css/editor-system';
-import { locale, t } from '../i18n/labels';
+import { locale, t as tl } from '../i18n/labels';
 import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, type AnimationGroup } from '../utils/animation-presets';
 import { CATALOGUE_GROUPS, type PresetPickDetail, type PresetTileSource } from '../contracts/preset-catalogue';
 import { docFromPreset } from './from-preset';
@@ -9,6 +9,7 @@ import type { AnimationDoc } from './model';
 import { previewConfig } from './studio-model';
 import { standaloneHass } from './studio-stage';
 import { tileHass } from './tiles';
+import { t } from './i18n';
 
 /*
  * Module `preset-tiles` (contract preset-catalogue 1.1.0, tile part): the "Customise a preset"
@@ -59,13 +60,13 @@ let builtins: BuiltinSource[] | undefined;
 let builtinsLocale: string | undefined;
 
 /** A group's heading: the built-in groups come from the labels tables, the catalogue's own are plain text (I10). */
-const groupLabel = (g: TileGroupName): string => (g in GROUP_LABELS ? t(GROUP_LABELS[g as AnimationGroup]) : g);
+const groupLabel = (g: TileGroupName): string => (g in GROUP_LABELS ? tl(GROUP_LABELS[g as AnimationGroup]) : g);
 
 /** One tile source per built-in preset (built once): `tap` from the trigger, `heavy` for seasonal scenes. */
 export function builtinTileSources(): BuiltinSource[] {
   if (builtins && builtinsLocale === locale()) return builtins;
   builtinsLocale = locale();
-  builtins = ANIMATION_PRESETS.map((p) => ({ kind: 'builtin', id: p.id, name: t(p.name), group: p.group, tap: p.trigger === 'tap', heavy: p.group === 'Seasonal' || !!p.seasonal }));
+  builtins = ANIMATION_PRESETS.map((p) => ({ kind: 'builtin', id: p.id, name: tl(p.name), group: p.group, tap: p.trigger === 'tap', heavy: p.group === 'Seasonal' || !!p.seasonal }));
   return builtins;
 }
 
@@ -140,7 +141,7 @@ export function previewMs(doc: AnimationDoc | undefined): number {
   return Math.min(8000, Math.max(2500, Math.round(secs * 1000)));
 }
 
-const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : undefined);
+const reducedQuery = (): MediaQueryList | undefined => (typeof window.matchMedia === 'function' ? window.matchMedia(t('(prefers-reduced-motion: reduce)')) : undefined);
 
 /** A config id from a tile key (`cat:candle-glow` -> `pt-cat-candle-glow`). */
 const previewId = (key: string): string => `pt-${key.toLowerCase().replace(/[^a-z0-9_-]/g, '-')}`.slice(0, 64);
@@ -323,7 +324,7 @@ export class PresetGrid extends LitElement {
         class="pt"
         data-preset=${key}
         title=${name}
-        aria-description=${tap ? 'Plays on tap' : nothing}
+        aria-description=${tap ? t('Plays on tap') : nothing}
         @click=${() => this._pick(s)}
         @pointerenter=${() => this._set('_active', key, true)}
         @pointerleave=${() => this._set('_active', key, false)}
@@ -332,10 +333,10 @@ export class PresetGrid extends LitElement {
       >
         <mc-preset-thumb aria-hidden="true" .source=${s} .play=${play} .hass=${this.hass} .lookup=${this.lookup}></mc-preset-thumb>
         <span class="nm">${name}</span>
-        ${tap ? html`<span class="chip is-count" aria-hidden="true">Tap</span>` : nothing}
+        ${tap ? html`<span class="chip is-count" aria-hidden="true">${t('Tap')}</span>` : nothing}
       </button>
       ${still && !this._reduced
-        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title="Preview" @click=${() => this._preview(s, key)}>
+        ? html`<button type="button" class="pt-play" tabindex="-1" aria-hidden="true" title=${t('Preview')} @click=${() => this._preview(s, key)}>
             <ha-icon icon="mdi:play"></ha-icon>
           </button>`
         : nothing}
@@ -355,9 +356,9 @@ export class PresetGrid extends LitElement {
             </section>`,
           )
         : html`<div class="no-results">
-            <p>No presets match "${this.query}".</p>
+            <p>${t('No presets match "{query}".', { query: this.query })}</p>
             <button type="button" class="btn btn-text btn-sm no-results-clear" @click=${() => this.dispatchEvent(new CustomEvent('preset-clear-search', { bubbles: true, composed: true }))}>
-              Clear search
+              ${t('Clear search')}
             </button>
           </div>`}
       <p class="notice" role="status" ?hidden=${!this.notice}>${this.notice}</p>

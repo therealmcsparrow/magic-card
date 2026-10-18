@@ -33,6 +33,7 @@ import {
   trackOf,
   type Box,
 } from './parts-model';
+import { t, m } from '../i18n';
 
 /*
  * Icon parts on the stage (studio slot 'stage-tool', track B2): drawn over the preview card, exactly
@@ -284,8 +285,8 @@ export class AnimPartsOverlay extends LitElement {
       const o = this._pivotOf(d.ref) ?? [0, 0];
       const path = serializePath(moveAnchor(d.path, d.index, snap(p[0] - o[0], step), snap(p[1] - o[1], step)));
       this._live = { ref: d.ref, path };
-      const t = trackOf(this.doc!, d.ref)!;
-      emitDoc(this, setPartPath(this.doc!, d.ref, { ...t.path!, d: path }), 'Move path point', true);
+      const track = trackOf(this.doc!, d.ref)!;
+      emitDoc(this, setPartPath(this.doc!, d.ref, { ...track.path!, d: path }), 'Move path point', true);
     }
   }
 
@@ -322,8 +323,8 @@ export class AnimPartsOverlay extends LitElement {
     if (!d.moved) return;
     if (d.kind === 'pivot' && d.ref && live?.pivot) emitDoc(this, setEffectivePivot(doc, d.ref, live.pivot), 'Move pivot');
     if (d.kind === 'anchor' && d.ref && live?.path) {
-      const t = trackOf(doc, d.ref);
-      if (t?.path) emitDoc(this, setPartPath(doc, d.ref, { ...t.path, d: live.path }), 'Move path point');
+      const track = trackOf(doc, d.ref);
+      if (track?.path) emitDoc(this, setPartPath(doc, d.ref, { ...track.path, d: live.path }), 'Move path point');
     }
   }
 
@@ -335,7 +336,7 @@ export class AnimPartsOverlay extends LitElement {
     this._band = undefined;
     this._live = undefined;
     // the start again, as a final change: the shell closes the gesture and leaves no undo step
-    if (d.moved && d.kind !== 'band') emitDoc(this, d.startDoc, d.kind === 'pivot' ? 'Move pivot' : 'Move path point');
+    if (d.moved && d.kind !== 'band') emitDoc(this, d.startDoc, d.kind === 'pivot' ? t('Move pivot') : t('Move path point'));
   }
 
   /** Arrow keys nudge the pivot; a held key repeats as transient moves, one undo step on key up. */
@@ -402,7 +403,7 @@ export class AnimPartsOverlay extends LitElement {
           data-pivot=${ref}
           tabindex="0"
           role="slider"
-          aria-label=${`${hasTrackPivot(d, ref) ? 'Preset pivot' : 'Pivot'} of ${name}`}
+          aria-label=${hasTrackPivot(d, ref) ? t('Preset pivot of {name}', { name }) : t('Pivot of {name}', { name })}
           aria-valuetext=${`x ${o[0].toFixed(2)}, y ${o[1].toFixed(2)}`}
           @keydown=${(e: KeyboardEvent) => this._onPivotKey(e, ref)}
         >
@@ -465,7 +466,7 @@ export class AnimPartsOverlay extends LitElement {
             viewBox=${vb.join(' ')}
             style=${`left: ${box.x}px; top: ${box.y}px; width: ${box.w}px; height: ${box.h}px`}
             role="group"
-            aria-label="Icon parts on the stage"
+            aria-label=${t('Icon parts on the stage')}
           >
             ${hits}
             ${hover ? svg`${this._partPaths(hover).map((p) => svg`<path class="hover" d=${p} style=${`stroke-width: ${2 * u}`}></path>`)}` : nothing}
@@ -579,7 +580,7 @@ export class AnimPartsOverlay extends LitElement {
 registerPanel({
   tag: 'mc-anim-parts-overlay',
   place: 'stage-tool',
-  title: 'Icon parts',
+  title: m('Icon parts'),
   order: 20,
   when: (doc, sel) => doc.kind === 'keyframes' && hasRig(doc) && sel.kind !== 'tool',
 });

@@ -4,6 +4,7 @@ import type { AnimationDoc } from '../model';
 import type { StageInfo } from '../slots';
 import { append as appendPoint, insertAt as insertPoint, isSmooth, moveAnchor, nearestOnPath, remove as removePoint, serialize as serializePath, setClosed, snap, toggleSmooth, type EditPath, type Pt } from '../../path/edit';
 import { parsePath, pointAtTime, setHandle } from './path-utils';
+import { t } from '../i18n';
 
 /** Grid step in document units: 5% (percent paths) or 10 px. */
 const gridStep = (units: string | undefined): number => (units === 'px' ? 10 : 5);
@@ -421,7 +422,7 @@ export class AnimPathOverlay extends LitElement {
     this._sel = i;
     const a = this._path.anchors[i];
     const p = this._toDoc(v, this._local(e, v));
-    this._press(e, { kind: 'anchor', index: i, grab: [a.x - p[0], a.y - p[1]], added: false, label: 'Move point', prevSel }, v);
+    this._press(e, { kind: 'anchor', index: i, grab: [a.x - p[0], a.y - p[1]], added: false, label: t('Move point'), prevSel }, v);
     (e.currentTarget as SVGElement | null)?.focus?.({ preventScroll: true });
   }
 
@@ -431,7 +432,7 @@ export class AnimPathOverlay extends LitElement {
     const h = this._path.anchors[i]?.[which];
     if (!h) return;
     const p = this._toDoc(v, this._local(e, v));
-    this._press(e, { kind: 'handle', index: i, which, grab: [h[0] - p[0], h[1] - p[1]], added: false, label: 'Move handle', prevSel: this._sel }, v);
+    this._press(e, { kind: 'handle', index: i, which, grab: [h[0] - p[0], h[1] - p[1]], added: false, label: t('Move handle'), prevSel: this._sel }, v);
   }
 
   /** On the line: insert a point there and drag it. */
@@ -445,7 +446,7 @@ export class AnimPathOverlay extends LitElement {
     if (index < 0) return;
     this._sel = index;
     this._lastTap = { index, at: e.timeStamp || performance.now() };
-    this._press(e, { kind: 'anchor', index, grab: [0, 0], added: true, label: 'Add point', prevSel: index }, v);
+    this._press(e, { kind: 'anchor', index, grab: [0, 0], added: true, label: t('Add point'), prevSel: index }, v);
     this._emit(path, 'Add point', true);
   }
 
@@ -464,7 +465,7 @@ export class AnimPathOverlay extends LitElement {
     if (index < 0) return;
     this._sel = index;
     this._lastTap = { index, at: e.timeStamp || performance.now() };
-    this._press(e, { kind: 'anchor', index, grab: [0, 0], added: true, label: 'Add point', prevSel: index }, v);
+    this._press(e, { kind: 'anchor', index, grab: [0, 0], added: true, label: t('Add point'), prevSel: index }, v);
     this._emit(path, 'Add point', true);
   }
 
@@ -527,7 +528,7 @@ export class AnimPathOverlay extends LitElement {
     if (!a) return;
     const toCorner = !!(a.in || a.out);
     this._sel = i;
-    this._emit(toggleSmooth(this._path, i), toCorner ? 'Corner point' : 'Smooth point');
+    this._emit(toggleSmooth(this._path, i), toCorner ? t('Corner point') : t('Smooth point'));
   }
 
   /** Delete the selected point (the one before it is selected next). */
@@ -544,7 +545,7 @@ export class AnimPathOverlay extends LitElement {
   toggleClosed(): void {
     if (this.disabled || this._path.anchors.length < 2) return;
     const closed = !this._path.closed;
-    this._emit(setClosed(this._path, closed), closed ? 'Close path' : 'Open path');
+    this._emit(setClosed(this._path, closed), closed ? t('Close path') : t('Open path'));
   }
 
   private _focusAnchor(i: number): void {
@@ -664,12 +665,11 @@ export class AnimPathOverlay extends LitElement {
       const smooth = !!(a.in || a.out);
       const sel = i === this._sel;
       const target = closable && ((this._sel === 0 && i === last) || (this._sel === last && i === 0));
-      const kind = smooth ? 'smooth' : 'corner';
-      const label = `Point ${i + 1} of ${n}${i === 0 ? ', start' : ''}, ${kind}, at ${Math.round(a.x * 10) / 10}, ${Math.round(a.y * 10) / 10}`;
+      const label = t('Point {i} of {n}{start}, {kind}, at {x}, {y}', { i: i + 1, n, start: i === 0 ? t(', start') : '', kind: smooth ? t('smooth') : t('corner'), x: Math.round(a.x * 10) / 10, y: Math.round(a.y * 10) / 10 });
       return svg`<g
         class="anchor ${sel ? 'sel' : ''} ${i === 0 ? 'start' : ''} ${target ? 'closable' : ''}"
         data-i=${i}
-        data-kind=${kind}
+        data-kind=${smooth ? 'smooth' : 'corner'}
         tabindex=${this.disabled ? -1 : 0}
         role="button"
         aria-pressed=${sel ? 'true' : 'false'}
@@ -735,7 +735,7 @@ export class AnimPathOverlay extends LitElement {
         viewBox="0 0 ${v.w} ${v.h}"
         preserveAspectRatio="none"
         role="group"
-        aria-label="Motion path. Click to add points, drag to move them."
+        aria-label=${t('Motion path. Click to add points, drag to move them.')}
         @pointerdown=${(e: PointerEvent) => this._onStageDown(e)}
         @pointermove=${(e: PointerEvent) => this._onMove(e)}
         @pointerup=${(e: PointerEvent) => this._onUp(e)}
@@ -754,9 +754,9 @@ export class AnimPathOverlay extends LitElement {
             : nothing
         }
         ${this._arrows(v)} ${this._subject(v)} ${this._handles(v)} ${this._anchors(v)}
-        ${startTag ? svg`<text class="tag" x=${startTag[0] + 10} y=${startTag[1] - 9}>Start</text>` : nothing}
+        ${startTag ? svg`<text class="tag" x=${startTag[0] + 10} y=${startTag[1] - 9}>${t('Start')}</text>` : nothing}
       </svg>
-      ${n === 0 && !this.disabled ? html`<p class="hint">Click to place the first point</p>` : n === 1 && !this.disabled ? html`<p class="hint">Click to add the next point</p>` : nothing}
+      ${n === 0 && !this.disabled ? html`<p class="hint">${t('Click to place the first point')}</p>` : n === 1 && !this.disabled ? html`<p class="hint">${t('Click to add the next point')}</p>` : nothing}
       <span class="sr-only" aria-live="polite">${this._announce}</span>
     `;
   }

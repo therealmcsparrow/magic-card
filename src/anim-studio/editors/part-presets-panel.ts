@@ -9,6 +9,8 @@ import { PART_PRESETS, applyPartPresetMany, clearPartMotion, presetParams, type 
 import { emitDoc, loadGeometry, peekGeometry, piecesOf, selectedRefs, sourceIcon, targetName, trackOf } from './parts-model';
 import './draw-svg-dialog';
 import type { AnimSvgDialog } from './draw-svg-dialog';
+import { t, m, list } from '../i18n';
+import { t as tl } from '../../i18n/labels';
 
 /*
  * Part presets (studio icon mode, inspector slot): with icon parts, groups or shapes selected, one
@@ -21,7 +23,7 @@ import type { AnimSvgDialog } from './draw-svg-dialog';
 const isRig = (ref: string | undefined): ref is TargetRef => !!ref && /^(part|group|shape):/.test(ref);
 
 /** Units shown next to each parameter value. */
-const fmt = (p: PartPresetParam, v: number): string => (p.id === 'intensity' ? `${v}×` : p.id === 'direction' ? (v < 0 ? 'Reverse' : 'Forward') : `${v} %`);
+const fmt = (p: PartPresetParam, v: number): string => (p.id === 'intensity' ? `${v}×` : p.id === 'direction' ? (v < 0 ? t('Reverse') : t('Forward')) : `${v} %`);
 
 @customElement('mc-anim-part-presets')
 export class AnimPartPresets extends LitElement {
@@ -76,15 +78,15 @@ export class AnimPartPresets extends LitElement {
     const next = applyPartPresetMany(base, this._targets, preset.id, params, { pieces });
     if (!transient) this._dragBase = undefined;
     if (next === base) {
-      if (!transient) this._status = 'This animation already has 24 animated targets: remove one to add a preset.';
+      if (!transient) this._status = t('This animation already has 24 animated targets: remove one to add a preset.');
       return;
     }
     const map = new Map(this._applied);
     map.set(this._key, { preset: preset.id, params });
     this._applied = map;
     const names = this._targets.map((t) => targetName(base, t));
-    this._status = transient ? '' : `${preset.name} on ${names.length > 2 ? `${names.length} parts` : names.join(' and ')}`;
-    emitDoc(this, next, `Preset: ${preset.name}`, transient);
+    this._status = transient ? '' : t('{preset} on {targets}', { preset: tl(preset.name), targets: names.length > 2 ? t('{count} parts', { count: names.length }) : list(names) });
+    emitDoc(this, next, `Preset: ${preset.id}`, transient);
   }
 
   private _pickPreset(select: HTMLSelectElement, applied?: { preset: string; params: Record<string, number> }): void {
@@ -101,7 +103,7 @@ export class AnimPartPresets extends LitElement {
     const map = new Map(this._applied);
     map.delete(this._key);
     this._applied = map;
-    this._status = 'Motion removed';
+    this._status = t('Motion removed');
     emitDoc(this, next, 'Remove motion');
   }
 
@@ -111,12 +113,12 @@ export class AnimPartPresets extends LitElement {
 
   private _renderParams(preset: PartPreset, params: Record<string, number>): TemplateResult {
     const full = presetParams(preset.id, params);
-    return html`<div class="params" role="group" aria-label="${preset.name} settings">
+    return html`<div class="params" role="group" aria-label=${t('{name} settings', { name: tl(preset.name) })}>
       ${preset.params.map((p) => {
         const v = full[p.id];
         if (p.id === 'direction') {
           return html`<div class="field">
-            <div class="field-head"><span class="lbl" id="pp-dir">Direction</span></div>
+            <div class="field-head"><span class="lbl" id="pp-dir">${t('Direction')}</span></div>
             <div class="seg full" role="radiogroup" aria-labelledby="pp-dir">
               ${[1, -1].map(
                 (d) => html`<button
@@ -128,7 +130,7 @@ export class AnimPartPresets extends LitElement {
                   ?disabled=${this.disabled}
                   @click=${() => this._apply(preset, { ...full, direction: d })}
                 >
-                  <ha-icon icon=${d > 0 ? 'mdi:rotate-right' : 'mdi:rotate-left'}></ha-icon>${d > 0 ? 'Forward' : 'Reverse'}
+                  <ha-icon icon=${d > 0 ? 'mdi:rotate-right' : 'mdi:rotate-left'}></ha-icon>${d > 0 ? t('Forward') : t('Reverse')}
                 </button>`,
               )}
             </div>
@@ -136,7 +138,7 @@ export class AnimPartPresets extends LitElement {
         }
         const id = `pp-${p.id}`;
         return html`<div class="field">
-          <div class="field-head"><label for=${id}>${p.label}</label><span class="val">${fmt(p, v)}</span></div>
+          <div class="field-head"><label for=${id}>${tl(p.label)}</label><span class="val">${fmt(p, v)}</span></div>
           <input
             id=${id}
             class="range"
@@ -171,9 +173,9 @@ export class AnimPartPresets extends LitElement {
     const animated = targets.some((t) => (trackOf(d, t)?.keyframes.length ?? 0) > 0);
     const pieces = this._geom ? piecesOf(this._geom) : [];
     return html`
-      <p class="help">${targets.length > 1 ? `${targets.length} targets selected: a preset plays on each (Wave: one after another).` : 'One click animates the selection; fine-tune the keys on the timeline.'}</p>
+      <p class="help">${targets.length > 1 ? t('{count} targets selected: a preset plays on each (Wave: one after another).', { count: targets.length }) : t('One click animates the selection; fine-tune the keys on the timeline.')}</p>
       <div class="field">
-        <div class="field-head"><label for="pp-preset">Preset</label></div>
+        <div class="field-head"><label for="pp-preset">${t('Preset')}</label></div>
         <div class="select">
           <select
             class="input"
@@ -182,19 +184,19 @@ export class AnimPartPresets extends LitElement {
             ?disabled=${this.disabled}
             @change=${(e: Event) => this._pickPreset(e.target as HTMLSelectElement, applied)}
           >
-            <option value="" ?selected=${!active} ?disabled=${!!active} ?hidden=${!!active}>Choose a preset</option>
-            ${PART_PRESETS.map((p) => html`<option value=${p.id} data-preset=${p.id} ?selected=${active?.id === p.id}>${p.name}</option>`)}
+            <option value="" ?selected=${!active} ?disabled=${!!active} ?hidden=${!!active}>${t('Choose a preset')}</option>
+            ${PART_PRESETS.map((p) => html`<option value=${p.id} data-preset=${p.id} ?selected=${active?.id === p.id}>${tl(p.name)}</option>`)}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>
-        ${active?.help ? html`<p class="help" id="pp-preset-help">${active.help}</p>` : nothing}
+        ${active?.help ? html`<p class="help" id="pp-preset-help">${tl(active.help)}</p>` : nothing}
       </div>
       ${active ? this._renderParams(active, applied!.params) : nothing}
       <div class="actions">
-        ${animated ? html`<button type="button" class="btn btn-text btn-sm clear" ?disabled=${this.disabled} @click=${() => this._clear()}>Remove motion</button>` : nothing}
+        ${animated ? html`<button type="button" class="btn btn-text btn-sm clear" ?disabled=${this.disabled} @click=${() => this._clear()}>${t('Remove motion')}</button>` : nothing}
         <span class="grow"></span>
         <button type="button" class="btn btn-secondary btn-sm export" @click=${() => this._openSvg()}>
-          <ha-icon icon="mdi:motion-play-outline"></ha-icon>Animated SVG
+          <ha-icon icon="mdi:motion-play-outline"></ha-icon>${t('Animated SVG')}
         </button>
       </div>
       <p class="status" role="status" aria-live="polite">${this._status}</p>
@@ -237,6 +239,7 @@ export class AnimPartPresets extends LitElement {
       }
       .actions {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 8px;
         margin-top: 4px;
@@ -257,7 +260,7 @@ export class AnimPartPresets extends LitElement {
 registerPanel({
   tag: 'mc-anim-part-presets',
   place: 'inspector',
-  title: 'Part presets',
+  title: m('Part presets'),
   order: 15,
   when: (doc, sel) => doc.kind === 'keyframes' && (sel.kind === 'target' || sel.kind === 'keys') && isRig(sel.target),
 });

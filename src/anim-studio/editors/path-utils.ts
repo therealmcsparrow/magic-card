@@ -2,6 +2,7 @@ import { parsePath as parseD } from '../../path/core';
 import { MAX_ANCHORS, append, bounds, copyAnchor, copyPath, fmtNum, insertAt, isSmooth, moveAnchor, nearestOnPath, remove, reverse, segment, segmentCount, serialize, setClosed, setHandle as setHandleAs, smoothAll, snap, straightenAll, toEdit, toggleSmooth, translate, type Anchor, type EditPath, type Pt } from '../../path/edit';
 import { samplePath, type PathSample } from '../compile';
 import type { PathSpec } from '../model';
+import { m, type MessageId } from '../i18n';
 
 /*
  * Path motion editing for the animation studio: the generic anchor model now lives in
@@ -66,13 +67,13 @@ export function pointAtTime(d: string, t: number): PathSample | undefined {
 
 export type PathTemplateId = 'circle' | 'figure-8' | 'wave' | 'bounce' | 'zigzag' | 'spiral';
 
-export const PATH_TEMPLATES: Array<{ id: PathTemplateId; label: string }> = [
-  { id: 'circle', label: 'Circle' },
-  { id: 'figure-8', label: 'Figure 8' },
-  { id: 'wave', label: 'Wave' },
-  { id: 'bounce', label: 'Bounce' },
-  { id: 'zigzag', label: 'Zigzag' },
-  { id: 'spiral', label: 'Spiral' },
+export const PATH_TEMPLATES: Array<{ id: PathTemplateId; label: MessageId }> = [
+  { id: 'circle', label: m('Circle') },
+  { id: 'figure-8', label: m('Figure 8') },
+  { id: 'wave', label: m('Wave') },
+  { id: 'bounce', label: m('Bounce') },
+  { id: 'zigzag', label: m('Zigzag') },
+  { id: 'spiral', label: m('Spiral') },
 ];
 
 /**

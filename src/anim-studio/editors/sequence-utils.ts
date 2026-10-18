@@ -1,6 +1,7 @@
-import { t } from '../../i18n/labels';
+import { t as tl } from '../../i18n/labels';
 import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, getAnimationPreset } from '../../utils/animation-presets';
 import { ANIMATION_CAPS, CUSTOM_PREFIX, SEQUENCEABLE_PRESETS, customRefId, isCustomRef, type AnimationDoc, type SequenceStep } from '../model';
+import { t } from '../i18n';
 
 /*
  * Pure helpers of the sequence editor (mc-anim-sequence-editor): what a step plays, how long it
@@ -62,27 +63,27 @@ export function cssSeconds(v: string | undefined): number | undefined {
 /** What a step reference plays, and whether it can (selfId: the sequence's own id). */
 export function stepInfo(animation: string, library: AnimationLibraryMap | undefined, selfId?: string): StepInfo {
   const ref = (animation ?? '').trim();
-  if (!ref) return { status: 'invalid', name: 'No animation', kind: '', problem: 'Pick an animation for this step.' };
+  if (!ref) return { status: 'invalid', name: t('No animation'), kind: '', problem: t('Pick an animation for this step.') };
   if (isCustomRef(ref)) {
     const id = customRefId(ref);
-    if (selfId && id === selfId) return { status: 'invalid', name: id, kind: 'Sequence', problem: 'A sequence cannot play itself.' };
+    if (selfId && id === selfId) return { status: 'invalid', name: id, kind: t('Sequence'), problem: t('A sequence cannot play itself.') };
     const doc = library?.[id];
-    if (!doc) return { status: 'missing', name: id, kind: '', problem: 'Not found in My animations. This step is skipped.' };
-    if (doc.kind === 'keyframes') return { status: 'ok', name: doc.name || id, kind: 'Keyframes', defaultDuration: doc.duration };
+    if (!doc) return { status: 'missing', name: id, kind: '', problem: t('Not found in My animations. This step is skipped.') };
+    if (doc.kind === 'keyframes') return { status: 'ok', name: doc.name || id, kind: t('Keyframes'), defaultDuration: doc.duration };
     if (doc.kind === 'path') {
       return sequenceableDoc(doc)
-        ? { status: 'ok', name: doc.name || id, kind: 'Path', defaultDuration: doc.duration }
-        : { status: 'invalid', name: doc.name || id, kind: 'Path', problem: 'Particles along a path cannot play in a sequence. This step is skipped.' };
+        ? { status: 'ok', name: doc.name || id, kind: t('Path'), defaultDuration: doc.duration }
+        : { status: 'invalid', name: doc.name || id, kind: t('Path'), problem: t('Particles along a path cannot play in a sequence. This step is skipped.') };
     }
-    const kind = doc.kind === 'particles' ? 'Particles' : 'Sequence';
-    return { status: 'invalid', name: doc.name || id, kind, problem: `${kind} cannot play in a sequence. This step is skipped.` };
+    const kind = doc.kind === 'particles' ? t('Particles') : t('Sequence');
+    return { status: 'invalid', name: doc.name || id, kind, problem: t('{kind} cannot play in a sequence. This step is skipped.', { kind }) };
   }
   const p = getAnimationPreset(ref);
-  if (!p) return { status: 'missing', name: ref, kind: 'Preset', problem: 'Unknown preset. This step is skipped.' };
+  if (!p) return { status: 'missing', name: ref, kind: t('Preset'), problem: t('Unknown preset. This step is skipped.') };
   if (!SEQUENCEABLE_PRESETS.has(p.id)) {
-    return { status: 'invalid', name: t(p.name), kind: 'Preset', problem: 'Effects with their own layer cannot play in a sequence. This step is skipped.' };
+    return { status: 'invalid', name: tl(p.name), kind: t('Preset'), problem: t('Effects with their own layer cannot play in a sequence. This step is skipped.') };
   }
-  return { status: 'ok', name: t(p.name), kind: 'Preset', defaultDuration: cssSeconds(p.defaults.duration) };
+  return { status: 'ok', name: tl(p.name), kind: t('Preset'), defaultDuration: cssSeconds(p.defaults.duration) };
 }
 
 /** Where each step sits in one cycle (as the player schedules it). */
@@ -130,7 +131,7 @@ export function formatSeconds(s: number): string {
 /** A step's one-line summary: "after 0.2 s · 0.6 s × 2". */
 export function stepSummary(step: SequenceStep, info: StepInfo): string {
   const parts: string[] = [];
-  if (step.delay > 0) parts.push(`after ${formatSeconds(step.delay)}`);
+  if (step.delay > 0) parts.push(t('after {seconds}', { seconds: formatSeconds(step.delay) }));
   const dur = step.duration ?? info.defaultDuration;
   if (dur !== undefined) parts.push(formatSeconds(dur));
   if (step.repeat > 1) parts.push(`× ${step.repeat}`);
@@ -166,17 +167,17 @@ export function stepPickerGroups(library: AnimationLibraryMap | undefined, selfI
   const mine = Object.values(library ?? {})
     .filter((d) => d.id !== selfId && sequenceableDoc(d))
     .sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id))
-    .filter((d) => hit(d.name, d.id, 'my animations', d.kind))
-    .map<PickerItem>((d) => ({ value: CUSTOM_PREFIX + d.id, name: d.name || d.id, kind: d.kind === 'path' ? 'Path' : 'Keyframes', icon: KIND_ICON[d.kind], duration: d.duration }));
-  if (mine.length) groups.push({ label: 'My animations', items: mine });
+    .filter((d) => hit(d.name, d.id, t('my animations'), d.kind))
+    .map<PickerItem>((d) => ({ value: CUSTOM_PREFIX + d.id, name: d.name || d.id, kind: d.kind === 'path' ? t('Path') : t('Keyframes'), icon: KIND_ICON[d.kind], duration: d.duration }));
+  if (mine.length) groups.push({ label: t('My animations'), items: mine });
   for (const g of ANIMATION_GROUPS) {
-    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id) && hit(t(p.name), p.id, g, t(GROUP_LABELS[g]))).map<PickerItem>((p) => ({
+    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id) && hit(tl(p.name), p.id, g, tl(GROUP_LABELS[g]))).map<PickerItem>((p) => ({
       value: p.id,
-      name: t(p.name),
+      name: tl(p.name),
       icon: 'mdi:motion-play-outline',
       duration: cssSeconds(p.defaults.duration),
     }));
-    if (items.length) groups.push({ label: t(GROUP_LABELS[g]), items });
+    if (items.length) groups.push({ label: tl(GROUP_LABELS[g]), items });
   }
   return groups;
 }

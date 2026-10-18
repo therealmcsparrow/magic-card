@@ -4,7 +4,7 @@ import { live } from 'lit/directives/live.js';
 import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
 import { setI18nLocale } from '../i18n/runtime';
 import type { LocaleHassLike } from '../contracts/i18n';
-import { ready as labelsReady, t } from '../i18n/labels';
+import { ready as labelsReady, t as tl } from '../i18n/labels';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { docFromPreset, presetDocId } from './from-preset';
@@ -28,7 +28,7 @@ import { KIND_EDITORS, PATH_OVERLAY_TAG, editorDefined } from './editor-slots';
 import { NO_SELECTION, PANELS, panelsFor, type PanelSpec, type PreviewChangeDetail, type StageInfo, type StudioSelection } from './slots';
 import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
-import { TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
+import { ORIGIN_GRID, ORIGIN_NAMES, TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
 import { docSizeError, paintOrder } from './editors/draw-utils';
 import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail } from '../contracts/studio-layers';
 import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLocked } from './layer-view';
@@ -36,11 +36,13 @@ import { lockBanner, lockBannerStyles } from './editors/lock-banner';
 import { stageParticlesOf } from './stage-particles';
 import type { UiMenuElement, UiMenuEntry, UiMenuPick, UiWindowElement } from '../contracts/ui-kit';
 import { deepActive, settleFocus, studioWindow } from './window';
+import { validationText } from './validation-text';
 import { sectionHead } from '../ui-kit/templates/layout';
 import { seg } from '../ui-kit/templates/choice';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
+import { t, tr, m, locale, type MessageId } from './i18n';
 
 /*
  * The animation studio: `<magic-card-animation-studio>`, a full-screen surface with the library
@@ -97,11 +99,11 @@ function writeDraft(key: string, doc?: AnimationDoc): void {
   }
 }
 
-const DIRECTIONS: Array<{ value: AnimationDirection; label: string }> = [
-  { value: 'normal', label: 'Normal' },
-  { value: 'reverse', label: 'Reverse' },
-  { value: 'alternate', label: 'Alternate' },
-  { value: 'alternate-reverse', label: 'Alternate reverse' },
+const DIRECTIONS: Array<{ value: AnimationDirection; label: MessageId }> = [
+  { value: 'normal', label: m('Normal') },
+  { value: 'reverse', label: m('Reverse') },
+  { value: 'alternate', label: m('Alternate') },
+  { value: 'alternate-reverse', label: m('Alternate reverse') },
 ];
 /** Section icons of the inspector and layers panels (sections and rail buttons need one). */
 const PANEL_ICON: Record<string, string> = {
@@ -130,17 +132,24 @@ const TIME_TAGS = new Set(['mc-anim-keyframes-editor', 'mc-anim-sequence-editor'
 const ENTITY_COLOR = 'var(--primary-color, #03a9f4)';
 const REPEATS = ['infinite', '1', '2', '3', '5'];
 const ORIGINS = ['center', 'top', 'bottom', 'left', 'right', 'top left', 'top right', 'bottom left', 'bottom right'];
-const NEW_NAMES: Record<AnimationKind, string> = {
-  keyframes: 'New keyframes',
-  particles: 'New particles',
-  path: 'New path',
-  sequence: 'New sequence',
+const NEW_NAMES: Record<AnimationKind, MessageId> = {
+  keyframes: m('New keyframes'),
+  particles: m('New particles'),
+  path: m('New path'),
+  sequence: m('New sequence'),
 };
-const NEW_HELP: Record<AnimationKind, string> = {
-  keyframes: 'Move, scale, turn and colour on a timeline',
-  particles: 'Icons, emoji or shapes that fall, rise or burst',
-  path: 'Follow a drawn path',
-  sequence: 'Play animations one after another',
+/** The New animation menu entries. */
+const NEW_BLANK: Record<AnimationKind, MessageId> = {
+  keyframes: m('Blank keyframes'),
+  particles: m('Blank particles'),
+  path: m('Blank path'),
+  sequence: m('Blank sequence'),
+};
+const NEW_HELP: Record<AnimationKind, MessageId> = {
+  keyframes: m('Move, scale, turn and colour on a timeline'),
+  particles: m('Icons, emoji or shapes that fall, rise or burst'),
+  path: m('Follow a drawn path'),
+  sequence: m('Play animations one after another'),
 };
 
 /** Fields the form shows; their errors appear under them, the rest in the summary. */
@@ -152,13 +161,13 @@ function isTyping(e: Event): boolean {
   return /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable;
 }
 
-const NOT_CONNECTED = { message: 'The animation library is not connected.' };
+const NOT_CONNECTED = { message: m('The animation library is not connected.') };
 
 const errorText = (err: unknown): { message: string; errors: FieldError[] } => {
   const e = (err ?? {}) as { message?: unknown; errors?: unknown };
   const errors = Array.isArray(e.errors) ? (e.errors as FieldError[]).filter((x) => x && typeof x.message === 'string') : [];
   return {
-    message: typeof e.message === 'string' && e.message ? e.message : 'Saving failed.',
+    message: typeof e.message === 'string' && e.message ? e.message : t('Saving failed.'),
     errors,
   };
 };
@@ -336,6 +345,8 @@ export class AnimationStudio extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('hass')) setI18nLocale(this.hass as LocaleHassLike | undefined);
+    // WCAG 3.1.2: the studio's language, for a screen reader (the inherited language is the page's)
+    if (this.lang !== locale()) this.lang = locale();
     if (changed.has('library')) this._docs = libraryDocs(this.library);
     if (changed.has('library') || changed.has('_docs')) {
       this._lookup = (id: string) => this._docs.get(id);
@@ -547,8 +558,9 @@ export class AnimationStudio extends LitElement {
   private _new(kind: AnimationKind): void {
     this._menu = false;
     const names = new Set(this.docs.map((d) => d.name));
-    let name = NEW_NAMES[kind];
-    for (let n = 2; names.has(name); n++) name = `${NEW_NAMES[kind]} ${n}`;
+    const base = t(NEW_NAMES[kind]);
+    let name = base;
+    for (let n = 2; names.has(name); n++) name = `${base} ${n}`;
     this._guard(() => this._openDoc(newAnimationDoc(kind, uniqueId(name, this._taken), name), true));
   }
 
@@ -597,7 +609,7 @@ export class AnimationStudio extends LitElement {
     try {
       built = structuredClone(source.entry.build());
     } catch (err) {
-      this._say(`This preset could not be opened: ${errorText(err).message}`);
+      this._say(t('This preset could not be opened: {message}', { message: errorText(err).message }));
       return;
     }
     const doc: AnimationDoc = { ...built, id: uniqueId(presetDocId(source.entry.id), this._taken) };
@@ -636,9 +648,9 @@ export class AnimationStudio extends LitElement {
     try {
       const res = await this._emit('mc-anim-duplicate', { animation: copy });
       this._store(this._stored(res, copy));
-      this._say(`Duplicated as "${copy.name}".`);
+      this._say(t('Duplicated as "{name}".', { name: copy.name }));
     } catch (err) {
-      this._say(`Duplicating failed: ${errorText(err).message}`);
+      this._say(t('Duplicating failed: {message}', { message: errorText(err).message }));
     }
   }
 
@@ -651,15 +663,15 @@ export class AnimationStudio extends LitElement {
     const next = { ...doc, name: clean };
     const v = validateAnimationDoc(next);
     if (!v.ok) {
-      this._say(`Not renamed: ${v.errors[0].message}`);
+      this._say(t('Not renamed: {message}', { message: validationText(v.errors[0].message) }));
       return;
     }
     try {
       const res = await this._emit('mc-anim-save', { animation: v.doc });
       this._store(this._stored(res, v.doc));
-      this._say(`Renamed to "${clean}".`);
+      this._say(t('Renamed to "{clean}".', { clean }));
     } catch (err) {
-      this._say(`Renaming failed: ${errorText(err).message}`);
+      this._say(t('Renaming failed: {message}', { message: errorText(err).message }));
     }
   }
 
@@ -678,9 +690,9 @@ export class AnimationStudio extends LitElement {
       const next = new Map(this._docs);
       next.delete(doc.id);
       this._docs = next;
-      this._say(`Deleted "${doc.name}".`);
+      this._say(t('Deleted "{name}".', { name: doc.name }));
     } catch (err) {
-      this._say(`Deleting failed: ${errorText(err).message}`);
+      this._say(t('Deleting failed: {message}', { message: errorText(err).message }));
     }
   }
 
@@ -697,7 +709,7 @@ export class AnimationStudio extends LitElement {
 
   private async _openTransfer(dialog: Dialog): Promise<void> {
     if (await this._transferChunk()) this._dialog = dialog;
-    else this._say('The import and export tool could not be loaded. Reload the page and try again.');
+    else this._say(t('The import and export tool could not be loaded. Reload the page and try again.'));
   }
 
   private _export(docs: AnimationDoc[]): void {
@@ -718,7 +730,8 @@ export class AnimationStudio extends LitElement {
         failed.push(`${d.id}: ${errorText(err).message}`);
       }
     }
-    this._say(`Imported ${ok} animation${ok === 1 ? '' : 's'}.${failed.length ? ` Not imported: ${failed.slice(0, 4).join('; ')}.` : ''}`);
+    const done = t('Imported {count, plural, one {# animation} other {# animations}}.', { count: ok });
+    this._say(failed.length ? `${done} ${t('Not imported: {list}.', { list: failed.slice(0, 4).join('; ') })}` : done);
     if (!failed.length) this._dialog = undefined;
   }
 
@@ -922,7 +935,7 @@ export class AnimationStudio extends LitElement {
     const v = validateAnimationDoc(this._doc);
     if (!v.ok) {
       this._errors = v.errors;
-      this._saveError = 'Fix the marked fields first.';
+      this._saveError = t('Fix the marked fields first.');
       return false;
     }
     this._busy = true;
@@ -941,7 +954,7 @@ export class AnimationStudio extends LitElement {
       const now = JSON.stringify(this._doc);
       if (now === sent && JSON.stringify(stored) !== now) this._apply(stored);
       else this._check();
-      this._say(`Saved "${stored.name}".`);
+      this._say(t('Saved "{name}".', { name: stored.name }));
       if (isNew) this._select(stored.id);
       return true;
     } catch (err) {
@@ -1011,14 +1024,14 @@ export class AnimationStudio extends LitElement {
   /** The New animation menu: the kit menu under the button (it handles arrows, type-ahead, Esc and the outside press). */
   private _renderNewMenu(): TemplateResult {
     const items: UiMenuEntry[] = [
-      ...ANIMATION_KINDS.map((k) => ({ id: `kind:${k}`, label: `Blank ${KIND_LABEL[k].toLowerCase()}`, icon: KIND_ICON[k] })),
-      { id: 'preset', label: 'Customise a preset…', icon: 'mdi:auto-fix', separatorBefore: true },
-      { id: 'icon', label: 'Icon animation…', icon: 'mdi:motion-play-outline' },
+      ...ANIMATION_KINDS.map((k) => ({ id: `kind:${k}`, label: t(NEW_BLANK[k]), icon: KIND_ICON[k] })),
+      { id: 'preset', label: t('Customise a preset…'), icon: 'mdi:auto-fix', separatorBefore: true },
+      { id: 'icon', label: t('Icon animation…'), icon: 'mdi:motion-play-outline' },
     ];
     return html`<mc-ui-menu
       class="new-menu"
       .items=${items}
-      label="New animation"
+      label=${t('New animation')}
       .align=${'end' as const}
       @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
         e.stopPropagation();
@@ -1053,7 +1066,7 @@ export class AnimationStudio extends LitElement {
         aria-expanded=${this._menu ? 'true' : 'false'}
         @click=${() => this._toggleNewMenu()}
       >
-        <ha-icon icon="mdi:plus"></ha-icon>New animation<ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
+        <ha-icon icon="mdi:plus"></ha-icon>${t('New animation')}<ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
       </button>
       ${this._menu ? this._renderNewMenu() : nothing}
     </div>`;
@@ -1062,7 +1075,7 @@ export class AnimationStudio extends LitElement {
   private _usedBy(id: string): TemplateResult | typeof nothing {
     if (!this.usage) return nothing;
     const n = this.usage[id] ?? 0;
-    return html`<span class="used ${n ? '' : 'none'}">${n ? `Used by ${n} card${n === 1 ? '' : 's'}` : 'Not used'}</span>`;
+    return html`<span class="used ${n ? '' : 'none'}">${n ? t('Used by {count, plural, one {# card} other {# cards}}', { count: n }) : t('Not used')}</span>`;
   }
 
   private _renderRow(d: AnimationDoc): TemplateResult {
@@ -1076,7 +1089,7 @@ export class AnimationStudio extends LitElement {
             ? html`<div class="name-cell">
                 <input
                   class="input rename"
-                  aria-label="Name of ${d.name}"
+                  aria-label=${t('Name of {name}', { name: d.name })}
                   maxlength="80"
                   .value=${d.name}
                   @keydown=${(e: KeyboardEvent) => {
@@ -1093,20 +1106,20 @@ export class AnimationStudio extends LitElement {
               </div>`
             : html`<button type="button" class="open name-cell" @click=${() => this._guard(() => this._openDoc(d, false))}>
                 <span class="nm">${d.name}</span>
-                <span class="id mono">custom:${d.id}</span>
+                <span class="id mono">${t('custom:{id}', { id: d.id })}</span>
               </button>`
         }
-        <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${KIND_LABEL[d.kind]}</span>
+        <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${t(KIND_LABEL[d.kind])}</span>
         ${this._usedBy(d.id)}
         <span class="acts">
-          <button type="button" class="icon-btn sm" title="Duplicate" aria-label="Duplicate ${d.name}" @click=${() => this._duplicate(d)}>
+          <button type="button" class="icon-btn sm" title=${t('Duplicate')} aria-label=${t('Duplicate {name}', { name: d.name })} @click=${() => this._duplicate(d)}>
             <ha-icon icon="mdi:content-copy"></ha-icon>
           </button>
           <button
             type="button"
             class="icon-btn sm rename-btn"
-            title="Rename"
-            aria-label="Rename ${d.name}"
+            title=${t('Rename')}
+            aria-label=${t('Rename {name}', { name: d.name })}
             @click=${() => {
               this._renaming = d.id;
               this._focusSel = '.rename';
@@ -1117,13 +1130,13 @@ export class AnimationStudio extends LitElement {
           <button
             type="button"
             class="icon-btn sm"
-            title="Export"
-            aria-label="Export ${d.name}"
+            title=${t('Export')}
+            aria-label=${t('Export {name}', { name: d.name })}
             @click=${() => this._export([d])}
           >
             <ha-icon icon="mdi:export-variant"></ha-icon>
           </button>
-          <button type="button" class="icon-btn sm danger" title="Delete" aria-label="Delete ${d.name}" @click=${() => this._askDelete(d)}>
+          <button type="button" class="icon-btn sm danger" title=${t('Delete')} aria-label=${t('Delete {name}', { name: d.name })} @click=${() => this._askDelete(d)}>
             <ha-icon icon="mdi:delete-outline"></ha-icon>
           </button>
         </span>
@@ -1134,13 +1147,13 @@ export class AnimationStudio extends LitElement {
   private _renderEmpty(): TemplateResult {
     return html`<div class="empty lib-empty">
       <ha-icon icon="mdi:animation-play-outline"></ha-icon>
-      <strong>No animations yet</strong>
-      <p>Build one from scratch or customise one of the presets. Saved animations appear in every card's animation picker, under My animations.</p>
+      <strong>${t('No animations yet')}</strong>
+      <p>${t("Build one from scratch or customise one of the presets. Saved animations appear in every card's animation picker, under My animations.")}</p>
       <div class="starters">
         ${ANIMATION_KINDS.map(
           (k) =>
             html`<button type="button" class="starter" @click=${() => this._new(k)}>
-              <ha-icon icon=${KIND_ICON[k]}></ha-icon><span class="mi-t">${KIND_LABEL[k]}</span><span class="mi-s">${NEW_HELP[k]}</span>
+              <ha-icon icon=${KIND_ICON[k]}></ha-icon><span class="mi-t">${t(KIND_LABEL[k])}</span><span class="mi-s">${t(NEW_HELP[k])}</span>
             </button>`,
         )}
         <button
@@ -1148,10 +1161,10 @@ export class AnimationStudio extends LitElement {
           class="starter"
           @click=${() => this._openPresets()}
         >
-          <ha-icon icon="mdi:auto-fix"></ha-icon><span class="mi-t">From a preset</span><span class="mi-s">Customise one of ${ANIMATION_PRESETS.length}</span>
+          <ha-icon icon="mdi:auto-fix"></ha-icon><span class="mi-t">${t('From a preset')}</span><span class="mi-s">${t('Customise one of {count}', { count: ANIMATION_PRESETS.length })}</span>
         </button>
         <button type="button" class="starter" data-kind="icon" @click=${() => this._openIconStart()}>
-          <ha-icon icon="mdi:motion-play-outline"></ha-icon><span class="mi-t">Icon animation</span><span class="mi-s">Animate an icon's parts</span>
+          <ha-icon icon="mdi:motion-play-outline"></ha-icon><span class="mi-t">${t('Icon animation')}</span><span class="mi-s">${t("Animate an icon's parts")}</span>
         </button>
       </div>
     </div>`;
@@ -1160,15 +1173,15 @@ export class AnimationStudio extends LitElement {
   private _renderLibrary(): TemplateResult {
     const all = this.docs;
     const kinds: Array<{ id: AnimationKind | 'all'; label: string }> = [
-      { id: 'all', label: 'All' },
-      ...ANIMATION_KINDS.map((k) => ({ id: k, label: KIND_LABEL[k] })),
+      { id: 'all', label: t('All') },
+      ...ANIMATION_KINDS.map((k) => ({ id: k, label: t(KIND_LABEL[k]) })),
     ];
     const shown = filterDocs(all, this._query).filter((d) => this._kind === 'all' || d.kind === this._kind);
     return html`
       <header class="topbar">
         <div class="grp title">
           <ha-icon class="title-icon" icon="mdi:animation-play-outline"></ha-icon>
-          <h1>Animation studio</h1>
+          <h1>${t('Animation studio')}</h1>
           <span class="chip is-count">${all.length}</span>
         </div>
         <span class="spacer"></span>
@@ -1178,7 +1191,7 @@ export class AnimationStudio extends LitElement {
             class="btn btn-secondary btn-sm"
             @click=${() => void this._openTransfer({ type: 'import' })}
           >
-            <ha-icon icon="mdi:import"></ha-icon>Import
+            <ha-icon icon="mdi:import"></ha-icon>${t('Import')}
           </button>
           <button
             type="button"
@@ -1186,7 +1199,7 @@ export class AnimationStudio extends LitElement {
             ?disabled=${!all.length}
             @click=${() => this._export(all)}
           >
-            <ha-icon icon="mdi:export-variant"></ha-icon>Export all
+            <ha-icon icon="mdi:export-variant"></ha-icon>${t('Export all')}
           </button>
           ${this._renderNewButton()}
         </div>
@@ -1202,21 +1215,21 @@ export class AnimationStudio extends LitElement {
                       <input
                         class="input"
                         type="search"
-                        placeholder="Search animations"
-                        aria-label="Search animations"
+                        placeholder=${t('Search animations')}
+                        aria-label=${t('Search animations')}
                         aria-keyshortcuts="/"
                         .value=${live(this._query)}
                         @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
                       />
                     </div>
-                    <div class="kinds">${seg({ role: 'radiogroup', label: 'Kind', value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>
+                    <div class="kinds">${seg({ role: 'radiogroup', label: t('Kind'), value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>
                   </div>
                   ${
                     shown.length
-                      ? html`<ul class="lib-list ${this.usage ? 'has-usage' : ''}" aria-label="My animations">
+                      ? html`<ul class="lib-list ${this.usage ? 'has-usage' : ''}" aria-label=${t('My animations')}>
                           ${shown.map((d) => this._renderRow(d))}
                         </ul>`
-                      : html`<p class="no-results">No animations match${this._query ? html` "${this._query}"` : ''}.</p>`
+                      : html`<p class="no-results">${this._query ? t('No animations match "{query}".', { query: this._query }) : t('No animations match.')}</p>`
                   }
                 `
               : this._renderEmpty()
@@ -1230,7 +1243,7 @@ export class AnimationStudio extends LitElement {
 
   private _fieldErrors(path: string): TemplateResult | typeof nothing {
     const list = this._errors.filter((e) => e.path === path);
-    return list.length ? html`${list.map((e) => html`<p class="help error" id="err-${path}">${e.message}</p>`)}` : nothing;
+    return list.length ? html`${list.map((e) => html`<p class="help error" id="err-${path}">${validationText(e.message)}</p>`)}` : nothing;
   }
 
   private _field(label: string, id: string, control: TemplateResult, path?: string, help?: string | TemplateResult): TemplateResult {
@@ -1303,7 +1316,7 @@ export class AnimationStudio extends LitElement {
     const open = opts.errors || !this._collapsed.has(id);
     return html`<section class="sec ${opts.cls ?? ''}" data-sec=${id}>
       ${sectionHead({ title, icon, collapsible: true, expanded: open, onToggle: () => this._toggleSection(id) })}
-      ${opts.errors ? html`<span class="sec-err" role="img" aria-label="Has errors"></span>` : nothing}
+      ${opts.errors ? html`<span class="sec-err" role="img" aria-label=${t('Has errors')}></span>` : nothing}
       <div class="sec-body" id="secb-${id}" ?hidden=${!open}>${open ? body : nothing}</div>
     </section>`;
   }
@@ -1320,7 +1333,7 @@ export class AnimationStudio extends LitElement {
           ${
             other.length
               ? html`<ul>
-                  ${other.map((e) => html`<li><span class="mono">${e.path || 'animation'}</span> ${e.message}</li>`)}
+                  ${other.map((e) => html`<li><span class="mono">${e.path || 'animation'}</span> ${validationText(e.message)}</li>`)}
                 </ul>`
               : nothing
           }
@@ -1330,14 +1343,14 @@ export class AnimationStudio extends LitElement {
 
   /** The animation settings (nothing selected): name, timing, what moves, in collapsible sections. */
   private _renderForm(d: AnimationDoc): TemplateResult {
-    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: t(e.label) }));
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: tl(e.label) }));
     if (!EASINGS.some((e) => e.id === d.easing)) easingOpts.push({ value: d.easing, label: d.easing });
     const it = String(d.iterations);
     const custom = this._customRepeat || !REPEATS.includes(it);
-    const repeatOpts = [...REPEATS.map((r) => ({ value: r, label: r === 'infinite' ? 'Infinite' : r })), { value: 'custom', label: 'Custom' }];
+    const repeatOpts = [...REPEATS.map((r) => ({ value: r, label: r === 'infinite' ? t('Infinite') : r })), { value: 'custom', label: t('Custom') }];
     const moves = d.kind === 'keyframes' || d.kind === 'sequence';
     const name = this._field(
-      'Name',
+      t('Name'),
       'f-name',
       html`<input
         class="input"
@@ -1348,14 +1361,14 @@ export class AnimationStudio extends LitElement {
         @input=${(e: InputEvent) => this._set({ name: (e.target as HTMLInputElement).value }, 'name')}
       />`,
       'name',
-      html`Cards use it as <span class="mono ref">custom:${d.id}</span>`,
+      html`${t('Cards use it as')} <span class="mono ref">${t('custom:{id}', { id: d.id })}</span>`,
     );
     const timing = html`
       ${
         d.kind === 'sequence'
-          ? html`<p class="help">A sequence lasts as long as its steps. Cards can still scale it with their Duration.</p>`
+          ? html`<p class="help">${t('A sequence lasts as long as its steps. Cards can still scale it with their Duration.')}</p>`
           : this._field(
-              'Duration',
+              t('Duration'),
               'f-duration',
               html`<div class="suffix">
                 <input
@@ -1379,13 +1392,13 @@ export class AnimationStudio extends LitElement {
       }
       <div class="two">
         ${this._field(
-          'Easing',
+          t('Easing'),
           'f-easing',
           this._selectEl('f-easing', d.easing, easingOpts, (v) => this._set({ easing: v }, 'easing')),
           'easing',
         )}
         ${this._field(
-          'Repeat',
+          t('Repeat'),
           'f-repeat',
           this._selectEl('f-repeat', custom ? 'custom' : it, repeatOpts, (v) => {
             if (v === 'custom') {
@@ -1402,7 +1415,7 @@ export class AnimationStudio extends LitElement {
       ${
         custom
           ? this._field(
-              'Repeat count',
+              t('Repeat count'),
               'f-count',
               html`<input
                 class="input"
@@ -1420,18 +1433,18 @@ export class AnimationStudio extends LitElement {
           : nothing
       }
       ${this._field(
-        'Direction',
+        t('Direction'),
         'f-dir',
-        this._selectEl('f-dir', d.direction ?? 'normal', DIRECTIONS, (v) =>
+        this._selectEl('f-dir', d.direction ?? 'normal', tr(DIRECTIONS), (v) =>
           this._set({ direction: v === 'normal' ? undefined : (v as AnimationDirection) }, 'direction'),
         ),
         'direction',
       )}
     `;
     return html`
-      ${this._section('anim', 'Animation', KIND_ICON[d.kind], name, { errors: this._hasErrors(['name']) })}
-      ${this._section('timing', 'Timing', 'mdi:timer-outline', timing, { errors: this._hasErrors(['duration', 'easing', 'iterations', 'direction']) })}
-      ${moves ? this._section('moves', 'What moves', 'mdi:cursor-move', this._renderMoves(d), { errors: this._hasErrors(['target', 'origin']) }) : nothing}
+      ${this._section('anim', t('Animation'), KIND_ICON[d.kind], name, { errors: this._hasErrors(['name']) })}
+      ${this._section('timing', t('Timing'), 'mdi:timer-outline', timing, { errors: this._hasErrors(['duration', 'easing', 'iterations', 'direction']) })}
+      ${moves ? this._section('moves', t('What moves'), 'mdi:cursor-move', this._renderMoves(d), { errors: this._hasErrors(['target', 'origin']) }) : nothing}
     `;
   }
 
@@ -1439,7 +1452,7 @@ export class AnimationStudio extends LitElement {
   private _renderMoves(d: AnimationDoc): TemplateResult {
     const originOpts = ORIGINS.map((o) => ({
       value: o,
-      label: o.charAt(0).toUpperCase() + o.slice(1),
+      label: ORIGIN_GRID.includes(o) ? t(ORIGIN_NAMES[ORIGIN_GRID.indexOf(o)]) : o.charAt(0).toUpperCase() + o.slice(1),
     }));
     if (!ORIGINS.includes(d.origin)) originOpts.push({ value: d.origin, label: d.origin });
     const target = d.target === 'icon' ? 'icon' : 'element';
@@ -1451,32 +1464,32 @@ export class AnimationStudio extends LitElement {
     };
     return html`
       <div class="field">
-        <div class="field-head"><span class="lbl" id="l-target">Target</span></div>
+        <div class="field-head"><span class="lbl" id="l-target">${t('Target')}</span></div>
         <div class="seg full target" role="radiogroup" aria-labelledby="l-target" @keydown=${onTargetKey}>
-          ${(['element', 'icon'] as const).map((t) => {
-            const on = t === target;
+          ${(['element', 'icon'] as const).map((tg) => {
+            const on = tg === target;
             return html`<button
               type="button"
               role="radio"
               aria-checked=${on ? 'true' : 'false'}
               tabindex=${on ? '0' : '-1'}
-              @click=${() => this._set({ target: t }, 'target')}
+              @click=${() => this._set({ target: tg }, 'target')}
             >
-              ${t === 'element' ? 'Element' : 'Icon'}
+              ${tg === 'element' ? t('Element') : t('Icon')}
             </button>`;
           })}
         </div>
-        <p class="help">Icon moves only the module's icon. Cards can override it.</p>
+        <p class="help">${t("Icon moves only the module's icon. Cards can override it.")}</p>
         ${this._fieldErrors('target')}
       </div>
       ${
         d.kind === 'keyframes'
           ? this._field(
-              'Origin',
+              t('Origin'),
               'f-origin',
               this._selectEl('f-origin', d.origin, originOpts, (v) => this._set({ origin: v }, 'origin')),
               'origin',
-              'The point it scales and turns around.',
+              t('The point it scales and turns around.'),
             )
           : nothing
       }
@@ -1566,11 +1579,11 @@ export class AnimationStudio extends LitElement {
   private _renderKindSlot(d: AnimationDoc): TemplateResult {
     const slot = KIND_EDITORS[d.kind];
     const loaded = editorDefined(slot.tag);
-    const body = loaded ? this._editorEl(slot.tag, d) : html`<p class="help">Loading the ${slot.title.toLowerCase()} editor…</p>`;
+    const body = loaded ? this._editorEl(slot.tag, d) : html`<p class="help">${t('Loading the {kind} editor…', { kind: t(slot.title).toLowerCase() })}</p>`;
     if (slot.place === 'inspector') {
-      return html`<div class="kind-slot place-inspector" data-kind=${d.kind}>${this._section(`kind-${d.kind}`, slot.title, KIND_ICON[d.kind], body)}</div>`;
+      return html`<div class="kind-slot place-inspector" data-kind=${d.kind}>${this._section(`kind-${d.kind}`, t(slot.title), KIND_ICON[d.kind], body)}</div>`;
     }
-    return html`<section class="kind-slot place-panel" aria-label=${slot.title} data-kind=${d.kind}>${body} ${this._panels('timeline', d)}</section>`;
+    return html`<section class="kind-slot place-panel" aria-label=${t(slot.title)} data-kind=${d.kind}>${body} ${this._panels('timeline', d)}</section>`;
   }
 
   private _onDocChange = (e: Event): void => {
@@ -1586,7 +1599,7 @@ export class AnimationStudio extends LitElement {
     if (big) {
       if (!transient) {
         this._endGesture();
-        this._say(`Not changed: ${big}`);
+        this._say(t('Not changed: {big}', { big }));
         // the editors go back to the document as it is
         this._doc = { ...this._doc };
       }
@@ -1754,35 +1767,35 @@ export class AnimationStudio extends LitElement {
   }
 
   private _renderLayerList(d: AnimationDoc, rail: boolean): TemplateResult {
-    if (d.kind === 'particles') return rail ? html`` : html`<p class="help layers-note">Particles play on the whole element.</p>`;
+    if (d.kind === 'particles') return rail ? html`` : html`<p class="help layers-note">${t('Particles play on the whole element.')}</p>`;
     const tile = TILES.find((t) => t.id === this._tile);
     const sel = this._selection;
-    const keyed = (t: TargetRef) =>
-      t === d.target && d.kind === 'keyframes' ? (d.keyframes?.length ?? 0) : (d.tracks?.find((x) => x.target === t)?.keyframes.length ?? 0);
+    const keyed = (tg: TargetRef) =>
+      tg === d.target && d.kind === 'keyframes' ? (d.keyframes?.length ?? 0) : (d.tracks?.find((x) => x.target === tg)?.keyframes.length ?? 0);
     return html`<ul class="layer-list" role="list">
-      ${this._layerTargets(d).map((t) => {
-        const on = (sel.kind === 'target' || sel.kind === 'keys') && (sel.target === t || !!sel.targets?.includes(t));
-        const off = !!tile && t !== 'element' && !tile.targets.includes(t);
-        const label = targetLabel(d, t);
-        const n = keyed(t);
-        const main = t === d.target;
-        const title = `${label}${main ? ' (the animation moves it)' : ''}${off ? ` · not on the ${tile!.label.toLowerCase()} tile` : ''}`;
+      ${this._layerTargets(d).map((tg) => {
+        const on = (sel.kind === 'target' || sel.kind === 'keys') && (sel.target === tg || !!sel.targets?.includes(tg));
+        const off = !!tile && tg !== 'element' && !tile.targets.includes(tg);
+        const label = targetLabel(d, tg);
+        const n = keyed(tg);
+        const main = tg === d.target;
+        const title = main && off ? t('{label} (the animation moves it) · not on the {tile} tile', { label, tile: t(tile!.label).toLowerCase() }) : main ? t('{label} (the animation moves it)', { label }) : off ? t('{label} · not on the {tile} tile', { label, tile: t(tile!.label).toLowerCase() }) : label;
         return html`<li>
           <button
             type="button"
             class="layer ${off ? 'off' : ''}"
-            data-target=${t}
+            data-target=${tg}
             aria-pressed=${on ? 'true' : 'false'}
             aria-label=${rail ? title : nothing}
             title=${title}
-            @click=${(e: MouseEvent) => this._pickLayer(t, e.ctrlKey || e.metaKey || e.shiftKey)}
+            @click=${(e: MouseEvent) => this._pickLayer(tg, e.ctrlKey || e.metaKey || e.shiftKey)}
           >
-            <ha-icon icon=${targetIcon(t)}></ha-icon>
+            <ha-icon icon=${targetIcon(tg)}></ha-icon>
             ${
               rail
                 ? nothing
-                : html`<span class="layer-name">${label}</span> ${main && moves(d) ? html`<span class="chip is-accent layer-main">Moves</span>` : nothing}
-                    ${n ? html`<span class="layer-count" title="${n} keyframe${n === 1 ? '' : 's'}">${n}</span>` : nothing}`
+                : html`<span class="layer-name">${label}</span> ${main && moves(d) ? html`<span class="chip is-accent layer-main">${t('Moves')}</span>` : nothing}
+                    ${n ? html`<span class="layer-count" title=${t('{count, plural, one {# keyframe} other {# keyframes}}', { count: n })}>${n}</span>` : nothing}`
             }
           </button>
         </li>`;
@@ -1818,22 +1831,22 @@ export class AnimationStudio extends LitElement {
       ? []
       : specs.map(
           (p) =>
-            html`<section class="layer-group" data-panel=${p.tag} aria-label=${p.title} tabindex="-1">
-              <h3 class="layer-head">${p.title}</h3>
+            html`<section class="layer-group" data-panel=${p.tag} aria-label=${t(p.title)} tabindex="-1">
+              <h3 class="layer-head">${t(p.title)}</h3>
               ${this._editorEl(p.tag, d, { cls: 'panel panel-layers', panel: true })}
             </section>`,
         );
     // the rail: the targets as icons, then a button per panel that opens the column at it
     const opens = rail && specs.length
-      ? html`<ul class="layer-list rail-panels" role="list" aria-label="Open in the layers column">
+      ? html`<ul class="layer-list rail-panels" role="list" aria-label=${t('Open in the layers column')}>
           ${specs.map(
             (p) => html`<li>
               <button
                 type="button"
                 class="layer rail-open"
                 data-open=${p.tag}
-                aria-label="Open ${p.title}"
-                title=${p.title}
+                aria-label=${t('Open {title}', { title: t(p.title) })}
+                title=${t(p.title)}
                 @click=${() => this._openLayers(p.tag)}
               >
                 <ha-icon icon=${PANEL_ICON[p.tag] ?? 'mdi:layers-outline'}></ha-icon>
@@ -1845,7 +1858,7 @@ export class AnimationStudio extends LitElement {
     // drawn shapes stay findable in the rail: one button each, top of the paint order first
     const drawn = rail && d.kind === 'keyframes' ? paintOrder(d.rig?.shapes ?? []).reverse() : [];
     const shapesRail = drawn.length
-      ? html`<ul class="layer-list rail-shapes" role="list" aria-label="Shapes">
+      ? html`<ul class="layer-list rail-shapes" role="list" aria-label=${t('Shapes')}>
           ${drawn.map((s) => {
             const t = `shape:${s.id}` as TargetRef;
             const on = this._selection.target === t || !!this._selection.targets?.includes(t);
@@ -1857,21 +1870,21 @@ export class AnimationStudio extends LitElement {
           })}
         </ul>`
       : nothing;
-    return html`<nav class="layers ${rail ? 'rail' : ''}" aria-label="Layers">
+    return html`<nav class="layers ${rail ? 'rail' : ''}" aria-label=${t('Layers')}>
       <div class="layers-head">
-        ${rail ? nothing : html`<h2>Layers</h2>`}
+        ${rail ? nothing : html`<h2>${t('Layers')}</h2>`}
         <button
           type="button"
           class="icon-btn sm rail-toggle"
           aria-expanded=${rail ? 'false' : 'true'}
-          aria-label=${rail ? 'Expand layers' : 'Collapse layers'}
-          title=${rail ? 'Expand layers' : 'Collapse layers'}
+          aria-label=${rail ? t('Expand layers') : t('Collapse layers')}
+          title=${rail ? t('Expand layers') : t('Collapse layers')}
           @click=${() => this._toggleRail()}
         >
           <ha-icon icon=${rail ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left'}></ha-icon>
         </button>
       </div>
-      <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">Hide, solo and lock only change this preview.</p>` : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
+      <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('Hide, solo and lock only change this preview.')}</p>` : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
     </nav>`;
   }
 
@@ -1883,17 +1896,17 @@ export class AnimationStudio extends LitElement {
     const n = sel.keys?.length ?? 0;
     const what =
       sel.kind === 'keys'
-        ? `${n} keyframe${n === 1 ? '' : 's'}${sel.target ? ` · ${targetLabel(d, sel.target)}` : ''}`
+        ? `${t('{count, plural, one {# keyframe} other {# keyframes}}', { count: n })}${sel.target ? ` · ${targetLabel(d, sel.target)}` : ''}`
         : sel.kind === 'target' && sel.target
           ? (sel.targets?.length ?? 0) > 1
-            ? `${sel.targets!.length} targets`
+            ? t('{count} targets', { count: sel.targets!.length })
             : targetLabel(d, sel.target)
           : sel.kind === 'tool'
-            ? `Tool: ${sel.tool ?? ''}`
+            ? t('Tool: {tool}', { tool: sel.tool ?? '' })
             : '';
     return html`<div class="ctx">
-      <button type="button" class="btn btn-text btn-sm ctx-back" title="Animation settings (Esc)" @click=${() => this._setSelection(NO_SELECTION)}>
-        <ha-icon icon="mdi:arrow-left"></ha-icon>Animation
+      <button type="button" class="btn btn-text btn-sm ctx-back" title=${t('Animation settings (Esc)')} @click=${() => this._setSelection(NO_SELECTION)}>
+        <ha-icon icon="mdi:arrow-left"></ha-icon>${t('Animation')}
       </button>
       <span class="ctx-what">${what}</span>
     </div>`;
@@ -1909,7 +1922,7 @@ export class AnimationStudio extends LitElement {
         targetLabel(d, sel.target),
         targetIcon(sel.target),
         html`<p class="help">
-            ${main ? `The animation's keyframes move the ${sel.target === 'icon' ? "module's icon" : 'whole element'}.` : `The animation's keyframes move the ${d.target === 'icon' ? 'icon' : 'element'}.`}
+            ${main ? (sel.target === 'icon' ? t("The animation's keyframes move the module's icon.") : t("The animation's keyframes move the whole element.")) : d.target === 'icon' ? t("The animation's keyframes move the icon.") : t("The animation's keyframes move the element.")}
           </p>
           ${
             main
@@ -1919,14 +1932,14 @@ export class AnimationStudio extends LitElement {
                   class="btn btn-secondary btn-sm make-main"
                   @click=${() => this._set({ target: sel.target as 'element' | 'icon' }, 'target')}
                 >
-                  <ha-icon icon="mdi:target"></ha-icon>Move the ${sel.target === 'icon' ? 'icon' : 'element'} instead
+                  <ha-icon icon="mdi:target"></ha-icon>${sel.target === 'icon' ? t('Move the icon instead') : t('Move the element instead')}
                 </button>`
           }
           ${d.kind === 'keyframes' && main ? this._renderMoves(d) : nothing}`,
       );
     }
     const n = sel.keys?.length ?? 0;
-    return html`<p class="help ctx-note">${sel.kind === 'keys' ? `${n} keyframe${n === 1 ? '' : 's'} selected.` : 'Nothing to set here yet.'}</p>`;
+    return html`<p class="help ctx-note">${sel.kind === 'keys' ? t('{count, plural, one {# keyframe} other {# keyframes}} selected.', { count: n }) : t('Nothing to set here yet.')}</p>`;
   }
 
   private _renderInspector(d: AnimationDoc): TemplateResult {
@@ -1937,13 +1950,13 @@ export class AnimationStudio extends LitElement {
       // with nothing selected, panels (states...) are collapsible sections like the settings above them
       const sections = panelsFor('inspector', d, sel)
         .filter((p) => editorDefined(p.tag))
-        .map((p) => this._section(`panel-${p.tag}`, p.title, PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true })));
+        .map((p) => this._section(`panel-${p.tag}`, t(p.title), PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true })));
       return html`${this._renderErrors()} ${kind} ${this._renderForm(d)} ${sections}`;
     }
     // every panel under its own titled, collapsible section
     const sections = panelsFor('inspector', d, sel)
       .filter((p) => editorDefined(p.tag))
-      .map((p) => this._section(`panel-${p.tag}`, p.title, PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true, inspector: true })));
+      .map((p) => this._section(`panel-${p.tag}`, t(p.title), PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true, inspector: true })));
     const lv = this._viewOf(d);
     const locked = selectionLocked(d, lv, sel) ? lockBanner(d, lv, selectionKeys(sel)) : nothing;
     // Element / Icon: what the animation moves (and "Move the icon instead") comes first
@@ -1952,7 +1965,7 @@ export class AnimationStudio extends LitElement {
     // the Icon target of an icon without parts: split it right here (the layers column may be a rail)
     const split =
       sel.kind === 'target' && sel.target === 'icon' && d.kind === 'keyframes' && !d.rig?.parts?.length && editorDefined(PARTS_LAYERS)
-        ? this._section('split-icon', 'Icon parts', PANEL_ICON[PARTS_LAYERS], this._editorEl(PARTS_LAYERS, d, { cls: 'panel panel-inspector', panel: true }))
+        ? this._section('split-icon', t('Icon parts'), PANEL_ICON[PARTS_LAYERS], this._editorEl(PARTS_LAYERS, d, { cls: 'panel panel-inspector', panel: true }))
         : nothing;
     const rest = sections.length ? sections : lead === nothing && split === nothing ? this._renderFallback(d) : nothing;
     return html`${locked} ${this._renderContext(d)} ${this._renderErrors()} ${lead} ${split} ${rest}`;
@@ -1979,12 +1992,12 @@ export class AnimationStudio extends LitElement {
     return html`
       <header class="topbar">
         <div class="grp">
-          <button type="button" class="btn btn-secondary btn-sm back" @click=${() => this._back()}><ha-icon icon="mdi:arrow-left"></ha-icon>Library</button>
+          <button type="button" class="btn btn-secondary btn-sm back" @click=${() => this._back()}><ha-icon icon="mdi:arrow-left"></ha-icon>${t('Library')}</button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
-            <strong class="doc-name">${d.name.trim() || 'Untitled animation'}</strong>
-            <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${KIND_LABEL[d.kind]}</span>
-            ${!this._saved ? html`<span class="chip is-accent">New</span>` : dirty ? html`<span class="chip is-warn">Unsaved changes</span>` : nothing}
+            <strong class="doc-name">${d.name.trim() || t('Untitled animation')}</strong>
+            <span class="chip kind"><ha-icon icon=${KIND_ICON[d.kind]}></ha-icon>${t(KIND_LABEL[d.kind])}</span>
+            ${!this._saved ? html`<span class="chip is-accent">${t('New')}</span>` : dirty ? html`<span class="chip is-warn">${t('Unsaved changes')}</span>` : nothing}
           </div>
         </div>
         <span class="spacer"></span>
@@ -1992,8 +2005,8 @@ export class AnimationStudio extends LitElement {
           <button
             type="button"
             class="icon-btn"
-            aria-label="Undo (Ctrl+Z)"
-            title="Undo (Ctrl+Z)"
+            aria-label=${t('Undo (Ctrl+Z)')}
+            title=${t('Undo (Ctrl+Z)')}
             ?disabled=${!this._history.canUndo()}
             @click=${() => this.undo()}
           >
@@ -2002,8 +2015,8 @@ export class AnimationStudio extends LitElement {
           <button
             type="button"
             class="icon-btn"
-            aria-label="Redo (Ctrl+Y)"
-            title="Redo (Ctrl+Y)"
+            aria-label=${t('Redo (Ctrl+Y)')}
+            title=${t('Redo (Ctrl+Y)')}
             ?disabled=${!this._history.canRedo()}
             @click=${() => this.redo()}
           >
@@ -2016,8 +2029,8 @@ export class AnimationStudio extends LitElement {
                   class="icon-btn insp-toggle"
                   aria-controls="inspector"
                   aria-expanded=${this._inspOpen ? 'true' : 'false'}
-                  aria-label="Inspector"
-                  title="Inspector"
+                  aria-label=${t('Inspector')}
+                  title=${t('Inspector')}
                   @click=${() => (this._inspOpen = !this._inspOpen)}
                 >
                   <ha-icon icon="mdi:tune-variant"></ha-icon>
@@ -2028,10 +2041,10 @@ export class AnimationStudio extends LitElement {
             type="button"
             class="btn btn-primary btn-sm save"
             ?disabled=${this._busy || (!dirty && !!this._saved)}
-            title="Save (Ctrl+S)"
+            title=${t('Save (Ctrl+S)')}
             @click=${() => this.save()}
           >
-            <ha-icon icon=${this._busy ? 'mdi:progress-upload' : 'mdi:content-save-outline'}></ha-icon>${this._busy ? 'Saving…' : 'Save'}
+            <ha-icon icon=${this._busy ? 'mdi:progress-upload' : 'mdi:content-save-outline'}></ha-icon>${this._busy ? t('Saving…') : t('Save')}
           </button>
         </div>
       </header>
@@ -2068,11 +2081,11 @@ export class AnimationStudio extends LitElement {
                     role="separator"
                     tabindex="0"
                     aria-orientation="horizontal"
-                    aria-label="Stage height"
+                    aria-label=${t('Stage height')}
                     aria-valuemin="15"
                     aria-valuemax="80"
                     aria-valuenow=${Math.round(this._split * 100)}
-                    title="Drag to resize the stage (double-click: reset)"
+                    title=${t('Drag to resize the stage (double-click: reset)')}
                     @pointerdown=${this._onSplitDown}
                     @pointermove=${this._onSplitMove}
                     @pointerup=${this._onSplitUp}
@@ -2084,7 +2097,7 @@ export class AnimationStudio extends LitElement {
               : nothing
           }
         </div>
-        <aside class="inspector" id="inspector" tabindex="-1" aria-label=${this._selection.kind === 'none' ? 'Animation settings' : 'Inspector'}>
+        <aside class="inspector" id="inspector" tabindex="-1" aria-label=${this._selection.kind === 'none' ? t('Animation settings') : t('Inspector')}>
           ${this._renderInspector(d)}
         </aside>
         ${slide && this._inspOpen ? html`<div class="insp-scrim" @click=${() => (this._inspOpen = false)}></div>` : nothing}
@@ -2112,23 +2125,23 @@ export class AnimationStudio extends LitElement {
       case 'delete': {
         const { doc, uses, sequences } = dg;
         const lines: string[] = [];
-        if (uses === undefined) lines.push('Cards that use it stop playing it, unless they embed a copy.');
-        else if (uses) lines.push(`It is used by ${uses} card${uses === 1 ? '' : 's'}; they stop playing it, unless they embed a copy.`);
-        if (sequences.length) lines.push(`Sequences that play it skip that step: ${sequences.map((s) => s.name).join(', ')}.`);
+        if (uses === undefined) lines.push(t('Cards that use it stop playing it, unless they embed a copy.'));
+        else if (uses) lines.push(t('It is used by {count, plural, one {# card} other {# cards}}; they stop playing it, unless they embed a copy.', { count: uses }));
+        if (sequences.length) lines.push(t('Sequences that play it skip that step: {names}.', { names: sequences.map((s) => s.name).join(', ') }));
         return studioWindow(
-          { heading: `Delete "${doc.name}"?`, variant: 'alert', initialFocus: 'dlg-safe', onClose },
+          { heading: t('Delete "{name}"?', { name: doc.name }), variant: 'alert', initialFocus: 'dlg-safe', onClose },
           html`<div class="dlg">${lines.map((l) => html`<p>${l}</p>`)}</div>`,
-          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>Cancel</button>
+          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>${t('Cancel')}</button>
             <button type="button" class="btn btn-danger btn-sm confirm-delete" @click=${() => this._delete(doc)}>
-              <ha-icon icon="mdi:delete-outline"></ha-icon>Delete
+              <ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete')}
             </button>`,
         );
       }
       case 'discard':
         return studioWindow(
-          { heading: 'Save your changes?', variant: 'alert', initialFocus: 'dlg-safe', onClose },
-          html`<div class="dlg"><p>"${this._doc?.name || 'This animation'}" has changes that are not saved yet.</p></div>`,
-          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>Keep editing</button>
+          { heading: t('Save your changes?'), variant: 'alert', initialFocus: 'dlg-safe', onClose },
+          html`<div class="dlg"><p>${t('"{name}" has changes that are not saved yet.', { name: this._doc?.name || t('This animation') })}</p></div>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>${t('Keep editing')}</button>
             <button
               type="button"
               class="btn btn-secondary btn-sm discard"
@@ -2139,7 +2152,7 @@ export class AnimationStudio extends LitElement {
                 dg.then();
               }}
             >
-              Discard
+              ${t('Discard')}
             </button>
             <button
               type="button"
@@ -2149,14 +2162,14 @@ export class AnimationStudio extends LitElement {
                 if (await this.save()) dg.then();
               }}
             >
-              Save
+              ${t('Save')}
             </button>`,
         );
       case 'restore':
         return studioWindow(
-          { heading: 'Restore unsaved changes?', variant: 'alert', initialFocus: 'restore-draft', onClose },
+          { heading: t('Restore unsaved changes?'), variant: 'alert', initialFocus: 'restore-draft', onClose },
           html`<div class="dlg">
-            <p>${dg.isNew ? `The new animation "${dg.draft.name}" was not saved last time.` : `"${dg.draft.name}" has changes that were not saved last time.`}</p>
+            <p>${dg.isNew ? t('The new animation "{name}" was not saved last time.', { name: dg.draft.name }) : t('"{name}" has changes that were not saved last time.', { name: dg.draft.name })}</p>
           </div>`,
           html`<button
               type="button"
@@ -2166,16 +2179,16 @@ export class AnimationStudio extends LitElement {
                 writeDraft(draftKey(dg.isNew ? undefined : dg.draft.id));
               }}
             >
-              Discard
+              ${t('Discard')}
             </button>
             <button type="button" class="btn btn-primary btn-sm restore-draft" id="restore-draft" @click=${() => this._restoreDraft(dg.draft, dg.isNew)}>
-              Restore unsaved changes
+              ${t('Restore unsaved changes')}
             </button>`,
         );
       case 'export':
       case 'import':
         return studioWindow(
-          { heading: dg.type === 'export' ? 'Export animations' : 'Import animations', size: 'l', dismissible: false, onClose },
+          { heading: dg.type === 'export' ? t('Export animations') : t('Import animations'), size: 'l', dismissible: false, onClose },
           html`<mc-transfer-panel
             host="animation-studio"
             .mode=${dg.type}
@@ -2187,29 +2200,29 @@ export class AnimationStudio extends LitElement {
         );
       case 'icon':
         return studioWindow(
-          { heading: 'Icon animation', size: 'l', onClose },
+          { heading: t('Icon animation'), size: 'l', onClose },
           html`<div class="dlg">
             ${
               editorDefined(ICON_START)
                 ? html`<mc-anim-icon-start class="icon-start" .hass=${this.hass} .lookup=${this._lookup} @icon-start=${(e: Event) => this._startIcon(e)}></mc-anim-icon-start>`
-                : html`<p class="help">Loading…</p>`
+                : html`<p class="help">${t('Loading…')}</p>`
             }
           </div>`,
-          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>${t('Cancel')}</button>`,
         );
       case 'presets': {
         return studioWindow(
-          { heading: 'Customise a preset', size: 'xl', initialFocus: 'preset-search', onClose },
+          { heading: t('Customise a preset'), size: 'xl', initialFocus: 'preset-search', onClose },
           html`<div class="dlg">
-            <p class="help">The preset becomes your own animation to edit: motion presets as keyframes, particle and ring presets with their settings.</p>
+            <p class="help">${t('The preset becomes your own animation to edit: motion presets as keyframes, particle and ring presets with their settings.')}</p>
             <div class="with-icon">
               <ha-icon icon="mdi:magnify"></ha-icon>
               <input
                 class="input preset-search"
                 id="preset-search"
                 type="search"
-                placeholder="Search presets"
-                aria-label="Search presets"
+                placeholder=${t('Search presets')}
+                aria-label=${t('Search presets')}
                 .value=${live(this._presetQuery)}
                 @input=${(e: InputEvent) => (this._presetQuery = (e.target as HTMLInputElement).value)}
               />
@@ -2220,12 +2233,12 @@ export class AnimationStudio extends LitElement {
               .query=${this._presetQuery}
               .hass=${this.hass}
               .lookup=${this._lookup}
-              .notice=${this._catalogueFailed ? 'More presets could not load. The built-in presets still work.' : ''}
+              .notice=${this._catalogueFailed ? t('More presets could not load. The built-in presets still work.') : ''}
               @preset-pick=${(e: Event) => this._pickPreset(e)}
               @preset-clear-search=${() => void this._clearPresetSearch()}
             ></mc-preset-grid>
           </div>`,
-          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>${t('Cancel')}</button>`,
         );
       }
     }

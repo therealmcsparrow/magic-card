@@ -5,6 +5,7 @@ import type { AnimationDoc } from '../model';
 import type { LayerKey, LayerView, LayersDensity } from '../../contracts/studio-layers';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import { LayerRows, layerRowStyles } from './layer-row';
+import { t, m } from '../i18n';
 
 /*
  * mc-anim-path-layers (place 'layers', path documents): the motion path and what moves along it. Not a
@@ -13,7 +14,7 @@ import { LayerRows, layerRowStyles } from './layer-row';
  * on the stage.
  */
 
-const SUBJECTS = { element: 'Element', icon: 'Icon', particles: 'Particles' } as const;
+const SUBJECTS = { element: m('Element'), icon: m('Icon'), particles: m('Particles') } as const;
 
 @customElement('mc-anim-path-layers')
 export class AnimPathLayers extends LitElement {
@@ -57,20 +58,21 @@ export class AnimPathLayers extends LitElement {
 
   private readonly _list = new LayerRows(this, {
     select: (key) => (this._sel = key),
-    nameOf: (key) => (key === 'path' ? 'Motion path' : `Moves along: ${this._subject()}`),
+    nameOf: (key) => (key === 'path' ? t('Motion path') : t('Moves along: {subject}', { subject: this._subject() })),
   });
 
   private _subject(): string {
-    return SUBJECTS[this.doc?.path?.subject ?? 'element'] ?? 'Element';
+    const mark = SUBJECTS[this.doc?.path?.subject ?? 'element'] ?? SUBJECTS.element;
+    return t(mark);
   }
 
   protected render(): TemplateResult | typeof nothing {
     const doc = this.doc;
     if (!doc || doc.kind !== 'path') return nothing;
-    if (!doc.path?.d.trim()) return html`<p class="empty-note">No motion path yet. Draw one on the stage.</p>`;
-    return html`<ul aria-label="Path layers (no stacking order)">
-      ${this._list.row({ key: 'path', name: 'Motion path', icon: 'mdi:vector-curve', selected: this._sel === 'path' })}
-      ${this._list.row({ key: 'subject', name: `Moves along: ${this._subject()}`, icon: 'mdi:arrow-right-bold-outline', selected: this._sel === 'subject' })}
+    if (!doc.path?.d.trim()) return html`<p class="empty-note">${t('No motion path yet. Draw one on the stage.')}</p>`;
+    return html`<ul aria-label=${t('Path layers (no stacking order)')}>
+      ${this._list.row({ key: 'path', name: t('Motion path'), icon: 'mdi:vector-curve', selected: this._sel === 'path' })}
+      ${this._list.row({ key: 'subject', name: t('Moves along: {subject}', { subject: this._subject() }), icon: 'mdi:arrow-right-bold-outline', selected: this._sel === 'subject' })}
     </ul>`;
   }
 }
@@ -79,7 +81,7 @@ registerPanel({
   tag: 'mc-anim-path-layers',
   place: 'layers',
   when: (doc) => doc.kind === 'path',
-  title: 'Path layers',
+  title: m('Path layers'),
   order: 10,
 });
 

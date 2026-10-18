@@ -53,6 +53,8 @@ import {
 } from './draw-utils';
 import { append as appendPoint, isSmooth, moveAnchor, remove as removePoint, serialize as serializePath, setClosed, type EditPath } from '../../path/edit';
 import { parsePath, setHandle } from './path-utils';
+import { t, m } from '../i18n';
+import { validationText } from '../validation-text';
 
 /*
  * Drawing on the icon (spec section C), two stage-tool panels:
@@ -489,7 +491,7 @@ export class AnimDrawOverlay extends LitElement {
   /** Refuse an edit of a locked shape and say so; true when refused. */
   private _refuseLocked(id: string): boolean {
     if (!this._isLocked(id)) return false;
-    this._announce = `${this._shapes.find((s) => s.id === id)?.name ?? 'Shape'} is locked. Unlock it in Layers.`;
+    this._announce = t('{name} is locked. Unlock it in Layers.', { name: this._shapes.find((s) => s.id === id)?.name ?? t('Shape') });
     return true;
   }
 
@@ -534,16 +536,16 @@ export class AnimDrawOverlay extends LitElement {
   private _commitShape(tool: DrawTool, d: string, closed: boolean): string | undefined {
     if (!this.doc || !d) return undefined;
     if (this._shapes.length >= V2_CAPS.shapes) {
-      this._announce = `At most ${V2_CAPS.shapes} shapes fit in a rig.`;
+      this._announce = t('At most {count} shapes fit in a rig.', { count: V2_CAPS.shapes });
       return undefined;
     }
     const info = TOOL_INFO[tool];
     const id = nextShapeId(rigIds(this.doc), info.base);
     const n = this._shapes.filter((s) => s.id.startsWith(`${info.base}-`)).length + 1;
-    const shape: RigShape = { id, name: `${tool === 'pen' ? 'Path' : tool === 'freehand' ? 'Stroke' : info.label} ${n}`, d, layer: drawStore.options.layer, ...newShapeStyle(drawStore.options, closed) };
+    const shape: RigShape = { id, name: `${tool === 'pen' ? t('Path') : tool === 'freehand' ? t('Stroke') : t(info.label)} ${n}`, d, layer: drawStore.options.layer, ...newShapeStyle(drawStore.options, closed) };
     const doc = addShape(this.doc, shape);
     if (!doc) return undefined;
-    this._emitDoc(doc, `Draw ${info.label.toLowerCase()}`);
+    this._emitDoc(doc, `Draw ${tool}`);
     return id;
   }
 
@@ -611,11 +613,11 @@ export class AnimDrawOverlay extends LitElement {
       case 'freehand':
       case 'motion': {
         if (tool === 'motion' && !isRigRef(this.selection.target)) {
-          this._announce = 'Select a part or shape first.';
+          this._announce = t('Select a part or shape first.');
           return;
         }
         if (tool === 'motion' && this.doc && this.layerView && isLocked(this.doc, this.layerView, this.selection.target!)) {
-          this._announce = 'That layer is locked. Unlock it in Layers.';
+          this._announce = t('That layer is locked. Unlock it in Layers.');
           return;
         }
         this._capture(e);
@@ -647,7 +649,7 @@ export class AnimDrawOverlay extends LitElement {
     const p = this._snap(v, raw, e.shiftKey);
     const r = appendPoint(pen ?? { anchors: [], closed: false }, p);
     if (r.index < 0) {
-      this._announce = 'The path has the most points it can hold.';
+      this._announce = t('The path has the most points it can hold.');
       return;
     }
     this._pen = r.path;
@@ -738,7 +740,7 @@ export class AnimDrawOverlay extends LitElement {
         const target = this._snap(v, [raw[0] + d.grab[0], raw[1] + d.grab[1]], e.shiftKey, d.id);
         const a = d.path.anchors[d.index];
         const next = d.which ? setHandle(d.path, d.index, d.which, target, isSmooth(a) && !e.altKey) : moveAnchor(d.path, d.index, target[0], target[1]);
-        this._emitDoc(updateShape(d.base, d.id, { d: serializePath(next) }), d.which ? 'Move handle' : 'Move point', true);
+        this._emitDoc(updateShape(d.base, d.id, { d: serializePath(next) }), d.which ? t('Move handle') : t('Move point'), true);
         return;
       }
       case 'pen': {
@@ -804,7 +806,7 @@ export class AnimDrawOverlay extends LitElement {
           const target = this.selection.target as TargetRef;
           const doc = setTrackPath(this.doc, target, fit.d, drawStore.options.follow);
           if (doc) this._emitDoc(doc, 'Draw motion path');
-          else this._announce = `At most ${V2_CAPS.tracks} animated targets.`;
+          else this._announce = t('At most {tracks} animated targets.', { tracks: V2_CAPS.tracks });
         }
         break;
       }
@@ -817,7 +819,7 @@ export class AnimDrawOverlay extends LitElement {
       case 'anchor':
         if (d.moved) {
           const s = this._shapes.find((x) => x.id === d.id);
-          if (s) this._emitDoc(updateShape(d.base, d.id, { d: s.d }), d.which ? 'Move handle' : 'Move point');
+          if (s) this._emitDoc(updateShape(d.base, d.id, { d: s.d }), d.which ? t('Move handle') : t('Move point'));
           // the raw samples no longer match an edited stroke: smoothing can't refit it
           if (drawStore.lastFreehand?.id === d.id) drawStore.setLastFreehand(undefined);
         }
@@ -826,7 +828,7 @@ export class AnimDrawOverlay extends LitElement {
         if (!d.ids.length) break;
         let doc = d.base;
         for (const id of d.ids) doc = removeShape(doc, id);
-        this._emitDoc(doc, d.ids.length === 1 ? 'Erase shape' : 'Erase shapes');
+        this._emitDoc(doc, d.ids.length === 1 ? t('Erase shape') : t('Erase shapes'));
         break;
       }
       case 'pen':
@@ -936,7 +938,7 @@ export class AnimDrawOverlay extends LitElement {
     const r = await readSvgFile(file);
     this._dialog ??= this.renderRoot.querySelector('mc-anim-svg-dialog') ?? undefined;
     if ('error' in r) {
-      this._announce = r.error;
+      this._announce = validationText(r.error);
       this._dialog?.openImport('', file.name);
       return;
     }
@@ -974,9 +976,9 @@ export class AnimDrawOverlay extends LitElement {
     return toCubicSubpaths(d)
       .map((s) => {
         if (!s.length) return '';
-        const m = (p: Pt) => this._toStage(v, p);
-        const st = m(s[0][0]);
-        return `M${st[0].toFixed(1)} ${st[1].toFixed(1)}${s.map((c) => `C${[c[1], c[2], c[3]].map((p) => m(p).map((n) => n.toFixed(1)).join(' ')).join(' ')}`).join('')}`;
+        const proj = (p: Pt) => this._toStage(v, p);
+        const st = proj(s[0][0]);
+        return `M${st[0].toFixed(1)} ${st[1].toFixed(1)}${s.map((c) => `C${[c[1], c[2], c[3]].map((p) => proj(p).map((n) => n.toFixed(1)).join(' ')).join(' ')}`).join('')}`;
       })
       .join('');
   }
@@ -1112,11 +1114,11 @@ export class AnimDrawOverlay extends LitElement {
 
   private _hint(): string {
     const tool = activeTool(this.selection);
-    if (this._pen) return this._pen.anchors.length < 2 ? 'Click to add the next point' : TOOL_INFO.pen.hint;
-    if (tool === 'motion' && !isRigRef(this.selection.target)) return 'Select a part or shape, then draw its motion path.';
-    if (tool === 'select' && !this._shapes.length) return 'No shapes yet: pick a drawing tool.';
+    if (this._pen) return this._pen.anchors.length < 2 ? t('Click to add the next point') : t(TOOL_INFO.pen.hint);
+    if (tool === 'motion' && !isRigRef(this.selection.target)) return t('Select a part or shape, then draw its motion path.');
+    if (tool === 'select' && !this._shapes.length) return t('No shapes yet: pick a drawing tool.');
     if (this._drag || this._selectedId) return '';
-    return TOOL_INFO[tool].hint;
+    return t(TOOL_INFO[tool].hint);
   }
 
   protected updated(): void {
@@ -1134,8 +1136,8 @@ export class AnimDrawOverlay extends LitElement {
         viewBox="0 0 ${v.w} ${v.h}"
         preserveAspectRatio="none"
         role="application"
-        aria-roledescription="drawing area"
-        aria-label=${`${TOOL_INFO[tool].label} tool. ${TOOL_INFO[tool].hint}`}
+        aria-roledescription=${t('drawing area')}
+        aria-label=${t('{label} tool. {hint}', { label: t(TOOL_INFO[tool].label), hint: t(TOOL_INFO[tool].hint) })}
         @pointerdown=${(e: PointerEvent) => this._onDown(e)}
         @pointermove=${(e: PointerEvent) => this._onMove(e)}
         @pointerup=${(e: PointerEvent) => this._onUp(e)}
@@ -1155,7 +1157,7 @@ export class AnimDrawOverlay extends LitElement {
             })()
           : nothing}
       </svg>
-      ${this._dropping ? html`<div class="drop">Drop the .svg to import it</div>` : nothing}
+      ${this._dropping ? html`<div class="drop">${t('Drop the .svg to import it')}</div>` : nothing}
       <span class="sr-only" aria-live="polite">${this._announce}</span>
       <mc-anim-svg-dialog .doc=${this.doc} .pieces=${this._pieceList} .viewBox=${this._viewBox}></mc-anim-svg-dialog>
     `;
@@ -1311,36 +1313,36 @@ export class AnimDrawToolbar extends LitElement {
     ></mc-anim-svg-dialog>`;
     if (!active) {
       return html`<button type="button" class="btn btn-secondary btn-sm open" ?disabled=${this.disabled} @click=${() => this._choose('select')}>
-          <ha-icon icon="mdi:draw-pen"></ha-icon>Draw
+          <ha-icon icon="mdi:draw-pen"></ha-icon>${t('Draw')}
         </button>
         ${dialog}`;
     }
     const canMotion = isRigRef(this.selection.target);
-    return html`<div class="bar" role="toolbar" aria-label="Drawing tools">
-        ${TOOLBAR_TOOLS.map((t) => {
-          const info = TOOL_INFO[t];
-          const off = this.disabled || (t === 'motion' && !canMotion);
+    return html`<div class="bar" role="toolbar" aria-label=${t('Drawing tools')}>
+        ${TOOLBAR_TOOLS.map((id) => {
+          const info = TOOL_INFO[id];
+          const off = this.disabled || (id === 'motion' && !canMotion);
           return html`<button
             type="button"
             class="icon-btn tool"
-            data-tool=${t}
-            aria-pressed=${tool === t ? 'true' : 'false'}
-            aria-label=${info.label}
-            title=${t === 'motion' && !canMotion ? 'Motion path: select a part or shape first' : info.label}
+            data-tool=${id}
+            aria-pressed=${tool === id ? 'true' : 'false'}
+            aria-label=${t(info.label)}
+            title=${id === 'motion' && !canMotion ? t('Motion path: select a part or shape first') : t(info.label)}
             ?disabled=${off}
-            @click=${() => this._choose(t)}
+            @click=${() => this._choose(id)}
           >
             <ha-icon icon=${info.icon}></ha-icon>
           </button>`;
         })}
         <span class="sep" aria-hidden="true"></span>
-        <button type="button" class="icon-btn import" aria-label="Import SVG" title="Import SVG" ?disabled=${this.disabled} @click=${() => this.openImport()}>
+        <button type="button" class="icon-btn import" aria-label=${t('Import SVG')} title=${t('Import SVG')} ?disabled=${this.disabled} @click=${() => this.openImport()}>
           <ha-icon icon="mdi:file-import-outline"></ha-icon>
         </button>
-        <button type="button" class="icon-btn export" aria-label="Save as icon" title="Save as icon" ?disabled=${this.disabled} @click=${() => this.openExport()}>
+        <button type="button" class="icon-btn export" aria-label=${t('Save as icon')} title=${t('Save as icon')} ?disabled=${this.disabled} @click=${() => this.openExport()}>
           <ha-icon icon="mdi:content-save-outline"></ha-icon>
         </button>
-        <button type="button" class="icon-btn done" aria-label="Stop drawing" title="Stop drawing" @click=${() => emitSelection(this, { kind: 'none' })}>
+        <button type="button" class="icon-btn done" aria-label=${t('Stop drawing')} title=${t('Stop drawing')} @click=${() => emitSelection(this, { kind: 'none' })}>
           <ha-icon icon="mdi:close"></ha-icon>
         </button>
       </div>
@@ -1351,8 +1353,8 @@ export class AnimDrawToolbar extends LitElement {
 
 // ── panels ──
 
-registerPanel({ tag: 'mc-anim-draw-overlay', place: 'stage-tool', when: drawToolActive, title: 'Drawing', order: 40 });
-registerPanel({ tag: 'mc-anim-draw-toolbar', place: 'stage-tool', when: (doc) => doc.kind === 'keyframes', title: 'Draw', order: 90, dock: 'top' });
+registerPanel({ tag: 'mc-anim-draw-overlay', place: 'stage-tool', when: drawToolActive, title: m('Drawing'), order: 40 });
+registerPanel({ tag: 'mc-anim-draw-toolbar', place: 'stage-tool', when: (doc) => doc.kind === 'keyframes', title: m('Draw'), order: 90, dock: 'top' });
 
 export { isDrawTool };
 

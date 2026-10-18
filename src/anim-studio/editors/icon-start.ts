@@ -11,6 +11,7 @@ import { iconAnimationDoc } from '../../icon-anim/icon-doc';
 import type { LibraryEntry } from '../../icon-anim/library';
 import { iconLibraryIfLoaded, loadIconLibrary, type IconLibrary } from '../icon-library-loader';
 import { standaloneHass } from '../studio-stage';
+import { t, m, type MessageId } from '../i18n';
 
 type CardElement = HTMLElement & { setConfig(c: unknown): void; hass?: unknown };
 
@@ -130,35 +131,37 @@ export class AnimIconThumb extends LitElement {
  */
 
 /** Readable HA domain names for the filter. */
-const DOMAIN_LABEL: Record<string, string> = {
-  alarm_control_panel: 'Alarm panel',
-  binary_sensor: 'Binary sensor',
-  button: 'Button',
-  calendar: 'Calendar',
-  camera: 'Camera',
-  climate: 'Climate',
-  cover: 'Cover',
-  device_tracker: 'Device tracker',
-  event: 'Event',
-  fan: 'Fan',
-  humidifier: 'Humidifier',
-  lawn_mower: 'Lawn mower',
-  light: 'Light',
-  lock: 'Lock',
-  media_player: 'Media player',
-  person: 'Person',
-  plant: 'Plant',
-  sensor: 'Sensor',
-  siren: 'Siren',
-  sun: 'Sun',
-  switch: 'Switch',
-  timer: 'Timer',
-  vacuum: 'Vacuum',
-  valve: 'Valve',
-  weather: 'Weather',
-  zone: 'Zone',
+const DOMAIN_LABEL: Record<string, MessageId> = {
+  alarm_control_panel: m('Alarm panel'),
+  binary_sensor: m('Binary sensor'),
+  button: m('Button'),
+  calendar: m('Calendar'),
+  camera: m('Camera'),
+  climate: m('Climate'),
+  cover: m('Cover'),
+  device_tracker: m('Device tracker'),
+  event: m('Event'),
+  fan: m('Fan'),
+  humidifier: m('Humidifier'),
+  lawn_mower: m('Lawn mower'),
+  light: m('Light'),
+  lock: m('Lock'),
+  media_player: m('Media player'),
+  person: m('Person'),
+  plant: m('Plant'),
+  sensor: m('Sensor'),
+  siren: m('Siren'),
+  sun: m('Sun'),
+  switch: m('Switch'),
+  timer: m('Timer'),
+  vacuum: m('Vacuum'),
+  valve: m('Valve'),
+  weather: m('Weather'),
+  zone: m('Zone'),
 };
-export const domainLabel = (d: string): string => DOMAIN_LABEL[d] ?? d.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
+/** A domain's name: Home Assistant's own (hass.localize, the word HA shows), else ours. */
+export const domainLabel = (d: string, hass?: unknown): string =>
+  (hass as { localize?: (key: string) => string } | undefined)?.localize?.(`component.${d}.title`) || (DOMAIN_LABEL[d] !== undefined ? t(DOMAIN_LABEL[d]) : null) || d.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
 
 @customElement('mc-anim-icon-start')
 export class AnimIconStart extends LitElement {
@@ -197,7 +200,7 @@ export class AnimIconStart extends LitElement {
   async start(): Promise<void> {
     const icon = this._icon.trim();
     if (!ICON_RE.test(icon)) {
-      this._error = 'Pick an icon, or type an id like mdi:bell-ring.';
+      this._error = t('Pick an icon, or type an id like mdi:bell-ring.');
       return;
     }
     this._busy = true;
@@ -207,15 +210,15 @@ export class AnimIconStart extends LitElement {
       const lib = this._lib ?? (await loadIconLibrary().catch(() => undefined));
       const g = lib?.mdiGeometry(icon) ?? (await resolveIconGeometry(icon));
       if (!g) {
-        this._error = 'This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.';
+        this._error = t('This icon could not be loaded. Check the icon id, or try again when Home Assistant is reachable.');
         return;
       }
-      const name = `${iconDisplayName(icon)} animation`;
+      const name = t('{name} animation', { name: iconDisplayName(icon) });
       // the geometry goes into the document (rig.svg): the parts stay the pieces split here, whatever
       // icon version a dashboard resolves
       const doc = iconAnimationDoc(icon, g, icon.slice(icon.indexOf(':') + 1), name, { embed: true });
       if (!doc.rig?.parts.length) {
-        this._error = 'This icon has no shapes to animate.';
+        this._error = t('This icon has no shapes to animate.');
         return;
       }
       this._emit(doc, 'icon');
@@ -233,15 +236,15 @@ export class AnimIconStart extends LitElement {
   private _renderPick(): TemplateResult {
     const picker = editorDefined('mc-icon-picker');
     return html`<section class="pick" aria-labelledby="is-pick">
-      <h3 id="is-pick">Start from an icon</h3>
-      <p class="help">The icon is split into its parts. Select a part, then give it a preset: swing, spin, draw on and more.</p>
+      <h3 id="is-pick">${t('Start from an icon')}</h3>
+      <p class="help">${t('The icon is split into its parts. Select a part, then give it a preset: swing, spin, draw on and more.')}</p>
       <div class="pick-row">
         <div class="field grow">
           ${picker
             ? html`<mc-icon-picker
                 .hass=${this.hass}
                 .value=${this._icon}
-                label="Icon"
+                label=${t('Icon')}
                 @value-changed=${(e: CustomEvent) => {
                   e.stopPropagation();
                   this._icon = String(e.detail?.value ?? '').trim();
@@ -250,7 +253,7 @@ export class AnimIconStart extends LitElement {
               ></mc-icon-picker>`
             : html`<input
                 class="input mono icon-input"
-                aria-label="Icon"
+                aria-label=${t('Icon')}
                 spellcheck="false"
                 .value=${live(this._icon)}
                 @input=${(e: Event) => {
@@ -261,7 +264,7 @@ export class AnimIconStart extends LitElement {
               />`}
         </div>
         <button type="button" class="btn btn-primary btn-sm start" ?disabled=${this._busy} @click=${() => void this.start()}>
-          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? 'Splitting…' : 'Split and start'}
+          <ha-icon icon="mdi:scissors-cutting"></ha-icon>${this._busy ? t('Splitting…') : t('Split and start')}
         </button>
       </div>
       ${this._error ? html`<p class="help error" role="alert">${this._error}</p>` : nothing}
@@ -271,16 +274,16 @@ export class AnimIconStart extends LitElement {
   private _renderLibrary(): TemplateResult {
     const lib = this._lib;
     const head = html`<div class="lib-head">
-      <h3 id="is-lib">Or start from the icon library</h3>
+      <h3 id="is-lib">${t('Or start from the icon library')}</h3>
       ${lib ? html`<span class="chip is-count">${lib.ICON_LIBRARY.length}</span>` : nothing}
     </div>`;
     if (!lib)
       return html`<section class="lib" aria-labelledby="is-lib">
         ${head}
         ${this._libFailed
-          ? html`<p class="help error lib-error" role="alert">The icon library could not be loaded. Check your connection, then try again.</p>
-              <div><button type="button" class="btn btn-secondary btn-sm lib-retry" @click=${() => void this._loadLibrary()}><ha-icon icon="mdi:refresh"></ha-icon>Try again</button></div>`
-          : html`<p class="help lib-loading" role="status">Loading icon library…</p>`}
+          ? html`<p class="help error lib-error" role="alert">${t('The icon library could not be loaded. Check your connection, then try again.')}</p>
+              <div><button type="button" class="btn btn-secondary btn-sm lib-retry" @click=${() => void this._loadLibrary()}><ha-icon icon="mdi:refresh"></ha-icon>${t('Try again')}</button></div>`
+          : html`<p class="help lib-loading" role="status">${t('Loading icon library…')}</p>`}
       </section>`;
     const shown = lib.searchLibrary(this._query, this._domain || undefined);
     return html`<section class="lib" aria-labelledby="is-lib">
@@ -291,15 +294,15 @@ export class AnimIconStart extends LitElement {
           <input
             class="input lib-search"
             type="search"
-            placeholder="Search icons"
-            aria-label="Search the icon library"
+            placeholder=${t('Search icons')}
+            aria-label=${t('Search the icon library')}
             .value=${live(this._query)}
             @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
           />
         </div>
-        <select class="input domain" aria-label="Domain" .value=${live(this._domain)} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
-          <option value="">All domains</option>
-          ${[...lib.LIBRARY_DOMAINS].sort((a, b) => domainLabel(a).localeCompare(domainLabel(b))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainLabel(d)}</option>`)}
+        <select class="input domain" aria-label=${t('Domain')} .value=${live(this._domain)} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
+          <option value="">${t('All domains')}</option>
+          ${[...lib.LIBRARY_DOMAINS].sort((a, b) => domainLabel(a, this.hass).localeCompare(domainLabel(b, this.hass))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainLabel(d, this.hass)}</option>`)}
         </select>
       </div>
       ${shown.length
@@ -309,12 +312,12 @@ export class AnimIconStart extends LitElement {
                 <button type="button" class="entry" data-id=${e.id} title="${e.name} (${e.icon})" @click=${() => this._emit(e.build(), 'library')}>
                   <mc-anim-icon-thumb .entry=${e} .hass=${this.hass}></mc-anim-icon-thumb>
                   <span class="nm">${e.name}</span>
-                  <span class="dm">${domainLabel(e.domain)}</span>
+                  <span class="dm">${domainLabel(e.domain, this.hass)}</span>
                 </button>
               </li>`,
             )}
           </ul>`
-        : html`<p class="help no-results">No icon animations match "${this._query}".</p>`}
+        : html`<p class="help no-results">${t('No icon animations match "{query}".', { query: this._query })}</p>`}
     </section>`;
   }
 

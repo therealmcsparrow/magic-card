@@ -5,6 +5,7 @@ import { editorSystem } from '../../css/editor-system';
 import type { UiWindowElement } from '../../contracts/ui-kit';
 import { seg } from '../../ui-kit/templates/choice';
 import { deepActive, studioWindow } from '../window';
+import { validationText } from '../validation-text';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../../icons/svg-sanitize';
 import type { AnimationDoc } from '../model';
 import { V2_CAPS, type RigShape } from '../model-v2';
@@ -12,6 +13,7 @@ import { checkExportSvg, exportRigSvg, importSvgFile, rigFromSvgIcon, svgFileNam
 import { addShape, docSizeError, isFilled, isStroked, paintOrder, rigIds } from './draw-utils';
 import { ANIMATED_SVG_WARN_BYTES, animatedSvgFileName, checkAnimatedSvg, exportAnimatedSvg, geometryFromPieces } from '../../icon-anim/animated-svg';
 import { bakedParticlesSvg } from './particles-utils';
+import { t } from '../i18n';
 
 /*
  * The own-icon dialog of the drawing tools (a kit <mc-ui-window>: a modal <dialog> in the top layer
@@ -22,7 +24,7 @@ import { bakedParticlesSvg } from './particles-utils';
  * A particles document exports only as an animated SVG: its baked loop (particles-v2 bakedSvg).
  */
 
-const kb = (n: number): string => `${(n / 1024).toFixed(n < 10240 ? 1 : 0)} KB`;
+const kb = (n: number): string => t('{size} KB', { size: (n / 1024).toFixed(n < 10240 ? 1 : 0) });
 const bytes = (s: string): number => new TextEncoder().encode(s).length;
 
 /**
@@ -69,12 +71,12 @@ export function downloadText(text: string, filename: string, type = 'image/svg+x
 
 /** Read an .svg File (size checked first). */
 export async function readSvgFile(file: File): Promise<{ text: string } | { error: string }> {
-  if (file.size > SVG_MAX_BYTES) return { error: 'The SVG is larger than 32 KB.' };
-  if (!/\.svg$/i.test(file.name) && file.type && file.type !== 'image/svg+xml') return { error: 'Choose an .svg file.' };
+  if (file.size > SVG_MAX_BYTES) return { error: t('The SVG is larger than 32 KB.') };
+  if (!/\.svg$/i.test(file.name) && file.type && file.type !== 'image/svg+xml') return { error: t('Choose an .svg file.') };
   try {
     return { text: await file.text() };
   } catch {
-    return { error: 'The file could not be read.' };
+    return { error: t('The file could not be read.') };
   }
 }
 
@@ -322,7 +324,7 @@ export class AnimSvgDialog extends LitElement {
       : this._isParticles
         ? bakedParticlesSvg(this.doc)
         : exportAnimatedSvg(this.doc, geometryFromPieces(this.pieces, this.viewBox), { smil: this._smil, ...(this._color ? { color: this._color } : {}) });
-    const error = r.svg ? checkAnimatedSvg(r.svg) : (r.warnings[0] ?? 'Nothing to export yet.');
+    const error = r.svg ? checkAnimatedSvg(r.svg) : (r.warnings[0] ?? t('Nothing to export yet.'));
     const warnings = r.svg ? r.warnings : r.warnings.slice(1);
     // an <img> plays the file as it is, isolated from the page (scripts never run in an image)
     // the file is currentColor (black in an image): the preview shows it in the theme's icon colour
@@ -347,7 +349,7 @@ export class AnimSvgDialog extends LitElement {
       this._status = done;
     } else {
       this._manual = { label, text };
-      this._status = 'Copy failed: select the text below and copy it';
+      this._status = t('Copy failed: select the text below and copy it');
     }
   }
 
@@ -402,7 +404,7 @@ export class AnimSvgDialog extends LitElement {
   private async _takeFile(file: File): Promise<void> {
     const r = await readSvgFile(file);
     if ('error' in r) {
-      this._error = r.error;
+      this._error = validationText(r.error);
       this._text = '';
       return;
     }
@@ -423,7 +425,7 @@ export class AnimSvgDialog extends LitElement {
     let doc: AnimationDoc | undefined = this.doc;
     for (const s of shapes) doc = doc && addShape(doc, s);
     if (!doc) {
-      this._error = `At most ${V2_CAPS.shapes} shapes fit in a rig.`;
+      this._error = t('At most {shapes} shapes fit in a rig.', { shapes: V2_CAPS.shapes });
       return;
     }
     const big = docSizeError(doc);
@@ -431,7 +433,7 @@ export class AnimSvgDialog extends LitElement {
       this._error = big;
       return;
     }
-    this._emit(doc, shapes.length === 1 ? 'Import shape' : 'Import shapes');
+    this._emit(doc, shapes.length === 1 ? t('Import shape') : t('Import shapes'));
     this.close();
   }
 
@@ -439,7 +441,7 @@ export class AnimSvgDialog extends LitElement {
     if (!this.doc) return;
     const r = rigFromSvgIcon(this.doc, this._text, this.viewBox);
     if ('error' in r) {
-      this._error = r.error;
+      this._error = validationText(r.error);
       return;
     }
     const big = docSizeError(r);
@@ -466,15 +468,15 @@ export class AnimSvgDialog extends LitElement {
 
   private _renderFormat(): TemplateResult {
     const opts: Array<['still' | 'animated', string, string]> = [
-      ['still', 'Icon', 'mdi:image-outline'],
-      ['animated', 'Animated SVG', 'mdi:motion-play-outline'],
+      ['still', t('Icon'), 'mdi:image-outline'],
+      ['animated', t('Animated SVG'), 'mdi:motion-play-outline'],
     ];
     const pick = (id: 'still' | 'animated') => {
       this._format = id;
       this._status = '';
       this._manual = undefined;
     };
-    return html`<div class="format">${seg({ role: 'radiogroup', label: 'What to save', full: true, value: this._format, items: opts.map(([value, label, icon]) => ({ value, label, icon })), onChange: pick })}</div>`;
+    return html`<div class="format">${seg({ role: 'radiogroup', label: t('What to save'), full: true, value: this._format, items: opts.map(([value, label, icon]) => ({ value, label, icon })), onChange: pick })}</div>`;
   }
 
   private _renderManual(): TemplateResult | typeof nothing {
@@ -495,23 +497,23 @@ export class AnimSvgDialog extends LitElement {
         <div class="top">
           <div class="preview">${url ? html`<img class="anim" src=${url} alt="" />` : html`<ha-icon icon="mdi:image-off-outline"></ha-icon>`}</div>
           <div class="facts">
-            <span>${this._isParticles ? 'A looping SVG file of the baked particles' : 'A looping SVG file of the animation'}</span>
-            <span class="muted">${kb(size)}${size > ANIMATED_SVG_WARN_BYTES ? ', large' : ''}</span>
+            <span>${this._isParticles ? t('A looping SVG file of the baked particles') : t('A looping SVG file of the animation')}</span>
+            <span class="muted">${kb(size)}${size > ANIMATED_SVG_WARN_BYTES ? t(', large') : ''}</span>
             ${this._isParticles
-              ? html`<span class="muted">Browsers play its CSS keyframes.</span>`
-              : html`<span class="muted">Browsers play its CSS keyframes; the SMIL copy plays where CSS animation is missing.</span>
+              ? html`<span class="muted">${t('Browsers play its CSS keyframes.')}</span>`
+              : html`<span class="muted">${t('Browsers play its CSS keyframes; the SMIL copy plays where CSS animation is missing.')}</span>
             <div class="color-row">
               <label class="check">
                 <input type="color" class="color" .value=${this._color || '#03a9f4'} @input=${(e: Event) => (this._color = (e.target as HTMLInputElement).value)} />
-                ${this._color ? html`Colour <span class="mono">${this._color}</span>` : 'Colour: currentColor'}
+                ${this._color ? html`${t('Colour')} <span class="mono">${this._color}</span>` : t('Colour: currentColor')}
               </label>
               ${this._color
-                ? html`<button type="button" class="btn btn-text btn-sm color-reset" @click=${() => (this._color = '')}>Use currentColor</button>`
-                : html`<span class="muted">Black in an &lt;img&gt;, the text colour inline.</span>`}
+                ? html`<button type="button" class="btn btn-text btn-sm color-reset" @click=${() => (this._color = '')}>${t('Use currentColor')}</button>`
+                : html`<span class="muted">${t('Black in an <img>, the text colour inline.')}</span>`}
             </div>
             <label class="check">
               <input type="checkbox" class="smil" .checked=${this._smil} @change=${(e: Event) => (this._smil = (e.target as HTMLInputElement).checked)} />
-              SMIL fallback
+              ${t('SMIL fallback')}
             </label>
             `}
             ${warnings.length ? html`<ul class="warn">${warnings.map((w) => html`<li>${w}</li>`)}</ul>` : nothing}
@@ -519,15 +521,15 @@ export class AnimSvgDialog extends LitElement {
           </div>
         </div>
         <div class="field">
-          <div class="field-head"><label for="svg-anim-code">Animated SVG</label></div>
+          <div class="field-head"><label for="svg-anim-code">${t('Animated SVG')}</label></div>
           <textarea id="svg-anim-code" class="code" readonly .value=${text}></textarea>
         </div>
         ${this._renderManual()}
       </div>
       <div slot="footer" class="foot">
         <p class="status grow" role="status" aria-live="polite">${this._status}</p>
-        <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, 'SVG to copy', 'Animated SVG copied')}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>Copy SVG
+        <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, t('SVG to copy'), t('Animated SVG copied'))}>
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy SVG')}
         </button>
         <button
           type="button"
@@ -535,10 +537,10 @@ export class AnimSvgDialog extends LitElement {
           ?disabled=${!!error}
           @click=${() => {
             downloadText(text, animatedSvgFileName(this.doc?.name ?? ''));
-            this._status = 'Download started';
+            this._status = t('Download started');
           }}
         >
-          <ha-icon icon="mdi:tray-arrow-down"></ha-icon>Download .svg
+          <ha-icon icon="mdi:tray-arrow-down"></ha-icon>${t('Download .svg')}
         </button>
       </div>
     `;
@@ -557,12 +559,12 @@ export class AnimSvgDialog extends LitElement {
         <div class="top">
           <div class="preview">${clean ? unsafeSVG(clean) : html`<ha-icon icon="mdi:image-off-outline"></ha-icon>`}</div>
           <div class="facts">
-            <span>${parts} ${parts === 1 ? 'part' : 'parts'}, ${shapes} ${shapes === 1 ? 'shape' : 'shapes'}${this.pieces.length ? '' : ', no icon'}</span>
-            <span class="muted">${kb(size)} of 32 KB</span>
-            <div class="meter ${size > SVG_MAX_BYTES ? 'over' : ''}" role="meter" aria-label="Size" aria-valuemin="0" aria-valuemax=${SVG_MAX_BYTES} aria-valuenow=${size}>
+            <span>${parts} ${parts === 1 ? 'part' : 'parts'}, ${shapes} ${shapes === 1 ? 'shape' : 'shapes'}${this.pieces.length ? '' : t(', no icon')}</span>
+            <span class="muted">${t('{kb} of 32 KB', { kb: kb(size) })}</span>
+            <div class="meter ${size > SVG_MAX_BYTES ? 'over' : ''}" role="meter" aria-label=${t('Size')} aria-valuemin="0" aria-valuemax=${SVG_MAX_BYTES} aria-valuenow=${size}>
               <i style="width:${pct}%"></i>
             </div>
-            <span class="muted">The icon at rest, without animation. Ids stay on each part and shape.</span>
+            <span class="muted">${t('The icon at rest, without animation. Ids stay on each part and shape.')}</span>
             ${error ? html`<p class="error" role="alert">${error}</p>` : nothing}
           </div>
         </div>
@@ -579,23 +581,23 @@ export class AnimSvgDialog extends LitElement {
       </div>
       <div slot="footer" class="foot">
         <p class="status grow" role="status" aria-live="polite">${this._status}</p>
-        <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, 'SVG to copy', 'SVG copied')}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>Copy SVG
+        <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, t('SVG to copy'), t('SVG copied'))}>
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy SVG')}
         </button>
         <button type="button" class="btn btn-secondary download" ?disabled=${!!error} @click=${() => {
           downloadText(text, svgFileName(this.doc?.name ?? ''));
-          this._status = 'Download started';
+          this._status = t('Download started');
         }}>
-          <ha-icon icon="mdi:tray-arrow-down"></ha-icon>Download .svg
+          <ha-icon icon="mdi:tray-arrow-down"></ha-icon>${t('Download .svg')}
         </button>
         <button
           type="button"
           class="btn btn-primary use"
           ?disabled=${!!error}
-          title="Copies icon: svg and the SVG as card YAML"
-          @click=${() => this._copy(useInCardYaml(text), 'Card YAML to copy', 'Card YAML copied: paste it into a module')}
+          title=${t('Copies icon: svg and the SVG as card YAML')}
+          @click=${() => this._copy(useInCardYaml(text), t('Card YAML to copy'), t('Card YAML copied: paste it into a module'))}
         >
-          <ha-icon icon="mdi:card-text-outline"></ha-icon>Use in card
+          <ha-icon icon="mdi:card-text-outline"></ha-icon>${t('Use in card')}
         </button>
       </div>
     `;
@@ -604,7 +606,7 @@ export class AnimSvgDialog extends LitElement {
   private _renderImport(): TemplateResult {
     const r = this._imported();
     const shapes = r && !('error' in r) ? r : undefined;
-    const error = this._error || (r && 'error' in r ? r.error : '');
+    const error = this._error || (r && 'error' in r ? validationText(r.error) : '');
     return html`
       <div class="body">
         ${this._text
@@ -612,8 +614,8 @@ export class AnimSvgDialog extends LitElement {
               <div class="preview">${shapes ? this._shapesPreview(shapes, this.viewBox) : html`<ha-icon icon="mdi:image-off-outline"></ha-icon>`}</div>
               <div class="facts">
                 <span>${this._fileName || 'SVG'}</span>
-                ${shapes ? html`<span class="muted">${shapes.length} ${shapes.length === 1 ? 'shape' : 'shapes'}, scaled into the icon</span>` : nothing}
-                <span class="muted">Add the drawing as shapes over the icon, or use it as the icon itself.</span>
+                ${shapes ? html`<span class="muted">${t('{count, plural, one {# shape} other {# shapes}}, scaled into the icon', { count: shapes.length })}</span>` : nothing}
+                <span class="muted">${t('Add the drawing as shapes over the icon, or use it as the icon itself.')}</span>
                 ${error ? html`<p class="error" role="alert">${error}</p>` : nothing}
               </div>
             </div>`
@@ -627,21 +629,21 @@ export class AnimSvgDialog extends LitElement {
               @drop=${(e: DragEvent) => this._drop(e)}
             >
               <ha-icon icon="mdi:file-upload-outline"></ha-icon>
-              <span>Drop an .svg file here</span>
+              <span>${t('Drop an .svg file here')}</span>
               <label class="btn btn-secondary">
-                Choose file
+                ${t('Choose file')}
                 <input type="file" accept=".svg,image/svg+xml" class="sr-only" @change=${(e: Event) => this._pick(e)} />
               </label>
               ${error ? html`<p class="error" role="alert">${error}</p>` : nothing}
             </div>`}
       </div>
       <div slot="footer" class="foot">
-        ${this._text ? html`<button type="button" class="btn btn-text again" @click=${() => (this._text = '')}>Choose another</button><span class="grow"></span>` : html`<span class="grow"></span>`}
+        ${this._text ? html`<button type="button" class="btn btn-text again" @click=${() => (this._text = '')}>${t('Choose another')}</button><span class="grow"></span>` : html`<span class="grow"></span>`}
         <button type="button" class="btn btn-secondary use-icon" ?disabled=${!this._text || !!this._sourceError()} @click=${() => this._useAsIcon()}>
-          <ha-icon icon="mdi:star-four-points-outline"></ha-icon>Use as icon
+          <ha-icon icon="mdi:star-four-points-outline"></ha-icon>${t('Use as icon')}
         </button>
         <button type="button" class="btn btn-primary add" ?disabled=${!shapes} @click=${() => shapes && this._addShapes(shapes)}>
-          <ha-icon icon="mdi:shape-plus-outline"></ha-icon>Add as shapes
+          <ha-icon icon="mdi:shape-plus-outline"></ha-icon>${t('Add as shapes')}
         </button>
       </div>
     `;
@@ -649,7 +651,7 @@ export class AnimSvgDialog extends LitElement {
 
   protected render(): TemplateResult | typeof nothing {
     if (!this._open) return nothing;
-    const title = this._mode === 'import' ? 'Import SVG' : this._isParticles ? 'Animated SVG' : 'Save as icon';
+    const title = this._mode === 'import' ? t('Import SVG') : this._isParticles ? t('Animated SVG') : t('Save as icon');
     return studioWindow(
       {
         heading: title,

@@ -6,6 +6,8 @@ import './compile-v2';
 import { tileModule, type PreviewTile } from './tiles';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { ANIMATION_CAPS, ANIMATION_ID_RE, CUSTOM_PREFIX, validateAnimationDoc, type AnimationDoc, type AnimationKind, type FieldError } from './model';
+import { t, m, type MessageId } from './i18n';
+import { validationText } from './validation-text';
 
 export type { PreviewTile } from './tiles';
 
@@ -14,11 +16,11 @@ export type { PreviewTile } from './tiles';
  * config of the preview card. No DOM.
  */
 
-export const KIND_LABEL: Record<AnimationKind, string> = {
-  keyframes: 'Keyframes',
-  particles: 'Particles',
-  path: 'Path',
-  sequence: 'Sequence',
+export const KIND_LABEL: Record<AnimationKind, MessageId> = {
+  keyframes: m('Keyframes'),
+  particles: m('Particles'),
+  path: m('Path'),
+  sequence: m('Sequence'),
 };
 
 export const KIND_ICON: Record<AnimationKind, string> = {
@@ -134,10 +136,10 @@ export function uniqueId(base: string, taken: (id: string) => boolean): string {
 
 /** `name`, or `name (copy)`, `name (copy 2)`... : a name not in `names`. */
 export function copyName(name: string, names: Set<string>): string {
-  const base = `${name} (copy)`;
+  const base = t('{name} (copy)', { name });
   if (!names.has(base)) return base.slice(0, ANIMATION_CAPS.name);
   for (let n = 2; ; n++) {
-    const next = `${name} (copy ${n})`;
+    const next = t('{name} (copy {n})', { name, n });
     if (!names.has(next)) return next.slice(0, ANIMATION_CAPS.name);
   }
 }
@@ -147,7 +149,7 @@ export function filterDocs(docs: AnimationDoc[], query: string): AnimationDoc[] 
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return docs;
   return docs.filter((d) => {
-    const hay = `${d.name} ${d.id} ${d.kind} ${KIND_LABEL[d.kind]}`.toLowerCase();
+    const hay = `${d.name} ${d.id} ${d.kind} ${t(KIND_LABEL[d.kind])}`.toLowerCase();
     return words.every((w) => hay.includes(w));
   });
 }
@@ -186,10 +188,10 @@ export const IMPORT_MAX_CHARS = 1024 * 1024;
  * `room` documents come back (the space left in the library); the rest is an error.
  */
 export function parseImport(text: string, taken: (id: string) => boolean, room: number = ANIMATION_CAPS.docs): ImportResult {
-  if (text.length > IMPORT_MAX_CHARS) return { docs: [], errors: [{ path: '', message: 'The YAML is too large to import (over 1 MB).' }], renamed: [] };
+  if (text.length > IMPORT_MAX_CHARS) return { docs: [], errors: [{ path: '', message: t('The YAML is too large to import (over 1 MB).') }], renamed: [] };
   const raw = fromYaml<unknown>(text);
   if (raw === null || raw === undefined || typeof raw !== 'object') {
-    return { docs: [], errors: [{ path: '', message: text.trim() ? 'Not valid YAML.' : 'Paste or load some YAML first.' }], renamed: [] };
+    return { docs: [], errors: [{ path: '', message: text.trim() ? t('Not valid YAML.') : t('Paste or load some YAML first.') }], renamed: [] };
   }
   let items: unknown[];
   const obj = raw as Record<string, unknown>;
@@ -197,14 +199,14 @@ export function parseImport(text: string, taken: (id: string) => boolean, room: 
   else if ('custom_animations' in obj) items = listOf(obj.custom_animations);
   else if ('kind' in obj || 'keyframes' in obj) items = [raw];
   else items = listOf(raw);
-  if (!items.length) return { docs: [], errors: [{ path: '', message: 'No animations found.' }], renamed: [] };
+  if (!items.length) return { docs: [], errors: [{ path: '', message: t('No animations found.') }], renamed: [] };
 
   const errors: FieldError[] = [];
   const valid: AnimationDoc[] = [];
   items.forEach((item, i) => {
     const r = validateAnimationDoc(item);
     if (r.ok) valid.push(r.doc);
-    else errors.push(...r.errors.map((e) => ({ path: `[${i}]${e.path ? `.${e.path}` : ''}`, message: e.message })));
+    else errors.push(...r.errors.map((e) => ({ path: `[${i}]${e.path ? `.${e.path}` : ''}`, message: validationText(e.message) })));
   });
   const fit = Math.max(0, room);
   if (valid.length > fit) {
@@ -212,8 +214,8 @@ export function parseImport(text: string, taken: (id: string) => boolean, room: 
     errors.push({
       path: '',
       message: fit
-        ? `The library holds at most ${cap} animations: only ${fit} more fit, ${valid.length - fit} were not imported.`
-        : `The library is full (${cap} animations): nothing was imported.`,
+        ? t('The library holds at most {cap} animations: only {fit} more fit, {skipped} were not imported.', { cap, fit, skipped: valid.length - fit })
+        : t('The library is full ({cap} animations): nothing was imported.', { cap }),
     });
     valid.length = fit;
   }
@@ -347,8 +349,8 @@ export function importDocs(items: TransferItem<'animation'>[], room: number): { 
   const errors: string[] = [];
   for (const it of items) {
     const r = validateAnimationDoc({ ...it.data, id: it.id, name: it.name });
-    if (!r.ok) errors.push(`${it.id}: ${r.errors[0]?.message ?? 'not valid'}`);
-    else if (docs.length >= Math.max(0, room)) errors.push(`${it.id}: the library is full`);
+    if (!r.ok) errors.push(`${it.id}: ${r.errors[0] ? validationText(r.errors[0].message) : t('not valid')}`);
+    else if (docs.length >= Math.max(0, room)) errors.push(t('{id}: the library is full', { id: it.id }));
     else docs.push(r.doc);
   }
   return { docs, errors };

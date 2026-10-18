@@ -31,6 +31,7 @@ import {
   upsertInlineDoc,
   withoutQuickEntry,
 } from './quick-model';
+import { t, m } from '../../../icon-anim/i18n';
 
 /*
  * "This icon" animations follow their module's icon (lazy chunk; the card editor's state manager
@@ -218,7 +219,7 @@ export function followsIcon(
 
 /** The animator's name for a split of `icon`. */
 export const ownName = (icon: string): string =>
-  icon.startsWith(OWN) ? 'Animated drawing' : `Animated ${icon.slice(icon.indexOf(':') + 1).replace(/-/g, ' ')}`;
+  icon.startsWith(OWN) ? t('Animated drawing') : t('Animated {name}', { name: icon.slice(icon.indexOf(':') + 1).replace(/-/g, ' ') });
 
 type Box = [number, number, number, number];
 
@@ -287,7 +288,7 @@ export function repointDoc(
     let n = i + 1;
     while (ids.has(`part-${n}`)) n++;
     ids.add(`part-${n}`);
-    parts.push({ id: `part-${n}`, name: `Part ${n}`, from: [i] });
+    parts.push({ id: `part-${n}`, name: t('Part {n}', { n }), from: [i] });
   }
   // a track's pivot (viewBox px) moves with its target's box
   const oldFrom = new Map<string, number[]>([
@@ -328,9 +329,9 @@ export function repointDoc(
 
 /** The note for the user after a document followed its module's icon. */
 export function followNote(icon: string, removed: number): string {
-  const head = `The icon animation now uses the new icon (${icon}).`;
+  const head = t('The icon animation now uses the new icon ({icon}).', { icon });
   if (!removed) return head;
-  return `${head} ${removed} part animation${removed === 1 ? ' was' : 's were'} removed because the new icon has fewer parts.`;
+  return `${head} ${t('{count, plural, one {# part animation was} other {# part animations were}} removed because the new icon has fewer parts.', { count: removed })}`;
 }
 
 /** Notes by document id until the animator shows them (once). */
@@ -495,7 +496,7 @@ async function shapeOf(h: FollowHost, ref: string, config?: MagicCardConfig): Pr
 }
 
 /** The note after a library animation went with its module's old icon. */
-export const DROP_NOTE = "The animated icon was removed because the module's icon changed.";
+export const DROP_NOTE = m("The animated icon was removed because the module's icon changed.");
 
 /**
  * One module's library animation goes once its icon settled on another (nothing when it went back
@@ -542,7 +543,7 @@ async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean |
   for (const a of LIVE) a.followed();
   document
     .querySelector('home-assistant')
-    ?.dispatchEvent(new CustomEvent('hass-notification', { detail: { message: DROP_NOTE } }));
+    ?.dispatchEvent(new CustomEvent('hass-notification', { detail: { message: t(DROP_NOTE) } }));
 }
 
 /**

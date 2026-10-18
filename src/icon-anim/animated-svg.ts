@@ -8,6 +8,7 @@ import type { IconGeometry } from '../icons/icon-source';
 import { splitIcon, type SplitPiece } from '../icons/icon-split';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { EASINGS } from '../utils/animation-presets';
+import { t } from '../anim-studio/i18n';
 
 /*
  * Animated SVG export (icon animator core): an icon animation as a standalone, looping SVG file.
@@ -344,15 +345,15 @@ export function animatedSvgFileName(name: string): string {
 export function exportAnimatedSvg(doc: AnimationDoc, geometry: IconGeometry, opts: AnimatedSvgOptions = {}): AnimatedSvgResult {
   const warnings: string[] = [];
   const r = validateAnimationDoc(doc, { v2: 'lenient' });
-  if (!r.ok) return { svg: '', warnings: [`The animation is not valid: ${r.errors[0]?.message ?? 'unknown error'}`] };
+  if (!r.ok) return { svg: '', warnings: [t('The animation is not valid: {message}', { message: r.errors[0]?.message ?? t('unknown error') })] };
   const d = r.doc;
-  if (d.kind !== 'keyframes') return { svg: '', warnings: ['Only keyframe animations export as an animated SVG.'] };
-  if (d.clips?.length) warnings.push('States (clips) are not exported: the file plays the animation’s own timeline.');
-  if (d.bindings?.length) warnings.push('Value bindings are not exported: the file plays at the drawn values.');
-  if (d.iterations !== 'infinite') warnings.push('The file loops: the repeat count is not exported.');
-  if (d.tracks?.some((t) => NOT_EXPORTED_TARGETS.has(t.target))) warnings.push('Tracks of card parts (name, state, background) are not exported.');
+  if (d.kind !== 'keyframes') return { svg: '', warnings: [t('Only keyframe animations export as an animated SVG.')] };
+  if (d.clips?.length) warnings.push(t('States (clips) are not exported: the file plays the animation’s own timeline.'));
+  if (d.bindings?.length) warnings.push(t('Value bindings are not exported: the file plays at the drawn values.'));
+  if (d.iterations !== 'infinite') warnings.push(t('The file loops: the repeat count is not exported.'));
+  if (d.tracks?.some((t) => NOT_EXPORTED_TARGETS.has(t.target))) warnings.push(t('Tracks of card parts (name, state, background) are not exported.'));
   const smil = opts.smil !== false;
-  if (smil && d.direction && d.direction !== 'normal') warnings.push('The SMIL fallback plays the animation forwards only.');
+  if (smil && d.direction && d.direction !== 'normal') warnings.push(t('The SMIL fallback plays the animation forwards only.'));
   if (smil && [...(d.keyframes ?? []), ...(d.tracks ?? []).flatMap((t) => t.keyframes)].some((k) => k.transform?.axis)) warnings.push('3D turns play flat in the SMIL fallback.');
 
   const viewBox = geometry.viewBox || '0 0 24 24';
@@ -366,12 +367,12 @@ export function exportAnimatedSvg(doc: AnimationDoc, geometry: IconGeometry, opt
     // no parts: the whole icon at rest
     body = `<g class="rig">${pieces.map((pc) => `<path class="${pc.secondary ? 'secondary' : 'primary'}" d="${esc(pc.d)}"${pc.evenodd ? ' fill-rule="evenodd"' : ''}></path>`).join('')}</g>`;
   }
-  if (!pieces.length && !rig.shapes?.length) return { svg: '', warnings: [...warnings, 'The icon has no shapes to export.'] };
+  if (!pieces.length && !rig.shapes?.length) return { svg: '', warnings: [...warnings, t('The icon has no shapes to export.')] };
 
   const dur = d.duration;
   const time = `${n4(dur)}s ${easingCss(d.easing)} 0s infinite ${d.direction ?? 'normal'}`;
   const color = opts.color ? safeCssValue(opts.color, 'color') : undefined;
-  if (opts.color && !color) warnings.push('The colour is not a valid CSS colour: the file uses currentColor.');
+  if (opts.color && !color) warnings.push(t('The colour is not a valid CSS colour: the file uses currentColor.'));
   const plain = color ? (exportPaint(color) ?? 'currentColor') : undefined;
 
   // every rule is scoped by a class of this file (its content's hash): several exports inline in
@@ -431,7 +432,7 @@ export function exportAnimatedSvg(doc: AnimationDoc, geometry: IconGeometry, opt
   }
   out.push('</svg>');
   const svg = out.join('\n');
-  if (bytes(svg) > ANIMATED_SVG_WARN_BYTES) warnings.push(`The file is ${Math.round(bytes(svg) / 1024)} KB, larger than 256 KB.`);
+  if (bytes(svg) > ANIMATED_SVG_WARN_BYTES) warnings.push(t('The file is {size} KB, larger than 256 KB.', { size: Math.round(bytes(svg) / 1024) }));
   return { svg, warnings };
 }
 
@@ -443,17 +444,17 @@ const ALLOWED = new Set(['svg', 'g', 'path', 'title', 'style', 'animate', 'anima
  * @import, entities); and its drawing passes the own-icon sanitiser with shapes left.
  */
 export function checkAnimatedSvg(svg: string): string | undefined {
-  if (/<script|<foreignobject|<iframe|<image|<use|<!entity|<!doctype/i.test(svg)) return 'Contains an element that runs or fetches.';
-  if (/\son[a-z]+\s*=/i.test(svg)) return 'Contains an event handler.';
-  if (/\shref\s*=|xlink:/i.test(svg)) return 'Contains a link.';
-  if (/url\(\s*['"]?(?!#)/i.test(svg) || /@import|javascript:|expression\s*\(/i.test(svg)) return 'Contains an external reference.';
-  for (const m of svg.matchAll(/<([a-zA-Z][\w-]*)/g)) if (!ALLOWED.has(m[1].toLowerCase())) return `Unexpected element <${m[1]}>.`;
+  if (/<script|<foreignobject|<iframe|<image|<use|<!entity|<!doctype/i.test(svg)) return t('Contains an element that runs or fetches.');
+  if (/\son[a-z]+\s*=/i.test(svg)) return t('Contains an event handler.');
+  if (/\shref\s*=|xlink:/i.test(svg)) return t('Contains a link.');
+  if (/url\(\s*['"]?(?!#)/i.test(svg) || /@import|javascript:|expression\s*\(/i.test(svg)) return t('Contains an external reference.');
+  for (const m of svg.matchAll(/<([a-zA-Z][\w-]*)/g)) if (!ALLOWED.has(m[1].toLowerCase())) return t('Unexpected element <{element}>.', { element: m[1] });
   // the drawing as the sanitiser sees it (no style, no animation); a large file: its CSS copy
   let drawing = svg.replace(/<style>[\s\S]*?<\/style>/g, '').replace(/<animate(Transform)?\b[^>]*\/>/g, '');
   if (bytes(drawing) > SVG_MAX_BYTES && drawing.includes('<g class="mc-smil">')) drawing = `${drawing.slice(0, drawing.indexOf('<g class="mc-smil">'))}</svg>`;
   const s = sanitizeSvg(drawing);
   if (s.error) return s.error;
-  if (!s.paths.length && !s.strokes.length && !s.accentPaths.length) return 'Nothing is drawn.';
+  if (!s.paths.length && !s.strokes.length && !s.accentPaths.length) return t('Nothing is drawn.');
   return undefined;
 }
 

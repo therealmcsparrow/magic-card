@@ -18,6 +18,7 @@ import {
 } from './draw-store';
 import { fitFreehand } from '../../path/draw';
 import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
+import { t, tx, m, type MessageId } from '../i18n';
 
 /*
  * mc-anim-shape-inspector (place 'inspector'): the settings of a selected drawn shape (name, fill,
@@ -27,14 +28,14 @@ import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn
  * them). Every edit is one doc-change.
  */
 
-const CAPS: Array<{ value: NonNullable<RigShape['linecap']>; label: string }> = [
-  { value: 'round', label: 'Round' },
-  { value: 'butt', label: 'Flat' },
-  { value: 'square', label: 'Square' },
+const CAPS: Array<{ value: NonNullable<RigShape['linecap']>; label: MessageId }> = [
+  { value: 'round', label: m('Round') },
+  { value: 'butt', label: m('Flat') },
+  { value: 'square', label: m('Square') },
 ];
-const LAYERS: Array<{ value: RigShape['layer']; label: string; icon: string }> = [
-  { value: 'over', label: 'Over the icon', icon: 'mdi:arrange-bring-forward' },
-  { value: 'under', label: 'Under the icon', icon: 'mdi:arrange-send-backward' },
+const LAYERS: Array<{ value: RigShape['layer']; label: MessageId; icon: string }> = [
+  { value: 'over', label: m('Over the icon'), icon: 'mdi:arrange-bring-forward' },
+  { value: 'under', label: m('Under the icon'), icon: 'mdi:arrange-send-backward' },
 ];
 
 /** A colour picker value as a shape colour (entity colours stay `entity` / `entity N%`). */
@@ -144,7 +145,7 @@ export class AnimShapeInspector extends LitElement {
 
   // ── pieces ──
 
-  private _seg<T extends string>(label: string, options: Array<{ value: T; label: string; icon?: string }>, value: T, pick: (v: T) => void, cls = ''): TemplateResult {
+  private _seg<T extends string>(label: string, options: Array<{ value: T; label: MessageId; icon?: string }>, value: T, pick: (v: T) => void, cls = ''): TemplateResult {
     const onKey = (e: KeyboardEvent) => {
       const i = options.findIndex((o) => o.value === value);
       const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
@@ -169,7 +170,7 @@ export class AnimShapeInspector extends LitElement {
             ?disabled=${this.disabled}
             @click=${() => on || pick(o.value)}
           >
-            ${o.icon ? html`<ha-icon icon=${o.icon}></ha-icon>` : nothing}${o.label}
+            ${o.icon ? html`<ha-icon icon=${o.icon}></ha-icon>` : nothing}${t(o.label)}
           </button>`;
         })}
       </div>
@@ -243,21 +244,21 @@ export class AnimShapeInspector extends LitElement {
     set: { fill: (v: string | undefined) => void; stroke: (v: string | undefined) => void; width: (n: number) => void; cap: (c: NonNullable<RigShape['linecap']>) => void },
   ): TemplateResult {
     return html`<section class="group" aria-labelledby="h-paint">
-      <div class="group-head"><h3 id="h-paint">Paint</h3></div>
+      <div class="group-head"><h3 id="h-paint">${t('Paint')}</h3></div>
       ${p.closed
         ? html`<div class="paint">
-            ${this._switch('Fill', '', p.fill !== undefined, () => set.fill(p.fill !== undefined ? undefined : 'currentColor'), 'fill-on', p.fill !== undefined && p.stroke === undefined)}
-            ${p.fill !== undefined ? this._color('Fill colour', p.fill, (v) => set.fill(v), 'fill-color') : nothing}
+            ${this._switch(t('Fill'), '', p.fill !== undefined, () => set.fill(p.fill !== undefined ? undefined : 'currentColor'), 'fill-on', p.fill !== undefined && p.stroke === undefined)}
+            ${p.fill !== undefined ? this._color(t('Fill colour'), p.fill, (v) => set.fill(v), 'fill-color') : nothing}
           </div>`
         : nothing}
       <div class="paint">
-        ${this._switch('Stroke', p.closed ? '' : 'An open line is drawn by its stroke.', p.stroke !== undefined, () => set.stroke(p.stroke !== undefined ? undefined : 'currentColor'), 'stroke-on', !p.closed || (p.stroke !== undefined && p.fill === undefined))}
+        ${this._switch(t('Stroke'), p.closed ? '' : t('An open line is drawn by its stroke.'), p.stroke !== undefined, () => set.stroke(p.stroke !== undefined ? undefined : 'currentColor'), 'stroke-on', !p.closed || (p.stroke !== undefined && p.fill === undefined))}
         ${p.stroke !== undefined
-          ? html`${this._color('Stroke colour', p.stroke, (v) => set.stroke(v), 'stroke-color')}
+          ? html`${this._color(t('Stroke colour'), p.stroke, (v) => set.stroke(v), 'stroke-color')}
               <div class="two">
-                ${this._number('f-width', 'Stroke width (icon units)', p.width, 0.25, 100, set.width)}
+                ${this._number('f-width', t('Stroke width (icon units)'), p.width, 0.25, 100, set.width)}
               </div>
-              ${this._seg('Line ends', CAPS, p.cap, set.cap, 'caps')}`
+              ${this._seg(t('Line ends'), CAPS, p.cap, set.cap, 'caps')}`
           : nothing}
       </div>
     </section>`;
@@ -267,9 +268,9 @@ export class AnimShapeInspector extends LitElement {
   private _smoothing(onChange: (tol: number, final: boolean) => void, help: string): TemplateResult {
     const tol = drawStore.options.tolerance;
     return html`<div class="field">
-      <div class="field-head"><label for="f-tol">Smoothing</label><span class="val">${tol.toFixed(2)}</span></div>
+      <div class="field-head"><label for="f-tol">${t('Smoothing')}</label><span class="val">${tol.toFixed(2)}</span></div>
       <div class="slider">
-        <span aria-hidden="true">Detail</span>
+        <span aria-hidden="true">${t('Detail')}</span>
         <input
           id="f-tol"
           type="range"
@@ -277,12 +278,12 @@ export class AnimShapeInspector extends LitElement {
           max=${TOLERANCE_RANGE.max}
           step=${TOLERANCE_RANGE.step}
           .value=${String(tol)}
-          aria-valuetext=${`${tol.toFixed(2)} icon units`}
+          aria-valuetext=${t('{size} icon units', { size: tol.toFixed(2) })}
           ?disabled=${this.disabled}
           @input=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), false)}
           @change=${(e: Event) => onChange(Number((e.target as HTMLInputElement).value), true)}
         />
-        <span aria-hidden="true">Smooth</span>
+        <span aria-hidden="true">${t('Smooth')}</span>
       </div>
       <p class="help">${help}</p>
     </div>`;
@@ -324,9 +325,9 @@ export class AnimShapeInspector extends LitElement {
     const freehand = drawStore.lastFreehand?.id === s.id;
     return html`
       <section class="group" aria-labelledby="h-shape">
-        <div class="group-head"><h3 id="h-shape">Shape</h3><span class="id" title="Target">${target}</span></div>
+        <div class="group-head"><h3 id="h-shape">${t('Shape')}</h3><span class="id" title=${t('Target')}>${target}</span></div>
         <div class="field">
-          <div class="field-head"><label for="f-name">Name</label></div>
+          <div class="field-head"><label for="f-name">${t('Name')}</label></div>
           <input
             id="f-name"
             class="input"
@@ -341,58 +342,58 @@ export class AnimShapeInspector extends LitElement {
             }}
           />
         </div>
-        ${this._seg('Layer', LAYERS, s.layer, (layer) => this._patch(s, { layer }, layer === 'under' ? 'Shape under the icon' : 'Shape over the icon'), 'layer')}
+        ${this._seg(t('Layer'), LAYERS, s.layer, (layer) => this._patch(s, { layer }, layer === 'under' ? t('Shape under the icon') : t('Shape over the icon')), 'layer')}
         <div class="row">
           <button type="button" class="btn btn-text btn-sm forward" ?disabled=${this.disabled || idx >= list.length - 1} @click=${() => this._emit(moveShape(doc, s.id, idx + 1), 'Bring shape forward')}>
-            <ha-icon icon="mdi:arrange-bring-forward"></ha-icon>Bring forward
+            <ha-icon icon="mdi:arrange-bring-forward"></ha-icon>${t('Bring forward')}
           </button>
           <button type="button" class="btn btn-text btn-sm backward" ?disabled=${this.disabled || idx <= 0} @click=${() => this._emit(moveShape(doc, s.id, idx - 1), 'Send shape backward')}>
-            <ha-icon icon="mdi:arrange-send-backward"></ha-icon>Send backward
+            <ha-icon icon="mdi:arrange-send-backward"></ha-icon>${t('Send backward')}
           </button>
         </div>
       </section>
       ${this._paint(
         { fill: isFilled(s) ? (s.fill ?? 'currentColor') : undefined, stroke: isStroked(s) ? s.stroke : undefined, width: s.stroke_width ?? 1, cap: s.linecap ?? 'butt', closed },
         {
-          fill: (v) => this._patch(s, { fill: v }, v ? 'Change fill' : 'Remove fill'),
-          stroke: (v) => this._patch(s, v ? { stroke: v, stroke_width: s.stroke_width ?? 1 } : { stroke: undefined, stroke_width: undefined, linecap: undefined }, v ? 'Change stroke' : 'Remove stroke'),
+          fill: (v) => this._patch(s, { fill: v }, v ? t('Change fill') : t('Remove fill')),
+          stroke: (v) => this._patch(s, v ? { stroke: v, stroke_width: s.stroke_width ?? 1 } : { stroke: undefined, stroke_width: undefined, linecap: undefined }, v ? t('Change stroke') : t('Remove stroke')),
           width: (n) => this._patch(s, { stroke_width: clampWidth(n) }, 'Change stroke width'),
           cap: (c) => this._patch(s, { linecap: c }, 'Change line ends'),
         },
       )}
       ${freehand
         ? html`<section class="group" aria-labelledby="h-smooth">
-            <div class="group-head"><h3 id="h-smooth">Freehand</h3></div>
-            ${this._smoothing((t, f) => this._refit(t, f), 'More smoothing: fewer points and a calmer line. The dotted line is what you drew.')}
+            <div class="group-head"><h3 id="h-smooth">${t('Freehand')}</h3></div>
+            ${this._smoothing((t, f) => this._refit(t, f), t('More smoothing: fewer points and a calmer line. The dotted line is what you drew.'))}
           </section>`
         : nothing}
       <section class="group" aria-labelledby="h-anim">
-        <div class="group-head"><h3 id="h-anim">Animation</h3></div>
+        <div class="group-head"><h3 id="h-anim">${t('Animation')}</h3></div>
         ${this._switch(
-          'Draw on',
-          isFilled(s) ? 'The outline draws in over the cycle, then the shape fills.' : 'The line draws in over the cycle.',
+          t('Draw on'),
+          isFilled(s) ? t('The outline draws in over the cycle, then the shape fills.') : t('The line draws in over the cycle.'),
           hasDrawOn(doc, target),
           () => (hasDrawOn(doc, target) ? this._emit(removeDrawOn(doc, target), 'Remove draw on') : this._emit(addDrawOnTrack(doc, target), 'Draw on')),
           'draw-on',
         )}
         <div class="field">
-          <div class="field-head"><span class="lbl">Motion path</span></div>
+          <div class="field-head"><span class="lbl">${t('Motion path')}</span></div>
           <div class="row">
             <button type="button" class="btn btn-secondary btn-sm draw-motion" ?disabled=${this.disabled} @click=${() => this._select({ kind: 'tool', tool: 'motion', target })}>
-              <ha-icon icon="mdi:map-marker-path"></ha-icon>${track?.path ? 'Redraw' : 'Draw motion path'}
+              <ha-icon icon="mdi:map-marker-path"></ha-icon>${track?.path ? t('Redraw') : t('Draw motion path')}
             </button>
             ${track?.path
               ? html`<button type="button" class="btn btn-text btn-sm remove-motion" ?disabled=${this.disabled} @click=${() => this._emit(setTrackPath(doc, target, undefined, false), 'Remove motion path')}>
-                  Remove
+                  ${t('Remove')}
                 </button>`
               : nothing}
           </div>
           ${track?.path
-            ? this._switch('Follow the path', 'The shape turns with the direction it travels.', !!track.path.follow_rotation, () => {
+            ? this._switch(t('Follow the path'), t('The shape turns with the direction it travels.'), !!track.path.follow_rotation, () => {
                 const tracks = (doc.tracks ?? []).map((t) => (t === track ? { ...t, path: { ...t.path!, follow_rotation: !t.path!.follow_rotation } } : t));
                 this._emit({ ...doc, tracks }, 'Follow the path');
               }, 'follow')
-            : html`<p class="help">Draw on the stage where the shape travels, starting where it rests.</p>`}
+            : html`<p class="help">${t('Draw on the stage where the shape travels, starting where it rests.')}</p>`}
         </div>
       </section>
       <section class="group">
@@ -400,7 +401,7 @@ export class AnimShapeInspector extends LitElement {
           this._emit(removeShape(doc, s.id), 'Delete shape');
           this._select({ kind: 'tool', tool: 'select' });
         }}>
-          <ha-icon icon="mdi:delete-outline"></ha-icon>Delete shape
+          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete shape')}
         </button>
       </section>
     `;
@@ -420,19 +421,19 @@ export class AnimShapeInspector extends LitElement {
     const target = this.selection.target;
     return html`
       <section class="group" aria-labelledby="h-tool">
-        <div class="group-head tool-head"><ha-icon icon=${info.icon}></ha-icon><h3 id="h-tool">${info.label}</h3></div>
-        <p class="help lead">${info.hint}</p>
+        <div class="group-head tool-head"><ha-icon icon=${info.icon}></ha-icon><h3 id="h-tool">${t(info.label)}</h3></div>
+        <p class="help lead">${t(info.hint)}</p>
         ${tool === 'motion'
           ? isRigRef(target)
-            ? html`<p class="help">Moving <span class="id">${target}</span>.</p>
-                ${this._switch('Follow the path', 'It turns with the direction it travels.', o.follow, () => this._opt({ follow: !o.follow }), 'follow-opt')}`
-            : html`<p class="help">Select a part or shape first.</p>`
+            ? html`<p class="help">${tx('Moving {target}.', { target: html`<span class="id">${target}</span>` })}</p>
+                ${this._switch(t('Follow the path'), t('It turns with the direction it travels.'), o.follow, () => this._opt({ follow: !o.follow }), 'follow-opt')}`
+            : html`<p class="help">${t('Select a part or shape first.')}</p>`
           : nothing}
-        ${tool === 'rect' ? this._number('f-radius', 'Corner radius (icon units)', o.radius, 0.5, 12, (n) => this._opt({ radius: n })) : nothing}
+        ${tool === 'rect' ? this._number('f-radius', t('Corner radius (icon units)'), o.radius, 0.5, 12, (n) => this._opt({ radius: n })) : nothing}
         ${tool === 'freehand' || tool === 'motion'
           ? this._smoothing(
               (t, f) => (tool === 'freehand' ? this._refit(t, f) : this._opt({ tolerance: t })),
-              tool === 'freehand' && drawStore.lastFreehand ? 'Changes the last stroke too. The dotted line is what you drew.' : 'More smoothing: fewer points and a calmer line.',
+              tool === 'freehand' && drawStore.lastFreehand ? t('Changes the last stroke too. The dotted line is what you drew.') : t('More smoothing: fewer points and a calmer line.'),
             )
           : nothing}
       </section>
@@ -447,15 +448,15 @@ export class AnimShapeInspector extends LitElement {
               },
             )}
             <section class="group" aria-labelledby="h-new">
-              <div class="group-head"><h3 id="h-new">New shapes</h3></div>
-              ${this._seg('Layer', LAYERS, o.layer, (layer) => this._opt({ layer }), 'layer')}
+              <div class="group-head"><h3 id="h-new">${t('New shapes')}</h3></div>
+              ${this._seg(t('Layer'), LAYERS, o.layer, (layer) => this._opt({ layer }), 'layer')}
             </section>`
         : nothing}
       ${tool !== 'erase' && tool !== 'select'
         ? html`<section class="group" aria-labelledby="h-snap">
-            <div class="group-head"><h3 id="h-snap">Snapping</h3></div>
-            ${this._switch('Grid', 'Points land on whole icon units. Hold Shift to place freely.', o.grid, () => this._opt({ grid: !o.grid }), 'snap-grid')}
-            ${this._switch('Anchor points', 'Points jump to the icon’s and other shapes’ points nearby.', o.anchors, () => this._opt({ anchors: !o.anchors }), 'snap-anchors')}
+            <div class="group-head"><h3 id="h-snap">${t('Snapping')}</h3></div>
+            ${this._switch(t('Grid'), t('Points land on whole icon units. Hold Shift to place freely.'), o.grid, () => this._opt({ grid: !o.grid }), 'snap-grid')}
+            ${this._switch(t('Anchor points'), t('Points jump to the icon’s and other shapes’ points nearby.'), o.anchors, () => this._opt({ anchors: !o.anchors }), 'snap-anchors')}
           </section>`
         : nothing}
     `;
@@ -470,7 +471,7 @@ export class AnimShapeInspector extends LitElement {
   }
 }
 
-registerPanel({ tag: 'mc-anim-shape-inspector', place: 'inspector', when: drawActive, title: 'Drawing', order: 30 });
+registerPanel({ tag: 'mc-anim-shape-inspector', place: 'inspector', when: drawActive, title: m('Drawing'), order: 30 });
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -2,6 +2,7 @@ import { css, html, type TemplateResult } from 'lit';
 import type { LayerKey, LayerView, LayerViewChangeDetail } from '../../contracts/studio-layers';
 import type { AnimationDoc } from '../model';
 import { unlockKeys } from '../layer-view';
+import { t } from '../i18n';
 
 /*
  * The "Locked. Unlock to edit." line at the top of an inspector or editor (design 08, Lock behaviour).
@@ -35,7 +36,7 @@ export const lockBannerStyles = css`
 export function lockBanner(doc: AnimationDoc, view: LayerView, keys: LayerKey[]): TemplateResult {
   const unlock = (e: Event): void => {
     const next = unlockKeys(doc, view, keys);
-    (e.currentTarget as HTMLElement).dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view: next, announce: 'Unlocked' }, bubbles: true, composed: true }));
+    (e.currentTarget as HTMLElement).dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view: next, announce: t('Unlocked') }, bubbles: true, composed: true }));
   };
-  return html`<div class="lock-banner" role="status"><ha-icon icon="mdi:lock-outline"></ha-icon><span class="txt">Locked. Unlock to edit.</span><button type="button" class="btn btn-text btn-sm unlock" @click=${unlock}>Unlock</button></div>`;
+  return html`<div class="lock-banner" role="status"><ha-icon icon="mdi:lock-outline"></ha-icon><span class="txt">${t('Locked. Unlock to edit.')}</span><button type="button" class="btn btn-text btn-sm unlock" @click=${unlock}>${t('Unlock')}</button></div>`;
 }

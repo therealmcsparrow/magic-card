@@ -4,6 +4,7 @@ import { registerSvgGeometry, resolveIconGeometry, peekIconGeometry, type IconGe
 import { splitIcon, unionBox, type SplitPiece } from '../../icons/icon-split';
 import { tileModule, type PreviewTile } from '../tiles';
 import type { StudioSelection } from '../slots';
+import { t } from '../i18n';
 
 /*
  * Icon parts in the studio (track B2): pure document edits for the parts layers, overlay and
@@ -62,7 +63,7 @@ export function piecesOf(g: IconGeometry): SplitPiece[] {
 /** A new track for `ref` would pass the cap (24 tracks): the edit is blocked. */
 export const trackCapReached = (doc: AnimationDoc, ref: string): boolean =>
   !doc.tracks?.some((t) => t.target === ref) && (doc.tracks?.length ?? 0) >= V2_CAPS.tracks;
-export const TRACK_CAP_MESSAGE = `This animation has ${V2_CAPS.tracks} animated targets, the most it can hold. Remove one to animate this part.`;
+export const trackCapMessage = (): string => t('This animation has {tracks} animated targets, the most it can hold. Remove one to animate this part.', { tracks: V2_CAPS.tracks });
 
 export const trackOf = (doc: AnimationDoc, ref: string): Track | undefined => doc.tracks?.find((t) => t.target === ref);
 
@@ -96,7 +97,7 @@ const withRig = (doc: AnimationDoc, rig: Rig): AnimationDoc => ({ ...doc, rig })
 
 /** A fresh rig: one part per piece of the source, "Part 1…n". */
 export function rigFromPieces(pieces: SplitPiece[], source?: { icon?: string; svg?: string }): Rig {
-  const parts: RigPart[] = pieces.slice(0, V2_CAPS.parts).map((p, i) => ({ id: `part-${i + 1}`, name: `Part ${i + 1}`, from: [p.index] }));
+  const parts: RigPart[] = pieces.slice(0, V2_CAPS.parts).map((p, i) => ({ id: `part-${i + 1}`, name: t('Part {i}', { i: i + 1 }), from: [p.index] }));
   return { ...(source?.svg ? { svg: source.svg } : source?.icon ? { icon: source.icon } : {}), parts };
 }
 
@@ -148,8 +149,8 @@ export const groupOfPart = (rig: Rig | undefined, id: string): RigGroup | undefi
 /** Why the selection cannot be grouped ('' when it can). */
 export function groupBlocker(doc: AnimationDoc, refs: string[]): string {
   const ids = partIdsOf(doc, refs);
-  if (ids.length < 2) return 'Select two or more parts to group them.';
-  if ((doc.rig?.groups?.length ?? 0) >= V2_CAPS.groups) return `A rig has at most ${V2_CAPS.groups} groups.`;
+  if (ids.length < 2) return t('Select two or more parts to group them.');
+  if ((doc.rig?.groups?.length ?? 0) >= V2_CAPS.groups) return t('A rig has at most {groups} groups.', { groups: V2_CAPS.groups });
   return '';
 }
 
@@ -202,7 +203,7 @@ export function splitPart(doc: AnimationDoc, partId: string): { doc: AnimationDo
     const id = freeId(rig, 'part', taken);
     taken.add(id);
     // clean numbering: part-7 is "Part 7"
-    return { id, name: `Part ${id.slice(5)}`, from: [i] };
+    return { id, name: t('Part {n}', { n: id.slice(5) }), from: [i] };
   });
   const first: RigPart = { ...part, from: [pieces[0]] };
   delete first.origin;

@@ -3,6 +3,7 @@ import { EPS, bez, dist, segDist, type Cubic, type Pt } from '../../path/draw';
 import { fmtNum } from '../../path/edit';
 import { ANIMATION_CAPS, type AnimationDoc, type AnimationKeyframe } from '../model';
 import { V2_CAPS, type RigShape, type TargetRef, type Track } from '../model-v2';
+import { t } from '../i18n';
 
 /*
  * Drawing on the icon, pure: freehand simplification (Ramer-Douglas-Peucker for corners, then a
@@ -222,7 +223,7 @@ export function nextShapeId(taken: Array<{ id: string }> | string[], base = 'sha
 export function docSizeError(doc: AnimationDoc): string | undefined {
   const json = JSON.stringify(doc);
   const bytes = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(json).length : json.length;
-  return bytes > ANIMATION_CAPS.bytes ? `The animation would be larger than ${Math.round(ANIMATION_CAPS.bytes / 1024)} KB (${Math.ceil(bytes / 1024)} KB).` : undefined;
+  return bytes > ANIMATION_CAPS.bytes ? t('The animation would be larger than {max} KB ({size} KB).', { max: Math.round(ANIMATION_CAPS.bytes / 1024), size: Math.ceil(bytes / 1024) }) : undefined;
 }
 
 const shapesOf = (doc: AnimationDoc): RigShape[] => doc.rig?.shapes ?? [];

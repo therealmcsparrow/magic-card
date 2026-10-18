@@ -1,4 +1,5 @@
 import type { AnimationKind } from './model';
+import { m, type MessageId } from './i18n';
 
 /*
  * Where each kind's own editor goes in the studio (contract: .superpowers/sdd/anim-studio/
@@ -15,14 +16,14 @@ export interface KindEditorSlot {
   tag: string;
   /** panel: the wide panel under the stage; inspector: the settings column. */
   place: 'panel' | 'inspector';
-  title: string;
+  title: MessageId;
 }
 
 export const KIND_EDITORS: Record<AnimationKind, KindEditorSlot> = {
-  keyframes: { tag: 'mc-anim-keyframes-editor', place: 'panel', title: 'Timeline' },
-  particles: { tag: 'mc-anim-particles-editor', place: 'inspector', title: 'Particles' },
-  path: { tag: 'mc-anim-path-editor', place: 'inspector', title: 'Path' },
-  sequence: { tag: 'mc-anim-sequence-editor', place: 'inspector', title: 'Steps' },
+  keyframes: { tag: 'mc-anim-keyframes-editor', place: 'panel', title: m('Timeline') },
+  particles: { tag: 'mc-anim-particles-editor', place: 'inspector', title: m('Particles') },
+  path: { tag: 'mc-anim-path-editor', place: 'inspector', title: m('Path') },
+  sequence: { tag: 'mc-anim-sequence-editor', place: 'inspector', title: m('Steps') },
 };
 
 /** Drawn over the preview stage while a path document is open (gets .stageRect). */

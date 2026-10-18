@@ -12,7 +12,7 @@
     "anim-studio": { "dir": "src/anim-studio/i18n", "roots": ["src/anim-studio"] },
     "icon-animator": { "dir": "src/icon-anim/i18n", "roots": ["src/icon-anim", "src/editor/components/icon-animator"] },
     "theme-editor": { "dir": "src/theme-editor/i18n", "roots": ["src/theme-editor"] },
-    "icon-library": { "dir": "src/icon-anim/library/i18n", "roots": ["src/icon-anim/library"] },
+    "icon-library": { "dir": "src/icon-anim/library/i18n", "roots": ["src/icon-anim/library", "src/icon-anim/library.ts"] },
     "preset-catalogue": { "dir": "src/preset-catalogue/i18n", "roots": ["src/preset-catalogue"] },
     "theme-presets": { "dir": "src/theme-editor/presets/i18n", "roots": ["src/theme-editor/presets"] }
   }

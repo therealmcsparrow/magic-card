@@ -1,4 +1,5 @@
 import type { TargetRef } from './model';
+import { t, m, type MessageId } from './i18n';
 
 /*
  * The preview stage's tiles: what the studio previews a document on. Each tile is one module of
@@ -17,8 +18,8 @@ export interface TileEntity {
 
 export interface TileDef {
   id: PreviewTile;
-  /** Stage toolbar label (sentence case). */
-  label: string;
+  /** Stage toolbar label (sentence case), an m() mark. */
+  label: MessageId;
   /** Stage toolbar icon. */
   icon: string;
   /** Card-part targets the tile's module has (`element` always). */
@@ -31,25 +32,25 @@ export interface TileDef {
 export const CARD_TILE_ENTITY = 'sensor.mc_studio_living_room';
 
 export const TILES: TileDef[] = [
-  { id: 'icon', label: 'Icon', icon: 'mdi:bell-ring-outline', targets: ['element', 'icon'] },
-  { id: 'button', label: 'Button', icon: 'mdi:gesture-tap-button', targets: ['element', 'icon', 'name'] },
-  { id: 'text', label: 'Text', icon: 'mdi:format-text', targets: ['element', 'name'] },
+  { id: 'icon', label: m('Icon'), icon: 'mdi:bell-ring-outline', targets: ['element', 'icon'] },
+  { id: 'button', label: m('Button'), icon: 'mdi:gesture-tap-button', targets: ['element', 'icon', 'name'] },
+  { id: 'text', label: m('Text'), icon: 'mdi:format-text', targets: ['element', 'name'] },
   {
     id: 'card',
-    label: 'Card',
+    label: m('Card'),
     icon: 'mdi:card-text-outline',
     targets: ['element', 'icon', 'name', 'state', 'background'],
     entities: {
       [CARD_TILE_ENTITY]: {
         state: '21.5',
-        attributes: { friendly_name: 'Living room', unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
+        attributes: { friendly_name: m('Living room'), unit_of_measurement: '°C', device_class: 'temperature', state_class: 'measurement' },
       },
     },
   },
 ];
 
 /** The tile's definition (the icon tile for an unknown id). */
-export const tileDef = (tile: PreviewTile): TileDef => TILES.find((t) => t.id === tile) ?? TILES[0];
+export const tileDef = (tile: PreviewTile): TileDef => TILES.find((x) => x.id === tile) ?? TILES[0];
 
 /** The tile's module config for the preview card (`thumb`: the smaller thumbnail tile). */
 export function tileModule(tile: PreviewTile, id: string, thumb: boolean, animations?: unknown[]): Record<string, unknown> {
@@ -58,9 +59,9 @@ export function tileModule(tile: PreviewTile, id: string, thumb: boolean, animat
     case 'icon':
       return { id, type: 'icon', icon: 'mdi:bell-ring', size: thumb ? '36px' : '64px', design };
     case 'button':
-      return { id, type: 'button', label: 'Doorbell', icon: 'mdi:bell', design };
+      return { id, type: 'button', label: t('Doorbell'), icon: 'mdi:bell', design };
     case 'text':
-      return { id, type: 'text', text: 'Front door', design: { ...design, font_size: thumb ? '18px' : '28px', font_weight: '500' } };
+      return { id, type: 'text', text: t('Front door'), design: { ...design, font_size: thumb ? '18px' : '28px', font_weight: '500' } };
     case 'card':
       // info-like: icon, name and state on a surface of its own, so the background has something to move
       return {
@@ -95,7 +96,10 @@ export function tileHass<T extends { states?: Record<string, unknown> }>(tile: P
   const hit = byTile.get(tile);
   if (hit) return hit as T;
   const states: Record<string, unknown> = {};
-  for (const [id, e] of Object.entries(ents)) states[id] = { entity_id: id, state: e.state, attributes: e.attributes, last_changed: '', last_updated: '', context: { id: '' } };
+  for (const [id, e] of Object.entries(ents)) {
+    const name = e.attributes.friendly_name as MessageId | undefined;
+    states[id] = { entity_id: id, state: e.state, attributes: name === undefined ? e.attributes : { ...e.attributes, friendly_name: t(name) }, last_changed: '', last_updated: '', context: { id: '' } };
+  }
   const out = { ...hass, states: { ...states, ...(hass.states ?? {}) } };
   byTile.set(tile, out);
   return out;

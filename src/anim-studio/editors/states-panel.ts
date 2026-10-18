@@ -21,6 +21,7 @@ import {
   type WhenKind,
 } from './states-utils';
 import { whenLabel } from './states-sim';
+import { t, m } from '../i18n';
 
 /*
  * States (studio inspector, nothing selected): the document's clips, what plays per entity state.
@@ -68,21 +69,21 @@ export class AnimStatesPanel extends LitElement {
     const clip = newClip(this._clips);
     this._write([...this._clips, clip], 'Add state');
     this._focusAfter = `.clip[data-i="${this._clips.length}"] select.when`;
-    this._announce = `State ${this._clips.length + 1} added: ${whenLabel(clip.when)}.`;
+    this._announce = t('State {count} added: {when}.', { count: this._clips.length + 1, when: whenLabel(clip.when) });
   }
 
   private _remove(i: number): void {
     const clips = this._clips.filter((_c, j) => j !== i);
     this._write(clips, 'Delete state');
     this._focusAfter = clips.length ? `.clip[data-i="${Math.min(i, clips.length - 1)}"] .del` : '.add';
-    this._announce = `State ${i + 1} deleted.`;
+    this._announce = t('State {i} deleted.', { i: i + 1 });
   }
 
   private _move(i: number, to: number): void {
     if (to < 0 || to >= this._clips.length) return;
     this._write(moveClip(this._clips, i, to), 'Reorder states');
     this._focusAfter = `.clip[data-i="${to}"] .${to < i ? 'up' : 'down'}`;
-    this._announce = `State moved to position ${to + 1}.`;
+    this._announce = t('State moved to position {to}.', { to: to + 1 });
   }
 
   protected updated(): void {
@@ -100,7 +101,7 @@ export class AnimStatesPanel extends LitElement {
     const numeric = kind === 'above' || kind === 'below';
     return html`<div class="pair">
       <div class="field">
-        <div class="field-head"><label for="${id}-k">When</label></div>
+        <div class="field-head"><label for="${id}-k">${t('When')}</label></div>
         <div class="select">
           <select
             class="input when"
@@ -108,22 +109,22 @@ export class AnimStatesPanel extends LitElement {
             ?disabled=${this.disabled}
             @change=${(e: Event) => this._patch(i, { when: whenOf((e.target as HTMLSelectElement).value as WhenKind, value) }, 'Change state condition')}
           >
-            ${WHEN_KINDS.map((k) => html`<option value=${k.id} ?selected=${k.id === kind}>${k.label}</option>`)}
+            ${WHEN_KINDS.map((k) => html`<option value=${k.id} ?selected=${k.id === kind}>${t(k.label)}</option>`)}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>
       </div>
       ${kind === 'entity_on' || kind === 'entity_off'
-        ? html`<div class="field"><div class="field-head"><span class="lbl">Value</span></div><p class="help fill">On means active for its domain (open, home, playing...).</p></div>`
+        ? html`<div class="field"><div class="field-head"><span class="lbl">${t('Value')}</span></div><p class="help fill">${t('On means active for its domain (open, home, playing...).')}</p></div>`
         : html`<div class="field">
-            <div class="field-head"><label for="${id}-v">${numeric ? 'Number' : 'State'}</label></div>
+            <div class="field-head"><label for="${id}-v">${numeric ? t('Number') : t('State')}</label></div>
             <input
               class="input ${numeric ? '' : 'mono'}"
               id="${id}-v"
               type=${numeric ? 'number' : 'text'}
               step="any"
               inputmode=${numeric ? 'decimal' : 'text'}
-              placeholder=${numeric ? '0' : 'on'}
+              placeholder=${numeric ? '0' : t('on')}
               autocomplete="off"
               spellcheck="false"
               ?disabled=${this.disabled}
@@ -146,7 +147,7 @@ export class AnimStatesPanel extends LitElement {
     const groups = clipOptions(this.library, this.doc?.id);
     const known = groups.some((g) => g.items.some((x) => x.value === c.animation));
     return html`<div class="field">
-      <div class="field-head"><label for=${id}>Play</label></div>
+      <div class="field-head"><label for=${id}>${t('Play')}</label></div>
       <div class="select">
         <select class="input play" id=${id} ?disabled=${this.disabled} @change=${(e: Event) => this._patch(i, { animation: (e.target as HTMLSelectElement).value }, 'Change state animation')}>
           ${known ? nothing : html`<option value=${c.animation} selected>${clipAnimationLabel(c.animation, this.library, this.doc?.id)}</option>`}
@@ -167,7 +168,7 @@ export class AnimStatesPanel extends LitElement {
       if (v !== value) this._patch(i, { transition: v }, 'Change state transition');
     };
     const onKey = (e: KeyboardEvent) => {
-      const at = TRANSITIONS.findIndex((t) => t.id === value);
+      const at = TRANSITIONS.findIndex((x) => x.id === value);
       const map: Record<string, number> = { ArrowRight: (at + 1) % TRANSITIONS.length, ArrowLeft: (at - 1 + TRANSITIONS.length) % TRANSITIONS.length, Home: 0, End: TRANSITIONS.length - 1 };
       const next = map[e.key];
       if (next === undefined) return;
@@ -175,17 +176,18 @@ export class AnimStatesPanel extends LitElement {
       pick(TRANSITIONS[next].id);
       this._focusAfter = `.clip[data-i="${i}"] .seg [aria-checked="true"]`;
     };
+    const hintOf = (TRANSITIONS.find((x) => x.id === value) ?? TRANSITIONS[0]).hint;
     return html`<div class="field">
-      <div class="field-head"><span class="lbl" id="st-${i}-t">Transition</span></div>
+      <div class="field-head"><span class="lbl" id="st-${i}-t">${t('Transition')}</span></div>
       <div class="seg full" role="radiogroup" aria-labelledby="st-${i}-t" aria-describedby="st-${i}-th" @keydown=${onKey}>
-        ${TRANSITIONS.map((t) => {
-          const on = t.id === value;
-          return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} ?disabled=${this.disabled} @click=${() => pick(t.id)}>
-            ${t.label}
+        ${TRANSITIONS.map((x) => {
+          const on = x.id === value;
+          return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} ?disabled=${this.disabled} @click=${() => pick(x.id)}>
+            ${t(x.label)}
           </button>`;
         })}
       </div>
-      <p class="help" id="st-${i}-th">${TRANSITIONS.find((t) => t.id === value)?.hint}.</p>
+      <p class="help" id="st-${i}-th">${t(hintOf)}.</p>
     </div>`;
   }
 
@@ -193,14 +195,14 @@ export class AnimStatesPanel extends LitElement {
     const problem = clipProblem(c, this.library, this.doc?.id);
     return html`<li class="cond clip" data-i=${i}>
       <div class="cond-head">
-        <span class="n">State ${i + 1} <span class="sub">· ${whenLabel(c.when)}</span></span>
-        <button type="button" class="icon-btn sm up" aria-label="Move state ${i + 1} up" title="Move up" ?disabled=${this.disabled || i === 0} @click=${() => this._move(i, i - 1)}>
+        <span class="n">${t('State {i}', { i: i + 1 })} <span class="sub">· ${whenLabel(c.when)}</span></span>
+        <button type="button" class="icon-btn sm up" aria-label=${t('Move state {i} up', { i: i + 1 })} title=${t('Move up')} ?disabled=${this.disabled || i === 0} @click=${() => this._move(i, i - 1)}>
           <ha-icon icon="mdi:arrow-up"></ha-icon>
         </button>
-        <button type="button" class="icon-btn sm down" aria-label="Move state ${i + 1} down" title="Move down" ?disabled=${this.disabled || i === n - 1} @click=${() => this._move(i, i + 1)}>
+        <button type="button" class="icon-btn sm down" aria-label=${t('Move state {i} down', { i: i + 1 })} title=${t('Move down')} ?disabled=${this.disabled || i === n - 1} @click=${() => this._move(i, i + 1)}>
           <ha-icon icon="mdi:arrow-down"></ha-icon>
         </button>
-        <button type="button" class="icon-btn sm danger del" aria-label="Delete state ${i + 1}" title="Delete state" ?disabled=${this.disabled} @click=${() => this._remove(i)}>
+        <button type="button" class="icon-btn sm danger del" aria-label=${t('Delete state {i}', { i: i + 1 })} title=${t('Delete state')} ?disabled=${this.disabled} @click=${() => this._remove(i)}>
           <ha-icon icon="mdi:delete-outline"></ha-icon>
         </button>
       </div>
@@ -216,15 +218,15 @@ export class AnimStatesPanel extends LitElement {
       <div class="wrap">
         <p class="help lead">
           ${clips.length
-            ? 'The first state that matches plays; with no match (or an unavailable entity) the own timeline plays. The entity is the module’s, or the one set on the animation in the card.'
-            : 'Play something else per entity state: a light that glows when on and rests when off. The entity is the module’s, or the one set on the animation in the card.'}
+            ? t('The first state that matches plays; with no match (or an unavailable entity) the own timeline plays. The entity is the module’s, or the one set on the animation in the card.')
+            : t('Play something else per entity state: a light that glows when on and rests when off. The entity is the module’s, or the one set on the animation in the card.')}
         </p>
         ${clips.length ? html`<ol class="clips">${clips.map((c, i) => this._clip(c, i, clips.length))}</ol>` : nothing}
         <div class="foot">
           <button type="button" class="btn btn-text btn-sm add" ?disabled=${this.disabled || full} @click=${() => this._add()}>
-            <ha-icon icon="mdi:plus"></ha-icon>Add state
+            <ha-icon icon="mdi:plus"></ha-icon>${t('Add state')}
           </button>
-          ${full ? html`<span class="help">At most ${CLIPS_MAX} states.</span>` : nothing}
+          ${full ? html`<span class="help">${t('At most {cLIPS_MAX} states.', { cLIPS_MAX: CLIPS_MAX })}</span>` : nothing}
         </div>
         <div class="sr-only" role="status" aria-live="polite">${this._announce}</div>
       </div>
@@ -287,7 +289,7 @@ export class AnimStatesPanel extends LitElement {
 }
 
 /** Nothing selected: the States section of the inspector. */
-registerPanel({ tag: 'mc-anim-states-panel', place: 'inspector', when: (_doc, sel) => sel.kind === 'none', title: 'States', order: 60 });
+registerPanel({ tag: 'mc-anim-states-panel', place: 'inspector', when: (_doc, sel) => sel.kind === 'none', title: m('States'), order: 60 });
 
 declare global {
   interface HTMLElementTagNameMap {

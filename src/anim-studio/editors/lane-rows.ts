@@ -3,8 +3,9 @@ import type { LayerKey, LayerView } from '../../contracts/studio-layers';
 import type { AnimationDoc, TargetRef } from '../model';
 import type { StudioSelection } from '../slots';
 import { laneAts, lanesOf } from '../layer-view';
-import { LANE_BY_ID, type LaneId } from './keyframes-utils';
+import { LANE_BY_ID, laneLabel, type LaneId } from './keyframes-utils';
 import type { LayerRows } from './layer-row';
+import { t } from '../i18n';
 
 /*
  * Keyframe tracks as lane rows (design 08 section 6): under a target row (card part, icon part, group,
@@ -21,7 +22,7 @@ export function splitLane(key: LayerKey): { target: TargetRef; lane: LaneId } {
 }
 
 /** "Opacity", "Rotate", "Move X". */
-export const laneName = (key: LayerKey): string => LANE_BY_ID[splitLane(key).lane]?.label ?? key;
+export const laneName = (key: LayerKey): string => (LANE_BY_ID[splitLane(key).lane] ? laneLabel(splitLane(key).lane) : key);
 
 /** Whether a target's tracks are open (`view.open` holds its row key); undefined when it has none. */
 export const tracksOpen = (doc: AnimationDoc, view: LayerView, target: TargetRef, key: LayerKey): boolean | undefined =>
@@ -41,6 +42,6 @@ export function trackRows(list: LayerRows, doc: AnimationDoc, selection: StudioS
     const key = laneKey(target, lane);
     const n = laneAts(doc, target, lane).length;
     const on = selection?.kind === 'keys' && !!selection.keys?.length && selection.keys.every((k) => k.target === target && k.lane === lane);
-    return list.row({ key, name: laneName(key), bare: true, level, badge: `${n} key${n === 1 ? '' : 's'}`, describe: 'keyframe track', selected: on, title: `${laneName(key)}: ${n} key${n === 1 ? '' : 's'}` });
+    return list.row({ key, name: laneName(key), bare: true, level, badge: t('{count, plural, one {# key} other {# keys}}', { count: n }), describe: t('keyframe track'), selected: on, title: t('{name}: {count, plural, one {# key} other {# keys}}', { name: laneName(key), count: n }) });
   });
 }

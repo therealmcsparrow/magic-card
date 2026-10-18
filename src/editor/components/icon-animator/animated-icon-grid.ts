@@ -4,6 +4,8 @@ import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, type LibraryE
 import type { IconAnimatorHost } from './loader';
 import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contracts/icon-library';
 import { styleDoc } from '../../../icon-anim/style';
+import { t, m } from '../../../icon-anim/i18n';
+import type { MessageId } from '../../../contracts/i18n';
 
 /*
  * The animated icon grid (lazy chunk magic-card-icon-animator.js): live moving tiles for the user's
@@ -21,18 +23,20 @@ const THUMB_TAG = 'mc-animated-icon-thumb';
 /** What a tile stands for: a built-in library entry, or one of the user's own documents. */
 export type AnimatedIconPick = { kind: 'library'; entry: LibraryEntry; style?: IconStyle; restyle?: boolean } | { kind: 'mine'; doc: AnimationDoc };
 
-const STYLE_LABELS: Record<IconStyle, string> = { quiet: 'Quiet', living: 'Living', glow: 'Glow' };
-const STYLE_HELP: Record<IconStyle, string> = {
-  quiet: 'Quiet: one part moves a little, slower. For calm dashboards.',
-  living: 'Living: the full animation, as drawn.',
-  glow: "Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.",
+const STYLE_LABELS: Record<IconStyle, MessageId> = { quiet: m('Quiet'), living: m('Living'), glow: m('Glow') };
+const STYLE_HELP: Record<IconStyle, MessageId> = {
+  quiet: m('Quiet: one part moves a little, slower. For calm dashboards.'),
+  living: m('Living: the full animation, as drawn.'),
+  glow: m("Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards."),
 };
 const isStyle = (v: unknown): v is IconStyle => (ICON_STYLES as readonly unknown[]).includes(v);
 
 /** The library documents that are icon animations (they carry a rig). */
 export const mineIconDocs = (list: AnimationDoc[]): AnimationDoc[] => list.filter((d) => !!d.rig);
 
-const domainName = (d: string): string => d.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
+/** A domain's name: Home Assistant's own (hass.localize, the word HA shows), else the id in words. */
+const domainName = (d: string, hass?: unknown): string =>
+  (hass as { localize?: (key: string) => string } | undefined)?.localize?.(`component.${d}.title`) || d.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
 
 interface CardElement extends HTMLElement {
   setConfig(c: unknown): void;
@@ -345,12 +349,12 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         void this.updateComplete.then(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
       };
       return html`<div class="style">
-        <span class="lbl" id="aig-style">Style</span>
+        <span class="lbl" id="aig-style">${t('Style')}</span>
         <div class="seg" role="radiogroup" aria-labelledby="aig-style" aria-describedby="aig-style-help" @keydown=${onKey}>
           ${ICON_STYLES.map((s) => {
             const on = s === this._style;
             return html`<button type="button" role="radio" data-val=${s} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => this._setStyle(s)}>
-              ${STYLE_LABELS[s]}
+              ${t(STYLE_LABELS[s])}
             </button>`;
           })}
         </div>
@@ -386,11 +390,11 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
         const matches = this._matches();
         builtIns = this._all || !matches.length ? ICON_LIBRARY : matches;
         if (!matches.length)
-          intro = html`<p class="help">No library animation matches ${this.icon}${this._entityDomain ? ` or ${this._entityDomain}` : ''}; showing all of them.</p>`;
+          intro = html`<p class="help">${this._entityDomain ? t('No library animation matches {icon} or {domain}; showing all of them.', { icon: this.icon, domain: this._entityDomain }) : t('No library animation matches {icon}; showing all of them.', { icon: this.icon })}</p>`;
         else if (matches.length < ICON_LIBRARY.length)
           toggle = html`<div>
             <button type="button" class="btn btn-text btn-sm" @click=${() => (this._all = !this._all)}>
-              ${this._all ? 'Show matches only' : `Show all (${ICON_LIBRARY.length})`}
+              ${this._all ? t('Show matches only') : t('Show all ({count})', { count: ICON_LIBRARY.length })}
             </button>
           </div>`;
       }
@@ -401,41 +405,41 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
             <input
               class="input"
               type="search"
-              placeholder="Search icons"
-              aria-label="Search animated icons"
+              placeholder=${t('Search icons')}
+              aria-label=${t('Search animated icons')}
               .value=${this._query}
               @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)}
             />
           </div>
-          <select class="input domain" aria-label="Domain" .value=${this._domain} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
-            <option value="">All domains</option>
-            ${[...LIBRARY_DOMAINS].sort((a, b) => domainName(a).localeCompare(domainName(b))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainName(d)}</option>`)}
+          <select class="input domain" aria-label=${t('Domain')} .value=${this._domain} @change=${(e: Event) => (this._domain = (e.target as HTMLSelectElement).value)}>
+            <option value="">${t('All domains')}</option>
+            ${[...LIBRARY_DOMAINS].sort((a, b) => domainName(a, this.hass).localeCompare(domainName(b, this.hass))).map((d) => html`<option value=${d} ?selected=${d === this._domain}>${domainName(d, this.hass)}</option>`)}
           </select>
         </div>
         ${mine.length
           ? html`<section aria-labelledby="aig-mine">
-              <h3 id="aig-mine">My animations</h3>
+              <h3 id="aig-mine">${t('My animations')}</h3>
               <ul class="grid" role="list">
-                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, 'My animation', d, { kind: 'mine', doc: d }))}
+                ${mine.map((d) => this._tile(d.id, d.name, d.rig?.icon ?? this.icon, t('My animation'), d, { kind: 'mine', doc: d }))}
               </ul>
             </section>`
           : nothing}
         ${builtIns.length
           ? html`<section aria-labelledby="aig-lib">
               <div class="lib-head">
-                <h3 id="aig-lib">Icon library</h3>
+                <h3 id="aig-lib">${t('Icon library')}</h3>
                 ${this._styleControl()}
               </div>
-              <p class="help" id="aig-style-help">${STYLE_HELP[this._style]}</p>
+              <p class="help" id="aig-style-help">${t(STYLE_HELP[this._style])}</p>
               ${intro}
               <ul class="grid" role="list">
-                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain), e, { kind: 'library', entry: e, style: this._style }, this._style))}
+                ${builtIns.map((e) => this._tile(`lib:${e.id}`, e.name, e.icon, domainName(e.domain, this.hass), e, { kind: 'library', entry: e, style: this._style }, this._style))}
               </ul>
               ${toggle}
             </section>`
           : mine.length
             ? nothing
-            : html`<p class="help no-results">No icon animations match "${this._query}".</p>`}
+            : html`<p class="help no-results">${t('No icon animations match "{query}".', { query: this._query })}</p>`}
       `;
     }
   }

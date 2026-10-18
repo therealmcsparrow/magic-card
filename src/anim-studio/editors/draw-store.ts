@@ -8,6 +8,7 @@ import type { StudioSelection } from '../slots';
 import { tileModule, type PreviewTile } from '../tiles';
 import { rigViewBox, type ExportPiece } from '../svg-export';
 import { cubicsToD, parseViewBox, type Pt } from './draw-utils';
+import { m, type MessageId } from '../i18n';
 
 /*
  * State the drawing panels share (the toolbar, the stage overlay and the inspector are separate
@@ -48,15 +49,15 @@ export function activeTool(sel: StudioSelection): DrawTool {
   return sel.kind === 'tool' && isDrawTool(sel.tool) ? sel.tool : 'select';
 }
 
-export const TOOL_INFO: Record<DrawTool, { label: string; icon: string; base: string; hint: string }> = {
-  select: { label: 'Select', icon: 'mdi:cursor-default-outline', base: 'shape', hint: 'Click a shape to select it, drag to move it.' },
-  pen: { label: 'Pen', icon: 'mdi:fountain-pen-tip', base: 'path', hint: 'Click to add points, drag for curves. Click the first point to close, Enter to finish.' },
-  line: { label: 'Line', icon: 'mdi:vector-line', base: 'line', hint: 'Drag to draw a line.' },
-  rect: { label: 'Rectangle', icon: 'mdi:square-rounded-outline', base: 'rect', hint: 'Drag to draw. Shift: square, Alt: from the centre.' },
-  ellipse: { label: 'Ellipse', icon: 'mdi:ellipse-outline', base: 'ellipse', hint: 'Drag to draw. Shift: circle, Alt: from the centre.' },
-  freehand: { label: 'Freehand', icon: 'mdi:draw', base: 'stroke', hint: 'Draw freely; the stroke is smoothed when you let go.' },
-  erase: { label: 'Erase', icon: 'mdi:eraser', base: 'shape', hint: 'Click or drag over shapes to delete them.' },
-  motion: { label: 'Motion path', icon: 'mdi:map-marker-path', base: 'path', hint: 'Draw the path the selected part travels, starting where it rests.' },
+export const TOOL_INFO: Record<DrawTool, { label: MessageId; icon: string; base: string; hint: MessageId }> = {
+  select: { label: m('Select'), icon: 'mdi:cursor-default-outline', base: 'shape', hint: m('Click a shape to select it, drag to move it.') },
+  pen: { label: m('Pen'), icon: 'mdi:fountain-pen-tip', base: 'path', hint: m('Click to add points, drag for curves. Click the first point to close, Enter to finish.') },
+  line: { label: m('Line'), icon: 'mdi:vector-line', base: 'line', hint: m('Drag to draw a line.') },
+  rect: { label: m('Rectangle'), icon: 'mdi:square-rounded-outline', base: 'rect', hint: m('Drag to draw. Shift: square, Alt: from the centre.') },
+  ellipse: { label: m('Ellipse'), icon: 'mdi:ellipse-outline', base: 'ellipse', hint: m('Drag to draw. Shift: circle, Alt: from the centre.') },
+  freehand: { label: m('Freehand'), icon: 'mdi:draw', base: 'stroke', hint: m('Draw freely; the stroke is smoothed when you let go.') },
+  erase: { label: m('Erase'), icon: 'mdi:eraser', base: 'shape', hint: m('Click or drag over shapes to delete them.') },
+  motion: { label: m('Motion path'), icon: 'mdi:map-marker-path', base: 'path', hint: m('Draw the path the selected part travels, starting where it rests.') },
 };
 
 export interface DrawOptions {

@@ -1,4 +1,4 @@
-import { t } from '../i18n/labels';
+import { t as tl } from '../i18n/labels';
 import { getAnimationPreset } from '../utils/animation-presets';
 import { parseKeyframeBlocks, presetKeyframesBody } from './css-keyframes';
 import { DEFAULT_PARTICLES, type AnimationDoc, type AnimationKeyframe, type KeyframeTransform } from './model';
@@ -147,7 +147,7 @@ export function docFromPreset(presetId: string, id = presetDocId(presetId), name
   const d = p.defaults;
   const base: AnimationDoc = {
     id,
-    name: name ?? t(p.name),
+    name: name ?? tl(p.name),
     kind: 'keyframes',
     duration: parseFloat(d.duration),
     easing: d.easing,

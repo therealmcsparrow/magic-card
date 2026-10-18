@@ -1,9 +1,10 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { t } from '../../i18n/labels';
+import { t as tl } from '../../i18n/labels';
 import { editorSystem } from '../../css/editor-system';
 import { validEasing } from '../model';
 import { BEZIER_PRESETS, bezierOf, clampBezier, easingFromBezier, easingLabel, type Bezier } from './keyframes-utils';
+import { t, m, type MessageId } from '../i18n';
 
 /** The plot: x 0-1 across, y from Y_MAX (top) to Y_MIN (bottom) so overshoot stays visible. */
 const SIZE = 168;
@@ -17,7 +18,7 @@ const py = (y: number): number => PAD + ((Y_MAX - y) / (Y_MAX - Y_MIN)) * W;
 const curvePath = (b: Bezier, x0 = px, y0 = py): string => `M${x0(0)} ${y0(0)} C${x0(b[0])} ${y0(b[1])} ${x0(b[2])} ${y0(b[3])} ${x0(1)} ${y0(1)}`;
 
 /** Tile labels that would not fit (the full name is the tile's title). */
-const SHORT: Record<string, string> = { 'ease-in-out': 'In-out' };
+const SHORT: Record<string, MessageId> = { 'ease-in-out': m('In-out') };
 
 /** A small glyph of a curve (preset tiles). */
 function glyph(b: Bezier | undefined): TemplateResult {
@@ -262,7 +263,7 @@ export class AnimBezierEditor extends LitElement {
   @property({ type: String }) inherited = 'ease';
   @property({ type: Boolean }) disabled = false;
   /** Visible label prefix for ids / aria. */
-  @property({ type: String }) label = 'Easing';
+  @property({ type: String }) label = '';
 
   /** The curve while dragging (the value prop catches up through the host). */
   @state() private _drag?: { handle: 0 | 1; bezier: Bezier };
@@ -344,7 +345,7 @@ export class AnimBezierEditor extends LitElement {
     }
     if (s === (this.value ?? '')) return;
     if (!validEasing(s)) {
-      this._textError = 'Use a preset name, cubic-bezier(x1, y1, x2, y2) or steps(n).';
+      this._textError = t('Use a preset name, cubic-bezier(x1, y1, x2, y2) or steps(n).');
       return;
     }
     this._textError = '';
@@ -359,19 +360,19 @@ export class AnimBezierEditor extends LitElement {
     const checked = current ? (presetIds.includes(current) ? current : 'custom') : '';
     const curveCss = current ? (bezierOf(current) ? `cubic-bezier(${bezierOf(current)!.join(',')})` : current) : b ? `cubic-bezier(${b.join(',')})` : 'linear';
     return html`
-      <div class="presets" role="radiogroup" aria-label=${`${this.label} preset`}>
-        ${[{ id: '', label: 'Default', bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS.map((q) => ({ ...q, label: t(q.label) }))].map(
+      <div class="presets" role="radiogroup" aria-label=${t('{label} preset', { label: this.label || t('Easing') })}>
+        ${[{ id: '', label: t('Default'), bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS.map((q) => ({ ...q, label: tl(q.label) }))].map(
           (p) => html`<button
             type="button"
             class="preset"
             role="radio"
             data-easing=${p.id || 'default'}
             aria-checked=${checked === p.id ? 'true' : 'false'}
-            title=${p.id ? p.label : `The animation's easing (${easingLabel(this.inherited).toLowerCase()})`}
+            title=${p.id ? p.label : t("The animation's easing ({easingLabel})", { easingLabel: easingLabel(this.inherited).toLowerCase() })}
             ?disabled=${this.disabled}
             @click=${() => this._emit(p.id || undefined)}
           >
-            ${glyph(p.bezier)}<span>${SHORT[p.id] ?? p.label}</span>
+            ${glyph(p.bezier)}<span>${SHORT[p.id] !== undefined ? t(SHORT[p.id]) : p.label}</span>
           </button>`,
         )}
       </div>
@@ -407,7 +408,7 @@ export class AnimBezierEditor extends LitElement {
                     data-handle=${h}
                     style="left: ${(px(b[h * 2]) / SIZE) * 100}%; top: ${(py(b[h * 2 + 1]) / SIZE) * 100}%"
                     role="slider"
-                    aria-label=${h === 0 ? 'Start handle' : 'End handle'}
+                    aria-label=${h === 0 ? t('Start handle') : t('End handle')}
                     aria-valuemin="-1"
                     aria-valuemax="2"
                     aria-valuenow=${b[h * 2 + 1]}
@@ -417,7 +418,7 @@ export class AnimBezierEditor extends LitElement {
                     @keydown=${(e: KeyboardEvent) => this._key(e, h)}
                   ></button>`,
                 )
-              : html`<p class="steps-note">${current?.startsWith('steps') ? 'Steps jump between values; there is no curve to edit.' : ''}</p>`}
+              : html`<p class="steps-note">${current?.startsWith('steps') ? t('Steps jump between values; there is no curve to edit.') : ''}</p>`}
           </div>
           <div class="nums">
             ${(['x1', 'y1', 'x2', 'y2'] as const).map(
@@ -438,14 +439,14 @@ export class AnimBezierEditor extends LitElement {
               </div>`,
             )}
             <div class="num text">
-              <label for="bz-text">Easing value</label>
+              <label for="bz-text">${t('Easing value')}</label>
               <input
                 class="input mono"
                 id="bz-text"
                 type="text"
                 spellcheck="false"
                 autocomplete="off"
-                placeholder=${`Default (${this.inherited})`}
+                placeholder=${t('Default ({inherited})', { inherited: this.inherited })}
                 aria-invalid=${this._textError ? 'true' : 'false'}
                 aria-describedby=${this._textError ? 'bz-err' : nothing}
                 .value=${current ?? ''}

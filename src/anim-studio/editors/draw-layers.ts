@@ -11,6 +11,7 @@ import { EMPTY_LAYER_VIEW, type LayerView, type LayersDensity } from '../../cont
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import { hasDrawOn, isFilled, isStroked, moveShapeInLayer, removeShape } from './draw-utils';
 import { selectedShapeId, sourceViewBox } from './draw-store';
+import { t, m } from '../i18n';
 
 /*
  * mc-anim-shapes-layers (place 'layers'): the rig's drawn shapes, top of the paint order first, with
@@ -95,8 +96,8 @@ abstract class ShapesLayersBase extends LitElement {
     const under = this.side === 'under';
     const rows = doc.rig!.shapes!.filter((x) => (x.layer === 'under') === under);
     const edge = dir === 'up' ? under && rows[rows.length - 1].id === id : !under && rows[0].id === id;
-    this._emit(next, dir === 'up' ? (edge ? 'Bring shape over the icon' : 'Bring shape forward') : edge ? 'Send shape under the icon' : 'Send shape backward');
-    this._list.announce(`${s.name} moved ${edge ? (dir === 'up' ? 'over the icon' : 'under the icon') : dir === 'up' ? 'up' : 'down'}`);
+    this._emit(next, dir === 'up' ? (edge ? t('Bring shape over the icon') : t('Bring shape forward')) : edge ? t('Send shape under the icon') : t('Send shape backward'));
+    this._list.announce(t('{name} moved {where}', { name: s.name, where: edge ? (dir === 'up' ? t('over the icon') : t('under the icon')) : dir === 'up' ? t('up') : t('down') }));
   }
 
   private _delete(id: string): void {
@@ -130,11 +131,11 @@ abstract class ShapesLayersBase extends LitElement {
     const rows = shapes.map((s, i) => ({ s, i })).filter((r) => (r.s.layer === 'under') === under).reverse();
     const first = rows[0].s.id;
     const last = rows[rows.length - 1].s.id;
-    return html`<ul aria-label=${under ? 'Shapes under the icon' : 'Shapes over the icon'}>
+    return html`<ul aria-label=${under ? t('Shapes under the icon') : t('Shapes over the icon')}>
       ${rows.map(({ s }) => {
         const target = `shape:${s.id}` as const;
         const track = doc.tracks?.find((t) => t.target === target);
-        const notes = [hasDrawOn(doc, target) ? 'draws on' : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
+        const notes = [hasDrawOn(doc, target) ? t('draws on') : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
         const upEdge = under && first === s.id;
         const downEdge = !under && last === s.id;
         const open = tracksOpen(doc, this.layerView ?? EMPTY_LAYER_VIEW, target, target);
@@ -146,19 +147,19 @@ abstract class ShapesLayersBase extends LitElement {
           note: notes,
           describe: notes,
           selected: s.id === sel && !(open && this.selection.kind === 'keys'),
-          up: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'up') !== doc, label: upEdge ? `Bring ${s.name} over the icon` : `Bring ${s.name} forward`, menu: upEdge ? 'Bring over the icon' : 'Move up (drawn on top)' },
-          down: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'down') !== doc, label: downEdge ? `Send ${s.name} under the icon` : `Send ${s.name} backward`, menu: downEdge ? 'Send under the icon' : 'Move down' },
+          up: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'up') !== doc, label: upEdge ? t('Bring {name} over the icon', { name: s.name }) : t('Bring {name} forward', { name: s.name }), menu: upEdge ? t('Bring over the icon') : t('Move up (drawn on top)') },
+          down: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'down') !== doc, label: downEdge ? t('Send {name} under the icon', { name: s.name }) : t('Send {name} backward', { name: s.name }), menu: downEdge ? t('Send under the icon') : t('Move down') },
           extra:
             s.id !== sel
               ? undefined
-              : html`<button type="button" class="icon-btn sm danger del" data-ctl="del" tabindex="-1" aria-label=${`Delete ${s.name}`} title="Delete shape" aria-disabled=${this.disabled || this._list.locked(target) ? 'true' : nothing} @click=${() => this._delete(s.id)}>
+              : html`<button type="button" class="icon-btn sm danger del" data-ctl="del" tabindex="-1" aria-label=${t('Delete {name}', { name: s.name })} title=${t('Delete shape')} aria-disabled=${this.disabled || this._list.locked(target) ? 'true' : nothing} @click=${() => this._delete(s.id)}>
                   <ha-icon icon="mdi:delete-outline"></ha-icon>
                 </button>`,
         });
         return open ? [row, ...trackRows(this._list, doc, this.selection, target, 2)] : [row];
       })}
     </ul>
-    ${shapes.length >= 48 ? html`<p class="empty-note">The rig holds the most shapes it can (48).</p>` : nothing}`;
+    ${shapes.length >= 48 ? html`<p class="empty-note">${t('The rig holds the most shapes it can (48).')}</p>` : nothing}`;
   }
 }
 
@@ -173,8 +174,8 @@ export class AnimShapesUnderLayers extends ShapesLayersBase {
 }
 
 // keyframes column, top to bottom: Shapes over the icon, Icon parts, Shapes under the icon, Card parts (LAYERS_ORDER)
-registerPanel({ tag: 'mc-anim-shapes-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer !== 'under'), title: 'Shapes over the icon', order: 5 });
-registerPanel({ tag: 'mc-anim-shapes-under-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer === 'under'), title: 'Shapes under the icon', order: 30 });
+registerPanel({ tag: 'mc-anim-shapes-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer !== 'under'), title: m('Shapes over the icon'), order: 5 });
+registerPanel({ tag: 'mc-anim-shapes-under-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer === 'under'), title: m('Shapes under the icon'), order: 30 });
 
 declare global {
   interface HTMLElementTagNameMap {

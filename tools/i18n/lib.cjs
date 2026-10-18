@@ -148,12 +148,13 @@ const sortedIds = (set) => [...set].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
 
 const catalogue = (n, name) => readJson(path.join(n.dir, name), {});
 
-/** Table text of an en-US / nl entry: the catalogue value; a context id stores the text without the prefix. */
+/** Table text of an en-US / nl entry: the catalogue value; a context id stores the text without the prefix. An entry equal to the British text is left empty: the runtime then reads the en-GB entry (smaller tables). */
 function tablesFor(n, ids) {
   const us = catalogue(n, 'en-US.json');
   const nl = catalogue(n, 'nl.json');
   const list = sortedIds(ids);
-  return { list, rows: [list, list.map((i) => us[i] ?? ''), list.map((i) => nl[i] ?? '')] };
+  const same = (v, i) => (v === undefined || v === i ? '' : v);
+  return { list, rows: [list, list.map((i) => same(us[i], i)), list.map((i) => same(nl[i], i))] };
 }
 
 function genSource(rows) {

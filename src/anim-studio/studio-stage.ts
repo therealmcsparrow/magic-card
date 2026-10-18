@@ -9,6 +9,7 @@ import type { PreviewChangeDetail, StageInfo } from './slots';
 import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail, type StageParticles } from '../contracts/studio-layers';
 import { StageSheets, stageHide } from './stage-hide';
 import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, type PreviewSim } from './editors/states-sim';
+import { t, m, type MessageId } from './i18n';
 
 /*
  * The studio's preview stage: the real `magic-card` (already loaded by the page, never defined
@@ -31,9 +32,9 @@ import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, 
 
 export type StageTheme = 'light' | 'dark';
 
-const THEMES: Array<{ id: StageTheme; label: string; icon: string }> = [
-  { id: 'light', label: 'Light card', icon: 'mdi:white-balance-sunny' },
-  { id: 'dark', label: 'Dark card', icon: 'mdi:weather-night' },
+const THEMES: Array<{ id: StageTheme; label: MessageId; icon: string }> = [
+  { id: 'light', label: m('Light card'), icon: 'mdi:white-balance-sunny' },
+  { id: 'dark', label: m('Dark card'), icon: 'mdi:weather-night' },
 ];
 export const SPEEDS = [0.25, 0.5, 1, 1.5, 2];
 /** The preview card's natural width (px), before it is scaled to fit. */
@@ -468,7 +469,7 @@ export class AnimationStage extends LitElement {
 
   private _showAll(): void {
     const view: LayerView = { ...this.layerView, hidden: [], solo: [] };
-    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: this.layerView.locked.length ? 'All layers shown. Locks kept.' : 'All layers shown' }, bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: this.layerView.locked.length ? t('All layers shown. Locks kept.') : t('All layers shown') }, bubbles: true, composed: true }));
   }
 
   protected updated(changed: PropertyValues): void {
@@ -496,7 +497,7 @@ export class AnimationStage extends LitElement {
 
   private _seg<T extends string>(
     label: string,
-    items: Array<{ id: T; label: string; icon: string }>,
+    items: Array<{ id: T; label: MessageId; icon: string }>,
     value: T,
     pick: (v: T) => void,
     cls: string,
@@ -524,10 +525,10 @@ export class AnimationStage extends LitElement {
           role="radio"
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
-          title=${x.label}
+          title=${t(x.label)}
           @click=${() => pick(x.id)}
         >
-          <ha-icon icon=${x.icon}></ha-icon><span class="lbl">${x.label}</span>
+          <ha-icon icon=${x.icon}></ha-icon><span class="lbl">${t(x.label)}</span>
         </button>`;
       })}
     </div>`;
@@ -536,14 +537,14 @@ export class AnimationStage extends LitElement {
   private _missing(): TemplateResult {
     return html`<div class="missing" role="status">
       <ha-icon icon="mdi:card-off-outline"></ha-icon>
-      <strong>Magic Card is not loaded on this page</strong>
-      <p>The preview plays on a real magic-card. Load magic-card.js (your dashboard resource) before the animation studio.</p>
+      <strong>${t('Magic Card is not loaded on this page')}</strong>
+      <p>${t('The preview plays on a real magic-card. Load magic-card.js (your dashboard resource) before the animation studio.')}</p>
     </div>`;
   }
 
   protected render(): TemplateResult {
     const cycle = this.cycle;
-    const t = Math.min(this._t, cycle);
+    const now = Math.min(this._t, cycle);
     const defined = !!customElements.get('magic-card');
     const k = this._k;
     const off = this._off;
@@ -553,10 +554,10 @@ export class AnimationStage extends LitElement {
       <div class="canvas">
         <div class="dock dock-top">
           ${this.hiddenLayers > 0 || this.layerView.solo.length > 0
-            ? html`<div class="hide-chip" role="group" aria-label="Layers hidden in the preview">
+            ? html`<div class="hide-chip" role="group" aria-label=${t('Layers hidden in the preview')}>
                 <ha-icon icon="mdi:eye-off-outline"></ha-icon>
-                <span>${this.hiddenLayers > 0 ? `Preview hides ${this.hiddenLayers} layer${this.hiddenLayers === 1 ? '' : 's'}` : 'Solo on'}</span>
-                <button type="button" class="show-all" aria-label="Show all hidden layers" @click=${() => this._showAll()}>Show all</button>
+                <span>${this.hiddenLayers > 0 ? t('Preview hides {count, plural, one {# layer} other {# layers}}', { count: this.hiddenLayers }) : t('Solo on')}</span>
+                <button type="button" class="show-all" aria-label=${t('Show all hidden layers')} @click=${() => this._showAll()}>${t('Show all')}</button>
               </div>`
             : nothing}
           <slot name="top"></slot>
@@ -568,11 +569,11 @@ export class AnimationStage extends LitElement {
             <div class="overlay"><slot name="overlay"></slot></div>
           </div>
         </div>
-        ${this.reduced && defined ? html`<p class="note">With reduced motion the card shows its still state: this animation does not play.</p>` : nothing}
+        ${this.reduced && defined ? html`<p class="note">${t('With reduced motion the card shows its still state: this animation does not play.')}</p>` : nothing}
         ${off
-          ? html`<span class="zoom-tag" title="Zoomed to the icon while you edit its parts or draw">Icon ${Math.round(k * 100)}%</span>`
+          ? html`<span class="zoom-tag" title=${t('Zoomed to the icon while you edit its parts or draw')}>${t('Icon {percent}%', { percent: Math.round(k * 100) })}</span>`
           : Math.abs(k - 1) > 0.005
-            ? html`<span class="zoom-tag" title="The preview is scaled to fit the stage">${Math.round(k * 100)}%</span>`
+            ? html`<span class="zoom-tag" title=${t('The preview is scaled to fit the stage')}>${Math.round(k * 100)}%</span>`
             : nothing}
         </div>
         <div class="dock dock-bottom"><slot name="bottom"></slot></div>
@@ -581,8 +582,8 @@ export class AnimationStage extends LitElement {
         <button
           type="button"
           class="icon-btn sm play"
-          aria-label=${this.playing ? 'Pause (Space)' : 'Play (Space)'}
-          title=${this.playing ? 'Pause (Space)' : 'Play (Space)'}
+          aria-label=${this.playing ? t('Pause (Space)') : t('Play (Space)')}
+          title=${this.playing ? t('Pause (Space)') : t('Play (Space)')}
           ?disabled=${this.reduced || !defined}
           @click=${() => this.togglePlay()}
         >
@@ -594,31 +595,31 @@ export class AnimationStage extends LitElement {
           min="0"
           max=${cycle}
           step="0.01"
-          aria-label="Position in the cycle"
-          aria-valuetext="${t.toFixed(2)} of ${cycle.toFixed(2)} seconds"
-          .value=${String(t)}
+          aria-label=${t('Position in the cycle')}
+          aria-valuetext=${t('{now} of {total} seconds', { now: now.toFixed(2), total: cycle.toFixed(2) })}
+          .value=${String(now)}
           ?disabled=${this.reduced || !defined}
           @input=${(e: Event) => this.seek(Number((e.target as HTMLInputElement).value))}
         />
-        <span class="time mono" aria-hidden="true">${t.toFixed(2)} / ${cycle.toFixed(2)} s</span>
+        <span class="time mono" aria-hidden="true">${now.toFixed(2)} / ${cycle.toFixed(2)} s</span>
         <label class="speed">
-          <span class="sr-only">Speed</span>
+          <span class="sr-only">${t('Speed')}</span>
           <div class="select">
-            <select class="input" aria-label="Speed" @change=${(e: Event) => this.setSpeed(Number((e.target as HTMLSelectElement).value))}>
+            <select class="input" aria-label=${t('Speed')} @change=${(e: Event) => this.setSpeed(Number((e.target as HTMLSelectElement).value))}>
               ${SPEEDS.map((s) => html`<option value=${s} ?selected=${s === this.speed}>${s}×</option>`)}
             </select>
             <ha-icon icon="mdi:chevron-down"></ha-icon>
           </div>
         </label>
         <span class="view">
-          ${this._seg('Preview tile', TILES, this.tile, (v) => this._pickTile(v), 'tiles')}
-          ${this._seg('Card theme', THEMES, this.theme, (v) => (this.theme = v), 'themes')}
+          ${this._seg(t('Preview tile'), TILES, this.tile, (v) => this._pickTile(v), 'tiles')}
+          ${this._seg(t('Card theme'), THEMES, this.theme, (v) => (this.theme = v), 'themes')}
           <button
             type="button"
             class="toggle reduced"
             aria-pressed=${this.reduced ? 'true' : 'false'}
-            aria-label="Reduced motion"
-            title="Preview with reduced motion"
+            aria-label=${t('Reduced motion')}
+            title=${t('Preview with reduced motion')}
             @click=${() => (this.reduced = !this.reduced)}
           >
             <ha-icon icon="mdi:motion-pause-outline"></ha-icon>

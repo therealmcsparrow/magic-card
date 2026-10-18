@@ -1,5 +1,6 @@
 import type { AnimationDoc, AnimationKeyframe } from '../model';
 import type { BindProperty, Binding, TargetRef } from '../model-v2-core';
+import { m, t, type MessageId } from '../i18n';
 
 /*
  * Pure helpers of the value bindings panel (editors/bindings-panel.ts): the bindable properties
@@ -11,7 +12,7 @@ export const BINDINGS_MAX = 8;
 
 export interface BindPropertyInfo {
   id: BindProperty;
-  label: string;
+  label: MessageId;
   /** Unit of the output numbers (shown in the field labels). */
   unit: string;
   /** Output when the property is picked. */
@@ -19,19 +20,19 @@ export interface BindPropertyInfo {
   step: number;
   /** Only for icon parts, groups and shapes. */
   rigOnly?: boolean;
-  hint: string;
+  hint: MessageId;
 }
 
 export const BIND_PROPERTY_INFO: BindPropertyInfo[] = [
-  { id: 'rotate_speed', label: 'Rotation speed', unit: '°/s', output: [0, 720], step: 10, hint: 'Spins continuously, faster as the value rises (a fan).' },
-  { id: 'rotate', label: 'Rotation', unit: '°', output: [0, 180], step: 5, hint: 'Turns to an angle (a needle or a dial).' },
-  { id: 'x', label: 'Move X', unit: 'px', output: [0, 12], step: 1, hint: 'Moves sideways.' },
-  { id: 'y', label: 'Move Y', unit: 'px', output: [0, -12], step: 1, hint: 'Moves up or down.' },
-  { id: 'scale', label: 'Scale', unit: '×', output: [0.8, 1.2], step: 0.05, hint: 'Grows with the value.' },
-  { id: 'opacity', label: 'Opacity', unit: '0-1', output: [0.3, 1], step: 0.05, hint: 'Fades in with the value.' },
-  { id: 'draw', label: 'Draw', unit: '0-1', output: [0, 1], step: 0.05, rigOnly: true, hint: 'Draws the line on (a battery or level).' },
-  { id: 'color_mix', label: 'Colour mix', unit: '', output: ['#9e9e9e', '#ffb300'], step: 1, hint: 'Blends from the first colour to the second.' },
-  { id: 'speed', label: 'Playback speed', unit: '×', output: [0.25, 2], step: 0.05, hint: 'Plays this animation faster or slower.' },
+  { id: 'rotate_speed', label: m('Rotation speed'), unit: '°/s', output: [0, 720], step: 10, hint: m('Spins continuously, faster as the value rises (a fan).') },
+  { id: 'rotate', label: m('Rotation'), unit: '°', output: [0, 180], step: 5, hint: m('Turns to an angle (a needle or a dial).') },
+  { id: 'x', label: m('Move X'), unit: 'px', output: [0, 12], step: 1, hint: m('Moves sideways.') },
+  { id: 'y', label: m('Move Y'), unit: 'px', output: [0, -12], step: 1, hint: m('Moves up or down.') },
+  { id: 'scale', label: m('Scale'), unit: '×', output: [0.8, 1.2], step: 0.05, hint: m('Grows with the value.') },
+  { id: 'opacity', label: m('Opacity'), unit: '0-1', output: [0.3, 1], step: 0.05, hint: m('Fades in with the value.') },
+  { id: 'draw', label: m('Draw'), unit: '0-1', output: [0, 1], step: 0.05, rigOnly: true, hint: m('Draws the line on (a battery or level).') },
+  { id: 'color_mix', label: m('Colour mix'), unit: '', output: ['#9e9e9e', '#ffb300'], step: 1, hint: m('Blends from the first colour to the second.') },
+  { id: 'speed', label: m('Playback speed'), unit: '×', output: [0.25, 2], step: 0.05, hint: m('Plays this animation faster or slower.') },
 ];
 
 export const bindInfo = (p: BindProperty): BindPropertyInfo => BIND_PROPERTY_INFO.find((x) => x.id === p) ?? BIND_PROPERTY_INFO[0];
@@ -71,8 +72,8 @@ export function withBindings(doc: AnimationDoc, bindings: Binding[]): AnimationD
 
 /** Why a binding cannot be saved as it is, if so. */
 export function bindingProblem(b: Binding): string | undefined {
-  if (b.input.min === b.input.max) return 'Min and max must differ.';
-  if (b.input.attribute !== undefined && b.input.attribute !== '' && !ATTRIBUTE_RE.test(b.input.attribute)) return 'Attribute names use letters, digits, _ . and -.';
+  if (b.input.min === b.input.max) return t('Min and max must differ.');
+  if (b.input.attribute !== undefined && b.input.attribute !== '' && !ATTRIBUTE_RE.test(b.input.attribute)) return t('Attribute names use letters, digits, _ . and -.');
   return undefined;
 }
 
@@ -92,18 +93,18 @@ export function laneConflict(doc: AnimationDoc | undefined, b: Binding): string 
   const has = (f: (k: AnimationKeyframe) => unknown) => list.some((k) => f(k) !== undefined);
   switch (b.property) {
     case 'opacity':
-      return has((k) => k.opacity) ? 'The timeline also animates the opacity here: while it plays, its opacity wins over this binding.' : undefined;
+      return has((k) => k.opacity) ? t('The timeline also animates the opacity here: while it plays, its opacity wins over this binding.') : undefined;
     case 'draw':
-      return has((k) => k.draw) ? 'The timeline also animates the draw here: while it plays, it wins over this binding.' : undefined;
+      return has((k) => k.draw) ? t('The timeline also animates the draw here: while it plays, it wins over this binding.') : undefined;
     case 'color_mix': {
       const lane = b.target === 'background' ? has((k) => k.background) : has((k) => k.color);
-      return lane ? 'The timeline also animates this colour: while it plays, its colour wins over this binding.' : undefined;
+      return lane ? t('The timeline also animates this colour: while it plays, its colour wins over this binding.') : undefined;
     }
     case 'rotate':
     case 'x':
     case 'y':
     case 'scale':
-      return has((k) => k.transform?.skew_x ?? k.transform?.skew_y) ? 'The timeline skews this target: while it plays, the skew replaces this binding’s movement.' : undefined;
+      return has((k) => k.transform?.skew_x ?? k.transform?.skew_y) ? t('The timeline skews this target: while it plays, the skew replaces this binding’s movement.') : undefined;
     default:
       return undefined;
   }

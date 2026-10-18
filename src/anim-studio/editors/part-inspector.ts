@@ -26,7 +26,7 @@ import {
   setPivot,
   setTrackPivot,
   sourceIcon,
-  TRACK_CAP_MESSAGE,
+  trackCapMessage,
   trackCapReached,
   targetBox,
   targetExists,
@@ -38,6 +38,7 @@ import {
   type Box,
 } from './parts-model';
 import { parseViewBox } from './draw-utils';
+import { t, m, type MessageId } from '../i18n';
 
 /*
  * The inspector of a selected icon part or group (studio slot 'inspector' when the selection's
@@ -49,16 +50,16 @@ import { parseViewBox } from './draw-utils';
  */
 
 type DrawMode = 'none' | 'on' | 'off' | 'custom';
-const PIVOTS: Array<{ fx: number; fy: number; label: string }> = [
-  { fx: 0, fy: 0, label: 'Top left' },
-  { fx: 0.5, fy: 0, label: 'Top' },
-  { fx: 1, fy: 0, label: 'Top right' },
-  { fx: 0, fy: 0.5, label: 'Left' },
-  { fx: 0.5, fy: 0.5, label: 'Centre' },
-  { fx: 1, fy: 0.5, label: 'Right' },
-  { fx: 0, fy: 1, label: 'Bottom left' },
-  { fx: 0.5, fy: 1, label: 'Bottom' },
-  { fx: 1, fy: 1, label: 'Bottom right' },
+const PIVOTS: Array<{ fx: number; fy: number; label: MessageId }> = [
+  { fx: 0, fy: 0, label: m('Top left') },
+  { fx: 0.5, fy: 0, label: m('Top') },
+  { fx: 1, fy: 0, label: m('Top right') },
+  { fx: 0, fy: 0.5, label: m('Left') },
+  { fx: 0.5, fy: 0.5, label: m('Centre') },
+  { fx: 1, fy: 0.5, label: m('Right') },
+  { fx: 0, fy: 1, label: m('Bottom left') },
+  { fx: 0.5, fy: 1, label: m('Bottom') },
+  { fx: 1, fy: 1, label: m('Bottom right') },
 ];
 /** Template size for icon parts: half-width in icon units. */
 const PART_PATH_SIZE = 4;
@@ -136,7 +137,7 @@ export class AnimPartInspector extends LitElement {
     const group = ref.startsWith('group:');
     const parts = partIdsOf(d, [ref]);
     const pieces = group ? 0 : (d.rig?.parts.find((p) => p.id === refId(ref))?.from?.length ?? 0);
-    const sub = group ? `Group of ${parts.length} part${parts.length === 1 ? '' : 's'}` : pieces > 1 ? `Part of ${pieces} shapes` : 'Part';
+    const sub = group ? t('Group of {count, plural, one {# part} other {# parts}}', { count: parts.length }) : pieces > 1 ? t('Part of {pieces} shapes', { pieces }) : t('Part');
     return html`<div class="head">
         <span class="tile-icon"><ha-icon icon=${group ? 'mdi:folder-outline' : 'mdi:vector-square'}></ha-icon></span>
         <div class="titles">
@@ -145,7 +146,7 @@ export class AnimPartInspector extends LitElement {
         </div>
       </div>
       <div class="field">
-        <div class="field-head"><label for="pi-name">Name</label></div>
+        <div class="field-head"><label for="pi-name">${t('Name')}</label></div>
         <input
           id="pi-name"
           class="input"
@@ -154,7 +155,7 @@ export class AnimPartInspector extends LitElement {
           ?disabled=${this.disabled}
           @change=${(e: Event) => {
             const v = (e.target as HTMLInputElement).value;
-            if (v.trim() && v.trim() !== targetName(d, ref)) this._emit(renameTarget(d, ref, v), group ? 'Rename group' : 'Rename part');
+            if (v.trim() && v.trim() !== targetName(d, ref)) this._emit(renameTarget(d, ref, v), group ? t('Rename group') : t('Rename part'));
           }}
         />
       </div>
@@ -177,7 +178,7 @@ export class AnimPartInspector extends LitElement {
     const preset = hasTrackPivot(d, ref);
     const pivot = targetPivot(d, ref, pieces, parseViewBox(this._geom?.viewBox)) ?? own;
     const set = (x: number, y: number) => this._emit(setEffectivePivot(d, ref, [x, y]), 'Move pivot');
-    const centre = () => this._emit(preset ? setEffectivePivot(d, ref, pivotAt(box!, 0.5, 0.5)) : setPivot(d, ref, undefined), preset ? 'Move pivot' : 'Reset pivot');
+    const centre = () => this._emit(preset ? setEffectivePivot(d, ref, pivotAt(box!, 0.5, 0.5)) : setPivot(d, ref, undefined), preset ? t('Move pivot') : t('Reset pivot'));
     const num = (axis: 0 | 1, label: string) => html`<div class="field">
       <div class="field-head"><label for="pi-p${axis}">${label}</label></div>
       <div class="unit">
@@ -188,7 +189,7 @@ export class AnimPartInspector extends LitElement {
           step="0.25"
           inputmode="decimal"
           .value=${pivot ? String(r2(pivot[axis])) : ''}
-          placeholder="Centre"
+          placeholder=${t('Centre')}
           ?disabled=${this.disabled}
           @change=${(e: Event) => {
             const v = Number((e.target as HTMLInputElement).value);
@@ -198,32 +199,32 @@ export class AnimPartInspector extends LitElement {
             else set(p[0], v);
           }}
         />
-        <span class="suffix" aria-hidden="true">units</span>
+        <span class="suffix" aria-hidden="true">${t('units')}</span>
       </div>
     </div>`;
     return html`<section class="group" aria-labelledby="pi-pivot">
       <div class="group-head">
         <ha-icon icon="mdi:crosshairs-gps"></ha-icon>
-        <h3 id="pi-pivot">Pivot</h3>
-        <span class=${preset ? 'src is-preset' : 'src'} data-pivot-source=${preset ? 'track' : 'part'}>${preset ? 'Preset pivot' : group ? 'Group pivot' : 'Part pivot'}</span>
+        <h3 id="pi-pivot">${t('Pivot')}</h3>
+        <span class=${preset ? 'src is-preset' : 'src'} data-pivot-source=${preset ? 'track' : 'part'}>${preset ? t('Preset pivot') : group ? t('Group pivot') : t('Part pivot')}</span>
         ${preset ? nothing : fieldReset('pivot', !!own, () => this._emit(setPivot(d, ref, undefined), 'Reset pivot'))}
       </div>
       <p class="help">
         ${preset
-          ? `The point the preset turns this ${group ? 'group' : 'part'} around, in icon units. It wins over the ${group ? 'group' : 'part'}'s own pivot. Drag it on the stage.`
-          : `The point the ${group ? 'group' : 'part'} rotates and scales around, in icon units. Drag it on the stage.`}
+          ? group ? t("The point the preset turns this group around, in icon units. It wins over the group's own pivot. Drag it on the stage.") : t("The point the preset turns this part around, in icon units. It wins over the part's own pivot. Drag it on the stage.")
+          : group ? t('The point the group rotates and scales around, in icon units. Drag it on the stage.') : t('The point the part rotates and scales around, in icon units. Drag it on the stage.')}
       </p>
       <div class="pair">${num(0, 'X')} ${num(1, 'Y')}</div>
       ${box
-        ? html`<div class="grid3" role="group" aria-label=${`Pivot on the ${group ? 'group' : 'part'}'s box`}>
+        ? html`<div class="grid3" role="group" aria-label=${group ? t("Pivot on the group's box") : t("Pivot on the part's box")}>
             ${PIVOTS.map((p) => {
               const [x, y] = pivotAt(box, p.fx, p.fy);
               const on = !!pivot && Math.abs(pivot[0] - x) < 0.01 && Math.abs(pivot[1] - y) < 0.01;
               return html`<button
                 type="button"
                 class="cell"
-                aria-label=${`Pivot: ${p.label.toLowerCase()}`}
-                title=${p.label}
+                aria-label=${t('Pivot: {position}', { position: t(p.label).toLowerCase() })}
+                title=${t(p.label)}
                 aria-pressed=${on ? 'true' : 'false'}
                 ?disabled=${this.disabled}
                 @click=${() => (p.fx === 0.5 && p.fy === 0.5 ? centre() : set(x, y))}
@@ -236,7 +237,7 @@ export class AnimPartInspector extends LitElement {
       ${preset
         ? html`<div>
             <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => this._emit(setTrackPivot(d, ref, undefined), 'Reset to part pivot')}>
-              Reset to ${group ? 'group' : 'part'} pivot
+              ${group ? t('Reset to group pivot') : t('Reset to part pivot')}
             </button>
           </div>`
         : nothing}
@@ -248,11 +249,11 @@ export class AnimPartInspector extends LitElement {
     const mode = this._drawMode(ref);
     // a new track would pass the cap: drawing on is blocked (turning it off stays possible)
     const capped = trackCapReached(d, ref);
-    const apply = (m: 'none' | 'on' | 'off') => this._emit(setDrawOn(d, ref, m, this._drawFrom, this._drawTo), m === 'none' ? 'Remove draw-on' : m === 'on' ? 'Draw on' : 'Draw off');
+    const apply = (m: 'none' | 'on' | 'off') => this._emit(setDrawOn(d, ref, m, this._drawFrom, this._drawTo), m === 'none' ? t('Remove draw-on') : m === 'on' ? t('Draw on') : t('Draw off'));
     const modes: Array<{ id: 'none' | 'on' | 'off'; label: string }> = [
-      { id: 'none', label: 'Off' },
-      { id: 'on', label: 'Draw on' },
-      { id: 'off', label: 'Draw off' },
+      { id: 'none', label: t('Off') },
+      { id: 'on', label: t('Draw on') },
+      { id: 'off', label: t('Draw off') },
     ];
     const pct = (id: string, label: string, value: number, set: (v: number) => void) => html`<div class="field">
       <div class="field-head"><label for=${id}>${label}</label></div>
@@ -280,21 +281,21 @@ export class AnimPartInspector extends LitElement {
     return html`<section class="group" aria-labelledby="pi-draw">
       <div class="group-head">
         <ha-icon icon="mdi:draw"></ha-icon>
-        <h3 id="pi-draw">Draw</h3>
+        <h3 id="pi-draw">${t('Draw')}</h3>
       </div>
-      <p class="help">The outline is traced, then the part fills in.</p>
-      <div class="seg full" role="radiogroup" aria-label="Draw">
+      <p class="help">${t('The outline is traced, then the part fills in.')}</p>
+      <div class="seg full" role="radiogroup" aria-label=${t('Draw')}>
         ${modes.map(
           (m) =>
             html`<button type="button" role="radio" aria-checked=${mode === m.id ? 'true' : 'false'} ?disabled=${this.disabled || (capped && m.id !== 'none')} @click=${() => apply(m.id)}>${m.label}</button>`,
         )}
       </div>
-      ${capped ? html`<p class="help cap">${TRACK_CAP_MESSAGE}</p>` : nothing}
-      ${mode === 'custom' ? html`<p class="help">This part has its own draw keys on the timeline.</p>` : nothing}
+      ${capped ? html`<p class="help cap">${trackCapMessage()}</p>` : nothing}
+      ${mode === 'custom' ? html`<p class="help">${t('This part has its own draw keys on the timeline.')}</p>` : nothing}
       ${mode !== 'none'
         ? html`<div class="pair">
-            ${pct('pi-df', 'Starts at', this._drawFrom, (v) => (this._drawFrom = v))}
-            ${pct('pi-dt', 'Complete at', this._drawTo, (v) => (this._drawTo = Math.max(v, this._drawFrom)))}
+            ${pct('pi-df', t('Starts at'), this._drawFrom, (v) => (this._drawFrom = v))}
+            ${pct('pi-dt', t('Complete at'), this._drawTo, (v) => (this._drawTo = Math.max(v, this._drawFrom)))}
           </div>`
         : nothing}
     </section>`;
@@ -304,23 +305,23 @@ export class AnimPartInspector extends LitElement {
     const d = this.doc!;
     const path = trackOf(d, ref)?.path;
     const capped = !path && trackCapReached(d, ref);
-    const toggle = () => this._emit(setPartPath(d, ref, path ? undefined : { d: DEFAULT_PART_PATH }), path ? 'Remove motion path' : 'Add motion path');
+    const toggle = () => this._emit(setPartPath(d, ref, path ? undefined : { d: DEFAULT_PART_PATH }), path ? t('Remove motion path') : t('Add motion path'));
     return html`<section class="group" aria-labelledby="pi-path">
       <div class="group-head">
         <ha-icon icon="mdi:vector-curve"></ha-icon>
-        <h3 id="pi-path">Motion path</h3>
+        <h3 id="pi-path">${t('Motion path')}</h3>
       </div>
       <div class="switch-row">
         <div class="txt">
-          <span class="lbl">Follow a path</span>
-          <p class="help">Moves the part along a curve, from its rest position. Drag the points on the stage.</p>
+          <span class="lbl">${t('Follow a path')}</span>
+          <p class="help">${t('Moves the part along a curve, from its rest position. Drag the points on the stage.')}</p>
         </div>
-        <button type="button" class="switch" role="switch" aria-checked=${path ? 'true' : 'false'} aria-label="Follow a path" ?disabled=${this.disabled || capped} @click=${toggle}></button>
+        <button type="button" class="switch" role="switch" aria-checked=${path ? 'true' : 'false'} aria-label=${t('Follow a path')} ?disabled=${this.disabled || capped} @click=${toggle}></button>
       </div>
-      ${capped ? html`<p class="help cap">${TRACK_CAP_MESSAGE}</p>` : nothing}
+      ${capped ? html`<p class="help cap">${trackCapMessage()}</p>` : nothing}
       ${path
         ? html`<div class="field">
-              <div class="field-head"><label for="pi-tpl">Shape</label></div>
+              <div class="field-head"><label for="pi-tpl">${t('Shape')}</label></div>
               <div class="select">
                 <select
                   id="pi-tpl"
@@ -334,21 +335,21 @@ export class AnimPartInspector extends LitElement {
                     (e.target as HTMLSelectElement).value = '';
                   }}
                 >
-                  <option value="">Replace with…</option>
-                  <option value="arc">Arc</option>
-                  ${PATH_TEMPLATES.map((t) => html`<option value=${t.id}>${t.label}</option>`)}
+                  <option value="">${t('Replace with…')}</option>
+                  <option value="arc">${t('Arc')}</option>
+                  ${PATH_TEMPLATES.map((tpl) => html`<option value=${tpl.id}>${t(tpl.label)}</option>`)}
                 </select>
                 <ha-icon icon="mdi:chevron-down"></ha-icon>
               </div>
             </div>
             <div class="switch-row">
-              <div class="txt"><span class="lbl">Turn with the path</span></div>
+              <div class="txt"><span class="lbl">${t('Turn with the path')}</span></div>
               <button
                 type="button"
                 class="switch"
                 role="switch"
                 aria-checked=${path.follow_rotation ? 'true' : 'false'}
-                aria-label="Turn with the path"
+                aria-label=${t('Turn with the path')}
                 ?disabled=${this.disabled}
                 @click=${() => this._emit(setPartPath(d, ref, { ...path, follow_rotation: !path.follow_rotation }), 'Path rotation')}
               ></button>
@@ -359,22 +360,22 @@ export class AnimPartInspector extends LitElement {
 
   private _renderKeys(ref: TargetRef): TemplateResult {
     const d = this.doc!;
-    const t = trackOf(d, ref);
-    const n = t?.keyframes.length ?? 0;
+    const track = trackOf(d, ref);
+    const n = track?.keyframes.length ?? 0;
     return html`<section class="group" aria-labelledby="pi-keys">
       <div class="group-head">
         <ha-icon icon="mdi:timeline-outline"></ha-icon>
-        <h3 id="pi-keys">Keys</h3>
+        <h3 id="pi-keys">${t('Keys')}</h3>
       </div>
       <p class="help">
         ${n
-          ? `${n} key${n === 1 ? '' : 's'} on the timeline. Rotate, move, scale, fade and colour this part there.`
-          : 'No keys yet. Add keys on the timeline to rotate, move, scale, fade or colour this part.'}
+          ? t('{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and colour this part there.', { count: n })
+          : t('No keys yet. Add keys on the timeline to rotate, move, scale, fade or colour this part.')}
       </p>
-      ${t
+      ${track
         ? html`<div>
             <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => this._emit(withTrack(d, ref, undefined), 'Remove part animation')}>
-              Remove this part's animation
+              ${t("Remove this part's animation")}
             </button>
           </div>`
         : nothing}
@@ -524,7 +525,7 @@ export class AnimPartInspector extends LitElement {
 registerPanel({
   tag: 'mc-anim-part-inspector',
   place: 'inspector',
-  title: 'Part',
+  title: m('Part'),
   order: 20,
   when: (doc, sel) => doc.kind === 'keyframes' && (sel.kind === 'target' || sel.kind === 'keys') && isPartRef(sel.target),
 });

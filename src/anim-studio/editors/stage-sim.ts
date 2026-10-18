@@ -4,6 +4,7 @@ import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc } from '../model';
 import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { DEFAULT_SIM, simAttributes, simNeeds, simNumericState, simulates, type PreviewChangeDetail } from './states-sim';
+import { t, m, type MessageId } from '../i18n';
 
 /*
  * Stage tool for documents with states or value bindings: a capsule at the foot of the preview
@@ -16,12 +17,12 @@ import { DEFAULT_SIM, simAttributes, simNeeds, simNumericState, simulates, type 
 
 type StateChoice = 'on' | 'off' | 'unavailable' | 'value' | 'custom';
 
-const CHOICES: Array<{ id: StateChoice; label: string; numeric?: boolean }> = [
-  { id: 'on', label: 'On' },
-  { id: 'off', label: 'Off' },
-  { id: 'unavailable', label: 'Unavailable' },
-  { id: 'value', label: 'Value', numeric: true },
-  { id: 'custom', label: 'Custom' },
+const CHOICES: Array<{ id: StateChoice; label: MessageId; numeric?: boolean }> = [
+  { id: 'on', label: m('On') },
+  { id: 'off', label: m('Off') },
+  { id: 'unavailable', label: m('Unavailable') },
+  { id: 'value', label: m('Value'), numeric: true },
+  { id: 'custom', label: m('Custom') },
 ];
 
 export { simulates };
@@ -83,10 +84,10 @@ export class AnimStageSim extends LitElement {
       this._choice = items[next].id;
       void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.seg [aria-checked="true"]')?.focus());
     };
-    return html`<div class="seg" role="radiogroup" aria-label="Preview state" @keydown=${onKey}>
+    return html`<div class="seg" role="radiogroup" aria-label=${t('Preview state')} @keydown=${onKey}>
       ${items.map((c) => {
         const on = c.id === this._choice;
-        return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} ?disabled=${this.disabled} @click=${() => this._pick(c.id)}>${c.label}</button>`;
+        return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} ?disabled=${this.disabled} @click=${() => this._pick(c.id)}>${t(c.label)}</button>`;
       })}
     </div>`;
   }
@@ -95,15 +96,15 @@ export class AnimStageSim extends LitElement {
     if (!simulates(this.doc)) return html``;
     const needs = simNeeds(this.doc);
     const pct = Math.round(this._value * 100);
-    return html`<div class="bar" role="group" aria-label="Preview entity">
+    return html`<div class="bar" role="group" aria-label=${t('Preview entity')}>
       <span class="lbl" aria-hidden="true"><ha-icon icon="mdi:lightbulb-outline"></ha-icon></span>
       ${this._states(needs.numericState)}
       ${this._choice === 'custom'
         ? html`<input
             class="input mono custom"
             type="text"
-            aria-label="Custom state"
-            placeholder="State"
+            aria-label=${t('Custom state')}
+            placeholder=${t('State')}
             autocomplete="off"
             spellcheck="false"
             ?disabled=${this.disabled}
@@ -113,7 +114,7 @@ export class AnimStageSim extends LitElement {
         : nothing}
       ${needs.value
         ? html`<label class="value">
-            <span class="sr-only">Preview value</span>
+            <span class="sr-only">${t('Preview value')}</span>
             <input
               type="range"
               min="0"
@@ -121,7 +122,7 @@ export class AnimStageSim extends LitElement {
               step="1"
               ?disabled=${this.disabled}
               .value=${String(pct)}
-              aria-valuetext="${pct} % of the input range"
+              aria-valuetext=${t('{pct} % of the input range', { pct })}
               @input=${(e: Event) => (this._value = Number((e.target as HTMLInputElement).value) / 100)}
             />
             <output aria-hidden="true">${pct}%</output>
@@ -194,7 +195,7 @@ export class AnimStageSim extends LitElement {
 }
 
 /** Over the stage while the document has states or bindings. */
-registerPanel({ tag: 'mc-anim-stage-sim', place: 'stage-tool', when: (doc) => simulates(doc), title: 'Preview entity', order: 80, dock: 'bottom' });
+registerPanel({ tag: 'mc-anim-stage-sim', place: 'stage-tool', when: (doc) => simulates(doc), title: m('Preview entity'), order: 80, dock: 'bottom' });
 
 declare global {
   interface HTMLElementTagNameMap {

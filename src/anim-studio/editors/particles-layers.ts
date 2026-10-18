@@ -9,6 +9,7 @@ import { emitterIds } from '../layer-view';
 import { stageParticlesOf } from '../stage-particles';
 import { LayerRows, layerRowStyles, type MoveInfo } from './layer-row';
 import { EMITTER_NAME_MAX, emitterCount, emitterLabel, emitterPlacement, moveEmitter, moveEmitterPastContent, renameEmitter, shapeLabel, shownShapes, viewSim } from './particles-utils';
+import { t, m } from '../i18n';
 
 /*
  * mc-anim-particles-layers (place 'layers', particles documents): the emitters as a paint stack around the
@@ -123,7 +124,7 @@ export class AnimParticlesLayers extends LitElement {
   private _nameOfKey(key: LayerKey): string {
     const id = key.slice(key.indexOf(':') + 1).replace(/[|/].*$/, '');
     const e = this.doc ? this._ems(this.doc).find((x) => x.id === id) : undefined;
-    return key.startsWith('children:') ? `Child particles of ${e?.name ?? id}` : (e?.name ?? id);
+    return key.startsWith('children:') ? t('Child particles of {name}', { name: e?.name ?? id }) : (e?.name ?? id);
   }
 
   private _emit(doc: AnimationDoc, label: string): void {
@@ -164,14 +165,14 @@ export class AnimParticlesLayers extends LitElement {
     if (crossing) {
       const side = e.side === 'back' ? 'front' : 'back';
       next = moveEmitterPastContent(doc, 0, e.i, side).doc;
-      label = `Move emitter ${side === 'front' ? 'in front of' : 'behind'} the content`;
-      said = `${e.name} moved ${side === 'front' ? 'in front of' : 'behind'} the content`;
+      label = side === 'front' ? t('Move emitter in front of the content') : t('Move emitter behind the content');
+      said = side === 'front' ? t('{name} moved in front of the content', { name: e.name }) : t('{name} moved behind the content', { name: e.name });
     } else {
       const to = list[dir === 'up' ? p - 1 : p + 1];
       if (!to) return;
       next = moveEmitter(doc, 0, e.i, to.i);
-      label = `Move emitter ${dir}`;
-      said = `${e.name} moved ${dir}, position ${(dir === 'up' ? p : p + 2)} of ${list.length}`;
+      label = dir === 'up' ? t('Move emitter up') : t('Move emitter down');
+      said = t('{name} moved {direction}, position {position} of {count}', { name: e.name, direction: dir === 'up' ? t('up') : t('down'), position: dir === 'up' ? p : p + 2, count: list.length });
     }
     if (next === doc) return;
     this._emit(next, label);
@@ -197,10 +198,10 @@ export class AnimParticlesLayers extends LitElement {
     const edge = dir === 'up' ? p === 0 : p === list.length - 1;
     const ok = !this.disabled && (cross || !edge);
     if (cross) {
-      const where = dir === 'up' ? 'in front of the content' : 'behind the content';
-      return { ok, label: `Move ${e.name} ${where}`, menu: `Move ${where}` };
+      const where = dir === 'up' ? t('in front of the content') : t('behind the content');
+      return { ok, label: t('Move {name} {where}', { name: e.name, where }), menu: t('Move {where}', { where }) };
     }
-    return dir === 'up' ? { ok, label: `Move ${e.name} up (drawn on top)`, menu: 'Move up (drawn on top)' } : { ok, label: `Move ${e.name} down`, menu: 'Move down' };
+    return dir === 'up' ? { ok, label: t('Move {name} up (drawn on top)', { name: e.name }), menu: t('Move up (drawn on top)') } : { ok, label: t('Move {name} down', { name: e.name }), menu: t('Move down') };
   }
 
   private _focusRow(key: LayerKey): void {
@@ -210,7 +211,7 @@ export class AnimParticlesLayers extends LitElement {
   private _renameField(e: Em, key: LayerKey): TemplateResult {
     return html`<input
       class="input rename"
-      aria-label="Layer name"
+      aria-label=${t('Layer name')}
       maxlength=${EMITTER_NAME_MAX}
       .value=${e.name}
       @click=${(ev: Event) => ev.stopPropagation()}
@@ -248,14 +249,14 @@ export class AnimParticlesLayers extends LitElement {
         down: this._moveInfo(e, 'down', list),
         renamable: this._multi,
         renaming: this._renaming === key ? this._renameField(e, key) : undefined,
-        describe: e.side === 'front' ? 'in front of the content' : 'behind the content',
-        title: `${e.name}, ${e.side === 'front' ? 'in front of' : 'behind'} the content`,
+        describe: e.side === 'front' ? t('in front of the content') : t('behind the content'),
+        title: e.side === 'front' ? t('{name}, in front of the content', { name: e.name }) : t('{name}, behind the content', { name: e.name }),
       }),
     ];
     if (!open) return out;
     if (kids) {
       out.push(
-        this._list.row({ key: `children:${e.id}`, name: 'Child particles', icon: 'mdi:dots-hexagon', level: 2, selected: this._sub === `children:${e.id}`, toggles }),
+        this._list.row({ key: `children:${e.id}`, name: t('Child particles'), icon: 'mdi:dots-hexagon', level: 2, selected: this._sub === `children:${e.id}`, toggles }),
       );
     }
     const shape = (shapes: WeightedShape[], prefix: string, label: string): void => {
@@ -264,8 +265,8 @@ export class AnimParticlesLayers extends LitElement {
         out.push(this._list.row({ key: k, name: `${label} ${n + 1}: ${shapeLabel(w.shape)}`, icon: 'mdi:shape-outline', level: 2, selected: this._sub === k, toggles: NONE }));
       });
     };
-    shape(own.shapes, e.id, 'Shape');
-    if (kids) shape(kids.shapes, `${e.id}/c`, 'Child shape');
+    shape(own.shapes, e.id, t('Shape'));
+    if (kids) shape(kids.shapes, `${e.id}/c`, t('Child shape'));
     return out;
   }
 
@@ -287,14 +288,14 @@ export class AnimParticlesLayers extends LitElement {
     const toggles = !hasSim ? HIDE_LOCK : ready ? undefined : LOCK_ONLY;
     const front = this._side(ems, 'front');
     const back = this._side(ems, 'back');
-    return html`<ul aria-label="Particle layers">
+    return html`<ul aria-label=${t('Particle layers')}>
         ${front.flatMap((e) => this._rowsOf(doc, e, ems, toggles))}
-        <li class="lcontent" title="Card content. Text, icons and background of the card.">
-          <ha-icon icon="mdi:card-text-outline" aria-hidden="true"></ha-icon><span>Card content</span><span class="sr">. Text, icons and background of the card.</span>
+        <li class="lcontent" title=${t('Card content. Text, icons and background of the card.')}>
+          <ha-icon icon="mdi:card-text-outline" aria-hidden="true"></ha-icon><span>${t('Card content')}</span><span class="sr">${t('. Text, icons and background of the card.')}</span>
         </li>
         ${back.flatMap((e) => this._rowsOf(doc, e, ems, toggles))}
       </ul>
-      ${hasSim && !ready ? html`<p class="note">Hide and solo are unavailable: the particle preview could not be built.</p>` : nothing}`;
+      ${hasSim && !ready ? html`<p class="note">${t('Hide and solo are unavailable: the particle preview could not be built.')}</p>` : nothing}`;
   }
 }
 
@@ -302,7 +303,7 @@ registerPanel({
   tag: 'mc-anim-particles-layers',
   place: 'layers',
   when: (doc) => doc.kind === 'particles',
-  title: 'Particle layers',
+  title: m('Particle layers'),
   order: 10,
 });
 

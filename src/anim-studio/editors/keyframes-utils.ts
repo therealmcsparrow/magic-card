@@ -1,8 +1,8 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, TargetRef, Track } from '../model';
 import { safeCssValue } from '../model';
 import { EASINGS } from '../../utils/animation-presets';
-import { t } from '../../i18n/labels';
-import type { MessageId } from '../../contracts/i18n';
+import { t as tl } from '../../i18n/labels';
+import { m, t, type MessageId } from '../i18n';
 
 /*
  * Pure helpers of the keyframe timeline editor (mc-anim-keyframes-editor) and its key inspector.
@@ -44,7 +44,8 @@ export type KeyLane = LaneId | '*';
 
 export interface LaneDef {
   id: LaneId;
-  label: string;
+  /** An m() mark; read it through laneLabel(). */
+  label: MessageId;
   group: 'Transform' | 'Appearance';
   icon: string;
   /** What the lane holds: numbers (interpolated), or a CSS value (held until the next key). */
@@ -75,32 +76,32 @@ export const ANIM_COLOR = 'var(--mc-anim-c)';
 
 /** The card lanes (every target has them). */
 export const LANES: LaneDef[] = [
-  { id: 'x', label: 'Move X', group: 'Transform', icon: 'mdi:arrow-left-right', kind: 'number', def: { transform: { x: 0 } } },
-  { id: 'y', label: 'Move Y', group: 'Transform', icon: 'mdi:arrow-up-down', kind: 'number', def: { transform: { y: 0 } } },
-  { id: 'scale', label: 'Scale', group: 'Transform', icon: 'mdi:resize', kind: 'number', def: { transform: { scale: 1 } } },
-  { id: 'scale_x', label: 'Scale X', group: 'Transform', icon: 'mdi:arrow-expand-horizontal', kind: 'number', def: { transform: { scale_x: 1 } } },
-  { id: 'scale_y', label: 'Scale Y', group: 'Transform', icon: 'mdi:arrow-expand-vertical', kind: 'number', def: { transform: { scale_y: 1 } } },
-  { id: 'rotate', label: 'Rotate', group: 'Transform', icon: 'mdi:rotate-right', kind: 'number', def: { transform: { rotate: 0 } } },
-  { id: 'skew', label: 'Skew', group: 'Transform', icon: 'mdi:vector-polygon', kind: 'number', def: { transform: { skew_x: 0, skew_y: 0 } } },
-  { id: 'opacity', label: 'Opacity', group: 'Appearance', icon: 'mdi:circle-opacity', kind: 'number', def: { opacity: 1 } },
-  { id: 'color', label: 'Color', group: 'Appearance', icon: 'mdi:format-color-text', kind: 'css', def: { color: ANIM_COLOR } },
+  { id: 'x', label: m('Move X'), group: 'Transform', icon: 'mdi:arrow-left-right', kind: 'number', def: { transform: { x: 0 } } },
+  { id: 'y', label: m('Move Y'), group: 'Transform', icon: 'mdi:arrow-up-down', kind: 'number', def: { transform: { y: 0 } } },
+  { id: 'scale', label: m('Scale'), group: 'Transform', icon: 'mdi:resize', kind: 'number', def: { transform: { scale: 1 } } },
+  { id: 'scale_x', label: m('Scale X'), group: 'Transform', icon: 'mdi:arrow-expand-horizontal', kind: 'number', def: { transform: { scale_x: 1 } } },
+  { id: 'scale_y', label: m('Scale Y'), group: 'Transform', icon: 'mdi:arrow-expand-vertical', kind: 'number', def: { transform: { scale_y: 1 } } },
+  { id: 'rotate', label: m('Rotate'), group: 'Transform', icon: 'mdi:rotate-right', kind: 'number', def: { transform: { rotate: 0 } } },
+  { id: 'skew', label: m('Skew'), group: 'Transform', icon: 'mdi:vector-polygon', kind: 'number', def: { transform: { skew_x: 0, skew_y: 0 } } },
+  { id: 'opacity', label: m('Opacity'), group: 'Appearance', icon: 'mdi:circle-opacity', kind: 'number', def: { opacity: 1 } },
+  { id: 'color', label: m('Colour'), group: 'Appearance', icon: 'mdi:format-color-text', kind: 'css', def: { color: ANIM_COLOR } },
   {
     id: 'background',
-    label: 'Background',
+    label: m('Background'),
     group: 'Appearance',
     icon: 'mdi:format-color-fill',
     kind: 'css',
     def: { background: `color-mix(in srgb, ${ANIM_COLOR} 20%, transparent)` },
   },
-  { id: 'shadow', label: 'Shadow and glow', group: 'Appearance', icon: 'mdi:box-shadow', kind: 'css', def: { shadow: `0 0 16px 2px ${ANIM_COLOR}` } },
-  { id: 'blur', label: 'Blur', group: 'Appearance', icon: 'mdi:blur', kind: 'number', def: { blur: 0 } },
-  { id: 'radius', label: 'Corner radius', group: 'Appearance', icon: 'mdi:rounded-corner', kind: 'number', def: { radius: 0 } },
-  { id: 'filter', label: 'Filter', group: 'Appearance', icon: 'mdi:auto-fix', kind: 'css', def: { filter: 'brightness(1.2)' } },
+  { id: 'shadow', label: m('Shadow and glow'), group: 'Appearance', icon: 'mdi:box-shadow', kind: 'css', def: { shadow: `0 0 16px 2px ${ANIM_COLOR}` } },
+  { id: 'blur', label: m('Blur'), group: 'Appearance', icon: 'mdi:blur', kind: 'number', def: { blur: 0 } },
+  { id: 'radius', label: m('Corner radius'), group: 'Appearance', icon: 'mdi:rounded-corner', kind: 'number', def: { radius: 0 } },
+  { id: 'filter', label: m('Filter'), group: 'Appearance', icon: 'mdi:auto-fix', kind: 'css', def: { filter: 'brightness(1.2)' } },
 ];
 /** Lanes of icon parts, groups and drawn shapes only (LANES stay the card lanes). */
 export const RIG_LANES: LaneDef[] = [
-  { id: 'draw', label: 'Draw on', group: 'Appearance', icon: 'mdi:draw', kind: 'number', def: { draw: 1 }, rig: true },
-  { id: 'stroke', label: 'Stroke color', group: 'Appearance', icon: 'mdi:border-color', kind: 'css', def: { stroke: ANIM_COLOR }, rig: true },
+  { id: 'draw', label: m('Draw on'), group: 'Appearance', icon: 'mdi:draw', kind: 'number', def: { draw: 1 }, rig: true },
+  { id: 'stroke', label: m('Stroke colour'), group: 'Appearance', icon: 'mdi:border-color', kind: 'css', def: { stroke: ANIM_COLOR }, rig: true },
 ];
 /** Every lane a keyframe may hold. */
 export const ALL_LANES: LaneDef[] = [...LANES, ...RIG_LANES];
@@ -111,6 +112,9 @@ export const LANE_BY_ID = Object.fromEntries(ALL_LANES.map((l) => [l.id, l])) as
 export const TIMELINE_NARROW = 480;
 export const isRigRef = (t: string | undefined): boolean => !!t && /^(part|group|shape):/.test(t);
 /** The lanes a target can animate. */
+/** A lane's name in the current language. */
+export const laneLabel = (lane: LaneId): string => t(LANE_BY_ID[lane].label);
+
 export const lanesFor = (target: TargetRef | string | undefined): LaneDef[] => (isRigRef(target) ? ALL_LANES : LANES);
 
 /**
@@ -603,17 +607,17 @@ export function retargetFragment(from: LaneId, to: LaneId, f: Fragment): Fragmen
 // ── targets (v2 tracks) ──
 
 /** Card-part targets by name (rig pieces are named in the rig). */
-const TARGET_INFO: Record<string, { label: string; icon: string }> = {
-  element: { label: 'Element', icon: 'mdi:card-outline' },
-  icon: { label: 'Icon', icon: 'mdi:emoticon-outline' },
-  name: { label: 'Name', icon: 'mdi:format-text' },
-  state: { label: 'State', icon: 'mdi:information-outline' },
-  background: { label: 'Background', icon: 'mdi:texture-box' },
+const TARGET_INFO: Record<string, { label: MessageId; icon: string }> = {
+  element: { label: m('Element'), icon: 'mdi:card-outline' },
+  icon: { label: m('Icon'), icon: 'mdi:emoticon-outline' },
+  name: { label: m('Name'), icon: 'mdi:format-text' },
+  state: { label: m('State'), icon: 'mdi:information-outline' },
+  background: { label: m('Background'), icon: 'mdi:texture-box' },
 };
 
 /** A target's name: card parts by label, rig pieces by their rig name (else the id). */
 export function targetLabel(doc: AnimationDoc, ref: TargetRef | string): string {
-  if (TARGET_INFO[ref]) return TARGET_INFO[ref].label;
+  if (TARGET_INFO[ref]) return t(TARGET_INFO[ref].label);
   const m = /^(part|group|shape):(.+)$/.exec(ref);
   if (!m) return ref;
   const list = m[1] === 'part' ? doc.rig?.parts : m[1] === 'group' ? doc.rig?.groups : doc.rig?.shapes;
@@ -788,11 +792,11 @@ export function pasteTargetKeys(doc: AnimationDoc, clip: KeyClip, at: number, de
 // ── snapping and zoom ──
 
 export type SnapGrid = 'pct1' | 'pct5' | 's01' | 'fps30';
-export const SNAP_GRIDS: Array<{ id: SnapGrid; label: string }> = [
+export const SNAP_GRIDS: Array<{ id: SnapGrid; label: MessageId }> = [
   { id: 'pct1', label: '1%' },
   { id: 'pct5', label: '5%' },
   { id: 's01', label: '0.1 s' },
-  { id: 'fps30', label: '30 fps' },
+  { id: 'fps30', label: m('30 fps') },
 ];
 
 /** The grid step in % of a `duration` s cycle. */
@@ -1000,17 +1004,17 @@ export function parseShadow(v: string | undefined): ShadowParts | undefined {
 export const formatShadow = (p: ShadowParts): string => `${p.x}px ${p.y}px ${p.blur}px ${p.spread}px ${p.color}`;
 
 export const SHADOW_PRESETS = [
-  { id: 'glow', label: 'Glow', value: `0px 0px 16px 2px ${ANIM_COLOR}` },
-  { id: 'drop', label: 'Drop shadow', value: '0px 6px 16px 0px rgba(0, 0, 0, 0.3)' },
-  { id: 'lift', label: 'Lift', value: '0px 14px 28px -6px rgba(0, 0, 0, 0.35)' },
-  { id: 'none', label: 'None', value: 'none' },
+  { id: 'glow', label: m('Glow'), value: `0px 0px 16px 2px ${ANIM_COLOR}` },
+  { id: 'drop', label: m('Drop shadow'), value: '0px 6px 16px 0px rgba(0, 0, 0, 0.3)' },
+  { id: 'lift', label: m('Lift'), value: '0px 14px 28px -6px rgba(0, 0, 0, 0.35)' },
+  { id: 'none', label: m('None'), value: 'none' },
 ];
 export const FILTER_PRESETS = [
-  { id: 'bright', label: 'Brighten', value: 'brightness(1.3)' },
-  { id: 'hue', label: 'Hue shift', value: 'hue-rotate(90deg)' },
-  { id: 'gray', label: 'Grayscale', value: 'grayscale(1)' },
-  { id: 'glow', label: 'Glow', value: `drop-shadow(0 0 6px ${ANIM_COLOR})` },
-  { id: 'none', label: 'None', value: 'none' },
+  { id: 'bright', label: m('Brighten'), value: 'brightness(1.3)' },
+  { id: 'hue', label: m('Hue shift'), value: 'hue-rotate(90deg)' },
+  { id: 'gray', label: m('Greyscale'), value: 'grayscale(1)' },
+  { id: 'glow', label: m('Glow'), value: `drop-shadow(0 0 6px ${ANIM_COLOR})` },
+  { id: 'none', label: m('None'), value: 'none' },
 ];
 
 export const validCss = (v: string, kind: 'color' | 'background' | 'shadow' | 'filter'): boolean =>
@@ -1020,6 +1024,8 @@ export const validCss = (v: string, kind: 'color' | 'background' | 'shadow' | 'f
 
 export const ORIGIN_RE = /^(?:(?:left|right|top|bottom|center|-?\d*\.?\d+(?:px|%|em|rem)?)\s*){1,3}$/;
 export const ORIGIN_GRID = ['top left', 'top', 'top right', 'left', 'center', 'right', 'bottom left', 'bottom', 'bottom right'];
+/** What each origin cell is called (aria-label and title), in ORIGIN_GRID order. */
+export const ORIGIN_NAMES: MessageId[] = [m('Top left'), m('Top'), m('Top right'), m('Left'), m('Centre'), m('Right'), m('Bottom left'), m('Bottom'), m('Bottom right')];
 
 /** The 3x3 grid cell (0-8) of an origin keyword value; -1 for anything else (lengths, 3D). */
 export function originCell(v: string | undefined): number {
@@ -1046,22 +1052,22 @@ const fmt = (n: number, d = 2): string => String(round(n, d));
 /** A short readout of a lane's value (lane heads, list rows, aria). */
 export function fragmentText(lane: LaneId, f: Fragment | undefined): string {
   if (!f) return '';
-  const t = f.transform ?? {};
+  const tf = f.transform ?? {};
   switch (lane) {
     case 'x':
-      return t.x === undefined ? '' : `${fmt(t.x, 1)} px`;
+      return tf.x === undefined ? '' : `${fmt(tf.x, 1)} px`;
     case 'y':
-      return t.y === undefined ? '' : `${fmt(t.y, 1)} px`;
+      return tf.y === undefined ? '' : `${fmt(tf.y, 1)} px`;
     case 'scale':
     case 'scale_x':
     case 'scale_y': {
-      const v = t[lane];
+      const v = tf[lane];
       return v === undefined ? '' : `${fmt(v * 100, 1)}%`;
     }
     case 'rotate':
-      return t.rotate === undefined ? '' : `${fmt(t.rotate, 1)}°`;
+      return tf.rotate === undefined ? '' : `${fmt(tf.rotate, 1)}°`;
     case 'skew':
-      return `${fmt(t.skew_x ?? 0, 1)}° ${fmt(t.skew_y ?? 0, 1)}°`;
+      return `${fmt(tf.skew_x ?? 0, 1)}° ${fmt(tf.skew_y ?? 0, 1)}°`;
     case 'opacity':
       return f.opacity === undefined ? '' : `${fmt(f.opacity * 100, 0)}%`;
     case 'blur':
@@ -1073,12 +1079,12 @@ export function fragmentText(lane: LaneId, f: Fragment | undefined): string {
     default: {
       const v = f[lane];
       if (v === undefined) return '';
-      return colorToPicker(v).startsWith('entity') ? 'Animation color' : v;
+      return colorToPicker(v).startsWith('entity') ? t('Animation colour') : v;
     }
   }
 }
 
 export const easingLabel = (e: string | undefined): string => {
   const known = e ? EASINGS.find((x) => x.id === e)?.label : undefined;
-  return known !== undefined ? t(known) : e ? (e.startsWith('steps') ? 'Steps' : 'Custom curve') : 'Default';
+  return known !== undefined ? tl(known) : e ? (e.startsWith('steps') ? t('Steps') : t('Custom curve')) : t('Default');
 };
