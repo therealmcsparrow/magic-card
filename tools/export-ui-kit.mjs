@@ -1,7 +1,7 @@
 // Writes the Magic Card Utils panel's copy of the UI kit (contract ui-kit 1.0.0, ADR 0030, task UI9):
 //   <MCU>/custom_components/magic_card_utils/www/mc-ui-kit.js
 // CSS only, no templates and no elements: the editor tokens (Core), the kit's geometry tokens, the kit parts
-// and the card editor's shared primitives, as one Lit `css` template, plus the few MDI glyphs the panel draws.
+// the card editor's shared primitives and the .toast look (contract: the MCU copy), as one Lit `css` template, plus the few MDI glyphs the panel draws.
 // Reproducible: the output holds no date and no path, so the same sources give the same SHA-256.
 //
 //   node tools/export-ui-kit.mjs [outFile]    default: ../magic-card-utils/custom_components/magic_card_utils/www/mc-ui-kit.js
@@ -46,7 +46,7 @@ export async function buildExport() {
 
   // Order as in the card editor: tokens, primitives, then the kit's own parts. editorLegacy (the 30 module
   // editors' mc-* classes) and the three element sheets (shadow-root rules of the kit's own elements) stay out.
-  const parts = [system.editorTokens, ...(kit.kitTokens ? [kit.kitTokens] : []), kit.editorPrimitives, ...kit.kitCss.filter((c) => c !== kit.kitTokens)];
+  const parts = [system.editorTokens, ...(kit.kitTokens ? [kit.kitTokens] : []), kit.editorPrimitives, ...kit.kitCss.filter((c) => c !== kit.kitTokens), ...(kit.kitToast ? [kit.kitToast] : [])];
   const cssText = parts.map((p) => p.cssText.trim()).join('\n');
   const glyphs = Object.entries(PANEL_GLYPHS).map(([k, n]) => {
     if (typeof mdi[n] !== 'string') throw new Error(`@mdi/js has no ${n}`);
