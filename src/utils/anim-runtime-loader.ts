@@ -1,3 +1,4 @@
+import { sameBuild } from './lazy-chunk';
 import { docNeedsRuntime, type AnimationDoc } from '../anim-studio/model';
 
 /*
@@ -19,7 +20,7 @@ export const needsRuntime = (doc: AnimationDoc): boolean => docNeedsRuntime(doc)
 /** Load the runtime chunk once; resolves undefined (and logs once) when it cannot be loaded. */
 export function loadRuntime(): Promise<AnimRuntime | undefined> {
   pending ??= import(/* webpackChunkName: "anim-runtime" */ '../anim-runtime').then(
-    (m) => (loaded = m),
+    (m) => (loaded = sameBuild('magic-card-anim-runtime.js', m)),
     (err: unknown) => {
       console.warn('Magic Card: the animation runtime (magic-card-anim-runtime.js) could not be loaded; animations play without parts, clips and bindings.', err);
       return undefined;

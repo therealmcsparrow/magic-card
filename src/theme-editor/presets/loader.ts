@@ -1,5 +1,6 @@
 import type * as Chunk from './chunk';
 import type { ThemePresetLibrary } from '../../contracts/theme-editor';
+import { PRESETS_BUILD } from './build';
 
 /*
  * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js (ADR 0014), loaded
@@ -46,6 +47,11 @@ const sane = (lib: ThemePresetLibrary | undefined): boolean =>
 export function loadPresetLibrary(): Promise<PresetChunk> {
   pending ??= new Promise<PresetChunk>((ok, no) => (setTimeout(no, 8000, Error('timed out')), importer().then(ok, no)))
     .then((m) => {
+      // a cached older chunk never runs against a newer editor (see src/utils/lazy-chunk.ts sameBuild)
+      if ((m as { BUILD?: string })?.BUILD !== PRESETS_BUILD) {
+        console.warn(`Magic Card was updated, reload the page (magic-card-theme-presets.js ${String((m as { BUILD?: string })?.BUILD)}, editor ${PRESETS_BUILD}).`);
+        throw new Error('the presets are from another release');
+      }
       if (!sane(m?.THEME_PRESET_LIBRARY)) throw new Error('unexpected preset library');
       return (loaded = m);
     })

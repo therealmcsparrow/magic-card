@@ -1,4 +1,5 @@
 import type { PresetCatalogueModule } from '../contracts/preset-catalogue';
+import { sameBuild } from '../utils/lazy-chunk';
 
 /*
  * The studio's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract
@@ -11,7 +12,7 @@ let pending: Promise<PresetCatalogueModule | undefined> | undefined;
 
 export function loadPresetCatalogue(): Promise<PresetCatalogueModule | undefined> {
   pending ??= import(/* webpackChunkName: "preset-catalogue" */ '../preset-catalogue/index').then(
-    (m) => m as PresetCatalogueModule,
+    (m) => sameBuild('magic-card-preset-catalogue.js', m) as PresetCatalogueModule | undefined,
     (err: unknown) => {
       pending = undefined;
       console.warn('Magic Card: preset catalogue not loaded', err);

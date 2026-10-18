@@ -6,6 +6,7 @@ import * as rig from './rig';
 import * as targets from './targets';
 import * as bindings from './bindings';
 import * as clips from './clips';
+export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
 /*
  * The v2 animation runtime: a lazy chunk (dist/magic-card-anim-runtime.js) the card loads through

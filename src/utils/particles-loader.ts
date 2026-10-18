@@ -1,5 +1,6 @@
 import type { ParticlesModule } from '../contracts/particles-v2';
 import { useParticlesCompiler } from '../anim-studio/compile';
+import { sameBuild } from './lazy-chunk';
 
 /*
  * Particles v2 (simulator, baker, CSS writer, live engine) is a lazy chunk,
@@ -17,6 +18,7 @@ let loaded: ParticlesModule | undefined;
 export function loadParticles(): Promise<ParticlesModule | undefined> {
   pending ??= import(/* webpackChunkName: "particles" */ '../particles').then(
     (m) => {
+      if (!sameBuild('magic-card-particles.js', m)) return undefined;
       useParticlesCompiler(m.compile, m.validateSim);
       return (loaded = m.particles);
     },

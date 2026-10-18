@@ -3,6 +3,8 @@
  * it is a lazy chunk, magic-card-icon-library.js, loaded next to the studio bundle (public path:
  * public-path.ts) when the icon animation start opens. Nothing else in the studio imports it.
  */
+import { sameBuild } from '../utils/lazy-chunk';
+
 export type IconLibrary = typeof import('./icon-library-chunk');
 
 let pending: Promise<IconLibrary> | undefined;
@@ -12,6 +14,7 @@ let loaded: IconLibrary | undefined;
 export function loadIconLibrary(): Promise<IconLibrary> {
   pending ??= import(/* webpackChunkName: "icon-library" */ './icon-library-chunk')
     // the library renders its names only after their tables (magic-card-i18n-icons.js) are in
+    .then((m) => sameBuild('magic-card-icon-library.js', m) ?? Promise.reject(new Error('the icon library is from another release')))
     .then(async (m) => ((await m.iconNamesReady()) ? m : Promise.reject(new Error('the icon names could not be loaded'))))
     .then(
     (m) => (loaded = m),

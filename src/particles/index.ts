@@ -5,6 +5,7 @@ import { bakedCss } from './css';
 import { bakedSvg } from './svg';
 import { validateSim } from './validate';
 import { apply, compileParticles, release } from './apply';
+export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
 /*
  * The particles module (particles-v2 1.0.0): the lazy chunk dist/magic-card-particles.js

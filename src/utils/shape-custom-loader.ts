@@ -1,4 +1,5 @@
 import { useCustomBuilder } from './shape-path';
+import { sameBuild } from './lazy-chunk';
 
 /*
  * The `shape: custom` builder (src/utils/shape-custom.ts) is a lazy chunk, dist/magic-card-shape-custom.js
@@ -14,6 +15,8 @@ let ready = false;
 export function loadCustomShapes(): Promise<boolean> {
   pending ??= import(/* webpackChunkName: "shape-custom" */ './shape-custom').then(
     (m) => {
+      // a cached older magic-card.js must not run a newer builder: warned once, the element stays unshaped
+      if (!sameBuild('magic-card-shape-custom.js', m)) return false;
       useCustomBuilder(m.buildCustom);
       return (ready = true);
     },

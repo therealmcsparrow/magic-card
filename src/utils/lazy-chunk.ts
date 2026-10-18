@@ -1,4 +1,4 @@
-import { VERSION } from '../version';
+import { BUILD_VERSION } from './build-version';
 import { LAZY_CHUNK_FILES } from '../contracts/lazy-module';
 import type { LazyChunk, LazyChunkModule, LazyChunkName } from '../contracts/lazy-module';
 
@@ -9,10 +9,20 @@ import type { LazyChunk, LazyChunkModule, LazyChunkName } from '../contracts/laz
  * the chunk of a newer release: the chunk is evaluated (harmless by contract) but never installed.
  */
 
-declare const __MC_BUILD_VERSION__: string | undefined;
-
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
-export const BUILD_VERSION: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
+export { BUILD_VERSION };
+
+/**
+ * The same check for the older lazy chunks (shape-custom, anim-runtime, particles, preset-catalogue,
+ * icon-library, theme-presets), whose entries export BUILD but have no install(): the module when it
+ * was built with this magic-card.js, else one warning and undefined (a cached older file never runs
+ * against a newer card). The caller keeps its own load state and does not retry.
+ */
+export function sameBuild<T extends { BUILD?: string }>(file: string, mod: T): T | undefined {
+  if (mod?.BUILD === BUILD_VERSION) return mod;
+  console.warn(`Magic Card was updated, reload the page (magic-card.js ${BUILD_VERSION}, ${file} ${String(mod?.BUILD)}).`);
+  return undefined;
+}
 
 export type LazyImporter = () => Promise<LazyChunkModule>;
 

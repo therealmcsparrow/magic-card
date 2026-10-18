@@ -6,6 +6,7 @@ import { HALLOWEEN } from './halloween';
 import { VALENTINE } from './valentine';
 import { HOME } from './home';
 import { LIGHT } from './light';
+export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
 /*
  * The preset catalogue chunk (dist/magic-card-preset-catalogue.js, contract preset-catalogue 1.1.0):

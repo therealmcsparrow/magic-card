@@ -2,6 +2,7 @@ import { MAX_SHAPE_POINTS } from '../contracts/custom-shape';
 import type { AnchoredPoint, CornerKey, CornerType, CustomShapeOptions } from '../contracts/custom-shape';
 import { clamp, cornerArc, cornerCentres, dedupeSegs, p, parseShapeLength, SHAPE_DEFAULTS, translate } from './shape-path';
 import type { Outline, Pt, Seg } from './shape-path';
+export { BUILD_VERSION as BUILD } from './build-version';
 
 /*
  * `shape: custom` (contract custom-shape 1.0.0): per-corner types and sizes, or anchored free-path
