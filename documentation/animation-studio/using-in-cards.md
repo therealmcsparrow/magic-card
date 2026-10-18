@@ -15,6 +15,8 @@ Animations from the library work like the built-in presets. You add them to a mo
 
 The Animations list is in the Design tab, Transitions & animations section (see [Animations](../design/animations.md)). Its Preset select starts with a My animations group that lists the library by name. The group only shows when the library has answered and holds at least one animation.
 
+The Preset select also has a **This card** group. It lists the card's own animations that the library does not list, such as one you wrote by hand or imported into the card. When two animations share a name, the entry shows its id in brackets, for example `Pendulum (pendulum-custom-3)`.
+
 Picking an animation from My animations writes `preset: custom:<id>` and clears the entry's Duration, Delay, Easing, Repeat, Direction, Intensity, Strength and Target, so the animation's own values apply. Play, State value and Color stay. If the previous preset had switched Play to On tap (Tap ripple, Press), Play goes back to Always.
 
 ## Animated icons in the icon picker

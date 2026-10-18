@@ -15,6 +15,12 @@ A picker window opens on top of the editor. Close it with:
 -   Escape. Escape closes only the picker. It never closes the Studio or Home Assistant's card dialog behind it.
 -   A click outside the window. A press that starts inside the window and ends outside (for example while selecting text or dragging a slider) does not close it.
 
+## Opening the icon picker from the icon field
+
+A tap or click on the icon field opens the icon picker. A tap on a field that already has focus types in the field instead, so the first tap opens the picker and the next one types. Moving to the field with Tab does not open the picker. When the picker closes, focus returns to the field.
+
+On a touch screen the browse button is 44 px square.
+
 ## Icon picker tabs
 
 The icon picker of the Icon, Info, Button and Light modules has two tabs, Icons and Animated icons. Animated icons shows moving tiles of your saved icon animations and the built-in ones. See [Animated icons in the icon picker](../animation-studio/using-in-cards.md#animated-icons-in-the-icon-picker).

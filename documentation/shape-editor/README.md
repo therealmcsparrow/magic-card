@@ -37,7 +37,11 @@ Click or tap to add points, and drag to make a curve. The points make one closed
 
 ## Combine
 
-Combine adds a second shape to the outline, or subtracts it, or keeps only the part that both shapes share.
+Combine with adds a second shape to the outline, or subtracts it, or keeps only the part that both shapes share. The second shape is one of the same 19 shapes as the SVG editor's Shapes tool: rounded rectangle, triangle, arrow, chevron, plus, heart, speech bubble, drop, leaf, shield, cloud, ticket, tab, tag, circle, ellipse, semicircle, star and hexagon.
+
+## Saved shapes
+
+When you save a shape, the list of saved shapes refreshes at once, so the new shape is there without a reload.
 
 ## Grid and snap
 
@@ -47,9 +51,11 @@ Turn on Snap to move points to the grid. The number fields accept exact values, 
 
 The editor shows the shape at the size of a tile, a row and a wide module, next to the real card. A change shows in all of them at once.
 
-## Padding
+## Space for text
 
-A padding setting keeps the text of the card clear of the outline. Corners and edges that cut into the box move the content in, so text is not hidden by a corner. The inset does not shrink as the card gets taller, so a card that grows does not jump.
+**Space for text** keeps the text of the card clear of the outline. Corners and edges that cut into the box move the content in, so text is not hidden by a corner. The inset does not shrink as the card gets taller, so a card that grows does not jump.
+
+**Extra space** sets the clear space on each side: top, right, bottom and left. You can raise it, not lower it. In free shape mode it cannot go below what the outline needs. **Show text area** shows the text area on the preview.
 
 ## Warnings
 

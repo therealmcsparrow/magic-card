@@ -27,6 +27,7 @@ items:
 | --- | --- |
 | `magic_card_export` | The format version, as `major.minor`. |
 | `kind` | `animation`, `theme`, `shape` or `icon`. |
+| `generator` | The Magic Card version that wrote the file, such as `Magic Card 2026.10.11-beta.1`. |
 | `items` | A list of items. A file with one item also has a list. |
 | `id`, `name` | The id and the name. The name is shown in the library. |
 | `author`, `description` | Optional. |
@@ -53,6 +54,22 @@ When you import a file:
 Icons are cleaned the same way as icons in the SVG editor. Scripts, links to other files and similar parts are removed, and the summary lists them.
 
 Animations and shapes import into a card as copies, when you do not have Magic Card Utils.
+
+## Import into a card
+
+In a card, **Library** then **This card** imports into that card, not into the library. The import compares the file with the card's own copies.
+
+-   If an id matches an item the card already has, Magic Card asks you to choose Replace or Keep both.
+-   If an id is held only by the library, the new item gets a new id without a question, so the card keeps its own copy.
+-   Repeated animation names get a number on import, such as "Pendulum 2".
+
+## Theme files
+
+Importing a theme file adds it to **My presets**. The result says **Added N to My presets**, and a preset is not a theme yet. A single theme shows an **Open as new theme** button.
+
+Saving a theme needs the include lines in `configuration.yaml`. If they are not there yet, the result says that saving needs one setup step in Home Assistant. Try on dashboard works without it. See [Add the include lines](../themes/getting-started.md#add-the-include-lines).
+
+A single theme also has **Copy as HA theme**. It copies the theme to the clipboard as YAML: the theme name, a colon, and its variables. Nothing else is copied.
 
 ## Safe import
 

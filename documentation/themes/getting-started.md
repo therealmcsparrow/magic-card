@@ -44,6 +44,8 @@ The [theme examples](examples/README.md) page shows every preset with a screensh
 
 Each preset sets a light and a dark mode, including the text on primary colours and the state colours. In every mode, the text, the secondary text, the text on the primary colour and the state colours reach a contrast of at least 4.5 to 1. Presets are starting points you can change.
 
+A theme that loads a file from another website is marked **Contacts another host**, with an info icon, on its card. A theme you open that does this shows a note above the variables. The preview and Try on dashboard ask that website for the file, so it sees your address. See [Export and import](../presets/export-and-import.md#safe-import) for the warning on theme files.
+
 ### Loading and failure
 
 The presets load the first time you open the create dialog. The Themes tab opens without them.

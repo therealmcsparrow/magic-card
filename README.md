@@ -1063,7 +1063,6 @@ Magic Card and Magic Card Utils have no telemetry and make no network calls of t
 
 -   Home Assistant 2024.8.0 or newer (`hacs.json`).
 -   Known limitations:
-    -   Markdown tables and reference links in a `markdown` module may fail to render on Chromium 85 to 91, for example on an older Android WebView.
     -   A saved icon appears as a one-colour silhouette in Home Assistant's own cards.
     -   A new icon appears in Home Assistant's icon picker after you reload the page.
     -   The Home Assistant companion apps are not verified with the editors and the new features yet.

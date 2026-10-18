@@ -12,6 +12,15 @@ This page covers the tools, the grid, the numeric fields, alignment, boolean ope
 -   Freehand.
 -   Select, which moves, scales, rotates and flips a shape.
 
+## Shapes tool
+
+The Shapes tool draws one of 19 ready-made shapes:
+
+-   Rounded rectangle, triangle, arrow, chevron, plus, heart, speech bubble, drop, leaf, shield, cloud, ticket, tab and tag.
+-   Circle, ellipse, semicircle, star and hexagon.
+
+A circle fills the shorter side of its box, so it stays round. The other shapes fill the whole box.
+
 Node editing works on a path. You can add, delete, smooth or sharpen a point (Corner or Smooth), close a path, reverse it and add a point after the selected one.
 
 ## Numeric fields
@@ -38,7 +47,7 @@ Select two or more shapes to align them, or to distribute them evenly. The Align
 
 ## Boolean operations
 
-Combine joins two or more shapes with a boolean operation (for example, union or subtract). Each operation has a reason shown in the menu, so you know why it is not available for the current selection. A boolean operation is one undo step.
+Combine joins two or more shapes with a boolean operation (for example, union or subtract). The same 19 shapes are offered in the shape editor's Combine with section. Each operation has a reason shown in the menu, so you know why it is not available for the current selection. A boolean operation is one undo step.
 
 ## Handles and touch
 

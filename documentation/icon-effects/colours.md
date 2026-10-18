@@ -7,11 +7,11 @@ The Color style of the Icon effects group paints the icon in one colour, two ton
 | Color style | `icon_fx.colors.style` | `solid`, `duotone`, `gradient`, `value` | `solid` |
 | Color / Primary color | `colors.primary` | Any CSS colour, `entity`, `entity N%` | The module's icon colour |
 | Secondary color | `colors.secondary` | A colour, or a share of the primary such as `40%` | The primary at 40% (duotone) |
-| Accent color | `colors.secondary` | A colour (custom SVG only) | None |
+| Accent color | `colors.secondary` | A colour (custom SVG, or a saved icon from the library) | None |
 | Gradient colors | `colors.gradient` | A list of two or more colours | `["#2196f3", "#f44336"]` |
 | Angle (deg) | `colors.angle` | 0 to 360 | `90` |
 
-The editor only shows the fields of the chosen style and drops the keys a style doesn't use when you switch: `gradient` outside Gradient and Value, `angle` outside Gradient, `secondary` outside Duotone (except on a custom SVG, where it is the accent colour). Choosing Solid removes `style`.
+The editor only shows the fields of the chosen style and drops the keys a style doesn't use when you switch: `gradient` outside Gradient and Value, `angle` outside Gradient, `secondary` outside Duotone (except on a custom SVG or a saved icon from the library, where it is the accent colour). Choosing Solid removes `style`.
 
 ## Solid
 

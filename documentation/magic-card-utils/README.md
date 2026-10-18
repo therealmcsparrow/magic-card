@@ -55,6 +55,8 @@ Magic Card and Magic Card Utils are two separate downloads. Update both. HACS sh
 
 After an update, hard refresh the browser so the new files load. See [Updating](../../README.md#updating).
 
+If a page still runs the old files, Magic Card shows "Magic Card was updated, reload the page" once, instead of failing. Reload the page. If that does not help, hard refresh the browser.
+
 ## Related
 
 -   [Animation studio](../animation-studio/README.md)

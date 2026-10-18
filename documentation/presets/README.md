@@ -18,7 +18,7 @@ The library shows each kind of item in the Magic Card Utils tabs. The Library ta
 A card can keep its own copy of a library item, so that it still works without Magic Card Utils.
 
 -   **Animations.** When you pick a library animation for a card, the card copies it into its `custom_animations`. The copy is removed when no animation uses it.
--   **Icons and shapes.** Keep a copy in this card is a switch on the save screen and on the card. The copy is on by default for a small item. The size is shown next to the switch.
+-   **Icons and shapes.** Keep a copy in this card is a switch on the save screen and on the card. The copy is on by default for a small item. The size is shown next to the switch. When you pick a saved icon in a card, the copy setting is one collapsed **Advanced** line. Its default keeps a copy of an icon up to 2 KB.
 -   **Theme presets.** A card keeps no copy of a theme preset. The theme editor uses a preset only to start a new theme.
 
 ## Without Magic Card Utils

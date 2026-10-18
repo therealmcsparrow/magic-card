@@ -30,7 +30,7 @@ icon_fx:
 ## Colours
 
 - Parts with `fill="currentColor"`, and parts without a fill, take the icon colour.
-- Parts with `class="mc-accent"` (or inside an element with it) take `icon_fx.colors.secondary`, shown as Accent color in [Colours](colours.md) for a custom SVG.
+- Parts with `class="mc-accent"` (or inside an element with it) take `icon_fx.colors.secondary`, shown as Accent color in [Colours](colours.md) for a custom SVG or a saved icon from the library (`icon: mcu:<id>`).
 - Parts with their own `fill` colour keep it while the colour style is Solid.
 - Duotone, Gradient and Value paint every shape, filled and stroked. A stroked icon keeps its outline.
 

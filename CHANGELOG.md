@@ -24,10 +24,19 @@ Magic Card Utils is needed for the editors and the library. The editors need Mag
 -   **Magic Card Utils tabs:** Library, Shapes and Editors.
 -   **Languages:** English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text is machine-assisted.
 -   **Accessibility:** built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields.
+-   **Shapes tool and Combine with** offer 19 shapes: rounded rectangle, triangle, arrow, chevron, plus, heart, speech bubble, drop, leaf, shield, cloud, ticket, tab, tag, circle, ellipse, semicircle, star and hexagon.
 
 ### Improved
 -   `magic-card.js` is 472 KB, down from about 680 KB. The rarely used parts (the slider, seasonal scenes, markdown, camera, video, weather, forecast, graphs and custom-card modules) are separate files that a dashboard loads only when a card uses them. The cards look and behave as before.
--   Editor messages name the version you need when your Magic Card is too old.
+-   Editor messages name the version you need when your Magic Card is too old. After an update, a page that still runs the old files shows "Magic Card was updated, reload the page" once, instead of failing.
+-   **Accent color** also paints the Accent shapes of a saved icon (`mcu:`), not only a custom SVG.
+-   The icon field opens the icon picker on a tap. The browse button is 44 px on a touch screen. Picking a saved icon shows one collapsed **Advanced** line for the copy setting, so the window does not jump.
+-   The **Library** in a card compares an import with that card. Repeated animation names get a number on import, such as "Pendulum 2". The Preset select has a **This card** group for the card's own animations, and a repeated name shows its id.
+-   Importing a theme file says **Added N to My presets**, and says that a preset is not a theme yet. A single item has an **Open as new theme** button. When the include lines are missing, the result says that saving needs one setup step in Home Assistant, and that Try on dashboard works without it.
+-   A theme value that loads a file from another website is marked **Contacts another host**, on the preset card and above the variables in the editor.
+-   **Copy as HA theme** copies a single theme to the clipboard as Home Assistant theme YAML.
+-   The shape list in the shape editor refreshes after a save, so a new shape appears without a reload.
+-   The Markdown module adds the JavaScript features that tables and reference links need on older browsers, such as Chromium 85 to 91 in an older Android WebView.
 
 ### Changed
 -   Each release has 23 files, up from 10. HACS installs them with the card. With a manual install, copy all 23 to the same folder, then hard refresh.
@@ -35,7 +44,6 @@ Magic Card Utils is needed for the editors and the library. The editors need Mag
 -   The documentation has new folders for the SVG editor, the shape editor, presets, Magic Card Utils, languages and accessibility, and a Layers page for the animation studio.
 
 ### Known limitations
--   Markdown tables and reference links in a `markdown` module may fail to render on Chromium 85 to 91.
 -   A saved icon appears as a one-colour silhouette in Home Assistant's own cards.
 -   A new icon appears in Home Assistant's icon picker after you reload the page.
 -   The Home Assistant companion apps are not verified with the editors and the new features yet.
