@@ -37,6 +37,12 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Gradients for backgrounds, rings, icons and text, written as CSS gradients. See [Gradients](documentation/design/gradients.md).
 -   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
 -   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
+-   SVG editor (pre-release, with Magic Card Utils): draw and edit icons on a 24 x 24 grid, with alignment, boolean operations, layers in groups with drag and drop, a dual-tone Accent colour, path tools (outline stroke, offset, simplify, join, split and knife), SVG import and export, and saving to the library. See [SVG editor](documentation/svg-editor/README.md).
+-   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
+-   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
+-   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
+-   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text is machine-assisted. See [Languages](documentation/languages/README.md).
+-   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
 
@@ -46,6 +52,8 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 
 Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
 
+The current release is a pre-release (2026.10.11-beta.1). HACS shows it only when Show beta versions is turned on in HACS.
+
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
 3.  Open the three-dot menu and choose Custom repositories.
@@ -53,19 +61,34 @@ Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the nine other files of the release into the same folder: `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. Magic Card loads them from there when they are needed.
+HACS also downloads the other 22 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
 ### Manual
 
-1.  Download the ten files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases): `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`.
+1.  Download the 23 files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases). The table under [Loading the other files](#loading-the-other-files) lists them all.
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-Only `magic-card.js` is a resource. The other files load from the same folder when something needs them:
+Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
+
+### Loading the other files
 
 | File | Loaded by |
 | --- | --- |
 | `magic-card-editor.js` | The card editor, when you edit a card, and the animation studio. Dashboards never load it. |
+| `magic-card-slider.js` | Cards with a `slider-layout` module (the swipeable carousel). |
+| `magic-card-seasonal.js` | Cards with a seasonal scene or a seasonal animation preset. |
+| `magic-card-markdown.js` | Cards with a `markdown` module. |
+| `magic-card-modules-extra.js` | Cards with a camera, video-bg, weather, forecast, graphs or custom-card module. |
+| `magic-card-shape-custom.js` | Cards with `shape: custom`. |
+| `magic-card-svg-editor.js` | The SVG editor in the Magic Card Utils panel. Dashboards never load it. |
+| `magic-card-shape-editor.js` | The shape editor in the Magic Card Utils panel. Dashboards never load it. |
+| `magic-card-path-canvas.js` | The drawing canvas of the SVG editor and the shape editor. |
+| `magic-card-path-tools.js` | The path tools of the SVG editor, on the first use of one. |
+| `magic-card-svg-booleans.js` | The boolean operations (Combine), on the first press of one. |
+| `magic-card-transfer.js` | The import and export windows. Dashboards never load it. |
+| `magic-card-i18n-labels.js` | The text tables of the animation studio, before it opens. |
+| `magic-card-i18n-icons.js` | The icon names of the icon library in the animation studio. |
 | `magic-card-anim-runtime.js` | Cards whose animations use icon parts, drawn shapes, card parts, state clips or value bindings. |
 | `magic-card-particles.js` | Cards that play a particles animation with the newer particle settings (physics, collisions, child particles, shape mixes). Until it loads, or when it is missing, the card plays a simpler version of the same layer. |
 | `magic-card-animation-studio.js` | The animation studio in Magic Card Utils. |
@@ -75,7 +98,7 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-theme-editor.js` | The Themes tab in the Magic Card Utils panel. Dashboards and the card editor never load it. |
 | `magic-card-theme-presets.js` | The Themes tab's create dialog, when it opens, for the 57 presets. Dashboards and the card editor never load it. |
 
-Keep all ten files in one folder.
+Keep all 23 files in one folder. `magic-card.js` is the only file a dashboard loads at once. At 472 KB it is down from about 680 KB in 2026.10.10, because the rarely used parts moved into the other files.
 
 ### Loading
 
@@ -1020,9 +1043,30 @@ rows:
                     color: white
 ```
 
+## Sharing and privacy
+
+Your designs can be shared as files. The [presets page](documentation/presets/README.md) explains the library, and [Export and import](documentation/presets/export-and-import.md) describes the file format and the checks that run on import.
+
+### Sharing presets
+
+Importing a theme file. Magic Card reads the file on your computer. It does not download anything while you read it, and it sends nothing to us. Some theme files point to a picture or font on another website, or contain card-mod lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose Import anyway, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card. Only import files from people you trust. To avoid this, choose Cancel, or delete those lines from the file and import it again.
+
+### Imported files are untrusted
+
+Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item by item, and cleaned (SVG scripts, links and external references are removed and listed). Theme files are the one exception, as described above, and only after you confirm.
+
+### Privacy
+
+Magic Card and Magic Card Utils have no telemetry and make no network calls of their own. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration. Nothing is sent to the author. The only outside requests are the ones your own configuration asks for, for example an image address you typed or a theme file that points to another website.
+
 ## Compatibility
 
 -   Home Assistant 2024.8.0 or newer (`hacs.json`).
+-   Known limitations:
+    -   Markdown tables and reference links in a `markdown` module may fail to render on Chromium 85 to 91, for example on an older Android WebView.
+    -   A saved icon appears as a one-colour silhouette in Home Assistant's own cards.
+    -   A new icon appears in Home Assistant's icon picker after you reload the page.
+    -   The Home Assistant companion apps are not verified with the editors and the new features yet.
 -   Sections view: the card supplies no fixed size, so the Layout tab of the card (`grid_options`) controls its columns and rows as usual. A live pop-up asks for a full-width, auto-height cell with no minimum rows and takes itself out of the flow. The older `layout_options` are supported as well.
 -   The `grid_options`, `layout_options`, `visibility` and `view_layout` keys that Home Assistant stores in the card config are kept when you edit the card or link it to a template.
 
@@ -1032,7 +1076,7 @@ rows:
 -   "Custom element doesn't exist: magic-card". The resource is missing or has the wrong URL. Check Settings, Dashboards, Resources for `/hacsfiles/magic-card/magic-card.js` (HACS) or `/local/magic-card.js` (manual), type JavaScript module.
 -   A pop-up does not open from a button. The ID is case-sensitive and must match exactly. The pop-up card must be on the dashboard the user is viewing.
 -   Templates cannot be saved or loaded. The `magic_card_utils` backend integration is missing.
--   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has ten files: `magic-card.js`, `magic-card-editor.js`, `magic-card-anim-runtime.js`, `magic-card-particles.js`, `magic-card-animation-studio.js`, `magic-card-icon-library.js`, `magic-card-icon-animator.js`, `magic-card-preset-catalogue.js`, `magic-card-theme-editor.js` and `magic-card-theme-presets.js`. With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
+-   The card editor, the Animated icons tab, the catalogue presets, the animation studio or its icon library cannot be loaded, or a particle layer plays only its simple version. A file next to `magic-card.js` is missing. Each release has 23 files, listed under [Loading the other files](#loading-the-other-files). With a manual install, copy all of them to the same folder, then hard refresh. The Themes tab in Magic Card Utils needs `magic-card-theme-editor.js` and `magic-card-theme-presets.js` next to `magic-card.js`. The icon library window has a Try again button once the file is there.
 -   Home Assistant shows its YAML editor in place of the Magic Card editor. `magic-card-editor.js` is missing or comes from another version than `magic-card.js`. The browser console says which. Copy the file next to `magic-card.js` and hard refresh.
 -   An entity colour shows nothing. The entity's domain has no state colour (a sensor, for example). Use a fixed colour instead.
 
@@ -1050,7 +1094,7 @@ This is an open-source project and contributions are welcome. Open an issue or s
 
 ## Support
 
-For issues, feature requests, or questions, please [create an issue on GitHub][issues-url].
+For issues, feature requests, or questions, please [create an issue on GitHub][issues-url]. To report a security problem, follow [SECURITY.md](SECURITY.md) and do not open a public issue.
 
 If you like Magic Card and want to support its development:
 

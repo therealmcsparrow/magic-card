@@ -11,6 +11,10 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Inspector](inspector/README.md) | The settings panel for the selected card, row, column, module, tab or row-module column, tab by tab |
 | [Themes](themes/README.md) | The theme editor in the Magic Card Utils Themes tab: creating a Home Assistant theme from blank, a preset or an installed theme, light, dark and Shared values, the Magic Card and third-party card groups, gradients, Try on dashboard and Revert, Use this theme, read-only files and the limits |
 | [Animation studio](animation-studio/README.md) | Your own keyframe, particle, path and sequence animations: the library with live preset tiles, particles with physics, collisions and child particles, icon animations with part presets, the icon library, animated SVG export, the editor with layers, stage, timeline and inspector, icon parts, drawing, own SVG icons, card parts, state clips and value bindings, using them in cards and their YAML format. Needs the Magic Card Utils integration. |
+| [SVG editor](svg-editor/README.md) | Drawing and editing icons on a 24 x 24 grid: tools, the grid, alignment, boolean operations, layers with groups and drag and drop, dual-tone Accent icons, path tools (outline stroke, offset, simplify, join, split, knife), importing SVG files and saving to the library. Needs Magic Card Utils. |
+| [Shape editor](shape-editor/README.md) | Outlines for a card, row, column or module: corner types and sizes, free shapes with the pen, starting from a preset, combining shapes, the previews and saving to the library. [Custom shapes in cards](shape-editor/custom-shapes-in-cards.md) has the YAML and what older browsers show. Needs Magic Card Utils for the editor. |
+| [Presets and the library](presets/README.md) | Your saved animations, theme presets, icons and shapes, the copies a card keeps, and the [export and import](presets/export-and-import.md) file format with its safety checks and the warning for themes that point to other websites. |
+| [Magic Card Utils](magic-card-utils/README.md) | The integration's panel tabs (Templates, Animations, Themes, Library, Shapes and Editors), saved icons in a card and in Home Assistant's own cards, and what needs what. |
 
 ## Options reference
 
@@ -22,6 +26,13 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations and catalogue presets, icon animations with their Quiet, Living and Glow styles, and rings, including timer rings |
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
+
+## Languages and accessibility
+
+| Folder | Covers |
+| --- | --- |
+| [Languages](languages/README.md) | English (UK), English (US) and Dutch, which language Magic Card uses, and which text stays in English |
+| [Accessibility](accessibility/README.md) | The WCAG 2.2 AA target, the keyboard and screen reader support in the editors, and what still needs a check on a real device |
 
 ## Examples
 
@@ -36,4 +47,5 @@ This folder documents the Magic Card editor and every option the card supports. 
 -   Writing YAML by hand: start with [YAML](yaml/README.md), then [Card, rows and columns](card/README.md) and [Modules](modules/README.md).
 -   Looking for ideas: browse the [Card gallery](gallery/README.md) and copy a card.
 -   Styling: [Design](design/README.md) and [Icon effects](icon-effects/README.md). To theme Home Assistant, start with [Themes](themes/README.md).
+-   Drawing an icon or an outline: [SVG editor](svg-editor/README.md) and [Shape editor](shape-editor/README.md). To share a design with someone else, read [Export and import](presets/export-and-import.md).
 -   Your own animations: [Animation studio](animation-studio/README.md). To make an icon's parts move, start with [Icon animations](animation-studio/icon-mode.md), or with the icon picker's Animated icons tab in the card editor (see [Icon animations in cards](design/quick-icon-animator.md)). [Icon parts](animation-studio/parts.md) covers the details. To react to an entity, read [States and values](animation-studio/states-and-values.md).

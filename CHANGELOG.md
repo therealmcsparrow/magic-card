@@ -4,6 +4,42 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## 2026.10.11-beta.1 (2026-10-18, pre-release)
+
+A pre-release: an SVG editor, a shape editor, a preset library with file export and import, and a smaller main file. HACS shows it only when you turn on Show beta versions. Each release has 23 files.
+
+Magic Card Utils is needed for the editors and the library. The editors need Magic Card 2026.10.11-beta.1 or newer.
+
+### New
+-   **SVG editor** in the Magic Card Utils panel (Library, New icon). Draw and edit icons on a 24 x 24 grid, with a pixel grid and a safe area, numeric fields, snapping, alignment, boolean operations, and handles of at least 24 px on touch screens.
+-   **Layers with groups.** Groups nest up to four levels. Drag a layer to reorder it or drop it on a group, or move it from the row menu and the keyboard. A drag is one undo step.
+-   **Dual-tone icons.** Turn on Dual-tone to paint some shapes in the card's accent colour. The saved icon keeps both outlines.
+-   **Path tools:** outline stroke, offset path, simplify, join, split and knife, each with a preview before you apply it.
+-   **Import and export of SVG,** including files from Lucide, Tabler, Feather and Heroicons. Icons are cleaned on import: scripts, links to other files and unsupported parts are removed, and a warning lists them.
+-   **Copy as HA path** and Copy SVG. Save an icon to the library, and use it in a card as `icon: mcu:<id>`.
+-   **Shape editor** in the Magic Card Utils panel: corners with their own type and size (round, squircle, bevel, scoop, notch and square), a free outline with the pen, start from a preset, combine shapes, grid and snapping, previews at the size of a tile, a row and a wide module.
+-   **Custom shapes on cards** with `shape: custom`: corner options in YAML, free outlines with `points`, and saved shapes with `ref`. The border, ring, shadow and value background follow the outline.
+-   **Presets library.** My animations and My theme presets are in the Magic Card Utils library. Export an animation, theme, shape or icon to a YAML or JSON file, and import it on another Home Assistant. Imports are checked item by item, and a theme that points to another website warns you before you confirm.
+-   **Animation studio layers.** Hide, solo and lock a part in the preview (the file is not changed). Keyframe parts and shapes are one stack. Particle layers show Particles and Card content, with Particles above or below the card. A particles animation can have several emitters, each in front of or behind the card.
+-   **Magic Card Utils tabs:** Library, Shapes and Editors.
+-   **Languages:** English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text is machine-assisted.
+-   **Accessibility:** built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields.
+
+### Improved
+-   `magic-card.js` is 472 KB, down from about 680 KB. The rarely used parts (the slider, seasonal scenes, markdown, camera, video, weather, forecast, graphs and custom-card modules) are separate files that a dashboard loads only when a card uses them. The cards look and behave as before.
+-   Editor messages name the version you need when your Magic Card is too old.
+
+### Changed
+-   Each release has 23 files, up from 10. HACS installs them with the card. With a manual install, copy all 23 to the same folder, then hard refresh.
+-   SECURITY.md: the scope covers importing preset, theme, animation, icon and shape files, and it describes the project's status.
+-   The documentation has new folders for the SVG editor, the shape editor, presets, Magic Card Utils, languages and accessibility, and a Layers page for the animation studio.
+
+### Known limitations
+-   Markdown tables and reference links in a `markdown` module may fail to render on Chromium 85 to 91.
+-   A saved icon appears as a one-colour silhouette in Home Assistant's own cards.
+-   A new icon appears in Home Assistant's icon picker after you reload the page.
+-   The Home Assistant companion apps are not verified with the editors and the new features yet.
+
 ## 2026.10.10 (2026-10-18)
 
 The Sci-fi & fantasy presets no longer look alike. A release still has ten files.

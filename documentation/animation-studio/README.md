@@ -37,6 +37,7 @@ The preview plays on a real `magic-card`, so Magic Card has to be loaded on the 
 
 -   [Library](library.md): search, new animations, customising a preset from a grid of live preset tiles, duplicate, rename, delete, export and import YAML, and the used-by count.
 -   [Editor and preview stage](preview-stage.md): the layout with Layers, stage, timeline and inspector, the timing settings, the preview tiles, light and dark, speed, play, pause and scrub, reduced motion, tablets, undo and redo, unsaved changes and keyboard shortcuts.
+-   [Layers](layers.md): the Layers column, hide, solo and lock in the preview, the stack order of keyframe parts and shapes, particle layers and several emitters.
 -   [Keyframes](keyframes.md): the timeline with a group per target, properties, multi-select, snapping, zoom, the keyframe inspector, easing per keyframe and per property, and copy and paste between lanes and targets.
 -   [Icon animations](icon-mode.md): starting from an icon or the icon library (a separate file loaded on demand), the icon split for you, and part presets with their parameters and pivots.
 -   [Icon library](icon-library.md): 192 ready-made icon animations by domain and category, search, the domain filter and customising an entry.
