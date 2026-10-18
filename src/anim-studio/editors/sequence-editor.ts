@@ -5,6 +5,7 @@ import { MenuPopover } from '../../editor/components/menu-popover';
 import type { HomeAssistant } from '../../types';
 import type { LayerView, LayerViewChangeDetail } from '../../contracts/studio-layers';
 import { dropStepKey, remapStepKeys } from '../layer-view';
+import { lockBanner, lockBannerStyles } from './lock-banner';
 import { ANIMATION_CAPS, type AnimationDoc, type SequenceStep } from '../model';
 import {
   activeStep,
@@ -133,8 +134,15 @@ export class AnimSequenceEditor extends LitElement {
     this._announce = `Step ${steps.length} added: ${stepInfo(animation, this.library, this.doc?.id).name}.`;
   }
 
+  /** A locked step cannot be moved, deleted or edited; says so in the live region. */
+  private _locked(i: number, say = false): boolean {
+    const on = !!this.layerView?.locked.includes(`step:${i}`);
+    if (on && say) this._announce = `Step ${i + 1} is locked. Unlock it in Layers.`;
+    return on;
+  }
+
   private _deleteStep(index: number): void {
-    if (this._steps.length <= 1) return;
+    if (this._steps.length <= 1 || this._locked(index, true)) return;
     const steps = this._steps.filter((_s, i) => i !== index);
     if (this._open === index) this._open = -1;
     else if (this._open > index) this._open--;
@@ -147,7 +155,7 @@ export class AnimSequenceEditor extends LitElement {
   /** Move step `from` to `to` (keyboard or a finished drag): one edit. */
   private _move(from: number, to: number, focus: 'handle' | 'toggle' = 'handle'): void {
     const n = this._steps.length;
-    if (from === to || to < 0 || to >= n) return;
+    if (from === to || to < 0 || to >= n || this._locked(from, true)) return;
     this._open = this._followMove(this._open, from, to);
     this._focusAfter = { index: to, part: focus };
     this._writeSteps(moveItem(this._steps, from, to), 'Move step');
@@ -167,7 +175,7 @@ export class AnimSequenceEditor extends LitElement {
   // ── drag to reorder ──
 
   private _onHandleDown(e: PointerEvent, index: number): void {
-    if (this.disabled || e.button !== 0 || this._steps.length < 2) return;
+    if (this.disabled || e.button !== 0 || this._steps.length < 2 || this._locked(index, true)) return;
     const rows = [...this.renderRoot.querySelectorAll<HTMLElement>('.step')];
     if (!rows[index]) return;
     e.preventDefault();
@@ -402,6 +410,7 @@ export class AnimSequenceEditor extends LitElement {
     const dragging = this._drag?.from === i;
     const off = this._dragOffset(i);
     const placeholder = info.defaultDuration !== undefined ? String(round3(info.defaultDuration)) : '';
+    const lock = this._locked(i);
     return html`
       <li
         class="step ${open ? 'is-open' : ''} ${bad ? 'is-bad' : ''} ${dragging ? 'is-dragging' : ''}"
@@ -416,7 +425,7 @@ export class AnimSequenceEditor extends LitElement {
             aria-label="Move step ${i + 1}"
             aria-describedby="seq-move-hint"
             title="Drag to reorder (Alt+Up / Alt+Down)"
-            ?disabled=${this.disabled || n < 2}
+            ?disabled=${this.disabled || lock || n < 2}
             @pointerdown=${(e: PointerEvent) => this._onHandleDown(e, i)}
             @pointermove=${(e: PointerEvent) => this._onHandleMove(e)}
             @pointerup=${(e: PointerEvent) => this._onHandleUp(e)}
@@ -444,7 +453,7 @@ export class AnimSequenceEditor extends LitElement {
             class="icon-btn sm danger"
             aria-label="Delete step ${i + 1}"
             title=${n <= 1 ? 'A sequence needs at least one step' : 'Delete step'}
-            ?disabled=${this.disabled || n <= 1}
+            ?disabled=${this.disabled || lock || n <= 1}
             @click=${() => this._deleteStep(i)}
           >
             <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -452,6 +461,7 @@ export class AnimSequenceEditor extends LitElement {
         </div>
         ${open
           ? html`<div class="body" id=${id('body')}>
+              ${lock ? lockBanner(this.doc!, this.layerView!, [`step:${i}`]) : nothing}
               ${bad ? html`<p class="help error problem" role="note">${info.problem}</p>` : nothing}
               ${this._field(
                 'Animation',
@@ -461,7 +471,7 @@ export class AnimSequenceEditor extends LitElement {
                   id=${id('anim')}
                   aria-haspopup="menu"
                   aria-expanded=${this._menu.isOpen && this._pick?.mode === 'step' && this._pick.index === i ? 'true' : 'false'}
-                  ?disabled=${this.disabled}
+                  ?disabled=${this.disabled || lock}
                   @click=${(e: Event) => this._openPicker(e, { mode: 'step', index: i })}
                 >
                   <span class="pick-val">${info.name}${info.kind && info.kind !== 'Preset' ? html`<span class="pick-kind"> · ${info.kind}</span>` : nothing}</span>
@@ -478,7 +488,7 @@ export class AnimSequenceEditor extends LitElement {
                     .units=${['s']}
                     .noCustom=${true}
                     .placeholder=${'0'}
-                    ?disabled=${this.disabled}
+                    ?disabled=${this.disabled || lock}
                     @value-changed=${(e: CustomEvent) => {
                       e.stopPropagation();
                       this._patchStep(i, { delay: clamp(round3(secondsOf(e.detail.value) ?? 0), 0, 600) }, 'Change step delay');
@@ -493,7 +503,7 @@ export class AnimSequenceEditor extends LitElement {
                     .units=${['s']}
                     .noCustom=${true}
                     .placeholder=${placeholder}
-                    ?disabled=${this.disabled}
+                    ?disabled=${this.disabled || lock}
                     @value-changed=${(e: CustomEvent) => {
                       e.stopPropagation();
                       const s = secondsOf(e.detail.value);
@@ -512,7 +522,7 @@ export class AnimSequenceEditor extends LitElement {
                     step="1"
                     inputmode="numeric"
                     .value=${String(step.repeat)}
-                    ?disabled=${this.disabled}
+                    ?disabled=${this.disabled || lock}
                     @change=${(e: Event) => {
                       const el = e.target as HTMLInputElement;
                       const v = Math.round(Number(el.value));
@@ -650,6 +660,7 @@ export class AnimSequenceEditor extends LitElement {
 
   static styles = [
     editorSystem,
+    lockBannerStyles,
     css`
       :host {
         display: block;
