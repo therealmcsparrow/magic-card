@@ -13,6 +13,9 @@ import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
 import type { LibraryOpenDetail, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
 import { SVG_EDITOR_CONTRACT_REVISION } from '../contracts/svg-editor';
+import { setI18nLocale } from '../i18n/runtime';
+import { count } from './count';
+import { locale, t } from './i18n';
 import './panel';
 import type { TransferPanel } from './panel';
 
@@ -40,7 +43,7 @@ type Status = 'loading' | 'ok' | 'missing' | 'error';
 
 const SAVE_ANIM = 'magic_card_utils/save_animation';
 const DEL_ANIM = 'magic_card_utils/delete_animation';
-const LABEL: Record<TransferKind, string> = { animation: 'Animations', shape: 'Shapes', icon: 'Icons', theme: 'Theme presets' };
+const LABEL = (kind: TransferKind): string => (kind === 'animation' ? t('Animations') : kind === 'shape' ? t('Shapes') : kind === 'icon' ? t('Icons') : t('Theme presets'));
 const rest = (o: object): Record<string, unknown> => {
   const { id: _i, name: _n, created_at: _c, updated_at: _u, ...r } = o as Record<string, unknown>;
   void [_i, _n, _c, _u];
@@ -122,7 +125,10 @@ export class LibraryView extends LitElement {
   }
 
   protected willUpdate(changed: PropertyValues): void {
-    if (changed.has('hass')) animationLibrary.ensure(this.hass);
+    if (changed.has('hass')) {
+      setI18nLocale(this.hass as never);
+      animationLibrary.ensure(this.hass);
+    }
   }
 
   protected updated(changed: PropertyValues): void {
@@ -232,12 +238,12 @@ export class LibraryView extends LitElement {
     this._bad = true;
     this._msg =
       c === 'unauthorized'
-        ? 'Your account can use the library but not change it. Ask an admin.'
+        ? t('Your account can use the library but not change it. Ask an admin.')
         : c === 'conflict'
-          ? 'It changed while you were looking. The list is reloaded; try again.'
+          ? t('It changed while you were looking. The list is reloaded; try again.')
           : c === 'library_full'
-            ? 'The library is full.'
-            : 'Could not reach Magic Card Utils. Nothing was changed.';
+            ? t('The library is full.')
+            : t('Could not reach Magic Card Utils. Nothing was changed.');
   }
 
   private async _after(done: string): Promise<void> {
@@ -252,7 +258,7 @@ export class LibraryView extends LitElement {
     const name = raw.trim();
     if (!name || name.length > 80) {
       this._bad = true;
-      this._msg = 'The name must be 1 to 80 characters.';
+      this._msg = t('The name must be 1 to 80 characters.');
       return;
     }
     try {
@@ -265,7 +271,7 @@ export class LibraryView extends LitElement {
         const key = k === 'icon' ? 'icon' : 'shape';
         await this._call({ type: k === 'icon' ? CMD.iconsSave : CMD.shapesSave, [key]: { ...rest(full as never), id: r.id, name }, base_updated_at: (full as SavedIcon).updated_at });
       }
-      await this._after(`Renamed to ${name}.`);
+      await this._after(t('Renamed to {name}.', { name }));
     } catch (e) {
       this._fail(e);
     }
@@ -277,7 +283,7 @@ export class LibraryView extends LitElement {
       if (k === 'animation') await this._call({ type: DEL_ANIM, animation_id: r.id });
       else if (k === 'theme') await this.presets!.remove(r.id);
       else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
-      await this._after(`Deleted ${r.name}.`);
+      await this._after(t('Deleted {name}.', { name: r.name }));
     } catch (e) {
       this._fail(e);
     }
@@ -311,7 +317,7 @@ export class LibraryView extends LitElement {
       // the host writes the inline copies
       this._panel = undefined;
       this._bad = false;
-      this._msg = `Added ${items.length} to this card.`;
+      this._msg = t('Added {n} to this card.', { n: items.length });
       return;
     }
     e.stopPropagation();
@@ -333,7 +339,7 @@ export class LibraryView extends LitElement {
       }
     }
     this._panel = undefined;
-    await this._after(`Imported ${ok} of ${items.length}.${full ? ` ${full} did not fit: the library is full.` : ''}${bad ? ` ${bad} could not be saved.` : ''}`);
+    await this._after([t('Imported {ok} of {total}.', { ok, total: items.length }), full ? t('{n} did not fit: the library is full.', { n: full }) : '', bad ? t('{n} could not be saved.', { n: bad }) : ''].filter(Boolean).join(' '));
   }
 
   private _closePanel = (e?: Event): void => {
@@ -345,7 +351,6 @@ export class LibraryView extends LitElement {
     const q = this._q.trim().toLowerCase();
     const shown = this._rows.filter((r) => r.words.includes(q));
     const can = this._admin && this._source === 'mcu' && this._status === 'ok';
-    const noun = LABEL[this._kind].toLowerCase();
     const p = this._panel;
     const ask = (mode: 'import' | 'export', run?: () => void) => (e: MouseEvent): void => {
       this._opener = e.currentTarget as HTMLElement;
@@ -353,47 +358,47 @@ export class LibraryView extends LitElement {
       else this._panel = { mode };
     };
     return html`
-      <div class="wrap">
-        ${seg({ role: 'tablist', label: 'Kind', value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL[k] })), onChange: (k) => this._go(k, this._source) })}
+      <div class="wrap" lang=${locale()}>
+        ${seg({ role: 'tablist', label: t('Kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) })}
         ${this._kind === 'theme' || this._panelCtx
           ? nothing
           : seg({
               role: 'radiogroup',
-              label: 'Source',
+              label: t('Source'),
               value: this._source,
               items: [
-                { value: 'mcu' as const, label: 'Magic Card Utils' },
-                { value: 'card' as const, label: 'This card' },
+                { value: 'mcu' as const, label: t('Magic Card Utils') },
+                { value: 'card' as const, label: t('This card') },
               ],
               onChange: (s) => this._go(this._kind, s),
             })}
         ${field({
           id: 'q',
-          label: `Search ${noun}`,
+          label: t('{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} other {Search theme presets}}', { kind: this._kind }),
           control: html`<div class="with-icon"><ha-icon icon="mdi:magnify"></ha-icon><input id="q" class="input" type="search" .value=${this._q} @input=${(e: Event) => (this._q = (e.target as HTMLInputElement).value)} /></div>`,
         })}
         <div class="bar">
-          ${button({ label: this._sel.size ? `Export ${this._sel.size} selected` : 'Export all', icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
-          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: `New ${this._kind}`, variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
-          ${can || this.inline ? button({ label: 'Import', icon: 'mdi:import', onClick: ask('import') }) : nothing}
+          ${button({ label: this._sel.size ? t('Export {n} selected', { n: this._sel.size }) : t('Export all'), icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
+          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: this._kind === 'icon' ? t('New icon') : t('New shape'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
+          ${can || this.inline ? button({ label: t('Import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
         </div>
-        ${this.inline && this._source === 'card' ? html`<p class="help">Imported items are saved in this card.</p>` : nothing}
+        ${this.inline && this._source === 'card' ? html`<p class="help">${t('Imported items are saved in this card.')}</p>` : nothing}
         ${this._msg ? notice({ tone: this._bad ? 'error' : 'success', text: this._msg, transient: true }) : nothing}
-        <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? `${shown.length} ${noun}` : ''}</div>
+        <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? count(shown.length, this._kind) : ''}</div>
         ${this._body(shown, can)}
       </div>
       ${p
         ? html`<mc-ui-window
             variant="sheet"
-            heading=${p.mode === 'import' ? 'Import' : 'Export'}
-            closeLabel="Close"
+            heading=${p.mode === 'import' ? t('Import') : t('Export')}
+            closeLabel=${t('Close')}
             movable
             resizable
             maximizable
-            moveLabel="Move window"
-            resizeLabel="Resize window"
-            maximizeLabel="Maximise"
-            restoreLabel="Restore size"
+            moveLabel=${t('Move window')}
+            resizeLabel=${t('Resize window')}
+            maximizeLabel=${t('Maximise')}
+            restoreLabel=${t('Restore size')}
             .dismissible=${false}
             .opener=${this._opener}
             @mc-window-close=${this._closePanel}
@@ -414,16 +419,16 @@ export class LibraryView extends LitElement {
 
   private _body(shown: Row[], can: boolean): TemplateResult {
     const s = this._status;
-    if (s === 'loading') return html`<p class="help">Loading...</p>`;
+    if (s === 'loading') return html`<p class="help">${t('Loading...')}</p>`;
     if (s === 'missing' || s === 'error') {
-      const older = this._kind === 'theme' ? 'Update Magic Card Utils to keep theme presets.' : 'Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.';
+      const older = this._kind === 'theme' ? t('Update Magic Card Utils to keep theme presets.') : t('Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.');
       return empty({
         icon: 'mdi:cloud-off-outline',
-        title: s === 'error' ? 'Could not reach Magic Card Utils. Your work is safe.' : older,
-        action: s === 'error' ? { label: 'Try again', onClick: () => { resetLibrary(); void this._load(); } } : undefined,
+        title: s === 'error' ? t('Could not reach Magic Card Utils. Your work is safe.') : older,
+        action: s === 'error' ? { label: t('Try again'), onClick: () => { resetLibrary(); void this._load(); } } : undefined,
       });
     }
-    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? `No ${LABEL[this._kind].toLowerCase()} match "${this._q}".` : `No ${LABEL[this._kind].toLowerCase()} here yet.` });
+    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('{kind, select, animation {No animations match "{q}".} shape {No shapes match "{q}".} icon {No icons match "{q}".} other {No theme presets match "{q}".}}', { kind: this._kind, q: this._q }) : t('{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} other {No theme presets here yet.}}', { kind: this._kind }) });
     return html`<div class="rows" role="list">${shown.map((r) => this._item(r, can))}</div>`;
   }
 
@@ -432,7 +437,7 @@ export class LibraryView extends LitElement {
     const set = (kind: 'rename' | 'delete' | undefined) => () => (this._edit = kind ? { id: r.id, kind } : undefined);
     const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
     const check = {
-      label: `Select ${r.name}`,
+      label: t('Select {name}', { name: r.name }),
       checked: this._sel.has(r.id),
       onChange: (on: boolean) => {
         const n = new Set(this._sel);
@@ -441,7 +446,7 @@ export class LibraryView extends LitElement {
         this._sel = n;
       },
     };
-    const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label: `${label} ${r.name}`, icon, iconOnly: true as const, variant, onClick });
+    const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label, icon, iconOnly: true as const, variant, onClick });
     return row({
       id: r.id,
       name: r.name,
@@ -449,7 +454,7 @@ export class LibraryView extends LitElement {
       check,
       content:
         e === 'rename'
-          ? html`<input class="input" aria-label="New name for ${r.name}" .value=${r.name} maxlength="80" @keydown=${(ev: KeyboardEvent) => {
+          ? html`<input class="input" aria-label=${t('New name for {name}', { name: r.name })} .value=${r.name} maxlength="80" @keydown=${(ev: KeyboardEvent) => {
               if (ev.key === 'Enter') void this._rename(r, (ev.target as HTMLInputElement).value);
               if (ev.key === 'Escape') {
                 ev.stopPropagation();
@@ -457,13 +462,13 @@ export class LibraryView extends LitElement {
               }
             }} />`
           : undefined,
-      actions: [...(edit ? [act('Edit', 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape', r.id))] : []), ...(can && !e ? [act('Rename', 'mdi:rename-box', set('rename')), act('Delete', 'mdi:delete-outline', set('delete'), 'danger')] : [])],
+      actions: [...(edit ? [act(t('Edit {name}', { name: r.name }), 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape', r.id))] : []), ...(can && !e ? [act(t('Rename {name}', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('Delete {name}', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : [])],
       trail:
         e === 'rename'
-          ? html`${button({ label: 'Save', size: 'sm', onClick: (ev) => void this._rename(r, (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value) })}${button({ label: 'Cancel', variant: 'text', size: 'sm', onClick: set(undefined) })}`
+          ? html`${button({ label: t('Save'), size: 'sm', onClick: (ev) => void this._rename(r, (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
           : e === 'delete'
-            ? html`<span class="help" role="alert">Delete ${r.name}? ${this._kind === 'theme' ? 'Themes you applied stay.' : 'Cards that use it keep their own copy, or show the default.'}</span>
-                ${button({ label: 'Delete', variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: 'Cancel', variant: 'text', size: 'sm', onClick: set(undefined) })}`
+            ? html`<span class="help" role="alert">${this._kind === 'theme' ? t('Delete {name}? Themes you applied stay.', { name: r.name }) : t('Delete {name}? Cards that use it keep their own copy, or show the default.', { name: r.name })}</span>
+                ${button({ label: t('Delete'), variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
             : undefined,
     });
   }

@@ -1,12 +1,13 @@
 import { sanitizeSvg } from '../../icons/svg-sanitize';
 import { ICON_MAX_BYTES } from '../../contracts/mcu-library';
 import type { IconData, TransferNote } from '../../contracts/preset-transfer';
+import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult } from '../types';
 
 /** The mcu-library path pattern. */
 export const ICON_PATH_RE = /^[MmZzLlHhVvCcSsQqTtAa0-9eE.,+\- \n]*$/;
-export const PATH_MISSING = "Open it in the SVG editor and save to show it in Home Assistant's own cards.";
+export const PATH_MISSING = (): string => t("Open it in the SVG editor and save to show it in Home Assistant's own cards.");
 
 const IGNORED_ATTRS = /^(xmlns|xml:|version$|width$|height$|viewbox$|baseprofile$|enable-background$)/i;
 
@@ -42,12 +43,12 @@ export function svgRemovals(input: string, markup: string, index: number): Trans
   }
   const notes: TransferNote[] = [];
   for (const [n, c] of els) {
-    const what = n === 'script' ? 'a script' : n === 'use' ? 'a <use> reference' : `<${n}>`;
-    notes.push(note('svg_removed', index, 'data.svg', `Removed ${what}${c > 1 ? ` (${c} times)` : ''}.`));
+    const what = n === 'script' ? t('a script') : n === 'use' ? t('a <use> reference') : `<${n}>`;
+    notes.push(note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count: c, what })));
   }
   for (const [n, c] of attrs) {
-    const what = n.startsWith('on') ? `the event handler ${n}` : /(^|:)href$/.test(n) ? `a link (${n})` : n === 'style' ? 'a style attribute' : `the attribute ${n}`;
-    notes.push(note('svg_removed', index, 'data.svg', `Removed ${what}${c > 1 ? ` (${c} times)` : ''}.`));
+    const what = n.startsWith('on') ? t('the event handler {name}', { name: n }) : /(^|:)href$/.test(n) ? t('a link ({name})', { name: n }) : n === 'style' ? t('a style attribute') : t('the attribute {name}', { name: n });
+    notes.push(note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count: c, what })));
   }
   return notes;
 }
@@ -56,16 +57,16 @@ export function svgRemovals(input: string, markup: string, index: number): Trans
 export function cleanSvg(index: number, svg: string): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
   // mc-f / mc-s are the sanitiser's own marks: strip them first so an exported icon re-imports unchanged
   const s = sanitizeSvg(svg.replace(/\bclass\s*=\s*(["'])([^"']*)\1/gi, (_m, q: string, v: string) => `class=${q}${v.split(/\s+/).filter((t) => t !== 'mc-f' && t !== 'mc-s').join(' ')}${q}`));
-  if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', s.error || 'The SVG could not be read.')] };
+  if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', s.error || t('The SVG could not be read.'))] };
   if (new TextEncoder().encode(s.markup).length > ICON_MAX_BYTES) {
-    return { ok: false, notes: [note('invalid_item', index, 'data.svg', `The icon is larger than ${ICON_MAX_BYTES / 1024} KB.`)] };
+    return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The icon is larger than {kb} KB.', { kb: ICON_MAX_BYTES / 1024 }))] };
   }
   return { ok: true, markup: s.markup, viewBox: s.viewBox, notes: svgRemovals(svg, s.markup, index) };
 }
 
 /** An icon item: svg sanitised (removals listed), path patterns and view box checked. */
 export function readIcon(index: number, data: unknown): KindResult<IconData> {
-  if (!isObj(data) || typeof data.svg !== 'string') return { ok: false, notes: [note('invalid_item', index, 'data.svg', 'The icon has no SVG.')] };
+  if (!isObj(data) || typeof data.svg !== 'string') return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The icon has no SVG.'))] };
   const c = cleanSvg(index, data.svg);
   if (!c.ok) return c;
   const notes = [...c.notes];
@@ -75,20 +76,20 @@ export function readIcon(index: number, data: unknown): KindResult<IconData> {
     const v = data[key];
     if (v === undefined) return undefined;
     if (typeof v === 'string' && ICON_PATH_RE.test(v) && v.length <= ICON_MAX_BYTES) return v;
-    notes.push(note('dropped_value', index, `data.${key}`, `"${key}" is not valid path data, so it was left out.`));
+    notes.push(note('dropped_value', index, `data.${key}`, t('"{key}" is not valid path data, so it was left out.', { key })));
     return undefined;
   };
   out.path = pathOf('path') ?? '';
-  if (!out.path) notes.push(note('path_missing', index, 'data.path', PATH_MISSING));
+  if (!out.path) notes.push(note('path_missing', index, 'data.path', PATH_MISSING()));
   const sec = pathOf('secondary_path');
   if (sec !== undefined) out.secondary_path = sec;
 
   const vb = typeof data.view_box === 'string' ? data.view_box.trim().split(/[\s,]+/).map(Number) : [];
   if (vb.length === 4 && vb.every(Number.isFinite)) out.view_box = vb.join(' ');
   else {
-    if (data.view_box !== undefined) notes.push(note('dropped_value', index, 'data.view_box', 'The view box is not four numbers, so it was taken from the SVG.'));
+    if (data.view_box !== undefined) notes.push(note('dropped_value', index, 'data.view_box', t('The view box is not four numbers, so it was taken from the SVG.')));
     out.view_box = c.viewBox;
   }
-  if (compactBytes(out) > 3 * ICON_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', 'The icon is too large.')] };
+  if (compactBytes(out) > 3 * ICON_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', t('The icon is too large.'))] };
   return { ok: true, data: out, notes };
 }

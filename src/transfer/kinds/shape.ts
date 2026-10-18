@@ -2,6 +2,7 @@ import { CORNER_TYPES, MAX_SHAPE_POINTS } from '../../contracts/custom-shape';
 import type { CustomShapeOptions } from '../../contracts/custom-shape';
 import { SHAPE_MAX_BYTES } from '../../contracts/mcu-library';
 import type { TransferDataByKind, TransferNote } from '../../contracts/preset-transfer';
+import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult, Raw } from '../types';
 
@@ -18,37 +19,37 @@ const isPair = (v: unknown): v is [number, number] => Array.isArray(v) && v.leng
 
 /** A shape item: known keys only, values checked one by one (invalid ones dropped and listed). */
 export function readShape(index: number, data: unknown): KindResult<TransferDataByKind['shape']> {
-  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', 'The shape data is missing.')] };
+  if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('The shape data is missing.'))] };
   const notes: TransferNote[] = [];
-  const bad = (path: string, what: string) => notes.push(note('dropped_value', index, `data.${path}`, `${what} is not valid, so it was left out.`));
+  const bad = (path: string, message: string) => notes.push(note('dropped_value', index, `data.${path}`, message));
   const out: Raw = {};
 
   for (const [k, v] of Object.entries(data)) {
     if (!(SHAPE_KEYS as readonly string[]).includes(k)) {
-      notes.push(note('dropped_key', index, `data.${k}`, `"${k}" is not a shape setting, so it was left out.`));
+      notes.push(note('dropped_key', index, `data.${k}`, t('"{key}" is not a shape setting, so it was left out.', { key: k })));
       continue;
     }
     if (k === 'corner') {
       if (isLength(v)) out.corner = v;
-      else bad(k, 'The corner size');
+      else bad(k, t('The corner size is not valid, so it was left out.'));
     } else if (k === 'corner_type') {
       if (isType(v)) out.corner_type = v;
-      else bad(k, 'The corner type');
+      else bad(k, t('The corner type is not valid, so it was left out.'));
     } else if (k === 'smoothing') {
       if (num(v) || (typeof v === 'string' && /^\s*(?:\d*\.)?\d+\s*$/.test(v))) out.smoothing = v;
-      else bad(k, 'The smoothing');
+      else bad(k, t('The smoothing is not valid, so it was left out.'));
     } else if (k === 'corners') {
       if (!isObj(v)) {
-        bad(k, 'The corners setting');
+        bad(k, t('The corners setting is not valid, so it was left out.'));
         continue;
       }
       const corners: Raw = {};
       for (const [c, spec] of Object.entries(v)) {
-        if (!['tl', 'tr', 'br', 'bl'].includes(c)) notes.push(note('dropped_key', index, `data.corners.${c}`, `"${c}" is not a corner, so it was left out.`));
+        if (!['tl', 'tr', 'br', 'bl'].includes(c)) notes.push(note('dropped_key', index, `data.corners.${c}`, t('"{key}" is not a corner, so it was left out.', { key: c })));
         else if (isType(spec) || isLength(spec)) corners[c] = spec;
         else if (isObj(spec) && (spec.type === undefined || isType(spec.type)) && (spec.size === undefined || isLength(spec.size))) {
           corners[c] = { ...(spec.type !== undefined ? { type: spec.type } : {}), ...(spec.size !== undefined ? { size: spec.size } : {}) };
-        } else bad(`corners.${c}`, `Corner ${c}`);
+        } else bad(`corners.${c}`, t('Corner {name} is not valid, so it was left out.', { name: c }));
       }
       if (Object.keys(corners).length) out.corners = corners;
     } else if (k === 'padding') {
@@ -57,20 +58,20 @@ export function readShape(index: number, data: unknown): KindResult<TransferData
         const pad: Raw = {};
         for (const [side, sv] of Object.entries(v)) {
           if (['top', 'right', 'bottom', 'left'].includes(side) && isLength(sv)) pad[side] = sv;
-          else bad(`padding.${side}`, `Padding "${side}"`);
+          else bad(`padding.${side}`, t('Padding "{name}" is not valid, so it was left out.', { name: side }));
         }
         if (Object.keys(pad).length) out.padding = pad;
-      } else bad(k, 'The padding');
+      } else bad(k, t('The padding is not valid, so it was left out.'));
     } else if (k === 'points') {
       if (!Array.isArray(v)) {
-        bad(k, 'The points list');
+        bad(k, t('The points list is not valid, so it was left out.'));
         continue;
       }
-      if (v.length > MAX_SHAPE_POINTS) return { ok: false, notes: [note('invalid_item', index, 'data.points', `A shape holds at most ${MAX_SHAPE_POINTS} points (this one has ${v.length}).`)] };
+      if (v.length > MAX_SHAPE_POINTS) return { ok: false, notes: [note('invalid_item', index, 'data.points', t('A shape holds at most {max} points (this one has {n}).', { max: MAX_SHAPE_POINTS, n: v.length }))] };
       const points: Raw[] = [];
       v.forEach((pt, i) => {
         if (!isObj(pt) || !isCoord(pt.x) || !isCoord(pt.y) || (pt.in !== undefined && !isPair(pt.in)) || (pt.out !== undefined && !isPair(pt.out))) {
-          bad(`points[${i}]`, `Point ${i + 1}`);
+          bad(`points[${i}]`, t('Point {n} is not valid, so it was left out.', { n: i + 1 }));
           return;
         }
         const keep: Raw = { x: pt.x, y: pt.y };
@@ -82,7 +83,7 @@ export function readShape(index: number, data: unknown): KindResult<TransferData
       if (points.length) out.points = points;
     }
   }
-  if (!Object.keys(out).length) return { ok: false, notes: [...notes, note('invalid_item', index, 'data', 'The shape has no valid settings.')] };
-  if (compactBytes(out) > SHAPE_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', `The shape is larger than ${SHAPE_MAX_BYTES / 1024} KB.`)] };
+  if (!Object.keys(out).length) return { ok: false, notes: [...notes, note('invalid_item', index, 'data', t('The shape has no valid settings.'))] };
+  if (compactBytes(out) > SHAPE_MAX_BYTES) return { ok: false, notes: [note('invalid_item', index, 'data', t('The shape is larger than {kb} KB.', { kb: SHAPE_MAX_BYTES / 1024 }))] };
   return { ok: true, data: out as Omit<CustomShapeOptions, 'ref'>, notes };
 }

@@ -11,3 +11,4 @@ labels	Light control with brightness, colour temperature, and colour options	Lig
 labels	Outline colour	Outline color
 labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
+transfer	Maximise	Maximize

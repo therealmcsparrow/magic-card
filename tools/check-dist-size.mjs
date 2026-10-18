@@ -39,7 +39,7 @@ const CAPS = {
   'magic-card-seasonal.js': 58_368, // 57 KiB (D5, measured 55,023 + 5 %); ceiling 80 KiB
   'magic-card-markdown.js': 55_296, // 54 KiB (D2, measured 52,185 + 5 %); above the 52 KiB sanity ceiling by the rounding only
   // preset transfer (T16, ADR 0022): codec + validators 17.2 KB, <mc-transfer-panel> 8.9 KB, <mc-library-view> 11 KB. OVER the CEO ceiling of 28,672 B (TRANSFER_CHUNK_CEILING): measured + 5 %, rounded up to 1 KiB, pending the CEO ruling (js-yaml, sanitizeSvg, model.ts and the validators are NOT in it, see 33-frontend-engineer-t16.md)
-  'magic-card-transfer.js': 39_936, // 39 KiB (measured 37,126 + 5 %); ceiling 28 KiB
+  'magic-card-transfer.js': 50_176, // 49 KiB (architect r3 number, pending the CEO; 164 messages measure 56,325, so this is red until the CEO rules); ceiling 28 KiB
   'magic-card-modules-extra.js': 24_576, // 24 KiB (D3, measured 23,139 + 5 %); ceiling 44 KiB
   // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
   'magic-card-svg-booleans.js': 9_216, // 9 KiB (7,884)
