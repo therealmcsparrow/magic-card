@@ -996,7 +996,17 @@ const pickerLocalStyles = css`
     display: flex;
     flex-direction: column;
     padding: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* A picker with tabs and a keep-a-copy step: a steady height, so choosing an icon never moves the window,
+     and the body scrolls where the screen is too short (200 % zoom) instead of squeezing the list away. */
+  .mc-picker-stack {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    min-height: 24rem;
   }
 
   /* ── Toolbar rows under the header (search, filters, breadcrumbs) ─ */
@@ -1011,6 +1021,12 @@ const pickerLocalStyles = css`
     min-height: 40px;
   }
 
+  @media (max-height: 560px) {
+    .mc-picker-search {
+      padding: 8px 16px;
+    }
+  }
+
   /* ── Scrollable list ───────────────────────────────────────────── */
   .mc-picker-list {
     flex: 1;
@@ -1021,6 +1037,11 @@ const pickerLocalStyles = css`
     display: grid;
     align-content: start;
     gap: 2px;
+  }
+
+  /* in a window the list never shrinks below about three rows (the body scrolls instead) */
+  mc-ui-window .mc-picker-list {
+    min-height: 11rem;
   }
 
   .mc-picker-category,
