@@ -26,10 +26,10 @@ const CAPS = {
   // path canvas for the SVG and shape editors (T4): 47,935 B measured + 5 %. The architect's ceiling was 40 KiB;
   // draw.ts (6.2 KB) is in this chunk by contract and is the main reason it is over. The chunk is only emitted
   // once an editor chunk imports src/path-canvas/loader.ts; until then this entry reports "missing from dist".
-  'magic-card-path-canvas.js': 55_296, // 54 KiB, CEO 2026-10-18 (draw tools moved in, ADR 0025)
+  'magic-card-path-canvas.js': 63_488, // 62 KiB, CEO 2026-10-18 (handles + context menu, ADR 0026)
   // SVG editor (T10): the architect's ceiling of 96 KiB, ADR 0019. Like the canvas chunk it is only emitted once the card-editor
   // chunk imports src/svg-editor/loader.ts (T11); until then this entry reports "missing from dist".
-  'magic-card-svg-editor.js': 112_640, // 110 KiB, CEO 2026-10-18 (measured 106,748 + 5%)
+  'magic-card-svg-editor.js': 117_760, // 115 KiB, CEO 2026-10-18 (align, handles, menu; ADR 0026)
   // shape editor (T7): the architect's ceiling of 48 KiB, ADR 0019. OVER the ceiling with the whole design scope
   // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
