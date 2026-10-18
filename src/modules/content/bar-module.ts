@@ -11,9 +11,7 @@ import { t } from '../../card/i18n';
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'bar',
-    get name() {
-      return t('Bar');
-    },
+    name: 'Bar',
     description: 'Display a progress bar based on entity state',
     category: 'content',
     icon: 'mdi:chart-bar',

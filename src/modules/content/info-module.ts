@@ -23,9 +23,7 @@ export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolea
 class InfoModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'info',
-    get name() {
-      return t('Info');
-    },
+    name: 'Info',
     description: 'Display entity name, state, and attributes',
     category: 'content',
     icon: 'mdi:information-outline',

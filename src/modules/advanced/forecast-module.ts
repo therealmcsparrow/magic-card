@@ -27,9 +27,7 @@ export function forecastSkeleton(count: number): TemplateResult {
 class ForecastModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'forecast',
-    get name() {
-      return t('Forecast');
-    },
+    name: 'Forecast',
     description: 'Display weather forecast data',
     category: 'advanced',
     icon: 'mdi:calendar-week-outline',

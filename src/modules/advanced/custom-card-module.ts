@@ -23,9 +23,7 @@ export const customCardEmpty = (): TemplateResult => html`
 class CustomCardModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'custom-card',
-    get name() {
-      return t('Custom card');
-    },
+    name: 'Custom card',
     description: 'Embed any 3rd party Lovelace card',
     category: 'advanced',
     icon: 'mdi:card-plus-outline',

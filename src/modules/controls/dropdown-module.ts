@@ -95,9 +95,7 @@ export function normalizeOptions(options: DropdownModuleConfig['options']): Drop
 class DropdownModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'dropdown',
-    get name() {
-      return t('Dropdown');
-    },
+    name: 'Dropdown',
     description: 'Select dropdown for choosing from a list of options',
     category: 'controls',
     icon: 'mdi:form-dropdown',

@@ -11,9 +11,7 @@ import { t } from '../../card/i18n';
 class GaugeModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'gauge',
-    get name() {
-      return t('Gauge');
-    },
+    name: 'Gauge',
     description: 'Arc gauge for displaying numeric sensor values',
     category: 'controls',
     icon: 'mdi:speedometer',

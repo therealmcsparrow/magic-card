@@ -31,9 +31,7 @@ function entityName(hass: HomeAssistant, stateObj: HassEntity): string {
 class TextModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'text',
-    get name() {
-      return t('Text');
-    },
+    name: 'Text',
     description: 'Display static or template text',
     category: 'content',
     icon: 'mdi:format-text',
@@ -43,7 +41,7 @@ class TextModule extends BaseMagicModule {
     return {
       id: generateId('text'),
       type: 'text',
-      text: t('Hello World'),
+      text: 'Hello World',
     };
   }
 

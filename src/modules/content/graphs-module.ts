@@ -6,7 +6,6 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { t } from '../../card/i18n';
 
 export { clearHistoryCache, downsample, historyRequest, parseHistory } from '../../services/history-cache';
 export type { HistorySample } from '../../services/history-cache';
@@ -14,9 +13,7 @@ export type { HistorySample } from '../../services/history-cache';
 class GraphsModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'graphs',
-    get name() {
-      return t('Graph');
-    },
+    name: 'Graph',
     description: 'Display entity history as a line graph',
     category: 'content',
     icon: 'mdi:chart-line',

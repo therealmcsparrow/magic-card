@@ -29,9 +29,7 @@ export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): M
 class SliderLayoutModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider-layout',
-    get name() {
-      return t('Slider layout');
-    },
+    name: 'Slider layout',
     description: 'Arrange child modules in a slider',
     category: 'layout',
     icon: 'mdi:view-carousel-outline',

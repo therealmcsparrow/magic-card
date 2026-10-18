@@ -21,9 +21,7 @@ import { t } from '../../card/i18n';
 class SliderModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider',
-    get name() {
-      return t('Slider');
-    },
+    name: 'Slider',
     description: 'Range slider for controlling numeric values',
     category: 'controls',
     icon: 'mdi:tune-vertical',

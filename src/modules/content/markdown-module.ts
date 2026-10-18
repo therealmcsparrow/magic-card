@@ -10,9 +10,7 @@ import { t } from '../../card/i18n';
 class MarkdownModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'markdown',
-    get name() {
-      return t('Markdown');
-    },
+    name: 'Markdown',
     description: 'Render markdown-formatted content',
     category: 'content',
     icon: 'mdi:language-markdown',

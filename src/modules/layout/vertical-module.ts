@@ -10,9 +10,7 @@ import { t } from '../../card/i18n';
 class VerticalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'vertical',
-    get name() {
-      return t('Vertical');
-    },
+    name: 'Vertical',
     description: 'Arrange child modules in a column',
     category: 'layout',
     icon: 'mdi:arrow-split-horizontal',

@@ -32,9 +32,7 @@ export function climateRange(stateObj: HassEntity | undefined, attribute: string
 class SpinboxModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'spinbox',
-    get name() {
-      return t('Spinbox');
-    },
+    name: 'Spinbox',
     description: 'Numeric input with increment and decrement buttons',
     category: 'controls',
     icon: 'mdi:numeric',

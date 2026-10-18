@@ -396,7 +396,7 @@ export class MagicCard extends LitElement {
                 {
                   id: generateId('text'),
                   type: 'text',
-                  text: t('Welcome to Magic Card'),
+                  text: 'Welcome to Magic Card',
                 },
               ],
             },

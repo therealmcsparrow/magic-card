@@ -12,9 +12,7 @@ import { t } from '../../card/i18n';
 class TabsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'tabs',
-    get name() {
-      return t('Tabs');
-    },
+    name: 'Tabs',
     description: 'Tabbed container for groups of modules',
     category: 'layout',
     icon: 'mdi:tab',
@@ -25,8 +23,8 @@ class TabsModule extends BaseMagicModule {
       id: generateId('tabs'),
       type: 'tabs',
       tabs: [
-        { label: t('Tab 1'), modules: [] },
-        { label: t('Tab 2'), modules: [] },
+        { label: 'Tab 1', modules: [] },
+        { label: 'Tab 2', modules: [] },
       ],
       active_tab: 0,
       tab_style: 'default',

@@ -13,9 +13,7 @@ import { t } from '../../card/i18n';
 class ButtonModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'button',
-    get name() {
-      return t('Button');
-    },
+    name: 'Button',
     description: 'Interactive button with icon, label, and optional state display',
     category: 'controls',
     icon: 'mdi:gesture-tap',
@@ -25,7 +23,7 @@ class ButtonModule extends BaseMagicModule {
     return {
       id: generateId('button'),
       type: 'button',
-      label: t('Button'),
+      label: 'Button',
       icon: 'mdi:power',
       show_state: false,
       button_style: 'default',

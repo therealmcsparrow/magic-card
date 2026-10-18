@@ -6,7 +6,6 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { dateTimeFormat, localeLanguage, localeTimeZone, uses12h } from '../../utils/locale-format';
 import { tickingText } from '../../utils/ticking-text';
-import { t } from '../../card/i18n';
 
 /** Date format presets; any other value is a pattern (see formatDatePattern). */
 const DATE_PRESETS: Record<string, Intl.DateTimeFormatOptions> = {
@@ -117,9 +116,7 @@ export function formatClockTime(date: Date, c: Pick<ClockModuleConfig, 'format_1
 class ClockModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'clock',
-    get name() {
-      return t('Clock');
-    },
+    name: 'Clock',
     description: 'Display current time and date',
     category: 'advanced',
     icon: 'mdi:clock-outline',

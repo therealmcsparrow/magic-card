@@ -27,9 +27,7 @@ const onImageLoad = (e: Event) => (e.target as HTMLElement).parentElement?.class
 class ImageModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'image',
-    get name() {
-      return t('Image');
-    },
+    name: 'Image',
     description: 'Display a static image or entity picture',
     category: 'content',
     icon: 'mdi:image-outline',

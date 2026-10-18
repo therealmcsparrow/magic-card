@@ -51,9 +51,7 @@ export function supportsEffect(stateObj: HassEntity): boolean {
 class LightModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'light',
-    get name() {
-      return t('Light');
-    },
+    name: 'Light',
     description: 'Light control with brightness, color temp, and color options',
     category: 'controls',
     icon: 'mdi:lightbulb-outline',
