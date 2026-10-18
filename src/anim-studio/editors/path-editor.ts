@@ -1,6 +1,8 @@
 import { LitElement, html, css, svg, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
+import type { LayerView } from '../../contracts/studio-layers';
+import { lockBanner, lockBannerStyles } from './lock-banner';
 import { ANIMATION_CAPS, type AnimationDoc, type PathSpec } from '../model';
 import {
   PATH_TEMPLATES,
@@ -68,7 +70,16 @@ function preview(id: PathTemplateId): { d: string; box: string } {
 export class AnimPathEditor extends LitElement {
   static styles = [
     editorSystem,
+    lockBannerStyles,
     css`
+      .lk-path,
+      .lk-subject {
+        display: contents;
+      }
+      .lk-path[inert] > *,
+      .lk-subject[inert] > * {
+        opacity: 0.55;
+      }
       :host {
         display: block;
         min-width: 0;
@@ -210,9 +221,15 @@ export class AnimPathEditor extends LitElement {
   @property({ attribute: false }) library?: Record<string, AnimationDoc>;
   @property({ type: Number }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Preview-only locks: `path` (the points, units, rotation, look) and `subject` (what moves). */
+  @property({ attribute: false }) layerView?: LayerView;
 
   private get _spec(): PathSpec {
     return this.doc?.path ?? DEFAULT_SPEC;
+  }
+
+  private _locked(key: 'path' | 'subject'): boolean {
+    return !!this.layerView?.locked.includes(key);
   }
 
   private _emit(path: PathSpec, label: string): void {
@@ -330,7 +347,7 @@ export class AnimPathEditor extends LitElement {
     const n = edit.anchors.length;
     const curved = edit.anchors.filter((a) => a.in || a.out).length;
     const canEdit = n > 1 && !this.disabled;
-    return html`<section class="sec" aria-label="Path">
+    return html`<section class="sec" aria-label="Path"><div class="lk-path" ?inert=${this._locked('path')}>
       <div class="field">
         <div class="field-head"><span class="lbl">Start from a template</span></div>
         ${this._templates()}
@@ -372,13 +389,14 @@ export class AnimPathEditor extends LitElement {
           <ha-icon icon="mdi:eraser"></ha-icon>Clear path
         </button>
       </div>
-    </section>`;
+    </div></section>`;
   }
 
   private _motionSection(): TemplateResult {
     const spec = this._spec;
     return html`<section class="sec" aria-labelledby="pe-motion">
       <h3 id="pe-motion">Motion</h3>
+      <div class="lk-subject" ?inert=${this._locked('subject')}>
       <div class="field">
         <div class="field-head"><span class="lbl">What moves</span></div>
         ${this._seg('What moves', SUBJECTS, spec.subject, (v) => this._subject(v))}
@@ -390,12 +408,15 @@ export class AnimPathEditor extends LitElement {
               : 'The whole element moves along the path from where it rests.'}
         </p>
       </div>
+      </div>
+      <div class="lk-path" ?inert=${this._locked('path')}>
       <div class="field">
         <div class="field-head"><span class="lbl">Units</span></div>
         ${this._seg('Units', UNITS, spec.units, (v) => this._set({ units: v }, 'Units'))}
         <p class="help">${spec.units === 'percent' ? 'Points are in % of the moving element, so the path scales with it.' : 'Points are in pixels, the same at every size.'}</p>
       </div>
       ${this._switch('Follow rotation', 'Turn the subject to face the direction of travel.', spec.follow_rotation, () => this._set({ follow_rotation: !spec.follow_rotation }, 'Follow rotation'), 'follow-switch')}
+      </div>
     </section>`;
   }
 
@@ -493,8 +514,10 @@ export class AnimPathEditor extends LitElement {
 
   protected render(): TemplateResult {
     const edit = parsePath(this._spec.d);
+    const keys = (['path', 'subject'] as const).filter((k) => this._locked(k));
     return html`<div class="ed">
-      ${this._pathSection(edit)} ${this._motionSection()} ${this._spec.subject === 'particles' ? this._particlesSection() : nothing}
+      ${keys.length ? lockBanner(this.doc!, this.layerView!, keys) : nothing}
+      ${this._pathSection(edit)} ${this._motionSection()} ${this._spec.subject === 'particles' ? html`<div class="lk-path" ?inert=${this._locked('path')}>${this._particlesSection()}</div>` : nothing}
     </div>`;
   }
 }

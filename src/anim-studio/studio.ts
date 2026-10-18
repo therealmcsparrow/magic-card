@@ -1563,7 +1563,7 @@ export class AnimationStudio extends LitElement {
       .hass=${this.hass}
       .library=${this._libraryObj}
       .time=${TIME_TAGS.has(tag) ? this._time : 0}
-      .disabled=${this._busy}
+      .disabled=${this._busy || (tag === PATH_OVERLAY_TAG && this._viewOf(d).locked.includes('path'))}
       .studioSelection=${this._selection}
       .layerView=${this._viewOf(d)}
       .emitter=${this._emitter.index}
