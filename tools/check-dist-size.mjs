@@ -34,7 +34,7 @@ const CAPS = {
   'magic-card-shape-editor.js': 69_632, // 68 KiB, CEO 2026-10-18 (measured 64,435 + 5%)
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
   'magic-card-slider.js': 4_096,
-  'magic-card-seasonal.js': 4_096,
+  'magic-card-seasonal.js': 58_368, // 57 KiB (D5, measured 55,023 + 5 %); ceiling 80 KiB
   'magic-card-markdown.js': 4_096,
   'magic-card-modules-extra.js': 4_096,
 };

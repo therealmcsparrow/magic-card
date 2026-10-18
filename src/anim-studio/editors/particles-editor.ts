@@ -81,6 +81,8 @@ import type { AnimSvgDialog } from './draw-svg-dialog';
  */
 function renderFx(anim: ResolvedAnimations): TemplateResult {
   const symbol = (s: FxLayer['symbol'] | ParticleSlotV2['symbol']) => (!s ? nothing : 'icon' in s ? html`<ha-icon .icon=${s.icon}></ha-icon>` : s.text);
+  // the card's seasonal chunk defines <mc-seasonal>; the element upgrades in place once it is loaded
+  if (anim.fx.some((l) => l.seasonal)) void window.MagicCard?.loadSeasonal?.();
   return html`${anim.fx.map((l) =>
     l.seasonal
       ? html`<mc-seasonal class="mc-anim-seasonal" data-fx=${l.preset} .scenes=${l.seasonal.scenes} .intensity=${l.seasonal.intensity} .seed=${`pv|${l.preset}`}></mc-seasonal>`

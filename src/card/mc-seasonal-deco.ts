@@ -1,5 +1,5 @@
 import { LitElement, css, html, unsafeCSS, nothing, PropertyValues, svg, SVGTemplateResult, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import type { SceneId } from '../utils/seasonal';
 import { sceneDecorations, type DecoMotif } from '../utils/seasonal-scenes';
 import { layoutDeco, type DecoBox, type DecoLayout } from '../utils/seasonal-deco';
@@ -118,7 +118,6 @@ function vine(l: NonNullable<DecoLayout['vine']>): SVGTemplateResult {
  * twinkle and cycle colours with stepped CSS animations (paused off-screen, still under reduced
  * motion); the other motifs are static. Without motifs it renders and observes nothing.
  */
-@customElement('mc-seasonal-deco')
 export class McSeasonalDeco extends LitElement {
   static styles = css`
     :host {

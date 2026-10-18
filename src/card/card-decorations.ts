@@ -8,12 +8,11 @@ import type { HomeAssistant } from '../types';
 import type { ResolvedValueBackground } from '../utils/value-background';
 import type { ResolvedSeasonal } from '../utils/seasonal';
 import { sceneDecorations, sceneFlashes, type BudgetGrant, type SeasonalBudget } from '../utils/seasonal-scenes';
-import { decoInsets } from '../utils/seasonal-deco';
+import { decoInsets } from '../utils/seasonal-deco-insets';
+import { loadSeasonal } from '../utils/lazy-chunks';
 import './mc-ring';
 import './mc-shape';
 import './mc-value-bg';
-import './mc-seasonal';
-import './mc-seasonal-deco';
 
 /*
  * Decorative layers the card adds inside a module / row / column wrapper or the card itself:
@@ -49,6 +48,7 @@ export function renderAnimFx(
 ): TemplateResult | typeof nothing {
   if (!anim?.fx.length) return nothing;
   return html`${anim.fx.map((l) => {
+    if (l.seasonal) void loadSeasonal();
     const g: BudgetGrant | undefined = l.seasonal && budget?.preset(l.seasonal.scenes, l.seasonal.intensity);
     return l.seasonal
       ? html`<mc-seasonal class="mc-anim-seasonal" data-fx=${l.preset} style=${l.style || nothing} .scenes=${l.seasonal.scenes}
@@ -114,6 +114,7 @@ export function renderSeasonal(
   opts: { shape?: ResolvedShape; seed: string; dark: boolean; grant?: BudgetGrant },
 ): TemplateResult | typeof nothing {
   if (!seasonal) return nothing;
+  void loadSeasonal();
   const layer =
     seasonal.layer === part
       ? html`<mc-seasonal class="mc-card-seasonal" .scenes=${seasonal.scenes} .intensity=${opts.grant?.intensity ?? seasonal.intensity}

@@ -491,24 +491,3 @@ export function layoutDeco(motifs: readonly DecoMotif[], box: DecoBox, seed = 'm
   if (fit.includes('vine')) out.vine = vineLayout(box, seed);
   return out;
 }
-
-/**
- * Room (px: top, right, bottom, left) the content keeps from the edge so decorations never cover
- * it: the hanging light bulbs on every side, icicles under the top, the pumpkin above the bottom,
- * the vine along the bottom-left; cobweb and frost are faint corner backdrops (under the content).
- * The card pads its element to at least this (like a shape's inset). Undefined: nothing to keep.
- */
-export function decoInsets(motifs: readonly DecoMotif[]): [number, number, number, number] | undefined {
-  const out: [number, number, number, number] = [0, 0, 0, 0];
-  const atLeast = (i: number, v: number) => (out[i] = Math.max(out[i], v));
-  for (const m of motifs) {
-    if (m === 'lights') for (let i = 0; i < 4; i++) atLeast(i, 20);
-    else if (m === 'icicles') atLeast(0, 20);
-    else if (m === 'pumpkin') atLeast(2, 30);
-    else if (m === 'vine') {
-      atLeast(2, 18);
-      atLeast(3, 20);
-    }
-  }
-  return out.some((v) => v > 0) ? out : undefined;
-}

@@ -1,7 +1,8 @@
 import { LitElement, html, nothing, PropertyValues, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import type { SceneId } from '../utils/seasonal';
-import { layoutScenes, Particle, SceneLayout } from '../utils/seasonal-scenes';
+import type { Particle, SceneLayout } from '../utils/seasonal-scenes';
+import { layoutScenes } from './seasonal-layout';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { seasonalStyles } from './seasonal-css';
 import { MOON, particleArt, SYMBOL_DEFS } from './seasonal-symbols';
@@ -73,7 +74,6 @@ function ambientArt(kind: string): TemplateResult {
  * pointer events; off-screen it pauses (shared IntersectionObserver), under reduced motion it is a
  * still composition. Renders nothing (and watches nothing) without a known scene.
  */
-@customElement('mc-seasonal')
 export class McSeasonal extends LitElement {
   static styles = seasonalStyles;
 

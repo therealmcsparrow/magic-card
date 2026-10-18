@@ -9,8 +9,6 @@ import { CARD_TAG, CARD_NAME, CARD_DESCRIPTION } from './utils/constants';
 
 // Card
 import './card/magic-card';
-import './card/mc-seasonal';
-import './card/mc-seasonal-deco';
 
 // Editor: a lazy chunk (magic-card-editor.js), loaded by MagicCard.getConfigElement() and
 // window.MagicCard.loadEditor() through src/utils/editor-loader.ts, never imported here
