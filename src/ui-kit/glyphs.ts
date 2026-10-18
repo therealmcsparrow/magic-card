@@ -1,4 +1,4 @@
-import { html, type TemplateResult } from 'lit';
+import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
 
 /* The editor's own glyphs: 24 x 24 outlines drawn with currentColor, so they follow the button colour. */
 
@@ -66,3 +66,27 @@ export type GlyphName = keyof typeof G;
 
 export const glyph = (n: GlyphName, size = 20): TemplateResult =>
   html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+
+/* ---- shape additions ------------------------------------------------------------------------ */
+
+/*
+ * The corner type glyphs of the shape editor: 24 x 24, stroke 1.5, a top left corner drawn in the style of the
+ * type (design 04 section 1). The mini card turns them to the other corners. Keys are the CornerType names of
+ * contracts/custom-shape, spelled as strings so the kit imports no contract.
+ */
+const CORNERS = {
+  round: 'M4 20V12A8 8 0 0 1 12 4H20',
+  squircle: 'M4 20V12C4 6.5 6.5 4 12 4H20',
+  bevel: 'M4 20V10L10 4H20',
+  scoop: 'M4 20V10A6 6 0 0 0 10 4H20',
+  notch: 'M4 20V10H10V4H20',
+  square: 'M4 20V4H20',
+} as const;
+
+export type CornerGlyphName = keyof typeof CORNERS;
+
+export const cornerGlyph = (t: CornerGlyphName, turn = 0): SVGTemplateResult =>
+  svg`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" style=${turn ? `transform:rotate(${turn}deg)` : ''}><path d=${CORNERS[t]} /></svg>`;
+
+/** Every glyph name the kit knows, for the gallery and the `glyph` template helper. */
+export const isGlyphName = (n: string): n is GlyphName => Object.prototype.hasOwnProperty.call(G, n);

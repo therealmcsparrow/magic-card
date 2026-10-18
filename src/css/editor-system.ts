@@ -55,9 +55,23 @@ export const editorTokens: CSSResult = css`
     --mc-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
     --mc-radius: 8px;
     --mc-radius-lg: 12px;
+    /* ui-kit tokens (contract ui-kit 1.0.0, ADR 0030); the layers and the theme editor use the same names */
+    --mc-hit: 40px;
+    --mc-font: var(--ha-font-family-body, var(--paper-font-body1_-_font-family, Roboto, system-ui, sans-serif));
+    --mc-focus: var(--mc-accent);
+    --mc-error-tint: color-mix(in srgb, var(--error-color, #db4437) 12%, transparent);
+    --mc-error-fill: color-mix(in srgb, var(--error-color, #db4437) 75%, #000);
+    --mc-success-ink: color-mix(in srgb, var(--success-color, #43a047) 55%, var(--primary-text-color, #212121));
+    --mc-success-tint: color-mix(in srgb, var(--success-color, #43a047) 12%, transparent);
+    --mc-scrim: rgba(0, 0, 0, 0.38);
     font-family: inherit;
     color: var(--mc-text);
     caret-color: var(--mc-accent);
+  }
+  @media (pointer: coarse) {
+    :host {
+      --mc-hit: 44px;
+    }
   }
 `;
 

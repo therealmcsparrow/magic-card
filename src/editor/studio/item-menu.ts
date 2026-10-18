@@ -1,7 +1,7 @@
 import { html, css, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { CardModule, MagicCardConfig } from '../../types';
 import type { DesignTarget, EditorStateManager } from '../state/editor-state';
-import { MenuOpenAt, MenuPopover } from '../components/menu-popover';
+import { MenuOpenAt, MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { copyText } from '../components/copy-text';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { readDesignClipboard } from '../../utils/design-clipboard';

@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
-import { MenuPopover } from '../../editor/components/menu-popover';
+import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import type { AnimationDoc, AnimationKeyframe, TargetRef } from '../model';
 import type { StudioSelection } from '../slots';
 import type { LayerView } from '../../contracts/studio-layers';

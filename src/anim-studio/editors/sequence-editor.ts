@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
-import { MenuPopover } from '../../editor/components/menu-popover';
+import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import type { HomeAssistant } from '../../types';
 import type { LayerView, LayerViewChangeDetail } from '../../contracts/studio-layers';
 import { dropStepKey, remapStepKeys } from '../layer-view';

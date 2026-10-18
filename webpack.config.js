@@ -65,7 +65,7 @@ module.exports = (env, argv) => {
         },
         // theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
         ...(isProduction
-          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
         {
           test: /\.css$/,

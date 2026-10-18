@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, MagicCardConfig } from '../../types';
 import { editorSystem } from '../../css/editor-system';
 import { collectNotSynced } from '../state/template-sync';
-import { MenuPopover } from '../components/menu-popover';
+import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 
 /**
  * Template link status + actions.

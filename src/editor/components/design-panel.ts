@@ -20,7 +20,7 @@ import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
 import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../utils/animation';
 import { fieldReset } from './field-reset';
-import { MenuPopover } from './menu-popover';
+import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 

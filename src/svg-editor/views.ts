@@ -7,7 +7,7 @@ import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
 import { HA_SECONDARY_OPACITY, type SvgArrange } from '../contracts/svg-editor';
 import { haWarns } from './ha';
 import { groupBlocked, layerTree, subject } from './layers';
-import { glyph, type GlyphName } from './icons';
+import { glyph, type GlyphName } from '../ui-kit/glyphs';
 import { byId, isOff, round2, shapeBox, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { apply, cancel, change, panelState } from './pathtools';

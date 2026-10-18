@@ -5,6 +5,11 @@ import './magic-card-editor';
 import './modules';
 // window.MagicCard.loadSvgEditor / loadShapeEditor (svg-editor 1.0.0)
 import './custom/loaders';
+// the ui-kit Module (ADR 0030): one copy for the editor family; the lazy chunks below it import it too and call this copy
+import { defineUiKit } from '../ui-kit';
+
+// guarded define of mc-ui-menu / mc-ui-window / mc-ui-popover (a no-op when another bundle defined them first)
+defineUiKit();
 
 /*
  * Entry of the lazy editor chunk, dist/magic-card-editor.js (ADR 0007). Only
