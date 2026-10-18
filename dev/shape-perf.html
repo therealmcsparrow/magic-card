@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shaped elements performance page (custom-shape contract, performance budget)</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); color-scheme: light; }
+  body { margin:0; padding:12px; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  #grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:12px; }
+</style>
+</head>
+<body>
+<div id="grid"></div>
+<script src="./shims.js"></script>
+<script>
+  if (new URLSearchParams(location.search).get('instr') !== '0') {
+  // Counters installed before any script: timers and animation frames, with the caller's stack.
+  window.__calls = { raf: [], timeout: [], interval: [] };
+  const stackOf = () => String(new Error().stack || '').split('\n').slice(2, 7).join(' | ');
+  const raf = window.requestAnimationFrame.bind(window);
+  window.requestAnimationFrame = (cb) => { window.__calls.raf.push(stackOf()); return raf(cb); };
+  const st = window.setTimeout.bind(window);
+  window.setTimeout = (cb, ms, ...a) => { window.__calls.timeout.push(stackOf()); return st(cb, ms, ...a); };
+  const si = window.setInterval.bind(window);
+  window.setInterval = (cb, ms, ...a) => { window.__calls.interval.push(stackOf()); return si(cb, ms, ...a); };
+  } else window.__calls = { raf: [], timeout: [], interval: [] };
+</script>
+<script type="module" src="../.harness-build/magic-card.js"></script>
+<script type="module">
+  await customElements.whenDefined('magic-card');
+  const q = new URLSearchParams(location.search);
+  const kind = q.get('kind') || 'custom'; // custom | preset | none
+  const count = Number(q.get('n') || 30);
+  const hass = { states: {}, language: 'en', locale: { language: 'en', number_format: 'language', time_format: 'language' }, themes: { themes: {}, darkMode: false }, config: {}, services: {}, user: {} };
+
+  // custom shapes: corner mode and free paths in equal parts
+  const TYPES = ['round', 'squircle', 'bevel', 'scoop', 'notch', 'round'];
+  const FREE = [
+    // ticket notches, folder tab, speech tail, chevron, shield
+    [{ x: 0, y: 0 }, { x: '100%', y: 0 }, { x: '100%', y: '50%-10' }, { x: '100%-10', y: '50%' }, { x: '100%', y: '50%+10' }, { x: '100%', y: '100%' }, { x: 0, y: '100%' }, { x: 0, y: '50%+10' }, { x: 10, y: '50%' }, { x: 0, y: '50%-10' }],
+    [{ x: 0, y: 0 }, { x: 80, y: 0 }, { x: 92, y: 16 }, { x: '100%', y: 16 }, { x: '100%', y: '100%' }, { x: 0, y: '100%' }],
+    [{ x: 0, y: 0 }, { x: '100%', y: 0 }, { x: '100%', y: '100%-14' }, { x: 40, y: '100%-14' }, { x: 24, y: '100%' }, { x: 24, y: '100%-14' }, { x: 0, y: '100%-14' }],
+    [{ x: 0, y: 0 }, { x: '100%-24', y: 0 }, { x: '100%', y: '50%' }, { x: '100%-24', y: '100%' }, { x: 0, y: '100%' }, { x: 24, y: '50%' }],
+    [{ x: 0, y: 0 }, { x: '100%', y: 0 }, { x: '100%', y: '60%', out: [0, 40] }, { x: '50%', y: '100%', in: [40, 0], out: [-40, 0] }, { x: 0, y: '60%', in: [0, 40] }],
+  ];
+  const shapeFor = (i) => {
+    if (kind === 'none') return {};
+    if (kind === 'preset') return { shape: ['squircle', 'notch', 'octagon', 'hexagon', 'pill'][i % 5] };
+    return i % 2
+      ? { shape: 'custom', shape_options: { points: FREE[(i >> 1) % FREE.length], padding: { top: 4, right: 12, bottom: 4, left: 12 } } }
+      : { shape: 'custom', shape_options: { corner: 14 + (i % 4) * 4, corner_type: TYPES[i % 6], corners: { br: TYPES[(i + 2) % 6] } } };
+  };
+  const config = (c) => ({
+    type: 'custom:magic-card',
+    ...shapeFor(c),
+    background: 'var(--secondary-background-color)',
+    rows: [{ id: 'r', columns: [{ id: 'c', modules: [0, 1, 2].map((m) => ({
+      id: `m${m}`, type: 'text', text: `Card ${c} module ${m}`,
+      design: { ...shapeFor(c * 3 + m + 1), background: 'rgba(3,169,244,.18)', padding: '8px' },
+    })) }] }],
+  });
+
+  const grid = document.getElementById('grid');
+  window.__build = () => {
+    const els = [];
+    for (let c = 0; c < count; c++) {
+      const el = document.createElement('magic-card');
+      el.setConfig(config(c));
+      el.hass = hass;
+      els.push(el);
+    }
+    return els;
+  };
+  /** Shaped elements: the card's content and every module wrapper carrying data-mc-shape. */
+  window.__shaped = () => {
+    const out = [];
+    for (const card of grid.children) {
+      const r = card.shadowRoot;
+      if (!r) continue;
+      r.querySelectorAll('[data-mc-shape]').forEach((e) => out.push(e));
+    }
+    return out;
+  };
+  window.__ready = true;
+</script>
+</body>
+</html>

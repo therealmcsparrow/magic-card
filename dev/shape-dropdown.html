@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Native dropdown inside a custom-shaped card (custom-shape contract, pop-ups)</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); color-scheme: light; }
+  body { margin:0; padding:24px; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:#cfd8dc; }
+  magic-card { display:block; width:300px; }
+</style>
+</head>
+<body>
+<script src="./shims.js"></script>
+<script type="module" src="../.harness-build/magic-card.js"></script>
+<script type="module">
+  await customElements.whenDefined('magic-card');
+  const options = ['Comfort', 'Eco', 'Away', 'Boost', 'Sleep', 'Party', 'Holiday', 'Guest', 'Night', 'Morning'];
+  const hass = {
+    states: { 'input_select.mode': { entity_id: 'input_select.mode', state: 'Eco', attributes: { friendly_name: 'Mode', options } } },
+    language: 'en', locale: { language: 'en', number_format: 'language', time_format: 'language' },
+    themes: { themes: {}, darkMode: false }, config: {}, services: {}, user: {},
+  };
+  const q = new URLSearchParams(location.search);
+  const el = document.createElement('magic-card');
+  el.setConfig({
+    type: 'custom:magic-card',
+    shape: 'custom',
+    shape_options: q.get('free') ? { points: [{ x: 0, y: 0 }, { x: '100%-24', y: 0 }, { x: '100%', y: 24 }, { x: '100%', y: '100%' }, { x: 0, y: '100%' }], padding: { right: 24 } } : { corner: 26, corner_type: 'bevel', corners: { br: 'notch' } },
+    background: '#ffe0b2',
+    rows: [{ id: 'r', columns: [{ id: 'c', modules: [
+      { id: 'd', type: 'dropdown', entity: 'input_select.mode', design: { shape: 'custom', shape_options: { corner: 14, corner_type: 'scoop' } } },
+    ] }] }],
+  });
+  el.hass = hass;
+  document.body.append(el);
+  window.__card = el;
+  window.__ready = true;
+</script>
+</body>
+</html>

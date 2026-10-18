@@ -3,6 +3,7 @@ import { deepClone } from '../utils/deep-merge';
 import { propertyKeys } from '../utils/css-properties';
 import { childListKey } from '../utils/module-path';
 import { animationDocList } from '../utils/custom-animations';
+import { mergeShapeOptions } from '../utils/shape-custom';
 
 /** Module keys whose absence is a local value: overridden without a value, the template's is dropped. */
 const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg']);
@@ -34,7 +35,7 @@ const CARD_GROUPED_KEYS: Record<string, string[]> = { shape: ['shape_options'] }
 /** Card-level keys whose value comes from the template (the card's content and look). */
 const TEMPLATE_CARD_KEYS = new Set([
   'type', 'template', 'not_synced', 'name', 'rows', 'display', 'conditional_appearance', ...CARD_SYNC_KEYS,
-  'custom_animations',
+  'custom_animations', 'custom_shapes',
   ...Object.values(CARD_GROUPED_KEYS).flat(),
 ]);
 
@@ -54,6 +55,20 @@ export function cardInstanceKeys(config: MagicCardConfig): Record<string, unknow
 }
 
 type Docs = Array<Record<string, unknown>>;
+
+type Shaped = { shape?: string; shape_options?: object };
+
+/**
+ * A merged design `m` over the template's `base`: when both are `shape: custom`, only the corners
+ * the local options name change (mergeShapeOptions). Returns `m`.
+ */
+function mergeShape<T extends Shaped>(m: T, base?: Shaped): T {
+  if (m.shape === 'custom' && base?.shape === 'custom' && base.shape_options && m.shape_options && m.shape_options !== base.shape_options)
+    m.shape_options = mergeShapeOptions(base.shape_options, m.shape_options);
+  return m;
+}
+
+const overDesign = <T extends Shaped>(base: T | undefined, local: T): T => mergeShape({ ...base, ...local }, base);
 
 /**
  * A linked card's custom animations: the template's documents in their order, a card document with
@@ -118,6 +133,11 @@ export function mergeTemplateWithOverrides(
   // view_layout, card_mod, hidden_animations and any other key another tool keeps in the card config.
   Object.assign(result, cardInstanceKeys(local));
 
+  // Saved shapes: by id (the card's own entry wins); a card that overrides them keeps only its own
+  const shapes = { ...(!own && !cardNotSynced.has('custom_shapes') && result.custom_shapes), ...local.custom_shapes };
+  if (Object.keys(shapes).length) result.custom_shapes = deepClone(shapes);
+  else delete result.custom_shapes;
+
   // Custom animations: by id (the card's own document wins)
   const docs = own ? local.custom_animations : mergeCustomAnimations(result.custom_animations, local);
   if (docs) result.custom_animations = deepClone(docs);
@@ -136,6 +156,7 @@ export function mergeTemplateWithOverrides(
         if (loc[k] === undefined) delete res[k];
         else res[k] = deepClone(loc[k]);
       }
+      mergeShape(res as Shaped, template);
       continue;
     }
     if (cardNotSynced.has(key) && (local as unknown as Record<string, unknown>)[key] !== undefined) {
@@ -175,7 +196,7 @@ export function mergeTemplateWithOverrides(
         if (localRow.column_widths !== undefined) row.column_widths = [...localRow.column_widths];
         else delete row.column_widths;
       }
-      if (rowNotSynced.has('design') && localRow.design) row.design = { ...row.design, ...localRow.design };
+      if (rowNotSynced.has('design') && localRow.design) row.design = overDesign(row.design, localRow.design);
       // actions: overridden as a whole (none left means this card's row has no actions)
       if (rowNotSynced.has('actions')) {
         if (localRow.actions) row.actions = localRow.actions;
@@ -195,7 +216,7 @@ export function mergeTemplateWithOverrides(
         const colNotSynced = new Set(localCol.not_synced || []);
         if (colNotSynced.size > 0) col.not_synced = [...colNotSynced];
 
-        if (colNotSynced.has('design') && localCol.design) col.design = { ...col.design, ...localCol.design };
+        if (colNotSynced.has('design') && localCol.design) col.design = overDesign(col.design, localCol.design);
         if (colNotSynced.has('gap') && localCol.gap !== undefined) col.gap = localCol.gap;
         if (colNotSynced.has('padding') && localCol.padding !== undefined) col.padding = localCol.padding;
         if (colNotSynced.has('vertical_align') && localCol.vertical_align !== undefined) col.vertical_align = localCol.vertical_align;
@@ -238,7 +259,7 @@ export function mergeTemplateWithOverrides(
           }
           // Design: only override not-synced design properties
           if (localMod.design && modNotSynced.has('design')) {
-            mod.design = { ...mod.design, ...localMod.design };
+            mod.design = overDesign(mod.design, localMod.design);
           } else if (localMod.design) {
             const localDesign = localMod.design as Record<string, unknown>;
             const merged = { ...(mod.design || {}) } as Record<string, unknown>;
@@ -255,7 +276,7 @@ export function mergeTemplateWithOverrides(
                 changed = true;
               }
             }
-            if (changed) mod.design = merged as typeof mod.design;
+            if (changed) mod.design = mergeShape(merged, mod.design) as typeof mod.design;
           }
           // Actions: only override if not synced
           if (localMod.actions && (modNotSynced.has('actions') || [...modNotSynced].some(p => p.startsWith('actions.')))) {

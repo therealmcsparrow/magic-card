@@ -1,4 +1,5 @@
 import type { ShapeKind, ShapeOptions } from '../types';
+import { buildCustom } from './shape-custom';
 
 /*
  * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size:
@@ -32,21 +33,21 @@ export interface ShapePathResult {
   inset: ShapeInset;
 }
 
-interface Pt {
+export interface Pt {
   x: number;
   y: number;
 }
 
 /** A path command: a line to `to`, or a cubic through control points `c1`, `c2` to `to`. */
-type Seg = { to: Pt; c1?: Pt; c2?: Pt };
+export type Seg = { to: Pt; c1?: Pt; c2?: Pt };
 
-interface Outline {
+export interface Outline {
   start: Pt;
   segs: Seg[];
   inset: ShapeInset;
 }
 
-const KINDS = new Set<ShapeKind>(['squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
+const KINDS = new Set<ShapeKind>(['custom', 'squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
 
 /** Cubic handle length of a quarter circle. */
 const KAPPA = 0.5522847498;
@@ -64,13 +65,13 @@ export const SHAPE_DEFAULTS = {
   wobble: 0.25,
 };
 
-const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+export const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const num = (v: unknown): number | undefined => {
   const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;
   return typeof n === 'number' && Number.isFinite(n) ? n : undefined;
 };
-const p = (x: number, y: number): Pt => ({ x, y });
-const zero = (): ShapeInset => ({ top: 0, right: 0, bottom: 0, left: 0 });
+export const p = (x: number, y: number): Pt => ({ x, y });
+export const zero = (): ShapeInset => ({ top: 0, right: 0, bottom: 0, left: 0 });
 
 /** A length option: a px number, `'16px'`, `'16'`, or `'25%'` of `ref`. Undefined when unreadable / negative. */
 export function parseShapeLength(v: unknown, ref: number): number | undefined {
@@ -148,47 +149,64 @@ function smoothLoop(pts: Pt[]): Pick<Outline, 'start' | 'segs'> {
  */
 function roundedRect(w: number, h: number, r: number, n: number, steps: number): Pick<Outline, 'start' | 'segs'> {
   const segs: Seg[] = [];
-  // corner centres and the angle each corner starts at (clockwise on screen: TR, BR, BL, TL)
-  const corners: Array<[Pt, number]> = [[p(w - r, r), -90], [p(w - r, h - r), 0], [p(r, h - r), 90], [p(r, r), 180]];
   const start = p(r, 0);
   let cur = start;
-  for (const [c, a0] of corners) {
-    const at = (deg: number): Pt => {
-      const t = (deg * Math.PI) / 180;
-      const cs = Math.cos(t);
-      const sn = Math.sin(t);
-      const e = 2 / n;
-      return p(c.x + r * Math.sign(cs) * Math.abs(cs) ** e, c.y + r * Math.sign(sn) * Math.abs(sn) ** e);
-    };
-    const from = at(a0);
-    if (dist(cur, from) > 1e-9) segs.push({ to: from });
-    if (n === 2) {
-      const to = at(a0 + 90);
-      const t0 = (a0 * Math.PI) / 180;
-      const t1 = ((a0 + 90) * Math.PI) / 180;
-      segs.push({
-        c1: p(from.x - Math.sin(t0) * r * KAPPA, from.y + Math.cos(t0) * r * KAPPA),
-        c2: p(to.x + Math.sin(t1) * r * KAPPA, to.y - Math.cos(t1) * r * KAPPA),
-        to,
-      });
-      cur = to;
-      continue;
-    }
-    // sampled superellipse; end tangents along the sides (the curve meets them flat)
-    const pts: Pt[] = [];
-    for (let i = 0; i <= steps; i++) pts.push(at(a0 + (90 * i) / steps));
-    const tan = catmullTangents(pts, false);
-    const t0 = (a0 * Math.PI) / 180;
-    const t1 = ((a0 + 90) * Math.PI) / 180;
-    const l0 = Math.hypot(tan[0].x, tan[0].y);
-    const l1 = Math.hypot(tan[steps].x, tan[steps].y);
-    tan[0] = p(-Math.sin(t0) * l0, Math.cos(t0) * l0);
-    tan[steps] = p(-Math.sin(t1) * l1, Math.cos(t1) * l1);
-    segs.push(...hermite(pts, tan, 1));
-    cur = pts[steps];
+  for (const [c, a0] of cornerCentres(w, h, r)) {
+    const arc = cornerArc(c, a0, r, n, steps);
+    if (dist(cur, arc.from) > 1e-9) segs.push({ to: arc.from });
+    segs.push(...arc.segs);
+    cur = segs[segs.length - 1].to;
   }
   if (dist(cur, start) > 1e-9) segs.push({ to: start });
   return { start, segs };
+}
+
+/** Corner centres and the angle each corner starts at (clockwise on screen: TR, BR, BL, TL). */
+export const cornerCentres = (w: number, h: number, r: number): Array<[Pt, number]> => [
+  [p(w - r, r), -90],
+  [p(w - r, h - r), 0],
+  [p(r, h - r), 90],
+  [p(r, r), 180],
+];
+
+/**
+ * One corner of radius r around centre `c`, starting at angle `a0` (degrees, clockwise): a superellipse
+ * of exponent `n` (2: a circle quarter, one cubic) sampled in `steps` pieces whose end tangents run
+ * along the sides. `from` is where it meets the incoming side.
+ */
+export function cornerArc(c: Pt, a0: number, r: number, n: number, steps: number): { from: Pt; segs: Seg[] } {
+  const at = (deg: number): Pt => {
+    const t = (deg * Math.PI) / 180;
+    const cs = Math.cos(t);
+    const sn = Math.sin(t);
+    const e = 2 / n;
+    return p(c.x + r * Math.sign(cs) * Math.abs(cs) ** e, c.y + r * Math.sign(sn) * Math.abs(sn) ** e);
+  };
+  const from = at(a0);
+  const t0 = (a0 * Math.PI) / 180;
+  const t1 = ((a0 + 90) * Math.PI) / 180;
+  if (n === 2) {
+    const to = at(a0 + 90);
+    return {
+      from,
+      segs: [
+        {
+          c1: p(from.x - Math.sin(t0) * r * KAPPA, from.y + Math.cos(t0) * r * KAPPA),
+          c2: p(to.x + Math.sin(t1) * r * KAPPA, to.y - Math.cos(t1) * r * KAPPA),
+          to,
+        },
+      ],
+    };
+  }
+  // sampled superellipse; end tangents along the sides (the curve meets them flat)
+  const pts: Pt[] = [];
+  for (let i = 0; i <= steps; i++) pts.push(at(a0 + (90 * i) / steps));
+  const tan = catmullTangents(pts, false);
+  const l0 = Math.hypot(tan[0].x, tan[0].y);
+  const l1 = Math.hypot(tan[steps].x, tan[steps].y);
+  tan[0] = p(-Math.sin(t0) * l0, Math.cos(t0) * l0);
+  tan[steps] = p(-Math.sin(t1) * l1, Math.cos(t1) * l1);
+  return { from, segs: hermite(pts, tan, 1) };
 }
 
 /**
@@ -284,6 +302,8 @@ function build(kind: ShapeKind, w: number, h: number, o: ShapeOptions, pad: Shap
   const corner = (def: number, max: number) => clamp(parseShapeLength(o.corner, m) ?? def, 0, max);
 
   switch (kind) {
+    case 'custom':
+      return buildCustom(w, h, o);
     case 'squircle': {
       const smoothing = clamp(num(o.smoothing) ?? SHAPE_DEFAULTS.smoothing, 0, 1);
       // smoothing 1 → n 3 (round), 0 → n 8 (almost square corners); the classic squircle is n 4
@@ -419,7 +439,7 @@ function offsetPolygon(pts: Pt[], off: number): Pt[] | undefined {
   return out;
 }
 
-const translate = (o: Outline, d: number): Outline => {
+export const translate = (o: Outline, d: number): Outline => {
   const m = (q: Pt) => p(q.x + d, q.y + d);
   return { start: m(o.start), segs: o.segs.map((s) => (s.c1 && s.c2 ? { c1: m(s.c1), c2: m(s.c2), to: m(s.to) } : { to: m(s.to) })), inset: o.inset };
 };
@@ -435,6 +455,7 @@ function buildInset(kind: ShapeKind, w: number, h: number, o: ShapeOptions, off:
   const iw = w - 2 * off;
   const ih = h - 2 * off;
   if (!(iw > 0 && ih > 0)) return undefined;
+  if (kind === 'custom') return buildCustom(w, h, o, off);
   let inner: ShapeOptions = o;
   if (kind === 'notch' || kind === 'octagon') inner = { ...o, corner: Math.max(0, cutCorner(kind, w, h, o) - (2 - Math.SQRT2) * off) };
   else if (kind === 'squircle') inner = { ...o, corner: Math.max(0, squircleRadius(w, h, o) - off) };
@@ -451,7 +472,7 @@ function dedupe(pts: Pt[]): Pt[] {
   return out.length >= 3 ? out : pts;
 }
 
-function dedupeSegs(start: Pt, segs: Seg[]): Seg[] {
+export function dedupeSegs(start: Pt, segs: Seg[]): Seg[] {
   let cur = start;
   return segs.filter((s) => {
     const keep = !!s.c1 || dist(cur, s.to) > 1e-9;
@@ -667,13 +688,14 @@ interface ShapeOutline {
 
 /** Recent outlines (several layers ask for the same shape and size: clip, stroke, ring, flows). */
 const memo = new Map<string, ShapeOutline | undefined>();
-const MEMO_SIZE = 64;
+const MEMO_SIZE = 256;
 
 /** The shape's outline (memoised): path, content inset and polyline; `off` px inward (buildInset). */
 function shapeOutline(kind: ShapeKind, w: number, h: number, opts: ShapeOptions | undefined, off = 0, pad?: ShapeInset): ShapeOutline | undefined {
   if (!valid(kind, w, h)) return undefined;
   const o = opts && typeof opts === 'object' ? opts : {};
-  const known = pad ? cleanPad(pad) : zero();
+  // (a custom shape's outline and inset do not depend on the content padding: one memo entry for all of them)
+  const known = pad && kind !== 'custom' ? cleanPad(pad) : zero();
   const key = `${kind}|${w}|${h}|${off}|${known.top},${known.right},${known.bottom},${known.left}|${JSON.stringify(o)}`;
   if (memo.has(key)) {
     const hit = memo.get(key);

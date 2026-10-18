@@ -1,7 +1,11 @@
 import { LitElement, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { DesignConfig, ShapeKind, ShapeOptions } from '../types';
+import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
+import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
+import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mcu-library';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
+import { resolveCustomShape } from '../utils/shape-custom';
 import { parseClosed, polygonCss } from '../path/core';
 import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
@@ -27,7 +31,7 @@ import { shapeLayerStyles } from './shape-css';
  */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
-const KINDS = new Set<ShapeKind>(['squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
+const KINDS = new Set<ShapeKind>(['custom', 'squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
 const INSET_VARS = ['--mc-shape-it', '--mc-shape-ir', '--mc-shape-ib', '--mc-shape-il'] as const;
 /** Wave animation: frames per period and the period; blob: seconds per morph cycle. */
 const WAVE_FRAMES = 8;
@@ -39,12 +43,28 @@ export interface ResolvedShape {
   options?: ShapeOptions;
 }
 
-/** The design's shape, or undefined for none / unknown (the element is not shaped at all). */
-export function resolveShape(design: Pick<DesignConfig, 'shape' | 'shape_options'> | undefined): ResolvedShape | undefined {
+/**
+ * The design's shape, or undefined for none / unknown (the element is not shaped at all). A custom
+ * shape's `ref` is resolved here (library, then the card's inline copy), so everything downstream
+ * (clip, stroke, rings, flows, decorations) reads the finished options.
+ */
+export function resolveShape(design: Pick<DesignConfig, 'shape' | 'shape_options'> | undefined, lookup?: ShapeLookup): ResolvedShape | undefined {
   const kind = design?.shape;
   if (!kind || !KINDS.has(kind)) return undefined;
-  const o = design?.shape_options;
+  let o = design?.shape_options;
+  if (kind === 'custom' && o && typeof o === 'object') o = resolveCustomShape(o, lookup);
   return o && typeof o === 'object' && Object.keys(o).length ? { kind, options: o } : { kind };
+}
+
+/** A saved shape of the provider's library (Magic Card Utils); undefined until it is ready and for unknown ids. */
+export const libraryShape = (id: string): CustomShapeOptions | undefined =>
+  (window as unknown as { magicCardUtils?: Partial<MagicCardUtilsWindow> }).magicCardUtils?.shapes?.get(id);
+
+/** Call `cb` when the library's shapes change; returns the stop function. */
+export function watchShapes(cb: () => void): () => void {
+  const on = (e: Event) => (e as CustomEvent<LibraryChangedDetail>).detail?.kind === 'shapes' && cb();
+  window.addEventListener(LIBRARY_CHANGED_EVENT, on);
+  return () => window.removeEventListener(LIBRARY_CHANGED_EVENT, on);
 }
 
 let pathSupport: boolean | undefined;

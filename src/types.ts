@@ -1,3 +1,5 @@
+import type { CustomShapeOptions, CustomShapesConfig } from './contracts/custom-shape';
+
 // ── Home Assistant types (subset) ──
 
 export interface HomeAssistant {
@@ -117,6 +119,8 @@ export interface MagicCardConfig {
   /** Outline shape of the card (src/utils/shape-path.ts); wins over border_radius. */
   shape?: ShapeKind;
   shape_options?: ShapeOptions;
+  /** Saved-shape copies by id for `shape: custom` + `shape_options.ref` (src/utils/shape-custom.ts). */
+  custom_shapes?: CustomShapesConfig;
   /** Tank fill / history sparkline behind the card's rows (src/card/mc-value-bg.ts); needs its own entity. */
   value_background?: ValueBackgroundConfig;
   /** Show the card as a pop-up (hidden on the dashboard, opened by `#hash`, triggers or actions). */
@@ -517,10 +521,10 @@ export interface AnimationConfig {
 
 export type RingMode = 'value' | 'animated';
 export type RingAnimation = 'snake' | 'pulse' | 'full' | 'dots' | 'dashes';
-export type ShapeKind = 'squircle' | 'hexagon' | 'octagon' | 'blob' | 'wave' | 'notch' | 'ticket' | 'pill' | 'circle' | 'none';
+export type ShapeKind = 'custom' | 'squircle' | 'hexagon' | 'octagon' | 'blob' | 'wave' | 'notch' | 'ticket' | 'pill' | 'circle' | 'none';
 
 /** `design.shape_options`: lengths are px numbers, `'16px'` or `'%'` of the element's smaller side. */
-export interface ShapeOptions {
+export interface ShapeOptions extends CustomShapeOptions {
   /** Squircle corner smoothing 0..1 (1 = roundest). */
   smoothing?: number | string;
   /** Notch / ticket cut size, hexagon / octagon side cut; squircle corner size. */

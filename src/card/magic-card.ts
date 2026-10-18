@@ -39,7 +39,8 @@ import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, 
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
 import { resolveValueBackground } from '../utils/value-background';
-import { resolveShape, ResolvedShape } from './mc-shape';
+import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
+import type { ShapeLookup } from '../contracts/custom-shape';
 import './mc-flows';
 import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../utils/flow';
 import { playTapAnimations } from './tap-fx';
@@ -149,8 +150,8 @@ interface ShapeParts {
 }
 
 /** `insets`: padding (px per side) the element keeps for its seasonal decorations. */
-function shapeParts(design: DesignConfig | undefined, padding?: string, insets?: number[]): ShapeParts {
-  const shape = resolveShape(design);
+function shapeParts(design: DesignConfig | undefined, padding?: string, insets?: number[], lookup?: ShapeLookup): ShapeParts {
+  const shape = resolveShape(design, lookup);
   if (!shape) return { border: resolveBorderLength(design), style: insets ? insetPaddingStyle(design, padding, { min: insets }) : undefined };
   return {
     shape,
@@ -253,6 +254,18 @@ export class MagicCard extends LitElement {
   private readonly _onLibrary = (): void => {
     this._libDirty = true;
     this.requestUpdate();
+  };
+  /** Custom shapes: the provider's library, then the card's own `custom_shapes` copies; a library change re-renders. */
+  private _unsubShapes?: () => void;
+  private readonly _shapes: ShapeLookup = {
+    library: (id) => {
+      this._unsubShapes ??= watchShapes(() => {
+        this._libDirty = true;
+        this.requestUpdate();
+      });
+      return libraryShape(id);
+    },
+    inline: (id) => (this._resolvedConfig ?? this._config)?.custom_shapes?.[id],
   };
   private _templateFetched = false;
   /** Last fetched config of `_config.template`; re-merged with the local config on every setConfig. */
@@ -660,6 +673,8 @@ export class MagicCard extends LitElement {
     this._unsubTemplateEvents = undefined;
     this._unsubLibrary?.();
     this._unsubLibrary = undefined;
+    this._unsubShapes?.();
+    this._unsubShapes = undefined;
     stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -749,7 +764,7 @@ export class MagicCard extends LitElement {
     const v2Index = this._v2(anim);
     const themeStyle = this._buildThemeStyle(resolved);
     // a shaped card: ha-card is clipped to the shape, its theme border drawn along it, the shadow on a wrapper
-    const shape = resolveShape(resolved);
+    const shape = resolveShape(resolved, this._shapes);
     // ha-card clips its edge (overflow: hidden): the card ring is drawn inside it
     const ring = resolveRing(resolved.ring, { states: this.hass?.states, clipped: true, shaped: !!shape });
     // the card's box_shadow, else the theme's card shadow (--ha-card-box-shadow, read in updated())
@@ -960,7 +975,7 @@ export class MagicCard extends LitElement {
     const design = resolveConditionalDesign(row.design, this.hass);
     const designStyle = designToStyle(design);
     const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim));
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
     const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
@@ -1011,7 +1026,7 @@ export class MagicCard extends LitElement {
     const design = resolveConditionalDesign(col.design, this.hass);
     const designStyle = designToStyle(design);
     const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim));
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
@@ -1055,7 +1070,7 @@ export class MagicCard extends LitElement {
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
     const anim = resolveAnimations(design, stateObj, { states: this.hass?.states, custom: this._customLookup });
     const v2Index = this._v2(anim, stateObj, mod.entity);
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(anim));
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(anim), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: mod.entity });
     // `entity` design colours read this var (currentColor when unset); only set when one is used
