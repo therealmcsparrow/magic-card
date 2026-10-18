@@ -494,3 +494,23 @@ export function toYaml(shapeOptions: CustomShapeOptions): string {
   for (const [k, v] of Object.entries(shapeOptions)) if (v !== undefined) put(v, '  ', k);
   return lines.join('\n');
 }
+
+/** Where on segment `i` (from point i to the next) the point `q` lies, as t in 0 to 1: the nearest of 33 samples. */
+export function segT(path: EditPath, i: number, q: [number, number]): number {
+  const a = path.anchors[i];
+  const b = path.anchors[(i + 1) % path.anchors.length];
+  const c = a.out ?? [(2 * a.x + b.x) / 3, (2 * a.y + b.y) / 3];
+  const d = b.in ?? [(a.x + 2 * b.x) / 3, (a.y + 2 * b.y) / 3];
+  const at = (t: number, k: 0 | 1): number => {
+    const u = 1 - t;
+    return u * u * u * [a.x, a.y][k] + 3 * u * u * t * c[k] + 3 * u * t * t * d[k] + t * t * t * [b.x, b.y][k];
+  };
+  let best = 0.5;
+  let min = Infinity;
+  for (let j = 1; j < 32; j++) {
+    const t = j / 32;
+    const e = (at(t, 0) - q[0]) ** 2 + (at(t, 1) - q[1]) ** 2;
+    if (e < min) [min, best] = [e, t];
+  }
+  return best;
+}
