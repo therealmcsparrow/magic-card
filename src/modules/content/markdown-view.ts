@@ -10,8 +10,27 @@ import { hasJinja, templateResultToString } from '../../services/template-contro
 
 /* Chunk-only (magic-card-markdown.js): nothing runs at evaluation; install() calls configureMarked(). */
 
+/**
+ * marked 18 calls Object.hasOwn (Chromium 93) and .at() (Chromium 92); Chromium 85-91, the lowest this card
+ * supports, has neither, and a table or a reference link would throw. Added by install() only where missing.
+ */
+export function polyfillForMarked(): void {
+  const define = (target: object, name: string, value: unknown): void => {
+    Object.defineProperty(target, name, { value, configurable: true, writable: true });
+  };
+  if (!(Object as { hasOwn?: unknown }).hasOwn) define(Object, 'hasOwn', (o: object, k: PropertyKey) => Object.prototype.hasOwnProperty.call(o, k));
+  const at = function (this: ArrayLike<unknown>, n: number): unknown {
+    const i = Math.trunc(n) || 0;
+    const k = i < 0 ? this.length + i : i;
+    return k < 0 || k >= this.length ? undefined : this[k];
+  };
+  if (!(Array.prototype as { at?: unknown }).at) define(Array.prototype, 'at', at);
+  if (!(String.prototype as { at?: unknown }).at) define(String.prototype, 'at', function (this: string, n: number) { return at.call(this, n); });
+}
+
 /** Markdown options (breaks, GFM): set by the chunk's install(), never at evaluation (AC13). */
 export function configureMarked(): void {
+  polyfillForMarked();
   marked.setOptions({
     breaks: true,
     gfm: true,
