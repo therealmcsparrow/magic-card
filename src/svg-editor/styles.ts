@@ -720,6 +720,59 @@ export const editorStyles: CSSResult[] = [
     .sentinel {
       position: absolute;
     }
+    .bool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .bool-grid .b {
+      gap: 6px;
+      justify-content: flex-start;
+      min-height: 36px;
+      padding: 0 10px;
+    }
+    .bool-grid .b[aria-disabled='true'] {
+      opacity: 0.75;
+    }
+    @media (max-width: 300px) {
+      .bool-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (pointer: coarse) {
+      .bool-grid .b {
+        min-height: 44px;
+      }
+    }
+    .result-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--mc-divider);
+      border-radius: 10px;
+      background: var(--mc-surface);
+      font-size: 0.8125rem;
+    }
+    .result-note p {
+      margin: 0;
+    }
+    .result-note .tx {
+      flex: 1;
+      min-width: 0;
+    }
+    .result-note .mk {
+      font-weight: 700;
+      width: 1.2em;
+      text-align: center;
+    }
+    .result-note.is-warn {
+      background: var(--mc-warn-tint);
+      color: var(--mc-warn-ink);
+    }
+    .result-note.is-error {
+      color: var(--mc-error-ink);
+    }
     @media (forced-colors: active) {
       .tool.on,
       .row.on,

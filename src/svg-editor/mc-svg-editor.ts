@@ -8,7 +8,10 @@ import { SVG_EDITOR_TAG, type SvgEditorModuleFacts, type SvgEditorSource, type S
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { resolveIconGeometry } from '../icons/icon-source';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
+import { loadPathBooleans } from '../path-booleans/loader';
+import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
+import { boolNote, boolReason, boolState, operandsOf, withResult } from './combine';
 import { bind, E } from './bind';
 import { haForm, type HaForm } from './ha';
 import { appendDoc, droppedTotal, fromGeometry, importSvg, type ImportNotes } from './import';
@@ -94,7 +97,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -128,6 +131,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   ha?: HaForm;
   banners: Banner[] = [];
   notes?: ImportNotes;
+  /** The status strip under the canvas (design 7.6). */
+  note?: { tone: 'info' | 'warn' | 'error'; lines: string[]; action?: { label: string; run: () => void } };
+  /** The boolean button waiting for the chunk. */
+  boolBusy?: BooleanOp;
   toast?: { text: string; action?: { label: string; run: () => void } };
   dlg: 'save' | 'help' | undefined;
   /** The export / import panel (preset-transfer 1.0.0), loaded through window.MagicCard.loadTransfer(). */
@@ -245,6 +252,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** Begin editing `doc` (history, baseline, banners). */
   begin(doc: Doc, notes?: ImportNotes): void {
     this.hist = this.chunk?.createHistory(doc);
+    this.note = undefined;
     this.base = doc;
     this.setDoc(doc);
     this.baseline = toSvg(doc);
@@ -470,6 +478,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** Make the live document the new committed one: one history step. */
   commit(label: string, merge?: string): void {
+    this.note = undefined;
     this.base = this.doc;
     this.flatBase = this.flat;
     this.hist?.push(this.doc, label, merge);
@@ -494,6 +503,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   private step(d: Doc | undefined, label: string): void {
     if (!d) return;
     this.gestures.reset();
+    this.note = undefined;
     this.setDoc(d);
     this.base = d;
     this.flatBase = this.flat;
@@ -549,6 +559,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   select(ids: string[]): void {
+    this.note = undefined;
     this.sel = ids;
     this.cvSel = undefined;
     this.syncPen();
@@ -647,6 +658,50 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.apply(d, 'Reorder');
     const s = byId(d, id)!;
     this.say(S.moved(s.name, d.shapes.length - d.shapes.indexOf(s), d.shapes.length));
+  }
+
+  // ── booleans ──
+
+  get boolean(): ReturnType<typeof boolState> {
+    return boolState(this.doc, this.sel);
+  }
+
+  /** Run one boolean operation on the selection (the chunk loads on the first press). */
+  async runBoolean(op: BooleanOp): Promise<void> {
+    if (this.boolBusy) return;
+    const st0 = this.boolean;
+    const why = boolReason(st0, op);
+    if (why) {
+      this.say(why);
+      return;
+    }
+    this.boolBusy = op;
+    let chunk;
+    try {
+      chunk = await loadPathBooleans();
+    } finally {
+      this.boolBusy = undefined;
+    }
+    if (!chunk) {
+      this.note = { tone: 'error', lines: [S.boolLoadFail], action: { label: S.boolRetry, run: () => void this.runBoolean(op) } };
+      this.say(S.boolLoadFail);
+      return;
+    }
+    const st = this.boolean;
+    if (boolReason(st, op)) return;
+    const r = chunk.run(op, operandsOf(st), { frame: this.doc.vb });
+    if (!r.ok) {
+      const t = r.reason === 'empty' ? S.boolEmpty : r.reason === 'no-area' ? S.boolNoArea : S.boolComplex;
+      this.note = { tone: 'error', lines: [t, S.boolUnchanged] };
+      this.say(t);
+      return;
+    }
+    const out = withResult(this.doc, st, op, r.paths);
+    this.apply(out.doc, S.boolOps[op]);
+    this.select([out.shape.id]);
+    const text = boolNote(op, st, r.skippedOpen + st.openOnly);
+    this.note = { tone: 'info', lines: [text], action: { label: S.undo, run: () => { this.undo(); this.note = { tone: 'info', lines: [S.undone] }; } } };
+    this.say(text);
   }
 
   /** Move/size fields: X, Y, W, H of the selection's box. */

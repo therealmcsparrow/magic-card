@@ -5,6 +5,8 @@ import type { TransferItem } from '../contracts/preset-transfer';
 import { toPathString } from '../path/core';
 import { D, E } from './bind';
 import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
+import type { BooleanOp } from '../contracts/path-booleans';
+import { boolHelp, boolReason } from './combine';
 import { haWarns } from './ha';
 import { glyph, type GlyphName } from './icons';
 import { byId, round2, shapeBox, outsideSafe, type Doc, type Paint, type Shape } from './model';
@@ -389,6 +391,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
         ${overLayer(ed)}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<p class="empty">${S.empty}</p>` : nothing}
       </div>
+      ${resultNote(ed)}
       <p id="hint" class="hint">${hintFor(ed)}</p>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)} ${previews(ed)}
     </section>
@@ -741,6 +744,39 @@ function documentSection(ed: McSvgEditor): TemplateResult {
     </section>`;
 }
 
+const BOOL_GLYPH: Record<BooleanOp, string> = {
+  union: 'M12 8A5 5 0 1 0 12 16A5 5 0 1 0 12 8Z',
+  subtract: 'M12 8A5 5 0 1 0 12 16A5 5 0 0 1 12 8ZM12 8A5 5 0 1 1 12 16',
+  intersect: 'M12 8A5 5 0 0 0 12 16A5 5 0 0 0 12 8Z',
+  exclude: 'M12 8A5 5 0 1 0 12 16A5 5 0 0 1 12 8ZM12 8A5 5 0 1 1 12 16A5 5 0 0 0 12 8Z',
+};
+const BOOL_OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
+
+function boolSection(ed: McSvgEditor): TemplateResult {
+  const st = ed.boolean;
+  const lines = boolHelp(st);
+  return html`<section class="grp-s bool" aria-labelledby="bo-h">
+    <h4 id="bo-h">${S.boolTitle}</h4>
+    <div class="bool-grid">
+      ${BOOL_OPS.map((o) => {
+        const why = boolReason(st, o);
+        const busy = ed.boolBusy === o;
+        return html`<button type="button" class=${`b${why ? ' is-off' : ''}`} aria-disabled=${why || ed.boolBusy ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} aria-describedby="bo-help" data-op=${o} @click=${() => void ed.runBoolean(o)}>
+          <svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} fill-opacity="0.35" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg><span>${busy ? S.boolWorking : S.boolOps[o]}</span></button>`;
+      })}
+    </div>
+    <p id="bo-help" class="help">${S.boolHint}</p>
+    ${lines.map((l) => html`<p class="help">${l}</p>`)}
+  </section>`;
+}
+
+function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
+  const n = ed.note;
+  if (!n) return nothing;
+  const mark = n.tone === 'info' ? 'i' : n.tone === 'warn' ? '!' : 'x';
+  return html`<div class=${`result-note is-${n.tone}`}><span class="mk" aria-hidden="true">${mark}</span><div class="tx">${n.lines.map((l) => html`<p>${l}</p>`)}</div>${n.action ? html`<button type="button" class="b" @click=${() => n.action!.run()}><span>${n.action.label}</span></button>` : nothing}</div>`;
+}
+
 function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
   const one = sel.length === 1 ? sel[0] : undefined;
   const b = ed.unionBox;
@@ -764,6 +800,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
         ${btn(S.flipH, 'flipH', () => ed.flip('h'), { ...off, keys: 'Shift+H' })}${btn(S.flipV, 'flipV', () => ed.flip('v'), { ...off, keys: 'Shift+V' })}
       </div>
     </section>
+    ${boolSection(ed)}
     ${one && (one.type === 'rect' || one.type === 'polygon' || one.type === 'star')
       ? html`<section class="grp-s" aria-labelledby="to-h"><h4 id="to-h">${S.typeOptions}</h4>
           ${one.type === 'rect' ? numField(S.radiusField, one.r ?? 0, (n) => ed.option({ r: Math.max(0, n) }), { min: 0 }) : numField(S.sidesField, one.sides ?? 5, (n) => ed.option({ sides: Math.min(24, Math.max(3, Math.round(n))) }), { min: 3, max: 24, step: 1 })}
