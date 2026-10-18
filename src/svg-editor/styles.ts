@@ -347,6 +347,64 @@ export const editorStyles: CSSResult[] = [
       padding: 24px;
       overflow: auto;
     }
+    /* The start dialog uses the picker windows' tokens (editor-css .mc-picker-overlay / -modal / -header). */
+    .start-dlg {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      border: 0;
+      padding: 16px;
+      overflow: hidden;
+      color: inherit;
+      background: rgba(0, 0, 0, 0.38);
+      overscroll-behavior: contain;
+    }
+    .start-dlg:not([open]) {
+      display: none;
+    }
+    .start-dlg::backdrop {
+      background: transparent;
+    }
+    .start-win {
+      display: flex;
+      flex-direction: column;
+      width: 440px;
+      max-width: 100%;
+      max-height: min(80vh, 720px);
+      overflow: hidden;
+      background: var(--mc-surface);
+      color: var(--mc-text);
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .start-head {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 12px 12px 20px;
+      border-bottom: 1px solid var(--mc-divider);
+    }
+    .start-head h3 {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .start-win .start {
+      justify-content: flex-start;
+      padding: 16px 20px 20px;
+    }
     .tiles {
       display: flex;
       flex-wrap: wrap;

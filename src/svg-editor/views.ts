@@ -159,7 +159,8 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" role="dialog" aria-modal="true" aria-label=${S.title} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
-    ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
+    ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>`}
+    ${ed.startOpen ? startDialog(ed) : nothing}
     ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
     ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? S.xferMenu : ed.menu.key ? ed.menu.opener.textContent!.trim() : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
@@ -191,6 +192,7 @@ function topBar(ed: McSvgEditor): TemplateResult {
   return html`<header class="top" role="toolbar" aria-label=${S.title}>
     ${btn(ed.mcu ? S.close : S.back, 'back', () => ed.back(), { text: true, cls: 'ghost' })}
     <h2>${S.title}</h2>
+    ${edit ? html`<button type="button" class="b new-btn" @click=${(e: Event) => ed.openStart(e.currentTarget as HTMLElement)}><span>${S.startNew}</span></button>` : nothing}
     ${edit
       ? html`<label class="nm-field"
           ><span class="sr">${S.nameLabel}</span
@@ -252,8 +254,7 @@ function moduleNotice(ed: McSvgEditor): TemplateResult {
 function startPanel(ed: McSvgEditor): TemplateResult {
   const tile = (g: GlyphName, name: string, sub: string, on: () => void, pressed?: boolean): TemplateResult =>
     html`<button type="button" class="tile" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 28)}<strong>${name}</strong><small>${sub}</small></button>`;
-  return html`<section class="start" aria-labelledby="start-h">
-    <h3 id="start-h">${S.startTitle}</h3>
+  return html`<div class="start">
     <div class="tiles">
       ${tile('blank', S.startBlank, S.startBlankSub, () => ed.begin(ed.blankStart()))}
       ${tile('iconpick', S.startIcon, S.startIconSub, () => (ed.startMode = ed.startMode === 'icon' ? undefined : 'icon'), ed.startMode === 'icon')}
@@ -282,7 +283,17 @@ function startPanel(ed: McSvgEditor): TemplateResult {
       : nothing}
     ${ed.startError ? html`<p class="error" role="alert">${ed.startError}</p>` : nothing}
     <p class="help">${S.startHint}</p>
-  </section>`;
+  </div>`;
+}
+
+/** The start choices as a modal dialog in the top layer, styled like the editor's picker windows. */
+function startDialog(ed: McSvgEditor): TemplateResult {
+  return html`<dialog class="start-dlg" aria-labelledby="start-h" @cancel=${(e: Event) => (e.preventDefault(), ed.closeStart())} @click=${(e: Event) => e.target === e.currentTarget && ed.closeStart()}>
+    <div class="start-win">
+      <div class="start-head"><h3 id="start-h">${S.startTitle}</h3>${btn(S.close, 'close', () => ed.closeStart())}</div>
+      ${startPanel(ed)}
+    </div>
+  </dialog>`;
 }
 
 // ── workspace ──
@@ -604,7 +615,7 @@ function inspector(ed: McSvgEditor): TemplateResult {
 }
 
 function xferBtns(ed: McSvgEditor): TemplateResult {
-  return html`<button type="button" class="b" data-xfer="import" @click=${(e: Event) => void ed.openTransfer('import', e.currentTarget as HTMLElement)}><span>${S.importFile}</span></button>`;
+  return html`<button type="button" class="b" data-xfer="import" @click=${(e: Event) => ((ed.startOpen = false), void ed.openTransfer('import', e.currentTarget as HTMLElement))}><span>${S.importFile}</span></button>`;
 }
 
 function gridChips(ed: McSvgEditor): TemplateResult {

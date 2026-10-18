@@ -37,6 +37,7 @@ export const S = {
   dismiss: 'Dismiss',
   close: 'Close',
 
+  startNew: 'New',
   startTitle: 'What do you want to start from?',
   startBlank: 'Blank',
   startBlankSub: '24 x 24',

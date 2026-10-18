@@ -109,7 +109,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -188,6 +188,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     return null;
   };
   startMode?: 'icon' | 'paste';
+  /** The start dialog is open (over a blank editor first, or from New). */
+  startOpen = false;
+  private startReturn?: HTMLElement;
   startError?: string;
   liveShape?: Live;
   coarse = false;
@@ -293,9 +296,31 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (src.kind === 'svg') this.openSvg(src.svg, S.untitled, true);
     else if (src.kind === 'icon') await this.openIcon(src.icon, true);
     else if (src.kind === 'library') await this.openLibrary(src.id);
-    else this.stage = 'start';
-    if (this.stage === 'loading') this.stage = 'start';
+    else this.showStart();
+    if (this.stage === 'loading') this.showStart();
     if (this.savedId && this.libraryAvailable) void this.loadLib();
+  }
+
+  /** First open without a start: a blank editor with the start dialog over it. */
+  showStart(): void {
+    if (!this.hist) this.begin(this.blankStart());
+    this.startOpen = true;
+  }
+
+  openStart(opener: HTMLElement): void {
+    this.startReturn = opener;
+    this.startError = undefined;
+    this.startMode = undefined;
+    this.startOpen = true;
+  }
+
+  closeStart(): void {
+    this.startOpen = false;
+    this.startError = undefined;
+    this.startMode = undefined;
+    const back = this.startReturn;
+    this.startReturn = undefined;
+    void this.updateComplete.then(() => (back?.isConnected ? back : this.canvas())?.focus({ preventScroll: true }));
   }
 
   /** Begin editing `doc` (history, baseline, banners). */
@@ -310,6 +335,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.cvSel = undefined;
     this.tool = 'select';
     this.stage = 'edit';
+    this.startOpen = false;
     this.banners = [];
     this.notes = notes;
     if (notes) this.noteBanners(notes);
@@ -322,7 +348,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (r.error || !r.doc) {
       this.startError = r.error === 'No <svg> element found.' ? S.notSvg : S.nothing;
       this.startMode = this.startMode ?? 'paste';
-      if (first) this.stage = 'start';
+      if (first) this.showStart();
       return false;
     }
     this.startError = undefined;
@@ -336,7 +362,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (!g) {
       this.startError = S.iconFail(ref.trim());
       this.startMode = 'icon';
-      if (first) this.stage = 'start';
+      if (first) this.showStart();
       return false;
     }
     const name = ref.includes(':') ? ref.split(':')[1].replace(/[-_]/g, ' ') : ref;
@@ -355,7 +381,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     } catch {
       /* the start panel shows the library state */
     }
-    this.stage = 'start';
+    this.showStart();
     this.panel = 'library';
   }
 
@@ -1048,6 +1074,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   escape(e: KeyboardEvent): void {
     e.preventDefault();
     e.stopPropagation();
+    if (this.startOpen) return this.closeStart();
     if (this.picker) {
       this.closePicker();
       return;
@@ -1072,7 +1099,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   onKey = (e: KeyboardEvent): void => {
     this.shift = e.shiftKey;
-    if (this.stage !== 'edit') {
+    if (this.stage !== 'edit' || this.startOpen) {
       if (e.key === 'Escape') this.escape(e);
       return;
     }
@@ -1710,6 +1737,14 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { open?(): void }>('mc-path-menu')?.open?.();
+    if (changed.has('startOpen') && this.startOpen) {
+      const d = this.renderRoot.querySelector<HTMLDialogElement>('dialog.start-dlg');
+      if (d && !d.open) {
+        if (typeof d.showModal === 'function') d.showModal();
+        else d.setAttribute('open', '');
+        d.querySelector<HTMLElement>('.tile')?.focus();
+      }
+    }
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 
