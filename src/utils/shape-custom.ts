@@ -1,26 +1,14 @@
 import { MAX_SHAPE_POINTS } from '../contracts/custom-shape';
-import type { AnchoredPoint, CornerKey, CornerType, CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
+import type { AnchoredPoint, CornerKey, CornerType, CustomShapeOptions } from '../contracts/custom-shape';
 import { clamp, cornerArc, cornerCentres, dedupeSegs, p, parseShapeLength, SHAPE_DEFAULTS, translate } from './shape-path';
 import type { Outline, Pt, Seg } from './shape-path';
 
 /*
  * `shape: custom` (contract custom-shape 1.0.0): per-corner types and sizes, or anchored free-path
  * points, built into the same Outline the presets use. Nothing here runs unless the kind is 'custom'.
- * Kept small on purpose: magic-card.js has a hard byte budget for it (ADR 0019).
+ * A lazy chunk (dist/magic-card-shape-custom.js, ADR 0021): only the loader imports it. The reference
+ * resolution and the option merge stay in src/utils/shape-ref.ts.
  */
-
-/** Library copy first (when the provider has it), else the card's inline copy; local options on top. */
-export function resolveCustomShape(o: CustomShapeOptions, lookup?: ShapeLookup): CustomShapeOptions {
-  return o.ref ? mergeShapeOptions((lookup?.library(o.ref) ?? lookup?.inline(o.ref)) || {}, o) : o;
-}
-
-/** `over` on top of `base`: corners merge per key, `points` and `padding` replace as a whole, no `ref`. */
-export function mergeShapeOptions(base: CustomShapeOptions, over: CustomShapeOptions): CustomShapeOptions {
-  const out: CustomShapeOptions = { ...base, ...over };
-  delete out.ref;
-  if (base.corners && over.corners) out.corners = { ...base.corners, ...over.corners };
-  return out;
-}
 
 /**
  * Per corner type: how far in it takes content from each of its two sides (in sizes; undefined for the
@@ -36,6 +24,8 @@ const TYPES: Record<CornerType, [reach?: number, grow?: number, segs?: number[][
   notch: [1, 0, [[1, 1], [0, 1]]],
 };
 const KEYS: CornerKey[] = ['tl', 'tr', 'br', 'bl'];
+const NAMES = new Set<unknown>(Object.keys(TYPES));
+const isType = (v: unknown): v is CornerType => NAMES.has(v);
 
 interface Corner {
   t: CornerType;
@@ -52,7 +42,7 @@ function fit(w: number, h: number, list: Corner[]): Corner[] {
 /** The four corners (tl, tr, br, bl) of a w x h box; a bad value falls back to the shared one, then square. */
 function corners(w: number, h: number, o: CustomShapeOptions): Corner[] {
   const len = (v: unknown) => parseShapeLength(v, Math.min(w, h));
-  const type = (v: unknown) => (typeof v === 'string' && /^(round|squircle|bevel|scoop|notch|square)$/.test(v) ? (v as CornerType) : undefined);
+  const type = (v: unknown) => (isType(v) ? v : undefined);
   const shared = len(o.corner) ?? (type(o.corner_type) ? 16 : 0);
   return fit(
     w,

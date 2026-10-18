@@ -5,7 +5,8 @@ import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape'
 import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mcu-library';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
-import { resolveCustomShape } from '../utils/shape-custom';
+import { resolveCustomShape } from '../utils/shape-ref';
+import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { parseClosed, polygonCss } from '../path/core';
 import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
@@ -46,11 +47,17 @@ export interface ResolvedShape {
 /**
  * The design's shape, or undefined for none / unknown (the element is not shaped at all). A custom
  * shape's `ref` is resolved here (library, then the card's inline copy), so everything downstream
- * (clip, stroke, rings, flows, decorations) reads the finished options.
+ * (clip, stroke, rings, flows, decorations) reads the finished options. A custom shape whose builder
+ * chunk is not loaded yet starts the load and is undefined (unshaped) meanwhile.
  */
 export function resolveShape(design: Pick<DesignConfig, 'shape' | 'shape_options'> | undefined, lookup?: ShapeLookup): ResolvedShape | undefined {
   const kind = design?.shape;
   if (!kind || !KINDS.has(kind)) return undefined;
+  // until the builder chunk is in, a custom shape renders as `none` (the card re-renders when it lands)
+  if (kind === 'custom' && !customShapesReady()) {
+    void loadCustomShapes();
+    return undefined;
+  }
   let o = design?.shape_options;
   if (kind === 'custom' && o && typeof o === 'object') o = resolveCustomShape(o, lookup);
   return o && typeof o === 'object' && Object.keys(o).length ? { kind, options: o } : { kind };

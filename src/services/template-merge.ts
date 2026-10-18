@@ -3,7 +3,7 @@ import { deepClone } from '../utils/deep-merge';
 import { propertyKeys } from '../utils/css-properties';
 import { childListKey } from '../utils/module-path';
 import { animationDocList } from '../utils/custom-animations';
-import { mergeShapeOptions } from '../utils/shape-custom';
+import { mergeShapeOptions } from '../utils/shape-ref';
 
 /** Module keys whose absence is a local value: overridden without a value, the template's is dropped. */
 const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg']);

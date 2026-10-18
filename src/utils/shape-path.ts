@@ -1,5 +1,5 @@
 import type { ShapeKind, ShapeOptions } from '../types';
-import { buildCustom } from './shape-custom';
+import type { CustomShapeChunk } from '../contracts/custom-shape';
 
 /*
  * Outline shapes for modules / rows / columns / the card as SVG paths in px for an element's size:
@@ -303,7 +303,7 @@ function build(kind: ShapeKind, w: number, h: number, o: ShapeOptions, pad: Shap
 
   switch (kind) {
     case 'custom':
-      return buildCustom(w, h, o);
+      return customBuilder?.(w, h, o);
     case 'squircle': {
       const smoothing = clamp(num(o.smoothing) ?? SHAPE_DEFAULTS.smoothing, 0, 1);
       // smoothing 1 → n 3 (round), 0 → n 8 (almost square corners); the classic squircle is n 4
@@ -455,7 +455,7 @@ function buildInset(kind: ShapeKind, w: number, h: number, o: ShapeOptions, off:
   const iw = w - 2 * off;
   const ih = h - 2 * off;
   if (!(iw > 0 && ih > 0)) return undefined;
-  if (kind === 'custom') return buildCustom(w, h, o, off);
+  if (kind === 'custom') return customBuilder?.(w, h, o, off);
   let inner: ShapeOptions = o;
   if (kind === 'notch' || kind === 'octagon') inner = { ...o, corner: Math.max(0, cutCorner(kind, w, h, o) - (2 - Math.SQRT2) * off) };
   else if (kind === 'squircle') inner = { ...o, corner: Math.max(0, squircleRadius(w, h, o) - off) };
@@ -682,9 +682,30 @@ const round = (i: ShapeInset): ShapeInset => ({
 interface ShapeOutline {
   d: string;
   inset: ShapeInset;
+  /** The built outline; its polyline is only sampled when a flow asks (shapePoint). */
+  b: Outline;
+  w: number;
+  h: number;
   /** The outline as a polyline (cubics sampled), for hit tests along a side. */
-  poly: Pt[];
+  poly?: Pt[];
 }
+
+/** The `shape: custom` builder, once its lazy chunk has loaded (src/utils/shape-custom-loader.ts); empty before. */
+let customBuilder: CustomShapeChunk['buildCustom'] | undefined;
+
+/** Register (or, with nothing, remove) the custom builder; outlines memoised so far are dropped. */
+export function useCustomBuilder(fn?: CustomShapeChunk['buildCustom']): void {
+  customBuilder = fn;
+  memo.clear();
+}
+
+/** The JSON of an options object, once per object (options objects are replaced, not edited, on a change). */
+const optionKeys = new WeakMap<object, string>();
+const keyOf = (o: ShapeOptions): string => {
+  let k = optionKeys.get(o);
+  if (k === undefined) optionKeys.set(o, (k = JSON.stringify(o)));
+  return k;
+};
 
 /** Recent outlines (several layers ask for the same shape and size: clip, stroke, ring, flows). */
 const memo = new Map<string, ShapeOutline | undefined>();
@@ -693,10 +714,11 @@ const MEMO_SIZE = 256;
 /** The shape's outline (memoised): path, content inset and polyline; `off` px inward (buildInset). */
 function shapeOutline(kind: ShapeKind, w: number, h: number, opts: ShapeOptions | undefined, off = 0, pad?: ShapeInset): ShapeOutline | undefined {
   if (!valid(kind, w, h)) return undefined;
+  if (kind === 'custom' && !customBuilder) return undefined;
   const o = opts && typeof opts === 'object' ? opts : {};
   // (a custom shape's outline and inset do not depend on the content padding: one memo entry for all of them)
   const known = pad && kind !== 'custom' ? cleanPad(pad) : zero();
-  const key = `${kind}|${w}|${h}|${off}|${known.top},${known.right},${known.bottom},${known.left}|${JSON.stringify(o)}`;
+  const key = `${kind}|${w}|${h}|${off}|${known.top},${known.right},${known.bottom},${known.left}|${keyOf(o)}`;
   if (memo.has(key)) {
     const hit = memo.get(key);
     // most recently used last
@@ -705,7 +727,7 @@ function shapeOutline(kind: ShapeKind, w: number, h: number, opts: ShapeOptions 
     return hit;
   }
   const b = off > 0 ? buildInset(kind, w, h, o, off) : build(kind, w, h, o, known);
-  const out = b ? { d: toPath(b, w, h), inset: round(b.inset), poly: flatten(b, w, h) } : undefined;
+  const out = b ? { d: toPath(b, w, h), inset: round(b.inset), b, w, h } : undefined;
   memo.set(key, out);
   if (memo.size > MEMO_SIZE) memo.delete(memo.keys().next().value as string);
   return out;
@@ -776,8 +798,9 @@ export function shapePoint(
   side: ShapeSide,
   t = 0.5,
 ): Pt | undefined {
-  const poly = shapeOutline(kind, w, h, opts)?.poly;
-  if (!poly) return undefined;
+  const so = shapeOutline(kind, w, h, opts);
+  if (!so) return undefined;
+  const poly = (so.poly ??= flatten(so.b, w, h));
   const vertical = side === 'top' || side === 'bottom';
   const along = clamp(Number.isFinite(t) ? t : 0.5, 0, 1) * (vertical ? w : h);
   // project every crossing of the line onto the axis across the side; keep the one nearest the side

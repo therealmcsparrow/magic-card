@@ -39,6 +39,7 @@ import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, 
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
 import { resolveValueBackground } from '../utils/value-background';
+import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
 import type { ShapeLookup } from '../contracts/custom-shape';
 import './mc-flows';
@@ -424,10 +425,20 @@ export class MagicCard extends LitElement {
       this._resolvedConfig = undefined;
     }
 
+    this._wantShapes(this._config);
+
     // Same template: re-merge the new local config (overrides may have changed) without refetching.
     if (this._templateConfig) {
       this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
     }
+  }
+
+  /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
+  private _shapeCfg?: object;
+  private _wantShapes(cfg: object): void {
+    if (cfg === this._shapeCfg || customShapesReady()) return;
+    this._shapeCfg = cfg;
+    if (JSON.stringify(cfg).includes('"shape":"custom"')) void loadCustomShapes().then((ok) => ok && this.isConnected && this.requestUpdate());
   }
 
   getCardSize(): number {
@@ -744,6 +755,7 @@ export class MagicCard extends LitElement {
     if (!config) {
       return html`<ha-card><div class="mc-error">No configuration</div></ha-card>`;
     }
+    this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
     loadGoogleFonts(configGoogleFonts(config));
     const popup = this._popup.isPopup();
