@@ -5,7 +5,7 @@
 // a user takes), then captures the editor's preview in Light and in Dark and joins both into one
 // image, 1200 px wide, with a caption over each half. The image is WebP, compressed to under 80 KB.
 //
-// Usage (from the repo root; Node 22.18 or newer, it loads library.ts with type stripping):
+// Usage (from the repo root; it loads library.ts through tools/ui-kit-ts-hooks.mjs):
 //   npm run build:harness                       the harness loads .harness-build/
 //   node tools/theme-example-shots.mjs          all presets  -> documentation/themes/examples/images/<id>.webp
 //   node tools/theme-example-shots.mjs nord ink only these ids
@@ -17,6 +17,10 @@ import puppeteer from 'puppeteer-core';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { register } from 'node:module';
+
+// library.ts imports the theme-presets namespace marker (m), which pulls in the i18n runtime: load the .ts files through the kit's hooks
+register('./ui-kit-ts-hooks.mjs', import.meta.url);
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);

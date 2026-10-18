@@ -1,13 +1,16 @@
 import { LitElement, html, css, PropertyValues, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { THEME_EDITOR_CONTRACT_VERSION } from '../contracts/theme-editor';
+import type { LocaleHassLike } from '../contracts/i18n';
+import { locale, t } from './i18n';
+import { setI18nLocale } from '../i18n/runtime';
 import type { UiToastElement } from '../contracts/ui-kit';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeEditorElement, ThemeFileEntry, ThemeList } from '../contracts/theme-editor';
 import { cloneDoc } from './model';
 import { base } from './styles';
 import { fire } from './util';
-import { REASON_TEXT } from './start-view';
+import { reasonText } from './start-view';
 import type { CreateDetail } from './start-view';
 import type { Draft } from './editor-view';
 import './editor-view';
@@ -88,6 +91,13 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   }
 
   protected willUpdate(changed: PropertyValues): void {
+    if (changed.has('hass')) {
+      setI18nLocale(this.hass as LocaleHassLike | undefined);
+      // the colour and unit pickers run on magic-card.js's own runtime copy
+      window.MagicCard?.setLocale?.(this.hass as LocaleHassLike | undefined);
+    }
+    // WCAG 3.1.2: the editor's language for a screen reader (the inherited language is the page's)
+    if (this.lang !== locale()) this.lang = locale();
     if (changed.has('backend') && this.backend && this._phase === 'waiting') this._startLoad();
   }
 
@@ -123,7 +133,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       void this._openSelected();
       void this._loadMine();
     } catch (e) {
-      this._listError = (e as ThemeBackendError).code === 'unauthorized' ? 'Only administrators can edit themes.' : ((e as Error).message ?? '');
+      this._listError = (e as ThemeBackendError).code === 'unauthorized' ? t('Only administrators can edit themes.') : ((e as Error).message ?? '');
       this._listPhase = 'error';
     }
   }
@@ -152,9 +162,9 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       this._files = r.files ?? this._files;
       this._loaded = r.loaded ?? this._loaded;
       this._include = r.include;
-      this._checkResult = r.include?.state === 'ok' ? 'Found it. You can save themes now.' : 'Still not found. Restart Home Assistant if you have just added the lines.';
+      this._checkResult = r.include?.state === 'ok' ? t('Found it. You can save themes now.') : t('Still not found. Restart Home Assistant if you have just added the lines.');
     } catch (e) {
-      this._checkResult = `The check failed. ${(e as Error).message ?? ''}`.trim();
+      this._checkResult = t('The check failed. {reason}', { reason: (e as Error).message ?? '' }).trim();
     }
     this._checking = false;
   }
@@ -177,12 +187,12 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
         file: r.file,
         mtime: r.mtime,
         editable: r.editable,
-        reason: r.reason ? REASON_TEXT[r.reason] : undefined,
+        reason: r.reason ? reasonText(r.reason) : undefined,
       };
       fire(this, 'mc-theme-select', { name: r.name });
     } catch (e) {
       this.selectedName = null;
-      this._say(`Could not open ${name}. ${(e as Error).message ?? ''}`.trim());
+      this._say(t('Could not open {name}. {reason}', { name, reason: (e as Error).message ?? '' }).trim());
       fire(this, 'mc-theme-select', { name: null });
     }
   }
@@ -230,7 +240,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
           if (this._draft) this._draft.name = e.detail.name;
         }}
         @mcte-deleted=${(e: CustomEvent) => {
-          this._say(`Deleted ${e.detail.name}.`);
+          this._say(t('Deleted {name}.', { name: e.detail.name }));
           this._close();
         }}
         @mcte-recheck=${() => void this._recheck()}
@@ -252,7 +262,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       @mcte-reload=${() => void this._loadList()}
       @mcte-recheck=${() => void this._recheck()}
       @mcte-deleted=${(e: CustomEvent) => {
-        this._say(`Deleted ${e.detail.name}.`);
+        this._say(t('Deleted {name}.', { name: e.detail.name }));
         void this._loadList();
       }}
     ></mcte-start-view>`;
@@ -261,17 +271,16 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   protected render(): TemplateResult {
     switch (this._phase) {
       case 'waiting':
-        return html`<p class="note" role="status">Waiting for Home Assistant to connect...</p>`;
+        return html`<p class="note" role="status">${t('Waiting for Home Assistant to connect...')}</p>`;
       case 'loading':
-        return html`<p class="note" role="status">Loading the theme editor...</p>`;
+        return html`<p class="note" role="status">${t('Loading the theme editor...')}</p>`;
       case 'failed':
         return html`<div class="note" role="alert">
-          <p>The theme editor could not load. Reload the page.</p>
+          <p>${t('The theme editor could not load. Reload the page.')}</p>
           <details>
-            <summary>Details</summary>
+            <summary>${t('Details')}</summary>
             <p>
-              The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update
-              Magic Card to 2026.10.06 or newer if it keeps happening.
+              ${t('The editor parts of Magic Card could not be loaded. The editor ships with Magic Card as magic-card-theme-editor.js: update Magic Card to 2026.10.06 or newer if it keeps happening.')}
             </p>
           </details>
         </div>`;

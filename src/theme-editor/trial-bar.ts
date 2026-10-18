@@ -4,6 +4,7 @@ import { glyph } from '../ui-kit/glyphs';
 import { THEME_TRIAL_BAR_TAG } from '../contracts/theme-editor';
 import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
+import { t } from './i18n';
 
 /*
  * <mc-theme-trial-bar>: the Revert bar of "Try on dashboards" (spec 9 and 16.5). trial.ts puts it as
@@ -150,26 +151,26 @@ export class McThemeTrialBar extends LitElement {
   }
 
   protected render(): TemplateResult | typeof nothing {
-    const t = this._trial;
-    if (!t) return nothing;
-    const text = this._narrow ? `Trying ${t.name}` : `Trying ${t.name} on this tab (${t.mode})`;
+    const tr = this._trial;
+    if (!tr) return nothing;
+    const text = this._narrow ? t('Trying {name}', { name: tr.name }) : t('Trying {name} on this tab ({mode, select, dark {dark} other {light}})', { name: tr.name, mode: tr.mode });
     if (this._short) {
-      return html`<div class="pill round ${this._edge}" role="region" aria-label="Theme trial">
+      return html`<div class="pill round ${this._edge}" role="region" aria-label=${t('Theme trial')}>
         <span class="sr" role="status">${text}</span>
-        <button type="button" class="round-btn" aria-label="Revert theme trial" title="Revert theme trial" @click=${() => stopTrial('revert')}>${glyph('undo')} Revert</button>
+        <button type="button" class="round-btn" aria-label=${t('Revert theme trial')} title=${t('Revert theme trial')} @click=${() => stopTrial('revert')}>${glyph('undo')} ${t('Revert')}</button>
       </div>`;
     }
-    return html`<div class="pill ${this._edge}" role="region" aria-label="Theme trial">
+    return html`<div class="pill ${this._edge}" role="region" aria-label=${t('Theme trial')}>
       ${glyph('palette')}
-      <span class="msg" role="status">${text}${t.skipped ? html` <span class="skip">(${t.skipped} not valid, left out)</span>` : nothing}</span>
+      <span class="msg" role="status">${text}${tr.skipped ? html` <span class="skip">(${t('{n} not valid, left out', { n: tr.skipped })})</span>` : nothing}</span>
       <span class="actions">
-        <button type="button" class="revert" @click=${() => stopTrial('revert')}>Revert</button>
-        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? 'Editor' : 'Open editor'}</button>
+        <button type="button" class="revert" @click=${() => stopTrial('revert')}>${t('Revert')}</button>
+        <button type="button" class="plain" @click=${() => openEditor()}>${this._narrow ? t('Editor') : t('Open editor')}</button>
         <button
           type="button"
           class="plain icon"
-          aria-label=${this._edge === 'bottom' ? 'Move to top' : 'Move to bottom'}
-          title=${this._edge === 'bottom' ? 'Move to top' : 'Move to bottom'}
+          aria-label=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
+          title=${this._edge === 'bottom' ? t('Move to top') : t('Move to bottom')}
           @click=${() => this._flip()}
         >
           ${this._edge === 'bottom' ? '▲' : '▼'}

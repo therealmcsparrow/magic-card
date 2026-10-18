@@ -5,7 +5,8 @@ import { THEME_VAR_RE } from '../contracts/theme-catalogue';
 import { kindOf } from './catalogue/index';
 import { validateValue } from './model';
 import { base } from './styles';
-import { fire, parseColor } from './util';
+import { t } from './i18n';
+import { fire, parseColor, scopeLabel } from './util';
 
 export interface RawEntry {
   name: string;
@@ -43,9 +44,9 @@ export function parseRawLines(text: string): { entries: RawEntry[]; failed: stri
 /** The liberal check for the raw row, plus the catalogue kind when the name is known. */
 export function rawValueError(name: string, value: string): string | null {
   const v = cleanRawValue(value);
-  if (!v) return 'Enter a value.';
-  if (/[\r\n]/.test(v)) return 'Use a single line.';
-  if (/[;{}]/.test(v)) return 'Remove ; { } from the value.';
+  if (!v) return t('Enter a value.');
+  if (/[\r\n]/.test(v)) return t('Use a single line.');
+  if (/[;{}]/.test(v)) return t('Remove {chars} from the value.', { chars: '; { }' });
   return validateValue(kindOf(name) ?? 'text', v);
 }
 
@@ -75,7 +76,8 @@ export class McteRawRows extends LitElement {
     return this._add();
   }
 
-  scopeLabel = 'Shared';
+  /** The scope the row adds to, as a word in the language (set by the editor). */
+  scopeLabel = '';
   existing: ReadonlySet<string> = new Set();
   /** Set by "Add {query} as a variable": the name field takes it and gets the focus. */
   prefill = '';
@@ -92,6 +94,11 @@ export class McteRawRows extends LitElement {
     }
   }
 
+  /** The scope word: the editor's, or Shared when none is set. */
+  private get _scopeWord(): string {
+    return this.scopeLabel || scopeLabel('shared');
+  }
+
   private get _cleanName(): string {
     return this._name.trim().replace(/^--/, '');
   }
@@ -99,12 +106,12 @@ export class McteRawRows extends LitElement {
   private _add(): boolean {
     const name = this._cleanName;
     if (!name) {
-      this._error = 'Enter a name.';
+      this._error = t('Enter a name.');
       this._focus('#raw-name');
       return false;
     }
     if (!okName(name)) {
-      this._error = 'Use letters, numbers, hyphens and underscores. This name is not allowed.';
+      this._error = t('Use letters, numbers, hyphens and underscores. This name is not allowed.');
       this._focus('#raw-name');
       return false;
     }
@@ -115,7 +122,7 @@ export class McteRawRows extends LitElement {
       return false;
     }
     fire(this, 'mcte-add', { entries: [{ name, value: cleanRawValue(this._value) }] });
-    this._status = `Added ${name} to ${this.scopeLabel}`;
+    this._status = t('Added {name} to {scope}', { name, scope: this._scopeWord });
     this._name = '';
     this._value = '';
     this._error = '';
@@ -139,8 +146,8 @@ export class McteRawRows extends LitElement {
     e.preventDefault();
     const { entries, failed } = parseRawLines(text);
     if (entries.length) fire(this, 'mcte-add', { entries });
-    this._status = entries.length ? `Added ${entries.length} ${entries.length === 1 ? 'variable' : 'variables'} to ${this.scopeLabel}` : 'Nothing was added';
-    this._error = failed.length ? `Could not read: ${failed.join(' | ')}` : '';
+    this._status = entries.length ? t('Added {c, plural, one {# variable} other {# variables}} to {scope}', { c: entries.length, scope: this._scopeWord }) : t('Nothing was added');
+    this._error = failed.length ? t('Could not read: {lines}', { lines: failed.join(' | ') }) : '';
     this._name = '';
     this._value = '';
     this._pending();
@@ -159,10 +166,10 @@ export class McteRawRows extends LitElement {
     const colour = !!parseColor(this._value);
     return html`
       <div class="panel" role="group" aria-labelledby="raw-title">
-        <h3 id="raw-title" class="title">Add any variable</h3>
+        <h3 id="raw-title" class="title">${t('Add any variable')}</h3>
         <div class="line">
           <div class="cell">
-            <label class="lbl" for="raw-name">Name</label>
+            <label class="lbl" for="raw-name">${t('Name')}</label>
             <input
               id="raw-name"
               class="input mono"
@@ -178,7 +185,7 @@ export class McteRawRows extends LitElement {
             />
           </div>
           <div class="cell">
-            <label class="lbl" for="raw-value">Value</label>
+            <label class="lbl" for="raw-value">${t('Value')}</label>
             <div class="val">
               ${colour ? html`<span class="swatch" style="background:${this._value}" aria-hidden="true"></span>` : nothing}
               <input
@@ -195,12 +202,12 @@ export class McteRawRows extends LitElement {
               />
             </div>
           </div>
-          <button type="button" class="btn btn-secondary add" @click=${() => this._add()}>${exists ? 'Update' : 'Add'}</button>
+          <button type="button" class="btn btn-secondary add" @click=${() => this._add()}>${exists ? t('Update') : t('Add')}</button>
         </div>
         <p id="raw-help" class="help">
           ${exists
-            ? `This variable already exists in ${this.scopeLabel}. Add will replace its value.`
-            : 'Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.'}
+            ? t('This variable already exists in {scope}. Add will replace its value.', { scope: this._scopeWord })
+            : t('Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.')}
         </p>
         ${this._error ? html`<p class="help error" id="raw-error" role="alert">${glyph('alertCircle', 16)}${this._error}</p>` : nothing}
         <p class="help" role="status">${this._status}</p>

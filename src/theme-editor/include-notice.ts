@@ -3,16 +3,20 @@ import type { PropertyDeclarations } from 'lit';
 import type { IncludeStatus } from '../contracts/theme-editor';
 import { glyph } from '../ui-kit/glyphs';
 import { base } from './styles';
+import { t } from './i18n';
 import { copyText, fire } from './util';
 
 export const THEMES_DOC_URL = 'https://github.com/therealmcsparrow/magic-card/blob/main/documentation/themes/README.md';
 
-const INTRO: Record<string, string> = {
-  missing: 'Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:',
-  inline: 'Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:',
-  other_layout: 'Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:',
-  unknown: 'The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:',
-};
+/** The sentence above the lines to add, for an include state (unknown states read like 'unknown'). */
+const intro = (state: string): string =>
+  state === 'missing'
+    ? t('Home Assistant only loads themes from /config/themes when your configuration.yaml has these lines:')
+    : state === 'inline'
+      ? t('Your configuration.yaml lists themes inline, so Home Assistant does not read /config/themes. To use the files this editor writes, use these lines:')
+      : state === 'other_layout'
+        ? t('Your configuration.yaml loads themes in another way, so the editor cannot be sure it can see its files. These lines make sure it can:')
+        : t('The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:');
 
 /**
  * <mcte-include-notice>: the calm "one setup step" callout (design 6 and 16.3). Draws nothing when
@@ -48,25 +52,24 @@ export class McteIncludeNotice extends LitElement {
     return html`<div class="notice info" part="callout">
       ${glyph('information')}
       <div class="body">
-        <h3 class="title">One setup step before you can save</h3>
-        <p>${INTRO[s.state] ?? INTRO.unknown}</p>
-        <pre class="code" tabindex="0" aria-label="Lines to add to configuration.yaml">${s.hint}</pre>
+        <h3 class="title">${t('One setup step before you can save')}</h3>
+        <p>${intro(s.state)}</p>
+        <pre class="code" tabindex="0" aria-label=${t('Lines to add to configuration.yaml')}>${s.hint}</pre>
         <details>
-          <summary>Where do I add these lines?</summary>
+          <summary>${t('Where do I add these lines?')}</summary>
           <p>
-            Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then
-            restart Home Assistant. Already have a frontend: section? Add only the themes line under it.
+            ${t('Open configuration.yaml with the File editor or Studio Code Server, add the lines, check your configuration, then restart Home Assistant. Already have a frontend: section? Add only the themes line under it.')}
           </p>
         </details>
         <div class="actions">
-          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${glyph('contentCopy')} Copy lines</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${glyph('contentCopy')} ${t('Copy lines')}</button>
           <button type="button" class="btn btn-secondary btn-sm" aria-disabled=${this.checking ? 'true' : 'false'} @click=${() => !this.checking && fire(this, 'mcte-recheck')}>
-            ${this.checking ? html`<span class="spin" aria-hidden="true"></span> Checking...` : 'Check again'}
+            ${this.checking ? html`<span class="spin" aria-hidden="true"></span> ${t('Checking...')}` : t('Check again')}
           </button>
-          <a class="btn btn-text btn-sm" href=${THEMES_DOC_URL} target="_blank" rel="noopener noreferrer">Show me how</a>
-          <span class="help" role="status">${this._copied ? 'Copied' : this.checking ? 'Checking...' : this.result}</span>
+          <a class="btn btn-text btn-sm" href=${THEMES_DOC_URL} target="_blank" rel="noopener noreferrer">${t('Show me how')}</a>
+          <span class="help" role="status">${this._copied ? t('Copied') : this.checking ? t('Checking...') : this.result}</span>
         </div>
-        <p class="help">You can skip this for now. Try on dashboard works without it.</p>
+        <p class="help">${t('You can skip this for now. Try on dashboard works without it.')}</p>
       </div>
     </div>`;
   }

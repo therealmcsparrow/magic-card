@@ -11,6 +11,8 @@ import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import type { UiToastElement } from '../contracts/ui-kit';
 import { base } from './styles';
+import { locale, t } from './i18n';
+import { fold } from '../i18n/fold';
 import { getTrial, isTrialActive, startTrial, stopTrial, subscribeTrial, syncTrialMode, updateTrial, useTheme } from './trial';
 import type { TrialState } from './trial';
 import {
@@ -22,7 +24,8 @@ import {
   isSetAnywhere,
   openingScope,
   ownValue,
-  SCOPE_LABEL,
+  modeList,
+  scopeLabel,
   slugName,
   textContrast,
   toYaml,
@@ -280,7 +283,7 @@ export class McteEditorView extends LitElement {
     this._rawPending = false;
     this._usedLink = false;
     this._computeHints(true);
-    if (d.from) this._say(`Editing ${SCOPE_LABEL[this._scope]}. Created from ${d.from}.`);
+    if (d.from) this._say(t('Editing {scope}. Created from {from}.', { scope: scopeLabel(this._scope), from: d.from }));
   }
 
   protected updated(changed: PropertyValues): void {
@@ -342,11 +345,11 @@ export class McteEditorView extends LitElement {
   }
 
   private get _reason(): SaveReason | null {
-    if (!this.draft?.editable) return { text: 'This theme is read only. Copy it to edit.' };
-    if (this.include && this.include.state !== 'ok') return { text: 'Saving is off until themes are set up', action: 'recheck', actionLabel: 'Check again' };
+    if (!this.draft?.editable) return { text: t('This theme is read only. Copy it to edit.') };
+    if (this.include && this.include.state !== 'ok') return { text: t('Saving is off until themes are set up'), action: 'recheck', actionLabel: t('Check again') };
     const n = this._errors.length;
-    if (n) return { text: `Fix ${n} ${n === 1 ? 'value' : 'values'} to save`, action: 'fix', actionLabel: 'Show the first' };
-    if (!this._isNew && !this._dirty) return { text: 'No changes to save', quiet: true };
+    if (n) return { text: t('Fix {c, plural, one {# value} other {# values}} to save', { c: n }), action: 'fix', actionLabel: t('Show the first') };
+    if (!this._isNew && !this._dirty) return { text: t('No changes to save'), quiet: true };
     return null;
   }
 
@@ -388,22 +391,28 @@ export class McteEditorView extends LitElement {
     this._edit(setVar(this._doc, name, value, mode));
   }
 
+  /** A variable's label in the language, or its name when the catalogue does not know it. */
+  private _labelOf(name: string): string {
+    const e = entryByName(name);
+    return e ? t(e.label) : name;
+  }
+
   private _onMoveShared(name: string, value: string): void {
     this._edit(setVar(removeVar(this._doc, name, this._scope === 'shared' ? undefined : this._scope), name, value));
-    this._say(`Moved ${entryByName(name)?.label ?? name} to Shared. Light and Dark both use it.`);
+    this._say(t('Moved {label} to Shared. Light and Dark both use it.', { label: this._labelOf(name) }));
   }
 
   private _onReset(name: string): void {
-    const label = entryByName(name)?.label ?? name;
+    const label = this._labelOf(name);
     this._edit(removeVar(this._doc, name, this._scope === 'shared' ? undefined : this._scope));
-    this._say(`Removed ${label} from ${SCOPE_LABEL[this._scope]}`);
+    this._say(t('Removed {label} from {scope}', { label, scope: scopeLabel(this._scope) }));
   }
 
   private _onSetModes(name: string, value: string, modes: ThemeMode[]): void {
     let d = this._doc;
     for (const m of modes) d = setVar(d, name, value, m);
     this._edit(d);
-    this._say(`Set in ${modes.map((m) => SCOPE_LABEL[m]).join(' and ')}`);
+    this._say(t('Set in {modes}', { modes: modeList(modes) }));
   }
 
   private _onAdd(entries: Array<{ name: string; value: string }>): void {
@@ -438,7 +447,7 @@ export class McteEditorView extends LitElement {
     d.modes = { light: {}, dark: {} };
     this._edit(d as ThemeDoc);
     this._closeDlg();
-    this._say('Added light and dark modes. Variables you set before stay shared.');
+    this._say(t('Added light and dark modes. Variables you set before stay shared.'));
   }
 
   private _copyMode(from: ThemeMode, to: ThemeMode): void {
@@ -449,7 +458,10 @@ export class McteEditorView extends LitElement {
     d.modes = { ...(d.modes ?? {}), [to]: { ...src } };
     this._edit(d);
     this._menu = false;
-    this._showToast({ text: `Copied ${n} ${n === 1 ? 'variable' : 'variables'} from ${SCOPE_LABEL[from]} to ${SCOPE_LABEL[to]}.`, action: { label: 'Undo', run: () => this._undoEdit() } });
+    this._showToast({
+      text: t('Copied {c, plural, one {# variable} other {# variables}} from {from} to {to}.', { c: n, from: scopeLabel(from), to: scopeLabel(to) }),
+      action: { label: t('Undo'), run: () => this._undoEdit() },
+    });
   }
 
   private _undoEdit(): void {
@@ -471,16 +483,23 @@ export class McteEditorView extends LitElement {
     const hints = new Map<string, FieldHint>();
     const card = String(vars['ha-card-background'] ?? vars['card-background-color'] ?? '#ffffff');
     const stage = String(vars['lovelace-background'] ?? vars['primary-background-color'] ?? '');
-    const modeName = SCOPE_LABEL[this._mode];
+    const modeName = scopeLabel(this._mode);
+    const one = new Intl.NumberFormat(locale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     for (const name of ['primary-text-color', 'secondary-text-color']) {
       const text = vars[name];
       if (text === undefined) continue;
-      const t = String(text);
-      if (/^var\(/i.test(t) || !t.trim()) continue;
-      const r = /gradient\(/i.test(card) ? 'transparent' : textContrast(t, card, stage);
+      const col = String(text);
+      if (/^var\(/i.test(col) || !col.trim()) continue;
+      const r = /gradient\(/i.test(card) ? 'transparent' : textContrast(col, card, stage);
       if (r === null) continue;
-      if (r === 'transparent') hints.set(name, { text: 'Contrast not checked: value has transparency.', ok: null });
-      else hints.set(name, { text: `Contrast on card, ${modeName}: ${r.ratio.toFixed(1)} to 1, ${r.ok ? 'easy to read' : 'hard to read, below 4.5 to 1'}`, ok: r.ok });
+      if (r === 'transparent') hints.set(name, { text: t('Contrast not checked: value has transparency.'), ok: null });
+      else {
+        const ratio = one.format(r.ratio);
+        hints.set(name, {
+          text: r.ok ? t('Contrast on card, {mode}: {ratio} to 1, easy to read', { mode: modeName, ratio }) : t('Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1', { mode: modeName, ratio }),
+          ok: r.ok,
+        });
+      }
     }
     this._hints = hints;
   }
@@ -529,7 +548,7 @@ export class McteEditorView extends LitElement {
       if (this._onlyChanged && !isSetAnywhere(this._doc, r.entry.name)) return false;
       if (!q) return true;
       const value = String(ownValue(this._doc, this._scope, r.entry.name) ?? ownValue(this._doc, 'shared', r.entry.name) ?? '').toLowerCase();
-      return r.entry.name.toLowerCase().includes(q) || r.entry.label.toLowerCase().includes(q) || value.includes(q);
+      return r.entry.name.toLowerCase().includes(q) || fold(r.custom ? r.entry.name : t(r.entry.label)).includes(fold(q)) || value.includes(q);
     });
   }
 
@@ -629,14 +648,14 @@ export class McteEditorView extends LitElement {
   /** A half-filled "Add any variable" row would be lost by a save: warn first instead. */
   private _warnRawPending(): void {
     this._afterSave = null;
-    const dismiss = { label: 'Cancel', run: () => (this._banner = null) };
+    const dismiss = { label: t('Cancel'), run: () => (this._banner = null) };
     this._banner = {
       kind: 'warn',
-      title: 'A variable is typed but not added',
-      message: 'The Add any variable row still holds text. Add it to the theme before saving, or save without it.',
+      title: t('A variable is typed but not added'),
+      message: t('The Add any variable row still holds text. Add it to the theme before saving, or save without it.'),
       actions: [
-        { label: 'Add it and save', run: () => void this._addPendingAndSave() },
-        { label: 'Save without it', run: () => ((this._banner = null), void this._saveClick(true)) },
+        { label: t('Add it and save'), run: () => void this._addPendingAndSave() },
+        { label: t('Save without it'), run: () => ((this._banner = null), void this._saveClick(true)) },
         dismiss,
       ],
     };
@@ -684,13 +703,13 @@ export class McteEditorView extends LitElement {
       this._rewriteAck = true;
       if (isTrialActive()) stopTrial('saved');
       // The header's status row shows "Saved hh:mm" and "Use this theme"; this is for screen readers.
-      this._say(res.loaded ? `Saved ${this._name} and reloaded themes. Screens that use this theme update now.` : `Saved ${this._name}.`);
+      this._say(res.loaded ? t('Saved {name} and reloaded themes. Screens that use this theme update now.', { name: this._name }) : t('Saved {name}.', { name: this._name }));
       if (!res.loaded) {
         this._banner = {
           kind: 'warn',
-          title: `Saved ${res.file}, but Home Assistant does not list ${this._name} yet`,
-          message: 'Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.',
-          actions: [{ label: 'Dismiss', run: () => (this._banner = null) }],
+          title: t('Saved {file}, but Home Assistant does not list {name} yet', { file: res.file, name: this._name }),
+          message: t('Reload themes in Developer tools, YAML, or restart Home Assistant. The file is written.'),
+          actions: [{ label: t('Dismiss'), run: () => (this._banner = null) }],
         };
       }
       fire(this, 'mcte-saved', { name: this._name });
@@ -711,51 +730,52 @@ export class McteEditorView extends LitElement {
 
   private _saveBanner(err: ThemeBackendError): Banner {
     const name = this._name;
-    const dismiss = { label: 'Dismiss', run: () => (this._banner = null) };
-    const retry = { label: 'Try again', run: () => void this._saveClick() };
+    const dismiss = { label: t('Dismiss'), run: () => (this._banner = null) };
+    const retry = { label: t('Try again'), run: () => void this._saveClick() };
+    const failed = t('Could not save {name}', { name });
     switch (err.code) {
       case 'conflict':
         return {
           kind: 'warn',
-          title: `${name}.yaml changed on disk`,
-          message: 'This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.',
+          title: t('{name}.yaml changed on disk', { name }),
+          message: t('This file changed since you opened it. Reload it to see the new version, or save anyway to replace it with yours.'),
           actions: [
-            { label: 'Reload', run: () => void this._reload() },
-            { label: 'Save anyway', run: () => void this._doSave(true) },
+            { label: t('Reload'), run: () => void this._reload() },
+            { label: t('Save anyway'), run: () => void this._doSave(true) },
           ],
         };
       case 'name_taken':
         return {
           kind: 'error',
-          title: `Could not save ${name}`,
-          message: err.message || 'A theme with this name already exists.',
-          actions: this._isNew ? [{ label: 'Choose another name', run: () => this._openRename() }, dismiss] : [dismiss],
+          title: failed,
+          message: err.message || t('A theme with this name already exists.'),
+          actions: this._isNew ? [{ label: t('Choose another name'), run: () => this._openRename() }, dismiss] : [dismiss],
         };
       case 'themes_not_included':
         fire(this, 'mcte-recheck');
         return {
           kind: 'error',
-          title: `Could not save ${name}`,
-          message: 'Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.',
+          title: failed,
+          message: t('Home Assistant does not load /config/themes yet. Add the lines shown above, restart, then press Check again.'),
           actions: [dismiss],
         };
       case 'unauthorized':
-        return { kind: 'error', title: `Could not save ${name}`, message: 'Only administrators can edit themes.', actions: [dismiss] };
+        return { kind: 'error', title: failed, message: t('Only administrators can edit themes.'), actions: [dismiss] };
       case 'invalid_format': {
         const first = err.errors?.[0];
         const nameErr = err.errors?.find((x) => x.path === 'name');
         return {
           kind: 'error',
-          title: `Could not save ${name}`,
-          message: first ? `${first.path.replace(/^theme\./, '')}: ${first.message}` : err.message,
-          actions: nameErr && this._isNew ? [{ label: 'Choose another name', run: () => this._openRename() }, dismiss] : [dismiss],
+          title: failed,
+          message: first ? t('{path}: {message}', { path: first.path.replace(/^theme\./, ''), message: first.message }) : err.message,
+          actions: nameErr && this._isNew ? [{ label: t('Choose another name'), run: () => this._openRename() }, dismiss] : [dismiss],
         };
       }
       default:
         return {
           kind: 'error',
-          title: `Could not save ${name}`,
-          message: /lost|closed|connection/i.test(err.message ?? '') ? 'The connection to Home Assistant was lost. Your changes are still here.' : (err.message ?? ''),
+          title: failed,
+          message: /lost|closed|connection/i.test(err.message ?? '') ? t('The connection to Home Assistant was lost. Your changes are still here.') : (err.message ?? ''),
           actions: [retry, dismiss],
         };
     }
@@ -771,9 +791,9 @@ export class McteEditorView extends LitElement {
       this._previewDoc = cloneDoc(r.theme);
       this._mtime = r.mtime;
       this._banner = null;
-      this._say('Reloaded the file from disk.');
+      this._say(t('Reloaded the file from disk.'));
     } catch (e) {
-      this._banner = { kind: 'error', title: `Could not read ${this._name}`, message: (e as Error).message, actions: [{ label: 'Dismiss', run: () => (this._banner = null) }] };
+      this._banner = { kind: 'error', title: t('Could not read {name}', { name: this._name }), message: (e as Error).message, actions: [{ label: t('Dismiss'), run: () => (this._banner = null) }] };
     }
   }
 
@@ -786,22 +806,20 @@ export class McteEditorView extends LitElement {
   private _applyRename(): void {
     const v = this._renameValue.trim();
     if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(v) || v === 'default' || v === 'backend-selected') {
-      this._renameError = 'Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).';
+      this._renameError = t('Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).');
       return;
     }
     this._name = v;
     this._closeDlg();
     this._banner = null;
     fire(this, 'mcte-rename', { name: v });
-    this._say(`Named the theme ${v}. Press Save to write it.`);
+    this._say(t('Named the theme {name}. Press Save to write it.', { name: v }));
   }
 
   private _use(): void {
     const ok = useTheme(this._name);
     this._usedLink = !ok;
-    this._usedMsg = ok
-      ? `Now using ${this._name} for your user.`
-      : `Pick ${this._name} in your profile to use it.`;
+    this._usedMsg = ok ? t('Now using {name} for your user.', { name: this._name }) : t('Pick {name} in your profile to use it.', { name: this._name });
     this._toastEl()?.close();
   }
 
@@ -810,7 +828,7 @@ export class McteEditorView extends LitElement {
     try {
       await this.backend.remove(this._name);
     } catch (e) {
-      this._dlgError = `Could not delete ${this._name}. ${(e as Error).message ?? ''}`.trim();
+      this._dlgError = t('Could not delete {name}. {reason}', { name: this._name, reason: (e as Error).message ?? '' }).trim();
       return;
     }
     if (isTrialActive() && getTrial()?.name === this._name) stopTrial('discard');
@@ -870,32 +888,32 @@ export class McteEditorView extends LitElement {
     el?.open(mode, { name: this._name, doc: this._doc, id: slugName(this._name) || 'theme' });
   }
 
-  private _copyKey(text: string, what: string): void {
-    void copyText(text).then(() => this._say(`Copied ${what} ${text}`));
+  private _copyKey(text: string): void {
+    void copyText(text).then(() => this._say(t('Copied key {text}', { text })));
   }
 
   // ── render: pieces ──
 
   private _chips(): TemplateResult {
     const dirtyChip = this._isNew
-      ? html`<span class="chip is-warn">New, not saved</span>`
+      ? html`<span class="chip is-warn">${t('New, not saved')}</span>`
       : this._dirty
-        ? html`<span class="chip is-warn">Unsaved changes</span>`
+        ? html`<span class="chip is-warn">${t('Unsaved changes')}</span>`
         : nothing;
     const n = this._errors.length;
     return html`${dirtyChip}
-    ${this._trial ? html`<span class="chip is-accent">Trying on this tab</span>` : nothing}
-    ${!this.draft.editable ? html`<span class="chip is-warn">Read only</span>` : nothing}
-    ${n ? html`<button type="button" class="chip is-warn" @click=${() => this._jumpToFirstError()}>${n} ${n === 1 ? 'value needs' : 'values need'} a fix</button>` : nothing}`;
+    ${this._trial ? html`<span class="chip is-accent">${t('Trying on this tab')}</span>` : nothing}
+    ${!this.draft.editable ? html`<span class="chip is-warn">${t('Read only')}</span>` : nothing}
+    ${n ? html`<button type="button" class="chip is-warn" @click=${() => this._jumpToFirstError()}>${t('{c, plural, one {# value needs} other {# values need}} a fix', { c: n })}</button>` : nothing}`;
   }
 
   private _tryHelp(): string {
-    return `Applies to this browser tab only. Open a dashboard to see it. Uses your current mode (${browserMode(this.hass)}).`;
+    return t('Applies to this browser tab only. Open a dashboard to see it. Uses your current mode ({mode, select, dark {dark} other {light}}).', { mode: browserMode(this.hass) });
   }
 
   private _tryTip(): string {
     const other = browserMode(this.hass) === 'dark' ? 'light' : 'dark';
-    return `${this._tryHelp()} The Revert button stays at the edge of the screen. To try ${other}, switch your profile to ${other}.`;
+    return t('{help} The Revert button stays at the edge of the screen. To try {other, select, dark {dark} other {light}}, switch your profile to {other, select, dark {dark} other {light}}.', { help: this._tryHelp(), other });
   }
 
   private _tryButton(inMenu = false): TemplateResult {
@@ -909,7 +927,7 @@ export class McteEditorView extends LitElement {
       title=${this._tryTip()}
       @click=${() => this._toggleTrial()}
     >
-      ${glyph('eyeOn', 18)} ${on ? 'Stop trying' : 'Try on dashboard'}
+      ${glyph('eyeOn', 18)} ${on ? t('Stop trying') : t('Try on dashboard')}
     </button>`;
   }
 
@@ -919,21 +937,21 @@ export class McteEditorView extends LitElement {
     return html`<div class="menuwrap" @focusout=${(e: FocusEvent) => {
       if (this._menu && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null)) this._menu = false;
     }}>
-      <button type="button" class="icon-btn more" aria-label="More actions" aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
+      <button type="button" class="icon-btn more" aria-label=${t('More actions')} aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
         ${glyph('dotsHorizontal')}
       </button>
       ${this._menu
-        ? html`<div class="menu" role="menu" aria-label="More actions" @keydown=${this._menuKey}>
+        ? html`<div class="menu" role="menu" aria-label=${t('More actions')} @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
-            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
-            <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>Export theme</button>
-            <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>Show YAML</button>
-            <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say('Copied YAML'), (this._menu = false)))}>Copy YAML</button>
+            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>${t('Save as my preset')}</button>` : nothing}
+            <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>${t('Export theme')}</button>
+            <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>${t('Show YAML')}</button>
+            <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say(t('Copied YAML')), (this._menu = false)))}>${t('Copy YAML')}</button>
             ${this._hasModes && this.draft.editable
-              ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>Copy Light to Dark</button>
-                  <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>Copy Dark to Light</button>`
+              ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>${t('Copy Light to Dark')}</button>
+                  <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>${t('Copy Dark to Light')}</button>`
               : nothing}
-            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>Delete theme</button>` : nothing}
+            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>${t('Delete theme')}</button>` : nothing}
           </div>`
         : nothing}
     </div>`;
@@ -951,11 +969,11 @@ export class McteEditorView extends LitElement {
             : nothing}`
         : nothing}
       ${showSaved
-        ? html`<span class="help saved" role="status">Saved ${this._savedAt}</span>
-            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>Use this theme</button>`
+        ? html`<span class="help saved" role="status">${t('Saved {time}', { time: this._savedAt })}</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => this._use()}>${t('Use this theme')}</button>`
         : nothing}
       ${this._usedMsg
-        ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">Open your profile</a>` : nothing}`
+        ? html`<span class="help" role="status">${this._usedMsg}</span>${this._usedLink ? html`<a class="btn btn-text btn-sm" href="/profile">${t('Open your profile')}</a>` : nothing}`
         : nothing}
     </div>`;
   }
@@ -964,31 +982,31 @@ export class McteEditorView extends LitElement {
     const compact = this._w < 640;
     return html`<header class="hdr">
       <div class="left">
-        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} Themes</button>
+        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} ${t('Themes')}</button>
         <h2 class="tname" tabindex="-1">${this._name}</h2>
         <div class="chips">${this._chips()}</div>
       </div>
       <div class="right">
-        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
+        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>${t('Save as my preset')}</button>` : nothing}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
       <div class="row2">
         <div class="ctrls">
           ${this._hasModes
-            ? html`<span class="lbl sr-only" id="edit-lbl">Editing</span>
+            ? html`<span class="lbl sr-only" id="edit-lbl">${t('Editing')}</span>
                 <mcte-mode-switch
-                  label="Edit variables for"
+                  label=${t('Edit variables for')}
                   .value=${this._scope}
                   .options=${[
-                    { value: 'shared', label: 'Shared' },
-                    { value: 'light', label: 'Light' },
-                    { value: 'dark', label: 'Dark' },
+                    { value: 'shared', label: scopeLabel('shared') },
+                    { value: 'light', label: scopeLabel('light') },
+                    { value: 'dark', label: scopeLabel('dark') },
                   ]}
                   @mcte-change=${(e: CustomEvent) => this._setScope(e.detail.value as Scope)}
                 ></mcte-mode-switch>`
             : this.draft.editable
-              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>Add light and dark modes</button>`
+              ? html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this._openDlg('add-modes')}>${t('Add light and dark modes')}</button>`
               : nothing}
           ${compact ? nothing : this._tryButton()}
         </div>
@@ -1051,21 +1069,21 @@ export class McteEditorView extends LitElement {
         @mcte-reset=${(e: CustomEvent) => (e.stopPropagation(), this._onReset(e.detail.name))}
         @mcte-set-modes=${(e: CustomEvent) => (e.stopPropagation(), this._onSetModes(e.detail.name, e.detail.value, e.detail.modes))}
         @mcte-move-shared=${(e: CustomEvent) => (e.stopPropagation(), this._onMoveShared(e.detail.name, e.detail.value))}
-        @mcte-copy=${(e: CustomEvent) => (e.stopPropagation(), this._copyKey(e.detail.text, e.detail.what))}
+        @mcte-copy=${(e: CustomEvent) => (e.stopPropagation(), this._copyKey(e.detail.text))}
       ></mcte-field-group>`;
     };
     const core = CORE_GROUPS.map(one);
     const cards = CARD_GROUPS.map(one);
     return html`
-      ${searching ? html`<p class="help" role="status">${shown} ${shown === 1 ? 'variable matches' : 'variables match'}</p>` : nothing}
+      ${searching ? html`<p class="help" role="status">${t('{c, plural, one {# variable matches} other {# variables match}}', { c: shown })}</p>` : nothing}
       ${searching && shown === 0
         ? html`<div class="empty">
-            <p>No variable called ${this._query} in the lists.</p>
-            <button type="button" class="btn btn-secondary" @click=${() => ((this._rawPrefill = this._query.trim()), (this._query = ''), (this._q = ''))}>Add ${this._query.trim()} as a variable</button>
+            <p>${t('No variable called {query} in the lists.', { query: this._query })}</p>
+            <button type="button" class="btn btn-secondary" @click=${() => ((this._rawPrefill = this._query.trim()), (this._query = ''), (this._q = ''))}>${t('Add {name} as a variable', { name: this._query.trim() })}</button>
           </div>`
         : nothing}
       ${core}
-      ${cards.some((c) => c !== nothing) ? html`<h2 class="sect">Magic Card and integrations</h2>${cards}` : nothing}
+      ${cards.some((c) => c !== nothing) ? html`<h2 class="sect">${t('Magic Card and integrations')}</h2>${cards}` : nothing}
     `;
   }
 
@@ -1081,29 +1099,29 @@ export class McteEditorView extends LitElement {
       ${this._bannerEl()}
       <div class="tools">
         <div class="searchbox">
-          <label class="sr-only" for="vsearch">Search variables</label>
+          <label class="sr-only" for="vsearch">${t('Search variables')}</label>
           <input
             id="vsearch"
             class="input"
             type="search"
-            placeholder="Search by name or value"
+            placeholder=${t('Search by name or value')}
             autocomplete="off"
             .value=${this._query}
             @input=${(e: Event) => this._search((e.target as HTMLInputElement).value)}
             @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && this._query && (e.stopPropagation(), this._search(''))}
           />
         </div>
-        <label class="switch-row"><input type="checkbox" .checked=${this._onlyChanged} @change=${(e: Event) => (this._onlyChanged = (e.target as HTMLInputElement).checked)} /> Only changed</label>
+        <label class="switch-row"><input type="checkbox" .checked=${this._onlyChanged} @change=${(e: Event) => (this._onlyChanged = (e.target as HTMLInputElement).checked)} /> ${t('Only changed')}</label>
       </div>
-      <p class="help status" role="status" aria-live="polite">Editing ${SCOPE_LABEL[this._scope]}. Previewing ${SCOPE_LABEL[this._mode]}.</p>
+      <p class="help status" role="status" aria-live="polite">${t('Editing {scope}. Previewing {mode}.', { scope: scopeLabel(this._scope), mode: scopeLabel(this._mode) })}</p>
       ${this._scope === 'shared' && this._hasModes
-        ? html`<p class="help">Shared applies to light and dark unless a mode sets its own value (the top level of the file).</p>`
+        ? html`<p class="help">${t('Shared applies to light and dark unless a mode sets its own value (the top level of the file).')}</p>`
         : nothing}
-      ${!this.draft.editable ? html`<p class="help">This theme is read only${this.draft.reason ? `. ${this.draft.reason}` : ''} Copy it to edit.</p>` : nothing}
+      ${!this.draft.editable ? html`<p class="help">${this.draft.reason ? t('This theme is read only. {reason} Copy it to edit.', { reason: this.draft.reason }) : t('This theme is read only. Copy it to edit.')}</p>` : nothing}
       <div class="groups">${this._groups()}</div>
       ${this.draft.editable
         ? html`<mcte-raw-rows
-            .scopeLabel=${SCOPE_LABEL[this._scope]}
+            .scopeLabel=${scopeLabel(this._scope)}
             .existing=${new Set(Object.keys((this._scope === 'shared' ? this._doc : (this._doc.modes?.[this._scope] ?? {})) as object))}
             .prefill=${this._rawPrefill}
             @mcte-add=${(e: CustomEvent) => (e.stopPropagation(), this._onAdd(e.detail.entries))}
@@ -1126,15 +1144,15 @@ export class McteEditorView extends LitElement {
     return html`<div class="strip">
       ${this._stripOpen
         ? html`<div class="strip-sample" inert aria-hidden="true">
-            <div class="mini-tile"><span class="dot"></span><span><b>Living room</b><br /><small>On</small></span></div>
-            <span class="mini-btn">Button</span>
+            <div class="mini-tile"><span class="dot"></span><span><b>${t('Living room')}</b><br /><small>${t('On')}</small></span></div>
+            <span class="mini-btn">${t('Button')}</span>
           </div>`
         : nothing}
       <div class="strip-bar">
         <button type="button" class="btn btn-text btn-sm" aria-expanded=${this._stripOpen ? 'true' : 'false'} @click=${() => (this._stripOpen = !this._stripOpen)}>
-          ${this._stripOpen ? 'Hide live strip' : 'Show live strip'}
+          ${this._stripOpen ? t('Hide live strip') : t('Show live strip')}
         </button>
-        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>Open preview</button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._panel = 'preview')}>${t('Open preview')}</button>
       </div>
     </div>`;
   }
@@ -1144,8 +1162,8 @@ export class McteEditorView extends LitElement {
     const sticky = this._sticky;
     if (layout === 'wide') {
       return html`<div class="cols">
-        <section class="pane vars" role="region" aria-label="Variables">${this._varsPanel()}</section>
-        <section class="pane prev" role="region" aria-label="Preview">${this._previewPanel()}</section>
+        <section class="pane vars" role="region" aria-label=${t('Variables')}>${this._varsPanel()}</section>
+        <section class="pane prev" role="region" aria-label=${t('Preview')}>${this._previewPanel()}</section>
       </div>`;
     }
     return html`
@@ -1155,11 +1173,11 @@ export class McteEditorView extends LitElement {
           <mcte-mode-switch
             full
             kind="tablist"
-            label="Editor panels"
+            label=${t('Editor panels')}
             .value=${this._panel}
             .options=${[
-              { value: 'vars', label: 'Variables', controls: 'panel-vars' },
-              { value: 'preview', label: 'Preview', controls: 'panel-preview' },
+              { value: 'vars', label: t('Variables'), controls: 'panel-vars' },
+              { value: 'preview', label: t('Preview'), controls: 'panel-preview' },
             ]}
             @mcte-change=${(e: CustomEvent) => (this._panel = e.detail.value)}
           ></mcte-mode-switch>
@@ -1167,42 +1185,42 @@ export class McteEditorView extends LitElement {
       </div>
       ${this._panel === 'vars' ? this._strip() : nothing}
       <div class="panes">
-        <section id="panel-vars" class="pane" role="tabpanel" aria-label="Variables" ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
-        <section id="panel-preview" class="pane" role="tabpanel" aria-label="Preview" ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
+        <section id="panel-vars" class="pane" role="tabpanel" aria-label=${t('Variables')} ?hidden=${this._panel !== 'vars'}>${this._varsPanel()}</section>
+        <section id="panel-preview" class="pane" role="tabpanel" aria-label=${t('Preview')} ?hidden=${this._panel !== 'preview'}>${this._previewPanel()}</section>
       </div>
     `;
   }
 
   private _dialog(): TemplateResult | typeof nothing {
     const name = this._name;
-    const cancel = html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>Cancel</button>`;
+    const cancel = html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>${t('Cancel')}</button>`;
     const close = () => (this._dlg = null);
     const err = (t: string) => html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t}</span></p>`;
     switch (this._dlg) {
       case 'discard':
-        return dialog(`Discard changes to ${name}?`, html`<p>You have changes that are not saved.</p>`, html`${cancel}
-          <button type="button" class="btn btn-danger" @click=${() => this._discard()}>Discard</button>
-          ${this._reason ? nothing : html`<button type="button" class="btn btn-primary" @click=${() => ((this._afterSave = 'back'), this._closeDlg(), void this._saveClick())}>Save</button>`}`, close);
+        return dialog(t('Discard changes to {name}?', { name }), html`<p>${t('You have changes that are not saved.')}</p>`, html`${cancel}
+          <button type="button" class="btn btn-danger" @click=${() => this._discard()}>${t('Discard')}</button>
+          ${this._reason ? nothing : html`<button type="button" class="btn btn-primary" @click=${() => ((this._afterSave = 'back'), this._closeDlg(), void this._saveClick())}>${t('Save')}</button>`}`, close);
       case 'first-save':
-        return dialog('Save and rewrite this file?', html`<p>Saving rewrites ${name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.</p>`, html`${cancel}
-          <button type="button" class="btn btn-primary" @click=${() => ((this._rewriteAck = true), this._closeDlg(), void this._doSave())}>Save</button>`, close);
+        return dialog(t('Save and rewrite this file?'), html`<p>${t('Saving rewrites {name}.yaml. Comments in the file are removed. All variables, including ones this editor does not know, are kept.', { name })}</p>`, html`${cancel}
+          <button type="button" class="btn btn-primary" @click=${() => ((this._rewriteAck = true), this._closeDlg(), void this._doSave())}>${t('Save')}</button>`, close);
       case 'delete':
-        return dialog(`Delete ${name}?`, html`<p>This removes /config/${this._file ?? `themes/${name}.yaml`}. Screens that use it, such as wall tablets, switch to the default theme.</p>${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
-          <button type="button" class="btn btn-danger" @click=${() => void this._delete()}>Delete</button>`, close);
+        return dialog(t('Delete {name}?', { name }), html`<p>${t('This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.', { file: this._file ?? `themes/${name}.yaml` })}</p>${this._dlgError ? err(this._dlgError) : nothing}`, html`${cancel}
+          <button type="button" class="btn btn-danger" @click=${() => void this._delete()}>${t('Delete')}</button>`, close);
       case 'add-modes':
-        return dialog('Add light and dark modes?', html`<p>Variables you set now stay shared. You can then override any of them for light or dark.</p>`, html`${cancel}
-          <button type="button" class="btn btn-primary" @click=${() => this._addModes()}>Add modes</button>`, close);
+        return dialog(t('Add light and dark modes?'), html`<p>${t('Variables you set now stay shared. You can then override any of them for light or dark.')}</p>`, html`${cancel}
+          <button type="button" class="btn btn-primary" @click=${() => this._addModes()}>${t('Add modes')}</button>`, close);
       case 'yaml': {
         const text = toYaml(name, this._doc);
-        return dialog(`${name}.yaml`, html`<p class="help">The file Save would write. It is read only here.</p><pre class="code" tabindex="0" aria-label="YAML of ${name}">${text}</pre>`, html`
-          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say('Copied YAML'))}>${glyph('contentCopy')} Copy YAML</button>
-          <button type="button" class="btn btn-primary" autofocus @click=${() => this._closeDlg()}>Close</button>`, close);
+        return dialog(`${name}.yaml`, html`<p class="help">${t('The file Save would write. It is read only here.')}</p><pre class="code" tabindex="0" aria-label=${t('YAML of {name}', { name })}>${text}</pre>`, html`
+          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say(t('Copied YAML')))}>${glyph('contentCopy')} ${t('Copy YAML')}</button>
+          <button type="button" class="btn btn-primary" autofocus @click=${() => this._closeDlg()}>${t('Close')}</button>`, close);
       }
       case 'rename':
-        return dialog('Choose another name', html`<label class="lbl" for="rename">Name your theme</label>
+        return dialog(t('Choose another name'), html`<label class="lbl" for="rename">${t('Name your theme')}</label>
           <input id="rename" class="input mono" .value=${this._renameValue} aria-invalid=${this._renameError ? 'true' : 'false'} @input=${(e: Event) => ((this._renameValue = (e.target as HTMLInputElement).value), (this._renameError = ''))} />
-          ${this._renameError ? err(this._renameError) : html`<p class="help">Lowercase letters, numbers, hyphens and underscores. Used as the file name.</p>`}`, html`${cancel}
-          <button type="submit" class="btn btn-primary">Use this name</button>`, close, (e) => (e.preventDefault(), this._applyRename()));
+          ${this._renameError ? err(this._renameError) : html`<p class="help">${t('Lowercase letters, numbers, hyphens and underscores. Used as the file name.')}</p>`}`, html`${cancel}
+          <button type="submit" class="btn btn-primary">${t('Use this name')}</button>`, close, (e) => (e.preventDefault(), this._applyRename()));
       default:
         return nothing;
     }

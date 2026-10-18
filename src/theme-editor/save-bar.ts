@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { base } from './styles';
+import { t } from './i18n';
 import { fire } from './util';
 
 export interface SaveReason {
@@ -51,10 +52,10 @@ export class McteSaveBar extends LitElement {
         aria-disabled=${off ? 'true' : 'false'}
         aria-busy=${this.saving ? 'true' : 'false'}
         aria-describedby=${ifDefined(this.reason ? 'reason' : undefined)}
-        title="Save (Ctrl+S)"
+        title=${t('Save (Ctrl+S)')}
         @click=${this._save}
       >
-        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> Saving...` : 'Save'}
+        ${this.saving ? html`<span class="spin" aria-hidden="true"></span> ${t('Saving...')}` : t('Save')}
       </button>
     `;
   }

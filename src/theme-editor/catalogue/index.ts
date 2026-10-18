@@ -1,5 +1,6 @@
 import { THEME_CATALOGUE_CONTRACT_VERSION } from '../../contracts/theme-catalogue';
 import type { CatalogueEntry, CatalogueGroup, CatalogueGroupId, CatalogueSource, FieldKind, ThemeCatalogue } from '../../contracts/theme-catalogue';
+import { m } from '../i18n';
 import { HA_ENTRIES } from './ha';
 import { MAGIC_CARD_ENTRIES } from './magic-card';
 import { TILE_ENTRIES } from './tile';
@@ -17,19 +18,19 @@ import { BUTTON_CARD_ENTRIES } from './button-card';
  */
 
 export const CATALOGUE_GROUPS: CatalogueGroup[] = [
-  { id: 'primary', label: 'Primary and accent' },
-  { id: 'backgrounds', label: 'Backgrounds and cards' },
-  { id: 'text', label: 'Text' },
-  { id: 'states', label: 'States and alerts' },
-  { id: 'sizes', label: 'Sizes and radii' },
-  { id: 'chrome', label: 'Header and sidebar' },
-  { id: 'magic-card', label: 'Magic Card', previewTag: 'magic-card' },
-  { id: 'tile', label: 'Tile card', previewTag: 'hui-tile-card' },
-  { id: 'mushroom', label: 'Mushroom', previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
-  { id: 'bubble-card', label: 'Bubble Card', previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
-  { id: 'ultra-card', label: 'Ultra Card', previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
-  { id: 'button-card', label: 'button-card', previewTag: 'button-card', resourcePattern: /button-card/i },
-  { id: 'other', label: 'Other' },
+  { id: 'primary', label: m('Primary and accent') },
+  { id: 'backgrounds', label: m('Backgrounds and cards') },
+  { id: 'text', label: m('Text') },
+  { id: 'states', label: m('States and alerts') },
+  { id: 'sizes', label: m('Sizes and radii') },
+  { id: 'chrome', label: m('Header and sidebar') },
+  { id: 'magic-card', label: m('Magic Card'), previewTag: 'magic-card' },
+  { id: 'tile', label: m('Tile card'), previewTag: 'hui-tile-card' },
+  { id: 'mushroom', label: m('Mushroom'), previewTag: 'mushroom-entity-card', resourcePattern: /mushroom/i },
+  { id: 'bubble-card', label: m('Bubble Card'), previewTag: 'bubble-card', resourcePattern: /bubble-card/i },
+  { id: 'ultra-card', label: m('Ultra Card'), previewTag: 'ultra-card', resourcePattern: /ultra-card/i },
+  { id: 'button-card', label: m('button-card'), previewTag: 'button-card', resourcePattern: /button-card/i },
+  { id: 'other', label: m('Other') },
 ];
 
 const RAW: CatalogueEntry[] = [

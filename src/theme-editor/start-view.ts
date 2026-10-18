@@ -10,6 +10,7 @@ import { cloneDoc } from './model';
 import type { PickerView } from './presets/picker';
 import { loadPresetLibrary, presetLibraryIfLoaded, type PresetChunk } from './presets/loader';
 import { base } from './styles';
+import { t } from './i18n';
 import { docFromHass, fire, hassOf, nameError, slugName, uniqueName } from './util';
 import './include-notice';
 import './mode-switch';
@@ -31,15 +32,28 @@ export interface CreateDetail {
 /** A My preset in the picker: its id gets this prefix so it can never equal a built-in id. */
 const MINE = 'my:';
 
-export const REASON_TEXT: Record<ReadOnlyReason, string> = {
-  subfolder: 'It is in a subfolder of /config/themes.',
-  multiple_themes: 'Its file holds several themes, and saving would rewrite all of them.',
-  name_mismatch: 'The theme name does not match the file name.',
-  invalid_name: 'The file name is not a name this editor can write.',
-  yaml_tags: 'It uses Home Assistant tags such as !secret.',
-  parse_error: 'The file could not be read as YAML.',
-  too_large: 'The file is too large to edit here.',
-  symlink: 'The file is a link to somewhere else.',
+/** Why a theme file is read only, in a sentence (empty for a code this version does not know). */
+export const reasonText = (reason: ReadOnlyReason): string => {
+  switch (reason) {
+    case 'subfolder':
+      return t('It is in a subfolder of /config/themes.');
+    case 'multiple_themes':
+      return t('Its file holds several themes, and saving would rewrite all of them.');
+    case 'name_mismatch':
+      return t('The theme name does not match the file name.');
+    case 'invalid_name':
+      return t('The file name is not a name this editor can write.');
+    case 'yaml_tags':
+      return t('It uses Home Assistant tags such as !secret.');
+    case 'parse_error':
+      return t('The file could not be read as YAML.');
+    case 'too_large':
+      return t('The file is too large to edit here.');
+    case 'symlink':
+      return t('The file is a link to somewhere else.');
+    default:
+      return '';
+  }
 };
 
 /**
@@ -205,6 +219,11 @@ export class McteStartView extends LitElement {
     return [...this._mineCards, ...(this._chunk?.THEME_PRESET_LIBRARY.presets ?? [])].find((p) => p.id === this._preset);
   }
 
+  /** A preset's name: a built-in one is translated by the chunk, a My preset is the user's own text. */
+  private _title(p: ThemePreset): string {
+    return this._chunk ? this._chunk.presetTitle(p) : String(p.name);
+  }
+
   private get _dlgEl(): MctePresetDialog | null {
     return this.renderRoot.querySelector('mcte-preset-dialog');
   }
@@ -212,14 +231,14 @@ export class McteStartView extends LitElement {
   /** The picker's Export (and, for My presets, Rename and Delete) of the selected preset. */
   private _act(mode: 'export' | 'rename' | 'delete', p: ThemePreset): void {
     const mine = this.mine?.find((m) => MINE + m.id === p.id);
-    this._dlgEl?.open(mode, { name: p.name, description: mine ? mine.description : p.blurb, author: mine?.author, doc: p.doc, target: mine, id: mine?.id ?? p.id });
+    this._dlgEl?.open(mode, { name: this._title(p), description: mine ? mine.description : this._chunk?.presetBlurb(p), author: mine?.author, doc: p.doc, target: mine, id: mine?.id ?? p.id });
   }
 
   private _prefill(): void {
     if (this._typedName) return;
     const taken = this._taken;
     const seed =
-      this._kind === 'preset' ? slugName(this._sel?.name ?? '') : this._kind === 'installed' && this._installed ? `${this._installed}_copy` : 'my-theme';
+      this._kind === 'preset' ? slugName(this._sel ? this._title(this._sel) : '') : this._kind === 'installed' && this._installed ? `${this._installed}_copy` : 'my-theme';
     this._name = uniqueName(slugName(seed) || 'my-theme', taken);
   }
 
@@ -242,8 +261,8 @@ export class McteStartView extends LitElement {
   }
 
   private get _createReason(): string {
-    if (this._kind === 'installed' && !this._installed) return 'Pick a theme to copy';
-    if (this._kind === 'preset' && !this._sel) return this._libState === 'loading' ? 'Presets are still loading' : 'Pick a preset to start from';
+    if (this._kind === 'installed' && !this._installed) return t('Pick a theme to copy');
+    if (this._kind === 'preset' && !this._sel) return this._libState === 'loading' ? t('Presets are still loading') : t('Pick a preset to start from');
     return '';
   }
 
@@ -261,10 +280,10 @@ export class McteStartView extends LitElement {
     if (this._kind === 'preset') {
       const p = this._sel!;
       doc = cloneDoc(p.doc);
-      from = p.name;
+      from = this._title(p);
     } else if (this._kind === 'blank') {
       doc = this._modes ? { modes: { light: {}, dark: {} } } : {};
-      from = 'a blank theme';
+      from = t('a blank theme');
     } else {
       from = this._installed;
       const file = this.files.find((f) => f.name === this._installed);
@@ -278,12 +297,12 @@ export class McteStartView extends LitElement {
         else doc = docFromHass(hassOf(this.hass).themes?.themes?.[this._installed]);
         if (!Object.keys(doc).length) {
           this._busy = false;
-          this._createError = `Could not read ${this._installed}. Neither its file nor Home Assistant has its values. Reload the themes and try again.`;
+          this._createError = t('Could not read {name}. Neither its file nor Home Assistant has its values. Reload the themes and try again.', { name: this._installed });
           return;
         }
       } catch (e) {
         this._busy = false;
-        this._createError = `Could not read ${this._installed}. ${(e as Error).message ?? ''}`.trim();
+        this._createError = t('Could not read {name}. {reason}', { name: this._installed, reason: (e as Error).message ?? '' }).trim();
         return;
       }
       this._busy = false;
@@ -320,12 +339,12 @@ export class McteStartView extends LitElement {
   private _presetPicker(): TemplateResult {
     const c = this._chunk;
     if (this._libState === 'loading') {
-      return html`<div class="pl" aria-busy="true"><p class="help" aria-hidden="true">Loading presets</p>${skeleton}</div>`;
+      return html`<div class="pl" aria-busy="true"><p class="help" aria-hidden="true">${t('Loading presets')}</p>${skeleton}</div>`;
     }
     if (!c) {
       return html`<div class="pl">
-        ${note('Presets could not load. Check your connection and try again. If it keeps failing, reload the page.')}
-        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._loadLib(true)}>Try again</button>
+        ${note(t('Presets could not load. Check your connection and try again. If it keeps failing, reload the page.'))}
+        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._loadLib(true)}>${t('Try again')}</button>
       </div>`;
     }
     return c.renderPicker(this._view(c), {
@@ -352,33 +371,33 @@ export class McteStartView extends LitElement {
     const options = this._installedNames.filter((o) => !q || o.name.toLowerCase().includes(q) || this._installed === o.name);
     const nameMsg = this._nameTouched ? this._nameMsg : '';
     const reason = this._createReason;
-    const label = this._kind === 'preset' && preset ? `Create from ${preset.name}` : 'Create theme';
-    return dialog('New theme', html`<div class="grid">
-          <span class="lbl" id="start-lbl">Start from</span>
+    const label = this._kind === 'preset' && preset ? t('Create from {name}', { name: this._title(preset) }) : t('Create theme');
+    return dialog(t('New theme'), html`<div class="grid">
+          <span class="lbl" id="start-lbl">${t('Start from')}</span>
           <mcte-mode-switch
             full
-            label="Start from"
+            label=${t('Start from')}
             .value=${this._kind}
             .options=${[
-              { value: 'preset', label: 'A preset' },
-              { value: 'blank', label: 'Blank' },
-              { value: 'installed', label: 'An installed theme' },
+              { value: 'preset', label: t('A preset') },
+              { value: 'blank', label: t('Blank') },
+              { value: 'installed', label: t('An installed theme') },
             ]}
             @mcte-change=${(e: CustomEvent) => {
               this._kind = e.detail.value as StartKind;
               this._prefill();
             }}
           ></mcte-mode-switch>
-          <p class="sr-only" role="status">${this._kind !== 'preset' ? '' : this._libState === 'loading' ? 'Loading presets' : this._chunk ? this._chunk.pickerStatus(this._view(this._chunk)) : ''}</p>
+          <p class="sr-only" role="status">${this._kind !== 'preset' ? '' : this._libState === 'loading' ? t('Loading presets') : this._chunk ? this._chunk.pickerStatus(this._view(this._chunk)) : ''}</p>
           ${this._kind === 'preset' ? this._presetPicker() : nothing}
           ${this._kind === 'blank'
-            ? html`<p class="help">An empty theme. Add only the variables you want to change.</p>
-                <label class="switch-row"><input type="checkbox" .checked=${this._modes} @change=${(e: Event) => (this._modes = (e.target as HTMLInputElement).checked)} /> Light and dark modes</label>
-                <p class="help">Cannot be removed later.</p>`
+            ? html`<p class="help">${t('An empty theme. Add only the variables you want to change.')}</p>
+                <label class="switch-row"><input type="checkbox" .checked=${this._modes} @change=${(e: Event) => (this._modes = (e.target as HTMLInputElement).checked)} /> ${t('Light and dark modes')}</label>
+                <p class="help">${t('Cannot be removed later.')}</p>`
             : nothing}
           ${this._kind === 'installed'
             ? html`<div class="combo">
-                <label class="lbl" for="inst">Installed theme</label>
+                <label class="lbl" for="inst">${t('Installed theme')}</label>
                 <input
                   id="inst"
                   class="input"
@@ -388,7 +407,7 @@ export class McteStartView extends LitElement {
                   aria-controls="inst-list"
                   aria-autocomplete="list"
                   aria-activedescendant=${ifDefined(this._listOpen && options[this._active] ? `opt-${options[this._active].name}` : undefined)}
-                  placeholder="Search installed themes"
+                  placeholder=${t('Search installed themes')}
                   .value=${this._installedQuery}
                   @input=${(e: Event) => {
                     this._installedQuery = (e.target as HTMLInputElement).value;
@@ -400,21 +419,21 @@ export class McteStartView extends LitElement {
                   @keydown=${(e: KeyboardEvent) => this._comboKey(e, options)}
                 />
                 ${this._listOpen
-                  ? html`<ul id="inst-list" class="list" role="listbox" aria-label="Installed themes">
+                  ? html`<ul id="inst-list" class="list" role="listbox" aria-label=${t('Installed themes')}>
                       ${options.length
                         ? options.map(
                             (o, i) => html`<li id="opt-${o.name}" role="option" aria-selected=${this._installed === o.name ? 'true' : 'false'} class=${i === this._active ? 'act' : ''} @mousedown=${(e: Event) => (e.preventDefault(), this._pickInstalled(o.name))}>
-                              <span>${o.name}</span><span class="chip">${o.modes ? 'Light + dark' : 'Same in light and dark'}</span>
+                              <span>${o.name}</span><span class="chip">${o.modes ? t('Light + dark') : t('Same in light and dark')}</span>
                             </li>`,
                           )
-                        : html`<li class="none" role="presentation">No installed theme matches.</li>`}
+                        : html`<li class="none" role="presentation">${t('No installed theme matches.')}</li>`}
                     </ul>`
                   : nothing}
-                <p class="help">Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.</p>
+                <p class="help">${t('Copies the variables from the installed theme. The original is not changed. Built-in themes expose only part of their variables.')}</p>
               </div>`
             : nothing}
           <div class="namef">
-            <label class="lbl" for="new-name">Name your theme</label>
+            <label class="lbl" for="new-name">${t('Name your theme')}</label>
             <input
               id="new-name"
               class="input mono"
@@ -428,14 +447,14 @@ export class McteStartView extends LitElement {
             />
             ${nameMsg
               ? note(nameMsg, 'name-help')
-              : html`<p class="help" id="name-help">Lowercase letters, numbers, hyphens and underscores. Used as the file name.</p>`}
+              : html`<p class="help" id="name-help">${t('Lowercase letters, numbers, hyphens and underscores. Used as the file name.')}</p>`}
           </div>
           ${this._createError ? note(this._createError) : nothing}
         </div>`, html`
           ${reason ? html`<span class="help" id="why">${reason}</span>` : nothing}
-          <button type="button" class="btn btn-text" @click=${() => this._closeDlg()}>Cancel</button>
+          <button type="button" class="btn btn-text" @click=${() => this._closeDlg()}>${t('Cancel')}</button>
           <button type="submit" class="btn btn-primary" aria-disabled=${nameMsg || reason || this._busy ? 'true' : 'false'} aria-describedby=${ifDefined(reason ? 'why' : undefined)}>
-            ${this._busy ? 'Reading...' : label}
+            ${this._busy ? t('Reading...') : label}
           </button>
         `, () => (this._dlg = null), (e) => (e.preventDefault(), void this._create()), 'xl');
   }
@@ -455,7 +474,7 @@ export class McteStartView extends LitElement {
     try {
       await this.backend.remove(f.name);
     } catch (e) {
-      this._deleteError = `Could not delete ${f.name}. ${(e as Error).message ?? ''}`.trim();
+      this._deleteError = t('Could not delete {name}. {reason}', { name: f.name, reason: (e as Error).message ?? '' }).trim();
       return;
     }
     const name = f.name;
@@ -468,11 +487,11 @@ export class McteStartView extends LitElement {
     if (!f) return html``;
     const others = this.files.filter((x) => x.file === f.file && x !== f).length;
     return dialog(
-      `Delete ${f.name}?`,
-      html`<p>This removes /config/${f.file}${others ? ` and the other ${others} ${others === 1 ? 'theme' : 'themes'} in that file` : ''}. Screens that use it, such as wall tablets, switch to the default theme.</p>
+      t('Delete {name}?', { name: f.name }),
+      html`<p>${others ? t('This removes /config/{file} and the other {c, plural, one {# theme} other {# themes}} in that file. Screens that use it, such as wall tablets, switch to the default theme.', { file: f.file, c: others }) : t('This removes /config/{file}. Screens that use it, such as wall tablets, switch to the default theme.', { file: f.file })}</p>
         ${this._deleteError ? note(this._deleteError) : nothing}`,
-      html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>Cancel</button>
-        <button type="button" class="btn btn-danger" @click=${() => void this._doDelete()}>Delete</button>`,
+      html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>${t('Cancel')}</button>
+        <button type="button" class="btn btn-danger" @click=${() => void this._doDelete()}>${t('Delete')}</button>`,
       () => (this._dlg = null),
     );
   }
@@ -484,48 +503,48 @@ export class McteStartView extends LitElement {
     return html`<li class="row">
       <div class="top">
         <button type="button" class="title" @click=${() => fire(this, 'mcte-open', { name: f.name })}>${f.name}</button>
-        <span class="chip">${f.has_modes ? 'Light + dark' : 'Same in light and dark'}</span>
-        ${f.editable ? nothing : html`<span class="chip is-warn">Read only</span>`}
-        <span class="help">${f.var_count} ${f.var_count === 1 ? 'variable' : 'variables'}</span>
+        <span class="chip">${f.has_modes ? t('Light + dark') : t('Same in light and dark')}</span>
+        ${f.editable ? nothing : html`<span class="chip is-warn">${t('Read only')}</span>`}
+        <span class="help">${t('{c, plural, one {# variable} other {# variables}}', { c: f.var_count })}</span>
       </div>
-      ${multi || !f.editable ? html`<p class="help">File ${f.file}.${!f.editable && f.reason ? ` ${REASON_TEXT[f.reason] ?? ''}` : ''}</p>` : nothing}
+      ${multi || !f.editable ? html`<p class="help">${t('File {file}.', { file: f.file })}${!f.editable && f.reason ? ` ${reasonText(f.reason)}` : ''}</p>` : nothing}
       <div class="acts">
         ${f.editable
-          ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${glyph('contentCopy')} Duplicate<span class="sr-only"> ${f.name}</span></button>
-              <button type="button" class="btn btn-text btn-sm danger" @click=${(e: Event) => this._askDelete(f, e)}>${glyph('delete')} Delete<span class="sr-only"> ${f.name}</span></button>`
-          : html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>Copy to edit<span class="sr-only"> ${f.name}</span></button>`}
+          ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${glyph('contentCopy')} ${t('Duplicate')}<span class="sr-only"> ${f.name}</span></button>
+              <button type="button" class="btn btn-text btn-sm danger" @click=${(e: Event) => this._askDelete(f, e)}>${glyph('delete')} ${t('Delete')}<span class="sr-only"> ${f.name}</span></button>`
+          : html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${t('Copy to edit')}<span class="sr-only"> ${f.name}</span></button>`}
       </div>
     </li>`;
   }
 
   private _list(): TemplateResult {
     if (this.phase === 'loading') {
-      return html`<div aria-busy="true"><p class="sr-only" role="status">Loading themes</p>${skeleton}</div>`;
+      return html`<div aria-busy="true"><p class="sr-only" role="status">${t('Loading themes')}</p>${skeleton}</div>`;
     }
     if (this.phase === 'error') {
       return html`<div class="empty" role="alert">
-        <h2>Themes could not be read</h2>
+        <h2>${t('Themes could not be read')}</h2>
         <p>${this.error}</p>
-        <button type="button" class="btn btn-secondary" @click=${() => fire(this, 'mcte-reload')}>Try again</button>
+        <button type="button" class="btn btn-secondary" @click=${() => fire(this, 'mcte-reload')}>${t('Try again')}</button>
       </div>`;
     }
     const q = this._query.trim().toLowerCase();
     const rows = [...this.files].sort((a, b) => a.name.localeCompare(b.name)).filter((f) => !q || f.name.toLowerCase().includes(q));
     if (!this.files.length) {
       return html`<div class="empty">
-        <h2>No themes yet</h2>
-        <p>Create a theme from a preset or copy one you have installed.</p>
-        <button type="button" class="btn btn-primary" @click=${() => this.openCreate()}>New theme</button>
+        <h2>${t('No themes yet')}</h2>
+        <p>${t('Create a theme from a preset or copy one you have installed.')}</p>
+        <button type="button" class="btn btn-primary" @click=${() => this.openCreate()}>${t('New theme')}</button>
       </div>`;
     }
     return html`
       ${this.files.length >= 8
         ? html`<div class="search">
-            <label class="sr-only" for="q">Search themes</label>
-            <input id="q" class="input" type="search" placeholder="Search themes" .value=${this._query} @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)} />
+            <label class="sr-only" for="q">${t('Search themes')}</label>
+            <input id="q" class="input" type="search" placeholder=${t('Search themes')} .value=${this._query} @input=${(e: Event) => (this._query = (e.target as HTMLInputElement).value)} />
           </div>`
         : nothing}
-      ${rows.length ? html`<ul class="rows">${rows.map((f) => this._row(f))}</ul>` : html`<p class="help">No theme called ${this._query}.</p>`}
+      ${rows.length ? html`<ul class="rows">${rows.map((f) => this._row(f))}</ul>` : html`<p class="help">${t('No theme called {query}.', { query: this._query })}</p>`}
     `;
   }
 
@@ -534,12 +553,12 @@ export class McteStartView extends LitElement {
       <div class="wrap">
         <header class="bar">
           <div>
-            <h2>Themes</h2>
-            <p class="help">Your themes live in /config/themes.</p>
+            <h2>${t('Themes')}</h2>
+            <p class="help">${t('Your themes live in /config/themes.')}</p>
           </div>
           <div class="barbtns">
-            <button type="button" class="btn btn-secondary" @click=${() => this._dlgEl?.open('import', { name: '' })}>Import</button>
-            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${glyph('add')} New theme ${glyph('chevronDown')}</button>
+            <button type="button" class="btn btn-secondary" @click=${() => this._dlgEl?.open('import', { name: '' })}>${t('Import')}</button>
+            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${glyph('add')} ${t('New theme')} ${glyph('chevronDown')}</button>
           </div>
         </header>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>

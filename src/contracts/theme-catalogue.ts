@@ -18,7 +18,15 @@
  * 4. A group is never empty. When a card documents no own theme variables, its group lists the HA
  *    variables it reads (kind 'follows'), each verified like rule 2.
  * 5. Variables a theme sets that are not in the catalogue are kept and shown in "Other" (raw row).
+ *
+ * Revision 2026-10-18 (i18n, type widening only; version stays 1.0.0): `label` and `hint` of an entry and the
+ * `label` of a group are MessageId, not string. The catalogue marks each text with m() (namespace 'theme-editor',
+ * src/theme-editor/i18n); the editor renders it with t(). In a test or a plain build m() returns the British
+ * text, so `entry.label` is still that string there. A custom variable (group Other) has no catalogue entry and
+ * is shown by its name.
  */
+
+import type { MessageId } from './i18n';
 
 export const THEME_CATALOGUE_CONTRACT_VERSION = '1.0.0';
 
@@ -61,10 +69,10 @@ export interface CatalogueEntry {
   group: CatalogueGroupId;
   source: CatalogueSource;
   kind: FieldKind;
-  /** Sentence-case label, e.g. 'Primary colour'. */
-  label: string;
-  /** One short line: what it changes. */
-  hint?: string;
+  /** Sentence-case label, e.g. 'Primary colour' (an m() id; render with t()). */
+  label: MessageId;
+  /** One short line: what it changes (an m() id; render with t()). */
+  hint?: MessageId;
   /** HA's (or the card's) default, for placeholders and the Reset button; '' when it has none. */
   default?: string;
   /** 'own': the source defines it. 'follows': an HA variable this card reads (rule 4). */
@@ -79,7 +87,7 @@ export interface CatalogueEntry {
 
 export interface CatalogueGroup {
   id: CatalogueGroupId;
-  label: string;
+  label: MessageId;
   /** For card groups: the custom element that must be defined for a live preview (else "preview not available"). */
   previewTag?: string;
   /** For card groups: dashboard resource URL pattern the preview may load on request. */

@@ -1,3 +1,5 @@
+import type { MessageId } from '../../contracts/i18n';
+import { m } from '../i18n';
 import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue';
 
 /**
@@ -8,23 +10,23 @@ import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue'
 const BASE = 'https://github.com/home-assistant/frontend/blob/20260930.4/src/components/tile/';
 const VERIFIED = '2026-10-17';
 
-type Row = [file: string, name: string, kind: FieldKind, label: string, def: string, hint: string];
+type Row = [file: string, name: string, kind: FieldKind, label: MessageId, def: string, hint: MessageId];
 
 const ROWS: Row[] = [
-  ['ha-tile-icon.ts', 'ha-tile-icon-border-radius', 'size', 'Icon radius', 'var(--ha-border-radius-pill)', 'Corner radius of the tile icon.'],
-  ['ha-tile-info.ts', 'ha-tile-info-gap', 'size', 'Text gap', '0', 'Vertical gap between primary and secondary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-min-height', 'size', 'Text block minimum height', 'auto', 'Reserves room for a missing secondary line.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-min-height', 'size', 'Primary text minimum height', 'auto', 'Keeps tiles that never wrap level with ones that do.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-font-size', 'size', 'Primary text size', 'var(--ha-font-size-m)', 'Font size of the primary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-font-weight', 'text', 'Primary text weight', 'var(--ha-font-weight-medium)', 'Font weight of the primary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-line-height', 'size', 'Primary line height', 'var(--ha-line-height-normal)', 'Line height of the primary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-letter-spacing', 'size', 'Primary letter spacing', '0.1px', 'Letter spacing of the primary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-primary-color', 'color', 'Primary text colour', 'var(--primary-text-color)', 'Colour of the primary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-secondary-font-size', 'size', 'Secondary text size', 'var(--ha-font-size-s)', 'Font size of the secondary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-secondary-font-weight', 'text', 'Secondary text weight', 'var(--ha-font-weight-normal)', 'Font weight of the secondary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-secondary-line-height', 'size', 'Secondary line height', 'var(--ha-line-height-condensed)', 'Line height of the secondary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-secondary-letter-spacing', 'size', 'Secondary letter spacing', '0.4px', 'Letter spacing of the secondary text.'],
-  ['ha-tile-info.ts', 'ha-tile-info-secondary-color', 'color', 'Secondary text colour', 'var(--primary-text-color)', 'Colour of the secondary text.'],
+  ['ha-tile-icon.ts', 'ha-tile-icon-border-radius', 'size', m('Icon radius'), 'var(--ha-border-radius-pill)', m('Corner radius of the tile icon.')],
+  ['ha-tile-info.ts', 'ha-tile-info-gap', 'size', m('Text gap'), '0', m('Vertical gap between primary and secondary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-min-height', 'size', m('Text block minimum height'), 'auto', m('Reserves room for a missing secondary line.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-min-height', 'size', m('Primary text minimum height'), 'auto', m('Keeps tiles that never wrap level with ones that do.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-font-size', 'size', m('Primary text size'), 'var(--ha-font-size-m)', m('Font size of the primary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-font-weight', 'text', m('Primary text weight'), 'var(--ha-font-weight-medium)', m('Font weight of the primary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-line-height', 'size', m('Primary line height'), 'var(--ha-line-height-normal)', m('Line height of the primary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-letter-spacing', 'size', m('Primary letter spacing'), '0.1px', m('Letter spacing of the primary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-primary-color', 'color', m('Primary text colour'), 'var(--primary-text-color)', m('Colour of the primary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-secondary-font-size', 'size', m('Secondary text size'), 'var(--ha-font-size-s)', m('Font size of the secondary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-secondary-font-weight', 'text', m('Secondary text weight'), 'var(--ha-font-weight-normal)', m('Font weight of the secondary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-secondary-line-height', 'size', m('Secondary line height'), 'var(--ha-line-height-condensed)', m('Line height of the secondary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-secondary-letter-spacing', 'size', m('Secondary letter spacing'), '0.4px', m('Letter spacing of the secondary text.')],
+  ['ha-tile-info.ts', 'ha-tile-info-secondary-color', 'color', m('Secondary text colour'), 'var(--primary-text-color)', m('Colour of the secondary text.')],
 ];
 
 export const TILE_ENTRIES: CatalogueEntry[] = ROWS.map(

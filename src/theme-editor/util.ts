@@ -3,6 +3,7 @@ import type { ThemeDoc, ThemeMode, ThemeValue } from '../contracts/theme-editor'
 import { cloneDoc } from './model';
 import type { DocError } from './model';
 import { kindOf } from './catalogue/index';
+import { t } from './i18n';
 
 /* Small pure helpers shared by the views: names, scopes, colour maths, the YAML view. */
 
@@ -31,17 +32,22 @@ export function uniqueName(base: string, taken: ReadonlySet<string>): string {
 
 /** The inline error for a theme name, or '' when it is fine. Mirrors the backend rule; the backend decides. */
 export function nameError(name: string, taken: ReadonlySet<string>): string {
-  if (!name.trim()) return 'Enter a name.';
-  if (!THEME_NAME_RE.test(name)) return 'Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).';
-  if (RESERVED_NAMES.includes(name)) return 'This name is reserved.';
-  if (taken.has(name)) return `A theme called ${name} already exists.`;
+  if (!name.trim()) return t('Enter a name.');
+  if (!THEME_NAME_RE.test(name)) return t('Use lowercase letters, numbers, hyphens and underscores, starting with a letter or number (64 characters at most).');
+  if (RESERVED_NAMES.includes(name)) return t('This name is reserved.');
+  if (taken.has(name)) return t('A theme called {name} already exists.', { name });
   return '';
 }
 
 // ── scopes ──
 
 export type Scope = 'shared' | ThemeMode;
-export const SCOPE_LABEL: Record<Scope, string> = { shared: 'Shared', light: 'Light', dark: 'Dark' };
+/** The word for a scope or mode, in the language. */
+export const scopeLabel = (s: Scope): string => (s === 'shared' ? t('Shared') : s === 'light' ? t('Light') : t('Dark'));
+
+/** "Light and Dark": the modes a line names. */
+export const modeList = (modes: readonly ThemeMode[]): string =>
+  modes.length === 2 ? t('{a} and {b}', { a: scopeLabel(modes[0]), b: scopeLabel(modes[1]) }) : modes.map(scopeLabel).join('');
 
 const isScalar = (v: unknown): v is ThemeValue => typeof v === 'string' || typeof v === 'number';
 

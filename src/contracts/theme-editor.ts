@@ -1,7 +1,14 @@
 import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
+import type { MessageId } from './i18n';
 
 /*
  * Contract: theme editor host. Version 1.2.0 (Architect-owned).
+ *
+ * Revision 2026-10-18 (i18n slice I8; no version change, nothing outside the editor sees it): the chunk rule below widens by
+ * `src/i18n/` (the runtime copy of this entry and the search fold; i18n contract 1.0.0 r3). The editor speaks en-GB, en-US
+ * and nl: namespace 'theme-editor' (tables in the entry) and 'theme-presets' (tables in the preset chunk), the language
+ * comes from `hass` (`lang` on the host follows it). `ThemePreset.name` / `blurb` / `note` are MessageId (see below) and
+ * theme-catalogue labels are MessageId too. The element API, the events and the backend adapter do not change.
  *
  * 1.2.0 (2026-10-18, UI kit migration, plan UI8, ADR 0030; additive, the panel's major-1 check still passes): the
  * editor is built on the ui-kit Module (ui-kit 1.0.0 r2). The chunk rule below widens by exactly two sources:
@@ -31,7 +38,7 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
  *   guarded by customElements.get. It never defines mc-color-picker / mc-unit-field: it asks
  *   magic-card.js for the editor chunk with `window.MagicCard.loadEditor()` (module-editor 1.0.0)
  *   and uses those elements by tag.
- * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/, `lit`, `src/ui-kit/` and
+ * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/, `lit`, `src/ui-kit/`, `src/i18n/` (r3) and
  *   `editorTokens` from src/css/editor-system.ts (1.2.0; before that: `lit` only; types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
  *   holds the preset library and the create dialog's picker (THEME_PRESETS_CHUNK_FILE, section
  *   "theme presets" below, ADR 0014). Its public path is set by src/theme-editor/public-path.ts,
@@ -365,12 +372,12 @@ export interface ThemePresetCredit {
 
 export interface ThemePreset {
   id: string;
-  /** Display name and the seed of the new theme's file name. */
-  name: string;
-  /** One short line under the name. */
-  blurb: string;
-  /** Optional extra line (cost or behaviour to know before picking it). */
-  note?: string;
+  /** Display name and the seed of the new theme's file name. A built-in preset holds an m() id (namespace 'theme-presets): render it with t() (the chunk's presetTitle()). A My preset (group 'mine') holds the user's own text. */
+  name: MessageId;
+  /** One short line under the name (an m() id for a built-in preset, the user's text for a My preset). */
+  blurb: MessageId;
+  /** Optional extra line (cost or behaviour to know before picking it); an m() id. */
+  note?: MessageId;
   group: ThemePresetGroup;
   inspiredBy?: ThemePresetCredit;
   /** 1.1.0: extra search words, lowercase, space separated. Required for 'genre' (first word sci-fi or fantasy). Never shown, never a franchise term. */

@@ -142,6 +142,79 @@ anim-studio	Use the parent's colours	Use the parent's colors
 anim-studio	color_mix needs two colours.	color_mix needs two colors.
 anim-studio	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and colour this part there.	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and color this part there.
 icon-animator	Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.	Glow: the full animation with its lit parts in the animation's color, else the theme's, and a soft halo on dark cards.
+theme-editor	Accent colour	Accent color
+theme-editor	Active state colour	Active state color
+theme-editor	Alarm triggered colour	Alarm triggered color
+theme-editor	Binary sensor active colour	Binary sensor active color
+theme-editor	Blue grey (RGB)	Blue gray (RGB)
+theme-editor	Body text in the primary text colour.	Body text in the primary text color.
+theme-editor	Card border colour	Card border color
+theme-editor	Card title colour	Card title color
+theme-editor	Chip border colour	Chip border color
+theme-editor	Colour of card titles.	Color of card titles.
+theme-editor	Colour of the card border.	Color of the card border.
+theme-editor	Colour of the dimmed area behind a pop-up.	Color of the dimmed area behind a pop-up.
+theme-editor	Colour of the primary text.	Color of the primary text.
+theme-editor	Colour of the secondary text.	Color of the secondary text.
+theme-editor	Cooling colour	Cooling color
+theme-editor	Cover open colour	Cover open color
+theme-editor	Dark grey (RGB)	Dark gray (RGB)
+theme-editor	Disabled colour	Disabled color
+theme-editor	Divider colour	Divider color
+theme-editor	Enter a colour like #1a73e8 or rgb(26, 115, 232).	Enter a color like #1a73e8 or rgb(26, 115, 232).
+theme-editor	Enter a colour or a gradient.	Enter a color or a gradient.
+theme-editor	Entity icons that have no state colour.	Entity icons that have no state color.
+theme-editor	Error colour	Error color
+theme-editor	Fan on colour	Fan on color
+theme-editor	Fill colour for light sliders.	Fill color for light sliders.
+theme-editor	Grey (RGB)	Gray (RGB)
+theme-editor	Heating colour	Heating color
+theme-editor	Icon colour	Icon color
+theme-editor	Icon colour when an entity is inactive.	Icon color when an entity is inactive.
+theme-editor	Inactive state colour	Inactive state color
+theme-editor	Info colour	Info color
+theme-editor	Light colour	Light color
+theme-editor	Light grey (RGB)	Light gray (RGB)
+theme-editor	Light on colour	Light on color
+theme-editor	Light tints of the primary colour.	Light tints of the primary color.
+theme-editor	Locked colour	Locked color
+theme-editor	Maximise	Maximize
+theme-editor	Media player active colour	Media player active color
+theme-editor	Outline colour	Outline color
+theme-editor	Person at home colour	Person at home color
+theme-editor	Pop-up backdrop colour	Pop-up backdrop color
+theme-editor	Primary colour	Primary color
+theme-editor	Primary colour, dark shade	Primary color, dark shade
+theme-editor	Primary colour, light shade	Primary color, light shade
+theme-editor	Primary text colour	Primary text color
+theme-editor	Secondary text colour	Secondary text color
+theme-editor	Shadow colour	Shadow color
+theme-editor	State icon colour	State icon color
+theme-editor	Subtitle colour	Subtitle color
+theme-editor	Success colour	Success color
+theme-editor	Switch on colour	Switch on color
+theme-editor	Text and icons drawn on the primary colour.	Text and icons drawn on the primary color.
+theme-editor	Text colour of tooltips.	Text color of tooltips.
+theme-editor	Text on primary colour	Text on primary color
+theme-editor	The colour HA shades shadows with.	The color HA shades shadows with.
+theme-editor	This field takes one colour, not a gradient.	This field takes one color, not a gradient.
+theme-editor	This is not a colour. Pick one with the swatch, or type a value like #3b82f6 or teal.	This is not a color. Pick one with the swatch, or type a value like #3b82f6 or teal.
+theme-editor	This variable takes a single colour. Gradients work in Card background and Dashboard background.	This variable takes a single color. Gradients work in Card background and Dashboard background.
+theme-editor	Title colour	Title color
+theme-editor	Tooltip text colour	Tooltip text color
+theme-editor	Tooltip text colour fallback.	Tooltip text color fallback.
+theme-editor	Track behind the fill. A slider with its own track colour keeps it.	Track behind the fill. A slider with its own track color keeps it.
+theme-editor	Unavailable state colour	Unavailable state color
+theme-editor	Unlocked colour	Unlocked color
+theme-editor	Warning colour	Warning color
 icon-library	Centre	Center
 icon-library	Centre bulb	Center bulb
 icon-library	LED strip colour chase	LED strip color chase
+theme-presets	Amber on blue-grey mirage.	Amber on blue-gray mirage.
+theme-presets	Clean Primer blues and neutral greys.	Clean Primer blues and neutral grays.
+theme-presets	Deep petrol and steel-grey with a coolant-cyan accent; copper at night.	Deep petrol and steel-gray with a coolant-cyan accent; copper at night.
+theme-presets	Familiar editor greys with a bright blue.	Familiar editor grays with a bright blue.
+theme-presets	Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.	Independent color schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.
+theme-presets	Low-contrast sage on soft grey.	Low-contrast sage on soft gray.
+theme-presets	Neutral blue-grey for any room.	Neutral blue-gray for any room.
+theme-presets	Presets use genre and colour words, not titles. Try one of these:	Presets use genre and color words, not titles. Try one of these:

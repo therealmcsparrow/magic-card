@@ -8,6 +8,7 @@ import type { UiWindowElement } from '../contracts/ui-kit';
 import { glyph } from '../ui-kit/glyphs';
 import { cloneDoc } from './model';
 import { base } from './styles';
+import { t } from './i18n';
 import { fire, slugName, uniqueName } from './util';
 
 export type PresetDlgMode = 'save' | 'rename' | 'delete' | 'import' | 'export';
@@ -23,13 +24,11 @@ export interface PresetDlgOpts {
   id?: string;
 }
 
-const MSG: Record<string, string> = {
-  library_full: 'You can keep 100 presets. Delete one first.',
-  conflict: 'This preset changed elsewhere. Reopen the list.',
-};
+const known = (code: string): string | undefined =>
+  code === 'library_full' ? t('You can keep 100 presets. Delete one first.') : code === 'conflict' ? t('This preset changed elsewhere. Reopen the list.') : undefined;
 const why = (e: unknown): string => {
   const x = e as ThemeBackendError;
-  return x.errors?.map((f) => f.message).join(' ') || MSG[x.code] || x.message || 'It did not work.';
+  return x.errors?.map((f) => f.message).join(' ') || known(x.code) || x.message || t('It did not work.');
 };
 
 /**
@@ -133,25 +132,29 @@ export class MctePresetDialog extends LitElement {
   /** Save as my preset, Rename (conflict check on updated_at) and Delete share this. */
   private _submit(): void {
     const store = this._store;
-    const t = this._opts.target;
+    const tgt = this._opts.target;
     const del = this._mode === 'delete';
     const re = this._mode === 'rename';
     const name = this._name.trim();
     if (!store) return;
     if (!del && (!name || name.length > 80)) {
-      this._error = 'Enter a name of 1 to 80 characters.';
+      this._error = t('Enter a name of 1 to 80 characters.');
       return;
     }
-    const d = re ? t?.description : this._desc.trim();
-    const a = re ? t?.author : this._author.trim();
+    const d = re ? tgt?.description : this._desc.trim();
+    const a = re ? tgt?.author : this._author.trim();
     const input: SavedThemePresetInput = {
-      id: re ? t!.id : uniqueName(slugName(name) || 'preset', new Set((this.mine ?? []).map((m) => m.id))),
+      id: re ? tgt!.id : uniqueName(slugName(name) || 'preset', new Set((this.mine ?? []).map((m) => m.id))),
       name,
-      doc: re ? t!.doc : cloneDoc(this._opts.doc ?? {}),
+      doc: re ? tgt!.doc : cloneDoc(this._opts.doc ?? {}),
       ...(d ? { description: d } : {}),
       ...(a ? { author: a } : {}),
     };
-    void this._run(async () => (del ? (await store.remove(t!.id), `Deleted ${t!.name}.`) : (await store.save(input, re ? t!.updated_at : undefined), re ? `Renamed to ${name}.` : `Saved ${name} under My presets.`)));
+    void this._run(async () =>
+      del
+        ? (await store.remove(tgt!.id), t('Deleted {name}.', { name: tgt!.name }))
+        : (await store.save(input, re ? tgt!.updated_at : undefined), re ? t('Renamed to {name}.', { name }) : t('Saved {name} under My presets.', { name })),
+    );
   }
 
   private async _import(items: TransferItem<'theme'>[]): Promise<void> {
@@ -159,7 +162,7 @@ export class MctePresetDialog extends LitElement {
     if (!store) {
       // Older Magic Card Utils: one theme opens as a new, unsaved theme ("Create from file").
       if (items.length !== 1) {
-        this._error = 'Update Magic Card Utils to keep theme presets. A file with one theme still opens.';
+        this._error = t('Update Magic Card Utils to keep theme presets. A file with one theme still opens.');
         return;
       }
       this._open(items[0]);
@@ -176,7 +179,7 @@ export class MctePresetDialog extends LitElement {
         await store.save(input);
         saved.push(it);
       } catch (e) {
-        failed.push(`${it.name}: ${why(e)}`);
+        failed.push(t('{name}: {reason}', { name: it.name, reason: why(e) }));
       }
     }
     this._busy = false;
@@ -192,14 +195,14 @@ export class MctePresetDialog extends LitElement {
   private _fields(): TemplateResult {
     const f = (id: string, label: string, max: number, k: '_name' | '_desc' | '_author'): TemplateResult =>
       html`<label class="lbl" for=${id}>${label}</label><input id=${id} class="input" maxlength=${max} .value=${this[k]} @input=${(e: Event) => ((this[k] = (e.target as HTMLInputElement).value), (this._error = ''))} />`;
-    return html`${f('pn', 'Name', 80, '_name')}${this._mode === 'save' ? html`${f('pd', 'Description (optional)', 280, '_desc')}${f('pa', 'Author (optional)', 80, '_author')}` : nothing}`;
+    return html`${f('pn', t('Name'), 80, '_name')}${this._mode === 'save' ? html`${f('pd', t('Description (optional)'), 280, '_desc')}${f('pa', t('Author (optional)'), 80, '_author')}` : nothing}`;
   }
 
   private _panel(mode: 'import' | 'export'): TemplateResult {
-    if (this._tx === 'loading') return html`<p class="help" role="status">Loading...</p>`;
+    if (this._tx === 'loading') return html`<p class="help" role="status">${t('Loading...')}</p>`;
     if (this._tx === 'error') {
-      return html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>The tools could not load. Check your connection.</span></p>
-        <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>Try again</button>`;
+      return html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t('The tools could not load. Check your connection.')}</span></p>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>${t('Try again')}</button>`;
     }
     const o = this._opts;
     const item = o.doc
@@ -222,22 +225,22 @@ export class MctePresetDialog extends LitElement {
 
   private _body(): { title: string; body: unknown; foot: unknown } {
     const m = this._mode;
-    const t = this._opts.target;
+    const tgt = this._opts.target;
     const go = (label: string, cls = 'btn-primary'): TemplateResult =>
-      html`<button type="button" class="btn btn-secondary" @click=${() => this._close()}>Cancel</button><button type="submit" class="btn ${cls}" aria-disabled=${this._busy ? 'true' : 'false'}>${label}</button>`;
-    if (m === 'save') return { title: 'Save as my preset', body: html`${this._fields()}${this._err()}`, foot: go('Save preset') };
-    if (m === 'rename') return { title: 'Rename preset', body: html`${this._fields()}${this._err()}`, foot: go('Rename') };
-    if (m === 'delete') return { title: `Delete ${t?.name}?`, body: html`<p>This removes it from My presets. Themes made from it stay.</p>${this._err()}`, foot: go('Delete', 'btn-danger') };
-    return { title: m === 'export' ? 'Export theme' : 'Import theme', body: this._done ? this._result() : this._panel(m!), foot: nothing };
+      html`<button type="button" class="btn btn-secondary" @click=${() => this._close()}>${t('Cancel')}</button><button type="submit" class="btn ${cls}" aria-disabled=${this._busy ? 'true' : 'false'}>${label}</button>`;
+    if (m === 'save') return { title: t('Save as my preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('Save preset')) };
+    if (m === 'rename') return { title: t('Rename preset'), body: html`${this._fields()}${this._err()}`, foot: go(t('Rename')) };
+    if (m === 'delete') return { title: t('Delete {name}?', { name: String(tgt?.name ?? '') }), body: html`<p>${t('This removes it from My presets. Themes made from it stay.')}</p>${this._err()}`, foot: go(t('Delete'), 'btn-danger') };
+    return { title: m === 'export' ? t('Export theme') : t('Import theme'), body: this._done ? this._result() : this._panel(m!), foot: nothing };
   }
 
   private _result(): TemplateResult {
     const { saved, failed } = this._done!;
-    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? `Saved ${saved.length} under My presets` : 'Nothing was saved'}</h3>
+    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('Saved {c} under My presets', { c: saved.length }) : t('Nothing was saved')}</h3>
       ${failed.map((f) => html`<p role="alert">${f}</p>`)}
       <div class="res-foot">
-        ${saved.length === 1 ? html`<button type="button" class="btn btn-secondary" @click=${() => this._open(saved[0])}>Open as new theme</button>` : nothing}
-        <button type="button" class="btn btn-primary" @click=${() => this._close()}>Close</button>
+        ${saved.length === 1 ? html`<button type="button" class="btn btn-secondary" @click=${() => this._open(saved[0])}>${t('Open as new theme')}</button>` : nothing}
+        <button type="button" class="btn btn-primary" @click=${() => this._close()}>${t('Close')}</button>
       </div>`;
   }
 

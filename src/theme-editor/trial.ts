@@ -4,6 +4,7 @@ import { kindOf } from './catalogue';
 import { hexToRgb, previewVars, validateValue } from './model';
 import { HA_DARK_DEFAULTS } from './dark-defaults';
 import { readHaDefaults } from './preview';
+import { t } from './i18n';
 import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
 
@@ -35,13 +36,15 @@ export interface TrialState {
   skipped: number;
 }
 
-export const TRIAL_END_TEXT: Record<TrialEnd, string> = {
-  revert: 'Reverted. This tab shows your own theme again.',
-  discard: 'Reverted. This tab shows your own theme again.',
-  saved: 'Saved. This tab now uses the saved theme file.',
-  idle: 'Trial ended after 10 minutes.',
-  'theme-changed': 'Trial ended because the theme changed.',
-};
+/** What a screen reader hears when a trial ends, in the language. */
+export const trialEndText = (reason: TrialEnd): string =>
+  reason === 'saved'
+    ? t('Saved. This tab now uses the saved theme file.')
+    : reason === 'idle'
+      ? t('Trial ended after 10 minutes.')
+      : reason === 'theme-changed'
+        ? t('Trial ended because the theme changed.')
+        : t('Reverted. This tab shows your own theme again.');
 
 type Listener = (state: TrialState | null, reason?: TrialEnd) => void;
 
@@ -279,7 +282,7 @@ export function stopTrial(reason: TrialEnd = 'revert'): void {
   lastHass = undefined;
   barEl?.remove();
   barEl = null;
-  announce(TRIAL_END_TEXT[reason]);
+  announce(trialEndText(reason));
   notify(reason);
 }
 

@@ -1,3 +1,5 @@
+import type { MessageId } from '../../contracts/i18n';
+import { m } from '../i18n';
 import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue';
 
 /**
@@ -8,18 +10,18 @@ import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue'
 const REF = 'https://github.com/WJDDesigns/Ultra-Card/blob/v3.13.3/src/cards/ultra-card.ts';
 const VERIFIED = '2026-10-17';
 
-type Row = [name: string, kind: FieldKind, label: string, hint: string];
+type Row = [name: string, kind: FieldKind, label: MessageId, hint: MessageId];
 
 const ROWS: Row[] = [
-  ['primary-color', 'color', 'Primary colour', 'Accents and active elements.'],
-  ['primary-text-color', 'color', 'Primary text colour', 'Main text.'],
-  ['secondary-text-color', 'color', 'Secondary text colour', 'Muted text.'],
-  ['divider-color', 'color', 'Divider colour', 'Borders and separators.'],
-  ['card-background-color', 'background', 'Card background', 'Card surface.'],
-  ['ha-card-background', 'background', 'Card background override', 'Takes priority over the card background.'],
-  ['ha-card-border-radius', 'size', 'Card radius', 'Corner radius of the card.'],
-  ['ha-card-box-shadow', 'shadow', 'Card shadow', 'Shadow of the card.'],
-  ['error-color', 'color', 'Error colour', 'Error messages.'],
+  ['primary-color', 'color', m('Primary colour'), m('Accents and active elements.')],
+  ['primary-text-color', 'color', m('Primary text colour'), m('Main text.')],
+  ['secondary-text-color', 'color', m('Secondary text colour'), m('Muted text.')],
+  ['divider-color', 'color', m('Divider colour'), m('Borders and separators.')],
+  ['card-background-color', 'background', m('Card background'), m('Card surface.')],
+  ['ha-card-background', 'background', m('Card background override'), m('Takes priority over the card background.')],
+  ['ha-card-border-radius', 'size', m('Card radius'), m('Corner radius of the card.')],
+  ['ha-card-box-shadow', 'shadow', m('Card shadow'), m('Shadow of the card.')],
+  ['error-color', 'color', m('Error colour'), m('Error messages.')],
 ];
 
 export const ULTRA_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(

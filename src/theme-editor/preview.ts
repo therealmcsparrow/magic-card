@@ -8,7 +8,8 @@ import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PAR
 import type { SampleId } from './preview-cards';
 import './preview-cards';
 import type { SwitchOption } from './mode-switch';
-import { browserMode } from './util';
+import { t, tx } from './i18n';
+import { browserMode, scopeLabel } from './util';
 
 /*
  * The preview stage (Contract theme-editor 1.0.0, "Preview isolation"). Every resolved variable of
@@ -70,9 +71,9 @@ export function pageThemeKeys(el: HTMLElement = document.documentElement): strin
   return keys;
 }
 
-const MODE_OPTIONS: SwitchOption[] = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
+const modeOptions = (): SwitchOption[] => [
+  { value: 'light', label: scopeLabel('light') },
+  { value: 'dark', label: scopeLabel('dark') },
 ];
 const checkValue = (name: string, value: string): boolean => validateValue(kindOf(name) ?? 'text', value) === null;
 
@@ -249,8 +250,8 @@ export class McteThemePreview extends LitElement {
   private _sample(id: SampleId, name: string): TemplateResult {
     const s = this._samples.get(id) ?? 'loading';
     if (s instanceof HTMLElement) return html`<div class="sample">${s}</div>`;
-    if (s === 'error') return html`<div class="placeholder"><p class="error">Preview of ${name} could not load.</p></div>`;
-    if (s === 'no-entity') return html`<div class="placeholder"><p class="help">Add a light or a switch to Home Assistant to see the ${name} sample.</p></div>`;
+    if (s === 'error') return html`<div class="placeholder"><p class="error">${t('Preview of {name} could not load.', { name })}</p></div>`;
+    if (s === 'no-entity') return html`<div class="placeholder"><p class="help">${t('Add a light or a switch to Home Assistant to see the {name} sample.', { name })}</p></div>`;
     return html`<div class="placeholder" aria-busy="true"></div>`;
   }
 
@@ -265,45 +266,45 @@ export class McteThemePreview extends LitElement {
         : html`<div class="toolbar">
             ${hasModes
               ? html`<mcte-mode-switch
-                  label="Preview mode"
+                  label=${t('Preview mode')}
                   .value=${mode}
-                  .options=${MODE_OPTIONS}
+                  .options=${modeOptions()}
                   @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._pick(e.detail.value))}
                 ></mcte-mode-switch>`
-              : html`<span class="help">This theme has no light or dark modes.</span>`}
-            <span class="chip" aria-live="polite">Previewing ${mode}</span>
+              : html`<span class="help">${t('This theme has no light or dark modes.')}</span>`}
+            <span class="chip" aria-live="polite">${t('Previewing {mode, select, dark {dark} other {light}}', { mode })}</span>
           </div>`}
-      ${empty ? html`<p class="help">Nothing set yet. The preview shows Home Assistant's default look.</p>` : nothing}
-      <section class="stage" aria-label="Theme preview, ${mode}" tabindex="0">
-        <p class="sr">Preview of ${count} sample cards using the ${mode} variables. The samples are not interactive.</p>
+      ${empty ? html`<p class="help">${t("Nothing set yet. The preview shows Home Assistant's default look.")}</p>` : nothing}
+      <section class="stage" aria-label=${t('Theme preview, {mode, select, dark {dark} other {light}}', { mode })} tabindex="0">
+        <p class="sr">${t('Preview of {count} sample cards using the {mode, select, dark {dark} other {light}} variables. The samples are not interactive.', { count, mode })}</p>
         ${this._skipped > 0
-          ? html`<p class="strip" role="status">Showing the last valid value for ${this._skipped} ${this._skipped === 1 ? 'variable' : 'variables'}.</p>`
+          ? html`<p class="strip" role="status">${t('Showing the last valid value for {c, plural, one {# variable} other {# variables}}.', { c: this._skipped })}</p>`
           : nothing}
         <div class="content" inert aria-hidden="true">
-          <div class="fake-header"><span class="burger">☰</span><span>Overview</span></div>
+          <div class="fake-header"><span class="burger">☰</span><span>${t('Overview')}</span></div>
           <div class="body">
-            <nav class="fake-side"><span class="on">Overview</span><span>Map</span><span>Settings</span></nav>
+            <nav class="fake-side"><span class="on">${t('Overview')}</span><span>${t('Map')}</span><span>${t('Settings')}</span></nav>
             <div class="samples">
-              <div class="pair">${this._sample('tile-on', 'tile card')}${this._sample('tile-off', 'tile card')}</div>
-              ${this._sample('entities', 'entities card')}
+              <div class="pair">${this._sample('tile-on', t('tile card'))}${this._sample('tile-off', t('tile card'))}</div>
+              ${this._sample('entities', t('entities card'))}
               <ha-card class="plain">
-                <div class="card-header">Controls</div>
+                <div class="card-header">${t('Controls')}</div>
                 <div class="card-content controls">
-                  <button class="b-primary" tabindex="-1">Primary</button>
-                  <button class="b-secondary" tabindex="-1">Secondary</button>
-                  <button class="b-text" tabindex="-1">Text</button>
+                  <button class="b-primary" tabindex="-1">${t('Primary')}</button>
+                  <button class="b-secondary" tabindex="-1">${t('Secondary')}</button>
+                  <button class="b-text" tabindex="-1">${t('Text')}</button>
                   <span class="switch" aria-hidden="true"></span>
-                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>Accent</span>
-                  <span class="field">Text field</span>
+                  <span class="accent-chip"><i class="dot" aria-hidden="true"></i>${t('Accent')}</span>
+                  <span class="field">${t('Text field')}</span>
                   <span class="slider" aria-hidden="true"><i></i></span>
                 </div>
               </ha-card>
               ${this._alerts()}
               <ha-card class="plain">
                 <div class="card-content">
-                  <h3>Heading</h3>
-                  <p>Body text in the primary text colour.</p>
-                  <p class="sec">Secondary text and <span class="link">a link</span>.</p>
+                  <h3>${t('Heading')}</h3>
+                  <p>${t('Body text in the primary text colour.')}</p>
+                  <p class="sec">${tx('Secondary text and {link}.', { link: html`<span class="link">${t('a link')}</span>` })}</p>
                 </div>
               </ha-card>
               ${this._sample('magic-card', 'Magic Card')}
@@ -311,8 +312,7 @@ export class McteThemePreview extends LitElement {
             </div>
           </div>
           <p class="help foot">
-            The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard:
-            themes that depend on custom card CSS, and the sidebar and header.
+            ${t('The preview is drawn with real Home Assistant elements and your variables. A few things can differ on the dashboard: themes that depend on custom card CSS, and the sidebar and header.')}
           </p>
         </div>
       </section>
@@ -320,14 +320,15 @@ export class McteThemePreview extends LitElement {
   }
 
   private _alerts(): TemplateResult {
-    const types = ['info', 'success', 'warning', 'error'];
+    const types: Array<[string, string]> = [
+      ['info', t('Info message')],
+      ['success', t('Success message')],
+      ['warning', t('Warning message')],
+      ['error', t('Error message')],
+    ];
     const real = !!customElements.get('ha-alert');
     return html`<div class="alerts">
-      ${types.map((t) =>
-        real
-          ? html`<ha-alert alert-type=${t}>${t[0].toUpperCase() + t.slice(1)} message</ha-alert>`
-          : html`<div class="alert a-${t}">${t[0].toUpperCase() + t.slice(1)} message</div>`,
-      )}
+      ${types.map(([type, text]) => (real ? html`<ha-alert alert-type=${type}>${text}</ha-alert>` : html`<div class="alert a-${type}">${text}</div>`))}
     </div>`;
   }
 

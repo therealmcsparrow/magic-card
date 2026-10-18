@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import { CATALOGUE_GROUPS } from './catalogue';
+import { t } from './i18n';
 
 /*
  * Real cards for the preview, and the "Preview not available" notice of a card group.
@@ -96,7 +97,7 @@ export function sampleConfig(id: SampleId, picks: Picks): Record<string, unknown
     case 'tile-off':
       return picks.off ?? any ? { type: 'tile', entity: picks.off ?? any } : null;
     case 'entities':
-      return picks.all.length ? { type: 'entities', title: 'Entities', entities: picks.all } : null;
+      return picks.all.length ? { type: 'entities', title: t('Entities'), entities: picks.all } : null;
     case 'magic-card':
       return {
         type: 'custom:magic-card',
@@ -109,7 +110,7 @@ export function sampleConfig(id: SampleId, picks: Picks): Record<string, unknown
                 id: 'preview-col',
                 modules: [
                   { id: 'preview-text', type: 'text', text: 'Magic Card' },
-                  { id: 'preview-button', type: 'button', label: 'Button' },
+                  { id: 'preview-button', type: 'button', label: t('Button') },
                   { id: 'preview-bar', type: 'bar', min: 0, max: 100, ...(picks.numeric ? { entity: picks.numeric } : {}) },
                 ],
               },
@@ -134,7 +135,7 @@ export async function createSample(config: Record<string, unknown>, hass: unknow
     el = await (await helpers).createCardElement(config);
   } else {
     const type = String(config.type ?? '');
-    if (!type.startsWith('custom:')) throw new Error('Home Assistant card helpers are not available');
+    if (!type.startsWith('custom:')) throw new Error(t('Home Assistant card helpers are not available'));
     el = document.createElement(type.slice('custom:'.length));
     (el as HTMLElement & { setConfig?: (c: unknown) => void }).setConfig?.(config);
   }
@@ -160,7 +161,7 @@ export function groupPreview(id: CatalogueGroupId): GroupPreview {
   if (group.previewTag.startsWith('hui-') && typeof (window as unknown as { loadCardHelpers?: unknown }).loadCardHelpers === 'function') {
     return { state: 'available' };
   }
-  return { state: 'unavailable', label: group.label, canLoad: !!group.resourcePattern };
+  return { state: 'unavailable', label: t(group.label), canLoad: !!group.resourcePattern };
 }
 
 interface Resource {
@@ -178,22 +179,22 @@ const LOAD_TIMEOUT_MS = 8000;
 /** Loads a card group's dashboard resource and waits until its preview element is defined. */
 export async function loadGroupCard(hass: Hass | undefined, id: CatalogueGroupId): Promise<void> {
   const group = CATALOGUE_GROUPS.find((g) => g.id === id);
-  if (!group?.previewTag || !group.resourcePattern) throw new Error('This card cannot be loaded for the preview.');
+  if (!group?.previewTag || !group.resourcePattern) throw new Error(t('This card cannot be loaded for the preview.'));
   if (customElements.get(group.previewTag)) return;
-  if (!hass?.callWS) throw new Error('Home Assistant is not connected.');
+  if (!hass?.callWS) throw new Error(t('Home Assistant is not connected.'));
   const resources = await hass.callWS<Resource[]>({ type: 'lovelace/resources' });
   const pattern = group.resourcePattern;
   const found = (resources ?? []).find((r) => typeof r.url === 'string' && pattern.test(r.url));
-  if (!found) throw new Error(`${group.label} is not in the dashboard resources.`);
-  if (!isLoadableUrl(found.url)) throw new Error(`${group.label} has a resource address the editor will not load.`);
+  if (!found) throw new Error(t('{label} is not in the dashboard resources.', { label: t(group.label) }));
+  if (!isLoadableUrl(found.url)) throw new Error(t('{label} has a resource address the editor will not load.', { label: t(group.label) }));
   const tag = group.previewTag;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const defined = customElements.whenDefined(tag);
   const script = document.createElement('script');
   script.type = found.type === 'module' ? 'module' : 'text/javascript';
   const failed = new Promise<never>((_, reject) => {
-    script.onerror = () => reject(new Error(`${group.label} could not be loaded.`));
-    timer = setTimeout(() => reject(new Error(`${group.label} did not start in time.`)), LOAD_TIMEOUT_MS);
+    script.onerror = () => reject(new Error(t('{label} could not be loaded.', { label: t(group.label) })));
+    timer = setTimeout(() => reject(new Error(t('{label} did not start in time.', { label: t(group.label) }))), LOAD_TIMEOUT_MS);
   });
   script.src = found.url;
   document.head.appendChild(script);
@@ -243,7 +244,8 @@ export class McteGroupPreview extends LitElement {
     try {
       await loadGroupCard(this.hass as Hass | undefined, this.group);
       this._load = 'idle';
-      this._announce = `${CATALOGUE_GROUPS.find((g) => g.id === this.group)?.label ?? 'The card'} is loaded for the preview.`;
+      const found = CATALOGUE_GROUPS.find((g) => g.id === this.group);
+      this._announce = found ? t('{label} is loaded for the preview.', { label: t(found.label) }) : t('The card is loaded for the preview.');
     } catch (err) {
       this._load = 'error';
       this._error = err instanceof Error ? err.message : String(err);
@@ -258,18 +260,17 @@ export class McteGroupPreview extends LitElement {
     }
     const busy = this._load === 'loading';
     return html`<div class="notice" part="notice">
-      <p class="title">Preview not available</p>
+      <p class="title">${t('Preview not available')}</p>
       <p class="help">
-        ${status.label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited
-        and saved.
+        ${t('{label} is not loaded in this editor, so the preview cannot show it. The variables below can still be edited and saved.', { label: status.label })}
       </p>
       ${status.canLoad
         ? html`<button type="button" class="btn" aria-disabled=${busy ? 'true' : 'false'} @click=${() => !busy && this._loadCard()}>
-            ${busy ? 'Loading...' : `Load ${status.label} for preview`}
+            ${busy ? t('Loading...') : t('Load {label} for preview', { label: status.label })}
           </button>`
         : nothing}
-      <p class="status" role="status">${busy ? `Loading ${status.label}...` : ''}</p>
-      ${this._load === 'error' ? html`<p class="error" role="alert">Could not load ${status.label}. ${this._error}</p>` : nothing}
+      <p class="status" role="status">${busy ? t('Loading {label}...', { label: status.label }) : ''}</p>
+      ${this._load === 'error' ? html`<p class="error" role="alert">${t('Could not load {label}. {reason}', { label: status.label, reason: this._error })}</p>` : nothing}
     </div>`;
   }
 

@@ -1,3 +1,5 @@
+import type { MessageId } from '../../contracts/i18n';
+import { m } from '../i18n';
 import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue';
 
 /**
@@ -8,21 +10,21 @@ import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue'
 const REF = 'https://github.com/custom-cards/button-card/blob/v7.0.1/src/styles.ts';
 const VERIFIED = '2026-10-17';
 
-type Row = [name: string, kind: FieldKind, label: string, hint: string, role: 'own' | 'follows'];
+type Row = [name: string, kind: FieldKind, label: MessageId, hint: MessageId, role: 'own' | 'follows'];
 
 const ROWS: Row[] = [
-  ['button-card-tooltip-background-color', 'color', 'Tooltip background', 'Background of tooltips.', 'own'],
-  ['button-card-tooltip-content-color', 'color', 'Tooltip text colour', 'Text colour of tooltips.', 'own'],
-  ['button-card-tooltip-font-size', 'size', 'Tooltip text size', 'Font size of tooltips.', 'own'],
-  ['button-card-tooltip-border-radius', 'size', 'Tooltip radius', 'Corner radius of tooltips.', 'own'],
-  ['button-card-tooltip-padding', 'text', 'Tooltip padding', 'Space inside tooltips.', 'own'],
-  ['button-card-tooltip-max-width', 'size', 'Tooltip maximum width', 'Widest a tooltip grows.', 'own'],
-  ['ha-card-border-radius', 'size', 'Card radius', 'Radius of the ripple on the icon.', 'follows'],
-  ['ha-card-box-shadow', 'shadow', 'Card shadow', 'Shadow of tooltips.', 'follows'],
-  ['card-background-color', 'background', 'Card background', 'Background of the loading spinner.', 'follows'],
-  ['primary-text-color', 'color', 'Primary text colour', 'Tooltip text colour fallback.', 'follows'],
-  ['secondary-background-color', 'background', 'Secondary background', 'Tooltip background fallback.', 'follows'],
-  ['state-icon-color', 'color', 'State icon colour', 'Icon colour when an entity is inactive.', 'follows'],
+  ['button-card-tooltip-background-color', 'color', m('Tooltip background'), m('Background of tooltips.'), 'own'],
+  ['button-card-tooltip-content-color', 'color', m('Tooltip text colour'), m('Text colour of tooltips.'), 'own'],
+  ['button-card-tooltip-font-size', 'size', m('Tooltip text size'), m('Font size of tooltips.'), 'own'],
+  ['button-card-tooltip-border-radius', 'size', m('Tooltip radius'), m('Corner radius of tooltips.'), 'own'],
+  ['button-card-tooltip-padding', 'text', m('Tooltip padding'), m('Space inside tooltips.'), 'own'],
+  ['button-card-tooltip-max-width', 'size', m('Tooltip maximum width'), m('Widest a tooltip grows.'), 'own'],
+  ['ha-card-border-radius', 'size', m('Card radius'), m('Radius of the ripple on the icon.'), 'follows'],
+  ['ha-card-box-shadow', 'shadow', m('Card shadow'), m('Shadow of tooltips.'), 'follows'],
+  ['card-background-color', 'background', m('Card background'), m('Background of the loading spinner.'), 'follows'],
+  ['primary-text-color', 'color', m('Primary text colour'), m('Tooltip text colour fallback.'), 'follows'],
+  ['secondary-background-color', 'background', m('Secondary background'), m('Tooltip background fallback.'), 'follows'],
+  ['state-icon-color', 'color', m('State icon colour'), m('Icon colour when an entity is inactive.'), 'follows'],
 ];
 
 export const BUTTON_CARD_ENTRIES: CatalogueEntry[] = ROWS.map(
