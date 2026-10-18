@@ -1,4 +1,7 @@
 import { css, html, nothing, type ReactiveController, type ReactiveControllerHost, type TemplateResult } from 'lit';
+import type { UiMenuEntry, UiMenuPick, UiMenuElement } from '../../contracts/ui-kit';
+import { kitButtonExtras, kitTokens } from '../../ui-kit/css/extras';
+import '../kit';
 import { EMPTY_LAYER_VIEW, LAYER_TOGGLES, type LayerKey, type LayerToggle, type LayerView, type LayerViewChangeDetail, type LayersDensity } from '../../contracts/studio-layers';
 import type { AnimationDoc } from '../model';
 import { hideReason, isLocked, markedBelow, parentKey, toggleLayer } from '../layer-view';
@@ -109,7 +112,9 @@ export function syncTabStops(host: Element): void {
 }
 
 export class LayerRows implements ReactiveController {
-  private _menu?: { key: LayerKey; x: number; y: number; first?: boolean };
+  private _menu?: { key: LayerKey; first?: boolean };
+  /** The menu button's own press closes the menu (an outside press); the click that follows must not open it again. */
+  private _outsideAt?: { key: LayerKey; at: number };
   private _focus?: { key: LayerKey; ctl?: string };
   private _n = 0;
 
@@ -123,11 +128,11 @@ export class LayerRows implements ReactiveController {
   hostUpdated(): void {
     syncTabStops(this.host);
     const f = this._focus;
-    const menu = this.host.renderRoot?.querySelector<HTMLElement>('.lmenu');
+    const menu = this.host.renderRoot?.querySelector<UiMenuElement>('mc-ui-menu');
     if (menu && this._menu?.first) {
       this._menu.first = false;
-      (menu as HTMLElement & { showPopover?: () => void }).showPopover?.();
-      menu.querySelector<HTMLElement>('[role^="menuitem"]')?.focus();
+      menu.anchor = this.host.renderRoot?.querySelector<HTMLElement>(`li[data-ref="${this._menu.key}"] [data-ctl="menu"]`) ?? undefined;
+      menu.show();
     }
     if (f) void this._refocus(f);
   }
@@ -253,12 +258,17 @@ export class LayerRows implements ReactiveController {
 
   // ── menu ──
 
-  private _openMenu(key: LayerKey, btn: HTMLElement, first = true): void {
-    const b = btn.getBoundingClientRect();
-    const h = 8 + 32 * 6;
-    const below = b.bottom + h <= (globalThis.innerHeight || 800);
-    this._menu = { key, x: Math.max(8, b.right - 200), y: below ? b.bottom + 2 : Math.max(8, b.top - h - 2), first };
+  private _openMenu(key: LayerKey, first = true): void {
+    this._menu = { key, first };
     this.host.requestUpdate();
+  }
+
+  private _toggleMenu(key: LayerKey): void {
+    if (this._menu?.key === key) return this._closeMenu();
+    const o = this._outsideAt;
+    this._outsideAt = undefined;
+    if (o && o.key === key && Date.now() - o.at < 400) return;
+    this._openMenu(key);
   }
 
   private _closeMenu(back = true): void {
@@ -268,63 +278,47 @@ export class LayerRows implements ReactiveController {
     if (key && back) this.focusKey(key, 'menu');
   }
 
-  private _menuKey(e: KeyboardEvent): void {
-    const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role^="menuitem"]')];
-    const at = items.indexOf(e.target as HTMLElement);
-    const to = (i: number): void => {
-      e.preventDefault();
-      items[(i + items.length) % items.length]?.focus();
-    };
-    if (e.key === 'ArrowDown') to(at + 1);
-    else if (e.key === 'ArrowUp') to(at - 1);
-    else if (e.key === 'Home') to(0);
-    else if (e.key === 'End') to(items.length - 1);
-    else if (e.key === 'Escape') {
-      e.preventDefault();
-      e.stopPropagation();
-      this._closeMenu();
-    } else if (e.key === 'Tab') this._closeMenu(false);
-    else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      const n = items.length;
-      for (let i = 1; i <= n; i++) {
-        const it = items[(at + i) % n];
-        if (it.textContent?.trim().toLowerCase().startsWith(e.key.toLowerCase())) return to((at + i) % n);
-      }
-    }
-  }
-
-  private _menuItems(r: RowInit): Array<{ label: string; check?: boolean; disabled?: boolean; hint?: string; run: () => void; sep?: boolean }> {
+  private _menuItems(r: RowInit): Array<UiMenuEntry & { run: () => void }> {
     const lock = this.locked(r.key);
-    const out: Array<{ label: string; check?: boolean; disabled?: boolean; hint?: string; run: () => void; sep?: boolean }> = [];
+    const out: Array<UiMenuEntry & { run: () => void }> = [];
     if (this.actions.move) {
       for (const dir of ['up', 'down'] as const) {
         const m = dir === 'up' ? r.up : r.down;
         if (!m) continue;
         const base = m.menu ?? m.label;
-        out.push({ label: lock ? `${base.replace(/ \(.*\)$/, '')} (locked)` : base, disabled: !m.ok || lock, hint: dir === 'up' ? 'Alt+Up' : 'Alt+Down', run: () => this._move(r, dir, 'menu') });
+        const reason = lock ? 'Locked' : !m.ok ? (dir === 'up' ? 'Already at the top' : 'Already at the bottom') : undefined;
+        out.push({ id: `move-${dir}`, icon: dir === 'up' ? 'mdi:arrow-up' : 'mdi:arrow-down', label: lock ? base.replace(/ \(.*\)$/, '') : base, reason, keys: dir === 'up' ? 'Alt+Up' : 'Alt+Down', run: () => this._move(r, dir, 'menu') });
       }
     }
-    if (r.renamable && this.actions.rename) out.push({ label: lock ? 'Rename (locked)' : 'Rename', disabled: lock, hint: 'F2', run: () => this._rename(r) });
+    if (r.renamable && this.actions.rename) out.push({ id: 'rename', icon: 'mdi:rename-outline', label: 'Rename', reason: lock ? 'Locked' : undefined, keys: 'F2', run: () => this._rename(r) });
     const view = this.view;
     TOGGLES.filter((k) => this._toggles(r).includes(k)).forEach((k, i) => {
       const on = view[k === 'hide' ? 'hidden' : k === 'solo' ? 'solo' : 'locked'].includes(r.key);
-      out.push({ label: TOGGLE_TEXT[k].name, check: on, hint: TOGGLE_TEXT[k].key, sep: i === 0 && out.length > 0, run: () => this.toggle(r.key, r.name, k) });
+      out.push({ id: k, icon: on ? 'mdi:checkbox-marked' : 'mdi:checkbox-blank-outline', label: TOGGLE_TEXT[k].name, checked: on, keys: TOGGLE_TEXT[k].key, separatorBefore: i === 0 && out.length > 0, run: () => this.toggle(r.key, r.name, k) });
     });
     return out;
   }
 
   private _renderMenu(r: RowInit): TemplateResult {
-    const m = this._menu!;
-    return html`<div class="lmenu" role="menu" popover="auto" aria-label=${`Layer actions, ${r.name}`} style=${`top:${m.y}px;left:${m.x}px`} @keydown=${(e: KeyboardEvent) => this._menuKey(e)} @toggle=${(e: Event) => (e as Event & { newState?: string }).newState === 'closed' && this._menu && this._closeMenu(false)}>
-      ${this._menuItems(r).map(
-        (it) => html`${it.sep ? html`<div class="lsep" role="separator"></div>` : nothing}<button type="button" class="litem" tabindex="-1" role=${it.check === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked=${it.check === undefined ? nothing : it.check ? 'true' : 'false'} aria-disabled=${it.disabled ? 'true' : nothing}
-          @click=${() => {
-            if (it.disabled) return;
-            this._closeMenu();
-            it.run();
-          }}><span>${it.label}</span>${it.hint ? html`<kbd>${it.hint}</kbd>` : nothing}</button>`,
-      )}
-    </div>`;
+    const entries = this._menuItems(r);
+    return html`<mc-ui-menu
+      .items=${entries}
+      .align=${'end' as const}
+      label=${`Layer actions, ${r.name}`}
+      @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
+        e.stopPropagation();
+        const hit = entries.find((x) => x.id === e.detail.id);
+        this._closeMenu();
+        hit?.run();
+      }}
+      @mc-menu-close=${(e: Event) => {
+        e.stopPropagation();
+        const reason = (e as CustomEvent<{ reason: string }>).detail.reason;
+        if (reason === 'pick') return;
+        if (reason === 'outside' && this._menu) this._outsideAt = { key: this._menu.key, at: Date.now() };
+        this._closeMenu(false);
+      }}
+    ></mc-ui-menu>`;
   }
 
   // ── row ──
@@ -357,14 +351,14 @@ export class LayerRows implements ReactiveController {
       const on = (k === 'hide' ? why?.kind === 'self' : k === 'solo' ? soloed : lockedSelf) as boolean;
       const soft = !on && (k === 'hide' ? !!why : k === 'lock' ? lockedVia : false);
       const t = TOGGLE_TEXT[k];
-      return html`<button type="button" class="lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t.name} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? 'Hide in preview: the layer rests at its normal value' : t.tip[on ? 1 : 0]} @click=${() => this.toggle(r.key, r.name, k)}>
+      return html`<button type="button" class="icon-btn xs lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t.name} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? 'Hide in preview: the layer rests at its normal value' : t.tip[on ? 1 : 0]} @click=${() => this.toggle(r.key, r.name, k)}>
         <ha-icon icon=${t.icon[on || soft ? 1 : 0]}></ha-icon>
       </button>`;
     };
     const mv = (dir: 'up' | 'down'): TemplateResult | typeof nothing => {
       const m = dir === 'up' ? r.up : r.down;
       if (!m) return nothing;
-      return html`<button type="button" class="lt mv ${dir}" data-ctl=${dir} tabindex="-1" aria-label=${m.label} title=${m.label} aria-disabled=${m.ok && !locked ? nothing : 'true'} @click=${() => this._move(r, dir, dir)}>
+      return html`<button type="button" class="icon-btn xs lt mv ${dir}" data-ctl=${dir} tabindex="-1" aria-label=${m.label} title=${m.label} aria-disabled=${m.ok && !locked ? nothing : 'true'} @click=${() => this._move(r, dir, dir)}>
         <ha-icon icon=${dir === 'up' ? 'mdi:chevron-up' : 'mdi:chevron-down'}></ha-icon>
       </button>`;
     };
@@ -376,10 +370,10 @@ export class LayerRows implements ReactiveController {
       <div class="lr-in">
         ${r.expanded === undefined
           ? html`<span class="lcaret-space"></span>`
-          : html`<button type="button" class="lt lcaret" tabindex="-1" aria-label=${r.expanded ? `Collapse ${r.name}` : `Expand ${r.name}`} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
+          : html`<button type="button" class="icon-btn xs lt lcaret" tabindex="-1" aria-label=${r.expanded ? `Collapse ${r.name}` : `Expand ${r.name}`} @click=${() => this.actions.open?.(r.key, !r.expanded)}>
               <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
             </button>`}
-        <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${r.title ?? r.name} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
+        <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${(r.title ?? r.name) + (r.badge && !r.title ? ` (${r.badge})` : '')} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
           ${r.thumb ?? (r.bare ? nothing : html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`)}
           ${r.renaming ? nothing : html`<span class="nm"><span class="nm-t">${r.name}</span>${r.note ? html`<small>${r.note}</small>` : nothing}</span>`}
           ${r.badge ? html`<span class="lbadge">${r.badge}</span>` : nothing}
@@ -391,10 +385,10 @@ export class LayerRows implements ReactiveController {
         </span>
         ${full}
         ${hasMenu
-          ? html`<button type="button" class="lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${`Layer actions, ${r.name}`} title="Layer actions" @click=${(e: Event) => (this._menu?.key === r.key ? this._closeMenu() : this._openMenu(r.key, e.currentTarget as HTMLElement))} @keydown=${(e: KeyboardEvent) => {
+          ? html`<button type="button" class="icon-btn xs lt lm" data-ctl="menu" tabindex="-1" aria-haspopup="menu" aria-expanded=${this._menu?.key === r.key ? 'true' : 'false'} aria-label=${`Layer actions, ${r.name}`} title="Layer actions" @click=${() => this._toggleMenu(r.key)} @keydown=${(e: KeyboardEvent) => {
               if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
-                this._openMenu(r.key, e.currentTarget as HTMLElement);
+                this._openMenu(r.key);
               }
             }}>
               <ha-icon icon="mdi:dots-vertical"></ha-icon>
@@ -408,7 +402,15 @@ export class LayerRows implements ReactiveController {
   }
 }
 
+/*
+ * The row on the kit (design/10 4.9, CEO 2026-10-18): every in-row control is the kit's borderless 24 px `.icon-btn.xs`, the
+ * row never wraps, and the name is what gives way (an ellipsis; the full name is the button's title). The container
+ * breakpoints are epic F's: under 200 px the toggles live in the Layer actions menu, 200 to 319 px they stay inline
+ * (move up and down go to the menu), from 320 px everything is inline.
+ */
 export const layerRowStyles = css`
+  ${kitTokens}
+  ${kitButtonExtras}
   .lr {
     list-style: none;
     container-type: inline-size;
@@ -417,7 +419,7 @@ export const layerRowStyles = css`
   .lr-in {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 2px;
     min-height: 32px;
     padding-right: 2px;
@@ -445,15 +447,15 @@ export const layerRowStyles = css`
     min-height: 32px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 2px 6px;
+    gap: 6px;
+    padding: 2px 4px;
     border-radius: var(--mc-radius, 8px);
     color: inherit;
     font-size: 0.875rem;
     cursor: pointer;
   }
   .lr-main:focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus, var(--mc-accent));
     outline-offset: -2px;
   }
   .kind {
@@ -485,17 +487,13 @@ export const layerRowStyles = css`
   .lr.sel .nm small {
     color: inherit;
   }
-  .lr.compact.sel .nm-t,
-  .lr.compact:focus-within .nm-t {
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
   .lbadge {
     flex: none;
     padding: 0 6px;
     min-height: 20px;
-    display: grid;
-    place-items: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 9999px;
     border: 1px solid var(--mc-divider);
     background: var(--mc-surface);
@@ -515,38 +513,18 @@ export const layerRowStyles = css`
     flex: 1;
     min-width: 0;
   }
-  .lt {
-    all: unset;
-    box-sizing: border-box;
-    flex: none;
-    display: grid;
-    place-items: center;
-    min-width: 28px;
-    height: 28px;
-    border-radius: var(--mc-radius-sm, 6px);
-    color: var(--mc-text-2);
-    cursor: pointer;
-  }
-  .lt:hover {
-    background: var(--mc-surface);
-  }
   .lt:focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus, var(--mc-accent));
     outline-offset: 0;
   }
-  .lt[aria-pressed='true'] {
-    background: var(--mc-accent-tint);
-    color: var(--mc-accent-ink);
+  .lr .lt:hover:not(:disabled) {
+    background: var(--mc-surface);
   }
   .lr.sel .lt {
     color: inherit;
   }
   .lt.soft {
     opacity: 0.6;
-  }
-  .lt[aria-disabled='true'] {
-    opacity: 0.4;
-    cursor: not-allowed;
   }
   .lfull {
     display: contents;
@@ -562,7 +540,7 @@ export const layerRowStyles = css`
     display: none;
   }
   .lr.compact .lm {
-    display: grid;
+    display: inline-grid;
   }
   .lr.compact .lst:not(:empty) {
     display: flex;
@@ -575,12 +553,25 @@ export const layerRowStyles = css`
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+  /* under 320 px the name needs the room: the count is read out (and in the tooltip) but not drawn */
+  @container (max-width: 319px) {
+    .lbadge:not(.warn) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      border: 0;
+      white-space: nowrap;
+    }
+  }
   @container (max-width: 199px) {
     .lfull {
       display: none;
     }
     .lm {
-      display: grid;
+      display: inline-grid;
     }
     .lst:not(:empty) {
       display: flex;
@@ -588,14 +579,10 @@ export const layerRowStyles = css`
   }
   @container (min-width: 200px) and (max-width: 319px) {
     .lm {
-      display: grid;
+      display: inline-grid;
     }
     .lfull .mv {
       display: none;
-    }
-    .lt {
-      min-width: 24px;
-      height: 24px;
     }
   }
   @media (pointer: coarse) {
@@ -607,82 +594,9 @@ export const layerRowStyles = css`
         display: flex;
       }
     }
-    .lt,
     .lr-main {
-      min-width: 44px;
-      min-height: 44px;
-      height: 44px;
+      min-height: var(--mc-hit, 44px);
     }
-    .litem {
-      min-height: 44px;
-    }
-    .litem kbd {
-      display: none;
-    }
-  }
-  .lmenu {
-    position: fixed;
-    inset: auto;
-    margin: 0;
-    min-width: 200px;
-    padding: 4px;
-    border: 1px solid var(--mc-divider);
-    border-radius: var(--mc-radius, 8px);
-    background: var(--mc-surface);
-    color: var(--mc-text);
-    box-shadow: var(--mc-shadow-float);
-    display: grid;
-  }
-  .litem {
-    all: unset;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    min-height: 32px;
-    padding: 0 10px;
-    border-radius: var(--mc-radius-sm, 6px);
-    font-size: 0.8125rem;
-    cursor: pointer;
-  }
-  .litem:hover,
-  .litem:focus-visible {
-    background: var(--mc-surface-2);
-  }
-  .litem:focus-visible {
-    outline: 2px solid var(--mc-accent);
-    outline-offset: -2px;
-  }
-  .litem[role='menuitemcheckbox']::before {
-    content: '';
-    width: 14px;
-    height: 14px;
-    margin-right: -6px;
-    border: 1.5px solid var(--mc-field-border);
-    border-radius: 3px;
-    box-sizing: border-box;
-  }
-  .litem[aria-checked='true']::before {
-    background: var(--mc-accent);
-    border-color: var(--mc-accent);
-  }
-  .litem[aria-disabled='true'] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .litem span {
-    flex: 1;
-  }
-  .litem kbd {
-    font: inherit;
-    font-size: 0.6875rem;
-    color: var(--mc-text-2);
-  }
-  .lsep {
-    height: 1px;
-    margin: 4px 0;
-    background: var(--mc-divider);
   }
   @media (prefers-reduced-motion: reduce) {
     .lr * {

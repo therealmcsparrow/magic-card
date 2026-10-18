@@ -1,7 +1,8 @@
 import { LitElement, html, css, nothing, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
-import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
+import type { UiPopoverElement } from '../../contracts/ui-kit';
+import '../kit';
 import type { HomeAssistant } from '../../types';
 import type { LayerView, LayerViewChangeDetail } from '../../contracts/studio-layers';
 import { dropStepKey, remapStepKeys } from '../layer-view';
@@ -81,17 +82,11 @@ export class AnimSequenceEditor extends LitElement {
   @state() private _query = '';
   @state() private _announce = '';
 
-  private _pick: PickTarget | null = null;
+  /** What the step picker (the kit popover) is open for; null while it is closed. */
+  @state() private _pick: PickTarget | null = null;
   private _focusAfter?: { index: number; part: 'handle' | 'toggle' };
+  private _trigger: HTMLElement | null = null;
   private _focusSearch = false;
-
-  private _menu = new MenuPopover(this, {
-    menu: () => this.renderRoot.querySelector<HTMLElement>('.pick-menu'),
-    onClose: () => {
-      this._pick = null;
-      this._query = '';
-    },
-  });
 
   private get _steps(): SequenceStep[] {
     return this.doc?.steps ?? [];
@@ -269,75 +264,106 @@ export class AnimSequenceEditor extends LitElement {
 
   // ── step picker ──
 
+  private _popover(): UiPopoverElement | null {
+    return this.renderRoot.querySelector<UiPopoverElement>('mc-ui-popover.pick-pop');
+  }
+
   private _openPicker(e: Event, target: PickTarget): void {
     if (this.disabled) return;
     const trigger = e.currentTarget as HTMLElement;
-    const same = this._menu.trigger === trigger;
-    this._pick = same ? null : target;
+    if (this._pick && this._trigger === trigger) {
+      this._popover()?.close('action');
+      return;
+    }
+    this._trigger = trigger;
+    this._pick = target;
     this._query = '';
-    this._focusSearch = !same;
-    this._menu.open(trigger);
+    this._focusSearch = true;
   }
 
   private _choose(value: string): void {
     const target = this._pick;
-    this._menu.close(true);
+    this._popover()?.close('action');
+    this._pick = null;
     if (!target) return;
     if (target.mode === 'add') this._addStep(value);
     else if (this._steps[target.index]?.animation !== value) this._patchStep(target.index, { animation: value }, 'Change step animation');
   }
 
-  private _onMenuKey(e: KeyboardEvent): void {
-    // Home / End move the caret in the search field
-    if ((e.key === 'Home' || e.key === 'End') && (e.target as HTMLElement).tagName === 'INPUT') return;
-    this._menu.onKeydown(e);
+  /** Arrows between the search field and the animations; Home and End inside the list (in the field they move the caret). */
+  private _onPickKey(e: KeyboardEvent): void {
+    const inField = (e.target as HTMLElement).tagName === 'INPUT';
+    if (inField && (e.key === 'Home' || e.key === 'End')) return;
+    const items = [...this.renderRoot.querySelectorAll<HTMLElement>('.pick-pop [role="menuitem"]')];
+    const field = this.renderRoot.querySelector<HTMLElement>('.pick-pop .pick-search input');
+    const at = items.indexOf(e.target as HTMLElement);
+    const go = (el: HTMLElement | null | undefined): void => {
+      if (!el) return;
+      e.preventDefault();
+      el.focus();
+    };
+    if (e.key === 'ArrowDown') go(inField ? items[0] : items[Math.min(items.length - 1, at + 1)]);
+    else if (e.key === 'ArrowUp') go(at <= 0 ? field : items[at - 1]);
+    else if (e.key === 'Home') go(items[0]);
+    else if (e.key === 'End') go(items[items.length - 1]);
   }
 
-  private _renderMenu(): TemplateResult {
+  private _renderPicker(): TemplateResult {
     const target = this._pick;
     const current = target?.mode === 'step' ? this._steps[target.index]?.animation : undefined;
     const groups = stepPickerGroups(this.library, this.doc?.id, this._query);
+    const name = target?.mode === 'add' ? 'Add step' : 'Step animation';
     return html`
-      <div class="menu pick-menu" role="menu" aria-label=${target?.mode === 'add' ? 'Add step' : 'Step animation'} @keydown=${(e: KeyboardEvent) => this._onMenuKey(e)}>
-        <div class="pick-search" role="none">
-          <ha-icon icon="mdi:magnify"></ha-icon>
-          <input
-            class="input"
-            type="search"
-            placeholder="Search animations"
-            aria-label="Search animations"
-            autocomplete="off"
-            .value=${this._query}
-            @input=${(e: InputEvent) => {
-              this._query = (e.target as HTMLInputElement).value;
-              void this.updateComplete.then(() => this._menu.position());
-            }}
-          />
+      <mc-ui-popover
+        class="pick-pop"
+        label=${name}
+        .anchor=${this._trigger}
+        @mc-popover-close=${(e: Event) => {
+          e.stopPropagation();
+          this._pick = null;
+          this._query = '';
+        }}
+      >
+        <div class="pick" @keydown=${(e: KeyboardEvent) => this._onPickKey(e)}>
+          <div class="pick-search">
+            <ha-icon icon="mdi:magnify"></ha-icon>
+            <input
+              class="input"
+              type="search"
+              placeholder="Search animations"
+              aria-label="Search animations"
+              autocomplete="off"
+              .value=${this._query}
+              @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
+            />
+          </div>
+          <div class="pick-list" role="menu" aria-label=${name}>
+            ${groups.length
+              ? groups.map(
+                  (g) => html`
+                    <div class="pick-group" role="group" aria-label=${g.label}>
+                      <div class="pick-head" aria-hidden="true">${g.label}</div>
+                      ${g.items.map(
+                        (it) => html`<button
+                          type="button"
+                          role="menuitem"
+                          class="pick-item ${it.value === current ? 'is-current' : ''}"
+                          data-value=${it.value}
+                          @click=${() => this._choose(it.value)}
+                        >
+                          <ha-icon icon=${it.icon}></ha-icon>
+                          <span class="pick-name">${it.name}${it.kind ? html`<span class="pick-kind"> · ${it.kind}</span>` : nothing}</span>
+                          ${it.duration !== undefined ? html`<span class="pick-dur">${formatSeconds(it.duration)}</span>` : nothing}
+                          ${it.value === current ? html`<ha-icon class="pick-check" icon="mdi:check"></ha-icon>` : nothing}
+                        </button>`,
+                      )}
+                    </div>
+                  `,
+                )
+              : html`<p class="menu-note">No animation matches “${this._query}”.</p>`}
+          </div>
         </div>
-        ${groups.length
-          ? groups.map(
-              (g) => html`
-                <div class="pick-group" role="group" aria-label=${g.label}>
-                  <div class="pick-head" aria-hidden="true">${g.label}</div>
-                  ${g.items.map(
-                    (it) => html`<button
-                      type="button"
-                      role="menuitem"
-                      class="pick-item ${it.value === current ? 'is-current' : ''}"
-                      data-value=${it.value}
-                      @click=${() => this._choose(it.value)}
-                    >
-                      <ha-icon icon=${it.icon}></ha-icon>
-                      <span class="pick-name">${it.name}${it.kind ? html`<span class="pick-kind"> · ${it.kind}</span>` : nothing}</span>
-                      ${it.duration !== undefined ? html`<span class="pick-dur">${formatSeconds(it.duration)}</span>` : nothing}
-                      ${it.value === current ? html`<ha-icon class="pick-check" icon="mdi:check"></ha-icon>` : nothing}
-                    </button>`,
-                  )}
-                </div>
-              `,
-            )
-          : html`<p class="menu-note">No animation matches “${this._query}”.</p>`}
-      </div>
+      </mc-ui-popover>
     `;
   }
 
@@ -470,7 +496,7 @@ export class AnimSequenceEditor extends LitElement {
                   class="input pick-btn"
                   id=${id('anim')}
                   aria-haspopup="menu"
-                  aria-expanded=${this._menu.isOpen && this._pick?.mode === 'step' && this._pick.index === i ? 'true' : 'false'}
+                  aria-expanded=${this._pick?.mode === 'step' && this._pick.index === i ? 'true' : 'false'}
                   ?disabled=${this.disabled || lock}
                   @click=${(e: Event) => this._openPicker(e, { mode: 'step', index: i })}
                 >
@@ -575,7 +601,7 @@ export class AnimSequenceEditor extends LitElement {
               type="button"
               class="btn btn-text btn-sm add"
               aria-haspopup="menu"
-              aria-expanded=${this._menu.isOpen && this._pick?.mode === 'add' ? 'true' : 'false'}
+              aria-expanded=${this._pick?.mode === 'add' ? 'true' : 'false'}
               ?disabled=${this.disabled || full}
               @click=${(e: Event) => this._openPicker(e, { mode: 'add' })}
             >
@@ -637,7 +663,7 @@ export class AnimSequenceEditor extends LitElement {
             : nothing}
         </section>
         <div class="sr-only" aria-live="polite">${this._announce}</div>
-        ${this._menu.isOpen ? this._renderMenu() : nothing}
+        ${this._pick ? this._renderPicker() : nothing}
       </div>
     `;
   }
@@ -647,9 +673,16 @@ export class AnimSequenceEditor extends LitElement {
   }
 
   protected updated(): void {
-    if (this._focusSearch && this._menu.isOpen) {
+    const pop = this._pick ? this._popover() : null;
+    if (pop && !pop.open) {
+      pop.anchor = this._trigger!;
+      pop.show();
+    }
+    if (this._focusSearch && pop) {
       this._focusSearch = false;
-      this.renderRoot.querySelector<HTMLInputElement>('.pick-search input')?.focus({ preventScroll: true });
+      void (pop as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() =>
+        this.renderRoot.querySelector<HTMLInputElement>('.pick-pop .pick-search input')?.focus({ preventScroll: true }),
+      );
     }
     const f = this._focusAfter;
     if (f) {
@@ -930,23 +963,17 @@ export class AnimSequenceEditor extends LitElement {
         gap: 4px 12px;
       }
 
-      /* ── picker menu ── */
-      .pick-menu {
+      /* ── step picker (the kit popover) ── */
+      .pick {
+        display: grid;
+        width: min(320px, calc(100vw - 40px));
         font-size: 0.875rem;
-        width: min(320px, calc(100vw - 16px));
-        max-height: 420px;
-        overflow: auto;
-        padding-top: 0;
-        align-content: start;
       }
       .pick-search {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        background: var(--mc-surface);
-        padding: 6px 0 4px;
+        position: relative;
         display: flex;
         align-items: center;
+        padding-bottom: 6px;
       }
       .pick-search > ha-icon {
         position: absolute;
@@ -958,6 +985,13 @@ export class AnimSequenceEditor extends LitElement {
       .pick-search .input {
         padding-left: 36px;
       }
+      .pick-list {
+        display: grid;
+        align-content: start;
+        max-height: min(340px, 50vh);
+        overflow: auto;
+        overscroll-behavior: contain;
+      }
       .pick-group {
         display: grid;
       }
@@ -967,8 +1001,34 @@ export class AnimSequenceEditor extends LitElement {
         font-weight: 500;
         color: var(--mc-text-2);
       }
-      .menu .pick-item {
+      .pick-item {
+        display: flex;
+        align-items: center;
         gap: 10px;
+        width: 100%;
+        min-height: var(--mc-hit, 40px);
+        padding: 0 12px;
+        border: 0;
+        border-radius: var(--mc-radius);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      .pick-item:hover,
+      .pick-item:focus-visible {
+        background: var(--mc-surface-2);
+      }
+      .pick-item:focus-visible {
+        outline: 2px solid var(--mc-focus, var(--mc-accent));
+        outline-offset: -2px;
+      }
+      .menu-note {
+        margin: 0;
+        padding: 8px 12px;
+        color: var(--mc-text-2);
+        font-size: 0.8125rem;
       }
       .pick-name {
         flex: 1;
@@ -983,11 +1043,11 @@ export class AnimSequenceEditor extends LitElement {
         color: var(--mc-text-2);
         font-variant-numeric: tabular-nums;
       }
-      .menu .pick-item.is-current {
+      .pick-item.is-current {
         color: var(--mc-accent-ink);
         font-weight: 500;
       }
-      .menu .pick-item .pick-check {
+      .pick-item .pick-check {
         color: var(--mc-accent-ink);
       }
     `,

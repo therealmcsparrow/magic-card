@@ -1,5 +1,7 @@
 // first: the public path of the lazy chunks, before any module can call import()
 import './public-path';
+// the studio's own copy of the ui kit (windows, menus), defined once, guarded (kit.ts)
+import './kit';
 import { AnimationStudio } from './studio';
 import { AnimationStage } from './studio-stage';
 import { AnimationThumb } from './studio-thumb';

@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { t } from '../../i18n/labels';
 import { editorSystem } from '../../css/editor-system';
+import { seg } from '../../ui-kit/templates/choice';
 import type { LayerView } from '../../contracts/studio-layers';
 import { emitterIds, isLocked } from '../layer-view';
 import { lockBanner, lockBannerStyles } from './lock-banner';
@@ -319,29 +320,18 @@ export class AnimParticlesEditor extends LitElement {
         padding-bottom: 16px;
       }
       .em-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        flex: 1;
+        flex: 1 1 100%;
         min-width: 0;
+        display: flex;
       }
-      .em-tabs [role='tab'] {
-        min-height: 32px;
+      .em-tabs .seg {
+        max-width: 100%;
+      }
+      .em-tabs .seg > button {
         max-width: 160px;
-        padding: 0 12px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 1px solid var(--mc-field-border);
-        border-radius: 16px;
-        background: var(--mc-surface);
-        color: var(--mc-text);
-        font-size: 0.8125rem;
-      }
-      .em-tabs [role='tab'][aria-selected='true'] {
-        border-color: var(--mc-accent);
-        box-shadow: 0 0 0 1px var(--mc-accent);
-        background: var(--mc-accent-tint);
       }
       .em-cap {
         flex-basis: 100%;
@@ -2391,17 +2381,11 @@ export class AnimParticlesEditor extends LitElement {
     const pick = (id: string) => {
       if (id === 'all') this._select(this._em, true);
       else this._select(+id);
-      this._focus(`.em-tabs [data-tab="${id}"]`);
+      this._focus(`.em-tabs [data-val="${id}"]`);
     };
     return html`<div class="em-bar">
       ${n > 1
-        ? html`<div class="em-tabs" role="tablist" aria-label="Emitters" @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ids, cur, pick)}>
-            ${ids.map(
-              (id) => html`<button type="button" role="tab" data-tab=${id} aria-selected=${id === cur ? 'true' : 'false'} tabindex=${id === cur ? 0 : -1} @click=${() => pick(id)}>
-                ${id === 'all' ? 'All particles' : this._name(+id)}
-              </button>`,
-            )}
-          </div>`
+        ? html`<div class="em-tabs">${seg({ role: 'tablist', label: 'Emitters', value: cur, items: ids.map((id) => ({ value: id, label: id === 'all' ? 'All particles' : this._name(+id) })), onChange: pick })}</div>`
         : nothing}
       <button type="button" class="btn btn-secondary btn-sm em-add" ?disabled=${!can || this.disabled} aria-describedby=${can ? nothing : 'h-em-cap'} @click=${this._addEmitter}>
         <ha-icon icon="mdi:plus"></ha-icon>Add emitter

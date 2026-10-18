@@ -558,53 +558,27 @@ export const studioStyles: CSSResult[] = [
     .ctx-note {
       padding-top: 16px;
     }
-    /* collapsible inspector sections */
+    /* collapsible inspector sections: the kit's section head (h3 + .sector-btn) on the studio's flat rule between sections */
     .sec {
+      position: relative;
       border-bottom: 1px solid var(--mc-divider);
     }
     .sec:last-child {
       border-bottom: 0;
     }
-    .sec-title {
-      margin: 0;
-      font: inherit;
-    }
-    .sec-head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      min-height: 48px;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      color: var(--mc-text);
-      font-size: 0.875rem;
-      font-weight: 500;
-      text-align: left;
-    }
-    .sec-head > ha-icon {
-      --mdc-icon-size: 18px;
-      color: var(--mc-text-2);
-    }
-    .sec-name {
-      flex: 1;
-      min-width: 0;
-    }
-    .sec-head .chev {
-      transition: transform 0.15s ease-out;
-    }
-    .sec-head[aria-expanded='false'] .chev {
-      transform: rotate(-90deg);
-    }
-    .sec-head:focus-visible {
-      outline-offset: -2px;
+    .sec .sector-btn {
+      width: calc(100% + 8px);
+      margin: 0 -4px;
+      padding: 8px 4px;
     }
     .sec-err {
+      position: absolute;
+      top: 20px;
+      right: 36px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--error-color, #db4437);
+      background: var(--mc-error-ink, var(--error-color, #db4437));
     }
     .sec-body {
       display: grid;
@@ -673,50 +647,20 @@ export const studioStyles: CSSResult[] = [
       border-top: 1px solid var(--mc-divider);
     }
 
-    /* dialogs */
-    dialog.dlg {
-      width: min(440px, calc(100vw - 32px));
-      max-height: calc(100vh - 64px);
-      padding: 20px;
-      border: 1px solid var(--mc-divider);
-      border-radius: var(--mc-radius-lg);
-      background: var(--mc-surface);
-      color: var(--mc-text);
-      box-shadow: var(--mc-shadow-float);
-      font-size: 0.875rem;
-      line-height: 1.5;
-      overflow: auto;
-    }
-    dialog.dlg.wide {
-      width: min(640px, calc(100vw - 32px));
-    }
-    /* the preset tile grid: 6 tiles of 136px across */
-    dialog.dlg.xwide {
-      width: min(880px, calc(100vw - 32px));
-    }
-    dialog.dlg[open] {
+    /* what goes into an <mc-ui-window>: the body is a grid, the footer's buttons join the window's own footer row */
+    .dlg {
       display: grid;
       gap: 12px;
+      min-width: 0;
     }
-    dialog.dlg::backdrop {
-      background: rgba(0, 0, 0, 0.32);
-    }
-    dialog.dlg h2 {
+    .dlg p {
       margin: 0;
-      font-size: 1rem;
-      font-weight: 500;
     }
-    dialog.dlg p {
-      margin: 0;
+    .dlg > p:not(.help) {
       color: var(--mc-text-2);
     }
-    .dlg-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 4px;
+    .foot {
+      display: contents;
     }
     textarea.yaml {
       min-height: 260px;

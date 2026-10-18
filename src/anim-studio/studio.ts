@@ -34,6 +34,10 @@ import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail } from '..
 import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLocked } from './layer-view';
 import { lockBanner, lockBannerStyles } from './editors/lock-banner';
 import { stageParticlesOf } from './stage-particles';
+import type { UiMenuElement, UiMenuEntry, UiMenuPick, UiWindowElement } from '../contracts/ui-kit';
+import { deepActive, settleFocus, studioWindow } from './window';
+import { sectionHead } from '../ui-kit/templates/layout';
+import { seg } from '../ui-kit/templates/choice';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
@@ -272,8 +276,11 @@ export class AnimationStudio extends LitElement {
   @state() private _query = '';
   @state() private _kind: AnimationKind | 'all' = 'all';
   @state() private _menu = false;
+  private _menuClosedAt = 0;
   @state() private _renaming?: string;
   @state() private _dialog?: Dialog;
+  /** What had focus when the dialog opened. */
+  private _opener?: HTMLElement;
   @state() private _doc?: AnimationDoc;
   /** The stored version of the open document; null while it was never saved. */
   @state() private _saved: AnimationDoc | null = null;
@@ -392,8 +399,29 @@ export class AnimationStudio extends LitElement {
       }
       this._focusSel = undefined;
     }
-    const dlg = this.shadowRoot?.querySelector<HTMLDialogElement>('dialog.dlg');
-    if (dlg && !dlg.open) dlg.showModal?.();
+    const menu = this._menu ? this.shadowRoot?.querySelector<UiMenuElement>('mc-ui-menu.new-menu') : undefined;
+    if (menu && !menu.open) {
+      menu.anchor = this.shadowRoot?.querySelector<HTMLElement>('.new-btn') ?? undefined;
+      menu.show();
+    }
+    // a dialog is a kit window; it opens once it is rendered and hands focus back to whatever had it
+    const win = this.shadowRoot?.querySelector<UiWindowElement>('mc-ui-window');
+    if (win && !win.open) {
+      this._opener = deepActive() ?? this._opener;
+      win.opener = this._opener;
+      win.show();
+      settleFocus(win);
+      // the transfer panel is the window's content: a screen reader user is best served by its heading
+      const start = win.querySelector<HTMLElement & { focusStart?: () => void }>('mc-anim-icon-start');
+      if (start) void (win as UiWindowElement & { updateComplete: Promise<unknown> }).updateComplete.then(() => setTimeout(() => start.focusStart?.(), 0));
+      const panel = win.querySelector<HTMLElement & { focusHeading?: () => void }>('mc-transfer-panel');
+      if (panel) void (win as UiWindowElement & { updateComplete: Promise<unknown> }).updateComplete.then(() => panel.focusHeading?.());
+    } else if (!win && changed.has('_dialog') && changed.get('_dialog') && this._opener?.isConnected) {
+      // closed by a plain state change (an action ran): focus goes back too, unless something took it
+      const now = deepActive();
+      if (!now || now === document.body) this._opener.focus({ preventScroll: true });
+      this._opener = undefined;
+    }
   }
 
   connectedCallback(): void {
@@ -975,70 +1003,45 @@ export class AnimationStudio extends LitElement {
     if (e.key === '/' && !mod && !isTyping(e)) {
       e.preventDefault();
       this.shadowRoot?.querySelector<HTMLInputElement>('.search input')?.focus();
-    } else if (e.key === 'Escape' && this._menu) {
-      e.preventDefault();
-      this._menu = false;
-      this._focusSel = '.new-btn';
     }
   };
 
   // ── render: library ──
 
+  /** The New animation menu: the kit menu under the button (it handles arrows, type-ahead, Esc and the outside press). */
   private _renderNewMenu(): TemplateResult {
-    const onKey = (e: KeyboardEvent) => {
-      const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="menuitem"]')];
-      const i = items.indexOf(e.composedPath()[0] as HTMLElement);
-      const next =
-        e.key === 'ArrowDown'
-          ? (i + 1) % items.length
-          : e.key === 'ArrowUp'
-            ? (i - 1 + items.length) % items.length
-            : e.key === 'Home'
-              ? 0
-              : e.key === 'End'
-                ? items.length - 1
-                : -1;
-      if (next >= 0) {
-        e.preventDefault();
-        items[next].focus();
-      } else if (e.key === 'Escape' || e.key === 'Tab') {
+    const items: UiMenuEntry[] = [
+      ...ANIMATION_KINDS.map((k) => ({ id: `kind:${k}`, label: `Blank ${KIND_LABEL[k].toLowerCase()}`, icon: KIND_ICON[k] })),
+      { id: 'preset', label: 'Customise a preset…', icon: 'mdi:auto-fix', separatorBefore: true },
+      { id: 'icon', label: 'Icon animation…', icon: 'mdi:motion-play-outline' },
+    ];
+    return html`<mc-ui-menu
+      class="new-menu"
+      .items=${items}
+      label="New animation"
+      .align=${'end' as const}
+      @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
+        e.stopPropagation();
+        const id = e.detail.id;
         this._menu = false;
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          this._focusSel = '.new-btn';
-        }
-      }
-    };
-    return html`
-      <div class="menu new-menu" role="menu" aria-label="New animation" @keydown=${onKey}>
-        ${ANIMATION_KINDS.map(
-          (k) =>
-            html`<button type="button" role="menuitem" data-kind=${k} @click=${() => this._new(k)}>
-              <ha-icon icon=${KIND_ICON[k]}></ha-icon>
-              <span class="mi"><span class="mi-t">Blank ${KIND_LABEL[k].toLowerCase()}</span><span class="mi-s">${NEW_HELP[k]}</span></span>
-            </button>`,
-        )}
-        <hr />
-        <button
-          type="button"
-          role="menuitem"
-          data-kind="preset"
-          @click=${() => {
-            this._menu = false;
-            this._openPresets();
-          }}
-        >
-          <ha-icon icon="mdi:auto-fix"></ha-icon>
-          <span class="mi"
-            ><span class="mi-t">Customise a preset…</span><span class="mi-s">Start from one of the ${ANIMATION_PRESETS.length} presets</span></span
-          >
-        </button>
-        <button type="button" role="menuitem" data-kind="icon" @click=${() => this._openIconStart()}>
-          <ha-icon icon="mdi:motion-play-outline"></ha-icon>
-          <span class="mi"><span class="mi-t">Icon animation…</span><span class="mi-s">Split an icon into parts, or start from the icon library</span></span>
-        </button>
-      </div>
-    `;
+        if (id === 'preset') this._openPresets();
+        else if (id === 'icon') this._openIconStart();
+        else this._new(id.slice(5) as AnimationKind);
+      }}
+      @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => {
+        e.stopPropagation();
+        // the button's own press closes the menu as an outside press; the click that follows must not open it again
+        if (e.detail.reason === 'outside') this._menuClosedAt = Date.now();
+        this._menu = false;
+      }}
+    ></mc-ui-menu>`;
+  }
+
+  private _toggleNewMenu(): void {
+    if (this._menu) {
+      this.shadowRoot?.querySelector<UiMenuElement>('mc-ui-menu.new-menu')?.close('escape');
+      this._menu = false;
+    } else if (Date.now() - this._menuClosedAt > 400) this._menu = true;
   }
 
   private _renderNewButton(): TemplateResult {
@@ -1048,19 +1051,11 @@ export class AnimationStudio extends LitElement {
         class="btn btn-primary btn-sm new-btn"
         aria-haspopup="menu"
         aria-expanded=${this._menu ? 'true' : 'false'}
-        @click=${() => {
-          this._menu = !this._menu;
-          if (this._menu) this._focusSel = '.new-menu [role="menuitem"]';
-        }}
+        @click=${() => this._toggleNewMenu()}
       >
         <ha-icon icon="mdi:plus"></ha-icon>New animation<ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
       </button>
-      ${
-        this._menu
-          ? html`<div class="scrim" @click=${() => (this._menu = false)}></div>
-              ${this._renderNewMenu()}`
-          : nothing
-      }
+      ${this._menu ? this._renderNewMenu() : nothing}
     </div>`;
   }
 
@@ -1169,19 +1164,6 @@ export class AnimationStudio extends LitElement {
       ...ANIMATION_KINDS.map((k) => ({ id: k, label: KIND_LABEL[k] })),
     ];
     const shown = filterDocs(all, this._query).filter((d) => this._kind === 'all' || d.kind === this._kind);
-    const onKindKey = (e: KeyboardEvent) => {
-      const i = kinds.findIndex((k) => k.id === this._kind);
-      const map: Record<string, number> = {
-        ArrowRight: (i + 1) % kinds.length,
-        ArrowLeft: (i - 1 + kinds.length) % kinds.length,
-        Home: 0,
-        End: kinds.length - 1,
-      };
-      if (map[e.key] === undefined) return;
-      e.preventDefault();
-      this._kind = kinds[map[e.key]].id;
-      this._focusSel = '.kinds [aria-checked="true"]';
-    };
     return html`
       <header class="topbar">
         <div class="grp title">
@@ -1227,20 +1209,7 @@ export class AnimationStudio extends LitElement {
                         @input=${(e: InputEvent) => (this._query = (e.target as HTMLInputElement).value)}
                       />
                     </div>
-                    <div class="seg kinds" role="radiogroup" aria-label="Kind" @keydown=${onKindKey}>
-                      ${kinds.map((k) => {
-                        const on = k.id === this._kind;
-                        return html`<button
-                          type="button"
-                          role="radio"
-                          aria-checked=${on ? 'true' : 'false'}
-                          tabindex=${on ? '0' : '-1'}
-                          @click=${() => (this._kind = k.id)}
-                        >
-                          ${k.label}
-                        </button>`;
-                      })}
-                    </div>
+                    <div class="kinds">${seg({ role: 'radiogroup', label: 'Kind', value: this._kind, items: kinds.map((k) => ({ value: k.id, label: k.label })), onChange: (v) => (this._kind = v) })}</div>
                   </div>
                   ${
                     shown.length
@@ -1332,21 +1301,9 @@ export class AnimationStudio extends LitElement {
   /** A collapsible inspector section (open state remembered per id; a section with errors stays open). */
   private _section(id: string, title: string, icon: string, body: TemplateResult, opts: { errors?: boolean; cls?: string } = {}): TemplateResult {
     const open = opts.errors || !this._collapsed.has(id);
-    return html`<section class="sec ${opts.cls ?? ''}" data-sec=${id} aria-labelledby="sec-${id}">
-      <h3 class="sec-title">
-        <button
-          type="button"
-          class="sec-head"
-          id="sec-${id}"
-          aria-expanded=${open ? 'true' : 'false'}
-          aria-controls="secb-${id}"
-          @click=${() => this._toggleSection(id)}
-        >
-          <ha-icon icon=${icon}></ha-icon><span class="sec-name">${title}</span>
-          ${opts.errors ? html`<span class="sec-err" title="Has errors"></span>` : nothing}
-          <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
-        </button>
-      </h3>
+    return html`<section class="sec ${opts.cls ?? ''}" data-sec=${id}>
+      ${sectionHead({ title, icon, collapsible: true, expanded: open, onToggle: () => this._toggleSection(id) })}
+      ${opts.errors ? html`<span class="sec-err" role="img" aria-label="Has errors"></span>` : nothing}
       <div class="sec-body" id="secb-${id}" ?hidden=${!open}>${open ? body : nothing}</div>
     </section>`;
   }
@@ -2135,27 +2092,21 @@ export class AnimationStudio extends LitElement {
     `;
   }
 
-  // ── dialogs ──
+  // ── dialogs (kit windows) ──
 
+  /** Close the open window (focus goes back to what opened it); its close event clears the state. */
   private _closeDialog = (): void => {
-    this._dialog = undefined;
+    const win = this.shadowRoot?.querySelector<UiWindowElement>('mc-ui-window');
+    if (win?.open) win.close('action');
+    else this._dialog = undefined;
   };
 
   private _renderDialog(): TemplateResult | typeof nothing {
     const dg = this._dialog;
     if (!dg) return nothing;
-    const shell = (label: string, body: TemplateResult, wide: boolean | 'xwide' = false) =>
-      html`<dialog
-        class="dlg ${wide === 'xwide' ? 'xwide' : wide ? 'wide' : ''}"
-        aria-label=${label}
-        @cancel=${(e: Event) => {
-          e.preventDefault();
-          this._closeDialog();
-        }}
-        @close=${() => this._dialog === dg && this._closeDialog()}
-      >
-        ${body}
-      </dialog>`;
+    const onClose = (): void => {
+      if (this._dialog === dg) this._dialog = undefined;
+    };
 
     switch (dg.type) {
       case 'delete': {
@@ -2164,76 +2115,67 @@ export class AnimationStudio extends LitElement {
         if (uses === undefined) lines.push('Cards that use it stop playing it, unless they embed a copy.');
         else if (uses) lines.push(`It is used by ${uses} card${uses === 1 ? '' : 's'}; they stop playing it, unless they embed a copy.`);
         if (sequences.length) lines.push(`Sequences that play it skip that step: ${sequences.map((s) => s.name).join(', ')}.`);
-        return shell(
-          'Delete animation',
-          html`<h2>Delete "${doc.name}"?</h2>
-            ${lines.map((l) => html`<p>${l}</p>`)}
-            <div class="dlg-actions">
-              <button type="button" class="btn btn-secondary btn-sm" autofocus @click=${this._closeDialog}>Cancel</button>
-              <button type="button" class="btn btn-danger btn-sm confirm-delete" @click=${() => this._delete(doc)}>
-                <ha-icon icon="mdi:delete-outline"></ha-icon>Delete
-              </button>
-            </div>`,
+        return studioWindow(
+          { heading: `Delete "${doc.name}"?`, variant: 'alert', initialFocus: 'dlg-safe', onClose },
+          html`<div class="dlg">${lines.map((l) => html`<p>${l}</p>`)}</div>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>Cancel</button>
+            <button type="button" class="btn btn-danger btn-sm confirm-delete" @click=${() => this._delete(doc)}>
+              <ha-icon icon="mdi:delete-outline"></ha-icon>Delete
+            </button>`,
         );
       }
       case 'discard':
-        return shell(
-          'Unsaved changes',
-          html`<h2>Save your changes?</h2>
-            <p>"${this._doc?.name || 'This animation'}" has changes that are not saved yet.</p>
-            <div class="dlg-actions">
-              <button type="button" class="btn btn-secondary btn-sm" autofocus @click=${this._closeDialog}>Keep editing</button>
-              <button
-                type="button"
-                class="btn btn-secondary btn-sm discard"
-                @click=${() => {
-                  this._dialog = undefined;
-                  writeDraft(draftKey(this._saved?.id));
-                  this._saved = this._doc ?? null;
-                  dg.then();
-                }}
-              >
-                Discard
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                @click=${async () => {
-                  this._dialog = undefined;
-                  if (await this.save()) dg.then();
-                }}
-              >
-                Save
-              </button>
-            </div>`,
+        return studioWindow(
+          { heading: 'Save your changes?', variant: 'alert', initialFocus: 'dlg-safe', onClose },
+          html`<div class="dlg"><p>"${this._doc?.name || 'This animation'}" has changes that are not saved yet.</p></div>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" id="dlg-safe" @click=${this._closeDialog}>Keep editing</button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm discard"
+              @click=${() => {
+                this._dialog = undefined;
+                writeDraft(draftKey(this._saved?.id));
+                this._saved = this._doc ?? null;
+                dg.then();
+              }}
+            >
+              Discard
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              @click=${async () => {
+                this._dialog = undefined;
+                if (await this.save()) dg.then();
+              }}
+            >
+              Save
+            </button>`,
         );
       case 'restore':
-        return shell(
-          'Unsaved changes',
-          html`<h2>Restore unsaved changes?</h2>
-            <p>
-              ${dg.isNew ? `The new animation "${dg.draft.name}" was not saved last time.` : `"${dg.draft.name}" has changes that were not saved last time.`}
-            </p>
-            <div class="dlg-actions">
-              <button
-                type="button"
-                class="btn btn-secondary btn-sm discard-draft"
-                @click=${() => {
-                  this._dialog = undefined;
-                  writeDraft(draftKey(dg.isNew ? undefined : dg.draft.id));
-                }}
-              >
-                Discard
-              </button>
-              <button type="button" class="btn btn-primary btn-sm restore-draft" autofocus @click=${() => this._restoreDraft(dg.draft, dg.isNew)}>
-                Restore unsaved changes
-              </button>
-            </div>`,
+        return studioWindow(
+          { heading: 'Restore unsaved changes?', variant: 'alert', initialFocus: 'restore-draft', onClose },
+          html`<div class="dlg">
+            <p>${dg.isNew ? `The new animation "${dg.draft.name}" was not saved last time.` : `"${dg.draft.name}" has changes that were not saved last time.`}</p>
+          </div>`,
+          html`<button
+              type="button"
+              class="btn btn-secondary btn-sm discard-draft"
+              @click=${() => {
+                this._dialog = undefined;
+                writeDraft(draftKey(dg.isNew ? undefined : dg.draft.id));
+              }}
+            >
+              Discard
+            </button>
+            <button type="button" class="btn btn-primary btn-sm restore-draft" id="restore-draft" @click=${() => this._restoreDraft(dg.draft, dg.isNew)}>
+              Restore unsaved changes
+            </button>`,
         );
       case 'export':
       case 'import':
-        return shell(
-          dg.type === 'export' ? 'Export animations' : 'Import animations',
+        return studioWindow(
+          { heading: dg.type === 'export' ? 'Export animations' : 'Import animations', size: 'l', dismissible: false, onClose },
           html`<mc-transfer-panel
             host="animation-studio"
             .mode=${dg.type}
@@ -2242,33 +2184,30 @@ export class AnimationStudio extends LitElement {
             @mc-transfer-import=${(e: CustomEvent) => void this._onImport(e)}
             @mc-transfer-close=${this._closeDialog}
           ></mc-transfer-panel>`,
-          true,
         );
       case 'icon':
-        return shell(
-          'Icon animation',
-          html`<h2>Icon animation</h2>
+        return studioWindow(
+          { heading: 'Icon animation', size: 'l', onClose },
+          html`<div class="dlg">
             ${
               editorDefined(ICON_START)
                 ? html`<mc-anim-icon-start class="icon-start" .hass=${this.hass} .lookup=${this._lookup} @icon-start=${(e: Event) => this._startIcon(e)}></mc-anim-icon-start>`
                 : html`<p class="help">Loading…</p>`
             }
-            <div class="dlg-actions">
-              <button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>
-            </div>`,
-          true,
+          </div>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>`,
         );
       case 'presets': {
-        return shell(
-          'Customise a preset',
-          html`<h2>Customise a preset</h2>
-            <p>The preset becomes your own animation to edit: motion presets as keyframes, particle and ring presets with their settings.</p>
+        return studioWindow(
+          { heading: 'Customise a preset', size: 'xl', initialFocus: 'preset-search', onClose },
+          html`<div class="dlg">
+            <p class="help">The preset becomes your own animation to edit: motion presets as keyframes, particle and ring presets with their settings.</p>
             <div class="with-icon">
               <ha-icon icon="mdi:magnify"></ha-icon>
               <input
                 class="input preset-search"
+                id="preset-search"
                 type="search"
-                autofocus
                 placeholder="Search presets"
                 aria-label="Search presets"
                 .value=${live(this._presetQuery)}
@@ -2285,10 +2224,8 @@ export class AnimationStudio extends LitElement {
               @preset-pick=${(e: Event) => this._pickPreset(e)}
               @preset-clear-search=${() => void this._clearPresetSearch()}
             ></mc-preset-grid>
-            <div class="dlg-actions">
-              <button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>
-            </div>`,
-          'xwide',
+          </div>`,
+          html`<button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Cancel</button>`,
         );
       }
     }

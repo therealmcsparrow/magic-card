@@ -2,6 +2,9 @@ import { LitElement, html, css, svg, nothing, type TemplateResult, type Property
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editorSystem } from '../../css/editor-system';
+import type { UiWindowElement } from '../../contracts/ui-kit';
+import { seg } from '../../ui-kit/templates/choice';
+import { deepActive, studioWindow } from '../window';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../../icons/svg-sanitize';
 import type { AnimationDoc } from '../model';
 import { V2_CAPS, type RigShape } from '../model-v2';
@@ -11,8 +14,8 @@ import { ANIMATED_SVG_WARN_BYTES, animatedSvgFileName, checkAnimatedSvg, exportA
 import { bakedParticlesSvg } from './particles-utils';
 
 /*
- * The own-icon dialog of the drawing tools (a native modal <dialog>, so it sits in the top layer
- * above the studio): "Save as icon" shows the rig at rest as SVG with Copy SVG, Download .svg and
+ * The own-icon dialog of the drawing tools (a kit <mc-ui-window>: a modal <dialog> in the top layer
+ * above the studio, movable, resizable and maximisable): "Save as icon" shows the rig at rest as SVG with Copy SVG, Download .svg and
  * Use in card (YAML for `icon: svg` + `svg:`), or as an animated SVG (CSS keyframes plus a SMIL
  * fallback, looping; Copy SVG, Download .svg); "Import SVG" previews a file's shapes and adds them
  * to the rig, or makes the file the rig's source icon. Emits doc-change like every panel.
@@ -24,7 +27,7 @@ const bytes = (s: string): number => new TextEncoder().encode(s).length;
 
 /**
  * Copy text to the clipboard. Falls back to a hidden textarea where the API is missing or refused;
- * `container` hosts it (an open modal dialog: everything outside it is inert, so a textarea in the
+ * `container` hosts it (an open modal window: everything outside it is inert, so a textarea in the
  * body could not be selected).
  */
 export async function copyText(text: string, container?: Element | null): Promise<boolean> {
@@ -83,43 +86,17 @@ export class AnimSvgDialog extends LitElement {
       :host {
         display: contents;
       }
-      dialog {
-        width: min(560px, calc(100vw - 32px));
-        max-height: calc(100vh - 48px);
-        box-sizing: border-box;
-        padding: 0;
-        border: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));
-        border-radius: 12px;
-        background: var(--card-background-color, #fff);
-        color: var(--primary-text-color, #212121);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-      }
-      dialog[open] {
-        display: flex;
-        flex-direction: column;
-      }
-      dialog::backdrop {
-        background: rgba(0, 0, 0, 0.32);
-      }
-      header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 12px 12px 16px;
-        border-bottom: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));
-      }
-      header h2 {
-        flex: 1;
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 500;
-      }
+      /* the window brings the frame, header and footer row; what is slotted in is a grid */
       .body {
-        padding: 16px;
-        overflow: auto;
         display: grid;
         gap: 16px;
+        min-width: 0;
+      }
+      .foot {
+        display: contents;
+      }
+      .foot .grow {
+        flex: 1;
       }
       .top {
         display: grid;
@@ -223,17 +200,6 @@ export class AnimSvgDialog extends LitElement {
         background: var(--card-background-color, #fff);
         color: inherit;
       }
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-end;
-        padding: 12px 16px;
-        border-top: 1px solid var(--divider-color, rgba(0, 0, 0, 0.12));
-      }
-      .actions .grow {
-        flex: 1;
-      }
       .status {
         min-height: 1.2em;
         margin: 0;
@@ -275,6 +241,7 @@ export class AnimSvgDialog extends LitElement {
   @property({ type: String }) viewBox = '0 0 24 24';
   @property({ type: Boolean }) disabled = false;
 
+  @state() private _open = false;
   @state() private _mode: 'export' | 'import' = 'export';
   /** Export: the icon at rest (own icon) or the animation (animated SVG file). */
   @state() private _format: 'still' | 'animated' = 'still';
@@ -316,11 +283,13 @@ export class AnimSvgDialog extends LitElement {
   }
 
   close(): void {
-    this.renderRoot.querySelector('dialog')?.close();
+    const win = this.renderRoot.querySelector<UiWindowElement>('mc-ui-window');
+    if (win?.open) win.close('action');
+    else this._open = false;
   }
 
   get open(): boolean {
-    return !!this.renderRoot.querySelector('dialog')?.open;
+    return this._open;
   }
 
   private get _isParticles(): boolean {
@@ -372,7 +341,7 @@ export class AnimSvgDialog extends LitElement {
   }
 
   private async _copy(text: string, label: string, done: string): Promise<void> {
-    const ok = await copyText(text, this.renderRoot.querySelector('dialog'));
+    const ok = await copyText(text, this.renderRoot.querySelector('mc-ui-window'));
     if (ok) {
       this._manual = undefined;
       this._status = done;
@@ -383,11 +352,13 @@ export class AnimSvgDialog extends LitElement {
   }
 
   private async _show(): Promise<void> {
+    const opener = deepActive() ?? undefined;
+    this._open = true;
     await this.updateComplete;
-    const d = this.renderRoot.querySelector('dialog');
-    if (d && !d.open) {
-      if (typeof d.showModal === 'function') d.showModal();
-      else d.setAttribute('open', '');
+    const win = this.renderRoot.querySelector<UiWindowElement>('mc-ui-window');
+    if (win && !win.open) {
+      win.opener = opener;
+      win.show();
     }
   }
 
@@ -503,30 +474,7 @@ export class AnimSvgDialog extends LitElement {
       this._status = '';
       this._manual = undefined;
     };
-    return html`<div
-      class="seg full format"
-      role="radiogroup"
-      aria-label="What to save"
-      @keydown=${(e: KeyboardEvent) => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
-        e.preventDefault();
-        pick(e.key === 'ArrowLeft' || e.key === 'Home' ? 'still' : 'animated');
-        void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.format [aria-checked="true"]')?.focus());
-      }}
-    >
-      ${opts.map(
-        ([id, label, icon]) => html`<button
-          type="button"
-          role="radio"
-          data-format=${id}
-          aria-checked=${this._format === id ? 'true' : 'false'}
-          tabindex=${this._format === id ? 0 : -1}
-          @click=${() => pick(id)}
-        >
-          <ha-icon icon=${icon}></ha-icon>${label}
-        </button>`,
-      )}
-    </div>`;
+    return html`<div class="format">${seg({ role: 'radiogroup', label: 'What to save', full: true, value: this._format, items: opts.map(([value, label, icon]) => ({ value, label, icon })), onChange: pick })}</div>`;
   }
 
   private _renderManual(): TemplateResult | typeof nothing {
@@ -576,7 +524,7 @@ export class AnimSvgDialog extends LitElement {
         </div>
         ${this._renderManual()}
       </div>
-      <div class="actions">
+      <div slot="footer" class="foot">
         <p class="status grow" role="status" aria-live="polite">${this._status}</p>
         <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, 'SVG to copy', 'Animated SVG copied')}>
           <ha-icon icon="mdi:content-copy"></ha-icon>Copy SVG
@@ -629,7 +577,7 @@ export class AnimSvgDialog extends LitElement {
             </div>`
           : nothing}
       </div>
-      <div class="actions">
+      <div slot="footer" class="foot">
         <p class="status grow" role="status" aria-live="polite">${this._status}</p>
         <button type="button" class="btn btn-secondary copy" ?disabled=${!!error} @click=${() => this._copy(text, 'SVG to copy', 'SVG copied')}>
           <ha-icon icon="mdi:content-copy"></ha-icon>Copy SVG
@@ -687,7 +635,7 @@ export class AnimSvgDialog extends LitElement {
               ${error ? html`<p class="error" role="alert">${error}</p>` : nothing}
             </div>`}
       </div>
-      <div class="actions">
+      <div slot="footer" class="foot">
         ${this._text ? html`<button type="button" class="btn btn-text again" @click=${() => (this._text = '')}>Choose another</button><span class="grow"></span>` : html`<span class="grow"></span>`}
         <button type="button" class="btn btn-secondary use-icon" ?disabled=${!this._text || !!this._sourceError()} @click=${() => this._useAsIcon()}>
           <ha-icon icon="mdi:star-four-points-outline"></ha-icon>Use as icon
@@ -699,17 +647,20 @@ export class AnimSvgDialog extends LitElement {
     `;
   }
 
-  protected render(): TemplateResult {
+  protected render(): TemplateResult | typeof nothing {
+    if (!this._open) return nothing;
     const title = this._mode === 'import' ? 'Import SVG' : this._isParticles ? 'Animated SVG' : 'Save as icon';
-    return html`<dialog aria-labelledby="svg-dlg-title" @close=${() => (this._status = '')} @cancel=${() => (this._status = '')}>
-      <header>
-        <h2 id="svg-dlg-title">${title}</h2>
-        <button type="button" class="icon-btn close" aria-label="Close" title="Close" @click=${() => this.close()}>
-          <ha-icon icon="mdi:close"></ha-icon>
-        </button>
-      </header>
-      ${this._mode === 'export' ? this._renderExport() : this._renderImport()}
-    </dialog>`;
+    return studioWindow(
+      {
+        heading: title,
+        size: 'm',
+        onClose: () => {
+          this._open = false;
+          this._status = '';
+        },
+      },
+      this._mode === 'export' ? this._renderExport() : this._renderImport(),
+    );
   }
 }
 

@@ -1,7 +1,8 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
-import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
+import type { UiMenuElement, UiMenuEntry, UiMenuPick } from '../../contracts/ui-kit';
+import '../kit';
 import type { AnimationDoc, AnimationKeyframe, TargetRef } from '../model';
 import type { StudioSelection } from '../slots';
 import type { LayerView } from '../../contracts/studio-layers';
@@ -171,12 +172,8 @@ export class AnimKeyframesEditor extends LitElement {
   private _hold?: { pointerId: number; x: number; y: number; timer: ReturnType<typeof setTimeout>; target: TargetRef; additive: boolean };
   /** A selection-change during a drag, once per frame. */
   private _selFrame = 0;
-  private _menu = new MenuPopover(this, {
-    menu: () => this.renderRoot.querySelector<HTMLElement>('.add-menu'),
-    onClose: () => {
-      this._menuOpen = false;
-    },
-  });
+  /** The Add property button's own press closes the menu (an outside press); the click that follows must not open it again. */
+  private _menuClosedAt = 0;
 
   /** Onion skin markers: the active target's keyframe times before and after the playhead. */
   get onion(): { prev?: number; next?: number } {
@@ -297,6 +294,11 @@ export class AnimKeyframesEditor extends LitElement {
   }
 
   protected updated(): void {
+    const menu = this._menuOpen ? this.renderRoot.querySelector<UiMenuElement>('mc-ui-menu.add-menu') : null;
+    if (menu && !menu.open) {
+      menu.anchor = this.renderRoot.querySelector<HTMLElement>('.add-btn') ?? undefined;
+      menu.show();
+    }
     if (this._pendingFocus) {
       const el = this.renderRoot.querySelector<HTMLElement>(`.key[data-key="${CSS.escape(this._pendingFocus)}"]`);
       this._pendingFocus = undefined;
@@ -819,7 +821,7 @@ export class AnimKeyframesEditor extends LitElement {
   }
 
   private _addLane(lane: LaneId): void {
-    this._menu.close(false);
+    this._menuOpen = false;
     this._add(this._active, lane, this.time * 100);
   }
 
@@ -959,13 +961,6 @@ export class AnimKeyframesEditor extends LitElement {
       }
       .add-btn ha-icon {
         --mdc-icon-size: 18px;
-      }
-      .add-menu {
-        min-width: 220px;
-        max-height: 420px;
-      }
-      .add-menu .menu-note {
-        padding-top: 8px;
       }
       /* ── timeline ── */
       .tl {
@@ -1558,6 +1553,25 @@ export class AnimKeyframesEditor extends LitElement {
     `;
   }
 
+  /** The property list of the Add property button: the kit menu, one entry per free lane, a rule between lane groups. */
+  private _renderAddMenu(free: ReturnType<typeof lanesFor>, active: TargetRef, at: number): TemplateResult {
+    const items: UiMenuEntry[] = free.map((l, i) => ({ id: l.id, label: l.label, icon: l.icon, separatorBefore: i > 0 && free[i - 1].group !== l.group }));
+    return html`<mc-ui-menu
+      class="add-menu"
+      .items=${items}
+      label=${`Add property to ${targetLabel(this._view!, active)} at the playhead (${pctText(at)})`}
+      @mc-menu-pick=${(e: CustomEvent<UiMenuPick>) => {
+        e.stopPropagation();
+        this._addLane(e.detail.id as LaneId);
+      }}
+      @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => {
+        e.stopPropagation();
+        if (e.detail.reason === 'outside') this._menuClosedAt = Date.now();
+        this._menuOpen = false;
+      }}
+    ></mc-ui-menu>`;
+  }
+
   private _renderBar(narrow: boolean): TemplateResult {
     const at = this.time * 100;
     const secs = (this._view!.duration * this.time).toFixed(2);
@@ -1598,27 +1612,14 @@ export class AnimKeyframesEditor extends LitElement {
           aria-expanded=${this._menuOpen ? 'true' : 'false'}
           title=${`Add a property to ${targetLabel(this._view!, active)}`}
           ?disabled=${this.disabled || !free.length}
-          @click=${(e: Event) => {
-            this._menuOpen = true;
-            this._menu.open(e.currentTarget as HTMLElement);
+          @click=${() => {
+            if (this._menuOpen) this._menuOpen = false;
+            else if (Date.now() - this._menuClosedAt > 400) this._menuOpen = true;
           }}
         >
           <ha-icon icon="mdi:plus"></ha-icon><span class="lbl">${narrow ? 'Property' : 'Add property'}</span>
         </button>
-        ${
-          this._menuOpen
-            ? html`<div class="menu add-menu" role="menu" aria-label="Add property" @keydown=${this._menu.onKeydown}>
-                <p class="menu-note">Adds a keyframe to ${targetLabel(this._view!, active)} at the playhead (${pctText(at)})</p>
-                ${free.map(
-                  (l, i) =>
-                    html`${i > 0 && free[i - 1].group !== l.group ? html`<hr />` : nothing}
-                      <button type="button" role="menuitem" data-lane=${l.id} @click=${() => this._addLane(l.id)}>
-                        <ha-icon icon=${l.icon}></ha-icon>${l.label}
-                      </button>`,
-                )}
-              </div>`
-            : nothing
-        }
+        ${this._menuOpen ? this._renderAddMenu(free, active, at) : nothing}
         <span class="spacer"></span>
         <div class="tools" role="toolbar" aria-label="Keyframe tools">
           <button

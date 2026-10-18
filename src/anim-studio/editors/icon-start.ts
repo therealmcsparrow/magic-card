@@ -224,6 +224,12 @@ export class AnimIconStart extends LitElement {
     }
   }
 
+  /** The window's first focus: the icon field (the window cannot look into this shadow root). */
+  focusStart(): void {
+    const field = this.renderRoot.querySelector<HTMLElement>('mc-icon-picker, .icon-input');
+    (field?.shadowRoot?.querySelector<HTMLElement>('input') ?? field)?.focus({ preventScroll: true });
+  }
+
   private _renderPick(): TemplateResult {
     const picker = editorDefined('mc-icon-picker');
     return html`<section class="pick" aria-labelledby="is-pick">
