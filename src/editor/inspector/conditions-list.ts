@@ -8,6 +8,7 @@ import {
   renderTextField,
   renderTextareaField,
 } from '../../utils/form-utils';
+import { t, m, tl, type MessageId } from '../i18n';
 
 export type ConditionMode = 'every' | 'any';
 
@@ -20,28 +21,42 @@ export interface ConditionsListHandlers {
 }
 
 const TYPE_OPTIONS = [
-  { label: 'State', value: 'state' },
-  { label: 'Attribute', value: 'attribute' },
-  { label: 'Time', value: 'time' },
-  { label: 'Template', value: 'template' },
+  { label: m('State'), value: 'state' },
+  { label: m('Attribute'), value: 'attribute' },
+  { label: m('Time'), value: 'time' },
+  { label: m('Template'), value: 'template' },
 ];
 
-const MODES: Array<{ value: ConditionMode; label: string }> = [
-  { value: 'every', label: 'All match (AND)' },
-  { value: 'any', label: 'Any matches (OR)' },
+const MODES: Array<{ value: ConditionMode; label: MessageId }> = [
+  { value: 'every', label: m('All match (AND)') },
+  { value: 'any', label: m('Any matches (OR)') },
 ];
 
 const OPERATORS = [
-  { label: 'equals', value: 'eq' },
-  { label: 'not equals', value: 'ne' },
+  { label: m('equals'), value: 'eq' },
+  { label: m('not equals'), value: 'ne' },
 ];
+
+/** The empty-state sentence and the lead-in of the list name the thing the conditions belong to (whole sentences, so each language can agree the words). */
+const emptyHint = (subject: string): string =>
+  subject === 'rule' ? t('Add a condition to show this rule only when it matters.')
+    : subject === 'card' ? t('Add a condition to show this card only when it matters.')
+    : subject === 'row' ? t('Add a condition to show this row only when it matters.')
+    : subject === 'column' ? t('Add a condition to show this column only when it matters.')
+    : t('Add a condition to show this module only when it matters.');
+const leadIn = (subject: string): string =>
+  subject === 'rule' ? t('Show this rule when…')
+    : subject === 'card' ? t('Show this card when…')
+    : subject === 'row' ? t('Show this row when…')
+    : subject === 'column' ? t('Show this column when…')
+    : t('Show this module when…');
 
 /** Match All/Any as a radio `.seg`. */
 export function renderMatchSeg(
   mode: ConditionMode,
   onMode: (mode: ConditionMode) => void,
   syncCtx?: SyncContext,
-  label = 'Match',
+  label = t('Match'),
 ): TemplateResult {
   const onKey = (e: KeyboardEvent) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
@@ -54,7 +69,7 @@ export function renderMatchSeg(
   return html`
     <div class="field">
       ${label ? renderFieldHead(label, syncCtx ? 'mode' : undefined, syncCtx) : nothing}
-      <div class="seg full" role="radiogroup" aria-label="Condition match" @keydown=${onKey}>
+      <div class="seg full" role="radiogroup" aria-label=${t('Condition match')} @keydown=${onKey}>
         ${MODES.map(
           (m) => html`
             <button
@@ -64,7 +79,7 @@ export function renderMatchSeg(
               aria-checked=${mode === m.value ? 'true' : 'false'}
               tabindex=${mode === m.value ? '0' : '-1'}
               @click=${() => onMode(m.value)}
-            >${m.label}</button>
+            >${t(m.label)}</button>
           `,
         )}
       </div>
@@ -84,9 +99,9 @@ function renderStateMatch(
   return html`
     <div class="two">
       ${renderSelectField(
-        'Operator',
+        t('Operator'),
         negated ? 'ne' : 'eq',
-        OPERATORS,
+        tl(OPERATORS),
         (op) => update(op === 'ne' ? { state: undefined, state_not: value } : { state: value, state_not: undefined }),
       )}
       ${renderTextField(
@@ -120,21 +135,21 @@ function renderConditionFields(
     case 'state':
     case 'attribute':
       return html`
-        ${renderEntityField('Entity', cond.entity, (v) => update({ entity: v }), hass, undefined, p('entity'), ctx)}
+        ${renderEntityField(t('Entity'), cond.entity, (v) => update({ entity: v }), hass, undefined, p('entity'), ctx)}
         ${cond.type === 'attribute'
-          ? renderTextField('Attribute', cond.attribute, (v) => update({ attribute: v }), p('attribute'), ctx)
+          ? renderTextField(t('Attribute'), cond.attribute, (v) => update({ attribute: v }), p('attribute'), ctx)
           : nothing}
-        ${renderStateMatch(cond, update, cond.type === 'attribute' ? 'Value' : 'State', ctx)}
+        ${renderStateMatch(cond, update, cond.type === 'attribute' ? t('Value') : t('State'), ctx)}
       `;
     case 'time':
       return html`
         <div class="two">
-          ${renderTimeField('After', cond.after, (v) => update({ after: v }))}
-          ${renderTimeField('Before', cond.before, (v) => update({ before: v }))}
+          ${renderTimeField(t('After'), cond.after, (v) => update({ after: v }))}
+          ${renderTimeField(t('Before'), cond.before, (v) => update({ before: v }))}
         </div>
       `;
     case 'template':
-      return renderTextareaField('Template', cond.template, (v) => update({ template: v }), { rows: 3 }, p('template'), ctx);
+      return renderTextareaField(t('Template'), cond.template, (v) => update({ template: v }), { rows: 3 }, p('template'), ctx);
     default:
       return html``;
   }
@@ -157,10 +172,10 @@ export function renderConditionsList(
     return html`
       <div class="empty">
         <ha-icon icon="mdi:eye-check-outline"></ha-icon>
-        <strong>Always visible</strong>
-        <p>Add a condition to show this ${subject} only when it matters.</p>
+        <strong>${t('Always visible')}</strong>
+        <p>${emptyHint(subject)}</p>
         <button type="button" class="btn btn-secondary btn-sm" @click=${handlers.onAdd}>
-          <ha-icon icon="mdi:plus"></ha-icon>Add condition
+          <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
         </button>
       </div>
     `;
@@ -168,7 +183,7 @@ export function renderConditionsList(
   const base = syncCtx?.basePath;
   return html`
     <div class="group">
-      <p class="help lead">Show this ${subject} when…</p>
+      <p class="help lead">${leadIn(subject)}</p>
       ${renderMatchSeg(mode, handlers.onMode, syncCtx, '')}
     </div>
     <div class="group cond-list">
@@ -178,21 +193,21 @@ export function renderConditionsList(
         return html`
           <div class="cond">
             <div class="cond-head">
-              <span class="n">Condition ${idx + 1}</span>
+              <span class="n">${t('Condition {n}', { n: idx + 1 })}</span>
               <button
                 type="button"
                 class="icon-btn sm danger"
-                aria-label="Remove condition ${idx + 1}"
-                title="Remove condition"
+                aria-label=${t('Remove condition {n}', { n: idx + 1 })}
+                title=${t('Remove condition')}
                 @click=${() => handlers.onRemove(idx)}
               >
                 <ha-icon icon="mdi:delete-outline"></ha-icon>
               </button>
             </div>
             ${renderSelectField(
-              'Type',
+              t('Type'),
               cond.type,
-              TYPE_OPTIONS,
+              tl(TYPE_OPTIONS),
               (v) => update({ type: v as DisplayCondition['type'] }),
               ctx ? 'type' : undefined,
               ctx,
@@ -203,7 +218,7 @@ export function renderConditionsList(
       })}
       <div>
         <button type="button" class="btn btn-secondary btn-sm" @click=${handlers.onAdd}>
-          <ha-icon icon="mdi:plus"></ha-icon>Add condition
+          <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
         </button>
       </div>
     </div>

@@ -40,6 +40,7 @@ import '../components/flows-editor';
 import '../components/seasonal-editor';
 import '../components/design-panel';
 import '../components/condition-row';
+import { t } from '../i18n';
 
 /** Write one top-level card property (marks it not_synced when the card is linked to a template). */
 export type CardUpdate = (propertyName: keyof MagicCardConfig, value: unknown) => void;
@@ -64,7 +65,7 @@ export function cardThemeOptions(hass?: HomeAssistant): ThemeOption[] {
   const names = Object.keys(hass?.themes?.themes || {}).sort((a, b) =>
     a.localeCompare(b, undefined, { sensitivity: 'base' }),
   );
-  return [{ label: 'Dashboard default', value: '__default__' }, ...names.map((n) => ({ label: n, value: n }))];
+  return [{ label: t('Dashboard default'), value: '__default__' }, ...names.map((n) => ({ label: n, value: n }))];
 }
 
 const newCondition = (): DisplayCondition => ({ id: generateId('cond'), type: 'state', entity: '', state: '' });
@@ -81,17 +82,17 @@ export function renderCardGeneral(
   const popupOn = popup?.enabled === true;
   return html`
     <div class="group">
-      ${renderTextField('Name', config.name, (v) => update('name', v), 'name', syncCtx)}
+      ${renderTextField(t('Name'), config.name, (v) => update('name', v), 'name', syncCtx)}
       ${renderToggleField(
-        'Use dashboard theme',
+        t('Use dashboard theme'),
         usePageTheme,
         (v) => update('use_page_theme', v),
         'use_page_theme',
         syncCtx,
-        'Turn off to pick a theme for this card only.',
+        t('Turn off to pick a theme for this card only.'),
       )}
       ${renderSelectField(
-        'Card theme',
+        t('Card theme'),
         usePageTheme ? '__default__' : config.theme || '__default__',
         cardThemeOptions(hass),
         (v) => update('theme', v === '__default__' ? undefined : v),
@@ -103,15 +104,15 @@ export function renderCardGeneral(
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:dock-window"></ha-icon>
-        <h3>Pop-up</h3>
+        <h3>${t('Pop-up')}</h3>
       </div>
       ${renderToggleField(
-        'Show as pop-up',
+        t('Show as pop-up'),
         popupOn,
         (v) => update('popup', v ? { ...popup, enabled: true } : popup && Object.keys(popup).length > 1 ? { ...popup, enabled: false } : undefined),
         'popup',
         syncCtx,
-        'Hidden on the dashboard; opens over it from its #ID, a trigger or an Open pop-up action.',
+        t('Hidden on the dashboard; opens over it from its #ID, a trigger or an Open pop-up action.'),
       )}
       ${popupOn
         ? html`<mc-popup-settings
@@ -170,7 +171,7 @@ export function renderCardDesign(
   const writeRules = (next: ConditionalCardAppearance[]) => update('conditional_appearance', next);
   const addRule = () => {
     const id = generateId('appr');
-    writeRules([...rules, { id, name: `Rule ${rules.length + 1}`, conditions: [], mode: 'every', overrides: {} }]);
+    writeRules([...rules, { id, name: t('Rule {n}', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
     design.set(id);
   };
   const updateRule = (patchRule: Partial<ConditionalCardAppearance>) =>
@@ -201,20 +202,20 @@ export function renderCardDesign(
   const lbl = (label: string, key: string, forId?: string) =>
     renderFieldHead(label, key, sc, { forId, reset: src.rule ? fieldReset(label, key in ov, () => src.set(key, undefined)) : undefined });
   const unset = (key: string) =>
-    src.rule && !(key in ov) ? html`<p class="help">Not set in this rule: Default applies.</p>` : nothing;
+    src.rule && !(key in ov) ? html`<p class="help">${t('Not set in this rule: Default applies.')}</p>` : nothing;
 
   const str = (k: string) => src.get(k) as string | undefined;
   const fields: Record<string, () => TemplateResult | typeof nothing> = {
-    card_height: () => html`${renderUnitField('Card height', str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
-    padding: () => html`${renderBoxField('Padding', str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
-    background: () => html`${renderColorField('Background color', str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
+    card_height: () => html`${renderUnitField(t('Card height'), str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
+    padding: () => html`${renderBoxField(t('Padding'), str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
+    background: () => html`${renderColorField(t('Background colour'), str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
     background_image: () =>
-      html`${renderMediaField('Background image', str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
-    border_radius: () => html`${renderUnitField('Border radius', str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc)}${unset('border_radius')}`,
+      html`${renderMediaField(t('Background image'), str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
+    border_radius: () => html`${renderUnitField(t('Border radius'), str('border_radius'), (v) => src.set('border_radius', v), 'border_radius', sc)}${unset('border_radius')}`,
     box_shadow: () =>
-      html`${renderTextField('Box shadow', str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: 'Theme default', mono: true })}${unset('box_shadow')}`,
+      html`${renderTextField(t('Box shadow'), str('box_shadow'), (v) => src.set('box_shadow', v), 'box_shadow', sc, { placeholder: t('Theme default'), mono: true })}${unset('box_shadow')}`,
     shape: () => html`<div class="field">
-      ${lbl('Shape', 'shape')}
+      ${lbl(t('Shape'), 'shape')}
       <mc-shape-editor
         .shape=${src.get('shape') as never}
         .options=${src.get('shape_options') as never}
@@ -229,7 +230,7 @@ export function renderCardDesign(
       ${unset('shape')}
     </div>`,
     value_background: () => html`<div class="field">
-      ${lbl('Value background', 'value_background')}
+      ${lbl(t('Value background'), 'value_background')}
       <mc-value-bg-editor
         .value=${src.get('value_background') as ValueBackgroundConfig | undefined}
         .hass=${hass}
@@ -239,7 +240,7 @@ export function renderCardDesign(
       ${unset('value_background')}
     </div>`,
     ring: () => html`<div class="field">
-      ${lbl('Ring', 'ring')}
+      ${lbl(t('Ring'), 'ring')}
       <mc-ring-editor
         .ring=${src.get('ring') as RingConfig | undefined}
         .hass=${hass}
@@ -250,7 +251,7 @@ export function renderCardDesign(
       ${unset('ring')}
     </div>`,
     seasonal: () => html`<div class="field">
-      ${lbl('Seasonal', 'seasonal')}
+      ${lbl(t('Seasonal'), 'seasonal')}
       <mc-seasonal-editor
         .value=${src.get('seasonal') as SeasonalSetting | undefined}
         .hass=${hass}
@@ -263,7 +264,7 @@ export function renderCardDesign(
       src.rule
         ? nothing
         : html`<div class="field">
-            ${renderFieldHead('Animations', 'animations', syncCtx)}
+            ${renderFieldHead(t('Animations'), 'animations', syncCtx)}
             <mc-animation-list
               .animations=${readAnimations({ animations: config.animations })}
               .hass=${hass}
@@ -276,16 +277,16 @@ export function renderCardDesign(
       src.rule
         ? nothing
         : html`<div class="field">
-            ${renderFieldHead('Custom CSS', 'css', syncCtx, {
+            ${renderFieldHead(t('Custom CSS'), 'css', syncCtx, {
               forId: 'card-css',
-              reset: fieldReset('Custom CSS', !!config.css, () => update('css', undefined)),
+              reset: fieldReset(t('Custom CSS'), !!config.css, () => update('css', undefined)),
             })}
             <textarea
               class="input mono"
               id="card-css"
               rows="4"
               spellcheck="false"
-              placeholder="Applied to the card's content, e.g. letter-spacing: 0.5px"
+              placeholder=${t("Applied to the card's content, e.g. letter-spacing: 0.5px")}
               .value=${config.css || ''}
               @input=${(e: InputEvent) => update('css', (e.target as HTMLTextAreaElement).value || undefined)}
             ></textarea>
@@ -293,15 +294,15 @@ export function renderCardDesign(
   };
   // [group id, name, open by default, [field, counted key][]]
   const groups: Array<[string, string, boolean, Array<[string, string?]>]> = [
-    ['layout', 'Layout', true, [['card_height', 'card_height'], ['padding', 'padding']]],
+    ['layout', t('Layout'), true, [['card_height', 'card_height'], ['padding', 'padding']]],
     [
       'style',
-      'Style',
+      t('Style'),
       true,
       [['background', 'background'], ['background_image', 'background_image'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
-    ['effects', 'Effects', false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
-    ['advanced', 'Advanced', false, [['css', 'css']]],
+    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
+    ['advanced', t('Advanced'), false, [['css', 'css']]],
   ];
   const renderGroup = ([id, name, defaultOpen, entries]: (typeof groups)[number]) => {
     const body = entries.map(([f]) => fields[f]()).filter((t) => t !== nothing);
@@ -312,7 +313,7 @@ export function renderCardDesign(
       <button type="button" class="dgroup-btn" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`dg-${id}`} @click=${() => design.toggle(id, !open)}>
         <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         <span class="nm">${name}</span>
-        ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
+        ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
       </button>
       <div class="dgroup-body" id=${`dg-${id}`} ?hidden=${!open}>${body}</div>
     </section>`;
@@ -320,29 +321,29 @@ export function renderCardDesign(
 
   const n = rules.length;
   const help = hover
-    ? 'Applied while the pointer is over this card, on top of Default and matching rules.'
+    ? t('Applied while the pointer is over this card, on top of Default and matching rules.')
     : n
-      ? `${n} conditional rule${n === 1 ? '' : 's'}. Same rules as the Conditions tab. Rules override Default only while their conditions match. A later rule wins over an earlier one.`
-      : 'Add a rule to change the look when conditions match.';
+      ? t('{n, plural, one {# conditional rule} other {# conditional rules}}. Same rules as the Conditions tab. Rules override Default only while their conditions match. A later rule wins over an earlier one.', { n })
+      : t('Add a rule to change the look when conditions match.');
   const mode = rule?.mode === 'any' ? 'any' : 'every';
   const conditions = rule?.conditions || [];
   const picker = html`<div class="rule-pick">
     <div class="field">
-      <div class="field-head"><label for="design-view">Editing design for</label></div>
+      <div class="field-head"><label for="design-view">${t('Editing design for')}</label></div>
       <div class="select">
         <select class="input" id="design-view" aria-describedby="design-view-help" @change=${(e: Event) => design.set((e.target as HTMLSelectElement).value)}>
-          <option value="default" ?selected=${!hover && !rule}>Default</option>
-          <option value=${HOVER_VIEW} ?selected=${hover}>Hover</option>
-          ${rules.map((r, i) => html`<option value=${r.id} ?selected=${r === rule}>Rule: ${r.name || `Rule ${i + 1}`}</option>`)}
+          <option value="default" ?selected=${!hover && !rule}>${t('Default')}</option>
+          <option value=${HOVER_VIEW} ?selected=${hover}>${t('Hover')}</option>
+          ${rules.map((r, i) => html`<option value=${r.id} ?selected=${r === rule}>${t('Rule: {name}', { name: r.name || t('Rule {n}', { n: i + 1 }) })}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
       <p class="help" id="design-view-help">${help}</p>
     </div>
     <div class="rule-actions">
-      <button type="button" class="btn btn-text btn-sm" @click=${addRule}><ha-icon icon="mdi:plus"></ha-icon>Add conditional rule</button>
+      <button type="button" class="btn btn-text btn-sm" @click=${addRule}><ha-icon icon="mdi:plus"></ha-icon>${t('Add conditional rule')}</button>
       ${n && openTab
-        ? html`<button type="button" class="btn btn-text btn-sm" data-open-tab="conditions" @click=${() => openTab('conditions')}>Open Conditions</button>`
+        ? html`<button type="button" class="btn btn-text btn-sm" data-open-tab="conditions" @click=${() => openTab('conditions')}>${t('Open Conditions')}</button>`
         : nothing}
     </div>
   </div>`;
@@ -350,7 +351,7 @@ export function renderCardDesign(
   const ruleBox = rule
     ? html`<div class="rule">
         <div class="rule-head">
-          <h3>Rule</h3>
+          <h3>${t('Rule')}</h3>
           <button
             type="button"
             class="btn btn-text btn-sm danger-text"
@@ -358,17 +359,17 @@ export function renderCardDesign(
               writeRules(rules.filter((r) => r !== rule));
               design.set('default');
             }}
-          ><ha-icon icon="mdi:delete-outline"></ha-icon>Delete rule</button>
+          ><ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete rule')}</button>
         </div>
         <div class="field">
-          <div class="field-head"><label for="rule-name">Rule name</label></div>
-          <input class="input" id="rule-name" type="text" placeholder="Rule name" .value=${rule.name || ''} @input=${(e: InputEvent) => updateRule({ name: (e.target as HTMLInputElement).value })} />
+          <div class="field-head"><label for="rule-name">${t('Rule name')}</label></div>
+          <input class="input" id="rule-name" type="text" placeholder=${t('Rule name')} .value=${rule.name || ''} @input=${(e: InputEvent) => updateRule({ name: (e.target as HTMLInputElement).value })} />
         </div>
         <div class="field">
-          <div class="field-head"><span class="lbl">Match</span></div>
-          <div class="seg full" role="radiogroup" aria-label="Condition match">
+          <div class="field-head"><span class="lbl">${t('Match')}</span></div>
+          <div class="seg full" role="radiogroup" aria-label=${t('Condition match')}>
             ${(['every', 'any'] as const).map(
-              (m) => html`<button type="button" role="radio" aria-checked=${mode === m ? 'true' : 'false'} @click=${() => updateRule({ mode: m })}>${m === 'every' ? 'All match (AND)' : 'Any matches (OR)'}</button>`,
+              (m) => html`<button type="button" role="radio" aria-checked=${mode === m ? 'true' : 'false'} @click=${() => updateRule({ mode: m })}>${m === 'every' ? t('All match (AND)') : t('Any matches (OR)')}</button>`,
             )}
           </div>
         </div>
@@ -382,10 +383,10 @@ export function renderCardDesign(
                   .onRemove=${() => updateRule({ conditions: conditions.filter((_c, j) => j !== i) })}
                 ></mc-condition-row>`,
               )
-            : html`<p class="help">No conditions yet. The rule applies once a condition is added and matches.</p>`}
+            : html`<p class="help">${t('No conditions yet. The rule applies once a condition is added and matches.')}</p>`}
           <div>
             <button type="button" class="btn btn-secondary btn-sm" @click=${() => updateRule({ conditions: [...conditions, newCondition()] })}>
-              <ha-icon icon="mdi:plus"></ha-icon>Add condition
+              <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
             </button>
           </div>
         </div>
@@ -398,7 +399,7 @@ export function renderCardDesign(
       ${hover
         ? html`<section class="group">
             <div class="field">
-              ${renderFieldHead('Hover', 'hover', syncCtx, { reset: fieldReset('Hover', !!config.hover, () => update('hover', undefined)) })}
+              ${renderFieldHead(t('Hover'), 'hover', syncCtx, { reset: fieldReset(t('Hover'), !!config.hover, () => update('hover', undefined)) })}
             </div>
             <mc-design-panel
               class="card-hover"
@@ -431,16 +432,16 @@ function renderTemplateAnimations(
   const btn = (label: string, act: () => void) => html`<button type="button" class="btn btn-text btn-sm" @click=${act}>${label}</button>`;
   // compact markup: Lit keeps a template's whitespace in the bundle
   return html`<section class="group tpl-anims"><div class="field">
-${renderFieldHead('Template animations', 'custom_animations', syncCtx)}
+${renderFieldHead(t('Template animations'), 'custom_animations', syncCtx)}
 ${config.not_synced?.includes('custom_animations')
-  ? html`<p class="help">This card uses only its own custom_animations.</p>`
+  ? html`<p class="help">${t('This card uses only its own custom_animations.')}</p>`
   : docs.map((d) => {
       const id = String(d.id);
       const mine = own.has(id);
       const off = !mine && hidden.has(id);
       return html`<div class="cond-head" data-id=${id}><span class="n">${d.name ?? id}
-<span class="chip">${mine ? 'Changed on this card' : off ? 'Hidden' : 'From template'}</span></span>
-${mine ? btn('Use template', () => write(dropOwnAnimation(config, id))) : btn(off ? 'Show' : 'Hide', () => write(setAnimationHidden(config, id, !off)))}</div>`;
+<span class="chip">${mine ? t('Changed on this card') : off ? t('Hidden') : t('From template')}</span></span>
+${mine ? btn(t('Use template'), () => write(dropOwnAnimation(config, id))) : btn(off ? t('Show') : t('Hide'), () => write(setAnimationHidden(config, id, !off)))}</div>`;
     })}</div></section>`;
 }
 
@@ -458,7 +459,7 @@ function renderConditionalAppearance(
   const addRule = () => {
     const id = generateId('appr');
     rulesState.expand(id);
-    writeRules([...rules, { id, name: `Rule ${rules.length + 1}`, conditions: [], mode: 'every', overrides: {} }]);
+    writeRules([...rules, { id, name: t('Rule {n}', { n: rules.length + 1 }), conditions: [], mode: 'every', overrides: {} }]);
   };
   const removeRule = (id: string) => {
     rulesState.collapse(id);
@@ -468,33 +469,33 @@ function renderConditionalAppearance(
     writeRules(rules.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
   const designLink = openTab
-    ? html`<div><button type="button" class="btn btn-text btn-sm" data-open-tab="design" @click=${() => openTab('design')}>Open Design</button></div>`
+    ? html`<div><button type="button" class="btn btn-text btn-sm" data-open-tab="design" @click=${() => openTab('design')}>${t('Open Design')}</button></div>`
     : nothing;
   return html`
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:palette-swatch-outline"></ha-icon>
-        <h3>Conditional appearance</h3>
+        <h3>${t('Conditional appearance')}</h3>
       </div>
       ${rules.length
         ? html`
-            <p class="help">Override appearance fields while conditions match. Rules apply in order; later rules win.</p>
+            <p class="help">${t('Override appearance fields while conditions match. Rules apply in order; later rules win.')}</p>
             ${designLink}
             ${rules.map((rule) => renderAppearanceRule(rule, hass, themeOptions, rulesState, updateRule, removeRule))}
             <div>
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
-                <ha-icon icon="mdi:plus"></ha-icon>Add appearance rule
+                <ha-icon icon="mdi:plus"></ha-icon>${t('Add appearance rule')}
               </button>
             </div>
           `
         : html`
             <div class="empty">
               <ha-icon icon="mdi:palette-swatch-outline"></ha-icon>
-              <strong>No appearance rules</strong>
-              <p>Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.</p>
+              <strong>${t('No appearance rules')}</strong>
+              <p>${t('Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.')}</p>
               ${designLink}
               <button type="button" class="btn btn-secondary btn-sm" @click=${addRule}>
-                <ha-icon icon="mdi:plus"></ha-icon>Add appearance rule
+                <ha-icon icon="mdi:plus"></ha-icon>${t('Add appearance rule')}
               </button>
             </div>
           `}
@@ -532,7 +533,7 @@ function renderAppearanceRule(
           class="icon-btn sm"
           aria-expanded=${expanded ? 'true' : 'false'}
           aria-controls=${bodyId}
-          aria-label=${expanded ? 'Collapse rule' : 'Expand rule'}
+          aria-label=${expanded ? t('Collapse rule') : t('Expand rule')}
           @click=${() => rulesState.toggle(rule.id)}
         >
           <ha-icon icon=${expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
@@ -540,18 +541,18 @@ function renderAppearanceRule(
         <input
           class="input rule-name"
           type="text"
-          aria-label="Rule name"
-          placeholder="Rule name"
+          aria-label=${t('Rule name')}
+          placeholder=${t('Rule name')}
           .value=${rule.name || ''}
           @input=${(e: InputEvent) => updateRule(rule.id, { name: (e.target as HTMLInputElement).value })}
         />
-        <span class="chip is-count">${conditions.length} cond.</span>
-        ${designCount ? html`<span class="chip">+ ${designCount} design field${designCount === 1 ? '' : 's'}</span>` : nothing}
+        <span class="chip is-count">${t('{n} cond.', { n: conditions.length })}</span>
+        ${designCount ? html`<span class="chip">${t('+ {n, plural, one {# design field} other {# design fields}}', { n: designCount })}</span>` : nothing}
         <button
           type="button"
           class="icon-btn sm danger"
-          aria-label="Remove rule"
-          title="Remove rule"
+          aria-label=${t('Remove rule')}
+          title=${t('Remove rule')}
           @click=${() => removeRule(rule.id)}
         >
           <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -560,7 +561,7 @@ function renderAppearanceRule(
       ${expanded
         ? html`
             <div class="rule-body" id=${bodyId}>
-              <div class="sub-head">Conditions</div>
+              <div class="sub-head">${t('Conditions')}</div>
               ${renderConditionsList(
                 conditions,
                 rule.mode || 'every',
@@ -575,20 +576,20 @@ function renderAppearanceRule(
                 undefined,
                 'rule',
               )}
-              <div class="sub-head">Appearance overrides</div>
-              <p class="help">Only fields you set override. Leave blank to fall through to the base settings.</p>
-              ${renderColorField('Background color', overrides.background, (v) => updateOverride('background', v), undefined, undefined, 'css')}
-              ${renderMediaField('Background image', overrides.background_image, (v) => updateOverride('background_image', v), hass, 'image')}
-              ${renderToggleField('Override dashboard theme', usePageTheme === false, (v) => updateOverride('use_page_theme', v ? false : undefined))}
+              <div class="sub-head">${t('Appearance overrides')}</div>
+              <p class="help">${t('Only fields you set override. Leave blank to fall through to the base settings.')}</p>
+              ${renderColorField(t('Background colour'), overrides.background, (v) => updateOverride('background', v), undefined, undefined, 'css')}
+              ${renderMediaField(t('Background image'), overrides.background_image, (v) => updateOverride('background_image', v), hass, 'image')}
+              ${renderToggleField(t('Override dashboard theme'), usePageTheme === false, (v) => updateOverride('use_page_theme', v ? false : undefined))}
               ${usePageTheme === false
-                ? renderSelectField('Card theme', overrides.theme || '__default__', themeOptions, (v) =>
+                ? renderSelectField(t('Card theme'), overrides.theme || '__default__', themeOptions, (v) =>
                     updateOverride('theme', v === '__default__' ? undefined : v),
                   )
                 : nothing}
-              ${renderUnitField('Border radius', overrides.border_radius, (v) => updateOverride('border_radius', v))}
-              ${renderBoxField('Padding', overrides.padding, (v) => updateOverride('padding', v), 'padding')}
-              ${renderTextField('Box shadow', overrides.box_shadow, (v) => updateOverride('box_shadow', v))}
-              ${renderUnitField('Card height', overrides.card_height, (v) => updateOverride('card_height', v))}
+              ${renderUnitField(t('Border radius'), overrides.border_radius, (v) => updateOverride('border_radius', v))}
+              ${renderBoxField(t('Padding'), overrides.padding, (v) => updateOverride('padding', v), 'padding')}
+              ${renderTextField(t('Box shadow'), overrides.box_shadow, (v) => updateOverride('box_shadow', v))}
+              ${renderUnitField(t('Card height'), overrides.card_height, (v) => updateOverride('card_height', v))}
             </div>
           `
         : nothing}
@@ -618,7 +619,7 @@ export function renderCardFlows(
   return html`
     <section class="group">
       <div class="field">
-        ${renderFieldHead('Flows', 'flows', syncCtx)}
+        ${renderFieldHead(t('Flows'), 'flows', syncCtx)}
         <mc-flows-editor
           .config=${config}
           .hass=${hass}
@@ -652,7 +653,7 @@ export function renderCardConditions(
     <section class="group">
       <div class="group-head">
         <ha-icon icon="mdi:eye-outline"></ha-icon>
-        <h3>Display conditions</h3>
+        <h3>${t('Display conditions')}</h3>
       </div>
       ${renderConditionsList(
         conditions,

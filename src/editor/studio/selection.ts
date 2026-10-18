@@ -1,9 +1,10 @@
-import { t } from '../../i18n/labels';
+import { t as lt } from '../../i18n/labels';
 import { html, TemplateResult } from 'lit';
 import { CardModule, EditorPath, MagicCardConfig } from '../../types';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { ChildStep, childSlots, descendantAt, formatChildChain, hasSlotNodes, parseChildChain, slotLabel } from '../../utils/module-path';
 import { hasColumnWidths } from '../../utils/column-widths';
+import { t } from '../i18n';
 
 export type Selection =
   | { kind: 'card' }
@@ -233,7 +234,7 @@ export function countModules(config: MagicCardConfig): number {
 
 export function moduleDisplayName(mod: CardModule): string {
   const name = ModuleRegistry.get(mod.type)?.metadata.name;
-  return name === undefined || name === '' ? mod.type : t(name);
+  return name === undefined || name === '' ? mod.type : lt(name);
 }
 
 export function moduleSubtitle(mod: CardModule): string | undefined {
@@ -260,26 +261,26 @@ export function moduleLabel(mod: CardModule): string | undefined {
 }
 
 export function describeSelection(config: MagicCardConfig, sel: Selection): SelectionInfo {
-  const cardTitle = config.name?.trim() || 'Card';
+  const cardTitle = config.name?.trim() || t('Card');
   const s = clampSelection(config, sel);
   if (s.kind === 'card') return { title: cardTitle, icon: 'mdi:card-outline', crumbs: [cardTitle] };
-  const rowLabel = layerName(config.rows[s.row]) ?? `Row ${s.row + 1}`;
+  const rowLabel = layerName(config.rows[s.row]) ?? t('Row {n}', { n: s.row + 1 });
   if (s.kind === 'row') {
     return { title: rowLabel, icon: 'mdi:view-sequential-outline', crumbs: [cardTitle, rowLabel],
-      subtitle: hasColumnWidths(config.rows[s.row]) ? 'Custom widths' : `Layout ${config.rows[s.row].layout || '1'}` };
+      subtitle: hasColumnWidths(config.rows[s.row]) ? t('Custom widths') : t('Layout {layout}', { layout: config.rows[s.row].layout || '1' }) };
   }
-  const colLabel = layerName(config.rows[s.row].columns[s.col]) ?? `Column ${s.col + 1}`;
+  const colLabel = layerName(config.rows[s.row].columns[s.col]) ?? t('Column {n}', { n: s.col + 1 });
   if (s.kind === 'column') {
     const n = config.rows[s.row].columns[s.col].modules?.length ?? 0;
     return { title: colLabel, icon: 'mdi:view-column-outline', crumbs: [cardTitle, rowLabel, colLabel],
-      subtitle: `${n} module${n === 1 ? '' : 's'}` };
+      subtitle: t('{n, plural, one {# module} other {# modules}}', { n }) };
   }
   if (s.kind === 'slot') {
     const owner = parentSelection(s);
     const mod = moduleAt(config, owner);
     const list = childSlots(mod)?.[s.slot];
     // a tab / column (or its layout) that is gone, e.g. a hover over a canvas a step behind the config
-    if (!mod || !list || !hasSlotNodes(mod)) return { title: mod?.type === 'tabs' ? 'Tab' : 'Column', icon: 'mdi:view-column-outline', crumbs: [cardTitle, rowLabel, colLabel] };
+    if (!mod || !list || !hasSlotNodes(mod)) return { title: mod?.type === 'tabs' ? t('Tab') : t('Column'), icon: 'mdi:view-column-outline', crumbs: [cardTitle, rowLabel, colLabel] };
     const title = (mod.type === 'row' ? layerName((mod as { columns?: unknown[] }).columns?.[s.slot]) : undefined) ?? slotLabel(mod, s.slot)!;
     const n = list.length;
     const tabIcon = (mod as { tabs?: Array<{ icon?: string }> }).tabs?.[s.slot]?.icon;
@@ -287,12 +288,12 @@ export function describeSelection(config: MagicCardConfig, sel: Selection): Sele
       title,
       icon: mod.type === 'tabs' ? tabIcon || 'mdi:tab' : 'mdi:view-column-outline',
       crumbs: [...describeSelection(config, owner).crumbs, title],
-      subtitle: `${n} module${n === 1 ? '' : 's'}`,
+      subtitle: t('{n, plural, one {# module} other {# modules}}', { n }),
     };
   }
   const mod = moduleAt(config, s);
   // a module that is gone (or a YAML entry that is not a module)
-  if (!mod || typeof mod !== 'object') return { title: 'Module', icon: 'mdi:puzzle-outline', crumbs: [cardTitle, rowLabel, colLabel] };
+  if (!mod || typeof mod !== 'object') return { title: t('Module'), icon: 'mdi:puzzle-outline', crumbs: [cardTitle, rowLabel, colLabel] };
   const name = layerName(mod) ?? moduleDisplayName(mod);
   return {
     title: name,

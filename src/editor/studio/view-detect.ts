@@ -1,3 +1,4 @@
+import { t, m, type MessageId } from '../i18n';
 /**
  * T1.7: which dashboard view the card sits in, and how wide the studio canvas should be to match.
  * Pure helpers; the studio runs them when it opens. Home Assistant gives the card editor the whole
@@ -31,14 +32,14 @@ export interface CanvasWidth {
   borderless: boolean;
 }
 
-export const OPTION_LABELS: Record<CanvasWidthOption, string> = { narrow: 'Narrow', wide: 'Wide', panel: 'Panel' };
+export const OPTION_LABELS: Record<CanvasWidthOption, MessageId> = { narrow: m('Narrow'), wide: m('Wide'), panel: m('Panel') };
 export const OPTION_PX: Record<'narrow' | 'wide', number> = { narrow: 400, wide: 800 };
 export const OPTION_IDS = Object.keys(OPTION_LABELS) as CanvasWidthOption[];
 /** The radios' accessible names (design: "Narrow, 400 pixels"). */
-export const OPTION_NAMES: Record<CanvasWidthOption, string> = {
-  narrow: 'Narrow, 400 pixels',
-  wide: 'Wide, 800 pixels',
-  panel: 'Panel, full width',
+export const OPTION_NAMES: Record<CanvasWidthOption, MessageId> = {
+  narrow: m('Narrow, 400 pixels'),
+  wide: m('Wide, 800 pixels'),
+  panel: m('Panel, full width'),
 };
 
 interface ViewLike {
@@ -49,7 +50,7 @@ interface ViewLike {
 }
 
 const unknown = (reason: string): DetectedView => ({ kind: 'unknown', reason });
-const UNKNOWN_REASON = "Couldn't tell the view type";
+const unknownReason = (): string => t("Couldn't tell the view type");
 
 /** The view the URL points at: its last segment matches a view `path`, else a view index; none = the first view. */
 function viewFromPath(views: ViewLike[], pathname: string): ViewLike | undefined {
@@ -63,14 +64,14 @@ function viewFromPath(views: ViewLike[], pathname: string): ViewLike | undefined
 
 export function detectView(lovelace: unknown, pathname: string, cardConfig?: Record<string, unknown>): DetectedView {
   const views = (lovelace as { views?: unknown } | undefined)?.views;
-  if (!Array.isArray(views) || !views.length) return unknown(UNKNOWN_REASON);
+  if (!Array.isArray(views) || !views.length) return unknown(unknownReason());
   let view: ViewLike | undefined;
   try {
     view = viewFromPath(views as ViewLike[], pathname);
   } catch {
-    return unknown(UNKNOWN_REASON);
+    return unknown(unknownReason());
   }
-  if (!view || typeof view !== 'object' || view.strategy) return unknown(UNKNOWN_REASON);
+  if (!view || typeof view !== 'object' || view.strategy) return unknown(unknownReason());
   const type = typeof view.type === 'string' && view.type ? view.type : view.panel === true ? 'panel' : 'masonry';
   if (type === 'panel' || type === 'masonry') return { kind: type, reason: '' };
   if (type === 'sections') {
@@ -83,7 +84,7 @@ export function detectView(lovelace: unknown, pathname: string, cardConfig?: Rec
     const pos = (cardConfig?.view_layout as { position?: unknown } | undefined)?.position;
     return { kind: 'sidebar', reason: '', sidebar: pos === 'sidebar' };
   }
-  return unknown(`View type ${type} isn't supported`);
+  return unknown(t("View type {type} isn't supported", { type }));
 }
 
 /** HA's sections grid: 12 columns with 8 px gaps inside a section of `400 x span + 32 x (span - 1)` px. */
@@ -98,19 +99,19 @@ export function autoWidth(view: DetectedView): CanvasWidth {
     ({ option, px, note, canMatch: false, borderless });
   switch (view.kind) {
     case 'panel':
-      return match('panel', null, 'Matches this view (panel)', true);
+      return match('panel', null, t('Matches this view (panel)'), true);
     case 'masonry':
-      return match('narrow', OPTION_PX.narrow, 'Matches this view (masonry)');
+      return match('narrow', OPTION_PX.narrow, t('Matches this view (masonry)'));
     case 'sections':
       return view.columns
-        ? match('narrow', sectionCardWidth(view.columns, view.span), `Matches this view (sections, ${view.columns} of 12 columns)`)
-        : match('narrow', OPTION_PX.narrow, 'Matches this view (sections)');
+        ? match('narrow', sectionCardWidth(view.columns, view.span), t('Matches this view (sections, {columns} of 12 columns)', { columns: view.columns }))
+        : match('narrow', OPTION_PX.narrow, t('Matches this view (sections)'));
     case 'sidebar':
       return view.sidebar
-        ? match('narrow', 380, 'Matches this view (sidebar)')
-        : match('wide', OPTION_PX.wide, 'Matches this view (sidebar)');
+        ? match('narrow', 380, t('Matches this view (sidebar)'))
+        : match('wide', OPTION_PX.wide, t('Matches this view (sidebar)'));
     default:
-      return match('narrow', OPTION_PX.narrow, view.reason || UNKNOWN_REASON);
+      return match('narrow', OPTION_PX.narrow, view.reason || unknownReason());
   }
 }
 
@@ -119,7 +120,7 @@ export function overrideWidth(option: CanvasWidthOption, detected: DetectedView)
   return {
     option,
     px: option === 'panel' ? null : OPTION_PX[option],
-    note: detected.kind === 'unknown' ? detected.reason || UNKNOWN_REASON : '',
+    note: detected.kind === 'unknown' ? detected.reason || unknownReason() : '',
     canMatch: detected.kind !== 'unknown',
     borderless: false,
   };

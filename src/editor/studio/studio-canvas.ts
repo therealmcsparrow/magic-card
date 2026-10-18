@@ -29,6 +29,7 @@ import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from
 import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
 import { CanvasWidth, OPTION_LABELS, autoWidth } from './view-detect';
+import { t, tx } from '../i18n';
 
 /** A card row or a row module whose column gutters get resize handles. */
 interface ResizeTarget {
@@ -426,7 +427,7 @@ export class StudioCanvas extends LitElement {
       // Connect mode: another module ends the flow; anything else keeps waiting.
       const config = this._state?.config;
       if (target.kind === 'module' && config && templateIdMissing(config, target)) {
-        this._connectNote = TEMPLATE_ID_HINT;
+        this._connectNote = t(TEMPLATE_ID_HINT);
       } else if (target.kind === 'module' && !sameSelection(target, this._connectFrom)) {
         const from = this._connectFrom;
         this._connectFrom = null;
@@ -960,12 +961,12 @@ export class StudioCanvas extends LitElement {
         role="separator"
         aria-orientation="vertical"
         tabindex="0"
-        aria-label="Resize between Column ${i + 1} and Column ${i + 2}"
+        aria-label=${t('Resize between Column {a} and Column {b}', { a: i + 1, b: i + 2 })}
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow=${share}
-        aria-valuetext="Column ${i + 1} ${widths[i]}, Column ${i + 2} ${widths[i + 1]}"
-        title="Drag to resize, double-click for equal widths"
+        aria-valuetext=${t('Column {a} {wa}, Column {b} {wb}', { a: i + 1, wa: widths[i], b: i + 2, wb: widths[i + 1] })}
+        title=${t('Drag to resize, double-click for equal widths')}
         hidden
         @pointerdown=${this._onHandleDown}
         @keydown=${this._onHandleKey}
@@ -1002,11 +1003,11 @@ export class StudioCanvas extends LitElement {
     const s = this._state;
     const wd = this.width;
     const shown = wd.px ?? this._fillPx;
-    const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? `, shown at ${this._fillPx} px` : '';
+    const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? t(', shown at {px} px', { px: this._fillPx }) : '';
     const sel = this._sel;
     const config = s?.config;
     const hidden = !!config && isHiddenItem(itemAt(config, sel));
-    const label = config ? `${describeSelection(config, sel).title}${hidden ? ' · hidden' : ''}` : '';
+    const label = config ? `${describeSelection(config, sel).title}${hidden ? ` · ${t('hidden')}` : ''}` : '';
     // Position of the module in its list: a column, or a layout module's slot for a nested child.
     let index = 0;
     let count = 0;
@@ -1030,7 +1031,7 @@ export class StudioCanvas extends LitElement {
         class="canvas ${this._connectFrom ? 'connecting' : ''}"
         tabindex="0"
         role="region"
-        aria-label="Canvas, ${label} selected"
+        aria-label=${t('Canvas, {label} selected', { label })}
         aria-describedby=${this._connectFrom ? 'connect-hint' : 'canvas-hint'}
         @click=${this._onGroundClick}
         @contextmenu=${this._onGroundContext}
@@ -1041,11 +1042,11 @@ export class StudioCanvas extends LitElement {
       >
         <div class="canvas-inner">
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
-            <div class="device-label"><span>${OPTION_LABELS[wd.option]}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
-              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>Match view</button>`
-              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}Live data</span></div>
+            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
+              ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
+              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}</span></div>
             ${this._cardError
-              ? html`<p class="card-error" role="status">Preview not updated: ${this._cardError}</p>`
+              ? html`<p class="card-error" role="status">${t('Preview not updated: {error}', { error: this._cardError })}</p>`
               : nothing}
             <div class="card-host"></div>
           </div>
@@ -1058,19 +1059,19 @@ export class StudioCanvas extends LitElement {
               : nothing}
           </div>
           ${this._renderColumnHandles()}
-          <div class="float-bar" role="toolbar" aria-label="Module actions" hidden>
-            <button type="button" class="icon-btn sm" aria-label="Move up" title="Move up (Alt+Up)" ?disabled=${first}
+          <div class="float-bar" role="toolbar" aria-label=${t('Module actions')} hidden>
+            <button type="button" class="icon-btn sm" aria-label=${t('Move up')} title=${t('Move up (Alt+Up)')} ?disabled=${first}
               @click=${(e: Event) => this._onBarClick('up', e)}><ha-icon icon="mdi:arrow-up"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label="Move down" title="Move down (Alt+Down)" ?disabled=${last}
+            <button type="button" class="icon-btn sm" aria-label=${t('Move down')} title=${t('Move down (Alt+Down)')} ?disabled=${last}
               @click=${(e: Event) => this._onBarClick('down', e)}><ha-icon icon="mdi:arrow-down"></ha-icon></button>
             <span class="sep" aria-hidden="true"></span>
-            <button type="button" class="icon-btn sm" aria-label="Duplicate" title="Duplicate (Ctrl+D)"
+            <button type="button" class="icon-btn sm" aria-label=${t('Duplicate')} title=${t('Duplicate (Ctrl+D)')}
               @click=${(e: Event) => this._onBarClick('duplicate', e)}><ha-icon icon="mdi:content-copy"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label="Add flow from here"
-              title=${locked ? `Add flow from here. ${TEMPLATE_ID_HINT}` : 'Add flow from here'} ?disabled=${locked}
+            <button type="button" class="icon-btn sm" aria-label=${t('Add flow from here')}
+              title=${locked ? t('Add flow from here. {hint}', { hint: t(TEMPLATE_ID_HINT) }) : t('Add flow from here')} ?disabled=${locked}
               aria-pressed=${this._connectFrom ? 'true' : 'false'}
               @click=${() => (this._connectFrom ? this._cancelConnect() : this._startConnect())}><ha-icon icon="mdi:transit-connection-variant"></ha-icon></button>
-            <button type="button" class="icon-btn sm danger" aria-label="Delete" title="Delete (Del)"
+            <button type="button" class="icon-btn sm danger" aria-label=${t('Delete')} title=${t('Delete (Del)')}
               @click=${(e: Event) => this._onBarClick('delete', e)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
           </div>
         </div>
@@ -1079,19 +1080,22 @@ export class StudioCanvas extends LitElement {
         ? html`<div class="connect-hint" id="connect-hint" @keydown=${this._onHintKeydown}>
             <ha-icon icon="mdi:transit-connection-variant"></ha-icon>
             <span>${this._connectNote
-              ? html`${this._connectNote}, or pick another. <kbd>Esc</kbd> cancels.`
-              : html`Click the module to connect to. <kbd>Esc</kbd> cancels.`}</span>
-            <button type="button" class="btn btn-text btn-sm" @click=${this._cancelConnect}>Cancel</button>
+              ? tx('{note}, or pick another. {key} cancels.', { note: this._connectNote, key: html`<kbd>Esc</kbd>` })
+              : tx('Click the module to connect to. {key} cancels.', { key: html`<kbd>Esc</kbd>` })}</span>
+            <button type="button" class="btn btn-text btn-sm" @click=${this._cancelConnect}>${t('Cancel')}</button>
           </div>`
         : nothing}
       <p class="sr-only" id="connect-status" role="status">${this._connectFrom
         ? this._connectNote
-          ? `${this._connectNote}, or pick another. Escape cancels.`
-          : 'Click the module to connect to. Escape cancels.'
+          ? t('{note}, or pick another. Escape cancels.', { note: this._connectNote })
+          : t('Click the module to connect to. Escape cancels.')
         : ''}</p>
       <p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
-        Click a module to select it. <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd> moves it, <kbd>Del</kbd> removes it,
-        <kbd>Shift</kbd> + <kbd>F10</kbd> opens its menu.
+        ${tx('Click a module to select it. {move} moves it, {remove} removes it, {menu} opens its menu.', {
+          move: html`<kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>`,
+          remove: html`<kbd>Del</kbd>`,
+          menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
+        })}
       </p>
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}

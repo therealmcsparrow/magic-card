@@ -13,6 +13,8 @@ import {
   RowModuleConfig,
 } from '../../types';
 import { UndoRedoStack } from './undo-redo';
+import { localiseCreationDefaults } from './creation-defaults';
+import { t } from '../i18n';
 import { followIcons } from '../components/icon-animator/loader';
 import { prunedConfig } from '../custom/library';
 import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
@@ -453,8 +455,9 @@ export class EditorStateManager {
 
   addModule(rowIndex: number, colIndex: number, type: ModuleType): void {
     const config = deepClone(this.state.config);
-    const newModule = ModuleRegistry.createDefault(type);
-    if (!newModule) return;
+    const created = ModuleRegistry.createDefault(type);
+    if (!created) return;
+    const newModule = localiseCreationDefaults(created);
 
     config.rows[rowIndex].columns[colIndex].modules.push(newModule);
     const moduleIndex = config.rows[rowIndex].columns[colIndex].modules.length - 1;
@@ -752,7 +755,8 @@ export class EditorStateManager {
    */
   wrapInLayout(sel: Selection, type: string): boolean {
     if (sel.kind !== 'module') return false;
-    const wrapper = ModuleRegistry.createDefault(type as ModuleType);
+    const made = ModuleRegistry.createDefault(type as ModuleType);
+    const wrapper = made && localiseCreationDefaults(made);
     // a layout's first slot (undefined for modules without children); no extra dashboard export needed
     const slot = wrapper ? mutableSlot(wrapper, 0) : undefined;
     if (!wrapper || !slot) return false;
@@ -877,8 +881,9 @@ export class EditorStateManager {
 
   /** Add a new module of `type` to a layout's slot (tab, row-module column, 0 for flat layouts) and select it. */
   addChildModule(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, type: string): void {
-    const created = ModuleRegistry.createDefault(type as ModuleType);
-    if (!created) return;
+    const made = ModuleRegistry.createDefault(type as ModuleType);
+    if (!made) return;
+    const created = localiseCreationDefaults(made);
     let index = -1;
     this._editLayout([row, col, module, child], (l) => [childListKey(l)!], (layout) => {
       const list = mutableSlot(layout as CardModule, slot);
@@ -897,7 +902,7 @@ export class EditorStateManager {
 
   addTab(row: number, col: number, module: number, child?: ChildStep[]): void {
     this._tabsEdit([row, col, module, child], (tabs) => {
-      tabs.push({ label: `Tab ${tabs.length + 1}`, modules: [] });
+      tabs.push({ label: t('Tab {n}', { n: tabs.length + 1 }), modules: [] });
     }, (l) => this._slotPath(row, col, module, child, l.tabs!.length - 1));
   }
 
@@ -910,7 +915,7 @@ export class EditorStateManager {
     this._tabsEdit([row, col, module, child], (tabs) => {
       if (!tabs[slot]) return false;
       if ('label' in patch && !patch.label?.trim()) {
-        const label = tabs[slot].label?.trim() ? tabs[slot].label : `Tab ${slot + 1}`;
+        const label = tabs[slot].label?.trim() ? tabs[slot].label : t('Tab {n}', { n: slot + 1 });
         if (label === tabs[slot].label && Object.keys(patch).length === 1) return false;
         patch = { ...patch, label };
       }

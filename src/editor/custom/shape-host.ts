@@ -7,6 +7,7 @@ import { cardStateOf as cardState, type CardState } from './bridge';
 import { listShapes } from './library';
 import { openLayer } from './layer';
 import { loadShapeEditor } from './loaders';
+import { t } from '../i18n';
 
 /*
  * The card editor's side of the shape editor (svg-editor 1.0.0, shape part): "Custom", "Edit as custom"
@@ -99,7 +100,7 @@ export async function openShapeEditor(o: ShapeEditorOpen): Promise<'opened' | 'f
   });
   el.addEventListener('mc-shape-close', (e) => {
     close();
-    if ((e as CustomEvent<{ done: boolean }>).detail?.done) toast('Shape applied.');
+    if ((e as CustomEvent<{ done: boolean }>).detail?.done) toast(t('Shape applied.'));
   });
   close = openLayer(el, { from: o.from, key: 'shape-entry' });
   return 'opened';

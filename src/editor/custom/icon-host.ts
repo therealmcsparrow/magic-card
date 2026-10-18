@@ -6,6 +6,7 @@ import { getIcon, listIcons } from './library';
 import { openLayer } from './layer';
 import { loadSvgEditor } from './loaders';
 import { getFullPath, hasTemplate, type SyncContext } from '../../utils/sync-path';
+import { t } from '../i18n';
 
 /*
  * The card editor's side of the SVG editor (svg-editor 1.0.0): "Draw an icon", "Customise this icon" and
@@ -137,7 +138,7 @@ export async function openIconEditor(o: IconEditorOpen): Promise<'opened' | 'fai
   el.addEventListener('mc-svg-save', (e) => {
     applySave(o, sm, (e as CustomEvent<SvgSaveDetail>).detail);
     close();
-    toast('Icon applied.');
+    toast(t('Icon applied.'));
   });
   el.addEventListener('mc-svg-close', () => close());
   close = openLayer(el, { from: o.from, key: 'icon-entry' });

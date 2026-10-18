@@ -78,16 +78,17 @@ import '../components/media-picker';
 import '../components/card-picker';
 import '../components/box-field';
 import '../components/design-panel';
+import { t, m, type MessageId } from '../i18n';
 
 type Kind = Selection['kind'];
 
 /** Tabs are text-only in every variant (one tab style). */
-const TAB_META: Record<EditorTab, { label: string }> = {
-  general: { label: 'General' },
-  actions: { label: 'Actions' },
-  conditions: { label: 'Conditions' },
-  design: { label: 'Design' },
-  flows: { label: 'Flows' },
+const TAB_META: Record<EditorTab, { label: MessageId }> = {
+  general: { label: m('General') },
+  actions: { label: m('Actions') },
+  conditions: { label: m('Conditions') },
+  design: { label: m('Design') },
+  flows: { label: m('Flows') },
 };
 const MODULE_TAB_ORDER: EditorTab[] = ['general', 'actions', 'conditions', 'design'];
 const KIND_TABS: Record<Exclude<Kind, 'module'>, EditorTab[]> = {
@@ -355,21 +356,21 @@ export class Inspector extends LitElement {
       <div class="insp" @field-sync-toggle=${this._onSyncToggle}>
         <div class="insp-head">
           ${this._renderIdentity(config, sel)}
-          <div class="seg full tabs" role="tablist" aria-label="Settings">
-            ${tabs.map((t) => {
-              const on = t === tab;
+          <div class="seg full tabs" role="tablist" aria-label=${t('Settings')}>
+            ${tabs.map((id) => {
+              const on = id === tab;
               return html`
                 <button
                   type="button"
                   role="tab"
-                  id="tab-${t}"
-                  aria-controls="panel-${t}"
+                  id="tab-${id}"
+                  aria-controls="panel-${id}"
                   aria-selected=${on ? 'true' : 'false'}
                   tabindex=${on ? '0' : '-1'}
-                  @click=${() => this.setTab(t)}
+                  @click=${() => this.setTab(id)}
                   @keydown=${(e: KeyboardEvent) => this._onTabKeydown(e, sel, tabs, tab)}
                 >
-                  ${TAB_META[t].label}
+                  ${t(TAB_META[id].label)}
                 </button>
               `;
             })}
@@ -386,9 +387,13 @@ export class Inspector extends LitElement {
     const info = describeSelection(config, sel);
     const s = clampSelection(config, sel);
     const crumb = (label: string, target: Selection) =>
-      html`<button type="button" class="crumb" title="Select ${label}" @click=${() => this._goTo(target)}>${label}</button>`;
+      html`<button type="button" class="crumb" title=${t('Select {label}', { label })} @click=${() => this._goTo(target)}>${label}</button>`;
     const dot = html`<span aria-hidden="true"> · </span>`;
-    const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+    const rowOf = (i: number) => t('Row {n}', { n: i + 1 });
+    const colOf = (i: number) => t('Column {n}', { n: i + 1 });
+    const rows = (n: number) => t('{n, plural, one {# row} other {# rows}}', { n });
+    const columns = (n: number) => t('{n, plural, one {# column} other {# columns}}', { n });
+    const modules = (n: number) => t('{n, plural, one {# module} other {# modules}}', { n });
 
     // Mockup header: "<Type> · <label>" with a one-line path under it.
     let title = info.title;
@@ -396,25 +401,25 @@ export class Inspector extends LitElement {
     let path: TemplateResult;
     switch (s.kind) {
       case 'card': {
-        title = `Card · ${info.title}`;
-        path = html`${plural((config.rows || []).length, 'row')} · ${plural(countModules(config), 'module')}`;
+        title = `${t('Card')} · ${info.title}`;
+        path = html`${rows((config.rows || []).length)} · ${modules(countModules(config))}`;
         break;
       }
       case 'row': {
         const row = config.rows[s.row];
         icon = 'mdi:table-row';
-        path = html`${plural(row.columns.length, 'column')} · ${hasColumnWidths(row) ? 'custom widths' : `layout ${row.layout || '1'}`}`;
+        path = html`${columns(row.columns.length)} · ${hasColumnWidths(row) ? t('custom widths') : t('layout {layout}', { layout: row.layout || '1' })}`;
         break;
       }
       case 'column': {
         const n = config.rows[s.row].columns[s.col].modules?.length ?? 0;
-        path = html`${crumb(`Row ${s.row + 1}`, { kind: 'row', row: s.row })}${dot}${plural(n, 'module')}`;
+        path = html`${crumb(rowOf(s.row), { kind: 'row', row: s.row })}${dot}${modules(n)}`;
         break;
       }
       case 'slot': {
         // "Row 1 · Column 1 · Tabs": the way back up to the layout module that owns the tab / column.
         const owner = parentSelection(s) as ModuleSelection;
-        path = html`${crumb(`Row ${s.row + 1}`, { kind: 'row', row: s.row })}${dot}${crumb(`Column ${s.col + 1}`, {
+        path = html`${crumb(rowOf(s.row), { kind: 'row', row: s.row })}${dot}${crumb(colOf(s.col), {
           kind: 'column',
           row: s.row,
           col: s.col,
@@ -424,7 +429,7 @@ export class Inspector extends LitElement {
       case 'module': {
         const mod = moduleAt(config, s);
         if (!mod || typeof mod !== 'object') {
-          path = html`${crumb(`Row ${s.row + 1}`, { kind: 'row', row: s.row })}`;
+          path = html`${crumb(rowOf(s.row), { kind: 'row', row: s.row })}`;
           break;
         }
         const label = moduleLabel(mod);
@@ -435,7 +440,7 @@ export class Inspector extends LitElement {
         const parents = childCrumbs(config, s).slice(0, -1);
         const up = parentSelection(s, config);
         const slot = up.kind === 'slot' ? crumb(describeSelection(config, up).title, up) : undefined;
-        path = html`${crumb(`Row ${s.row + 1}`, { kind: 'row', row: s.row })}${dot}${crumb(`Column ${s.col + 1}`, {
+        path = html`${crumb(rowOf(s.row), { kind: 'row', row: s.row })}${dot}${crumb(colOf(s.col), {
           kind: 'column',
           row: s.row,
           col: s.col,
@@ -452,7 +457,7 @@ export class Inspector extends LitElement {
         <div class="txt">
           <h2>${title}</h2>
           <p class="path">${path}${isHiddenItem(itemAt(config, s))
-            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>Hidden on dashboard</span>`
+            ? html`${dot}<span class="hidden-note"><ha-icon icon="mdi:eye-off-outline"></ha-icon>${t('Hidden on dashboard')}</span>`
             : nothing}</p>
         </div>
       </div>
@@ -552,7 +557,7 @@ export class Inspector extends LitElement {
       return html`
         <div class="empty">
           <ha-icon icon="mdi:puzzle-remove-outline"></ha-icon>
-          <strong>Unknown module type</strong>
+          <strong>${t('Unknown module type')}</strong>
           <p class="mono">${mod.type}</p>
         </div>
       `;
@@ -590,15 +595,15 @@ export class Inspector extends LitElement {
     const key = childListKey(top);
     if (!top || !key) return nothing;
     const overridden = ((top.not_synced || []) as string[]).includes(key);
-    const what = sel.child?.length ? 'This module is part of its layout' : 'The modules inside this layout';
+    const child = !!sel.child?.length;
     return html`
       <div class="child-list-sync" data-overridden=${overridden ? '' : nothing}>
         <p class="help">${overridden
-          ? `${what}; the layout's modules differ from the template.`
-          : `${what}; they follow the template as one list.`}</p>
+          ? child ? t("This module is part of its layout; the layout's modules differ from the template.") : t("The modules inside this layout; the layout's modules differ from the template.")
+          : child ? t('This module is part of its layout; they follow the template as one list.') : t('The modules inside this layout; they follow the template as one list.')}</p>
         ${overridden
           ? html`<button type="button" class="btn btn-text btn-sm child-list-reset" @click=${() => this._resetChildList(sel.row, sel.col, sel.module, key)}>
-              <ha-icon icon="mdi:backup-restore"></ha-icon>Reset to template
+              <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset to template')}
             </button>`
           : nothing}
       </div>

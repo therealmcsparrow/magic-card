@@ -27,6 +27,7 @@ import { fieldReset } from '../components/field-reset';
 import { GridRowLike, applyRowLayout, effectiveWidths, hasColumnWidths, normalizeWidth, widthWeights } from '../../utils/column-widths';
 import { toggleNotSynced } from '../state/template-sync';
 import { renderActionGroups } from '../components/action-editor';
+import { t, m, tl } from '../i18n';
 
 const equalLayout = (n: number) => Array.from({ length: Math.max(n, 1) }, () => '1').join('-');
 
@@ -110,12 +111,12 @@ export function renderLayoutPicker(g: RowGrid): TemplateResult {
   };
   return html`
     <div class="field">
-      <div class="field-head"><span class="lbl" id="row-layout-lbl">Column layout</span></div>
+      <div class="field-head"><span class="lbl" id="row-layout-lbl">${t('Column layout')}</span></div>
       <div class="seg full" role="radiogroup" aria-labelledby="row-layout-lbl" @keydown=${onKey}>
         ${all.map((value) => {
           const on = value === current;
           const weights = value === CUSTOM_WIDTHS ? widthWeights(effectiveWidths(row)) : presetWeights(value);
-          const name = value === CUSTOM_WIDTHS ? `${colCount} column${colCount === 1 ? '' : 's'}, custom widths` : layoutName(weights);
+          const name = value === CUSTOM_WIDTHS ? t('{n, plural, one {# column} other {# columns}}, custom widths', { n: colCount }) : layoutName(weights);
           return html`
             <button
               type="button"
@@ -131,7 +132,7 @@ export function renderLayoutPicker(g: RowGrid): TemplateResult {
           `;
         })}
       </div>
-      <p class="help">Removing a column moves its modules into the column to its left.</p>
+      <p class="help">${t('Removing a column moves its modules into the column to its left.')}</p>
     </div>
   `;
 }
@@ -180,17 +181,17 @@ export function renderColumnWidths(g: RowGrid): TemplateResult {
   return html`
     <div class="field col-widths">
       <div class="field-head">
-        <span class="lbl" id="row-widths-lbl">Column widths</span>
+        <span class="lbl" id="row-widths-lbl">${t('Column widths')}</span>
         ${g.sync ?? nothing}
-        ${fieldReset('Column widths', custom, () => g.setWidths(undefined))}
+        ${fieldReset(t('Column widths'), custom, () => g.setWidths(undefined))}
       </div>
       <div class="col-width-list" role="group" aria-labelledby="row-widths-lbl">
         ${widths.map((w, ci) => html`
           <div class="col-width">
-            <span class="col-width-lbl" aria-hidden="true">Column ${ci + 1}</span>
+            <span class="col-width-lbl" aria-hidden="true">${t('Column {n}', { n: ci + 1 })}</span>
             <mc-unit-field
               .value=${w}
-              .label=${`Column ${ci + 1} width`}
+              .label=${t('Column {n} width', { n: ci + 1 })}
               .units=${WIDTH_UNITS}
               @value-changed=${(e: CustomEvent<{ value: string }>) => writeWidth(g, ci, e.detail.value, e.target)}
             ></mc-unit-field>
@@ -202,18 +203,18 @@ export function renderColumnWidths(g: RowGrid): TemplateResult {
           type="button"
           class="btn btn-text btn-sm"
           @click=${() => g.setWidths(undefined, equalLayout(g.row.columns.length))}
-        ><ha-icon icon="mdi:arrow-split-vertical"></ha-icon>Equal widths</button>
+        ><ha-icon icon="mdi:arrow-split-vertical"></ha-icon>${t('Equal widths')}</button>
       </div>
-      <p class="help">fr shares the free space. Use Custom for auto (as wide as the content). % widths plus gap can overflow the row.</p>
+      <p class="help">${t('fr shares the free space. Use Custom for auto (as wide as the content). % widths plus gap can overflow the row.')}</p>
     </div>
   `;
 }
 
 const ALIGN_OPTIONS = [
-  { label: 'Top', value: 'start' },
-  { label: 'Center', value: 'center' },
-  { label: 'Bottom', value: 'end' },
-  { label: 'Stretch', value: 'stretch' },
+  { label: m('Top'), value: 'start' },
+  { label: m('Centre'), value: 'center' },
+  { label: m('Bottom'), value: 'end' },
+  { label: m('Stretch'), value: 'stretch' },
 ];
 
 export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateManager): TemplateResult {
@@ -229,9 +230,9 @@ export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateMana
     <div class="group">
       ${renderLayoutPicker(grid)}
       ${row.columns.length > 1 ? renderColumnWidths(grid) : nothing}
-      ${renderUnitField('Gap between columns', row.gap, (v) => sm.updateRow(ri, { gap: v }), undefined, undefined, '12')}
-      ${renderSelectField('Vertical alignment', aligns[0] || 'start', ALIGN_OPTIONS, setAlign)}
-      ${renderBoxField('Padding', row.padding, (v) => sm.updateRow(ri, { padding: v }), 'padding')}
+      ${renderUnitField(t('Gap between columns'), row.gap, (v) => sm.updateRow(ri, { gap: v }), undefined, undefined, '12')}
+      ${renderSelectField(t('Vertical alignment'), aligns[0] || 'start', tl(ALIGN_OPTIONS), setAlign)}
+      ${renderBoxField(t('Padding'), row.padding, (v) => sm.updateRow(ri, { padding: v }), 'padding')}
     </div>
   `;
 }
@@ -244,19 +245,19 @@ function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Parti
     ? html`
         <div class="field">
           <div class="field-head">
-            <label for="col-width">Width</label>
+            <label for="col-width">${t('Width')}</label>
             ${grid.sync ?? nothing}
-            ${fieldReset('Width', hasColumnWidths(grid.row) && effectiveWidths(grid.row)[ci] !== '1fr', () => writeWidth(grid, ci, '1fr'))}
+            ${fieldReset(t('Width'), hasColumnWidths(grid.row) && effectiveWidths(grid.row)[ci] !== '1fr', () => writeWidth(grid, ci, '1fr'))}
           </div>
           <mc-unit-field
             data-col-width
             inputId="col-width"
             .value=${effectiveWidths(grid.row)[ci]}
-            .label=${'Width'}
+            .label=${t('Width')}
             .units=${WIDTH_UNITS}
             @value-changed=${(e: CustomEvent<{ value: string }>) => writeWidth(grid, ci, e.detail.value, e.target)}
           ></mc-unit-field>
-          <p class="help">One of the row's column widths.</p>
+          <p class="help">${t("One of the row's column widths.")}</p>
         </div>
       `
     : nothing;
@@ -264,13 +265,13 @@ function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Parti
     <div class="group">
       ${width}
       ${renderSelectField(
-        'Vertical alignment',
+        t('Vertical alignment'),
         col.vertical_align || 'start',
-        ALIGN_OPTIONS,
+        tl(ALIGN_OPTIONS),
         (v) => update({ vertical_align: v as ColumnConfig['vertical_align'] }),
       )}
-      ${renderUnitField('Gap', col.gap, (v) => update({ gap: v || undefined }))}
-      ${renderBoxField('Padding', col.padding, (v) => update({ padding: v }), 'padding')}
+      ${renderUnitField(t('Gap'), col.gap, (v) => update({ gap: v || undefined }))}
+      ${renderBoxField(t('Padding'), col.padding, (v) => update({ padding: v }), 'padding')}
     </div>
   `;
 }
@@ -323,8 +324,8 @@ export function renderRowModuleGeneral(
     <div class="group">
       ${renderLayoutPicker(grid)}
       ${columns.length > 1 ? renderColumnWidths(grid) : nothing}
-      ${renderUnitField('Gap between columns', c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
-      ${renderBoxField('Padding', c.padding, (v) => onChange({ ...c, padding: v }), 'padding', 'padding', syncCtx)}
+      ${renderUnitField(t('Gap between columns'), c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
+      ${renderBoxField(t('Padding'), c.padding, (v) => onChange({ ...c, padding: v }), 'padding', 'padding', syncCtx)}
     </div>
   `;
 }
@@ -362,9 +363,9 @@ export function renderTabGeneral(at: SlotOwner, slot: number, mod: TabsModuleCon
   return html`
     <div class="group">
       <div style="display: contents" @change=${restore}>
-        ${renderTextField('Label', tab?.label, (v) => { if (v.trim()) update({ label: v }); })}
+        ${renderTextField(t('Label'), tab?.label, (v) => { if (v.trim()) update({ label: v }); })}
       </div>
-      ${renderIconField('Icon', tab?.icon, (v) => update({ icon: v || undefined }), hass)}
+      ${renderIconField(t('Icon'), tab?.icon, (v) => update({ icon: v || undefined }), hass)}
     </div>
   `;
 }
@@ -461,6 +462,6 @@ export function renderRowActions(ri: number, row: RowConfig, sm: EditorStateMana
   };
   return html`
     ${renderActionGroups(row.actions, update, hass)}
-    <p class="help">Runs when the row is tapped outside a module with its own action or control.</p>
+    <p class="help">${t('Runs when the row is tapped outside a module with its own action or control.')}</p>
   `;
 }

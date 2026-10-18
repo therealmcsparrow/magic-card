@@ -8,6 +8,7 @@ import { withDocs } from './animation-copies';
 import { cardStateOf, type CardState } from './bridge';
 import { openLayer } from './layer';
 import { loadTransfer } from '../transfer-loader';
+import { t } from '../i18n';
 
 /*
  * The "Library" button of the icon picker, the shape section and the animation list opens this sheet in
@@ -66,7 +67,7 @@ export class LibrarySheet extends LitElement {
   };
 
   render() {
-    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading="Library" closeLabel="Close" movable resizable maximizable moveLabel="Move window" resizeLabel="Resize window" maximizeLabel="Maximise" restoreLabel="Restore size" @mc-window-close=${() => this.onClose?.()}>
+    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('Library')} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} @mc-window-close=${() => this.onClose?.()}>
       <mc-library-view .hass=${this.hass} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
     </mc-ui-window>`;
   }
@@ -80,7 +81,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   try {
     await loadTransfer();
   } catch {
-    toast('The library could not load. Check your connection and try again.');
+    toast(t('The library could not load. Check your connection and try again.'));
     return;
   }
   const sheet = document.createElement('mc-library-sheet') as LibrarySheet;
@@ -88,7 +89,7 @@ export async function openLibrary(opener: HTMLElement, hass: HomeAssistant | und
   sheet.kind = kind;
   sheet.sm = cardStateOf(opener);
   const close = openLayer(sheet, undefined, () => sheet.onClose?.());
-  sheet.parentElement?.setAttribute('aria-label', 'Library');
+  sheet.parentElement?.setAttribute('aria-label', t('Library'));
   sheet.onClose = () => {
     close();
     opener.focus();

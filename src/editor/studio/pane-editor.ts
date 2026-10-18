@@ -11,10 +11,11 @@ import './structure-outline';
 import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
+import { t, m, type MessageId } from '../i18n';
 
-const MODES: Array<{ id: EditorMode; label: string }> = [
-  { id: 'form', label: 'Form' },
-  { id: 'yaml', label: 'YAML' },
+const MODES: Array<{ id: EditorMode; label: MessageId }> = [
+  { id: 'form', label: m('Form') },
+  { id: 'yaml', label: m('YAML') },
 ];
 
 /**
@@ -102,7 +103,7 @@ export class PaneEditor extends LitElement {
 
     return html`
       <div class="pane-head">
-        <div class="seg mode" role="tablist" aria-label="Editor mode">
+        <div class="seg mode" role="tablist" aria-label=${t('Editor mode')}>
           ${MODES.map((m) => {
             const on = m.id === mode;
             return html`
@@ -113,14 +114,14 @@ export class PaneEditor extends LitElement {
                 tabindex=${on ? '0' : '-1'}
                 @click=${() => sm.setEditorMode(m.id)}
                 @keydown=${(e: KeyboardEvent) => this._onModeKeydown(e, mode)}
-              >${m.label}</button>
+              >${t(m.label)}</button>
             `;
           })}
         </div>
-        <button type="button" class="icon-btn" title="Undo" aria-label="Undo" ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}>
+        <button type="button" class="icon-btn" title=${t('Undo')} aria-label=${t('Undo')} ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}>
           <ha-icon icon="mdi:undo"></ha-icon>
         </button>
-        <button type="button" class="icon-btn" title="Redo" aria-label="Redo" ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}>
+        <button type="button" class="icon-btn" title=${t('Redo')} aria-label=${t('Redo')} ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}>
           <ha-icon icon="mdi:redo"></ha-icon>
         </button>
       </div>
@@ -132,9 +133,9 @@ export class PaneEditor extends LitElement {
               ${this._renderCta(s)}
               <section aria-labelledby="sec-structure">
                 <div class="sec-title">
-                  <h3 id="sec-structure">Structure</h3>
+                  <h3 id="sec-structure">${t('Structure')}</h3>
                   <button type="button" class="btn btn-text btn-sm" @click=${() => sm.setSelectedPath(null)}>
-                    <ha-icon icon="mdi:card-outline"></ha-icon>Card settings
+                    <ha-icon icon="mdi:card-outline"></ha-icon>${t('Card settings')}
                   </button>
                 </div>
                 <mc-structure-outline
@@ -160,15 +161,14 @@ export class PaneEditor extends LitElement {
         <div class="cta-top">
           ${this._renderThumb(config, s)}
           <div class="cta-text">
-            <h3>${config.name?.trim() || 'Untitled card'}</h3>
+            <h3>${config.name?.trim() || t('Untitled card')}</h3>
             <p>
-              ${rows.length} row${rows.length === 1 ? '' : 's'} · ${mods} module${mods === 1 ? '' : 's'}. Build visually with
-              layers, canvas and the full inspector.
+              ${t('{rows, plural, one {# row} other {# rows}} · {mods, plural, one {# module} other {# modules}}. Build visually with layers, canvas and the full inspector.', { rows: rows.length, mods })}
             </p>
           </div>
         </div>
         <button type="button" class="btn btn-primary" @click=${this._openStudio}>
-          <ha-icon icon="mdi:arrow-expand"></ha-icon>Open studio
+          <ha-icon icon="mdi:arrow-expand"></ha-icon>${t('Open studio')}
         </button>
       </div>
     `;

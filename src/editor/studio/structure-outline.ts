@@ -28,6 +28,7 @@ import {
 } from './selection';
 import type { SlotSelection } from './selection';
 import { ChildStep, childSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import { t } from '../i18n';
 
 type DragState =
   | { type: 'row'; row: number }
@@ -267,9 +268,9 @@ export class StructureOutline extends LitElement {
   private _defaultLabel(sel: Selection): string | undefined {
     const config = this._state?.config;
     if (!config) return undefined;
-    if (sel.kind === 'row') return `Row ${sel.row + 1}`;
-    if (sel.kind === 'column') return `Column ${sel.col + 1}`;
-    if (sel.kind === 'slot') return `Column ${sel.slot + 1}`;
+    if (sel.kind === 'row') return t('Row {n}', { n: sel.row + 1 });
+    if (sel.kind === 'column') return t('Column {n}', { n: sel.col + 1 });
+    if (sel.kind === 'slot') return t('Column {n}', { n: sel.slot + 1 });
     const mod = sel.kind === 'module' ? moduleAt(config, sel) : undefined;
     return mod ? moduleTitle({ ...mod, editor_name: undefined }) : undefined;
   }
@@ -327,7 +328,7 @@ export class StructureOutline extends LitElement {
   /** "Hidden on dashboard" mark after an item's name. */
   private _hiddenMark(item: unknown): TemplateResult | typeof nothing {
     return isHiddenItem(item)
-      ? html`<ha-icon class="hid-ico" icon="mdi:eye-off-outline" title="Hidden on dashboard"></ha-icon><span class="sr-only">Hidden on dashboard</span>`
+      ? html`<ha-icon class="hid-ico" icon="mdi:eye-off-outline" title=${t('Hidden on dashboard')}></ha-icon><span class="sr-only">${t('Hidden on dashboard')}</span>`
       : nothing;
   }
 
@@ -669,7 +670,7 @@ export class StructureOutline extends LitElement {
     const rows = this._rows;
     const selKey = this._selectedKey;
     const focusKey = this._resolveFocusKey(selKey);
-    const cardName = this._state?.config.name?.trim() || 'Card';
+    const cardName = this._state?.config.name?.trim() || t('Card');
     const card = this._itemAttrs('card', selKey, focusKey);
     const renamingCard = this._renaming === 'card';
 
@@ -687,7 +688,7 @@ export class StructureOutline extends LitElement {
         <ul
           class="tree"
           role="tree"
-          aria-label="Card structure"
+          aria-label=${t('Card structure')}
           @dragleave=${this._onTreeDragLeave}
         >
           <li role="none">
@@ -704,7 +705,7 @@ export class StructureOutline extends LitElement {
                 @dblclick=${() => this.startRename('card')}
               >
                 <ha-icon icon="mdi:card-outline"></ha-icon>
-                ${renamingCard ? this._renderRename({ kind: 'card' }, 'Card name') : html`<span class="text"><span class="name">${cardName}</span></span>`}
+                ${renamingCard ? this._renderRename({ kind: 'card' }, t('Card name')) : html`<span class="text"><span class="name">${cardName}</span></span>`}
               </div>
             </div>
           </li>
@@ -714,17 +715,17 @@ export class StructureOutline extends LitElement {
           ? html`
               <div class="foot">
                 <button type="button" class="btn btn-secondary btn-sm" @click=${this._requestAddRow}>
-                  <ha-icon icon="mdi:plus"></ha-icon>Add row
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add row')}
                 </button>
               </div>
             `
           : html`
               <div class="empty card-empty">
                 <ha-icon icon="mdi:view-sequential-outline"></ha-icon>
-                <strong>No rows yet</strong>
-                <p>Rows hold columns, columns hold modules.</p>
+                <strong>${t('No rows yet')}</strong>
+                <p>${t('Rows hold columns, columns hold modules.')}</p>
                 <button type="button" class="btn btn-text btn-sm" @click=${this._requestAddRow}>
-                  <ha-icon icon="mdi:plus"></ha-icon>Add row
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add row')}
                 </button>
               </div>
             `}
@@ -769,7 +770,7 @@ export class StructureOutline extends LitElement {
     const lineAfter = drop?.type === 'row' && ri === this._rows.length - 1 && drop.index === ri + 1;
     const sel: Selection = { kind: 'row', row: ri };
     const menuOpen = this._menuOpenFor(sel);
-    const name = layerName(row) ?? `Row ${ri + 1}`;
+    const name = layerName(row) ?? t('Row {n}', { n: ri + 1 });
     const renaming = this._renaming === key;
 
     return html`
@@ -785,7 +786,7 @@ export class StructureOutline extends LitElement {
             class="caret"
             tabindex="-1"
             aria-expanded=${open ? 'true' : 'false'}
-            aria-label="${open ? 'Collapse' : 'Expand'} row ${ri + 1}"
+            aria-label=${open ? t('Collapse row {n}', { n: ri + 1 }) : t('Expand row {n}', { n: ri + 1 })}
             @click=${() => this._setCollapsed(ri, open)}
           >
             <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -807,7 +808,7 @@ export class StructureOutline extends LitElement {
             @dblclick=${() => this.startRename(key)}
           >
             ${renaming
-              ? this._renderRename(sel, 'Row name')
+              ? this._renderRename(sel, t('Row name'))
               : this.variant === 'pane'
                 ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span></span>`
                 : html`<span class="text"><span class="name">${name}</span></span>${this._renderGlyph(row)}`}
@@ -816,7 +817,7 @@ export class StructureOutline extends LitElement {
           <button
             type="button"
             class="icon-btn sm more"
-            aria-label="${name} actions"
+            aria-label=${t('{name} actions', { name })}
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
             @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -849,7 +850,7 @@ export class StructureOutline extends LitElement {
     const sel: Selection = { kind: 'column', row: ri, col: ci };
     const menuOpen = this._menuOpenFor(sel);
     const col = this._rows[ri]?.columns[ci];
-    const name = layerName(col) ?? `Column ${ci + 1}`;
+    const name = layerName(col) ?? t('Column {n}', { n: ci + 1 });
 
     return html`
       <li role="none" class="col">
@@ -866,15 +867,15 @@ export class StructureOutline extends LitElement {
             @click=${this._onItemClick}
             @dblclick=${() => this.startRename(key)}
           >
-            ${this._renaming === key ? this._renderRename(sel, 'Column name') : html`<span class="text"><span class="name">${name}</span></span>`}
+            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span></span>`}
             ${this._hiddenMark(col)}
-            ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title="Own module list: not synced with the template. Reset column restores it."></ha-icon><span class="sr-only">Own module list, not synced with the template</span>` : nothing}
-            <span class="chip is-count">${n}<span class="sr-only"> module${n === 1 ? '' : 's'}</span></span>
+            ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('Own module list: not synced with the template. Reset column restores it.')}></ha-icon><span class="sr-only">${t('Own module list, not synced with the template')}</span>` : nothing}
+            <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
           </div>
           <button
             type="button"
             class="icon-btn sm more"
-            aria-label="Row ${ri + 1} column ${ci + 1} actions"
+            aria-label=${t('Row {row} column {column} actions', { row: ri + 1, column: ci + 1 })}
             aria-haspopup="menu"
             aria-expanded=${menuOpen ? 'true' : 'false'}
             @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -894,14 +895,14 @@ export class StructureOutline extends LitElement {
                 @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)}
                 @drop=${this._dropModule}
               >
-                <p>Empty column</p>
+                <p>${t('Empty column')}</p>
                 <button
                   type="button"
                   class="btn btn-text btn-sm"
-                  aria-label="Add module to Row ${ri + 1} Column ${ci + 1}"
+                  aria-label=${t('Add module to Row {row} Column {column}', { row: ri + 1, column: ci + 1 })}
                   @click=${() => this._addModule(ri, ci)}
                 >
-                  <ha-icon icon="mdi:plus"></ha-icon>Add module
+                  <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
                 </button>
               </div>
             `}
@@ -916,10 +917,10 @@ export class StructureOutline extends LitElement {
         <button
           type="button"
           class="btn btn-text btn-sm"
-          aria-label="Add module to Row ${ri + 1} Column ${ci + 1}"
+          aria-label=${t('Add module to Row {row} Column {column}', { row: ri + 1, column: ci + 1 })}
           @click=${() => this._addModule(ri, ci)}
         >
-          <ha-icon icon="mdi:plus"></ha-icon>Add module
+          <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
         </button>
       </li>
     `;
@@ -932,10 +933,10 @@ export class StructureOutline extends LitElement {
         <button
           type="button"
           class="btn btn-text btn-sm"
-          aria-label="Add column to Row ${ri + 1}"
+          aria-label=${t('Add column to Row {row}', { row: ri + 1 })}
           @click=${() => this._addColumn(ri)}
         >
-          <ha-icon icon="mdi:plus"></ha-icon>Add column
+          <ha-icon icon="mdi:plus"></ha-icon>${t('Add column')}
         </button>
       </li>
     `;
@@ -986,14 +987,14 @@ export class StructureOutline extends LitElement {
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
-              ? this._renderRename(sel, 'Module name')
+              ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${moduleTitle(mod)}</span>
                   ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : nothing}
                 </span>`}
             ${this._hiddenMark(mod)}
             ${overrides
-              ? html`<span class="ovr-dot" title="Has local overrides"></span><span class="sr-only">Has local overrides</span>`
+              ? html`<span class="ovr-dot" title=${t('Has local overrides')}></span><span class="sr-only">${t('Has local overrides')}</span>`
               : nothing}
           </div>
           ${this._renderModuleMore(mod, sel, a.tab)}
@@ -1057,17 +1058,17 @@ export class StructureOutline extends LitElement {
               >
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
-                  ? this._renderRename(sel, isTabs ? 'Tab name' : 'Column name')
+                  ? this._renderRename(sel, isTabs ? t('Tab name') : t('Column name'))
                   : html`<span class="text"><span class="name">${label}</span></span>`}
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
-                <span class="chip is-count">${n}<span class="sr-only"> module${n === 1 ? '' : 's'}</span></span>
+                <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
               </div>
               <button
                 type="button"
                 class="icon-btn sm more"
                 tabindex=${a.tab}
-                aria-label="${label} actions"
+                aria-label=${t('{name} actions', { name: label })}
                 aria-haspopup="menu"
                 aria-expanded=${menuOpen ? 'true' : 'false'}
                 @click=${(e: Event) => this._openMenuFor(sel, e)}
@@ -1083,9 +1084,9 @@ export class StructureOutline extends LitElement {
         `;
       })}
       <li role="none" class="add-col">
-        <button type="button" class="btn btn-text btn-sm" aria-label="Add ${isTabs ? 'tab' : 'column'} to ${this._moduleName(parent)}"
+        <button type="button" class="btn btn-text btn-sm" aria-label=${isTabs ? t('Add tab to {name}', { name: this._moduleName(parent) }) : t('Add column to {name}', { name: this._moduleName(parent) })}
           @click=${() => this._addSlot(owner, parent.type)}>
-          <ha-icon icon="mdi:plus"></ha-icon>Add ${isTabs ? 'tab' : 'column'}
+          <ha-icon icon="mdi:plus"></ha-icon>${isTabs ? t('Add tab') : t('Add column')}
         </button>
       </li>
     </ul>`;
@@ -1118,7 +1119,7 @@ export class StructureOutline extends LitElement {
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
-              ? this._renderRename(sel, 'Module name')
+              ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${title}</span>
                   ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : nothing}
@@ -1136,8 +1137,8 @@ export class StructureOutline extends LitElement {
   private _renderAddChild(owner: ModuleSel, slot: number, where: string): TemplateResult {
     return html`
       <li role="none" class="add-mod">
-        <button type="button" class="btn btn-text btn-sm" aria-label="Add module to ${where}" @click=${() => this._addChild(owner, slot)}>
-          <ha-icon icon="mdi:plus"></ha-icon>Add module
+        <button type="button" class="btn btn-text btn-sm" aria-label=${t('Add module to {where}', { where })} @click=${() => this._addChild(owner, slot)}>
+          <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
         </button>
       </li>
     `;
@@ -1156,7 +1157,7 @@ export class StructureOutline extends LitElement {
         type="button"
         class="icon-btn sm more"
         tabindex=${tab}
-        aria-label="Module options for ${this._moduleName(mod)}"
+        aria-label=${t('Module options for {name}', { name: this._moduleName(mod) })}
         aria-haspopup="menu"
         aria-expanded=${open ? 'true' : 'false'}
         @click=${(e: Event) => this._openMenuFor(sel, e)}

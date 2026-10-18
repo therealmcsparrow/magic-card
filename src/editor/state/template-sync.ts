@@ -3,6 +3,7 @@ import { deepClone } from '../../utils/deep-merge';
 import { childSlots } from '../../utils/module-path';
 import { HA_INSTANCE_KEYS } from '../../services/template-merge';
 import { animationDocList } from '../../utils/custom-animations';
+import { t } from '../i18n';
 
 /** Remove not_synced from a module and every nested layout child (mutates: callers pass a clone). */
 function deleteModuleNotSynced(mod: CardModule): void {
@@ -18,18 +19,18 @@ export function collectNotSynced(config: MagicCardConfig): NotSyncedEntry[] {
   const entries: NotSyncedEntry[] = [];
 
   if (config.not_synced?.length) {
-    entries.push({ location: 'Card', paths: [...config.not_synced] });
+    entries.push({ location: t('Card'), paths: [...config.not_synced] });
   }
 
   for (let ri = 0; ri < (config.rows || []).length; ri++) {
     const row = config.rows[ri];
     if (row.not_synced?.length) {
-      entries.push({ location: `Row ${ri + 1}`, paths: [...row.not_synced] });
+      entries.push({ location: t('Row {n}', { n: ri + 1 }), paths: [...row.not_synced] });
     }
     for (let ci = 0; ci < (row.columns || []).length; ci++) {
       const col = row.columns[ci];
       if (col.not_synced?.length) {
-        entries.push({ location: `Row ${ri + 1} / Col ${ci + 1}`, paths: [...col.not_synced] });
+        entries.push({ location: t('Row {row} / Col {col}', { row: ri + 1, col: ci + 1 }), paths: [...col.not_synced] });
       }
       for (let mi = 0; mi < (col.modules || []).length; mi++) {
         const mod = col.modules[mi];

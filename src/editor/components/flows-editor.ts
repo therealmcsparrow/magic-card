@@ -7,6 +7,7 @@ import { deepClone } from '../../utils/deep-merge';
 import { entityStateColor } from '../../utils/entity-color';
 import { FlowModuleOption, TEMPLATE_ID_HINT, flowModuleOptions, newFlow, resolveFlowEndpoint } from '../state/flows';
 import { fieldReset } from './field-reset';
+import { t } from '../i18n';
 
 import './color-picker';
 import './entity-picker';
@@ -297,7 +298,7 @@ export class FlowsEditor extends LitElement {
       ...(value ? [] : [{ value: '', label: 'Pick a module', disabled: true }]),
       ...(known ? [] : [{ value, label: `Module not found (${value})` }]),
       ...listed.map((m) =>
-        m.locked ? { value: m.value, label: `${m.label} (no id)`, disabled: true, title: TEMPLATE_ID_HINT } : { value: m.value, label: m.label },
+        m.locked ? { value: m.value, label: `${m.label} (no id)`, disabled: true, title: t(TEMPLATE_ID_HINT) } : { value: m.value, label: m.label },
       ),
     ];
     const onPick = (v: string) => {
@@ -314,7 +315,7 @@ export class FlowsEditor extends LitElement {
         : known
           ? nothing
           : html`<p class="help error" id=${hintId}>Module not found</p>`}
-      ${locked ? html`<p class="help" id=${lockedId}>Modules marked (no id) come from the template. ${TEMPLATE_ID_HINT} to connect it.</p>` : nothing}
+      ${locked ? html`<p class="help" id=${lockedId}>Modules marked (no id) come from the template. ${t(TEMPLATE_ID_HINT)} to connect it.</p>` : nothing}
     `;
   }
 

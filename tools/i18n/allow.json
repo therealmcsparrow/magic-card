@@ -1,5 +1,5 @@
 {
   "_note": "D3: words that look American or end in -ise/-our/-isation but are right in British UI copy (exact words, lower case). D5: texts that are not user words (product names, formats, units).",
   "britishWords": ["colour-scheme"],
-  "text": ["Magic Card", "YAML", "JSON", "SVG", "MDI", "CSS", "HTML", "px", "%", "x", "Hz", "ms", "fps", "deg", "rem", "em", "vh", "vw", "URL", "ID", "HA", "OK", "RGB", "HSL", "HEX", "CMYK", "Hex", "RGBA"]
+  "text": ["Magic Card", "YAML", "JSON", "SVG", "MDI", "CSS", "HTML", "px", "%", "x", "Hz", "ms", "fps", "deg", "rem", "em", "vh", "vw", "URL", "ID", "HA", "OK", "RGB", "HSL", "HEX", "CMYK", "Hex", "RGBA", "Esc", "Alt", "Up", "Down", "Del", "Shift", "Ctrl", "F10"]
 }

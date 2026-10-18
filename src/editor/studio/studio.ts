@@ -16,10 +16,11 @@ import './structure-outline';
 import './template-bar';
 import '../inspector/inspector';
 import '../modes/yaml-editor';
+import { t, m, type MessageId } from '../i18n';
 
-const MODES: Array<{ id: EditorMode; label: string }> = [
-  { id: 'form', label: 'Form' },
-  { id: 'yaml', label: 'YAML' },
+const MODES: Array<{ id: EditorMode; label: MessageId }> = [
+  { id: 'form', label: m('Form') },
+  { id: 'yaml', label: m('YAML') },
 ];
 
 function isTyping(e: Event): boolean {
@@ -53,7 +54,7 @@ export class Studio extends LitElement {
   @property({ attribute: false }) lovelace?: unknown;
 
   @state() private _state?: EditorState;
-  @state() private _view: DetectedView = { kind: 'unknown', reason: "Couldn't tell the view type" };
+  @state() private _view: DetectedView = { kind: 'unknown', reason: '' };
   /** The user's pick; null = follow the view. Lives as long as this dialog. */
   @state() private _override: CanvasWidthOption | null = null;
   @state() private _showLayers = false;
@@ -239,13 +240,13 @@ export class Studio extends LitElement {
       <header class="topbar">
         <div class="grp">
           <button type="button" class="btn btn-secondary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:arrow-left"></ha-icon>Back to dialog
+            <ha-icon icon="mdi:arrow-left"></ha-icon>${t('Back to dialog')}
           </button>
           <button
             type="button"
             class="icon-btn layers-toggle"
-            aria-label=${this._showLayers ? 'Hide layers' : 'Show layers'}
-            title="Layers"
+            aria-label=${this._showLayers ? t('Hide layers') : t('Show layers')}
+            title=${t('Layers')}
             aria-controls="layers"
             aria-expanded=${this._showLayers ? 'true' : 'false'}
             @click=${() => { this._showLayers = !this._showLayers; }}
@@ -254,13 +255,13 @@ export class Studio extends LitElement {
           </button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
-            <strong>${s.config.name?.trim() || 'Untitled card'}</strong>
+            <strong>${s.config.name?.trim() || t('Untitled card')}</strong>
             <mc-template-bar compact .config=${s.config} .hass=${this.hass}></mc-template-bar>
           </div>
         </div>
         <span class="spacer"></span>
         <div class="grp">
-          <div class="seg mode" role="tablist" aria-label="Editor mode">
+          <div class="seg mode" role="tablist" aria-label=${t('Editor mode')}>
             ${MODES.map((m) => {
               const on = m.id === mode;
               return html`<button
@@ -270,10 +271,10 @@ export class Studio extends LitElement {
                 tabindex=${on ? '0' : '-1'}
                 @click=${() => sm.setEditorMode(m.id)}
                 @keydown=${(e: KeyboardEvent) => this._onModeKeydown(e, mode)}
-              >${m.label}</button>`;
+              >${t(m.label)}</button>`;
             })}
           </div>
-          <div class="seg devices" role="radiogroup" aria-label="Canvas width" ?hidden=${mode !== 'form'}>
+          <div class="seg devices" role="radiogroup" aria-label=${t('Canvas width')} ?hidden=${mode !== 'form'}>
             ${OPTION_IDS.map((id) => {
               const on = id === this._width.option;
               return html`<button
@@ -281,22 +282,22 @@ export class Studio extends LitElement {
                 role="radio"
                 aria-checked=${on ? 'true' : 'false'}
                 tabindex=${on ? '0' : '-1'}
-                aria-label=${OPTION_NAMES[id]}
-                title=${OPTION_NAMES[id]}
+                aria-label=${t(OPTION_NAMES[id])}
+                title=${t(OPTION_NAMES[id])}
                 @click=${() => this._setWidth(id)}
                 @keydown=${this._onDeviceKeydown}
-              >${OPTION_LABELS[id]}</button>`;
+              >${t(OPTION_LABELS[id])}</button>`;
             })}
           </div>
         </div>
         <span class="spacer"></span>
         <div class="grp">
-          <button type="button" class="icon-btn" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)"
+          <button type="button" class="icon-btn" aria-label=${t('Undo (Ctrl+Z)')} title=${t('Undo (Ctrl+Z)')}
             ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
-          <button type="button" class="icon-btn" aria-label="Redo (Ctrl+Y)" title="Redo (Ctrl+Y)"
+          <button type="button" class="icon-btn" aria-label=${t('Redo (Ctrl+Y)')} title=${t('Redo (Ctrl+Y)')}
             ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
           <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
-            <ha-icon icon="mdi:check"></ha-icon>Done
+            <ha-icon icon="mdi:check"></ha-icon>${t('Done')}
           </button>
         </div>
       </header>
@@ -315,7 +316,7 @@ export class Studio extends LitElement {
     return html`
       <dialog
         class="studio ${this._showLayers ? 'show-layers' : ''}"
-        aria-label="Magic Card studio"
+        aria-label=${t('Magic Card studio')}
         @cancel=${this._onCancel}
         @close=${this._onNativeClose}
         @keydown=${this._onKeydown}
@@ -324,10 +325,10 @@ export class Studio extends LitElement {
           ? html`
               ${this._renderTopbar(s, mode)}
               <div class="workspace">
-                <nav class="panel layers" id="layers" aria-label="Layers">
+                <nav class="panel layers" id="layers" aria-label=${t('Layers')}>
                   <div class="panel-title">
-                    <h2>Layers</h2>
-                    <span class="chip is-count">${mods} module${mods === 1 ? '' : 's'}</span>
+                    <h2>${t('Layers')}</h2>
+                    <span class="chip is-count">${t('{mods, plural, one {# module} other {# modules}}', { mods })}</span>
                   </div>
                   <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}
                     @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
@@ -342,7 +343,7 @@ export class Studio extends LitElement {
                         </div>
                       `}
                 </div>
-                <aside class="panel inspector" aria-label="Inspector">
+                <aside class="panel inspector" aria-label=${t('Inspector')}>
                   <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
                 </aside>
               </div>

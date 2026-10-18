@@ -26,6 +26,7 @@ import {
   selectionKey,
   selectionToPath,
 } from './selection';
+import { t } from '../i18n';
 
 /** The menu's list, or one of its second levels in the same popover. */
 export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete';
@@ -54,6 +55,9 @@ interface Entry {
   /** Where focus goes after the action: back to the origin (default) or to the new selection. */
   focus?: 'selection' | 'none';
 }
+
+/** "Row 2 · Column 1": where a pasted or moved module goes. */
+const rowColumn = (row: number, col: number): string => `${t('Row {n}', { n: row + 1 })} · ${t('Column {n}', { n: col + 1 })}`;
 
 const KBD = {
   rename: ['F2', 'F2'],
@@ -196,9 +200,9 @@ export class ItemMenu implements ReactiveController {
   private _name(config: MagicCardConfig, sel: Selection): string {
     if (sel.kind === 'module') {
       const mod = moduleAt(config, sel);
-      return mod ? moduleTitle(mod) : 'Module';
+      return mod ? moduleTitle(mod) : t('Module');
     }
-    return sel.kind === 'card' ? config.name?.trim() || 'Card' : describeSelection(config, sel).title;
+    return sel.kind === 'card' ? config.name?.trim() || t('Card') : describeSelection(config, sel).title;
   }
 
   // ── shortcuts shared by both surfaces ──
@@ -312,9 +316,9 @@ export class ItemMenu implements ReactiveController {
     const item = sel.kind === 'card' ? orderedYamlConfig(config) : cleanItem(itemAt(config, sel));
     // undefined keys (no name / template) are left out like the YAML editor does
     const text = toYaml(JSON.parse(JSON.stringify(item ?? {})));
-    const label = `${name} YAML`;
+    const label = t('{name} YAML', { name });
     if (await copyText(text, this.host.shadowRoot ?? this.host)) {
-      this.opts.status(`${label} copied`);
+      this.opts.status(t('{name} YAML copied', { name }));
       return;
     }
     this._copy = { text, title: label };
@@ -331,7 +335,7 @@ export class ItemMenu implements ReactiveController {
     const sm = this._sm;
     const clip = readModuleClipboard();
     if (!sm || !clip || !sm.pasteModule(sel)) return;
-    this.opts.status(`${moduleTitle(clip)} pasted into ${where}`);
+    this.opts.status(t('{module} pasted into {where}', { module: moduleTitle(clip), where }));
   }
 
   private _run(e: Entry): void {
@@ -356,11 +360,11 @@ export class ItemMenu implements ReactiveController {
       const slots = parent ? childSlots(parent) : undefined;
       const current = child[child.length - 1].slot;
       if (!parent || !slots) return [];
-      return slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? `Slot ${slot + 1}`,
+      return slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? t('Slot {n}', { n: slot + 1 }),
         () => sm.moveChildToSlot(sel.row, sel.col, sel.module, child, slot))]));
     }
     return config.rows.flatMap((row, r) => row.columns.flatMap((_, c) => (r === sel.row && c === sel.col ? [] : [go(
-      `Row ${r + 1} · Column ${c + 1}`, () => sm.moveModuleToColumn(sel.row, sel.col, sel.module, r, c))])));
+      rowColumn(r, c), () => sm.moveModuleToColumn(sel.row, sel.col, sel.module, r, c))])));
   }
 
   /** The groups of the open menu (separators between them) and its accessible name. */
@@ -368,38 +372,39 @@ export class ItemMenu implements ReactiveController {
     const sm = this._sm!;
     const linked = !!config.template;
     const name = this._name(config, sel);
-    const back: Entry = { icon: 'mdi:arrow-left', label: 'Back', run: () => undefined, view: 'main' };
-    const cancel: Entry = { icon: 'mdi:arrow-left', label: 'Cancel', run: () => undefined, view: 'main' };
-    const rename: Entry = { icon: 'mdi:rename-box', label: 'Rename', run: () => this.opts.rename(sel), kbd: KBD.rename, focus: 'none' };
-    const yaml: Entry = { icon: 'mdi:code-braces', label: 'Copy YAML', run: () => void this._copyYaml(sel, name) };
+    const back: Entry = { icon: 'mdi:arrow-left', label: t('Back'), run: () => undefined, view: 'main' };
+    const cancel: Entry = { icon: 'mdi:arrow-left', label: t('Cancel'), run: () => undefined, view: 'main' };
+    const rename: Entry = { icon: 'mdi:rename-box', label: t('Rename'), run: () => this.opts.rename(sel), kbd: KBD.rename, focus: 'none' };
+    const yaml: Entry = { icon: 'mdi:code-braces', label: t('Copy YAML'), run: () => void this._copyYaml(sel, name) };
     const noDesign = !readDesignClipboard();
     const noModule = !readModuleClipboard();
     const designItems = (target: DesignTarget): Entry[] => {
-      const why = noDesign ? 'Copy a design first' : undefined;
+      const why = noDesign ? t('Copy a design first') : undefined;
       return [
-        { icon: 'mdi:content-copy', label: 'Copy design', run: () => { sm.copyDesign(target); this.opts.status(`${name} design copied`); } },
-        { icon: 'mdi:content-paste', label: 'Paste design', run: () => sm.pasteDesign(target, 'replace'), disabled: noDesign, why },
-        { icon: 'mdi:set-merge', label: 'Merge pasted design', run: () => sm.pasteDesign(target, 'merge'), disabled: noDesign, why },
+        { icon: 'mdi:content-copy', label: t('Copy design'), run: () => { sm.copyDesign(target); this.opts.status(t('{name} design copied', { name })); } },
+        { icon: 'mdi:content-paste', label: t('Paste design'), run: () => sm.pasteDesign(target, 'replace'), disabled: noDesign, why },
+        { icon: 'mdi:set-merge', label: t('Merge pasted design'), run: () => sm.pasteDesign(target, 'merge'), disabled: noDesign, why },
       ];
     };
     const paste = (label: string, where: string): Entry => ({
-      icon: 'mdi:content-paste', label, run: () => this._paste(sel, where), disabled: noModule, why: noModule ? 'Copy a module first' : undefined, focus: 'selection',
+      icon: 'mdi:content-paste', label, run: () => this._paste(sel, where), disabled: noModule, why: noModule ? t('Copy a module first') : undefined, focus: 'selection',
     });
     const item = itemAt(config, sel);
     const hidden = isHiddenItem(item);
-    const hide = (what = ''): Entry => ({
+    const hide = (tab = false): Entry => ({
       icon: hidden ? 'mdi:eye-outline' : 'mdi:eye-off-outline',
-      label: `${hidden ? 'Show' : 'Hide'}${what} on dashboard`,
+      label: tab ? (hidden ? t('Show tab on dashboard') : t('Hide tab on dashboard')) : hidden ? t('Show on dashboard') : t('Hide on dashboard'),
       run: () => sm.setHidden(sel, !hidden),
     });
     const overrides = sm.hasOverrides(sel);
     const reset = (label: string): Entry[] => (linked ? [{
-      icon: 'mdi:backup-restore', label, run: () => undefined, view: 'reset', disabled: !overrides, why: overrides ? undefined : 'Nothing differs from the template',
+      icon: 'mdi:backup-restore', label, run: () => undefined, view: 'reset', disabled: !overrides, why: overrides ? undefined : t('Nothing differs from the template'),
     }] : []);
+    const actionsLabel = t('{name} actions', { name });
     const resetView = (note: string) => ({
-      label: `${name} actions`,
+      label: actionsLabel,
       note,
-      groups: [[cancel, { icon: 'mdi:backup-restore', label: 'Reset', danger: true, focus: 'selection', run: () => {
+      groups: [[cancel, { icon: 'mdi:backup-restore', label: t('Reset'), danger: true, focus: 'selection', run: () => {
         if (sel.kind === 'card') this._fire('template-resync');
         // a column owning its module list resets only after the editor fetched the template
         else if (sm.ownsModuleList(sel)) this._fire('mc-template-reapply', { resetColumn: sel });
@@ -408,17 +413,17 @@ export class ItemMenu implements ReactiveController {
     });
 
     if (sel.kind === 'card') {
-      if (this.view === 'reset') return resetView('Reset the whole card to the template? All your changes are lost.');
+      if (this.view === 'reset') return resetView(t('Reset the whole card to the template? All your changes are lost.'));
       const changed = countNotSynced(config) > 0;
       return {
-        label: `${name} actions`,
+        label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:card-outline', label: 'Edit card settings', run: () => this._edit(sel), focus: 'none' },
-            { icon: 'mdi:plus', label: 'Add row', run: () => this._fire('request-add-row'), focus: 'none' },
+            { icon: 'mdi:card-outline', label: t('Edit card settings'), run: () => this._edit(sel), focus: 'none' },
+            { icon: 'mdi:plus', label: t('Add row'), run: () => this._fire('request-add-row'), focus: 'none' },
           ],
           [rename, yaml],
-          linked ? [{ icon: 'mdi:backup-restore', label: 'Reset card to template…', run: () => undefined, view: 'reset', disabled: !changed, why: changed ? undefined : 'Nothing differs from the template' }] : [],
+          linked ? [{ icon: 'mdi:backup-restore', label: t('Reset card to template…'), run: () => undefined, view: 'reset', disabled: !changed, why: changed ? undefined : t('Nothing differs from the template') }] : [],
         ],
       };
     }
@@ -427,43 +432,43 @@ export class ItemMenu implements ReactiveController {
     if (!row) return null;
 
     if (sel.kind === 'row') {
-      if (this.view === 'reset') return resetView(`Reset ${name} to the template? Your changes to it are lost.`);
+      if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
       const r = sel.row;
       return {
-        label: `${name} actions`,
+        label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:table-column-plus-after', label: 'Add column', run: () => { sm.addColumn(r); this._select({ kind: 'column', row: r, col: sm.getConfig().rows[r].columns.length - 1 }); }, focus: 'selection' },
-            { icon: 'mdi:content-duplicate', label: 'Duplicate row', run: () => sm.duplicateRow(r), kbd: KBD.dup, focus: 'selection' },
+            { icon: 'mdi:table-column-plus-after', label: t('Add column'), run: () => { sm.addColumn(r); this._select({ kind: 'column', row: r, col: sm.getConfig().rows[r].columns.length - 1 }); }, focus: 'selection' },
+            { icon: 'mdi:content-duplicate', label: t('Duplicate row'), run: () => sm.duplicateRow(r), kbd: KBD.dup, focus: 'selection' },
             rename,
           ],
           [yaml, ...designItems({ row: r })],
-          [hide(), ...reset('Reset row to template…')],
+          [hide(), ...reset(t('Reset row to template…'))],
           [
-            { icon: 'mdi:arrow-up', label: 'Move up', run: () => this._moveRow(r, r - 1), disabled: r === 0, kbd: KBD.up, focus: 'none' },
-            { icon: 'mdi:arrow-down', label: 'Move down', run: () => this._moveRow(r, r + 1), disabled: r >= config.rows.length - 1, kbd: KBD.down, focus: 'none' },
+            { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveRow(r, r - 1), disabled: r === 0, kbd: KBD.up, focus: 'none' },
+            { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveRow(r, r + 1), disabled: r >= config.rows.length - 1, kbd: KBD.down, focus: 'none' },
           ],
-          [{ icon: 'mdi:delete-outline', label: 'Delete row', run: () => this._deleteRow(r), danger: true, kbd: KBD.del, focus: 'none' }],
+          [{ icon: 'mdi:delete-outline', label: t('Delete row'), run: () => this._deleteRow(r), danger: true, kbd: KBD.del, focus: 'none' }],
         ],
       };
     }
 
     if (sel.kind === 'column') {
-      if (this.view === 'reset') return resetView(`Reset ${name} to the template? Your changes to it are lost.`);
+      if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
       const only = row.columns.length <= 1;
       return {
-        label: `Row ${sel.row + 1} column ${sel.col + 1} actions`,
+        label: t('Row {row} column {column} actions', { row: sel.row + 1, column: sel.col + 1 }),
         groups: [
           [
-            { icon: 'mdi:plus', label: 'Add module', run: () => this._fire('add-module', { rowIndex: sel.row, colIndex: sel.col }), focus: 'none' },
-            paste('Paste module', `Row ${sel.row + 1} · Column ${sel.col + 1}`),
+            { icon: 'mdi:plus', label: t('Add module'), run: () => this._fire('add-module', { rowIndex: sel.row, colIndex: sel.col }), focus: 'none' },
+            paste(t('Paste module'), rowColumn(sel.row, sel.col)),
             rename,
           ],
           [yaml, ...designItems({ row: sel.row, col: sel.col })],
-          [hide(), ...reset('Reset column to template…')],
+          [hide(), ...reset(t('Reset column to template…'))],
           [{
-            icon: 'mdi:delete-outline', label: 'Delete column', danger: true, kbd: KBD.del, focus: 'selection',
-            run: () => sm.deleteColumn(sel.row, sel.col), disabled: only, why: only ? 'A row needs one column' : undefined,
+            icon: 'mdi:delete-outline', label: t('Delete column'), danger: true, kbd: KBD.del, focus: 'selection',
+            run: () => sm.deleteColumn(sel.row, sel.col), disabled: only, why: only ? t('A row needs one column') : undefined,
           }],
         ],
       };
@@ -474,37 +479,38 @@ export class ItemMenu implements ReactiveController {
       const slots = childSlots(owner);
       if (!owner || !slots?.[sel.slot]) return null;
       const isTabs = owner.type === 'tabs';
-      const what = isTabs ? 'tab' : 'column';
       const n = slots[sel.slot].length;
       const only = slots.length <= 1;
       const ownerSel = parentSelection(sel) as ModuleSelection;
       const del = (): void => this._deleteSlot(sel);
       if (this.view === 'delete') {
         return {
-          label: `${name} actions`,
-          note: `Delete ${what} "${name}" and its ${n} module${n === 1 ? '' : 's'}?`,
-          groups: [[cancel, { icon: 'mdi:delete-outline', label: `Delete ${what}`, run: del, danger: true, focus: 'none' }]],
+          label: actionsLabel,
+          note: isTabs
+            ? t('Delete tab "{name}" and its {n, plural, one {# module} other {# modules}}?', { name, n })
+            : t('Delete column "{name}" and its {n, plural, one {# module} other {# modules}}?', { name, n }),
+          groups: [[cancel, { icon: 'mdi:delete-outline', label: isTabs ? t('Delete tab') : t('Delete column'), run: del, danger: true, focus: 'none' }]],
         };
       }
       const target = { row: sel.row, col: sel.col, module: sel.module, child: sel.child, slot: sel.slot };
       return {
-        label: `${name} actions`,
+        label: actionsLabel,
         groups: [
           [
-            { icon: 'mdi:plus', label: 'Add module', run: () => this._addChild(ownerSel, sel.slot), focus: 'none' },
-            paste('Paste module', `${moduleTitle(owner)} · ${name}`),
+            { icon: 'mdi:plus', label: t('Add module'), run: () => this._addChild(ownerSel, sel.slot), focus: 'none' },
+            paste(t('Paste module'), `${moduleTitle(owner)} · ${name}`),
             rename,
           ],
           isTabs ? [yaml] : [yaml, ...designItems(target)],
-          [hide(isTabs ? ' tab' : '')],
+          [hide(isTabs)],
           [
-            { icon: 'mdi:arrow-up', label: 'Move up', run: () => this._moveSlot(sel, -1), disabled: sel.slot <= 0, kbd: KBD.up, focus: 'selection' },
-            { icon: 'mdi:arrow-down', label: 'Move down', run: () => this._moveSlot(sel, 1), disabled: sel.slot >= slots.length - 1, kbd: KBD.down, focus: 'selection' },
+            { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveSlot(sel, -1), disabled: sel.slot <= 0, kbd: KBD.up, focus: 'selection' },
+            { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveSlot(sel, 1), disabled: sel.slot >= slots.length - 1, kbd: KBD.down, focus: 'selection' },
           ],
           [{
-            icon: 'mdi:delete-outline', label: `Delete ${what}`, danger: true, kbd: KBD.del,
+            icon: 'mdi:delete-outline', label: isTabs ? t('Delete tab') : t('Delete column'), danger: true, kbd: KBD.del,
             run: del, view: n && !only ? 'delete' : undefined, focus: 'none',
-            disabled: only, why: only ? `${isTabs ? 'A tabs module' : 'A row'} needs one ${what}` : undefined,
+            disabled: only, why: only ? (isTabs ? t('A tabs module needs one tab') : t('A row needs one column')) : undefined,
           }],
         ],
       };
@@ -517,14 +523,14 @@ export class ItemMenu implements ReactiveController {
     const top = config.rows[sel.row]?.columns[sel.col]?.modules?.[sel.module];
     if (this.view === 'reset') {
       return resetView(nested && top
-        ? `Reset ${moduleTitle(top)} to the template? Changes to all its modules are lost.`
-        : `Reset ${name} to the template? Your changes to it are lost.`);
+        ? t('Reset {name} to the template? Changes to all its modules are lost.', { name: moduleTitle(top) })
+        : t('Reset {name} to the template? Your changes to it are lost.', { name }));
     }
     const targets = this._moveTargets(config, sel);
-    if (this.view === 'move') return { label: `${name} actions`, groups: [[back], targets] };
+    if (this.view === 'move') return { label: actionsLabel, groups: [[back], targets] };
     if (this.view === 'wrap') {
       return {
-        label: `${name} actions`,
+        label: actionsLabel,
         groups: [[back], WRAP_TYPES.map((type) => {
           const meta = ModuleRegistry.get(type)?.metadata;
           return { icon: meta?.icon || 'mdi:view-grid-outline', label: moduleDisplayName({ type } as CardModule), run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
@@ -538,35 +544,35 @@ export class ItemMenu implements ReactiveController {
     const count = list?.length ?? 0;
     const add: Entry[] = mod.type === 'tabs' || mod.type === 'row'
       ? [{
-          icon: mod.type === 'tabs' ? 'mdi:tab-plus' : 'mdi:table-column-plus-after', label: mod.type === 'tabs' ? 'Add tab' : 'Add column', focus: 'selection',
+          icon: mod.type === 'tabs' ? 'mdi:tab-plus' : 'mdi:table-column-plus-after', label: mod.type === 'tabs' ? t('Add tab') : t('Add column'), focus: 'selection',
           run: () => (mod.type === 'tabs' ? sm.addTab(sel.row, sel.col, sel.module, sel.child?.map((s) => ({ ...s }))) : sm.addNestedColumn(sel.row, sel.col, sel.module, sel.child?.map((s) => ({ ...s })))),
         }]
-      : hasSlotNodes(mod) || !childSlots(mod) ? [] : [{ icon: 'mdi:plus', label: 'Add module', run: () => this._addChild(sel, 0), focus: 'none' }];
+      : hasSlotNodes(mod) || !childSlots(mod) ? [] : [{ icon: 'mdi:plus', label: t('Add module'), run: () => this._addChild(sel, 0), focus: 'none' }];
     const locked = templateIdMissing(config, sel);
     const connect: Entry[] = this.opts.surface === 'canvas' && this.opts.connect ? [{
-      icon: 'mdi:transit-connection-variant', label: 'Add flow from here', run: () => this.opts.connect!(sel), focus: 'none',
-      disabled: locked, why: locked ? TEMPLATE_ID_HINT : undefined,
+      icon: 'mdi:transit-connection-variant', label: t('Add flow from here'), run: () => this.opts.connect!(sel), focus: 'none',
+      disabled: locked, why: locked ? t(TEMPLATE_ID_HINT) : undefined,
     }] : [];
-    const where = nested ? describeSelection(config, parentSelection(sel, config)).title : `Row ${sel.row + 1} · Column ${sel.col + 1}`;
+    const where = nested ? describeSelection(config, parentSelection(sel, config)).title : rowColumn(sel.row, sel.col);
     return {
-      label: `${name} actions`,
+      label: actionsLabel,
       groups: [
-        [{ icon: 'mdi:pencil-outline', label: 'Edit', run: () => this._edit(sel), focus: 'none' }, ...add, ...connect, rename],
+        [{ icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' }, ...add, ...connect, rename],
         [
-          { icon: 'mdi:content-copy', label: 'Copy module', run: () => { if (sm.copyModule(sel)) this.opts.status(`${name} copied`); } },
-          paste('Paste module after', where),
-          { icon: 'mdi:content-duplicate', label: 'Duplicate', run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
-          { icon: 'mdi:group', label: 'Wrap in layout', run: () => undefined, view: 'wrap', sub: true },
+          { icon: 'mdi:content-copy', label: t('Copy module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('{name} copied', { name })); } },
+          paste(t('Paste module after'), where),
+          { icon: 'mdi:content-duplicate', label: t('Duplicate'), run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
+          { icon: 'mdi:group', label: t('Wrap in layout'), run: () => undefined, view: 'wrap', sub: true },
           yaml,
         ],
         designItems({ row: sel.row, col: sel.col, module: sel.module, child: sel.child }),
-        [hide(), ...reset(nested ? 'Reset layout to template…' : 'Reset to template…')],
+        [hide(), ...reset(nested ? t('Reset layout to template…') : t('Reset to template…'))],
         [
-          { icon: 'mdi:arrow-up', label: 'Move up', run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
-          { icon: 'mdi:arrow-down', label: 'Move down', run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
-          { icon: 'mdi:folder-move-outline', label: 'Move to…', run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : 'No other column to move to' },
+          { icon: 'mdi:arrow-up', label: t('Move up'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
+          { icon: 'mdi:arrow-down', label: t('Move down'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
+          { icon: 'mdi:folder-move-outline', label: t('Move to…'), run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : t('No other column to move to') },
         ],
-        [{ icon: 'mdi:delete-outline', label: 'Delete', run: () => this._deleteModule(sel), danger: true, kbd: KBD.del, focus: 'none' }],
+        [{ icon: 'mdi:delete-outline', label: t('Delete'), run: () => this._deleteModule(sel), danger: true, kbd: KBD.del, focus: 'none' }],
       ],
     };
   }
@@ -605,11 +611,11 @@ export class ItemMenu implements ReactiveController {
       ? html`<dialog class="copy-dlg" aria-labelledby="copy-dlg-title" aria-describedby="copy-dlg-hint"
           @close=${this._closeCopy}
           @keydown=${(e: KeyboardEvent) => { if (e.key === 'Escape') e.stopPropagation(); }}>
-          <h2 id="copy-dlg-title">Copy this YAML</h2>
-          <p id="copy-dlg-hint">${c.title}. Press Ctrl+C (⌘C on a Mac) to copy.</p>
+          <h2 id="copy-dlg-title">${t('Copy this YAML')}</h2>
+          <p id="copy-dlg-hint">${t('{title}. Press Ctrl+C (⌘C on a Mac) to copy.', { title: c.title })}</p>
           <textarea readonly rows="12" aria-labelledby="copy-dlg-title" .value=${c.text}></textarea>
           <div class="actions">
-            <button type="button" class="btn btn-secondary" @click=${(e: Event) => (e.currentTarget as HTMLElement).closest('dialog')?.close()}>Close</button>
+            <button type="button" class="btn btn-secondary" @click=${(e: Event) => (e.currentTarget as HTMLElement).closest('dialog')?.close()}>${t('Close')}</button>
           </div>
         </dialog>`
       : nothing;

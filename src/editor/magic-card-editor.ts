@@ -1,4 +1,4 @@
-import { LitElement, html, css, TemplateResult, nothing } from 'lit';
+import { LitElement, html, css, TemplateResult, nothing, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { MagicCardConfig, HomeAssistant, EditorState } from '../types';
 import { mergeTemplateWithOverrides, withTemplateAnimations } from '../services/template-merge';
@@ -24,6 +24,8 @@ import './studio/pane-editor';
 import './studio/studio';
 import './panels/module-selector';
 import './components/template-picker';
+import { t, tx, locale } from './i18n';
+import { setI18nLocale } from '../i18n/runtime';
 
 /**
  * Events that never leave the editor when a descendant fires them. HA's card dialog
@@ -201,7 +203,7 @@ export class MagicCardEditor extends LitElement {
     if (!config?.template) return;
     const prepare = col ? () => (sm.ownsModuleList(col) && sm.resetItem(col, true) ? sm.getConfig() : undefined) : undefined;
     this._fetchAndApplyTemplate(config.template, config, prepare).then((ok) => {
-      if (col && !ok) this._notify('Could not load the template, so the column was not reset.');
+      if (col && !ok) this._notify(t('Could not load the template, so the column was not reset.'));
     });
   };
 
@@ -274,9 +276,15 @@ export class MagicCardEditor extends LitElement {
     }
   }
 
+  protected willUpdate(changed: PropertyValues): void {
+    // the language of the HA profile (the runtime copy is shared with the card; the editor may open without a preview)
+    if (changed.has('hass') && this.hass) setI18nLocale(this.hass);
+    this.lang = locale();
+  }
+
   protected render(): TemplateResult {
     if (!this._editorState) {
-      return html`<div class="loading" aria-busy="true" aria-label="Loading editor"></div>`;
+      return html`<div class="loading" aria-busy="true" aria-label=${t('Loading editor')}></div>`;
     }
 
     // While the studio is open, overlays are slotted into its modal <dialog> so they stack above it.
@@ -311,11 +319,10 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
     // compact markup: Lit keeps a template's whitespace in the bundle
     return html`<dialog class="mc-sync-dialog" aria-labelledby="sync-title" aria-describedby="sync-text"
 @click=${(e: Event) => { if (this._syncDialogCtrl.isBackdropClick(e)) this._cancelSync(); }}>
-<div class="dialog" @click=${(e: Event) => e.stopPropagation()}><h2 id="sync-title">Update linked cards?</h2>
-<p id="sync-text">This card is linked to template <span class="mono">${this._linkedTemplate}</span>. Do you want to
-update all linked cards with this structural change?</p><div class="actions">
-<button type="button" class="btn btn-secondary" @click=${this._handleSyncNo}>Only this card</button>
-<button type="button" class="btn btn-primary" @click=${this._handleSyncYes}>Update all linked cards</button></div></div></dialog>`;
+<div class="dialog" @click=${(e: Event) => e.stopPropagation()}><h2 id="sync-title">${t('Update linked cards?')}</h2>
+<p id="sync-text">${tx('This card is linked to template {name}. Do you want to update all linked cards with this structural change?', { name: html`<span class="mono">${this._linkedTemplate}</span>` })}</p><div class="actions">
+<button type="button" class="btn btn-secondary" @click=${this._handleSyncNo}>${t('Only this card')}</button>
+<button type="button" class="btn btn-primary" @click=${this._handleSyncYes}>${t('Update all linked cards')}</button></div></div></dialog>`;
   }
 
   private _handleAddRow = (): void => {

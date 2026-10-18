@@ -2,6 +2,7 @@ import type { CardModule, FlowConfig, HomeAssistant, MagicCardConfig } from '../
 import { generateId } from '../../utils/id-generator';
 import { childListKey, childSlots, slotLabel } from '../../utils/module-path';
 import { ModuleSelection, moduleAt, moduleDisplayName, moduleLabel, moduleSelection, modulePathAttr } from '../studio/selection';
+import { t, m } from '../i18n';
 
 /**
  * Editor side of flow lines: the modules a flow can connect, module ids for flow endpoints (written
@@ -23,7 +24,7 @@ export interface FlowModuleOption {
 }
 
 /** Why a locked module can't be picked (From / To, studio connect mode). */
-export const TEMPLATE_ID_HINT = 'Give this module an id in the template';
+export const TEMPLATE_ID_HINT = m('Give this module an id in the template');
 
 /** Prefix of a select value for a module without an id. */
 const PATH_PREFIX = '@';
@@ -83,7 +84,7 @@ export function flowModuleOptions(config: MagicCardConfig, hass?: HomeAssistant)
   };
   (config.rows || []).forEach((row, r) =>
     (row?.columns || []).forEach((col, c) =>
-      (col?.modules || []).forEach((mod, m) => visit(mod, moduleSelection(r, c, m), [`Row ${r + 1}`, `Column ${c + 1}`])),
+      (col?.modules || []).forEach((mod, m) => visit(mod, moduleSelection(r, c, m), [t('Row {n}', { n: r + 1 }), t('Column {n}', { n: c + 1 })])),
     ),
   );
   // Identical labels (two unlabelled Text modules in a column) get their position in their list.
@@ -92,7 +93,7 @@ export function flowModuleOptions(config: MagicCardConfig, hass?: HomeAssistant)
   for (const o of out) {
     if ((count.get(o.label) ?? 0) < 2) continue;
     const step = o.sel.child?.[o.sel.child.length - 1];
-    o.label = `${o.label} · Module ${(step ? step.index : o.sel.module) + 1}`;
+    o.label = `${o.label} · ${t('Module {n}', { n: (step ? step.index : o.sel.module) + 1 })}`;
   }
   return out;
 }

@@ -8,6 +8,7 @@ import { animationLibrary, inlineAnimations, type LibraryHass } from '../../serv
 import { customAnimationIds, embedCustomAnimations } from '../../utils/custom-animations';
 import { toYaml } from '../../utils/yaml-utils';
 import { withTemplateAnimations } from '../../services/template-merge';
+import { t } from '../i18n';
 
 /** Returns config with type, name, template ordered first in the YAML object */
 export function orderedYamlConfig(config: MagicCardConfig | undefined): Record<string, unknown> {
@@ -135,12 +136,12 @@ export class YamlEditor extends LitElement {
     try {
       await navigator.clipboard.writeText(yaml);
       this._status = missing.length
-        ? `YAML copied. Not embedded (not found): ${missing.join(', ')}.`
+        ? t('YAML copied. Not embedded (not found): {ids}.', { ids: missing.join(', ') })
         : this._embed
-          ? 'YAML copied with your animations.'
-          : 'YAML copied.';
+          ? t('YAML copied with your animations.')
+          : t('YAML copied.');
     } catch {
-      this._status = 'Copying failed: the browser blocked the clipboard.';
+      this._status = t('Copying failed: the browser blocked the clipboard.');
     }
   }
 
@@ -151,23 +152,23 @@ export class YamlEditor extends LitElement {
     const n = ids.length;
     return html`
       <div class="export">
-        <span class="txt"><strong>Uses ${n} of your animations.</strong> Embed ${n === 1 ? 'it' : 'them'} to share this card with another Home Assistant.</span>
+        <span class="txt"><strong>${t('Uses {n} of your animations.', { n })}</strong> ${t('{n, plural, one {Embed it to share this card with another Home Assistant.} other {Embed them to share this card with another Home Assistant.}}', { n })}</span>
         <label class="opt">
           <button
             type="button"
             class="switch"
             role="switch"
             aria-checked=${this._embed ? 'true' : 'false'}
-            aria-label="Embed my animations"
+            aria-label=${t('Embed my animations')}
             @click=${() => {
               this._embed = !this._embed;
               this._status = '';
             }}
           ></button>
-          Embed my animations
+          ${t('Embed my animations')}
         </label>
         <button type="button" class="btn btn-secondary btn-sm copy-yaml" @click=${() => this._copy()}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>Copy YAML
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy YAML')}
         </button>
         <p class="status" role="status" aria-live="polite">${this._status}</p>
       </div>
