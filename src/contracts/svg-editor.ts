@@ -1,4 +1,5 @@
 import type { CustomShapeOptions } from './custom-shape';
+import type { ShapeOptions } from '../types';
 import type { SavedIconInput } from './mcu-library';
 
 /*
@@ -105,6 +106,13 @@ import type { SavedIconInput } from './mcu-library';
  * - `mc-shape-change` detail ShapeChangeDetail; `commit` false during drags. The host applies it
  *   through design-panel's ShapePatch (extended with custom_shapes) and pushes one history step
  *   per commit.
+ * - `mc-shape-close` detail ShapeCloseDetail, from Done and from Back to card editor. The change
+ *   events already applied everything (the card behind the editor is live), so there is nothing to
+ *   confirm on leaving; the host closes the layer and returns focus to the opener.
+ * Additive in T7 (2026-10-18, for the Architect to confirm): the properties `preset` ("Edit as custom":
+ * the preset's `shape` and `shape_options`; the studio converts it, `Notch` becomes Bevel, `Ticket`,
+ * `Wave` and `Blob` get a notice) and `label` (the target, "Living room tile"), and the event above.
+ * Done after "Edit as custom" with no edit still sends one `mc-shape-change` so the card turns custom.
  */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
@@ -148,6 +156,16 @@ export interface SvgSaveDetail {
 export interface ShapeEditorValue {
   shape: 'custom';
   shape_options: CustomShapeOptions;
+}
+
+/** "Edit as custom": the preset the studio starts from. */
+export interface ShapeEditorPreset {
+  shape: string;
+  shape_options?: ShapeOptions;
+}
+
+export interface ShapeCloseDetail {
+  done: boolean;
 }
 
 export interface ShapeChangeDetail {
