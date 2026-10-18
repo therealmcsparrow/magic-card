@@ -16,7 +16,7 @@ const CAPS = {
   'magic-card-editor.js': 680_960, // 647,655
   'magic-card-icon-animator.js': 233_472, // 222,240
   'magic-card-icon-library.js': 180_224, // 171,507
-  'magic-card-particles.js': 34_816, // 33,080
+  'magic-card-particles.js': 38_912, // 38 KiB, CEO 2026-10-18 (multiple emitters + per-emitter placement, spike F-S1 36,804)
   'magic-card-preset-catalogue.js': 24_576, // 22,797
   'magic-card-theme-editor.js': 176_128, // 175,781 (T19: 172,032 + CEO-approved raise, 22-architect epic C); was 163,837
   'magic-card-theme-presets.js': 21_504, // 19,878
