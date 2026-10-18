@@ -38,8 +38,14 @@ export class TransferPanel extends LitElement {
         display: grid;
         gap: 12px;
       }
-      h3:focus {
+      h3:focus,
+      #res:focus {
         outline: none;
+      }
+      .res {
+        margin: 0;
+        font-weight: 600;
+        font-size: 0.875rem;
       }
       .bar {
         display: flex;
@@ -73,6 +79,16 @@ export class TransferPanel extends LitElement {
     void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('h3')?.focus());
   }
 
+  /** After a file is read: focus the result line and bring it into view, so the list of kept values is not left below the fold of a short window. */
+  private focusResult(): void {
+    void this.updateComplete.then(() => {
+      const el = this.renderRoot.querySelector<HTMLElement>('#res');
+      if (!el) return this.focusHeading();
+      el.focus({ preventScroll: true });
+      el.scrollIntoView?.({ block: 'start' });
+    });
+  }
+
   private async _read(text: string, fileName?: string): Promise<void> {
     this._fileName = fileName ?? '';
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
@@ -82,7 +98,7 @@ export class TransferPanel extends LitElement {
       ? parseTransfer(text, { accept: HOST_KINDS[this.host], fileName })
       : { ok: false, refusal: 'limits', message: t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
     this._choice = 'keep-both';
-    this.focusHeading();
+    this.focusResult();
   }
 
   private async _onFile(e: Event): Promise<void> {
@@ -92,7 +108,7 @@ export class TransferPanel extends LitElement {
     const refused = checkFileSize(file);
     if (refused && !refused.ok) {
       this._res = { ok: false, refusal: refused.refusal, message: refused.message };
-      this.focusHeading();
+      this.focusResult();
     } else await this._read(await file.text(), file.name);
     input.value = '';
   }
@@ -145,8 +161,8 @@ export class TransferPanel extends LitElement {
           ${button({ label: t('Close'), variant: 'text', onClick: this._close })}
         </div>
       </div>
-      <div role="status" aria-live="polite" class="help">${r?.ok ? this._summary(r) : ''}</div>
-      ${r && !r.ok ? notice({ tone: 'error', text: r.message }) : r ? this._result(r) : nothing}
+      ${r?.ok ? html`<p id="res" class="res" tabindex="-1" role="status">${this._summary(r)}</p>` : r ? html`<div id="res" tabindex="-1">${notice({ tone: 'error', text: r.message })}</div>` : nothing}
+      ${r?.ok ? this._result(r) : nothing}
     `;
   }
 

@@ -533,7 +533,7 @@ export class McteStartView extends LitElement {
     if (!this.files.length) {
       return html`<div class="empty">
         <h2>${t('No themes yet')}</h2>
-        <p>${t('Create a theme from a preset or copy one you have installed.')}</p>
+        <p>${this.mine?.length ? t('{n, plural, one {# preset is} other {# presets are}} saved under My presets, but a preset is not a theme yet. Choose New theme and pick it to make one.', { n: this.mine.length }) : t('Create a theme from a preset or copy one you have installed.')}</p>
         <button type="button" class="btn btn-primary" @click=${() => this.openCreate()}>${t('New theme')}</button>
       </div>`;
     }
@@ -565,7 +565,7 @@ export class McteStartView extends LitElement {
         ${this._list()}
       </div>
       ${this._dlg === 'create' ? this._createDialog() : this._dlg === 'delete' ? this._deleteDialog() : nothing}
-      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .taken=${this._taken}></mcte-preset-dialog>
+      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .include=${this.include} .taken=${this._taken}></mcte-preset-dialog>
     `;
   }
 

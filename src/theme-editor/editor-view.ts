@@ -1237,7 +1237,7 @@ export class McteEditorView extends LitElement {
       <p class="sr-only" role="status">${this._msg}</p>
       <mc-ui-toast .offset=${this._trial ? 88 : 16} @mc-toast-action=${() => this._toastRun?.()}></mc-ui-toast>
       ${this._dialog()}
-      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine}></mcte-preset-dialog>
+      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .include=${this.include}></mcte-preset-dialog>
     `;
   }
 

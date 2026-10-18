@@ -2,7 +2,7 @@ import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from '
 import type { PropertyDeclarations } from 'lit';
 import type { SavedThemePreset, SavedThemePresetInput } from '../contracts/mcu-library';
 import type { TransferItem } from '../contracts/preset-transfer';
-import type { ThemeBackend, ThemeBackendError, ThemeDoc } from '../contracts/theme-editor';
+import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc } from '../contracts/theme-editor';
 import { closeDialog, deepActive, dialog, openDialog } from './dialogs';
 import type { UiWindowElement } from '../contracts/ui-kit';
 import { glyph } from '../ui-kit/glyphs';
@@ -43,6 +43,7 @@ export class MctePresetDialog extends LitElement {
   static properties: PropertyDeclarations = {
     backend: { attribute: false },
     mine: { attribute: false },
+    include: { attribute: false },
     taken: { attribute: false },
     _mode: { state: true },
     _name: { state: true },
@@ -56,6 +57,8 @@ export class MctePresetDialog extends LitElement {
 
   backend: ThemeBackend | undefined;
   mine: SavedThemePreset[] | undefined;
+  /** Whether Home Assistant loads theme files; the import result says what to do when it does not. */
+  include: IncludeStatus | undefined;
   taken: ReadonlySet<string> = new Set();
 
   private _mode: PresetDlgMode | null = null;
@@ -95,7 +98,12 @@ export class MctePresetDialog extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
-    if (changed.has('_done') && this._done) this.renderRoot.querySelector<HTMLElement>('#res')?.focus();
+    if (changed.has('_done') && this._done) {
+      // the result sits under the file chooser in a short window: focus it and scroll it into view
+      const res = this.renderRoot.querySelector<HTMLElement>('#res');
+      res?.focus({ preventScroll: true });
+      res?.scrollIntoView?.({ block: 'start' });
+    }
     if (changed.has('_mode') && this._mode) openDialog(this.renderRoot);
   }
 
@@ -237,11 +245,17 @@ export class MctePresetDialog extends LitElement {
 
   private _result(): TemplateResult {
     const { saved, failed } = this._done!;
-    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('Saved {c} under My presets', { c: saved.length }) : t('Nothing was saved')}</h3>
+    const one = saved.length === 1;
+    const setup = !!this.include && this.include.state !== 'ok';
+    return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? t('Added {c} to My presets', { c: saved.length }) : t('Nothing was saved')}</h3>
+      ${saved.length
+        ? html`<p>${one ? t('This is a preset, not a theme on your dashboard yet. Open it as a new theme to try it and to save it.') : t('These are presets, not themes on your dashboard yet. Choose New theme and pick one under My presets.')}</p>
+            ${setup ? html`<p class="help">${t('Saving a theme needs one setup step in Home Assistant. Try on dashboard works without it; the editor shows the lines to add.')}</p>` : nothing}`
+        : nothing}
       ${failed.map((f) => html`<p role="alert">${f}</p>`)}
       <div class="res-foot">
-        ${saved.length === 1 ? html`<button type="button" class="btn btn-secondary" @click=${() => this._open(saved[0])}>${t('Open as new theme')}</button>` : nothing}
-        <button type="button" class="btn btn-primary" @click=${() => this._close()}>${t('Close')}</button>
+        <button type="button" class="btn ${one ? 'btn-secondary' : 'btn-primary'}" @click=${() => this._close()}>${t('Close')}</button>
+        ${one ? html`<button type="button" class="btn btn-primary" @click=${() => this._open(saved[0])}>${t('Open as new theme')}</button>` : nothing}
       </div>`;
   }
 
