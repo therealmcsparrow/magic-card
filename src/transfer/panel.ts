@@ -67,6 +67,9 @@ export class TransferPanel extends LitElement {
   @property({ attribute: false }) exportItems?: { kind: TransferKind; items: TransferItem[] };
   @property({ attribute: false }) taken: (kind: TransferKind, id: string) => boolean = () => false;
   @property({ type: Boolean }) hasLibrary = true;
+  /** (r3, optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
+  @property({ attribute: false }) reserved?: (kind: TransferKind, id: string) => boolean;
+  @property({ attribute: false }) takenName?: (kind: TransferKind, name: string) => boolean;
 
   @state() private _res?: ParseResult;
   @state() private _choice: ClashChoice = 'keep-both';
@@ -125,7 +128,10 @@ export class TransferPanel extends LitElement {
   private _confirm(): void {
     const r = this._res;
     if (!r?.ok) return;
-    const items = resolveClashes(r.items, (id) => this.taken(r.kind, id), this._choice);
+    const items = resolveClashes(r.items, (id) => this.taken(r.kind, id), this._choice, {
+      reserved: this.reserved ? (id) => this.reserved!(r.kind, id) : undefined,
+      takenName: this.takenName ? (n) => this.takenName!(r.kind, n) : undefined,
+    });
     this.dispatchEvent(new CustomEvent('mc-transfer-import', { bubbles: true, composed: true, detail: { kind: r.kind, items, choice: this._choice } }));
     this._res = undefined;
   }

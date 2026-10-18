@@ -341,7 +341,7 @@ export interface TransferChunk {
   /** "Copy as HA theme". */
   haThemeYaml(name: string, doc: ThemeDoc): string;
   /** Ids after the clash choice; sequence steps follow renamed animation ids. */
-  resolveClashes<K extends TransferKind>(items: TransferItem<K>[], taken: (id: string) => boolean, choice: ClashChoice): TransferItem<K>[];
+  resolveClashes<K extends TransferKind>(items: TransferItem<K>[], taken: (id: string) => boolean, choice: ClashChoice, opts?: { reserved?: (id: string) => boolean; takenName?: (name: string) => boolean }): TransferItem<K>[];
   /** Custom element tags the chunk defines (customElements.get guarded). */
   tags: { panel: 'mc-transfer-panel'; library: 'mc-library-view' };
 }

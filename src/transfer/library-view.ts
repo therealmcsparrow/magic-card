@@ -266,12 +266,34 @@ export class LibraryView extends LitElement {
     return kind === 'theme' ? !!this.presets : this._status === 'ok' && this._source === 'mcu' && kind === this._kind;
   }
 
+  /** The import lands in this card (the "This card" list of the card editor), not in Magic Card Utils. */
+  private get _intoCard(): boolean {
+    return this._source === 'card' && !this._panelCtx;
+  }
+
+  /** Ids the import would collide with in its target; what the clash choice is about. */
   private _taken = (kind: TransferKind, id: string): boolean => {
+    if (this._intoCard) {
+      const c = this.config;
+      return kind === 'animation' ? animationDocList(c?.custom_animations).some((d) => d.id === id) : kind === 'shape' ? !!c?.custom_shapes?.[id] : !!c?.custom_icons?.[id];
+    }
     if (kind === this._kind && this._source === 'mcu') return this._rows.some((r) => r.id === id);
     if (kind === 'animation') return !!animationLibrary.get(id) || animationDocList(this.config?.custom_animations).some((d) => d.id === id);
     // a copy that shares an id with a saved item would be pruned from the card as unused
     if (kind === 'shape') return !!this.config?.custom_shapes?.[id] || this._src.isSaved('shapes', id);
     return kind === 'icon' && (!!this.config?.custom_icons?.[id] || this._src.isSaved('icons', id));
+  };
+
+  /** Into the card: ids Magic Card Utils holds too. They are renamed without asking, since a copy under a saved id would be pruned. */
+  private _reserved = (kind: TransferKind, id: string): boolean =>
+    this._intoCard && (kind === 'animation' ? !!animationLibrary.get(id) : kind === 'shape' ? this._src.isSaved('shapes', id) : kind === 'icon' && this._src.isSaved('icons', id));
+
+  /** Animation names the target already shows, so an import of "Pendulum" arrives as "Pendulum 2". */
+  private _takenName = (kind: TransferKind, name: string): boolean => {
+    if (kind !== 'animation') return false;
+    const n = name.trim().toLowerCase();
+    const docs = this._intoCard ? animationDocList(this.config?.custom_animations) : animationLibrary.list();
+    return docs.some((d) => String(d.name ?? d.id).trim().toLowerCase() === n);
   };
 
   private async _call(msg: Record<string, unknown>): Promise<void> {
@@ -453,7 +475,9 @@ export class LibraryView extends LitElement {
               .mode=${p.mode}
               .exportItems=${p.exportItems}
               .taken=${this._taken}
-              .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._status !== 'missing'}
+              .reserved=${this._reserved}
+              .takenName=${this._takenName}
+              .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._intoCard || this._status !== 'missing'}
               @mc-transfer-import=${this._import}
               @mc-transfer-close=${this._closePanel}
             ></mc-transfer-panel>

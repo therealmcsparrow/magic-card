@@ -228,18 +228,43 @@ export function haThemeYaml(name: string, doc: ThemeDoc): string {
   return toYaml(plain({ [name]: doc }));
 }
 
-/** Ids after the clash choice; sequence steps follow renamed animation ids. */
-export function resolveClashes<K extends TransferKind>(items: TransferItem<K>[], taken: (id: string) => boolean, choice: ClashChoice): TransferItem<K>[] {
-  if (choice === 'replace') return items;
+/** `name`, or `name 2`, `name 3`...: the first name not taken (80 characters at most). */
+function uniqueName(name: string, taken: (n: string) => boolean): string {
+  if (!taken(name)) return name;
+  for (let n = 2; ; n++) {
+    const next = `${name.slice(0, 76)} ${n}`;
+    if (!taken(next)) return next;
+  }
+}
+
+/**
+ * Ids after the clash choice; sequence steps follow renamed animation ids. `taken` is what the import lands in (the
+ * clash the user chooses about). Optional: `reserved` ids another library holds (renamed whatever the choice, so a
+ * card copy never shares an id with a saved item) and `takenName` (a name the target already shows gets a number).
+ */
+export function resolveClashes<K extends TransferKind>(
+  items: TransferItem<K>[],
+  taken: (id: string) => boolean,
+  choice: ClashChoice,
+  opts: { reserved?: (id: string) => boolean; takenName?: (name: string) => boolean } = {},
+): TransferItem<K>[] {
   const used = new Set<string>();
+  const names = new Set<string>();
   const map = new Map<string, string>();
+  const reserved = opts.reserved ?? (() => false);
   for (const it of items) {
-    const to = uniqueId(it.id, (x) => taken(x) || used.has(x));
+    const keep = choice === 'replace' && taken(it.id);
+    const to = keep ? it.id : uniqueId(it.id, (x) => taken(x) || reserved(x) || used.has(x));
     used.add(to);
     map.set(it.id, to);
   }
   return items.map((it) => {
     const next: TransferItem<K> = { ...it, id: map.get(it.id)! };
+    // a replaced item keeps its name; every other one must not repeat a name the target or this file already shows
+    if (opts.takenName && !(choice === 'replace' && taken(it.id))) {
+      next.name = uniqueName(it.name, (n) => opts.takenName!(n) || names.has(n));
+      names.add(next.name);
+    }
     const steps = (it.data as { steps?: { animation: string }[] }).steps;
     if (steps) {
       const fixed = steps.map((s) => {
