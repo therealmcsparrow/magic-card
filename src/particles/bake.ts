@@ -3,6 +3,7 @@ import { deriveSeed, mulberry32 } from './rng';
 import { createWorld, simulateLife, spawnParent, type Particle, type Sample, type World } from './sim';
 import { childCount, spawnChildren, triggerOf } from './children';
 import { BASE_TOLERANCE, rankStops, simplifyRanked, type RawStop } from './simplify';
+import { emitterPlan, type Plan } from './emitters';
 
 const CAPS = PARTICLES_V2_CAPS;
 /** Bytes of one element's CSS besides its stops (slot rule and @keyframes wrapper); the CSS writer (T2.3) should stay near it. */
@@ -112,16 +113,13 @@ interface Item {
   parent?: number;
 }
 
-/** Same input, same output (P2-2): no DOM, no Date, no Math.random. */
-export function bake(input: BakeInput): BakedLoop {
-  const { spec } = input;
+/** One emitter: its `n` parents and up to `m` children, within `maxBytes`; slots count from 0 in its own block. */
+function bakeOne(p: Plan, period: number, geometry: BakeGeometry, maxBytes: number): BakedLoop {
+  const spec = p.spec;
   const sim = spec.sim;
-  const period = input.period > 0 && Number.isFinite(input.period) ? input.period : 1;
-  const geometry = quantizeGeometry(input.geometry);
   const w = createWorld(spec, period, geometry);
-  const asked = Math.max(0, Math.floor(spec.count));
-  const n = Math.min(asked, CAPS.parents);
-  let capped = asked > CAPS.parents;
+  const n = p.n;
+  let capped = Math.floor(spec.count) > n;
 
   const c = sim.children;
   const per = childCount(c);
@@ -140,7 +138,7 @@ export function bake(input: BakeInput): BakedLoop {
   const kids: Item[] = [];
   if (c && per > 0) {
     const firing = parents.map((it, i) => (triggerOf(c, runs[i]) ? i : -1)).filter((i) => i >= 0);
-    const budget = CAPS.elements - n;
+    const budget = p.m;
     const base = firing.length ? Math.floor(budget / firing.length) : 0;
     const extra = firing.length ? budget % firing.length : 0;
     if (firing.length * per > budget) capped = true;
@@ -178,13 +176,13 @@ export function bake(input: BakeInput): BakedLoop {
           stops,
         });
       });
-      if (bytes <= CAPS.maxBytes) break;
+      if (bytes <= maxBytes) break;
       capped = true;
     }
-    if (bytes <= CAPS.maxBytes || limit === 0) break;
+    if (bytes <= maxBytes || limit === 0) break;
     limit = Math.floor(limit / 2);
   }
-  while (bytes > CAPS.maxBytes && elements.length) {
+  while (bytes > maxBytes && elements.length) {
     const e = elements.pop()!;
     bytes -= elementBytes(e.stops);
     capped = true;
@@ -198,4 +196,26 @@ export function bake(input: BakeInput): BakedLoop {
     elements,
     stats: { elements: elements.length, stops, bytes, capped, warn: bytes > CAPS.warnBytes },
   };
+}
+
+/** Same input, same output (P2-2). Emitters bake one by one into one pool (part 0's block first); budgets are per document. */
+export function bake(input: BakeInput): BakedLoop {
+  const period = input.period > 0 && Number.isFinite(input.period) ? input.period : 1;
+  const geometry = quantizeGeometry(input.geometry);
+  const d = emitterPlan(input.spec);
+  const elements: BakedElement[] = [];
+  const stats = { elements: 0, stops: 0, bytes: 0, capped: false, warn: false };
+  let cut = 0;
+  d.plans.forEach((p, i) => {
+    if (i === d.cut) cut = elements.length;
+    const l = bakeOne(p, period, geometry, d.plans[1] ? Math.floor((CAPS.maxBytes * (p.n + p.m)) / d.pool) : CAPS.maxBytes);
+    l.elements.forEach((e) => elements.push({ ...e, slot: e.slot + p.at, ...(e.parent !== undefined ? { parent: e.parent + p.at } : {}) }));
+    stats.stops += l.stats.stops;
+    stats.bytes += l.stats.bytes;
+    stats.capped ||= l.stats.capped;
+  });
+  stats.elements = elements.length;
+  stats.warn = stats.bytes > CAPS.warnBytes;
+  const second = d.plans[d.cut];
+  return { engine: PARTICLES_ENGINE, period, geometry, elements, stats, ...(second ? { parts: { element: cut, slot: second.at, front: second.front } } : {}) };
 }

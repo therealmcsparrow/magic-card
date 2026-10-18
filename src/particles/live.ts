@@ -4,6 +4,7 @@ import { deriveSeed, mulberry32, uniform, type Rng } from './rng';
 import { createWorld, radiusOf, sample, shapeOf, spawnParent, stepParticle, type Emit, type Hit, type Particle, type World } from './sim';
 import { childCount, spawnChildren } from './children';
 import type { SlotLook } from './css';
+import { emitterPlan, type DocPlan, type Plan } from './emitters';
 
 /*
  * The live engine (particles-v2, P2-3): the same world, spawn and step as the bake, run in real time
@@ -33,19 +34,22 @@ export interface LiveLayout {
 
 const rnd2 = (v: number): number => Math.round(v * 100) / 100;
 
-/** The live layer's slots, from the seed alone (no geometry): the parents' looks equal the bake's. */
-export function liveLayout(spec: ParticlesSpecV2, period: number): LiveLayout {
+/**
+ * An emitter's slots, from the seed alone (no geometry): the parents' looks equal the bake's. `p` (emitters.ts):
+ * its parents and child slots; missing: the 1.1.0 numbers for the spec alone.
+ */
+export function liveLayout(spec: ParticlesSpecV2, period: number, p?: Pick<Plan, 'n' | 'm'>): LiveLayout {
   const w = createWorld(spec, period, DEFAULT_GEOMETRY);
-  const n = Math.min(Math.max(0, Math.floor(spec.count)), PARTICLES_V2_CAPS.parents);
+  const n = p ? p.n : Math.min(Math.max(0, Math.floor(spec.count)), PARTICLES_V2_CAPS.parents);
   const rng = mulberry32(spec.sim.seed);
   const looks: SlotLook[] = [];
   for (let i = 0; i < n; i++) {
-    const p = spawnParent(w, rng, i);
-    looks.push({ shape: p.shape, size: rnd2(p.size), ...(p.color !== undefined ? { color: p.color } : {}) });
+    const q = spawnParent(w, rng, i);
+    looks.push({ shape: q.shape, size: rnd2(q.size), ...(q.color !== undefined ? { color: q.color } : {}) });
   }
   const c = spec.sim.children;
   const per = childCount(c);
-  const m = c && n ? Math.min(n * per, PARTICLES_V2_CAPS.elements - n) : 0;
+  const m = p ? p.m : c && n ? Math.min(n * per, PARTICLES_V2_CAPS.elements - n) : 0;
   const crng = mulberry32(deriveSeed(spec.sim.seed, 5));
   for (let j = 0; j < m; j++) {
     const shape = shapeOf(crng, c!.shapes);
@@ -55,6 +59,10 @@ export function liveLayout(spec: ParticlesSpecV2, period: number): LiveLayout {
   }
   return { parents: n, children: m, looks };
 }
+
+/** Each emitter's slot block, part 0's first. */
+export const layoutsOf = (d: DocPlan, period: number): LiveLayout[] => d.plans.map((p) => liveLayout(p.spec, period, p));
+export const docLooks = (d: DocPlan, period: number): SlotLook[] => layoutsOf(d, period).flatMap((l) => l.looks);
 
 export type Face = 'floor' | 'ceiling' | 'left' | 'right' | 'content';
 
@@ -211,7 +219,7 @@ export function clearFrame(layer: HTMLElement): void {
 
 interface Entry {
   el: HTMLElement;
-  sim: LiveSim;
+  sims: LiveSim[];
   key: string;
   on: boolean;
   acc: number;
@@ -251,10 +259,10 @@ function frame(ts: number): void {
     if (!e.on) continue;
     e.acc += dt;
     for (let n = 0; e.acc >= DT - 1e-9 && n < STEP_ROOM; n++) {
-      e.sim.step();
+      for (const s of e.sims) s.step();
       e.acc -= DT;
     }
-    writeFrame(e.el, e.sim.frame());
+    writeFrame(e.el, e.sims.flatMap((s) => s.frame()));
   }
   if (anyOn() && pageVisible()) raf = requestAnimationFrame(frame);
   else last = 0;
@@ -265,18 +273,26 @@ function onVisibility(): void {
   else halt();
 }
 
+/** The simulations of one part: one per emitter, over that emitter's block of the part's pool. */
+export function partSims(spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, part: 0 | 1): LiveSim[] {
+  const d = emitterPlan(spec);
+  const ls = layoutsOf(d, period);
+  return d.plans.flatMap((p, i) => (i >= d.cut === !!part ? [new LiveSim(p.spec, period, geometry, ls[i])] : []));
+}
+
 /**
- * Runs `layer` live. Idempotent: the same `key` (layer name: spec, period, geometry) keeps the
- * running simulation; another key starts over.
+ * Runs `layer` (the document's `part`) live, one simulation per emitter of the part. Idempotent: the same
+ * `key` (layer name: spec, period, geometry, part) keeps the running simulations; another key starts over.
  */
-export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string): void {
+export function startLive(layer: HTMLElement, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry, key: string, part: 0 | 1 = 0): void {
   if (entries.get(layer)?.key === key) return;
   stopLive(layer);
   if (!listening && typeof document !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibility);
     listening = true;
   }
-  const e: Entry = { el: layer, sim: new LiveSim(spec, period, geometry), key, on: false, acc: 0 };
+  const sims = partSims(spec, period, geometry, part);
+  const e: Entry = { el: layer, sims, key, on: false, acc: 0 };
   entries.set(layer, e);
   const watched = watchOffscreen(layer, (on) => {
     if (entries.get(layer) !== e) return;

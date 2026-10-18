@@ -5,6 +5,7 @@ import {
   PARTICLES_V2_CAPS,
   type BuiltinShape,
   type ParticleColliders,
+  type ParticleEmitter,
   type ParticleFlow,
   type ParticlePhysics,
   type ParticleRanges,
@@ -14,7 +15,7 @@ import {
   type SubEmitTrigger,
   type WeightedShape,
 } from '../contracts/particles-v2';
-import { ANIMATION_CAPS, Checker, ICON_RE, PARTICLE_DIRECTIONS, safeCssValue, type FieldError } from '../anim-studio/model';
+import { ANIMATION_CAPS, Checker, ICON_RE, PARTICLE_DIRECTIONS, safeCssValue, type FieldError, type ParticlesSpec } from '../anim-studio/model';
 import { sanitizeSvg, SVG_MAX_BYTES } from '../icons/svg-sanitize';
 
 /*
@@ -201,8 +202,96 @@ function children(c: Checker, raw: unknown, path: string, lenient: boolean): Sub
   return out;
 }
 
+const ID_RE = /^[a-z0-9-]{1,16}$/;
+
+/** The per-emitter fields the primary and every extra emitter share: seed, shapes, ranges, physics (flow is checked by the caller). */
+function emitterFields(c: Checker, o: Record<string, unknown>, path: string, lenient: boolean, flow: ParticleFlow) {
+  const r = isObj(o.ranges) ? o.ranges : (c.obj(o.ranges ?? {}, `${path}.ranges`) ?? {});
+  const d = DEFAULT_RANGES;
+  return {
+    seed: num(c, o, 'seed', `${path}.seed`, [0, 0xffffffff], 0, true) >>> 0,
+    flow,
+    shapes: shapes(c, o.shapes, `${path}.shapes`),
+    ranges: {
+      speed: range(c, r, 'speed', `${path}.ranges.speed`, SIM_LIMITS.speed, d.speed, lenient),
+      spin: range(c, r, 'spin', `${path}.ranges.spin`, SIM_LIMITS.spin, d.spin, lenient),
+      delay: range(c, r, 'delay', `${path}.ranges.delay`, SIM_LIMITS.delay, d.delay, lenient),
+      lifetime: range(c, r, 'lifetime', `${path}.ranges.lifetime`, SIM_LIMITS.lifetime, d.lifetime, lenient),
+      opacity: range(c, r, 'opacity', `${path}.ranges.opacity`, SIM_LIMITS.opacity, d.opacity, lenient),
+    },
+    physics: physics(c, o.physics, `${path}.physics`, DEFAULT_PHYSICS, false) as ParticlePhysics,
+  };
+}
+
+/** An emitter's id (1-16 of [a-z0-9-], unique) and name (trimmed, at most 40 characters). A bad id is an error and comes back ''. */
+function label(c: Checker, o: Record<string, unknown>, path: string, ids: Set<string>, need: boolean, lenient: boolean): { id: string; name?: string } {
+  const id = typeof o.id === 'string' && ID_RE.test(o.id) && !ids.has(o.id) ? o.id : '';
+  if (id) ids.add(id);
+  else if (need || o.id != null) c.err(`${path}.id`, 'Must be 1-16 of a-z, 0-9 and -, and unique.');
+  const t = typeof o.name === 'string' ? o.name.trim() : undefined;
+  if (t === undefined ? o.name != null : t.length > 40 && !lenient) c.err(`${path}.name`, 'Must be text of at most 40 characters.');
+  return { id, name: t?.slice(0, 40) || undefined };
+}
+
+/**
+ * 1.2.0 extra emitters; lenient: a broken one is dropped as a whole, the rest play. A bad `layer`
+ * or `children` only loses that field, a bad id becomes e<n>. `pid`: the primary's id.
+ */
+function extraEmitters(c: Checker, raw: unknown, lenient: boolean, pid: string, count: number): ParticleEmitter[] {
+  const path = `${P}.emitters`;
+  const max = PARTICLES_V2_CAPS.emitters - 1;
+  const ids = new Set(pid ? [pid] : []);
+  const out: ParticleEmitter[] = [];
+  c.list(raw, path, lenient ? Infinity : max)?.slice(0, max).forEach((x, i) => {
+    const p = `${path}[${i}]`;
+    const o = c.obj(x, p);
+    if (!o) return;
+    const { id, name } = label(c, o, p, ids, true, lenient);
+    const layer = c.oneOf(o, 'layer', `${p}.layer`, ['front', 'back'] as const);
+    const before = c.errors.length;
+    const flow = c.oneOf(o, 'flow', `${p}.flow`, FLOWS);
+    if (!flow) c.err(`${p}.flow`, 'Required.');
+    const e: ParticleEmitter = {
+      id,
+      ...(name && { name }),
+      ...(layer && { layer }),
+      count: num(c, o, 'count', `${p}.count`, [1, PARTICLES_V2_CAPS.parents], 10, true),
+      size: range(c, o, 'size', `${p}.size`, SIM_LIMITS.size, [6, 10], lenient),
+      colors: colors(c, o.colors, `${p}.colors`),
+      fade: c.bool(o, 'fade', `${p}.fade`, true),
+      spread: num(c, o, 'spread', `${p}.spread`, [0, 100], 100),
+      ...emitterFields(c, o, p, lenient, flow ?? 'fall'),
+    };
+    const kept = c.errors.length === before;
+    const ch = o.children == null ? undefined : children(c, o.children, `${p}.children`, lenient);
+    if (ch) e.children = ch;
+    if (!lenient || kept) out.push(e);
+  });
+  // one document holds PARTICLES_V2_CAPS.parents parents, the primary's included
+  let over = count + out.reduce((n, e) => n + e.count, 0) - PARTICLES_V2_CAPS.parents;
+  if (over > 0) {
+    c.err(path, `At most ${PARTICLES_V2_CAPS.parents} particles over all emitters.`);
+    for (let i = out.length; lenient && over > 0 && i--; ) {
+      const t = Math.min(over, out[i].count);
+      out[i].count -= t;
+      over -= t;
+    }
+  }
+  const list = out.filter((e) => e.count > 0);
+  const used = new Set(pid ? [pid] : []);
+  list.forEach((e) => (e.id && !used.has(e.id) ? used.add(e.id) : (e.id = '')));
+  let n = 0;
+  list.forEach((e) => {
+    if (!e.id) {
+      while (used.has(`e${++n}`));
+      used.add((e.id = `e${n}`));
+    }
+  });
+  return list;
+}
+
 /** particles-v2 ParticlesModule.validateSim. */
-export function validateSim(raw: unknown, mode: 'strict' | 'lenient'): { sim?: ParticlesSim; errors: FieldError[] } {
+export function validateSim(raw: unknown, mode: 'strict' | 'lenient', spec?: Pick<ParticlesSpec, 'count' | 'layer'>): { sim?: ParticlesSim; errors: FieldError[] } {
   const lenient = mode === 'lenient';
   const c = new Checker();
   const o = c.obj(raw, P);
@@ -216,27 +305,20 @@ export function validateSim(raw: unknown, mode: 'strict' | 'lenient'): { sim?: P
     if (o.flow === undefined) c.err(`${P}.flow`, 'Required.');
     if (lenient) return { errors: c.errors };
   }
-  const r = isObj(o.ranges) ? o.ranges : (c.obj(o.ranges ?? {}, `${P}.ranges`) ?? {});
-  const d = DEFAULT_RANGES;
   const sim: ParticlesSim = {
     engine: PARTICLES_ENGINE,
     mode: c.oneOf(o, 'mode', `${P}.mode`, ['baked', 'live'] as const, 'baked') ?? 'baked',
-    seed: num(c, o, 'seed', `${P}.seed`, [0, 0xffffffff], 0, true) >>> 0,
-    flow: flow ?? 'fall',
-    shapes: shapes(c, o.shapes, `${P}.shapes`),
-    ranges: {
-      speed: range(c, r, 'speed', `${P}.ranges.speed`, SIM_LIMITS.speed, d.speed, lenient),
-      spin: range(c, r, 'spin', `${P}.ranges.spin`, SIM_LIMITS.spin, d.spin, lenient),
-      delay: range(c, r, 'delay', `${P}.ranges.delay`, SIM_LIMITS.delay, d.delay, lenient),
-      lifetime: range(c, r, 'lifetime', `${P}.ranges.lifetime`, SIM_LIMITS.lifetime, d.lifetime, lenient),
-      opacity: range(c, r, 'opacity', `${P}.ranges.opacity`, SIM_LIMITS.opacity, d.opacity, lenient),
-    },
-    physics: physics(c, o.physics, `${P}.physics`, DEFAULT_PHYSICS, false) as ParticlePhysics,
+    ...emitterFields(c, o, P, lenient, flow ?? 'fall'),
     colliders: colliders(c, o.colliders, `${P}.colliders`),
   };
   if (o.children !== undefined && o.children !== null) {
     const ch = children(c, o.children, `${P}.children`, lenient);
     if (ch) sim.children = ch;
+  }
+  if (o.emitters !== undefined && o.emitters !== null) {
+    const lab = label(c, o, P, new Set(), false, lenient);
+    const more = extraEmitters(c, o.emitters, lenient, lab.id, spec ? Math.max(0, Math.floor(spec.count)) : 1);
+    if (more.length) Object.assign(sim, lab.id && { id: lab.id }, lab.name && { name: lab.name }, { emitters: more });
   }
   return { sim, errors: c.errors };
 }

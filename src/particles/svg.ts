@@ -90,7 +90,11 @@ export function bakedSvg(loop: BakedLoop, opts: { width: number; height: number;
   const rules: string[] = [];
   const moves: string[] = [];
   const at = (s: BakedStop): BakedStop => ({ ...s, x: (s.x / 100) * W, y: (s.y / 100) * H });
-  loop.elements.forEach((e: BakedElement, k) => {
+  // back part first (the document's part 1 is the front one when `parts.front`)
+  const order = loop.elements.map((_, k) => k);
+  if (loop.parts && !loop.parts.front) order.push(...order.splice(0, loop.parts.element));
+  order.forEach((k) => {
+    const e: BakedElement = loop.elements[k];
     const d = drawn(e.shape);
     const c = fileColor(e.color);
     const g = `<g class="${p}e${k}"${c ? ` color="${esc(c)}"` : ''}>${d.markup}</g>`;

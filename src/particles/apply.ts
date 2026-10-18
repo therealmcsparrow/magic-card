@@ -8,8 +8,9 @@ import {
   type ParticlesSpecV2,
 } from '../contracts/particles-v2';
 import { bake, quantizeGeometry } from './bake';
-import { bakedCss, layerBase, layerName, liveCss, stopAt } from './css';
-import { LiveSim, clearFrame, liveLayout, startLive, stopLive, writeFrame, __resetLiveForTests, type LiveFrame } from './live';
+import { bakedCss, layerBase, layerName, liveCss, slotOf, stopAt } from './css';
+import { clearFrame, docLooks, partSims, startLive, stopLive, writeFrame, __resetLiveForTests, type LiveFrame } from './live';
+import { cutSlot, emitterPlan, parts, type DocPlan } from './emitters';
 import { childCount } from './children';
 import { SHAPES_CSS, SHAPES_KEY } from './shapes';
 
@@ -26,11 +27,35 @@ import { SHAPES_CSS, SHAPES_KEY } from './shapes';
 interface Entry {
   compiled: CompiledParticlesV2;
   loop?: BakedLoop;
-  still?: Array<LiveFrame | undefined>;
+  plan: DocPlan;
+  /** Reduced motion: one still frame per part. */
+  still: Array<Array<LiveFrame | undefined>>;
 }
 
 const MAX_DOCS = 32;
 const cache = new Map<string, Map<string, Entry>>();
+
+/** The document as compiled for one geometry (undefined: unmeasured, the unbaked pool): both parts' rules and slots. */
+function build(docId: string, spec: ParticlesSpecV2, period: number, base: string, g?: BakeGeometry, loop?: BakedLoop): Entry {
+  const d = emitterPlan(spec);
+  const looks = docLooks(d, period);
+  const layer = (k: 0 | 1) => {
+    const name = g ? layerName(k ? base + 'o' : base, g) : `${k ? base + 'o' : base}-g0`;
+    const mine = parts(d, looks)[k];
+    const css = loop ? bakedCss(loop, name, docId, looks, k ? loop.parts!.element : 0, k ? undefined : loop.parts?.element, k ? loop.parts!.slot : 0).css : liveCss(mine, name, docId).css;
+    return { name, css, slots: mine.map(slotOf) };
+  };
+  const a = layer(0);
+  const b = d.cut < d.plans.length ? layer(1) : undefined;
+  const front = spec.layer === 'front';
+  const capped = !!g && !loop && d.plans.some((p) => Math.floor(p.spec.count) > p.n || p.m < p.n * childCount(p.spec.sim.children));
+  const stats = loop ? loop.stats : { elements: looks.length, stops: 0, bytes: a.css.length + (b?.css.length ?? 0), capped, warn: false };
+  const cut = cutSlot(d);
+  const emitterSlots = d.plans
+    .map((p, k) => ({ index: p.index, part: (k < d.cut ? 0 : 1) as 0 | 1, first: p.at - (k < d.cut ? 0 : cut), parents: p.n, children: p.m }))
+    .sort((x, y) => x.index - y.index);
+  return { compiled: { mode: spec.sim.mode, ...a, front, ...(b ? { other: { ...b, front: !front } } : {}), emitterSlots, stats }, ...(loop ? { loop } : {}), plan: d, still: [] };
+}
 
 function entryFor(docId: string, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry): Entry {
   const g = quantizeGeometry(geometry);
@@ -46,18 +71,7 @@ function entryFor(docId: string, spec: ParticlesSpecV2, period: number, geometry
     cache.set(base, variants);
     return hit;
   }
-  const front = spec.layer === 'front';
-  const layout = liveLayout(spec, period);
-  let entry: Entry;
-  if (spec.sim.mode === 'live') {
-    const { css, slots } = liveCss(layout.looks, name, docId);
-    const capped = Math.floor(spec.count) > PARTICLES_V2_CAPS.parents || layout.children < layout.parents * childCount(spec.sim.children);
-    entry = { compiled: { mode: 'live', name, css, slots, front, stats: { elements: slots.length, stops: 0, bytes: css.length, capped, warn: false } } };
-  } else {
-    const loop = bake({ spec, period, geometry: g });
-    const { css, slots } = bakedCss(loop, name, docId, layout.looks);
-    entry = { compiled: { mode: 'baked', name, css, slots, front, stats: loop.stats }, loop };
-  }
+  const entry = build(docId, spec, period, base, g, spec.sim.mode === 'live' ? undefined : bake({ spec, period, geometry: g }));
   if (!variants) {
     variants = new Map();
     cache.set(base, variants);
@@ -74,9 +88,7 @@ function entryFor(docId: string, spec: ParticlesSpecV2, period: number, geometry
  */
 export function compileParticles(docId: string, spec: ParticlesSpecV2, period: number, geometry: BakeGeometry): CompiledParticlesV2 {
   if (geometry.aspect > 0) return entryFor(docId, spec, period, geometry).compiled;
-  const name = `${layerBase(docId, spec, period)}-g0`;
-  const { css, slots } = liveCss(liveLayout(spec, period).looks, name, docId);
-  return { mode: spec.sim.mode, name, css, slots, front: spec.layer === 'front', stats: { elements: slots.length, stops: 0, bytes: css.length, capped: false, warn: false } };
+  return build(docId, spec, period, layerBase(docId, spec, period)).compiled;
 }
 
 /** The layer's quantised geometry from the page; undefined while it has no size (hidden, not laid out). */
@@ -93,17 +105,21 @@ function measure(layer: HTMLElement, ctx: ParticlesApplyCtx): BakeGeometry | und
   return quantizeGeometry(g);
 }
 
-/** Reduced motion: one frame from the middle of the loop (baked) or after a short run (live), held still. */
-function stillFrame(e: Entry, spec: ParticlesSpecV2, period: number, g: BakeGeometry): Array<LiveFrame | undefined> {
-  if (e.still) return e.still;
-  if (e.loop) e.still = e.loop.elements.map((el) => stopAt(el.stops, 0.5));
-  else {
-    const sim = new LiveSim(spec, period, g);
+/** Reduced motion: one frame of a part from the middle of the loop (baked) or after a short run (live), held still. */
+function stillFrame(e: Entry, spec: ParticlesSpecV2, period: number, g: BakeGeometry, part: 0 | 1): Array<LiveFrame | undefined> {
+  if (e.still[part]) return e.still[part];
+  const frames: Array<LiveFrame | undefined> = [];
+  const l = e.loop;
+  if (l) {
+    const cut = l.parts?.element ?? l.elements.length;
+    l.elements.slice(part ? cut : 0, part ? undefined : cut).forEach((el) => (frames[el.slot - (part ? l.parts!.slot : 0)] = stopAt(el.stops, 0.5)));
+  } else {
+    const sims = partSims(spec, period, g, part);
     const steps = Math.round(Math.min(period * 0.5, 3) / PARTICLES_V2_CAPS.dt);
-    for (let i = 0; i < steps; i++) sim.step();
-    e.still = sim.frame();
+    for (const sim of sims) for (let i = 0; i < steps; i++) sim.step();
+    frames.push(...sims.flatMap((s) => s.frame()));
   }
-  return e.still;
+  return (e.still[part] = frames);
 }
 
 const stills = new WeakSet<HTMLElement>();
@@ -118,19 +134,21 @@ export function apply(layer: HTMLElement, ctx: ParticlesApplyCtx): void {
     const measured = measure(layer, ctx);
     const g = measured ?? DEFAULT_GEOMETRY;
     const e = entryFor(docId, spec, period, g);
+    const part = ctx.part ? 1 : 0;
+    const c = (part ? e.compiled.other : e.compiled)!;
     // the render's unbaked pool (or another geometry's bake): this size's rules; the slots stay
-    if (layer.getAttribute('data-fx') !== e.compiled.name) {
-      ctx.useCss(e.compiled.name, e.compiled.css);
-      layer.setAttribute('data-fx', e.compiled.name);
+    if (layer.getAttribute('data-fx') !== c.name) {
+      ctx.useCss(c.name, c.css);
+      layer.setAttribute('data-fx', c.name);
     }
     if (ctx.reducedMotion) {
       stopLive(layer);
-      writeFrame(layer, stillFrame(e, spec, period, g), true);
+      writeFrame(layer, stillFrame(e, spec, period, g, part), true);
       stills.add(layer);
       return;
     }
     if (stills.delete(layer)) clearFrame(layer);
-    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, e.compiled.name);
+    if (spec.sim.mode === 'live') startLive(layer, spec, period, g, c.name, part);
     else stopLive(layer);
   } catch (err) {
     if (!logged) {

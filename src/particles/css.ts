@@ -61,7 +61,7 @@ export function stopAt(stops: BakedStop[], t: number): BakedStop {
  * own SVG shapes as masks. `keyframes(k)` gives slot k's @keyframes body; none: a live layer (the
  * engine writes the motion, so the slots run no animation).
  */
-export function layerCss(name: string, docId: string, looks: SlotLook[], keyframes?: (k: number) => string): string {
+export function layerCss(name: string, docId: string, looks: SlotLook[], keyframes?: (j: number) => string, at: (j: number) => number = (j) => j): string {
   const L = `.mc-anim-fx[data-fx="${name}"]`;
   const kf = `mcp${hashString(name)}-`;
   const out = [
@@ -71,13 +71,14 @@ export function layerCss(name: string, docId: string, looks: SlotLook[], keyfram
       `font-size:var(--mcc-sz);line-height:1;font-style:normal;--mdc-icon-size:var(--mcc-sz);${keyframes ? 'animation-timing-function:linear' : 'animation:none'}}`,
   ];
   const masks = new Map<string, number[]>();
-  looks.forEach((l, k) => {
+  looks.forEach((l, j) => {
+    const k = at(j);
     if ('svg' in l.shape) masks.set(l.shape.svg, [...(masks.get(l.shape.svg) ?? []), k]);
     const anim = keyframes ? `animation-name:${kf}${k};` : '';
     // a colour that is not a plain CSS colour is dropped (callers validate, but this is a contract API)
     const color = l.color ? safeCssValue(l.color, 'color') : undefined;
     out.push(`${L}>i:nth-child(${k + 1}){${anim}--mcc-sz:${r2(l.size)}px${color ? `;--mcc-pc:${color}` : ''}}`);
-    if (keyframes) out.push(`@keyframes ${kf}${k}{${keyframes(k)}}`);
+    if (keyframes) out.push(`@keyframes ${kf}${k}{${keyframes(j)}}`);
   });
   // own SVG shapes: always through the sanitiser (never raw markup in a rule); unusable: a dot
   masks.forEach((slots, svg) => {
@@ -92,14 +93,15 @@ const lookOf = (e: BakedElement): SlotLook => ({ shape: e.shape, size: e.size, .
 
 /**
  * A baked loop as layer CSS and its slots (particles-v2 ParticlesModule.bakedCss). Stops as
- * bake.stopDecl writes them (stats.bytes counts these). `pool` (the card: liveLayout's looks): the
- * slots are the whole pool and element k takes pool look k, as in the live engine, so the slots never
- * change between geometries (a bake with fewer children leaves the rest of the pool unanimated, at
- * the base opacity 0).
+ * bake.stopDecl writes them (stats.bytes counts these). `pool` (the card: the document's slot looks): the
+ * slots are the whole pool and an element takes pool look `slot`, as in the live engine, so the slots never
+ * change between geometries (an emitter that bakes fewer children leaves the rest of its block unanimated,
+ * at the base opacity 0). Elements [lo, hi) are one part, whose pool starts at `off`.
  */
-export function bakedCss(loop: BakedLoop, name: string, docId: string, pool?: SlotLook[]): { css: string; slots: ParticleSlotV2[] } {
-  const looks = loop.elements.map((e, k) => pool?.[k] ?? lookOf(e));
-  const css = layerCss(name, docId, looks, (k) => loop.elements[k].stops.map(stopDecl).join(''));
+export function bakedCss(loop: BakedLoop, name: string, docId: string, pool?: SlotLook[], lo = 0, hi = loop.elements.length, off = 0): { css: string; slots: ParticleSlotV2[] } {
+  const els = loop.elements.slice(lo, hi);
+  const looks = els.map((e) => pool?.[e.slot] ?? lookOf(e));
+  const css = layerCss(name, docId, looks, (j) => els[j].stops.map(stopDecl).join(''), pool ? (j) => els[j].slot - off : undefined);
   return { css, slots: (pool ?? looks).map(slotOf) };
 }
 
