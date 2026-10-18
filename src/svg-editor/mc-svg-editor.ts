@@ -1,6 +1,7 @@
 import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
 import type { History, PathCanvasChunk, PathChange, PathContext, PathPaint, PathSelection, PathTransform, TransformBox } from '../contracts/path-canvas';
 import type { MenuEntry } from '../contracts/path-canvas';
+import type { UiPopoverElement, UiToastElement, UiWindowElement } from '../contracts/ui-kit';
 import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
@@ -109,7 +110,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'startMax', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -162,7 +163,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** The open path tool (panel and preview), the tool waiting for its chunks, and and where. */
   pt?: PtState;
   ptBusy?: PathTool;
-  toast?: { text: string; action?: { label: string; run: () => void } };
+  /** What the toast's action button does (the toast itself is the kit's <mc-ui-toast>). */
+  private toastRun?: () => void;
   pvOpen = false;
   dlg: 'save' | 'help' | 'single' | undefined;
   /** Dual-tone switch (session state): on also whenever a layer paints Accent. */
@@ -190,7 +192,6 @@ export class McSvgEditor extends LitElement implements StageHost {
   startMode?: 'icon' | 'paste';
   /** The start dialog is open (over a blank editor first, or from New). */
   startOpen = false;
-  startMax = false;
   /** New was pressed with unsaved changes: the Start over question is showing. */
   newAsk = false;
   private startReturn?: HTMLElement;
@@ -233,7 +234,6 @@ export class McSvgEditor extends LitElement implements StageHost {
   private raf = 0;
   private outTimer?: ReturnType<typeof setTimeout>;
   private liveTimer?: ReturnType<typeof setTimeout>;
-  private toastTimer?: ReturnType<typeof setTimeout>;
 
   // ── lifecycle ──
 
@@ -267,7 +267,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     for (const [d, f] of this.dialogs) d.removeEventListener('cancel', f);
     this.dialogs = [];
     cancelAnimationFrame(this.raf);
-    for (const t of [this.outTimer, this.liveTimer, this.toastTimer]) clearTimeout(t);
+    for (const t of [this.outTimer, this.liveTimer]) clearTimeout(t);
     if (this.deleted) void this.flushDelete();
     const o = this.opener;
     if (o) {
@@ -314,7 +314,6 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.startReturn = opener;
     if (this.dirty && !asked) {
       this.newAsk = true;
-      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.newq button')?.focus());
       return;
     }
     this.startError = undefined;
@@ -764,9 +763,14 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.updateComplete.then(() => this.canvas()?.focus({ preventScroll: true }));
   }
 
-  choosePrim(k: PrimitiveKind): void {
+  /** The arrow keys in the picker pick a kind and keep it open. */
+  pickPrim(k: PrimitiveKind): void {
     this.opts = { ...this.opts, prim: k };
     this.say(S.prim[k]);
+  }
+
+  choosePrim(k: PrimitiveKind): void {
+    this.pickPrim(k);
     this.closePicker();
   }
 
@@ -1060,7 +1064,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   closeSingle(): void {
     this.dlg = undefined;
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-dual]')?.focus());
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('#sw-dual')?.focus());
   }
 
   setTone(t: 'main' | 'accent'): void {
@@ -1112,7 +1116,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (this.pt) return ptCancel(this);
     if (this.pvOpen) {
       this.pvOpen = false;
-      this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.pv-toggle')?.focus());
+      this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-pv]')?.focus());
       return;
     }
     if (this.dlg) this.dlg = undefined;
@@ -1128,7 +1132,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   onKey = (e: KeyboardEvent): void => {
     this.shift = e.shiftKey;
-    if (this.stage !== 'edit' || this.startOpen || this.newAsk) {
+    if (this.stage !== 'edit' || this.modal) {
       if (e.key === 'Escape') this.escape(e);
       return;
     }
@@ -1338,9 +1342,20 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   showToast(text: string, action?: { label: string; run: () => void }, ms = 6000): void {
-    this.toast = { text, action };
-    clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => (this.toast = undefined), ms);
+    this.toastRun = action?.run;
+    this.renderRoot.querySelector<UiToastElement>('mc-ui-toast')?.show({ text, action: action && { id: 'act', label: action.label }, duration: ms });
+  }
+
+  /** The toast's action button was pressed. */
+  toastAct(): void {
+    const run = this.toastRun;
+    this.toastRun = undefined;
+    run?.();
+  }
+
+  /** A window, popover or confirmation is open: the layer's own keys wait. */
+  get modal(): boolean {
+    return this.startOpen || this.newAsk || this.leaving || !!this.xfer || this.dlg === 'save' || this.dlg === 'single';
   }
 
   // ── events out ──
@@ -1377,7 +1392,6 @@ export class McSvgEditor extends LitElement implements StageHost {
       return;
     }
     this.leaving = true;
-    this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.leave button')?.focus());
   }
 
   leave(): void {
@@ -1462,11 +1476,6 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.keepCopy = (this.out.svg ? bytesOf(this.out.svg) : 0) <= KEEP_COPY_DEFAULT_MAX_BYTES;
     this.dlg = 'save';
     if (this.lib.state === 'idle') void this.loadLib();
-    this.updateComplete.then(() => {
-      const i = this.renderRoot.querySelector<HTMLInputElement>('.pop input');
-      i?.focus();
-      i?.select();
-    });
   }
 
   /** `mode` 'update' writes over `id`; 'new' takes a free id for the name. */
@@ -1769,15 +1778,25 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
-    if (changed.has('startOpen') && this.startOpen) {
-      const d = this.renderRoot.querySelector<HTMLDialogElement>('dialog.start-dlg');
-      if (d && !d.open) {
-        if (typeof d.showModal === 'function') d.showModal();
-        else d.setAttribute('open', '');
-        d.querySelector<HTMLElement>('.tile')?.focus();
-      }
-    }
+    this.openOverlays();
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
+  }
+
+  /** Windows and popovers are rendered closed: open each one the first time it shows up. */
+  private openOverlays(): void {
+    for (const w of this.renderRoot.querySelectorAll<UiWindowElement>('mc-ui-window')) {
+      if (w.open) continue;
+      w.show();
+      // after the window's own focus step: the Save name is selected for typing over
+      if (this.dlg === 'save') void (w as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() => this.renderRoot.querySelector<HTMLInputElement>('#save-name')?.select());
+    }
+    for (const p of this.renderRoot.querySelectorAll<UiPopoverElement>('mc-ui-popover')) {
+      if (p.open) continue;
+      p.anchor = this.renderRoot.querySelector<HTMLElement>(`[aria-controls="${p.id}"]`)!;
+      p.show();
+      // a keyboard user lands in the panel (Esc and Tab leave it); the panel names itself
+      void (p as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>(p.id === 'pv' ? '#pv [role=radio][tabindex="0"]' : '.pop-body')?.focus({ preventScroll: true }));
+    }
   }
 
   protected willUpdate(changed: PropertyValues): void {

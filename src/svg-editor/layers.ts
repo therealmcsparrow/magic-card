@@ -2,7 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { DRAG_EDGE_PX, DRAG_START_PX, type TreePlace } from '../contracts/svg-editor';
 import type { MenuEntry } from '../contracts/path-canvas';
-import { glyph } from './icons';
+import { glyph } from '../ui-kit/glyphs';
 import { arrangeOrder, byId, groupChain, groupItems, layoutRows, outsideSafe, toneOf, tryMove, under, type Doc, type MoveWhy, type TreeRow } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { S } from './strings';
@@ -340,7 +340,7 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
     else ed.apply(ed.replaceOne(s!, patch), label);
   };
   const ib = (label: string, cls2: string, g2: Parameters<typeof glyph>[0], on2: (e: Event) => void, pressed?: boolean): TemplateResult =>
-    html`<button type="button" class=${`b icon ${cls2}`} tabindex=${tab} aria-pressed=${pressed === undefined ? nothing : aria(pressed)} aria-label=${label} title=${label} @click=${on2}>${glyph(g2, 16)}</button>`;
+    html`<button type="button" class=${`icon-btn xs ${cls2}`.trim()} tabindex=${tab} aria-pressed=${pressed === undefined ? nothing : aria(pressed)} aria-label=${label} title=${label} @click=${on2}>${glyph(g2, 16)}</button>`;
   return html`<div
     class=${cls}
     role="treeitem"
@@ -351,7 +351,7 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
     aria-selected=${aria(on)}
     tabindex=${tab}
     data-id=${k}
-    style=${`--lv:${r.level}`}
+    style=${`--lvl:${r.level - 1}`}
     @click=${(e: MouseEvent) => pick(ed, r, e.shiftKey || e.ctrlKey || e.metaKey)}
     @dblclick=${() => (ed.renaming = k)}
     @keydown=${(e: KeyboardEvent) => rowKey(e, ed, r)}
@@ -363,7 +363,7 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
   >
     <button
       type="button"
-      class="b icon grip"
+      class="icon-btn xs grip"
       tabindex="-1"
       aria-label=${S.grip(name)}
       title=${S.grip(name)}
@@ -372,17 +372,17 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
       @pointermove=${(e: PointerEvent) => gripMove(ed, e)}
       @pointerup=${() => endDrag(ed, true)}
       @pointercancel=${() => endDrag(ed, false)}
-    >${glyph('grip', 16)}</button>
-    ${g ? ib(open ? S.collapse(name) : S.expand(name), 'chev', open ? 'down' : 'right', (e) => {
+    >${glyph('dragVertical', 16)}</button>
+    ${g ? ib(open ? S.collapse(name) : S.expand(name), 'chev', open ? 'chevronDown' : 'chevronRight', (e) => {
       e.stopPropagation();
       ed.toggleGroup(g.id);
     }) : nothing}
-    ${ib(hid ? S.show(name) : S.hide(name), '', hid ? 'eyeOff' : 'eye', toggle({ hidden: !hid }, 'Hide'), hid)}
-    ${ib(lck ? S.unlock(name) : S.lock(name), '', lck ? 'lock' : 'unlock', toggle({ locked: !lck }, 'Lock'), lck)}
+    ${ib(hid ? S.show(name) : S.hide(name), '', hid ? 'eyeOffOutline' : 'eyeOn', toggle({ hidden: !hid }, 'Hide'), hid)}
+    ${ib(lck ? S.unlock(name) : S.lock(name), '', lck ? 'lock' : 'lockOpenVariant', toggle({ locked: !lck }, 'Lock'), lck)}
     ${ed.renaming === k
-      ? html`<input class="rename" type="text" .value=${name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, k)} @blur=${(e: Event) => ed.renameShape(k, (e.target as HTMLInputElement).value)} />`
+      ? html`<input class="rename input" type="text" .value=${name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, k)} @blur=${(e: Event) => ed.renameShape(k, (e.target as HTMLInputElement).value)} />`
       : html`<span class="nm" title=${name}>${name}</span>`}
-    ${s && ed.dualOn ? html`<span class="chip tone">${S.tone[toneOf(s)]}</span>` : nothing}
+    ${s && ed.dualOn ? html`<span class="chip">${S.tone[toneOf(s)]}</span>` : nothing}
     ${s && unsafe.has(s.id) ? html`<span class="chip is-warn" title=${S.outsideSafe}>!<span class="sr">${S.outsideSafe}</span></span>` : nothing}
     ${g ? ib(S.ungroupOf(name), '', 'ungroup', (e) => {
       e.stopPropagation();

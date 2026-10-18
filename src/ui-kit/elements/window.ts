@@ -77,6 +77,8 @@ export class UiWindow extends LitElement {
   show(): void {
     if (this._open) return;
     this._open = true;
+    // the footer is shown from the first render, so a button in it can take the first focus
+    this._hasFooter = !!this.querySelector(':scope > [slot="footer"]');
     this._compact = this._isCompact();
     this._rtl = getComputedStyle(this).direction === 'rtl';
     window.addEventListener('resize', this._viewport);

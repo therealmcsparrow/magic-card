@@ -176,7 +176,7 @@ export function later(ed: McSvgEditor): void {
 function close(ed: McSvgEditor, { tool, timer }: PtState): void {
   clearTimeout(timer);
   ed.pt = undefined;
-  void ed.updateComplete.then(() => ed.renderRoot.querySelector<HTMLElement>(tool === 'knife' ? '.rail [aria-keyshortcuts=K]' : '.tb-menu[data-menu=path]')?.focus());
+  void ed.updateComplete.then(() => ed.renderRoot.querySelector<HTMLElement>(tool === 'knife' ? '.rail [aria-keyshortcuts=K]' : '[data-menu=path]')?.focus());
 }
 
 export function change(ed: McSvgEditor, patch: Partial<PanelState>): void {
