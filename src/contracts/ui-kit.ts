@@ -33,6 +33,8 @@
  * - r4 2026-10-18 (CEO decision 2026-10-18, additive): UiMenuEntry gets an optional `sub`, a help line under the
  *   label (also the item's accessible description unless `reason` is set). <mc-ui-window> shows its footer from the
  *   first render, so a footer button can take the first focus (an alert's initialFocus).
+ * - 2026-10-19 (text only, revision number unchanged): the editorLegacy line names both chunks that bundle
+ *   it, magic-card-editor.js and magic-card-animation-studio.js (its own webpack entry).
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -113,10 +115,11 @@
  * kitSlider   .slider-row (new: label, range, number field, unit)
  * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
  * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
- * editorLegacy (mc-* classes of the 30 module editors): stays in the card-editor chunk, moved to
- *             src/ui-kit/css/legacy.ts. It reaches the screens of that chunk (card editor, studio, animation
- *             studio editors) only through the editorSystem stack of src/css/editor-stack.ts; the SVG editor,
- *             shape editor, theme editor, transfer panel and MCU use kitCss and never import it.
+ * editorLegacy (mc-* classes of the 30 module editors): moved to src/ui-kit/css/legacy.ts. Bundled into
+ *             the card-editor chunk (magic-card-editor.js: card editor and studio) and the animation-studio
+ *             chunk (magic-card-animation-studio.js, its own entry: the animation studio editors). It
+ *             reaches those screens only through the editorSystem stack of src/css/editor-stack.ts; the SVG
+ *             editor, shape editor, theme editor, transfer panel and MCU use kitCss and never import it.
  *
  * ── Layer 2: template helpers (signatures in UiKitTemplates; typed loosely, no lit import here) ──
  * Icons: `icon` is an HA icon name ("mdi:...", rendered as <ha-icon>) or `glyph` a GlyphName from the

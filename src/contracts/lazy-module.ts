@@ -3,10 +3,14 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.0.0 (Architect-owned). ADR 0024.
+ * Contract: lazy modules and lazy card chunks. Version 1.1.0 (Architect-owned). ADR 0024.
  * Epic D (brief 23-product-manager.md): swiper, the seasonal decoration set, `marked` + markdown and
  * the rarely used modules leave magic-card.js. One mechanism: lazy entries in the module registry,
  * plus the same chunk helper for the seasonal elements (the existing loader pattern).
+ * 1.1.0 (2026-10-19, additive; svg-and-shape-editors fix round 1, QA): the six older chunks without
+ * install() also carry BUILD and their loaders refuse a mismatch through sameBuild() (section
+ * "Build-checked older chunks", SAME_BUILD_CHUNK_FILES, SameBuildModule). The four lazyChunk() chunks
+ * are unchanged.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -24,6 +28,23 @@ import type { MagicModule } from '../modules/module-types';
  *   getMetadata are unchanged and include lazy entries from module evaluation on (AC7, AC8).
  * - window.MagicCard.loadSeasonal: `() => Promise<boolean>`, additive (apiVersion stays 1); the
  *   animation studio calls it before it shows a seasonal preset (it uses <mc-seasonal> by tag).
+ *
+ * ── (1.1.0) Build-checked older chunks ──
+ * The chunks in SAME_BUILD_CHUNK_FILES predate lazyChunk() and keep their own loaders and their own
+ * export surface (no install()). Each entry exports BUILD (src/utils/build-version.ts BUILD_VERSION;
+ * theme-presets its own PRESETS_BUILD, because the theme editor entry may not import src/utils). Each
+ * loader passes the imported entry through `sameBuild(file, mod)` (src/utils/build-version.ts,
+ * re-exported by lazy-chunk.ts) before it uses any export: BUILD equal -> the module; otherwise one
+ * console.warn with the same "Magic Card was updated, reload the page (...)" text, no export is used
+ * or handed on, and the loader returns its own failure value (shape-custom false; anim-runtime,
+ * particles and both preset-catalogue loaders undefined; icon-library and theme-presets reject). No
+ * retry until the page reloads. Side effects at evaluation are not covered by this guard (the
+ * anim-runtime entry imports compile-v2 for its registration); the AC13 rule below applies to new
+ * chunks, these six keep their current evaluation behaviour. Loaders type the imported entry as
+ * `E & SameBuildModule`, E being that entry's exports: PresetCatalogueModule (preset-catalogue 1.x),
+ * src/particles/index.ts (its `particles` is ParticlesModule, particles-v2), src/anim-runtime/index.ts,
+ * src/utils/shape-custom.ts, src/anim-studio/icon-library-chunk.ts and src/theme-editor/presets/chunk.ts.
+ * So no cast is needed around sameBuild().
  *
  * ── Chunk entries ──
  * Each chunk entry module exports LazyChunkModule and nothing runs at evaluation that changes
@@ -62,7 +83,7 @@ import type { MagicModule } from '../modules/module-types';
  * renderPreview tests keep their synchronous output).
  */
 
-export const LAZY_MODULE_CONTRACT = '1.0.0';
+export const LAZY_MODULE_CONTRACT = '1.1.0';
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra';
@@ -99,6 +120,23 @@ export interface LazyChunkModule {
   readonly BUILD: string;
   /** Define elements, provide views, set library options. Called once, only when BUILD matches. */
   install(): void;
+}
+
+/** (1.1.0) The older chunks guarded by sameBuild() instead of lazyChunk() (dist file names). */
+export const SAME_BUILD_CHUNK_FILES = [
+  'magic-card-shape-custom.js',
+  'magic-card-anim-runtime.js',
+  'magic-card-particles.js',
+  'magic-card-preset-catalogue.js',
+  'magic-card-icon-library.js',
+  'magic-card-theme-presets.js',
+] as const;
+export type SameBuildChunkFile = (typeof SAME_BUILD_CHUNK_FILES)[number];
+
+/** (1.1.0) What every SAME_BUILD_CHUNK_FILES entry exports besides its own surface. */
+export interface SameBuildModule {
+  /** __MC_BUILD_VERSION__ of the build that made this chunk (theme-presets: PRESETS_BUILD). */
+  readonly BUILD: string;
 }
 
 /** One lazily loaded chunk (src/utils/lazy-chunk.ts). */

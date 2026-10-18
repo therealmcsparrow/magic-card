@@ -8,6 +8,9 @@
  * Shapes tool and the shape editor's starter outlines. draw.ts is now reached by both editors through
  * the path-canvas chunk (path-canvas revision 4). PathEdit lists `toggleSmooth` (T10 found it missing;
  * edit.ts already exports it).
+ * Revision 4 (2026-10-19, additive; nothing shipped, so in place): PRIMITIVE_KINDS grows from 14 to 19
+ * with circle, ellipse, semicircle, star and hexagon. One exception to "proportions scale with the
+ * box": circle takes the shorter side of the box as its diameter and sits centred, so it stays round.
  *
  * One path model for the whole product. It replaces three private copies:
  * - src/icons/path-math.ts      (parser for every SVG command, arcs to cubics, resample, morph)
@@ -45,14 +48,15 @@
  *   with index -1. canAdd() tells the canvas and the tools beforehand (design W10).
  * - The animation studio keeps its own cap behaviour through the path-utils shim (unchanged).
  *
- * Primitives (revision 3):
+ * Primitives (revision 3, kinds extended in revision 4):
  * - primitive(kind, box) returns ONE closed subpath inside `box`, clockwise (y down), at most
  *   PRIMITIVE_MAX_ANCHORS anchors, so every kind is also a valid card shape outline (custom-shape
  *   MAX_SHAPE_POINTS 64) and a valid boolean operand. Only straight sides and cubics, no arcs.
  * - Proportions are fixed per kind and scale with the box (rounded-rect radius = 20 % of the shorter
  *   side; speech bubble tail at the bottom left, 20 % of the height; arrow points right, head 40 % of
- *   the width). Not parametric after insertion: the result is a plain editable path. The rect tool
- *   keeps its own radius field.
+ *   the width). Exception (r4): circle uses the shorter side as its diameter, centred in the box;
+ *   ellipse fills the box. Not parametric after insertion: the result is a plain editable path. The
+ *   rect tool keeps its own radius field.
  * - Existing generators (rectPath, ellipsePath, polygonPath, starPath, linePath, fitFreehand,
  *   fitCubics, rdp) keep their output strings byte-identical (golden test; the studio uses them).
  *
@@ -60,7 +64,7 @@
  */
 
 export const PATH_MODEL_CONTRACT_VERSION = '1.0.0';
-export const PATH_MODEL_CONTRACT_REVISION = 3;
+export const PATH_MODEL_CONTRACT_REVISION = 4;
 
 export type Pt = [number, number];
 /** start, c1, c2, end (morph and math code). */
@@ -181,7 +185,7 @@ export interface PathTidy {
 
 // ── editor-only: draw generators (src/path/draw.ts), revision 3 ──
 
-/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines (additive: circle, ellipse, semicircle, star and hexagon joined the first 14). */
+/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines. Revision 4 (2026-10-19, additive): circle, ellipse, semicircle, star and hexagon joined the first 14. */
 export const PRIMITIVE_KINDS = [
   'rounded-rect',
   'triangle',

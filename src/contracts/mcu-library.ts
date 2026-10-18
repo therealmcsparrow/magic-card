@@ -18,6 +18,12 @@ import type { ThemeDoc } from './theme-editor';
  * "Editors" tab and hosts the SVG editor and shape editor without a card (section "(r4) Editors in the
  * panel"). No new command and no storage change. Also settles the theme presets adapter shape (section
  * "(r4) Panel adapter shapes"): the panel side changes.
+ * Revision 5 (2026-10-19, provider behaviour only; mirrors the "(r5)" line of library_contract.py;
+ * nothing released): the provider reads shapes lazily. `ready` covers the subscription only; the first
+ * shapes.get / shapes.ids sends shapes_list once per page; until that answer lands they answer
+ * undefined / [], then the provider fires `mcu-library-changed` { kind: 'shapes', ids: [] }. No command,
+ * window API or storage change: PROVIDER_API_VERSION stays 1 and MCU_LIBRARY_CONTRACT_REVISION stays 4,
+ * as on the Python side (MCU tests pin 4).
  *
  * Two parts:
  * 1. WebSocket commands (MCU backend module `library`, library.py). Storage: HA Store
@@ -112,8 +118,12 @@ import type { ThemeDoc } from './theme-editor';
  *   editor appears in HA's picker after a page reload (Magic Card's own picker refreshes at once).
  *   Docs say so.
  * - window.magicCardUtils = { apiVersion: PROVIDER_API_VERSION, ready: Promise<void>,
- *   shapes: { get(id): CustomShapeOptions | undefined, ids(): string[] } }. shapes.get answers
- *   undefined until ready.
+ *   shapes: { get(id): CustomShapeOptions | undefined, ids(): string[] } }. (r5) Shapes load lazily:
+ *   `ready` covers the subscription only. The first shapes.get or shapes.ids sends shapes_list once per
+ *   page; until that answer lands, get answers undefined and ids []. When it lands the provider fires
+ *   `mcu-library-changed` { kind: 'shapes', ids: [] }, and cards re-render from the library (mc-shape
+ *   listens to it). A failed lazy load is not retried until the page reloads; cards keep their inline
+ *   copy. A page with no card that uses a shape ref never downloads the shapes.
  * - After the first load and after every library change it dispatches on window:
  *   `iconset-registered` (Magic Card's icon-source already re-checks pending refs on it) and
  *   `mcu-library-changed` with detail { kind: 'icons' | 'shapes', ids: string[] } (ids changed or
@@ -370,7 +380,9 @@ export const BLANK_ICON: Readonly<ProviderIcon> = Object.freeze({ path: '', view
 
 export interface MagicCardUtilsWindow {
   apiVersion: number;
+  /** (r5) Resolves once the library subscription is up; shapes load lazily on first get / ids. */
   ready: Promise<void>;
+  /** (r5) get: undefined and ids: [] until the lazy shapes_list lands (then mcu-library-changed, kind shapes). */
   shapes: { get(id: string): CustomShapeOptions | undefined; ids(): string[] };
 }
 
