@@ -1,7 +1,7 @@
 import type { ThemeDoc, ThemePreset, ThemePresetGroup, ThemePresetLibrary } from '../../contracts/theme-editor';
 
 /*
- * The preset library (Contract theme-presets 1.1.0, ADR 0014 and 0015): 57 themes, each with a light and a
+ * The preset library (Contract theme-presets 1.2.0, ADR 0014 and 0015): 57 themes, each with a light and a
  * dark mode, in one lazy chunk (magic-card-theme-presets.js) that the create dialog loads on first
  * open. Only `import type` here: Node can load this file with type stripping, and the chunk holds
  * no UI code. The first 5 are the original starters (ids and values unchanged since 2026.10.06).
@@ -196,4 +196,4 @@ const PRESETS: ThemePreset[] = [
   P('silverleaf-glade', 'Silverleaf Glade', 'genre', 'Silvered jade leaves and gold touches by day; sage green by night.', '1a7f698a6a10edf1eef9fbfa1c26224a5a55d2dcd8709078e0c06810161519211fe6eeeba7b7b12d3a36', { tags: 'fantasy forest elegant low-glare night' }),
 ];
 
-export const THEME_PRESET_LIBRARY: ThemePresetLibrary = { version: '1.1.0', presets: PRESETS };
+export const THEME_PRESET_LIBRARY: ThemePresetLibrary = { version: '1.2.0', presets: PRESETS };

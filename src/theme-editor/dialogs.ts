@@ -2,7 +2,7 @@ import { html } from 'lit';
 import type { TemplateResult } from 'lit';
 
 /** The focused element, looking through open shadow roots. */
-function deepActive(): HTMLElement | null {
+export function deepActive(): HTMLElement | null {
   let a: Element | null = document.activeElement;
   while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
   return a && a !== document.body ? (a as HTMLElement) : null;

@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing, adoptStyles, PropertyValues, TemplateRe
 import type { CSSResultOrNative } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
 import { closeDialog, dialog, openDialog } from './dialogs';
 import { icon } from './icons';
@@ -12,6 +13,8 @@ import { base } from './styles';
 import { docFromHass, fire, hassOf, nameError, slugName, uniqueName } from './util';
 import './include-notice';
 import './mode-switch';
+import './preset-dialog';
+import type { MctePresetDialog } from './preset-dialog';
 
 const note = (t: string, id?: string): TemplateResult => html`<p class="help error" id=${ifDefined(id)} role="alert">${icon('alert')}<span>${t}</span></p>`;
 const skeleton = html`<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
@@ -24,6 +27,9 @@ export interface CreateDetail {
   /** What the draft was made from, for the editor's first status line. */
   from: string;
 }
+
+/** A My preset in the picker: its id gets this prefix so it can never equal a built-in id. */
+const MINE = 'my:';
 
 export const REASON_TEXT: Record<ReadOnlyReason, string> = {
   subfolder: 'It is in a subfolder of /config/themes.',
@@ -51,6 +57,7 @@ export class McteStartView extends LitElement {
     error: {},
     hass: { attribute: false },
     backend: { attribute: false },
+    mine: { attribute: false },
     checking: { type: Boolean },
     checkResult: {},
     _query: { state: true },
@@ -82,6 +89,8 @@ export class McteStartView extends LitElement {
   error = '';
   hass: unknown;
   backend: ThemeBackend | undefined;
+  /** My theme presets (undefined: Magic Card Utils has none to offer). */
+  mine: SavedThemePreset[] | undefined;
   checking = false;
   checkResult = '';
 
@@ -126,6 +135,13 @@ export class McteStartView extends LitElement {
       byName.set(f.name, f.has_modes);
     }
     return [...byName].map(([name, modes]) => ({ name, modes })).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  protected willUpdate(changed: PropertyValues): void {
+    if (changed.has('mine') && this._chunk) {
+      this._preset = this._chunk.pickerSelection(this._view(this._chunk));
+      this._prefill();
+    }
   }
 
   protected updated(changed: PropertyValues): void {
@@ -177,12 +193,26 @@ export class McteStartView extends LitElement {
     adoptStyles(this.renderRoot as ShadowRoot, [...((this.constructor as typeof McteStartView).styles as CSSResultOrNative[]), c.pickerStyles]);
     this._chunk = c;
     this._libState = 'ready';
-    this._preset ||= c.THEME_PRESET_LIBRARY.presets[0].id;
+    this._preset ||= this._mineCards[0]?.id ?? c.THEME_PRESET_LIBRARY.presets[0].id;
     this._prefill();
   }
 
+  private get _mineCards(): ThemePreset[] {
+    return (this.mine ?? []).map((m) => ({ id: MINE + m.id, name: m.name, blurb: m.description ?? '', group: 'mine', doc: m.doc }));
+  }
+
   private get _sel(): ThemePreset | undefined {
-    return this._chunk?.THEME_PRESET_LIBRARY.presets.find((p) => p.id === this._preset);
+    return [...this._mineCards, ...(this._chunk?.THEME_PRESET_LIBRARY.presets ?? [])].find((p) => p.id === this._preset);
+  }
+
+  private get _dlgEl(): MctePresetDialog | null {
+    return this.renderRoot.querySelector('mcte-preset-dialog');
+  }
+
+  /** The picker's Export (and, for My presets, Rename and Delete) of the selected preset. */
+  private _act(mode: 'export' | 'rename' | 'delete', p: ThemePreset): void {
+    const mine = this.mine?.find((m) => MINE + m.id === p.id);
+    this._dlgEl?.open(mode, { name: p.name, description: mine ? mine.description : p.blurb, author: mine?.author, doc: p.doc, target: mine, id: mine?.id ?? p.id });
   }
 
   private _prefill(): void {
@@ -302,6 +332,7 @@ export class McteStartView extends LitElement {
         select: (id) => ((this._preset = id), this._prefill()),
         query: (q, f) => ((this._pq = q), f && (this._pf = f), this._follow(c)),
         filter: (f) => ((this._pf = f), this._follow(c)),
+        act: (m, p) => this._act(m, p),
     });
   }
 
@@ -312,7 +343,7 @@ export class McteStartView extends LitElement {
   }
 
   private _view(c: PresetChunk): PickerView {
-    return { lib: c.THEME_PRESET_LIBRARY, selected: this._preset, query: this._pq, filter: this._pf };
+    return { lib: c.THEME_PRESET_LIBRARY, mine: this._mineCards, selected: this._preset, query: this._pq, filter: this._pf };
   }
 
   private _createDialog(): TemplateResult {
@@ -506,12 +537,16 @@ export class McteStartView extends LitElement {
             <h2>Themes</h2>
             <p class="help">Your themes live in /config/themes.</p>
           </div>
-          <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${icon('plus')} New theme ${icon('chevron')}</button>
+          <div class="barbtns">
+            <button type="button" class="btn btn-secondary" @click=${() => this._dlgEl?.open('import', { name: '' })}>Import</button>
+            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${icon('plus')} New theme ${icon('chevron')}</button>
+          </div>
         </header>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>
         ${this._list()}
       </div>
       ${this._dlg === 'create' ? this._createDialog() : this._dlg === 'delete' ? this._deleteDialog() : nothing}
+      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .taken=${this._taken}></mcte-preset-dialog>
     `;
   }
 
@@ -537,6 +572,11 @@ export class McteStartView extends LitElement {
         gap: 12px;
         align-items: center;
         justify-content: space-between;
+      }
+      .barbtns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
       }
       .bar h2 {
         font-size: 1.375rem;

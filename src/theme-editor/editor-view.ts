@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from '
 import type { PropertyDeclarations } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { CatalogueGroupId } from '../contracts/theme-catalogue';
+import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { icon } from './icons';
@@ -21,6 +22,7 @@ import {
   openingScope,
   ownValue,
   SCOPE_LABEL,
+  slugName,
   textContrast,
   toYaml,
 } from './util';
@@ -33,6 +35,8 @@ import './preview';
 import './preview-cards';
 import './include-notice';
 import './mode-switch';
+import './preset-dialog';
+import type { MctePresetDialog } from './preset-dialog';
 import './raw-rows';
 import './save-bar';
 
@@ -98,6 +102,7 @@ export class McteEditorView extends LitElement {
     hass: { attribute: false },
     backend: { attribute: false },
     include: { attribute: false },
+    mine: { attribute: false },
     checking: { type: Boolean },
     checkResult: {},
     _doc: { state: true },
@@ -141,6 +146,8 @@ export class McteEditorView extends LitElement {
   hass: unknown;
   backend: ThemeBackend | undefined;
   include: IncludeStatus | undefined;
+  /** My theme presets, for the ids "Save as my preset" must not reuse. */
+  mine: SavedThemePreset[] | undefined;
   checking = false;
   checkResult = '';
 
@@ -861,6 +868,14 @@ export class McteEditorView extends LitElement {
     items[(at + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus();
   }
 
+  /** Opens the My presets / export dialog from the More menu; focus goes back to the More button. */
+  private _presetDlg(mode: 'save' | 'export'): void {
+    this._menu = false;
+    const el = this.renderRoot.querySelector<MctePresetDialog>('mcte-preset-dialog');
+    this.renderRoot.querySelector<HTMLElement>(mode === 'save' && this._w >= 640 ? '.savepreset' : '.more')?.focus();
+    el?.open(mode, { name: this._name, doc: this._doc, id: slugName(this._name) || 'theme' });
+  }
+
   private _copyKey(text: string, what: string): void {
     void copyText(text).then(() => this._say(`Copied ${what} ${text}`));
   }
@@ -916,6 +931,8 @@ export class McteEditorView extends LitElement {
       ${this._menu
         ? html`<div class="menu" role="menu" aria-label="More actions" @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
+            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" class="mi" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
+            <button type="button" role="menuitem" class="mi" @click=${() => this._presetDlg('export')}>Export theme</button>
             <button type="button" role="menuitem" class="mi" @click=${() => this._openDlg('yaml')}>Show YAML</button>
             <button type="button" role="menuitem" class="mi" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say('Copied YAML'), (this._menu = false)))}>Copy YAML</button>
             ${this._hasModes && this.draft.editable
@@ -958,6 +975,7 @@ export class McteEditorView extends LitElement {
         <div class="chips">${this._chips()}</div>
       </div>
       <div class="right">
+        ${this.backend?.presets && this._w >= 640 ? html`<button type="button" class="btn btn-secondary savepreset" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
         <mcte-save-bar .reason=${this._reason} .saving=${this._saving} ?show-shortcut=${true} @mcte-save=${() => void this._saveClick()}></mcte-save-bar>
         ${this._menuEl()}
       </div>
@@ -1213,6 +1231,7 @@ export class McteEditorView extends LitElement {
           </div>`
         : nothing}
       ${this._dialog()}
+      <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine}></mcte-preset-dialog>
     `;
   }
 

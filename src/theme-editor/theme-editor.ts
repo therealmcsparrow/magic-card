@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { THEME_EDITOR_CONTRACT_VERSION } from '../contracts/theme-editor';
+import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeEditorElement, ThemeFileEntry, ThemeList } from '../contracts/theme-editor';
 import { cloneDoc } from './model';
 import { base } from './styles';
@@ -42,6 +43,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     _checking: { state: true },
     _checkResult: { state: true },
     _notice: { state: true },
+    _mine: { state: true },
   };
 
   hass: unknown;
@@ -60,6 +62,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   private _checking = false;
   private _checkResult = '';
   private _notice = '';
+  private _mine: SavedThemePreset[] | undefined;
   private _loading?: Promise<void>;
   private _noticeTimer?: ReturnType<typeof setTimeout>;
   private _opened: string | null = null;
@@ -68,6 +71,13 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     e.preventDefault();
     e.returnValue = '';
   };
+
+  constructor() {
+    super();
+    // From the views' preset dialog: the list of My presets changed, or it has a line to say.
+    this.addEventListener('mcte-mine-changed', () => void this._loadMine());
+    this.addEventListener('mcte-notice', (e) => this._say((e as CustomEvent<{ text: string }>).detail.text));
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -113,9 +123,25 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       this._listPhase = 'ready';
       this._listError = '';
       void this._openSelected();
+      void this._loadMine();
     } catch (e) {
       this._listError = (e as ThemeBackendError).code === 'unauthorized' ? 'Only administrators can edit themes.' : ((e as Error).message ?? '');
       this._listPhase = 'error';
+    }
+  }
+
+  private async _loadMine(): Promise<void> {
+    const store = this.backend?.presets;
+    if (!store) {
+      this._mine = undefined;
+      return;
+    }
+    try {
+      // the panel adapter answers { theme_presets }, the contract type says a list: take both
+      const r = (await store.list()) as SavedThemePreset[] | { theme_presets?: SavedThemePreset[] };
+      this._mine = Array.isArray(r) ? r : (r?.theme_presets ?? []);
+    } catch {
+      this._mine = this._mine ?? [];
     }
   }
 
@@ -193,6 +219,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
         .hass=${this.hass}
         .backend=${this.backend}
         .include=${this._include}
+        .mine=${this._mine}
         .checking=${this._checking}
         .checkResult=${this._checkResult}
         @mcte-back=${() => this._close()}
@@ -217,6 +244,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       .files=${this._files}
       .loaded=${this._loaded}
       .include=${this._include}
+      .mine=${this._mine}
       .phase=${this._listPhase}
       .error=${this._listError}
       .hass=${this.hass}

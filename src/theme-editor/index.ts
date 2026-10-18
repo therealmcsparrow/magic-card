@@ -4,6 +4,7 @@ import { McteEditorView } from './editor-view';
 import { McteFieldGroup } from './field-group';
 import { McteIncludeNotice } from './include-notice';
 import { McteModeSwitch } from './mode-switch';
+import { MctePresetDialog } from './preset-dialog';
 import { McteRawRows } from './raw-rows';
 import { McteSaveBar } from './save-bar';
 import { McteStartView } from './start-view';
@@ -19,6 +20,7 @@ import { MagicCardThemeEditor } from './theme-editor';
 export const THEME_EDITOR_ELEMENTS: Array<[string, CustomElementConstructor]> = [
   ['mcte-mode-switch', McteModeSwitch],
   ['mcte-include-notice', McteIncludeNotice],
+  ['mcte-preset-dialog', MctePresetDialog],
   ['mcte-save-bar', McteSaveBar],
   ['mcte-raw-rows', McteRawRows],
   ['mcte-field-group', McteFieldGroup],

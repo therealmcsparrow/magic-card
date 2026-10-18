@@ -18,6 +18,8 @@ export interface PickerView {
   query: string;
   /** 'all', 'original' or 'inspired'. */
   filter: string;
+  /** (1.2.0) The user's own presets as picker items (group 'mine'), shown first. */
+  mine?: readonly ThemePreset[];
 }
 
 export interface PickerEvents {
@@ -25,9 +27,12 @@ export interface PickerEvents {
   /** Set the search; `filter` also sets the Show chip in the same step. */
   query: (q: string, filter?: string) => void;
   filter: (f: string) => void;
+  /** Export, and for My presets Rename and Delete, of the selected preset. */
+  act: (mode: 'export' | 'rename' | 'delete', p: ThemePreset) => void;
 }
 
 /** Group order, Show labels, headings and search words (the contract's ThemePresetGroupInfo, kept here so the chunk imports nothing at run time). */
+const MINE = { id: 'mine', label: 'My presets', search: 'my' } as const;
 const GROUPS = [
   { id: 'original', label: 'Original', search: 'original' },
   { id: 'inspired', label: 'Inspired by', search: 'inspired by' },
@@ -37,7 +42,18 @@ const SUGGESTIONS = ['sci-fi', 'fantasy', 'neon', 'desert', 'forest'];
 const DISCLAIMER = 'Independent colour schemes made for Magic Card. Not affiliated with, or endorsed by, any film, series, book or game.';
 const flat = (s: string): string => s.replace(/[\s-]/g, '');
 
-const colours = (p: ThemePreset, m: 'light' | 'dark'): Record<string, string> => (p.doc.modes?.[m] ?? {}) as Record<string, string>;
+// A swatch value that names another host (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
+// add a second declaration is never put into a style: opening the picker must not contact anyone.
+const OUTSIDE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])|;|@import/i;
+const colours = (p: ThemePreset, m: 'light' | 'dark'): Record<string, string> => {
+  const v = { ...p.doc, ...p.doc.modes?.[m] } as Record<string, unknown>;
+  const out: Record<string, string> = {};
+  for (const k of ['lovelace-background', 'primary-background-color', 'card-background-color', 'primary-color', 'accent-color']) {
+    const x = v[k];
+    if (typeof x === 'string' && !OUTSIDE.test(x)) out[k] = x;
+  }
+  return out;
+};
 
 function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
   const half = (m: 'light' | 'dark'): TemplateResult => {
@@ -56,10 +72,11 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
   </label>`;
 }
 
+const everyone = (v: PickerView): readonly ThemePreset[] => (v.mine?.length ? [...v.mine, ...v.lib.presets] : v.lib.presets);
 const search = (v: PickerView): ThemePreset[] => {
   const q = v.query.trim().toLowerCase();
-  return v.lib.presets.filter((p) => {
-    const hay = `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.tags ?? ''} ${GROUPS.find((g) => g.id === p.group)?.search}`.toLowerCase();
+  return everyone(v).filter((p) => {
+    const hay = `${p.name} ${p.blurb} ${p.inspiredBy?.name ?? ''} ${p.tags ?? ''} ${p.group === 'mine' ? MINE.search : GROUPS.find((g) => g.id === p.group)?.search}`.toLowerCase();
     return !q || hay.includes(q) || flat(hay).includes(flat(q));
   });
 };
@@ -82,7 +99,8 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
   const found = search(v);
   const count = (g: string): number => found.filter((p) => p.group === g).length;
   const shown = shownOf(v);
-  const sel = v.lib.presets.find((p) => p.id === v.selected);
+  const sel = everyone(v).find((p) => p.id === v.selected);
+  const groups = v.mine?.length ? [MINE, ...GROUPS] : GROUPS;
   // with no match at all, counts of 0 on every chip read like "no presets exist": leave them off
   const num = (n: number): string => (found.length ? ` ${n}` : '');
   // Move focus to the search field before the list re-renders: the button that was pressed is about to go.
@@ -111,13 +129,13 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
       <mcte-mode-switch
         label="Show"
         .value=${v.filter}
-        .options=${[{ value: 'all', label: `All${num(found.length)}` }, ...GROUPS.map((g) => ({ value: g.id, label: `${g.label}${num(count(g.id))}` }))]}
+        .options=${[{ value: 'all', label: `All${num(found.length)}` }, ...groups.map((g) => ({ value: g.id, label: `${g.label}${num(count(g.id))}` }))]}
         @mcte-change=${(e: CustomEvent) => ev.filter(e.detail.value)}
       ></mcte-mode-switch>
     </div>
     <div class="plist" role="radiogroup" aria-label="Preset">
       ${shown.length
-        ? GROUPS.map((g) => {
+        ? groups.map((g) => {
             const items = shown.filter((p) => p.group === g.id);
             const part = (title: string, list: ThemePreset[]): TemplateResult | typeof nothing =>
               list.length ? html`<h4>${title} <span class="help">${list.length}</span></h4><div class="presets">${list.map((p) => card(p, p === sel, ev))}</div>` : nothing;
@@ -134,10 +152,20 @@ export function renderPicker(v: PickerView, ev: PickerEvents): TemplateResult {
             <div class="sug">${SUGGESTIONS.map((w) => html`<button type="button" class="btn btn-secondary btn-sm" @click=${(e: Event) => again(e, w)}>${w}</button>`)}</div>
             <p><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => again(e, '')}>Clear search</button></p>`}
     </div>
+    ${sel
+      ? html`<div class="pacts">${(sel.group === 'mine' ? (['export', 'rename', 'delete'] as const) : (['export'] as const)).map(
+          (m) => html`<button type="button" class="btn btn-text btn-sm ${m === 'delete' ? 'danger' : ''}" @click=${() => ev.act(m, sel)}>${m[0].toUpperCase() + m.slice(1)}<span class="sr-only"> ${sel.name}</span></button>`,
+        )}</div>`
+      : nothing}
   </div>`;
 }
 
 export const pickerStyles = css`
+  .pacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .pl {
     display: grid;
     gap: 12px;
