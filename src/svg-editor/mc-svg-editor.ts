@@ -109,7 +109,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -190,6 +190,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   startMode?: 'icon' | 'paste';
   /** The start dialog is open (over a blank editor first, or from New). */
   startOpen = false;
+  /** New was pressed with unsaved changes: the Start over question is showing. */
+  newAsk = false;
   private startReturn?: HTMLElement;
   startError?: string;
   liveShape?: Live;
@@ -307,11 +309,28 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.startOpen = true;
   }
 
-  openStart(opener: HTMLElement): void {
+  openStart(opener: HTMLElement, asked = false): void {
     this.startReturn = opener;
+    if (this.dirty && !asked) {
+      this.newAsk = true;
+      void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.newq button')?.focus());
+      return;
+    }
     this.startError = undefined;
     this.startMode = undefined;
     this.startOpen = true;
+  }
+
+  closeNew(): void {
+    this.newAsk = false;
+    const back = this.startReturn;
+    this.startReturn = undefined;
+    void this.updateComplete.then(() => (back?.isConnected ? back : this.canvas())?.focus({ preventScroll: true }));
+  }
+
+  confirmNew(): void {
+    this.newAsk = false;
+    this.openStart(this.startReturn!, true);
   }
 
   closeStart(): void {
@@ -1074,6 +1093,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   escape(e: KeyboardEvent): void {
     e.preventDefault();
     e.stopPropagation();
+    if (this.newAsk) return this.closeNew();
     if (this.startOpen) return this.closeStart();
     if (this.picker) {
       this.closePicker();
@@ -1099,7 +1119,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   onKey = (e: KeyboardEvent): void => {
     this.shift = e.shiftKey;
-    if (this.stage !== 'edit' || this.startOpen) {
+    if (this.stage !== 'edit' || this.startOpen || this.newAsk) {
       if (e.key === 'Escape') this.escape(e);
       return;
     }

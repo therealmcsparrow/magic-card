@@ -377,7 +377,7 @@ export const editorStyles: CSSResult[] = [
     .start-win {
       display: flex;
       flex-direction: column;
-      width: 440px;
+      width: 480px;
       max-width: 100%;
       max-height: min(80vh, 720px);
       overflow: hidden;
@@ -393,7 +393,7 @@ export const editorStyles: CSSResult[] = [
       padding: 12px 12px 12px 20px;
       border-bottom: 1px solid var(--mc-divider);
     }
-    .start-head h3 {
+    .start-head h2 {
       flex: 1;
       min-width: 0;
       margin: 0;
@@ -401,19 +401,75 @@ export const editorStyles: CSSResult[] = [
       font-weight: 500;
       line-height: 1.3;
     }
-    .start-win .start {
-      justify-content: flex-start;
-      padding: 16px 20px 20px;
+    .icon-btn {
+      display: inline-grid;
+      place-items: center;
+      flex: none;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--mc-text-2);
+      cursor: pointer;
     }
-    .start-win .tiles {
+    .icon-btn:hover {
+      background: var(--mc-surface-2);
+      color: var(--mc-text);
+    }
+    .start-win .start {
+      flex: 1;
+      min-height: 0;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 12px;
+      padding: 8px 8px 16px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .start-win .start > :not(.grid) {
+      margin-inline: 8px;
+    }
+    .start-win .grid {
+      list-style: none;
+      margin: 0;
+      padding: 2px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      width: 100%;
+      grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+      gap: 8px;
+    }
+    .start-win .grid > li {
+      display: flex;
     }
     .start-win .tile {
-      width: auto;
-      padding: 8px;
+      width: 100%;
+      height: auto;
+      align-content: start;
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      padding: 8px 6px;
+      border: 1px solid var(--mc-divider);
+      border-radius: 8px;
+      background: var(--mc-surface);
+      color: var(--mc-text);
       text-align: center;
+    }
+    .start-win .tile:hover {
+      border-color: color-mix(in srgb, var(--mc-accent) 60%, transparent);
+    }
+    .start-win .tile[aria-pressed='true'] {
+      border-color: var(--mc-accent);
+      background: var(--mc-accent-tint);
+    }
+    .start-win .nm {
+      font-size: 0.8125rem;
+      line-height: 1.25;
+    }
+    .start-win .dm {
+      font-size: 0.6875rem;
+      color: var(--mc-text-2);
     }
     .tiles {
       display: flex;

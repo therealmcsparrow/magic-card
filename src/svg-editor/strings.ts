@@ -38,6 +38,9 @@ export const S = {
   close: 'Close',
 
   startNew: 'New',
+  newTitle: 'Start over? Unsaved changes are lost.',
+  newGo: 'Start over',
+  newKeep: 'Keep editing',
   startTitle: 'What do you want to start from?',
   startBlank: 'Blank',
   startBlankSub: '24 x 24',

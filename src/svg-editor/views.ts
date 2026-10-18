@@ -161,7 +161,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>`}
     ${ed.startOpen ? startDialog(ed) : nothing}
-    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
+    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.newAsk ? newPop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
     ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? S.xferMenu : ed.menu.key ? ed.menu.opener.textContent!.trim() : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
@@ -253,15 +253,15 @@ function moduleNotice(ed: McSvgEditor): TemplateResult {
 
 function startPanel(ed: McSvgEditor): TemplateResult {
   const tile = (g: GlyphName, name: string, sub: string, on: () => void, pressed?: boolean): TemplateResult =>
-    html`<button type="button" class="tile" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 28)}<strong>${name}</strong><small>${sub}</small></button>`;
+    html`<li><button type="button" class="tile" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 28)}<span class="nm">${name}</span><span class="dm">${sub}</span></button></li>`;
   return html`<div class="start">
-    <div class="tiles">
+    <ul class="grid" role="list">
       ${tile('blank', S.startBlank, S.startBlankSub, () => ed.begin(ed.blankStart()))}
       ${tile('iconpick', S.startIcon, S.startIconSub, () => (ed.startMode = ed.startMode === 'icon' ? undefined : 'icon'), ed.startMode === 'icon')}
       ${tile('paste', S.startPaste, S.startPasteSub, () => (ed.startMode = ed.startMode === 'paste' ? undefined : 'paste'), ed.startMode === 'paste')}
       ${tile('file', S.startFile, S.startFileSub, () => ed.renderRoot.querySelector<HTMLInputElement>('input[type=file]')?.click())}
       ${ed.libraryMissing ? nothing : tile('library', S.startLib, S.startLibSub, () => ed.startLibrary())}
-    </div>
+    </ul>
     <div class="acts">${xferBtns(ed)}</div>
     <input type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
     ${ed.startMode === 'icon'
@@ -290,7 +290,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
 function startDialog(ed: McSvgEditor): TemplateResult {
   return html`<dialog class="start-dlg" aria-labelledby="start-h" @cancel=${(e: Event) => (e.preventDefault(), ed.closeStart())} @click=${(e: Event) => e.target === e.currentTarget && ed.closeStart()}>
     <div class="start-win">
-      <div class="start-head"><h3 id="start-h">${S.startTitle}</h3>${btn(S.close, 'close', () => ed.closeStart())}</div>
+      <div class="start-head"><h2 id="start-h">${S.startTitle}</h2><button type="button" class="icon-btn" aria-label=${S.close} title=${S.close} @click=${() => ed.closeStart()}>${glyph('close', 20)}</button></div>
       ${startPanel(ed)}
     </div>
   </dialog>`;
@@ -834,6 +834,16 @@ function leavePop(ed: McSvgEditor): TemplateResult {
       ${btn(S.leaveKeep, undefined, () => (ed.leaving = false), { text: true })}
       ${btn(ed.mcu ? S.mcuLeave : S.leaveDiscard, undefined, () => ed.leave(), { text: true })}
       ${ed.mcu ? nothing : btn(S.leaveUse, undefined, () => ed.done(), { text: true, cls: 'primary', disabled: !!ed.blockReason })}
+    </div>
+  </div>`;
+}
+
+function newPop(ed: McSvgEditor): TemplateResult {
+  return html`<div class="pop leave newq" role="alertdialog" aria-label=${S.newTitle}>
+    <p><strong>${S.newTitle}</strong></p>
+    <div class="acts end">
+      ${btn(S.newKeep, undefined, () => ed.closeNew(), { text: true })}
+      ${btn(S.newGo, undefined, () => ed.confirmNew(), { text: true, cls: 'primary' })}
     </div>
   </div>`;
 }
