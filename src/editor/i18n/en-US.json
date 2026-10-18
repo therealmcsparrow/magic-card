@@ -247,6 +247,7 @@
   "Default": "Default",
   "Default sets a solid colour, so a rule cannot swap it for a gradient. Clear the Default colour first.": "Default sets a solid color, so a rule cannot swap it for a gradient. Clear the Default color first.",
   "Default tab": "Default tab",
+  "Del": "Del",
   "Delay": "Delay",
   "Delete": "Delete",
   "Delete (Del)": "Delete (Del)",

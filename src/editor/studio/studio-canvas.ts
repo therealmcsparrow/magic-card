@@ -1092,8 +1092,9 @@ export class StudioCanvas extends LitElement {
         : ''}</p>
       <p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
         ${tx('Click a module to select it. {move} moves it, {remove} removes it, {menu} opens its menu.', {
-          move: html`<kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>`,
-          remove: html`<kbd>Del</kbd>`,
+          // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
+          move: html`<kbd>Alt</kbd> + <kbd>${t('Up')}</kbd>/<kbd>${t('Down')}</kbd>`,
+          remove: html`<kbd>${t('Del')}</kbd>`,
           menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
         })}
       </p>
