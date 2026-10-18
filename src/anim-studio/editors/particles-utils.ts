@@ -782,12 +782,38 @@ export function editEmitter(doc: AnimationDoc, seed: number, i: number, fn: (vie
   return patchParticles(doc, { speed: ep.speed, sim: { ...sim0, mode: es.mode, colliders: es.colliders, emitters } });
 }
 
-/** The name shown for emitter `i`: its own, else the flow's label (numbered when two share it). */
+/**
+ * The name shown for emitter `i`: its own, else "Particles" / "Particles 2" ... (design 08). The number is the one in its
+ * `e<n>` id, so it stays with the emitter when the list is reordered; a single emitter is always "Particles".
+ */
 export function emitterLabel(doc: AnimationDoc, seed: number, i: number): string {
   const list = toList(doc, seed);
-  const name = list[i]?.name;
-  if (name) return name;
-  const flow = FLOW_LABELS[list[i].flow];
-  const same = list.filter((e) => !e.name && FLOW_LABELS[e.flow] === flow);
-  return same.length > 1 ? `${flow} ${same.indexOf(list[i]) + 1}` : flow;
+  const e = list[i];
+  if (e?.name) return e.name;
+  if (list.length < 2) return 'Particles';
+  const m = /^e(\d+)$/.exec(e?.id ?? '');
+  const n = m ? Number(m[1]) : i + 1;
+  return n > 1 ? `Particles ${n}` : 'Particles';
+}
+
+/**
+ * Moves emitter `i` across the Card content row: it takes `side` and sits next to the content (the bottom-most emitter in
+ * front, the top-most one behind). Other emitters keep their side. `index` is where the emitter is afterwards.
+ */
+export function moveEmitterPastContent(doc: AnimationDoc, seed: number, i: number, side: Side): { doc: AnimationDoc; index: number } {
+  if (!validIndex(doc, i) || emitterPlacement(doc, i) === side) return { doc, index: i };
+  if (emitterCount(doc) === 1) return { doc: patchParticles(doc, { layer: side }), index: 0 };
+  const list = toList(doc, seed);
+  const [e] = list.splice(i, 1);
+  e.layer = side;
+  let at = Math.min(i, list.length);
+  if (side === 'front') {
+    const first = list.findIndex((x) => x.layer === 'front');
+    if (first >= 0) at = first;
+  } else {
+    const last = list.map((x) => x.layer).lastIndexOf('back');
+    if (last >= 0) at = last + 1;
+  }
+  list.splice(at, 0, e);
+  return { doc: fromList(doc, seed, list), index: at };
 }

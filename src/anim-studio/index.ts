@@ -21,6 +21,7 @@ import './editors/part-inspector';
 import './editors/draw-tools';
 // card parts (track D)
 import './editors/targets-layers';
+import './editors/particles-layers';
 // states, value bindings, preview entity (track E)
 import './editors/states-panel';
 import './editors/bindings-panel';

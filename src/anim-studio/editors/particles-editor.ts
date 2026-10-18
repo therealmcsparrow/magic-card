@@ -188,7 +188,7 @@ export class AnimParticlesEditor extends LitElement {
   @state() private _stats?: BakedLoop['stats'];
   @state() private _baking = false;
   /** "All particles" is open (only with 2+ emitters): the document-wide fields, no emitter. */
-  @state() private _all = false;
+  @property({ type: Boolean }) all = false;
   /** The announcement of the last Placement change. */
   @state() private _live = '';
 
@@ -977,7 +977,7 @@ export class AnimParticlesEditor extends LitElement {
   /** Selects an emitter (or "All particles"); the Layers list follows through `emitter-change`. */
   private _select(index: number, all = false): void {
     this.emitter = index;
-    this._all = all;
+    this.all = all;
     this.dispatchEvent(new CustomEvent('emitter-change', { detail: { index, all }, bubbles: true, composed: true }));
   }
 
@@ -1009,7 +1009,7 @@ export class AnimParticlesEditor extends LitElement {
         this._chip = 0;
         this._seed = newSeed();
         this._stats = undefined;
-        this._all = false;
+        this.all = false;
         this._live = '';
       }
       if (this._p && !this._p.preset) {
@@ -1182,7 +1182,7 @@ export class AnimParticlesEditor extends LitElement {
   private _shuffle = (): void => {
     if (!this.doc) return;
     // "All particles" shuffles every emitter, an emitter only itself
-    const all = this._multi && this._all;
+    const all = this._multi && this.all;
     let doc = this.doc;
     for (let i = all ? 0 : this._em; i < (all ? emitterCount(this.doc) : this._em + 1); i++) doc = editEmitter(doc, this._seed, i, (d) => shuffleSeed(d, this._seed));
     this._emit(doc, 'Shuffle');
@@ -2345,7 +2345,7 @@ export class AnimParticlesEditor extends LitElement {
 
   private _renderForm(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
     const multi = this._multi;
-    const all = multi && this._all;
+    const all = multi && this.all;
     return html`${this._renderBar()}
       ${all
         ? html`<p class="help all-note">These apply to every emitter. Placement is set per emitter.</p>
@@ -2359,7 +2359,7 @@ export class AnimParticlesEditor extends LitElement {
     const doc = this.doc!;
     const n = emitterCount(doc);
     const can = canAddEmitter(doc);
-    const cur = this._all ? 'all' : String(this._em);
+    const cur = this.all ? 'all' : String(this._em);
     const ids = ['all', ...Array.from({ length: n }, (_, i) => String(i))];
     const pick = (id: string) => {
       if (id === 'all') this._select(this._em, true);

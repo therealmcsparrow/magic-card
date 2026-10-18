@@ -106,6 +106,7 @@ const PANEL_ICON: Record<string, string> = {
   'mc-anim-parts-layers': 'mdi:vector-square',
   'mc-anim-shapes-layers': 'mdi:shape-outline',
   'mc-anim-shapes-under-layers': 'mdi:shape-outline',
+  'mc-anim-particles-layers': 'mdi:shimmer',
   'mc-anim-part-presets': 'mdi:auto-fix',
 };
 /** The icon animation start (icon picker and icon library; editors/icon-start.ts). */
@@ -689,6 +690,7 @@ export class AnimationStudio extends LitElement {
 
   private _openDoc(doc: AnimationDoc, isNew: boolean, announce = true): void {
     this._doc = doc;
+    this._emitter = { index: 0, all: false };
     this._saved = isNew ? null : doc;
     this._history.reset(doc);
     this._errors = [];
@@ -787,6 +789,15 @@ export class AnimationStudio extends LitElement {
     this._previewMemo = { base, view, out };
     return out;
   }
+
+  /** The emitter the particles editor edits and the Particle layers list highlights (each raises `emitter-change`). */
+  @state() private _emitter = { index: 0, all: false };
+
+  private _onEmitter = (e: Event): void => {
+    e.stopPropagation();
+    const { index, all } = (e as CustomEvent<{ index?: number; all?: boolean }>).detail ?? {};
+    if (Number.isInteger(index) && index! >= 0 && (index !== this._emitter.index || !!all !== this._emitter.all)) this._emitter = { index: index!, all: !!all };
+  };
 
   private _onLayerView = (e: Event): void => {
     const { view, announce } = (e as CustomEvent<LayerViewChangeDetail>).detail;
@@ -1529,6 +1540,8 @@ export class AnimationStudio extends LitElement {
         .stage=${this._stageInfo}
         .layerView=${this._viewOf(d)}
         .density=${this._width > 0 && this._width < RAIL_BELOW ? 'compact' : 'full'}
+        .emitter=${this._emitter.index}
+        .all=${this._emitter.all}
         .stageRect=${extra.stageRect}
         .subjectRect=${extra.subjectRect}
         .entityColor=${ENTITY_COLOR}
@@ -1546,6 +1559,8 @@ export class AnimationStudio extends LitElement {
       .time=${TIME_TAGS.has(tag) ? this._time : 0}
       .disabled=${this._busy}
       .studioSelection=${this._selection}
+      .emitter=${this._emitter.index}
+      .all=${this._emitter.all}
       .tile=${this._tile}
       .stage=${this._stageInfo}
       .stageRect=${extra.stageRect}
@@ -2046,6 +2061,7 @@ export class AnimationStudio extends LitElement {
       <div
         @preview-change=${this._onPreviewChange}
         @layer-view-change=${this._onLayerView}
+        @emitter-change=${this._onEmitter}
         class="workspace ${rail ? 'rail' : ''} ${this._compact ? 'compact' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
       >
         ${this._renderLayers(d)}
