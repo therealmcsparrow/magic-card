@@ -8,6 +8,7 @@ import { withDocs } from './animation-copies';
 import { cardStateOf, type CardState } from './bridge';
 import { openLayer } from './layer';
 import { loadTransfer } from '../transfer-loader';
+import { librarySource } from './library';
 import { t } from '../i18n';
 
 /*
@@ -68,7 +69,7 @@ export class LibrarySheet extends LitElement {
 
   render() {
     return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading=${t('Library')} closeLabel=${t('Close')} movable resizable maximizable moveLabel=${t('Move window')} resizeLabel=${t('Resize window')} maximizeLabel=${t('Maximise')} restoreLabel=${t('Restore size')} @mc-window-close=${() => this.onClose?.()}>
-      <mc-library-view .hass=${this.hass} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
+      <mc-library-view .hass=${this.hass} .source=${librarySource} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
     </mc-ui-window>`;
   }
 }

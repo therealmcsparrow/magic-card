@@ -1,6 +1,7 @@
 import type { AnimationDoc } from '../anim-studio/model';
 import type { CustomShapeOptions } from './custom-shape';
 import type { ThemeDoc } from './theme-editor';
+import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
 
 /*
  * Contract: preset files (export / import) and the transfer chunk. Version 1.0.0 (Architect-owned).
@@ -228,6 +229,23 @@ export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>>
   'theme-editor': ['theme'],
   'mcu-panel': ['icon', 'shape', 'animation', 'theme'],
 };
+
+/** A saved-item list as the library source answers it. */
+export type LibraryListing<T> = { state: 'ok'; items: T[] } | { state: 'missing' | 'error'; items: [] };
+/**
+ * (r3, additive) What <mc-library-view> reads saved icons and shapes through. The card editor passes
+ * its own cached lists as `source`; without one the view calls the mcu-library commands itself. The view
+ * never imports a feature Module.
+ */
+export interface LibrarySource {
+  listIcons(hass: unknown): Promise<LibraryListing<IconSummary>>;
+  listShapes(hass: unknown): Promise<LibraryListing<SavedShape>>;
+  getIcon(hass: unknown, id: string): Promise<SavedIcon | undefined>;
+  /** Whether the last list holds this id (false while no list is loaded). */
+  isSaved(kind: 'icons' | 'shapes', id: string): boolean;
+  /** Forget cached lists. */
+  reset(): void;
+}
 
 /** (r2) Where <mc-library-view> runs. */
 export type LibraryViewContext = 'card-editor' | 'mcu-panel';

@@ -10,8 +10,7 @@ import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
 import type { ThemePresetStore } from '../contracts/theme-editor';
 import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
-import type { LibraryOpenDetail, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
-import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
+import type { LibraryListing, LibraryOpenDetail, LibrarySource, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import { SVG_EDITOR_CONTRACT_REVISION } from '../contracts/svg-editor';
 import { setI18nLocale } from '../i18n/runtime';
 import { count } from './count';
@@ -53,6 +52,41 @@ const meta = (m: ItemMeta): ItemMeta => ({ ...(m.author ? { author: m.author } :
 
 const DEFAULT_KINDS: TransferKind[] = ['animation', 'shape', 'icon'];
 
+const codeOf = (e: unknown): string => String((e as { code?: string })?.code ?? '');
+
+/** The source used when the host passes none: the mcu-library commands, with the ids of the last lists remembered. */
+function commandSource(): LibrarySource {
+  const known: { icons?: Set<string>; shapes?: Set<string> } = {};
+  const list = async <T extends { id: string }>(hass: unknown, type: string, key: 'icons' | 'shapes'): Promise<LibraryListing<T>> => {
+    const w = hass as LibraryHass | undefined;
+    if (!w?.callWS) return { state: 'missing', items: [] };
+    try {
+      const r = await w.callWS<Record<string, T[]>>({ type });
+      const items = Array.isArray(r?.[key]) ? r[key] : [];
+      known[key] = new Set(items.map((i) => String(i.id)));
+      return { state: 'ok', items };
+    } catch (e) {
+      return { state: codeOf(e) === 'unknown_command' ? 'missing' : 'error', items: [] };
+    }
+  };
+  return {
+    listIcons: (h) => list(h, CMD.iconsList, 'icons'),
+    listShapes: (h) => list(h, CMD.shapesList, 'shapes'),
+    getIcon: async (h, id) => {
+      try {
+        const r = await (h as LibraryHass).callWS<{ icons: SavedIcon[] }>({ type: CMD.iconsGet, ids: [id] });
+        return r?.icons?.[0] as never;
+      } catch {
+        return undefined;
+      }
+    },
+    isSaved: (kind, id) => !!known[kind]?.has(id),
+    reset: () => {
+      known.icons = known.shapes = undefined;
+    },
+  };
+}
+
 @customElement('mc-library-view')
 export class LibraryView extends LitElement {
   /** The Magic Card Utils panel gates on this (svg-editor revision 5), so the Library tab needs no SVG editor fetch. */
@@ -90,6 +124,12 @@ export class LibraryView extends LitElement {
   @property({ type: String }) startKind?: TransferKind;
   /** The theme editor's backend.presets; absent = an older Magic Card Utils (or none). */
   @property({ attribute: false }) presets?: ThemePresetStore;
+  /** (r3) Where saved icons and shapes are read; absent = the view calls the mcu-library commands itself. */
+  @property({ attribute: false }) source?: LibrarySource;
+  private _own?: LibrarySource;
+  private get _src(): LibrarySource {
+    return this.source ?? (this._own ??= commandSource());
+  }
 
   /** (r2) 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
   @property({ type: String }) context: LibraryViewContext = 'card-editor';
@@ -193,7 +233,7 @@ export class LibraryView extends LitElement {
           status = 'error';
         }
     } else {
-      const l = await (kind === 'icon' ? listIcons(this.hass) : listShapes(this.hass));
+      const l = await (kind === 'icon' ? this._src.listIcons(this.hass) : this._src.listShapes(this.hass));
       status = l.state;
       rows = (l.items as Array<{ id: string; name: string; keywords?: string[] }>).map((i) => row(i.id, i.name, i, i.keywords));
     }
@@ -230,8 +270,8 @@ export class LibraryView extends LitElement {
     if (kind === this._kind && this._source === 'mcu') return this._rows.some((r) => r.id === id);
     if (kind === 'animation') return !!animationLibrary.get(id) || animationDocList(this.config?.custom_animations).some((d) => d.id === id);
     // a copy that shares an id with a saved item would be pruned from the card as unused
-    if (kind === 'shape') return !!this.config?.custom_shapes?.[id] || isSaved('shapes', id);
-    return kind === 'icon' && (!!this.config?.custom_icons?.[id] || isSaved('icons', id));
+    if (kind === 'shape') return !!this.config?.custom_shapes?.[id] || this._src.isSaved('shapes', id);
+    return kind === 'icon' && (!!this.config?.custom_icons?.[id] || this._src.isSaved('icons', id));
   };
 
   private async _call(msg: Record<string, unknown>): Promise<void> {
@@ -252,7 +292,7 @@ export class LibraryView extends LitElement {
   }
 
   private async _after(done: string): Promise<void> {
-    resetLibrary();
+    this._src.reset();
     this._edit = undefined;
     await this._load();
     this._bad = false;
@@ -271,7 +311,7 @@ export class LibraryView extends LitElement {
       if (k === 'animation') await this._call({ type: SAVE_ANIM, animation: { ...(r.src as object), name } });
       else if (k === 'theme') await this.presets!.save({ ...rest(r.src as SavedThemePreset), id: r.id, name } as never, (r.src as SavedThemePreset).updated_at);
       else {
-        const full = k === 'icon' ? await getIcon(this.hass, r.id) : (r.src as SavedShape);
+        const full = k === 'icon' ? await this._src.getIcon(this.hass, r.id) : (r.src as SavedShape);
         if (!full) throw new Error('gone');
         const key = k === 'icon' ? 'icon' : 'shape';
         await this._call({ type: k === 'icon' ? CMD.iconsSave : CMD.shapesSave, [key]: { ...rest(full as never), id: r.id, name }, base_updated_at: (full as SavedIcon).updated_at });
@@ -309,7 +349,7 @@ export class LibraryView extends LitElement {
         items.push({ ...base, ...(this._source === 'card' ? {} : meta(s as ItemMeta)), data: { ...sh, ref: undefined } } as never);
       } else if (this._source === 'card') items.push({ ...base, data: { svg: String(r.src) } } as never);
       else {
-        const full = await getIcon(this.hass, r.id);
+        const full = await this._src.getIcon(this.hass, r.id);
         if (full) items.push({ ...base, ...meta(full), ...(full.keywords?.length ? { keywords: full.keywords } : {}), data: { svg: full.svg, path: full.path, ...(full.secondary_path ? { secondary_path: full.secondary_path } : {}), view_box: full.view_box } } as never);
       }
     }
@@ -430,7 +470,7 @@ export class LibraryView extends LitElement {
       return empty({
         icon: 'mdi:cloud-off-outline',
         title: s === 'error' ? t('Could not reach Magic Card Utils. Your work is safe.') : older,
-        action: s === 'error' ? { label: t('Try again'), onClick: () => { resetLibrary(); void this._load(); } } : undefined,
+        action: s === 'error' ? { label: t('Try again'), onClick: () => { this._src.reset(); void this._load(); } } : undefined,
       });
     }
     if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('{kind, select, animation {No animations match "{q}".} shape {No shapes match "{q}".} icon {No icons match "{q}".} other {No theme presets match "{q}".}}', { kind: this._kind, q: this._q }) : t('{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} other {No theme presets here yet.}}', { kind: this._kind }) });

@@ -1,4 +1,5 @@
 import { CMD, LIBRARY_CHANGED_EVENT, type IconSummary, type SavedIcon, type SavedShape, type SavedShapeInput } from '../../contracts/mcu-library';
+import type { LibrarySource } from '../../contracts/preset-transfer';
 import type { MagicCardConfig } from '../../types';
 import { animationLibrary } from '../../services/animation-library';
 import { pruneLibraryCopies, type KnownLibrary } from './prune';
@@ -119,3 +120,6 @@ export function needsLists(config: MagicCardConfig): { icons: boolean; shapes: b
 /** The provider's shape for `id` (what a card renders from), undefined until it is ready or unknown. */
 export const providerShape = (id: string) =>
   (window as unknown as { magicCardUtils?: { shapes?: { get(id: string): import('../../contracts/custom-shape').CustomShapeOptions | undefined } } }).magicCardUtils?.shapes?.get(id);
+
+/** What <mc-library-view> reads saved icons and shapes through (preset-transfer LibrarySource): this file's cached lists. */
+export const librarySource: LibrarySource = { listIcons, listShapes, getIcon, isSaved, reset: resetLibrary };
