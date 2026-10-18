@@ -373,7 +373,7 @@ export class McteFieldGroup extends LitElement {
         color: var(--mc-text-2);
         text-align: left;
         overflow-wrap: anywhere;
-        min-height: 20px;
+        min-height: 24px;
       }
       .key:hover {
         text-decoration: underline;
