@@ -401,7 +401,7 @@ export class Inspector extends LitElement {
     let path: TemplateResult;
     switch (s.kind) {
       case 'card': {
-        title = `${t('Card')} · ${info.title}`;
+        title = config.name?.trim() ? `${t('Card')} · ${info.title}` : t('Card');
         path = html`${rows((config.rows || []).length)} · ${modules(countModules(config))}`;
         break;
       }

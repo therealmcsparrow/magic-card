@@ -23,7 +23,7 @@ export interface ShapeEditorOpen {
   /** Any element of the card editor: finds the card's state manager, and is where focus returns. */
   from: HTMLElement;
   hass?: HomeAssistant;
-  /** "Shape for Living room tile". */
+  /** The target ("Living room tile", "this card"); the shape editor writes "Shape for {label}" in its title. */
   label: string;
   /** The card's current custom shape; none: a blank one (or `preset`). */
   value?: ShapeEditorValue;

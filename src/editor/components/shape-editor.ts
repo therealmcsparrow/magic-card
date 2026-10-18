@@ -3,7 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, ShapeKind, ShapeOptions } from '../../types';
 import type { CustomShapeOptions } from '../../contracts/custom-shape';
 import type { SavedShape } from '../../contracts/mcu-library';
-import { freeId, listShapes, saveShape, slug, type Listing } from '../custom/library';
+import { freeId, listShapes, refreshShapes, saveShape, slug, type Listing } from '../custom/library';
+import { LIBRARY_CHANGED_EVENT } from '../../contracts/mcu-library';
 import { applyShapePatch, openShapeEditor, type ShapeWrite } from '../custom/shape-host';
 import { cardStateOf } from '../custom/bridge';
 import { openLibrary } from '../custom/library-sheet';
@@ -250,7 +251,7 @@ export class ShapeEditor extends LitElement {
   @property({ attribute: false }) onChange?: (patch: ShapePatch) => void;
   /** Reads the saved shapes (My shapes, Save as shape) and opens the shape editor. */
   @property({ attribute: false }) hass?: HomeAssistant;
-  /** The name of the target in the shape editor's title: "Shape for Living room tile". */
+  /** The name of the target ("Living room tile"); the shape editor adds "Shape for" to its title. */
   @property({ type: String }) label = '';
 
   @state() private _lib?: Listing<SavedShape>;
@@ -261,6 +262,28 @@ export class ShapeEditor extends LitElement {
   @state() private _saving?: { name: string; error?: string; busy?: boolean };
   @state() private _status = '';
   private _listed?: unknown;
+
+  /** The saved shapes changed (Magic Card Utils event, or the shape editor handed a result back): list them again. */
+  private async _relist(): Promise<void> {
+    if (!this.hass) return;
+    const l = await refreshShapes(this.hass);
+    if (this.isConnected) this._lib = l;
+  }
+
+  private readonly _onLibraryChanged = (e: Event): void => {
+    const kind = (e as CustomEvent<{ kind?: string }>).detail?.kind;
+    if (kind === undefined || kind === 'shapes') void this._relist();
+  };
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    window.addEventListener(LIBRARY_CHANGED_EVENT, this._onLibraryChanged);
+  }
+
+  disconnectedCallback(): void {
+    window.removeEventListener(LIBRARY_CHANGED_EVENT, this._onLibraryChanged);
+    super.disconnectedCallback();
+  }
 
   private get _kind(): ShapeKind {
     const s = this.shape;
@@ -487,10 +510,14 @@ export class ShapeEditor extends LitElement {
     const r = await openShapeEditor({
       from: this,
       hass: this.hass,
-      label: this.label || t('Shape for {thing}', { thing: thisTarget(this.target) }),
+      label: this.label || thisTarget(this.target),
       value: kind === 'custom' ? { shape: 'custom', shape_options: this._opts } : undefined,
       preset,
-      apply: (patch) => this.onChange?.(patch),
+      // Done may follow a Save to library in the editor: the list under My shapes is read again
+      apply: (patch) => {
+        this.onChange?.(patch);
+        void this._relist();
+      },
     });
     this._opening = r === 'failed' ? 'failed' : '';
   }
