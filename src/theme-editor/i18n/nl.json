@@ -123,7 +123,6 @@
   "Colour of the dimmed area behind a pop-up.": "Kleur van het gedimde gebied achter een pop-up.",
   "Colour of the primary text.": "Kleur van de primaire tekst.",
   "Colour of the secondary text.": "Kleur van de secundaire tekst.",
-  "Contacts another host": "Neemt contact op met een andere host",
   "Contrast not checked: value has transparency.": "Contrast niet gecontroleerd: de waarde is transparant.",
   "Contrast on card, {mode}: {ratio} to 1, easy to read": "Contrast op kaart, {mode}: {ratio} op 1, goed leesbaar",
   "Contrast on card, {mode}: {ratio} to 1, hard to read, below 4.5 to 1": "Contrast op kaart, {mode}: {ratio} op 1, slecht leesbaar, onder 4,5 op 1",
@@ -516,8 +515,6 @@
   "Slider track": "Spoor van schuifregelaar",
   "Small font size": "Kleine lettergrootte",
   "Small radius": "Kleine hoekradius",
-  "Some values load files from another host. The preview and Try on dashboard ask that host for them, so it sees your address.": "Sommige waarden laden bestanden van een andere host. De voorvertoning en Op dashboard proberen vragen die host erom, dus die ziet je adres.",
-  "Some values load files from {hosts}. The preview and Try on dashboard ask that host for them, so it sees your address.": "Sommige waarden laden bestanden van {hosts}. De voorvertoning en Op dashboard proberen vragen die host erom, dus die ziet je adres.",
   "Space inside tooltips.": "Ruimte binnen tooltips.",
   "Start from": "Beginnen met",
   "State icon colour": "Kleur van statuspictogram",
@@ -687,5 +684,8 @@
   "{name}.yaml changed on disk": "{name}.yaml is gewijzigd op schijf",
   "{name}: {reason}": "{name}: {reason}",
   "{n} not valid, left out": "{n} ongeldig, weggelaten",
-  "{path}: {message}": "{path}: {message}"
+  "{path}: {message}": "{path}: {message}",
+  "Contacts another website": "Neemt contact op met een andere website",
+  "Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.": "Sommige waarden laden bestanden van een andere website. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus die website kan je IP-adres zien.",
+  "Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.": "Sommige waarden laden bestanden van {hosts}. Het voorbeeld en Op dashboard proberen vragen die bestanden op, dus de sites waarnaar ze verwijzen kunnen je IP-adres zien."
 }

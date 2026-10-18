@@ -157,7 +157,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Material Design Icons
 
-Icon paths from `@mdi/js` are bundled in `magic-card-icon-animator.js`. Material Design Icons are
+Icon paths from `@mdi/js` are bundled in several files in `dist/`, among them `magic-card-icon-animator.js`,
+`magic-card-icon-library.js` and `magic-card-editor.js`. Material Design Icons are
 maintained by Pictogrammers (https://pictogrammers.com/library/mdi/, source https://github.com/Templarian/MaterialDesign-JS).
 The package states that the icons are distributed under the Apache License 2.0, and that some icons are
 redistributed under that licence from other sources. The package ships no NOTICE file. The licence

@@ -199,7 +199,7 @@ export class TransferPanel extends LitElement {
             ${glyph('help', 20)}
             <div class="body">
               <strong>${t('{n, plural, one {# value is kept as written} other {# values are kept as written}}', { n: kept.length })}</strong>
-              <span class="help">${hosts.length ? `${t('Using this theme makes each browser ask {hosts} for files, so those sites see its address.', { hosts: hosts.join(', ') })} ` : ''}${t('Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.')}</span>
+              <span class="help">${hosts.length ? `${t('Every browser that shows a dashboard with this theme asks {hosts} for files, and those sites can see the visitor\'s IP address.', { hosts: hosts.join(', ') })} ` : ''}${t('Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.')}</span>
               <ul>
                 ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
               </ul>
@@ -291,6 +291,7 @@ export class TransferPanel extends LitElement {
           onChange: (f) => (this._format = f),
         })}
       </div>
+      ${e.items.some((i) => i.author) ? html`<p class="help">${t('The author name is saved in the file. Check it before you share the file.')}</p>` : nothing}
       <textarea id="out" class="input" readonly aria-label=${t('Export text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">
         ${button({ label: t('Download'), variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}

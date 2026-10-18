@@ -41,11 +41,11 @@ export function readTheme(index: number, data: unknown): KindResult<TransferData
       }
       out[k] = v as string | number;
       kept++;
-      if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('{mode} mode: "{key}" is a card-mod style. It was kept; it runs CSS on your dashboard.', { mode: label, key: k }) : t('"{key}" is a card-mod style. It was kept; it runs CSS on your dashboard.', { key: k })));
+      if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('{mode} mode: "{key}" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.', { mode: label, key: k }) : t('"{key}" is a card-mod style. It was kept; with card-mod installed it runs CSS on your dashboard.', { key: k })));
       if (typeof v === 'string') {
         if (contactsOtherHost(v)) {
           const hosts = hostsOf(decodeCssEscapes(v));
-          notes.push(note('external_ref', index, path, label ? t('{mode} mode: "{key}" points to {hosts}. It was kept; your browser will contact it.', { mode: label, key: k, hosts: hosts.length ? hosts.join(', ') : t('another host') }) : t('"{key}" points to {hosts}. It was kept; your browser will contact it.', { key: k, hosts: hosts.length ? hosts.join(', ') : t('another host') }), hosts));
+          notes.push(note('external_ref', index, path, label ? t('{mode} mode: "{key}" points to {hosts}. It was kept; every browser that shows this theme will contact it.', { mode: label, key: k, hosts: hosts.length ? hosts.join(', ') : t('another website') }) : t('"{key}" points to {hosts}. It was kept; every browser that shows this theme will contact it.', { key: k, hosts: hosts.length ? hosts.join(', ') : t('another website') }), hosts));
         } else if (LOCAL_PATH_RE.test(v)) {
           notes.push(note('local_path', index, path, label ? t('{mode} mode: "{key}" uses a file on the sharer\'s Home Assistant. It may not exist on your system.', { mode: label, key: k }) : t('"{key}" uses a file on the sharer\'s Home Assistant. It may not exist on your system.', { key: k })));
         }

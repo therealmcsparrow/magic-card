@@ -52,7 +52,7 @@ export const presetTitle = (p: ThemePreset): string => own(p, p.name);
 export const presetBlurb = (p: ThemePreset): string => own(p, p.blurb);
 const flat = (s: string): string => s.replace(/[\s-]/g, '');
 
-// A swatch value that names another host (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
+// A swatch value that names another website (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
 // add a second declaration is never put into a style: opening the picker must not contact anyone.
 // A backslash (CSS escape) and every function that fetches (url, image, image-set, src, element, cross-fade) are refused too:
 // `url(ht\74ps://x)` and `url(http:x)` do not look like a host to a plain pattern but the browser reads them as one.
@@ -80,7 +80,7 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     ></span>
     <span class="pn">${presetTitle(p)}${on ? glyph('check') : nothing}</span>
     <span class="help">${presetBlurb(p)}</span>
-    ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('Contacts another host')}</span>` : nothing}
+    ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('Contacts another website')}</span>` : nothing}
     ${p.inspiredBy ? html`<span class="help">${t('Inspired by {name}', { name: p.inspiredBy.name })}</span>` : nothing} ${on && p.note ? html`<span class="help">${own(p, p.note)}</span>` : nothing}
   </label>`;
 }

@@ -1017,15 +1017,15 @@ export class McteEditorView extends LitElement {
     </header>`;
   }
 
-  /** Values that point at another host: the preview and Try on dashboard load them at once, so say so (not by colour alone). */
+  /** Values that point at another website: the preview and Try on dashboard load them at once, so say so (not by colour alone). */
   private _outsideEl(): TemplateResult | typeof nothing {
     const o = outsideOf(this._doc);
     if (!o.any) return nothing;
     return html`<div class="notice warn" role="status">
       ${glyph('information')}
       <div class="body">
-        <strong>${t('Contacts another host')}</strong>
-        <p>${o.hosts.length ? t('Some values load files from {hosts}. The preview and Try on dashboard ask that host for them, so it sees your address.', { hosts: o.hosts.join(', ') }) : t('Some values load files from another host. The preview and Try on dashboard ask that host for them, so it sees your address.')}</p>
+        <strong>${t('Contacts another website')}</strong>
+        <p>${o.hosts.length ? t('Some values load files from {hosts}. The preview and Try on dashboard request those files, so the sites they point to can see your IP address.', { hosts: o.hosts.join(', ') }) : t('Some values load files from another website. The preview and Try on dashboard request those files, so that website can see your IP address.')}</p>
       </div>
     </div>`;
   }

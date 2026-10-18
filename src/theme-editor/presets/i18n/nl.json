@@ -18,7 +18,6 @@
   "Cobalt Gold": "Kobaltgoud",
   "Cobalt Prism": "Kobaltprisma",
   "Cobalt blue with a gold primary.": "Kobaltblauw met een gouden hoofdkleur.",
-  "Contacts another host": "Neemt contact op met een andere host",
   "Contrast": "Contrast",
   "Cool arctic blues on polar night.": "Koele arctische blauwtinten op poolnacht.",
   "Crimson Pines": "Karmozijnrode dennen",
@@ -145,5 +144,6 @@
   "original": "origineel",
   "sci-fi": "sciencefiction",
   "{n, plural, one {# preset} other {# presets}} shown": "{n, plural, one {# voorinstelling} other {# voorinstellingen}} getoond",
-  "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.": "{n, plural, one {# voorinstelling} other {# voorinstellingen}} getoond. Probeer {a}, {b}, {c}, {d} of {e}."
+  "{n, plural, one {# preset} other {# presets}} shown. Try {a}, {b}, {c}, {d} or {e}.": "{n, plural, one {# voorinstelling} other {# voorinstellingen}} getoond. Probeer {a}, {b}, {c}, {d} of {e}.",
+  "Contacts another website": "Neemt contact op met een andere website"
 }
