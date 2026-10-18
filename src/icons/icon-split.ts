@@ -1,5 +1,5 @@
 import type { IconGeometry } from './icon-source';
-import { cubicsToPath, toCubicSubpaths, type Cubic, type Pt } from './path-math';
+import { cubicsToPath, toCubicSubpaths, type Cubic, type Pt } from '../path/core';
 
 /*
  * Auto-split of an icon into pieces for icon rigs (animation studio v2, parts). Shared by the card's

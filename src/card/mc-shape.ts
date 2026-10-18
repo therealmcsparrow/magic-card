@@ -2,7 +2,7 @@ import { LitElement, html, nothing, PropertyValues, svg, TemplateResult } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { DesignConfig, ShapeKind, ShapeOptions } from '../types';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
-import { outlinePolygon, parseOutline } from '../utils/shape-outline';
+import { parseClosed, polygonCss } from '../path/core';
 import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
 import { offscreenObserver } from '../icons/offscreen';
@@ -64,8 +64,8 @@ export function __resetClipPathSupport(value?: boolean): void {
 /** The clip-path value of a shape path. */
 export function shapeClip(d: string): string {
   if (clipPathSupported()) return `path('${d}')`;
-  const o = parseOutline(d);
-  return o ? outlinePolygon(o) : 'none';
+  const o = parseClosed(d);
+  return o ? polygonCss(o) : 'none';
 }
 
 type Side = 'top' | 'right' | 'bottom' | 'left';

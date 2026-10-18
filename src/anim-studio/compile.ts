@@ -1,4 +1,4 @@
-import { toCubicSubpaths, type Cubic, type Pt } from '../icons/path-math';
+import { toCubicSubpaths, type Cubic, type Pt } from '../path/core';
 import { sanitizeSvg } from '../icons/svg-sanitize';
 import { EASINGS, getAnimationPreset } from '../utils/animation-presets';
 import type { CompiledV2 } from './compile-v2';

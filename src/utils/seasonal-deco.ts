@@ -1,6 +1,6 @@
 import type { ShapeKind, ShapeOptions } from '../types';
 import { clampRadii, insetRadii, Radii, shapeRingPath } from './ring-path';
-import { flattenOutline, parseOutline } from './shape-outline';
+import { flatten, parseClosed } from '../path/core';
 import type { DecoMotif } from './seasonal-scenes';
 import { seededRandom } from './seasonal-scenes';
 
@@ -152,8 +152,8 @@ function signedArea(pts: Pt[]): number {
 export function decoOutline(box: DecoBox, inset = 0): Pt[] {
   let pts: Pt[];
   if (box.shape) {
-    const o = parseOutline(shapeRingPath(box.shape.kind, box.w, box.h, box.shape.options, { inset }));
-    pts = o ? flattenOutline(o, 24) : [];
+    const o = parseClosed(shapeRingPath(box.shape.kind, box.w, box.h, box.shape.options, { inset }));
+    pts = o ? flatten(o, 24).map(([x, y]) => ({ x, y })) : [];
   } else pts = roundedOutline(box.w, box.h, box.radii, inset);
   // y points down: clockwise on screen has a positive shoelace area
   return pts.length > 2 && signedArea(pts) < 0 ? pts.reverse() : pts;

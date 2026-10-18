@@ -1,4 +1,4 @@
-import { toCubicSubpaths } from '../../icons/path-math';
+import { toCubicSubpaths } from '../../path/core';
 import { resolveIconGeometry, type IconGeometry } from '../../icons/icon-source';
 import { sanitizeSvg } from '../../icons/svg-sanitize';
 import { splitIcon } from '../../icons/icon-split';

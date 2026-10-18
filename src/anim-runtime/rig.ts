@@ -4,7 +4,7 @@ import type { IconGeometry } from '../icons/icon-source';
 import { pathBox, splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
 import type { IconRig } from '../icons/mc-svg-icon';
 import { sanitizeSvg } from '../icons/svg-sanitize';
-import { cubicsToPath, toCubicSubpaths } from '../icons/path-math';
+import { cubicsToPath, toCubicSubpaths } from '../path/core';
 import { rigCss, rigSelector, tracksDraw } from './rig-css';
 import type { ApplyCtx, HintCtx, RuntimeHints } from './types';
 

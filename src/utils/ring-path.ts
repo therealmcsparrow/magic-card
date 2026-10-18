@@ -1,6 +1,6 @@
 import type { RingStart, ShapeKind, ShapeOptions } from '../types';
 import { shapeInsetPath, shapePath } from './shape-path';
-import { outlinePath, parseOutline, restartOutline, reverseOutline, translateOutline } from './shape-outline';
+import { parseClosed, restartAt, reverse, toPathString, translate } from '../path/core';
 
 /*
  * The outline of a CSS rounded rectangle as an SVG path, from an element's rendered size and its
@@ -276,16 +276,16 @@ export function shapeRingPath(kind: ShapeKind, w: number, h: number, options: Sh
   let base;
   if (d >= 0) {
     const path = shapeInsetPath(kind, w, h, options, d);
-    base = path ? parseOutline(path) : undefined;
+    base = path ? parseClosed(path) : undefined;
   } else {
     const res = w - 2 * d > 0 && h - 2 * d > 0 ? shapePath(kind, w - 2 * d, h - 2 * d, options) : undefined;
-    const o = res && parseOutline(res.d);
-    base = o && translateOutline(o, d, d);
+    const o = res && parseClosed(res.d);
+    base = o && translate(o, d, d);
   }
   if (!base) return '';
   // the start's point on the box: the eighth turn i is at angle i * 45deg clockwise from the top
   const a = (Math.max(0, RING_STARTS.indexOf(opts.start ?? 'top')) * Math.PI) / 4;
-  let o = restartOutline(base, { x: (w * (1 + Math.round(Math.sin(a)))) / 2, y: (h * (1 - Math.round(Math.cos(a)))) / 2 });
-  if (opts.direction === 'ccw') o = reverseOutline(o);
-  return outlinePath(o);
+  let o = restartAt(base, [(w * (1 + Math.round(Math.sin(a)))) / 2, (h * (1 - Math.round(Math.cos(a)))) / 2]);
+  if (opts.direction === 'ccw') o = reverse(o);
+  return toPathString([o]);
 }

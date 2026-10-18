@@ -9,7 +9,7 @@ import { iconBaseStyles } from './icon-css';
 import { offscreenObserver, __resetOffscreenObserverForTests } from './offscreen';
 import { resolveIconFx, ResolvedIconFx } from './icon-fx';
 import { linearGradientSvg } from '../utils/gradient';
-import { interpolate, matchShapes } from './path-math';
+import { interpolate, matchShapes } from '../path/core';
 
 let uidSeq = 0;
 const r3 = (n: number) => String(+n.toFixed(3));

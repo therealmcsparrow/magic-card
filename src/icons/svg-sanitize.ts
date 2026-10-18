@@ -1,4 +1,4 @@
-import { cubicsToPath, Pt, toCubicSubpaths } from './path-math';
+import { cubicsToPath, Pt, toCubicSubpaths } from '../path/core';
 
 /*
  * Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the

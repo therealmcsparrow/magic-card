@@ -1,4 +1,4 @@
-import { toCubicSubpaths } from '../icons/path-math';
+import { toCubicSubpaths } from '../path/core';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';

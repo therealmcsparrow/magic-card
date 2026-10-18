@@ -2,7 +2,7 @@ import { LitElement, html, css, svg, nothing, type PropertyValues, type Template
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { editorSystem } from '../../css/editor-system';
-import { toCubicSubpaths } from '../../icons/path-math';
+import { toCubicSubpaths } from '../../path/core';
 import { entityColorCss } from '../../utils/entity-color';
 import type { AnimationDoc } from '../model';
 import { V2_CAPS, type RigShape, type TargetRef } from '../model-v2';
