@@ -13,7 +13,7 @@ import { fieldReset } from './field-reset';
 
 import './unit-field';
 import { t, m, type MessageId } from '../i18n';
-import { thisTarget } from '../i18n/target';
+import { thisTarget } from '../target-name';
 
 /** What a shape edit writes: both keys (undefined = removed). */
 export interface ShapePatch {

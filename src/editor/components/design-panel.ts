@@ -39,7 +39,7 @@ import './shape-editor';
 import './value-bg-editor';
 import { parseGradient } from '../../utils/gradient';
 import { t, fold } from '../i18n';
-import { thisTarget } from '../i18n/target';
+import { thisTarget } from '../target-name';
 
 /** Mockup placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
