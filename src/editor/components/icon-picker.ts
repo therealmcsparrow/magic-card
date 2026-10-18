@@ -439,6 +439,7 @@ export class IconPicker extends LitElement {
               activeId,
             })}
           </div>
+          <p class="sr-only" role="status">${this._icons === null ? '' : total > 0 ? t('{n, plural, one {# icon found} other {# icons found}}', { n: total }) : t('No icons found')}</p>
           <div class="mc-picker-list" id="mc-icon-list" role="listbox" aria-label=${t('Icons')}>
             ${this._icons === null
               ? html`<div class="mc-picker-loading">${t('Loading icons…')}</div>`
