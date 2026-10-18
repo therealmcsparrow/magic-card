@@ -1,6 +1,8 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
+import { kitSlider } from '../../ui-kit/css/slider';
+import { slider } from '../../ui-kit/templates/slider';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
 // the stops use <mc-color-picker> by tag: color-picker.ts imports this file and defines it
@@ -70,6 +72,7 @@ export function renderSeg(label: string, value: string, options: SegOption[], on
 export class GradientEditor extends LitElement {
   static styles = [
     editorSystem,
+    kitSlider,
     css`
       :host {
         display: block;
@@ -115,14 +118,8 @@ export class GradientEditor extends LitElement {
         font-weight: 500;
         color: var(--mc-text);
       }
-      .row > .seg,
-      .row > input[type='range'] {
+      .row > .seg {
         flex: 1 1 120px;
-        min-width: 0;
-      }
-      .angle-num {
-        flex: 0 0 64px;
-        width: 64px;
         min-width: 0;
       }
       .stops {
@@ -155,10 +152,6 @@ export class GradientEditor extends LitElement {
         .row {
           flex-direction: column;
           align-items: stretch;
-        }
-        .angle-num {
-          flex-basis: auto;
-          width: 100%;
         }
         .actions {
           flex-direction: column;
@@ -272,33 +265,20 @@ export class GradientEditor extends LitElement {
           : nothing}
         ${g.radial
           ? nothing
-          : html`<div class="row">
-              <label for="angle">Angle</label>
-              <input
-                id="angle"
-                type="range"
-                min="0"
-                max="360"
-                step="1"
-                .value=${String(angle)}
-                aria-valuetext=${`${angle} degrees`}
-                ?disabled=${this.disabled}
-                @input=${(e: Event) => (this._draft = this._angle((e.target as HTMLInputElement).value))}
-                @change=${(e: Event) => this._emit({ ...g, angle: this._angle((e.target as HTMLInputElement).value) })}
-              />
-              <input
-                class="input angle-num"
-                type="number"
-                min="0"
-                max="360"
-                step="1"
-                aria-label="Angle in degrees"
-                .value=${String(angle)}
-                ?disabled=${this.disabled}
-                @change=${(e: Event) => this._emit({ ...g, angle: this._angle((e.target as HTMLInputElement).value) })}
-              />
-              <span aria-hidden="true">deg</span>
-            </div>`}
+          : slider({
+              id: 'angle',
+              label: 'Angle',
+              min: 0,
+              max: 360,
+              step: 1,
+              value: angle,
+              unit: 'deg',
+              valueText: `${angle} degrees`,
+              numberLabel: 'Angle in degrees',
+              disabled: this.disabled,
+              onInput: (v) => (this._draft = this._angle(String(v))),
+              onChange: (v) => this._emit({ ...g, angle: this._angle(String(v)) }),
+            })}
         <div class="stops">${g.stops.map((s, i) => this._renderStop(s, i, n))}</div>
         ${this._badStop >= 0 ? html`<div class="help error" role="alert">Use a hex color, rgb(a) or var(--name).</div>` : nothing}
         <div class="actions">

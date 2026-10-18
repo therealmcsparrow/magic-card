@@ -250,14 +250,6 @@ export class TemplateBar extends LitElement {
         color: var(--mc-warn-ink);
         overflow-wrap: anywhere;
       }
-      .menu button:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-      }
-      .menu button.danger,
-      .menu button.danger ha-icon {
-        color: var(--mc-error-ink);
-      }
     `,
   ];
 }

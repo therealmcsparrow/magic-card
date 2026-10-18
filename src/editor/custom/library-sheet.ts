@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
+import type { UiWindowElement } from '../../contracts/ui-kit';
 import type { IconData, TransferItem, TransferKind } from '../../contracts/preset-transfer';
 import type { HomeAssistant, MagicCardConfig } from '../../types';
 import { withDocs } from './animation-copies';
@@ -24,39 +25,19 @@ export function withImported(c: MagicCardConfig, kind: TransferKind, items: Tran
   return withDocs(c, items.map((i) => ({ ...(i.data as object), id: i.id, name: i.name }) as Record<string, unknown>));
 }
 
+/** Phone width: the kit window is a bottom sheet (CEO D8), else the wide picker window. */
+const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 599px)').matches;
+
 @customElement('mc-library-sheet')
 export class LibrarySheet extends LitElement {
   static styles = [
     editorSystem,
     css`
       :host {
-        position: fixed;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        background: rgba(0, 0, 0, 0.45);
-        outline: none;
+        display: contents;
       }
-      .box {
-        width: min(640px, 100vw - 16px);
-        max-height: calc(100vh - 16px);
-        overflow: auto;
-        padding: 16px;
-        display: grid;
-        gap: 12px;
-        background: var(--mc-surface);
-        color: var(--mc-text);
-        border-radius: var(--mc-radius);
-      }
-      .top {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
-      h2 {
-        flex: 1;
-        margin: 0;
-        font-size: 1.1rem;
+      mc-library-view {
+        display: block;
       }
     `,
   ];
@@ -73,7 +54,7 @@ export class LibrarySheet extends LitElement {
   }
 
   protected firstUpdated(): void {
-    this.renderRoot.querySelector<HTMLElement>('h2')?.focus();
+    this.renderRoot.querySelector<UiWindowElement>('mc-ui-window')?.show();
   }
 
   private _import = (e: CustomEvent<{ kind: TransferKind; items: TransferItem[] }>): void => {
@@ -85,13 +66,9 @@ export class LibrarySheet extends LitElement {
   };
 
   render() {
-    return html`<div class="box" @keydown=${(e: KeyboardEvent) => e.key === 'Escape' && (e.preventDefault(), e.stopPropagation(), this.onClose?.())}>
-      <div class="top">
-        <h2 tabindex="-1">Library</h2>
-        <button type="button" class="btn btn-secondary btn-sm" @click=${() => this.onClose?.()}>Close</button>
-      </div>
+    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading="Library" closeLabel="Close" @mc-window-close=${() => this.onClose?.()}>
       <mc-library-view .hass=${this.hass} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
-    </div>`;
+    </mc-ui-window>`;
   }
 }
 
