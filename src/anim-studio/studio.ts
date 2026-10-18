@@ -159,13 +159,13 @@ const errorText = (err: unknown): { message: string; errors: FieldError[] } => {
 export const SPLIT_KEY = 'mcas-split';
 /** Collapsed inspector sections (JSON list of ids). */
 export const SECTIONS_KEY = 'mcas-sections';
-/** The layers column: 'rail' or 'open' (unset: rail below RAIL_BELOW). */
+/** The layers column: 'rail' (the user collapsed it) or 'open'; unset: open. */
 export const LAYERS_KEY = 'mcas-layers';
 export const SPLIT_DEFAULT = 0.4;
 /** The stage and the timeline each keep at least this height (px). */
 export const SPLIT_MIN_PX = 160;
 /**
- * Below this width the layers column starts as a rail (unless the user opened it); below
+ * Below this width the layers rows are compact (names, one Layer actions menu); below
  * COMPACT_BELOW the columns are narrower; below SLIDE_BELOW the inspector slides over.
  */
 export const RAIL_BELOW = 1000;
@@ -281,7 +281,7 @@ export class AnimationStudio extends LitElement {
   @state() private _tile: PreviewTile = 'icon';
   /** The stage's share of the centre column (0-1). */
   @state() private _split = readSplit();
-  /** The user's layers column choice; unset: a rail below RAIL_BELOW. */
+  /** The user's layers column choice; unset: open (compact rows below RAIL_BELOW). */
   @state() private _layersPref = readStore(LAYERS_KEY) as 'rail' | 'open' | null;
   /** The studio's own width (rail and slide-over breakpoints). */
   @state() private _width = 0;
@@ -1269,7 +1269,8 @@ export class AnimationStudio extends LitElement {
   // ── layout v2: sections, layers, inspector, splitter ──
 
   private get _rail(): boolean {
-    return this._layersPref ? this._layersPref === 'rail' : this._width > 0 && this._width < RAIL_BELOW;
+    // the icons-only rail is the user's choice ("Collapse layers"); a narrow window gets the compact list
+    return this._layersPref === 'rail';
   }
 
   /** Narrower layers and inspector columns, so the timeline keeps its lanes (1000 to 1100 px). */
