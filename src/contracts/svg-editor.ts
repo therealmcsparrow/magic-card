@@ -274,15 +274,37 @@ import type { BooleanOp } from './path-booleans';
  *   applied, same text as the SVG editor. An applied result gets default anchoring, the padding
  *   solver reruns (raise-survives rule), W6 and the crossing check run as after any edit, one
  *   history step labelled "Combine shape" / "Subtract shape" / "Intersect shape", the operand is gone.
- * (r4) What the shape editor takes from revision 4 (Free shape only; Corners has no canvas, no menu
- * and no "More actions"): no align, distribute, arrange, flip, rotate, duplicate or placement row (one
+ * (r4) What the shape editor takes from revision 4 (Free shape only; Corners has no canvas and no menu;
+ * r6: there is no "More actions" button in either mode): no align, distribute, arrange, flip, rotate, duplicate or placement row (one
  * outline that fills its box). The pending operand gets the canvas `transform` (scale true, rotate
  * false, keepRatio true, bounds = the Edit-at frame); a scale updates its X / Y / W / H and, like any
  * operand change, is not a history step. No Angle field and no rotate handle this round. "Centre" puts
  * the operand in the middle of the Edit-at box. Context menu "Outline actions" (canvas `contextMenu`
- * true, plus "More actions"): a point -> Corner or Smooth, Add point after, Remove point; a segment ->
+ * true; right-click, long-press, the ContextMenu key, Shift+F10): a point -> Corner or Smooth, Add point after, Remove point; a segment ->
  * Add point here (at the pressed point, PathContext.hit.at); the pending operand -> Combine, Subtract,
  * Intersect, Centre, Cancel; empty canvas -> Start from a shape..., Add shape..., Pen.
+ * (r6, UI5, ui-kit 1.0.0 r3) The shape editor takes the SVG editor's structure and the ui kit's look:
+ * - Top bar (kit topBar): Back to card editor (Close in host 'mcu') | title | name | Undo, Redo | Export / Import
+ *   (a menu: Export file, Import file, Copy YAML) | Save to library and Done (host 'mcu': one primary, Save) | Shortcuts.
+ *   The name field is 180 px with a visible placeholder in host 'mcu'. Save to library stays pressable without
+ *   Magic Card Utils: it shows the Library tab with the reason.
+ * - Free shape: a tool rail (Select, Add point, Remove point, Pen) and a float toolbar over the canvas (Preview,
+ *   Start from..., Combine..., Grid, Snap). Corners: the float toolbar has Preview and Start from... only. The
+ *   canvas fills the height; nothing sits under it but the result note and the pen bar. There is no hint line and
+ *   no "More actions" button: every action in the Outline actions menu has a button (Corner | Smooth, Add point
+ *   after and Remove point in the point section; Add point on the rail; Combine, Subtract, Intersect, Centre and
+ *   Cancel in the Combine section; Start from... and Combine... on the toolbar; Pen on the rail). The key
+ *   help is the Shortcuts popover.
+ * - Previews (three boxes, On card | Outlines, older browser look) are behind the Preview button, an anchored popover.
+ * - Start from, Combine with, Save to library, Leave without saving and Export / Import are `<mc-ui-window>`s
+ *   (movable, resizable and maximisable; the Leave window is an alert). Start from lists the shapes in both modes.
+ *   In Corners mode it also lists the five corner styles, and a shape switches to Free shape: the new outline, the
+ *   mode and the size are one history step. In host 'mcu', a new shape (no `savedId`, no `preset`, an empty
+ *   `value`) opens Start from once.
+ * - Grid and Snap (Free shape): the canvas `pixelGrid` and `gridStep` 10, and `snap` { grid 10, frame, no anchors }.
+ *   Both start off and are not stored.
+ * - The result note (what a button just did, with Undo) clears on the next edit, on a mode change, or 8 s after the
+ *   last pointer or focus in it. Persistent warnings (the outline cuts the text area, crosses itself) stay as notices.
  * Events:
  * - `mc-shape-change` detail ShapeChangeDetail; `commit` false during drags. The host applies it
  *   through design-panel's ShapePatch (extended with custom_shapes) and pushes one history step

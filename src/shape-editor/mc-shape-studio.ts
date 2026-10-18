@@ -4,6 +4,7 @@ import { CORNER_TYPES, MAX_SHAPE_POINTS } from '../contracts/custom-shape';
 import type { CornerKey, CornerType, CustomShapeOptions } from '../contracts/custom-shape';
 import type { SavedShape } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
+import type { KitButtonOptions, UiMenuEntry, UiPopoverElement, UiToastElement, UiWindowElement } from '../contracts/ui-kit';
 import type { TransferItem } from '../contracts/preset-transfer';
 import type { BooleanOp } from '../contracts/path-booleans';
 import type { CanvasMode, MenuEntry, PathChange, PathContext, PathSelection, PathTransform, TransformBox } from '../contracts/path-canvas';
@@ -16,6 +17,7 @@ import type { ShapeOptions } from '../types';
 import { loadCustomShapes } from '../utils/shape-custom-loader';
 import { resolveCustomShape } from '../utils/shape-ref';
 import { clamp, shapePath } from '../utils/shape-path';
+import { RovingFocus, button, chip, defineUiKit, empty, glyph as kitGlyph, notice, row, sectionHead, slider, switchRow, toolbar, topBar } from '../ui-kit';
 import { glyph } from './glyphs';
 import { deleteShape, freeId, listShapes, LibraryError, lookupFor, saveShape, slug, tooBig, watchLibrary, type Hass, type LibraryProblem } from './library';
 import {
@@ -25,7 +27,7 @@ import {
 import { isCut, selfCrosses, solveSpace } from './space';
 import { n, S } from './strings';
 import { studioStyles } from './styles';
-import { btn, check, num, r1, seg } from './ui';
+import { btn, num, r1, seg } from './ui';
 
 /*
  * <mc-shape-studio> (contract svg-editor 1.0.0 rev 2, shape part; custom-shape 1.0.0 rev 3): the card shape
@@ -55,8 +57,12 @@ const MAX_SIZE = 2000;
 const ROW: EditSize = SIZES[1];
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 const coarse = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+/** The kit's rail turns into a row under this viewport width (the same media query). */
+const narrow = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 799px)').matches;
 const up = (n: Node): Node | null => (n as Element).assignedSlot ?? n.parentNode ?? (n as ShadowRoot).host ?? null;
 type Tool = 'nodes' | 'add' | 'remove' | 'pen';
+/** Grid spacing and snap reach in edit-size px (Free shape). */
+const GRID = 10;
 type Pending = { kind: 'pen'; path?: EditPath } | { kind: 'shape'; prim: PrimitiveKind; path: EditPath };
 const LOCKED = [{ locked: true }];
 const NONE: never[] = [];
@@ -92,9 +98,10 @@ export class McShapeStudio extends LitElement {
   @state() tool: Tool = 'nodes';
   /** A pen outline being drawn, or a shape waiting to be combined: never in the config or the history. */
   @state() pending?: Pending;
-  @state() picker?: { to: 'start' | 'combine'; at: number };
-  /** The open Outline actions menu (Free shape only); the element exists only while it is open. */
-  @state() menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener?: HTMLElement };
+  /** The Start from / Combine with window. */
+  @state() picker?: { to: 'start' | 'combine' };
+  /** The open menu (Outline actions in Free shape, or Export / Import); the element exists only while it is open. */
+  @state() menu?: { kind: 'outline' | 'xfer'; items: UiMenuEntry[]; at?: Pt; touch: boolean; opener?: HTMLElement; anchor?: HTMLElement };
   /** The pending shape as it was when a scale drag began. */
   private tBase?: EditPath;
   /** The press that opened the menu (its segment and where). */
@@ -111,7 +118,10 @@ export class McShapeStudio extends LitElement {
   @state() caption = '';
   @state() notice = '';
   @state() live = '';
-  @state() toast?: { text: string; action?: { label: string; run: () => void } };
+  @state() pvOpen = false;
+  @state() helpOpen = false;
+  @state() grid = false;
+  @state() snapOn = false;
   @state() allChanged = false;
   @state() stageW = 0;
   @state() name: string = S.untitled;
@@ -160,11 +170,19 @@ export class McShapeStudio extends LitElement {
   private stopLib?: () => void;
   private trash?: { item: SavedShape; timer: ReturnType<typeof setTimeout> };
   private liveTimer?: ReturnType<typeof setTimeout>;
+  private stripTimer?: ReturnType<typeof setTimeout>;
+  private xferClosed = 0;
+  /** What the toast's action button does (the toast element holds only the label). */
+  private toastRun?: () => void;
+  /** The control that had focus when a window opened: focus returns there. */
+  private back?: HTMLElement;
+  private roving = new RovingFocus({ items: '.pk', orientation: 'both' });
 
   // ── lifecycle ──
 
   connectedCallback(): void {
     super.connectedCallback();
+    defineUiKit();
     this.addEventListener('keydown', this.onKey);
     this.addEventListener('keydown', this.onEsc, true);
     // Home Assistant's dialog must not close on Escape (contract shell rule 2)
@@ -189,6 +207,7 @@ export class McShapeStudio extends LitElement {
     this.stopLib?.();
     this.flushDelete();
     clearTimeout(this.liveTimer);
+    clearTimeout(this.stripTimer);
     if (this.raf) cancelAnimationFrame(this.raf);
   }
 
@@ -198,7 +217,11 @@ export class McShapeStudio extends LitElement {
     this.failed = false;
     this.ready = await loadCustomShapes();
     this.failed = !this.ready;
-    if (this.ready && !this.opened) this.open();
+    if (this.ready && !this.opened) {
+      this.open();
+      // Magic Card Utils, "New shape": a plain rectangle looks like nothing happened, so the Start from window opens once
+      if (this.host === 'mcu' && !this.savedId && !this.preset && !Object.keys(this.value?.shape_options ?? {}).length) this.openPicker('start');
+    }
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -217,6 +240,11 @@ export class McShapeStudio extends LitElement {
     this.dataset.layout = this.layout;
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
+    // a window opens the first time it renders; it closes through close() so focus goes back to its opener
+    for (const w of this.shadowRoot?.querySelectorAll<UiWindowElement>('mc-ui-window:not([data-shown])') ?? []) {
+      w.dataset.shown = '1';
+      w.show();
+    }
   }
 
   private measure(): void {
@@ -426,14 +454,11 @@ export class McShapeStudio extends LitElement {
   private onKey = (e: KeyboardEvent): void => {
     if (e.key === 'Escape') {
       // the canvas ends a drag and clears its selection first (and stops the event then); what reaches here is ours
-      if (this.leaving) this.leaving = false;
-      else if (this.saving) this.saving = false;
-      else if (this.sheet) this.sheet = false;
+      if (this.sheet) this.sheet = false;
       else if (this.pointSel !== undefined) this.selectPoint(undefined);
       else if (!this.escHinted) {
         this.escHinted = true;
-        this.toast = { text: this.host === 'mcu' ? S.escHintMcu : S.escHint };
-        setTimeout(() => (this.toast = undefined), 6000);
+        this.toastShow(this.host === 'mcu' ? S.escHintMcu : S.escHint);
       }
       e.preventDefault();
       e.stopPropagation();
@@ -555,6 +580,7 @@ export class McShapeStudio extends LitElement {
   setMode(m: 'corners' | 'path'): void {
     if (m === this.doc.mode) return;
     this.dropPending();
+    this.strip = undefined;
     if (m === 'path') return void this.toPath();
     this.pointSel = this.cvSel = this.picker = undefined;
     this.commit({ ...this.doc, mode: 'corners' }, S.tabCorners);
@@ -580,6 +606,27 @@ export class McShapeStudio extends LitElement {
   note(text: string, undo = false, say = text): void {
     this.strip = { text, undo };
     this.say(say);
+    this.armStrip();
+  }
+
+  /** The result note clears 8 s after the last pointer or focus inside it (the next edit and a mode change clear it sooner). */
+  armStrip(): void {
+    clearTimeout(this.stripTimer);
+    this.stripTimer = setTimeout(() => (this.strip = undefined), 8000);
+  }
+
+  holdStrip(): void {
+    clearTimeout(this.stripTimer);
+  }
+
+  toastShow(text: string, action?: { label: string; run: () => void }): void {
+    this.toastRun = action?.run;
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<UiToastElement>('mc-ui-toast')?.show({ text, action: action && { id: 'act', label: action.label } }));
+  }
+
+  toastHide(): void {
+    this.toastRun = undefined;
+    this.shadowRoot?.querySelector<UiToastElement>('mc-ui-toast')?.close();
   }
 
   /** Points changed since the switch: going back to Corners would lose them. */
@@ -672,9 +719,8 @@ export class McShapeStudio extends LitElement {
   }
 
   private onEsc = (e: KeyboardEvent): void => {
-    if (e.key !== 'Escape' || !(this.picker || this.pending)) return;
-    if (this.picker) this.closePicker();
-    else this.dropPending(true);
+    if (e.key !== 'Escape' || !this.pending) return;
+    this.dropPending(true);
     e.preventDefault();
     e.stopPropagation();
   };
@@ -703,41 +749,40 @@ export class McShapeStudio extends LitElement {
   private replaceOutline(anchors: Anchor[], text: string): void {
     this.pending = this.picker = this.cvSel = undefined;
     this.tool = 'nodes';
-    this.commitPoints(fromAnchors([], anchors, this.size.w, this.size.h), text);
+    const points = fromAnchors([], anchors, this.size.w, this.size.h);
+    if (this.doc.mode === 'corners') {
+      // Start from in Corners mode: the outline replaces the corners and the mode switches, in one undo step
+      const solver = this.solve(points);
+      this.fromPath = false;
+      this.baseline = JSON.stringify(points);
+      this.commit({ ...this.doc, mode: 'path', points, solver, pad: solver }, text);
+      this.panel = 'outline';
+    } else this.commitPoints(points, text);
     this.selectPoint(undefined);
     this.note(text, true);
   }
 
+  /** Opens the Start from / Combine with window; the shapes come from the path canvas chunk, loaded now when it is not. */
   openPicker(to: 'start' | 'combine'): void {
-    this.picker = { to, at: 0 };
-    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.picks [role=radio]')?.focus());
+    this.back = (this.shadowRoot?.activeElement as HTMLElement | null) ?? undefined;
+    this.picker = { to };
+    if (!this.D) void this.ensureCanvas();
   }
 
-  closePicker(): void {
-    const to = this.picker?.to;
-    this.picker = undefined;
-    void this.updateComplete.then(() => this.focusTo(to === 'combine' ? '[data-pick=combine]' : '[data-pick=start]'));
-  }
-
-  pickKey(e: KeyboardEvent): void {
-    const at = this.picker?.at ?? 0;
-    const cols = coarse() ? 3 : 4;
-    const to = { ArrowRight: at + 1, ArrowLeft: at - 1, ArrowDown: at + cols, ArrowUp: at - cols, Home: 0, End: PRIMITIVE_KINDS.length - 1 }[e.key];
-    if (to === undefined) return;
-    e.preventDefault();
-    const next = clamp(to, 0, PRIMITIVE_KINDS.length - 1);
-    this.picker = { ...this.picker!, at: next };
-    void this.updateComplete.then(() => this.shadowRoot?.querySelectorAll<HTMLElement>('.picks [role=radio]')[next]?.focus());
+  /** Closes the windows through their own close(), so focus goes back to the opener. */
+  closeWindows(): void {
+    for (const w of this.shadowRoot?.querySelectorAll<UiWindowElement>('mc-ui-window') ?? []) if (w.open) w.close('action');
   }
 
   choose(kind: PrimitiveKind): void {
     const to = this.picker?.to;
     const { w, h } = this.size;
     if (!this.D) return;
+    this.closeWindows();
     this.picker = undefined;
     if (to === 'start') {
-      this.replaceOutline(this.D.primitive(kind, { x: 0, y: 0, w, h }).anchors, S.startedFrom(S.prim[kind]));
-      void this.updateComplete.then(() => this.focusTo('[data-pick=start]'));
+      const free = this.doc.mode === 'path';
+      this.replaceOutline(this.D.primitive(kind, { x: 0, y: 0, w, h }).anchors, free ? S.startedFrom(S.prim[kind]) : S.startedSwitch(S.prim[kind]));
       return;
     }
     this.dropPending();
@@ -825,7 +870,8 @@ export class McShapeStudio extends LitElement {
 
   openMenu(hit: PathContext['hit'], at: Pt, touch: boolean, opener?: HTMLElement): void {
     this.hit = hit;
-    this.menu = { items: this.menuItems(hit), at, touch, opener };
+    this.back = opener;
+    this.menu = { kind: 'outline', items: this.menuItems(hit), at, touch, opener };
     void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement & { show(): void }>('mc-ui-menu')?.show());
   }
 
@@ -836,17 +882,34 @@ export class McShapeStudio extends LitElement {
     this.openMenu(hit, client, source === 'touch', this.shadowRoot?.querySelector<HTMLElement>('mc-path-canvas') ?? undefined);
   }
 
-  /** The More actions button: the same menu for the selected point, the pending shape or the empty canvas. */
-  moreActions(ev: Event): void {
-    const b = ev.currentTarget as HTMLElement;
-    const r = b.getBoundingClientRect();
-    this.openMenu(this.pointSel === undefined ? undefined : { path: 0, anchor: this.pointSel }, [r.left, r.bottom], false, b);
+  /** The Export / Import menu under its top bar button. */
+  openXferMenu(e: Event): void {
+    const b = e.currentTarget as HTMLElement;
+    if (this.menu?.kind === 'xfer') return void (this.menu = undefined);
+    this.menu = {
+      kind: 'xfer',
+      touch: false,
+      opener: b,
+      anchor: b,
+      items: [
+        { id: 'export', label: S.exportFile, icon: 'mdi:file-export-outline' },
+        { id: 'import', label: S.importFile, icon: 'mdi:file-import-outline' },
+        { id: 'yaml', label: S.copyYaml, glyph: 'copy' },
+      ],
+    };
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement & { show(): void }>('mc-ui-menu')?.show());
   }
 
   onPick(e: CustomEvent<{ id: string }>): void {
     e.stopPropagation();
     const id = e.detail.id;
     const h = this.hit;
+    if (this.menu?.kind === 'xfer') {
+      const from = this.menu.anchor;
+      if (id === 'yaml') void this.copyText(toYaml(this.options()));
+      else void this.openTransfer(id === 'export' ? 'export' : 'import', from);
+      return;
+    }
     const op = S.ops.find(([k]) => k === id);
     if (op) void this.boolean(op[0], op[1]);
     else if (id === 'centre') this.setOperand('centre');
@@ -856,7 +919,7 @@ export class McShapeStudio extends LitElement {
     else if (id === 'remove') this.deletePoint(h?.anchor);
     else if (id === 'here' && h?.segment !== undefined && h.at) this.addAfter(h.segment, segT(this.path, h.segment, h.at));
     else if (id === 'pen') this.setTool('pen');
-    else if (id === 'start' || id === 'add') return this.openPicker(id === 'start' ? 'start' : 'combine');
+    else if (id === 'start' || id === 'add') return void this.updateComplete.then(() => this.openPicker(id === 'start' ? 'start' : 'combine'));
     void this.updateComplete.then(() => this.focusTo('.stage mc-path-canvas'));
   }
 
@@ -967,9 +1030,9 @@ export class McShapeStudio extends LitElement {
     if (this.noLib) return this.showPanel('library');
     this.saveName = this.name === S.untitled ? '' : this.name;
     this.saveError = '';
+    this.back = (this.shadowRoot?.activeElement as HTMLElement | null) ?? undefined;
     this.saving = true;
     if (this.lib.state === 'idle') void this.loadLib();
-    void this.updateComplete.then(() => this.focusTo('#sn'));
   }
 
   get existing(): SavedShape | undefined {
@@ -993,8 +1056,9 @@ export class McShapeStudio extends LitElement {
       this.saved = { id: item.id, name: item.name, updated_at: item.updated_at, json: JSON.stringify(shape) };
       this.name = item.name;
       this.openedId = item.id;
+      this.closeWindows();
       this.saving = false;
-      this.toast = { text: S.saved(item.name), action: { label: S.useOnCard, run: () => this.useSaved() } };
+      this.toastShow(S.saved(item.name), { label: S.useOnCard, run: () => this.useSaved() });
     } catch (e) {
       const p = e instanceof LibraryError ? e.problem : 'unreachable';
       this.saveError = S.fail[p] ?? S.saveFail(name);
@@ -1009,7 +1073,7 @@ export class McShapeStudio extends LitElement {
     if (!s) return;
     this.emitted = true;
     this.linked = s.id;
-    this.toast = undefined;
+    this.toastHide();
     this.fire({ value: { shape: 'custom', shape_options: { ref: s.id } }, customShapes: { [s.id]: this.options() }, commit: true, label: S.useOnCard });
     this.say(S.applied(this.label || S.title));
   }
@@ -1019,14 +1083,17 @@ export class McShapeStudio extends LitElement {
     this.flushDelete();
     this.lib = { ...this.lib, hidden: new Set([...this.lib.hidden, item.id]) };
     this.trash = { item, timer: setTimeout(() => this.flushDelete(), 10000) };
-    this.toast = { text: S.deleted(item.name), action: { label: S.undo, run: () => this.undoDelete() } };
+    this.toastShow(S.deleted(item.name), { label: S.undo, run: this.undoRun });
   }
+
+  private undoRun = (): void => this.undoDelete();
 
   private undoDelete(): void {
     if (!this.trash) return;
     clearTimeout(this.trash.timer);
     this.unhide(this.trash.item.id);
-    this.trash = this.toast = undefined;
+    this.trash = undefined;
+    this.toastHide();
   }
 
   private unhide(id: string, drop = false): void {
@@ -1044,7 +1111,7 @@ export class McShapeStudio extends LitElement {
       () => this.unhide(p.item.id, true),
       () => this.unhide(p.item.id),
     );
-    if (this.toast?.action?.label === S.undo) this.toast = undefined;
+    if (this.toastRun === this.undoRun) this.toastHide();
   }
 
   async copyText(text: string): Promise<void> {
@@ -1063,17 +1130,16 @@ export class McShapeStudio extends LitElement {
       const load = (window as unknown as { MagicCard?: Partial<MagicCardEditorWindowAdditions> }).MagicCard?.loadTransfer;
       if (!load) throw new Error('no loader');
       await load();
+      this.back = back;
       this.xfer = { mode, back };
     } catch {
-      this.toast = { text: S.transferFail };
-      setTimeout(() => (this.toast = undefined), 6000);
+      this.toastShow(S.transferFail);
     }
   }
 
   closeTransfer(): void {
-    const back = this.xfer?.back;
+    this.closeWindows();
     this.xfer = undefined;
-    void this.updateComplete.then(() => (back?.isConnected ? back : this.shadowRoot?.querySelector<HTMLElement>('[data-xfer]'))?.focus());
   }
 
   private get exportItems(): { kind: 'shape'; items: TransferItem<'shape'>[] } {
@@ -1098,18 +1164,6 @@ export class McShapeStudio extends LitElement {
     if (items.length > 1) this.say(S.importedFirst(items.length));
   }
 
-  private xferLayer(): TemplateResult {
-    const x = this.xfer!;
-    return html`<div class="xfer" role="dialog" aria-modal="true" aria-label=${x.mode === 'export' ? S.exportFile : S.importFile} @keydown=${(e: Event) => e.stopPropagation()}>
-<mc-transfer-panel .host=${'shape-editor'} .mode=${x.mode} .exportItems=${x.mode === 'export' ? this.exportItems : undefined} .hasLibrary=${!this.noLib}
-@mc-transfer-close=${() => this.closeTransfer()} @mc-transfer-import=${(e: CustomEvent<{ items: TransferItem[] }>) => (e.stopPropagation(), this.importItems(e.detail.items))}></mc-transfer-panel></div>`;
-  }
-
-  private xferBtns(): TemplateResult {
-    const b = (mode: 'import' | 'export', label: string): TemplateResult => html`<button class="b" data-xfer=${mode} @click=${(e: Event) => void this.openTransfer(mode, e.currentTarget as HTMLElement)}>${label}</button>`;
-    return html`<div class="acts">${b('export', S.exportFile)}${b('import', S.importFile)}</div>`;
-  }
-
   // ── leaving ──
 
   done(): void {
@@ -1124,8 +1178,8 @@ export class McShapeStudio extends LitElement {
   /** Host 'mcu': Close asks first when there is unsaved work. */
   close(): void {
     if (!this.mcuDirty) return this.leave(false);
+    this.back = (this.shadowRoot?.activeElement as HTMLElement | null) ?? undefined;
     this.leaving = true;
-    void this.updateComplete.then(() => this.focusTo('.pop [data-keep]'));
   }
 
   /** Host 'mcu': Save as shape. `asCopy` after a conflict: a new id, no base time. */
@@ -1133,7 +1187,7 @@ export class McShapeStudio extends LitElement {
     const name = this.name.trim().slice(0, 80);
     if (!name) {
       this.nameErr = true;
-      this.focusTo('input.name');
+      this.focusTo('.topbar .name input');
       return;
     }
     const shape = this.options();
@@ -1188,57 +1242,175 @@ export class McShapeStudio extends LitElement {
     const title = this.label ? S.titleFor(this.label) : S.title;
     const inPath = this.tab === 'path';
     return html`<div class="layer" role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
-<div class="skips">${btn(S.skip.canvas, () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${btn(S.skip.past, () => this.focusTo('.previews button'))}${this.pointSel !== undefined ? btn(S.skip.point, () => this.focusTo('#fx')) : nothing}${btn(S.skip.insp, () => this.focusTo('.insp button, .insp input'))}</div>
+<div class="skips">${btn(S.skip.canvas, () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(S.skip.point, () => this.focusTo('#fx')) : nothing}${btn(S.skip.insp, () => this.focusTo('.insp button, .insp input'))}</div>
 ${this.top(title)}${this.mcuBar()}${this.banners()}
-${!this.ready ? html`<div class="empty" role="status">${this.failed ? html`${S.loadFail} ${btn(S.retry, () => void this.boot())}` : S.loading}</div>` : html`<div class="work">
+${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${S.loadFail}</p>${btn(S.retry, () => void this.boot())}` : S.loading}</div>` : html`<div class="work">
 <aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? S.points : S.outline}>${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? S.points : S.outline], ['library', S.library]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
-<main class="center">${this.editBar()}${this.tools()}${this.penBar()}${this.stage()}${this.pointBar()}${this.stripView()}${this.previews()}</main>
-<aside class="insp" aria-label=${S.inspector}>${this.modeSwitch()}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
+<main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
+<aside class="insp" aria-label=${S.inspector}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
-${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${S.menuName} .at=${this.menu.at} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: Event) => (e.stopPropagation(), (this.menu = undefined))}></mc-ui-menu>` : nothing}${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
-${this.saving ? this.savePop() : nothing}${this.leaving ? this.leavePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
+${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? S.exportImport : S.menuName} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
+<mc-ui-popover id="pv-pop" .label=${S.preview} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
+<mc-ui-popover id="help-pop" .label=${S.help} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
+${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
+<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div></div>`;
+  }
+
+  private onMenuClose(e: CustomEvent<{ reason: string }>): void {
+    e.stopPropagation();
+    // the menu button toggles: its own press closes the menu (reason outside), the click that follows must not open it again
+    if (this.menu?.kind === 'xfer') this.xferClosed = e.detail.reason === 'outside' ? Date.now() : 0;
+    this.menu = undefined;
+  }
+
+  /** Opens or closes an anchored popover (Preview, Shortcuts) under the button that was pressed. */
+  private togglePop(e: Event, which: 'pv' | 'help'): void {
+    const pop = this.shadowRoot?.querySelector<UiPopoverElement>(`#${which}-pop`);
+    if (!pop) return;
+    pop.anchor = e.currentTarget as HTMLElement;
+    if (pop.open) pop.close('action');
+    else {
+      this[which === 'pv' ? 'pvOpen' : 'helpOpen'] = true;
+      pop.show();
+    }
   }
 
   // prettier-ignore
   private top(title: string): TemplateResult {
     const mcu = this.host === 'mcu';
-    const dirty = mcu ? this.mcuDirty : this.dirtyFromSaved;
-    return html`<header class="top" role="toolbar" aria-label=${S.title}>${mcu ? btn(S.close, () => this.close(), 'ghost') : btn(S.back, () => this.leave(false), 'ghost')}<h2>${title}</h2>
-${this.layout === 'compact' ? html`<button class="b" aria-expanded=${this.sheet} @click=${() => (this.sheet = !this.sheet)}>${this.tab === 'path' ? S.points : S.outline}</button>` : nothing}
-<input class="name" type="text" maxlength=${mcu ? 80 : nothing} aria-required=${mcu} aria-invalid=${this.nameErr} aria-describedby=${mcu ? 'nm-err' : nothing} aria-label=${S.nameLabel} title=${S.nameTip} .value=${this.name} @input=${(e: Event) => ((this.name = (e.target as HTMLInputElement).value), (this.nameErr = false))} />${mcu ? html`<span class="warn" id="nm-err" role="alert">${this.nameErr ? S.nameRequired : ''}</span>` : nothing}<span class="mark" aria-live="polite">${this.saved ? (dirty ? S.markChanged : S.markSaved) : ''}</span><span class="grow"></span>
-<button class="b icon" aria-label=${S.undo} aria-disabled=${!this.canUndo} @click=${() => this.undo()}>&#8630;</button><button class="b icon" aria-label=${S.redo} aria-disabled=${!this.future.length} @click=${() => this.redo()}>&#8631;</button>
-${mcu ? html`<button class="b primary" aria-disabled=${!this.name.trim() || this.saveBusy} @click=${() => void this.saveMcu()}>${S.saveShape}</button>` : html`${this.noLib ? html`<span class="sr" id="m1d">${S.m1}</span>` : nothing}<button class="b" aria-disabled=${this.noLib} aria-describedby=${this.noLib ? 'm1d' : nothing} @click=${() => this.openSave()}>${S.saveLib}</button>${btn(S.done, () => this.done(), 'primary')}`}</header>`;
+    const actions: KitButtonOptions[] = [];
+    if (this.layout === 'compact') actions.push({ label: this.tab === 'path' ? S.points : S.outline, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
+    actions.push({ label: S.exportImport, icon: 'mdi:swap-vertical', haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
+    if (mcu) actions.push({ label: S.save, variant: 'primary', disabledReason: this.saveBusy ? S.working : undefined, onClick: () => void this.saveMcu() });
+    else actions.push({ label: S.saveLib, onClick: () => this.openSave() }, { label: S.done, variant: 'primary', onClick: () => this.done() });
+    return topBar({
+      back: { label: mcu ? S.close : S.back, onClick: () => (mcu ? this.close() : this.leave(false)) },
+      title,
+      name: { label: S.nameLabel, placeholder: mcu ? S.nameLabel : undefined, value: this.name, error: mcu && this.nameErr ? S.nameRequired : undefined, onInput: (v) => ((this.name = v), (this.nameErr = false)) },
+      undo: { label: S.undo, glyph: 'undo', keys: 'Control+Z', disabledReason: this.canUndo ? undefined : S.nothingUndo, onClick: () => this.undo() },
+      redo: { label: S.redo, glyph: 'redo', keys: 'Control+Shift+Z', disabledReason: this.future.length ? undefined : S.nothingRedo, onClick: () => this.redo() },
+      actions,
+      help: { label: S.help, glyph: 'helpCircle', haspopup: 'dialog', expanded: this.helpOpen, controls: 'help-pop', onClick: (e) => this.togglePop(e, 'help') },
+    });
   }
 
   private mcuBar(): TemplateResult | typeof nothing {
     if (this.host !== 'mcu' || (!this.conflict && !this.mcuError)) return nothing;
     return this.conflict
-      ? html`<div class="banners"><div class="banner warn conflict" role="alert">${S.conflictMcu} ${btn(S.saveCopy, () => void this.saveMcu(true))}${btn(S.reload, () => void this.reloadMcu())}</div></div>`
-      : html`<div class="banners"><div class="banner warn" role="alert">${this.mcuError}</div></div>`;
-  }
-
-  // prettier-ignore
-  private leavePop(): TemplateResult {
-    return html`<div class="pop" role="alertdialog" aria-modal="true" aria-label=${S.leaveTitle}><h3>${S.leaveTitle}</h3>
-<div class="acts end"><button class="b ghost" data-keep @click=${() => ((this.leaving = false), this.focusTo('.layer'))}>${S.keep}</button><button class="b primary" @click=${() => ((this.leaving = false), this.leave(false))}>${S.leave}</button></div></div>`;
+      ? html`<div class="banners"><div class="notice warn" role="alert">${kitGlyph('alertCircle', 20)}<div class="body"><p>${S.conflictMcu}</p><div class="actions">${btn(S.saveCopy, () => void this.saveMcu(true))}${btn(S.reload, () => void this.reloadMcu())}</div></div></div></div>`
+      : html`<div class="banners">${notice({ tone: 'error', text: this.mcuError })}</div>`;
   }
 
   private banners(): TemplateResult | typeof nothing {
-    const list: Array<[string, string]> = [];
+    const list: Array<['warn' | 'info', string]> = [];
     if (this.notice) list.push(['warn', this.notice]);
-    else if (this.linked) list.push(['', S.linked(this.linked)]);
+    else if (this.linked) list.push(['info', S.linked(this.linked)]);
     for (const p of this.an) {
       if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? S.w6Path(sh(p.id)) : S.w6Corners]);
       if (p.cross) list.push(['warn', S.crosses(sh(p.id))]);
     }
-    return list.length ? html`<div class="banners">${list.map(([k, t]) => html`<div class="banner ${k}" role=${k ? 'alert' : 'status'}>${t}</div>`)}</div>` : nothing;
+    return list.length ? html`<div class="banners">${list.map(([tone, text]) => notice({ tone, text }))}</div>` : nothing;
+  }
+
+  // ── windows ──
+
+  /** One window of the ui kit: title, body and a footer of buttons; movable, resizable and maximisable (an alert has no grips). */
+  // prettier-ignore
+  private win(heading: string, body: TemplateResult, foot: TemplateResult | typeof nothing, o: { size?: 's' | 'm' | 'l'; variant?: 'dialog' | 'picker'; initialFocus?: string; onClose: () => void }): TemplateResult {
+    return html`<mc-ui-window variant=${o.variant ?? 'dialog'} size=${o.size ?? nothing} heading=${heading} closeLabel=${S.close} movable resizable maximizable moveLabel=${S.moveWin} resizeLabel=${S.resizeWin} maximizeLabel=${S.maxWin} restoreLabel=${S.restoreWin} initialFocus=${o.initialFocus ?? nothing} .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), o.onClose())}>${body}${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}</mc-ui-window>`;
   }
 
   // prettier-ignore
-  private editBar(): TemplateResult {
-    const { w, h, id } = this.size;
-    return html`<div class="editbar" role="group" aria-label=${S.editAt}><div class="f"><span>${S.editAt}</span>${seg(S.editAt, Object.entries(S.tab) as Array<[string, string]>, id, (k) => this.setSize(k === 'custom' ? { id: 'custom', w, h } : SIZES.find((s) => s.id === k)!))}</div>
-${num(S.width, w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(S.height, h, (v) => this.setDims(w, v), { min: 24, max: MAX_SIZE })}</div>`;
+  private leaveWin(): TemplateResult {
+    return html`<mc-ui-window variant="alert" heading=${S.leaveTitle} closeLabel=${S.close} initialFocus="keep" .opener=${this.back} @mc-window-close=${(e: Event) => (e.stopPropagation(), (this.leaving = false))}>
+<p>${S.leaveBody}</p>
+<div slot="footer" class="foot"><button type="button" id="keep" class="btn btn-secondary" @click=${() => this.closeWindows()}>${S.keep}</button><button type="button" class="btn btn-danger" @click=${() => (this.closeWindows(), this.leave(false))}>${S.leave}</button></div></mc-ui-window>`;
+  }
+
+  // prettier-ignore
+  private saveWin(): TemplateResult {
+    const ex = this.existing;
+    const asNew = this.openedId && ex?.id === this.openedId;
+    const body = html`<div class="dlg" @keydown=${(e: KeyboardEvent) => e.key === 'Enter' && (e.preventDefault(), void this.doSave())}>
+<label class="field"><span class="fl">${S.saveName}</span><input class="input" id="sn" type="text" maxlength="40" aria-describedby="se" .value=${this.saveName} @input=${(e: Event) => (this.saveName = (e.target as HTMLInputElement).value)} /></label>
+<p class="help">${S.saveNameHelp}</p>${ex ? html`<p class="help">${S.nameExists(ex.name)}</p>` : nothing}<p class="help error" id="se" role="alert">${this.saveError}</p></div>`;
+    const foot = html`${btn(S.cancel, () => this.closeWindows())}${asNew ? btn(S.saveAsNew, () => ((this.saveName = S.copyOf(ex!.name)), this.focusTo('#sn'))) : nothing}${btn(ex ? S.update(ex.name) : S.save, () => void this.doSave(), { variant: 'primary', size: 'md', disabledReason: this.saveBusy ? S.working : undefined })}`;
+    return this.win(S.saveLib, body, foot, { initialFocus: 'sn', onClose: () => (this.saving = false) });
+  }
+
+  // prettier-ignore
+  private xferWin(): TemplateResult {
+    const x = this.xfer!;
+    const body = html`<mc-transfer-panel .host=${'shape-editor'} .mode=${x.mode} .exportItems=${x.mode === 'export' ? this.exportItems : undefined} .hasLibrary=${!this.noLib}
+@mc-transfer-close=${() => this.closeTransfer()} @mc-transfer-import=${(e: CustomEvent<{ items: TransferItem[] }>) => (e.stopPropagation(), this.importItems(e.detail.items))}></mc-transfer-panel>`;
+    return this.win(x.mode === 'export' ? S.exportFile : S.importFile, body, nothing, { size: 'l', onClose: () => (this.xfer = undefined) });
+  }
+
+  /** Start from and Combine with: the groups of shapes as tiles. A tile starts the action at once; arrows only move focus. */
+  // prettier-ignore
+  private pickerWin(): TemplateResult {
+    const p = this.picker!;
+    const start = p.to === 'start';
+    const group = (name: string, count: number, tiles: TemplateResult): TemplateResult => html`<section class="pgroup"><div class="pgroup-head"><h3>${name}</h3>${chip({ label: String(count), tone: 'count' })}</div>${tiles}</section>`;
+    const tile = (val: string, i: number, label: string, pic: TemplateResult, run: () => void): TemplateResult => html`<button type="button" class="tile pk" data-val=${val} tabindex=${i === 0 ? 0 : -1} @click=${run}><span class="thumb">${pic}</span><span>${label}</span></button>`;
+    const grid = (name: string, items: TemplateResult[]): TemplateResult => html`<div class="tiles" role="group" aria-label=${name} @keydown=${this.pickKey}>${items}</div>`;
+    const shapes = this.D && this.E
+      ? grid(S.shapesGroup, PRIMITIVE_KINDS.map((k, i) => tile(k, i, S.prim[k], html`<svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg>`, () => this.choose(k))))
+      : this.canvas === 'fail' ? html`<p class="help" role="alert">${S.canvasFail}</p>${btn(S.retry, () => void this.ensureCanvas())}` : html`<p class="help" role="status">${S.loading}</p>`;
+    const body = html`<div class="dlg">${start ? html`<p class="help">${S.startHelp}</p>` : nothing}
+${start && this.doc.mode === 'corners' ? group(S.cornerStyles, STARTERS.length, grid(S.cornerStyles, STARTERS.map((s, i) => tile(s.id, i, S.starter[s.id], glyph(s.corners().tl.type), () => this.applyStarter(s.id))))) : nothing}
+${group(S.shapesGroup, PRIMITIVE_KINDS.length, shapes)}</div>`;
+    return this.win(start ? S.startFrom : S.pickCombine, body, btn(S.cancel, () => this.closeWindows()), { variant: 'picker', onClose: () => (this.picker = undefined) });
+  }
+
+  /** Arrows move focus through the tiles in two dimensions (a tile starts the action only when pressed); Home and End jump. */
+  private pickKey = (e: KeyboardEvent): void => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const els = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('.pk')];
+    const cur = els.indexOf(e.composedPath().find((x) => els.includes(x as HTMLElement)) as HTMLElement);
+    const row = els.findIndex((el) => el.offsetTop !== els[0].offsetTop);
+    const cols = row > 0 ? row : coarse() ? 3 : 4;
+    const to = { ArrowRight: cur + 1, ArrowLeft: cur - 1, ArrowDown: cur + cols, ArrowUp: cur - cols, Home: 0, End: els.length - 1 }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.roving.focus(els, clamp(to, 0, els.length - 1));
+  };
+
+  applyStarter(id: string): void {
+    const s = STARTERS.find((x) => x.id === id);
+    if (!s) return;
+    this.closeWindows();
+    this.together = s.id !== 'two';
+    this.commit({ ...this.doc, mode: 'corners', corners: s.corners() }, S.starter[s.id]);
+  }
+
+  // ── canvas area ──
+
+  /** The tool rail (Free shape): Select, Add point, Remove point, Pen. */
+  // prettier-ignore
+  private rail(): TemplateResult {
+    const T: Array<[Tool, string, string, string?]> = [['nodes', S.toolSelect, 'mdi:cursor-default', 'V'], ['add', S.toolAdd, 'mdi:vector-polyline-plus'], ['remove', S.removePoint, 'mdi:vector-polyline-minus'], ['pen', S.toolPen, 'mdi:fountain-pen-tip', 'P']];
+    return toolbar({ label: S.tools, orientation: narrow() ? 'horizontal' : 'vertical', kind: 'rail', items: T.map(([k, label, icon, keys]) => ({ label, icon, iconOnly: true, keys, pressed: this.tool === k, onClick: () => this.setTool(k) })) });
+  }
+
+  /** The float toolbar over the canvas: Preview, Start from, Combine, Grid and Snap. Icons only on a narrow layer. */
+  // prettier-ignore
+  private floatBar(): TemplateResult {
+    const free = this.doc.mode === 'path';
+    const iconOnly = this.layout === 'compact' || this.layout === 'stacked';
+    const items: Array<KitButtonOptions | 'divider'> = [
+      { label: S.preview, glyph: 'eyeOn', iconOnly, haspopup: 'dialog', expanded: this.pvOpen, controls: 'pv-pop', onClick: (e) => this.togglePop(e, 'pv') },
+      'divider',
+      { label: S.startBtn, icon: 'mdi:shape-outline', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('start') },
+    ];
+    if (free) items.push(
+      { label: S.combineBtn, icon: 'mdi:vector-combine', iconOnly, haspopup: 'dialog', onClick: () => this.openPicker('combine') },
+      'divider',
+      { label: S.grid, icon: 'mdi:grid', iconOnly, pressed: this.grid, onClick: () => (this.grid = !this.grid) },
+      { label: S.snap, icon: 'mdi:magnet', iconOnly, pressed: this.snapOn, onClick: () => (this.snapOn = !this.snapOn) },
+    );
+    return html`<div class="float">${toolbar({ label: S.canvasTools, orientation: 'horizontal', kind: 'float', items })}</div>`;
   }
 
   /** The drawing: corner mode is the runtime outline with corner handles, path mode is the shared canvas. */
@@ -1247,11 +1419,11 @@ ${num(S.width, w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(S
     const { w, h } = this.size;
     const cur = this.cur;
     if (this.doc.mode === 'path') {
-      if (this.canvas !== 'ready') return html`<div class="stage"><div class="empty" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`${S.canvasFail} ${btn(S.retry, () => void this.ensureCanvas())}` : S.loading}</div></div>`;
+      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${S.canvasFail} ${btn(S.retry, () => void this.ensureCanvas())}</div>` : S.loading}</div></div>`;
       return html`<div class="stage"><mc-path-canvas aria-label=${S.title} aria-describedby="hint" loupeLabel=${`at ${sh(this.size.id)}`}
-.frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: false, grid: 0, anchors: false, frame: false }}
+.frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain} .transform=${this.transformBox} .contextMenu=${this.pending?.kind !== 'pen'}
-@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas></div>`;
+@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? S.hintPen : this.tool === 'add' ? S.hintAdd : this.tool === 'remove' ? S.hintRemove : S.hint}</span>${this.dock()}</div>`;
     }
     const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
     const f = this.doc.mode === 'corners' ? Math.min(1, ...clamped(this.doc.corners, w, h).map((c) => c.to / c.from)) : 1;
@@ -1261,7 +1433,45 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
       const o = Math.max(cornerPx(this.doc.corners[key], w, h) * f * 0.5, 14 / k);
       const [x, y] = [i === 0 || i === 3 ? o : w - o, i < 2 ? o : h - o];
       return svg`<g aria-hidden="true"><circle class="handle ${this.sel === key || this.together ? 'on' : ''}" cx=${x} cy=${y} r=${5 / k} /><circle class="hit" cx=${x} cy=${y} r=${hit} @pointerdown=${(e: PointerEvent) => this.handleDown(e, key)} @pointermove=${(e: PointerEvent) => this.handleMove(e)} @pointerup=${(e: PointerEvent) => this.handleUp(e)} @pointercancel=${(e: PointerEvent) => this.handleUp(e)} /></g>`;
-    }) : nothing}</svg>${k < 0.995 ? html`<span class="scale">${S.scaled(Math.round(k * 100))}</span>` : nothing}</div>`;
+    }) : nothing}</svg>${this.floatBar()}${k < 0.995 ? html`<span class="scale">${S.scaled(Math.round(k * 100))}</span>` : nothing}${this.dock()}</div>`;
+  }
+
+  /** The foot of the canvas: the pen's Finish / Cancel bar and the result note (cleared by the next edit, a mode change or 8 s). */
+  // prettier-ignore
+  private dock(): TemplateResult | typeof nothing {
+    const s = this.strip;
+    const pen = this.penBar();
+    if (!s && pen === nothing) return nothing;
+    return html`<div class="dock" @pointerenter=${() => this.holdStrip()} @focusin=${() => this.holdStrip()} @pointerleave=${() => this.strip && this.armStrip()} @focusout=${() => this.strip && this.armStrip()}>${pen}${s ? notice({ tone: 'info', text: s.text, transient: true, action: s.undo && this.canUndo ? { label: S.undo, onClick: () => this.undo() } : undefined }) : nothing}</div>`;
+  }
+
+  // prettier-ignore
+  private penBar(): TemplateResult | typeof nothing {
+    const p = this.pending;
+    if (p?.kind !== 'pen') return nothing;
+    const c = p.path?.anchors.length ?? 0;
+    const ok = c >= 3;
+    return html`<div class="pen" role="group" aria-label=${S.penHead}><strong>${S.penText}</strong><span class="help why" id="penwhy">${S.hintPen} ${ok ? n(c, 'point', 'points') : S.penNeed}</span>
+<button type="button" class="btn btn-primary btn-sm" aria-disabled=${!ok} aria-describedby="penwhy" @click=${() => (ok ? this.finishPen() : this.say(S.penNeed))}>${S.finish}</button>${btn(S.cancel, () => this.dropPending(true))}</div>`;
+  }
+
+  /** The three previews, behind the Preview button (an anchored popover): they are the renderer's own outlines. */
+  // prettier-ignore
+  private previews(): TemplateResult {
+    const mark = this.doc.mode === 'path' || Object.values(this.doc.corners).some((c) => c.type !== 'square');
+    return html`<div class="pop-body"><div class="pv-head">${seg(S.preview, [['card', S.onCard], ['outline', S.outlines]], this.cardView ? 'card' : 'outline', (v) => (this.cardView = v === 'card'), false, false)}</div>
+${switchRow({ id: 'older', label: S.older, checked: this.older, onChange: (b) => (this.older = b) })}
+<div class="pv-row">${this.an.map((p) => {
+      const sc = p.w <= 120 ? 1 : p.w <= 360 ? 0.5 : 0.4;
+      const bare = this.cardView ? '' : 'bare';
+      return html`<button type="button" class="pv ${this.cardView ? 'card' : ''} ${p.cut || p.cross ? 'cut' : ''}" aria-pressed=${this.size.id === p.id} aria-label=${S.previewAt(sh(p.id), p.w, p.h)} @click=${() => this.setSize(this.sizes.find((s) => s.id === p.id)!)}>
+<svg viewBox="0 0 ${p.w} ${p.h}" style="width:${Math.max(96, Math.round(p.w * sc))}px" aria-hidden="true">${this.older ? svg`<polygon class="shape ${bare}" points=${p.poly.map((q) => `${r1(q[0])},${r1(q[1])}`).join(' ')} />` : svg`<path class="shape ${bare}" d=${p.d} />`}${this.cardView ? this.sample(p) : nothing}</svg>
+<span class="help">${nm(p.id)}${sc < 1 ? ` (${Math.round(sc * 100)}%)` : ''}</span></button>`;
+    })}</div><p class="help">${S.follow}</p>${this.older ? html`<p class="help">${S.olderNote}</p>` : nothing}${mark ? html`<p class="help">${S.w7}</p>` : nothing}</div>`;
+  }
+
+  private shortcuts(): TemplateResult {
+    return html`<div class="pop-body"><h3>${S.help}</h3><ul class="keys">${S.keys.map((k) => html`<li>${k}</li>`)}</ul></div>`;
   }
 
   /** The text area (dashed) and two lines of sample text where the card would put its content. */
@@ -1271,66 +1481,58 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
     return svg`<rect class="textarea" x=${left} y=${top} width=${Math.max(0, wd)} height=${Math.max(0, p.h - top - bottom)} />${wd > 40 ? svg`<text x=${left + 4} y=${top + 18}>${S.sample[0]}</text><text x=${left + 4} y=${top + 36}>${S.sample[1]}</text>` : nothing}`;
   }
 
-  // prettier-ignore
-  private pointBar(): TemplateResult | typeof nothing {
-    if (this.doc.mode !== 'path') return nothing;
-    const i = this.pointSel;
-    const cnt = this.doc.points.length;
-    const pad = (l: string, dx: number, dy: number, c: string) => html`<button class="b icon" aria-label=${S.move(l)} @click=${(e: MouseEvent) => this.nudge(dx, dy, e.shiftKey)}>${c}</button>`;
-    return html`<div class="pointbar" role="group" aria-label=${S.pointHead}><button class="b" aria-haspopup="menu" aria-expanded=${!!this.menu} @click=${(e: Event) => this.moreActions(e)}>${S.more}</button><span class="help" id="hint">${this.pending?.kind === 'pen' ? S.hintPen : this.tool === 'add' ? S.hintAdd : this.tool === 'remove' ? S.hintRemove : S.hint}</span>${i === undefined ? nothing : html`<strong>${S.pointOf(i + 1, cnt)}</strong>${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}<span role="group" aria-label=${S.nudgeL}>${pad('left', -1, 0, '←')}${pad('up', 0, -1, '↑')}${pad('down', 0, 1, '↓')}${pad('right', 1, 0, '→')}</span>`}</div>`;
-  }
-
-  // prettier-ignore
-  private previews(): TemplateResult {
-    const mark = this.doc.mode === 'path' || Object.values(this.doc.corners).some((c) => c.type !== 'square');
-    return html`<section class="previews" aria-label=${S.preview}><div class="pv-head"><strong>${S.preview}</strong>${seg(S.preview, [['card', S.onCard], ['outline', S.outlines]], this.cardView ? 'card' : 'outline', (v) => (this.cardView = v === 'card'))}${check(S.older, this.older, (b) => (this.older = b))}</div>
-<div class="pv-row">${this.an.map((p) => {
-      const sc = p.w <= 120 ? 1 : p.w <= 360 ? 0.5 : 0.4;
-      const bare = this.cardView ? '' : 'bare';
-      return html`<button class="pv ${this.cardView ? 'card' : ''} ${p.cut || p.cross ? 'cut' : ''}" aria-pressed=${this.size.id === p.id} aria-label=${S.previewAt(sh(p.id), p.w, p.h)} @click=${() => this.setSize(this.sizes.find((s) => s.id === p.id)!)}>
-<svg viewBox="0 0 ${p.w} ${p.h}" style="width:${Math.max(96, Math.round(p.w * sc))}px" aria-hidden="true">${this.older ? svg`<polygon class="shape ${bare}" points=${p.poly.map((q) => `${r1(q[0])},${r1(q[1])}`).join(' ')} />` : svg`<path class="shape ${bare}" d=${p.d} />`}${this.cardView ? this.sample(p) : nothing}</svg>
-<span class="help">${nm(p.id)}${sc < 1 ? ` (${Math.round(sc * 100)}%)` : ''}</span></button>`;
-    })}</div><p class="help">${S.follow}</p>${this.older ? html`<p class="help">${S.olderNote}</p>` : nothing}${mark ? html`<p class="help">${S.w7}</p>` : nothing}</section>`;
-  }
-
   // ── left panel ──
 
   // prettier-ignore
   private cornerRows(): TemplateResult {
-    return html`<ul class="rows" role="listbox" aria-label=${S.outline}>${KEYS.map((k) => {
+    return html`<div class="rows" role="list" aria-label=${S.outline}>${KEYS.map((k) => {
       const c = this.doc.corners[k];
-      return html`<li class="row ${this.sel === k ? 'on' : ''}" role="option" aria-selected=${this.sel === k}><button @click=${() => (this.sel = k)}>${S.corner[k]}</button><span class="mono">${c.type === 'square' ? S.type.square.toLowerCase() : `${c.type} ${c.size}${c.pct ? '%' : ''}`}</span></li>`;
-    })}</ul>`;
+      const on = this.sel === k;
+      return html`<div class="row ${on ? 'selected' : ''}" role="listitem"><button type="button" class="name" aria-current=${on ? 'true' : nothing} @click=${() => (this.sel = k)}>${S.corner[k]}</button><span class="mono">${c.type === 'square' ? S.type.square.toLowerCase() : `${c.type} ${c.size}${c.pct ? '%' : ''}`}</span></div>`;
+    })}</div>`;
   }
 
   // prettier-ignore
   private pointRows(): TemplateResult {
-    return html`<ul class="rows" role="listbox" aria-label=${S.points}>${this.path.anchors.map((q, i) => html`<li class="row ${this.pointSel === i ? 'on' : ''}" role="option" aria-selected=${this.pointSel === i}><button @click=${() => (this.selectPoint(i), this.shadowRoot?.querySelector<HTMLElement & { focusAnchor(p: number, a: number): void }>('mc-path-canvas')?.focusAnchor(0, i))}>${S.pointRow(i + 1, q.x, q.y)}</button></li>`)}</ul>`;
+    return html`<div class="rows" role="list" aria-label=${S.points}>${this.path.anchors.map((q, i) => {
+      const on = this.pointSel === i;
+      return html`<div class="row ${on ? 'selected' : ''}" role="listitem"><button type="button" class="name" aria-current=${on ? 'true' : nothing} @click=${() => (this.selectPoint(i), this.shadowRoot?.querySelector<HTMLElement & { focusAnchor(p: number, a: number): void }>('mc-path-canvas')?.focusAnchor(0, i))}>${S.pointName(i + 1)}</button><span class="mono">${S.pointXY(q.x, q.y)}</span></div>`;
+    })}</div>`;
   }
 
   // prettier-ignore
   private libPanel(): TemplateResult {
     const st = this.lib.state;
-    if (this.noLib) return html`<div class="empty">${S.m1} <a href="https://github.com/therealmcsparrow/magic-card-utils" target="_blank" rel="noopener">${S.m1Link}</a></div>${btn(S.copyYaml, () => this.copyText(toYaml(this.options())))}`;
-    if (st === 'loading' || st === 'idle') return html`<div class="empty" role="status">${S.libLoading}</div>`;
-    if (st !== 'ready') return html`<div class="empty" role="alert">${st === 'readonly' ? S.fail.readonly : S.e5} ${btn(S.retry, () => void this.loadLib())}</div>`;
+    if (this.noLib) return html`${empty({ title: S.libMissingHead, text: S.m1, icon: 'mdi:shape-outline' })}<a href="https://github.com/therealmcsparrow/magic-card-utils" target="_blank" rel="noopener">${S.m1Link}</a>`;
+    if (st === 'loading' || st === 'idle') return html`<p class="help" role="status">${S.libLoading}</p>`;
+    if (st !== 'ready') return html`<div role="alert">${notice({ tone: 'error', text: st === 'readonly' ? S.fail.readonly : S.e5 })}${btn(S.retry, () => void this.loadLib())}</div>`;
     const items = this.items;
-    return html`<p class="help">${S.libRule}</p><input type="search" aria-label=${S.libSearch} placeholder=${S.libSearch} .value=${this.lib.q} @input=${(e: Event) => (this.lib = { ...this.lib, q: (e.target as HTMLInputElement).value })} />
-${items.length ? html`<ul class="libs">${items.map((it) => html`<li><svg viewBox="0 0 48 32" aria-hidden="true"><path class="shape" d=${shapePath('custom', 48, 32, it.shape as ShapeOptions)?.d ?? ''} /></svg><span class="nm">${it.name}</span><button class="b" aria-label="${S.open} ${it.name}" @click=${() => this.openItem(it)}>${S.open}</button><button class="b ghost" aria-label="${S.del} ${it.name}" @click=${() => this.removeItem(it)}>&times;</button></li>`)}</ul>` : html`<div class="empty">${this.lib.q ? S.libNoMatch(this.lib.q) : S.libEmpty}</div>`}
+    return html`<p class="help">${S.libRule}</p><input class="input" type="search" aria-label=${S.libSearch} placeholder=${S.libSearch} .value=${this.lib.q} @input=${(e: Event) => (this.lib = { ...this.lib, q: (e.target as HTMLInputElement).value })} />
+${items.length ? html`<div class="rows libs" role="list">${items.map((it) => row({ id: it.id, name: it.name, content: html`<button type="button" class="thumb-li" aria-label="${S.open} ${it.name}" @click=${() => this.openItem(it)}><svg viewBox="0 0 48 32" aria-hidden="true"><path class="shape" d=${shapePath('custom', 48, 32, it.shape as ShapeOptions)?.d ?? ''} /></svg><span>${it.name}</span></button>`, actions: [{ label: `${S.del} ${it.name}`, glyph: 'delete', variant: 'danger', onClick: () => this.removeItem(it) }] }))}</div>` : empty(this.lib.q ? { title: S.libNoMatch(this.lib.q) } : { title: S.libEmptyHead, text: S.libEmpty, icon: 'mdi:shape-outline' })}
 ${btn(S.libSaveCurrent, () => this.openSave())}`;
   }
 
-  // prettier-ignore
-  private savePop(): TemplateResult {
-    const ex = this.existing;
-    const asNew = this.openedId && ex?.id === this.openedId;
-    return html`<div class="pop" role="dialog" aria-label=${S.saveLib} @keydown=${(e: KeyboardEvent) => e.key === 'Enter' && (e.preventDefault(), void this.doSave())}><h3>${S.saveLib}</h3>
-<label class="f"><span>${S.saveName}</span><input id="sn" type="text" maxlength="40" aria-describedby="se" .value=${this.saveName} @input=${(e: Event) => (this.saveName = (e.target as HTMLInputElement).value)} /></label>
-<span class="help">${S.saveNameHelp}</span>${ex ? html`<span class="help">${S.nameExists(ex.name)}</span>` : nothing}<span class="warn" id="se" role="alert">${this.saveError}</span>
-<div class="acts end">${btn(S.cancel, () => (this.saving = false), 'ghost')}${asNew ? btn(S.saveAsNew, () => ((this.saveName = S.copyOf(ex!.name)), this.focusTo('#sn'))) : nothing}<button class="b primary" aria-disabled=${this.saveBusy} @click=${() => void this.doSave()}>${ex ? S.update(ex.name) : S.save}</button></div></div>`;
+  // ── inspectors ──
+
+  /** The Shape section head: its name and, once saved, whether the shape changed since. */
+  private shapeHead(): TemplateResult {
+    const dirty = this.host === 'mcu' ? this.mcuDirty : this.dirtyFromSaved;
+    return html`<div class="sec-head">${sectionHead({ title: S.shape, level: 3 })}<span aria-live="polite">${this.saved ? chip({ label: dirty ? S.markChanged : S.markSaved, tone: dirty ? 'warn' : 'accent' }) : nothing}</span></div>`;
   }
 
-  // ── inspectors ──
+  // prettier-ignore
+  private modeSwitch(): TemplateResult {
+    const note = this.edited ? (this.fromPath ? S.squareNote : S.dropNote) : '';
+    return html`${seg(S.shapeType, [['corners', S.tabCorners], ['path', S.tabPath]], this.tab, (m) => this.setMode(m))}${note ? html`<p class="help" id="modenote">${note}</p>` : nothing}`;
+  }
+
+  /** Edit at: the size the shape is drawn and checked at (Width and Height for a custom size). */
+  // prettier-ignore
+  private editAt(): TemplateResult {
+    const { w, h, id } = this.size;
+    return html`<div class="field" role="group" aria-label=${S.editAt}><span class="fl">${S.editAt}</span>${seg(S.editAt, Object.entries(S.tab) as Array<[string, string]>, id, (k) => this.setSize(k === 'custom' ? { id: 'custom', w, h } : SIZES.find((s) => s.id === k)!))}</div>
+${id === 'custom' ? html`<div class="grid2">${num(S.width, w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(S.height, h, (v) => this.setDims(w, v), { min: 24, max: MAX_SIZE })}</div>` : nothing}`;
+  }
 
   // prettier-ignore
   private cornersInspector(): TemplateResult {
@@ -1346,17 +1548,17 @@ ${btn(S.libSaveCurrent, () => this.openSave())}`;
       pick(list[(list.indexOf(at) + to + list.length) % list.length]);
       void this.updateComplete.then(() => this.focusTo(sel));
     };
-    return html`${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}
-<div role="toolbar" aria-label=${S.starters} class="acts">${STARTERS.map((s) => btn(S.starter[s.id], () => ((this.together = s.id !== 'two'), this.commit({ ...d, mode: 'corners', corners: s.corners() }, S.starter[s.id]))))}</div>
-<fieldset ?disabled=${d.mode === 'path'} class="bare-set"><div class="f"><span>${S.editMode}</span>${seg(S.editMode, [['each', S.each], ['all', S.together]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
-${this.together && this.allChanged ? html`<p class="help" role="status">${S.allChanged} ${btn(S.editSeparately, () => this.setTogether(false), 'ghost')}</p>` : nothing}
-<div class="corner-form"><div class="mini" role="radiogroup" aria-label=${S.cornerL} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.mini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button role="radio" aria-label=${S.corner[k]} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
-<div class="f"><h4>${this.together ? S.allFour : S.corner[this.sel]}</h4><span id="ct">${S.typeL}</span><div class="tiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (t) => this.editCorner({ type: t as CornerType }, S.type[t]), '.tiles [tabindex="0"]')}>${CORNER_TYPES.map((t) => html`<button role="radio" aria-checked=${c.type === t} tabindex=${c.type === t ? 0 : -1} title=${S.typeHelp[t]} @click=${() => this.editCorner({ type: t }, S.type[t])}>${glyph(t)}${S.type[t]}</button>`)}</div><span class="help" id="th">${S.typeHelp[c.type]}</span>
-${c.type === 'square' ? html`<span class="help">${S.squareNoSize}</span>` : html`<div class="f"><span>${S.sizeL}</span><div class="unit"><input type="number" min="0" inputmode="decimal" aria-label=${S.sizeL} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, S.sizeL, `size-${this.sel}`)} /><select aria-label=${S.unitL} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, S.unitL); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select></div><span class="help">${c.pct ? S.sizePctHelp : S.sizePxHelp}</span></div>`}
-<div class="acts">${btn(S.copyAll, () => this.setCorners(cornersOf(c), S.copyAll), 'ghost')}${btn(S.reset, () => this.resetCorner(), 'ghost')}</div></div></div>
+    return html`<section class="sec">${this.shapeHead()}${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}${this.modeSwitch()}${this.editAt()}</section>
+<section class="sec">${sectionHead({ title: S.starters, level: 4 })}<div class="acts" role="group" aria-label=${S.starters}>${STARTERS.map((s) => chip({ label: S.starter[s.id], onClick: () => this.applyStarter(s.id) }))}</div></section>
+<section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: S.cornerL, level: 4 })}<div class="field"><span class="fl">${S.editMode}</span>${seg(S.editMode, [['each', S.each], ['all', S.together]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
+${this.together && this.allChanged ? html`<p class="help" role="status">${S.allChanged} ${btn(S.editSeparately, () => this.setTogether(false), { variant: 'text' })}</p>` : nothing}
+<div class="corner-form"><div class="cmini" role="radiogroup" aria-label=${S.cornerL} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.cmini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button type="button" role="radio" aria-label=${S.corner[k]} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
+<div class="cf"><h4 class="sub-label">${this.together ? S.allFour : S.corner[this.sel]}</h4><span class="fl" id="ct">${S.typeL}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (t) => this.editCorner({ type: t as CornerType }, S.type[t]), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((t) => html`<button type="button" role="radio" aria-checked=${c.type === t} tabindex=${c.type === t ? 0 : -1} title=${S.typeHelp[t]} @click=${() => this.editCorner({ type: t }, S.type[t])}>${glyph(t)}${S.type[t]}</button>`)}</div><p class="help" id="th">${S.typeHelp[c.type]}</p>
+${c.type === 'square' ? html`<p class="help">${S.squareNoSize}</p>` : html`<div class="field"><span class="fl">${S.sizeL}</span><div class="unit"><input class="input" type="number" min="0" inputmode="decimal" aria-label=${S.sizeL} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, S.sizeL, `size-${this.sel}`)} /><div class="select"><select class="input" aria-label=${S.unitL} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, S.unitL); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select><ha-icon icon="mdi:chevron-down"></ha-icon></div></div><p class="help">${c.pct ? S.sizePctHelp : S.sizePxHelp}</p></div>`}
+<div class="acts">${btn(S.copyAll, () => this.setCorners(cornersOf(c), S.copyAll), { variant: 'text' })}${btn(S.reset, () => this.resetCorner(), { variant: 'text' })}</div></div></div>
 ${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${S.clampChip(sh(this.size.id), x.to)}</span>`)}
-${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? html`<label class="f"><span>${S.smoothing}</span><input type="range" min="0" max="1" step="0.05" .value=${String(d.smoothing)} @input=${(e: Event) => this.commit({ ...d, smoothing: clamp(+(e.target as HTMLInputElement).value, 0, 1) }, S.smoothing, 'smooth')} /></label>` : nothing}</fieldset>
-${this.spaceBlock(worst)}<div class="acts">${btn(S.resetShape, () => this.commit(this.initial, S.resetShape), 'ghost')}</div>${this.yamlBlock()}`;
+${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? slider({ id: 'smooth', label: S.smoothing, min: 0, max: 1, step: 0.05, value: d.smoothing, onInput: (v) => this.commit({ ...d, smoothing: clamp(v, 0, 1) }, S.smoothing, 'smooth'), onChange: (v) => this.commit({ ...this.doc, smoothing: clamp(v, 0, 1) }, S.smoothing, 'smooth') }) : nothing}</fieldset></section>
+${this.spaceBlock(worst)}<div class="acts">${btn(S.resetShape, () => this.commit(this.initial, S.resetShape), { variant: 'text' })}</div>`;
   }
 
   // prettier-ignore
@@ -1364,29 +1566,16 @@ ${this.spaceBlock(worst)}<div class="acts">${btn(S.resetShape, () => this.commit
     const d = this.doc;
     const ins = this.cur?.inset ?? noSides();
     const path = d.mode === 'path';
-    return html`<div class="f"><h4>${S.space}</h4><span class="mono" aria-label="${S.space}: ${S.spaceOrder}">${SIDES.map((s) => Math.round(ins[s])).join(' ')}</span><span class="help">${path ? S.spaceHelpPath : S.spaceHelp}</span>${!path && worst > 0 ? html`<span class="help">${S.spaceCost(worst)}</span>` : nothing}
-${check(S.showText, this.showText, (b) => (this.showText = b))}<span id="xs">${S.extra}</span><div class="grid4" role="group" aria-labelledby="xs">${SIDES.map((s) => num(S.side[s], path ? d.pad[s] : d.extra[s], (v) => this.setSpace(s, v), { min: path ? d.solver[s] : 0 }))}</div><span class="help">${S.extraHelp}</span></div>`;
-  }
-
-  // prettier-ignore
-  private yamlBlock(): TemplateResult {
-    const y = toYaml(this.options());
-    return html`<details><summary>${S.yaml}</summary><textarea readonly rows="8" aria-label=${S.yaml} .value=${y}></textarea>${btn(S.copyYaml, () => this.copyText(y))}</details>${this.xferBtns()}`;
+    return html`<section class="sec">${sectionHead({ title: S.space, level: 4 })}<span class="mono" aria-label="${S.space}: ${S.spaceOrder}">${SIDES.map((s) => Math.round(ins[s])).join(' ')}</span><p class="help">${path ? S.spaceHelpPath : S.spaceHelp}</p>${!path && worst > 0 ? html`<p class="help">${S.spaceCost(worst)}</p>` : nothing}
+${switchRow({ id: 'show-text', label: S.showText, checked: this.showText, onChange: (b) => (this.showText = b) })}<div class="field"><span class="fl" id="xs">${S.extra}</span><div class="grid4" role="group" aria-labelledby="xs">${SIDES.map((s) => num(S.side[s], path ? d.pad[s] : d.extra[s], (v) => this.setSpace(s, v), { min: path ? d.solver[s] : 0 }))}</div><p class="help">${S.extraHelp}</p></div></section>`;
   }
 
   // prettier-ignore
   private pathInspector(): TemplateResult {
     const d = this.doc;
-    return html`<p class="help">${S.freeHelp}</p>
-<div class="f"><h4>${S.startFrom}</h4><div class="acts"><button class="b" data-pick="start" aria-haspopup="dialog" aria-expanded=${this.picker?.to === 'start'} @click=${() => this.openPicker('start')}>${S.choose}</button></div><span class="help">${S.startHelp}</span>${this.picker?.to === 'start' ? this.pickerView(S.pickStart) : nothing}</div>
-${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}<div class="f"><h4>${S.points}</h4><span class="mono" role="status">${S.count(d.points.length, MAX_SHAPE_POINTS)}</span>
-<div class="acts">${btn(S.reverse, () => (this.commitPoints(reversePoints(d.points), S.reverse), this.selectPoint(undefined)))}</div></div>${this.spaceBlock(0)}${this.yamlBlock()}`;
-  }
-
-  // prettier-ignore
-  private modeSwitch(): TemplateResult {
-    const note = this.edited ? (this.fromPath ? S.squareNote : S.dropNote) : '';
-    return html`${seg(S.shapeType, [['corners', S.tabCorners], ['path', S.tabPath]], this.tab, (m) => this.setMode(m), false, note ? 'modenote' : undefined)}${note ? html`<p class="help" id="modenote">${note}</p>` : nothing}`;
+    return html`<section class="sec">${this.shapeHead()}<p class="help">${S.freeHelp}</p>${this.modeSwitch()}${this.editAt()}</section>
+${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}${this.combine()}<section class="sec">${sectionHead({ title: S.points, level: 4 })}<span class="mono" role="status">${S.count(d.points.length, MAX_SHAPE_POINTS)}</span>
+<div class="acts">${btn(S.reverse, () => (this.commitPoints(reversePoints(d.points), S.reverse), this.selectPoint(undefined)))}</div></section>${this.spaceBlock(0)}`;
   }
 
   get cvMode(): CanvasMode {
@@ -1394,55 +1583,15 @@ ${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(thi
     return p?.kind === 'shape' ? 'select' : p?.kind === 'pen' || this.tool === 'add' ? 'add' : 'nodes';
   }
 
+  /** The pending shape of Combine: placed with its fields, then Combine, Subtract or Intersect. Nothing renders while none is pending. */
   // prettier-ignore
-  private tools(): TemplateResult | typeof nothing {
-    if (this.doc.mode !== 'path') return nothing;
-    const T: Array<[Tool, string]> = [['nodes', S.toolSelect], ['add', S.toolAdd], ['remove', S.removePoint], ['pen', S.toolPen]];
-    const move = (e: KeyboardEvent): void => {
-      const to = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-      const bs = [...(e.currentTarget as Element).querySelectorAll<HTMLElement>('button')];
-      if (to) {
-        e.preventDefault();
-        bs[(bs.indexOf(e.target as HTMLElement) + to + bs.length) % bs.length]?.focus();
-      }
-    };
-    return html`<div class="acts" role="toolbar" aria-label=${S.tools} @keydown=${move}>${T.map(([k, t]) => html`<button class="b" aria-pressed=${this.tool === k} tabindex=${this.tool === k ? 0 : -1} @click=${() => this.setTool(k)}>${t}</button>`)}</div>`;
-  }
-
-  // prettier-ignore
-  private penBar(): TemplateResult | typeof nothing {
-    const p = this.pending;
-    if (p?.kind !== 'pen') return nothing;
-    const c = p.path?.anchors.length ?? 0;
-    const ok = c >= 3;
-    return html`<div class="banner" role="group" aria-label=${S.penHead}><strong>${S.penText}</strong><span class="help" id="penwhy" style="flex:1 1 200px">${S.hintPen} ${ok ? n(c, 'point', 'points') : S.penNeed}</span>
-<div class="acts"><button class="b primary" aria-disabled=${!ok} aria-describedby="penwhy" @click=${() => (ok ? this.finishPen() : this.say(S.penNeed))}>${S.finish}</button>${btn(S.cancel, () => this.dropPending(true))}</div></div>`;
-  }
-
-  /** The result line under the canvas: it stays until the next change (no timer). */
-  // prettier-ignore
-  private stripView(): TemplateResult | typeof nothing {
-    const s = this.strip;
-    return s ? html`<div class="banner strip"><span>${s.text}</span>${s.undo && this.canUndo ? btn(S.undo, () => this.undo(), 'ghost') : nothing}</div>` : nothing;
-  }
-
-  /** The 14-tile shape picker (Start from, Combine with): a radiogroup, arrows in two dimensions. */
-  // prettier-ignore
-  private pickerView(heading: string): TemplateResult {
-    const at = this.picker?.at ?? 0;
-    return html`<div class="shape-picker ${coarse() || this.layout === 'stacked' ? 'sheet-mode' : ''}"><div class="pv-head"><strong>${heading}</strong><span class="grow"></span>${btn(S.close, () => this.closePicker(), 'ghost')}</div>
-<div class="tiles picks" role="radiogroup" aria-label=${heading} @keydown=${(e: KeyboardEvent) => this.pickKey(e)}>${PRIMITIVE_KINDS.map((k, i) => html`<button role="radio" aria-checked="false" aria-posinset=${i + 1} aria-setsize=${PRIMITIVE_KINDS.length} tabindex=${i === at ? 0 : -1} @click=${() => this.choose(k)}><svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg><span>${S.prim[k]}</span></button>`)}</div></div>`;
-  }
-
-  /** Combine with another shape: the picker, then the pending shape with its fields (Combine, Subtract, Intersect). */
-  // prettier-ignore
-  private combine(): TemplateResult {
+  private combine(): TemplateResult | typeof nothing {
     const p = this.pending;
     const b = this.operandBox;
-    if (p?.kind !== 'shape' || !b) return html`<div class="f"><h4>${S.combineHead}</h4><div class="acts"><button class="b" data-pick="combine" aria-haspopup="dialog" aria-expanded=${this.picker?.to === 'combine'} @click=${() => this.openPicker('combine')}>${S.addShape}</button></div>${this.picker?.to === 'combine' ? this.pickerView(S.pickCombine) : nothing}</div>`;
-    return html`<div class="f" role="group" aria-label=${S.operandGroup}><h4>${S.combineHead}</h4><div class="pv-head"><strong>${S.notApplied(S.prim[p.prim])}</strong>${btn(S.cancel, () => this.dropPending(), 'ghost')}</div>
+    if (p?.kind !== 'shape' || !b) return nothing;
+    return html`<section class="sec" role="group" aria-label=${S.operandGroup}>${sectionHead({ title: S.combineHead, level: 4 })}<div class="pv-head"><strong>${S.notApplied(S.prim[p.prim])}</strong><span class="grow"></span>${btn(S.cancel, () => this.dropPending(), { variant: 'text' })}</div>
 <div class="grid4">${num(S.box.x, b.x, (v) => this.setOperand({ x: v }), { id: 'ox' })}${num(S.box.y, b.y, (v) => this.setOperand({ y: v }))}${num(S.box.w, b.w, (v) => this.setOperand({ w: v }), { min: 1 })}${num(S.box.h, b.h, (v) => this.setOperand({ h: v }), { min: 1 })}</div>
-<div class="acts">${btn(S.centre, () => this.setOperand('centre'))}</div><span class="help">${S.operandHelp}</span><div class="acts ops">${S.ops.map(([k, t]) => html`<button class="b" aria-busy=${this.busy === k} @click=${() => void this.boolean(k, t)}>${this.busy === k ? S.working : t}</button>`)}</div><span class="help">${S.opsHelp}</span></div>`;
+<div class="acts">${btn(S.centre, () => this.setOperand('centre'))}</div><p class="help">${S.operandHelp}</p><div class="acts ops">${S.ops.map(([k, t]) => html`<button type="button" class="btn btn-secondary btn-sm" aria-busy=${this.busy === k} @click=${() => void this.boolean(k, t)}>${this.busy === k ? S.working : t}</button>`)}</div><p class="help">${S.opsHelp}</p></section>`;
   }
 
   // prettier-ignore
@@ -1458,19 +1607,21 @@ ${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(thi
       const [dx, dy] = q ? [q[0] - a.x, q[1] - a.y] : [0, 0];
       const len = Math.hypot(dx, dy);
       const ang = q ? (Math.atan2(dy, dx) * 180) / Math.PI : which === 'in' ? 180 : 0;
-      return html`<fieldset class="grid2 bare-set"><legend class="help">${S.handle[which]}</legend>${num(S.angle, ang, (v) => this.setHandle(i, which, v, len || 20))}${num(S.length, len, (v) => this.setHandle(i, which, ang, Math.max(0, v)), { min: 0 })}</fieldset>`;
+      return html`<fieldset class="grid2 bare-set"><legend>${S.handle[which]}</legend>${num(S.angle, ang, (v) => this.setHandle(i, which, v, len || 20))}${num(S.length, len, (v) => this.setHandle(i, which, ang, Math.max(0, v)), { min: 0 })}</fieldset>`;
     };
     const ax = (axis: 'x' | 'y'): TemplateResult => {
       const cur = p[axis];
       const size = axis === 'x' ? w : h;
       const x = axis === 'x';
       const lbl = cur.k === 's' ? (x ? S.acrossW : S.downH) : S.dist[`${axis}${cur.k}`];
-      return html`<div class="f"><span>${x ? S.anchorX : S.anchorY}</span>${seg(x ? S.anchorX : S.anchorY, [['l', x ? S.aLeft : S.aTop], ['r', x ? S.aRight : S.aBottom], ['s', S.aStretch]] as Array<[Axis['k'], string]>, cur.k, (k) => this.setAnchorKind(i, axis, k))}
+      return html`<div class="field"><span class="fl">${x ? S.anchorX : S.anchorY}</span>${seg(x ? S.anchorX : S.anchorY, [['l', x ? S.aLeft : S.aTop], ['r', x ? S.aRight : S.aBottom], ['s', S.aStretch]] as Array<[Axis['k'], string]>, cur.k, (k) => this.setAnchorKind(i, axis, k))}
 ${num(lbl, cur.v, (v) => this.setAxis(i, axis, { ...cur, v: clamp(v, 0, cur.k === 's' ? 100 : size) }), { step: cur.k === 's' ? 0.5 : 1, min: 0 })}<span class="help mono">${r1(x ? a.x : a.y)} / ${size}</span></div>`;
     };
-    return html`<section class="f" aria-label=${S.pointHead}><h4>${S.pointHead}</h4><div class="pv-head"><strong>${S.pointOf(i + 1, cnt)}</strong>${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}</div>
+    const pad = (label: string, icon: string, dx: number, dy: number): TemplateResult => button({ label: S.move(label), icon, iconOnly: true, onClick: (e) => this.nudge(dx, dy, e.shiftKey) });
+    return html`<section class="sec" aria-label=${S.pointHead}>${sectionHead({ title: S.pointOf(i + 1, cnt), level: 3 })}<div class="acts">${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}</div>
 ${seg(S.pointType, [['c', S.pCorner], ['s', S.pSmooth]], smooth ? 's' : 'c', (k) => this.editPath((E, pa) => E.setKind(pa, i, k === 's' ? 'smooth' : 'corner'), S.pointType))}
-<div class="grid2">${num(S.xField, a.x, (v) => this.movePoint(i, clamp(v, 0, w)), { id: 'fx' })}${num(S.yField, a.y, (v) => this.movePoint(i, undefined, clamp(v, 0, h)))}</div><span class="help">${S.atSize(sh(this.size.id), w, h)}</span>
+<div class="grid2">${num(S.xField, a.x, (v) => this.movePoint(i, clamp(v, 0, w)), { id: 'fx' })}${num(S.yField, a.y, (v) => this.movePoint(i, undefined, clamp(v, 0, h)))}</div><p class="help">${S.atSize(sh(this.size.id), w, h)}</p>
+${coarse() ? html`<div class="acts" role="group" aria-label=${S.nudgeL}>${pad('left', 'mdi:arrow-left', -1, 0)}${pad('up', 'mdi:arrow-up', 0, -1)}${pad('down', 'mdi:arrow-down', 0, 1)}${pad('right', 'mdi:arrow-right', 1, 0)}</div>` : nothing}
 ${hdl('in')}${hdl('out')}<div class="acts">${btn(S.addAfter, () => this.addAfter())}${btn(S.removePoint, () => this.deletePoint())}</div><details><summary>${S.advanced}</summary>${ax('x')}${ax('y')}</details></section>`;
   }
 }

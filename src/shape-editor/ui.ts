@@ -1,17 +1,19 @@
 import { html, nothing, type TemplateResult } from 'lit';
+import type { KitButtonOptions } from '../contracts/ui-kit';
+import { button, seg as kitSeg } from '../ui-kit';
 
 /*
- * Small template helpers shared by the shape editor's panels (one place for the radio groups, tabs and
- * number fields, so the markup is written once).
+ * Small template helpers of the shape editor's panels, on the ui kit (contract ui-kit 1.0.0): a kit button, the kit
+ * segmented control and the number field, written once. Markup uses kit class names only; the layer's own CSS never
+ * restyles them.
  */
 
-export const btn = (text: unknown, run: (e: MouseEvent) => void, cls = ''): TemplateResult => html`<button class="b ${cls}" @click=${run}>${text}</button>`;
+/** A small kit button (secondary unless `o.variant` says otherwise). */
+export const btn = (label: string, onClick: (e: MouseEvent) => void, o: Partial<KitButtonOptions> = {}): TemplateResult => button({ label, onClick, size: 'sm', ...o });
 
-/** A segmented control: radios (`role` radio, one choice) or tabs. */
-export const seg = <K extends string>(label: string, items: Array<[K, string]>, cur: K, pick: (k: K) => void, tab = false, desc?: string): TemplateResult =>
-  html`<div class="seg" role=${tab ? 'tablist' : 'radiogroup'} aria-label=${label} aria-describedby=${desc ?? nothing}>${items.map(
-    ([k, t]) => html`<button role=${tab ? 'tab' : 'radio'} aria-checked=${tab ? undefined : k === cur} aria-selected=${tab ? k === cur : undefined} @click=${() => pick(k)}>${t}</button>`,
-  )}</div>`;
+/** A segmented control: radios (`radiogroup`, one choice) or tabs (`tablist`). */
+export const seg = <K extends string>(label: string, items: Array<[K, string]>, cur: K, pick: (k: K) => void, tab = false, full = true): TemplateResult =>
+  kitSeg<K>({ role: tab ? 'tablist' : 'radiogroup', label, items: items.map(([value, text]) => ({ value, label: text })), value: cur, full, onChange: pick });
 
 export const r1 = (v: number): number => Math.round(v * 10) / 10;
 
@@ -22,8 +24,6 @@ export interface NumOpts {
   max?: number;
 }
 
+/** A labelled number field: the label wraps the input, so the pair is one control for a screen reader. */
 export const num = (label: string, v: number, set: (n: number) => void, o: NumOpts = {}): TemplateResult =>
-  html`<label class="f"><span>${label}</span><input id=${o.id ?? ''} type="number" inputmode="decimal" step=${o.step ?? 1} min=${o.min ?? ''} max=${o.max ?? ''} .value=${String(r1(v))} @change=${(e: Event) => set(+(e.target as HTMLInputElement).value)} /></label>`;
-
-export const check = (label: string, on: boolean, set: (b: boolean) => void): TemplateResult =>
-  html`<label class="switch"><input type="checkbox" .checked=${on} @change=${(e: Event) => set((e.target as HTMLInputElement).checked)} />${label}</label>`;
+  html`<label class="field"><span class="fl">${label}</span><input class="input" id=${o.id ?? nothing} type="number" inputmode="decimal" step=${o.step ?? 1} min=${o.min ?? nothing} max=${o.max ?? nothing} .value=${String(r1(v))} @change=${(e: Event) => set(+(e.target as HTMLInputElement).value)} /></label>`;
