@@ -60,12 +60,6 @@ export const canvasStyles: CSSResult[] = [
       -webkit-touch-callout: none;
       user-select: none;
     }
-    svg.surface.pan {
-      cursor: grab;
-    }
-    svg.surface.add {
-      cursor: crosshair;
-    }
     .frame {
       fill: var(--pc-surface);
       stroke: var(--pc-border);

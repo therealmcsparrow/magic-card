@@ -27,6 +27,7 @@ import {
   type SnapConfig,
   type TransformBox,
 } from '../contracts/path-canvas';
+import { cursorFor } from './cursor';
 import { MAX_ANCHORS, type AnchorKind, type Box, type EditPath, type Pt } from '../contracts/path-model';
 import { append, canAdd, fromEdit, insertAt, isSmooth, nearestOnPath, serialize, setClosed, setHandle } from '../path/edit';
 import { flatten } from '../path/core';
@@ -183,6 +184,8 @@ export class PathCanvas extends LitElement {
   @state() private _focused = false;
   @state() private _cross?: Pt;
   @state() private _panning = false;
+  @state() private _hover: Hit = { t: 'none' };
+  private _hoverAt?: Pt;
 
   private _g?: Gesture;
   private _touches = new Map<number, Pt>();
@@ -245,6 +248,7 @@ export class PathCanvas extends LitElement {
 
   protected updated(changed: Map<string, unknown>): void {
     if (changed.has('frame') && !this._viewSet) this.fit();
+    if (this._hoverAt && !this._g && (changed.has('mode') || changed.has('transform') || changed.has('paint') || changed.has('paths'))) this.hoverAt(this._hoverAt);
   }
 
   // ── public API ──
@@ -527,6 +531,7 @@ export class PathCanvas extends LitElement {
     }
     const hit = this.hitTest(s, this.coarse(e));
     start.hit = hit;
+    this.requestUpdate();
     if (this.mode === 'add') this.downAdd(start, e, s);
     else if (this.mode === 'nodes') this.downNodes(start, e, s);
     else this.downSelect(start, e);
@@ -682,8 +687,18 @@ export class PathCanvas extends LitElement {
 
   // ── pointer: move ──
 
+  /** The cursor target under the pointer when no drag runs (mouse and pen only: touch has no hover). */
+  private hoverAt(s: Pt, type = 'mouse'): void {
+    this._hoverAt = s;
+    if (this._g || type === 'touch' || this.mode === 'view') return;
+    const h = this.hitTest(s, false);
+    const k = (x: Hit): string => (x.t === 'scale' ? `scale${x.sx}${x.sy}` : x.t);
+    if (k(h) !== k(this._hover)) this._hover = h;
+  }
+
   private _move = (e: PointerEvent): void => {
     const s = this.screenOf(e);
+    this.hoverAt(s, e.pointerType);
     if (e.pointerType === 'touch' && this._touches.has(e.pointerId)) {
       this._touches.set(e.pointerId, s);
       if (this._pinch) {
@@ -877,6 +892,7 @@ export class PathCanvas extends LitElement {
     this._panning = false;
     this.stopLoupe();
     const s = this.screenOf(e);
+    this.hoverAt(s, e.pointerType);
     if (g.started) {
       if (g.kind === 'pan') this.emitView();
       else if (g.kind === 'marquee') this.finishMarquee(g, s);
@@ -938,6 +954,7 @@ export class PathCanvas extends LitElement {
     this._g = undefined;
     this.release(g.id);
     this._panning = false;
+    if (this._hoverAt) this.hoverAt(this._hoverAt);
     this._marquee = undefined;
     this.stopLoupe();
     this.clearLp();
@@ -1033,6 +1050,7 @@ export class PathCanvas extends LitElement {
   private _onBlur = (): void => {
     this._focused = false;
     this._space = false;
+    this.requestUpdate();
     this.flushPending();
   };
 
@@ -1044,7 +1062,10 @@ export class PathCanvas extends LitElement {
   }
 
   private _onKeyUp = (e: KeyboardEvent): void => {
-    if (e.code === 'Space') this._space = false;
+    if (e.code === 'Space') {
+      this._space = false;
+      this.requestUpdate();
+    }
     if (e.key.startsWith('Arrow')) this.flushPending();
   };
 
@@ -1055,6 +1076,7 @@ export class PathCanvas extends LitElement {
     this._kbd = true;
     if (e.code === 'Space' || e.key === ' ') {
       this._space = true;
+      this.requestUpdate();
       eat(e);
       return;
     }
@@ -1504,8 +1526,9 @@ export class PathCanvas extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const cls = `surface${this._panning || this._space ? ' pan' : ''}${this.mode === 'add' ? ' add' : ''}`;
-    return html`<svg class=${cls} part="surface" aria-hidden="true" @pointerdown=${this._down} @pointermove=${this._move} @pointerup=${this._up} @pointercancel=${this._cancel}>
+    const g = this._g;
+    const cur = cursorFor({ mode: this.mode, hit: g ? g.hit : this._hover, drag: g?.kind, space: this._space, panning: this._panning, delegated: this.mode === 'select' && !this.contextMenu });
+    return html`<svg class="surface" style=${cur ? `cursor:${cur}` : nothing} part="surface" aria-hidden="true" @pointerdown=${this._down} @pointermove=${this._move} @pointerup=${this._up} @pointercancel=${this._cancel}>
         ${this.renderArt()}${this.renderEdit()}
       </svg>
       ${this.renderSlider()}${this.renderLoupe()}${this._read ? html`<div class="read${this._read.touch ? ' up' : ''}" aria-hidden="true" style="left:${this._read.at[0]}px;top:${this._read.at[1]}px">${this._read.text}</div>` : nothing}${this.renderList()}
