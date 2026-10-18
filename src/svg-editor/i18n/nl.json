@@ -320,6 +320,8 @@
   "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.": "Tab loopt langs de punten. [ en ] springen naar het vorige of volgende punt. Pijltjes verplaatsen het. Enter bewerkt de X en Y.",
   "Tag": "Label",
   "That file has no shapes an icon can use.": "Dat bestand bevat geen vormen die een pictogram kan gebruiken.",
+  "The SVG is larger than 32 KB.": "De SVG is groter dan 32 KB.",
+  "The SVG is too complex.": "De SVG is te complex.",
   "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.": "Het geanimeerde pictogram dat je koos, is verwijderd: het tekent het oude pictogram. Animeer je tekening met Dit pictogram.",
   "The animation you set on This icon follows your drawing.": "De animatie die je bij Dit pictogram instelde, volgt je tekening.",
   "The icon editor could not load. Check your connection and try again.": "De pictogrameditor kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.",

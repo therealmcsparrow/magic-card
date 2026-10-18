@@ -64,6 +64,7 @@ import { editorStyles } from './styles';
 import type { LocaleHassLike } from '../contracts/i18n';
 import { setI18nLocale } from '../i18n/runtime';
 import { t } from './i18n';
+import { svgErrorKind } from '../icons/svg-error';
 import { PRIM, ARRANGE, BOOL_OPS, PT_NAME } from './names';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
 import { renderEditor } from './views';
@@ -113,7 +114,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -193,6 +194,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     return null;
   };
   startMode?: 'icon' | 'paste';
+  /** What is typed in the icon name field of the start window; empty until the user types. */
+  startIcon = '';
   /** The start dialog is open (over a blank editor first, or from New). */
   startOpen = false;
   /** New was pressed with unsaved changes: the Start over question is showing. */
@@ -366,10 +369,24 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.updateComplete.then(() => this.canvas()?.fit());
   }
 
+  /** A sanitiser or importer reason as text in the user's language. */
+  errorText(error: string | undefined): string {
+    switch (svgErrorKind(error)) {
+      case 'size':
+        return t('The SVG is larger than 32 KB.');
+      case 'not-svg':
+        return t('This is not valid SVG. Check that it starts with <svg and is closed.');
+      case 'complex':
+        return t('The SVG is too complex.');
+      default:
+        return t('That file has no shapes an icon can use.');
+    }
+  }
+
   openSvg(text: string, name: string, first = false): boolean {
     const r = importSvg(text, name);
     if (r.error || !r.doc) {
-      this.startError = r.error === 'No <svg> element found.' ? t('This is not valid SVG. Check that it starts with <svg and is closed.') : t('That file has no shapes an icon can use.');
+      this.startError = this.errorText(r.error);
       this.startMode = this.startMode ?? 'paste';
       if (first) this.showStart();
       return false;
@@ -1377,7 +1394,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   get blockReason(): string | undefined {
-    return this.out.error === 'empty' ? t('Draw something first') : this.out.error === 'over' ? t('Over the 32 KB limit') : this.out.error === 'invalid' ? this.out.message : undefined;
+    return this.out.error === 'empty' ? t('Draw something first') : this.out.error === 'over' ? t('Over the 32 KB limit') : this.out.error === 'invalid' ? this.errorText(this.out.message) : undefined;
   }
 
   done(): void {
@@ -1669,9 +1686,13 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   async startFile(file?: File): Promise<void> {
     if (!file) return;
+    if (file.size > SVG_MAX_BYTES) {
+      this.startError = this.errorText('The SVG is larger than 32 KB.');
+      return;
+    }
     try {
       const text = await file.text();
-      this.openSvg(text.slice(0, 1_000_000), file.name.replace(/.svg$/i, '') || t('My icon'));
+      this.openSvg(text, file.name.replace(/.svg$/i, '') || t('My icon'));
     } catch {
       this.startError = t('Could not read that file.');
     }

@@ -312,10 +312,11 @@ function startPanel(ed: McSvgEditor): TemplateResult {
     ${ed.startMode === 'icon'
       ? html`<form class="startform" @submit=${(e: Event) => {
           e.preventDefault();
-          void ed.openIcon((ed.renderRoot.querySelector<HTMLInputElement>('#start-icon')?.value ?? '').trim());
+          const name = ed.startIcon.trim();
+          if (name) void ed.openIcon(name);
         }}>
-          ${field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" placeholder="mdi:lightbulb" autocomplete="off" aria-describedby="start-icon-help" />` })}
-          <div class="acts"><button class="btn btn-primary" type="submit">${t('Use this icon')}</button></div>
+          ${field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
+          <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
       : nothing}
     ${ed.startMode === 'paste'

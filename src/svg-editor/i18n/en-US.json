@@ -320,6 +320,8 @@
   "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.": "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.",
   "Tag": "Tag",
   "That file has no shapes an icon can use.": "That file has no shapes an icon can use.",
+  "The SVG is larger than 32 KB.": "The SVG is larger than 32 KB.",
+  "The SVG is too complex.": "The SVG is too complex.",
   "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.": "The animated icon you picked is removed: it draws the old icon. Animate your drawing with This icon.",
   "The animation you set on This icon follows your drawing.": "The animation you set on This icon follows your drawing.",
   "The icon editor could not load. Check your connection and try again.": "The icon editor could not load. Check your connection and try again.",

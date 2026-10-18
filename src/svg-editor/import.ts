@@ -1,5 +1,5 @@
 import type { IconGeometry } from '../icons/icon-source';
-import { multiply, parseTransform, sanitizeSvg, shapePath, type Matrix } from '../icons/svg-sanitize';
+import { multiply, parseTransform, sanitizeSvg, shapePath, SVG_MAX_BYTES, type Matrix } from '../icons/svg-sanitize';
 import { parsePath } from '../path/core';
 import { E } from './bind';
 import { MAX_GROUP_DEPTH } from '../contracts/svg-editor';
@@ -180,6 +180,8 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
 
 export function importSvg(text: string, name = 'My icon'): ImportResult {
   const notes = emptyNotes();
+  // size first: the sanitiser's 32 KB limit also protects the two DOM parses below
+  if (new TextEncoder().encode(text).length > SVG_MAX_BYTES) return { error: 'The SVG is larger than 32 KB.', notes };
   notes.dropped = scanDropped(text);
   const s = sanitizeSvg(text);
   if (s.error) return { error: s.error, notes };
