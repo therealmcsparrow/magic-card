@@ -57,6 +57,8 @@ export const canvasStyles: CSSResult[] = [
       height: 100%;
       min-height: inherit;
       touch-action: none;
+      -webkit-touch-callout: none;
+      user-select: none;
     }
     svg.surface.pan {
       cursor: grab;
@@ -133,6 +135,44 @@ export const canvasStyles: CSSResult[] = [
     .tag text {
       fill: var(--pc-on);
       font: 600 11px/1 system-ui, sans-serif;
+    }
+    .tb {
+      fill: none;
+      stroke: var(--pc-accent);
+      stroke-width: 1;
+      pointer-events: none;
+    }
+    .tbh {
+      fill: var(--pc-surface);
+      stroke: var(--pc-accent);
+      stroke-width: 1.5;
+      pointer-events: none;
+    }
+    .read {
+      position: absolute;
+      z-index: 2;
+      pointer-events: none;
+      width: max-content;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font: 600 11px/1.3 var(--pc-mono);
+      background: var(--pc-surface);
+      color: var(--pc-text);
+      box-shadow: var(--pc-shadow);
+    }
+    .read.up {
+      transform: translateX(-50%);
+    }
+    .rot {
+      position: absolute;
+      box-sizing: border-box;
+      border-radius: 50%;
+      pointer-events: none;
+      outline: none;
+    }
+    .rot:focus-visible {
+      outline: 2px solid var(--pc-accent);
+      outline-offset: 2px;
     }
     .cross {
       stroke: var(--pc-accent);

@@ -2,17 +2,30 @@ import { LitElement, html, svg, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { guard } from 'lit/directives/guard.js';
 import {
+  CONTEXT_DEDUPE_MS,
   DRAG_SLOP_PX,
+  HANDLE_GLYPH_PX,
+  HIT_MIN_COARSE,
+  HIT_MIN_FINE,
+  LONG_PRESS_MS,
+  LONG_PRESS_SLOP_PX,
   LOUPE_DELAY_MS,
   LOUPE_SIZE_PX,
   GRID_MIN_PX,
   LOUPE_ZOOM,
+  ROTATE_STEM_COARSE_PX,
+  ROTATE_STEM_PX,
+  SNAP_REACH_COARSE_PX,
+  SNAP_REACH_PX,
   type CanvasMode,
   type ConstrainPoint,
   type PathChange,
+  type PathContext,
   type PathPaint,
   type PathSelection,
+  type PathTransform,
   type SnapConfig,
+  type TransformBox,
 } from '../contracts/path-canvas';
 import { MAX_ANCHORS, type AnchorKind, type Box, type EditPath, type Pt } from '../contracts/path-model';
 import { append, canAdd, fromEdit, insertAt, isSmooth, nearestOnPath, serialize, setClosed, setHandle } from '../path/edit';
@@ -32,13 +45,18 @@ import {
   num,
   pointsWord,
   snapAngle,
+  snapEdges,
+  snapLines,
   snapPoint,
   stepValue,
   toFrame,
   toScreen,
   zoomAt,
+  type Line,
+  type SnapContext,
   type View,
 } from './geometry';
+import { IDENTITY, angleOf, boxMatrix, placeHandles, resizeBy, rotateMatrix, rotateSpot, scaleBox, wrap180 } from './transform';
 import { anchorsInRect, effectiveKind, moveAll, moveSet, removeSet, stopIndex, stops, toggleKind } from './ops';
 
 /*
@@ -53,6 +71,8 @@ type Hit =
   | { t: 'handle'; path: number; i: number; which: 'in' | 'out' }
   | { t: 'segment'; path: number; seg: number; at: number }
   | { t: 'body'; path: number }
+  | { t: 'scale'; sx: -1 | 0 | 1; sy: -1 | 0 | 1 }
+  | { t: 'rotate' }
   | { t: 'none' };
 
 interface Gesture {
@@ -60,7 +80,14 @@ interface Gesture {
   type: string;
   down: Pt;
   hit: Hit;
-  kind: 'anchor' | 'handle' | 'path' | 'marquee' | 'pan' | 'add' | 'none';
+  kind: 'anchor' | 'handle' | 'path' | 'marquee' | 'pan' | 'add' | 'scale' | 'rotate' | 'none';
+  /** Where the pointer went down in client px (long-press). */
+  client: Pt;
+  /** The transform box at pointer-down (scale, rotate, and a snapped whole-path move). */
+  box?: Box;
+  rot?: { prev: number; total: number };
+  /** The last transform emitted (committed on pointer-up). */
+  tr?: PathTransform;
   startPaths: EditPath[];
   started: boolean;
   /** Touch only: where the point sits relative to the finger (CSS px). */
@@ -77,6 +104,11 @@ interface Gesture {
 
 const DIRS: Record<string, Pt> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
 const INPUT_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
+/** A key the canvas acted on: nothing else (the browser, Home Assistant's shortcuts) gets it. */
+const eat = (e: Event): void => {
+  e.preventDefault();
+  e.stopPropagation();
+};
 
 export class PathCanvas extends LitElement {
   static styles = canvasStyles;
@@ -94,6 +126,11 @@ export class PathCanvas extends LitElement {
   @property({ type: Number }) maxPaths = 64;
   @property({ attribute: false }) kinds: readonly AnchorKind[] = ['corner', 'smooth', 'symmetric'];
   @property({ attribute: false }) constrain?: ConstrainPoint;
+  /** Selection box with scale and rotate handles ('select' mode only; path-canvas rev 5). */
+  @property({ attribute: false }) transform?: TransformBox;
+  @property() rotateLabel = 'Rotation';
+  /** Emit `mc-path-context` and keep the browser menu off the drawing surface. */
+  @property({ attribute: false }) contextMenu = false;
 
   private _nudge?: number;
   private _big?: number;
@@ -138,7 +175,9 @@ export class PathCanvas extends LitElement {
   @state() private _live = '';
   @state() private _loupe?: { contact: Pt; at: Pt };
   @state() private _loupeOn = false;
-  @state() private _guides: { x?: number; y?: number } = {};
+  @state() private _guides: { x?: Line; y?: Line } = {};
+  @state() private _gbox?: { box: Box; angle: number };
+  @state() private _read?: { at: Pt; text: string; touch: boolean };
   @state() private _marquee?: [Pt, Pt];
   @state() private _kbd = false;
   @state() private _focused = false;
@@ -159,6 +198,8 @@ export class PathCanvas extends LitElement {
   private _pending?: PathChange;
   private _lastLimit = 0;
   private _list?: TemplateResult;
+  private _lp?: ReturnType<typeof setTimeout>;
+  private _ctxAt = -Infinity;
 
   // ── lifecycle ──
 
@@ -176,10 +217,11 @@ export class PathCanvas extends LitElement {
     clearTimeout(this._liveTimer);
     clearTimeout(this._loupeTimer);
     clearTimeout(this._commitTimer);
+    this.clearLp();
   }
 
   private listeners(): Array<[string, unknown, boolean?]> {
-    return [['keydown', this._onKey], ['keyup', this._onKeyUp], ['focus', this._onFocus], ['blur', this._onBlur], ['dblclick', this._onDblClick], ['pointerdown', this._onHostDown, true]];
+    return [['keydown', this._onKey], ['keyup', this._onKeyUp], ['focus', this._onFocus], ['blur', this._onBlur], ['dblclick', this._onDblClick], ['pointerdown', this._onHostDown, true], ['contextmenu', this._onContext]];
   }
 
   protected willUpdate(changed: Map<string, unknown>): void {
@@ -326,9 +368,47 @@ export class PathCanvas extends LitElement {
     else this._liveTimer = setTimeout(flush, wait);
   }
 
+  private sctx(others: Pt[], reach: number): SnapContext {
+    return { snap: this.snap, frame: this.frame, others, reach, safeArea: this.safeArea };
+  }
+
   // ── hit testing ──
 
+  private boxRect(b: Box): [number, number, number, number] {
+    const a = toScreen(this._view, [b.x, b.y]);
+    const c = toScreen(this._view, [b.x + b.w, b.y + b.h]);
+    return [a[0], a[1], c[0], c[1]];
+  }
+
+  /** The rotate handle's centre in canvas px, or undefined without a box. */
+  private rotSpot(coarse = this.coarse()): Pt | undefined {
+    const t = this.transform;
+    return t?.rotate && this.mode === 'select' ? rotateSpot(this.boxRect(t.box), coarse ? ROTATE_STEM_COARSE_PX : ROTATE_STEM_PX, coarse ? HIT_MIN_COARSE : HIT_MIN_FINE) : undefined;
+  }
+
+  /** Handle targets win over path bodies. */
+  private boxHit(s: Pt, coarse: boolean): Hit | undefined {
+    const t = this.transform;
+    if (!t || this.mode !== 'select') return undefined;
+    const half = hitHalf(coarse);
+    const q = this.rotSpot(coarse);
+    if (q && inTarget(q, s, half)) return { t: 'rotate' };
+    let best: Hit | undefined;
+    let bd = Infinity;
+    if (t.scale)
+      for (const h of placeHandles(this.boxRect(t.box), half * 2)) {
+        const d = dist(h.at, s);
+        if (inTarget(h.at, s, half) && d < bd) {
+          bd = d;
+          best = { t: 'scale', sx: h.sx, sy: h.sy };
+        }
+      }
+    return best;
+  }
+
   private hitTest(s: Pt, coarse: boolean): Hit {
+    const bh = this.boxHit(s, coarse);
+    if (bh) return bh;
     const v = this._view;
     const half = hitHalf(coarse);
     const ap = this.active();
@@ -420,6 +500,7 @@ export class PathCanvas extends LitElement {
       id: e.pointerId,
       type: e.pointerType || 'mouse',
       down: s,
+      client: [e.clientX, e.clientY],
       hit: { t: 'none' },
       kind: 'none',
       startPaths: this.paths.slice(),
@@ -449,6 +530,7 @@ export class PathCanvas extends LitElement {
     if (this.mode === 'add') this.downAdd(start, e, s);
     else if (this.mode === 'nodes') this.downNodes(start, e, s);
     else this.downSelect(start, e);
+    if (this._g === start && this.contextMenu && start.type === 'touch' && this._touches.size === 1) this._lp = setTimeout(() => this.longPress(start), LONG_PRESS_MS);
   };
 
   private downNodes(g: Gesture, e: PointerEvent, s: Pt): void {
@@ -493,10 +575,16 @@ export class PathCanvas extends LitElement {
 
   private downSelect(g: Gesture, e: PointerEvent): void {
     const h = g.hit;
-    if (h.t === 'body' || h.t === 'segment') {
+    if (h.t === 'scale' || h.t === 'rotate') {
+      g.kind = h.t;
+      g.box = this.transform?.box;
+      const b = g.box;
+      if (b) g.rot = { prev: angleOf([b.x + b.w / 2, b.y + b.h / 2], toFrame(this._view, g.down)), total: 0 };
+    } else if (h.t === 'body' || h.t === 'segment') {
       const pi = h.path;
       if (!this._sel || this._sel.path !== pi || this._sel.anchors.length) this.setSel({ path: pi, anchors: [] });
       g.kind = 'path';
+      g.box = this.transform?.box;
     } else {
       g.kind = g.type === 'touch' ? 'pan' : 'none';
     }
@@ -551,7 +639,7 @@ export class PathCanvas extends LitElement {
           }),
         );
       }
-      out = snapPoint(f, { snap: this.snap, frame: this.frame, others, reach: 6 / this._view.zoom }).pt;
+      out = snapPoint(f, this.sctx(others, 6 / this._view.zoom)).pt;
     }
     return out;
   }
@@ -607,6 +695,11 @@ export class PathCanvas extends LitElement {
     if (!g || g.id !== e.pointerId) return;
     if (!g.started) {
       if (dist(s, g.down) < DRAG_SLOP_PX) return;
+      if (this._lp) {
+        // a touch press may still become the context menu: no drag (and no loupe) until it resolves
+        if (dist(s, g.down) < LONG_PRESS_SLOP_PX) return;
+        this.clearLp();
+      }
       if (g.kind === 'none' || g.kind === 'add') return; // a tap places, whatever the jitter
       g.started = true;
       if (g.type === 'touch' && (g.kind === 'anchor' || g.kind === 'handle')) this.startLoupe();
@@ -627,6 +720,8 @@ export class PathCanvas extends LitElement {
     this._loupeOn = false;
     this._loupe = undefined;
     this._guides = {};
+    this._gbox = undefined;
+    this._read = undefined;
   }
 
   private drag(g: Gesture, s: Pt, e: PointerEvent): void {
@@ -643,6 +738,7 @@ export class PathCanvas extends LitElement {
       this._marquee = [g.down, s];
       return;
     }
+    if (g.kind === 'scale' || g.kind === 'rotate') return this.dragBox(g, s, e);
     const reach = 6 / v.zoom;
     if (g.kind === 'anchor' && g.hit.t === 'anchor') {
       const { path: pi, i } = g.hit;
@@ -655,7 +751,7 @@ export class PathCanvas extends LitElement {
           if (!set.includes(k)) others.push([a.x, a.y]);
         });
       }
-      const sn = suspend ? { pt: f, guides: {} } : snapPoint(f, { snap: this.snap, frame: this.frame, others, reach });
+      const sn = suspend ? { pt: f, guides: {} } : snapPoint(f, this.sctx(others, reach));
       let pt = sn.pt;
       if (this.constrain) pt = this.constrain(pt, { path: pi, anchor: i, which: 'anchor' });
       this._guides = sn.guides;
@@ -671,29 +767,88 @@ export class PathCanvas extends LitElement {
       let pt: Pt = f;
       if (!suspend && this.snap.enabled) {
         const ang = snapAngle([a.x, a.y], f);
-        pt = ang ?? snapPoint(f, { snap: this.snap, frame: this.frame, others: [], reach }).pt;
+        pt = ang ?? snapPoint(f, this.sctx([], reach)).pt;
       }
       if (this.constrain) pt = this.constrain(pt, { path: pi, anchor: i, which });
       this.pushDrag(g, pi, setHandle(sp, i, which, pt), 'Move handle');
       this._loupe = { contact: s, at: pt };
       return;
     }
-    if (g.kind === 'path' && g.hit.t !== 'none') {
+    if (g.kind === 'path' && 'path' in g.hit) {
       const pi = g.hit.path;
       const sp = g.startPaths[pi];
       if (!sp?.anchors.length) return;
       const f0 = toFrame(v, g.down);
       let dx = f[0] - f0[0];
       let dy = f[1] - f0[1];
+      this._guides = {};
       if (!suspend && this.snap.enabled) {
-        const a0 = sp.anchors[0];
-        const sn = snapPoint([a0.x + dx, a0.y + dy], { snap: this.snap, frame: this.frame, others: [], reach });
-        dx = sn.pt[0] - a0.x;
-        dy = sn.pt[1] - a0.y;
+        const b = g.box;
+        if (b) {
+          // the moving box (edges and centre) snaps, so a group lines up as one
+          const c = this.sctx([], reach);
+          const rx = snapEdges([b.x + dx, b.x + dx + b.w / 2, b.x + dx + b.w], snapLines(c, 0), this.snap.grid, reach);
+          const ry = snapEdges([b.y + dy, b.y + dy + b.h / 2, b.y + dy + b.h], snapLines(c, 1), this.snap.grid, reach);
+          dx += rx.d;
+          dy += ry.d;
+          this._guides = { x: rx.line, y: ry.line };
+        } else {
+          const a0 = sp.anchors[0];
+          const sn = snapPoint([a0.x + dx, a0.y + dy], this.sctx([], reach));
+          dx = sn.pt[0] - a0.x;
+          dy = sn.pt[1] - a0.y;
+        }
       }
       this.pushDrag(g, pi, moveAll(sp, dx, dy), 'Move path');
       return;
     }
+  }
+
+  /** A scale or rotate drag: the matrix is relative to the geometry at gesture start. */
+  private dragBox(g: Gesture, s: Pt, e: PointerEvent): void {
+    const t = this.transform;
+    const b = g.box;
+    const h = g.hit;
+    if (!t || !b || (h.t !== 'scale' && h.t !== 'rotate')) return;
+    const v = this._view;
+    const f = toFrame(v, s);
+    let tr: PathTransform;
+    let nb = b;
+    let turned = 0;
+    let text: string;
+    this._guides = {};
+    if (h.t === 'rotate' && g.rot) {
+      const c: Pt = [b.x + b.w / 2, b.y + b.h / 2];
+      const r = g.rot;
+      const cur = angleOf(c, f);
+      r.total += wrap180(cur - r.prev);
+      r.prev = cur;
+      const base = t.angle ?? 0;
+      turned = e.shiftKey ? Math.round((base + r.total) / 15) * 15 - base : r.total;
+      text = `${num(base + turned)} degrees`;
+      tr = { kind: 'rotate', matrix: rotateMatrix(c, turned), angle: turned, commit: false, label: 'Rotate', source: 'pointer' };
+    } else if (h.t === 'scale') {
+      const f0 = toFrame(v, g.down);
+      const edge: Pt = [(h.sx > 0 ? b.x + b.w : b.x) + f[0] - f0[0], (h.sy > 0 ? b.y + b.h : b.y) + f[1] - f0[1]];
+      if (this.snap.enabled && !e.ctrlKey && !e.metaKey) {
+        const reach = (this.coarse(e) ? SNAP_REACH_COARSE_PX : SNAP_REACH_PX) / v.zoom;
+        const c = this.sctx([], reach);
+        for (const i of [0, 1] as const) {
+          if (!(i ? h.sy : h.sx)) continue;
+          const r = snapEdges([edge[i]], snapLines(c, i), this.snap.grid, reach);
+          edge[i] += r.d;
+          if (r.line) this._guides = { ...this._guides, [i ? 'y' : 'x']: r.line };
+        }
+      }
+      nb = scaleBox(b, h.sx, h.sy, edge, { ratio: t.keepRatio !== e.shiftKey, centre: e.altKey, bounds: t.bounds });
+      text = `W ${num(nb.w)} H ${num(nb.h)}`;
+      tr = { kind: 'scale', matrix: boxMatrix(b, nb), size: { w: nb.w, h: nb.h }, commit: false, label: 'Scale', source: 'pointer' };
+    } else return;
+    g.tr = tr;
+    this._gbox = { box: nb, angle: turned };
+    const touch = g.type === 'touch';
+    this._read = { at: touch ? [s[0], s[1] - 56] : [s[0] + 14, s[1] + 18], text, touch };
+    this.emit('mc-path-transform', tr);
   }
 
   private pushDrag(g: Gesture, pi: number, np: EditPath, label: string): void {
@@ -706,6 +861,7 @@ export class PathCanvas extends LitElement {
   // ── pointer: up / cancel ──
 
   private _up = (e: PointerEvent): void => {
+    this.clearLp();
     if (e.pointerType === 'touch') {
       this._touches.delete(e.pointerId);
       if (this._pinch) {
@@ -724,6 +880,7 @@ export class PathCanvas extends LitElement {
     if (g.started) {
       if (g.kind === 'pan') this.emitView();
       else if (g.kind === 'marquee') this.finishMarquee(g, s);
+      else if (g.tr) this.emit('mc-path-transform', { ...g.tr, commit: true });
       else if (g.last) this.emitChange(g.last, true, g.label);
       this._marquee = undefined;
       return;
@@ -741,6 +898,7 @@ export class PathCanvas extends LitElement {
   };
 
   private _cancel = (e: PointerEvent): void => {
+    this.clearLp();
     if (e.pointerType === 'touch') {
       this._touches.delete(e.pointerId);
       if (this._pinch && this._touches.size < 2) this._pinch = undefined;
@@ -782,7 +940,10 @@ export class PathCanvas extends LitElement {
     this._panning = false;
     this._marquee = undefined;
     this.stopLoupe();
-    if (g.started && g.kind !== 'pan' && g.kind !== 'marquee') {
+    this.clearLp();
+    if (g.started && (g.kind === 'scale' || g.kind === 'rotate')) {
+      this.emit('mc-path-transform', { kind: g.kind, matrix: IDENTITY, commit: false, label: 'Cancel', source: 'pointer' } satisfies PathTransform);
+    } else if (g.started && g.kind !== 'pan' && g.kind !== 'marquee') {
       this.emitChange(g.startPaths, false, 'Cancel');
     } else if (g.started && g.kind === 'pan') {
       this._view = g.startView;
@@ -825,6 +986,7 @@ export class PathCanvas extends LitElement {
   // ── view: pinch, wheel ──
 
   private beginPinch(): void {
+    this.clearLp();
     if (this._g?.started) {
       // a second finger while a point is dragged: the loupe comes at once
       this._loupeOn = true;
@@ -889,10 +1051,11 @@ export class PathCanvas extends LitElement {
   private _onKey = (e: KeyboardEvent): void => {
     const t = e.composedPath()[0] as HTMLElement | undefined;
     if (t && (INPUT_TAGS.has(t.tagName) || t.isContentEditable)) return;
+    if (t?.classList?.contains('rot') && e.key !== 'Escape') return; // the rotation slider has its own keys
     this._kbd = true;
     if (e.code === 'Space' || e.key === ' ') {
       this._space = true;
-      e.preventDefault();
+      eat(e);
       return;
     }
     if (e.key === 'Escape') {
@@ -900,10 +1063,24 @@ export class PathCanvas extends LitElement {
       return;
     }
     if (this.mode === 'view') return;
+    if (this.contextMenu && (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey))) {
+      eat(e);
+      this.keyContext();
+      return;
+    }
     const mod = e.ctrlKey || e.metaKey;
     if (mod) {
+      const tb = this.transform;
+      if (e.shiftKey && e.key in DIRS && tb?.scale && this.mode === 'select') {
+        // resize from the top-left corner (WCAG 2.5.7)
+        eat(e);
+        const nb = resizeBy(tb.box, DIRS[e.key][0], DIRS[e.key][1], e.altKey ? this.fineNudge : this.nudge, tb.bounds);
+        this.emit<PathTransform>('mc-path-transform', { kind: 'scale', matrix: boxMatrix(tb.box, nb), size: { w: nb.w, h: nb.h }, commit: true, label: 'Scale', source: 'keyboard' });
+        this.announce(`W ${num(nb.w)} H ${num(nb.h)}`, 250);
+        return;
+      }
       if ((e.key === 'a' || e.key === 'A') && this.active() >= 0 && this.mode !== 'select') {
-        e.preventDefault();
+        eat(e);
         const ap = this.active();
         const n = this.paths[ap].anchors.length;
         this.setSel({ path: ap, anchors: Array.from({ length: n }, (_, i) => i) }, false);
@@ -915,14 +1092,14 @@ export class PathCanvas extends LitElement {
     if (e.key === '=' || e.key === '+') return this.zoomKey(e, 1.25);
     if (e.key === '-' || e.key === '_') return this.zoomKey(e, 0.8);
     if (e.key === '0' && !e.shiftKey) {
-      e.preventDefault();
+      eat(e);
       this.fit();
       return;
     }
     const nodes = this.mode === 'nodes' || this.mode === 'add';
     if (e.key === 'Tab' && nodes) return this.tab(e);
     if (nodes && (code === 'BracketLeft' || code === 'BracketRight' || e.key === '[' || e.key === ']')) {
-      e.preventDefault();
+      eat(e);
       this.step(code === 'BracketRight' || e.key === ']' ? 1 : -1);
       return;
     }
@@ -930,42 +1107,40 @@ export class PathCanvas extends LitElement {
     if (!nodes) return;
     switch (true) {
       case code === 'KeyH' || e.key === 'h' || e.key === 'H':
-        e.preventDefault();
+        eat(e);
         this.cycleTarget();
         return;
       case code === 'KeyC' || e.key === 'c' || e.key === 'C':
-        e.preventDefault();
+        eat(e);
         if (this._sel?.anchors.length) this.toggleKindOf(this._sel.path, this._sel.anchors);
         return;
       case e.key === 'Delete' || e.key === 'Backspace':
-        e.preventDefault();
+        eat(e);
         this.deleteKey();
         return;
       case e.key === 'Insert':
-        e.preventDefault();
+        eat(e);
         this.insertAfter();
         return;
       case e.key === 'Enter':
-        e.preventDefault();
+        eat(e);
         this.enter();
         return;
     }
   };
 
   private zoomKey(e: KeyboardEvent, f: number): void {
-    e.preventDefault();
+    eat(e);
     this.zoomBy(f);
   }
 
   private escape(e: KeyboardEvent): void {
     if (this.cancelDrag()) {
-      e.preventDefault();
-      e.stopPropagation();
+      eat(e);
       return;
     }
     if (this._sel) {
-      e.preventDefault();
-      e.stopPropagation();
+      eat(e);
       this.setSel(undefined);
     }
   }
@@ -983,7 +1158,7 @@ export class PathCanvas extends LitElement {
       next = 0;
     } else next = cur + (e.shiftKey ? -1 : 1);
     if (next < 0 || next >= list.length) return; // out of the canvas: no trap
-    e.preventDefault();
+    eat(e);
     const st = list[next];
     this.setSel(st.which ? { path: ap, anchors: [st.i], handle: { anchor: st.i, which: st.which } } : { path: ap, anchors: [st.i] });
   }
@@ -1031,7 +1206,7 @@ export class PathCanvas extends LitElement {
     const ap = this.active();
     const step = (v: number, k: number): number => stepValue(v, d[k] * amount, snapped);
     if (this.mode === 'add') {
-      e.preventDefault();
+      eat(e);
       const a = this._cross ?? this.crossStart();
       this._cross = [step(a[0], 0), step(a[1], 1)];
       this.announce(`Cursor at x ${num(this._cross[0])}, y ${num(this._cross[1])}. Press Enter to place a point.`, 250);
@@ -1043,7 +1218,7 @@ export class PathCanvas extends LitElement {
       return;
     }
     if (!sel) return;
-    e.preventDefault();
+    eat(e);
     const h = sel.handle;
     const set = sel.anchors.length ? sel.anchors : p.anchors.map((_, i) => i);
     const i = h ? h.anchor : set[set.length - 1];
@@ -1063,7 +1238,7 @@ export class PathCanvas extends LitElement {
   }
 
   private panBy(dx: number, dy: number, e?: Event): void {
-    e?.preventDefault();
+    if (e) eat(e);
     this._view = { ...this._view, x: this._view.x + dx, y: this._view.y + dy };
     this._viewSet = true;
     this.emitView();
@@ -1125,6 +1300,75 @@ export class PathCanvas extends LitElement {
     }
     if (sel && sel.anchors.length === 1 && ap >= 0) this.emit('mc-path-fields', { path: ap, anchor: sel.handle?.anchor ?? sel.anchors[0] });
   }
+
+  // ── context gesture ──
+
+  private clearLp(): void {
+    clearTimeout(this._lp);
+    this._lp = undefined;
+  }
+
+  private longPress(g: Gesture): void {
+    this._lp = undefined;
+    if (this._g !== g || g.started) return;
+    this._g = undefined;
+    this.release(g.id);
+    this.contextAt(g.down, g.client, 'touch');
+  }
+
+  private emitContext(client: Pt, frame: Pt, hit: PathContext['hit'], source: PathContext['source']): void {
+    this._ctxAt = Date.now();
+    this.emit<PathContext>('mc-path-context', { client, frame, hit, source });
+  }
+
+  /** Right-click or long-press at canvas px `s`: select what is under it first, then say where. */
+  private contextAt(s: Pt, client: Pt, source: PathContext['source']): void {
+    let h = this.hitTest(s, source === 'touch');
+    const sel = this._sel;
+    if (h.t === 'scale' || h.t === 'rotate') h = sel ? { t: 'body', path: sel.path } : { t: 'none' };
+    const f = toFrame(this._view, s);
+    if (h.t === 'none') return this.emitContext(client, f, undefined, source);
+    const on = h.t === 'anchor' ? [h.i] : [];
+    if (sel?.path !== h.path || (h.t === 'anchor' && !sel.anchors.includes(h.i))) this.setSel({ path: h.path, anchors: on });
+    this.emitContext(client, f, { path: h.path, anchor: h.t === 'anchor' ? h.i : undefined, segment: h.t === 'segment' ? h.seg : undefined, at: h.t === 'segment' ? f : undefined }, source);
+  }
+
+  private _onContext = (e: MouseEvent): void => {
+    const t = e.composedPath()[0] as Node;
+    if (!this.contextMenu || this.mode === 'view' || (t !== this && !this.surface()?.contains(t))) return;
+    e.preventDefault();
+    if (Date.now() - this._ctxAt < CONTEXT_DEDUPE_MS) return;
+    if (t === this) return this.keyContext();
+    const pt = (e as PointerEvent).pointerType;
+    this.contextAt(this.screenOf(e), [e.clientX, e.clientY], pt === 'touch' ? 'touch' : pt === 'pen' ? 'pen' : 'mouse');
+  };
+
+  /** ContextMenu key or Shift+F10: at the focused point, else the box centre, else the canvas centre. */
+  private keyContext(): void {
+    const sel = this._sel;
+    const b = this.transform?.box ?? this.frame;
+    const i = sel?.anchors.length ? (sel.handle?.anchor ?? sel.anchors[sel.anchors.length - 1]) : -1;
+    const a = sel && i >= 0 ? this.paths[sel.path]?.anchors[i] : undefined;
+    const f: Pt = a ? [a.x, a.y] : [b.x + b.w / 2, b.y + b.h / 2];
+    const sc = toScreen(this._view, f);
+    const r = this.surface()?.getBoundingClientRect();
+    this.emitContext([(r?.left ?? 0) + sc[0], (r?.top ?? 0) + sc[1]], f, sel ? { path: sel.path, anchor: a ? i : undefined } : undefined, 'keyboard');
+  }
+
+  /** Rotation slider: Arrows 1 degree, Shift+Arrows 15, Home back to 0; one commit per key. */
+  private _rotKey = (e: KeyboardEvent): void => {
+    const t = this.transform;
+    if (!t || e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    const step = e.shiftKey ? 15 : 1;
+    const d = k === 'ArrowRight' || k === 'ArrowUp' ? step : k === 'ArrowLeft' || k === 'ArrowDown' ? -step : k === 'Home' ? -(t.angle ?? 0) : undefined;
+    if (d === undefined) return;
+    eat(e);
+    if (!d) return;
+    const b = t.box;
+    this.emit<PathTransform>('mc-path-transform', { kind: 'rotate', matrix: rotateMatrix([b.x + b.w / 2, b.y + b.h / 2], d), angle: d, commit: true, label: 'Rotate', source: 'keyboard' });
+    this.announce(`${num((t.angle ?? 0) + d)} degrees`, 250);
+  };
 
   // ── render ──
 
@@ -1196,8 +1440,17 @@ export class PathCanvas extends LitElement {
     }
     const g = this._guides;
     const [w, h] = this._size;
-    if (g.x !== undefined) out.push(svg`<path class="guide" d="M${toScreen(v, [g.x, 0])[0]} 0V${h}"></path>`);
-    if (g.y !== undefined) out.push(svg`<path class="guide" d="M0 ${toScreen(v, [0, g.y])[1]}H${w}"></path>`);
+    const tag = (text: string, x: number, y: number): TemplateResult => svg`<g class="tag"><rect x=${x - 3} y=${y - 11} width=${text.length * 6.4 + 6} height="15" rx="3"></rect><text x=${x} y=${y}>${text}</text></g>`;
+    if (g.x) {
+      const x = toScreen(v, [g.x.v, 0])[0];
+      out.push(svg`<path class="guide" d="M${x} 0V${h}"></path>`, tag(g.x.label, x + 6, 16));
+    }
+    if (g.y) {
+      const y = toScreen(v, [0, g.y.v])[1];
+      out.push(svg`<path class="guide" d="M0 ${y}H${w}"></path>`, tag(g.y.label, 8, y - 6));
+    }
+    const tb = this.transform;
+    if (tb && this.mode === 'select') out.push(this.renderBox(tb));
     const m = this._marquee;
     if (m) out.push(svg`<rect class="marquee" x=${Math.min(m[0][0], m[1][0])} y=${Math.min(m[0][1], m[1][1])} width=${Math.abs(m[0][0] - m[1][0])} height=${Math.abs(m[0][1] - m[1][1])}></rect>`);
     if (this.mode === 'add' && this._cross) {
@@ -1205,6 +1458,31 @@ export class PathCanvas extends LitElement {
       out.push(svg`<path class="cross" d="M${c[0] - 8} ${c[1]}h16M${c[0]} ${c[1] - 8}v16"></path>`);
     }
     return out.length ? svg`${out}` : nothing;
+  }
+
+  /** The selection box, its eight scale handles and the rotate handle; during a drag from the gesture's own state. */
+  private renderBox(tb: TransformBox): TemplateResult {
+    const gb = this._gbox;
+    const r = this.boxRect(gb?.box ?? tb.box);
+    const coarse = this.coarse();
+    const k = HANDLE_GLYPH_PX;
+    const cx = (r[0] + r[2]) / 2;
+    const cy = (r[1] + r[3]) / 2;
+    const turning = gb && gb.angle !== 0;
+    const sq = (x: number, y: number): TemplateResult => svg`<rect class="tbh" x=${x - k / 2} y=${y - k / 2} width=${k} height=${k}></rect>`;
+    const q = turning ? undefined : this.rotSpot(coarse);
+    return svg`<g class="tbox"><rect class="tb" x=${r[0]} y=${r[1]} width=${r[2] - r[0]} height=${r[3] - r[1]} transform=${turning ? `rotate(${gb.angle} ${cx} ${cy})` : nothing}></rect>${
+      turning || !tb.scale ? nothing : placeHandles(r, coarse ? HIT_MIN_COARSE : HIT_MIN_FINE).map((h) => sq(h.at[0], h.at[1]))
+    }${q ? svg`<path class="tb" d="M${cx} ${q[1] < r[1] ? r[1] : r[3]}V${q[1]}"></path><circle class="tbh" cx=${q[0]} cy=${q[1]} r=${k / 2}></circle>` : nothing}</g>`;
+  }
+
+  private renderSlider(): TemplateResult | typeof nothing {
+    const q = this.rotSpot();
+    const tb = this.transform;
+    if (!q || !tb) return nothing;
+    const hit = this.coarse() ? HIT_MIN_COARSE : HIT_MIN_FINE;
+    const a = tb.angle ?? 0;
+    return html`<div class="rot" role="slider" tabindex="0" aria-label=${this.rotateLabel} aria-valuemin="-360" aria-valuemax="360" aria-valuenow=${a} aria-valuetext="${num(a)} degrees" style="left:${q[0] - hit / 2}px;top:${q[1] - hit / 2}px;width:${hit}px;height:${hit}px" @keydown=${this._rotKey}></div>`;
   }
 
   private renderLoupe(): TemplateResult | typeof nothing {
@@ -1230,7 +1508,7 @@ export class PathCanvas extends LitElement {
     return html`<svg class=${cls} part="surface" aria-hidden="true" @pointerdown=${this._down} @pointermove=${this._move} @pointerup=${this._up} @pointercancel=${this._cancel}>
         ${this.renderArt()}${this.renderEdit()}
       </svg>
-      ${this.renderLoupe()}${this.renderList()}
+      ${this.renderSlider()}${this.renderLoupe()}${this._read ? html`<div class="read${this._read.touch ? ' up' : ''}" aria-hidden="true" style="left:${this._read.at[0]}px;top:${this._read.at[1]}px">${this._read.text}</div>` : nothing}${this.renderList()}
       <div class="sr" role="status" aria-live="polite">${this._live}</div>`;
   }
 }

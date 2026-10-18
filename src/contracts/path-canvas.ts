@@ -94,8 +94,9 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
  *   `opener`; after a pick the host moves focus. Esc that closed the menu is stopped there (editor Esc
  *   order: gesture, then overlay). No motion under reduced motion. No strings of its own: the host passes
  *   every label. The host places the element inside its own layer (shadow root), so focus stays inside.
- * - Size: transform box, context gesture and menu are estimated at about 7.9 KB minified; proposed
- *   ceiling 62 KiB = 63,488 B (ADR 0026), CAPS entry = measured + 5 %, rounded up to 1 KiB.
+ * - Size: transform box, context gesture and menu were estimated at about 7.9 KB minified; T29 measured
+ *   about 15.1 KB (menu 6.0 KB, canvas 9.1 KB). Ceiling 62 KiB = 63,488 B (ADR 0026); the CAPS entry
+ *   follows the CEO's ruling on the measured size (handoff 45).
  *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
@@ -191,8 +192,8 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
  */
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
-/** Stays 4 until T29 implements revision 5, then 5. */
-export const PATH_CANVAS_CONTRACT_REVISION = 4;
+/** Revision 5 is implemented (T29). */
+export const PATH_CANVAS_CONTRACT_REVISION = 5;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';

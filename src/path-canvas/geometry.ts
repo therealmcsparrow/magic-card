@@ -65,47 +65,68 @@ export interface SnapContext {
   others: Pt[];
   /** Snap reach in frame units (about 6 CSS px). */
   reach: number;
+  /** Safe-area inset in frame units (used with snap.safeArea). */
+  safeArea?: number;
+}
+
+/** A line a drag can hold on to; the label is drawn next to its guide. */
+export interface Line {
+  v: number;
+  label: string;
 }
 
 export interface Snapped {
   pt: Pt;
-  /** Lines the point snapped to (not the grid): drawn as a 1 px guide. */
-  guides: { x?: number; y?: number };
+  /** Lines the point snapped to (not the grid): drawn as a 1 px guide with their label. */
+  guides: { x?: Line; y?: Line };
 }
 
-function snapAxis(v: number, lines: number[], grid: number, reach: number): { v: number; line: boolean } {
-  let best: number | undefined;
-  let bd = reach;
-  for (const l of lines) {
-    const d = Math.abs(l - v);
-    if (d <= bd) {
-      bd = d;
-      best = l;
-    }
-  }
-  if (best !== undefined) return { v: best, line: true };
-  return { v: grid > 0 ? clean(Math.round(v / grid) * grid) : v, line: false };
-}
-
-/** Snap a dragged point: lines (anchors, frame, host lines) within reach win, else the grid. */
-export function snapPoint(p: Pt, c: SnapContext): Snapped {
+/** Snap targets on one axis (0 = x, 1 = y): safe area first, so it wins a tie. */
+export function snapLines(c: Pick<SnapContext, 'snap' | 'frame' | 'safeArea'>, axis: 0 | 1, others: readonly Pt[] = []): Line[] {
   const s = c.snap;
-  if (!s.enabled) return { pt: p, guides: {} };
-  const xs: number[] = [...(s.extra?.x ?? [])];
-  const ys: number[] = [...(s.extra?.y ?? [])];
+  const o = axis ? c.frame.y : c.frame.x;
+  const n = axis ? c.frame.h : c.frame.w;
+  const sa = s.safeArea ? (c.safeArea ?? 0) : 0;
+  const out: Line[] = [];
+  const add = (v: number, label: string): number => out.push({ v, label });
+  if (sa > 0) {
+    add(o + sa, 'Safe area edge');
+    add(o + n - sa, 'Safe area edge');
+  }
   if (s.frame) {
-    xs.push(c.frame.x, c.frame.x + c.frame.w / 2, c.frame.x + c.frame.w);
-    ys.push(c.frame.y, c.frame.y + c.frame.h / 2, c.frame.y + c.frame.h);
+    add(o, 'Edge');
+    add(o + n, 'Edge');
   }
-  if (s.anchors) {
-    for (const o of c.others) {
-      xs.push(o[0]);
-      ys.push(o[1]);
+  if (s.frame || sa > 0) add(o + n / 2, 'Centre');
+  for (const v of (axis ? s.extra?.y : s.extra?.x) ?? []) add(v, 'Edge');
+  for (const p of others) add(p[axis], 'Edge');
+  return out;
+}
+
+/**
+ * Snap one or more moving edges: the smallest shift that puts any of `vals` on a line within `reach`,
+ * else the grid for the first value.
+ */
+export function snapEdges(vals: number[], lines: Line[], grid: number, reach: number): { d: number; line?: Line } {
+  let bd = reach + 1e-9;
+  let best: { d: number; line: Line } | undefined;
+  for (const l of lines)
+    for (const v of vals) {
+      const d = l.v - v;
+      if (Math.abs(d) < bd) {
+        bd = Math.abs(d);
+        best = { d, line: l };
+      }
     }
-  }
-  const x = snapAxis(p[0], xs, s.grid, c.reach);
-  const y = snapAxis(p[1], ys, s.grid, c.reach);
-  return { pt: [x.v, y.v], guides: { x: x.line ? x.v : undefined, y: y.line ? y.v : undefined } };
+  return best ?? { d: grid > 0 ? clean(Math.round(vals[0] / grid) * grid) - vals[0] : 0 };
+}
+
+/** Snap a dragged point: lines (anchors, frame, host lines, safe area) within reach win, else the grid. */
+export function snapPoint(p: Pt, c: SnapContext): Snapped {
+  if (!c.snap.enabled) return { pt: p, guides: {} };
+  const x = snapEdges([p[0]], snapLines(c, 0, c.snap.anchors ? c.others : []), c.snap.grid, c.reach);
+  const y = snapEdges([p[1]], snapLines(c, 1, c.snap.anchors ? c.others : []), c.snap.grid, c.reach);
+  return { pt: [clean(p[0] + x.d), clean(p[1] + y.d)], guides: { x: x.line, y: y.line } };
 }
 
 /** Handle angle: when within `tol` degrees of a multiple of `step`, the same length at that angle. */
