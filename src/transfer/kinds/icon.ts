@@ -1,4 +1,5 @@
 import { sanitizeSvg } from '../../icons/svg-sanitize';
+import { svgErrorKind } from '../../icons/svg-error';
 import { ICON_MAX_BYTES } from '../../contracts/mcu-library';
 import type { IconData, TransferNote } from '../../contracts/preset-transfer';
 import { t } from '../i18n';
@@ -53,11 +54,27 @@ export function svgRemovals(input: string, markup: string, index: number): Trans
   return notes;
 }
 
+/** Why the sanitiser refused an SVG, in the user's language. */
+function svgReason(error: string | undefined): string {
+  switch (svgErrorKind(error)) {
+    case 'size':
+      return t('The SVG is larger than 32 KB.');
+    case 'complex':
+      return t('The SVG is too complex.');
+    case 'no-shapes':
+      return t('The SVG has no shapes to draw.');
+    case 'not-svg':
+      return t('No <svg> element found.');
+    default:
+      return t('The SVG could not be read.');
+  }
+}
+
 /** Sanitise an icon's markup: the result and everything that was removed. */
 export function cleanSvg(index: number, svg: string): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
   // mc-f / mc-s are the sanitiser's own marks: strip them first so an exported icon re-imports unchanged
   const s = sanitizeSvg(svg.replace(/\bclass\s*=\s*(["'])([^"']*)\1/gi, (_m, q: string, v: string) => `class=${q}${v.split(/\s+/).filter((t) => t !== 'mc-f' && t !== 'mc-s').join(' ')}${q}`));
-  if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', s.error || t('The SVG could not be read.'))] };
+  if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', svgReason(s.error))] };
   if (new TextEncoder().encode(s.markup).length > ICON_MAX_BYTES) {
     return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The icon is larger than {kb} KB.', { kb: ICON_MAX_BYTES / 1024 }))] };
   }
