@@ -30,7 +30,7 @@ ul{padding:0;list-style:none}
 .top,.row,.banner,.toast,.acts,.pointbar,.pv-head{display:flex;align-items:center;gap:6px}
 .top{flex-wrap:wrap;min-height:52px;padding:6px 12px;background:var(--mc-surface);border-bottom:1px solid var(--mc-divider)}
 .grow{flex:1}
-.name{width:180px;max-width:40vw}
+input[type=text].name{width:180px;max-width:40vw}
 .mark{color:var(--mc-text-2)}
 .chip{padding:2px 8px;border-radius:9999px;font-size:.75rem;background:var(--mc-warn-tint);color:var(--mc-warn-ink)}
 input[type=text],input[type=number],input[type=search],select,textarea{width:100%;min-height:var(--hit);padding:0 10px;color:inherit;background:var(--mc-surface);border:1px solid var(--mc-field-border);border-radius:8px;font:inherit}
