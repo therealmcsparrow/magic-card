@@ -2,6 +2,9 @@ import { LitElement, html, css, svg, nothing, type PropertyValues, type Template
 import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { editorSystem } from '../../css/editor-system';
+import type { LayerView } from '../../contracts/studio-layers';
+import { emitterIds, isLocked } from '../layer-view';
+import { lockBanner, lockBannerStyles } from './lock-banner';
 import { animationStyles } from '../../css/animations';
 import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../../utils/animation';
 import { intensityLabel } from '../../utils/animation-presets';
@@ -169,6 +172,8 @@ export class AnimParticlesEditor extends LitElement {
   /** 0-1 scrub position (unused: particles loop on their own). */
   @property({ attribute: false }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Preview-only locks: a locked emitter (or its child particles) is read-only here. */
+  @property({ attribute: false }) layerView?: LayerView;
   /** The emitter the fields edit (0 = the primary). Clamped to the document's emitters; the Layers list sets it too. */
   @property({ type: Number }) emitter = 0;
 
@@ -205,7 +210,12 @@ export class AnimParticlesEditor extends LitElement {
   static styles = [
     editorSystem,
     animationStyles,
+    lockBannerStyles,
     css`
+      .lk[inert],
+      .sector-body[inert] {
+        opacity: 0.55;
+      }
       :host {
         display: block;
         container-type: inline-size;
@@ -2267,7 +2277,7 @@ export class AnimParticlesEditor extends LitElement {
       ${only === 'all' ? nothing : this._sector('variation', 'mdi:dice-multiple-outline', 'Variation', variationSummary(this._vdoc, sim), () => this._renderVariation(sim))}
       ${only === 'all' ? nothing : this._sector('physics', 'mdi:weight', 'Physics', physicsSummary(sim), () => this._renderPhysics(sim))}
       ${only === 'emitter' ? nothing : this._sector('collisions', 'mdi:arrow-collapse-down', 'Collisions', collisionsSummary(sim), () => this._renderCollisions(sim))}
-      ${only === 'all' ? nothing : this._sector('children', 'mdi:creation-outline', 'Child particles', childrenSummary(sim), () => this._renderChildren(sim))}
+      ${only === 'all' ? nothing : this._sector('children', 'mdi:creation-outline', 'Child particles', childrenSummary(sim), () => html`<div class="sector-body-lk" ?inert=${this._locks.kids.length > 0}>${this._renderChildren(sim)}</div>`)}
     </div>`;
   }
 
@@ -2323,6 +2333,19 @@ export class AnimParticlesEditor extends LitElement {
     this._focus('.mode-seg [aria-checked="true"]');
   };
 
+  /** The locked rows among the emitters being edited (one, or all in "All particles"): `own` locks the fields, `kids` only the child particles. */
+  private get _locks(): { own: string[]; kids: string[] } {
+    const doc = this.doc;
+    const v = this.layerView;
+    if (!doc || !v?.locked.length) return { own: [], kids: [] };
+    const ids = doc.particles?.sim ? emitterIds(doc) : ['main'];
+    const on = this.all && ids.length > 1 ? ids : [ids[Math.min(this._em, ids.length - 1)] ?? 'main'];
+    return {
+      own: on.filter((id) => isLocked(doc, v, `emitter:${id}`)).map((id) => `emitter:${id}`),
+      kids: on.filter((id) => isLocked(doc, v, `children:${id}`)).map((id) => `children:${id}`),
+    };
+  }
+
   // ── render ──
 
   protected render(): TemplateResult {
@@ -2336,7 +2359,8 @@ export class AnimParticlesEditor extends LitElement {
       <div class="wrap">
         ${this._renderPreview()}
         <div class="form" ?inert=${this.disabled} @focusout=${this._onFocusOut}>
-          ${!sim ? this._renderPreset(p) : this._renderForm(p, sim)}
+          ${this._locks.own.length ? lockBanner(this.doc, this.layerView!, this._locks.own) : nothing}
+          ${!sim ? html`<div class="lk" ?inert=${this._locks.own.length > 0}>${this._renderPreset(p)}</div>` : this._renderForm(p, sim)}
         </div>
       </div>`;
   }
@@ -2347,11 +2371,13 @@ export class AnimParticlesEditor extends LitElement {
     const multi = this._multi;
     const all = multi && this.all;
     return html`${this._renderBar()}
+      <div class="lk" ?inert=${this._locks.own.length > 0}>
       ${all
         ? html`<p class="help all-note">These apply to every emitter. Placement is set per emitter.</p>
             ${this._renderMode(sim)}${this._renderTiming(p)}${this._renderSectors(sim, 'all')}`
         : html`${multi ? this._renderEmitterHead() : nothing}${this._renderPlacement()}
-            ${multi ? nothing : this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim, !multi)}${this._renderLook(p, sim)}${this._renderSectors(sim, multi ? 'emitter' : undefined)}`}`;
+            ${multi ? nothing : this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim, !multi)}${this._renderLook(p, sim)}${this._renderSectors(sim, multi ? 'emitter' : undefined)}`}
+      </div>`;
   }
 
   /** The emitter switcher (2+ emitters) and Add emitter. */
