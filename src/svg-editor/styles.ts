@@ -706,6 +706,11 @@ export const editorStyles: CSSResult[] = [
     .pv .seg {
       align-self: flex-start;
     }
+    .pv-g {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
     .pv-row {
       flex-wrap: wrap;
       align-items: flex-end;

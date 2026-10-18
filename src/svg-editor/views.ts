@@ -6,11 +6,11 @@ import { toPathString } from '../path/core';
 import { D, E } from './bind';
 import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
 import type { BooleanOp } from '../contracts/path-booleans';
-import type { SvgAlignEdge, SvgAlignTarget, SvgArrange } from '../contracts/svg-editor';
+import { HA_SECONDARY_OPACITY, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange } from '../contracts/svg-editor';
 import { boolHelp, boolReason } from './combine';
 import { haWarns } from './ha';
 import { glyph, type GlyphName } from './icons';
-import { byId, isOff, round2, shapeBox, outsideSafe, type Doc, type Paint, type Shape } from './model';
+import { byId, isOff, round2, shapeBox, outsideSafe, toneOf, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
@@ -122,11 +122,29 @@ function segKey<T extends string>(e: KeyboardEvent, items: Array<[T, string]>, k
   (e.currentTarget as HTMLElement).parentElement?.querySelectorAll<HTMLElement>('button')[i]?.focus();
 }
 
-const paintItems: Array<[Paint, string]> = [
+const paintItems = (dual: boolean): Array<[Paint, string]> => [
   ['none', S.paintNone],
   ['main', S.paintMain],
-  ['accent', S.paintAccent],
+  ...(dual ? [['accent', S.paintAccent] as [Paint, string]] : []),
 ];
+
+/** The icon-level Dual-tone switch: Main and Accent over the same paint. */
+const dualSwitch = (ed: McSvgEditor): TemplateResult =>
+  html`<label class="switch"><input type="checkbox" data-dual .checked=${ed.dualOn} @change=${(e: Event) => {
+    const i = e.target as HTMLInputElement;
+    ed.toggleDual(i.checked);
+    i.checked = ed.dualOn;
+  }} /><span>${S.dualTone}</span></label><p class="help">${S.dualHelp}</p>`;
+
+function singlePop(ed: McSvgEditor): TemplateResult {
+  return html`<div class="pop single" role="alertdialog" aria-label=${S.singleAsk(ed.accentCount)}>
+    <p><strong>${S.singleAsk(ed.accentCount)}</strong></p>
+    <div class="acts end">
+      ${btn(S.singleKeep, undefined, () => ed.closeSingle(), { text: true })}
+      ${btn(S.singleGo, undefined, () => ed.singleTone(), { text: true, cls: 'primary' })}
+    </div>
+  </div>`;
+}
 
 function xferLayer(ed: McSvgEditor): TemplateResult {
   const x = ed.xfer!;
@@ -143,7 +161,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
-    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
+    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
     ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
@@ -550,7 +568,7 @@ function layersPanel(ed: McSvgEditor): TemplateResult {
       ${ed.renaming === s.id
         ? html`<input class="rename" type="text" .value=${s.name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, s)} @blur=${(e: Event) => ed.renameShape(s.id, (e.target as HTMLInputElement).value)} />`
         : html`<span class="nm" title=${s.name}>${s.name}</span>`}
-      ${s.fill === 'accent' || s.stroke === 'accent' ? html`<span class="chip">${S.accentChip}</span>` : nothing}
+      ${ed.dualOn ? html`<span class="chip tone">${S.tone[toneOf(s)]}</span>` : nothing}
       ${unsafe.has(s.id) ? html`<span class="chip is-warn" title=${S.outsideSafe}>!<span class="sr">${S.outsideSafe}</span></span>` : nothing}
     </div>`;
   };
@@ -745,6 +763,7 @@ function documentSection(ed: McSvgEditor): TemplateResult {
   return html`<section class="grp-s" aria-labelledby="doc-h">
       <h3 id="doc-h">${S.docTitle}</h3>
       <p class="help">${S.noneSelected}</p>
+      ${dualSwitch(ed)}
       ${gridChips(ed)}
       ${placeRow(ed)}
       ${chk(S.safeArea, ed.safe, (v) => { ed.safe = v; ed.checks(); })}
@@ -762,6 +781,7 @@ function documentSection(ed: McSvgEditor): TemplateResult {
         ${btn(S.copySvg, 'copy', () => ed.copySvg(), { text: true, disabled: !ed.out.svg })}
         ${btn(S.downloadSvg, 'save', () => ed.download(), { text: true, disabled: !ed.out.svg })}
         ${btn(S.copyHa, 'copy', () => ed.copyHa(), { text: true, disabled: !ed.out.svg, tip: S.copyHaTip })}
+        ${ed.ha?.secondary ? btn(S.copyAccent, 'copy', () => ed.copyAccent(), { text: true }) : nothing}
         ${xferBtns(ed)}
       </div>
       <p class="help">${S.copyHaTip}</p>
@@ -881,8 +901,9 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       : nothing}
     <section class="grp-s" aria-labelledby="fs-h">
       <h4 id="fs-h">${S.fillAndStroke}</h4>
-      <div class="lbl">${S.fill}</div>${seg(S.fill, first.fill, paintItems, (v) => ed.setPaint('fill', v))}
-      <div class="lbl">${S.stroke}</div>${seg(S.stroke, first.stroke, paintItems, (v) => ed.setPaint('stroke', v))}
+      ${dualSwitch(ed)}
+      <div class="lbl">${S.fill}</div>${seg(S.fill, first.fill, paintItems(ed.dualOn), (v) => ed.setPaint('fill', v))}
+      <div class="lbl">${S.stroke}</div>${seg(S.stroke, first.stroke, paintItems(ed.dualOn), (v) => ed.setPaint('stroke', v))}
       <p class="help">${S.paintHelp}</p>
       ${first.stroke !== 'none'
         ? html`<div class="grid2">
@@ -939,6 +960,10 @@ function previews(ed: McSvgEditor): TemplateResult {
     html`<div class="pv-tile" style=${`background:${c.ground};--m:${ed.mcu ? ed.pvMain : c.m};--a:${ed.mcu ? ed.pvAccent : c.a}`} role="img" aria-label=${S.pvSize(px)}>
       ${guard([doc.shapes, doc.groups, ed.pvTheme, px], () => html`<svg viewBox=${viewBox(doc)} width=${px} height=${px} aria-hidden="true">${artNodes(doc)}</svg>`)}
     </div>`;
+  const haTile = (px: number): TemplateResult =>
+    html`<div class="pv-tile" style=${`background:${c.ground};color:${ed.mcu ? ed.pvMain : c.m}`} role="img" aria-label=${S.pvHaSize(px)}>
+      ${ha && !ha.empty ? html`<svg viewBox=${ha.viewBox} width=${px} height=${px} aria-hidden="true">${ha.secondary ? svg`<path d=${ha.secondary} fill="currentColor" opacity=${HA_SECONDARY_OPACITY}></path>` : nothing}${ha.path ? svg`<path d=${ha.path} fill="currentColor" fill-rule="nonzero"></path>` : nothing}</svg>` : nothing}
+    </div>`;
   const warn = ha && haWarns(ha);
   return html`<section class="pv" aria-label=${S.preview}>
     ${seg(S.preview, ed.pvTheme, [['light', S.pvLight], ['dark', S.pvDark], ['on', S.pvOn], ['off', S.pvOff]] as Array<['light' | 'dark' | 'on' | 'off', string]>, (t) => (ed.pvTheme = t))}
@@ -947,15 +972,8 @@ function previews(ed: McSvgEditor): TemplateResult {
           ([l, v, on]) => html`<label class="f"><span>${l as string}</span><input type="color" .value=${v as string} @input=${(e: Event) => (on as (v: string) => void)((e.target as HTMLInputElement).value)} /></label>`,
         )}</div>`
       : nothing}
-    <div class="pv-row">
-      ${tile(24)}${tile(48)}${tile(96)}
-      <div class="pv-ha">
-        <div class="pv-tile" style=${`background:${c.ground};color:${ed.mcu ? ed.pvMain : c.m}`} role="img" aria-label=${S.pvHa} title=${S.pvHaTip}>
-          ${ha && !ha.empty ? html`<svg viewBox=${ha.viewBox} width="24" height="24" aria-hidden="true">${ha.secondary ? svg`<path d=${ha.secondary} fill="currentColor" opacity=".5"></path>` : nothing}${ha.path ? svg`<path d=${ha.path} fill="currentColor" fill-rule="nonzero"></path>` : nothing}</svg>` : nothing}
-        </div>
-        <small>${S.pvHa}</small>
-      </div>
-    </div>
+    <div class="pv-g pv-mc"><small>${S.pvMc}</small><div class="pv-row">${tile(24)}${tile(48)}${tile(96)}</div></div>
+    <div class="pv-g pv-ha"><small title=${S.pvHaTip}>${S.pvHa}</small><div class="pv-row">${[24, 48].map(haTile)}</div></div>
     ${warn ? html`<p class="banner warn inline" role="status">${ha.empty ? S.haWarnEmpty : S.haWarn}</p>` : nothing}
   </section>`;
 }

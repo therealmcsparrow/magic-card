@@ -2,6 +2,7 @@ import type { MenuEntry } from '../contracts/path-canvas';
 import type { BooleanOp } from '../contracts/path-booleans';
 import type { SvgAlignEdge, SvgArrange } from '../contracts/svg-editor';
 import { boolReason } from './combine';
+import { toneOf } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { S } from './strings';
 
@@ -30,6 +31,7 @@ export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
     it('flipV', S.flipV, undefined, 'Shift+V'),
     it('rotCW', S.rotCw),
     it('rotCCW', S.rotCcw),
+    ...(ed.dualOn ? [it('tone', ed.selected.every((s) => toneOf(s) === 'accent') ? S.singleGo : S.makeAccent)] : []),
     { ...it('arrange', S.arrangeTitle, undefined, undefined, true), items: ARR.map((a) => it(`arr:${a}`, S.arrange[a], ed.canArrange(a) ? undefined : S.arrangeLimit)) },
     {
       ...it('align', S.alignTitle),
@@ -53,6 +55,7 @@ export function runMenu(ed: McSvgEditor, id: string): void {
   else if (k === 'del') ed.deleteSelected();
   else if (k === 'flipH' || k === 'flipV') ed.flip(k === 'flipH' ? 'h' : 'v');
   else if (k === 'rotCW' || k === 'rotCCW') ed.rotate(k === 'rotCW' ? 90 : -90);
+  else if (k === 'tone') ed.setTone(ed.selected.every((s) => toneOf(s) === 'accent') ? 'main' : 'accent');
   else if (k === 'arr') ed.arrange(v as SvgArrange);
   else if (k === 'al') ed.align(v as SvgAlignEdge);
   else if (k === 'dist') ed.distribute(v as 'h' | 'v');

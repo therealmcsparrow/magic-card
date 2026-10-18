@@ -46,6 +46,7 @@ import {
   shapeBox,
   toSvg,
   transformShape,
+  toneOf,
   ungroup,
   unionBox,
   boxOf,
@@ -105,7 +106,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -156,7 +157,9 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** The boolean button waiting for the chunk. */
   boolBusy?: BooleanOp;
   toast?: { text: string; action?: { label: string; run: () => void } };
-  dlg: 'save' | 'help' | undefined;
+  dlg: 'save' | 'help' | 'single' | undefined;
+  /** Dual-tone switch (session state): on also whenever a layer paints Accent. */
+  dual = false;
   /** The export / import panel (preset-transfer 1.0.0), loaded through window.MagicCard.loadTransfer(). */
   xfer?: { mode: 'import' | 'export'; items?: TransferItem[]; back?: HTMLElement };
   leaving = false;
@@ -284,6 +287,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.setDoc(doc);
     this.baseline = toSvg(doc);
     this.sel = [];
+    this.dual = false;
     this.cvSel = undefined;
     this.tool = 'select';
     this.stage = 'edit';
@@ -939,6 +943,38 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.editShapes(this.sel, (s) => retype(s, patch), 'Change shape', 'option');
   }
 
+  get accentCount(): number {
+    return this.doc.shapes.filter((s) => toneOf(s) !== 'main').length;
+  }
+
+  get dualOn(): boolean {
+    return this.dual || this.accentCount > 0;
+  }
+
+  /** On at once; off asks first while Accent layers exist. */
+  toggleDual(on: boolean): void {
+    if (on) this.dual = true;
+    else if (this.accentCount) this.dlg = 'single';
+    else this.dual = false;
+  }
+
+  /** Single tone: every Accent fill and stroke becomes Main, one history step (locked layers too). */
+  singleTone(): void {
+    const main = (p: Paint): Paint => (p === 'accent' ? 'main' : p);
+    this.apply({ ...this.doc, shapes: this.doc.shapes.map((s) => (toneOf(s) === 'main' ? s : { ...s, fill: main(s.fill), stroke: main(s.stroke), auto: false })) }, 'Single tone');
+    this.dual = false;
+    this.closeSingle();
+  }
+
+  closeSingle(): void {
+    this.dlg = undefined;
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-dual]')?.focus());
+  }
+
+  setTone(t: 'main' | 'accent'): void {
+    this.editShapes(this.sel, (s) => ({ ...s, fill: s.fill === 'none' ? 'none' : t, stroke: s.stroke === 'none' ? 'none' : t, auto: false }), 'Tone');
+  }
+
   setPaint(which: 'fill' | 'stroke', v: Paint): void {
     this.editShapes(this.sel, (s) => ({ ...s, [which]: v, auto: false, ...(which === 'stroke' && v !== 'none' && s.width <= 0 ? { width: 2 } : {}) }), `Change ${which}`);
   }
@@ -1437,6 +1473,11 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   copySvg(): void {
     if (this.out.svg) void this.copyText(this.out.svg, S.copiedSvg);
+  }
+
+  copyAccent(): void {
+    const f = haForm(this.doc, this.decimals);
+    if (f.secondary) void this.copyText(f.secondary, S.copiedAccent);
   }
 
   copyHa(): void {

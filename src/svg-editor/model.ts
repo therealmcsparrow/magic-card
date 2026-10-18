@@ -236,6 +236,12 @@ export function retype(s: Shape, patch: Partial<Pick<Shape, 'r' | 'sides' | 'inn
 
 // ── layers ──
 
+/** Which tone a layer paints: Main, Accent, or both (fill and stroke differ). */
+export const toneOf = (s: Shape): 'main' | 'accent' | 'both' => {
+  const a = s.fill === 'accent' || s.stroke === 'accent';
+  return a ? (s.fill === 'main' || s.stroke === 'main' ? 'both' : 'accent') : 'main';
+};
+
 export const byId = (d: Doc, id: string): Shape | undefined => d.shapes.find((s) => s.id === id);
 export const replaceShape = (d: Doc, s: Shape): Doc => ({ ...d, shapes: d.shapes.map((x) => (x.id === s.id ? s : x)) });
 export const mapShapes = (d: Doc, ids: readonly string[], f: (s: Shape) => Shape): Doc => ({ ...d, shapes: d.shapes.map((s) => (ids.includes(s.id) ? f(s) : s)) });
