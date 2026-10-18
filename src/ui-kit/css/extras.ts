@@ -5,6 +5,29 @@ import { css, CSSResult } from 'lit';
  * patterns. Not part of editorSystem: a screen adds them with `kitCss`, so the card editor renders as before.
  */
 
+/**
+ * The geometry and motion tokens the kit owns (contract KIT_SCOPED_TOKENS). Declared on :host like editorTokens, no
+ * colours, so a screen can still override them on its own :host. First in kitCss. Elements and parts that can sit
+ * in a root without this part read them with the same literal as fallback.
+ */
+export const kitTokens: CSSResult = css`
+  :host {
+    --mc-hit-sm: 32px;
+    --mc-hit-xs: 24px;
+    --mc-radius-tag: 6px;
+    --mc-radius-seg: 10px;
+    --mc-radius-xl: 16px;
+    --mc-ease: 0.15s ease-out;
+    --mc-shadow-dialog: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  @media (pointer: coarse) {
+    :host {
+      --mc-hit-sm: 44px;
+      --mc-hit-xs: 44px;
+    }
+  }
+`;
+
 export const kitButtonExtras: CSSResult = css`
   svg.gl {
     display: block;
@@ -38,16 +61,16 @@ export const kitButtonExtras: CSSResult = css`
   }
   /* in-row button: 24 square, borderless (list and tree rows) */
   .icon-btn.xs {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
+    width: var(--mc-hit-xs, 24px);
+    height: var(--mc-hit-xs, 24px);
+    border-radius: var(--mc-radius-tag, 6px);
     gap: 0;
     --mdc-icon-size: 16px;
   }
   @media (pointer: coarse) {
     .icon-btn.xs {
-      width: var(--mc-hit);
-      height: var(--mc-hit);
+      width: var(--mc-hit, 44px);
+      height: var(--mc-hit, 44px);
     }
   }
 `;
@@ -237,4 +260,4 @@ export const kitToolbar: CSSResult = css`
 `;
 
 /** Every part the card editor lacks. A screen: static styles = [editorTokens, editorPrimitives, kitCss, own layout css]. */
-export const kitCss: CSSResult[] = [kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar];
+export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar];

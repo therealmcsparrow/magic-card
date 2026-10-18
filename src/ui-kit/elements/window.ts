@@ -20,6 +20,8 @@ export class UiWindow extends LitElement {
   @property() heading = '';
   @property() closeLabel = '';
   @property() variant: 'dialog' | 'picker' | 'alert' | 'sheet' = 'dialog';
+  /** Width: s 420, m 480, l 640 (xl is contracted, its rule lands with the first 880 px grid). Default m; the picker variant defaults to l and the alert to s. */
+  @property({ reflect: true }) size?: 's' | 'm' | 'l' | 'xl';
   /** Id of an element inside the slotted content that gets focus first; default the first focusable one. */
   @property() initialFocus?: string;
   @property({ attribute: false }) opener?: HTMLElement;
@@ -108,7 +110,7 @@ export class UiWindow extends LitElement {
     if (!this._open) return nothing;
     const alert = this.variant === 'alert';
     return html`<dialog
-      class=${this.variant}
+      class="${this.variant} size-${this.size ?? (alert ? 's' : this.variant === 'picker' ? 'l' : 'm')}"
       role=${alert ? 'alertdialog' : 'dialog'}
       aria-labelledby="${this._id}-t"
       @cancel=${this._cancel}

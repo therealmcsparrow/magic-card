@@ -109,10 +109,10 @@ export const kitWindowElementCss: CSSResult = css`
   dialog {
     padding: 0;
     border: 0;
-    border-radius: 16px;
+    border-radius: var(--mc-radius-xl, 16px);
     background: var(--mc-surface, #fff);
     color: var(--mc-text, #212121);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--mc-shadow-dialog, 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1));
     width: min(480px, calc(100vw - 32px));
     max-height: min(80vh, 720px);
     overflow: hidden;
@@ -123,10 +123,13 @@ export const kitWindowElementCss: CSSResult = css`
   dialog::backdrop {
     background: var(--mc-scrim, rgba(0, 0, 0, 0.38));
   }
-  dialog.alert {
+  dialog.size-s {
     width: min(420px, calc(100vw - 32px));
   }
-  dialog.picker {
+  dialog.size-m {
+    width: min(480px, calc(100vw - 32px));
+  }
+  dialog.size-l {
     width: min(640px, calc(100vw - 32px));
   }
   .panel {
@@ -186,13 +189,15 @@ export const kitWindowElementCss: CSSResult = css`
   .footer[hidden] {
     display: none;
   }
+  /* Phones (CEO D8): a window is never full screen. It keeps its rounded corners and a margin; the sheet variant docks to the bottom edge. */
   @media (max-width: 599px) {
     dialog.sheet {
       width: 100vw;
       max-width: 100vw;
       margin: auto 0 0;
       max-height: 60vh;
-      border-radius: 16px 16px 0 0;
+      border-radius: var(--mc-radius-xl, 16px) var(--mc-radius-xl, 16px) 0 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
   }
   @media (pointer: coarse) {
