@@ -210,8 +210,8 @@ export const pickerStyles = css`
       grid-template-columns: 1fr auto;
     }
     .plist {
-      max-height: min(52vh, 520px);
-      min-height: min(52vh, 320px);
+      max-height: min(34vh, 340px);
+      min-height: min(28vh, 220px);
       overflow: auto;
       padding: 2px;
     }
