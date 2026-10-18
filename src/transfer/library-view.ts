@@ -310,11 +310,23 @@ export class LibraryView extends LitElement {
     this._msg = done;
   }
 
+  /** Puts focus back where the row's edit state started or ended: a pressed button must not leave it on the page. */
+  private _focusRow(id: string, to: 'input' | 'cancel' | 'rename' | 'delete'): void {
+    void this.updateComplete.then(() => {
+      const row = [...this.renderRoot.querySelectorAll<HTMLInputElement>('input.check')].find((i) => i.id === `row-${id}-check`)?.closest('.row');
+      if (!row) return;
+      const all = [...row.querySelectorAll<HTMLElement>('button')];
+      const acts = [...row.querySelectorAll<HTMLElement>('.acts button')];
+      (to === 'input' ? row.querySelector<HTMLElement>('.input') : to === 'cancel' ? all[all.length - 1] : to === 'delete' ? acts[acts.length - 1] : acts[acts.length - 2])?.focus();
+    });
+  }
+
   private async _rename(r: Row, raw: string): Promise<void> {
     const name = raw.trim();
     if (!name || name.length > 80) {
       this._bad = true;
       this._msg = t('The name must be 1 to 80 characters.');
+      this._focusRow(r.id, 'input');
       return;
     }
     try {
@@ -328,20 +340,29 @@ export class LibraryView extends LitElement {
         await this._call({ type: k === 'icon' ? CMD.iconsSave : CMD.shapesSave, [key]: { ...rest(full as never), id: r.id, name }, base_updated_at: (full as SavedIcon).updated_at });
       }
       await this._after(t('Renamed to {name}.', { name }));
+      this._focusRow(r.id, 'rename');
     } catch (e) {
       this._fail(e);
+      this._focusRow(r.id, 'input');
     }
   }
 
   private async _delete(r: Row): Promise<void> {
+    const at = [...this.renderRoot.querySelectorAll<HTMLInputElement>('input.check')].findIndex((i) => i.id === `row-${r.id}-check`);
     try {
       const k = this._kind;
       if (k === 'animation') await this._call({ type: DEL_ANIM, animation_id: r.id });
       else if (k === 'theme') await this.presets!.remove(r.id);
       else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
       await this._after(t('Deleted {name}.', { name: r.name }));
+      // the row is gone: focus goes to the row that took its place, or to the search field when the list is empty
+      void this.updateComplete.then(() => {
+        const left = this.renderRoot.querySelectorAll<HTMLElement>('input.check');
+        (left[Math.min(at, left.length - 1)] ?? this.renderRoot.querySelector<HTMLElement>('#q'))?.focus();
+      });
     } catch (e) {
       this._fail(e);
+      this._focusRow(r.id, 'cancel');
     }
   }
 
@@ -492,7 +513,11 @@ export class LibraryView extends LitElement {
 
   private _item(r: Row, can: boolean): TemplateResult {
     const e = this._edit?.id === r.id ? this._edit.kind : undefined;
-    const set = (kind: 'rename' | 'delete' | undefined) => () => (this._edit = kind ? { id: r.id, kind } : undefined);
+    const set = (kind: 'rename' | 'delete' | undefined) => () => {
+      const was = this._edit?.id === r.id ? this._edit.kind : undefined;
+      this._edit = kind ? { id: r.id, kind } : undefined;
+      this._focusRow(r.id, kind ? (kind === 'rename' ? 'input' : 'cancel') : (was ?? 'rename'));
+    };
     const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
     const check = {
       label: t('Select {name}', { name: r.name }),
