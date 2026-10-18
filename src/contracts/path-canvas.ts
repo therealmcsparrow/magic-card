@@ -17,10 +17,14 @@ import type { AnchorKind, Box, EditPath, PathEdit, PathTidy, Pt } from './path-m
  * PathCanvasChunk below. Uses path-model 1.0.0. Imports nothing from src/anim-studio/,
  * src/editor/, src/svg-editor/ or src/shape-editor/.
  *
+ * Revision 3 (2026-10-18, CEO decision after T4 measured 47,935 B against the 40 KiB ceiling): the chunk
+ * no longer exports `pathDraw`. src/path/draw.ts (6.2 KB, draw tools only) is imported by the SVG editor
+ * chunk itself; the shape editor never draws. The chunk cap is 44 KiB (45,056 B), see ADR 0019.
+ *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
- * (edit, tidy, draw) from this chunk's exports and do not import src/path/edit.ts, tidy.ts or
- * draw.ts themselves (import scan test). They may import src/path/core.ts (small, also in the card).
+ * (edit, tidy) from this chunk's exports and do not import src/path/edit.ts or tidy.ts
+ * themselves; only the SVG editor chunk imports src/path/draw.ts directly (revision 3) (import scan test). They may import src/path/core.ts (small, also in the card).
  *
  * The canvas is controlled: it never keeps its own copy of the paths. It renders `paths`, and every
  * change is an `mc-path-change` event the host applies (or refuses) and passes back.
@@ -192,12 +196,11 @@ export interface History<T> {
   clear(state: T): void;
 }
 
-/** What `import()` of the chunk resolves to. Draw generators keep the signatures of src/path/draw.ts. */
+/** What `import()` of the chunk resolves to. Draw generators (src/path/draw.ts) are not part of it, see revision 3. */
 export interface PathCanvasChunk {
   PATH_CANVAS_CONTRACT_VERSION: string;
   /** Default limit 100 steps. */
   createHistory<T>(initial: T, limit?: number): History<T>;
   pathEdit: PathEdit;
   pathTidy: PathTidy;
-  pathDraw: Record<string, (...args: never[]) => unknown>;
 }

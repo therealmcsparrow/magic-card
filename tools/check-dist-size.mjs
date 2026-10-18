@@ -22,7 +22,7 @@ const CAPS = {
   // path canvas for the SVG and shape editors (T4): 47,935 B measured + 5 %. The architect's ceiling was 40 KiB;
   // draw.ts (6.2 KB) is in this chunk by contract and is the main reason it is over. The chunk is only emitted
   // once an editor chunk imports src/path-canvas/loader.ts; until then this entry reports "missing from dist".
-  'magic-card-path-canvas.js': 51_200, // 47,935
+  'magic-card-path-canvas.js': 45_056, // 44 KiB by CEO decision (ADR 0019); measured below
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));

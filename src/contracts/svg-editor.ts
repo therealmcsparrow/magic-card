@@ -13,7 +13,7 @@ import type { SavedIconInput } from './mcu-library';
  * - module `svg-editor`, src/svg-editor/, chunk SVG_EDITOR_CHUNK_FILE, element SVG_EDITOR_TAG.
  * - module `shape-editor`, src/shape-editor/, chunk SHAPE_EDITOR_CHUNK_FILE, element SHAPE_EDITOR_TAG.
  * Both import() the path-canvas chunk (path-canvas 1.0.0) when they open and take the editor-only
- * path-model parts (edit, tidy, draw) from its exports (one copy rule, path-canvas.ts). Modules
+ * path-model parts (edit, tidy) from its exports (one copy rule, path-canvas.ts). Revision 2026-10-18: the draw tools (src/path/draw.ts) are no longer in that chunk; this chunk imports src/path/draw.ts itself (CEO decision, ADR 0019). The shape editor never imports it. Modules
  * already in magic-card.js (src/path/core.ts, src/icons/svg-sanitize.ts, src/icons/icon-source.ts,
  * src/utils/shape-path.ts) are imported normally; webpack does not copy modules a parent chunk
  * already holds. The animation studio entry imports the same src/path/ files (shared source, its
