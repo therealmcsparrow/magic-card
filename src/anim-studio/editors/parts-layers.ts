@@ -88,6 +88,7 @@ export class AnimPartsLayers extends LitElement {
 
   private readonly _list = new LayerRows(this, {
     select: (key, e) => {
+      if (key.startsWith('tracks:')) return this._list.setOpen(key.slice(7), !this.layerView?.open.includes(key.slice(7)));
       if (key.startsWith('lane:')) return this.disabled ? undefined : selectLane(this, this.doc!, key);
       const rows = this._rows();
       const row = rows.find((r) => r.ref === key);
@@ -100,7 +101,7 @@ export class AnimPartsLayers extends LitElement {
     move: (key, dir) => this._move(dir === 'up' ? 1 : -1, key as TargetRef),
     rename: (key) => (this._renaming = key as TargetRef),
     dblclick: (key) => !this.disabled && !this._list.refuseLocked(key, targetName(this.doc!, key as TargetRef)) && (this._renaming = key as TargetRef),
-    open: (key, open) => (key.startsWith('group:') ? this._setOpen(key.slice(6), open) : this._list.setOpen(key, open)),
+    open: (key, open) => (key.startsWith('group:') ? this._setOpen(key.slice(6), open) : this._list.setOpen(key.startsWith('tracks:') ? key.slice(7) : key, open)),
     nameOf: (key) => (key.startsWith('lane:') ? laneName(key) : this.doc ? targetName(this.doc, key as TargetRef) : key),
   });
 
@@ -332,7 +333,7 @@ export class AnimPartsLayers extends LitElement {
     // Shift+Up / Down: extend the selection (plain arrows, Home / End, Alt, F2, H S L: the shared row)
     if (e.shiftKey && !e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && (e.target as HTMLElement).matches?.('[data-lk]')) {
       // a track row is not a part: it does not extend the part selection
-      if ((e.target as HTMLElement).dataset.lk?.startsWith('lane:')) return;
+      if (/^(lane|tracks):/.test((e.target as HTMLElement).dataset.lk ?? '')) return;
       e.preventDefault();
       const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === 'ArrowDown' ? 1 : -1)))];
       if (!next) return;
@@ -437,8 +438,9 @@ export class AnimPartsLayers extends LitElement {
     const order = row.kind === 'part' ? parts.findIndex((p) => `part:${p.id}` === row.ref) : -1;
     const lockedRow = this._list.locked(row.ref);
     const lanes = lanesOf(d, row.ref).length > 0;
-    // a part's tracks open with the view; a group's follow its own disclosure (members and tracks together)
-    const open = row.kind === 'group' ? (lanes ? !this._collapsed.has(gid) : undefined) : tracksOpen(d, this.layerView ?? EMPTY_LAYER_VIEW, row.ref, row.ref);
+    // a part's tracks open with the view; a group has two disclosures: its members (open by default) and its
+    // tracks, a "Tracks" row under it (closed by default, the view's `open` list)
+    const open = row.kind === 'group' ? undefined : tracksOpen(d, this.layerView ?? EMPTY_LAYER_VIEW, row.ref, row.ref);
     const item = this._list.row({
       key: row.ref,
       name: row.name,
@@ -474,6 +476,12 @@ export class AnimPartsLayers extends LitElement {
             />`
           : undefined,
     });
+    if (row.kind === 'group') {
+      if (!lanes || this._collapsed.has(gid)) return [item];
+      const tOpen = !!tracksOpen(d, this.layerView ?? EMPTY_LAYER_VIEW, row.ref, row.ref);
+      const head = this._list.row({ key: `tracks:${row.ref}`, name: 'Tracks (combined, no order)', bare: true, level: 2, expanded: tOpen, selected: false, toggles: [], describe: `keyframe tracks of ${row.name}` });
+      return tOpen ? [item, head, ...trackRows(this._list, d, this.selection, row.ref, 3)] : [item, head];
+    }
     return open ? [item, ...trackRows(this._list, d, this.selection, row.ref, row.level === 2 ? 3 : 2)] : [item];
   }
 
