@@ -348,6 +348,12 @@ export class AnimationStudio extends LitElement {
     else if (changed.has('_doc')) this._autoSplit(true);
     // the slide-over takes the focus when it opens (its scrim covers the rest)
     if (changed.has('_inspOpen') && this._inspOpen && this._slideOver) this._focusSel ??= 'aside.inspector';
+    // a shape was drawn: its row is in view in the layers column (a short window scrolls the column)
+    if (changed.has('_doc') && this._doc && prev && prev.id === this._doc.id && (this._doc.rig?.shapes?.length ?? 0) > (prev.rig?.shapes?.length ?? 0)) {
+      const shapes = this._doc.rig?.shapes ?? [];
+      const id = shapes[shapes.length - 1].id;
+      void this._revealShape(id);
+    }
     if (this._revealPanel) {
       const sec = this.shadowRoot?.querySelector<HTMLElement>(`.layer-group[data-panel="${this._revealPanel}"]`);
       this._revealPanel = undefined;
@@ -1663,6 +1669,16 @@ export class AnimationStudio extends LitElement {
     if (growOnly ? split < this._split - 0.002 : Math.abs(split - this._split) > 0.002) this._split = split;
   }
 
+  /** Scroll the layers column to a (new) shape's row or rail button, once it is rendered. */
+  private async _revealShape(id: string): Promise<void> {
+    await this.updateComplete;
+    const nav = this.shadowRoot?.querySelector('nav.layers');
+    const panel = nav?.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-anim-shapes-layers');
+    await panel?.updateComplete;
+    const row = panel?.shadowRoot?.querySelector<HTMLElement>(`li[data-id="${id}"]`) ?? nav?.querySelector<HTMLElement>(`[data-shape="${id}"]`);
+    row?.scrollIntoView?.({ block: 'nearest' });
+  }
+
   private _onSplitDown = (e: PointerEvent): void => {
     if (e.button !== 0) return;
     e.preventDefault();
@@ -1797,6 +1813,21 @@ export class AnimationStudio extends LitElement {
           )}
         </ul>`
       : nothing;
+    // drawn shapes stay findable in the rail: one button each, top of the paint order first
+    const drawn = rail && d.kind === 'keyframes' ? [...(d.rig?.shapes ?? [])].reverse() : [];
+    const shapesRail = drawn.length
+      ? html`<ul class="layer-list rail-shapes" role="list" aria-label="Shapes">
+          ${drawn.map((s) => {
+            const t = `shape:${s.id}` as TargetRef;
+            const on = this._selection.target === t || !!this._selection.targets?.includes(t);
+            return html`<li>
+              <button type="button" class="layer" data-shape=${s.id} aria-pressed=${on ? 'true' : 'false'} aria-label=${s.name} title=${s.name} @click=${(e: MouseEvent) => this._pickLayer(t, e.ctrlKey || e.metaKey || e.shiftKey)}>
+                <ha-icon icon="mdi:vector-polyline"></ha-icon>
+              </button>
+            </li>`;
+          })}
+        </ul>`
+      : nothing;
     return html`<nav class="layers ${rail ? 'rail' : ''}" aria-label="Layers">
       <div class="layers-head">
         ${rail ? nothing : html`<h2>Layers</h2>`}
@@ -1811,7 +1842,7 @@ export class AnimationStudio extends LitElement {
           <ha-icon icon=${rail ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left'}></ha-icon>
         </button>
       </div>
-      <div class="layers-body">${panels.length ? panels : html`${this._renderLayerList(d, rail)}${opens}`}</div>
+      <div class="layers-body">${panels.length ? panels : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
     </nav>`;
   }
 

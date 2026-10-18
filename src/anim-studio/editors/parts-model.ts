@@ -213,7 +213,7 @@ export function splitPart(doc: AnimationDoc, partId: string): { doc: AnimationDo
   return { doc: withRig(doc, { ...rig, parts, ...(groups ? { groups } : {}) }), ids: [partId, ...extra.map((p) => p.id)] };
 }
 
-/** Move a part up (-1) or down (+1) in drawing order (later parts draw on top). */
+/** Move a part earlier (-1, drawn underneath: down the list) or later (+1, drawn on top: up the list) in drawing order (later parts draw on top). */
 export function movePart(doc: AnimationDoc, partId: string, by: -1 | 1): AnimationDoc {
   const rig = doc.rig;
   const i = rig?.parts.findIndex((p) => p.id === partId) ?? -1;

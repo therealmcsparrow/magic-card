@@ -129,7 +129,9 @@ export class AnimPartsLayers extends LitElement {
     const keys = (ref: string) => trackOf(d, ref)?.keyframes.length ?? 0;
     const rows: Row[] = [];
     const placed = new Set<string>();
-    for (const p of rig.parts) {
+    // the list reads like the Shapes list: the part painted last (on top) first, the bottom part last
+    const top = [...rig.parts].reverse();
+    for (const p of top) {
       const g = groupOfPart(rig, p.id);
       if (!g) {
         rows.push({ ref: partRef(p.id), level: 1, kind: 'part', name: p.name, count: p.from?.length ?? 1, keys: keys(partRef(p.id)) });
@@ -139,7 +141,7 @@ export class AnimPartsLayers extends LitElement {
       placed.add(g.id);
       rows.push({ ref: groupRef(g.id), level: 1, kind: 'group', name: g.name, count: g.parts.length, keys: keys(groupRef(g.id)) });
       if (this._collapsed.has(g.id)) continue;
-      for (const m of rig.parts.filter((x) => groupOfPart(rig, x.id)?.id === g.id)) {
+      for (const m of top.filter((x) => groupOfPart(rig, x.id)?.id === g.id)) {
         rows.push({ ref: partRef(m.id), level: 2, kind: 'part', name: m.name, count: m.from?.length ?? 1, keys: keys(partRef(m.id)) });
       }
     }
@@ -252,7 +254,7 @@ export class AnimPartsLayers extends LitElement {
     const part = this._sel.find((r) => r.startsWith('part:'));
     if (!d || !part || this.disabled) return;
     const next = movePart(d, part.slice(5), by);
-    if (next !== d) this._change(next, 'Move part', by < 0 ? 'Moved up: drawn underneath' : 'Moved down: drawn on top');
+    if (next !== d) this._change(next, 'Move part', by > 0 ? 'Moved up: drawn on top' : 'Moved down: drawn underneath');
   }
 
   private _rename(ref: TargetRef, name: string): void {
@@ -336,7 +338,7 @@ export class AnimPartsLayers extends LitElement {
     }
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
-      if (e.altKey) return this._move(e.key === 'ArrowUp' ? -1 : 1);
+      if (e.altKey) return this._move(e.key === 'ArrowUp' ? 1 : -1);
       const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === 'ArrowDown' ? 1 : -1)))];
       if (!next) return;
       if (e.shiftKey && cur >= 0) this._select([...this._sel, next.ref], next.ref);
@@ -546,8 +548,8 @@ export class AnimPartsLayers extends LitElement {
               ${this._iconBtn('mdi:ungroup', 'Ungroup', () => this._ungroup(), sel.some((r) => r.startsWith('group:')), 'Ctrl+Shift+G')}
               ${this._iconBtn('mdi:set-merge', 'Merge parts', () => this._merge(), mergeable)}
               ${this._iconBtn('mdi:call-split', 'Split back into shapes', () => this._splitBack(), splittable)}
-              ${this._iconBtn('mdi:arrow-up', 'Move up (drawn underneath)', () => this._move(-1), order > 0, 'Alt+ArrowUp')}
-              ${this._iconBtn('mdi:arrow-down', 'Move down (drawn on top)', () => this._move(1), order >= 0 && order < d.rig!.parts.length - 1, 'Alt+ArrowDown')}
+              ${this._iconBtn('mdi:arrow-up', 'Move up (drawn on top)', () => this._move(1), order >= 0 && order < d.rig!.parts.length - 1, 'Alt+ArrowUp')}
+              ${this._iconBtn('mdi:arrow-down', 'Move down (drawn underneath)', () => this._move(-1), order > 0, 'Alt+ArrowDown')}
             </div>
             <ul class="tree" role="tree" aria-label="Icon parts" aria-multiselectable="true">
               ${rows.map((r) => this._renderRow(r, rows, sel))}
