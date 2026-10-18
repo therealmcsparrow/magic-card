@@ -194,7 +194,7 @@ export class StructureOutline extends LitElement {
   }
 
   private _visibleItems(): HTMLElement[] {
-    return Array.from(this.shadowRoot?.querySelectorAll<HTMLElement>('[role="treeitem"]') || []);
+    return Array.from(this.shadowRoot?.querySelectorAll<HTMLElement>('[role="treeitem"][data-key]') || []);
   }
 
   private _select(sel: Selection): void {
@@ -344,7 +344,7 @@ export class StructureOutline extends LitElement {
   private _itemOnPath(path: EventTarget[]): HTMLElement | null {
     for (const t of path) {
       if (t === this) return null;
-      if (t instanceof HTMLElement && t.getAttribute('role') === 'treeitem') return t;
+      if (t instanceof HTMLElement && t.getAttribute('role') === 'treeitem' && t.dataset.key) return t;
     }
     return null;
   }
@@ -408,8 +408,17 @@ export class StructureOutline extends LitElement {
 
   // ── click / keyboard ──
 
+  /** A press on the caret or the ⋮ button belongs to the button, not to the item that holds it. */
+  private _onButton(e: Event): boolean {
+    return e.composedPath().some((n) => n instanceof HTMLButtonElement);
+  }
+
+  private _rename(e: Event, key: string): void {
+    if (!this._onButton(e)) this.startRename(key);
+  }
+
   private _onItemClick(e: Event): void {
-    if (Date.now() < this._ignoreClickUntil) return;
+    if (Date.now() < this._ignoreClickUntil || this._onButton(e)) return;
     const el = (e.currentTarget as HTMLElement);
     const key = el.dataset.key;
     if (key) this._select(selectionFromKey(key));
@@ -503,7 +512,7 @@ export class StructureOutline extends LitElement {
         break;
     }
     // F2, Ctrl+D, Delete on rows / columns / tabs, Shift+F10 and the Menu key: the same as the canvas
-    const anchor = item.parentElement?.querySelector<HTMLElement>(':scope > .more') ?? item;
+    const anchor = item.querySelector<HTMLElement>(':scope > .more') ?? item;
     if (this._itemMenu.shortcut(e, sel, anchor, { returnFocus: item })) handled();
   }
 
@@ -780,7 +789,10 @@ export class StructureOutline extends LitElement {
         @dragover=${(e: DragEvent) => this._onRowDragOver(e, ri)}
         @drop=${this._onRowDrop}
       >
-        <div class="line">
+        <div class="line k-row" role="treeitem" aria-level="2" data-key=${key} data-hidden=${isHiddenItem(row) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
+          aria-expanded=${open ? 'true' : 'false'} aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+          draggable="true" @dragstart=${(e: DragEvent) => this._onRowDragStart(e, ri)} @dragend=${this._onDragEnd}
+          @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
           <button
             type="button"
             class="caret"
@@ -793,19 +805,9 @@ export class StructureOutline extends LitElement {
           </button>
           <div
             class="item row-item k-row"
-            role="treeitem"
-            aria-level="2"
-            data-key=${key}
+            id=${`i-${key}`}
             data-hidden=${isHiddenItem(row) ? '' : nothing}
-            tabindex=${a.tab}
-            aria-expanded=${open ? 'true' : 'false'}
-            aria-selected=${a.current ? 'true' : 'false'}
-            aria-current=${a.current ? 'true' : nothing}
-            draggable="true"
-            @dragstart=${(e: DragEvent) => this._onRowDragStart(e, ri)}
-            @dragend=${this._onDragEnd}
-            @click=${this._onItemClick}
-            @dblclick=${() => this.startRename(key)}
+            data-current=${a.current ? '' : nothing}
           >
             ${renaming
               ? this._renderRename(sel, t('Row name'))
@@ -854,18 +856,15 @@ export class StructureOutline extends LitElement {
 
     return html`
       <li role="none" class="col">
-        <div class="line" @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)} @drop=${this._dropModule}>
+        <div class="line k-column" role="treeitem" aria-level="3" data-key=${key} data-hidden=${isHiddenItem(col) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
+          aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+          @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}
+          @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)} @drop=${this._dropModule}>
           <div
             class="item col-item k-column"
-            role="treeitem"
-            aria-level="3"
-            data-key=${key}
+            id=${`i-${key}`}
             data-hidden=${isHiddenItem(col) ? '' : nothing}
-            tabindex=${a.tab}
-            aria-selected=${a.current ? 'true' : 'false'}
-            aria-current=${a.current ? 'true' : nothing}
-            @click=${this._onItemClick}
-            @dblclick=${() => this.startRename(key)}
+            data-current=${a.current ? '' : nothing}
           >
             ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span></span>`}
             ${this._hiddenMark(col)}
@@ -891,6 +890,8 @@ export class StructureOutline extends LitElement {
           : html`
               <div
                 class="empty col-empty ${dropHere === 0 ? 'drop-into' : ''}"
+                role="treeitem"
+                aria-level="4"
                 data-empty=${key}
                 @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)}
                 @drop=${this._dropModule}
@@ -913,7 +914,7 @@ export class StructureOutline extends LitElement {
   /** Layers: a compact "Add module" row under a column's last module (opens the module picker). */
   private _renderAddRow(ri: number, ci: number): TemplateResult {
     return html`
-      <li role="none" class="add-mod">
+      <li role="treeitem" aria-level="4" class="add-mod">
         <button
           type="button"
           class="btn btn-text btn-sm"
@@ -929,7 +930,7 @@ export class StructureOutline extends LitElement {
   /** A compact "Add column" row under a row's last column (adds an empty column and selects it). */
   private _renderAddColumn(ri: number): TemplateResult {
     return html`
-      <li role="none" class="add-col">
+      <li role="treeitem" aria-level="3" class="add-col">
         <button
           type="button"
           class="btn btn-text btn-sm"
@@ -969,21 +970,15 @@ export class StructureOutline extends LitElement {
         @dragover=${(e: DragEvent) => this._onModuleDragOver(e, ri, ci, mi)}
         @drop=${this._dropModule}
       >
-        <div class="line mod-line">
+        <div class="line mod-line k-module" role="treeitem" aria-level="4" data-key=${key} data-hidden=${isHiddenItem(mod) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
+          aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+          draggable=${this._renaming === key ? 'false' : 'true'} @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, ri, ci, mi)} @dragend=${this._onDragEnd}
+          @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
           <div
             class="item mod-item k-module"
-            role="treeitem"
-            aria-level="4"
-            data-key=${key}
+            id=${`i-${key}`}
             data-hidden=${isHiddenItem(mod) ? '' : nothing}
-            tabindex=${a.tab}
-            aria-selected=${a.current ? 'true' : 'false'}
-            aria-current=${a.current ? 'true' : nothing}
-            draggable=${this._renaming === key ? 'false' : 'true'}
-            @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, ri, ci, mi)}
-            @dragend=${this._onDragEnd}
-            @click=${this._onItemClick}
-            @dblclick=${() => this.startRename(key)}
+            data-current=${a.current ? '' : nothing}
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
@@ -1025,7 +1020,7 @@ export class StructureOutline extends LitElement {
     if (!hasSlotNodes(parent)) {
       return html`<ul role="group">
         ${(slots[0] ?? []).map((child, index) => this._renderChild(child, owner, 0, index, level, selKey, focusKey))}
-        ${this._renderAddChild(owner, 0, this._moduleName(parent))}
+        ${this._renderAddChild(owner, 0, this._moduleName(parent), level)}
       </ul>`;
     }
     const isTabs = parent.type === 'tabs';
@@ -1043,18 +1038,14 @@ export class StructureOutline extends LitElement {
         const renaming = this._renaming === key;
         return html`
           <li role="none" class="col slot">
-            <div class="line mod-line">
+            <div class="line mod-line k-column" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(entry) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
+              aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+              @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
               <div
                 class="item col-item slot-item k-column"
-                role="treeitem"
-                aria-level=${level}
-                data-key=${key}
+                id=${`i-${key}`}
                 data-hidden=${isHiddenItem(entry) ? '' : nothing}
-                tabindex=${a.tab}
-                aria-selected=${a.current ? 'true' : 'false'}
-                aria-current=${a.current ? 'true' : nothing}
-                @click=${this._onItemClick}
-                @dblclick=${() => this.startRename(key)}
+                data-current=${a.current ? '' : nothing}
               >
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
@@ -1078,12 +1069,12 @@ export class StructureOutline extends LitElement {
             </div>
             <ul role="group">
               ${list.map((child, index) => this._renderChild(child, owner, slot, index, level + 1, selKey, focusKey))}
-              ${this._renderAddChild(owner, slot, `${this._moduleName(parent)} ${label}`)}
+              ${this._renderAddChild(owner, slot, `${this._moduleName(parent)} ${label}`, level + 1)}
             </ul>
           </li>
         `;
       })}
-      <li role="none" class="add-col">
+      <li role="treeitem" aria-level=${level} class="add-col">
         <button type="button" class="btn btn-text btn-sm" aria-label=${isTabs ? t('Add tab to {name}', { name: this._moduleName(parent) }) : t('Add column to {name}', { name: this._moduleName(parent) })}
           @click=${() => this._addSlot(owner, parent.type)}>
           <ha-icon icon="mdi:plus"></ha-icon>${isTabs ? t('Add tab') : t('Add column')}
@@ -1103,19 +1094,15 @@ export class StructureOutline extends LitElement {
     const sub = typeof child.entity === 'string' && ENTITY_RE.test(child.entity) ? child.entity : undefined;
     return html`
       <li role="none" class="mod child">
-        <div class="line mod-line">
+        <div class="line mod-line k-module" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(child) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
+          aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+          title=${this.variant === 'layers' ? `${title}${sub ? ` · ${sub}` : ''}` : nothing}
+          @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
           <div
             class="item mod-item k-module"
-            role="treeitem"
-            aria-level=${level}
-            data-key=${key}
+            id=${`i-${key}`}
             data-hidden=${isHiddenItem(child) ? '' : nothing}
-            title=${this.variant === 'layers' ? `${title}${sub ? ` · ${sub}` : ''}` : nothing}
-            tabindex=${a.tab}
-            aria-selected=${a.current ? 'true' : 'false'}
-            aria-current=${a.current ? 'true' : nothing}
-            @click=${this._onItemClick}
-            @dblclick=${() => this.startRename(key)}
+            data-current=${a.current ? '' : nothing}
           >
             <ha-icon icon=${icon}></ha-icon>
             ${this._renaming === key
@@ -1134,9 +1121,9 @@ export class StructureOutline extends LitElement {
   }
 
   /** "Add module" under a layout's list (also when empty): opens the module picker for that slot. */
-  private _renderAddChild(owner: ModuleSel, slot: number, where: string): TemplateResult {
+  private _renderAddChild(owner: ModuleSel, slot: number, where: string, level: number): TemplateResult {
     return html`
-      <li role="none" class="add-mod">
+      <li role="treeitem" aria-level=${level} class="add-mod">
         <button type="button" class="btn btn-text btn-sm" aria-label=${t('Add module to {where}', { where })} @click=${() => this._addChild(owner, slot)}>
           <ha-icon icon="mdi:plus"></ha-icon>${t('Add module')}
         </button>
@@ -1225,15 +1212,21 @@ export class StructureOutline extends LitElement {
       .item:hover {
         background: var(--mc-surface-2);
       }
-      .item:focus-visible {
+      /* The line is the tree item (it owns the caret and the menu button); the plate inside it shows the ring. */
+      .line:focus-visible {
+        outline: none;
+      }
+      .line:focus-visible > .item,
+      .card-item:focus-visible {
+        outline: 2px solid var(--mc-focus);
         outline-offset: -2px;
       }
       /* Selected item: 12% wash + ink of its level (.k-card / .k-row / .k-column / .k-module). */
-      .item[aria-current='true'] {
+      .item[data-current] {
         background: var(--k-tint);
         color: var(--k-ink);
       }
-      :host([variant='pane']) .item[aria-current='true'] {
+      :host([variant='pane']) .item[data-current] {
         border-color: color-mix(in srgb, var(--k) 45%, transparent);
       }
       .item > ha-icon {
@@ -1241,7 +1234,7 @@ export class StructureOutline extends LitElement {
         color: var(--mc-text-2);
         flex: none;
       }
-      .item[aria-current='true'] > ha-icon {
+      .item[data-current] > ha-icon {
         color: var(--k-ink);
       }
       .text {
@@ -1288,7 +1281,7 @@ export class StructureOutline extends LitElement {
         font-weight: 500;
         color: var(--mc-text-2);
       }
-      .col-item[aria-current='true'] .name {
+      .col-item[data-current] .name {
         color: var(--k-ink);
       }
       .ovr-dot {
@@ -1335,7 +1328,7 @@ export class StructureOutline extends LitElement {
       }
       .mod-line:hover > .more,
       .mod-line:focus-within > .more,
-      .mod-line > .item[aria-current='true'] + .more,
+      .mod-line > .item[data-current] + .more,
       .mod-line > .more[aria-expanded='true'] {
         opacity: 1;
       }
