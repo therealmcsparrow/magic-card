@@ -1,4 +1,4 @@
-import type { AnchorKind, Box, EditPath, PathEdit, PathTidy, Pt } from './path-model';
+import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from './path-model';
 
 /*
  * Contract: path canvas. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0020.
@@ -15,16 +15,26 @@ import type { AnchorKind, Box, EditPath, PathEdit, PathTidy, Pt } from './path-m
  * chunks only; never by magic-card.js, never by the card-editor chunk statically. The chunk defines
  * one element, PATH_CANVAS_TAG (guarded by customElements.get), and its module exports
  * PathCanvasChunk below. Uses path-model 1.0.0. Imports nothing from src/anim-studio/,
- * src/editor/, src/svg-editor/ or src/shape-editor/.
+ * src/editor/, src/svg-editor/, src/shape-editor/ or src/path-booleans/.
  *
  * Revision 3 (2026-10-18, CEO decision after T4 measured 47,935 B against the 40 KiB ceiling): the chunk
- * no longer exports `pathDraw`. src/path/draw.ts (6.2 KB, draw tools only) is imported by the SVG editor
- * chunk itself; the shape editor never draws. The chunk cap is 44 KiB (45,056 B), see ADR 0019.
+ * no longer exports `pathDraw`; src/path/draw.ts is imported by the SVG editor chunk itself. The chunk
+ * cap is 44 KiB (45,056 B), see ADR 0019. SUPERSEDED by revision 4.
+ *
+ * Revision 4 (2026-10-18, CEO decisions after the hands-on demo, ADR 0025): the shape editor now draws
+ * too (pen, starter outlines), so the draw generators come back into this chunk and are shared by both
+ * editors: the chunk exports `pathDraw` (path-model PathDraw, incl. the new primitives). Neither editor
+ * chunk imports src/path/draw.ts or src/path/edit.ts any more (with splitChunks false that would copy
+ * them; T10 measured draw 6.2 KB + edit 5.9 KB copied into the SVG editor chunk). Additive element
+ * properties: `gridStep` (drawn grid spacing, the SVG editor's grid size setting) and `underlay` (T10:
+ * ground and frame see-through so the host can draw the artwork underneath). Ceiling: needs CEO, see
+ * ADR 0025 (proposed 54 KiB = 55,296 B; CAPS entry measured + 5 %).
  *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
- * (edit, tidy) from this chunk's exports and do not import src/path/edit.ts or tidy.ts
- * themselves; only the SVG editor chunk imports src/path/draw.ts directly (revision 3) (import scan test). They may import src/path/core.ts (small, also in the card).
+ * (edit, tidy, draw) from this chunk's exports and do not import src/path/edit.ts, tidy.ts or
+ * draw.ts themselves (import scan test, revision 4). They may import src/path/core.ts (small, also in
+ * the card). Boolean operations are their own chunk (path-booleans 1.0.0), not part of this one.
  *
  * The canvas is controlled: it never keeps its own copy of the paths. It renders `paths`, and every
  * change is an `mc-path-change` event the host applies (or refuses) and passes back.
@@ -64,6 +74,10 @@ import type { AnchorKind, Box, EditPath, PathEdit, PathTidy, Pt } from './path-m
  *   anything; the editor layer root stops Escape (svg-editor 1.0.0).
  * - Snapping (when `snap.enabled`; Shift held during a drag suspends it; Alt never does): grid step,
  *   other anchors, frame edges and centre, 15 degree handle angles, plus host lines in `snap.extra`.
+ * - Grid drawing (revision 4): with `pixelGrid` on, lines every `gridStep` frame units from the frame
+ *   origin (default 1). When gridStep x zoom is under 8 CSS px the canvas draws every k-th line, k the
+ *   smallest whole number that reaches 8 px; at most 256 lines per axis. Hosts keep snap.grid and
+ *   gridStep equal.
  * - Large paths: an imported subpath may hold more than MAX_ANCHORS anchors (path-model 1.0.0).
  *   Moving, deleting and changing kind work; 'add' mode and inserting are refused (no event) and
  *   the canvas emits `mc-path-limit` once per attempt so the host can show W10. Dragging one anchor
@@ -89,11 +103,14 @@ import type { AnchorKind, Box, EditPath, PathEdit, PathTidy, Pt } from './path-m
  * move / delete / kind change, `[` / `]` by event.code, H target cycle, fine step unsnapped, fine
  * and coarse hit size, slop, loupe only for touch, snapping on / off / Shift / Alt, 140-anchor
  * import editable and add refused with mc-path-limit, history coalescing and limit, listbox and
- * live-region text.
+ * live-region text. Revision 4: the chunk exports `pathDraw` with every PathDraw member; every
+ * PRIMITIVE_KINDS entry gives one closed clockwise subpath inside its box with at most
+ * PRIMITIVE_MAX_ANCHORS anchors at 24 x 24 and 360 x 120; gridStep 0.5 / 2 / 3 line positions and
+ * the 8 px thinning; `underlay` leaves ground and frame unpainted.
  */
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
-export const PATH_CANVAS_CONTRACT_REVISION = 2;
+export const PATH_CANVAS_CONTRACT_REVISION = 4;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';
@@ -107,6 +124,8 @@ export const LOUPE_SIZE_PX = 72;
 export const LOUPE_ZOOM = 3;
 export const LOUPE_OFFSET_PX = 64;
 export const LOUPE_DELAY_MS = 120;
+/** Revision 4: drawn grid lines are at least this far apart on screen. */
+export const GRID_MIN_PX = 8;
 
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
@@ -172,9 +191,13 @@ export interface PathCanvasElement extends HTMLElement {
   loupeLabel?: string;
   /** Safe-area guide inside the frame (SVG editor: 2 units = the 20 x 20 live area). */
   safeArea?: number;
-  /** Show the pixel grid when one unit is drawn 8 CSS px or larger. */
+  /** Show the grid (lines every `gridStep`, thinned below GRID_MIN_PX). */
   pixelGrid: boolean;
-  /** At most this many subpaths (shape editor: 1). */
+  /** Revision 4: grid line spacing in frame units, default 1. */
+  gridStep?: number;
+  /** Revision 4 (T10): boolean attribute; ground and frame are transparent, the host draws underneath. */
+  underlay?: boolean;
+  /** At most this many subpaths (shape editor: 1; 2 while a boolean operand or a pen outline is pending). */
   maxPaths: number;
   /** Anchor kinds offered. */
   kinds: readonly AnchorKind[];
@@ -196,11 +219,12 @@ export interface History<T> {
   clear(state: T): void;
 }
 
-/** What `import()` of the chunk resolves to. Draw generators (src/path/draw.ts) are not part of it, see revision 3. */
+/** What `import()` of the chunk resolves to. Revision 4: `pathDraw` is back (shared by both editors). */
 export interface PathCanvasChunk {
   PATH_CANVAS_CONTRACT_VERSION: string;
   /** Default limit 100 steps. */
   createHistory<T>(initial: T, limit?: number): History<T>;
   pathEdit: PathEdit;
   pathTidy: PathTidy;
+  pathDraw: PathDraw;
 }
