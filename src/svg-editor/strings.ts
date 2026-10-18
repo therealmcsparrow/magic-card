@@ -247,6 +247,16 @@ export const S = {
   saveFull: 'The library is full. Delete an icon you no longer use.',
   saveInvalid: 'The library could not accept this icon. Tidy it and try again.',
 
+  nameNeeded: 'Give the icon a name.',
+  mcuSaved: 'Saved',
+  mcuConflict: 'This icon was changed somewhere else.',
+  mcuCopy: 'Save as a copy',
+  mcuReload: 'Reload',
+  mcuLeaveTitle: 'Leave without saving?',
+  mcuLeave: 'Leave',
+  pvMainColour: 'Main preview colour',
+  pvAccentColour: 'Accent preview colour',
+
   leaveTitle: 'This is not used on the card yet.',
   leaveSaved: 'It is saved in the library.',
   leaveUse: 'Use on this card',

@@ -5,7 +5,7 @@ import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
-import { SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
+import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { resolveIconGeometry } from '../icons/icon-source';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
@@ -101,7 +101,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu'].map((n) => [n, { state: true }])),
+    host: { type: String },
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -109,6 +110,16 @@ export class McSvgEditor extends LitElement implements StageHost {
   libraryAvailable = true;
   savedId?: string;
   module?: SvgEditorModuleFacts;
+  /** Revision 5: 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
+  host: SvgEditorHost = 'card';
+  /** Revision 5: the element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
+  static contractRevision = 5;
+  conflict = false;
+  pvMain = MCU_PREVIEW_MAIN;
+  pvAccent = MCU_PREVIEW_ACCENT;
+  get mcu(): boolean {
+    return this.host === 'mcu';
+  }
 
   stage: Stage = 'loading';
   doc: Doc = blankDoc(S.untitled);
@@ -1212,6 +1223,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   done(): void {
+    if (this.mcu) return void this.saveMcu();
     if (this.blockReason || !this.out.svg) {
       this.say(this.blockReason ?? '');
       return;
@@ -1301,6 +1313,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   openSave(): void {
     if (this.stage !== 'edit') return;
+    if (this.mcu) return void this.saveMcu();
     if (this.libraryMissing) {
       this.say(S.libMissing);
       return;
@@ -1350,11 +1363,56 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.showToast(S.saved(item.name), { label: S.useOnCard, run: () => this.done() }, 10_000);
       this.say(S.saved(item.name));
     } catch (e) {
-      const p = e instanceof LibraryError ? e.problem : 'unreachable';
-      this.saveError = p === 'readonly' ? S.libReadOnly : p === 'conflict' ? S.saveConflict(name) : p === 'full' ? S.saveFull : p === 'invalid' ? S.saveInvalid : p === 'missing' ? S.libMissing : S.saveFail(name);
+      this.saveError = this.problemText(e, name);
     } finally {
       this.saveBusy = false;
     }
+  }
+
+  private problemText(e: unknown, name: string): string {
+    const p = e instanceof LibraryError ? e.problem : 'unreachable';
+    return p === 'readonly' ? S.libReadOnly : p === 'conflict' ? S.saveConflict(name) : p === 'full' ? S.saveFull : p === 'invalid' ? S.saveInvalid : p === 'missing' ? S.libMissing : S.saveFail(name);
+  }
+
+  /** Host 'mcu': Save writes to the library and the editor stays open. `copy` takes a new id and ignores the stored version. */
+  async saveMcu(copy = false): Promise<void> {
+    const name = this.doc.name.trim();
+    const why = !name ? S.nameNeeded : this.blockReason;
+    if (why || !this.out.svg || this.saveBusy) {
+      if (why) this.say(why);
+      return;
+    }
+    this.saveBusy = true;
+    this.conflict = false;
+    this.note = undefined;
+    try {
+      if (copy || !this.saved) await this.loadLib();
+      const cur: { id: string; updated_at: string } | undefined = copy ? undefined : (this.saved?.item ?? this.lib.items.find((i) => i.id === this.savedId));
+      if (!cur && this.lib.state !== 'ready') throw new LibraryError(this.lib.state === 'idle' || this.lib.state === 'loading' ? 'unreachable' : this.lib.state);
+      const id = cur?.id ?? freeId(name, new Set(this.lib.items.map((i) => i.id)));
+      const ha = haForm(this.doc, this.decimals);
+      const svg = this.out.svg;
+      const item = await saveIcon(this.hass, { id, name, svg, path: ha.path, ...(ha.secondary ? { secondary_path: ha.secondary } : {}), view_box: this.out.viewBox }, cur?.updated_at);
+      this.saved = { item, svg };
+      this.baseline = toSvg(this.base);
+      this.dirty = false;
+      void this.loadLib();
+      this.fire('mc-svg-save', { target: 'library', svg, saved: item } satisfies SvgSaveDetail);
+      this.say(S.mcuSaved);
+    } catch (e) {
+      if (e instanceof LibraryError && e.problem === 'conflict') {
+        this.conflict = true;
+        this.say(S.mcuConflict);
+      } else this.note = { tone: 'error', lines: [this.problemText(e, name)] };
+    } finally {
+      this.saveBusy = false;
+    }
+  }
+
+  /** The conflict banner's Reload: the stored version replaces the drawing. */
+  reload(): void {
+    this.conflict = false;
+    if (this.saved) void this.openLibrary(this.saved.item.id);
   }
 
   /** The item "Update" writes over: the one named like the field, else the one this editor opened or last saved. */
@@ -1444,11 +1502,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   blankStart(): Doc {
-    return blankDoc(S.untitled);
+    return blankDoc(this.mcu ? '' : S.untitled);
   }
 
   startLibrary(): void {
-    this.begin(blankDoc(S.untitled));
+    this.begin(this.blankStart());
     this.openPanel('library');
   }
 

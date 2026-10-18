@@ -170,14 +170,15 @@ function topBar(ed: McSvgEditor): TemplateResult {
   const o = ed.out;
   const used = kbOf(o.bytes);
   const zone = o.error === 'over' ? 'is-error' : o.bytes >= 24 * 1024 ? 'is-warn' : '';
-  const needLib = ed.libraryMissing;
+  const needLib = ed.libraryMissing && !ed.mcu;
+  const why = ed.mcu && edit && !ed.doc.name.trim() ? S.nameNeeded : blocked;
   return html`<header class="top" role="toolbar" aria-label=${S.title}>
-    ${btn(S.back, 'back', () => ed.back(), { text: true, cls: 'ghost' })}
+    ${btn(ed.mcu ? S.close : S.back, 'back', () => ed.back(), { text: true, cls: 'ghost' })}
     <h2>${S.title}</h2>
     ${edit
       ? html`<label class="nm-field"
           ><span class="sr">${S.nameLabel}</span
-          ><input class="name" type="text" maxlength="80" title=${S.nameTip} .value=${ed.doc.name} @change=${(e: Event) => ed.apply({ ...ed.doc, name: (e.target as HTMLInputElement).value }, 'Rename icon', 'name')} />
+          ><input class="name" type="text" maxlength="80" aria-required=${ed.mcu ? 'true' : nothing} title=${S.nameTip} .value=${ed.doc.name} @change=${(e: Event) => ed.apply({ ...ed.doc, name: (e.target as HTMLInputElement).value }, 'Rename icon', 'name')} />
           ${ed.saved ? html`<small class="mark">${ed.savedCurrent ? S.savedMark : S.changedMark}</small>` : nothing}</label
         >`
       : nothing}
@@ -186,17 +187,17 @@ function topBar(ed: McSvgEditor): TemplateResult {
       ? html`${ed.layout === 'compact' ? btn(ed.panel === 'layers' ? S.layers : S.library, undefined, () => (ed.overlay = !ed.overlay), { text: true, cls: 'ghost', pressed: ed.overlay }) : nothing}
           ${btn(S.undo, 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z' })}${btn(S.redo, 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z' })}
           <span class=${`chip meter ${zone}`} title=${S.meterTip}>${o.error === 'empty' ? '0.0' : used} / 32 KB · ${S.points(o.points)}${o.bytes >= 4096 && !zone ? html` · ${S.heavy}` : nothing}</span>
-          <button type="button" class="b" aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} @click=${() => !needLib && ed.openSave()} aria-keyshortcuts="Control+S"><span>${S.saveLib}</span></button>
+          ${ed.mcu ? nothing : html`<button type="button" class="b" aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} @click=${() => !needLib && ed.openSave()} aria-keyshortcuts="Control+S"><span>${S.saveLib}</span></button>`}
           ${needLib ? html`<span id="lib-hint" class="sr">${S.libMissing}</span>` : nothing}
-          <button type="button" class="b primary" aria-disabled=${blocked ? 'true' : nothing} aria-describedby=${blocked ? 'done-why' : nothing} title=${blocked ?? nothing} @click=${() => ed.done()} aria-keyshortcuts="Control+Enter"><span>${S.done}</span></button>
-          ${blocked ? html`<span id="done-why" class="sr">${blocked}</span>` : nothing}
+          <button type="button" class="b primary" aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} title=${why ?? nothing} @click=${() => ed.done()} aria-keyshortcuts="Control+Enter"><span>${ed.mcu ? S.saveGo : S.done}</span></button>
+          ${why ? html`<span id="done-why" class="sr">${why}</span>` : nothing}
           ${btn(S.help, 'help', () => (ed.dlg = ed.dlg === 'help' ? undefined : 'help'), { pressed: ed.dlg === 'help', keys: '?' })}`
       : nothing}
   </header>`;
 }
 
 function banners(ed: McSvgEditor): TemplateResult | typeof nothing {
-  if (!ed.banners.length && !(ed.module && ed.stage === 'edit')) return nothing;
+  if (!ed.banners.length && !ed.conflict && !(ed.module && ed.stage === 'edit')) return nothing;
   const facts = ed.module && ed.stage === 'edit' && !ed.noticeGone ? moduleNotice(ed) : nothing;
   return html`<div class="banners">
     ${ed.banners.map(
@@ -208,6 +209,9 @@ function banners(ed: McSvgEditor): TemplateResult | typeof nothing {
       </div>`,
     )}
     ${facts}
+    ${ed.conflict
+      ? html`<div class="banner warn" role="alert"><span class="txt">${S.mcuConflict}</span>${btn(S.mcuCopy, undefined, () => void ed.saveMcu(true), { text: true })}${btn(S.mcuReload, undefined, () => ed.reload(), { text: true })}</div>`
+      : nothing}
   </div>`;
 }
 
@@ -435,7 +439,7 @@ function artLayer(ed: McSvgEditor): TemplateResult {
   const v = ed.view;
   const f = ed.doc.vb;
   const live = ed.liveShape?.shape;
-  return html`<svg class="art" aria-hidden="true" style="--m: var(--mc-text, #212121); --a: var(--art-accent)">
+  return html`<svg class="art" aria-hidden="true" style=${ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)'}>
     <g transform=${`translate(${v.x} ${v.y}) scale(${v.zoom})`}>
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
       ${guard([ed.doc.shapes, ed.doc.groups], () => artNodes(ed.doc))}
@@ -933,16 +937,21 @@ function previews(ed: McSvgEditor): TemplateResult {
   const doc = ed.base;
   const ha = ed.ha;
   const tile = (px: number): TemplateResult =>
-    html`<div class="pv-tile" style=${`background:${c.ground};--m:${c.m};--a:${c.a}`} role="img" aria-label=${S.pvSize(px)}>
+    html`<div class="pv-tile" style=${`background:${c.ground};--m:${ed.mcu ? ed.pvMain : c.m};--a:${ed.mcu ? ed.pvAccent : c.a}`} role="img" aria-label=${S.pvSize(px)}>
       ${guard([doc.shapes, doc.groups, ed.pvTheme, px], () => html`<svg viewBox=${viewBox(doc)} width=${px} height=${px} aria-hidden="true">${artNodes(doc)}</svg>`)}
     </div>`;
   const warn = ha && haWarns(ha);
   return html`<section class="pv" aria-label=${S.preview}>
     ${seg(S.preview, ed.pvTheme, [['light', S.pvLight], ['dark', S.pvDark], ['on', S.pvOn], ['off', S.pvOff]] as Array<['light' | 'dark' | 'on' | 'off', string]>, (t) => (ed.pvTheme = t))}
+    ${ed.mcu
+      ? html`<div class="acts">${[[S.pvMainColour, ed.pvMain, (v: string) => (ed.pvMain = v)], [S.pvAccentColour, ed.pvAccent, (v: string) => (ed.pvAccent = v)]].map(
+          ([l, v, on]) => html`<label class="f"><span>${l as string}</span><input type="color" .value=${v as string} @input=${(e: Event) => (on as (v: string) => void)((e.target as HTMLInputElement).value)} /></label>`,
+        )}</div>`
+      : nothing}
     <div class="pv-row">
       ${tile(24)}${tile(48)}${tile(96)}
       <div class="pv-ha">
-        <div class="pv-tile" style=${`background:${c.ground};color:${c.m}`} role="img" aria-label=${S.pvHa} title=${S.pvHaTip}>
+        <div class="pv-tile" style=${`background:${c.ground};color:${ed.mcu ? ed.pvMain : c.m}`} role="img" aria-label=${S.pvHa} title=${S.pvHaTip}>
           ${ha && !ha.empty ? html`<svg viewBox=${ha.viewBox} width="24" height="24" aria-hidden="true">${ha.secondary ? svg`<path d=${ha.secondary} fill="currentColor" opacity=".5"></path>` : nothing}${ha.path ? svg`<path d=${ha.path} fill="currentColor" fill-rule="nonzero"></path>` : nothing}</svg>` : nothing}
         </div>
         <small>${S.pvHa}</small>
@@ -987,11 +996,11 @@ function helpPop(ed: McSvgEditor): TemplateResult {
 
 function leavePop(ed: McSvgEditor): TemplateResult {
   return html`<div class="pop leave" role="alertdialog" aria-label=${S.leaveTitle}>
-    <p><strong>${S.leaveTitle}</strong> ${ed.savedCurrent ? S.leaveSaved : ''}</p>
+    <p><strong>${ed.mcu ? S.mcuLeaveTitle : S.leaveTitle}</strong> ${ed.savedCurrent && !ed.mcu ? S.leaveSaved : ''}</p>
     <div class="acts end">
       ${btn(S.leaveKeep, undefined, () => (ed.leaving = false), { text: true })}
-      ${btn(S.leaveDiscard, undefined, () => ed.leave(), { text: true })}
-      ${btn(S.leaveUse, undefined, () => ed.done(), { text: true, cls: 'primary', disabled: !!ed.blockReason })}
+      ${btn(ed.mcu ? S.mcuLeave : S.leaveDiscard, undefined, () => ed.leave(), { text: true })}
+      ${ed.mcu ? nothing : btn(S.leaveUse, undefined, () => ed.done(), { text: true, cls: 'primary', disabled: !!ed.blockReason })}
     </div>
   </div>`;
 }
