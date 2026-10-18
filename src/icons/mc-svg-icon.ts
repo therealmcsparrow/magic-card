@@ -222,6 +222,9 @@ export class McSvgIcon extends LitElement {
     return this._rigRef ?? this._byState ?? this._own ?? (this._useState ? this._stateRef : this.icon);
   }
 
+  /** The kept copy last registered: its text and the ref it got. */
+  private _copy?: { text: string; ref: string };
+
   /** Never blank: the entity's icon, else the module's default (never an `mcu:` name). */
   private get _fb(): string {
     return entityIcon(this.hass, this.entity) || this.fallback || 'mdi:help';
@@ -234,9 +237,14 @@ export class McSvgIcon extends LitElement {
   private get _ref(): string | undefined {
     const r = this._want;
     if (r?.startsWith('mcu:')) {
+      if (peekIconGeometry(r)) return r;
       const kept = this.kept?.[r.slice(4)];
-      const copy = kept && registerSvgGeometry(kept);
-      return peekIconGeometry(r) ? r : copy && !svgError(copy) ? copy : this._fb;
+      if (!kept) return this._fb;
+      // registering hashes the whole copy: once per copy, again only when the icon cache dropped its geometry
+      const m = this._copy;
+      const copy = m?.text === kept && (peekIconGeometry(m.ref) || svgError(m.ref)) ? m.ref : registerSvgGeometry(kept);
+      if (m?.ref !== copy || m.text !== kept) this._copy = { text: kept, ref: copy };
+      return !svgError(copy) ? copy : this._fb;
     }
     return r?.startsWith('svg:') && svgError(r) ? this._fb : r;
   }
