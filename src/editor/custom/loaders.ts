@@ -13,6 +13,13 @@ export const loadShapeEditor = loadShapeEditorChunk;
 /** (module-editor 1.1.0) window.MagicCard.loadTransfer(): the preset transfer chunk, see transfer-loader.ts. */
 export { loadTransfer };
 
-if (typeof window !== 'undefined') {
-  window.MagicCard = { ...window.MagicCard, loadSvgEditor, loadShapeEditor, loadTransfer } as NonNullable<Window['MagicCard']>;
+/**
+ * Adds the loaders to the existing window.MagicCard object in place. A caller that took `window.MagicCard`
+ * before awaiting loadEditor() (the Magic Card Utils panel did) must see them; replacing the object left
+ * it holding one without loadSvgEditor / loadShapeEditor / loadTransfer.
+ */
+export function installLoaders(): void {
+  window.MagicCard = Object.assign(window.MagicCard ?? ({} as NonNullable<Window['MagicCard']>), { loadSvgEditor, loadShapeEditor, loadTransfer });
 }
+
+if (typeof window !== 'undefined') installLoaders();

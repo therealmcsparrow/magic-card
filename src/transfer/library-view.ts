@@ -11,6 +11,7 @@ import type { ThemePresetStore } from '../contracts/theme-editor';
 import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
 import type { LibraryOpenDetail, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
+import { SVG_EDITOR_CONTRACT_REVISION } from '../contracts/svg-editor';
 import './panel';
 
 /*
@@ -47,6 +48,8 @@ const meta = (m: ItemMeta): ItemMeta => ({ ...(m.author ? { author: m.author } :
 
 @customElement('mc-library-view')
 export class LibraryView extends LitElement {
+  /** The Magic Card Utils panel gates on this (svg-editor revision 5), so the Library tab needs no SVG editor fetch. */
+  static contractRevision = SVG_EDITOR_CONTRACT_REVISION;
   static styles = [
     editorSystem,
     css`
