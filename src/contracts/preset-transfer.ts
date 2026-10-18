@@ -181,7 +181,6 @@ export const EXTERNAL_REF_RE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^
 /** CSS escapes (`\74 ` and `\/`) resolved the way a browser reads them, and comments dropped. */
 export function decodeCssEscapes(value: string): string {
   return value
-    .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\\([0-9a-f]{1,6})[ \t\n\r\f]?|\\([\s\S])/gi, (_m, hex: string | undefined, ch: string | undefined) => {
       if (hex === undefined) return ch ?? '';
       const cp = parseInt(hex, 16);
@@ -193,7 +192,7 @@ const URL_CALL_RE = /\burl\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi;
 // Network schemes only: card-mod CSS is full of "color: red" and a generic "word:" test would flag all of it.
 // Any other scheme can only be fetched through url() or image functions, which are checked below.
 const BARE_SCHEME_RE = /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):(?!\/\/)/i;
-const IMAGE_FN_RE = /(?:^|[^a-z0-9-])(?:-webkit-)?(?:image-set|image|src|cross-fade|element)\(\s*["']/i;
+const IMAGE_FN_RE = /(?:^|[^a-z0-9-])(?:-webkit-)?(?:image-set|image|src|cross-fade|element)\(/i;
 const SAFE_URL_RE = /^(?:#|\/(?!\/)|data:image\/)/i;
 
 /**
@@ -203,13 +202,18 @@ const SAFE_URL_RE = /^(?:#|\/(?!\/)|data:image\/)/i;
  * `@import`, and any url() that is not `#id`, a single-slash path or an inline image.
  */
 export function contactsOtherHost(value: string): boolean {
-  if (value.includes('\\')) return true;
-  const v = decodeCssEscapes(value);
+  // `\` and `/*` are refused outright: where a comment ends inside a string or url() is not worth reasoning about
+  if (value.includes('\\') || value.includes('/*')) return true;
+  // browsers delete tab, CR and LF inside a URL: url("/<TAB>/evil.example") is //evil.example
+  const v = decodeCssEscapes(value).replace(/[\t\r\n]/g, '');
   if (EXTERNAL_REF_RE.test(v) || BARE_SCHEME_RE.test(v) || /@import/i.test(v)) return true;
   for (const m of v.matchAll(URL_CALL_RE)) {
     if (!SAFE_URL_RE.test((m[1] ?? m[2] ?? m[3] ?? '').trim())) return true;
   }
-  return IMAGE_FN_RE.test(v.replace(URL_CALL_RE, ''));
+  const rest = v.replace(URL_CALL_RE, '');
+  const at = rest.search(IMAGE_FN_RE);
+  // image-set(), -webkit-image-set(), image(), src()...: every string after the function name must be safe, not only the first
+  return at >= 0 && [...rest.slice(at).matchAll(/"([^"]*)"|'([^']*)'/g)].some((s) => !SAFE_URL_RE.test((s[1] ?? s[2]).trim()));
 }
 
 /** A value with a path on the sharer's own Home Assistant (info line only). */
