@@ -6,6 +6,8 @@
 export const n = (count: number, one: string, many: string): string => `${count.toLocaleString()} ${count === 1 ? one : many}`;
 const px = (v: number): string => String(Math.round(v * 10) / 10);
 
+const TOO_BIG = 'This shape is too big for the library (8 KB).';
+
 export const S = {
   title: 'Shape editor',
   titleFor: (t: string): string => `Shape for ${t}`,
@@ -126,6 +128,16 @@ export const S = {
   operandReady: (k: string): string => `${k} ready to combine. Use the arrows or fields to place it.`,
   operandHelp: 'Move it with the arrow keys or drag it on the canvas.',
   centre: 'Centre',
+  ops: [['union', 'Combine'], ['subtract', 'Subtract'], ['intersect', 'Intersect']] as Array<[string, string]>,
+  working: 'Working...',
+  opsHelp: 'Combine adds it to the outline. Subtract cuts it out. Intersect keeps only the overlap.',
+  opDone: (v: string, c: number): string => `${v}${v.endsWith('e') ? 'd' : 'ed'}. The outline has ${n(c, 'point', 'points')}.`,
+  dropped: (c: number): string => `Kept the largest piece. ${n(c, 'smaller piece was', 'smaller pieces were')} removed.`,
+  filled: 'Card shapes have one outline, so the hole was filled.',
+  noTools: "Couldn't load the shape tools. Try again.",
+  tooMany: (c: number, max: number): string => `The result needs ${c} points. A card shape can have ${max}. Nothing was changed. Try a smaller or simpler shape.`,
+  gone: 'Nothing would be left of the shape. Nothing was changed.',
+  complex: 'These shapes have too many points to combine. Nothing was changed.',
   box: { x: 'X', y: 'Y', w: 'W', h: 'H' },
   prim: {
     'rounded-rect': 'Rounded rectangle', triangle: 'Triangle', arrow: 'Arrow', chevron: 'Chevron', plus: 'Plus', heart: 'Heart', 'speech-bubble': 'Speech bubble',
@@ -205,9 +217,9 @@ export const S = {
     conflict: 'This shape changed while you were editing. Save as new, or reload it.',
     full: 'The library is full. Delete a shape first.',
     missing: 'Keep your own shapes for every dashboard with the free Magic Card Utils add-on.',
-    invalid: 'This shape is too big for the library (8 KB).',
+    invalid: TOO_BIG,
   } as Record<string, string>,
-  tooBig: 'This shape is too big for the library (8 KB).',
+  tooBig: TOO_BIG,
   saveName: 'Name',
   saveNameHelp: 'Short, no slashes. Shown in the list.',
   nameEmpty: 'Give it a name.',

@@ -5,10 +5,12 @@ import type { CornerKey, CornerType, CustomShapeOptions } from '../contracts/cus
 import type { SavedShape } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
+import type { BooleanOp } from '../contracts/path-booleans';
 import type { CanvasMode, PathChange, PathSelection } from '../contracts/path-canvas';
 import { PRIMITIVE_KINDS, type Anchor, type Box, type EditPath, type PathDraw, type PathEdit, type PrimitiveKind, type Pt } from '../contracts/path-model';
 import type { ShapeChangeDetail, ShapeEditorPreset, ShapeEditorValue } from '../contracts/svg-editor';
 import { bounds, flatten, parseClosed, toPathString } from '../path/core';
+import { loadPathBooleans } from '../path-booleans/loader';
 import { loadPathCanvas } from '../path-canvas/loader';
 import type { ShapeOptions } from '../types';
 import { loadCustomShapes } from '../utils/shape-custom-loader';
@@ -85,6 +87,7 @@ export class McShapeStudio extends LitElement {
   /** A pen outline being drawn, or a shape waiting to be combined: never in the config or the history. */
   @state() pending?: Pending;
   @state() picker?: { to: 'start' | 'combine'; at: number };
+  @state() busy = '';
   @state() strip?: { text: string; undo: boolean };
   @state() canvas: 'idle' | 'loading' | 'ready' | 'fail' = 'idle';
   @state() cardView = true;
@@ -713,6 +716,25 @@ export class McShapeStudio extends LitElement {
     void this.updateComplete.then(() => this.focusTo('#ox'));
   }
 
+  /** Combine, Subtract or Intersect the outline (bottom) with the pending shape; the result stays one closed outline. */
+  async boolean(op: string, verb: string): Promise<void> {
+    if (this.busy || this.pending?.kind !== 'shape') return;
+    this.busy = op;
+    const B = await loadPathBooleans();
+    this.busy = '';
+    const p = this.pending;
+    if (p?.kind !== 'shape' || !this.E) return;
+    if (!B) return this.note(S.noTools);
+    const { w, h } = this.size;
+    const r = B.run(op as BooleanOp, [this.path, p.path].map((x) => ({ paths: [x], fillRule: 'nonzero' as const })), { frame: { x: 0, y: 0, w, h } });
+    if (!r.ok) return this.note(r.reason === 'too-complex' ? S.complex : S.gone);
+    const o = B.singleOutline(r);
+    const c = o.path.anchors.length;
+    if (c > MAX_SHAPE_POINTS) return this.note(S.tooMany(c, MAX_SHAPE_POINTS));
+    this.replaceOutline(o.path.anchors, [S.opDone(verb, c), o.droppedPieces ? S.dropped(o.droppedPieces) : '', o.filledHoles ? S.filled : ''].filter(Boolean).join(' '));
+    void this.updateComplete.then(() => this.focusTo('[data-pick=combine]'));
+  }
+
   /** The tile glyph: the kind drawn by the same generator in a 20 px box. */
   glyphOf(kind: PrimitiveKind): string {
     if (!this.glyphs[kind] && this.D && this.E) this.glyphs[kind] = toPathString([this.E.fromEdit(this.D.primitive(kind, { x: 1, y: 1, w: 18, h: 18 }))]);
@@ -1244,7 +1266,7 @@ ${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(thi
 <div class="tiles picks" role="radiogroup" aria-label=${heading} @keydown=${(e: KeyboardEvent) => this.pickKey(e)}>${PRIMITIVE_KINDS.map((k, i) => html`<button role="radio" aria-checked="false" aria-posinset=${i + 1} aria-setsize=${PRIMITIVE_KINDS.length} tabindex=${i === at ? 0 : -1} @click=${() => this.choose(k)}><svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg><span>${S.prim[k]}</span></button>`)}</div></div>`;
   }
 
-  /** Combine with another shape: the picker, then the pending shape with its fields (Combine, Subtract and Intersect come with the booleans). */
+  /** Combine with another shape: the picker, then the pending shape with its fields (Combine, Subtract, Intersect). */
   // prettier-ignore
   private combine(): TemplateResult {
     const p = this.pending;
@@ -1252,7 +1274,7 @@ ${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(thi
     if (p?.kind !== 'shape' || !b) return html`<div class="f"><h4>${S.combineHead}</h4><div class="acts"><button class="b" data-pick="combine" aria-haspopup="dialog" aria-expanded=${this.picker?.to === 'combine'} @click=${() => this.openPicker('combine')}>${S.addShape}</button></div>${this.picker?.to === 'combine' ? this.pickerView(S.pickCombine) : nothing}</div>`;
     return html`<div class="f" role="group" aria-label=${S.operandGroup}><h4>${S.combineHead}</h4><div class="pv-head"><strong>${S.notApplied(S.prim[p.prim])}</strong>${btn(S.cancel, () => this.dropPending(), 'ghost')}</div>
 <div class="grid4">${num(S.box.x, b.x, (v) => this.setOperand({ x: v }), { id: 'ox' })}${num(S.box.y, b.y, (v) => this.setOperand({ y: v }))}${num(S.box.w, b.w, (v) => this.setOperand({ w: v }), { min: 1 })}${num(S.box.h, b.h, (v) => this.setOperand({ h: v }), { min: 1 })}</div>
-<div class="acts">${btn(S.centre, () => this.setOperand('centre'))}</div><span class="help">${S.operandHelp}</span></div>`;
+<div class="acts">${btn(S.centre, () => this.setOperand('centre'))}</div><span class="help">${S.operandHelp}</span><div class="acts ops">${S.ops.map(([k, t]) => html`<button class="b" aria-busy=${this.busy === k} @click=${() => void this.boolean(k, t)}>${this.busy === k ? S.working : t}</button>`)}</div><span class="help">${S.opsHelp}</span></div>`;
   }
 
   // prettier-ignore
