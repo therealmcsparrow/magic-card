@@ -264,26 +264,17 @@ const magicCardLocalStyles = css`
     margin: 0 var(--mc-gap-xs);
   }
 
-  /* Button module wrapper */
+  /* Button module wrapper: layout only; the clickable .mc-button-inner carries the look */
   .mc-button {
     display: inline-flex;
     align-items: center;
     gap: var(--mc-gap-sm);
-    padding: var(--mc-button-padding);
     border-top-left-radius: var(--mc-design-radius-tl, var(--mc-button-radius));
     border-top-right-radius: var(--mc-design-radius-tr, var(--mc-button-radius));
     border-bottom-right-radius: var(--mc-design-radius-br, var(--mc-button-radius));
     border-bottom-left-radius: var(--mc-design-radius-bl, var(--mc-button-radius));
-    border: 1px solid var(--mc-border);
-    background: var(--mc-bg);
     color: var(--mc-design-color, var(--mc-text));
-    cursor: pointer;
     font-size: var(--mc-button-font-size);
-    transition: background var(--mc-transition-duration);
-  }
-
-  .mc-button:hover {
-    background: var(--mc-border);
   }
 
   /* Button inner element + variants */
@@ -302,6 +293,11 @@ const magicCardLocalStyles = css`
     cursor: pointer;
     font-size: var(--mc-button-font-size);
     font-weight: 500;
+    transition: opacity var(--mc-transition-duration);
+  }
+
+  .mc-button-inner:hover {
+    opacity: 0.9;
   }
 
   .mc-button-inner ha-icon,
@@ -1323,7 +1319,6 @@ const magicCardLocalStyles = css`
     outline-offset: 2px;
   }
 
-  .mc-button:active,
   .mc-button-inner:active,
   .mc-tab-button:active,
   .mc-spinbox-btn:active {
