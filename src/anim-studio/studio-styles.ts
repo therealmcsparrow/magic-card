@@ -291,6 +291,9 @@ export const studioStyles: CSSResult[] = [
       --layers-w: 224px;
       --insp-w: 288px;
     }
+    .workspace.dense:not(.rail) {
+      --layers-w: 208px;
+    }
     .workspace.rail {
       --layers-w: 52px;
     }

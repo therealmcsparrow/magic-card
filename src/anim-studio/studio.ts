@@ -2065,7 +2065,7 @@ export class AnimationStudio extends LitElement {
         @preview-change=${this._onPreviewChange}
         @layer-view-change=${this._onLayerView}
         @emitter-change=${this._onEmitter}
-        class="workspace ${rail ? 'rail' : ''} ${this._compact ? 'compact' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
+        class="workspace ${rail ? 'rail' : ''} ${this._compact ? 'compact' : ''} ${this._width > 0 && this._width < RAIL_BELOW ? 'dense' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
       >
         ${this._renderLayers(d)}
         <div class="center ${panel ? 'with-panel' : ''}" style="--split: ${this._split}">
