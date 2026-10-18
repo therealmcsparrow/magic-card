@@ -342,16 +342,14 @@ export class LibraryView extends LitElement {
   }
 
   private async _delete(r: Row): Promise<void> {
-    const near = (this.renderRoot as ShadowRoot).getElementById(`row-${r.id}-check`)?.closest('.row');
-    const next = (near?.nextElementSibling ?? near?.previousElementSibling)?.querySelector('input')?.id;
     try {
       const k = this._kind;
       if (k === 'animation') await this._call({ type: DEL_ANIM, animation_id: r.id });
       else if (k === 'theme') await this.presets!.remove(r.id);
       else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
       await this._after(t('Deleted {name}.', { name: r.name }));
-      // the row is gone: focus goes to its neighbour, or to the search field
-      void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById(next || 'q')?.focus());
+      // the row is gone: focus goes to the search field
+      void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById('q')?.focus());
     } catch (e) {
       this._fail(e);
     }
@@ -505,9 +503,9 @@ export class LibraryView extends LitElement {
   private _item(r: Row, can: boolean): TemplateResult {
     const e = this._edit?.id === r.id ? this._edit.kind : undefined;
     const set = (kind: 'rename' | 'delete' | undefined) => () => {
-      const was = this._edit?.kind;
+      const back = `.acts button:nth-last-child(${this._edit?.kind === 'delete' ? 1 : 2})`;
       this._edit = kind ? { id: r.id, kind } : undefined;
-      this._fr(r.id, kind ? (kind === 'rename' ? '.input' : ':scope > button:last-child') : was === 'delete' ? '.acts button:last-child' : '.acts button:nth-last-child(2)');
+      this._fr(r.id, kind ? (kind === 'rename' ? '.input' : ':scope > button:last-child') : back);
     };
     const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
     const check = {
