@@ -33,7 +33,7 @@ export class IconPicker extends LitElement {
     pickerStyles,
     iconPickerStyles,
     css`
-      mc-ui-window > .seg {
+      .mc-picker-stack > .seg {
         flex-shrink: 0;
         width: auto;
         margin: 8px 16px 0;
@@ -45,10 +45,27 @@ export class IconPicker extends LitElement {
       }
       .mc-picker-keep {
         flex-shrink: 0;
+        padding: 0 16px;
+        border-top: 1px solid var(--mc-divider);
+      }
+      .mc-picker-keep > summary {
+        min-height: var(--mc-hit, 40px);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.8125rem;
+        color: var(--mc-text-2);
+      }
+      .mc-picker-keep[open] {
         display: grid;
         gap: 4px;
-        padding: 8px 16px;
-        border-top: 1px solid var(--mc-divider);
+        padding-bottom: 8px;
+      }
+      @media (pointer: coarse) {
+        .browse {
+          min-width: 44px;
+          min-height: 44px;
+        }
       }
       .mc-picker-keep-actions {
         display: flex;
@@ -253,6 +270,17 @@ export class IconPicker extends LitElement {
     this._commit((e.target as HTMLInputElement).value);
   }
 
+  /** Field focus before the press: a tap on a field that already has focus is for typing, any other tap opens the picker. */
+  private _fieldWasFocused = false;
+
+  private _onFieldPointerDown(e: PointerEvent): void {
+    this._fieldWasFocused = this.shadowRoot?.activeElement === e.currentTarget;
+  }
+
+  private _onFieldClick(): void {
+    if (!this._fieldWasFocused && !this._showModal) this._openModal();
+  }
+
   private _onFieldKeydown(e: KeyboardEvent): void {
     if (e.key === 'ArrowDown' && !e.altKey) {
       e.preventDefault();
@@ -332,6 +360,8 @@ export class IconPicker extends LitElement {
           spellcheck="false"
           @input=${this._onInputChange}
           @keydown=${this._onFieldKeydown}
+          @pointerdown=${this._onFieldPointerDown}
+          @click=${this._onFieldClick}
         />
         <button
           type="button"
@@ -357,7 +387,8 @@ export class IconPicker extends LitElement {
     const k = this._keep;
     if (!k || this._selectedIcon.trim() !== `mcu:${k.id}`) return '';
     const kb = k.bytes < 1024 ? t('{n} B', { n: k.bytes }) : t('{size} KB', { size: (k.bytes / 1024).toFixed(1) });
-    return html`<div class="mc-picker-keep">
+    return html`<details class="mc-picker-keep">
+      <summary>${t('Advanced')}</summary>
       <div class="switch-row">
         <div class="txt">
           <div class="field-head"><label for="mc-keep-copy">${t('Keep a copy in this card (adds {size})', { size: kb })}</label></div>
@@ -372,7 +403,7 @@ export class IconPicker extends LitElement {
             <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>${t('Customise a copy')}</button>
           </div>`
         : ''}
-    </div>`;
+    </details>`;
   }
 
   private _renderModal(): TemplateResult {
@@ -384,6 +415,7 @@ export class IconPicker extends LitElement {
 
     return html`
       ${renderPickerWindow(t('Select icon'), () => this._closeModal(), 'm', html`
+          <div class="mc-picker-stack">
           ${this.animated ? this._renderTabs() : ''}
           ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           ${lib?.state === 'ok'
@@ -431,6 +463,7 @@ export class IconPicker extends LitElement {
               : ''}
           </div>`}
           ${grid ? '' : this._renderKeep()}
+          </div>
           <div class="mc-picker-footer" slot="footer">
             ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('Clear')}</button>`}
             ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}
