@@ -1,7 +1,8 @@
 import { LitElement, html, css, nothing } from 'lit';
 import type { TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../css/editor-system';
+import { editorTokens } from '../css/editor-system';
+import { button, defineUiKit, editorPrimitives, empty, field, kitCss, notice, row, seg } from '../ui-kit';
 import { animationDocList } from '../utils/custom-animations';
 import { animationLibrary } from '../services/animation-library';
 import type { LibraryHass } from '../services/animation-library';
@@ -13,6 +14,7 @@ import type { LibraryOpenDetail, LibraryViewContext, TransferItem, TransferKind 
 import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
 import { SVG_EDITOR_CONTRACT_REVISION } from '../contracts/svg-editor';
 import './panel';
+import type { TransferPanel } from './panel';
 
 /*
  * <mc-library-view> (preset-transfer 1.0.0): the saved animations, shapes and icons (and, when the host
@@ -50,8 +52,11 @@ const meta = (m: ItemMeta): ItemMeta => ({ ...(m.author ? { author: m.author } :
 export class LibraryView extends LitElement {
   /** The Magic Card Utils panel gates on this (svg-editor revision 5), so the Library tab needs no SVG editor fetch. */
   static contractRevision = SVG_EDITOR_CONTRACT_REVISION;
+  // kit parts plus layout only (contract ui-kit 1.0.0: a screen styles its own layout, never a kit class)
   static styles = [
-    editorSystem,
+    editorTokens,
+    editorPrimitives,
+    ...kitCss,
     css`
       :host {
         display: block;
@@ -61,38 +66,11 @@ export class LibraryView extends LitElement {
         display: grid;
         gap: 12px;
       }
-      .row,
-      li {
+      .bar {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
-      }
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 4px;
-      }
-      li {
-        padding: 4px 8px;
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius);
-        min-height: 44px;
-      }
-      .grow {
-        flex: 1 1 140px;
-        min-width: 0;
-        overflow-wrap: anywhere;
-      }
-      .grow small {
-        display: block;
-        color: var(--mc-text-2);
-      }
-      input[type='checkbox'] {
-        width: 24px;
-        height: 24px;
       }
     `,
   ];
@@ -119,6 +97,8 @@ export class LibraryView extends LitElement {
   @state() private _sel = new Set<string>();
   @state() private _edit?: { id: string; kind: 'rename' | 'delete' };
   @state() private _msg = '';
+  @state() private _bad = false;
+  private _opener?: HTMLElement;
   @state() private _panel?: { mode: 'import' | 'export'; exportItems?: { kind: TransferKind; items: TransferItem[] } };
 
   private _unsub?: () => void;
@@ -128,6 +108,7 @@ export class LibraryView extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    defineUiKit();
     const ks = this._kinds;
     this._kind = this.startKind && ks.includes(this.startKind) ? this.startKind : this.context === 'mcu-panel' ? ks[0] : ks.includes(this._kind) ? this._kind : ks[0];
     this._unsub = animationLibrary.subscribe(() => this._kind === 'animation' && void this._load());
@@ -145,8 +126,16 @@ export class LibraryView extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
-    // the panel went away (closed or imported): focus would fall to the page, so it goes back to the toolbar
-    if (changed.has('_panel') && changed.get('_panel') && !this._panel) this.renderRoot.querySelector<HTMLElement>('.seg button.active')?.focus();
+    // the window opens once the panel is in it; when the panel went away the window has closed, so focus goes back to the button that opened it
+    if (changed.has('_panel')) {
+      if (this._panel && !changed.get('_panel')) {
+        const w = this.renderRoot.querySelector<HTMLElement & { show(): void; updateComplete: Promise<unknown> }>('mc-ui-window');
+        w?.show();
+        // the window focuses its close button; a screen reader user is better served by the panel heading
+        void w?.updateComplete.then(() => this.renderRoot.querySelector<TransferPanel>('mc-transfer-panel')?.focusHeading());
+      }
+      else if (!this._panel && changed.get('_panel') && this._opener?.isConnected) this._opener.focus();
+    }
     if (changed.has('hass') && !changed.get('hass') && this.hass) void this._load();
     if (changed.has('config') || changed.has('presets')) void this._load();
   }
@@ -216,6 +205,7 @@ export class LibraryView extends LitElement {
     this._edit = undefined;
     this._q = '';
     this._msg = '';
+    this._bad = false;
     this._status = 'loading';
     void this._load();
   }
@@ -239,6 +229,7 @@ export class LibraryView extends LitElement {
 
   private _fail(e: unknown): void {
     const c = String((e as { code?: string })?.code ?? '');
+    this._bad = true;
     this._msg =
       c === 'unauthorized'
         ? 'Your account can use the library but not change it. Ask an admin.'
@@ -253,12 +244,14 @@ export class LibraryView extends LitElement {
     resetLibrary();
     this._edit = undefined;
     await this._load();
+    this._bad = false;
     this._msg = done;
   }
 
   private async _rename(r: Row, raw: string): Promise<void> {
     const name = raw.trim();
     if (!name || name.length > 80) {
+      this._bad = true;
       this._msg = 'The name must be 1 to 80 characters.';
       return;
     }
@@ -317,6 +310,7 @@ export class LibraryView extends LitElement {
     if (!this._has(kind)) {
       // the host writes the inline copies
       this._panel = undefined;
+      this._bad = false;
       this._msg = `Added ${items.length} to this card.`;
       return;
     }
@@ -342,47 +336,72 @@ export class LibraryView extends LitElement {
     await this._after(`Imported ${ok} of ${items.length}.${full ? ` ${full} did not fit: the library is full.` : ''}${bad ? ` ${bad} could not be saved.` : ''}`);
   }
 
+  private _closePanel = (e?: Event): void => {
+    e?.stopPropagation();
+    this._panel = undefined;
+  };
+
   render(): TemplateResult {
-    if (this._panel)
-      return html`<mc-transfer-panel
-        host=${this._panelCtx ? 'mcu-panel' : 'card-editor'}
-        .mode=${this._panel.mode}
-        .exportItems=${this._panel.exportItems}
-        .taken=${this._taken}
-        .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._status !== 'missing'}
-        @mc-transfer-import=${this._import}
-        @mc-transfer-close=${(e: Event) => {
-          e.stopPropagation();
-          this._panel = undefined;
-        }}
-      ></mc-transfer-panel>`;
     const q = this._q.trim().toLowerCase();
     const shown = this._rows.filter((r) => r.words.includes(q));
     const can = this._admin && this._source === 'mcu' && this._status === 'ok';
     const noun = LABEL[this._kind].toLowerCase();
+    const p = this._panel;
+    const ask = (mode: 'import' | 'export', run?: () => void) => (e: MouseEvent): void => {
+      this._opener = e.currentTarget as HTMLElement;
+      if (run) run();
+      else this._panel = { mode };
+    };
     return html`
       <div class="wrap">
-        <div class="seg" role="group" aria-label="Kind">
-          ${this._kinds.map((k) => html`<button aria-pressed=${this._kind === k} class=${this._kind === k ? 'active' : ''} @click=${() => this._go(k, this._source)}>${LABEL[k]}</button>`)}
-        </div>
+        ${seg({ role: 'tablist', label: 'Kind', value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL[k] })), onChange: (k) => this._go(k, this._source) })}
         ${this._kind === 'theme' || this._panelCtx
           ? nothing
-          : html`<div class="seg" role="group" aria-label="Source">
-              ${(['mcu', 'card'] as const).map((s) => html`<button aria-pressed=${this._source === s} class=${this._source === s ? 'active' : ''} @click=${() => this._go(this._kind, s)}>${s === 'mcu' ? 'Magic Card Utils' : 'This card'}</button>`)}
-            </div>`}
-        <div class="field">
-          <div class="field-head"><label for="q">Search ${noun}</label></div>
-          <input id="q" class="input" type="search" .value=${this._q} @input=${(e: Event) => (this._q = (e.target as HTMLInputElement).value)} />
-        </div>
-        <div class="row">
-          <button class="btn btn-secondary" ?disabled=${!shown.length} @click=${() => this._export()}>${this._sel.size ? `Export ${this._sel.size} selected` : 'Export all'}</button>
-          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? html`<button class="btn btn-primary" @click=${() => this._open(this._kind as 'icon' | 'shape')}>New ${this._kind}</button>` : nothing}
-          ${can || this.inline ? html`<button class="btn btn-secondary" @click=${() => (this._panel = { mode: 'import' })}>Import</button>` : nothing}
+          : seg({
+              role: 'radiogroup',
+              label: 'Source',
+              value: this._source,
+              items: [
+                { value: 'mcu' as const, label: 'Magic Card Utils' },
+                { value: 'card' as const, label: 'This card' },
+              ],
+              onChange: (s) => this._go(this._kind, s),
+            })}
+        ${field({
+          id: 'q',
+          label: `Search ${noun}`,
+          control: html`<div class="with-icon"><ha-icon icon="mdi:magnify"></ha-icon><input id="q" class="input" type="search" .value=${this._q} @input=${(e: Event) => (this._q = (e.target as HTMLInputElement).value)} /></div>`,
+        })}
+        <div class="bar">
+          ${button({ label: this._sel.size ? `Export ${this._sel.size} selected` : 'Export all', icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
+          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: `New ${this._kind}`, variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
+          ${can || this.inline ? button({ label: 'Import', icon: 'mdi:import', onClick: ask('import') }) : nothing}
         </div>
         ${this.inline && this._source === 'card' ? html`<p class="help">Imported items are saved in this card.</p>` : nothing}
-        <div role="status" aria-live="polite" class="help">${this._msg || (this._status === 'ok' ? `${shown.length} ${noun}` : '')}</div>
+        ${this._msg ? notice({ tone: this._bad ? 'error' : 'success', text: this._msg, transient: true }) : nothing}
+        <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? `${shown.length} ${noun}` : ''}</div>
         ${this._body(shown, can)}
       </div>
+      ${p
+        ? html`<mc-ui-window
+            variant="sheet"
+            heading=${p.mode === 'import' ? 'Import' : 'Export'}
+            closeLabel="Close"
+            .dismissible=${false}
+            .opener=${this._opener}
+            @mc-window-close=${this._closePanel}
+          >
+            <mc-transfer-panel
+              host=${this._panelCtx ? 'mcu-panel' : 'card-editor'}
+              .mode=${p.mode}
+              .exportItems=${p.exportItems}
+              .taken=${this._taken}
+              .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._status !== 'missing'}
+              @mc-transfer-import=${this._import}
+              @mc-transfer-close=${this._closePanel}
+            ></mc-transfer-panel>
+          </mc-ui-window>`
+        : nothing}
     `;
   }
 
@@ -391,43 +410,54 @@ export class LibraryView extends LitElement {
     if (s === 'loading') return html`<p class="help">Loading...</p>`;
     if (s === 'missing' || s === 'error') {
       const older = this._kind === 'theme' ? 'Update Magic Card Utils to keep theme presets.' : 'Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.';
-      return html`<div class="empty"><p>${s === 'error' ? 'Could not reach Magic Card Utils. Your work is safe.' : older}</p>${s === 'error' ? html`<button class="btn btn-secondary" @click=${() => { resetLibrary(); void this._load(); }}>Try again</button>` : nothing}</div>`;
+      return empty({
+        icon: 'mdi:cloud-off-outline',
+        title: s === 'error' ? 'Could not reach Magic Card Utils. Your work is safe.' : older,
+        action: s === 'error' ? { label: 'Try again', onClick: () => { resetLibrary(); void this._load(); } } : undefined,
+      });
     }
-    if (!shown.length) return html`<div class="empty"><p>${this._q ? `No ${LABEL[this._kind].toLowerCase()} match "${this._q}".` : `No ${LABEL[this._kind].toLowerCase()} here yet.`}</p></div>`;
-    return html`<ul>${shown.map((r) => this._item(r, can))}</ul>`;
+    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? `No ${LABEL[this._kind].toLowerCase()} match "${this._q}".` : `No ${LABEL[this._kind].toLowerCase()} here yet.` });
+    return html`<div class="rows" role="list">${shown.map((r) => this._item(r, can))}</div>`;
   }
 
   private _item(r: Row, can: boolean): TemplateResult {
     const e = this._edit?.id === r.id ? this._edit.kind : undefined;
     const set = (kind: 'rename' | 'delete' | undefined) => () => (this._edit = kind ? { id: r.id, kind } : undefined);
-    return html`<li>
-      <input type="checkbox" aria-label="Select ${r.name}" .checked=${this._sel.has(r.id)} @change=${(ev: Event) => {
+    const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
+    const check = {
+      label: `Select ${r.name}`,
+      checked: this._sel.has(r.id),
+      onChange: (on: boolean) => {
         const n = new Set(this._sel);
-        if ((ev.target as HTMLInputElement).checked) n.add(r.id);
+        if (on) n.add(r.id);
         else n.delete(r.id);
         this._sel = n;
-      }} />
-      ${e === 'rename'
-        ? html`<input class="input grow" aria-label="New name for ${r.name}" .value=${r.name} maxlength="80" @keydown=${(ev: KeyboardEvent) => {
-            if (ev.key === 'Enter') void this._rename(r, (ev.target as HTMLInputElement).value);
-            if (ev.key === 'Escape') {
-              ev.stopPropagation();
-              set(undefined)();
-            }
-          }} />
-          <button class="btn btn-secondary btn-sm" @click=${(ev: Event) => void this._rename(r, (ev.target as HTMLElement).parentElement!.querySelector<HTMLInputElement>('.input')!.value)}>Save</button>
-          <button class="btn btn-text btn-sm" @click=${set(undefined)}>Cancel</button>`
-        : html`<span class="grow">${r.name}<small class="mono">${r.id}</small></span>`}
-      ${this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape') ? html`<button class="btn btn-text btn-sm" aria-label="Edit ${r.name}" @click=${() => this._open(this._kind as 'icon' | 'shape', r.id)}>Edit</button>` : nothing}
-      ${can && !e
-        ? html`<button class="btn btn-text btn-sm" aria-label="Rename ${r.name}" @click=${set('rename')}>Rename</button>
-            <button class="btn btn-text btn-sm" aria-label="Delete ${r.name}" @click=${set('delete')}>Delete</button>`
-        : nothing}
-      ${e === 'delete'
-        ? html`<span class="help" role="alert">Delete ${r.name}? ${this._kind === 'theme' ? 'Themes you applied stay.' : 'Cards that use it keep their own copy, or show the default.'}</span>
-            <button class="btn btn-primary btn-sm" @click=${() => this._delete(r)}>Delete</button>
-            <button class="btn btn-text btn-sm" @click=${set(undefined)}>Cancel</button>`
-        : nothing}
-    </li>`;
+      },
+    };
+    const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label: `${label} ${r.name}`, icon, iconOnly: true as const, variant, onClick });
+    return row({
+      id: r.id,
+      name: r.name,
+      sub: r.id,
+      check,
+      content:
+        e === 'rename'
+          ? html`<input class="input" aria-label="New name for ${r.name}" .value=${r.name} maxlength="80" @keydown=${(ev: KeyboardEvent) => {
+              if (ev.key === 'Enter') void this._rename(r, (ev.target as HTMLInputElement).value);
+              if (ev.key === 'Escape') {
+                ev.stopPropagation();
+                set(undefined)();
+              }
+            }} />`
+          : undefined,
+      actions: [...(edit ? [act('Edit', 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape', r.id))] : []), ...(can && !e ? [act('Rename', 'mdi:rename-box', set('rename')), act('Delete', 'mdi:delete-outline', set('delete'), 'danger')] : [])],
+      trail:
+        e === 'rename'
+          ? html`${button({ label: 'Save', size: 'sm', onClick: (ev) => void this._rename(r, (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value) })}${button({ label: 'Cancel', variant: 'text', size: 'sm', onClick: set(undefined) })}`
+          : e === 'delete'
+            ? html`<span class="help" role="alert">Delete ${r.name}? ${this._kind === 'theme' ? 'Themes you applied stay.' : 'Cards that use it keep their own copy, or show the default.'}</span>
+                ${button({ label: 'Delete', variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: 'Cancel', variant: 'text', size: 'sm', onClick: set(undefined) })}`
+            : undefined,
+    });
   }
 }

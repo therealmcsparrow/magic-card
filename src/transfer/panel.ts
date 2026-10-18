@@ -1,7 +1,8 @@
 import { LitElement, html, css, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { editorSystem } from '../css/editor-system';
+import { editorTokens } from '../css/editor-system';
+import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
 import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
 import { loadRuntime } from '../utils/anim-runtime-loader';
@@ -23,8 +24,11 @@ const KEPT = (n: TransferNote): boolean => n.code === 'external_ref' || n.code =
 
 @customElement('mc-transfer-panel')
 export class TransferPanel extends LitElement {
+  // kit parts plus layout only (contract ui-kit 1.0.0: a screen styles its own layout, never a kit class)
   static styles = [
-    editorSystem,
+    editorTokens,
+    editorPrimitives,
+    ...kitCss,
     css`
       :host {
         display: block;
@@ -34,60 +38,20 @@ export class TransferPanel extends LitElement {
         display: grid;
         gap: 12px;
       }
-      h3 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 600;
-      }
       h3:focus {
         outline: none;
       }
-      .row {
+      .bar {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         align-items: center;
-      }
-      input[type='file'] {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        opacity: 0;
-      }
-      .file:focus-within {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: 2px;
       }
       ul {
         margin: 0;
         padding-left: 18px;
         font-size: 0.8125rem;
         overflow-wrap: anywhere;
-      }
-      .box {
-        display: grid;
-        gap: 6px;
-        margin: 0;
-        padding: 12px;
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius);
-        min-width: 0;
-      }
-      .box.warn {
-        border-color: var(--mc-warn-ink, #b45309);
-      }
-      .box.err {
-        border-color: var(--mc-error-ink);
-        color: var(--mc-error-ink);
-      }
-      .box strong {
-        font-weight: 600;
-      }
-      .opt {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        min-height: 32px;
       }
     `,
   ];
@@ -105,7 +69,7 @@ export class TransferPanel extends LitElement {
 
   private _fileName = '';
 
-  private _focusHeading(): void {
+  focusHeading(): void {
     void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('h3')?.focus());
   }
 
@@ -118,7 +82,7 @@ export class TransferPanel extends LitElement {
       ? parseTransfer(text, { accept: HOST_KINDS[this.host], fileName })
       : { ok: false, refusal: 'limits', message: 'The checker for these animations did not load, so the file was not read. Check your connection and try again.' };
     this._choice = 'keep-both';
-    this._focusHeading();
+    this.focusHeading();
   }
 
   private async _onFile(e: Event): Promise<void> {
@@ -128,7 +92,7 @@ export class TransferPanel extends LitElement {
     const refused = checkFileSize(file);
     if (refused && !refused.ok) {
       this._res = { ok: false, refusal: refused.refusal, message: refused.message };
-      this._focusHeading();
+      this.focusHeading();
     } else await this._read(await file.text(), file.name);
     input.value = '';
   }
@@ -167,21 +131,22 @@ export class TransferPanel extends LitElement {
     const r = this._res;
     const accept = HOST_KINDS[this.host].includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
     return html`
-      <h3 tabindex="-1">${r ? (r.ok ? `Import ${count(r.items.length, r.kind)}` : 'This file was not imported') : 'Import presets'}</h3>
-      <div class="row">
-        <label class="btn btn-secondary file"><input type="file" accept=${accept} @change=${this._onFile} />Choose a file</label>
+      <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? `Import ${count(r.items.length, r.kind)}` : 'This file was not imported') : 'Import presets'}</h3></div>
+      <div class="bar">
+        ${button({ label: 'Choose a file', icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
+        <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
         <span class="help">${accept.replace(/\./g, '').replace(/,/g, ', ')}, up to 1 MB</span>
       </div>
       <div class="field">
         <div class="field-head"><label for="paste">Or paste the text</label></div>
         <textarea id="paste" class="input" spellcheck="false"></textarea>
-        <div class="row">
-          <button class="btn btn-secondary" @click=${() => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value)}>Read</button>
-          <button class="btn btn-text" @click=${this._close}>Close</button>
+        <div class="bar">
+          ${button({ label: 'Read', onClick: () => void this._read(this.renderRoot.querySelector<HTMLTextAreaElement>('#paste')!.value) })}
+          ${button({ label: 'Close', variant: 'text', onClick: this._close })}
         </div>
       </div>
       <div role="status" aria-live="polite" class="help">${r?.ok ? this._summary(r) : ''}</div>
-      ${r && !r.ok ? html`<div class="box err" role="alert">${r.message}</div>` : r ? this._result(r) : nothing}
+      ${r && !r.ok ? notice({ tone: 'error', text: r.message }) : r ? this._result(r) : nothing}
     `;
   }
 
@@ -205,17 +170,20 @@ export class TransferPanel extends LitElement {
         ${r.items.map((i) => html`<li>${i.name}${this.taken(r.kind, i.id) ? html` <span class="help">(you have this one)</span>` : nothing}</li>`)}
       </ul>
       ${kept.length
-        ? html`<div class="box warn">
-            <strong>${kept.length} ${kept.length === 1 ? 'value is' : 'values are'} kept as written</strong>
-            <span class="help">${hosts.length ? `Using this theme makes each browser ask ${hosts.join(', ')} for files, so those sites see its address. ` : ''}Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.</span>
-            <ul>
-              ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
-            </ul>
+        ? html`<div class="notice warn" role="status">
+            ${glyph('help', 20)}
+            <div class="body">
+              <strong>${kept.length} ${kept.length === 1 ? 'value is' : 'values are'} kept as written</strong>
+              <span class="help">${hosts.length ? `Using this theme makes each browser ask ${hosts.join(', ')} for files, so those sites see its address. ` : ''}Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card.</span>
+              <ul>
+                ${kept.map((n) => html`<li>${name(n)}<span class="mono">${n.path.replace(/^data\./, '')}</span>${n.hosts?.length ? ` (${n.hosts.join(', ')})` : ''}</li>`)}
+              </ul>
+            </div>
           </div>`
         : nothing}
       ${local.length ? html`<p class="help">${local.length} values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.</p>` : nothing}
       ${rest.length
-        ? html`<details class="box">
+        ? html`<details class="cond">
             <summary>${rest.length} ${rest.length === 1 ? 'note' : 'notes'}</summary>
             <ul>
               ${rest.map((n) => html`<li>${name(n)}${n.message}</li>`)}
@@ -223,18 +191,27 @@ export class TransferPanel extends LitElement {
           </details>`
         : nothing}
       ${r.kind !== 'theme' && !this.hasLibrary ? html`<p class="help">Magic Card Utils is not installed, so these are saved as copies inside this card.</p>` : nothing}
-      ${blocked ? html`<div class="box err" role="alert">Update Magic Card Utils to keep theme presets.</div>` : nothing}
+      ${blocked ? notice({ tone: 'error', text: 'Update Magic Card Utils to keep theme presets.' }) : nothing}
       ${clashes.length
-        ? html`<fieldset class="box">
-            <legend>${count(clashes.length, r.kind)} already ${clashes.length === 1 ? 'exists' : 'exist'}</legend>
-            ${(['keep-both', 'replace'] as const).map(
-              (c) => html`<label class="opt"><input type="radio" name="clash" .checked=${this._choice === c} @change=${() => (this._choice = c)} />${c === 'replace' ? 'Replace them' : 'Keep both (the new ones get a number)'}</label>`,
-            )}
-          </fieldset>`
+        ? html`<div class="field">
+            <div class="field-head"><span class="lbl">${count(clashes.length, r.kind)} already ${clashes.length === 1 ? 'exists' : 'exist'}</span></div>
+            ${seg({
+              role: 'radiogroup',
+              label: 'What to do with them',
+              full: true,
+              value: this._choice,
+              items: [
+                { value: 'keep-both', label: 'Keep both' },
+                { value: 'replace', label: 'Replace them' },
+              ],
+              onChange: (c) => (this._choice = c),
+            })}
+            <p class="help">${this._choice === 'replace' ? 'The saved ones are overwritten.' : 'The new ones get a number.'}</p>
+          </div>`
         : nothing}
-      <div class="row">
-        <button class="btn btn-primary" ?disabled=${blocked} @click=${() => this._confirm()}>${kept.length ? 'Import anyway' : `Import ${count(r.items.length, r.kind)}`}</button>
-        <button class="btn btn-text" @click=${() => (this._res = undefined)}>Cancel</button>
+      <div class="bar">
+        ${button({ label: kept.length ? 'Import anyway' : `Import ${count(r.items.length, r.kind)}`, variant: 'primary', disabled: blocked, onClick: () => this._confirm() })}
+        ${button({ label: 'Cancel', variant: 'text', onClick: () => (this._res = undefined) })}
       </div>
     `;
   }
@@ -275,17 +252,26 @@ export class TransferPanel extends LitElement {
     if (!e?.items.length) return html`<p class="help" role="status">Nothing to export.</p>`;
     const text = this._text();
     return html`
-      <h3 tabindex="-1">Export ${count(e.items.length, e.kind)}</h3>
-      <fieldset class="box">
-        <legend>File format</legend>
-        <div class="row">${(['yaml', 'json'] as const).map((f) => html`<label class="opt"><input type="radio" name="fmt" .checked=${this._format === f} @change=${() => (this._format = f)} />${f.toUpperCase()}</label>`)}</div>
-      </fieldset>
+      <div class="group-head"><h3 tabindex="-1">Export ${count(e.items.length, e.kind)}</h3></div>
+      <div class="field">
+        <div class="field-head"><span class="lbl">File format</span></div>
+        ${seg({
+          role: 'radiogroup',
+          label: 'File format',
+          value: this._format,
+          items: [
+            { value: 'yaml', label: 'YAML' },
+            { value: 'json', label: 'JSON' },
+          ],
+          onChange: (f) => (this._format = f),
+        })}
+      </div>
       <textarea id="out" class="input" readonly aria-label="Export text" .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
-      <div class="row">
-        <button class="btn btn-primary" @click=${() => this._download()}>Download</button>
-        <button class="btn btn-secondary" @click=${() => this._copy(text)}>Copy</button>
-        ${e.kind === 'theme' && e.items.length === 1 ? html`<button class="btn btn-secondary" @click=${() => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never))}>Copy as HA theme</button>` : nothing}
-        <button class="btn btn-text" @click=${this._close}>Close</button>
+      <div class="bar">
+        ${button({ label: 'Download', variant: 'primary', icon: 'mdi:download', onClick: () => this._download() })}
+        ${button({ label: 'Copy', icon: 'mdi:content-copy', onClick: () => this._copy(text) })}
+        ${e.kind === 'theme' && e.items.length === 1 ? button({ label: 'Copy as HA theme', onClick: () => this._copy(haThemeYaml(e.items[0].name, e.items[0].data as never)) }) : nothing}
+        ${button({ label: 'Close', variant: 'text', onClick: this._close })}
       </div>
       <div role="status" aria-live="polite" class="help">${this._done}</div>
     `;

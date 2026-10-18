@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magic Card transfer UI harness</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-background-color:#fafafa; --card-background-color:#fff;
+    --secondary-background-color:#f2f3f5; --primary-text-color:#212121; --secondary-text-color:#5f6368;
+    --divider-color:rgba(0,0,0,.12); --warning-color:#ff9800; --error-color:#db4437; --success-color:#43a047; color-scheme: light; }
+  :root[data-theme="dark"] { --primary-background-color:#111111; --card-background-color:#1c1c1c;
+    --secondary-background-color:#282a2d; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b;
+    --divider-color:rgba(225,225,225,.12); color-scheme: dark; }
+  body { margin:0; font-family: Roboto, "Segoe UI", system-ui, sans-serif; background:var(--primary-background-color); color:var(--primary-text-color); }
+  #host { width:520px; margin:24px; padding:16px; background:var(--card-background-color); border:1px solid var(--divider-color); border-radius:12px; box-sizing:border-box; }
+  @media (max-width:599px){ #host { width:auto; margin:0; border-radius:0 } }
+</style>
+</head>
+<body>
+  <div id="host"></div>
+  <script src="./shims.js"></script>
+  <script src="../.harness-build/transfer-ui/transfer-ui.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+    const v = document.createElement('mc-library-view');
+    v.hass = window.__hass; v.inline = true; v.startKind = 'icon';
+    v.config = { custom_animations: {}, custom_shapes: {}, custom_icons: {} };
+    document.getElementById('host').append(v);
+    window.__view = v;
+  </script>
+</body>
+</html>

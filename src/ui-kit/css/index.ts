@@ -4,3 +4,4 @@ export { kitCss, kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, 
 export { kitMenuElementCss, kitWindowElementCss, kitPopoverElementCss } from './elements';
 export { kitToast } from './toast';
 export { kitSlider } from './slider';
+export { kitRow } from './rows';

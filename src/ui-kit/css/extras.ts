@@ -1,4 +1,5 @@
 import { css, CSSResult } from 'lit';
+import { kitRow } from './rows';
 import { kitSlider } from './slider';
 
 /*
@@ -360,4 +361,4 @@ export const kitSectionHead: CSSResult = css`
 `;
 
 /** Every part the card editor lacks. A screen: static styles = [editorTokens, editorPrimitives, kitCss, own layout css]. */
-export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar, kitTopbar, kitSectionHead, kitSlider];
+export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar, kitTopbar, kitSectionHead, kitRow, kitSlider];
