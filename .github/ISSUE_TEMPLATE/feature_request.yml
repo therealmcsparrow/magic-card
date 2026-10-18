@@ -1,0 +1,47 @@
+name: "Feature request (Magic Card card)"
+description: "Suggest a change or a new option for the Magic Card dashboard card."
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the idea. Describe the problem first. A clear problem makes it easier to judge a proposal.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before you submit"
+      options:
+        - label: "I searched the existing issues and discussions and found no similar request."
+          required: true
+        - label: "This is not a security issue. Security problems go through private reporting, not this form."
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "What problem would this solve?"
+      description: "Describe what you cannot do today, or what gets in the way."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "What would you like to happen?"
+      description: "Describe the change or new option. A card configuration example helps if it fits."
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternatives you have tried or considered"
+
+  - type: textarea
+    id: who_benefits
+    attributes:
+      label: "Who benefits?"
+      description: "Describe the people or the setup this helps, for example a wall tablet, a kiosk or a dashboard with many cards."

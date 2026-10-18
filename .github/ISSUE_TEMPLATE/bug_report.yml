@@ -1,0 +1,162 @@
+name: "Bug report (Magic Card card)"
+description: "Something in the Magic Card dashboard card does not work as expected."
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Fill in every part of this form. A report without the card configuration and the browser console errors is hard to act on.
+
+        Do not report security problems here. Report them privately at https://github.com/therealmcsparrow/magic-card/security/advisories/new
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before you submit"
+      description: "Tick every box. The form is for problems you can reproduce on the latest release."
+      options:
+        - label: "I searched the existing issues and found no report of this problem."
+          required: true
+        - label: "I am on the latest Magic Card release."
+          required: true
+        - label: "I cleared the browser cache and did a hard refresh (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, I cleared the frontend cache."
+          required: true
+        - label: "The problem also happens with the default Home Assistant theme and without card-mod."
+          required: true
+        - label: "This is not a security issue. Security problems go through private reporting, not this form."
+          required: true
+
+  - type: input
+    id: card_version
+    attributes:
+      label: "Magic Card version"
+      description: "Shown in HACS. You can also find it in the browser console: the line starts with MAGIC-CARD v followed by the version."
+      placeholder: "for example 2026.10.10"
+    validations:
+      required: true
+
+  - type: input
+    id: ha_core_version
+    attributes:
+      label: "Home Assistant Core version"
+      description: "Settings → About, then the Home Assistant Core version."
+      placeholder: "for example 2026.10.1"
+    validations:
+      required: true
+
+  - type: input
+    id: ha_frontend_version
+    attributes:
+      label: "Home Assistant Frontend version"
+      description: "Settings → About, then the Frontend version."
+      placeholder: "for example 20261001.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install_method
+    attributes:
+      label: "How did you install Magic Card?"
+      options:
+        - "HACS"
+        - "Manual (I copied the files myself)"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: "Browser and version"
+      description: "Where the problem happens."
+      placeholder: "for example Chrome 130 on Windows 11"
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: "Device or companion app"
+      description: "Desktop, phone, tablet or wall panel. For the Android or iOS companion app, give the app version. For a kiosk, name it (for example Fully Kiosk Browser)."
+      placeholder: "for example Android 15 with the Home Assistant companion app 2026.10"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: utils_installed
+    attributes:
+      label: "Is Magic Card Utils installed?"
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+
+  - type: input
+    id: utils_version
+    attributes:
+      label: "Magic Card Utils version"
+      description: "Leave empty if Magic Card Utils is not installed."
+      placeholder: "for example 2026.10.09"
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: "Language in your Home Assistant profile"
+      options:
+        - "en"
+        - "en-GB"
+        - "nl"
+        - "Other (name it in the steps)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: "What happened?"
+      description: "Describe the problem and what you see."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "What did you expect to happen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to reproduce"
+      description: "Numbered steps from a fresh page load to the problem. Name the dashboard view and the card."
+      placeholder: |
+        1. Open the dashboard view "Hall".
+        2. Switch the card to ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: card_config
+    attributes:
+      label: "Card configuration"
+      description: "Paste the YAML of the card. Remove any secrets and any entity names you do not want to share."
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: "Browser console errors"
+      description: "Open the developer tools (F12), go to the Console tab, reproduce the problem and copy the red error lines. If you cannot open the console, for example on a wall panel, say so."
+      render: shell
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots or screen recording"
+      description: "Drag files into this box. For an animation problem, a short screen recording helps most."
+

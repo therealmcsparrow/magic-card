@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Report a security vulnerability"
+    url: "https://github.com/therealmcsparrow/magic-card/security/advisories/new"
+    about: "Report security problems privately. Do not open a public issue for them."
+  - name: "Questions and ideas"
+    url: "https://github.com/therealmcsparrow/magic-card/discussions"
+    about: "Ask a question, share a setup or discuss an idea. Use an issue for a bug you can reproduce."
