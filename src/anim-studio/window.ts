@@ -1,5 +1,4 @@
 import { html, nothing, type TemplateResult } from 'lit';
-import type { UiWindowElement } from '../contracts/ui-kit';
 import './kit';
 import { t } from './i18n';
 
@@ -8,21 +7,6 @@ export function deepActive(): HTMLElement | null {
   let a: Element | null = document.activeElement;
   while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
   return a && a !== document.body ? (a as HTMLElement) : null;
-}
-
-/**
- * Starts focus on the window's initialFocus element when it sits in the footer: the window's footer is hidden until its
- * slot reports content, so the window's own first focus cannot reach a footer button and leaves it on the close button.
- */
-export function settleFocus(win: UiWindowElement): void {
-  const id = win.initialFocus;
-  if (!id) return;
-  void (win as UiWindowElement & { updateComplete: Promise<unknown> }).updateComplete.then(() =>
-    setTimeout(() => {
-      const el = win.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
-      if (el && deepActive() !== el) el.focus({ preventScroll: true });
-    }, 0),
-  );
 }
 
 export interface StudioWindow {

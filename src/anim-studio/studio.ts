@@ -35,7 +35,7 @@ import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLo
 import { lockBanner, lockBannerStyles } from './editors/lock-banner';
 import { stageParticlesOf } from './stage-particles';
 import type { UiMenuElement, UiMenuEntry, UiMenuPick, UiWindowElement } from '../contracts/ui-kit';
-import { deepActive, settleFocus, studioWindow } from './window';
+import { deepActive, studioWindow } from './window';
 import { validationText } from './validation-text';
 import { sectionHead } from '../ui-kit/templates/layout';
 import { seg } from '../ui-kit/templates/choice';
@@ -425,7 +425,6 @@ export class AnimationStudio extends LitElement {
       this._opener = deepActive() ?? this._opener;
       win.opener = this._opener;
       win.show();
-      settleFocus(win);
       // the transfer panel is the window's content: a screen reader user is best served by its heading
       const start = win.querySelector<HTMLElement & { focusStart?: () => void }>('mc-anim-icon-start');
       if (start) void (win as UiWindowElement & { updateComplete: Promise<unknown> }).updateComplete.then(() => setTimeout(() => start.focusStart?.(), 0));
@@ -1028,7 +1027,7 @@ export class AnimationStudio extends LitElement {
   /** The New animation menu: the kit menu under the button (it handles arrows, type-ahead, Esc and the outside press). */
   private _renderNewMenu(): TemplateResult {
     const items: UiMenuEntry[] = [
-      ...ANIMATION_KINDS.map((k) => ({ id: `kind:${k}`, label: t(NEW_BLANK[k]), icon: KIND_ICON[k] })),
+      ...ANIMATION_KINDS.map((k) => ({ id: `kind:${k}`, label: t(NEW_BLANK[k]), sub: t(NEW_HELP[k]), icon: KIND_ICON[k] })),
       { id: 'preset', label: t('Customise a preset…'), icon: 'mdi:auto-fix', separatorBefore: true },
       { id: 'icon', label: t('Icon animation…'), icon: 'mdi:motion-play-outline' },
     ];

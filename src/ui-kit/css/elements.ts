@@ -74,6 +74,14 @@ export const kitMenuElementCss: CSSResult = /* @__PURE__ */ css`
   .label {
     flex: 1;
   }
+  .item:has(.sub-line) {
+    padding-block: 6px;
+  }
+  .sub-line {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    color: var(--mc-text-2, #5f6368);
+  }
   .keys,
   .why {
     font-size: 0.75rem;

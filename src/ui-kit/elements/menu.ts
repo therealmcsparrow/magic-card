@@ -173,13 +173,13 @@ export class UiMenu extends LitElement {
         tabindex="-1"
         aria-checked=${e.checked === undefined ? nothing : String(e.checked)}
         aria-disabled=${e.reason ? 'true' : nothing}
-        aria-description=${e.reason ?? nothing}
+        aria-description=${e.reason ?? e.sub ?? nothing}
         aria-keyshortcuts=${e.keys ?? nothing}
         aria-haspopup=${sub ? 'menu' : nothing}
         aria-expanded=${sub ? String(this._sub === i) : nothing}
         @click=${(ev: Event) => this.pick(i, ev.currentTarget as HTMLElement)}
       >
-        ${this.mark(e)}<span class="label">${e.label}</span>${e.keys ? html`<span class="keys">${e.keys}</span>` : nothing}${sub ? '›' : nothing}${e.reason ? html`<span class="why">${e.reason}</span>` : nothing}
+        ${this.mark(e)}<span class="label">${e.label}</span>${e.keys ? html`<span class="keys">${e.keys}</span>` : nothing}${sub ? '›' : nothing}${e.reason ? html`<span class="why">${e.reason}</span>` : nothing}${e.sub ? html`<span class="sub-line">${e.sub}</span>` : nothing}
       </div>`;
   }
 

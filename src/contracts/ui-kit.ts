@@ -1,5 +1,5 @@
 /*
- * Contract: ui kit. Version 1.0.0, revision 3 (Architect-owned, 2026-10-18). ADR 0030.
+ * Contract: ui kit. Version 1.0.0, revision 4 (Architect-owned, 2026-10-18). ADR 0030.
  * CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
  * the same as in card studio, please create centralized components so all screens have the same look
  * and feel". CEO confirmation the same day: the card editor (src/editor/ + src/css/editor-system) is the
@@ -30,6 +30,9 @@
  *   A scrim close needs press and release on the scrim (the old picker rule). Folded in from the builds:
  *   KitSliderOptions valueText / numberLabel / disabled (UI2), KitRowOptions sub / check / content / trail
  *   and an optional onSelect (UI6).
+ * - r4 2026-10-18 (CEO decision 2026-10-18, additive): UiMenuEntry gets an optional `sub`, a help line under the
+ *   label (also the item's accessible description unless `reason` is set). <mc-ui-window> shows its footer from the
+ *   first render, so a footer button can take the first focus (an alert's initialFocus).
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -156,7 +159,7 @@
  */
 
 export const UI_KIT_CONTRACT_VERSION = '1.0.0';
-export const UI_KIT_CONTRACT_REVISION = 3;
+export const UI_KIT_CONTRACT_REVISION = 4;
 
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
@@ -352,6 +355,8 @@ export interface UiKitTemplates {
 export interface UiMenuEntry {
   id: string;
   label: string;
+  /** Optional help line under the label (r4, additive); also the item's accessible description unless `reason` is set. */
+  sub?: string;
   /** Shortcut hint on fine pointers and aria-keyshortcuts, e.g. "Control+D". */
   keys?: string;
   /** Set = unavailable (aria-disabled, still focusable); the text says why. */
