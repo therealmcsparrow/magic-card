@@ -145,6 +145,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
     ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
+    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
   </div>`;
@@ -377,7 +378,9 @@ function workspace(ed: McSvgEditor): TemplateResult {
           .paint=${ed.flat.paint}
           .selection=${ed.cvSelection}
           .mode=${ed.canvasMode}
-          .snap=${{ enabled: ed.snapOn, grid: ed.grid, anchors: true, frame: true }}
+          .snap=${{ enabled: ed.snapOn, grid: ed.grid, anchors: true, frame: true, safeArea: ed.safeOn }}
+          .transform=${ed.transformBox}
+          .contextMenu=${ed.tool === 'select' || ed.tool === 'node'}
           .gridStep=${ed.grid}
           .safeArea=${ed.safeOn ? 2 : undefined}
           .pixelGrid=${ed.pixelGrid}
@@ -388,6 +391,8 @@ function workspace(ed: McSvgEditor): TemplateResult {
           @mc-path-view=${ed.onView}
           @mc-path-limit=${ed.onLimit}
           @mc-path-fields=${ed.onFields}
+          @mc-path-transform=${ed.onTransform}
+          @mc-path-context=${ed.onContext}
         ></mc-path-canvas>
         ${overLayer(ed)}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<p class="empty">${S.empty}</p>` : nothing}
@@ -442,7 +447,7 @@ function artLayer(ed: McSvgEditor): TemplateResult {
 function overLayer(ed: McSvgEditor): TemplateResult {
   const v = ed.view;
   const to = (x: number, y: number): [number, number] => [v.x + x * v.zoom, v.y + y * v.zoom];
-  const boxes = ed.tool === 'node' || ed.tool === 'pen' ? [] : ed.selected.filter((s) => !s.hidden).map((s) => ({ s, b: shapeBox(s) }));
+  const boxes = ed.tool === 'node' || ed.tool === 'pen' || ed.transformBox ? [] : ed.selected.filter((s) => !s.hidden).map((s) => ({ s, b: shapeBox(s) }));
   const l = ed.liveShape;
   return html`<svg class="over" aria-hidden="true">
     ${boxes.map(({ b }) => {
@@ -531,6 +536,11 @@ function layersPanel(ed: McSvgEditor): TemplateResult {
       @click=${(e: MouseEvent) => ed.pickLayer(s.id, e.shiftKey || e.ctrlKey || e.metaKey)}
       @dblclick=${() => (ed.renaming = s.id)}
       @keydown=${(e: KeyboardEvent) => layerKey(e, ed, s.id)}
+      @contextmenu=${(e: MouseEvent) => ed.rowContext(e, s.id)}
+      @pointerdown=${(e: PointerEvent) => ed.pressDown(e, s.id)}
+      @pointermove=${ed.pressMove}
+      @pointerup=${ed.pressEnd}
+      @pointercancel=${ed.pressEnd}
     >
       <button type="button" class="b icon" aria-pressed=${aria(!!hide)} aria-label=${hide ? S.show(s.name) : S.hide(s.name)} title=${hide ? S.show(s.name) : S.hide(s.name)} @click=${(e: Event) => { e.stopPropagation(); ed.editShapes([s.id], (x) => ({ ...x, hidden: !x.hidden }), 'Hide'); }}>${glyph(hide ? 'eyeOff' : 'eye', 16)}</button>
       <button type="button" class="b icon" aria-pressed=${aria(!!s.locked)} aria-label=${s.locked ? S.unlock(s.name) : S.lock(s.name)} title=${s.locked ? S.unlock(s.name) : S.lock(s.name)} @click=${(e: Event) => { e.stopPropagation(); ed.apply(ed.replaceOne(s, { locked: !s.locked }), 'Lock'); }}>${glyph(s.locked ? 'lock' : 'unlock', 16)}</button>
@@ -562,6 +572,7 @@ function layersPanel(ed: McSvgEditor): TemplateResult {
       data-id=${`g:${g.id}`}
       @click=${() => ed.select(members.map((m) => m.id))}
       @keydown=${(e: KeyboardEvent) => groupKey(e, ed, g.id, open)}
+      @contextmenu=${(e: MouseEvent) => ed.rowContext(e, `g:${g.id}`)}
     >
       <button type="button" class="b icon" aria-label=${open ? 'Collapse' : 'Expand'} @click=${(e: Event) => { e.stopPropagation(); ed.toggleGroup(g.id); }}>${glyph(open ? 'down' : 'right', 16)}</button>
       <span class="nm">${g.name}</span>
@@ -589,6 +600,13 @@ function layerKey(e: KeyboardEvent, ed: McSvgEditor, id: string): void {
     r?.focus();
   };
   if (e.altKey) return;
+  if (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)) {
+    e.preventDefault();
+    e.stopPropagation();
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    ed.openRowMenu(id, e.currentTarget as HTMLElement, [r.left + 24, r.bottom], false);
+    return;
+  }
   switch (e.key) {
     case 'ArrowDown':
       e.preventDefault();
@@ -680,6 +698,7 @@ function libraryPanel(ed: McSvgEditor): TemplateResult {
 function inspector(ed: McSvgEditor): TemplateResult {
   const sel = ed.selected;
   return html`<aside class="insp" aria-label=${S.inspector}>
+    <button type="button" class="b more" aria-label=${S.moreActions} title=${S.moreActions} aria-haspopup="menu" aria-expanded=${aria(!!ed.menu)} @click=${(e: Event) => ed.moreMenu(e.currentTarget as HTMLElement)}>${glyph('more', 18)}</button>
     ${ed.pointCtx ? pointSection(ed) : nothing}
     ${sel.length ? shapeSections(ed, sel) : documentSection(ed)}
   </aside>`;
@@ -845,7 +864,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       </div>
       ${chk(S.lockRatio, ed.lockRatio, (v) => (ed.lockRatio = v))}
       <div class="acts">
-        ${btn(S.rotMinus, 'rotL', () => ed.rotate(-15), off)}${btn(S.rotPlus, 'rotR', () => ed.rotate(15), off)}
+        ${btn(S.rotMinus, 'rotL', () => ed.rotate(-15), off)}${btn(S.rotPlus, 'rotR', () => ed.rotate(15), off)}${btn(S.rotCcw, 'rot90L', () => ed.rotate(-90), off)}${btn(S.rotCw, 'rot90R', () => ed.rotate(90), off)}
         ${btn(S.flipH, 'flipH', () => ed.flip('h'), { ...off, keys: 'Shift+H' })}${btn(S.flipV, 'flipV', () => ed.flip('v'), { ...off, keys: 'Shift+V' })}
       </div>
       ${placeRow(ed)}

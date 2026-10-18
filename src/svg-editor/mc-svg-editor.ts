@@ -1,5 +1,6 @@
 import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
-import type { History, PathCanvasChunk, PathChange, PathPaint, PathSelection } from '../contracts/path-canvas';
+import type { History, PathCanvasChunk, PathChange, PathContext, PathPaint, PathSelection, PathTransform, TransformBox } from '../contracts/path-canvas';
+import type { MenuEntry } from '../contracts/path-canvas';
 import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
@@ -50,6 +51,7 @@ import {
   type Paint,
   type Shape,
 } from './model';
+import { emptyMenu, pointMenu, runMenu, shapeMenu } from './menu';
 import { editorStyles } from './styles';
 import { S } from './strings';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
@@ -99,7 +101,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -125,7 +127,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   safe = true;
   decimals = 2;
   nudgePad = true;
-  lockRatio = false;
+  lockRatio = true;
   opts: ToolOpts = { ...DEFAULT_OPTS };
   panel: 'layers' | 'library' = 'layers';
   pvTheme: 'light' | 'dark' | 'on' | 'off' = 'light';
@@ -164,6 +166,13 @@ export class McSvgEditor extends LitElement implements StageHost {
   deleted?: { item: SavedIcon; timer: ReturnType<typeof setTimeout> };
   escHinted = false;
   noticeGone = false;
+
+  /** The open "Shape actions" menu. */
+  menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener: HTMLElement };
+  private press?: { x: number; y: number; t: ReturnType<typeof setTimeout> };
+  private menuAt = 0;
+  private tk = '';
+  private tv?: TransformBox;
 
   hist?: History<Doc>;
   chunk?: PathCanvasChunk;
@@ -424,6 +433,88 @@ export class McSvgEditor extends LitElement implements StageHost {
     const d = (e as CustomEvent<{ path: number; anchor: number }>).detail;
     void d;
     this.updateComplete.then(() => (this.renderRoot.querySelector<HTMLInputElement>('[data-field="pxb"]') ?? this.renderRoot.querySelector<HTMLInputElement>('[data-field="px"]'))?.focus());
+  };
+
+  /** The selection box the canvas draws with handles (Select tool, unlocked visible layers). */
+  get transformBox(): TransformBox | undefined {
+    const sel = this.tool === 'select' ? this.selected.filter((s) => !s.locked && !s.hidden) : [];
+    const box = boxOf(sel);
+    const t = box && { box, scale: true, rotate: true, keepRatio: this.lockRatio, angle: sel.length === 1 ? sel[0].angle ?? 0 : 0 };
+    const k = JSON.stringify(t);
+    if (k !== this.tk) [this.tk, this.tv] = [k, t || undefined];
+    return this.tv;
+  }
+
+  /** A scale or rotate from the handles or keys: the matrix applies to the document at gesture start. */
+  onTransform = (e: Event): void => {
+    const d = (e as CustomEvent<PathTransform>).detail;
+    if (d.label === 'Cancel') return this.setDoc(this.base);
+    const sel = this.selected.filter((s) => !s.locked && !s.hidden);
+    const from = boxOf(this.base.shapes.filter((s) => sel.some((x) => x.id === s.id)));
+    if (!from) return;
+    const m = d.matrix;
+    const to: Box = { x: m[0] * from.x + m[4], y: m[3] * from.y + m[5], w: m[0] * from.w, h: m[3] * from.h };
+    const rot = d.kind === 'rotate';
+    this.setDoc(mapShapes(this.base, sel.map((s) => s.id), (s) => (rot ? { ...transformShape(s, m), angle: round2(((s.angle ?? 0) + (d.angle ?? 0)) % 360) } : setShapeBox(s, from, to))));
+    if (d.commit) this.commit(d.label, d.source === 'keyboard' ? d.label : undefined);
+  };
+
+  // ── Shape actions menu ──
+
+  onContext = (e: Event): void => {
+    const d = (e as CustomEvent<PathContext>).detail;
+    const sid = d.hit ? this.flat.map[d.hit.path]?.sid : undefined;
+    if (sid && !this.sel.includes(sid) && this.tool === 'select') this.select([sid]);
+    const on = d.hit || d.source === 'keyboard';
+    const items = d.hit?.anchor !== undefined && this.pointCtx ? pointMenu(this) : on && this.sel.length ? shapeMenu(this) : emptyMenu();
+    this.menu = { items, at: d.client, touch: d.source === 'touch', opener: this.canvas()! };
+  };
+
+  moreMenu(b: HTMLElement): void {
+    const r = b.getBoundingClientRect();
+    this.menu = { items: this.sel.length ? shapeMenu(this) : emptyMenu(), at: [r.left, r.bottom], touch: false, opener: b };
+  }
+
+  /** A layer row opens the menu; the row's shape is selected first unless it is in the selection already. */
+  openRowMenu(id: string, row: HTMLElement, at: Pt, touch: boolean): void {
+    const ids = id.startsWith('g:') ? this.doc.shapes.filter((s) => s.group === id.slice(2)).map((s) => s.id) : [id];
+    if (!ids.every((i) => this.sel.includes(i))) this.select(ids);
+    this.menuAt = Date.now();
+    this.menu = { items: shapeMenu(this), at, touch, opener: row };
+  }
+
+  rowContext(e: MouseEvent, id: string): void {
+    if ((e.target as HTMLElement).tagName === 'INPUT') return;
+    e.preventDefault();
+    if (Date.now() - this.menuAt > 500) this.openRowMenu(id, e.currentTarget as HTMLElement, [e.clientX, e.clientY], false);
+  }
+
+  pressDown(e: PointerEvent, id: string): void {
+    this.pressEnd();
+    if (e.pointerType !== 'touch') return;
+    const row = e.currentTarget as HTMLElement;
+    const [x, y] = [e.clientX, e.clientY];
+    this.press = { x, y, t: setTimeout(() => (this.press = undefined, this.openRowMenu(id, row, [x, y], true)), 500) };
+  }
+
+  pressMove = (e: PointerEvent): void => {
+    if (this.press && Math.hypot(e.clientX - this.press.x, e.clientY - this.press.y) > 8) this.pressEnd();
+  };
+
+  pressEnd = (): void => {
+    if (this.press) clearTimeout(this.press.t);
+    this.press = undefined;
+  };
+
+  onPick = (e: Event): void => {
+    const row = this.menu?.opener;
+    this.menu = undefined;
+    runMenu(this, (e as CustomEvent<{ id: string }>).detail.id);
+    this.updateComplete.then(() => (row?.classList.contains('row') && row.isConnected ? row : this.canvas())?.focus({ preventScroll: true }));
+  };
+
+  onMenuClose = (): void => {
+    this.menu = undefined;
   };
 
   /** Turn the canvas's path list into an edit of the committed document. */
@@ -1477,6 +1568,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   // ── render ──
 
   protected updated(changed: PropertyValues): void {
+    if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { open?(): void }>('mc-path-menu')?.open?.();
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 

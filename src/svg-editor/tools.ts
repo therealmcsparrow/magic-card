@@ -35,6 +35,8 @@ export interface StageHost {
   doc: Doc;
   snapOn: boolean;
   grid: number;
+  /** The safe area is shown: its edges and centre lines are snap lines too. */
+  safeOn?: boolean;
   point(e: { clientX: number; clientY: number }): Pt;
   centre(): Pt;
   setLive(l: Live | undefined): void;
@@ -71,7 +73,14 @@ export class Gestures {
 
   private snap(p: Pt, off: boolean): Pt {
     const s = this.h.grid;
-    return this.h.snapOn && !off && s > 0 ? [clean(Math.round(p[0] / s) * s), clean(Math.round(p[1] / s) * s)] : p;
+    if (!this.h.snapOn || off) return p;
+    // a safe-area line (edge or centre) wins when it is nearer than the grid point
+    const ax = (v: number): number => {
+      const g = s > 0 ? clean(Math.round(v / s) * s) : v;
+      const l = this.h.safeOn ? [2, 12, 22].reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a)) : g;
+      return Math.abs(l - v) < Math.abs(g - v) ? l : g;
+    };
+    return [ax(p[0]), ax(p[1])];
   }
 
   private build(a: Pt, b: Pt, square: boolean): Shape | undefined {

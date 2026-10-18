@@ -447,6 +447,9 @@ export const editorStyles: CSSResult[] = [
       padding: 8px;
       background: var(--mc-surface);
     }
+    .more {
+      align-self: flex-end;
+    }
     .left {
       grid-area: left;
       border-right: 1px solid var(--mc-divider);
@@ -676,6 +679,7 @@ export const editorStyles: CSSResult[] = [
       min-height: var(--hit);
       padding: 0 4px;
       border-radius: 8px;
+      -webkit-touch-callout: none;
     }
     .row[aria-level='2'] {
       padding-left: 20px;
