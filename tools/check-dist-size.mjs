@@ -13,7 +13,7 @@ const B2 = 471_856;
 const CAPS = {
   'magic-card.js': B2 + 8_192, // 480,048
   'magic-card-animation-studio.js': 902_144, // 858,558
-  'magic-card-editor.js': 715_776, // 699 KiB, CEO 2026-10-18 (measured 681,033 + 5%)
+  'magic-card-editor.js': 728_064, // 711 KiB, CEO-approved backup 2026-10-18 (UI kit + i18n)
   'magic-card-icon-animator.js': 233_472, // 222,240
   'magic-card-icon-library.js': 180_224, // 171,507
   'magic-card-particles.js': 38_912, // 38 KiB, CEO 2026-10-18 (multiple emitters + per-emitter placement, spike F-S1 36,804)

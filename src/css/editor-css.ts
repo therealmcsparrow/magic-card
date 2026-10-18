@@ -1289,24 +1289,6 @@ const pickerLocalStyles = css`
   .mc-modal-resize-handle:hover {
     opacity: 0.7;
   }
-
-  /* ── Phone: a bottom sheet like the kit window (CEO D8) ─────── */
-  @media (max-width: 599px) {
-    .mc-picker-overlay {
-      align-items: flex-end;
-      padding: 0;
-    }
-
-    .mc-picker-modal {
-      width: 100%;
-      max-height: 60vh;
-      border-radius: 16px 16px 0 0;
-    }
-
-    .mc-modal-resize-handle {
-      display: none;
-    }
-  }
 `;
 
 export const pickerStyles = pickerLocalStyles;

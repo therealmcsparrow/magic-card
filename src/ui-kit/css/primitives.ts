@@ -746,19 +746,6 @@ export const editorPrimitives: CSSResult = css`
     background: var(--mc-surface-2);
     outline: none;
   }
-  .menu button:focus-visible {
-    outline: 2px solid var(--mc-focus);
-    outline-offset: -2px;
-  }
-  .menu button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    background: transparent;
-  }
-  .menu button.danger,
-  .menu button.danger ha-icon {
-    color: var(--mc-error-ink);
-  }
   .menu button ha-icon {
     --mdc-icon-size: 18px;
     color: var(--mc-text-2);
