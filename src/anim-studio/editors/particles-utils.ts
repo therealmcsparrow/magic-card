@@ -10,6 +10,7 @@ import {
   PARTICLES_V2_CAPS,
   type BuiltinShape,
   type ParticleColliders,
+  type ParticleEmitter,
   type ParticleFlow,
   type ParticleMode,
   type ParticlesModule,
@@ -568,4 +569,166 @@ export function bakedParticlesSvg(doc: AnimationDoc): { svg: string; warnings: s
   if (loop.stats.capped) warnings.push('The loop hit the size limit, so the file shows fewer particles.');
   const w = 200;
   return { svg: m.bakedSvg(loop, { width: w, height: Math.round(w / DEFAULT_GEOMETRY.aspect) }), warnings };
+}
+
+// ── emitters (particles-v2 1.2.0, ADR 0028) ──
+// Index 0 is the primary emitter (spec count / size / colors / fade / spread / layer plus the sim's own fields), index i the
+// extra sim.emitters[i - 1]. Every op is pure and returns the SAME document when it changes nothing (so a no-op is no undo step
+// and a single-emitter document is never rewritten). Ids and names exist only with 2+ emitters; going back to one drops them
+// (with `emitters`), so add then remove is byte-identical to the document you started with.
+
+export const EMITTER_NAME_MAX = 40;
+
+type Side = 'front' | 'back';
+
+/** One emitter with its side always explicit (the working form; storage writes `layer` only when it differs from the primary's). */
+type Full = ParticleEmitter & { layer: Side };
+
+/** Emitters of the document, primary first. 1 for a v1 document or one without extras. */
+export const emitterCount = (doc: AnimationDoc): number => 1 + (doc.particles?.sim?.emitters?.length ?? 0);
+
+/** The parents all emitters of the document use together. */
+export function emitterParents(doc: AnimationDoc): number {
+  return (doc.particles?.count ?? DEFAULT_PARTICLES.count) + (doc.particles?.sim?.emitters ?? []).reduce((n, e) => n + e.count, 0);
+}
+
+/** Parents still free in the document's budget. */
+export const parentsLeft = (doc: AnimationDoc): number => Math.max(0, PARTICLES_V2_CAPS.parents - emitterParents(doc));
+
+/** Can one more emitter be added (up to 4, with at least one free parent)? */
+export const canAddEmitter = (doc: AnimationDoc): boolean => emitterCount(doc) < PARTICLES_V2_CAPS.emitters && parentsLeft(doc) >= 1;
+
+const NEW_EMITTER_COUNT = 10;
+
+const sideOf = (e: { layer?: Side }, primary: Side): Side => e.layer ?? primary;
+
+/** The emitters as full objects (primary first), ids as stored (the primary's may be missing: ''). */
+function toList(doc: AnimationDoc, seed: number): Full[] {
+  const spec = doc.particles ?? DEFAULT_PARTICLES;
+  const sim = viewSim(doc, seed);
+  const primary: Full = {
+    id: sim.id ?? '',
+    ...(sim.name !== undefined ? { name: sim.name } : {}),
+    layer: spec.layer,
+    seed: sim.seed,
+    count: spec.count,
+    size: [spec.size[0], spec.size[1]],
+    colors: [...spec.colors],
+    fade: spec.fade,
+    spread: spec.spread,
+    flow: sim.flow,
+    shapes: sim.shapes,
+    ranges: sim.ranges,
+    physics: sim.physics,
+    ...(sim.children ? { children: sim.children } : {}),
+  };
+  return [primary, ...(sim.emitters ?? []).map((e): Full => ({ ...e, layer: sideOf(e, spec.layer) }))];
+}
+
+/** Writes the list back: the first emitter becomes the primary, sides are stored relative to its side. */
+function fromList(doc: AnimationDoc, seed: number, list: Full[]): AnimationDoc {
+  const base = viewSim(doc, seed);
+  const [first, ...rest] = list;
+  const sim: ParticlesSim = { ...base, seed: first.seed, flow: first.flow, shapes: first.shapes, ranges: first.ranges, physics: first.physics };
+  if (first.children) sim.children = first.children;
+  else delete sim.children;
+  delete sim.id;
+  delete sim.name;
+  delete sim.emitters;
+  if (list.length > 1) {
+    // keep each stored id once; a missing or repeated one gets the smallest free e<n>
+    const taken = new Set<string>();
+    const kept = list.map((e) => (e.id && !taken.has(e.id) ? (taken.add(e.id), e.id) : ''));
+    const ids = kept.map((id) => {
+      if (id) return id;
+      let n = 1;
+      while (taken.has(`e${n}`)) n++;
+      taken.add(`e${n}`);
+      return `e${n}`;
+    });
+    sim.id = ids[0];
+    if (first.name) sim.name = first.name;
+    sim.emitters = rest.map((e, i) => {
+      const { layer, name, ...keep } = e;
+      return { ...keep, id: ids[i + 1], ...(name ? { name } : {}), ...(layer !== first.layer ? { layer } : {}) };
+    });
+  }
+  const patched = patchParticles(doc, { count: first.count, size: first.size, colors: first.colors, fade: first.fade, spread: first.spread, layer: first.layer });
+  return withSim(patched, sim);
+}
+
+const validIndex = (doc: AnimationDoc, i: number): boolean => Number.isInteger(i) && i >= 0 && i < emitterCount(doc);
+
+/** A new emitter after the last one: a copy of the primary's look with its own seed and (up to) 10 parents. No-op at 4 emitters or with no free parent. */
+export function addEmitter(doc: AnimationDoc, seed: number, rand?: () => number): AnimationDoc {
+  if (!canAddEmitter(doc)) return doc;
+  const list = toList(doc, seed);
+  const copy = structuredClone(list[0]);
+  delete copy.name;
+  copy.id = '';
+  copy.seed = newSeed(list[0].seed, rand);
+  copy.count = Math.min(NEW_EMITTER_COUNT, list[0].count, parentsLeft(doc));
+  return fromList(doc, seed, [...list, copy]);
+}
+
+/** A copy of emitter `i` right after it, with a new seed and as many parents as still fit. */
+export function duplicateEmitter(doc: AnimationDoc, seed: number, i: number, rand?: () => number): AnimationDoc {
+  if (!validIndex(doc, i) || !canAddEmitter(doc)) return doc;
+  const list = toList(doc, seed);
+  const copy = structuredClone(list[i]);
+  copy.id = '';
+  copy.seed = newSeed(list[i].seed, rand);
+  copy.count = Math.min(list[i].count, parentsLeft(doc));
+  if (copy.name) copy.name = `${copy.name} copy`.slice(0, EMITTER_NAME_MAX).trim();
+  list.splice(i + 1, 0, copy);
+  return fromList(doc, seed, list);
+}
+
+/** Removes emitter `i` (the primary too: the next one takes its place). The last emitter stays. */
+export function removeEmitter(doc: AnimationDoc, seed: number, i: number): AnimationDoc {
+  if (!validIndex(doc, i) || emitterCount(doc) < 2) return doc;
+  const list = toList(doc, seed);
+  list.splice(i, 1);
+  return fromList(doc, seed, list);
+}
+
+/** Moves emitter `from` to position `to` (paint order: later is drawn above earlier ones of its side). Sides and seeds travel with it. */
+export function moveEmitter(doc: AnimationDoc, seed: number, from: number, to: number): AnimationDoc {
+  if (!validIndex(doc, from) || !validIndex(doc, to) || from === to) return doc;
+  const list = toList(doc, seed);
+  list.splice(to, 0, list.splice(from, 1)[0]);
+  return fromList(doc, seed, list);
+}
+
+/** The name as stored: trimmed, at most 40 characters ("" clears it). */
+export const cleanEmitterName = (raw: string): string => raw.trim().slice(0, EMITTER_NAME_MAX).trim();
+
+/** Names emitter `i` (2+ emitters only). An empty name clears it. */
+export function renameEmitter(doc: AnimationDoc, seed: number, i: number, raw: string): AnimationDoc {
+  if (!validIndex(doc, i) || emitterCount(doc) < 2) return doc;
+  const name = cleanEmitterName(raw);
+  const sim = doc.particles!.sim!;
+  if ((i === 0 ? sim.name : sim.emitters![i - 1].name) === (name || undefined)) return doc;
+  const list = toList(doc, seed);
+  if (name) list[i].name = name;
+  else delete list[i].name;
+  return fromList(doc, seed, list);
+}
+
+/** The side emitter `i` is on. */
+export function emitterPlacement(doc: AnimationDoc, i: number): Side {
+  const spec = doc.particles ?? DEFAULT_PARTICLES;
+  return i <= 0 ? spec.layer : sideOf(spec.sim?.emitters?.[i - 1] ?? {}, spec.layer);
+}
+
+/**
+ * Puts emitter `i` behind or in front of the content. Flipping the primary moves ParticlesSpec.layer and rewrites the extras'
+ * `layer` so none of them changes side; a `layer` equal to spec.layer is never written.
+ */
+export function setEmitterPlacement(doc: AnimationDoc, seed: number, i: number, side: Side): AnimationDoc {
+  if (!validIndex(doc, i) || emitterPlacement(doc, i) === side) return doc;
+  if (emitterCount(doc) === 1) return patchParticles(doc, { layer: side });
+  const list = toList(doc, seed);
+  list[i].layer = side;
+  return fromList(doc, seed, list);
 }
