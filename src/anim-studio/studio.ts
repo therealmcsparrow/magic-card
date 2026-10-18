@@ -11,14 +11,14 @@ import {
   KIND_ICON,
   KIND_LABEL,
   copyName,
-  docsToYaml,
   filterDocs,
   libraryDocs,
-  parseImport,
+  exportItems,
+  importDocs,
   sequencesUsing,
   uniqueId,
-  type ImportResult,
 } from './studio-model';
+import type { TransferChunk, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import type { AnimationStage } from './studio-stage';
 import { studioStyles } from './studio-styles';
 import { KIND_EDITORS, PATH_OVERLAY_TAG, editorDefined } from './editor-slots';
@@ -55,7 +55,7 @@ import { loadPresetCatalogue } from './preset-catalogue-loader';
 type Dialog =
   | { type: 'delete'; doc: AnimationDoc; uses: number | undefined; sequences: AnimationDoc[] }
   | { type: 'discard'; then: () => void }
-  | { type: 'export'; title: string; yaml: string; file: string }
+  | { type: 'export'; items: TransferItem<'animation'>[] }
   | { type: 'import' }
   | { type: 'presets' }
   | { type: 'icon' }
@@ -265,8 +265,6 @@ export class AnimationStudio extends LitElement {
   @state() private _saveError = '';
   @state() private _busy = false;
   @state() private _status = '';
-  @state() private _import?: ImportResult & { done?: string };
-  @state() private _importText = '';
   @state() private _presetQuery = '';
   /** Catalogue presets once the chunk has loaded (preset-catalogue 1.1.0); undefined until then. */
   @state() private _catalogue?: CataloguePreset[];
@@ -633,61 +631,42 @@ export class AnimationStudio extends LitElement {
     }
   }
 
-  private _export(docs: AnimationDoc[], title: string, file: string): void {
-    this._dialog = { type: 'export', title, yaml: docsToYaml(docs), file };
-  }
-
-  private async _copy(text: string): Promise<void> {
+  /** The transfer chunk (export / import panel), through the card's editor chunk. */
+  private async _transferChunk(): Promise<TransferChunk | undefined> {
     try {
-      await navigator.clipboard.writeText(text);
-      this._say('YAML copied.');
+      const mc = window.MagicCard;
+      if (!mc?.loadEditor || !mc.loadTransfer || !(await mc.loadEditor())) return undefined;
+      return await (mc.loadTransfer as () => Promise<TransferChunk>)();
     } catch {
-      this._say('Copying failed: the browser blocked the clipboard.');
+      return undefined;
     }
   }
 
-  private _download(text: string, file: string): void {
-    const url = URL.createObjectURL(new Blob([text], { type: 'text/yaml' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = file;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  private async _openTransfer(dialog: Dialog): Promise<void> {
+    if (await this._transferChunk()) this._dialog = dialog;
+    else this._say('The import and export tool could not be loaded. Reload the page and try again.');
   }
 
-  private async _loadFile(e: Event): Promise<void> {
-    const input = e.target as HTMLInputElement;
-    const f = input.files?.[0];
-    if (!f) return;
-    this._importText = await f.text();
-    this._import = undefined;
-    input.value = '';
+  private _export(docs: AnimationDoc[]): void {
+    void this._openTransfer({ type: 'export', items: exportItems(docs, this._docs) });
   }
 
-  private async _runImport(): Promise<void> {
-    const r = parseImport(this._importText, this._taken, ANIMATION_CAPS.docs - this._docs.size);
-    this._import = r;
-    if (!r.docs.length) return;
+  private async _onImport(e: CustomEvent<{ kind: TransferKind; items: TransferItem[] }>): Promise<void> {
+    e.stopPropagation();
+    const { docs, errors } = importDocs(e.detail.items as TransferItem<'animation'>[], ANIMATION_CAPS.docs - this._docs.size);
+    const failed = [...errors];
     let ok = 0;
-    const failed: FieldError[] = [];
-    for (const d of r.docs) {
+    for (const d of docs) {
       try {
         const res = await this._emit('mc-anim-save', { animation: d });
         this._store(this._stored(res, d));
         ok++;
       } catch (err) {
-        const t = errorText(err);
-        failed.push(...(t.errors.length ? t.errors.map((x) => ({ path: `${d.id}.${x.path}`, message: x.message })) : [{ path: d.id, message: t.message }]));
+        failed.push(`${d.id}: ${errorText(err).message}`);
       }
     }
-    const renamed = r.renamed.length ? ` Renamed (id taken): ${r.renamed.map((x) => `${x.from} → ${x.to}`).join(', ')}.` : '';
-    this._import = {
-      ...r,
-      errors: [...r.errors, ...failed],
-      done: `Imported ${ok} animation${ok === 1 ? '' : 's'}.${renamed}`,
-    };
-    this._say(this._import.done!);
-    if (ok) this._importText = '';
+    this._say(`Imported ${ok} animation${ok === 1 ? '' : 's'}.${failed.length ? ` Not imported: ${failed.slice(0, 4).join('; ')}.` : ''}`);
+    if (!failed.length) this._dialog = undefined;
   }
 
   // ── editor ──
@@ -1076,9 +1055,9 @@ export class AnimationStudio extends LitElement {
           <button
             type="button"
             class="icon-btn sm"
-            title="Export YAML"
-            aria-label="Export ${d.name} as YAML"
-            @click=${() => this._export([d], `Export "${d.name}"`, `${d.id}.yaml`)}
+            title="Export"
+            aria-label="Export ${d.name}"
+            @click=${() => this._export([d])}
           >
             <ha-icon icon="mdi:export-variant"></ha-icon>
           </button>
@@ -1148,11 +1127,7 @@ export class AnimationStudio extends LitElement {
           <button
             type="button"
             class="btn btn-secondary btn-sm"
-            @click=${() => {
-              this._importText = '';
-              this._import = undefined;
-              this._dialog = { type: 'import' };
-            }}
+            @click=${() => void this._openTransfer({ type: 'import' })}
           >
             <ha-icon icon="mdi:import"></ha-icon>Import
           </button>
@@ -1160,7 +1135,7 @@ export class AnimationStudio extends LitElement {
             type="button"
             class="btn btn-secondary btn-sm"
             ?disabled=${!all.length}
-            @click=${() => this._export(all, 'Export all animations', 'my-animations.yaml')}
+            @click=${() => this._export(all)}
           >
             <ha-icon icon="mdi:export-variant"></ha-icon>Export all
           </button>
@@ -2143,69 +2118,19 @@ export class AnimationStudio extends LitElement {
             </div>`,
         );
       case 'export':
+      case 'import':
         return shell(
-          dg.title,
-          html`<h2>${dg.title}</h2>
-            <p>
-              Import this YAML in another animation studio. A card can also embed it as
-              <span class="mono">custom_animations:</span>.
-            </p>
-            <textarea class="input yaml" readonly aria-label="YAML" .value=${dg.yaml}></textarea>
-            <div class="dlg-actions">
-              <button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>Close</button>
-              <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._download(dg.yaml, dg.file)}>
-                <ha-icon icon="mdi:download"></ha-icon>Download
-              </button>
-              <button type="button" class="btn btn-primary btn-sm" autofocus @click=${() => this._copy(dg.yaml)}>
-                <ha-icon icon="mdi:content-copy"></ha-icon>Copy YAML
-              </button>
-            </div>`,
+          dg.type === 'export' ? 'Export animations' : 'Import animations',
+          html`<mc-transfer-panel
+            host="animation-studio"
+            .mode=${dg.type}
+            .exportItems=${dg.type === 'export' ? { kind: 'animation', items: dg.items } : undefined}
+            .taken=${(_k: TransferKind, id: string) => this._taken(id)}
+            @mc-transfer-import=${(e: CustomEvent) => void this._onImport(e)}
+            @mc-transfer-close=${this._closeDialog}
+          ></mc-transfer-panel>`,
           true,
         );
-      case 'import': {
-        const r = this._import;
-        return shell(
-          'Import animations',
-          html`<h2>Import animations</h2>
-            <p>
-              Paste YAML from an export: one animation, a list, or a card's
-              <span class="mono">custom_animations</span>. An id that exists gets a new one.
-            </p>
-            <textarea
-              class="input yaml"
-              aria-label="YAML to import"
-              placeholder="- id: doorbell-wiggle&#10;  name: Doorbell wiggle&#10;  kind: keyframes&#10;  …"
-              .value=${live(this._importText)}
-              @input=${(e: InputEvent) => {
-                this._importText = (e.target as HTMLTextAreaElement).value;
-                this._import = undefined;
-              }}
-            ></textarea>
-            ${
-              r?.errors.length
-                ? html`<div class="errors" role="alert">
-                    <strong>${r.docs.length ? 'Some items were not imported:' : 'Nothing imported:'}</strong>
-                    <ul>
-                      ${r.errors.slice(0, 8).map((e) => html`<li><span class="mono">${e.path || 'YAML'}</span> ${e.message}</li>`)}
-                    </ul>
-                  </div>`
-                : nothing
-            }
-            ${r?.done ? html`<p class="ok" role="status">${r.done}</p>` : nothing}
-            <div class="dlg-actions">
-              <label class="btn btn-text btn-sm file">
-                <ha-icon icon="mdi:file-upload-outline"></ha-icon>Load file
-                <input type="file" accept=".yaml,.yml,.json,text/yaml,application/json" @change=${(e: Event) => this._loadFile(e)} />
-              </label>
-              <span class="spacer"></span>
-              <button type="button" class="btn btn-secondary btn-sm" @click=${this._closeDialog}>${r?.done ? 'Done' : 'Cancel'}</button>
-              <button type="button" class="btn btn-primary btn-sm run-import" ?disabled=${!this._importText.trim()} @click=${() => this._runImport()}>
-                <ha-icon icon="mdi:import"></ha-icon>Import
-              </button>
-            </div>`,
-          true,
-        );
-      }
       case 'icon':
         return shell(
           'Icon animation',

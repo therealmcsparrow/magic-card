@@ -4,6 +4,7 @@ import { embedCustomAnimations } from '../utils/custom-animations';
 import './model-v2';
 import './compile-v2';
 import { tileModule, type PreviewTile } from './tiles';
+import type { TransferItem } from '../contracts/preset-transfer';
 import { ANIMATION_CAPS, ANIMATION_ID_RE, CUSTOM_PREFIX, validateAnimationDoc, type AnimationDoc, type AnimationKind, type FieldError } from './model';
 
 export type { PreviewTile } from './tiles';
@@ -315,4 +316,40 @@ export function libraryDocs(input: unknown): Map<string, AnimationDoc> {
     if (r.ok && !out.has(r.doc.id)) out.set(r.doc.id, r.doc);
   }
   return out;
+}
+
+// ── preset files (transfer chunk) ──
+
+/**
+ * The envelope items for `docs`. A sequence takes the custom documents its steps play along
+ * (looked up in `library`, followed through nested sequences).
+ */
+export function exportItems(docs: AnimationDoc[], library: Map<string, AnimationDoc>): TransferItem<'animation'>[] {
+  const out = new Map<string, AnimationDoc>();
+  const add = (d: AnimationDoc): void => {
+    if (out.has(d.id)) return;
+    out.set(d.id, d);
+    for (const ref of stepRefs(d)) {
+      const dep = library.get(ref);
+      if (dep) add(dep);
+    }
+  };
+  docs.forEach(add);
+  return [...out.values()].map((d) => {
+    const { id, name, ...data } = JSON.parse(JSON.stringify(d)) as AnimationDoc;
+    return { id, name, data };
+  });
+}
+
+/** Documents from imported envelope items (ids already resolved); at most `room`, the rest is an error. */
+export function importDocs(items: TransferItem<'animation'>[], room: number): { docs: AnimationDoc[]; errors: string[] } {
+  const docs: AnimationDoc[] = [];
+  const errors: string[] = [];
+  for (const it of items) {
+    const r = validateAnimationDoc({ ...it.data, id: it.id, name: it.name });
+    if (!r.ok) errors.push(`${it.id}: ${r.errors[0]?.message ?? 'not valid'}`);
+    else if (docs.length >= Math.max(0, room)) errors.push(`${it.id}: the library is full`);
+    else docs.push(r.doc);
+  }
+  return { docs, errors };
 }
