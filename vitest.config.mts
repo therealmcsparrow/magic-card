@@ -26,5 +26,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     include: ['tests/**/*.test.ts'],
+    // every lazy chunk installed before a test file runs, so renderPreview keeps its synchronous output
+    setupFiles: ['tests/setup-lazy-chunks.ts'],
   },
 });

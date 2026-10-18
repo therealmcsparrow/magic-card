@@ -35,6 +35,7 @@ import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
 import { particlesFailed } from '../anim-studio/compile';
 import { loadEditor } from '../utils/editor-loader';
+import { prefetchLazy } from '../utils/lazy-chunks';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
@@ -431,6 +432,8 @@ export class MagicCard extends LitElement {
     if (this._templateConfig) {
       this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
     }
+    // lazy modules and the seasonal set: start their chunks now, all at once
+    prefetchLazy(this._resolvedConfig ?? this._config);
   }
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
@@ -708,6 +711,7 @@ export class MagicCard extends LitElement {
         this._templateConfig = entry.config as MagicCardConfig;
         // Merge template with local overrides
         this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
+        prefetchLazy(this._resolvedConfig);
       }
     } catch (err) {
       console.warn('Magic Card: Failed to fetch template', name, err);

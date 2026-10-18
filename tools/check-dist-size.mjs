@@ -32,6 +32,11 @@ const CAPS = {
   // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
   'magic-card-shape-editor.js': 69_632, // 68 KiB, CEO 2026-10-18 (measured 64,435 + 5%)
+  // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
+  'magic-card-slider.js': 4_096,
+  'magic-card-seasonal.js': 4_096,
+  'magic-card-markdown.js': 4_096,
+  'magic-card-modules-extra.js': 4_096,
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));
