@@ -6,11 +6,14 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { entityNumber, formatEntityValue } from '../../utils/entity-value';
 import { rangeColor } from '../../utils/color-ranges';
+import { t } from '../../card/i18n';
 
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'bar',
-    name: 'Bar',
+    get name() {
+      return t('Bar');
+    },
     description: 'Display a progress bar based on entity state',
     category: 'content',
     icon: 'mdi:chart-bar',
@@ -51,7 +54,7 @@ class BarModule extends BaseMagicModule {
 
     let valueText = '—';
     if (entity && unavailable && attribute && entity.attributes[attribute] === undefined) {
-      valueText = hass!.formatEntityState?.(entity, 'unavailable') || 'Unavailable';
+      valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('Unavailable');
     } else if (entity) {
       valueText = formatEntityValue(hass, entity, attribute, { decimals: c.decimals }).text;
     }
@@ -86,7 +89,7 @@ class BarModule extends BaseMagicModule {
     const c = config as BarModuleConfig;
     // No entity yet is not an error: the bar shows its minimum until one is picked.
     if (c.min !== undefined && c.max !== undefined && c.min >= c.max) {
-      errors.push('Min must be less than max');
+      errors.push(t('Min must be less than max'));
     }
     return errors;
   }

@@ -9,6 +9,7 @@ import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-v
 import { stopControlEvent } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
+import { t } from '../../card/i18n';
 
 
 /**
@@ -31,7 +32,9 @@ export function climateRange(stateObj: HassEntity | undefined, attribute: string
 class SpinboxModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'spinbox',
-    name: 'Spinbox',
+    get name() {
+      return t('Spinbox');
+    },
     description: 'Numeric input with increment and decrement buttons',
     category: 'controls',
     icon: 'mdi:numeric',
@@ -70,7 +73,7 @@ class SpinboxModule extends BaseMagicModule {
       if (next === value) return;
       setPendingValue(key, next, ctrl.value, (v) => runServiceCall(hass, call(v)), () => ctx?.requestUpdate());
     };
-    const name = stateObj ? entityDisplayName(hass, stateObj) : 'Spinbox';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Spinbox');
     const atMin = value !== undefined && ctrl !== undefined && value <= ctrl.min;
     const atMax = value !== undefined && ctrl !== undefined && value >= ctrl.max;
 
@@ -79,7 +82,7 @@ class SpinboxModule extends BaseMagicModule {
         <button
           type="button"
           class="mc-spinbox-btn mc-spinbox-decrement"
-          aria-label=${`Decrease ${name}`}
+          aria-label=${t('Decrease {name}', { name })}
           ?disabled=${disabled || atMin}
           @click=${change(-1)}
           @pointerdown=${stopControlEvent}
@@ -90,7 +93,7 @@ class SpinboxModule extends BaseMagicModule {
         <button
           type="button"
           class="mc-spinbox-btn mc-spinbox-increment"
-          aria-label=${`Increase ${name}`}
+          aria-label=${t('Increase {name}', { name })}
           ?disabled=${disabled || atMax}
           @click=${change(1)}
           @pointerdown=${stopControlEvent}
@@ -103,8 +106,8 @@ class SpinboxModule extends BaseMagicModule {
 
   validate(config: CardModule): string[] {
     const c = config as SpinboxModuleConfig;
-    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return ['Min must be less than max'];
-    if (c.step !== undefined && !(c.step > 0)) return ['Step must be greater than 0'];
+    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return [t('Min must be less than max')];
+    if (c.step !== undefined && !(c.step > 0)) return [t('Step must be greater than 0')];
     return [];
   }
 }

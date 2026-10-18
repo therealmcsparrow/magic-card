@@ -12,6 +12,7 @@ import {
   urlWithHash,
 } from '../utils/popup';
 import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupCoordinator } from './popup-coordinator';
+import { t } from './i18n';
 
 export type PopupPhase = 'closed' | 'open' | 'closing';
 /** What opened the pop-up: the URL hash, a trigger without a hash, or the editor's preview button. */
@@ -403,7 +404,7 @@ export class PopupController implements ReactiveController, PopupHandle {
         ${sheet ? html`<div class="mc-popup-handle" aria-hidden="true"></div>` : nothing}
         ${title ? html`<h2 class="mc-popup-title" id=${titleId}>${title}</h2>` : html`<span class="mc-popup-title"></span>`}
         ${showClose
-          ? html`<button type="button" class="mc-popup-close" aria-label="Close" title="Close" @click=${this._onCloseClick}>
+          ? html`<button type="button" class="mc-popup-close" aria-label=${t('Close')} title=${t('Close')} @click=${this._onCloseClick}>
               <ha-icon icon="mdi:close"></ha-icon>
             </button>`
           : nothing}

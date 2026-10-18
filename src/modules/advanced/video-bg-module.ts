@@ -5,6 +5,7 @@ import { CardModule, VideoBgModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
+import { t } from '../../card/i18n';
 
 /**
  * Video background: plays behind the other modules of its column or layout (row, column, tab,
@@ -13,7 +14,9 @@ import { lazyChunks } from '../../utils/lazy-chunks';
 class VideoBgModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'video-bg',
-    name: 'Video background',
+    get name() {
+      return t('Video background');
+    },
     description: 'Video playing behind the other modules of its column or layout',
     category: 'advanced',
     icon: 'mdi:video-outline',

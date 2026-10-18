@@ -8,6 +8,7 @@ import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import type { McSwiperOptions } from './mc-swiper';
+import { t } from '../../card/i18n';
 
 /** Swiper options from the module config; unset keys keep the defaults (1 slide, 8 px gap). */
 export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): McSwiperOptions {
@@ -28,7 +29,9 @@ export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): M
 class SliderLayoutModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider-layout',
-    name: 'Slider layout',
+    get name() {
+      return t('Slider layout');
+    },
     description: 'Arrange child modules in a slider',
     category: 'layout',
     icon: 'mdi:view-carousel-outline',
@@ -53,7 +56,7 @@ class SliderLayoutModule extends BaseMagicModule {
     const c = config as SliderLayoutModuleConfig;
     const children = c.modules || [];
     if (!children.length) {
-      return html`<div class="mc-module mc-slider-layout">${renderEmptySlot('Empty slider')}</div>`;
+      return html`<div class="mc-module mc-slider-layout">${renderEmptySlot(t('Empty slider'))}</div>`;
     }
     const ctx = currentRenderContext();
     const configured = sliderOptions(c, !!ctx?.editMode);
@@ -79,10 +82,10 @@ class SliderLayoutModule extends BaseMagicModule {
         </div>
         ${options.navigation
           ? html`
-            <button type="button" class="mc-slider-nav mc-slider-prev" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label="Previous slide">
+            <button type="button" class="mc-slider-nav mc-slider-prev" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('Previous slide')}>
               <ha-icon icon="mdi:chevron-left"></ha-icon>
             </button>
-            <button type="button" class="mc-slider-nav mc-slider-next" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label="Next slide">
+            <button type="button" class="mc-slider-nav mc-slider-next" @pointerdown=${stop} @pointerup=${stop} @keydown=${stop} aria-label=${t('Next slide')}>
               <ha-icon icon="mdi:chevron-right"></ha-icon>
             </button>`
           : nothing}

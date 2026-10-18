@@ -1,3 +1,4 @@
+import { t } from './i18n';
 import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
@@ -377,7 +378,7 @@ export class MagicCard extends LitElement {
 
   /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
   static async getConfigElement(): Promise<HTMLElement> {
-    if (!(await loadEditor())) throw new Error('Magic Card: the visual editor could not be loaded.');
+    if (!(await loadEditor())) throw new Error(t('Magic Card: the visual editor could not be loaded.'));
     return document.createElement(EDITOR_TAG);
   }
 
@@ -395,7 +396,7 @@ export class MagicCard extends LitElement {
                 {
                   id: generateId('text'),
                   type: 'text',
-                  text: 'Welcome to Magic Card',
+                  text: t('Welcome to Magic Card'),
                 },
               ],
             },
@@ -407,12 +408,12 @@ export class MagicCard extends LitElement {
 
   setConfig(config: MagicCardConfig): void {
     if (!config) {
-      throw new Error('No configuration provided');
+      throw new Error(t('No configuration provided'));
     }
 
     const validation = ConfigValidator.validate(config);
     if (!validation.valid) {
-      throw new Error(`Invalid configuration: ${validation.errors.join('; ')}`);
+      throw new Error(t('Invalid configuration: {errors}', { errors: validation.errors.join('; ') }));
     }
 
     const prevTemplate = this._config?.template;
@@ -758,7 +759,7 @@ export class MagicCard extends LitElement {
   private _renderCard(): TemplateResult {
     const config = this._resolvedConfig ?? this._config;
     if (!config) {
-      return html`<ha-card><div class="mc-error">No configuration</div></ha-card>`;
+      return html`<ha-card><div class="mc-error">${t('No configuration')}</div></ha-card>`;
     }
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
@@ -859,14 +860,14 @@ export class MagicCard extends LitElement {
           </ha-card>
         `
       : nothing;
-    const label = config.popup?.title?.trim() || config.name || 'Pop-up';
+    const label = config.popup?.title?.trim() || config.name || t('Pop-up');
     const dialog = this._popup.renderDialog(surface, label, titleId, resolved.border_radius);
     if (this._popup.hidden) return dialog;
     // in an editor the card stays inline, marked as a pop-up
     const id = this._popup.popupId();
     return html`
       <div class="mc-popup-badge" aria-hidden="true">
-        <ha-icon icon="mdi:dock-window"></ha-icon>Pop-up${id ? html` · #${id}` : nothing}
+        <ha-icon icon="mdi:dock-window"></ha-icon>${t('Pop-up')}${id ? html` · #${id}` : nothing}
       </div>
       ${inline}${dialog}
     `;
@@ -1314,7 +1315,7 @@ export class MagicCard extends LitElement {
 
   private _getActionLabel(mod: CardModule): string {
     const customLabel = (mod.label as string | undefined) || (mod.name as string | undefined);
-    return customLabel ? `Activate ${customLabel}` : `Activate ${mod.type} module`;
+    return customLabel ? t('Activate {name}', { name: customLabel }) : t('Activate {type} module', { type: mod.type });
   }
 
   private _onPointerDown(e: PointerEvent, mod: Actor): void {

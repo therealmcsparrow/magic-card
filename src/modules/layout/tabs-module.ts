@@ -7,11 +7,14 @@ import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
+import { t } from '../../card/i18n';
 
 class TabsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'tabs',
-    name: 'Tabs',
+    get name() {
+      return t('Tabs');
+    },
     description: 'Tabbed container for groups of modules',
     category: 'layout',
     icon: 'mdi:tab',
@@ -22,8 +25,8 @@ class TabsModule extends BaseMagicModule {
       id: generateId('tabs'),
       type: 'tabs',
       tabs: [
-        { label: 'Tab 1', modules: [] },
-        { label: 'Tab 2', modules: [] },
+        { label: t('Tab 1'), modules: [] },
+        { label: t('Tab 2'), modules: [] },
       ],
       active_tab: 0,
       tab_style: 'default',
@@ -89,7 +92,7 @@ class TabsModule extends BaseMagicModule {
         <div class="mc-tabs-content" role="tabpanel">
           ${activeTab?.modules?.length
             ? activeTab.modules.map((child, i) => renderChildModule(child, hass, i, activeIdx))
-            : renderEmptySlot('Empty tab')}
+            : renderEmptySlot(t('Empty tab'))}
         </div>
       </div>
     `;

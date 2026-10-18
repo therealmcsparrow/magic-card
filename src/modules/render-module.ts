@@ -2,6 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import { ModuleRegistry } from './module-registry';
 import type { CardModule, HomeAssistant, ModuleType } from '../types';
 import { currentRenderContext } from '../services/render-context';
+import { t } from '../card/i18n';
 
 /** Small inline error state shown in place of one module; the rest of the card keeps rendering. */
 export function renderModuleError(messages: string[]): TemplateResult {
@@ -25,7 +26,7 @@ export function renderModuleHint(messages: string[]): TemplateResult {
  */
 export function renderModuleContent(config: CardModule, hass?: HomeAssistant): TemplateResult {
   const module = ModuleRegistry.get(config?.type as ModuleType);
-  if (!module) return renderModuleError([`Unknown module: ${String(config?.type)}`]);
+  if (!module) return renderModuleError([t('Unknown module: {type}', { type: String(config?.type) })]);
   try {
     const errors = module.validate(config);
     if (errors.length) return renderModuleError(errors);

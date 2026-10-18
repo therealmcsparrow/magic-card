@@ -1,5 +1,6 @@
 import { MagicCardConfig, RowConfig, ColumnConfig, CardModule, ModuleType } from '../types';
 import { ModuleRegistry } from '../modules/module-registry';
+import { t } from '../card/i18n';
 
 export interface ValidationResult {
   valid: boolean;
@@ -13,49 +14,49 @@ export class ConfigValidator {
     const warnings: string[] = [];
 
     if (!config || typeof config !== 'object') {
-      return { valid: false, errors: ['Config must be an object'], warnings };
+      return { valid: false, errors: [t('Config must be an object')], warnings };
     }
 
     const c = config as Record<string, unknown>;
 
     if (!c.type || typeof c.type !== 'string') {
-      errors.push('Config must have a type');
+      errors.push(t('Config must have a type'));
     }
 
     if (!Array.isArray(c.rows)) {
-      errors.push('Config must have a rows array');
+      errors.push(t('Config must have a rows array'));
       return { valid: false, errors, warnings };
     }
 
     (c.rows as RowConfig[]).forEach((row, ri) => {
       if (!row.columns || !Array.isArray(row.columns)) {
-        errors.push(`Row ${ri} must have a columns array`);
+        errors.push(t('Row {row} must have a columns array', { row: ri }));
         return;
       }
 
       row.columns.forEach((col, ci) => {
         if (!col.modules || !Array.isArray(col.modules)) {
-          errors.push(`Row ${ri}, Column ${ci} must have a modules array`);
+          errors.push(t('Row {row}, Column {col} must have a modules array', { row: ri, col: ci }));
           return;
         }
 
         col.modules.forEach((mod, mi) => {
           if (!mod || typeof mod !== 'object') {
-            errors.push(`Row ${ri}, Col ${ci}, Module ${mi}: must be an object`);
+            errors.push(t('Row {row}, Col {col}, Module {module}: must be an object', { row: ri, col: ci, module: mi }));
             return;
           }
           if (!mod.type) {
-            warnings.push(`Row ${ri}, Col ${ci}, Module ${mi}: missing type`);
+            warnings.push(t('Row {row}, Col {col}, Module {module}: missing type', { row: ri, col: ci, module: mi }));
             return;
           }
 
           // A module's own validation errors are shown inside that module, never fatal for the card.
           if (!ModuleRegistry.has(mod.type as ModuleType)) {
-            warnings.push(`Row ${ri}, Col ${ci}, Module ${mi}: unknown type "${mod.type}"`);
+            warnings.push(t('Row {row}, Col {col}, Module {module}: unknown type "{type}"', { row: ri, col: ci, module: mi, type: String(mod.type) }));
           } else {
             const module = ModuleRegistry.get(mod.type as ModuleType);
             const moduleErrors = module ? module.validate(mod) : [];
-            warnings.push(...moduleErrors.map((e) => `Row ${ri}, Col ${ci}, Module ${mi} (${mod.type}): ${e}`));
+            warnings.push(...moduleErrors.map((e) => t('Row {row}, Col {col}, Module {module} ({type}): {error}', { row: ri, col: ci, module: mi, type: String(mod.type), error: e })));
           }
         });
       });

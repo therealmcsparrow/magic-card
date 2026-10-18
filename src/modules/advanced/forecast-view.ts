@@ -44,8 +44,8 @@ export class ForecastView implements ModuleView {
     if (type !== 'twice_daily' || item.is_daytime === undefined) return weekday;
     const localize = (hass as { localize?: Localize } | undefined)?.localize;
     const part = item.is_daytime
-      ? localize?.('ui.card.weather.day') || 'Day'
-      : localize?.('ui.card.weather.night') || 'Night';
+      ? localize?.('ui.card.weather.day') || t('Day')
+      : localize?.('ui.card.weather.night') || t('Night');
     return html`${weekday}<br />${part}`;
   }
 

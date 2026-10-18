@@ -8,11 +8,14 @@ import { currentRenderContext } from '../../services/render-context';
 import { DEFAULT_GAP, NESTED_COLUMN_GAP } from '../../utils/constants';
 import { rowGridTemplate } from '../../utils/column-widths';
 import { generateId } from '../../utils/id-generator';
+import { t } from '../../card/i18n';
 
 class RowModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'row',
-    name: 'Row',
+    get name() {
+      return t('Row');
+    },
     description: 'Grid row with columns, nestable inside any column',
     category: 'layout',
     icon: 'mdi:view-sequential-outline',

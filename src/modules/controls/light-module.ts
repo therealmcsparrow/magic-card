@@ -21,6 +21,7 @@ import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-v
 import { renderTrack, stopControlEvent } from '../../utils/slider-track';
 import { selectValue } from '../../utils/select-value';
 import { currentRenderContext } from '../../services/render-context';
+import { t } from '../../card/i18n';
 
 /** LightEntityFeature.EFFECT */
 const FEATURE_EFFECT = 4;
@@ -50,7 +51,9 @@ export function supportsEffect(stateObj: HassEntity): boolean {
 class LightModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'light',
-    name: 'Light',
+    get name() {
+      return t('Light');
+    },
     description: 'Light control with brightness, color temp, and color options',
     category: 'controls',
     icon: 'mdi:lightbulb-outline',
@@ -74,7 +77,7 @@ class LightModule extends BaseMagicModule {
     const unavailable = !stateObj || stateObj.state === 'unavailable' || stateObj.state === 'unknown';
     const live = !!stateObj && !!hass && !unavailable;
     const isOn = stateObj?.state === 'on';
-    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || 'Light';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('Light');
     const update = () => ctx?.requestUpdate();
 
     // brightness (0 when off), pending while HA has not reported the new value yet
@@ -126,7 +129,7 @@ class LightModule extends BaseMagicModule {
             type="button"
             class="mc-light-toggle"
             style="color: ${iconColor};"
-            aria-label=${`Toggle ${name}`}
+            aria-label=${t('Toggle {name}', { name })}
             aria-pressed=${isOn ? 'true' : 'false'}
             ?disabled=${!live}
             @click=${onToggle}
@@ -202,7 +205,7 @@ class LightModule extends BaseMagicModule {
                 <input
                   type="color"
                   class="mc-light-color-input"
-                  aria-label=${`${name} color`}
+                  aria-label=${t('{name} colour', { name })}
                   .value=${lightHex(stateObj)}
                   ?disabled=${!live}
                   @change=${(e: Event) => {
@@ -230,7 +233,7 @@ class LightModule extends BaseMagicModule {
                 <ha-icon .icon=${'mdi:creation'}></ha-icon>
                 <select
                   class="mc-light-effect-select"
-                  aria-label=${`${name} effect`}
+                  aria-label=${t('{name} effect', { name })}
                   ?disabled=${!live}
                   @change=${(e: Event) => {
                     e.stopPropagation();
@@ -243,7 +246,7 @@ class LightModule extends BaseMagicModule {
                   @pointerup=${stopControlEvent}
                   @keydown=${stopControlEvent}
                 >
-                  ${!effect || !effects.includes(effect) ? html`<option value="" selected disabled hidden>Effect</option>` : nothing}
+                  ${!effect || !effects.includes(effect) ? html`<option value="" selected disabled hidden>${t('Effect')}</option>` : nothing}
                   ${effects.map((ef) => html`<option value=${ef} ?selected=${ef === effect}>${this._effectLabel(hass, stateObj!, ef)}</option>`)}
                   ${selectValue(effect && effects.includes(effect) ? effect : '')}
                 </select>

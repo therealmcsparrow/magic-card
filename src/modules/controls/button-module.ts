@@ -8,11 +8,14 @@ import { entityStateColor } from '../../utils/entity-color';
 import { renderIcon } from '../../icons/render-icon';
 import { stateIcon } from '../../utils/entity-icon';
 import { formatEntityValue } from '../../utils/entity-value';
+import { t } from '../../card/i18n';
 
 class ButtonModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'button',
-    name: 'Button',
+    get name() {
+      return t('Button');
+    },
     description: 'Interactive button with icon, label, and optional state display',
     category: 'controls',
     icon: 'mdi:gesture-tap',
@@ -22,7 +25,7 @@ class ButtonModule extends BaseMagicModule {
     return {
       id: generateId('button'),
       type: 'button',
-      label: 'Button',
+      label: t('Button'),
       icon: 'mdi:power',
       show_state: false,
       button_style: 'default',
@@ -34,7 +37,7 @@ class ButtonModule extends BaseMagicModule {
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
     // the attribute (formatted by HA, with its unit) or the state
     const state = entity && c.show_state ? formatEntityValue(hass, entity, c.attribute || undefined).text : undefined;
-    const label = c.label || 'Button';
+    const label = c.label || t('Button');
     const isIconOnly = c.button_style === 'icon-only';
     const icon = c.icon || '';
     const iconFx = { hass, className: 'mc-anim-icon', part: 'icon', fx: c.icon_fx, iconOn: c.icon_on, iconOff: c.icon_off, svg: c.svg, fallbackIcon: 'mdi:gesture-tap' };

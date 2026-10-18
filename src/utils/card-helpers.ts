@@ -1,3 +1,4 @@
+import { t } from '../card/i18n';
 import type { HomeAssistant } from '../types';
 
 /* Home Assistant card helpers and small helpers shared by the camera and custom-card modules and their editors (sync, magic-card.js). */
@@ -36,7 +37,7 @@ export function whenDefined(tag: string): Promise<unknown> {
   return Promise.race([
     customElements.whenDefined(tag),
     new Promise<void>((_, reject) => {
-      timer = setTimeout(() => reject(new Error(`Timeout waiting for ${tag}`)), WAIT_MS);
+      timer = setTimeout(() => reject(new Error(t('Timeout waiting for {tag}', { tag }))), WAIT_MS);
     }),
   ]).finally(() => clearTimeout(timer));
 }

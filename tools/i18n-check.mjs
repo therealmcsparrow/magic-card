@@ -112,7 +112,7 @@ export async function main(argv = process.argv.slice(2)) {
       if (b === undefined) err('D5', `${k}: ${c.n} hard-coded texts and no baseline entry (npm run i18n -- --check --update-baseline)`);
       else if (c.n > b) err('D5', `${k}: ${c.n} hard-coded texts, baseline ${b}; wrap new text in t() (see --verbose for places)`);
       else if (c.n < b) warn('D5', `${k}: ${c.n} hard-coded texts, baseline ${b}; lower the baseline (--update-baseline)`);
-      if (verbose && c.where.length) for (const w of c.where.slice(0, 40)) console.log(`  D5 ${k} ${w}`);
+      if (verbose && c.where.length) for (const w of c.where.slice(0, +(process.env.I18N_WHERE || 40))) console.log(`  D5 ${k} ${w}`);
     }
   }
 

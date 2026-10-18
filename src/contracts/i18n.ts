@@ -157,7 +157,7 @@ export interface I18nModuleEntry {
 }
 
 export const I18N_MODULES = {
-  card: { bundle: 'magic-card.js', folders: ['src/card', 'src/modules', 'src/icons', 'src/utils (runtime files)'], status: 'pending', slice: 'I1', dashboard: true },
+  card: { bundle: 'magic-card.js', folders: ['src/card', 'src/modules', 'src/icons', 'src/utils (runtime files)'], status: 'complete', slice: 'I1', dashboard: true },
   'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator)', 'src/utils (editor-only files, e.g. css-property-options.ts)'], status: 'pending', slice: 'I2', dashboard: false },
   'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], status: 'pending', slice: 'I3', dashboard: false },
   'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], status: 'pending', slice: 'I4', dashboard: false },

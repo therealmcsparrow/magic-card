@@ -8,6 +8,7 @@ import { runServiceCall, ServiceCall } from '../../utils/entity-control';
 import { selectValue } from '../../utils/select-value';
 import { stopControlEvent } from '../../utils/slider-track';
 import { entityDisplayName } from '../../utils/entity-value';
+import { t } from '../../card/i18n';
 
 /**
  * What a dropdown sets on an entity: the option list it offers (an attribute of the entity), where
@@ -94,7 +95,9 @@ export function normalizeOptions(options: DropdownModuleConfig['options']): Drop
 class DropdownModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'dropdown',
-    name: 'Dropdown',
+    get name() {
+      return t('Dropdown');
+    },
     description: 'Select dropdown for choosing from a list of options',
     category: 'controls',
     icon: 'mdi:form-dropdown',
@@ -169,7 +172,7 @@ class DropdownModule extends BaseMagicModule {
       runServiceCall(hass, call);
     };
 
-    const name = stateObj ? entityDisplayName(hass, stateObj) : 'Dropdown';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Dropdown');
     return html`
       <div class="mc-module mc-dropdown">
         <select
@@ -188,7 +191,7 @@ class DropdownModule extends BaseMagicModule {
             ? options.map(
                 (opt) => html`<option value=${opt.value} ?disabled=${opt.disabled} ?selected=${current === opt.value}>${opt.label}</option>`,
               )
-            : html`<option disabled ?selected=${!stateObj}>No options</option>`}
+            : html`<option disabled ?selected=${!stateObj}>${t('No options')}</option>`}
           ${stateObj && options.length ? selectValue(known ? current! : '') : nothing}
         </select>
       </div>

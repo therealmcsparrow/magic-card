@@ -8,6 +8,7 @@ import { currentRenderContext } from '../../services/render-context';
 import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
+import { t } from '../../card/i18n';
 
 /** HA's formatters when present (localised, with units); raw values otherwise. */
 function entityState(hass: HomeAssistant, stateObj: HassEntity, attribute?: string): string {
@@ -30,7 +31,9 @@ function entityName(hass: HomeAssistant, stateObj: HassEntity): string {
 class TextModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'text',
-    name: 'Text',
+    get name() {
+      return t('Text');
+    },
     description: 'Display static or template text',
     category: 'content',
     icon: 'mdi:format-text',
@@ -40,7 +43,7 @@ class TextModule extends BaseMagicModule {
     return {
       id: generateId('text'),
       type: 'text',
-      text: 'Hello World',
+      text: t('Hello World'),
     };
   }
 
@@ -68,7 +71,7 @@ class TextModule extends BaseMagicModule {
       case 'pending':
         return '';
       case 'error':
-        return html`<span class="mc-template-error" role="alert" title=${result.error}>Template error: ${result.error}</span>`;
+        return html`<span class="mc-template-error" role="alert" title=${result.error}>${t('Template error: {error}', { error: result.error })}</span>`;
       default:
         return text;
     }
@@ -78,7 +81,7 @@ class TextModule extends BaseMagicModule {
   private _entityText(c: TextModuleConfig, hass?: HomeAssistant): TemplateResult | string {
     const id = c.entity!;
     const stateObj = hass?.states?.[id];
-    if (!hass || !stateObj) return html`${id} <span class="mc-text-muted">unavailable</span>`;
+    if (!hass || !stateObj) return html`${id} <span class="mc-text-muted">${t('unavailable')}</span>`;
     const display = c.entity_display || 'state';
     if (display === 'name') return entityName(hass, stateObj);
     // a timer's live countdown; idle (and other entities) show the state
@@ -90,9 +93,9 @@ class TextModule extends BaseMagicModule {
 
   hints(config: CardModule): string[] {
     const textConfig = config as TextModuleConfig;
-    if (textConfig.use_entity) return textConfig.entity ? [] : ['Entity is required'];
+    if (textConfig.use_entity) return textConfig.entity ? [] : [t('Entity is required')];
     if (textConfig.text) return [];
-    return [textConfig.use_template ? 'Template is required' : 'Text content is required'];
+    return [textConfig.use_template ? t('Template is required') : t('Text content is required')];
   }
 }
 

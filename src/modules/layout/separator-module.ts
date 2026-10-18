@@ -4,11 +4,14 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, SeparatorModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
+import { t } from '../../card/i18n';
 
 class SeparatorModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'separator',
-    name: 'Separator',
+    get name() {
+      return t('Separator');
+    },
     description: 'Visual divider between modules',
     category: 'layout',
     icon: 'mdi:minus',

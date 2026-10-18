@@ -1,3 +1,4 @@
+import { t } from '../../card/i18n';
 import { LitElement, html, css, TemplateResult, nothing, PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant, CustomCardModuleConfig } from '../../types';
@@ -17,7 +18,7 @@ async function createCardElement(config: Record<string, unknown>): Promise<HTMLE
   const helpers = getCardHelpers();
   if (helpers) return (await helpers).createCardElement(config);
   const type = String(config.type ?? '');
-  if (!type.startsWith('custom:')) throw new Error('Home Assistant card helpers are not available');
+  if (!type.startsWith('custom:')) throw new Error(t('Home Assistant card helpers are not available'));
   const tag = type.slice('custom:'.length);
   await whenDefined(tag);
   const el = document.createElement(tag) as ConfigurableElement;
@@ -144,7 +145,7 @@ export class EmbeddedCard extends LitElement {
     try {
       element = await createCardElement(config);
     } catch (err) {
-      element = errorCard(`Failed to load "${this.cardType}": ${err instanceof Error ? err.message : String(err)}`, config);
+      element = errorCard(t('Failed to load "{type}": {error}', { type: this.cardType, error: err instanceof Error ? err.message : String(err) }), config);
     }
     // A newer type / config was asked for while this one loaded.
     if (generation !== this._generation) return;
@@ -185,7 +186,7 @@ export class EmbeddedCard extends LitElement {
   // The container is filled by hand (_createElement), so it holds no Lit parts of its own.
   protected render(): TemplateResult {
     return html`${!this._element && this.cardType
-      ? html`<div class="mc-embedded-loading">Loading card...</div>`
+      ? html`<div class="mc-embedded-loading">${t('Loading card...')}</div>`
       : nothing}<div class="mc-embedded-container"></div>`;
   }
 }

@@ -9,6 +9,7 @@ import { renderIcon } from '../../icons/render-icon';
 import { entityStateColor } from '../../utils/entity-color';
 import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
+import { t } from '../../card/i18n';
 
 /**
  * Name and state toggles: both on when neither key is set (new YAML, like the default). Once one is
@@ -22,7 +23,9 @@ export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolea
 class InfoModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'info',
-    name: 'Info',
+    get name() {
+      return t('Info');
+    },
     description: 'Display entity name, state, and attributes',
     category: 'content',
     icon: 'mdi:information-outline',
@@ -47,7 +50,7 @@ class InfoModule extends BaseMagicModule {
     if (!showName && !showState && !c.secondary_info) showState = true;
     if (!showName && !showState && !entity) showName = true;
 
-    const name = entity ? entityDisplayName(hass, entity) : c.entity || 'No entity';
+    const name = entity ? entityDisplayName(hass, entity) : c.entity || t('No entity');
     let state: string | ReturnType<typeof countdown> = '—';
     if (entity && !c.attribute && timerCountdown(entity) !== undefined) {
       // an active / paused timer: its remaining time, counting down live

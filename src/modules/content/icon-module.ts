@@ -7,11 +7,14 @@ import { generateId } from '../../utils/id-generator';
 import { entityStateColor } from '../../utils/entity-color';
 import { parseGradient } from '../../utils/gradient';
 import { renderIcon } from '../../icons/render-icon';
+import { t } from '../../card/i18n';
 
 class IconModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'icon',
-    name: 'Icon',
+    get name() {
+      return t('Icon');
+    },
     description: 'Display an icon from MDI or entity',
     category: 'content',
     icon: 'mdi:emoticon-outline',

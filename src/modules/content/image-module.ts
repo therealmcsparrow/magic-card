@@ -7,6 +7,7 @@ import { generateId } from '../../utils/id-generator';
 import { cssAspectRatio, mediaSrc, resolveMediaUrl } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
+import { t } from '../../card/i18n';
 
 /** An attribute value that is an image address (not a name, a state or a javascript: URL). */
 const URL_LIKE = /^(?:\/|https?:\/\/|data:image\/)/i;
@@ -26,7 +27,9 @@ const onImageLoad = (e: Event) => (e.target as HTMLElement).parentElement?.class
 class ImageModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'image',
-    name: 'Image',
+    get name() {
+      return t('Image');
+    },
     description: 'Display a static image or entity picture',
     category: 'content',
     icon: 'mdi:image-outline',
@@ -89,7 +92,7 @@ class ImageModule extends BaseMagicModule {
   hints(config: CardModule): string[] {
     // No image yet is not an error: the preview shows the image-off placeholder.
     const c = config as ImageModuleConfig;
-    if (c.entity_picture && !c.entity) return ['Entity is required when using entity picture'];
+    if (c.entity_picture && !c.entity) return [t('Entity is required when using entity picture')];
     return [];
   }
 }

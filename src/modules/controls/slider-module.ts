@@ -9,6 +9,7 @@ import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-v
 import { renderTrack } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
+import { t } from '../../card/i18n';
 
 
 /**
@@ -20,7 +21,9 @@ import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 class SliderModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider',
-    name: 'Slider',
+    get name() {
+      return t('Slider');
+    },
     description: 'Range slider for controlling numeric values',
     category: 'controls',
     icon: 'mdi:tune-vertical',
@@ -54,7 +57,7 @@ class SliderModule extends BaseMagicModule {
       : stateObj
         ? formatEntityValue(hass, stateObj).text
         : '';
-    const name = stateObj ? entityDisplayName(hass, stateObj) : 'Slider';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Slider');
 
     const track = renderTrack({
       value,
@@ -87,8 +90,8 @@ class SliderModule extends BaseMagicModule {
 
   validate(config: CardModule): string[] {
     const c = config as SliderModuleConfig;
-    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return ['Min must be less than max'];
-    if (c.step !== undefined && !(c.step > 0)) return ['Step must be greater than 0'];
+    if (c.min !== undefined && c.max !== undefined && c.min >= c.max) return [t('Min must be less than max')];
+    if (c.step !== undefined && !(c.step > 0)) return [t('Step must be greater than 0')];
     return [];
   }
 }

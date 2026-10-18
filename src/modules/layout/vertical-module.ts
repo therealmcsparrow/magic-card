@@ -5,11 +5,14 @@ import { CardModule, HomeAssistant, VerticalModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot } from '../render-module';
 import { generateId } from '../../utils/id-generator';
+import { t } from '../../card/i18n';
 
 class VerticalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'vertical',
-    name: 'Vertical',
+    get name() {
+      return t('Vertical');
+    },
     description: 'Arrange child modules in a column',
     category: 'layout',
     icon: 'mdi:arrow-split-horizontal',
@@ -34,7 +37,7 @@ class VerticalModule extends BaseMagicModule {
         style="gap:${c.gap || '8px'}; align-items:${c.align || 'stretch'}">
         ${children.length > 0
           ? children.map((child, i) => renderChildModule(child, hass, i))
-          : renderEmptySlot('Empty column')}
+          : renderEmptySlot(t('Empty column'))}
       </div>
     `;
   }

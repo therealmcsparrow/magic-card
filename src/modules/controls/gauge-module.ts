@@ -6,11 +6,14 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { entityDisplayName, entityNumber, formatEntityValue } from '../../utils/entity-value';
 import { rangeColor } from '../../utils/color-ranges';
+import { t } from '../../card/i18n';
 
 class GaugeModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'gauge',
-    name: 'Gauge',
+    get name() {
+      return t('Gauge');
+    },
     description: 'Arc gauge for displaying numeric sensor values',
     category: 'controls',
     icon: 'mdi:speedometer',
@@ -49,7 +52,7 @@ class GaugeModule extends BaseMagicModule {
     } else {
       num = entityNumber(entity, attribute);
       if (num === undefined && attribute && entity.attributes[attribute] === undefined) {
-        valueText = hass!.formatEntityState?.(entity, 'unavailable') || 'Unavailable';
+        valueText = hass!.formatEntityState?.(entity, 'unavailable') || t('Unavailable');
       } else {
         const v = formatEntityValue(hass, entity, attribute, { decimals: c.decimals });
         valueText = num === undefined ? v.text : v.value;
@@ -150,7 +153,7 @@ class GaugeModule extends BaseMagicModule {
 
   validate(config: CardModule): string[] {
     const c = config as GaugeModuleConfig;
-    if (c.min !== undefined && c.max !== undefined && Number(c.min) >= Number(c.max)) return ['Min must be less than max'];
+    if (c.min !== undefined && c.max !== undefined && Number(c.min) >= Number(c.max)) return [t('Min must be less than max')];
     return [];
   }
 }

@@ -1,3 +1,4 @@
+import { t } from '../../card/i18n';
 import { html, TemplateResult } from 'lit';
 import { CardModule, HomeAssistant, CameraModuleConfig, HassEntity } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
@@ -71,7 +72,7 @@ export class CameraView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as CameraModuleConfig;
     const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
-    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || 'No camera';
+    const name = stateObj ? entityDisplayName(hass, stateObj) : c.entity || t('No camera');
     const ctx = currentRenderContext();
 
     let body: TemplateResult;
