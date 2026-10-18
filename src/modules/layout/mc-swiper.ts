@@ -29,6 +29,19 @@ export class McSwiper extends HTMLElement {
   private _initQueued = false;
   private _activeIndex?: number;
 
+  constructor() {
+    super();
+    // Upgrade in place: Lit set `options` / `activeIndex` as own properties before this class was
+    // defined (the chunk loads after the first render); re-set them through the accessors.
+    for (const key of ['options', 'activeIndex'] as const) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        const value = (this as unknown as Record<string, unknown>)[key];
+        delete (this as unknown as Record<string, unknown>)[key];
+        (this as unknown as Record<string, unknown>)[key] = value;
+      }
+    }
+  }
+
   get options(): McSwiperOptions | undefined {
     return this._options;
   }
@@ -122,7 +135,10 @@ export class McSwiper extends HTMLElement {
   }
 }
 
-if (!customElements.get('mc-swiper')) customElements.define('mc-swiper', McSwiper);
+/** Called by the slider chunk's install(); evaluating this file defines nothing (AC13). */
+export function defineSwiper(): void {
+  if (!customElements.get('mc-swiper')) customElements.define('mc-swiper', McSwiper);
+}
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,9 +1,16 @@
 import { VERSION } from '../../version';
+import { ModuleRegistry } from '../module-registry';
+import { CameraView } from '../content/camera-view';
+import { GraphsView } from '../content/graphs-view';
+import { CustomCardView, EmbeddedCard } from '../advanced/custom-card-view';
+import { ForecastView } from '../advanced/forecast-view';
+import { VideoBgView, McBgVideo } from '../advanced/video-bg-view';
+import { WeatherView } from '../advanced/weather-view';
 
 /*
  * Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes
  * nothing global: everything happens in install(), which src/utils/lazy-chunk.ts calls only when
- * BUILD matches the magic-card.js that loaded it (AC13). D2-D5 move the code in.
+ * BUILD matches the magic-card.js that loaded it (AC13).
  */
 
 declare const __MC_BUILD_VERSION__: string | undefined;
@@ -11,5 +18,12 @@ declare const __MC_BUILD_VERSION__: string | undefined;
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
 
 export function install(): void {
-  // nothing moved here yet
+  if (!customElements.get('mc-embedded-card')) customElements.define('mc-embedded-card', EmbeddedCard);
+  if (!customElements.get('mc-bg-video')) customElements.define('mc-bg-video', McBgVideo);
+  ModuleRegistry.provideView('camera', new CameraView());
+  ModuleRegistry.provideView('video-bg', new VideoBgView());
+  ModuleRegistry.provideView('weather', new WeatherView());
+  ModuleRegistry.provideView('forecast', new ForecastView());
+  ModuleRegistry.provideView('graphs', new GraphsView());
+  ModuleRegistry.provideView('custom-card', new CustomCardView());
 }

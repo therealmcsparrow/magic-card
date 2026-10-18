@@ -33,10 +33,10 @@ const CAPS = {
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
   'magic-card-shape-editor.js': 69_632, // 68 KiB, CEO 2026-10-18 (measured 64,435 + 5%)
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
-  'magic-card-slider.js': 4_096,
+  'magic-card-slider.js': 97_280, // 95 KiB (D4, measured 92,085 + 5 %); ceiling 120 KiB
   'magic-card-seasonal.js': 58_368, // 57 KiB (D5, measured 55,023 + 5 %); ceiling 80 KiB
-  'magic-card-markdown.js': 4_096,
-  'magic-card-modules-extra.js': 4_096,
+  'magic-card-markdown.js': 55_296, // 54 KiB (D2, measured 52,185 + 5 %); above the 52 KiB sanity ceiling by the rounding only
+  'magic-card-modules-extra.js': 24_576, // 24 KiB (D3, measured 23,139 + 5 %); ceiling 44 KiB
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));

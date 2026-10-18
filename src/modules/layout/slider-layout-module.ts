@@ -6,7 +6,7 @@ import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot, visibleChildren } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
-import './mc-swiper';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import type { McSwiperOptions } from './mc-swiper';
 
 /** Swiper options from the module config; unset keys keep the defaults (1 slide, 8 px gap). */
@@ -42,6 +42,11 @@ class SliderLayoutModule extends BaseMagicModule {
       pagination: true,
       navigation: true,
     };
+  }
+
+  /** Unused: renderPreview works at once; `<mc-swiper>` upgrades in place when the chunk is defined. */
+  placeholder(config: CardModule): TemplateResult {
+    return this.renderPreview(config);
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -87,4 +92,4 @@ class SliderLayoutModule extends BaseMagicModule {
   }
 }
 
-ModuleRegistry.register(new SliderLayoutModule());
+ModuleRegistry.registerLazy(new SliderLayoutModule(), lazyChunks.slider);

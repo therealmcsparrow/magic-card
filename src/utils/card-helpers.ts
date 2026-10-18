@@ -1,0 +1,56 @@
+import type { HomeAssistant } from '../types';
+
+/* Home Assistant card helpers and small helpers shared by the camera and custom-card modules and their editors (sync, magic-card.js). */
+
+export interface CardHelpers {
+  createCardElement(config: Record<string, unknown>): HTMLElement;
+}
+
+export type ConfigurableElement = HTMLElement & {
+  hass?: HomeAssistant;
+  preview?: boolean;
+  editMode?: boolean;
+  setConfig?: (c: Record<string, unknown>) => void;
+};
+
+const WAIT_MS = 5000;
+
+let _cardHelpersPromise: Promise<CardHelpers> | null = null;
+
+/** HA's card helpers (window.loadCardHelpers), loaded once; undefined outside Home Assistant. */
+export function getCardHelpers(): Promise<CardHelpers> | undefined {
+  const load = (window as unknown as { loadCardHelpers?: () => Promise<CardHelpers> }).loadCardHelpers;
+  if (typeof load !== 'function') return undefined;
+  if (!_cardHelpersPromise) {
+    _cardHelpersPromise = Promise.resolve(load()).catch((err: unknown) => {
+      _cardHelpersPromise = null; // try again next time
+      throw err;
+    });
+  }
+  return _cardHelpersPromise;
+}
+
+export function whenDefined(tag: string): Promise<unknown> {
+  if (customElements.get(tag)) return Promise.resolve();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  return Promise.race([
+    customElements.whenDefined(tag),
+    new Promise<void>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Timeout waiting for ${tag}`)), WAIT_MS);
+    }),
+  ]).finally(() => clearTimeout(timer));
+}
+
+/** JSON with object keys sorted: the same config in another key order gives the same string. */
+export function stableJson(value: unknown): string {
+  const sort = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(sort);
+    if (v && typeof v === 'object') {
+      return Object.fromEntries(Object.keys(v as object).sort().map((k) => [k, sort((v as Record<string, unknown>)[k])]));
+    }
+    return v;
+  };
+  return JSON.stringify(sort(value)) ?? '';
+}
+
+export const fullConfig = (cardType: string, cardConfig: Record<string, unknown> | undefined) => ({ ...(cardConfig || {}), type: cardType });
