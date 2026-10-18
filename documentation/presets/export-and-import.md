@@ -6,7 +6,7 @@ You can save an animation, a theme, a shape or an icon as a file, and open that 
 
 Export is available in the library, the animation studio, the theme editor, the shape editor and the SVG editor. Choose YAML or JSON.
 
-Exported files hold your presets and, if you fill it in, the author name you typed. They contain no date, no computer name and no Home Assistant address. Check the author field before you share a file.
+Exported files hold your presets and, if you fill it in, the author name you typed. They name the Magic Card version that made them. They contain no date, no computer name and no Home Assistant address. Check the author field before you share a file.
 
 ## The file format
 
@@ -79,10 +79,20 @@ Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item
 
 ## The outside-host warning for themes
 
-Importing a theme file. Magic Card reads the file on your computer. It does not download anything while you read it, and it sends nothing to us. Some theme files point to a picture or font on another website, or contain card-mod lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose Import anyway, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card. Only import files from people you trust. To avoid this, choose Cancel, or delete those lines from the file and import it again.
+When you import a theme file, Magic Card reads it on your computer. It downloads nothing while it reads, and it sends nothing to the author.
 
-The import summary shows the warning before you confirm. The confirm button reads Import anyway while the warning is shown. Choose Cancel to stop the import.
+Some theme files point to a picture or font on another website, or contain `card-mod-` lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose **Import anyway**, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with `card-mod-` only work when card-mod is installed, and they can restyle any card.
+
+Only import files from people you trust. To avoid all of this, choose **Cancel**, or delete those lines from the file and import it again.
+
+The import summary shows the warning before you confirm. The confirm button reads **Import anyway** while the warning is shown. Choose **Cancel** to stop the import.
 
 ## Privacy
 
-Magic Card and Magic Card Utils have no telemetry and make no network calls of their own. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration. Nothing is sent to the author. The only outside requests are the ones your own configuration asks for, for example an image address you typed or a theme file that points to another website.
+Magic Card and Magic Card Utils have no telemetry and send nothing to the author. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration.
+
+Magic Card Utils makes no requests to other websites. Magic Card makes them only when your own configuration asks for it:
+
+-   A card that uses a Google font from the font picker loads that font from `fonts.googleapis.com`. Google can see the visitor's IP address. To avoid this, use a font that is installed on the device.
+-   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address.
+-   A theme file kept with **Import anyway** that points to another website is requested the same way.

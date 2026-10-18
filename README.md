@@ -41,7 +41,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
 -   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
 -   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
--   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text is machine-assisted. See [Languages](documentation/languages/README.md).
+-   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
 ## Installation
@@ -1049,7 +1049,11 @@ Your designs can be shared as files. The [presets page](documentation/presets/RE
 
 ### Sharing presets
 
-Importing a theme file. Magic Card reads the file on your computer. It does not download anything while you read it, and it sends nothing to us. Some theme files point to a picture or font on another website, or contain card-mod lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose Import anyway, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with card-mod- only work when card-mod is installed, and they can restyle any card. Only import files from people you trust. To avoid this, choose Cancel, or delete those lines from the file and import it again.
+When you import a theme file, Magic Card reads it on your computer. It downloads nothing while it reads, and it sends nothing to the author.
+
+Some theme files point to a picture or font on another website, or contain `card-mod-` lines. If a file does, Magic Card lists each setting and the website before you confirm. If you choose **Import anyway**, every browser that shows a dashboard with this theme asks that website for the file, and the website can see the visitor's IP address. Lines that start with `card-mod-` only work when card-mod is installed, and they can restyle any card.
+
+Only import files from people you trust. To avoid all of this, choose **Cancel**, or delete those lines from the file and import it again.
 
 ### Imported files are untrusted
 
@@ -1057,7 +1061,13 @@ Imported files are limited to 1 MB, parsed with a safe YAML reader, checked item
 
 ### Privacy
 
-Magic Card and Magic Card Utils have no telemetry and make no network calls of their own. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration. Nothing is sent to the author. The only outside requests are the ones your own configuration asks for, for example an image address you typed or a theme file that points to another website.
+Magic Card and Magic Card Utils have no telemetry and send nothing to the author. Your icons, shapes and presets are stored in your own Home Assistant (Magic Card Utils) or in the card configuration.
+
+Magic Card Utils makes no requests to other websites. Magic Card makes them only when your own configuration asks for it:
+
+-   A card that uses a Google font from the font picker loads that font from `fonts.googleapis.com`. Google can see the visitor's IP address. To avoid this, use a font that is installed on the device.
+-   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address.
+-   A theme file kept with **Import anyway** that points to another website is requested the same way.
 
 ## Compatibility
 

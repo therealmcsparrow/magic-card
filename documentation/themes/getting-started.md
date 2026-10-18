@@ -44,7 +44,7 @@ The [theme examples](examples/README.md) page shows every preset with a screensh
 
 Each preset sets a light and a dark mode, including the text on primary colours and the state colours. In every mode, the text, the secondary text, the text on the primary colour and the state colours reach a contrast of at least 4.5 to 1. Presets are starting points you can change.
 
-A theme that loads a file from another website is marked **Contacts another host**, with an info icon, on its card. A theme you open that does this shows a note above the variables. The preview and Try on dashboard ask that website for the file, so it sees your address. See [Export and import](../presets/export-and-import.md#safe-import) for the warning on theme files.
+A theme that loads a file from another website is marked **Contacts another website**, with an info icon, on its card. A theme you open that does this shows a note above the variables. The preview and Try on dashboard ask that website for the file, so it can see your IP address. Every browser that later shows a dashboard with this theme does the same. See [The outside-host warning for themes](../presets/export-and-import.md#the-outside-host-warning-for-themes) for the warning on theme files.
 
 ### Loading and failure
 

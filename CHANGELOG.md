@@ -33,7 +33,7 @@ Magic Card Utils is needed for the editors and the library. The editors need Mag
 -   The icon field opens the icon picker on a tap. The browse button is 44 px on a touch screen. Picking a saved icon shows one collapsed **Advanced** line for the copy setting, so the window does not jump.
 -   The **Library** in a card compares an import with that card. Repeated animation names get a number on import, such as "Pendulum 2". The Preset select has a **This card** group for the card's own animations, and a repeated name shows its id.
 -   Importing a theme file says **Added N to My presets**, and says that a preset is not a theme yet. A single item has an **Open as new theme** button. When the include lines are missing, the result says that saving needs one setup step in Home Assistant, and that Try on dashboard works without it.
--   A theme value that loads a file from another website is marked **Contacts another host**, on the preset card and above the variables in the editor.
+-   A theme value that loads a file from another website is marked **Contacts another website**, on the preset card and above the variables in the editor.
 -   **Copy as HA theme** copies a single theme to the clipboard as Home Assistant theme YAML.
 -   The shape list in the shape editor refreshes after a save, so a new shape appears without a reload.
 -   The Markdown module adds the JavaScript features that tables and reference links need on older browsers, such as Chromium 85 to 91 in an older Android WebView.
