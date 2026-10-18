@@ -9,6 +9,18 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * Revision 2 (2026-10-18, epic E1, ADR 0020 / 0027; nothing released, additive): host 'mcu-panel' (the
  * Magic Card Utils panel's Library tab, mcu-library 1.0.0 r4) for <mc-library-view>, with New / Edit
  * actions that fire `mc-library-open`. Sections marked (r2).
+ * Revision 3 (2026-10-19, additive; nothing released): <mc-library-view> reads saved icons and shapes
+ * through `LibrarySource` (property `source`; without one it calls the mcu-library commands itself, so
+ * it never imports a feature Module). resolveClashes gains opts `reserved` (ids another library holds:
+ * renamed whatever the choice, so in 'replace' mode an id the target does not hold is still renamed when
+ * reserved) and `takenName` (a new item whose name the target already shows gets a number; a replaced
+ * item keeps its name); <mc-transfer-panel> gains properties `reserved(kind, id)` and
+ * `takenName(kind, name)` passed through to it. External-host detection (contactsOtherHost) decodes CSS
+ * escapes, removes tab/CR/LF, flags any value with a backslash or a comment opener, and checks every
+ * argument of image-set() and similar functions.
+ * Row thumbnail hook (r3): <mc-library-view> property `rowExtra?: (kind, id) => { thumb?: Node; meta?: string }`;
+ * `thumb` is drawn decorative before the row name, `meta` is appended to the id line (e.g. "10 points").
+ * A host never reads or writes the view's shadow DOM; the Magic Card Utils Shapes tab uses this hook.
  *
  * ── Envelope (the file format; public once released, semver from then on) ──
  * One file holds one kind and one or more items. YAML or JSON, same object:
