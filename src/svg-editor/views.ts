@@ -3,12 +3,13 @@ import { guard } from 'lit/directives/guard.js';
 import { repeat } from 'lit/directives/repeat.js';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { toPathString } from '../path/core';
-import { E } from './bind';
+import { D, E } from './bind';
+import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
 import { haWarns } from './ha';
 import { glyph, type GlyphName } from './icons';
 import { byId, round2, shapeBox, outsideSafe, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
-import { kbOf, toolName } from './mc-svg-editor';
+import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
 import { S } from './strings';
 import type { Tool } from './tools';
@@ -269,6 +270,7 @@ const TOOLS: Array<[Tool, GlyphName, string]> = [
   ['ellipse', 'ellipse', 'E'],
   ['line', 'line', 'L'],
   ['polygon', 'polygon', 'G'],
+  ['shapes', 'rect', 'S'],
   ['free', 'free', 'B'],
   ['hand', 'hand', 'H'],
 ];
@@ -285,13 +287,54 @@ function rail(ed: McSvgEditor): TemplateResult {
           aria-keyshortcuts=${k}
           title=${`${toolName(t)} (${k})`}
           tabindex=${ed.tool === t ? 0 : -1}
-          @click=${() => ed.setTool(t)}
+          aria-haspopup=${t === 'shapes' ? 'dialog' : nothing}
+          aria-expanded=${t === 'shapes' ? aria(ed.picker) : nothing}
+          @click=${() => (t === 'shapes' && ed.tool === t && ed.picker ? ed.closePicker() : ed.setTool(t))}
           @keydown=${(e: KeyboardEvent) => railKey(e, ed, t)}
         >
-          ${glyph(g, 20)}
+          ${t === 'shapes' ? primGlyph(ed.opts.prim, 20) : glyph(g, 20)}
         </button>`,
     )}
   </nav>`;
+}
+
+// ── shape picker ──
+
+const primD = new Map<PrimitiveKind, string>();
+/** The glyph of a kind: the same primitive() outline in a 20 px box, so there is no extra icon art. */
+function primGlyph(k: PrimitiveKind, size: number): TemplateResult {
+  let d = primD.get(k);
+  if (d === undefined) {
+    d = toPathString([E.fromEdit(D.primitive(k, { x: 2, y: 2, w: 16, h: 16 }))]);
+    primD.set(k, d);
+  }
+  return html`<svg class="gl" viewBox="0 0 20 20" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${d} fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>`;
+}
+
+function tileKey(e: KeyboardEvent, ed: McSvgEditor, i: number, cols: number): void {
+  const n = PRIMITIVE_KINDS.length;
+  const to: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + cols, ArrowUp: i - cols, Home: 0, End: n - 1 };
+  const j = to[e.key];
+  if (j === undefined) return;
+  e.preventDefault();
+  if (j < 0 || j >= n) return;
+  ed.opts = { ...ed.opts, prim: PRIMITIVE_KINDS[j] };
+  ed.updateComplete.then(() => ed.renderRoot.querySelectorAll<HTMLElement>('.picker [role=radio]')[j]?.focus());
+}
+
+function picker(ed: McSvgEditor): TemplateResult {
+  const sheet = ed.coarse || ed.layout === 'stacked';
+  const cols = sheet ? 3 : 4;
+  return html`<div class=${`picker${sheet ? ' sheet' : ''}`} role="dialog" aria-modal="false" aria-labelledby="pick-h">
+    <div class="pick-head"><h3 id="pick-h">${S.shapesTitle}</h3>${btn(S.close, 'close', () => ed.closePicker(), { text: sheet, cls: 'ghost' })}</div>
+    <div class="tiles" role="radiogroup" aria-label=${S.shapesTitle} style=${`--cols:${cols}`}>
+      ${PRIMITIVE_KINDS.map(
+        (k, i) =>
+          html`<button type="button" class="tile" role="radio" aria-checked=${aria(ed.opts.prim === k)} tabindex=${ed.opts.prim === k ? 0 : -1} @click=${() => ed.choosePrim(k)} @keydown=${(e: KeyboardEvent) => tileKey(e, ed, i, cols)}>${primGlyph(k, 20)}<span>${S.prim[k]}</span></button>`,
+      )}
+    </div>
+    <p class="help">${S.shapesHelp}</p>
+  </div>`;
 }
 
 function railKey(e: KeyboardEvent, ed: McSvgEditor, t: Tool): void {
@@ -308,6 +351,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
   const left = ed.layout === 'wide' || ed.layout === 'mid' || stacked || ed.overlay;
   return html`<div class=${`work${ed.overlay ? ' ov' : ''}`}>
     ${rail(ed)}
+    ${ed.picker ? picker(ed) : nothing}
     ${left ? leftPanel(ed) : nothing}
     <section class="center" aria-label=${S.title}>
       ${floatBar(ed)}
@@ -331,6 +375,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
           .selection=${ed.cvSelection}
           .mode=${ed.canvasMode}
           .snap=${{ enabled: ed.snapOn, grid: ed.grid, anchors: true, frame: true }}
+          .gridStep=${ed.grid}
           .safeArea=${ed.safeOn ? 2 : undefined}
           .pixelGrid=${ed.pixelGrid}
           .maxPaths=${512}
@@ -359,6 +404,8 @@ function hintFor(ed: McSvgEditor): string {
       return S.hintNode;
     case 'pen':
       return S.hintPen;
+    case 'shapes':
+      return S.hintShapes;
     case 'free':
       return S.hintFree;
     case 'hand':
@@ -371,7 +418,7 @@ function hintFor(ed: McSvgEditor): string {
 function floatBar(ed: McSvgEditor): TemplateResult {
   return html`<div class="float" role="toolbar" aria-label=${S.canvasLabel}>
     ${btn(S.zoomOut, 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(S.zoomIn, 'plus', () => ed.zoomBy(1.25), { keys: '=' })}${btn(S.zoomFit, 'fit', () => ed.fitView(), { keys: '0' })}
-    ${btn(S.gridOn, 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'" })}${btn(S.snapOn, 'snap', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
+    ${btn(S.gridToggle(ed.grid), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true, tip: S.gridOn })}${btn(S.snapOn, 'snap', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
   </div>`;
 }
 
@@ -640,11 +687,39 @@ function xferBtns(ed: McSvgEditor, only?: 'import'): TemplateResult {
   return html`${only ? nothing : b('export', S.exportFile, !ed.out.svg)}${b('import', S.importFile)}`;
 }
 
+function gridChips(ed: McSvgEditor): TemplateResult {
+  const items: Array<[string, string]> = [...GRID_CHIPS.map((g): [string, string] => [String(g), String(g)]), ['custom', S.gridCustom]];
+  const cur = ed.gridCustom ? 'custom' : GRID_CHIPS.includes(ed.grid) ? String(ed.grid) : 'custom';
+  const pickChip = (k: string): void => {
+    if (k === 'custom') {
+      ed.gridCustom = true;
+      ed.gridMsg = undefined;
+    } else ed.setGrid(parseFloat(k));
+  };
+  return html`<div class="grid-size">
+    <span id="gs-l" class="lbl">${S.gridChips}</span>
+    <div class="seg chips" role="radiogroup" aria-labelledby="gs-l">
+      ${items.map(
+        ([k, text]) =>
+          html`<button type="button" role="radio" aria-checked=${aria(k === cur)} tabindex=${k === cur ? 0 : -1} @click=${() => pickChip(k)} @keydown=${(e: KeyboardEvent) => segKey(e, items, k, pickChip)}>${k === cur ? glyph('check', 14) : nothing}${text}</button>`,
+      )}
+    </div>
+    ${cur === 'custom'
+      ? html`<label class="f"><span>${S.gridCustomField}</span><span class="row-u"><input type="number" inputmode="decimal" step="0.05" min=${GRID_MIN} max=${GRID_MAX} data-field="grid-custom" aria-invalid=${ed.gridMsg?.error ? 'true' : 'false'} aria-describedby="gs-m" .value=${fmt(ed.grid)} @input=${(e: Event) => ed.typeGrid((e.target as HTMLInputElement).value, false)} @change=${(e: Event) => {
+          const el = e.target as HTMLInputElement;
+          ed.typeGrid(el.value, true);
+          if (!ed.gridMsg?.error) el.value = fmt(ed.grid);
+        }} /><span>${S.gridUnits}</span></span></label>`
+      : nothing}
+    <p id="gs-m" class=${`help${ed.gridMsg?.error ? ' warn' : ''}`} role=${ed.gridMsg?.error ? 'alert' : nothing}>${ed.gridMsg ? ed.gridMsg.text : ed.snapOn ? S.gridHelp : S.gridHelpOff}</p>
+  </div>`;
+}
+
 function documentSection(ed: McSvgEditor): TemplateResult {
   return html`<section class="grp-s" aria-labelledby="doc-h">
       <h3 id="doc-h">${S.docTitle}</h3>
       <p class="help">${S.noneSelected}</p>
-      ${pick(S.gridSize, ed.grid, [1, 0.5, 0.25].map((g) => [g, String(g)]), (v) => (ed.grid = parseFloat(v)))}
+      ${gridChips(ed)}
       ${chk(S.safeArea, ed.safe, (v) => { ed.safe = v; ed.checks(); })}
       ${chk(S.nudgePad, ed.nudgePad, (v) => (ed.nudgePad = v))}
     </section>

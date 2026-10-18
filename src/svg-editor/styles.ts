@@ -456,6 +456,103 @@ export const editorStyles: CSSResult[] = [
       padding: 8px 12px;
       border-left: 1px solid var(--mc-divider);
     }
+    .work {
+      position: relative;
+    }
+    .seg.chips {
+      flex-wrap: wrap;
+    }
+    .seg.chips > button {
+      min-width: 40px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    @media (pointer: coarse) {
+      .seg.chips > button {
+        min-height: 44px;
+      }
+    }
+    .grid-size {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .row-u {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .picker {
+      position: absolute;
+      z-index: 11;
+      top: 8px;
+      left: 60px;
+      width: 340px;
+      max-width: calc(100% - 68px);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--mc-surface);
+      border: 1px solid var(--mc-divider);
+      border-radius: 12px;
+      box-shadow: var(--mc-shadow-float);
+    }
+    .picker.sheet {
+      position: fixed;
+      top: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: auto;
+      max-width: none;
+      max-height: 60vh;
+      overflow: auto;
+      border-radius: 12px 12px 0 0;
+    }
+    .pick-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pick-head h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+      gap: 4px;
+    }
+    .tile {
+      min-height: 64px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font: inherit;
+      font-size: 0.75rem;
+      line-height: 1.2;
+      text-align: center;
+      color: inherit;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tile[aria-checked='true'] {
+      color: var(--mc-accent-ink);
+      background: var(--mc-accent-tint);
+      border-color: var(--mc-accent);
+    }
+    .picker.sheet .tile {
+      min-height: 72px;
+    }
     .left.sheet {
       position: absolute;
       z-index: 10;

@@ -1,4 +1,4 @@
-import type { Box, EditPath, PathData, Pt } from '../contracts/path-model';
+import type { Box, EditPath, PathData, PrimitiveKind, Pt } from '../contracts/path-model';
 import { flatten, parsePath } from '../path/core';
 import { D, E, T } from './bind';
 
@@ -70,10 +70,11 @@ export function newShape(type: ShapeType, paths: EditPath[], over: Partial<Shape
 }
 
 const NAMES: Record<ShapeType, string> = { path: 'Path', rect: 'Rectangle', ellipse: 'Ellipse', line: 'Line', polygon: 'Polygon', star: 'Star' };
-export function nameFor(d: Doc, type: ShapeType): string {
-  const base = NAMES[type];
+export function nameFor(d: Doc, type: ShapeType, plain?: string): string {
+  const base = plain ?? NAMES[type];
   const used = new Set(d.shapes.map((s) => s.name));
-  for (let i = 1; ; i++) if (!used.has(`${base} ${i}`)) return `${base} ${i}`;
+  if (plain && !used.has(plain)) return plain;
+  for (let i = plain ? 2 : 1; ; i++) if (!used.has(`${base} ${i}`)) return `${base} ${i}`;
 }
 
 /**
@@ -161,6 +162,19 @@ export function fromCorners(d: Doc, type: Exclude<ShapeType, 'path'>, a: Pt, b: 
   if (type === 'polygon' || type === 'star') s.geo = { cx: box.x + box.w / 2, cy: box.y + box.h / 2, rad: Math.min(box.w, box.h) / 2 };
   s.paths = generate(s, box);
   return s;
+}
+
+/** A primitive (heart, arrow, ...) drawn from two corners: a plain, filled, editable path named after the kind. */
+export function fromPrimitive(d: Doc, kind: PrimitiveKind, name: string, a: Pt, b: Pt, square: boolean): Shape {
+  let w = b[0] - a[0];
+  let h = b[1] - a[1];
+  if (square) {
+    const m = Math.max(Math.abs(w), Math.abs(h));
+    w = Math.sign(w || 1) * m;
+    h = Math.sign(h || 1) * m;
+  }
+  const box: Box = { x: Math.min(a[0], a[0] + w), y: Math.min(a[1], a[1] + h), w: Math.abs(w), h: Math.abs(h) };
+  return newShape('path', [D.primitive(kind, box)], { name: nameFor(d, 'path', name) });
 }
 
 /** The shape as plain path data (its type options no longer apply). */

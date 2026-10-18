@@ -1,7 +1,7 @@
-import type { Pt } from '../contracts/path-model';
+import type { Pt, PrimitiveKind } from '../contracts/path-model';
 import { S } from './strings';
 import { D } from './bind';
-import { toEditPaths, fromCorners, newShape, nameFor, type Doc, type Shape } from './model';
+import { toEditPaths, fromCorners, fromPrimitive, newShape, nameFor, type Doc, type Shape } from './model';
 
 /*
  * Draw tools on the stage: rectangle, ellipse, line, polygon / star and freehand, and the Hand tool.
@@ -10,8 +10,8 @@ import { toEditPaths, fromCorners, newShape, nameFor, type Doc, type Shape } fro
  * pen and the point tools are the canvas's own.
  */
 
-export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'free' | 'hand';
-export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon'];
+export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand';
+export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon', 'shapes'];
 export const DRAW_TOOLS: readonly Tool[] = [...SHAPE_TOOLS, 'free', 'hand'];
 
 export interface ToolOpts {
@@ -19,6 +19,7 @@ export interface ToolOpts {
   sides: number;
   inner: number;
   star: boolean;
+  prim: PrimitiveKind;
 }
 
 export interface Live {
@@ -77,6 +78,7 @@ export class Gestures {
     const t = this.h.tool;
     if (!SHAPE_TOOLS.includes(t) || (Math.abs(b[0] - a[0]) < 0.01 && Math.abs(b[1] - a[1]) < 0.01)) return undefined;
     const o = this.h.opts;
+    if (t === 'shapes') return fromPrimitive(this.h.doc, o.prim, S.prim[o.prim], a, b, square);
     const kind = t === 'polygon' ? (o.star ? 'star' : 'polygon') : (t as 'rect' | 'ellipse' | 'line');
     return fromCorners(this.h.doc, kind, a, b, { r: o.r, sides: o.sides, inner: o.inner, square: square && kind !== 'line' });
   }

@@ -3,6 +3,8 @@
  * `n()`. English only for now; a translation replaces `S` as a whole.
  */
 
+import type { PrimitiveKind } from '../contracts/path-model';
+
 export const n = (count: number, one: string, many: string): string => `${count.toLocaleString()} ${count === 1 ? one : many}`;
 
 export const S = {
@@ -88,7 +90,36 @@ export const S = {
   toolEllipse: 'Ellipse',
   toolLine: 'Line',
   toolPolygon: 'Polygon or star',
+  toolShapes: 'Shapes',
   toolFree: 'Freehand',
+  shapesTitle: 'Shapes',
+  shapesHelp: 'Click and drag on the canvas, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets each corner.',
+  hintShapes: 'Click and drag, or click two corners. Hold Shift for a square. Without a mouse: arrows move the crosshair, Enter sets a corner. Press S to pick another shape.',
+  prim: {
+    'rounded-rect': 'Rounded rectangle',
+    triangle: 'Triangle',
+    arrow: 'Arrow',
+    chevron: 'Chevron',
+    plus: 'Plus',
+    heart: 'Heart',
+    'speech-bubble': 'Speech bubble',
+    drop: 'Drop',
+    leaf: 'Leaf',
+    shield: 'Shield',
+    cloud: 'Cloud',
+    ticket: 'Ticket',
+    tab: 'Tab',
+    tag: 'Tag',
+  } as Record<PrimitiveKind, string>,
+  gridChips: 'Grid size',
+  gridCustom: 'Custom',
+  gridCustomField: 'Custom grid size',
+  gridUnits: 'units',
+  gridError: 'Use 0.1 to 12.',
+  gridClamped: (v: number): string => `Grid size set to ${v}, the nearest allowed size.`,
+  gridHelp: 'Snapping and the arrow keys move by this size.',
+  gridHelpOff: 'Arrow keys move by 0.5. Turn on Snap to use the grid size.',
+  gridToggle: (v: number): string => `Grid ${v}`,
   toolHand: 'Hand',
   hintSelect: 'Click a shape to select it. Arrows move it. The fields on the right set size and angle.',
   hintNode: 'Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.',
@@ -273,7 +304,7 @@ export const S = {
   help: 'Shortcuts',
   helpKeys: [
     'Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library',
-    'Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, B freehand',
+    'Tools: V select, A points, P pen, R rectangle, E ellipse, L line, G polygon, S shapes, B freehand',
     "Zoom: = and -, fit: 0, grid: Ctrl+', snap: Ctrl+;",
     'Arrows move, Shift+arrows move far, Alt+arrows move 0.1',
     '[ and ] previous and next point, C corner or smooth, H handle, Delete removes',

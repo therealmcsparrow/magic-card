@@ -5,7 +5,7 @@ import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor'
 import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
 import { SVG_EDITOR_TAG, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
-import type { Anchor, Box, EditPath, Pt } from '../contracts/path-model';
+import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { resolveIconGeometry } from '../icons/icon-source';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { loadPathCanvas } from '../path-canvas/loader';
@@ -83,7 +83,7 @@ export interface Banner {
 export type Stage = 'loading' | 'fail' | 'start' | 'edit';
 export type CanvasEl = HTMLElement & { fit(): void; view: { zoom: number; pan: Pt }; setView(z: number, p: Pt): void; focusAnchor(p: number, a: number): void; selection?: PathSelection };
 
-const DEFAULT_OPTS: ToolOpts = { r: 0, sides: 5, inner: 0.5, star: false };
+const DEFAULT_OPTS: ToolOpts = { r: 0, sides: 5, inner: 0.5, star: false, prim: 'rounded-rect' };
 const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 
 export class McSvgEditor extends LitElement implements StageHost {
@@ -94,7 +94,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -112,6 +112,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   snapOn = true;
   pixelGrid = true;
   grid = 1;
+  /** Shape picker open (Shapes tool). */
+  picker = false;
+  /** Custom grid size chosen. */
+  gridCustom = false;
+  gridMsg?: { text: string; error: boolean };
   safe = true;
   decimals = 2;
   nudgePad = true;
@@ -549,7 +554,42 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.syncPen();
   }
 
+  /** Close the shape picker and put focus on the canvas, so the crosshair is ready. */
+  closePicker(): void {
+    this.picker = false;
+    this.updateComplete.then(() => this.canvas()?.focus({ preventScroll: true }));
+  }
+
+  choosePrim(k: PrimitiveKind): void {
+    this.opts = { ...this.opts, prim: k };
+    this.say(S.prim[k]);
+    this.closePicker();
+  }
+
+  /** A chip of the grid size group. */
+  setGrid(v: number): void {
+    this.grid = v;
+    this.gridCustom = false;
+    this.gridMsg = undefined;
+  }
+
+  /** The custom size field: valid values apply at once, others stay as typed with a reason. */
+  typeGrid(raw: string, final: boolean): void {
+    const n = parseFloat(raw);
+    const ok = Number.isFinite(n) && n >= GRID_MIN && n <= GRID_MAX;
+    if (ok) {
+      this.grid = n;
+      this.gridMsg = undefined;
+      if (final && GRID_CHIPS.includes(n)) this.gridCustom = false;
+    } else if (final && Number.isFinite(n)) {
+      this.grid = Math.min(GRID_MAX, Math.max(GRID_MIN, n));
+      this.gridMsg = { text: S.gridClamped(this.grid), error: false };
+    } else this.gridMsg = { text: S.gridError, error: true };
+  }
+
   setTool(t: Tool): void {
+    if (t === 'shapes') this.picker = true;
+    else this.picker = false;
     if (this.tool === t) return;
     this.gestures.reset();
     this.tool = t;
@@ -564,7 +604,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   addShape(s: Shape): void {
     this.apply({ ...this.doc, shapes: [...this.doc.shapes, s] }, `Draw ${s.name}`);
-    this.tool = 'select';
+    if (this.tool !== 'shapes') this.tool = 'select';
     this.flat = this.makeFlat(this.doc);
     this.select([s.id]);
     this.say(S.drawn(s.name));
@@ -690,6 +730,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   escape(e: KeyboardEvent): void {
     e.preventDefault();
     e.stopPropagation();
+    if (this.picker) {
+      this.closePicker();
+      return;
+    }
     if (this.gestures.cancel()) return;
     if (this.dlg) this.dlg = undefined;
     else if (this.leaving) this.leaving = false;
@@ -760,6 +804,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && e.composedPath().some((n) => (n as HTMLElement).getAttribute?.('role') === 'tree') && this.sel[0]) {
       e.preventDefault();
       this.reorder(this.sel[0], e.key === 'ArrowUp' ? 1 : -1);
+      return;
+    }
+    if (this.tool === 'shapes' && code === 'KeyS' && !e.shiftKey && !e.altKey && this.inCanvasOrRail(e)) {
+      e.preventDefault();
+      this.picker = true;
       return;
     }
     if (this.gestures.active && DRAW_TOOLS.includes(this.tool)) return;
@@ -1282,6 +1331,10 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   // ── render ──
 
+  protected updated(changed: PropertyValues): void {
+    if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
+  }
+
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
   }
@@ -1305,10 +1358,14 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 }
 
-const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyB: 'free', KeyH: 'hand' };
+export const GRID_CHIPS: readonly number[] = [0.5, 1, 2, 3, 4];
+export const GRID_MIN = 0.1;
+export const GRID_MAX = 12;
+
+const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyS: 'shapes', KeyB: 'free', KeyH: 'hand' };
 
 export const toolName = (t: Tool): string =>
-  ({ select: S.toolSelect, node: S.toolNode, pen: S.toolPen, rect: S.toolRect, ellipse: S.toolEllipse, line: S.toolLine, polygon: S.toolPolygon, free: S.toolFree, hand: S.toolHand })[t];
+  ({ select: S.toolSelect, node: S.toolNode, pen: S.toolPen, rect: S.toolRect, ellipse: S.toolEllipse, line: S.toolLine, polygon: S.toolPolygon, shapes: S.toolShapes, free: S.toolFree, hand: S.toolHand })[t];
 
 export const kbOf = (bytes: number): string => (bytes / 1024).toLocaleString(undefined, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 
