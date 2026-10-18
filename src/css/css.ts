@@ -957,8 +957,10 @@ const magicCardLocalStyles = css`
     flex-direction: column;
     align-items: center;
     gap: var(--mc-gap-xs);
-    padding: var(--mc-gap-sm);
-    min-width: 60px;
+    padding: var(--mc-gap-sm) var(--mc-gap-xs);
+    /* 60 px wide, shrinking to 44 px in a narrow column so five days fit 331 px; more than fit scroll */
+    flex: 0 1 60px;
+    min-width: 44px;
   }
 
   .mc-forecast-item ha-icon,
