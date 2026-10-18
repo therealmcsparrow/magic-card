@@ -107,6 +107,8 @@ const PANEL_ICON: Record<string, string> = {
   'mc-anim-shapes-layers': 'mdi:shape-outline',
   'mc-anim-shapes-under-layers': 'mdi:shape-outline',
   'mc-anim-particles-layers': 'mdi:shimmer',
+  'mc-anim-path-layers': 'mdi:vector-curve',
+  'mc-anim-steps-layers': 'mdi:format-list-numbered',
   'mc-anim-part-presets': 'mdi:auto-fix',
 };
 /** The icon animation start (icon picker and icon library; editors/icon-start.ts). */
