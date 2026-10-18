@@ -1,25 +1,64 @@
 import type { AnchorKind } from './path-model';
+import type { Outline } from '../utils/shape-path';
 
 /*
- * Contract: custom shape. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0018, ADR 0020.
+ * Contract: custom shape. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0018, ADR 0020, ADR 0021.
  * Revision 2 (2026-10-18, before any implementation, ADR 0020): free-path content inset after
  * spike S2 (runtime fallback 0, editor writes `padding`, no-cut is warn-only for free paths);
  * ref resolution order spelled out (first paint, never blank); pop-ups and the shaped-element
  * performance budget; card-level copies are pruned and template-merged.
+ * Revision 3 (2026-10-18, CEO decision after T2, ADR 0021): the builder is a lazy chunk
+ * (magic-card-shape-custom.js); ref resolution and the option merge stay in magic-card.js; a
+ * custom-shaped element is drawn unshaped until the chunk has loaded; how the 50 ms budget is
+ * measured; buildCustomInset folded into buildCustom(w, h, opts, off); a library change re-renders
+ * every card that looked up a ref (no id filter).
  *
  * Config schema of `shape: custom` and the runtime corner / anchor builder that turns it into an
  * outline at the element's measured size.
  *
- * Implementation (runtime, magic-card.js): module `shape-runtime`
- * - src/utils/shape-custom.ts: resolveCustomShape() and buildCustom(); called by shape-path.ts for
- *   kind 'custom' (KINDS gains 'custom', types.ts ShapeKind gains 'custom', ShapeOptions gains the
- *   fields below). Uses path-model core only. Budget: see ADR 0019 (at most 2,560 B in magic-card.js).
- * - mc-shape.ts passes the element's shape_options through resolveCustomShape() with the card's
- *   ShapeLookup before calling shapePath. Everything downstream (clip, polygon fallback, border
- *   stroke, border length mask, focus ring, ring via shapeRingPath / shapeInsetPath, drop shadow
- *   wrapper, value background, flows via shapePoint, seasonal decorations) is unchanged: it reads
- *   the outline, not the options.
+ * Implementation (runtime), module `shape-runtime`, split in two (ADR 0021):
+ * - magic-card.js (sync, Core-adjacent glue, budget ADR 0019: T2 at most 2,560 B net):
+ *   - src/utils/shape-ref.ts: resolveCustomShape() and mergeShapeOptions() (moved out of
+ *     shape-custom.ts; template-merge.ts and mc-shape.ts import them from here).
+ *   - src/utils/shape-path.ts: KINDS has 'custom'; the shared helpers the builder imports
+ *     (cornerArc, cornerCentres, dedupeSegs, translate, clamp, p, parseShapeLength, SHAPE_DEFAULTS);
+ *     toPath, flatten, the memo and everything after the Outline. It holds the builder in a slot:
+ *     useCustomBuilder(fn) sets it and clears the memo; build / buildInset of kind 'custom' return
+ *     undefined while the slot is empty (and that undefined is never memoised).
+ *   - src/utils/shape-custom-loader.ts (Core lazy-loader list, particles-loader.ts pattern):
+ *     loadCustomShapes(): Promise<boolean> loads the chunk once, calls useCustomBuilder, resolves
+ *     false and warns once when the load fails (no retry until reload); customShapesReady(): boolean.
+ *   - mc-shape.ts resolveShape(): for 'custom' without the builder it starts the load and returns
+ *     undefined, so the element is drawn exactly as `shape: none` (no clip, no inset vars, no
+ *     mc-shape, rectangle rings, flows on the box). It never paints a half-shaped state.
+ *   - magic-card.ts: starts the load in setConfig when the raw config text contains
+ *     `"shape":"custom"` (so a cached chunk usually lands before the first paint), and when any
+ *     resolveShape call reported a pending custom shape; when the load resolves true and the card
+ *     is connected it calls requestUpdate() once (particles pattern).
+ * - dist/magic-card-shape-custom.js (lazy chunk, webpackChunkName "shape-custom"):
+ *   src/utils/shape-custom.ts exports buildCustom() only (CustomShapeChunk below). It imports the
+ *   shape-path helpers, which webpack takes from magic-card.js (splitChunks: false, available
+ *   modules are not copied): the chunk must not contain shape-path.ts. Nothing else imports
+ *   shape-custom.ts statically; the editors (card editor preview, T7 shape editor) await
+ *   loadCustomShapes() and re-render, so there is one copy of the builder.
  * Editor: module `shape-editor` (lazy chunk) writes this schema; it never writes px paths.
+ * Everything downstream of the Outline (clip, polygon fallback, border stroke, border length mask,
+ * focus ring, ring via shapeRingPath / shapeInsetPath, drop shadow wrapper, value background, flows
+ * via shapePoint, seasonal decorations) is unchanged and stays in magic-card.js.
+ *
+ * ── First paint (revision 3) ──
+ * - Cold page, first card with `shape: custom`: the card paints unshaped (as `shape: none`) until
+ *   the chunk lands, then re-renders once shaped. The clip is written in that render and the inset
+ *   vars one frame later, the same two-step settle every preset already has. The content can move
+ *   by the shape's inset once; that is the accepted cost (CEO 2026-10-18). No hidden state, no
+ *   preset approximation (both need builder code in magic-card.js or risk a blank card, R1).
+ * - Warm page (chunk in memory, or registered by an editor chunk): resolveShape returns the shape
+ *   on the first render; no unshaped frame.
+ * - Load failure (offline, a stale dist): the element stays unshaped for the page's life; never
+ *   blank, one console warning.
+ * - Chromium 85-87: webpack's own chunk loader (script tag, public path from src/index.ts) works
+ *   there; the chunk is ES2021 like the rest. The polygon fallback lives in magic-card.js and reads
+ *   the path string, so it needs nothing from the chunk; the pending state is unshaped there too.
  *
  * ── YAML (card `shape_options`, or `design.shape_options` on modules, rows, columns) ──
  *
@@ -47,6 +86,9 @@ import type { AnchorKind } from './path-model';
  *
  * Rules:
  * - Lengths (corner, size, padding) follow parseShapeLength: px, or % of the element's shorter side.
+ * - Corner sizes: a corner that names a type but has no size anywhere gets 16 px; with neither
+ *   `corner` nor `corner_type` the shared size is 0 (square), so `corners: { br: notch }` changes
+ *   only br.
  * - Coord: a number = px from the left / top edge; a string '<n>', '<n>px', '<p>%', '<p>%+<n>' or
  *   '<p>%-<n>' = p % of the width / height plus n px ('100%-24' = 24 px from the right / bottom).
  *   Resolved px are clamped to 0..w, 0..h. Handles `in` / `out` are px offsets from their resolved
@@ -63,11 +105,12 @@ import type { AnchorKind } from './path-model';
  *   (cut corners); "Edit as custom" maps it to corner_type bevel.
  *
  * - Content inset. Content sits at max(inset, pad) per side, as today (pad = the element's own
- *   padding). No inset ever shrinks as h grows, so content-sized elements do not oscillate.
+ *   padding). No inset ever shrinks as h grows, so content-sized elements do not oscillate. A
+ *   custom shape's outline and inset never depend on pad (one memo entry per size).
  *   Corner mode (the no-cut promise holds here): per corner on both its sides: square 0,
- *     round 0.293 s, squircle the preset's formula, bevel 0.5 s, scoop 0.707 s, notch s; a side's
- *     inset is the larger of its two corners. `padding` replaces the computed inset on the sides
- *     it names.
+ *     round 0.293 s, squircle 1 - 0.5^(1/n) s (the curve's 45 degree point), bevel 0.5 s, scoop
+ *     0.707 s, notch s; a side's inset is the larger of its two corners. `padding` replaces the
+ *     computed inset on the sides it names.
  *   Free path mode: the runtime derives nothing from the points. The inset is `padding` on the
  *     sides it names and 0 on the others. Spike S2: deriving it from coordinates cut text in 5 of 22
  *     shapes and over-padded a folder tab to a 36 px text column.
@@ -95,8 +138,8 @@ import type { AnchorKind } from './path-model';
  *   corner / corner_type, then square; fewer than 3 valid points falls back to corner mode, then the
  *   plain rectangle). `shape: none` resets. A shape is never the reason a card is blank (design R1,
  *   R2).
- * - No animation for custom shapes in 1.0.0 (`animate` is ignored). Unshaped elements pay nothing:
- *   no code in shape-custom.ts runs unless the kind is 'custom'.
+ * - No animation for custom shapes in 1.0.0 (`animate` is ignored). Unshaped elements and preset
+ *   shapes pay nothing: the chunk is never requested unless some element's kind is 'custom'.
  *
  * ── Pop-ups inside a shaped element ──
  * clip-path clips every painted descendant. Pop-ups therefore must not paint inside the element:
@@ -111,38 +154,51 @@ import type { AnchorKind } from './path-model';
  *   proof opens a dropdown inside a shaped card in Chrome desktop, Android WebView and iPad Safari.
  *
  * ── Performance budget (shaped elements) ──
- * Reference page: 30 cards, each with a custom-shaped card plus 3 custom-shaped modules (120 shaped
- * elements, half of them free paths), Chrome with 4x CPU throttling:
+ * Reference page: dev/shape-perf.html, 30 cards, each with a custom-shaped card plus 3 custom-shaped
+ * modules (120 shaped elements, half of them free paths), Chrome with 4x CPU throttling:
  * - One ResizeObserver for all of them (the existing shared one, mc-ring.ts watchSize); no
  *   per-element observer, no MutationObserver, no timers.
  * - Idle: zero animation-frame callbacks and zero timers from shape code over 10 s.
- * - First render: shape resolve + build + clip write for all 120 together <= 50 ms of main-thread
- *   time, and no long task over 50 ms caused by shape code. A resize settles within 2 layout passes
- *   per element (S2: converged in <= 2 rounds in 264 of 264 runs).
- * - buildCustom is memoised per (w, h, resolved options); a provider change event re-resolves only
- *   the elements whose `ref` is listed in the event.
+ * - First render: shape main-thread time for all 120 together <= SHAPE_FIRST_RENDER_BUDGET_MS, and
+ *   no long task over 50 ms caused by shape code. A resize settles within 2 layout passes per
+ *   element (S2: converged in <= 2 rounds in 264 of 264 runs).
+ * - How it is measured (revision 3): scripts/t2-shape-perf.mjs, the dev bundle (readable names),
+ *   CPU profile sampled at 200 us, median of 5 runs, from navigation until the page settles (both
+ *   the unshaped render and the shaped re-render after the chunk lands). Shape time = the samples
+ *   whose stack contains any of resolveShape, resolveCustomShape, shapePath, shapeInsetPath,
+ *   shapeRingPath, shapePoint, shapeClip or the loader's then-callback, each sample counted once.
+ *   That INCLUDES the shared outline code (memo key, build, toPath, flatten, polygon fallback): it is
+ *   what the user waits for, and the presets meet it on the same page (33-40 ms in T2). It EXCLUDES
+ *   layout and style work (borderBoxSize, getComputedStyle, style writes), the chunk's fetch, parse
+ *   and evaluation, and Lit rendering. The same script reports the preset page as a control.
+ * - The Node micro-benchmark (tests/shape-custom-perf.test.ts, 120 x 4 builds <= 12.5 ms at 1x)
+ *   stays as the regression guard in CI-less runs; it does not replace the page measure.
+ * - buildCustom results are memoised per (w, h, off, resolved options) in shape-path's memo.
+ * - A provider `mcu-library-changed` event for shapes re-renders every card that has looked up a
+ *   ref (one listener per such card, removed on disconnect; no id filter: a library save is rare).
  * Lowest supported engine: Chromium 85 / Android System WebView 85 (the build targets ES2021, see
  * tsconfig). clip-path path() is used where CSS.supports says so (Chromium 88+); older engines get
  * the polygon fallback, which custom shapes share with the presets (only cut edges become facets).
  *
- * ── ref resolution (resolveCustomShape) ──
+ * ── ref resolution (resolveCustomShape, magic-card.js) ──
  * - base = lookup.library(ref) ?? lookup.inline(ref) (whole item, not merged with each other).
  *   library = mcu-library provider (window.magicCardUtils.shapes, mcu-library 1.0.0); it answers
  *   undefined until the provider is ready and for unknown ids, so first paint is the inline copy
  *   and never waits. inline = the card's `custom_shapes[ref]` (MagicCardConfig.custom_shapes, card
  *   level, shared by every element of the card).
+ * - Resolution runs whether or not the chunk has loaded (it is sync and in magic-card.js); only
+ *   the build waits for the chunk.
  * - A `ref` is a live link (the user chose `Use`; the UI says it "changes every card that uses
  *   it"): once the provider holds the item, the library version wins, and a library save
- *   re-resolves the elements that use it. `Use as copy` / `Customise a copy` write options inline
+ *   re-renders the cards that use it. `Use as copy` / `Customise a copy` write options inline
  *   without `ref`, so they never change unprompted. Deleting or losing the library item never
  *   changes the card: the inline copy takes over.
  * - Fallback chain (design R5): library item -> inline copy -> the local options alone -> corner
  *   mode defaults (square). The editor shows the R5 notice; the runtime is silent.
  * - result = base with the local options on top; `corners` merge per corner key; `points` and
  *   `padding` replace as a whole; `ref` itself is dropped. Same rule for template + local
- *   shape_options (template-merge.ts): only an overridden corner changes.
- * - When the provider fires `mcu-library-changed` for shapes, mc-shape re-resolves (one listener per
- *   page, added only when some element uses `ref`).
+ *   shape_options (template-merge.ts, only when both sides are `shape: custom`): only an overridden
+ *   corner changes.
  * - The editor always writes an inline copy into `custom_shapes` when it sets `ref` (shapes are a
  *   few hundred bytes), refreshes the copies of the card's refs from the library whenever it opens
  *   the card, and on every save removes `custom_shapes` entries that no element of the card uses.
@@ -151,13 +207,19 @@ import type { AnchorKind } from './path-model';
  */
 
 export const CUSTOM_SHAPE_CONTRACT_VERSION = '1.0.0';
-export const CUSTOM_SHAPE_CONTRACT_REVISION = 2;
+export const CUSTOM_SHAPE_CONTRACT_REVISION = 3;
 export const MAX_SHAPE_POINTS = 64;
 export const CUSTOM_SHAPE_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 /** Editor W6: a text line sample farther than this outside the outline counts as cut (px). */
 export const CUT_TOLERANCE_PX = 2;
 /** Lowest Chromium the card (and the polygon fallback) is promised for: build target ES2021. */
 export const MIN_CHROMIUM = 85;
+/** The builder's lazy chunk (ADR 0021). Its CAPS entry is its measured size + 5 %, rounded up to 1 KiB. */
+export const CUSTOM_SHAPE_CHUNK = 'magic-card-shape-custom.js';
+/** Hard ceiling of that chunk (B). More than this means shape-path.ts was copied into it. */
+export const CUSTOM_SHAPE_CHUNK_CEILING = 5_120;
+/** Reference page, 120 shaped elements, 4x CPU throttle: shape main-thread time on first render (ms). */
+export const SHAPE_FIRST_RENDER_BUDGET_MS = 50;
 
 export type CornerType = 'round' | 'squircle' | 'bevel' | 'scoop' | 'notch' | 'square';
 export const CORNER_TYPES: readonly CornerType[] = ['round', 'squircle', 'bevel', 'scoop', 'notch', 'square'];
@@ -206,12 +268,29 @@ export interface ShapeLookup {
 export type CustomShapesConfig = Record<string, CustomShapeOptions>;
 
 /**
- * Runtime surface (src/utils/shape-custom.ts):
- * - resolveCustomShape(opts: CustomShapeOptions, lookup?: ShapeLookup): CustomShapeOptions
- *   (pure; returns the same object when nothing changes, so the shapePath memo key stays stable).
- * - buildCustom(w, h, opts, pad?) / buildCustomInset(w, h, opts, off): the Outline + inset that
- *   shape-path.ts already uses for presets (private type there).
+ * Sync surface in magic-card.js (src/utils/shape-ref.ts):
+ * - resolveCustomShape(opts, lookup?) (pure; returns the same object when there is no ref, so the
+ *   shapePath memo key stays stable) and mergeShapeOptions(base, over).
  */
 export interface CustomShapeRuntime {
   resolveCustomShape(opts: CustomShapeOptions, lookup?: ShapeLookup): CustomShapeOptions;
+  mergeShapeOptions(base: CustomShapeOptions, over: CustomShapeOptions): CustomShapeOptions;
+}
+
+/**
+ * The lazy chunk's module (src/utils/shape-custom.ts, dist/magic-card-shape-custom.js), loaded only
+ * by src/utils/shape-custom-loader.ts and handed to shape-path's useCustomBuilder().
+ * buildCustom(w, h, opts, off = 0): the outline and content inset of a w x h box; off > 0 = the
+ * shape moved off px inward in the same box (rings, inner border). Pure, no DOM, no padding input.
+ */
+export interface CustomShapeChunk {
+  buildCustom(w: number, h: number, opts: CustomShapeOptions, off?: number): Outline;
+}
+
+/** Magic-card.js side of the loader (src/utils/shape-custom-loader.ts). */
+export interface CustomShapeLoader {
+  /** Loads the chunk once and registers the builder; false (and one warning) when it cannot load. */
+  loadCustomShapes(): Promise<boolean>;
+  /** The builder is registered (never starts a load). */
+  customShapesReady(): boolean;
 }
