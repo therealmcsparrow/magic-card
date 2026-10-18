@@ -1,7 +1,8 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { editorPrimitives, editorTokens } from '../css/editor-system';
-import { ANIMATION_GROUPS, ANIMATION_PRESETS } from '../utils/animation-presets';
+import { locale, t } from '../i18n/labels';
+import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, type AnimationGroup } from '../utils/animation-presets';
 import { CATALOGUE_GROUPS, type PresetPickDetail, type PresetTileSource } from '../contracts/preset-catalogue';
 import { docFromPreset } from './from-preset';
 import type { AnimationDoc } from './model';
@@ -55,10 +56,16 @@ const GROUP_ICON: Record<TileGroupName, string> = {
 };
 
 let builtins: BuiltinSource[] | undefined;
+let builtinsLocale: string | undefined;
+
+/** A group's heading: the built-in groups come from the labels tables, the catalogue's own are plain text (I10). */
+const groupLabel = (g: TileGroupName): string => (g in GROUP_LABELS ? t(GROUP_LABELS[g as AnimationGroup]) : g);
 
 /** One tile source per built-in preset (built once): `tap` from the trigger, `heavy` for seasonal scenes. */
 export function builtinTileSources(): BuiltinSource[] {
-  builtins ??= ANIMATION_PRESETS.map((p) => ({ kind: 'builtin', id: p.id, name: p.name, group: p.group, tap: p.trigger === 'tap', heavy: p.group === 'Seasonal' || !!p.seasonal }));
+  if (builtins && builtinsLocale === locale()) return builtins;
+  builtinsLocale = locale();
+  builtins = ANIMATION_PRESETS.map((p) => ({ kind: 'builtin', id: p.id, name: t(p.name), group: p.group, tap: p.trigger === 'tap', heavy: p.group === 'Seasonal' || !!p.seasonal }));
   return builtins;
 }
 
@@ -87,7 +94,7 @@ export function groupTiles(sources: PresetTileSource[], query: string): TileGrou
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   const hit = (s: PresetTileSource): boolean => {
     if (!words.length) return true;
-    const hay = (s.kind === 'builtin' ? `${s.name} ${s.id} ${s.group}` : `${s.entry.name} ${s.entry.id} ${s.entry.group} ${s.entry.tags.join(' ')}`).toLowerCase();
+    const hay = (s.kind === 'builtin' ? `${s.name} ${s.id} ${s.group} ${groupLabel(s.group)}` : `${s.entry.name} ${s.entry.id} ${s.entry.group} ${s.entry.tags.join(' ')}`).toLowerCase();
     return words.every((w) => hay.includes(w));
   };
   const by = new Map<TileGroupName, PresetTileSource[]>();
@@ -340,8 +347,8 @@ export class PresetGrid extends LitElement {
     return html`
       ${groups.length
         ? groups.map(
-            (g) => html`<section class="pg" role="group" aria-label=${g.group}>
-              <h3>${g.group} <span class="chip is-count">${g.tiles.length}</span></h3>
+            (g) => html`<section class="pg" role="group" aria-label=${groupLabel(g.group)}>
+              <h3>${groupLabel(g.group)} <span class="chip is-count">${g.tiles.length}</span></h3>
               <ul class="grid" role="list">
                 ${g.tiles.map((s) => this._tile(s))}
               </ul>

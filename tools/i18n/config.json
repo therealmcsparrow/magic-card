@@ -2,6 +2,7 @@
   "_note": "Namespace -> i18n folder (holds index.ts, en-US.json, nl.json and the git-ignored messages.gen.ts). A namespace is active once its folder exists. roots: source folders the D5 hard-coded-text baseline counts for it (longest prefix wins).",
   "namespaces": {
     "card": { "dir": "src/card/i18n", "roots": ["src/card", "src/modules", "src/icons"] },
+    "labels": { "dir": "src/i18n/labels", "roots": ["src/utils/css-properties.ts", "src/utils/css-property-options.ts", "src/utils/animation-presets.ts", "src/utils/seasonal-scenes.ts"] },
     "card-editor": { "dir": "src/editor/i18n", "roots": ["src/editor"] },
     "path-canvas": { "dir": "src/path-canvas/i18n", "roots": ["src/path-canvas"] },
     "svg-editor": { "dir": "src/svg-editor/i18n", "roots": ["src/svg-editor"] },

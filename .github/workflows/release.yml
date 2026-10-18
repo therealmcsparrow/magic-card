@@ -44,6 +44,10 @@ jobs:
       - name: Dist size budget
         run: npm run size
 
+      - name: i18n placement (runtime, tables and call sites per built file)
+        # reads the module list of the build above (contract i18n r3, D7)
+        run: node tools/check-i18n.mjs --ci --placement
+
       - name: Generate CycloneDX SBOM (production dependencies)
         # the tool is a pinned devDependency, installed from the lockfile by npm ci
         run: npm run sbom

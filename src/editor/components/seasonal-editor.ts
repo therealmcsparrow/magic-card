@@ -1,3 +1,4 @@
+import { t } from '../../i18n/labels';
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalSceneSetting, SeasonalSetting } from '../../types';
@@ -229,7 +230,8 @@ export class SeasonalEditor extends LitElement {
   private _today(): string {
     const d = seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
     const scene = autoScene(d, this._cfg);
-    return SCENES[scene]?.label ?? LABEL[scene] ?? scene;
+    const l = SCENES[scene]?.label;
+    return l === undefined ? (LABEL[scene] ?? scene) : t(l);
   }
 
   private _picker(current: SeasonalSceneSetting): TemplateResult {

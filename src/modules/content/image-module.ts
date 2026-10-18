@@ -8,6 +8,7 @@ import { cssAspectRatio, mediaSrc, resolveMediaUrl } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 /** An attribute value that is an image address (not a name, a state or a javascript: URL). */
 const URL_LIKE = /^(?:\/|https?:\/\/|data:image\/)/i;
@@ -27,8 +28,8 @@ const onImageLoad = (e: Event) => (e.target as HTMLElement).parentElement?.class
 class ImageModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'image',
-    name: 'Image',
-    description: 'Display a static image or entity picture',
+    name: lm('Image'),
+    description: lm('Display a static image or entity picture'),
     category: 'content',
     icon: 'mdi:image-outline',
   };

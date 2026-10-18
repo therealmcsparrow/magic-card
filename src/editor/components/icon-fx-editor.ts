@@ -1,3 +1,4 @@
+import { t } from '../../i18n/labels';
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant, IconColorsConfig, IconFillConfig, IconFxConfig, IconFxKeys } from '../../types';
@@ -667,7 +668,7 @@ export class IconFxEditor extends LitElement {
     const rule = autoDeviceRule(this._stateObj, this.entity);
     if (!rule) return 'Auto has no animation for this entity; pick one.';
     const now = autoDeviceAnim(this._stateObj);
-    return `Auto for this entity: ${rule}.${now ? ` Now: ${DEVICE_LABEL[now.anim]}.` : ''}`;
+    return `Auto for this entity: ${t(rule)}.${now ? ` Now: ${DEVICE_LABEL[now.anim]}.` : ''}`;
   }
 
   private _renderDevice(): TemplateResult {

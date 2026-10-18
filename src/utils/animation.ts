@@ -1,3 +1,5 @@
+import type { MessageId } from '../contracts/i18n';
+import { lm } from '../i18n/labels/mark';
 import type { AnimationConfig, AnimationDirection, DesignConfig, HassEntity } from '../types';
 import { entityStateColor, isEntityActive } from './entity-color';
 import { resolveEntityColors } from './css-utils';
@@ -226,14 +228,20 @@ export function animationTriggerActive(
 
 type Prop = 'rotate' | 'translate' | 'scale' | 'opacity' | 'filter' | 'box-shadow';
 
-const PROP_LABEL: Record<Prop, string> = {
-  rotate: 'rotation',
-  translate: 'position',
-  scale: 'scale',
-  opacity: 'opacity',
-  filter: 'filter',
-  'box-shadow': 'glow',
+const PROP_LABEL: Record<Prop, MessageId> = {
+  rotate: lm('rotation'),
+  translate: lm('position'),
+  scale: lm('scale'),
+  opacity: lm('opacity'),
+  filter: lm('filter'),
+  'box-shadow': lm('glow'),
 };
+
+/** Which earlier animation an entry overrides, and which property both animate; the editor words it (labels namespace). */
+export interface ConflictNote {
+  name: MessageId;
+  what: MessageId;
+}
 
 /** CSS properties an entry animates on its element: a glow is box-shadow on a wrapper, filter on an icon. */
 function props(channels: AnimationChannel[], onIcon: boolean): Prop[] {
@@ -244,9 +252,9 @@ const onIcon = (e: AnimationConfig, allowIcon: boolean) => allowIcon && e.target
 
 /**
  * Per entry, a note when it overrides an earlier entry on the same element and property (the
- * later animation in a CSS animation list wins), e.g. "Overrides Spin: both animate the rotation".
+ * later animation in a CSS animation list wins), e.g. { name: Spin, what: rotation }.
  */
-export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: boolean } = {}): Array<string | undefined> {
+export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: boolean } = {}): Array<ConflictNote | undefined> {
   const allowIcon = opts.allowIcon !== false;
   return list.map((e, i) => {
     const p = getAnimationPreset(e.preset);
@@ -258,8 +266,8 @@ export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: 
       const shared = props(q.channels, onIcon(list[j], allowIcon)).find((x) => mine.includes(x));
       if (!shared) continue;
       const glow = p.channels.includes('glow') || q.channels.includes('glow');
-      const what = shared === 'filter' && glow ? 'glow' : PROP_LABEL[shared];
-      return `Overrides ${q.name}: both animate the ${what}`;
+      const what = shared === 'filter' && glow ? PROP_LABEL['box-shadow'] : PROP_LABEL[shared];
+      return { name: q.name, what };
     }
     return undefined;
   });

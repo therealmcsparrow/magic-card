@@ -9,6 +9,7 @@ import { selectValue } from '../../utils/select-value';
 import { stopControlEvent } from '../../utils/slider-track';
 import { entityDisplayName } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 /**
  * What a dropdown sets on an entity: the option list it offers (an attribute of the entity), where
@@ -95,8 +96,8 @@ export function normalizeOptions(options: DropdownModuleConfig['options']): Drop
 class DropdownModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'dropdown',
-    name: 'Dropdown',
-    description: 'Select dropdown for choosing from a list of options',
+    name: lm('Dropdown'),
+    description: lm('Select dropdown for choosing from a list of options'),
     category: 'controls',
     icon: 'mdi:form-dropdown',
   };

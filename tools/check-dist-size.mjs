@@ -45,6 +45,9 @@ const CAPS = {
   'magic-card-svg-booleans.js': 9_216, // 9 KiB (7,884)
   // path tools (T37, ADR 0027): 17,784 B measured (production build under a parent that holds lit; webpack stats list only src/path-tools/* and the contract, no lit, core.ts or booleans code) + 5 %, rounded up to 1 KiB; ceiling 20,480 B (PATH_TOOLS_CEILING_BYTES). Only emitted once the SVG editor chunk imports src/path-tools/loader.ts (T38); until then this entry reports "missing from dist".
   'magic-card-path-tools.js': 19_456, // 19 KiB (17,784)
+  // i18n table chunks (contract i18n 1.0.0 r3, Handoff 108): the lazy tables of namespace 'labels' (editor and studio, editor-only labels that magic-card.js carries as numbers) and of 'icon-library' (the icon library and icon animator chunks). Caps are the architect's projection + 5 %, rounded up to 1 KiB; pending the CEO's ruling on the raises. I11 ratchets them to measured + 5 %.
+  'magic-card-i18n-labels.js': 26_624, // 26 KiB (projected 24,400)
+  'magic-card-i18n-icons.js': 23_552, // 23 KiB (projected 21,600; empty until the icon names move in I10)
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));

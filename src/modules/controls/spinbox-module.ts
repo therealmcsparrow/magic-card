@@ -10,6 +10,7 @@ import { stopControlEvent } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 
 /**
@@ -32,8 +33,8 @@ export function climateRange(stateObj: HassEntity | undefined, attribute: string
 class SpinboxModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'spinbox',
-    name: 'Spinbox',
-    description: 'Numeric input with increment and decrement buttons',
+    name: lm('Spinbox'),
+    description: lm('Numeric input with increment and decrement buttons'),
     category: 'controls',
     icon: 'mdi:numeric',
   };

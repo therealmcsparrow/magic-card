@@ -1,5 +1,6 @@
 import { LitElement, html, css, svg, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { t } from '../../i18n/labels';
 import { editorSystem } from '../../css/editor-system';
 import { validEasing } from '../model';
 import { BEZIER_PRESETS, bezierOf, clampBezier, easingFromBezier, easingLabel, type Bezier } from './keyframes-utils';
@@ -359,7 +360,7 @@ export class AnimBezierEditor extends LitElement {
     const curveCss = current ? (bezierOf(current) ? `cubic-bezier(${bezierOf(current)!.join(',')})` : current) : b ? `cubic-bezier(${b.join(',')})` : 'linear';
     return html`
       <div class="presets" role="radiogroup" aria-label=${`${this.label} preset`}>
-        ${[{ id: '', label: 'Default', bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS].map(
+        ${[{ id: '', label: 'Default', bezier: bezierOf(this.inherited) }, ...BEZIER_PRESETS.map((q) => ({ ...q, label: t(q.label) }))].map(
           (p) => html`<button
             type="button"
             class="preset"

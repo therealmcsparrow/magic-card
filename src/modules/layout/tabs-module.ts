@@ -8,12 +8,13 @@ import { renderChildModule, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class TabsModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'tabs',
-    name: 'Tabs',
-    description: 'Tabbed container for groups of modules',
+    name: lm('Tabs'),
+    description: lm('Tabbed container for groups of modules'),
     category: 'layout',
     icon: 'mdi:tab',
   };

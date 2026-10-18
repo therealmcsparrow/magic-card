@@ -22,6 +22,7 @@ import { renderTrack, stopControlEvent } from '../../utils/slider-track';
 import { selectValue } from '../../utils/select-value';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 /** LightEntityFeature.EFFECT */
 const FEATURE_EFFECT = 4;
@@ -51,8 +52,8 @@ export function supportsEffect(stateObj: HassEntity): boolean {
 class LightModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'light',
-    name: 'Light',
-    description: 'Light control with brightness, color temp, and color options',
+    name: lm('Light'),
+    description: lm('Light control with brightness, colour temperature, and colour options'),
     category: 'controls',
     icon: 'mdi:lightbulb-outline',
   };

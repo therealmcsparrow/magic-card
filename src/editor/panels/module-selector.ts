@@ -1,3 +1,4 @@
+import { t } from '../../i18n/labels';
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { ModuleRegistry } from '../../modules/module-registry';
@@ -28,7 +29,7 @@ export class ModuleSelector extends LitElement {
 
   protected render(): TemplateResult {
     const modules = this._searchQuery
-      ? ModuleRegistry.search(this._searchQuery)
+      ? ModuleRegistry.search(this._searchQuery, t)
       : ModuleRegistry.getAll();
 
     const grouped = new Map<ModuleCategory, MagicModuleMetadata[]>();
@@ -79,12 +80,12 @@ export class ModuleSelector extends LitElement {
                       type="button"
                       class="mc-picker-item"
                       @click=${() => this._onSelect(meta)}
-                      aria-label=${`Add ${meta.name} module`}
+                      aria-label=${`Add ${t(meta.name)} module`}
                     >
                       <span class="mc-picker-item-icon"><ha-icon icon=${meta.icon}></ha-icon></span>
                       <span class="mc-picker-item-content">
-                        <span class="mc-picker-item-name">${meta.name}</span>
-                        <span class="mc-picker-item-desc">${meta.description}</span>
+                        <span class="mc-picker-item-name">${t(meta.name)}</span>
+                        <span class="mc-picker-item-desc">${t(meta.description)}</span>
                       </span>
                     </button>
                   `,

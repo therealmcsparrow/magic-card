@@ -2,6 +2,9 @@ import { LitElement, html, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 import { html as staticHtml, unsafeStatic } from 'lit/static-html.js';
+import { setI18nLocale } from '../i18n/runtime';
+import type { LocaleHassLike } from '../contracts/i18n';
+import { ready as labelsReady, t } from '../i18n/labels';
 import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { docFromPreset, presetDocId } from './from-preset';
@@ -246,6 +249,11 @@ function isSelection(v: unknown): v is StudioSelection {
   return !!s && typeof s === 'object' && ['none', 'keys', 'target', 'tool'].includes(s.kind);
 }
 
+/** The labels tables (namespace 'labels', chunk magic-card-i18n-labels.js) load before the studio renders its first screen (contract i18n r3, Rule 3). */
+let labelsState: 'loading' | 'ready' | 'failed' = 'loading';
+const labelsLoad = labelsReady().then((ok) => (labelsState = ok ? 'ready' : 'failed'));
+const LABELS_FAILED = 'The studio texts (magic-card-i18n-labels.js) could not be loaded. Reload the page.';
+
 export class AnimationStudio extends LitElement {
   static styles = [...studioStyles, lockBannerStyles];
 
@@ -277,6 +285,7 @@ export class AnimationStudio extends LitElement {
   /** Catalogue presets once the chunk has loaded (preset-catalogue 1.1.0); undefined until then. */
   @state() private _catalogue?: CataloguePreset[];
   @state() private _catalogueFailed = false;
+  @state() private _labels = labelsState;
   @state() private _customRepeat = false;
   /** What is selected in the editor (keys, a target, a stage tool): drives the inspector. */
   @state() private _selection: StudioSelection = NO_SELECTION;
@@ -319,6 +328,7 @@ export class AnimationStudio extends LitElement {
   // ── host data ──
 
   protected willUpdate(changed: PropertyValues): void {
+    if (changed.has('hass')) setI18nLocale(this.hass as LocaleHassLike | undefined);
     if (changed.has('library')) this._docs = libraryDocs(this.library);
     if (changed.has('library') || changed.has('_docs')) {
       this._lookup = (id: string) => this._docs.get(id);
@@ -388,6 +398,7 @@ export class AnimationStudio extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    void labelsLoad.then(() => (this._labels = labelsState));
     this.addEventListener('keydown', this._onKeydown);
     this.addEventListener('pointerdown', this._onPointer);
     window.addEventListener('beforeunload', this._onBeforeUnload);
@@ -1362,7 +1373,7 @@ export class AnimationStudio extends LitElement {
 
   /** The animation settings (nothing selected): name, timing, what moves, in collapsible sections. */
   private _renderForm(d: AnimationDoc): TemplateResult {
-    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: e.label }));
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: t(e.label) }));
     if (!EASINGS.some((e) => e.id === d.easing)) easingOpts.push({ value: d.easing, label: d.easing });
     const it = String(d.iterations);
     const custom = this._customRepeat || !REPEATS.includes(it);
@@ -2284,6 +2295,7 @@ export class AnimationStudio extends LitElement {
   }
 
   protected render(): TemplateResult {
+    if (this._labels !== 'ready') return html`<div class="shell" role="status">${this._labels === 'failed' ? LABELS_FAILED : nothing}</div>`;
     const d = this._view === 'editor' ? this._doc : undefined;
     return html`
       <div class="shell" data-view=${d ? 'editor' : 'library'}>${d ? this._renderEditor(d) : this._renderLibrary()}</div>

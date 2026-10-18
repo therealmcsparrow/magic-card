@@ -10,14 +10,17 @@ let loaded: IconLibrary | undefined;
 
 /** Load the chunk once; rejects when it cannot load (the next call tries again). */
 export function loadIconLibrary(): Promise<IconLibrary> {
-  pending ??= import(/* webpackChunkName: "icon-library" */ './icon-library-chunk').then(
+  pending ??= import(/* webpackChunkName: "icon-library" */ './icon-library-chunk')
+    // the library renders its names only after their tables (magic-card-i18n-icons.js) are in
+    .then(async (m) => ((await m.iconNamesReady()) ? m : Promise.reject(new Error('the icon names could not be loaded'))))
+    .then(
     (m) => (loaded = m),
     (err: unknown) => {
       pending = undefined;
       console.warn('Magic Card: icon library not loaded', err);
       throw err;
     },
-  );
+    );
   return pending;
 }
 

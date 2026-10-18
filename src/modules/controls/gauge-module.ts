@@ -7,12 +7,13 @@ import { generateId } from '../../utils/id-generator';
 import { entityDisplayName, entityNumber, formatEntityValue } from '../../utils/entity-value';
 import { rangeColor } from '../../utils/color-ranges';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class GaugeModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'gauge',
-    name: 'Gauge',
-    description: 'Arc gauge for displaying numeric sensor values',
+    name: lm('Gauge'),
+    description: lm('Arc gauge for displaying numeric sensor values'),
     category: 'controls',
     icon: 'mdi:speedometer',
   };

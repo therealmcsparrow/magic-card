@@ -7,12 +7,13 @@ import { generateId } from '../../utils/id-generator';
 import { entityNumber, formatEntityValue } from '../../utils/entity-value';
 import { rangeColor } from '../../utils/color-ranges';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class BarModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'bar',
-    name: 'Bar',
-    description: 'Display a progress bar based on entity state',
+    name: lm('Bar'),
+    description: lm('Display a progress bar based on entity state'),
     category: 'content',
     icon: 'mdi:chart-bar',
   };

@@ -11,10 +11,17 @@ import { VERSION } from '../version';
  * again. The retry is not verified against a failed fetch: webpack forgets a failed chunk, but a
  * browser may keep the failed module request for that URL until the page reloads, so the warning
  * tells the user to reload.
+ *
+ * The editor's labels (CSS property names, animation presets, module names, ... : namespace 'labels',
+ * contract i18n 1.0.0 r3) sit in a second lazy chunk, magic-card-i18n-labels.js, that the editor chunk
+ * imports. This file never imports it (magic-card.js carries only the label numbers); it awaits the
+ * chunk's ready() and takes the same failure path when the labels cannot load.
  */
 
 interface EditorChunk {
   EDITOR_VERSION: string;
+  /** Resolves true once the labels tables are loaded, false when magic-card-i18n-labels.js failed (never rejects). */
+  labelsReady(): Promise<boolean>;
 }
 
 const importEditor = (): Promise<EditorChunk> => import(/* webpackChunkName: "editor" */ '../editor/editor-entry');
@@ -32,9 +39,9 @@ const fail = (message: string, err?: unknown): false => {
 export function loadEditor(): Promise<boolean> {
   pending ??= importer().then(
     (m) =>
-      m.EDITOR_VERSION === VERSION
-        ? true
-        : fail(`Magic Card was updated, reload the page (magic-card.js ${VERSION}, magic-card-editor.js ${m.EDITOR_VERSION}).`),
+      m.EDITOR_VERSION !== VERSION
+        ? fail(`Magic Card was updated, reload the page (magic-card.js ${VERSION}, magic-card-editor.js ${m.EDITOR_VERSION}).`)
+        : m.labelsReady().then((ok) => (ok ? true : fail('Magic Card: the editor texts (magic-card-i18n-labels.js) could not be loaded, reload the page.'))),
     (err: unknown) => fail('Magic Card: the editor (magic-card-editor.js) could not be loaded, reload the page.', err),
   );
   return pending;

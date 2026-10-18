@@ -6,6 +6,7 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
 import { lazyChunks } from '../../utils/lazy-chunks';
+import { lm } from '../../i18n/labels/mark';
 
 /** No entity yet, or the forecast has not arrived: the "Day 1..N / --°" skeleton. */
 export function forecastSkeleton(count: number): TemplateResult {
@@ -27,8 +28,8 @@ export function forecastSkeleton(count: number): TemplateResult {
 class ForecastModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'forecast',
-    name: 'Forecast',
-    description: 'Display weather forecast data',
+    name: lm('Forecast'),
+    description: lm('Display weather forecast data'),
     category: 'advanced',
     icon: 'mdi:calendar-week-outline',
   };

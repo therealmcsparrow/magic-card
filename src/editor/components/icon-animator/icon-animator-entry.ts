@@ -9,3 +9,5 @@ export { defineAnimatedIconGrid, ANIMATED_ICON_GRID_TAG } from './animated-icon-
 export { followIcons, iconAnimationFacts } from './follow-icon';
 export { pickAnimatedIcon, currentIconPick, currentIconStyle } from './animated-icon-pick';
 export { pickCatalogue, pruneCatalogue } from './catalogue-pick';
+// icon and part names (namespace 'icon-library', chunk magic-card-i18n-icons.js): loadIconAnimator awaits them
+export { ready as iconNamesReady } from '../../../icon-anim/library/i18n';

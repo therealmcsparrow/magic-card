@@ -15,6 +15,8 @@ import {
   displayProperties,
   propertyKeys,
 } from '../../utils/css-properties';
+import { t } from '../../i18n/labels';
+import type { MessageId } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-system';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
@@ -52,6 +54,9 @@ function unitPlaceholder(key: string, design: Record<string, unknown>): string {
 export const TEXT_GRADIENT_MODULES = ['text', 'info', 'markdown'];
 
 const HOVER_VIEW = '__hover__';
+
+/** Label text of an optional message (labels namespace). */
+const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : t(id));
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
 const NO_HOVER_TYPES = new Set(['animations', 'ring', 'shape', 'value_bg']);
@@ -474,9 +479,10 @@ export class DesignPanel extends LitElement {
     const q = this._searchQuery.toLowerCase();
     return properties.filter(
       (p) =>
-        p.label.toLowerCase().includes(q) ||
+        t(p.label).toLowerCase().includes(q) ||
         p.cssProperty.toLowerCase().includes(q) ||
         p.key.toLowerCase().includes(q) ||
+        p.key.replace(/_/g, ' ').includes(q) ||
         (BOX_LONGHANDS[p.key] || []).some(
           (l) => l.cssProperty.includes(q) || l.key.includes(q),
         ),
@@ -660,9 +666,9 @@ export class DesignPanel extends LitElement {
         `
       : nothing;
     // the animation list has its own per-entry "Reset to preset", the ring editor per-field resets and Off
-    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(p.label, this._isSet(p), () => this._reset([p]));
+    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(t(p.label), this._isSet(p), () => this._reset([p]));
     const field = (control: TemplateResult, sync: TemplateResult | typeof nothing = nothing, forId?: string, help?: string) =>
-      this._renderField(p.label, control, sync, forId, help, reset);
+      this._renderField(t(p.label), control, sync, forId, help, reset);
 
     switch (p.type) {
       case 'animations': {
@@ -770,7 +776,7 @@ export class DesignPanel extends LitElement {
           html`
             <mc-unit-field
               .value=${value}
-              .label=${p.label}
+              .label=${t(p.label)}
               .units=${p.units}
               .placeholder=${unitPlaceholder(p.key, { ...(this.design as Record<string, unknown>), ...this._getActiveDesign() })}
               @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
@@ -778,7 +784,7 @@ export class DesignPanel extends LitElement {
           `,
           syncIndicator,
           undefined,
-          p.help,
+          lbl(p.help),
         );
 
       case 'color': {
@@ -787,7 +793,7 @@ export class DesignPanel extends LitElement {
           html`
             <mc-color-picker
               .value=${value}
-              .label=${p.label}
+              .label=${t(p.label)}
               .allowEntity=${this._allowEntityColor}
               .entityColor=${this._entityColor}
               .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
@@ -836,7 +842,7 @@ export class DesignPanel extends LitElement {
                 id=${id}
                 @change=${(e: Event) => this._handlePropertyChange(p.key, (e.target as HTMLSelectElement).value)}
               >
-                <option value="" ?selected=${!value}>${p.emptyLabel ?? 'Not set'}</option>
+                <option value="" ?selected=${!value}>${p.emptyLabel === undefined ? 'Not set' : t(p.emptyLabel)}</option>
                 ${this._renderOptions(p.options || [], value)}
               </select>
               <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -861,7 +867,7 @@ export class DesignPanel extends LitElement {
         };
         return field(
           html`
-            <div class="seg full" role="radiogroup" aria-label=${p.label} @keydown=${onKey}>
+            <div class="seg full" role="radiogroup" aria-label=${t(p.label)} @keydown=${onKey}>
               ${opts.map((o) => {
                 const on = o.value === current;
                 return html`<button
@@ -871,7 +877,7 @@ export class DesignPanel extends LitElement {
                   aria-checked=${on ? 'true' : 'false'}
                   tabindex=${on ? '0' : '-1'}
                   @click=${() => this._handlePropertyChange(p.key, o.value)}
-                >${o.label}</button>`;
+                >${t(o.label)}</button>`;
               })}
             </div>
           `,
@@ -916,7 +922,7 @@ export class DesignPanel extends LitElement {
 
   /** Options, inside <optgroup>s when they carry a group (animation presets). */
   private _renderOptions(options: CssPropertyOption[], value: string): TemplateResult[] {
-    const opt = (o: CssPropertyOption) => html`<option value=${o.value} ?selected=${value === o.value}>${o.label}</option>`;
+    const opt = (o: CssPropertyOption) => html`<option value=${o.value} ?selected=${value === o.value}>${t(o.label)}</option>`;
     const groups = [...new Set(options.map((o) => o.group))];
     if (groups.length === 1 && groups[0] === undefined) return options.map(opt);
     return groups.map(
@@ -943,7 +949,7 @@ export class DesignPanel extends LitElement {
           @click=${() => this._toggleSector(sector.id)}
         >
           <ha-icon icon=${sector.icon}></ha-icon>
-          <span class="nm">${sector.name}</span>
+          <span class="nm">${t(sector.name)}</span>
           ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         </button>
@@ -954,7 +960,7 @@ export class DesignPanel extends LitElement {
                     <button
                       type="button"
                       class="btn btn-text btn-sm sector-reset"
-                      aria-label="Reset section ${sector.name}"
+                      aria-label="Reset section ${t(sector.name)}"
                       title="Clear every value in this section"
                       @click=${() => this._reset(sector.properties.filter((p) => this._isSet(p)))}
                     >
@@ -1145,7 +1151,7 @@ export class DesignPanel extends LitElement {
           @click=${() => this._toggleGroup(group, this._isGroupOpen(group, count))}
         >
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
-          <span class="nm">${group.name}</span>
+          <span class="nm">${t(group.name)}</span>
           ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
         </button>
         <div class="dgroup-body" id=${bodyId} ?hidden=${!open}>

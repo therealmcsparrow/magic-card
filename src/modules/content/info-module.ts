@@ -10,6 +10,7 @@ import { entityStateColor } from '../../utils/entity-color';
 import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 /**
  * Name and state toggles: both on when neither key is set (new YAML, like the default). Once one is
@@ -23,8 +24,8 @@ export function infoToggles(c: InfoModuleConfig): { name: boolean; state: boolea
 class InfoModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'info',
-    name: 'Info',
-    description: 'Display entity name, state, and attributes',
+    name: lm('Info'),
+    description: lm('Display entity name, state, and attributes'),
     category: 'content',
     icon: 'mdi:information-outline',
   };

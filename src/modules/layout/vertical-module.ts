@@ -6,12 +6,13 @@ import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot } from '../render-module';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class VerticalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'vertical',
-    name: 'Vertical',
-    description: 'Arrange child modules in a column',
+    name: lm('Vertical'),
+    description: lm('Arrange child modules in a column'),
     category: 'layout',
     icon: 'mdi:arrow-split-horizontal',
   };

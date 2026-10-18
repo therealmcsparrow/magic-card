@@ -1,8 +1,11 @@
-// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0 r2). Run as `npm run i18n -- --check` or
-// `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline]`.
+// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0 r3). Run as `npm run i18n -- --check` or
+// `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline] [--placement]`.
 //   D1 every id is a string literal      D2 every id has en-US and nl entries with the same arguments
 //   D3 en-GB spelling                    D4 en-US.json equals the generator output
-//   D5 no hard-coded user text (ratchet) D6 every message parses     D7 runtime size and import scan
+//   D5 no hard-coded user text (ratchet) D6 every message parses     D7 runtime size, import scan and
+//   placement (which bundle holds the runtime, the tables and each namespace's call sites; reads the
+//   production build's module list, node_modules/.cache/magic-card/i18n-stats.json, written by webpack.config.js;
+//   --placement requires it and runs after `npm run build`, without it the placement part is skipped)
 // Namespaces whose status in I18N_MODULES is 'pending' report D2 as warnings. --strict (or
 // I18N_RELEASE_STRICT in the contract, on from slice I11) makes them errors, requires every namespace to be
 // 'complete' and every D5 baseline to be 0. --ci adds GitHub annotations. Exit 1 on any error.
@@ -10,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { run as checkUS } from './i18n-us.mjs';
+import { placement, STATS_FILE } from './i18n/placement.mjs';
 const require = createRequire(import.meta.url);
 const lib = require('./i18n/lib.cjs');
 const ts = require('typescript');
@@ -28,6 +32,7 @@ const OK = new Set([...(ALLOW.britishWords ?? []), ...COMMON_ISE, ...COMMON_OUR]
 
 export async function main(argv = process.argv.slice(2)) {
   const flags = new Set(argv);
+  const placementOnly = flags.has('--placement');
   const contract = lib.loadContract();
   const strict = flags.has('--strict') || contract.I18N_RELEASE_STRICT === true || process.env.I18N_RELEASE_STRICT === '1';
   const ci = flags.has('--ci') || process.env.CI === 'true';
@@ -39,6 +44,13 @@ export async function main(argv = process.argv.slice(2)) {
 
   const { ids, ctxIds, violations, nsList } = lib.extractAll();
   const modules = contract.I18N_MODULES;
+  if (placementOnly) {
+    const out = placement(contract, nsList, { required: true });
+    for (const e of out.errors) console.error(`${ci ? '::error::' : 'FAIL '}${e}`);
+    for (const n of out.notes) console.log(n);
+    console.log(`i18n placement: ${out.errors.length} errors`);
+    return out.errors.length ? 1 : 0;
+  }
 
   // D1
   for (const v of violations) err('D1', `${v.file}:${v.line} ${v.fn}(): ${v.reason}`);
@@ -133,6 +145,11 @@ export async function main(argv = process.argv.slice(2)) {
       if (/\.gen$/.test(spec) && !/\/i18n\/index\.ts$/.test(r)) err('D7', `${r}: imports a messages.gen table (only src/<folder>/i18n/index.ts may)`);
     }
   }
+
+  // D7 placement from the production build's module list (skipped when no build has run)
+  const pl = placement(contract, nsList, { required: false });
+  for (const e of pl.errors) err('D7', e.replace(/^D7 /, ''));
+  for (const n of pl.notes) console.log(n);
 
   for (const w of warnings) console.warn(`${ci ? '::warning::' : 'warn '}${w}`);
   for (const e of errors) console.error(`${ci ? '::error::' : 'FAIL '}${e}`);

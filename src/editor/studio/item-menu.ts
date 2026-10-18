@@ -20,6 +20,7 @@ import {
   itemAt,
   layoutModuleAt,
   moduleAt,
+  moduleDisplayName,
   moduleLabel,
   parentSelection,
   selectionKey,
@@ -86,7 +87,7 @@ export function moduleTitle(mod: CardModule): string {
   const own = typeof mod.editor_name === 'string' && mod.editor_name.trim();
   if (own) return own;
   const label = moduleLabel(mod);
-  const name = ModuleRegistry.get(mod.type)?.metadata.name || mod.type;
+  const name = moduleDisplayName(mod);
   return label ? `${name} · ${label}` : name;
 }
 
@@ -526,7 +527,7 @@ export class ItemMenu implements ReactiveController {
         label: `${name} actions`,
         groups: [[back], WRAP_TYPES.map((type) => {
           const meta = ModuleRegistry.get(type)?.metadata;
-          return { icon: meta?.icon || 'mdi:view-grid-outline', label: meta?.name || type, run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
+          return { icon: meta?.icon || 'mdi:view-grid-outline', label: moduleDisplayName({ type } as CardModule), run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
         })],
       };
     }

@@ -9,6 +9,7 @@ import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 /** HA's formatters when present (localised, with units); raw values otherwise. */
 function entityState(hass: HomeAssistant, stateObj: HassEntity, attribute?: string): string {
@@ -31,8 +32,8 @@ function entityName(hass: HomeAssistant, stateObj: HassEntity): string {
 class TextModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'text',
-    name: 'Text',
-    description: 'Display static or template text',
+    name: lm('Text'),
+    description: lm('Display static or template text'),
     category: 'content',
     icon: 'mdi:format-text',
   };

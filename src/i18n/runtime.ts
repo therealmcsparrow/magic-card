@@ -1,11 +1,12 @@
 /*
- * Module i18n (contract src/contracts/i18n.ts 1.0.0 r2, ADR 0032 r2): locale pick, compact tables and the
- * ICU-subset formatter. Lives in magic-card.js (<= I18N_RUNTIME_MAX_BYTES minified); every lazy chunk below
- * it reuses this module. Messages come from per-namespace tables: three newline-joined strings (en-GB,
- * en-US, nl), entry i of each is message i. Ids are numbers after tools/i18n-loader.cjs; without the loader
- * (vitest, plain JS) the British text is looked up in the en-GB table.
+ * Module i18n (contract src/contracts/i18n.ts 1.0.0 r3, ADR 0032 r2): locale pick, compact tables and the
+ * ICU-subset formatter. One copy per entry (magic-card.js, the studio entry, the theme-editor entry; each
+ * <= I18N_RUNTIME_MAX_BYTES minified); every lazy chunk below an entry reuses its copy. Messages come from
+ * per-namespace tables: three '|'-joined strings (en-GB, en-US, nl), entry i of each is message i. Ids are
+ * numbers after tools/i18n-loader.cjs; without the loader (vitest, plain JS) the British text is looked up
+ * in the en-GB table. A tc() id is stored in the en-GB table as context + U+0001 + text.
  */
-import type { I18nFor, Locale, LocaleHassLike, ResolveLocale, RichArgs } from '../contracts/i18n';
+import type { I18nFor, I18nForLazy, Locale, LocaleHassLike, ResolveLocale, RichArgs } from '../contracts/i18n';
 import { formatNumber } from '../utils/locale-format';
 
 const NAMES: readonly Locale[] = ['en-GB', 'en-US', 'nl'];
@@ -51,13 +52,16 @@ const fmt = (s: string, a: RichArgs, h?: number): unknown[] =>
     })
     .filter(String);
 
-export const i18nFor: I18nFor = (ns, tb) => {
+type Tables = Parameters<I18nFor>[1];
+
+const core = (ns: Parameters<I18nFor>[0], tb: () => Tables | undefined) => {
   const rows: string[][] = [];
-  const row = (l: number) => (rows[l] ||= tb[l].split('\n'));
+  const row = (l: number) => (rows[l] ||= (tb() as Tables)[l].split('|'));
   let ix: Map<string, number> | undefined;
   /** Message text for id in locale l: that locale, else en-GB (context prefix stripped there). */
   const look = (id: string | number, c = '', l = loc) => {
-    const i = typeof id == 'number' ? id : ((ix ||= new Map(row(0).map((s, k) => [s, k]))).get(c ? c + '|' + id : id) ?? -1);
+    if (!tb()) return dbg('not ready ' + ns), '';
+    const i = typeof id == 'number' ? id : ((ix ||= new Map(row(0).map((s, k) => [s, k]))).get(c ? c + '\u0001' + id : id) ?? -1);
     if (i < 0) return dbg('unknown ' + id), String(id);
     return (l && row(l)[i]) || (row(0)[i] ?? '').slice(c ? c.length + 1 : 0);
   };
@@ -72,9 +76,21 @@ export const i18nFor: I18nFor = (ns, tb) => {
   return {
     ns,
     locale: () => NAMES[loc],
-    t: (id, a) => make(id, a).join(''),
-    tc: (c, id, a) => make(id, a, c).join(''),
-    tx: (id, a) => make(id, a),
-    m: (id) => id,
+    t: (id: string | number, a?: RichArgs) => make(id, a).join(''),
+    tc: (c: string, id: string, a?: RichArgs) => make(id, a, c).join(''),
+    tx: (id: string | number, a: RichArgs) => make(id, a),
+    m: (id: string) => id,
+  };
+};
+
+export const i18nFor: I18nFor = (ns, tb) => core(ns, () => tb);
+
+/** A namespace whose tables sit in a lazy chunk: nothing renders before ready() resolves (Rule 3). */
+export const i18nForLazy: I18nForLazy = (ns, load) => {
+  let tb: Tables | undefined;
+  let p: Promise<boolean> | undefined;
+  return {
+    ...core(ns, () => tb),
+    ready: () => (p ||= load().then((x) => ((tb = x.default), true), () => ((p = undefined), false))),
   };
 };

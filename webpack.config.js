@@ -11,6 +11,16 @@ const buildVersion = () => {
   return v;
 };
 
+// { chunks: [{ id, parents, files, modules }] } with every module name (concatenated ones flattened)
+const writeI18nStats = (stats) => {
+  const flat = (m) => (m.modules?.length ? m.modules.flatMap(flat) : [m.name]);
+  const j = stats.toJson({ all: false, ids: true, chunks: true, chunkRelations: true, modules: true, chunkModules: true, nestedModules: true, dependentModules: true, orphanModules: true, modulesSpace: Infinity, chunkModulesSpace: Infinity, nestedModulesSpace: Infinity });
+  const out = { chunks: j.chunks.map((c) => ({ id: c.id, parents: c.parents, files: c.files, modules: [...new Set((c.modules ?? []).flatMap(flat))].filter((n) => n?.startsWith('./src/')) })) };
+  const file = path.resolve(__dirname, 'node_modules/.cache/magic-card/i18n-stats.json');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(out));
+};
+
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
@@ -75,7 +85,11 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) })],
+    plugins: [
+      new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) }),
+      // the module list per built file for the i18n placement check (tools/i18n/placement.mjs, D7); git-ignored cache
+      ...(isProduction ? [{ apply: (compiler) => compiler.hooks.done.tap('mc-i18n-stats', writeI18nStats) }] : []),
+    ],
     devtool: isProduction ? false : 'source-map',
     optimization: {
       minimize: isProduction,

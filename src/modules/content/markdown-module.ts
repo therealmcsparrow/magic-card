@@ -6,12 +6,13 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class MarkdownModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'markdown',
-    name: 'Markdown',
-    description: 'Render markdown-formatted content',
+    name: lm('Markdown'),
+    description: lm('Render markdown-formatted content'),
     category: 'content',
     icon: 'mdi:language-markdown',
   };

@@ -1,4 +1,5 @@
-import { ANIMATION_GROUPS, ANIMATION_PRESETS, getAnimationPreset } from '../../utils/animation-presets';
+import { t } from '../../i18n/labels';
+import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, getAnimationPreset } from '../../utils/animation-presets';
 import { CUSTOM_PREFIX, SEQUENCEABLE_PRESETS, customRefId, isCustomRef, type AnimationDoc } from '../model';
 import type { Clip, ClipWhen } from '../model-v2-core';
 import { sequenceableDoc } from './sequence-utils';
@@ -103,8 +104,8 @@ export function clipOptions(library: unknown, selfId?: string): ClipOptionGroup[
     .map((d) => ({ value: CUSTOM_PREFIX + d.id, label: d.name || d.id }));
   if (mine.length) groups.push({ label: 'My animations', items: mine });
   for (const g of ANIMATION_GROUPS) {
-    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id)).map((p) => ({ value: p.id, label: p.name }));
-    if (items.length) groups.push({ label: g, items });
+    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id)).map((p) => ({ value: p.id, label: t(p.name) }));
+    if (items.length) groups.push({ label: t(GROUP_LABELS[g]), items });
   }
   return groups;
 }
@@ -118,7 +119,8 @@ export function clipAnimationLabel(animation: string, library: unknown, selfId?:
     const doc = libraryList(library).find((d) => d.id === id);
     return doc ? doc.name || doc.id : id === selfId ? 'Own timeline' : `${id} (not found)`;
   }
-  return getAnimationPreset(animation)?.name ?? `${animation} (unknown)`;
+  const known = getAnimationPreset(animation)?.name;
+  return known !== undefined ? t(known) : `${animation} (unknown)`;
 }
 
 /** Why a clip plays nothing in the card, if it does not. */

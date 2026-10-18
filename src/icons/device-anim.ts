@@ -1,3 +1,5 @@
+import type { MessageId } from '../contracts/i18n';
+import { lm } from '../i18n/labels/mark';
 import type { DeviceAnim, HassEntity } from '../types';
 import { isEntityActive } from '../utils/entity-color';
 import { isUnavailable } from '../utils/entity-value';
@@ -94,35 +96,35 @@ export function autoDeviceAnim(stateObj: HassEntity | undefined): DeviceAnimSpec
  * What Auto does for an entity's domain / device class, whatever its state is right now (the editor's
  * help). Kept next to autoDeviceAnim so both cover the same entities; undefined where Auto has nothing.
  */
-export function autoDeviceRule(stateObj: HassEntity | undefined, entityId = stateObj?.entity_id ?? ''): string | undefined {
+export function autoDeviceRule(stateObj: HassEntity | undefined, entityId = stateObj?.entity_id ?? ''): MessageId | undefined {
   const domain = entityId.split('.')[0];
   const dc = String(stateObj?.attributes?.device_class ?? '');
   switch (domain) {
     case 'fan':
-      return 'Spin while on, faster at a higher speed';
+      return lm('Spin while on, faster at a higher speed');
     case 'light':
-      return "Glow while on, in the light's color and brightness";
+      return lm("Glow while on, in the light's colour and brightness");
     case 'climate':
-      return 'Flame while heating, Snow while cooling, Spin while only the fan runs';
+      return lm('Flame while heating, Snow while cooling, Spin while only the fan runs');
     case 'vacuum':
-      return 'Drum while cleaning';
+      return lm('Drum while cleaning');
     case 'sensor':
-      return 'Drum while the state is running, washing or drying';
+      return lm('Drum while the state is running, washing or drying');
     case 'binary_sensor':
-      if (dc === 'running') return 'Drum while running';
-      if (OPENING_CLASSES.has(dc)) return 'Swing: a slightly opened pose while open';
-      if (ALERT_CLASSES.has(dc)) return 'Pulse in the alert color while on';
+      if (dc === 'running') return lm('Drum while running');
+      if (OPENING_CLASSES.has(dc)) return lm('Swing: a slightly opened pose while open');
+      if (ALERT_CLASSES.has(dc)) return lm('Pulse in the alert colour while on');
       return undefined;
     case 'cover':
-      return 'Swing while opening or closing, a slightly opened pose while open';
+      return lm('Swing while opening or closing, a slightly opened pose while open');
     case 'lock':
-      return 'Shake while jammed, Pulse while locking or unlocking';
+      return lm('Shake while jammed, Pulse while locking or unlocking');
     case 'media_player':
-      return 'Equalizer while playing';
+      return lm('Equalizer while playing');
     case 'alarm_control_panel':
-      return 'Pulse in the alert color while triggered';
+      return lm('Pulse in the alert colour while triggered');
     case 'siren':
-      return 'Pulse in the alert color while on';
+      return lm('Pulse in the alert colour while on');
     default:
       return undefined;
   }

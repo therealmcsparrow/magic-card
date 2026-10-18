@@ -55,7 +55,8 @@ export function loadIconAnimator(): Promise<boolean> {
   // a chunk that loads but cannot define the element (an older card with a newer cached chunk)
   // counts as a failure too
   pending ??= import(/* webpackChunkName: "icon-animator" */ './icon-animator-entry')
-    .then((m) => {
+    .then(async (m) => {
+      if (!(await m.iconNamesReady())) throw new Error('icon names');
       chunk = m;
       m.defineAnimatedIconGrid(host);
       return true;

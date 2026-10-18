@@ -1,6 +1,7 @@
 import { MagicModule, MagicModuleMetadata } from './module-types';
 import { CardModule, HomeAssistant, ModuleCategory, ModuleType } from '../types';
 import type { LazyChunk, LazyModuleStub, ModuleView } from '../contracts/lazy-module';
+import type { MessageId } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
 
 class ModuleRegistryImpl {
@@ -100,12 +101,13 @@ class ModuleRegistryImpl {
     return this.getAll().map((m) => m.metadata);
   }
 
-  search(query: string): MagicModule[] {
+  /** `text` turns a name or description into the words the user sees (the labels namespace, which magic-card.js does not carry). */
+  search(query: string, text: (id: MessageId) => string = String): MagicModule[] {
     const lower = query.toLowerCase();
     return this.getAll().filter(
       (m) =>
-        m.metadata.name.toLowerCase().includes(lower) ||
-        m.metadata.description.toLowerCase().includes(lower) ||
+        text(m.metadata.name).toLowerCase().includes(lower) ||
+        text(m.metadata.description).toLowerCase().includes(lower) ||
         m.metadata.type.toLowerCase().includes(lower),
     );
   }

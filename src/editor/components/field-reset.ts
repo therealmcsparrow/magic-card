@@ -1,4 +1,5 @@
 import { html, TemplateResult, nothing } from 'lit';
+import { t } from '../../i18n/labels';
 
 /**
  * The reset affordance of a field head (editor system `.field-reset`): a small icon button, shown
@@ -10,8 +11,8 @@ export function fieldReset(label: string, visible: boolean, onReset: () => void)
   return html`<button
     type="button"
     class="icon-btn sm field-reset"
-    aria-label="Reset ${label}"
-    title="Reset to default"
+    aria-label=${t('Reset {label}', { label })}
+    title=${t('Reset to default')}
     @click=${(e: Event) => {
       e.stopPropagation();
       onReset();

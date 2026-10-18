@@ -1,6 +1,7 @@
 import { LitElement, html, css, svg, nothing, type PropertyValues, type TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
+import { t } from '../../i18n/labels';
 import { editorSystem } from '../../css/editor-system';
 import type { LayerView } from '../../contracts/studio-layers';
 import { emitterIds, isLocked } from '../layer-view';
@@ -1146,7 +1147,7 @@ export class AnimParticlesEditor extends LitElement {
     const preset = basePreset(this.doc!);
     const sim = p.preset ? undefined : this._sim;
     const sum = !sim
-      ? `${preset?.name ?? p.preset} · ${this.doc!.duration} s`
+      ? `${preset ? t(preset.name) : p.preset} · ${this.doc!.duration} s`
       : this._baking
         ? 'Baking…'
         : `${this._multi ? `${emitterParents(this.doc!)} particles · ${emitterCount(this.doc!)} emitters` : `${p.count} ${p.count === 1 ? 'particle' : 'particles'} · ${FLOW_LABELS[sim.flow].toLowerCase()}`} · ${sim.mode === 'live' ? 'live' : `${+periodOf(this.doc!).toFixed(2)} s loop`}`;
@@ -2296,7 +2297,7 @@ export class AnimParticlesEditor extends LitElement {
       </div>
       ${preset
         ? html`<div class="field">
-            <div class="field-head"><label for="f-intensity">${intensityLabel(preset)}</label></div>
+            <div class="field-head"><label for="f-intensity">${intensityLabel(preset, t)}</label></div>
             <input
               id="f-intensity"
               class="input"
@@ -2310,7 +2311,7 @@ export class AnimParticlesEditor extends LitElement {
               @change=${(e: Event) => {
                 const raw = (e.target as HTMLInputElement).value;
                 const next = withPresetIntensity(this.doc!, preset, raw === '' ? undefined : Number(raw));
-                if (next.particles!.intensity !== p.intensity) this._emit(next, `Change ${preset.intensity.label.toLowerCase()}`);
+                if (next.particles!.intensity !== p.intensity) this._emit(next, `Change ${t(preset.intensity.label).toLowerCase()}`);
                 else (e.target as HTMLInputElement).value = p.intensity === undefined ? '' : String(p.intensity);
               }}
             />

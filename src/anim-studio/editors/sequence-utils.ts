@@ -1,4 +1,5 @@
-import { ANIMATION_GROUPS, ANIMATION_PRESETS, getAnimationPreset } from '../../utils/animation-presets';
+import { t } from '../../i18n/labels';
+import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, getAnimationPreset } from '../../utils/animation-presets';
 import { ANIMATION_CAPS, CUSTOM_PREFIX, SEQUENCEABLE_PRESETS, customRefId, isCustomRef, type AnimationDoc, type SequenceStep } from '../model';
 
 /*
@@ -79,9 +80,9 @@ export function stepInfo(animation: string, library: AnimationLibraryMap | undef
   const p = getAnimationPreset(ref);
   if (!p) return { status: 'missing', name: ref, kind: 'Preset', problem: 'Unknown preset. This step is skipped.' };
   if (!SEQUENCEABLE_PRESETS.has(p.id)) {
-    return { status: 'invalid', name: p.name, kind: 'Preset', problem: 'Effects with their own layer cannot play in a sequence. This step is skipped.' };
+    return { status: 'invalid', name: t(p.name), kind: 'Preset', problem: 'Effects with their own layer cannot play in a sequence. This step is skipped.' };
   }
-  return { status: 'ok', name: p.name, kind: 'Preset', defaultDuration: cssSeconds(p.defaults.duration) };
+  return { status: 'ok', name: t(p.name), kind: 'Preset', defaultDuration: cssSeconds(p.defaults.duration) };
 }
 
 /** Where each step sits in one cycle (as the player schedules it). */
@@ -169,13 +170,13 @@ export function stepPickerGroups(library: AnimationLibraryMap | undefined, selfI
     .map<PickerItem>((d) => ({ value: CUSTOM_PREFIX + d.id, name: d.name || d.id, kind: d.kind === 'path' ? 'Path' : 'Keyframes', icon: KIND_ICON[d.kind], duration: d.duration }));
   if (mine.length) groups.push({ label: 'My animations', items: mine });
   for (const g of ANIMATION_GROUPS) {
-    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id) && hit(p.name, p.id, g)).map<PickerItem>((p) => ({
+    const items = ANIMATION_PRESETS.filter((p) => p.group === g && SEQUENCEABLE_PRESETS.has(p.id) && hit(t(p.name), p.id, g, t(GROUP_LABELS[g]))).map<PickerItem>((p) => ({
       value: p.id,
-      name: p.name,
+      name: t(p.name),
       icon: 'mdi:motion-play-outline',
       duration: cssSeconds(p.defaults.duration),
     }));
-    if (items.length) groups.push({ label: g, items });
+    if (items.length) groups.push({ label: t(GROUP_LABELS[g]), items });
   }
   return groups;
 }

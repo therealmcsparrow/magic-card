@@ -1,6 +1,8 @@
 import type { AnimationDoc, AnimationKeyframe, KeyframeTransform, TargetRef, Track } from '../model';
 import { safeCssValue } from '../model';
 import { EASINGS } from '../../utils/animation-presets';
+import { t } from '../../i18n/labels';
+import type { MessageId } from '../../contracts/i18n';
 
 /*
  * Pure helpers of the keyframe timeline editor (mc-anim-keyframes-editor) and its key inspector.
@@ -906,7 +908,7 @@ export function bezierOf(easing: string | undefined): Bezier | undefined {
 }
 
 /** Easing presets of the curve editor: the EASINGS ids with their curves. */
-export const BEZIER_PRESETS: Array<{ id: string; label: string; bezier: Bezier }> = EASINGS.map((e) => ({ id: e.id, label: e.label, bezier: bezierOf(e.id)! }));
+export const BEZIER_PRESETS: Array<{ id: string; label: MessageId; bezier: Bezier }> = EASINGS.map((e) => ({ id: e.id, label: e.label, bezier: bezierOf(e.id)! }));
 
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 /** x is kept within 0-1 (CSS requires it), y within -1..2. */
@@ -1076,5 +1078,7 @@ export function fragmentText(lane: LaneId, f: Fragment | undefined): string {
   }
 }
 
-export const easingLabel = (e: string | undefined): string =>
-  e ? (EASINGS.find((x) => x.id === e)?.label ?? (e.startsWith('steps') ? 'Steps' : 'Custom curve')) : 'Default';
+export const easingLabel = (e: string | undefined): string => {
+  const known = e ? EASINGS.find((x) => x.id === e)?.label : undefined;
+  return known !== undefined ? t(known) : e ? (e.startsWith('steps') ? 'Steps' : 'Custom curve') : 'Default';
+};

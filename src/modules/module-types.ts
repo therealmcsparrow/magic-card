@@ -1,3 +1,4 @@
+import type { MessageId } from '../contracts/i18n';
 import { TemplateResult } from 'lit';
 import {
   CardModule,
@@ -9,8 +10,8 @@ import type { DependencyContext, ModuleDependencies } from '../services/card-dep
 
 export interface MagicModuleMetadata {
   type: ModuleType;
-  name: string;
-  description: string;
+  name: MessageId;
+  description: MessageId;
   category: ModuleCategory;
   icon: string;
 }

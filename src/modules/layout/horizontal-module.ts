@@ -6,12 +6,13 @@ import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot } from '../render-module';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class HorizontalModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'horizontal',
-    name: 'Horizontal',
-    description: 'Arrange child modules in a row',
+    name: lm('Horizontal'),
+    description: lm('Arrange child modules in a row'),
     category: 'layout',
     icon: 'mdi:arrow-split-vertical',
   };

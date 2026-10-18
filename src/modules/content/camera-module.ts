@@ -7,6 +7,7 @@ import { generateId } from '../../utils/id-generator';
 import type { DependencyContext, ModuleDependencies } from '../../services/card-dependencies';
 import { cssAspectRatio } from '../../utils/media';
 import { lazyChunks } from '../../utils/lazy-chunks';
+import { lm } from '../../i18n/labels/mark';
 
 export const STREAM_TAG = 'ha-camera-stream';
 export const DEFAULT_REFRESH_S = 10;
@@ -17,8 +18,8 @@ export const refreshMs = (c: CameraModuleConfig) =>
 class CameraModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'camera',
-    name: 'Camera',
-    description: 'Display a camera entity stream',
+    name: lm('Camera'),
+    description: lm('Display a camera entity stream'),
     category: 'content',
     icon: 'mdi:camera-outline',
   };

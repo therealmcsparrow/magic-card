@@ -9,12 +9,13 @@ import { renderIcon } from '../../icons/render-icon';
 import { stateIcon } from '../../utils/entity-icon';
 import { formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 class ButtonModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'button',
-    name: 'Button',
-    description: 'Interactive button with icon, label, and optional state display',
+    name: lm('Button'),
+    description: lm('Interactive button with icon, label, and optional state display'),
     category: 'controls',
     icon: 'mdi:gesture-tap',
   };

@@ -1,3 +1,4 @@
+import { t } from '../../i18n/labels';
 import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
@@ -5,6 +6,7 @@ import { editorSystem } from '../../css/editor-system';
 import { animationConflicts, applyPreset, newAnimation, resetToPreset } from '../../utils/animation';
 import {
   ANIMATION_GROUPS,
+  GROUP_LABELS,
   ANIMATION_PRESETS,
   DEFAULT_STRENGTH,
   EASINGS,
@@ -282,9 +284,9 @@ export class AnimationList extends LitElement {
               </optgroup>`
             : nothing}
           ${ANIMATION_GROUPS.map(
-            (g) => html`<optgroup label=${g}>
+            (g) => html`<optgroup label=${t(GROUP_LABELS[g])}>
               ${ANIMATION_PRESETS.filter((p) => p.group === g).map(
-                (p) => html`<option value=${p.id} ?selected=${p.id === value}>${p.name}</option>`,
+                (p) => html`<option value=${p.id} ?selected=${p.id === value}>${t(p.name)}</option>`,
               )}
               ${g === LIGHT_GROUP ? this._catOptions(g, value) : nothing}
             </optgroup>`,
@@ -371,7 +373,7 @@ export class AnimationList extends LitElement {
     return html`
       <div class="cond">
         <div class="cond-head">
-          <span class="n">Animation ${index + 1} <span class="sub">· ${p.name}</span></span>
+          <span class="n">Animation ${index + 1} <span class="sub">· ${t(p.name)}</span></span>
           <button type="button" class="icon-btn sm danger" aria-label="Delete animation ${index + 1}" title="Delete animation" @click=${() => this._remove(index)}>
             <ha-icon icon="mdi:delete-outline"></ha-icon>
           </button>
@@ -451,7 +453,7 @@ export class AnimationList extends LitElement {
     const it = a.iterations ?? d?.iterations ?? 'infinite';
     const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
     const easing = a.easing ?? d?.easing ?? 'ease';
-    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: e.label }));
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: t(e.label) }));
     if (!EASINGS.some((e) => e.id === easing)) easingOpts.push({ value: easing, label: easing });
 
     return html`
@@ -548,7 +550,7 @@ export class AnimationList extends LitElement {
           )}
           ${p
             ? this._field(
-                intensityLabel(p),
+                intensityLabel(p, t),
                 html`<input
                   class="input"
                   id=${id('int')}
@@ -662,7 +664,7 @@ export class AnimationList extends LitElement {
     const layer = doc.kind === 'particles' || (doc.kind === 'path' && doc.path?.subject === 'particles');
     const base = doc.particles?.preset ? getAnimationPreset(doc.particles.preset) : undefined;
     const easing = a.easing ?? doc.easing;
-    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: e.label }));
+    const easingOpts = EASINGS.map((e) => ({ value: e.id, label: t(e.label) }));
     if (!EASINGS.some((e) => e.id === easing)) easingOpts.push({ value: easing, label: easing });
     const it = a.iterations ?? doc.iterations;
     const custom = this._custom.has(a.id) || !REPEATS.includes(String(it));
@@ -750,7 +752,7 @@ export class AnimationList extends LitElement {
             ? this._field('Amplitude (%)', this._number(index, 'intensity', id('int'), a.intensity, '100', 0, 400, 5), id('int'))
             : base
               ? this._field(
-                  intensityLabel(base),
+                  intensityLabel(base, t),
                   this._number(index, 'intensity', id('int'), a.intensity, String(doc.particles?.intensity ?? base.defaults.intensity), base.intensity.min, base.intensity.max, base.intensity.step ?? 1),
                   id('int'),
                 )
@@ -804,7 +806,9 @@ export class AnimationList extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon });
+    const notes = animationConflicts(this.animations, { allowIcon: this.allowIcon }).map((n) =>
+      n ? t('Overrides {name}: both animate the {what}', { name: t(n.name), what: t(n.what) }) : undefined,
+    );
     return html`
       <div class="list">
         ${this.animations.map((a, i) => this._block(a, i, notes[i]))}

@@ -232,7 +232,7 @@ export const I18N_MODULES = {
       'src/modules (module descriptions)',
       'files compiled into both magic-card-editor.js and the studio entry (I0b lists them from stats.json)',
     ],
-    tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'pending', slice: 'I0b, I2c, I10', dashboard: false,
+    tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'complete', slice: 'I0b, I2c, I10', dashboard: false,
   },
   'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator and files the studio also compiles)'], tables: 'inline', status: 'pending', slice: 'I2', dashboard: false },
   'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'pending', slice: 'I3', dashboard: false },

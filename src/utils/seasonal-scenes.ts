@@ -1,4 +1,6 @@
 import type { SceneId } from './seasonal';
+import { lm } from '../i18n/labels/mark';
+import type { MessageId } from '../contracts/i18n';
 
 /*
  * Seasonal scenes as data: per scene the particle kinds (drawn by src/card/seasonal-symbols.ts),
@@ -92,7 +94,7 @@ export interface ParticleSpec {
 
 export interface SceneDef {
   id: SceneId;
-  label: string;
+  label: MessageId;
   particles: readonly ParticleSpec[];
   ambient?: readonly AmbientKind[];
   decorations?: readonly DecoMotif[];
@@ -180,19 +182,19 @@ const rain = (weight: number, motion: Motion = 'rain'): ParticleSpec => ({
 export const SCENES: Record<SceneId, SceneDef> = {
   winter: {
     id: 'winter',
-    label: 'Winter',
+    label: lm('Winter'),
     particles: [snowDots(6), flakes(3, 8)],
     decorations: ['frost', 'icicles'],
   },
   spring: {
     id: 'spring',
-    label: 'Spring',
+    label: lm('Spring'),
     particles: [petals(5), { kind: 'blossom', motion: 'tumble', weight: 1.6, max: 4, dur: [11, 16], size: [17, 24], opacity: [0.85, 1], palette: PETALS, drift: 50 }],
     decorations: ['vine'],
   },
   summer: {
     id: 'summer',
-    label: 'Summer',
+    label: lm('Summer'),
     ambient: ['sun'],
     particles: [
       { kind: 'butterfly', motion: 'flutter', weight: 1, max: 4, dur: [9, 15], size: [28, 38], palette: BUTTERFLIES, band: [18, 78] },
@@ -201,7 +203,7 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   autumn: {
     id: 'autumn',
-    label: 'Autumn',
+    label: lm('Autumn'),
     particles: [
       { kind: 'leaf', motion: 'tumble', weight: 6, dur: [8, 14], size: [20, 32], opacity: [0.85, 1], palette: LEAVES, variants: 3, drift: 70 },
       rain(1.4, 'drizzle'),
@@ -209,7 +211,7 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   christmas: {
     id: 'christmas',
-    label: 'Christmas',
+    label: lm('Christmas'),
     particles: [
       snowDots(4),
       flakes(1.4, 4),
@@ -219,7 +221,7 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   new_year: {
     id: 'new_year',
-    label: 'New Year',
+    label: lm('New Year'),
     particles: [
       { kind: 'firework', motion: 'burst', weight: 2.4, max: 5, dur: [2.6, 4], size: [64, 100], opacity: [0.8, 0.95], palette: FIREWORKS, band: [14, 52] },
       { kind: 'confetti', motion: 'tumble', weight: 5, dur: [5, 8], size: [8, 13], palette: CONFETTI, variants: 3, drift: 40 },
@@ -227,12 +229,12 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   valentine: {
     id: 'valentine',
-    label: 'Valentine',
+    label: lm('Valentine'),
     particles: [{ kind: 'heart', motion: 'rise', weight: 1, dur: [8, 13], size: [12, 24], opacity: [0.6, 0.95], palette: HEARTS, variants: 2, drift: 30 }],
   },
   easter: {
     id: 'easter',
-    label: 'Easter',
+    label: lm('Easter'),
     particles: [
       petals(3),
       { kind: 'egg', motion: 'bob', weight: 1.6, max: 6, dur: [2.4, 3.6], size: [22, 30], palette: EGGS, band: [80, 92], variants: 3 },
@@ -240,35 +242,35 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   halloween: {
     id: 'halloween',
-    label: 'Halloween',
+    label: lm('Halloween'),
     particles: [
       { kind: 'bat', motion: 'fly', weight: 1, max: 7, dur: [7, 12], size: [24, 36], opacity: [0.8, 1], palette: ['bat'], band: [8, 55] },
       { kind: 'fogband', motion: 'drift', weight: 0.5, max: 3, dur: [16, 26], size: [260, 380], opacity: [0.55, 0.85], palette: ['ghost-violet', 'mist', 'ghost-green'], band: [70, 100] },
     ],
     decorations: ['cobweb', 'pumpkin'],
   },
-  snow: { id: 'snow', label: 'Snow', particles: [snowDots(7), flakes(3, 8)] },
-  rain: { id: 'rain', label: 'Rain', particles: [rain(1)] },
-  storm: { id: 'storm', label: 'Thunderstorm', ambient: ['flash'], particles: [rain(1)] },
+  snow: { id: 'snow', label: lm('Snow'), particles: [snowDots(7), flakes(3, 8)] },
+  rain: { id: 'rain', label: lm('Rain'), particles: [rain(1)] },
+  storm: { id: 'storm', label: lm('Thunderstorm'), ambient: ['flash'], particles: [rain(1)] },
   sun: {
     id: 'sun',
-    label: 'Sunny',
+    label: lm('Sunny'),
     ambient: ['sun'],
     particles: [{ kind: 'mote', motion: 'flutter', weight: 1, max: 8, dur: [7, 12], size: [3, 6], opacity: [0.5, 0.9], palette: GOLD, band: [10, 90] }],
   },
   clouds: {
     id: 'clouds',
-    label: 'Cloudy',
+    label: lm('Cloudy'),
     particles: [{ kind: 'cloud', motion: 'across', weight: 1, max: 5, dur: [50, 90], size: [64, 120], opacity: [0.55, 0.95], palette: ['cloud'], band: [6, 46] }],
   },
   fog: {
     id: 'fog',
-    label: 'Fog',
+    label: lm('Fog'),
     particles: [{ kind: 'fogband', motion: 'drift', weight: 1, max: 4, dur: [16, 28], size: [280, 420], opacity: [0.4, 0.75], palette: MIST, band: [25, 100] }],
   },
   wind: {
     id: 'wind',
-    label: 'Windy',
+    label: lm('Windy'),
     particles: [
       { kind: 'windline', motion: 'gust', weight: 2, max: 6, dur: [2.4, 5], size: [90, 160], opacity: [0.55, 0.95], palette: ['wind'], band: [12, 88], variants: 2 },
       { kind: 'leaf', motion: 'blow', weight: 1, max: 4, dur: [4, 6.5], size: [16, 22], palette: LEAVES, band: [20, 80], variants: 3 },
@@ -276,7 +278,7 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   night: {
     id: 'night',
-    label: 'Night',
+    label: lm('Night'),
     ambient: ['moon'],
     particles: [
       { kind: 'sparkle', motion: 'twinkle', weight: 3, max: 10, dur: [2.4, 4.6], size: [7, 14], opacity: [0.6, 1], palette: NIGHT_STARS, band: [4, 58] },
@@ -285,7 +287,7 @@ export const SCENES: Record<SceneId, SceneDef> = {
   },
   dusk: {
     id: 'dusk',
-    label: 'Dusk',
+    label: lm('Dusk'),
     ambient: ['dusk'],
     particles: [{ kind: 'sparkle', motion: 'twinkle', weight: 1, max: 3, dur: [3, 5], size: [6, 10], opacity: [0.45, 0.8], palette: NIGHT_STARS, band: [4, 30] }],
   },

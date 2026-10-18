@@ -10,6 +10,7 @@ import { renderTrack } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
+import { lm } from '../../i18n/labels/mark';
 
 
 /**
@@ -21,8 +22,8 @@ import { t } from '../../card/i18n';
 class SliderModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
     type: 'slider',
-    name: 'Slider',
-    description: 'Range slider for controlling numeric values',
+    name: lm('Slider'),
+    description: lm('Range slider for controlling numeric values'),
     category: 'controls',
     icon: 'mdi:tune-vertical',
   };

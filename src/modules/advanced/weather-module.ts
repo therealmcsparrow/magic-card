@@ -6,6 +6,7 @@ import { CardModule, HomeAssistant, WeatherModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
+import { lm } from '../../i18n/labels/mark';
 
 export const isNight = (hass: HomeAssistant | undefined): boolean => hass?.states?.['sun.sun']?.state === 'below_horizon';
 
@@ -16,8 +17,8 @@ export const isNight = (hass: HomeAssistant | undefined): boolean => hass?.state
 class WeatherModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'weather',
-    name: 'Weather',
-    description: 'Display weather entity information',
+    name: lm('Weather'),
+    description: lm('Display weather entity information'),
     category: 'advanced',
     icon: 'mdi:weather-partly-cloudy',
   };
