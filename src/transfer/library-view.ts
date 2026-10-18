@@ -8,7 +8,8 @@ import type { LibraryHass } from '../services/animation-library';
 import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
 import type { ThemePresetStore } from '../contracts/theme-editor';
-import type { TransferItem, TransferKind } from '../contracts/preset-transfer';
+import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
+import type { LibraryOpenDetail, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
 import './panel';
 
@@ -104,6 +105,9 @@ export class LibraryView extends LitElement {
   /** The theme editor's backend.presets; absent = an older Magic Card Utils (or none). */
   @property({ attribute: false }) presets?: ThemePresetStore;
 
+  /** (r2) 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
+  @property({ type: String }) context: LibraryViewContext = 'card-editor';
+
   @state() private _kind: TransferKind = 'animation';
   @state() private _source: Source = 'mcu';
   @state() private _q = '';
@@ -121,7 +125,8 @@ export class LibraryView extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._kind = this.startKind && this.kinds.includes(this.startKind) ? this.startKind : this.kinds.includes(this._kind) ? this._kind : this.kinds[0];
+    const ks = this._kinds;
+    this._kind = this.startKind && ks.includes(this.startKind) ? this.startKind : this.context === 'mcu-panel' ? ks[0] : ks.includes(this._kind) ? this._kind : ks[0];
     this._unsub = animationLibrary.subscribe(() => this._kind === 'animation' && void this._load());
     window.addEventListener(LIBRARY_CHANGED_EVENT, this._onChanged);
   }
@@ -143,6 +148,18 @@ export class LibraryView extends LitElement {
     if (changed.has('config') || changed.has('presets')) void this._load();
   }
 
+  private get _kinds(): readonly TransferKind[] {
+    return this.context === 'mcu-panel' ? HOST_KINDS['mcu-panel'] : this.kinds;
+  }
+
+  private get _panelCtx(): boolean {
+    return this.context === 'mcu-panel';
+  }
+
+  private _open(kind: 'icon' | 'shape', id?: string): void {
+    this.dispatchEvent(new CustomEvent<LibraryOpenDetail>(LIBRARY_OPEN_EVENT, { detail: id ? { kind, id } : { kind }, bubbles: true, composed: true }));
+  }
+
   private get _admin(): boolean {
     return this.hass?.user?.is_admin !== false;
   }
@@ -154,7 +171,7 @@ export class LibraryView extends LitElement {
     let status: Status = 'ok';
     let rows: Row[] = [];
     const row = (id: string, name: string, src: unknown, kw: string[] = []): Row => ({ id, name, src, words: [id, name, ...kw].join(' ').toLowerCase() });
-    if (this._source === 'card') {
+    if (this._source === 'card' && !this._panelCtx) {
       const c = this.config ?? {};
       if (kind === 'animation') rows = animationDocList(c.custom_animations).map((d) => row(String(d.id), String(d.name ?? d.id), d));
       else if (kind === 'shape') rows = Object.entries(c.custom_shapes ?? {}).map(([id, s]) => row(id, id, s));
@@ -178,7 +195,7 @@ export class LibraryView extends LitElement {
       rows = (l.items as Array<{ id: string; name: string; keywords?: string[] }>).map((i) => row(i.id, i.name, i, i.keywords));
     }
     if (seq !== this._seq) return;
-    if (status === 'missing' && this.inline && this._source === 'mcu' && kind !== 'theme' && !this._switched) {
+    if (status === 'missing' && this.inline && !this._panelCtx && this._source === 'mcu' && kind !== 'theme' && !this._switched) {
       // no Magic Card Utils: the card's own copies are all there is to list
       this._switched = true;
       this._source = 'card';
@@ -325,7 +342,7 @@ export class LibraryView extends LitElement {
   render(): TemplateResult {
     if (this._panel)
       return html`<mc-transfer-panel
-        host="card-editor"
+        host=${this._panelCtx ? 'mcu-panel' : 'card-editor'}
         .mode=${this._panel.mode}
         .exportItems=${this._panel.exportItems}
         .taken=${this._taken}
@@ -343,9 +360,9 @@ export class LibraryView extends LitElement {
     return html`
       <div class="wrap">
         <div class="seg" role="group" aria-label="Kind">
-          ${this.kinds.map((k) => html`<button aria-pressed=${this._kind === k} class=${this._kind === k ? 'active' : ''} @click=${() => this._go(k, this._source)}>${LABEL[k]}</button>`)}
+          ${this._kinds.map((k) => html`<button aria-pressed=${this._kind === k} class=${this._kind === k ? 'active' : ''} @click=${() => this._go(k, this._source)}>${LABEL[k]}</button>`)}
         </div>
-        ${this._kind === 'theme'
+        ${this._kind === 'theme' || this._panelCtx
           ? nothing
           : html`<div class="seg" role="group" aria-label="Source">
               ${(['mcu', 'card'] as const).map((s) => html`<button aria-pressed=${this._source === s} class=${this._source === s ? 'active' : ''} @click=${() => this._go(this._kind, s)}>${s === 'mcu' ? 'Magic Card Utils' : 'This card'}</button>`)}
@@ -356,6 +373,7 @@ export class LibraryView extends LitElement {
         </div>
         <div class="row">
           <button class="btn btn-secondary" ?disabled=${!shown.length} @click=${() => this._export()}>${this._sel.size ? `Export ${this._sel.size} selected` : 'Export all'}</button>
+          ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? html`<button class="btn btn-primary" @click=${() => this._open(this._kind as 'icon' | 'shape')}>New ${this._kind}</button>` : nothing}
           ${can || this.inline ? html`<button class="btn btn-secondary" @click=${() => (this._panel = { mode: 'import' })}>Import</button>` : nothing}
         </div>
         ${this.inline && this._source === 'card' ? html`<p class="help">Imported items are saved in this card.</p>` : nothing}
@@ -397,6 +415,7 @@ export class LibraryView extends LitElement {
           <button class="btn btn-secondary btn-sm" @click=${(ev: Event) => void this._rename(r, (ev.target as HTMLElement).parentElement!.querySelector<HTMLInputElement>('.input')!.value)}>Save</button>
           <button class="btn btn-text btn-sm" @click=${set(undefined)}>Cancel</button>`
         : html`<span class="grow">${r.name}<small class="mono">${r.id}</small></span>`}
+      ${this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape') ? html`<button class="btn btn-text btn-sm" aria-label="Edit ${r.name}" @click=${() => this._open(this._kind as 'icon' | 'shape', r.id)}>Edit</button>` : nothing}
       ${can && !e
         ? html`<button class="btn btn-text btn-sm" aria-label="Rename ${r.name}" @click=${set('rename')}>Rename</button>
             <button class="btn btn-text btn-sm" aria-label="Delete ${r.name}" @click=${set('delete')}>Delete</button>`
