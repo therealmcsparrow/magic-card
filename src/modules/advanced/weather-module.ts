@@ -7,6 +7,7 @@ import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { lm } from '../../i18n/labels/mark';
+import { weatherMinHeight } from '../lazy-heights';
 
 export const isNight = (hass: HomeAssistant | undefined): boolean => hass?.states?.['sun.sun']?.state === 'below_horizon';
 
@@ -40,9 +41,9 @@ class WeatherModule extends BaseLazyStub {
     return config.entity ? { entities: ['sun.sun'] } : {};
   }
 
-  /** The weather box with a minimum height, so the layout does not move when the view arrives. */
-  placeholder(_config: CardModule): TemplateResult {
-    return html`<div class="mc-module mc-weather" style="min-height: 48px"></div>`;
+  /** The weather box with the height it will have (icon and temperature row, plus the forecast), so the layout does not move when the view arrives. */
+  placeholder(config: CardModule): TemplateResult {
+    return html`<div class="mc-module mc-weather" style="min-height: ${weatherMinHeight(config as WeatherModuleConfig)}px"></div>`;
   }
 }
 

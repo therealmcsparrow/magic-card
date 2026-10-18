@@ -1,4 +1,4 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, ForecastModuleConfig } from '../../types';
@@ -7,11 +7,12 @@ import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { lm } from '../../i18n/labels/mark';
+import { forecastMinHeight } from '../lazy-heights';
 
 /** No entity yet, or the forecast has not arrived: the "Day 1..N / --°" skeleton. */
-export function forecastSkeleton(count: number): TemplateResult {
+export function forecastSkeleton(count: number, config?: ForecastModuleConfig): TemplateResult {
   return html`
-    <div class="mc-module mc-forecast">
+    <div class="mc-module mc-forecast" style=${config ? `min-height: ${forecastMinHeight(config)}px` : nothing}>
       ${Array.from({ length: count }).map(
         (_, i) => html`
           <div class="mc-forecast-item">
@@ -49,7 +50,7 @@ class ForecastModule extends BaseLazyStub {
 
   placeholder(config: CardModule): TemplateResult {
     const count = Math.max(1, Math.round((config as ForecastModuleConfig).num_forecasts || 5));
-    return forecastSkeleton(count);
+    return forecastSkeleton(count, config as ForecastModuleConfig);
   }
 }
 

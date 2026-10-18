@@ -6,6 +6,7 @@ import type { ModuleView } from '../../contracts/lazy-module';
 import { renderModuleError } from '../render-module';
 import { sanitizeHtml, escapeHtml } from '../../utils/sanitize-html';
 import { currentRenderContext } from '../../services/render-context';
+import { markdownMinHeightEm } from '../lazy-heights';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
 
 /* Chunk-only (magic-card-markdown.js): nothing runs at evaluation; install() calls configureMarked(). */
@@ -85,6 +86,7 @@ export class MarkdownView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as MarkdownModuleConfig;
     const source = this._source(c, hass);
+    if (source === null) return html`<div class="mc-module mc-markdown" style="min-height: ${markdownMinHeightEm(c.content)}em"></div>`; // template pending: keep the placeholder's height
     if (typeof source !== 'string') return source;
     const rendered = markdownToHtml(source);
     return html`<div class="mc-module mc-markdown">${unsafeHTML(rendered)}</div>`;
@@ -95,7 +97,7 @@ export class MarkdownView implements ModuleView {
    * {{ entity }} placeholders) is rendered by Home Assistant through a render_template
    * subscription; the legacy placeholders alone are filled in locally, HTML-escaped.
    */
-  private _source(c: MarkdownModuleConfig, hass?: HomeAssistant): string | TemplateResult {
+  private _source(c: MarkdownModuleConfig, hass?: HomeAssistant): string | TemplateResult | null {
     const content = c.content === undefined || c.content === null ? '' : String(c.content);
     const legacyOnly = !hasJinja(content.replace(LEGACY_TOKEN, ''));
     const ctx = currentRenderContext();
@@ -107,7 +109,7 @@ export class MarkdownView implements ModuleView {
       case 'ok':
         return templateResultToString(result.result);
       case 'pending':
-        return '';
+        return null;
       case 'error':
         return renderModuleError([`Template error: ${result.error}`]);
       default:

@@ -30,8 +30,11 @@ export const seasonalCardStyles = css`
   .mc-popup-body > .mc-card-content[data-mc-seasonal] {
     border-radius: 0;
   }
+  /* absolute from the first paint: before the chunk defines them they are empty flex items, and their gaps moved the content */
   mc-seasonal,
   mc-seasonal-deco {
+    position: absolute;
+    inset: 0;
     z-index: -1;
     pointer-events: none;
   }

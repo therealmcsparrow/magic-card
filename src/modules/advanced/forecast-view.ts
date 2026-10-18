@@ -24,8 +24,8 @@ function num(v: unknown): number | undefined {
 }
 
 export class ForecastView implements ModuleView {
-  private _placeholder(count: number): TemplateResult {
-    return forecastSkeleton(count);
+  private _placeholder(count: number, config: ForecastModuleConfig): TemplateResult {
+    return forecastSkeleton(count, config);
   }
 
   private _message(text: string, cls = 'mc-forecast-empty'): TemplateResult {
@@ -63,10 +63,10 @@ export class ForecastView implements ModuleView {
     const c = config as ForecastModuleConfig;
     const count = Math.max(1, Math.round(c.num_forecasts || 5));
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
-    if (!entity) return this._placeholder(count);
+    if (!entity) return this._placeholder(count, c);
 
     const result = weatherForecast(entity, c.forecast_type, currentRenderContext());
-    if (result.status === 'pending') return this._placeholder(count);
+    if (result.status === 'pending') return this._placeholder(count, c);
     if (result.status === 'unavailable') {
       let state = '';
       try {
