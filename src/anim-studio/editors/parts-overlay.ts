@@ -220,6 +220,11 @@ export class AnimPartsOverlay extends LitElement {
 
   // ── selection ──
 
+  /** Locked (directly, or through its group): no pivot or path handles, no grouping, not caught by the band. */
+  private _lk(ref: TargetRef): boolean {
+    return !!this.doc && !!this.layerView?.locked.length && isLocked(this.doc, this.layerView, ref);
+  }
+
   private get _sel(): TargetRef[] {
     return selectedRefs(this.selection);
   }
@@ -242,8 +247,11 @@ export class AnimPartsOverlay extends LitElement {
     const hit = t.closest('[data-ref]')?.getAttribute('data-ref') as TargetRef | undefined;
     const p = this._toVb(e);
     const base: Drag = { pointerId: e.pointerId, kind: 'band', start: p, startClient: [e.clientX, e.clientY], startDoc: this.doc, moved: false, additive: e.shiftKey || e.ctrlKey || e.metaKey };
-    if (pivot) this._drag = { ...base, kind: 'pivot', ref: pivot };
-    else if (anchor !== undefined && anchor !== null && this.selection.target) {
+    if (pivot) {
+      if (this._lk(pivot)) return;
+      this._drag = { ...base, kind: 'pivot', ref: pivot };
+    } else if (anchor !== undefined && anchor !== null && this.selection.target) {
+      if (this._lk(this.selection.target)) return;
       const d = trackOf(this.doc, this.selection.target)?.path?.d;
       if (!d) return;
       this._drag = { ...base, kind: 'anchor', ref: this.selection.target, index: Number(anchor), path: parsePath(d) };
@@ -302,6 +310,7 @@ export class AnimPartsOverlay extends LitElement {
       const y1 = Math.max(a[1], b[1]);
       const hits = (doc.rig?.parts ?? [])
         .map((p) => partRef(p.id))
+        .filter((ref) => !this._lk(ref))
         .filter((ref) => {
           const bx = targetBox(doc, ref, this._pieces);
           // fully inside the band (parts overlap a lot: touching would catch the whole icon)
@@ -333,7 +342,7 @@ export class AnimPartsOverlay extends LitElement {
   private _onPivotKey(e: KeyboardEvent, ref: TargetRef): void {
     const dirs: Record<string, Pt> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
     const dir = dirs[e.key];
-    if (!dir || this.disabled || !this.doc) return;
+    if (!dir || this.disabled || !this.doc || this._lk(ref)) return;
     e.preventDefault();
     const step = e.shiftKey ? 1 : 0.25;
     const p = this._pivotOf(ref) ?? [12, 12];
@@ -351,6 +360,7 @@ export class AnimPartsOverlay extends LitElement {
   private _onKey(e: KeyboardEvent): void {
     if (!this.doc || this.disabled) return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'g' && !e.shiftKey) {
+      if (this._sel.some((r) => this._lk(r))) return;
       const r = groupParts(this.doc, this._sel);
       if (!r.id) return;
       e.preventDefault();
@@ -385,7 +395,7 @@ export class AnimPartsOverlay extends LitElement {
       const out: SVGTemplateResult[] = [];
       out.push(svg`${this._partPaths(ref).map((p) => svg`<path class="sel-outline" d=${p}></path>`)}`);
       if (b) out.push(svg`<rect class="bbox" x=${b[0]} y=${b[1]} width=${b[2]} height=${b[3]}></rect>`);
-      if (o && primary) {
+      if (o && primary && !this._lk(ref)) {
         const name = targetName(d, ref);
         out.push(svg`<g
           class="pivot"
@@ -414,7 +424,7 @@ export class AnimPartsOverlay extends LitElement {
     const ep = parsePath(d);
     return svg`<g class="mpath" transform=${`translate(${o[0]} ${o[1]})`}>
       <path class="mline" d=${d} style=${`stroke-width: ${2 * u}`}></path>
-      ${ep.anchors.map(
+      ${this._lk(ref) ? nothing : ep.anchors.map(
         (a, i) => svg`<g class="anchor" data-anchor=${i}>
           <circle class="anchor-hit" cx=${a.x} cy=${a.y} r=${HANDLE_R * u}></circle>
           <circle class="anchor-dot" cx=${a.x} cy=${a.y} r=${4.5 * u} style=${`stroke-width: ${1.5 * u}`}></circle>
