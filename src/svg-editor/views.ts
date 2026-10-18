@@ -6,6 +6,7 @@ import { toPathString } from '../path/core';
 import { D, E } from './bind';
 import { PRIMITIVE_KINDS, type PrimitiveKind } from '../contracts/path-model';
 import type { BooleanOp } from '../contracts/path-booleans';
+import type { SvgAlignEdge, SvgAlignTarget, SvgArrange } from '../contracts/svg-editor';
 import { boolHelp, boolReason } from './combine';
 import { haWarns } from './ha';
 import { glyph, type GlyphName } from './icons';
@@ -723,6 +724,7 @@ function documentSection(ed: McSvgEditor): TemplateResult {
       <h3 id="doc-h">${S.docTitle}</h3>
       <p class="help">${S.noneSelected}</p>
       ${gridChips(ed)}
+      ${placeRow(ed)}
       ${chk(S.safeArea, ed.safe, (v) => { ed.safe = v; ed.checks(); })}
       ${chk(S.nudgePad, ed.nudgePad, (v) => (ed.nudgePad = v))}
     </section>
@@ -761,11 +763,11 @@ function boolSection(ed: McSvgEditor): TemplateResult {
       ${BOOL_OPS.map((o) => {
         const why = boolReason(st, o);
         const busy = ed.boolBusy === o;
-        return html`<button type="button" class=${`b${why ? ' is-off' : ''}`} aria-disabled=${why || ed.boolBusy ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} aria-describedby="bo-help" data-op=${o} @click=${() => void ed.runBoolean(o)}>
-          <svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} fill-opacity="0.35" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg><span>${busy ? S.boolWorking : S.boolOps[o]}</span></button>`;
+        return html`<button type="button" class=${`b${why ? ' is-off' : ''}`} aria-disabled=${why || ed.boolBusy ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} data-op=${o} @click=${() => void ed.runBoolean(o)}>
+          <svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.6"></path></svg><span>${busy ? S.boolWorking : S.boolOps[o]}</span></button>`;
       })}
     </div>
-    <p id="bo-help" class="help">${S.boolHint}</p>
+    <p class="help">${S.boolHint}</p>
     ${lines.map((l) => html`<p class="help">${l}</p>`)}
   </section>`;
 }
@@ -775,6 +777,52 @@ function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
   if (!n) return nothing;
   const mark = n.tone === 'info' ? 'i' : n.tone === 'warn' ? '!' : 'x';
   return html`<div class=${`result-note is-${n.tone}`}><span class="mk" aria-hidden="true">${mark}</span><div class="tx">${n.lines.map((l) => html`<p>${l}</p>`)}</div>${n.action ? html`<button type="button" class="b" @click=${() => n.action!.run()}><span>${n.action.label}</span></button>` : nothing}</div>`;
+}
+
+/** A button that stays focusable when unavailable; the editor says why when it is pressed. */
+function abtn(label: string, g: GlyphName, on: () => void, off: boolean, text = false): TemplateResult {
+  return html`<button type="button" class="b" aria-label=${text ? nothing : label} title=${text ? nothing : label} aria-disabled=${off ? 'true' : nothing} @click=${on}>${glyph(g, 18)}${text ? html`<span>${label}</span>` : nothing}</button>`;
+}
+
+const EDGES: Array<[SvgAlignEdge, GlyphName]> = [['left', 'alignL'], ['centre', 'alignC'], ['right', 'alignR'], ['top', 'alignT'], ['middle', 'alignM'], ['bottom', 'alignB']];
+
+function alignSection(ed: McSvgEditor): TemplateResult {
+  const { items, leftOut } = ed.items;
+  const many = items.length >= 2;
+  const items3 = items.length >= 3;
+  const targets: Array<[SvgAlignTarget, string]> = [['selection', S.alignTargets.selection], ['canvas', S.alignTargets.canvas], ['safe', S.alignTargets.safe]];
+  const cur = ed.alignBase;
+  const offT = (k: SvgAlignTarget): string | undefined => (k === 'selection' && !many ? S.alignNeedTwo : k === 'safe' && !ed.safeOn ? S.safeHidden : undefined);
+  const pickT = (k: SvgAlignTarget): void => {
+    const why = offT(k);
+    if (why) ed.say(why);
+    else ed.alignTarget = k;
+  };
+  const reason = offT('selection') ?? offT('safe');
+  return html`<section class="grp-s" aria-labelledby="al-h">
+    <h4 id="al-h">${S.alignTitle}</h4>
+    <div class="seg" role="radiogroup" aria-label=${S.alignRel}>
+      ${targets.map(([k, text]) => html`<button type="button" role="radio" aria-checked=${aria(k === cur)} aria-disabled=${offT(k) ? 'true' : nothing} tabindex=${k === cur ? 0 : -1} @click=${() => pickT(k)} @keydown=${(e: KeyboardEvent) => segKey(e, targets, k, pickT)}>${text}</button>`)}
+    </div>
+    <div class="acts">${EDGES.map(([e, g]) => abtn(S.alignEdge[e], g, () => ed.align(e), !items.length))}</div>
+    <div class="acts">${abtn(S.distH, 'distH', () => ed.distribute('h'), !items3)}${abtn(S.distV, 'distV', () => ed.distribute('v'), !items3)}</div>
+    <p class="help">${items3 ? S.distHelp : S.alignNeedThree}</p>
+    ${reason ? html`<p class="help">${reason}</p>` : nothing}
+    ${leftOut ? html`<p class="help">${S.boolLeftOut(leftOut, false)}</p>` : nothing}
+  </section>`;
+}
+
+function placeRow(ed: McSvgEditor): TemplateResult {
+  const none = !ed.safeOn;
+  return html`<div class="acts place">
+      ${abtn(S.placeCentre, 'alignC', () => ed.place('centre'), false, true)}${abtn(S.placeFit, 'fit', () => ed.place('fit'), none, true)}${abtn(S.placeMatch, 'snap', () => ed.place('match'), none, true)}
+    </div>
+    <p class="help">${none ? S.safeHidden : S.placeMatchHelp}</p>`;
+}
+
+function arrangeRow(ed: McSvgEditor): TemplateResult {
+  const hows: Array<[SvgArrange, GlyphName]> = [['front', 'toFront'], ['forward', 'up'], ['backward', 'down'], ['back', 'toBack']];
+  return html`<div class="acts arr">${hows.map(([h, g]) => abtn(S.arrange[h], g, () => ed.arrange(h), !ed.canArrange(h), true))}</div>`;
 }
 
 function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
@@ -787,6 +835,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       <h3 id="sh-h">${one ? one.name : S.shapes(sel.length)}</h3>
       ${one ? html`<label class="f"><span>${S.rename}</span><input type="text" .value=${one.name} @change=${(e: Event) => ed.renameShape(one.id, (e.target as HTMLInputElement).value)} /></label>` : nothing}
     </section>
+    ${alignSection(ed)}
     <section class="grp-s" aria-labelledby="ps-h">
       <h4 id="ps-h">${S.posSize}</h4>
       <div class="grid2">
@@ -799,6 +848,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
         ${btn(S.rotMinus, 'rotL', () => ed.rotate(-15), off)}${btn(S.rotPlus, 'rotR', () => ed.rotate(15), off)}
         ${btn(S.flipH, 'flipH', () => ed.flip('h'), { ...off, keys: 'Shift+H' })}${btn(S.flipV, 'flipV', () => ed.flip('v'), { ...off, keys: 'Shift+V' })}
       </div>
+      ${placeRow(ed)}
     </section>
     ${boolSection(ed)}
     ${one && (one.type === 'rect' || one.type === 'polygon' || one.type === 'star')
@@ -822,6 +872,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
     </section>
     <section class="grp-s" aria-labelledby="ly-h">
       <h4 id="ly-h">${S.layerSection}</h4>
+      ${arrangeRow(ed)}
       ${pick(S.fillRule, first.rule, [['nonzero', S.ruleNonzero], ['evenodd', S.ruleEvenodd]], (v) => ed.patch({ rule: v as Shape['rule'] }, 'Fill rule'))}
       <p class="help">${S.ruleHelp}</p>
       ${chk(S.hidden, !!first.hidden, (v) => ed.patch({ hidden: v }, 'Hide'))}

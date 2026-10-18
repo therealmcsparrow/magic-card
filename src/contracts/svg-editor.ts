@@ -312,7 +312,7 @@ import type { BooleanOp } from './path-booleans';
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
 /** Stays 3 until T30 implements revision 4, then 4. */
-export const SVG_EDITOR_CONTRACT_REVISION = 3;
+export const SVG_EDITOR_CONTRACT_REVISION = 4;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 export const SVG_EDITOR_CHUNK = 'svg-editor';
 export const SVG_EDITOR_CHUNK_FILE = 'magic-card-svg-editor.js';

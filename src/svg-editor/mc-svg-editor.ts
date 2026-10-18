@@ -4,13 +4,14 @@ import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
-import { SVG_EDITOR_TAG, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
+import { SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { resolveIconGeometry } from '../icons/icon-source';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
+import { alignMoves, centreMove, distributeMoves, fitBox, itemsOf, matchMove, safeBox, union, type Item, type Move } from './arrange';
 import { boolNote, boolReason, boolState, operandsOf, withResult } from './combine';
 import { bind, E } from './bind';
 import { haForm, type HaForm } from './ha';
@@ -26,6 +27,7 @@ import {
   groupShapes,
   is24,
   mapShapes,
+  arrangeOrder,
   moveOrder,
   moveShape,
   newShape,
@@ -97,7 +99,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -131,6 +133,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   ha?: HaForm;
   banners: Banner[] = [];
   notes?: ImportNotes;
+  /** What Align is relative to. */
+  alignTarget: SvgAlignTarget = 'selection';
   /** The status strip under the canvas (design 7.6). */
   note?: { tone: 'info' | 'warn' | 'error'; lines: string[]; action?: { label: string; run: () => void } };
   /** The boolean button waiting for the chunk. */
@@ -660,6 +664,88 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.say(S.moved(s.name, d.shapes.length - d.shapes.indexOf(s), d.shapes.length));
   }
 
+  // ── align, distribute, placement, arrange ──
+
+  /** The items Align and Distribute act on. */
+  get items(): { items: Item[]; leftOut: number } {
+    return itemsOf(this.doc, this.sel);
+  }
+
+  /** Placement acts on the selection, or on the whole drawing when nothing is selected. */
+  get placeItems(): { items: Item[]; leftOut: number } {
+    return itemsOf(this.doc, this.sel.length ? this.sel : this.doc.shapes.map((s) => s.id));
+  }
+
+  /** The target Align really uses: Selection needs two items, Safe area needs the safe area. */
+  get alignBase(): SvgAlignTarget {
+    if (this.alignTarget === 'selection' && this.items.items.length < 2) return 'canvas';
+    if (this.alignTarget === 'safe' && !this.safeOn) return 'canvas';
+    return this.alignTarget;
+  }
+
+  private moveItems(moves: Move[], label: string): boolean {
+    const by = new Map<string, Move>();
+    for (const m of moves) if (Math.abs(m.dx) > 1e-9 || Math.abs(m.dy) > 1e-9) m.ids.forEach((id) => by.set(id, m));
+    if (!by.size) return false;
+    this.apply({ ...this.doc, shapes: this.doc.shapes.map((s) => (by.has(s.id) ? moveShape(s, by.get(s.id)!.dx, by.get(s.id)!.dy) : s)) }, label);
+    return true;
+  }
+
+  align(edge: SvgAlignEdge): void {
+    const { items } = this.items;
+    if (!items.length) return;
+    const t = this.alignBase;
+    const to = t === 'selection' ? union(items)! : t === 'safe' ? safeBox(this.doc.vb) : this.doc.vb;
+    this.moveItems(alignMoves(items, edge, to), 'Align');
+    this.say(S.aligned(items.length, S.alignTo[edge]));
+  }
+
+  distribute(axis: 'h' | 'v'): void {
+    const { items } = this.items;
+    if (items.length < 3) {
+      this.say(S.alignNeedThree);
+      return;
+    }
+    this.moveItems(distributeMoves(items, axis), 'Distribute');
+    this.say(S.spaced(items.length));
+  }
+
+  place(kind: 'centre' | 'fit' | 'match'): void {
+    const { items } = this.placeItems;
+    const from = union(items);
+    if (!from) return;
+    if (kind !== 'centre' && !this.safeOn) {
+      this.say(S.safeHidden);
+      return;
+    }
+    const ids = items.flatMap((i) => i.ids);
+    let moved = false;
+    if (kind === 'fit') {
+      const to = fitBox(from, safeBox(this.doc.vb));
+      const m = boxMatrix(from, to);
+      if (Math.abs(m[0] - 1) > 1e-9 || Math.abs(m[3] - 1) > 1e-9 || Math.abs(m[4]) > 1e-9 || Math.abs(m[5]) > 1e-9) {
+        this.apply(mapShapes(this.doc, ids, (s) => setShapeBox(s, from, to)), 'Fit to safe area');
+        moved = true;
+      }
+    } else {
+      const d = kind === 'centre' ? centreMove(from, this.doc.vb) : matchMove(from, safeBox(this.doc.vb));
+      moved = this.moveItems([{ ids, ...d }], kind === 'centre' ? 'Centre on canvas' : 'Match safe-area edges');
+    }
+    if (moved) this.say(kind === 'centre' ? S.placeCentre : kind === 'fit' ? S.placeFit : S.placeMatch);
+  }
+
+  /** Arrange order of the selection; false when it is already at that limit. */
+  canArrange(how: SvgArrange): boolean {
+    return !!this.sel.length && arrangeOrder(this.doc, this.sel, how) !== this.doc;
+  }
+
+  arrange(how: SvgArrange): void {
+    const d = arrangeOrder(this.doc, this.sel, how);
+    if (d === this.doc) return;
+    this.apply(d, 'Arrange');
+    this.say(S.arrange[how]);
+  }
+
   // ── booleans ──
 
   get boolean(): ReturnType<typeof boolState> {
@@ -691,7 +777,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (boolReason(st, op)) return;
     const r = chunk.run(op, operandsOf(st), { frame: this.doc.vb });
     if (!r.ok) {
-      const t = r.reason === 'empty' ? S.boolEmpty : r.reason === 'no-area' ? S.boolNoArea : S.boolComplex;
+      const t = r.reason === 'empty' ? S.boolEmpty : r.reason === 'no-area' ? S.boolOpen : S.boolComplex;
       this.note = { tone: 'error', lines: [t, S.boolUnchanged] };
       this.say(t);
       return;
@@ -836,6 +922,10 @@ export class McSvgEditor extends LitElement implements StageHost {
       } else if (code === 'KeyD') {
         e.preventDefault();
         this.duplicate();
+      } else if (code === 'BracketRight' || code === 'BracketLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        this.arrange(code === 'BracketRight' ? (e.shiftKey ? 'front' : 'forward') : e.shiftKey ? 'back' : 'backward');
       } else if (code === 'KeyG') {
         e.preventDefault();
         if (e.shiftKey) {

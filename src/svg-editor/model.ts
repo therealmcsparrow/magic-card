@@ -1,5 +1,6 @@
 import type { Box, EditPath, PathData, PrimitiveKind, Pt } from '../contracts/path-model';
 import { flatten, parsePath } from '../path/core';
+import type { SvgArrange } from '../contracts/svg-editor';
 import { D, E, T } from './bind';
 
 /*
@@ -257,15 +258,49 @@ export function duplicateShapes(d: Doc, ids: readonly string[]): { doc: Doc; ids
   return { doc: { ...d, shapes: out }, ids: made };
 }
 
-/** Move one shape up (+1) or down (-1) in the drawing order, or to the end. */
-export function moveOrder(d: Doc, id: string, dir: 1 | -1): Doc {
-  const i = d.shapes.findIndex((s) => s.id === id);
-  const j = i + dir;
-  if (i < 0 || j < 0 || j >= d.shapes.length) return d;
-  const shapes = d.shapes.slice();
-  [shapes[i], shapes[j]] = [shapes[j], shapes[i]];
-  return { ...d, shapes };
+/** The selected items move as a block and keep their order; Forward / Backward pass one unselected neighbour. */
+function blockMove<T>(list: T[], on: (t: T) => boolean, how: SvgArrange): T[] {
+  const a = list.slice();
+  if (how === 'front') return [...a.filter((x) => !on(x)), ...a.filter(on)];
+  if (how === 'back') return [...a.filter(on), ...a.filter((x) => !on(x))];
+  if (how === 'forward') {
+    for (let i = a.length - 2; i >= 0; i--) if (on(a[i]) && !on(a[i + 1])) [a[i], a[i + 1]] = [a[i + 1], a[i]];
+  } else {
+    for (let i = 1; i < a.length; i++) if (on(a[i]) && !on(a[i - 1])) [a[i], a[i - 1]] = [a[i - 1], a[i]];
+  }
+  return a;
 }
+
+/**
+ * Arrange order within each item's sibling list: the top level (a group counts as one unit) or the group
+ * a layer belongs to. Returns the same document when nothing would move (the limit).
+ */
+export function arrangeOrder(d: Doc, ids: readonly string[], how: SvgArrange): Doc {
+  const sel = new Set(ids);
+  let shapes = d.shapes.slice();
+  // layers of a partly selected group move inside the group (its slots in the list)
+  for (const g of d.groups) {
+    const slots: number[] = [];
+    shapes.forEach((s, i) => s.group === g.id && slots.push(i));
+    const on = slots.filter((i) => sel.has(shapes[i].id)).length;
+    if (!on || on === slots.length) continue;
+    const moved = blockMove(slots.map((i) => shapes[i]), (s) => sel.has(s.id), how);
+    slots.forEach((slot, k) => (shapes[slot] = moved[k]));
+  }
+  // top level: ungrouped layers and whole groups
+  const full = new Set(d.groups.filter((g) => shapes.filter((s) => s.group === g.id).every((s) => sel.has(s.id))).map((g) => g.id));
+  const units: Shape[][] = [];
+  for (const s of shapes) {
+    const last = units[units.length - 1];
+    if (s.group && last && last[0].group === s.group) last.push(s);
+    else units.push([s]);
+  }
+  shapes = blockMove(units, (u) => (u[0].group ? full.has(u[0].group) : sel.has(u[0].id)), how).flat();
+  return shapes.every((s, i) => s === d.shapes[i]) ? d : { ...d, shapes };
+}
+
+/** Move one shape up (+1) or down (-1) in the drawing order. */
+export const moveOrder = (d: Doc, id: string, dir: 1 | -1): Doc => arrangeOrder(d, [id], dir === 1 ? 'forward' : 'backward');
 
 export function groupShapes(d: Doc, ids: readonly string[]): { doc: Doc; group?: string } {
   const members = d.shapes.filter((s) => ids.includes(s.id));

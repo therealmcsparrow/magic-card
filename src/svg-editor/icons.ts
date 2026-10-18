@@ -45,6 +45,16 @@ const G = {
   link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
   save: 'M5 4h12l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6',
   check: 'M5 12.5l4.5 4.5L19 7',
+  alignL: 'M4 3v18M8 7h12M8 14h8',
+  alignC: 'M12 3v18M5 7h14M8 14h8',
+  alignR: 'M20 3v18M4 7h12M12 14h8',
+  alignT: 'M3 4h18M7 8v12M14 8v8',
+  alignM: 'M3 12h18M7 5v14M14 8v8',
+  alignB: 'M3 20h18M7 4v12M14 8v8',
+  distH: 'M4 3v18M20 3v18M10 8h4v8h-4z',
+  distV: 'M3 4h18M3 20h18M8 10h8v4H8z',
+  toFront: 'M12 19V6M6 11l6-6 6 6M5 3h14',
+  toBack: 'M12 5v13M6 13l6 6 6-6M5 21h14',
 } as const;
 
 export type GlyphName = keyof typeof G;
