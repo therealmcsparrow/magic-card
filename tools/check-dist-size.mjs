@@ -27,11 +27,11 @@ const CAPS = {
   'magic-card-path-canvas.js': 45_056, // 44 KiB by CEO decision (ADR 0019); measured below
   // SVG editor (T10): the architect's ceiling of 96 KiB, ADR 0019. Like the canvas chunk it is only emitted once the card-editor
   // chunk imports src/svg-editor/loader.ts (T11); until then this entry reports "missing from dist".
-  'magic-card-svg-editor.js': 98_304, // 96 KiB
+  'magic-card-svg-editor.js': 112_640, // 110 KiB, CEO 2026-10-18 (measured 106,748 + 5%)
   // shape editor (T7): the architect's ceiling of 48 KiB, ADR 0019. OVER the ceiling with the whole design scope
   // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
-  'magic-card-shape-editor.js': 49_152, // 48 KiB
+  'magic-card-shape-editor.js': 69_632, // 68 KiB, CEO 2026-10-18 (measured 64,435 + 5%)
 };
 
 const dir = fileURLToPath(new URL('../dist/', import.meta.url));
