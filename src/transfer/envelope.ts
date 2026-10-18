@@ -228,15 +228,6 @@ export function haThemeYaml(name: string, doc: ThemeDoc): string {
   return toYaml(plain({ [name]: doc }));
 }
 
-/** `name`, or `name 2`, `name 3`...: the first name not taken (80 characters at most). */
-function uniqueName(name: string, taken: (n: string) => boolean): string {
-  if (!taken(name)) return name;
-  for (let n = 2; ; n++) {
-    const next = `${name.slice(0, 76)} ${n}`;
-    if (!taken(next)) return next;
-  }
-}
-
 /**
  * Ids after the clash choice; sequence steps follow renamed animation ids. `taken` is what the import lands in (the
  * clash the user chooses about). Optional: `reserved` ids another library holds (renamed whatever the choice, so a
@@ -262,7 +253,7 @@ export function resolveClashes<K extends TransferKind>(
     const next: TransferItem<K> = { ...it, id: map.get(it.id)! };
     // a replaced item keeps its name; every other one must not repeat a name the target or this file already shows
     if (opts.takenName && !(choice === 'replace' && taken(it.id))) {
-      next.name = uniqueName(it.name, (n) => opts.takenName!(n) || names.has(n));
+      next.name = uniqueId(it.name, (n) => opts.takenName!(n) || names.has(n), ' ');
       names.add(next.name);
     }
     const steps = (it.data as { steps?: { animation: string }[] }).steps;

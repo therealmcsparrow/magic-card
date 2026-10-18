@@ -12,10 +12,10 @@ export function slug(s: string, fallback: string): string {
 }
 
 /** `id`, or `id-2`, `id-3`...: the first id not taken (same rule as the studio's uniqueId). */
-export function uniqueId(id: string, taken: (id: string) => boolean): string {
+export function uniqueId(id: string, taken: (id: string) => boolean, sep = '-'): string {
   if (!taken(id)) return id;
   for (let n = 2; ; n++) {
-    const next = `${id.slice(0, 60)}-${n}`;
+    const next = `${id.slice(0, 60)}${sep}${n}`;
     if (!taken(next)) return next;
   }
 }
