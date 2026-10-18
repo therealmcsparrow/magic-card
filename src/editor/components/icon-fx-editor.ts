@@ -248,6 +248,10 @@ export class IconFxEditor extends LitElement {
   private get _isSvg(): boolean {
     return this.icon === 'svg';
   }
+  /** An own SVG or a library icon (mcu:) can have parts drawn in the Accent paint, so it has an accent colour. */
+  private get _hasAccent(): boolean {
+    return this._isSvg || /^mcu:/.test(this.icon);
+  }
   private get _stateObj(): HassEntity | undefined {
     return this.entity ? this.hass?.states?.[this.entity] : undefined;
   }
@@ -277,7 +281,7 @@ export class IconFxEditor extends LitElement {
     // the angle outside Gradient, the secondary outside Duotone (own SVGs keep it: their accent colour).
     if (next && next.style !== 'gradient' && next.style !== 'value') delete next.gradient;
     if (next && next.style !== 'gradient') delete next.angle;
-    if (next && next.style !== 'duotone' && !this._isSvg) delete next.secondary;
+    if (next && next.style !== 'duotone' && !this._hasAccent) delete next.secondary;
     this._setFx({ colors: next && Object.keys(next).length ? next : undefined });
   }
 
@@ -763,10 +767,10 @@ export class IconFxEditor extends LitElement {
         ? this._field(t('Secondary colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
             html`${this._color('secondary', t('Secondary colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
               <p class="help">${t('Empty: the primary colour at {pct}%.', { pct: ICON_FX_DEFAULTS.secondaryPct })}</p>`)
-        : this._isSvg
+        : this._hasAccent
           ? this._field(t('Accent colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
               html`${this._color('secondary', t('Accent colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
-                <p class="help">${t('Parts of the SVG with class="mc-accent".')}</p>`)
+                <p class="help">${this._isSvg ? t('Parts of the SVG with class="mc-accent".') : t('Parts of the icon drawn in Accent in the icon editor.')}</p>`)
           : nothing}
       ${style === 'gradient' || style === 'value'
         ? html`
