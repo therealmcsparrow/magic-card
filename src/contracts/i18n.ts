@@ -1,11 +1,26 @@
 /*
- * Contract: i18n. Version 1.0.0, revision 2 (Architect-owned, PROPOSED until the Plan Gate). ADR 0032.
+ * Contract: i18n. Version 1.0.0, revision 3 (Architect-owned). ADR 0032.
  * r1 2026-10-18: first draft (British text as id, runtime en-US word list, lazy nl chunks).
  * r2 2026-10-18, CEO Plan Gate answers: en-US is a FULL shipped table (generated at dev time from en-GB,
  *    EN_US_WORDS and reviewed exceptions, then committed); no separate locale files: en-GB, en-US and nl
  *    are bundled into each screen's own file; every message must exist in all three locales; compact
  *    tables (one string per locale, entries indexed by a build-time number) to limit the cost; the CEO
  *    spot-checks machine-drafted Dutch per batch at the Ship Gate. Runtime word list and lazy nl dropped.
+ * r3 2026-10-18, after spike S-I1 (Handoff 97; ruling Handoff 108). Tables live with the bundle that
+ *    RENDERS the text, not with the file that holds the literal:
+ *    - 'card' holds only text a dashboard can render. Editor-only labels in files magic-card.js carries
+ *      (CSS property data, animation presets, seasonal scenes, font groups, module descriptions) are
+ *      marked lm() and ship in magic-card.js as numbers; their text is in namespace 'labels'.
+ *    - A namespace whose call sites are compiled into more than one bundle keeps ONE copy of its tables
+ *      in a lazy table chunk (magic-card-i18n-<ns>.js): 'labels' (card editor, studio) and
+ *      'icon-library' (icon-library chunk, icon-animator chunk). 'card' stays inline in magic-card.js
+ *      (dashboards never wait for a second request); the studio entry keeps its own copy of the card
+ *      tables (about 5 KB, accepted, see "Where tables live").
+ *    - Runtime copies: magic-card.js (reused at 0 B by every chunk below it), the studio entry and the
+ *      theme-editor entry (own entries, own copy, own locale state). r2's "0 B below magic-card.js" was
+ *      wrong for the two entries. I18N_RUNTIME_MAX_BYTES 1,536 -> 2,048 per copy.
+ *    - Table separator '|' instead of '\n' (Terser writes '\n' as two bytes; saves 3 B per message).
+ *    - S-I1 confirmed dashboard: false for icon-library and preset-catalogue.
  * CEO request 2026-10-18, verbatim: "add us english to the i18n". CEO decisions the same day: UI copy is
  * British (colour, customise, centre, grey); config keys stay as they are; nl complete in this
  * pre-release; each screen's i18n slice runs right after its UI-kit slice, in the same lane.
@@ -26,8 +41,9 @@
  *   'en' and any other 'en-*'                              -> 'en-US'  (HA's "English" is American)
  *   'nl', 'nl-*'                                           -> 'nl'
  *   anything else, empty or malformed                      -> 'en-GB'
- * Each bundle calls setI18nLocale(hass) when hass changes: the card (Core card element, replacing
- * setLanguage), the card-editor chunk, the studio entry, the theme-editor entry, the MCU panel.
+ * Each runtime copy keeps its own locale; each bundle calls setI18nLocale(hass) when hass changes: the
+ * card (Core card element, replacing setLanguage), the card-editor chunk, the studio entry, the
+ * theme-editor entry, the MCU panel. All read the same hass, so they agree.
  * Numbers, dates and times keep src/utils/locale-format.ts (hass.locale number_format, time_format,
  * time_zone); `#` and numeric args use its formatNumber. Never toLocaleString() bare.
  * Every screen root sets lang="<locale>" (WCAG 3.1.2). HA-owned words (states, domains, attributes) come
@@ -36,34 +52,58 @@
  * ── Ids and the compact format (ADR 0032 r2) ──
  * Authoring id: the en-GB text (t('Background colour'); tc('verb', 'Clear') when one British text needs
  * two translations, table key 'verb|Clear'; m('Flame') marks data literals such as icon, preset, theme
- * and CSS option names, rendered later with t(item.name)).
+ * and CSS option names, rendered later with t(item.name)). (r3) lm('Background colour') is m() for the
+ * 'labels' namespace in files magic-card.js carries; it comes from src/i18n/labels/mark.ts (identity,
+ * no tables, no import()), so magic-card.js gets the number and nothing else.
  * Shipped id: a number. Per namespace, tools/i18n-build.mjs (prebuild, also the vitest setup) extracts
  * every id, sorts them (stable diffs), and writes src/<folder>/i18n/messages.gen.ts (git-ignored):
- *   export default ['<en-GB 0>\n<en-GB 1>...', '<en-US 0>\n...', '<nl 0>\n...']  // LOCALES order
+ *   export default ['<en-GB 0>|<en-GB 1>...', '<en-US 0>|...', '<nl 0>|...']  // LOCALES order, r3 '|'
  * tools/i18n-loader.cjs (webpack pre-loader, production and development) rewrites t('text') to t(17) and
- * m('text') to 17 in that namespace's files, so each text is stored once per locale and never at the
- * call site. Messages may not contain a newline (D6). At run time a locale's string is split once, on
- * first use; the other two are never touched.
+ * m('text') / lm('text') to 17 in that namespace's files, so each text is stored once per locale and
+ * never at the call site. Messages may not contain '|' or a newline (D6). At run time a locale's string
+ * is split once, on first use; the other two are never touched.
  * Without the loader (vitest, MCU plain JS) t() also accepts the British text and finds its index through
  * a Map built once from the en-GB string. Both paths return the same text.
- * Per namespace module src/<folder>/i18n/index.ts: `export const { t, tc, tx, m } = i18nFor(ns, tables)`.
- * i18nFor creates closures only (allowed at module top level of a lazy chunk, lazy-module 1.0.0).
- * The tables are in the same bundle file as the call sites: no extra request, no locale chunk files.
+ * Per namespace module src/<folder>/i18n/index.ts: inline tables
+ * `export const { t, tc, tx, m } = i18nFor(ns, tables)`; table chunk (r3)
+ * `export const { t, tc, tx, m, ready } = i18nForLazy(ns, () => import(/* webpackChunkName: "i18n-<ns>" *\/ './messages.gen'))`.
+ * Both create closures only (allowed at module top level of a lazy chunk, lazy-module 1.0.0).
  * Call sites in the runtime lazy chunks (slider, seasonal, markdown, modules-extra) use the 'card'
  * namespace, whose tables live in magic-card.js.
+ *
+ * ── Where tables live (r3) ──
+ * Rule 1, by renderer: a message goes to 'card' only when a dashboard can render it (card content,
+ *   config errors on the card, empty states, screen-reader labels). Text only an editor, the studio or
+ *   a picker shows goes to that screen's namespace, or to 'labels' when the literal sits in a file
+ *   magic-card.js carries. Proper names and strings that are also identifiers (font family names, CSS
+ *   property names shown as code) are not messages (D5 allowlist).
+ * Rule 2, one copy: a namespace whose call sites are compiled into exactly one bundle keeps its tables
+ *   inline in that bundle. A namespace compiled into several bundles keeps them in its table chunk,
+ *   which every one of those bundles import()s (one file, several parents; the preset-catalogue
+ *   pattern). A file that the card-editor chunk and the studio entry both compile uses 'labels'.
+ *   Exception: 'card' is inline in magic-card.js; the studio entry compiles 28 card files and so carries
+ *   a second copy of the card tables (about 5 KB at 64 messages). Reaching magic-card.js's copy through
+ *   window.MagicCard would need per-entry module replacement in one webpack compilation (or a second
+ *   compilation that emits the shared lazy chunks twice) plus a cross-bundle function API; 5 KB in an
+ *   editor-only file costs less.
+ * Rule 3, ready before render: a table-chunk namespace renders nothing before ready() resolves. The
+ *   card-editor install (loadEditor()) awaits labels.ready() alongside its own setup; the studio entry
+ *   awaits labels.ready() before its first render; the icon picker and icon animator await
+ *   icon-library ready() where they already await the icon library. ready() resolving false takes that
+ *   screen's existing load-failure path (loadEditor() resolves false; the studio shows its load error).
  *
  * ── Message syntax (ICU subset, own parser in src/i18n/runtime.ts, no dependency) ──
  *   {name}                                         argument; numbers through formatNumber
  *   {n, plural, =0 {...} one {# point} other {# points}}   Intl.PluralRules(locale); `other` required
  *   {kind, select, line {...} other {...}}         `other` required
  * Branches may hold {name} arguments, not another plural or select. No literal braces, no apostrophe
- * quoting, no newlines. Arguments are inserted as text after the locale text is chosen. Never innerHTML.
- * tx(id, args) returns parts (string | unknown) so lit can render rich arguments, e.g.
+ * quoting, no newlines, no '|'. Arguments are inserted as text after the locale text is chosen. Never
+ * innerHTML. tx(id, args) returns parts (string | unknown) so lit can render rich arguments, e.g.
  * tx('Delete {name}? This cannot be undone.', { name: html`<strong>..</strong>` }); parts never cross a
  * bundle boundary. ui-kit 1.0.0 holds no strings: every label comes from the caller.
  *
  * ── Drift check (tools/check-i18n.mjs, `npm run i18n -- --check`, release.yml after the size step) ──
- * D1 Extraction: the first argument of t / tc / tx / m is a string literal (no variables, no ${}).
+ * D1 Extraction: the first argument of t / tc / tx / m / lm is a string literal (no variables, no ${}).
  * D2 Completeness: every extracted id of a namespace has a non-empty entry in en-US.json and nl.json with
  *    the same argument names and valid plural/select branches; no stale entries. A namespace with
  *    status 'pending' is skipped; the release gate needs every namespace 'complete'
@@ -75,15 +115,23 @@
  *    extracted id and differs from the word-list result; tools/i18n/en-US.golden.txt (every id whose
  *    en-US text differs) is regenerated and reviewed in the PR.
  * D5 No hard-coded user strings: TS/JS AST scan of html`` text and SCANNED_ATTRIBUTES / SCANNED_PROPERTIES
- *    holding letters, outside t/tc/tx/m, src/i18n, src/contracts and the allowlist (Magic Card, YAML, SVG,
- *    MDI, CSS, px). Per-namespace baseline tools/i18n/baseline.json may only go down; 0 when the slice is done.
- * D6 Syntax: every message in every locale parses; no braces outside the syntax; no newline.
- * D7 Import scan: magic-card.js holds src/i18n/runtime.ts (<= I18N_RUNTIME_MAX_BYTES) and the 'card'
- *    tables only; no other namespace's tables leave their own bundle; the contract's constants are
- *    imported by tools only (src/ imports types).
+ *    holding letters, outside t/tc/tx/m/lm, src/i18n, src/contracts and the allowlist (Magic Card, YAML,
+ *    SVG, MDI, CSS, px, proper names). Per-namespace baseline tools/i18n/baseline.json may only go down;
+ *    0 when the slice is done.
+ * D6 Syntax: every message in every locale parses; no braces outside the syntax; no newline; no '|'.
+ * D7 Placement (r3; import scan plus the production stats.json):
+ *    - magic-card.js holds src/i18n/runtime.ts (<= I18N_RUNTIME_MAX_BYTES), the 'card' tables and lm()
+ *      numbers; never src/i18n/labels/index.ts, an import() of a table chunk, or any other table.
+ *    - Every namespace's tables sit in exactly the file its I18N_MODULES entry names (`bundle` when
+ *      tables 'inline', `chunk` when 'chunk'), except the accepted studio copy of 'card'.
+ *    - Every call site of a namespace is in a bundle that holds or import()s its tables.
+ *    - runtime.ts is in magic-card.js, the studio entry and the theme-editor entry, nowhere else.
+ *    - The contract's constants are imported by tools only (src/ imports types).
  * Characterization (local vitest; tests/ is not committed): per screen, a text snapshot (text nodes,
  * aria-label, title, placeholder, alt) in en-GB and en-US before extraction, unchanged after extraction,
  * changed only by the reviewed spelling list after the British pass; YAML of the 60 gallery cards unchanged.
+ * (r3) The text snapshot of the 80 gallery cards is unchanged when labels move to lm() (proof that no
+ * dashboard renders a 'labels' message).
  *
  * ── Magic Card Utils ──
  * tools/export-i18n.mjs transpiles src/i18n/runtime.ts to www/mc-i18n.js and the 'mcu-panel' tables to
@@ -96,11 +144,13 @@
  * ── Error cases ──
  * unknown locale -> en-GB | empty entry in en-US or nl -> en-GB text | unknown string id (no loader, not
  * extracted) -> the text itself, console.debug once | malformed message -> en-GB text, console.debug once
- * | missing argument -> empty string, console.debug once.
+ * | missing argument -> empty string, console.debug once | (r3) t() of a table-chunk namespace before
+ * ready() resolved, or after it resolved false -> empty string, console.debug once (Rule 3 keeps this
+ * off screen) | (r3) table chunk fails to load -> ready() resolves false, never rejects.
  */
 
 export const I18N_CONTRACT_VERSION = '1.0.0';
-export const I18N_CONTRACT_REVISION = 2;
+export const I18N_CONTRACT_REVISION = 3;
 
 export type Locale = 'en-GB' | 'en-US' | 'nl';
 /** Table order inside messages.gen.ts. */
@@ -108,6 +158,8 @@ export const LOCALES: readonly Locale[] = ['en-GB', 'en-US', 'nl'];
 export const BASE_LOCALE: Locale = 'en-GB';
 /** English variants that read British spelling; every other en-* is American. */
 export const BRITISH_ENGLISH: readonly string[] = ['en-gb', 'en-au', 'en-nz', 'en-ie', 'en-za', 'en-in'];
+/** r3. Joins the entries of one locale table (was '\n' in r2). Forbidden inside messages (D6). */
+export const TABLE_SEPARATOR = '|';
 
 /** Authoring id: the en-GB text (or 'context|text'). */
 export type MessageText = string;
@@ -116,7 +168,7 @@ export type MessageIndex = number;
 export type MessageId = MessageText | MessageIndex;
 export type MessageArgs = Record<string, string | number>;
 export type RichArgs = Record<string, unknown>;
-/** Three newline-joined strings in LOCALES order; entry i of each is message i. */
+/** Three TABLE_SEPARATOR-joined strings in LOCALES order; entry i of each is message i. */
 export type LocaleTables = readonly [enGB: string, enUS: string, nl: string];
 /** Source catalogue (en-US.json, nl.json): en-GB text -> text in that locale. */
 export type SourceCatalogue = Readonly<Record<MessageText, string>>;
@@ -140,14 +192,28 @@ export interface ModuleI18n {
   m(id: MessageText): MessageId;
 }
 export type I18nFor = (ns: I18nNamespace, tables: LocaleTables) => ModuleI18n;
+/** r3. A table-chunk namespace. */
+export interface LazyModuleI18n extends ModuleI18n {
+  /** Resolves true once the tables are usable, false when the table chunk failed to load. Never
+   *  rejects. One shared promise per namespace per bundle; the first call starts the import(). */
+  ready(): Promise<boolean>;
+}
+/** r3. `load` is the namespace's import() of its messages.gen module (webpackChunkName "i18n-<ns>"). */
+export type I18nForLazy = (ns: I18nNamespace, load: () => Promise<{ default: LocaleTables }>) => LazyModuleI18n;
+/** r3. src/i18n/labels/mark.ts: identity marker for 'labels' literals in files magic-card.js carries. */
+export type LabelMark = (id: MessageText) => MessageId;
 
 export type NsStatus = 'pending' | 'complete';
 
 export interface I18nModuleEntry {
-  /** Bundle file that carries the call sites and the tables. */
+  /** Bundle file(s) that carry the call sites. */
   bundle: string;
-  /** Source folders whose call sites belong to this namespace (I0 confirms them against stats.json). */
+  /** Source folders or files whose call sites belong to this namespace (I0b confirms them against stats.json). */
   folders: readonly string[];
+  /** r3. 'inline': tables in `bundle`; 'chunk': tables in `chunk`, import()ed by every bundle in `bundle`. */
+  tables: 'inline' | 'chunk';
+  /** r3. Table chunk file, when tables is 'chunk'. */
+  chunk?: string;
   /** Set to 'complete' by the localizer step of the slice (en-US and nl both complete). */
   status: NsStatus;
   /** Slice in the plan that owns the extraction. */
@@ -157,34 +223,45 @@ export interface I18nModuleEntry {
 }
 
 export const I18N_MODULES = {
-  card: { bundle: 'magic-card.js', folders: ['src/card', 'src/modules', 'src/icons', 'src/utils (runtime files)'], status: 'complete', slice: 'I1', dashboard: true },
-  'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator)', 'src/utils (editor-only files, e.g. css-property-options.ts)'], status: 'pending', slice: 'I2', dashboard: false },
-  'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], status: 'pending', slice: 'I3', dashboard: false },
-  'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], status: 'pending', slice: 'I4', dashboard: false },
-  'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], status: 'pending', slice: 'I4', dashboard: false },
-  'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], status: 'pending', slice: 'I5', dashboard: false },
-  transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], status: 'pending', slice: 'I6', dashboard: false },
-  'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], status: 'pending', slice: 'I7', dashboard: false },
-  'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], status: 'pending', slice: 'I7', dashboard: false },
-  'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], status: 'pending', slice: 'I8', dashboard: false },
-  'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], status: 'pending', slice: 'I9', dashboard: false },
-  'icon-library': { bundle: 'magic-card-icon-library.js', folders: ['src/icon-anim/library'], status: 'pending', slice: 'I10', dashboard: false },
-  'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], status: 'pending', slice: 'I10', dashboard: false },
-  'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], status: 'pending', slice: 'I10', dashboard: false },
+  card: { bundle: 'magic-card.js (second copy in magic-card-animation-studio.js, accepted)', folders: ['src/card', 'src/modules (dashboard text only)', 'src/icons', 'src/utils (runtime files, dashboard text only)'], tables: 'inline', status: 'complete', slice: 'I1', dashboard: true },
+  labels: {
+    bundle: 'magic-card-editor.js, magic-card-animation-studio.js (lm() numbers also in magic-card.js)',
+    folders: [
+      'src/utils/css-properties.ts', 'src/utils/css-property-options.ts', 'src/utils/animation-presets.ts',
+      'src/utils/google-fonts.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',
+      'src/modules (module descriptions)',
+      'files compiled into both magic-card-editor.js and the studio entry (I0b lists them from stats.json)',
+    ],
+    tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'pending', slice: 'I0b, I2c, I10', dashboard: false,
+  },
+  'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator and files the studio also compiles)'], tables: 'inline', status: 'pending', slice: 'I2', dashboard: false },
+  'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'pending', slice: 'I3', dashboard: false },
+  'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], tables: 'inline', status: 'pending', slice: 'I4', dashboard: false },
+  'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], tables: 'inline', status: 'pending', slice: 'I4', dashboard: false },
+  'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], tables: 'inline', status: 'pending', slice: 'I5', dashboard: false },
+  transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'pending', slice: 'I6', dashboard: false },
+  'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'pending', slice: 'I7', dashboard: false },
+  'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'pending', slice: 'I7', dashboard: false },
+  'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'pending', slice: 'I8', dashboard: false },
+  'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'pending', slice: 'I9', dashboard: false },
+  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'pending', slice: 'I10', dashboard: false },
+  'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'pending', slice: 'I10', dashboard: false },
+  'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'pending', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
-// `dashboard: false` for icon-library and preset-catalogue is to be confirmed by spike S-I1; if a
-// dashboard loads either chunk, the Architect revises (their name tables would then reach dashboards).
+// dashboard: false for icon-library and preset-catalogue: confirmed by spike S-I1 (Handoff 97: chunk
+// graph, import() sites and an 80-card Chromium run that loaded neither).
 
-/** Minified bytes of src/i18n/runtime.ts in magic-card.js (the 'card' tables excluded). */
-export const I18N_RUNTIME_MAX_BYTES = 1_536;
+/** Minified bytes of src/i18n/runtime.ts per copy (magic-card.js, studio entry, theme-editor entry),
+ *  tables excluded. r3: 2,048 (r2 1,536; S-I1 measured 1,257 before i18nForLazy). */
+export const I18N_RUNTIME_MAX_BYTES = 2_048;
 /** Off until slice I11; then the release gate needs every namespace 'complete' and every baseline at 0. */
 export const I18N_RELEASE_STRICT = false;
 
 /** html`` attributes and lit properties whose letter strings must go through t (D5). */
-export const SCANNED_ATTRIBUTES: readonly string[] = ['title', 'label', 'placeholder', 'aria-label', 'aria-description', 'alt', 'helper', '.label', '.title', '.helper', '.placeholder', '.closeLabel'];
+export const SCANNED_ATTRIBUTES: readonly string[] = ['title', 'label', 'placeholder', 'aria-label', 'aria-description', 'alt', 'helper', '.label', '.title', '.helper', '.placeholder', '.closeLabel', '.moveLabel', '.resizeLabel', '.maximizeLabel', '.restoreLabel'];
 /** Object properties whose letter strings must go through t or m (D5). */
-export const SCANNED_PROPERTIES: readonly string[] = ['label', 'title', 'name', 'description', 'help', 'hint', 'placeholder', 'tooltip', 'message', 'text', 'closeLabel', 'resetLabel'];
+export const SCANNED_PROPERTIES: readonly string[] = ['label', 'title', 'name', 'description', 'help', 'hint', 'placeholder', 'tooltip', 'message', 'text', 'closeLabel', 'resetLabel', 'valueText', 'numberLabel'];
 
 /**
  * Input of tools/i18n-us.mjs (dev time only, never shipped): en-GB -> en-US, whole words, case kept per
@@ -200,7 +277,7 @@ export const EN_US_WORDS: Readonly<Record<string, string>> = {
   behaviour: 'behavior', behaviours: 'behaviors',
   organise: 'organize', organised: 'organized', organising: 'organizing',
   optimise: 'optimize', optimised: 'optimized', optimising: 'optimizing',
-  minimise: 'minimize', maximise: 'maximize', normalise: 'normalize', normalised: 'normalized',
+  minimise: 'minimize', maximise: 'maximize', maximised: 'maximized', normalise: 'normalize', normalised: 'normalized',
   synchronise: 'synchronize', synchronised: 'synchronized', initialise: 'initialize',
   visualise: 'visualize', personalise: 'personalize', prioritise: 'prioritize', summarise: 'summarize',
   randomise: 'randomize', randomised: 'randomized', recognise: 'recognize', recognised: 'recognized',

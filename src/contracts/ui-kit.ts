@@ -1,5 +1,5 @@
 /*
- * Contract: ui kit. Version 1.0.0, revision 2 (Architect-owned, 2026-10-18). ADR 0030.
+ * Contract: ui kit. Version 1.0.0, revision 3 (Architect-owned, 2026-10-18). ADR 0030.
  * CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
  * the same as in card studio, please create centralized components so all screens have the same look
  * and feel". CEO confirmation the same day: the card editor (src/editor/ + src/css/editor-system) is the
@@ -20,7 +20,16 @@
  *   Additive in r2: <mc-ui-toast>, UiWindowElement.size, kit-scoped tokens (KIT_SCOPED_TOKENS), `.toast`
  *   and `.check` in KIT_CLASSES, dialog width 480 (r1 said 440). Not adopted: --mc-accent-src (it would
  *   rewrite every accent formula in Core editorTokens; the theme editor keeps overriding the accent tokens
- *   on its :host, as allowed below). Window header drag and Maximize: not in 1.x until a screen needs them.
+ *   on its :host, as allowed below). Window header drag and Maximize: not in 1.x until a screen needs them
+ *   (superseded by r3).
+ * - r3 2026-10-18 (CEO decision 2026-10-18, Handoff 108), all additive: the window gets header drag,
+ *   corner resize and maximise (UiWindowElement movable / resizable / maximizable / maximized and four
+ *   caller labels; parts move, resize, maximize), with keyboard and single-pointer alternatives (WCAG
+ *   2.1.1, 2.5.7) and no persistence. Every non-alert window turns all three on, so the nine card-editor
+ *   pickers, the module selector, the SVG editor's Start window and the studio dialogs behave the same.
+ *   A scrim close needs press and release on the scrim (the old picker rule). Folded in from the builds:
+ *   KitSliderOptions valueText / numberLabel / disabled (UI2), KitRowOptions sub / check / content / trail
+ *   and an optional onSelect (UI6).
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -132,14 +141,22 @@
  *    85-113), Escape never closes HA's dialog, define twice is harmless, a lower-revision definition
  *    keeps working, DOM-only API (a caller built on a different lit copy can drive it), a toast shown
  *    while a window is open renders above its scrim.
+ *    (r3) Window placement: header drag and corner resize with mouse and touch; arrows on the move and
+ *    resize grips (16 px, Shift 64), Home resets; a click without movement docks / steps the size; the
+ *    maximise button toggles and restores the previous rect; min 320 x 240, header clamp after a
+ *    viewport resize; Escape during a drag cancels it and leaves the window open; a press inside the
+ *    panel released on the scrim does not close; show() after close() starts centred at the default
+ *    size; no storage write; alert and compact sheet show no grips.
  * 4. Import scan: magic-card.js reaches no src/ui-kit/ file; child chunks import only files
  *    src/ui-kit/index.ts reaches; stats.json lists src/ui-kit/** only in magic-card-editor.js, the
  *    studio entry and the theme editor entry.
  * 5. Selector scan: no kit class rule outside src/ui-kit/ (allow list for layout-only modifiers).
+ * 6. (r3) Window scan: every `<mc-ui-window` in src/ whose variant is not 'alert' sets movable,
+ *    resizable and maximizable and binds all four placement labels.
  */
 
 export const UI_KIT_CONTRACT_VERSION = '1.0.0';
-export const UI_KIT_CONTRACT_REVISION = 2;
+export const UI_KIT_CONTRACT_REVISION = 3;
 
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
@@ -260,7 +277,17 @@ export interface KitRowOptions extends KitIcon {
   grip?: boolean;
   /** Trailing icon buttons (hide, lock, more). */
   actions?: KitButtonOptions[];
-  onSelect: (e: MouseEvent | KeyboardEvent) => void;
+  /** r3: optional; a `check` row selects through its checkbox. */
+  onSelect?: (e: MouseEvent | KeyboardEvent) => void;
+  /** r3. Second line under the name (mono), e.g. the id. */
+  sub?: string;
+  /** r3. Leading `.check` checkbox; the name becomes its <label> (multi-select list). The row tints
+   *  while checked. `label` is the checkbox's accessible name. */
+  check?: { label: string; checked: boolean; onChange: (v: boolean) => void };
+  /** r3. Replaces the name (inline rename input). */
+  content?: KitTemplate;
+  /** r3. Rendered after the actions (inline delete confirmation). */
+  trail?: KitTemplate;
 }
 
 export interface KitNoticeOptions {
@@ -282,6 +309,12 @@ export interface KitSliderOptions {
   unit?: string;
   onInput: (v: number) => void;
   onChange: (v: number) => void;
+  /** r3. aria-valuetext of the range (e.g. "90 degrees, pointing right"). */
+  valueText?: string;
+  /** r3. Accessible name of the number field; default `label`. */
+  numberLabel?: string;
+  /** r3. Disables the range and the number field. */
+  disabled?: boolean;
 }
 
 export interface KitTopBarOptions {
@@ -378,7 +411,36 @@ export interface UiWindowClose {
  * never reaches HA's card dialog. Focus returns to `opener`. `aria-modal` is true because it is.
  * Content is slotted (light DOM in the caller's root, styled by the caller's kit CSS).
  * Slots: default (body), "footer" (buttons, primary last), "header-actions" (optional icon buttons).
- * CSS parts: panel, header, title, close, body, footer.
+ * CSS parts: panel, header, title, close, body, footer; (r3) move, resize, maximize.
+ * (r3) Scrim close: only when the press AND the release are on the scrim (a drag or a text selection
+ * that starts in the panel and ends outside never closes; the old PickerDialogController rule).
+ *
+ * (r3) Placement (CEO 2026-10-18: every window behaves the same). Each flag is off by default; every
+ * caller of a non-alert window sets all three (test 6). Ignored, and their controls not rendered, for
+ * variant 'alert' and for 'sheet' at compact width (the bottom sheet under 600 px).
+ * - movable: drag by the header with mouse, pen or touch (pointer capture, touch-action none on the
+ *   header), not when the press starts on a button, input, select or textarea. The header starts with
+ *   a grip button (part `move`, glyph 'grip', aria-label moveLabel). Keyboard on the grip: arrows move
+ *   16 px, Shift+arrows 64 px, Home re-centres. Single pointer without dragging (WCAG 2.5.7): a click
+ *   on the grip docks the window, centre -> inline-end edge -> inline-start edge -> centre (16 px
+ *   margin), so HA's card preview beside the editor can be seen.
+ * - resizable: grip button at the bottom inline-end corner (part `resize`, aria-label resizeLabel).
+ *   Drag resizes; arrows 16 px, Shift+arrows 64 px; Home returns to the size default; a click steps the
+ *   width s -> m -> l -> xl -> s (WCAG 2.5.7). Minimum 320 x 240 px; maximum the viewport minus 16 px
+ *   per side.
+ * - maximizable: icon button before Close (part `maximize`, aria-pressed, aria-label maximizeLabel or
+ *   restoreLabel): the panel fills the viewport minus 16 px per side; restoring returns the rect it had
+ *   before. `maximized` is settable (also before show()) and reflects as an attribute.
+ * - "A click" is a pointer release within 4 px of its press; more than that is a drag.
+ * - Once moved, resized or maximised the panel has an explicit size: the body scrolls, header and footer
+ *   stay. At least 48 px of the header stays inside the viewport, also after a viewport resize.
+ * - Escape during a drag or resize cancels it (rect restored) and is consumed; the window stays open.
+ * - Persistence: none, as today (the pickers' ModalDragResizeController.reset() runs on close; the SVG
+ *   Start window keeps Maximise in memory only). Every show() starts centred at the size default and not
+ *   maximised unless the caller set `maximized`. Nothing goes to localStorage, the config or MCU storage.
+ * - Grips are 32 px fine (--mc-hit-sm) and 44 px coarse; focus ring per the styling rules; no rect
+ *   transition (so reduced motion needs nothing extra). The kit holds no strings: a flag that is on
+ *   without its label renders the control and logs one console.debug (test 6 keeps src/ clean).
  */
 export interface UiWindowElement extends HTMLElement {
   heading: string;
@@ -396,6 +458,20 @@ export interface UiWindowElement extends HTMLElement {
   opener?: HTMLElement;
   /** Scrim click closes (default true, never for 'alert'). */
   dismissible?: boolean;
+  /** r3. Header drag plus the move grip. Attribute `movable`. Default false. */
+  movable?: boolean;
+  /** r3. Corner resize grip. Attribute `resizable`. Default false. */
+  resizable?: boolean;
+  /** r3. Maximise / restore button. Attribute `maximizable`. Default false. */
+  maximizable?: boolean;
+  /** r3. Current maximised state; settable, reflected as attribute `maximized`. Reset to false on close. */
+  maximized?: boolean;
+  /** r3. Accessible names from the caller (British copy, e.g. "Move window", "Resize window",
+   *  "Maximise", "Restore size"). */
+  moveLabel?: string;
+  resizeLabel?: string;
+  maximizeLabel?: string;
+  restoreLabel?: string;
   readonly open: boolean;
   show(): void;
   close(reason?: UiWindowClose['reason']): void;
