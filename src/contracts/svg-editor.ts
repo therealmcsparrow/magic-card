@@ -305,6 +305,19 @@ import type { BooleanOp } from './path-booleans';
  *   Both start off and are not stored.
  * - The result note (what a button just did, with Undo) clears on the next edit, on a mode change, or 8 s after the
  *   last pointer or focus in it. Persistent warnings (the outline cuts the text area, crosses itself) stay as notices.
+ * (r6, UI4, ui-kit 1.0.0 r3) The SVG editor is built from the ui kit; its layout decisions of r5 and the CEO's SVG
+ * decisions of 2026-10-18 stay. Its chunk imports the kit (Core's editorTokens, src/ui-kit/css, templates and glyphs)
+ * and nothing more: the card-editor chunk that loads it holds the kit, so the chunk grows by no kit code. It defines
+ * no element of its own besides <mc-svg-editor> and uses <mc-ui-window>, <mc-ui-popover>, <mc-ui-menu> and <mc-ui-toast>.
+ * - Top bar: Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) | Undo, Redo | size chip |
+ *   Export / Import (menu) | Save to library | Done | Shortcuts. The tool rail is the kit rail (a toolbar: arrows move the
+ *   focus, a press picks the tool); Align, Combine and Path stay menu buttons after a divider on the canvas toolbar.
+ * - Start from, Save to library, Leave, Start over, Make N Accent layers Main and Export / Import are <mc-ui-window>s
+ *   (the confirmations are alerts, the others movable, resizable and maximisable). Shortcuts and Preview are anchored
+ *   <mc-ui-popover>s: Preview is closed by default and the canvas keeps its full height. No hint line, no More actions.
+ * - Yes / no settings are switches (no native checkbox), choices are segmented controls, MDI glyphs everywhere
+ *   (src/svg-editor/icons.ts is gone), the HA font in rem. A toast is <mc-ui-toast>; the result of an action is a notice.
+ * - The path-tools panel (path-tools 1.0.0) renders with the same kit templates.
  * Events:
  * - `mc-shape-change` detail ShapeChangeDetail; `commit` false during drags. The host applies it
  *   through design-panel's ShapePatch (extended with custom_shapes) and pushes one history step
