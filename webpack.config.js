@@ -20,7 +20,8 @@ module.exports = (env, argv) => {
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
-    // (magic-card-icon-library.js, public path: src/anim-studio/public-path.ts). The release uploads
+    // (magic-card-icon-library.js, public path: src/anim-studio/public-path.ts). The path canvas of the
+    // SVG and shape editors is a lazy chunk too (magic-card-path-canvas.js, src/path-canvas/loader.ts). The release uploads
     // dist/*.js and HACS installs them all.
     entry: {
       'magic-card': './src/index.ts',
@@ -62,9 +63,9 @@ module.exports = (env, argv) => {
           use: 'ts-loader',
           exclude: /node_modules/,
         },
-        // theme editor chunk (160 KB cap): shrink css`` / html`` template text in production builds
+        // theme editor chunk (160 KB cap) and path canvas chunk (40 KiB cap): shrink css`` / html`` template text in production builds
         ...(isProduction
-          ? [{ test: /\.ts$/, include: path.resolve(__dirname, 'src/theme-editor'), enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
         {
           test: /\.css$/,
