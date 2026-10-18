@@ -7,6 +7,8 @@ import { entityColorCss } from '../../utils/entity-color';
 import type { AnimationDoc } from '../model';
 import { V2_CAPS, type RigShape, type TargetRef } from '../model-v2';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
+import type { LayerView } from '../../contracts/studio-layers';
+import { isLocked } from '../layer-view';
 import type { ExportPiece } from '../svg-export';
 import {
   TOOL_INFO,
@@ -309,6 +311,8 @@ export class AnimDrawOverlay extends LitElement {
   }
 
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Preview-only locks: a locked shape cannot be picked, moved, nudged, deleted or erased. */
+  @property({ attribute: false }) layerView?: LayerView;
   @property({ attribute: false }) tile?: string;
   @property({ type: Number }) time = 0;
   /** Contract props, unused here. */
@@ -478,6 +482,17 @@ export class AnimDrawOverlay extends LitElement {
     return this.pieces ?? this._resolved?.pieces ?? [];
   }
 
+  private _isLocked(id: string): boolean {
+    return !!this.doc && !!this.layerView?.locked.length && isLocked(this.doc, this.layerView, `shape:${id}`);
+  }
+
+  /** Refuse an edit of a locked shape and say so; true when refused. */
+  private _refuseLocked(id: string): boolean {
+    if (!this._isLocked(id)) return false;
+    this._announce = `${this._shapes.find((s) => s.id === id)?.name ?? 'Shape'} is locked. Unlock it in Layers.`;
+    return true;
+  }
+
   private get _selectedId(): string | undefined {
     return selectedShapeId(this.selection);
   }
@@ -564,8 +579,11 @@ export class AnimDrawOverlay extends LitElement {
     const tool = activeTool(this.selection);
     switch (tool) {
       case 'select': {
-        const id = hitShape(this._shapes, raw, HIT_PX / v.k);
+        // a locked shape is passed over; when only locked ones are there, say so and select nothing
+        const id = hitShape(this._shapes.filter((s) => !this._isLocked(s.id)), raw, HIT_PX / v.k);
         if (!id) {
+          const lockedHit = hitShape(this._shapes, raw, HIT_PX / v.k);
+          if (lockedHit && this._refuseLocked(lockedHit)) return;
           if (this._selectedId) emitSelection(this, { kind: 'tool', tool: 'select' });
           return;
         }
@@ -594,6 +612,10 @@ export class AnimDrawOverlay extends LitElement {
       case 'motion': {
         if (tool === 'motion' && !isRigRef(this.selection.target)) {
           this._announce = 'Select a part or shape first.';
+          return;
+        }
+        if (tool === 'motion' && this.doc && this.layerView && isLocked(this.doc, this.layerView, this.selection.target!)) {
+          this._announce = 'That layer is locked. Unlock it in Layers.';
           return;
         }
         this._capture(e);
@@ -639,7 +661,7 @@ export class AnimDrawOverlay extends LitElement {
     if (d?.kind !== 'erase') return;
     let doc = d.base;
     for (const id of d.ids) doc = removeShape(doc, id);
-    const id = hitShape(doc.rig?.shapes ?? [], p, HIT_PX / v.k);
+    const id = hitShape((doc.rig?.shapes ?? []).filter((s) => !this._isLocked(s.id)), p, HIT_PX / v.k);
     if (!id) return;
     d.ids.push(id);
     this._emitDoc(removeShape(doc, id), 'Erase shape', true);
@@ -651,7 +673,7 @@ export class AnimDrawOverlay extends LitElement {
     e.stopPropagation();
     const id = this._selectedId;
     const s = id ? this._shapes.find((x) => x.id === id) : undefined;
-    if (!s) return;
+    if (!s || this._refuseLocked(s.id)) return;
     const v = this._view();
     const local = this._local(e, v);
     const raw = this._toVB(v, local);
@@ -870,6 +892,7 @@ export class AnimDrawOverlay extends LitElement {
       return;
     }
     if (!id) return;
+    if (this._refuseLocked(id)) return;
     if (e.key === 'Delete' || e.key === 'Backspace') {
       e.preventDefault();
       this._emitDoc(removeShape(this.doc, id), 'Delete shape');
@@ -970,7 +993,7 @@ export class AnimDrawOverlay extends LitElement {
           return svg`<rect class="bbox" x=${x - 4} y=${y - 4} width=${b.w * v.k + 8} height=${b.h * v.k + 8} rx="2"></rect>`;
         })()
       : nothing;
-    if (toCubicSubpaths(s.d).length !== 1 || this._drag?.kind === 'move') return box;
+    if (toCubicSubpaths(s.d).length !== 1 || this._drag?.kind === 'move' || this._isLocked(s.id)) return box;
     const path = parsePath(s.d);
     if (path.anchors.length > 100) return box;
     return svg`${box}${this._handlesOf(v, path, this._anchorSel, (i, which) => (e: PointerEvent) => this._onAnchorDown(e, i, which))}
