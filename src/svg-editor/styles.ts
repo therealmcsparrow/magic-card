@@ -748,6 +748,12 @@ export const editorStyles: CSSResult[] = [
     .stage.tool-hand {
       cursor: grab;
     }
+    .stage.tool-hand:active {
+      cursor: grabbing;
+    }
+    .stage:not(.tool-select, .tool-node, .tool-pen, .tool-hand) {
+      cursor: crosshair;
+    }
     .stage > svg,
     .stage > mc-path-canvas {
       position: absolute;
