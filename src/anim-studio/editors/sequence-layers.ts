@@ -4,6 +4,7 @@ import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc } from '../model';
 import type { LayerKey, LayerView, LayersDensity } from '../../contracts/studio-layers';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
+import { remapStepKeys } from '../layer-view';
 import { LayerRows, layerRowStyles } from './layer-row';
 import { formatSeconds, moveItem, stepInfo, type AnimationLibraryMap } from './sequence-utils';
 
@@ -15,23 +16,7 @@ import { formatSeconds, moveItem, stepInfo, type AnimationLibraryMap } from './s
  * in the Sequence editor.
  */
 
-/** The view after step `from` moved to place `to`: every `step:<n>` key follows its step. */
-export function remapStepKeys(view: LayerView, from: number, to: number): LayerView {
-  const at = (i: number): number => (i === from ? to : from < to ? (i > from && i <= to ? i - 1 : i) : i >= to && i < from ? i + 1 : i);
-  const map = (list: LayerKey[]): LayerKey[] => {
-    let changed = false;
-    const out = list.map((k) => {
-      const m = /^step:(\d+)$/.exec(k);
-      if (!m) return k;
-      const n = at(Number(m[1]));
-      if (n !== Number(m[1])) changed = true;
-      return `step:${n}`;
-    });
-    return changed ? out : list;
-  };
-  const next = { hidden: map(view.hidden), solo: map(view.solo), locked: map(view.locked), open: map(view.open) };
-  return next.hidden === view.hidden && next.solo === view.solo && next.locked === view.locked && next.open === view.open ? view : next;
-}
+export { remapStepKeys };
 
 @customElement('mc-anim-steps-layers')
 export class AnimStepsLayers extends LitElement {

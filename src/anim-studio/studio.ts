@@ -1562,6 +1562,7 @@ export class AnimationStudio extends LitElement {
       .time=${TIME_TAGS.has(tag) ? this._time : 0}
       .disabled=${this._busy}
       .studioSelection=${this._selection}
+      .layerView=${this._viewOf(d)}
       .emitter=${this._emitter.index}
       .all=${this._emitter.all}
       .tile=${this._tile}

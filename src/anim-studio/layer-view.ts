@@ -1,5 +1,6 @@
 import type { ApplyLayerView, IsLocked, LayerKey, LayerToggle, LayerView } from '../contracts/studio-layers';
 import type { AnimationDoc, AnimationKeyframe } from './model';
+import type { StudioSelection } from './slots';
 import type { BindProperty, TargetRef, Track } from './model-v2-core';
 import { isEmptyKeyframe, laneTimes, mainTarget, stripLane, usedLanes, type LaneId } from './editors/keyframes-utils';
 
@@ -223,4 +224,54 @@ export function pruneLayerView(doc: AnimationDoc, view: LayerView): LayerView {
   const locked = keep(view.locked);
   const open = keep(view.open);
   return hidden === view.hidden && solo === view.solo && locked === view.locked && open === view.open ? view : { hidden, solo, locked, open };
+}
+
+/** The rows a selection touches: parts, groups and shapes by their own key, a card part as `target:`, a key's lane as `lane:`. */
+export function selectionKeys(sel: StudioSelection): LayerKey[] {
+  const row = (t: string): LayerKey => (/^(part|group|shape):/.test(t) ? t : `target:${t}`);
+  if (sel.kind === 'keys') return (sel.keys ?? []).map((k) => (k.lane === '*' ? row(k.target) : `lane:${k.target}|${k.lane}`));
+  return (sel.targets?.length ? sel.targets : sel.target ? [sel.target] : []).map(row);
+}
+
+/** Whether anything the selection touches is locked (the inspectors then read only). */
+export function selectionLocked(doc: AnimationDoc, view: LayerView, sel: StudioSelection): boolean {
+  return view.locked.length > 0 && selectionKeys(sel).some((k) => isLocked(doc, view, k));
+}
+
+/** The view after step `from` moved to place `to`: every `step:<n>` key follows its step. */
+export function remapStepKeys(view: LayerView, from: number, to: number): LayerView {
+  const at = (i: number): number => (i === from ? to : from < to ? (i > from && i <= to ? i - 1 : i) : i >= to && i < from ? i + 1 : i);
+  return remapSteps(view, at);
+}
+
+/** The view after step `index` was deleted: its keys leave and the later steps' keys move up. */
+export function dropStepKey(view: LayerView, index: number): LayerView {
+  return remapSteps(view, (i) => (i === index ? -1 : i > index ? i - 1 : i));
+}
+
+function remapSteps(view: LayerView, at: (i: number) => number): LayerView {
+  const map = (list: LayerKey[]): LayerKey[] => {
+    let changed = false;
+    const out: LayerKey[] = [];
+    for (const k of list) {
+      const m = /^step:(\d+)$/.exec(k);
+      if (!m) {
+        out.push(k);
+        continue;
+      }
+      const n = at(Number(m[1]));
+      if (n !== Number(m[1])) changed = true;
+      if (n >= 0) out.push(`step:${n}`);
+    }
+    return changed ? out : list;
+  };
+  const next = { hidden: map(view.hidden), solo: map(view.solo), locked: map(view.locked), open: map(view.open) };
+  return next.hidden === view.hidden && next.solo === view.solo && next.locked === view.locked && next.open === view.open ? view : next;
+}
+
+/** The view with every lock that holds these rows removed (their own and the ones they inherit from a group, target or emitter). */
+export function unlockKeys(doc: AnimationDoc, view: LayerView, keys: LayerKey[]): LayerView {
+  const drop = new Set<LayerKey>();
+  for (const key of keys) for (let k: LayerKey | undefined = key, n = 0; k && n < 4; k = parentKey(doc, k), n++) if (view.locked.includes(k)) drop.add(k);
+  return drop.size ? { ...view, locked: view.locked.filter((k) => !drop.has(k)) } : view;
 }

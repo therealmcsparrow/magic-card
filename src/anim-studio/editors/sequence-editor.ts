@@ -3,6 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
 import { MenuPopover } from '../../editor/components/menu-popover';
 import type { HomeAssistant } from '../../types';
+import type { LayerView, LayerViewChangeDetail } from '../../contracts/studio-layers';
+import { dropStepKey, remapStepKeys } from '../layer-view';
 import { ANIMATION_CAPS, type AnimationDoc, type SequenceStep } from '../model';
 import {
   activeStep,
@@ -69,6 +71,8 @@ export class AnimSequenceEditor extends LitElement {
   /** Current scrub position, 0-1 of one cycle. */
   @property({ type: Number }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Preview-only hide / solo / lock of the steps (`step:<n>` keys); they follow a step through a move, a drag or a delete. */
+  @property({ attribute: false }) layerView?: LayerView;
 
   /** The expanded step row (-1: none). */
   @state() private _open = -1;
@@ -96,6 +100,13 @@ export class AnimSequenceEditor extends LitElement {
 
   private _emit(doc: AnimationDoc, label: string, transient = false): void {
     this.dispatchEvent(new CustomEvent('doc-change', { bubbles: true, composed: true, detail: transient ? { doc, label, transient: true } : { doc, label } }));
+  }
+
+  /** The view with the step keys moved the way the steps were (nothing is sent when no key changes). */
+  private _remap(by: (v: LayerView) => LayerView): void {
+    const v = this.layerView;
+    const next = v && by(v);
+    if (next && next !== v) this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view: next }, bubbles: true, composed: true }));
   }
 
   private _writeSteps(steps: SequenceStep[], label: string, transient = false): void {
@@ -129,6 +140,7 @@ export class AnimSequenceEditor extends LitElement {
     else if (this._open > index) this._open--;
     this._focusAfter = steps.length ? { index: Math.min(index, steps.length - 1), part: 'toggle' } : undefined;
     this._writeSteps(steps, 'Delete step');
+    this._remap((v) => dropStepKey(v, index));
     this._announce = `Step ${index + 1} deleted.`;
   }
 
@@ -139,6 +151,7 @@ export class AnimSequenceEditor extends LitElement {
     this._open = this._followMove(this._open, from, to);
     this._focusAfter = { index: to, part: focus };
     this._writeSteps(moveItem(this._steps, from, to), 'Move step');
+    this._remap((v) => remapStepKeys(v, from, to));
     this._announce = `Step moved to position ${to + 1} of ${n}.`;
   }
 
@@ -217,6 +230,7 @@ export class AnimSequenceEditor extends LitElement {
       this._open = this._followMove(this._open, d.from, d.to);
       this._focusAfter = { index: d.to, part: 'handle' };
       if (this.doc) this._emit({ ...this.doc, steps: moveItem(d.steps, d.from, d.to) }, 'Move step');
+      this._remap((v) => remapStepKeys(v, d.from, d.to));
       this._announce = `Step moved to position ${d.to + 1} of ${d.steps.length}.`;
     }
   }
