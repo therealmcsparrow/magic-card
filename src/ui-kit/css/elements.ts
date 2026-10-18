@@ -132,6 +132,9 @@ export const kitWindowElementCss: CSSResult = css`
   dialog.size-l {
     width: min(640px, calc(100vw - 32px));
   }
+  dialog.size-xl {
+    width: min(880px, calc(100vw - 32px));
+  }
   .panel {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
