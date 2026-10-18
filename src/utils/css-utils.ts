@@ -77,6 +77,8 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
   return Array.isArray(rec.conditional) && rec.conditional.some((r) => designUsesEntityColor(r?.design));
 }
 
+const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
+
 /** The border a button / dropdown control draws when the design writes none (width, style, colour). */
 export interface ControlLook {
   w: string;
@@ -88,7 +90,7 @@ export interface ControlLook {
 
 const NO_BORDER: ControlLook = { w: '0', s: 'none', c: 'currentColor' };
 /** The wrapper's own border and shadow keys, which move to the control (see designBorderVars). */
-const CONTROL_KEYS = new Set(['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color', 'box_shadow']);
+const CONTROL_KEYS = new Set([...BORDER_KEYS, 'box_shadow']);
 
 /** The default border of a button (by variant) or dropdown; undefined for any other module. */
 export function controlLook(type: string | undefined, variant?: string): ControlLook | undefined {
@@ -459,8 +461,6 @@ function defaultBorderStyle(rec: Record<string, unknown>): string | undefined {
   const v = SIDES.map((s) => sides[s].style);
   return v.every((x) => x === v[0]) ? v[0] : v.join(' ');
 }
-
-const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
 
 /**
  * The design border for a button / dropdown control as three four-value custom properties
