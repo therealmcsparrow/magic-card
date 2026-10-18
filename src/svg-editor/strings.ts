@@ -123,7 +123,6 @@ export const S = {
   gridHelpOff: 'Arrow keys move by 0.5. Turn on Snap to use the grid size.',
   gridToggle: (v: number): string => `Grid ${v}`,
   toolHand: 'Hand',
-  hintSelect: 'Click a shape to select it. Arrows move it. The fields on the right set size and angle.',
   hintNode: 'Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.',
   hintPen: 'Click to place a point. Click the first point to close. Esc ends the path.',
   hintShape: 'Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.',

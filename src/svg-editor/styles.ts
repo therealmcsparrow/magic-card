@@ -416,7 +416,7 @@ export const editorStyles: CSSResult[] = [
     }
     [data-layout='stacked'] .stage {
       flex: none;
-      min-height: max(320px, 45vh);
+      min-height: max(320px, 70vh);
     }
     .rail {
       grid-area: rail;
@@ -573,6 +573,7 @@ export const editorStyles: CSSResult[] = [
       display: flex;
       flex-direction: column;
       gap: 6px;
+      position: relative;
       min-width: 0;
       min-height: 0;
       padding: 8px;
@@ -756,6 +757,21 @@ export const editorStyles: CSSResult[] = [
     .pt-panel {
       padding: 8px 0 12px;
       border-bottom: 1px solid var(--mc-divider);
+    }
+    .pv {
+      position: absolute;
+      z-index: 15;
+      right: 16px;
+      bottom: 16px;
+      box-sizing: border-box;
+      width: min(calc(100% - 32px), 340px);
+      max-height: calc(100% - 32px);
+      padding: 12px;
+      overflow: auto;
+      background: var(--mc-surface);
+      border: 1px solid var(--mc-divider);
+      border-radius: 12px;
+      box-shadow: var(--mc-shadow-float);
     }
     .pv .seg {
       align-self: flex-start;

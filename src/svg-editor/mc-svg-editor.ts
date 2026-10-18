@@ -109,7 +109,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -163,6 +163,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   pt?: PtState;
   ptBusy?: PathTool;
   toast?: { text: string; action?: { label: string; run: () => void } };
+  pvOpen = false;
   dlg: 'save' | 'help' | 'single' | undefined;
   /** Dual-tone switch (session state): on also whenever a layer paints Accent. */
   dual = false;
@@ -1045,6 +1046,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     if (endDrag(this, false) || this.gestures.cancel()) return;
     if (this.pt) return ptCancel(this);
+    if (this.pvOpen) {
+      this.pvOpen = false;
+      this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.pv-toggle')?.focus());
+      return;
+    }
     if (this.dlg) this.dlg = undefined;
     else if (this.leaving) this.leaving = false;
     else if (this.overlay) this.overlay = false;

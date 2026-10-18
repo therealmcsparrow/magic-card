@@ -395,7 +395,6 @@ function workspace(ed: McSvgEditor): TemplateResult {
           underlay
           role="group"
           aria-label=${S.canvasLabel}
-          aria-describedby="hint"
           .frame=${ed.doc.vb}
           .paths=${ed.cvPaths}
           .paint=${ed.flat.paint}
@@ -421,8 +420,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<p class="empty">${S.empty}</p>` : nothing}
       </div>
       ${resultNote(ed)}
-      <p id="hint" class="hint">${hintFor(ed)}</p>
-      ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)} ${previews(ed)}
+      ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)} ${ed.pvOpen ? previews(ed) : nothing}
     </section>
     ${inspector(ed)}
   </div>`;
@@ -431,7 +429,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
 function hintFor(ed: McSvgEditor): string {
   switch (ed.tool) {
     case 'select':
-      return S.hintSelect;
+      return '';
     case 'node':
       return S.hintNode;
     case 'pen':
@@ -452,6 +450,7 @@ function hintFor(ed: McSvgEditor): string {
 function floatBar(ed: McSvgEditor): TemplateResult {
   return html`<div class="float" role="toolbar" aria-label=${S.canvasLabel}>
     ${btn(S.zoomOut, 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(S.zoomIn, 'plus', () => ed.zoomBy(1.25), { keys: '=' })}${btn(S.zoomFit, 'fit', () => ed.fitView(), { keys: '0' })}
+    <button type="button" class="b pv-toggle" aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}><span>${S.preview}</span></button>
     ${btn(S.gridToggle(ed.grid), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true, tip: S.gridOn })}${btn(S.snapOn, 'snap', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
   </div>`;
 }
@@ -860,7 +859,7 @@ function previews(ed: McSvgEditor): TemplateResult {
       ${ha && !ha.empty ? html`<svg viewBox=${ha.viewBox} width=${px} height=${px} aria-hidden="true">${ha.secondary ? svg`<path d=${ha.secondary} fill="currentColor" opacity=${HA_SECONDARY_OPACITY}></path>` : nothing}${ha.path ? svg`<path d=${ha.path} fill="currentColor" fill-rule="nonzero"></path>` : nothing}</svg>` : nothing}
     </div>`;
   const warn = ha && haWarns(ha);
-  return html`<section class="pv" aria-label=${S.preview}>
+  return html`<section id="pv" class="pv" role="group" aria-label=${S.preview}>
     ${seg(S.preview, ed.pvTheme, [['light', S.pvLight], ['dark', S.pvDark], ['on', S.pvOn], ['off', S.pvOff]] as Array<['light' | 'dark' | 'on' | 'off', string]>, (t) => (ed.pvTheme = t))}
     ${ed.mcu
       ? html`<div class="acts">${[[S.pvMainColour, ed.pvMain, (v: string) => (ed.pvMain = v)], [S.pvAccentColour, ed.pvAccent, (v: string) => (ed.pvAccent = v)]].map(
@@ -901,7 +900,7 @@ function savePop(ed: McSvgEditor): TemplateResult {
 function helpPop(ed: McSvgEditor): TemplateResult {
   return html`<div class="pop help-pop" role="dialog" aria-label=${S.help} aria-modal="false">
     <h3>${S.help}</h3>
-    <ul>${S.helpKeys.map((x) => html`<li>${x}</li>`)}</ul>
+    <ul>${hintFor(ed) ? html`<li>${hintFor(ed)}</li>` : nothing}${S.helpKeys.map((x) => html`<li>${x}</li>`)}</ul>
     ${btn(S.close, 'close', () => (ed.dlg = undefined), { text: true })}
   </div>`;
 }
