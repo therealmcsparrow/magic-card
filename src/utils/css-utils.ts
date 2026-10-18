@@ -77,7 +77,11 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
   return Array.isArray(rec.conditional) && rec.conditional.some((r) => designUsesEntityColor(r?.design));
 }
 
-export function designToStyle(input?: DesignConfig): string {
+/**
+ * `control`: a button / dropdown wrapper, which hands its border and shadow to the control inside
+ * (see designBorderVars); other modules draw them on the wrapper and get no mirrored vars.
+ */
+export function designToStyle(input?: DesignConfig, control = false): string {
   if (!input) return '';
   const design = resolveEntityColors(designNumbersToCss(input));
 
@@ -116,6 +120,11 @@ export function designToStyle(input?: DesignConfig): string {
   }
   const bg = nonEmpty(rec.background_color) ?? nonEmpty(rec.background);
   if (bg) parts.push(`--mc-design-bg: ${bg}`);
+  if (control) {
+    parts.push(...designBorderVars(rec));
+    const shadow = nonEmpty(rec.box_shadow);
+    if (shadow) parts.push(`--mc-design-shadow: ${shadow}`);
+  }
 
   if (design.css) {
     parts.push(design.css);
@@ -218,6 +227,8 @@ export interface HoverTarget {
   shape?: { design?: DesignConfig; padding?: string; card?: boolean };
   /** The border length overlay of an unshaped element (resolveBorderLength of its design). */
   borderLength?: ResolvedBorderLength;
+  /** A button / dropdown wrapper: the hover border and shadow reach the control (designToStyle `control`). */
+  control?: boolean;
 }
 
 const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !important`);
@@ -236,7 +247,7 @@ const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
  */
 export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
   if (!hover || typeof hover !== 'object') return '';
-  const decls = splitDeclarations(hoverSafe(designToStyle(hover as DesignConfig)))
+  const decls = splitDeclarations(hoverSafe(designToStyle(hover as DesignConfig, target.control)))
     .filter((d) => d.includes(':'))
     .map(important);
   if (!decls.length) return '';
@@ -424,6 +435,43 @@ function defaultBorderStyle(rec: Record<string, unknown>): string | undefined {
   if (!SIDES.some((s) => sides[s].widthSet && !sides[s].styleSet)) return undefined;
   const v = SIDES.map((s) => sides[s].style);
   return v.every((x) => x === v[0]) ? v[0] : v.join(' ');
+}
+
+/**
+ * The design border as per-side custom properties (--mc-design-border-<side>-<width|style|color>),
+ * only the fields the design writes. A button / dropdown draws its border on the control from them
+ * (the wrapper keeps layout); a width without a style is solid, like on the wrapper.
+ */
+function designBorderVars(rec: Record<string, unknown>): string[] {
+  const keys = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
+  if (!keys.some((k) => nonEmpty(rec[k]))) return [];
+  type F = { width?: string; style?: string; color?: string };
+  const all = nonEmpty(rec.border);
+  const fromShort = (v: string): F => {
+    const b = parseBorderShorthand(v);
+    return { width: b.width, style: b.style, color: b.color };
+  };
+  const sides = Object.fromEntries(SIDES.map((s) => [s, all ? fromShort(all) : {}])) as Record<Side, F>;
+  for (const s of SIDES) {
+    const v = nonEmpty(rec[`border_${s}`]);
+    if (v) sides[s] = fromShort(v);
+  }
+  const longhand = (key: string, field: keyof F, map: (v: string) => string = (v) => v) => {
+    const v = nonEmpty(rec[key]);
+    if (v) expandSides(v).forEach((x, i) => (sides[SIDES[i]][field] = map(x)));
+  };
+  longhand('border_width', 'width', normWidth);
+  longhand('border_style', 'style', (v) => v.toLowerCase());
+  longhand('border_color', 'color');
+  const out: string[] = [];
+  for (const s of SIDES) {
+    const f = sides[s];
+    if (f.width !== undefined && f.style === undefined) f.style = 'solid';
+    for (const field of ['width', 'style', 'color'] as const) {
+      if (f[field] !== undefined) out.push(`--mc-design-border-${s}-${field}: ${f[field]}`);
+    }
+  }
+  return out;
 }
 
 export interface BorderLengthLine {

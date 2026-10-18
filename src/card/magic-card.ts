@@ -1092,7 +1092,8 @@ export class MagicCard extends LitElement {
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: mod.entity });
     // `entity` design colours read this var (currentColor when unset); only set when one is used
     const entityColor = stateObj && designUsesEntityColor(design) ? entityStateColor(stateObj) : undefined;
-    const designStyle = [designToStyle(design), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
+    const control = mod.type === 'button' || mod.type === 'dropdown';
+    const designStyle = [designToStyle(design, control), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
       .filter(Boolean)
       .join('; ');
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)
@@ -1120,7 +1121,7 @@ export class MagicCard extends LitElement {
         tabindex=${hasActions ? 0 : nothing}
         aria-label=${hasActions ? this._getActionLabel(acting) : nothing}
         data-mc-path=${this.editMode ? path : nothing}
-        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border })}
+        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
