@@ -20,15 +20,32 @@ const sameList = (a?: readonly string[], b?: readonly string[]) =>
 
 const BULB = 'M0 2.2C2.6 2.6 3.5 5.3 3.1 7.4 2.7 9.6 1.3 11.1 0 11.1-1.3 11.1-2.7 9.6-3.1 7.4-3.5 5.3-2.6 2.6 0 2.2Z';
 
+/**
+ * The string of lights, built so that nothing on it needs the main thread to animate. The colour
+ * cycle is five stacked layers (`.lc.p0`..`.p4`) holding every bulb: layer p shows bulb i in colour
+ * (i + p) mod 5 and is lit during step p of five, so exactly one layer is visible at a time and each
+ * bulb walks through the palette in order. The twinkle is one wrapper per bulb group (`.tw`, five
+ * phases) around that layer's halos. Both only animate opacity, which the compositor does without
+ * restyling or repainting. Socket and highlight are colourless and drawn once on top.
+ */
 function lights(l: NonNullable<DecoLayout['lights']>): SVGTemplateResult {
+  const n = LIGHT_COLOURS.length;
+  const at = (b: (typeof l.bulbs)[number]) => `translate(${b.x} ${b.y}) rotate(${b.angle}) scale(${l.scale})`;
+  const layer = (p: number) => svg`<g class="lc p${p}">
+      ${LIGHT_COLOURS.map(
+        (_, k) => svg`<g class="tw" style="--k:${k}">${l.bulbs
+          .filter((b) => b.index % n === k)
+          .map(
+            (b) => svg`<g transform=${at(b)} style="color:${LIGHT_COLOURS[(b.index + p) % n]}"><circle cy="7" r="8.5" class="halo"></circle><circle cy="7" r="5.2" class="halo"></circle></g>`,
+          )}</g>`,
+      )}
+      ${l.bulbs.map((b) => svg`<path transform=${at(b)} d=${BULB} class="glass" style="color:${LIGHT_COLOURS[(b.index + p) % n]}"></path>`)}
+    </g>`;
   return svg`<g class="lights">
     <path d=${l.wire} class="wire"></path>
+    ${LIGHT_COLOURS.map((_, p) => layer(p))}
     ${l.bulbs.map(
-      (b) => svg`<g class="bulb" style="--i:${b.index};color:${LIGHT_COLOURS[b.index % LIGHT_COLOURS.length]}"
-        transform="translate(${b.x} ${b.y}) rotate(${b.angle}) scale(${l.scale})">
-        <circle cy="7" r="8.5" class="halo"></circle>
-        <circle cy="7" r="5.2" class="halo"></circle>
-        <path d=${BULB} class="glass"></path>
+      (b) => svg`<g class="bulb" transform=${at(b)}>
         <ellipse cx="-1.15" cy="5.8" rx=".75" ry="1.8" class="hi"></ellipse>
         <rect x="-1.8" y="-.8" width="3.6" height="3.4" rx=".9" class="socket"></rect>
       </g>`,
@@ -145,15 +162,22 @@ export class McSeasonalDeco extends LitElement {
       stroke-width: 1.2;
       stroke-linecap: round;
     }
-    .bulb {
-      animation: mc-deco-cycle ${CYCLE_STEP * LIGHT_COLOURS.length}s steps(1, end) infinite;
-      animation-delay: calc(var(--i) * -${CYCLE_STEP}s);
+    /* one of five colour layers is lit per step; the first is the resting look (reduced motion) */
+    .lc {
+      opacity: 0;
+    }
+    .lc.p0 {
+      opacity: 1;
+    }
+    ${unsafeCSS(LIGHT_COLOURS.map((_, p) => `.lc.p${p} { animation: mc-deco-on${p} ${CYCLE_STEP * LIGHT_COLOURS.length}s steps(1, end) infinite; }`).join(' '))}
+    .tw {
+      opacity: 0.73;
+      animation: mc-deco-twinkle 1.8s steps(1, end) infinite;
+      animation-delay: calc(var(--k) * -0.7s);
     }
     .halo {
       fill: currentColor;
-      opacity: 0.16;
-      animation: mc-deco-twinkle 1.8s steps(1, end) infinite;
-      animation-delay: calc(var(--i) * -0.7s);
+      opacity: 0.22;
     }
     .glass {
       fill: currentColor;
@@ -169,18 +193,22 @@ export class McSeasonalDeco extends LitElement {
       stroke: #23362a;
       stroke-width: 0.4;
     }
-    @keyframes mc-deco-cycle {
-      ${unsafeCSS(LIGHT_COLOURS.map((c, i) => `${(i * 100) / LIGHT_COLOURS.length}% { color: ${c}; }`).join(' '))}
-    }
+    ${unsafeCSS(
+      LIGHT_COLOURS.map(
+        (_, p) =>
+          `@keyframes mc-deco-on${p} { ${LIGHT_COLOURS.map((__, i) => `${(i * 100) / LIGHT_COLOURS.length}% { opacity: ${i === p ? 1 : 0}; }`).join(' ')} }`,
+      ).join(' '),
+    )}
+    /* halo opacity 0.16 / 0.04 / 0.22 of the 0.22 it is drawn at */
     @keyframes mc-deco-twinkle {
       0% {
-        opacity: 0.16;
+        opacity: 0.73;
       }
       40% {
-        opacity: 0.04;
+        opacity: 0.18;
       }
       70% {
-        opacity: 0.22;
+        opacity: 1;
       }
     }
 
