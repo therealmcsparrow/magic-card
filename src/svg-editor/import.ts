@@ -102,12 +102,8 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
   if (!root) return doc;
   const groups: Group[] = [];
 
-  const walk = (el: Element, m: Matrix, inh: Inherit, group: string | undefined, depth: number): void => {
-    const tag = el.localName.toLowerCase();
-    if (NOT_DRAWN.has(tag) || !KEEP.has(tag)) return;
-    const t = el.getAttribute('transform');
-    if (t) notes.transforms = true;
-    const mm = t ? multiply(m, parseTransform(t)) : m;
+  /** SVG inheritance: the element's own presentation attributes over its parent's (the root <svg> and <g> included). */
+  const inherit = (el: Element, inh: Inherit): Inherit => {
     const get = (k: string): string | undefined => el.getAttribute(k)?.trim();
     const p: Inherit = { ...inh };
     const f = get('fill');
@@ -130,6 +126,16 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
     if (rule === 'evenodd' || rule === 'nonzero') p.rule = rule;
     if ((get('class') ?? '').split(/\s+/).includes('mc-accent')) p.accent = true;
     if (get('opacity') || get('fill-opacity') || get('stroke-opacity')) notes.opacity = true;
+    return p;
+  };
+
+  const walk = (el: Element, m: Matrix, inh: Inherit, group: string | undefined, depth: number): void => {
+    const tag = el.localName.toLowerCase();
+    if (NOT_DRAWN.has(tag) || !KEEP.has(tag)) return;
+    const t = el.getAttribute('transform');
+    if (t) notes.transforms = true;
+    const mm = t ? multiply(m, parseTransform(t)) : m;
+    const p = inherit(el, inh);
 
     if (tag === 'g') {
       let g = group;
@@ -167,7 +173,7 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
 
   const rm = parseTransform(root.getAttribute('transform'));
   if (root.getAttribute('transform')) notes.transforms = true;
-  const rootInh: Inherit = { ...ROOT };
+  const rootInh = inherit(root, ROOT);
   for (const c of root.children) walk(c, rm, rootInh, undefined, 0);
   return pruneGroups({ ...doc, groups });
 }

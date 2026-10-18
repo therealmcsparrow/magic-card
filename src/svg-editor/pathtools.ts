@@ -117,7 +117,9 @@ function plan(p: PtState, d: Doc, sel: readonly string[]): Planned {
         const r = done(c.outlineStroke(s.paths, { width: s.width, cap: s.cap, join: s.join }, opt(s), deps), s.paths);
         if (!r) continue;
         const ring = { fill: s.stroke, stroke: 'none' as const, rule: 'nonzero' as const };
-        rep.set(s.id, s.fill === 'none' ? [edit(s, r, ring)] : [edit(s, s.paths, { stroke: 'none' }), newShape('path', r, { ...ring, name: `${s.name} outline`, group: s.group })]);
+        // the result is named "<name> outline" so a round-capped line that looks the same is plainly a new shape
+        const named = / outline$/.test(s.name) ? s.name : `${s.name} outline`;
+        rep.set(s.id, s.fill === 'none' ? [edit(s, r, { ...ring, name: named })] : [edit(s, s.paths, { stroke: 'none' }), newShape('path', r, { ...ring, name: named, group: s.group })]);
       } else if (tool === 'offset') {
         const cl = s.paths.filter(closed);
         if (!cl.length) continue;
