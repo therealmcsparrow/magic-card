@@ -681,8 +681,52 @@ export const editorStyles: CSSResult[] = [
       border-radius: 8px;
       -webkit-touch-callout: none;
     }
-    .row[aria-level='2'] {
-      padding-left: 20px;
+    .tree .row {
+      padding-left: calc(4px + (var(--lv, 1) - 1) * 14px);
+      scroll-margin-block: 48px;
+    }
+    .tree .row .b {
+      min-width: max(24px, calc(var(--hit) - 12px));
+      min-height: max(24px, calc(var(--hit) - 12px));
+      padding: 0 2px;
+      border-color: transparent;
+      background: transparent;
+    }
+    .grip {
+      touch-action: none;
+      cursor: grab;
+    }
+    .row.off .nm {
+      opacity: 0.55;
+    }
+    .row.dragging {
+      opacity: 0.5;
+    }
+    .tree.dragging {
+      user-select: none;
+      cursor: grabbing;
+    }
+    .row.drop-before {
+      box-shadow: inset 0 2px 0 var(--mc-accent);
+    }
+    .row.drop-after {
+      box-shadow: inset 0 -2px 0 var(--mc-accent);
+    }
+    .row.drop-into {
+      outline: 2px solid var(--mc-accent);
+      outline-offset: -2px;
+    }
+    .row.drop-no {
+      outline: 2px dashed currentColor;
+      outline-offset: -2px;
+      cursor: not-allowed;
+    }
+    .dstat {
+      min-height: 1.4em;
+      margin: 0;
+    }
+    .dstat.is-no {
+      font-weight: 600;
     }
     .nm {
       flex: 1;

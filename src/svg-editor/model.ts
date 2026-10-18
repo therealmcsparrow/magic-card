@@ -421,6 +421,32 @@ export function ungroup(d: Doc, groupId: string): Doc {
   return build(d, root);
 }
 
+/** A row of the layer tree, top first: a layer or a group, its level (1 = top), place among its siblings (top = 0) and direct item count. */
+export interface TreeRow {
+  id: string;
+  group: boolean;
+  parent?: string;
+  level: number;
+  index: number;
+  size: number;
+  kids: number;
+}
+
+/** The tree as rows in display order; `all` also lists the content of collapsed groups. */
+export function layoutRows(d: Doc, all = false): TreeRow[] {
+  const out: TreeRow[] = [];
+  const walk = (list: TNode[], level: number, parent?: string): void =>
+    list
+      .slice()
+      .reverse()
+      .forEach((n, index) => {
+        out.push({ id: n.id, group: !n.s, parent, level, index, size: list.length, kids: n.kids?.length ?? 0 });
+        if (n.kids && (all || d.groups.find((g) => g.id === n.id)?.open !== false)) walk(n.kids, level + 1, n.id);
+      });
+  walk(tree(d), 1);
+  return out;
+}
+
 export type MoveWhy = 'self' | 'depth' | 'locked' | 'none';
 
 /** Move an item (layer or group id) to a place in the layer tree; `why` says why it was refused (doc stays). */

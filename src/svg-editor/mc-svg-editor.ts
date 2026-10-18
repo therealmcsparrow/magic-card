@@ -32,7 +32,6 @@ import {
   is24,
   mapShapes,
   arrangeOrder,
-  moveOrder,
   moveShape,
   newShape,
   nameFor,
@@ -52,9 +51,11 @@ import {
   boxOf,
   asPath,
   type Doc,
+  type Group,
   type Paint,
   type Shape,
 } from './model';
+import { endDrag, stepOrder, groupBlocked, type DragState } from './layers';
 import { emptyMenu, pointMenu, runMenu, shapeMenu } from './menu';
 import { editorStyles } from './styles';
 import { S } from './strings';
@@ -106,7 +107,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -168,6 +169,18 @@ export class McSvgEditor extends LitElement implements StageHost {
   layout: 'wide' | 'mid' | 'compact' | 'stacked' = 'wide';
   overlay = false;
   renaming?: string;
+  /** The tree row that holds the tab stop (`g:<id>` for a group). */
+  cur?: string;
+  /** A layer drag in progress, its target and whether it is allowed. */
+  drag?: DragState;
+  dragPend?: { id: string; x: number; y: number; cy: number; raf?: number };
+  /** The tree's status line: why a move was refused. */
+  tmsg = '';
+  /** The element the tree scrolls in (the left panel). */
+  listScroller = (): HTMLElement | null => {
+    for (let n = this.renderRoot.querySelector<HTMLElement>('.tree'); n; n = n.parentElement) if (/auto|scroll/.test(getComputedStyle(n).overflowY)) return n;
+    return null;
+  };
   startMode?: 'icon' | 'paste';
   startError?: string;
   liveShape?: Live;
@@ -453,7 +466,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The selection box the canvas draws with handles (Select tool, unlocked visible layers). */
   get transformBox(): TransformBox | undefined {
-    const sel = this.tool === 'select' ? this.selected.filter((s) => !s.locked && !s.hidden) : [];
+    const sel = this.tool === 'select' ? this.selected.filter((s) => !isOff(this.doc, s, 'locked') && !isOff(this.doc, s, 'hidden')) : [];
     const box = boxOf(sel);
     const t = box && { box, scale: true, rotate: true, keepRatio: this.lockRatio, angle: sel.length === 1 ? sel[0].angle ?? 0 : 0 };
     const k = JSON.stringify(t);
@@ -465,7 +478,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   onTransform = (e: Event): void => {
     const d = (e as CustomEvent<PathTransform>).detail;
     if (d.label === 'Cancel') return this.setDoc(this.base);
-    const sel = this.selected.filter((s) => !s.locked && !s.hidden);
+    const sel = this.selected.filter((s) => !isOff(this.doc, s, 'locked') && !isOff(this.doc, s, 'hidden'));
     const from = boxOf(this.base.shapes.filter((s) => sel.some((x) => x.id === s.id)));
     if (!from) return;
     const m = d.matrix;
@@ -495,6 +508,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   openRowMenu(id: string, row: HTMLElement, at: Pt, touch: boolean): void {
     const ids = id.startsWith('g:') ? under(this.doc, id.slice(2)).map((s) => s.id) : [id];
     if (!ids.every((i) => this.sel.includes(i))) this.select(ids);
+    this.cur = id;
     this.menuAt = Date.now();
     this.menu = { items: shapeMenu(this), at, touch, opener: row };
   }
@@ -560,7 +574,7 @@ export class McSvgEditor extends LitElement implements StageHost {
           const dx = b.x - a.x;
           const dy = b.y - a.y;
           const sid = fb.map[i].sid;
-          const ids = (this.sel.includes(sid) ? this.sel : [sid]).filter((id) => !byId(doc, id)?.locked);
+          const ids = (this.sel.includes(sid) ? this.sel : [sid]).filter((id) => { const x = byId(doc, id); return !x || !isOff(doc, x, 'locked'); });
           doc = mapShapes(doc, ids, (s) => moveShape(s, dx, dy));
         } else {
           for (const i of changed) {
@@ -757,6 +771,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   group(): void {
     const r = groupItems(this.doc, this.sel);
     if (r.group) this.apply(r.doc, 'Group');
+    else if (groupBlocked(this)) this.say(S.groupDepth);
   }
 
   ungroupSel(gid: string): void {
@@ -764,11 +779,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   reorder(id: string, dir: 1 | -1): void {
-    const d = moveOrder(this.doc, id, dir);
-    if (d === this.doc) return;
-    this.apply(d, 'Reorder');
-    const s = byId(d, id)!;
-    this.say(S.moved(s.name, d.shapes.length - d.shapes.indexOf(s), d.shapes.length));
+    stepOrder(this, id, dir);
+  }
+
+  editGroup(gid: string, patch: Partial<Group>, label: string): void {
+    this.apply({ ...this.doc, groups: this.doc.groups.map((g) => (g.id === gid ? { ...g, ...patch } : g)) }, label);
   }
 
   // ── align, distribute, placement, arrange ──
@@ -899,7 +914,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** Move/size fields: X, Y, W, H of the selection's box. */
   setBox(to: Partial<Box>, label: string): void {
-    const sel = this.selected.filter((s) => !s.locked);
+    const sel = this.selected.filter((s) => !isOff(this.doc, s, 'locked'));
     const from = boxOf(sel);
     if (!from) return;
     const b: Box = { ...from, ...to };
@@ -913,7 +928,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   rotate(deg: number): void {
-    const sel = this.selected.filter((s) => !s.locked);
+    const sel = this.selected.filter((s) => !isOff(this.doc, s, 'locked'));
     const b = boxOf(sel);
     if (!b || !deg) return;
     const m = rotateMatrix(deg, [b.x + b.w / 2, b.y + b.h / 2]);
@@ -926,7 +941,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   flip(axis: 'h' | 'v'): void {
-    const sel = this.selected.filter((s) => !s.locked);
+    const sel = this.selected.filter((s) => !isOff(this.doc, s, 'locked'));
     const b = boxOf(sel);
     if (!b) return;
     const m = flipMatrix(axis, [b.x + b.w / 2, b.y + b.h / 2]);
@@ -980,19 +995,19 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   fitSafe(): void {
-    const b = boxOf(this.doc.shapes.filter((s) => !s.hidden));
+    const b = boxOf(this.doc.shapes.filter((s) => !isOff(this.doc, s, 'hidden')));
     if (!b) return;
     const k = Math.min(1, 20 / Math.max(b.w, 0.01), 20 / Math.max(b.h, 0.01));
     const w = b.w * k;
     const h = b.h * k;
     const to: Box = { x: 12 - w / 2, y: 12 - h / 2, w, h };
     const m = boxMatrix(b, to);
-    this.apply({ ...this.doc, shapes: this.doc.shapes.map((s) => (s.hidden ? s : transformShape(s, m, true))) }, 'Fit to 20');
+    this.apply({ ...this.doc, shapes: this.doc.shapes.map((s) => (isOff(this.doc, s, 'hidden') ? s : transformShape(s, m, true))) }, 'Fit to 20');
   }
 
   tidyNow(): void {
     this.decimals = Math.min(this.decimals, 1);
-    this.apply({ ...this.doc, shapes: this.doc.shapes.filter((s) => !s.hidden) }, 'Tidy');
+    this.apply({ ...this.doc, shapes: this.doc.shapes.filter((s) => !isOff(this.doc, s, 'hidden')) }, 'Tidy');
   }
 
   // ── Escape, keys ──
@@ -1014,7 +1029,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.closePicker();
       return;
     }
-    if (this.gestures.cancel()) return;
+    if (endDrag(this, false) || this.gestures.cancel()) return;
     if (this.dlg) this.dlg = undefined;
     else if (this.leaving) this.leaving = false;
     else if (this.overlay) this.overlay = false;
@@ -1083,11 +1098,6 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (e.key === '?' || (code === 'Slash' && e.shiftKey)) {
       e.preventDefault();
       this.dlg = this.dlg === 'help' ? undefined : 'help';
-      return;
-    }
-    if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && e.composedPath().some((n) => (n as HTMLElement).getAttribute?.('role') === 'tree') && this.sel[0]) {
-      e.preventDefault();
-      this.reorder(this.sel[0], e.key === 'ArrowUp' ? 1 : -1);
       return;
     }
     if (this.tool === 'shapes' && code === 'KeyS' && !e.shiftKey && !e.altKey && this.inCanvasOrRail(e)) {
@@ -1562,12 +1572,6 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
   }
 
-  pickLayer(id: string, additive: boolean): void {
-    const next = additive ? (this.sel.includes(id) ? this.sel.filter((x) => x !== id) : [...this.sel, id]) : [id];
-    this.select(next);
-    if (!additive) this.say(S.liveSelected(byId(this.doc, id)?.name ?? ''));
-  }
-
   replaceOne(s: Shape, patch: Partial<Shape>): Doc {
     return { ...this.doc, shapes: this.doc.shapes.map((x) => (x.id === s.id ? { ...x, ...patch } : x)) };
   }
@@ -1575,6 +1579,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   renameShape(id: string, name: string): void {
     const n = name.trim();
     this.renaming = undefined;
+    if (id.startsWith('g:')) {
+      if (n && this.doc.groups.find((g) => g.id === id.slice(2))?.name !== n) this.editGroup(id.slice(2), { name: n }, 'Rename');
+      return;
+    }
     const s = byId(this.doc, id);
     if (n && s && n !== s.name) this.apply(this.replaceOne(s, { name: n }), 'Rename', `rename-${id}`);
   }

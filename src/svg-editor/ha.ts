@@ -1,7 +1,7 @@
 import type { EditPath, PathData, Pt, SubPath } from '../contracts/path-model';
 import { flatten, reverse } from '../path/core';
 import { E, T } from './bind';
-import type { Doc, Shape } from './model';
+import { isOff, type Doc, type Shape } from './model';
 
 /*
  * The "In Home Assistant" form of a drawing (mcu-library 1.0.0, "Saved icon path"): Home Assistant draws
@@ -76,7 +76,7 @@ const GRID = 40;
 export function haForm(d: Doc, decimals = 2): HaForm {
   const main: SubPath[] = [];
   const second: SubPath[] = [];
-  for (const s of d.shapes) (s.fill === 'accent' || (s.fill === 'none' && s.stroke === 'accent') ? second : main).push(...haSubpaths(s));
+  for (const s of d.shapes) if (!isOff(d, s, 'hidden')) (s.fill === 'accent' || (s.fill === 'none' && s.stroke === 'accent') ? second : main).push(...haSubpaths(s));
   const str = (x: SubPath[]): string => (x.length ? T.tidyPath(x as PathData, { decimals }) : '');
   const path = str(main);
   const secondary = str(second);
@@ -84,7 +84,7 @@ export function haForm(d: Doc, decimals = 2): HaForm {
   const out: HaForm = { path, secondary, viewBox: `${vb.x} ${vb.y} ${vb.w} ${vb.h}`, empty: !path && !secondary, lost: 0 };
 
   // coverage of the drawing against the form, sampled on a grid
-  const drawn = d.shapes.filter((s) => !s.hidden && (s.fill !== 'none' || s.stroke !== 'none'));
+  const drawn = d.shapes.filter((s) => !isOff(d, s, 'hidden') && (s.fill !== 'none' || s.stroke !== 'none'));
   const info = drawn.map((s) => ({
     s,
     polys: s.paths.filter((p) => p.anchors.length > 1).map((p) => ({ pts: flatten(E.fromEdit({ anchors: p.anchors, closed: s.fill !== 'none' || p.closed }), 6), closed: p.closed })),

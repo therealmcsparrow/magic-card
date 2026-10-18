@@ -1,6 +1,5 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
 import { guard } from 'lit/directives/guard.js';
-import { repeat } from 'lit/directives/repeat.js';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { toPathString } from '../path/core';
 import { D, E } from './bind';
@@ -9,8 +8,9 @@ import type { BooleanOp } from '../contracts/path-booleans';
 import { HA_SECONDARY_OPACITY, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange } from '../contracts/svg-editor';
 import { boolHelp, boolReason } from './combine';
 import { haWarns } from './ha';
+import { groupBlocked, layerTree, subject } from './layers';
 import { glyph, type GlyphName } from './icons';
-import { byId, isOff, round2, shapeBox, outsideSafe, toneOf, type Doc, type Paint, type Shape } from './model';
+import { byId, isOff, round2, shapeBox, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
@@ -539,144 +539,18 @@ function leftPanel(ed: McSvgEditor): TemplateResult {
 }
 
 function layersPanel(ed: McSvgEditor): TemplateResult {
-  const d = ed.doc;
-  const unsafe = new Set(outsideSafe(d));
-  const rows: TemplateResult[] = [];
-  const done = new Set<string>();
-  const ordered = d.shapes.slice().reverse();
-  const row = (s: Shape, level: number): TemplateResult => {
-    const on = ed.sel.includes(s.id);
-    const hide = s.hidden;
-    return html`<div
-      class=${`row${on ? ' on' : ''}`}
-      role="treeitem"
-      aria-level=${level}
-      aria-selected=${aria(on)}
-      tabindex=${on || (!ed.sel.length && ordered[0] === s) ? 0 : -1}
-      data-id=${s.id}
-      @click=${(e: MouseEvent) => ed.pickLayer(s.id, e.shiftKey || e.ctrlKey || e.metaKey)}
-      @dblclick=${() => (ed.renaming = s.id)}
-      @keydown=${(e: KeyboardEvent) => layerKey(e, ed, s.id)}
-      @contextmenu=${(e: MouseEvent) => ed.rowContext(e, s.id)}
-      @pointerdown=${(e: PointerEvent) => ed.pressDown(e, s.id)}
-      @pointermove=${ed.pressMove}
-      @pointerup=${ed.pressEnd}
-      @pointercancel=${ed.pressEnd}
-    >
-      <button type="button" class="b icon" aria-pressed=${aria(!!hide)} aria-label=${hide ? S.show(s.name) : S.hide(s.name)} title=${hide ? S.show(s.name) : S.hide(s.name)} @click=${(e: Event) => { e.stopPropagation(); ed.editShapes([s.id], (x) => ({ ...x, hidden: !x.hidden }), 'Hide'); }}>${glyph(hide ? 'eyeOff' : 'eye', 16)}</button>
-      <button type="button" class="b icon" aria-pressed=${aria(!!s.locked)} aria-label=${s.locked ? S.unlock(s.name) : S.lock(s.name)} title=${s.locked ? S.unlock(s.name) : S.lock(s.name)} @click=${(e: Event) => { e.stopPropagation(); ed.apply(ed.replaceOne(s, { locked: !s.locked }), 'Lock'); }}>${glyph(s.locked ? 'lock' : 'unlock', 16)}</button>
-      ${ed.renaming === s.id
-        ? html`<input class="rename" type="text" .value=${s.name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, s)} @blur=${(e: Event) => ed.renameShape(s.id, (e.target as HTMLInputElement).value)} />`
-        : html`<span class="nm" title=${s.name}>${s.name}</span>`}
-      ${ed.dualOn ? html`<span class="chip tone">${S.tone[toneOf(s)]}</span>` : nothing}
-      ${unsafe.has(s.id) ? html`<span class="chip is-warn" title=${S.outsideSafe}>!<span class="sr">${S.outsideSafe}</span></span>` : nothing}
-    </div>`;
-  };
-  for (const s of ordered) {
-    if (done.has(s.id)) continue;
-    const g = s.group ? d.groups.find((x) => x.id === s.group) : undefined;
-    if (!g) {
-      rows.push(row(s, 1));
-      continue;
-    }
-    const members = ordered.filter((m) => m.group === g.id);
-    members.forEach((m) => done.add(m.id));
-    const open = g.open !== false;
-    const allSel = members.every((m) => ed.sel.includes(m.id));
-    rows.push(html`<div
-      class=${`row grp${allSel ? ' on' : ''}`}
-      role="treeitem"
-      aria-level="1"
-      aria-expanded=${aria(open)}
-      aria-selected=${aria(allSel)}
-      tabindex="-1"
-      data-id=${`g:${g.id}`}
-      @click=${() => ed.select(members.map((m) => m.id))}
-      @keydown=${(e: KeyboardEvent) => groupKey(e, ed, g.id, open)}
-      @contextmenu=${(e: MouseEvent) => ed.rowContext(e, `g:${g.id}`)}
-    >
-      <button type="button" class="b icon" aria-label=${open ? 'Collapse' : 'Expand'} @click=${(e: Event) => { e.stopPropagation(); ed.toggleGroup(g.id); }}>${glyph(open ? 'down' : 'right', 16)}</button>
-      <span class="nm">${g.name}</span>
-      ${btn(S.ungroup, undefined, () => ed.ungroupSel(g.id), { text: true, cls: 'mini' })}
-    </div>`);
-    if (open) members.forEach((m) => rows.push(row(m, 2)));
-  }
   const some = ed.sel.length > 0;
+  const one = subject(ed);
+  const blocked = groupBlocked(ed);
   return html`<div class="layers">
-    ${rows.length ? html`<div class="tree" role="tree" aria-label=${S.layers} aria-multiselectable="true">${repeat(rows, (_, i) => i, (r) => r)}</div>` : html`<p class="help">${S.layersEmpty}</p>`}
+    ${ed.doc.shapes.length ? layerTree(ed) : html`<p class="help">${S.layersEmpty}</p>`}
     <div class="acts">
-      ${btn(S.groupAdd, 'group', () => ed.group(), { disabled: ed.sel.length < 2 })}${btn(S.duplicate, 'copy', () => ed.duplicate(), { disabled: !some, keys: 'Control+D' })}${btn(S.remove, 'trash', () => ed.deleteSelected(), { disabled: !some })}
-      ${btn(S.moveUp, 'up', () => ed.reorder(ed.sel[0], 1), { disabled: ed.sel.length !== 1 })}${btn(S.moveDown, 'down', () => ed.reorder(ed.sel[0], -1), { disabled: ed.sel.length !== 1 })}
+      ${btn(S.groupAdd, 'group', () => ed.group(), { disabled: ed.sel.length < 2 || blocked })}${btn(S.duplicate, 'copy', () => ed.duplicate(), { disabled: !some, keys: 'Control+D' })}${btn(S.remove, 'trash', () => ed.deleteSelected(), { disabled: !some })}
+      ${btn(S.moveUp, 'up', () => one && ed.reorder(one, 1), { disabled: !one })}${btn(S.moveDown, 'down', () => one && ed.reorder(one, -1), { disabled: !one })}
     </div>
+    ${blocked ? html`<p class="help">${S.groupDepth}</p>` : nothing}
     <p class="help">${S.layerMove}</p>
   </div>`;
-}
-
-function layerKey(e: KeyboardEvent, ed: McSvgEditor, id: string): void {
-  if ((e.target as HTMLElement).tagName === 'INPUT') return;
-  const rows = [...(e.currentTarget as HTMLElement).parentElement!.querySelectorAll<HTMLElement>('[role=treeitem]')];
-  const i = rows.indexOf(e.currentTarget as HTMLElement);
-  const go = (j: number): void => {
-    const r = rows[Math.max(0, Math.min(rows.length - 1, j))];
-    r?.focus();
-  };
-  if (e.altKey) return;
-  if (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)) {
-    e.preventDefault();
-    e.stopPropagation();
-    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    ed.openRowMenu(id, e.currentTarget as HTMLElement, [r.left + 24, r.bottom], false);
-    return;
-  }
-  switch (e.key) {
-    case 'ArrowDown':
-      e.preventDefault();
-      go(i + 1);
-      break;
-    case 'ArrowUp':
-      e.preventDefault();
-      go(i - 1);
-      break;
-    case 'Home':
-      e.preventDefault();
-      go(0);
-      break;
-    case 'End':
-      e.preventDefault();
-      go(rows.length - 1);
-      break;
-    case 'F2':
-      e.preventDefault();
-      ed.renaming = id;
-      ed.updateComplete.then(() => ed.renderRoot.querySelector<HTMLInputElement>('.rename')?.select());
-      break;
-    case ' ':
-    case 'Enter':
-      e.preventDefault();
-      ed.pickLayer(id, e.shiftKey);
-      break;
-  }
-}
-
-function groupKey(e: KeyboardEvent, ed: McSvgEditor, gid: string, open: boolean): void {
-  if (e.key === 'ArrowRight' && !open) {
-    e.preventDefault();
-    ed.toggleGroup(gid);
-  } else if (e.key === 'ArrowLeft' && open) {
-    e.preventDefault();
-    ed.toggleGroup(gid);
-  } else layerKey(e, ed, `g:${gid}`);
-}
-
-function renameKey(e: KeyboardEvent, ed: McSvgEditor, s: Shape): void {
-  e.stopPropagation();
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    ed.renameShape(s.id, (e.target as HTMLInputElement).value);
-  } else if (e.key === 'Escape') {
-    e.preventDefault();
-    ed.renaming = undefined;
-  }
 }
 
 function libraryPanel(ed: McSvgEditor): TemplateResult {

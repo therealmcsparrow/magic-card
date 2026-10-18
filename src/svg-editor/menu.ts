@@ -2,6 +2,7 @@ import type { MenuEntry } from '../contracts/path-canvas';
 import type { BooleanOp } from '../contracts/path-booleans';
 import type { SvgAlignEdge, SvgArrange } from '../contracts/svg-editor';
 import { boolReason } from './combine';
+import { moveMenu, runMove } from './layers';
 import { toneOf } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { S } from './strings';
@@ -45,12 +46,13 @@ export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
       ],
     },
     { ...it('combine', S.boolOps.union), items: OPS.map((o) => it(`bool:${o}`, S.boolOps[o], boolReason(st, o))) },
+    ...(moveMenu(ed) ? [moveMenu(ed)!] : []),
   ];
 }
 
 /** Do what a picked entry says. */
 export function runMenu(ed: McSvgEditor, id: string): void {
-  const [k, v] = id.split(':');
+  const [k, v, w] = id.split(':');
   if (k === 'dup') ed.duplicate();
   else if (k === 'del') ed.deleteSelected();
   else if (k === 'flipH' || k === 'flipV') ed.flip(k === 'flipH' ? 'h' : 'v');
@@ -61,6 +63,7 @@ export function runMenu(ed: McSvgEditor, id: string): void {
   else if (k === 'dist') ed.distribute(v as 'h' | 'v');
   else if (k === 'place') ed.place(v as 'centre' | 'fit' | 'match');
   else if (k === 'bool') void ed.runBoolean(v as BooleanOp);
+  else if (k === 'mv') runMove(ed, v, w);
   else if (k === 'all') ed.select(ed.doc.shapes.map((s) => s.id));
   else if (k === 'zoom') ed.fitView();
   else if (k === 'kind') ed.setKind(ed.pointCtx?.kind === 'smooth' ? 'corner' : 'smooth');
