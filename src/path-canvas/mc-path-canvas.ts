@@ -32,6 +32,7 @@ import { MAX_ANCHORS, type AnchorKind, type Box, type EditPath, type Pt } from '
 import { append, canAdd, fromEdit, insertAt, isSmooth, nearestOnPath, serialize, setClosed, setHandle } from '../path/edit';
 import { flatten } from '../path/core';
 import { canvasStyles } from './styles';
+import { t } from './i18n';
 import {
   bandHalf,
   clampZoom,
@@ -43,8 +44,9 @@ import {
   insidePolygon,
   kindWord,
   loupeCentre,
-  num,
+  rnd,
   pointsWord,
+  degrees,
   snapAngle,
   snapEdges,
   snapLines,
@@ -58,6 +60,9 @@ import {
   type View,
 } from './geometry';
 import { IDENTITY, angleOf, boxMatrix, placeHandles, resizeBy, rotateMatrix, rotateSpot, scaleBox, wrap180 } from './transform';
+
+/** History step names the hosts merge and compare on (for example 'Cancel'). They are keys, never shown: hosts say "Undo" in the language. */
+const STEP = { close: 'Close path', add: 'Add point', rotate: 'Rotate', scale: 'Scale', cancel: 'Cancel' } as const;
 import { anchorsInRect, effectiveKind, moveAll, moveSet, removeSet, stopIndex, stops, toggleKind } from './ops';
 
 /*
@@ -129,7 +134,7 @@ export class PathCanvas extends LitElement {
   @property({ attribute: false }) constrain?: ConstrainPoint;
   /** Selection box with scale and rotate handles ('select' mode only; path-canvas rev 5). */
   @property({ attribute: false }) transform?: TransformBox;
-  @property() rotateLabel = 'Rotation';
+  @property() rotateLabel?: string;
   /** Emit `mc-path-context` and keep the browser menu off the drawing surface. */
   @property({ attribute: false }) contextMenu = false;
 
@@ -211,7 +216,7 @@ export class PathCanvas extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     if (!this.hasAttribute('role')) this.setAttribute('role', 'group');
-    if (!this.hasAttribute('aria-roledescription')) this.setAttribute('aria-roledescription', 'drawing canvas');
+    if (!this.hasAttribute('aria-roledescription')) this.setAttribute('aria-roledescription', t('drawing canvas'));
     for (const [n, f, c] of this.listeners()) this.addEventListener(n, f as EventListener, c);
   }
 
@@ -316,7 +321,7 @@ export class PathCanvas extends LitElement {
   private emitLimit(path: number): void {
     this._lastLimit = Date.now();
     this.emit('mc-path-limit', { path, max: MAX_ANCHORS });
-    this.announce(`This path has ${MAX_ANCHORS} points, the most you can add. Move, delete or change them instead.`);
+    this.announce(t('This path has {max} points, the most you can add. Move, delete or change them instead.', { max: MAX_ANCHORS }));
   }
 
   /** The path that keys and taps act on. */
@@ -345,20 +350,22 @@ export class PathCanvas extends LitElement {
     const p = this.paths[path];
     const a = p?.anchors[i];
     if (!a) return '';
-    return `Point ${i + 1} of ${p.anchors.length}, ${kindWord(a, isSmooth(a))}, x ${num(a.x)}, y ${num(a.y)}`;
+    return t('Point {n} of {total}, {kind}, x {x}, y {y}', { n: i + 1, total: p.anchors.length, kind: kindWord(a, isSmooth(a)), x: rnd(a.x), y: rnd(a.y) });
   }
 
   private describeSel(sel: PathSelection | undefined, prev?: PathSelection): string {
-    if (!sel) return prev ? 'Selection cleared.' : '';
+    if (!sel) return prev ? t('Selection cleared.') : '';
     const p = this.paths[sel.path];
     if (!p) return '';
     if (sel.handle) {
       const h = p.anchors[sel.handle.anchor]?.[sel.handle.which];
-      return `${sel.handle.which === 'in' ? 'In' : 'Out'} handle of point ${sel.handle.anchor + 1}${h ? `, x ${num(h[0])}, y ${num(h[1])}` : ''}.`;
+      return h
+        ? t('{which, select, in {In handle of point {n}, x {x}, y {y}.} other {Out handle of point {n}, x {x}, y {y}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1, x: rnd(h[0]), y: rnd(h[1]) })
+        : t('{which, select, in {In handle of point {n}.} other {Out handle of point {n}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1 });
     }
     if (sel.anchors.length === 1) return `${this.describeAnchor(sel.path, sel.anchors[0])}.`;
-    if (sel.anchors.length > 1) return `${sel.anchors.length} points selected.`;
-    return `Path, ${pointsWord(p.anchors.length)}, ${p.closed ? 'closed' : 'open'}.`;
+    if (sel.anchors.length > 1) return t('{n} points selected.', { n: sel.anchors.length });
+    return p.closed ? t('Path, {points}, closed.', { points: pointsWord(p.anchors.length) }) : t('Path, {points}, open.', { points: pointsWord(p.anchors.length) });
   }
 
   private announce(text: string, delay = 0): void {
@@ -613,7 +620,7 @@ export class PathCanvas extends LitElement {
     if (h.t === 'anchor') {
       if (p && !p.closed && h.i === 0 && p.anchors.length >= 3) {
         g.kind = 'add';
-        g.add = { paths: this.paths.map((x, i) => (i === ap ? setClosed(x, true) : x)), path: ap, index: 0, label: 'Close path', close: true };
+        g.add = { paths: this.paths.map((x, i) => (i === ap ? setClosed(x, true) : x)), path: ap, index: 0, label: STEP.close, close: true };
       } else {
         this.setSel({ path: h.path, anchors: [h.i] });
         g.kind = 'none';
@@ -628,7 +635,7 @@ export class PathCanvas extends LitElement {
       }
       const r = insertAt(this.paths[h.path], h.seg, h.at);
       g.kind = 'add';
-      g.add = { paths: this.paths.map((x, i) => (i === h.path ? r.path : x)), path: h.path, index: r.index, label: 'Add point' };
+      g.add = { paths: this.paths.map((x, i) => (i === h.path ? r.path : x)), path: h.path, index: r.index, label: STEP.add };
       return;
     }
     const pt = this.place(f, e.shiftKey);
@@ -669,21 +676,21 @@ export class PathCanvas extends LitElement {
       }
       const q = this.constrain ? this.constrain(pt, { path: ap, anchor: p.anchors.length, which: 'anchor' }) : pt;
       const r = append(p, q);
-      return { paths: this.paths.map((x, i) => (i === ap ? r.path : x)), path: ap, index: r.index, label: 'Add point' };
+      return { paths: this.paths.map((x, i) => (i === ap ? r.path : x)), path: ap, index: r.index, label: STEP.add };
     }
     if (this.paths.length >= this.maxPaths) return undefined;
     const q = this.constrain ? this.constrain(pt, { path: this.paths.length, anchor: 0, which: 'anchor' }) : pt;
-    return { paths: [...this.paths, { anchors: [{ x: q[0], y: q[1] }], closed: false }], path: this.paths.length, index: 0, label: 'Add point' };
+    return { paths: [...this.paths, { anchors: [{ x: q[0], y: q[1] }], closed: false }], path: this.paths.length, index: 0, label: STEP.add };
   }
 
-  private insertOnSegment(path: number, seg: number, t: number): void {
+  private insertOnSegment(path: number, seg: number, at: number): void {
     const p = this.paths[path];
     if (!p) return;
     if (!canAdd(p)) {
       this.emitLimit(path);
       return;
     }
-    const r = insertAt(p, seg, t);
+    const r = insertAt(p, seg, at);
     if (r.index < 0) return;
     this.emitChange(
       this.paths.map((x, i) => (i === path ? r.path : x)),
@@ -691,7 +698,7 @@ export class PathCanvas extends LitElement {
       'Add point',
     );
     this.setSel({ path, anchors: [r.index] }, false);
-    this.announce(`Point added, ${pointsWord(r.path.anchors.length)}.`);
+    this.announce(t('Point added, {points}.', { points: pointsWord(r.path.anchors.length) }));
   }
 
   // ── pointer: move ──
@@ -830,10 +837,10 @@ export class PathCanvas extends LitElement {
 
   /** A scale or rotate drag: the matrix is relative to the geometry at gesture start. */
   private dragBox(g: Gesture, s: Pt, e: PointerEvent): void {
-    const t = this.transform;
+    const tf = this.transform;
     const b = g.box;
     const h = g.hit;
-    if (!t || !b || (h.t !== 'scale' && h.t !== 'rotate')) return;
+    if (!tf || !b || (h.t !== 'scale' && h.t !== 'rotate')) return;
     const v = this._view;
     const f = toFrame(v, s);
     let tr: PathTransform;
@@ -847,10 +854,10 @@ export class PathCanvas extends LitElement {
       const cur = angleOf(c, f);
       r.total += wrap180(cur - r.prev);
       r.prev = cur;
-      const base = t.angle ?? 0;
+      const base = tf.angle ?? 0;
       turned = e.shiftKey ? Math.round((base + r.total) / 15) * 15 - base : r.total;
-      text = `${num(base + turned)} degrees`;
-      tr = { kind: 'rotate', matrix: rotateMatrix(c, turned), angle: turned, commit: false, label: 'Rotate', source: 'pointer' };
+      text = degrees(base + turned);
+      tr = { kind: 'rotate', matrix: rotateMatrix(c, turned), angle: turned, commit: false, label: STEP.rotate, source: 'pointer' };
     } else if (h.t === 'scale') {
       const f0 = toFrame(v, g.down);
       const edge: Pt = [(h.sx > 0 ? b.x + b.w : b.x) + f[0] - f0[0], (h.sy > 0 ? b.y + b.h : b.y) + f[1] - f0[1]];
@@ -864,9 +871,9 @@ export class PathCanvas extends LitElement {
           if (r.line) this._guides = { ...this._guides, [i ? 'y' : 'x']: r.line };
         }
       }
-      nb = scaleBox(b, h.sx, h.sy, edge, { ratio: t.keepRatio !== e.shiftKey, centre: e.altKey, bounds: t.bounds });
-      text = `W ${num(nb.w)} H ${num(nb.h)}`;
-      tr = { kind: 'scale', matrix: boxMatrix(b, nb), size: { w: nb.w, h: nb.h }, commit: false, label: 'Scale', source: 'pointer' };
+      nb = scaleBox(b, h.sx, h.sy, edge, { ratio: tf.keepRatio !== e.shiftKey, centre: e.altKey, bounds: tf.bounds });
+      text = t('W {w} H {h}', { w: rnd(nb.w), h: rnd(nb.h) });
+      tr = { kind: 'scale', matrix: boxMatrix(b, nb), size: { w: nb.w, h: nb.h }, commit: false, label: STEP.scale, source: 'pointer' };
     } else return;
     g.tr = tr;
     this._gbox = { box: nb, angle: turned };
@@ -943,7 +950,7 @@ export class PathCanvas extends LitElement {
   private afterAdd(path: number, index: number, list: EditPath[], closed?: boolean): void {
     const n = list[path]?.anchors.length ?? 0;
     this.setSel({ path, anchors: [closed ? 0 : index] }, false);
-    this.announce(closed ? 'Path closed.' : `Point added, ${pointsWord(n)}.`);
+    this.announce(closed ? t('Path closed.') : t('Point added, {points}.', { points: pointsWord(n) }));
   }
 
   private finishMarquee(g: Gesture, s: Pt): void {
@@ -968,9 +975,9 @@ export class PathCanvas extends LitElement {
     this.stopLoupe();
     this.clearLp();
     if (g.started && (g.kind === 'scale' || g.kind === 'rotate')) {
-      this.emit('mc-path-transform', { kind: g.kind, matrix: IDENTITY, commit: false, label: 'Cancel', source: 'pointer' } satisfies PathTransform);
+      this.emit('mc-path-transform', { kind: g.kind, matrix: IDENTITY, commit: false, label: STEP.cancel, source: 'pointer' } satisfies PathTransform);
     } else if (g.started && g.kind !== 'pan' && g.kind !== 'marquee') {
-      this.emitChange(g.startPaths, false, 'Cancel');
+      this.emitChange(g.startPaths, false, STEP.cancel);
     } else if (g.started && g.kind === 'pan') {
       this._view = g.startView;
     }
@@ -1006,7 +1013,7 @@ export class PathCanvas extends LitElement {
       'Change point type',
     );
     const a = p.anchors[set[0]];
-    this.announce(`Point ${set[0] + 1} is now ${a ? effectiveKind(a) : 'changed'}.`);
+    if (a) this.announce(t('Point {n} is now {kind}.', { n: set[0] + 1, kind: kindWord(a, isSmooth(a)) }));
   }
 
   // ── view: pinch, wheel ──
@@ -1079,9 +1086,9 @@ export class PathCanvas extends LitElement {
   };
 
   private _onKey = (e: KeyboardEvent): void => {
-    const t = e.composedPath()[0] as HTMLElement | undefined;
-    if (t && (INPUT_TAGS.has(t.tagName) || t.isContentEditable)) return;
-    if (t?.classList?.contains('rot') && e.key !== 'Escape') return; // the rotation slider has its own keys
+    const tgt = e.composedPath()[0] as HTMLElement | undefined;
+    if (tgt && (INPUT_TAGS.has(tgt.tagName) || tgt.isContentEditable)) return;
+    if (tgt?.classList?.contains('rot') && e.key !== 'Escape') return; // the rotation slider has its own keys
     this._kbd = true;
     if (e.code === 'Space' || e.key === ' ') {
       this._space = true;
@@ -1106,8 +1113,8 @@ export class PathCanvas extends LitElement {
         // resize from the top-left corner (WCAG 2.5.7)
         eat(e);
         const nb = resizeBy(tb.box, DIRS[e.key][0], DIRS[e.key][1], e.altKey ? this.fineNudge : this.nudge, tb.bounds);
-        this.emit<PathTransform>('mc-path-transform', { kind: 'scale', matrix: boxMatrix(tb.box, nb), size: { w: nb.w, h: nb.h }, commit: true, label: 'Scale', source: 'keyboard' });
-        this.announce(`W ${num(nb.w)} H ${num(nb.h)}`, 250);
+        this.emit<PathTransform>('mc-path-transform', { kind: 'scale', matrix: boxMatrix(tb.box, nb), size: { w: nb.w, h: nb.h }, commit: true, label: STEP.scale, source: 'keyboard' });
+        this.announce(t('W {w} H {h}', { w: rnd(nb.w), h: rnd(nb.h) }), 250);
         return;
       }
       if ((e.key === 'a' || e.key === 'A') && this.active() >= 0 && this.mode !== 'select') {
@@ -1115,7 +1122,7 @@ export class PathCanvas extends LitElement {
         const ap = this.active();
         const n = this.paths[ap].anchors.length;
         this.setSel({ path: ap, anchors: Array.from({ length: n }, (_, i) => i) }, false);
-        this.announce(`All ${pointsWord(n)} selected.`);
+        this.announce(t('All {points} selected.', { points: pointsWord(n) }));
       }
       return;
     }
@@ -1219,14 +1226,14 @@ export class PathCanvas extends LitElement {
     if (a.in) order.push('in');
     if (a.out) order.push('out');
     if (order.length === 1) {
-      this.announce('This point has no handles. Press C to make it smooth.');
+      this.announce(t('This point has no handles. Press C to make it smooth.'));
       return;
     }
     const cur = sel.handle ? order.indexOf(sel.handle.which) : 0;
     const which = order[(cur + 1) % order.length];
     this._sel = { path: sel.path, anchors: [i], handle: which ? { anchor: i, which } : undefined };
     this.emit('mc-path-select', this._sel);
-    this.announce(which ? `Arrow keys move the ${which} handle.` : 'Arrow keys move the point.');
+    this.announce(which === 'in' ? t('Arrow keys move the in handle.') : which ? t('Arrow keys move the out handle.') : t('Arrow keys move the point.'));
   }
 
   private arrow(e: KeyboardEvent): void {
@@ -1240,7 +1247,7 @@ export class PathCanvas extends LitElement {
       eat(e);
       const a = this._cross ?? this.crossStart();
       this._cross = [step(a[0], 0), step(a[1], 1)];
-      this.announce(`Cursor at x ${num(this._cross[0])}, y ${num(this._cross[1])}. Press Enter to place a point.`, 250);
+      this.announce(t('Cursor at x {x}, y {y}. Press Enter to place a point.', { x: rnd(this._cross[0]), y: rnd(this._cross[1]) }), 250);
       return;
     }
     const p = this.paths[ap];
@@ -1265,7 +1272,7 @@ export class PathCanvas extends LitElement {
     this.emitChange(list, false, label);
     clearTimeout(this._commitTimer);
     this._commitTimer = setTimeout(() => this.flushPending(), 800);
-    if (sel.anchors.length) this.announce(`x ${num(q[0])}, y ${num(q[1])}`, 250);
+    if (sel.anchors.length) this.announce(t('x {x}, y {y}', { x: rnd(q[0]), y: rnd(q[1]) }), 250);
   }
 
   private panBy(dx: number, dy: number, e?: Event): void {
@@ -1296,7 +1303,7 @@ export class PathCanvas extends LitElement {
       );
       this._sel = { path: ap, anchors: [h.anchor] };
       this.emit('mc-path-select', this._sel);
-      this.announce('Handle deleted.');
+      this.announce(t('Handle deleted.'));
       return;
     }
     if (!sel.anchors.length) return;
@@ -1304,7 +1311,7 @@ export class PathCanvas extends LitElement {
     const n = np.anchors.length;
     this.emitChange(n ? this.paths.map((x, i) => (i === ap ? np : x)) : this.paths.filter((_, i) => i !== ap), true, sel.anchors.length > 1 ? 'Delete points' : 'Delete point');
     this.setSel(n ? { path: ap, anchors: [Math.min(n - 1, Math.max(0, Math.min(...sel.anchors) - 1))] } : undefined, false);
-    this.announce(n ? `${sel.anchors.length > 1 ? 'Points' : 'Point'} deleted, ${pointsWord(n)}.` : 'Path deleted.');
+    this.announce(n ? (sel.anchors.length > 1 ? t('Points deleted, {points}.', { points: pointsWord(n) }) : t('Point deleted, {points}.', { points: pointsWord(n) })) : t('Path deleted.'));
   }
 
   private insertAfter(): void {
@@ -1389,17 +1396,17 @@ export class PathCanvas extends LitElement {
 
   /** Rotation slider: Arrows 1 degree, Shift+Arrows 15, Home back to 0; one commit per key. */
   private _rotKey = (e: KeyboardEvent): void => {
-    const t = this.transform;
-    if (!t || e.ctrlKey || e.metaKey || e.altKey) return;
+    const tr0 = this.transform;
+    if (!tr0 || e.ctrlKey || e.metaKey || e.altKey) return;
     const k = e.key;
     const step = e.shiftKey ? 15 : 1;
-    const d = k === 'ArrowRight' || k === 'ArrowUp' ? step : k === 'ArrowLeft' || k === 'ArrowDown' ? -step : k === 'Home' ? -(t.angle ?? 0) : undefined;
+    const d = k === 'ArrowRight' || k === 'ArrowUp' ? step : k === 'ArrowLeft' || k === 'ArrowDown' ? -step : k === 'Home' ? -(tr0.angle ?? 0) : undefined;
     if (d === undefined) return;
     eat(e);
     if (!d) return;
-    const b = t.box;
-    this.emit<PathTransform>('mc-path-transform', { kind: 'rotate', matrix: rotateMatrix([b.x + b.w / 2, b.y + b.h / 2], d), angle: d, commit: true, label: 'Rotate', source: 'keyboard' });
-    this.announce(`${num((t.angle ?? 0) + d)} degrees`, 250);
+    const b = tr0.box;
+    this.emit<PathTransform>('mc-path-transform', { kind: 'rotate', matrix: rotateMatrix([b.x + b.w / 2, b.y + b.h / 2], d), angle: d, commit: true, label: STEP.rotate, source: 'keyboard' });
+    this.announce(degrees((tr0.angle ?? 0) + d), 250);
   };
 
   // ── render ──
@@ -1475,11 +1482,11 @@ export class PathCanvas extends LitElement {
     const tag = (text: string, x: number, y: number): TemplateResult => svg`<g class="tag"><rect x=${x - 3} y=${y - 11} width=${text.length * 6.4 + 6} height="15" rx="3"></rect><text x=${x} y=${y}>${text}</text></g>`;
     if (g.x) {
       const x = toScreen(v, [g.x.v, 0])[0];
-      out.push(svg`<path class="guide" d="M${x} 0V${h}"></path>`, tag(g.x.label, x + 6, 16));
+      out.push(svg`<path class="guide" d="M${x} 0V${h}"></path>`, tag(t(g.x.label), x + 6, 16));
     }
     if (g.y) {
       const y = toScreen(v, [0, g.y.v])[1];
-      out.push(svg`<path class="guide" d="M0 ${y}H${w}"></path>`, tag(g.y.label, 8, y - 6));
+      out.push(svg`<path class="guide" d="M0 ${y}H${w}"></path>`, tag(t(g.y.label), 8, y - 6));
     }
     const tb = this.transform;
     if (tb && this.mode === 'select') out.push(this.renderBox(tb));
@@ -1514,7 +1521,7 @@ export class PathCanvas extends LitElement {
     if (!q || !tb) return nothing;
     const hit = this.coarse() ? HIT_MIN_COARSE : HIT_MIN_FINE;
     const a = tb.angle ?? 0;
-    return html`<div class="rot" role="slider" tabindex="0" aria-label=${this.rotateLabel} aria-valuemin="-360" aria-valuemax="360" aria-valuenow=${a} aria-valuetext="${num(a)} degrees" style="left:${q[0] - hit / 2}px;top:${q[1] - hit / 2}px;width:${hit}px;height:${hit}px" @keydown=${this._rotKey}></div>`;
+    return html`<div class="rot" role="slider" tabindex="0" aria-label=${this.rotateLabel ?? t('Rotation')} aria-valuemin="-360" aria-valuemax="360" aria-valuenow=${a} aria-valuetext=${degrees(a)} style="left:${q[0] - hit / 2}px;top:${q[1] - hit / 2}px;width:${hit}px;height:${hit}px" @keydown=${this._rotKey}></div>`;
   }
 
   private renderLoupe(): TemplateResult | typeof nothing {
@@ -1522,7 +1529,7 @@ export class PathCanvas extends LitElement {
     if (!L || !this._loupeOn) return nothing;
     const c = loupeCentre(L.contact, this._size[0]);
     const r = LOUPE_SIZE_PX / 2;
-    const label = `x ${num(L.at[0])}, y ${num(L.at[1])}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
+    const label = `${t('x {x}, y {y}', { x: rnd(L.at[0]), y: rnd(L.at[1]) })}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
     return html`<div class="loupe" aria-hidden="true" style="left:${c[0] - r}px;top:${c[1] - r}px"><div class="lens"><svg viewBox="0 0 ${r * 2} ${r * 2}"><g transform="translate(${r} ${r}) scale(${this._view.zoom * LOUPE_ZOOM}) translate(${-L.at[0]} ${-L.at[1]})">${this.paths.map((_, i) => this.drawPath(i, 'outline'))}</g><rect class="pt sel" x=${r - 5.5} y=${r - 5.5} width="11" height="11"></rect></svg></div><span class="lbl">${label}</span></div>`;
   }
 
@@ -1531,7 +1538,7 @@ export class PathCanvas extends LitElement {
     if (this._g?.started && this._list) return this._list;
     const ap = this.active();
     const sel = this._sel;
-    this._list = html`<ul class="sr" role="listbox" aria-label="Points">${(this.paths[ap]?.anchors ?? []).map((_, i) => html`<li role="option" aria-selected=${sel?.path === ap && sel.anchors.includes(i)}>${this.describeAnchor(ap, i)}</li>`)}</ul>`;
+    this._list = html`<ul class="sr" role="listbox" aria-label=${t('Points')}>${(this.paths[ap]?.anchors ?? []).map((_, i) => html`<li role="option" aria-selected=${sel?.path === ap && sel.anchors.includes(i)}>${this.describeAnchor(ap, i)}</li>`)}</ul>`;
     return this._list;
   }
 

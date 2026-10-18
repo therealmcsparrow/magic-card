@@ -70,6 +70,7 @@ card-editor	colour	color
 card-editor	colour temperature	color temperature
 card-editor	colours	colors
 card-editor	{name}: entity colour	{name}: entity color
+path-canvas	Centre	Center
 svg-editor	Accent preview colour	Accent preview color
 svg-editor	Align centre	Align center
 svg-editor	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {center} right {right} top {top} middle {middle} other {bottom}}.

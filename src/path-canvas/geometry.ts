@@ -1,4 +1,6 @@
 import type { Box, EditPath, Pt } from '../contracts/path-model';
+import type { MessageId } from '../contracts/i18n';
+import { locale, m, t } from './i18n';
 import { HIT_MIN_COARSE, HIT_MIN_FINE, LOUPE_OFFSET_PX, LOUPE_SIZE_PX, SEGMENT_BAND_COARSE, SEGMENT_BAND_FINE, type SnapConfig } from '../contracts/path-canvas';
 
 /*
@@ -72,7 +74,7 @@ export interface SnapContext {
 /** A line a drag can hold on to; the label is drawn next to its guide. */
 export interface Line {
   v: number;
-  label: string;
+  label: MessageId;
 }
 
 export interface Snapped {
@@ -88,18 +90,18 @@ export function snapLines(c: Pick<SnapContext, 'snap' | 'frame' | 'safeArea'>, a
   const n = axis ? c.frame.h : c.frame.w;
   const sa = s.safeArea ? (c.safeArea ?? 0) : 0;
   const out: Line[] = [];
-  const add = (v: number, label: string): number => out.push({ v, label });
+  const add = (v: number, label: MessageId): number => out.push({ v, label });
   if (sa > 0) {
-    add(o + sa, 'Safe area edge');
-    add(o + n - sa, 'Safe area edge');
+    add(o + sa, m('Safe area edge'));
+    add(o + n - sa, m('Safe area edge'));
   }
   if (s.frame) {
-    add(o, 'Edge');
-    add(o + n, 'Edge');
+    add(o, m('Edge'));
+    add(o + n, m('Edge'));
   }
-  if (s.frame || sa > 0) add(o + n / 2, 'Centre');
-  for (const v of (axis ? s.extra?.y : s.extra?.x) ?? []) add(v, 'Edge');
-  for (const p of others) add(p[axis], 'Edge');
+  if (s.frame || sa > 0) add(o + n / 2, m('Centre'));
+  for (const v of (axis ? s.extra?.y : s.extra?.x) ?? []) add(v, m('Edge'));
+  for (const p of others) add(p[axis], m('Edge'));
   return out;
 }
 
@@ -174,8 +176,16 @@ export function loupeCentre(contact: Pt, w: number): Pt {
 
 export const num = (v: number): string => String(Math.round(v * 100) / 100 || 0);
 
+const formats: Record<string, Intl.NumberFormat> = {};
+/** A coordinate or size rounded to two decimals, with the decimal separator of the active language (the messages take it as text). */
+export const rnd = (v: number): string => (formats[locale()] ||= new Intl.NumberFormat(locale(), { maximumFractionDigits: 2 })).format(Math.round(v * 100) / 100 || 0);
+
 export function kindWord(a: EditPath['anchors'][number], smooth: boolean): string {
-  return a.kind ?? (smooth ? 'smooth' : 'corner');
+  const k = a.kind ?? (smooth ? 'smooth' : 'corner');
+  return k === 'smooth' ? t('smooth') : k === 'symmetric' ? t('symmetric') : t('corner');
 }
 
-export const pointsWord = (n: number): string => `${n} ${n === 1 ? 'point' : 'points'}`;
+export const pointsWord = (n: number): string => t('{n, plural, one {# point} other {# points}}', { n });
+
+/** An angle in degrees, said in the language. */
+export const degrees = (v: number): string => t('{one, select, yes {{n} degree} other {{n} degrees}}', { one: v === 1 ? 'yes' : 'no', n: rnd(v) });
