@@ -17,7 +17,7 @@
   "Point {n} of {total}, {kind}, x {x}, y {y}": "Punt {n} van {total}, {kind}, x {x}, y {y}",
   "Points": "Punten",
   "Points deleted, {points}.": "Punten verwijderd, {points}.",
-  "Rotation": "Draaiing",
+  "Rotation": "Rotatie",
   "Safe area edge": "Rand veilig gebied",
   "Selection cleared.": "Selectie opgeheven.",
   "This path has {max} points, the most you can add. Move, delete or change them instead.": "Dit pad heeft {max} punten, het maximum. Verplaats, verwijder of wijzig ze in plaats daarvan.",
