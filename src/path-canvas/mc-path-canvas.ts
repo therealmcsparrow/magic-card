@@ -203,6 +203,8 @@ export class PathCanvas extends LitElement {
   private _list?: TemplateResult;
   private _lp?: ReturnType<typeof setTimeout>;
   private _ctxAt = -Infinity;
+  /** A long-press opened the menu and the finger has not lifted yet: the compatibility mousedown after the lift must not take focus from it. */
+  private _lpDone = false;
 
   // ── lifecycle ──
 
@@ -224,7 +226,7 @@ export class PathCanvas extends LitElement {
   }
 
   private listeners(): Array<[string, unknown, boolean?]> {
-    return [['keydown', this._onKey], ['keyup', this._onKeyUp], ['focus', this._onFocus], ['blur', this._onBlur], ['dblclick', this._onDblClick], ['pointerdown', this._onHostDown, true], ['contextmenu', this._onContext]];
+    return [['keydown', this._onKey], ['keyup', this._onKeyUp], ['focus', this._onFocus], ['blur', this._onBlur], ['dblclick', this._onDblClick], ['pointerdown', this._onHostDown, true], ['mousedown', this._onLiftMouse], ['contextmenu', this._onContext]];
   }
 
   protected willUpdate(changed: Map<string, unknown>): void {
@@ -483,8 +485,15 @@ export class PathCanvas extends LitElement {
   // ── pointer: down ──
 
   private _onHostDown = (): void => {
+    this._lpDone = false;
     this._kbd = false;
     this._cross = undefined;
+  };
+
+  private _onLiftMouse = (e: MouseEvent): void => {
+    if (!this._lpDone) return;
+    this._lpDone = false;
+    e.preventDefault();
   };
 
   private _down = (e: PointerEvent): void => {
@@ -1335,6 +1344,7 @@ export class PathCanvas extends LitElement {
     if (this._g !== g || g.started) return;
     this._g = undefined;
     this.release(g.id);
+    this._lpDone = true;
     this.contextAt(g.down, g.client, 'touch');
   }
 

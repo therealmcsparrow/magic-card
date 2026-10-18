@@ -1768,7 +1768,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   // ── render ──
 
   protected updated(changed: PropertyValues): void {
-    if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { open?(): void }>('mc-path-menu')?.open?.();
+    if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
     if (changed.has('startOpen') && this.startOpen) {
       const d = this.renderRoot.querySelector<HTMLDialogElement>('dialog.start-dlg');
       if (d && !d.open) {

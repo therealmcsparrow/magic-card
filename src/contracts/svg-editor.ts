@@ -42,7 +42,7 @@ import type { BooleanOp } from './path-booleans';
  * src/utils/shape-path.ts) are imported normally; webpack does not copy modules a parent chunk
  * already holds. The animation studio entry imports the same src/path/ files (shared source, its
  * own bundle). Neither editor chunk imports src/anim-studio/** (import scan test).
- * (r4) The menu element comes from the path-canvas chunk (PATH_MENU_TAG); neither editor ships a menu
+ * (r4) The menu element comes from the path-canvas chunk (PATH_MENU_TAG); from path-canvas r6 it is <mc-ui-menu> of the ui-kit (UI_MENU_TAG); neither editor ships a menu
  * of its own or imports src/editor/components/menu-popover.ts.
  * (r5) The SVG editor import()s the path-tools chunk (path-tools 1.0.0) through src/path-tools/loader.ts
  * on the first use of a path tool, never on open, and imports nothing else from src/path-tools/. The

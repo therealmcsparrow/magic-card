@@ -162,7 +162,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>`}
     ${ed.startOpen ? startDialog(ed) : nothing}
     ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.newAsk ? newPop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
-    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? S.xferMenu : ed.menu.key ? ed.menu.opener.textContent!.trim() : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
+    ${ed.menu ? html`<mc-ui-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? S.xferMenu : ed.menu.key ? ed.menu.opener.textContent!.trim() : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-ui-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
   </div>`;

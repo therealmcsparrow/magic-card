@@ -826,7 +826,7 @@ export class McShapeStudio extends LitElement {
   openMenu(hit: PathContext['hit'], at: Pt, touch: boolean, opener?: HTMLElement): void {
     this.hit = hit;
     this.menu = { items: this.menuItems(hit), at, touch, opener };
-    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement & { open(): void }>('mc-path-menu')?.open());
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement & { show(): void }>('mc-ui-menu')?.show());
   }
 
   onContext(e: CustomEvent<PathContext>): void {
@@ -1195,7 +1195,7 @@ ${!this.ready ? html`<div class="empty" role="status">${this.failed ? html`${S.l
 <main class="center">${this.editBar()}${this.tools()}${this.penBar()}${this.stage()}${this.pointBar()}${this.stripView()}${this.previews()}</main>
 <aside class="insp" aria-label=${S.inspector}>${this.modeSwitch()}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
-${this.menu ? html`<mc-path-menu .items=${this.menu.items} .label=${S.menuName} .at=${this.menu.at} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: Event) => (e.stopPropagation(), (this.menu = undefined))}></mc-path-menu>` : nothing}${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
+${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${S.menuName} .at=${this.menu.at} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: Event) => (e.stopPropagation(), (this.menu = undefined))}></mc-ui-menu>` : nothing}${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
 ${this.saving ? this.savePop() : nothing}${this.leaving ? this.leavePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
   }
 

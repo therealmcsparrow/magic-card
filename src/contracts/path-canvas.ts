@@ -1,4 +1,5 @@
 import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from './path-model';
+import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-kit';
 
 /*
  * Contract: path canvas. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0020.
@@ -29,6 +30,19 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
  * properties: `gridStep` (drawn grid spacing, the SVG editor's grid size setting) and `underlay` (T10:
  * ground and frame see-through so the host can draw the artwork underneath). Ceiling 54 KiB = 55,296 B
  * (CEO, ADR 0025).
+ *
+ * Revision 6 (2026-10-18, UI3, ADR 0030, ui-kit 1.0.0 r2): the chunk no longer defines a menu. <mc-path-menu> is
+ * replaced by <mc-ui-menu> (UI_MENU_TAG, UiMenuElement) from the ui-kit Module, which the card-editor chunk
+ * defines once (defineUiKit()); the svg-editor and shape-editor layers render it inside their own shadow root.
+ * Removed: PATH_MENU_TAG and the chunk's menu element. PathMenuElement stays as an alias of UiMenuElement;
+ * MenuEntry = UiMenuEntry, MenuPick = UiMenuPick, MenuClose = UiMenuClose. Events unchanged ('mc-menu-pick',
+ * 'mc-menu-close', same detail). One API difference: open the menu with show() (was open(); `open` is now the
+ * read-only state).
+ * Menu behaviour of r5 is kept (right-click, long-press, ContextMenu / Shift+F10, roving focus, one submenu
+ * level, Esc, Tab, focus back to `opener`, 8 px viewport margin, reasons as aria-description); the items
+ * follow the kit look: --mc-hit high (44 on coarse), MDI glyphs, kit tokens. The canvas's local --pc-* token
+ * block is gone: its styles read the kit tokens (--mc-*) directly. The canvas element, its events, cursors
+ * (cursor.ts) are unchanged. Additive for hosts that already pass MenuEntry data.
  *
  * Revision 5 (2026-10-18, CEO scope added after revision 4: on-canvas scale / rotate handles, snapping
  * to the safe area, the context menu; design 02 s7.8-7.10 and 03 s9; ADR 0026; PROPOSED, the chunk
@@ -78,7 +92,7 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
  *   Android long-press) is prevented and ignored. The pointer-up that ends a long-press does nothing else.
  *   The drawing surface has `-webkit-touch-callout: none` and `user-select: none`. With `contextMenu`
  *   false (default) the canvas leaves the browser's behaviour alone. The canvas never opens a menu itself.
- * - Menu element: the chunk also defines PATH_MENU_TAG (`<mc-path-menu>`, PathMenuElement, guarded by
+ * - (r5; superseded by r6: the element is <mc-ui-menu>) Menu element: the chunk also defined PATH_MENU_TAG (`<mc-path-menu>`, PathMenuElement, guarded by
  *   customElements.get), a generic menu both editors use for the canvas, layer rows and a "More actions"
  *   button. role="menu" named by `label`; items role menuitem (menuitemcheckbox when `checked` is set);
  *   `separatorBefore` renders role="separator"; an item with `items` is a submenu parent
@@ -169,7 +183,7 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
  * - `mc-path-limit` detail { path, max: MAX_ANCHORS }: an add was refused at the cap.
  * - (r5) `mc-path-transform` detail PathTransform: a scale or rotate from the transform box or its keys.
  * - (r5) `mc-path-context` detail PathContext: a context gesture (only with `contextMenu` true).
- * - (r5) From <mc-path-menu>: `mc-menu-pick` detail MenuPick, `mc-menu-close` detail MenuClose.
+ * - (r5) From the menu (r6: <mc-ui-menu>): `mc-menu-pick` detail MenuPick, `mc-menu-close` detail MenuClose.
  *
  * Contract tests (QA, tests/path-canvas.contract.test.ts): controlled rendering, commit sequence of
  * a drag (n x false, then one true), Esc during a drag (start paths, no commit), keyboard-only add /
@@ -193,7 +207,7 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
 /** Revision 5 is implemented (T29). */
-export const PATH_CANVAS_CONTRACT_REVISION = 5;
+export const PATH_CANVAS_CONTRACT_REVISION = 6;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';
@@ -223,9 +237,6 @@ export const LONG_PRESS_MS = 500;
 export const LONG_PRESS_SLOP_PX = 8;
 /** Revision 5: a contextmenu event this soon after an emitted context gesture is ignored. */
 export const CONTEXT_DEDUPE_MS = 500;
-/** Revision 5: the menu element the chunk defines. */
-export const PATH_MENU_TAG = 'mc-path-menu';
-
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
 
@@ -317,43 +328,12 @@ export interface PathContext {
   source: 'mouse' | 'touch' | 'pen' | 'keyboard';
 }
 
-/** Revision 5: one item of <mc-path-menu>. */
-export interface MenuEntry {
-  id: string;
-  label: string;
-  /** Shortcut hint shown on fine pointers and as aria-keyshortcuts, e.g. "Control+D". */
-  keys?: string;
-  /** Set = unavailable; the text says why. */
-  reason?: string;
-  /** Set = menuitemcheckbox. */
-  checked?: boolean;
-  separatorBefore?: boolean;
-  /** One submenu level; entries inside must not have `items`. */
-  items?: MenuEntry[];
-}
-
-export interface MenuPick {
-  id: string;
-}
-
-export interface MenuClose {
-  reason: 'pick' | 'escape' | 'outside' | 'tab';
-}
-
-/** Revision 5: <mc-path-menu> properties. */
-export interface PathMenuElement extends HTMLElement {
-  items: MenuEntry[];
-  /** Accessible name, e.g. "Shape actions", "Outline actions". */
-  label: string;
-  /** Client CSS px. */
-  at: Pt;
-  /** Opened by touch: keep 8 px or more from the point. */
-  touch?: boolean;
-  /** Focus goes back here on close without a pick. */
-  opener?: HTMLElement;
-  open(): void;
-  close(): void;
-}
+/** Revision 6: the menu data and events are the ui-kit's (same shape as r5). */
+export type MenuEntry = UiMenuEntry;
+export type MenuPick = UiMenuPick;
+export type MenuClose = UiMenuClose;
+/** Revision 6: the menu element is <mc-ui-menu>; open it with show(). */
+export type PathMenuElement = UiMenuElement;
 
 /** <mc-path-canvas> properties. */
 export interface PathCanvasElement extends HTMLElement {
