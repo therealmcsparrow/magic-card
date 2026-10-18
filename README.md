@@ -42,6 +42,10 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 
 ### HACS (recommended)
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=therealmcsparrow&repository=magic-card&category=plugin)
+
+Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
+
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
 3.  Open the three-dot menu and choose Custom repositories.
