@@ -1,5 +1,7 @@
 /*
- * Contract: path model. Version 1.0.0 (Architect-owned). ADR 0017.
+ * Contract: path model. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0020.
+ * Revision 2 (2026-10-18, before any implementation): MAX_ANCHORS limits adding only; imported
+ * paths of any anchor count load and stay editable (design W10).
  *
  * One path model for the whole product. It replaces three private copies:
  * - src/icons/path-math.ts      (parser for every SVG command, arcs to cubics, resample, morph)
@@ -27,10 +29,19 @@
  * - Point type is the tuple Pt = [x, y] everywhere. shape-path.ts may keep its private {x, y} type
  *   internally; it converts at the boundary.
  *
+ * Anchor limit (MAX_ANCHORS per subpath) limits ADDING only:
+ * - toEdit, moveAnchor, setHandle, setKind, remove, reverse, translate, transform and fromEdit
+ *   accept any anchor count. The only bound on an imported path is its source size (an icon's
+ *   ICON_MAX_BYTES, mcu-library 1.0.0).
+ * - insertAt and append on a subpath that already has MAX_ANCHORS or more return the path unchanged
+ *   with index -1. canAdd() tells the canvas and the tools beforehand (design W10).
+ * - The animation studio keeps its own cap behaviour through the path-utils shim (unchanged).
+ *
  * Numbers: 2 decimals in every serialised string (fmt), -0 written as 0. Editors may ask tidy for 1.
  */
 
 export const PATH_MODEL_CONTRACT_VERSION = '1.0.0';
+export const PATH_MODEL_CONTRACT_REVISION = 2;
 
 export type Pt = [number, number];
 /** start, c1, c2, end (morph and math code). */
@@ -108,13 +119,17 @@ export interface EditPath {
   closed: boolean;
 }
 
-/** Hard cap per subpath (unchanged from path-utils). */
+/** Most anchors a subpath can GROW to (adding stops here). Imported paths may hold more. */
 export const MAX_ANCHORS = 100;
 
 export interface PathEdit {
   toEdit(s: SubPath): EditPath;
   fromEdit(p: EditPath): SubPath;
+  /** False when p has MAX_ANCHORS or more anchors. */
+  canAdd(p: EditPath): boolean;
+  /** At the cap: p unchanged, index -1. */
   insertAt(p: EditPath, seg: number, t: number): { path: EditPath; index: number };
+  /** At the cap: p unchanged, index -1. */
   append(p: EditPath, q: Pt, atStart?: boolean): { path: EditPath; index: number };
   remove(p: EditPath, i: number): EditPath;
   moveAnchor(p: EditPath, i: number, x: number, y: number): EditPath;
