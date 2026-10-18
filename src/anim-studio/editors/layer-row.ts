@@ -564,7 +564,7 @@ export const layerRowStyles = css`
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
-  @container (max-width: 319px) {
+  @container (max-width: 199px) {
     .lfull {
       display: none;
     }
@@ -575,7 +575,27 @@ export const layerRowStyles = css`
       display: flex;
     }
   }
+  @container (min-width: 200px) and (max-width: 319px) {
+    .lm {
+      display: grid;
+    }
+    .lfull .mv {
+      display: none;
+    }
+    .lt {
+      min-width: 24px;
+      height: 24px;
+    }
+  }
   @media (pointer: coarse) {
+    @container (max-width: 319px) {
+      .lfull {
+        display: none;
+      }
+      .lst:not(:empty) {
+        display: flex;
+      }
+    }
     .lt,
     .lr-main {
       min-width: 44px;
