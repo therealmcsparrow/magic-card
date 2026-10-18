@@ -5,10 +5,10 @@ import type { CornerKey, CornerType, CustomShapeOptions } from '../contracts/cus
 import type { SavedShape } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
-import type { PathChange, PathSelection } from '../contracts/path-canvas';
-import type { Anchor, EditPath, PathEdit, Pt } from '../contracts/path-model';
+import type { CanvasMode, PathChange, PathSelection } from '../contracts/path-canvas';
+import { PRIMITIVE_KINDS, type Anchor, type Box, type EditPath, type PathDraw, type PathEdit, type PrimitiveKind, type Pt } from '../contracts/path-model';
 import type { ShapeChangeDetail, ShapeEditorPreset, ShapeEditorValue } from '../contracts/svg-editor';
-import { flatten, parseClosed } from '../path/core';
+import { bounds, flatten, parseClosed, toPathString } from '../path/core';
 import { loadPathCanvas } from '../path-canvas/loader';
 import type { ShapeOptions } from '../types';
 import { loadCustomShapes } from '../utils/shape-custom-loader';
@@ -17,11 +17,11 @@ import { clamp, shapePath } from '../utils/shape-path';
 import { glyph } from './glyphs';
 import { deleteShape, freeId, listShapes, LibraryError, lookupFor, saveShape, slug, tooBig, watchLibrary, type Hass, type LibraryProblem } from './library';
 import {
-  absOf, blankDoc, clamped, cornerPx, cornersOf, cornersToPoints, fromAnchors, KEYS, noSides, presetToCustom, readDoc, rectPoints, repad, reversePoints, SIDES, SIZES, STARTERS, toEditPath, toYaml,
+  absOf, blankDoc, clamped, cornerPx, cornersOf, cornersToPoints, fromAnchors, KEYS, noSides, presetToCustom, readDoc, repad, reversePoints, SIDES, SIZES, STARTERS, toEditPath, toYaml,
   withAbs, writeDoc, writePoints, type Axis, type Corner, type Doc, type EditSize, type Side, type Sides,
 } from './model';
 import { isCut, selfCrosses, solveSpace } from './space';
-import { S } from './strings';
+import { n, S } from './strings';
 import { studioStyles } from './styles';
 import { btn, check, num, r1, seg } from './ui';
 
@@ -54,6 +54,10 @@ const ROW: EditSize = SIZES[1];
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
 const coarse = (): boolean => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const up = (n: Node): Node | null => (n as Element).assignedSlot ?? n.parentNode ?? (n as ShadowRoot).host ?? null;
+type Tool = 'nodes' | 'add' | 'remove' | 'pen';
+type Pending = { kind: 'pen'; path?: EditPath } | { kind: 'shape'; prim: PrimitiveKind; path: EditPath };
+const LOCKED = [{ locked: true }];
+const NONE: never[] = [];
 const nm = (id: string): string => S.size[id] ?? S.size.custom;
 const sh = (id: string): string => S.short[id] ?? S.short.custom;
 
@@ -73,12 +77,15 @@ export class McShapeStudio extends LitElement {
   @state() size: EditSize = ROW;
   @state() ready = false;
   @state() failed = false;
-  @state() tab: 'corners' | 'path' = 'corners';
   @state() together = false;
   @state() sel: CornerKey = 'tl';
   @state() pointSel?: number;
   @state() cvSel?: PathSelection;
-  @state() tool: 'nodes' | 'add' = 'nodes';
+  @state() tool: Tool = 'nodes';
+  /** A pen outline being drawn, or a shape waiting to be combined: never in the config or the history. */
+  @state() pending?: Pending;
+  @state() picker?: { to: 'start' | 'combine'; at: number };
+  @state() strip?: { text: string; undo: boolean };
   @state() canvas: 'idle' | 'loading' | 'ready' | 'fail' = 'idle';
   @state() cardView = true;
   @state() older = false;
@@ -105,6 +112,12 @@ export class McShapeStudio extends LitElement {
   @state() xfer?: { mode: 'import' | 'export'; back?: HTMLElement };
 
   E?: PathEdit;
+  /** The draw generators of the path canvas chunk (the shape editor never imports src/path/draw). */
+  D?: PathDraw;
+  private baseline = '';
+  private fromPath = false;
+  private ptr = false;
+  private glyphs: Record<string, string> = {};
   an: Preview[] = [];
   opts: CustomShapeOptions = {};
   initial: Doc = blankDoc();
@@ -125,7 +138,7 @@ export class McShapeStudio extends LitElement {
   private ro?: ResizeObserver;
   private dialogs: HTMLDialogElement[] = [];
   private stopLib?: () => void;
-  private pending?: { item: SavedShape; timer: ReturnType<typeof setTimeout> };
+  private trash?: { item: SavedShape; timer: ReturnType<typeof setTimeout> };
   private liveTimer?: ReturnType<typeof setTimeout>;
 
   // ── lifecycle ──
@@ -133,6 +146,7 @@ export class McShapeStudio extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this.addEventListener('keydown', this.onKey);
+    this.addEventListener('keydown', this.onEsc, true);
     // Home Assistant's dialog must not close on Escape (contract shell rule 2)
     for (let n: Node | null = up(this); n; n = up(n)) {
       if (n instanceof HTMLDialogElement) {
@@ -148,6 +162,7 @@ export class McShapeStudio extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.onKey);
+    this.removeEventListener('keydown', this.onEsc, true);
     for (const d of this.dialogs) d.removeEventListener('cancel', this.onCancel);
     this.dialogs = [];
     this.ro?.disconnect();
@@ -218,9 +233,11 @@ export class McShapeStudio extends LitElement {
     }
     this.doc = this.read(o);
     this.initial = this.doc;
-    this.tab = this.doc.mode;
     this.together = this.allSame();
-    this.pointSel = this.cvSel = undefined;
+    this.pointSel = this.cvSel = this.pending = this.picker = this.strip = undefined;
+    this.tool = 'nodes';
+    this.fromPath = this.doc.mode === 'path';
+    this.baseline = JSON.stringify(this.doc.points);
     if (this.doc.mode === 'path') void this.ensureCanvas();
     this.analyse(true);
   }
@@ -241,6 +258,7 @@ export class McShapeStudio extends LitElement {
     this.canvas = 'loading';
     const c = await loadPathCanvas();
     this.E = c?.pathEdit;
+    this.D = c?.pathDraw;
     this.canvas = c ? 'ready' : 'fail';
   }
 
@@ -317,6 +335,7 @@ export class McShapeStudio extends LitElement {
     this.future = [];
     this.linked = undefined;
     this.notice = '';
+    this.strip = undefined;
     this.send(true, label);
     this.say(label);
   }
@@ -351,7 +370,8 @@ export class McShapeStudio extends LitElement {
   private jump(to: Doc, label: string, stack: Doc[]): void {
     stack.push(this.doc);
     this.doc = to;
-    this.tab = to.mode;
+    this.pending = this.picker = this.strip = undefined;
+    this.tool = 'nodes';
     this.mergeKey = undefined;
     if (to.mode === 'path') void this.ensureCanvas();
     if (this.pointSel !== undefined && this.pointSel >= to.points.length) this.pointSel = undefined;
@@ -384,6 +404,7 @@ export class McShapeStudio extends LitElement {
     }
     const mod = e.ctrlKey || e.metaKey;
     const key = e.key.toLowerCase();
+    if (!mod && !e.altKey && (key === 'v' || key === 'p') && this.doc.mode === 'path' && this.canvas === 'ready' && !FIELD.has((e.composedPath()[0] as Element)?.tagName)) return this.setTool(key === 'v' ? 'nodes' : 'pen');
     if (mod && key === 's') {
       e.preventDefault();
       this.openSave();
@@ -489,16 +510,44 @@ export class McShapeStudio extends LitElement {
 
   // ── path mode ──
 
-  async toPath(rect: boolean): Promise<void> {
+  get tab(): 'corners' | 'path' {
+    return this.doc.mode;
+  }
+
+  /** The mode switch: Free shape turns the corners into points, Corners drops the points (one undo step each). */
+  setMode(m: 'corners' | 'path'): void {
+    if (m === this.doc.mode) return;
+    this.dropPending();
+    if (m === 'path') return void this.toPath();
+    this.pointSel = this.cvSel = this.picker = undefined;
+    this.commit({ ...this.doc, mode: 'corners' }, S.tabCorners);
+    this.together = this.allSame();
+    this.say(S.modeCorners);
+  }
+
+  async toPath(): Promise<void> {
     await this.ensureCanvas();
     if (!this.E) return;
     const { w, h } = this.size;
-    const points = rect ? rectPoints() : cornersToPoints(this.doc.corners, w, h, this.doc.smoothing);
+    const points = cornersToPoints(this.doc.corners, w, h, this.doc.smoothing);
     const solver = this.solve(points);
-    this.commit({ ...this.doc, mode: 'path', points, solver, pad: solver }, S.convert);
-    this.tab = 'path';
+    this.fromPath = false;
+    this.baseline = JSON.stringify(points);
+    this.commit({ ...this.doc, mode: 'path', points, solver, pad: solver }, S.tabPath);
     this.panel = 'outline';
     this.selectPoint(0);
+    this.note(S.nowPoints, true, `${S.nowPoints} ${S.modeFree(points.length)}`);
+  }
+
+  /** The visible result line under the canvas (the live region says it once). */
+  note(text: string, undo = false, say = text): void {
+    this.strip = { text, undo };
+    this.say(say);
+  }
+
+  /** Points changed since the switch: going back to Corners would lose them. */
+  get edited(): boolean {
+    return this.doc.mode === 'path' && (this.fromPath || JSON.stringify(this.doc.points) !== this.baseline);
   }
 
   get path(): EditPath {
@@ -525,10 +574,12 @@ export class McShapeStudio extends LitElement {
   onPathChange(e: CustomEvent<PathChange>): void {
     e.stopPropagation();
     const { paths, commit, label } = e.detail;
+    if (this.pending) return this.onPending(paths);
     const a = paths[0]?.anchors;
     if (!a) return;
     if (a.length > MAX_SHAPE_POINTS || a.length < 3) {
-      this.say(a.length < 3 ? S.fewest : S.atMax(MAX_SHAPE_POINTS));
+      if (a.length < 3) this.note(S.fewest);
+      else this.say(S.atMax(MAX_SHAPE_POINTS));
       return this.requestUpdate();
     }
     const points = fromAnchors(this.doc.points, a, this.size.w, this.size.h);
@@ -543,7 +594,148 @@ export class McShapeStudio extends LitElement {
   onPathSelect(e: CustomEvent<PathSelection>): void {
     e.stopPropagation();
     this.cvSel = e.detail;
-    this.pointSel = e.detail?.anchors?.length ? e.detail.anchors[e.detail.anchors.length - 1] : undefined;
+    // a pending pen outline or shape is path 1: it never selects a point of the outline
+    if (this.pending) return;
+    const i = e.detail?.anchors?.length ? e.detail.anchors[e.detail.anchors.length - 1] : undefined;
+    this.pointSel = i;
+    // Remove point: only a pointer press removes (walking over points with Tab selects them too)
+    if (this.tool === 'remove' && this.ptr && i !== undefined && e.detail.anchors.length === 1) {
+      this.ptr = false;
+      queueMicrotask(() => this.deletePoint());
+    }
+  }
+
+  /** Capture-phase press on the canvas: tells onPathSelect the selection came from a pointer. */
+  ptrDown = { capture: true, handleEvent: (): void => void ((this.ptr = true), setTimeout(() => (this.ptr = false))) };
+
+  // ── pen, picker, pending shape ──
+
+  setTool(t: Tool): void {
+    if (t === this.tool) return;
+    this.dropPending(true);
+    this.tool = t;
+    this.picker = undefined;
+    if (t === 'pen') {
+      this.pending = { kind: 'pen' };
+      this.pointSel = this.cvSel = undefined;
+      this.say(S.penText);
+    }
+  }
+
+  /** Drop the pen outline or the shape to combine (nothing was applied). */
+  dropPending(say = false): void {
+    const was = this.pending;
+    if (!was) return;
+    this.pending = undefined;
+    this.cvSel = undefined;
+    if (was.kind === 'pen') {
+      this.tool = 'nodes';
+      if (say) this.say(S.penCancelled);
+    }
+  }
+
+  private onEsc = (e: KeyboardEvent): void => {
+    if (e.key !== 'Escape' || !(this.picker || this.pending)) return;
+    if (this.picker) this.closePicker();
+    else this.dropPending(true);
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  private onPending(paths: EditPath[]): void {
+    const p = this.pending;
+    const path = paths[1];
+    if (!p || !path) return;
+    if (p.kind === 'pen') {
+      if (path.anchors.length > MAX_SHAPE_POINTS) {
+        this.say(S.atMax(MAX_SHAPE_POINTS));
+        return this.requestUpdate();
+      }
+      this.pending = { kind: 'pen', path };
+      if (path.closed && path.anchors.length >= 3) this.finishPen();
+    } else this.pending = { ...p, path };
+  }
+
+  finishPen(): void {
+    const p = this.pending;
+    if (p?.kind !== 'pen' || (p.path?.anchors.length ?? 0) < 3) return this.say(S.penNeed);
+    this.replaceOutline(p.path!.anchors, S.replaced);
+  }
+
+  /** Pen and Start from: the anchors become the outline with default anchoring, one history step. */
+  private replaceOutline(anchors: Anchor[], text: string): void {
+    this.pending = this.picker = this.cvSel = undefined;
+    this.tool = 'nodes';
+    this.commitPoints(fromAnchors([], anchors, this.size.w, this.size.h), text);
+    this.selectPoint(undefined);
+    this.note(text, true);
+  }
+
+  openPicker(to: 'start' | 'combine'): void {
+    this.picker = { to, at: 0 };
+    void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>('.picks [role=radio]')?.focus());
+  }
+
+  closePicker(): void {
+    const to = this.picker?.to;
+    this.picker = undefined;
+    void this.updateComplete.then(() => this.focusTo(to === 'combine' ? '[data-pick=combine]' : '[data-pick=start]'));
+  }
+
+  pickKey(e: KeyboardEvent): void {
+    const at = this.picker?.at ?? 0;
+    const cols = coarse() ? 3 : 4;
+    const to = { ArrowRight: at + 1, ArrowLeft: at - 1, ArrowDown: at + cols, ArrowUp: at - cols, Home: 0, End: PRIMITIVE_KINDS.length - 1 }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    const next = clamp(to, 0, PRIMITIVE_KINDS.length - 1);
+    this.picker = { ...this.picker!, at: next };
+    void this.updateComplete.then(() => this.shadowRoot?.querySelectorAll<HTMLElement>('.picks [role=radio]')[next]?.focus());
+  }
+
+  choose(kind: PrimitiveKind): void {
+    const to = this.picker?.to;
+    const { w, h } = this.size;
+    if (!this.D) return;
+    this.picker = undefined;
+    if (to === 'start') {
+      this.replaceOutline(this.D.primitive(kind, { x: 0, y: 0, w, h }).anchors, S.startedFrom(S.prim[kind]));
+      void this.updateComplete.then(() => this.focusTo('[data-pick=start]'));
+      return;
+    }
+    this.dropPending();
+    this.tool = 'nodes';
+    this.pointSel = undefined;
+    const path = this.D.primitive(kind, { x: w / 4, y: h / 4, w: w / 2, h: h / 2 });
+    this.pending = { kind: 'shape', prim: kind, path };
+    this.cvSel = { path: 1, anchors: [] };
+    this.say(S.operandReady(S.prim[kind]));
+    void this.updateComplete.then(() => this.focusTo('#ox'));
+  }
+
+  /** The tile glyph: the kind drawn by the same generator in a 20 px box. */
+  glyphOf(kind: PrimitiveKind): string {
+    if (!this.glyphs[kind] && this.D && this.E) this.glyphs[kind] = toPathString([this.E.fromEdit(this.D.primitive(kind, { x: 1, y: 1, w: 18, h: 18 }))]);
+    return this.glyphs[kind] ?? '';
+  }
+
+  /** Where the pending shape sits: the box round its curves. */
+  get operandBox(): Box | undefined {
+    const p = this.pending;
+    if (p?.kind !== 'shape' || !p.path.anchors.length) return undefined;
+    return this.E ? bounds([this.E.fromEdit(p.path)]) : undefined;
+  }
+
+  /** Move or resize the pending shape to this box (fields X, Y, W, H, Centre). */
+  setOperand(patch: Partial<Box> | 'centre'): void {
+    const p = this.pending;
+    const b = this.operandBox;
+    if (p?.kind !== 'shape' || !b || !this.E) return;
+    const to: Box = patch === 'centre' ? { ...b, x: (this.size.w - b.w) / 2, y: (this.size.h - b.h) / 2 } : { ...b, ...patch };
+    to.w = Math.max(1, to.w);
+    to.h = Math.max(1, to.h);
+    const [sx, sy] = [to.w / (b.w || 1), to.h / (b.h || 1)];
+    this.pending = { ...p, path: this.E.transform(p.path, [sx, 0, 0, sy, to.x - b.x * sx, to.y - b.y * sy]) };
   }
 
   onFields(e: CustomEvent<{ anchor: number }>): void {
@@ -591,9 +783,10 @@ export class McShapeStudio extends LitElement {
   deletePoint(): void {
     const i = this.pointSel;
     if (i === undefined) return;
-    if (this.doc.points.length <= 3) return this.say(S.fewest);
+    if (this.doc.points.length <= 3) return this.note(S.fewest);
     this.editPath((E, p) => E.remove(p, i), S.del);
     this.selectPoint(Math.max(0, i - 1));
+    this.say(S.removed(this.doc.points.length));
   }
 
   setAxis(i: number, axis: 'x' | 'y', a: Axis): void {
@@ -640,12 +833,13 @@ export class McShapeStudio extends LitElement {
   /** Replace the shape in the editor with a library item (one history step: undo brings the old one back). */
   openItem(item: SavedShape): void {
     this.commit(this.read(item.shape), S.open);
-    this.tab = this.doc.mode;
     this.together = this.allSame();
     this.name = item.name;
     this.openedId = item.id;
     this.saved = { id: item.id, name: item.name, updated_at: item.updated_at, json: JSON.stringify(item.shape) };
     this.caption = '';
+    this.fromPath = this.doc.mode === 'path';
+    this.baseline = JSON.stringify(this.doc.points);
     if (this.doc.mode === 'path') void this.ensureCanvas();
   }
 
@@ -704,15 +898,15 @@ export class McShapeStudio extends LitElement {
   removeItem(item: SavedShape): void {
     this.flushDelete();
     this.lib = { ...this.lib, hidden: new Set([...this.lib.hidden, item.id]) };
-    this.pending = { item, timer: setTimeout(() => this.flushDelete(), 10000) };
+    this.trash = { item, timer: setTimeout(() => this.flushDelete(), 10000) };
     this.toast = { text: S.deleted(item.name), action: { label: S.undo, run: () => this.undoDelete() } };
   }
 
   private undoDelete(): void {
-    if (!this.pending) return;
-    clearTimeout(this.pending.timer);
-    this.unhide(this.pending.item.id);
-    this.pending = this.toast = undefined;
+    if (!this.trash) return;
+    clearTimeout(this.trash.timer);
+    this.unhide(this.trash.item.id);
+    this.trash = this.toast = undefined;
   }
 
   private unhide(id: string, drop = false): void {
@@ -722,10 +916,10 @@ export class McShapeStudio extends LitElement {
   }
 
   private flushDelete(): void {
-    const p = this.pending;
+    const p = this.trash;
     if (!p) return;
     clearTimeout(p.timer);
-    this.pending = undefined;
+    this.trash = undefined;
     deleteShape(this.hass, p.item.id).then(
       () => this.unhide(p.item.id, true),
       () => this.unhide(p.item.id),
@@ -776,7 +970,6 @@ export class McShapeStudio extends LitElement {
     if (!it) return;
     const d = this.read(it.data as CustomShapeOptions);
     this.name = it.name || this.name;
-    this.tab = d.mode;
     this.together = false;
     this.pointSel = this.cvSel = undefined;
     this.commit(d, S.imported(it.name));
@@ -824,8 +1017,8 @@ export class McShapeStudio extends LitElement {
 ${this.top(title)}${this.banners()}
 ${!this.ready ? html`<div class="empty" role="status">${this.failed ? html`${S.loadFail} ${btn(S.retry, () => void this.boot())}` : S.loading}</div>` : html`<div class="work">
 <aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? S.points : S.outline}>${seg('', [['outline', inPath ? S.points : S.outline], ['library', S.library]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
-<main class="center">${this.editBar()}${this.stage()}${this.pointBar()}${this.previews()}</main>
-<aside class="insp" aria-label=${S.inspector}>${seg('', [['corners', S.tabCorners], ['path', S.tabPath]], this.tab, (t) => ((this.tab = t), t === 'path' && void this.ensureCanvas()), true)}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
+<main class="center">${this.editBar()}${this.tools()}${this.penBar()}${this.stage()}${this.pointBar()}${this.stripView()}${this.previews()}</main>
+<aside class="insp" aria-label=${S.inspector}>${this.modeSwitch()}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
 ${this.saving ? this.savePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
@@ -844,7 +1037,6 @@ ${this.noLib ? html`<span class="sr" id="m1d">${S.m1}</span>` : nothing}<button 
     const list: Array<[string, string]> = [];
     if (this.notice) list.push(['warn', this.notice]);
     else if (this.linked) list.push(['', S.linked(this.linked)]);
-    if (this.tab === 'corners' && this.doc.mode === 'path') list.push(['', S.locked]);
     for (const p of this.an) {
       if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? S.w6Path(sh(p.id)) : S.w6Corners]);
       if (p.cross) list.push(['warn', S.crosses(sh(p.id))]);
@@ -864,10 +1056,10 @@ ${num(S.width, w, (v) => this.setDims(v, h), { min: 24, max: MAX_SIZE })}${num(S
   private stage(): TemplateResult {
     const { w, h } = this.size;
     const cur = this.cur;
-    if (this.tab === 'path' && this.doc.mode === 'path') {
+    if (this.doc.mode === 'path') {
       if (this.canvas !== 'ready') return html`<div class="stage"><div class="empty" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`${S.canvasFail} ${btn(S.retry, () => void this.ensureCanvas())}` : S.loading}</div></div>`;
       return html`<div class="stage"><mc-path-canvas aria-label=${S.title} aria-describedby="hint" loupeLabel=${`at ${sh(this.size.id)}`}
-.frame=${{ x: 0, y: 0, w, h }} .paths=${[this.path]} .selection=${this.cvSel} .mode=${this.tool} .maxPaths=${1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: false, grid: 0, anchors: false, frame: false }}
+.frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: false, grid: 0, anchors: false, frame: false }}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain}
 @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas></div>`;
     }
@@ -891,12 +1083,11 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
 
   // prettier-ignore
   private pointBar(): TemplateResult | typeof nothing {
-    if (this.tab !== 'path' || this.doc.mode !== 'path') return nothing;
+    if (this.doc.mode !== 'path') return nothing;
     const i = this.pointSel;
     const cnt = this.doc.points.length;
     const pad = (l: string, dx: number, dy: number, c: string) => html`<button class="b icon" aria-label=${S.move(l)} @click=${(e: MouseEvent) => this.nudge(dx, dy, e.shiftKey)}>${c}</button>`;
-    return html`<div class="pointbar" role="group" aria-label=${S.pointHead}>${seg(S.tool, [['nodes', S.toolSelect], ['add', S.toolAdd]], this.tool, (t) => (this.tool = t))}
-<span class="help" id="hint">${this.tool === 'add' ? S.hintAdd : S.hint}</span>${i === undefined ? nothing : html`<strong>${S.pointOf(i + 1, cnt)}</strong>${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}<span role="group" aria-label=${S.nudgeL}>${pad('left', -1, 0, '←')}${pad('up', 0, -1, '↑')}${pad('down', 0, 1, '↓')}${pad('right', 1, 0, '→')}</span>`}</div>`;
+    return html`<div class="pointbar" role="group" aria-label=${S.pointHead}><span class="help" id="hint">${this.pending?.kind === 'pen' ? S.hintPen : this.tool === 'add' ? S.hintAdd : this.tool === 'remove' ? S.hintRemove : S.hint}</span>${i === undefined ? nothing : html`<strong>${S.pointOf(i + 1, cnt)}</strong>${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}<span role="group" aria-label=${S.nudgeL}>${pad('left', -1, 0, '←')}${pad('up', 0, -1, '↑')}${pad('down', 0, 1, '↓')}${pad('right', 1, 0, '→')}</span>`}</div>`;
   }
 
   // prettier-ignore
@@ -966,7 +1157,7 @@ ${btn(S.libSaveCurrent, () => this.openSave())}`;
       void this.updateComplete.then(() => this.focusTo(sel));
     };
     return html`${this.caption ? html`<p class="help" role="status">${this.caption}</p>` : nothing}
-<div role="toolbar" aria-label=${S.starters} class="acts">${STARTERS.map((s) => btn(S.starter[s.id], () => ((this.together = s.id !== 'two'), this.commit({ ...d, mode: 'corners', corners: s.corners() }, S.starter[s.id]), (this.tab = 'corners'))))}</div>
+<div role="toolbar" aria-label=${S.starters} class="acts">${STARTERS.map((s) => btn(S.starter[s.id], () => ((this.together = s.id !== 'two'), this.commit({ ...d, mode: 'corners', corners: s.corners() }, S.starter[s.id]))))}</div>
 <fieldset ?disabled=${d.mode === 'path'} class="bare-set"><div class="f"><span>${S.editMode}</span>${seg(S.editMode, [['each', S.each], ['all', S.together]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
 ${this.together && this.allChanged ? html`<p class="help" role="status">${S.allChanged} ${btn(S.editSeparately, () => this.setTogether(false), 'ghost')}</p>` : nothing}
 <div class="corner-form"><div class="mini" role="radiogroup" aria-label=${S.cornerL} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.mini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button role="radio" aria-label=${S.corner[k]} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
@@ -975,7 +1166,7 @@ ${c.type === 'square' ? html`<span class="help">${S.squareNoSize}</span>` : html
 <div class="acts">${btn(S.copyAll, () => this.setCorners(cornersOf(c), S.copyAll), 'ghost')}${btn(S.reset, () => this.resetCorner(), 'ghost')}</div></div></div>
 ${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${S.clampChip(sh(this.size.id), x.to)}</span>`)}
 ${Object.values(d.corners).some((x) => x.type === 'round' || x.type === 'squircle') ? html`<label class="f"><span>${S.smoothing}</span><input type="range" min="0" max="1" step="0.05" .value=${String(d.smoothing)} @input=${(e: Event) => this.commit({ ...d, smoothing: clamp(+(e.target as HTMLInputElement).value, 0, 1) }, S.smoothing, 'smooth')} /></label>` : nothing}</fieldset>
-${this.spaceBlock(worst)}<div class="acts">${btn(S.convert, () => ((this.tab = 'path'), void this.ensureCanvas()), 'ghost')}${btn(S.resetShape, () => this.commit(this.initial, S.resetShape), 'ghost')}</div>${this.yamlBlock()}`;
+${this.spaceBlock(worst)}<div class="acts">${btn(S.resetShape, () => this.commit(this.initial, S.resetShape), 'ghost')}</div>${this.yamlBlock()}`;
   }
 
   // prettier-ignore
@@ -996,9 +1187,72 @@ ${check(S.showText, this.showText, (b) => (this.showText = b))}<span id="xs">${S
   // prettier-ignore
   private pathInspector(): TemplateResult {
     const d = this.doc;
-    if (d.mode === 'corners') return html`<p class="help">${S.pathStart}</p><div class="acts">${btn(S.fromCorners, () => void this.toPath(false), 'primary')}${btn(S.fromBlank, () => void this.toPath(true))}</div>`;
-    return html`${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}<div class="f"><h4>${S.points}</h4><span class="mono" role="status">${S.count(d.points.length, MAX_SHAPE_POINTS)}</span>
+    return html`<p class="help">${S.freeHelp}</p>
+<div class="f"><h4>${S.startFrom}</h4><div class="acts"><button class="b" data-pick="start" aria-haspopup="dialog" aria-expanded=${this.picker?.to === 'start'} @click=${() => this.openPicker('start')}>${S.choose}</button></div><span class="help">${S.startHelp}</span>${this.picker?.to === 'start' ? this.pickerView(S.pickStart) : nothing}</div>
+${this.combine()}${this.pointSel === undefined ? nothing : this.pointSection(this.pointSel)}<div class="f"><h4>${S.points}</h4><span class="mono" role="status">${S.count(d.points.length, MAX_SHAPE_POINTS)}</span>
 <div class="acts">${btn(S.reverse, () => (this.commitPoints(reversePoints(d.points), S.reverse), this.selectPoint(undefined)))}</div></div>${this.spaceBlock(0)}${this.yamlBlock()}`;
+  }
+
+  // prettier-ignore
+  private modeSwitch(): TemplateResult {
+    const note = this.edited ? (this.fromPath ? S.squareNote : S.dropNote) : '';
+    return html`${seg(S.shapeType, [['corners', S.tabCorners], ['path', S.tabPath]], this.tab, (m) => this.setMode(m), false, note ? 'modenote' : undefined)}${note ? html`<p class="help" id="modenote">${note}</p>` : nothing}`;
+  }
+
+  get cvMode(): CanvasMode {
+    const p = this.pending;
+    return p?.kind === 'shape' ? 'select' : p?.kind === 'pen' || this.tool === 'add' ? 'add' : 'nodes';
+  }
+
+  // prettier-ignore
+  private tools(): TemplateResult | typeof nothing {
+    if (this.doc.mode !== 'path') return nothing;
+    const T: Array<[Tool, string]> = [['nodes', S.toolSelect], ['add', S.toolAdd], ['remove', S.removePoint], ['pen', S.toolPen]];
+    const move = (e: KeyboardEvent): void => {
+      const to = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      const bs = [...(e.currentTarget as Element).querySelectorAll<HTMLElement>('button')];
+      if (to) {
+        e.preventDefault();
+        bs[(bs.indexOf(e.target as HTMLElement) + to + bs.length) % bs.length]?.focus();
+      }
+    };
+    return html`<div class="acts" role="toolbar" aria-label=${S.tools} @keydown=${move}>${T.map(([k, t]) => html`<button class="b" aria-pressed=${this.tool === k} tabindex=${this.tool === k ? 0 : -1} @click=${() => this.setTool(k)}>${t}</button>`)}</div>`;
+  }
+
+  // prettier-ignore
+  private penBar(): TemplateResult | typeof nothing {
+    const p = this.pending;
+    if (p?.kind !== 'pen') return nothing;
+    const c = p.path?.anchors.length ?? 0;
+    const ok = c >= 3;
+    return html`<div class="banner" role="group" aria-label=${S.penHead}><strong>${S.penText}</strong><span class="help" id="penwhy" style="flex:1 1 200px">${S.hintPen} ${ok ? n(c, 'point', 'points') : S.penNeed}</span>
+<div class="acts"><button class="b primary" aria-disabled=${!ok} aria-describedby="penwhy" @click=${() => (ok ? this.finishPen() : this.say(S.penNeed))}>${S.finish}</button>${btn(S.cancel, () => this.dropPending(true))}</div></div>`;
+  }
+
+  /** The result line under the canvas: it stays until the next change (no timer). */
+  // prettier-ignore
+  private stripView(): TemplateResult | typeof nothing {
+    const s = this.strip;
+    return s ? html`<div class="banner strip"><span>${s.text}</span>${s.undo && this.canUndo ? btn(S.undo, () => this.undo(), 'ghost') : nothing}</div>` : nothing;
+  }
+
+  /** The 14-tile shape picker (Start from, Combine with): a radiogroup, arrows in two dimensions. */
+  // prettier-ignore
+  private pickerView(heading: string): TemplateResult {
+    const at = this.picker?.at ?? 0;
+    return html`<div class="shape-picker ${coarse() || this.layout === 'stacked' ? 'sheet-mode' : ''}"><div class="pv-head"><strong>${heading}</strong><span class="grow"></span>${btn(S.close, () => this.closePicker(), 'ghost')}</div>
+<div class="tiles picks" role="radiogroup" aria-label=${heading} @keydown=${(e: KeyboardEvent) => this.pickKey(e)}>${PRIMITIVE_KINDS.map((k, i) => html`<button role="radio" aria-checked="false" aria-posinset=${i + 1} aria-setsize=${PRIMITIVE_KINDS.length} tabindex=${i === at ? 0 : -1} @click=${() => this.choose(k)}><svg viewBox="0 0 20 20" aria-hidden="true"><path d=${this.glyphOf(k)} /></svg><span>${S.prim[k]}</span></button>`)}</div></div>`;
+  }
+
+  /** Combine with another shape: the picker, then the pending shape with its fields (Combine, Subtract and Intersect come with the booleans). */
+  // prettier-ignore
+  private combine(): TemplateResult {
+    const p = this.pending;
+    const b = this.operandBox;
+    if (p?.kind !== 'shape' || !b) return html`<div class="f"><h4>${S.combineHead}</h4><div class="acts"><button class="b" data-pick="combine" aria-haspopup="dialog" aria-expanded=${this.picker?.to === 'combine'} @click=${() => this.openPicker('combine')}>${S.addShape}</button></div>${this.picker?.to === 'combine' ? this.pickerView(S.pickCombine) : nothing}</div>`;
+    return html`<div class="f" role="group" aria-label=${S.operandGroup}><h4>${S.combineHead}</h4><div class="pv-head"><strong>${S.notApplied(S.prim[p.prim])}</strong>${btn(S.cancel, () => this.dropPending(), 'ghost')}</div>
+<div class="grid4">${num(S.box.x, b.x, (v) => this.setOperand({ x: v }), { id: 'ox' })}${num(S.box.y, b.y, (v) => this.setOperand({ y: v }))}${num(S.box.w, b.w, (v) => this.setOperand({ w: v }), { min: 1 })}${num(S.box.h, b.h, (v) => this.setOperand({ h: v }), { min: 1 })}</div>
+<div class="acts">${btn(S.centre, () => this.setOperand('centre'))}</div><span class="help">${S.operandHelp}</span></div>`;
   }
 
   // prettier-ignore
@@ -1027,6 +1281,6 @@ ${num(lbl, cur.v, (v) => this.setAxis(i, axis, { ...cur, v: clamp(v, 0, cur.k ==
     return html`<section class="f" aria-label=${S.pointHead}><h4>${S.pointHead}</h4><div class="pv-head"><strong>${S.pointOf(i + 1, cnt)}</strong>${btn(S.prev, () => this.selectPoint((i + cnt - 1) % cnt))}${btn(S.next, () => this.selectPoint((i + 1) % cnt))}</div>
 ${seg(S.pointType, [['c', S.pCorner], ['s', S.pSmooth]], smooth ? 's' : 'c', (k) => this.editPath((E, pa) => E.setKind(pa, i, k === 's' ? 'smooth' : 'corner'), S.pointType))}
 <div class="grid2">${num(S.xField, a.x, (v) => this.movePoint(i, clamp(v, 0, w)), { id: 'fx' })}${num(S.yField, a.y, (v) => this.movePoint(i, undefined, clamp(v, 0, h)))}</div><span class="help">${S.atSize(sh(this.size.id), w, h)}</span>
-${hdl('in')}${hdl('out')}<div class="acts">${btn(S.addAfter, () => this.addAfter())}${btn(S.del, () => this.deletePoint())}</div><details><summary>${S.advanced}</summary>${ax('x')}${ax('y')}</details></section>`;
+${hdl('in')}${hdl('out')}<div class="acts">${btn(S.addAfter, () => this.addAfter())}${btn(S.removePoint, () => this.deletePoint())}</div><details><summary>${S.advanced}</summary>${ax('x')}${ax('y')}</details></section>`;
   }
 }

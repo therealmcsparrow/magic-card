@@ -1,4 +1,4 @@
-import { html, type TemplateResult } from 'lit';
+import { html, nothing, type TemplateResult } from 'lit';
 
 /*
  * Small template helpers shared by the shape editor's panels (one place for the radio groups, tabs and
@@ -8,8 +8,8 @@ import { html, type TemplateResult } from 'lit';
 export const btn = (text: unknown, run: (e: MouseEvent) => void, cls = ''): TemplateResult => html`<button class="b ${cls}" @click=${run}>${text}</button>`;
 
 /** A segmented control: radios (`role` radio, one choice) or tabs. */
-export const seg = <K extends string>(label: string, items: Array<[K, string]>, cur: K, pick: (k: K) => void, tab = false): TemplateResult =>
-  html`<div class="seg" role=${tab ? 'tablist' : 'radiogroup'} aria-label=${label}>${items.map(
+export const seg = <K extends string>(label: string, items: Array<[K, string]>, cur: K, pick: (k: K) => void, tab = false, desc?: string): TemplateResult =>
+  html`<div class="seg" role=${tab ? 'tablist' : 'radiogroup'} aria-label=${label} aria-describedby=${desc ?? nothing}>${items.map(
     ([k, t]) => html`<button role=${tab ? 'tab' : 'radio'} aria-checked=${tab ? undefined : k === cur} aria-selected=${tab ? k === cur : undefined} @click=${() => pick(k)}>${t}</button>`,
   )}</div>`;
 

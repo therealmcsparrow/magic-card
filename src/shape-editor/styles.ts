@@ -108,6 +108,13 @@ summary{min-height:32px;cursor:pointer}
 .libs svg{flex:none;width:48px;height:32px;background:var(--mc-surface-2);border-radius:6px}
 .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .empty{padding:12px;border:1px dashed var(--mc-divider);border-radius:12px;color:var(--mc-text-2)}
+.insp>.seg{flex-wrap:nowrap}
+.banner span{flex:1}
+.shape-picker{display:flex;flex-direction:column;gap:6px;padding:8px;border:1px solid var(--mc-divider);border-radius:12px;background:var(--mc-surface)}
+.shape-picker.sheet-mode{position:fixed;z-index:25;inset:auto 0 0;max-height:60vh;overflow:auto}
+.picks{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sheet-mode .picks{grid-template-columns:repeat(3,minmax(0,1fr))}
+.picks svg{width:20px;height:20px;fill:currentColor;fill-opacity:.15;stroke:currentColor}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media(forced-colors:active){.tiles [aria-checked=true],.mini [aria-checked=true],.row.on{outline:2px solid Highlight}.handle{stroke:Highlight}}
 `;
