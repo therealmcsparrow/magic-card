@@ -13,6 +13,7 @@ import { openLibrary } from '../custom/library-sheet';
 import { applyIconPatch, openIconEditor, withKeptIcon } from '../custom/icon-host';
 import type { SyncContext } from '../../utils/sync-path';
 import { hasTemplate } from '../../utils/sync-path';
+import { t } from '../i18n';
 
 /** Most rows the list renders at once (MDI alone has 7000+ icons): refine the search for the rest. */
 export const ICON_LIST_CAP = 150;
@@ -62,7 +63,7 @@ export class IconPicker extends LitElement {
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
-  @property({ type: String }) label = 'Icon';
+  @property({ type: String }) label = '';
   /** Set on the icon field of icon, info and button modules: adds the Animated icons tab. */
   @property({ attribute: false }) animated?: { module: CardModule; onModule: (m: CardModule) => void };
   /** Template link of the module's icon field: the icon editor marks icon and svg as this card's own. */
@@ -114,11 +115,11 @@ export class IconPicker extends LitElement {
 
   private _renderTabs(): TemplateResult {
     return html`
-      <div class="seg" role="tablist" aria-label="Icon source">
-        ${(['icons', 'animated'] as const).map((t) => html`
-          <button type="button" role="tab" aria-selected=${this._tab === t ? 'true' : 'false'}
-            tabindex=${this._tab === t ? '0' : '-1'} @click=${() => this._setTab(t)} @keydown=${this._onTabKeydown}
-          >${t === 'icons' ? 'Icons' : 'Animated icons'}</button>
+      <div class="seg" role="tablist" aria-label=${t('Icon source')}>
+        ${(['icons', 'animated'] as const).map((tb) => html`
+          <button type="button" role="tab" aria-selected=${this._tab === tb ? 'true' : 'false'}
+            tabindex=${this._tab === tb ? '0' : '-1'} @click=${() => this._setTab(tb)} @keydown=${this._onTabKeydown}
+          >${tb === 'icons' ? t('Icons') : t('Animated icons')}</button>
         `)}
       </div>
     `;
@@ -126,10 +127,10 @@ export class IconPicker extends LitElement {
 
   private _renderAnimated(): TemplateResult {
     const a = this.animated!;
-    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">Loading…</div>`;
+    if (this._chunk === 'loading') return html`<div class="mc-picker-loading">${t('Loading…')}</div>`;
     if (this._chunk === 'failed') {
-      return html`<div class="mc-picker-empty">The animated icons could not be loaded. Try again.
-        <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>Retry</button></div>`;
+      return html`<div class="mc-picker-empty">${t('The animated icons could not be loaded. Try again.')}
+        <button type="button" class="btn btn-secondary" @click=${() => this._setTab('animated')}>${t('Retry')}</button></div>`;
     }
     const m = a.module as CardModule & { entity?: string };
     return html`<mc-animated-icon-grid .hass=${this.hass} .icon=${this.value} .entity=${m.entity ?? ''}
@@ -327,7 +328,7 @@ export class IconPicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder="mdi:icon"
-          aria-label=${this.label}
+          aria-label=${this.label || t('Icon')}
           spellcheck="false"
           @input=${this._onInputChange}
           @keydown=${this._onFieldKeydown}
@@ -335,8 +336,8 @@ export class IconPicker extends LitElement {
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label="Browse icons"
-          title="Browse icons"
+          aria-label=${t('Browse icons')}
+          title=${t('Browse icons')}
           data-focus-key="icon-entry"
           @click=${this._openModal}
         >
@@ -355,20 +356,20 @@ export class IconPicker extends LitElement {
   private _renderKeep(): TemplateResult | string {
     const k = this._keep;
     if (!k || this._selectedIcon.trim() !== `mcu:${k.id}`) return '';
-    const kb = k.bytes < 1024 ? `${k.bytes} B` : `${(k.bytes / 1024).toFixed(1)} KB`;
+    const kb = k.bytes < 1024 ? t('{n} B', { n: k.bytes }) : t('{size} KB', { size: (k.bytes / 1024).toFixed(1) });
     return html`<div class="mc-picker-keep">
       <div class="switch-row">
         <div class="txt">
-          <div class="field-head"><label for="mc-keep-copy">Keep a copy in this card (adds ${kb})</label></div>
-          <p class="help" id="mc-keep-help">Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.</p>
+          <div class="field-head"><label for="mc-keep-copy">${t('Keep a copy in this card (adds {size})', { size: kb })}</label></div>
+          <p class="help" id="mc-keep-help">${t('Without a copy, the card shows the default icon if Magic Card Utils or this icon is removed.')}</p>
         </div>
         <button type="button" class="switch" id="mc-keep-copy" role="switch" aria-checked=${k.on ? 'true' : 'false'} aria-describedby="mc-keep-help"
           @click=${() => (this._keep = { ...k, on: !k.on })}></button>
       </div>
       ${this.animated
         ? html`<div class="mc-picker-keep-actions">
-            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('copy')}>Use as copy</button>
-            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>Customise a copy</button>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('copy')}>${t('Use as copy')}</button>
+            <button type="button" class="btn btn-text btn-sm" @click=${() => void this._fromSaved('customise')}>${t('Customise a copy')}</button>
           </div>`
         : ''}
     </div>`;
@@ -382,28 +383,28 @@ export class IconPicker extends LitElement {
     const grid = !!this.animated && this._tab === 'animated';
 
     return html`
-      ${renderPickerWindow('Select icon', () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('Select icon'), () => this._closeModal(), 'm', html`
           ${this.animated ? this._renderTabs() : ''}
           ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           ${lib?.state === 'ok'
-            ? html`<div class="seg full" role="radiogroup" aria-label="Icons from">
-                ${(['all', 'mine'] as const).map((v) => html`<button type="button" role="radio" aria-checked=${this._src === v ? 'true' : 'false'} @click=${() => { this._src = v; this._active = -1; }}>${v === 'all' ? 'All' : `My icons (${lib.items.length})`}</button>`)}
+            ? html`<div class="seg full" role="radiogroup" aria-label=${t('Icons from')}>
+                ${(['all', 'mine'] as const).map((v) => html`<button type="button" role="radio" aria-checked=${this._src === v ? 'true' : 'false'} @click=${() => { this._src = v; this._active = -1; }}>${v === 'all' ? t('All') : t('My icons ({n})', { n: lib.items.length })}</button>`)}
               </div>`
             : ''}
           <div class="mc-picker-search">
-            ${renderPickerSearch('Search icons', this._searchQuery, (v) => this._onSearch(v), {
+            ${renderPickerSearch(t('Search icons'), this._searchQuery, (v) => this._onSearch(v), {
               onKeydown: (e) => this._onSearchKeydown(e),
               listId: 'mc-icon-list',
               activeId,
             })}
           </div>
-          <div class="mc-picker-list" id="mc-icon-list" role="listbox" aria-label="Icons">
+          <div class="mc-picker-list" id="mc-icon-list" role="listbox" aria-label=${t('Icons')}>
             ${this._icons === null
-              ? html`<div class="mc-picker-loading">Loading icons…</div>`
+              ? html`<div class="mc-picker-loading">${t('Loading icons…')}</div>`
               : rows.length > 0
                 ? rows.map((icon, i) => html`
-                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">My icons <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>Show all</button></div>` : ''}
-                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">Material Design icons</div>` : ''}
+                    ${i === 0 && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('My icons')} <button type="button" class="btn btn-text btn-sm" @click=${() => { this._src = 'mine'; }}>${t('Show all')}</button></div>` : ''}
+                    ${i === mine && mine > 0 && this._src === 'all' ? html`<div class="mc-picker-category mc-picker-group">${t('Material Design icons')}</div>` : ''}
                     <button
                       type="button"
                       role="option"
@@ -423,22 +424,22 @@ export class IconPicker extends LitElement {
                     </button>
                   `)
                 : this._src === 'mine' && !this._searchQuery.trim()
-                  ? html`<div class="mc-picker-empty">No saved icons yet. Draw an icon, then choose Save to library in the editor.${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>Draw an icon</button>` : ''}</div>`
-                  : html`<div class="mc-picker-empty">No icons found. Type a full id, such as mdi:fan.${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>Clear search</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>Draw an icon</button>` : ''}</div>`}
+                  ? html`<div class="mc-picker-empty">${t('No saved icons yet. Draw an icon, then choose Save to library in the editor.')}${this.animated ? html` <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}</div>`
+                  : html`<div class="mc-picker-empty">${t('No icons found. Type a full id, such as mdi:fan.')}${this.animated && this._src === 'mine' ? html` <button type="button" class="btn btn-secondary" @click=${() => { this._searchQuery = ''; }}>${t('Clear search')}</button> <button type="button" class="btn btn-secondary" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}</div>`}
             ${total > rows.length
-              ? html`<div class="mc-picker-more">Showing ${rows.length} of ${total}. Refine the search to see more.</div>`
+              ? html`<div class="mc-picker-more">${t('Showing {shown} of {total}. Refine the search to see more.', { shown: rows.length, total })}</div>`
               : ''}
           </div>`}
           ${grid ? '' : this._renderKeep()}
           <div class="mc-picker-footer" slot="footer">
-            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>Clear</button>`}
-            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>Draw an icon</button>` : ''}
-            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>Library</button>` : ''}
-            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">Keep your own icons: install the free Magic Card Utils add-on.</span>` : ''}
-            ${this._editorFailed ? html`<span class="help error" role="alert">The icon editor could not load. Try again.</span>` : ''}
+            ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>${t('Clear')}</button>`}
+            ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>${t('Draw an icon')}</button>` : ''}
+            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>${t('Library')}</button>` : ''}
+            ${!grid && lib && lib.state === 'missing' ? html`<span class="help">${t('Keep your own icons: install the free Magic Card Utils add-on.')}</span>` : ''}
+            ${this._editorFailed ? html`<span class="help error" role="alert">${t('The icon editor could not load. Try again.')}</span>` : ''}
             <span class="spacer"></span>
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>`}
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>`}
           </div>
       `)}
     `;

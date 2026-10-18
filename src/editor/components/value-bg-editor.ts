@@ -11,20 +11,21 @@ import './color-picker';
 import './unit-field';
 import './entity-picker';
 import './attribute-picker';
+import { t, m, type MessageId } from '../i18n';
 
-type Opt = { value: string; label: string };
+type Opt = { value: string; label: MessageId };
 type Key = keyof ValueBackgroundConfig;
 
 const TYPES: Opt[] = [
-  { value: 'off', label: 'Off' },
-  { value: 'fill', label: 'Fill' },
-  { value: 'sparkline', label: 'Sparkline' },
+  { value: 'off', label: m('Off') },
+  { value: 'fill', label: m('Fill') },
+  { value: 'sparkline', label: m('Sparkline') },
 ];
 const DIRECTIONS: Opt[] = [
-  { value: 'up', label: 'Up' },
-  { value: 'down', label: 'Down' },
-  { value: 'left', label: 'Left' },
-  { value: 'right', label: 'Right' },
+  { value: 'up', label: m('Up') },
+  { value: 'down', label: m('Down') },
+  { value: 'left', label: m('Left') },
+  { value: 'right', label: m('Right') },
 ];
 
 /** Keys only one type reads: dropped when switching to the other. */
@@ -137,7 +138,7 @@ export class ValueBgEditor extends LitElement {
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
           @click=${() => onPick(o.value)}
-        >${o.label}</button>`;
+        >${t(o.label)}</button>`;
       })}
     </div>`;
   }
@@ -193,20 +194,20 @@ export class ValueBgEditor extends LitElement {
     const stateObj = entity ? this.hass?.states?.[entity] : undefined;
     return html`
       ${this._field(
-        'Entity',
+        t('Entity'),
         'entity',
         html`<mc-entity-picker
           .hass=${this.hass}
           .value=${v.entity || ''}
-          .label=${this.defaultEntity ? `Module entity (${this.defaultEntity})` : 'Entity'}
+          .label=${this.defaultEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity')}
           @value-changed=${(e: CustomEvent) => this._set({ entity: e.detail.value })}
         ></mc-entity-picker>`,
       )}
-      ${entity ? nothing : html`<p class="help no-entity">Pick an entity: a value background without one draws nothing.</p>`}
-      ${!v.entity && this.defaultEntity ? html`<p class="help">Empty uses the module entity (${this.defaultEntity}).</p>` : nothing}
+      ${entity ? nothing : html`<p class="help no-entity">${t('Pick an entity: a value background without one draws nothing.')}</p>`}
+      ${!v.entity && this.defaultEntity ? html`<p class="help">${t('Empty uses the module entity ({entity}).', { entity: this.defaultEntity })}</p>` : nothing}
       ${stateObj && Object.keys(stateObj.attributes || {}).length
         ? this._field(
-            'Attribute',
+            t('Attribute'),
             'attribute',
             html`<mc-attribute-picker
               .hass=${this.hass}
@@ -225,11 +226,11 @@ export class ValueBgEditor extends LitElement {
     const stateObj = entity ? this.hass?.states?.[entity] : undefined;
     return html`
       ${this._field(
-        'Color',
+        t('Colour'),
         'color',
         html`<mc-color-picker
           .value=${v.color || ''}
-          .label=${fill ? 'Fill color' : 'Line color'}
+          .label=${fill ? t('Fill colour') : t('Line colour')}
           .allowEntity=${!!entity}
           .entityColor=${entityStateColor(stateObj) ?? 'currentColor'}
           .gradient=${fill ? 'css' : ''}
@@ -237,11 +238,11 @@ export class ValueBgEditor extends LitElement {
         ></mc-color-picker>`,
       )}
       ${this._field(
-        fill ? 'Fill opacity' : 'Area opacity',
+        fill ? t('Fill opacity') : t('Area opacity'),
         'opacity',
         html`<mc-unit-field
           .value=${opacityField(v.opacity)}
-          .label=${fill ? 'Fill opacity' : 'Area opacity'}
+          .label=${fill ? t('Fill opacity') : t('Area opacity')}
           .units=${['%']}
           .noCustom=${true}
           .placeholder=${String(Math.round((fill ? VALUE_BG_DEFAULTS.opacity : VALUE_BG_DEFAULTS.areaOpacity) * 100))}
@@ -251,35 +252,35 @@ export class ValueBgEditor extends LitElement {
         undefined,
         fill
           ? undefined
-          : `The area fades out upwards. The line stays faint (${Math.round(VALUE_BG_DEFAULTS.lineOpacity * 100)}%) so text over it stays readable.`,
+          : t('The area fades out upwards. The line stays faint ({pct}%) so text over it stays readable.', { pct: Math.round(VALUE_BG_DEFAULTS.lineOpacity * 100) }),
       )}
     `;
   }
 
   private _range(fill: boolean): TemplateResult {
     return html`<div class="two">
-      ${this._field('Min', 'min', this._number('vb-min', 'min', fill ? 0 : 'Auto'), 'vb-min')}
-      ${this._field('Max', 'max', this._number('vb-max', 'max', fill ? 100 : 'Auto'), 'vb-max')}
+      ${this._field(t('Min'), 'min', this._number('vb-min', 'min', fill ? 0 : t('Auto')), 'vb-min')}
+      ${this._field(t('Max'), 'max', this._number('vb-max', 'max', fill ? 100 : t('Auto')), 'vb-max')}
     </div>`;
   }
 
   private _fill(): TemplateResult {
     const v = this._v;
     return html`
-      ${this._field('Direction', 'direction', this._seg('Fill direction', v.direction ?? 'up', DIRECTIONS, (d) => this._set({ direction: d as ValueBackgroundConfig['direction'] })))}
-      ${this._switch('Wave', 'wave', 'An animated wave on the surface. Still with reduced motion.')}
+      ${this._field(t('Direction'), 'direction', this._seg(t('Fill direction'), v.direction ?? 'up', DIRECTIONS, (d) => this._set({ direction: d as ValueBackgroundConfig['direction'] })))}
+      ${this._switch(t('Wave'), 'wave', t('An animated wave on the surface. Still with reduced motion.'))}
     `;
   }
 
   private _sparkline(): TemplateResult {
     return html`
       <div class="two">
-        ${this._field('Hours', 'hours', this._number('vb-hours', 'hours', VALUE_BG_DEFAULTS.hours, 1, VALUE_BG_DEFAULTS.maxHours, 1), 'vb-hours', 'Up to 168 (a week).')}
-        ${this._field('Line width (px)', 'line_width', this._number('vb-line', 'line_width', VALUE_BG_DEFAULTS.lineWidth, 0.5, 20, 0.5), 'vb-line')}
+        ${this._field(t('Hours'), 'hours', this._number('vb-hours', 'hours', VALUE_BG_DEFAULTS.hours, 1, VALUE_BG_DEFAULTS.maxHours, 1), 'vb-hours', t('Up to 168 (a week).'))}
+        ${this._field(t('Line width (px)'), 'line_width', this._number('vb-line', 'line_width', VALUE_BG_DEFAULTS.lineWidth, 0.5, 20, 0.5), 'vb-line')}
       </div>
-      ${this._switch('Area', 'area', 'Fill the area under the line.')}
-      ${this._switch('Smoothing', 'smoothing', 'A curved line instead of straight segments.')}
-      <p class="help">History that can't be loaded draws nothing.</p>
+      ${this._switch(t('Area'), 'area', t('Fill the area under the line.'))}
+      ${this._switch(t('Smoothing'), 'smoothing', t('A curved line instead of straight segments.'))}
+      <p class="help">${t("History that can't be loaded draws nothing.")}</p>
     `;
   }
 
@@ -288,7 +289,7 @@ export class ValueBgEditor extends LitElement {
     const entity = this._v.entity || this.defaultEntity;
     return html`
       <div class="vb-ed">
-        ${this._field('Type', undefined, this._seg('Value background type', type, TYPES, (t) => this._pickType(t)))}
+        ${this._field(t('Type'), undefined, this._seg(t('Value background type'), type, TYPES, (t) => this._pickType(t)))}
         ${type === 'off'
           ? nothing
           : html`

@@ -4,6 +4,7 @@ import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
+import { t } from '../i18n';
 
 interface ServiceInfo {
   domain: string;
@@ -18,7 +19,7 @@ export class ServicePicker extends LitElement {
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
-  @property({ type: String }) label = 'Service';
+  @property({ type: String }) label = '';
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
@@ -145,15 +146,15 @@ export class ServicePicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder="domain.service"
-          aria-label=${this.label}
+          aria-label=${this.label || t('Service')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label="Browse services"
-          title="Browse services"
+          aria-label=${t('Browse services')}
+          title=${t('Browse services')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:magnify"></ha-icon>
@@ -168,11 +169,11 @@ export class ServicePicker extends LitElement {
     const groupedServices = this._getFilteredServices();
 
     return html`
-      ${renderPickerWindow('Select service', () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('Select service'), () => this._closeModal(), 'm', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch('Search services', this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('Search services'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label="Services">
+          <div class="mc-picker-list" role="listbox" aria-label=${t('Services')}>
             ${groupedServices.length > 0
               ? groupedServices.map(group => html`
                   <div class="mc-picker-domain">${group.domain}</div>
@@ -196,11 +197,11 @@ export class ServicePicker extends LitElement {
                     </button>
                   `)}
                 `)
-              : html`<div class="mc-picker-empty">No services found</div>`
+              : html`<div class="mc-picker-empty">${t('No services found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
           </div>
       `)}
     `;

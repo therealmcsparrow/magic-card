@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
 import { editorSystem } from '../../css/editor-system';
 import './unit-field';
+import { t, m, type MessageId } from '../i18n';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
@@ -10,18 +11,18 @@ const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
 /** Same units as mc-unit-field (auto, calc(…) and var(…) are its "Custom" values). */
 const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'];
 
-const SIDE_META: Record<Side, { label: string; icon: string }> = {
-  top: { label: 'Top', icon: 'mdi:border-top-variant' },
-  right: { label: 'Right', icon: 'mdi:border-right-variant' },
-  bottom: { label: 'Bottom', icon: 'mdi:border-bottom-variant' },
-  left: { label: 'Left', icon: 'mdi:border-left-variant' },
+const SIDE_META: Record<Side, { label: MessageId; icon: string }> = {
+  top: { label: m('Top'), icon: 'mdi:border-top-variant' },
+  right: { label: m('Right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('Bottom'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('Left'), icon: 'mdi:border-left-variant' },
 };
 
-const CORNER_META: Record<Side, { label: string; icon: string }> = {
-  top: { label: 'Top left', icon: 'mdi:border-top-variant' },
-  right: { label: 'Top right', icon: 'mdi:border-right-variant' },
-  bottom: { label: 'Bottom right', icon: 'mdi:border-bottom-variant' },
-  left: { label: 'Bottom left', icon: 'mdi:border-left-variant' },
+const CORNER_META: Record<Side, { label: MessageId; icon: string }> = {
+  top: { label: m('Top left'), icon: 'mdi:border-top-variant' },
+  right: { label: m('Top right'), icon: 'mdi:border-right-variant' },
+  bottom: { label: m('Bottom right'), icon: 'mdi:border-bottom-variant' },
+  left: { label: m('Bottom left'), icon: 'mdi:border-left-variant' },
 };
 
 /**
@@ -122,17 +123,18 @@ export class BoxField extends LitElement {
 
   private _renderSide(position: Side): TemplateResult {
     const meta = this.baseName === 'border_radius' ? CORNER_META[position] : SIDE_META[position];
+    const sideLabel = t(meta.label);
     const source: Side = this._linked ? 'top' : position;
     return html`
       <div class="box-side">
         <span class="box-side-label" @click=${() => this.renderRoot.querySelector<HTMLElement>(`mc-unit-field[data-side="${position}"]`)?.focus()}>
-          <ha-icon icon=${meta.icon}></ha-icon>${meta.label}
+          <ha-icon icon=${meta.icon}></ha-icon>${sideLabel}
         </span>
         <mc-unit-field
           compact
           data-side=${position}
           .inputId=${`side-${position}`}
-          .label=${meta.label}
+          .label=${sideLabel}
           .units=${UNITS}
           .value=${this._getValue(source)}
           @value-changed=${(e: CustomEvent) => {
@@ -155,7 +157,7 @@ export class BoxField extends LitElement {
             aria-pressed=${this._linked ? 'true' : 'false'}
             @click=${this._toggleLink}
           >
-            <ha-icon icon="mdi:link-variant"></ha-icon>Same on all sides
+            <ha-icon icon="mdi:link-variant"></ha-icon>${t('Same on all sides')}
           </button>
         </div>
       </div>

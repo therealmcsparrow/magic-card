@@ -2,6 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import type { ColorRange } from '../../types';
 import type { SyncContext } from '../../utils/sync-path';
 import { renderColorField, renderFieldHead, renderNumberField } from '../../utils/form-utils';
+import { t } from '../i18n';
 
 const DEFAULT_COLORS = ['#4caf50', '#ff9800', '#f44336', '#2196f3'];
 
@@ -34,28 +35,28 @@ export function renderColorRangesField(
           (r, i) => html`
             <div class="cond">
               <div class="cond-head">
-                <span class="n">Range ${i + 1} <span class="sub">· from ${r.from}</span></span>
+                <span class="n">${t('Range {n}', { n: i + 1 })} <span class="sub">· ${t('from {value}', { value: r.from })}</span></span>
                 <button
                   type="button"
                   class="icon-btn sm danger"
-                  aria-label="Delete range ${i + 1}"
-                  title="Delete range"
+                  aria-label=${t('Delete range {n}', { n: i + 1 })}
+                  title=${t('Delete range')}
                   @click=${() => write(list.filter((_r, j) => j !== i))}
                 >
                   <ha-icon icon="mdi:delete-outline"></ha-icon>
                 </button>
               </div>
-              ${r.to !== undefined && r.to !== null ? html`<p class="help">Ends at ${r.to} (set in YAML).</p>` : nothing}
+              ${r.to !== undefined && r.to !== null ? html`<p class="help">${t('Ends at {value} (set in YAML).', { value: r.to })}</p>` : nothing}
               <div class="two">
-                ${renderNumberField('From', r.from, (v) => update(i, { from: v }))}
-                ${renderColorField('Color', r.color, (v) => update(i, { color: v }))}
+                ${renderNumberField(t('From'), r.from, (v) => update(i, { from: v }))}
+                ${renderColorField(t('Colour'), r.color, (v) => update(i, { color: v }))}
               </div>
             </div>
           `,
         )}
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${add}>
-            <ha-icon icon="mdi:plus"></ha-icon>Add range
+            <ha-icon icon="mdi:plus"></ha-icon>${t('Add range')}
           </button>
         </div>
       </div>

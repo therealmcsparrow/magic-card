@@ -1,6 +1,7 @@
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
+import { t } from '../i18n';
 
 const UNITS = ['px', 'em', 'rem', '%', 'vw', 'vh'] as const;
 /** Value of the unit select's "Custom" option: the input takes any CSS value as text. */
@@ -234,9 +235,9 @@ export class UnitField extends LitElement {
               @keydown=${onKey}
             />`}
         <div class="select ${custom ? 'is-custom' : ''}">
-          <select class="input" aria-label=${this.label ? `${this.label} unit` : 'Unit'} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
+          <select class="input" aria-label=${this.label ? t('{label} unit', { label: this.label }) : t('Unit')} ?disabled=${this.disabled} @change=${(e: Event) => this._pickUnit(e.target as HTMLSelectElement)}>
             ${units.map((u) => html`<option value=${u} ?selected=${!custom && unit === u}>${u}</option>`)}
-            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>Custom</option>`}
+            ${this.noCustom && !custom ? nothing : html`<option value=${CUSTOM_UNIT} ?selected=${custom}>${t('Custom')}</option>`}
           </select>
           <ha-icon icon="mdi:chevron-down"></ha-icon>
         </div>

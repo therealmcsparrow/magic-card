@@ -2,6 +2,7 @@ import { html, TemplateResult } from 'lit';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import type { UiWindowElement } from '../../contracts/ui-kit';
+import { t } from '../i18n';
 
 /** Shared markup for the picker modals (styled by pickerStyles + editorSystem). */
 
@@ -226,17 +227,17 @@ const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(
 export function renderPickerWindow(title: string, onClose: () => void, size: 's' | 'm' | 'l', content: TemplateResult): TemplateResult {
   return html`<mc-ui-window
     heading=${title}
-    closeLabel="Close"
+    closeLabel=${t('Close')}
     variant=${compact() ? 'sheet' : 'picker'}
     size=${size}
     initialFocus="mc-picker-search"
     movable
     resizable
     maximizable
-    moveLabel="Move window"
-    resizeLabel="Resize window"
-    maximizeLabel="Maximise"
-    restoreLabel="Restore size"
+    moveLabel=${t('Move window')}
+    resizeLabel=${t('Resize window')}
+    maximizeLabel=${t('Maximise')}
+    restoreLabel=${t('Restore size')}
     @mc-window-close=${onClose}
     >${content}</mc-ui-window>`;
 }

@@ -8,6 +8,7 @@ import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
 import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
 import './unit-field';
+import { t } from '../i18n';
 
 const STORAGE_KEY = 'magic-card-saved-colors';
 const MAX_SAVED_COLORS = 12;
@@ -360,8 +361,8 @@ export class ColorPicker extends LitElement {
       type="button"
       class="icon-btn entity-toggle"
       aria-pressed=${on ? 'true' : 'false'}
-      aria-label=${`Entity color for ${(this.label || 'color').toLowerCase()}`}
-      title="Use the entity's state color"
+      aria-label=${t('Entity colour for {name}', { name: (this.label || t('colour')).toLowerCase() })}
+      title=${t("Use the entity's state colour")}
       @click=${() => this._emitValue(on ? '' : 'entity')}
     >
       <ha-icon icon="mdi:palette-swatch-variant"></ha-icon>
@@ -372,20 +373,20 @@ export class ColorPicker extends LitElement {
   private _renderEntity(opacity: number): TemplateResult {
     const base = this.entityColor || 'currentColor';
     const preview = opacity >= 100 ? base : `color-mix(in srgb, ${base} ${opacity}%, transparent)`;
-    const name = this.label || 'color';
+    const name = this.label || t('colour');
     return html`
       <div class="color">
-        <button type="button" class="swatch" disabled aria-label=${`${name}: entity color`} title="The entity's state color">
+        <button type="button" class="swatch" disabled aria-label=${t('{name}: entity colour', { name })} title=${t("The entity's state colour")}>
           <span class="swatch-fill"><span style="background: ${preview}"></span></span>
         </button>
-        <input class="input" type="text" readonly .value=${'Entity color'} aria-label=${name} />
+        <input class="input" type="text" readonly .value=${t('Entity colour')} aria-label=${name} />
         ${this._renderEntityToggle(true)}
       </div>
       <div class="field entity-opacity">
-        <div class="field-head"><span class="lbl">Opacity</span></div>
+        <div class="field-head"><span class="lbl">${t('Opacity')}</span></div>
         <mc-unit-field
           .value=${opacity >= 100 ? '' : `${opacity}%`}
-          .label=${`${name} opacity`}
+          .label=${t('{name} opacity', { name })}
           .units=${['%']}
           placeholder="100"
           @value-changed=${(e: CustomEvent) => {
@@ -399,7 +400,7 @@ export class ColorPicker extends LitElement {
   }
 
   private _toSolid(g: GradientModel): void {
-    this._status = 'Switched to Solid. Undo brings the gradient back.';
+    this._status = t('Switched to Solid. Undo brings the gradient back.');
     this._emitValue(g.stops[0]);
   }
 
@@ -411,18 +412,18 @@ export class ColorPicker extends LitElement {
     const g: GradientModel = old
       ? { radial: old.radial && this.gradient === 'css', angle: old.angle, stops: old.stops.slice(0, MAX_STOPS) }
       : { radial: false, angle: 135, stops: [first, second] };
-    this._status = old ? 'Gradient replaced with the editor version.' : 'Gradient created from your color.';
+    this._status = old ? t('Gradient replaced with the editor version.') : t('Gradient created from your colour.');
     this._emitValue(gradientToString(g));
   }
 
   private _renderMode(g: GradientModel | undefined): TemplateResult {
-    const name = this.label || 'color';
+    const name = this.label || t('colour');
     return html`${renderSeg(
-      `${name} mode`,
+      t('{name} mode', { name }),
       g ? 'gradient' : 'solid',
       [
-        { value: 'solid', label: 'Solid' },
-        { value: 'gradient', label: 'Gradient' },
+        { value: 'solid', label: t('Solid') },
+        { value: 'gradient', label: t('Gradient') },
       ],
       (v) => {
         if (v === 'solid' && g) this._toSolid(g);
@@ -439,7 +440,7 @@ export class ColorPicker extends LitElement {
     return html`
       ${this.gradient ? this._renderMode(g) : nothing}
       ${body}
-      ${custom ? html`<div class="help">This is custom gradient CSS. Choose Gradient to replace it with the editor's version.</div>` : nothing}
+      ${custom ? html`<div class="help">${t("This is custom gradient CSS. Choose Gradient to replace it with the editor's version.")}</div>` : nothing}
       ${g && this.gradientNote ? html`<div class="help">${this.gradientNote}</div>` : nothing}
       ${this.gradient ? html`<div class="help" role="status" aria-live="polite">${this._status}</div>` : nothing}
     `;
@@ -448,7 +449,7 @@ export class ColorPicker extends LitElement {
   private _renderGradient(g: GradientModel): TemplateResult {
     return html`<mc-gradient-editor
       .model=${g}
-      .label=${this.label || 'color'}
+      .label=${this.label || t('colour')}
       .allowRadial=${this.gradient === 'css'}
       @value-changed=${() => (this._status = '')}
     ></mc-gradient-editor>`;
@@ -456,15 +457,15 @@ export class ColorPicker extends LitElement {
 
   private _renderSolid(): TemplateResult {
     const displayColor = this.value || 'transparent';
-    const name = this.label || 'color';
+    const name = this.label || t('colour');
 
     return html`
       <div class="color">
         <button
           type="button"
           class="swatch"
-          aria-label=${`Pick ${name.toLowerCase()}`}
-          title="Open color picker"
+          aria-label=${t('Pick {name}', { name: name.toLowerCase() })}
+          title=${t('Open colour picker')}
           @click=${this._openModal}
         >
           <span class="swatch-fill"><span style="background: ${displayColor}"></span></span>
@@ -492,7 +493,7 @@ export class ColorPicker extends LitElement {
       : this._hsvaToRgbaString(this._hsva);
 
     return html`
-      ${renderPickerWindow('Color picker', () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('Colour picker'), () => this._closeModal(), 's', html`
 
           <div class="mc-color-body">
             <div
@@ -526,7 +527,7 @@ export class ColorPicker extends LitElement {
                 class="input"
                 type="text"
                 inputmode="numeric"
-                aria-label="Hue"
+                aria-label=${t('Hue')}
                 .value=${Math.round(this._hsva.h).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
@@ -557,7 +558,7 @@ export class ColorPicker extends LitElement {
                 class="input"
                 type="text"
                 inputmode="numeric"
-                aria-label="Opacity percent"
+                aria-label=${t('Opacity percent')}
                 .value=${Math.round(this._hsva.a * 100).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
@@ -569,7 +570,7 @@ export class ColorPicker extends LitElement {
 
             <div class="mc-input-row">
               <label class="field">
-                <span class="lbl">Hex</span>
+                <span class="lbl">${t('Hex')}</span>
                 <input class="input" type="text" spellcheck="false" .value=${this._hexInput} @input=${this._handleHexInput} />
               </label>
               <label class="field">
@@ -587,7 +588,7 @@ export class ColorPicker extends LitElement {
             </div>
 
             <div class="mc-color-section">
-              <span class="mc-color-section-header">Presets</span>
+              <span class="mc-color-section-header">${t('Presets')}</span>
               <div class="mc-color-grid">
                 ${PRESET_COLORS.map((color) => html`
                   <button
@@ -603,7 +604,7 @@ export class ColorPicker extends LitElement {
             </div>
 
             <div class="mc-color-section">
-              <span class="mc-color-section-header">Saved colors</span>
+              <span class="mc-color-section-header">${t('Saved colours')}</span>
               <div class="mc-saved-colors">
                 ${this._savedColors.map((color) => html`
                   <div class="mc-saved-swatch" style="background: ${color}">
@@ -611,13 +612,13 @@ export class ColorPicker extends LitElement {
                       type="button"
                       class="mc-saved-pick"
                       title=${color}
-                      aria-label=${`Use ${color}`}
+                      aria-label=${t('Use {value}', { value: color })}
                       @click=${() => this._selectPreset(color)}
                     ></button>
                     <button
                       type="button"
                       class="mc-remove-btn"
-                      aria-label=${`Remove ${color}`}
+                      aria-label=${t('Remove {value}', { value: color })}
                       @click=${(e: Event) => this._removeSavedColor(color, e)}
                     >
                       <ha-icon icon="mdi:close"></ha-icon>
@@ -627,8 +628,8 @@ export class ColorPicker extends LitElement {
                 <button
                   type="button"
                   class="icon-btn sm"
-                  title="Save current color"
-                  aria-label="Save current color"
+                  title=${t('Save current colour')}
+                  aria-label=${t('Save current colour')}
                   @click=${this._addSavedColor}
                 >
                   <ha-icon icon="mdi:plus"></ha-icon>
@@ -637,8 +638,8 @@ export class ColorPicker extends LitElement {
             </div>
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
           </div>
       `)}
     `;

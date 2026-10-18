@@ -15,7 +15,7 @@ import {
   displayProperties,
   propertyKeys,
 } from '../../utils/css-properties';
-import { t } from '../../i18n/labels';
+import { t as lt } from '../../i18n/labels';
 import type { MessageId } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-system';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
@@ -38,6 +38,8 @@ import './ring-editor';
 import './shape-editor';
 import './value-bg-editor';
 import { parseGradient } from '../../utils/gradient';
+import { t, fold } from '../i18n';
+import { thisTarget } from '../i18n/target';
 
 /** Mockup placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
@@ -56,7 +58,7 @@ export const TEXT_GRADIENT_MODULES = ['text', 'info', 'markdown'];
 const HOVER_VIEW = '__hover__';
 
 /** Label text of an optional message (labels namespace). */
-const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : t(id));
+const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : lt(id));
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
 const NO_HOVER_TYPES = new Set(['animations', 'ring', 'shape', 'value_bg']);
@@ -295,9 +297,9 @@ export class DesignPanel extends LitElement {
     const sub = !!this._sub();
     if (parseGradient(this._getValue('background_color'))) return '';
     const shorthand = rec.background ?? (sub ? base.background : undefined);
-    if (shorthand && !parseGradient(shorthand as string)) return 'Gradient needs an empty Background field. Clear it to use a gradient here.';
-    if (rec.background_image || (sub && base.background_image)) return 'A background image replaces a gradient here. Remove the image to use a gradient.';
-    if (sub && base.background_color) return 'Default sets a solid color, so a rule cannot swap it for a gradient. Clear the Default color first.';
+    if (shorthand && !parseGradient(shorthand as string)) return t('Gradient needs an empty Background field. Clear it to use a gradient here.');
+    if (rec.background_image || (sub && base.background_image)) return t('A background image replaces a gradient here. Remove the image to use a gradient.');
+    if (sub && base.background_color) return t('Default sets a solid colour, so a rule cannot swap it for a gradient. Clear the Default colour first.');
     return '';
   }
 
@@ -450,8 +452,8 @@ export class DesignPanel extends LitElement {
 
   /** Whether the Custom CSS field matches the search (always shown without one). */
   private _customCssMatches(): boolean {
-    const q = this._searchQuery.toLowerCase();
-    return !q || 'custom css'.includes(q) || q === 'css';
+    const q = fold(this._searchQuery);
+    return !q || fold(t('Custom CSS')).includes(q) || q === 'css';
   }
 
   private _countSetProperties(sector: CssSector): number {
@@ -476,10 +478,10 @@ export class DesignPanel extends LitElement {
     const hover = this._isHoverView();
     const properties = all.filter((p) => this._isVisible(p) && !(hover && (p.virtual || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
-    const q = this._searchQuery.toLowerCase();
+    const q = fold(this._searchQuery);
     return properties.filter(
       (p) =>
-        t(p.label).toLowerCase().includes(q) ||
+        fold(lt(p.label)).includes(q) ||
         p.cssProperty.toLowerCase().includes(q) ||
         p.key.toLowerCase().includes(q) ||
         p.key.replace(/_/g, ' ').includes(q) ||
@@ -499,7 +501,7 @@ export class DesignPanel extends LitElement {
 
   private _copyDesign(): void {
     copyDesign(this.design);
-    this._announce('Design copied');
+    this._announce(t('Design copied'));
   }
 
   /** Paste the copied design onto the whole design (all rules included), in one change. */
@@ -514,7 +516,7 @@ export class DesignPanel extends LitElement {
     if (this.hasTemplate && changed.length) updates._markNotSynced = changed;
     this._activeView = 'default';
     this.onChange(updates);
-    this._announce('Design pasted');
+    this._announce(t('Design pasted'));
   }
 
   private _openPasteMenu(trigger: HTMLElement): void {
@@ -537,7 +539,7 @@ export class DesignPanel extends LitElement {
     return html`
       <div class="design-clip">
         <button type="button" class="btn btn-text btn-sm" @click=${() => this._copyDesign()}>
-          <ha-icon icon="mdi:content-copy"></ha-icon>Copy design
+          <ha-icon icon="mdi:content-copy"></ha-icon>${t('Copy design')}
         </button>
         <button
           type="button"
@@ -545,19 +547,19 @@ export class DesignPanel extends LitElement {
           aria-haspopup="menu"
           aria-expanded=${this._pasteMenu ? 'true' : 'false'}
           ?disabled=${!canPaste}
-          title=${canPaste ? 'Paste the copied design' : 'Copy a design first'}
+          title=${canPaste ? t('Paste the copied design') : t('Copy a design first')}
           @click=${(e: Event) => this._openPasteMenu(e.currentTarget as HTMLElement)}
         >
-          <ha-icon icon="mdi:content-paste"></ha-icon>Paste design
+          <ha-icon icon="mdi:content-paste"></ha-icon>${t('Paste design')}
         </button>
         <span class="clip-status" role="status" aria-live="polite">${this._clipStatus}</span>
         ${this._pasteMenu
-          ? html`<div class="menu" role="menu" aria-label="Paste design" @keydown=${this._pastePop.onKeydown}>
+          ? html`<div class="menu" role="menu" aria-label=${t('Paste design')} @keydown=${this._pastePop.onKeydown}>
               <button type="button" role="menuitem" @click=${() => this._pasteDesign('replace')}>
-                <ha-icon icon="mdi:content-paste"></ha-icon>Replace design
+                <ha-icon icon="mdi:content-paste"></ha-icon>${t('Replace design')}
               </button>
               <button type="button" role="menuitem" @click=${() => this._pasteDesign('merge')}>
-                <ha-icon icon="mdi:set-merge"></ha-icon>Merge into design
+                <ha-icon icon="mdi:set-merge"></ha-icon>${t('Merge into design')}
               </button>
             </div>`
           : nothing}
@@ -571,7 +573,7 @@ export class DesignPanel extends LitElement {
     const rules = [...(this.design.conditional || [])];
     const newRule: ConditionalDesign = {
       id: generateId('rule'),
-      name: `Rule ${(this.design.conditional?.length ?? 0) + 1}`,
+      name: t('Rule {n}', { n: (this.design.conditional?.length ?? 0) + 1 }),
       conditions: [],
       mode: 'every',
       design: {},
@@ -666,9 +668,9 @@ export class DesignPanel extends LitElement {
         `
       : nothing;
     // the animation list has its own per-entry "Reset to preset", the ring editor per-field resets and Off
-    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(t(p.label), this._isSet(p), () => this._reset([p]));
+    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]));
     const field = (control: TemplateResult, sync: TemplateResult | typeof nothing = nothing, forId?: string, help?: string) =>
-      this._renderField(t(p.label), control, sync, forId, help, reset);
+      this._renderField(lt(p.label), control, sync, forId, help, reset);
 
     switch (p.type) {
       case 'animations': {
@@ -776,7 +778,7 @@ export class DesignPanel extends LitElement {
           html`
             <mc-unit-field
               .value=${value}
-              .label=${t(p.label)}
+              .label=${lt(p.label)}
               .units=${p.units}
               .placeholder=${unitPlaceholder(p.key, { ...(this.design as Record<string, unknown>), ...this._getActiveDesign() })}
               @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
@@ -793,11 +795,11 @@ export class DesignPanel extends LitElement {
           html`
             <mc-color-picker
               .value=${value}
-              .label=${t(p.label)}
+              .label=${lt(p.label)}
               .allowEntity=${this._allowEntityColor}
               .entityColor=${this._entityColor}
               .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
-              .gradientNote=${p.key === 'color' ? 'Text uses this gradient as its fill. Older tablets show the first color.' : ''}
+              .gradientNote=${p.key === 'color' ? t('Text uses this gradient as its fill. Older tablets show the first colour.') : ''}
               @value-changed=${(e: CustomEvent) =>
                 p.key === 'background_color' ? this._handleBackgroundColor(e.detail.value) : this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-color-picker>
@@ -842,7 +844,7 @@ export class DesignPanel extends LitElement {
                 id=${id}
                 @change=${(e: Event) => this._handlePropertyChange(p.key, (e.target as HTMLSelectElement).value)}
               >
-                <option value="" ?selected=${!value}>${p.emptyLabel === undefined ? 'Not set' : t(p.emptyLabel)}</option>
+                <option value="" ?selected=${!value}>${p.emptyLabel === undefined ? t('Not set') : lt(p.emptyLabel)}</option>
                 ${this._renderOptions(p.options || [], value)}
               </select>
               <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -867,7 +869,7 @@ export class DesignPanel extends LitElement {
         };
         return field(
           html`
-            <div class="seg full" role="radiogroup" aria-label=${t(p.label)} @keydown=${onKey}>
+            <div class="seg full" role="radiogroup" aria-label=${lt(p.label)} @keydown=${onKey}>
               ${opts.map((o) => {
                 const on = o.value === current;
                 return html`<button
@@ -877,7 +879,7 @@ export class DesignPanel extends LitElement {
                   aria-checked=${on ? 'true' : 'false'}
                   tabindex=${on ? '0' : '-1'}
                   @click=${() => this._handlePropertyChange(p.key, o.value)}
-                >${t(o.label)}</button>`;
+                >${lt(o.label)}</button>`;
               })}
             </div>
           `,
@@ -922,7 +924,7 @@ export class DesignPanel extends LitElement {
 
   /** Options, inside <optgroup>s when they carry a group (animation presets). */
   private _renderOptions(options: CssPropertyOption[], value: string): TemplateResult[] {
-    const opt = (o: CssPropertyOption) => html`<option value=${o.value} ?selected=${value === o.value}>${t(o.label)}</option>`;
+    const opt = (o: CssPropertyOption) => html`<option value=${o.value} ?selected=${value === o.value}>${lt(o.label)}</option>`;
     const groups = [...new Set(options.map((o) => o.group))];
     if (groups.length === 1 && groups[0] === undefined) return options.map(opt);
     return groups.map(
@@ -949,8 +951,8 @@ export class DesignPanel extends LitElement {
           @click=${() => this._toggleSector(sector.id)}
         >
           <ha-icon icon=${sector.icon}></ha-icon>
-          <span class="nm">${t(sector.name)}</span>
-          ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
+          <span class="nm">${lt(sector.name)}</span>
+          ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         </button>
         ${isOpen
@@ -960,11 +962,11 @@ export class DesignPanel extends LitElement {
                     <button
                       type="button"
                       class="btn btn-text btn-sm sector-reset"
-                      aria-label="Reset section ${t(sector.name)}"
-                      title="Clear every value in this section"
+                      aria-label=${t('Reset section {name}', { name: lt(sector.name) })}
+                      title=${t('Clear every value in this section')}
                       @click=${() => this._reset(sector.properties.filter((p) => this._isSet(p)))}
                     >
-                      <ha-icon icon="mdi:backup-restore"></ha-icon>Reset section
+                      <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}
                     </button>
                   </div>`
                 : nothing}
@@ -996,14 +998,14 @@ export class DesignPanel extends LitElement {
     const rules = this.design.conditional || [];
     const n = rules.length;
     const help = this._isHoverView()
-      ? `Applied while the pointer is over this ${this.target}, on top of Default and matching rules.`
+      ? t('Applied while the pointer is over {thing}, on top of Default and matching rules.', { thing: thisTarget(this.target) })
       : n
-        ? `${n} conditional rule${n === 1 ? '' : 's'}. Rules override Default only while their conditions match.`
-        : 'Add a rule to change the look when conditions match.';
+        ? t('{n, plural, one {# conditional rule} other {# conditional rules}}. Rules override Default only while their conditions match.', { n })
+        : t('Add a rule to change the look when conditions match.');
     return html`
       <div class="rule-pick">
         <div class="field">
-          <div class="field-head"><label for="design-view">Editing design for</label></div>
+          <div class="field-head"><label for="design-view">${t('Editing design for')}</label></div>
           <div class="select">
             <select
               class="input"
@@ -1013,10 +1015,10 @@ export class DesignPanel extends LitElement {
                 this._activeView = (e.target as HTMLSelectElement).value;
               }}
             >
-              <option value="default" ?selected=${this._activeView === 'default'}>Default</option>
-              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>Hover</option>
+              <option value="default" ?selected=${this._activeView === 'default'}>${t('Default')}</option>
+              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${t('Hover')}</option>
               ${rules.map(
-                (r, i) => html`<option value=${r.id} ?selected=${this._activeView === r.id}>Rule: ${r.name || `Rule ${i + 1}`}</option>`,
+                (r, i) => html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('Rule: {name}', { name: r.name || t('Rule {n}', { n: i + 1 }) })}</option>`,
               )}
             </select>
             <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -1025,7 +1027,7 @@ export class DesignPanel extends LitElement {
         </div>
         <div>
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._addRule()}>
-            <ha-icon icon="mdi:plus"></ha-icon>Add conditional rule
+            <ha-icon icon="mdi:plus"></ha-icon>${t('Add conditional rule')}
           </button>
         </div>
       </div>
@@ -1035,35 +1037,35 @@ export class DesignPanel extends LitElement {
   private _renderRuleHeader(rule: ConditionalDesign): TemplateResult {
     const mode = rule.mode === 'any' ? 'any' : 'every';
     const modes: Array<{ v: 'every' | 'any'; l: string }> = [
-      { v: 'every', l: 'All match (AND)' },
-      { v: 'any', l: 'Any matches (OR)' },
+      { v: 'every', l: t('All match (AND)') },
+      { v: 'any', l: t('Any matches (OR)') },
     ];
     return html`
       <div class="rule-head">
-        <h3>Rule</h3>
+        <h3>${t('Rule')}</h3>
         <button
           type="button"
           class="btn btn-text btn-sm danger-text"
           @click=${() => this._removeRule(rule.id)}
         >
-          <ha-icon icon="mdi:delete-outline"></ha-icon>Delete rule
+          <ha-icon icon="mdi:delete-outline"></ha-icon>${t('Delete rule')}
         </button>
       </div>
       <div class="field">
-        <div class="field-head"><label for="rule-name">Rule name</label></div>
+        <div class="field-head"><label for="rule-name">${t('Rule name')}</label></div>
         <input
           class="input"
           id="rule-name"
           type="text"
           .value=${rule.name || ''}
-          placeholder="Rule name"
+          placeholder=${t('Rule name')}
           @input=${(e: InputEvent) =>
             this._updateRuleName(rule.id, (e.target as HTMLInputElement).value)}
         />
       </div>
       <div class="field">
-        <div class="field-head"><span class="lbl">Match</span></div>
-        <div class="seg full" role="radiogroup" aria-label="Condition match">
+        <div class="field-head"><span class="lbl">${t('Match')}</span></div>
+        <div class="seg full" role="radiogroup" aria-label=${t('Condition match')}>
           ${modes.map(
             (m) => html`
               <button
@@ -1095,10 +1097,10 @@ export class DesignPanel extends LitElement {
                 ></mc-condition-row>
               `,
             )
-          : html`<p class="help">No conditions yet. The rule applies once a condition is added and matches.</p>`}
+          : html`<p class="help">${t('No conditions yet. The rule applies once a condition is added and matches.')}</p>`}
         <div>
           <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._addConditionToRule(rule)}>
-            <ha-icon icon="mdi:plus"></ha-icon>Add condition
+            <ha-icon icon="mdi:plus"></ha-icon>${t('Add condition')}
           </button>
         </div>
       </div>
@@ -1151,8 +1153,8 @@ export class DesignPanel extends LitElement {
           @click=${() => this._toggleGroup(group, this._isGroupOpen(group, count))}
         >
           <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
-          <span class="nm">${t(group.name)}</span>
-          ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
+          <span class="nm">${lt(group.name)}</span>
+          ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
         </button>
         <div class="dgroup-body" id=${bodyId} ?hidden=${!open}>
           ${open
@@ -1168,8 +1170,8 @@ export class DesignPanel extends LitElement {
     return html`
       <div class="field">
         <div class="field-head">
-          <label for="custom-css">Custom CSS</label>
-          ${fieldReset('Custom CSS', !!this._getCustomCssValue(), () => this._handleCustomCssChange(''))}
+          <label for="custom-css">${t('Custom CSS')}</label>
+          ${fieldReset(t('Custom CSS'), !!this._getCustomCssValue(), () => this._handleCustomCssChange(''))}
         </div>
         <textarea
           class="input"
@@ -1178,7 +1180,7 @@ export class DesignPanel extends LitElement {
           .value=${this._getCustomCssValue()}
           @input=${(e: InputEvent) => this._handleCustomCssChange((e.target as HTMLTextAreaElement).value)}
           rows="4"
-          placeholder="Applied to this ${this.target} only"
+          placeholder=${t('Applied to {thing} only', { thing: thisTarget(this.target) })}
         ></textarea>
       </div>
     `;
@@ -1216,8 +1218,8 @@ export class DesignPanel extends LitElement {
             <input
               class="input"
               type="search"
-              placeholder="Search CSS properties, e.g. padding"
-              aria-label="Search CSS properties"
+              placeholder=${t('Search CSS properties, e.g. padding')}
+              aria-label=${t('Search CSS properties')}
               .value=${this._searchQuery}
               @input=${(e: InputEvent) => {
                 this._searchQuery = (e.target as HTMLInputElement).value;
@@ -1226,7 +1228,7 @@ export class DesignPanel extends LitElement {
           </div>
           ${groups.some((g) => g !== nothing)
             ? html`<div class="dgroups">${groups}</div>`
-            : html`<p class="no-results">No CSS property matches "${this._searchQuery}".</p>`}
+            : html`<p class="no-results">${t('No CSS property matches "{query}".', { query: this._searchQuery })}</p>`}
         </div>
       </div>
     `;

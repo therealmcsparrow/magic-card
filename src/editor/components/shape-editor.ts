@@ -12,6 +12,8 @@ import { SHAPE_DEFAULTS, shapePath } from '../../utils/shape-path';
 import { fieldReset } from './field-reset';
 
 import './unit-field';
+import { t, m, type MessageId } from '../i18n';
+import { thisTarget } from '../i18n/target';
 
 /** What a shape edit writes: both keys (undefined = removed). */
 export interface ShapePatch {
@@ -23,23 +25,23 @@ type OptionKey = Exclude<keyof ShapeOptions, 'phase'>;
 
 interface ShapeTile {
   kind: ShapeKind;
-  label: string;
+  label: MessageId;
   /** The options this shape reads (others are dropped when switching to it). */
   options: OptionKey[];
 }
 
 export const SHAPE_TILES: ShapeTile[] = [
-  { kind: 'none', label: 'None', options: [] },
-  { kind: 'squircle', label: 'Squircle', options: ['corner', 'smoothing'] },
-  { kind: 'pill', label: 'Pill', options: [] },
-  { kind: 'circle', label: 'Circle', options: [] },
-  { kind: 'hexagon', label: 'Hexagon', options: ['corner'] },
-  { kind: 'octagon', label: 'Octagon', options: ['corner'] },
-  { kind: 'notch', label: 'Notch', options: ['corner'] },
-  { kind: 'ticket', label: 'Ticket', options: ['corner'] },
-  { kind: 'wave', label: 'Wave', options: ['edge', 'amplitude', 'waves', 'animate'] },
-  { kind: 'blob', label: 'Blob', options: ['seed', 'wobble', 'animate'] },
-  { kind: 'custom', label: 'Custom', options: [] },
+  { kind: 'none', label: m('None'), options: [] },
+  { kind: 'squircle', label: m('Squircle'), options: ['corner', 'smoothing'] },
+  { kind: 'pill', label: m('Pill'), options: [] },
+  { kind: 'circle', label: m('Circle'), options: [] },
+  { kind: 'hexagon', label: m('Hexagon'), options: ['corner'] },
+  { kind: 'octagon', label: m('Octagon'), options: ['corner'] },
+  { kind: 'notch', label: m('Notch'), options: ['corner'] },
+  { kind: 'ticket', label: m('Ticket'), options: ['corner'] },
+  { kind: 'wave', label: m('Wave'), options: ['edge', 'amplitude', 'waves', 'animate'] },
+  { kind: 'blob', label: m('Blob'), options: ['seed', 'wobble', 'animate'] },
+  { kind: 'custom', label: m('Custom'), options: [] },
 ];
 
 /** Presets "Edit as custom" can convert to corners or a path (shape editor, design 04 section 0). */
@@ -47,19 +49,19 @@ const EDITABLE: ShapeKind[] = ['squircle', 'pill', 'circle', 'hexagon', 'octagon
 /** Presets that cannot be edited yet: the line under the picker says so. */
 const NOT_EDITABLE: ShapeKind[] = ['ticket', 'wave', 'blob'];
 
-const SHAPE_GROUPS: Array<[string, ShapeKind[]]> = [
-  ['Rounded', ['squircle', 'pill', 'circle']],
-  ['Cut corners', ['hexagon', 'octagon', 'notch', 'ticket']],
-  ['Organic', ['wave', 'blob']],
-  ['Your own', ['custom']],
+const SHAPE_GROUPS: Array<[MessageId, ShapeKind[]]> = [
+  [m('Rounded'), ['squircle', 'pill', 'circle']],
+  [m('Cut corners'), ['hexagon', 'octagon', 'notch', 'ticket']],
+  [m('Organic'), ['wave', 'blob']],
+  [m('Your own'), ['custom']],
 ];
 
-const EDGES: Array<{ value: NonNullable<ShapeOptions['edge']>; label: string }> = [
-  { value: 'top', label: 'Top' },
-  { value: 'right', label: 'Right' },
-  { value: 'bottom', label: 'Bottom' },
-  { value: 'left', label: 'Left' },
-  { value: 'all', label: 'All' },
+const EDGES: Array<{ value: NonNullable<ShapeOptions['edge']>; label: MessageId }> = [
+  { value: 'top', label: m('Top') },
+  { value: 'right', label: m('Right') },
+  { value: 'bottom', label: m('Bottom') },
+  { value: 'left', label: m('Left') },
+  { value: 'all', label: m('All') },
 ];
 
 const LENGTH_UNITS = ['px', '%'];
@@ -73,12 +75,12 @@ const CORNER_PLACEHOLDER: Partial<Record<ShapeKind, string>> = {
   octagon: 'auto',
 };
 
-const CORNER_LABEL: Partial<Record<ShapeKind, string>> = {
-  squircle: 'Corner size',
-  notch: 'Cut size',
-  ticket: 'Cutout size',
-  hexagon: 'Side cut',
-  octagon: 'Side cut',
+const CORNER_LABEL: Partial<Record<ShapeKind, MessageId>> = {
+  squircle: m('Corner size'),
+  notch: m('Cut size'),
+  ticket: m('Cutout size'),
+  hexagon: m('Side cut'),
+  octagon: m('Side cut'),
 };
 
 const PREVIEW_W = 40;
@@ -302,13 +304,13 @@ export class ShapeEditor extends LitElement {
   }
 
   private _picker(kind: ShapeKind): TemplateResult {
-    const opt = (t: ShapeTile) => html`<option value=${t.kind} ?selected=${t.kind === kind}>${t.label}</option>`;
-    const group = (label: string, kinds: ShapeKind[]) =>
-      html`<optgroup label=${label}>${kinds.map((k) => opt(SHAPE_TILES.find((t) => t.kind === k)!))}</optgroup>`;
+    const opt = (tile: ShapeTile) => html`<option value=${tile.kind} ?selected=${tile.kind === kind}>${t(tile.label)}</option>`;
+    const group = (label: MessageId, kinds: ShapeKind[]) =>
+      html`<optgroup label=${t(label)}>${kinds.map((k) => opt(SHAPE_TILES.find((tile) => tile.kind === k)!))}</optgroup>`;
     const d = kind === 'none' || kind === 'custom' ? '' : previewPath(kind, this._opts);
     return html`<div class="pick">
       <div class="select">
-        <select class="input" id="shape-kind" data-focus-key="shape-entry" aria-label="Shape" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as ShapeKind)}>
+        <select class="input" id="shape-kind" data-focus-key="shape-entry" aria-label=${t('Shape')} @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as ShapeKind)}>
           ${opt(SHAPE_TILES[0])}
           ${SHAPE_GROUPS.map(([label, kinds]) => group(label, kinds))}
         </select>
@@ -377,17 +379,17 @@ export class ShapeEditor extends LitElement {
     return html`<div class="switch-row">
       <div class="txt">
         <div class="field-head">
-          <span class="lbl">Animate</span>
-          ${fieldReset('Animate', this._opts.animate !== undefined, () => this._set({ animate: undefined }))}
+          <span class="lbl">${t('Animate')}</span>
+          ${fieldReset(t('Animate'), this._opts.animate !== undefined, () => this._set({ animate: undefined }))}
         </div>
-        <p class="help">${kind === 'wave' ? 'The waves flow along the edge.' : 'The blob morphs slowly.'} Paused off-screen and with reduced motion.</p>
+        <p class="help">${kind === 'wave' ? t('The waves flow along the edge.') : t('The blob morphs slowly.')} ${t('Paused off-screen and with reduced motion.')}</p>
       </div>
       <button
         type="button"
         class="switch"
         role="switch"
         aria-checked=${on ? 'true' : 'false'}
-        aria-label="Animate"
+        aria-label=${t('Animate')}
         @click=${() => this._set({ animate: on ? undefined : true })}
       ></button>
     </div>`;
@@ -405,7 +407,7 @@ export class ShapeEditor extends LitElement {
       this._set({ edge: next });
       requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
     };
-    return html`<div class="seg full" role="radiogroup" aria-label="Wave edge" @keydown=${onKey}>
+    return html`<div class="seg full" role="radiogroup" aria-label=${t('Wave edge')} @keydown=${onKey}>
       ${EDGES.map((o) => {
         const on = o.value === value;
         return html`<button
@@ -415,30 +417,30 @@ export class ShapeEditor extends LitElement {
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
           @click=${() => this._set({ edge: o.value })}
-        >${o.label}</button>`;
+        >${t(o.label)}</button>`;
       })}
     </div>`;
   }
 
   private _options(kind: ShapeKind): TemplateResult | typeof nothing {
-    const lengthHelp = 'In px, or % of the shorter side.';
+    const lengthHelp = t('In px, or % of the shorter side.');
     switch (kind) {
       case 'squircle':
         return html`<div class="two">
-          ${this._field('Corner size', 'corner', this._length('corner', 'Corner size', CORNER_PLACEHOLDER.squircle!), undefined, lengthHelp)}
-          ${this._field('Smoothing', 'smoothing', this._number('smoothing', SHAPE_DEFAULTS.smoothing, 0, 1, 0.05), 'shape-smoothing', '1 is rounder, 0 is squarer.')}
+          ${this._field(t('Corner size'), 'corner', this._length('corner', t('Corner size'), CORNER_PLACEHOLDER.squircle!), undefined, lengthHelp)}
+          ${this._field(t('Smoothing'), 'smoothing', this._number('smoothing', SHAPE_DEFAULTS.smoothing, 0, 1, 0.05), 'shape-smoothing', t('1 is rounder, 0 is squarer.'))}
         </div>`;
       case 'hexagon':
       case 'octagon':
       case 'notch':
       case 'ticket':
-        return this._field(CORNER_LABEL[kind]!, 'corner', this._length('corner', CORNER_LABEL[kind]!, CORNER_PLACEHOLDER[kind]!), undefined, lengthHelp);
+        return this._field(t(CORNER_LABEL[kind]!), 'corner', this._length('corner', t(CORNER_LABEL[kind]!), CORNER_PLACEHOLDER[kind]!), undefined, lengthHelp);
       case 'wave':
         return html`
-          ${this._field('Edge', 'edge', this._edge())}
+          ${this._field(t('Edge'), 'edge', this._edge())}
           <div class="two">
-            ${this._field('Wave height', 'amplitude', this._length('amplitude', 'Wave height', String(SHAPE_DEFAULTS.amplitude)), undefined, lengthHelp)}
-            ${this._field('Waves', 'waves', this._number('waves', SHAPE_DEFAULTS.waves, 1, 50), 'shape-waves')}
+            ${this._field(t('Wave height'), 'amplitude', this._length('amplitude', t('Wave height'), String(SHAPE_DEFAULTS.amplitude)), undefined, lengthHelp)}
+            ${this._field(t('Waves'), 'waves', this._number('waves', SHAPE_DEFAULTS.waves, 1, 50), 'shape-waves')}
           </div>
           ${this._animate(kind)}
         `;
@@ -446,22 +448,22 @@ export class ShapeEditor extends LitElement {
         return html`
           <div class="two">
             ${this._field(
-              'Seed',
+              t('Seed'),
               'seed',
               html`<div class="seed">
                 ${this._number('seed', SHAPE_DEFAULTS.seed, 0, undefined, 1)}
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  title="Pick another random blob"
+                  title=${t('Pick another random blob')}
                   @click=${() => this._set({ seed: randomSeed(this._opts.seed ?? SHAPE_DEFAULTS.seed) })}
                 >
-                  <ha-icon icon="mdi:dice-5-outline"></ha-icon>Shuffle
+                  <ha-icon icon="mdi:dice-5-outline"></ha-icon>${t('Shuffle')}
                 </button>
               </div>`,
               'shape-seed',
             )}
-            ${this._field('Wobble', 'wobble', this._number('wobble', SHAPE_DEFAULTS.wobble, 0, 1, 0.05), 'shape-wobble', '0 is round, 1 is most irregular.')}
+            ${this._field(t('Wobble'), 'wobble', this._number('wobble', SHAPE_DEFAULTS.wobble, 0, 1, 0.05), 'shape-wobble', t('0 is round, 1 is most irregular.'))}
           </div>
           ${this._animate(kind)}
         `;
@@ -485,7 +487,7 @@ export class ShapeEditor extends LitElement {
     const r = await openShapeEditor({
       from: this,
       hass: this.hass,
-      label: this.label || `Shape for this ${this.target}`,
+      label: this.label || t('Shape for {thing}', { thing: thisTarget(this.target) }),
       value: kind === 'custom' ? { shape: 'custom', shape_options: this._opts } : undefined,
       preset,
       apply: (patch) => this.onChange?.(patch),
@@ -505,7 +507,7 @@ export class ShapeEditor extends LitElement {
         ? { shape: 'custom', shape_options: { ...item.shape } }
         : { shape: 'custom', shape_options: { ref: item.id }, custom_shapes: { [item.id]: item.shape } },
     );
-    this._status = asCopy ? `Using a copy of ${item.name}.` : `Using ${item.name}. Changes to it reach every card that uses it.`;
+    this._status = asCopy ? t('Using a copy of {name}.', { name: item.name }) : t('Using {name}. Changes to it reach every card that uses it.', { name: item.name });
   }
 
   /** A linked shape becomes this card's own: the library's options without the link. */
@@ -515,7 +517,7 @@ export class ShapeEditor extends LitElement {
     const own = this._lib?.items.find((i) => i.id === id)?.shape ?? this._copies()[id];
     if (!own) return;
     this._write({ shape: 'custom', shape_options: { ...own } });
-    this._status = 'This card now has its own copy.';
+    this._status = t('This card now has its own copy.');
   }
 
   private async _saveAs(): Promise<void> {
@@ -523,11 +525,11 @@ export class ShapeEditor extends LitElement {
     if (!f || f.busy) return;
     const name = f.name.trim();
     if (!name) {
-      this._saving = { ...f, error: 'Give it a name.' };
+      this._saving = { ...f, error: t('Give it a name.') };
       return;
     }
     if (name.length > 80) {
-      this._saving = { ...f, error: 'Use at most 80 characters.' };
+      this._saving = { ...f, error: t('Use at most 80 characters.') };
       return;
     }
     this._saving = { ...f, busy: true, error: undefined };
@@ -537,15 +539,15 @@ export class ShapeEditor extends LitElement {
     const r = await saveShape(this.hass, { id: freeId(slug(name, 'shape'), taken), name, shape });
     if (r.shape) {
       this._saving = undefined;
-      this._status = `Saved as ${r.shape.name}. Find it under My shapes.`;
+      this._status = t('Saved as {name}. Find it under My shapes.', { name: r.shape.name });
       this._lib = await listShapes(this.hass);
       return;
     }
     const why = {
-      readonly: 'Your account can use the library but not change it. Ask an admin.',
-      full: 'The library is full. Delete a shape first.',
-      invalid: 'This shape can not be saved.',
-      unreachable: 'Could not reach Magic Card Utils. Try again.',
+      readonly: t('Your account can use the library but not change it. Ask an admin.'),
+      full: t('The library is full. Delete a shape first.'),
+      invalid: t('This shape can not be saved.'),
+      unreachable: t('Could not reach Magic Card Utils. Try again.'),
     }[r.error ?? 'unreachable'];
     this._saving = { ...f, busy: false, error: why };
   }
@@ -554,31 +556,31 @@ export class ShapeEditor extends LitElement {
     if (this._lib?.state !== 'ok') return nothing;
     const chip = (v: 'presets' | 'mine', label: string) =>
       html`<button type="button" role="radio" aria-checked=${this._source === v ? 'true' : 'false'} @click=${() => (this._source = v)}>${label}</button>`;
-    return html`<div class="seg full" role="radiogroup" aria-label="Shape source">${chip('presets', 'Presets')}${chip('mine', `My shapes (${this._lib.items.length})`)}</div>`;
+    return html`<div class="seg full" role="radiogroup" aria-label=${t('Shape source')}>${chip('presets', t('Presets'))}${chip('mine', t('My shapes ({n})', { n: this._lib.items.length }))}</div>`;
   }
 
   private _mine(): TemplateResult {
     const items = this._lib?.items ?? [];
     if (!items.length) {
-      return html`<div class="mine-empty"><p class="help">No saved shapes yet. Make a custom shape, then choose Save as shape.</p>
-        <button type="button" class="btn btn-secondary btn-sm" data-focus-key="shape-entry" @click=${() => void this._open()}>Make a custom shape</button></div>`;
+      return html`<div class="mine-empty"><p class="help">${t('No saved shapes yet. Make a custom shape, then choose Save as shape.')}</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-focus-key="shape-entry" @click=${() => void this._open()}>${t('Make a custom shape')}</button></div>`;
     }
-    return html`<ul class="mine" aria-label="My shapes">
+    return html`<ul class="mine" aria-label=${t('My shapes')}>
       ${items.map(
         (i) => html`<li>
           <span class="nm">${i.name}</span>
-          <button type="button" class="btn btn-secondary btn-sm" aria-label=${`Use ${i.name}`} @click=${() => this._use(i, false)}>Use</button>
-          <button type="button" class="btn btn-text btn-sm" aria-label=${`Use a copy of ${i.name}`} @click=${() => this._use(i, true)}>Use as copy</button>
+          <button type="button" class="btn btn-secondary btn-sm" aria-label=${t('Use {name}', { name: i.name })} @click=${() => this._use(i, false)}>${t('Use')}</button>
+          <button type="button" class="btn btn-text btn-sm" aria-label=${t('Use a copy of {name}', { name: i.name })} @click=${() => this._use(i, true)}>${t('Use as copy')}</button>
         </li>`,
       )}
     </ul>
-    <p class="help">Use follows the library: change a shape and every card that uses it changes. Use as copy makes this card independent.</p>`;
+    <p class="help">${t('Use follows the library: change a shape and every card that uses it changes. Use as copy makes this card independent.')}</p>`;
   }
 
   private _openButton(label: string, onClick: () => void): TemplateResult {
     const loading = this._opening === 'loading';
     return html`<button type="button" class="btn btn-secondary btn-sm" data-focus-key="shape-entry" aria-busy=${loading ? 'true' : 'false'} @click=${onClick}>
-      ${label}${loading ? html`<span class="sr-only"> Loading</span>` : nothing}
+      ${label}${loading ? html`<span class="sr-only"> ${t('Loading')}</span>` : nothing}
     </button>`;
   }
 
@@ -587,30 +589,30 @@ export class ShapeEditor extends LitElement {
     const parts: TemplateResult[] = [];
     if (kind === 'custom') {
       const ref = this._opts.ref;
-      parts.push(this._openButton('Edit shape', () => void this._open()));
+      parts.push(this._openButton(t('Edit shape'), () => void this._open()));
       if (ref) {
-        parts.push(html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._detach()}>Use as copy</button>`);
+        parts.push(html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._detach()}>${t('Use as copy')}</button>`);
       } else if (this._lib) {
         const off = this._lib.state !== 'ok';
         parts.push(
           html`<button type="button" class="btn btn-text btn-sm" aria-disabled=${off ? 'true' : 'false'} aria-describedby=${off ? 'shape-lib-hint' : nothing}
-            @click=${() => (off ? undefined : (this._saving = { name: 'Custom shape' }))}>Save as shape</button>`,
+            @click=${() => (off ? undefined : (this._saving = { name: t('Custom shape') }))}>${t('Save as shape')}</button>`,
         );
       }
     } else if (EDITABLE.includes(kind)) {
-      parts.push(this._openButton('Edit as custom', () => void this._open({ shape: kind, shape_options: this._opts })));
+      parts.push(this._openButton(t('Edit as custom'), () => void this._open({ shape: kind, shape_options: this._opts })));
     }
     const hints: TemplateResult[] = [];
-    if (NOT_EDITABLE.includes(kind)) hints.push(html`<p class="help">Ticket, Wave and Blob can not be edited yet. Use the preset as it is.</p>`);
+    if (NOT_EDITABLE.includes(kind)) hints.push(html`<p class="help">${t('Ticket, Wave and Blob can not be edited yet. Use the preset as it is.')}</p>`);
     if (kind === 'custom' && this._opts.ref) {
       const name = this._lib?.items.find((i) => i.id === this._opts.ref)?.name ?? this._opts.ref;
-      hints.push(html`<p class="help">Linked to the saved shape ${name}. Change it there and every card that uses it changes.</p>`);
+      hints.push(html`<p class="help">${t('Linked to the saved shape {name}. Change it there and every card that uses it changes.', { name })}</p>`);
     }
     if (kind === 'custom' && !this._opts.ref && this._lib && this._lib.state !== 'ok') {
-      hints.push(html`<p class="help" id="shape-lib-hint">Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, this shape is saved in this card only.</p>`);
+      hints.push(html`<p class="help" id="shape-lib-hint">${t('Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, this shape is saved in this card only.')}</p>`);
     }
     if (this._opening === 'failed') {
-      hints.push(html`<p class="help error" role="alert">The shape editor could not load. Check your connection and try again.</p>`);
+      hints.push(html`<p class="help error" role="alert">${t('The shape editor could not load. Check your connection and try again.')}</p>`);
     }
     return html`<div class="shape-actions">${parts}</div>${hints}${this._saveForm()}`;
   }
@@ -619,14 +621,14 @@ export class ShapeEditor extends LitElement {
     const f = this._saving;
     if (!f) return nothing;
     return html`<form class="save-form" @submit=${(e: Event) => { e.preventDefault(); void this._saveAs(); }}>
-      <label for="shape-save-name">Name</label>
+      <label for="shape-save-name">${t('Name')}</label>
       <input class="input" id="shape-save-name" .value=${f.name} maxlength="80" aria-invalid=${f.error ? 'true' : 'false'} aria-describedby=${f.error ? 'shape-save-err' : nothing}
         @input=${(e: InputEvent) => (this._saving = { ...f, name: (e.target as HTMLInputElement).value, error: undefined })}
         @keydown=${(e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); this._saving = undefined; } }} />
       ${f.error ? html`<p class="help error" id="shape-save-err" role="alert">${f.error}</p>` : nothing}
       <div class="shape-actions">
-        <button type="submit" class="btn btn-primary btn-sm" ?disabled=${f.busy}>Save</button>
-        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._saving = undefined)}>Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm" ?disabled=${f.busy}>${t('Save')}</button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._saving = undefined)}>${t('Cancel')}</button>
       </div>
     </form>`;
   }
@@ -642,10 +644,10 @@ export class ShapeEditor extends LitElement {
   private _hints(kind: ShapeKind): TemplateResult | typeof nothing {
     if (kind === 'none') return nothing;
     const hints: string[] = [];
-    if (this.hasRadius) hints.push('The shape replaces Border radius here.');
-    if (this.hasShadow) hints.push('Box shadow follows the shape as a drop shadow (first shadow only).');
-    if (this.target === 'module') hints.push('The shape clips anything that pops out of the module, like dropdowns and tooltips.');
-    if (this.target === 'card' && this.popup) hints.push('An open pop-up keeps a rectangular surface.');
+    if (this.hasRadius) hints.push(t('The shape replaces Border radius here.'));
+    if (this.hasShadow) hints.push(t('Box shadow follows the shape as a drop shadow (first shadow only).'));
+    if (this.target === 'module') hints.push(t('The shape clips anything that pops out of the module, like dropdowns and tooltips.'));
+    if (this.target === 'card' && this.popup) hints.push(t('An open pop-up keeps a rectangular surface.'));
     if (!hints.length) return nothing;
     return html`<div class="hints">${hints.map((h) => html`<p class="help">${h}</p>`)}</div>`;
   }
@@ -664,7 +666,7 @@ export class ShapeEditor extends LitElement {
         ${this._source === 'mine' && this._lib?.state === 'ok'
           ? this._mine()
           : html`${this._picker(kind)}${this._actions(kind)}${this._hints(kind)}${this._options(kind)}`}
-        <div class="shape-actions"><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'shape')}>Library</button></div>
+        <div class="shape-actions"><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'shape')}>${t('Library')}</button></div>
         <p class="sr-only" role="status">${this._status}</p>
       </div>
     `;

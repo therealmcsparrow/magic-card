@@ -1,6 +1,7 @@
 import { html, TemplateResult } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import { layoutWeights } from '../state/layouts';
+import { t } from '../i18n';
 
 /**
  * A row's column layout drawn as bars (`.layout-glyph`, editor system): one bar per column at its
@@ -22,6 +23,7 @@ export function presetWeights(layout: string, colCount?: number): number[] {
 /** Accessible name of a layout: "1 column", "2 columns, 2 to 1". */
 export function layoutName(weights: readonly number[]): string {
   const n = weights.length;
-  if (n <= 1) return '1 column';
-  return `${n} columns, ${weights.map((w) => +w.toFixed(2)).join(' to ')}`;
+  if (n <= 1) return t('1 column');
+  const ratio = weights.map((w) => String(+w.toFixed(2))).reduce((acc, w) => t('{from} to {to}', { from: acc, to: w }));
+  return t('{n} columns, {ratio}', { n, ratio });
 }

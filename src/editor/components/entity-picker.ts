@@ -5,6 +5,7 @@ import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { entityIcon } from '../../utils/entity-icon';
+import { t } from '../i18n';
 
 @customElement('mc-entity-picker')
 export class EntityPicker extends LitElement {
@@ -12,7 +13,7 @@ export class EntityPicker extends LitElement {
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
-  @property({ type: String }) label = 'Entity';
+  @property({ type: String }) label = '';
   /** Shown while empty (e.g. the default it falls back to). */
   @property({ type: String }) placeholder = 'entity_id';
   @property({ type: String }) domain = '';
@@ -141,15 +142,15 @@ export class EntityPicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder=${this.placeholder}
-          aria-label=${this.label}
+          aria-label=${this.label || t('Entity')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label="Browse entities"
-          title="Browse entities"
+          aria-label=${t('Browse entities')}
+          title=${t('Browse entities')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:magnify"></ha-icon>
@@ -172,11 +173,11 @@ export class EntityPicker extends LitElement {
     const entities = this._getFilteredEntities();
 
     return html`
-      ${renderPickerWindow('Select entity', () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('Select entity'), () => this._closeModal(), 's', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch('Search entities', this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('Search entities'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label="Entities">
+          <div class="mc-picker-list" role="listbox" aria-label=${t('Entities')}>
             ${entities.length > 0
               ? entities.map(entity => html`
                   <button
@@ -194,12 +195,12 @@ export class EntityPicker extends LitElement {
                     <span class="chip">${entity.state}</span>
                   </button>
                 `)
-              : html`<div class="mc-picker-empty">No entities found</div>`
+              : html`<div class="mc-picker-empty">${t('No entities found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
           </div>
       `)}
     `;

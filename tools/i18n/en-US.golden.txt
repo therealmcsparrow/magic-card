@@ -11,28 +11,65 @@ labels	Light control with brightness, colour temperature, and colour options	Lig
 labels	Outline colour	Outline color
 labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
+card-editor	Accent colour	Accent color
+card-editor	Add colour	Add color
+card-editor	Animation colour	Animation color
 card-editor	Background colour	Background color
 card-editor	Bar colour	Bar color
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
 card-editor	Colour	Color
+card-editor	Colour picker	Color picker
 card-editor	Colour ranges	Color ranges
+card-editor	Colour style	Color style
+card-editor	Colour {n}	Color {n}
 card-editor	Colours the icon like Home Assistant does for this entity's state.	Colors the icon like Home Assistant does for this entity's state.
+card-editor	Customise a copy	Customize a copy
+card-editor	Customise this icon	Customize this icon
+card-editor	Default sets a solid colour, so a rule cannot swap it for a gradient. Clear the Default colour first.	Default sets a solid color, so a rule cannot swap it for a gradient. Clear the Default color first.
+card-editor	Effects need the icon shape; this icon could not be loaded (or is a multi-colour logo), so it is shown as is.	Effects need the icon shape; this icon could not be loaded (or is a multi-color logo), so it is shown as is.
+card-editor	Empty: the primary colour at {pct}%.	Empty: the primary color at {pct}%.
+card-editor	Entity colour	Entity color
+card-editor	Entity colour for {name}	Entity color for {name}
 card-editor	Fill colour	Fill color
+card-editor	Gradient colours	Gradient colors
+card-editor	Gradient created from your colour.	Gradient created from your color.
 card-editor	Icon colour	Icon color
+card-editor	Idle colour	Idle color
 card-editor	Line colour	Line color
 card-editor	Maximise	Maximize
+card-editor	Open colour picker	Open color picker
+card-editor	Primary colour	Primary color
+card-editor	Remove colour	Remove color
+card-editor	Remove colour {n}	Remove color {n}
+card-editor	Ring colour	Ring color
+card-editor	Ring colour from this remaining % up; overrides Colour.	Ring color from this remaining % up; overrides Color.
+card-editor	Ring colour from this value up; overrides Colour.	Ring color from this value up; overrides Color.
+card-editor	Save current colour	Save current color
+card-editor	Saved colours	Saved colors
+card-editor	Secondary colour	Secondary color
 card-editor	Show colour picker	Show color picker
 card-editor	Show colour temp	Show color temp
 card-editor	Slider colour	Slider color
+card-editor	Stop {num} colour	Stop {num} color
+card-editor	Styles are removed; use fill attributes (for example fill="#f44336") for colours.	Styles are removed; use fill attributes (for example fill="#f44336") for colors.
+card-editor	Text uses this gradient as its fill. Older tablets show the first colour.	Text uses this gradient as its fill. Older tablets show the first color.
 card-editor	The arc takes the colour of the highest range at or below the value.	The arc takes the color of the highest range at or below the value.
 card-editor	The bar takes the colour of the highest range at or below the value; the bar colour applies below the first range.	The bar takes the color of the highest range at or below the value; the bar color applies below the first range.
+card-editor	The colour along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.	The color along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.
+card-editor	The empty part uses the colour {colour} (set in YAML); a value here replaces it.	The empty part uses the color {colour} (set in YAML); a value here replaces it.
+card-editor	The entity's state colour	The entity's state color
 card-editor	The icon uses this gradient as its fill. Older tablets show the first colour.	The icon uses this gradient as its fill. Older tablets show the first color.
 card-editor	Track colour	Track color
+card-editor	Up to 32 KB. Parts with fill="currentColor" take the icon colour, parts with class="mc-accent" the accent colour.	Up to 32 KB. Parts with fill="currentColor" take the icon color, parts with class="mc-accent" the accent color.
+card-editor	Use a hex colour, rgb(a) or var(--name).	Use a hex color, rgb(a) or var(--name).
 card-editor	Use entity colour	Use entity color
 card-editor	Use entity colour wins while the entity has a state colour; this colour applies otherwise.	Use entity color wins while the entity has a state color; this color applies otherwise.
+card-editor	Use the entity's state colour	Use the entity's state color
+card-editor	colour	color
 card-editor	colour temperature	color temperature
 card-editor	colours	colors
+card-editor	{name}: entity colour	{name}: entity color
 svg-editor	Accent preview colour	Accent preview color
 svg-editor	Align centre	Align center
 svg-editor	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {center} right {right} top {top} middle {middle} other {bottom}}.

@@ -5,12 +5,13 @@ import { DisplayCondition, HomeAssistant } from '../../types';
 import './entity-picker';
 import './attribute-picker';
 import { editorSystem } from '../../css/editor-system';
+import { t, m, type MessageId } from '../i18n';
 
-const CONDITION_TYPES: Array<{ value: DisplayCondition['type']; label: string }> = [
-  { value: 'state', label: 'State' },
-  { value: 'attribute', label: 'Attribute' },
-  { value: 'time', label: 'Time' },
-  { value: 'template', label: 'Template' },
+const CONDITION_TYPES: Array<{ value: DisplayCondition['type']; label: MessageId }> = [
+  { value: 'state', label: m('State') },
+  { value: 'attribute', label: m('Attribute') },
+  { value: 'time', label: m('Time') },
+  { value: 'template', label: m('Template') },
 ];
 
 @customElement('mc-condition-row')
@@ -43,11 +44,11 @@ export class ConditionRow extends LitElement {
           <div class="select">
             <select
               class="input"
-              aria-label="Condition type"
+              aria-label=${t('Condition type')}
               @change=${(e: Event) => this.onChange?.({ type: (e.target as HTMLSelectElement).value as DisplayCondition['type'] })}
             >
               ${CONDITION_TYPES.map(
-                (t) => html`<option value=${t.value} ?selected=${c.type === t.value}>${t.label}</option>`,
+                (ct) => html`<option value=${ct.value} ?selected=${c.type === ct.value}>${t(ct.label)}</option>`,
               )}
             </select>
             <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -55,8 +56,8 @@ export class ConditionRow extends LitElement {
           <button
             type="button"
             class="icon-btn sm danger"
-            aria-label="Remove condition"
-            title="Remove condition"
+            aria-label=${t('Remove condition')}
+            title=${t('Remove condition')}
             @click=${() => this.onRemove?.()}
           >
             <ha-icon icon="mdi:delete-outline"></ha-icon>
@@ -91,13 +92,13 @@ export class ConditionRow extends LitElement {
           ${this.moduleEntity
             ? html`
                 <div class="switch-row">
-                  <span class="txt">Use module entity</span>
+                  <span class="txt">${t('Use module entity')}</span>
                   <button
                     type="button"
                     class="switch"
                     role="switch"
                     aria-checked=${useModuleEntity ? 'true' : 'false'}
-                    aria-label="Use module entity"
+                    aria-label=${t('Use module entity')}
                     @click=${() => this.onChange?.({ use_module_entity: !useModuleEntity })}
                   ></button>
                 </div>
@@ -106,7 +107,7 @@ export class ConditionRow extends LitElement {
           ${!useModuleEntity || !this.moduleEntity
             ? html`
                 <div class="field">
-                  <div class="field-head"><span class="lbl">Entity</span></div>
+                  <div class="field-head"><span class="lbl">${t('Entity')}</span></div>
                   <mc-entity-picker
                     .hass=${this.hass}
                     .value=${c.entity || ''}
@@ -118,7 +119,7 @@ export class ConditionRow extends LitElement {
           ${c.type === 'attribute'
             ? html`
                 <div class="field">
-                  <div class="field-head"><span class="lbl">Attribute</span></div>
+                  <div class="field-head"><span class="lbl">${t('Attribute')}</span></div>
                   <mc-attribute-picker
                     .hass=${this.hass}
                     .value=${c.attribute || ''}
@@ -129,22 +130,22 @@ export class ConditionRow extends LitElement {
               `
             : nothing}
           <div class="two">
-            ${this._textField('Equals', c.state, (v) => this.onChange?.({ state: v }))}
-            ${this._textField('Not equals', c.state_not, (v) => this.onChange?.({ state_not: v }))}
+            ${this._textField(t('Equals'), c.state, (v) => this.onChange?.({ state: v }))}
+            ${this._textField(t('Not equals'), c.state_not, (v) => this.onChange?.({ state_not: v }))}
           </div>
         `;
       }
       case 'time':
         return html`
           <div class="two">
-            ${this._textField('After', c.after, (v) => this.onChange?.({ after: v }), 'time')}
-            ${this._textField('Before', c.before, (v) => this.onChange?.({ before: v }), 'time')}
+            ${this._textField(t('After'), c.after, (v) => this.onChange?.({ after: v }), 'time')}
+            ${this._textField(t('Before'), c.before, (v) => this.onChange?.({ before: v }), 'time')}
           </div>
         `;
       case 'template':
         return html`
           <label class="field">
-            <span class="field-head"><span class="lbl">Template</span></span>
+            <span class="field-head"><span class="lbl">${t('Template')}</span></span>
             <textarea
               class="input"
               rows="3"

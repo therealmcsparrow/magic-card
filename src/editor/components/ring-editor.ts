@@ -11,56 +11,57 @@ import './color-picker';
 import './unit-field';
 import './entity-picker';
 import './attribute-picker';
+import { t, m, type MessageId } from '../i18n';
 
-type Opt = { value: string; label: string };
+type Opt = { value: string; label: MessageId };
 
 const MODES: Opt[] = [
-  { value: 'off', label: 'Off' },
-  { value: 'value', label: 'Value' },
-  { value: 'animated', label: 'Animated' },
+  { value: 'off', label: m('Off') },
+  { value: 'value', label: m('Value') },
+  { value: 'animated', label: m('Animated') },
 ];
 const ANIMATIONS: Opt[] = [
-  { value: 'snake', label: 'Snake' },
-  { value: 'pulse', label: 'Pulse' },
-  { value: 'full', label: 'Full' },
-  { value: 'dots', label: 'Chase dots' },
-  { value: 'dashes', label: 'Marching ants' },
+  { value: 'snake', label: m('Snake') },
+  { value: 'pulse', label: m('Pulse') },
+  { value: 'full', label: m('Full') },
+  { value: 'dots', label: m('Chase dots') },
+  { value: 'dashes', label: m('Marching ants') },
 ];
 const STARTS: Opt[] = [
-  { value: 'top', label: 'Top' },
-  { value: 'top-right', label: 'Top right' },
-  { value: 'right', label: 'Right' },
-  { value: 'bottom-right', label: 'Bottom right' },
-  { value: 'bottom', label: 'Bottom' },
-  { value: 'bottom-left', label: 'Bottom left' },
-  { value: 'left', label: 'Left' },
-  { value: 'top-left', label: 'Top left' },
+  { value: 'top', label: m('Top') },
+  { value: 'top-right', label: m('Top right') },
+  { value: 'right', label: m('Right') },
+  { value: 'bottom-right', label: m('Bottom right') },
+  { value: 'bottom', label: m('Bottom') },
+  { value: 'bottom-left', label: m('Bottom left') },
+  { value: 'left', label: m('Left') },
+  { value: 'top-left', label: m('Top left') },
 ];
 const DIRECTIONS: Opt[] = [
-  { value: 'cw', label: 'Clockwise' },
-  { value: 'ccw', label: 'Counter-clockwise' },
+  { value: 'cw', label: m('Clockwise') },
+  { value: 'ccw', label: m('Counter-clockwise') },
 ];
 const CAPS: Opt[] = [
-  { value: 'round', label: 'Round' },
-  { value: 'butt', label: 'Flat' },
+  { value: 'round', label: m('Round') },
+  { value: 'butt', label: m('Flat') },
 ];
 const POSITIONS: Opt[] = [
-  { value: 'inside', label: 'Inside' },
-  { value: 'center', label: 'Center' },
-  { value: 'outside', label: 'Outside' },
+  { value: 'inside', label: m('Inside') },
+  { value: 'center', label: m('Centre') },
+  { value: 'outside', label: m('Outside') },
 ];
 const BOUND_MODES: Opt[] = [
-  { value: 'number', label: 'Number' },
-  { value: 'entity', label: 'Entity' },
+  { value: 'number', label: m('Number') },
+  { value: 'entity', label: m('Entity') },
 ];
 const TIMER_FILLS: Opt[] = [
-  { value: 'remaining', label: 'Remaining' },
-  { value: 'elapsed', label: 'Elapsed' },
+  { value: 'remaining', label: m('Remaining') },
+  { value: 'elapsed', label: m('Elapsed') },
 ];
 const SHOW: Array<Opt & { entity?: boolean }> = [
-  { value: 'always', label: 'Always' },
-  { value: 'entity_on', label: 'While entity is on', entity: true },
-  { value: 'state', label: 'While state equals…', entity: true },
+  { value: 'always', label: m('Always') },
+  { value: 'entity_on', label: m('While entity is on'), entity: true },
+  { value: 'state', label: m('While state equals…'), entity: true },
 ];
 
 /**
@@ -162,7 +163,7 @@ export class RingEditor extends LitElement {
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
           @click=${() => onPick(o.value)}
-        >${o.label}</button>`;
+        >${t(o.label)}</button>`;
       })}
     </div>`;
   }
@@ -170,7 +171,7 @@ export class RingEditor extends LitElement {
   private _select(id: string, value: string, options: Array<Opt & { disabled?: boolean }>, onPick: (v: string) => void): TemplateResult {
     return html`<div class="select">
       <select class="input" id=${id} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
-        ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value} ?disabled=${!!o.disabled}>${o.label}</option>`)}
+        ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value} ?disabled=${!!o.disabled}>${t(o.label)}</option>`)}
       </select>
       <ha-icon icon="mdi:chevron-down"></ha-icon>
     </div>`;
@@ -247,13 +248,13 @@ export class RingEditor extends LitElement {
     return this._field(
       label,
       key,
-      html`${this._seg(`${label} source`, mode, BOUND_MODES, pick)}
+      html`${this._seg(t('{label} source', { label }), mode, BOUND_MODES, pick)}
         ${mode === 'number'
           ? this._number(id, key, RING_DEFAULTS[key], undefined, undefined, 0.1)
           : html`<mc-entity-picker
                 .hass=${this.hass}
                 .value=${entity}
-                .label=${`${label} entity`}
+                .label=${t('{label} entity', { label })}
                 @value-changed=${(e: CustomEvent) => write(e.detail.value ? { entity: e.detail.value } : undefined)}
               ></mc-entity-picker>
               ${hasAttrs
@@ -279,11 +280,11 @@ export class RingEditor extends LitElement {
     const timer = isTimer(entity) && !r.attribute;
     const bound = (v: ValueBound | undefined, def: number) => (typeof v === 'number' ? v : def);
     return html`
-      ${this._field('Entity', 'entity', this._entity('entity', 'Entity', this.defaultEntity ? `Module entity (${this.defaultEntity})` : 'Entity'))}
-      ${entity ? nothing : html`<p class="help">Pick an entity: a value ring without one stays empty.</p>`}
+      ${this._field(t('Entity'), 'entity', this._entity('entity', t('Entity'), this.defaultEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity')))}
+      ${entity ? nothing : html`<p class="help">${t('Pick an entity: a value ring without one stays empty.')}</p>`}
       ${!timer && entity && this.hass?.states[entity] && Object.keys(this.hass.states[entity].attributes || {}).length
         ? this._field(
-            'Attribute',
+            t('Attribute'),
             'attribute',
             html`<mc-attribute-picker
               .hass=${this.hass}
@@ -295,19 +296,19 @@ export class RingEditor extends LitElement {
         : nothing}
       ${timer
         ? this._field(
-            'Timer fill',
+            t('Timer fill'),
             'timer_fill',
-            html`${this._seg('Timer fill', r.timer_fill ?? 'remaining', TIMER_FILLS, (v) => this._set({ timer_fill: v === 'remaining' ? undefined : (v as RingConfig['timer_fill']) }))}
-              <p class="help">Min, Max and Attribute do not apply to a timer; thresholds use its remaining %.</p>`,
+            html`${this._seg(t('Timer fill'), r.timer_fill ?? 'remaining', TIMER_FILLS, (v) => this._set({ timer_fill: v === 'remaining' ? undefined : (v as RingConfig['timer_fill']) }))}
+              <p class="help">${t('Min, Max and Attribute do not apply to a timer; thresholds use its remaining %.')}</p>`,
           )
         : html`<div class=${typeof r.min === 'object' || typeof r.max === 'object' || this._entityBound.min || this._entityBound.max ? 'bounds' : 'two'}>
-            ${this._bound('min', 'Min')} ${this._bound('max', 'Max')}
+            ${this._bound('min', t('Min'))} ${this._bound('max', t('Max'))}
           </div>`}
-      ${this._field('Fill transition', 'transition', this._time('transition', 'Fill transition', RING_DEFAULTS.transition))}
-      ${renderColorRangesField('Thresholds', r.thresholds, (t: ColorRange[] | undefined) => this._set({ thresholds: t }), {
+      ${this._field(t('Fill transition'), 'transition', this._time('transition', t('Fill transition'), RING_DEFAULTS.transition))}
+      ${renderColorRangesField(t('Thresholds'), r.thresholds, (t: ColorRange[] | undefined) => this._set({ thresholds: t }), {
         min: timer ? 0 : bound(r.min, RING_DEFAULTS.min),
         max: timer ? 100 : bound(r.max, RING_DEFAULTS.max),
-        help: timer ? 'Ring color from this remaining % up; overrides Color.' : 'Ring color from this value up; overrides Color.',
+        help: timer ? t('Ring colour from this remaining % up; overrides Colour.') : t('Ring colour from this value up; overrides Colour.'),
       })}
     `;
   }
@@ -315,10 +316,10 @@ export class RingEditor extends LitElement {
   private _animated(): TemplateResult {
     const anim = this._r.animation ?? RING_DEFAULTS.animation;
     return html`
-      ${this._field('Animation', 'animation', this._select('ring-anim', anim, ANIMATIONS, (v) => this._set({ animation: v as RingConfig['animation'] })), 'ring-anim')}
+      ${this._field(t('Animation'), 'animation', this._select('ring-anim', anim, ANIMATIONS, (v) => this._set({ animation: v as RingConfig['animation'] })), 'ring-anim')}
       <div class="two">
-        ${anim === 'snake' ? this._field('Length (%)', 'length', this._number('ring-len', 'length', RING_DEFAULTS.length, 1, 99), 'ring-len') : nothing}
-        ${anim === 'full' ? nothing : this._field('Speed', 'speed', this._time('speed', 'Speed', RING_DEFAULTS.speed))}
+        ${anim === 'snake' ? this._field(t('Length (%)'), 'length', this._number('ring-len', 'length', RING_DEFAULTS.length, 1, 99), 'ring-len') : nothing}
+        ${anim === 'full' ? nothing : this._field(t('Speed'), 'speed', this._time('speed', t('Speed'), RING_DEFAULTS.speed))}
       </div>
     `;
   }
@@ -326,13 +327,13 @@ export class RingEditor extends LitElement {
   private _position(): TemplateResult {
     const pick = (v: string) => this._set({ position: v as RingConfig['position'] });
     const pos = this._r.position ?? RING_DEFAULTS.position;
-    if (!this.clipped) return this._field('Position', 'position', this._seg('Position', pos, POSITIONS, pick));
+    if (!this.clipped) return this._field(t('Position'), 'position', this._seg(t('Position'), pos, POSITIONS, pick));
     const opts = POSITIONS.filter((o) => o.value !== 'outside');
     return this._field(
-      'Position',
+      t('Position'),
       'position',
-      html`${this._seg('Position', pos === 'outside' ? 'inside' : pos, opts, pick)}
-        <p class="help">The card clips its edge: the ring sits inside it and its glow shows inward.</p>`,
+      html`${this._seg(t('Position'), pos === 'outside' ? 'inside' : pos, opts, pick)}
+        <p class="help">${t('The card clips its edge: the ring sits inside it and its glow shows inward.')}</p>`,
     );
   }
 
@@ -343,17 +344,17 @@ export class RingEditor extends LitElement {
     const opts = SHOW.map((o) => ({ ...o, disabled: !!o.entity && !hasEntity && o.value !== trigger }));
     return html`
       ${this._field(
-        'Entity for show condition',
+        t('Entity for show condition'),
         'trigger_entity',
-        this._entity('trigger_entity', 'Entity for show condition', this.defaultEntity && !this.requireEntity ? `Module entity (${this.defaultEntity})` : 'Entity for show condition'),
+        this._entity('trigger_entity', t('Entity for show condition'), this.defaultEntity && !this.requireEntity ? t('Module entity ({entity})', { entity: this.defaultEntity }) : t('Entity for show condition')),
       )}
-      ${this._field('Show', 'trigger', this._select('ring-show', trigger, opts, (v) => this._set({ trigger: v === 'always' ? undefined : (v as AnimationTrigger) })), 'ring-show')}
+      ${this._field(t('Show'), 'trigger', this._select('ring-show', trigger, opts, (v) => this._set({ trigger: v === 'always' ? undefined : (v as AnimationTrigger) })), 'ring-show')}
       ${!hasEntity && trigger !== 'always'
-        ? html`<p class="help">Pick an entity: this condition never shows the ring without one.</p>`
+        ? html`<p class="help">${t('Pick an entity: this condition never shows the ring without one.')}</p>`
         : nothing}
       ${trigger === 'state'
         ? this._field(
-            'State value',
+            t('State value'),
             'state',
             html`<input class="input" id="ring-state" type="text" .value=${r.state || ''} @input=${(e: InputEvent) => this._set({ state: (e.target as HTMLInputElement).value })} />`,
             'ring-state',
@@ -367,21 +368,21 @@ export class RingEditor extends LitElement {
     const mode = r.mode === 'value' || r.mode === 'animated' ? r.mode : 'off';
     return html`
       <div class="ring-ed">
-        ${this._field('Mode', undefined, this._seg('Ring mode', mode, MODES, (v) => this._mode(v)))}
+        ${this._field(t('Mode'), undefined, this._seg(t('Ring mode'), mode, MODES, (v) => this._mode(v)))}
         ${mode === 'off'
           ? nothing
           : html`
               ${mode === 'value' ? this._value() : this._animated()}
               <div class="two">
-                ${this._field('Width (px)', 'width', this._number('ring-width', 'width', RING_DEFAULTS.width, 0.5, 40, 0.5), 'ring-width')}
-                ${this._field('Glow (px)', 'glow', this._number('ring-glow', 'glow', 0, 0, 40), 'ring-glow')}
+                ${this._field(t('Width (px)'), 'width', this._number('ring-width', 'width', RING_DEFAULTS.width, 0.5, 40, 0.5), 'ring-width')}
+                ${this._field(t('Glow (px)'), 'glow', this._number('ring-glow', 'glow', 0, 0, 40), 'ring-glow')}
               </div>
-              ${this._field('Color', 'color', this._color('color', 'Ring color'))}
-              ${this._field('Track color', 'track_color', this._color('track_color', 'Track color'))}
-              ${this._field('Track opacity (%)', 'track_opacity', this._number('ring-track-op', 'track_opacity', 100, 0, 100, 5), 'ring-track-op')}
-              ${this._field('Start', 'start', this._select('ring-start', r.start ?? RING_DEFAULTS.start, STARTS, (v) => this._set({ start: v as RingConfig['start'] })), 'ring-start')}
-              ${this._field('Direction', 'direction', this._seg('Direction', r.direction ?? 'cw', DIRECTIONS, (v) => this._set({ direction: v as RingConfig['direction'] })))}
-              ${this._field('Caps', 'linecap', this._seg('Caps', r.linecap ?? 'round', CAPS, (v) => this._set({ linecap: v as RingConfig['linecap'] })))}
+              ${this._field(t('Colour'), 'color', this._color('color', t('Ring colour')))}
+              ${this._field(t('Track colour'), 'track_color', this._color('track_color', t('Track colour')))}
+              ${this._field(t('Track opacity (%)'), 'track_opacity', this._number('ring-track-op', 'track_opacity', 100, 0, 100, 5), 'ring-track-op')}
+              ${this._field(t('Start'), 'start', this._select('ring-start', r.start ?? RING_DEFAULTS.start, STARTS, (v) => this._set({ start: v as RingConfig['start'] })), 'ring-start')}
+              ${this._field(t('Direction'), 'direction', this._seg(t('Direction'), r.direction ?? 'cw', DIRECTIONS, (v) => this._set({ direction: v as RingConfig['direction'] })))}
+              ${this._field(t('Caps'), 'linecap', this._seg(t('Caps'), r.linecap ?? 'round', CAPS, (v) => this._set({ linecap: v as RingConfig['linecap'] })))}
               ${this._position()}
               ${this._show()}
             `}

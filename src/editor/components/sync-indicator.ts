@@ -1,6 +1,7 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
+import { t } from '../i18n';
 
 @customElement('mc-sync-indicator')
 export class SyncIndicator extends LitElement {
@@ -44,10 +45,10 @@ export class SyncIndicator extends LitElement {
         <button
           class="sync"
           type="button"
-          title="Synced with the template. Click to keep a local value that won't sync."
+          title=${t("Synced with the template. Click to keep a local value that won't sync.")}
           @click=${this._handleClick}
         >
-          <ha-icon icon="mdi:link-variant"></ha-icon><span class="sr-only">Synced with template</span>
+          <ha-icon icon="mdi:link-variant"></ha-icon><span class="sr-only">${t('Synced with template')}</span>
         </button>
       `;
     }
@@ -56,11 +57,11 @@ export class SyncIndicator extends LitElement {
       <button
         class="sync is-over"
         type="button"
-        title="Overridden locally. Click to re-sync from the template."
+        title=${t('Overridden locally. Click to re-sync from the template.')}
         @click=${this._handleClick}
       >
         <ha-icon icon="mdi:link-variant-off"></ha-icon>
-        Overridden
+        ${t('Overridden')}
       </button>
     `;
   }

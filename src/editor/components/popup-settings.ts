@@ -8,12 +8,13 @@ import { fieldReset } from './field-reset';
 
 import './unit-field';
 import './entity-picker';
+import { t, tx, m, tl, type MessageId } from '../i18n';
 
-type Opt = { value: string; label: string };
+type Opt = { value: string; label: MessageId };
 
 const STYLES: Opt[] = [
-  { value: 'sheet', label: 'Sheet' },
-  { value: 'dialog', label: 'Dialog' },
+  { value: 'sheet', label: m('Sheet') },
+  { value: 'dialog', label: m('Dialog') },
 ];
 
 /**
@@ -157,13 +158,13 @@ export class PopupSettings extends LitElement {
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
           @click=${() => onPick(o.value)}
-        >${o.label}</button>`;
+        >${t(o.label)}</button>`;
       })}
     </div>`;
   }
 
   private _trigger(key: 'open_on' | 'close_on', label: string, help: string): TemplateResult {
-    const t: PopupTrigger = this._p[key] || {};
+    const trig: PopupTrigger = this._p[key] || {};
     const write = (patch: Partial<PopupTrigger>) => {
       const next = { ...(this._p[key] || {}), ...patch } as Record<string, unknown>;
       for (const [k, v] of Object.entries(next)) if (v === undefined || v === '') delete next[k];
@@ -174,22 +175,22 @@ export class PopupSettings extends LitElement {
       <div class="field">
         <div class="field-head">
           <span class="lbl">${label}</span>
-          ${fieldReset(label, !!(t.entity || t.state), () => this._set({ [key]: undefined }))}
+          ${fieldReset(label, !!(trig.entity || trig.state), () => this._set({ [key]: undefined }))}
         </div>
         <div class="trigger">
           <mc-entity-picker
             .hass=${this.hass}
-            .value=${t.entity || ''}
-            .label=${'Entity'}
+            .value=${trig.entity || ''}
+            .label=${t('Entity')}
             @value-changed=${(e: CustomEvent) => write({ entity: e.detail.value })}
           ></mc-entity-picker>
           <input
             class="input"
             id=${stateId}
             type="text"
-            aria-label="${label}: state"
-            placeholder="State, e.g. on (empty: any change)"
-            .value=${t.state || ''}
+            aria-label=${t('{label}: state', { label })}
+            placeholder=${t('State, e.g. on (empty: any change)')}
+            .value=${trig.state || ''}
             @input=${(e: InputEvent) => write({ state: (e.target as HTMLInputElement).value.trim() })}
           />
         </div>
@@ -201,14 +202,14 @@ export class PopupSettings extends LitElement {
   private async _copy(path: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(path);
-      this._say('Navigation path copied');
+      this._say(t('Navigation path copied'));
     } catch {
-      this._say('Copy failed: select the path and copy it');
+      this._say(t('Copy failed: select the path and copy it'));
     }
   }
 
   private _preview(): void {
-    this._say(popupCoordinator.preview(this.canvas) ? '' : 'No preview of this card to open yet');
+    this._say(popupCoordinator.preview(this.canvas) ? '' : t('No preview of this card to open yet'));
   }
 
   protected render(): TemplateResult {
@@ -222,29 +223,29 @@ export class PopupSettings extends LitElement {
       : path
         ? html`
             <div class="path">
-              <span class="help">Navigation path</span>
+              <span class="help">${t('Navigation path')}</span>
               <code>${path}</code>
-              <button type="button" class="icon-btn sm" aria-label="Copy navigation path" title="Copy navigation path" @click=${() => this._copy(path)}>
+              <button type="button" class="icon-btn sm" aria-label=${t('Copy navigation path')} title=${t('Copy navigation path')} @click=${() => this._copy(path)}>
                 <ha-icon icon="mdi:content-copy"></ha-icon>
               </button>
             </div>
-            <p class="help">Open it from any button: tap action Navigate to <span class="mono">${path}</span>, or Open pop-up.</p>
+            <p class="help">${tx('Open it from any button: tap action Navigate to {path}, or Open pop-up.', { path: html`<span class="mono">${path}</span>` })}</p>
           `
-        : html`<p class="help">Without an ID it opens only from its triggers.</p>`;
+        : html`<p class="help">${t('Without an ID it opens only from its triggers.')}</p>`;
 
     return html`
       <div class="popup-ed">
-        ${this._field('Pop-up ID', 'hash', this._text('popup-hash', 'hash', 'kitchen', true), 'popup-hash', pathRow)}
-        ${this._field('Title', 'title', this._text('popup-title', 'title', 'No header text'), 'popup-title')}
-        ${this._field('Style', 'style', this._seg('Style', p.style === 'dialog' ? 'dialog' : 'sheet', STYLES, (v) => this._set({ style: v as PopupConfig['style'] })))}
+        ${this._field(t('Pop-up ID'), 'hash', this._text('popup-hash', 'hash', 'kitchen', true), 'popup-hash', pathRow)}
+        ${this._field(t('Title'), 'title', this._text('popup-title', 'title', t('No header text')), 'popup-title')}
+        ${this._field(t('Style'), 'style', this._seg(t('Style'), p.style === 'dialog' ? 'dialog' : 'sheet', tl(STYLES), (v) => this._set({ style: v as PopupConfig['style'] })))}
         <div class="two">
-          ${this._field('Width', 'width', this._unit('width', 'Width', ['px', '%', 'vw', 'rem', 'em'], POPUP_DEFAULTS.width.replace('px', '')))}
-          ${this._field('Max height', 'max_height', this._unit('max_height', 'Max height', ['vh', 'px', '%', 'rem'], POPUP_DEFAULTS.max_height.replace('vh', '')))}
+          ${this._field(t('Width'), 'width', this._unit('width', t('Width'), ['px', '%', 'vw', 'rem', 'em'], POPUP_DEFAULTS.width.replace('px', '')))}
+          ${this._field(t('Max height'), 'max_height', this._unit('max_height', t('Max height'), ['vh', 'px', '%', 'rem'], POPUP_DEFAULTS.max_height.replace('vh', '')))}
         </div>
         <div class="two">
-          ${this._field('Backdrop blur', 'backdrop_blur', this._unit('backdrop_blur', 'Backdrop blur', ['px'], POPUP_DEFAULTS.backdrop_blur.replace('px', '')))}
+          ${this._field(t('Backdrop blur'), 'backdrop_blur', this._unit('backdrop_blur', t('Backdrop blur'), ['px'], POPUP_DEFAULTS.backdrop_blur.replace('px', '')))}
           ${this._field(
-            'Backdrop opacity',
+            t('Backdrop opacity'),
             'backdrop_opacity',
             html`<input
               class="input"
@@ -260,23 +261,23 @@ export class PopupSettings extends LitElement {
                 const s = (e.target as HTMLInputElement).value;
                 this._set({ backdrop_opacity: s === '' ? undefined : Math.min(100, Math.max(0, Number(s))) / 100 });
               }}
-            /><p class="help" id="popup-opacity-unit">Percent, 0 is no darkening.</p>`,
+            /><p class="help" id="popup-opacity-unit">${t('Percent, 0 is no darkening.')}</p>`,
             'popup-opacity',
           )}
         </div>
         <div class="switch-row">
-          <div class="txt"><div class="field-head"><label>Show close button</label></div></div>
+          <div class="txt"><div class="field-head"><label>${t('Show close button')}</label></div></div>
           <button
             type="button"
             class="switch"
             role="switch"
             aria-checked=${p.show_close !== false ? 'true' : 'false'}
-            aria-label="Show close button"
+            aria-label=${t('Show close button')}
             @click=${() => this._set({ show_close: p.show_close === false ? undefined : false })}
           ></button>
         </div>
         ${this._field(
-          'Auto close',
+          t('Auto close'),
           'auto_close',
           html`<input
             class="input"
@@ -284,21 +285,21 @@ export class PopupSettings extends LitElement {
             type="number"
             min="0"
             step="1"
-            placeholder="Off"
+            placeholder=${t('Off')}
             .value=${p.auto_close ? String(p.auto_close) : ''}
             @input=${(e: InputEvent) => {
               const s = (e.target as HTMLInputElement).value;
               const n = Number(s);
               this._set({ auto_close: s === '' || !(n > 0) ? undefined : n });
             }}
-          /><p class="help">Seconds without interaction. Empty: stays open.</p>`,
+          /><p class="help">${t('Seconds without interaction. Empty: stays open.')}</p>`,
           'popup-auto',
         )}
-        ${this._trigger('open_on', 'Open when', 'Opens when the entity changes to this state, e.g. a doorbell turning on.')}
-        ${this._trigger('close_on', 'Close when', 'Closes when the entity changes to this state.')}
+        ${this._trigger('open_on', t('Open when'), t('Opens when the entity changes to this state, e.g. a doorbell turning on.'))}
+        ${this._trigger('close_on', t('Close when'), t('Closes when the entity changes to this state.'))}
         <div class="actions">
           <button type="button" class="btn btn-secondary btn-sm" @click=${() => this._preview()}>
-            <ha-icon icon="mdi:eye-outline"></ha-icon>Preview pop-up
+            <ha-icon icon="mdi:eye-outline"></ha-icon>${t('Preview pop-up')}
           </button>
           <span class="help" role="status" aria-live="polite">${this._status}</span>
         </div>

@@ -1,4 +1,4 @@
-import { t } from '../../i18n/labels';
+import { t as lt } from '../../i18n/labels';
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalSceneSetting, SeasonalSetting } from '../../types';
@@ -11,47 +11,48 @@ import { fieldReset } from './field-reset';
 
 import './entity-picker';
 import './unit-field';
+import { t, m, type MessageId } from '../i18n';
 
 interface SceneTile {
   value: SeasonalSceneSetting;
-  label: string;
+  label: MessageId;
   icon: string;
 }
 
 export const SEASONAL_TILES: SceneTile[] = [
-  { value: 'auto', label: 'Auto', icon: 'mdi:calendar-star' },
-  { value: 'winter', label: 'Winter', icon: 'mdi:snowflake' },
-  { value: 'spring', label: 'Spring', icon: 'mdi:flower-tulip-outline' },
-  { value: 'summer', label: 'Summer', icon: 'mdi:white-balance-sunny' },
-  { value: 'autumn', label: 'Autumn', icon: 'mdi:leaf-maple' },
-  { value: 'christmas', label: 'Christmas', icon: 'mdi:pine-tree' },
-  { value: 'new_year', label: 'New Year', icon: 'mdi:party-popper' },
-  { value: 'valentine', label: 'Valentine', icon: 'mdi:heart-outline' },
-  { value: 'easter', label: 'Easter', icon: 'mdi:egg-easter' },
-  { value: 'halloween', label: 'Halloween', icon: 'mdi:halloween' },
-  { value: 'weather', label: 'Weather', icon: 'mdi:weather-partly-rainy' },
-  { value: 'daynight', label: 'Day and night', icon: 'mdi:weather-night' },
-  { value: 'none', label: 'None', icon: 'mdi:cancel' },
+  { value: 'auto', label: m('Auto'), icon: 'mdi:calendar-star' },
+  { value: 'winter', label: m('Winter'), icon: 'mdi:snowflake' },
+  { value: 'spring', label: m('Spring'), icon: 'mdi:flower-tulip-outline' },
+  { value: 'summer', label: m('Summer'), icon: 'mdi:white-balance-sunny' },
+  { value: 'autumn', label: m('Autumn'), icon: 'mdi:leaf-maple' },
+  { value: 'christmas', label: m('Christmas'), icon: 'mdi:pine-tree' },
+  { value: 'new_year', label: m('New Year'), icon: 'mdi:party-popper' },
+  { value: 'valentine', label: m('Valentine'), icon: 'mdi:heart-outline' },
+  { value: 'easter', label: m('Easter'), icon: 'mdi:egg-easter' },
+  { value: 'halloween', label: m('Halloween'), icon: 'mdi:halloween' },
+  { value: 'weather', label: m('Weather'), icon: 'mdi:weather-partly-rainy' },
+  { value: 'daynight', label: m('Day and night'), icon: 'mdi:weather-night' },
+  { value: 'none', label: m('None'), icon: 'mdi:cancel' },
 ];
 
-const LABEL: Record<string, string> = Object.fromEntries(SEASONAL_TILES.map((t) => [t.value, t.label]));
+const LABEL: Record<string, MessageId> = Object.fromEntries(SEASONAL_TILES.map((tile) => [tile.value, tile.label]));
 
-const HOLIDAYS: Array<{ key: SeasonalHoliday; label: string }> = [
-  { key: 'christmas', label: 'Christmas' },
-  { key: 'new_year', label: 'New Year' },
-  { key: 'valentine', label: 'Valentine' },
-  { key: 'easter', label: 'Easter' },
-  { key: 'halloween', label: 'Halloween' },
+const HOLIDAYS: Array<{ key: SeasonalHoliday; label: MessageId }> = [
+  { key: 'christmas', label: m('Christmas') },
+  { key: 'new_year', label: m('New Year') },
+  { key: 'valentine', label: m('Valentine') },
+  { key: 'easter', label: m('Easter') },
+  { key: 'halloween', label: m('Halloween') },
 ];
 
-type Opt = { value: string; label: string };
+type Opt = { value: string; label: MessageId };
 const LAYERS: Opt[] = [
-  { value: 'back', label: 'Behind content' },
-  { value: 'front', label: 'Over content' },
+  { value: 'back', label: m('Behind content') },
+  { value: 'front', label: m('Over content') },
 ];
 const HEMISPHERES: Opt[] = [
-  { value: 'north', label: 'North' },
-  { value: 'south', label: 'South' },
+  { value: 'north', label: m('North') },
+  { value: 'south', label: m('South') },
 ];
 
 /** A calendar entry the resolver accepts: a range, one day, `off` (or false), `auto` (easter). */
@@ -231,22 +232,22 @@ export class SeasonalEditor extends LitElement {
     const d = seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
     const scene = autoScene(d, this._cfg);
     const l = SCENES[scene]?.label;
-    return l === undefined ? (LABEL[scene] ?? scene) : t(l);
+    return l === undefined ? (LABEL[scene] === undefined ? scene : t(LABEL[scene])) : lt(l);
   }
 
   private _picker(current: SeasonalSceneSetting): TemplateResult {
-    const opt = (t: SceneTile) =>
-      html`<option value=${t.value} ?selected=${t.value === current}>${t.value === 'auto' ? `Auto (${this._preview ? 'preview' : 'today'}: ${this._today()})` : t.label}</option>`;
-    const tile = (v: string) => SEASONAL_TILES.find((t) => t.value === v)!;
+    const opt = (sc: SceneTile) =>
+      html`<option value=${sc.value} ?selected=${sc.value === current}>${sc.value === 'auto' ? t('Auto ({when}: {scene})', { when: this._preview ? t('preview') : t('today'), scene: this._today() }) : t(sc.label)}</option>`;
+    const tile = (v: string) => SEASONAL_TILES.find((sc) => sc.value === v)!;
     const group = (label: string, values: string[]) => html`<optgroup label=${label}>${values.map((v) => opt(tile(v)))}</optgroup>`;
     return html`<div class="pick">
       <span class="scene-ico" aria-hidden="true"><ha-icon icon=${tile(current).icon}></ha-icon></span>
       <div class="select">
-        <select class="input" id="seasonal-scene" aria-label="Seasonal scene" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as SeasonalSceneSetting)}>
+        <select class="input" id="seasonal-scene" aria-label=${t('Seasonal scene')} @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as SeasonalSceneSetting)}>
           ${opt(tile('auto'))}
-          ${group('Seasons', ['winter', 'spring', 'summer', 'autumn'])}
-          ${group('Holidays', ['christmas', 'new_year', 'valentine', 'easter', 'halloween'])}
-          ${group('Live', ['weather', 'daynight'])}
+          ${group(t('Seasons'), ['winter', 'spring', 'summer', 'autumn'])}
+          ${group(t('Holidays'), ['christmas', 'new_year', 'valentine', 'easter', 'halloween'])}
+          ${group(t('Live'), ['weather', 'daynight'])}
           ${opt(tile('none'))}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -289,7 +290,7 @@ export class SeasonalEditor extends LitElement {
           aria-checked=${on ? 'true' : 'false'}
           tabindex=${on ? '0' : '-1'}
           @click=${() => onPick(o.value)}
-        >${o.label}</button>`;
+        >${t(o.label)}</button>`;
       })}
     </div>`;
   }
@@ -299,17 +300,17 @@ export class SeasonalEditor extends LitElement {
     return html`<div class="switch-row">
       <div class="txt">
         <div class="field-head">
-          <span class="lbl">Border decorations</span>
-          ${fieldReset('Border decorations', this._cfg.decorations !== undefined, () => this._set({ decorations: undefined }))}
+          <span class="lbl">${t('Border decorations')}</span>
+          ${fieldReset(t('Border decorations'), this._cfg.decorations !== undefined, () => this._set({ decorations: undefined }))}
         </div>
-        <p class="help">Lights, icicles, frost, a cobweb, a pumpkin or a flower vine along the border, for the scenes that have them. The content keeps clear of them.</p>
+        <p class="help">${t('Lights, icicles, frost, a cobweb, a pumpkin or a flower vine along the border, for the scenes that have them. The content keeps clear of them.')}</p>
       </div>
       <button
         type="button"
         class="switch"
         role="switch"
         aria-checked=${on ? 'true' : 'false'}
-        aria-label="Border decorations"
+        aria-label=${t('Border decorations')}
         @click=${() => this._set({ decorations: on ? false : undefined })}
       ></button>
     </div>`;
@@ -320,17 +321,17 @@ export class SeasonalEditor extends LitElement {
     const toggle = (s: SeasonalSceneSetting) =>
       this._set({ combine: list.includes(s) ? list.filter((c) => c !== s) : [...list, s] });
     return this._field(
-      'Combine with',
+      t('Combine with'),
       'combine',
-      html`<div class="chips" role="group" aria-label="Combine with">
+      html`<div class="chips" role="group" aria-label=${t('Combine with')}>
         ${SEASONAL_PICKS.filter((s) => s !== scene).map(
           (s) => html`<button type="button" class="chip" aria-pressed=${list.includes(s) ? 'true' : 'false'} @click=${() => toggle(s)}>
-            ${LABEL[s] ?? s}
+            ${LABEL[s] === undefined ? s : t(LABEL[s])}
           </button>`,
         )}
       </div>`,
       undefined,
-      'Extra scenes layered on top, like Day and night during winter.',
+      t('Extra scenes layered on top, like Day and night during winter.'),
     );
   }
 
@@ -341,7 +342,7 @@ export class SeasonalEditor extends LitElement {
     this._set({ calendar: Object.keys(cal).length ? cal : undefined });
   }
 
-  private _calendarField(h: { key: SeasonalHoliday; label: string }): TemplateResult {
+  private _calendarField(h: { key: SeasonalHoliday; label: MessageId }): TemplateResult {
     const id = `seasonal-cal-${h.key}`;
     const stored = this._cfg.calendar?.[h.key];
     const storedText = stored === false ? 'off' : typeof stored === 'string' ? stored : '';
@@ -376,24 +377,24 @@ export class SeasonalEditor extends LitElement {
       .value=${text}
       @input=${onInput}
     />`;
-    const error = invalid ? html`<p class="help error" id=${errId} role="alert">Use MM-DD..MM-DD, like 12-01..12-26, or off.</p>` : nothing;
+    const error = invalid ? html`<p class="help error" id=${errId} role="alert">${t('Use MM-DD..MM-DD, like 12-01..12-26, or off.')}</p>` : nothing;
     if (h.key === 'easter') {
       const auto = !set || storedText.trim().toLowerCase() === 'auto';
       return html`<div class="field">
         <div class="switch-row">
           <div class="txt">
             <div class="field-head">
-              <span class="lbl">Easter</span>
-              ${fieldReset('Easter', set, reset)}
+              <span class="lbl">${t('Easter')}</span>
+              ${fieldReset(t('Easter'), set, reset)}
             </div>
-            <p class="help">Automatic: Palm Sunday to Easter Monday, worked out for each year.</p>
+            <p class="help">${t('Automatic: Palm Sunday to Easter Monday, worked out for each year.')}</p>
           </div>
           <button
             type="button"
             class="switch"
             role="switch"
             aria-checked=${auto ? 'true' : 'false'}
-            aria-label="Easter dates automatic"
+            aria-label=${t('Easter dates automatic')}
             @click=${() => (auto ? this._writeCalendar('easter', '04-01..04-07') : reset())}
           ></button>
         </div>
@@ -402,8 +403,8 @@ export class SeasonalEditor extends LitElement {
     }
     return html`<div class="field">
       <div class="field-head">
-        <label for=${id}>${h.label}</label>
-        ${fieldReset(h.label, set || draft !== undefined, reset)}
+        <label for=${id}>${t(h.label)}</label>
+        ${fieldReset(t(h.label), set || draft !== undefined, reset)}
       </div>
       ${input(DEFAULT_CALENDAR[h.key])}${error}
     </div>`;
@@ -421,13 +422,13 @@ export class SeasonalEditor extends LitElement {
         @click=${() => (this._calendarOpen = !open)}
       >
         <ha-icon icon="mdi:calendar-range"></ha-icon>
-        <span class="nm">Holiday dates</span>
-        ${n ? html`<span class="chip is-count">${n} changed</span>` : nothing}
+        <span class="nm">${t('Holiday dates')}</span>
+        ${n ? html`<span class="chip is-count">${t('{n} changed', { n })}</span>` : nothing}
         <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
       </button>
       ${open
         ? html`<div class="cal-body" id="seasonal-cal-body">
-            <p class="help">Auto shows a holiday between these dates (inclusive), else the season. A range may run over the new year. Type off to skip a holiday.</p>
+            <p class="help">${t('Auto shows a holiday between these dates (inclusive), else the season. A range may run over the new year. Type off to skip a holiday.')}</p>
             ${HOLIDAYS.map((h) => this._calendarField(h))}
           </div>`
         : nothing}
@@ -438,8 +439,8 @@ export class SeasonalEditor extends LitElement {
     const id = 'seasonal-preview-date';
     return html`<div class="field">
       <div class="field-head">
-        <label for=${id}>Preview date</label>
-        ${fieldReset('Preview date', !!this._preview, () => setSeasonalPreviewDate(undefined))}
+        <label for=${id}>${t('Preview date')}</label>
+        ${fieldReset(t('Preview date'), !!this._preview, () => setSeasonalPreviewDate(undefined))}
       </div>
       <input
         class="input"
@@ -452,7 +453,7 @@ export class SeasonalEditor extends LitElement {
           setSeasonalPreviewDate(m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12) : undefined);
         }}
       />
-      <p class="help">Shows Auto on another day in this preview only. Not saved.</p>
+      <p class="help">${t('Shows Auto on another day in this preview only. Not saved.')}</p>
     </div>`;
   }
 
@@ -475,13 +476,13 @@ export class SeasonalEditor extends LitElement {
         ${this._picker(scene)}
         ${on
           ? html`
-              ${this._field('Layer', 'layer', this._seg('Layer', cfg.layer === 'front' ? 'front' : 'back', LAYERS, (v) => this._set({ layer: v === 'front' ? 'front' : undefined })), undefined, cfg.layer === 'front' ? 'Over the content, dimmed. Taps still reach the content.' : undefined)}
+              ${this._field(t('Layer'), 'layer', this._seg(t('Layer'), cfg.layer === 'front' ? 'front' : 'back', LAYERS, (v) => this._set({ layer: v === 'front' ? 'front' : undefined })), undefined, cfg.layer === 'front' ? t('Over the content, dimmed. Taps still reach the content.') : undefined)}
               ${this._field(
-                'Intensity',
+                t('Intensity'),
                 'intensity',
                 html`<mc-unit-field
                   .value=${intensityText(cfg.intensity)}
-                  .label=${'Intensity'}
+                  .label=${t('Intensity')}
                   .units=${['%']}
                   .noCustom=${true}
                   .placeholder=${'50'}
@@ -489,38 +490,38 @@ export class SeasonalEditor extends LitElement {
                   @value-changed=${(e: CustomEvent) => this._set({ intensity: e.detail.value || undefined })}
                 ></mc-unit-field>`,
                 undefined,
-                'How many particles: 100% is 24, the most a scene draws.',
+                t('How many particles: 100% is 24, the most a scene draws.'),
               )}
               ${this._decorations()}
               ${weather
                 ? this._field(
-                    'Weather entity',
+                    t('Weather entity'),
                     'weather_entity',
                     html`<mc-entity-picker
                       .hass=${this.hass}
                       .value=${cfg.weather_entity || ''}
-                      .label=${'Weather entity'}
+                      .label=${t('Weather entity')}
                       .domain=${'weather'}
                       @value-changed=${(e: CustomEvent) => this._set({ weather_entity: e.detail.value || undefined })}
                     ></mc-entity-picker>`,
                     undefined,
-                    'Snow, rain, a storm, sun, clouds, fog or wind, from its state.',
+                    t('Snow, rain, a storm, sun, clouds, fog or wind, from its state.'),
                   )
                 : nothing}
               ${this._field(
-                'Off switch',
+                t('Off switch'),
                 'entity',
                 html`<mc-entity-picker
                   .hass=${this.hass}
                   .value=${cfg.entity || ''}
-                  .label=${'Off switch'}
+                  .label=${t('Off switch')}
                   @value-changed=${(e: CustomEvent) => this._set({ entity: e.detail.value || undefined })}
                 ></mc-entity-picker>`,
                 undefined,
-                'An input_boolean or switch: off hides the scene, on every card that uses it.',
+                t('An input_boolean or switch: off hides the scene, on every card that uses it.'),
               )}
               ${auto
-                ? this._field('Hemisphere', 'hemisphere', this._seg('Hemisphere', hemisphereOf(cfg.hemisphere), HEMISPHERES, (v) => this._set({ hemisphere: v === 'south' ? 'south' : undefined })), undefined, 'South flips the seasons.')
+                ? this._field(t('Hemisphere'), 'hemisphere', this._seg(t('Hemisphere'), hemisphereOf(cfg.hemisphere), HEMISPHERES, (v) => this._set({ hemisphere: v === 'south' ? 'south' : undefined })), undefined, t('South flips the seasons.'))
                 : nothing}
               ${this._combine(scene)} ${auto ? this._calendar() : nothing} ${auto ? this._previewDate() : nothing}
             `

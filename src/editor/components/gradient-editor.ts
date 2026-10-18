@@ -5,6 +5,7 @@ import { kitSlider } from '../../ui-kit/css/slider';
 import { slider } from '../../ui-kit/templates/slider';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
+import { t } from '../i18n';
 // the stops use <mc-color-picker> by tag: color-picker.ts imports this file and defines it
 
 /** What the editor can write: a linear (`<n>deg`) or radial (`circle`) gradient of 2 to 5 stops, no positions. */
@@ -164,7 +165,7 @@ export class GradientEditor extends LitElement {
   ];
 
   @property({ type: Object }) model: GradientModel = { radial: false, angle: 135, stops: ['#ffffff', '#000000'] };
-  @property({ type: String }) label = 'color';
+  @property({ type: String }) label = '';
   /** Offer the Type control (CSS targets). Ring and icon gradients are linear only. */
   @property({ type: Boolean }) allowRadial = false;
   @property({ type: Boolean }) disabled = false;
@@ -219,18 +220,18 @@ export class GradientEditor extends LitElement {
   private _renderStop(s: string, i: number, n: number): TemplateResult {
     const num = i + 1;
     const atMin = n <= MIN_STOPS;
-    return html`<div class="stop" role="group" aria-label=${`Stop ${num} of ${n}`}>
+    return html`<div class="stop" role="group" aria-label=${t('Stop {num} of {n}', { num, n })}>
       <mc-color-picker
         .value=${s}
-        .label=${`Stop ${num} color`}
+        .label=${t('Stop {num} colour', { num })}
         ?aria-invalid=${this._badStop === i}
         @value-changed=${(e: CustomEvent) => this._setStop(i, String(e.detail.value), e)}
       ></mc-color-picker>
       <button
         type="button"
         class="icon-btn"
-        aria-label=${`Remove stop ${num}`}
-        title=${atMin ? 'A gradient needs at least 2 stops' : `Remove stop ${num}`}
+        aria-label=${t('Remove stop {num}', { num })}
+        title=${atMin ? t('A gradient needs at least 2 stops') : t('Remove stop {num}', { num })}
         ?disabled=${atMin || this.disabled}
         @click=${() => this._remove(i)}
       >
@@ -244,19 +245,19 @@ export class GradientEditor extends LitElement {
     const angle = this._draft ?? g.angle;
     const paint = gradientToString({ ...g, angle });
     const n = g.stops.length;
-    const name = this.label;
+    const name = this.label || t('colour');
     return html`
       <div class="grad">
-        <div class="preview" role="img" aria-label="Gradient preview"><span style=${`background: ${paint}`}></span></div>
+        <div class="preview" role="img" aria-label=${t('Gradient preview')}><span style=${`background: ${paint}`}></span></div>
         ${this.allowRadial
           ? html`<div class="row">
-              <span class="lbl">Type</span>
+              <span class="lbl">${t('Type')}</span>
               ${renderSeg(
-                `${name} gradient type`,
+                t('{name} gradient type', { name }),
                 g.radial ? 'radial' : 'linear',
                 [
-                  { value: 'linear', label: 'Linear' },
-                  { value: 'radial', label: 'Radial' },
+                  { value: 'linear', label: t('Linear') },
+                  { value: 'radial', label: t('Radial') },
                 ],
                 (v) => v !== (g.radial ? 'radial' : 'linear') && this._emit({ ...g, radial: v === 'radial' }),
                 this.disabled,
@@ -267,32 +268,32 @@ export class GradientEditor extends LitElement {
           ? nothing
           : slider({
               id: 'angle',
-              label: 'Angle',
+              label: t('Angle'),
               min: 0,
               max: 360,
               step: 1,
               value: angle,
               unit: 'deg',
-              valueText: `${angle} degrees`,
-              numberLabel: 'Angle in degrees',
+              valueText: t('{angle} degrees', { angle }),
+              numberLabel: t('Angle in degrees'),
               disabled: this.disabled,
               onInput: (v) => (this._draft = this._angle(String(v))),
               onChange: (v) => this._emit({ ...g, angle: this._angle(String(v)) }),
             })}
         <div class="stops">${g.stops.map((s, i) => this._renderStop(s, i, n))}</div>
-        ${this._badStop >= 0 ? html`<div class="help error" role="alert">Use a hex color, rgb(a) or var(--name).</div>` : nothing}
+        ${this._badStop >= 0 ? html`<div class="help error" role="alert">${t('Use a hex colour, rgb(a) or var(--name).')}</div>` : nothing}
         <div class="actions">
           <button
             type="button"
             class="btn btn-text btn-sm"
-            title=${n >= MAX_STOPS ? `Up to ${MAX_STOPS} stops` : 'Add stop'}
+            title=${n >= MAX_STOPS ? t('Up to {max} stops', { max: MAX_STOPS }) : t('Add stop')}
             ?disabled=${n >= MAX_STOPS || this.disabled}
             @click=${this._add}
           >
-            <ha-icon icon="mdi:plus"></ha-icon> Add stop
+            <ha-icon icon="mdi:plus"></ha-icon> ${t('Add stop')}
           </button>
           <button type="button" class="btn btn-text btn-sm" ?disabled=${this.disabled} @click=${() => this._emit({ ...g, stops: [...g.stops].reverse() })}>
-            <ha-icon icon="mdi:swap-horizontal"></ha-icon> Reverse
+            <ha-icon icon="mdi:swap-horizontal"></ha-icon> ${t('Reverse')}
           </button>
         </div>
       </div>

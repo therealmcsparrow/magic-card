@@ -12,24 +12,25 @@ import {
 import { fromYaml, toYaml } from '../../utils/yaml-utils';
 import { normalizePopupHash, popupHashError } from '../../utils/popup';
 import { popupCoordinator } from '../../card/popup-coordinator';
+import { t, tx, m, tl, type MessageId } from '../i18n';
 
 /** The gestures of an Actions tab, in order. */
-export const ACTION_GESTURES: Array<{ key: keyof ActionsConfig; title: string; icon: string }> = [
-  { key: 'tap_action', title: 'Tap', icon: 'mdi:gesture-tap' },
-  { key: 'hold_action', title: 'Hold', icon: 'mdi:gesture-tap-hold' },
-  { key: 'double_tap_action', title: 'Double tap', icon: 'mdi:gesture-double-tap' },
+export const ACTION_GESTURES: Array<{ key: keyof ActionsConfig; title: MessageId; icon: string }> = [
+  { key: 'tap_action', title: m('Tap'), icon: 'mdi:gesture-tap' },
+  { key: 'hold_action', title: m('Hold'), icon: 'mdi:gesture-tap-hold' },
+  { key: 'double_tap_action', title: m('Double tap'), icon: 'mdi:gesture-double-tap' },
 ];
 
-const ACTION_OPTIONS: Array<{ label: string; value: ActionType }> = [
-  { label: 'None', value: 'none' },
-  { label: 'Toggle', value: 'toggle' },
-  { label: 'More info', value: 'more-info' },
-  { label: 'Navigate', value: 'navigate' },
-  { label: 'Call service', value: 'perform-action' },
-  { label: 'URL', value: 'url' },
-  { label: 'Assist', value: 'assist' },
-  { label: 'Open pop-up', value: 'popup' },
-  { label: 'Close pop-up', value: 'close-popup' },
+const ACTION_OPTIONS: Array<{ label: MessageId; value: ActionType }> = [
+  { label: m('None'), value: 'none' },
+  { label: m('Toggle'), value: 'toggle' },
+  { label: m('More info'), value: 'more-info' },
+  { label: m('Navigate'), value: 'navigate' },
+  { label: m('Call service'), value: 'perform-action' },
+  { label: m('URL'), value: 'url' },
+  { label: m('Assist'), value: 'assist' },
+  { label: m('Open pop-up'), value: 'popup' },
+  { label: m('Close pop-up'), value: 'close-popup' },
 ];
 
 /**
@@ -61,16 +62,16 @@ export function renderActionConfig(
   return html`
     <div class="mc-action-config">
       ${renderSelectField(
-        'Action',
+        t('Action'),
         currentAction.action,
-        ACTION_OPTIONS,
+        tl(ACTION_OPTIONS),
         (v) => onChange({ ...currentAction, action: v as ActionType }),
         'action',
         syncCtx,
       )}
       ${needsEntity && ownerEntity
         ? renderToggleField(
-            'Use module entity',
+            t('Use module entity'),
             useModuleEntity,
             (v) => onChange({
               ...currentAction,
@@ -82,16 +83,16 @@ export function renderActionConfig(
           )
         : nothing}
       ${needsEntity && (!ownerEntity || !useModuleEntity)
-        ? renderEntityField('Entity', currentAction.entity, (v) =>
+        ? renderEntityField(t('Entity'), currentAction.entity, (v) =>
             onChange({ ...currentAction, entity: v }), hass, undefined,
             'entity', syncCtx,
           )
         : nothing}
       ${currentAction.action === 'toggle' && ownerEntity && useModuleEntity
-        ? html`<p class="help">Toggles <span class="mono">${ownerEntity}</span> (the module entity).</p>`
+        ? html`<p class="help">${tx('Toggles {entity} (the module entity).', { entity: html`<span class="mono">${ownerEntity}</span>` })}</p>`
         : nothing}
       ${currentAction.action === 'navigate'
-        ? renderTextField('Navigation path', currentAction.navigation_path, (v) =>
+        ? renderTextField(t('Navigation path'), currentAction.navigation_path, (v) =>
             onChange({ ...currentAction, navigation_path: v }),
             'navigation_path', syncCtx,
           )
@@ -99,7 +100,7 @@ export function renderActionConfig(
       ${currentAction.action === 'popup'
         ? html`
             <div class="mc-field">
-              ${renderFieldHead('Pop-up ID', 'hash', syncCtx)}
+              ${renderFieldHead(t('Pop-up ID'), 'hash', syncCtx)}
               <input
                 class="input mono"
                 type="text"
@@ -107,7 +108,7 @@ export function renderActionConfig(
                 autocomplete="off"
                 list=${listId}
                 placeholder="kitchen"
-                aria-label="Pop-up ID"
+                aria-label=${t('Pop-up ID')}
                 .value=${popupId}
                 @input=${(e: InputEvent) => onChange({ ...currentAction, hash: normalizePopupHash((e.target as HTMLInputElement).value) || undefined })}
               />
@@ -116,33 +117,33 @@ export function renderActionConfig(
               </datalist>
               ${popupError
                 ? html`<p class="help error" role="alert">${popupError}</p>`
-                : html`<p class="help">Opens the Magic Card pop-up with this ID (navigates to <span class="mono">#${popupId || 'id'}</span>).</p>`}
+                : html`<p class="help">${tx('Opens the Magic Card pop-up with this ID (navigates to {path}).', { path: html`<span class="mono">#${popupId || 'id'}</span>` })}</p>`}
             </div>
           `
         : nothing}
       ${currentAction.action === 'close-popup'
-        ? html`<p class="help">Closes the Magic Card pop-up that is open (also from inside it).</p>`
+        ? html`<p class="help">${t('Closes the Magic Card pop-up that is open (also from inside it).')}</p>`
         : nothing}
       ${currentAction.action === 'url'
-        ? renderTextField('URL', currentAction.url_path, (v) =>
+        ? renderTextField(t('URL'), currentAction.url_path, (v) =>
             onChange({ ...currentAction, url_path: v }),
             'url_path', syncCtx,
           )
         : nothing}
       ${currentAction.action === 'perform-action'
         ? html`
-            ${renderServiceField('Service', currentAction.service, (v) =>
+            ${renderServiceField(t('Service'), currentAction.service, (v) =>
               onChange({ ...currentAction, service: v }), hass,
               'service', syncCtx,
             )}
-            ${renderTextField('Target entity', target, (v) => {
+            ${renderTextField(t('Target entity'), target, (v) => {
               const next = { ...(currentAction.data || {}) } as Record<string, unknown>;
               if (v.trim()) next.entity_id = v.trim();
               else delete next.entity_id;
               writeData(next);
             }, 'data', syncCtx, { placeholder: 'entity_id', mono: true })}
             <div class="mc-field">
-              ${renderFieldHead('Service data', 'data', syncCtx)}
+              ${renderFieldHead(t('Service data'), 'data', syncCtx)}
               <textarea
                 class="input"
                 rows="3"
@@ -155,7 +156,7 @@ export function renderActionConfig(
                   writeData(target ? { ...parsed, entity_id: target } : { ...parsed });
                 }}
               ></textarea>
-              <p class="help">YAML. Leave empty to call the service without data.</p>
+              <p class="help">${t('YAML. Leave empty to call the service without data.')}</p>
             </div>
           `
         : nothing}
@@ -174,7 +175,7 @@ export function renderActionGroups(
   return html`${ACTION_GESTURES.map(
     (g) => html`
       <section class="group">
-        <div class="group-head"><ha-icon icon=${g.icon}></ha-icon><h3>${g.title}</h3></div>
+        <div class="group-head"><ha-icon icon=${g.icon}></ha-icon><h3>${t(g.title)}</h3></div>
         ${renderActionConfig(actions?.[g.key], (a) => update(g.key, a), hass, ownerEntity, syncCtxFor?.(g.key), g.key)}
       </section>
     `,

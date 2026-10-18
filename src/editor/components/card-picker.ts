@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
+import { t, m, fold, type MessageId } from '../i18n';
 
 interface CardInfo {
   type: string;
@@ -12,42 +13,48 @@ interface CardInfo {
   category: 'built-in' | 'custom';
 }
 
-const BUILTIN_CARDS: CardInfo[] = [
-  { type: 'alarm-panel', name: 'Alarm panel', description: 'Alarm control panel', icon: 'mdi:shield-home', category: 'built-in' },
-  { type: 'area', name: 'Area', description: 'Show area devices and entities', icon: 'mdi:texture-box', category: 'built-in' },
-  { type: 'button', name: 'Button', description: 'Action button for an entity', icon: 'mdi:gesture-tap-button', category: 'built-in' },
-  { type: 'calendar', name: 'Calendar', description: 'Calendar display', icon: 'mdi:calendar', category: 'built-in' },
-  { type: 'conditional', name: 'Conditional', description: 'Show cards based on conditions', icon: 'mdi:eye-check', category: 'built-in' },
-  { type: 'entities', name: 'Entities', description: 'List of entity rows', icon: 'mdi:format-list-bulleted', category: 'built-in' },
-  { type: 'entity', name: 'Entity', description: 'Single entity display', icon: 'mdi:card-text', category: 'built-in' },
-  { type: 'entity-filter', name: 'Entity filter', description: 'Filtered entity list', icon: 'mdi:filter', category: 'built-in' },
-  { type: 'gauge', name: 'Gauge', description: 'Gauge visualization', icon: 'mdi:gauge', category: 'built-in' },
-  { type: 'glance', name: 'Glance', description: 'Quick overview of entities', icon: 'mdi:eye', category: 'built-in' },
-  { type: 'grid', name: 'Grid', description: 'Grid layout of cards', icon: 'mdi:view-grid', category: 'built-in' },
-  { type: 'heading', name: 'Heading', description: 'Section heading', icon: 'mdi:format-header-1', category: 'built-in' },
-  { type: 'history-graph', name: 'History graph', description: 'Entity history graph', icon: 'mdi:chart-line', category: 'built-in' },
-  { type: 'horizontal-stack', name: 'Horizontal stack', description: 'Stack cards horizontally', icon: 'mdi:arrow-split-vertical', category: 'built-in' },
-  { type: 'humidifier', name: 'Humidifier', description: 'Humidifier control', icon: 'mdi:air-humidifier', category: 'built-in' },
-  { type: 'iframe', name: 'iFrame', description: 'Embed a webpage', icon: 'mdi:web', category: 'built-in' },
-  { type: 'light', name: 'Light', description: 'Light control card', icon: 'mdi:lightbulb', category: 'built-in' },
-  { type: 'logbook', name: 'Logbook', description: 'Entity logbook entries', icon: 'mdi:book-open-variant', category: 'built-in' },
-  { type: 'map', name: 'Map', description: 'Map with entity locations', icon: 'mdi:map', category: 'built-in' },
-  { type: 'markdown', name: 'Markdown', description: 'Rendered Markdown text', icon: 'mdi:language-markdown', category: 'built-in' },
-  { type: 'media-control', name: 'Media control', description: 'Media player controls', icon: 'mdi:cast', category: 'built-in' },
-  { type: 'picture', name: 'Picture', description: 'Display an image', icon: 'mdi:image', category: 'built-in' },
-  { type: 'picture-elements', name: 'Picture elements', description: 'Image with interactive elements', icon: 'mdi:image-edit', category: 'built-in' },
-  { type: 'picture-entity', name: 'Picture entity', description: 'Entity with background image', icon: 'mdi:image-area', category: 'built-in' },
-  { type: 'picture-glance', name: 'Picture glance', description: 'Image with entity icons', icon: 'mdi:image-multiple', category: 'built-in' },
-  { type: 'plant-status', name: 'Plant status', description: 'Plant monitor display', icon: 'mdi:flower', category: 'built-in' },
-  { type: 'sensor', name: 'Sensor', description: 'Sensor with graph', icon: 'mdi:eye', category: 'built-in' },
-  { type: 'shopping-list', name: 'Shopping list', description: 'Shopping list card', icon: 'mdi:cart', category: 'built-in' },
-  { type: 'statistic', name: 'Statistic', description: 'Long-term statistic', icon: 'mdi:chart-box', category: 'built-in' },
-  { type: 'statistics-graph', name: 'Statistics graph', description: 'Statistics graph', icon: 'mdi:chart-bell-curve', category: 'built-in' },
-  { type: 'thermostat', name: 'Thermostat', description: 'Climate control card', icon: 'mdi:thermostat', category: 'built-in' },
-  { type: 'tile', name: 'Tile', description: 'Compact tile card', icon: 'mdi:square-rounded', category: 'built-in' },
-  { type: 'todo-list', name: 'To-Do List', description: 'To-do list card', icon: 'mdi:checkbox-marked-outline', category: 'built-in' },
-  { type: 'vertical-stack', name: 'Vertical stack', description: 'Stack cards vertically', icon: 'mdi:arrow-split-horizontal', category: 'built-in' },
-  { type: 'weather-forecast', name: 'Weather forecast', description: 'Weather forecast card', icon: 'mdi:weather-partly-cloudy', category: 'built-in' },
+/** A built-in card: its name and description are m() marks, resolved when the list is built. */
+interface BuiltinCard extends Omit<CardInfo, 'name' | 'description'> {
+  name: MessageId;
+  description: MessageId;
+}
+
+const BUILTIN_CARDS: BuiltinCard[] = [
+  { type: 'alarm-panel', name: m('Alarm panel'), description: m('Alarm control panel'), icon: 'mdi:shield-home', category: 'built-in' },
+  { type: 'area', name: m('Area'), description: m('Show area devices and entities'), icon: 'mdi:texture-box', category: 'built-in' },
+  { type: 'button', name: m('Button'), description: m('Action button for an entity'), icon: 'mdi:gesture-tap-button', category: 'built-in' },
+  { type: 'calendar', name: m('Calendar'), description: m('Calendar display'), icon: 'mdi:calendar', category: 'built-in' },
+  { type: 'conditional', name: m('Conditional'), description: m('Show cards based on conditions'), icon: 'mdi:eye-check', category: 'built-in' },
+  { type: 'entities', name: m('Entities'), description: m('List of entity rows'), icon: 'mdi:format-list-bulleted', category: 'built-in' },
+  { type: 'entity', name: m('Entity'), description: m('Single entity display'), icon: 'mdi:card-text', category: 'built-in' },
+  { type: 'entity-filter', name: m('Entity filter'), description: m('Filtered entity list'), icon: 'mdi:filter', category: 'built-in' },
+  { type: 'gauge', name: m('Gauge'), description: m('Gauge visualization'), icon: 'mdi:gauge', category: 'built-in' },
+  { type: 'glance', name: m('Glance'), description: m('Quick overview of entities'), icon: 'mdi:eye', category: 'built-in' },
+  { type: 'grid', name: m('Grid'), description: m('Grid layout of cards'), icon: 'mdi:view-grid', category: 'built-in' },
+  { type: 'heading', name: m('Heading'), description: m('Section heading'), icon: 'mdi:format-header-1', category: 'built-in' },
+  { type: 'history-graph', name: m('History graph'), description: m('Entity history graph'), icon: 'mdi:chart-line', category: 'built-in' },
+  { type: 'horizontal-stack', name: m('Horizontal stack'), description: m('Stack cards horizontally'), icon: 'mdi:arrow-split-vertical', category: 'built-in' },
+  { type: 'humidifier', name: m('Humidifier'), description: m('Humidifier control'), icon: 'mdi:air-humidifier', category: 'built-in' },
+  { type: 'iframe', name: 'iFrame', description: m('Embed a webpage'), icon: 'mdi:web', category: 'built-in' },
+  { type: 'light', name: m('Light'), description: m('Light control card'), icon: 'mdi:lightbulb', category: 'built-in' },
+  { type: 'logbook', name: m('Logbook'), description: m('Entity logbook entries'), icon: 'mdi:book-open-variant', category: 'built-in' },
+  { type: 'map', name: m('Map'), description: m('Map with entity locations'), icon: 'mdi:map', category: 'built-in' },
+  { type: 'markdown', name: m('Markdown'), description: m('Rendered Markdown text'), icon: 'mdi:language-markdown', category: 'built-in' },
+  { type: 'media-control', name: m('Media control'), description: m('Media player controls'), icon: 'mdi:cast', category: 'built-in' },
+  { type: 'picture', name: m('Picture'), description: m('Display an image'), icon: 'mdi:image', category: 'built-in' },
+  { type: 'picture-elements', name: m('Picture elements'), description: m('Image with interactive elements'), icon: 'mdi:image-edit', category: 'built-in' },
+  { type: 'picture-entity', name: m('Picture entity'), description: m('Entity with background image'), icon: 'mdi:image-area', category: 'built-in' },
+  { type: 'picture-glance', name: m('Picture glance'), description: m('Image with entity icons'), icon: 'mdi:image-multiple', category: 'built-in' },
+  { type: 'plant-status', name: m('Plant status'), description: m('Plant monitor display'), icon: 'mdi:flower', category: 'built-in' },
+  { type: 'sensor', name: m('Sensor'), description: m('Sensor with graph'), icon: 'mdi:eye', category: 'built-in' },
+  { type: 'shopping-list', name: m('Shopping list'), description: m('Shopping list card'), icon: 'mdi:cart', category: 'built-in' },
+  { type: 'statistic', name: m('Statistic'), description: m('Long-term statistic'), icon: 'mdi:chart-box', category: 'built-in' },
+  { type: 'statistics-graph', name: m('Statistics graph'), description: m('Statistics graph'), icon: 'mdi:chart-bell-curve', category: 'built-in' },
+  { type: 'thermostat', name: m('Thermostat'), description: m('Climate control card'), icon: 'mdi:thermostat', category: 'built-in' },
+  { type: 'tile', name: m('Tile'), description: m('Compact tile card'), icon: 'mdi:square-rounded', category: 'built-in' },
+  { type: 'todo-list', name: m('To-Do List'), description: m('To-do list card'), icon: 'mdi:checkbox-marked-outline', category: 'built-in' },
+  { type: 'vertical-stack', name: m('Vertical stack'), description: m('Stack cards vertically'), icon: 'mdi:arrow-split-horizontal', category: 'built-in' },
+  { type: 'weather-forecast', name: m('Weather forecast'), description: m('Weather forecast card'), icon: 'mdi:weather-partly-cloudy', category: 'built-in' },
 ];
 
 @customElement('mc-card-picker')
@@ -104,23 +111,23 @@ export class CardPicker extends LitElement {
     return customCards.map((card) => ({
       type: `custom:${card.type}`,
       name: card.name || card.type,
-      description: card.description || 'Custom card',
+      description: card.description || t('Custom card'),
       icon: 'mdi:puzzle',
       category: 'custom' as const,
     }));
   }
 
   private _getFilteredCards(): { builtIn: CardInfo[]; custom: CardInfo[] } {
-    const q = this._searchQuery.toLowerCase();
+    const q = fold(this._searchQuery);
 
     const filterFn = (card: CardInfo) => {
       if (!q) return true;
       return card.type.toLowerCase().includes(q) ||
-        card.name.toLowerCase().includes(q) ||
-        card.description.toLowerCase().includes(q);
+        fold(card.name).includes(q) ||
+        fold(card.description).includes(q);
     };
 
-    const builtIn = BUILTIN_CARDS.filter(filterFn);
+    const builtIn = BUILTIN_CARDS.map((c): CardInfo => ({ ...c, name: t(c.name), description: t(c.description) })).filter(filterFn);
     const custom = this._getCustomCards().filter(filterFn);
 
     return { builtIn, custom };
@@ -134,11 +141,11 @@ export class CardPicker extends LitElement {
           class="input mono"
           .value=${this.value}
           placeholder="button, custom:mushroom-light-card"
-          aria-label="Card type"
+          aria-label=${t('Card type')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
-        <button type="button" class="btn btn-secondary" @click=${this._openModal}>Select</button>
+        <button type="button" class="btn btn-secondary" @click=${this._openModal}>${t('Select')}</button>
       </div>
 
       ${this._showModal ? this._renderModal() : ''}
@@ -150,28 +157,28 @@ export class CardPicker extends LitElement {
     const hasResults = builtIn.length > 0 || custom.length > 0;
 
     return html`
-      ${renderPickerWindow('Select card', () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('Select card'), () => this._closeModal(), 's', html`
           <div class="mc-picker-search">
-            ${renderPickerSearch('Search cards', this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('Search cards'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
-          <div class="mc-picker-list" role="listbox" aria-label="Cards">
+          <div class="mc-picker-list" role="listbox" aria-label=${t('Cards')}>
             ${hasResults
               ? html`
                   ${builtIn.length > 0 ? html`
-                    <div class="mc-picker-category">Built-in cards</div>
+                    <div class="mc-picker-category">${t('Built-in cards')}</div>
                     ${builtIn.map(card => this._renderCardItem(card))}
                   ` : ''}
                   ${custom.length > 0 ? html`
-                    <div class="mc-picker-category">Custom cards (HACS)</div>
+                    <div class="mc-picker-category">${t('Custom cards (HACS)')}</div>
                     ${custom.map(card => this._renderCardItem(card))}
                   ` : ''}
                 `
-              : html`<div class="mc-picker-empty">No cards found</div>`
+              : html`<div class="mc-picker-empty">${t('No cards found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave}>${t('Save')}</button>
           </div>
       `)}
     `;
@@ -191,7 +198,7 @@ export class CardPicker extends LitElement {
           <span class="mc-picker-item-name">${card.name}</span>
           <span class="mc-picker-item-id">${card.type}</span>
         </span>
-        <span class="chip">${card.category === 'custom' ? 'Custom' : 'Built-in'}</span>
+        <span class="chip">${card.category === 'custom' ? t('Custom') : t('Built-in')}</span>
       </button>
     `;
   }

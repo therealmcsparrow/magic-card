@@ -4,6 +4,7 @@ import { HomeAssistant, MediaBrowseItem } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
+import { t } from '../i18n';
 
 interface BreadcrumbEntry {
   title: string;
@@ -42,7 +43,7 @@ export class MediaPicker extends LitElement {
     this._showModal = true;
     this._searchQuery = '';
     this._selectedItem = null;
-    this._breadcrumbs = [{ title: 'Media', media_content_id: '' }];
+    this._breadcrumbs = [{ title: t('Media'), media_content_id: '' }];
     this._browseMedia('');
   }
 
@@ -66,7 +67,7 @@ export class MediaPicker extends LitElement {
       const result = await this.hass.callWS<MediaBrowseItem>(msg);
       this._items = result.children || [];
     } catch {
-      this._error = 'No media sources available';
+      this._error = t('No media sources available');
       this._items = [];
     }
 
@@ -160,15 +161,15 @@ export class MediaPicker extends LitElement {
           class="input"
           .value=${this.value}
           placeholder="/local/images/background.jpg"
-          aria-label="Media URL or path"
+          aria-label=${t('Media URL or path')}
           spellcheck="false"
           @input=${this._onInputChange}
         />
         <button
           type="button"
           class="icon-btn sm field-action browse"
-          aria-label="Browse media"
-          title="Browse media"
+          aria-label=${t('Browse media')}
+          title=${t('Browse media')}
           @click=${this._openModal}
         >
           <ha-icon icon="mdi:folder-open-outline"></ha-icon>
@@ -182,27 +183,27 @@ export class MediaPicker extends LitElement {
     const items = this._getFilteredItems();
 
     return html`
-      ${renderPickerWindow('Select media', () => this._closeModal(), 'm', html`
+      ${renderPickerWindow(t('Select media'), () => this._closeModal(), 'm', html`
 
           ${this._renderBreadcrumbs()}
 
           <div class="mc-picker-search">
-            ${renderPickerSearch('Filter items', this._searchQuery, (v) => { this._searchQuery = v; })}
+            ${renderPickerSearch(t('Filter items'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
 
-          <div class="mc-picker-list" role="listbox" aria-label="Media">
+          <div class="mc-picker-list" role="listbox" aria-label=${t('Media')}>
             ${this._loading
-              ? html`<div class="mc-picker-loading">Loading...</div>`
+              ? html`<div class="mc-picker-loading">${t('Loading...')}</div>`
               : this._error
                 ? html`<div class="mc-picker-empty">${this._error}</div>`
                 : items.length > 0
                   ? items.map((item) => this._renderItem(item))
-                  : html`<div class="mc-picker-empty">No items found</div>`
+                  : html`<div class="mc-picker-empty">${t('No items found')}</div>`
             }
           </div>
           <div class="mc-picker-footer" slot="footer">
-            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
-            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>Save</button>
+            <button type="button" class="btn btn-secondary" @click=${this._closeModal}>${t('Cancel')}</button>
+            <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>${t('Save')}</button>
           </div>
       `)}
     `;
@@ -212,7 +213,7 @@ export class MediaPicker extends LitElement {
     if (this._breadcrumbs.length <= 1) return html``;
 
     return html`
-      <nav class="mc-picker-breadcrumbs" aria-label="Media folders">
+      <nav class="mc-picker-breadcrumbs" aria-label=${t('Media folders')}>
         ${this._breadcrumbs.map((entry, i) => {
           const isLast = i === this._breadcrumbs.length - 1;
           if (isLast) {

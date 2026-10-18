@@ -1,4 +1,4 @@
-import { t } from '../../i18n/labels';
+import { t as lt } from '../../i18n/labels';
 import { LitElement, html, css, PropertyValues, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant, IconColorsConfig, IconFillConfig, IconFxConfig, IconFxKeys } from '../../types';
@@ -22,48 +22,49 @@ import './entity-picker';
 import './attribute-picker';
 import './icon-picker';
 import './sync-indicator';
+import { t, m, type MessageId } from '../i18n';
 
 /** A change of the module's icon keys; a key set to undefined is removed. */
 export type IconFxPatch = Partial<Pick<IconFxKeys, 'icon_fx' | 'icon_on' | 'icon_off' | 'svg'>> & { icon?: string };
 
-type Opt = { value: string; label: string };
+type Opt = { value: string; label: MessageId };
 
-const DEVICE_LABEL: Record<string, string> = {
-  spin: 'Spin', glow: 'Glow', flame: 'Flame', drum: 'Drum', swing: 'Swing', pulse: 'Pulse', snow: 'Snow', shake: 'Shake', eq: 'Equalizer',
+const DEVICE_LABEL: Record<string, MessageId> = {
+  spin: m('Spin'), glow: m('Glow'), flame: m('Flame'), drum: m('Drum'), swing: m('Swing'), pulse: m('Pulse'), snow: m('Snow'), shake: m('Shake'), eq: m('Equalizer'),
 };
 const DEVICES: Opt[] = [
-  { value: 'off', label: 'Off' },
-  { value: 'auto', label: 'Auto' },
+  { value: 'off', label: m('Off') },
+  { value: 'auto', label: m('Auto') },
   ...Object.entries(DEVICE_LABEL).map(([value, label]) => ({ value, label })),
 ];
 const DRAWS: Opt[] = [
-  { value: 'off', label: 'Off' },
-  { value: 'load', label: 'On load' },
-  { value: 'change', label: 'On change' },
-  { value: 'loop', label: 'Loop' },
+  { value: 'off', label: m('Off') },
+  { value: 'load', label: m('On load') },
+  { value: 'change', label: m('On change') },
+  { value: 'loop', label: m('Loop') },
 ];
 const DIRECTIONS: Opt[] = [
-  { value: 'up', label: 'Up' },
-  { value: 'down', label: 'Down' },
-  { value: 'left', label: 'Left' },
-  { value: 'right', label: 'Right' },
+  { value: 'up', label: m('Up') },
+  { value: 'down', label: m('Down') },
+  { value: 'left', label: m('Left') },
+  { value: 'right', label: m('Right') },
 ];
 const STYLES: Opt[] = [
-  { value: 'solid', label: 'Solid' },
-  { value: 'duotone', label: 'Duotone' },
-  { value: 'gradient', label: 'Gradient' },
-  { value: 'value', label: 'Value' },
+  { value: 'solid', label: m('Solid') },
+  { value: 'duotone', label: m('Duotone') },
+  { value: 'gradient', label: m('Gradient') },
+  { value: 'value', label: m('Value') },
 ];
 
 /** Markup the sanitiser would strip silently but that must never be pasted: say what and refuse it. */
 function hostileParts(svg: string): string[] {
   const found: string[] = [];
-  if (/<\s*script/i.test(svg)) found.push('a script');
-  if (/\son[a-z]+\s*=/i.test(svg)) found.push('event handlers');
-  if (/javascript:|vbscript:/i.test(svg)) found.push('a javascript: link');
+  if (/<\s*script/i.test(svg)) found.push(t('a script'));
+  if (/\son[a-z]+\s*=/i.test(svg)) found.push(t('event handlers'));
+  if (/javascript:|vbscript:/i.test(svg)) found.push(t('a javascript: link'));
   if (/<\s*foreignObject/i.test(svg)) found.push('foreignObject');
-  if (/<\s*(?:iframe|embed|object)\b/i.test(svg) || /href\s*=\s*(?!["']?\s*#)/i.test(svg)) found.push('external references');
-  if (/url\(\s*(?!["']?\s*#)/i.test(svg) || /@import|data:/i.test(svg)) found.push('external references');
+  if (/<\s*(?:iframe|embed|object)\b/i.test(svg) || /href\s*=\s*(?!["']?\s*#)/i.test(svg)) found.push(t('external references'));
+  if (/url\(\s*(?!["']?\s*#)/i.test(svg) || /@import|data:/i.test(svg)) found.push(t('external references'));
   return [...new Set(found)];
 }
 
@@ -71,17 +72,19 @@ function hostileParts(svg: string): string[] {
 export function customSvgError(svg: string): string | undefined {
   const bad = hostileParts(svg);
   if (bad.length) {
-    const list = bad.length > 1 ? `${bad.slice(0, -1).join(', ')} and ${bad[bad.length - 1]}` : bad[0];
-    return `This SVG contains ${list}. Remove ${bad.length > 1 ? 'them' : 'it'} and try again.`;
+    const list = bad.length > 1 ? t('{list} and {last}', { list: bad.slice(0, -1).join(', '), last: bad[bad.length - 1] }) : bad[0];
+    return bad.length > 1
+      ? t('This SVG contains {list}. Remove them and try again.', { list })
+      : t('This SVG contains {list}. Remove it and try again.', { list });
   }
   // Not unsafe, but dropped by the sanitiser: the shapes they draw would silently go missing.
-  if (/<\s*(?:use|image)\b/i.test(svg)) return "<use> and <image> aren't supported. Draw the shapes as paths and try again.";
+  if (/<\s*(?:use|image)\b/i.test(svg)) return t("<use> and <image> aren't supported. Draw the shapes as paths and try again.");
   return sanitizeSvg(svg).error;
 }
 
 /** What the sanitiser removes from an accepted SVG that changes its look; undefined when nothing. */
 export function customSvgWarning(svg: string): string | undefined {
-  if (/<\s*style\b/i.test(svg) || /\sstyle\s*=/i.test(svg)) return 'Styles are removed; use fill attributes (for example fill="#f44336") for colors.';
+  if (/<\s*style\b/i.test(svg) || /\sstyle\s*=/i.test(svg)) return t('Styles are removed; use fill attributes (for example fill="#f44336") for colours.');
   return undefined;
 }
 
@@ -320,23 +323,23 @@ export class IconFxEditor extends LitElement {
   private _renderIconEditor(): TemplateResult {
     const icon = this.moduleIcon;
     const kind = icon === 'svg' || icon.startsWith('mcu:') ? 'edit' : icon.includes(':') ? 'customise' : 'draw';
-    const label = { edit: 'Edit icon', customise: 'Customise this icon', draw: 'Draw an icon' }[kind];
+    const label = { edit: t('Edit icon'), customise: t('Customise this icon'), draw: t('Draw an icon') }[kind];
     const loading = this._editorState === 'loading';
     const pack = icon.slice(0, icon.indexOf(':'));
     return html`
       <div class="icon-editor">
         <div class="svg-actions">
           <button type="button" class="btn btn-secondary btn-sm" data-focus-key="icon-entry" aria-busy=${loading ? 'true' : 'false'} @click=${() => void this._openEditor(kind)}>
-            <ha-icon icon="mdi:pencil-ruler"></ha-icon>${label}${loading ? html`<span class="sr-only"> Loading</span>` : nothing}
+            <ha-icon icon="mdi:pencil-ruler"></ha-icon>${label}${loading ? html`<span class="sr-only"> ${t('Loading')}</span>` : nothing}
           </button>
         </div>
         ${kind === 'customise'
-          ? html`<p class="help">Makes your own copy. The original stays in ${pack === 'mdi' ? 'Material Design Icons' : pack}.</p>`
+          ? html`<p class="help">${t('Makes your own copy. The original stays in {pack}.', { pack: pack === 'mdi' ? t('Material Design Icons') : pack })}</p>`
           : nothing}
         ${this._editorState === 'failed'
-          ? html`<p class="help error" role="alert">The icon editor could not load. Check your connection and try again.</p>`
+          ? html`<p class="help error" role="alert">${t('The icon editor could not load. Check your connection and try again.')}</p>`
           : nothing}
-        ${this._savedMissing() ? html`<p class="help warn" role="status">Saved icon "${icon.slice(4)}" was not found. The card shows the default icon.</p>` : nothing}
+        ${this._savedMissing() ? html`<p class="help warn" role="status">${t('Saved icon "{name}" was not found. The card shows the default icon.', { name: icon.slice(4) })}</p>` : nothing}
       </div>
     `;
   }
@@ -449,7 +452,7 @@ export class IconFxEditor extends LitElement {
     return html`<div class="seg full" role="radiogroup" aria-label=${label} @keydown=${onKey}>
       ${options.map((o) => {
         const on = o.value === value;
-        return html`<button type="button" role="radio" data-val=${o.value} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => onPick(o.value)}>${o.label}</button>`;
+        return html`<button type="button" role="radio" data-val=${o.value} aria-checked=${on ? 'true' : 'false'} tabindex=${on ? '0' : '-1'} @click=${() => onPick(o.value)}>${t(o.label)}</button>`;
       })}
     </div>`;
   }
@@ -457,7 +460,7 @@ export class IconFxEditor extends LitElement {
   private _select(id: string, value: string, options: Opt[], onPick: (v: string) => void, describedBy?: string): TemplateResult {
     return html`<div class="select">
       <select class="input" id=${id} aria-describedby=${describedBy || nothing} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
-        ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value}>${o.label}</option>`)}
+        ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value}>${t(o.label)}</option>`)}
       </select>
       <ha-icon icon="mdi:chevron-down"></ha-icon>
     </div>`;
@@ -538,7 +541,7 @@ export class IconFxEditor extends LitElement {
     const file = input.files?.[0];
     if (!file) return;
     if (file.size > SVG_MAX_BYTES) {
-      this._svgError = 'The SVG is larger than 32 KB.';
+      this._svgError = t('The SVG is larger than 32 KB.');
       this._svgAlert = true;
     } else {
       this._applySvg(await file.text(), true);
@@ -557,10 +560,10 @@ export class IconFxEditor extends LitElement {
     const warning = this._svgError ? undefined : customSvgWarning(draft);
     return html`
       ${this._renderIconEditor()}
-      ${this._switch('Custom SVG', on, () => this._toggleSvg(), on ? undefined : 'Draw your own SVG icon instead of one from the icon list.')}
+      ${this._switch(t('Custom SVG'), on, () => this._toggleSvg(), on ? undefined : t('Draw your own SVG icon instead of one from the icon list.'))}
       ${on
         ? html`${this._field(
-            'SVG markup',
+            t('SVG markup'),
             !!this.svg,
             () => {
               this._svgDraft = undefined;
@@ -571,7 +574,7 @@ export class IconFxEditor extends LitElement {
                 class="input mono"
                 id="fx-svg"
                 spellcheck="false"
-                placeholder="<svg viewBox=&quot;0 0 24 24&quot;>…</svg>"
+                placeholder=${t('<svg viewBox="0 0 24 24">…</svg>')}
                 aria-invalid=${this._svgError ? 'true' : 'false'}
                 aria-describedby=${this._svgError ? 'fx-svg-error' : warning ? 'fx-svg-help fx-svg-warning' : 'fx-svg-help'}
                 .value=${draft}
@@ -581,14 +584,14 @@ export class IconFxEditor extends LitElement {
                 ${this._svgError
                   ? html`<p class="help error" id="fx-svg-error" role=${this._svgAlert ? 'alert' : nothing}>${this._svgError}</p>`
                   : html`<p class="help" id="fx-svg-help">
-                      Up to 32 KB. Parts with fill="currentColor" take the icon color, parts with class="mc-accent" the accent color.
+                      ${t('Up to 32 KB. Parts with fill="currentColor" take the icon colour, parts with class="mc-accent" the accent colour.')}
                     </p>`}
                 ${warning ? html`<p class="help warn" id="fx-svg-warning">${warning}</p>` : nothing}
               </div>
               <div class="svg-actions">
                 <input type="file" accept=".svg,image/svg+xml" id="fx-svg-file" @change=${(e: Event) => void this._upload(e)} />
                 <button type="button" class="btn btn-secondary btn-sm" @click=${() => this.renderRoot.querySelector<HTMLInputElement>('#fx-svg-file')?.click()}>
-                  <ha-icon icon="mdi:upload"></ha-icon>Upload SVG
+                  <ha-icon icon="mdi:upload"></ha-icon>${t('Upload SVG')}
                 </button>
               </div>`,
             'fx-svg',
@@ -608,28 +611,28 @@ export class IconFxEditor extends LitElement {
     const emptyPct = f ? pctOf(f.empty_color) : undefined;
     const emptyIsColor = !!f?.empty_color && emptyPct === undefined;
     return html`
-      ${this._switch('Liquid fill', on, () => this._setFx({ fill: on ? undefined : {} }), 'Fills the icon like a liquid with a value, e.g. a battery level.')}
+      ${this._switch(t('Liquid fill'), on, () => this._setFx({ fill: on ? undefined : {} }), t('Fills the icon like a liquid with a value, e.g. a battery level.'))}
       ${on
         ? html`
             ${this._field(
-              'Entity',
+              t('Entity'),
               !!f!.entity,
               () => this._setFill({ entity: undefined, attribute: undefined }),
               html`<mc-entity-picker
                 .hass=${this.hass}
                 .value=${f!.entity || ''}
-                .label=${this.entity ? `Module entity (${this.entity})` : 'Entity'}
+                .label=${this.entity ? t('Module entity ({entity})', { entity: this.entity }) : t('Entity')}
                 @value-changed=${(e: CustomEvent) => this._setFill({ entity: e.detail.value || undefined, attribute: undefined })}
               ></mc-entity-picker>`,
             )}
             ${!entity
-              ? html`<p class="help">Pick an entity: a fill without a value stays empty.</p>`
+              ? html`<p class="help">${t('Pick an entity: a fill without a value stays empty.')}</p>`
               : !f!.entity
-                ? html`<p class="help">Empty: the module's entity (${this.entity}).</p>`
+                ? html`<p class="help">${t("Empty: the module's entity ({entity}).", { entity: this.entity })}</p>`
                 : nothing}
             ${attrs.length
               ? this._field(
-                  'Attribute',
+                  t('Attribute'),
                   !!f!.attribute,
                   () => this._setFill({ attribute: undefined }),
                   html`<mc-attribute-picker
@@ -641,20 +644,20 @@ export class IconFxEditor extends LitElement {
                 )
               : nothing}
             <div class="two">
-              ${this._field('Min', f!.min !== undefined, () => this._setFill({ min: undefined }), this._number('fx-fill-min', f!.min, ICON_FX_DEFAULTS.min, (n) => this._setFill({ min: n })), 'fx-fill-min')}
-              ${this._field('Max', f!.max !== undefined, () => this._setFill({ max: undefined }), this._number('fx-fill-max', f!.max, ICON_FX_DEFAULTS.max, (n) => this._setFill({ max: n })), 'fx-fill-max')}
+              ${this._field(t('Min'), f!.min !== undefined, () => this._setFill({ min: undefined }), this._number('fx-fill-min', f!.min, ICON_FX_DEFAULTS.min, (n) => this._setFill({ min: n })), 'fx-fill-min')}
+              ${this._field(t('Max'), f!.max !== undefined, () => this._setFill({ max: undefined }), this._number('fx-fill-max', f!.max, ICON_FX_DEFAULTS.max, (n) => this._setFill({ max: n })), 'fx-fill-max')}
             </div>
-            ${this._field('Color', !!f!.color, () => this._setFill({ color: undefined }), this._color('fill-color', 'Fill color', f!.color, (v) => this._setFill({ color: v })))}
+            ${this._field(t('Colour'), !!f!.color, () => this._setFill({ color: undefined }), this._color('fill-color', t('Fill colour'), f!.color, (v) => this._setFill({ color: v })))}
             ${this._field(
-              'Empty opacity (%)',
+              t('Empty opacity (%)'),
               f!.empty_color !== undefined,
               () => this._setFill({ empty_color: undefined }),
               html`${this._number('fx-fill-empty', emptyPct, ICON_FX_DEFAULTS.emptyOpacity * 100, (n) => this._setFill({ empty_color: n === undefined ? undefined : `${Math.min(100, Math.max(0, n))}%` }), 0, 100, 5)}
-                ${emptyIsColor ? html`<p class="help">The empty part uses the color ${f!.empty_color} (set in YAML); a value here replaces it.</p>` : nothing}`,
+                ${emptyIsColor ? html`<p class="help">${t('The empty part uses the colour {colour} (set in YAML); a value here replaces it.', { colour: String(f!.empty_color) })}</p>` : nothing}`,
               'fx-fill-empty',
             )}
-            ${this._switch('Wave', f!.wave !== false, () => this._setFill({ wave: f!.wave === false ? undefined : false }))}
-            ${this._field('Direction', !!f!.direction, () => this._setFill({ direction: undefined }), this._seg('Direction', f!.direction ?? 'up', DIRECTIONS, (v) => this._setFill({ direction: v === 'up' ? undefined : (v as IconFillConfig['direction']) })))}
+            ${this._switch(t('Wave'), f!.wave !== false, () => this._setFill({ wave: f!.wave === false ? undefined : false }))}
+            ${this._field(t('Direction'), !!f!.direction, () => this._setFill({ direction: undefined }), this._seg(t('Direction'), f!.direction ?? 'up', DIRECTIONS, (v) => this._setFill({ direction: v === 'up' ? undefined : (v as IconFillConfig['direction']) })))}
           `
         : nothing}
     `;
@@ -662,19 +665,19 @@ export class IconFxEditor extends LitElement {
 
   private _deviceHelp(device: string): string {
     if (device !== 'auto') {
-      return device === 'off' ? 'Animates the icon like the device it shows.' : 'Pauses while the entity is off or unavailable.';
+      return device === 'off' ? t('Animates the icon like the device it shows.') : t('Pauses while the entity is off or unavailable.');
     }
-    if (!this.entity) return 'Pick an entity: Auto animates the icon from its state.';
+    if (!this.entity) return t('Pick an entity: Auto animates the icon from its state.');
     const rule = autoDeviceRule(this._stateObj, this.entity);
-    if (!rule) return 'Auto has no animation for this entity; pick one.';
+    if (!rule) return t('Auto has no animation for this entity; pick one.');
     const now = autoDeviceAnim(this._stateObj);
-    return `Auto for this entity: ${t(rule)}.${now ? ` Now: ${DEVICE_LABEL[now.anim]}.` : ''}`;
+    return t('Auto for this entity: {rule}.', { rule: lt(rule) }) + (now ? ` ${t('Now: {device}.', { device: t(DEVICE_LABEL[now.anim]) })}` : '');
   }
 
   private _renderDevice(): TemplateResult {
     const device = typeof this._fx.device === 'string' ? this._fx.device : 'off';
     return this._field(
-      'Device animation',
+      t('Device animation'),
       device !== 'off',
       () => this._setFx({ device: undefined }),
       html`${this._select('fx-device', device, this.entity || device === 'auto' ? DEVICES : DEVICES.filter((o) => o.value !== 'auto'), (v) => this._setFx({ device: v as IconFxConfig['device'] }), 'fx-device-help')}
@@ -686,15 +689,15 @@ export class IconFxEditor extends LitElement {
   private _renderDraw(): TemplateResult {
     const draw = this._fx.draw ?? 'off';
     return html`
-      ${this._field('Line draw', draw !== 'off', () => this._setFx({ draw: undefined }), this._select('fx-draw', draw, DRAWS, (v) => this._setFx({ draw: v as IconFxConfig['draw'] })), 'fx-draw')}
+      ${this._field(t('Line draw'), draw !== 'off', () => this._setFx({ draw: undefined }), this._select('fx-draw', draw, DRAWS, (v) => this._setFx({ draw: v as IconFxConfig['draw'] })), 'fx-draw')}
       ${draw !== 'off'
         ? this._field(
-            'Draw duration',
+            t('Draw duration'),
             !!this._fx.draw_duration,
             () => this._setFx({ draw_duration: undefined }),
             html`<mc-unit-field
               .value=${this._fx.draw_duration || ''}
-              .label=${'Draw duration'}
+              .label=${t('Draw duration')}
               .units=${['s', 'ms']}
               .placeholder=${String(ICON_FX_DEFAULTS.drawDuration)}
               @value-changed=${(e: CustomEvent) => this._setFx({ draw_duration: e.detail.value || undefined })}
@@ -722,9 +725,9 @@ export class IconFxEditor extends LitElement {
         undefined,
         key,
       );
-    return html`<div class="state-icons" role="group" aria-label="State icons" aria-describedby="fx-state-help">
-      <div class="two">${iconField('Icon when on', 'icon_on', this.iconOn)} ${iconField('Icon when off', 'icon_off', this.iconOff)}</div>
-      <p class="help" id="fx-state-help">State icons: the icon while the entity is on or off. Empty: the module's icon.</p>
+    return html`<div class="state-icons" role="group" aria-label=${t('State icons')} aria-describedby="fx-state-help">
+      <div class="two">${iconField(t('Icon when on'), 'icon_on', this.iconOn)} ${iconField(t('Icon when off'), 'icon_off', this.iconOff)}</div>
+      <p class="help" id="fx-state-help">${t("State icons: the icon while the entity is on or off. Empty: the module's icon.")}</p>
     </div>`;
   }
 
@@ -732,8 +735,8 @@ export class IconFxEditor extends LitElement {
     if (!this.allowStateIcons) return nothing;
     const on = this._fx.morph === true;
     return html`
-      ${this._switch('Morph', on, () => this._setFx({ morph: on ? undefined : true }), 'Morphs between the state icons when the entity turns on or off.')}
-      ${on && !this.iconOn && !this.iconOff ? html`<p class="help">Pick the state icons (Icon when on / off) to morph between; unset sides use the module's icon.</p>` : nothing}
+      ${this._switch(t('Morph'), on, () => this._setFx({ morph: on ? undefined : true }), t('Morphs between the state icons when the entity turns on or off.'))}
+      ${on && !this.iconOn && !this.iconOff ? html`<p class="help">${t("Pick the state icons (Icon when on / off) to morph between; unset sides use the module's icon.")}</p>` : nothing}
     `;
   }
 
@@ -752,44 +755,44 @@ export class IconFxEditor extends LitElement {
         ? setStops(stops.map((x, j) => (j === i ? v : x)))
         : setStops(stops.length > 2 ? stops.filter((_, j) => j !== i) : stops.map((x, j) => (j === i ? defaults[j] ?? defaults[defaults.length - 1] : x)));
     return html`
-      ${this._field('Color style', !!c.style, () => this._setColors({ style: undefined }), this._seg('Color style', style, STYLES, (v) => this._setColors({ style: v as IconColorsConfig['style'] })))}
+      ${this._field(t('Colour style'), !!c.style, () => this._setColors({ style: undefined }), this._seg(t('Colour style'), style, STYLES, (v) => this._setColors({ style: v as IconColorsConfig['style'] })))}
       ${style === 'gradient' || style === 'value'
         ? nothing
-        : this._field(style === 'solid' ? 'Color' : 'Primary color', !!c.primary, () => this._setColors({ primary: undefined }), this._color('primary', 'Primary color', c.primary, (v) => this._setColors({ primary: v })))}
+        : this._field(style === 'solid' ? t('Colour') : t('Primary colour'), !!c.primary, () => this._setColors({ primary: undefined }), this._color('primary', t('Primary colour'), c.primary, (v) => this._setColors({ primary: v })))}
       ${style === 'duotone'
-        ? this._field('Secondary color', !!c.secondary, () => this._setColors({ secondary: undefined }),
-            html`${this._color('secondary', 'Secondary color', c.secondary, (v) => this._setColors({ secondary: v }))}
-              <p class="help">Empty: the primary color at ${ICON_FX_DEFAULTS.secondaryPct}%.</p>`)
+        ? this._field(t('Secondary colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
+            html`${this._color('secondary', t('Secondary colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
+              <p class="help">${t('Empty: the primary colour at {pct}%.', { pct: ICON_FX_DEFAULTS.secondaryPct })}</p>`)
         : this._isSvg
-          ? this._field('Accent color', !!c.secondary, () => this._setColors({ secondary: undefined }),
-              html`${this._color('secondary', 'Accent color', c.secondary, (v) => this._setColors({ secondary: v }))}
-                <p class="help">Parts of the SVG with class="mc-accent".</p>`)
+          ? this._field(t('Accent colour'), !!c.secondary, () => this._setColors({ secondary: undefined }),
+              html`${this._color('secondary', t('Accent colour'), c.secondary, (v) => this._setColors({ secondary: v }))}
+                <p class="help">${t('Parts of the SVG with class="mc-accent".')}</p>`)
           : nothing}
       ${style === 'gradient' || style === 'value'
         ? html`
             ${this._field(
-              'Gradient colors',
+              t('Gradient colours'),
               Array.isArray(c.gradient) && c.gradient.length > 0,
               () => this._setColors({ gradient: undefined }),
               html`<div class="stops">
                 ${stops.map(
                   (s, i) => html`<div class="stop">
-                    ${this._color(`stop-${i}`, `Color ${i + 1}`, s, (v) => setStop(i, v))}
+                    ${this._color(`stop-${i}`, t('Colour {n}', { n: i + 1 }), s, (v) => setStop(i, v))}
                     ${stops.length > 2
-                      ? html`<button type="button" class="icon-btn sm danger" aria-label="Remove color ${i + 1}" title="Remove color" @click=${() => setStops(stops.filter((_, j) => j !== i))}>
+                      ? html`<button type="button" class="icon-btn sm danger" aria-label=${t('Remove colour {n}', { n: i + 1 })} title=${t('Remove colour')} @click=${() => setStops(stops.filter((_, j) => j !== i))}>
                           <ha-icon icon="mdi:delete-outline"></ha-icon>
                         </button>`
                       : nothing}
                   </div>`,
                 )}
-                <div><button type="button" class="btn btn-text btn-sm" @click=${() => setStops([...stops, stops[stops.length - 1]])}><ha-icon icon="mdi:plus"></ha-icon>Add color</button></div>
+                <div><button type="button" class="btn btn-text btn-sm" @click=${() => setStops([...stops, stops[stops.length - 1]])}><ha-icon icon="mdi:plus"></ha-icon>${t('Add colour')}</button></div>
               </div>
               ${style === 'value'
-                ? html`<p class="help">The color along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.</p>`
+                ? html`<p class="help">${t("The colour along these stops follows the value: Liquid fill's entity, min and max, else the module's entity from 0 to 100.")}</p>`
                 : nothing}`,
             )}
             ${style === 'gradient'
-              ? this._field('Angle (deg)', c.angle !== undefined, () => this._setColors({ angle: undefined }), this._number('fx-angle', c.angle, ICON_FX_DEFAULTS.angle, (n) => this._setColors({ angle: n }), 0, 360, 15), 'fx-angle')
+              ? this._field(t('Angle (deg)'), c.angle !== undefined, () => this._setColors({ angle: undefined }), this._number('fx-angle', c.angle, ICON_FX_DEFAULTS.angle, (n) => this._setColors({ angle: n }), 0, 360, 15), 'fx-angle')
               : nothing}
           `
         : nothing}
@@ -816,8 +819,8 @@ export class IconFxEditor extends LitElement {
           <div class="sector-head">
             <button type="button" class="sector-btn" aria-expanded=${this._open ? 'true' : 'false'} aria-controls=${this._open ? 'fx-body' : nothing} @click=${() => (this._open = !this._open)}>
               <ha-icon icon="mdi:creation-outline"></ha-icon>
-              <span class="nm">Icon effects</span>
-              ${count > 0 ? html`<span class="chip is-count">${count} set</span>` : nothing}
+              <span class="nm">${t('Icon effects')}</span>
+              ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
               <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
             </button>
             ${this._sync('icon_fx')}
@@ -826,14 +829,14 @@ export class IconFxEditor extends LitElement {
             ? html`<div class="sector-body" id="fx-body">
                 ${count > 0
                   ? html`<div class="sector-reset-row">
-                      <button type="button" class="btn btn-text btn-sm sector-reset" aria-label="Reset section Icon effects" title="Clear every icon effect" @click=${() => this._resetAll()}>
-                        <ha-icon icon="mdi:backup-restore"></ha-icon>Reset section
+                      <button type="button" class="btn btn-text btn-sm sector-reset" aria-label=${t('Reset section Icon effects')} title=${t('Clear every icon effect')} @click=${() => this._resetAll()}>
+                        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}
                       </button>
                     </div>`
                   : nothing}
                 ${this._noShape
                   ? html`<p class="help" id="fx-shape-hint" role="status">
-                      Effects need the icon shape; this icon could not be loaded (or is a multi-color logo), so it is shown as is.
+                      ${t('Effects need the icon shape; this icon could not be loaded (or is a multi-colour logo), so it is shown as is.')}
                     </p>`
                   : nothing}
                 ${this._renderFill()} ${this._renderDevice()} ${this._renderDraw()} ${this._renderMorph()} ${this._renderColors()}
@@ -848,8 +851,8 @@ export class IconFxEditor extends LitElement {
 /** Weather / Forecast note while Animated icons is on: set icon effects are kept, only paused. */
 export function animatedIconsNote(fx?: IconFxConfig): string {
   return hasIconFx(fx)
-    ? 'Animated weather icons replace icon effects. Your icon effects are paused and come back when Animated icons is off.'
-    : 'Animated weather icons replace icon effects.';
+    ? t('Animated weather icons replace icon effects. Your icon effects are paused and come back when Animated icons is off.')
+    : t('Animated weather icons replace icon effects.');
 }
 
 /**
