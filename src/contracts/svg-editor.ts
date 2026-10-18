@@ -15,6 +15,11 @@ import type { BooleanOp } from './path-booleans';
  * the top, free-shape pen, add / remove points and starter outlines; draw tools reach both editors
  * through the path-canvas chunk (path-canvas revision 4), which reverses "the shape editor never
  * imports draw".
+ * Revision 4 (2026-10-18, CEO scope added after revision 3: align and distribute, on-canvas scale and
+ * rotate handles, placement shortcuts, arrange order, a context menu; design 02 s7.6-7.10, 03 s9, 06 s7;
+ * ADR 0026; PROPOSED, the SVG editor and path canvas ceilings need the CEO). Additive; uses path-canvas
+ * revision 5. SVG_EDITOR_CONTRACT_REVISION moves to 4 in T30 and stays 3 while T24 / T26 run. Sections
+ * marked (r4) below.
  *
  * Two lazy chunks of the magic-card entry, each loaded by the card-editor chunk (never by
  * magic-card.js, which gains 0 B from them):
@@ -30,6 +35,8 @@ import type { BooleanOp } from './path-booleans';
  * src/utils/shape-path.ts) are imported normally; webpack does not copy modules a parent chunk
  * already holds. The animation studio entry imports the same src/path/ files (shared source, its
  * own bundle). Neither editor chunk imports src/anim-studio/** (import scan test).
+ * (r4) The menu element comes from the path-canvas chunk (PATH_MENU_TAG); neither editor ships a menu
+ * of its own or imports src/editor/components/menu-popover.ts.
  *
  * Loaders (window contract, additive, apiVersion stays 1; set by the card-editor chunk when it
  * loads, so magic-card.js does not grow):
@@ -41,9 +48,9 @@ import type { BooleanOp } from './path-booleans';
  *
  * ── Shell rules (both hosts) ──
  * - Escape never closes an editor and never reaches Home Assistant's card dialog. Order: end a
- *   gesture, then close an open overlay or popover, then (revision 3) drop a pending boolean operand
- *   or an unfinished pen outline, then clear the selection, then nothing (one-time hint, design 01
- *   section 1). Mechanism, all three:
+ *   gesture, then close an open overlay or popover (r4: the context menu and the shape picker count as
+ *   overlays), then (revision 3) drop a pending boolean operand or an unfinished pen outline, then
+ *   clear the selection, then nothing (one-time hint, design 01 section 1). Mechanism, all three:
  *   1. a keydown listener on the layer root (the host element) that, for Escape, calls
  *      preventDefault() and stopPropagation() after the inner handlers ran (the same pattern
  *      module-selector.ts uses inside HA's dialog today). A cancelled keydown also stops a native
@@ -54,10 +61,20 @@ import type { BooleanOp } from './path-booleans';
  *      always dispatched from inside it.
  *   Proof (T8, T11): HA 2026.10.2 card editor dialog (the S1 Docker image), focus on canvas, rail,
  *   field and overlay, in Chrome, Firefox and Safari: the dialog stays open.
+ * - (r4) Keys and Home Assistant: every keydown an editor acts on (tool letters, Ctrl/Cmd chords, Shift+
+ *   F10, ContextMenu, Delete) gets preventDefault() and stopPropagation() at the layer root after the
+ *   inner handler ran, so HA's document shortcuts (quick bar, assist) and browser chords do not also
+ *   fire. While a text field has focus nothing but Escape is taken.
  * - Focus returns to the opener, or its replacement by `data-focus-key` (design 01 section 1).
  * - Boolean buttons (revision 3): labelled buttons in the tab order (no drag needed); the chunk loads
  *   on the first press (button busy, aria-busy); a load failure shows "Couldn't load the shape tools.
  *   Try again." and changes nothing; every outcome is announced in the editor's polite live region.
+ * - (r4) Message texts: every sentence in this contract is the first sentence of its message. An editor
+ *   may add a second one ("Nothing was changed.", "Try a smaller or simpler shape.", design 02 s7.6).
+ *   Tests match with includes / startsWith, never whole-string equality.
+ * - (r4) Every menu item is the same action as its button: same history step, label, reason text,
+ *   announcement and status-strip note. After a pick focus goes to the canvas (to the layer row when the
+ *   menu opened there); after a close without a pick, back to the opener.
  *
  * ── <mc-svg-editor> ──
  * Opened by the module icon editor ("Draw an icon", "Customise this icon", "Edit icon") as a
@@ -103,6 +120,57 @@ import type { BooleanOp } from './path-booleans';
  *   'no-area' "Select closed shapes. Open lines have no area.", 'too-complex' "These shapes have too
  *   many points to combine.". skippedOpen > 0 adds "N open lines were left out." to a successful
  *   result.
+ * (r4) Items and bounds, for everything below: the items are the visible, unlocked selected layers, a
+ * selected group counting as one item (the union of its layers); hidden or locked ones are left out and
+ * the help line says so. An item's box is its stored geometry (rotation is baked into the points, so a
+ * rotated shape uses its rotated outline) flattened as model.ts pathsBounds does (within 0.01 units),
+ * stroke width ignored. Every command below is one history step, announced, with no status-strip note.
+ * (r4) Align (inspector section "Align", menu submenu "Align"): Align left, centre, right, top, middle,
+ * bottom (SvgAlignEdge) relative to SVG_ALIGN_TARGETS: 'selection' = the union box of the items (2+
+ * items; with 1 the choice falls back to 'canvas' and 'selection' shows "Select two or more shapes to
+ * align them to each other."), 'canvas' = the viewBox, 'safe' = the viewBox inset by SVG_SAFE_INSET
+ * (only at 24 x 24 with the safe area shown, else unavailable with "The safe area is hidden."). Each
+ * item moves by translation only. Distribute horizontally / vertically: 3+ items ("Select three or
+ * more shapes to space them evenly."), sorted by box left / top (ties: drawing order); the two
+ * outermost stay; equal gaps between neighbouring boxes (negative when they overlap); ignores the
+ * target. Pure maths in src/svg-editor/arrange.ts (editor-only; the shape editor does not align).
+ * (r4) Placement ("Position and size" row, menu "Align" submenu): "Centre on canvas" translates the
+ * union box of the items to the viewBox centre. "Fit to safe area" scales the union box uniformly about
+ * its centre to the largest size inside the safe area (it may enlarge; stroke widths are not scaled)
+ * and centres it there. "Match safe-area edges" translates per axis by the least amount that brings
+ * the union box inside the safe area where it sticks out; on an axis where the box is larger than the
+ * safe area it is centred; inside already = no move, no step. With nothing selected the three act on
+ * every visible unlocked layer (the drawing). Fit and Match need the safe area ('safe' rule above).
+ * (r4) Snapping to the safe area: while Snap is on and the safe area is shown, the canvas gets
+ * snap.safeArea true (path-canvas r5: moves and scale drags snap the box to the safe-area edges and
+ * centre lines with a labelled guide), and the stage draw tools (tools.ts) use the same lines.
+ * (r4) Arrange order (Layer section, menu submenu "Arrange", keys): Bring to front, Forward, Backward,
+ * Send to back, within each item's sibling list (top level, or its group; a selected group moves as
+ * one). Selected siblings move as a block and keep their order; Forward / Backward move the block one
+ * place past the next unselected sibling. At the limit the button / item is unavailable, no step. Keys
+ * with focus in the editor and not in a text field: Ctrl/Cmd+BracketRight forward, Ctrl/Cmd+
+ * BracketLeft backward, with Shift to the front / back (event.code). Alt+Up / Alt+Down in the Layers
+ * list stay. Model: moveOrder gains multi-id and to-end forms (model.ts).
+ * (r4) Handles: in the Select tool the editor sets the canvas `transform` to the union box of the items
+ * (scale true, rotate true, keepRatio = the "Lock ratio" switch in "Position and size", default on,
+ * angle = the single item's `angle`, else 0) and no longer draws its own `.selbox` for it (other
+ * selected boxes may stay as plain outlines). On mc-path-transform it applies the matrix to every item
+ * from the document at gesture start (as layer moves do); Esc restores that document; a commit is one
+ * history step "Scale" / "Rotate" (keyboard steps merge within 1 s); a rotate adds its angle to each
+ * layer's `angle` (mod 360). Alternatives without a drag (WCAG 2.5.7): W, H and Angle fields with Lock
+ * ratio, "Rotate 90 degrees clockwise" / "counter-clockwise" next to Flip and in the menu, Ctrl/Cmd+
+ * Shift+Arrows and the Rotation slider (canvas).
+ * (r4) Context menu, "Shape actions" (PathMenuElement inside the editor's shadow root): opened by the
+ * canvas (`contextMenu` true, mc-path-context), by right-click / long-press (LONG_PRESS_MS) / ContextMenu
+ * / Shift+F10 on a layer row (the editor's own listener, same dedupe rule as the canvas), and by a
+ * visible "More actions" button in the inspector header. Items by target:
+ * - shape(s) selected: Duplicate, Delete; Flip horizontally, Flip vertically, Rotate 90 degrees clockwise,
+ *   Rotate 90 degrees counter-clockwise; Arrange > (four); Align > (six, Distribute horizontally /
+ *   vertically, Centre on canvas, Fit to safe area, Match safe-area edges); Combine > (SVG_BOOLEAN_OPS,
+ *   their reasons as above).
+ * - empty canvas: Select all, Zoom to fit.
+ * - a point in the Node tool: Corner or Smooth (the other one), Delete point, Add point after.
+ *
  * Events (bubbling, composed):
  * - `mc-svg-save` detail SvgSaveDetail. The host writes the module: target 'module' ->
  *   { icon: 'svg', svg }; target 'library' -> the editor has already called icons_save
@@ -184,6 +252,15 @@ import type { BooleanOp } from './path-booleans';
  *   applied, same text as the SVG editor. An applied result gets default anchoring, the padding
  *   solver reruns (raise-survives rule), W6 and the crossing check run as after any edit, one
  *   history step labelled "Combine shape" / "Subtract shape" / "Intersect shape", the operand is gone.
+ * (r4) What the shape editor takes from revision 4 (Free shape only; Corners has no canvas, no menu
+ * and no "More actions"): no align, distribute, arrange, flip, rotate, duplicate or placement row (one
+ * outline that fills its box). The pending operand gets the canvas `transform` (scale true, rotate
+ * false, keepRatio true, bounds = the Edit-at frame); a scale updates its X / Y / W / H and, like any
+ * operand change, is not a history step. No Angle field and no rotate handle this round. "Centre" puts
+ * the operand in the middle of the Edit-at box. Context menu "Outline actions" (canvas `contextMenu`
+ * true, plus "More actions"): a point -> Corner or Smooth, Add point after, Remove point; a segment ->
+ * Add point here (at the pressed point, PathContext.hit.at); the pending operand -> Combine, Subtract,
+ * Intersect, Centre, Cancel; empty canvas -> Start from a shape..., Add shape..., Pen.
  * Events:
  * - `mc-shape-change` detail ShapeChangeDetail; `commit` false during drags. The host applies it
  *   through design-panel's ShapePatch (extended with custom_shapes) and pushes one history step
@@ -220,9 +297,21 @@ import type { BooleanOp } from './path-booleans';
  * user's padding raise, Add shape + each op incl. largest piece kept, hole filled, over-64 refused,
  * operand never in mc-shape-change, Esc drops a pending operand before clearing the selection;
  * import scan (no src/path/draw.ts, edit.ts, tidy.ts, nothing from src/path-booleans/ but loader.ts).
+ * Contract tests added in revision 4 (QA): align each edge against selection / canvas / safe with a
+ * rotated shape and a stroked shape (stroke ignored), a group as one item, a locked layer left out;
+ * 'selection' falls back with one item; distribute 3 and 4 items incl. overlap, ends fixed; Centre on
+ * canvas, Fit to safe area (uniform, centred, enlarges, stroke width unchanged), Match safe-area edges
+ * (least move, inside = no step, oversize centred), all three with no selection; arrange block moves
+ * inside a group and at top level, limits unavailable, Ctrl/Cmd+[ / ] (+Shift) by event.code; handles
+ * scale and rotate several layers about the shared box, angle bookkeeping, Esc restore, one step per
+ * drag; menu items per target in both editors, each runs the same action as its button (history label,
+ * announcement), focus after pick and close; consumed keys do not reach document listeners; shape
+ * editor operand scale updates the fields and is not a history step, no rotate handle, no menu in
+ * Corners; messages matched by includes.
  */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
+/** Stays 3 until T30 implements revision 4, then 4. */
 export const SVG_EDITOR_CONTRACT_REVISION = 3;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 export const SVG_EDITOR_CHUNK = 'svg-editor';
@@ -239,9 +328,16 @@ export const SVG_GRID_MAX = 12;
 /** Revision 3: boolean ops each editor offers. */
 export const SVG_BOOLEAN_OPS: readonly BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
 export const SHAPE_BOOLEAN_OPS: readonly BooleanOp[] = ['union', 'subtract', 'intersect'];
+/** Revision 4: what Align is relative to, and the safe-area inset at 24 x 24. */
+export const SVG_ALIGN_TARGETS = ['selection', 'canvas', 'safe'] as const;
+export const SVG_SAFE_INSET = 2;
 
 /** Revision 3: the shape editor's top-level mode switch. */
 export type ShapeEditorMode = 'corners' | 'free';
+/** Revision 4. */
+export type SvgAlignTarget = (typeof SVG_ALIGN_TARGETS)[number];
+export type SvgAlignEdge = 'left' | 'centre' | 'right' | 'top' | 'middle' | 'bottom';
+export type SvgArrange = 'front' | 'forward' | 'backward' | 'back';
 
 export type SvgEditorSource =
   | { kind: 'blank' }
