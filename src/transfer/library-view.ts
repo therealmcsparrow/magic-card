@@ -51,6 +51,8 @@ const rest = (o: object): Record<string, unknown> => {
 };
 const meta = (m: ItemMeta): ItemMeta => ({ ...(m.author ? { author: m.author } : {}), ...(m.description ? { description: m.description } : {}) });
 
+const DEFAULT_KINDS: TransferKind[] = ['animation', 'shape', 'icon'];
+
 @customElement('mc-library-view')
 export class LibraryView extends LitElement {
   /** The Magic Card Utils panel gates on this (svg-editor revision 5), so the Library tab needs no SVG editor fetch. */
@@ -79,7 +81,7 @@ export class LibraryView extends LitElement {
   ];
 
   @property({ attribute: false }) hass?: Hass;
-  @property({ attribute: false }) kinds: TransferKind[] = ['animation', 'shape', 'icon'];
+  @property({ attribute: false }) kinds: TransferKind[] = DEFAULT_KINDS;
   /** The card's custom_animations / custom_shapes / custom_icons copies ("This card"). */
   @property({ attribute: false }) config?: { custom_animations?: unknown; custom_shapes?: Record<string, unknown>; custom_icons?: Record<string, string> };
   /** The card editor: imports that do not go to Magic Card Utils bubble up as `mc-transfer-import` for the host to write into the card. */
@@ -147,7 +149,10 @@ export class LibraryView extends LitElement {
   }
 
   private get _kinds(): readonly TransferKind[] {
-    return this.context === 'mcu-panel' ? HOST_KINDS['mcu-panel'] : this.kinds;
+    // (r2) in the panel context a `kinds` set by the host narrows the four kinds (the Shapes tab); left alone it shows them all
+    if (this.context !== 'mcu-panel') return this.kinds;
+    const some = this.kinds !== DEFAULT_KINDS ? HOST_KINDS['mcu-panel'].filter((k) => this.kinds.includes(k)) : [];
+    return some.length ? some : HOST_KINDS['mcu-panel'];
   }
 
   private get _panelCtx(): boolean {
@@ -359,7 +364,7 @@ export class LibraryView extends LitElement {
     };
     return html`
       <div class="wrap" lang=${locale()}>
-        ${seg({ role: 'tablist', label: t('Kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) })}
+        ${this._kinds.length > 1 ? seg({ role: 'tablist', label: t('Kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) }) : nothing}
         ${this._kind === 'theme' || this._panelCtx
           ? nothing
           : seg({

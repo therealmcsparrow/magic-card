@@ -310,5 +310,7 @@ export interface TransferChunk {
  * panel opened with host 'mcu-panel'. Its header gets "New icon" (icons kind) / "New shape" (shapes
  * kind), and icon and shape rows get "Edit" (a real button, label "Edit <name>"); each fires
  * LIBRARY_OPEN_EVENT (bubbling, composed) with LibraryOpenDetail, and the panel opens the editor. The
+ * `kinds`, when the host sets it, narrows these (the Shapes tab passes ['shape']; one kind hides the kind
+ * selector). The
  * view itself never loads an editor chunk. Size: about 0.6-0.9 KB on the transfer chunk.
  */
