@@ -467,7 +467,7 @@ function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean
   if (o.sim !== undefined && o.sim !== null && (lenient ? new Checker() : c).obj(o.sim, `${path}.sim`)) {
     if (!particlesValidator) out.sim = o.sim as ParticlesSim;
     else {
-      const r = particlesValidator(o.sim, lenient ? 'lenient' : 'strict');
+      const r = particlesValidator(o.sim, lenient ? 'lenient' : 'strict', { count: out.count, layer: out.layer });
       if (!lenient) c.errors.push(...r.errors);
       if (r.sim && (lenient || !r.errors.length)) out.sim = r.sim;
     }
@@ -476,7 +476,7 @@ function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean
 }
 
 /** Checks a raw `particles.sim` (particles-v2 ParticlesModule.validateSim; error paths `particles.sim.*`). */
-export type ParticlesValidator = (raw: unknown, mode: 'strict' | 'lenient') => { sim?: ParticlesSim; errors: FieldError[] };
+export type ParticlesValidator = (raw: unknown, mode: 'strict' | 'lenient', spec?: { count: number; layer: 'back' | 'front' }) => { sim?: ParticlesSim; errors: FieldError[] };
 let particlesValidator: ParticlesValidator | undefined;
 
 /** Turn on `particles.sim` checking in validateAnimationDoc (the particles chunk and the studio call this). */

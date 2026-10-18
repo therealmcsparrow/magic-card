@@ -550,7 +550,7 @@ function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
   let out = simCache.get(doc);
   const p = doc.particles!;
   try {
-    const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient').sim;
+    const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient', { count: p.count, layer: p.layer }).sim;
     if (sim) {
       const spec: ParticlesSpecV2 = { ...p, sim };
       const period = doc.duration / p.speed;
