@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, ForecastModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { localize } from '../../localize/localize';
+import { t } from '../../card/i18n';
 import { lazyChunks } from '../../utils/lazy-chunks';
 
 /** No entity yet, or the forecast has not arrived: the "Day 1..N / --°" skeleton. */
@@ -14,7 +14,7 @@ export function forecastSkeleton(count: number): TemplateResult {
       ${Array.from({ length: count }).map(
         (_, i) => html`
           <div class="mc-forecast-item">
-            <span class="mc-forecast-label">${localize('forecast.day').replace('{n}', String(i + 1))}</span>
+            <span class="mc-forecast-label">${t('Day {n}', { n: i + 1 })}</span>
             <ha-icon icon="mdi:weather-partly-cloudy"></ha-icon>
             <span class="mc-forecast-temp">--°</span>
           </div>

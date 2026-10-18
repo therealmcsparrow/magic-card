@@ -1,0 +1,18 @@
+{
+  "_note": "Namespace -> i18n folder (holds index.ts, en-US.json, nl.json and the git-ignored messages.gen.ts). A namespace is active once its folder exists. roots: source folders the D5 hard-coded-text baseline counts for it (longest prefix wins).",
+  "namespaces": {
+    "card": { "dir": "src/card/i18n", "roots": ["src/card", "src/modules", "src/icons"] },
+    "card-editor": { "dir": "src/editor/i18n", "roots": ["src/editor"] },
+    "path-canvas": { "dir": "src/path-canvas/i18n", "roots": ["src/path-canvas"] },
+    "svg-editor": { "dir": "src/svg-editor/i18n", "roots": ["src/svg-editor"] },
+    "path-tools": { "dir": "src/path-tools/i18n", "roots": ["src/path-tools"] },
+    "shape-editor": { "dir": "src/shape-editor/i18n", "roots": ["src/shape-editor"] },
+    "transfer": { "dir": "src/transfer/i18n", "roots": ["src/transfer"] },
+    "anim-studio": { "dir": "src/anim-studio/i18n", "roots": ["src/anim-studio"] },
+    "icon-animator": { "dir": "src/icon-anim/i18n", "roots": ["src/icon-anim", "src/editor/components/icon-animator"] },
+    "theme-editor": { "dir": "src/theme-editor/i18n", "roots": ["src/theme-editor"] },
+    "icon-library": { "dir": "src/icon-anim/library/i18n", "roots": ["src/icon-anim/library"] },
+    "preset-catalogue": { "dir": "src/preset-catalogue/i18n", "roots": ["src/preset-catalogue"] },
+    "theme-presets": { "dir": "src/theme-editor/presets/i18n", "roots": ["src/theme-editor/presets"] }
+  }
+}

@@ -62,7 +62,7 @@ import { RenderContext, withRenderContext } from '../services/render-context';
 import { renderModuleContent } from '../modules/render-module';
 import { runServiceCall, toggleCall } from '../utils/entity-control';
 import { childSlots, parseChildChain } from '../utils/module-path';
-import { setLanguage } from '../localize/localize';
+import { setI18nLocale } from '../i18n/runtime';
 import { PopupController } from './popup-controller';
 import { EditorPlace, navigateToPopup, popupCoordinator } from './popup-coordinator';
 import { animationLibrary, inlineAnimations } from '../services/animation-library';
@@ -506,7 +506,7 @@ export class MagicCard extends LitElement {
 
   protected shouldUpdate(changedProperties: PropertyValues): boolean {
     // Module texts in the user's language from the first hass on (not only when it changes later).
-    if (changedProperties.has('hass') && this.hass) setLanguage(this.hass.language);
+    if (changedProperties.has('hass') && this.hass) setI18nLocale(this.hass);
     if (changedProperties.has('hass')) {
       this._popup.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
     }

@@ -1,0 +1,233 @@
+{
+  "_note": "The 73 keys of the removed src/localize (en and nl), kept for the localizer to reuse when the editor slices extract the same words. Not shipped, not read by any tool.",
+  "keys": {
+    "card.name": {
+      "en": "Magic Card",
+      "nl": "Magic Card"
+    },
+    "card.description": {
+      "en": "A fully open-source multi-module card",
+      "nl": "Een volledig open-source multi-module kaart"
+    },
+    "editor.mode_form": {
+      "en": "Form",
+      "nl": "Formulier"
+    },
+    "editor.mode_yaml": {
+      "en": "YAML",
+      "nl": "YAML"
+    },
+    "editor.add_row": {
+      "en": "Add row",
+      "nl": "Rij toevoegen"
+    },
+    "editor.add_module": {
+      "en": "Add module",
+      "nl": "Module toevoegen"
+    },
+    "editor.delete": {
+      "en": "Delete",
+      "nl": "Verwijderen"
+    },
+    "editor.undo": {
+      "en": "Undo",
+      "nl": "Ongedaan maken"
+    },
+    "editor.redo": {
+      "en": "Redo",
+      "nl": "Opnieuw"
+    },
+    "tabs.general": {
+      "en": "General",
+      "nl": "Algemeen"
+    },
+    "tabs.actions": {
+      "en": "Actions",
+      "nl": "Acties"
+    },
+    "tabs.conditions": {
+      "en": "Conditions",
+      "nl": "Condities"
+    },
+    "tabs.design": {
+      "en": "Design",
+      "nl": "Ontwerp"
+    },
+    "modules.text": {
+      "en": "Text",
+      "nl": "Tekst"
+    },
+    "modules.icon": {
+      "en": "Icon",
+      "nl": "Icoon"
+    },
+    "modules.info": {
+      "en": "Info",
+      "nl": "Info"
+    },
+    "modules.image": {
+      "en": "Image",
+      "nl": "Afbeelding"
+    },
+    "modules.markdown": {
+      "en": "Markdown",
+      "nl": "Markdown"
+    },
+    "modules.bar": {
+      "en": "Bar",
+      "nl": "Balk"
+    },
+    "modules.graphs": {
+      "en": "Graph",
+      "nl": "Grafiek"
+    },
+    "modules.camera": {
+      "en": "Camera",
+      "nl": "Camera"
+    },
+    "modules.button": {
+      "en": "Button",
+      "nl": "Knop"
+    },
+    "modules.slider": {
+      "en": "Slider",
+      "nl": "Schuifregelaar"
+    },
+    "modules.spinbox": {
+      "en": "Spinbox",
+      "nl": "Spinbox"
+    },
+    "modules.dropdown": {
+      "en": "Dropdown",
+      "nl": "Dropdown"
+    },
+    "modules.light": {
+      "en": "Light",
+      "nl": "Lamp"
+    },
+    "modules.gauge": {
+      "en": "Gauge",
+      "nl": "Meter"
+    },
+    "modules.horizontal": {
+      "en": "Horizontal",
+      "nl": "Horizontaal"
+    },
+    "modules.vertical": {
+      "en": "Vertical",
+      "nl": "Verticaal"
+    },
+    "modules.tabs": {
+      "en": "Tabs",
+      "nl": "Tabbladen"
+    },
+    "modules.separator": {
+      "en": "Separator",
+      "nl": "Scheidingslijn"
+    },
+    "modules.clock": {
+      "en": "Clock",
+      "nl": "Klok"
+    },
+    "modules.weather": {
+      "en": "Weather",
+      "nl": "Weer"
+    },
+    "modules.forecast": {
+      "en": "Forecast",
+      "nl": "Weersvoorspelling"
+    },
+    "modules.video-bg": {
+      "en": "Video background",
+      "nl": "Video achtergrond"
+    },
+    "actions_config.tap_action": {
+      "en": "Tap action",
+      "nl": "Tik actie"
+    },
+    "actions_config.hold_action": {
+      "en": "Hold action",
+      "nl": "Vasthoud actie"
+    },
+    "actions_config.double_tap_action": {
+      "en": "Double tap action",
+      "nl": "Dubbeltik actie"
+    },
+    "actions_config.action_none": {
+      "en": "None",
+      "nl": "Geen"
+    },
+    "actions_config.action_more_info": {
+      "en": "More info",
+      "nl": "Meer info"
+    },
+    "actions_config.action_toggle": {
+      "en": "Toggle",
+      "nl": "Schakel"
+    },
+    "actions_config.action_navigate": {
+      "en": "Navigate",
+      "nl": "Navigeer"
+    },
+    "actions_config.action_url": {
+      "en": "URL",
+      "nl": "URL"
+    },
+    "actions_config.action_perform_action": {
+      "en": "Perform action",
+      "nl": "Actie uitvoeren"
+    },
+    "actions_config.action_assist": {
+      "en": "Assist",
+      "nl": "Assistent"
+    },
+    "conditions.mode_every": {
+      "en": "All conditions (AND)",
+      "nl": "Alle condities (EN)"
+    },
+    "conditions.mode_any": {
+      "en": "Any condition (OR)",
+      "nl": "Elke conditie (OF)"
+    },
+    "conditions.type_state": {
+      "en": "State",
+      "nl": "Status"
+    },
+    "conditions.type_attribute": {
+      "en": "Attribute",
+      "nl": "Attribuut"
+    },
+    "conditions.type_time": {
+      "en": "Time",
+      "nl": "Tijd"
+    },
+    "conditions.type_template": {
+      "en": "Template",
+      "nl": "Template"
+    },
+    "conditions.add_condition": {
+      "en": "Add condition",
+      "nl": "Conditie toevoegen"
+    },
+    "forecast.day": {
+      "en": "Day {n}",
+      "nl": "Dag {n}"
+    },
+    "forecast.no_forecast": {
+      "en": "This entity has no forecast",
+      "nl": "Deze entiteit heeft geen weersverwachting"
+    },
+    "forecast.not_available": {
+      "en": "Forecast not available: {error}",
+      "nl": "Weersverwachting niet beschikbaar: {error}"
+    },
+    "forecast.no_data": {
+      "en": "No forecast data",
+      "nl": "Geen weersverwachting"
+    },
+    "forecast.unavailable": {
+      "en": "Unavailable",
+      "nl": "Niet beschikbaar"
+    }
+  }
+}

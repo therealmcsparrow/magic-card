@@ -26,6 +26,8 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     include: ['tests/**/*.test.ts'],
+    // writes the git-ignored src/<folder>/i18n/messages.gen.ts files the i18n modules import
+    globalSetup: ['tools/i18n/vitest-global-setup.mjs'],
     // every lazy chunk installed before a test file runs, so renderPreview keeps its synchronous output
     setupFiles: ['tests/setup-lazy-chunks.ts'],
   },

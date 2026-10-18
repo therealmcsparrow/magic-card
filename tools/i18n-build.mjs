@@ -1,0 +1,30 @@
+// npm run i18n: en-US.json (tools/i18n-us.mjs) then messages.gen.ts of every active namespace
+// (src/<folder>/i18n, git-ignored, three newline-joined tables en-GB / en-US / nl).
+// Also the prebuild step and the vitest global setup. `npm run i18n -- --check` runs the drift check.
+import { createRequire } from 'node:module';
+import { run as writeUS } from './i18n-us.mjs';
+const lib = createRequire(import.meta.url)('./i18n/lib.cjs');
+
+/** Generate everything; throws on a D1 violation (a non-literal id). */
+export function buildAll({ quiet = false } = {}) {
+  writeUS();
+  const { res, violations } = lib.buildAll();
+  if (violations.length) {
+    throw new Error('i18n: ' + violations.map((v) => `${v.file}:${v.line} ${v.fn}() ${v.reason}`).join('\n'));
+  }
+  if (!quiet) for (const r of res) console.log(`i18n ${r.ns}: ${r.count} messages${r.changed ? ' (messages.gen.ts written)' : ''}`);
+  return res;
+}
+
+if (process.argv[1]?.endsWith('i18n-build.mjs')) {
+  if (process.argv.includes('--check')) {
+    const { main } = await import('./i18n-check.mjs');
+    process.exit(await main(process.argv.slice(2)));
+  }
+  try {
+    buildAll();
+  } catch (e) {
+    console.error(String(e.message ?? e));
+    process.exit(1);
+  }
+}

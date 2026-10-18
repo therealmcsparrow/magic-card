@@ -1,0 +1,7 @@
+{
+  "Day {n}": "Dag {n}",
+  "Forecast not available: {error}": "Weersverwachting niet beschikbaar: {error}",
+  "No forecast data": "Geen weersverwachting",
+  "This entity has no forecast": "Deze entiteit heeft geen weersverwachting",
+  "Unavailable": "Niet beschikbaar"
+}

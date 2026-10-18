@@ -4,7 +4,7 @@ import { weatherIconSvg } from '../../icons/weather-icon-svg';
 import { CardModule, HomeAssistant, HassEntity, ForecastModuleConfig } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { currentRenderContext } from '../../services/render-context';
-import { localize } from '../../localize/localize';
+import { t } from '../../card/i18n';
 import { dateTimeFormat, formatNumber, uses12h } from '../../utils/locale-format';
 import {
   ForecastItem,
@@ -74,13 +74,13 @@ export class ForecastView implements ModuleView {
       } catch {
         // the translated state is optional
       }
-      return this._message(state || localize('forecast.unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
+      return this._message(state || t('Unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
     }
-    if (result.status === 'none') return this._message(localize('forecast.no_forecast'));
-    if (result.status === 'error') return this._message(localize('forecast.not_available').replace('{error}', result.error));
+    if (result.status === 'none') return this._message(t('This entity has no forecast'));
+    if (result.status === 'error') return this._message(t('Forecast not available: {error}', { error: result.error }));
 
     const items = result.forecast.slice(0, count);
-    if (!items.length) return this._message(localize('forecast.no_data'));
+    if (!items.length) return this._message(t('No forecast data'));
 
     const a = entity.attributes;
     const units = hass?.config?.unit_system;
