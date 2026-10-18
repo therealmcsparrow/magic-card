@@ -5,7 +5,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { CatalogueEntry, CatalogueGroup } from '../contracts/theme-catalogue';
 import type { ThemeDoc, ThemeMode } from '../contracts/theme-editor';
-import { icon } from './icons';
+import { glyph } from '../ui-kit/glyphs';
 import { groupPreview, previewCardsEvents } from './preview-cards';
 import { base } from './styles';
 import { fire, ownValue, overriddenIn, SCOPE_LABEL } from './util';
@@ -184,7 +184,7 @@ export class McteFieldGroup extends LitElement {
     const rgb = entry.kind === 'rgb' && !err && shown ? shown : '';
     // A read-only theme shows its colours as text with a swatch; the picker is for editing only.
     const look = isColour(entry) && shown ? shown : '';
-    return html`<div class="ctl">
+    return html`<div class="color">
       ${rgb ? html`<span class="swatch" style="background:rgb(${rgb})" aria-hidden="true"></span>` : nothing}
       ${look ? html`<span class="swatch" style=${styleMap({ background: look })} aria-hidden="true"></span>` : nothing}
       <input
@@ -216,8 +216,8 @@ export class McteFieldGroup extends LitElement {
     const text = both
       ? 'Light and Dark both use their own value, so this has no effect.'
       : `${modeLabel(others[0])} uses its own value. This only changes ${modeLabel(covered[0])}.`;
-    return html`<div class="callout is-warn" role="group" aria-label="Shared value has no effect">
-      ${icon('alert')}
+    return html`<div class="notice warn" role="group" aria-label="Shared value has no effect">
+      ${glyph('alertCircle')}
       <div class="body">
         <p>${text}</p>
         <div class="actions">
@@ -243,8 +243,8 @@ export class McteFieldGroup extends LitElement {
     const key = `${name}:only:${scope}`;
     if (!this.ctx.touched.has(name) || this._kept.has(key)) return nothing;
     const other: ThemeMode = scope === 'light' ? 'dark' : 'light';
-    return html`<div class="callout is-warn" role="group" aria-label="Value set in one mode only">
-      ${icon('alert')}
+    return html`<div class="notice warn" role="group" aria-label="Value set in one mode only">
+      ${glyph('alertCircle')}
       <div class="body">
         <p>Only ${modeLabel(scope)} gets this value. ${modeLabel(other)} keeps the default.</p>
         <div class="actions">
@@ -278,7 +278,7 @@ export class McteFieldGroup extends LitElement {
         : '';
     const only = this._onlyIn(row, name);
     return html`<div class="field ${err ? 'bad' : ''}" id="f-${name}" data-state=${state}>
-      <div class="head">
+      <div class="field-head">
         ${isColour(entry) && !this.ctx.readOnly
           ? html`<span class="lbl" id="lbl-${name}">${label}</span>`
           : html`<label class="lbl ${custom ? 'mono' : ''}" for="in-${name}">${label}</label>`}
@@ -289,7 +289,7 @@ export class McteFieldGroup extends LitElement {
         ${only ? html`<span class="chip is-warn">Only in ${modeLabel(only)}</span>` : nothing}
         ${own && !this.ctx.readOnly
           ? html`<button type="button" class="icon-btn sm reset" aria-label="Remove ${label} from ${scopeName}" title="Remove from ${scopeName}" @click=${() => fire(this, 'mcte-reset', { name })}>
-              ${icon('reset')}
+              ${glyph('restart')}
             </button>`
           : nothing}
       </div>
@@ -297,13 +297,13 @@ export class McteFieldGroup extends LitElement {
         ? nothing
         : html`<button type="button" class="key mono" aria-label="Copy key ${name}" @click=${() => fire(this, 'mcte-copy', { text: name, what: 'key' })}>${name}</button>`}
       ${this._control(row, shown, own, err, label)}
-      ${err ? html`<p class="help error" id="err-${name}" role="alert">${icon('alert')}<span>${err}</span></p>` : nothing}
+      ${err ? html`<p class="help error" id="err-${name}" role="alert">${glyph('alertCircle', 16)}<span>${err}</span></p>` : nothing}
       ${state === 'shared' ? html`<p class="help">Shared: ${sharedV}</p>` : nothing}
       ${state === 'default' ? html`<p class="help">${entry.default ? `Default: ${entry.default}` : 'Not set'}</p>` : nothing}
       ${sharedValues ? html`<p class="help">${sharedValues}</p>` : nothing}
       ${entry.hint ? html`<p class="help">${entry.hint}</p>` : nothing}
       ${hint
-        ? html`<p class="help hint ${hint.ok === false ? 'bad' : ''}" aria-live="polite">${hint.ok === null ? icon('info') : icon(hint.ok ? 'check' : 'alert')}<span>${hint.text}</span></p>`
+        ? html`<p class="help hint ${hint.ok === false ? 'bad' : ''}" aria-live="polite">${hint.ok === null ? glyph('information', 16) : glyph(hint.ok ? 'check' : 'alertCircle', 16)}<span>${hint.text}</span></p>`
         : nothing}
       ${this._noEffect(name, shown)} ${only ? this._modeOnly(name, shown, only) : nothing}
     </div>`;
@@ -312,13 +312,14 @@ export class McteFieldGroup extends LitElement {
   protected render(): TemplateResult {
     const g = this.group;
     const missing = this._notInstalled;
-    return html`<section class="grp ${this.open ? 'open' : ''}" data-group=${g.id}>
-      <h3>
+    return html`<section class="sectors" data-group=${g.id}>
+      <div class="sector">
+      <h3 class="sector-head">
         <button type="button" class="sector-btn" aria-expanded=${this.open ? 'true' : 'false'} aria-controls="body-${g.id}" @click=${() => fire(this, 'mcte-toggle', { id: g.id })}>
-          <span class="gname">${g.label}</span>
+          <span class="nm">${g.label}</span>
           ${this.setCount ? html`<span class="chip">${this.setCount} set</span>` : nothing}
-          ${missing ? html`<span class="chip">${icon('info')} Not installed here</span>` : nothing}
-          ${icon('chevron', 'chev')}
+          ${missing ? html`<span class="chip">${glyph('information', 14)} Not installed here</span>` : nothing}
+          <span class="chev">${glyph('chevronDown')}</span>
         </button>
       </h3>
       <div class="sector-body" id="body-${g.id}">
@@ -326,6 +327,7 @@ export class McteFieldGroup extends LitElement {
           ? html`${g.previewTag ? html`<mcte-group-preview .hass=${this.hass} .group=${g.id}></mcte-group-preview>` : nothing}
             ${repeat(this.rows, (r) => r.entry.name, (r) => this._field(r))}`
           : nothing}
+      </div>
       </div>
     </section>`;
   }
@@ -336,73 +338,26 @@ export class McteFieldGroup extends LitElement {
       :host {
         display: block;
       }
-      .grp {
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius-lg);
-        background: var(--mc-surface);
-        overflow: clip;
-      }
-      h3 {
-        font-size: 1rem;
-      }
       .sector-btn {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        width: 100%;
-        min-height: 48px;
-        padding: 0 12px;
-        border: 0;
-        background: transparent;
-        cursor: pointer;
-        text-align: left;
         scroll-margin-top: var(--stack-h, 0px);
-      }
-      .gname {
-        flex: 1 1 auto;
-        font-weight: 500;
-        overflow-wrap: anywhere;
-      }
-      .chev {
-        transition: transform 0.15s;
-      }
-      .open .chev {
-        transform: rotate(180deg);
-      }
-      .sector-body {
-        display: grid;
-        gap: 0;
-      }
-      .open .sector-body {
-        border-top: 1px solid var(--mc-divider);
       }
       .sector-body > .help {
-        padding: 8px 12px 0;
+        padding-top: 4px;
       }
       .field {
-        display: grid;
-        gap: 6px;
-        padding: 12px;
-        border-bottom: 1px solid var(--mc-divider);
         scroll-margin-top: var(--stack-h, 0px);
-        min-width: 0;
       }
       .field.bad {
-        box-shadow: inset 4px 0 0 var(--mc-error-ink);
+        margin-left: -12px;
+        padding-left: 9px;
+        border-left: 3px solid var(--mc-error-ink);
       }
-      .field:last-child {
-        border-bottom: 0;
-      }
-      .head {
-        display: flex;
+      .field-head {
         flex-wrap: wrap;
-        align-items: center;
         gap: 4px 8px;
       }
-      .head .lbl {
+      .field-head .lbl {
         flex: 1 1 auto;
-        font-size: 0.8125rem;
-        font-weight: 500;
         overflow-wrap: anywhere;
       }
       .key {
@@ -420,31 +375,18 @@ export class McteFieldGroup extends LitElement {
       .key:hover {
         text-decoration: underline;
       }
-      .ctl {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
       .swatch {
-        flex: none;
-        width: 28px;
-        height: 28px;
-        border-radius: 6px;
-        border: 1px solid var(--mc-field-border);
+        cursor: default;
       }
       .hint {
         display: flex;
         gap: 6px;
         align-items: center;
       }
-      .hint .ico {
-        width: 16px;
-        height: 16px;
-      }
       .hint.bad {
         color: var(--mc-error-ink);
       }
-      .callout {
+      .notice {
         padding: 8px 10px;
       }
       mc-color-picker {

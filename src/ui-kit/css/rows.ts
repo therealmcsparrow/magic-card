@@ -5,7 +5,7 @@ import { css, CSSResult } from 'lit';
  * --mc-hit. Trailing buttons are the borderless 24 px `.icon-btn.xs` (kitButtonExtras). Level indent is the --lvl
  * custom property the helper sets (0 = top level), 16 px a step.
  */
-export const kitRow: CSSResult = css`
+export const kitRow: CSSResult = /* @__PURE__ */ css`
   .rows {
     display: grid;
     gap: 2px;

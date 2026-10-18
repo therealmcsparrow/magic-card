@@ -5,10 +5,11 @@ import type { CatalogueGroupId } from '../contracts/theme-catalogue';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
-import { icon } from './icons';
+import { glyph } from '../ui-kit/glyphs';
 import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, setVar, validateValue } from './model';
 import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
+import type { UiToastElement } from '../contracts/ui-kit';
 import { base } from './styles';
 import { getTrial, isTrialActive, startTrial, stopTrial, subscribeTrial, syncTrialMode, updateTrial, useTheme } from './trial';
 import type { TrialState } from './trial';
@@ -122,7 +123,6 @@ export class McteEditorView extends LitElement {
     _usedMsg: { state: true },
     _msg: { state: true },
     _dlg: { state: true },
-    _toast: { state: true },
     _banner: { state: true },
     _trial: { state: true },
     _touched: { state: true },
@@ -168,7 +168,7 @@ export class McteEditorView extends LitElement {
   private _usedMsg = '';
   private _msg = '';
   private _dlg: Dlg = null;
-  private _toast: Toast | null = null;
+  private _toastRun?: () => void;
   private _banner: Banner | null = null;
   private _trial: TrialState | null = null;
   private _touched = new Set<string>();
@@ -191,8 +191,6 @@ export class McteEditorView extends LitElement {
   private _ro?: ResizeObserver;
   private _stackRo?: ResizeObserver;
   private _unsub?: () => void;
-  private _toastTimer?: ReturnType<typeof setTimeout>;
-  private _toastPaused = false;
   private _hintTimer?: ReturnType<typeof setTimeout>;
   private _msgTimer?: ReturnType<typeof setTimeout>;
   private _qTimer?: ReturnType<typeof setTimeout>;
@@ -250,7 +248,7 @@ export class McteEditorView extends LitElement {
     this._ro?.disconnect();
     this._stackRo?.disconnect();
     this._unsub?.();
-    for (const t of [this._toastTimer, this._hintTimer, this._msgTimer, this._qTimer]) clearTimeout(t);
+    for (const t of [this._hintTimer, this._msgTimer, this._qTimer]) clearTimeout(t);
     super.disconnectedCallback();
   }
 
@@ -458,7 +456,7 @@ export class McteEditorView extends LitElement {
     if (!this._undo) return;
     this._edit(this._undo);
     this._undo = null;
-    this._toast = null;
+    this._toastEl()?.close();
   }
 
   // ── hints (contrast) ──
@@ -562,17 +560,13 @@ export class McteEditorView extends LitElement {
 
   // ── toast ──
 
-  private _showToast(t: Toast): void {
-    this._toast = t;
-    this._startToastTimer();
+  private _toastEl(): UiToastElement | null {
+    return this.renderRoot.querySelector<UiToastElement>('mc-ui-toast');
   }
 
-  private _startToastTimer(): void {
-    clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => {
-      if (this._toastPaused) return;
-      this._toast = null;
-    }, TOAST_MS);
+  private _showToast(t: Toast): void {
+    this._toastRun = t.action?.run;
+    this._toastEl()?.show({ text: t.text, action: t.action && { id: 'action', label: t.action.label }, duration: TOAST_MS });
   }
 
   // ── dialogs ──
@@ -808,7 +802,7 @@ export class McteEditorView extends LitElement {
     this._usedMsg = ok
       ? `Now using ${this._name} for your user.`
       : `Pick ${this._name} in your profile to use it.`;
-    this._toast = null;
+    this._toastEl()?.close();
   }
 
   private async _delete(): Promise<void> {
@@ -915,7 +909,7 @@ export class McteEditorView extends LitElement {
       title=${this._tryTip()}
       @click=${() => this._toggleTrial()}
     >
-      ${icon('eye')} ${on ? 'Stop trying' : 'Try on dashboard'}
+      ${glyph('eyeOn', 18)} ${on ? 'Stop trying' : 'Try on dashboard'}
     </button>`;
   }
 
@@ -926,20 +920,20 @@ export class McteEditorView extends LitElement {
       if (this._menu && !(e.currentTarget as HTMLElement).contains(e.relatedTarget as Node | null)) this._menu = false;
     }}>
       <button type="button" class="icon-btn more" aria-label="More actions" aria-haspopup="menu" aria-expanded=${this._menu ? 'true' : 'false'} @click=${() => (this._menu = !this._menu)}>
-        ${icon('more')}
+        ${glyph('dotsHorizontal')}
       </button>
       ${this._menu
         ? html`<div class="menu" role="menu" aria-label="More actions" @keydown=${this._menuKey}>
             ${compact ? html`${this._tryButton(true)}<p class="help tryhelp-menu" id="try-help">${this._tryHelp()}</p>` : nothing}
-            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" class="mi" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
-            <button type="button" role="menuitem" class="mi" @click=${() => this._presetDlg('export')}>Export theme</button>
-            <button type="button" role="menuitem" class="mi" @click=${() => this._openDlg('yaml')}>Show YAML</button>
-            <button type="button" role="menuitem" class="mi" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say('Copied YAML'), (this._menu = false)))}>Copy YAML</button>
+            ${compact && this.backend?.presets ? html`<button type="button" role="menuitem" @click=${() => this._presetDlg('save')}>Save as my preset</button>` : nothing}
+            <button type="button" role="menuitem" @click=${() => this._presetDlg('export')}>Export theme</button>
+            <button type="button" role="menuitem" @click=${() => this._openDlg('yaml')}>Show YAML</button>
+            <button type="button" role="menuitem" @click=${() => void copyText(toYaml(this._name, this._doc)).then(() => (this._say('Copied YAML'), (this._menu = false)))}>Copy YAML</button>
             ${this._hasModes && this.draft.editable
-              ? html`<button type="button" role="menuitem" class="mi" @click=${() => this._copyMode('light', 'dark')}>Copy Light to Dark</button>
-                  <button type="button" role="menuitem" class="mi" @click=${() => this._copyMode('dark', 'light')}>Copy Dark to Light</button>`
+              ? html`<button type="button" role="menuitem" @click=${() => this._copyMode('light', 'dark')}>Copy Light to Dark</button>
+                  <button type="button" role="menuitem" @click=${() => this._copyMode('dark', 'light')}>Copy Dark to Light</button>`
               : nothing}
-            ${canDelete ? html`<button type="button" role="menuitem" class="mi danger" @click=${() => this._openDlg('delete')}>Delete theme</button>` : nothing}
+            ${canDelete ? html`<button type="button" role="menuitem" class="danger" @click=${() => this._openDlg('delete')}>Delete theme</button>` : nothing}
           </div>`
         : nothing}
     </div>`;
@@ -970,7 +964,7 @@ export class McteEditorView extends LitElement {
     const compact = this._w < 640;
     return html`<header class="hdr">
       <div class="left">
-        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${icon('back')} Themes</button>
+        <button type="button" class="btn btn-text back" @click=${() => this._back()}>${glyph('arrowLeft')} Themes</button>
         <h2 class="tname" tabindex="-1">${this._name}</h2>
         <div class="chips">${this._chips()}</div>
       </div>
@@ -1007,8 +1001,8 @@ export class McteEditorView extends LitElement {
   private _bannerEl(): TemplateResult | typeof nothing {
     const b = this._banner;
     if (!b) return nothing;
-    return html`<div class="callout ${b.kind === 'error' ? 'is-error' : 'is-warn'} banner" role="alert">
-      ${icon('alert')}
+    return html`<div class="notice ${b.kind === 'error' ? 'error' : 'warn'} banner" role="alert">
+      ${glyph('alertCircle')}
       <div class="body">
         <h3 class="title" tabindex="-1">${b.title}</h3>
         <p>${b.message}</p>
@@ -1183,7 +1177,7 @@ export class McteEditorView extends LitElement {
     const name = this._name;
     const cancel = html`<button type="button" class="btn btn-secondary" autofocus @click=${() => this._closeDlg()}>Cancel</button>`;
     const close = () => (this._dlg = null);
-    const err = (t: string) => html`<p class="help error" role="alert">${icon('alert')}<span>${t}</span></p>`;
+    const err = (t: string) => html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${t}</span></p>`;
     switch (this._dlg) {
       case 'discard':
         return dialog(`Discard changes to ${name}?`, html`<p>You have changes that are not saved.</p>`, html`${cancel}
@@ -1201,7 +1195,7 @@ export class McteEditorView extends LitElement {
       case 'yaml': {
         const text = toYaml(name, this._doc);
         return dialog(`${name}.yaml`, html`<p class="help">The file Save would write. It is read only here.</p><pre class="code" tabindex="0" aria-label="YAML of ${name}">${text}</pre>`, html`
-          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say('Copied YAML'))}>${icon('copy')} Copy YAML</button>
+          <button type="button" class="btn btn-secondary" @click=${() => void copyText(text).then(() => this._say('Copied YAML'))}>${glyph('contentCopy')} Copy YAML</button>
           <button type="button" class="btn btn-primary" autofocus @click=${() => this._closeDlg()}>Close</button>`, close);
       }
       case 'rename':
@@ -1223,13 +1217,7 @@ export class McteEditorView extends LitElement {
         ${this._body()}
       </div>
       <p class="sr-only" role="status">${this._msg}</p>
-      ${this._toast
-        ? html`<div class="toast ${this._trial ? 'over-bar' : ''}" role="status" @mouseenter=${() => (this._toastPaused = true)} @mouseleave=${() => ((this._toastPaused = false), this._startToastTimer())} @focusin=${() => (this._toastPaused = true)} @focusout=${() => ((this._toastPaused = false), this._startToastTimer())}>
-            <span>${this._toast.text}</span>
-            ${this._toast.action ? html`<button type="button" @click=${() => this._toast?.action?.run()}>${this._toast.action.label}</button>` : nothing}
-            <button type="button" aria-label="Dismiss" @click=${() => (this._toast = null)}>${icon('close')}</button>
-          </div>`
-        : nothing}
+      <mc-ui-toast .offset=${this._trial ? 88 : 16} @mc-toast-action=${() => this._toastRun?.()}></mc-ui-toast>
       ${this._dialog()}
       <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine}></mcte-preset-dialog>
     `;
@@ -1344,42 +1332,11 @@ export class McteEditorView extends LitElement {
         position: relative;
       }
       .menu {
-        position: absolute;
         right: 0;
         top: calc(100% + 4px);
-        z-index: 4;
         min-width: 220px;
         max-width: calc(100vw - 24px);
-        padding: 4px;
-        border: 1px solid var(--mc-divider);
-        border-radius: var(--mc-radius-lg);
-        background: var(--mc-surface);
-        box-shadow: var(--mc-shadow-float);
-        display: grid;
-      }
-      .mi {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 40px;
-        padding: 0 12px;
-        border: 0;
-        border-radius: var(--mc-radius);
-        background: transparent;
-        text-align: left;
-        cursor: pointer;
-        font-size: 0.875rem;
-      }
-      .mi:hover,
-      .mi:focus-visible {
-        background: var(--mc-surface-2);
-      }
-      .mi.danger {
-        color: var(--mc-error-ink);
-      }
-      .btn.try .ico {
-        width: 18px;
-        height: 18px;
+        z-index: 4;
       }
       .cols {
         flex: 1 1 auto;

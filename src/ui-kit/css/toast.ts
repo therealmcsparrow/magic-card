@@ -4,7 +4,7 @@ import { css, CSSResult } from 'lit';
  * `.toast` (r2, design/10 4.11): inverse chip, bottom centre. Used by <mc-ui-toast> in its shadow root and, as CSS only, by
  * the MCU panel. Not in `kitCss`: a screen that shows toasts uses the element, which brings this with it.
  */
-export const kitToast: CSSResult = css`
+export const kitToast: CSSResult = /* @__PURE__ */ css`
   .toast {
     position: fixed;
     inset: auto;

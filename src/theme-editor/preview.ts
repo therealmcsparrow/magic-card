@@ -7,6 +7,7 @@ import { previewVars, validateValue } from './model';
 import { createSample, pickEntities, previewCardsEvents, sampleConfig, THIRD_PARTY_SAMPLES } from './preview-cards';
 import type { SampleId } from './preview-cards';
 import './preview-cards';
+import type { SwitchOption } from './mode-switch';
 import { browserMode } from './util';
 
 /*
@@ -69,6 +70,10 @@ export function pageThemeKeys(el: HTMLElement = document.documentElement): strin
   return keys;
 }
 
+const MODE_OPTIONS: SwitchOption[] = [
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+];
 const checkValue = (name: string, value: string): boolean => validateValue(kindOf(name) ?? 'text', value) === null;
 
 /**
@@ -259,19 +264,12 @@ export class McteThemePreview extends LitElement {
         ? nothing
         : html`<div class="toolbar">
             ${hasModes
-              ? html`<div class="seg" role="radiogroup" aria-label="Preview mode">
-                  ${(['light', 'dark'] as ThemeMode[]).map(
-                    (m) => html`<button
-                      type="button"
-                      role="radio"
-                      aria-checked=${mode === m ? 'true' : 'false'}
-                      class=${mode === m ? 'on' : ''}
-                      @click=${() => this._pick(m)}
-                    >
-                      ${m === 'light' ? 'Light' : 'Dark'}
-                    </button>`,
-                  )}
-                </div>`
+              ? html`<mcte-mode-switch
+                  label="Preview mode"
+                  .value=${mode}
+                  .options=${MODE_OPTIONS}
+                  @mcte-change=${(e: CustomEvent<{ value: ThemeMode }>) => (e.stopPropagation(), this._pick(e.detail.value))}
+                ></mcte-mode-switch>`
               : html`<span class="help">This theme has no light or dark modes.</span>`}
             <span class="chip" aria-live="polite">Previewing ${mode}</span>
           </div>`}
@@ -349,30 +347,6 @@ export class McteThemePreview extends LitElement {
       align-items: center;
       gap: 8px 12px;
       margin-bottom: 8px;
-    }
-    .seg {
-      display: inline-flex;
-      border: 1px solid var(--mc-field-border, #767676);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .seg button {
-      min-height: 44px;
-      min-width: 64px;
-      padding: 0 14px;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-      cursor: pointer;
-    }
-    .seg button.on {
-      background: var(--mc-accent-fill, #0276ab);
-      color: var(--mc-on-accent, #fff);
-    }
-    .seg button:focus-visible {
-      outline: 3px solid var(--mc-focus, #0276ab);
-      outline-offset: -3px;
     }
     .chip {
       font-size: 0.8125rem;

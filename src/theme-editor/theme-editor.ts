@@ -1,6 +1,7 @@
-import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
+import { LitElement, html, css, PropertyValues, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import { THEME_EDITOR_CONTRACT_VERSION } from '../contracts/theme-editor';
+import type { UiToastElement } from '../contracts/ui-kit';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeEditorElement, ThemeFileEntry, ThemeList } from '../contracts/theme-editor';
 import { cloneDoc } from './model';
@@ -42,7 +43,6 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
     _dirty: { state: true },
     _checking: { state: true },
     _checkResult: { state: true },
-    _notice: { state: true },
     _mine: { state: true },
   };
 
@@ -61,10 +61,8 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   private _dirty = false;
   private _checking = false;
   private _checkResult = '';
-  private _notice = '';
   private _mine: SavedThemePreset[] | undefined;
   private _loading?: Promise<void>;
-  private _noticeTimer?: ReturnType<typeof setTimeout>;
   private _opened: string | null = null;
   private readonly _beforeUnload = (e: BeforeUnloadEvent): void => {
     if (!this._dirty) return;
@@ -207,9 +205,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
   }
 
   private _say(text: string): void {
-    this._notice = text;
-    clearTimeout(this._noticeTimer);
-    this._noticeTimer = setTimeout(() => (this._notice = ''), NOTICE_MS);
+    this.renderRoot.querySelector<UiToastElement>('mc-ui-toast')?.show({ text, duration: NOTICE_MS });
   }
 
   private _views(): TemplateResult {
@@ -280,7 +276,7 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
           </details>
         </div>`;
       default:
-        return html`${this._notice ? html`<p class="notice" role="status">${this._notice}</p>` : nothing}${this._views()}`;
+        return html`${this._views()}<mc-ui-toast></mc-ui-toast>`;
     }
   }
 
@@ -295,17 +291,6 @@ export class MagicCardThemeEditor extends LitElement implements ThemeEditorEleme
       }
       .note {
         margin: 16px;
-      }
-      .notice {
-        position: absolute;
-        z-index: 2;
-        top: 8px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 8px 16px;
-        border-radius: var(--mc-radius);
-        background: var(--mc-text);
-        color: var(--mc-surface);
       }
       mcte-start-view,
       mcte-editor-view {

@@ -3,8 +3,9 @@ import type { PropertyDeclarations } from 'lit';
 import type { SavedThemePreset, SavedThemePresetInput } from '../contracts/mcu-library';
 import type { TransferItem } from '../contracts/preset-transfer';
 import type { ThemeBackend, ThemeBackendError, ThemeDoc } from '../contracts/theme-editor';
-import { deepActive } from './dialogs';
-import { icon } from './icons';
+import { closeDialog, deepActive, dialog, openDialog } from './dialogs';
+import type { UiWindowElement } from '../contracts/ui-kit';
+import { glyph } from '../ui-kit/glyphs';
 import { cloneDoc } from './model';
 import { base } from './styles';
 import { fire, slugName, uniqueName } from './util';
@@ -94,17 +95,13 @@ export class MctePresetDialog extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
-    const d = this.renderRoot.querySelector('dialog');
     if (changed.has('_done') && this._done) this.renderRoot.querySelector<HTMLElement>('#res')?.focus();
-    if (changed.has('_mode') && this._mode && d && !d.open) {
-      if (d.showModal) d.showModal();
-      else d.setAttribute('open', '');
-    }
+    if (changed.has('_mode') && this._mode) openDialog(this.renderRoot);
   }
 
   private _close(): void {
-    const d = this.renderRoot.querySelector('dialog');
-    if (d?.open) d.close?.();
+    const w = this.renderRoot.querySelector<UiWindowElement>('mc-ui-window');
+    if (w?.open) closeDialog(this.renderRoot);
     else this._closed();
   }
 
@@ -201,7 +198,7 @@ export class MctePresetDialog extends LitElement {
   private _panel(mode: 'import' | 'export'): TemplateResult {
     if (this._tx === 'loading') return html`<p class="help" role="status">Loading...</p>`;
     if (this._tx === 'error') {
-      return html`<p class="help error" role="alert">${icon('alert')}<span>The tools could not load. Check your connection.</span></p>
+      return html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>The tools could not load. Check your connection.</span></p>
         <button type="button" class="btn btn-secondary btn-sm" @click=${() => void this._loadTx()}>Try again</button>`;
     }
     const o = this._opts;
@@ -220,7 +217,7 @@ export class MctePresetDialog extends LitElement {
   }
 
   private _err(): TemplateResult | typeof nothing {
-    return this._error ? html`<p class="help error" role="alert">${icon('alert')}<span>${this._error}</span></p>` : nothing;
+    return this._error ? html`<p class="help error" role="alert">${glyph('alertCircle', 16)}<span>${this._error}</span></p>` : nothing;
   }
 
   private _body(): { title: string; body: unknown; foot: unknown } {
@@ -238,7 +235,7 @@ export class MctePresetDialog extends LitElement {
     const { saved, failed } = this._done!;
     return html`<h3 tabindex="-1" id="res" role="status">${saved.length ? `Saved ${saved.length} under My presets` : 'Nothing was saved'}</h3>
       ${failed.map((f) => html`<p role="alert">${f}</p>`)}
-      <div class="foot">
+      <div class="res-foot">
         ${saved.length === 1 ? html`<button type="button" class="btn btn-secondary" @click=${() => this._open(saved[0])}>Open as new theme</button>` : nothing}
         <button type="button" class="btn btn-primary" @click=${() => this._close()}>Close</button>
       </div>`;
@@ -251,10 +248,7 @@ export class MctePresetDialog extends LitElement {
       e.preventDefault();
       this._submit();
     };
-    const inner = html`<h2 id="t">${title}</h2>${body}${foot === nothing ? nothing : html`<div class="foot">${foot}</div>`}`;
-    return html`<dialog aria-labelledby="t" class=${this._mode === 'import' || this._mode === 'export' ? 'wide' : ''} @close=${() => this._closed()}>
-      ${foot === nothing ? html`<div class="dlg">${inner}</div>` : html`<form class="dlg" @submit=${submit}>${inner}</form>`}
-    </dialog>`;
+    return dialog(title, body, foot, () => this._closed(), foot === nothing ? undefined : submit, this._mode === 'import' || this._mode === 'export' ? 'l' : 'm');
   }
 
   static styles = [
@@ -263,9 +257,6 @@ export class MctePresetDialog extends LitElement {
       :host {
         display: contents;
       }
-      dialog.wide {
-        width: min(640px, calc(100vw - 32px));
-      }
       ul {
         margin: 0;
         padding-left: 18px;
@@ -273,6 +264,12 @@ export class MctePresetDialog extends LitElement {
       }
       h3:focus {
         outline: none;
+      }
+      .res-foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
       }
     `,
   ];

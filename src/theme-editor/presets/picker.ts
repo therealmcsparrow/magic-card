@@ -1,7 +1,7 @@
 import { html, css, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
 import type { ThemePreset, ThemePresetLibrary } from '../../contracts/theme-editor';
-import { icon } from '../icons';
+import { glyph } from '../../ui-kit/glyphs';
 
 /*
  * The preset picker of the create dialog (design/dialog-spec.md): search, a Show filter, two groups
@@ -66,7 +66,7 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
       ><span class="sw">${half('light')}${half('dark')}</span
       ><span class="ac" style="background:linear-gradient(90deg,${colours(p, 'light')['accent-color']} 50%,${colours(p, 'dark')['accent-color']} 50%)"></span
     ></span>
-    <span class="pn">${p.name}${on ? icon('check') : nothing}</span>
+    <span class="pn">${p.name}${on ? glyph('check') : nothing}</span>
     <span class="help">${p.blurb}</span>
     ${p.inspiredBy ? html`<span class="help">Inspired by ${p.inspiredBy.name}</span>` : nothing} ${on && p.note ? html`<span class="help">${p.note}</span>` : nothing}
   </label>`;
@@ -216,7 +216,7 @@ export const pickerStyles = css`
       padding: 2px;
     }
   }
-  /* The sheet (under 600 px) has a sticky footer of up to three rows: keep a focused card above it */
+  /* The sheet (under 600 px) keeps its footer below the scrolling body; a focused card still stays clear of the edge */
   @media (max-width: 599px) {
     .pin {
       scroll-margin-block: 8px 136px;
@@ -228,9 +228,6 @@ export const pickerStyles = css`
       max-height: none;
       min-height: 0;
       overflow: visible;
-    }
-    dialog .foot {
-      position: static;
     }
     .pin {
       scroll-margin-block: 8px;

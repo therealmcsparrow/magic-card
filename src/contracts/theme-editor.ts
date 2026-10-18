@@ -1,7 +1,16 @@
 import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 
 /*
- * Contract: theme editor host. Version 1.1.0 (Architect-owned).
+ * Contract: theme editor host. Version 1.2.0 (Architect-owned).
+ *
+ * 1.2.0 (2026-10-18, UI kit migration, plan UI8, ADR 0030; additive, the panel's major-1 check still passes): the
+ * editor is built on the ui-kit Module (ui-kit 1.0.0 r2). The chunk rule below widens by exactly two sources:
+ * `src/ui-kit/` and, from Core, `editorTokens` of `src/css/editor-system.ts` (tokens only). The entry compiles its own
+ * copy of the kit parts it imports and calls defineUiKit() once; it may therefore also define the kit's `mc-ui-*`
+ * elements, guarded (the kit's own rule). The editor keeps its fixed accent as an override of the accent tokens on
+ * :host (a11y S1). Dialogs are <mc-ui-window variant="sheet">: a bottom sheet on phones, never full screen
+ * (CEO D8); transient messages are <mc-ui-toast>; glyphs are the kit's MDI set. No change to the backend adapter,
+ * the element API or the events.
  *
  * 1.1.0 (2026-10-18, epic C, additive; the panel's major-1 check still passes): optional
  * ThemeBackend.presets (My theme presets, mcu-library 1.0.0 r3), "Save as my preset", the
@@ -22,8 +31,8 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
  *   guarded by customElements.get. It never defines mc-color-picker / mc-unit-field: it asks
  *   magic-card.js for the editor chunk with `window.MagicCard.loadEditor()` (module-editor 1.0.0)
  *   and uses those elements by tag.
- * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/ and `lit`
- *   (types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
+ * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/, `lit`, `src/ui-kit/` and
+ *   `editorTokens` from src/css/editor-system.ts (1.2.0; before that: `lit` only; types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
  *   holds the preset library and the create dialog's picker (THEME_PRESETS_CHUNK_FILE, section
  *   "theme presets" below, ADR 0014). Its public path is set by src/theme-editor/public-path.ts,
  *   the entry's first import. magic-card.js is untouched (+0 B).
@@ -56,7 +65,7 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
  * - "Copy as HA theme" (Export menu): haThemeYaml(name, doc) to the clipboard.
  */
 
-export const THEME_EDITOR_CONTRACT_VERSION = '1.1.0';
+export const THEME_EDITOR_CONTRACT_VERSION = '1.2.0';
 export const THEME_EDITOR_FILE = 'magic-card-theme-editor.js';
 export const THEME_EDITOR_TAG = 'magic-card-theme-editor';
 export const THEME_TRIAL_BAR_TAG = 'mc-theme-trial-bar';

@@ -1,5 +1,6 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
+import { glyph } from '../ui-kit/glyphs';
 import { THEME_VAR_RE } from '../contracts/theme-catalogue';
 import { kindOf } from './catalogue/index';
 import { validateValue } from './model';
@@ -157,9 +158,9 @@ export class McteRawRows extends LitElement {
     const exists = !!name && this.existing.has(name);
     const colour = !!parseColor(this._value);
     return html`
-      <div class="group" role="group" aria-labelledby="raw-title">
+      <div class="panel" role="group" aria-labelledby="raw-title">
         <h3 id="raw-title" class="title">Add any variable</h3>
-        <div class="row">
+        <div class="line">
           <div class="cell">
             <label class="lbl" for="raw-name">Name</label>
             <input
@@ -201,7 +202,7 @@ export class McteRawRows extends LitElement {
             ? `This variable already exists in ${this.scopeLabel}. Add will replace its value.`
             : 'Use the name as it appears in the theme file, without the leading dashes. You can also paste several lines of name: value.'}
         </p>
-        ${this._error ? html`<p class="help error" id="raw-error" role="alert"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z"></path></svg>${this._error}</p>` : nothing}
+        ${this._error ? html`<p class="help error" id="raw-error" role="alert">${glyph('alertCircle', 16)}${this._error}</p>` : nothing}
         <p class="help" role="status">${this._status}</p>
       </div>
     `;
@@ -213,7 +214,7 @@ export class McteRawRows extends LitElement {
       :host {
         display: block;
       }
-      .group {
+      .panel {
         border: 1px solid var(--mc-divider);
         border-radius: var(--mc-radius-lg);
         padding: 12px;
@@ -225,7 +226,7 @@ export class McteRawRows extends LitElement {
         font-size: 0.9375rem;
         font-weight: 500;
       }
-      .row {
+      .line {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
@@ -241,13 +242,6 @@ export class McteRawRows extends LitElement {
         display: flex;
         gap: 8px;
         align-items: center;
-      }
-      .swatch {
-        flex: none;
-        width: 28px;
-        height: 28px;
-        border-radius: 6px;
-        border: 1px solid var(--mc-field-border);
       }
     `,
   ];

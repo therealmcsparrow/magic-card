@@ -5,7 +5,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ReadOnlyReason, ThemeBackend, ThemeDoc, ThemeFileEntry, ThemePreset } from '../contracts/theme-editor';
 import { closeDialog, dialog, openDialog } from './dialogs';
-import { icon } from './icons';
+import { glyph } from '../ui-kit/glyphs';
 import { cloneDoc } from './model';
 import type { PickerView } from './presets/picker';
 import { loadPresetLibrary, presetLibraryIfLoaded, type PresetChunk } from './presets/loader';
@@ -16,7 +16,7 @@ import './mode-switch';
 import './preset-dialog';
 import type { MctePresetDialog } from './preset-dialog';
 
-const note = (t: string, id?: string): TemplateResult => html`<p class="help error" id=${ifDefined(id)} role="alert">${icon('alert')}<span>${t}</span></p>`;
+const note = (t: string, id?: string): TemplateResult => html`<p class="help error" id=${ifDefined(id)} role="alert">${glyph('alertCircle', 16)}<span>${t}</span></p>`;
 const skeleton = html`<div class="skel"></div><div class="skel"></div><div class="skel"></div>`;
 
 export type StartKind = 'blank' | 'preset' | 'installed';
@@ -190,7 +190,7 @@ export class McteStartView extends LitElement {
 
   private _gotLib(c: PresetChunk): void {
     // the picker's styles come with the chunk: adopt them next to the view's own
-    adoptStyles(this.renderRoot as ShadowRoot, [...((this.constructor as typeof McteStartView).styles as CSSResultOrNative[]), c.pickerStyles]);
+    adoptStyles(this.renderRoot as ShadowRoot, [...(((this.constructor as typeof McteStartView).styles as unknown[]).flat(Infinity) as CSSResultOrNative[]), c.pickerStyles]);
     this._chunk = c;
     this._libState = 'ready';
     this._preset ||= this._mineCards[0]?.id ?? c.THEME_PRESET_LIBRARY.presets[0].id;
@@ -437,7 +437,7 @@ export class McteStartView extends LitElement {
           <button type="submit" class="btn btn-primary" aria-disabled=${nameMsg || reason || this._busy ? 'true' : 'false'} aria-describedby=${ifDefined(reason ? 'why' : undefined)}>
             ${this._busy ? 'Reading...' : label}
           </button>
-        `, () => (this._dlg = null), (e) => (e.preventDefault(), void this._create()));
+        `, () => (this._dlg = null), (e) => (e.preventDefault(), void this._create()), 'xl');
   }
 
   // ── delete ──
@@ -491,8 +491,8 @@ export class McteStartView extends LitElement {
       ${multi || !f.editable ? html`<p class="help">File ${f.file}.${!f.editable && f.reason ? ` ${REASON_TEXT[f.reason] ?? ''}` : ''}</p>` : nothing}
       <div class="acts">
         ${f.editable
-          ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${icon('copy')} Duplicate<span class="sr-only"> ${f.name}</span></button>
-              <button type="button" class="btn btn-text btn-sm danger" @click=${(e: Event) => this._askDelete(f, e)}>${icon('trash')} Delete<span class="sr-only"> ${f.name}</span></button>`
+          ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>${glyph('contentCopy')} Duplicate<span class="sr-only"> ${f.name}</span></button>
+              <button type="button" class="btn btn-text btn-sm danger" @click=${(e: Event) => this._askDelete(f, e)}>${glyph('delete')} Delete<span class="sr-only"> ${f.name}</span></button>`
           : html`<button type="button" class="btn btn-secondary btn-sm" @click=${() => this.openCreate({ kind: 'installed', installed: f.name })}>Copy to edit<span class="sr-only"> ${f.name}</span></button>`}
       </div>
     </li>`;
@@ -539,7 +539,7 @@ export class McteStartView extends LitElement {
           </div>
           <div class="barbtns">
             <button type="button" class="btn btn-secondary" @click=${() => this._dlgEl?.open('import', { name: '' })}>Import</button>
-            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${icon('plus')} New theme ${icon('chevron')}</button>
+            <button type="button" class="btn btn-primary new" @click=${() => this.openCreate()}>${glyph('add')} New theme ${glyph('chevronDown')}</button>
           </div>
         </header>
         <mcte-include-notice .status=${this.include} .checking=${this.checking} .result=${this.checkResult}></mcte-include-notice>
@@ -632,11 +632,6 @@ export class McteStartView extends LitElement {
         border-radius: var(--mc-radius-lg);
         background: var(--mc-surface-2);
       }
-      @media (min-width: 600px) {
-        dialog:has(.pl) {
-          width: min(960px, calc(100vw - 32px));
-        }
-      }
       .grid {
         display: grid;
         gap: 12px;
@@ -678,10 +673,8 @@ export class McteStartView extends LitElement {
         display: grid;
         gap: 4px;
       }
-      .foot {
-        align-items: center;
-      }
       .foot .help {
+        align-self: center;
         margin-right: auto;
       }
     `,

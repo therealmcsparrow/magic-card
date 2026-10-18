@@ -12,7 +12,7 @@ import { kitSlider } from './slider';
  * colours, so a screen can still override them on its own :host. First in kitCss. Elements and parts that can sit
  * in a root without this part read them with the same literal as fallback.
  */
-export const kitTokens: CSSResult = css`
+export const kitTokens: CSSResult = /* @__PURE__ */ css`
   :host {
     --mc-hit-sm: 32px;
     --mc-hit-xs: 24px;
@@ -30,7 +30,7 @@ export const kitTokens: CSSResult = css`
   }
 `;
 
-export const kitButtonExtras: CSSResult = css`
+export const kitButtonExtras: CSSResult = /* @__PURE__ */ css`
   svg.gl {
     display: block;
     flex: none;
@@ -77,7 +77,7 @@ export const kitButtonExtras: CSSResult = css`
   }
 `;
 
-export const kitChipExtras: CSSResult = css`
+export const kitChipExtras: CSSResult = /* @__PURE__ */ css`
   .chip.is-error {
     color: var(--mc-error-ink);
     border-color: color-mix(in srgb, var(--mc-error-ink) 40%, transparent);
@@ -85,7 +85,7 @@ export const kitChipExtras: CSSResult = css`
   }
 `;
 
-export const kitNotice: CSSResult = css`
+export const kitNotice: CSSResult = /* @__PURE__ */ css`
   .notice {
     display: flex;
     align-items: flex-start;
@@ -152,7 +152,7 @@ export const kitNotice: CSSResult = css`
   }
 `;
 
-export const kitTile: CSSResult = css`
+export const kitTile: CSSResult = /* @__PURE__ */ css`
   .tiles {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
@@ -201,7 +201,7 @@ export const kitTile: CSSResult = css`
   }
 `;
 
-export const kitCheck: CSSResult = css`
+export const kitCheck: CSSResult = /* @__PURE__ */ css`
   .check {
     appearance: none;
     flex: none;
@@ -241,7 +241,7 @@ export const kitCheck: CSSResult = css`
   }
 `;
 
-export const kitToolbar: CSSResult = css`
+export const kitToolbar: CSSResult = /* @__PURE__ */ css`
   .toolbar {
     display: inline-flex;
     align-items: center;
@@ -311,7 +311,7 @@ export const kitToolbar: CSSResult = css`
 `;
 
 /** Full-screen layer header (design/10 4.8, the card editor's studio bar): 56 high, Surface, Divider under it. */
-export const kitTopbar: CSSResult = css`
+export const kitTopbar: CSSResult = /* @__PURE__ */ css`
   .topbar {
     display: flex;
     flex-wrap: wrap;
@@ -342,7 +342,7 @@ export const kitTopbar: CSSResult = css`
 `;
 
 /** Panel headings: plain (.group-head in editorPrimitives) and the collapsible head that wraps .sector-btn. */
-export const kitSectionHead: CSSResult = css`
+export const kitSectionHead: CSSResult = /* @__PURE__ */ css`
   .sector-head {
     margin: 0;
     font-size: inherit;

@@ -5,7 +5,7 @@ import { css, CSSResult } from 'lit';
  * angle row, which is the reference look: the label keeps 48 px, the range takes the rest (120 px minimum, then the
  * row wraps), the number field is 64 px. Below 240 px of container width the parts stack.
  */
-export const kitSlider: CSSResult = css`
+export const kitSlider: CSSResult = /* @__PURE__ */ css`
   .slider-row {
     display: flex;
     align-items: center;

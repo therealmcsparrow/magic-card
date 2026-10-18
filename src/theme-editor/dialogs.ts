@@ -1,5 +1,6 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 import type { TemplateResult } from 'lit';
+import type { UiWindowElement } from '../contracts/ui-kit';
 
 /** The focused element, looking through open shadow roots. */
 export function deepActive(): HTMLElement | null {
@@ -8,39 +9,29 @@ export function deepActive(): HTMLElement | null {
   return a && a !== document.body ? (a as HTMLElement) : null;
 }
 
-let opener: HTMLElement | null = null;
-
-/** Gives focus back to what opened the dialog (Esc, Cancel and a finished action all end here). */
-function restoreFocus(): void {
-  const o = opener;
-  if (!o) return;
-  const back = (): void => {
-    if (o.isConnected) o.focus({ preventScroll: true });
-  };
-  back();
-  queueMicrotask(back);
-}
-
-/** Opens the first closed <dialog> in a render root as a modal (falls back to `open` where showModal is missing). */
+/** Opens the first closed <mc-ui-window> in a render root; it hands focus back to what had it (Esc, Cancel and a finished action all end there). */
 export function openDialog(root: ParentNode): void {
-  const d = root.querySelector<HTMLDialogElement>('dialog:not([open])');
-  if (!d) return;
-  opener = deepActive();
-  if (typeof d.showModal === 'function') d.showModal();
-  else d.setAttribute('open', '');
+  const w = root.querySelector<UiWindowElement>('mc-ui-window');
+  if (!w || w.open) return;
+  w.opener = deepActive() ?? undefined;
+  w.show();
 }
 
-/** Closes the first open <dialog> in a render root. */
+/** Closes the first open <mc-ui-window> in a render root. */
 export function closeDialog(root: ParentNode): void {
-  const d = root.querySelector<HTMLDialogElement>('dialog[open]');
-  if (d && typeof d.close === 'function') d.close();
+  const w = root.querySelector<UiWindowElement>('mc-ui-window');
+  if (w?.open) w.close('action');
 }
 
-/** One modal: title, body and a footer of buttons, labelled by its title. `close` runs on Esc and on `close`. */
-export function dialog(title: string, body: unknown, foot: unknown, close: () => void, submit?: (e: Event) => void): TemplateResult {
-  const inner = html`<h2 id="t">${title}</h2>${body}<div class="foot">${foot}</div>`;
-  const done = (): void => (close(), restoreFocus());
-  return html`<dialog aria-labelledby="t" @close=${done} @cancel=${done}>
-    ${submit ? html`<form class="dlg" @submit=${submit}>${inner}</form>` : html`<div class="dlg">${inner}</div>`}
-  </dialog>`;
+/**
+ * One window of the ui kit: title, body and a footer of buttons. Phones get the bottom sheet, never a full screen (CEO D8).
+ * `close` runs when the window closes (Esc, scrim, the X, Cancel). With `submit` the window sits inside a <form>, so a
+ * submit button in the footer and Enter in a field both reach it.
+ */
+export function dialog(title: string, body: unknown, foot: unknown, close: () => void, submit?: (e: Event) => void, size: 's' | 'm' | 'l' | 'xl' = 'm'): TemplateResult {
+  const win = html`<mc-ui-window variant="sheet" size=${size} heading=${title} closeLabel="Close" @mc-window-close=${close}>
+    <div class="dlg">${body}</div>
+    ${foot === nothing ? nothing : html`<div slot="footer" class="foot">${foot}</div>`}
+  </mc-ui-window>`;
+  return submit ? html`<form class="dlg-form" @submit=${submit}>${win}</form>` : win;
 }

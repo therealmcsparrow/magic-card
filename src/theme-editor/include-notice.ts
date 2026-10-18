@@ -1,7 +1,7 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import type { PropertyDeclarations } from 'lit';
 import type { IncludeStatus } from '../contracts/theme-editor';
-import { icon } from './icons';
+import { glyph } from '../ui-kit/glyphs';
 import { base } from './styles';
 import { copyText, fire } from './util';
 
@@ -45,8 +45,8 @@ export class McteIncludeNotice extends LitElement {
     if (!s || s.state === 'ok') {
       return this.result ? html`<p class="help" role="status">${this.result}</p>` : nothing;
     }
-    return html`<div class="callout is-info" part="callout">
-      ${icon('info')}
+    return html`<div class="notice info" part="callout">
+      ${glyph('information')}
       <div class="body">
         <h3 class="title">One setup step before you can save</h3>
         <p>${INTRO[s.state] ?? INTRO.unknown}</p>
@@ -59,7 +59,7 @@ export class McteIncludeNotice extends LitElement {
           </p>
         </details>
         <div class="actions">
-          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${icon('copy')} Copy lines</button>
+          <button type="button" class="btn btn-secondary btn-sm" @click=${this._copy}>${glyph('contentCopy')} Copy lines</button>
           <button type="button" class="btn btn-secondary btn-sm" aria-disabled=${this.checking ? 'true' : 'false'} @click=${() => !this.checking && fire(this, 'mcte-recheck')}>
             ${this.checking ? html`<span class="spin" aria-hidden="true"></span> Checking...` : 'Check again'}
           </button>

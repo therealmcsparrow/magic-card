@@ -11,7 +11,7 @@ const LEGACY_INPUT = unsafeCSS(
     ":not([type='checkbox']):not([type='color']):not([type='range']):not([type='radio'])",
 );
 
-export const editorLegacy: CSSResult = css`
+export const editorLegacy: CSSResult = /* @__PURE__ */ css`
   .mc-tab-content {
     display: grid;
     gap: 16px;

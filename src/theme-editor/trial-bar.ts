@@ -1,5 +1,6 @@
 import { LitElement, html, css, nothing, TemplateResult } from 'lit';
 import { state } from 'lit/decorators.js';
+import { glyph } from '../ui-kit/glyphs';
 import { THEME_TRIAL_BAR_TAG } from '../contracts/theme-editor';
 import { getTrial, openEditor, stopTrial, subscribeTrial } from './trial';
 import type { TrialState } from './trial';
@@ -155,11 +156,11 @@ export class McThemeTrialBar extends LitElement {
     if (this._short) {
       return html`<div class="pill round ${this._edge}" role="region" aria-label="Theme trial">
         <span class="sr" role="status">${text}</span>
-        <button type="button" class="round-btn" aria-label="Revert theme trial" title="Revert theme trial" @click=${() => stopTrial('revert')}>${this._undoIcon()} Revert</button>
+        <button type="button" class="round-btn" aria-label="Revert theme trial" title="Revert theme trial" @click=${() => stopTrial('revert')}>${glyph('undo')} Revert</button>
       </div>`;
     }
     return html`<div class="pill ${this._edge}" role="region" aria-label="Theme trial">
-      ${this._icon()}
+      ${glyph('palette')}
       <span class="msg" role="status">${text}${t.skipped ? html` <span class="skip">(${t.skipped} not valid, left out)</span>` : nothing}</span>
       <span class="actions">
         <button type="button" class="revert" @click=${() => stopTrial('revert')}>Revert</button>
@@ -177,22 +178,11 @@ export class McThemeTrialBar extends LitElement {
     </div>`;
   }
 
-  private _undoIcon(): TemplateResult {
-    return html`<svg class="ico" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path fill="currentColor" d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62A7.96 7.96 0 0 1 12.5 10c3.54 0 6.55 2.31 7.6 5.5l2.37-.78A10.5 10.5 0 0 0 12.5 8Z" />
-    </svg>`;
-  }
-
-  private _icon(): TemplateResult {
-    return html`<svg class="ico" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M12 3a9 9 0 0 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.4A4.6 4.6 0 0 0 22 10c0-3.9-4.5-7-10-7Zm-5.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"
-      />
-    </svg>`;
-  }
-
   static styles = css`
+    svg.gl {
+      display: block;
+      flex: none;
+    }
     :host,
     :host([popover]) {
       position: fixed;
