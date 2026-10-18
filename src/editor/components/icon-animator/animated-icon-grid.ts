@@ -4,6 +4,7 @@ import { ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor, searchLibrary, type LibraryE
 import type { IconAnimatorHost } from './loader';
 import { DEFAULT_ICON_STYLE, ICON_STYLES, type IconStyle } from '../../../contracts/icon-library';
 import { styleDoc } from '../../../icon-anim/style';
+import { fold } from '../../../i18n/fold';
 import { t, m } from '../../../icon-anim/i18n';
 import type { MessageId } from '../../../contracts/i18n';
 
@@ -317,9 +318,9 @@ export function defineAnimatedIconGrid(h: IconAnimatorHost): void {
     /** My animations: icon documents, filtered by the search (name and icon). None under a domain filter. */
     private _mine(): AnimationDoc[] {
       if (h.library.status !== 'ready' || this._domain) return [];
-      const terms = this._query.toLowerCase().split(/\s+/).filter(Boolean);
+      const terms = fold(this._query).split(/\s+/).filter(Boolean);
       return mineIconDocs(h.library.list()).filter((d) => {
-        const hay = `${d.name} ${d.rig?.icon ?? ''}`.toLowerCase();
+        const hay = fold(`${d.name} ${d.rig?.icon ?? ''}`);
         return terms.every((w) => hay.includes(w));
       });
     }

@@ -1,3 +1,4 @@
+import { fold } from '../../i18n/fold';
 import { t as tl } from '../../i18n/labels';
 import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, getAnimationPreset } from '../../utils/animation-presets';
 import { ANIMATION_CAPS, CUSTOM_PREFIX, SEQUENCEABLE_PRESETS, customRefId, isCustomRef, type AnimationDoc, type SequenceStep } from '../model';
@@ -161,8 +162,8 @@ const KIND_ICON: Record<string, string> = { keyframes: 'mdi:chart-bell-curve-cum
  * sequence itself), then the motion presets by group. `query` filters by name, id and group.
  */
 export function stepPickerGroups(library: AnimationLibraryMap | undefined, selfId?: string, query = ''): PickerGroup[] {
-  const q = query.trim().toLowerCase();
-  const hit = (...s: Array<string | undefined>) => !q || s.some((x) => x?.toLowerCase().includes(q));
+  const q = fold(query.trim());
+  const hit = (...s: Array<string | undefined>) => !q || s.some((x) => x && fold(x).includes(q));
   const groups: PickerGroup[] = [];
   const mine = Object.values(library ?? {})
     .filter((d) => d.id !== selfId && sequenceableDoc(d))

@@ -1,4 +1,5 @@
 import { EASE, THEME, b, glow, group, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Light & colour: slow breathing glow, opacity 0.6..1, no hard flashes, 2.4-4 s. Joins the built-in group. */
 
@@ -7,7 +8,7 @@ const L = THEME.light;
 export const LIGHT = group('Light & colour', [
   {
     id: 'light-lamp-breathe',
-    name: 'Lamp breathe',
+    name: m('Lamp breathe'),
     icon: 'mdi:lightbulb-on',
     tags: ['lamp', 'bulb', 'breathe', 'glow', 'night light'],
     doc: (id, name) =>
@@ -23,7 +24,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-lamp-switch-on',
-    name: 'Lamp switch-on',
+    name: m('Lamp switch-on'),
     icon: 'mdi:lamp',
     tags: ['lamp', 'switch', 'on', 'event', 'glow'],
     doc: (id, name) =>
@@ -42,7 +43,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-sunbeam-dust',
-    name: 'Sunbeam dust',
+    name: m('Sunbeam dust'),
     icon: 'mdi:white-balance-sunny',
     tags: ['dust', 'motes', 'sunbeam', 'calm', 'particles'],
     doc: (id, name) =>
@@ -62,7 +63,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-candlelight',
-    name: 'Candlelight',
+    name: m('Candlelight'),
     icon: 'mdi:candle',
     tags: ['candle', 'warm', 'flicker', 'cosy', 'glow'],
     doc: (id, name) =>
@@ -82,7 +83,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-sunrise-warm-up',
-    name: 'Sunrise warm-up',
+    name: m('Sunrise warm-up'),
     icon: 'mdi:weather-sunset-up',
     tags: ['sunrise', 'wake up', 'warm', 'colour', 'glow'],
     doc: (id, name) =>
@@ -98,7 +99,7 @@ export const LIGHT = group('Light & colour', [
   },
   {
     id: 'light-party-sparkle',
-    name: 'Party sparkle',
+    name: m('Party sparkle'),
     icon: 'mdi:party-popper',
     tags: ['party', 'disco', 'sparkle', 'colour', 'particles'],
     doc: (id, name) =>

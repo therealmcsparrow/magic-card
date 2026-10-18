@@ -5,6 +5,8 @@ import { splitIcon, type SplitPiece } from '../../icons/icon-split';
 import { anchorOf, piecesBox, type Anchor } from '../icon-doc';
 import { mdiGeometry } from '../mdi-paths';
 import { presetKeyframes } from '../part-presets';
+import type { MessageId } from '../../contracts/i18n';
+import { t as tn } from './i18n';
 
 /*
  * The icon library's builder and motion helpers (module icon-library, contract 1.2.0). An entry is
@@ -19,12 +21,16 @@ import { presetKeyframes } from '../part-presets';
 // ── builder ──
 
 export type Pivot = Anchor | [number, number];
-export type PartDef = [name: string, from: number[], pivot?: Pivot];
-export type GroupDef = [name: string, parts: string[], pivot?: Pivot];
+export type PartDef = [name: MessageId, from: number[], pivot?: Pivot];
+export type GroupDef = [name: MessageId, parts: string[], pivot?: Pivot];
+
+/** A drawn shape of an entry: its name is an m() mark; `n` fills the {n} of a numbered name. */
+export type SpecShape = Omit<RigShape, 'name'> & { name: MessageId; n?: number };
 
 export interface Spec {
   id: string;
-  name: string;
+  /** An m() mark; the tile, the document and the search read it with tn() once the icon tables are ready. */
+  name: MessageId;
   domain: string;
   icon: string;
   tags: string[];
@@ -32,7 +38,7 @@ export interface Spec {
   duration: number;
   parts: Record<string, PartDef>;
   groups?: Record<string, GroupDef>;
-  shapes?: RigShape[];
+  shapes?: SpecShape[];
   /** Own source paths (filled, 24 x 24) instead of the MDI icon: one piece per path. */
   own?: string[];
   tracks: (t: Tracks) => void;
@@ -78,14 +84,14 @@ export function build(spec: Spec): AnimationDoc {
   };
   const parts: RigPart[] = Object.entries(spec.parts).map(([id, [name, from, pivot]]) => {
     const origin = pivotOf(from, pivot);
-    return { id, name, from, ...(origin ? { origin } : {}) };
+    return { id, name: tn(name), from, ...(origin ? { origin } : {}) };
   });
   const groups: RigGroup[] = Object.entries(spec.groups ?? {}).map(([id, [name, members, pivot]]) => {
     const origin = pivotOf(
       members.flatMap((m) => spec.parts[m]?.[1] ?? []),
       pivot,
     );
-    return { id, name, parts: members, ...(origin ? { origin } : {}) };
+    return { id, name: tn(name), parts: members, ...(origin ? { origin } : {}) };
   });
   const tracks: Track[] = [];
   const trackOf = (target: TargetRef): Track => {
@@ -108,7 +114,7 @@ export function build(spec: Spec): AnimationDoc {
   });
   return {
     id: spec.id,
-    name: spec.name,
+    name: tn(spec.name),
     kind: 'keyframes',
     duration: spec.duration,
     easing: 'ease-in-out',
@@ -122,7 +128,7 @@ export function build(spec: Spec): AnimationDoc {
       svg: svgOf(source),
       parts,
       ...(groups.length ? { groups } : {}),
-      ...(spec.shapes?.length ? { shapes: spec.shapes } : {}),
+      ...(spec.shapes?.length ? { shapes: spec.shapes.map(({ n, name, ...s }) => ({ ...s, name: tn(name, { n: n ?? 0 }) })) } : {}),
     },
     tracks,
   };
@@ -190,7 +196,18 @@ export const fold = (to: number, extra: KeyframeTransform = {}): AnimationKeyfra
 export const SPIN = (n = 1) => [t(0, { rotate: 0 }, { easing: 'linear' }), t(100, { rotate: 360 * n })];
 
 /** The library entry of a spec (a fresh document per build(), so editing one never changes the library), with its Style hints. */
-export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({ id: s.id, name: s.name, domain: s.domain, icon: s.icon, tags: s.tags, build: () => build(s), ...(styles ? { styles } : {}) });
+export const entryOf = (s: Spec, styles?: IconStyleHints): LibraryEntry => ({
+  id: s.id,
+  // the tile name in the current language (a getter: the tables are lazy, a language change applies at once)
+  get name() {
+    return tn(s.name);
+  },
+  domain: s.domain,
+  icon: s.icon,
+  tags: s.tags,
+  build: () => build(s),
+  ...(styles ? { styles } : {}),
+});
 
 const r3 = (v: number): number => Math.round(v * 1000) / 1000;
 type Channel = Exclude<keyof KeyframeTransform, 'axis'>;

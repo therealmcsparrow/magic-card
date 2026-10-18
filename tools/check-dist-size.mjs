@@ -15,9 +15,9 @@ const CAPS = {
   'magic-card-animation-studio.js': 995_328, // 972 KiB, CEO-approved 2026-10-18 (epic F + UI kit + full i18n lines; ratchets in I11)
   'magic-card-editor.js': 805_888, // 787 KiB, CEO-approved 2026-10-18 (UI kit + i18n; ratchets to measured + 5% in I11)
   'magic-card-icon-animator.js': 233_472, // 222,240
-  'magic-card-icon-library.js': 180_224, // 171,507
+  'magic-card-icon-library.js': 188_416, // 184 KiB, architect r3 table (ratchets to measured + 5% in I11); 171,507
   'magic-card-particles.js': 38_912, // 38 KiB, CEO 2026-10-18 (multiple emitters + per-emitter placement, spike F-S1 36,804)
-  'magic-card-preset-catalogue.js': 24_576, // 22,797
+  'magic-card-preset-catalogue.js': 26_624, // 22,797
   'magic-card-theme-editor.js': 238_592, // 233 KiB, CEO 2026-10-18 (UI kit + i18n; ratchets to measured + 5% in I11)
   'magic-card-theme-presets.js': 21_504, // 19,878
   // shape: custom builder (T2, ADR 0021): 2,873 B measured + 5 %, rounded up to 1 KiB; hard ceiling 5,120 B (more means shape-path.ts was copied in)

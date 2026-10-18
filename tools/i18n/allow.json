@@ -1,5 +1,5 @@
 {
   "_note": "D3: words that look American or end in -ise/-our/-isation but are right in British UI copy (exact words, lower case). D5: texts that are not user words (product names, formats, units).",
-  "britishWords": ["colour-scheme", "color_mix", "clockwise", "anticlockwise"],
+  "britishWords": ["meter", "sunrise", "colour-scheme", "color_mix", "clockwise", "anticlockwise"],
   "text": ["Magic Card", "YAML", "JSON", "SVG", "MDI", "CSS", "HTML", "px", "%", "x", "Hz", "ms", "fps", "deg", "rem", "em", "vh", "vw", "URL", "ID", "HA", "OK", "RGB", "HSL", "HEX", "CMYK", "Hex", "RGBA", "Esc", "Alt", "Up", "Down", "Del", "Shift", "Ctrl", "F10", "type", "Arial", "Helvetica", "Times New Roman", "Georgia", "Courier New", "Verdana", "Tahoma", "Trebuchet MS", "Comic Sans MS", "Impact", "Sans-serif", "Serif", "Monospace", "Cursive", "kitchen", "{{ states('sensor.example') == 'on' }}", "{{ states('sensor.solar_power') | int }} W", "/local/images/background.jpg", "mdi:icon", "button, custom:mushroom-light-card", "domain.service", "auto, calc(100% - 8px)", "#rrggbb or var(--name)", "mdi:lightbulb"]
 }

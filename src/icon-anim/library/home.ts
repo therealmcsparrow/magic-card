@@ -1,5 +1,6 @@
 import { dim, k, padKeys, SPIN, te, t, type Spec } from './build';
 import { LASER_CUTTER, LASER_SPARK, PRINTER_3D, WIND_TURBINE } from './rigs';
+import { m } from './i18n';
 
 /*
  * P4 entries, theme home (brand artist's p4-spec.json, Living rigs): machines move mechanically
@@ -24,13 +25,13 @@ function travel(stops: number[]): ReturnType<typeof t>[] {
 export const HOME: Spec[] = [
   {
     id: 'mailbox',
-    name: 'Mail arrived',
+    name: m('Mail arrived'),
     domain: 'binary_sensor',
     icon: 'mdi:mailbox',
     tags: ['home', 'mail', 'post', 'letter', 'mailbox'],
     duration: 3,
-    parts: { box: ['Mailbox', [0]], slot: ['Letter slot', [1]] },
-    groups: { mailbox: ['Mailbox', ['box', 'slot'], 'bottom'] },
+    parts: { box: [m('Mailbox'), [0]], slot: [m('Letter slot'), [1]] },
+    groups: { mailbox: [m('Mailbox'), ['box', 'slot'], 'bottom'] },
     tracks: (x) => {
       x.keys('group:mailbox', [te(0, { y: 0, scale_y: 1 }), t(8, { y: 0, scale_y: 0.94 }, { easing: 'ease-out' }), t(18, { y: -0.6, scale_y: 1.03 }, { easing: 'ease-in' }), te(28, { y: 0, scale_y: 0.97 }), t(36, { y: 0, scale_y: 1 })]);
       x.keys('part:slot', padKeys([k(20, { opacity: 1, easing: 'ease-in-out' }), k(30, { opacity: 0.35, easing: 'ease-in-out' }), k(40, { opacity: 1, easing: 'ease-in-out' }), k(50, { opacity: 0.35, easing: 'ease-in-out' }), k(60, { opacity: 1 })]));
@@ -38,12 +39,12 @@ export const HOME: Spec[] = [
   },
   {
     id: 'parcel',
-    name: 'Parcel delivered',
+    name: m('Parcel delivered'),
     domain: 'binary_sensor',
     icon: 'mdi:package-variant-closed',
     tags: ['home', 'parcel', 'package', 'delivery', 'post'],
     duration: 2.4,
-    parts: { parcel: ['Parcel', [0], 'bottom'] },
+    parts: { parcel: [m('Parcel'), [0], 'bottom'] },
     // sits at rest, fades away, then drops in and lands with a squash
     tracks: (x) =>
       x.keys('part:parcel', [
@@ -59,35 +60,35 @@ export const HOME: Spec[] = [
   },
   {
     id: 'wind-turbine',
-    name: 'Wind turbine',
+    name: m('Wind turbine'),
     domain: 'sensor',
     icon: 'mdi:wind-turbine',
     tags: ['home', 'energy', 'wind', 'power', 'renewable'],
     duration: 1.8,
     own: WIND_TURBINE,
-    parts: { tower: ['Tower', [0]], hub: ['Hub', [1]], blade_t: ['Top blade', [2]], blade_l: ['Left blade', [3]], blade_r: ['Right blade', [4]] },
-    groups: { rotor: ['Rotor', ['hub', 'blade_t', 'blade_l', 'blade_r'], [12, 9]] },
+    parts: { tower: [m('Tower'), [0]], hub: [m('Hub'), [1]], blade_t: [m('Top blade'), [2]], blade_l: [m('Left blade'), [3]], blade_r: [m('Right blade'), [4]] },
+    groups: { rotor: [m('Rotor'), ['hub', 'blade_t', 'blade_l', 'blade_r'], [12, 9]] },
     tracks: (x) => x.keys('group:rotor', SPIN()),
   },
   {
     id: 'server',
-    name: 'Server',
+    name: m('Server'),
     domain: 'sensor',
     icon: 'mdi:server',
     tags: ['home', 'server', 'network', 'nas', 'computer'],
     duration: 1.5,
-    parts: { unit_1: ['Top unit', [0]], unit_2: ['Middle unit', [1]], unit_3: ['Bottom unit', [2]] },
+    parts: { unit_1: [m('Top unit'), [0]], unit_2: [m('Middle unit'), [1]], unit_3: [m('Bottom unit'), [2]] },
     tracks: (x) => ['unit_1', 'unit_2', 'unit_3'].forEach((p, i) => x.keys(`part:${p}`, dim(i * 30, 20, 0.6))),
   },
   {
     id: 'access-point',
-    name: 'Access point',
+    name: m('Access point'),
     domain: 'device_tracker',
     icon: 'mdi:access-point',
     tags: ['home', 'wifi', 'network', 'signal', 'wireless'],
     duration: 1.8,
-    parts: { wave_ol: ['Outer left wave', [0]], wave_or: ['Outer right wave', [1]], wave_il: ['Inner left wave', [2]], wave_ir: ['Inner right wave', [3]], dot: ['Antenna', [4], 'center'] },
-    groups: { outer: ['Outer waves', ['wave_ol', 'wave_or']], inner: ['Inner waves', ['wave_il', 'wave_ir']] },
+    parts: { wave_ol: [m('Outer left wave'), [0]], wave_or: [m('Outer right wave'), [1]], wave_il: [m('Inner left wave'), [2]], wave_ir: [m('Inner right wave'), [3]], dot: [m('Antenna'), [4], 'center'] },
+    groups: { outer: [m('Outer waves'), ['wave_ol', 'wave_or']], inner: [m('Inner waves'), ['wave_il', 'wave_ir']] },
     tracks: (x) => {
       x.keys('group:inner', dim(0, 50));
       x.keys('group:outer', dim(20, 50));
@@ -95,22 +96,22 @@ export const HOME: Spec[] = [
   },
   {
     id: 'garage-open',
-    name: 'Garage opening',
+    name: m('Garage opening'),
     domain: 'cover',
     icon: 'mdi:garage-open-variant',
     tags: ['home', 'garage', 'door', 'cover', 'open'],
     duration: 3,
-    parts: { garage: ['Garage', [0]], door: ['Door', [1]] },
+    parts: { garage: [m('Garage'), [0]], door: [m('Door'), [1]] },
     tracks: (x) => x.keys('part:door', [te(0, { y: 0 }), te(15, { y: 0 }), te(45, { y: -2 }), te(65, { y: -2 }), t(88, { y: 0.2 }, { easing: 'ease-out' }), t(94, { y: 0 })]),
   },
   {
     id: 'toaster',
-    name: 'Toaster',
+    name: m('Toaster'),
     domain: 'switch',
     icon: 'mdi:toaster',
     tags: ['home', 'kitchen', 'toast', 'breakfast', 'appliance'],
     duration: 3,
-    parts: { body: ['Toaster', [0], 'bottom'], toast: ['Toast', [1]] },
+    parts: { body: [m('Toaster'), [0], 'bottom'], toast: [m('Toast'), [1]] },
     tracks: (x) => {
       x.keys('part:toast', [te(0, { y: 0 }), t(10, { y: 0 }, { easing: 'ease-out' }), t(22, { y: -2.5 }, { easing: 'ease-in-out' }), te(30, { y: -2.2 }), t(45, { y: -2.2 }, { easing: 'ease-in' }), t(58, { y: 0 })]);
       x.keys('part:body', [te(0, { scale_y: 1 }), te(8, { scale_y: 1 }), te(11, { scale_y: 0.96 }), t(16, { scale_y: 1 })]);
@@ -118,12 +119,12 @@ export const HOME: Spec[] = [
   },
   {
     id: 'stove',
-    name: 'Stove',
+    name: m('Stove'),
     domain: 'climate',
     icon: 'mdi:stove',
     tags: ['home', 'kitchen', 'oven', 'cooking', 'heat'],
     duration: 2.4,
-    parts: { burner_l: ['Left oven glow', [0]], body: ['Stove', [1]], knob_1: ['Knob 1', [2], 'center'], knob_2: ['Knob 2', [3], 'center'], knob_3: ['Knob 3', [4], 'center'], burner_r: ['Right oven glow', [5]] },
+    parts: { burner_l: [m('Left oven glow'), [0]], body: [m('Stove'), [1]], knob_1: [m('Knob 1'), [2], 'center'], knob_2: [m('Knob 2'), [3], 'center'], knob_3: [m('Knob 3'), [4], 'center'], burner_r: [m('Right oven glow'), [5]] },
     tracks: (x) => {
       x.keys('part:burner_l', dim(0, 100, 0.6));
       x.keys('part:burner_r', [k(0, { opacity: 0.6, easing: 'ease-in-out' }), k(50, { opacity: 1, easing: 'ease-in-out' }), k(100, { opacity: 0.6 })]);
@@ -131,32 +132,32 @@ export const HOME: Spec[] = [
   },
   {
     id: 'bed-sleep',
-    name: 'Sleeping',
+    name: m('Sleeping'),
     domain: 'input_boolean',
     icon: 'mdi:bed',
     tags: ['home', 'bed', 'sleep', 'night', 'bedroom'],
     duration: 4,
-    parts: { bed: ['Bed', [0]], head: ['Head', [1], 'bottom'] },
+    parts: { bed: [m('Bed'), [0]], head: [m('Head'), [1], 'bottom'] },
     tracks: (x) => x.keys('part:head', [te(0, { scale: 1 }), te(50, { scale: 1.05 }), t(100, { scale: 1 })]),
   },
   {
     id: 'light-switch',
-    name: 'Light switch',
+    name: m('Light switch'),
     domain: 'switch',
     icon: 'mdi:light-switch',
     tags: ['home', 'switch', 'light', 'toggle', 'wall'],
     duration: 2.4,
-    parts: { toggle: ['Toggle', [0], 'center'], plate: ['Plate', [1]] },
+    parts: { toggle: [m('Toggle'), [0], 'center'], plate: [m('Plate'), [1]] },
     tracks: (x) => x.keys('part:toggle', [te(0, { scale_y: 1 }), te(10, { scale_y: 1 }), te(25, { scale_y: -1.05 }), te(30, { scale_y: -1 }), te(55, { scale_y: -1 }), te(70, { scale_y: 1.05 }), t(75, { scale_y: 1 })]),
   },
   {
     id: 'water-leak',
-    name: 'Water leak',
+    name: m('Water leak'),
     domain: 'binary_sensor',
     icon: 'mdi:pipe-leak',
     tags: ['home', 'leak', 'water', 'moisture', 'pipe'],
     duration: 1.6,
-    parts: { pipe_l: ['Left pipe', [0]], pipe_r: ['Right pipe', [1]], drip: ['Drip', [2], 'top'] },
+    parts: { pipe_l: [m('Left pipe'), [0]], pipe_r: [m('Right pipe'), [1]], drip: [m('Drip'), [2], 'top'] },
     tracks: (x) =>
       x.keys('part:drip', [
         te(0, { y: 0, scale_y: 1 }, { opacity: 1 }),
@@ -168,26 +169,26 @@ export const HOME: Spec[] = [
   },
   {
     id: 'home-assistant',
-    name: 'Home Assistant',
+    name: m('Home Assistant'),
     domain: 'sensor',
     icon: 'mdi:home-assistant',
     tags: ['home', 'home assistant', 'hass', 'smart home', 'house'],
     duration: 2.4,
-    parts: { house: ['House', [0]], node_l: ['Left node', [1], 'center'], node_r: ['Right node', [2], 'center'], node_t: ['Top node', [3], 'center'] },
+    parts: { house: [m('House'), [0]], node_l: [m('Left node'), [1], 'center'], node_r: [m('Right node'), [2], 'center'], node_t: [m('Top node'), [3], 'center'] },
     // data flows left, top, right
     tracks: (x) =>
       ([['node_l', 0], ['node_t', 25], ['node_r', 50]] as const).forEach(([p, at]) => x.keys(`part:${p}`, [te(at, { scale: 1 }), te(at + 12, { scale: 1.4 }), t(at + 25, { scale: 1 })])),
   },
   {
     id: 'printer-3d',
-    name: '3D printer',
+    name: m('3D printer'),
     domain: 'maker',
     icon: 'mdi:printer-3d',
     tags: ['home', 'maker', '3d', 'printer', 'print', 'sensor'],
     duration: 6,
     own: PRINTER_3D,
-    parts: { frame: ['Frame', [0]], bed: ['Bed', [1]], print: ['Print', [2], [12, 17]], rail: ['Rail', [3]], head: ['Print head', [4]] },
-    groups: { toolhead: ['Toolhead', ['rail', 'head'], [12, 11]] },
+    parts: { frame: [m('Frame'), [0]], bed: [m('Bed'), [1]], print: [m('Print'), [2], [12, 17]], rail: [m('Rail'), [3]], head: [m('Print head'), [4]] },
+    groups: { toolhead: [m('Toolhead'), ['rail', 'head'], [12, 11]] },
     tracks: (x) => {
       // layer passes: four sweeps there and back at a constant speed
       x.keys('part:head', travel([0, 3.5, -2, 3.5, -2, 3.5, -2, 3.5, 0]));
@@ -198,15 +199,15 @@ export const HOME: Spec[] = [
   },
   {
     id: 'laser-cutter',
-    name: 'Laser cutter',
+    name: m('Laser cutter'),
     domain: 'maker',
     icon: 'mdi:laser-pointer',
     tags: ['home', 'maker', 'laser', 'cutter', 'engraver', 'sensor'],
     duration: 3,
     own: LASER_CUTTER,
-    parts: { body: ['Case', [0]], lid: ['Lid', [1], [3, 5]], rail: ['Rail', [2]], material: ['Material', [3]], head: ['Laser head', [4]], beam: ['Beam', [5], 'top'] },
-    groups: { cut: ['Cutting head', ['head', 'beam'], [10.5, 12]] },
-    shapes: [{ id: 'spark', name: 'Spark', d: LASER_SPARK, fill: '#ffca28', layer: 'over', origin: [10.5, 15.25] }],
+    parts: { body: [m('Case'), [0]], lid: [m('Lid'), [1], [3, 5]], rail: [m('Rail'), [2]], material: [m('Material'), [3]], head: [m('Laser head'), [4]], beam: [m('Beam'), [5], 'top'] },
+    groups: { cut: [m('Cutting head'), ['head', 'beam'], [10.5, 12]] },
+    shapes: [{ id: 'spark', name: m('Spark'), d: LASER_SPARK, fill: '#ffca28', layer: 'over', origin: [10.5, 15.25] }],
     tracks: (x) => {
       const along = (at: number) => r2(at <= 50 ? (at / 50) * 6 : ((100 - at) / 50) * 6);
       x.keys('group:cut', [t(0, { x: 0 }, { easing: 'linear' }), t(50, { x: 6 }, { easing: 'linear' }), t(100, { x: 0 })]);
@@ -223,12 +224,12 @@ export const HOME: Spec[] = [
   },
   {
     id: 'printer-3d-nozzle',
-    name: '3D printer nozzle',
+    name: m('3D printer nozzle'),
     domain: 'maker',
     icon: 'mdi:printer-3d-nozzle',
     tags: ['home', 'maker', '3d', 'printer', 'nozzle', 'extruder', 'sensor'],
     duration: 1,
-    parts: { nozzle: ['Nozzle', [0], 'bottom'], filament: ['Filament', [1]] },
+    parts: { nozzle: [m('Nozzle'), [0], 'bottom'], filament: [m('Filament'), [1]] },
     tracks: (x) => x.keys('part:nozzle', [te(0, { y: 0 }), te(30, { y: 0.4 }), te(60, { y: 0 }), t(100, { y: 0 })]),
   },
 ];

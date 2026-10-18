@@ -142,3 +142,6 @@ anim-studio	Use the parent's colours	Use the parent's colors
 anim-studio	color_mix needs two colours.	color_mix needs two colors.
 anim-studio	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and colour this part there.	{count, plural, one {# key} other {# keys}} on the timeline. Rotate, move, scale, fade and color this part there.
 icon-animator	Glow: the full animation with its lit parts in the animation's colour, else the theme's, and a soft halo on dark cards.	Glow: the full animation with its lit parts in the animation's color, else the theme's, and a soft halo on dark cards.
+icon-library	Centre	Center
+icon-library	Centre bulb	Center bulb
+icon-library	LED strip colour chase	LED strip color chase

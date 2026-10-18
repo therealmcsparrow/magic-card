@@ -1,5 +1,7 @@
 import type { RigShape } from '../../anim-studio/model';
 import type { IconStyleHints } from '../../contracts/icon-library';
+import type { MessageId } from '../../contracts/i18n';
+import { m } from './i18n';
 
 /*
  * Style hints of the icon library (module icon-library, contract 1.2.0), from the brand artist's
@@ -166,11 +168,11 @@ export const GLOW_ON_LIGHT: Record<string, string> = {
 };
 
 /** Shapes drawn only in Glow (under the parts, lit in the glow colour, moving with their part). */
-export const GLOW_SHAPES: Record<string, Array<RigShape & { with: string }>> = {
+export const GLOW_SHAPES: Record<string, Array<Omit<RigShape, 'name'> & { name: MessageId; with: string }>> = {
   'jack-o-lantern': [
     {
       id: 'face_glow',
-      name: 'Face glow',
+      name: m('Face glow'),
       d: 'M5.5 13.5a6.5 4.25 0 1 0 13 0a6.5 4.25 0 1 0 -13 0Z',
       layer: 'under',
       with: 'part:pumpkin',

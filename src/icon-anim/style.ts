@@ -19,6 +19,7 @@ import {
 import { pathBox, splitIcon, unionBox, type SplitPiece } from '../icons/icon-split';
 import { GLOW_ON_LIGHT, GLOW_SHAPES } from './library/style-hints';
 import { t } from './i18n';
+import { t as tn } from './library/i18n';
 
 /*
  * Icon Styles (module icon-library, contract icon-library 1.2.1, ADR 0006): every library entry
@@ -548,7 +549,7 @@ function glowDoc(
     )
       continue;
     const pivot = geo.origin(follow as TargetRef);
-    extra.push({ ...shape, fill: paint.fill, ...(pivot ? { origin: pivot } : {}) });
+    extra.push({ ...shape, name: tn(shape.name), fill: paint.fill, ...(pivot ? { origin: pivot } : {}) });
     if (src) added.push(followTrack(shape.id, src, [], true));
   }
 

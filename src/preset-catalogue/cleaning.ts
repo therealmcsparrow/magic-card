@@ -1,4 +1,5 @@
 import { EASE, THEME, b, group, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Cleaning: purposeful back and forth, glide rather than bounce, sparkles staggered, 1.6-2.4 s. */
 
@@ -8,7 +9,7 @@ const FOAM = [C.glow, '#ffffff', '#b2ebf2'];
 export const CLEANING = group('Cleaning', [
   {
     id: 'clean-soap-bubbles-pop',
-    name: 'Soap bubbles that pop',
+    name: m('Soap bubbles that pop'),
     icon: 'mdi:chart-bubble',
     tags: ['bubbles', 'soap', 'washing', 'pop', 'droplets', 'particles'],
     heavy: true,
@@ -40,7 +41,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-fresh-sparkle',
-    name: 'Fresh sparkle',
+    name: m('Fresh sparkle'),
     icon: 'mdi:shimmer',
     tags: ['sparkle', 'clean', 'shine', 'done', 'particles'],
     doc: (id, name) =>
@@ -59,7 +60,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-robot-vacuum-glide',
-    name: 'Robot vacuum glide',
+    name: m('Robot vacuum glide'),
     icon: 'mdi:robot-vacuum',
     tags: ['vacuum', 'robot', 'cleaning', 'running', 'roomba'],
     doc: (id, name) =>
@@ -79,7 +80,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-washer-spin-cycle',
-    name: 'Washer spin cycle',
+    name: m('Washer spin cycle'),
     icon: 'mdi:washing-machine',
     tags: ['washing machine', 'laundry', 'spin', 'rumble', 'running'],
     doc: (id, name) =>
@@ -104,7 +105,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-dishwasher-steam',
-    name: 'Dishwasher steam',
+    name: m('Dishwasher steam'),
     icon: 'mdi:dishwasher',
     tags: ['steam', 'dishwasher', 'drying', 'hot', 'particles'],
     doc: (id, name) =>
@@ -123,7 +124,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-spray-mist',
-    name: 'Spray mist',
+    name: m('Spray mist'),
     icon: 'mdi:spray-bottle',
     tags: ['spray', 'mist', 'cleaning', 'humidifier', 'particles'],
     doc: (id, name) =>
@@ -144,7 +145,7 @@ export const CLEANING = group('Cleaning', [
   },
   {
     id: 'clean-wipe-clean',
-    name: 'Wipe clean',
+    name: m('Wipe clean'),
     icon: 'mdi:broom',
     tags: ['broom', 'mop', 'wipe', 'sweep', 'cleaning'],
     doc: (id, name) =>

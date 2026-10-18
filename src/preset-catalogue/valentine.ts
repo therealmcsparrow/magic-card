@@ -1,4 +1,5 @@
 import { EASE, THEME, b, glow, group, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Valentine: lub-dub beat (keys 0, 14, 28, 42 then rest) with soft overshoot, 1.1-1.3 s beats, 3 s floats. */
 
@@ -8,7 +9,7 @@ const PINKS = [V.icon, V.glow, '#f48fb1'];
 export const VALENTINE = group('Valentine', [
   {
     id: 'valentine-lub-dub',
-    name: 'Lub-dub heartbeat',
+    name: m('Lub-dub heartbeat'),
     icon: 'mdi:heart',
     tags: ['heart', 'beat', 'pulse', 'love', 'valentine'],
     doc: (id, name) =>
@@ -26,7 +27,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-floating-hearts',
-    name: 'Floating hearts',
+    name: m('Floating hearts'),
     icon: 'mdi:heart-multiple',
     tags: ['hearts', 'love', 'float', 'valentine', 'particles'],
     doc: (id, name) =>
@@ -45,7 +46,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-heart-burst',
-    name: 'Heart burst',
+    name: m('Heart burst'),
     icon: 'mdi:heart-flash',
     tags: ['hearts', 'burst', 'love', 'celebrate', 'particles'],
     doc: (id, name) =>
@@ -66,7 +67,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-falling-petals',
-    name: 'Falling petals',
+    name: m('Falling petals'),
     icon: 'mdi:flower-tulip',
     tags: ['petals', 'roses', 'flowers', 'love', 'particles'],
     doc: (id, name) =>
@@ -84,7 +85,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-blush-glow',
-    name: 'Blush glow',
+    name: m('Blush glow'),
     icon: 'mdi:heart-outline',
     tags: ['glow', 'blush', 'pink', 'soft', 'valentine'],
     doc: (id, name) =>
@@ -101,7 +102,7 @@ export const VALENTINE = group('Valentine', [
   },
   {
     id: 'valentine-cupid-sparkle',
-    name: 'Cupid sparkle',
+    name: m('Cupid sparkle'),
     icon: 'mdi:heart-plus',
     tags: ['sparkle', 'hearts', 'twinkle', 'love', 'particles'],
     doc: (id, name) =>

@@ -1,4 +1,5 @@
 import { EASE, THEME, b, glow, group, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Fire & heat: irregular flicker (unequal key spacing 0/23/41/67/88), pivot at the flame base, 1.0-1.6 s. */
 
@@ -8,7 +9,7 @@ const EMBERS = [F.glow, '#ff7043', F.icon];
 export const FIRE = group('Fire & heat', [
   {
     id: 'fire-hearth-flicker',
-    name: 'Hearth flicker',
+    name: m('Hearth flicker'),
     icon: 'mdi:fire',
     tags: ['flame', 'fireplace', 'flicker', 'glow', 'heat'],
     doc: (id, name) =>
@@ -28,7 +29,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-heating-up',
-    name: 'Heating up',
+    name: m('Heating up'),
     icon: 'mdi:thermometer-high',
     tags: ['thermostat', 'radiator', 'boiler', 'heat', 'temperature'],
     doc: (id, name) =>
@@ -50,7 +51,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-rising-embers',
-    name: 'Rising embers',
+    name: m('Rising embers'),
     icon: 'mdi:campfire',
     tags: ['embers', 'sparks', 'campfire', 'fireplace', 'particles'],
     doc: (id, name) =>
@@ -69,7 +70,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-licking-flames',
-    name: 'Licking flames',
+    name: m('Licking flames'),
     icon: 'mdi:fire-circle',
     tags: ['flame', 'fire', 'burner', 'stove', 'particles'],
     doc: (id, name) =>
@@ -88,7 +89,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-chimney-smoke',
-    name: 'Chimney smoke',
+    name: m('Chimney smoke'),
     icon: 'mdi:home-roof',
     tags: ['smoke', 'chimney', 'stove', 'wood burner', 'particles'],
     doc: (id, name) =>
@@ -108,7 +109,7 @@ export const FIRE = group('Fire & heat', [
   },
   {
     id: 'fire-sparkler',
-    name: 'Sparkler',
+    name: m('Sparkler'),
     icon: 'mdi:shimmer',
     tags: ['sparks', 'sparkler', 'welding', 'bounce', 'particles'],
     heavy: true,

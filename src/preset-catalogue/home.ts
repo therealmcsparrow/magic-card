@@ -1,4 +1,5 @@
 import { EASE, THEME, b, group, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Home automation: machines move linearly (1.2-2 s); events anticipate and overshoot, act in the first 60 %, rest the last 40 % (3 s). */
 
@@ -8,7 +9,7 @@ const WATER = [HM.icon, '#64b5f6', '#bbdefb'];
 export const HOME = group('Home automation', [
   {
     id: 'home-leak-drip-splash',
-    name: 'Leak drip & splash',
+    name: m('Leak drip & splash'),
     icon: 'mdi:water-alert',
     tags: ['leak', 'water', 'drip', 'splash', 'alarm', 'particles'],
     doc: (id, name) =>
@@ -40,7 +41,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-fan-running',
-    name: 'Fan running',
+    name: m('Fan running'),
     icon: 'mdi:fan',
     tags: ['fan', 'ventilation', 'spin', 'cooling', 'running'],
     doc: (id, name) =>
@@ -52,7 +53,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-doorbell-ring',
-    name: 'Doorbell ring',
+    name: m('Doorbell ring'),
     icon: 'mdi:doorbell',
     tags: ['doorbell', 'ring', 'visitor', 'event', 'notification'],
     doc: (id, name) =>
@@ -74,7 +75,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-motion-detected',
-    name: 'Motion detected',
+    name: m('Motion detected'),
     icon: 'mdi:motion-sensor',
     tags: ['motion', 'presence', 'sensor', 'alert', 'blink'],
     doc: (id, name) =>
@@ -94,7 +95,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-mail-arrived',
-    name: 'Mail arrived',
+    name: m('Mail arrived'),
     icon: 'mdi:mailbox-up',
     tags: ['mail', 'post', 'letterbox', 'parcel', 'event'],
     doc: (id, name) =>
@@ -114,7 +115,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-energy-flow',
-    name: 'Energy flow',
+    name: m('Energy flow'),
     icon: 'mdi:lightning-bolt',
     tags: ['energy', 'power', 'solar', 'electricity', 'flow', 'particles'],
     doc: (id, name) =>
@@ -132,7 +133,7 @@ export const HOME = group('Home automation', [
   },
   {
     id: 'home-garden-sprinkler',
-    name: 'Garden sprinkler',
+    name: m('Garden sprinkler'),
     icon: 'mdi:sprinkler-variant',
     tags: ['sprinkler', 'irrigation', 'garden', 'water', 'particles'],
     doc: (id, name) =>

@@ -1,3 +1,4 @@
+import { fold } from '../i18n/fold';
 import { toYaml, fromYaml } from '../utils/yaml-utils';
 import { embedCustomAnimations } from '../utils/custom-animations';
 // the studio checks and compiles the v2 fields (rigs, tracks, clips, bindings): register them
@@ -149,7 +150,7 @@ export function filterDocs(docs: AnimationDoc[], query: string): AnimationDoc[] 
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return docs;
   return docs.filter((d) => {
-    const hay = `${d.name} ${d.id} ${d.kind} ${t(KIND_LABEL[d.kind])}`.toLowerCase();
+    const hay = fold(`${d.name} ${d.id} ${d.kind} ${t(KIND_LABEL[d.kind])}`);
     return words.every((w) => hay.includes(w));
   });
 }

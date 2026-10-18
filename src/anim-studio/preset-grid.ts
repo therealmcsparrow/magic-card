@@ -1,6 +1,7 @@
 import { LitElement, html, css, nothing, PropertyValues, TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { editorPrimitives, editorTokens } from '../css/editor-system';
+import { fold } from '../i18n/fold';
 import { locale, t as tl } from '../i18n/labels';
 import { ANIMATION_GROUPS, ANIMATION_PRESETS, GROUP_LABELS, type AnimationGroup } from '../utils/animation-presets';
 import { CATALOGUE_GROUPS, type PresetPickDetail, type PresetTileSource } from '../contracts/preset-catalogue';
@@ -92,10 +93,10 @@ export interface TileGroup {
  * group name or (catalogue) tags. Groups without a match are left out.
  */
 export function groupTiles(sources: PresetTileSource[], query: string): TileGroup[] {
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const words = fold(query).split(/\s+/).filter(Boolean);
   const hit = (s: PresetTileSource): boolean => {
     if (!words.length) return true;
-    const hay = (s.kind === 'builtin' ? `${s.name} ${s.id} ${s.group} ${groupLabel(s.group)}` : `${s.entry.name} ${s.entry.id} ${s.entry.group} ${s.entry.tags.join(' ')}`).toLowerCase();
+    const hay = fold(s.kind === 'builtin' ? `${s.name} ${s.id} ${s.group} ${groupLabel(s.group)}` : `${s.entry.name} ${s.entry.id} ${s.entry.group} ${s.entry.tags.join(' ')}`);
     return words.every((w) => hay.includes(w));
   };
   const by = new Map<TileGroupName, PresetTileSource[]>();

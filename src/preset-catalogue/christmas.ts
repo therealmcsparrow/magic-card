@@ -1,4 +1,5 @@
 import { EASE, THEME, b, glow, group, ic, k, motionDoc, particlesDoc } from './kit';
+import { m } from './i18n';
 
 /* Christmas: gentle sway and twinkle, ease-in-out, 2-3.2 s; bells jingle 0.8 s then rest. */
 
@@ -7,7 +8,7 @@ const X = THEME.christmas;
 export const CHRISTMAS = group('Christmas', [
   {
     id: 'xmas-snow-settle',
-    name: 'Snow that settles',
+    name: m('Snow that settles'),
     icon: 'mdi:snowflake',
     tags: ['snow', 'winter', 'snowflakes', 'floor', 'settle', 'particles'],
     heavy: true,
@@ -29,7 +30,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-new-year-fireworks',
-    name: 'New Year fireworks',
+    name: m('New Year fireworks'),
     icon: 'mdi:firework',
     tags: ['fireworks', 'new year', 'celebration', 'party', 'particles'],
     heavy: true,
@@ -64,7 +65,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-jingle-bell',
-    name: 'Jingle bell',
+    name: m('Jingle bell'),
     icon: 'mdi:bell-ring',
     tags: ['bell', 'jingle', 'ring', 'christmas', 'notification'],
     doc: (id, name) =>
@@ -86,7 +87,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-bauble-sway',
-    name: 'Bauble sway',
+    name: m('Bauble sway'),
     icon: 'mdi:ornament',
     tags: ['bauble', 'ornament', 'tree', 'sway', 'christmas'],
     doc: (id, name) =>
@@ -103,7 +104,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-present-hop',
-    name: 'Present hop',
+    name: m('Present hop'),
     icon: 'mdi:gift',
     tags: ['gift', 'present', 'hop', 'surprise', 'christmas'],
     doc: (id, name) =>
@@ -125,7 +126,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-golden-star-shower',
-    name: 'Golden star shower',
+    name: m('Golden star shower'),
     icon: 'mdi:star-shooting',
     tags: ['stars', 'gold', 'christmas', 'shower', 'particles'],
     doc: (id, name) =>
@@ -143,7 +144,7 @@ export const CHRISTMAS = group('Christmas', [
   },
   {
     id: 'xmas-fairy-lights',
-    name: 'Fairy light glow',
+    name: m('Fairy light glow'),
     icon: 'mdi:string-lights',
     tags: ['lights', 'fairy lights', 'tree', 'glow', 'christmas'],
     doc: (id, name) =>

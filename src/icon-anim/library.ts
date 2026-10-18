@@ -8,6 +8,8 @@ import { HOME } from './library/home';
 import { LIGHTS } from './library/lights';
 import { NATURE } from './library/nature';
 import { STYLE_HINTS } from './library/style-hints';
+import { m } from './library/i18n';
+import { fold as foldText } from '../i18n/fold';
 
 /*
  * The animated icon library (icon animator core, contract icon-library 1.2.0): ready animations for
@@ -40,13 +42,13 @@ const SPECS: Spec[] = [
   // ── light ──
   {
     id: 'bulb-glow',
-    name: 'Bulb glow',
+    name: m('Bulb glow'),
     domain: 'light',
     icon: 'mdi:lightbulb-on',
     tags: ['light', 'lamp', 'bulb', 'on'],
     duration: 2,
-    parts: { bulb: ['Bulb', [0], 'center'], base: ['Base', [1]], ray_l: ['Ray left', [3]], ray_tl: ['Ray top left', [5]], ray_t: ['Ray top', [4]], ray_tr: ['Ray top right', [6]], ray_r: ['Ray right', [2]] },
-    groups: { rays: ['Rays', ['ray_l', 'ray_tl', 'ray_t', 'ray_tr', 'ray_r'], [12, 11]] },
+    parts: { bulb: [m('Bulb'), [0], 'center'], base: [m('Base'), [1]], ray_l: [m('Ray left'), [3]], ray_tl: [m('Ray top left'), [5]], ray_t: [m('Ray top'), [4]], ray_tr: [m('Ray top right'), [6]], ray_r: [m('Ray right'), [2]] },
+    groups: { rays: [m('Rays'), ['ray_l', 'ray_tl', 'ray_t', 'ray_tr', 'ray_r'], [12, 11]] },
     tracks: (x) => {
       x.preset('part:bulb', 'pulse', { intensity: 0.35 });
       x.keys('group:rays', [t(0, { scale: 0.9 }), t(50, { scale: 1.12 }), t(100, { scale: 0.9 })]);
@@ -55,13 +57,13 @@ const SPECS: Spec[] = [
   },
   {
     id: 'ceiling-light',
-    name: 'Ceiling light',
+    name: m('Ceiling light'),
     domain: 'light',
     icon: 'mdi:ceiling-light',
     tags: ['light', 'pendant', 'lamp'],
     duration: 3,
-    parts: { shade: ['Shade', [0]], bulb: ['Bulb', [1], 'center'] },
-    groups: { pendant: ['Pendant', ['shade', 'bulb'], [12, 4]] },
+    parts: { shade: [m('Shade'), [0]], bulb: [m('Bulb'), [1], 'center'] },
+    groups: { pendant: [m('Pendant'), ['shade', 'bulb'], [12, 4]] },
     tracks: (x) => {
       x.preset('group:pendant', 'swing', { intensity: 0.3 });
       x.preset('part:bulb', 'pulse', { intensity: 1 });
@@ -70,12 +72,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'table-lamp',
-    name: 'Table lamp switching on',
+    name: m('Table lamp switching on'),
     domain: 'light',
     icon: 'mdi:lamp',
     tags: ['light', 'lamp', 'switch'],
     duration: 3,
-    parts: { shade: ['Shade', [0], 'bottom'], foot: ['Foot', [1]] },
+    parts: { shade: [m('Shade'), [0], 'bottom'], foot: [m('Foot'), [1]] },
     tracks: (x) => {
       x.keys('part:shade', [k(0, { opacity: 0.25, easing: 'linear' }), k(6, { opacity: 1, easing: 'linear' }), k(10, { opacity: 0.45, easing: 'linear' }), k(15, { opacity: 1 }), k(90, { opacity: 1, easing: 'ease-in' }), k(100, { opacity: 0.25 })]);
       x.keys('part:shade', [t(15, { scale: 1 }), t(22, { scale: 1.05 }), t(32, { scale: 1 })]);
@@ -83,12 +85,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'led-strip',
-    name: 'LED strip colour chase',
+    name: m('LED strip colour chase'),
     domain: 'light',
     icon: 'mdi:led-strip-variant',
     tags: ['light', 'led', 'rgb', 'colour'],
     duration: 3,
-    parts: { top: ['Top strip', [0]], middle: ['Middle strip', [2]], bottom: ['Bottom strip', [1]] },
+    parts: { top: [m('Top strip'), [0]], middle: [m('Middle strip'), [2]], bottom: [m('Bottom strip'), [1]] },
     tracks: (x) => {
       const HUES = ['#ff1744', '#ffea00', '#00e676', '#2979ff', '#d500f9'];
       ['top', 'middle', 'bottom'].forEach((p, i) =>
@@ -101,12 +103,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'light-group',
-    name: 'Light group',
+    name: m('Light group'),
     domain: 'light',
     icon: 'mdi:lightbulb-group',
     tags: ['light', 'group', 'bulbs'],
     duration: 1.8,
-    parts: { left: ['Left bulb', [3], 'center'], centre: ['Centre bulb', [0], 'center'], right: ['Right bulb', [5], 'center'], bases: ['Bases', [2, 1, 4]] },
+    parts: { left: [m('Left bulb'), [3], 'center'], centre: [m('Centre bulb'), [0], 'center'], right: [m('Right bulb'), [5], 'center'], bases: [m('Bases'), [2, 1, 4]] },
     tracks: (x) => {
       ['left', 'centre', 'right'].forEach((p, i) => x.keys(`part:${p}`, presetKeyframes('wave', { share: 60, delay: i * 20 })));
     },
@@ -114,12 +116,12 @@ const SPECS: Spec[] = [
   // ── switch, power ──
   {
     id: 'switch-toggle',
-    name: 'Switch toggle',
+    name: m('Switch toggle'),
     domain: 'switch',
     icon: 'mdi:toggle-switch-outline',
     tags: ['switch', 'input_boolean', 'toggle'],
     duration: 2.4,
-    parts: { track: ['Track', [0]], knob: ['Knob', [1], 'center'] },
+    parts: { track: [m('Track'), [0]], knob: [m('Knob'), [1], 'center'] },
     tracks: (x) =>
       x.keys('part:knob', [
         t(0, { x: 0, scale_x: 1 }),
@@ -133,12 +135,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'power-button',
-    name: 'Power button',
+    name: m('Power button'),
     domain: 'switch',
     icon: 'mdi:power',
     tags: ['switch', 'power', 'button', 'on'],
     duration: 2.4,
-    parts: { ring: ['Ring', [0], 'center'], line: ['Line', [1], 'bottom'] },
+    parts: { ring: [m('Ring'), [0], 'center'], line: [m('Line'), [1], 'bottom'] },
     tracks: (x) => {
       x.preset('part:ring', 'draw-loop', { share: 100 });
       x.keys('part:line', [t(0, { y: 0 }), t(8, { y: -1.2 }, { easing: 'ease-in' }), t(18, { y: 0 }, { easing: 'ease-out' }), t(24, { y: -0.3 }), t(30, { y: 0 })]);
@@ -146,12 +148,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'plug-in',
-    name: 'Plug in',
+    name: m('Plug in'),
     domain: 'switch',
     icon: 'mdi:power-plug',
     tags: ['switch', 'outlet', 'plug', 'socket', 'power'],
     duration: 2.4,
-    parts: { plug: ['Plug', [0], 'center'] },
+    parts: { plug: [m('Plug'), [0], 'center'] },
     tracks: (x) =>
       x.keys('part:plug', [
         t(0, { y: 3 }, { opacity: 0.55 }),
@@ -166,23 +168,23 @@ const SPECS: Spec[] = [
   // ── fan ──
   {
     id: 'fan-spin',
-    name: 'Fan spin',
+    name: m('Fan spin'),
     domain: 'fan',
     icon: 'mdi:fan',
     tags: ['fan', 'ventilation', 'spin'],
     duration: 1.2,
-    parts: { blades: ['Blades', [0], [12, 12]] },
+    parts: { blades: [m('Blades'), [0], [12, 12]] },
     tracks: (x) => x.keys('part:blades', SPIN()),
   },
   {
     id: 'ceiling-fan',
-    name: 'Ceiling fan with light',
+    name: m('Ceiling fan with light'),
     domain: 'fan',
     icon: 'mdi:ceiling-fan-light',
     tags: ['fan', 'ceiling', 'light'],
     duration: 1.2,
-    parts: { rod: ['Rod', [0]], blade_l: ['Left blade', [1]], blade_r: ['Right blade', [2]], hub: ['Hub', [3]], ray_m: ['Middle ray', [4]], ray_r: ['Right ray', [5]], ray_l: ['Left ray', [6]] },
-    groups: { blades: ['Blades', ['blade_l', 'blade_r'], [12, 13.5]], rays: ['Light rays', ['ray_m', 'ray_r', 'ray_l'], [12, 18]] },
+    parts: { rod: [m('Rod'), [0]], blade_l: [m('Left blade'), [1]], blade_r: [m('Right blade'), [2]], hub: [m('Hub'), [3]], ray_m: [m('Middle ray'), [4]], ray_r: [m('Right ray'), [5]], ray_l: [m('Left ray'), [6]] },
+    groups: { blades: [m('Blades'), ['blade_l', 'blade_r'], [12, 13.5]], rays: [m('Light rays'), ['ray_m', 'ray_r', 'ray_l'], [12, 18]] },
     tracks: (x) => {
       x.keys('group:blades', [
         t(0, { scale_x: 1 }, { easing: 'ease-in' }),
@@ -196,12 +198,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'air-purifier',
-    name: 'Air purifier',
+    name: m('Air purifier'),
     domain: 'fan',
     icon: 'mdi:air-purifier',
     tags: ['fan', 'air', 'purifier', 'humidifier'],
     duration: 2.4,
-    parts: { dial: ['Dial', [0], 'center'], body: ['Body', [1]], air_t: ['Air top', [2]], air_b: ['Air bottom', [3]] },
+    parts: { dial: [m('Dial'), [0], 'center'], body: [m('Body'), [1]], air_t: [m('Air top'), [2]], air_b: [m('Air bottom'), [3]] },
     tracks: (x) => {
       x.preset('part:air_t', 'draw-loop');
       x.preset('part:air_b', 'draw-loop', { delay: 15, share: 85 });
@@ -211,22 +213,22 @@ const SPECS: Spec[] = [
   // ── climate ──
   {
     id: 'flame',
-    name: 'Flame',
+    name: m('Flame'),
     domain: 'climate',
     icon: 'mdi:fire',
     tags: ['climate', 'heat', 'heating', 'thermostat', 'fire', 'water_heater'],
     duration: 1.2,
-    parts: { flame: ['Flame', [0], 'bottom'] },
+    parts: { flame: [m('Flame'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:flame', flame(1.2)),
   },
   {
     id: 'fireplace',
-    name: 'Fireplace',
+    name: m('Fireplace'),
     domain: 'climate',
     icon: 'mdi:fireplace',
     tags: ['climate', 'heat', 'fire', 'stove'],
     duration: 1.4,
-    parts: { floor: ['Hearth', [0]], mantel: ['Mantel', [1]], outer: ['Outer flame', [2], 'bottom'], inner: ['Inner flame', [3], 'bottom'] },
+    parts: { floor: [m('Hearth'), [0]], mantel: [m('Mantel'), [1]], outer: [m('Outer flame'), [2], 'bottom'], inner: [m('Inner flame'), [3], 'bottom'] },
     tracks: (x) => {
       x.keys('part:outer', presetKeyframes('flicker', { intensity: 0.7 }));
       x.keys('part:inner', flame(1.4, 10, 90));
@@ -234,61 +236,61 @@ const SPECS: Spec[] = [
   },
   {
     id: 'snowflake',
-    name: 'Snowflake',
+    name: m('Snowflake'),
     domain: 'climate',
     icon: 'mdi:snowflake',
     tags: ['climate', 'cool', 'cooling', 'frost', 'freezer', 'weather'],
     duration: 6,
-    parts: { flake: ['Snowflake', [0], [12, 12]] },
+    parts: { flake: [m('Snowflake'), [0], [12, 12]] },
     tracks: (x) => x.keys('part:flake', [t(0, { rotate: 0, scale: 1 }, { easing: 'linear' }), t(50, { rotate: 180, scale: 1.08 }, { easing: 'linear' }), t(100, { rotate: 360, scale: 1 })]),
   },
   {
     id: 'air-conditioner',
-    name: 'Air conditioner',
+    name: m('Air conditioner'),
     domain: 'climate',
     icon: 'mdi:air-conditioner',
     tags: ['climate', 'cool', 'ac', 'fan'],
     duration: 1.5,
-    parts: { fan: ['Fan', [0], 'center'], a: ['A', [1]], slash: ['Slash', [2]], c: ['C', [3]] },
+    parts: { fan: [m('Fan'), [0], 'center'], a: [m('A'), [1]], slash: [m('Slash'), [2]], c: [m('C'), [3]] },
     tracks: (x) => x.keys('part:fan', SPIN()),
   },
   {
     id: 'radiator',
-    name: 'Radiator heat',
+    name: m('Radiator heat'),
     domain: 'climate',
     icon: 'mdi:radiator',
     tags: ['climate', 'heat', 'heating', 'heater', 'radiator'],
     duration: 2.4,
-    parts: { wave_l: ['Left wave', [0]], wave_m: ['Middle wave', [1]], wave_r: ['Right wave', [2]], body: ['Radiator', [3]] },
+    parts: { wave_l: [m('Left wave'), [0]], wave_m: [m('Middle wave'), [1]], wave_r: [m('Right wave'), [2]], body: [m('Radiator'), [3]] },
     tracks: (x) => ['wave_l', 'wave_m', 'wave_r'].forEach((w, i) => x.keys(`part:${w}`, rise(i * 18, 62, -2.5))),
   },
   {
     id: 'heat-haze',
-    name: 'Heat haze',
+    name: m('Heat haze'),
     domain: 'sensor',
     icon: 'mdi:heat-wave',
     tags: ['sensor', 'temperature', 'heat', 'hot', 'climate'],
     duration: 2.4,
-    parts: { wave_l: ['Left wave', [0]], wave_m: ['Middle wave', [1]], wave_r: ['Right wave', [2]] },
+    parts: { wave_l: [m('Left wave'), [0]], wave_m: [m('Middle wave'), [1]], wave_r: [m('Right wave'), [2]] },
     tracks: (x) => ['wave_l', 'wave_m', 'wave_r'].forEach((w, i) => x.keys(`part:${w}`, [t(0, { y: 0.8 }, { opacity: 0.35 }), t(15 + i * 15, { y: 0.8 }, { opacity: 0.35, easing: 'ease-in-out' }), t(45 + i * 15, { y: -0.8 }, { opacity: 1, easing: 'ease-in-out' }), t(75 + i * 8, { y: 0.8 }, { opacity: 0.35 })])),
   },
   {
     id: 'thermometer',
-    name: 'Thermometer',
+    name: m('Thermometer'),
     domain: 'sensor',
     icon: 'mdi:thermometer-lines',
     tags: ['sensor', 'temperature', 'climate', 'thermostat'],
     duration: 2.4,
     parts: {
-      tube: ['Thermometer', [8], 'bottom'],
-      l1: ['Mark 1', [7]],
-      r1: ['Mark 2', [3]],
-      l2: ['Mark 3', [6]],
-      r2: ['Mark 4', [2]],
-      l3: ['Mark 5', [5]],
-      r3: ['Mark 6', [1]],
-      l4: ['Mark 7', [4]],
-      r4: ['Mark 8', [0]],
+      tube: [m('Thermometer'), [8], 'bottom'],
+      l1: [m('Mark 1'), [7]],
+      r1: [m('Mark 2'), [3]],
+      l2: [m('Mark 3'), [6]],
+      r2: [m('Mark 4'), [2]],
+      l3: [m('Mark 5'), [5]],
+      r3: [m('Mark 6'), [1]],
+      l4: [m('Mark 7'), [4]],
+      r4: [m('Mark 8'), [0]],
     },
     tracks: (x) => {
       x.keys('part:tube', [t(0, { scale_y: 1 }), t(50, { scale_y: 1.04 }), t(100, { scale_y: 1 })]);
@@ -297,12 +299,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'humidity',
-    name: 'Humidity drop',
+    name: m('Humidity drop'),
     domain: 'sensor',
     icon: 'mdi:water-percent',
     tags: ['sensor', 'humidity', 'moisture', 'humidifier'],
     duration: 2.2,
-    parts: { drop: ['Drop', [0], 'bottom'] },
+    parts: { drop: [m('Drop'), [0], 'bottom'] },
     tracks: (x) =>
       x.keys('part:drop', [
         t(0, { y: 0, scale_x: 1, scale_y: 1 }),
@@ -314,23 +316,23 @@ const SPECS: Spec[] = [
   },
   {
     id: 'humidifier',
-    name: 'Humidifier mist',
+    name: m('Humidifier mist'),
     domain: 'humidifier',
     icon: 'mdi:air-humidifier',
     tags: ['humidifier', 'dehumidifier', 'humidity', 'mist'],
     duration: 2,
-    parts: { dial: ['Dial', [0]], body: ['Body', [1]], drop: ['Drop', [2], 'center'] },
+    parts: { dial: [m('Dial'), [0]], body: [m('Body'), [1]], drop: [m('Drop'), [2], 'center'] },
     tracks: (x) => x.keys('part:drop', rise(0, 80, -3)),
   },
   {
     id: 'outdoor-temperature',
-    name: 'Outdoor temperature',
+    name: m('Outdoor temperature'),
     domain: 'sensor',
     icon: 'mdi:sun-thermometer',
     tags: ['sensor', 'temperature', 'weather', 'sun', 'outdoor'],
     duration: 8,
-    parts: { ray_t: ['Ray top', [0]], ray_l: ['Ray left', [2]], ray_bl: ['Ray bottom left', [4]], ray_b: ['Ray bottom', [5]], sun: ['Sun', [3], 'center'], thermo: ['Thermometer', [1], 'bottom'] },
-    groups: { rays: ['Rays', ['ray_t', 'ray_l', 'ray_bl', 'ray_b'], [10, 12]] },
+    parts: { ray_t: [m('Ray top'), [0]], ray_l: [m('Ray left'), [2]], ray_bl: [m('Ray bottom left'), [4]], ray_b: [m('Ray bottom'), [5]], sun: [m('Sun'), [3], 'center'], thermo: [m('Thermometer'), [1], 'bottom'] },
+    groups: { rays: [m('Rays'), ['ray_t', 'ray_l', 'ray_bl', 'ray_b'], [10, 12]] },
     tracks: (x) => {
       x.keys('group:rays', [t(0, { rotate: -20 }), t(50, { rotate: 20 }), t(100, { rotate: -20 })]);
       x.preset('part:sun', 'pulse', { intensity: 0.4 });
@@ -340,12 +342,12 @@ const SPECS: Spec[] = [
   // ── cover ──
   {
     id: 'garage-door',
-    name: 'Garage door',
+    name: m('Garage door'),
     domain: 'cover',
     icon: 'mdi:garage-variant',
     tags: ['cover', 'garage', 'door', 'binary_sensor'],
     duration: 4,
-    parts: { house: ['Garage', [0]], slat_t: ['Top slat', [1]], slat_m: ['Middle slat', [3]], slat_b: ['Bottom slat', [2]] },
+    parts: { house: [m('Garage'), [0]], slat_t: [m('Top slat'), [1]], slat_m: [m('Middle slat'), [3]], slat_b: [m('Bottom slat'), [2]] },
     tracks: (x) => {
       x.keys('part:slat_t', rollUp(-2.5, 0));
       x.keys('part:slat_m', rollUp(-5.5, 1));
@@ -354,22 +356,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'roller-shutter',
-    name: 'Roller shutter',
+    name: m('Roller shutter'),
     domain: 'cover',
     icon: 'mdi:window-shutter',
     tags: ['cover', 'shutter', 'blind', 'window'],
     duration: 4,
-    parts: { frame: ['Frame', [0]], s1: ['Slat 1', [1]], s2: ['Slat 2', [2]], s3: ['Slat 3', [3]], s4: ['Slat 4', [4]] },
+    parts: { frame: [m('Frame'), [0]], s1: [m('Slat 1'), [1]], s2: [m('Slat 2'), [2]], s3: [m('Slat 3'), [3]], s4: [m('Slat 4'), [4]] },
     tracks: (x) => ['s1', 's2', 's3', 's4'].forEach((s, i) => x.keys(`part:${s}`, rollUp(-(2 + i * 3), i))),
   },
   {
     id: 'curtains',
-    name: 'Curtains',
+    name: m('Curtains'),
     domain: 'cover',
     icon: 'mdi:curtains',
     tags: ['cover', 'curtain', 'window'],
     duration: 4,
-    parts: { rod: ['Rod', [0]], left: ['Left curtain', [1], 'top-left'], right: ['Right curtain', [2], 'top-right'] },
+    parts: { rod: [m('Rod'), [0]], left: [m('Left curtain'), [1], 'top-left'], right: [m('Right curtain'), [2], 'top-right'] },
     tracks: (x) => {
       x.keys('part:left', fold(0.45));
       x.keys('part:right', fold(0.45));
@@ -377,12 +379,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'gate',
-    name: 'Gate',
+    name: m('Gate'),
     domain: 'cover',
     icon: 'mdi:gate-open',
     tags: ['cover', 'gate', 'binary_sensor'],
     duration: 4,
-    parts: { left: ['Left leaf', [0], 'left'], right: ['Right leaf', [1], 'right'] },
+    parts: { left: [m('Left leaf'), [0], 'left'], right: [m('Right leaf'), [1], 'right'] },
     tracks: (x) => {
       x.keys('part:left', fold(0.4, { skew_y: -10 }));
       x.keys('part:right', fold(0.4, { skew_y: 10 }));
@@ -390,35 +392,35 @@ const SPECS: Spec[] = [
   },
   {
     id: 'door',
-    name: 'Door opening',
+    name: m('Door opening'),
     domain: 'binary_sensor',
     icon: 'mdi:door',
     tags: ['binary_sensor', 'door', 'opening', 'cover'],
     duration: 3,
-    parts: { leaf: ['Door', [0]], knob: ['Knob', [1]] },
-    groups: { door: ['Door leaf', ['leaf', 'knob'], 'left'] },
+    parts: { leaf: [m('Door'), [0]], knob: [m('Knob'), [1]] },
+    groups: { door: [m('Door leaf'), ['leaf', 'knob'], 'left'] },
     tracks: (x) => x.keys('group:door', fold(0.5, { skew_y: -8 })),
   },
   {
     id: 'fridge',
-    name: 'Fridge door',
+    name: m('Fridge door'),
     domain: 'binary_sensor',
     icon: 'mdi:fridge',
     tags: ['binary_sensor', 'fridge', 'freezer', 'door', 'appliance'],
     duration: 3,
-    parts: { top: ['Freezer door', [0], 'left'], bottom: ['Fridge door', [1]] },
+    parts: { top: [m('Freezer door'), [0], 'left'], bottom: [m('Fridge door'), [1]] },
     tracks: (x) => x.keys('part:top', fold(0.55, { skew_y: -8 })),
   },
   // ── lock ──
   {
     id: 'lock',
-    name: 'Lock',
+    name: m('Lock'),
     domain: 'lock',
     icon: 'mdi:lock',
     tags: ['lock', 'door', 'security'],
     duration: 2.4,
     own: [LOCK_BODY, LOCK_SHACKLE],
-    parts: { body: ['Body', [0], 'bottom'], shackle: ['Shackle', [1]] },
+    parts: { body: [m('Body'), [0], 'bottom'], shackle: [m('Shackle'), [1]] },
     tracks: (x) => {
       x.keys('part:shackle', [
         t(0, { y: -2.5 }),
@@ -435,12 +437,12 @@ const SPECS: Spec[] = [
   // ── media ──
   {
     id: 'speaker',
-    name: 'Speaker',
+    name: m('Speaker'),
     domain: 'media_player',
     icon: 'mdi:speaker-wireless',
     tags: ['media_player', 'speaker', 'music', 'sound'],
     duration: 1.2,
-    parts: { wave_o: ['Outer wave', [0]], wave_i: ['Inner wave', [1]], body: ['Speaker', [2]], cone: ['Cone', [3], 'center'] },
+    parts: { wave_o: [m('Outer wave'), [0]], wave_i: [m('Inner wave'), [1]], body: [m('Speaker'), [2]], cone: [m('Cone'), [3], 'center'] },
     tracks: (x) => {
       x.keys('part:cone', [t(0, { scale: 1 }), t(10, { scale: 1.22 }, { easing: 'ease-out' }), t(28, { scale: 1 }), t(50, { scale: 1.14 }, { easing: 'ease-out' }), t(68, { scale: 1 })]);
       x.keys('part:wave_i', presetKeyframes('wave', { share: 60 }));
@@ -449,12 +451,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'volume',
-    name: 'Volume',
+    name: m('Volume'),
     domain: 'media_player',
     icon: 'mdi:volume-high',
     tags: ['media_player', 'volume', 'sound', 'speaker'],
     duration: 1.4,
-    parts: { wave_o: ['Outer wave', [0]], wave_i: ['Inner wave', [1]], speaker: ['Speaker', [2], 'right'] },
+    parts: { wave_o: [m('Outer wave'), [0]], wave_i: [m('Inner wave'), [1]], speaker: [m('Speaker'), [2], 'right'] },
     tracks: (x) => {
       x.preset('part:speaker', 'pulse', { intensity: 0.4 });
       x.keys('part:wave_i', presetKeyframes('wave', { share: 60 }));
@@ -463,12 +465,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'tv',
-    name: 'TV on',
+    name: m('TV on'),
     domain: 'media_player',
     icon: 'mdi:television-classic',
     tags: ['media_player', 'tv', 'television'],
     duration: 2.4,
-    parts: { tv: ['Television', [0], 'bottom'] },
+    parts: { tv: [m('Television'), [0], 'bottom'] },
     tracks: (x) =>
       x.keys('part:tv', [
         t(0, { scale_x: 1, scale_y: 1 }, { opacity: 0.4 }),
@@ -480,44 +482,44 @@ const SPECS: Spec[] = [
   },
   {
     id: 'music-note',
-    name: 'Music note dance',
+    name: m('Music note dance'),
     domain: 'media_player',
     icon: 'mdi:music-note',
     tags: ['media_player', 'music', 'playing'],
     duration: 1.2,
-    parts: { note: ['Note', [0], 'bottom'] },
+    parts: { note: [m('Note'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:note', [t(0, { rotate: -10, y: 0 }), t(25, { rotate: 0, y: -1.5 }), t(50, { rotate: 10, y: 0 }), t(75, { rotate: 0, y: -1.5 }), t(100, { rotate: -10, y: 0 })]),
   },
   {
     id: 'play',
-    name: 'Play',
+    name: m('Play'),
     domain: 'media_player',
     icon: 'mdi:play-circle',
     tags: ['media_player', 'play', 'playing'],
     duration: 1.6,
-    parts: { button: ['Button', [0], 'center'] },
+    parts: { button: [m('Button'), [0], 'center'] },
     tracks: (x) => x.keys('part:button', [t(0, { scale: 1 }), t(15, { scale: 0.88 }, { easing: 'ease-out' }), t(35, { scale: 1.08 }), t(55, { scale: 1 })]),
   },
   {
     id: 'headphones',
-    name: 'Headphones',
+    name: m('Headphones'),
     domain: 'media_player',
     icon: 'mdi:headphones',
     tags: ['media_player', 'music', 'headphones'],
     duration: 1,
-    parts: { phones: ['Headphones', [0], 'bottom'] },
+    parts: { phones: [m('Headphones'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:phones', [t(0, { y: 0, rotate: -4 }), t(25, { y: -1, rotate: 0 }), t(50, { y: 0, rotate: 4 }), t(75, { y: -1, rotate: 0 }), t(100, { y: 0, rotate: -4 })]),
   },
   // ── vacuum, mower ──
   {
     id: 'robot-vacuum',
-    name: 'Robot vacuum',
+    name: m('Robot vacuum'),
     domain: 'vacuum',
     icon: 'mdi:robot-vacuum',
     tags: ['vacuum', 'cleaning', 'robot'],
     duration: 4,
-    parts: { sensor: ['Sensor', [0], 'center'], body: ['Body', [1]], brush: ['Brush', [2], 'center'] },
-    groups: { robot: ['Robot', ['sensor', 'body', 'brush'], 'center'] },
+    parts: { sensor: [m('Sensor'), [0], 'center'], body: [m('Body'), [1]], brush: [m('Brush'), [2], 'center'] },
+    groups: { robot: [m('Robot'), ['sensor', 'body', 'brush'], 'center'] },
     tracks: (x) => {
       x.keys('group:robot', [t(0, { x: -2, rotate: 0 }), t(40, { x: 2, rotate: 0 }), t(50, { x: 2, rotate: 12 }), t(90, { x: -2, rotate: 12 }), t(100, { x: -2, rotate: 0 })]);
       x.keys('part:brush', SPIN(2));
@@ -526,12 +528,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'robot-mower',
-    name: 'Robot mower',
+    name: m('Robot mower'),
     domain: 'lawn_mower',
     icon: 'mdi:robot-mower',
     tags: ['lawn_mower', 'mower', 'garden', 'robot'],
     duration: 6,
-    parts: { mower: ['Mower', [0], 'bottom'] },
+    parts: { mower: [m('Mower'), [0], 'bottom'] },
     tracks: (x) =>
       x.keys('part:mower', [
         t(0, { x: -2.5, y: 0, scale_x: 1 }),
@@ -550,12 +552,12 @@ const SPECS: Spec[] = [
   // ── appliances ──
   {
     id: 'washing-machine',
-    name: 'Washing machine',
+    name: m('Washing machine'),
     domain: 'sensor',
     icon: 'mdi:washing-machine',
     tags: ['sensor', 'washer', 'washing', 'laundry', 'appliance', 'switch'],
     duration: 1.5,
-    parts: { drum: ['Drum', [0], 'center'], body: ['Machine', [1], 'bottom'] },
+    parts: { drum: [m('Drum'), [0], 'center'], body: [m('Machine'), [1], 'bottom'] },
     tracks: (x) => {
       x.keys('part:drum', SPIN());
       x.keys('part:body', presetKeyframes('shake', { intensity: 0.15, share: 100 }));
@@ -563,43 +565,43 @@ const SPECS: Spec[] = [
   },
   {
     id: 'dryer',
-    name: 'Tumble dryer',
+    name: m('Tumble dryer'),
     domain: 'sensor',
     icon: 'mdi:tumble-dryer',
     tags: ['sensor', 'dryer', 'laundry', 'appliance', 'switch'],
     duration: 2,
-    parts: { body: ['Dryer', [0]], wave_l: ['Left wave', [1]], wave_r: ['Right wave', [2]] },
-    groups: { drum: ['Drum', ['wave_l', 'wave_r'], [12, 14]] },
+    parts: { body: [m('Dryer'), [0]], wave_l: [m('Left wave'), [1]], wave_r: [m('Right wave'), [2]] },
+    groups: { drum: [m('Drum'), ['wave_l', 'wave_r'], [12, 14]] },
     tracks: (x) => x.keys('group:drum', SPIN()),
   },
   {
     id: 'dishwasher',
-    name: 'Dishwasher',
+    name: m('Dishwasher'),
     domain: 'sensor',
     icon: 'mdi:dishwasher',
     tags: ['sensor', 'dishwasher', 'appliance', 'switch'],
     duration: 1.6,
-    parts: { body: ['Dishwasher', [0]], drop: ['Drop', [1], 'bottom'] },
+    parts: { body: [m('Dishwasher'), [0]], drop: [m('Drop'), [1], 'bottom'] },
     tracks: (x) => x.preset('part:drop', 'bounce', { intensity: 0.5 }),
   },
   {
     id: 'coffee-maker',
-    name: 'Coffee maker',
+    name: m('Coffee maker'),
     domain: 'switch',
     icon: 'mdi:coffee-maker',
     tags: ['switch', 'coffee', 'kitchen', 'appliance'],
     duration: 1.2,
-    parts: { machine: ['Machine', [0]], drop: ['Drop', [1], 'center'] },
+    parts: { machine: [m('Machine'), [0]], drop: [m('Drop'), [1], 'center'] },
     tracks: (x) => x.keys('part:drop', fall(0, 70, 4, 0)),
   },
   {
     id: 'kettle',
-    name: 'Kettle boiling',
+    name: m('Kettle boiling'),
     domain: 'switch',
     icon: 'mdi:kettle-steam',
     tags: ['switch', 'kettle', 'kitchen', 'steam', 'appliance'],
     duration: 2,
-    parts: { kettle: ['Kettle', [0], 'bottom'], steam_r: ['Right steam', [1]], steam_l: ['Left steam', [2]] },
+    parts: { kettle: [m('Kettle'), [0], 'bottom'], steam_r: [m('Right steam'), [1]], steam_l: [m('Left steam'), [2]] },
     tracks: (x) => {
       x.keys('part:steam_l', rise(0, 60));
       x.keys('part:steam_r', rise(30, 60));
@@ -608,12 +610,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'cooking-pot',
-    name: 'Cooking pot',
+    name: m('Cooking pot'),
     domain: 'sensor',
     icon: 'mdi:pot-steam',
     tags: ['sensor', 'cooking', 'kitchen', 'steam'],
     duration: 2.2,
-    parts: { pot: ['Pot', [0]], steam_l: ['Left steam', [1]], steam_r: ['Right steam', [2]] },
+    parts: { pot: [m('Pot'), [0]], steam_l: [m('Left steam'), [1]], steam_r: [m('Right steam'), [2]] },
     tracks: (x) => {
       x.keys('part:steam_l', rise(0, 60));
       x.keys('part:steam_r', rise(32, 60));
@@ -621,33 +623,33 @@ const SPECS: Spec[] = [
   },
   {
     id: 'oven',
-    name: 'Oven heating',
+    name: m('Oven heating'),
     domain: 'switch',
     icon: 'mdi:toaster-oven',
     tags: ['switch', 'oven', 'kitchen', 'appliance', 'heat'],
     duration: 2,
-    parts: { body: ['Oven', [0]], glow: ['Heating element', [1], 'center'] },
+    parts: { body: [m('Oven'), [0]], glow: [m('Heating element'), [1], 'center'] },
     tracks: (x) => x.keys('part:glow', [k(0, { color: '#ff6d00', opacity: 0.6 }), k(50, { color: '#ffab40', opacity: 1 }), k(100, { color: '#ff6d00', opacity: 0.6 })]),
   },
   {
     id: 'printer',
-    name: 'Printer',
+    name: m('Printer'),
     domain: 'sensor',
     icon: 'mdi:printer',
     tags: ['sensor', 'printer', 'printing'],
     duration: 2,
-    parts: { paper: ['Paper', [0], 'center'], body: ['Printer', [1]] },
+    parts: { paper: [m('Paper'), [0], 'center'], body: [m('Printer'), [1]] },
     tracks: (x) => x.keys('part:paper', [t(0, { y: -1.5 }, { opacity: 0 }), t(20, { y: -1.5 }, { opacity: 1, easing: 'linear' }), t(75, { y: 1.2 }, { opacity: 1 }), t(88, { y: 1.6 }, { opacity: 0 })]),
   },
   // ── battery, energy ──
   {
     id: 'battery-charging',
-    name: 'Battery charging',
+    name: m('Battery charging'),
     domain: 'sensor',
     icon: 'mdi:battery-charging-high',
     tags: ['sensor', 'battery', 'charging', 'binary_sensor', 'ev'],
     duration: 2.5,
-    parts: { shell: ['Battery', [0]], bar_1: ['Bar 1', [1]], bar_2: ['Bar 2', [3]], bar_3: ['Bar 3', [2]], bolt: ['Bolt', [4], 'center'] },
+    parts: { shell: [m('Battery'), [0]], bar_1: [m('Bar 1'), [1]], bar_2: [m('Bar 2'), [3]], bar_3: [m('Bar 3'), [2]], bolt: [m('Bolt'), [4], 'center'] },
     tracks: (x) => {
       ['bar_1', 'bar_2', 'bar_3'].forEach((b, i) => x.keys(`part:${b}`, fillIn(10 + i * 20)));
       x.keys('part:bolt', [t(0, { scale: 1 }, { color: '#ffc107' }), t(50, { scale: 1.12 }, { color: '#ffe082' }), t(100, { scale: 1 }, { color: '#ffc107' })]);
@@ -655,22 +657,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'battery-level',
-    name: 'Battery level',
+    name: m('Battery level'),
     domain: 'sensor',
     icon: 'mdi:battery-high',
     tags: ['sensor', 'battery'],
     duration: 2.5,
-    parts: { shell: ['Battery', [0]], bar_1: ['Bar 1', [1]], bar_2: ['Bar 2', [3]], bar_3: ['Bar 3', [2]] },
+    parts: { shell: [m('Battery'), [0]], bar_1: [m('Bar 1'), [1]], bar_2: [m('Bar 2'), [3]], bar_3: [m('Bar 3'), [2]] },
     tracks: (x) => ['bar_1', 'bar_2', 'bar_3'].forEach((b, i) => x.keys(`part:${b}`, fillIn(10 + i * 20))),
   },
   {
     id: 'energy-bolt',
-    name: 'Energy',
+    name: m('Energy'),
     domain: 'sensor',
     icon: 'mdi:lightning-bolt',
     tags: ['sensor', 'energy', 'power', 'electricity'],
     duration: 2,
-    parts: { bolt: ['Bolt', [0], 'center'] },
+    parts: { bolt: [m('Bolt'), [0], 'center'] },
     tracks: (x) => {
       x.keys('part:bolt', flash(0, '#ffc107'));
       x.keys('part:bolt', [t(0, { scale: 1 }), t(8, { scale: 1.12 }), t(30, { scale: 1 })]);
@@ -678,12 +680,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'solar-power',
-    name: 'Solar power',
+    name: m('Solar power'),
     domain: 'sensor',
     icon: 'mdi:solar-power',
     tags: ['sensor', 'solar', 'energy', 'sun', 'pv'],
     duration: 2.4,
-    parts: { sun: ['Sun', [3], 'top-left'], ray_1: ['Ray 1', [0]], ray_2: ['Ray 2', [1]], ray_3: ['Ray 3', [2]], panel: ['Panel', [4], 'center'] },
+    parts: { sun: [m('Sun'), [3], 'top-left'], ray_1: [m('Ray 1'), [0]], ray_2: [m('Ray 2'), [1]], ray_3: [m('Ray 3'), [2]], panel: [m('Panel'), [4], 'center'] },
     tracks: (x) => {
       x.preset('part:sun', 'pulse', { intensity: 0.5 });
       ['ray_1', 'ray_2', 'ray_3'].forEach((r, i) => x.keys(`part:${r}`, presetKeyframes('wave', { share: 55, delay: i * 15 })));
@@ -692,12 +694,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'electric-car',
-    name: 'Electric car charging',
+    name: m('Electric car charging'),
     domain: 'sensor',
     icon: 'mdi:car-electric',
     tags: ['sensor', 'ev', 'car', 'charging', 'device_tracker'],
     duration: 2,
-    parts: { car: ['Car', [0], 'bottom'], plug: ['Charge', [1], 'center'] },
+    parts: { car: [m('Car'), [0], 'bottom'], plug: [m('Charge'), [1], 'center'] },
     tracks: (x) => {
       x.keys('part:plug', [t(0, { x: -1 }, { opacity: 0.3 }), t(50, { x: 1 }, { opacity: 1 }), t(100, { x: -1 }, { opacity: 0.3 })]);
       x.preset('part:car', 'pulse', { intensity: 0.15 });
@@ -705,12 +707,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'energy-meter',
-    name: 'Energy meter',
+    name: m('Energy meter'),
     domain: 'sensor',
     icon: 'mdi:meter-electric-outline',
     tags: ['sensor', 'energy', 'meter', 'power'],
     duration: 1.6,
-    parts: { meter: ['Meter', [0]], display: ['Display', [1]], bolt: ['Bolt', [2], 'center'] },
+    parts: { meter: [m('Meter'), [0]], display: [m('Display'), [1]], bolt: [m('Bolt'), [2], 'center'] },
     tracks: (x) => {
       x.keys('part:bolt', flash(0, '#ffc107'));
       x.keys('part:display', [k(0, { opacity: 1 }), k(50, { opacity: 0.4 }), k(100, { opacity: 1 })]);
@@ -719,12 +721,12 @@ const SPECS: Spec[] = [
   // ── water ──
   {
     id: 'water-drop',
-    name: 'Water drop',
+    name: m('Water drop'),
     domain: 'binary_sensor',
     icon: 'mdi:water',
     tags: ['binary_sensor', 'water', 'leak', 'moisture', 'sensor'],
     duration: 1.8,
-    parts: { drop: ['Drop', [0], 'bottom'] },
+    parts: { drop: [m('Drop'), [0], 'bottom'] },
     tracks: (x) =>
       x.keys('part:drop', [
         t(0, { y: -3, scale_x: 0.8, scale_y: 0.8 }, { opacity: 0 }),
@@ -738,46 +740,46 @@ const SPECS: Spec[] = [
   },
   {
     id: 'water-pump',
-    name: 'Water pump',
+    name: m('Water pump'),
     domain: 'switch',
     icon: 'mdi:water-pump',
     tags: ['switch', 'pump', 'water', 'valve'],
     duration: 1.2,
-    parts: { drop: ['Drop', [0], 'center'], pump: ['Pump', [1]] },
+    parts: { drop: [m('Drop'), [0], 'center'], pump: [m('Pump'), [1]] },
     tracks: (x) => x.keys('part:drop', fall(0, 80, 2.5, -1.5)),
   },
   {
     id: 'faucet',
-    name: 'Faucet',
+    name: m('Faucet'),
     domain: 'valve',
     icon: 'mdi:faucet',
     tags: ['valve', 'water', 'tap', 'switch'],
     duration: 1.2,
-    parts: { drop: ['Drop', [0], 'center'], tap: ['Tap', [1]], handle: ['Handle', [2]] },
+    parts: { drop: [m('Drop'), [0], 'center'], tap: [m('Tap'), [1]], handle: [m('Handle'), [2]] },
     tracks: (x) => x.keys('part:drop', fall(0, 80, 4, -1.5)),
   },
   {
     id: 'shower',
-    name: 'Shower',
+    name: m('Shower'),
     domain: 'switch',
     icon: 'mdi:shower-head',
     tags: ['switch', 'shower', 'water', 'bathroom'],
     duration: 1,
     parts: {
-      head: ['Head', [13]],
-      bar: ['Bar', [12]],
-      d1: ['Drop 1', [9]],
-      d2: ['Drop 2', [10]],
-      d3: ['Drop 3', [11]],
-      d4: ['Drop 4', [5]],
-      d5: ['Drop 5', [6]],
-      d6: ['Drop 6', [7]],
-      d7: ['Drop 7', [8]],
-      d8: ['Drop 8', [4]],
-      d9: ['Drop 9', [3]],
-      d10: ['Drop 10', [2]],
-      d11: ['Drop 11', [1]],
-      d12: ['Drop 12', [0]],
+      head: [m('Head'), [13]],
+      bar: [m('Bar'), [12]],
+      d1: [m('Drop 1'), [9]],
+      d2: [m('Drop 2'), [10]],
+      d3: [m('Drop 3'), [11]],
+      d4: [m('Drop 4'), [5]],
+      d5: [m('Drop 5'), [6]],
+      d6: [m('Drop 6'), [7]],
+      d7: [m('Drop 7'), [8]],
+      d8: [m('Drop 8'), [4]],
+      d9: [m('Drop 9'), [3]],
+      d10: [m('Drop 10'), [2]],
+      d11: [m('Drop 11'), [1]],
+      d12: [m('Drop 12'), [0]],
     },
     tracks: (x) => {
       const offsets = [0, 34, 67, 17, 50, 84, 8, 25, 75, 42, 92, 58];
@@ -789,26 +791,26 @@ const SPECS: Spec[] = [
   },
   {
     id: 'sprinkler',
-    name: 'Sprinkler',
+    name: m('Sprinkler'),
     domain: 'valve',
     icon: 'mdi:sprinkler-variant',
     tags: ['valve', 'switch', 'irrigation', 'garden', 'water'],
     duration: 1.4,
     parts: {
-      stand: ['Stand', [0]],
-      head: ['Head', [13], 'bottom'],
-      l1: ['Left drop 1', [1]],
-      l2: ['Left drop 2', [2]],
-      l3: ['Left drop 3', [3]],
-      l4: ['Left drop 4', [5]],
-      l5: ['Left drop 5', [6]],
-      l6: ['Left drop 6', [4]],
-      r1: ['Right drop 1', [11]],
-      r2: ['Right drop 2', [12]],
-      r3: ['Right drop 3', [7]],
-      r4: ['Right drop 4', [9]],
-      r5: ['Right drop 5', [8]],
-      r6: ['Right drop 6', [10]],
+      stand: [m('Stand'), [0]],
+      head: [m('Head'), [13], 'bottom'],
+      l1: [m('Left drop 1'), [1]],
+      l2: [m('Left drop 2'), [2]],
+      l3: [m('Left drop 3'), [3]],
+      l4: [m('Left drop 4'), [5]],
+      l5: [m('Left drop 5'), [6]],
+      l6: [m('Left drop 6'), [4]],
+      r1: [m('Right drop 1'), [11]],
+      r2: [m('Right drop 2'), [12]],
+      r3: [m('Right drop 3'), [7]],
+      r4: [m('Right drop 4'), [9]],
+      r5: [m('Right drop 5'), [8]],
+      r6: [m('Right drop 6'), [10]],
     },
     tracks: (x) => {
       const ring = [0, 1, 1, 2, 2, 2];
@@ -819,45 +821,45 @@ const SPECS: Spec[] = [
   },
   {
     id: 'valve',
-    name: 'Valve',
+    name: m('Valve'),
     domain: 'valve',
     icon: 'mdi:valve',
     tags: ['valve', 'water', 'gas', 'pipe'],
     duration: 3,
-    parts: { pipe_l: ['Left pipe', [0]], pipe_r: ['Right pipe', [1]], handle: ['Handle', [2], [12, 12]] },
+    parts: { pipe_l: [m('Left pipe'), [0]], pipe_r: [m('Right pipe'), [1]], handle: [m('Handle'), [2], [12, 12]] },
     tracks: (x) =>
       x.keys('part:handle', [t(0, { rotate: 0 }), t(15, { rotate: 0 }, { easing: 'ease-in-out' }), t(40, { rotate: 90 }), t(60, { rotate: 90 }, { easing: 'ease-in-out' }), t(85, { rotate: 0 }), t(100, { rotate: 0 })]),
   },
   {
     id: 'pool',
-    name: 'Pool',
+    name: m('Pool'),
     domain: 'switch',
     icon: 'mdi:pool',
     tags: ['switch', 'pool', 'water', 'pump', 'sensor'],
     duration: 2.5,
-    parts: { ladder: ['Ladder', [0]], water: ['Water', [1], 'center'] },
+    parts: { ladder: [m('Ladder'), [0]], water: [m('Water'), [1], 'center'] },
     tracks: (x) => x.keys('part:water', [t(0, { x: 0, y: 0 }), t(25, { x: -1, y: -0.3 }), t(50, { x: 0, y: 0 }), t(75, { x: 1, y: -0.3 }), t(100, { x: 0, y: 0 })]),
   },
   {
     id: 'watering-can',
-    name: 'Watering',
+    name: m('Watering'),
     domain: 'plant',
     icon: 'mdi:watering-can',
     tags: ['plant', 'garden', 'irrigation', 'water', 'valve'],
     duration: 3,
-    parts: { can: ['Watering can', [0], 'bottom-left'] },
+    parts: { can: [m('Watering can'), [0], 'bottom-left'] },
     tracks: (x) => x.keys('part:can', [t(0, { rotate: 0 }), t(15, { rotate: 0 }, { easing: 'ease-in-out' }), t(35, { rotate: 18 }), t(45, { rotate: 15 }), t(55, { rotate: 18 }), t(65, { rotate: 15 }, { easing: 'ease-in-out' }), t(85, { rotate: 0 })]),
   },
   // ── security ──
   {
     id: 'doorbell-ring',
-    name: 'Doorbell ring',
+    name: m('Doorbell ring'),
     domain: 'event',
     icon: 'mdi:bell-ring',
     tags: ['event', 'binary_sensor', 'doorbell', 'bell', 'notification', 'ring'],
     duration: 1.8,
-    parts: { body: ['Bell', [0]], clapper: ['Clapper', [1], 'top'], wave_r: ['Right wave', [2]], wave_l: ['Left wave', [3]] },
-    groups: { bell: ['Bell and clapper', ['body', 'clapper'], [12, 2]], waves: ['Sound waves', ['wave_r', 'wave_l']] },
+    parts: { body: [m('Bell'), [0]], clapper: [m('Clapper'), [1], 'top'], wave_r: [m('Right wave'), [2]], wave_l: [m('Left wave'), [3]] },
+    groups: { bell: [m('Bell and clapper'), ['body', 'clapper'], [12, 2]], waves: [m('Sound waves'), ['wave_r', 'wave_l']] },
     tracks: (x) => {
       x.preset('group:bell', 'ring', { share: 70, intensity: 1 });
       x.keys('part:clapper', swingBelow(presetKeyframes('ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 }), CLAPPER_DROP));
@@ -866,13 +868,13 @@ const SPECS: Spec[] = [
   },
   {
     id: 'notification',
-    name: 'Notification',
+    name: m('Notification'),
     domain: 'event',
     icon: 'mdi:bell-alert',
     tags: ['event', 'notification', 'alert', 'bell', 'update'],
     duration: 1.8,
-    parts: { mark: ['Exclamation', [0]], dot: ['Dot', [1]], body: ['Bell', [2]], clapper: ['Clapper', [3], 'top'] },
-    groups: { bell: ['Bell and clapper', ['body', 'clapper'], [12, 2]], alert: ['Exclamation mark', ['mark', 'dot'], 'center'] },
+    parts: { mark: [m('Exclamation'), [0]], dot: [m('Dot'), [1]], body: [m('Bell'), [2]], clapper: [m('Clapper'), [3], 'top'] },
+    groups: { bell: [m('Bell and clapper'), ['body', 'clapper'], [12, 2]], alert: [m('Exclamation mark'), ['mark', 'dot'], 'center'] },
     tracks: (x) => {
       x.preset('group:bell', 'ring', { share: 70 });
       x.keys('part:clapper', swingBelow(presetKeyframes('ring', { share: 70, delay: 3, intensity: 1.3, direction: -1 }), CLAPPER_DROP));
@@ -881,12 +883,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'alarm-light',
-    name: 'Alarm light',
+    name: m('Alarm light'),
     domain: 'siren',
     icon: 'mdi:alarm-light',
     tags: ['siren', 'alarm_control_panel', 'alarm', 'security', 'triggered'],
     duration: 1,
-    parts: { light: ['Light', [6], 'bottom'], base: ['Base', [5]], ray_l: ['Ray left', [3]], ray_tl: ['Ray top left', [0]], ray_t: ['Ray top', [1]], ray_tr: ['Ray top right', [2]], ray_r: ['Ray right', [4]] },
+    parts: { light: [m('Light'), [6], 'bottom'], base: [m('Base'), [5]], ray_l: [m('Ray left'), [3]], ray_tl: [m('Ray top left'), [0]], ray_t: [m('Ray top'), [1]], ray_tr: [m('Ray top right'), [2]], ray_r: [m('Ray right'), [4]] },
     tracks: (x) => {
       x.keys('part:light', [t(0, { scale: 1 }, { color: '#f44336' }), t(50, { scale: 1.05 }, { color: '#ff8a80' }), t(100, { scale: 1 }, { color: '#f44336' })]);
       ['ray_l', 'ray_tl', 'ray_t', 'ray_tr', 'ray_r'].forEach((r, i) =>
@@ -896,13 +898,13 @@ const SPECS: Spec[] = [
   },
   {
     id: 'smoke-alarm',
-    name: 'Smoke alarm',
+    name: m('Smoke alarm'),
     domain: 'binary_sensor',
     icon: 'mdi:smoke-detector-alert',
     tags: ['binary_sensor', 'smoke', 'co', 'carbon_monoxide', 'alarm', 'safety'],
     duration: 1,
-    parts: { body: ['Detector', [0]], centre: ['Centre', [1], 'center'], mark: ['Exclamation', [2]], dot: ['Dot', [3]] },
-    groups: { alert: ['Exclamation mark', ['mark', 'dot']] },
+    parts: { body: [m('Detector'), [0]], centre: [m('Centre'), [1], 'center'], mark: [m('Exclamation'), [2]], dot: [m('Dot'), [3]] },
+    groups: { alert: [m('Exclamation mark'), ['mark', 'dot']] },
     tracks: (x) => {
       x.keys('part:centre', [t(0, { scale: 1 }, { color: '#f44336' }), t(50, { scale: 1.15 }, { color: '#ff8a80' }), t(100, { scale: 1 }, { color: '#f44336' })]);
       x.keys('group:alert', [k(0, { opacity: 1, easing: 'steps(1, end)' }), k(50, { opacity: 0.1, easing: 'steps(1, end)' }), k(100, { opacity: 1 })]);
@@ -910,12 +912,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'smoke-detector',
-    name: 'Smoke detector standby',
+    name: m('Smoke detector standby'),
     domain: 'binary_sensor',
     icon: 'mdi:smoke-detector',
     tags: ['binary_sensor', 'smoke', 'safety', 'ok'],
     duration: 3,
-    parts: { body: ['Detector', [0]], centre: ['Centre', [1], 'center'] },
+    parts: { body: [m('Detector'), [0]], centre: [m('Centre'), [1], 'center'] },
     tracks: (x) =>
       x.keys('part:centre', [
         t(0, { scale: 1 }, { color: 'currentColor' }),
@@ -926,13 +928,13 @@ const SPECS: Spec[] = [
   },
   {
     id: 'alarm-clock',
-    name: 'Alarm clock',
+    name: m('Alarm clock'),
     domain: 'sensor',
     icon: 'mdi:alarm',
     tags: ['sensor', 'alarm', 'clock', 'timer', 'time', 'wake'],
     duration: 1.4,
-    parts: { clock: ['Clock', [0]], hands: ['Hands', [1]], bell_l: ['Left bell', [2], 'center'], bell_r: ['Right bell', [3], 'center'] },
-    groups: { alarm: ['Alarm clock', ['clock', 'hands', 'bell_l', 'bell_r'], [12, 22]] },
+    parts: { clock: [m('Clock'), [0]], hands: [m('Hands'), [1]], bell_l: [m('Left bell'), [2], 'center'], bell_r: [m('Right bell'), [3], 'center'] },
+    groups: { alarm: [m('Alarm clock'), ['clock', 'hands', 'bell_l', 'bell_r'], [12, 22]] },
     tracks: (x) => {
       x.preset('group:alarm', 'ring', { share: 70, intensity: 0.5 });
       x.keys('part:bell_l', [t(0, { y: 0 }), t(10, { y: -0.6 }), t(20, { y: 0 }), t(30, { y: -0.6 }), t(40, { y: 0 }), t(50, { y: -0.6 }), t(60, { y: 0 })]);
@@ -941,27 +943,27 @@ const SPECS: Spec[] = [
   },
   {
     id: 'alert',
-    name: 'Alert',
+    name: m('Alert'),
     domain: 'binary_sensor',
     icon: 'mdi:alert',
     tags: ['binary_sensor', 'alert', 'problem', 'warning', 'update'],
     duration: 1.2,
-    parts: { sign: ['Sign', [0], 'bottom'] },
+    parts: { sign: [m('Sign'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:sign', [t(0, { scale: 1 }, { opacity: 1 }), t(15, { scale: 1.12 }, { opacity: 1 }), t(30, { scale: 1 }, { opacity: 0.55 }), t(45, { scale: 1.08 }, { opacity: 1 }), t(60, { scale: 1 }, { opacity: 1 })]),
   },
   {
     id: 'security-armed',
-    name: 'Security armed',
+    name: m('Security armed'),
     domain: 'alarm_control_panel',
     icon: 'mdi:shield-home',
     tags: ['alarm_control_panel', 'security', 'armed', 'shield'],
     duration: 2.4,
-    parts: { shield: ['Shield', [0], 'center'] },
+    parts: { shield: [m('Shield'), [0], 'center'] },
     tracks: (x) => x.keys('part:shield', [t(0, { scale: 1 }, { opacity: 0.85 }), t(50, { scale: 1.07 }, { opacity: 1 }), t(100, { scale: 1 }, { opacity: 0.85 })]),
   },
   {
     id: 'cctv',
-    name: 'Security camera',
+    name: m('Security camera'),
     domain: 'camera',
     icon: 'mdi:cctv',
     tags: ['camera', 'cctv', 'security', 'surveillance'],
@@ -969,17 +971,17 @@ const SPECS: Spec[] = [
     // P4-2: MDI draws the camera, its arm and the wall bracket in one outline, so the rig is cut
     // (library/rigs.ts): the mount stays still, the head (body and hood) pans around the joint.
     own: [CCTV_MOUNT, CCTV_HEAD_BODY, CCTV_HEAD_HOOD],
-    parts: { mount: ['Mount', [0]], head: ['Camera head', [1, 2], [16, 13]] },
+    parts: { mount: [m('Mount'), [0]], head: [m('Camera head'), [1, 2], [16, 13]] },
     tracks: (x) => x.keys('part:head', [t(0, { rotate: 0 }), t(10, { rotate: 0 }, { easing: 'ease-in-out' }), t(40, { rotate: -12 }), t(55, { rotate: -12 }, { easing: 'ease-in-out' }), t(85, { rotate: 8 }), t(100, { rotate: 0 })]),
   },
   {
     id: 'camera-snapshot',
-    name: 'Camera snapshot',
+    name: m('Camera snapshot'),
     domain: 'camera',
     icon: 'mdi:camera',
     tags: ['camera', 'snapshot', 'photo'],
     duration: 2,
-    parts: { body: ['Camera', [0], 'center'], lens: ['Lens', [1], 'center'] },
+    parts: { body: [m('Camera'), [0], 'center'], lens: [m('Lens'), [1], 'center'] },
     tracks: (x) => {
       x.keys('part:lens', [t(0, { scale: 1 }), t(10, { scale: 0.6 }, { easing: 'ease-out' }), t(25, { scale: 1.1 }), t(40, { scale: 1 })]);
       x.keys('part:body', [t(0, { scale: 1 }), t(10, { scale: 0.96 }), t(25, { scale: 1 })]);
@@ -987,13 +989,13 @@ const SPECS: Spec[] = [
   },
   {
     id: 'motion',
-    name: 'Motion detected',
+    name: m('Motion detected'),
     domain: 'binary_sensor',
     icon: 'mdi:motion-sensor',
     tags: ['binary_sensor', 'motion', 'occupancy', 'presence', 'movement'],
     duration: 1.5,
-    parts: { head: ['Head', [0]], wave_o: ['Outer wave', [1]], wave_m: ['Middle wave', [2]], wave_i: ['Inner wave', [3]], body: ['Person', [4]] },
-    groups: { person: ['Person', ['head', 'body'], 'bottom'] },
+    parts: { head: [m('Head'), [0]], wave_o: [m('Outer wave'), [1]], wave_m: [m('Middle wave'), [2]], wave_i: [m('Inner wave'), [3]], body: [m('Person'), [4]] },
+    groups: { person: [m('Person'), ['head', 'body'], 'bottom'] },
     tracks: (x) => {
       x.keys('group:person', [t(0, { y: 0, rotate: 0 }), t(25, { y: -0.6, rotate: 2 }), t(50, { y: 0, rotate: 0 }), t(75, { y: -0.6, rotate: 2 }), t(100, { y: 0, rotate: 0 })]);
       x.keys('part:wave_i', presetKeyframes('wave', { share: 55 }));
@@ -1003,23 +1005,23 @@ const SPECS: Spec[] = [
   },
   {
     id: 'walking',
-    name: 'Walking',
+    name: m('Walking'),
     domain: 'person',
     icon: 'mdi:walk',
     tags: ['person', 'device_tracker', 'presence', 'motion', 'away'],
     duration: 1,
-    parts: { body: ['Body', [0]], head: ['Head', [1]] },
-    groups: { walker: ['Walker', ['body', 'head'], 'bottom'] },
+    parts: { body: [m('Body'), [0]], head: [m('Head'), [1]] },
+    groups: { walker: [m('Walker'), ['body', 'head'], 'bottom'] },
     tracks: (x) => x.keys('group:walker', [t(0, { y: 0, rotate: -2 }), t(25, { y: -0.7, rotate: 0 }), t(50, { y: 0, rotate: 2 }), t(75, { y: -0.7, rotate: 0 }), t(100, { y: 0, rotate: -2 })]),
   },
   {
     id: 'person-home',
-    name: 'Person home',
+    name: m('Person home'),
     domain: 'person',
     icon: 'mdi:account',
     tags: ['person', 'device_tracker', 'presence', 'home', 'user'],
     duration: 2.4,
-    parts: { head: ['Head', [0], 'bottom'], body: ['Body', [1], 'bottom'] },
+    parts: { head: [m('Head'), [0], 'bottom'], body: [m('Body'), [1], 'bottom'] },
     tracks: (x) => {
       x.keys('part:head', [t(0, { y: 0, rotate: 0 }), t(30, { y: -0.6, rotate: -6 }), t(60, { y: 0, rotate: 4 }), t(100, { y: 0, rotate: 0 })]);
       x.keys('part:body', [t(0, { scale_y: 1 }), t(30, { scale_y: 1.04 }), t(60, { scale_y: 1 })]);
@@ -1027,24 +1029,24 @@ const SPECS: Spec[] = [
   },
   {
     id: 'doorbell-press',
-    name: 'Doorbell press',
+    name: m('Doorbell press'),
     domain: 'button',
     icon: 'mdi:doorbell',
     tags: ['button', 'doorbell', 'event', 'press'],
     duration: 2,
-    parts: { button: ['Button', [0], 'center'], panel: ['Panel', [1]] },
+    parts: { button: [m('Button'), [0], 'center'], panel: [m('Panel'), [1]] },
     tracks: (x) => x.keys('part:button', [t(0, { scale: 1 }), t(8, { scale: 0.7 }, { easing: 'ease-out', color: '#03a9f4' }), t(20, { scale: 1.08 }), t(32, { scale: 1 })]),
   },
   // ── weather ──
   {
     id: 'sunny',
-    name: 'Sunny',
+    name: m('Sunny'),
     domain: 'weather',
     icon: 'mdi:weather-sunny',
     tags: ['weather', 'sun', 'sunny', 'clear', 'day'],
     duration: 6,
-    parts: { sun: ['Sun', [0], 'center'], ray_t: ['Ray top', [1]], ray_tl: ['Ray top left', [2]], ray_bl: ['Ray bottom left', [3]], ray_tr: ['Ray top right', [4]], ray_br: ['Ray bottom right', [5]], ray_b: ['Ray bottom', [6]] },
-    groups: { rays: ['Rays', ['ray_t', 'ray_tl', 'ray_bl', 'ray_tr', 'ray_br', 'ray_b'], [12, 12]] },
+    parts: { sun: [m('Sun'), [0], 'center'], ray_t: [m('Ray top'), [1]], ray_tl: [m('Ray top left'), [2]], ray_bl: [m('Ray bottom left'), [3]], ray_tr: [m('Ray top right'), [4]], ray_br: [m('Ray bottom right'), [5]], ray_b: [m('Ray bottom'), [6]] },
+    groups: { rays: [m('Rays'), ['ray_t', 'ray_tl', 'ray_bl', 'ray_tr', 'ray_br', 'ray_b'], [12, 12]] },
     tracks: (x) => {
       x.keys('group:rays', [t(0, { rotate: 0, scale: 1 }, { easing: 'linear' }), t(50, { rotate: 180, scale: 1.08 }, { easing: 'linear' }), t(100, { rotate: 360, scale: 1 })]);
       x.preset('part:sun', 'pulse', { intensity: 0.4 });
@@ -1052,22 +1054,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'cloudy',
-    name: 'Cloudy',
+    name: m('Cloudy'),
     domain: 'weather',
     icon: 'mdi:weather-cloudy',
     tags: ['weather', 'cloud', 'cloudy', 'overcast'],
     duration: 4,
-    parts: { cloud: ['Cloud', [0]] },
+    parts: { cloud: [m('Cloud'), [0]] },
     tracks: (x) => x.keys('part:cloud', [t(0, { x: 0 }), t(25, { x: 1.2 }), t(75, { x: -1.2 }), t(100, { x: 0 })]),
   },
   {
     id: 'pouring',
-    name: 'Pouring rain',
+    name: m('Pouring rain'),
     domain: 'weather',
     icon: 'mdi:weather-pouring',
     tags: ['weather', 'rain', 'rainy', 'pouring', 'storm'],
     duration: 1,
-    parts: { drop_l: ['Left drop', [0]], drop_m: ['Middle drop', [1]], drop_r: ['Right drop', [2]], cloud: ['Cloud', [3]] },
+    parts: { drop_l: [m('Left drop'), [0]], drop_m: [m('Middle drop'), [1]], drop_r: [m('Right drop'), [2]], cloud: [m('Cloud'), [3]] },
     tracks: (x) => {
       x.keys('part:drop_l', fall(0, 70, 2.5, -1.5));
       x.keys('part:drop_m', fall(30, 70, 2.5, -1.5));
@@ -1076,12 +1078,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'rainy',
-    name: 'Rain',
+    name: m('Rain'),
     domain: 'weather',
     icon: 'mdi:weather-rainy',
     tags: ['weather', 'rain', 'rainy', 'drizzle'],
     duration: 1.6,
-    parts: { cloud: ['Cloud', [0]], drop: ['Drop', [1]] },
+    parts: { cloud: [m('Cloud'), [0]], drop: [m('Drop'), [1]] },
     tracks: (x) => {
       x.keys('part:drop', fall(0, 80, 2, -2));
       x.keys('part:cloud', [t(0, { x: 0 }), t(50, { x: 0.5 }), t(100, { x: 0 })]);
@@ -1089,22 +1091,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'snowy',
-    name: 'Snow',
+    name: m('Snow'),
     domain: 'weather',
     icon: 'mdi:weather-snowy',
     tags: ['weather', 'snow', 'snowy', 'winter'],
     duration: 2.6,
-    parts: { cloud: ['Cloud', [0]], flake: ['Snowflake', [1], 'center'] },
+    parts: { cloud: [m('Cloud'), [0]], flake: [m('Snowflake'), [1], 'center'] },
     tracks: (x) => x.keys('part:flake', fall(0, 90, 1.5, -2.5).map((f, i) => ({ ...f, transform: { ...f.transform, rotate: [0, 0, 30, 80, 90, 90][i] ?? 90 } }))),
   },
   {
     id: 'heavy-snow',
-    name: 'Heavy snow',
+    name: m('Heavy snow'),
     domain: 'weather',
     icon: 'mdi:weather-snowy-heavy',
     tags: ['weather', 'snow', 'snowy', 'blizzard', 'winter'],
     duration: 2.4,
-    parts: { flake_l: ['Left flake', [0], 'center'], cloud: ['Cloud', [1]], flake_r: ['Right flake', [2], 'center'] },
+    parts: { flake_l: [m('Left flake'), [0], 'center'], cloud: [m('Cloud'), [1]], flake_r: [m('Right flake'), [2], 'center'] },
     tracks: (x) => {
       x.keys('part:flake_l', [t(0, { y: -1.5, rotate: 0 }, { opacity: 0 }), t(15, { y: -1, rotate: 15 }, { opacity: 1 }), t(80, { y: 1.5, rotate: 90 }, { opacity: 1 }), t(100, { y: 2, rotate: 110 }, { opacity: 0 })]);
       x.keys('part:flake_r', [t(0, { y: -0.5, rotate: 40 }, { opacity: 1 }), t(30, { y: 1, rotate: 80 }, { opacity: 0 }), t(45, { y: -2, rotate: 0 }, { opacity: 0 }), t(60, { y: -1.5, rotate: 10 }, { opacity: 1 }), t(100, { y: -0.5, rotate: 40 }, { opacity: 1 })]);
@@ -1112,12 +1114,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'thunderstorm',
-    name: 'Thunderstorm',
+    name: m('Thunderstorm'),
     domain: 'weather',
     icon: 'mdi:weather-lightning',
     tags: ['weather', 'lightning', 'storm', 'thunder'],
     duration: 2.2,
-    parts: { cloud: ['Cloud', [0]], bolt: ['Bolt', [1], 'top'] },
+    parts: { cloud: [m('Cloud'), [0]], bolt: [m('Bolt'), [1], 'top'] },
     tracks: (x) => {
       x.keys('part:bolt', flash(10, '#ffd600'));
       x.keys('part:cloud', [t(0, { x: 0 }), t(10, { x: 0 }), t(13, { x: 0.3 }), t(16, { x: -0.3 }), t(19, { x: 0.2 }), t(22, { x: 0 })]);
@@ -1125,12 +1127,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'storm-rain',
-    name: 'Storm with rain',
+    name: m('Storm with rain'),
     domain: 'weather',
     icon: 'mdi:weather-lightning-rainy',
     tags: ['weather', 'lightning', 'rain', 'storm'],
     duration: 2,
-    parts: { cloud: ['Cloud', [0]], bolt: ['Bolt', [1], 'top'], drop: ['Drop', [2]] },
+    parts: { cloud: [m('Cloud'), [0]], bolt: [m('Bolt'), [1], 'top'], drop: [m('Drop'), [2]] },
     tracks: (x) => {
       x.keys('part:bolt', flash(5, '#ffd600'));
       x.keys('part:drop', fall(20, 60, 2, -1.5));
@@ -1138,12 +1140,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'fog',
-    name: 'Fog',
+    name: m('Fog'),
     domain: 'weather',
     icon: 'mdi:weather-fog',
     tags: ['weather', 'fog', 'mist', 'haze'],
     duration: 4,
-    parts: { line_1: ['Fog line 1', [0]], line_2: ['Fog line 2', [1]], cloud: ['Cloud', [2]], line_3: ['Fog line 3', [3]], line_4: ['Fog line 4', [4]] },
+    parts: { line_1: [m('Fog line 1'), [0]], line_2: [m('Fog line 2'), [1]], cloud: [m('Cloud'), [2]], line_3: [m('Fog line 3'), [3]], line_4: [m('Fog line 4'), [4]] },
     tracks: (x) => {
       const drift = (d: number) => [t(0, { x: 0 }, { opacity: 1 }), t(50, { x: d }, { opacity: 0.5 }), t(100, { x: 0 }, { opacity: 1 })];
       x.keys('part:line_1', drift(1.5));
@@ -1154,12 +1156,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'windy',
-    name: 'Windy',
+    name: m('Windy'),
     domain: 'weather',
     icon: 'mdi:weather-windy',
     tags: ['weather', 'wind', 'windy', 'breeze'],
     duration: 3,
-    parts: { gust_t: ['Top gust', [0]], gust_m: ['Middle gust', [1]], gust_b: ['Bottom gust', [2]] },
+    parts: { gust_t: [m('Top gust'), [0]], gust_m: [m('Middle gust'), [1]], gust_b: [m('Bottom gust'), [2]] },
     tracks: (x) => {
       x.preset('part:gust_m', 'draw-loop', { share: 80 });
       x.preset('part:gust_t', 'draw-loop', { share: 80, delay: 10 });
@@ -1168,12 +1170,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'clear-night',
-    name: 'Clear night',
+    name: m('Clear night'),
     domain: 'weather',
     icon: 'mdi:weather-night',
     tags: ['weather', 'night', 'moon', 'clear', 'stars'],
     duration: 3,
-    parts: { star_l: ['Big star', [0], 'center'], star_r: ['Small star', [1], 'center'], moon: ['Moon', [2], 'center'] },
+    parts: { star_l: [m('Big star'), [0], 'center'], star_r: [m('Small star'), [1], 'center'], moon: [m('Moon'), [2], 'center'] },
     tracks: (x) => {
       x.keys('part:moon', [t(0, { rotate: -4 }), t(50, { rotate: 4 }), t(100, { rotate: -4 })]);
       x.keys('part:star_l', [t(0, { scale: 1 }, { opacity: 1 }), t(20, { scale: 0.6 }, { opacity: 0.4 }), t(40, { scale: 1 }, { opacity: 1 })]);
@@ -1182,12 +1184,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'partly-cloudy',
-    name: 'Partly cloudy',
+    name: m('Partly cloudy'),
     domain: 'weather',
     icon: 'mdi:weather-partly-cloudy',
     tags: ['weather', 'partlycloudy', 'cloud', 'sun'],
     duration: 4,
-    parts: { cloud: ['Sun and cloud', [0]], ray_t: ['Ray top', [1]], ray_tl: ['Ray top left', [2]], ray_r: ['Ray right', [3]], ray_l: ['Ray left', [4]] },
+    parts: { cloud: [m('Sun and cloud'), [0]], ray_t: [m('Ray top'), [1]], ray_tl: [m('Ray top left'), [2]], ray_r: [m('Ray right'), [3]], ray_l: [m('Ray left'), [4]] },
     tracks: (x) => {
       x.keys('part:cloud', [t(0, { x: 0 }), t(50, { x: 0.8 }), t(100, { x: 0 })]);
       ['ray_l', 'ray_tl', 'ray_t', 'ray_r'].forEach((r, i) => x.keys(`part:${r}`, presetKeyframes('wave', { share: 60, delay: i * 12 })));
@@ -1195,12 +1197,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'hail',
-    name: 'Hail',
+    name: m('Hail'),
     domain: 'weather',
     icon: 'mdi:weather-hail',
     tags: ['weather', 'hail', 'storm'],
     duration: 1.4,
-    parts: { cloud: ['Cloud', [0]], ball_1: ['Hailstone 1', [3], 'center'], ball_2: ['Hailstone 2', [2], 'center'], ball_3: ['Hailstone 3', [1], 'center'] },
+    parts: { cloud: [m('Cloud'), [0]], ball_1: [m('Hailstone 1'), [3], 'center'], ball_2: [m('Hailstone 2'), [2], 'center'], ball_3: [m('Hailstone 3'), [1], 'center'] },
     tracks: (x) => {
       x.keys('part:ball_1', fall(0, 60, 2, -1.5));
       x.keys('part:ball_2', fall(25, 60, 2, -1.5));
@@ -1209,34 +1211,34 @@ const SPECS: Spec[] = [
   },
   {
     id: 'sunset',
-    name: 'Sunset',
+    name: m('Sunset'),
     domain: 'sun',
     icon: 'mdi:weather-sunset',
     tags: ['sun', 'weather', 'sunset', 'sunrise', 'evening'],
     duration: 3,
-    parts: { sun: ['Sun', [0]], line_1: ['Horizon 1', [1]], line_2: ['Horizon 2', [2]], ray_t: ['Ray top', [3]], ray_l: ['Ray left', [4]], ray_r: ['Ray right', [5]] },
+    parts: { sun: [m('Sun'), [0]], line_1: [m('Horizon 1'), [1]], line_2: [m('Horizon 2'), [2]], ray_t: [m('Ray top'), [3]], ray_l: [m('Ray left'), [4]], ray_r: [m('Ray right'), [5]] },
     tracks: (x) => ['ray_l', 'ray_t', 'ray_r'].forEach((r, i) => x.keys(`part:${r}`, [t(0, { y: 0 }, { opacity: 1 }), t(15 + i * 10, { y: 0 }, { opacity: 1, easing: 'ease-in' }), t(45 + i * 10, { y: 1 }, { opacity: 0.1 }), t(70, { y: 1 }, { opacity: 0.1, easing: 'ease-out' }), t(95, { y: 0 }, { opacity: 1 })])),
   },
   // ── network, phones, time ──
   {
     id: 'wifi',
-    name: 'Wi-Fi',
+    name: m('Wi-Fi'),
     domain: 'binary_sensor',
     icon: 'mdi:wifi',
     tags: ['binary_sensor', 'connectivity', 'wifi', 'network', 'signal'],
     duration: 1.6,
-    parts: { dot: ['Dot', [0]], arc_m: ['Middle arc', [2]], arc_t: ['Top arc', [1]] },
-    groups: { signal: ['Signal', ['dot', 'arc_m', 'arc_t']] },
+    parts: { dot: [m('Dot'), [0]], arc_m: [m('Middle arc'), [2]], arc_t: [m('Top arc'), [1]] },
+    groups: { signal: [m('Signal'), ['dot', 'arc_m', 'arc_t']] },
     tracks: (x) => ['dot', 'arc_m', 'arc_t'].forEach((p, i) => x.keys(`part:${p}`, [k(0, { opacity: 0.25 }), k(i * 20, { opacity: 0.25, easing: 'ease-out' }), k(i * 20 + 15, { opacity: 1 }), k(75, { opacity: 1, easing: 'ease-in' }), k(95, { opacity: 0.25 })])),
   },
   {
     id: 'router',
-    name: 'Router',
+    name: m('Router'),
     domain: 'binary_sensor',
     icon: 'mdi:router-wireless',
     tags: ['binary_sensor', 'connectivity', 'router', 'network', 'internet'],
     duration: 1.6,
-    parts: { wave_o: ['Outer wave', [0]], wave_i: ['Inner wave', [1]], router: ['Router', [2]] },
+    parts: { wave_o: [m('Outer wave'), [0]], wave_i: [m('Inner wave'), [1]], router: [m('Router'), [2]] },
     tracks: (x) => {
       x.keys('part:wave_i', presetKeyframes('wave', { share: 60 }));
       x.keys('part:wave_o', presetKeyframes('wave', { share: 60, delay: 20 }));
@@ -1244,12 +1246,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'phone-signal',
-    name: 'Phone signal',
+    name: m('Phone signal'),
     domain: 'device_tracker',
     icon: 'mdi:cellphone-wireless',
     tags: ['device_tracker', 'phone', 'mobile', 'connectivity'],
     duration: 1.6,
-    parts: { wave_o: ['Outer wave', [0]], wave_i: ['Inner wave', [1]], dot: ['Dot', [2], 'center'], phone: ['Phone', [3]] },
+    parts: { wave_o: [m('Outer wave'), [0]], wave_i: [m('Inner wave'), [1]], dot: [m('Dot'), [2], 'center'], phone: [m('Phone'), [3]] },
     tracks: (x) => {
       x.preset('part:dot', 'pulse', { intensity: 0.8, share: 40 });
       x.keys('part:wave_i', presetKeyframes('wave', { share: 60, delay: 10 }));
@@ -1258,12 +1260,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'phone-ringing',
-    name: 'Phone ringing',
+    name: m('Phone ringing'),
     domain: 'event',
     icon: 'mdi:phone-ring',
     tags: ['event', 'phone', 'call', 'ringing'],
     duration: 1.2,
-    parts: { handset: ['Handset', [0], 'center'], wave_r: ['Right wave', [1]], wave_t: ['Top wave', [2]], wave_l: ['Left wave', [3]] },
+    parts: { handset: [m('Handset'), [0], 'center'], wave_r: [m('Right wave'), [1]], wave_t: [m('Top wave'), [2]], wave_l: [m('Left wave'), [3]] },
     tracks: (x) => {
       x.preset('part:handset', 'ring', { share: 60, intensity: 0.5 });
       ['wave_l', 'wave_t', 'wave_r'].forEach((w, i) => x.keys(`part:${w}`, presetKeyframes('wave', { share: 50, delay: i * 12 })));
@@ -1271,32 +1273,32 @@ const SPECS: Spec[] = [
   },
   {
     id: 'phone-vibrate',
-    name: 'Phone vibrate',
+    name: m('Phone vibrate'),
     domain: 'device_tracker',
     icon: 'mdi:cellphone',
     tags: ['device_tracker', 'phone', 'mobile', 'notification'],
     duration: 1.4,
-    parts: { phone: ['Phone', [0], 'center'] },
+    parts: { phone: [m('Phone'), [0], 'center'] },
     tracks: (x) => x.keys('part:phone', [0, 4, 8, 12, 16, 20, 24, 28, 32, 50, 54, 58, 62, 66, 70, 74, 78, 82].map((at, i, all) => t(at, { rotate: i === 0 || i === 8 || i === 9 || i === all.length - 1 ? 0 : i % 2 ? 4 : -4 }, { easing: 'linear' }))),
   },
   {
     id: 'clock',
-    name: 'Clock',
+    name: m('Clock'),
     domain: 'sensor',
     icon: 'mdi:clock-outline',
     tags: ['sensor', 'time', 'clock', 'timer', 'schedule'],
     duration: 4,
-    parts: { face: ['Face', [0]], hands: ['Hands', [1], [12, 12]] },
+    parts: { face: [m('Face'), [0]], hands: [m('Hands'), [1], [12, 12]] },
     tracks: (x) => x.keys('part:hands', SPIN()),
   },
   {
     id: 'hourglass',
-    name: 'Hourglass',
+    name: m('Hourglass'),
     domain: 'timer',
     icon: 'mdi:timer-sand',
     tags: ['timer', 'time', 'waiting', 'countdown'],
     duration: 3,
-    parts: { glass: ['Hourglass', [0], [12, 12]], sand: ['Sand', [1], 'bottom'] },
+    parts: { glass: [m('Hourglass'), [0], [12, 12]], sand: [m('Sand'), [1], 'bottom'] },
     tracks: (x) => {
       // the sand drains, hides while the glass turns over (the glass alone is symmetric: 180° looks
       // like 0°, so the loop has no jump) and is back at the top for the next cycle
@@ -1312,12 +1314,12 @@ const SPECS: Spec[] = [
   },
   {
     id: 'timer',
-    name: 'Timer',
+    name: m('Timer'),
     domain: 'timer',
     icon: 'mdi:timer-outline',
     tags: ['timer', 'time', 'countdown', 'stopwatch'],
     duration: 3,
-    parts: { face: ['Face', [0]], hand: ['Hand', [1], [12, 13]], button: ['Button', [2]] },
+    parts: { face: [m('Face'), [0]], hand: [m('Hand'), [1], [12, 13]], button: [m('Button'), [2]] },
     tracks: (x) => {
       x.keys('part:hand', SPIN());
       x.keys('part:button', [t(0, { y: 0 }), t(4, { y: 0.6 }), t(10, { y: 0 })]);
@@ -1325,43 +1327,43 @@ const SPECS: Spec[] = [
   },
   {
     id: 'car',
-    name: 'Car driving',
+    name: m('Car driving'),
     domain: 'device_tracker',
     icon: 'mdi:car',
     tags: ['device_tracker', 'car', 'vehicle', 'driving', 'away'],
     duration: 0.8,
-    parts: { car: ['Car', [0], 'bottom'] },
+    parts: { car: [m('Car'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:car', [t(0, { y: 0, rotate: 0 }), t(25, { y: -0.4, rotate: -1 }), t(50, { y: 0, rotate: 0 }), t(75, { y: -0.3, rotate: 1 }), t(100, { y: 0, rotate: 0 })]),
   },
   // ── home, garden, pets ──
   {
     id: 'trash',
-    name: 'Trash day',
+    name: m('Trash day'),
     domain: 'calendar',
     icon: 'mdi:trash-can',
     tags: ['calendar', 'sensor', 'trash', 'garbage', 'waste', 'bin'],
     duration: 2,
-    parts: { bin: ['Bin', [0], 'bottom'] },
+    parts: { bin: [m('Bin'), [0], 'bottom'] },
     tracks: (x) => x.preset('part:bin', 'wobble', { share: 60, intensity: 1 }),
   },
   {
     id: 'plant',
-    name: 'Plant',
+    name: m('Plant'),
     domain: 'plant',
     icon: 'mdi:sprout',
     tags: ['plant', 'garden', 'moisture', 'sensor'],
     duration: 3,
-    parts: { soil: ['Soil', [0]], sprout: ['Sprout', [1], [12, 17]] },
+    parts: { soil: [m('Soil'), [0]], sprout: [m('Sprout'), [1], [12, 17]] },
     tracks: (x) => x.keys('part:sprout', [t(0, { rotate: -5 }), t(50, { rotate: 5 }), t(100, { rotate: -5 })]),
   },
   {
     id: 'flower',
-    name: 'Flower',
+    name: m('Flower'),
     domain: 'plant',
     icon: 'mdi:flower',
     tags: ['plant', 'garden', 'flower', 'spring'],
     duration: 3,
-    parts: { leaf_l: ['Left leaf', [0], 'top-right'], head: ['Flower', [1], 'bottom'], leaf_r: ['Right leaf', [2], 'top-left'] },
+    parts: { leaf_l: [m('Left leaf'), [0], 'top-right'], head: [m('Flower'), [1], 'bottom'], leaf_r: [m('Right leaf'), [2], 'top-left'] },
     tracks: (x) => {
       x.keys('part:head', [t(0, { rotate: -6 }), t(50, { rotate: 6 }), t(100, { rotate: -6 })]);
       x.keys('part:leaf_l', [t(0, { rotate: 0 }), t(50, { rotate: -6 }), t(100, { rotate: 0 })]);
@@ -1370,22 +1372,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'leaf',
-    name: 'Leaf in the wind',
+    name: m('Leaf in the wind'),
     domain: 'sensor',
     icon: 'mdi:leaf',
     tags: ['sensor', 'eco', 'energy', 'nature', 'plant'],
     duration: 3,
-    parts: { leaf: ['Leaf', [0], 'bottom-left'] },
+    parts: { leaf: [m('Leaf'), [0], 'bottom-left'] },
     tracks: (x) => x.keys('part:leaf', [t(0, { rotate: 0, y: 0 }), t(30, { rotate: -8, y: -0.6 }), t(60, { rotate: 4, y: 0.2 }), t(100, { rotate: 0, y: 0 })]),
   },
   {
     id: 'paw',
-    name: 'Pet',
+    name: m('Pet'),
     domain: 'sensor',
     icon: 'mdi:paw',
     tags: ['sensor', 'pet', 'dog', 'cat', 'feeder', 'presence'],
     duration: 1.6,
-    parts: { toe_1: ['Toe 1', [2], 'center'], toe_2: ['Toe 2', [0], 'center'], toe_3: ['Toe 3', [1], 'center'], toe_4: ['Toe 4', [3], 'center'], pad: ['Pad', [4], 'center'] },
+    parts: { toe_1: [m('Toe 1'), [2], 'center'], toe_2: [m('Toe 2'), [0], 'center'], toe_3: [m('Toe 3'), [1], 'center'], toe_4: [m('Toe 4'), [3], 'center'], pad: [m('Pad'), [4], 'center'] },
     tracks: (x) => {
       ['toe_1', 'toe_2', 'toe_3', 'toe_4'].forEach((p, i) => x.keys(`part:${p}`, [t(0, { scale: 1 }), t(i * 10, { scale: 1 }, { easing: 'ease-out' }), t(i * 10 + 10, { scale: 1.25 }, { easing: 'ease-in' }), t(i * 10 + 22, { scale: 1 })]));
       x.keys('part:pad', [t(0, { scale: 1 }), t(50, { scale: 1 }), t(60, { scale: 1.08 }), t(72, { scale: 1 })]);
@@ -1393,22 +1395,22 @@ const SPECS: Spec[] = [
   },
   {
     id: 'dog',
-    name: 'Dog',
+    name: m('Dog'),
     domain: 'sensor',
     icon: 'mdi:dog',
     tags: ['sensor', 'pet', 'dog', 'presence'],
     duration: 2,
-    parts: { dog: ['Dog', [0], 'bottom'] },
+    parts: { dog: [m('Dog'), [0], 'bottom'] },
     tracks: (x) => x.keys('part:dog', [t(0, { rotate: 0 }), t(20, { rotate: -10 }), t(45, { rotate: -10 }, { easing: 'ease-in-out' }), t(65, { rotate: 0 })]),
   },
   {
     id: 'bee',
-    name: 'Bee',
+    name: m('Bee'),
     domain: 'sensor',
     icon: 'mdi:bee',
     tags: ['sensor', 'garden', 'nature', 'pollen'],
     duration: 3,
-    parts: { bee: ['Bee', [0], 'center'] },
+    parts: { bee: [m('Bee'), [0], 'center'] },
     tracks: (x) => {
       x.path('part:bee', 'M0 0 C 1.5 -2 3 -2 3 0 S 1.5 2 0 0 S -3 2 -3 0 S -1.5 -2 0 0');
       x.keys('part:bee', [t(0, { rotate: -8 }, { easing: 'linear' }), t(25, { rotate: 8 }, { easing: 'linear' }), t(50, { rotate: -8 }, { easing: 'linear' }), t(75, { rotate: 8 }, { easing: 'linear' }), t(100, { rotate: -8 })]);
@@ -1416,53 +1418,53 @@ const SPECS: Spec[] = [
   },
   {
     id: 'bird',
-    name: 'Bird',
+    name: m('Bird'),
     domain: 'sensor',
     icon: 'mdi:bird',
     tags: ['sensor', 'garden', 'nature', 'bird'],
     duration: 1.6,
-    parts: { bird: ['Bird', [0], 'center'] },
+    parts: { bird: [m('Bird'), [0], 'center'] },
     tracks: (x) => x.keys('part:bird', [t(0, { y: 0, rotate: 0 }), t(30, { y: -1.4, rotate: -6 }), t(60, { y: 0.3, rotate: 3 }), t(100, { y: 0, rotate: 0 })]),
   },
   {
     id: 'fish',
-    name: 'Fish',
+    name: m('Fish'),
     domain: 'sensor',
     icon: 'mdi:fish',
     tags: ['sensor', 'aquarium', 'pet', 'water'],
     duration: 2,
-    parts: { fish: ['Fish', [0], 'center'] },
+    parts: { fish: [m('Fish'), [0], 'center'] },
     tracks: (x) => x.keys('part:fish', [t(0, { x: 0, y: 0, rotate: 0 }), t(25, { x: 0.8, y: -0.4, rotate: -6 }), t(50, { x: 0, y: 0, rotate: 0 }), t(75, { x: -0.8, y: 0.4, rotate: 6 }), t(100, { x: 0, y: 0, rotate: 0 })]),
   },
   {
     id: 'heartbeat',
-    name: 'Heartbeat',
+    name: m('Heartbeat'),
     domain: 'sensor',
     icon: 'mdi:heart-pulse',
     tags: ['sensor', 'health', 'heart', 'pulse', 'fitness'],
     duration: 1.2,
-    parts: { top: ['Heart top', [0]], bottom: ['Heart and pulse', [1]] },
-    groups: { heart: ['Heart', ['top', 'bottom'], 'center'] },
+    parts: { top: [m('Heart top'), [0]], bottom: [m('Heart and pulse'), [1]] },
+    groups: { heart: [m('Heart'), ['top', 'bottom'], 'center'] },
     tracks: (x) => x.keys('group:heart', [t(0, { scale: 1 }, { easing: 'ease-out' }), t(10, { scale: 1.15 }, { easing: 'ease-in' }), t(22, { scale: 1 }, { easing: 'ease-out' }), t(32, { scale: 1.1 }, { easing: 'ease-in' }), t(48, { scale: 1 })]),
   },
   {
     id: 'home',
-    name: 'Home',
+    name: m('Home'),
     domain: 'zone',
     icon: 'mdi:home',
     tags: ['zone', 'person', 'home', 'presence', 'house'],
     duration: 2.4,
-    parts: { house: ['House', [0], 'bottom'] },
+    parts: { house: [m('House'), [0], 'bottom'] },
     tracks: (x) => x.preset('part:house', 'bounce', { intensity: 0.4, share: 50 }),
   },
   {
     id: 'gauge',
-    name: 'Gauge',
+    name: m('Gauge'),
     domain: 'sensor',
     icon: 'mdi:gauge',
     tags: ['sensor', 'gauge', 'speed', 'pressure', 'level'],
     duration: 3,
-    parts: { dial: ['Dial', [0]], needle: ['Needle', [1], [11, 14]], tick_t: ['Top tick', [2]], tick_l: ['Left tick', [3]], tick_r: ['Right tick', [4]] },
+    parts: { dial: [m('Dial'), [0]], needle: [m('Needle'), [1], [11, 14]], tick_t: [m('Top tick'), [2]], tick_l: [m('Left tick'), [3]], tick_r: [m('Right tick'), [4]] },
     tracks: (x) => x.keys('part:needle', [t(0, { rotate: -70 }, { easing: 'ease-out' }), t(40, { rotate: 10 }, { easing: 'ease-in-out' }), t(55, { rotate: -5 }), t(70, { rotate: 5 }, { easing: 'ease-in-out' }), t(100, { rotate: -70 })]),
   },
 ];
@@ -1499,10 +1501,10 @@ export function libraryFor(domainOrIcon: string): LibraryEntry[] {
 
 /** Entries matching a search (name, id, icon, domain and tags, every word). */
 export function searchLibrary(query: string, domain?: string): LibraryEntry[] {
-  const terms = (query ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+  const terms = foldText(query ?? '').split(/\s+/).filter(Boolean);
   return ICON_LIBRARY.filter((e) => {
     if (domain && e.domain !== domain && !e.tags.includes(domain)) return false;
-    const hay = `${e.name} ${e.id} ${e.icon} ${e.domain} ${e.tags.join(' ')}`.toLowerCase();
+    const hay = foldText(`${e.name} ${e.id} ${e.icon} ${e.domain} ${e.tags.join(' ')}`);
     return terms.every((w) => hay.includes(w));
   });
 }
