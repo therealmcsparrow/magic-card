@@ -87,6 +87,8 @@ export const editorStyles: CSSResult[] = [
     }
     h4,
     .help,
+    .pt-help,
+    .pt-outcome,
     .lbl,
     .f > span {
       font-size: 0.75rem;
@@ -153,6 +155,7 @@ export const editorStyles: CSSResult[] = [
     .pointbar,
     .pad,
     .acts,
+    .pt-actions,
     .libs li,
     .pv-row,
     .float {
@@ -622,17 +625,22 @@ export const editorStyles: CSSResult[] = [
     }
     .selbox,
     .rubber,
-    .trail {
+    .trail,
+    .pvw path {
       fill: none;
       stroke: var(--mc-accent);
       stroke-width: 1.5;
       stroke-dasharray: 5 3;
     }
-    .rubber {
+    .rubber,
+    .pvw path {
       fill: var(--mc-accent-tint);
     }
     .trail {
       stroke-dasharray: none;
+    }
+    .pvw path {
+      vector-effect: non-scaling-stroke;
     }
     .cross {
       stroke: var(--mc-accent);
@@ -665,6 +673,7 @@ export const editorStyles: CSSResult[] = [
     .libmsg,
     .libs,
     .grp-s,
+    .pt-panel,
     .pv {
       display: flex;
       flex-direction: column;
@@ -743,7 +752,8 @@ export const editorStyles: CSSResult[] = [
       background: var(--mc-surface-2);
       border-radius: 8px;
     }
-    .grp-s {
+    .grp-s,
+    .pt-panel {
       padding: 8px 0 12px;
       border-bottom: 1px solid var(--mc-divider);
     }

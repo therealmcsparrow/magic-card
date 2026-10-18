@@ -10,6 +10,7 @@ import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path
 import { resolveIconGeometry } from '../icons/icon-source';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { loadPathBooleans } from '../path-booleans/loader';
+import type { PathTool } from '../contracts/path-tools';
 import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
 import { alignMoves, centreMove, distributeMoves, fitBox, itemsOf, matchMove, safeBox, union, type Item, type Move } from './arrange';
@@ -57,6 +58,7 @@ import {
 } from './model';
 import { endDrag, stepOrder, groupBlocked, type DragState } from './layers';
 import { emptyMenu, pointMenu, runMenu, shapeMenu } from './menu';
+import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
 import { S } from './strings';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
@@ -107,7 +109,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -157,6 +159,9 @@ export class McSvgEditor extends LitElement implements StageHost {
   note?: { tone: 'info' | 'warn' | 'error'; lines: string[]; action?: { label: string; run: () => void } };
   /** The boolean button waiting for the chunk. */
   boolBusy?: BooleanOp;
+  /** The open path tool (panel and preview), the tool waiting for its chunks, and and where. */
+  pt?: PtState;
+  ptBusy?: PathTool;
   toast?: { text: string; action?: { label: string; run: () => void } };
   dlg: 'save' | 'help' | 'single' | undefined;
   /** Dual-tone switch (session state): on also whenever a layer paints Accent. */
@@ -891,8 +896,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.boolBusy = undefined;
     }
     if (!chunk) {
-      this.note = { tone: 'error', lines: [S.boolLoadFail], action: { label: S.boolRetry, run: () => void this.runBoolean(op) } };
-      this.say(S.boolLoadFail);
+      this.noteFail(S.boolLoadFail, () => void this.runBoolean(op));
       return;
     }
     const st = this.boolean;
@@ -908,7 +912,17 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.apply(out.doc, S.boolOps[op]);
     this.select([out.shape.id]);
     const text = boolNote(op, st, r.skippedOpen + st.openOnly);
+    this.noteUndo(text);
+  }
+
+  /** The status strip: a result with Undo, or a failure with Try again. Both go to the live region. */
+  noteUndo(text: string): void {
     this.note = { tone: 'info', lines: [text], action: { label: S.undo, run: () => { this.undo(); this.note = { tone: 'info', lines: [S.undone] }; } } };
+    this.say(text);
+  }
+
+  noteFail(text: string, retry: () => void): void {
+    this.note = { tone: 'error', lines: [text], action: { label: S.boolRetry, run: retry } };
     this.say(text);
   }
 
@@ -1030,6 +1044,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       return;
     }
     if (endDrag(this, false) || this.gestures.cancel()) return;
+    if (this.pt) return ptCancel(this);
     if (this.dlg) this.dlg = undefined;
     else if (this.leaving) this.leaving = false;
     else if (this.overlay) this.overlay = false;
@@ -1207,6 +1222,10 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   setLive(l: Live | undefined): void {
     this.liveShape = l;
+  }
+
+  cut(a: Pt, b: Pt): void {
+    void openTool(this, 'knife', [a, b]);
   }
 
   panBy(dx: number, dy: number): void {
@@ -1682,6 +1701,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
+    if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
   }
 
   protected render(): TemplateResult {
@@ -1707,10 +1727,10 @@ export const GRID_CHIPS: readonly number[] = [0.5, 1, 2, 3, 4];
 export const GRID_MIN = 0.1;
 export const GRID_MAX = 12;
 
-const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyS: 'shapes', KeyB: 'free', KeyH: 'hand' };
+const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyS: 'shapes', KeyB: 'free', KeyH: 'hand', KeyK: 'knife' };
 
 export const toolName = (t: Tool): string =>
-  ({ select: S.toolSelect, node: S.toolNode, pen: S.toolPen, rect: S.toolRect, ellipse: S.toolEllipse, line: S.toolLine, polygon: S.toolPolygon, shapes: S.toolShapes, free: S.toolFree, hand: S.toolHand })[t];
+  ({ select: S.toolSelect, node: S.toolNode, pen: S.toolPen, rect: S.toolRect, ellipse: S.toolEllipse, line: S.toolLine, polygon: S.toolPolygon, shapes: S.toolShapes, free: S.toolFree, hand: S.toolHand, knife: S.ptName.knife })[t];
 
 export const kbOf = (bytes: number): string => (bytes / 1024).toLocaleString(undefined, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 

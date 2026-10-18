@@ -1,8 +1,10 @@
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { BooleanOp } from '../contracts/path-booleans';
+import type { PathTool } from '../contracts/path-tools';
 import type { SvgAlignEdge, SvgArrange } from '../contracts/svg-editor';
 import { boolReason } from './combine';
 import { moveMenu, runMove } from './layers';
+import { PATH_BUTTONS, openTool, ptReason } from './pathtools';
 import { toneOf } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { S } from './strings';
@@ -18,7 +20,7 @@ export const emptyMenu = (): MenuEntry[] => [it('all', S.selectAll), it('zoom', 
 
 export function pointMenu(ed: McSvgEditor): MenuEntry[] {
   const k = ed.pointCtx?.kind;
-  return [it('kind', k === 'smooth' ? S.kindCorner : S.kindSmooth), it('addpt', S.pointAdd, ed.canAddPoint ? undefined : S.pointAddNo), it('delpt', S.pointDelete)];
+  return [it('kind', k === 'smooth' ? S.kindCorner : S.kindSmooth), it('addpt', S.pointAdd, ed.canAddPoint ? undefined : S.pointAddNo), it('delpt', S.pointDelete), it('split', S.ptHere, ptReason(ed, 'split'))];
 }
 
 export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
@@ -46,6 +48,7 @@ export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
       ],
     },
     { ...it('combine', S.boolOps.union), items: OPS.map((o) => it(`bool:${o}`, S.boolOps[o], boolReason(st, o))) },
+    { ...it('path', S.ptTitle), items: PATH_BUTTONS.map((t) => it(`pt:${t}`, S.ptName[t], ptReason(ed, t))) },
     ...(moveMenu(ed) ? [moveMenu(ed)!] : []),
   ];
 }
@@ -64,6 +67,7 @@ export function runMenu(ed: McSvgEditor, id: string): void {
   else if (k === 'place') ed.place(v as 'centre' | 'fit' | 'match');
   else if (k === 'bool') void ed.runBoolean(v as BooleanOp);
   else if (k === 'mv') runMove(ed, v, w);
+  else if (k === 'pt' || k === 'split') void openTool(ed, (k === 'pt' ? v : 'split') as PathTool);
   else if (k === 'all') ed.select(ed.doc.shapes.map((s) => s.id));
   else if (k === 'zoom') ed.fitView();
   else if (k === 'kind') ed.setKind(ed.pointCtx?.kind === 'smooth' ? 'corner' : 'smooth');

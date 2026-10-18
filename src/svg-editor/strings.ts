@@ -4,6 +4,7 @@
  */
 
 import type { PrimitiveKind } from '../contracts/path-model';
+import type { PathTool } from '../contracts/path-tools';
 
 export const n = (count: number, one: string, many: string): string => `${count.toLocaleString()} ${count === 1 ? one : many}`;
 
@@ -219,6 +220,17 @@ export const S = {
   boolUnchanged: 'Nothing was changed.',
   boolLoadFail: "Couldn't load the shape tools. Try again.",
   boolRetry: 'Try again',
+  ptTitle: 'Path',
+  ptName: { 'outline-stroke': 'Outline stroke', offset: 'Offset path', simplify: 'Simplify', join: 'Join', split: 'Split at point', knife: 'Knife' } as Record<PathTool, string>,
+  ptSelect: 'Select a shape first.',
+  ptNoStroke: 'This shape has no stroke to outline.',
+  ptNoArea: 'Select a closed shape. Open lines have no area.',
+  ptNotOpen: 'Join works on open paths. Use Split first to open a closed one.',
+  ptPoint: 'Select one point between the ends with the Node tool.',
+  ptHere: 'Split here',
+  ptLoadFail: "Couldn't load the path tools. Try again.",
+  ptDone: (n: string, b: number, a: number): string => `${n} applied: ${b} points before, ${a} after.`,
+  hintKnife: 'Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.',
   undone: 'Undone.',
 
   libRule: 'Use follows the library: change "Lamp" and every card that uses it changes. Use as copy makes the card independent.',

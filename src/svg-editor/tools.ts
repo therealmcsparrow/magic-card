@@ -10,8 +10,8 @@ import { toEditPaths, fromCorners, fromPrimitive, newShape, nameFor, type Doc, t
  * pen and the point tools are the canvas's own.
  */
 
-export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand';
-export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon', 'shapes'];
+export type Tool = 'select' | 'node' | 'pen' | 'rect' | 'ellipse' | 'line' | 'polygon' | 'shapes' | 'free' | 'hand' | 'knife';
+export const SHAPE_TOOLS: readonly Tool[] = ['rect', 'ellipse', 'line', 'polygon', 'shapes', 'knife'];
 export const DRAW_TOOLS: readonly Tool[] = [...SHAPE_TOOLS, 'free', 'hand'];
 
 export interface ToolOpts {
@@ -43,6 +43,7 @@ export interface StageHost {
   addShape(s: Shape): void;
   panBy(dx: number, dy: number): void;
   say(text: string): void;
+  cut(a: Pt, b: Pt): void;
   space: boolean;
 }
 
@@ -85,7 +86,7 @@ export class Gestures {
 
   private build(a: Pt, b: Pt, square: boolean): Shape | undefined {
     const t = this.h.tool;
-    if (!SHAPE_TOOLS.includes(t) || (Math.abs(b[0] - a[0]) < 0.01 && Math.abs(b[1] - a[1]) < 0.01)) return undefined;
+    if (t === 'knife' || !SHAPE_TOOLS.includes(t) || (Math.abs(b[0] - a[0]) < 0.01 && Math.abs(b[1] - a[1]) < 0.01)) return undefined;
     const o = this.h.opts;
     if (t === 'shapes') return fromPrimitive(this.h.doc, o.prim, S.prim[o.prim], a, b, square);
     const kind = t === 'polygon' ? (o.star ? 'star' : 'polygon') : (t as 'rect' | 'ellipse' | 'line');
@@ -165,6 +166,7 @@ export class Gestures {
     this.pending = undefined;
     this.cursor = undefined;
     this.h.setLive(undefined);
+    if (this.h.tool === 'knife') return this.h.cut(a, b);
     const s = this.build(a, b, square);
     if (s) this.h.addShape(s);
   }

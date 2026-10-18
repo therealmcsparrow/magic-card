@@ -12,6 +12,7 @@ import { groupBlocked, layerTree, subject } from './layers';
 import { glyph, type GlyphName } from './icons';
 import { byId, isOff, round2, shapeBox, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
+import { PATH_BUTTONS, apply, cancel, change, openTool, panelState, ptReason } from './pathtools';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
 import { S } from './strings';
@@ -297,6 +298,7 @@ const TOOLS: Array<[Tool, GlyphName, string]> = [
   ['polygon', 'polygon', 'G'],
   ['shapes', 'rect', 'S'],
   ['free', 'free', 'B'],
+  ['knife', 'knife', 'K'],
   ['hand', 'hand', 'H'],
 ];
 
@@ -440,6 +442,8 @@ function hintFor(ed: McSvgEditor): string {
       return S.hintFree;
     case 'hand':
       return S.hintHand;
+    case 'knife':
+      return S.hintKnife;
     default:
       return S.hintShape;
   }
@@ -461,6 +465,7 @@ function artLayer(ed: McSvgEditor): TemplateResult {
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
       ${guard([ed.doc.shapes, ed.doc.groups], () => artNodes(ed.doc))}
       ${live ? svg`<g class="ghost">${artNodes({ ...ed.doc, shapes: [live] })}</g>` : nothing}
+      ${ed.pt?.res?.doc ? svg`<g class="pvw">${ed.pt.res.prev.map((s) => svg`<path d=${dOf(s)}></path>`)}</g>` : nothing}
     </g>
   </svg>`;
 }
@@ -476,7 +481,7 @@ function overLayer(ed: McSvgEditor): TemplateResult {
       const [x, y] = to(b.x, b.y);
       return svg`<rect class="selbox" x=${x} y=${y} width=${b.w * v.zoom} height=${b.h * v.zoom}></rect>`;
     })}
-    ${l?.from && l.cursor ? svg`<path class="rubber" d=${`M${to(...l.from).join(' ')}L${to(l.cursor[0], l.from[1]).join(' ')}L${to(...l.cursor).join(' ')}L${to(l.from[0], l.cursor[1]).join(' ')}Z`}></path>` : nothing}
+    ${l?.from && l.cursor ? svg`<path class="rubber" d=${ed.tool === 'knife' ? `M${to(...l.from).join(' ')}L${to(...l.cursor).join(' ')}` : `M${to(...l.from).join(' ')}L${to(l.cursor[0], l.from[1]).join(' ')}L${to(...l.cursor).join(' ')}L${to(l.from[0], l.cursor[1]).join(' ')}Z`}></path>` : nothing}
     ${l?.cursor ? svg`<path class="cross" d=${`M${to(l.cursor[0], l.cursor[1])[0] - 9} ${to(l.cursor[0], l.cursor[1])[1]}h18M${to(l.cursor[0], l.cursor[1])[0]} ${to(l.cursor[0], l.cursor[1])[1] - 9}v18`}></path>` : nothing}
     ${l?.trail ? svg`<polyline class="trail" points=${l.trail.map((p) => to(p[0], p[1]).join(',')).join(' ')}></polyline>` : nothing}
   </svg>`;
@@ -595,7 +600,7 @@ function inspector(ed: McSvgEditor): TemplateResult {
   return html`<aside class="insp" aria-label=${S.inspector}>
     <button type="button" class="b more" aria-label=${S.moreActions} title=${S.moreActions} aria-haspopup="menu" aria-expanded=${aria(!!ed.menu)} @click=${(e: Event) => ed.moreMenu(e.currentTarget as HTMLElement)}>${glyph('more', 18)}</button>
     ${ed.pointCtx ? pointSection(ed) : nothing}
-    ${sel.length ? shapeSections(ed, sel) : documentSection(ed)}
+    ${sel.length ? shapeSections(ed, sel) : html`${ed.pt ? pathSection(ed) : nothing}${documentSection(ed)}`}
   </aside>`;
 }
 
@@ -670,21 +675,36 @@ const BOOL_GLYPH: Record<BooleanOp, string> = {
 };
 const BOOL_OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
 
+/** A button of the Combine and Path grids: unavailable ones stay focusable (the reason is text under the grid). */
+const opBtn = (op: string, label: string, off: unknown, busy: boolean, on: () => void, gl?: TemplateResult): TemplateResult =>
+  html`<button type="button" class=${`b${off ? ' is-off' : ''}`} aria-disabled=${off ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} data-op=${op} @click=${on}>${gl ?? nothing}<span>${label}</span></button>`;
+
 function boolSection(ed: McSvgEditor): TemplateResult {
   const st = ed.boolean;
   const lines = boolHelp(st);
   return html`<section class="grp-s bool" aria-labelledby="bo-h">
     <h4 id="bo-h">${S.boolTitle}</h4>
     <div class="bool-grid">
-      ${BOOL_OPS.map((o) => {
-        const why = boolReason(st, o);
-        const busy = ed.boolBusy === o;
-        return html`<button type="button" class=${`b${why ? ' is-off' : ''}`} aria-disabled=${why || ed.boolBusy ? 'true' : nothing} aria-busy=${busy ? 'true' : nothing} data-op=${o} @click=${() => void ed.runBoolean(o)}>
-          <svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.6"></path></svg><span>${busy ? S.boolWorking : S.boolOps[o]}</span></button>`;
-      })}
+      ${BOOL_OPS.map((o) =>
+        opBtn(o, ed.boolBusy === o ? S.boolWorking : S.boolOps[o], boolReason(st, o) || ed.boolBusy, ed.boolBusy === o, () => void ed.runBoolean(o), svg`<svg class="gl" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d=${BOOL_GLYPH[o]} fill=${o === 'union' || o === 'subtract' ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="1.6"></path></svg>`),
+      )}
     </div>
     <p class="help">${S.boolHint}</p>
     ${lines.map((l) => html`<p class="help">${l}</p>`)}
+  </section>`;
+}
+
+function pathSection(ed: McSvgEditor): TemplateResult {
+  const p = ed.pt;
+  if (p)
+    return p.c.renderPanel(panelState(p), { change: (x) => change(ed, x), apply: () => apply(ed), cancel: () => cancel(ed) }) as TemplateResult;
+  const why = PATH_BUTTONS.map((t) => ptReason(ed, t));
+  return html`<section class="grp-s pt-sec" aria-labelledby="pt-h">
+    <h4 id="pt-h">${S.ptTitle}</h4>
+    <div class="bool-grid">
+      ${PATH_BUTTONS.map((t, i) => opBtn(t, S.ptName[t], why[i] || ed.ptBusy, ed.ptBusy === t, () => void openTool(ed, t)))}
+    </div>
+    ${[...new Set(why)].map((l) => (l ? html`<p class="help">${l}</p>` : nothing))}
   </section>`;
 }
 
@@ -767,6 +787,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       ${placeRow(ed)}
     </section>
     ${boolSection(ed)}
+    ${pathSection(ed)}
     ${one && (one.type === 'rect' || one.type === 'polygon' || one.type === 'star')
       ? html`<section class="grp-s" aria-labelledby="to-h"><h4 id="to-h">${S.typeOptions}</h4>
           ${one.type === 'rect' ? numField(S.radiusField, one.r ?? 0, (n) => ed.option({ r: Math.max(0, n) }), { min: 0 }) : numField(S.sidesField, one.sides ?? 5, (n) => ed.option({ sides: Math.min(24, Math.max(3, Math.round(n))) }), { min: 3, max: 24, step: 1 })}
