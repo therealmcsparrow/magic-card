@@ -13,7 +13,7 @@ const B2 = 471_856;
 const CAPS = {
   'magic-card.js': B2 + 8_192, // 480,048
   'magic-card-animation-studio.js': 902_144, // 858,558
-  'magic-card-editor.js': 728_064, // 711 KiB, CEO-approved backup 2026-10-18 (UI kit + i18n)
+  'magic-card-editor.js': 805_888, // 787 KiB, CEO-approved 2026-10-18 (UI kit + i18n; ratchets to measured + 5% in I11)
   'magic-card-icon-animator.js': 233_472, // 222,240
   'magic-card-icon-library.js': 180_224, // 171,507
   'magic-card-particles.js': 38_912, // 38 KiB, CEO 2026-10-18 (multiple emitters + per-emitter placement, spike F-S1 36,804)
@@ -39,12 +39,12 @@ const CAPS = {
   'magic-card-seasonal.js': 58_368, // 57 KiB (D5, measured 55,023 + 5 %); ceiling 80 KiB
   'magic-card-markdown.js': 55_296, // 54 KiB (D2, measured 52,185 + 5 %); above the 52 KiB sanity ceiling by the rounding only
   // preset transfer (T16, ADR 0022): codec + validators 17.2 KB, <mc-transfer-panel> 8.9 KB, <mc-library-view> 11 KB. OVER the CEO ceiling of 28,672 B (TRANSFER_CHUNK_CEILING): measured + 5 %, rounded up to 1 KiB, pending the CEO ruling (js-yaml, sanitizeSvg, model.ts and the validators are NOT in it, see 33-frontend-engineer-t16.md)
-  'magic-card-transfer.js': 50_176, // 49 KiB (architect r3 number, pending the CEO; 164 messages measure 56,325, so this is red until the CEO rules); ceiling 28 KiB
+  'magic-card-transfer.js': 59_392, // 58 KiB, CEO 2026-10-18 (164 messages measure 56,323)
   'magic-card-modules-extra.js': 24_576, // 24 KiB (D3, measured 23,139 + 5 %); ceiling 44 KiB
   // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
   'magic-card-svg-booleans.js': 9_216, // 9 KiB (7,884)
   // path tools (T37, ADR 0027): 17,784 B measured (production build under a parent that holds lit; webpack stats list only src/path-tools/* and the contract, no lit, core.ts or booleans code) + 5 %, rounded up to 1 KiB; ceiling 20,480 B (PATH_TOOLS_CEILING_BYTES). Only emitted once the SVG editor chunk imports src/path-tools/loader.ts (T38); until then this entry reports "missing from dist".
-  'magic-card-path-tools.js': 19_456, // 19 KiB (17,784)
+  'magic-card-path-tools.js': 22_528, // 22 KiB, CEO-approved 2026-10-18 (i18n)
   // i18n table chunks (contract i18n 1.0.0 r3, Handoff 108): the lazy tables of namespace 'labels' (editor and studio, editor-only labels that magic-card.js carries as numbers) and of 'icon-library' (the icon library and icon animator chunks). Caps are the architect's projection + 5 %, rounded up to 1 KiB; pending the CEO's ruling on the raises. I11 ratchets them to measured + 5 %.
   'magic-card-i18n-labels.js': 26_624, // 26 KiB (projected 24,400)
   'magic-card-i18n-icons.js': 23_552, // 23 KiB (projected 21,600; empty until the icon names move in I10)
