@@ -5,6 +5,7 @@ import {
   DRAG_SLOP_PX,
   LOUPE_DELAY_MS,
   LOUPE_SIZE_PX,
+  GRID_MIN_PX,
   LOUPE_ZOOM,
   type CanvasMode,
   type ConstrainPoint,
@@ -88,6 +89,8 @@ export class PathCanvas extends LitElement {
   @property({ attribute: false }) loupeLabel?: string;
   @property({ type: Number }) safeArea?: number;
   @property({ type: Boolean }) pixelGrid = false;
+  /** Grid line spacing in frame units (path-canvas rev 4). */
+  @property({ type: Number }) gridStep = 1;
   @property({ type: Number }) maxPaths = 64;
   @property({ attribute: false }) kinds: readonly AnchorKind[] = ['corner', 'smooth', 'symmetric'];
   @property({ attribute: false }) constrain?: ConstrainPoint;
@@ -1140,9 +1143,13 @@ export class PathCanvas extends LitElement {
     const ap = this.active();
     const edit = this.mode !== 'view';
     let grid = '';
-    if (this.pixelGrid && zoom >= 8 && fr.w <= 256 && fr.h <= 256) {
-      for (let k = 1; k < fr.w; k++) grid += `M${fr.x + k} ${fr.y}v${fr.h}`;
-      for (let k = 1; k < fr.h; k++) grid += `M${fr.x} ${fr.y + k}h${fr.w}`;
+    if (this.pixelGrid) {
+      const step = this.gridStep && this.gridStep > 0 ? this.gridStep : 1;
+      const k = Math.max(1, Math.ceil(GRID_MIN_PX / (step * zoom) - 1e-9), Math.ceil(Math.max(fr.w, fr.h) / (step * 256)));
+      const s = step * k;
+      const at = (i: number): number => Math.round(i * s * 1000) / 1000;
+      for (let i = 1; at(i) < fr.w - 1e-9; i++) grid += `M${fr.x + at(i)} ${fr.y}v${fr.h}`;
+      for (let i = 1; at(i) < fr.h - 1e-9; i++) grid += `M${fr.x} ${fr.y + at(i)}h${fr.w}`;
     }
     const sa = this.safeArea;
     return svg`<g transform="translate(${x} ${y}) scale(${zoom})">

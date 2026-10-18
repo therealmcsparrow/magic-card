@@ -1,6 +1,6 @@
 import type { Pt } from '../contracts/path-model';
-import { fitFreehand } from '../path/draw';
 import { S } from './strings';
+import { D } from './bind';
 import { toEditPaths, fromCorners, newShape, nameFor, type Doc, type Shape } from './model';
 
 /*
@@ -159,7 +159,7 @@ export class Gestures {
   }
 
   private finishFree(trail: Pt[]): void {
-    const r = fitFreehand(trail, 0.3);
+    const r = D.fitFreehand(trail, 0.3);
     if (!r.d) return;
     const paths = toEditPaths(r.d);
     if (!paths.length) return;

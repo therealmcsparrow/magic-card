@@ -1,7 +1,6 @@
 import type { Box, EditPath, PathData, Pt } from '../contracts/path-model';
 import { flatten, parsePath } from '../path/core';
-import { ellipsePath, polygonPath, rectPath, starPath } from '../path/draw';
-import { E, T } from './bind';
+import { D, E, T } from './bind';
 
 /*
  * The icon document: layers (shapes) over one artboard. Shapes are immutable values (every edit makes a
@@ -129,14 +128,14 @@ export const pointCount = (d: Doc): number => d.shapes.reduce((n, s) => n + s.pa
 export function generate(s: Shape, box: Box): EditPath[] {
   switch (s.type) {
     case 'rect':
-      return toEditPaths(rectPath(box.x, box.y, box.w, box.h, s.r ?? 0));
+      return toEditPaths(D.rectPath(box.x, box.y, box.w, box.h, s.r ?? 0));
     case 'ellipse':
-      return toEditPaths(ellipsePath(box.x + box.w / 2, box.y + box.h / 2, box.w / 2, box.h / 2));
+      return toEditPaths(D.ellipsePath(box.x + box.w / 2, box.y + box.h / 2, box.w / 2, box.h / 2));
     case 'polygon':
     case 'star': {
       const g = s.geo ?? { cx: box.x + box.w / 2, cy: box.y + box.h / 2, rad: Math.min(box.w, box.h) / 2 };
       const n = s.sides ?? 5;
-      return toEditPaths(s.type === 'star' ? starPath(g.cx, g.cy, g.rad, g.rad * (s.inner ?? 0.5), n) : polygonPath(g.cx, g.cy, g.rad, n));
+      return toEditPaths(s.type === 'star' ? D.starPath(g.cx, g.cy, g.rad, g.rad * (s.inner ?? 0.5), n) : D.polygonPath(g.cx, g.cy, g.rad, n));
     }
     default:
       return s.paths;
