@@ -2,7 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { DRAG_EDGE_PX, DRAG_START_PX, type TreePlace } from '../contracts/svg-editor';
 import type { MenuEntry } from '../contracts/path-canvas';
-import { glyph } from '../ui-kit/glyphs';
+import { glyph } from './icons';
 import { arrangeOrder, byId, groupChain, groupItems, layoutRows, outsideSafe, toneOf, tryMove, under, type Doc, type MoveWhy, type TreeRow } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { S } from './strings';
