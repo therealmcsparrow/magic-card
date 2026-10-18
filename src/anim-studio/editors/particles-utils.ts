@@ -732,3 +732,62 @@ export function setEmitterPlacement(doc: AnimationDoc, seed: number, i: number, 
   list[i].layer = side;
   return fromList(doc, seed, list);
 }
+
+// ── the selected emitter (particles editor) ──
+// Every single-emitter edit of the editor (setFlow, setShapes, patchParticles, ...) works on any emitter through a view: the
+// document as if emitter `i` were its only emitter. The result is written back into that emitter; mode, colliders and the loop
+// speed are the document's and travel back as they are.
+
+/** The document as if emitter `i` were the only one (i = 0 or a single-emitter document: the document itself). */
+export function emitterDoc(doc: AnimationDoc, seed: number, i: number): AnimationDoc {
+  if (i <= 0 || i >= emitterCount(doc)) return doc;
+  const e = toList(doc, seed)[i];
+  const sim: ParticlesSim = { ...viewSim(doc, seed), seed: e.seed, flow: e.flow, shapes: e.shapes, ranges: e.ranges, physics: e.physics };
+  delete sim.id;
+  delete sim.name;
+  delete sim.emitters;
+  delete sim.children;
+  if (e.children) sim.children = e.children;
+  return withSim(patchParticles(doc, { count: e.count, size: e.size, colors: e.colors, fade: e.fade, spread: e.spread, layer: e.layer }), sim);
+}
+
+/** Runs `fn` on the view of emitter `i` and stores the result in that emitter. A result equal to the view is the same document. */
+export function editEmitter(doc: AnimationDoc, seed: number, i: number, fn: (view: AnimationDoc) => AnimationDoc): AnimationDoc {
+  const view = emitterDoc(doc, seed, i);
+  if (view === doc) return fn(doc);
+  const out = fn(view);
+  if (out === view) return doc;
+  const ep = out.particles!;
+  const es = ep.sim!;
+  const sim0 = doc.particles!.sim!;
+  const emitters = sim0.emitters!.map((e, k): ParticleEmitter => {
+    if (k !== i - 1) return e;
+    const rest = { ...e };
+    delete rest.children;
+    return {
+      ...rest,
+      seed: es.seed,
+      flow: es.flow,
+      shapes: es.shapes,
+      ranges: es.ranges,
+      physics: es.physics,
+      count: Math.max(1, Math.min(ep.count, e.count + parentsLeft(doc))),
+      size: ep.size,
+      colors: ep.colors,
+      fade: ep.fade,
+      spread: ep.spread,
+      ...(es.children ? { children: es.children } : {}),
+    };
+  });
+  return patchParticles(doc, { speed: ep.speed, sim: { ...sim0, mode: es.mode, colliders: es.colliders, emitters } });
+}
+
+/** The name shown for emitter `i`: its own, else the flow's label (numbered when two share it). */
+export function emitterLabel(doc: AnimationDoc, seed: number, i: number): string {
+  const list = toList(doc, seed);
+  const name = list[i]?.name;
+  if (name) return name;
+  const flow = FLOW_LABELS[list[i].flow];
+  const same = list.filter((e) => !e.name && FLOW_LABELS[e.flow] === flow);
+  return same.length > 1 ? `${flow} ${same.indexOf(list[i]) + 1}` : flow;
+}

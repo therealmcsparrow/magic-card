@@ -6,7 +6,7 @@ import { animationStyles } from '../../css/animations';
 import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../../utils/animation';
 import { intensityLabel } from '../../utils/animation-presets';
 import type { DesignConfig, HomeAssistant } from '../../types';
-import { DEFAULT_GEOMETRY, type BakedLoop, type BuiltinShape, type ParticleMode, type ParticleSlotV2, type ParticlesSim, type Range, type SubEmitter, type WeightedShape } from '../../contracts/particles-v2';
+import { DEFAULT_GEOMETRY, PARTICLES_V2_CAPS, type BakedLoop, type BuiltinShape, type ParticleMode, type ParticleSlotV2, type ParticlesSim, type Range, type SubEmitter, type WeightedShape } from '../../contracts/particles-v2';
 import { compileAnimationDoc, easingCss } from '../compile';
 import { ANIMATION_CAPS, type AnimationDoc, type ParticleShape, type ParticlesSpec } from '../model';
 import {
@@ -21,15 +21,25 @@ import {
   SHAPE_DEFAULTS,
   SHAPE_KINDS,
   V2_LIMITS,
+  EMITTER_NAME_MAX,
+  addEmitter,
   anyCollider,
   bakeSpec,
+  canAddEmitter,
   basePreset,
   childrenSummary,
   colliderOn,
   collisionsSummary,
   convertPresetParticles,
   defaultChildren,
+  duplicateEmitter,
+  editEmitter,
   editSim,
+  emitterCount,
+  emitterDoc,
+  emitterLabel,
+  emitterParents,
+  emitterPlacement,
   emojiError,
   flowSpreadLabel,
   fromDocColor,
@@ -41,11 +51,15 @@ import {
   newSeed,
   nextShape,
   orderRange,
+  parentsLeft,
   patchParticles,
   periodOf,
   physicsSummary,
   presetIntensity,
   presetKind,
+  removeEmitter,
+  renameEmitter,
+  setEmitterPlacement,
   setFlow,
   setGravity,
   setMode,
@@ -155,6 +169,8 @@ export class AnimParticlesEditor extends LitElement {
   /** 0-1 scrub position (unused: particles loop on their own). */
   @property({ attribute: false }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** The emitter the fields edit (0 = the primary). Clamped to the document's emitters; the Layers list sets it too. */
+  @property({ type: Number }) emitter = 0;
 
   /** The last icon / emoji / SVG used, so switching a chip back restores it. */
   @state() private _shapes: Partial<Record<'icon' | 'emoji' | 'svg', ParticleShape>> = {};
@@ -171,6 +187,10 @@ export class AnimParticlesEditor extends LitElement {
   /** Stats of the last bake (with the particles module only). */
   @state() private _stats?: BakedLoop['stats'];
   @state() private _baking = false;
+  /** "All particles" is open (only with 2+ emitters): the document-wide fields, no emitter. */
+  @state() private _all = false;
+  /** The announcement of the last Placement change. */
+  @state() private _live = '';
 
   /** The seed a v1 document's first v2 edit writes (and the one shown until then). */
   private _seed = newSeed();
@@ -179,7 +199,7 @@ export class AnimParticlesEditor extends LitElement {
   private _bakeMs = 0;
   private _bakeToken = 0;
   /** The preview layer the particles module was applied to (released when it goes). */
-  private _applied?: HTMLElement;
+  private _applied: HTMLElement[] = [];
   private _liveCss = new Map<string, string>();
 
   static styles = [
@@ -277,6 +297,68 @@ export class AnimParticlesEditor extends LitElement {
         .reduced-note {
           display: block;
         }
+      }
+
+      /* ── emitters ── */
+      .em-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 16px;
+      }
+      .em-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+      }
+      .em-tabs [role='tab'] {
+        min-height: 32px;
+        max-width: 160px;
+        padding: 0 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border: 1px solid var(--mc-field-border);
+        border-radius: 16px;
+        background: var(--mc-surface);
+        color: var(--mc-text);
+        font-size: 0.8125rem;
+      }
+      .em-tabs [role='tab'][aria-selected='true'] {
+        border-color: var(--mc-accent);
+        box-shadow: 0 0 0 1px var(--mc-accent);
+        background: var(--mc-accent-tint);
+      }
+      .em-cap {
+        flex-basis: 100%;
+        margin: 0;
+      }
+      .em-head {
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        padding-bottom: 16px;
+      }
+      .em-name-field {
+        flex: 1;
+        min-width: 0;
+      }
+      .all-note {
+        margin: 0 0 16px;
+      }
+      .placement {
+        padding-bottom: 20px;
+      }
+      .em-live {
+        margin: 0;
+        font-size: 0.75rem;
+        color: var(--mc-text-2);
+      }
+      .em-live:empty {
+        display: none;
       }
 
       /* ── mode ── */
@@ -844,27 +926,78 @@ export class AnimParticlesEditor extends LitElement {
     }
   }
 
+  /** The selected emitter, inside the document's emitters. */
+  private get _em(): number {
+    return this.doc ? Math.max(0, Math.min(Math.trunc(this.emitter) || 0, emitterCount(this.doc) - 1)) : 0;
+  }
+
+  private _viewKey?: { doc: AnimationDoc; em: number; view: AnimationDoc };
+
+  /** The document as if the selected emitter were its only one: every field below reads and edits this. */
+  private get _vdoc(): AnimationDoc {
+    const doc = this.doc!;
+    const em = this._em;
+    if (this._viewKey?.doc !== doc || this._viewKey.em !== em) this._viewKey = { doc, em, view: emitterDoc(doc, this._seed, em) };
+    return this._viewKey.view;
+  }
+
   private get _p(): ParticlesSpec | undefined {
-    return this.doc?.kind === 'particles' ? this.doc.particles : undefined;
+    return this.doc?.kind === 'particles' ? this._vdoc.particles : undefined;
   }
 
   /** The simulation the fields show (a v1 document read as one). */
   private get _sim(): ParticlesSim {
-    return viewSim(this.doc!, this._seed);
+    return viewSim(this._vdoc, this._seed);
+  }
+
+  /** Runs a single-emitter edit on the selected emitter; the result is a whole document. */
+  private _on(fn: (view: AnimationDoc) => AnimationDoc): AnimationDoc {
+    return editEmitter(this.doc!, this._seed, this._em, fn);
   }
 
   private _patch(patch: Partial<ParticlesSpec>, label: string, transient = false): void {
     if (!this.doc) return;
-    this._emit(patchParticles(this.doc, patch), label, transient);
+    this._emit(this._on((d) => patchParticles(d, patch)), label, transient);
   }
 
   /** A v2-only edit (adds `sim` to a v1 document). */
   private _editSim(fn: (s: ParticlesSim) => ParticlesSim, label: string, transient = false): void {
     if (!this.doc) return;
-    this._emit(editSim(this.doc, this._seed, fn), label, transient);
+    this._emit(this._on((d) => editSim(d, this._seed, fn)), label, transient);
+  }
+
+  /** The same edit on every emitter (document-wide fields such as bounce). */
+  private _editAll(fn: (s: ParticlesSim) => ParticlesSim, label: string, transient = false): void {
+    if (!this.doc) return;
+    let doc = this.doc;
+    for (let i = 0; i < emitterCount(doc); i++) doc = editEmitter(doc, this._seed, i, (d) => editSim(d, this._seed, fn));
+    this._emit(doc, label, transient);
+  }
+
+  /** Selects an emitter (or "All particles"); the Layers list follows through `emitter-change`. */
+  private _select(index: number, all = false): void {
+    this.emitter = index;
+    this._all = all;
+    this.dispatchEvent(new CustomEvent('emitter-change', { detail: { index, all }, bubbles: true, composed: true }));
+  }
+
+  private get _multi(): boolean {
+    return !!this.doc && emitterCount(this.doc) > 1;
+  }
+
+  private _name(i: number): string {
+    return this._multi ? emitterLabel(this.doc!, this._seed, i) : 'Particles';
   }
 
   protected willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has('emitter') && changed.get('emitter') !== undefined) {
+      // another emitter: drop drafts and selections of the old one
+      this._svgDraft = undefined;
+      this._emojiDraft = undefined;
+      this._color = -1;
+      this._chip = 0;
+      this._live = '';
+    }
     if (changed.has('doc')) {
       const prev = changed.get('doc') as AnimationDoc | undefined;
       // a document from outside (undo, another document): drop drafts of the old one
@@ -876,6 +1009,8 @@ export class AnimParticlesEditor extends LitElement {
         this._chip = 0;
         this._seed = newSeed();
         this._stats = undefined;
+        this._all = false;
+        this._live = '';
       }
       if (this._p && !this._p.preset) {
         for (const w of this._sim.shapes) if (!('builtin' in w.shape)) this._shapes = { ...this._shapes, [shapeKind(w.shape)]: w.shape };
@@ -904,22 +1039,15 @@ export class AnimParticlesEditor extends LitElement {
     const c = compileAnimationDoc(doc);
     if (!c.layer || !c.name) return { css: '' };
     const cycle = +(doc.duration / c.layer.speed).toFixed(3);
-    const timing = `${c.name} ${cycle}s ${easingCss(doc.easing)} 0s infinite ${doc.direction ?? 'normal'}`;
-    return {
-      css: c.css,
-      anim: {
-        style: '',
-        fx: [
-          {
-            preset: c.name,
-            front: c.layer.front,
-            style: `--mc-fx-anim: ${timing}; --mc-fx-dur: ${cycle}s; --mc-fx-delay: 0s`,
-            particles: c.layer.particles,
-            ...(c.layer.symbol ? { symbol: c.layer.symbol } : {}),
-          },
-        ],
-      },
-    };
+    // part 1 (the emitters on the other side of the content) is the card's second layer, right after the first
+    const fx: FxLayer[] = [[c.name, c.layer] as const, ...(c.split ? [[c.split.name, c.split.layer] as const] : [])].map(([name, l]) => ({
+      preset: name,
+      front: l.front,
+      style: `--mc-fx-anim: ${name} ${cycle}s ${easingCss(doc.easing)} 0s infinite ${doc.direction ?? 'normal'}; --mc-fx-dur: ${cycle}s; --mc-fx-delay: 0s`,
+      particles: l.particles,
+      ...(l.symbol ? { symbol: l.symbol } : {}),
+    }));
+    return { css: c.css, anim: { style: '', fx } };
   }
 
   private _previewCss = '';
@@ -967,35 +1095,38 @@ export class AnimParticlesEditor extends LitElement {
   private _applyModule(): void {
     const m = getStudioParticles();
     const spec = this.doc && this._p?.sim && !this._p.preset ? bakeSpec(this.doc) : undefined;
-    const layer = this.renderRoot.querySelector<HTMLElement>('.stage .mc-anim-fx') ?? undefined;
-    if (this._applied && this._applied !== layer) this._release();
-    if (!m || !spec || !layer || (this._paused && spec.sim.mode === 'live')) {
+    const layers = [...this.renderRoot.querySelectorAll<HTMLElement>('.stage .mc-anim-fx')];
+    if (this._applied.some((l, i) => l !== layers[i])) this._release();
+    if (!m || !spec || !layers.length || (this._paused && spec.sim.mode === 'live')) {
       this._release();
       return;
     }
     const reducedMotion = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     try {
-      m.apply(layer, {
-        useCss: (name, rules) => {
-          this._liveCss.set(name, rules);
-          const s = this.renderRoot.querySelector<HTMLStyleElement>('style[data-live]');
-          if (s) s.textContent = [...this._liveCss.values()].join('\n');
-        },
-        reducedMotion,
-        content: () => this.renderRoot.querySelector('.stage-module') ?? undefined,
-        docId: this.doc!.id,
-        spec,
-        period: periodOf(this.doc!),
+      layers.forEach((layer, i) => {
+        m.apply(layer, {
+          useCss: (name, rules) => {
+            this._liveCss.set(name, rules);
+            const s = this.renderRoot.querySelector<HTMLStyleElement>('style[data-live]');
+            if (s) s.textContent = [...this._liveCss.values()].join('\n');
+          },
+          reducedMotion,
+          content: () => this.renderRoot.querySelector('.stage-module') ?? undefined,
+          docId: this.doc!.id,
+          spec,
+          period: periodOf(this.doc!),
+          ...(i === 1 ? { part: 1 as const } : {}),
+        });
       });
-      this._applied = layer;
+      this._applied = layers;
     } catch {
       /* the module logs its own errors */
     }
   }
 
   private _release(): void {
-    if (this._applied) getStudioParticles()?.release(this._applied);
-    this._applied = undefined;
+    for (const l of this._applied) getStudioParticles()?.release(l);
+    this._applied = [];
   }
 
   private _renderPreview(): TemplateResult {
@@ -1008,7 +1139,7 @@ export class AnimParticlesEditor extends LitElement {
       ? `${preset?.name ?? p.preset} · ${this.doc!.duration} s`
       : this._baking
         ? 'Baking…'
-        : `${p.count} ${p.count === 1 ? 'particle' : 'particles'} · ${FLOW_LABELS[sim.flow].toLowerCase()} · ${sim.mode === 'live' ? 'live' : `${+periodOf(this.doc!).toFixed(2)} s loop`}`;
+        : `${this._multi ? `${emitterParents(this.doc!)} particles · ${emitterCount(this.doc!)} emitters` : `${p.count} ${p.count === 1 ? 'particle' : 'particles'} · ${FLOW_LABELS[sim.flow].toLowerCase()}`} · ${sim.mode === 'live' ? 'live' : `${+periodOf(this.doc!).toFixed(2)} s loop`}`;
     const capped = !!sim && !!this._stats?.capped;
     const warn = !!sim && !capped && !!this._stats?.warn;
     const canExport = !!sim && !!getStudioParticles();
@@ -1049,7 +1180,12 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _shuffle = (): void => {
-    if (this.doc) this._emit(shuffleSeed(this.doc, this._seed), 'Shuffle');
+    if (!this.doc) return;
+    // "All particles" shuffles every emitter, an emitter only itself
+    const all = this._multi && this._all;
+    let doc = this.doc;
+    for (let i = all ? 0 : this._em; i < (all ? emitterCount(this.doc) : this._em + 1); i++) doc = editEmitter(doc, this._seed, i, (d) => shuffleSeed(d, this._seed));
+    this._emit(doc, 'Shuffle');
   };
 
   private _openExport = (): void => {
@@ -1135,7 +1271,7 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _setShapes(shapes: WeightedShape[], label: string, transient = false): void {
-    if (this.doc) this._emit(setShapes(this.doc, this._seed, shapes), label, transient);
+    if (this.doc) this._emit(this._on((d) => setShapes(d, this._seed, shapes)), label, transient);
   }
 
   /** Chip `i` becomes `shape` (weight kept). */
@@ -1398,24 +1534,27 @@ export class AnimParticlesEditor extends LitElement {
   // ── movement ──
 
   private _pickFlow(f: ParticlesSim['flow'], focus = false): void {
-    if (this.doc && this._sim.flow !== f) this._emit(setFlow(this.doc, this._seed, f), 'Change flow');
+    if (this.doc && this._sim.flow !== f) this._emit(this._on((d) => setFlow(d, this._seed, f)), 'Change flow');
     if (focus) this._focus(`.dir[data-dir="${f}"]`);
   }
 
   private _number(key: 'count' | 'speed', id: string, value: number, label: string): TemplateResult {
     const l = LIMITS[key];
+    // an emitter's count stops at the parents still free in the document
+    const max = key === 'count' ? Math.min(l.max, value + parentsLeft(this.doc!)) : l.max;
     return html`<input
       id=${id}
       class="input"
       type="number"
       inputmode="decimal"
       min=${l.min}
-      max=${l.max}
+      max=${max}
       step=${key === 'speed' ? 0.1 : 1}
       .value=${String(value)}
       @change=${(e: Event) => {
         const input = e.target as HTMLInputElement;
-        const n = limitNumber(key, input.value);
+        const raw = limitNumber(key, input.value);
+        const n = raw === undefined ? undefined : Math.min(raw, max);
         if (n === undefined || n === value) {
           input.value = String(value);
           return;
@@ -1519,7 +1658,18 @@ export class AnimParticlesEditor extends LitElement {
     </div>`;
   }
 
-  private _renderMovement(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
+  /** The loop speed: one for the whole document (the period every emitter shares). */
+  private _renderTiming(p: ParticlesSpec): TemplateResult {
+    return html`<section class="group" aria-labelledby="h-timing">
+      <div class="group-head"><h3 id="h-timing">Timing</h3></div>
+      <div class="field">
+        <div class="field-head"><label for="f-speed">Loop speed (×)</label></div>
+        ${this._number('speed', 'f-speed', p.speed, 'Change speed')}
+      </div>
+    </section>`;
+  }
+
+  private _renderMovement(p: ParticlesSpec, sim: ParticlesSim, withSpeed = true): TemplateResult {
     return html`<section class="group" aria-labelledby="h-move">
       <div class="group-head"><h3 id="h-move">Movement</h3></div>
       <div class="field">
@@ -1547,11 +1697,13 @@ export class AnimParticlesEditor extends LitElement {
           )}
         </div>
       </div>
-      <div class="pair">
-        <div class="field">
-          <div class="field-head"><label for="f-speed">Loop speed (×)</label></div>
-          ${this._number('speed', 'f-speed', p.speed, 'Change speed')}
-        </div>
+      <div class=${withSpeed ? 'pair' : ''}>
+        ${withSpeed
+          ? html`<div class="field">
+              <div class="field-head"><label for="f-speed">Loop speed (×)</label></div>
+              ${this._number('speed', 'f-speed', p.speed, 'Change speed')}
+            </div>`
+          : nothing}
         <div class="field">
           <div class="field-head"><label for="f-spread">${flowSpreadLabel(sim.flow)}</label></div>
           ${this._unit('spread', 'f-spread', p.spread, '%', 'Change spread', 100)}
@@ -1587,7 +1739,7 @@ export class AnimParticlesEditor extends LitElement {
             return;
           }
           input.value = String(n);
-          this._emit(setWind(this.doc!, this._seed, n), 'Change wind angle');
+          this._emit(this._on((d) => setWind(d, this._seed, n)), 'Change wind angle');
         }}
       />
       <p class="help" id="h-wind">Negative blows the rain to the left, positive to the right. It sets the gravity direction.</p>
@@ -1611,34 +1763,10 @@ export class AnimParticlesEditor extends LitElement {
   private _renderLook(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
     return html`<section class="group" aria-labelledby="h-look">
       <div class="group-head"><h3 id="h-look">Look</h3></div>
-      <div class="pair">
-        <div class="field">
-          <div class="field-head"><label for="f-count">Count</label></div>
-          ${this._number('count', 'f-count', p.count, 'Change count')}
-        </div>
-        <div class="field">
-          <div class="field-head"><span class="lbl">Layer</span></div>
-          <div
-            class="seg full layer-seg"
-            role="radiogroup"
-            aria-label="Layer"
-            @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ['back', 'front'], p.layer, (id) => this._pickLayer(id as ParticlesSpec['layer'], true))}
-          >
-            ${(['back', 'front'] as const).map(
-              (l) => html`<button
-                type="button"
-                role="radio"
-                data-layer=${l}
-                aria-checked=${p.layer === l ? 'true' : 'false'}
-                tabindex=${p.layer === l ? 0 : -1}
-                title=${l === 'back' ? 'Behind the content' : 'Over the content'}
-                @click=${() => this._pickLayer(l)}
-              >
-                ${l === 'back' ? 'Back' : 'Front'}
-              </button>`,
-            )}
-          </div>
-        </div>
+      <div class="field">
+        <div class="field-head"><label for="f-count">Count</label></div>
+        ${this._number('count', 'f-count', p.count, 'Change count')}
+        ${this._multi ? html`<p class="help count-help">Up to ${p.count + parentsLeft(this.doc!)} for this emitter. All emitters share ${PARTICLES_V2_CAPS.parents} particles.</p>` : nothing}
       </div>
       <div class="field">
         <div class="field-head"><span class="lbl" id="l-size">Size</span></div>
@@ -1680,8 +1808,35 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _pickLayer(l: ParticlesSpec['layer'], focus = false): void {
-    if (this._p?.layer !== l) this._patch({ layer: l }, l === 'front' ? 'Particles in front' : 'Particles behind');
+    if (this.doc && emitterPlacement(this.doc, this._em) !== l) {
+      const name = this._name(this._em);
+      const where = l === 'front' ? 'in front of the content' : 'behind the content';
+      this._live = `${name} is now ${where}.`;
+      this._emit(setEmitterPlacement(this.doc, this._seed, this._em, l), `${name} ${where}`);
+    }
     if (focus) this._focus(`.layer-seg [data-layer="${l}"]`);
+  }
+
+  /** Placement of the selected emitter: behind or in front of the content (the card draws a second particle layer for the other side). */
+  private _renderPlacement(): TemplateResult {
+    const side = emitterPlacement(this.doc!, this._em);
+    return html`<div class="field placement">
+      <div class="field-head"><span class="lbl" id="l-place">Placement</span></div>
+      <div
+        class="seg full layer-seg"
+        role="radiogroup"
+        aria-label="Placement"
+        @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ['back', 'front'], side, (id) => this._pickLayer(id as ParticlesSpec['layer'], true))}
+      >
+        ${(['back', 'front'] as const).map(
+          (l) => html`<button type="button" role="radio" data-layer=${l} aria-checked=${side === l ? 'true' : 'false'} tabindex=${side === l ? 0 : -1} aria-describedby="h-place" @click=${() => this._pickLayer(l)}>
+            ${l === 'back' ? 'Behind the content' : 'In front of the content'}
+          </button>`,
+        )}
+      </div>
+      <p class="help placement-help" id="h-place">In front: particles draw over text and icons. They never block clicks.</p>
+      <p class="em-live" role="status">${this._live}</p>
+    </div>`;
   }
 
   private _addColor(): void {
@@ -1789,7 +1944,7 @@ export class AnimParticlesEditor extends LitElement {
   }
 
   private _renderVariation(sim: ParticlesSim): TemplateResult {
-    const doc = this.doc!;
+    const doc = this._vdoc;
     return html`<div class="field">
         <div class="field-head"><label for="f-seed">Seed</label></div>
         <div class="seed-row">
@@ -1817,7 +1972,7 @@ export class AnimParticlesEditor extends LitElement {
         </div>
         <p class="help" id="h-seed">The same seed gives the same loop every time.</p>
       </div>
-      ${this._range('spin', 'Spin per loop (deg)', 'spin', spinPerLoop(doc, sim), 'spin', (r) => this._emit(setSpin(doc, this._seed, r), 'Change spin'), {
+      ${this._range('spin', 'Spin per loop (deg)', 'spin', spinPerLoop(doc, sim), 'spin', (r) => this._emit(this._on((d) => setSpin(d, this._seed, r)), 'Change spin'), {
         help: 'Each particle turns the way it picks, left or right.',
       })}
       ${this._range('delay', 'Start delay (s)', 'start delay', sim.ranges.delay, 'delay', (r) => this._editSim((s) => ({ ...s, ranges: { ...s.ranges, delay: r } }), 'Change start delay'))}
@@ -1829,7 +1984,7 @@ export class AnimParticlesEditor extends LitElement {
   private _pickGravityAngle(angle: number, focus = false): void {
     const sim = this._sim;
     const unit = sim.physics.gravity.strength / PHYSICS_SCALE.gravity;
-    if (this.doc && angle !== sim.physics.gravity.angle) this._emit(setGravity(this.doc, this._seed, angle, unit), 'Change gravity direction');
+    if (this.doc && angle !== sim.physics.gravity.angle) this._emit(this._on((d) => setGravity(d, this._seed, angle, unit)), 'Change gravity direction');
     if (focus) this._focus(`.compass [data-angle="${angle}"]`);
   }
 
@@ -1840,7 +1995,7 @@ export class AnimParticlesEditor extends LitElement {
     const turbUnit = +(sim.physics.turbulence.strength / PHYSICS_SCALE.turbulence).toFixed(2);
     const angles = COMPASS.map((c) => String(c.angle));
     const onCompass = COMPASS.some((c) => c.angle === g.angle);
-    return html`${this._slider('f-grav', 'Gravity', gUnit, gUnit ? gUnit.toFixed(2) : 'None', (n, t) => this._emit(setGravity(this.doc!, this._seed, g.angle, n), 'Change gravity', t))}
+    return html`${this._slider('f-grav', 'Gravity', gUnit, gUnit ? gUnit.toFixed(2) : 'None', (n, t) => this._emit(this._on((d) => setGravity(d, this._seed, g.angle, n)), 'Change gravity', t))}
       <div class="field">
         <div class="field-head"><span class="lbl" id="l-gdir">Gravity direction</span></div>
         <div
@@ -1884,7 +2039,7 @@ export class AnimParticlesEditor extends LitElement {
               input.value = String(g.angle);
               return;
             }
-            this._emit(setGravity(this.doc!, this._seed, n, gUnit), 'Change gravity direction');
+            this._emit(this._on((d) => setGravity(d, this._seed, n, gUnit)), 'Change gravity direction');
           }}
         />
         <p class="help" id="h-gangle">0 pulls down, 90 left, 180 up, 270 right.</p>
@@ -1956,7 +2111,7 @@ export class AnimParticlesEditor extends LitElement {
         'Bounce',
         sim.physics.bounce,
         sim.physics.bounce.toFixed(2),
-        (n, t) => this._editSim((s) => ({ ...s, physics: { ...s.physics, bounce: n } }), 'Change bounce', t),
+        (n, t) => this._editAll((s) => ({ ...s, physics: { ...s.physics, bounce: n } }), 'Change bounce', t),
         { help: '0 stops on impact, 1 bounces back at full speed.', disabled: !any },
       )}`;
   }
@@ -2107,12 +2262,12 @@ export class AnimParticlesEditor extends LitElement {
           ></mc-color-picker>`}`;
   }
 
-  private _renderSectors(sim: ParticlesSim): TemplateResult {
+  private _renderSectors(sim: ParticlesSim, only?: 'emitter' | 'all'): TemplateResult {
     return html`<div class="sectors">
-      ${this._sector('variation', 'mdi:dice-multiple-outline', 'Variation', variationSummary(this.doc!, sim), () => this._renderVariation(sim))}
-      ${this._sector('physics', 'mdi:weight', 'Physics', physicsSummary(sim), () => this._renderPhysics(sim))}
-      ${this._sector('collisions', 'mdi:arrow-collapse-down', 'Collisions', collisionsSummary(sim), () => this._renderCollisions(sim))}
-      ${this._sector('children', 'mdi:creation-outline', 'Child particles', childrenSummary(sim), () => this._renderChildren(sim))}
+      ${only === 'all' ? nothing : this._sector('variation', 'mdi:dice-multiple-outline', 'Variation', variationSummary(this._vdoc, sim), () => this._renderVariation(sim))}
+      ${only === 'all' ? nothing : this._sector('physics', 'mdi:weight', 'Physics', physicsSummary(sim), () => this._renderPhysics(sim))}
+      ${only === 'emitter' ? nothing : this._sector('collisions', 'mdi:arrow-collapse-down', 'Collisions', collisionsSummary(sim), () => this._renderCollisions(sim))}
+      ${only === 'all' ? nothing : this._sector('children', 'mdi:creation-outline', 'Child particles', childrenSummary(sim), () => this._renderChildren(sim))}
     </div>`;
   }
 
@@ -2181,10 +2336,111 @@ export class AnimParticlesEditor extends LitElement {
       <div class="wrap">
         ${this._renderPreview()}
         <div class="form" ?inert=${this.disabled} @focusout=${this._onFocusOut}>
-          ${!sim ? this._renderPreset(p) : html`${this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim)}${this._renderLook(p, sim)}${this._renderSectors(sim)}`}
+          ${!sim ? this._renderPreset(p) : this._renderForm(p, sim)}
         </div>
       </div>`;
   }
+
+  // ── emitters ──
+
+  private _renderForm(p: ParticlesSpec, sim: ParticlesSim): TemplateResult {
+    const multi = this._multi;
+    const all = multi && this._all;
+    return html`${this._renderBar()}
+      ${all
+        ? html`<p class="help all-note">These apply to every emitter. Placement is set per emitter.</p>
+            ${this._renderMode(sim)}${this._renderTiming(p)}${this._renderSectors(sim, 'all')}`
+        : html`${multi ? this._renderEmitterHead() : nothing}${this._renderPlacement()}
+            ${multi ? nothing : this._renderMode(sim)}${this._renderShape()}${this._renderMovement(p, sim, !multi)}${this._renderLook(p, sim)}${this._renderSectors(sim, multi ? 'emitter' : undefined)}`}`;
+  }
+
+  /** The emitter switcher (2+ emitters) and Add emitter. */
+  private _renderBar(): TemplateResult {
+    const doc = this.doc!;
+    const n = emitterCount(doc);
+    const can = canAddEmitter(doc);
+    const cur = this._all ? 'all' : String(this._em);
+    const ids = ['all', ...Array.from({ length: n }, (_, i) => String(i))];
+    const pick = (id: string) => {
+      if (id === 'all') this._select(this._em, true);
+      else this._select(+id);
+      this._focus(`.em-tabs [data-tab="${id}"]`);
+    };
+    return html`<div class="em-bar">
+      ${n > 1
+        ? html`<div class="em-tabs" role="tablist" aria-label="Emitters" @keydown=${(e: KeyboardEvent) => this._radioKeys(e, ids, cur, pick)}>
+            ${ids.map(
+              (id) => html`<button type="button" role="tab" data-tab=${id} aria-selected=${id === cur ? 'true' : 'false'} tabindex=${id === cur ? 0 : -1} @click=${() => pick(id)}>
+                ${id === 'all' ? 'All particles' : this._name(+id)}
+              </button>`,
+            )}
+          </div>`
+        : nothing}
+      <button type="button" class="btn btn-secondary btn-sm em-add" ?disabled=${!can || this.disabled} aria-describedby=${can ? nothing : 'h-em-cap'} @click=${this._addEmitter}>
+        <ha-icon icon="mdi:plus"></ha-icon>Add emitter
+      </button>
+      ${can ? nothing : html`<p class="help em-cap" id="h-em-cap">${n >= PARTICLES_V2_CAPS.emitters ? `At most ${PARTICLES_V2_CAPS.emitters} emitters.` : 'No free particles left. Lower a count to add an emitter.'}</p>`}
+    </div>`;
+  }
+
+  private _renderEmitterHead(): TemplateResult {
+    const i = this._em;
+    const sim = this.doc!.particles!.sim!;
+    const own = (i === 0 ? sim.name : sim.emitters?.[i - 1]?.name) ?? '';
+    return html`<div class="em-head">
+      <div class="field em-name-field">
+        <div class="field-head"><label for="f-em-name">Emitter name</label></div>
+        <input
+          id="f-em-name"
+          class="input em-name"
+          type="text"
+          maxlength=${EMITTER_NAME_MAX}
+          placeholder=${emitterLabel(this.doc!, this._seed, i)}
+          .value=${live(own)}
+          @change=${(e: Event) => {
+            const input = e.target as HTMLInputElement;
+            const next = renameEmitter(this.doc!, this._seed, i, input.value);
+            input.value = (i === 0 ? next.particles!.sim!.name : next.particles!.sim!.emitters?.[i - 1]?.name) ?? '';
+            this._emit(next, 'Rename emitter');
+          }}
+        />
+      </div>
+      <button type="button" class="icon-btn sm em-dup" aria-label="Duplicate emitter" title="Duplicate emitter" ?disabled=${!canAddEmitter(this.doc!) || this.disabled} @click=${this._dupEmitter}>
+        <ha-icon icon="mdi:content-copy"></ha-icon>
+      </button>
+      <button type="button" class="icon-btn sm danger em-remove" aria-label="Remove emitter" title="Remove emitter" ?disabled=${this.disabled} @click=${this._removeEmitter}>
+        <ha-icon icon="mdi:delete-outline"></ha-icon>
+      </button>
+    </div>`;
+  }
+
+  private _addEmitter = (): void => {
+    if (!this.doc) return;
+    const next = addEmitter(this.doc, this._seed);
+    if (next === this.doc) return;
+    this._emit(next, 'Add emitter');
+    this._select(emitterCount(next) - 1);
+    this._focus('.em-tabs [aria-selected="true"]');
+  };
+
+  private _dupEmitter = (): void => {
+    if (!this.doc) return;
+    const next = duplicateEmitter(this.doc, this._seed, this._em);
+    if (next === this.doc) return;
+    this._emit(next, 'Duplicate emitter');
+    this._select(this._em + 1);
+    this._focus('.em-tabs [aria-selected="true"]');
+  };
+
+  private _removeEmitter = (): void => {
+    if (!this.doc) return;
+    const i = this._em;
+    const next = removeEmitter(this.doc, this._seed, i);
+    if (next === this.doc) return;
+    this._emit(next, 'Remove emitter');
+    this._select(Math.max(0, i - 1));
+    this._focus('.em-tabs [aria-selected="true"]');
+  };
 
   /** Leaving a text field or slider without a change event (Escape, a re-render) still closes its edit. */
   private _onFocusOut = (e: FocusEvent): void => {
