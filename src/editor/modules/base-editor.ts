@@ -14,6 +14,7 @@ import type { SyncContext } from '../../utils/sync-path';
 import { renderActionGroups } from '../components/action-editor';
 import { renderConditionsList } from '../inspector/conditions-list';
 import '../components/design-panel';
+import { t } from '../i18n';
 
 /*
  * Default module tab renderers (module-editor 1.0.0): what a listed tab uses when its ModuleEditor
@@ -183,4 +184,4 @@ export const DEFAULT_TAB_RENDERERS: Partial<Record<EditorTab, ModuleTabRender>> 
 };
 
 /** Shown for an unknown module type and for a tab its editor does not list. */
-export const renderNoSettings = (): TemplateResult => html`<p class="help">No settings for this module.</p>`;
+export const renderNoSettings = (): TemplateResult => html`<p class="help">${t('No settings for this module.')}</p>`;

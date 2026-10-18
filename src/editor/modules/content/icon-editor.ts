@@ -5,6 +5,7 @@ import { renderUnitField, renderToggleField, renderEntityField, renderColorField
 import { entityIcon } from '../../../utils/entity-icon';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
 import { buildSyncContext } from '../base-editor';
+import { t } from '../../i18n';
 
 export const iconEditor: ModuleEditor = {
   type: 'icon',
@@ -13,14 +14,14 @@ export const iconEditor: ModuleEditor = {
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField('Entity', c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderToggleField('Use entity icon', c.use_entity_icon, (v) =>
+        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
+        ${renderToggleField(t('Use entity icon'), c.use_entity_icon, (v) =>
           onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)}
-        ${renderToggleField('Use entity color', c.use_entity_color, (v) =>
+        ${renderToggleField(t('Use entity colour'), c.use_entity_color, (v) =>
           onChange({ ...c, use_entity_color: v }), 'use_entity_color', syncCtx,
-          "Colors the icon like Home Assistant does for this entity's state.")}
+          t("Colours the icon like Home Assistant does for this entity's state."))}
         ${!c.use_entity_icon && c.icon !== 'svg'
-          ? renderIconField('Icon', c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
+          ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
           entity: c.entity,
@@ -29,11 +30,11 @@ export const iconEditor: ModuleEditor = {
           allowStateIcons: !!c.entity,
           syncCtx,
         })}
-        ${renderColorField('Icon color', c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', 'The icon uses this gradient as its fill. Older tablets show the first color.')}
+        ${renderColorField(t('Icon colour'), c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', t('The icon uses this gradient as its fill. Older tablets show the first colour.'))}
         ${c.use_entity_color && c.icon_color
-          ? renderFieldHint('Use entity color wins while the entity has a state color; this color applies otherwise.')
+          ? renderFieldHint(t('Use entity colour wins while the entity has a state colour; this colour applies otherwise.'))
           : nothing}
-        ${renderUnitField('Size', c.size, (v) => onChange({ ...c, size: v || undefined }), 'size', syncCtx, '24')}
+        ${renderUnitField(t('Size'), c.size, (v) => onChange({ ...c, size: v || undefined }), 'size', syncCtx, '24')}
       </div>
     `;
   },

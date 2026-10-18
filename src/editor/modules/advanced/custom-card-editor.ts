@@ -12,6 +12,10 @@ import {
   whenDefined,
 } from '../../../modules/advanced/custom-card-module';
 import { buildSyncContext } from '../base-editor';
+import { t, tx } from '../../i18n';
+
+/** Shown in the empty YAML box (sample card configuration, not translated text). */
+const SAMPLE_YAML = ['entity: sensor.temperature', 'name: My Sensor', 'show_state: true'].join('\n');
 
 type Localize = (key: string) => string;
 type FormSchema = { name?: string } & Record<string, unknown>;
@@ -278,17 +282,15 @@ export class CustomCardEditor extends LitElement {
             }
           }}
           rows="12"
-          placeholder="entity: sensor.temperature
-name: My Sensor
-show_state: true"
+          placeholder=${SAMPLE_YAML}
         ></textarea>
         ${!valid
           ? html`<div class="mc-yaml-fallback-error">
-              Invalid YAML - card will use last valid configuration
+              ${t('Invalid YAML - card will use last valid configuration')}
             </div>`
           : nothing}
         <div class="mc-yaml-fallback-help">
-          The <code>type</code> key is set automatically from Card Type. Do not include it here.
+          ${tx('The {key} key is set automatically from Card Type. Do not include it here.', { key: html`<code>type</code>` })}
         </div>
       </div>
     `;
@@ -304,7 +306,7 @@ show_state: true"
           this._yamlMode = gui;
         }}
       >
-        ${gui ? 'Show code editor' : 'Show visual editor'}
+        ${gui ? t('Show code editor') : t('Show visual editor')}
       </button>
     </div>`;
   }
@@ -312,12 +314,12 @@ show_state: true"
   protected render(): TemplateResult | typeof nothing {
     const c = this.config;
     if (!c?.card_type) return nothing;
-    if (this._status !== 'ready') return html`<div class="mc-editor-loading">Loading editor...</div>`;
-    if (!this._editor) return this._renderYaml(c, 'No visual editor available for this card type. Configure using YAML:');
+    if (this._status !== 'ready') return html`<div class="mc-editor-loading">${t('Loading editor...')}</div>`;
+    if (!this._editor) return this._renderYaml(c, t('No visual editor available for this card type. Configure using YAML:'));
     if (!this._yamlMode && !this._guiError) return html`${this._renderToggle(true)}${this._editor}`;
     return html`${this._renderToggle(false)}${this._renderYaml(
       c,
-      this._guiError ? `The visual editor does not support this configuration: ${this._guiError}` : undefined,
+      this._guiError ? t('The visual editor does not support this configuration: {error}', { error: this._guiError }) : undefined,
     )}`;
   }
 }
@@ -331,18 +333,18 @@ export const customCardEditor: ModuleEditor = {
 
     return html`
       <div class="mc-tab-content">
-        ${renderTextField('Name', c.name, (v) => onChange({ ...c, name: v }), 'name', syncCtx)}
+        ${renderTextField(t('Name'), c.name, (v) => onChange({ ...c, name: v }), 'name', syncCtx)}
         ${renderFieldHint(
-          'An optional label to help you identify this card in the editor.',
+          t('An optional label to help you identify this card in the editor.'),
           'mc-field-hint-tight',
         )}
-        ${renderCardField('Card type', c.card_type, (v) => onChange({ ...c, card_type: v }))}
+        ${renderCardField(t('Card type'), c.card_type, (v) => onChange({ ...c, card_type: v }))}
         ${c.card_type
           ? html`
             <div class="mc-card-editor-section">
               <div class="mc-card-editor-header">
                 <ha-icon class="mc-card-editor-icon" icon="mdi:cog"></ha-icon>
-                Card configuration
+                ${t('Card configuration')}
               </div>
               <div class="mc-card-editor-body">
                 <mc-custom-card-editor .config=${c} .hass=${hass} .onChange=${onChange}></mc-custom-card-editor>

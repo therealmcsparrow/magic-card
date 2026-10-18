@@ -3,6 +3,7 @@ import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { VerticalModuleConfig } from '../../../types';
 import { renderUnitField, renderSelectField } from '../../../utils/form-utils';
 import { buildSyncContext } from '../base-editor';
+import { t } from '../../i18n';
 
 export const verticalEditor: ModuleEditor = {
   type: 'vertical',
@@ -12,12 +13,12 @@ export const verticalEditor: ModuleEditor = {
 
     return html`
       <div class="mc-tab-content">
-        ${renderUnitField('Gap', c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
-        ${renderSelectField('Align', c.align, [
-          { label: 'Start', value: 'start' },
-          { label: 'Center', value: 'center' },
-          { label: 'End', value: 'end' },
-          { label: 'Stretch', value: 'stretch' },
+        ${renderUnitField(t('Gap'), c.gap, (v) => onChange({ ...c, gap: v || undefined }), 'gap', syncCtx, '8')}
+        ${renderSelectField(t('Align'), c.align, [
+          { label: t('Start'), value: 'start' },
+          { label: t('Centre'), value: 'center' },
+          { label: t('End'), value: 'end' },
+          { label: t('Stretch'), value: 'stretch' },
         ], (v) => onChange({ ...c, align: v as VerticalModuleConfig['align'] }), 'align', syncCtx)}
       </div>
     `;
