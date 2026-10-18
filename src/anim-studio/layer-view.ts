@@ -1,7 +1,7 @@
 import type { ApplyLayerView, IsLocked, LayerKey, LayerToggle, LayerView } from '../contracts/studio-layers';
 import type { AnimationDoc, AnimationKeyframe } from './model';
 import type { BindProperty, TargetRef, Track } from './model-v2-core';
-import { isEmptyKeyframe, stripLane, usedLanes, type LaneId } from './editors/keyframes-utils';
+import { isEmptyKeyframe, laneTimes, mainTarget, stripLane, usedLanes, type LaneId } from './editors/keyframes-utils';
 
 /*
  * Layer view state resolved against a document (contract studio-layers.ts section 3). Pure.
@@ -29,9 +29,19 @@ export function emitterIds(doc: AnimationDoc): string[] {
 /** The lanes that have keys, per target (the document's own track and `tracks`). */
 function laneTargets(doc: AnimationDoc): Array<[TargetRef, AnimationKeyframe[]]> {
   const out: Array<[TargetRef, AnimationKeyframe[]]> = [];
-  if (doc.kind === 'keyframes') out.push([doc.target, doc.keyframes ?? []]);
+  if (doc.kind === 'keyframes') out.push([mainTarget(doc), doc.keyframes ?? []]);
   for (const t of doc.tracks ?? []) out.push([t.target, t.keyframes]);
   return out;
+}
+
+/** The lanes (animated properties) a target has keys on, in timeline order. */
+export function lanesOf(doc: AnimationDoc, target: TargetRef): LaneId[] {
+  return usedLanes(laneTargets(doc).filter(([t]) => t === target).flatMap(([, kfs]) => kfs));
+}
+
+/** The times (% of the cycle) where a target's lane has a key. */
+export function laneAts(doc: AnimationDoc, target: TargetRef, lane: LaneId): number[] {
+  return laneTimes(laneTargets(doc).filter(([t]) => t === target).flatMap(([, kfs]) => kfs), lane);
 }
 
 /** Every row of `doc` that can be hidden or soloed, with its list. */
@@ -123,7 +133,7 @@ export function parentKey(doc: AnimationDoc, key: LayerKey): LayerKey | undefine
   if (kind === 'children') return `emitter:${id}`;
   if (kind === 'lane') {
     const t = key.slice(5, key.lastIndexOf('|'));
-    return t === 'element' ? undefined : /^(part|group|shape):/.test(t) ? t : `target:${t}`;
+    return /^(part|group|shape):/.test(t) ? t : `target:${t}`;
   }
   return undefined;
 }
@@ -187,7 +197,7 @@ export const applyLayerView: ApplyLayerView = (doc, view) => {
   const out: AnimationDoc = { ...doc };
   if (steps.size) out.steps = (doc.steps ?? []).filter((_, i) => !steps.has(i));
   if (lanes.size) {
-    if (doc.keyframes && lanes.has(doc.target)) out.keyframes = stripLanes(doc.keyframes, lanes.get(doc.target)!);
+    if (doc.keyframes && lanes.has(mainTarget(doc))) out.keyframes = stripLanes(doc.keyframes, lanes.get(mainTarget(doc))!);
     if (doc.tracks) {
       out.tracks = doc.tracks.flatMap((t): Track[] => {
         const l = lanes.get(t.target);

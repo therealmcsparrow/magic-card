@@ -32,7 +32,9 @@ export interface RowInit {
   note?: string;
   /** Count badge ("3 keys"). */
   badge?: string;
-  level?: 1 | 2;
+  level?: 1 | 2 | 3;
+  /** No kind icon (a lane row). */
+  bare?: boolean;
   /** Disclosure: undefined = no children. */
   expanded?: boolean;
   selected: boolean;
@@ -151,6 +153,12 @@ export class LayerRows implements ReactiveController {
     if (!this.locked(key)) return false;
     this.announce(`${name} is locked. Unlock it in Layers.`);
     return true;
+  }
+
+  /** Open or close a row's disclosure that lives in the view (`LayerView.open`); nothing is announced. */
+  setOpen(key: LayerKey, open: boolean): void {
+    const v = this.view;
+    if (v.open.includes(key) !== open) this.announce('', { ...v, open: open ? [...v.open, key] : v.open.filter((k) => k !== key) });
   }
 
   toggle(key: LayerKey, name: string, kind: LayerToggle): void {
@@ -349,7 +357,7 @@ export class LayerRows implements ReactiveController {
       const on = (k === 'hide' ? why?.kind === 'self' : k === 'solo' ? soloed : lockedSelf) as boolean;
       const soft = !on && (k === 'hide' ? !!why : k === 'lock' ? lockedVia : false);
       const t = TOGGLE_TEXT[k];
-      return html`<button type="button" class="lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t.name} title=${t.tip[on ? 1 : 0]} @click=${() => this.toggle(r.key, r.name, k)}>
+      return html`<button type="button" class="lt ${soft ? 'soft' : ''}" data-ctl=${k} data-toggle=${k} tabindex="-1" aria-pressed=${on ? 'true' : 'false'} aria-label=${t.name} title=${k === 'hide' && !on && r.key.startsWith('lane:') ? 'Hide in preview: the layer rests at its normal value' : t.tip[on ? 1 : 0]} @click=${() => this.toggle(r.key, r.name, k)}>
         <ha-icon icon=${t.icon[on || soft ? 1 : 0]}></ha-icon>
       </button>`;
     };
@@ -372,7 +380,7 @@ export class LayerRows implements ReactiveController {
               <ha-icon icon=${r.expanded ? 'mdi:chevron-down' : 'mdi:chevron-right'}></ha-icon>
             </button>`}
         <button type="button" class="lr-main" data-lk=${r.key} tabindex="-1" aria-pressed=${r.selected ? 'true' : 'false'} aria-expanded=${r.expanded === undefined ? nothing : r.expanded ? 'true' : 'false'} aria-describedby=${said.length ? id : nothing} aria-keyshortcuts="H S L Alt+ArrowUp Alt+ArrowDown" title=${r.title ?? r.name} @focus=${(e: Event) => ((active = (e.currentTarget as HTMLElement).dataset.lk!), syncTabStops(h))} @click=${(e: MouseEvent) => this.actions.select(r.key, e)}>
-          ${r.thumb ?? html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`}
+          ${r.thumb ?? (r.bare ? nothing : html`<ha-icon class="kind" icon=${r.icon ?? 'mdi:layers-outline'}></ha-icon>`)}
           ${r.renaming ? nothing : html`<span class="nm"><span class="nm-t">${r.name}</span>${r.note ? html`<small>${r.note}</small>` : nothing}</span>`}
           ${r.badge ? html`<span class="lbadge">${r.badge}</span>` : nothing}
           ${below > 0 ? html`<span class="lbadge warn" aria-hidden="true">${below} hidden</span>` : nothing}
@@ -425,6 +433,9 @@ export const layerRowStyles = css`
   }
   .lr.lvl-2 .lr-in {
     padding-left: 18px;
+  }
+  .lr.lvl-3 .lr-in {
+    padding-left: 36px;
   }
   .lr-main {
     all: unset;

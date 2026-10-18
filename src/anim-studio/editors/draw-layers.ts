@@ -6,7 +6,8 @@ import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc } from '../model';
 import type { RigShape } from '../model-v2';
 import { LayerRows, layerRowStyles } from './layer-row';
-import type { LayerView, LayersDensity } from '../../contracts/studio-layers';
+import { laneName, selectLane, trackRows, tracksOpen } from './lane-rows';
+import { EMPTY_LAYER_VIEW, type LayerView, type LayersDensity } from '../../contracts/studio-layers';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import { hasDrawOn, isFilled, isStroked, moveShapeInLayer, removeShape } from './draw-utils';
 import { selectedShapeId, sourceViewBox } from './draw-store';
@@ -65,9 +66,10 @@ abstract class ShapesLayersBase extends LitElement {
   @property() density: LayersDensity = 'full';
 
   private readonly _list = new LayerRows(this, {
-    select: (key, e) => this._pick(key.slice(6), e),
+    select: (key, e) => (key.startsWith('lane:') ? !this.disabled && selectLane(this, this.doc!, key) : this._pick(key.slice(6), e)),
     move: (key, dir) => this._shift(key.slice(6), dir),
-    nameOf: (key) => this.doc?.rig?.shapes?.find((x) => x.id === key.slice(6))?.name ?? key,
+    open: (key, open) => this._list.setOpen(key, open),
+    nameOf: (key) => (key.startsWith('lane:') ? laneName(key) : (this.doc?.rig?.shapes?.find((x) => x.id === key.slice(6))?.name ?? key)),
   });
 
   private _emit(doc: AnimationDoc, label: string): void {
@@ -135,13 +137,15 @@ abstract class ShapesLayersBase extends LitElement {
         const notes = [hasDrawOn(doc, target) ? 'draws on' : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
         const upEdge = under && first === s.id;
         const downEdge = !under && last === s.id;
-        return this._list.row({
+        const open = tracksOpen(doc, this.layerView ?? EMPTY_LAYER_VIEW, target, target);
+        const row = this._list.row({
           key: target,
+          expanded: open,
           name: s.name,
           thumb: this._thumb(s, vb),
           note: notes,
           describe: notes,
-          selected: s.id === sel,
+          selected: s.id === sel && !(open && this.selection.kind === 'keys'),
           up: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'up') !== doc, label: upEdge ? `Bring ${s.name} over the icon` : `Bring ${s.name} forward`, menu: upEdge ? 'Bring over the icon' : 'Move up (drawn on top)' },
           down: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'down') !== doc, label: downEdge ? `Send ${s.name} under the icon` : `Send ${s.name} backward`, menu: downEdge ? 'Send under the icon' : 'Move down' },
           extra:
@@ -151,6 +155,7 @@ abstract class ShapesLayersBase extends LitElement {
                   <ha-icon icon="mdi:delete-outline"></ha-icon>
                 </button>`,
         });
+        return open ? [row, ...trackRows(this._list, doc, this.selection, target, 2)] : [row];
       })}
     </ul>
     ${shapes.length >= 48 ? html`<p class="empty-note">The rig holds the most shapes it can (48).</p>` : nothing}`;

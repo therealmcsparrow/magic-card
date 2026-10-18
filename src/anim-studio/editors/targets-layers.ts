@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc, TargetRef } from '../model';
 import { LayerRows, layerRowStyles } from './layer-row';
-import type { LayerView, LayersDensity } from '../../contracts/studio-layers';
+import { laneName, selectLane, trackRows, tracksOpen } from './lane-rows';
+import { EMPTY_LAYER_VIEW, type LayerView, type LayersDensity } from '../../contracts/studio-layers';
 import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { tileDef, type PreviewTile } from '../tiles';
 
@@ -82,8 +83,9 @@ export class AnimTargetsLayers extends LitElement {
   @property() density: LayersDensity = 'full';
 
   private readonly _list = new LayerRows(this, {
-    select: (key) => this._select(key.slice(7) as TargetRef),
-    nameOf: (key) => CARD_PART_ROWS.find((r) => r.target === key.slice(7))?.label ?? key,
+    select: (key) => (key.startsWith('lane:') ? !this.disabled && selectLane(this, this.doc!, key) : this._select(key.slice(7) as TargetRef)),
+    open: (key, open) => this._list.setOpen(key, open),
+    nameOf: (key) => (key.startsWith('lane:') ? laneName(key) : (CARD_PART_ROWS.find((r) => r.target === key.slice(7))?.label ?? key)),
   });
 
   private _select(target: TargetRef): void {
@@ -92,21 +94,26 @@ export class AnimTargetsLayers extends LitElement {
     this.dispatchEvent(new CustomEvent('selection-change', { detail: { selection }, bubbles: true, composed: true }));
   }
 
-  private _row(r: TargetRow, onTile: boolean, selected: TargetRef | undefined): TemplateResult {
+  private _row(r: TargetRow, onTile: boolean, selected: TargetRef | undefined): TemplateResult[] {
     const doc = this.doc!;
     const n = animatesTarget(doc, r.target) ? (r.target === doc.target && doc.kind === 'keyframes' ? (doc.keyframes?.length ?? 0) : 0) + (doc.tracks?.find((t) => t.target === r.target)?.keyframes.length ?? 0) : 0;
-    return this._list.row({
-      key: `target:${r.target}`,
+    const key = `target:${r.target}`;
+    const open = tracksOpen(doc, this.layerView ?? EMPTY_LAYER_VIEW, r.target, key);
+    const row = this._list.row({
+      key,
+      expanded: open,
       name: r.label,
       icon: r.icon,
       note: onTile ? undefined : 'Not on this tile',
       badge: n ? `${n} key${n === 1 ? '' : 's'}` : undefined,
       describe: [animatesTarget(doc, r.target) ? 'animated' : '', onTile ? '' : `not on the ${tileDef(this.tile).label} tile`].filter(Boolean).join(', '),
-      selected: selected === r.target,
+      // an open track list shows the picked track instead of its target
+      selected: selected === r.target && !(open && this.selection.kind === 'keys'),
       // the whole card cannot be hidden
       toggles: r.target === 'element' ? ['lock'] : undefined,
       title: onTile ? r.label : `${r.label} is not on the ${tileDef(this.tile).label} tile`,
     });
+    return open ? [row, ...trackRows(this._list, doc, this.selection, r.target, 2)] : [row];
   }
 
   protected render(): TemplateResult | typeof nothing {
