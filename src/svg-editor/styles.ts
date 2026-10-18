@@ -692,12 +692,32 @@ export const editorStyles: CSSResult[] = [
       padding-left: calc(4px + (var(--lv, 1) - 1) * 14px);
       scroll-margin-block: 48px;
     }
+    .tree .row {
+      flex-wrap: nowrap;
+      gap: 0;
+    }
     .tree .row .b {
-      min-width: max(24px, calc(var(--hit) - 12px));
-      min-height: max(24px, calc(var(--hit) - 12px));
-      padding: 0 2px;
-      border-color: transparent;
+      flex: none;
+      width: 24px;
+      min-width: 24px;
+      height: 24px;
+      min-height: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: 6px;
       background: transparent;
+    }
+    .tree .row .b:hover {
+      background: color-mix(in srgb, var(--mc-text, #212121) 10%, transparent);
+    }
+    .tree .row .b[aria-pressed='true'] {
+      background: transparent;
+    }
+    .tree .row .b:focus-visible {
+      outline-offset: -2px;
+    }
+    .tree .row .chip {
+      flex: none;
     }
     .grip {
       touch-action: none;
