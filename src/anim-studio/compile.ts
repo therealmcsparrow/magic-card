@@ -105,6 +105,8 @@ export interface CompiledAnimation {
    * what the card hands to ParticlesModule.apply after the render (`spec.sim` checked lenient).
    */
   sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period'>;
+  /** particles v2 with emitters on both sides of the content: the second layer (part 1), rendered next to `layer`. */
+  split?: { name: string; layer: CompiledLayer; sim: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period' | 'part'> };
   /** particles v2 without the chunk's compiler: `layer` is the v1 fallback, the chunk is wanted. */
   needsParticles?: true;
 }
@@ -554,7 +556,19 @@ function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
       const period = doc.duration / p.speed;
       // aspect 0: the slot pool only; the chunk's apply bakes once the layer is measured
       const v = particlesCompiler!(doc.id, spec, period, { aspect: 0 });
-      simCache.set(doc, (out = { kind: 'particles', name: v.name, css: v.css, layer: { front: v.front, particles: v.slots, speed: p.speed }, sim: { docId: doc.id, spec, period } }));
+      const o = v.other;
+      simCache.set(
+        doc,
+        (out = {
+          kind: 'particles',
+          name: v.name,
+          css: o ? `${v.css}
+${o.css}` : v.css,
+          layer: { front: v.front, particles: v.slots, speed: p.speed },
+          sim: { docId: doc.id, spec, period },
+          ...(o ? { split: { name: o.name, layer: { front: o.front, particles: o.slots, speed: p.speed }, sim: { docId: doc.id, spec, period, part: 1 as const } } } : {}),
+        }),
+      );
     }
   } catch {
     failedSims.add(doc.id);

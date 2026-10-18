@@ -1232,7 +1232,7 @@ export class MagicCard extends LitElement {
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
         // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
         // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)
-        useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + name.slice(name.lastIndexOf('-g')) : name, name, css),
+        useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + (sim.part ? 'o' : '') + name.slice(name.lastIndexOf('-g')) : name, name, css),
         content: () =>
           sim.spec.sim.colliders.content === 'icon'
             ? [...w.querySelectorAll('.mc-anim-icon')].find((e) => e.closest('.mc-module-wrapper') === w)

@@ -297,7 +297,7 @@ export interface FxLayer {
   /** Custom particles: the content of each particle (an icon or a text symbol). */
   symbol?: { icon: string } | { text: string };
   /** particles v2 compiled by the particles chunk: the card applies the layer after the render. */
-  sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period'>;
+  sim?: Pick<ParticlesApplyCtx, 'docId' | 'spec' | 'period' | 'part'>;
 }
 
 export interface SeasonalFx {
@@ -599,15 +599,18 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
   if (c.layer) {
     if (c.sim || c.needsParticles) ctx.runtime.p = true;
     const cycle = `${+(seconds(dur) / c.layer.speed).toFixed(3)}s`;
-    ctx.fx.push({
-      preset: c.name,
-      front: c.layer.front,
-      style: [`--mc-fx-anim: ${c.name} ${cycle} ${tail}`, `--mc-fx-dur: ${cycle}`, `--mc-fx-delay: ${delay}`, ...own].join('; '),
-      particles: c.layer.particles,
-      ...(c.layer.symbol ? { symbol: c.layer.symbol } : {}),
-      sim: c.sim,
-      ...(tap ? { tap } : {}),
-    });
+    // a split document (emitters on both sides of the content) pushes its second layer right after the first
+    for (const [name, l, sim] of [[c.name, c.layer, c.sim] as const, ...(c.split ? [[c.split.name, c.split.layer, c.split.sim] as const] : [])]) {
+      ctx.fx.push({
+        preset: name,
+        front: l.front,
+        style: [`--mc-fx-anim: ${name} ${cycle} ${tail}`, `--mc-fx-dur: ${cycle}`, `--mc-fx-delay: ${delay}`, ...own].join('; '),
+        particles: l.particles,
+        ...(l.symbol ? { symbol: l.symbol } : {}),
+        sim,
+        ...(tap ? { tap } : {}),
+      });
+    }
     return undefined;
   }
 
