@@ -7,7 +7,8 @@ import { moveMenu, runMove } from './layers';
 import { PATH_BUTTONS, openTool, ptReason } from './pathtools';
 import { toneOf } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
-import { S } from './strings';
+import { t } from './i18n';
+import { ALIGN_TARGETS, ALIGN_EDGE, ARRANGE, BOOL_OPS, PT_NAME } from './names';
 
 /* The "Shape actions" menu: entries per target, and the one place a pick turns into an editor command. */
 
@@ -16,24 +17,24 @@ const ARR: SvgArrange[] = ['front', 'forward', 'backward', 'back'];
 const EDGES: SvgAlignEdge[] = ['left', 'centre', 'right', 'top', 'middle', 'bottom'];
 const OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
 
-export const emptyMenu = (): MenuEntry[] => [it('all', S.selectAll), it('zoom', S.zoomToFit)];
+export const emptyMenu = (): MenuEntry[] => [it('all', t('Select all')), it('zoom', t('Zoom to fit'))];
 
 /** The topbar Export / Import menu: what the sidebar's Export section held. */
 export function xferItems(ed: McSvgEditor): MenuEntry[] {
-  const no = ed.out.svg ? undefined : S.xferNone;
+  const no = ed.out.svg ? undefined : t('Nothing to export yet.');
   return [
-    it('x:export', S.exportFile, no),
-    it('x:import', S.importFile),
-    it('x:copy', S.copySvg, no, undefined, true),
-    it('x:download', S.downloadSvg, no),
-    it('x:ha', S.copyHa, no),
-    ...(ed.ha?.secondary ? [it('x:accent', S.copyAccent)] : []),
+    it('x:export', t('Export file'), no),
+    it('x:import', t('Import file')),
+    it('x:copy', t('Copy SVG'), no, undefined, true),
+    it('x:download', t('Download .svg'), no),
+    it('x:ha', t('Copy as HA path'), no),
+    ...(ed.ha?.secondary ? [it('x:accent', t('Copy accent path'))] : []),
   ];
 }
 
 export function pointMenu(ed: McSvgEditor): MenuEntry[] {
   const k = ed.pointCtx?.kind;
-  return [it('kind', k === 'smooth' ? S.kindCorner : S.kindSmooth), it('addpt', S.pointAdd, ed.canAddPoint ? undefined : S.pointAddNo), it('delpt', S.pointDelete), it('split', S.ptHere, ptReason(ed, 'split'))];
+  return [it('kind', k === 'smooth' ? t('Corner') : t('Smooth')), it('addpt', t('Add point after'), ed.canAddPoint ? undefined : t('This is the last point of an open line.')), it('delpt', t('Delete point')), it('split', t('Split here'), ptReason(ed, 'split'))];
 }
 
 const TARGETS: SvgAlignTarget[] = ['selection', 'canvas', 'safe'];
@@ -41,37 +42,37 @@ const TARGETS: SvgAlignTarget[] = ['selection', 'canvas', 'safe'];
 /** Align, distribute and place; the canvas toolbar adds the "relative to" choice in front. */
 export function alignItems(ed: McSvgEditor, tool: boolean): MenuEntry[] {
   const n = ed.items.items.length;
-  const noSafe = ed.safeOn ? undefined : S.safeHidden;
-  const none = tool && !n ? S.noneSelected : undefined;
-  const need3 = n >= 3 ? undefined : S.alignNeedThree;
-  const off = (k: SvgAlignTarget): string | undefined => (k === 'selection' && n < 2 ? S.alignNeedTwo : k === 'safe' && !ed.safeOn ? S.safeHidden : undefined);
+  const noSafe = ed.safeOn ? undefined : t('The safe area is hidden.');
+  const none = tool && !n ? t('Nothing selected. Pick a layer, or click a shape.') : undefined;
+  const need3 = n >= 3 ? undefined : t('Select three or more shapes to space them evenly.');
+  const off = (k: SvgAlignTarget): string | undefined => (k === 'selection' && n < 2 ? t('Select two or more shapes to align them to each other.') : k === 'safe' && !ed.safeOn ? t('The safe area is hidden.') : undefined);
   return [
-    ...(tool ? TARGETS.map((k) => ({ ...it(`tgt:${k}`, `${S.alignRel}: ${S.alignTargets[k]}`, off(k)), checked: ed.alignBase === k })) : []),
-    ...EDGES.map((e, i) => it(`al:${e}`, S.alignEdge[e], none, undefined, tool && !i)),
-    it('dist:h', S.distH, none ?? need3, undefined, tool),
-    it('dist:v', S.distV, none ?? need3),
-    it('place:centre', S.placeCentre, undefined, undefined, tool),
-    it('place:fit', S.placeFit, noSafe),
-    it('place:match', S.placeMatch, noSafe),
+    ...(tool ? TARGETS.map((k) => ({ ...it(`tgt:${k}`, `${t('Relative to')}: ${t(ALIGN_TARGETS[k])}`, off(k)), checked: ed.alignBase === k })) : []),
+    ...EDGES.map((e, i) => it(`al:${e}`, t(ALIGN_EDGE[e]), none, undefined, tool && !i)),
+    it('dist:h', t('Distribute horizontally'), none ?? need3, undefined, tool),
+    it('dist:v', t('Distribute vertically'), none ?? need3),
+    it('place:centre', t('Centre on canvas'), undefined, undefined, tool),
+    it('place:fit', t('Fit to safe area'), noSafe),
+    it('place:match', t('Match safe-area edges'), noSafe),
   ];
 }
 
-export const combineItems = (ed: McSvgEditor): MenuEntry[] => OPS.map((o) => it(`bool:${o}`, S.boolOps[o], boolReason(ed.boolean, o)));
-export const pathItems = (ed: McSvgEditor): MenuEntry[] => PATH_BUTTONS.map((t) => it(`pt:${t}`, S.ptName[t], ptReason(ed, t)));
+export const combineItems = (ed: McSvgEditor): MenuEntry[] => OPS.map((o) => it(`bool:${o}`, t(BOOL_OPS[o]), boolReason(ed.boolean, o)));
+export const pathItems = (ed: McSvgEditor): MenuEntry[] => PATH_BUTTONS.map((tool) => it(`pt:${tool}`, t(PT_NAME[tool]), ptReason(ed, tool)));
 
 export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
   return [
-    it('dup', S.duplicate, undefined, 'Control+D'),
-    it('del', S.remove, undefined, 'Delete'),
-    it('flipH', S.flipH, undefined, 'Shift+H', true),
-    it('flipV', S.flipV, undefined, 'Shift+V'),
-    it('rotCW', S.rotCw),
-    it('rotCCW', S.rotCcw),
-    ...(ed.dualOn ? [it('tone', ed.selected.every((s) => toneOf(s) === 'accent') ? S.singleGo : S.makeAccent)] : []),
-    { ...it('arrange', S.arrangeTitle, undefined, undefined, true), items: ARR.map((a) => it(`arr:${a}`, S.arrange[a], ed.canArrange(a) ? undefined : S.arrangeLimit)) },
-    { ...it('align', S.alignTitle), items: alignItems(ed, false) },
-    { ...it('combine', S.boolOps.union), items: combineItems(ed) },
-    { ...it('path', S.ptTitle), items: pathItems(ed) },
+    it('dup', t('Duplicate'), undefined, 'Control+D'),
+    it('del', t('Delete'), undefined, 'Delete'),
+    it('flipH', t('Flip horizontally'), undefined, 'Shift+H', true),
+    it('flipV', t('Flip vertically'), undefined, 'Shift+V'),
+    it('rotCW', t('Rotate 90 degrees clockwise')),
+    it('rotCCW', t('Rotate 90 degrees anticlockwise')),
+    ...(ed.dualOn ? [it('tone', ed.selected.every((s) => toneOf(s) === 'accent') ? t('Make Main') : t('Make Accent'))] : []),
+    { ...it('arrange', t('Arrange'), undefined, undefined, true), items: ARR.map((a) => it(`arr:${a}`, t(ARRANGE[a]), ed.canArrange(a) ? undefined : t('It is already there.'))) },
+    { ...it('align', t('Align')), items: alignItems(ed, false) },
+    { ...it('combine', t(BOOL_OPS.union)), items: combineItems(ed) },
+    { ...it('path', t('Path')), items: pathItems(ed) },
     ...(moveMenu(ed) ? [moveMenu(ed)!] : []),
   ];
 }

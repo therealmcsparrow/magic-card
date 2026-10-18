@@ -1,5 +1,6 @@
 import type { Pt, PrimitiveKind } from '../contracts/path-model';
-import { S } from './strings';
+import { t } from './i18n';
+import { PRIM } from './names';
 import { D } from './bind';
 import { toEditPaths, fromCorners, fromPrimitive, newShape, nameFor, type Doc, type Shape } from './model';
 
@@ -85,11 +86,11 @@ export class Gestures {
   }
 
   private build(a: Pt, b: Pt, square: boolean): Shape | undefined {
-    const t = this.h.tool;
-    if (t === 'knife' || !SHAPE_TOOLS.includes(t) || (Math.abs(b[0] - a[0]) < 0.01 && Math.abs(b[1] - a[1]) < 0.01)) return undefined;
+    const tool = this.h.tool;
+    if (tool === 'knife' || !SHAPE_TOOLS.includes(tool) || (Math.abs(b[0] - a[0]) < 0.01 && Math.abs(b[1] - a[1]) < 0.01)) return undefined;
     const o = this.h.opts;
-    if (t === 'shapes') return fromPrimitive(this.h.doc, o.prim, S.prim[o.prim], a, b, square);
-    const kind = t === 'polygon' ? (o.star ? 'star' : 'polygon') : (t as 'rect' | 'ellipse' | 'line');
+    if (tool === 'shapes') return fromPrimitive(this.h.doc, o.prim, t(PRIM[o.prim]), a, b, square);
+    const kind = tool === 'polygon' ? (o.star ? 'star' : 'polygon') : (tool as 'rect' | 'ellipse' | 'line');
     return fromCorners(this.h.doc, kind, a, b, { r: o.r, sides: o.sides, inner: o.inner, square: square && kind !== 'line' });
   }
 
@@ -198,7 +199,7 @@ export class Gestures {
       if (!this.pending) {
         this.pending = c;
         this.h.setLive({ from: c, cursor: c });
-        this.h.say(S.firstCorner);
+        this.h.say(t('First corner set. Move, then press Enter for the opposite corner.'));
       } else this.finish(this.pending, c, false);
       return true;
     }

@@ -6,7 +6,8 @@ import { loadPathTools } from '../path-tools/loader';
 import { D } from './bind';
 import { asPath, isOff, newShape, pruneGroups, shapeBox, uid, type Doc, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
-import { S } from './strings';
+import { t } from './i18n';
+import { PT_NAME } from './names';
 
 /*
  * Path tools in the editor (contract svg-editor rev 5, path-tools 1.0.0): which layers a tool works on, why it
@@ -40,14 +41,14 @@ const usable = (d: Doc, f: (s: Shape) => boolean): Shape[] => d.shapes.filter((s
 export function ptReason(ed: McSvgEditor, tool: PathTool): string | undefined {
   if (tool === 'split') {
     const c = ed.pointCtx;
-    return !c || (!c.p.closed && (c.i === 0 || c.i === c.p.anchors.length - 1)) ? S.ptPoint : undefined;
+    return !c || (!c.p.closed && (c.i === 0 || c.i === c.p.anchors.length - 1)) ? t('Select one point between the ends with the Node tool.') : undefined;
   }
-  const t = usable(ed.doc, (s) => ed.sel.includes(s.id));
-  if (!t.length) return S.ptSelect;
-  const ps = t.flatMap((s) => s.paths);
-  if (tool === 'outline-stroke') return t.some((s) => s.stroke !== 'none' && s.width > 0) ? undefined : S.ptNoStroke;
-  if (tool === 'offset') return ps.some(closed) ? undefined : S.ptNoArea;
-  if (tool === 'join') return ps.some(opened) ? undefined : S.ptNotOpen;
+  const on = usable(ed.doc, (s) => ed.sel.includes(s.id));
+  if (!on.length) return t('Select a shape first.');
+  const ps = on.flatMap((s) => s.paths);
+  if (tool === 'outline-stroke') return on.some((s) => s.stroke !== 'none' && s.width > 0) ? undefined : t('This shape has no stroke to outline.');
+  if (tool === 'offset') return ps.some(closed) ? undefined : t('Select a closed shape. Open lines have no area.');
+  if (tool === 'join') return ps.some(opened) ? undefined : t('Join works on open paths. Use Split first to open a closed one.');
   return undefined;
 }
 
@@ -155,7 +156,7 @@ export async function openTool(ed: McSvgEditor, tool: PathTool, line?: [Pt, Pt])
     ed.ptBusy = undefined;
   }
   if (!l) {
-    ed.noteFail(S.ptLoadFail, () => void openTool(ed, tool, line));
+    ed.noteFail(t('Couldn\'t load the path tools. Try again.'), () => void openTool(ed, tool, line));
     return;
   }
   ed.note = undefined;
@@ -197,9 +198,9 @@ export function apply(ed: McSvgEditor): void {
   if (!p) return;
   const r = plan(p, ed.doc, ed.sel);
   if (!r.doc) return;
-  ed.apply(r.doc, S.ptName[p.tool]);
+  ed.apply(r.doc, t(PT_NAME[p.tool]));
   ed.select(r.sel);
-  ed.noteUndo(S.ptDone(S.ptName[p.tool], r.before, r.after));
+  ed.noteUndo(t('{name} applied: {before} points before, {after} after.', { name: t(PT_NAME[p.tool]), before: r.before, after: r.after }));
   close(ed, p);
 }
 

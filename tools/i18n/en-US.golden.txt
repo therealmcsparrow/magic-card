@@ -12,9 +12,27 @@ labels	Outline colour	Outline color
 labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
 card-editor	Background colour	Background color
+card-editor	Bar colour	Bar color
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
+card-editor	Colour	Color
+card-editor	Colour ranges	Color ranges
+card-editor	Colours the icon like Home Assistant does for this entity's state.	Colors the icon like Home Assistant does for this entity's state.
+card-editor	Fill colour	Fill color
+card-editor	Icon colour	Icon color
+card-editor	Line colour	Line color
 card-editor	Maximise	Maximize
+card-editor	Show colour picker	Show color picker
+card-editor	Show colour temp	Show color temp
+card-editor	Slider colour	Slider color
+card-editor	The arc takes the colour of the highest range at or below the value.	The arc takes the color of the highest range at or below the value.
+card-editor	The bar takes the colour of the highest range at or below the value; the bar colour applies below the first range.	The bar takes the color of the highest range at or below the value; the bar color applies below the first range.
+card-editor	The icon uses this gradient as its fill. Older tablets show the first colour.	The icon uses this gradient as its fill. Older tablets show the first color.
+card-editor	Track colour	Track color
+card-editor	Use entity colour	Use entity color
+card-editor	Use entity colour wins while the entity has a state colour; this colour applies otherwise.	Use entity color wins while the entity has a state color; this color applies otherwise.
+card-editor	colour temperature	color temperature
+card-editor	colours	colors
 svg-editor	Accent preview colour	Accent preview color
 svg-editor	Align centre	Align center
 svg-editor	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.	Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {center} right {right} top {top} middle {middle} other {bottom}}.
@@ -25,6 +43,7 @@ svg-editor	Main follows the entity colour. Accent follows the card's secondary c
 svg-editor	Main preview colour	Main preview color
 svg-editor	Maximise	Maximize
 svg-editor	Opacity is not kept. Icons are one solid colour.	Opacity is not kept. Icons are one solid color.
+svg-editor	Rotate 90 degrees anticlockwise	Rotate 90 degrees counterclockwise
 svg-editor	This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.	This module will use your drawing instead of {icon}. Colors, Draw and Morph effects keep working on it.
 svg-editor	This module will use your drawing. Colours, Draw and Morph effects keep working on it.	This module will use your drawing. Colors, Draw and Morph effects keep working on it.
 svg-editor	Use two colours: Main and Accent.	Use two colors: Main and Accent.

@@ -5,7 +5,8 @@ import type { MenuEntry } from '../contracts/path-canvas';
 import { glyph } from '../ui-kit/glyphs';
 import { arrangeOrder, byId, groupChain, groupItems, layoutRows, outsideSafe, toneOf, tryMove, under, type Doc, type MoveWhy, type TreeRow } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
-import { S } from './strings';
+import { t } from './i18n';
+import { MOVE_WHY, TONE } from './names';
 
 /* The layer tree: rows over the nested groups (role=tree), keys, grip drag with drop targets, and the moves that need no drag. */
 
@@ -39,9 +40,9 @@ function placeFor(rows: TreeRow[], id: string, t: TreeRow, how: Drop): TreePlace
 }
 
 function whyText(d: Doc, why: MoveWhy, place: TreePlace): string {
-  if (why === 'depth') return S.groupDepth;
-  if (why === 'locked') return S.moveWhy.locked(groupChain(d, place.parent ?? undefined).find((g) => g.locked)?.name ?? '');
-  return S.moveWhy[why === 'self' ? 'self' : 'none'];
+  if (why === 'depth') return t('Groups can be 4 levels deep.');
+  if (why === 'locked') return t('{name} is locked.', { name: groupChain(d, place.parent ?? undefined).find((g) => g.locked)?.name ?? '' });
+  return t(MOVE_WHY[why === 'self' ? 'self' : 'none']);
 }
 
 /** The item the menu and the buttons act on: a group when its row is current and exactly its layers are picked, else the single picked layer. */
@@ -71,7 +72,7 @@ function announce(ed: McSvgEditor, id: string, into: boolean): void {
   const r = layoutRows(ed.doc, true).find((x) => x.id === id);
   if (!r) return;
   const n = nameOf(ed.doc, id);
-  ed.say(into && r.parent ? S.movedInto(n, nameOf(ed.doc, r.parent), r.index + 1, r.size) : into ? S.movedTop(n, r.index + 1, r.size) : S.moved(n, r.index + 1, r.size));
+  ed.say(into && r.parent ? t('{name} moved into {group}, position {pos} of {total}', { name: n, group: nameOf(ed.doc, r.parent), pos: r.index + 1, total: r.size }) : into ? t('{name} moved to the top level, position {pos} of {total}', { name: n, pos: r.index + 1, total: r.size }) : t('{name} moved, position {pos} of {total}', { name: n, pos: r.index + 1, total: r.size }));
 }
 
 /** Move an item to a place: one history step, announced; a refusal changes nothing and says why. */
@@ -93,7 +94,7 @@ export function moveTo(ed: McSvgEditor, id: string, place: TreePlace): boolean {
 export function stepOrder(ed: McSvgEditor, id: string, dir: 1 | -1): void {
   const ids = ed.doc.groups.some((g) => g.id === id) ? under(ed.doc, id).map((s) => s.id) : [id];
   const d = arrangeOrder(ed.doc, ids, dir === 1 ? 'forward' : 'backward');
-  if (d === ed.doc) return refuse(ed, S.moveLimit);
+  if (d === ed.doc) return refuse(ed, t('It cannot move further.'));
   ed.tmsg = '';
   ed.apply(d, 'Reorder');
   announce(ed, id, false);
@@ -107,11 +108,11 @@ export function stepGroup(ed: McSvgEditor, id: string, dir: 'in' | 'out'): void 
   if (!me) return;
   if (dir === 'in') {
     const above = rows.find((r) => r.parent === me.parent && r.index === me.index - 1);
-    if (!above?.group) return refuse(ed, S.noGroupAbove);
+    if (!above?.group) return refuse(ed, t('There is no group above.'));
     moveTo(ed, id, { parent: above.id, index: above.kids });
   } else {
     const par = rows.find((r) => r.id === me.parent);
-    if (!par) return refuse(ed, S.atTopLevel);
+    if (!par) return refuse(ed, t('It is already at the top level.'));
     moveTo(ed, id, { parent: par.parent ?? null, index: par.index + 1 });
   }
 }
@@ -133,14 +134,14 @@ export function moveMenu(ed: McSvgEditor): MenuEntry | undefined {
   const e = (eid: string, label: string, reason?: string, sep?: boolean): MenuEntry => ({ id: eid, label, reason, separatorBefore: sep });
   return {
     id: 'moveto',
-    label: S.moveTo,
+    label: t('Move to…'),
     items: [
-      e('mv:up', S.moveUp, arrangeOrder(d, ids, 'forward') === d ? S.moveLimit : undefined),
-      e('mv:down', S.moveDown, arrangeOrder(d, ids, 'backward') === d ? S.moveLimit : undefined),
-      e('mv:in', S.moveIn, above?.group ? undefined : S.noGroupAbove),
-      e('mv:out', S.moveOut, me.parent ? undefined : S.atTopLevel),
-      e('mv:top', S.moveTop, me.parent ? why({ parent: null, index: 0 }) : S.atTopLevel, true),
-      ...d.groups.map((g) => e(`mv:to:${g.id}`, S.moveInto(g.name), why({ parent: g.id, index: 0 }))),
+      e('mv:up', t('Move up'), arrangeOrder(d, ids, 'forward') === d ? t('It cannot move further.') : undefined),
+      e('mv:down', t('Move down'), arrangeOrder(d, ids, 'backward') === d ? t('It cannot move further.') : undefined),
+      e('mv:in', t('Move into group above'), above?.group ? undefined : t('There is no group above.')),
+      e('mv:out', t('Move out of group'), me.parent ? undefined : t('It is already at the top level.')),
+      e('mv:top', t('Top level'), me.parent ? why({ parent: null, index: 0 }) : t('It is already at the top level.'), true),
+      ...d.groups.map((g) => e(`mv:to:${g.id}`, t('Into {name}', { name: g.name }), why({ parent: g.id, index: 0 }))),
     ],
   };
 }
@@ -303,7 +304,7 @@ function pick(ed: McSvgEditor, r: TreeRow, add: boolean): void {
   const on = ids.every((i) => ed.sel.includes(i));
   ed.cur = K(r);
   ed.select(add ? (on ? ed.sel.filter((x) => !ids.includes(x)) : [...new Set([...ed.sel, ...ids])]) : ids);
-  if (!add) ed.say(S.liveSelected(nameOf(ed.doc, r.id)));
+  if (!add) ed.say(t('{name} selected.', { name: nameOf(ed.doc, r.id) }));
 }
 
 function renameKey(e: KeyboardEvent, ed: McSvgEditor, k: string): void {
@@ -365,26 +366,26 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
       type="button"
       class="icon-btn xs grip"
       tabindex="-1"
-      aria-label=${S.grip(name)}
-      title=${S.grip(name)}
+      aria-label=${t('Drag to move {name}', { name })}
+      title=${t('Drag to move {name}', { name })}
       @click=${(e: Event) => e.stopPropagation()}
       @pointerdown=${(e: PointerEvent) => gripDown(ed, e, r.id)}
       @pointermove=${(e: PointerEvent) => gripMove(ed, e)}
       @pointerup=${() => endDrag(ed, true)}
       @pointercancel=${() => endDrag(ed, false)}
     >${glyph('dragVertical', 16)}</button>
-    ${g ? ib(open ? S.collapse(name) : S.expand(name), 'chev', open ? 'chevronDown' : 'chevronRight', (e) => {
+    ${g ? ib(open ? t('Collapse {name}', { name }) : t('Expand {name}', { name }), 'chev', open ? 'chevronDown' : 'chevronRight', (e) => {
       e.stopPropagation();
       ed.toggleGroup(g.id);
     }) : nothing}
-    ${ib(hid ? S.show(name) : S.hide(name), '', hid ? 'eyeOffOutline' : 'eyeOn', toggle({ hidden: !hid }, 'Hide'), hid)}
-    ${ib(lck ? S.unlock(name) : S.lock(name), '', lck ? 'lock' : 'lockOpenVariant', toggle({ locked: !lck }, 'Lock'), lck)}
+    ${ib(hid ? t('Show {name}', { name }) : t('Hide {name}', { name }), '', hid ? 'eyeOffOutline' : 'eyeOn', toggle({ hidden: !hid }, 'Hide'), hid)}
+    ${ib(lck ? t('Unlock {name}', { name }) : t('Lock {name}', { name }), '', lck ? 'lock' : 'lockOpenVariant', toggle({ locked: !lck }, 'Lock'), lck)}
     ${ed.renaming === k
       ? html`<input class="rename input" type="text" .value=${name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, k)} @blur=${(e: Event) => ed.renameShape(k, (e.target as HTMLInputElement).value)} />`
       : html`<span class="nm" title=${name}>${name}</span>`}
-    ${s && ed.dualOn ? html`<span class="chip">${S.tone[toneOf(s)]}</span>` : nothing}
-    ${s && unsafe.has(s.id) ? html`<span class="chip is-warn" title=${S.outsideSafe}>!<span class="sr">${S.outsideSafe}</span></span>` : nothing}
-    ${g ? ib(S.ungroupOf(name), '', 'ungroup', (e) => {
+    ${s && ed.dualOn ? html`<span class="chip">${t(TONE[toneOf(s)])}</span>` : nothing}
+    ${s && unsafe.has(s.id) ? html`<span class="chip is-warn" title=${t('Reaches outside the 20 x 20 safe area')}>!<span class="sr">${t('Reaches outside the 20 x 20 safe area')}</span></span>` : nothing}
+    ${g ? ib(t('Ungroup {name}', { name }), '', 'ungroup', (e) => {
       e.stopPropagation();
       ed.ungroupSel(g.id);
     }) : nothing}
@@ -400,7 +401,7 @@ export function layerTree(ed: McSvgEditor): TemplateResult {
   const cur = ed.cur && keys.includes(ed.cur) ? ed.cur : first && K(first);
   const dr = ed.drag;
   const status = dr?.why && dr.place ? whyText(ed.doc, dr.why, dr.place) : ed.tmsg;
-  return html`<div class=${`tree${dr ? ' dragging' : ''}`} role="tree" aria-label=${S.layers} aria-multiselectable="true" @focusin=${(e: Event) => {
+  return html`<div class=${`tree${dr ? ' dragging' : ''}`} role="tree" aria-label=${t('Layers')} aria-multiselectable="true" @focusin=${(e: Event) => {
       const k = (e.target as HTMLElement).closest<HTMLElement>('[role=treeitem]')?.dataset.id;
       if (k && k !== ed.cur) ed.cur = k;
     }}>${repeat(rows, K, (r) => rowView(ed, r, cur ?? '', unsafe))}</div>

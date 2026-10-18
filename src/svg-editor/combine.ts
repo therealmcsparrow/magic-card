@@ -1,6 +1,7 @@
 import type { BooleanOp, BooleanOperand } from '../contracts/path-booleans';
 import { isOff, newShape, pruneGroups, type Doc, type Shape } from './model';
-import { S } from './strings';
+import { t } from './i18n';
+import { BOOL_DONE, BOOL_NAME } from './names';
 import type { EditPath } from '../contracts/path-model';
 
 /*
@@ -51,9 +52,9 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
 export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   const n = st.operands.length;
   if (n >= 2 || (n === 1 && op === 'union' && st.merge)) return undefined;
-  if (n === 1) return S.boolSecond;
-  if (st.openLayers) return S.boolOpen;
-  return S.boolNone;
+  if (n === 1) return t('Select a second shape.');
+  if (st.openLayers) return t('Select closed shapes. Open lines have no area.');
+  return t('Select two or more closed shapes.');
 }
 
 export function operandsOf(st: BoolState): BooleanOperand[] {
@@ -65,7 +66,7 @@ export function withResult(d: Doc, st: BoolState, op: BooleanOp, paths: EditPath
   const base = st.operands[0];
   const ids = new Set(st.operands.map((s) => s.id));
   const shape = newShape('path', paths, {
-    name: S.boolName[op],
+    name: t(BOOL_NAME[op]),
     fill: base.fill,
     stroke: base.stroke,
     width: base.width,
@@ -85,6 +86,6 @@ export function withResult(d: Doc, st: BoolState, op: BooleanOp, paths: EditPath
 /** The result's note text. */
 export function boolNote(op: BooleanOp, st: BoolState, skipped: number): string {
   const n = st.operands.length;
-  const main = n === 1 ? S.boolMerged(closedOf(st.operands[0])) : S.boolDone[op](n, st.operands[0].name);
-  return skipped > 0 ? `${main} ${S.boolSkipped(skipped)}` : main;
+  const main = n === 1 ? t('Merged {c} parts into one path.', { c: closedOf(st.operands[0]) }) : t(BOOL_DONE[op], { c: n, n: n - 1, from: st.operands[0].name });
+  return skipped > 0 ? `${main} ${t('{c, plural, one {1 open line was left out.} other {# open lines were left out.}}', { c: skipped })}` : main;
 }

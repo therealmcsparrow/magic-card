@@ -29,11 +29,11 @@ const CAPS = {
   'magic-card-path-canvas.js': 68_608, // 67 KiB, CEO 2026-10-18 (measured 65,332 + 5%)
   // SVG editor (T10): the architect's ceiling of 96 KiB, ADR 0019. Like the canvas chunk it is only emitted once the card-editor
   // chunk imports src/svg-editor/loader.ts (T11); until then this entry reports "missing from dist".
-  'magic-card-svg-editor.js': 147_456, // 144 KiB, CEO 2026-10-18 (headroom for review fixes after T38; was 140 KiB)
+  'magic-card-svg-editor.js': 158_720, // 155 KiB, CEO 2026-10-18 (was 144 KiB: the UI kit restyle UI4, then the i18n tables I4; Handoff 108; the kit itself costs this chunk nothing, the tables do)
   // shape editor (T7): the architect's ceiling of 48 KiB, ADR 0019. OVER the ceiling with the whole design scope
   // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
-  'magic-card-shape-editor.js': 86_016, // 84 KiB, CEO 2026-10-18 (booleans + T32 handles/menu)
+  'magic-card-shape-editor.js': 101_376, // 99 KiB, CEO 2026-10-18 (was 84 KiB: the UI kit restyle UI5, then the i18n tables I5; Handoff 108)
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
   'magic-card-slider.js': 97_280, // 95 KiB (D4, measured 92,085 + 5 %); ceiling 120 KiB
   'magic-card-seasonal.js': 58_368, // 57 KiB (D5, measured 55,023 + 5 %); ceiling 80 KiB

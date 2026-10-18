@@ -61,7 +61,10 @@ import { endDrag, stepOrder, groupBlocked, moveMenu, type DragState } from './la
 import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
-import { S } from './strings';
+import type { LocaleHassLike } from '../contracts/i18n';
+import { setI18nLocale } from '../i18n/runtime';
+import { t } from './i18n';
+import { PRIM, ARRANGE, BOOL_OPS, PT_NAME } from './names';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
 import { renderEditor } from './views';
 
@@ -130,7 +133,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   stage: Stage = 'loading';
-  doc: Doc = blankDoc(S.untitled);
+  doc: Doc = blankDoc('');
   sel: string[] = [];
   tool: Tool = 'select';
   cvSel?: PathSelection;
@@ -250,6 +253,7 @@ export class McSvgEditor extends LitElement implements StageHost {
         this.dialogs.push([n, f]);
       }
     }
+    if (this.hass) setI18nLocale(this.hass as LocaleHassLike);
     this.coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
     if (typeof ResizeObserver !== 'undefined') {
       this.ro = new ResizeObserver(() => this.measure());
@@ -296,7 +300,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.chunk = chunk;
     this.measure();
     const src = this.source;
-    if (src.kind === 'svg') this.openSvg(src.svg, S.untitled, true);
+    if (src.kind === 'svg') this.openSvg(src.svg, t('My icon'), true);
     else if (src.kind === 'icon') await this.openIcon(src.icon, true);
     else if (src.kind === 'library') await this.openLibrary(src.id);
     else this.showStart();
@@ -365,7 +369,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   openSvg(text: string, name: string, first = false): boolean {
     const r = importSvg(text, name);
     if (r.error || !r.doc) {
-      this.startError = r.error === 'No <svg> element found.' ? S.notSvg : S.nothing;
+      this.startError = r.error === 'No <svg> element found.' ? t('This is not valid SVG. Check that it starts with <svg and is closed.') : t('That file has no shapes an icon can use.');
       this.startMode = this.startMode ?? 'paste';
       if (first) this.showStart();
       return false;
@@ -379,14 +383,14 @@ export class McSvgEditor extends LitElement implements StageHost {
   async openIcon(ref: string, first = false): Promise<boolean> {
     const g = await resolveIconGeometry(ref.trim());
     if (!g) {
-      this.startError = S.iconFail(ref.trim());
+      this.startError = t('Could not find "{name}". Check the name, or wait for the icon packs to load.', { name: ref.trim() });
       this.startMode = 'icon';
       if (first) this.showStart();
       return false;
     }
     const name = ref.includes(':') ? ref.split(':')[1].replace(/[-_]/g, ' ') : ref;
     this.startError = undefined;
-    this.begin(fromGeometry(g, S.fromIcon(name)));
+    this.begin(fromGeometry(g, t('{name} copy', { name })));
     return true;
   }
 
@@ -408,10 +412,10 @@ export class McSvgEditor extends LitElement implements StageHost {
     const out: Banner[] = [];
     const d = n.dropped;
     if (droppedTotal(d)) {
-      const parts = [d.script && S.droppedScript(d.script), d.image && S.droppedImage(d.image), d.link && S.droppedLink(d.link), d.other && S.droppedOther(d.other)].filter(Boolean) as string[];
-      out.push({ id: 'dropped', kind: 'warn', text: `${S.dropped(droppedTotal(d))}: ${parts.join(', ')}. ${S.droppedKept}`, detail: parts });
+      const parts = [d.script && t('{c, plural, one {# script} other {# scripts}}', { c: d.script }), d.image && t('{c, plural, one {# image} other {# images}}', { c: d.image }), d.link && t('{c, plural, one {# external link} other {# external links}}', { c: d.link }), d.other && t('{c, plural, one {# other item} other {# other items}}', { c: d.other })].filter(Boolean) as string[];
+      out.push({ id: 'dropped', kind: 'warn', text: `${t('Removed {c, plural, one {# thing} other {# things}} icons cannot use', { c: droppedTotal(d) })}: ${parts.join(', ')}. ${t('Everything else was kept.')}`, detail: parts });
     }
-    const change = [n.transforms && S.transforms, n.colours && S.colours, n.opacity && S.opacity, n.merged && S.merged].filter(Boolean) as string[];
+    const change = [n.transforms && t('Transforms were applied to the paths. The drawing looks the same, the markup is different.'), n.colours && t('Colours were replaced by the card\'s colours: Main and Accent.'), n.opacity && t('Opacity is not kept. Icons are one solid colour.'), n.merged && t('Groups deeper than 4 levels were merged.')].filter(Boolean) as string[];
     if (change.length) out.push({ id: 'changed', kind: 'info', text: change.join(' ') });
     this.banners = out;
   }
@@ -499,7 +503,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     else this.sel = [m.sid];
     this.cvSel = this.tool === 'select' ? undefined : d;
     this.syncPen();
-    this.say(m ? S.liveSelected(byId(this.doc, m.sid)?.name ?? '') : '');
+    this.say(m ? t('{name} selected.', { name: byId(this.doc, m.sid)?.name ?? '' }) : '');
   };
 
   onView = (e: Event): void => {
@@ -685,11 +689,11 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   undo(): void {
-    this.step(this.hist?.undo(), S.undo);
+    this.step(this.hist?.undo(), t('Undo'));
   }
 
   redo(): void {
-    this.step(this.hist?.redo(), S.redo);
+    this.step(this.hist?.redo(), t('Redo'));
   }
 
   private step(d: Doc | undefined, label: string): void {
@@ -723,11 +727,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     const keep = this.banners.filter((b) => !['over', 'safe', 'limit'].includes(b.id));
     const add: Banner[] = [];
     const o = this.out;
-    if (o.error === 'over') add.push({ id: 'over', kind: 'error', text: S.over(kbOf(o.bytes)), action: { label: S.tidyNow, run: () => this.tidyNow() } });
+    if (o.error === 'over') add.push({ id: 'over', kind: 'error', text: t('This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.', { used: kbOf(o.bytes) }), action: { label: t('Tidy now'), run: () => this.tidyNow() } });
     const most = Math.max(0, ...this.base.shapes.flatMap((x) => x.paths.map((q) => q.anchors.length)));
-    if (most >= 100) add.push({ id: 'limit', kind: 'info', text: S.tooManyPoints(most) });
+    if (most >= 100) add.push({ id: 'limit', kind: 'info', text: t('This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.', { c: most }) });
     const out = outsideSafe(this.base);
-    if (out.length && this.safe) add.push({ id: 'safe', kind: 'warn', text: S.outsideBanner(out.length), action: { label: S.fitTo20, run: () => this.fitSafe() } });
+    if (out.length && this.safe) add.push({ id: 'safe', kind: 'warn', text: t('{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.', { c: out.length }), action: { label: t('Fit to 20'), run: () => this.fitSafe() } });
     this.banners = [...keep, ...add];
   }
 
@@ -766,7 +770,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** The arrow keys in the picker pick a kind and keep it open. */
   pickPrim(k: PrimitiveKind): void {
     this.opts = { ...this.opts, prim: k };
-    this.say(S.prim[k]);
+    this.say(t(PRIM[k]));
   }
 
   choosePrim(k: PrimitiveKind): void {
@@ -791,8 +795,8 @@ export class McSvgEditor extends LitElement implements StageHost {
       if (final && GRID_CHIPS.includes(n)) this.gridCustom = false;
     } else if (final && Number.isFinite(n)) {
       this.grid = Math.min(GRID_MAX, Math.max(GRID_MIN, n));
-      this.gridMsg = { text: S.gridClamped(this.grid), error: false };
-    } else this.gridMsg = { text: S.gridError, error: true };
+      this.gridMsg = { text: t('Grid size set to {size}, the nearest allowed size.', { size: this.grid }), error: false };
+    } else this.gridMsg = { text: t('Use 0.1 to 12.'), error: true };
   }
 
   setTool(t: Tool): void {
@@ -815,7 +819,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (this.tool !== 'shapes') this.tool = 'select';
     this.flat = this.makeFlat(this.doc);
     this.select([s.id]);
-    this.say(S.drawn(s.name));
+    this.say(t('{name} added.', { name: s.name }));
   }
 
   editShapes(ids: string[], f: (s: Shape) => Shape, label: string, merge?: string): void {
@@ -830,7 +834,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const name = byId(this.doc, ids[0])?.name ?? '';
     this.apply(removeShapes(this.doc, ids), 'Delete');
     this.sel = [];
-    this.say(S.liveDeleted(ids.length > 1 ? S.shapes(ids.length) : name));
+    this.say(t('{name} deleted.', { name: ids.length > 1 ? t('{c} shapes selected', { c: ids.length }) : name }));
   }
 
   duplicate(): void {
@@ -843,7 +847,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   group(): void {
     const r = groupItems(this.doc, this.sel);
     if (r.group) this.apply(r.doc, 'Group');
-    else if (groupBlocked(this)) this.say(S.groupDepth);
+    else if (groupBlocked(this)) this.say(t('Groups can be 4 levels deep.'));
   }
 
   ungroupSel(gid: string): void {
@@ -888,20 +892,20 @@ export class McSvgEditor extends LitElement implements StageHost {
   align(edge: SvgAlignEdge): void {
     const { items } = this.items;
     if (!items.length) return;
-    const t = this.alignBase;
-    const to = t === 'selection' ? union(items)! : t === 'safe' ? safeBox(this.doc.vb) : this.doc.vb;
+    const rel = this.alignBase;
+    const to = rel === 'selection' ? union(items)! : rel === 'safe' ? safeBox(this.doc.vb) : this.doc.vb;
     this.moveItems(alignMoves(items, edge, to), 'Align');
-    this.say(S.aligned(items.length, S.alignTo[edge]));
+    this.say(t('Aligned {c, plural, one {# shape} other {# shapes}} to the {edge, select, left {left} centre {centre} right {right} top {top} middle {middle} other {bottom}}.', { c: items.length, edge }));
   }
 
   distribute(axis: 'h' | 'v'): void {
     const { items } = this.items;
     if (items.length < 3) {
-      this.say(S.alignNeedThree);
+      this.say(t('Select three or more shapes to space them evenly.'));
       return;
     }
     this.moveItems(distributeMoves(items, axis), 'Distribute');
-    this.say(S.spaced(items.length));
+    this.say(t('Spaced {c} shapes evenly.', { c: items.length }));
   }
 
   place(kind: 'centre' | 'fit' | 'match'): void {
@@ -909,7 +913,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const from = union(items);
     if (!from) return;
     if (kind !== 'centre' && !this.safeOn) {
-      this.say(S.safeHidden);
+      this.say(t('The safe area is hidden.'));
       return;
     }
     const ids = items.flatMap((i) => i.ids);
@@ -925,7 +929,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       const d = kind === 'centre' ? centreMove(from, this.doc.vb) : matchMove(from, safeBox(this.doc.vb));
       moved = this.moveItems([{ ids, ...d }], kind === 'centre' ? 'Centre on canvas' : 'Match safe-area edges');
     }
-    if (moved) this.say(kind === 'centre' ? S.placeCentre : kind === 'fit' ? S.placeFit : S.placeMatch);
+    if (moved) this.say(kind === 'centre' ? t('Centre on canvas') : kind === 'fit' ? t('Fit to safe area') : t('Match safe-area edges'));
   }
 
   /** Arrange order of the selection; false when it is already at that limit. */
@@ -937,7 +941,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const d = arrangeOrder(this.doc, this.sel, how);
     if (d === this.doc) return;
     this.apply(d, 'Arrange');
-    this.say(S.arrange[how]);
+    this.say(t(ARRANGE[how]));
   }
 
   // ── booleans ──
@@ -963,20 +967,20 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.boolBusy = undefined;
     }
     if (!chunk) {
-      this.noteFail(S.boolLoadFail, () => void this.runBoolean(op));
+      this.noteFail(t('Couldn\'t load the shape tools. Try again.'), () => void this.runBoolean(op));
       return;
     }
     const st = this.boolean;
     if (boolReason(st, op)) return;
     const r = chunk.run(op, operandsOf(st), { frame: this.doc.vb });
     if (!r.ok) {
-      const t = r.reason === 'empty' ? S.boolEmpty : r.reason === 'no-area' ? S.boolOpen : S.boolComplex;
-      this.note = { tone: 'error', lines: [t, S.boolUnchanged] };
-      this.say(t);
+      const why = r.reason === 'empty' ? t('Nothing is left of these shapes.') : r.reason === 'no-area' ? t('Select closed shapes. Open lines have no area.') : t('These shapes have too many points to combine.');
+      this.note = { tone: 'error', lines: [why, t('Nothing was changed.')] };
+      this.say(why);
       return;
     }
     const out = withResult(this.doc, st, op, r.paths);
-    this.apply(out.doc, S.boolOps[op]);
+    this.apply(out.doc, t(BOOL_OPS[op]));
     this.select([out.shape.id]);
     const text = boolNote(op, st, r.skippedOpen + st.openOnly);
     this.noteUndo(text);
@@ -984,12 +988,12 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The status strip: a result with Undo, or a failure with Try again. Both go to the live region. */
   noteUndo(text: string): void {
-    this.note = { tone: 'info', lines: [text], action: { label: S.undo, run: () => { this.undo(); this.note = { tone: 'info', lines: [S.undone] }; } } };
+    this.note = { tone: 'info', lines: [text], action: { label: t('Undo'), run: () => { this.undo(); this.note = { tone: 'info', lines: [t('Undone.')] }; } } };
     this.say(text);
   }
 
   noteFail(text: string, retry: () => void): void {
-    this.note = { tone: 'error', lines: [text], action: { label: S.boolRetry, run: retry } };
+    this.note = { tone: 'error', lines: [text], action: { label: t('Try again'), run: retry } };
     this.say(text);
   }
 
@@ -1126,7 +1130,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     else if (this.sel.length) this.select([]);
     else if (!this.escHinted) {
       this.escHinted = true;
-      this.showToast(S.escHint);
+      this.showToast(t('Esc doesn\'t close the editor. Use Done or Back to card editor.'));
     }
   }
 
@@ -1373,7 +1377,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   get blockReason(): string | undefined {
-    return this.out.error === 'empty' ? S.doneBlocked : this.out.error === 'over' ? S.doneOver : this.out.error === 'invalid' ? this.out.message : undefined;
+    return this.out.error === 'empty' ? t('Draw something first') : this.out.error === 'over' ? t('Over the 32 KB limit') : this.out.error === 'invalid' ? this.out.message : undefined;
   }
 
   done(): void {
@@ -1426,7 +1430,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.select(m.ids);
       this.tool = 'select';
     } catch {
-      this.showToast(S.libInsertFail);
+      this.showToast(t('Could not load that icon.'));
     }
   }
 
@@ -1441,7 +1445,7 @@ export class McSvgEditor extends LitElement implements StageHost {
         const timer = setTimeout(() => void this.flushDelete(), 10_000);
         this.deleted = { item: full, timer };
       })
-      .catch(() => this.showToast(S.libInsertFail));
+      .catch(() => this.showToast(t('Could not load that icon.')));
   }
 
   async flushDelete(): Promise<void> {
@@ -1468,10 +1472,10 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (this.stage !== 'edit') return;
     if (this.mcu) return void this.saveMcu();
     if (this.libraryMissing) {
-      this.say(S.libMissing);
+      this.say(t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.'));
       return;
     }
-    this.saveName = this.saved?.item.name ?? this.doc.name ?? S.untitled;
+    this.saveName = this.saved?.item.name ?? this.doc.name ?? t('My icon');
     this.saveError = '';
     this.keepCopy = (this.out.svg ? bytesOf(this.out.svg) : 0) <= KEEP_COPY_DEFAULT_MAX_BYTES;
     this.dlg = 'save';
@@ -1482,15 +1486,15 @@ export class McSvgEditor extends LitElement implements StageHost {
   async saveToLibrary(mode: 'update' | 'new'): Promise<void> {
     const name = this.saveName.trim();
     if (!name) {
-      this.saveError = S.nameEmpty;
+      this.saveError = t('Give it a name.');
       return;
     }
     if (name.length > 40) {
-      this.saveError = S.nameLong;
+      this.saveError = t('Use 40 characters or fewer.');
       return;
     }
     if (!this.out.svg || this.blockReason) {
-      this.saveError = this.blockReason ?? S.doneBlocked;
+      this.saveError = this.blockReason ?? t('Draw something first');
       return;
     }
     const taken = new Set(this.lib.items.map((i) => i.id));
@@ -1508,8 +1512,8 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.doc = { ...this.doc, name: item.name };
       this.dlg = undefined;
       void this.loadLib();
-      this.showToast(S.saved(item.name), { label: S.useOnCard, run: () => this.done() }, 10_000);
-      this.say(S.saved(item.name));
+      this.showToast(t('Saved to library as {name}. Press Done to use it on this card.', { name: item.name }), { label: t('Use on this card'), run: () => this.done() }, 10_000);
+      this.say(t('Saved to library as {name}. Press Done to use it on this card.', { name: item.name }));
     } catch (e) {
       this.saveError = this.problemText(e, name);
     } finally {
@@ -1519,13 +1523,13 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   private problemText(e: unknown, name: string): string {
     const p = e instanceof LibraryError ? e.problem : 'unreachable';
-    return p === 'readonly' ? S.libReadOnly : p === 'conflict' ? S.saveConflict(name) : p === 'full' ? S.saveFull : p === 'invalid' ? S.saveInvalid : p === 'missing' ? S.libMissing : S.saveFail(name);
+    return p === 'readonly' ? t('Your account can use the library but not change it. Ask an admin, or keep this icon in the card only.') : p === 'conflict' ? t('{name} changed while you were editing. Save as new, or reload it.', { name }) : p === 'full' ? t('The library is full. Delete an icon you no longer use.') : p === 'invalid' ? t('The library could not accept this icon. Tidy it and try again.') : p === 'missing' ? t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.') : t('Could not save {name}. Try again.', { name });
   }
 
   /** Host 'mcu': Save writes to the library and the editor stays open. `copy` takes a new id and ignores the stored version. */
   async saveMcu(copy = false): Promise<void> {
     const name = this.doc.name.trim();
-    const why = !name ? S.nameNeeded : this.blockReason;
+    const why = !name ? t('Give the icon a name.') : this.blockReason;
     if (why || !this.out.svg || this.saveBusy) {
       if (why) this.say(why);
       return;
@@ -1546,11 +1550,11 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.dirty = false;
       void this.loadLib();
       this.fire('mc-svg-save', { target: 'library', svg, saved: item } satisfies SvgSaveDetail);
-      this.say(S.mcuSaved);
+      this.say(t('Saved'));
     } catch (e) {
       if (e instanceof LibraryError && e.problem === 'conflict') {
         this.conflict = true;
-        this.say(S.mcuConflict);
+        this.say(t('This icon was changed somewhere else.'));
       } else this.note = { tone: 'error', lines: [this.problemText(e, name)] };
     } finally {
       this.saveBusy = false;
@@ -1578,22 +1582,22 @@ export class McSvgEditor extends LitElement implements StageHost {
       await navigator.clipboard.writeText(text);
       this.showToast(ok);
     } catch {
-      this.showToast(S.copyFail);
+      this.showToast(t('Could not copy. Select the markup and copy it yourself.'));
     }
   }
 
   copySvg(): void {
-    if (this.out.svg) void this.copyText(this.out.svg, S.copiedSvg);
+    if (this.out.svg) void this.copyText(this.out.svg, t('Copied the SVG.'));
   }
 
   copyAccent(): void {
     const f = haForm(this.doc, this.decimals);
-    if (f.secondary) void this.copyText(f.secondary, S.copiedAccent);
+    if (f.secondary) void this.copyText(f.secondary, t('Copied the accent path.'));
   }
 
   copyHa(): void {
     const f = haForm(this.doc, this.decimals);
-    void this.copyText(JSON.stringify({ path: f.path, ...(f.secondary ? { secondaryPath: f.secondary } : {}), viewBox: f.viewBox }), S.copiedHa);
+    void this.copyText(JSON.stringify({ path: f.path, ...(f.secondary ? { secondaryPath: f.secondary } : {}), viewBox: f.viewBox }), t('Copied the path and viewBox, for Home Assistant custom icon sets. See the docs.'));
   }
 
   download(): void {
@@ -1601,7 +1605,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const url = URL.createObjectURL(new Blob([this.out.svg], { type: 'image/svg+xml' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${slug(this.doc.name || S.untitled)}.svg`;
+    a.download = `${slug(this.doc.name || t('My icon'))}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -1614,11 +1618,11 @@ export class McSvgEditor extends LitElement implements StageHost {
       if (!load) throw new Error('no loader');
       await load();
       const o = this.out;
-      const name = this.doc.name || S.untitled;
+      const name = this.doc.name || t('My icon');
       const items: TransferItem[] | undefined = o.svg ? [{ id: slug(name), name, data: { svg: o.svg, view_box: o.viewBox } }] : undefined;
       this.xfer = { mode, items: mode === 'export' ? items : undefined, back };
     } catch {
-      this.showToast(S.transferFail);
+      this.showToast(t('Could not load the export and import tool. Try again.'));
     }
   }
 
@@ -1635,11 +1639,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.closeTransfer();
     if (!svg) return;
     const r = importSvg(svg, it.name);
-    if (!r.doc) return void this.showToast(S.notSvg);
+    if (!r.doc) return void this.showToast(t('This is not valid SVG. Check that it starts with <svg and is closed.'));
     if (this.stage === 'edit') this.apply(r.doc, 'Import');
     else this.begin(r.doc);
     this.select([]);
-    this.showToast(items.length > 1 ? S.importedFirst(it.name, items.length) : S.imported(it.name));
+    this.showToast(items.length > 1 ? t('Opened {name}, the first of {count} icons in the file. The others were not used.', { name: it.name, count: items.length }) : t('Opened {name} as the drawing. Undo brings your last drawing back.', { name: it.name }));
   }
 
   // ── layers, points, start ──
@@ -1655,7 +1659,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   blankStart(): Doc {
-    return blankDoc(this.mcu ? '' : S.untitled);
+    return blankDoc(this.mcu ? '' : t('My icon'));
   }
 
   startLibrary(): void {
@@ -1667,9 +1671,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (!file) return;
     try {
       const text = await file.text();
-      this.openSvg(text.slice(0, 1_000_000), file.name.replace(/.svg$/i, '') || S.untitled);
+      this.openSvg(text.slice(0, 1_000_000), file.name.replace(/.svg$/i, '') || t('My icon'));
     } catch {
-      this.startError = S.fileFail;
+      this.startError = t('Could not read that file.');
     }
   }
 
@@ -1697,7 +1701,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   finishPath(): void {
     this.cvSel = undefined;
     this.select([]);
-    this.say(S.finishPath);
+    this.say(t('Finish path'));
   }
 
   /** The point the point tools are on: its layer, subpath and anchor. */
@@ -1800,6 +1804,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   protected willUpdate(changed: PropertyValues): void {
+    if (changed.has('hass') && this.hass) setI18nLocale(this.hass as LocaleHassLike);
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
     if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
   }
@@ -1829,10 +1834,11 @@ export const GRID_MAX = 12;
 
 const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyS: 'shapes', KeyB: 'free', KeyH: 'hand', KeyK: 'knife' };
 
-export const toolName = (t: Tool): string =>
-  ({ select: S.toolSelect, node: S.toolNode, pen: S.toolPen, rect: S.toolRect, ellipse: S.toolEllipse, line: S.toolLine, polygon: S.toolPolygon, shapes: S.toolShapes, free: S.toolFree, hand: S.toolHand, knife: S.ptName.knife })[t];
+export const toolName = (tool: Tool): string =>
+  ({ select: t('Select'), node: t('Edit points'), pen: t('Pen'), rect: t('Rectangle'), ellipse: t('Ellipse'), line: t('Line'), polygon: t('Polygon or star'), shapes: t('Shapes'), free: t('Freehand'), hand: t('Hand'), knife: t(PT_NAME.knife) })[tool];
 
-export const kbOf = (bytes: number): string => (bytes / 1024).toLocaleString(undefined, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+/** Bytes as KB, for a {size} argument (the runtime formats numbers in the user's number format). */
+export const kbOf = (bytes: number): number => bytes / 1024;
 
 function deepActive(): HTMLElement | undefined {
   let a: Element | null = document.activeElement;
