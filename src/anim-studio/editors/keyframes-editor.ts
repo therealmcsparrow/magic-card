@@ -4,6 +4,8 @@ import { editorSystem } from '../../css/editor-system';
 import { MenuPopover } from '../../editor/components/menu-popover';
 import type { AnimationDoc, AnimationKeyframe, TargetRef } from '../model';
 import type { StudioSelection } from '../slots';
+import type { LayerView } from '../../contracts/studio-layers';
+import { isLocked, lanesOf } from '../layer-view';
 import './bezier-editor';
 import './key-inspector';
 import {
@@ -127,6 +129,8 @@ export class AnimKeyframesEditor extends LitElement {
   /** Playhead, 0-1 of the cycle. */
   @property({ type: Number }) time = 0;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  /** Preview-only lock of lanes and targets: their keys cannot be added, moved or deleted. */
+  @property({ attribute: false }) layerView?: LayerView;
   /** Onion skin: ghost markers of the keyframes around the playhead (view only, never emitted). */
   @property({ type: Boolean, reflect: true, attribute: 'onion-skin' }) onionSkin = false;
   /** auto: lanes from 480px wide, the keyframe list below that. */
@@ -353,6 +357,24 @@ export class AnimKeyframesEditor extends LitElement {
     this.dispatchEvent(new CustomEvent('selection-change', { bubbles: true, composed: true, detail: { selection } }));
   }
 
+  /** Whether a key is locked: its lane, its target, or (a whole keyframe) any lane of its target. */
+  private _isLocked(k: { target: TargetRef; lane: string }): boolean {
+    const v = this.layerView;
+    const d = this.doc;
+    if (!d || !v?.locked.length) return false;
+    if (k.lane !== '*') return isLocked(d, v, `lane:${k.target}|${k.lane}`);
+    return isLocked(d, v, /^(part|group|shape):/.test(k.target) ? k.target : `target:${k.target}`) || lanesOf(d, k.target).some((l) => isLocked(d, v, `lane:${k.target}|${l}`));
+  }
+
+  /** Refuse an edit of locked keys, and say which (the live region); true when refused. */
+  private _refuseLocked(keys: Array<{ target: TargetRef; lane: string }>): boolean {
+    const k = keys.find((x) => this._isLocked(x));
+    if (!k || !this._view) return false;
+    const t = targetLabel(this._view, k.target);
+    this._announce(`${k.lane === '*' ? t : `${t} ${LANE_BY_ID[k.lane as LaneId]?.label.toLowerCase() ?? k.lane}`} is locked. Unlock it in Layers.`);
+    return true;
+  }
+
   private _commit(doc: AnimationDoc, label: string, sel?: TKey[]): void {
     if (!this.doc || this.disabled) return;
     this._emit(doc, label);
@@ -441,6 +463,8 @@ export class AnimKeyframesEditor extends LitElement {
       this._anchor = k;
     }
     this._laneFocus.set(`${k.target}|${k.lane}`, k.at);
+    // a locked key can be selected (its values show), not dragged
+    if (this._refuseLocked(this._keys)) return;
     this._drag = {
       kind: 'keys',
       pointerId: e.pointerId,
@@ -692,6 +716,7 @@ export class AnimKeyframesEditor extends LitElement {
       e.preventDefault();
       if (!this._isSel(k)) this._select([k]);
       const sel = this._keys;
+      if (this._refuseLocked(sel)) return;
       const res = moveTargetKeys(this._view, sel, (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 10 : 1));
       if (res.doc === this._view) return;
       const idx = sel.findIndex((s) => tkeyId(s, main) === tkeyId(k, main));
@@ -776,6 +801,7 @@ export class AnimKeyframesEditor extends LitElement {
   private _add(target: TargetRef, lane: KeyLane, at: number): void {
     const view = this._view;
     if (!this.doc || !view || this.disabled) return;
+    if (this._refuseLocked([{ target, lane }])) return;
     const t = round1(Math.min(100, Math.max(0, at)));
     const kfs = trackKeyframes(view, target);
     const res = lane === '*' ? addWholeKey(kfs, t, view.easing) : addKey(kfs, lane, t, view.easing);
@@ -800,7 +826,7 @@ export class AnimKeyframesEditor extends LitElement {
   private _delete(): void {
     const n = this._keys.length;
     const view = this._view;
-    if (!n || !view) return;
+    if (!n || !view || this._refuseLocked(this._keys)) return;
     this._commit(deleteTargetKeys(view, this._keys), `Delete ${plural(n, 'keyframe')}`, []);
     this._announce(`${n} ${plural(n, 'keyframe')} deleted`);
   }
@@ -831,6 +857,7 @@ export class AnimKeyframesEditor extends LitElement {
       this._announce('Nothing pasted: those properties do not fit here');
       return;
     }
+    if (this._refuseLocked(res.selection)) return;
     this._commit(res.doc, `Paste ${plural(res.selection.length, 'keyframe')}`, res.selection);
     const skipped = res.skipped ? `; ${res.skipped} skipped (not for this target or lane)` : '';
     this._announce(`${res.selection.length} ${plural(res.selection.length, 'keyframe')} pasted at ${pctText(this.time * 100)}${skipped}`);
@@ -1276,6 +1303,10 @@ export class AnimKeyframesEditor extends LitElement {
       .lane.summary .span.sel {
         background: none;
       }
+      .key.locked {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
       .key {
         position: absolute;
         top: 50%;
@@ -1719,9 +1750,10 @@ export class AnimKeyframesEditor extends LitElement {
       const k: TKey = { target, lane, at };
       const sel = this._isSel(k);
       const val = lane === '*' ? this._kfLanesText(kfs, at) : fragmentText(lane, keyFragment(kfs, lane, at));
+      const locked = this._isLocked(k);
       return html`<button
         type="button"
-        class="key ${sel ? 'sel' : ''} ${at === o.prev || at === o.next ? 'onion' : ''} ${this._drag?.kind === 'keys' && sel ? 'dragging' : ''}"
+        class="key ${sel ? 'sel' : ''} ${locked ? 'locked' : ''} ${at === o.prev || at === o.next ? 'onion' : ''} ${this._drag?.kind === 'keys' && sel ? 'dragging' : ''}"
         style="--at: ${at / 100}"
         data-key=${tkeyId(k, main)}
         data-lane=${lane}
@@ -1733,7 +1765,7 @@ export class AnimKeyframesEditor extends LitElement {
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow=${at}
-        aria-valuetext=${`${pctText(at)}${val ? `, ${val}` : ''}${sel ? ', selected' : ''}`}
+        aria-valuetext=${`${pctText(at)}${val ? `, ${val}` : ''}${sel ? ', selected' : ''}${locked ? ', locked' : ''}`}
         aria-describedby="kf-help"
         title=${`${label} at ${pctText(at)}${val ? ` · ${val}` : ''}`}
         @pointerdown=${(e: PointerEvent) => this._onKeyDown(e, k)}
