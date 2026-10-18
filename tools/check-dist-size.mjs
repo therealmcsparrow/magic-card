@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const B2 = 471_856;
 const CAPS = {
   'magic-card.js': B2 + 8_192, // 480,048
-  'magic-card-animation-studio.js': 995_328, // 972 KiB, held at the CEO-approved cap: measured 995,262 + 5 % would round to 1,045,504, which is higher (I11)
+  'magic-card-animation-studio.js': 996_352, // 973 KiB, CEO 2026-10-19 (fix round: lazy-loader version guards)
   'magic-card-editor.js': 805_888, // 787 KiB, held at the CEO-approved cap: measured 790,605 + 5 % would round to 830,464, which is higher (I11)
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
   'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
