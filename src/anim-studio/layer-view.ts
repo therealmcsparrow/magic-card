@@ -64,6 +64,8 @@ export function rowsOf(doc: AnimationDoc): Map<LayerKey, LayerList> {
       if (kids[i]) rows.set(`children:${id}`, 'emitters');
     });
   }
+  // a version 1 particles document (or preset) has one layer: the whole particle layer
+  else if (doc.kind === 'particles' && doc.particles) rows.set('emitter:main', 'emitters');
   if (doc.kind === 'sequence') (doc.steps ?? []).forEach((_, i) => rows.set(`step:${i}`, 'steps'));
   return rows;
 }

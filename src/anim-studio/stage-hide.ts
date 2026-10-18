@@ -50,6 +50,8 @@ export const stageHide: StageHide = (doc, view, particles) => {
     else if (kind === 'group') icon.push(`[data-g=${q(id)}]${HIDE}`);
     // data-s is the rig's shape marker; particle slots use data-s too, so it never goes in the card sheet
     else if (kind === 'shape') icon.push(`[data-s=${q(id)}]${HIDE}`);
+    // version 1 particles / presets: the whole fx layer (the document has no emitter slots)
+    else if (kind === 'emitter' && !particles && !doc.particles?.sim) card.push(`.mc-anim-fx${HIDE}`);
     else if (kind === 'target') {
       if (id === 'background') card.push('.mc-module-wrapper{background:none!important}', `[data-mc-gen-bg]${HIDE}`);
       else if (id !== 'element') card.push(`${ownPart(id)}${HIDE}`);

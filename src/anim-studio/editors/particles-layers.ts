@@ -29,6 +29,7 @@ interface Em {
 }
 
 const LOCK_ONLY: readonly LayerToggle[] = ['lock'];
+const HIDE_LOCK: readonly LayerToggle[] = ['hide', 'lock'];
 const NONE: readonly LayerToggle[] = [];
 
 @customElement('mc-anim-particles-layers')
@@ -283,7 +284,7 @@ export class AnimParticlesLayers extends LitElement {
     const hasSim = !!doc.particles?.sim;
     const ready = hasSim && !!stageParticlesOf(doc);
     // no v2 emitters: nothing to hide or lock; v2 without a stage rule source: lock only
-    const toggles = !hasSim ? NONE : ready ? undefined : LOCK_ONLY;
+    const toggles = !hasSim ? HIDE_LOCK : ready ? undefined : LOCK_ONLY;
     const front = this._side(ems, 'front');
     const back = this._side(ems, 'back');
     return html`<ul aria-label="Particle layers">
