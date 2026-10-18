@@ -30,6 +30,23 @@ const COMMON_ISE = [
 const COMMON_OUR = ['our', 'ours', 'your', 'yours', 'hour', 'hours', 'four', 'tour', 'tours', 'pour', 'flour', 'sour', 'devour', 'detour', 'contour', 'scour'];
 const OK = new Set([...(ALLOW.britishWords ?? []), ...COMMON_ISE, ...COMMON_OUR].map((w) => w.toLowerCase()));
 
+/** D3 on one en-GB text: the messages for American forms and unlisted -ise/-our words. Also used for the MCU panel (tools/i18n-mcu.mjs). */
+export function spellingErrors(contract, text) {
+  const out = [];
+  const { EN_US_WORDS } = contract;
+  const usForms = new Set(Object.values(EN_US_WORDS));
+  for (const tok of text.match(/[A-Za-z]+(?:[-_][A-Za-z]+)*/g) ?? []) {
+    if (OK.has(tok.toLowerCase())) continue;
+    for (const part of tok.toLowerCase().split(/[-_]/)) {
+      if (OK.has(part)) continue;
+      if (usForms.has(part)) out.push(`"${tok}" is American, write the British form`);
+      else if (part.length > 4 && !(part in EN_US_WORDS) && /(ise|ised|ises|ising|isation|isations|our|ours)$/.test(part))
+        out.push(`"${tok}" ends in -ise/-isation/-our but is not in EN_US_WORDS; add the pair to the contract list, or allow it in tools/i18n/allow.json`);
+    }
+  }
+  return out;
+}
+
 export async function main(argv = process.argv.slice(2)) {
   const flags = new Set(argv);
   const placementOnly = flags.has('--placement');
@@ -87,17 +104,7 @@ export async function main(argv = process.argv.slice(2)) {
         else if (!base.error && lib.argSig(p.args) !== lib.argSig(base.args)) report('D2', `${n.ns} "${id}" (${loc}): arguments differ (${lib.argNames(p.args)} vs ${lib.argNames(base.args)})`);
       }
       // D3 spelling of the en-GB id
-      const { EN_US_WORDS } = contract;
-      const usForms = new Set(Object.values(EN_US_WORDS));
-      for (const tok of text(id).match(/[A-Za-z]+(?:[-_][A-Za-z]+)*/g) ?? []) {
-        if (OK.has(tok.toLowerCase())) continue;
-        for (const part of tok.toLowerCase().split(/[-_]/)) {
-          if (OK.has(part)) continue;
-          if (usForms.has(part)) err('D3', `${n.ns} "${id}": "${tok}" is American, write the British form`);
-          else if (part.length > 4 && !(part in EN_US_WORDS) && /(ise|ised|ises|ising|isation|isations|our|ours)$/.test(part))
-            err('D3', `${n.ns} "${id}": "${tok}" ends in -ise/-isation/-our but is not in EN_US_WORDS; add the pair to the contract list, or allow it in tools/i18n/allow.json`);
-        }
-      }
+      for (const m of spellingErrors(contract, text(id))) err('D3', `${n.ns} "${id}": ${m}`);
     }
     for (const k of Object.keys(us)) if (!set.has(k)) err('D2', `${n.ns} en-US.json: stale entry "${k}"`);
     for (const k of Object.keys(nl)) if (!set.has(k)) report('D2', `${n.ns} nl.json: stale entry "${k}"`);
