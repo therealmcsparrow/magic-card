@@ -28,7 +28,8 @@ const known = (code: string): string | undefined =>
   code === 'library_full' ? t('You can keep 100 presets. Delete one first.') : code === 'conflict' ? t('This preset changed elsewhere. Reopen the list.') : undefined;
 const why = (e: unknown): string => {
   const x = e as ThemeBackendError;
-  return x.errors?.map((f) => f.message).join(' ') || known(x.code) || x.message || t('It did not work.');
+  // only text of this editor: the server's own field messages are English and are not shown
+  return known(x.code) ?? (x.code === 'invalid_format' ? t('Magic Card Utils did not accept this preset. Check the name and the values.') : x.code === 'unauthorized' ? t('Only administrators can change presets.') : t('It did not work.'));
 };
 
 /**
