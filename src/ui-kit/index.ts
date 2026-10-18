@@ -14,5 +14,6 @@ export { defineUiKit } from './define';
 export { UiMenu } from './elements/menu';
 export { UiWindow } from './elements/window';
 export { UiPopover } from './elements/popover';
+export { UiToast } from './elements/toast';
 
 export const uiKit: UiKitModule = { version: UI_KIT_CONTRACT_VERSION, revision: UI_KIT_CONTRACT_REVISION, defineUiKit };

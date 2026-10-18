@@ -1,6 +1,7 @@
-import { UI_KIT_CONTRACT_REVISION, UI_MENU_TAG, UI_POPOVER_TAG, UI_WINDOW_TAG } from '../contracts/ui-kit';
+import { UI_KIT_CONTRACT_REVISION, UI_MENU_TAG, UI_POPOVER_TAG, UI_TOAST_TAG, UI_WINDOW_TAG } from '../contracts/ui-kit';
 import { UiMenu } from './elements/menu';
 import { UiPopover } from './elements/popover';
+import { UiToast } from './elements/toast';
 import { UiWindow } from './elements/window';
 
 /*
@@ -13,6 +14,7 @@ const ELEMENTS: Array<[string, CustomElementConstructor & { uiKitRevision?: numb
   [UI_MENU_TAG, UiMenu],
   [UI_WINDOW_TAG, UiWindow],
   [UI_POPOVER_TAG, UiPopover],
+  [UI_TOAST_TAG, UiToast],
 ];
 
 export function defineUiKit(): void {
