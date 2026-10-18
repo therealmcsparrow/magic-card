@@ -44,6 +44,12 @@ const none = (): Promise<Listing<never>> => Promise.resolve({ state: 'missing', 
 export const listIcons = (hass: Hass | undefined): Promise<Listing<IconSummary>> => (!hass?.callWS ? none() : (icons ??= list<IconSummary, 'icons'>(hass, CMD.iconsList, 'icons')));
 export const listShapes = (hass: Hass | undefined): Promise<Listing<SavedShape>> => (!hass?.callWS ? none() : (shapes ??= list<SavedShape, 'shapes'>(hass, CMD.shapesList, 'shapes')));
 
+/** The saved shapes again, past the cache: a shape was saved or changed (the shape editor's Save to library). */
+export function refreshShapes(hass: Hass | undefined): Promise<Listing<SavedShape>> {
+  shapes = undefined;
+  return listShapes(hass);
+}
+
 /** Forget the cached lists (the library changed, or "Try again"). */
 export function resetLibrary(): void {
   icons = shapes = undefined;
