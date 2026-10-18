@@ -1,4 +1,5 @@
 import { css, CSSResult } from 'lit';
+import { kitSlider } from './slider';
 
 /*
  * Kit parts that the card editor does not have (design/10-ui-kit.md sections 4.1 to 4.11), derived from its tokens and
@@ -359,4 +360,4 @@ export const kitSectionHead: CSSResult = css`
 `;
 
 /** Every part the card editor lacks. A screen: static styles = [editorTokens, editorPrimitives, kitCss, own layout css]. */
-export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar, kitTopbar, kitSectionHead];
+export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar, kitTopbar, kitSectionHead, kitSlider];

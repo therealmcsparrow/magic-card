@@ -669,10 +669,6 @@ export const itemMenuStyles = css`
     color: var(--mc-text);
     white-space: nowrap;
   }
-  .item-menu button:focus-visible {
-    outline: 2px solid var(--mc-accent);
-    outline-offset: -2px;
-  }
   .item-menu button[data-kbd]::after,
   .item-menu button[aria-haspopup]::after {
     margin-left: auto;
@@ -687,15 +683,6 @@ export const itemMenuStyles = css`
   .item-menu button[aria-haspopup]::after {
     content: '›';
     font-size: 1rem;
-  }
-  .item-menu button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    background: transparent;
-  }
-  .item-menu button.danger,
-  .item-menu button.danger ha-icon {
-    color: var(--mc-error-ink);
   }
   .item-menu .menu-note {
     margin: 4px 8px 8px;
