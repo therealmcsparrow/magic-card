@@ -113,8 +113,10 @@
  * kitSlider   .slider-row (new: label, range, number field, unit)
  * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
  * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
- * editorLegacy (mc-* classes of the 30 module editors): stays in the card-editor chunk only, moved to
- *             src/ui-kit/css/legacy.ts, never imported by another screen.
+ * editorLegacy (mc-* classes of the 30 module editors): stays in the card-editor chunk, moved to
+ *             src/ui-kit/css/legacy.ts. It reaches the screens of that chunk (card editor, studio, animation
+ *             studio editors) only through the editorSystem stack of src/css/editor-stack.ts; the SVG editor,
+ *             shape editor, theme editor, transfer panel and MCU use kitCss and never import it.
  *
  * ── Layer 2: template helpers (signatures in UiKitTemplates; typed loosely, no lit import here) ──
  * Icons: `icon` is an HA icon name ("mdi:...", rendered as <ha-icon>) or `glyph` a GlyphName from the
