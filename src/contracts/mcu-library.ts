@@ -13,6 +13,11 @@ import type { ThemeDoc } from './theme-editor';
  * commands; optional author / description on icons, shapes and theme presets; the animation store
  * joins the library view (no migration); kept animation copies; pruning narrowed to library copies.
  * Preset files: preset-transfer 1.0.0.
+ * Revision 4 (2026-10-18, epic E1, brief 48, CEO 2026-10-18: entry points in the Library view AND an
+ * "Editors" tab; nothing released yet, ADR 0020, ADR 0027): the panel gets a "Library" tab and an
+ * "Editors" tab and hosts the SVG editor and shape editor without a card (section "(r4) Editors in the
+ * panel"). No new command and no storage change. Also settles the theme presets adapter shape (section
+ * "(r4) Panel adapter shapes"): the panel side changes.
  *
  * Two parts:
  * 1. WebSocket commands (MCU backend module `library`, library.py). Storage: HA Store
@@ -24,6 +29,8 @@ import type { ThemeDoc } from './theme-editor';
  *    (window.magicCardUtils). Magic Card never calls the library commands from magic-card.js; it
  *    only reads the provider. Only the editors (lazy chunks) call the commands. Theme presets are
  *    never on the provider (cards do not use them).
+ * (r4) 3. The panel (MCU module `panel`, www/magic_card_utils_panel.js): Library and Editors tabs
+ *    hosting Magic Card's editors (below).
  *
  * ── 1. WebSocket commands ──
  * Reads: any authenticated user (cards render for non-admin users). Writes: admin only.
@@ -53,7 +60,8 @@ import type { ThemeDoc } from './theme-editor';
  *   polygon defs linearGradient radialGradient stop clipPath mask title); no attribute named on*,
  *   style, href or xlink:href; no "javascript:", "<!ENTITY", "<!DOCTYPE" or "<?" anywhere; url()
  *   only as url(#id). path / secondary_path match ^[MmZzLlHhVvCcSsQqTtAa0-9eE.,+\- \n]*$ and are at
- *   most ICON_MAX_BYTES each; view_box is four finite numbers.
+ *   most ICON_MAX_BYTES each; view_box is four finite numbers. (r4) Nested <g> (svg-editor r5, up to
+ *   4 levels) passes these rules unchanged; the server does not count depth.
  * - shapes: `shape` is an object of at most SHAPE_MAX_BYTES compact JSON, with only the
  *   CustomShapeOptions keys (minus `ref`); points at most 64. Deeper value checks are the card's job
  *   (it ignores invalid values one by one).
@@ -124,7 +132,9 @@ import type { ThemeDoc } from './theme-editor';
  * reversed winding (holes stay holes). The editor previews this "In Home Assistant" form at 24 px
  * next to the full icon and shows W11 when `path` is empty or loses more than half of the
  * drawing's filled area. (r3) An imported icon without a valid path is saved with path '' and
- * the import summary says to open and save it in the SVG editor.
+ * the import summary says to open and save it in the SVG editor. (r4) Unchanged by Dual-tone
+ * (svg-editor r5): Accent = secondary_path; the editor's preview strip shows both forms. A user who
+ * wants open strokes in HA's form converts them first with Outline stroke (path-tools 1.0.0).
  *
  * ── How cards reference saved items ──
  * - Icon: `icon: mcu:<id>` wherever an icon string goes (Magic Card modules, and any other card
@@ -150,7 +160,9 @@ import type { ThemeDoc } from './theme-editor';
  * - Theme: none (CEO 2026-10-18, option a). Cards keep `theme: <HA theme name>`; a theme preset is
  *   a starting point in the theme editor, never referenced by a card, never copied into one.
  * - A ref is a live link for icons and animations too (same rule as custom-shape: the library wins
- *   once loaded, the kept copy only covers a missing provider, store or item).
+ *   once loaded, the kept copy only covers a missing provider, store or item). (r4) So an icon or
+ *   shape edited in the panel shows on every card that references it after a reload (kept copies in
+ *   cards are refreshed the next time that card's editor saves; they only cover a missing library).
  *
  * ── Kept copies (`custom_icons`, `custom_shapes`, (r3) `custom_animations`) ──
  * - "Keep a copy in this card" for icons defaults ON when the sanitised markup is at most
@@ -181,10 +193,57 @@ import type { ThemeDoc } from './theme-editor';
  *   as AnimationLibrary does). Cards never call commands, so there is nothing to detect at render.
  *   (r3) The theme editor detects theme presets through ThemeBackend.presets (theme-editor 1.1.0):
  *   absent = an older Magic Card Utils.
+ *
+ * ── (r4) 3. Editors in the panel (E1) ──
+ * - Tabs: MCU_PANEL_TABS; "Library" and "Editors" come after "Themes". Both lead to the same editor
+ *   shell (below).
+ * - Loading, no card and no new Magic Card file (the Themes tab pattern, ADR 0010 / 0027): the panel's
+ *   _ensureMagicCard() (magic-card.js from lovelace/resources, imported once), then
+ *   `await window.MagicCard.loadEditor()` (the card-editor chunk), then on first use
+ *   window.MagicCard.loadSvgEditor() / loadShapeEditor() (svg-editor 1.0.0 loaders) and, for the Library
+ *   tab, window.MagicCard.loadTransfer() (preset-transfer 1.0.0). Fetched: magic-card.js (the panel
+ *   already loads it), magic-card-editor.js, the editor chunk, and on use the path-canvas, booleans,
+ *   path-tools and transfer chunks, all from the folder magic-card.js came from. No card element, no
+ *   dashboard, no request to another host. magic-card.js and magic-card-editor.js grow 0 B.
+ * - Version gate: Magic Card not found -> "Install Magic Card to draw icons and shapes here." Loaders
+ *   missing, or customElements.get(tag).contractRevision below SVG_EDITOR_MCU_MIN_REVISION (svg-editor
+ *   r5) -> "Drawing icons and shapes here needs Magic Card <version> or newer. Update Magic Card." with
+ *   <version> = the panel constant MIN_MAGIC_CARD_FOR_EDITORS (the Lead sets it to the Magic Card release
+ *   that ships E). Nothing else loads; the tabs stay usable for the message and the Library list.
+ * - Shell: one panel method _openEditor({ kind: 'icon' | 'shape', id?, opener }) for both tabs. It hides
+ *   the tab bar and the tab content and mounts the element in a host that fills the panel's content area
+ *   under the toolbar: icon -> <mc-svg-editor host="mcu"> with hass, source ({ kind: 'blank' } or
+ *   { kind: 'library', id }), savedId, libraryAvailable true; shape -> <mc-shape-studio host="mcu"> with
+ *   hass, value (the shapes_list item's `shape` as { shape: 'custom', shape_options }, or unset for New),
+ *   customShapes {}, libraryAvailable true. hass is kept current. The panel focuses the element. On
+ *   mc-svg-save / mc-shape-save it refreshes its lists. On mc-svg-close / mc-shape-close it removes the
+ *   element, shows the tab again and returns focus to the opener (or the row's replacement found by
+ *   data-focus-key).
+ * - Library tab: <mc-library-view> (preset-transfer 1.0.0 revision 2) with context 'mcu-panel', hass and
+ *   presets (the same adapter object as the Themes tab). It lists icons, shapes, animations and theme
+ *   presets from Magic Card Utils only (no "This card" source); search, rename, delete, export and import
+ *   as in the card editor. "New icon" / "New shape" in its header and "Edit" on icon and shape rows fire
+ *   `mc-library-open` { kind, id? }; the panel calls _openEditor.
+ * - Editors tab (the panel's own markup, no Magic Card code): buttons "New icon" and "New shape", then
+ *   "Recent icons" and "Recent shapes" with the MCU_RECENT_ITEMS most recently updated items of each
+ *   (icons_list / shapes_list, by updated_at), each with "Edit", and "See all in Library" (switches tab).
+ *   Empty lists say "Nothing saved yet."
+ * - Accessibility: the new tabs join the existing tablist (roving tabindex, arrow keys); every control
+ *   is a real button of at least 24 x 24 CSS px; the shell's focus rules above; works at 200 % zoom.
+ * - Won't: editing card YAML from the panel. Later: deep links to an editor, duplicate from library,
+ *   folders / tags.
+ *
+ * ── (r4) Panel adapter shapes ──
+ * ThemeBackend.presets (theme-editor 1.1.0 ThemePresetStore) is the shape of record: list() resolves
+ * SavedThemePreset[] (the array), save() resolves the SavedThemePreset, remove() resolves undefined. The
+ * MCU panel adapter (_createPresetBackend) changes to match; until now it answered { theme_presets } and
+ * { theme_preset } (found live in T19). Magic Card's readers (theme-editor.ts _loadMine and
+ * library-view.ts) keep accepting both shapes (tolerant reader, 0 B change), to be simplified in a later
+ * cleanup once no MCU build with the old adapter is in use.
  */
 
 export const MCU_LIBRARY_CONTRACT_VERSION = '1.0.0';
-export const MCU_LIBRARY_CONTRACT_REVISION = 3;
+export const MCU_LIBRARY_CONTRACT_REVISION = 4;
 export const PROVIDER_API_VERSION = 1;
 export const ICON_PREFIX = 'mcu';
 export const LIBRARY_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
@@ -210,6 +269,10 @@ export const CONNECTION_WAIT_MS = 30_000;
 export const KEEP_COPY_DEFAULT_MAX_BYTES = 2 * 1024;
 /** (r3) Same rule for a picked My animation (compact JSON of the doc). */
 export const KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES = 8 * 1024;
+/** (r4) Panel tabs, in order. */
+export const MCU_PANEL_TABS = ['templates', 'animations', 'themes', 'library', 'editors'] as const;
+/** (r4) Items per "Recent" list in the Editors tab. */
+export const MCU_RECENT_ITEMS = 8;
 
 export const CMD = {
   iconsList: 'magic_card_utils/icons_list',

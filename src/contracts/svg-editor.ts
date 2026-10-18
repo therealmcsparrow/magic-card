@@ -1,6 +1,6 @@
 import type { CustomShapeOptions } from './custom-shape';
 import type { ShapeOptions } from '../types';
-import type { SavedIconInput } from './mcu-library';
+import type { SavedIconInput, SavedShape } from './mcu-library';
 import type { BooleanOp } from './path-booleans';
 
 /*
@@ -20,6 +20,13 @@ import type { BooleanOp } from './path-booleans';
  * ADR 0026; PROPOSED, the SVG editor and path canvas ceilings need the CEO). Additive; uses path-canvas
  * revision 5. SVG_EDITOR_CONTRACT_REVISION moves to 4 in T30 and stays 3 while T24 / T26 run. Sections
  * marked (r4) below.
+ * Revision 5 (2026-10-18, epic E, brief 48 with the CEO's decisions of 2026-10-18: all of E in this
+ * release, both MCU entry points, groups nest 4 levels, the name "Accent" stays; ADR 0027; PROPOSED, the
+ * SVG editor ceiling and the new path-tools chunk need the CEO). Additive: host 'mcu' for both elements
+ * (E1), Dual-tone (E2), nested groups and the layer tree with drag and drop (E3), path tools through the
+ * path-tools 1.0.0 chunk (E4). E5 is r4 (T29 / T31 / T32). SVG_EDITOR_CONTRACT_REVISION moves to 5 in
+ * T39 (host mode), which the MCU panel checks. Sections marked (r5) below; (r5) supersedes the old
+ * "Library tab, not in 1.0.0 scope" line under Loaders.
  *
  * Two lazy chunks of the magic-card entry, each loaded by the card-editor chunk (never by
  * magic-card.js, which gains 0 B from them):
@@ -37,6 +44,9 @@ import type { BooleanOp } from './path-booleans';
  * own bundle). Neither editor chunk imports src/anim-studio/** (import scan test).
  * (r4) The menu element comes from the path-canvas chunk (PATH_MENU_TAG); neither editor ships a menu
  * of its own or imports src/editor/components/menu-popover.ts.
+ * (r5) The SVG editor import()s the path-tools chunk (path-tools 1.0.0) through src/path-tools/loader.ts
+ * on the first use of a path tool, never on open, and imports nothing else from src/path-tools/. The
+ * shape editor does not load it.
  *
  * Loaders (window contract, additive, apiVersion stays 1; set by the card-editor chunk when it
  * loads, so magic-card.js does not grow):
@@ -45,6 +55,9 @@ import type { BooleanOp } from './path-booleans';
  * Memoised; false on failure and retried on the next call (chunk URL rewritten, as the theme
  * presets loader does); 8 s timeout. The Magic Card Utils panel may later call loadEditor() then
  * loadSvgEditor() to host the SVG editor in a "Library" tab (not in 1.0.0 scope).
+ * (r5) In scope now: the Magic Card Utils panel calls window.MagicCard.loadEditor(), then
+ * loadSvgEditor() / loadShapeEditor(), and creates the elements with host 'mcu' (section "(r5) Hosts").
+ * No new loader, entry or window member: magic-card.js and magic-card-editor.js grow 0 B.
  *
  * ── Shell rules (both hosts) ──
  * - Escape never closes an editor and never reaches Home Assistant's card dialog. Order: end a
@@ -61,6 +74,8 @@ import type { BooleanOp } from './path-booleans';
  *      always dispatched from inside it.
  *   Proof (T8, T11): HA 2026.10.2 card editor dialog (the S1 Docker image), focus on canvas, rail,
  *   field and overlay, in Chrome, Firefox and Safari: the dialog stays open.
+ *   (r5) The Escape order gains, after overlays and before the pending operand: cancel a layer drag,
+ *   then drop a path-tool preview.
  * - (r4) Keys and Home Assistant: every keydown an editor acts on (tool letters, Ctrl/Cmd chords, Shift+
  *   F10, ContextMenu, Delete) gets preventDefault() and stopPropagation() at the layer root after the
  *   inner handler ran, so HA's document shortcuts (quick bar, assist) and browser chords do not also
@@ -81,6 +96,7 @@ import type { BooleanOp } from './path-booleans';
  * full-screen layer.
  * Properties: hass; source: SvgEditorSource; libraryAvailable: boolean (icons_list answered);
  * savedId?: string (editing a library icon); module?: SvgEditorModuleFacts (for the notice).
+ * (r5) host?: SvgEditorHost, default 'card'.
  * Exactly one artboard, viewBox default 0 0 24 24.
  * Save path, always: the document is serialised, passed through sanitizeSvg, tidied (path-model
  * tidy) and checked against SVG_MAX_BYTES; a sanitiser error or the size cap blocks the save with
@@ -204,6 +220,11 @@ import type { BooleanOp } from './path-booleans';
  *   same path as any icon edit on a linked card); the template keeps its icon. Notice: "This card
  *   is linked to a template. Your drawing is used on this card only."
  * - Nothing else in the module is changed by Done.
+ * - (r5) Nested <g> (E3) must change nothing at runtime: the sanitiser allows g at any depth, `.mc-accent`
+ *   paints at any depth, and the geometry readers (svgGeometry, the follow-icon piece split) must treat
+ *   <g> as transparent. T34 proves it with a 4-level icon through icon_fx draw / morph and a "This icon"
+ *   animation, magic-card.js +0 B. If a reader only takes direct children, the fix goes in the editor's
+ *   export instead (toSvg writes at most one <g> level; the tree stays editor-only), never in the runtime.
  *
  * ── <mc-shape-studio> ──
  * Opened from the shape picker (design panel) by the "Custom" tile, "Edit as custom" or "Edit shape".
@@ -213,6 +234,7 @@ import type { BooleanOp } from './path-booleans';
  * (custom-shape 1.0.0). In free path mode the studio always writes `padding` (px per side, from its
  * inscribed-rectangle solver at the "Edit at" size, raised by "Extra space") and shows W6 when
  * content is cut at a preview size (custom-shape 1.0.0 Content inset).
+ * (r5) host?: SvgEditorHost, default 'card'.
  * Previews: three boxes (120 x 120, 360 x 120, 720 x 200) drawn with the runtime shapePath, so the
  * preview is the renderer, plus the real card behind the editor as today.
  * Mode switch (revision 3): a "Corners | Free shape" segmented control (ShapeEditorMode) is the first
@@ -269,6 +291,7 @@ import type { BooleanOp } from './path-booleans';
  *   events already applied everything (the card behind the editor is live), so there is nothing to
  *   confirm on leaving; the host closes the layer and returns focus to the opener. A pending operand
  *   or pen outline is dropped on close (it was never applied).
+ * - (r5) `mc-shape-save` detail ShapeSaveDetail, host 'mcu' only (section "(r5) Hosts").
  * Additive in T7 (2026-10-18, for the Architect to confirm): the properties `preset` ("Edit as custom":
  * the preset's `shape` and `shape_options`; the studio converts it, `Notch` becomes Bevel, `Ticket`,
  * `Wave` and `Blob` get a notice) and `label` (the target, "Living room tile"), and the event above.
@@ -289,6 +312,119 @@ import type { BooleanOp } from './path-booleans';
  * - The entry button must stay enabled while the chunk loads (a disabled button drops focus, and focus
  *   returns to the opener, or its `data-focus-key` replacement).
  *
+ * ── (r5) Hosts (E1): 'card' and 'mcu' ──
+ * 'card' (default) is everything above. 'mcu' = hosted by the Magic Card Utils panel (mcu-library 1.0.0
+ * r4 "Editors in the panel"): no card, no module, no entity, no HA dialog.
+ * - Version: both element classes get `static contractRevision` (= SVG_EDITOR_CONTRACT_REVISION). The
+ *   panel needs SVG_EDITOR_MCU_MIN_REVISION or more, else it shows its update message and creates nothing.
+ * - Layer: the panel mounts the element in its content area (no <dialog>). The editors' own Escape rule
+ *   (layer root) still applies; the panel focuses the element on open and returns focus to the opener.
+ * - <mc-svg-editor host="mcu">: source { kind: 'blank' } (New icon) or { kind: 'library', id } with
+ *   savedId (Edit); `module` unset; libraryAvailable from icons_list as in 'card'. Save always targets
+ *   'library'. The name is required: Save is disabled with "Give the icon a name." until it has one. A
+ *   new icon's id is the name's slug made unique against icons_list; an edit sends base_updated_at, and
+ *   `conflict` shows "This icon was changed somewhere else." with "Save as a copy" and "Reload". No Keep
+ *   a copy switch, no module notice, no "save into the module". After a save `mc-svg-save` { target:
+ *   'library', svg, saved } fires and the editor STAYS OPEN ("Saved" announced). `mc-svg-close` after the
+ *   existing unsaved-work confirm. Imports go through sanitizeSvg as in 'card' (same boundary, CRA).
+ * - Preview colours ('mcu' only): labelled colour inputs "Main preview colour" and "Accent preview
+ *   colour" (defaults MCU_PREVIEW_MAIN, MCU_PREVIEW_ACCENT) colour the canvas and the previews. Session
+ *   only: never saved, never in the markup, not in browser storage.
+ * - <mc-shape-studio host="mcu">: `value` is the library shape being edited, or for New the studio's
+ *   default custom shape (what the "Custom" tile starts with); customShapes {}; `preset` and `label`
+ *   unset. The studio keeps its own value: it applies its own changes (it still fires mc-shape-change;
+ *   the panel ignores it). No card behind it: the three preview boxes only. Save is "Save as shape" with a
+ *   required name ("Give the shape a name."), same id and conflict rules (shapes_save); it fires
+ *   `mc-shape-save` and stays open. "Close" replaces Done / Back: with changes since the last save it
+ *   asks "Leave without saving?" (Leave, Keep editing), then fires mc-shape-close { done: false }.
+ *
+ * ── (r5) Dual-tone (E2) ──
+ * The names stay "Main" and "Accent" everywhere (CEO 2026-10-18). No new model, config or markup field
+ * (Paint is already none | main | accent; accent markup is class mc-accent).
+ * - A "Dual-tone" switch in the document section. On open it is on when any layer paints Accent (fill
+ *   or stroke), else off. Session state.
+ * - Off: the paint pickers offer None and Main. Turning it off while N layers use Accent asks "Make N
+ *   Accent layers Main?"; confirm sets them to Main as one history step "Single tone"; cancel keeps it on.
+ * - On: the pickers offer None, Main and Accent. Each layer row shows a text tag "Main" or "Accent" (not
+ *   colour alone, WCAG 1.4.1); the row menu gets "Make Accent" / "Make Main" (fill and stroke, one step).
+ * - Preview strip (shown when the drawing has content): "In Magic Card" (Main and Accent in the card's
+ *   colours, or the preview colours in 'mcu') and "In Home Assistant" (haForm: `path` in Main and
+ *   `secondary_path` in the same colour at HA_SECONDARY_OPACITY), each at 24 and 48 px, labelled. It
+ *   replaces the separate 24 px "In Home Assistant" preview; W11 is unchanged.
+ * - Save and "Copy as HA path": `path` and `secondary_path` as mcu-library "Saved icon path" (Accent
+ *   shapes go to secondary_path, unchanged). With Accent layers the copy menu adds "Copy accent path".
+ *
+ * ── (r5) Groups and the layer tree (E3) ──
+ * Model (src/svg-editor/model.ts, editor-only):
+ * - Group gains `parent?: string` (the enclosing group's id; absent = top level). Shape.group stays the
+ *   innermost group.
+ * - Invariants, checked by a test helper after every operation: (I1) the shapes under a group, at all
+ *   depths, are one contiguous run of `shapes`; (I2) every parent exists, no cycles; (I3) depth(group) =
+ *   1 + depth(parent) <= MAX_GROUP_DEPTH (top-level group = 1); (I4) a group with no shape under it is
+ *   removed.
+ * - Paint order is the order of `shapes` (index 0 is painted first, the bottom). The tree lists the top
+ *   first: a parent's items (its own shapes and child groups, ordered by their first shape) in reverse
+ *   paint order, each group's items under it. This is the order T25 / T30 fix; E3 keeps it.
+ * - Hidden and locked count for every descendant (an item is hidden when it or any ancestor is).
+ * - toSvg writes one bare <g> per group level (nested, no attributes); hidden subtrees are left out.
+ *   Import turns nested <g> into groups up to MAX_GROUP_DEPTH and puts deeper content into the 4th level
+ *   with the note "Groups deeper than 4 levels were merged." Names, hide, lock and open state are not in
+ *   the markup (as today): a reopened icon gets its structure back with default names.
+ * - Operations, each one history step, pure: groupItems(ids) puts a new group in the parent of the
+ *   top-most item, at its place (items from other parents move in); refused when any item would end up
+ *   deeper than MAX_GROUP_DEPTH. ungroup(id) moves its items to its parent at its place.
+ *   moveItem(id, place: TreePlace): place.index is the position in the parent's tree order (top = 0)
+ *   counted after the item is taken out. Refused, no change, when the place is inside the item itself,
+ *   would exceed MAX_GROUP_DEPTH, or the target group (or one of its ancestors) is locked. The r4
+ *   arrange order and moveOrder act on sibling items, a group as one block.
+ * - Everything that counts "a selected group as its layers" (boolean operands, r4 items, handles) walks
+ *   all depths; a selected group is one item for align and handles.
+ * Layers list:
+ * - role=tree; rows role=treeitem with aria-level, aria-expanded (groups), aria-setsize, aria-posinset;
+ *   roving tabindex. Up / Down move focus, Right opens a group or goes to its first item, Left closes it
+ *   or goes to the parent, Home / End, Enter selects, Ctrl/Cmd+Space adds to the selection, F2 renames.
+ *   Indent per level; rows and their buttons at least 24 x 24 CSS px (2.5.8); the focused row is kept
+ *   clear of the sticky list header with scroll-padding (2.4.11).
+ * - Drag (pointer events, not HTML drag and drop): only from the row's grip button ("Drag to move
+ *   <name>"), after DRAG_START_PX; touch-action none on the grip only. Over a row: top quarter = above,
+ *   bottom quarter = below, middle half of a group row = into it (as its top item). A line or a group
+ *   outline shows the target; an invalid target shows the not-allowed state and the reason in the list's
+ *   status line ("Groups can be 4 levels deep.", "<name> is locked.", "A group can't go inside itself.").
+ *   The list scrolls when the pointer is within DRAG_EDGE_PX of its top or bottom edge. Escape cancels.
+ *   The drop is moveItem, one history step "Move layer". A long-press on the row (not the grip) still
+ *   opens the r4 context menu and never starts a drag.
+ * - Without a drag (WCAG 2.5.7), from the row menu ("Move" submenu) and keys on a focused row: Move up
+ *   (Alt+Up) and Move down (Alt+Down), now within the tree; Move into group above (Alt+Shift+Right: the
+ *   item becomes the bottom item of the group right above it, so its paint order does not change); Move
+ *   out of group (Alt+Shift+Left: it becomes the item right below its former group). Unavailable at a
+ *   limit, with the reason. Keys follow the r4 consumed-key rule.
+ * - After every move the polite live region says "<name> moved into <group>, position i of n" or
+ *   "<name> moved to the top level, position i of n".
+ * - "Group" inside a group at MAX_GROUP_DEPTH is disabled with "Groups can be 4 levels deep."
+ *
+ * ── (r5) Path tools (E4), SVG editor only, path-tools 1.0.0 ──
+ * - Entry points: an inspector section "Path" (Outline stroke, Offset, Simplify, Join, Split at point),
+ *   the context menu submenu "Path" (same items, same reasons), "Split here" in the point menu, and a
+ *   "Knife" rail tool (key K, consumed-key rule) placed like the line tool: drag, two clicks or the
+ *   keyboard crosshair (2.5.7).
+ * - Targets: visible, unlocked selected layers. Outline stroke: layers with a stroke; a layer with fill
+ *   and stroke keeps its fill without the stroke and gets a new layer "<name> outline" with the stroke's
+ *   paint right above it. Offset (closed subpaths) and Simplify (all subpaths): each selected layer.
+ *   Join: one layer with two open subpaths, two layers with one open subpath each (the result takes the
+ *   bottom-most one's place and paint; the other is removed), or one open subpath (Close path). Split:
+ *   the Node tool's single selected anchor (open: two layers "<name> 1" / "<name> 2" with the same paint;
+ *   closed: the same layer, opened there). Knife: the selected layers, or with none selected every
+ *   visible unlocked layer the drawn segment touches; a cut layer becomes one layer per piece, "<name> 1"
+ *   to "<name> n", same paint, at its place.
+ * - The first use loads the booleans and path-tools chunks together (control busy, aria-busy); a failure
+ *   shows "Couldn't load the path tools. Try again." and changes nothing.
+ * - Every tool opens the chunk's panel (renderPanel) with Apply and Cancel and a dashed preview on the
+ *   canvas (rerun PREVIEW_DEBOUNCE_MS after a field change); the preview is never in the document or the
+ *   history. Apply = one history step named after the tool. Cancel or Escape drops it. Outcomes and
+ *   refusals (path-tools messages) go to the polite live region; a refusal changes nothing.
+ * - The SVG editor holds no geometry for these tools (import scan: nothing from src/path-tools/ but
+ *   loader.ts).
+ *
  * Contract tests added in revision 3 (QA): grid size sets gridStep and snap.grid, nudge follows it,
  * Custom bounds; every primitive kind placed by drag, two clicks and keyboard; Combine of two layers
  * gives one layer at the bottom-most place with its paint, Subtract order, disabled reasons, open
@@ -308,10 +444,21 @@ import type { BooleanOp } from './path-booleans';
  * announcement), focus after pick and close; consumed keys do not reach document listeners; shape
  * editor operand scale updates the fields and is not a history step, no rotate handle, no menu in
  * Corners; messages matched by includes.
+ * Contract tests added in revision 5 (QA): host 'mcu' in both elements (name required, new id unique
+ * against the list, conflict with base_updated_at, no module notice or Keep a copy, preview colours not
+ * in the markup, the studio keeps its own value, asks before leaving unsaved work, mc-shape-save, stays
+ * open after a save), static contractRevision; Dual-tone state on open, Off turns Accent layers Main in
+ * one step, tone tag text, both preview renderings, Copy accent path; tree invariants I1-I4 after group,
+ * ungroup, moveItem and import at every depth, the depth / locked / self refusals with their reasons,
+ * paint order matches the tree after a drop (top row painted last), one Ctrl+Z restores, keyboard moves
+ * and their announcements, long-press opens the menu and never a drag, nested <g> in toSvg and on import
+ * (5 levels merged into 4); path tools: chunk not fetched on open, load failure leaves the drawing
+ * unchanged, each tool's target rules, Outline stroke of a filled and stroked layer gives two layers,
+ * Join of two layers, Knife piece layers and names, one undo step per Apply, Escape drops the preview.
  */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
-/** Stays 3 until T30 implements revision 4, then 4. */
+/** 4 since T30 (revision 4); moves to 5 when T39 implements the (r5) host mode. */
 export const SVG_EDITOR_CONTRACT_REVISION = 4;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 export const SVG_EDITOR_CHUNK = 'svg-editor';
@@ -332,12 +479,35 @@ export const SHAPE_BOOLEAN_OPS: readonly BooleanOp[] = ['union', 'subtract', 'in
 export const SVG_ALIGN_TARGETS = ['selection', 'canvas', 'safe'] as const;
 export const SVG_SAFE_INSET = 2;
 
+/** Revision 5: who hosts the editors. */
+export const SVG_EDITOR_HOSTS = ['card', 'mcu'] as const;
+/** Revision 5: the lowest element contractRevision the Magic Card Utils panel accepts. */
+export const SVG_EDITOR_MCU_MIN_REVISION = 5;
+/** Revision 5: group nesting cap (CEO 2026-10-18). A top-level group is level 1. */
+export const MAX_GROUP_DEPTH = 4;
+/** Revision 5: a layer drag starts after this many CSS px; edge auto-scroll zone. */
+export const DRAG_START_PX = 4;
+export const DRAG_EDGE_PX = 32;
+/** Revision 5: how Home Assistant draws secondary_path (preview strip). */
+export const HA_SECONDARY_OPACITY = 0.5;
+/** Revision 5: neutral preview colours in the MCU host (HA's default state icon and accent colours). */
+export const MCU_PREVIEW_MAIN = '#44739e';
+export const MCU_PREVIEW_ACCENT = '#ff9800';
+
 /** Revision 3: the shape editor's top-level mode switch. */
 export type ShapeEditorMode = 'corners' | 'free';
 /** Revision 4. */
 export type SvgAlignTarget = (typeof SVG_ALIGN_TARGETS)[number];
 export type SvgAlignEdge = 'left' | 'centre' | 'right' | 'top' | 'middle' | 'bottom';
 export type SvgArrange = 'front' | 'forward' | 'backward' | 'back';
+/** Revision 5. */
+export type SvgEditorHost = (typeof SVG_EDITOR_HOSTS)[number];
+
+/** Revision 5: a place in the layer tree. parent null = top level; index in tree order, top = 0. */
+export interface TreePlace {
+  parent: string | null;
+  index: number;
+}
 
 export type SvgEditorSource =
   | { kind: 'blank' }
@@ -381,6 +551,11 @@ export interface ShapeEditorPreset {
 
 export interface ShapeCloseDetail {
   done: boolean;
+}
+
+/** Revision 5, host 'mcu': the stored item as the server returned it. */
+export interface ShapeSaveDetail {
+  saved: SavedShape;
 }
 
 export interface ShapeChangeDetail {

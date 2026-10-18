@@ -5,6 +5,9 @@ import type { ThemeDoc } from './theme-editor';
 /*
  * Contract: preset files (export / import) and the transfer chunk. Version 1.0.0 (Architect-owned).
  * ADR 0022. Epic C of svg-and-shape-editors (brief addendum 21-product-manager.md, CEO 2026-10-18).
+ * Revision 2 (2026-10-18, epic E1, ADR 0020 / 0027; nothing released, additive): host 'mcu-panel' (the
+ * Magic Card Utils panel's Library tab, mcu-library 1.0.0 r4) for <mc-library-view>, with New / Edit
+ * actions that fire `mc-library-open`. Sections marked (r2).
  *
  * ── Envelope (the file format; public once released, semver from then on) ──
  * One file holds one kind and one or more items. YAML or JSON, same object:
@@ -96,6 +99,7 @@ import type { ThemeDoc } from './theme-editor';
  * animations through the existing animation commands). Without it (card editor, shape editor, SVG
  * editor only): animation / shape / icon items become inline copies on the card being edited
  * (custom_animations / custom_shapes / custom_icons[id]); themes need Magic Card Utils anyway.
+ * (r2) 'mcu-panel' always has Magic Card Utils: every kind goes to its store.
  * An item whose id exists in the target is a clash. When any item clashes, the summary lists them
  * and asks once: "Replace" (overwrite, no base_updated_at) or "Keep both" (the imported ones get
  * uniqueId(id): id-2, id-3, ...). Cancel saves nothing. A library cap that is reached imports what
@@ -121,6 +125,7 @@ import type { ThemeDoc } from './theme-editor';
  * - theme editor and animation studio entries: await window.MagicCard.loadEditor(), then
  *   window.MagicCard.loadTransfer() (module-editor 1.1.0, set by the editor chunk). Neither entry
  *   gets a new import(): the theme editor's one-import() rule stays.
+ * - (r2) the Magic Card Utils panel: the same two calls (mcu-library 1.0.0 r4).
  * magic-card.js grows 0 B (no runtime parsing of preset files; CEO 2026-10-18 option a: no theme
  * copy in cards). Dashboards that open no editor never fetch the chunk.
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
@@ -178,16 +183,27 @@ export const CARD_MOD_KEY_RE = /^card-mod-/i;
 
 export type TransferKind = 'animation' | 'theme' | 'shape' | 'icon';
 export type TransferFormat = 'yaml' | 'json';
-export type TransferHost = 'card-editor' | 'shape-editor' | 'svg-editor' | 'animation-studio' | 'theme-editor';
+export type TransferHost = 'card-editor' | 'shape-editor' | 'svg-editor' | 'animation-studio' | 'theme-editor' | 'mcu-panel';
 
-/** Kinds each host accepts on import (and offers on export). */
+/** Kinds each host accepts on import (and offers on export). (r2) mcu-panel. */
 export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>> = {
   'card-editor': ['animation', 'shape', 'icon'],
   'shape-editor': ['shape'],
   'svg-editor': ['icon'],
   'animation-studio': ['animation'],
   'theme-editor': ['theme'],
+  'mcu-panel': ['icon', 'shape', 'animation', 'theme'],
 };
+
+/** (r2) Where <mc-library-view> runs. */
+export type LibraryViewContext = 'card-editor' | 'mcu-panel';
+/** (r2) Fired by the library view in 'mcu-panel': New (no id) or Edit of an icon or shape. */
+export const LIBRARY_OPEN_EVENT = 'mc-library-open';
+export interface LibraryOpenDetail {
+  kind: 'icon' | 'shape';
+  /** Absent = New. */
+  id?: string;
+}
 
 export interface IconData {
   svg: string;
@@ -288,4 +304,11 @@ export interface TransferChunk {
  * mcu-library commands) and "This card" (the card's custom_* copies). List, search (name,
  * keywords), rename, delete (with confirm), export, import. Rename and delete need admin (the
  * commands say so); non-admin users see the list read-only.
+ * (r2) Property `context: LibraryViewContext`, default 'card-editor' (all of the above). 'mcu-panel'
+ * (the Magic Card Utils Library tab): kinds HOST_KINDS['mcu-panel'], source "Magic Card Utils" only (no
+ * "This card", no `config`, `inline` false), `presets` = the panel's theme presets adapter, the transfer
+ * panel opened with host 'mcu-panel'. Its header gets "New icon" (icons kind) / "New shape" (shapes
+ * kind), and icon and shape rows get "Edit" (a real button, label "Edit <name>"); each fires
+ * LIBRARY_OPEN_EVENT (bubbling, composed) with LibraryOpenDetail, and the panel opens the editor. The
+ * view itself never loads an editor chunk. Size: about 0.6-0.9 KB on the transfer chunk.
  */
