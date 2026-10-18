@@ -1,5 +1,5 @@
 /*
- * Path model, editor-only: the 14 primitive outlines (contract path-model 1.0.0 rev 3). Each is one
+ * Path model, editor-only: the primitive outlines (contract path-model 1.0.0 rev 3). Each is one
  * closed clockwise subpath (y down) inside its box, straight sides and cubics only, at most
  * PRIMITIVE_MAX_ANCHORS anchors. Proportions are fixed per kind and scale with the box.
  */
@@ -49,6 +49,31 @@ const body = (x: number, y: number, w: number, h: number, r: number, mid: Array<
     [x, y + r, undefined, [x, y + r - c]],
   ]);
 };
+
+/** An ellipse as four smooth anchors, clockwise from the top. */
+const oval = (cx: number, cy: number, rx: number, ry: number): EditPath => ({
+  closed: true,
+  anchors: [
+    { x: cx, y: cy - ry, in: [cx - rx * K, cy - ry], out: [cx + rx * K, cy - ry], kind: 'smooth' },
+    { x: cx + rx, y: cy, in: [cx + rx, cy - ry * K], out: [cx + rx, cy + ry * K], kind: 'smooth' },
+    { x: cx, y: cy + ry, in: [cx + rx * K, cy + ry], out: [cx - rx * K, cy + ry], kind: 'smooth' },
+    { x: cx - rx, y: cy, in: [cx - rx, cy + ry * K], out: [cx - rx, cy - ry * K], kind: 'smooth' },
+  ],
+});
+
+/** A five-point star, clockwise from the top tip, fitted to the unit box. */
+const STAR: Array<[number, number]> = (() => {
+  const raw = Array.from({ length: 10 }, (_, i): [number, number] => {
+    const r = i % 2 ? 0.4 : 1;
+    const a = (i * Math.PI) / 5;
+    return [Math.sin(a) * r, -Math.cos(a) * r];
+  });
+  const x0 = Math.min(...raw.map((p) => p[0]));
+  const x1 = Math.max(...raw.map((p) => p[0]));
+  const y0 = Math.min(...raw.map((p) => p[1]));
+  const y1 = Math.max(...raw.map((p) => p[1]));
+  return raw.map(([x, y]) => [(x - x0) / (x1 - x0), (y - y0) / (y1 - y0)]);
+})();
 
 export function primitive(kind: PrimitiveKind, b: Box): EditPath {
   const { x, y, w, h } = b;
@@ -120,5 +145,21 @@ export function primitive(kind: PrimitiveKind, b: Box): EditPath {
       return unit(b, [[0, 0], [0.38, 0], [0.48, 0.18], [1, 0.18], [1, 1], [0, 1]]);
     case 'tag':
       return unit(b, [[0, 0], [0.72, 0], [1, 0.5], [0.72, 1], [0, 1]]);
+    case 'circle': {
+      const r = Math.min(w, h) / 2;
+      return oval(x + w / 2, y + h / 2, r, r);
+    }
+    case 'ellipse':
+      return oval(x + w / 2, y + h / 2, w / 2, h / 2);
+    case 'semicircle':
+      return unit(b, [
+        [0, 1, undefined, [0, 1 - K]],
+        [0.5, 0, [0.5 - 0.5 * K, 0], [0.5 + 0.5 * K, 0], true],
+        [1, 1, [1, 1 - K]],
+      ]);
+    case 'star':
+      return unit(b, STAR.map(([sx, sy]): U => [sx, sy]));
+    case 'hexagon':
+      return unit(b, [[0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1], [0, 0.5]]);
   }
 }

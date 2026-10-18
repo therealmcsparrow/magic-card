@@ -89,6 +89,11 @@ export const PRIM: Record<PrimitiveKind, MessageId> = {
   ticket: m('Ticket'),
   tab: m('Tab'),
   tag: m('Tag'),
+  circle: m('Circle'),
+  ellipse: m('Ellipse'),
+  semicircle: m('Semicircle'),
+  star: m('Star'),
+  hexagon: m('Hexagon'),
 };
 
 /** What an anchored axis measures, by anchor and axis (xl: from the left edge, yr: from the bottom edge ...). */

@@ -181,7 +181,7 @@ export interface PathTidy {
 
 // ── editor-only: draw generators (src/path/draw.ts), revision 3 ──
 
-/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines. */
+/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines (additive: circle, ellipse, semicircle, star and hexagon joined the first 14). */
 export const PRIMITIVE_KINDS = [
   'rounded-rect',
   'triangle',
@@ -197,6 +197,11 @@ export const PRIMITIVE_KINDS = [
   'ticket',
   'tab',
   'tag',
+  'circle',
+  'ellipse',
+  'semicircle',
+  'star',
+  'hexagon',
 ] as const;
 export type PrimitiveKind = (typeof PRIMITIVE_KINDS)[number];
 export const PRIMITIVE_MAX_ANCHORS = 24;
