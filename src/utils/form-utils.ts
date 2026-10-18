@@ -135,6 +135,7 @@ export function renderTextField(
       <input
         class="input ${options?.mono ? 'mono' : ''}"
         type="text"
+        aria-label=${label || nothing}
         spellcheck=${options?.mono ? 'false' : nothing}
         placeholder=${options?.placeholder ?? nothing}
         .value=${value || ''}
@@ -157,6 +158,7 @@ export function renderTextareaField(
       ${renderFieldHead(label, propertyName, syncContext)}
       <textarea
         class="input"
+        aria-label=${label || nothing}
         .value=${value || ''}
         rows=${String(options?.rows ?? 4)}
         placeholder=${options?.placeholder ?? nothing}
@@ -180,6 +182,7 @@ export function renderNumberField(
       <input
         class="input"
         type="number"
+        aria-label=${label || nothing}
         .value=${String(value ?? '')}
         min=${options?.min ?? nothing}
         max=${options?.max ?? nothing}
