@@ -9,7 +9,7 @@ import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
 import type { ThemePresetStore } from '../contracts/theme-editor';
 import type { TransferItem, TransferKind } from '../contracts/preset-transfer';
-import { getIcon, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
+import { getIcon, isSaved, listIcons, listShapes, resetLibrary } from '../editor/custom/library';
 import './panel';
 
 /*
@@ -97,6 +97,10 @@ export class LibraryView extends LitElement {
   @property({ attribute: false }) kinds: TransferKind[] = ['animation', 'shape', 'icon'];
   /** The card's custom_animations / custom_shapes / custom_icons copies ("This card"). */
   @property({ attribute: false }) config?: { custom_animations?: unknown; custom_shapes?: Record<string, unknown>; custom_icons?: Record<string, string> };
+  /** The card editor: imports that do not go to Magic Card Utils bubble up as `mc-transfer-import` for the host to write into the card. */
+  @property({ type: Boolean }) inline = false;
+  /** The kind shown first. */
+  @property({ type: String }) startKind?: TransferKind;
   /** The theme editor's backend.presets; absent = an older Magic Card Utils (or none). */
   @property({ attribute: false }) presets?: ThemePresetStore;
 
@@ -112,11 +116,12 @@ export class LibraryView extends LitElement {
 
   private _unsub?: () => void;
   private _seq = 0;
+  private _switched = false;
   private _onChanged = (): void => void this._load();
 
   connectedCallback(): void {
     super.connectedCallback();
-    if (!this.kinds.includes(this._kind)) this._kind = this.kinds[0];
+    this._kind = this.startKind && this.kinds.includes(this.startKind) ? this.startKind : this.kinds.includes(this._kind) ? this._kind : this.kinds[0];
     this._unsub = animationLibrary.subscribe(() => this._kind === 'animation' && void this._load());
     window.addEventListener(LIBRARY_CHANGED_EVENT, this._onChanged);
   }
@@ -132,6 +137,8 @@ export class LibraryView extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
+    // the panel went away (closed or imported): focus would fall to the page, so it goes back to the toolbar
+    if (changed.has('_panel') && changed.get('_panel') && !this._panel) this.renderRoot.querySelector<HTMLElement>('.seg button.active')?.focus();
     if (changed.has('hass') && !changed.get('hass') && this.hass) void this._load();
     if (changed.has('config') || changed.has('presets')) void this._load();
   }
@@ -159,7 +166,9 @@ export class LibraryView extends LitElement {
       if (!this.presets) status = 'missing';
       else
         try {
-          rows = (await this.presets.list()).map((p) => row(p.id, p.name, p));
+          // the panel adapter answers { theme_presets }, the contract type says a list: take both
+          const r = (await this.presets.list()) as SavedThemePreset[] | { theme_presets?: SavedThemePreset[] };
+          rows = (Array.isArray(r) ? r : (r?.theme_presets ?? [])).map((p) => row(p.id, p.name, p));
         } catch {
           status = 'error';
         }
@@ -169,6 +178,12 @@ export class LibraryView extends LitElement {
       rows = (l.items as Array<{ id: string; name: string; keywords?: string[] }>).map((i) => row(i.id, i.name, i, i.keywords));
     }
     if (seq !== this._seq) return;
+    if (status === 'missing' && this.inline && this._source === 'mcu' && kind !== 'theme' && !this._switched) {
+      // no Magic Card Utils: the card's own copies are all there is to list
+      this._switched = true;
+      this._source = 'card';
+      return this._load();
+    }
     this._rows = rows.sort((a, b) => a.name.localeCompare(b.name));
     this._status = status;
     this._sel = new Set([...this._sel].filter((id) => rows.some((r) => r.id === id)));
@@ -187,14 +202,15 @@ export class LibraryView extends LitElement {
 
   /** Whether imports of `kind` go to Magic Card Utils (else the host gets the event). */
   private _has(kind: TransferKind): boolean {
-    return kind === 'theme' ? !!this.presets : kind === 'animation' ? animationLibrary.status === 'ready' : this._status === 'ok' && this._source === 'mcu' && kind === this._kind;
+    return kind === 'theme' ? !!this.presets : this._status === 'ok' && this._source === 'mcu' && kind === this._kind;
   }
 
   private _taken = (kind: TransferKind, id: string): boolean => {
     if (kind === this._kind && this._source === 'mcu') return this._rows.some((r) => r.id === id);
     if (kind === 'animation') return !!animationLibrary.get(id) || animationDocList(this.config?.custom_animations).some((d) => d.id === id);
-    if (kind === 'shape') return !!this.config?.custom_shapes?.[id];
-    return kind === 'icon' && !!this.config?.custom_icons?.[id];
+    // a copy that shares an id with a saved item would be pruned from the card as unused
+    if (kind === 'shape') return !!this.config?.custom_shapes?.[id] || isSaved('shapes', id);
+    return kind === 'icon' && (!!this.config?.custom_icons?.[id] || isSaved('icons', id));
   };
 
   private async _call(msg: Record<string, unknown>): Promise<void> {
@@ -278,8 +294,12 @@ export class LibraryView extends LitElement {
 
   private async _import(e: CustomEvent<{ kind: TransferKind; items: TransferItem[] }>): Promise<void> {
     const { kind, items } = e.detail;
-    if (!this._has(kind) && kind !== 'animation') return; // the host writes the inline copies
-    if (kind === 'animation' && animationLibrary.status !== 'ready') return;
+    if (!this._has(kind)) {
+      // the host writes the inline copies
+      this._panel = undefined;
+      this._msg = `Added ${items.length} to this card.`;
+      return;
+    }
     e.stopPropagation();
     let ok = 0;
     let full = 0;
@@ -309,7 +329,7 @@ export class LibraryView extends LitElement {
         .mode=${this._panel.mode}
         .exportItems=${this._panel.exportItems}
         .taken=${this._taken}
-        .hasLibrary=${this._has(this._kind)}
+        .hasLibrary=${this._kind === 'theme' ? !!this.presets : this._status !== 'missing'}
         @mc-transfer-import=${this._import}
         @mc-transfer-close=${(e: Event) => {
           e.stopPropagation();
@@ -336,8 +356,9 @@ export class LibraryView extends LitElement {
         </div>
         <div class="row">
           <button class="btn btn-secondary" ?disabled=${!shown.length} @click=${() => this._export()}>${this._sel.size ? `Export ${this._sel.size} selected` : 'Export all'}</button>
-          ${can ? html`<button class="btn btn-secondary" @click=${() => (this._panel = { mode: 'import' })}>Import</button>` : nothing}
+          ${can || this.inline ? html`<button class="btn btn-secondary" @click=${() => (this._panel = { mode: 'import' })}>Import</button>` : nothing}
         </div>
+        ${this.inline && this._source === 'card' ? html`<p class="help">Imported items are saved in this card.</p>` : nothing}
         <div role="status" aria-live="polite" class="help">${this._msg || (this._status === 'ok' ? `${shown.length} ${noun}` : '')}</div>
         ${this._body(shown, can)}
       </div>

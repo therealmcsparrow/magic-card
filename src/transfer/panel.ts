@@ -137,6 +137,7 @@ export class TransferPanel extends LitElement {
 
   private _key = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape') return;
+    e.preventDefault();
     e.stopPropagation();
     this._close();
   };

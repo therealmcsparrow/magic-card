@@ -1,5 +1,6 @@
 import { CMD, LIBRARY_CHANGED_EVENT, type IconSummary, type SavedIcon, type SavedShape, type SavedShapeInput } from '../../contracts/mcu-library';
 import type { MagicCardConfig } from '../../types';
+import { animationLibrary } from '../../services/animation-library';
 import { pruneLibraryCopies, type KnownLibrary } from './prune';
 
 /*
@@ -56,6 +57,9 @@ if (typeof window !== 'undefined') {
   });
 }
 
+/** Whether the loaded library lists this saved id (false while the list is not loaded). */
+export const isSaved = (kind: 'icons' | 'shapes', id: string): boolean => !!known[kind]?.has(id);
+
 /** Whether Magic Card Utils answered the library commands (undefined: not asked yet). */
 export const libraryMissing = (): boolean => missing;
 
@@ -101,7 +105,8 @@ export function freeId(base: string, taken: ReadonlySet<string>): string {
 }
 
 /** The card without the unused library copies (pruning rule: prune.ts); the same object when none. */
-export const prunedConfig = (config: MagicCardConfig): MagicCardConfig => pruneLibraryCopies(config, known);
+export const prunedConfig = (config: MagicCardConfig): MagicCardConfig =>
+  pruneLibraryCopies(config, { ...known, animations: animationLibrary.status === 'ready' ? { has: (id) => !!animationLibrary.get(id) } : undefined });
 
 /** True when the card has copies and a list that makes pruning possible has not been asked for yet. */
 export function needsLists(config: MagicCardConfig): { icons: boolean; shapes: boolean } {

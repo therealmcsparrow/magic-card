@@ -18,8 +18,43 @@
 const STYLE =
   'padding:0;border:0;margin:0;width:100vw;height:100vh;max-width:none;max-height:none;background:transparent;color:inherit;overflow:visible;';
 
-/** Mount `el` in the top layer; returns the function that removes it. */
-export function openLayer(el: HTMLElement): () => void {
+/**
+ * Where focus goes when the layer closes. The opener can be gone by then (the icon picker closes when
+ * the editor opens) and the form behind may have re-rendered around it (a drawing changes the icon
+ * field). So the ancestors of `from` are noted when the layer opens; on close the nearest one still on
+ * the page is searched, through shadow roots, for a visible, labelled element with
+ * `data-focus-key=<key>` ("Draw an icon" has become "Edit icon"), then the next one up.
+ */
+function parents(el: Node): Element[] {
+  const out: Element[] = [];
+  for (let n: Node | null = el; n; ) {
+    n = n.parentNode ?? (n as ShadowRoot).host ?? null;
+    if (n?.nodeType === 1) out.push(n as Element);
+  }
+  return out;
+}
+
+function findEntry(root: ParentNode, sel: string): HTMLElement | undefined {
+  for (const el of root.querySelectorAll<HTMLElement>('*')) {
+    if (el.matches(sel) && el.textContent?.trim() && el.getClientRects().length) return el;
+    const hit = el.shadowRoot && findEntry(el.shadowRoot, sel);
+    if (hit) return hit;
+  }
+  return undefined;
+}
+
+function refocus(chain: Element[], key: string): void {
+  const sel = `[data-focus-key="${key}"]`;
+  for (const a of chain) {
+    if (!a.isConnected) continue;
+    const hit = (a.shadowRoot && findEntry(a.shadowRoot, sel)) || findEntry(a, sel);
+    if (hit) return hit.focus({ preventScroll: true });
+  }
+}
+
+/** Mount `el` in the top layer; returns the function that removes it (`back`: where focus returns, see refocus). */
+export function openLayer(el: HTMLElement, back?: { from: Element; key: string }, onEscape?: () => void): () => void {
+  const chain = back ? parents(back.from) : [];
   const dlg = document.createElement('dialog');
   dlg.className = 'mc-editor-layer';
   dlg.style.cssText = STYLE;
@@ -36,6 +71,8 @@ export function openLayer(el: HTMLElement): () => void {
   const onKey = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape' || e.composedPath().includes(dlg)) return;
     stop(e);
+    // focus fell to the page (a clicked button went away): the layer still answers Escape if it was given a handler
+    onEscape?.();
     e.stopImmediatePropagation();
   };
   window.addEventListener('keydown', onKey, true);
@@ -60,5 +97,7 @@ export function openLayer(el: HTMLElement): () => void {
       /* not open */
     }
     dlg.remove();
+    // after the owner re-rendered (the button may carry a new label)
+    if (back) requestAnimationFrame(() => requestAnimationFrame(() => refocus(chain, back.key)));
   };
 }

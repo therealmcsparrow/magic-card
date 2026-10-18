@@ -22,6 +22,9 @@ import type { CardState } from './icon-animator/card-request';
 import { loadCatalogue } from './preset-catalogue-loader';
 import { applyCataloguePick } from './icon-animator/loader';
 import { animationDocList } from '../../utils/custom-animations';
+import { openLibrary } from '../custom/library-sheet';
+import { cardStateOf } from '../custom/bridge';
+import { docBytes, hasCopy, keepPicked, setAnimationCopy } from '../custom/animation-copies';
 
 import './color-picker';
 import './unit-field';
@@ -191,7 +194,12 @@ export class AnimationList extends LitElement {
     const was = this.animations[index]?.preset ?? '';
     const list = this.animations.map((a, i) => (i === index ? applyPreset(a, select.value) : a));
     const entry = this._catEntry(select.value);
-    if (!entry) return this._write(list);
+    if (!entry) {
+      this._write(list);
+      // a library animation: the card keeps a copy (small ones by default), written after the module edit
+      if (isCustomRef(select.value) && !customRefId(select.value).startsWith(CAT_PREFIX)) keepPicked(cardStateOf(this), customRefId(select.value));
+      return;
+    }
     void applyCataloguePick(this, entry, list, (l) => this._write(l)).then((ok) => {
       if (!ok) select.value = was;
     });
@@ -599,6 +607,24 @@ export class AnimationList extends LitElement {
     }
   }
 
+  /** "Keep a copy in this card" for a library animation (animation-copies.ts). */
+  private _keepCopy(ref: string, id: string): TemplateResult | typeof nothing {
+    const lib = animationLibrary.get(ref);
+    const sm = lib ? cardStateOf(this) : undefined;
+    if (!lib || !sm) return nothing;
+    const on = hasCopy(sm.getConfig(), ref);
+    const n = docBytes(lib);
+    const kb = n < 1024 ? `${n} B` : `${(n / 1024).toFixed(1)} KB`;
+    return html`<div class="switch-row">
+      <div class="txt">
+        <div class="field-head"><label for=${id}>Keep a copy in this card (${on ? '' : 'adds '}${kb})</label></div>
+        <p class="help" id="${id}-help">Without a copy, the card plays nothing if Magic Card Utils or this animation is removed.</p>
+      </div>
+      <button type="button" class="switch" id=${id} role="switch" aria-checked=${on ? 'true' : 'false'} aria-describedby="${id}-help"
+        @click=${() => { setAnimationCopy(sm, ref, !on, false); this.requestUpdate(); }}></button>
+    </div>`;
+  }
+
   /**
    * An animation from the library (`custom:<id>`): the preset fields, its own values as the defaults
    * (empty fields follow the document).
@@ -617,6 +643,7 @@ export class AnimationList extends LitElement {
       </div>
       ${note ? html`<p class="help anim-note">${note}</p>` : nothing}
       ${this._field('Preset', this._presetSelect(id('preset'), index, a.preset), id('preset'))}
+      ${this._keepCopy(ref, id('keep'))}
     `;
     if (!doc) {
       return html`<div class="cond">
@@ -785,6 +812,7 @@ export class AnimationList extends LitElement {
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._add()}>
             <ha-icon icon="mdi:plus"></ha-icon>Add animation
           </button>
+          <button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'animation')}>Library</button>
         </div>
       </div>
     `;

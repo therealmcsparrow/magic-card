@@ -6,6 +6,7 @@ import type { SavedShape } from '../../contracts/mcu-library';
 import { freeId, listShapes, saveShape, slug, type Listing } from '../custom/library';
 import { applyShapePatch, openShapeEditor, type ShapeWrite } from '../custom/shape-host';
 import { cardStateOf } from '../custom/bridge';
+import { openLibrary } from '../custom/library-sheet';
 import { editorSystem } from '../../css/editor-system';
 import { SHAPE_DEFAULTS, shapePath } from '../../utils/shape-path';
 import { fieldReset } from './field-reset';
@@ -663,6 +664,7 @@ export class ShapeEditor extends LitElement {
         ${this._source === 'mine' && this._lib?.state === 'ok'
           ? this._mine()
           : html`${this._picker(kind)}${this._actions(kind)}${this._hints(kind)}${this._options(kind)}`}
+        <div class="shape-actions"><button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'shape')}>Library</button></div>
         <p class="sr-only" role="status">${this._status}</p>
       </div>
     `;

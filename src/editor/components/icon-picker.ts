@@ -10,6 +10,7 @@ import { IconListItem, iconDisplayName, isIconId, loadIconList, searchIcons } fr
 import { KEEP_COPY_DEFAULT_MAX_BYTES, type IconSummary } from '../../contracts/mcu-library';
 import { cardStateOf as cardState } from '../custom/bridge';
 import { getIcon, listIcons, type Listing } from '../custom/library';
+import { openLibrary } from '../custom/library-sheet';
 import { applyIconPatch, openIconEditor, withKeptIcon } from '../custom/icon-host';
 import type { SyncContext } from '../../utils/sync-path';
 import { hasTemplate } from '../../utils/sync-path';
@@ -437,6 +438,7 @@ export class IconPicker extends LitElement {
           <div class="mc-picker-footer">
             ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>Clear</button>`}
             ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>Draw an icon</button>` : ''}
+            ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>Library</button>` : ''}
             ${!grid && lib && lib.state === 'missing' ? html`<span class="help">Keep your own icons: install the free Magic Card Utils add-on.</span>` : ''}
             ${this._editorFailed ? html`<span class="help error" role="alert">The icon editor could not load. Try again.</span>` : ''}
             <span class="spacer"></span>

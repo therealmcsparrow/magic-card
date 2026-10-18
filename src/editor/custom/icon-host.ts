@@ -140,7 +140,7 @@ export async function openIconEditor(o: IconEditorOpen): Promise<'opened' | 'fai
     toast('Icon applied.');
   });
   el.addEventListener('mc-svg-close', () => close());
-  close = openLayer(el);
+  close = openLayer(el, { from: o.from, key: 'icon-entry' });
   return 'opened';
 }
 

@@ -101,6 +101,6 @@ export async function openShapeEditor(o: ShapeEditorOpen): Promise<'opened' | 'f
     close();
     if ((e as CustomEvent<{ done: boolean }>).detail?.done) toast('Shape applied.');
   });
-  close = openLayer(el);
+  close = openLayer(el, { from: o.from, key: 'shape-entry' });
   return 'opened';
 }
