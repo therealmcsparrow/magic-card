@@ -53,7 +53,9 @@ const flat = (s: string): string => s.replace(/[\s-]/g, '');
 
 // A swatch value that names another host (preset-transfer EXTERNAL_REF_RE, kept here as a copy) or that could
 // add a second declaration is never put into a style: opening the picker must not contact anyone.
-const OUTSIDE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])|;|@import/i;
+// A backslash (CSS escape) and every function that fetches (url, image, image-set, src, element, cross-fade) are refused too:
+// `url(ht\74ps://x)` and `url(http:x)` do not look like a host to a plain pattern but the browser reads them as one.
+const OUTSIDE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])|;|@import|\\|\burl\(|(?:^|[^a-z-])(?:-webkit-)?(?:image|image-set|src|element|cross-fade)\(|\b(?:https?|wss?|ftp):/i;
 const colours = (p: ThemePreset, m: 'light' | 'dark'): Record<string, string> => {
   const v = { ...p.doc, ...p.doc.modes?.[m] } as Record<string, unknown>;
   const out: Record<string, string> = {};

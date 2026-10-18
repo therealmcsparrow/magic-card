@@ -1,4 +1,4 @@
-import { CARD_MOD_KEY_RE, EXTERNAL_REF_RE, LOCAL_PATH_RE, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
+import { CARD_MOD_KEY_RE, contactsOtherHost, decodeCssEscapes, LOCAL_PATH_RE, THEME_PRESET_MAX_BYTES, THEME_VALUE_MAX_CHARS } from '../../contracts/preset-transfer';
 import type { TransferDataByKind, TransferNote } from '../../contracts/preset-transfer';
 import { THEME_VAR_RE } from '../../contracts/theme-catalogue';
 import { t } from '../i18n';
@@ -9,6 +9,7 @@ import type { KindResult, Raw } from '../types';
 export function hostsOf(value: string): string[] {
   const out = new Set<string>();
   for (const m of value.matchAll(/(?:[a-z][a-z0-9+.-]*:)?\/\/(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi)) out.add(m[1].toLowerCase());
+  for (const m of value.matchAll(/\b(?:https?|wss?|ftp):(?!\/)([^\s/:?#)"'\,;]+)/gi)) out.add(m[1].toLowerCase());
   return [...out];
 }
 
@@ -44,8 +45,8 @@ export function readTheme(index: number, data: unknown): KindResult<TransferData
       kept++;
       if (CARD_MOD_KEY_RE.test(k)) notes.push(note('card_mod', index, path, label ? t('{mode} mode: "{key}" is a card-mod style. It was kept; it runs CSS on your dashboard.', { mode: label, key: k }) : t('"{key}" is a card-mod style. It was kept; it runs CSS on your dashboard.', { key: k })));
       if (typeof v === 'string') {
-        if (EXTERNAL_REF_RE.test(v)) {
-          const hosts = hostsOf(v);
+        if (contactsOtherHost(v)) {
+          const hosts = hostsOf(decodeCssEscapes(v));
           notes.push(note('external_ref', index, path, label ? t('{mode} mode: "{key}" points to {hosts}. It was kept; your browser will contact it.', { mode: label, key: k, hosts: hosts.length ? hosts.join(', ') : t('another host') }) : t('"{key}" points to {hosts}. It was kept; your browser will contact it.', { key: k, hosts: hosts.length ? hosts.join(', ') : t('another host') }), hosts));
         } else if (LOCAL_PATH_RE.test(v)) {
           notes.push(note('local_path', index, path, label ? t('{mode} mode: "{key}" uses a file on the sharer\'s Home Assistant. It may not exist on your system.', { mode: label, key: k }) : t('"{key}" uses a file on the sharer\'s Home Assistant. It may not exist on your system.', { key: k })));

@@ -177,6 +177,40 @@ export const THEME_PRESET_MAX_BYTES = 32 * 1024;
  * match. Matching values are kept and listed (CEO 2026-10-18).
  */
 export const EXTERNAL_REF_RE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])/i;
+/** CSS escapes (`\74 ` and `\/`) resolved the way a browser reads them, and comments dropped. */
+export function decodeCssEscapes(value: string): string {
+  return value
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\\([0-9a-f]{1,6})[ \t\n\r\f]?|\\([\s\S])/gi, (_m, hex: string | undefined, ch: string | undefined) => {
+      if (hex === undefined) return ch ?? '';
+      const cp = parseInt(hex, 16);
+      return cp > 0 && cp <= 0x10ffff && (cp < 0xd800 || cp > 0xdfff) ? String.fromCodePoint(cp) : '�';
+    });
+}
+
+const URL_CALL_RE = /\burl\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi;
+// Network schemes only: card-mod CSS is full of "color: red" and a generic "word:" test would flag all of it.
+// Any other scheme can only be fetched through url() or image functions, which are checked below.
+const BARE_SCHEME_RE = /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):(?!\/\/)/i;
+const IMAGE_FN_RE = /(?:^|[^a-z0-9-])(?:-webkit-)?(?:image-set|image|src|cross-fade|element)\(\s*["']/i;
+const SAFE_URL_RE = /^(?:#|\/(?!\/)|data:image\/)/i;
+
+/**
+ * True when a theme value can make the browser contact another host. Escapes are decoded first, so
+ * `url(ht\74ps://x)` and `url("\2f\2f x")` count. Flagged: a `scheme://` or `//` host, a `http:`-style scheme
+ * without slashes (`http:evil.example` is read as a host), a backslash left in the value, an
+ * `@import`, and any url() that is not `#id`, a single-slash path or an inline image.
+ */
+export function contactsOtherHost(value: string): boolean {
+  if (value.includes('\\')) return true;
+  const v = decodeCssEscapes(value);
+  if (EXTERNAL_REF_RE.test(v) || BARE_SCHEME_RE.test(v) || /@import/i.test(v)) return true;
+  for (const m of v.matchAll(URL_CALL_RE)) {
+    if (!SAFE_URL_RE.test((m[1] ?? m[2] ?? m[3] ?? '').trim())) return true;
+  }
+  return IMAGE_FN_RE.test(v.replace(URL_CALL_RE, ''));
+}
+
 /** A value with a path on the sharer's own Home Assistant (info line only). */
 export const LOCAL_PATH_RE = /url\(\s*["']?\/(?!\/)/i;
 export const CARD_MOD_KEY_RE = /^card-mod-/i;
