@@ -4,6 +4,7 @@ import type { ThemePreset, ThemePresetLibrary } from '../../contracts/theme-edit
 import type { MessageId } from '../../contracts/i18n';
 import { glyph } from '../../ui-kit/glyphs';
 import { fold } from '../../i18n/fold';
+import { outsideOf } from '../outside';
 import { m, t } from './i18n';
 
 /*
@@ -79,6 +80,7 @@ function card(p: ThemePreset, on: boolean, ev: PickerEvents): TemplateResult {
     ></span>
     <span class="pn">${presetTitle(p)}${on ? glyph('check') : nothing}</span>
     <span class="help">${presetBlurb(p)}</span>
+    ${outsideOf(p.doc).any ? html`<span class="host">${glyph('information', 14)} ${t('Contacts another host')}</span>` : nothing}
     ${p.inspiredBy ? html`<span class="help">${t('Inspired by {name}', { name: p.inspiredBy.name })}</span>` : nothing} ${on && p.note ? html`<span class="help">${own(p, p.note)}</span>` : nothing}
   </label>`;
 }
@@ -329,6 +331,14 @@ export const pickerStyles = css`
     font-weight: 500;
     font-size: 0.875rem;
     overflow-wrap: anywhere;
+  }
+  .host {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--mc-text);
   }
   .pn .ico {
     width: 16px;

@@ -9,7 +9,7 @@ import type { KindResult, Raw } from '../types';
 export function hostsOf(value: string): string[] {
   const out = new Set<string>();
   for (const m of value.matchAll(/(?:[a-z][a-z0-9+.-]*:)?\/\/(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi)) out.add(m[1].toLowerCase());
-  for (const m of value.matchAll(/\b(?:https?|wss?|ftp):(?!\/)([^\s/:?#)"'\,;]+)/gi)) out.add(m[1].toLowerCase());
+  for (const m of value.matchAll(/\b(?:https?|wss?|ftp):(?!\/)([^\s/:?#)"'\\,;]+)/gi)) out.add(m[1].toLowerCase());
   return [...out];
 }
 

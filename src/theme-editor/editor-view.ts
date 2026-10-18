@@ -6,6 +6,7 @@ import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
+import { outsideOf } from './outside';
 import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, setVar, validateValue } from './model';
 import type { DocError } from './model';
 import { closeDialog, dialog, openDialog } from './dialogs';
@@ -1016,6 +1017,19 @@ export class McteEditorView extends LitElement {
     </header>`;
   }
 
+  /** Values that point at another host: the preview and Try on dashboard load them at once, so say so (not by colour alone). */
+  private _outsideEl(): TemplateResult | typeof nothing {
+    const o = outsideOf(this._doc);
+    if (!o.any) return nothing;
+    return html`<div class="notice warn" role="status">
+      ${glyph('information')}
+      <div class="body">
+        <strong>${t('Contacts another host')}</strong>
+        <p>${o.hosts.length ? t('Some values load files from {hosts}. The preview and Try on dashboard ask that host for them, so it sees your address.', { hosts: o.hosts.join(', ') }) : t('Some values load files from another host. The preview and Try on dashboard ask that host for them, so it sees your address.')}</p>
+      </div>
+    </div>`;
+  }
+
   private _bannerEl(): TemplateResult | typeof nothing {
     const b = this._banner;
     if (!b) return nothing;
@@ -1096,6 +1110,7 @@ export class McteEditorView extends LitElement {
         : this.checkResult
           ? html`<p class="help" role="status">${this.checkResult}</p>`
           : nothing}
+      ${this._outsideEl()}
       ${this._bannerEl()}
       <div class="tools">
         <div class="searchbox">
