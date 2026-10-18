@@ -25,7 +25,10 @@ import {
   byId,
   duplicateShapes,
   flipMatrix,
-  groupShapes,
+  groupItems,
+  isOff,
+  pruneGroups,
+  under,
   is24,
   mapShapes,
   arrangeOrder,
@@ -340,7 +343,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       const parts = [d.script && S.droppedScript(d.script), d.image && S.droppedImage(d.image), d.link && S.droppedLink(d.link), d.other && S.droppedOther(d.other)].filter(Boolean) as string[];
       out.push({ id: 'dropped', kind: 'warn', text: `${S.dropped(droppedTotal(d))}: ${parts.join(', ')}. ${S.droppedKept}`, detail: parts });
     }
-    const change = [n.transforms && S.transforms, n.colours && S.colours, n.opacity && S.opacity].filter(Boolean) as string[];
+    const change = [n.transforms && S.transforms, n.colours && S.colours, n.opacity && S.opacity, n.merged && S.merged].filter(Boolean) as string[];
     if (change.length) out.push({ id: 'changed', kind: 'info', text: change.join(' ') });
     this.banners = out;
   }
@@ -356,14 +359,12 @@ export class McSvgEditor extends LitElement implements StageHost {
     const paths: EditPath[] = [];
     const map: Flat['map'] = [];
     const paint: PathPaint[] = [];
-    const g = new Map(doc.groups.map((x) => [x.id, x]));
     const pick = this.tool === 'select' || this.tool === 'node' || this.tool === 'pen';
     for (const s of doc.shapes) {
-      const grp = s.group ? g.get(s.group) : undefined;
       s.paths.forEach((p, sub) => {
         paths.push(p);
         map.push({ sid: s.id, sub });
-        paint.push({ fill: s.fill === 'none' ? 'none' : 'transparent', stroke: 'none', hidden: !!(s.hidden || grp?.hidden), locked: !pick || !!(s.locked || grp?.locked) });
+        paint.push({ fill: s.fill === 'none' ? 'none' : 'transparent', stroke: 'none', hidden: isOff(doc, s, 'hidden'), locked: !pick || isOff(doc, s, 'locked') });
       });
     }
     return { paths, map, paint };
@@ -488,7 +489,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** A layer row opens the menu; the row's shape is selected first unless it is in the selection already. */
   openRowMenu(id: string, row: HTMLElement, at: Pt, touch: boolean): void {
-    const ids = id.startsWith('g:') ? this.doc.shapes.filter((s) => s.group === id.slice(2)).map((s) => s.id) : [id];
+    const ids = id.startsWith('g:') ? under(this.doc, id.slice(2)).map((s) => s.id) : [id];
     if (!ids.every((i) => this.sel.includes(i))) this.select(ids);
     this.menuAt = Date.now();
     this.menu = { items: shapeMenu(this), at, touch, opener: row };
@@ -543,7 +544,7 @@ export class McSvgEditor extends LitElement implements StageHost {
           return keep.length === s.paths.length ? s : keep.length ? asPath({ ...s, paths: keep }) : undefined;
         })
         .filter((s): s is Shape => !!s);
-      doc = { ...doc, shapes, groups: doc.groups.filter((g) => shapes.some((s) => s.group === g.id)) };
+      doc = pruneGroups({ ...doc, shapes });
       this.sel = this.sel.filter((id) => shapes.some((s) => s.id === id));
     } else {
       const changed = old.map((_, i) => i).filter((i) => next[i] !== old[i]);
@@ -750,7 +751,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   group(): void {
-    const r = groupShapes(this.doc, this.sel);
+    const r = groupItems(this.doc, this.sel);
     if (r.group) this.apply(r.doc, 'Group');
   }
 

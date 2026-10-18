@@ -69,6 +69,7 @@ export const S = {
   transforms: 'Transforms were applied to the paths. The drawing looks the same, the markup is different.',
   colours: "Colours were replaced by the card's colours: Main and Accent.",
   opacity: 'Opacity is not kept. Icons are one solid colour.',
+  merged: 'Groups deeper than 4 levels were merged.',
   tooManyPoints: (c: number): string => `This icon has ${c} points. You can edit and move them, but not add points until it has fewer than 100.`,
   outsideSafe: 'Reaches outside the 20 x 20 safe area',
   fitTo20: 'Fit to 20',

@@ -1,6 +1,6 @@
 import type { Box } from '../contracts/path-model';
 import { SVG_SAFE_INSET, type SvgAlignEdge } from '../contracts/svg-editor';
-import { boxOf, unionBox, type Doc } from './model';
+import { boxOf, groupChain, isOff, under, unionBox, type Doc } from './model';
 
 /*
  * Align, distribute and placement: pure box maths. An item is a layer, or a whole selected group (the
@@ -21,15 +21,17 @@ export const safeBox = (vb: Box): Box => ({ x: vb.x + SVG_SAFE_INSET, y: vb.y + 
 
 /** The visible, unlocked layers among `sel` as items, and how many selected layers were left out. */
 export function itemsOf(d: Doc, sel: readonly string[]): { items: Item[]; leftOut: number } {
-  const g = new Map(d.groups.map((x) => [x.id, x]));
-  const off = (s: Doc['shapes'][number]): boolean => !!(s.hidden || s.locked || (s.group && (g.get(s.group)?.hidden || g.get(s.group)?.locked)));
+  const off = (s: Doc['shapes'][number]): boolean => isOff(d, s, 'hidden') || isOff(d, s, 'locked');
   const picked = d.shapes.filter((s) => sel.includes(s.id));
   const items: Item[] = [];
   const seen = new Set<string>();
   for (const s of picked) {
     if (off(s) || seen.has(s.id)) continue;
-    const whole = s.group ? d.shapes.filter((m) => m.group === s.group) : [s];
-    const members = whole.every((m) => sel.includes(m.id)) ? whole : [s];
+    let members = [s];
+    for (const g of groupChain(d, s.group)) {
+      const whole = under(d, g.id);
+      if (whole.every((m) => sel.includes(m.id))) members = whole;
+    }
     members.forEach((m) => seen.add(m.id));
     const box = boxOf(members);
     if (box) items.push({ ids: members.map((m) => m.id), box });

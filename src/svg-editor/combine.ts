@@ -1,5 +1,5 @@
 import type { BooleanOp, BooleanOperand } from '../contracts/path-booleans';
-import { newShape, type Doc, type Shape } from './model';
+import { isOff, newShape, pruneGroups, type Doc, type Shape } from './model';
 import { S } from './strings';
 import type { EditPath } from '../contracts/path-model';
 
@@ -26,8 +26,6 @@ export interface BoolState {
 }
 
 export function boolState(d: Doc, sel: readonly string[]): BoolState {
-  const hidden = new Set(d.groups.filter((g) => g.hidden).map((g) => g.id));
-  const locked = new Set(d.groups.filter((g) => g.locked).map((g) => g.id));
   const operands: Shape[] = [];
   let leftOut = 0;
   let nLocked = 0;
@@ -35,8 +33,8 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
   let openLayers = 0;
   for (const s of d.shapes) {
     if (!sel.includes(s.id)) continue;
-    const isLocked = !!(s.locked || (s.group && locked.has(s.group)));
-    const isHidden = !!(s.hidden || (s.group && hidden.has(s.group)));
+    const isLocked = isOff(d, s, 'locked');
+    const isHidden = isOff(d, s, 'hidden');
     if (isLocked || isHidden) {
       leftOut++;
       if (isLocked) nLocked++;
@@ -93,8 +91,7 @@ export function withResult(d: Doc, st: BoolState, op: BooleanOp, paths: EditPath
     if (s.id === base.id) shapes.push(shape);
     else if (!ids.has(s.id)) shapes.push(s);
   }
-  const used = new Set(shapes.map((s) => s.group));
-  return { doc: { ...d, shapes, groups: d.groups.filter((g) => used.has(g.id)) }, shape };
+  return { doc: pruneGroups({ ...d, shapes }), shape };
 }
 
 /** The result's note text. */

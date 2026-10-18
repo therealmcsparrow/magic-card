@@ -10,7 +10,7 @@ import type { SvgAlignEdge, SvgAlignTarget, SvgArrange } from '../contracts/svg-
 import { boolHelp, boolReason } from './combine';
 import { haWarns } from './ha';
 import { glyph, type GlyphName } from './icons';
-import { byId, round2, shapeBox, outsideSafe, type Doc, type Paint, type Shape } from './model';
+import { byId, isOff, round2, shapeBox, outsideSafe, type Doc, type Paint, type Shape } from './model';
 import type { McSvgEditor } from './mc-svg-editor';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
@@ -37,9 +37,8 @@ const paintVar = (p: Paint): string => (p === 'none' ? 'none' : p === 'main' ? '
 
 /** The shapes as SVG nodes painted with --m (Main) and --a (Accent), set by the parent. */
 export function artNodes(d: Doc, onlyVisible = true): TemplateResult[] {
-  const hid = new Set(d.groups.filter((g) => g.hidden).map((g) => g.id));
   return d.shapes
-    .filter((s) => !onlyVisible || (!s.hidden && !(s.group && hid.has(s.group))))
+    .filter((s) => !onlyVisible || !isOff(d, s, 'hidden'))
     .map((s) => svg`<path d=${dOf(s)} style=${`fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}`}></path>`);
 }
 

@@ -1,6 +1,6 @@
 import type { Box, EditPath, PathData, PrimitiveKind, Pt } from '../contracts/path-model';
 import { flatten, parsePath } from '../path/core';
-import type { SvgArrange } from '../contracts/svg-editor';
+import { MAX_GROUP_DEPTH, type SvgArrange, type TreePlace } from '../contracts/svg-editor';
 import { D, E, T } from './bind';
 
 /*
@@ -47,6 +47,8 @@ export interface Group {
   hidden?: boolean;
   locked?: boolean;
   open?: boolean;
+  /** The enclosing group (absent = top level). Shape.group is the innermost group. */
+  parent?: string;
 }
 
 export interface Doc {
@@ -239,9 +241,7 @@ export const replaceShape = (d: Doc, s: Shape): Doc => ({ ...d, shapes: d.shapes
 export const mapShapes = (d: Doc, ids: readonly string[], f: (s: Shape) => Shape): Doc => ({ ...d, shapes: d.shapes.map((s) => (ids.includes(s.id) ? f(s) : s)) });
 
 export function removeShapes(d: Doc, ids: readonly string[]): Doc {
-  const shapes = d.shapes.filter((s) => !ids.includes(s.id));
-  const used = new Set(shapes.map((s) => s.group));
-  return { ...d, shapes, groups: d.groups.filter((g) => used.has(g.id)) };
+  return pruneGroups({ ...d, shapes: d.shapes.filter((s) => !ids.includes(s.id)) });
 }
 
 export function duplicateShapes(d: Doc, ids: readonly string[]): { doc: Doc; ids: string[] } {
@@ -272,51 +272,170 @@ function blockMove<T>(list: T[], on: (t: T) => boolean, how: SvgArrange): T[] {
 }
 
 /**
- * Arrange order within each item's sibling list: the top level (a group counts as one unit) or the group
- * a layer belongs to. Returns the same document when nothing would move (the limit).
+ * Arrange order within each item's sibling list: the top level or the group a layer belongs to, at every
+ * depth (a group counts as one unit once all its layers are selected). Returns the same document when
+ * nothing would move (the limit).
  */
 export function arrangeOrder(d: Doc, ids: readonly string[], how: SvgArrange): Doc {
   const sel = new Set(ids);
-  let shapes = d.shapes.slice();
-  // layers of a partly selected group move inside the group (its slots in the list)
-  for (const g of d.groups) {
-    const slots: number[] = [];
-    shapes.forEach((s, i) => s.group === g.id && slots.push(i));
-    const on = slots.filter((i) => sel.has(shapes[i].id)).length;
-    if (!on || on === slots.length) continue;
-    const moved = blockMove(slots.map((i) => shapes[i]), (s) => sel.has(s.id), how);
-    slots.forEach((slot, k) => (shapes[slot] = moved[k]));
-  }
-  // top level: ungrouped layers and whole groups
-  const full = new Set(d.groups.filter((g) => shapes.filter((s) => s.group === g.id).every((s) => sel.has(s.id))).map((g) => g.id));
-  const units: Shape[][] = [];
-  for (const s of shapes) {
-    const last = units[units.length - 1];
-    if (s.group && last && last[0].group === s.group) last.push(s);
-    else units.push([s]);
-  }
-  shapes = blockMove(units, (u) => (u[0].group ? full.has(u[0].group) : sel.has(u[0].id)), how).flat();
-  return shapes.every((s, i) => s === d.shapes[i]) ? d : { ...d, shapes };
+  const full = (n: TNode): boolean => (n.s ? sel.has(n.id) : n.kids!.every(full));
+  const go = (list: TNode[]): TNode[] => {
+    list.forEach((n) => n.kids && (n.kids = go(n.kids)));
+    return blockMove(list, full, how);
+  };
+  const out = build(d, go(tree(d)));
+  return out.shapes.every((s, i) => s === d.shapes[i]) ? d : out;
 }
 
 /** Move one shape up (+1) or down (-1) in the drawing order. */
 export const moveOrder = (d: Doc, id: string, dir: 1 | -1): Doc => arrangeOrder(d, [id], dir === 1 ? 'forward' : 'backward');
 
-export function groupShapes(d: Doc, ids: readonly string[]): { doc: Doc; group?: string } {
-  const members = d.shapes.filter((s) => ids.includes(s.id));
-  if (members.length < 2) return { doc: d };
-  const g: Group = { id: uid('g'), name: `Group ${d.groups.length + 1}`, open: true };
-  const top = d.shapes.map((s) => s.id).lastIndexOf(members[members.length - 1].id);
-  const rest = d.shapes.filter((s) => !ids.includes(s.id));
-  const before = d.shapes.slice(0, top + 1).filter((s) => !ids.includes(s.id)).length;
-  const shapes = [...rest.slice(0, before), ...members.map((s) => ({ ...s, group: g.id })), ...rest.slice(before)];
-  const used = new Set(shapes.map((s) => s.group));
-  return { doc: { ...d, shapes, groups: [...d.groups, g].filter((x) => used.has(x.id)) }, group: g.id };
+// ── groups: parent pointers over the flat, paint-ordered list ──
+
+/** A tree node in paint order (first = bottom): a shape, or a group with kids. */
+interface TNode {
+  id: string;
+  s?: Shape;
+  kids?: TNode[];
 }
 
-export function ungroup(d: Doc, groupId: string): Doc {
-  return { ...d, shapes: d.shapes.map((s) => (s.group === groupId ? { ...s, group: undefined } : s)), groups: d.groups.filter((g) => g.id !== groupId) };
+/** The group and its ancestors, innermost first. */
+export function groupChain(d: Doc, id?: string): Group[] {
+  const out: Group[] = [];
+  for (let g = d.groups.find((x) => x.id === id); g && out.length < 9; g = d.groups.find((x) => x.id === g!.parent)) out.push(g);
+  return out;
 }
+
+/** Hidden or locked itself or through any ancestor group. */
+export const isOff = (d: Doc, s: Shape, k: 'hidden' | 'locked'): boolean => !!(s[k] || groupChain(d, s.group).some((g) => g[k]));
+
+/** The layers under a group, at all depths, in paint order. */
+export const under = (d: Doc, id: string): Shape[] => d.shapes.filter((s) => groupChain(d, s.group).some((g) => g.id === id));
+
+function tree(d: Doc): TNode[] {
+  const root: TNode[] = [];
+  const at = new Map<string, TNode>();
+  for (const s of d.shapes) {
+    let list = root;
+    for (const g of groupChain(d, s.group).reverse()) {
+      let n = at.get(g.id);
+      if (!n) {
+        n = { id: g.id, kids: [] };
+        at.set(g.id, n);
+        list.push(n);
+      }
+      list = n.kids!;
+    }
+    list.push({ id: s.id, s });
+  }
+  return root;
+}
+
+/** The flat document again: shapes in tree order, group and parent set, groups left with no layer dropped. */
+function build(d: Doc, root: TNode[]): Doc {
+  const shapes: Shape[] = [];
+  const gs = new Map<string, Group>();
+  const walk = (list: TNode[], parent?: string): number => {
+    let n = 0;
+    for (const k of list) {
+      if (k.s) {
+        shapes.push(k.s.group === parent ? k.s : { ...k.s, group: parent });
+        n++;
+      } else {
+        const g = d.groups.find((x) => x.id === k.id)!;
+        const c = walk(k.kids!, k.id);
+        if (c) gs.set(g.id, g.parent === parent ? g : { ...g, parent });
+        n += c;
+      }
+    }
+    return n;
+  };
+  walk(root);
+  return { ...d, shapes, groups: d.groups.filter((g) => gs.has(g.id)).map((g) => gs.get(g.id)!) };
+}
+
+type Loc = Map<string, { list: TNode[]; parent?: string; n: TNode }>;
+
+/** Where every node sits: its list, its parent group and the node. */
+function locate(root: TNode[]): Loc {
+  const m: Loc = new Map();
+  const walk = (list: TNode[], parent?: string): void => list.forEach((n) => (m.set(n.id, { list, parent, n }), n.kids && walk(n.kids, n.id)));
+  walk(root);
+  return m;
+}
+
+const height = (n: TNode): number => (n.kids ? 1 + Math.max(0, ...n.kids.map(height)) : 0);
+
+/** Drops groups with no layer under them (I4). */
+export function pruneGroups(d: Doc): Doc {
+  const used = new Set(d.shapes.flatMap((s) => groupChain(d, s.group).map((g) => g.id)));
+  return d.groups.every((g) => used.has(g.id)) ? d : { ...d, groups: d.groups.filter((g) => used.has(g.id)) };
+}
+
+/**
+ * Group items (layer ids, or group ids) in the parent of the top-most one, at its place; items from other
+ * parents move in. A group whose layers are all picked counts as one item. Refused (same document, no
+ * group) with fewer than two items or when an item would end up deeper than MAX_GROUP_DEPTH.
+ */
+export function groupItems(d: Doc, ids: readonly string[]): { doc: Doc; group?: string } {
+  const sel = new Set(ids.flatMap((i) => (d.groups.some((g) => g.id === i) ? under(d, i).map((s) => s.id) : [i])));
+  const items: string[] = [];
+  for (const s of d.shapes) {
+    if (!sel.has(s.id)) continue;
+    let it = s.id;
+    for (const g of groupChain(d, s.group)) if (under(d, g.id).every((x) => sel.has(x.id))) it = g.id;
+    if (!items.includes(it)) items.push(it);
+  }
+  const root = tree(d);
+  const loc = locate(root);
+  const top = loc.get(items[items.length - 1]);
+  if (items.length < 2 || !top) return { doc: d };
+  const depth = groupChain(d, top.parent).length + 1;
+  if (items.some((i) => depth + height(loc.get(i)!.n) > MAX_GROUP_DEPTH)) return { doc: d };
+  const g: Group = { id: uid('g'), name: `Group ${d.groups.length + 1}`, open: true };
+  const list = top.list;
+  const at = list.slice(0, list.indexOf(top.n) + 1).filter((n) => !items.includes(n.id)).length;
+  const nodes = items.map((i) => loc.get(i)!.n);
+  for (const i of items) {
+    const l = loc.get(i)!;
+    l.list.splice(l.list.indexOf(l.n), 1);
+  }
+  list.splice(at, 0, { id: g.id, kids: nodes });
+  return { doc: build({ ...d, groups: [...d.groups, g] }, root), group: g.id };
+}
+
+export const groupShapes = groupItems;
+
+/** The group's items go to its parent at its place. */
+export function ungroup(d: Doc, groupId: string): Doc {
+  const root = tree(d);
+  const at = locate(root).get(groupId);
+  if (!at?.n.kids) return d;
+  at.list.splice(at.list.indexOf(at.n), 1, ...at.n.kids);
+  return build(d, root);
+}
+
+export type MoveWhy = 'self' | 'depth' | 'locked' | 'none';
+
+/** Move an item (layer or group id) to a place in the layer tree; `why` says why it was refused (doc stays). */
+export function tryMove(d: Doc, id: string, place: TreePlace): { doc: Doc; why?: MoveWhy } {
+  const root = tree(d);
+  const loc = locate(root);
+  const it = loc.get(id);
+  const to = place.parent ? loc.get(place.parent) : undefined;
+  const no = (why: MoveWhy) => ({ doc: d, why });
+  if (!it || (place.parent && !to?.n.kids)) return no('none');
+  if (place.parent && (place.parent === id || locate(it.n.kids ?? []).has(place.parent))) return no('self');
+  const up = groupChain(d, place.parent ?? undefined);
+  if (up.some((g) => g.locked)) return no('locked');
+  if (up.length + height(it.n) > MAX_GROUP_DEPTH) return no('depth');
+  it.list.splice(it.list.indexOf(it.n), 1);
+  const list = to ? to.n.kids! : root;
+  list.splice(list.length - Math.max(0, Math.min(place.index, list.length)), 0, it.n);
+  return { doc: build(d, root) };
+}
+
+export const moveItem = (d: Doc, id: string, place: TreePlace): Doc => tryMove(d, id, place).doc;
 
 // ── export ──
 
@@ -341,25 +460,18 @@ function shapeElements(s: Shape, decimals: number): string[] {
   return [];
 }
 
-/** The document as SVG markup (not yet through the sanitiser). Hidden layers and groups are left out. */
+/** The document as SVG markup (not yet through the sanitiser). Hidden layers and groups are left out; groups nest as bare <g>. */
 export function toSvg(d: Doc, decimals = 2): string {
-  let out = '';
-  let open: string | undefined;
-  const hiddenGroup = new Set(d.groups.filter((g) => g.hidden).map((g) => g.id));
-  for (const s of d.shapes) {
-    if (s.hidden || (s.group && hiddenGroup.has(s.group))) continue;
-    const els = shapeElements(s, decimals).join('');
-    if (!els) continue;
-    if (s.group !== open) {
-      if (open) out += '</g>';
-      if (s.group) out += '<g>';
-      open = s.group;
-    }
-    out += els;
-  }
-  if (open) out += '</g>';
+  const emit = (list: TNode[]): string =>
+    list
+      .map((n) => {
+        if (n.s) return n.s.hidden ? '' : shapeElements(n.s, decimals).join('');
+        const inner = d.groups.find((g) => g.id === n.id)?.hidden ? '' : emit(n.kids!);
+        return inner && `<g>${inner}</g>`;
+      })
+      .join('');
   const v = d.vb;
-  return `<svg viewBox="${r2(v.x)} ${r2(v.y)} ${r2(v.w)} ${r2(v.h)}">${out}</svg>`;
+  return `<svg viewBox="${r2(v.x)} ${r2(v.y)} ${r2(v.w)} ${r2(v.h)}">${emit(tree(d))}</svg>`;
 }
 
 /** Shapes that reach outside the 20 x 20 live area of a 24 x 24 icon (design W4). */

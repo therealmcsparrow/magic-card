@@ -2,7 +2,8 @@ import type { IconGeometry } from '../icons/icon-source';
 import { multiply, parseTransform, sanitizeSvg, shapePath, type Matrix } from '../icons/svg-sanitize';
 import { parsePath } from '../path/core';
 import { E } from './bind';
-import { blankDoc, closeFilled, newShape, nameFor, round2, uid, type Cap, type Doc, type Group, type Join, type Paint, type Shape, type ShapeType } from './model';
+import { MAX_GROUP_DEPTH } from '../contracts/svg-editor';
+import { blankDoc, closeFilled, newShape, nameFor, pruneGroups, round2, uid, type Cap, type Doc, type Group, type Join, type Paint, type Shape, type ShapeType } from './model';
 
 /*
  * Anything in becomes a document through the sanitiser first (CRA: sanitizeSvg on every import). The
@@ -23,6 +24,8 @@ export interface ImportNotes {
   transforms: boolean;
   colours: boolean;
   opacity: boolean;
+  /** Groups deeper than MAX_GROUP_DEPTH were merged into the last level. */
+  merged?: boolean;
 }
 
 export interface ImportResult {
@@ -99,7 +102,7 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
   if (!root) return doc;
   const groups: Group[] = [];
 
-  const walk = (el: Element, m: Matrix, inh: Inherit, group: string | undefined): void => {
+  const walk = (el: Element, m: Matrix, inh: Inherit, group: string | undefined, depth: number): void => {
     const tag = el.localName.toLowerCase();
     if (NOT_DRAWN.has(tag) || !KEEP.has(tag)) return;
     const t = el.getAttribute('transform');
@@ -130,12 +133,14 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
 
     if (tag === 'g') {
       let g = group;
-      if (!g) {
-        const grp: Group = { id: uid('g'), name: `Group ${groups.length + 1}`, open: true };
+      let dp = depth;
+      if (depth < MAX_GROUP_DEPTH) {
+        const grp: Group = { id: uid('g'), name: `Group ${groups.length + 1}`, open: true, parent: group };
         groups.push(grp);
         g = grp.id;
-      }
-      for (const c of el.children) walk(c, mm, p, g);
+        dp++;
+      } else notes.merged = true;
+      for (const c of el.children) walk(c, mm, p, g, dp);
       return;
     }
     const d = shapePath(el, tag);
@@ -163,10 +168,8 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
   const rm = parseTransform(root.getAttribute('transform'));
   if (root.getAttribute('transform')) notes.transforms = true;
   const rootInh: Inherit = { ...ROOT };
-  for (const c of root.children) walk(c, rm, rootInh, undefined);
-  const used = new Set(doc.shapes.map((s) => s.group));
-  doc.groups = groups.filter((g) => used.has(g.id));
-  return doc;
+  for (const c of root.children) walk(c, rm, rootInh, undefined, 0);
+  return pruneGroups({ ...doc, groups });
 }
 
 export function importSvg(text: string, name = 'My icon'): ImportResult {
@@ -199,7 +202,7 @@ export function appendDoc(into: Doc, from: Doc): { doc: Doc; ids: string[] } {
   const gmap = new Map(from.groups.map((g) => [g.id, uid('g')]));
   const shapes = from.shapes.map((s) => ({ ...s, id: uid(), group: s.group ? gmap.get(s.group) : undefined }));
   return {
-    doc: { ...into, shapes: [...into.shapes, ...shapes], groups: [...into.groups, ...from.groups.map((g) => ({ ...g, id: gmap.get(g.id)! }))] },
+    doc: { ...into, shapes: [...into.shapes, ...shapes], groups: [...into.groups, ...from.groups.map((g) => ({ ...g, id: gmap.get(g.id)!, parent: g.parent ? gmap.get(g.parent) : undefined }))] },
     ids: shapes.map((s) => s.id),
   };
 }
