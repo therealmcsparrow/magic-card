@@ -17,6 +17,8 @@ export interface RowOptions extends Omit<KitRowOptions, 'onSelect'> {
   sub?: string;
   check?: { label: string; checked: boolean; onChange: (v: boolean) => void };
   content?: TemplateResult;
+  /** A host's leading node (a thumbnail), drawn before the name; any lit child value. */
+  lead?: unknown;
   trail?: TemplateResult;
 }
 
@@ -57,7 +59,7 @@ export function row(o: RowOptions): TemplateResult {
     ${o.check
       ? html`<input type="checkbox" class="check" id=${checkId} aria-label=${o.check.label} .checked=${o.check.checked} @change=${(e: Event) => o.check!.onChange((e.target as HTMLInputElement).checked)} />`
       : nothing}
-    ${iconOf(o)}${name}
+    ${iconOf(o)}${o.lead ?? nothing}${name}
     ${o.actions?.length ? html`<span class="acts">${o.actions.map(action)}</span>` : nothing}${o.trail ?? nothing}
   </div>`;
 }

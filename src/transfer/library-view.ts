@@ -115,6 +115,8 @@ export class LibraryView extends LitElement {
   @property({ attribute: false }) presets?: ThemePresetStore;
   /** (r3) Where saved icons and shapes are read; absent = the view calls the mcu-library commands itself. */
   @property({ attribute: false }) source?: LibrarySource;
+  /** (r3) A host's extra for a row: a leading node (a thumbnail) and a short text after the id. Read on every render; absent = none. */
+  @property({ attribute: false }) rowExtra?: (kind: TransferKind, id: string) => { thumb?: Node; meta?: string } | undefined;
   private _own?: LibrarySource;
   private get _src(): LibrarySource {
     return this.source ?? (this._own ??= commandSource());
@@ -519,10 +521,12 @@ export class LibraryView extends LitElement {
       },
     };
     const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label, icon, iconOnly: true as const, variant, onClick });
+    const x = this.rowExtra?.(this._kind, r.id);
     return row({
       id: r.id,
       name: r.name,
-      sub: r.id,
+      sub: x?.meta ? `${r.id} · ${x.meta}` : r.id,
+      lead: x?.thumb,
       check,
       content:
         e === 'rename'
