@@ -33,6 +33,12 @@ import type { TransferChunk } from './preset-transfer';
  *   exists only after loadEditor() resolved true. The theme editor and animation studio entries
  *   use it, so the transfer chunk is loaded by the magic-card.js runtime and shares its modules.
  *   apiVersion stays 1.
+ * - (1.1.0, additive, 2026-10-18, revision r1 of the window contract) `window.MagicCard.setLocale(hass)`
+ *   is the card runtime's `setI18nLocale` (i18n 1.0.0). An entry that carries its own i18n runtime copy
+ *   (the standalone animation studio) calls it next to its own `setI18nLocale`, so the colour, unit and
+ *   icon pickers, which run on magic-card.js's copy, follow the Home Assistant language. Optional on
+ *   the type (an old magic-card.js lacks it): call `window.MagicCard?.setLocale?.(hass)`. +16 B in
+ *   magic-card.js. apiVersion stays 1.
  *
  * Types only (0 B), apart from the constants below.
  */

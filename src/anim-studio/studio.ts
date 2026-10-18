@@ -344,7 +344,11 @@ export class AnimationStudio extends LitElement {
   // ── host data ──
 
   protected willUpdate(changed: PropertyValues): void {
-    if (changed.has('hass')) setI18nLocale(this.hass as LocaleHassLike | undefined);
+    if (changed.has('hass')) {
+      setI18nLocale(this.hass as LocaleHassLike | undefined);
+      // the pickers run on magic-card.js's own runtime copy
+      window.MagicCard?.setLocale?.(this.hass as LocaleHassLike | undefined);
+    }
     // WCAG 3.1.2: the studio's language, for a screen reader (the inherited language is the page's)
     if (this.lang !== locale()) this.lang = locale();
     if (changed.has('library')) this._docs = libraryDocs(this.library);

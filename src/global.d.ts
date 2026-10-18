@@ -9,7 +9,7 @@ declare global {
      * Contract read by the magic-card-utils panel: `apiVersion` 1 is the current one. `loadEditor`
      * loads the editor chunk (true once its elements are defined); the animation studio calls it.
      */
-    MagicCard?: { version: string; apiVersion: number; loadEditor?: () => Promise<boolean>; loadSeasonal?: () => Promise<boolean>; [key: string]: unknown };
+    MagicCard?: { version: string; apiVersion: number; loadEditor?: () => Promise<boolean>; loadSeasonal?: () => Promise<boolean>; setLocale?: import('./contracts/i18n').SetI18nLocale; [key: string]: unknown };
     customCards?: Array<{
       type: string;
       name: string;
