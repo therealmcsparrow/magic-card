@@ -195,7 +195,7 @@ registerPanel({
   // tracks (card parts) belong to keyframes documents
   when: (doc) => doc.kind === 'keyframes',
   title: 'Card parts',
-  order: 10,
+  order: 40,
 });
 
 declare global {

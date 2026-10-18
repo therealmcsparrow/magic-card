@@ -26,7 +26,7 @@ import { NO_SELECTION, PANELS, panelsFor, type PanelSpec, type PreviewChangeDeta
 import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
 import { TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
-import { docSizeError } from './editors/draw-utils';
+import { docSizeError, paintOrder } from './editors/draw-utils';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
@@ -102,6 +102,7 @@ const PANEL_ICON: Record<string, string> = {
   'mc-anim-targets-layers': 'mdi:card-text-outline',
   'mc-anim-parts-layers': 'mdi:vector-square',
   'mc-anim-shapes-layers': 'mdi:shape-outline',
+  'mc-anim-shapes-under-layers': 'mdi:shape-outline',
   'mc-anim-part-presets': 'mdi:auto-fix',
 };
 /** The icon animation start (icon picker and icon library; editors/icon-start.ts). */
@@ -1673,8 +1674,9 @@ export class AnimationStudio extends LitElement {
   private async _revealShape(id: string): Promise<void> {
     await this.updateComplete;
     const nav = this.shadowRoot?.querySelector('nav.layers');
-    const panel = nav?.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-anim-shapes-layers');
-    await panel?.updateComplete;
+    const panels = [...(nav?.querySelectorAll<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-anim-shapes-layers, mc-anim-shapes-under-layers') ?? [])];
+    await Promise.all(panels.map((p) => p.updateComplete));
+    const panel = panels.find((p) => p.shadowRoot?.querySelector(`li[data-id="${id}"]`)) ?? panels[0];
     const row = panel?.shadowRoot?.querySelector<HTMLElement>(`li[data-id="${id}"]`) ?? nav?.querySelector<HTMLElement>(`[data-shape="${id}"]`);
     row?.scrollIntoView?.({ block: 'nearest' });
   }
@@ -1784,7 +1786,7 @@ export class AnimationStudio extends LitElement {
   private _renderLayers(d: AnimationDoc): TemplateResult {
     const rail = this._rail;
     const specs = panelsFor('layers', d, this._selection).filter((p) => editorDefined(p.tag));
-    // card parts, icon parts, shapes: each under its own heading, in registration order
+    // shapes over, icon parts, shapes under, card parts: each under its own heading, in panel order (LAYERS_ORDER)
     const panels = rail
       ? []
       : specs.map(
@@ -1814,7 +1816,7 @@ export class AnimationStudio extends LitElement {
         </ul>`
       : nothing;
     // drawn shapes stay findable in the rail: one button each, top of the paint order first
-    const drawn = rail && d.kind === 'keyframes' ? [...(d.rig?.shapes ?? [])].reverse() : [];
+    const drawn = rail && d.kind === 'keyframes' ? paintOrder(d.rig?.shapes ?? []).reverse() : [];
     const shapesRail = drawn.length
       ? html`<ul class="layer-list rail-shapes" role="list" aria-label="Shapes">
           ${drawn.map((s) => {

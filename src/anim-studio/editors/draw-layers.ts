@@ -6,7 +6,7 @@ import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc } from '../model';
 import type { RigShape } from '../model-v2';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
-import { hasDrawOn, isFilled, isStroked, moveShape, removeShape } from './draw-utils';
+import { hasDrawOn, isFilled, isStroked, moveShapeInLayer, removeShape } from './draw-utils';
 import { selectedShapeId, sourceViewBox } from './draw-store';
 
 /*
@@ -16,8 +16,10 @@ import { selectedShapeId, sourceViewBox } from './draw-store';
  * and delete (no hover-only actions: they work by touch too).
  */
 
-@customElement('mc-anim-shapes-layers')
-export class AnimShapesLayers extends LitElement {
+abstract class ShapesLayersBase extends LitElement {
+  /** Which side of the icon this section lists. */
+  protected abstract readonly side: 'over' | 'under';
+
   static styles = [
     editorSystem,
     css`
@@ -136,18 +138,19 @@ export class AnimShapesLayers extends LitElement {
   protected render(): TemplateResult {
     const doc = this.doc;
     const shapes = doc?.rig?.shapes ?? [];
-    if (!doc || !shapes.length) return html``;
+    const under = this.side === 'under';
+    if (!doc || !shapes.some((s) => (s.layer === 'under') === under)) return html``;
     const sel = selectedShapeId(this.selection);
     // with a draw tool picked, a shape is selected with the select tool (the drawing overlay stays)
     const drawing = this.selection.kind === 'tool';
     const vb = sourceViewBox(doc.rig);
-    // the top of the paint order first: over before under, later before earlier
-    const rows = [...shapes.map((s, i) => ({ s, i })).filter((r) => r.s.layer !== 'under').reverse(), ...shapes.map((s, i) => ({ s, i })).filter((r) => r.s.layer === 'under').reverse()];
-    return html`<ul aria-label="Shapes">
-      ${rows.map(({ s, i }) => {
+    // the top of this side's paint order first: later before earlier
+    const rows = shapes.map((s, i) => ({ s, i })).filter((r) => (r.s.layer === 'under') === under).reverse();
+    return html`<ul aria-label=${under ? 'Shapes under the icon' : 'Shapes over the icon'}>
+      ${rows.map(({ s }) => {
         const target = `shape:${s.id}` as const;
         const track = doc.tracks?.find((t) => t.target === target);
-        const notes = [s.layer === 'under' ? 'Under the icon' : 'Over the icon', hasDrawOn(doc, target) ? 'draws on' : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
+        const notes = [hasDrawOn(doc, target) ? 'draws on' : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
         return html`<li class=${s.id === sel ? 'sel' : ''} data-id=${s.id}>
           <button
             type="button"
@@ -161,10 +164,10 @@ export class AnimShapesLayers extends LitElement {
           ${s.id !== sel
             ? nothing
             : html`<span class="acts">
-            <button type="button" class="icon-btn sm up" aria-label=${`Bring ${s.name} forward`} title="Bring forward" ?disabled=${this.disabled || i === shapes.length - 1} @click=${() => this._emit(moveShape(doc, s.id, i + 1), 'Bring shape forward')}>
+            <button type="button" class="icon-btn sm up" aria-label=${under && rows[0].s.id === s.id ? `Bring ${s.name} over the icon` : `Bring ${s.name} forward`} title=${under && rows[0].s.id === s.id ? 'Bring over the icon' : 'Bring forward'} ?disabled=${this.disabled || moveShapeInLayer(doc, s.id, 'up') === doc} @click=${() => this._emit(moveShapeInLayer(doc, s.id, 'up'), s.layer === 'under' && rows[0].s.id === s.id ? 'Bring shape over the icon' : 'Bring shape forward')}>
               <ha-icon icon="mdi:chevron-up"></ha-icon>
             </button>
-            <button type="button" class="icon-btn sm down" aria-label=${`Send ${s.name} backward`} title="Send backward" ?disabled=${this.disabled || i === 0} @click=${() => this._emit(moveShape(doc, s.id, i - 1), 'Send shape backward')}>
+            <button type="button" class="icon-btn sm down" aria-label=${!under && rows[rows.length - 1].s.id === s.id ? `Send ${s.name} under the icon` : `Send ${s.name} backward`} title=${!under && rows[rows.length - 1].s.id === s.id ? 'Send under the icon' : 'Send backward'} ?disabled=${this.disabled || moveShapeInLayer(doc, s.id, 'down') === doc} @click=${() => this._emit(moveShapeInLayer(doc, s.id, 'down'), !under && rows[rows.length - 1].s.id === s.id ? 'Send shape under the icon' : 'Send shape backward')}>
               <ha-icon icon="mdi:chevron-down"></ha-icon>
             </button>
             <button type="button" class="icon-btn sm danger del" aria-label=${`Delete ${s.name}`} title="Delete shape" ?disabled=${this.disabled} @click=${() => {
@@ -181,10 +184,23 @@ export class AnimShapesLayers extends LitElement {
   }
 }
 
-registerPanel({ tag: 'mc-anim-shapes-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.length, title: 'Shapes', order: 60 });
+@customElement('mc-anim-shapes-layers')
+export class AnimShapesLayers extends ShapesLayersBase {
+  protected readonly side = 'over';
+}
+
+@customElement('mc-anim-shapes-under-layers')
+export class AnimShapesUnderLayers extends ShapesLayersBase {
+  protected readonly side = 'under';
+}
+
+// keyframes column, top to bottom: Shapes over the icon, Icon parts, Shapes under the icon, Card parts (LAYERS_ORDER)
+registerPanel({ tag: 'mc-anim-shapes-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer !== 'under'), title: 'Shapes over the icon', order: 5 });
+registerPanel({ tag: 'mc-anim-shapes-under-layers', place: 'layers', when: (doc) => doc.kind === 'keyframes' && !!doc.rig?.shapes?.some((s) => s.layer === 'under'), title: 'Shapes under the icon', order: 30 });
 
 declare global {
   interface HTMLElementTagNameMap {
     'mc-anim-shapes-layers': AnimShapesLayers;
+    'mc-anim-shapes-under-layers': AnimShapesUnderLayers;
   }
 }

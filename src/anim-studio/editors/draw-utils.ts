@@ -263,6 +263,49 @@ export function moveShape(doc: AnimationDoc, id: string, to: number): AnimationD
   return { ...doc, rig: { ...doc.rig, shapes } };
 }
 
+/**
+ * One step in the paint order of a shape's own side (over / under the icon). Past the edge of its side the
+ * shape changes side: down from the last over row = the top-most under row, up from the first under row =
+ * the bottom-most over row. Returns `doc` itself when there is nowhere to go (top over / bottom under).
+ */
+export function moveShapeInLayer(doc: AnimationDoc, id: string, dir: 'up' | 'down'): AnimationDoc {
+  const list = shapesOf(doc);
+  const i = list.findIndex((s) => s.id === id);
+  if (i < 0 || !doc.rig) return doc;
+  const side = list[i].layer === 'under' ? 'under' : 'over';
+  const same = (s: RigShape): boolean => (s.layer === 'under' ? 'under' : 'over') === side;
+  const shapes = [...list];
+  const [s] = shapes.splice(i, 1);
+  let j = -1;
+  if (dir === 'up') j = list.findIndex((x, k) => k > i && same(x));
+  else
+    for (let k = i - 1; k >= 0; k--)
+      if (same(list[k])) {
+        j = k;
+        break;
+      }
+  if (j >= 0) {
+    // going up, the neighbour sits at j - 1 after the removal: insert behind it
+    shapes.splice(j, 0, s);
+    return { ...doc, rig: { ...doc.rig, shapes } };
+  }
+  if ((side === 'over') === (dir === 'up')) return doc;
+  const flipped: RigShape = { ...s, layer: side === 'over' ? 'under' : 'over' };
+  if (flipped.layer === 'over') {
+    // the bottom-most over row sits just before the first over shape
+    const first = shapes.findIndex((x) => x.layer !== 'under');
+    shapes.splice(first < 0 ? i : first, 0, flipped);
+  } else {
+    // the top-most under row sits just after the last under shape
+    let last = -1;
+    shapes.forEach((x, k) => {
+      if (x.layer === 'under') last = k;
+    });
+    shapes.splice(last < 0 ? i : last + 1, 0, flipped);
+  }
+  return { ...doc, rig: { ...doc.rig, shapes } };
+}
+
 /** Remove a shape and everything that targets it (its track and bindings). */
 export function removeShape(doc: AnimationDoc, id: string): AnimationDoc {
   if (!doc.rig?.shapes) return doc;
