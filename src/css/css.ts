@@ -8,8 +8,6 @@ import { shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
 
 /** Module roots that are 100% wide (their own rules below); a layout gives their wrapper that width. */
-const BORDER_SIDES = ['top', 'right', 'bottom', 'left'];
-const BORDER_VARS = BORDER_SIDES.flatMap((s) => ['width', 'style', 'color'].map((f) => `${s}-${f}`));
 const FULL_WIDTH_ROOTS = [
   '.mc-bar', '.mc-separator', '.mc-slider-container--horizontal', '.mc-image', '.mc-dropdown',
   '.mc-video-bg', '.mc-camera', '.mc-graphs', '.mc-nested-row', '.mc-slider-layout',
@@ -289,7 +287,10 @@ const magicCardLocalStyles = css`
     border-top-right-radius: var(--mc-design-radius-tr, var(--mc-button-radius));
     border-bottom-right-radius: var(--mc-design-radius-br, var(--mc-button-radius));
     border-bottom-left-radius: var(--mc-design-radius-bl, var(--mc-button-radius));
-    border: none;
+    border-width: var(--mc-design-bw, 0);
+    border-style: var(--mc-design-bs, none);
+    border-color: var(--mc-design-bc, currentColor);
+    box-shadow: var(--mc-design-shadow, none);
     background: var(--mc-design-bg, var(--mc-button-color));
     color: var(--mc-design-color, var(--mc-button-text-color));
     cursor: pointer;
@@ -315,19 +316,19 @@ const magicCardLocalStyles = css`
   .mc-button-inner--default {
     background: var(--mc-design-bg, var(--mc-button-color));
     color: var(--mc-design-color, var(--mc-button-text-color));
-    border: none;
   }
 
   .mc-button-inner--outline {
     background: var(--mc-design-bg, transparent);
     color: var(--mc-design-color, var(--mc-button-color));
-    border: 1px solid var(--mc-button-color);
+    border-width: var(--mc-design-bw, 1px);
+    border-style: var(--mc-design-bs, solid);
+    border-color: var(--mc-design-bc, var(--mc-button-color));
   }
 
   .mc-button-inner--flat {
     background: var(--mc-design-bg, transparent);
     color: var(--mc-design-color, var(--mc-button-color));
-    border: none;
   }
 
   .mc-button-inner--icon-only {
@@ -505,7 +506,10 @@ const magicCardLocalStyles = css`
   .mc-dropdown select {
     width: 100%;
     padding: var(--mc-dropdown-padding);
-    border: 1px solid var(--mc-border);
+    border-width: var(--mc-design-bw, 1px);
+    border-style: var(--mc-design-bs, solid);
+    border-color: var(--mc-design-bc, var(--mc-border));
+    box-shadow: var(--mc-design-shadow, none);
     border-top-left-radius: var(--mc-design-radius-tl, var(--mc-dropdown-radius));
     border-top-right-radius: var(--mc-design-radius-tr, var(--mc-dropdown-radius));
     border-bottom-right-radius: var(--mc-design-radius-br, var(--mc-dropdown-radius));
@@ -1200,7 +1204,9 @@ const magicCardLocalStyles = css`
     --mc-design-radius-bl: initial;
     --mc-design-bg: initial;
     --mc-design-shadow: initial;
-    ${unsafeCSS(BORDER_VARS.map((v) => `--mc-design-border-${v}: initial;`).join(' '))}
+    --mc-design-bw: initial;
+    --mc-design-bs: initial;
+    --mc-design-bc: initial;
     --mc-entity-color: initial;
     --mc-anim-color: initial;
     --mc-anim-m: initial;
@@ -1213,34 +1219,6 @@ const magicCardLocalStyles = css`
   /* the design background fills the button / dropdown itself, not a full-width band behind it */
   .mc-module-wrapper:has(> .mc-button, > .mc-dropdown) {
     background: none !important;
-  }
-
-  /*
-   * ...and so do its border and shadow (radius already does): the wrapper keeps layout and padding,
-   * the control draws the design. A border-length overlay or a shape owns the wrapper's outline, so
-   * those keep it there. The control's own border (outline variant, select) is the fallback.
-   */
-  .mc-module-wrapper:has(> .mc-button, > .mc-dropdown):not([data-mc-border-fx], [data-mc-shape]) {
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-
-  .mc-module-wrapper:not([data-mc-border-fx], [data-mc-shape]) > .mc-button > .mc-button-inner,
-  .mc-module-wrapper:not([data-mc-border-fx], [data-mc-shape]) > .mc-dropdown select {
-    ${unsafeCSS(BORDER_SIDES.map((s) => `border-${s}-width: var(--mc-design-border-${s}-width, var(--mc-ctl-bw, 0)); border-${s}-style: var(--mc-design-border-${s}-style, var(--mc-ctl-bs, none)); border-${s}-color: var(--mc-design-border-${s}-color, var(--mc-ctl-bc, currentColor));`).join(' '))}
-    box-shadow: var(--mc-design-shadow, none);
-  }
-
-  .mc-button-inner--outline {
-    --mc-ctl-bw: 1px;
-    --mc-ctl-bs: solid;
-    --mc-ctl-bc: var(--mc-button-color);
-  }
-
-  .mc-dropdown select {
-    --mc-ctl-bw: 1px;
-    --mc-ctl-bs: solid;
-    --mc-ctl-bc: var(--mc-border);
   }
 
   .mc-module-wrapper[role='button'],

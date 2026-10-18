@@ -77,11 +77,33 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
   return Array.isArray(rec.conditional) && rec.conditional.some((r) => designUsesEntityColor(r?.design));
 }
 
+/** The border a button / dropdown control draws when the design writes none (width, style, colour). */
+export interface ControlLook {
+  w: string;
+  s: string;
+  c: string;
+  /** Hover only: the base design the hover border merges with. */
+  base?: DesignConfig;
+}
+
+const NO_BORDER: ControlLook = { w: '0', s: 'none', c: 'currentColor' };
+/** The wrapper's own border and shadow keys, which move to the control (see designBorderVars). */
+const CONTROL_KEYS = new Set(['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color', 'box_shadow']);
+
+/** The default border of a button (by variant) or dropdown; undefined for any other module. */
+export function controlLook(type: string | undefined, variant?: string): ControlLook | undefined {
+  if (type === 'dropdown') return { w: '1px', s: 'solid', c: 'var(--mc-border)' };
+  if (type !== 'button') return undefined;
+  return variant === 'outline' ? { w: '1px', s: 'solid', c: 'var(--mc-button-color)' } : NO_BORDER;
+}
+
 /**
- * `control`: a button / dropdown wrapper, which hands its border and shadow to the control inside
- * (see designBorderVars); other modules draw them on the wrapper and get no mirrored vars.
+ * `control`: a button / dropdown wrapper whose design border and shadow are drawn by the control
+ * inside: the wrapper gets none of them, the control reads --mc-design-bw / -bs / -bc (four values,
+ * top right bottom left, unset sides filled with the control's own default) and --mc-design-shadow.
+ * Other modules, shaped elements and border-length overlays draw them on the wrapper.
  */
-export function designToStyle(input?: DesignConfig, control = false): string {
+export function designToStyle(input?: DesignConfig, control?: ControlLook): string {
   if (!input) return '';
   const design = resolveEntityColors(designNumbersToCss(input));
 
@@ -91,6 +113,7 @@ export function designToStyle(input?: DesignConfig, control = false): string {
   const gradient = parseGradient(design.color)?.stops[0];
 
   for (const [key, cssProperty] of Object.entries(ALL_CSS_MAP)) {
+    if (control && CONTROL_KEYS.has(key)) continue;
     let value = gradient && key === 'color' ? gradient : rec[key];
     if (typeof value === 'string' && IMAGE_KEYS.has(key)) value = mediaCssImage(undefined, value);
     if (value !== undefined && typeof value === 'string' && value !== '') {
@@ -98,7 +121,7 @@ export function designToStyle(input?: DesignConfig, control = false): string {
     }
   }
 
-  const borderStyle = defaultBorderStyle(rec);
+  const borderStyle = control ? undefined : defaultBorderStyle(rec);
   if (borderStyle) parts.push(`border-style: ${borderStyle}`);
 
   // Module text that sets its own colour (button label, info value, ...) reads this, so the
@@ -121,7 +144,7 @@ export function designToStyle(input?: DesignConfig, control = false): string {
   const bg = nonEmpty(rec.background_color) ?? nonEmpty(rec.background);
   if (bg) parts.push(`--mc-design-bg: ${bg}`);
   if (control) {
-    parts.push(...designBorderVars(rec));
+    parts.push(...designBorderVars(rec, control));
     const shadow = nonEmpty(rec.box_shadow);
     if (shadow) parts.push(`--mc-design-shadow: ${shadow}`);
   }
@@ -228,7 +251,7 @@ export interface HoverTarget {
   /** The border length overlay of an unshaped element (resolveBorderLength of its design). */
   borderLength?: ResolvedBorderLength;
   /** A button / dropdown wrapper: the hover border and shadow reach the control (designToStyle `control`). */
-  control?: boolean;
+  control?: ControlLook;
 }
 
 const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !important`);
@@ -437,14 +460,17 @@ function defaultBorderStyle(rec: Record<string, unknown>): string | undefined {
   return v.every((x) => x === v[0]) ? v[0] : v.join(' ');
 }
 
+const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
+
 /**
- * The design border as per-side custom properties (--mc-design-border-<side>-<width|style|color>),
- * only the fields the design writes. A button / dropdown draws its border on the control from them
- * (the wrapper keeps layout); a width without a style is solid, like on the wrapper.
+ * The design border for a button / dropdown control as three four-value custom properties
+ * (--mc-design-bw, -bs, -bc); only when the design writes a border field. A width without a style is
+ * solid, like on the wrapper; a side the design leaves out takes the control's default. A hover
+ * merges its fields over the base design (look.base) so the lists stay complete.
  */
-function designBorderVars(rec: Record<string, unknown>): string[] {
-  const keys = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
-  if (!keys.some((k) => nonEmpty(rec[k]))) return [];
+function designBorderVars(own: Record<string, unknown>, look: ControlLook): string[] {
+  if (!BORDER_KEYS.some((k) => nonEmpty(own[k]))) return [];
+  const rec = look.base ? { ...(look.base as Record<string, unknown>), ...own } : own;
   type F = { width?: string; style?: string; color?: string };
   const all = nonEmpty(rec.border);
   const fromShort = (v: string): F => {
@@ -463,15 +489,9 @@ function designBorderVars(rec: Record<string, unknown>): string[] {
   longhand('border_width', 'width', normWidth);
   longhand('border_style', 'style', (v) => v.toLowerCase());
   longhand('border_color', 'color');
-  const out: string[] = [];
-  for (const s of SIDES) {
-    const f = sides[s];
-    if (f.width !== undefined && f.style === undefined) f.style = 'solid';
-    for (const field of ['width', 'style', 'color'] as const) {
-      if (f[field] !== undefined) out.push(`--mc-design-border-${s}-${field}: ${f[field]}`);
-    }
-  }
-  return out;
+  for (const s of SIDES) if (sides[s].width !== undefined && sides[s].style === undefined) sides[s].style = 'solid';
+  const list = (field: keyof F, fallback: string) => SIDES.map((s) => sides[s][field] ?? fallback).join(' ');
+  return [`--mc-design-bw: ${list('width', look.w)}`, `--mc-design-bs: ${list('style', look.s)}`, `--mc-design-bc: ${list('color', look.c)}`];
 }
 
 export interface BorderLengthLine {

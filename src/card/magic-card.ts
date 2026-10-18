@@ -16,6 +16,7 @@ import { magicCardStyles } from '../css/css';
 import { CARD_TAG, EDITOR_TAG, DEFAULT_LAYOUT, DEFAULT_GAP, NESTED_COLUMN_GAP, TAP_MOVE_TOLERANCE_PX } from '../utils/constants';
 import {
   designToStyle,
+  controlLook,
   resolveConditionalDesign,
   resolveBorderLength,
   designUsesEntityColor,
@@ -1093,7 +1094,9 @@ export class MagicCard extends LitElement {
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: mod.entity });
     // `entity` design colours read this var (currentColor when unset); only set when one is used
     const entityColor = stateObj && designUsesEntityColor(design) ? entityStateColor(stateObj) : undefined;
-    const control = mod.type === 'button' || mod.type === 'dropdown';
+    // a button / dropdown draws the design border and shadow on the control, unless a shape or a border length owns the outline
+    const look = shape || border ? undefined : controlLook(mod.type, (mod as { button_style?: string }).button_style);
+    const control = look && { ...look, base: design };
     const designStyle = [designToStyle(design, control), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
       .filter(Boolean)
       .join('; ');
