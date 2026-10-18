@@ -65,7 +65,7 @@ export const editorPrimitives: CSSResult = css`
     cursor: pointer;
   }
   :focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus);
     outline-offset: 2px;
   }
   .mono {
@@ -340,13 +340,20 @@ export const editorPrimitives: CSSResult = css`
   }
   .input:focus {
     outline: none;
-    border-color: var(--mc-accent);
-    box-shadow: 0 0 0 1px var(--mc-accent);
+    border-color: var(--mc-focus);
+    box-shadow: 0 0 0 1px var(--mc-focus);
   }
   .input:disabled {
     background: var(--mc-surface-2);
     color: var(--mc-text-2);
     cursor: not-allowed;
+  }
+  /* error state (design/10 4.3): the border carries it, the message below says what to fix */
+  .input[aria-invalid='true'] {
+    border-color: var(--mc-error-ink);
+  }
+  .input[aria-invalid='true']:focus {
+    box-shadow: 0 0 0 1px var(--mc-error-ink);
   }
   textarea.input {
     resize: vertical;

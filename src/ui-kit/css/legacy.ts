@@ -71,8 +71,8 @@ export const editorLegacy: CSSResult = css`
   ${LEGACY_INPUT}:focus,
   .mc-input-field.mc-input-field:focus {
     outline: none;
-    border-color: var(--mc-accent);
-    box-shadow: 0 0 0 1px var(--mc-accent);
+    border-color: var(--mc-focus);
+    box-shadow: 0 0 0 1px var(--mc-focus);
   }
   ${LEGACY_INPUT}:disabled {
     background: var(--mc-surface-2);
@@ -196,7 +196,7 @@ export const editorLegacy: CSSResult = css`
     box-shadow: none;
   }
   :is(.mc-btn, .mc-btn-primary, .mc-btn-secondary, .mc-btn-icon):focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus);
     outline-offset: 2px;
   }
 
@@ -260,7 +260,7 @@ export const editorLegacy: CSSResult = css`
     box-shadow: 0 0 0 1px var(--mc-divider), 0 1px 2px rgba(0, 0, 0, 0.08);
   }
   .mc-tab-button:focus-visible {
-    outline: 2px solid var(--mc-accent);
+    outline: 2px solid var(--mc-focus);
     outline-offset: -2px;
   }
 `;

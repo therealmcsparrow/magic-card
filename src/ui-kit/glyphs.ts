@@ -1,6 +1,6 @@
 import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
 
-/* The editor's own glyphs: 24 x 24 outlines drawn with currentColor, so they follow the button colour. */
+/* The kit glyph set: 24 x 24 outlines drawn with currentColor, so they follow the button colour. A copy of src/svg-editor/icons.ts (the SVG editor switches over in UI4, then the original goes). */
 
 const G = {
   select: 'M6 3l12 8-5.5 1.3L10 18z',
