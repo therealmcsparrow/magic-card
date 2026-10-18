@@ -459,7 +459,7 @@ import type { BooleanOp } from './path-booleans';
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
 /** 4 since T30 (revision 4); moves to 5 when T39 implements the (r5) host mode. */
-export const SVG_EDITOR_CONTRACT_REVISION = 4;
+export const SVG_EDITOR_CONTRACT_REVISION = 5;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 export const SVG_EDITOR_CHUNK = 'svg-editor';
 export const SVG_EDITOR_CHUNK_FILE = 'magic-card-svg-editor.js';
