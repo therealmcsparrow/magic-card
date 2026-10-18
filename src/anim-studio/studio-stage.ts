@@ -662,6 +662,9 @@ export class AnimationStage extends LitElement {
         padding-left: 8px;
         border-left: 1px solid var(--mc-divider);
       }
+      .view .seg {
+        flex-wrap: wrap;
+      }
       .seg > button {
         gap: 6px;
         min-height: 28px;
