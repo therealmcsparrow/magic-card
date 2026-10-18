@@ -12,17 +12,7 @@ import type { LazyChunk, LazyChunkModule, LazyChunkName } from '../contracts/laz
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
 export { BUILD_VERSION };
 
-/**
- * The same check for the older lazy chunks (shape-custom, anim-runtime, particles, preset-catalogue,
- * icon-library, theme-presets), whose entries export BUILD but have no install(): the module when it
- * was built with this magic-card.js, else one warning and undefined (a cached older file never runs
- * against a newer card). The caller keeps its own load state and does not retry.
- */
-export function sameBuild<T extends { BUILD?: string }>(file: string, mod: T): T | undefined {
-  if (mod?.BUILD === BUILD_VERSION) return mod;
-  console.warn(`Magic Card was updated, reload the page (magic-card.js ${BUILD_VERSION}, ${file} ${String(mod?.BUILD)}).`);
-  return undefined;
-}
+export { sameBuild } from './build-version';
 
 export type LazyImporter = () => Promise<LazyChunkModule>;
 

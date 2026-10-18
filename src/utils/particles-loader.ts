@@ -1,6 +1,6 @@
 import type { ParticlesModule } from '../contracts/particles-v2';
 import { useParticlesCompiler } from '../anim-studio/compile';
-import { sameBuild } from './lazy-chunk';
+import { sameBuild } from './build-version';
 
 /*
  * Particles v2 (simulator, baker, CSS writer, live engine) is a lazy chunk,

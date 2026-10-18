@@ -1,5 +1,5 @@
 import type { PresetCatalogueModule } from '../contracts/preset-catalogue';
-import { sameBuild } from '../utils/lazy-chunk';
+import { sameBuild } from '../utils/build-version';
 
 /*
  * The studio's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract

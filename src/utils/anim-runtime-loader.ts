@@ -1,4 +1,4 @@
-import { sameBuild } from './lazy-chunk';
+import { sameBuild } from './build-version';
 import { docNeedsRuntime, type AnimationDoc } from '../anim-studio/model';
 
 /*

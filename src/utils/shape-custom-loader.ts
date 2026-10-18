@@ -1,5 +1,5 @@
 import { useCustomBuilder } from './shape-path';
-import { sameBuild } from './lazy-chunk';
+import { sameBuild } from './build-version';
 
 /*
  * The `shape: custom` builder (src/utils/shape-custom.ts) is a lazy chunk, dist/magic-card-shape-custom.js
