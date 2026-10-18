@@ -405,6 +405,16 @@ export const editorStyles: CSSResult[] = [
       justify-content: flex-start;
       padding: 16px 20px 20px;
     }
+    .start-win .tiles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: 100%;
+    }
+    .start-win .tile {
+      width: auto;
+      padding: 8px;
+      text-align: center;
+    }
     .tiles {
       display: flex;
       flex-wrap: wrap;
