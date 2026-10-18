@@ -270,7 +270,7 @@ export class AnimParticlesLayers extends LitElement {
 
   protected updated(changed: Map<PropertyKey, unknown>): void {
     // the editor selected another emitter: keep its row inside the column (AC6)
-    if ((changed.has('emitter') || changed.has('all')) && this.doc && !this.all) {
+    if (((changed.has('emitter') && changed.get('emitter') !== undefined) || (changed.has('all') && changed.get('all') !== undefined)) && this.doc && !this.all) {
       const id = this._ems(this.doc)[Math.min(this.emitter, emitterCount(this.doc) - 1)]?.id;
       this.renderRoot.querySelector<HTMLElement>(`[data-lk="emitter:${id}"]`)?.scrollIntoView?.({ block: 'nearest' });
     }
