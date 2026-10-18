@@ -1583,9 +1583,16 @@ export const colorPickerStyles = css`
     display: grid;
     place-items: center;
     overflow: hidden;
-    font-size: 0.625rem;
+  }
+
+  /* the theme colour behind can be any colour, so the word sits on its own plate (white on 78 % black is 12:1 or more) */
+  .mc-color-swatch .var-tag {
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.78);
     color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    font-size: 0.6875rem;
+    line-height: 1.2;
   }
 
   .mc-saved-colors {

@@ -598,7 +598,7 @@ export class ColorPicker extends LitElement {
                     title=${color}
                     aria-label=${color}
                     @click=${() => this._selectPreset(color)}
-                  >${color.startsWith('var(') ? 'var' : ''}</button>
+                  >${color.startsWith('var(') ? html`<span class="var-tag">var</span>` : ''}</button>
                 `)}
               </div>
             </div>
