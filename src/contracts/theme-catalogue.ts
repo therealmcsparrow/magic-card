@@ -19,7 +19,7 @@
  *    variables it reads (kind 'follows'), each verified like rule 2.
  * 5. Variables a theme sets that are not in the catalogue are kept and shown in "Other" (raw row).
  *
- * Revision 2026-10-18 (i18n, type widening only; version stays 1.0.0): `label` and `hint` of an entry and the
+ * 1.1.0 (2026-10-18, i18n; was 1.0.0, a reader typed for string labels needs the render step below): `label` and `hint` of an entry and the
  * `label` of a group are MessageId, not string. The catalogue marks each text with m() (namespace 'theme-editor',
  * src/theme-editor/i18n); the editor renders it with t(). In a test or a plain build m() returns the British
  * text, so `entry.label` is still that string there. A custom variable (group Other) has no catalogue entry and
@@ -28,7 +28,7 @@
 
 import type { MessageId } from './i18n';
 
-export const THEME_CATALOGUE_CONTRACT_VERSION = '1.0.0';
+export const THEME_CATALOGUE_CONTRACT_VERSION = '1.1.0';
 
 export type CatalogueSource = 'ha' | 'magic-card' | 'tile' | 'mushroom' | 'bubble-card' | 'ultra-card' | 'button-card';
 
