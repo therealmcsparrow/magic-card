@@ -6,6 +6,8 @@ import type { AnimationDoc } from './model';
 import { previewConfig } from './studio-model';
 import { TILES, tileHass, type PreviewTile } from './tiles';
 import type { PreviewChangeDetail, StageInfo } from './slots';
+import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail, type StageParticles } from '../contracts/studio-layers';
+import { StageSheets, stageHide } from './stage-hide';
 import { DEFAULT_SIM, SIM_ENTITY, applyPreviewChange, simulates, withSimEntity, type PreviewSim } from './editors/states-sim';
 
 /*
@@ -136,6 +138,12 @@ export class AnimationStage extends LitElement {
   @property({ attribute: false }) subjectTarget?: string;
   /** Zoom to the card's icon (icon parts and drawing tools); no icon on the tile: the whole card. */
   @property({ type: Boolean }) zoomIcon = false;
+  /** The document's preview-only layer view (hide / solo); never saved. Drawn rows hide through the stage sheets. */
+  @property({ attribute: false }) layerView: LayerView = EMPTY_LAYER_VIEW;
+  /** Emitter slot ranges for the stage sheet (particles documents). */
+  @property({ attribute: false }) stageParticles?: StageParticles;
+  /** Rows the preview hides now (the chip's N). */
+  @property({ type: Number }) hiddenLayers = 0;
 
   @state() theme: StageTheme = 'light';
   @state() reduced = false;
@@ -159,6 +167,11 @@ export class AnimationStage extends LitElement {
   private _sentTime = -1;
 
   private _themeSet = false;
+  /** The stage-only hide rules (section 3a of the studio-layers contract), kept in the preview card's roots. */
+  private _sheets = new StageSheets();
+  private _mo?: MutationObserver;
+  private _moRoot?: ShadowRoot;
+  private _attachQueued = false;
   /** Per animation: its own rate and the rate the stage set (see _rate). */
   private _rates = new WeakMap<Animation, { base: number; set: number }>();
   /** The preview's entry is driven by the simulated entity. */
@@ -182,6 +195,8 @@ export class AnimationStage extends LitElement {
     super.disconnectedCallback();
     this._ro?.disconnect();
     this._ro = undefined;
+    this._mo?.disconnect();
+    this._mo = this._moRoot = undefined;
     cancelAnimationFrame(this._raf);
     this._raf = 0;
     if (this._poll) clearInterval(this._poll);
@@ -430,7 +445,38 @@ export class AnimationStage extends LitElement {
     this._observeFrame();
   }
 
+  /** (Re)write the hide rules and put them in the card and icon roots; watch the card for icons it replaces. */
+  private _applyHide(): void {
+    const root = this._card?.shadowRoot;
+    if (!root || !this.doc) return;
+    this._sheets.set(root, stageHide(this.doc, this.layerView, this.stageParticles));
+    if (this._moRoot !== root) {
+      this._mo?.disconnect();
+      this._moRoot = root;
+      // an icon the card re-creates has no stage sheet yet: add it before the next frame
+      this._mo = new MutationObserver(() => {
+        if (this._attachQueued) return;
+        this._attachQueued = true;
+        queueMicrotask(() => {
+          this._attachQueued = false;
+          this._sheets.attach(this._card?.shadowRoot);
+        });
+      });
+      this._mo.observe(root, { childList: true, subtree: true });
+    }
+  }
+
+  private _showAll(): void {
+    const view: LayerView = { ...this.layerView, hidden: [], solo: [] };
+    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: 'All layers shown in the preview' }, bubbles: true, composed: true }));
+  }
+
   protected updated(changed: PropertyValues): void {
+    if (changed.has('doc') || changed.has('layerView') || changed.has('stageParticles') || changed.has('tile') || changed.has('reduced') || !this._moRoot) {
+      this._applyHide();
+      // the card renders after setConfig: attach again once it has
+      void (this._card as unknown as { updateComplete?: Promise<unknown> })?.updateComplete?.then(() => this._applyHide());
+    }
     // a new config restarts the card's animations: keep the stage's speed / pause
     if (changed.has('subjectTarget')) requestAnimationFrame(() => this._emitRect());
     if (changed.has('zoomIcon')) requestAnimationFrame(() => this._fit());
@@ -505,7 +551,16 @@ export class AnimationStage extends LitElement {
     const move = off ? `translate(${off.x}px, ${off.y}px) ` : '';
     return html`
       <div class="canvas">
-        <div class="dock dock-top"><slot name="top"></slot></div>
+        <div class="dock dock-top">
+          ${this.hiddenLayers > 0
+            ? html`<div class="hide-chip" role="group" aria-label="Layers hidden in the preview">
+                <ha-icon icon="mdi:eye-off-outline"></ha-icon>
+                <span>Preview hides ${this.hiddenLayers} layer${this.hiddenLayers === 1 ? '' : 's'}</span>
+                <button type="button" class="show-all" @click=${() => this._showAll()}>Show all</button>
+              </div>`
+            : nothing}
+          <slot name="top"></slot>
+        </div>
         <div class="area">
         <div class="fit ${off ? 'zoomed' : ''}" style=${fit}>
           <div class="frame" style="${THEME_VARS[this.theme]};width:${FRAME_WIDTH}px;transform:${move}scale(${k})" data-theme=${this.theme}>
@@ -677,6 +732,40 @@ export class AnimationStage extends LitElement {
         display: flex !important;
         justify-content: center;
         margin: 8px 12px 0;
+      }
+      .hide-chip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin: 8px auto 0;
+        padding: 2px 4px 2px 10px;
+        width: fit-content;
+        max-width: calc(100% - 24px);
+        border: 1px solid var(--mc-divider);
+        border-radius: 9999px;
+        background: var(--mc-surface-2, var(--mc-surface));
+        color: var(--mc-text);
+        font-size: 0.8125rem;
+        --mdc-icon-size: 16px;
+      }
+      .hide-chip .show-all {
+        min-height: 24px;
+        padding: 0 10px;
+        border: 0;
+        border-radius: 9999px;
+        background: transparent;
+        color: var(--mc-accent, var(--primary-color, #03a9f4));
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .hide-chip .show-all:hover {
+        background: color-mix(in srgb, var(--mc-accent, var(--primary-color, #03a9f4)) 12%, transparent);
+      }
+      .hide-chip .show-all:focus-visible {
+        outline: 2px solid var(--mc-accent, var(--primary-color, #03a9f4));
+        outline-offset: 1px;
       }
       .dock-bottom ::slotted(*) {
         margin: 0 12px 8px;

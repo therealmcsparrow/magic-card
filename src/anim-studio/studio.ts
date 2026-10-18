@@ -27,6 +27,9 @@ import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
 import { TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
 import { docSizeError, paintOrder } from './editors/draw-utils';
+import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail } from '../contracts/studio-layers';
+import { applyLayerView, hiddenCount, pruneLayerView } from './layer-view';
+import { stageParticlesOf } from './stage-particles';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
 import { loadPresetCatalogue } from './preset-catalogue-loader';
@@ -766,6 +769,35 @@ export class AnimationStudio extends LitElement {
   private _libraryObj: Record<string, AnimationDoc> = {};
   /** A drag in a kind editor is going on (transient doc-change events). */
   private _gesture = false;
+
+  /** Preview-only hide / solo / lock per document id, for this session (never saved, never in the history). */
+  @state() private _layerViews = new Map<string, LayerView>();
+  private _previewMemo?: { base: AnimationDoc; view: LayerView; out: AnimationDoc };
+
+  /** The document's layer view without the rows it no longer has. */
+  private _viewOf(d: AnimationDoc): LayerView {
+    return pruneLayerView(d, this._layerViews.get(d.id) ?? EMPTY_LAYER_VIEW);
+  }
+
+  /** The document the preview card plays: lanes and steps hidden (the same object while nothing changes, so the card does not restart). */
+  private _previewDoc(base: AnimationDoc, view: LayerView): AnimationDoc {
+    const m = this._previewMemo;
+    if (m && m.base === base && m.view === view) return m.out;
+    const out = applyLayerView(base, view);
+    this._previewMemo = { base, view, out };
+    return out;
+  }
+
+  private _onLayerView = (e: Event): void => {
+    const { view, announce } = (e as CustomEvent<LayerViewChangeDetail>).detail;
+    e.stopPropagation();
+    const id = this._doc?.id;
+    if (!id) return;
+    const next = new Map(this._layerViews);
+    next.set(id, view);
+    this._layerViews = next;
+    if (announce) this._say(announce);
+  };
 
   /** The last valid state of the open document: what the stage plays while a field is invalid. */
   @state() private _playable?: AnimationDoc;
@@ -1944,6 +1976,9 @@ export class AnimationStudio extends LitElement {
     const panel = KIND_EDITORS[d.kind].place === 'panel';
     const slide = this._slideOver;
     const rail = this._rail;
+    const lv = this._viewOf(d);
+    const playing = this._playable ?? d;
+    const hidden = hiddenCount(playing, lv);
     return html`
       <header class="topbar">
         <div class="grp">
@@ -2005,12 +2040,16 @@ export class AnimationStudio extends LitElement {
       </header>
       <div
         @preview-change=${this._onPreviewChange}
+        @layer-view-change=${this._onLayerView}
         class="workspace ${rail ? 'rail' : ''} ${this._compact ? 'compact' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
       >
         ${this._renderLayers(d)}
         <div class="center ${panel ? 'with-panel' : ''}" style="--split: ${this._split}">
           <mcas-stage
-            .doc=${this._playable ?? d}
+            .doc=${this._previewDoc(playing, lv)}
+            .layerView=${lv}
+            .hiddenLayers=${hidden}
+            .stageParticles=${hidden ? stageParticlesOf(playing) : undefined}
             .lookup=${this._lookup}
             .hass=${this.hass}
             .tile=${this._tile}
