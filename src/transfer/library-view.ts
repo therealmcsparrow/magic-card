@@ -310,15 +310,9 @@ export class LibraryView extends LitElement {
     this._msg = done;
   }
 
-  /** Puts focus back where the row's edit state started or ended: a pressed button must not leave it on the page. */
-  private _focusRow(id: string, to: 'input' | 'cancel' | 'rename' | 'delete'): void {
-    void this.updateComplete.then(() => {
-      const row = [...this.renderRoot.querySelectorAll<HTMLInputElement>('input.check')].find((i) => i.id === `row-${id}-check`)?.closest('.row');
-      if (!row) return;
-      const all = [...row.querySelectorAll<HTMLElement>('button')];
-      const acts = [...row.querySelectorAll<HTMLElement>('.acts button')];
-      (to === 'input' ? row.querySelector<HTMLElement>('.input') : to === 'cancel' ? all[all.length - 1] : to === 'delete' ? acts[acts.length - 1] : acts[acts.length - 2])?.focus();
-    });
+  /** Focus must not fall to the page when a row button is pressed: put it on `q` inside the row once it is drawn. */
+  private _fr(id: string, q: string): void {
+    void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById(`row-${id}-check`)?.closest('.row')?.querySelector<HTMLElement>(q)?.focus());
   }
 
   private async _rename(r: Row, raw: string): Promise<void> {
@@ -326,7 +320,6 @@ export class LibraryView extends LitElement {
     if (!name || name.length > 80) {
       this._bad = true;
       this._msg = t('The name must be 1 to 80 characters.');
-      this._focusRow(r.id, 'input');
       return;
     }
     try {
@@ -340,29 +333,25 @@ export class LibraryView extends LitElement {
         await this._call({ type: k === 'icon' ? CMD.iconsSave : CMD.shapesSave, [key]: { ...rest(full as never), id: r.id, name }, base_updated_at: (full as SavedIcon).updated_at });
       }
       await this._after(t('Renamed to {name}.', { name }));
-      this._focusRow(r.id, 'rename');
+      this._fr(r.id, '.acts button:nth-last-child(2)');
     } catch (e) {
       this._fail(e);
-      this._focusRow(r.id, 'input');
     }
   }
 
   private async _delete(r: Row): Promise<void> {
-    const at = [...this.renderRoot.querySelectorAll<HTMLInputElement>('input.check')].findIndex((i) => i.id === `row-${r.id}-check`);
+    const near = (this.renderRoot as ShadowRoot).getElementById(`row-${r.id}-check`)?.closest('.row');
+    const next = (near?.nextElementSibling ?? near?.previousElementSibling)?.querySelector('input')?.id;
     try {
       const k = this._kind;
       if (k === 'animation') await this._call({ type: DEL_ANIM, animation_id: r.id });
       else if (k === 'theme') await this.presets!.remove(r.id);
       else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
       await this._after(t('Deleted {name}.', { name: r.name }));
-      // the row is gone: focus goes to the row that took its place, or to the search field when the list is empty
-      void this.updateComplete.then(() => {
-        const left = this.renderRoot.querySelectorAll<HTMLElement>('input.check');
-        (left[Math.min(at, left.length - 1)] ?? this.renderRoot.querySelector<HTMLElement>('#q'))?.focus();
-      });
+      // the row is gone: focus goes to its neighbour, or to the search field
+      void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById(next || 'q')?.focus());
     } catch (e) {
       this._fail(e);
-      this._focusRow(r.id, 'cancel');
     }
   }
 
@@ -514,9 +503,9 @@ export class LibraryView extends LitElement {
   private _item(r: Row, can: boolean): TemplateResult {
     const e = this._edit?.id === r.id ? this._edit.kind : undefined;
     const set = (kind: 'rename' | 'delete' | undefined) => () => {
-      const was = this._edit?.id === r.id ? this._edit.kind : undefined;
+      const was = this._edit?.kind;
       this._edit = kind ? { id: r.id, kind } : undefined;
-      this._focusRow(r.id, kind ? (kind === 'rename' ? 'input' : 'cancel') : (was ?? 'rename'));
+      this._fr(r.id, kind ? (kind === 'rename' ? '.input' : ':scope > button:last-child') : was === 'delete' ? '.acts button:last-child' : '.acts button:nth-last-child(2)');
     };
     const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
     const check = {
