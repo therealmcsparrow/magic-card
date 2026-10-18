@@ -1,23 +1,38 @@
 /*
- * Contract: ui kit. Version 1.0.0, revision 1 (Architect-owned, 2026-10-18, PROPOSED until the Plan Gate).
- * ADR 0030. CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
+ * Contract: ui kit. Version 1.0.0, revision 2 (Architect-owned, 2026-10-18). ADR 0030.
+ * CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
  * the same as in card studio, please create centralized components so all screens have the same look
  * and feel". CEO confirmation the same day: the card editor (src/editor/ + src/css/editor-system) is the
  * base look; the kit is extracted FROM it (single source), not designed in parallel.
  *
- * Names below are provisional until the designer's visual spec (design/10-ui-kit.md) lands; the
- * Architect then revises this file in place (ADR 0020: unreleased contracts are revised in place).
- * Class names that exist today in src/css/editor-system.ts keep their names (.btn, .input, .seg, ...).
+ * Revisions (ADR 0020: unreleased contracts are revised in place):
+ * - r1 2026-10-18: first text, names provisional.
+ * - r2 2026-10-18 (names ruling, Handoff 99): names are FINAL. Tags stay `mc-ui-*` (shipped in UI1, and
+ *   `mc-*` alone is the namespace of the card's own elements such as mc-path-menu). design/10-ui-kit.md
+ *   names map as follows; builders use the right-hand column only:
+ *     mc-dialog -> <mc-ui-window>      mc-menu -> <mc-ui-menu>       mc-toast -> <mc-ui-toast> (new, r2)
+ *     popover   -> <mc-ui-popover>     .dialog -> .win-* parts        confirm -> variant 'alert'
+ *     window S/M/L/XL -> size 's'|'m'|'l'|'xl' (new, r2)            sheet   -> variant 'sheet'
+ *     --mc-h / -h-sm / -h-xs -> --mc-hit / --mc-hit-sm / --mc-hit-xs
+ *     --mc-radius-sm -> --mc-radius-tag (the card's src/css/tokens.ts already has --mc-radius-sm: 4px)
+ *     notice "result of an action" -> .notice.result-note (notice({ transient: true }))
+ *     .tree .row .b -> .row + .icon-btn.xs                            topbar 56 px (r1 said 52)
+ *   Additive in r2: <mc-ui-toast>, UiWindowElement.size, kit-scoped tokens (KIT_SCOPED_TOKENS), `.toast`
+ *   and `.check` in KIT_CLASSES, dialog width 480 (r1 said 440). Not adopted: --mc-accent-src (it would
+ *   rewrite every accent formula in Core editorTokens; the theme editor keeps overriding the accent tokens
+ *   on its :host, as allowed below). Window header drag and Maximize: not in 1.x until a screen needs them.
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
  *   1. CSS parts (src/ui-kit/css/*.ts): lit CSSResult per component family, plus `kitCss` = all parts.
- *      They read only tokens (Core: src/css/editor-system.ts `editorTokens`). Never colours.
+ *      Colours come only from Core tokens (src/css/editor-system.ts `editorTokens`). Geometry and motion
+ *      tokens the kit adds itself (KIT_SCOPED_TOKENS) are declared on :host by the `kitTokens` part
+ *      (Module-owned, no colours, so no Core change); every use carries the literal as var() fallback.
  *   2. Template helpers (src/ui-kit/templates/*.ts) and controllers (src/ui-kit/controllers/*.ts):
  *      functions that return lit templates rendered in the CALLER's shadow root (light DOM there), so
  *      labels, aria-labelledby, aria-describedby and forms keep working; each bundle compiles its own copy.
  *   3. Elements (src/ui-kit/elements/*.ts): only where top layer or focus management is needed:
- *      UI_MENU_TAG, UI_WINDOW_TAG, UI_POPOVER_TAG. Defined once, guarded (defineUiKit() below).
+ *      UI_MENU_TAG, UI_WINDOW_TAG, UI_POPOVER_TAG, UI_TOAST_TAG. Defined once, guarded (defineUiKit()).
  *
  * Physical copies (webpack splitChunks: false):
  * - magic-card-editor.js imports src/ui-kit/index.ts statically (the ONE copy for the editor family).
@@ -57,29 +72,32 @@
  * - A screen styles its own LAYOUT only. It may not write rules for kit class names (KIT_CLASSES) in its
  *   own sheets; selector scan test over src/ (excluding src/ui-kit/ and the legacy sheet).
  * - A screen may override TOKENS on its :host (the theme editor keeps its fixed accent, a11y S1).
- * - Hit size comes from --mc-hit (40 px fine, 44 px coarse); focus is :focus-visible 2 px --mc-accent.
+ * - Hit size comes from --mc-hit / --mc-hit-sm / --mc-hit-xs (40 / 32 / 24 px fine, all 44 px coarse);
+ *   focus is :focus-visible 2 px --mc-focus (CEO D1).
  * - Font: --mc-font (HA's body font with Roboto, system-ui fallback). Layers stop setting system-ui.
  * - Kit CSS is in the minify-templates loader include list (webpack.config.js) in production builds.
  *
  * ── Layer 1: CSS parts (class conventions) ──
  * Each part is a CSSResult in src/ui-kit/css/; names from editor-system.ts where they exist.
+ * kitTokens   (r2) :host declarations of KIT_SCOPED_TOKENS, coarse-pointer overrides included
  * kitBase     *, focus-visible, ::selection, .sr-only, [hidden], scrollbars, .mono, reduced motion
  * kitButton   .btn + .btn-primary | .btn-secondary | .btn-text | .btn-danger (new) | .btn-sm;
- *             .icon-btn (+ .sm, .danger); states :hover, :active, [aria-pressed=true] (new), :disabled
+ *             .icon-btn (+ .sm, .xs, .danger); states :hover, :active, [aria-pressed=true] (new), :disabled
  *             and [aria-disabled=true] (new, keeps focus), coarse 44 px via --mc-hit
  * kitField    .field, .field-head, .lbl, .help (.error, .lead), .input (input, textarea), .select,
- *             .unit, .with-icon, .with-action, .field-action, .color, .swatch, .field-reset
+ *             .unit, .with-icon, .with-action, .field-action, .color, .swatch, .field-reset; .check (r2)
  * kitSwitch   .switch-row, .switch (button role=switch aria-checked); replaces native checkboxes
- * kitChip     .chip (.is-accent, .is-warn, .is-count), button.chip, [aria-pressed=true]
+ * kitChip     .chip (.is-accent, .is-warn, .is-error, .is-count), button.chip, [aria-pressed=true]
  * kitSeg      .seg (.full): the one tab bar AND segmented control (role tablist | radiogroup)
  * kitTile     .tiles, .tile (new: picture tile with always-visible 12 px label; aria-checked)
  * kitSection  .group, .group-head (h3), .sectors, .sector, .sector-btn (collapsible), .sector-body
- * kitRow      .rows, .row (new: tree / list row: grip, glyph, name, trailing icon buttons;
- *             aria-level, aria-selected, aria-expanded; 32 px fine / 44 px coarse)
+ * kitRow      .rows, .row (new: tree / list row: grip, glyph, name, trailing .icon-btn.xs;
+ *             aria-level, aria-selected, aria-expanded; 40 px fine / 44 px coarse, design/10 4.9)
  * kitToolbar  .toolbar (new: floating capsule), .rail (new: vertical 56 px tool rail),
- *             .topbar (new: full-screen layer header, 52 px)
- * kitNotice   .notice (new: inline banner .info | .warn | .error, persists while true),
- *             .result-note (new: transient status with mark, text, one action), .empty
+ *             .topbar (new: full-screen layer header, 56 px, order per design/10 4.8)
+ * kitNotice   .notice (new: inline banner .info | .warn | .error | .success, persists while true;
+ *             + .result-note modifier: result of an action, cleared on the next edit), .empty,
+ *             .toast (r2: inverse chip look, used by UI_TOAST_TAG and by the MCU CSS-only copy)
  * kitSlider   .slider-row (new: label, range, number field, unit)
  * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
  * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
@@ -88,11 +106,12 @@
  *
  * ── Layer 2: template helpers (signatures in UiKitTemplates; typed loosely, no lit import here) ──
  * Icons: `icon` is an HA icon name ("mdi:...", rendered as <ha-icon>) or `glyph` a GlyphName from the
- * kit's 24 x 24 stroke set (src/ui-kit/glyphs.ts, moved from src/svg-editor/icons.ts plus the shape
- * editor's additions). Every label string comes from the caller (aico:i18n); helpers hold no strings.
+ * kit's 24 x 24 stroke set (src/ui-kit/glyphs.ts: a copy of src/svg-editor/icons.ts plus the shape
+ * editor's additions until UI4 switches the SVG editor over and deletes icons.ts). Every label string
+ * comes from the caller (aico:i18n); helpers hold no strings.
  *
  * ── Layer 3: elements ──
- * See UiMenuElement, UiWindowElement, UiPopoverElement below. CSS parts are listed per element.
+ * See UiMenuElement, UiWindowElement, UiPopoverElement, UiToastElement below.
  *
  * ── Controllers (source-shared) ──
  * MenuPopover (moved from src/editor/components/menu-popover.ts, unchanged API), RovingFocus
@@ -108,10 +127,11 @@
  * 2. Extraction proof: for every class that existed in editor-system.ts, the card editor screenshots
  *    before and after the move differ by 0 px (byte-identical CSS in the move commit).
  * 3. Elements: keyboard (arrows, Home/End, type-ahead, Esc, Tab leaves, focus returns to opener),
- *    roles (menu, menuitem, menuitemcheckbox, dialog, alertdialog), aria-modal only when modal,
+ *    roles (menu, menuitem, menuitemcheckbox, dialog, alertdialog, status), aria-modal only when modal,
  *    top layer inside HA's transformed card dialog (Popover API; fixed-position fallback on Chromium
  *    85-113), Escape never closes HA's dialog, define twice is harmless, a lower-revision definition
- *    keeps working, DOM-only API (a caller built on a different lit copy can drive it).
+ *    keeps working, DOM-only API (a caller built on a different lit copy can drive it), a toast shown
+ *    while a window is open renders above its scrim.
  * 4. Import scan: magic-card.js reaches no src/ui-kit/ file; child chunks import only files
  *    src/ui-kit/index.ts reaches; stats.json lists src/ui-kit/** only in magic-card-editor.js, the
  *    studio entry and the theme editor entry.
@@ -119,33 +139,51 @@
  */
 
 export const UI_KIT_CONTRACT_VERSION = '1.0.0';
-export const UI_KIT_CONTRACT_REVISION = 1;
+export const UI_KIT_CONTRACT_REVISION = 2;
 
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
 export const UI_POPOVER_TAG = 'mc-ui-popover';
+/** r2. Built with the first screen that shows a toast (plan: UI8). */
+export const UI_TOAST_TAG = 'mc-ui-toast';
 
 /** Class names only src/ui-kit/ may write rules for (selector scan test). */
 export const KIT_CLASSES = [
   'btn', 'btn-primary', 'btn-secondary', 'btn-text', 'btn-danger', 'btn-sm', 'icon-btn',
   'field', 'field-head', 'lbl', 'help', 'input', 'select', 'unit', 'with-icon', 'with-action', 'field-action',
-  'color', 'swatch', 'field-reset', 'switch', 'switch-row', 'chip', 'seg', 'tiles', 'tile',
+  'color', 'swatch', 'field-reset', 'check', 'switch', 'switch-row', 'chip', 'seg', 'tiles', 'tile',
   'group', 'group-head', 'sectors', 'sector', 'sector-btn', 'sector-body', 'rows', 'row',
-  'toolbar', 'rail', 'topbar', 'notice', 'result-note', 'empty', 'slider-row', 'menu',
+  'toolbar', 'rail', 'topbar', 'notice', 'result-note', 'toast', 'empty', 'slider-row', 'menu',
 ] as const;
 export type KitClass = (typeof KIT_CLASSES)[number];
 
-/** Tokens the kit reads. Existing ones live in editorTokens (Core); NEW_TOKENS are additive (Plan Gate). */
+/** Colour and base tokens the kit reads. They live in editorTokens (Core). */
 export const KIT_TOKENS = [
   '--mc-accent', '--mc-accent-ink', '--mc-accent-fill', '--mc-on-accent', '--mc-accent-tint',
   '--mc-surface', '--mc-surface-2', '--mc-ground', '--mc-text', '--mc-text-2', '--mc-divider',
   '--mc-field-border', '--mc-warn-ink', '--mc-warn-tint', '--mc-error-ink', '--mc-success',
   '--mc-shadow-float', '--mc-mono', '--mc-radius', '--mc-radius-lg',
 ] as const;
-/** Added to editorTokens in revision 1 (names already used by the theme editor and the layers). */
+/** Added to editorTokens (Core) in r1, CEO-approved: the only Core token change. */
 export const NEW_TOKENS = [
   '--mc-hit', '--mc-font', '--mc-focus', '--mc-error-tint', '--mc-error-fill', '--mc-success-ink', '--mc-success-tint',
   '--mc-scrim',
+] as const;
+/**
+ * r2. Kit-scoped geometry and motion tokens, declared by the `kitTokens` part on :host (Module, not
+ * Core; no colours). A screen may override them on its :host like any token. Values (fine / coarse):
+ *   --mc-hit-sm       32px / 44px     small controls, float-toolbar buttons, row menu button
+ *   --mc-hit-xs       24px / 44px     in-row .icon-btn.xs
+ *   --mc-radius-tag   6px             chips, tiles' inner preview, tags
+ *   --mc-radius-seg   10px            segmented track, float toolbar capsule
+ *   --mc-radius-xl    16px            window, sheet (top corners)
+ *   --mc-ease         .15s ease-out   colour, border and shadow transitions (0s under reduced motion)
+ *   --mc-shadow-dialog 0 24px 64px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.1)
+ * (--mc-hit itself, 40px / 44px, is Core.)
+ */
+export const KIT_SCOPED_TOKENS = [
+  '--mc-hit-sm', '--mc-hit-xs', '--mc-radius-tag', '--mc-radius-seg', '--mc-radius-xl', '--mc-ease',
+  '--mc-shadow-dialog',
 ] as const;
 
 // ── Layer 2: template helpers ────────────────────────────────────────────────
@@ -229,7 +267,8 @@ export interface KitNoticeOptions {
   tone: 'info' | 'warn' | 'error' | 'success';
   text: string | string[];
   action?: { label: string; onClick: () => void };
-  /** result-note: role=status, or role=alert for refusals. Cleared by the caller on the next edit. */
+  /** Adds .result-note: the result of an action; the caller clears it on the next edit, a mode change,
+   *  or after 8 s without pointer or focus inside. role=status, or role=alert for refusals. */
   transient?: boolean;
 }
 
@@ -345,9 +384,13 @@ export interface UiWindowElement extends HTMLElement {
   heading: string;
   /** Close button label (i18n from the caller). */
   closeLabel: string;
-  /** dialog: 440 px; picker: min(640px, 100vw - 32px); alert: role=alertdialog, no scrim close;
-   *  sheet: bottom sheet at compact width, dialog otherwise. */
+  /** dialog: size m; picker: size l; alert: role=alertdialog, size s, no scrim close;
+   *  sheet: bottom sheet (r 16 16 0 0, max 60vh) at compact width, dialog otherwise. */
   variant: 'dialog' | 'picker' | 'alert' | 'sheet';
+  /** r2. Width, overriding the variant's default: s 420, m 480, l 640, xl 880 px (preset grids);
+   *  always max-width 100 %, max-height min(80vh, 720px). Attribute `size`. The xl rule is added by the
+   *  first screen that opens an 880 px grid; until then no caller passes 'xl'. */
+  size?: 's' | 'm' | 'l' | 'xl';
   /** Element (by id inside the slotted content) that gets focus first; default the first focusable. */
   initialFocus?: string;
   opener?: HTMLElement;
@@ -378,11 +421,32 @@ export interface UiPopoverElement extends HTMLElement {
   close(reason?: UiPopoverClose['reason']): void;
 }
 
+/** r2. Event 'mc-toast-action' (bubbles, composed): the toast's action button was pressed. */
+export interface UiToastAction {
+  id: string;
+}
+
+/**
+ * r2. <mc-ui-toast>: transient confirmation of an action that needs no decision ("Copied SVG").
+ * One per screen root; a new show() replaces the current message. Look: `.toast` (design/10 4.11),
+ * bottom centre, `offset` px above the bottom edge. Top layer (popover="manual") so it shows above an
+ * open <mc-ui-window>. Live region role=status (polite), never focus-stealing. Hides after `duration`
+ * ms (default 6000), paused while hovered or focused within. Never the only place a failure is
+ * reported (failures are a .notice). No strings of its own. CSS parts: toast, text, action.
+ */
+export interface UiToastElement extends HTMLElement {
+  /** Default 16. Raise it when a save bar sits at the bottom. */
+  offset?: number;
+  readonly open: boolean;
+  show(o: { text: string; action?: { id: string; label: string }; duration?: number }): void;
+  close(): void;
+}
+
 /** src/ui-kit/index.ts exports this; the card-editor chunk, the studio and the theme editor call it once. */
 export interface UiKitModule {
   version: typeof UI_KIT_CONTRACT_VERSION;
   revision: number;
-  /** Guarded define of the three elements. Safe to call more than once and from several bundles. */
+  /** Guarded define of the kit elements. Safe to call more than once and from several bundles. */
   defineUiKit(): void;
 }
 
@@ -391,5 +455,6 @@ declare global {
     'mc-ui-menu': UiMenuElement;
     'mc-ui-window': UiWindowElement;
     'mc-ui-popover': UiPopoverElement;
+    'mc-ui-toast': UiToastElement;
   }
 }
