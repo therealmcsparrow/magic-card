@@ -13,6 +13,9 @@ import { t } from '../i18n';
 const STORAGE_KEY = 'magic-card-saved-colors';
 const MAX_SAVED_COLORS = 12;
 
+/** The CSS function the HA theme chips stand for: a code word, not translated. */
+const CSS_VAR = 'var';
+
 const PRESET_COLORS = [
   // Row 1 - Grays
   '#ffffff', '#f3f4f6', '#d1d5db', '#9ca3af', '#6b7280', '#374151', '#1f2937', '#000000',
@@ -598,7 +601,7 @@ export class ColorPicker extends LitElement {
                     title=${color}
                     aria-label=${color}
                     @click=${() => this._selectPreset(color)}
-                  >${color.startsWith('var(') ? html`<span class="var-tag">var</span>` : ''}</button>
+                  >${color.startsWith('var(') ? html`<span class="var-tag">${CSS_VAR}</span>` : ''}</button>
                 `)}
               </div>
             </div>
