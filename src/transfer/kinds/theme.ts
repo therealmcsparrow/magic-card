@@ -5,12 +5,10 @@ import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult, Raw } from '../types';
 
-/** Host names in a value: the part after `://` or a leading `//`. */
+/** Host names in a value, after CSS escapes: the part after `://`, a leading `//` or `http:`. */
 export function hostsOf(value: string): string[] {
-  const out = new Set<string>();
-  for (const m of value.matchAll(/(?:[a-z][a-z0-9+.-]*:)?\/\/(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi)) out.add(m[1].toLowerCase());
-  for (const m of value.matchAll(/\b(?:https?|wss?|ftp):(?!\/)([^\s/:?#)"'\\,;]+)/gi)) out.add(m[1].toLowerCase());
-  return [...out];
+  const re = /(?:\b(?:https?|wss?|ftp):(?!\/)|\/\/)(?:[^\s/@)"'\\]*@)?(\[[0-9a-f:]+\]|[^\s/:?#)"'\\,;]+)/gi;
+  return [...new Set([...value.matchAll(re)].map((m) => m[1].toLowerCase()))];
 }
 
 /**

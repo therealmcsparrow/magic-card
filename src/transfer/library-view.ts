@@ -56,34 +56,23 @@ const codeOf = (e: unknown): string => String((e as { code?: string })?.code ?? 
 
 /** The source used when the host passes none: the mcu-library commands, with the ids of the last lists remembered. */
 function commandSource(): LibrarySource {
-  const known: { icons?: Set<string>; shapes?: Set<string> } = {};
-  const list = async <T extends { id: string }>(hass: unknown, type: string, key: 'icons' | 'shapes'): Promise<LibraryListing<T>> => {
-    const w = hass as LibraryHass | undefined;
-    if (!w?.callWS) return { state: 'missing', items: [] };
+  const known: Record<string, Set<string> | undefined> = {};
+  const ws = (h: unknown, msg: Record<string, unknown>): Promise<Record<string, never[]>> => (h as LibraryHass).callWS(msg);
+  const list = async (h: unknown, type: string, key: string): Promise<LibraryListing<never>> => {
     try {
-      const r = await w.callWS<Record<string, T[]>>({ type });
-      const items = Array.isArray(r?.[key]) ? r[key] : [];
-      known[key] = new Set(items.map((i) => String(i.id)));
+      const items = (await ws(h, { type }))?.[key] ?? [];
+      known[key] = new Set(items.map((i: { id: string }) => i.id));
       return { state: 'ok', items };
     } catch (e) {
-      return { state: codeOf(e) === 'unknown_command' ? 'missing' : 'error', items: [] };
+      return { state: codeOf(e) === 'unknown_command' || !(h as LibraryHass)?.callWS ? 'missing' : 'error', items: [] };
     }
   };
   return {
     listIcons: (h) => list(h, CMD.iconsList, 'icons'),
     listShapes: (h) => list(h, CMD.shapesList, 'shapes'),
-    getIcon: async (h, id) => {
-      try {
-        const r = await (h as LibraryHass).callWS<{ icons: SavedIcon[] }>({ type: CMD.iconsGet, ids: [id] });
-        return r?.icons?.[0] as never;
-      } catch {
-        return undefined;
-      }
-    },
+    getIcon: (h, id) => ws(h, { type: CMD.iconsGet, ids: [id] }).then((r) => (r?.icons?.[0] as SavedIcon | undefined), () => undefined),
     isSaved: (kind, id) => !!known[kind]?.has(id),
-    reset: () => {
-      known.icons = known.shapes = undefined;
-    },
+    reset: () => (known.icons = known.shapes = undefined) as never,
   };
 }
 
