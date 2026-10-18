@@ -594,13 +594,20 @@ export class McShapeStudio extends LitElement {
   /** The mode switch: Free shape turns the corners into points, Corners drops the points (one undo step each). */
   setMode(m: 'corners' | 'path'): void {
     if (m === this.doc.mode) return;
+    // the switch is rebuilt for the other mode: a keyboard user on it stays on it (arrow keys switch and move together)
+    const on = this.shadowRoot?.activeElement;
+    const keep = on instanceof HTMLElement && on.getAttribute('role') === 'radio' && on.parentElement?.getAttribute('aria-label') === t('Shape type');
+    const refocus = (): void => {
+      if (keep) void this.updateComplete.then(() => this.shadowRoot?.querySelector<HTMLElement>(`[aria-label="${t('Shape type')}"] [data-val="${m}"]`)?.focus());
+    };
     this.dropPending();
     this.strip = undefined;
-    if (m === 'path') return void this.toPath();
+    if (m === 'path') return void this.toPath().then(refocus);
     this.pointSel = this.cvSel = this.picker = undefined;
     this.commit({ ...this.doc, mode: 'corners' }, t('Corners'));
     this.together = this.allSame();
     this.say(t('Corners.'));
+    refocus();
   }
 
   async toPath(): Promise<void> {
@@ -1293,12 +1300,14 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
   private top(title: string): TemplateResult {
     const mcu = this.host === 'mcu';
     const actions: KitButtonOptions[] = [];
+    // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
+    const tight = this.layout === 'compact' || this.layout === 'stacked';
     if (this.layout === 'compact') actions.push({ label: this.tab === 'path' ? t('Points') : t('Outline'), expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
-    actions.push({ label: t('Export / Import'), icon: 'mdi:swap-vertical', haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
+    actions.push({ label: t('Export / Import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
     if (mcu) actions.push({ label: t('Save'), variant: 'primary', disabledReason: this.saveBusy ? t('Working...') : undefined, onClick: () => void this.saveMcu() });
     else actions.push({ label: t('Save to library'), onClick: () => this.openSave() }, { label: t('Done'), variant: 'primary', onClick: () => this.done() });
     return topBar({
-      back: { label: mcu ? t('Close') : t('Back to card editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
+      back: { label: mcu ? t('Close') : tight ? t('Back') : t('Back to card editor'), onClick: () => (mcu ? this.close() : this.leave(false)) },
       title,
       name: { label: t('Shape name'), placeholder: mcu ? t('Shape name') : undefined, value: this.name, error: mcu && this.nameErr ? t('Give the shape a name.') : undefined, onInput: (v) => ((this.name = v), (this.nameErr = false)) },
       undo: { label: t('Undo'), glyph: 'undo', keys: 'Control+Z', disabledReason: this.canUndo ? undefined : t('Nothing to undo'), onClick: () => this.undo() },
@@ -1567,7 +1576,7 @@ ${id === 'custom' ? html`<div class="grid2">${num(t('Width'), w, (v) => this.set
 <section class="sec"><fieldset ?disabled=${d.mode === 'path'} class="bare-set">${sectionHead({ title: t('Corner'), level: 4 })}<div class="field"><span class="fl">${t('Edit corners')}</span>${seg(t('Edit corners'), [['each', t('Each corner')], ['all', t('All corners together')]], this.together ? 'all' : 'each', (k) => this.setTogether(k === 'all'))}</div>
 ${this.together && this.allChanged ? html`<p class="help" role="status">${t('All four corners changed. Change just one?')} ${btn(t('Edit corners separately'), () => this.setTogether(false), { variant: 'text' })}</p>` : nothing}
 <div class="corner-form"><div class="cmini" role="radiogroup" aria-label=${t('Corner')} @keydown=${(e: KeyboardEvent) => arrow(e, KEYS, this.sel, (k) => (this.sel = k as CornerKey), '.cmini [tabindex="0"]')}>${KEYS.map((k, i) => html`<button type="button" role="radio" aria-label=${t(CORNER[k])} aria-checked=${this.together || this.sel === k} tabindex=${this.sel === k ? 0 : -1} @click=${() => (this.sel = k)}>${glyph(d.corners[k].type, turn[i])}</button>`)}</div>
-<div class="cf"><h4 class="sub-label">${this.together ? t('All four corners') : t(CORNER[this.sel])}</h4><span class="fl" id="ct">${t('Type')}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (ty) => this.editCorner({ type: ty as CornerType }, t(TYPE[ty as CornerType])), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((ty) => html`<button type="button" role="radio" aria-checked=${c.type === ty} tabindex=${c.type === ty ? 0 : -1} title=${t(TYPE_HELP[ty])} @click=${() => this.editCorner({ type: ty }, t(TYPE[ty]))}>${glyph(ty)}${t(TYPE[ty])}</button>`)}</div><p class="help" id="th">${t(TYPE_HELP[c.type])}</p>
+<div class="cf"><h4 class="sub-label">${this.together ? t('All four corners') : t(CORNER[this.sel])}</h4><span class="fl" id="ct">${t('Type')}</span><div class="ctiles" role="radiogroup" aria-labelledby="ct" aria-describedby="th" @keydown=${(e: KeyboardEvent) => arrow(e, CORNER_TYPES, c.type, (ty) => this.editCorner({ type: ty as CornerType }, t(TYPE[ty as CornerType])), '.ctiles [tabindex="0"]')}>${CORNER_TYPES.map((ty) => html`<button type="button" role="radio" aria-label=${t(TYPE[ty])} aria-checked=${c.type === ty} tabindex=${c.type === ty ? 0 : -1} title=${t(TYPE_HELP[ty])} @click=${() => this.editCorner({ type: ty }, t(TYPE[ty]))}>${glyph(ty)}${t(TYPE[ty])}</button>`)}</div><p class="help" id="th">${t(TYPE_HELP[c.type])}</p>
 ${c.type === 'square' ? html`<p class="help">${t('Square corners have no size.')}</p>` : html`<div class="field"><span class="fl">${t('Size')}</span><div class="unit"><input class="input" type="number" min="0" inputmode="decimal" aria-label=${t('Size')} .value=${String(r1(c.size))} @change=${(e: Event) => this.editCorner({ size: Math.max(0, +(e.target as HTMLInputElement).value || 0) }, t('Size'), `size-${this.sel}`)} /><div class="select"><select class="input" aria-label=${t('Unit')} @change=${(e: Event) => { const p = (e.target as HTMLSelectElement).value === '%'; this.editCorner({ pct: p, size: toPct(p) }, t('Unit')); }}><option value="px" ?selected=${!c.pct}>px</option><option value="%" ?selected=${c.pct}>%</option></select><ha-icon icon="mdi:chevron-down"></ha-icon></div></div><p class="help">${c.pct ? t('Follows the card\'s shorter side.') : t('Stays the same on every card size.')}</p></div>`}
 <div class="acts">${btn(t('Copy to all corners'), () => this.setCorners(cornersOf(c), t('Copy to all corners')), { variant: 'text' })}${btn(t('Reset'), () => this.resetCorner(), { variant: 'text' })}</div></div></div>
 ${clamped(d.corners, this.size.w, this.size.h).map((x) => html`<span class="chip is-warn" role="status">${t('Corner is smaller on small cards: {v} px on {size}.', { size: sh(this.size.id), v: r1(x.to) })}</span>`)}

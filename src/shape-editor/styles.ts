@@ -29,6 +29,7 @@ h2,h3,h4,p,ul{margin:0}
 .left,.insp{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
 .left{grid-area:left;border-right:1px solid var(--mc-divider)}
 [data-layout=compact] .left{display:none}
+[data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:56px;bottom:0;left:0;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
 .insp{grid-area:insp;border-left:1px solid var(--mc-divider)}
 .center{grid-area:center;display:flex;flex-direction:column;min-width:0;min-height:0}
