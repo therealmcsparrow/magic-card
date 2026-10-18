@@ -16,7 +16,8 @@ import {
   type DrawOptions,
   type DrawTool,
 } from './draw-store';
-import { addDrawOnTrack, fitFreehand, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
+import { fitFreehand } from '../../path/draw';
+import { addDrawOnTrack, hasDrawOn, isFilled, isStroked, moveShape, removeDrawOn, removeShape, setTrackPath, updateShape } from './draw-utils';
 
 /*
  * mc-anim-shape-inspector (place 'inspector'): the settings of a selected drawn shape (name, fill,

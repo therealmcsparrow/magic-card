@@ -29,22 +29,18 @@ import './draw-layers';
 import './shape-inspector';
 import type { AnimSvgDialog } from './draw-svg-dialog';
 import { readSvgFile } from './draw-svg-dialog';
+import { MAX_FREEHAND_SAMPLES, ellipsePath, fitFreehand, linePath, rectPath } from '../../path/draw';
 import {
   addShape,
   anchorsOf,
   dragBox,
-  ellipsePath,
-  fitFreehand,
   hitShape,
   isFilled,
   isStroked,
-  linePath,
-  MAX_FREEHAND_SAMPLES,
   nextShapeId,
   paintOrder,
   parseViewBox,
   pathBBox,
-  rectPath,
   removeShape,
   rigIds,
   setTrackPath,
@@ -53,7 +49,8 @@ import {
   updateShape,
   type Pt,
 } from './draw-utils';
-import { appendPoint, isSmooth, moveAnchor, parsePath, removePoint, serializePath, setClosed, setHandle, type EditPath } from './path-utils';
+import { append as appendPoint, isSmooth, moveAnchor, remove as removePoint, serialize as serializePath, setClosed, type EditPath } from '../../path/edit';
+import { parsePath, setHandle } from './path-utils';
 
 /*
  * Drawing on the icon (spec section C), two stage-tool panels:

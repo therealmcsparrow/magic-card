@@ -2,23 +2,8 @@ import { LitElement, html, css, svg, nothing, type PropertyValues, type Template
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationDoc } from '../model';
 import type { StageInfo } from '../slots';
-import {
-  appendPoint,
-  insertPoint,
-  isSmooth,
-  moveAnchor,
-  nearestOnPath,
-  parsePath,
-  pointAtTime,
-  removePoint,
-  serializePath,
-  setClosed,
-  setHandle,
-  snap,
-  toggleSmooth,
-  type EditPath,
-  type Pt,
-} from './path-utils';
+import { append as appendPoint, insertAt as insertPoint, isSmooth, moveAnchor, nearestOnPath, remove as removePoint, serialize as serializePath, setClosed, snap, toggleSmooth, type EditPath, type Pt } from '../../path/edit';
+import { parsePath, pointAtTime, setHandle } from './path-utils';
 
 /** Grid step in document units: 5% (percent paths) or 10 px. */
 const gridStep = (units: string | undefined): number => (units === 'px' ? 10 : 5);

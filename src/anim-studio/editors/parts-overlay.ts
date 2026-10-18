@@ -5,7 +5,8 @@ import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import type { PreviewTile } from '../tiles';
 import type { IconGeometry } from '../../icons/icon-source';
 import type { SplitPiece } from '../../icons/icon-split';
-import { moveAnchor, parsePath, serializePath, snap, type EditPath } from './path-utils';
+import { moveAnchor, serialize as serializePath, snap, type EditPath } from '../../path/edit';
+import { parsePath } from './path-utils';
 import {
   emitDoc,
   emitSelection,

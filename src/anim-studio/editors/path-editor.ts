@@ -5,18 +5,11 @@ import { ANIMATION_CAPS, type AnimationDoc, type PathSpec } from '../model';
 import {
   PATH_TEMPLATES,
   parsePath,
-  pathBounds,
-  reversePath,
-  serializePath,
-  setClosed,
-  smoothAll,
-  straightenAll,
   templateCenter,
   templatePath,
-  translatePath,
-  type EditPath,
   type PathTemplateId,
 } from './path-utils';
+import { bounds as pathBounds, reverse as reversePath, serialize as serializePath, setClosed, smoothAll, straightenAll, translate as translatePath, type EditPath } from '../../path/edit';
 
 /*
  * mc-unit-field and mc-color-picker are used by tag only: the card bundle defines them and is
