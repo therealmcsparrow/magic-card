@@ -744,6 +744,7 @@ export class MagicCard extends LitElement {
     this._subscriptions.begin();
     this._media.begin();
     this._renderContext.editMode = this.editMode;
+    this._renderContext.customIcons = (this._resolvedConfig ?? this._config)?.custom_icons;
     this._renderContext.preview = this.editMode || this.preview || this._isEditorPreview();
     this._pathStack = [];
     this._hoverRules = new Map();

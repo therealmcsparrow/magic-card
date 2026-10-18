@@ -1,8 +1,8 @@
 /**
  * Icon geometry source: resolves an icon reference (`mdi:fan`, `phu:fridge`, `si:github`…) to its
  * SVG path data so the icon engine can draw, mask and morph it. Order:
- * 1. Third-party icon packs registered on `window.customIconsets[prefix]` (current API) or
- *    `window.customIcons[prefix].getIcon` (older API).
+ * 1. Third-party icon packs registered on `window.customIcons[prefix].getIcon` (HA's current API; also
+ *    `mcu:`, the Magic Card Utils library) or `window.customIconsets[prefix]` (older API).
  * 2. A hidden `<ha-icon>` probe in a shared off-screen holder: HA's own route to its icon DB
  *    (only for the prefixes HA resolves itself: mdi, hass, hassio, hademo).
  * 3. `svg:<hash>` refs registered with registerSvgGeometry (own SVG).
@@ -29,6 +29,8 @@ interface IconSetResult {
   secondaryPath?: unknown;
   viewBox?: unknown;
   svg?: unknown;
+  /** Magic Card Utils library: the full sanitised markup of a saved icon. */
+  mc_svg?: unknown;
 }
 type IconSetGetter = (name: string) => IconSetResult | undefined | Promise<IconSetResult | undefined>;
 interface IconWindow {
@@ -163,10 +165,12 @@ function sanitize(svgText: string): SanitizedSvg {
  * Own SVG: sanitises the markup once and registers its shapes as the geometry of `svg:<hash>`
  * (paths, `mc-accent` shapes as the secondary paths, strokes). Returns the ref; a rejected SVG has
  * no geometry (svgError tells why) and draws the fallback icon. A ref is only reused for the very same
- * text: a hash collision gets the next free `svg:<hash>.<n>`.
+ * text: a hash collision gets the next free `svg:<hash>.<n>`. `as` registers it under that ref instead
+ * (an `mcu:` icon the library answered with its full markup: `mc_svg`), replacing what was there.
  */
-export function registerSvgGeometry(svgText: string): string {
-  const base = `svg:${hash(svgText)}`;
+export function registerSvgGeometry(svgText: string, as?: string): string {
+  if (as) ownSvgs.delete(as);
+  const base = as ?? `svg:${hash(svgText)}`;
   let ref = base;
   for (let n = 1; ownSvgs.has(ref) && ownSvgs.get(ref)!.text !== svgText; n++) ref = `${base}.${n}`;
   const known = ownEntry(ref);
@@ -218,6 +222,11 @@ async function fromPack(ref: string): Promise<PackOutcome> {
     return undefined;
   }
   if (!res || typeof res !== 'object') return undefined;
+  if (typeof res.mc_svg === 'string') {
+    registerSvgGeometry(res.mc_svg, ref);
+    const og = peekIconGeometry(ref);
+    if (og) return og;
+  }
   const path = typeof res.path === 'string' ? res.path.trim() : '';
   // Full SVG markup (multi-colour logos): no single path to draw; HA's <ha-icon> keeps rendering it.
   if (typeof res.svg === 'string' || path.startsWith('<')) return 'markup';
@@ -353,10 +362,22 @@ function retryPending(): void {
   }
 }
 
+/** The library changed (provider event): forget the listed `mcu:` refs (all when none are listed); watchers fetch them again. */
+function libraryChanged(e: Event): void {
+  const d = (e as CustomEvent<{ kind?: string; ids?: string[] }>).detail;
+  if (d?.kind !== 'icons') return;
+  for (const ref of d.ids?.length ? d.ids.map((id) => `mcu:${id}`) : [...cache.keys(), ...listeners.keys()].filter((r) => r.startsWith('mcu:'))) {
+    cache.delete(ref);
+    ownSvgs.delete(ref);
+    listeners.get(ref)?.forEach((cb) => cb());
+  }
+}
+
 function bindEvents(): void {
   if (eventBound || typeof window === 'undefined') return;
   eventBound = true;
   window.addEventListener('iconset-registered', retryPending);
+  window.addEventListener('mcu-library-changed', libraryChanged);
 }
 
 /** Resolves an icon ref to its geometry; undefined when it can't be resolved (caller renders <ha-icon>). */

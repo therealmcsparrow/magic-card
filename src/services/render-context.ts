@@ -54,6 +54,8 @@ export interface RenderContext {
    * before the module's content); renderIcon uses it for the module's main icon (`part: 'icon'`).
    */
   iconRig?: unknown;
+  /** The card's `custom_icons` copies (markup by saved-icon id): drawn by `mcu:` icons the library does not answer. */
+  customIcons?: Record<string, string>;
 }
 
 let current: RenderContext | undefined;

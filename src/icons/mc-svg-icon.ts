@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { HassEntity, HomeAssistant, IconFxConfig } from '../types';
-import { isIconStateOn, stateIcon } from '../utils/entity-icon';
+import { entityIcon, isIconStateOn, stateIcon } from '../utils/entity-icon';
 import { IconGeometry, StrokeShape, onIconGeometry, peekIconGeometry, peekSvgMarkup, registerSvgGeometry, resolveIconGeometry, svgError } from './icon-source';
 import { iconBaseStyles } from './icon-css';
 import { offscreenObserver, __resetOffscreenObserverForTests } from './offscreen';
@@ -43,8 +43,6 @@ const XFADE_MS = 250;
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const reducedMotion = (): boolean =>
   typeof matchMedia === 'function' && !!matchMedia('(prefers-reduced-motion: reduce)')?.matches;
-/** Shown in place of an own SVG that was rejected (or `icon: svg` without markup). */
-const BROKEN_ICON = 'mdi:image-broken-variant';
 const geomKey = (g: IconGeometry): string =>
   `${g.viewBox}|${g.paths.join(' ')}|${(g.secondary ?? []).join(' ')}|${(g.strokes ?? []).map((s) => `${s.d}@${s.width}`).join(' ')}`;
 
@@ -95,6 +93,10 @@ export class McSvgIcon extends LitElement {
   @property({ attribute: false }) iconOn?: string;
   @property({ attribute: false }) iconOff?: string;
   @property({ attribute: false }) svg?: string;
+  /** The module's default icon: drawn for an `mcu:` icon nothing answers and for an SVG that was rejected. */
+  @property({ attribute: false }) fallback?: string;
+  /** The card's `custom_icons` copies (markup by saved-icon id). */
+  @property({ attribute: false }) kept?: Record<string, string>;
   /**
    * Entity icons inside HA: a hidden <ha-state-icon> picks the icon (registry, attribute, icon
    * translations, device class) and this draws it; until then it is the visible fallback.
@@ -215,9 +217,28 @@ export class McSvgIcon extends LitElement {
     return !this._byState && !this._own && !!this.stateObj && typeof customElements !== 'undefined' && !!customElements.get('ha-state-icon');
   }
 
-  /** The icon ref drawn: a state icon, the one <ha-state-icon> picked (state mode) or `icon`. */
-  private get _ref(): string | undefined {
+  /** The icon ref asked for: a state icon, the one <ha-state-icon> picked (state mode) or `icon`. */
+  private get _want(): string | undefined {
     return this._rigRef ?? this._byState ?? this._own ?? (this._useState ? this._stateRef : this.icon);
+  }
+
+  /** Never blank: the entity's icon, else the module's default (never an `mcu:` name). */
+  private get _fb(): string {
+    return entityIcon(this.hass, this.entity) || this.fallback || 'mdi:help';
+  }
+
+  /**
+   * The icon ref drawn. `mcu:`: the library's answer, else the card's kept copy, else the fallback;
+   * an own SVG the sanitiser rejected: the fallback.
+   */
+  private get _ref(): string | undefined {
+    const r = this._want;
+    if (r?.startsWith('mcu:')) {
+      const kept = this.kept?.[r.slice(4)];
+      const copy = kept && registerSvgGeometry(kept);
+      return peekIconGeometry(r) ? r : copy && !svgError(copy) ? copy : this._fb;
+    }
+    return r?.startsWith('svg:') && svgError(r) ? this._fb : r;
   }
 
   protected willUpdate(changed: PropertyValues<this>): void {
@@ -241,7 +262,7 @@ export class McSvgIcon extends LitElement {
       this._geom = this._shown;
       return;
     }
-    this._track(this._geom, this._fx, this._geom && ref?.startsWith('svg:') ? peekSvgMarkup(ref) : undefined);
+    this._track(this._geom, this._fx, this._geom && ref ? peekSvgMarkup(ref) : undefined);
   }
 
   /** Starts a morph / cross-fade / line-draw when the drawn shape or the entity state changes. */
@@ -357,7 +378,8 @@ export class McSvgIcon extends LitElement {
    * expired failure or a pack that registered late. A slow probe lands through the subscription.
    */
   private _ensure(): void {
-    const ref = this._ref;
+    // The ref asked for (an `mcu:` icon may be drawing its copy or the fallback meanwhile).
+    const ref = this._want;
     if (!this.isConnected) return;
     if (ref !== this._watched) {
       this._unsub?.();
@@ -367,7 +389,7 @@ export class McSvgIcon extends LitElement {
     }
     if (!ref || peekIconGeometry(ref)) return;
     void resolveIconGeometry(ref).then((g) => {
-      if (g && this._ref === ref) this.requestUpdate();
+      if (g && this._want === ref) this.requestUpdate();
     });
   }
 
@@ -433,7 +455,7 @@ export class McSvgIcon extends LitElement {
   protected render(): TemplateResult {
     this._animates = false;
     const g = this._geom;
-    const fallback = this.icon === 'svg' ? BROKEN_ICON : this.icon;
+    const fallback = this.icon === 'svg' || this._want?.startsWith('mcu:') ? this._fb : this.icon;
     if (!this._useState) return g ? this._svg(g) : html`<ha-icon icon=${fallback || nothing} aria-hidden=${this.decorative ? 'true' : nothing}></ha-icon>`;
     // Same <ha-state-icon> element in both cases: it keeps reporting the entity's icon while hidden.
     return html`${g ? this._svg(g) : nothing}<ha-state-icon
@@ -457,7 +479,7 @@ export class McSvgIcon extends LitElement {
     const box = parseViewBox(g.viewBox);
     // Own SVG: its own markup (colours, strokes); painted styles recolour it.
     const ref = this._ref;
-    const ownMarkup = ref?.startsWith('svg:') ? peekSvgMarkup(ref) : undefined;
+    const ownMarkup = ref ? peekSvgMarkup(ref) : undefined;
     const needsClip = !!fx.fill || (fx.colors.style === 'duotone' && !g.secondary?.length);
     // Stroked shapes have no area for a clipPath: the clip is a mask with their strokes drawn white.
     const strokes = g.strokes ?? [];

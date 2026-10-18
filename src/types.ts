@@ -1,4 +1,5 @@
 import type { CustomShapeOptions, CustomShapesConfig } from './contracts/custom-shape';
+import type { CustomIconsConfig } from './contracts/mcu-library';
 
 // ── Home Assistant types (subset) ──
 
@@ -121,6 +122,8 @@ export interface MagicCardConfig {
   shape_options?: ShapeOptions;
   /** Saved-shape copies by id for `shape: custom` + `shape_options.ref` (src/utils/shape-custom.ts). */
   custom_shapes?: CustomShapesConfig;
+  /** Kept copies of saved icons (sanitised markup by id) for `icon: mcu:<id>`, drawn when the library has no answer. */
+  custom_icons?: CustomIconsConfig;
   /** Tank fill / history sparkline behind the card's rows (src/card/mc-value-bg.ts); needs its own entity. */
   value_background?: ValueBackgroundConfig;
   /** Show the card as a pop-up (hidden on the dashboard, opened by `#hash`, triggers or actions). */

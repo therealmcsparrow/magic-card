@@ -58,7 +58,9 @@ export function renderIcon(opts: RenderIconOpts): TemplateResult {
   const byState = stateIcon(o.hass, o.entity, o.iconOn, o.iconOff);
   const useEntity = !byState && !!o.useEntityIcon && !!o.entity;
   // Own SVG (`icon: svg` + `svg`): always drawn by <mc-svg-icon>, with or without effects.
-  const own = o.icon === 'svg' && !!o.svg;
+  const icon = byState ?? (useEntity ? entityIcon(o.hass, o.entity) || o.icon : o.icon);
+  // `mcu:` (saved library icons) always go to <mc-svg-icon> too, so HA's single-colour silhouette never shows.
+  const own = (o.icon === 'svg' && !!o.svg) || !!icon?.startsWith('mcu:');
   const rig = o.rig ?? (o.part === 'icon' ? currentRenderContext()?.iconRig : undefined);
   if (!hasIconFx(o.fx) && !own && !rig) {
     const part = o.part ?? nothing;
@@ -67,7 +69,6 @@ export function renderIcon(opts: RenderIconOpts): TemplateResult {
       ? renderEntityIcon(o.hass, o.entity, o.icon ?? '', className, o.part)
       : html`<ha-icon class=${className} data-mc-part=${part} .icon=${o.icon}></ha-icon>`;
   }
-  const icon = byState ?? (useEntity ? entityIcon(o.hass, o.entity) || o.icon : o.icon);
   // Inside HA, <ha-state-icon> knows the icon (translations, device class): mc-svg-icon reads it.
   const stateObj = useEntity && typeof customElements !== 'undefined' && customElements.get('ha-state-icon') ? o.hass?.states?.[o.entity!] : undefined;
   return html`<mc-svg-icon
@@ -85,6 +86,8 @@ export function renderIcon(opts: RenderIconOpts): TemplateResult {
     .iconOn=${o.iconOn}
     .iconOff=${o.iconOff}
     .svg=${o.svg}
+    .fallback=${o.fallbackIcon}
+    .kept=${currentRenderContext()?.customIcons}
     .stateObj=${stateObj}
     .rig=${rig}
   ></mc-svg-icon>`;

@@ -35,7 +35,7 @@ const CARD_GROUPED_KEYS: Record<string, string[]> = { shape: ['shape_options'] }
 /** Card-level keys whose value comes from the template (the card's content and look). */
 const TEMPLATE_CARD_KEYS = new Set([
   'type', 'template', 'not_synced', 'name', 'rows', 'display', 'conditional_appearance', ...CARD_SYNC_KEYS,
-  'custom_animations', 'custom_shapes',
+  'custom_animations', 'custom_shapes', 'custom_icons',
   ...Object.values(CARD_GROUPED_KEYS).flat(),
 ]);
 
@@ -133,10 +133,12 @@ export function mergeTemplateWithOverrides(
   // view_layout, card_mod, hidden_animations and any other key another tool keeps in the card config.
   Object.assign(result, cardInstanceKeys(local));
 
-  // Saved shapes: by id (the card's own entry wins); a card that overrides them keeps only its own
-  const shapes = { ...(!own && !cardNotSynced.has('custom_shapes') && result.custom_shapes), ...local.custom_shapes };
-  if (Object.keys(shapes).length) result.custom_shapes = deepClone(shapes);
-  else delete result.custom_shapes;
+  // Saved shapes and kept icon copies: by id (the card's own entry wins); a card that overrides them keeps only its own
+  for (const key of ['custom_shapes', 'custom_icons'] as const) {
+    const items = { ...(!own && !cardNotSynced.has(key) && result[key]), ...local[key] };
+    if (Object.keys(items).length) Object.assign(result, { [key]: deepClone(items) });
+    else delete result[key];
+  }
 
   // Custom animations: by id (the card's own document wins)
   const docs = own ? local.custom_animations : mergeCustomAnimations(result.custom_animations, local);
