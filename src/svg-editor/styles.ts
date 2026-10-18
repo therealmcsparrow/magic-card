@@ -37,9 +37,15 @@ export const editorStyles: CSSResult[] = [
     }
     .skips {
       position: absolute;
-      z-index: 5;
+      z-index: 20;
+      top: 8px;
+      left: 8px;
       display: flex;
       gap: 4px;
+    }
+    .skips button:focus {
+      background: var(--mc-surface);
+      box-shadow: var(--mc-shadow-float);
     }
     .layer {
       position: relative;

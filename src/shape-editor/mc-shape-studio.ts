@@ -1252,6 +1252,13 @@ export class McShapeStudio extends LitElement {
     this.dispatchEvent(new CustomEvent('mc-shape-close', { detail: { done }, bubbles: true, composed: true }));
   }
 
+  /** The layer is modal: a sentinel at each end sends Tab to the last or first control instead of out into the page. */
+  private wrapFocus(end: boolean): void {
+    const all = [...this.shadowRoot!.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select, textarea, [tabindex="0"]')];
+    const list = all.filter((el) => !el.classList.contains('sentinel') && !el.closest('[hidden]') && el.getClientRects().length > 0);
+    (end ? list[list.length - 1] : list[0])?.focus();
+  }
+
   focusTo(sel: string): void {
     this.shadowRoot?.querySelector<HTMLElement>(sel)?.focus();
   }
@@ -1263,6 +1270,7 @@ export class McShapeStudio extends LitElement {
     const title = this.label ? t('Shape for {target}', { target: this.label }) : t('Shape editor');
     const inPath = this.tab === 'path';
     return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
+<span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => this.focusTo('.insp button, .insp input'))}</div>
 ${this.top(title)}${this.mcuBar()}${this.banners()}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work">
@@ -1274,7 +1282,8 @@ ${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind
 <mc-ui-popover id="pv-pop" .label=${t('Preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
 <mc-ui-popover id="help-pop" .label=${t('Shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
 ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
-<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div></div>`;
+<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div>
+<span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(false)}></span></div>`;
   }
 
   private onMenuClose(e: CustomEvent<{ reason: string }>): void {

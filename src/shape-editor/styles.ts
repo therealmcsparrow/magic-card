@@ -12,7 +12,9 @@ import { editorPrimitives, kitCss } from '../ui-kit';
 const layout: CSSResult = css`
 :host{position:fixed;inset:0;z-index:1000;display:block;color:var(--mc-text);font:.875rem/1.4 var(--mc-font)}
 *,::before,::after{box-sizing:border-box}
-.skips{position:absolute;z-index:8;display:flex;gap:4px}
+.skips{position:absolute;z-index:20;top:8px;left:8px;display:flex;gap:4px}
+.skips button:focus{background:var(--mc-surface);box-shadow:var(--mc-shadow-float)}
+.sentinel{position:absolute}
 .skips button:not(:focus){position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .layer{position:relative;display:flex;flex-direction:column;height:100%;background:var(--mc-ground)}
 .layer:focus{outline:none}
