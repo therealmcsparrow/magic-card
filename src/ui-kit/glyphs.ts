@@ -62,10 +62,30 @@ const G = {
   toBack: 'M12 5v13M6 13l6 6 6-6M5 21h14',
 } as const;
 
-export type GlyphName = keyof typeof G;
+/*
+ * Material Design Icons (CEO D4: MDI everywhere), filled 24 x 24 paths, only the ones the kit's own templates draw.
+ * A name here wins over the same name in the stroke set above, so the window close button, the topbar and the
+ * section head show the HA icon family. Other kit glyph names stay on the stroke set until their screen migrates.
+ */
+const M = {
+  arrowLeft: 'M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z',
+  check: 'M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z',
+  chevronDown: 'M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z',
+  close: 'M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z',
+  undo: 'M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z',
+  redo: 'M18.4,10.6C16.55,9 14.15,8 11.5,8C6.85,8 2.92,11.03 1.54,15.22L3.9,16C4.95,12.81 7.95,10.5 11.5,10.5C13.45,10.5 15.23,11.22 16.62,12.38L13,16H22V7L18.4,10.6Z',
+  helpCircle: 'M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z',
+  dotsVertical: 'M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z',
+} as const;
+
+export type GlyphName = keyof typeof G | keyof typeof M;
+
+const isMdi = (n: string): n is keyof typeof M => Object.prototype.hasOwnProperty.call(M, n);
 
 export const glyph = (n: GlyphName, size = 20): TemplateResult =>
-  html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+  isMdi(n)
+    ? html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${M[n]} fill="currentColor"></path></svg>`
+    : html`<svg class="gl" viewBox="0 0 24 24" width=${size} height=${size} aria-hidden="true" focusable="false"><path d=${G[n as keyof typeof G]} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 
 /* ---- shape additions ------------------------------------------------------------------------ */
 
@@ -89,4 +109,4 @@ export const cornerGlyph = (t: CornerGlyphName, turn = 0): SVGTemplateResult =>
   svg`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" style=${turn ? `transform:rotate(${turn}deg)` : ''}><path d=${CORNERS[t]} /></svg>`;
 
 /** Every glyph name the kit knows, for the gallery and the `glyph` template helper. */
-export const isGlyphName = (n: string): n is GlyphName => Object.prototype.hasOwnProperty.call(G, n);
+export const isGlyphName = (n: string): n is GlyphName => Object.prototype.hasOwnProperty.call(G, n) || isMdi(n);

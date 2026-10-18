@@ -247,7 +247,7 @@ export const kitToolbar: CSSResult = css`
     gap: 2px;
     padding: 2px;
     border: 1px solid var(--mc-divider);
-    border-radius: 10px;
+    border-radius: var(--mc-radius-seg, 10px);
     background: var(--mc-surface);
     box-shadow: var(--mc-shadow-float);
   }
@@ -257,7 +257,106 @@ export const kitToolbar: CSSResult = css`
     margin: 4px;
     background: var(--mc-divider);
   }
+  /* vertical tool rail: 56 wide, one column of icon buttons, a horizontal rule for a divider */
+  .rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 56px;
+    padding: 8px 0;
+    background: var(--mc-surface);
+    border-right: 1px solid var(--mc-divider);
+    overflow-y: auto;
+  }
+  .rail [role='separator'][aria-orientation='horizontal'] {
+    width: 24px;
+    height: 1px;
+    margin: 4px 0;
+    background: var(--mc-divider);
+  }
+  /* an icon button on the float toolbar and the rail is borderless; the pressed tool shows the accent tint */
+  .toolbar .icon-btn,
+  .rail .icon-btn {
+    border-radius: var(--mc-radius);
+  }
+  .toolbar .icon-btn.sm {
+    width: var(--mc-hit-sm, 32px);
+    height: var(--mc-hit-sm, 32px);
+  }
+  .toolbar .btn-sm {
+    border-color: transparent;
+    background: transparent;
+  }
+  .toolbar .btn-sm:hover {
+    background: var(--mc-surface-2);
+  }
+  @media (max-width: 799px) {
+    .rail {
+      flex-direction: row;
+      width: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--mc-divider);
+      padding: 0 8px;
+      overflow-x: auto;
+    }
+    .rail [role='separator'][aria-orientation='horizontal'] {
+      width: 1px;
+      height: 24px;
+      margin: 0 4px;
+    }
+  }
+`;
+
+/** Full-screen layer header (design/10 4.8, the card editor's studio bar): 56 high, Surface, Divider under it. */
+export const kitTopbar: CSSResult = css`
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    min-height: 56px;
+    padding: 8px 16px;
+    background: var(--mc-surface);
+    border-bottom: 1px solid var(--mc-divider);
+    position: relative;
+    z-index: 6;
+  }
+  .topbar .title {
+    min-width: 0;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .topbar .name {
+    width: 180px;
+    max-width: 40vw;
+    min-width: 0;
+  }
+  .topbar .spacer {
+    flex: 1;
+  }
+`;
+
+/** Panel headings: plain (.group-head in editorPrimitives) and the collapsible head that wraps .sector-btn. */
+export const kitSectionHead: CSSResult = css`
+  .sector-head {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  .sector-head > .sector-btn {
+    border-radius: var(--mc-radius-lg);
+    font-size: 0.875rem;
+  }
+  .group-head h4 {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    flex: 1;
+  }
 `;
 
 /** Every part the card editor lacks. A screen: static styles = [editorTokens, editorPrimitives, kitCss, own layout css]. */
-export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar];
+export const kitCss: CSSResult[] = [kitTokens, kitButtonExtras, kitChipExtras, kitNotice, kitTile, kitCheck, kitToolbar, kitTopbar, kitSectionHead];
