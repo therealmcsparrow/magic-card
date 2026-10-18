@@ -49,6 +49,8 @@ textarea{padding:8px 10px;font:.8125rem ui-monospace,Consolas,monospace}
 .banners{display:flex;flex-direction:column;gap:4px;padding:4px 12px 0}
 .banner{flex-wrap:wrap;padding:6px 10px;border-radius:8px;background:var(--mc-surface-2);font-size:.8125rem}
 .banner.warn{background:var(--mc-warn-tint);color:var(--mc-warn-ink)}
+.xfer{position:absolute;inset:0;z-index:30;display:grid;place-items:start center;overflow:auto;padding:24px 12px;background:color-mix(in srgb,var(--mc-surface) 70%,transparent)}
+.xfer>mc-transfer-panel{width:min(100%,560px);padding:16px;box-sizing:border-box;background:var(--mc-surface);border:1px solid var(--mc-divider);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.16)}
 .toast,.pop{position:absolute;z-index:20;background:var(--mc-surface);border:1px solid var(--mc-divider);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.16)}
 .toast{left:50%;bottom:16px;transform:translateX(-50%);padding:8px 12px;max-width:90vw}
 .pop{top:60px;right:16px;width:min(92vw,380px);padding:16px;display:flex;flex-direction:column;gap:8px}

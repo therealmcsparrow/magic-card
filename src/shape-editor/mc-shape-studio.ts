@@ -3,6 +3,8 @@ import { property, state } from 'lit/decorators.js';
 import { CORNER_TYPES, MAX_SHAPE_POINTS } from '../contracts/custom-shape';
 import type { CornerKey, CornerType, CustomShapeOptions } from '../contracts/custom-shape';
 import type { SavedShape } from '../contracts/mcu-library';
+import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
+import type { TransferItem } from '../contracts/preset-transfer';
 import type { PathChange, PathSelection } from '../contracts/path-canvas';
 import type { Anchor, EditPath, PathEdit, Pt } from '../contracts/path-model';
 import type { ShapeChangeDetail, ShapeEditorPreset, ShapeEditorValue } from '../contracts/svg-editor';
@@ -13,7 +15,7 @@ import { loadCustomShapes } from '../utils/shape-custom-loader';
 import { resolveCustomShape } from '../utils/shape-ref';
 import { clamp, shapePath } from '../utils/shape-path';
 import { glyph } from './glyphs';
-import { deleteShape, freeId, listShapes, LibraryError, lookupFor, saveShape, tooBig, watchLibrary, type Hass, type LibraryProblem } from './library';
+import { deleteShape, freeId, listShapes, LibraryError, lookupFor, saveShape, slug, tooBig, watchLibrary, type Hass, type LibraryProblem } from './library';
 import {
   absOf, blankDoc, clamped, cornerPx, cornersOf, cornersToPoints, fromAnchors, KEYS, noSides, presetToCustom, readDoc, rectPoints, repad, reversePoints, SIDES, SIZES, STARTERS, toEditPath, toYaml,
   withAbs, writeDoc, writePoints, type Axis, type Corner, type Doc, type EditSize, type Side, type Sides,
@@ -99,6 +101,8 @@ export class McShapeStudio extends LitElement {
   @state() openedId?: string;
   @state() lib: { state: LibState; items: SavedShape[]; q: string; hidden: Set<string> } = { state: 'idle', items: [], q: '', hidden: new Set() };
   @state() linked?: string;
+  /** The export / import panel (preset-transfer 1.0.0) through window.MagicCard.loadTransfer(). */
+  @state() xfer?: { mode: 'import' | 'export'; back?: HTMLElement };
 
   E?: PathEdit;
   an: Preview[] = [];
@@ -738,6 +742,61 @@ export class McShapeStudio extends LitElement {
     }
   }
 
+  // ── export / import file (preset-transfer) ──
+
+  async openTransfer(mode: 'import' | 'export', back?: HTMLElement): Promise<void> {
+    try {
+      const load = (window as unknown as { MagicCard?: Partial<MagicCardEditorWindowAdditions> }).MagicCard?.loadTransfer;
+      if (!load) throw new Error('no loader');
+      await load();
+      this.xfer = { mode, back };
+    } catch {
+      this.toast = { text: S.transferFail };
+      setTimeout(() => (this.toast = undefined), 6000);
+    }
+  }
+
+  closeTransfer(): void {
+    const back = this.xfer?.back;
+    this.xfer = undefined;
+    void this.updateComplete.then(() => (back?.isConnected ? back : this.shadowRoot?.querySelector<HTMLElement>('[data-xfer]'))?.focus());
+  }
+
+  private get exportItems(): { kind: 'shape'; items: TransferItem<'shape'>[] } {
+    const name = this.name.trim() || S.untitled;
+    const data: CustomShapeOptions = { ...this.options() };
+    delete data.ref;
+    return { kind: 'shape', items: [{ id: this.saved?.id ?? slug(name), name, data }] };
+  }
+
+  /** The first shape of the file becomes the document, as one undoable change. */
+  importItems(items: TransferItem[]): void {
+    const it = items[0];
+    this.closeTransfer();
+    if (!it) return;
+    const d = this.read(it.data as CustomShapeOptions);
+    this.name = it.name || this.name;
+    this.tab = d.mode;
+    this.together = false;
+    this.pointSel = this.cvSel = undefined;
+    this.commit(d, S.imported(it.name));
+    this.together = this.allSame();
+    if (d.mode === 'path') void this.ensureCanvas();
+    if (items.length > 1) this.say(S.importedFirst(items.length));
+  }
+
+  private xferLayer(): TemplateResult {
+    const x = this.xfer!;
+    return html`<div class="xfer" role="dialog" aria-modal="true" aria-label=${x.mode === 'export' ? S.exportFile : S.importFile} @keydown=${(e: Event) => e.stopPropagation()}>
+<mc-transfer-panel .host=${'shape-editor'} .mode=${x.mode} .exportItems=${x.mode === 'export' ? this.exportItems : undefined} .hasLibrary=${!this.noLib}
+@mc-transfer-close=${() => this.closeTransfer()} @mc-transfer-import=${(e: CustomEvent<{ items: TransferItem[] }>) => (e.stopPropagation(), this.importItems(e.detail.items))}></mc-transfer-panel></div>`;
+  }
+
+  private xferBtns(): TemplateResult {
+    const b = (mode: 'import' | 'export', label: string): TemplateResult => html`<button class="b" data-xfer=${mode} @click=${(e: Event) => void this.openTransfer(mode, e.currentTarget as HTMLElement)}>${label}</button>`;
+    return html`<div class="acts">${b('export', S.exportFile)}${b('import', S.importFile)}</div>`;
+  }
+
   // ── leaving ──
 
   done(): void {
@@ -769,7 +828,7 @@ ${!this.ready ? html`<div class="empty" role="status">${this.failed ? html`${S.l
 <aside class="insp" aria-label=${S.inspector}>${seg('', [['corners', S.tabCorners], ['path', S.tabPath]], this.tab, (t) => ((this.tab = t), t === 'path' && void this.ensureCanvas()), true)}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
-${this.saving ? this.savePop() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
+${this.saving ? this.savePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
   }
 
   // prettier-ignore
@@ -931,7 +990,7 @@ ${check(S.showText, this.showText, (b) => (this.showText = b))}<span id="xs">${S
   // prettier-ignore
   private yamlBlock(): TemplateResult {
     const y = toYaml(this.options());
-    return html`<details><summary>${S.yaml}</summary><textarea readonly rows="8" aria-label=${S.yaml} .value=${y}></textarea>${btn(S.copyYaml, () => this.copyText(y))}</details>`;
+    return html`<details><summary>${S.yaml}</summary><textarea readonly rows="8" aria-label=${S.yaml} .value=${y}></textarea>${btn(S.copyYaml, () => this.copyText(y))}</details>${this.xferBtns()}`;
   }
 
   // prettier-ignore

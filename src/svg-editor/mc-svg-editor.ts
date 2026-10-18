@@ -1,6 +1,8 @@
 import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
 import type { History, PathCanvasChunk, PathChange, PathPaint, PathSelection } from '../contracts/path-canvas';
 import type { SavedIcon } from '../contracts/mcu-library';
+import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
+import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
 import { SVG_EDITOR_TAG, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, Pt } from '../contracts/path-model';
@@ -92,7 +94,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     libraryAvailable: { type: Boolean },
     savedId: { attribute: false },
     module: { attribute: false },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'toast', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startError', 'liveShape', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -123,6 +125,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   notes?: ImportNotes;
   toast?: { text: string; action?: { label: string; run: () => void } };
   dlg: 'save' | 'help' | undefined;
+  /** The export / import panel (preset-transfer 1.0.0), loaded through window.MagicCard.loadTransfer(). */
+  xfer?: { mode: 'import' | 'export'; items?: TransferItem[]; back?: HTMLElement };
   leaving = false;
   live = '';
   dirty = false;
@@ -1104,6 +1108,42 @@ export class McSvgEditor extends LitElement implements StageHost {
     a.download = `${slug(this.doc.name || S.untitled)}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // ── export / import file (preset-transfer) ──
+
+  async openTransfer(mode: 'import' | 'export', back?: HTMLElement): Promise<void> {
+    try {
+      const load = (window as unknown as { MagicCard?: Partial<MagicCardEditorWindowAdditions> }).MagicCard?.loadTransfer;
+      if (!load) throw new Error('no loader');
+      await load();
+      const o = this.out;
+      const name = this.doc.name || S.untitled;
+      const items: TransferItem[] | undefined = o.svg ? [{ id: slug(name), name, data: { svg: o.svg, view_box: o.viewBox } }] : undefined;
+      this.xfer = { mode, items: mode === 'export' ? items : undefined, back };
+    } catch {
+      this.showToast(S.transferFail);
+    }
+  }
+
+  closeTransfer(): void {
+    const back = this.xfer?.back;
+    this.xfer = undefined;
+    void this.updateComplete.then(() => (back?.isConnected ? back : this.renderRoot.querySelector<HTMLElement>('[data-xfer]'))?.focus());
+  }
+
+  /** The first icon of the file opens as the drawing; the sanitiser output is what is read (CRA). */
+  importItems(items: TransferItem[]): void {
+    const it = items[0];
+    const svg = (it?.data as { svg?: string } | undefined)?.svg;
+    this.closeTransfer();
+    if (!svg) return;
+    const r = importSvg(svg, it.name);
+    if (!r.doc) return void this.showToast(S.notSvg);
+    if (this.stage === 'edit') this.apply(r.doc, 'Import');
+    else this.begin(r.doc);
+    this.select([]);
+    this.showToast(items.length > 1 ? S.importedFirst(it.name, items.length) : S.imported(it.name));
   }
 
   // ── layers, points, start ──

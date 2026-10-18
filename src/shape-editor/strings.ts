@@ -148,6 +148,11 @@ export const S = {
   sample: ['Living room', 'Lamp on'],
 
   yaml: 'YAML',
+  exportFile: 'Export file',
+  importFile: 'Import file',
+  transferFail: 'Could not load the export and import tool. Try again.',
+  imported: (n: string) => `Imported ${n}`,
+  importedFirst: (c: number) => `Only the first of ${c} shapes in the file was used.`,
   copyYaml: 'Copy YAML',
   copied: 'Copied',
   linked: (id: string): string => `Linked to the saved shape "${id}". Your edits make it this card's own shape.`,

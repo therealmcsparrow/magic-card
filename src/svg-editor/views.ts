@@ -1,6 +1,7 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
 import { guard } from 'lit/directives/guard.js';
 import { repeat } from 'lit/directives/repeat.js';
+import type { TransferItem } from '../contracts/preset-transfer';
 import { toPathString } from '../path/core';
 import { E } from './bind';
 import { haWarns } from './ha';
@@ -124,6 +125,14 @@ const paintItems: Array<[Paint, string]> = [
   ['accent', S.paintAccent],
 ];
 
+function xferLayer(ed: McSvgEditor): TemplateResult {
+  const x = ed.xfer!;
+  return html`<div class="xfer" role="dialog" aria-modal="true" aria-label=${x.mode === 'export' ? S.exportFile : S.importFile} @keydown=${(e: Event) => e.stopPropagation()}>
+    <mc-transfer-panel .host=${'svg-editor'} .mode=${x.mode} .exportItems=${x.items ? { kind: 'icon', items: x.items } : undefined} .hasLibrary=${!ed.libraryMissing}
+      @mc-transfer-close=${() => ed.closeTransfer()} @mc-transfer-import=${(e: CustomEvent<{ items: TransferItem[] }>) => (e.stopPropagation(), ed.importItems(e.detail.items))}></mc-transfer-panel>
+  </div>`;
+}
+
 // ── the layer ──
 
 export function renderEditor(ed: McSvgEditor): TemplateResult {
@@ -131,7 +140,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
-    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${toast(ed)}
+    ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
   </div>`;
@@ -226,6 +235,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
       ${tile('file', S.startFile, S.startFileSub, () => ed.renderRoot.querySelector<HTMLInputElement>('input[type=file]')?.click())}
       ${ed.libraryMissing ? nothing : tile('library', S.startLib, S.startLibSub, () => ed.startLibrary())}
     </div>
+    <div class="acts">${xferBtns(ed, 'import')}</div>
     <input type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
     ${ed.startMode === 'icon'
       ? html`<form class="startform" @submit=${(e: Event) => {
@@ -624,6 +634,12 @@ function inspector(ed: McSvgEditor): TemplateResult {
   </aside>`;
 }
 
+function xferBtns(ed: McSvgEditor, only?: 'import'): TemplateResult {
+  const b = (mode: 'import' | 'export', label: string, off = false): TemplateResult =>
+    html`<button type="button" class="b" data-xfer=${mode} aria-disabled=${off ? 'true' : nothing} @click=${(e: Event) => !off && void ed.openTransfer(mode, e.currentTarget as HTMLElement)}><span>${label}</span></button>`;
+  return html`${only ? nothing : b('export', S.exportFile, !ed.out.svg)}${b('import', S.importFile)}`;
+}
+
 function documentSection(ed: McSvgEditor): TemplateResult {
   return html`<section class="grp-s" aria-labelledby="doc-h">
       <h3 id="doc-h">${S.docTitle}</h3>
@@ -644,6 +660,7 @@ function documentSection(ed: McSvgEditor): TemplateResult {
         ${btn(S.copySvg, 'copy', () => ed.copySvg(), { text: true, disabled: !ed.out.svg })}
         ${btn(S.downloadSvg, 'save', () => ed.download(), { text: true, disabled: !ed.out.svg })}
         ${btn(S.copyHa, 'copy', () => ed.copyHa(), { text: true, disabled: !ed.out.svg, tip: S.copyHaTip })}
+        ${xferBtns(ed)}
       </div>
       <p class="help">${S.copyHaTip}</p>
     </section>`;

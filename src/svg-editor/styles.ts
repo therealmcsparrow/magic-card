@@ -271,6 +271,25 @@ export const editorStyles: CSSResult[] = [
       flex: 1;
       min-width: 12ch;
     }
+    .xfer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: start center;
+      overflow: auto;
+      padding: 24px 12px;
+      background: color-mix(in srgb, var(--mc-surface) 70%, transparent);
+    }
+    .xfer > mc-transfer-panel {
+      width: min(100%, 560px);
+      padding: 16px;
+      box-sizing: border-box;
+      background: var(--mc-surface);
+      border: 1px solid var(--mc-divider);
+      border-radius: 12px;
+      box-shadow: var(--mc-shadow-float);
+    }
     .toast,
     .pop {
       position: absolute;
