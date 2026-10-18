@@ -163,7 +163,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${S.loading}</p>` : ed.stage === 'fail' ? html`<div class="center-msg" role="alert"><p>${S.loadFail}</p>${btn(S.retry, undefined, () => void ed.start(), { text: true, cls: 'primary' })}</div>` : startPanel(ed)}
     ${ed.dlg === 'save' ? savePop(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.dlg === 'single' ? singlePop(ed) : nothing} ${ed.leaving ? leavePop(ed) : nothing} ${ed.xfer ? xferLayer(ed) : nothing} ${toast(ed)}
-    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
+    ${ed.menu ? html`<mc-path-menu .items=${ed.menu.items} .label=${ed.menu.xfer ? S.xferMenu : S.shapeActions} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-path-menu>` : nothing}
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(false)}></span>
   </div>`;
@@ -205,6 +205,7 @@ function topBar(ed: McSvgEditor): TemplateResult {
       ? html`${ed.layout === 'compact' ? btn(ed.panel === 'layers' ? S.layers : S.library, undefined, () => (ed.overlay = !ed.overlay), { text: true, cls: 'ghost', pressed: ed.overlay }) : nothing}
           ${btn(S.undo, 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z' })}${btn(S.redo, 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z' })}
           <span class=${`chip meter ${zone}`} title=${S.meterTip}>${o.error === 'empty' ? '0.0' : used} / 32 KB · ${S.points(o.points)}${o.bytes >= 4096 && !zone ? html` · ${S.heavy}` : nothing}</span>
+          <button type="button" class="b xfer-btn" aria-haspopup="menu" aria-expanded=${aria(!!ed.menu?.xfer)} @click=${(e: Event) => ed.xferMenu(e.currentTarget as HTMLElement)}><span>${S.xferMenu}</span></button>
           ${ed.mcu ? nothing : html`<button type="button" class="b" aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} @click=${() => !needLib && ed.openSave()} aria-keyshortcuts="Control+S"><span>${S.saveLib}</span></button>`}
           ${needLib ? html`<span id="lib-hint" class="sr">${S.libMissing}</span>` : nothing}
           <button type="button" class="b primary" aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} title=${why ?? nothing} @click=${() => ed.done()} aria-keyshortcuts="Control+Enter"><span>${ed.mcu ? S.saveGo : S.done}</span></button>
@@ -262,7 +263,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
       ${tile('file', S.startFile, S.startFileSub, () => ed.renderRoot.querySelector<HTMLInputElement>('input[type=file]')?.click())}
       ${ed.libraryMissing ? nothing : tile('library', S.startLib, S.startLibSub, () => ed.startLibrary())}
     </div>
-    <div class="acts">${xferBtns(ed, 'import')}</div>
+    <div class="acts">${xferBtns(ed)}</div>
     <input type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
     ${ed.startMode === 'icon'
       ? html`<form class="startform" @submit=${(e: Event) => {
@@ -597,16 +598,13 @@ function libraryPanel(ed: McSvgEditor): TemplateResult {
 function inspector(ed: McSvgEditor): TemplateResult {
   const sel = ed.selected;
   return html`<aside class="insp" aria-label=${S.inspector}>
-    <button type="button" class="b more" aria-label=${S.moreActions} title=${S.moreActions} aria-haspopup="menu" aria-expanded=${aria(!!ed.menu)} @click=${(e: Event) => ed.moreMenu(e.currentTarget as HTMLElement)}>${glyph('more', 18)}</button>
     ${ed.pointCtx ? pointSection(ed) : nothing}
     ${sel.length ? shapeSections(ed, sel) : html`${ed.pt ? pathSection(ed) : nothing}${documentSection(ed)}`}
   </aside>`;
 }
 
-function xferBtns(ed: McSvgEditor, only?: 'import'): TemplateResult {
-  const b = (mode: 'import' | 'export', label: string, off = false): TemplateResult =>
-    html`<button type="button" class="b" data-xfer=${mode} aria-disabled=${off ? 'true' : nothing} @click=${(e: Event) => !off && void ed.openTransfer(mode, e.currentTarget as HTMLElement)}><span>${label}</span></button>`;
-  return html`${only ? nothing : b('export', S.exportFile, !ed.out.svg)}${b('import', S.importFile)}`;
+function xferBtns(ed: McSvgEditor): TemplateResult {
+  return html`<button type="button" class="b" data-xfer="import" @click=${(e: Event) => void ed.openTransfer('import', e.currentTarget as HTMLElement)}><span>${S.importFile}</span></button>`;
 }
 
 function gridChips(ed: McSvgEditor): TemplateResult {
@@ -652,17 +650,6 @@ function documentSection(ed: McSvgEditor): TemplateResult {
       ${pick(S.tidyPrecision, ed.decimals, [0, 1, 2, 3].map((k) => [k, String(k)]), (v) => { ed.decimals = parseInt(v, 10); ed.refresh(); })}
       <p class="help">${S.tidyHelp}</p>
       ${ed.out.bytes >= 24 * 1024 ? html`<p class="help warn">${S.getting}</p>${btn(S.tidyNow, undefined, () => ed.tidyNow(), { text: true })}` : nothing}
-    </section>
-    <section class="grp-s" aria-labelledby="exp-h">
-      <h4 id="exp-h">${S.export}</h4>
-      <div class="acts col">
-        ${btn(S.copySvg, 'copy', () => ed.copySvg(), { text: true, disabled: !ed.out.svg })}
-        ${btn(S.downloadSvg, 'save', () => ed.download(), { text: true, disabled: !ed.out.svg })}
-        ${btn(S.copyHa, 'copy', () => ed.copyHa(), { text: true, disabled: !ed.out.svg, tip: S.copyHaTip })}
-        ${ed.ha?.secondary ? btn(S.copyAccent, 'copy', () => ed.copyAccent(), { text: true }) : nothing}
-        ${xferBtns(ed)}
-      </div>
-      <p class="help">${S.copyHaTip}</p>
     </section>`;
 }
 

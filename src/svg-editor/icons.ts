@@ -43,7 +43,6 @@ const G = {
   rotR: 'M19 12a7 7 0 1 1-2-5M19 4v4h-4',
   rot90L: 'M19 20v-8a5 5 0 0 0-5-5H5M9 3L5 7l4 4',
   rot90R: 'M5 20v-8a5 5 0 0 1 5-5h9M15 3l4 4-4 4',
-  more: 'M5 12h.01M12 12h.01M19 12h.01',
   ungroup: 'M4 4h6v6H4zM14 14h6v6h-6zM14 10l6-6M15 4h5v5',
   grip: 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
   flipH: 'M12 3v18M8 7L3 12l5 5zM16 7l5 5-5 5z',

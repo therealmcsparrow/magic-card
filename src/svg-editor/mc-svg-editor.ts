@@ -57,7 +57,7 @@ import {
   type Shape,
 } from './model';
 import { endDrag, stepOrder, groupBlocked, type DragState } from './layers';
-import { emptyMenu, pointMenu, runMenu, shapeMenu } from './menu';
+import { emptyMenu, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
 import { S } from './strings';
@@ -204,7 +204,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   noticeGone = false;
 
   /** The open "Shape actions" menu. */
-  menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener: HTMLElement };
+  menu?: { items: MenuEntry[]; at: Pt; touch: boolean; opener: HTMLElement; xfer?: boolean };
   private press?: { x: number; y: number; t: ReturnType<typeof setTimeout> };
   private menuAt = 0;
   private tk = '';
@@ -505,9 +505,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.menu = { items, at: d.client, touch: d.source === 'touch', opener: this.canvas()! };
   };
 
-  moreMenu(b: HTMLElement): void {
+  xferMenu(b: HTMLElement): void {
     const r = b.getBoundingClientRect();
-    this.menu = { items: this.sel.length ? shapeMenu(this) : emptyMenu(), at: [r.left, r.bottom], touch: false, opener: b };
+    this.menu = { items: xferItems(this), at: [r.left, r.bottom], touch: false, opener: b, xfer: true };
   }
 
   /** A layer row opens the menu; the row's shape is selected first unless it is in the selection already. */
@@ -545,7 +545,9 @@ export class McSvgEditor extends LitElement implements StageHost {
   onPick = (e: Event): void => {
     const row = this.menu?.opener;
     this.menu = undefined;
-    runMenu(this, (e as CustomEvent<{ id: string }>).detail.id);
+    const id = (e as CustomEvent<{ id: string }>).detail.id;
+    runMenu(this, id, row);
+    if (id.startsWith('x:')) return;
     this.updateComplete.then(() => (row?.classList.contains('row') && row.isConnected ? row : this.canvas())?.focus({ preventScroll: true }));
   };
 

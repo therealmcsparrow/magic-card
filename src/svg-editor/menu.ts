@@ -18,6 +18,19 @@ const OPS: BooleanOp[] = ['union', 'subtract', 'intersect', 'exclude'];
 
 export const emptyMenu = (): MenuEntry[] => [it('all', S.selectAll), it('zoom', S.zoomToFit)];
 
+/** The topbar Export / Import menu: what the sidebar's Export section held. */
+export function xferItems(ed: McSvgEditor): MenuEntry[] {
+  const no = ed.out.svg ? undefined : S.xferNone;
+  return [
+    it('x:export', S.exportFile, no),
+    it('x:import', S.importFile),
+    it('x:copy', S.copySvg, no, undefined, true),
+    it('x:download', S.downloadSvg, no),
+    it('x:ha', S.copyHa, no),
+    ...(ed.ha?.secondary ? [it('x:accent', S.copyAccent)] : []),
+  ];
+}
+
 export function pointMenu(ed: McSvgEditor): MenuEntry[] {
   const k = ed.pointCtx?.kind;
   return [it('kind', k === 'smooth' ? S.kindCorner : S.kindSmooth), it('addpt', S.pointAdd, ed.canAddPoint ? undefined : S.pointAddNo), it('delpt', S.pointDelete), it('split', S.ptHere, ptReason(ed, 'split'))];
@@ -54,9 +67,16 @@ export function shapeMenu(ed: McSvgEditor): MenuEntry[] {
 }
 
 /** Do what a picked entry says. */
-export function runMenu(ed: McSvgEditor, id: string): void {
+export function runMenu(ed: McSvgEditor, id: string, opener?: HTMLElement): void {
   const [k, v, w] = id.split(':');
-  if (k === 'dup') ed.duplicate();
+  if (k === 'x') {
+    if (v === 'export' || v === 'import') void ed.openTransfer(v, opener);
+    else if (v === 'copy') ed.copySvg();
+    else if (v === 'download') ed.download();
+    else if (v === 'ha') ed.copyHa();
+    else ed.copyAccent();
+    if (v !== 'export' && v !== 'import') opener?.focus();
+  } else if (k === 'dup') ed.duplicate();
   else if (k === 'del') ed.deleteSelected();
   else if (k === 'flipH' || k === 'flipV') ed.flip(k === 'flipH' ? 'h' : 'v');
   else if (k === 'rotCW' || k === 'rotCCW') ed.rotate(k === 'rotCW' ? 90 : -90);
