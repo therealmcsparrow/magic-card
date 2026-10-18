@@ -261,10 +261,26 @@ export class AnimationList extends LitElement {
     `;
   }
 
+  /** "This card": the card's own inline documents the library does not list (a hand-written or imported copy), by id and name. */
+  private _cardDocs(): Array<{ id: string; name: string }> {
+    const detail: { sm?: CardState } = {};
+    this.dispatchEvent(new CustomEvent('mc-card-bridge', { bubbles: true, composed: true, detail }));
+    const inLib = new Set(this._mine().map((d) => d.id));
+    return animationDocList(detail.sm?.getConfig()?.custom_animations)
+      .map((d) => ({ id: String(d.id ?? ''), name: String(d.name ?? d.id ?? '') }))
+      .filter((d) => d.id && !d.id.startsWith(CAT_PREFIX) && !inLib.has(d.id));
+  }
+
   private _presetSelect(id: string, index: number, value: string): TemplateResult {
     const mine = this._mine();
+    const card = this._cardDocs();
+    // two entries that read the same (a built-in "Pendulum" and an imported one) show the id after the name
+    const seen = new Map<string, number>();
+    const key = (n: string): string => n.trim().toLowerCase();
+    for (const n of [...mine.map((d) => d.name), ...card.map((d) => d.name), ...ANIMATION_PRESETS.map((p) => lt(p.name))]) seen.set(key(n), (seen.get(key(n)) ?? 0) + 1);
+    const label = (name: string, docId: string): string => ((seen.get(key(name)) ?? 0) > 1 ? t('{name} ({id})', { name, id: docId }) : name);
     const cat = isCustomRef(value) && customRefId(value).startsWith(CAT_PREFIX);
-    const known = !!getAnimationPreset(value) || !!this._catEntry(value) || (!cat && !!this._doc(value));
+    const known = !!getAnimationPreset(value) || !!this._catEntry(value) || (!cat && !!this._doc(value)) || (isCustomRef(value) && card.some((d) => d.id === customRefId(value)));
     // a stored catalogue pick reads as its id until the catalogue loaded (or when it is not in it)
     const unknown = cat
       ? this._doc(value)?.name ?? customRefId(value)
@@ -281,7 +297,12 @@ export class AnimationList extends LitElement {
           ${known ? nothing : html`<option value=${value} selected>${unknown}</option>`}
           ${mine.length
             ? html`<optgroup label=${t('My animations')}>
-                ${mine.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${d.name}</option>`)}
+                ${mine.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${label(d.name, d.id)}</option>`)}
+              </optgroup>`
+            : nothing}
+          ${card.length
+            ? html`<optgroup label=${t('This card')}>
+                ${card.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${label(d.name, d.id)}</option>`)}
               </optgroup>`
             : nothing}
           ${ANIMATION_GROUPS.map(
