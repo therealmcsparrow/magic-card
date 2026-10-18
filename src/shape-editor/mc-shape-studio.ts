@@ -65,11 +65,17 @@ const sh = (id: string): string => S.short[id] ?? S.short.custom;
 
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
+  /** Contract svg-editor revision 5: the Magic Card Utils panel checks this before it creates the element. */
+  static contractRevision = 5;
 
   @property({ attribute: false }) hass?: Hass;
   @property({ attribute: false }) value?: ShapeEditorValue;
   @property({ attribute: false }) customShapes?: Record<string, CustomShapeOptions>;
   @property({ type: Boolean }) libraryAvailable = true;
+  /** 'mcu': hosted by the Magic Card Utils panel (own value, Save as shape, Close). */
+  @property({ reflect: true }) host: 'card' | 'mcu' = 'card';
+  /** Host 'mcu': the library shape being edited (its name and update time come from shapes_list). */
+  @property() savedId?: string;
   /** "Edit as custom": the preset to start from (its name and `shape_options`). */
   @property({ attribute: false }) preset?: ShapeEditorPreset;
   /** What the shape is for, e.g. "Living room tile" (title). */
@@ -117,6 +123,11 @@ export class McShapeStudio extends LitElement {
   @state() openedId?: string;
   @state() lib: { state: LibState; items: SavedShape[]; q: string; hidden: Set<string> } = { state: 'idle', items: [], q: '', hidden: new Set() };
   @state() linked?: string;
+  @state() leaving = false;
+  @state() nameErr = false;
+  @state() conflict = false;
+  @state() mcuError = '';
+  private openJson = '';
   /** The export / import panel (preset-transfer 1.0.0) through window.MagicCard.loadTransfer(). */
   @state() xfer?: { mode: 'import' | 'export'; back?: HTMLElement };
 
@@ -192,7 +203,7 @@ export class McShapeStudio extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     // the host feeds our own changes back through `value`: only something else (or a new preset) reopens
-    const foreign = changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
+    const foreign = this.host !== 'mcu' && changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
     if (['doc', 'size', 'ready', 'older', 'customShapes'].some((k) => changed.has(k))) this.analyse();
   }
@@ -249,6 +260,22 @@ export class McShapeStudio extends LitElement {
     this.baseline = JSON.stringify(this.doc.points);
     if (this.doc.mode === 'path') void this.ensureCanvas();
     this.analyse(true);
+    this.openJson = JSON.stringify(this.options());
+    this.leaving = this.nameErr = this.conflict = false;
+    this.mcuError = '';
+    if (this.host === 'mcu') {
+      this.name = '';
+      void this.loadLib().then(() => this.adopt());
+    }
+  }
+
+  /** Host 'mcu' Edit: take the name and update time of the library item behind `savedId`. */
+  private adopt(): void {
+    const it = this.savedId ? this.lib.items.find((i) => i.id === this.savedId) : undefined;
+    if (!it) return;
+    this.name = it.name;
+    this.openedId = it.id;
+    this.saved = { id: it.id, name: it.name, updated_at: it.updated_at, json: JSON.stringify(this.options()) };
   }
 
   /** "All corners together" only for a shape whose four corners are the same and not blank (a blank one opens on Each corner). */
@@ -399,12 +426,13 @@ export class McShapeStudio extends LitElement {
   private onKey = (e: KeyboardEvent): void => {
     if (e.key === 'Escape') {
       // the canvas ends a drag and clears its selection first (and stops the event then); what reaches here is ours
-      if (this.saving) this.saving = false;
+      if (this.leaving) this.leaving = false;
+      else if (this.saving) this.saving = false;
       else if (this.sheet) this.sheet = false;
       else if (this.pointSel !== undefined) this.selectPoint(undefined);
       else if (!this.escHinted) {
         this.escHinted = true;
-        this.toast = { text: S.escHint };
+        this.toast = { text: this.host === 'mcu' ? S.escHintMcu : S.escHint };
         setTimeout(() => (this.toast = undefined), 6000);
       }
       e.preventDefault();
@@ -1089,6 +1117,61 @@ export class McShapeStudio extends LitElement {
     this.leave(true);
   }
 
+  get mcuDirty(): boolean {
+    return JSON.stringify(this.options()) !== (this.saved?.json ?? this.openJson);
+  }
+
+  /** Host 'mcu': Close asks first when there is unsaved work. */
+  close(): void {
+    if (!this.mcuDirty) return this.leave(false);
+    this.leaving = true;
+    void this.updateComplete.then(() => this.focusTo('.pop [data-keep]'));
+  }
+
+  /** Host 'mcu': Save as shape. `asCopy` after a conflict: a new id, no base time. */
+  async saveMcu(asCopy = false): Promise<void> {
+    const name = this.name.trim().slice(0, 80);
+    if (!name) {
+      this.nameErr = true;
+      this.focusTo('input.name');
+      return;
+    }
+    const shape = this.options();
+    if (tooBig(shape)) {
+      this.mcuError = S.tooBig;
+      return;
+    }
+    if (this.saveBusy) return;
+    this.saveBusy = true;
+    this.mcuError = '';
+    this.conflict = false;
+    try {
+      if (this.lib.state !== 'ready') await this.loadLib();
+      const keep = asCopy ? undefined : this.saved;
+      const id = keep?.id ?? freeId(name, new Set(this.lib.items.map((i) => i.id)));
+      const item = await saveShape(this.hass, { id, name, shape }, keep?.updated_at);
+      this.lib = { ...this.lib, items: [item, ...this.lib.items.filter((i) => i.id !== item.id)] };
+      this.saved = { id: item.id, name: item.name, updated_at: item.updated_at, json: JSON.stringify(shape) };
+      this.openedId = item.id;
+      this.name = item.name;
+      this.say(S.markSaved);
+      this.dispatchEvent(new CustomEvent('mc-shape-save', { detail: { saved: item }, bubbles: true, composed: true }));
+    } catch (e) {
+      const p = e instanceof LibraryError ? e.problem : 'unreachable';
+      if (p === 'conflict') this.conflict = true;
+      else this.mcuError = S.fail[p] ?? S.saveFail(name);
+    }
+    this.saveBusy = false;
+  }
+
+  /** Conflict: fetch the item again and show the stored version. */
+  async reloadMcu(): Promise<void> {
+    this.conflict = false;
+    await this.loadLib();
+    const it = this.lib.items.find((i) => i.id === this.saved?.id);
+    if (it) this.openItem(it);
+  }
+
   leave(done: boolean): void {
     this.flushDelete();
     this.dispatchEvent(new CustomEvent('mc-shape-close', { detail: { done }, bubbles: true, composed: true }));
@@ -1106,23 +1189,38 @@ export class McShapeStudio extends LitElement {
     const inPath = this.tab === 'path';
     return html`<div class="layer" role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
 <div class="skips">${btn(S.skip.canvas, () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${btn(S.skip.past, () => this.focusTo('.previews button'))}${this.pointSel !== undefined ? btn(S.skip.point, () => this.focusTo('#fx')) : nothing}${btn(S.skip.insp, () => this.focusTo('.insp button, .insp input'))}</div>
-${this.top(title)}${this.banners()}
+${this.top(title)}${this.mcuBar()}${this.banners()}
 ${!this.ready ? html`<div class="empty" role="status">${this.failed ? html`${S.loadFail} ${btn(S.retry, () => void this.boot())}` : S.loading}</div>` : html`<div class="work">
-<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? S.points : S.outline}>${seg('', [['outline', inPath ? S.points : S.outline], ['library', S.library]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
+<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? S.points : S.outline}>${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? S.points : S.outline], ['library', S.library]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
 <main class="center">${this.editBar()}${this.tools()}${this.penBar()}${this.stage()}${this.pointBar()}${this.stripView()}${this.previews()}</main>
 <aside class="insp" aria-label=${S.inspector}>${this.modeSwitch()}${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.menu ? html`<mc-path-menu .items=${this.menu.items} .label=${S.menuName} .at=${this.menu.at} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: Event) => (e.stopPropagation(), (this.menu = undefined))}></mc-path-menu>` : nothing}${this.toast ? html`<div class="toast" role="status">${this.toast.text}${this.toast.action ? btn(this.toast.action.label, this.toast.action.run, 'ghost') : nothing}</div>` : nothing}
-${this.saving ? this.savePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
+${this.saving ? this.savePop() : nothing}${this.leaving ? this.leavePop() : nothing}${this.xfer ? this.xferLayer() : nothing}<div class="sr" role="status" aria-live="polite">${this.live}</div></div>`;
   }
 
   // prettier-ignore
   private top(title: string): TemplateResult {
-    return html`<header class="top" role="toolbar" aria-label=${S.title}>${btn(S.back, () => this.leave(false), 'ghost')}<h2>${title}</h2>
+    const mcu = this.host === 'mcu';
+    const dirty = mcu ? this.mcuDirty : this.dirtyFromSaved;
+    return html`<header class="top" role="toolbar" aria-label=${S.title}>${mcu ? btn(S.close, () => this.close(), 'ghost') : btn(S.back, () => this.leave(false), 'ghost')}<h2>${title}</h2>
 ${this.layout === 'compact' ? html`<button class="b" aria-expanded=${this.sheet} @click=${() => (this.sheet = !this.sheet)}>${this.tab === 'path' ? S.points : S.outline}</button>` : nothing}
-<input class="name" type="text" aria-label=${S.nameLabel} title=${S.nameTip} .value=${this.name} @input=${(e: Event) => (this.name = (e.target as HTMLInputElement).value)} /><span class="mark" aria-live="polite">${this.saved ? (this.dirtyFromSaved ? S.markChanged : S.markSaved) : ''}</span><span class="grow"></span>
+<input class="name" type="text" maxlength=${mcu ? 80 : nothing} aria-required=${mcu} aria-invalid=${this.nameErr} aria-describedby=${mcu ? 'nm-err' : nothing} aria-label=${S.nameLabel} title=${S.nameTip} .value=${this.name} @input=${(e: Event) => ((this.name = (e.target as HTMLInputElement).value), (this.nameErr = false))} />${mcu ? html`<span class="warn" id="nm-err" role="alert">${this.nameErr ? S.nameRequired : ''}</span>` : nothing}<span class="mark" aria-live="polite">${this.saved ? (dirty ? S.markChanged : S.markSaved) : ''}</span><span class="grow"></span>
 <button class="b icon" aria-label=${S.undo} aria-disabled=${!this.canUndo} @click=${() => this.undo()}>&#8630;</button><button class="b icon" aria-label=${S.redo} aria-disabled=${!this.future.length} @click=${() => this.redo()}>&#8631;</button>
-${this.noLib ? html`<span class="sr" id="m1d">${S.m1}</span>` : nothing}<button class="b" aria-disabled=${this.noLib} aria-describedby=${this.noLib ? 'm1d' : nothing} @click=${() => this.openSave()}>${S.saveLib}</button>${btn(S.done, () => this.done(), 'primary')}</header>`;
+${mcu ? html`<button class="b primary" aria-disabled=${!this.name.trim() || this.saveBusy} @click=${() => void this.saveMcu()}>${S.saveShape}</button>` : html`${this.noLib ? html`<span class="sr" id="m1d">${S.m1}</span>` : nothing}<button class="b" aria-disabled=${this.noLib} aria-describedby=${this.noLib ? 'm1d' : nothing} @click=${() => this.openSave()}>${S.saveLib}</button>${btn(S.done, () => this.done(), 'primary')}`}</header>`;
+  }
+
+  private mcuBar(): TemplateResult | typeof nothing {
+    if (this.host !== 'mcu' || (!this.conflict && !this.mcuError)) return nothing;
+    return this.conflict
+      ? html`<div class="banners"><div class="banner warn conflict" role="alert">${S.conflictMcu} ${btn(S.saveCopy, () => void this.saveMcu(true))}${btn(S.reload, () => void this.reloadMcu())}</div></div>`
+      : html`<div class="banners"><div class="banner warn" role="alert">${this.mcuError}</div></div>`;
+  }
+
+  // prettier-ignore
+  private leavePop(): TemplateResult {
+    return html`<div class="pop" role="alertdialog" aria-modal="true" aria-label=${S.leaveTitle}><h3>${S.leaveTitle}</h3>
+<div class="acts end"><button class="b ghost" data-keep @click=${() => ((this.leaving = false), this.focusTo('.layer'))}>${S.keep}</button><button class="b primary" @click=${() => ((this.leaving = false), this.leave(false))}>${S.leave}</button></div></div>`;
   }
 
   private banners(): TemplateResult | typeof nothing {
