@@ -1121,14 +1121,11 @@ export class StudioCanvas extends LitElement {
         background-image: radial-gradient(var(--mc-canvas-dot) 1px, transparent 1.2px);
         background-size: 16px 16px;
       }
-      /* The selection frame is the focus indicator; a subtle ring only when nothing is framed. */
+      /* The canvas always shows a ring when the keyboard is on it; the selection frame inside it marks what is selected. */
       .canvas:focus-visible {
         /* --mc-text-2: non-accent, >= 3:1 against --mc-canvas in light (5.2:1) and dark (6.0:1) */
         outline: 2px solid var(--mc-text-2);
         outline-offset: -2px;
-      }
-      .canvas.framed:focus-visible {
-        outline: none;
       }
       .canvas-inner {
         position: relative;
