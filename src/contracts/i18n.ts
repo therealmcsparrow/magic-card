@@ -186,7 +186,8 @@ export interface ModuleI18n {
   /** Current locale of this bundle. */
   locale(): Locale;
   t(id: MessageId, args?: MessageArgs): string;
-  tc(context: string, id: MessageText, args?: MessageArgs): string;
+  /** The id is the British text in source and a number after the loader (tc('verb', 17)), like t(). */
+  tc(context: string, id: MessageId, args?: MessageArgs): string;
   tx(id: MessageId, args: RichArgs): unknown[];
   /** Identity marker for data literals (becomes the index after the loader). */
   m(id: MessageText): MessageId;

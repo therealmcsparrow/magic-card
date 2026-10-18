@@ -77,7 +77,7 @@ const core = (ns: Parameters<I18nFor>[0], tb: () => Tables | undefined) => {
     ns,
     locale: () => NAMES[loc],
     t: (id: string | number, a?: RichArgs) => make(id, a).join(''),
-    tc: (c: string, id: string, a?: RichArgs) => make(id, a, c).join(''),
+    tc: (c: string, id: string | number, a?: RichArgs) => make(id, a, c).join(''),
     tx: (id: string | number, a: RichArgs) => make(id, a),
     m: (id: string) => id,
   };
