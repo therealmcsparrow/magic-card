@@ -5,6 +5,8 @@ import { entityColorCss } from '../../utils/entity-color';
 import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc } from '../model';
 import type { RigShape } from '../model-v2';
+import { LayerRows, layerRowStyles } from './layer-row';
+import type { LayerView, LayersDensity } from '../../contracts/studio-layers';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
 import { hasDrawOn, isFilled, isStroked, moveShapeInLayer, removeShape } from './draw-utils';
 import { selectedShapeId, sourceViewBox } from './draw-store';
@@ -22,6 +24,7 @@ abstract class ShapesLayersBase extends LitElement {
 
   static styles = [
     editorSystem,
+    layerRowStyles,
     css`
       :host {
         display: block;
@@ -33,69 +36,13 @@ abstract class ShapesLayersBase extends LitElement {
         display: grid;
         gap: 2px;
       }
-      li {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        min-height: 44px;
-        align-items: center;
-        border-radius: 8px;
-      }
-      li:hover {
-        background: var(--secondary-background-color, #f2f3f5);
-      }
-      li.sel {
-        background: color-mix(in srgb, var(--primary-color, #03a9f4) 12%, transparent);
-      }
-      .pick {
-        display: grid;
-        grid-template-columns: 28px minmax(0, 1fr);
-        align-items: center;
-        gap: 8px;
-        min-height: 40px;
-        padding: 0 8px;
-        border: 0;
-        background: none;
-        color: var(--primary-text-color, #212121);
-        font: inherit;
-        font-size: 0.875rem;
-        text-align: left;
-        cursor: pointer;
-        border-radius: 8px;
-        min-width: 0;
-      }
-      li.sel .pick {
-        color: color-mix(in srgb, var(--primary-color, #03a9f4) 60%, var(--primary-text-color, #212121));
-      }
-      .pick:focus-visible {
-        outline: 2px solid var(--primary-color, #03a9f4);
-        outline-offset: -2px;
-      }
       .thumb {
+        flex: none;
         width: 28px;
         height: 28px;
         border-radius: 6px;
         background: var(--secondary-background-color, #f2f3f5);
         color: var(--state-icon-color, #44739e);
-      }
-      .nm {
-        display: grid;
-        min-width: 0;
-      }
-      .nm span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .nm small {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 0.75rem;
-        color: var(--secondary-text-color, #5f6368);
-      }
-      .acts {
-        display: flex;
-        padding-right: 4px;
       }
       .empty-note {
         margin: 0;
@@ -114,6 +61,14 @@ abstract class ShapesLayersBase extends LitElement {
   @property({ type: Number }) time = 0;
   @property({ attribute: false }) tile?: string;
   @property({ attribute: false }) stage?: StageInfo;
+  @property({ attribute: false }) layerView?: LayerView;
+  @property() density: LayersDensity = 'full';
+
+  private readonly _list = new LayerRows(this, {
+    select: (key, e) => this._pick(key.slice(6), e),
+    move: (key, dir) => this._shift(key.slice(6), dir),
+    nameOf: (key) => this.doc?.rig?.shapes?.find((x) => x.id === key.slice(6))?.name ?? key,
+  });
 
   private _emit(doc: AnimationDoc, label: string): void {
     this.dispatchEvent(new CustomEvent('doc-change', { bubbles: true, composed: true, detail: { doc, label } }));
@@ -121,6 +76,33 @@ abstract class ShapesLayersBase extends LitElement {
 
   private _select(selection: StudioSelection): void {
     this.dispatchEvent(new CustomEvent('selection-change', { bubbles: true, composed: true, detail: { selection } }));
+  }
+
+  private _pick(id: string, _e: MouseEvent | KeyboardEvent): void {
+    const target = `shape:${id}` as const;
+    // with a draw tool picked, a shape is selected with the select tool (the drawing overlay stays)
+    this._select(this.selection.kind === 'tool' ? { kind: 'tool', tool: 'select', target } : { kind: 'target', target });
+  }
+
+  private _shift(id: string, dir: 'up' | 'down'): void {
+    const doc = this.doc;
+    const s = doc?.rig?.shapes?.find((x) => x.id === id);
+    if (!doc || !s) return;
+    const next = moveShapeInLayer(doc, id, dir);
+    if (next === doc) return;
+    const under = this.side === 'under';
+    const rows = doc.rig!.shapes!.filter((x) => (x.layer === 'under') === under);
+    const edge = dir === 'up' ? under && rows[rows.length - 1].id === id : !under && rows[0].id === id;
+    this._emit(next, dir === 'up' ? (edge ? 'Bring shape over the icon' : 'Bring shape forward') : edge ? 'Send shape under the icon' : 'Send shape backward');
+    this._list.announce(`${s.name} moved ${edge ? (dir === 'up' ? 'over the icon' : 'under the icon') : dir === 'up' ? 'up' : 'down'}`);
+  }
+
+  private _delete(id: string): void {
+    const doc = this.doc;
+    const s = doc?.rig?.shapes?.find((x) => x.id === id);
+    if (!doc || !s || this.disabled || this._list.refuseLocked(`shape:${id}`, s.name)) return;
+    this._emit(removeShape(doc, id), 'Delete shape');
+    if (selectedShapeId(this.selection) === id) this._select({ kind: 'none' });
   }
 
   private _thumb(s: RigShape, vb: string): TemplateResult {
@@ -141,43 +123,34 @@ abstract class ShapesLayersBase extends LitElement {
     const under = this.side === 'under';
     if (!doc || !shapes.some((s) => (s.layer === 'under') === under)) return html``;
     const sel = selectedShapeId(this.selection);
-    // with a draw tool picked, a shape is selected with the select tool (the drawing overlay stays)
-    const drawing = this.selection.kind === 'tool';
     const vb = sourceViewBox(doc.rig);
     // the top of this side's paint order first: later before earlier
     const rows = shapes.map((s, i) => ({ s, i })).filter((r) => (r.s.layer === 'under') === under).reverse();
+    const first = rows[0].s.id;
+    const last = rows[rows.length - 1].s.id;
     return html`<ul aria-label=${under ? 'Shapes under the icon' : 'Shapes over the icon'}>
       ${rows.map(({ s }) => {
         const target = `shape:${s.id}` as const;
         const track = doc.tracks?.find((t) => t.target === target);
         const notes = [hasDrawOn(doc, target) ? 'draws on' : '', track?.path ? 'moves' : ''].filter(Boolean).join(', ');
-        return html`<li class=${s.id === sel ? 'sel' : ''} data-id=${s.id}>
-          <button
-            type="button"
-            class="pick"
-            aria-current=${s.id === sel ? 'true' : 'false'}
-            @click=${() => this._select(drawing ? { kind: 'tool', tool: 'select', target } : { kind: 'target', target })}
-          >
-            ${this._thumb(s, vb)}
-            <span class="nm"><span>${s.name}</span><small>${notes}</small></span>
-          </button>
-          ${s.id !== sel
-            ? nothing
-            : html`<span class="acts">
-            <button type="button" class="icon-btn sm up" aria-label=${under && rows[0].s.id === s.id ? `Bring ${s.name} over the icon` : `Bring ${s.name} forward`} title=${under && rows[0].s.id === s.id ? 'Bring over the icon' : 'Bring forward'} ?disabled=${this.disabled || moveShapeInLayer(doc, s.id, 'up') === doc} @click=${() => this._emit(moveShapeInLayer(doc, s.id, 'up'), s.layer === 'under' && rows[0].s.id === s.id ? 'Bring shape over the icon' : 'Bring shape forward')}>
-              <ha-icon icon="mdi:chevron-up"></ha-icon>
-            </button>
-            <button type="button" class="icon-btn sm down" aria-label=${!under && rows[rows.length - 1].s.id === s.id ? `Send ${s.name} under the icon` : `Send ${s.name} backward`} title=${!under && rows[rows.length - 1].s.id === s.id ? 'Send under the icon' : 'Send backward'} ?disabled=${this.disabled || moveShapeInLayer(doc, s.id, 'down') === doc} @click=${() => this._emit(moveShapeInLayer(doc, s.id, 'down'), !under && rows[rows.length - 1].s.id === s.id ? 'Send shape under the icon' : 'Send shape backward')}>
-              <ha-icon icon="mdi:chevron-down"></ha-icon>
-            </button>
-            <button type="button" class="icon-btn sm danger del" aria-label=${`Delete ${s.name}`} title="Delete shape" ?disabled=${this.disabled} @click=${() => {
-              this._emit(removeShape(doc, s.id), 'Delete shape');
-              if (s.id === sel) this._select({ kind: 'none' });
-            }}>
-              <ha-icon icon="mdi:delete-outline"></ha-icon>
-            </button>
-          </span>`}
-        </li>`;
+        const upEdge = under && first === s.id;
+        const downEdge = !under && last === s.id;
+        return this._list.row({
+          key: target,
+          name: s.name,
+          thumb: this._thumb(s, vb),
+          note: notes,
+          describe: notes,
+          selected: s.id === sel,
+          up: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'up') !== doc, label: upEdge ? `Bring ${s.name} over the icon` : `Bring ${s.name} forward`, menu: upEdge ? 'Bring over the icon' : 'Move up (drawn on top)' },
+          down: { ok: !this.disabled && moveShapeInLayer(doc, s.id, 'down') !== doc, label: downEdge ? `Send ${s.name} under the icon` : `Send ${s.name} backward`, menu: downEdge ? 'Send under the icon' : 'Move down' },
+          extra:
+            s.id !== sel
+              ? undefined
+              : html`<button type="button" class="icon-btn sm danger del" data-ctl="del" tabindex="-1" aria-label=${`Delete ${s.name}`} title="Delete shape" aria-disabled=${this.disabled || this._list.locked(target) ? 'true' : nothing} @click=${() => this._delete(s.id)}>
+                  <ha-icon icon="mdi:delete-outline"></ha-icon>
+                </button>`,
+        });
       })}
     </ul>
     ${shapes.length >= 48 ? html`<p class="empty-note">The rig holds the most shapes it can (48).</p>` : nothing}`;

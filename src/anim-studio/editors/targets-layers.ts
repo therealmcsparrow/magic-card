@@ -2,6 +2,8 @@ import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-system';
 import type { AnimationDoc, TargetRef } from '../model';
+import { LayerRows, layerRowStyles } from './layer-row';
+import type { LayerView, LayersDensity } from '../../contracts/studio-layers';
 import { NO_SELECTION, registerPanel, type StudioSelection } from '../slots';
 import { tileDef, type PreviewTile } from '../tiles';
 
@@ -46,6 +48,7 @@ const listText = (labels: string[]): string =>
 export class AnimTargetsLayers extends LitElement {
   static styles = [
     editorSystem,
+    layerRowStyles,
     css`
       :host {
         display: block;
@@ -59,74 +62,11 @@ export class AnimTargetsLayers extends LitElement {
         display: grid;
         gap: 2px;
       }
-      button.row {
-        all: unset;
-        box-sizing: border-box;
-        display: grid;
-        grid-template-columns: 18px minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        min-height: 40px;
-        padding: 6px 10px;
-        border-radius: var(--mc-radius, 8px);
-        color: var(--mc-text);
-        cursor: pointer;
-        transition: background-color 0.15s ease-out, color 0.15s ease-out;
-      }
-      button.row:hover {
-        background: var(--mc-surface-2);
-      }
-      button.row:focus-visible {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: -2px;
-      }
-      button.row[aria-pressed='true'] {
-        background: var(--mc-accent-tint);
-        color: var(--mc-accent-ink);
-      }
-      button.row:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-      }
-      ha-icon {
-        --mdc-icon-size: 18px;
-        color: var(--mc-text-2);
-      }
-      button.row[aria-pressed='true'] ha-icon {
-        color: var(--mc-accent-ink);
-      }
-      .label {
-        display: grid;
-        min-width: 0;
-        line-height: 1.3;
-      }
-      .label small {
-        font-size: 0.75rem;
-        color: var(--mc-text-2);
-      }
-      button.row[aria-pressed='true'] .label small {
-        color: inherit;
-      }
-      .keys {
-        width: 8px;
-        height: 8px;
-        border-radius: 9999px;
-        background: var(--mc-text-2);
-      }
-      button.row[aria-pressed='true'] .keys {
-        background: var(--mc-accent-ink);
-      }
       .hint {
         margin: 8px 10px 0;
         font-size: 0.75rem;
         line-height: 1.4;
         color: var(--mc-text-2);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        button.row {
-          transition: none;
-        }
       }
     `,
   ];
@@ -138,6 +78,13 @@ export class AnimTargetsLayers extends LitElement {
   @property({ type: Boolean }) disabled = false;
   @property({ attribute: false }) selection: StudioSelection = NO_SELECTION;
   @property({ attribute: false }) tile: PreviewTile = 'icon';
+  @property({ attribute: false }) layerView?: LayerView;
+  @property() density: LayersDensity = 'full';
+
+  private readonly _list = new LayerRows(this, {
+    select: (key) => this._select(key.slice(7) as TargetRef),
+    nameOf: (key) => CARD_PART_ROWS.find((r) => r.target === key.slice(7))?.label ?? key,
+  });
 
   private _select(target: TargetRef): void {
     if (this.disabled) return;
@@ -147,22 +94,19 @@ export class AnimTargetsLayers extends LitElement {
 
   private _row(r: TargetRow, onTile: boolean, selected: TargetRef | undefined): TemplateResult {
     const doc = this.doc!;
-    const keyed = animatesTarget(doc, r.target);
-    return html`<li>
-      <button
-        type="button"
-        class="row"
-        data-target=${r.target}
-        aria-pressed=${selected === r.target ? 'true' : 'false'}
-        ?disabled=${this.disabled}
-        title=${onTile ? r.label : `${r.label} is not on the ${tileDef(this.tile).label} tile`}
-        @click=${() => this._select(r.target)}
-      >
-        <ha-icon icon=${r.icon}></ha-icon>
-        <span class="label">${r.label}${onTile ? nothing : html`<small>Not on this tile</small>`}</span>
-        ${keyed ? html`<span class="keys" role="img" aria-label="Animated"></span>` : html`<span></span>`}
-      </button>
-    </li>`;
+    const n = animatesTarget(doc, r.target) ? (r.target === doc.target && doc.kind === 'keyframes' ? (doc.keyframes?.length ?? 0) : 0) + (doc.tracks?.find((t) => t.target === r.target)?.keyframes.length ?? 0) : 0;
+    return this._list.row({
+      key: `target:${r.target}`,
+      name: r.label,
+      icon: r.icon,
+      note: onTile ? undefined : 'Not on this tile',
+      badge: n ? `${n} key${n === 1 ? '' : 's'}` : undefined,
+      describe: [animatesTarget(doc, r.target) ? 'animated' : '', onTile ? '' : `not on the ${tileDef(this.tile).label} tile`].filter(Boolean).join(', '),
+      selected: selected === r.target,
+      // the whole card cannot be hidden
+      toggles: r.target === 'element' ? ['lock'] : undefined,
+      title: onTile ? r.label : `${r.label} is not on the ${tileDef(this.tile).label} tile`,
+    });
   }
 
   protected render(): TemplateResult | typeof nothing {

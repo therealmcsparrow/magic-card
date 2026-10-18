@@ -793,9 +793,12 @@ export class AnimationStudio extends LitElement {
     e.stopPropagation();
     const id = this._doc?.id;
     if (!id) return;
-    const next = new Map(this._layerViews);
-    next.set(id, view);
-    this._layerViews = next;
+    // a message alone (a move, a refused edit) leaves the view as it is
+    if (view !== this._layerViews.get(id) && view !== this._viewOf(this._doc!)) {
+      const next = new Map(this._layerViews);
+      next.set(id, view);
+      this._layerViews = next;
+    }
     if (announce) this._say(announce);
   };
 
@@ -1524,6 +1527,8 @@ export class AnimationStudio extends LitElement {
         .selection=${this._selection}
         .tile=${this._tile}
         .stage=${this._stageInfo}
+        .layerView=${this._viewOf(d)}
+        .density=${this._width > 0 && this._width < RAIL_BELOW ? 'compact' : 'full'}
         .stageRect=${extra.stageRect}
         .subjectRect=${extra.subjectRect}
         .entityColor=${ENTITY_COLOR}
@@ -1876,7 +1881,7 @@ export class AnimationStudio extends LitElement {
           <ha-icon icon=${rail ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left'}></ha-icon>
         </button>
       </div>
-      <div class="layers-body">${panels.length ? panels : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
+      <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">Hide, solo and lock only change this preview.</p>` : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
     </nav>`;
   }
 

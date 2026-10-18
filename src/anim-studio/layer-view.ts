@@ -1,4 +1,4 @@
-import type { ApplyLayerView, LayerKey, LayerView } from '../contracts/studio-layers';
+import type { ApplyLayerView, IsLocked, LayerKey, LayerToggle, LayerView } from '../contracts/studio-layers';
 import type { AnimationDoc, AnimationKeyframe } from './model';
 import type { BindProperty, TargetRef, Track } from './model-v2-core';
 import { isEmptyKeyframe, stripLane, usedLanes, type LaneId } from './editors/keyframes-utils';
@@ -95,8 +95,69 @@ export function resolveHidden(doc: AnimationDoc, view: LayerView): Set<LayerKey>
   return hidden;
 }
 
-/** Number of rows the preview hides (the chip's N). */
-export const hiddenCount = (doc: AnimationDoc, view: LayerView): number => resolveHidden(doc, view).size;
+/**
+ * Number of layers the preview hides (the chip's N): the effective hidden rows, without the pseudo
+ * `parents:` rows and without a row that is hidden only because its parent is (the child particles of
+ * a hidden emitter, a lane of a hidden target).
+ */
+export function hiddenCount(doc: AnimationDoc, view: LayerView): number {
+  const hidden = resolveHidden(doc, view);
+  let n = 0;
+  for (const k of hidden) {
+    if (k.startsWith(PARENTS_PREFIX)) continue;
+    const p = parentKey(doc, k);
+    if (p && hidden.has(p)) continue;
+    n++;
+  }
+  return n;
+}
+
+/** The row a row belongs to: a part to its group, child particles to their emitter, a lane to its target. */
+export function parentKey(doc: AnimationDoc, key: LayerKey): LayerKey | undefined {
+  const [kind, ...rest] = key.split(':');
+  const id = rest.join(':');
+  if (kind === 'part') {
+    const g = doc.rig?.groups?.find((x) => x.parts.includes(id));
+    return g ? `group:${g.id}` : undefined;
+  }
+  if (kind === 'children') return `emitter:${id}`;
+  if (kind === 'lane') {
+    const t = key.slice(5, key.lastIndexOf('|'));
+    return t === 'element' ? undefined : /^(part|group|shape):/.test(t) ? t : `target:${t}`;
+  }
+  return undefined;
+}
+
+const FIELD: Record<LayerToggle, 'hidden' | 'solo' | 'locked'> = { hide: 'hidden', solo: 'solo', lock: 'locked' };
+
+/** The view with that toggle flipped for that row (a new object). */
+export function toggleLayer(view: LayerView, key: LayerKey, toggle: LayerToggle): LayerView {
+  const f = FIELD[toggle];
+  return { ...view, [f]: view[f].includes(key) ? view[f].filter((k) => k !== key) : [...view[f], key] };
+}
+
+/** Locked directly, or through its group, target or emitter. */
+export const isLocked: IsLocked = (doc, view, key) => {
+  for (let k: LayerKey | undefined = key, n = 0; k && n < 4; k = parentKey(doc, k), n++) if (view.locked.includes(k)) return true;
+  return false;
+};
+
+/** Why a row is not shown in the preview: its own hide, a solo elsewhere, or the row it belongs to (`by`). */
+export function hideReason(doc: AnimationDoc, view: LayerView, key: LayerKey): { kind: 'self' | 'solo' | 'parent'; by?: LayerKey } | undefined {
+  if (view.hidden.includes(key)) return { kind: 'self' };
+  const hidden = resolveHidden(doc, view);
+  if (hidden.has(key)) return { kind: 'solo' };
+  for (let k = parentKey(doc, key), n = 0; k && n < 4; k = parentKey(doc, k), n++) if (hidden.has(k)) return { kind: 'parent', by: k };
+  return undefined;
+}
+
+/** How many rows below a row (a group's parts, a target's lanes, an emitter's child particles) are hidden or soloed: the "2 hidden" badge of a closed row. */
+export function markedBelow(doc: AnimationDoc, view: LayerView, key: LayerKey): number {
+  const hidden = resolveHidden(doc, view);
+  let n = 0;
+  for (const k of rowsOf(doc).keys()) if (parentKey(doc, k) === key && (hidden.has(k) || view.solo.includes(k))) n++;
+  return n;
+}
 
 /** The binding properties that write a lane. */
 const BIND_LANE: Partial<Record<BindProperty, LaneId>> = { rotate: 'rotate', rotate_speed: 'rotate', x: 'x', y: 'y', scale: 'scale', opacity: 'opacity', draw: 'draw', color_mix: 'color' };

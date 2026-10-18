@@ -5,6 +5,8 @@ import type { AnimationDoc, TargetRef } from '../model';
 import { V2_CAPS } from '../model-v2';
 import { editorDefined } from '../editor-slots';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
+import type { LayerView, LayersDensity } from '../../contracts/studio-layers';
+import { LayerRows, layerRowStyles } from './layer-row';
 import type { PreviewTile } from '../tiles';
 import {
   emitDoc,
@@ -14,11 +16,9 @@ import {
   groupParts,
   groupRef,
   hasRig,
-  hiddenParts,
   loadGeometry,
   mergeParts,
   movePart,
-  onHiddenChange,
   partIdsOf,
   partRef,
   piecesOf,
@@ -29,8 +29,6 @@ import {
   splitPart,
   targetName,
   targetSelection,
-  toggleHidden,
-  clearHidden,
   trackOf,
   ungroup,
 } from './parts-model';
@@ -41,7 +39,7 @@ import {
  * as a tree, selects them (click, Shift range, Ctrl / Cmd toggle; the selection is the studio's:
  * selection-change with target 'part:<id>' / 'group:<id>', so the timeline adds keys to that
  * target's track), renames (double-click, F2), groups (Ctrl+G), ungroups (Ctrl+Shift+G), merges,
- * splits back, reorders (Alt+arrows) and hides parts in the preview (session only, never stored).
+ * splits back, reorders (Alt+arrows) and hides, solos and locks parts in the preview (session only, never stored; the shared layer row).
  * Every action is a button too: no hover-only or keyboard-only actions (tablet).
  */
 
@@ -67,6 +65,8 @@ export class AnimPartsLayers extends LitElement {
   @property({ attribute: false }) selection: StudioSelection = { kind: 'none' };
   @property({ attribute: false }) tile: PreviewTile = 'icon';
   @property({ attribute: false }) stage?: StageInfo;
+  @property({ attribute: false }) layerView?: LayerView;
+  @property() density: LayersDensity = 'full';
 
   @state() private _renaming?: TargetRef;
   @state() private _icon = '';
@@ -79,25 +79,33 @@ export class AnimPartsLayers extends LitElement {
   @state() private _status = '';
   /** A visible note after a split (the 64-part cap cut it short). */
   @state() private _notice = '';
-  /** The row that holds the tab stop (roving tabindex): the focused row, else the primary selection, else the first row. */
-  private _focusRef?: string;
   /** Shift-click range anchor. */
   private _anchor?: TargetRef;
   /** The user typed the icon to split (else it follows the document and the preview tile). */
   private _iconTyped = false;
-  private _offHidden?: () => void;
+
+  private readonly _list = new LayerRows(this, {
+    select: (key, e) => {
+      const rows = this._rows();
+      const row = rows.find((r) => r.ref === key);
+      if (row && e instanceof MouseEvent) this._onRowClick(e, row, rows);
+      else if (row) {
+        this._anchor = row.ref;
+        this._select([row.ref]);
+      }
+    },
+    move: (key, dir) => this._move(dir === 'up' ? 1 : -1, key as TargetRef),
+    rename: (key) => (this._renaming = key as TargetRef),
+    dblclick: (key) => !this.disabled && !this._list.refuseLocked(key, targetName(this.doc!, key as TargetRef)) && (this._renaming = key as TargetRef),
+    open: (key, open) => this._setOpen(key.slice(6), open),
+    nameOf: (key) => (this.doc ? targetName(this.doc, key as TargetRef) : key),
+  });
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._offHidden = onHiddenChange(() => this.requestUpdate());
     // the card bundle defines the icon picker: until it does, "Icon to split" is a plain field
     if (!editorDefined('mc-icon-picker') && typeof customElements !== 'undefined') void customElements.whenDefined('mc-icon-picker').then(() => this.requestUpdate());
   }
-  disconnectedCallback(): void {
-    super.disconnectedCallback();
-    this._offHidden?.();
-  }
-
   protected willUpdate(changed: PropertyValues<this>): void {
     // another document: nothing of the last one's split carries over
     const prev = changed.get('doc') as AnimationDoc | undefined;
@@ -192,7 +200,6 @@ export class AnimPartsLayers extends LitElement {
       const n = next.rig?.parts.length ?? 0;
       const capped = pieces.length > V2_CAPS.parts;
       this._notice = capped ? `The icon has ${pieces.length} shapes: the first ${V2_CAPS.parts} became parts (the most a rig holds), the rest stay at rest.` : '';
-      clearHidden();
       this._change(next, 'Split icon', `Split into ${n} part${n === 1 ? '' : 's'}${capped ? ` (the first ${V2_CAPS.parts})` : ''}`);
       this._confirm = false;
       this._resplit = false;
@@ -205,6 +212,7 @@ export class AnimPartsLayers extends LitElement {
   private _group(): void {
     const d = this.doc;
     if (!d || this.disabled) return;
+    if (this._lockedSel()) return;
     const why = groupBlocker(d, this._sel);
     if (why) {
       this._status = why;
@@ -219,7 +227,7 @@ export class AnimPartsLayers extends LitElement {
   private _ungroup(): void {
     const d = this.doc;
     const groups = this._sel.filter((r) => r.startsWith('group:'));
-    if (!d || !groups.length || this.disabled) return;
+    if (!d || !groups.length || this.disabled || this._lockedSel()) return;
     let next = d;
     const members: TargetRef[] = [];
     for (const g of groups) {
@@ -232,7 +240,7 @@ export class AnimPartsLayers extends LitElement {
 
   private _merge(): void {
     const d = this.doc;
-    if (!d || this.disabled) return;
+    if (!d || this.disabled || this._lockedSel()) return;
     const r = mergeParts(d, this._sel);
     if (!r.id) return;
     this._change(r.doc, 'Merge parts', 'Parts merged');
@@ -242,19 +250,37 @@ export class AnimPartsLayers extends LitElement {
   private _splitBack(): void {
     const d = this.doc;
     const part = this._sel.find((r) => r.startsWith('part:'));
-    if (!d || !part || this.disabled) return;
+    if (!d || !part || this.disabled || this._lockedSel()) return;
     const r = splitPart(d, part.slice(5));
     if (r.ids.length < 2) return;
     this._change(r.doc, 'Split part', `Split into ${r.ids.length} parts`);
     this._select(r.ids.map(partRef));
   }
 
-  private _move(by: -1 | 1): void {
+  /** Say so and return true when a selected part, group or piece is locked. */
+  private _lockedSel(): boolean {
     const d = this.doc;
-    const part = this._sel.find((r) => r.startsWith('part:'));
-    if (!d || !part || this.disabled) return;
+    const hit = d && this._sel.find((r) => this._list.locked(r));
+    return !!hit && this._list.refuseLocked(hit, targetName(d!, hit));
+  }
+
+  private _move(by: -1 | 1, ref?: TargetRef): void {
+    const d = this.doc;
+    const part = ref ?? this._sel.find((r) => r.startsWith('part:'));
+    if (!d || !part || !part.startsWith('part:') || this.disabled) return;
+    if (this._list.refuseLocked(part, targetName(d, part))) return;
     const next = movePart(d, part.slice(5), by);
-    if (next !== d) this._change(next, 'Move part', by > 0 ? 'Moved up: drawn on top' : 'Moved down: drawn underneath');
+    if (next !== d) {
+      this._change(next, 'Move part', by > 0 ? 'Moved up: drawn on top' : 'Moved down: drawn underneath');
+      this._list.announce(`${targetName(d, part)} moved ${by > 0 ? 'up' : 'down'}`);
+    }
+  }
+
+  private _setOpen(gid: string, open: boolean): void {
+    const next = new Set(this._collapsed);
+    if (open) next.delete(gid);
+    else next.add(gid);
+    this._collapsed = next;
   }
 
   private _rename(ref: TargetRef, name: string): void {
@@ -262,7 +288,7 @@ export class AnimPartsLayers extends LitElement {
     if (this._renaming !== ref) return;
     this._renaming = undefined;
     const d = this.doc;
-    if (!d || !name.trim() || name.trim() === targetName(d, ref)) return;
+    if (!d || !name.trim() || name.trim() === targetName(d, ref) || this._list.refuseLocked(ref, targetName(d, ref))) return;
     this._change(renameTarget(d, ref, name), 'Rename part', 'Renamed');
   }
 
@@ -299,70 +325,25 @@ export class AnimPartsLayers extends LitElement {
       return;
     }
     const rows = this._rows();
-    const focused = (this.renderRoot as ShadowRoot).activeElement?.closest?.('li.row')?.getAttribute('data-ref') ?? undefined;
-    const curRef = focused ?? this.selection.target ?? this._anchor;
-    const cur = rows.findIndex((r) => r.ref === curRef);
-    const row = rows[cur];
-    if (row && !mod && k === 'h') {
-      // hide / show in the preview
+    const cur = rows.findIndex((r) => r.ref === ((e.target as HTMLElement).closest?.('li.lr')?.getAttribute('data-ref') ?? this.selection.target ?? this._anchor));
+    // Shift+Up / Down: extend the selection (plain arrows, Home / End, Alt, F2, H S L: the shared row)
+    if (e.shiftKey && !e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && (e.target as HTMLElement).matches?.('[data-lk]')) {
       e.preventDefault();
-      toggleHidden(row.ref);
-      return;
-    }
-    if (row?.kind === 'group' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
-      e.preventDefault();
-      const gid = row.ref.slice(6);
-      const next = new Set(this._collapsed);
-      if (e.key === 'ArrowLeft') next.add(gid);
-      else next.delete(gid);
-      this._collapsed = next;
-      return;
-    }
-    if (row?.level === 2 && e.key === 'ArrowLeft') {
-      // to the row's group
-      e.preventDefault();
-      const g = rows.slice(0, cur).reverse().find((r) => r.kind === 'group');
-      if (g) {
-        this._select([g.ref]);
-        this._focusRow(g.ref);
-      }
-      return;
-    }
-    if (e.key === ' ' || e.key === 'Enter') {
-      if (row && (e.target as HTMLElement).matches?.('li.row')) {
-        e.preventDefault();
-        this._anchor = row.ref;
-        this._select([row.ref]);
-      }
-      return;
-    }
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (e.altKey) return this._move(e.key === 'ArrowUp' ? 1 : -1);
       const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === 'ArrowDown' ? 1 : -1)))];
       if (!next) return;
-      if (e.shiftKey && cur >= 0) this._select([...this._sel, next.ref], next.ref);
-      else {
-        this._anchor = next.ref;
-        this._select([next.ref]);
-      }
+      if (cur >= 0) this._select([...this._sel, next.ref], next.ref);
+      else this._select([next.ref]);
       this._focusRow(next.ref);
       return;
     }
-    if (e.key === 'F2' && this.selection.target) {
-      e.preventDefault();
-      this._renaming = this.selection.target;
-      return;
-    }
-    if (e.key === 'Escape' && this._sel.length) {
+    if (e.key === 'Escape' && this._sel.length && (e.target as HTMLElement).matches?.('[data-lk]')) {
       e.preventDefault();
       this._select([]);
     }
   }
 
   private _focusRow(ref: string): void {
-    this._focusRef = ref;
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>(`li[data-ref="${ref}"]`)?.focus());
+    this._list.focusKey(ref);
   }
 
   // ── render ──
@@ -444,85 +425,47 @@ export class AnimPartsLayers extends LitElement {
     </div>`;
   }
 
-  private _tabRef(rows: Row[]): string | undefined {
-    for (const r of [this._focusRef, this.selection.target]) if (r && rows.some((x) => x.ref === r)) return r;
-    return rows[0]?.ref;
-  }
-
   private _renderRow(row: Row, rows: Row[], sel: TargetRef[]): TemplateResult {
-    const selected = sel.includes(row.ref);
-    const hidden = hiddenParts().has(row.ref);
+    const d = this.doc!;
     const gid = row.kind === 'group' ? row.ref.slice(6) : '';
-    const collapsed = !!gid && this._collapsed.has(gid);
-    const meta = row.kind === 'part' && row.count > 1 ? `${row.count} shapes` : '';
-    return html`<li
-      role="treeitem"
-      class="row lvl-${row.level} ${selected ? 'is-selected' : ''} ${hidden ? 'is-hidden' : ''}"
-      aria-level=${row.level}
-      aria-selected=${selected ? 'true' : 'false'}
-      aria-expanded=${row.kind === 'group' ? (collapsed ? 'false' : 'true') : nothing}
-      tabindex=${row.ref === this._tabRef(rows) ? 0 : -1}
-      @focus=${() => (this._focusRef = row.ref)}
-      data-ref=${row.ref}
-      @click=${(e: MouseEvent) => this._onRowClick(e, row, rows)}
-      @dblclick=${() => !this.disabled && (this._renaming = row.ref)}
-    >
-      ${row.kind === 'group'
-        ? html`<button
-            type="button"
-            class="caret"
-            tabindex="-1"
-            aria-label=${collapsed ? `Expand ${row.name}` : `Collapse ${row.name}`}
-            @click=${(e: Event) => {
-              e.stopPropagation();
-              const next = new Set(this._collapsed);
-              if (collapsed) next.delete(gid);
-              else next.add(gid);
-              this._collapsed = next;
-            }}
-          >
-            <ha-icon icon=${collapsed ? 'mdi:chevron-right' : 'mdi:chevron-down'}></ha-icon>
-          </button>`
-        : html`<span class="caret-space"></span>`}
-      <ha-icon class="kind" icon=${ICONS[row.kind]}></ha-icon>
-      ${this._renaming === row.ref
-        ? html`<input
-            class="input rename"
-            aria-label="Name"
-            .value=${row.name}
-            maxlength="80"
-            @click=${(e: Event) => e.stopPropagation()}
-            @keydown=${(e: KeyboardEvent) => {
-              e.stopPropagation();
-              if (e.key === 'Enter') {
-                this._rename(row.ref, (e.target as HTMLInputElement).value);
-                this._focusRow(row.ref);
-              }
-              if (e.key === 'Escape') {
-                this._renaming = undefined;
-                this._focusRow(row.ref);
-              }
-            }}
-            @blur=${(e: Event) => this._rename(row.ref, (e.target as HTMLInputElement).value)}
-          />`
-        : html`<span class="name">${row.name}</span>`}
-      ${meta ? html`<span class="meta">${meta}</span>` : nothing}
-      ${row.keys ? html`<span class="keys" title="Keys on the timeline">${row.keys}</span>` : nothing}
-      <button
-        type="button"
-        class="eye"
-        tabindex="-1"
-        aria-pressed=${hidden ? 'true' : 'false'}
-        aria-label=${hidden ? `Show ${row.name} in the preview` : `Hide ${row.name} in the preview`}
-        title=${hidden ? 'Show in the preview' : 'Hide in the preview'}
-        @click=${(e: Event) => {
-          e.stopPropagation();
-          toggleHidden(row.ref);
-        }}
-      >
-        <ha-icon icon=${hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline'}></ha-icon>
-      </button>
-    </li>`;
+    const parts = d.rig?.parts ?? [];
+    const order = row.kind === 'part' ? parts.findIndex((p) => `part:${p.id}` === row.ref) : -1;
+    const lockedRow = this._list.locked(row.ref);
+    return this._list.row({
+      key: row.ref,
+      name: row.name,
+      icon: ICONS[row.kind],
+      note: row.kind === 'part' && row.count > 1 ? `${row.count} shapes` : undefined,
+      badge: row.keys ? `${row.keys} key${row.keys === 1 ? '' : 's'}` : undefined,
+      level: row.level,
+      expanded: row.kind === 'group' ? !this._collapsed.has(gid) : undefined,
+      selected: sel.includes(row.ref),
+      renamable: true,
+      up: row.kind === 'part' ? { ok: !this.disabled && order >= 0 && order < parts.length - 1 && !lockedRow, label: `Move ${row.name} up (drawn on top)`, menu: 'Move up (drawn on top)' } : undefined,
+      down: row.kind === 'part' ? { ok: !this.disabled && order > 0 && !lockedRow, label: `Move ${row.name} down (drawn underneath)`, menu: 'Move down' } : undefined,
+      renaming:
+        this._renaming === row.ref
+          ? html`<input
+              class="input rename"
+              aria-label="Name"
+              .value=${row.name}
+              maxlength="80"
+              @click=${(e: Event) => e.stopPropagation()}
+              @keydown=${(e: KeyboardEvent) => {
+                e.stopPropagation();
+                if (e.key === 'Enter') {
+                  this._rename(row.ref, (e.target as HTMLInputElement).value);
+                  this._focusRow(row.ref);
+                }
+                if (e.key === 'Escape') {
+                  this._renaming = undefined;
+                  this._focusRow(row.ref);
+                }
+              }}
+              @blur=${(e: Event) => this._rename(row.ref, (e.target as HTMLInputElement).value)}
+            />`
+          : undefined,
+    });
   }
 
   protected render(): TemplateResult {
@@ -551,11 +494,11 @@ export class AnimPartsLayers extends LitElement {
               ${this._iconBtn('mdi:arrow-up', 'Move up (drawn on top)', () => this._move(1), order >= 0 && order < d.rig!.parts.length - 1, 'Alt+ArrowUp')}
               ${this._iconBtn('mdi:arrow-down', 'Move down (drawn underneath)', () => this._move(-1), order > 0, 'Alt+ArrowDown')}
             </div>
-            <ul class="tree" role="tree" aria-label="Icon parts" aria-multiselectable="true">
+            <ul class="tree" aria-label="Icon parts">
               ${rows.map((r) => this._renderRow(r, rows, sel))}
             </ul>
             ${this._notice ? html`<p class="help notice" role="note">${this._notice}</p>` : nothing}
-            <p class="help">Click a part to animate it on the timeline. Shift or Ctrl adds to the selection; double-click or F2 renames, H hides.</p>
+            <p class="help">Click a part to animate it on the timeline. Shift or Ctrl adds to the selection; double-click or F2 renames. H hides, S solos, L locks (preview only).</p>
             ${this._resplit || this._confirm
               ? nothing
               : html`<div>
@@ -571,6 +514,7 @@ export class AnimPartsLayers extends LitElement {
   static styles = [
     editorTokens,
     editorPrimitives,
+    layerRowStyles,
     css`
       :host {
         display: block;
@@ -611,103 +555,6 @@ export class AnimPartsLayers extends LitElement {
         padding: 0;
         display: grid;
         gap: 1px;
-      }
-      .row {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        min-height: 36px;
-        padding: 0 4px 0 2px;
-        border-radius: var(--mc-radius-sm, 6px);
-        cursor: pointer;
-        user-select: none;
-        --mdc-icon-size: 18px;
-      }
-      .row:hover {
-        background: var(--mc-surface-2);
-      }
-      .row.is-selected {
-        background: var(--mc-accent-tint);
-        color: var(--mc-accent-ink);
-      }
-      .row:focus-visible {
-        outline: 2px solid var(--mc-accent);
-        outline-offset: -2px;
-      }
-      .row.lvl-2 {
-        padding-left: 22px;
-      }
-      .row.is-hidden .name,
-      .row.is-hidden .kind {
-        opacity: 0.5;
-      }
-      .kind {
-        color: var(--mc-text-2);
-        flex: none;
-      }
-      .row.is-selected .kind {
-        color: inherit;
-      }
-      .caret,
-      .eye {
-        flex: none;
-        display: grid;
-        place-items: center;
-        width: 28px;
-        height: 28px;
-        border: 0;
-        border-radius: var(--mc-radius-sm, 6px);
-        background: transparent;
-        color: var(--mc-text-2);
-        padding: 0;
-        cursor: pointer;
-      }
-      .caret:hover,
-      .eye:hover {
-        background: var(--mc-surface);
-      }
-      .eye[aria-pressed='true'] {
-        color: var(--mc-accent-ink);
-      }
-      .caret-space {
-        width: 28px;
-        flex: none;
-      }
-      .name {
-        flex: 1;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .meta {
-        flex: none;
-        color: var(--mc-text-2);
-        font-size: 0.75rem;
-      }
-      .row.is-selected .meta {
-        color: inherit;
-      }
-      .keys {
-        flex: none;
-        min-width: 20px;
-        height: 20px;
-        padding: 0 6px;
-        box-sizing: border-box;
-        border-radius: 9999px;
-        border: 1px solid var(--mc-divider);
-        background: var(--mc-surface);
-        color: var(--mc-text-2);
-        font-size: 0.6875rem;
-        font-weight: 500;
-        display: grid;
-        place-items: center;
-      }
-      .rename {
-        flex: 1;
-        min-width: 0;
-        height: 30px;
-        padding: 4px 8px;
       }
       .help {
         margin: 0;

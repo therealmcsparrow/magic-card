@@ -2,6 +2,8 @@ import { LitElement, html, css, svg, nothing, type PropertyValues, type SVGTempl
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationDoc, TargetRef } from '../model';
 import { registerPanel, type StageInfo, type StudioSelection } from '../slots';
+import type { LayerView } from '../../contracts/studio-layers';
+import { isLocked, resolveHidden } from '../layer-view';
 import type { PreviewTile } from '../tiles';
 import type { IconGeometry } from '../../icons/icon-source';
 import type { SplitPiece } from '../../icons/icon-split';
@@ -15,10 +17,7 @@ import {
   groupRef,
   hasRig,
   hasTrackPivot,
-  hiddenCss,
-  hiddenParts,
   loadGeometry,
-  onHiddenChange,
   partIdsOf,
   partRef,
   peekGeometry,
@@ -105,6 +104,8 @@ export class AnimPartsOverlay extends LitElement {
   @property({ attribute: false }) selection: StudioSelection = { kind: 'none' };
   @property({ attribute: false }) tile: PreviewTile = 'icon';
   @property({ attribute: false }) stage?: StageInfo;
+  /** Hidden and locked parts cannot be picked on the stage. */
+  @property({ attribute: false }) layerView?: LayerView;
   /** Tests / hosts without a stage: the icon element to sit on. */
   @property({ attribute: false }) iconEl?: HTMLElement;
 
@@ -121,13 +122,11 @@ export class AnimPartsOverlay extends LitElement {
   private _drag?: Drag;
   /** Keyboard pivot nudges: the document before the first of a repeat run (one undo step on key up). */
   private _nudge?: { ref: TargetRef; doc: AnimationDoc };
-  private _offHidden?: () => void;
   private _ro?: ResizeObserver;
   private _watched = new WeakSet<Element>();
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._offHidden = onHiddenChange(() => this._syncHidden());
     if (typeof ResizeObserver !== 'undefined') {
       this._watched = new WeakSet();
       this._ro = new ResizeObserver(() => requestAnimationFrame(() => this._measure()));
@@ -137,9 +136,7 @@ export class AnimPartsOverlay extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._offHidden?.();
     this._ro?.disconnect();
-    this._syncHidden(true);
   }
 
   // ── geometry ──
@@ -167,7 +164,6 @@ export class AnimPartsOverlay extends LitElement {
   protected updated(): void {
     // measure after layout (a state change from inside updated() would schedule a second update)
     requestAnimationFrame(() => this._measure());
-    this._syncHidden();
   }
 
   private _icon(): HTMLElement | undefined {
@@ -208,24 +204,6 @@ export class AnimPartsOverlay extends LitElement {
     const measured = this.offsetWidth > 0 && host.width > 0;
     const scale = measured ? k : this.stage && this.stage.scale > 0 ? this.stage.scale : 1;
     if (Math.abs(scale - this._scale) > 0.001) this._scale = scale;
-  }
-
-  /** Hidden-in-preview parts: a rule in the preview icon's shadow root. */
-  private _syncHidden(off = false): void {
-    const root = this._icon()?.shadowRoot;
-    if (!root) return;
-    let el = root.querySelector<HTMLStyleElement>('style[data-mc-parts-hidden]');
-    const css = off ? '' : hiddenCss(hiddenParts());
-    if (!css) {
-      el?.remove();
-      return;
-    }
-    if (!el) {
-      el = document.createElement('style');
-      el.setAttribute('data-mc-parts-hidden', '');
-      root.appendChild(el);
-    }
-    if (el.textContent !== css) el.textContent = css;
   }
 
   /** Icon units per screen px (the box is in unscaled card px; the stage shows it at _scale). */
@@ -451,14 +429,15 @@ export class AnimPartsOverlay extends LitElement {
     const box = this._box;
     const u = this._unit;
     const sel = this._sel;
-    const hidden = hiddenParts();
+    const lv = this.layerView;
+    const hidden = lv ? resolveHidden(d, lv) : new Set<string>();
     const vb = this._vb;
     const band = this._band;
     const hover = this._hover && !sel.includes(this._hover) ? this._hover : undefined;
     // hit areas: every part (a group's members select themselves), later parts on top
     const hits = d.rig!.parts
       .map((p) => partRef(p.id))
-      .filter((ref) => !hidden.has(ref) && !hidden.has(groupRef(groupOfPart(d.rig, ref.slice(5))?.id ?? '')))
+      .filter((ref) => !hidden.has(ref) && !hidden.has(groupRef(groupOfPart(d.rig, ref.slice(5))?.id ?? '')) && !(lv && isLocked(d, lv, ref)))
       .map((ref) => svg`<g class="hit" data-ref=${ref}>${this._partPaths(ref).map((p) => svg`<path d=${p} style=${`stroke-width: ${8 * u}`}></path>`)}</g>`);
     return html`<div
       class="layer"

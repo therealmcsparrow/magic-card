@@ -468,7 +468,7 @@ export class AnimationStage extends LitElement {
 
   private _showAll(): void {
     const view: LayerView = { ...this.layerView, hidden: [], solo: [] };
-    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: 'All layers shown in the preview' }, bubbles: true, composed: true }));
+    this.dispatchEvent(new CustomEvent<LayerViewChangeDetail>('layer-view-change', { detail: { view, announce: this.layerView.locked.length ? 'All layers shown. Locks kept.' : 'All layers shown' }, bubbles: true, composed: true }));
   }
 
   protected updated(changed: PropertyValues): void {
@@ -552,11 +552,11 @@ export class AnimationStage extends LitElement {
     return html`
       <div class="canvas">
         <div class="dock dock-top">
-          ${this.hiddenLayers > 0
+          ${this.hiddenLayers > 0 || this.layerView.solo.length > 0
             ? html`<div class="hide-chip" role="group" aria-label="Layers hidden in the preview">
                 <ha-icon icon="mdi:eye-off-outline"></ha-icon>
-                <span>Preview hides ${this.hiddenLayers} layer${this.hiddenLayers === 1 ? '' : 's'}</span>
-                <button type="button" class="show-all" @click=${() => this._showAll()}>Show all</button>
+                <span>${this.hiddenLayers > 0 ? `Preview hides ${this.hiddenLayers} layer${this.hiddenLayers === 1 ? '' : 's'}` : 'Solo on'}</span>
+                <button type="button" class="show-all" aria-label="Show all hidden layers" @click=${() => this._showAll()}>Show all</button>
               </div>`
             : nothing}
           <slot name="top"></slot>

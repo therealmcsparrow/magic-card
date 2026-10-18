@@ -335,8 +335,12 @@ export const studioStyles: CSSResult[] = [
     .layers.rail .layers-body {
       padding: 6px;
     }
-    .layers-note {
+    .layers-note,
+    .layers-help {
       padding: 4px 8px;
+    }
+    .layers-help {
+      margin: 8px 0 0;
     }
     /* registered layers panels (card parts, icon parts, shapes), each under a small heading */
     .layer-group + .layer-group {

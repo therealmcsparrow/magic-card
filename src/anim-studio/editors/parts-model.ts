@@ -390,35 +390,6 @@ export function setPartPath(doc: AnimationDoc, ref: TargetRef, path: Track['path
   return withTrack(doc, ref, { ...(t ?? { target: ref, keyframes: [] }), target: ref, path });
 }
 
-// ── hidden in preview (studio session only, never stored) ──
-
-const hidden = new Set<string>();
-const hiddenEvents = new EventTarget();
-export const hiddenParts = (): ReadonlySet<string> => hidden;
-export function toggleHidden(ref: string, on = !hidden.has(ref)): void {
-  if (on) hidden.add(ref);
-  else hidden.delete(ref);
-  hiddenEvents.dispatchEvent(new Event('change'));
-}
-/** Show every part again (a new split). */
-export function clearHidden(): void {
-  if (!hidden.size) return;
-  hidden.clear();
-  hiddenEvents.dispatchEvent(new Event('change'));
-}
-export function onHiddenChange(cb: () => void): () => void {
-  hiddenEvents.addEventListener('change', cb);
-  return () => hiddenEvents.removeEventListener('change', cb);
-}
-/** CSS hiding the parts, groups and shapes hidden in the preview. */
-export function hiddenCss(refs: Iterable<string>): string {
-  const sels = [...refs]
-    .map((r) => /^(part|group|shape):([a-z0-9][a-z0-9_-]{0,31})$/.exec(r))
-    .filter((m): m is RegExpExecArray => !!m)
-    .map((m) => `[data-${m[1] === 'part' ? 'p' : m[1] === 'group' ? 'g' : 's'}="${m[2]}"]`);
-  return sels.length ? `${sels.join(', ')} { visibility: hidden !important; }` : '';
-}
-
 // ── selection ──
 
 const RIG_REF = /^(part|group|shape):/;
