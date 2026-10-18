@@ -387,6 +387,13 @@ export class LibraryView extends LitElement {
             variant="sheet"
             heading=${p.mode === 'import' ? 'Import' : 'Export'}
             closeLabel="Close"
+            movable
+            resizable
+            maximizable
+            moveLabel="Move window"
+            resizeLabel="Resize window"
+            maximizeLabel="Maximise"
+            restoreLabel="Restore size"
             .dismissible=${false}
             .opener=${this._opener}
             @mc-window-close=${this._closePanel}

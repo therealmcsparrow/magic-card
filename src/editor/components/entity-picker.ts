@@ -3,8 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
-import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { entityIcon } from '../../utils/entity-icon';
 
 @customElement('mc-entity-picker')
@@ -18,8 +17,7 @@ export class EntityPicker extends LitElement {
   @property({ type: String }) placeholder = 'entity_id';
   @property({ type: String }) domain = '';
 
-  private _modalCtrl = new ModalDragResizeController(this);
-  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
+  private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -32,7 +30,6 @@ export class EntityPicker extends LitElement {
   }
 
   private _closeModal(): void {
-    this._modalCtrl.reset();
     this._showModal = false;
   }
 
@@ -175,9 +172,7 @@ export class EntityPicker extends LitElement {
     const entities = this._getFilteredEntities();
 
     return html`
-      <dialog class="mc-picker-overlay" aria-label="Select entity" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
-        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
-          ${renderPickerHeader('Select entity', this._modalCtrl, () => this._closeModal())}
+      ${renderPickerWindow('Select entity', () => this._closeModal(), 's', html`
           <div class="mc-picker-search">
             ${renderPickerSearch('Search entities', this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
@@ -202,13 +197,11 @@ export class EntityPicker extends LitElement {
               : html`<div class="mc-picker-empty">No entities found</div>`
             }
           </div>
-          <div class="mc-picker-footer">
+          <div class="mc-picker-footer" slot="footer">
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
             <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
           </div>
-          ${renderResizeHandle(this._modalCtrl)}
-        </div>
-      </dialog>
+      `)}
     `;
   }
 }

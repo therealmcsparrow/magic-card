@@ -6,8 +6,7 @@ import { cardInstanceKeys } from '../../services/template-merge';
 import { stripForTemplate } from '../state/template-sync';
 import { pickerStyles, templatePickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
-import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 
 interface TemplateEntry {
   config: Omit<MagicCardConfig, 'type'> & { type?: string };
@@ -20,8 +19,7 @@ type TemplateStore = Record<string, TemplateEntry>;
 export class TemplatePicker extends LitElement {
   static styles = [editorSystem, pickerStyles, templatePickerStyles];
 
-  private _modalCtrl = new ModalDragResizeController(this);
-  private _dialogCtrl = new PickerDialogController(this, () => this._close());
+  private _windowCtrl = new PickerWindowController(this, () => this._close());
 
   @property({ type: String }) mode: 'create' | 'link' = 'create';
   @property({ attribute: false }) config?: MagicCardConfig;
@@ -110,7 +108,6 @@ export class TemplatePicker extends LitElement {
   }
 
   private _close(): void {
-    this._modalCtrl.reset();
     this.dispatchEvent(new CustomEvent('mc-picker-close', { bubbles: true, composed: true }));
   }
 
@@ -251,13 +248,7 @@ export class TemplatePicker extends LitElement {
   protected render(): TemplateResult {
     const title = this.mode === 'create' ? 'Create template' : 'Load template';
     return html`
-      <dialog class="mc-picker-overlay" aria-label=${title} @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._close(); }}>
-        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._close())} @click=${(e: Event) => e.stopPropagation()}>
-          ${renderPickerHeader(title, this._modalCtrl, () => this._close())}
-          ${this.mode === 'create' ? this._renderCreate() : this._renderLink()}
-          ${renderResizeHandle(this._modalCtrl)}
-        </div>
-      </dialog>
+      ${renderPickerWindow(title, () => this._close(), 's', html`${this.mode === 'create' ? this._renderCreate() : this._renderLink()}`)}
     `;
   }
 
@@ -298,7 +289,7 @@ export class TemplatePicker extends LitElement {
             `
           : nothing}
       </div>
-      <div class="mc-picker-footer">
+      <div class="mc-picker-footer" slot="footer">
         <button type="button" class="btn btn-secondary" @click=${this._close}>Cancel</button>
         ${this._showOverwrite
           ? html`<button type="button" class="btn btn-primary" ?disabled=${this._saving} @click=${this._handleCreateSave}>Overwrite</button>`
@@ -431,7 +422,7 @@ export class TemplatePicker extends LitElement {
             )
           : html`<div class="mc-picker-empty">No templates saved</div>`}
       </div>
-      <div class="mc-picker-footer">
+      <div class="mc-picker-footer" slot="footer">
         <button type="button" class="btn btn-secondary" @click=${this._close}>Cancel</button>
       </div>
     `;

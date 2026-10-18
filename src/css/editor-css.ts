@@ -989,82 +989,14 @@ const pickerLocalStyles = css`
     background: var(--mc-error-ink);
   }
 
-  /* ── Overlay / backdrop ────────────────────────────────────────── */
-  /* A <dialog> shown with showModal() (PickerDialogController): in the top layer it is fixed to the
-     viewport even inside HA's transformed dialog. The UA dialog box (fit-content, auto margins,
-     border, padding, max sizes) is reset so it covers the viewport like the old overlay did. */
-  .mc-picker-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: auto;
-    height: auto;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    border: 0;
-    padding: 16px;
-    overflow: hidden;
-    color: inherit;
-    background: rgba(0, 0, 0, 0.38);
-    /* Scrolling past a list's end must not scroll the HA dialog / dashboard behind. */
-    overscroll-behavior: contain;
-  }
-
-  .mc-picker-overlay:not([open]) {
-    display: none;
-  }
-
-  .mc-picker-overlay::backdrop {
-    background: transparent;
-  }
-
-  /* ── Modal container ───────────────────────────────────────────── */
-  .mc-picker-modal {
-    position: relative;
+  /* ── Window ─────────────────────────────────────────────────────── */
+  /* The picker is a kit <mc-ui-window> (movable, resizable, maximisable). Its body is a column that the search row
+     and the list share; the list scrolls, the header and the footer stay. */
+  mc-ui-window::part(body) {
     display: flex;
     flex-direction: column;
-    width: var(--mc-picker-width, 440px);
-    max-width: 100%;
-    max-height: min(80vh, 720px);
+    padding: 0;
     overflow: hidden;
-    background: var(--mc-surface);
-    color: var(--mc-text);
-    border-radius: 16px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  /* The window takes focus when it opens (role=dialog); its controls show their own focus rings. */
-  .mc-picker-modal:focus {
-    outline: none;
-  }
-
-  /* ── Header: title + icon buttons ──────────────────────────────── */
-  .mc-picker-header {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 12px 12px 12px 20px;
-    border-bottom: 1px solid var(--mc-divider);
-    cursor: grab;
-    user-select: none;
-  }
-
-  .mc-picker-header:active {
-    cursor: grabbing;
-  }
-
-  .mc-picker-title {
-    flex: 1;
-    min-width: 0;
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.3;
   }
 
   /* ── Toolbar rows under the header (search, filters, breadcrumbs) ─ */
@@ -1245,84 +1177,17 @@ const pickerLocalStyles = css`
     color: var(--mc-text-2);
   }
 
-  /* ── Footer ────────────────────────────────────────────────────── */
+  /* ── Footer (slotted into the window footer, which draws the rule and the padding) ─ */
   .mc-picker-footer {
     display: flex;
+    flex: 1;
     justify-content: flex-end;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 12px 16px;
-    border-top: 1px solid var(--mc-divider);
-  }
-
-  /* ── Positioned modal (after first drag/resize) ─────────────── */
-  .mc-modal--positioned {
-    position: fixed;
-    margin: 0;
-    max-width: none;
-    max-height: none;
-  }
-
-  /* ── Maximized modal ────────────────────────────────────────── */
-  .mc-modal--maximized {
-    position: fixed;
-    margin: 0;
-    max-width: none;
-    max-height: none;
-    transition: left 0.2s ease-out, top 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out;
-  }
-
-  /* ── Resize handle ──────────────────────────────────────────── */
-  .mc-modal-resize-handle {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-    width: 16px;
-    height: 16px;
-    cursor: nwse-resize;
-    opacity: 0.35;
-    border-radius: 0 0 16px 0;
-    background: linear-gradient(135deg, transparent 50%, var(--mc-text-2) 50%);
-  }
-
-  .mc-modal-resize-handle:hover {
-    opacity: 0.7;
-  }
-
-  /* ── Phone: a bottom sheet like the kit window (CEO D8) ─────── */
-  @media (max-width: 599px) {
-    .mc-picker-overlay {
-      align-items: flex-end;
-      padding: 0;
-    }
-
-    .mc-picker-modal {
-      width: 100%;
-      max-height: 60vh;
-      border-radius: 16px 16px 0 0;
-    }
-
-    .mc-modal-resize-handle {
-      display: none;
-    }
   }
 `;
 
 export const pickerStyles = pickerLocalStyles;
-
-/* ================================================================== */
-/*  MODULE SELECTOR STYLES                                             */
-/* ================================================================== */
-export const moduleSelectorStyles = css`
-  :host {
-    --mc-picker-width: 480px;
-  }
-
-  .mc-picker-header {
-    cursor: default;
-  }
-`;
 
 /* ================================================================== */
 /*  YAML EDITOR STYLES                                                 */
@@ -1451,10 +1316,6 @@ export const templatePickerStyles = css`
 /*  ICON PICKER STYLES (with stale var fixes)                          */
 /* ================================================================== */
 export const iconPickerStyles = css`
-  :host {
-    --mc-picker-width: 480px;
-  }
-
   /* Keyboard-highlighted row (arrow keys in the search field). */
   .mc-picker-item.is-active {
     background: var(--mc-surface-2);
@@ -1483,22 +1344,9 @@ export const iconPickerStyles = css`
 `;
 
 /* ================================================================== */
-/*  MEDIA PICKER STYLES (with stale var fixes)                         */
-/* ================================================================== */
-export const mediaPickerStyles = css`
-  :host {
-    --mc-picker-width: 480px;
-  }
-`;
-
-/* ================================================================== */
 /*  FONT PICKER STYLES (with stale var fixes)                          */
 /* ================================================================== */
 export const fontPickerStyles = css`
-  :host {
-    --mc-picker-width: 500px;
-  }
-
   .mc-font-preview {
     display: flex;
     align-items: center;
@@ -1521,22 +1369,9 @@ export const fontPickerStyles = css`
 `;
 
 /* ================================================================== */
-/*  SERVICE PICKER STYLES (with stale var fixes)                       */
-/* ================================================================== */
-export const servicePickerStyles = css`
-  :host {
-    --mc-picker-width: 480px;
-  }
-`;
-
-/* ================================================================== */
 /*  COLOR PICKER STYLES (with stale var fixes)                         */
 /* ================================================================== */
 export const colorPickerStyles = css`
-  :host {
-    --mc-picker-width: 340px;
-  }
-
   /* ── Color field: swatch + text input ──────────────────────── */
   .swatch {
     position: relative;

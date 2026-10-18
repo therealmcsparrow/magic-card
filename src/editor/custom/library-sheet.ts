@@ -66,7 +66,7 @@ export class LibrarySheet extends LitElement {
   };
 
   render() {
-    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading="Library" closeLabel="Close" @mc-window-close=${() => this.onClose?.()}>
+    return html`<mc-ui-window .variant=${compact() ? 'sheet' : 'picker'} heading="Library" closeLabel="Close" movable resizable maximizable moveLabel="Move window" resizeLabel="Resize window" maximizeLabel="Maximise" restoreLabel="Restore size" @mc-window-close=${() => this.onClose?.()}>
       <mc-library-view .hass=${this.hass} .config=${this._config} .inline=${true} .startKind=${this.kind} @mc-transfer-import=${this._import}></mc-library-view>
     </mc-ui-window>`;
   }

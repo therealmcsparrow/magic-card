@@ -6,7 +6,7 @@ import { css, CSSResult } from 'lit';
  * screen that overrides tokens on its :host keeps its look). Provisional until design/10-ui-kit.md lands.
  */
 
-const inherit = css`
+const inherit = /* @__PURE__ */ css`
   :host {
     display: contents;
     font-family: var(--mc-font, inherit);
@@ -18,7 +18,7 @@ const inherit = css`
   }
 `;
 
-export const kitMenuElementCss: CSSResult = css`
+export const kitMenuElementCss: CSSResult = /* @__PURE__ */ css`
   ${inherit}
   .menu {
     position: fixed;
@@ -104,8 +104,8 @@ export const kitMenuElementCss: CSSResult = css`
   }
 `;
 
-export const kitWindowElementCss: CSSResult = css`
-  ${inherit}
+/* The window rules carry no ${} so the production build can minify them; the shared :host rule joins below. */
+const windowCss = /* @__PURE__ */ css`
   dialog {
     padding: 0;
     border: 0;
@@ -141,6 +141,9 @@ export const kitWindowElementCss: CSSResult = css`
     width: 100%;
     max-height: inherit;
   }
+  dialog.placed .panel {
+    height: 100%;
+  }
   .header {
     display: flex;
     align-items: center;
@@ -155,7 +158,7 @@ export const kitWindowElementCss: CSSResult = css`
     font-size: 1rem;
     font-weight: 500;
   }
-  .close {
+  .tool {
     display: inline-grid;
     place-items: center;
     width: 32px;
@@ -167,13 +170,56 @@ export const kitWindowElementCss: CSSResult = css`
     color: var(--mc-text-2, #5f6368);
     cursor: pointer;
   }
-  .close:hover {
+  .tool:hover {
     background: var(--mc-surface-2, #f2f3f5);
     color: var(--mc-text, #212121);
   }
-  .close:focus-visible {
+  .tool:focus-visible {
     outline: 2px solid var(--mc-focus, var(--mc-accent, #03a9f4));
     outline-offset: 1px;
+  }
+  .tool:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: transparent;
+  }
+  /* Placement (contract r3). Once placed, the panel has an explicit size and the body scrolls. */
+  .header.movable {
+    padding-inline-start: 8px;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+  .header.movable:active {
+    cursor: grabbing;
+  }
+  .move {
+    cursor: inherit;
+    touch-action: none;
+  }
+  .resize {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    width: 32px;
+    height: 32px;
+    z-index: 1;
+    cursor: nwse-resize;
+    touch-action: none;
+    border-radius: var(--mc-radius, 8px) 0 var(--mc-radius-xl, 16px) 0;
+  }
+  dialog.rtl .resize {
+    cursor: nesw-resize;
+    border-radius: 0 var(--mc-radius, 8px) 0 var(--mc-radius-xl, 16px);
+  }
+  dialog.rtl .resize svg {
+    transform: scaleX(-1);
+  }
+  .panel.sizable .footer {
+    padding-inline-end: 40px;
+  }
+  .panel.sizable:not(.has-footer) .body {
+    padding-bottom: 36px;
   }
   .body {
     min-height: 0;
@@ -204,9 +250,12 @@ export const kitWindowElementCss: CSSResult = css`
     }
   }
   @media (pointer: coarse) {
-    .close {
+    .tool {
       width: var(--mc-hit, 44px);
       height: var(--mc-hit, 44px);
+    }
+    .panel.sizable .footer {
+      padding-inline-end: 52px;
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -217,7 +266,9 @@ export const kitWindowElementCss: CSSResult = css`
   }
 `;
 
-export const kitPopoverElementCss: CSSResult = css`
+export const kitWindowElementCss: CSSResult = /* @__PURE__ */ css`${inherit}${windowCss}`;
+
+export const kitPopoverElementCss: CSSResult = /* @__PURE__ */ css`
   ${inherit}
   .panel {
     position: fixed;

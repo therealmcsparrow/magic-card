@@ -3,8 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant } from '../../types';
 import { pickerStyles, iconPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
-import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { applyAnimatedIconPick, currentIconPick, currentIconStyle, loadIconAnimator } from './icon-animator/loader';
 import { IconListItem, iconDisplayName, isIconId, loadIconList, searchIcons } from '../../utils/icon-list';
 import { KEEP_COPY_DEFAULT_MAX_BYTES, type IconSummary } from '../../contracts/mcu-library';
@@ -33,7 +32,7 @@ export class IconPicker extends LitElement {
     pickerStyles,
     iconPickerStyles,
     css`
-      .mc-picker-modal > .seg {
+      mc-ui-window > .seg {
         flex-shrink: 0;
         width: auto;
         margin: 8px 16px 0;
@@ -69,8 +68,7 @@ export class IconPicker extends LitElement {
   /** Template link of the module's icon field: the icon editor marks icon and svg as this card's own. */
   @property({ attribute: false }) syncCtx?: SyncContext;
 
-  private _modalCtrl = new ModalDragResizeController(this);
-  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
+  private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -157,7 +155,6 @@ export class IconPicker extends LitElement {
   }
 
   private _closeModal(): void {
-    this._modalCtrl.reset();
     this._showModal = false;
   }
 
@@ -385,9 +382,7 @@ export class IconPicker extends LitElement {
     const grid = !!this.animated && this._tab === 'animated';
 
     return html`
-      <dialog class="mc-picker-overlay" aria-label="Select icon" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
-        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
-          ${renderPickerHeader('Select icon', this._modalCtrl, () => this._closeModal())}
+      ${renderPickerWindow('Select icon', () => this._closeModal(), 'm', html`
           ${this.animated ? this._renderTabs() : ''}
           ${grid ? html`<div class="mc-picker-list" role="tabpanel">${this._renderAnimated()}</div>` : html`
           ${lib?.state === 'ok'
@@ -435,7 +430,7 @@ export class IconPicker extends LitElement {
               : ''}
           </div>`}
           ${grid ? '' : this._renderKeep()}
-          <div class="mc-picker-footer">
+          <div class="mc-picker-footer" slot="footer">
             ${grid ? '' : html`<button type="button" class="btn btn-text clear" @click=${this._handleClear}>Clear</button>`}
             ${!grid && this.animated ? html`<button type="button" class="btn btn-text" data-focus-key="icon-entry" @click=${() => void this._draw()}>Draw an icon</button>` : ''}
             ${this.animated ? html`<button type="button" class="btn btn-text" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'icon')}>Library</button>` : ''}
@@ -445,9 +440,7 @@ export class IconPicker extends LitElement {
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
             ${grid ? '' : html`<button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>`}
           </div>
-          ${renderResizeHandle(this._modalCtrl)}
-        </div>
-      </dialog>
+      `)}
     `;
   }
 }

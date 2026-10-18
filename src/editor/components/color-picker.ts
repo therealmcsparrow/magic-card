@@ -2,8 +2,7 @@ import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles, colorPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
-import { pickerKeydown, renderPickerHeader, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { renderPickerWindow, PickerWindowController } from './picker-parts';
 import { parseEntityColor } from '../../utils/entity-color';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
@@ -68,8 +67,7 @@ export class ColorPicker extends LitElement {
   @state() private _savedColors: string[] = [];
   @state() private _hexInput = '';
 
-  private _modalCtrl = new ModalDragResizeController(this);
-  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
+  private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
   private _dragging: 'area' | 'hue' | 'opacity' | null = null;
 
   connectedCallback(): void {
@@ -247,7 +245,6 @@ export class ColorPicker extends LitElement {
   }
 
   private _closeModal(): void {
-    this._modalCtrl.reset();
     this._isOpen = false;
   }
 
@@ -495,9 +492,7 @@ export class ColorPicker extends LitElement {
       : this._hsvaToRgbaString(this._hsva);
 
     return html`
-      <dialog class="mc-picker-overlay" aria-label="Color picker" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
-        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
-          ${renderPickerHeader('Color picker', this._modalCtrl, () => this._closeModal())}
+      ${renderPickerWindow('Color picker', () => this._closeModal(), 's', html`
 
           <div class="mc-color-body">
             <div
@@ -641,13 +636,11 @@ export class ColorPicker extends LitElement {
               </div>
             </div>
           </div>
-          <div class="mc-picker-footer">
+          <div class="mc-picker-footer" slot="footer">
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
             <button type="button" class="btn btn-primary" @click=${this._handleSave}>Save</button>
           </div>
-          ${renderResizeHandle(this._modalCtrl)}
-        </div>
-      </dialog>
+      `)}
     `;
   }
 }

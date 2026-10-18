@@ -1,7 +1,7 @@
 import { html, TemplateResult } from 'lit';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
+import type { UiWindowElement } from '../../contracts/ui-kit';
 
 /** Shared markup for the picker modals (styled by pickerStyles + editorSystem). */
 
@@ -179,34 +179,6 @@ export function pickerKeydown(onClose: () => void): (e: KeyboardEvent) => void {
   };
 }
 
-export function renderPickerHeader(
-  title: string,
-  ctrl: ModalDragResizeController,
-  onClose: () => void,
-): TemplateResult {
-  return html`
-    <div
-      class="mc-picker-header"
-      @pointerdown=${(e: PointerEvent) => ctrl.handleHeaderPointerDown(e)}
-      @touchstart=${(e: TouchEvent) => ctrl.handleHeaderTouchStart(e)}
-    >
-      <h2 class="mc-picker-title">${title}</h2>
-      <button
-        type="button"
-        class="icon-btn sm"
-        aria-label=${ctrl.isMaximized ? 'Restore size' : 'Maximize'}
-        title=${ctrl.isMaximized ? 'Restore size' : 'Maximize'}
-        @click=${() => ctrl.toggleMaximize()}
-      >
-        <ha-icon icon=${ctrl.isMaximized ? 'mdi:window-restore' : 'mdi:window-maximize'}></ha-icon>
-      </button>
-      <button type="button" class="icon-btn" aria-label="Close" title="Close" @click=${onClose}>
-        <ha-icon icon="mdi:close"></ha-icon>
-      </button>
-    </div>
-  `;
-}
-
 export interface PickerSearchOptions {
   /** keydown on the search input (list navigation). */
   onKeydown?: (e: KeyboardEvent) => void;
@@ -225,6 +197,7 @@ export function renderPickerSearch(
     <div class="with-icon">
       <ha-icon icon="mdi:magnify"></ha-icon>
       <input
+        id="mc-picker-search"
         class="input"
         type="text"
         placeholder=${placeholder}
@@ -242,12 +215,81 @@ export function renderPickerSearch(
   `;
 }
 
-export function renderResizeHandle(ctrl: ModalDragResizeController): TemplateResult {
-  return html`
-    <div
-      class="mc-modal-resize-handle"
-      @pointerdown=${(e: PointerEvent) => ctrl.handleResizePointerDown(e)}
-      @touchstart=${(e: TouchEvent) => ctrl.handleResizeTouchStart(e)}
-    ></div>
-  `;
+/** Phone width: the kit window is a bottom sheet there (CEO D8) and has no grips. */
+const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 599px)').matches;
+
+/**
+ * One picker window: the kit's <mc-ui-window> (movable, resizable, maximisable) around the picker's search row, list and
+ * a footer (`<div class="mc-picker-footer" slot="footer">`). PickerWindowController shows it once rendered.
+ * Sizes: s 420, m 480, l 640.
+ */
+export function renderPickerWindow(title: string, onClose: () => void, size: 's' | 'm' | 'l', content: TemplateResult): TemplateResult {
+  return html`<mc-ui-window
+    heading=${title}
+    closeLabel="Close"
+    variant=${compact() ? 'sheet' : 'picker'}
+    size=${size}
+    initialFocus="mc-picker-search"
+    movable
+    resizable
+    maximizable
+    moveLabel="Move window"
+    resizeLabel="Resize window"
+    maximizeLabel="Maximise"
+    restoreLabel="Restore size"
+    @mc-window-close=${onClose}
+    >${content}</mc-ui-window>`;
+}
+
+/**
+ * Shows the picker's <mc-ui-window> once the host has rendered it (the kit window is a native modal <dialog> in the top
+ * layer, a real focus trap), and returns focus to the control that opened it. A host removed from the document while the
+ * window is open closes it and the picker (`onClose`); the same host, back in the document and still rendering the window,
+ * shows it again (a parent-controlled picker).
+ */
+export class PickerWindowController implements ReactiveController {
+  private _shown = false;
+  private _back: HTMLElement | null = null;
+
+  constructor(
+    private readonly host: ReactiveControllerHost & HTMLElement,
+    private readonly onClose: () => void,
+  ) {
+    host.addController(this);
+  }
+
+  private win(): UiWindowElement | null {
+    return this.host.shadowRoot?.querySelector<UiWindowElement>('mc-ui-window') ?? null;
+  }
+
+  hostUpdated(): void {
+    const w = this.win();
+    if (!w) {
+      // gone from the template (Save, or a close we did not see): the trigger gets its focus back
+      const back = this._back;
+      this._shown = false;
+      this._back = null;
+      if (back?.isConnected) back.focus({ preventScroll: true });
+      return;
+    }
+    if (!w.open) {
+      if (!this._shown) {
+        this._back = deepActiveElement();
+        w.opener = this._back ?? undefined;
+      }
+      this._shown = true;
+      w.show();
+    }
+  }
+
+  hostConnected(): void {
+    this.hostUpdated();
+  }
+
+  hostDisconnected(): void {
+    if (!this._shown) return;
+    this._shown = false;
+    this.win()?.close('action');
+    this.onClose();
+  }
 }

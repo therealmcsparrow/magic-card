@@ -4,9 +4,9 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { MODULE_CATEGORIES } from '../../utils/constants';
 import { MagicModuleMetadata } from '../../modules/module-types';
 import { ModuleCategory } from '../../types';
-import { pickerStyles, moduleSelectorStyles } from '../../css/editor-css';
+import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { renderPickerSearch, PickerDialogController } from '../components/picker-parts';
+import { renderPickerSearch, renderPickerWindow, PickerWindowController } from '../components/picker-parts';
 
 type CategoryFilter = 'all' | ModuleCategory;
 
@@ -19,16 +19,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 @customElement('mc-module-selector')
 export class ModuleSelector extends LitElement {
-  static styles = [editorSystem, pickerStyles, moduleSelectorStyles];
+  static styles = [editorSystem, pickerStyles];
 
-  private _dialogCtrl = new PickerDialogController(this, () => this._onClose());
+  private _windowCtrl = new PickerWindowController(this, () => this._onClose());
 
   @state() private _searchQuery = '';
   @state() private _category: CategoryFilter = 'all';
-
-  protected firstUpdated(): void {
-    this.shadowRoot?.querySelector<HTMLInputElement>('.mc-picker-search input')?.focus();
-  }
 
   protected render(): TemplateResult {
     const modules = this._searchQuery
@@ -49,18 +45,7 @@ export class ModuleSelector extends LitElement {
     const filters: CategoryFilter[] = ['all', ...MODULE_CATEGORIES];
 
     return html`
-      <dialog class="mc-picker-overlay" aria-label="Add module" @click=${this._onOverlayClick}>
-        <div
-          class="mc-picker-modal"
-          @click=${(e: Event) => e.stopPropagation()}
-          @keydown=${this._onDialogKeyDown}
-        >
-          <div class="mc-picker-header">
-            <h2 class="mc-picker-title">Add module</h2>
-            <button type="button" class="icon-btn" aria-label="Close" title="Close" @click=${this._onClose}>
-              <ha-icon icon="mdi:close"></ha-icon>
-            </button>
-          </div>
+      ${renderPickerWindow('Add module', () => this._onClose(), 'm', html`
           <div class="mc-picker-search">
             ${renderPickerSearch('Search modules', this._searchQuery, (v) => { this._searchQuery = v; })}
             <div class="seg full" role="radiogroup" aria-label="Module category">
@@ -107,8 +92,7 @@ export class ModuleSelector extends LitElement {
               `,
             )}
           </div>
-        </div>
-      </dialog>
+      `)}
     `;
   }
 
@@ -126,15 +110,4 @@ export class ModuleSelector extends LitElement {
     this.dispatchEvent(new CustomEvent('mc-picker-close', { bubbles: true, composed: true }));
   }
 
-  private _onOverlayClick(e: Event): void {
-    if (this._dialogCtrl.isBackdropClick(e)) this._onClose();
-  }
-
-  private _onDialogKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      e.stopPropagation();
-      this._onClose();
-    }
-  }
 }

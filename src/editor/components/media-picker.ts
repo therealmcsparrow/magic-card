@@ -1,10 +1,9 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant, MediaBrowseItem } from '../../types';
-import { pickerStyles, mediaPickerStyles } from '../../css/editor-css';
+import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-system';
-import { ModalDragResizeController } from '../controllers/modal-drag-resize';
-import { pickerKeydown, renderPickerHeader, renderPickerSearch, renderResizeHandle, PickerDialogController } from './picker-parts';
+import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 
 interface BreadcrumbEntry {
   title: string;
@@ -13,14 +12,13 @@ interface BreadcrumbEntry {
 
 @customElement('mc-media-picker')
 export class MediaPicker extends LitElement {
-  static styles = [editorSystem, pickerStyles, mediaPickerStyles];
+  static styles = [editorSystem, pickerStyles];
 
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ type: String }) value = '';
   @property({ type: String }) mediaType: 'image' | 'video' | '' = '';
 
-  private _modalCtrl = new ModalDragResizeController(this);
-  private _dialogCtrl = new PickerDialogController(this, () => this._closeModal());
+  private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
   @state() private _showModal = false;
   @state() private _searchQuery = '';
@@ -49,7 +47,6 @@ export class MediaPicker extends LitElement {
   }
 
   private _closeModal(): void {
-    this._modalCtrl.reset();
     this._showModal = false;
     this._items = [];
     this._error = '';
@@ -185,9 +182,7 @@ export class MediaPicker extends LitElement {
     const items = this._getFilteredItems();
 
     return html`
-      <dialog class="mc-picker-overlay" aria-label="Select media" @click=${(e: Event) => { if (!this._modalCtrl.consumeDragFlag() && this._dialogCtrl.isBackdropClick(e)) this._closeModal(); }}>
-        <div class="mc-picker-modal" @keydown=${pickerKeydown(() => this._closeModal())} @click=${(e: Event) => e.stopPropagation()}>
-          ${renderPickerHeader('Select media', this._modalCtrl, () => this._closeModal())}
+      ${renderPickerWindow('Select media', () => this._closeModal(), 'm', html`
 
           ${this._renderBreadcrumbs()}
 
@@ -205,13 +200,11 @@ export class MediaPicker extends LitElement {
                   : html`<div class="mc-picker-empty">No items found</div>`
             }
           </div>
-          <div class="mc-picker-footer">
+          <div class="mc-picker-footer" slot="footer">
             <button type="button" class="btn btn-secondary" @click=${this._closeModal}>Cancel</button>
             <button type="button" class="btn btn-primary" @click=${this._handleSave} ?disabled=${!this._selectedItem}>Save</button>
           </div>
-          ${renderResizeHandle(this._modalCtrl)}
-        </div>
-      </dialog>
+      `)}
     `;
   }
 
