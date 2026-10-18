@@ -28,7 +28,8 @@ import type { TargetRef } from './model';
 import { TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
 import { docSizeError, paintOrder } from './editors/draw-utils';
 import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail } from '../contracts/studio-layers';
-import { applyLayerView, hiddenCount, pruneLayerView } from './layer-view';
+import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLocked } from './layer-view';
+import { lockBanner, lockBannerStyles } from './editors/lock-banner';
 import { stageParticlesOf } from './stage-particles';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
@@ -246,7 +247,7 @@ function isSelection(v: unknown): v is StudioSelection {
 }
 
 export class AnimationStudio extends LitElement {
-  static styles = studioStyles;
+  static styles = [...studioStyles, lockBannerStyles];
 
   @property({ attribute: false }) hass?: Record<string, unknown>;
   /** The library: documents as a list or by id (the panel passes `{ [id]: doc }`). */
@@ -1522,6 +1523,8 @@ export class AnimationStudio extends LitElement {
       slot?: string;
       cls?: string;
       panel?: boolean;
+      /** An inspector panel: read-only while the selection is locked. */
+      inspector?: boolean;
       stageRect?: { width: number; height: number };
       subjectRect?: { x: number; y: number; width: number; height: number };
     } = {},
@@ -1537,7 +1540,7 @@ export class AnimationStudio extends LitElement {
         .hass=${this.hass}
         .library=${this._libraryObj}
         .time=${TIME_TAGS.has(tag) ? this._time : 0}
-        .disabled=${this._busy}
+        .disabled=${this._busy || (!!extra.inspector && selectionLocked(d, this._viewOf(d), this._selection))}
         .selection=${this._selection}
         .tile=${this._tile}
         .stage=${this._stageInfo}
@@ -1972,7 +1975,9 @@ export class AnimationStudio extends LitElement {
     // every panel under its own titled, collapsible section
     const sections = panelsFor('inspector', d, sel)
       .filter((p) => editorDefined(p.tag))
-      .map((p) => this._section(`panel-${p.tag}`, p.title, PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true })));
+      .map((p) => this._section(`panel-${p.tag}`, p.title, PANEL_ICON[p.tag] ?? 'mdi:puzzle-outline', this._editorEl(p.tag, d, { cls: 'panel panel-inspector', panel: true, inspector: true })));
+    const lv = this._viewOf(d);
+    const locked = selectionLocked(d, lv, sel) ? lockBanner(d, lv, selectionKeys(sel)) : nothing;
     // Element / Icon: what the animation moves (and "Move the icon instead") comes first
     const own = sel.kind === 'target' && (sel.target === 'element' || sel.target === 'icon');
     const lead = own && moves(d) ? this._renderFallback(d) : nothing;
@@ -1982,7 +1987,7 @@ export class AnimationStudio extends LitElement {
         ? this._section('split-icon', 'Icon parts', PANEL_ICON[PARTS_LAYERS], this._editorEl(PARTS_LAYERS, d, { cls: 'panel panel-inspector', panel: true }))
         : nothing;
     const rest = sections.length ? sections : lead === nothing && split === nothing ? this._renderFallback(d) : nothing;
-    return html`${this._renderContext(d)} ${this._renderErrors()} ${lead} ${split} ${rest}`;
+    return html`${locked} ${this._renderContext(d)} ${this._renderErrors()} ${lead} ${split} ${rest}`;
   }
 
   /**
