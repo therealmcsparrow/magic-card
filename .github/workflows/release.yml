@@ -28,7 +28,7 @@ jobs:
         run: npm run notices -- --check
 
       - name: i18n drift check (en-GB, en-US, nl)
-        # before the build: the build regenerates en-US.json, so a stale committed file is caught here. Non-strict until slice I11 sets I18N_RELEASE_STRICT
+        # before the build: the build regenerates en-US.json, so a stale committed file is caught here. Strict since slice I11 (I18N_RELEASE_STRICT in the contract)
         run: node tools/check-i18n.mjs --ci
 
       - run: npm run build

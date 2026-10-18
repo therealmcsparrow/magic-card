@@ -236,18 +236,18 @@ export const I18N_MODULES = {
     tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'complete', slice: 'I0b, I2c, I7, I10', dashboard: false,
   },
   'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator and files the studio also compiles)'], tables: 'inline', status: 'complete', slice: 'I2', dashboard: false },
-  'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'pending', slice: 'I3', dashboard: false },
+  'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'complete', slice: 'I3', dashboard: false },
   'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
   'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
   'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], tables: 'inline', status: 'complete', slice: 'I5', dashboard: false },
   transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'complete', slice: 'I6', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
-  'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'pending', slice: 'I8', dashboard: false },
+  'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },
   'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'complete', slice: 'I9', dashboard: false },
-  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'pending', slice: 'I10', dashboard: false },
-  'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'pending', slice: 'I10', dashboard: false },
-  'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'pending', slice: 'I10', dashboard: false },
+  'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
+  'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
+  'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
 // dashboard: false for icon-library and preset-catalogue: confirmed by spike S-I1 (Handoff 97: chunk
@@ -256,8 +256,8 @@ export type I18nNamespace = keyof typeof I18N_MODULES;
 /** Minified bytes of src/i18n/runtime.ts per copy (magic-card.js, studio entry, theme-editor entry),
  *  tables excluded. r3: 2,048 (r2 1,536; S-I1 measured 1,257 before i18nForLazy). */
 export const I18N_RUNTIME_MAX_BYTES = 2_048;
-/** Off until slice I11; then the release gate needs every namespace 'complete' and every baseline at 0. */
-export const I18N_RELEASE_STRICT = false;
+/** On since slice I11: the release gate needs every namespace 'complete' and every baseline at 0. */
+export const I18N_RELEASE_STRICT = true;
 
 /** html`` attributes and lit properties whose letter strings must go through t (D5). */
 export const SCANNED_ATTRIBUTES: readonly string[] = ['title', 'label', 'placeholder', 'aria-label', 'aria-description', 'alt', 'helper', '.label', '.title', '.helper', '.placeholder', '.closeLabel', '.moveLabel', '.resizeLabel', '.maximizeLabel', '.restoreLabel'];
