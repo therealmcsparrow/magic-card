@@ -228,7 +228,10 @@ function gripMove(ed: McSvgEditor, e: PointerEvent): void {
 // ── the tree ──
 
 function rowKey(e: KeyboardEvent, ed: McSvgEditor, r: TreeRow): void {
-  if ((e.target as HTMLElement).tagName === 'INPUT') return;
+  const tag = (e.target as HTMLElement).tagName;
+  if (tag === 'INPUT') return;
+  // Enter and Space on a row button (eye, padlock, chevron, ungroup) belong to the button: the browser turns them into its click.
+  if (tag === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return;
   const k = K(r);
   const all = [...(e.currentTarget as HTMLElement).parentElement!.querySelectorAll<HTMLElement>('[role=treeitem]')];
   const i = all.indexOf(e.currentTarget as HTMLElement);
