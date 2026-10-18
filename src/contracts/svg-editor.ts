@@ -113,6 +113,20 @@ import type { SavedIconInput } from './mcu-library';
  * the preset's `shape` and `shape_options`; the studio converts it, `Notch` becomes Bevel, `Ticket`,
  * `Wave` and `Blob` get a notice) and `label` (the target, "Living room tile"), and the event above.
  * Done after "Edit as custom" with no edit still sends one `mc-shape-change` so the card turns custom.
+ * Recorded by the card editor (T8 / T11, 2026-10-18): the card editor uses all three as written (it sets
+ * `preset` and `label`, writes on `mc-shape-change` with `commit` true, closes on `mc-shape-close`).
+ *
+ * Host rules found in the live check (HA 2026.10.2, src/editor/custom/layer.ts, T8 / T11):
+ * - The layer is a modal <dialog> on <body> (top layer), not a child of the form: HA's card dialog
+ *   transforms and clips, and the form re-renders on every committed change. The editors' ancestor
+ *   <dialog> walk therefore finds none; the host covers Escape itself.
+ * - HA's card dialog is a wa-dialog that also closes on a keydown that reaches its document-level key
+ *   handling, not only on the browser's cancel. The editors' layer-root handler stops Escape only while
+ *   focus is inside their shadow DOM; with focus on the editor element, the dialog or the page it did
+ *   not, and the card dialog closed. The host stops Escape on the dialog (bubble) and on the window
+ *   (capture, targets outside the layer), ignores `cancel`, and focuses the editor element on open.
+ * - The entry button must stay enabled while the chunk loads (a disabled button drops focus, and focus
+ *   returns to the opener, or its `data-focus-key` replacement).
  */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';

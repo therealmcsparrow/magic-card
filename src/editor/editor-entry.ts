@@ -3,6 +3,8 @@ import { VERSION } from '../version';
 import './magic-card-editor';
 // every module's settings tabs (module-editor 1.0.0)
 import './modules';
+// window.MagicCard.loadSvgEditor / loadShapeEditor (svg-editor 1.0.0)
+import './custom/loaders';
 
 /*
  * Entry of the lazy editor chunk, dist/magic-card-editor.js (ADR 0007). Only

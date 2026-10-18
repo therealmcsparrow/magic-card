@@ -223,6 +223,7 @@ export function renderCardDesign(
         .hasRadius=${!!(src.get('border_radius') || (src.rule && config.border_radius))}
         .hasShadow=${!!(src.get('box_shadow') || (src.rule && config.box_shadow))}
         .popup=${config.popup?.enabled === true}
+        .hass=${hass}
         .onChange=${(p: ShapePatch) => src.many({ shape: p.shape, shape_options: p.shape_options })}
       ></mc-shape-editor>
       ${unset('shape')}

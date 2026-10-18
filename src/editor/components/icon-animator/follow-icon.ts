@@ -60,12 +60,19 @@ export function svgGeometry(svg: string): IconGeometry | undefined {
   return g;
 }
 
-/** A module's own icon id ('' when it shows its entity's icon, the type default or an own SVG). */
+/** Marks the icon ref of a module's own drawing (`icon: svg`): this prefix, then the markup. */
+const OWN = 'mc-own:';
+
+/**
+ * A module's own icon ref ('' when it shows its entity's icon or the type default): an icon id, a
+ * saved icon (`mcu:<id>`), or its own drawing (`icon: svg`), which is OWN plus the markup, so a
+ * changed drawing is a changed icon.
+ */
 export function explicitIcon(m: Record<string, unknown> | undefined): string {
   const icon = m?.icon;
-  return m && !m.use_entity_icon && typeof icon === 'string' && icon !== 'svg' && icon.includes(':')
-    ? icon
-    : '';
+  if (!m || m.use_entity_icon || typeof icon !== 'string') return '';
+  if (icon === 'svg') return typeof m.svg === 'string' && m.svg.trim() ? OWN + m.svg : '';
+  return icon.includes(':') ? icon : '';
 }
 
 type Path = Array<string | number>;
@@ -163,6 +170,29 @@ export function libraryIconChanges(
 }
 
 /**
+ * What an icon change does to the module's icon animation, for the SVG editor's notice: a library
+ * animation (a built-in document, a My animations copy or reference) draws its own copy of the old
+ * icon and is removed; a "This icon" animation follows the new icon. Same rules as
+ * libraryIconChanges / iconChanges. `tpl`: the linked template's documents.
+ */
+export function iconAnimationFacts(
+  m: Record<string, unknown>,
+  config: MagicCardConfig,
+  tpl?: unknown,
+): { pickedAnimation: boolean; followsIcon: boolean } {
+  const e = entryOf(m);
+  if (!e) return { pickedAnimation: false, followsIcon: false };
+  const raw = e.quick ? storedDoc(config, tpl, e.id)?.doc : undefined;
+  const picked =
+    !e.quick ||
+    e.id.startsWith(MINE_PREFIX) ||
+    (e.entry.library_icon && ICON_LIBRARY.some((x) => x.id === e.entry.library_icon)
+      ? !!libraryPickOf(e.entry, raw)
+      : ICON_LIBRARY.some((x) => x.name === raw?.name));
+  return { pickedAnimation: picked, followsIcon: !picked };
+}
+
+/**
  * A stored document that follows the module's icon: a split of the module's own icon ("This icon",
  * not a library entry nor a My animations copy) whose drawing is embedded or names the old icon.
  * Raw, as stored. `own`: a library pick edited by hand, the user's own whatever its name.
@@ -188,7 +218,7 @@ export function followsIcon(
 
 /** The animator's name for a split of `icon`. */
 export const ownName = (icon: string): string =>
-  `Animated ${icon.slice(icon.indexOf(':') + 1).replace(/-/g, ' ')}`;
+  icon.startsWith(OWN) ? 'Animated drawing' : `Animated ${icon.slice(icon.indexOf(':') + 1).replace(/-/g, ' ')}`;
 
 type Box = [number, number, number, number];
 
@@ -451,9 +481,15 @@ export function followIcons(
   }
 }
 
-/** An icon's shape (Home Assistant's icon sets, else the bundled mdi paths); undefined when it cannot load. */
-async function shapeOf(h: FollowHost, ref: string): Promise<IconGeometry | undefined> {
+/**
+ * An icon's shape: a drawing's markup, Home Assistant's icon sets, the card's kept copy of a saved
+ * icon, else the bundled mdi paths; undefined when it cannot load.
+ */
+async function shapeOf(h: FollowHost, ref: string, config?: MagicCardConfig): Promise<IconGeometry | undefined> {
+  if (ref.startsWith(OWN)) return svgGeometry(ref.slice(OWN.length));
   let g = await h.resolveIcon(ref, { timeoutMs: 1500 }).catch(() => undefined);
+  const kept = ref.startsWith('mcu:') ? config?.custom_icons?.[ref.slice(4)] : undefined;
+  if (!g && kept) g = svgGeometry(kept);
   if (!g && (g = mdiGeometry(ref))) h.setIcon(ref, g);
   return g;
 }
@@ -485,7 +521,7 @@ async function drop(h: FollowHost, sm: CardState, w: Pending): Promise<boolean |
   const first = live();
   if (!first.ok) return;
   // like follow: an icon whose shape cannot load (a half-typed id) keeps the animation; Clear drops
-  if (first.to && !(await shapeOf(h, first.to))) return 'park';
+  if (first.to && !(await shapeOf(h, first.to, first.c))) return 'park';
   if (sm.attached === false) return true;
   const { c, ok, to } = live();
   if (!ok || to !== first.to) return;
@@ -532,7 +568,7 @@ async function follow(h: FollowHost, sm: CardState, w: Pending): Promise<boolean
   if (!followsIcon(raw, from, to, own)) return;
   const v = validateAnimationDoc(raw, { v2: 'lenient' });
   if (!v.ok || !v.doc.rig) return;
-  const shape = (ref: string) => shapeOf(h, ref);
+  const shape = (ref: string) => shapeOf(h, ref, first.c);
   const g = await shape(to);
   if (!g) return;
   const rig = v.doc.rig;

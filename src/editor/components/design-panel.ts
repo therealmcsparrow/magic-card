@@ -714,6 +714,7 @@ export class DesignPanel extends LitElement {
             .target=${this.target}
             .hasRadius=${this._hasRadius()}
             .hasShadow=${!!merged.box_shadow}
+            .hass=${this.hass}
             .onChange=${(patch: ShapePatch) => this._handleKeysChange({ ...patch }, 'shape')}
           ></mc-shape-editor>`,
           syncIndicator,

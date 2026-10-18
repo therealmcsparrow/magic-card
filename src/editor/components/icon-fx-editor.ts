@@ -10,6 +10,10 @@ import { onIconGeometry, resolveIconGeometry } from '../../icons/icon-source';
 import { sanitizeSvg, SVG_MAX_BYTES } from '../../icons/svg-sanitize';
 import { fieldReset } from './field-reset';
 import { getFullPath, hasTemplate, isNotSynced, type SyncContext } from '../../utils/sync-path';
+import { cardStateOf as cardState } from '../custom/bridge';
+import { listIcons, type Listing } from '../custom/library';
+import { applyIconPatch, openIconEditor, sourceOfModule } from '../custom/icon-host';
+import type { IconSummary } from '../../contracts/mcu-library';
 
 import './color-picker';
 import './unit-field';
@@ -169,6 +173,18 @@ export class IconFxEditor extends LitElement {
       .help.warn {
         color: var(--mc-warn-ink);
       }
+      .icon-editor {
+        display: grid;
+        gap: 6px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
       textarea.input {
         min-height: 120px;
       }
@@ -191,6 +207,8 @@ export class IconFxEditor extends LitElement {
   /** Offer Morph and the state icons (modules with an on / off entity). */
   @property({ type: Boolean }) allowStateIcons = false;
   @property({ attribute: false }) onChange?: (patch: IconFxPatch) => void;
+  /** The module as stored (for the SVG editor's notice: state icons, icon animation). */
+  @property({ attribute: false }) moduleCfg?: Record<string, unknown>;
   /** Template link of the module: sync indicators for icon_fx, icon_on, icon_off and svg. */
   @property({ attribute: false }) syncCtx?: SyncContext;
 
@@ -202,6 +220,11 @@ export class IconFxEditor extends LitElement {
   @state() private _noShape = false;
   /** Custom SVG switched on here, before a valid SVG wrote `icon: svg`. */
   @state() private _svgOn = false;
+  /** The icon editor's chunk: loading or failed. */
+  @state() private _editorState: 'loading' | 'failed' | '' = '';
+  /** The saved icons (for the "not found" notice of an mcu: icon). */
+  @state() private _saved?: Listing<IconSummary>;
+  private _savedFor?: unknown;
   /** The module's icon before Custom SVG: restored when it is switched off. */
   private _prevIcon?: string;
   private _shapeFor = '';
@@ -268,9 +291,71 @@ export class IconFxEditor extends LitElement {
     }
   }
 
+  // ── icon editor (Draw an icon, Customise this icon, Edit icon) ──
+
+  private async _openEditor(kind: 'draw' | 'customise' | 'edit'): Promise<void> {
+    // the button stays enabled while the chunk loads: a disabled button drops focus, and focus must return to it
+    if (this._editorState === 'loading') return;
+    const module = this.moduleCfg ?? { icon: this.moduleIcon || undefined, svg: this.svg || undefined, icon_on: this.iconOn || undefined, icon_off: this.iconOff || undefined };
+    const config = cardState(this)?.getConfig();
+    const source =
+      kind === 'draw'
+        ? ({ kind: 'blank' } as const)
+        : kind === 'customise'
+          ? ({ kind: 'icon', icon: this.moduleIcon } as const)
+          : sourceOfModule(module, config, (await listIcons(this.hass)).state === 'ok') ?? ({ kind: 'blank' } as const);
+    this._editorState = 'loading';
+    const r = await openIconEditor({
+      from: this,
+      hass: this.hass,
+      module,
+      linked: !!this.syncCtx && hasTemplate(this.syncCtx),
+      source,
+      apply: (patch) => this.onChange?.(patch),
+    });
+    this._editorState = r === 'failed' ? 'failed' : '';
+  }
+
+  private _renderIconEditor(): TemplateResult {
+    const icon = this.moduleIcon;
+    const kind = icon === 'svg' || icon.startsWith('mcu:') ? 'edit' : icon.includes(':') ? 'customise' : 'draw';
+    const label = { edit: 'Edit icon', customise: 'Customise this icon', draw: 'Draw an icon' }[kind];
+    const loading = this._editorState === 'loading';
+    const pack = icon.slice(0, icon.indexOf(':'));
+    return html`
+      <div class="icon-editor">
+        <div class="svg-actions">
+          <button type="button" class="btn btn-secondary btn-sm" data-focus-key="icon-entry" aria-busy=${loading ? 'true' : 'false'} @click=${() => void this._openEditor(kind)}>
+            <ha-icon icon="mdi:pencil-ruler"></ha-icon>${label}${loading ? html`<span class="sr-only"> Loading</span>` : nothing}
+          </button>
+        </div>
+        ${kind === 'customise'
+          ? html`<p class="help">Makes your own copy. The original stays in ${pack === 'mdi' ? 'Material Design Icons' : pack}.</p>`
+          : nothing}
+        ${this._editorState === 'failed'
+          ? html`<p class="help error" role="alert">The icon editor could not load. Check your connection and try again.</p>`
+          : nothing}
+        ${this._savedMissing() ? html`<p class="help warn" role="status">Saved icon "${icon.slice(4)}" was not found. The card shows the default icon.</p>` : nothing}
+      </div>
+    `;
+  }
+
+  /** An `mcu:` icon that neither the library nor a kept copy in the card can draw (design R4). */
+  private _savedMissing(): boolean {
+    const icon = this.moduleIcon;
+    if (!icon.startsWith('mcu:') || !this._saved) return false;
+    const id = icon.slice(4);
+    if (cardState(this)?.getConfig().custom_icons?.[id]) return false;
+    return this._saved.state !== 'ok' || !this._saved.items.some((i) => i.id === id);
+  }
+
   // ── shape hint ──
 
   protected updated(): void {
+    if (this.moduleIcon.startsWith('mcu:') && this.hass && this._savedFor !== this.hass) {
+      this._savedFor = this.hass;
+      void listIcons(this.hass).then((l) => (this._saved = l));
+    }
     const ref = hasIconFx(this._fx) && this.icon && !this._isSvg && this.icon.includes(':') ? this.icon : '';
     if (ref === this._shapeFor) return;
     this._shapeFor = ref;
@@ -470,6 +555,7 @@ export class IconFxEditor extends LitElement {
     const draft = this._svgDraft ?? (this._isSvg ? this.svg : '') ?? '';
     const warning = this._svgError ? undefined : customSvgWarning(draft);
     return html`
+      ${this._renderIconEditor()}
       ${this._switch('Custom SVG', on, () => this._toggleSvg(), on ? undefined : 'Draw your own SVG icon instead of one from the icon list.')}
       ${on
         ? html`${this._field(
@@ -776,18 +862,7 @@ export function renderIconFxEditor<T extends IconFxKeys & { icon?: string }>(
   opts: { entity?: string; icon?: string; allowSvg?: boolean; allowStateIcons?: boolean; syncCtx?: SyncContext } = {},
 ): TemplateResult {
   const linked = !!opts.syncCtx && hasTemplate(opts.syncCtx);
-  const apply = (patch: IconFxPatch) => {
-    const next = { ...c, ...patch } as Record<string, unknown>;
-    for (const k of Object.keys(patch)) if (next[k] === undefined) delete next[k];
-    // Linked card: every written key is an override, a removed one too (the template merge keeps it
-    // removed), the same as the reset of any other field.
-    if (linked) {
-      const ns = new Set((c as { not_synced?: string[] }).not_synced ?? []);
-      for (const k of Object.keys(patch)) ns.add(getFullPath(opts.syncCtx!, k));
-      next.not_synced = [...ns];
-    }
-    onChange(next as T);
-  };
+  const apply = (patch: IconFxPatch) => onChange(applyIconPatch(c, patch, linked ? opts.syncCtx : undefined) as T);
   return html`<mc-icon-fx-editor
     .hass=${hass}
     .fx=${c.icon_fx}
@@ -797,6 +872,7 @@ export function renderIconFxEditor<T extends IconFxKeys & { icon?: string }>(
     .iconOn=${c.icon_on ?? ''}
     .iconOff=${c.icon_off ?? ''}
     .svg=${c.svg ?? ''}
+    .moduleCfg=${c as unknown as Record<string, unknown>}
     .allowSvg=${!!opts.allowSvg}
     .allowStateIcons=${!!opts.allowStateIcons}
     .syncCtx=${opts.syncCtx}

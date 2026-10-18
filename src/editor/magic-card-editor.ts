@@ -14,6 +14,7 @@ import type { ChildStep } from '../utils/module-path';
 import type { PaneEditor } from './studio/pane-editor';
 import type { Studio } from './studio/studio';
 import type { CardRequestDetail } from './components/icon-animator/card-request';
+import { listIcons, listShapes, needsLists } from './custom/library';
 
 type Docs = Array<Record<string, unknown>>;
 type TemplateEntry = { config: Omit<MagicCardConfig, 'type'> & { type?: string }; description?: string };
@@ -225,6 +226,10 @@ export class MagicCardEditor extends LitElement {
       this._asked = name;
       this._docs(name).catch(() => {});
     }
+    // kept copies of saved icons / shapes: ask the library once, so unused copies can be pruned on the next edit
+    const need = needsLists(s.config);
+    if (this.hass && need.icons) void listIcons(this.hass);
+    if (this.hass && need.shapes) void listShapes(this.hass);
   };
 
   /** Every template, fetched now (one request at a time); their custom_animations go to the cache. */

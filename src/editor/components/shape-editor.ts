@@ -1,6 +1,11 @@
 import { LitElement, html, css, svg, TemplateResult, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import type { ShapeKind, ShapeOptions } from '../../types';
+import { customElement, property, state } from 'lit/decorators.js';
+import type { HomeAssistant, ShapeKind, ShapeOptions } from '../../types';
+import type { CustomShapeOptions } from '../../contracts/custom-shape';
+import type { SavedShape } from '../../contracts/mcu-library';
+import { freeId, listShapes, saveShape, slug, type Listing } from '../custom/library';
+import { applyShapePatch, openShapeEditor, type ShapeWrite } from '../custom/shape-host';
+import { cardStateOf } from '../custom/bridge';
 import { editorSystem } from '../../css/editor-system';
 import { SHAPE_DEFAULTS, shapePath } from '../../utils/shape-path';
 import { fieldReset } from './field-reset';
@@ -33,12 +38,19 @@ export const SHAPE_TILES: ShapeTile[] = [
   { kind: 'ticket', label: 'Ticket', options: ['corner'] },
   { kind: 'wave', label: 'Wave', options: ['edge', 'amplitude', 'waves', 'animate'] },
   { kind: 'blob', label: 'Blob', options: ['seed', 'wobble', 'animate'] },
+  { kind: 'custom', label: 'Custom', options: [] },
 ];
+
+/** Presets "Edit as custom" can convert to corners or a path (shape editor, design 04 section 0). */
+const EDITABLE: ShapeKind[] = ['squircle', 'pill', 'circle', 'hexagon', 'octagon', 'notch'];
+/** Presets that cannot be edited yet: the line under the picker says so. */
+const NOT_EDITABLE: ShapeKind[] = ['ticket', 'wave', 'blob'];
 
 const SHAPE_GROUPS: Array<[string, ShapeKind[]]> = [
   ['Rounded', ['squircle', 'pill', 'circle']],
   ['Cut corners', ['hexagon', 'octagon', 'notch', 'ticket']],
   ['Organic', ['wave', 'blob']],
+  ['Your own', ['custom']],
 ];
 
 const EDGES: Array<{ value: NonNullable<ShapeOptions['edge']>; label: string }> = [
@@ -181,6 +193,42 @@ export class ShapeEditor extends LitElement {
       .hints .help {
         margin: 0;
       }
+      .shape-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .mine {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 6px;
+      }
+      .mine li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .mine .nm {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .save-form {
+        display: grid;
+        gap: 8px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
     `,
   ];
 
@@ -197,6 +245,19 @@ export class ShapeEditor extends LitElement {
   /** The card is a pop-up (its open surface stays rectangular: hint). */
   @property({ type: Boolean }) popup = false;
   @property({ attribute: false }) onChange?: (patch: ShapePatch) => void;
+  /** Reads the saved shapes (My shapes, Save as shape) and opens the shape editor. */
+  @property({ attribute: false }) hass?: HomeAssistant;
+  /** The name of the target in the shape editor's title: "Shape for Living room tile". */
+  @property({ type: String }) label = '';
+
+  @state() private _lib?: Listing<SavedShape>;
+  @state() private _source: 'presets' | 'mine' = 'presets';
+  /** The shape editor's chunk: loading or failed (E1). */
+  @state() private _opening: 'loading' | 'failed' | '' = '';
+  /** "Save as shape": the name field is open. */
+  @state() private _saving?: { name: string; error?: string; busy?: boolean };
+  @state() private _status = '';
+  private _listed?: unknown;
 
   private get _kind(): ShapeKind {
     const s = this.shape;
@@ -220,6 +281,12 @@ export class ShapeEditor extends LitElement {
   }
 
   private _pick(kind: ShapeKind): void {
+    if (kind === 'custom') {
+      // the Custom tile opens the editor; nothing is written until it commits a change
+      if (this._kind !== 'custom') void this._open();
+      this.requestUpdate();
+      return;
+    }
     if (kind === 'none') {
       this.onChange?.({ shape: this.explicitNone ? 'none' : undefined, shape_options: undefined });
       return;
@@ -237,17 +304,17 @@ export class ShapeEditor extends LitElement {
     const opt = (t: ShapeTile) => html`<option value=${t.kind} ?selected=${t.kind === kind}>${t.label}</option>`;
     const group = (label: string, kinds: ShapeKind[]) =>
       html`<optgroup label=${label}>${kinds.map((k) => opt(SHAPE_TILES.find((t) => t.kind === k)!))}</optgroup>`;
-    const d = kind === 'none' ? '' : previewPath(kind, this._opts);
+    const d = kind === 'none' || kind === 'custom' ? '' : previewPath(kind, this._opts);
     return html`<div class="pick">
       <div class="select">
-        <select class="input" id="shape-kind" aria-label="Shape" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as ShapeKind)}>
+        <select class="input" id="shape-kind" data-focus-key="shape-entry" aria-label="Shape" @change=${(e: Event) => this._pick((e.target as HTMLSelectElement).value as ShapeKind)}>
           ${opt(SHAPE_TILES[0])}
           ${SHAPE_GROUPS.map(([label, kinds]) => group(label, kinds))}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>
       <svg class="preview" viewBox="-8 -6 ${PREVIEW_W + 16} ${PREVIEW_H + 12}" aria-hidden="true">
-        ${kind === 'none' ? svg`<path class="none-mark" d="M2 2H38V26H2Z"></path>` : svg`<path d=${d}></path>`}
+        ${kind === 'none' ? svg`<path class="none-mark" d="M2 2H38V26H2Z"></path>` : kind === 'custom' ? svg`<path d="M10 2H38V18L30 26H2V10Z"></path>` : svg`<path d=${d}></path>`}
       </svg>
     </div>`;
   }
@@ -402,6 +469,175 @@ export class ShapeEditor extends LitElement {
     }
   }
 
+  // ── custom shapes: the shape editor, My shapes, Save as shape ──
+
+  /** The card's `custom_shapes` (copies of saved shapes), read through the card editor's state. */
+  private _copies(): Record<string, CustomShapeOptions> {
+    return (cardStateOf(this)?.getConfig().custom_shapes ?? {}) as Record<string, CustomShapeOptions>;
+  }
+
+  private async _open(preset?: { shape: string; shape_options?: ShapeOptions }): Promise<void> {
+    // the entry button stays enabled while the chunk loads: a disabled button drops focus, and focus must return to it
+    if (this._opening === 'loading') return;
+    this._opening = 'loading';
+    const kind = this._kind;
+    const r = await openShapeEditor({
+      from: this,
+      hass: this.hass,
+      label: this.label || `Shape for this ${this.target}`,
+      value: kind === 'custom' ? { shape: 'custom', shape_options: this._opts } : undefined,
+      preset,
+      apply: (patch) => this.onChange?.(patch),
+    });
+    this._opening = r === 'failed' ? 'failed' : '';
+  }
+
+  /** A patch with inline copies: the two keys go to the consumer, the copies to the card's custom_shapes (same undo step). */
+  private _write(patch: ShapeWrite): void {
+    applyShapePatch(cardStateOf(this), patch, (keys) => this.onChange?.(keys));
+  }
+
+  private _use(item: SavedShape, asCopy: boolean): void {
+    // a link keeps an inline copy in the card (it draws when Magic Card Utils is missing)
+    this._write(
+      asCopy
+        ? { shape: 'custom', shape_options: { ...item.shape } }
+        : { shape: 'custom', shape_options: { ref: item.id }, custom_shapes: { [item.id]: item.shape } },
+    );
+    this._status = asCopy ? `Using a copy of ${item.name}.` : `Using ${item.name}. Changes to it reach every card that uses it.`;
+  }
+
+  /** A linked shape becomes this card's own: the library's options without the link. */
+  private _detach(): void {
+    const id = this._opts.ref;
+    if (!id) return;
+    const own = this._lib?.items.find((i) => i.id === id)?.shape ?? this._copies()[id];
+    if (!own) return;
+    this._write({ shape: 'custom', shape_options: { ...own } });
+    this._status = 'This card now has its own copy.';
+  }
+
+  private async _saveAs(): Promise<void> {
+    const f = this._saving;
+    if (!f || f.busy) return;
+    const name = f.name.trim();
+    if (!name) {
+      this._saving = { ...f, error: 'Give it a name.' };
+      return;
+    }
+    if (name.length > 80) {
+      this._saving = { ...f, error: 'Use at most 80 characters.' };
+      return;
+    }
+    this._saving = { ...f, busy: true, error: undefined };
+    const taken = new Set((this._lib?.items ?? []).map((i) => i.id));
+    const shape: ShapeOptions = { ...this._opts };
+    delete shape.ref;
+    const r = await saveShape(this.hass, { id: freeId(slug(name, 'shape'), taken), name, shape });
+    if (r.shape) {
+      this._saving = undefined;
+      this._status = `Saved as ${r.shape.name}. Find it under My shapes.`;
+      this._lib = await listShapes(this.hass);
+      return;
+    }
+    const why = {
+      readonly: 'Your account can use the library but not change it. Ask an admin.',
+      full: 'The library is full. Delete a shape first.',
+      invalid: 'This shape can not be saved.',
+      unreachable: 'Could not reach Magic Card Utils. Try again.',
+    }[r.error ?? 'unreachable'];
+    this._saving = { ...f, busy: false, error: why };
+  }
+
+  private _sourceChips(): TemplateResult | typeof nothing {
+    if (this._lib?.state !== 'ok') return nothing;
+    const chip = (v: 'presets' | 'mine', label: string) =>
+      html`<button type="button" role="radio" aria-checked=${this._source === v ? 'true' : 'false'} @click=${() => (this._source = v)}>${label}</button>`;
+    return html`<div class="seg full" role="radiogroup" aria-label="Shape source">${chip('presets', 'Presets')}${chip('mine', `My shapes (${this._lib.items.length})`)}</div>`;
+  }
+
+  private _mine(): TemplateResult {
+    const items = this._lib?.items ?? [];
+    if (!items.length) {
+      return html`<div class="mine-empty"><p class="help">No saved shapes yet. Make a custom shape, then choose Save as shape.</p>
+        <button type="button" class="btn btn-secondary btn-sm" data-focus-key="shape-entry" @click=${() => void this._open()}>Make a custom shape</button></div>`;
+    }
+    return html`<ul class="mine" aria-label="My shapes">
+      ${items.map(
+        (i) => html`<li>
+          <span class="nm">${i.name}</span>
+          <button type="button" class="btn btn-secondary btn-sm" aria-label=${`Use ${i.name}`} @click=${() => this._use(i, false)}>Use</button>
+          <button type="button" class="btn btn-text btn-sm" aria-label=${`Use a copy of ${i.name}`} @click=${() => this._use(i, true)}>Use as copy</button>
+        </li>`,
+      )}
+    </ul>
+    <p class="help">Use follows the library: change a shape and every card that uses it changes. Use as copy makes this card independent.</p>`;
+  }
+
+  private _openButton(label: string, onClick: () => void): TemplateResult {
+    const loading = this._opening === 'loading';
+    return html`<button type="button" class="btn btn-secondary btn-sm" data-focus-key="shape-entry" aria-busy=${loading ? 'true' : 'false'} @click=${onClick}>
+      ${label}${loading ? html`<span class="sr-only"> Loading</span>` : nothing}
+    </button>`;
+  }
+
+  private _actions(kind: ShapeKind): TemplateResult | typeof nothing {
+    if (kind === 'none') return nothing;
+    const parts: TemplateResult[] = [];
+    if (kind === 'custom') {
+      const ref = this._opts.ref;
+      parts.push(this._openButton('Edit shape', () => void this._open()));
+      if (ref) {
+        parts.push(html`<button type="button" class="btn btn-text btn-sm" @click=${() => this._detach()}>Use as copy</button>`);
+      } else if (this._lib) {
+        const off = this._lib.state !== 'ok';
+        parts.push(
+          html`<button type="button" class="btn btn-text btn-sm" aria-disabled=${off ? 'true' : 'false'} aria-describedby=${off ? 'shape-lib-hint' : nothing}
+            @click=${() => (off ? undefined : (this._saving = { name: 'Custom shape' }))}>Save as shape</button>`,
+        );
+      }
+    } else if (EDITABLE.includes(kind)) {
+      parts.push(this._openButton('Edit as custom', () => void this._open({ shape: kind, shape_options: this._opts })));
+    }
+    const hints: TemplateResult[] = [];
+    if (NOT_EDITABLE.includes(kind)) hints.push(html`<p class="help">Ticket, Wave and Blob can not be edited yet. Use the preset as it is.</p>`);
+    if (kind === 'custom' && this._opts.ref) {
+      const name = this._lib?.items.find((i) => i.id === this._opts.ref)?.name ?? this._opts.ref;
+      hints.push(html`<p class="help">Linked to the saved shape ${name}. Change it there and every card that uses it changes.</p>`);
+    }
+    if (kind === 'custom' && !this._opts.ref && this._lib && this._lib.state !== 'ok') {
+      hints.push(html`<p class="help" id="shape-lib-hint">Keep your own shapes for every dashboard with the free Magic Card Utils add-on. Until then, this shape is saved in this card only.</p>`);
+    }
+    if (this._opening === 'failed') {
+      hints.push(html`<p class="help error" role="alert">The shape editor could not load. Check your connection and try again.</p>`);
+    }
+    return html`<div class="shape-actions">${parts}</div>${hints}${this._saveForm()}`;
+  }
+
+  private _saveForm(): TemplateResult | typeof nothing {
+    const f = this._saving;
+    if (!f) return nothing;
+    return html`<form class="save-form" @submit=${(e: Event) => { e.preventDefault(); void this._saveAs(); }}>
+      <label for="shape-save-name">Name</label>
+      <input class="input" id="shape-save-name" .value=${f.name} maxlength="80" aria-invalid=${f.error ? 'true' : 'false'} aria-describedby=${f.error ? 'shape-save-err' : nothing}
+        @input=${(e: InputEvent) => (this._saving = { ...f, name: (e.target as HTMLInputElement).value, error: undefined })}
+        @keydown=${(e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); this._saving = undefined; } }} />
+      ${f.error ? html`<p class="help error" id="shape-save-err" role="alert">${f.error}</p>` : nothing}
+      <div class="shape-actions">
+        <button type="submit" class="btn btn-primary btn-sm" ?disabled=${f.busy}>Save</button>
+        <button type="button" class="btn btn-text btn-sm" @click=${() => (this._saving = undefined)}>Cancel</button>
+      </div>
+    </form>`;
+  }
+
+  protected willUpdate(): void {
+    // the saved shapes: listed once per hass (a page without Magic Card Utils answers "missing" at once)
+    if (this.hass && this._listed !== this.hass) {
+      this._listed = this.hass;
+      void listShapes(this.hass).then((l) => (this._lib = l));
+    }
+  }
+
   private _hints(kind: ShapeKind): TemplateResult | typeof nothing {
     if (kind === 'none') return nothing;
     const hints: string[] = [];
@@ -423,9 +659,11 @@ export class ShapeEditor extends LitElement {
     const kind = this._kind;
     return html`
       <div class="shape-ed">
-        ${this._picker(kind)}
-        ${this._hints(kind)}
-        ${this._options(kind)}
+        ${this._sourceChips()}
+        ${this._source === 'mine' && this._lib?.state === 'ok'
+          ? this._mine()
+          : html`${this._picker(kind)}${this._actions(kind)}${this._hints(kind)}${this._options(kind)}`}
+        <p class="sr-only" role="status">${this._status}</p>
       </div>
     `;
   }

@@ -14,6 +14,7 @@ import {
 } from '../../types';
 import { UndoRedoStack } from './undo-redo';
 import { followIcons } from '../components/icon-animator/loader';
+import { prunedConfig } from '../custom/library';
 import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
@@ -204,7 +205,9 @@ export class EditorStateManager {
     if (recordUndo) {
       this.undoRedo.push(this.state.config);
     }
-    const next = deepClone(config);
+    // kept copies of saved icons and shapes nothing uses any more go (library.ts; not while typing YAML)
+    const cloned = deepClone(config);
+    const next = this.state.editorMode === 'yaml' ? cloned : prunedConfig(cloned);
     this.state = {
       ...this.state,
       config: next,

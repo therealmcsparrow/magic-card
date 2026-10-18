@@ -425,6 +425,7 @@ export function renderIconField(
       <mc-icon-picker
         .hass=${hass}
         .animated=${animated}
+        .syncCtx=${syncContext}
         .value=${value || ''}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value || '')}
       ></mc-icon-picker>
