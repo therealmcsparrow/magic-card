@@ -37,6 +37,9 @@ Magic Card Utils is needed for the editors and the library. The editors need Mag
 -   **Copy as HA theme** copies a single theme to the clipboard as Home Assistant theme YAML.
 -   The shape list in the shape editor refreshes after a save, so a new shape appears without a reload.
 -   The Markdown module adds the JavaScript features that tables and reference links need on older browsers, such as Chromium 85 to 91 in an older Android WebView.
+-   The Christmas border lights no longer keep a slow tablet busy. They fade five stacked layers instead of recolouring every bulb, so a card with the Christmas scene idles at about 0.4 % CPU on a 4x throttled Chrome, down from 99 %.
+-   Markdown, weather and forecast modules reserve their height before they load, so the page no longer jumps when the card finishes loading. Seasonal cards no longer shift when the seasonal files arrive.
+-   The five-day forecast fits a 331 px column. The days shrink from 60 to 44 px before the row scrolls.
 
 ### Changed
 -   Each release has 23 files, up from 10. HACS installs them with the card. With a manual install, copy all 23 to the same folder, then hard refresh.
