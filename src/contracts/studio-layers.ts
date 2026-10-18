@@ -3,6 +3,8 @@ import type { AnimationDoc } from '../anim-studio/model';
 /*
  * Contract: studio layers. Revision 1 (2026-10-18, epic F, brief 61 with the CEO's answers of
  * 2026-10-18; ADR 0029). Architect-owned. Not released, so later revisions are made in place (ADR 0020).
+ * Amended in place 2026-10-18 (Plan Gate: placement per emitter, ADR 0028 revision): section 1, the
+ * particles move rule.
  *
  * Extends the studio v2 slot contract (src/anim-studio/slots.ts) for panels registered with
  * `place: 'layers'`. Provided by the studio shell (src/anim-studio/studio.ts) and
@@ -19,8 +21,13 @@ import type { AnimationDoc } from '../anim-studio/model';
  *    keyframe tracks (properties combine, no order, not movable), Sequence steps (play order, first
  *    step first; Move up = earlier).
  *    Keyframes column, top to bottom: Shapes over the icon, Icon parts, Shapes under the icon, Card
- *    parts (LAYERS_ORDER). A shape moved down past the last "over" row becomes "under" (and back); a
- *    particles block moved past the Card content row flips ParticlesSpec.layer. Each move is one undo step.
+ *    parts (LAYERS_ORDER). A shape moved down past the last "over" row becomes "under" (and back).
+ *    Each move is one undo step.
+ *    Particle layers list, top to bottom: the emitters in front of the content (top-most first), the
+ *    fixed Card content row, the emitters behind it (top-most first). One emitter moved past the Card
+ *    content row changes only that emitter's placement (particles-v2 1.2.0: ParticleEmitter.layer;
+ *    for the primary ParticlesSpec.layer, with the extras' `layer` rewritten so they stay where they
+ *    are). Within one side, moves reorder sim.emitters as before.
  *
  * 2. Rows (LayerKey, stable across reorders):
  *    `target:<TargetRef>`        element, icon, name, state, background (Card parts)
@@ -55,8 +62,9 @@ import type { AnimationDoc } from '../anim-studio/model';
  *        opacity are dropped for it. element: no hide (the whole card would vanish).
  *      lane: that property is removed from every key of that target (including clips' tracks); its
  *        bindings are dropped; the target rests at its base value.
- *      emitter: ranges.opacity and its children's ranges.opacity become [0, 0] (seeds unchanged, so
- *        the other emitters keep their exact motion; particles-v2 1.2.0). children: only the children's.
+ *      emitter: ranges.opacity and its children's ranges.opacity become [0, 0] (seeds and placement
+ *        unchanged, so the other emitters keep their exact motion and the preview keeps the same
+ *        layers; particles-v2 1.2.0). children: only the children's.
  *      step: removed from the preview's steps.
  *      path / subject / content / pshape: no hide.
  *
@@ -73,7 +81,8 @@ import type { AnimationDoc } from '../anim-studio/model';
  *    section), Right / Left open / close a disclosure, Alt+ArrowUp / Down move, and with a row focused
  *    H hide, S solo, L lock (aria-keyshortcuts on the row). Toggle buttons have aria-pressed and the
  *    labels "Hide in preview", "Solo in preview", "Lock". Moves and toggles are announced through the
- *    shell's live region. Targets >= 24 x 24 px; focus 2 px accent outline; reduced motion: no row
+ *    shell's live region (a move past Card content: "<name> moved in front of the content" / "behind
+ *    the content"). Targets >= 24 x 24 px; focus 2 px accent outline; reduced motion: no row
  *    transitions.
  */
 
