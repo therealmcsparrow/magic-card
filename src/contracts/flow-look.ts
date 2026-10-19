@@ -8,6 +8,9 @@ import type { ResolvedFlow } from '../utils/flow';
  * r2 2026-10-19 (designer round 1 requests R1-R3 and spike S3, folded into 1.0.0 in place per
  * ADR 0020 because nothing is built against it yet): quality tiers, page-hidden pause, theme-derived
  * defaults with a contrast check, static neon blur allowed, spin wording, background-layers seam.
+ * r3 2026-10-19 (spike S2, folded in place, nothing built yet): path grammar M L H V C A, gradient
+ * method, rotation probe with a SMIL fallback (the one exception to rule 1), taper scaled on short
+ * runs, Douglas-Peucker tolerance, overlapping rails accepted.
  *
  * Seam: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts overlay, both in
  * magic-card.js) keeps today's look (solid line, dots or moving dashes, reduced-motion arrow) and
@@ -36,13 +39,35 @@ import type { ResolvedFlow } from '../utils/flow';
  * - Value-dependent options without an entity (thresholds, tube_fill_value) fall back silently:
  *   single colour, full tube.
  *
- * Wave / zigzag geometry: the offset is applied along the normal of the sampled centre line on
- * every route. The amplitude tapers to 0 over the first and last 12 px of the path and over 12 px
- * on each side of an elbow corner arc (anchors, caps and corners stay clean), and is capped at
- * 40 % of the local radius of curvature on curves (no loops on tight curves). The shape is
- * computed once per geometry change, never per frame: the wave is still, and its motion is a
- * moving highlight dash plus the shapes on the centre line. electric: three seeded zigzag
- * variants stacked, switched by a CSS steps() opacity animation (no per-frame JS).
+ * ── Path geometry (r3, spike S2) ──
+ * geo.d from flowPath() uses only absolute M, L, H, V, C and A commands (A: rx = ry, no rotation,
+ * small arc; the elbow corners). The chunk's own sampler (src/flow-look/sampler.ts, about 3.8 KB
+ * minified, 1.9 KB gzip) parses exactly that grammar; offsets and lengths come from it, never from
+ * DOM measuring. Offset lines are emitted as polylines simplified by Douglas-Peucker at 0.2 px.
+ *
+ * Wave / zigzag: the offset is applied along the normal of the sampled centre line on every route.
+ * Taper: the amplitude goes to 0 (smoothstep) at both path ends and on every elbow corner arc,
+ * over T px on each side, T = min(12, run / 4), run = the straight or curved stretch between two
+ * of those points; and the amplitude on that stretch is at most T (so a short stub never gets a
+ * steep jump). Long runs keep the 12 px taper; short elbows (S2: 24 % full amplitude on a 67 px
+ * elbow with the fixed 12 px) now show a smaller but visible wave. Amplitude is also capped at
+ * 40 % of the local radius of curvature (no loops). Computed once per geometry change, never per
+ * frame: the wave is still; its motion is a moving highlight dash plus the shapes on the centre
+ * line. electric: three seeded zigzag variants stacked, switched by a CSS steps() opacity
+ * animation (no per-frame JS).
+ * Double rail: exact offset curves at +-(rail_gap + width) / 2, loops cut, mitred inner corners.
+ * Where parallel runs of one route lie closer than the rail offset (short elbows) the rails of
+ * different runs overlap: accepted, documented, not capped.
+ *
+ * Gradient (r3, spike S2): straight routes use one linearGradient from start to end
+ * (userSpaceOnUse; exact there). Every other route draws N = clamp(ceil(L / 10), 4, 32) segments
+ * of the same `d` (stroke-dasharray / dashoffset, no extra geometry), each in its opaque colour at
+ * its arc-length position, overlapping the next by 1 px, all inside one <g opacity="a">, where a
+ * is the average of the two end colours' alpha (their colours are drawn opaque). Abutting
+ * segments leave hairlines and translucent overlaps darken; this method was within 1/255 in all
+ * three engines at DPR 1 and 2. Two very different end alphas are therefore approximated.
+ * On wave / zigzag lines the segments run along the offset polyline (colour position off by the
+ * wave's length ratio, a few %: accepted). Segments are static (no frame cost).
  *
  * ── Quality tiers (r2, designer R1; deterministic, no frame-time probe) ──
  * H = the number of heavy flows among the card's resolved flows (visible or not): line tube or
@@ -59,17 +84,15 @@ import type { ResolvedFlow } from '../utils/flow';
  *
  * ── Colours and contrast (r2, designer R2; floor-safe) ──
  * Paint the chunk writes itself is hex, rgb() / rgba(), `var(--primary-text-color, #212121)` or
- * the resolved line colour, with any transparency as a separate fill-opacity / stroke-opacity:
- * never color-mix() (Chromium 85-110 rejects it as SVG paint, browsers.M1/M3). Defaults in
- * FLOW_LOOK_THEME. Text-derived parts follow the theme on light and dark cards. The light-theme
- * neon core is the line colour with a black stroke at 0.45 opacity drawn over it (the same result
- * as mixing with 45 % black, per gradient stop too). A value the user sets (tube_tint, neon_core,
- * cable_color) is used as written. Information-carrying parts (tube wall, tube level mark, neon
- * core, cable outline) are >= 3:1 against the card surface on both themes (WCAG 1.4.11):
- * tools/check-look-contrast.mjs (node, no browser) composites each part of every preset in
- * look-editor presets over #ffffff, #f2f2f2, #111111 and #1c1c1c with the HA default text colours
- * (#212121 light, #e1e1e1 dark) and exits 1 below 3.0. It runs with the release gate checks (no CI
- * tests in this repo), owner QA.
+ * the resolved line colour, with any transparency as a separate fill-opacity / stroke-opacity /
+ * group opacity: never color-mix() (Chromium 85-110 rejects it as SVG paint, browsers.M1/M3).
+ * Defaults in FLOW_LOOK_THEME. The light-theme neon core is the line colour with a black stroke at
+ * 0.45 opacity drawn over it (per gradient segment too). A value the user sets (tube_tint,
+ * neon_core, cable_color) is used as written. Information-carrying parts (tube wall, tube level
+ * mark, neon core, cable outline) are >= 3:1 against the card surface on both themes (WCAG
+ * 1.4.11): tools/check-look-contrast.mjs (node, no browser) composites each part of every preset
+ * over #ffffff, #f2f2f2, #111111 and #1c1c1c with the HA default text colours (#212121 light,
+ * #e1e1e1 dark) and exits 1 below 3.0. It runs with the release gate checks, owner QA.
  *
  * ── magic-card.js side (flows Module) ──
  * - types.ts: `FlowConfig extends FlowLookConfig`.
@@ -83,11 +106,18 @@ import type { ResolvedFlow } from '../utils/flow';
  *   Card budget: MAX_CARD_DOTS (40) covers every element that moves (dots, shapes, bubbles,
  *   ripples and splash droplets). mc-flows sums slot.requested() of look flows (after the tier
  *   caps) and the dots of classic flows, scales each moving flow to floor(n * 40 / total), at
- *   least 1, and passes it as `count`. After each render it exposes `budget` (FlowBudget) for the
- *   editor's notices.
+ *   least 1, and passes it as `count`. After each render it exposes `budget` (FlowBudget).
  * - mc-flows renders `<style>${slot.css}</style>` once in its shadow root while any flow has a
  *   look, and one HTML layer per z level (`div.html.back` z-index 0, `div.html.front` z-index 2,
  *   inset 0, pointer-events none, pauseOffscreen()) for `html` parts (MDI icon shapes, spike S1).
+ * - (r3) _probeOffsetPath() also checks rotation, once, in the same pass: a 20 x 4 rect with
+ *   offset-rotate: auto at the end of a vertical 100 px path must measure about 4 wide and 20 tall.
+ *   Result -> opts.motion: 'css' (path and rotation work), 'smil' (path works, rotation fails),
+ *   'none' (path fails: today's offsetPath false, moving dash instead). Classic dots never rotate
+ *   and keep using the path result only.
+ * - (r3) While any look flow renders with motion 'smil', mc-flows calls pauseAnimations() /
+ *   unpauseAnimations() on its two SVGs whenever their `offscreen` attribute or its `page-hidden`
+ *   host attribute changes (SMIL ignores animation-play-state).
  * - (r2) mc-flows reflects `page-hidden` on its host while document.visibilityState is 'hidden'
  *   (visibilitychange listener, removed on disconnect). flows-css.ts pauses the classic dots and
  *   dashes under :host([page-hidden]) too. The shared offscreen observer (Core) is not changed.
@@ -100,10 +130,13 @@ import type { ResolvedFlow } from '../utils/flow';
  * ── Renderer rules (the chunk) ──
  * 1. Pure templates from (flow, geo, opts); no requestAnimationFrame loops, no timers, no layout
  *    reads. Motion is CSS: offset-distance, transform, opacity, stroke-dashoffset only.
+ *    Exception (r3), only when opts.motion is 'smil': shapes that turn with the path move by
+ *    <animateMotion rotate="auto" path=...> (same duration, delay and direction as the CSS
+ *    version); shapes that never turn (dot, bubble) and every other animation stay CSS. Under
+ *    reduced motion the animateMotion elements are not rendered.
  * 2. No `filter` on an animated element or any ancestor of one. Shape glow and the neon mid layer
  *    are wider translucent strokes or shapes. (r2, S3) The neon outer layer may be a static
- *    blur(<= 8 px) when flicker is off (S3: no slower than stacked strokes); with flicker on it is
- *    stacked translucent strokes (safety margin for GPU-less tablets).
+ *    blur(<= 8 px) when flicker is off; with flicker on it is stacked translucent strokes.
  * 3. opts.reduced: nothing moves (no travel, highlight, bubbles, flicker, pulse, ripple, splash),
  *    travelling shapes are removed, so nothing spins either; the line stays in its style (wave
  *    keeps its shape, tube its level, neon full brightness), and a direction mark stays: the arrow
@@ -111,16 +144,14 @@ import type { ResolvedFlow } from '../utils/flow';
  *    55 % on short lines), >= 3:1 against the surface. Idle (direction 0): still line in the idle
  *    colour, no shapes, bubbles hidden, liquid empty with the wall and a 2 px level mark at the
  *    start end kept (AC5).
- * 4. Every animation in `css` pauses under `svg[offscreen]`, `div.html[offscreen]` and
+ * 4. Every CSS animation in `css` pauses under `svg[offscreen]`, `div.html[offscreen]` and
  *    `:host([page-hidden])`, and is `animation: none` under `@media (prefers-reduced-motion:
  *    reduce)`. Flicker never exceeds 2 dips per second (WCAG 2.3.1).
  * 5. Direction: start / end, caps, gradients and the tube fill follow the travel direction
  *    (direction -1: start is the `to` end). Shapes point along the path tangent (offset-rotate:
- *    auto; icons when shape_icon_rotate), through elbow corners (AC6, AC7). Spin is a rotation on
- *    an inner element, added to the tangent.
- * 6. Every route (curve, straight, elbow) and both layers (AC4). geo.d uses only M, L, C and A
- *    commands (flow-geometry), so offsets and lengths come from the chunk's own sampler for that
- *    grammar (spike S2), never from DOM measuring.
+ *    auto, or animateMotion rotate="auto"; icons when shape_icon_rotate), through elbow corners
+ *    (AC6, AC7). Spin is a rotation on an inner element, added to the tangent.
+ * 6. Every route (curve, straight, elbow) and both layers (AC4), through the sampler above.
  * 7. Keeps `g.flow[data-flow]` and `path.line` (studio flowAt() and the selection halo, which
  *    mc-flows still draws, rely on them). `path.line` is the centre line (may be transparent).
  * 8. shape: icon without shape_icon draws a dot (never an empty line).
@@ -130,19 +161,38 @@ import type { ResolvedFlow } from '../utils/flow';
  * >= 50 fps with no frame over 50 ms at 4x CPU throttling on the gallery card built for it, and
  * costs 0 main-thread time per frame while off-screen or page-hidden. S3: 110-139 fps, worst
  * frame 35 ms, for 36-48 moving elements.
+ * Device checks (QA, not provable by spike): Safari / iOS 16.4 rotation through elbows on the
+ * gallery card; Chromium 85 floor.
  */
 
 export const FLOW_LOOK_CONTRACT = '1.0.0';
-export const FLOW_LOOK_CONTRACT_REVISION = 2;
+export const FLOW_LOOK_CONTRACT_REVISION = 3;
 
 export type FlowLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'wave' | 'zigzag' | 'tube' | 'neon' | 'cable';
 export type FlowShape = 'dot' | 'arrow' | 'chevron' | 'square' | 'diamond' | 'star' | 'comet' | 'spark' | 'bubble' | 'drop' | 'icon';
 export type FlowCap = 'none' | 'round' | 'arrow';
 /** (r2) Quality tier chosen by mc-flows from H. */
 export type FlowLookQuality = 'full' | 'lite' | 'minimal';
+/** (r3) How shapes move here (mc-flows' probe): CSS offset-path, SMIL for turning shapes, or no travel (moving dash). */
+export type FlowMotionSupport = 'css' | 'smil' | 'none';
 
 /** (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
 export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;
+
+/** (r3) Sampler and geometry constants (spike S2). */
+export const FLOW_GEOMETRY = {
+  /** Path commands flowPath() emits (absolute). */
+  grammar: ['M', 'L', 'H', 'V', 'C', 'A'],
+  /** Taper length T = min(taperMax, run x taperRunShare); amplitude on that run <= T. */
+  taperMax: 12,
+  taperRunShare: 0.25,
+  /** Amplitude <= curvatureShare x local radius of curvature. */
+  curvatureShare: 0.4,
+  /** Douglas-Peucker tolerance for emitted offset polylines (px). */
+  simplifyPx: 0.2,
+  /** Gradient segments: clamp(ceil(L / segmentPx), min, max), overlapping by overlapPx. */
+  gradient: { segmentPx: 10, min: 4, max: 32, overlapPx: 1 },
+} as const;
 
 /** Shapes the `shape_spin` switch applies to (CEO 2026-10-19). */
 export const FLOW_SPIN_SHAPES: readonly FlowShape[] = ['star', 'square', 'diamond', 'icon'];
@@ -210,7 +260,7 @@ export interface FlowLookConfig {
   dash_gap?: number;
   /** double: gap between the two rails (px); each rail is `width` wide. */
   rail_gap?: number;
-  /** wave / zigzag: height (px). */
+  /** wave / zigzag: height (px); lower on short runs (taper rule). */
   amplitude?: number;
   /** wave / zigzag: length of one period (px). */
   wavelength?: number;
@@ -326,8 +376,13 @@ export interface FlowLookRenderOptions {
   /** The flow's index on the card (unique ids: `mc-flow-<kind>-<index>`). */
   index: number;
   reduced: boolean;
-  /** offset-path works on SVG here (mc-flows' probe); false: no travelling shapes, a moving dash instead. */
+  /**
+   * offset-path works on SVG here (mc-flows' probe); false: no travelling shapes, a moving dash
+   * instead. Equals motion !== 'none'.
+   */
   offsetPath: boolean;
+  /** (r3) css / smil / none, from the extended probe (rule 1 exception for smil). */
+  motion: FlowMotionSupport;
   /** Moving elements this flow may draw (card budget applied). */
   count: number;
   /** HA dark mode (mc-flows `dark`): picks the theme-derived neon core. */
