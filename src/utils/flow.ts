@@ -1,4 +1,6 @@
 import type { FlowConfig, FlowSide, HomeAssistant, MagicCardConfig } from '../types';
+import { flowLookSlot } from '../card/flow-look-slot';
+import { hasFlowLook, type FlowLookResolved } from '../contracts/flow-look';
 import { safeColor } from './animation';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
@@ -43,6 +45,14 @@ export interface ResolvedFlow {
   /** False: draw nothing (missing / same endpoints, or idle with show_when: flowing). */
   visible: boolean;
   layer: 'back' | 'front';
+  /** The signed numeric value of the flow's entity; undefined without one (flow-look 1.0.0). */
+  value?: number;
+  /** The 0..1 log curve behind speed and width: 1 without an entity, 0 while idle. */
+  t: number;
+  /** flow-look: the resolved look, only while the flow has look keys and the chunk filled the slot. */
+  look?: FlowLookResolved;
+  /** flow-look: gradient end colour (lifted from `look.colorTo`). */
+  colorTo?: string;
 }
 
 export const FLOW_DEFAULTS = {
@@ -130,17 +140,21 @@ export function resolveFlow(
   let direction: 1 | -1 | 0 = 1;
   let speedS = fast;
   let width = baseWidth;
+  let value: number | undefined;
+  let t = 1;
   const stateObj = f.entity ? hass?.states?.[f.entity] : undefined;
   if (f.entity) {
     const v = entityNumber(stateObj, f.attribute || undefined);
+    value = v;
     const mag = v === undefined ? undefined : Math.abs(v);
     if (mag === undefined || mag <= min) {
       active = false;
       direction = 0;
       speedS = slow;
+      t = 0;
     } else {
       // max <= min: anything above min counts as max.
-      const t = max > min ? Math.min(1, Math.max(0, Math.log1p(mag - min) / Math.log1p(max - min))) : 1;
+      t = max > min ? Math.min(1, Math.max(0, Math.log1p(mag - min) / Math.log1p(max - min))) : 1;
       speedS = slow + (fast - slow) * t;
       if (scaleWidth) width = baseWidth * (1 + t);
       direction = v! < 0 && reverse ? -1 : 1;
@@ -192,11 +206,20 @@ export function resolveFlow(
     glow: glowRaw !== undefined && glowRaw > 0 ? Math.min(MAX_GLOW, glowRaw) : FLOW_DEFAULTS.glow,
     visible,
     layer: f.layer === 'front' ? 'front' : 'back',
+    t,
     labelPosition:
       typeof f.label_position === 'string' && LABEL_POSITIONS.has(f.label_position) ? f.label_position : FLOW_DEFAULTS.label_position,
   };
   if (labelText !== undefined) out.label = labelText;
   if (labelTemplate !== undefined) out.labelTemplate = labelTemplate;
+  if (value !== undefined) out.value = value;
+  // flow-look: only flows with look keys reach the chunk; an empty slot (loading, failed) = classic look.
+  // The renderer gets `out` as `base` and may set its colour (value mode); colorTo is lifted for the overlay.
+  const renderer = hasFlowLook(f) ? flowLookSlot.get() : undefined;
+  if (renderer) {
+    out.look = renderer.resolve(f, out, hass, colorEntity);
+    if (out.look.colorTo !== undefined) out.colorTo = out.look.colorTo;
+  }
   return out;
 }
 

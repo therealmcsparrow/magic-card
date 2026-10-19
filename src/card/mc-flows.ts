@@ -1,13 +1,54 @@
 import { LitElement, html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import {
+  FLOW_QUALITY_THRESHOLDS,
+  FLOW_SPIN_SHAPES,
+  type FlowBudget,
+  type FlowLookQuality,
+  type FlowLookResolved,
+  type FlowMotionSupport,
+  type FlowWithLook,
+} from '../contracts/flow-look';
 import type { ResolvedFlow } from '../utils/flow';
 import { anchorSides, flowPath, spreadAnchors, type FlowGeometry, type Point, type Rect } from '../utils/flow-geometry';
-import { pauseOffscreen } from '../icons/offscreen';
+import { pauseOffscreen, unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
+import { flowLookSlot } from './flow-look-slot';
 import { flowsOverlayStyles } from './flows-css';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
-/** Most dots one card animates at once (each flow keeps at least one). */
+/** Most moving elements one card animates at once (each moving flow keeps at least one). */
 const MAX_CARD_DOTS = 40;
+
+/**
+ * Tier H (flow-look 1.0.0 r2): the heavy flows among all of the card's resolved flows, visible or
+ * not. A tube or neon line counts 1, a zigzag with electric 0.5. full up to 3, lite up to 6, else
+ * minimal. Deterministic: no frame-time probe.
+ */
+export function pickFlowQuality(flows: ReadonlyArray<{ look?: Pick<FlowLookResolved, 'line' | 'electric'> }>): FlowLookQuality {
+  let h = 0;
+  for (const { look } of flows) {
+    if (!look) continue;
+    if (look.line === 'tube' || look.line === 'neon') h += 1;
+    else if (look.line === 'zigzag' && look.electric) h += 0.5;
+  }
+  return h > FLOW_QUALITY_THRESHOLDS.minimal ? 'minimal' : h > FLOW_QUALITY_THRESHOLDS.lite ? 'lite' : 'full';
+}
+
+/**
+ * The card budget: `n` moving elements per flow (after the tier caps), `weight` 2 for flows whose
+ * shapes spin (spike S1: spin is the dearest variant), 1 otherwise. Over the cap every moving flow is
+ * scaled to floor(n * max / total) with total = sum of n x weight, at least 1; idle flows stay 0.
+ */
+export function allocateBudget(items: ReadonlyArray<{ id: string; n: number; weight: number }>, max = MAX_CARD_DOTS): Map<string, number> {
+  const total = items.reduce((s, { n, weight }) => s + n * weight, 0);
+  const out = new Map<string, number>();
+  for (const { id, n } of items) out.set(id, total > max && n > 0 ? Math.max(1, Math.floor((n * max) / total)) : n);
+  return out;
+}
+
+/** Spinning shapes weigh 2 in the budget. */
+const spinWeight = (look: FlowLookResolved): number =>
+  look.spin && (FLOW_SPIN_SHAPES.includes(look.shape) || (!!look.alternate && FLOW_SPIN_SHAPES.includes(look.alternate))) ? 2 : 1;
 
 /** Same flows (a card render makes new objects every time). */
 function sameFlows(a?: ResolvedFlow[], b?: ResolvedFlow[]): boolean {
@@ -186,6 +227,17 @@ export class McFlows extends LitElement {
    * property but don't move SVG elements): undefined = not known yet, false = draw dashes.
    */
   private _offsetPathWorks?: boolean;
+  /** offset-rotate: auto turns SVG elements here (second probe); false -> SMIL animateMotion for turning shapes. */
+  private _rotationWorks?: boolean;
+  /** A look flow was drawn by the last render (the probe also runs for them). */
+  private _lookDrawn = false;
+  /** The last render drew look flows with SMIL motion: pause / unpause them with the page and the viewport. */
+  private _smil = false;
+  /** The layer SVGs watched for off-screen changes (SMIL ignores animation-play-state). */
+  private _smilWatched = new Set<Element>();
+
+  /** Per flow, after each render: moving elements wanted, drawn after the card budget, and the card's tier. */
+  budget: FlowBudget = new Map();
   /**
    * Rendered label sizes by text shape (measured once, after their first render): digits are
    * normalised (labels use tabular-nums, so a new value of the same shape has the same size) and
@@ -220,6 +272,9 @@ export class McFlows extends LitElement {
     this._watch();
     document.fonts?.addEventListener?.('loadingdone', this._onFonts);
     document.fonts?.ready?.then(this._onFonts, () => undefined);
+    this.toggleAttribute('page-hidden', document.visibilityState === 'hidden');
+    document.addEventListener('visibilitychange', this._onVisibility);
+    if (this.hasUpdated) this._watchSmil();
   }
 
   disconnectedCallback(): void {
@@ -229,7 +284,35 @@ export class McFlows extends LitElement {
     this._unwatch();
     if (this._raf) cancelAnimationFrame(this._raf);
     this._raf = 0;
+    document.removeEventListener('visibilitychange', this._onVisibility);
+    for (const el of this._smilWatched) unwatchOffscreen(el);
+    this._smilWatched.clear();
   }
+
+  /** page-hidden on the host: the CSS pauses classic dots and dashes, the chunk's css its animations. */
+  private _onVisibility = () => {
+    this.toggleAttribute('page-hidden', document.visibilityState === 'hidden');
+    this._syncSmil();
+  };
+
+  /** Watch the layer SVGs through the shared offscreen observer (no observer of our own). */
+  private _watchSmil(): void {
+    if (!this._smil) return;
+    for (const el of this.renderRoot.querySelectorAll('svg')) {
+      if (this._smilWatched.has(el)) continue;
+      if (watchOffscreen(el, this._syncSmil)) this._smilWatched.add(el);
+    }
+  }
+
+  /** SMIL ignores animation-play-state: pause the timeline of each layer SVG while off-screen or page-hidden. */
+  private _syncSmil = (): void => {
+    if (!this._smil) return;
+    const hidden = this.hasAttribute('page-hidden');
+    for (const el of this.renderRoot.querySelectorAll('svg')) {
+      if (hidden || el.hasAttribute('offscreen')) el.pauseAnimations?.();
+      else el.unpauseAnimations?.();
+    }
+  };
 
   /** Watch the overlay's card content; true when it is a new one. */
   private _watch(): boolean {
@@ -267,24 +350,47 @@ export class McFlows extends LitElement {
     this._endsKey = '';
   }
 
-  /** Probe offset-path on an SVG circle: it must land at the end of its 100 px path. */
+  /**
+   * Probe, once per browser, in the layout: offset-path on an SVG circle must land at the end of its
+   * 100 px path (else nothing travels), and (look flows only) offset-rotate: auto on a 20 x 4 rect
+   * at the end of a vertical 100 px path must measure about 4 wide and 20 tall (else turning shapes
+   * move by SMIL). Both run in one pass.
+   */
   private _probeOffsetPath(): void {
-    if (this._offsetPathWorks !== undefined) return;
     const host = this.renderRoot.querySelector('svg.back');
-    if (!host || !this.renderRoot.querySelector('circle.dot')) return;
-    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    c.setAttribute('class', 'probe');
-    c.setAttribute('r', '1');
-    c.setAttribute('style', "offset-path: path('M 0 0 L 100 0'); offset-distance: 100%; offset-rotate: 0deg; visibility: hidden");
-    host.append(c);
-    const b = c.getBoundingClientRect();
+    if (!host) return;
+    const wantPath = this._offsetPathWorks === undefined && (this._lookDrawn || !!this.renderRoot.querySelector('circle.dot'));
+    const wantRot = this._lookDrawn && this._offsetPathWorks !== false && this._rotationWorks === undefined;
+    if (!wantPath && !wantRot) return;
+    const ns = 'http://www.w3.org/2000/svg';
+    let c: SVGElement | undefined;
+    let r: SVGElement | undefined;
+    if (wantPath) {
+      c = document.createElementNS(ns, 'circle');
+      c.setAttribute('class', 'probe');
+      c.setAttribute('r', '1');
+      c.setAttribute('style', "offset-path: path('M 0 0 L 100 0'); offset-distance: 100%; offset-rotate: 0deg; visibility: hidden");
+      host.append(c);
+    }
+    if (wantRot) {
+      r = document.createElementNS(ns, 'rect');
+      r.setAttribute('class', 'probe');
+      r.setAttribute('width', '20');
+      r.setAttribute('height', '4');
+      r.setAttribute('style', "offset-path: path('M 0 0 L 0 100'); offset-distance: 100%; offset-rotate: auto; visibility: hidden");
+      host.append(r);
+    }
+    const cb = c?.getBoundingClientRect();
+    const rb = r?.getBoundingClientRect();
     const s = host.getBoundingClientRect();
-    c.remove();
+    c?.remove();
+    r?.remove();
     // not laid out (hidden card, test DOM): ask again next time
-    if (!(b.width > 0) || !(s.width > 0)) return;
+    if (!(s.width > 0) || (cb && !(cb.width > 0)) || (rb && !(rb.width > 0 && rb.height > 0))) return;
     const scale = host instanceof SVGSVGElement && host.clientWidth > 0 ? s.width / host.clientWidth : 1;
-    this._offsetPathWorks = b.left + b.width / 2 - s.left > 50 * scale;
-    if (!this._offsetPathWorks) this.requestUpdate();
+    if (cb) this._offsetPathWorks = cb.left + cb.width / 2 - s.left > 50 * scale;
+    if (rb && this._offsetPathWorks) this._rotationWorks = rb.width < rb.height;
+    if (!this._offsetPathWorks || this._rotationWorks === false) this.requestUpdate();
   }
 
   protected updated(): void {
@@ -307,6 +413,8 @@ export class McFlows extends LitElement {
       measured = true;
     }
     if (measured) this.requestUpdate();
+    this._watchSmil();
+    this._syncSmil();
   }
 
   /** Read the endpoint rects; re-render only when one changed. */
@@ -405,27 +513,55 @@ export class McFlows extends LitElement {
     const reduced = !!this._media?.matches;
     const offsetPath =
       this._offsetPathWorks !== false && typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('offset-path', 'path("M0 0")');
+    const motion: FlowMotionSupport = !offsetPath ? 'none' : this._rotationWorks === false ? 'smil' : 'css';
+    const slot = flowLookSlot.get();
     const back: SVGTemplateResult[] = [];
     const front: SVGTemplateResult[] = [];
+    const htmlBack: TemplateResult[] = [];
+    const htmlFront: TemplateResult[] = [];
     const labels: TemplateResult[] = [];
+    const all = this.flows ?? [];
+    const quality = pickFlowQuality(all);
     // the sides of every drawn flow first: flows sharing a side spread along it
-    const drawn = (this.flows ?? []).flatMap((f, i) => {
+    const drawn = all.flatMap((f, i) => {
       const a = this._rects.get(f.from);
       const b = this._rects.get(f.to);
       return f.visible && a && b ? [{ f, i, a, b, from: f.from, to: f.to, sides: anchorSides(a, b, f.fromSide, f.toSide) }] : [];
     });
     const spread = spreadAnchors(drawn, this._rects);
     const obstacles = [...this._rects.values()];
-    // dots per flow: scaled down when the card would animate more than MAX_CARD_DOTS
-    const dotted = (f: ResolvedFlow) => f.active && f.direction !== 0 && !reduced && offsetPath && f.dots > 0;
-    const total = drawn.reduce((s, { f }) => s + (dotted(f) ? f.dots : 0), 0);
-    const dotsOf = (f: ResolvedFlow) => (total > MAX_CARD_DOTS ? Math.max(1, Math.floor((f.dots * MAX_CARD_DOTS) / total)) : f.dots);
-    drawn.forEach(({ f, i, a, b, sides }, k) => {
-      // reduced motion: the arrowed end stops short by the arrowhead, which then ends at the anchor
-      const arrow = reduced && f.active && f.direction !== 0 ? arrowSize(f.width) : 0;
+    // geometry first: the card budget needs what each look flow asks for
+    const items = drawn.map(({ f, i, a, b, sides }, k) => {
+      const look = slot && f.look ? (f as FlowWithLook) : undefined;
+      // reduced motion: the arrowed end of a classic flow stops short by the arrowhead, which then ends at the anchor
+      const arrow = !look && reduced && f.active && f.direction !== 0 ? arrowSize(f.width) : 0;
       const trim: [number, number] = f.direction < 0 ? [arrow, 0] : [0, arrow];
-      const geo = flowPath(a, b, sides, f.route, { t: spread[k], trim });
-      (f.layer === 'front' ? front : back).push(this._flow(f, geo, i, reduced, offsetPath, dotsOf(f)));
+      return { f, i, look, arrow, geo: flowPath(a, b, sides, f.route, { t: spread[k], trim }) };
+    });
+    // moving elements per flow: classic dots, or what the look asks for after the tier caps (spin weighs 2)
+    const dotted = (f: ResolvedFlow) => f.active && f.direction !== 0 && !reduced && offsetPath && f.dots > 0;
+    const wanted = items.map(({ f, look, geo }) => ({
+      id: f.id,
+      n: look ? slot!.requested(look, geo, reduced, quality) : dotted(f) ? f.dots : 0,
+      weight: look ? spinWeight(look.look) : 1,
+    }));
+    const counts = allocateBudget(wanted);
+    this._lookDrawn = items.some(({ look }) => look);
+    this._smil = this._lookDrawn && motion === 'smil';
+    this.budget = new Map(wanted.map(({ id, n }) => [id, { requested: n, drawn: counts.get(id) ?? 0, quality }]));
+    items.forEach(({ f, i, look, arrow, geo }) => {
+      const count = counts.get(f.id) ?? 0;
+      if (look) {
+        const parts = slot!.render(look, geo, { index: i, reduced, offsetPath, motion, count, dark: this.dark, quality });
+        const halo =
+          !!this.selected && this.selected === f.id
+            ? svg`<path class="sel" d=${geo.d} style="stroke-width: ${r1(f.width + 10)}px"></path>`
+            : nothing;
+        (f.layer === 'front' ? front : back).push(svg`${halo}${parts.svg}`);
+        if (parts.html) (f.layer === 'front' ? htmlFront : htmlBack).push(parts.html);
+      } else {
+        (f.layer === 'front' ? front : back).push(this._flow(f, geo, i, reduced, offsetPath, count));
+      }
       const text = f.label;
       if (!text || f.labelPosition === 'hidden') return;
       const color = f.active ? f.color : f.idleColor;
@@ -440,9 +576,12 @@ export class McFlows extends LitElement {
       obstacles.push({ x: at.x - size.w / 2, y: at.y - size.h / 2, w: size.w, h: size.h });
       labels.push(html`<div class="label" style="left: ${r1(at.x)}px; top: ${r1(at.y)}px; --mc-flow-color: ${color}">${text}</div>`);
     });
-    return html`
+    // deviates: lit.S7 - flow-look 1.0.0 injects the chunk's constant css once per shadow root while a flow has a look (no config value is in it)
+    return html`${this._lookDrawn ? html`<style>${slot!.css}</style>` : nothing}
       <svg class="back" ${pauseOffscreen()} focusable="false">${back}</svg>
+      ${htmlBack.length ? html`<div class="html back" ${pauseOffscreen()}>${htmlBack}</div>` : nothing}
       <svg class="front" ${pauseOffscreen()} focusable="false">${front}</svg>
+      ${htmlFront.length ? html`<div class="html front" ${pauseOffscreen()}>${htmlFront}</div>` : nothing}
       <div class="labels">${labels}</div>
     `;
   }

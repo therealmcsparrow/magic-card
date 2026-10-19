@@ -92,6 +92,21 @@ export const flowsOverlayStyles = css`
   .labels {
     z-index: 2;
   }
+  /* flow-look HTML layers (icon shapes): one per z level, same box as the SVGs; labels stay on top */
+  div.html {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+  }
+  div.html.back {
+    z-index: 0;
+  }
+  div.html.front {
+    z-index: 2;
+  }
   .labels {
     position: absolute;
     inset: 0;
@@ -148,7 +163,10 @@ export const flowsOverlayStyles = css`
   /* off-screen (shared IntersectionObserver, src/icons/offscreen.ts): nothing moves */
   svg[offscreen] .dot,
   svg[offscreen] .glow,
-  svg[offscreen] .dash {
+  svg[offscreen] .dash,
+  :host([page-hidden]) .dot,
+  :host([page-hidden]) .glow,
+  :host([page-hidden]) .dash {
     animation-play-state: paused;
   }
   .label {
