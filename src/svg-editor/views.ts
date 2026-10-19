@@ -298,13 +298,10 @@ function moduleNotice(ed: McSvgEditor): TemplateResult {
 
 // ── start window ──
 
-/** The card editor's icon picker: a pick in its window starts the drawing at once; typing in its field only fills it (the button or Enter starts). */
+/** The card editor's icon picker, used by tag (SVG_EDITOR_EXTERNAL_TAGS): a pick or typing fills the name; the button or Enter starts the drawing. */
 function startPicked(ed: McSvgEditor, e: CustomEvent<{ value: string }>): void {
   e.stopPropagation();
-  const name = String(e.detail?.value ?? '').trim();
-  ed.startIcon = name;
-  const typing = (e.currentTarget as HTMLElement).shadowRoot?.activeElement?.closest('.with-icon');
-  if (name && !typing) void ed.openIcon(name);
+  ed.startIcon = String(e.detail?.value ?? '').trim();
 }
 
 function startPanel(ed: McSvgEditor): TemplateResult {
@@ -327,8 +324,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
           if (name) void ed.openIcon(name);
         }}>
           ${customElements.get('mc-icon-picker')
-            ? html`<mc-icon-picker .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>
-                <p class="help">${t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.')}</p>`
+            ? field({ id: 'start-icon', label: t('Icon name'), help: t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.'), control: html`<mc-icon-picker id="start-icon" .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} aria-describedby="start-icon-help" @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>` })
             : field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
           <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
@@ -434,6 +430,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
     ${left ? leftPanel(ed) : nothing}
     <section class="center" aria-label=${t('Icon editor')}>
       ${floatBar(ed)}
+      <div class="stagebox">
       <div
         class=${`stage tool-${ed.tool}`}
         @pointerdown=${ed.cap.down}
@@ -469,9 +466,10 @@ function workspace(ed: McSvgEditor): TemplateResult {
           @mc-path-context=${ed.onContext}
         ></mc-path-canvas>
         ${overLayer(ed)}
-        ${banners(ed)}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<div class="hint">${empty({ title: t('Nothing here yet'), text: t('Pick a tool on the left, or press P to draw.') })}</div>` : nothing}
-        ${resultNote(ed)}
+      </div>
+      ${banners(ed)}
+      ${resultNote(ed)}
       </div>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)}
     </section>

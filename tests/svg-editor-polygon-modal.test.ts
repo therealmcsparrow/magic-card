@@ -1,5 +1,5 @@
 /** The Polygon tool asks for its corner count in a modal window: nothing is added above or below the canvas. */
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import '../src/svg-editor/index';
 import type { McSvgEditor } from '../src/svg-editor/mc-svg-editor';
 
@@ -66,14 +66,47 @@ describe('Polygon tool: corner count in a window', () => {
     expect(el.dlg).toBeUndefined();
   });
 
-  it('Escape closes it like Cancel', async () => {
+  it('Escape on the field closes it like Cancel', async () => {
     const el = await open();
     el.setTool('polygon');
     await el.updateComplete;
-    win(el)!.dispatchEvent(new CustomEvent('mc-window-close', { bubbles: true, composed: true }));
+    key(sides(el), 'Escape');
     await el.updateComplete;
     expect(el.dlg).toBeUndefined();
     expect(el.tool).toBe('select');
+  });
+
+  it('picking Polygon again, then Cancel, closes the window and keeps the options', async () => {
+    const el = await open();
+    el.setTool('polygon');
+    await new Promise((r) => setTimeout(r, 20));
+    sides(el).blur();
+    el.opts = { ...el.opts, sides: 6 };
+    el.dlg = undefined;
+    await el.updateComplete;
+    el.setTool('polygon');
+    await el.updateComplete;
+    sides(el).value = '9';
+    sides(el).dispatchEvent(new Event('change', { bubbles: true }));
+    await el.updateComplete;
+    sides(el).blur();
+    [...el.renderRoot.querySelectorAll<HTMLButtonElement>('mc-ui-window [slot=footer] button')].find((b) => b.textContent!.trim() === 'Cancel')!.click();
+    await new Promise((r) => setTimeout(r, 20));
+    expect(el.dlg).toBeUndefined();
+    expect(el.opts.sides).toBe(6);
+    expect(el.tool).toBe('polygon');
+  });
+
+  it('Cancel puts the focus back on the canvas', async () => {
+    const el = await open();
+    el.setTool('polygon');
+    await el.updateComplete;
+    const canvas = el.renderRoot.querySelector<HTMLElement>('mc-path-canvas')!;
+    const f = vi.spyOn(canvas, 'focus');
+    sides(el).blur();
+    el.polyCancel();
+    await new Promise((r) => setTimeout(r, 20));
+    expect(f).toHaveBeenCalled();
   });
 
   it('with Star on, the inner size is asked in the same window', async () => {
@@ -94,5 +127,21 @@ describe('Polygon tool: corner count in a window', () => {
     el.setTool('polygon');
     await el.updateComplete;
     expect(el.dlg).toBe('poly');
+  });
+});
+
+describe('Polygon window: focus return', () => {
+  it('OK and Enter hand focus back to the canvas after the window closes', async () => {
+    const el = await open();
+    const canvas = el.renderRoot.querySelector<HTMLElement>('mc-path-canvas')!;
+    let focused = 0;
+    canvas.focus = (() => void focused++) as typeof canvas.focus;
+    el.setTool('polygon');
+    await el.updateComplete;
+    key(sides(el), 'Enter');
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 10));
+    expect(el.dlg).toBeUndefined();
+    expect(focused).toBeGreaterThan(0);
   });
 });

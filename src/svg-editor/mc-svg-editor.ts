@@ -840,7 +840,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.dlg = undefined;
     if (b) {
       this.opts = b.opts;
-      this.setTool(b.tool);
+      if (b.tool !== this.tool) this.setTool(b.tool);
+      else void this.updateComplete.then(() => this.canvas()?.focus({ preventScroll: true }));
     }
   }
 

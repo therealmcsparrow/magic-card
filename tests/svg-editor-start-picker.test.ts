@@ -45,27 +45,24 @@ describe('Start from > An icon uses the icon picker', () => {
   it('renders mc-icon-picker, not the plain name field', async () => {
     const el = await open();
     expect(pick(el)).not.toBeNull();
-    expect(el.renderRoot.querySelector('#start-icon')).toBeNull();
+    expect(el.renderRoot.querySelector('input#start-icon')).toBeNull();
   });
 
-  it('picking an icon in the picker window starts the drawing from it', async () => {
+  it('has a visible Icon name label and no private picker markup is read', async () => {
+    const el = await open();
+    expect(el.renderRoot.querySelector('.startform label')!.textContent).toBe('Icon name');
+  });
+
+  it('a pick or typing fills the name; the button starts the drawing', async () => {
     const el = await open();
     const go = vi.spyOn(el, 'openIcon').mockResolvedValue(true);
     pick(el).shadowRoot!.querySelector<HTMLInputElement>('.search')!.focus();
     emit(pick(el), 'mdi:star');
-    expect(go).toHaveBeenCalledWith('mdi:star');
-  });
-
-  it('typing in the field only fills it: the button starts the drawing', async () => {
-    const el = await open();
-    const go = vi.spyOn(el, 'openIcon').mockResolvedValue(true);
-    pick(el).shadowRoot!.querySelector<HTMLInputElement>('.with-icon input')!.focus();
-    emit(pick(el), 'mdi:sta');
     await el.updateComplete;
     expect(go).not.toHaveBeenCalled();
     const btn = el.renderRoot.querySelector<HTMLButtonElement>('.startform button[type=submit]')!;
     expect(btn.disabled).toBe(false);
     btn.click();
-    expect(go).toHaveBeenCalledWith('mdi:sta');
+    expect(go).toHaveBeenCalledWith('mdi:star');
   });
 });
