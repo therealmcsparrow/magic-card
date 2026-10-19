@@ -12,7 +12,6 @@ import { renderEntityBlock } from '../components/entity-source';
 import { buildSyncContext } from './base-editor';
 import { DEFAULT_TAB_RENDERERS, renderNoSettings } from './base-editor';
 import { renderLayerGroups } from '../layers/layer-design';
-import '../layers/layer-groups'; // defines <mc-layer-design>; the one line to swap for a lazy chunk
 import type { LayerEditorContext } from '../layers/placement-model';
 
 /** A fresh registry (tests); the editor uses the shared `moduleEditors`. */

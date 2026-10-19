@@ -236,6 +236,7 @@ export const I18N_MODULES = {
     tables: 'chunk', chunk: 'magic-card-i18n-labels.js', status: 'complete', slice: 'I0b, I2c, I7, I10', dashboard: false,
   },
   'card-editor': { bundle: 'magic-card-editor.js', folders: ['src/editor (minus icon-animator and files the studio also compiles)'], tables: 'inline', status: 'complete', slice: 'I2', dashboard: false },
+  'layer-editor': { bundle: 'magic-card-layer-editor.js', folders: ['src/editor/layers (the panels: layer-groups, layer-styles, tokens, controls, cost, looks, bg-layers, bg-layer-editor, bg-layers-ops, layers-sheet)', 'src/editor/components/mc-anchor-grid.ts'], tables: 'inline', status: 'complete', slice: 'T13', dashboard: false },
   'path-canvas': { bundle: 'magic-card-path-canvas.js', folders: ['src/path-canvas'], tables: 'inline', status: 'complete', slice: 'I3', dashboard: false },
   'svg-editor': { bundle: 'magic-card-svg-editor.js', folders: ['src/svg-editor'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
   'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },

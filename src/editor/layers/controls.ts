@@ -1,6 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { LAYER_BLENDS, type LayerBlend } from '../../contracts/layer-placement';
-import { m, t } from '../i18n';
+import { m, t } from './i18n';
 
 /*
  * Small controls shared by the Layer group and the Card backdrop group. Each one carries the Marco N1 cues:

@@ -1,9 +1,9 @@
 import { LitElement, css, html, nothing, svg, type TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { LAYER_ANCHORS, type LayerAnchor } from '../../contracts/layer-placement';
 import { editorTokens } from '../../css/editor-system';
 import { layerControlCss } from '../layers/tokens';
-import { t } from '../i18n';
+import { t } from '../layers/i18n';
 import { anchorName } from '../layers/anchor-names';
 
 export { anchorName };
@@ -34,7 +34,6 @@ export function gridTarget(key: string, index: number): number {
   }
 }
 
-@customElement('mc-anchor-grid')
 export class McAnchorGrid extends LitElement {
   /** Chosen anchor; undefined: none chosen yet (the first cell is the tab stop). */
   @property({ attribute: false }) value?: LayerAnchor;

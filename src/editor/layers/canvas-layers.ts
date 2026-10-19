@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import type { Box } from './checks';
 import { collectHitItems, layersHere, type HereEntry } from './layers-here';
 import { cycleTarget } from './layers-at';
-import type { SheetItem } from './layers-sheet';
+import type { SheetItem } from '../../contracts/layer-editor';
 
 /*
  * The studio canvas side of layer selection (designer 03 section 6, 11 H): Alt-click cycling, the layers

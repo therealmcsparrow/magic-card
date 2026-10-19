@@ -1,5 +1,5 @@
 import type { LayerAnchor, LayerConfig, Placement, ScrimConfig, ScrimStyle } from '../../contracts/layer-placement';
-import type { LayerGroupContext } from '../../contracts/module-editor';
+import type { LayerEditorContext } from '../../contracts/layer-editor';
 import type { CardModule, MagicCardConfig } from '../../types';
 import { isRunnableAction } from '../../utils/actions';
 import { childSlots, descendantAt } from '../../utils/module-path';
@@ -193,13 +193,7 @@ export function reorderTarget(list: readonly CardModule[], index: number, to: Mo
 
 // ── context for the inspector ──
 
-export interface LayerEditorContext extends LayerGroupContext {
-  /** data-mc-path of the module (the canvas wrapper). */
-  path: string;
-  name: string;
-  /** In-flow siblings that have an action: the overlap check compares the overlay with these. */
-  others: Array<{ path: string; name: string }>;
-}
+export type { LayerEditorContext };
 
 export function moduleName(mod: CardModule): string {
   const own = typeof mod.editor_name === 'string' && mod.editor_name.trim();

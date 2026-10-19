@@ -1,12 +1,15 @@
 import { LitElement, css, html, nothing, type TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { MAX_BACKGROUND_LAYERS, type BackgroundLayerConfig, type BgLayerType } from '../../contracts/bg-stack';
+import type { RuleView } from '../../contracts/layer-editor';
 import type { HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import { copyText } from '../components/copy-text';
-import { m, t } from '../i18n';
+import { t as te } from '../i18n';
+import { m, t } from './i18n';
 import { renderLayerEditor, type EditorHost } from './bg-layer-editor';
-import { LAYER_TYPES, LIMIT_TEXT, addLayer, layerSummary, moveLayerIn, removeLayer, restoreLayer, setLayerKeys, statusSentence, thumbStyle, previewSrc } from './bg-layers-model';
+import { LAYER_TYPES, layerSummary } from './bg-layers-model';
+import { LIMIT_TEXT, addLayer, moveLayerIn, removeLayer, restoreLayer, setLayerKeys, statusSentence, thumbStyle, previewSrc } from './bg-layers-ops';
 import { getPreview, getStatus, onStatus, setPreview, takeOpenLayer, type PanPreview } from './bg-status';
 import { costFromBackdrop, type CostReason } from './cost';
 import { BACKDROP_LOOKS, addBackdropLook, type BackdropLook } from './looks';
@@ -27,12 +30,6 @@ const ADD_ITEMS: ReadonlyArray<{ value: BgLayerType; label: ReturnType<typeof m>
 const UNDO_MS = 12000;
 let uid = 0;
 
-export interface RuleView {
-  /** The rule sets its own `background_layers`. */
-  own: boolean;
-}
-
-@customElement('mc-bg-layers')
 export class McBgLayers extends LitElement {
   @property({ attribute: false }) layers?: BackgroundLayerConfig[];
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -338,7 +335,7 @@ export class McBgLayers extends LitElement {
 
   private _name(layer: BackgroundLayerConfig, i: number): string {
     const s = layerSummary(layer);
-    return t('{type}, layer {n}', { type: t(s.type), n: i + 1 });
+    return t('{type}, layer {n}', { type: te(s.type), n: i + 1 });
   }
 
   protected updated(): void {
@@ -391,7 +388,7 @@ export class McBgLayers extends LitElement {
       <div class="r1">
         <button type="button" class="rhead" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`${this._id}-${i}-ed`} aria-label=${name} @click=${() => (this._open = open ? -1 : i)}>
           <span class="thumb ${st.loading ? 'skeleton' : ''}" style=${style} aria-hidden="true">${src ? html`<img src=${src} alt="" loading="lazy" referrerpolicy="no-referrer" />` : style ? nothing : html`<ha-icon icon=${TYPE_ICONS[layer.type] ?? 'mdi:layers-outline'}></ha-icon>`}</span>
-          <span><span class="title">${t(s.type)}</span><span class="sum">${s.detail ?? ''}</span></span>
+          <span><span class="title">${te(s.type)}</span><span class="sum">${s.detail ?? ''}</span></span>
           <span class="chev" aria-hidden="true">▸</span>
         </button>
         ${hidden ? html`<span class="chip2" data-chip="hidden">${t('Hidden')}</span>` : nothing}
@@ -465,7 +462,7 @@ export class McBgLayers extends LitElement {
         <button type="button" class="lyr-btn" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT)) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
         ${full ? html`<p class="warnrow" id=${`${this._id}-limit`} data-limit>${t(LIMIT_TEXT)}</p>` : nothing}
         ${this._adding && !full
-          ? html`<div class="lseg" role="group" aria-label=${t('Layer type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${t(it.label)}</button>`)}</div>`
+          ? html`<div class="lseg" role="group" aria-label=${t('Layer type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${te(it.label)}</button>`)}</div>`
           : nothing}
       </div>
       <div class="looks">

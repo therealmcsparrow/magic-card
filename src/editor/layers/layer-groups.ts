@@ -1,12 +1,12 @@
 import { LitElement, css, html, nothing, type TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { BLUR_LIGHT_MAX, BLUR_MAX, type LayerAnchor, type LayerFill, type Placement, type ScrimStyle } from '../../contracts/layer-placement';
 import type { CardModule, HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import { copyText } from '../components/copy-text';
 import '../components/mc-anchor-grid';
 import { anchorName } from './anchor-names';
-import { m, t } from '../i18n';
+import { m, t } from './i18n';
 import { overlapWith, isSmallTarget } from './checks';
 import { costFromModule, type CostReason } from './cost';
 import { measureBoxes, onLayerMeasure } from './layer-measure';
@@ -69,7 +69,6 @@ function scrimColourId(c: string | undefined): 'black' | 'white' | 'card' | 'cus
   return 'custom';
 }
 
-@customElement('mc-layer-groups')
 export class McLayerGroups extends LitElement {
   @property({ attribute: false }) config!: CardModule;
   @property({ attribute: false }) hass?: HomeAssistant;
@@ -507,7 +506,6 @@ export class McLayerGroups extends LitElement {
  * (`mc-design-view`, detail { view }); the groups belong to Default only, so they are hidden in the Hover
  * view and inside a conditional design rule (module-editor 1.3.0).
  */
-@customElement('mc-layer-design')
 export class McLayerDesign extends LitElement {
   @property({ attribute: false }) config!: CardModule;
   @property({ attribute: false }) hass?: HomeAssistant;

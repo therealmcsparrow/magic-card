@@ -1,8 +1,9 @@
 import { LitElement, css, html, nothing, type TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+import type { SheetItem } from '../../contracts/layer-editor';
 import { editorSystem } from '../../css/editor-stack';
 import { layerControlCss } from './tokens';
-import { t } from '../i18n';
+import { t } from './i18n';
 
 /*
  * "Layers here" sheet (designer 11 H): every layer at one point of the canvas, front first, modules and card
@@ -11,16 +12,6 @@ import { t } from '../i18n';
  * Events: `pick` (detail { key }), `close`.
  */
 
-export interface SheetItem {
-  /** data-mc-path of a module, or `backdrop:<index>` for a card backdrop layer. */
-  key: string;
-  name: string;
-  /** "Behind others", "On top", "Card backdrop, layer 2" ... */
-  detail: string;
-  current?: boolean;
-}
-
-@customElement('mc-layers-sheet')
 export class McLayersSheet extends LitElement {
   @property({ attribute: false }) items: SheetItem[] = [];
   /** Viewport point the sheet opens at. */

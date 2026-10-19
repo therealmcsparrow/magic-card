@@ -9,10 +9,12 @@ import '../components/media-picker';
 import '../components/entity-picker';
 import '../components/attribute-picker';
 import '../components/mc-anchor-grid';
-import { m, t } from '../i18n';
+import { t as te } from '../i18n';
+import { m, t } from './i18n';
 import { toYaml } from '../../utils/yaml-utils';
 import { parseGradient } from '../../utils/gradient';
-import { isCameraEntity, imageSource, LAYER_TYPES, setImageSource, setStateRow, removeStateRow, renameStateRow, stateRows, switchType, type ImageSource } from './bg-layers-model';
+import { LAYER_TYPES } from './bg-layers-model';
+import { isCameraEntity, imageSource, setImageSource, setStateRow, removeStateRow, renameStateRow, stateRows, switchType, type ImageSource } from './bg-layers-ops';
 import type { PanPreview } from './bg-status';
 import { blendTiles, lyrSeg, lyrSlider, lyrSwitch } from './controls';
 import { isAnchor } from './placement-model';
@@ -306,7 +308,7 @@ export function renderLayerEditor(h: EditorHost, layer: BackgroundLayerConfig, i
   return html`<div class="editor" data-editor=${type}>
     <div class="field">
       <span class="lbl">${t('Layer type')}</span>
-      ${lyrSeg(t('Layer type'), type as BgLayerType, LAYER_TYPES.map((x) => ({ value: x.value, label: t(x.label) })), (v) => v !== type && h.swap(i, switchType(layer, v), t('Layer type changed.')), 'type')}
+      ${lyrSeg(t('Layer type'), type as BgLayerType, LAYER_TYPES.map((x) => ({ value: x.value, label: te(x.label) })), (v) => v !== type && h.swap(i, switchType(layer, v), t('Layer type changed.')), 'type')}
     </div>
     ${type === 'image' ? renderImage(h, layer, i) : type === 'gradient' ? renderGradient(h, layer, i) : type === 'pattern' ? renderPattern(h, layer, i) : renderColour(h, layer, i)}
     ${lyrSlider(h.idOf(i, 'op'), t('Opacity'), Math.max(0, Math.min(100, layer.opacity ?? 100)), 0, 100, '%', (v) => h.patch(i, { opacity: v === 100 ? undefined : v }))}

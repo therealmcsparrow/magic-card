@@ -2,7 +2,7 @@ import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
 import { MAX_BACKGROUND_LAYERS } from '../../contracts/bg-stack';
 import type { LayerConfig, Placement } from '../../contracts/layer-placement';
 import type { CardModule, HomeAssistant } from '../../types';
-import { m } from '../i18n';
+import { m } from './i18n';
 
 /*
  * Looks (designer 11 I): one-tap tiles that write plain YAML (placement + layer, or background_layers

@@ -35,7 +35,7 @@ import { setLayerMeasurer, notifyLayerMeasure } from '../layers/layer-measure';
 import { requestOpenLayer, setStatus, clearStatuses, getPreview, onStatus } from '../layers/bg-status';
 import { isAutomatic, placementOf } from '../layers/placement-model';
 import type { HereEntry } from '../layers/layers-here';
-import '../layers/layers-sheet';
+import { layerEditorReady, loadLayerEditor } from '../layers/layer-editor-loader';
 
 /** A card row or a row module whose column gutters get resize handles. */
 interface ResizeTarget {
@@ -317,6 +317,7 @@ export class StudioCanvas extends LitElement {
     if (this.hasUpdated) this._observe();
     window.addEventListener('resize', this._queuePlace);
     setLayerMeasurer(this._layers.measure);
+    void loadLayerEditor(); // prefetch: the Layers here sheet and the design panels live in a lazy chunk
     this._stopPreview = onStatus(() => this._applyPreview());
   }
 
@@ -651,7 +652,8 @@ export class StudioCanvas extends LitElement {
   /** Press and hold: several layers at the point open the Layers here sheet, otherwise the item menu. */
   private _longPressAt(path: EventTarget[], x: number, y: number): void {
     const here = this._connectFrom ? [] : this._layers.here(x, y);
-    if (here.length > 1) this._openSheet(here, x, y);
+    // until the layer editor chunk is ready the sheet is not defined: the item menu answers, as before layers
+    if (here.length > 1 && layerEditorReady()) this._openSheet(here, x, y);
     else this._contextAt(path, x, y);
   }
 
