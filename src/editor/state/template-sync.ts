@@ -71,6 +71,7 @@ export function clearNotSynced(config: MagicCardConfig): MagicCardConfig {
 export function stripForTemplate(config: MagicCardConfig): Record<string, unknown> {
   const result = clearNotSynced(config) as unknown as Record<string, unknown>;
   delete result['template'];
+  delete result['entity']; // per card, so one template fits any device
   for (const key of HA_INSTANCE_KEYS) delete result[key];
   return result;
 }
@@ -102,6 +103,8 @@ export function wrapOnChangeWithSync(
       if (skipKeys.has(key)) continue;
       if (newRec[key] !== oldRec[key]) notSynced.add(key);
     }
+    // a removed entity (Same as card) must stay removed: the merge restores the template's unless it is marked
+    if (oldRec.entity !== undefined && !('entity' in newRec)) notSynced.add('entity');
 
     newRec.not_synced = Array.from(notSynced);
     onChange(updated);

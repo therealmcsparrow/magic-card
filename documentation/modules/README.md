@@ -68,7 +68,8 @@ Every module is a YAML mapping with these keys. The module pages only list the k
 | --- | --- | --- |
 | `type` | string | The module type, from the tables above. Required. |
 | `id` | string | Identifies the module. The editor writes a generated id. Without one, the card derives an id from the module's position. Flow lines refer to modules by id, so give a module a fixed id when a flow starts or ends there (see [Flow lines](../flows/README.md)). |
-| `entity` | entity id | The module's entity. Most modules read their value from it. Modules that do not use it still pass it to the design (entity colours, animation triggers, rings) and to actions. |
+| `entity` | entity id, or `none` | The module's entity. Most modules read their value from it. Modules that do not use it still pass it to the design (entity colours, animation triggers, rings) and to actions. Without the key the module follows the card's `entity`, or the layout around it when that layout has `share_entity: true`. `none` gives the module no entity. See [Card entity](../card-entity/README.md). |
+| `share_entity` | `true` / `false` | Layout modules only (horizontal, vertical, row, tabs, slider layout). The layout's own `entity` also applies to the modules inside it. Default `false`. |
 | `attribute` | string | An attribute of the entity to use instead of its state, where the module supports it. |
 | `design` | mapping | Spacing, borders, typography, background, animations, ring, shape, value background, hover styles and custom CSS. See [Design](../design/README.md). |
 | `actions` | mapping | `tap_action`, `hold_action` and `double_tap_action`. See [Card, rows and columns](../card/README.md) and the [Inspector](../inspector/README.md). |

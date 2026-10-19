@@ -5,6 +5,7 @@ Keys at the top level of the card. Back to [Card configuration](README.md).
 ## Contents
 
 -   [All card keys](#all-card-keys)
+-   [Card entity](#card-entity)
 -   [Theme](#theme)
 -   [Background](#background)
 -   [Size and spacing](#size-and-spacing)
@@ -21,6 +22,7 @@ Keys at the top level of the card. Back to [Card configuration](README.md).
 | `type` | `custom:magic-card` | required | The card type. |
 | `rows` | List of rows | required | The content. See [Rows and columns](rows-and-columns.md). |
 | `name` | Text | none | A name for the card in the editor. Also the accessible name of a pop-up without a title. Not drawn on the card. |
+| `entity` | Entity id | none | The device the card is for. Modules, rows and columns without an entity of their own use it. See [Card entity](#card-entity). |
 | `use_page_theme` | `true` / `false` | `true` | `false` gives the card its own theme. |
 | `theme` | Theme name | Home Assistant's default theme | The card's theme while `use_page_theme` is `false`. |
 | `background` | CSS colour or background value | Theme card background | Background of the card. |
@@ -46,6 +48,14 @@ Keys at the top level of the card. Back to [Card configuration](README.md).
 | `template` | Template name | none | Links the card to a saved template. See [Templates](../editor/templates.md). |
 | `not_synced` | List of key paths | none | Fields of a linked card that are local overrides. Written by the editor. |
 | `hidden_animations` | List of ids | none | Template animation documents a linked card leaves out. See [Template animations](../editor/templates.md#template-animations). |
+
+## Card entity
+
+```yaml
+entity: light.kitchen
+```
+
+Modules, rows and columns that have no `entity` of their own use the card entity. A module can pick its own entity, or write `entity: none` to have none. Layouts pass their own entity on to the modules inside only with `share_entity: true`. The card entity is not part of a Magic Card Utils template: the card keeps its own when it links to a template. The editor field is Card entity in [Card: General tab](../inspector/card-general.md). The rules, the YAML spellings and the `entity` and `card_entity` template variables are on [Card entity](../card-entity/README.md).
 
 ## Theme
 

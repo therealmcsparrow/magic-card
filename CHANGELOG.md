@@ -4,14 +4,34 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.11-beta.2 (2026-10-19, pre-release)
+
+### New
+-   **Card entity.** A card can name the device it is for with `entity`, and modules, rows and columns without an entity of their own use it. Set it in Card settings, General, in the new Card entity field. Change that one field to point the same card at another device. See [Card entity](documentation/card-entity/README.md).
+-   **Entity field with three buttons** in the General tab of every module that takes an entity: Same as card (or Same as row, Same as column), Pick one and No entity. `entity: none` gives a module no entity even when the card has one. The field says where the entity comes from, and the attribute list shows the attributes of that entity.
+-   **Share with tiles inside** on layouts (horizontal, vertical, row, tabs and slider layout, `share_entity: true`). The modules in a layout follow the layout's own entity before the card entity. `entity: none` on a layout gives every module inside no entity unless it picks its own.
+-   **`entity` and `card_entity` in templates.** Text templates, Markdown content and `template` conditions can read the entity of their module and the card's entity. A template gets them only when it mentions them.
+-   **Which device is this card for?** When you load a Magic Card Utils template into a card that has no entity, and the template has modules that would follow one, the confirmation asks for it. Magic Card Utils templates never hold the card entity, so one template fits any device.
+-   The structure outline marks modules that follow the card or a layout, and flags a module whose inherited entity is the wrong kind of device.
 
 ### Improved
+-   **Rows and columns can have an entity.** Card rows, card columns and the columns of a row module get the same Entity field as a module (Same as card, Pick one, No entity) and, with an entity of their own, the Share with tiles inside switch. Rows and columns the editor creates start with the switch on. The structure outline shows their entity. Existing cards are unchanged: a row or column without the keys uses the card entity as before.
+-   **Pick a light** (or camera, weather source) in the editor hint opens the entity window filtered to that kind of device. In the editor preview, a tile that cannot use the card entity shows "Needs another device", and the Card entity field counts such tiles.
+-   The Card entity field suggests entity ids while you type and saves only a real entity id, when you press Enter or leave the field. The Browse window lists the kinds of device your modules need first, and no longer changes size when you pick a row.
+-   A Text module with a template has the Entity field, and its hint shows `entity` and `card_entity`.
+-   The chosen segment of every segmented control in the editor is bold with an underline, not only a paler fill. A disabled Same as card looks disabled. The tab stop of the entity buttons follows the arrow keys, and the device question of a template load takes the focus.
+-   The structure outline shows "No entity" under a module set to none, and no "Same as card" under a static text.
+-   A **toggle** action on an entity that comes from the card or a layout only toggles lights, switches, fans, input booleans, automations and humidifiers. For a lock, a cover or anything else it opens the more-info dialog instead. A slider that follows a cover still moves the cover.
+-   Camera, Weather, Forecast, Light and Dropdown modules follow the card entity only when it is the right kind of device. Otherwise they show nothing, and the editor says why in plain words. The Custom card module never follows the card entity.
 -   **Notices no longer resize the canvas.** In the SVG editor, warnings, banners and the result of an action (with Undo) now float over the canvas instead of pushing it smaller. Dismiss buttons and screen reader announcements work as before.
 -   **Shape editor, Draw and Messages tabs.** The left sidebar has a Draw tab and a Messages tab. Warnings and errors are one coloured line each in Messages, with a button that opens the full message in a window. The tab shows a count, and a screen reader announces a new message.
 -   **SVG editor, Start from > An icon** uses the same icon picker as the card editor, with search, Material Design Icons, icon packs and your own icons. Pick an icon, then choose Use this icon.
 -   **SVG editor, Polygon tool** asks for the number of corners (and the star settings) in a window. The canvas keeps its size. Enter confirms. Cancel and Escape go back to the tool you had.
 -   **SVG editor layers:** the layer buttons are smaller and always fit on one line.
+
+### Existing cards
+-   **Existing cards are unchanged.** A card without an `entity` key renders as before. A layout that already has an `entity` keeps it to itself until you switch on Share with tiles inside; layouts you add in the editor from now on start with it on, and pasting or duplicating a layout keeps its YAML as it was.
+-   `entity: none` had no meaning before, because entity ids always contain a dot.
 
 ## 2026.10.11-beta.1 (2026-10-18, pre-release)
 

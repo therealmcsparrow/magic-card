@@ -2,6 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import type {
   ActionConfig,
   ActionsConfig,
+  CardModule,
   ColumnConfig,
   DesignConfig,
   DisplayCondition,
@@ -14,7 +15,9 @@ import type {
 } from '../../types';
 import type { SyncContext } from '../../utils/sync-path';
 import type { ChildStep } from '../../utils/module-path';
-import { generateId } from '../../utils/id-generator';
+import { newColumn } from '../state/containers';
+import { renderEntityBlock } from '../components/entity-source';
+import { resolveContainerSource } from '../entity-source';
 import type { EditorStateManager } from '../state/editor-state';
 import { renderBoxField, renderIconField, renderSelectField, renderSyncMark, renderTextField, renderUnitField } from '../../utils/form-utils';
 import { renderConditionsList } from './conditions-list';
@@ -217,7 +220,26 @@ const ALIGN_OPTIONS = [
   { label: m('Stretch'), value: 'stretch' },
 ];
 
-export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateManager): TemplateResult {
+type NodeEntity = { entity?: unknown; share_entity?: unknown; not_synced?: string[] };
+
+/**
+ * The Entity block of a row, a column or a row module's column (entity-scope 1.1.0): the same field a layout
+ * module gets. On a template-linked card the entity and share keys that change are marked not_synced
+ * (nested columns have none: their row module's column list is the override).
+ */
+function entityBlock(node: NodeEntity, at: Parameters<typeof resolveContainerSource>[1], sm: EditorStateManager, hass: HomeAssistant | undefined, write: (patch: Record<string, unknown>) => void, marks = true): TemplateResult {
+  return renderEntityBlock(node as unknown as CardModule, hass, (next) => {
+    const n = next as unknown as NodeEntity;
+    const patch: Record<string, unknown> = { entity: n.entity, share_entity: n.share_entity };
+    if (marks && sm.getConfig().template) {
+      const changed = ['entity', 'share_entity'].filter((k) => patch[k] !== node[k as 'entity']);
+      patch.not_synced = Array.from(new Set([...(node.not_synced ?? []), ...changed]));
+    }
+    write(patch);
+  }, resolveContainerSource(sm.getConfig(), at));
+}
+
+export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
   // Row-level vertical alignment writes every column's vertical_align (the shared value, else the first column's).
   const aligns = row.columns.map((c) => c.vertical_align || 'start');
   const setAlign = (v: string) => {
@@ -227,6 +249,7 @@ export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateMana
   };
   const grid = cardRowGrid(ri, row, sm);
   return html`
+    ${entityBlock(row, { row: ri }, sm, hass, (patch) => sm.updateRow(ri, patch))}
     <div class="group">
       ${renderLayoutPicker(grid)}
       ${row.columns.length > 1 ? renderColumnWidths(grid) : nothing}
@@ -240,7 +263,7 @@ export function renderRowGeneral(ri: number, row: RowConfig, sm: EditorStateMana
 type ColumnFields = Pick<ColumnConfig, 'gap' | 'padding' | 'vertical_align'>;
 
 /** A column's General fields: its width in the row, vertical alignment, gap, padding. */
-function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Partial<ColumnConfig>) => void, grid?: RowGrid): TemplateResult {
+function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Partial<ColumnConfig>) => void, grid?: RowGrid, entity: TemplateResult | typeof nothing = nothing): TemplateResult {
   const width = grid && grid.row.columns.length > 1
     ? html`
         <div class="field">
@@ -262,6 +285,7 @@ function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Parti
       `
     : nothing;
   return html`
+    ${entity}
     <div class="group">
       ${width}
       ${renderSelectField(
@@ -276,9 +300,10 @@ function renderColumnFields(col: ColumnFields, ci: number, update: (patch: Parti
   `;
 }
 
-export function renderColumnGeneral(ri: number, ci: number, col: ColumnConfig, sm: EditorStateManager): TemplateResult {
+export function renderColumnGeneral(ri: number, ci: number, col: ColumnConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
   const row = sm.getConfig().rows[ri];
-  return renderColumnFields(col, ci, (patch) => sm.updateColumn(ri, ci, patch), row ? cardRowGrid(ri, row, sm) : undefined);
+  const entity = entityBlock(col, { row: ri, col: ci }, sm, hass, (patch) => sm.updateColumn(ri, ci, patch));
+  return renderColumnFields(col, ci, (patch) => sm.updateColumn(ri, ci, patch), row ? cardRowGrid(ri, row, sm) : undefined, entity);
 }
 
 /** A row module's own General settings: layout picker, column widths, gap, padding (module keys). */
@@ -306,9 +331,9 @@ export function renderRowModuleGeneral(
   const grid: RowGrid = {
     row: { ...c, columns },
     setLayout: (layout) => write((next) => {
-      const cols = columns.map((col) => (col && typeof col === 'object' ? { ...col } : { id: generateId('col'), modules: [] }));
+      const cols = columns.map((col) => (col && typeof col === 'object' ? { ...col } : newColumn()));
       const shaped = { columns: cols } as { layout?: string; column_widths?: string[]; columns: NestedColumnConfig[] };
-      applyRowLayout(shaped, layout, () => ({ id: generateId('col'), modules: [] }));
+      applyRowLayout(shaped, layout, newColumn);
       if (cols.length !== columns.length) next.columns = cols;
       next.layout = layout;
       delete next.column_widths;
@@ -331,9 +356,11 @@ export function renderRowModuleGeneral(
 }
 
 /** A row module's column (slot view): General like a card column. */
-export function renderNestedColumnGeneral(at: SlotOwner, slot: number, mod: RowModuleConfig, sm: EditorStateManager): TemplateResult {
+export function renderNestedColumnGeneral(at: SlotOwner, slot: number, mod: RowModuleConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
   const col = mod.columns?.[slot] ?? { modules: [] };
-  return renderColumnFields(col, slot, (patch) => sm.updateNestedColumn(at.row, at.col, at.module, at.child, slot, patch), nestedRowGrid(at, mod, sm));
+  const write = (patch: Record<string, unknown>) => sm.updateNestedColumn(at.row, at.col, at.module, at.child, slot, patch);
+  const entity = entityBlock(col, { row: at.row, col: at.col, module: at.module, child: at.child, slot }, sm, hass, write, false);
+  return renderColumnFields(col, slot, (patch) => sm.updateNestedColumn(at.row, at.col, at.module, at.child, slot, patch), nestedRowGrid(at, mod, sm), entity);
 }
 
 export function renderNestedColumnDesign(at: SlotOwner, slot: number, mod: RowModuleConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
@@ -447,7 +474,7 @@ export function renderColumnConditions(ri: number, ci: number, col: ColumnConfig
 
 /**
  * A row's Actions tab: the module action editor (tap, hold, double tap with every action type and
- * its fields). A row has no entity of its own, so toggle / more-info ask for one. None removes the
+ * its fields). With no entity of its own a row uses the card's (or the one a sharing layout passes down), and toggle / more-info ask for one only when there is none. None removes the
  * gesture. On a template-linked card the row's actions become a local override (`not_synced`).
  */
 export function renderRowActions(ri: number, row: RowConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
@@ -463,5 +490,6 @@ export function renderRowActions(ri: number, row: RowConfig, sm: EditorStateMana
   return html`
     ${renderActionGroups(row.actions, update, hass)}
     <p class="help">${t('Runs when the row is tapped outside a module with its own action or control.')}</p>
+    <p class="help">${t("With no entity of its own, the row uses the card's.")}</p>
   `;
 }

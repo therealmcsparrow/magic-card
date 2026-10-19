@@ -1,20 +1,22 @@
 import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { CameraModuleConfig } from '../../../types';
-import { renderTextField, renderToggleField, renderEntityField, renderSegField, renderNumberField, renderFieldHint } from '../../../utils/form-utils';
+import { renderTextField, renderToggleField, renderSegField, renderNumberField, renderFieldHint } from '../../../utils/form-utils';
 import { DEFAULT_REFRESH_S } from '../../../modules/content/camera-module';
 import { buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const cameraEditor: ModuleEditor = {
   type: 'camera',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as CameraModuleConfig;
     const syncCtx = buildSyncContext(config, template);
     const live = c.camera_view === 'live';
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Camera entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, 'camera', 'entity', syncCtx)}
+        ${renderEntitySourceField(t('Camera entity'), c, onChange, hass, scope, { domain: 'camera', syncCtx })}
         ${renderSegField(t('View'), live ? 'live' : 'snapshot', [
           { label: t('Live'), value: 'live' },
           { label: t('Snapshot'), value: 'snapshot' },

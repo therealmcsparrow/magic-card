@@ -4,25 +4,27 @@ import type { BarModuleConfig } from '../../../types';
 import {
   renderUnitField,
   renderToggleField,
-  renderEntityField,
-  renderAttributeField,
+    renderAttributeField,
   renderSelectField,
   renderNumberField,
   renderColorField,
 } from '../../../utils/form-utils';
 import { renderColorRangesField } from '../../components/color-ranges-field';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 export const barEditor: ModuleEditor = {
   type: 'bar',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as BarModuleConfig;
+    const eid = entityFor(c, scope);
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${renderNumberField(t('Min'), c.min, (v) => onChange({ ...c, min: v }), undefined, 'min', syncCtx)}
         ${renderNumberField(t('Max'), c.max, (v) => onChange({ ...c, max: v }), undefined, 'max', syncCtx)}
         ${renderUnitField(t('Bar height'), c.bar_height, (v) => onChange({ ...c, bar_height: v || undefined }), 'bar_height', syncCtx, '8')}

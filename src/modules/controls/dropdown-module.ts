@@ -100,6 +100,7 @@ class DropdownModule extends BaseMagicModule {
     description: lm('Select dropdown for choosing from a list of options'),
     category: 'controls',
     icon: 'mdi:form-dropdown',
+    inherit: Object.keys(ADAPTERS),
   };
 
   createDefault(): DropdownModuleConfig {

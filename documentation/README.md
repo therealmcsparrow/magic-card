@@ -23,6 +23,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [YAML](yaml/README.md) | The full config tree, value syntax, templates, YAML mode, troubleshooting and complete copy-paste examples |
 | [Card, rows and columns](card/README.md) | Card-level, row and column options, actions, display conditions, conditional appearance and pop-up mode |
 | [Modules](modules/README.md) | Every module type and its options, one page per module |
+| [Card entity](card-entity/README.md) | One entity for the whole card: modules, rows and columns follow it unless they pick their own or `none`, layouts that share an entity with the modules inside, modules that need one kind of device, toggles on an inherited entity, `entity` and `card_entity` in templates, and how Magic Card Utils templates treat it |
 | [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations and catalogue presets, icon animations with their Quiet, Living and Glow styles, and rings, including timer rings |
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |

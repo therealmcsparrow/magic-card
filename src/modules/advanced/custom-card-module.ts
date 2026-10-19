@@ -28,6 +28,7 @@ class CustomCardModule extends BaseLazyStub {
     description: lm('Embed any 3rd party Lovelace card'),
     category: 'advanced',
     icon: 'mdi:card-plus-outline',
+    inherit: false,
   };
 
   createDefault(): CustomCardModuleConfig {

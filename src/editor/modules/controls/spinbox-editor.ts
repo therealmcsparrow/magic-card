@@ -1,25 +1,28 @@
 import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { SpinboxModuleConfig } from '../../../types';
-import { renderEntityField, renderNumberField, renderAttributeField, renderFieldHint } from '../../../utils/form-utils';
+import { renderNumberField, renderAttributeField, renderFieldHint } from '../../../utils/form-utils';
 import { numericControl } from '../../../utils/entity-control';
 import { climateRange } from '../../../modules/controls/spinbox-module';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
 export const spinboxEditor: ModuleEditor = {
   type: 'spinbox',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const syncCtx = buildSyncContext(config, template);
     const c = config as SpinboxModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
+    const eid = entityFor(c, scope);
+    const stateObj = eid ? hass?.states[eid] : undefined;
     const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${stateObj && own?.readOnly
           ? renderFieldHint(t('This value can only be shown: the entity (or this attribute) cannot be set from a spinbox.'))
           : nothing}

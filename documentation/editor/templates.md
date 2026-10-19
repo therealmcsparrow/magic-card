@@ -60,6 +60,7 @@ From a card that is linked to another template, the new template gets the animat
 Load template… opens the "Load template" window with a search field ("Search templates") and the saved templates in alphabetical order, each with its description.
 
 -   Click a template (or press Enter or Space on it). The window asks "Load "…"? This will replace your current config." Press Load to confirm.
+-   When the card has no entity yet and the template has a module that would follow one, the confirmation also asks "Which device is this card for?" Pick a device to set the card entity of the loaded card, or leave it empty. See [Card entity](../card-entity/README.md#templates).
 -   Loading replaces the card's whole config with the template's content and links the card to it. Only the per-card Home Assistant keys (`grid_options`, `visibility` and similar) and other keys the template does not manage, such as `card_mod`, are kept from the old config. The card's own `custom_animations` and `hidden_animations` go: the template supplies its animations. Undo brings the old config back.
 
 Each template in the list also has two buttons:
@@ -142,6 +143,8 @@ Only Add row asks this. Other structural changes (columns, modules) stay local u
 ## What a template does not hold
 
 The keys Home Assistant keeps for one card on its dashboard are never part of a template: `grid_options`, `layout_options`, `visibility` and `view_layout`. Each linked card keeps its own.
+
+The card `entity` is not part of a template either. Saving leaves it out, loading and merging never take it from the template, and a card keeps its own entity when it links to or loads a template, so one template fits any device. See [Card entity](../card-entity/README.md#templates).
 
 ## Limits
 

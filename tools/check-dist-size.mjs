@@ -14,7 +14,7 @@ const B2 = 471_856;
 const CAPS = {
   'magic-card.js': B2 + 8_192, // 480,048
   'magic-card-animation-studio.js': 996_352, // 973 KiB, CEO 2026-10-19 (fix round: lazy-loader version guards)
-  'magic-card-editor.js': 805_888, // 787 KiB, held at the CEO-approved cap: measured 790,605 + 5 % would round to 830,464, which is higher (I11)
+  'magic-card-editor.js': 819_200, // 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
   'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
   'magic-card-particles.js': 38_912, // 38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)

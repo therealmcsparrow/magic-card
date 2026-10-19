@@ -1,5 +1,6 @@
 import type { CustomShapeOptions, CustomShapesConfig } from './contracts/custom-shape';
 import type { CustomIconsConfig } from './contracts/mcu-library';
+import type { EntityScopeNode } from './contracts/entity-scope';
 
 // ── Home Assistant types (subset) ──
 
@@ -90,6 +91,8 @@ export interface MagicCardConfig {
   type: string;
   name?: string;
   template?: string;
+  /** Card entity: modules without their own `entity` follow it (contract entity-scope). Per card, never in a template. */
+  entity?: string;
   not_synced?: string[]; // Property paths that are not synced to template
   rows: RowConfig[];
   use_page_theme?: boolean;
@@ -286,7 +289,7 @@ export interface CardAppearanceOverrides {
   seasonal?: SeasonalSetting;
 }
 
-export interface RowConfig {
+export interface RowConfig extends EntityScopeNode {
   id: string;
   columns: ColumnConfig[];
   layout?: string; // '1' | '1-1' | '1-2' | '2-1' | '1-1-1' | custom grid
@@ -304,7 +307,7 @@ export interface RowConfig {
   not_synced?: string[]; // Property paths that are not synced for this row
 }
 
-export interface ColumnConfig {
+export interface ColumnConfig extends EntityScopeNode {
   id: string;
   modules: CardModule[];
   gap?: string;
@@ -919,6 +922,8 @@ export interface GaugeModuleConfig extends CardModule {
 }
 
 export interface HorizontalModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'horizontal';
   modules?: CardModule[];
   gap?: string;
@@ -927,6 +932,8 @@ export interface HorizontalModuleConfig extends CardModule {
 }
 
 export interface VerticalModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'vertical';
   modules?: CardModule[];
   gap?: string;
@@ -934,7 +941,7 @@ export interface VerticalModuleConfig extends CardModule {
 }
 
 /** A row module's column: settings like a card column (ids are added by the editor; old configs have none). */
-export interface NestedColumnConfig {
+export interface NestedColumnConfig extends EntityScopeNode {
   id?: string;
   modules: CardModule[];
   gap?: string;
@@ -949,6 +956,8 @@ export interface NestedColumnConfig {
 }
 
 export interface RowModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'row';
   columns?: NestedColumnConfig[];
   layout?: string;
@@ -959,6 +968,8 @@ export interface RowModuleConfig extends CardModule {
 }
 
 export interface TabsModuleConfig extends CardModule, IconFxKeys {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'tabs';
   tabs?: Array<{
     label: string;
@@ -980,6 +991,8 @@ export interface SeparatorModuleConfig extends CardModule {
 }
 
 export interface SliderLayoutModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'slider-layout';
   modules?: CardModule[];
   pagination?: boolean;

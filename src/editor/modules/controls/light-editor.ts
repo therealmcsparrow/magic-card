@@ -1,25 +1,28 @@
 import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { LightModuleConfig } from '../../../types';
-import { renderToggleField, renderEntityField, renderFieldHint, renderIconField } from '../../../utils/form-utils';
+import { renderToggleField, renderFieldHint, renderIconField } from '../../../utils/form-utils';
 import { lightSupportsBrightness, lightSupportsColor, lightSupportsColorTemp } from '../../../utils/entity-control';
 import { entityIcon } from '../../../utils/entity-icon';
 import { supportsEffect } from '../../../modules/controls/light-module';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const lightEditor: ModuleEditor = {
   type: 'light',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const syncCtx = buildSyncContext(config, template);
     const c = config as LightModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
+    const eid = entityFor(c, scope);
+    const stateObj = eid ? hass?.states[eid] : undefined;
     const lacks = (on: boolean | undefined, ok: boolean, what: string) =>
       on && stateObj && !ok ? renderFieldHint(t('This light has no {what}; the control is hidden.', { what })) : nothing;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, 'light', 'entity', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { domain: 'light', syncCtx })}
         ${renderToggleField(t('Show brightness'), c.show_brightness !== false, (v) =>
           onChange({ ...c, show_brightness: v }),
         'show_brightness', syncCtx)}
@@ -42,9 +45,9 @@ export const lightEditor: ModuleEditor = {
           ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v || undefined }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
-          entity: c.entity,
-          icon: c.icon || entityIcon(hass, c.entity) || 'mdi:lightbulb',
-          allowStateIcons: !!c.entity,
+          entity: eid,
+          icon: c.icon || entityIcon(hass, eid) || 'mdi:lightbulb',
+          allowStateIcons: !!eid,
           syncCtx,
         })}
       </div>

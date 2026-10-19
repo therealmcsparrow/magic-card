@@ -1,6 +1,7 @@
 import { DisplayConfig, DisplayCondition, HomeAssistant } from '../types';
 import { currentRenderContext } from './render-context';
 import { templateResultTruthy } from './template-controller';
+import { templateVars } from '../utils/entity-scope';
 
 export class ConditionsService {
   static evaluate(display: DisplayConfig | undefined, hass: HomeAssistant | undefined): boolean {
@@ -64,7 +65,8 @@ export class ConditionsService {
    */
   private static evaluateTemplateCondition(cond: DisplayCondition): boolean {
     if (!cond.template?.trim()) return true;
-    const result = currentRenderContext()?.template(cond.template);
+    const ctx = currentRenderContext();
+    const result = ctx?.template(cond.template, templateVars(cond.template, ctx.entity, ctx.cardEntity));
     return result?.status === 'ok' && templateResultTruthy(result.result);
   }
 

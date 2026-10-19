@@ -39,6 +39,7 @@ import {
   selectionToPath,
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
+import { entityStats, resolveEntitySource } from '../entity-source';
 import { childListKey, replaceDescendant } from '../../utils/module-path';
 import { withEditorKey } from '../../utils/editor-key';
 import {
@@ -141,6 +142,17 @@ export class Inspector extends LitElement {
 
   protected updated(): void {
     this._syncScroller();
+    if (this._focusCardEntity) {
+      const picker = this.shadowRoot?.querySelector<HTMLElement & { focusInput?: () => void; updateComplete: Promise<unknown> }>('mc-entity-picker[data-card-entity]');
+      if (picker) {
+        this._focusCardEntity = false;
+        picker.scrollIntoView?.({ block: 'nearest' });
+        // the studio canvas takes the focus back after a selection change: focus again once it has settled
+        const focus = () => picker.focusInput?.();
+        void picker.updateComplete.then(focus);
+        setTimeout(focus, 80);
+      }
+    }
     // the card Design tab's "Editing design for" select follows the state (?selected alone does not move it)
     const view = this.shadowRoot?.querySelector<HTMLSelectElement>('select#design-view');
     if (view && view.value !== this._designView && [...view.options].some((o) => o.value === this._designView)) view.value = this._designView;
@@ -200,6 +212,16 @@ export class Inspector extends LitElement {
     if (!this._tabsFor(sel).includes(tab as EditorTab)) return;
     this._tabs = { ...this._tabs, [sel.kind]: tab as EditorTab };
   }
+
+  private _focusCardEntity = false;
+
+  /** "Card settings > General" link of an entity source: select the card, show General and focus the Card entity field. */
+  private _openCardEntity = (): void => {
+    this._tabs = { ...this._tabs, card: 'general' };
+    this._focusCardEntity = true;
+    this._goTo({ kind: 'card' });
+    this.requestUpdate();
+  };
 
   /** Move keyboard focus to the inspector (its active tab) once the current selection has rendered. */
   focusInspector(): void {
@@ -353,7 +375,7 @@ export class Inspector extends LitElement {
     const tab = this._activeTab(sel, tabs);
 
     return html`
-      <div class="insp" @field-sync-toggle=${this._onSyncToggle}>
+      <div class="insp" @field-sync-toggle=${this._onSyncToggle} @mc-open-card-entity=${this._openCardEntity}>
         <div class="insp-head">
           ${this._renderIdentity(config, sel)}
           <div class="seg full tabs" role="tablist" aria-label=${t('Settings')}>
@@ -475,14 +497,14 @@ export class Inspector extends LitElement {
         if (tab === 'design') return renderRowDesign(sel.row, row, sm, this.hass);
         if (tab === 'conditions') return renderRowConditions(sel.row, row, sm, this.hass);
         if (tab === 'actions') return renderRowActions(sel.row, row, sm, this.hass);
-        return renderRowGeneral(sel.row, row, sm);
+        return renderRowGeneral(sel.row, row, sm, this.hass);
       }
       case 'column': {
         const col: ColumnConfig | undefined = config.rows[sel.row]?.columns[sel.col];
         if (!col) return html``;
         if (tab === 'design') return renderColumnDesign(sel.row, sel.col, col, sm, this.hass);
         if (tab === 'conditions') return renderColumnConditions(sel.row, sel.col, col, sm, this.hass);
-        return renderColumnGeneral(sel.row, sel.col, col, sm);
+        return renderColumnGeneral(sel.row, sel.col, col, sm, this.hass);
       }
       case 'module':
         return this._renderModule(config, sel, tab);
@@ -535,7 +557,17 @@ export class Inspector extends LitElement {
       };
       return renderCardFlows(config, write, syncCtx, this.hass, this._flowsState);
     }
-    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio');
+    const entityField = {
+      ...entityStats(config),
+      // a card entity belongs to this card only: no not_synced mark, even on a template-linked card
+      onChange: (entity: string | undefined) => {
+        const next = { ...sm.getConfig() } as Record<string, unknown>;
+        if (entity === undefined) delete next.entity;
+        else next.entity = entity;
+        sm.updateConfig(next as unknown as MagicCardConfig);
+      },
+    };
+    return renderCardGeneral(config, update, syncCtx, this.hass, this.variant === 'studio', entityField);
   }
 
   /** A tab (General) or a row-module column (General, Conditions, Design). */
@@ -547,7 +579,7 @@ export class Inspector extends LitElement {
     const row = mod as RowModuleConfig;
     if (tab === 'design') return renderNestedColumnDesign(sel, sel.slot, row, sm, this.hass);
     if (tab === 'conditions') return renderNestedColumnConditions(sel, sel.slot, row, sm, this.hass);
-    return renderNestedColumnGeneral(sel, sel.slot, row, sm);
+    return renderNestedColumnGeneral(sel, sel.slot, row, sm, this.hass);
   }
 
   private _renderModule(config: MagicCardConfig, sel: Extract<Selection, { kind: 'module' }>, tab: EditorTab): TemplateResult {
@@ -581,7 +613,7 @@ export class Inspector extends LitElement {
       const updateTop = wrapOnChangeWithSync(top, (m: CardModule) => sm.replaceModule(sel.row, sel.col, sel.module, m));
       onChange = (m: CardModule) => updateTop(replaceDescendant(top, sel.child!, m));
     }
-    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template));
+    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template, resolveEntitySource(config, sel)));
     return html`${this._renderChildListSync(config, sel)}${body}`;
   }
 
