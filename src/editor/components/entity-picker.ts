@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, nothing, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
@@ -17,16 +17,28 @@ export class EntityPicker extends LitElement {
   /** Shown while empty (e.g. the default it falls back to). */
   @property({ type: String }) placeholder = 'entity_id';
   @property({ type: String }) domain = '';
+  /** Only a real entity id (or empty) is reported, on Enter or leaving the field; typing shows matching ids. */
+  @property({ type: Boolean }) strict = false;
+  /** Domains listed first in the window. */
+  @property({ attribute: false }) preferred: readonly string[] = [];
+  /** Help text tied to the field with aria-describedby. */
+  @property({ type: String }) help = '';
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
 
   @state() private _showModal = false;
+  @state() private _typed = '';
   @state() private _searchQuery = '';
   @state() private _selectedEntityId = '';
 
   /** Moves keyboard focus into the entity id field. */
   focusInput(): void {
     this.renderRoot.querySelector<HTMLInputElement>('input')?.focus();
+  }
+
+  /** Opens the picker window. */
+  open(): void {
+    this._openModal();
   }
 
   private _openModal(): void {
@@ -51,11 +63,14 @@ export class EntityPicker extends LitElement {
 
   private _selectEntity(entityId: string): void {
     this._selectedEntityId = entityId;
-    this._searchQuery = entityId;
   }
 
   private _onInputChange(e: InputEvent): void {
     const value = (e.target as HTMLInputElement).value;
+    if (this.strict) {
+      this._typed = value;
+      return;
+    }
     this.value = value;
     this.dispatchEvent(new CustomEvent('value-changed', {
       detail: { value },
@@ -83,9 +98,33 @@ export class EntityPicker extends LitElement {
         const q = this._searchQuery.toLowerCase();
         return e.id.toLowerCase().includes(q) || e.name.toLowerCase().includes(q);
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .sort((a, b) => this._rank(a.id) - this._rank(b.id) || a.name.localeCompare(b.name));
 
     return entities.slice(0, 100);
+  }
+
+  private _rank(id: string): number {
+    return this.preferred.includes(id.split('.')[0]) ? 0 : 1;
+  }
+
+  /** strict: report the typed id when it is empty or a real entity; otherwise put the last good value back. */
+  private _commit(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const v = input.value;
+    if (v !== '' && !this.hass?.states[v]) {
+      input.value = this.value;
+      return;
+    }
+    this.value = v;
+    this.dispatchEvent(new CustomEvent('value-changed', { detail: { value: v }, bubbles: true, composed: true }));
+  }
+
+  private _suggestions(): string[] {
+    const q = this._typed.toLowerCase();
+    return Object.keys(this.hass?.states ?? {})
+      .filter((id) => (!this.domain || id.startsWith(this.domain + '.')) && id.includes(q))
+      .sort((a, b) => this._rank(a) - this._rank(b) || a.localeCompare(b))
+      .slice(0, 20);
   }
 
   private _getEntityInfo(): { name: string; icon: string; state: string; stateText: string } | null {
@@ -148,9 +187,13 @@ export class EntityPicker extends LitElement {
           .value=${this.value}
           placeholder=${this.placeholder}
           aria-label=${this.label || t('Entity')}
+          aria-describedby=${this.help ? 'help' : nothing}
+          list=${this.strict ? 'ids' : nothing}
           spellcheck="false"
           @input=${this._onInputChange}
+          @change=${this.strict ? this._commit : nothing}
         />
+        ${this.strict ? html`<datalist id="ids">${this._suggestions().map((id) => html`<option value=${id}></option>`)}</datalist>` : nothing}
         <button
           type="button"
           class="icon-btn sm field-action browse"
@@ -169,6 +212,7 @@ export class EntityPicker extends LitElement {
             </p>
           `
         : ''}
+      ${this.help ? html`<p class="help" id="help">${this.help}</p>` : nothing}
 
       ${this._showModal ? this._renderModal() : ''}
     `;

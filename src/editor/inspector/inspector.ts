@@ -39,7 +39,7 @@ import {
   selectionToPath,
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
-import { countFollowing, resolveEntitySource } from '../entity-source';
+import { entityStats, resolveEntitySource } from '../entity-source';
 import { childListKey, replaceDescendant } from '../../utils/module-path';
 import { withEditorKey } from '../../utils/editor-key';
 import {
@@ -147,7 +147,10 @@ export class Inspector extends LitElement {
       if (picker) {
         this._focusCardEntity = false;
         picker.scrollIntoView?.({ block: 'nearest' });
-        void picker.updateComplete.then(() => picker.focusInput?.());
+        // the studio canvas takes the focus back after a selection change: focus again once it has settled
+        const focus = () => picker.focusInput?.();
+        void picker.updateComplete.then(focus);
+        setTimeout(focus, 80);
       }
     }
     // the card Design tab's "Editing design for" select follows the state (?selected alone does not move it)
@@ -555,7 +558,7 @@ export class Inspector extends LitElement {
       return renderCardFlows(config, write, syncCtx, this.hass, this._flowsState);
     }
     const entityField = {
-      following: countFollowing(config),
+      ...entityStats(config),
       // a card entity belongs to this card only: no not_synced mark, even on a template-linked card
       onChange: (entity: string | undefined) => {
         const next = { ...sm.getConfig() } as Record<string, unknown>;

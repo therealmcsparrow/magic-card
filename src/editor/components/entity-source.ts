@@ -68,10 +68,10 @@ export class EntitySource extends LitElement {
       .src .seg > button[aria-pressed='true'] {
         background: var(--mc-surface);
         color: var(--mc-accent-ink);
-        box-shadow: 0 0 0 1px var(--mc-divider), 0 1px 2px rgba(0, 0, 0, 0.08);
       }
       .src .seg > button[aria-disabled='true'] {
-        border: 1px dashed var(--mc-divider);
+        border: 1px dashed var(--mc-text-2);
+        opacity: 0.55;
         cursor: default;
       }
       .src .line,
@@ -215,10 +215,11 @@ export class EntitySource extends LitElement {
     this._say(t('No entity.'));
   };
 
-  private _pickAndFocus = (): void => {
+  /** The mismatch button: opens the picker window, filtered to the kind this tile needs. */
+  private _pickAndOpen = (): void => {
     this._pick();
     this._picking = true;
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement & { focusInput?: () => void }>('mc-entity-picker')?.focusInput?.());
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement & { open?: () => void }>('mc-entity-picker')?.open?.());
   };
 
   private _openCardSettings = (): void => {
@@ -244,6 +245,7 @@ export class EntitySource extends LitElement {
     e.preventDefault();
     const n = btns.length;
     const next = e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (at + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1) + n) % n;
+    btns.forEach((b, i) => (b.tabIndex = i === next ? 0 : -1));
     btns[next].focus();
   };
 
@@ -293,7 +295,7 @@ export class EntitySource extends LitElement {
     return html`
       <p class="warn"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon><span>${this._mismatchText()}</span></p>
       <div class="acts">
-        <button type="button" class="btn btn-secondary btn-sm" @click=${this._pickAndFocus}>${t('Pick {kind}', { kind: one ? kindNoun(i.domains![0]) : t('a device') })}</button>
+        <button type="button" class="btn btn-secondary btn-sm" @click=${this._pickAndOpen}>${t('Pick {kind}', { kind: one ? kindNoun(i.domains![0]) : t('a device') })}</button>
         <button type="button" class="btn btn-secondary btn-sm" @click=${this._none}>${t('No entity')}</button>
       </div>
     `;
@@ -350,6 +352,7 @@ export class EntitySource extends LitElement {
               .value=${i.choice === 'own' ? this._raw ?? '' : ''}
               .domain=${this.domain}
               .label=${t('Own entity')}
+              .placeholder=${t('Pick a device')}
               @value-changed=${this._onPicked}
             ></mc-entity-picker>`
           : nothing}

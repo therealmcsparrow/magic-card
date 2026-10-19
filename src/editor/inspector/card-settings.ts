@@ -75,6 +75,10 @@ const newCondition = (): DisplayCondition => ({ id: generateId('cond'), type: 's
 export interface CardEntityField {
   /** Modules that follow it (the plain "N tiles follow it." line; hidden at 0). */
   following: number;
+  /** Modules that need another kind of device than the card entity. */
+  needing: number;
+  /** Domains the card's modules need: listed first in the picker window. */
+  preferred: string[];
   /** undefined removes the key. */
   onChange: (entity: string | undefined) => void;
 }
@@ -89,12 +93,16 @@ function renderCardEntity(config: MagicCardConfig, hass: HomeAssistant | undefin
         .value=${typeof config.entity === 'string' ? config.entity : ''}
         .label=${t('Card entity')}
         .placeholder=${t('Pick a device')}
+        .strict=${true}
+        .preferred=${field.preferred}
+        .help=${`${t('The device this card is for. Tiles follow it unless you set one for them.')} ${t("Magic Card Utils templates never include it. Applying one keeps this card's entity.")}`}
         @value-changed=${(e: CustomEvent<{ value: string }>) => field.onChange(e.detail.value === '' ? undefined : e.detail.value)}
       ></mc-entity-picker>
-      <p class="help">${t('The device this card is for. Tiles follow it unless you set one for them.')}</p>
-      <p class="help">${t("Magic Card Utils templates never include it. Applying one keeps this card's entity.")}</p>
       ${field.following > 0
         ? html`<p class="help follow">${t('{n, plural, one {# tile follows it.} other {# tiles follow it.}}', { n: field.following })}</p>`
+        : nothing}
+      ${field.needing > 0
+        ? html`<p class="help follow needs">${t('{n, plural, one {# tile needs another device.} other {# tiles need another device.}}', { n: field.needing })}</p>`
         : nothing}
     </div>
   `;

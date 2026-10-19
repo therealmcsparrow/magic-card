@@ -7,7 +7,7 @@ import { editorSystem } from '../../css/editor-stack';
 import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { kindNoun, sourceWord } from '../components/entity-source';
-import { resolveEntitySource, takesEntity } from '../entity-source';
+import { ignoresEntity, resolveEntitySource, takesEntity } from '../entity-source';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
 import {
   Selection,
@@ -952,9 +952,10 @@ export class StructureOutline extends LitElement {
    */
   private _followedEntity(mod: CardModule, sel: ModuleSel): TemplateResult | typeof nothing {
     const config = this._state?.config;
-    if (!config || !(takesEntity(mod.type) || hasChildSlots(mod))) return nothing;
+    if (!config || ignoresEntity(mod) || !(takesEntity(mod.type) || hasChildSlots(mod))) return nothing;
     const info = resolveEntitySource(config, sel);
     const from = info.inherited;
+    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
     if (info.choice !== 'inherit' || info.cardModule || !from) return nothing;
     if (info.mismatch) {
       return html`<span class="sub is-mismatch"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon>${t('Needs {kind}', { kind: kindNoun(info.domains?.length === 1 ? info.domains[0] : undefined) })}<span class="sr-only">${t('Entity does not fit this module')}</span></span>`;

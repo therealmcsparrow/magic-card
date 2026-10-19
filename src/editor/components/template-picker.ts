@@ -8,7 +8,7 @@ import { pickerStyles, templatePickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { entityKey } from '../../utils/entity-scope';
-import { templateFollows } from '../entity-source';
+import { templateDomains, templateFollows } from '../entity-source';
 import './entity-picker';
 import { t } from '../i18n';
 
@@ -67,8 +67,15 @@ export class TemplatePicker extends LitElement {
     if (changed.has('_confirmLoad')) this._device = '';
   }
 
+  /** The confirm opens above the list: when it asks for a device, the focus goes to that field. */
+  private _focusQuestion(): void {
+    const picker = this.shadowRoot?.querySelector<HTMLElement & { focusInput?: () => void; updateComplete: Promise<unknown> }>('.mc-template-device mc-entity-picker');
+    void picker?.updateComplete.then(() => picker.focusInput?.());
+  }
+
   protected updated(changed: Map<string, unknown>): void {
     super.updated(changed);
+    if (changed.has('_confirmLoad') && this._confirmLoad) this._focusQuestion();
     // Retry loading if hass becomes available after initial connectedCallback
     if (changed.has('hass') && this.hass && Object.keys(this._templates).length === 0 && !this._loading) {
       this._loadTemplates();
@@ -374,6 +381,11 @@ export class TemplatePicker extends LitElement {
     return templateFollows(rows.flatMap((r) => (r.columns ?? []).flatMap((c) => c.modules ?? [])));
   }
 
+  private _domainsOf(name: string): string[] {
+    const rows = this._templates[name]?.config.rows;
+    return Array.isArray(rows) ? templateDomains(rows.flatMap((r) => (r.columns ?? []).flatMap((c) => c.modules ?? []))) : [];
+  }
+
   private _renderLink(): TemplateResult {
     if (this._loading) {
       return html`<div class="mc-picker-loading">${t('Loading templates...')}</div>`;
@@ -392,13 +404,15 @@ export class TemplatePicker extends LitElement {
                 ${t('Load "{name}"? This will replace your current config.', { name: this._confirmLoad })}
               </div>
               ${this._asksDevice(this._confirmLoad)
-                ? html`<div class="mc-template-device" role="group" aria-labelledby="device-q">
-                    <p class="mc-template-confirm-text" id="device-q">${t('Which device is this card for?')}</p>
+                ? html`<div class="mc-template-device">
+                    <p class="mc-template-confirm-text">${t('Which device is this card for?')}</p>
                     <mc-entity-picker
                       .hass=${this.hass}
                       .value=${this._device}
                       .label=${t('Which device is this card for?')}
                       .placeholder=${t('Pick a device')}
+                      .strict=${true}
+                      .preferred=${this._domainsOf(this._confirmLoad)}
                       @value-changed=${(e: CustomEvent<{ value: string }>) => { this._device = e.detail.value; }}
                     ></mc-entity-picker>
                     <p class="help">${t('Tiles that follow the card will show it.')}</p>

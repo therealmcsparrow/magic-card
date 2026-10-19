@@ -40,10 +40,11 @@ export const textEditor: ModuleEditor = {
               ${renderTextField(t('Text'), c.text, (v) => onChange({ ...c, text: v }), 'text', syncCtx)}
               ${renderToggleField(t('Use template'), c.use_template, (v) =>
                 onChange({ ...c, use_template: v }), 'use_template', syncCtx)}
-              ${c.use_template ? renderFieldHint(t('Use Jinja2 templates: {example}', { example: "{{ states('sensor.temp') }}" })) : nothing}
+              ${c.use_template ? renderFieldHint(t('Use Jinja2 templates: {example}', { example: '{{ states(entity) }}, {{ states(card_entity) }}' })) : nothing}
             `}
         ${renderToggleField(t('Use entity'), c.use_entity, (v) => onChange({ ...c, use_entity: v }), 'use_entity', syncCtx,
           t("Shows an entity's state or name instead of the text."))}
+        ${c.use_template && !c.use_entity ? renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx }) : nothing}
         ${c.use_entity
           ? html`
               ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
