@@ -385,8 +385,16 @@ export const editorStyles: CSSResult[] = [
     .lib .rows .row {
       flex-wrap: nowrap;
     }
-    .layers .acts {
-      gap: 4px;
+    /* seven borderless icon buttons on one line at the panel's own width: they shrink from 28 to 24 px (never smaller) */
+    .layers > .acts {
+      flex-wrap: nowrap;
+      gap: 2px;
+    }
+    .layers > .acts .icon-btn {
+      flex: 0 1 28px;
+      min-width: 24px;
+      height: 28px;
+      --mdc-icon-size: 18px;
     }
 
     /* the shape picker over the canvas */
