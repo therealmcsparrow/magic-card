@@ -18,6 +18,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * `takenName(kind, name)` passed through to it. External-host detection (contactsOtherHost) decodes CSS
  * escapes, removes tab/CR/LF, flags any value with a backslash or a comment opener, and checks every
  * argument of image-set() and similar functions.
+ * 2026-10-19 (text only, version unchanged; code review 153): TRANSFER_CHUNK_CEILING follows the CEO's 62 KiB ruling.
  * Row thumbnail hook (r3): <mc-library-view> property `rowExtra?: (kind, id) => { thumb?: Node; meta?: string }`;
  * `thumb` is drawn decorative before the row name, `meta` is appended to the id line (e.g. "10 points").
  * A host never reads or writes the view's shadow DOM; the Magic Card Utils Shapes tab uses this hook.
@@ -144,9 +145,9 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
- * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING. Over
- * the ceiling means a parent module got copied in (check js-yaml first) or the library view grew:
- * report, do not raise.
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING (62 KiB =
+ * 63,488 B, CEO 2026-10-19; was 28 KiB). Over the ceiling means a parent module got copied in (check
+ * js-yaml first) or the library view grew: report it; only the CEO raises it.
  *
  * ── Accessibility (WCAG 2.2 AA, our bar) ──
  * The file control is a real <input type=file> behind a labelled button ("Choose a file"), accept
@@ -166,7 +167,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
-export const TRANSFER_CHUNK_CEILING = 28 * 1024;
+export const TRANSFER_CHUNK_CEILING = 62 * 1024; // 63,488 B, CEO 2026-10-19 (was 28 KiB)
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const MAX_IMPORT_BYTES = 1024 * 1024;
@@ -190,7 +191,7 @@ export const THEME_PRESET_MAX_BYTES = 32 * 1024;
  * match. Matching values are kept and listed (CEO 2026-10-18).
  */
 export const EXTERNAL_REF_RE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])/i;
-/** CSS escapes (`\74 ` and `\/`) resolved the way a browser reads them, and comments dropped. */
+/** CSS escapes (`\74 ` and `\/`) resolved the way a browser reads them. */
 export function decodeCssEscapes(value: string): string {
   return value
     .replace(/\\([0-9a-f]{1,6})[ \t\n\r\f]?|\\([\s\S])/gi, (_m, hex: string | undefined, ch: string | undefined) => {
