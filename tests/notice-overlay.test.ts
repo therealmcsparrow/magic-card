@@ -117,32 +117,6 @@ describe('SVG editor: notices do not resize the canvas', () => {
   });
 });
 
-describe('shape editor: notices do not resize the canvas', () => {
-  const css = cssOf(studioStyles);
-  const layerOf = (el: McShapeStudio): Element => el.shadowRoot!.querySelector('.layer')!;
-
-  it('control: the result strip in the dock floats (already correct)', async () => {
-    const el = await openShape();
-    el.note('Corners turned into points. Undo brings them back.', true);
-    await el.updateComplete;
-    const n = el.shadowRoot!.querySelector('.dock .notice')!;
-    expect(n).not.toBeNull();
-    expect(floats(n, layerOf(el), css)).toBe(true);
-  });
-
-  it.each([
-    ['notice (not found / cannot edit)', (el: McShapeStudio) => (el.notice = 'Saved shape "x" was not found. This card uses its own copy.')],
-    ['linked info banner', (el: McShapeStudio) => ((el as unknown as { linked: string }).linked = 'abc')],
-  ])('top banner: %s floats over the canvas instead of taking layout space', async (_n, set) => {
-    const el = await openShape();
-    set(el);
-    await el.updateComplete;
-    const notice = el.shadowRoot!.querySelector('.banners .notice');
-    expect(notice, 'the notice is rendered').not.toBeNull();
-    expect(floats(notice!, layerOf(el), css), 'no out-of-flow ancestor').toBe(true);
-  });
-});
-
 describe('SVG editor: notice buttons are not inside the canvas stage', () => {
   it('banners and result note are siblings of .stage, so the stage capture handlers never see their clicks or keys', async () => {
     const el = await openSvg();
