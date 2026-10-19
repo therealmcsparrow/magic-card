@@ -193,7 +193,7 @@ See [Templates](documentation/editor/templates.md) for the details.
 
 Settings that Home Assistant keeps for a single card (`grid_options`, `layout_options`, `visibility`, `view_layout`) are never part of a template.
 
-Templates are stored by the `magic_card_utils` backend integration (WebSocket commands `magic_card_utils/get_templates`, `save_template` and `delete_template`). Without it, templates cannot be loaded or saved.
+Templates are stored by the `magic_card_utils` backend integration. Without it, templates cannot be loaded or saved. Every user can see a linked card; only administrators can create, change or delete templates. A card reads just the templates it uses, and follows changes live. If a template is missing or cannot be loaded, the card shows its own settings with a short notice. Users who are not administrators need the Magic Card Utils release that has the per-template read commands.
 
 ### Copy and paste design
 

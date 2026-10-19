@@ -52,6 +52,8 @@
   "Slider": "Slider",
   "Spinbox": "Spinbox",
   "Step must be greater than 0": "Step must be greater than 0",
+  "Template \"{name}\" couldn't be loaded. Showing this card's own settings.": "Template \"{name}\" couldn't be loaded. Showing this card's own settings.",
+  "Template \"{name}\" wasn't found. Showing this card's own settings.": "Template \"{name}\" wasn't found. Showing this card's own settings.",
   "Template error: {error}": "Template error: {error}",
   "Template is required": "Template is required",
   "Text content is required": "Text content is required",

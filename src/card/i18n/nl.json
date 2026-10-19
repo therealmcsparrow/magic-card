@@ -52,6 +52,8 @@
   "Slider": "Schuifregelaar",
   "Spinbox": "Getalkiezer",
   "Step must be greater than 0": "De stapgrootte moet groter zijn dan 0",
+  "Template \"{name}\" couldn't be loaded. Showing this card's own settings.": "Sjabloon \"{name}\" kon niet worden geladen. De eigen instellingen van deze kaart worden getoond.",
+  "Template \"{name}\" wasn't found. Showing this card's own settings.": "Sjabloon \"{name}\" is niet gevonden. De eigen instellingen van deze kaart worden getoond.",
   "Template error: {error}": "Templatefout: {error}",
   "Template is required": "Een template is verplicht",
   "Text content is required": "Tekstinhoud is verplicht",
