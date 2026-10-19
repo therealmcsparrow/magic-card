@@ -1097,8 +1097,10 @@ export class MagicCard extends LitElement {
     // the same object while the id is unchanged (every config without a card entity), else a shallow copy
     const mod = (source.entity || undefined) === entity ? source : { ...source, entity };
     this._scope = childScope(source, up);
+    // editor preview only: a module that follows an entity of the wrong kind says so (never on the dashboard)
+    const needs = this.editMode && !entity && !!up && !source.entity && !!ModuleRegistry.get(source.type)?.metadata.inherit;
     try {
-      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity));
+      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity, needs));
     } finally {
       this._scope = up;
     }
@@ -1120,7 +1122,7 @@ export class MagicCard extends LitElement {
     }
   }
 
-  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean): TemplateResult {
+  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean, needs: boolean): TemplateResult {
     const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;
@@ -1169,6 +1171,7 @@ export class MagicCard extends LitElement {
         data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
+        data-mc-needs=${needs ? t('Needs another device') : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
         data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing}
         data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}

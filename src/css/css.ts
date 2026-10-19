@@ -806,6 +806,7 @@ const magicCardLocalStyles = css`
    * the root used to be sized (min-width 0 like .mc-module; full width for roots that are 100% wide),
    * so bars, separators, sliders ... keep their width in rows and centred columns.
    */
+  .mc-module-wrapper[data-mc-needs]::after{content:attr(data-mc-needs);display:block;border:1px dashed;font-size:.75rem}
   .mc-horizontal > .mc-module-wrapper,
   .mc-vertical > .mc-module-wrapper {
     min-width: 0;
