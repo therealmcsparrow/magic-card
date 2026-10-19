@@ -32,6 +32,7 @@ import type { MessageId } from './i18n';
  * theme_presets commands of mcu-library 1.0.0 r3 (library_contract.py).
  *
  * Loading (same pattern as the animation studio entry):
+ * - The entry is an ES module: load it with import() or <script type="module">, never a classic script.
  * - The panel resolves magic-card.js from `lovelace/resources`, loads it (_ensureMagicCard), then
  *   imports THEME_EDITOR_FILE from the same directory with the same query string.
  * - The entry defines THEME_EDITOR_TAG and its own `mcte-*` / `mc-theme-trial-bar` elements only,

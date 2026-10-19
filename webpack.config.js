@@ -42,7 +42,7 @@ module.exports = (env, argv) => {
       filename: '[name].js',
       // the query busts caches when the chunk changes (HACS' ?hacstag= only reaches the entry URL)
       chunkFilename: 'magic-card-[name].js?v=[contenthash:8]',
-      // set at run time (src/index.ts, src/anim-studio/public-path.ts); '' keeps webpack's document.currentScript probe out
+      // set at run time from import.meta.url (src/index.ts, src/*/public-path.ts); '' keeps webpack's document.currentScript probe out
       publicPath: '',
       // chunks are ES modules loaded with native import() (smallest loader; works from the module
       // script HA loads magic-card.js as); the entries stay plain scripts

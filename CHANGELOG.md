@@ -6,6 +6,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Security
+-   **Lazy chunk location.** The animation studio and the theme editor now take the folder they load their extra files from out of their own module URL. They no longer read `document.currentScript` or an error stack, which a web page could influence. The folder is used only when it has the same scheme and host as the page. Otherwise the chunk fails to load and the usual retry message shows. Both files are ES modules, so load them with `import()` or `<script type="module">`.
+
 ### Improved
 -   **Notices no longer resize the canvas.** In the SVG editor, warnings, banners and the result of an action (with Undo) now float over the canvas instead of pushing it smaller. Dismiss buttons and screen reader announcements work as before.
 -   **Shape editor, Draw and Messages tabs.** The left sidebar has a Draw tab and a Messages tab. Warnings and errors are one coloured line each in Messages, with a button that opens the full message in a window. The tab shows a count, and a screen reader announces a new message.
