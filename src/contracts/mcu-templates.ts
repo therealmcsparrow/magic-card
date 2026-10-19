@@ -24,12 +24,15 @@
  *    - One page-wide instance. Per HA connection and template name: one subscribe_template, shared by
  *      every card that watches that name (reference counted; the last unwatch unsubscribes).
  *    - Subscribes with resubscribe:false: the library doesn't re-send after a reconnect. On the
- *      connection's 'ready' event this module drops each live subscription and subscribes again, so it
- *      sees a failed re-subscribe (for example MCU not loaded yet) and retries; the first event of the
- *      new subscription carries the current state again.
+ *      connection's 'ready' event this module forgets each old subscription (the old socket's ids are
+ *      invalid, so no unsubscribe is sent) and any subscribe still in flight, and subscribes again, so
+ *      it sees a failed re-subscribe (for example MCU not loaded yet) and retries; the first event of
+ *      the new subscription carries the current state again.
  *    - unknown_command on subscribe_template: legacy mode for that connection. One get_templates for
  *      the whole page (one shared promise), every name read from it; no live updates (as before).
- *      Legacy mode ends on the next 'ready': subscribe_template is probed again (MCU may have finished loading).
+ *      Legacy mode ends on the next 'ready' or when a slow re-probe of subscribe_template succeeds
+ *      (after 5 s, doubling to at most 30 s; stops on success or the last unwatch), so a still-loading
+ *      MCU settles without a reload. An old MCU costs one unknown_command per probe step.
  *      unauthorized from that call (non-admin on an old MCU) -> status 'unavailable' for every name.
  *    - Any other failure (not_loaded, dropped socket): status 'unavailable'; retried once on the
  *      connection's next 'ready' event and after TEMPLATE_RETRY_MS while it stays up.
@@ -56,6 +59,9 @@ export const TEMPLATE_CMD = {
 export const TEMPLATE_NAME_MAX_CHARS = 255;
 /** Retry after a failure that may pass (not unknown_command, not unauthorized). */
 export const TEMPLATE_RETRY_MS = 15_000;
+/** Re-probe of subscribe_template after unknown_command: 5 s, doubling, at most 30 s; stops on success or the last unwatch. */
+export const TEMPLATE_PROBE_MIN_MS = 5_000;
+export const TEMPLATE_PROBE_MAX_MS = 30_000;
 
 export interface TemplateContent {
   config: Record<string, unknown>;

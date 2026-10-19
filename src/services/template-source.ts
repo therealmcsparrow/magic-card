@@ -1,4 +1,4 @@
-import { TEMPLATE_CMD, TEMPLATE_RETRY_MS, type TemplateHass, type TemplateSource, type TemplateState } from '../contracts/mcu-templates';
+import { TEMPLATE_CMD, TEMPLATE_PROBE_MAX_MS, TEMPLATE_PROBE_MIN_MS, TEMPLATE_RETRY_MS, type TemplateHass, type TemplateSource, type TemplateState } from '../contracts/mcu-templates';
 
 /*
  * Template source (Module `template-source`, contract mcu-templates 1.0.0, src/contracts/mcu-templates.ts).
@@ -19,6 +19,8 @@ interface Entry {
   dead?: boolean;
   /** The last failure may pass: retry on 'ready' and after TEMPLATE_RETRY_MS. */
   retry?: boolean;
+  /** Generation of the latest subscribe attempt. */
+  gen?: number;
 }
 
 interface Link {
@@ -27,6 +29,9 @@ interface Link {
   /** An MCU without subscribe_template: one shared get_templates for the page. */
   legacy?: boolean;
   all?: Promise<unknown>;
+  /** Slow re-probe of subscribe_template while legacy (MCU may still be loading). */
+  probeTimer?: ReturnType<typeof setTimeout>;
+  probes: number;
   onReady: () => void;
 }
 
@@ -85,23 +90,54 @@ function readAll(link: Link, entry: Entry, n: string): void {
   );
 }
 
-function begin(link: Link, entry: Entry, n: string): void {
+/** Slow re-probe of subscribe_template while the link is in legacy mode: 5, 10, 20, then every 30 s. */
+function scheduleProbe(link: Link): void {
+  if (link.probeTimer || !link.legacy) return;
+  const delay = Math.min(TEMPLATE_PROBE_MIN_MS * 2 ** link.probes++, TEMPLATE_PROBE_MAX_MS);
+  link.probeTimer = setTimeout(() => {
+    link.probeTimer = undefined;
+    const first = link.entries.entries().next().value;
+    if (link.legacy && first) begin(link, first[1], first[0], true);
+  }, delay);
+}
+
+function begin(link: Link, entry: Entry, n: string, probing = false): void {
   if (entry.dead || entry.busy || entry.unsub) return;
   clearTimeout(entry.timer);
-  if (link.legacy) return readAll(link, entry, n);
+  if (link.legacy && !probing) return readAll(link, entry, n);
   entry.busy = true;
+  // A 'ready' starts a new generation: answers and events of an older one belong to a dead socket.
+  const g = (entry.gen = (entry.gen ?? 0) + 1);
+  const current = (): boolean => entry.gen === g;
+  const leaveLegacy = (): void => {
+    link.legacy = false;
+    link.all = undefined;
+    link.probes = 0;
+    for (const [m, e] of link.entries) if (e !== entry) begin(link, e, m);
+  };
   const failed = (err: unknown): void => {
+    if (!current()) return;
     entry.busy = false;
+    const unknown = codeOf(err) === 'unknown_command';
+    if (probing) {
+      if (unknown) return scheduleProbe(link);
+      leaveLegacy();
+      if (entry.dead) return;
+    }
     if (entry.dead) return;
-    if (codeOf(err) === 'unknown_command') {
+    if (unknown) {
       link.legacy = true;
       readAll(link, entry, n);
+      scheduleProbe(link);
     } else fail(link, entry, n, err, true);
   };
   try {
-    Promise.resolve(link.hass.connection!.subscribeMessage<unknown>((msg) => !entry.dead && onEvent(link, entry, n, msg), { type: TEMPLATE_CMD.subscribeTemplate, name: n }, { resubscribe: false })).then((unsub) => {
+    Promise.resolve(link.hass.connection!.subscribeMessage<unknown>((msg) => current() && !entry.dead && onEvent(link, entry, n, msg), { type: TEMPLATE_CMD.subscribeTemplate, name: n }, { resubscribe: false })).then((unsub) => {
+      // stale: do not call its unsub, the id is meaningless on the new socket
+      if (!current()) return;
       entry.busy = false;
       if (typeof unsub !== 'function') return;
+      if (probing) leaveLegacy();
       if (entry.dead) unsub();
       else entry.unsub = unsub;
     }, failed);
@@ -116,15 +152,20 @@ function linkFor(hass: TemplateHass, conn: Conn): Link {
     const l: Link = {
       hass,
       entries: new Map(),
+      probes: 0,
       onReady: () => {
-        // reconnected: this module owns re-subscription (resubscribe:false), so it sees a failed one.
-        // Leave legacy mode and probe subscribe_template again: MCU may have finished loading.
+        // Reconnected: the old socket and its subscriptions are gone, and so are their ids. Never send
+        // the old unsub on the new socket (the ids restart there and could cancel another subscription).
+        // This module owns re-subscription (resubscribe:false): leave legacy mode, forget in-flight
+        // subscribes (they never settle) and subscribe again; MCU may have finished loading.
         l.legacy = false;
         l.all = undefined;
+        l.probes = 0;
+        clearTimeout(l.probeTimer);
+        l.probeTimer = undefined;
         for (const [n, e] of l.entries) {
-          const old = e.unsub;
           e.unsub = undefined;
-          if (old) void Promise.resolve().then(old).catch(() => undefined);
+          e.busy = false;
           begin(l, e, n);
         }
       },
@@ -137,6 +178,7 @@ function linkFor(hass: TemplateHass, conn: Conn): Link {
 
 function drop(conn: Conn, link: Link): void {
   conn.removeEventListener?.('ready', link.onReady);
+  clearTimeout(link.probeTimer);
   links.delete(conn);
 }
 
