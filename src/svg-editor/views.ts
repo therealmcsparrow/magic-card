@@ -298,6 +298,15 @@ function moduleNotice(ed: McSvgEditor): TemplateResult {
 
 // ── start window ──
 
+/** The card editor's icon picker: a pick in its window starts the drawing at once; typing in its field only fills it (the button or Enter starts). */
+function startPicked(ed: McSvgEditor, e: CustomEvent<{ value: string }>): void {
+  e.stopPropagation();
+  const name = String(e.detail?.value ?? '').trim();
+  ed.startIcon = name;
+  const typing = (e.currentTarget as HTMLElement).shadowRoot?.activeElement?.closest('.with-icon');
+  if (name && !typing) void ed.openIcon(name);
+}
+
 function startPanel(ed: McSvgEditor): TemplateResult {
   const tile = (g: GlyphName, name: string, sub: string, on: () => void, pressed?: boolean): TemplateResult =>
     html`<button type="button" class="tile glyph-only" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 24)}<span>${name}</span><span class="meta">${sub}</span></button>`;
@@ -317,7 +326,10 @@ function startPanel(ed: McSvgEditor): TemplateResult {
           const name = ed.startIcon.trim();
           if (name) void ed.openIcon(name);
         }}>
-          ${field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
+          ${customElements.get('mc-icon-picker')
+            ? html`<mc-icon-picker .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>
+                <p class="help">${t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.')}</p>`
+            : field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
           <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
       : nothing}
