@@ -196,7 +196,7 @@ export function renderEditor(ed: McSvgEditor): TemplateResult {
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${t('The icon editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
-    ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
+    ${ed.dlg === 'poly' ? polyWin(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
     ${ed.menu ? html`<mc-ui-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? t('Export / Import') : ed.menu.key ? ed.menu.opener.textContent!.trim() : t('Shape actions')} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-ui-menu>` : nothing}
     <mc-ui-toast @mc-toast-action=${() => ed.toastAct()}></mc-ui-toast>
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
@@ -553,14 +553,32 @@ function toolOptions(ed: McSvgEditor): TemplateResult | typeof nothing {
   const o = ed.opts;
   const set = (patch: Partial<typeof o>): void => void (ed.opts = { ...o, ...patch });
   if (ed.tool === 'rect') return html`<div class="opts">${numField('o-radius', t('Corner radius'), o.r, (n) => set({ r: Math.max(0, n) }), { min: 0 })}</div>`;
-  if (ed.tool === 'polygon')
-    return html`<div class="opts">
+  if (ed.tool === 'pen') return html`<div class="opts">${btn(t('Finish path'), undefined, () => ed.finishPath(), { text: true })}</div>`;
+  return nothing;
+}
+
+/** Polygon or star: the corner count, asked in a window so the canvas keeps its size. Enter is OK, Esc and Cancel go back to the tool before. */
+function polyWin(ed: McSvgEditor): TemplateResult {
+  const o = ed.opts;
+  const set = (patch: Partial<typeof o>): void => void (ed.opts = { ...o, ...patch });
+  const enter = (e: KeyboardEvent): void => {
+    const el = e.target as HTMLInputElement;
+    if (e.key !== 'Enter' || el.type === 'checkbox' || el.getAttribute('role') === 'switch') return;
+    e.preventDefault();
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    ed.polyOk();
+  };
+  return html`<mc-ui-window variant="dialog" size="s" heading=${t('Polygon or star')} closeLabel=${t('Close')} @mc-window-close=${() => ed.polyCancel()}>
+    <div class="dlg" @keydown=${enter}>
       ${numField('o-sides', t('Corners'), o.sides, (n) => set({ sides: Math.min(24, Math.max(3, Math.round(n))) }), { min: 3, max: 24, step: 1 })}
       ${chk('sw-star', t('Star'), o.star, (v) => set({ star: v }))}
       ${o.star ? numField('o-inner', t('Inner size'), o.inner, (n) => set({ inner: Math.min(0.95, Math.max(0.1, n)) }), { min: 0.1, max: 0.95, step: 0.05 }) : nothing}
-    </div>`;
-  if (ed.tool === 'pen') return html`<div class="opts">${btn(t('Finish path'), undefined, () => ed.finishPath(), { text: true })}</div>`;
-  return nothing;
+    </div>
+    <div slot="footer" class="foot">
+      ${btn(t('Cancel'), undefined, () => ed.polyCancel(), { text: true, size: 'md' })}
+      ${btn(t('OK'), undefined, () => ed.polyOk(), { text: true, size: 'md', variant: 'primary' })}
+    </div>
+  </mc-ui-window>`;
 }
 
 function pointFields(ed: McSvgEditor, prefix: string, field?: string, back?: () => void): TemplateResult | typeof nothing {

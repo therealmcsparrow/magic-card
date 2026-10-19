@@ -170,7 +170,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** What the toast's action button does (the toast itself is the kit's <mc-ui-toast>). */
   private toastRun?: () => void;
   pvOpen = false;
-  dlg: 'save' | 'help' | 'single' | undefined;
+  dlg: 'save' | 'help' | 'single' | 'poly' | undefined;
   /** Dual-tone switch (session state): on also whenever a layer paints Accent. */
   dual = false;
   /** The export / import panel (preset-transfer 1.0.0), loaded through window.MagicCard.loadTransfer(). */
@@ -818,12 +818,43 @@ export class McSvgEditor extends LitElement implements StageHost {
     } else this.gridMsg = { text: t('Use 0.1 to 12.'), error: true };
   }
 
+  /** The polygon window's way back: the options and the tool as they were when it opened. */
+  private polyBack?: { opts: ToolOpts; tool: Tool };
+
+  /** The Polygon tool asks for its corner count in a window (never in a row that would resize the canvas). */
+  private askPolygon(from: Tool): void {
+    this.polyBack = { opts: this.opts, tool: from };
+    this.dlg = 'poly';
+  }
+
+  polyOk(): void {
+    this.polyBack = undefined;
+    this.dlg = undefined;
+    void this.updateComplete.then(() => this.canvas()?.focus({ preventScroll: true }));
+  }
+
+  polyCancel(): void {
+    if (this.dlg !== 'poly') return;
+    const b = this.polyBack;
+    this.polyBack = undefined;
+    this.dlg = undefined;
+    if (b) {
+      this.opts = b.opts;
+      this.setTool(b.tool);
+    }
+  }
+
   setTool(t: Tool): void {
     if (t === 'shapes') this.picker = true;
     else this.picker = false;
-    if (this.tool === t) return;
+    if (this.tool === t) {
+      if (t === 'polygon' && !this.dlg) this.askPolygon(t);
+      return;
+    }
+    const from = this.tool;
     this.gestures.reset();
     this.tool = t;
+    if (t === 'polygon') this.askPolygon(from);
     this.cvSel = undefined;
     this.doc = { ...this.doc };
     if (t === 'node' && !this.sel.length && this.doc.shapes.length) this.sel = [this.doc.shapes[this.doc.shapes.length - 1].id];
@@ -1142,7 +1173,8 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-pv]')?.focus());
       return;
     }
-    if (this.dlg) this.dlg = undefined;
+    if (this.dlg === 'poly') this.polyCancel();
+    else if (this.dlg) this.dlg = undefined;
     else if (this.leaving) this.leaving = false;
     else if (this.overlay) this.overlay = false;
     else if (this.renaming) this.renaming = undefined;
@@ -1378,7 +1410,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** A window, popover or confirmation is open: the layer's own keys wait. */
   get modal(): boolean {
-    return this.startOpen || this.newAsk || this.leaving || !!this.xfer || this.dlg === 'save' || this.dlg === 'single';
+    return this.startOpen || this.newAsk || this.leaving || !!this.xfer || this.dlg === 'save' || this.dlg === 'single' || this.dlg === 'poly';
   }
 
   // ── events out ──
@@ -1826,6 +1858,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       if (w.open) continue;
       w.show();
       // after the window's own focus step: the Save name is selected for typing over
+      if (this.dlg === 'poly') void (w as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() => this.renderRoot.querySelector<HTMLInputElement>('#o-sides')?.select());
       if (this.dlg === 'save') void (w as unknown as { updateComplete: Promise<unknown> }).updateComplete.then(() => this.renderRoot.querySelector<HTMLInputElement>('#save-name')?.select());
     }
     for (const p of this.renderRoot.querySelectorAll<UiPopoverElement>('mc-ui-popover')) {
