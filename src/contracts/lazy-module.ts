@@ -3,7 +3,7 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.1.0 (Architect-owned). ADR 0024.
+ * Contract: lazy modules and lazy card chunks. Version 1.2.0 (Architect-owned). ADR 0024.
  * Epic D (brief 23-product-manager.md): swiper, the seasonal decoration set, `marked` + markdown and
  * the rarely used modules leave magic-card.js. One mechanism: lazy entries in the module registry,
  * plus the same chunk helper for the seasonal elements (the existing loader pattern).
@@ -13,6 +13,12 @@ import type { MagicModule } from '../modules/module-types';
  * are unchanged.
  * 2026-10-19 (text only, version unchanged; code review 153): the typing sentence in "Build-checked
  * older chunks" now says which loaders still cast instead of claiming that none do.
+ * 1.2.0 (2026-10-19, additive; background-layers, ADR 0038, bg-stack 1.0.0): chunk 'layers'
+ * (magic-card-layers.js, entry src/layers/stack/chunk.ts) defines <mc-bg-stack>; it serves no module
+ * type, like 'seasonal'. Prefetch: when the config has a non-empty card `background_layers` (also in
+ * a conditional_appearance override); loaded on demand when the card renders <mc-bg-stack>.
+ * Merge note: task flow-slider-styles adds chunk 'flow-look' as 1.2.0 on its branch (flow-look 1.0.0).
+ * Whichever branch merges second renumbers its entry to 1.3.0 and keeps both chunks.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -78,7 +84,8 @@ import type { MagicModule } from '../modules/module-types';
  * skipped), collecting module `type`s with a lazy entry, and load() of each needed chunk at once, so
  * nested lazy modules never wait on their parent (no waterfall). The seasonal chunk is prefetched
  * when the config has a `seasonal` setting or a seasonal animation preset, and loaded on demand by
- * card-decorations.ts whenever it renders <mc-seasonal> / <mc-seasonal-deco>.
+ * card-decorations.ts whenever it renders <mc-seasonal> / <mc-seasonal-deco>. (1.2.0) The layers
+ * chunk likewise for `background_layers` and <mc-bg-stack>.
  *
  * ── Editors ──
  * The editor chunk, the studio and the theme editor never import a *-view.ts file or a chunk entry
@@ -91,16 +98,17 @@ import type { MagicModule } from '../modules/module-types';
  * renderPreview tests keep their synchronous output).
  */
 
-export const LAZY_MODULE_CONTRACT = '1.1.0';
+export const LAZY_MODULE_CONTRACT = '1.2.0';
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'layers';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
   seasonal: 'magic-card-seasonal.js',
   markdown: 'magic-card-markdown.js',
   'modules-extra': 'magic-card-modules-extra.js',
+  layers: 'magic-card-layers.js',
 };
 
 /**
@@ -113,10 +121,11 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   seasonal: 81_920,
   markdown: 57_344,
   'modules-extra': 45_056,
+  layers: 16_384,
 };
 
-/** Which module types each chunk serves (seasonal serves no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal and layers serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'layers'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],

@@ -4,7 +4,7 @@ import type { EntitySourceInfo } from './entity-scope';
 import type { TransferChunk } from './preset-transfer';
 
 /*
- * Contract: per-module editors. Version 1.2.0 (Architect-owned). ADR 0007, ADR 0022.
+ * Contract: per-module editors. Version 1.3.0 (Architect-owned). ADR 0007, ADR 0022.
  *
  * Seam: dashboard module classes (src/modules/**) keep metadata, createDefault, renderPreview,
  * validate, hints, migrate and getDependencies. Settings tabs are ModuleEditor entries in the editor
@@ -49,10 +49,20 @@ import type { TransferChunk } from './preset-transfer';
  *   renderEntityField); for every other editor the registry puts the field in front of General. Callers
  *   that pass no scope get the plain entity field and `config.entity`, as in 1.1.0.
  *
+ * - (1.3.0, additive, 2026-10-19, background-layers, layer-placement 1.0.0) The design tab of every
+ *   module starts with the Placement group and, for background / overlay, the Layer group
+ *   (03-ui-ux-designer.md sections 2-3). They edit the module's top-level `placement` and `layer`
+ *   keys, never `design`, and are not shown in the Hover view or inside conditional design rules.
+ *   The registry draws them in front of the design tab for every editor (default or own `design`),
+ *   so no ModuleEditor changes; an editor that must hide them sets `layerGroups: false` (none does in
+ *   1.3.0). Implementation: src/editor/layers/layer-groups.ts `renderLayerGroups(config, hass,
+ *   onChange, ctx)`, with `ctx.siblings` (in-flow sibling count, for the video-bg implicit state and
+ *   the in-flow fallback hint) and `ctx.canHoist` (offer fill row / card). The inspector supplies ctx.
+ *
  * Types only (0 B), apart from the constants below.
  */
 
-export const MODULE_EDITOR_CONTRACT = '1.2.0';
+export const MODULE_EDITOR_CONTRACT = '1.3.0';
 
 /** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
 export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];
@@ -73,12 +83,24 @@ export type ModuleTabRender = (
   scope?: EntitySourceInfo,
 ) => TemplateResult;
 
+/** (1.3.0) What the inspector knows about the module's place, for the Placement / Layer groups. */
+export interface LayerGroupContext {
+  /** Visible in-flow siblings in the same container. */
+  siblings: number;
+  /** fill: row / card may be offered (module directly in a card grid or row module column). */
+  canHoist: boolean;
+  /** Position among the container's backgrounds or overlays, for "Background layer 2 of 3". */
+  rank?: { index: number; count: number };
+}
+
 export interface ModuleEditor {
   type: ModuleType;
   /** Tabs in display order; missing = DEFAULT_MODULE_TABS. */
   tabs?: readonly EditorTab[];
   /** (1.2.0) true: General draws the entity field itself; absent: the registry puts it in front. */
   entityField?: true;
+  /** (1.3.0) false: no Placement / Layer groups on the design tab. Absent = shown. */
+  layerGroups?: false;
   general: ModuleTabRender;
   actions?: ModuleTabRender;
   conditions?: ModuleTabRender;
@@ -96,5 +118,7 @@ export interface ModuleEditorRegistry {
     onChange: (m: CardModule) => void,
     template?: string,
     scope?: EntitySourceInfo,
+    /** (1.3.0) Placement / Layer group context; absent: the groups are not drawn. */
+    layers?: LayerGroupContext,
   ): TemplateResult;
 }
