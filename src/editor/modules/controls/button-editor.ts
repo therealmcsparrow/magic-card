@@ -22,7 +22,7 @@ import { attributeCaption, renderEntitySourceField, withEntityKey } from '../../
 function withEntity(config: CardModule, entity: string | undefined, current: string | undefined): CardModule {
   const c = config as ButtonModuleConfig;
   const isNew = !current && c.actions === undefined;
-  return isNew && entity ? { ...c, entity, actions: defaultButtonActions(entity) } : withEntityKey(c, entity);
+  return isNew && entity && entity !== 'none' ? { ...c, entity, actions: defaultButtonActions(entity) } : withEntityKey(c, entity);
 }
 
 export const buttonEditor: ModuleEditor = {

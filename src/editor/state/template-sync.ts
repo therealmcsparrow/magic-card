@@ -103,6 +103,8 @@ export function wrapOnChangeWithSync(
       if (skipKeys.has(key)) continue;
       if (newRec[key] !== oldRec[key]) notSynced.add(key);
     }
+    // a removed entity (Same as card) must stay removed: the merge restores the template's unless it is marked
+    if (oldRec.entity !== undefined && !('entity' in newRec)) notSynced.add('entity');
 
     newRec.not_synced = Array.from(notSynced);
     onChange(updated);
