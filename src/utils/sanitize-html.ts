@@ -4,6 +4,8 @@
  * unknown tags (their text stays) and drops dangerous ones with their content.
  */
 
+import { declarations, tokenize, type Tok } from './css-tokens';
+
 const ALLOWED_TAGS = new Set([
   'a', 'abbr', 'b', 'blockquote', 'br', 'caption', 'center', 'code', 'col', 'colgroup', 'dd', 'del', 'details',
   'div', 'dl', 'dt', 'em', 'figcaption', 'figure', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'input',
@@ -40,8 +42,6 @@ const TAG_ATTRS: Record<string, Set<string>> = {
 const URL_ATTRS = new Set(['href', 'src']);
 const SAFE_SCHEMES = new Set(['http', 'https', 'mailto', 'tel']);
 const SAFE_DATA_IMAGE = /^data:image\/(png|gif|jpe?g|webp|avif|bmp);/i;
-/** Anything that could load a resource, run script or hide obfuscation: the whole style attribute goes. */
-const UNSAFE_STYLE = /url\s*\(|expression\s*\(|javascript:|vbscript:|@import|behavior\s*:|-moz-binding|\\|\/\*|[<>]/i;
 /**
  * Style properties an entity state or template may set: text, colour, box and border. Nothing that
  * takes an element out of its flow (position, inset, top / left, z-index, transform, float), so
@@ -59,36 +59,108 @@ const SAFE_STYLE_PROPS = new RegExp(
     ].join('|') +
     ')$',
 );
-/** Image functions (image-set, image(), cross-fade, element(), paint()) load or show other content. */
-const UNSAFE_STYLE_VALUE = /(image|image-set|cross-fade|element|paint|src)\s*\(/i;
-const VIEWPORT_UNIT = /\d\s*(vw|vh|vmin|vmax|[sld]v[wh])\b/i;
-const NEGATIVE = /(^|[\s(,])-\s*[\d.]/;
-const SAFE_DISPLAY = new Set(['none', 'inline', 'block', 'inline-block']);
+/** Longest style attribute looked at (proj.M3): a longer one is dropped before it is tokenized. */
+const MAX_STYLE = 4096;
+const SAFE_DISPLAY = /^(none|inline|block|inline-block)$/i;
 const MIN_OPACITY = 0.3;
+/** No viewport or container units: they size a box to the whole dashboard. */
+const SAFE_UNITS = /^(px|em|rem|ex|ch|pt|pc|cm|mm|in|q|lh|rlh|cap|ic|deg|grad|rad|turn)$/;
+/** Anything else (url, image, image-set, cross-fade, element, paint, src, expression, env, attr, unknown) is dropped. */
+const SAFE_FUNCTIONS =
+  /^(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark|var|calc|min|max|clamp|(-webkit-)?(repeating-)?(linear|radial|conic)-gradient)$/;
+const STRING_PROPS = /^(font|font-family|list-style-type)$/;
+const SAFE_HASH = /^#[\da-f]{3,8}$/i;
 
-function safeDeclaration(prop: string, value: string): boolean {
-  if (!value || !SAFE_STYLE_PROPS.test(prop) || UNSAFE_STYLE_VALUE.test(value)) return false;
-  if ((value.split('"').length - 1) % 2 || (value.split("'").length - 1) % 2) return false;
-  // No viewport-sized boxes and no negative margins pulling content over its neighbours.
-  if (VIEWPORT_UNIT.test(value) || (prop.startsWith('margin') && NEGATIVE.test(value))) return false;
-  if (prop === 'display') return SAFE_DISPLAY.has(value.toLowerCase());
-  if (prop === 'opacity') {
-    const n = value.endsWith('%') ? parseFloat(value) / 100 : parseFloat(value);
-    return Number.isFinite(n) && n >= MIN_OPACITY;
+/** Whether one value token may be re-emitted. prev is the token before it, without whitespace. */
+function safeToken(tok: Tok, prop: string, prev?: Tok): boolean {
+  switch (tok.t) {
+    case 'num': case 'pct': case 'comma':
+      return true;
+    case 'id':
+      return !tok.s.startsWith('--') || (prev?.t === 'fn' && prev.v === 'var');
+    case 'dim':
+      return SAFE_UNITS.test(tok.v!);
+    case 'sym':
+      return SAFE_HASH.test(tok.s);
+    case 'delim':
+      return '/+-*'.includes(tok.s);
+    case 'fn':
+      return SAFE_FUNCTIONS.test(tok.v!);
+    case 'open':
+      return tok.s === '(';
+    case 'close':
+      return tok.s === ')';
+    case 'str':
+      return STRING_PROPS.test(prop) && !/[<>]/.test(tok.s);
+    default:
+      return false; // at-keyword, colon, CDO, CDC, comment
   }
-  return true;
 }
 
-/** The allowed declarations of a style attribute ('' when none is left). */
+const MARGIN_KEYWORD = /^(auto|inherit|initial|unset|revert|revert-layer)$/i;
+const MARGIN_MATH = /^(calc|min|max|clamp)$/;
+/**
+ * Margin allow-list: unsigned numbers, lengths and percentages, keywords, and calc/min/max/clamp
+ * made only of unsigned operands with + * / operators. Inside math there is no `-`, ident (infinity, -infinity, nan)
+ * or var() (a custom property can hold a negative value), so the result cannot be negative.
+ */
+function safeMargin(value: Tok[]): boolean {
+  let math = 0;
+  for (const t of value) {
+    if (t.t === 'num' || t.t === 'dim' || t.t === 'pct') {
+      if (t.s[0] === '-') return false;
+    } else if (math && (t.t === 'comma' || (t.t === 'delim' && '+*/'.includes(t.s)) || t.t === 'open')) {
+      if (t.t === 'open') math++;
+    } else if (math && t.t === 'close') math--;
+    else if (t.t === 'fn' && MARGIN_MATH.test(t.v!)) math++;
+    else if (math) return false;
+    else if (t.t === 'id' && MARGIN_KEYWORD.test(t.s)) continue;
+    else return false;
+  }
+  return !math;
+}
+
+/** The declaration rebuilt as `prop: value` from its own tokens, or '' when any part is not allowed. */
+function safeDeclaration(toks: Tok[]): string {
+  const sig = toks.filter((t) => t.t !== 'ws');
+  const [name, colon] = sig;
+  if (name?.t !== 'id' || name.s.startsWith('--') || colon?.t !== 'colon') return '';
+  const prop = name.s.toLowerCase();
+  if (!SAFE_STYLE_PROPS.test(prop)) return '';
+  let body = toks.slice(toks.indexOf(colon) + 1);
+  let important = '';
+  const last = sig[sig.length - 1];
+  const before = sig[sig.length - 2];
+  if (last.t === 'id' && last.s.toLowerCase() === 'important' && before.t === 'delim' && before.s === '!') {
+    body = body.slice(0, body.lastIndexOf(before));
+    important = ' !important';
+  }
+  const value = body.filter((t) => t.t !== 'ws');
+  if (!value.length) return '';
+  for (let i = 0; i < value.length; i++) if (!safeToken(value[i], prop, value[i - 1])) return '';
+  // Rules on top of the token list: no negative margins, a visible opacity, a few display values.
+  if (prop.startsWith('margin') && !safeMargin(value)) return '';
+  if (prop === 'display' && !(value.length === 1 && SAFE_DISPLAY.test(value[0].s))) return '';
+  if (prop === 'opacity') {
+    const one = value.length === 1 && (value[0].t === 'num' || value[0].t === 'pct') ? value[0] : null;
+    if (!one || !(parseFloat(one.s) / (one.t === 'pct' ? 100 : 1) >= MIN_OPACITY)) return '';
+  }
+  return `${prop}: ${body.map((t) => (t.t === 'ws' ? ' ' : t.s)).join('').trim()}${important}`;
+}
+
+/**
+ * The allowed declarations of a style attribute ('' when none is left). Allow-list, not block-list: the
+ * input is tokenized like a browser does (strings, escapes, comments, brackets), and the output is rebuilt
+ * from the allowed tokens only, so what the browser parses later is exactly what was checked here.
+ * Threats: url() and image functions that load a resource (also hidden by escapes or comments), an unclosed
+ * string or paren that swallows the next declaration, overlays through viewport units and negative margins.
+ */
 export function sanitizeStyle(style: string): string {
-  if (UNSAFE_STYLE.test(style)) return '';
+  if (style.length > MAX_STYLE) return '';
   const kept: string[] = [];
-  for (const decl of style.split(';')) {
-    const colon = decl.indexOf(':');
-    if (colon < 0) continue;
-    const prop = decl.slice(0, colon).trim().toLowerCase();
-    const value = decl.slice(colon + 1).trim();
-    if (safeDeclaration(prop, value)) kept.push(`${prop}: ${value}`);
+  for (const decl of declarations(tokenize(style))) {
+    const out = decl.bad ? '' : safeDeclaration(decl.toks);
+    if (out) kept.push(out);
   }
   return kept.join('; ');
 }

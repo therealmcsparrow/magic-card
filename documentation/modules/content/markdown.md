@@ -24,6 +24,19 @@ Renders Markdown, with Home Assistant templates.
 -   A single line break becomes a line break.
 -   HTML in the content is sanitised against an allow list. Common text, list, table, image and link tags stay, as do `ha-icon` and `ha-alert`. Scripts, styles, iframes, forms, SVG, audio and video are removed with their content. Other unknown tags are removed but their text stays.
 
+### Styles in HTML
+
+A `style` attribute keeps only the declarations that are on an allow list. The others are dropped one by one, and the rest of the attribute stays.
+
+-   Properties: colour, background, opacity, display, text and font settings, line height, spacing, margin, padding, width and height (also min and max), borders and border radius, gap, vertical-align, white-space, word-break and list-style-type.
+-   Values: keywords, numbers, percentages, colours (`#rgb`, `rgb()`, `hsl()`, `oklch()` and the other colour functions), `var()`, `calc()`, `min()`, `max()`, `clamp()` and gradients. Lengths use absolute or font-relative units. Units that follow the screen (`vw`, `vh` and the like) and container units are not allowed.
+-   Strings (`"..."`) are allowed in `font`, `font-family` and `list-style-type` only.
+-   `url()`, `image()`, `image-set()` and the other functions that load or show other content are dropped, and so is any function not named above.
+-   A backslash escape or a comment drops its declaration, so a value such as `col/**/or` does nothing.
+-   `display` takes `none`, `inline`, `block` or `inline-block`. `opacity` must be 0.3 or higher.
+-   Margins take unsigned numbers, lengths and percentages, `auto`, the global keywords (`inherit`, `initial`, `unset`, `revert`, `revert-layer`), and `calc()`, `min()`, `max()` and `clamp()` built only from unsigned values with `+`, `*` and `/`. Negative values, constants such as `pi`, and `var()` are dropped. A custom property can be negative, so `margin: var(--x)` is no longer kept.
+-   A style longer than 4,096 characters is dropped as a whole.
+
 ## Templates
 
 The content is a Home Assistant template. Home Assistant renders it and the module updates when the result changes.
