@@ -3,6 +3,7 @@ import type { FlowGeometry } from '../utils/flow-geometry';
 import type { FlowLookParts, FlowLookQuality, FlowLookRenderOptions, FlowWithLook } from '../contracts/flow-look';
 import { at, fmt } from './sampler';
 import { flowLookRegistry, unmix, type LineCtx } from './registry';
+import { arrivalWanted } from './arrival';
 import { cable } from './lines/cable';
 import { double, dashed, dotted, solid } from './lines/plain';
 import { neon } from './lines/neon';
@@ -24,7 +25,10 @@ export function bubblesWanted(f: FlowWithLook, quality: FlowLookQuality): number
 
 /** Moving elements this flow asks for (slot.requested): travelling shapes plus bubbles. */
 export function wanted(f: FlowWithLook, geo: FlowGeometry, reduced: boolean, quality: FlowLookQuality): number {
-  return reduced || !flowing(f) ? 0 : flowLookRegistry.shapes.requested(f, geo, quality) + bubblesWanted(f, quality);
+  if (reduced || !flowing(f)) return 0;
+  const shapes = flowLookRegistry.shapes.requested(f, geo, quality);
+  // the arrival ring / splash only plays when shapes arrive, and counts toward the card budget
+  return shapes + bubblesWanted(f, quality) + (shapes > 0 ? arrivalWanted(f, quality) : 0);
 }
 
 /** Reduced motion and direction: a 14 px chevron every 160 px (one at 55 % on lines under 160 px). */
