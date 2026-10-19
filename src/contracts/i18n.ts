@@ -247,6 +247,7 @@ export const I18N_MODULES = {
   'mcu-panel': { bundle: 'magic-card-utils www/magic_card_utils_panel.js', folders: ['magic-card-utils/custom_components/magic_card_utils/www'], tables: 'inline', status: 'complete', slice: 'I9', dashboard: false },
   'icon-library': { bundle: 'magic-card-icon-library.js, magic-card-icon-animator.js', folders: ['src/icon-anim/library', 'src/icon-anim/library.ts'], tables: 'chunk', chunk: 'magic-card-i18n-icons.js', status: 'complete', slice: 'I10', dashboard: false },
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
+  'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;

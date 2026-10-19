@@ -13,6 +13,7 @@ import { numericControl } from '../../../utils/entity-control';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
+import '../../components/slider-look-host';
 
 const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
@@ -37,6 +38,7 @@ export const sliderEditor: ModuleEditor = {
         ${renderNumberField(t('Step'), c.step, (v) => onChange({ ...c, step: optional(v) }), { optional: true, min: 0, placeholder: own ? String(own.step) : '1' }, 'step', syncCtx)}
         ${renderFieldHint(t("Empty: the entity's own range and step. Min and max can only narrow that range."))}
         ${renderToggleField(t('Show value'), c.show_value !== false, (v) => onChange({ ...c, show_value: v }), 'show_value', syncCtx)}
+        ${renderFieldHint(t('Same as Where in Look.'))}
         ${renderSelectField(
           t('Direction'),
           c.direction,
@@ -48,8 +50,14 @@ export const sliderEditor: ModuleEditor = {
           'direction',
           syncCtx,
         )}
-        ${renderColorField(t('Slider colour'), c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx)}
+        ${c.use_entity_color
+          ? html`<div class="mc-field">
+              <div class="field-head"><span class="lbl">${t('Slider colour')}</span></div>
+              <p class="help">${t('Following the light')} <button type="button" class="btn sm ghost" @click=${() => onChange({ ...c, use_entity_color: undefined })}>${t('Use own colour')}</button></p>
+            </div>`
+          : renderColorField(t('Slider colour'), c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx)}
         ${renderColorField(t('Track colour'), c.track_color, (v) => onChange({ ...c, track_color: v || undefined }), 'track_color', syncCtx)}
+        <mc-slider-look-host .config=${c} .hass=${hass} .template=${template} .entity=${eid} .onChange=${(next: SliderModuleConfig) => onChange(next)}></mc-slider-look-host>
       </div>
     `;
   },

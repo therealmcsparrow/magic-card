@@ -366,10 +366,14 @@ export class FlowsEditor extends LitElement {
     `;
   }
 
-  private _color(index: number, f: FlowConfig, key: 'color' | 'idle_color', label: string): TemplateResult {
-    // same source as the resolver: the flow's entity, else the From module's
+  /** The colour an 'entity' colour shows: same source as the resolver, the flow's entity, else the From module's. */
+  private _entityColor(f: FlowConfig): string {
     const entity = f.entity || (this.config && typeof f.from === 'string' ? flowModuleEntities(this.config).get(f.from) : undefined) || '';
-    const entityColor = entity ? entityStateColor(this.hass?.states?.[entity]) ?? '' : '';
+    return entity ? entityStateColor(this.hass?.states?.[entity]) ?? '' : '';
+  }
+
+  private _color(index: number, f: FlowConfig, key: 'color' | 'idle_color', label: string): TemplateResult {
+    const entityColor = this._entityColor(f);
     return this._keyField(
       index,
       f,
@@ -444,6 +448,7 @@ export class FlowsEditor extends LitElement {
         .flow=${f}
         .hass=${this.hass}
         .flowKey=${key}
+        .entityColor=${this._entityColor(f)}
         .budget=${this.budget}
         .open=${this._lookOpen(key)}
         .onToggle=${(name: string) => this._setSection(key, `look:${name}`, !this._lookOpen(key).has(name))}

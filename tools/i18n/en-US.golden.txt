@@ -65,6 +65,7 @@ card-editor	Up to 32 KB. Parts with fill="currentColor" take the icon colour, pa
 card-editor	Use a hex colour, rgb(a) or var(--name).	Use a hex color, rgb(a) or var(--name).
 card-editor	Use entity colour	Use entity color
 card-editor	Use entity colour wins while the entity has a state colour; this colour applies otherwise.	Use entity color wins while the entity has a state color; this color applies otherwise.
+card-editor	Use own colour	Use own color
 card-editor	Use the entity's state colour	Use the entity's state color
 card-editor	colour	color
 card-editor	colour temperature	color temperature
@@ -210,6 +211,32 @@ theme-editor	Warning colour	Warning color
 icon-library	Centre	Center
 icon-library	Centre bulb	Center bulb
 icon-library	LED strip colour chase	LED strip color chase
+look-editor	Auto works with brightness and colour temperature sliders.	Auto works with brightness and color temperature sliders.
+look-editor	Auto, from the light's colour	Auto, from the light's color
+look-editor	Border colour	Border color
+look-editor	Brightness: dark to bright in the slider colour. Colour temperature: warm to cool.	Brightness: dark to bright in the slider color. Color temperature: warm to cool.
+look-editor	Centre	Center
+look-editor	Centre needs a vertical slider.	Center needs a vertical slider.
+look-editor	Colour	Color
+look-editor	Colour mode	Color mode
+look-editor	Colour ranges	Color ranges
+look-editor	Colour source: {source}.	Color source: {source}.
+look-editor	Core colour	Core color
+look-editor	End colour	End color
+look-editor	Falls back to Slider colour when the light has no colour.	Falls back to Slider color when the light has no color.
+look-editor	Gradient, light's colour to end colour	Gradient, light's color to end color
+look-editor	Idle colour	Idle color
+look-editor	Light's colour	Light's color
+look-editor	Line end colour	Line end color
+look-editor	Only lights have a colour of their own.	Only lights have a color of their own.
+look-editor	Pick a sensor or device first: the colour follows its value.	Pick a sensor or device first: the color follows its value.
+look-editor	Shape colour	Shape color
+look-editor	Sheath colour	Sheath color
+look-editor	Slider colour	Slider color
+look-editor	The light's colour, if that is on, or Slider colour is where the fill starts. Gradient and Auto build on it.	The light's color, if that is on, or Slider color is where the fill starts. Gradient and Auto build on it.
+look-editor	The line takes the colour of the range the value falls in.	The line takes the color of the range the value falls in.
+look-editor	Use own colour	Use own color
+look-editor	Use the light's colour	Use the light's color
 theme-presets	Amber on blue-grey mirage.	Amber on blue-gray mirage.
 theme-presets	Clean Primer blues and neutral greys.	Clean Primer blues and neutral grays.
 theme-presets	Deep petrol and steel-grey with a coolant-cyan accent; copper at night.	Deep petrol and steel-gray with a coolant-cyan accent; copper at night.

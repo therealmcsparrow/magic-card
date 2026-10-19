@@ -1,6 +1,7 @@
 import type { HomeAssistant, FlowConfig, SliderModuleConfig } from '../types';
 import type { FlowBudget, FlowLookConfig } from './flow-look';
 import type { SliderLookConfig } from './slider-look';
+import type { MessageId } from './i18n';
 
 /*
  * Contract: look editors. Version 1.0.0 (Architect-owned). ADR 0037. Task flow-slider-styles.
@@ -94,10 +95,10 @@ export type SliderPresetId = 'minimal' | 'material' | 'neon' | 'glass' | 'big-fi
 
 export interface LookPreset<Id extends string, Keys> {
   id: Id;
-  /** en-GB message id (look-editor namespace). */
-  label: string;
-  /** (r2) en-GB message id of the one-line description ("Blue tube with drops and a rising level."). */
-  description: string;
+  /** en-GB message id (look-editor namespace): an m() mark, read with t(). */
+  label: MessageId;
+  /** (r2) en-GB message id of the one-line description ("Blue tube with drops and a rising level."), an m() mark. */
+  description: MessageId;
   /** (r2) Static 72 x 56 preview SVG markup in the preset's own colours (aria-hidden). */
   preview: string;
   values: Keys;
@@ -112,6 +113,8 @@ export interface FlowLookEditorElement extends HTMLElement {
   hass?: HomeAssistant;
   /** The flow's key on the card (flowKeys); used for the budget lookup and section state. */
   flowKey: string;
+  /** (r2, additive) CSS colour the swatch of an 'entity' colour shows (the host resolves the flow's entity, else the From module's). */
+  entityColor?: string;
   /** Requested / drawn / quality per flow key (quality = the card's tier). */
   budget?: FlowBudget;
   /** Open sections (inspector-owned) and their toggle. */

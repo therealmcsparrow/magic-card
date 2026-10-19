@@ -14,6 +14,7 @@
     "theme-editor": { "dir": "src/theme-editor/i18n", "roots": ["src/theme-editor"] },
     "icon-library": { "dir": "src/icon-anim/library/i18n", "roots": ["src/icon-anim/library", "src/icon-anim/library.ts"] },
     "preset-catalogue": { "dir": "src/preset-catalogue/i18n", "roots": ["src/preset-catalogue"] },
+    "look-editor": { "dir": "src/look-editor/i18n", "roots": ["src/look-editor"] },
     "theme-presets": { "dir": "src/theme-editor/presets/i18n", "roots": ["src/theme-editor/presets"] }
   }
 }
