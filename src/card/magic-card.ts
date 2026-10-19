@@ -50,6 +50,7 @@ import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../util
 import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
 import { childScope, effectiveEntity } from '../utils/entity-scope';
+import type { EntityScopeNode } from '../contracts/entity-scope';
 import { ModuleRegistry } from '../modules/module-registry';
 import { entityStateColor } from '../utils/entity-color';
 import { mergeTemplateWithOverrides } from '../services/template-merge';
@@ -329,7 +330,7 @@ export class MagicCard extends LitElement {
     // a row module's column renders like a card column (design, conditions, valign, editor slot path)
     renderColumn: (col, slot) => {
       const parent = this._pathStack[this._pathStack.length - 1];
-      return parent === undefined ? undefined : this._withEntity(this._scope, () => this._renderColumn(col as ColumnConfig, 0, slot, parent));
+      return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
     },
     childHidden: (child) => !this.editMode && this._withEntity(this._entityOf(child), () => this._isHidden(child)),
     uiState: <T>(key: string) => {
@@ -393,10 +394,12 @@ export class MagicCard extends LitElement {
       rows: [
         {
           id: generateId('row'),
+          share_entity: true,
           layout: '1',
           columns: [
             {
               id: generateId('col'),
+              share_entity: true,
               modules: [
                 {
                   id: generateId('text'),
@@ -989,7 +992,23 @@ export class MagicCard extends LitElement {
     return !!hidden || (!!display?.conditions?.length && !this._evaluateDisplay(display));
   }
 
+  /** A grid row / column: its own entity (design, ring, value background, animations, actions, conditions) and the scope below it. */
+  private _scoped<T>(node: EntityScopeNode, fn: (entity: string | undefined) => T): T {
+    const up = this._scope;
+    const entity = effectiveEntity(node, up);
+    this._scope = childScope(node, up);
+    try {
+      return this._withEntity(entity, () => fn(entity));
+    } finally {
+      this._scope = up;
+    }
+  }
+
   private _renderRow(row: RowConfig, ri: number): TemplateResult {
+    return this._scoped(row, (scope) => this._renderRowAt(row, ri, scope));
+  }
+
+  private _renderRowAt(row: RowConfig, ri: number, scope: string | undefined): TemplateResult {
     const hidden = this._isHidden(row);
     if (hidden && !this.editMode) {
       return html``;
@@ -998,7 +1017,6 @@ export class MagicCard extends LitElement {
     const gridTemplate = rowGridTemplate(row, DEFAULT_LAYOUT);
     const gap = row.gap || DEFAULT_GAP;
     const rowStyle = `grid-template-columns: ${gridTemplate}; gap: ${gap}${row.padding ? `; padding: ${row.padding}` : ''}`;
-    const scope = this._scope;
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
@@ -1010,7 +1028,7 @@ export class MagicCard extends LitElement {
     // row actions (not on the studio canvas) run on taps outside its modules' own actions and
     // controls. No role: a button role would hide the row's content from assistive tech. Focusable
     // (Enter / Space) only without interactive content of its own (set in updated()).
-    const actor: Actor = { actions: row.actions, entity: scope, inherited: true };
+    const actor: Actor = { actions: row.actions, entity: scope, inherited: scope !== row.entity };
     const hasActions = !this.editMode && hasRunnableActions(row.actions, scope);
     const own = (e: Event) => !this._isRowControlEvent(e);
 
@@ -1044,6 +1062,10 @@ export class MagicCard extends LitElement {
 
   /** A card column, or (`nested`: the row module's path) a row module's column. */
   private _renderColumn(col: ColumnConfig, ri: number, ci: number, nested?: string): TemplateResult {
+    return this._scoped(col, (scope) => this._renderColumnAt(col, ri, ci, nested, scope));
+  }
+
+  private _renderColumnAt(col: ColumnConfig, ri: number, ci: number, nested: string | undefined, scope: string | undefined): TemplateResult {
     const hidden = this._isHidden(col);
     if (hidden && !this.editMode) {
       return html``;
@@ -1051,7 +1073,6 @@ export class MagicCard extends LitElement {
 
     const gap = col.gap || (nested === undefined ? DEFAULT_GAP : NESTED_COLUMN_GAP);
     const colStyle = `gap: ${gap}${col.padding ? `; padding: ${col.padding}` : ''}`;
-    const scope = this._scope;
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);

@@ -13,7 +13,7 @@ const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg', 'entity
  * or (marked without a value) dropped (mutates `item`, a clone).
  */
 function keepLocal(item: object, local: object, marks: Set<string>): void {
-  for (const k of ['hidden', 'editor_name']) {
+  for (const k of ['hidden', 'editor_name', 'entity', 'share_entity']) {
     if (!marks.has(k)) continue;
     const v = (local as Record<string, unknown>)[k];
     if (v === undefined) delete (item as Record<string, unknown>)[k];

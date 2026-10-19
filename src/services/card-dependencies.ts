@@ -68,20 +68,21 @@ export function collectDependencies(config: MagicCardConfig, ctx: DependencyCont
   };
   const seen = new Set<unknown>();
 
-  const walk = (node: unknown, embedded = false, up?: string): void => {
+  const walk = (node: unknown, embedded = false, up?: string, grid = false): void => {
     if (!node || typeof node !== 'object' || seen.has(node)) return;
     seen.add(node);
     if (Array.isArray(node)) {
-      for (const n of node) walk(n, embedded, up);
+      for (const n of node) walk(n, embedded, up, grid);
       return;
     }
     const rec = node as Record<string, unknown>;
     // entity-scope: modules follow the same entity as the render (a module's own, a sharing layout's, the card's)
     const mod = !embedded && typeof rec.type === 'string' ? ModuleRegistry.get(rec.type as ModuleType) : undefined;
-    const below = mod ? childScope(rec, up) : up;
+    // a grid row / column (the elements of `rows` and `columns`) is a scope node like a layout module
+    const below = mod || grid ? childScope(rec, up) : up;
     for (const [key, value] of Object.entries(rec)) {
       if (ENTITY_KEYS.has(key)) addIds(value, entities);
-      if (value && typeof value === 'object') walk(value, embedded || key === 'card_config', below);
+      if (value && typeof value === 'object') walk(value, embedded || key === 'card_config', below, key === 'rows' || key === 'columns');
     }
     if (rec.type === 'time' && ('after' in rec || 'before' in rec)) interval(TIME_CONDITION_INTERVAL);
     // the Day and night animation preset follows the sun
