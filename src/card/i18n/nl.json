@@ -7,6 +7,7 @@
   "Config must be an object": "De configuratie moet een object zijn",
   "Config must have a rows array": "De configuratie moet een lijst met rijen (rows) bevatten",
   "Config must have a type": "De configuratie moet een type bevatten",
+  "Couldn't set {name}": "Kon {name} niet instellen",
   "Day": "Dag",
   "Day {n}": "Dag {n}",
   "Decrease {name}": "{name} verlagen",

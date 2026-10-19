@@ -7,6 +7,7 @@
   "Config must be an object": "Config must be an object",
   "Config must have a rows array": "Config must have a rows array",
   "Config must have a type": "Config must have a type",
+  "Couldn't set {name}": "Couldn't set {name}",
   "Day": "Day",
   "Day {n}": "Day {n}",
   "Decrease {name}": "Decrease {name}",
