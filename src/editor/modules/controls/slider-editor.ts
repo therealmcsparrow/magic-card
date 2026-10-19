@@ -3,30 +3,32 @@ import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { SliderModuleConfig } from '../../../types';
 import {
   renderToggleField,
-  renderEntityField,
-  renderSelectField,
+    renderSelectField,
   renderAttributeField,
   renderNumberField,
   renderColorField,
   renderFieldHint,
 } from '../../../utils/form-utils';
 import { numericControl } from '../../../utils/entity-control';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
 export const sliderEditor: ModuleEditor = {
   type: 'slider',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const syncCtx = buildSyncContext(config, template);
     const c = config as SliderModuleConfig;
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
+    const eid = entityFor(c, scope);
+    const stateObj = eid ? hass?.states[eid] : undefined;
     const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)}
         ${stateObj && own?.readOnly
           ? renderFieldHint(t('This value can only be shown: the entity (or this attribute) cannot be set from a slider.'))
           : nothing}

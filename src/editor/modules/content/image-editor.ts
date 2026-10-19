@@ -1,27 +1,30 @@
 import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { ImageModuleConfig } from '../../../types';
-import { renderTextField, renderToggleField, renderEntityField, renderAttributeField, renderSelectField, renderMediaField, renderFieldHint } from '../../../utils/form-utils';
+import { renderTextField, renderToggleField, renderAttributeField, renderSelectField, renderMediaField, renderFieldHint } from '../../../utils/form-utils';
 import { cssAspectRatio } from '../../../utils/media';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t, tc } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const imageEditor: ModuleEditor = {
   type: 'image',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as ImageModuleConfig;
+    const eid = entityFor(c, scope);
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
         ${!c.attribute
           ? renderToggleField(t('Use entity picture'), c.entity_picture, (v) =>
               onChange({ ...c, entity_picture: v }), 'entity_picture', syncCtx,
               t("Shows the entity's picture (person, image, camera, media player)."))
           : nothing}
-        ${renderAttributeField(t('Image from attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)}
-        ${c.entity && c.attribute ? renderFieldHint(t('The attribute holds the image URL; it replaces the entity picture and the image URL.')) : nothing}
-        ${!c.entity_picture && !(c.entity && c.attribute)
+        ${renderAttributeField(t('Image from attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)}
+        ${eid && c.attribute ? renderFieldHint(t('The attribute holds the image URL; it replaces the entity picture and the image URL.')) : nothing}
+        ${!c.entity_picture && !(eid && c.attribute)
           ? renderMediaField(t('Image URL'), c.image, (v) => onChange({ ...c, image: v }), hass, 'image', 'image', syncCtx)
           : nothing}
         ${renderTextField(t('Aspect ratio'), c.aspect_ratio === undefined ? undefined : String(c.aspect_ratio), (v) =>

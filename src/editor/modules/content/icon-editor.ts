@@ -1,20 +1,23 @@
 import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { IconModuleConfig } from '../../../types';
-import { renderUnitField, renderToggleField, renderEntityField, renderColorField, renderIconField, renderFieldHint } from '../../../utils/form-utils';
+import { renderUnitField, renderToggleField, renderColorField, renderIconField, renderFieldHint } from '../../../utils/form-utils';
 import { entityIcon } from '../../../utils/entity-icon';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const iconEditor: ModuleEditor = {
   type: 'icon',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as IconModuleConfig;
+    const eid = entityFor(c, scope);
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
         ${renderToggleField(t('Use entity icon'), c.use_entity_icon, (v) =>
           onChange({ ...c, use_entity_icon: v }), 'use_entity_icon', syncCtx)}
         ${renderToggleField(t('Use entity colour'), c.use_entity_color, (v) =>
@@ -24,10 +27,10 @@ export const iconEditor: ModuleEditor = {
           ? renderIconField(t('Icon'), c.icon, (v) => onChange({ ...c, icon: v }), hass, 'icon', syncCtx, { module: c, onModule: onChange })
           : nothing}
         ${renderIconFxEditor(c, hass, onChange, {
-          entity: c.entity,
-          icon: c.use_entity_icon ? entityIcon(hass, c.entity) || c.icon : c.icon || 'mdi:help',
+          entity: eid,
+          icon: c.use_entity_icon ? entityIcon(hass, eid) || c.icon : c.icon || 'mdi:help',
           allowSvg: !c.use_entity_icon,
-          allowStateIcons: !!c.entity,
+          allowStateIcons: !!eid,
           syncCtx,
         })}
         ${renderColorField(t('Icon colour'), c.icon_color, (v) => onChange({ ...c, icon_color: v || undefined }), 'icon_color', syncCtx, 'linear', t('The icon uses this gradient as its fill. Older tablets show the first colour.'))}

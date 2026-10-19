@@ -2,18 +2,20 @@ import { html } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { MarkdownModuleConfig } from '../../../types';
 import {
-  renderEntityField,
-  renderAttributeField,
+    renderAttributeField,
   renderTextareaField,
   renderFieldHint,
 } from '../../../utils/form-utils';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const markdownEditor: ModuleEditor = {
   type: 'markdown',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as MarkdownModuleConfig;
+    const eid = entityFor(c, scope);
     const syncCtx = buildSyncContext(config, template);
     return html`
       <div class="mc-tab-content">
@@ -31,8 +33,8 @@ export const markdownEditor: ModuleEditor = {
             entity: '{{ states(entity) }}',
           }),
         )}
-        ${renderEntityField(t('Entity (for templates)'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, c.entity, 'attribute', syncCtx)}
+        ${renderEntitySourceField(t('Entity (for templates)'), c, onChange, hass, scope, { syncCtx })}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx)}
       </div>
     `;
   },

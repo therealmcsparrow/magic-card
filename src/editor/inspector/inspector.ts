@@ -39,6 +39,7 @@ import {
   selectionToPath,
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
+import { resolveEntitySource } from '../entity-source';
 import { childListKey, replaceDescendant } from '../../utils/module-path';
 import { withEditorKey } from '../../utils/editor-key';
 import {
@@ -581,7 +582,7 @@ export class Inspector extends LitElement {
       const updateTop = wrapOnChangeWithSync(top, (m: CardModule) => sm.replaceModule(sel.row, sel.col, sel.module, m));
       onChange = (m: CardModule) => updateTop(replaceDescendant(top, sel.child!, m));
     }
-    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template));
+    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template, resolveEntitySource(config, sel)));
     return html`${this._renderChildListSync(config, sel)}${body}`;
   }
 

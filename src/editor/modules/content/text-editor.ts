@@ -6,12 +6,12 @@ import {
   renderTextField,
   renderToggleField,
   renderFieldHint,
-  renderEntityField,
-  renderAttributeField,
+    renderAttributeField,
   renderSegField,
 } from '../../../utils/form-utils';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t, m, tl, type MessageId } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 type EntityDisplay = NonNullable<TextModuleConfig['entity_display']>;
 
@@ -25,8 +25,10 @@ const TIMER_DISPLAY_OPTIONS = [...DISPLAY_OPTIONS, { label: m('Remaining'), valu
 
 export const textEditor: ModuleEditor = {
   type: 'text',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const c = config as TextModuleConfig;
+    const eid = entityFor(c, scope);
     const syncCtx = buildSyncContext(config, template);
 
     // "Use entity" hides the static Text field; its value stays in the config for switching back.
@@ -44,10 +46,10 @@ export const textEditor: ModuleEditor = {
           t("Shows an entity's state or name instead of the text."))}
         ${c.use_entity
           ? html`
-              ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
+              ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
               ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }),
-                hass, c.entity, 'attribute', syncCtx)}
-              ${renderSegField(t('Display'), c.entity_display, tl(isTimer(c.entity) || c.entity_display === 'remaining' ? TIMER_DISPLAY_OPTIONS : DISPLAY_OPTIONS),
+                hass, eid, 'attribute', syncCtx)}
+              ${renderSegField(t('Display'), c.entity_display, tl(isTimer(eid) || c.entity_display === 'remaining' ? TIMER_DISPLAY_OPTIONS : DISPLAY_OPTIONS),
                 (v) => onChange({ ...c, entity_display: v as EntityDisplay }), 'entity_display', syncCtx)}
             `
           : nothing}

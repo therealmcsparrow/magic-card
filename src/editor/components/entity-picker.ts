@@ -24,6 +24,11 @@ export class EntityPicker extends LitElement {
   @state() private _searchQuery = '';
   @state() private _selectedEntityId = '';
 
+  /** Moves keyboard focus into the entity id field. */
+  focusInput(): void {
+    this.renderRoot.querySelector<HTMLInputElement>('input')?.focus();
+  }
+
   private _openModal(): void {
     this._selectedEntityId = this.value;
     this._showModal = true;

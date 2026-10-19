@@ -3,8 +3,7 @@ import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { DropdownModuleConfig } from '../../../types';
 import {
   renderTextField,
-  renderEntityField,
-  renderAttributeField,
+    renderAttributeField,
   renderFieldHint,
   renderFieldHead,
 } from '../../../utils/form-utils';
@@ -15,16 +14,19 @@ import {
   validOptions,
   type DropdownOption,
 } from '../../../modules/controls/dropdown-module';
-import { buildSyncContext } from '../base-editor';
+import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
+import { renderEntitySourceField } from '../../components/entity-source';
 
 export const dropdownEditor: ModuleEditor = {
   type: 'dropdown',
-  general(config, hass, onChange, template) {
+  entityField: true,
+  general(config, hass, onChange, template, scope) {
     const syncCtx = buildSyncContext(config, template);
     const c = config as DropdownModuleConfig;
+    const eid = entityFor(c, scope);
     const options = normalizeOptions(c.options);
-    const stateObj = c.entity ? hass?.states[c.entity] : undefined;
+    const stateObj = eid ? hass?.states[eid] : undefined;
     const ad = stateObj ? adapterFor(stateObj, c.attribute) : undefined;
     const valid = validOptions(stateObj, ad, options);
     const write = (next: DropdownOption[]) => onChange({ ...c, options: next.length ? next : undefined });
@@ -39,12 +41,12 @@ export const dropdownEditor: ModuleEditor = {
     const updateOption = (index: number, key: 'label' | 'value', val: string) =>
       write(options.map((opt, i) => (i === index ? { ...opt, [key]: val } : opt)));
 
-    const attrs = dropdownAttributes(c.entity);
+    const attrs = dropdownAttributes(eid);
     return html`
       <div class="mc-tab-content">
-        ${renderEntityField(t('Entity'), c.entity, (v) => onChange({ ...c, entity: v }), hass, undefined, 'entity', syncCtx)}
+        ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
         ${attrs.length
-          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, c.entity, 'attribute', syncCtx)
+          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)
           : nothing}
         ${attrs.length
           ? renderFieldHint(t('Sets {attributes}; empty: {fallback}.', { attributes: attrs.join(', '), fallback: stateObj?.entity_id.startsWith('climate.') ? t('the HVAC mode') : attrs[0] }))
