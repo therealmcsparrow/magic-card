@@ -200,7 +200,24 @@ export function decodeCssEscapes(value: string): string {
     });
 }
 
-const URL_CALL_RE = /\burl\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*))\s*\)/gi;
+const URL_CALL_RE = /\burl\(([^)]*)\)/gi;
+const STRING_RE = /"([^"]*)"|'([^']*)'/g;
+const NET_START_RE = /^(?:\/[/\\]|(?:https?|wss?|ftp):)/i;
+/** Longest value checked; the import already drops values over 1,024 characters, a longer one is refused as suspicious. */
+const CHECK_MAX_CHARS = 4096;
+/** Leading and trailing control characters and spaces removed, the way a URL parser does (a loop: no backtracking on long runs). */
+function trimCtl(s: string): string {
+  let i = 0;
+  let j = s.length;
+  while (i < j && s.charCodeAt(i) <= 32) i++;
+  while (j > i && s.charCodeAt(j - 1) <= 32) j--;
+  return s.slice(i, j);
+}
+/** The argument of a url(): trimmed, one pair of quotes removed, trimmed again. */
+const urlArg = (raw: string): string => {
+  const t = trimCtl(raw);
+  return trimCtl(/^(["']).*\1$/s.test(t) ? t.slice(1, -1) : t);
+};
 // Network schemes only: card-mod CSS is full of "color: red" and a generic "word:" test would flag all of it.
 // Any other scheme can only be fetched through url() or image functions, which are checked below.
 const BARE_SCHEME_RE = /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):(?!\/\/)/i;
@@ -215,17 +232,20 @@ const SAFE_URL_RE = /^(?:#|\/(?!\/)|data:image\/)/i;
  */
 export function contactsOtherHost(value: string): boolean {
   // `\` and `/*` are refused outright: where a comment ends inside a string or url() is not worth reasoning about
-  if (value.includes('\\') || value.includes('/*')) return true;
+  if (value.length > CHECK_MAX_CHARS || value.includes('\\') || value.includes('/*')) return true;
   // browsers delete tab, CR and LF inside a URL: url("/<TAB>/evil.example") is //evil.example
   const v = decodeCssEscapes(value).replace(/[\t\r\n]/g, '');
   if (EXTERNAL_REF_RE.test(v) || BARE_SCHEME_RE.test(v) || /@import/i.test(v)) return true;
-  for (const m of v.matchAll(URL_CALL_RE)) {
-    if (!SAFE_URL_RE.test((m[1] ?? m[2] ?? m[3] ?? '').trim())) return true;
-  }
+  // a string can be built in one variable and used in another: image-set(var(--x) 1x). Any quoted string that
+  // starts like a host once control characters and spaces are gone is flagged, and so is an image function with var().
+  for (const s of v.matchAll(STRING_RE)) if (NET_START_RE.test(trimCtl(s[1] ?? s[2]))) return true;
+  const image = IMAGE_FN_RE.test(v) || /\burl\(/i.test(v);
+  if (image && /\bvar\(/i.test(v)) return true;
+  for (const m of v.matchAll(URL_CALL_RE)) if (!SAFE_URL_RE.test(urlArg(m[1]))) return true;
   const rest = v.replace(URL_CALL_RE, '');
   const at = rest.search(IMAGE_FN_RE);
   // image-set(), -webkit-image-set(), image(), src()...: every string after the function name must be safe, not only the first
-  return at >= 0 && [...rest.slice(at).matchAll(/"([^"]*)"|'([^']*)'/g)].some((s) => !SAFE_URL_RE.test((s[1] ?? s[2]).trim()));
+  return at >= 0 && [...rest.slice(at).matchAll(STRING_RE)].some((s) => !SAFE_URL_RE.test(trimCtl(s[1] ?? s[2])));
 }
 
 /** A value with a path on the sharer's own Home Assistant (info line only). */
