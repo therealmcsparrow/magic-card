@@ -1,5 +1,7 @@
 import type { LazyChunkName } from '../contracts/lazy-module';
+import { hasLayers } from '../layers/layer-slot';
 import { ModuleRegistry } from '../modules/module-registry';
+import type { CardModule } from '../types';
 import { getAnimationPreset } from './animation-presets';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
 
@@ -38,11 +40,12 @@ const wantsSeasonal = (node: unknown, visited = new Set<unknown>()): boolean => 
 
 const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
 
-/** The card has a backdrop: `background_layers`, or a conditional appearance rule that sets it. */
+/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it) or any layered module. */
 export function wantsLayers(config: unknown): boolean {
-  const c = config as { background_layers?: unknown; conditional_appearance?: unknown } | null;
+  const c = config as { background_layers?: unknown; conditional_appearance?: unknown; rows?: Array<{ columns?: Array<{ modules?: CardModule[] }> } | null> } | null;
   if (!c || typeof c !== 'object') return false;
   if (nonEmpty(c.background_layers)) return true;
+  if (Array.isArray(c.rows) && c.rows.some((r) => Array.isArray(r?.columns) && r!.columns!.some((col) => hasLayers(col?.modules ?? [])))) return true;
   const rules = c.conditional_appearance;
   return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
 }

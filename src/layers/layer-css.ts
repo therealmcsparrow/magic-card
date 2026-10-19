@@ -1,8 +1,6 @@
-import { css, unsafeCSS } from 'lit';
-
 /*
- * Layer CSS (contract layer-placement 1.0.0 r2). Part of magic-card.js, so written compact (no
- * template minifier runs on it). Chromium 85 floor: top / right / bottom / left, never the `inset`
+ * Layer CSS (contract layer-placement 1.0.0 r2). Part of the 'layers' chunk, handed to the card as
+ * text and injected once per shadow root as <style data-mc-layer-css>. Chromium 85 floor: top / right / bottom / left, never the `inset`
  * shorthand; no color-mix(). Nothing here animates: filter, offsets and background-position stay
  * still (spike S1). Every rule hangs on a data attribute the render hook sets only for layered
  * cards, so a card without layers is untouched.
@@ -18,10 +16,10 @@ import { css, unsafeCSS } from 'lit';
  *   (data-mc-path) keeps them to select. A wrapper with focus rises above the overlays.
  * - Low power: no blur, no blend; pictures, opacity and scrims stay.
  */
-const BOXES = unsafeCSS('.mc-column,.mc-row,.mc-horizontal,.mc-vertical,.mc-tabs-content,.mc-nested-row');
-const BG = unsafeCSS('.mc-module-wrapper[data-mc-placement=background]');
+const BOXES = '.mc-column,.mc-row,.mc-horizontal,.mc-vertical,.mc-tabs-content,.mc-nested-row';
+const BG = '.mc-module-wrapper[data-mc-placement=background]';
 
-export const layerStyles = css`
+export const LAYER_CSS = `
 ha-card[data-mc-layers]{isolation:isolate;display:flex;flex-direction:column}
 .mc-card-content[data-mc-layers],:is(${BOXES})[data-mc-layers]{position:relative;isolation:isolate}
 .mc-card-content[data-mc-layers]{flex:1 1 auto}

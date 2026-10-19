@@ -1,15 +1,15 @@
 import { LAYER_ANCHORS, LAYER_BLENDS, LEADING_ANCHORS, BLUR_MAX, MAX_OVERLAY_RANK, SCRIM_HOLD, SCRIM_DEFAULT_STRENGTH } from '../contracts/layer-placement';
 import type { Arranged, ArrangedChild, ArrangeOptions, ResolvedLayer, ScrimConfig } from '../contracts/layer-placement';
 import { safeColor } from '../utils/animation';
-import { childSlots } from '../utils/module-path';
+import { isLayered, placementOf } from './layer-slot';
 import type { CardModule } from '../types';
 
 /*
  * Layer placement (contract layer-placement 1.0.0 r2): which children of a container are in flow,
  * behind the others or on top, and what each wrapper gets. Pure: no lit, no DOM. Every value that
  * reaches an attribute or a style is clamped, matched against an allow-list or parsed from a strict
- * grammar here (proj.M2); nothing is copied from the config as text. Kept small: it is part of
- * magic-card.js (size budget in the contract).
+ * grammar here (proj.M2); nothing is copied from the config as text. Lives in the 'layers' chunk
+ * (src/layers/stack/chunk.ts hands it to the slot); only that entry imports this file.
  */
 
 const CARD_COLOR = 'var(--ha-card-background, var(--card-background-color, #fff))';
@@ -22,15 +22,6 @@ const clamp = (v: unknown, min: number, max: number, fallback: number): number =
   return typeof n === 'number' && isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
 };
 const pick = <T extends string>(list: readonly T[], v: unknown, fallback: T): T => (list.includes(v as T) ? (v as T) : fallback);
-
-/** `placement` as the module renders it: background / overlay, else undefined (flow, also unknown values). */
-const placementOf = (mod: unknown): 'background' | 'overlay' | undefined => {
-  const p = obj(mod).placement;
-  return p === 'background' || p === 'overlay' ? p : undefined;
-};
-
-/** The module sits behind others or on top (an explicit `placement`). */
-export const isLayered = (mod: unknown): boolean => !!placementOf(mod);
 
 /** An offset: a number (px) or "<n>px" / "<n>%", bounded; anything else is 0px. A centred axis may be negative. */
 function offset(v: unknown, signed: boolean): string {
@@ -135,14 +126,4 @@ export function arrange(children: readonly CardModule[], opts: ArrangeOptions): 
     hoisted,
     layered: live.length > 0,
   };
-}
-
-/** Any module, at any depth, sits behind others or on top (prefetch and CSS gating). */
-export function hasLayers(modules: readonly CardModule[], seen = new Set<unknown>()): boolean {
-  if (!Array.isArray(modules) || seen.size > 2000) return false;
-  return modules.some((m) => {
-    if (seen.has(m)) return false;
-    seen.add(m);
-    return isLayered(m) || (childSlots(m) ?? []).some((slot) => hasLayers(slot, seen));
-  });
 }

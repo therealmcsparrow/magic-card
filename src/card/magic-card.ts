@@ -37,7 +37,7 @@ import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
 import { particlesFailed } from '../anim-studio/compile';
 import { loadEditor } from '../utils/editor-loader';
-import { prefetchLazy } from '../utils/lazy-chunks';
+import { lazyChunks, prefetchLazy } from '../utils/lazy-chunks';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
@@ -75,7 +75,7 @@ import { animationLibrary, inlineAnimations } from '../services/animation-librar
 import type { AnimationDoc } from '../anim-studio/model';
 import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
 import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
-import { arrange, hasLayers, scanFills } from '../layers/placement';
+import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost } from '../layers/stack-host';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
@@ -316,6 +316,8 @@ export class MagicCard extends LitElement {
   private _pathStack: string[] = [];
   /** The card has background_layers or a layered module (layer-placement 1.0.0). */
   private _layerOn = false;
+  /** This card asked for a re-render when the layers chunk lands (once). */
+  private _layersAsked = false;
   /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
   private _frames: FillFrame[] = [];
   private _card: FillFrame = { flow: false, row: false, out: [] };
@@ -772,6 +774,7 @@ export class MagicCard extends LitElement {
     // layer-placement / bg-stack: the card backdrop, and whether any module sits behind others or on top
     const backdrop = Array.isArray(resolved.background_layers) && resolved.background_layers.length ? resolved.background_layers : undefined;
     const layered = this._beginLayers(config, !!backdrop);
+    const layerCss = layered && layerSlot.get() ? html`<style data-mc-layer-css>${layerSlot.get()!.css}</style>` : nothing;
     const lowPower = layered && resolved.layers_low_power;
     const stack = backdrop ? html`<mc-bg-stack .layers=${backdrop} .hass=${this.hass} .host=${this._stackHost}></mc-bg-stack>` : nothing;
     const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
@@ -793,10 +796,10 @@ export class MagicCard extends LitElement {
       : withShapeShadow(html`
           <ha-card style=${haCardStyle || nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            <div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+            ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
-              data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
+              data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${badge}
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}
           </ha-card>
@@ -816,12 +819,12 @@ export class MagicCard extends LitElement {
       ? html`
           <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${this._popup.renderHead(titleId)}
+            ${layerCss}${this._popup.renderHead(titleId)}
             <div class="mc-popup-body">
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
-                data-mc-flash=${flash ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
+                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
             </div>${renderRing(popupRing)}
           </ha-card>
         `
@@ -968,14 +971,22 @@ export class MagicCard extends LitElement {
     const any = !!config.rows?.some((r) => r?.columns?.some((c) => hasLayers(c?.modules)));
     this._layerOn = backdrop || any;
     this._card = { flow: false, row: false, out: [] };
-    if (any) this._card.flow = scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
+    const rt = layerSlot.get();
+    if (any && rt) this._card.flow = rt.scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
+    // slot empty: this render lays children out in config order; ask for one more when the chunk lands
+    if (this._layerOn && !rt && !this._layersAsked) {
+      this._layersAsked = true;
+      void lazyChunks.layers.load();
+      lazyChunks.layers.whenReady(() => this.requestUpdate());
+    }
     return this._layerOn;
   }
 
   /** A row, or a row module, is about to render its columns (undefined without layers). */
   private _pushFrame(lists: ReadonlyArray<CardModule[] | undefined>): FillFrame | undefined {
-    if (!this._layerOn) return undefined;
-    const { flow, row } = scanFills(lists, this._hid);
+    const rt = layerSlot.get();
+    if (!this._layerOn || !rt) return undefined;
+    const { flow, row } = rt.scanFills(lists, this._hid);
     const frame = { flow, row, out: [] };
     this._frames.push(frame);
     return frame;
@@ -988,8 +999,10 @@ export class MagicCard extends LitElement {
 
   /** A column's modules in layer-placement order (fill row / card allowed: it is a card or row module column). */
   private _arrangeKids(mods: CardModule[]): Arranged {
+    const rt = layerSlot.get();
+    if (!rt) return inFlow(mods);
     const frame = this._frames[this._frames.length - 1];
-    return arrange(mods, {
+    return rt.arrange(mods, {
       hidden: this._hid,
       hasActions: (c) => hasRunnableActions(c.actions, this._entityOf(c)),
       canHoist: true,
@@ -1197,6 +1210,8 @@ export class MagicCard extends LitElement {
       ctx.iconRig = outerRig;
     }
     const at = layer?.attrs;
+    // a layered module before the chunk lands is out of flow and invisible (LAYER_SYNC_CSS); after a failed load it is plain
+    const pending = !layer && isLayered(mod) && !layerSlot.get() && !lazyChunks.layers.failed();
     const media = layer?.media
       ? html`<div class="mc-layer-media">${content}</div>${layer.scrim ? html`<div class="mc-layer-scrim"></div>` : nothing}`
       : content;
@@ -1205,6 +1220,7 @@ export class MagicCard extends LitElement {
       <div
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
         data-mc-placement=${at?.['data-mc-placement'] ?? (mod.type === 'video-bg' && mod.placement === 'flow' ? 'flow' : nothing)}
+        data-mc-layer-pending=${pending ? '' : nothing}
         data-mc-anchor=${at?.['data-mc-anchor'] ?? nothing}
         data-mc-pass=${at?.['data-mc-pass'] ?? nothing}
         data-mc-blur=${at?.['data-mc-blur'] ?? nothing}

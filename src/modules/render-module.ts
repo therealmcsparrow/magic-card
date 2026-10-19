@@ -2,7 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import { ModuleRegistry } from './module-registry';
 import type { CardModule, HomeAssistant, ModuleType } from '../types';
 import { currentRenderContext } from '../services/render-context';
-import { arrange } from '../layers/placement';
+import { inFlow, layerSlot } from '../layers/layer-slot';
 import type { ArrangedChild, RenderChildren, ResolvedLayer } from '../contracts/layer-placement';
 import { t } from '../card/i18n';
 
@@ -67,11 +67,15 @@ export function renderChildModule(
  */
 export function layoutChildren(children: readonly CardModule[], hass: HomeAssistant | undefined, slot = 0): { layered: boolean; content: TemplateResult } {
   const ctx = currentRenderContext();
-  const a = arrange(children, {
-    hidden: (c) => !!ctx?.childHidden?.(c),
-    hasActions: (c) => !!ctx?.childHasActions?.(c),
-    canHoist: false,
-  });
+  const rt = layerSlot.get();
+  // slot empty (chunk loading or failed): config order, the card marks the layered wrappers pending
+  const a = rt
+    ? rt.arrange(children, {
+        hidden: (c) => !!ctx?.childHidden?.(c),
+        hasActions: (c) => !!ctx?.childHasActions?.(c),
+        canHoist: false,
+      })
+    : inFlow(children);
   const one = ({ child, index, layer }: ArrangedChild) => renderChildModule(child, hass, index, slot, layer);
   return { layered: a.layered, content: html`${a.front.map(one)}${a.backgrounds.map(one)}` };
 }
