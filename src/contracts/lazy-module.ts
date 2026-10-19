@@ -3,7 +3,7 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.1.0 (Architect-owned). ADR 0024.
+ * Contract: lazy modules and lazy card chunks. Version 1.2.0 (Architect-owned). ADR 0024.
  * Epic D (brief 23-product-manager.md): swiper, the seasonal decoration set, `marked` + markdown and
  * the rarely used modules leave magic-card.js. One mechanism: lazy entries in the module registry,
  * plus the same chunk helper for the seasonal elements (the existing loader pattern).
@@ -13,6 +13,13 @@ import type { MagicModule } from '../modules/module-types';
  * are unchanged.
  * 2026-10-19 (text only, version unchanged; code review 153): the typing sentence in "Build-checked
  * older chunks" now says which loaders still cast instead of claiming that none do.
+ * 1.2.0 (2026-10-19, additive; flow-slider-styles T1): LazyChunkName gains 'flow-look' and 'slider-look'
+ * (dist/magic-card-flow-look.js, dist/magic-card-slider-look.js). They serve no module type: each fills a
+ * slot from install() (src/card/flow-look-slot.ts, src/modules/controls/slider-look-slot.ts; contracts
+ * flow-look 1.0.0 and slider-look 1.0.0). prefetchLazy() loads flow-look when a `flows` entry has a look
+ * key (hasFlowLook) and slider-look when a `slider` module has one (hasSliderLook); same walk rules
+ * (nested children yes, `card_config` no). The background-layers run also claims 1.2.0 (chunk 'layers'):
+ * the second branch to merge renumbers to 1.3.0 and merges both lines here.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -91,16 +98,18 @@ import type { MagicModule } from '../modules/module-types';
  * renderPreview tests keep their synchronous output).
  */
 
-export const LAZY_MODULE_CONTRACT = '1.1.0';
+export const LAZY_MODULE_CONTRACT = '1.2.0';
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
   seasonal: 'magic-card-seasonal.js',
   markdown: 'magic-card-markdown.js',
   'modules-extra': 'magic-card-modules-extra.js',
+  'flow-look': 'magic-card-flow-look.js',
+  'slider-look': 'magic-card-slider-look.js',
 };
 
 /**
@@ -113,10 +122,12 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   seasonal: 81_920,
   markdown: 57_344,
   'modules-extra': 45_056,
+  'flow-look': 32_768,
+  'slider-look': 28_672,
 };
 
-/** Which module types each chunk serves (seasonal serves no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal, flow-look and slider-look serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],

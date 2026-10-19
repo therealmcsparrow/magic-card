@@ -1,6 +1,6 @@
 // Fails when a built dist/*.js grows past its budget, or when an unlisted .js file appears.
 // Budgets, set by the CEO on 2026-10-17 (sizes then in comments):
-// - magic-card.js, which every dashboard loads: B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
+// - magic-card.js, which every dashboard loads: 486,400 B (475 KiB), CEO 2026-10-19 (flow looks + background layers + pause button). Before: B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
 //   epic D (swiper, marked, the seasonal decorations and six rare modules moved into lazy chunks); CEO decision 2026-10-18.
 //   B1 = 679,875 B was the 2026.10.04 baseline.
 // - lazy chunks: the 2026.10.07 size + 5 %, rounded up to 1 KiB.
@@ -10,11 +10,10 @@ import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const B2 = 471_856;
 const CAPS = {
-  'magic-card.js': B2 + 8_192, // 480,048
+  'magic-card.js': 486_400, // 475 KiB, CEO 2026-10-19 (flow looks + background layers + pause button); was B2 + 8,192 = 480,048
   'magic-card-animation-studio.js': 996_352, // 973 KiB, CEO 2026-10-19 (fix round: lazy-loader version guards)
-  'magic-card-editor.js': 819_200, // 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
+  'magic-card-editor.js': 851_968, // 832 KiB, CEO 2026-10-19 (flow looks + background layers + pause button); was 819_200 (800 KiB, CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
   'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
   'magic-card-particles.js': 38_912, // 38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)
@@ -41,6 +40,9 @@ const CAPS = {
   'magic-card-markdown.js': 57_344, // 56 KiB, raised from 55,296 for the style allow-list tokenizer (CEO 2026-10-19)
   // preset transfer (T16, ADR 0022): codec + validators, <mc-transfer-panel>, <mc-library-view>. Cap and TRANSFER_CHUNK_CEILING are 63,488 B (62 KiB), CEO 2026-10-19 (js-yaml, sanitizeSvg, model.ts and the validators are NOT in it, see 33-frontend-engineer-t16.md)
   'magic-card-transfer.js': 63_488, // 62 KiB, CEO 2026-10-19 (fix rounds: URL checks, focus, thumbnail hook; measured 60,032)
+  // flow-slider-styles T1 stubs (empty install): placeholder caps at the lazy-module 1.2.0 ceilings; T13 sets measured + 5 %, rounded up to 1 KiB
+  'magic-card-flow-look.js': 32_768, // 32 KiB placeholder (ceiling)
+  'magic-card-slider-look.js': 28_672, // 28 KiB placeholder (ceiling)
   'magic-card-modules-extra.js': 24_576, // 24 KiB, measured 23,013 + 5 %, rounded up to 1 KiB (I11)
   // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
   'magic-card-svg-booleans.js': 8_192, // 8 KiB, measured 7,723 + 5 %, rounded up to 1 KiB (I11); was 9,216
