@@ -1,3 +1,4 @@
+import { SHAPE_CSS } from './shapes/css';
 /*
  * Styles for the mc-flows shadow root (flow-look rules 2-4). A constant: no config value is ever
  * inside it. Classes: `an` marks every animation of this chunk (paused offscreen / page-hidden,
@@ -17,4 +18,4 @@ export const FLOW_LOOK_CSS = `
 .fk-t{animation:mc-flow-ft 2s linear infinite}
 svg[offscreen] .an,div.html[offscreen] .an,:host([page-hidden]) .an{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.an{animation:none}.flow[data-line] path{transition:none}}
-`;
+` + SHAPE_CSS;

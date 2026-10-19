@@ -4,4 +4,5 @@
  * (replaces registry.shapes), T5 adds './colour-ends' (stroke with gradients, ends, colour modes).
  * Nothing else imports the parts, so adding one never touches the line modules.
  */
-export {};
+import './shapes/register';
+import './colour-ends';
