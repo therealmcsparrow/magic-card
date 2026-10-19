@@ -4,6 +4,21 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### New
+-   **Layers.** A module can go behind the other modules (Behind others, `placement: background`) or sit at a fixed spot above them (On top, `placement: overlay`). Choose a position and offsets, plus opacity, blur, a blend mode and Darken behind text. Set it in the editor, or in YAML with `placement` and `layer`. See [Layers](documentation/design/layers.md).
+-   **Card backdrop.** Up to four layers behind the card's content: pictures, gradients, patterns and colours. A picture can come from an entity, or change with the state of an entity. Camera pictures refresh on a timer, can pan and zoom, and show "Not updated" when they fail. See [Backgrounds](documentation/design/backgrounds.md#card-backdrop).
+-   **Pause motion button.** A card with motion shows a button that pauses everything on it that moves. Set `pause_button` to `auto` (the default), `always` or `hidden`, and pick the corner with `pause_button_corner`. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
+-   **Low-power mode** for a card (`layers_low_power`). It drops blur, blend and pan and zoom on that card's layers.
+
+### Improved
+-   **Video background** can use the same placement options. Without a placement key it works as before. See [Video background](documentation/modules/advanced/video-bg.md).
+
+### Existing cards
+-   **Existing cards look the same**, with one change: a card that has motion now shows a Pause motion button, by default in its bottom-left corner. Set `pause_button: hidden` to remove it.
+-   The pause button remembers a paused card in this browser's local storage, under a key that starts `mc-paused:`.
+
 ## 2026.10.11-beta.2 (2026-10-19, pre-release)
 
 ### New

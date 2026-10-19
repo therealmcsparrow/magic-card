@@ -9,6 +9,7 @@ The whole Magic Card config as one annotated tree, then a table per level. Per-m
 -   [Rows](#rows)
 -   [Columns](#columns)
 -   [Shared module keys](#shared-module-keys)
+-   [Layers](#layers)
 -   [Layout modules and their children](#layout-modules-and-their-children)
     -   [Row module columns](#row-module-columns)
 -   [Design](#design)
@@ -170,6 +171,10 @@ rows:                              # required (a list, may be empty)
 | `shape_options` | object | | Options of the card's shape. See [Shape](#shape). |
 | `value_background` | object | | Fill or sparkline behind the card's rows. See [Value background](#value-background). Needs its own `entity`. |
 | `seasonal` | object, string or boolean | | Seasonal scene. See [Seasonal scenes](#seasonal-scenes). |
+| `background_layers` | list | | Card backdrop: at most 4 layers, first entry in front. A fifth entry is ignored. Keys in [Layers](#layers). See [Backgrounds](../design/backgrounds.md#card-backdrop). |
+| `layers_low_power` | boolean | `false` | Drops blur, blend and pan and zoom on this card's backdrop and layered modules. Pictures, opacity and darkening stay. |
+| `pause_button` | string | `auto` | `auto` (shown on cards that have motion), `always` or `hidden`. See [Pause motion button](../design/layers.md#pause-motion-button). |
+| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. |
 | `popup` | object | | See [Pop-up](#pop-up). |
 | `flows` | list | | See [Flows](#flows). |
 
@@ -222,9 +227,59 @@ Every module has these. The module-specific keys are in [Modules](../modules/REA
 | `editor_name` | string | Editor-only name. The structure tree, canvas labels and inspector show it in place of "Type · label". The card never shows it, so `label`, `text` and `name` stay what the dashboard shows. |
 | `design` | object | See [Design](#design). |
 | `actions` | object | See [Actions](#actions). |
+| `placement` | string | `flow` (Normal, also when absent), `background` (Behind others) or `overlay` (On top). See [Layers](#layers). |
+| `layer` | object | Options of a Behind others or On top module. See [Layers](#layers). Ignored when `placement` is `flow` or absent. |
 | `not_synced` | list | Template-linked card only. |
 
 A module with a missing or unknown `type` shows an error in its own place. The rest of the card keeps rendering.
+
+## Layers
+
+Placement and the `layer` block are shared by every module. The card backdrop is set with `background_layers`. How each option behaves is in [Layers](../design/layers.md) and [Backgrounds](../design/backgrounds.md#card-backdrop).
+
+Keys of the `layer` block:
+
+| Key | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `layer.fill` | `container`, `row` or `card` | `container` | Behind others only. `row` and `card` apply to a module directly in a card column or row module column. |
+| `layer.anchor` | `top-left`, `top`, `top-right`, `left`, `center`, `right`, `bottom-left`, `bottom` or `bottom-right` | `top-left` | On top only. |
+| `layer.offset_x` | CSS length, for example `8px` or `5%` | `0` | On top only. On an edge it must be 0 or more. On a middle position it can be negative. |
+| `layer.offset_y` | CSS length | `0` | As `offset_x`, for the vertical axis. |
+| `layer.opacity` | 0 to 100 (%) | `100` | |
+| `layer.blur` | 0 to 24 (px) | `0` | Above 12 counts as heavy for older tablets. |
+| `layer.blend` | `normal`, `multiply`, `screen`, `overlay`, `darken`, `lighten` or `soft-light` | `normal` | |
+| `layer.click_through` | boolean | Behind others: `true`. On top: `true` without an action, `false` with one. | Taps pass through to what is under the module. |
+| `layer.scrim` | object | absent (off) | Darken behind text. Present means on. |
+| `layer.scrim.style` | `dim`, `bottom`, `top`, `left` or `right` | | `dim` is flat. The others fade from that edge. The editor writes `bottom`. |
+| `layer.scrim.color` | CSS colour or `card` | `black` | `card` is the card's background colour. |
+| `layer.scrim.strength` | 0 to 90 (%) | `60` | |
+
+Keys of a `background_layers` entry:
+
+| Key | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `type` | `image`, `gradient`, `pattern` or `color` | required | |
+| `hidden` | boolean | `false` | |
+| `opacity` | 0 to 100 (%) | `100` | |
+| `blend` | as `layer.blend` | `normal` | |
+| `image` | path, URL or media item | | One picture. With `states`, the picture for any other state. |
+| `entity` | entity id | the card's entity | `image` layers. Follows a device, taking the picture from `attribute`. |
+| `attribute` | string | `entity_picture` | |
+| `states` | map of state to picture | | Changes with state. Exact match. |
+| `refresh` | seconds, 5 or more | `10` | Camera entities only. |
+| `stale_badge` | boolean | `true` | Camera entities only. `false` turns off the stale label. |
+| `position` | an anchor, or `"<x>% <y>%"` | `center` | |
+| `size` | `cover`, `contain`, `auto` or `"<n>%"` | `cover` | |
+| `repeat` | `no-repeat`, `repeat`, `repeat-x` or `repeat-y` | `no-repeat` | Only when `size` is not `cover`. |
+| `blur` | 0 to 24 (px) | `0` | Image layers. |
+| `pan_zoom` | object | off | Pictures and camera still pictures only. Keys: `from` (100 to 200, default 100), `to` (100 to 200, default 115), `focus` (an anchor, default `center`), `duration` (10 to 120 s, default 30), `alternate` (default `true`), `pause_when_idle` (default `false`). |
+| `gradient` | CSS gradient | | `gradient` layers. 2 to 8 stops. |
+| `pattern` | `dots`, `grid`, `lines`, `diagonal` or `checks` | | `pattern` layers. |
+| `color` | CSS colour | | `color` layers, and the ink of `pattern` layers. |
+| `size` | 4 to 64 (px) | | `pattern` layers: the cell size. |
+| `thickness` | 1 to 8 (px) | | `pattern` layers: line width, or dot size for `dots` and `checks`. |
+
+The pause button keys are described in [Pause motion button](../design/layers.md#pause-motion-button).
 
 Modules that draw an icon (`icon`, `button`, `info`, `light`, `tabs`, `weather`, `forecast`) also take `icon_fx`, `icon_on` and `icon_off`. `svg` is for `icon`, `button` and `info`; the Light module has no Custom SVG switch. See [Icon effects](#icon-effects).
 

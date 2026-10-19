@@ -10,7 +10,8 @@ The card itself has a shorter Design tab: background colour and image, border ra
 - [Borders and outlines](borders.md): borders, border radius, border length lines, outline, box shadow
 - [Positioning and layout](positioning.md): position, offsets, display, visibility, opacity, z-index, overflow, cursor
 - [Typography](typography.md): font, text colour, alignment, decoration, spacing, wrapping
-- [Backgrounds](backgrounds.md): background colour and image, backdrop filter
+- [Backgrounds](backgrounds.md): background colour and image, backdrop filter, and the card backdrop (up to four pictures, gradients, patterns and colours behind the card)
+- [Layers](layers.md): modules behind others or on top, position and offsets, blend and blur, darkening behind text, click-through and the Pause motion button
 - [Flexbox](flexbox.md) and [CSS grid](grid.md)
 - [Transitions and CSS animation properties](transitions.md): transition, transform, filter and the raw `animation_*` keys
 - [Lists and tables](lists-tables.md)
