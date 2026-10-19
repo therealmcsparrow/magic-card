@@ -26,7 +26,7 @@ export const CARD_SYNC_KEYS = [
   'use_page_theme', 'theme',
   'background', 'background_image', 'border_radius', 'padding',
   'box_shadow', 'card_height', 'overflow', 'css', 'animations', 'ring', 'popup', 'flows',
-  'shape', 'value_background', 'seasonal', 'hover',
+  'shape', 'value_background', 'seasonal', 'hover', 'background_layers',
 ];
 
 /** Card keys synced together with a CARD_SYNC_KEYS key (one field in the editor): the shape's options. */

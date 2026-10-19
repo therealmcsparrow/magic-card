@@ -1,6 +1,6 @@
 // Fails when a built dist/*.js grows past its budget, or when an unlisted .js file appears.
 // Budgets, set by the CEO on 2026-10-17 (sizes then in comments):
-// - magic-card.js, which every dashboard loads: B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
+// - magic-card.js, which every dashboard loads: 486,400 B since 2026-10-19 (see CAPS); before that B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
 //   epic D (swiper, marked, the seasonal decorations and six rare modules moved into lazy chunks); CEO decision 2026-10-18.
 //   B1 = 679,875 B was the 2026.10.04 baseline.
 // - lazy chunks: the 2026.10.07 size + 5 %, rounded up to 1 KiB.
@@ -12,9 +12,11 @@ import { fileURLToPath } from 'node:url';
 
 const B2 = 471_856;
 const CAPS = {
-  'magic-card.js': B2 + 8_192, // 480,048
+  // CEO 2026-10-19: flow looks + background layers + pause button; 486,400 B (475 KiB) supersedes the plan's 485,376 B
+  'magic-card.js': 486_400,
   'magic-card-animation-studio.js': 996_352, // 973 KiB, CEO 2026-10-19 (fix round: lazy-loader version guards)
-  'magic-card-editor.js': 819_200, // 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
+  // CEO 2026-10-19: flow looks + background layers + pause button; 851,968 B (832 KiB)
+  'magic-card-editor.js': 851_968, // was 819_200, 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
   'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
   'magic-card-particles.js': 38_912, // 38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)
@@ -36,6 +38,8 @@ const CAPS = {
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
   'magic-card-shape-editor.js': 105_472, // 103 KiB (CEO 2026-10-19, Messages tab); was 101_376, the cap held since I11
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
+  // background layers <mc-bg-stack> (T5, ADR 0038): placeholder at the lazy-module ceiling while the chunk is a stub; T9 sets measured + 5 %
+  'magic-card-layers.js': 16_384, // 16 KiB
   'magic-card-slider.js': 97_280, // 95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)
   'magic-card-seasonal.js': 58_368, // 57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11)
   'magic-card-markdown.js': 57_344, // 56 KiB, raised from 55,296 for the style allow-list tokenizer (CEO 2026-10-19)

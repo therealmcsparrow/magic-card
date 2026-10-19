@@ -1,6 +1,33 @@
 import { MagicCardConfig, RowConfig, ColumnConfig, CardModule, ModuleType } from '../types';
 import { ModuleRegistry } from '../modules/module-registry';
 import { t } from '../card/i18n';
+import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack';
+
+const PLACEMENTS = ['flow', 'background', 'overlay'];
+const LAYER_TYPES = ['image', 'gradient', 'pattern', 'color'];
+const PAUSE_BUTTONS = ['auto', 'always', 'hidden'];
+const PAUSE_CORNERS = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
+const isObj = (v: unknown): boolean => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/** Layer and pause keys: contract defaults apply to bad values, so these are warnings, never errors. */
+function layerWarnings(c: Record<string, unknown>): string[] {
+  const w: string[] = [];
+  const bl = c.background_layers;
+  if (bl !== undefined) {
+    if (!Array.isArray(bl)) w.push(t('background_layers must be a list'));
+    else {
+      if (bl.length > MAX_BACKGROUND_LAYERS) w.push(t('background_layers: only the first {max} layers are used', { max: MAX_BACKGROUND_LAYERS }));
+      // proj.M3: never walk more than the cap
+      bl.slice(0, MAX_BACKGROUND_LAYERS).forEach((l, i) => {
+        if (!isObj(l) || !LAYER_TYPES.includes(String((l as Record<string, unknown>).type))) w.push(t('background_layers {index}: unknown layer type', { index: i }));
+      });
+    }
+  }
+  if (c.layers_low_power !== undefined && typeof c.layers_low_power !== 'boolean') w.push(t('layers_low_power must be true or false'));
+  if (c.pause_button !== undefined && !PAUSE_BUTTONS.includes(String(c.pause_button))) w.push(t('pause_button must be auto, always or hidden'));
+  if (c.pause_button_corner !== undefined && !PAUSE_CORNERS.includes(String(c.pause_button_corner))) w.push(t('pause_button_corner is not a corner'));
+  return w;
+}
 
 export interface ValidationResult {
   valid: boolean;
@@ -28,6 +55,8 @@ export class ConfigValidator {
       return { valid: false, errors, warnings };
     }
 
+    warnings.push(...layerWarnings(c));
+
     (c.rows as RowConfig[]).forEach((row, ri) => {
       if (!row.columns || !Array.isArray(row.columns)) {
         errors.push(t('Row {row} must have a columns array', { row: ri }));
@@ -48,6 +77,14 @@ export class ConfigValidator {
           if (!mod.type) {
             warnings.push(t('Row {row}, Col {col}, Module {module}: missing type', { row: ri, col: ci, module: mi }));
             return;
+          }
+
+          const m = mod as Record<string, unknown>;
+          if (m.placement !== undefined && !PLACEMENTS.includes(String(m.placement))) {
+            warnings.push(t('Row {row}, Col {col}, Module {module}: unknown placement', { row: ri, col: ci, module: mi }));
+          }
+          if (m.layer !== undefined && !isObj(m.layer)) {
+            warnings.push(t('Row {row}, Col {col}, Module {module}: layer must be an object', { row: ri, col: ci, module: mi }));
           }
 
           // A module's own validation errors are shown inside that module, never fatal for the card.
