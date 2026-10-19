@@ -7,7 +7,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### Security
--   **Stricter style filter for Markdown.** The `style` attribute in Markdown HTML is now read the way a browser reads it and rebuilt from allowed parts only, instead of being checked for forbidden text. A declaration that is not allowed is dropped on its own, and the rest of the attribute stays. See [Styles in HTML](documentation/modules/content/markdown.md#styles-in-html).
+-   **Stricter style filter for Markdown.** The `style` attribute in Markdown HTML is now read the way a browser reads it and rebuilt from allowed parts only, instead of being checked for forbidden text. A declaration that is not allowed is dropped on its own, and the rest of the attribute stays. Margins are stricter too: negative values, constants such as `pi` and `var()` are dropped, so `margin: var(--x)` is no longer kept, because a custom property can be negative. See [Styles in HTML](documentation/modules/content/markdown.md#styles-in-html).
 
 ### Improved
 -   **Notices no longer resize the canvas.** In the SVG editor, warnings, banners and the result of an action (with Undo) now float over the canvas instead of pushing it smaller. Dismiss buttons and screen reader announcements work as before.

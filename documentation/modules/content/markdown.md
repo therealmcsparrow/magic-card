@@ -33,7 +33,8 @@ A `style` attribute keeps only the declarations that are on an allow list. The o
 -   Strings (`"..."`) are allowed in `font`, `font-family` and `list-style-type` only.
 -   `url()`, `image()`, `image-set()` and the other functions that load or show other content are dropped, and so is any function not named above.
 -   A backslash escape or a comment drops its declaration, so a value such as `col/**/or` does nothing.
--   `display` takes `none`, `inline`, `block` or `inline-block`. `opacity` must be 0.3 or higher. Negative margins are dropped.
+-   `display` takes `none`, `inline`, `block` or `inline-block`. `opacity` must be 0.3 or higher.
+-   Margins take unsigned numbers, lengths and percentages, `auto`, the global keywords (`inherit`, `initial`, `unset`, `revert`, `revert-layer`), and `calc()`, `min()`, `max()` and `clamp()` built only from unsigned values with `+`, `*` and `/`. Negative values, constants such as `pi`, and `var()` are dropped. A custom property can be negative, so `margin: var(--x)` is no longer kept.
 -   A style longer than 4,096 characters is dropped as a whole.
 
 ## Templates
