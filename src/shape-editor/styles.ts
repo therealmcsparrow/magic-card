@@ -20,12 +20,12 @@ const layout: CSSResult = css`
 .layer:focus{outline:none}
 h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
-.banners{display:grid;gap:6px;padding:8px 12px 0}
 .work{flex:1;min-height:0;display:grid;grid-template-columns:240px minmax(0,1fr) 340px;grid-template-areas:'left center insp'}
 [data-layout=mid] .work{grid-template-columns:220px minmax(0,1fr) 320px}
 [data-layout=compact] .work{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:'center insp'}
 [data-layout=stacked] .work{display:flex;flex-direction:column;overflow:auto}
-[data-layout=stacked] .center{order:1;overflow:visible}
+[data-layout=stacked] .center{order:1;flex:none;overflow:visible}
+[data-layout=stacked] .left,[data-layout=stacked] .insp,.left>*{flex:none}
 [data-layout=stacked] .left{order:2}
 [data-layout=stacked] .insp{order:3}
 .left,.insp{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}
@@ -45,6 +45,9 @@ h2,h3,h4,p,ul{margin:0}
 .float>*{pointer-events:auto}
 .dock{position:absolute;z-index:3;left:12px;right:12px;bottom:12px;display:grid;gap:8px;justify-items:start}
 .dock>*{max-width:min(100%,520px)}
+.mlist{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.mrow{align-items:center;padding:4px 4px 4px 8px}
+.mrow .ell{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pen{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;background:var(--mc-surface);border:1px solid var(--mc-divider);border-radius:var(--mc-radius-lg);box-shadow:var(--mc-shadow-float)}
 .pen .why{flex:1 1 200px}
 .scale{position:absolute;left:12px;bottom:8px;z-index:1;font-size:.75rem;color:var(--mc-text-2)}

@@ -192,11 +192,11 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
+    ${skipLinks(ed)} ${topBar(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${t('The icon editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
-    ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
+    ${ed.dlg === 'poly' ? polyWin(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
     ${ed.menu ? html`<mc-ui-menu .items=${ed.menu.items} .label=${ed.menu.key === 'xfer' ? t('Export / Import') : ed.menu.key ? ed.menu.opener.textContent!.trim() : t('Shape actions')} .at=${ed.menu.at} .touch=${ed.menu.touch} .opener=${ed.menu.opener} @mc-menu-pick=${ed.onPick} @mc-menu-close=${ed.onMenuClose}></mc-ui-menu>` : nothing}
     <mc-ui-toast @mc-toast-action=${() => ed.toastAct()}></mc-ui-toast>
     <div class="sr" role="status" aria-live="polite">${ed.live}</div>
@@ -270,8 +270,8 @@ function bannerView(ed: McSvgEditor, b: { kind: Banner['kind']; text: string; de
 }
 
 function banners(ed: McSvgEditor): TemplateResult | typeof nothing {
-  if (!ed.banners.length && !ed.conflict && !(ed.module && ed.stage === 'edit')) return nothing;
   const facts = ed.module && ed.stage === 'edit' && !ed.noticeGone ? moduleNotice(ed) : nothing;
+  if (!ed.banners.length && !ed.conflict && facts === nothing) return nothing;
   return html`<div class="banners">
     ${ed.banners.map((b) => bannerView(ed, { ...b, dismiss: b.id === 'over' || b.id === 'safe' ? undefined : () => (ed.banners = ed.banners.filter((x) => x !== b)) }))}
     ${facts}
@@ -298,6 +298,12 @@ function moduleNotice(ed: McSvgEditor): TemplateResult {
 
 // ── start window ──
 
+/** The card editor's icon picker, used by tag (SVG_EDITOR_EXTERNAL_TAGS): a pick or typing fills the name; the button or Enter starts the drawing. */
+function startPicked(ed: McSvgEditor, e: CustomEvent<{ value: string }>): void {
+  e.stopPropagation();
+  ed.startIcon = String(e.detail?.value ?? '').trim();
+}
+
 function startPanel(ed: McSvgEditor): TemplateResult {
   const tile = (g: GlyphName, name: string, sub: string, on: () => void, pressed?: boolean): TemplateResult =>
     html`<button type="button" class="tile glyph-only" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 24)}<span>${name}</span><span class="meta">${sub}</span></button>`;
@@ -317,7 +323,9 @@ function startPanel(ed: McSvgEditor): TemplateResult {
           const name = ed.startIcon.trim();
           if (name) void ed.openIcon(name);
         }}>
-          ${field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
+          ${customElements.get('mc-icon-picker')
+            ? field({ id: 'start-icon', label: t('Icon name'), help: t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.'), control: html`<mc-icon-picker id="start-icon" .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>` })
+            : field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
           <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
       : nothing}
@@ -422,6 +430,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
     ${left ? leftPanel(ed) : nothing}
     <section class="center" aria-label=${t('Icon editor')}>
       ${floatBar(ed)}
+      <div class="stagebox">
       <div
         class=${`stage tool-${ed.tool}`}
         @pointerdown=${ed.cap.down}
@@ -459,7 +468,9 @@ function workspace(ed: McSvgEditor): TemplateResult {
         ${overLayer(ed)}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<div class="hint">${empty({ title: t('Nothing here yet'), text: t('Pick a tool on the left, or press P to draw.') })}</div>` : nothing}
       </div>
+      ${banners(ed)}
       ${resultNote(ed)}
+      </div>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)}
     </section>
     ${inspector(ed)}
@@ -540,14 +551,32 @@ function toolOptions(ed: McSvgEditor): TemplateResult | typeof nothing {
   const o = ed.opts;
   const set = (patch: Partial<typeof o>): void => void (ed.opts = { ...o, ...patch });
   if (ed.tool === 'rect') return html`<div class="opts">${numField('o-radius', t('Corner radius'), o.r, (n) => set({ r: Math.max(0, n) }), { min: 0 })}</div>`;
-  if (ed.tool === 'polygon')
-    return html`<div class="opts">
+  if (ed.tool === 'pen') return html`<div class="opts">${btn(t('Finish path'), undefined, () => ed.finishPath(), { text: true })}</div>`;
+  return nothing;
+}
+
+/** Polygon or star: the corner count, asked in a window so the canvas keeps its size. Enter is OK, Esc and Cancel go back to the tool before. */
+function polyWin(ed: McSvgEditor): TemplateResult {
+  const o = ed.opts;
+  const set = (patch: Partial<typeof o>): void => void (ed.opts = { ...o, ...patch });
+  const enter = (e: KeyboardEvent): void => {
+    const el = e.target as HTMLInputElement;
+    if (e.key !== 'Enter' || el.type === 'checkbox' || el.getAttribute('role') === 'switch') return;
+    e.preventDefault();
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    ed.polyOk();
+  };
+  return html`<mc-ui-window variant="dialog" size="s" heading=${t('Polygon or star')} closeLabel=${t('Close')} @mc-window-close=${() => ed.polyCancel()}>
+    <div class="dlg" @keydown=${enter}>
       ${numField('o-sides', t('Corners'), o.sides, (n) => set({ sides: Math.min(24, Math.max(3, Math.round(n))) }), { min: 3, max: 24, step: 1 })}
       ${chk('sw-star', t('Star'), o.star, (v) => set({ star: v }))}
       ${o.star ? numField('o-inner', t('Inner size'), o.inner, (n) => set({ inner: Math.min(0.95, Math.max(0.1, n)) }), { min: 0.1, max: 0.95, step: 0.05 }) : nothing}
-    </div>`;
-  if (ed.tool === 'pen') return html`<div class="opts">${btn(t('Finish path'), undefined, () => ed.finishPath(), { text: true })}</div>`;
-  return nothing;
+    </div>
+    <div slot="footer" class="foot">
+      ${btn(t('Cancel'), undefined, () => ed.polyCancel(), { text: true, size: 'md' })}
+      ${btn(t('OK'), undefined, () => ed.polyOk(), { text: true, size: 'md', variant: 'primary' })}
+    </div>
+  </mc-ui-window>`;
 }
 
 function pointFields(ed: McSvgEditor, prefix: string, field?: string, back?: () => void): TemplateResult | typeof nothing {
@@ -705,7 +734,7 @@ function pathSection(ed: McSvgEditor): TemplateResult {
 function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
   const n = ed.note;
   if (!n) return nothing;
-  return notice({ tone: n.tone, text: n.lines, action: n.action ? { label: n.action.label, onClick: () => n.action!.run() } : undefined, transient: true });
+  return html`<div class="result">${notice({ tone: n.tone, text: n.lines, action: n.action ? { label: n.action.label, onClick: () => n.action!.run() } : undefined, transient: true })}</div>`;
 }
 
 /** A button that stays focusable when unavailable; the editor says why when it is pressed. */

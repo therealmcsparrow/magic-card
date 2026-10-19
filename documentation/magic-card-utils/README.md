@@ -9,11 +9,11 @@ Install it from the [Magic Card Utils repository](https://github.com/therealmcsp
 The panel has six tabs:
 
 -   **Templates**: saved card templates. See [Templates](../editor/templates.md).
+-   **Library**: your saved icons, shapes, animations and theme presets. New icon and New shape open the editors. Edit opens a saved item.
 -   **Animations**: your own animations, in the [animation studio](../animation-studio/README.md).
 -   **Themes**: the [theme editor](../themes/README.md) and your theme presets.
--   **Library**: your saved icons and shapes. New icon and New shape open the editors. Edit opens a saved item.
--   **Shapes**: your saved shapes, for the `ref` key in a card.
--   **Editors**: the [SVG editor](../svg-editor/README.md) and the [shape editor](../shape-editor/README.md), opened without a card.
+-   **Icons**: your saved icons, with New icon, Edit, Rename, Delete and Export. New icon opens the [SVG editor](../svg-editor/README.md) without a card.
+-   **Shapes**: your saved shapes, for the `ref` key in a card. New shape opens the [shape editor](../shape-editor/README.md) without a card.
 
 The editors need Magic Card 2026.10.11-beta.1 or newer. When the card is older, the panel says which version you need, and it does not open the editor.
 

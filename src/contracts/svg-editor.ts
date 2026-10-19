@@ -496,6 +496,12 @@ export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
 /** 4 since T30 (revision 4); moves to 5 when T39 implements the (r5) host mode. */
 export const SVG_EDITOR_CONTRACT_REVISION = 5;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
+/**
+ * Elements of the card editor chunk (module-editor contract) that the SVG editor uses by tag, never by import:
+ * `mc-icon-picker` in Start from > An icon (props `hass`, `value`, `label`; event `value-changed` { value }).
+ * Defined once loadEditor() resolved; without it the editor shows a plain name field.
+ */
+export const SVG_EDITOR_EXTERNAL_TAGS: readonly string[] = ['mc-icon-picker'];
 export const SVG_EDITOR_CHUNK = 'svg-editor';
 export const SVG_EDITOR_CHUNK_FILE = 'magic-card-svg-editor.js';
 export const SHAPE_EDITOR_TAG = 'mc-shape-studio';

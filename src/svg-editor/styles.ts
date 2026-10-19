@@ -65,11 +65,46 @@ export const editorStyles: CSSResult[] = [
     .sentinel {
       position: absolute;
     }
-    .banners {
+    .banners,
+    .result {
+      position: absolute;
+      z-index: 4;
+      left: 12px;
+      right: 12px;
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       gap: 8px;
-      padding: 8px 16px 0;
+      pointer-events: none;
+    }
+    .banners {
+      top: 12px;
+    }
+    .result {
+      bottom: 12px;
+    }
+    .banners > *,
+    .result > * {
+      max-width: min(100%, 560px);
+      pointer-events: auto;
+      box-shadow: var(--mc-shadow-float);
+    }
+    /* the kit tints are see-through: back them with the surface so the drawing under a notice never shows through the text */
+    .banners > .notice.notice,
+    .result > .notice.notice {
+      background: linear-gradient(var(--nt), var(--nt)) var(--mc-surface);
+    }
+    .notice.info {
+      --nt: var(--mc-accent-tint);
+    }
+    .notice.success {
+      --nt: var(--mc-success-tint);
+    }
+    .notice.warn {
+      --nt: var(--mc-warn-tint);
+    }
+    .notice.error {
+      --nt: var(--mc-error-tint);
     }
     .banners .notice > .icon-btn {
       align-self: flex-start;
@@ -165,7 +200,7 @@ export const editorStyles: CSSResult[] = [
     [data-layout='stacked'] .insp {
       order: 6;
     }
-    [data-layout='stacked'] .stage {
+    [data-layout='stacked'] .stagebox {
       flex: none;
       min-height: max(320px, 70vh);
     }
@@ -244,10 +279,17 @@ export const editorStyles: CSSResult[] = [
       background: var(--mc-accent-tint);
       color: var(--mc-accent-ink);
     }
+    /* the notices are siblings of the stage inside this box: the stage keeps its pointer and key capture to itself */
+    .stagebox {
+      position: relative;
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 320px;
+    }
     .stage {
       position: relative;
       flex: 1 1 auto;
-      min-height: 320px;
+      min-width: 0;
       overflow: hidden;
       border-radius: var(--mc-radius-lg);
       background-color: var(--mc-canvas);
@@ -350,8 +392,16 @@ export const editorStyles: CSSResult[] = [
     .lib .rows .row {
       flex-wrap: nowrap;
     }
-    .layers .acts {
-      gap: 4px;
+    /* seven borderless icon buttons on one line at the panel's own width: they shrink from 28 to 24 px (never smaller) */
+    .layers > .acts {
+      flex-wrap: nowrap;
+      gap: 2px;
+    }
+    .layers > .acts .icon-btn {
+      flex: 0 1 28px;
+      min-width: 24px;
+      height: 28px;
+      --mdc-icon-size: 18px;
     }
 
     /* the shape picker over the canvas */

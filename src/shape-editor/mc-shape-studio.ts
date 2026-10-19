@@ -72,6 +72,13 @@ const NONE: never[] = [];
 const nm = (id: string): string => t(SIZE[id in SIZE ? id : 'custom']);
 const sh = (id: string): string => t(SHORT[id in SHORT ? id : 'custom']);
 
+interface Msg {
+  id: string;
+  tone: 'warn' | 'error' | 'info';
+  text: string;
+  conflict?: boolean;
+}
+
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
   /** Contract svg-editor revision 5: the Magic Card Utils panel checks this before it creates the element. */
@@ -121,6 +128,14 @@ export class McShapeStudio extends LitElement {
   @state() caption = '';
   @state() notice = '';
   @state() live = '';
+  @state() side: 'draw' | 'messages' = 'draw';
+  @state() msgOpen?: string;
+  /** New warnings and errors, read out on their own so they never replace an action's own announcement. */
+  @state() msgLive = '';
+  private msgTimer?: ReturnType<typeof setTimeout>;
+  /** The message window just closed: if its eye button is gone (the message was resolved), focus goes to the Messages tab. */
+  private msgReturn = false;
+  private seen = new Set<string>();
   @state() pvOpen = false;
   @state() helpOpen = false;
   @state() grid = false;
@@ -234,6 +249,15 @@ export class McShapeStudio extends LitElement {
     const foreign = this.host !== 'mcu' && changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
     if (['doc', 'size', 'ready', 'older', 'customShapes'].some((k) => changed.has(k))) this.analyse();
+    const now = this.msgs();
+    const key = (m: Msg): string => `${m.id}|${m.text}`;
+    const fresh = now.find((m) => m.tone !== 'info' && !this.seen.has(key(m)));
+    this.seen = new Set(now.map(key));
+    if (fresh) {
+      this.msgLive = `${fresh.tone === 'error' ? t('Error') : t('Warning')}: ${fresh.text}`;
+      clearTimeout(this.msgTimer);
+      this.msgTimer = setTimeout(() => (this.msgLive = ''), 4000);
+    }
   }
 
   protected firstUpdated(): void {
@@ -242,6 +266,11 @@ export class McShapeStudio extends LitElement {
   }
 
   protected updated(): void {
+    if (this.msgOpen && !this.msgs().some((m) => m.id === this.msgOpen)) this.msgOpen = undefined;
+    if (this.msgReturn && !this.back?.isConnected) {
+      this.msgReturn = false;
+      this.shadowRoot?.querySelector<HTMLElement>('.left [role=tab][aria-selected=true]')?.focus();
+    }
     this.dataset.layout = this.layout;
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
@@ -1272,17 +1301,17 @@ export class McShapeStudio extends LitElement {
     return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => this.focusTo('.insp button, .insp input'))}</div>
-${this.top(title)}${this.mcuBar()}${this.banners()}
+${this.top(title)}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work">
-<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? t('Points') : t('Outline')}>${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
+<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${this.side === 'messages' ? t('Messages') : inPath ? t('Points') : t('Outline')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
 <aside class="insp" aria-label=${t('Inspector')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('Export / Import') : t('Outline actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
 <mc-ui-popover id="pv-pop" .label=${t('Preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
 <mc-ui-popover id="help-pop" .label=${t('Shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
-${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
-<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div>
+${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
+<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div><div class="sr-only" role="status" aria-live="polite" id="msglive">${this.msgLive}</div>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(false)}></span></div>`;
   }
 
@@ -1311,7 +1340,7 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
     const actions: KitButtonOptions[] = [];
     // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
     const tight = this.layout === 'compact' || this.layout === 'stacked';
-    if (this.layout === 'compact') actions.push({ label: this.tab === 'path' ? t('Points') : t('Outline'), expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
+    if (this.layout === 'compact') actions.push({ label: `${this.tab === 'path' ? t('Points') : t('Outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
     actions.push({ label: t('Export / Import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
     if (mcu) actions.push({ label: t('Save'), variant: 'primary', disabledReason: this.saveBusy ? t('Working...') : undefined, onClick: () => void this.saveMcu() });
     else actions.push({ label: t('Save to library'), onClick: () => this.openSave() }, { label: t('Done'), variant: 'primary', onClick: () => this.done() });
@@ -1326,22 +1355,47 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
     });
   }
 
-  private mcuBar(): TemplateResult | typeof nothing {
-    if (this.host !== 'mcu' || (!this.conflict && !this.mcuError)) return nothing;
-    return this.conflict
-      ? html`<div class="banners"><div class="notice warn" role="alert">${kitGlyph('alertCircle', 20)}<div class="body"><p>${t('This shape was changed somewhere else.')}</p><div class="actions">${btn(t('Save as a copy'), () => void this.saveMcu(true))}${btn(t('Reload'), () => void this.reloadMcu())}</div></div></div></div>`
-      : html`<div class="banners">${notice({ tone: 'error', text: this.mcuError })}</div>`;
+  /** Every warning and error of the editor, in the order they are shown in Messages. */
+  private msgs(): Msg[] {
+    const out: Msg[] = [];
+    if (this.host === 'mcu') {
+      if (this.conflict) out.push({ id: 'conflict', tone: 'warn', text: t('This shape was changed somewhere else.'), conflict: true });
+      else if (this.mcuError) out.push({ id: 'mcu', tone: 'error', text: this.mcuError });
+    }
+    if (this.notice) out.push({ id: 'notice', tone: 'warn', text: this.notice });
+    else if (this.linked) out.push({ id: 'linked', tone: 'info', text: t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked }) });
+    for (const p of this.an) {
+      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) out.push({ id: `cut-${p.id}`, tone: 'warn', text: this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.') });
+      if (p.cross) out.push({ id: `cross-${p.id}`, tone: 'warn', text: t('The outline crosses itself at {where}.', { where: sh(p.id) }) });
+    }
+    return out;
   }
 
-  private banners(): TemplateResult | typeof nothing {
-    const list: Array<['warn' | 'info', string]> = [];
-    if (this.notice) list.push(['warn', this.notice]);
-    else if (this.linked) list.push(['info', t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked })]);
-    for (const p of this.an) {
-      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.')]);
-      if (p.cross) list.push(['warn', t('The outline crosses itself at {where}.', { where: sh(p.id) })]);
-    }
-    return list.length ? html`<div class="banners">${list.map(([tone, text]) => notice({ tone, text }))}</div>` : nothing;
+  private msgCount(): number {
+    return this.msgs().filter((m) => m.tone !== 'info').length;
+  }
+
+  /** The left sidebar's tabs: Draw (the panels) and Messages (with a count). The tab is never switched for the user. */
+  private sideTabs(): TemplateResult {
+    const n = this.msgCount();
+    return seg(t('Sidebar'), [['draw', t('Draw')], ['messages', n ? `${t('Messages')} (${n})` : t('Messages')]], this.side, (v) => (this.side = v), true);
+  }
+
+  // prettier-ignore
+  private msgList(): TemplateResult {
+    const list = this.msgs();
+    if (!list.length) return html`<p class="help">${t('No messages.')}</p>`;
+    const kind = (m: Msg): string => (m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note'));
+    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('Show full message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: (e) => ((this.back = e.currentTarget as HTMLElement), (this.msgOpen = m.id)) })}</div>`)}</div>`;
+  }
+
+  // prettier-ignore
+  private msgWin(): TemplateResult | typeof nothing {
+    const m = this.msgs().find((x) => x.id === this.msgOpen);
+    if (!m) return nothing;
+    const heading = m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note');
+    const foot = html`${m.conflict ? html`${btn(t('Save as a copy'), () => (this.closeWindows(), void this.saveMcu(true)))}${btn(t('Reload'), () => (this.closeWindows(), void this.reloadMcu()))}` : nothing}${btn(t('Close'), () => this.closeWindows(), { variant: 'primary', size: 'md' })}`;
+    return this.win(heading, html`<p>${m.text}</p>`, foot, { size: 's', onClose: () => ((this.msgOpen = undefined), (this.msgReturn = true), setTimeout(() => (this.msgReturn = false), 1500)) });
   }
 
   // ── windows ──

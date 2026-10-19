@@ -11,6 +11,8 @@ The layers list shows every shape in the icon. The top layer is the one drawn on
 -   Move a layer up or down.
 
 
+The buttons under the list (Add group, Duplicate, Delete, Select all, Move to, Move up, Move down) are small icon buttons that stay on one line, also in a narrow panel. Each is at least 24 by 24 pixels.
+
 ## Groups
 
 Select several shapes and choose Group to put them in a group. Groups can contain other groups, up to four levels deep. When a group is already four levels deep, Group inside it is unavailable, and the menu says why.

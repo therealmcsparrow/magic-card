@@ -13,6 +13,14 @@ This is a pre-release. HACS shows it only when you turn on Show beta versions.
 
 The editor opens full-screen in the panel. Your changes are saved only when you choose Save to library. The name is required.
 
+## Draw and Messages
+
+The left sidebar has two tabs, Draw and Messages. Draw holds the corner or point list and the library. Messages holds every warning and error: a saved shape that was not found, an outline that cuts into the text area or crosses itself, and, in the Magic Card Utils panel, a save problem or a shape that was changed somewhere else.
+
+Each message is one line, with an icon and the colour of its level (yellow for a warning, red for an error, blue for a note). The line is shortened with an ellipsis. Choose the eye button on a line to read the whole message in a window. A message that has actions, such as Save as a copy and Reload, shows them in that window.
+
+The Messages tab shows how many warnings and errors there are, for example Messages (2). When a new one arrives, a screen reader announces it. The editor does not switch tabs for you. On a narrow window, where the sidebar opens from the toolbar, the count is on that button. Nothing floats over the canvas, so the canvas never changes size.
+
 ## Two modes
 
 -   **Corners** changes the four corners of a box. Each corner has its own type and size.
