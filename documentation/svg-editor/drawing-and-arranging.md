@@ -7,7 +7,7 @@ This page covers the tools, the grid, the numeric fields, alignment, boolean ope
 -   Rectangle, with a corner radius.
 -   Ellipse.
 -   Line.
--   Polygon and star.
+-   Polygon and star. When you choose the tool, a window asks for the number of corners and whether to draw a star (with its inner size). Press Enter or choose OK to start drawing. Cancel or Escape returns to the tool you had before. Choose Polygon again to open the window again.
 -   Pen, which adds points and curves.
 -   Freehand.
 -   Select, which moves, scales, rotates and flips a shape.

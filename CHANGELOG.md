@@ -4,6 +4,14 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Improved
+-   **Notices no longer resize the canvas.** In the SVG editor and the shape editor, warnings, banners and the result of an action (with Undo) now float over the canvas instead of pushing it smaller. Dismiss buttons and screen reader announcements work as before.
+-   **SVG editor, Start from > An icon** uses the same icon picker as the card editor, with search, Material Design Icons, icon packs and your own icons. Pick an icon, then choose Use this icon.
+-   **SVG editor, Polygon tool** asks for the number of corners (and the star settings) in a window. The canvas keeps its size. Enter confirms. Cancel and Escape go back to the tool you had.
+-   **SVG editor layers:** the layer buttons are smaller and always fit on one line.
+
 ## 2026.10.11-beta.1 (2026-10-18, pre-release)
 
 A pre-release: an SVG editor, a shape editor, a preset library with file export and import, and a smaller main file. HACS shows it only when you turn on Show beta versions. Each release has 23 files.

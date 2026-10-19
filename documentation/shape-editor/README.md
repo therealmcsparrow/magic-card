@@ -13,6 +13,8 @@ This is a pre-release. HACS shows it only when you turn on Show beta versions.
 
 The editor opens full-screen in the panel. Your changes are saved only when you choose Save to library. The name is required.
 
+Warnings, such as a saved shape that was not found or an outline that cuts into the text area, float over the top of the canvas. They do not change its size, and they are limited to 40 % of its height.
+
 ## Two modes
 
 -   **Corners** changes the four corners of a box. Each corner has its own type and size.
