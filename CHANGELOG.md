@@ -6,6 +6,10 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Fixed
+-   **Template cards work for users who are not administrators.** A card linked to a template now shows it for every user, and follows later changes to the template without a reload. Before, only administrators saw the template, and the card sent requests that Magic Card Utils never answered. Those requests are gone. This needs the matching Magic Card Utils release: with an older one, administrators see no change, and other users see a notice instead of the template.
+-   **A readable notice** appears on a template card when the template does not exist or could not be loaded: Template "name" wasn't found, or couldn't be loaded. The card shows its own settings below it. The notice is also available in Dutch.
+
 ### Improved
 -   **Notices no longer resize the canvas.** In the SVG editor, warnings, banners and the result of an action (with Undo) now float over the canvas instead of pushing it smaller. Dismiss buttons and screen reader announcements work as before.
 -   **Shape editor, Draw and Messages tabs.** The left sidebar has a Draw tab and a Messages tab. Warnings and errors are one coloured line each in Messages, with a button that opens the full message in a window. The tab shows a count, and a screen reader announces a new message.

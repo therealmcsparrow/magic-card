@@ -51,6 +51,7 @@ import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
 import { entityStateColor } from '../utils/entity-color';
 import { mergeTemplateWithOverrides } from '../services/template-merge';
+import { templateSource } from '../services/template-source';
 import { ConfigValidator } from '../services/config-validator';
 import { ConditionsService } from '../services/conditions-service';
 import { collectDependencies, CardDependencies } from '../services/card-dependencies';
@@ -78,13 +79,6 @@ interface TemplateEntry {
 }
 
 type TemplateStore = Record<string, TemplateEntry>;
-
-interface TemplateUpdatedEvent {
-  data: {
-    name: string;
-    template: TemplateEntry;
-  };
-}
 
 /**
  * A module with an id, and the same for every nested layout child (graph history and other per-module
@@ -224,7 +218,13 @@ export class MagicCard extends LitElement {
   /** The last render was a shaped card without its own box_shadow. */
   private _readThemeShadow = false;
 
-  private _unsubTemplateEvents?: () => void;
+  /** Unwatch of the template-source subscription, and the name it watches. */
+  private _unwatchTemplate?: () => void;
+  private _watchedTemplate?: string;
+  private _watchedHass?: unknown;
+  /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
+  @state()
+  private _templateNotice?: 'missing' | 'unavailable';
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
   private _customRendered = false;
   /** Re-render on library changes; only once a custom animation was looked up. */
@@ -271,7 +271,6 @@ export class MagicCard extends LitElement {
     },
     inline: (id) => (this._resolvedConfig ?? this._config)?.custom_shapes?.[id],
   };
-  private _templateFetched = false;
   /** Last fetched config of `_config.template`; re-merged with the local config on every setConfig. */
   private _templateConfig?: MagicCardConfig;
   private _boundRequestUpdate = () => this.requestUpdate();
@@ -355,15 +354,11 @@ export class MagicCard extends LitElement {
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
-  private readonly _cardInstanceId: string = generateId('cardinst');
-  private _registeredTemplate?: string;
-  private _pendingRegisterTimer?: number;
   /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. */
   private readonly _popup = new PopupController(this, {
     config: () => (this._resolvedConfig ?? this._config)?.popup,
     editorPlace: () => this._editorPlace(),
   });
-  private static readonly _REGISTER_DEBOUNCE_MS = 1500;
   /** Seasonal particles of one render pass, over the card's scene and all its seasonal presets. */
   private readonly _seasonalBudget = new SeasonalBudget();
   /** The card's seasonal scene (config `seasonal`): resolution, midnight timer, editor preview date. */
@@ -423,8 +418,8 @@ export class MagicCard extends LitElement {
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
 
     if (config.template !== prevTemplate) {
-      this._templateFetched = false;
       this._templateConfig = undefined;
+      this._templateNotice = undefined;
       this._resolvedConfig = undefined;
     }
 
@@ -475,6 +470,7 @@ export class MagicCard extends LitElement {
     this._subscriptions.hostConnected();
     this._media.hostConnected();
     if (this.hasUpdated) this._syncTicker();
+    if (this.hasUpdated) this._syncTemplateWatch();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
     // the render restarts both
     if (this.hasUpdated && this._customRendered) this._onLibrary();
@@ -584,14 +580,7 @@ export class MagicCard extends LitElement {
 
     if (this.editMode) return;
 
-    this._reconcileInstanceRegistration();
-
-    if (!this.hass || !this._config?.template) return;
-    if (this._templateFetched) return;
-
-    this._templateFetched = true;
-    this._fetchTemplate(this._config.template);
-    this._subscribeTemplateEvents();
+    this._syncTemplateWatch();
   }
 
   private _isEditorPreview(): boolean {
@@ -609,67 +598,32 @@ export class MagicCard extends LitElement {
     return undefined;
   }
 
-  private _cancelPendingRegister(): void {
-    if (this._pendingRegisterTimer !== undefined) {
-      window.clearTimeout(this._pendingRegisterTimer);
-      this._pendingRegisterTimer = undefined;
-    }
-  }
-
-  private _reconcileInstanceRegistration(): void {
-    if (!this.hass || this.editMode) return;
-
-    const connectedWithTemplate = this.isConnected && !!this._config?.template;
-    const desired = connectedWithTemplate && !this._isEditorPreview()
-      ? this._config!.template!
-      : undefined;
-
-    // Already in sync with no pending work — nothing to do.
-    if (desired === this._registeredTemplate && this._pendingRegisterTimer === undefined) {
-      return;
-    }
-
-    // Any change invalidates a pending register
-    this._cancelPendingRegister();
-
-    // Unregister immediately if we had a live registration that's no longer desired
-    if (this._registeredTemplate && this._registeredTemplate !== desired) {
-      const previous = this._registeredTemplate;
-      this._registeredTemplate = undefined;
-      this.hass
-        .callWS({
-          type: 'magic_card_utils/unregister_card_instance',
-          name: previous,
-          card_id: this._cardInstanceId,
-        })
-        .catch(() => {
-          // Backend integration may not be installed — fail silently
-        });
-    }
-
-    if (!desired || this._registeredTemplate === desired) return;
-
-    // Debounce register so editor-preview flicker doesn't churn the backend.
-    this._pendingRegisterTimer = window.setTimeout(() => {
-      this._pendingRegisterTimer = undefined;
-      if (!this.hass) return;
-      if (!this.isConnected) return;
-      if (this._isEditorPreview()) return;
-      const current = this._config?.template || undefined;
-      if (current !== desired) return;
-      if (this._registeredTemplate === desired) return;
-
-      this._registeredTemplate = desired;
-      this.hass
-        .callWS({
-          type: 'magic_card_utils/register_card_instance',
-          name: desired,
-          card_id: this._cardInstanceId,
-        })
-        .catch(() => {
-          // Backend integration may not be installed — fail silently
-        });
-    }, MagicCard._REGISTER_DEBOUNCE_MS);
+  /**
+   * Watch `config.template` through the template source (one shared subscription per name and page).
+   * Starts and stops only when the connection or the name change, never on a new `hass` object.
+   */
+  private _syncTemplateWatch(): void {
+    const name = this.isConnected && !this.editMode && this.hass ? this._config?.template : undefined;
+    const conn = name ? this.hass!.connection : undefined;
+    if (name === this._watchedTemplate && conn === this._watchedHass) return;
+    this._unwatchTemplate?.();
+    this._unwatchTemplate = undefined;
+    this._watchedTemplate = name;
+    this._watchedHass = conn;
+    if (!name) return;
+    this._unwatchTemplate = templateSource.watch(this.hass as never, name, (state) => {
+      if (this._config?.template !== name) return;
+      this._templateNotice = state.status === 'missing' || state.status === 'unavailable' ? state.status : undefined;
+      if (state.status === 'ready') {
+        this._templateConfig = state.config as unknown as MagicCardConfig;
+        this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
+        prefetchLazy(this._resolvedConfig);
+      } else if (state.status !== 'loading') {
+        this._templateConfig = undefined;
+        this._resolvedConfig = undefined;
+      }
+      this.requestUpdate();
+    });
   }
 
   disconnectedCallback(): void {
@@ -685,8 +639,10 @@ export class MagicCard extends LitElement {
     this._holdTimers = new WeakMap();
     this._tapTimers = new WeakMap();
     this._downAt = new WeakMap();
-    this._unsubTemplateEvents?.();
-    this._unsubTemplateEvents = undefined;
+    this._unwatchTemplate?.();
+    this._unwatchTemplate = undefined;
+    this._watchedTemplate = undefined;
+    this._watchedHass = undefined;
     this._unsubLibrary?.();
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
@@ -697,48 +653,6 @@ export class MagicCard extends LitElement {
     this._v2Applied = new Set();
     for (const el of this._pApplied) particlesIfLoaded()?.release(el);
     this._pApplied = new Set();
-    this._cancelPendingRegister();
-    this._reconcileInstanceRegistration();
-  }
-
-  private async _fetchTemplate(name: string): Promise<void> {
-    if (!this.hass || !this._config) return;
-    try {
-      const result = await this.hass.callWS<{ templates: TemplateStore }>({
-        type: 'magic_card_utils/get_templates',
-      });
-      const entry = result.templates?.[name];
-      // Ignore a late response for a template this card is no longer linked to.
-      if (entry && this._config?.template === name) {
-        this._templateConfig = entry.config as MagicCardConfig;
-        // Merge template with local overrides
-        this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-        prefetchLazy(this._resolvedConfig);
-      }
-    } catch (err) {
-      console.warn('Magic Card: Failed to fetch template', name, err);
-    }
-  }
-
-
-  private _subscribeTemplateEvents(): void {
-    if (this._unsubTemplateEvents || !this.hass) return;
-
-    this.hass.connection
-      .subscribeEvents<TemplateUpdatedEvent>(
-        (event) => {
-          if (
-            this._config?.template &&
-            event.data.name === this._config.template
-          ) {
-            this._fetchTemplate(this._config.template);
-          }
-        },
-        'magic_card_utils_template_updated',
-      )
-      .then((unsub) => {
-        this._unsubTemplateEvents = unsub;
-      });
   }
 
   protected render(): TemplateResult {
@@ -755,6 +669,15 @@ export class MagicCard extends LitElement {
     this._pathStack = [];
     this._hoverRules = new Map();
     return withRenderContext(this._renderContext, () => this._renderCard());
+  }
+
+  /** One status line when the linked template is missing or could not be loaded (the card shows its own settings). */
+  private _renderTemplateNotice(): TemplateResult | typeof nothing {
+    const name = this._config?.template;
+    if (!name || !this._templateNotice) return nothing;
+    return html`<div class="mc-template-notice" role="status" style="padding-block: 4px; font-size: 0.85em; line-height: 1.3; color: var(--secondary-text-color)">${this._templateNotice === 'missing'
+      ? t('Template "{name}" wasn\'t found. Showing this card\'s own settings.', { name })
+      : t('Template "{name}" couldn\'t be loaded. Showing this card\'s own settings.', { name })}</div>`;
   }
 
   private _renderCard(): TemplateResult {
@@ -832,7 +755,7 @@ export class MagicCard extends LitElement {
             <div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}>
-              ${rows()}${renderValueBg(valueBg, this.hass)}
+              ${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}
           </ha-card>
         `, shadow, !!shape);

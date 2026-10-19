@@ -139,6 +139,25 @@ Add row on a linked card asks "Update linked cards?" first. "Only this card" add
 
 Only Add row asks this. Other structural changes (columns, modules) stay local until you use Save to template.
 
+## Who can see a template
+
+Every signed-in user sees a card that is linked to a template, and the card follows changes to the template without a reload. Only administrators can create, change, rename or delete templates.
+
+A card asks Magic Card Utils for the one template it is linked to, and watches that template. Two cards that use the same template share one request. The card never asks for the full template list, so a dashboard that uses two templates costs two requests, however many templates you have saved. What a viewer receives is the card configuration, the card type and the time of the last save. The list of cards that use a template stays visible to administrators only.
+
+### When a template cannot be shown
+
+The card shows its own settings, with one line above them:
+
+-   Template "name" wasn't found. The template was deleted or renamed. A rename does not update linked cards, so link them to the new name.
+-   Template "name" couldn't be loaded. Magic Card Utils is missing, still starting, or too old for your user.
+
+Screen readers announce the line once.
+
+### Versions
+
+Viewers who are not administrators need both the Magic Card release and the Magic Card Utils release that add the per-template read commands. With an older Magic Card Utils, an administrator still sees the template (it is read from the full list, once per page, without live updates). Another user gets the second notice. An older Magic Card with the newer Magic Card Utils keeps working for administrators.
+
 ## What a template does not hold
 
 The keys Home Assistant keeps for one card on its dashboard are never part of a template: `grid_options`, `layout_options`, `visibility` and `view_layout`. Each linked card keeps its own.
