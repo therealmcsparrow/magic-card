@@ -1,5 +1,5 @@
 /*
- * Contract: ui kit. Version 1.0.0, revision 4 (Architect-owned, 2026-10-18). ADR 0030.
+ * Contract: ui kit. Version 1.1.0, revision 5 (Architect-owned, 2026-10-18; r5 2026-10-19). ADR 0030.
  * CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
  * the same as in card studio, please create centralized components so all screens have the same look
  * and feel". CEO confirmation the same day: the card editor (src/editor/ + src/css/editor-system) is the
@@ -39,6 +39,13 @@
  *   `lead`, a host's leading node drawn after the icon and before the name (the library view's shape
  *   thumbnail, added to row() in 36134cf). Row templates only; no element changes, so
  *   UI_KIT_CONTRACT_REVISION stays 4.
+ *
+ * - 1.1.0 r5 2026-10-19 (flow-slider-styles T9, additive): three elements, <mc-ui-disclosure>,
+ *   <mc-ui-tile-group> and <mc-ui-chip-group> (UiDisclosureElement, UiChoiceGroupElement below), and
+ *   <mc-ui-toast> gains `dismissLabel` (a 44 px close button), Escape closes it, and a press inside it
+ *   pauses the timer until the pointer is released. Tile and chip groups use MANUAL activation: aria-pressed
+ *   buttons in role=group with a roving tabindex; arrows, Home and End move focus only; Space, Enter or a
+ *   click select. Existing elements are unchanged.
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -167,14 +174,18 @@
  *    resizable and maximizable and binds all four placement labels.
  */
 
-export const UI_KIT_CONTRACT_VERSION = '1.0.0';
-export const UI_KIT_CONTRACT_REVISION = 4;
+export const UI_KIT_CONTRACT_VERSION = '1.1.0';
+export const UI_KIT_CONTRACT_REVISION = 5;
 
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
 export const UI_POPOVER_TAG = 'mc-ui-popover';
 /** r2. Built with the first screen that shows a toast (plan: UI8). */
 export const UI_TOAST_TAG = 'mc-ui-toast';
+/** 1.1.0 r5 (flow-slider-styles T9). Disclosure row, picture tiles and picture chips with manual activation. */
+export const UI_DISCLOSURE_TAG = 'mc-ui-disclosure';
+export const UI_TILE_GROUP_TAG = 'mc-ui-tile-group';
+export const UI_CHIP_GROUP_TAG = 'mc-ui-chip-group';
 
 /** Class names only src/ui-kit/ may write rules for (selector scan test). */
 export const KIT_CLASSES = [
@@ -524,15 +535,58 @@ export interface UiToastAction {
  * One per screen root; a new show() replaces the current message. Look: `.toast` (design/10 4.11),
  * bottom centre, `offset` px above the bottom edge. Top layer (popover="manual") so it shows above an
  * open <mc-ui-window>. Live region role=status (polite), never focus-stealing. Hides after `duration`
- * ms (default 6000), paused while hovered or focused within. Never the only place a failure is
+ * ms (default 6000), paused while hovered or focused within, and (r5) while pressed. Never the only place a failure is
  * reported (failures are a .notice). No strings of its own. CSS parts: toast, text, action.
  */
 export interface UiToastElement extends HTMLElement {
   /** Default 16. Raise it when a save bar sits at the bottom. */
   offset?: number;
+  /** r5. Accessible name of the close button (44 px). Without it there is no button; Escape still closes. */
+  dismissLabel?: string;
   readonly open: boolean;
   show(o: { text: string; action?: { id: string; label: string }; duration?: number }): void;
   close(): void;
+}
+
+/**
+ * r5. <mc-ui-disclosure>: a collapsible section row (button with aria-expanded, a heading around it).
+ * `heading` is the title (never truncated), `summary` a short state line after it (truncates, wraps under the
+ * title when narrow; part of the button's accessible name). `open` is settable and reflects; a click toggles
+ * it and fires 'mc-toggle' { open } (bubbles, composed), so an inspector that owns the state can set `open`
+ * again. Slot: default (the body, hidden while closed). `level` is the heading level (default 3).
+ */
+export interface UiDisclosureElement extends HTMLElement {
+  heading: string;
+  summary?: string;
+  open: boolean;
+  level?: number;
+}
+
+/** r5. One choice of a tile or chip group. `preview` is static SVG markup from a chunk constant (never config). */
+export interface UiChoice {
+  value: string;
+  label: string;
+  /** One line shown under the group for the focused or selected choice. */
+  description?: string;
+  preview?: string;
+}
+
+/** r5. Event 'mc-pick' (bubbles, composed): a choice was selected (Space, Enter or click). */
+export interface UiChoicePick {
+  value: string;
+}
+
+/**
+ * r5. <mc-ui-tile-group> and <mc-ui-chip-group>: MANUAL activation. Buttons with aria-pressed in a role=group
+ * named `label`; one tab stop (roving); Left / Right / Up / Down / Home / End move focus only; Space, Enter or
+ * a click fire 'mc-pick'. `value` is owned by the host (the groups never change it themselves), so a group
+ * never applies a choice on focus. Previews are aria-hidden; the label is the accessible name. They wrap at
+ * every width, 44 px targets on coarse pointers.
+ */
+export interface UiChoiceGroupElement extends HTMLElement {
+  label: string;
+  items: UiChoice[];
+  value?: string;
 }
 
 /** src/ui-kit/index.ts exports this; the card-editor chunk, the studio and the theme editor call it once. */
@@ -549,5 +603,8 @@ declare global {
     'mc-ui-window': UiWindowElement;
     'mc-ui-popover': UiPopoverElement;
     'mc-ui-toast': UiToastElement;
+    'mc-ui-disclosure': UiDisclosureElement;
+    'mc-ui-tile-group': UiChoiceGroupElement;
+    'mc-ui-chip-group': UiChoiceGroupElement;
   }
 }

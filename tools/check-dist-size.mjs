@@ -43,6 +43,8 @@ const CAPS = {
   // flow-slider-styles T1 stubs (empty install): placeholder caps at the lazy-module 1.2.0 ceilings; T13 sets measured + 5 %, rounded up to 1 KiB
   'magic-card-flow-look.js': 32_768, // 32 KiB placeholder (ceiling)
   'magic-card-slider-look.js': 28_672, // 28 KiB placeholder (ceiling)
+  // look editors (flow-slider-styles T9 stub, ceiling 73,728 B = 72 KiB in contracts/look-editor.ts's plan): placeholder at the plan ceiling; T13 sets measured + 5 %, rounded up to 1 KiB
+  'magic-card-look-editor.js': 73_728, // 72 KiB placeholder (ceiling)
   'magic-card-modules-extra.js': 24_576, // 24 KiB, measured 23,013 + 5 %, rounded up to 1 KiB (I11)
   // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
   'magic-card-svg-booleans.js': 8_192, // 8 KiB, measured 7,723 + 5 %, rounded up to 1 KiB (I11); was 9,216

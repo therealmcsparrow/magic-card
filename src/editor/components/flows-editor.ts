@@ -1,6 +1,10 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import type { FlowConfig, HomeAssistant, MagicCardConfig } from '../../types';
+import type { FlowBudget } from '../../contracts/flow-look';
+import { FLOW_LOOK_EDITOR_TAG } from '../../contracts/look-editor';
+import { notice } from '../../ui-kit';
+import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
 import { editorSystem } from '../../css/editor-stack';
 import { FLOW_DEFAULTS, flowKeys, flowModuleEntities } from '../../utils/flow';
 import { deepClone } from '../../utils/deep-merge';
@@ -93,6 +97,33 @@ export class FlowsEditor extends LitElement {
         display: grid;
         gap: 4px;
       }
+      .grp {
+        display: grid;
+        gap: 12px;
+        min-width: 0;
+      }
+      .grp-h {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .grp-body {
+        display: grid;
+        gap: 16px;
+        min-width: 0;
+      }
+      .skeleton {
+        display: grid;
+        gap: 8px;
+      }
+      .skeleton .bar {
+        height: 56px;
+        border-radius: var(--mc-radius, 8px);
+        background: var(--mc-surface-2);
+      }
+      .skeleton:focus {
+        outline: none;
+      }
     `,
   ];
 
@@ -106,8 +137,68 @@ export class FlowsEditor extends LitElement {
   @property({ attribute: false }) onToggle?: (key: string) => void;
   /** A flow's key changed (an id-less flow got other ends): keep it open / selected. */
   @property({ attribute: false }) onRekey?: (from: string, to: string) => void;
+  /** Disclosure states the inspector keeps for the session: "flowKey|section" -> open (user toggles only). */
+  @property({ attribute: false }) sections?: ReadonlyMap<string, boolean>;
+  @property({ attribute: false }) onSection?: (id: string, open: boolean) => void;
+  /** One-level Undo snapshot per flow key (the object before the last preset / reset); inspector-owned, never YAML. */
+  @property({ attribute: false }) undoSnapshots?: ReadonlyMap<string, FlowConfig>;
+  @property({ attribute: false }) onUndoSnapshot?: (flowKey: string, snapshot: FlowConfig | undefined) => void;
+  /** The studio canvas' mc-flows budget, when it has one (tier notices in the look editor). */
+  @property({ attribute: false }) budget?: FlowBudget;
   /** The next card config (flows, and a module id when a pick needed one). One edit. */
   @property({ attribute: false }) onChange?: (config: MagicCardConfig) => void;
+
+  /** Look chunk: idle until a block is open, then loading, ready (the editor chunk is in) or failed (Try again). */
+  @state() private _look: 'idle' | 'loading' | 'ready' | 'failed' = lookEditorLoaded() ? 'ready' : 'idle';
+  /** Fallbacks when the inspector passes no state (a bare mount): the same maps, kept here. */
+  private _ownSections = new Map<string, boolean>();
+  private _ownUndo = new Map<string, FlowConfig>();
+
+  protected willUpdate(): void {
+    if (this._look === 'idle' && this.expanded.size) this._loadLook();
+  }
+
+  private _loadLook(focus = false): void {
+    this._look = 'loading';
+    void loadLookEditor().then((ok) => {
+      this._look = ok ? 'ready' : 'failed';
+    });
+    if (focus) void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('.skeleton')?.focus());
+  }
+
+  private _sectionOpen(flowKey: string, name: string, auto: boolean): boolean {
+    return (this.sections ?? this._ownSections).get(`${flowKey}|${name}`) ?? auto;
+  }
+
+  private _setSection(flowKey: string, name: string, open: boolean): void {
+    const id = `${flowKey}|${name}`;
+    if (this.onSection) this.onSection(id, open);
+    else {
+      this._ownSections.set(id, open);
+      this.requestUpdate();
+    }
+  }
+
+  /** Names (without the "look:" prefix) of the look editor's sections the user opened. */
+  private _lookOpen(flowKey: string): ReadonlySet<string> {
+    const prefix = `${flowKey}|look:`;
+    const out = new Set<string>();
+    for (const [id, open] of this.sections ?? this._ownSections) if (open && id.startsWith(prefix)) out.add(id.slice(prefix.length));
+    return out;
+  }
+
+  private _snapshot(flowKey: string): FlowConfig | undefined {
+    return (this.undoSnapshots ?? this._ownUndo).get(flowKey);
+  }
+
+  private _setSnapshot(flowKey: string, snapshot: FlowConfig | undefined): void {
+    if (this.onUndoSnapshot) this.onUndoSnapshot(flowKey, snapshot);
+    else {
+      if (snapshot) this._ownUndo.set(flowKey, snapshot);
+      else this._ownUndo.delete(flowKey);
+      this.requestUpdate();
+    }
+  }
 
   private get _flows(): FlowConfig[] {
     const f = this.config?.flows;
@@ -139,6 +230,14 @@ export class FlowsEditor extends LitElement {
         if (v === undefined || v === '' || (typeof v === 'number' && Number.isNaN(v))) delete f[k];
       }
       flows[index] = f as unknown as FlowConfig;
+      return flows;
+    });
+  }
+
+  /** The look editor hands over the whole next flow: one edit, like a pick. */
+  private _replace(index: number, next: FlowConfig): void {
+    this._write((_c, flows) => {
+      flows[index] = next;
       return flows;
     });
   }
@@ -320,104 +419,190 @@ export class FlowsEditor extends LitElement {
     `;
   }
 
-  private _body(index: number, f: FlowConfig, modules: FlowModuleOption[]): TemplateResult {
+  /** The fields of the Look group that exist today (Colour ... Dot size); the fallback when the look editor is not there. */
+  private _lookFallback(index: number, f: FlowConfig): TemplateResult {
+    const id = (k: string) => `flow-${index}-${k}`;
+    return html`
+      ${this._color(index, f, 'color', t('Colour'))} ${this._color(index, f, 'idle_color', t('Idle colour'))}
+      <div class="two">
+        ${this._keyField(index, f, 'width', t('Width (px)'), this._number(index, f, 'width', id('width'), FLOW_DEFAULTS.width, 0.5, 40, 0.5), id('width'))}
+        ${this._keyField(index, f, 'glow', t('Glow (px)'), this._number(index, f, 'glow', id('glow'), FLOW_DEFAULTS.glow, 0, 30), id('glow'))}
+      </div>
+      ${this._switch(index, f, 'scale_width', t('Scale width'), FLOW_DEFAULTS.scale_width, t('Up to twice the width at Max.'))}
+      <div class="two">
+        ${this._keyField(index, f, 'dots', t('Dots'), this._number(index, f, 'dots', id('dots'), FLOW_DEFAULTS.dots, 0, 8, 1, f.dots === 0 ? id('dots-help') : undefined), id('dots'))}
+        ${this._keyField(index, f, 'dot_size', t('Dot size (px)'), this._number(index, f, 'dot_size', id('dot-size'), FLOW_DEFAULTS.dot_size, 1, 40), id('dot-size'))}
+      </div>
+      ${f.dots === 0 ? html`<p class="help" id=${id('dots-help')}>${t('0 dots: moving dashes instead.')}</p>` : nothing}
+    `;
+  }
+
+  /** The Look group: the look editor once its chunk is in; a skeleton while loading; fields plus Try again when it failed. */
+  private _lookGroup(index: number, f: FlowConfig, key: string): TemplateResult {
+    if (this._look === 'ready' && customElements.get(FLOW_LOOK_EDITOR_TAG)) {
+      return html`<mc-flow-look-editor
+        .flow=${f}
+        .hass=${this.hass}
+        .flowKey=${key}
+        .budget=${this.budget}
+        .open=${this._lookOpen(key)}
+        .onToggle=${(name: string) => this._setSection(key, `look:${name}`, !this._lookOpen(key).has(name))}
+        .undo=${this._snapshot(key)}
+        .onUndoChange=${(snap: FlowConfig | undefined) => this._setSnapshot(key, snap)}
+        .onChange=${(next: FlowConfig) => this._replace(index, next)}
+      ></mc-flow-look-editor>`;
+    }
+    // Chunk in but the element not defined (a stub build): nothing editable today may disappear.
+    if (this._look === 'ready') return this._lookFallback(index, f);
+    if (this._look === 'failed') {
+      return html`
+        ${notice({ tone: 'warn', text: t("Couldn't load the line styles."), action: { label: t('Try again'), onClick: () => this._loadLook(true) } })}
+        ${this._lookFallback(index, f)}
+      `;
+    }
+    return html`<div class="skeleton" role="status" aria-busy="true" tabindex="-1">
+      <span>${t('Loading line styles...')}</span>
+      <div class="bar"></div>
+    </div>`;
+  }
+
+  /** A disclosure group whose open state the inspector keeps; `auto` is the state when the user has not chosen. */
+  private _fold(key: string, name: string, heading: string, summary: string, auto: boolean, content: TemplateResult): TemplateResult {
+    return html`<mc-ui-disclosure
+      level="5"
+      .heading=${heading}
+      .summary=${summary}
+      .open=${this._sectionOpen(key, name, auto)}
+      @mc-toggle=${(e: CustomEvent<{ open: boolean }>) => this._setSection(key, name, e.detail.open)}
+    >
+      <div class="grp-body">${content}</div>
+    </mc-ui-disclosure>`;
+  }
+
+  private _body(index: number, f: FlowConfig, modules: FlowModuleOption[], key: string): TemplateResult {
     const id = (k: string) => `flow-${index}-${k}`;
     const label = f.label ?? FLOW_DEFAULTS.label;
     const entity = f.entity || '';
     const attrs = entity && this.hass?.states?.[entity] ? Object.keys(this.hass.states[entity].attributes || {}) : [];
+    const route = f.route ?? FLOW_DEFAULTS.route;
+    const routeKeys: Key[] = ['attribute', 'min', 'max', 'reverse_negative', 'route', 'from_side', 'to_side', 'speed', 'min_speed'];
+    const routeSet = routeKeys.some((k) => f[k] !== undefined && f[k] !== '');
+    const labelOf = (opts: OptMark[], v: string) => (tl(opts).find((o) => o.value === v) ?? tl(opts)[0]).label;
     return html`
       <div class="body">
-        <div class="two">
-          <div>${this._endpoint(index, f, 'from', modules)}</div>
-          <div>${this._endpoint(index, f, 'to', modules)}</div>
-        </div>
-        ${this._keyField(
-          index,
-          f,
-          'entity',
-          t('Entity'),
-          html`<mc-entity-picker
-            .hass=${this.hass}
-            .value=${entity}
-            .label=${t('Entity')}
-            @value-changed=${(e: CustomEvent) => this._patch(index, { entity: e.detail.value })}
-          ></mc-entity-picker>`,
+        <section class="grp" aria-labelledby=${id('h-conn')}>
+          <h4 class="grp-h" id=${id('h-conn')}>${t('Connection')}</h4>
+          <div class="two">
+            <div>${this._endpoint(index, f, 'from', modules)}</div>
+            <div>${this._endpoint(index, f, 'to', modules)}</div>
+          </div>
+          ${this._keyField(
+            index,
+            f,
+            'entity',
+            t('Entity'),
+            html`<mc-entity-picker
+              .hass=${this.hass}
+              .value=${entity}
+              .label=${t('Entity')}
+              @value-changed=${(e: CustomEvent) => this._patch(index, { entity: e.detail.value })}
+            ></mc-entity-picker>`,
+          )}
+          ${entity ? nothing : html`<p class="help">${t('No entity: the line always flows at its speed.')}</p>`}
+        </section>
+        <section class="grp" aria-labelledby=${id('h-look')}>
+          <h4 class="grp-h" id=${id('h-look')}>${t('Look')}</h4>
+          ${this._lookGroup(index, f, key)}
+        </section>
+        ${this._fold(
+          key,
+          'value-route',
+          t('Value and route'),
+          `${labelOf(ROUTES, route)} · ${t('{min} to {max}', { min: String(f.min ?? FLOW_DEFAULTS.min), max: String(f.max ?? FLOW_DEFAULTS.max) })}`,
+          routeSet,
+          html`
+            ${attrs.length
+              ? this._keyField(
+                  index,
+                  f,
+                  'attribute',
+                  t('Attribute'),
+                  html`<mc-attribute-picker
+                    .hass=${this.hass}
+                    .entityId=${entity}
+                    .value=${f.attribute || ''}
+                    @value-changed=${(e: CustomEvent) => this._patch(index, { attribute: e.detail.value })}
+                  ></mc-attribute-picker>`,
+                )
+              : nothing}
+            <div class="two">
+              ${this._keyField(index, f, 'min', t('Min'), this._number(index, f, 'min', id('min'), FLOW_DEFAULTS.min, 0, undefined, 'any'), id('min'))}
+              ${this._keyField(index, f, 'max', t('Max'), this._number(index, f, 'max', id('max'), FLOW_DEFAULTS.max, undefined, undefined, 'any'), id('max'))}
+            </div>
+            ${this._switch(index, f, 'reverse_negative', t('Reverse when negative'), FLOW_DEFAULTS.reverse_negative, t('A negative value runs the dots from the end to the start.'))}
+            ${this._keyField(index, f, 'route', t('Route'), this._seg(t('Route'), route, tl(ROUTES), (v) => this._patch(index, { route: v })))}
+            <div class="two">
+              ${this._keyField(index, f, 'from_side', t('From side'), this._select(id('from-side'), f.from_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { from_side: v === 'auto' ? undefined : v })), id('from-side'))}
+              ${this._keyField(index, f, 'to_side', t('To side'), this._select(id('to-side'), f.to_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { to_side: v === 'auto' ? undefined : v })), id('to-side'))}
+            </div>
+            <div class="two">
+              ${this._keyField(index, f, 'speed', t('Speed (s)'), this._number(index, f, 'speed', id('speed'), FLOW_DEFAULTS.speed, 0.2, undefined, 0.1, id('speed-help')), id('speed'))}
+              ${this._keyField(index, f, 'min_speed', t('Min speed (s)'), this._number(index, f, 'min_speed', id('min-speed'), FLOW_DEFAULTS.min_speed, 0.2, undefined, 0.1, id('speed-help')), id('min-speed'))}
+            </div>
+            <p class="help" id=${id('speed-help')}>${t('Seconds for a dot to travel the line: Speed at Max, Min speed just above Min.')}</p>
+          `,
         )}
-        ${entity ? nothing : html`<p class="help">${t('No entity: the line always flows at its speed.')}</p>`}
-        ${attrs.length
-          ? this._keyField(
-              index,
-              f,
-              'attribute',
-              t('Attribute'),
-              html`<mc-attribute-picker
-                .hass=${this.hass}
-                .entityId=${entity}
-                .value=${f.attribute || ''}
-                @value-changed=${(e: CustomEvent) => this._patch(index, { attribute: e.detail.value })}
-              ></mc-attribute-picker>`,
-            )
-          : nothing}
-        <div class="two">
-          ${this._keyField(index, f, 'min', t('Min'), this._number(index, f, 'min', id('min'), FLOW_DEFAULTS.min, 0, undefined, 'any'), id('min'))}
-          ${this._keyField(index, f, 'max', t('Max'), this._number(index, f, 'max', id('max'), FLOW_DEFAULTS.max, undefined, undefined, 'any'), id('max'))}
-        </div>
-        ${this._switch(index, f, 'reverse_negative', t('Reverse when negative'), FLOW_DEFAULTS.reverse_negative, t('A negative value runs the dots from the end to the start.'))}
-        ${this._keyField(index, f, 'route', t('Route'), this._seg(t('Route'), f.route ?? FLOW_DEFAULTS.route, tl(ROUTES), (v) => this._patch(index, { route: v })))}
-        <div class="two">
-          ${this._keyField(index, f, 'from_side', t('From side'), this._select(id('from-side'), f.from_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { from_side: v === 'auto' ? undefined : v })), id('from-side'))}
-          ${this._keyField(index, f, 'to_side', t('To side'), this._select(id('to-side'), f.to_side ?? 'auto', tl(SIDES), (v) => this._patch(index, { to_side: v === 'auto' ? undefined : v })), id('to-side'))}
-        </div>
-        ${this._color(index, f, 'color', t('Colour'))}
-        ${this._color(index, f, 'idle_color', t('Idle colour'))}
-        <div class="two">
-          ${this._keyField(index, f, 'width', t('Width (px)'), this._number(index, f, 'width', id('width'), FLOW_DEFAULTS.width, 0.5, 40, 0.5), id('width'))}
-          ${this._keyField(index, f, 'glow', t('Glow (px)'), this._number(index, f, 'glow', id('glow'), FLOW_DEFAULTS.glow, 0, 30), id('glow'))}
-        </div>
-        ${this._switch(index, f, 'scale_width', t('Scale width'), FLOW_DEFAULTS.scale_width, t('Up to twice the width at Max.'))}
-        <div class="two">
-          ${this._keyField(index, f, 'dots', t('Dots'), this._number(index, f, 'dots', id('dots'), FLOW_DEFAULTS.dots, 0, 8, 1, f.dots === 0 ? id('dots-help') : undefined), id('dots'))}
-          ${this._keyField(index, f, 'dot_size', t('Dot size (px)'), this._number(index, f, 'dot_size', id('dot-size'), FLOW_DEFAULTS.dot_size, 1, 40), id('dot-size'))}
-        </div>
-        ${f.dots === 0 ? html`<p class="help" id=${id('dots-help')}>${t('0 dots: moving dashes instead.')}</p>` : nothing}
-        <div class="two">
-          ${this._keyField(index, f, 'speed', t('Speed (s)'), this._number(index, f, 'speed', id('speed'), FLOW_DEFAULTS.speed, 0.2, undefined, 0.1, id('speed-help')), id('speed'))}
-          ${this._keyField(index, f, 'min_speed', t('Min speed (s)'), this._number(index, f, 'min_speed', id('min-speed'), FLOW_DEFAULTS.min_speed, 0.2, undefined, 0.1, id('speed-help')), id('min-speed'))}
-        </div>
-        <p class="help" id=${id('speed-help')}>${t('Seconds for a dot to travel the line: Speed at Max, Min speed just above Min.')}</p>
-        ${this._keyField(index, f, 'label', t('Label'), this._seg(t('Label'), label, tl(LABELS), (v) => this._patch(index, { label: v === 'none' ? undefined : v }), label === 'value' && !entity ? id('label-help') : undefined))}
-        ${label === 'value' && !entity ? html`<p class="help" id=${id('label-help')}>${t('Pick an entity: a value label needs one.')}</p>` : nothing}
-        ${label === 'template'
-          ? this._keyField(
-              index,
-              f,
-              'label_template',
-              t('Label template'),
-              html`<textarea
-                class="input"
-                id=${id('tpl')}
-                rows="2"
-                placeholder="{{ states('sensor.solar_power') | int }} W"
-                .value=${f.label_template || ''}
-                @input=${(e: InputEvent) => this._patch(index, { label_template: (e.target as HTMLTextAreaElement).value })}
-              ></textarea>`,
-              id('tpl'),
-            )
-          : nothing}
-        ${label !== 'none'
-          ? this._keyField(
-              index,
-              f,
-              'label_position',
-              t('Label position'),
-              this._select(id('label-pos'), f.label_position ?? FLOW_DEFAULTS.label_position, tl(LABEL_POSITIONS), (v) =>
-                this._patch(index, { label_position: v === 'auto' ? undefined : v }),
-              ),
-              id('label-pos'),
-            )
-          : nothing}
-        ${this._keyField(index, f, 'show_when', t('Show'), this._seg(t('Show'), f.show_when ?? FLOW_DEFAULTS.show_when, tl(SHOW), (v) => this._patch(index, { show_when: v === 'always' ? undefined : v })))}
-        ${this._keyField(index, f, 'layer', t('Layer'), this._seg(t('Layer'), f.layer ?? FLOW_DEFAULTS.layer, tl(LAYERS), (v) => this._patch(index, { layer: v === 'back' ? undefined : v })))}
+        ${this._fold(
+          key,
+          'label',
+          t('Label'),
+          labelOf(LABELS, label),
+          f.label !== undefined,
+          html`
+            ${this._keyField(index, f, 'label', t('Label'), this._seg(t('Label'), label, tl(LABELS), (v) => this._patch(index, { label: v === 'none' ? undefined : v }), label === 'value' && !entity ? id('label-help') : undefined))}
+            ${label === 'value' && !entity ? html`<p class="help" id=${id('label-help')}>${t('Pick an entity: a value label needs one.')}</p>` : nothing}
+            ${label === 'template'
+              ? this._keyField(
+                  index,
+                  f,
+                  'label_template',
+                  t('Label template'),
+                  html`<textarea
+                    class="input"
+                    id=${id('tpl')}
+                    rows="2"
+                    placeholder="{{ states('sensor.solar_power') | int }} W"
+                    .value=${f.label_template || ''}
+                    @input=${(e: InputEvent) => this._patch(index, { label_template: (e.target as HTMLTextAreaElement).value })}
+                  ></textarea>`,
+                  id('tpl'),
+                )
+              : nothing}
+            ${label !== 'none'
+              ? this._keyField(
+                  index,
+                  f,
+                  'label_position',
+                  t('Label position'),
+                  this._select(id('label-pos'), f.label_position ?? FLOW_DEFAULTS.label_position, tl(LABEL_POSITIONS), (v) =>
+                    this._patch(index, { label_position: v === 'auto' ? undefined : v }),
+                  ),
+                  id('label-pos'),
+                )
+              : nothing}
+          `,
+        )}
+        ${this._fold(
+          key,
+          'visibility',
+          t('Visibility'),
+          `${labelOf(SHOW, f.show_when ?? FLOW_DEFAULTS.show_when)} · ${labelOf(LAYERS, f.layer ?? FLOW_DEFAULTS.layer)}`,
+          f.show_when !== undefined || f.layer !== undefined,
+          html`
+            ${this._keyField(index, f, 'show_when', t('Show'), this._seg(t('Show'), f.show_when ?? FLOW_DEFAULTS.show_when, tl(SHOW), (v) => this._patch(index, { show_when: v === 'always' ? undefined : v })))}
+            ${this._keyField(index, f, 'layer', t('Layer'), this._seg(t('Layer'), f.layer ?? FLOW_DEFAULTS.layer, tl(LAYERS), (v) => this._patch(index, { layer: v === 'back' ? undefined : v })))}
+          `,
+        )}
       </div>
     `;
   }
@@ -453,7 +638,7 @@ export class FlowsEditor extends LitElement {
           </button>
         </div>
         ${open
-          ? html`<div id=${bodyId}>${this._body(index, f, modules)}</div>`
+          ? html`<div id=${bodyId}>${this._body(index, f, modules, key)}</div>`
           : !f.from || !f.to || missing
             ? html`<div class="hints">
                 ${!f.from ? html`<p class="help">${t('Pick the start module')}</p>` : nothing}

@@ -6,6 +6,7 @@ import type {
   DisplayConfig,
   EditorState,
   EditorTab,
+  FlowConfig,
   HomeAssistant,
   MagicCardConfig,
   RowConfig,
@@ -114,6 +115,9 @@ export class Inspector extends LitElement {
   @state() private _tabs: Record<Kind, EditorTab> = { card: 'general', row: 'general', column: 'general', module: 'general', slot: 'general' };
   @state() private _expandedRules = new Set<string>();
   @state() private _expandedFlows = new Set<string>();
+  /** Flow blocks: disclosure states and the look editor's one-level Undo snapshots, per flow key, for the session (never YAML). */
+  @state() private _flowSections = new Map<string, boolean>();
+  @state() private _flowUndo = new Map<string, FlowConfig>();
   /** Card Design tab: which design is edited (Default, Hover or a rule id) and the groups the user toggled. */
   @state() private _designView = 'default';
   @state() private _designOpen = new Map<string, boolean>();
@@ -354,7 +358,27 @@ export class Inspector extends LitElement {
         if (open) sm?.selectFlow(key);
         else if (selected === key) sm?.selectFlow(null);
       },
+      sections: this._flowSections,
+      setSection: (id, open) => {
+        this._flowSections = new Map(this._flowSections).set(id, open);
+      },
+      undoSnapshots: this._flowUndo,
+      setUndoSnapshot: (flowKey, snapshot) => {
+        const next = new Map(this._flowUndo);
+        if (snapshot) next.set(flowKey, snapshot);
+        else next.delete(flowKey);
+        this._flowUndo = next;
+      },
       rekey: (from, to) => {
+        // The block's section states follow its flow to the new key; an Undo snapshot is dropped (it belonged to the old ends).
+        const moved = new Map<string, boolean>();
+        for (const [id, open] of this._flowSections) moved.set(id.startsWith(`${from}|`) ? `${to}|${id.slice(from.length + 1)}` : id, open);
+        this._flowSections = moved;
+        if (this._flowUndo.has(from)) {
+          const u = new Map(this._flowUndo);
+          u.delete(from);
+          this._flowUndo = u;
+        }
         if (selected === from) sm?.selectFlow(to);
         if (!this._expandedFlows.has(from)) return;
         const next = new Set(this._expandedFlows);

@@ -294,3 +294,154 @@ export const kitPopoverElementCss: CSSResult = /* @__PURE__ */ css`
     box-shadow: var(--mc-shadow-float, 0 4px 16px rgba(0, 0, 0, 0.2));
   }
 `;
+
+/*
+ * ui-kit 1.1.0 r5: disclosure row and the tile / chip groups. Same token-with-fallback rule as above.
+ * The groups wrap at every width without media queries (auto-fill with a percentage floor), so 320 px and 200 %
+ * zoom show two tiles or three chips per row and never scroll sideways (Chromium 85 has no container queries).
+ */
+export const kitDisclosureElementCss: CSSResult = /* @__PURE__ */ css`
+  ${inherit}
+  .head {
+    margin: 0;
+    font: inherit;
+  }
+  .btn {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+    width: 100%;
+    min-height: var(--mc-hit, 40px);
+    padding: 6px 4px;
+    border: 0;
+    border-radius: var(--mc-radius, 8px);
+    background: transparent;
+    color: var(--mc-text, #212121);
+    font: inherit;
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background: var(--mc-surface-2, #f2f3f5);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--mc-focus, var(--mc-accent, #03a9f4));
+    outline-offset: 2px;
+  }
+  .title {
+    flex: 0 0 auto;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .sum {
+    flex: 1 1 8rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--mc-text-2, #5f6368);
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+  .chev {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-inline-start: auto;
+    color: var(--mc-text-2, #5f6368);
+    transition: transform 0.15s ease-out;
+  }
+  [aria-expanded='true'] .chev {
+    transform: rotate(180deg);
+  }
+  .body {
+    display: grid;
+    gap: 16px;
+    padding: 4px 4px 12px;
+  }
+  .body[hidden] {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chev {
+      transition: none;
+    }
+  }
+`;
+
+export const kitChoiceGroupElementCss: CSSResult = /* @__PURE__ */ css`
+  ${inherit}
+  .group {
+    display: grid;
+    gap: 8px;
+    padding: 2px;
+  }
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(104px, 45%), 1fr));
+    gap: 8px;
+  }
+  .chip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(88px, 30%), 1fr));
+    gap: 8px;
+  }
+  .opt {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 4px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+    border: 1px solid var(--mc-divider, rgba(0, 0, 0, 0.12));
+    border-radius: var(--mc-radius, 8px);
+    background: var(--mc-surface, #fff);
+    color: var(--mc-text, #212121);
+    font: inherit;
+    font-size: 0.8125rem;
+    line-height: 1.25;
+    text-align: center;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+  }
+  .chip-grid .opt {
+    min-height: 88px;
+  }
+  .opt:hover {
+    border-color: var(--mc-field-border, #8a8f98);
+  }
+  .opt[aria-pressed='true'] {
+    border-color: var(--mc-accent, #03a9f4);
+    box-shadow: inset 0 0 0 1px var(--mc-accent, #03a9f4);
+    background: var(--mc-accent-tint, #e6f4fb);
+  }
+  .opt:focus-visible {
+    outline: 2px solid var(--mc-focus, var(--mc-accent, #03a9f4));
+    outline-offset: 2px;
+  }
+  .pv {
+    display: grid;
+    place-items: center;
+    max-width: 100%;
+  }
+  .pv svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--mc-text-2, #5f6368);
+  }
+  @media (pointer: coarse) {
+    .opt {
+      min-height: var(--mc-hit, 44px);
+    }
+    .chip-grid .opt {
+      min-height: 88px;
+    }
+  }
+`;

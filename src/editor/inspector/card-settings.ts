@@ -7,12 +7,14 @@ import type {
   ConditionalCardAppearance,
   DisplayCondition,
   DisplayConfig,
+  FlowConfig,
   HomeAssistant,
   MagicCardConfig,
   PopupConfig,
   SeasonalSetting,
   ValueBackgroundConfig,
 } from '../../types';
+import type { FlowBudget } from '../../contracts/flow-look';
 import type { ShapePatch } from '../components/shape-editor';
 import type { SyncContext } from '../../utils/sync-path';
 import { generateId } from '../../utils/id-generator';
@@ -643,6 +645,14 @@ export interface FlowsState {
   selected?: string | null;
   toggle: (key: string) => void;
   rekey: (from: string, to: string) => void;
+  /** Disclosure states of the flow blocks ("flowKey|section" -> open) and the look editor's sections ("flowKey|look:section"). */
+  sections?: ReadonlyMap<string, boolean>;
+  setSection?: (id: string, open: boolean) => void;
+  /** One-level Undo snapshot per flow key (look editor, contract look-editor 1.0.0); session only, never written to YAML. */
+  undoSnapshots?: ReadonlyMap<string, FlowConfig>;
+  setUndoSnapshot?: (flowKey: string, snapshot: FlowConfig | undefined) => void;
+  /** The studio canvas' flow budget, when the canvas has one. */
+  budget?: FlowBudget;
 }
 
 /**
@@ -667,6 +677,11 @@ export function renderCardFlows(
           .selected=${flowsState.selected}
           .onToggle=${flowsState.toggle}
           .onRekey=${flowsState.rekey}
+          .sections=${flowsState.sections}
+          .onSection=${flowsState.setSection}
+          .undoSnapshots=${flowsState.undoSnapshots}
+          .onUndoSnapshot=${flowsState.setUndoSnapshot}
+          .budget=${flowsState.budget}
           .onChange=${write}
         ></mc-flows-editor>
       </div>
