@@ -497,14 +497,14 @@ export class Inspector extends LitElement {
         if (tab === 'design') return renderRowDesign(sel.row, row, sm, this.hass);
         if (tab === 'conditions') return renderRowConditions(sel.row, row, sm, this.hass);
         if (tab === 'actions') return renderRowActions(sel.row, row, sm, this.hass);
-        return renderRowGeneral(sel.row, row, sm);
+        return renderRowGeneral(sel.row, row, sm, this.hass);
       }
       case 'column': {
         const col: ColumnConfig | undefined = config.rows[sel.row]?.columns[sel.col];
         if (!col) return html``;
         if (tab === 'design') return renderColumnDesign(sel.row, sel.col, col, sm, this.hass);
         if (tab === 'conditions') return renderColumnConditions(sel.row, sel.col, col, sm, this.hass);
-        return renderColumnGeneral(sel.row, sel.col, col, sm);
+        return renderColumnGeneral(sel.row, sel.col, col, sm, this.hass);
       }
       case 'module':
         return this._renderModule(config, sel, tab);
@@ -579,7 +579,7 @@ export class Inspector extends LitElement {
     const row = mod as RowModuleConfig;
     if (tab === 'design') return renderNestedColumnDesign(sel, sel.slot, row, sm, this.hass);
     if (tab === 'conditions') return renderNestedColumnConditions(sel, sel.slot, row, sm, this.hass);
-    return renderNestedColumnGeneral(sel, sel.slot, row, sm);
+    return renderNestedColumnGeneral(sel, sel.slot, row, sm, this.hass);
   }
 
   private _renderModule(config: MagicCardConfig, sel: Extract<Selection, { kind: 'module' }>, tab: EditorTab): TemplateResult {

@@ -18,7 +18,7 @@ import { t } from '../i18n';
 import { followIcons } from '../components/icon-animator/loader';
 import { prunedConfig } from '../custom/library';
 import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
-import { newColumn } from './containers';
+import { dropUndefined, newColumn } from './containers';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
 
@@ -313,7 +313,7 @@ export class EditorStateManager {
 
   updateRow(rowIndex: number, updates: Partial<RowConfig>): void {
     const config = deepClone(this.state.config);
-    config.rows[rowIndex] = { ...config.rows[rowIndex], ...updates };
+    config.rows[rowIndex] = dropUndefined({ ...config.rows[rowIndex], ...updates }, updates);
     this.updateConfig(config);
   }
 
@@ -398,7 +398,7 @@ export class EditorStateManager {
 
   updateColumn(rowIndex: number, colIndex: number, updates: Partial<ColumnConfig>): void {
     const config = deepClone(this.state.config);
-    config.rows[rowIndex].columns[colIndex] = { ...config.rows[rowIndex].columns[colIndex], ...updates };
+    config.rows[rowIndex].columns[colIndex] = dropUndefined({ ...config.rows[rowIndex].columns[colIndex], ...updates }, updates);
     this.updateConfig(config);
   }
 

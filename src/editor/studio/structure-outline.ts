@@ -7,7 +7,7 @@ import { editorSystem } from '../../css/editor-stack';
 import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
 import { kindNoun, sourceWord } from '../components/entity-source';
-import { ignoresEntity, resolveEntitySource, takesEntity } from '../entity-source';
+import { ignoresEntity, resolveContainerSource, resolveEntitySource, takesEntity } from '../entity-source';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
 import {
   Selection,
@@ -814,8 +814,8 @@ export class StructureOutline extends LitElement {
             ${renaming
               ? this._renderRename(sel, t('Row name'))
               : this.variant === 'pane'
-                ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span></span>`
-                : html`<span class="text"><span class="name">${name}</span></span>${this._renderGlyph(row)}`}
+                ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span>${this._containerEntity(row, { row: ri })}</span>`
+                : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(row, { row: ri })}</span>${this._renderGlyph(row)}`}
             ${this._hiddenMark(row)}
           </div>
           <button
@@ -868,7 +868,7 @@ export class StructureOutline extends LitElement {
             data-hidden=${isHiddenItem(col) ? '' : nothing}
             data-current=${a.current ? '' : nothing}
           >
-            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span></span>`}
+            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(col, { row: ri, col: ci })}</span>`}
             ${this._hiddenMark(col)}
             ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('Own module list: not synced with the template. Reset column restores it.')}></ha-icon><span class="sr-only">${t('Own module list, not synced with the template')}</span>` : nothing}
             <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
@@ -1071,7 +1071,7 @@ export class StructureOutline extends LitElement {
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
                   ? this._renderRename(sel, isTabs ? t('Tab name') : t('Column name'))
-                  : html`<span class="text"><span class="name">${label}</span></span>`}
+                  : html`<span class="text"><span class="name">${label}</span>${isTabs ? nothing : this._containerEntity(entry ?? {}, { row: owner.row, col: owner.col, module: owner.module, child: owner.child, slot })}</span>`}
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
                 <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
@@ -1102,6 +1102,17 @@ export class StructureOutline extends LitElement {
         </button>
       </li>
     </ul>`;
+  }
+
+  /** A row, column or row module column that has an entity of its own: its id or No entity, and whether it shares. Nothing for "Same as ..." (every row would say it). */
+  private _containerEntity(node: { entity?: unknown; share_entity?: unknown }, at: Parameters<typeof resolveContainerSource>[1]): TemplateResult | typeof nothing {
+    const config = this._state?.config;
+    if (!config) return nothing;
+    const info = resolveContainerSource(config, at);
+    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
+    const id = typeof node.entity === 'string' && ENTITY_RE.test(node.entity) ? node.entity : undefined;
+    if (!id) return nothing;
+    return html`<span class="sub is-entity">${node.share_entity === true ? html`<ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Shared with tiles inside')} </span>` : nothing}${breakableId(id)}</span>`;
   }
 
   /** One layout child (and its own children). */

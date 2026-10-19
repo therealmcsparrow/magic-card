@@ -283,7 +283,7 @@ export class EntitySource extends LitElement {
     if (this._picking || i.cardModule) return nothing;
     // nothing to follow
     const msg = i.walled
-      ? html`${t('A layout around this tile has No entity, so there is nothing to follow.')}`
+      ? html`${t('A row, column or layout around this tile has No entity, so there is nothing to follow.')}`
       : this._link(t("Nothing chosen yet. To use the card's device, set it in {link}.", { link: '\u0001' }));
     return html`<p class="help" id="hint">${msg}</p>`;
   }
@@ -366,6 +366,9 @@ export class EntitySource extends LitElement {
 /** Layout modules: they can share their own entity with the modules inside. */
 const LAYOUT_TYPES: readonly string[] = ['horizontal', 'vertical', 'row', 'tabs', 'slider-layout'];
 
+/** A layout module, or a grid row / column / row module column (those have no `type`). */
+const isLayout = (c: CardModule): boolean => !c.type || LAYOUT_TYPES.includes(c.type);
+
 export interface EntitySourceFieldOptions {
   /** Narrows the picker (camera, light, weather). */
   domain?: string;
@@ -406,7 +409,7 @@ export function renderEntitySourceField(
         .info=${scope}
         .value=${c.entity}
         .domain=${opts.domain ?? ''}
-        .layout=${LAYOUT_TYPES.includes(c.type)}
+        .layout=${isLayout(c)}
         .fieldKey=${editorKey(c)}
         .onChange=${(v: string | undefined) => onChange(write(c, v))}
       ></mc-entity-source>
@@ -422,7 +425,7 @@ export function renderEntityBlock(
   scope: EntitySourceInfo,
   syncCtx?: SyncContext,
 ): TemplateResult {
-  const share = LAYOUT_TYPES.includes(c.type) && scope.choice === 'own' && !scope.invalidOwn;
+  const share = isLayout(c) && scope.choice === 'own' && !scope.invalidOwn;
   return html`
     <div class="mc-tab-content">
       ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
