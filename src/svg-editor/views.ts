@@ -324,7 +324,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
           if (name) void ed.openIcon(name);
         }}>
           ${customElements.get('mc-icon-picker')
-            ? field({ id: 'start-icon', label: t('Icon name'), help: t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.'), control: html`<mc-icon-picker id="start-icon" .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} aria-describedby="start-icon-help" @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>` })
+            ? field({ id: 'start-icon', label: t('Icon name'), help: t('Search the Home Assistant icons and installed icon packs, or type a name like mdi:lightbulb.'), control: html`<mc-icon-picker id="start-icon" .hass=${ed.hass} .value=${ed.startIcon} label=${t('Icon name')} @value-changed=${(e: CustomEvent<{ value: string }>) => startPicked(ed, e)}></mc-icon-picker>` })
             : field({ id: 'start-icon', label: t('Icon name'), help: t('For example mdi:lightbulb. Home Assistant icons and installed icon packs work.'), control: html`<input id="start-icon" class="input" type="text" .value=${ed.startIcon} autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="start-icon-help" @input=${(e: Event) => (ed.startIcon = (e.target as HTMLInputElement).value)} />` })}
           <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
