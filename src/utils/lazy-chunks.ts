@@ -14,7 +14,7 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   seasonal: lazyChunk('seasonal', () => import(/* webpackChunkName: "seasonal" */ '../card/seasonal-chunk')),
   markdown: lazyChunk('markdown', () => import(/* webpackChunkName: "markdown" */ '../modules/lazy/markdown-chunk')),
   'modules-extra': lazyChunk('modules-extra', () => import(/* webpackChunkName: "modules-extra" */ '../modules/lazy/extras-chunk')),
-  // stub until the <mc-bg-stack> chunk lands (background-layers T5)
+  // <mc-bg-stack>, the card backdrop (background-layers T5, ADR 0038)
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
 };
 
@@ -36,6 +36,17 @@ const wantsSeasonal = (node: unknown, visited = new Set<unknown>()): boolean => 
   return false;
 };
 
+const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
+
+/** The card has a backdrop: `background_layers`, or a conditional appearance rule that sets it. */
+export function wantsLayers(config: unknown): boolean {
+  const c = config as { background_layers?: unknown; conditional_appearance?: unknown } | null;
+  if (!c || typeof c !== 'object') return false;
+  if (nonEmpty(c.background_layers)) return true;
+  const rules = c.conditional_appearance;
+  return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
+}
+
 /**
  * Start every chunk this card config needs, at once (nested lazy modules never wait on their
  * parent): the chunks of the lazy module types in it, and the seasonal chunk for a `seasonal`
@@ -46,6 +57,7 @@ export function prefetchLazy(config: unknown): void {
   seen.add(config);
   ModuleRegistry.prefetch(config);
   if (wantsSeasonal(config)) void lazyChunks.seasonal.load();
+  if (wantsLayers(config)) void lazyChunks.layers.load();
 }
 
 /** Tests: replace one chunk import (undefined restores it) and forget its state. */

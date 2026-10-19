@@ -38,7 +38,7 @@ const CAPS = {
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
   'magic-card-shape-editor.js': 105_472, // 103 KiB (CEO 2026-10-19, Messages tab); was 101_376, the cap held since I11
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
-  // background layers <mc-bg-stack> (T5, ADR 0038): placeholder at the lazy-module ceiling while the chunk is a stub; T9 sets measured + 5 %
+  // background layers <mc-bg-stack> (T5, ADR 0038): provisional, 15,523 B measured + 5 % rounds up to 16 KiB, which is also the lazy-module ceiling (contract lazy-module 1.2.0); T9 re-measures
   'magic-card-layers.js': 16_384, // 16 KiB
   'magic-card-slider.js': 97_280, // 95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)
   'magic-card-seasonal.js': 58_368, // 57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11)
