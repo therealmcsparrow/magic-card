@@ -313,8 +313,6 @@ export class MagicCard extends LitElement {
   private _pathStack: string[] = [];
   /** Entity-scope: the entity a module here follows (the card's, or the nearest sharing layout's). */
   private _scope?: string;
-  /** A module's config with its effective entity, kept so the same object comes back while the id is unchanged. */
-  private readonly _effectiveCfg = new WeakMap<CardModule, [string | undefined, CardModule]>();
   /** UI state of layout modules (active tab, slide), per card and keyed by the module's path. */
   private readonly _uiState = new Map<string, unknown>();
   private readonly _renderContext: RenderContext = {
@@ -1095,9 +1093,8 @@ export class MagicCard extends LitElement {
     // entity-scope: render with the effective entity; the children follow the nearest sharing layout
     const up = this._scope;
     const entity = this._entityOf(source);
-    const cached = this._effectiveCfg.get(source);
-    const mod = (source.entity || undefined) === entity ? source : cached && cached[0] === entity ? cached[1] : { ...source, entity };
-    if (mod !== source) this._effectiveCfg.set(source, [entity, mod]);
+    // the same object while the id is unchanged (every config without a card entity), else a shallow copy
+    const mod = (source.entity || undefined) === entity ? source : { ...source, entity };
     this._scope = childScope(source, up);
     try {
       return this._withEntity(entity, () => this._renderModuleAt(mod, path));

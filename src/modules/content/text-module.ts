@@ -8,6 +8,7 @@ import { currentRenderContext } from '../../services/render-context';
 import { timerCountdown } from '../../utils/timer';
 import { countdown } from '../../utils/timer-countdown';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
+import { templateVars } from '../../utils/entity-scope';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
 
@@ -63,7 +64,7 @@ class TextModule extends BaseMagicModule {
     const text = c.text === undefined || c.text === null ? '' : String(c.text);
     const ctx = currentRenderContext();
     if (!ctx || !hasJinja(text)) return text;
-    const result = ctx.template(text);
+    const result = ctx.template(text, templateVars(text, c.entity, ctx.cardEntity));
     switch (result.status) {
       case 'ok':
         return templateResultToString(result.result);
