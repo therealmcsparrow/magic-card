@@ -12,33 +12,44 @@ labels	Outline colour	Outline color
 labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
 card-editor	Accent colour	Accent color
+card-editor	Add a colour at the back to blend with.	Add a color at the back to blend with.
 card-editor	Add colour	Add color
 card-editor	Animation colour	Animation color
 card-editor	Background colour	Background color
 card-editor	Bar colour	Bar color
+card-editor	Card backdrop layers sit on top of this colour and image.	Card backdrop layers sit on top of this color and image.
+card-editor	Card colour	Card color
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
 card-editor	Colour	Color
 card-editor	Colour picker	Color picker
 card-editor	Colour ranges	Color ranges
 card-editor	Colour style	Color style
+card-editor	Colour wash	Color wash
 card-editor	Colour {n}	Color {n}
 card-editor	Colours the icon like Home Assistant does for this entity's state.	Colors the icon like Home Assistant does for this entity's state.
+card-editor	Custom colour	Custom color
 card-editor	Customise a copy	Customize a copy
 card-editor	Customise this icon	Customize this icon
 card-editor	Default sets a solid colour, so a rule cannot swap it for a gradient. Clear the Default colour first.	Default sets a solid color, so a rule cannot swap it for a gradient. Clear the Default color first.
+card-editor	Distance from the centre. Negative values move it left or up.	Distance from the center. Negative values move it left or up.
 card-editor	Effects need the icon shape; this icon could not be loaded (or is a multi-colour logo), so it is shown as is.	Effects need the icon shape; this icon could not be loaded (or is a multi-color logo), so it is shown as is.
 card-editor	Empty: the primary colour at {pct}%.	Empty: the primary color at {pct}%.
 card-editor	Entity colour	Entity color
 card-editor	Entity colour for {name}	Entity color for {name}
 card-editor	Fill colour	Fill color
+card-editor	From the centre	From the center
 card-editor	Gradient colours	Gradient colors
 card-editor	Gradient created from your colour.	Gradient created from your color.
 card-editor	Icon colour	Icon color
 card-editor	Idle colour	Idle color
+card-editor	Keeps the darker colour	Keeps the darker color
+card-editor	Keeps the lighter colour	Keeps the lighter color
 card-editor	Line colour	Line color
 card-editor	Maximise	Maximize
+card-editor	No layers yet. Add an image, gradient, pattern or colour behind the card content.	No layers yet. Add an image, gradient, pattern or color behind the card content.
 card-editor	Open colour picker	Open color picker
+card-editor	Pattern colour	Pattern color
 card-editor	Primary colour	Primary color
 card-editor	Remove colour	Remove color
 card-editor	Remove colour {n}	Remove color {n}
@@ -60,6 +71,7 @@ card-editor	The colour along these stops follows the value: Liquid fill's entity
 card-editor	The empty part uses the colour {colour} (set in YAML); a value here replaces it.	The empty part uses the color {colour} (set in YAML); a value here replaces it.
 card-editor	The entity's state colour	The entity's state color
 card-editor	The icon uses this gradient as its fill. Older tablets show the first colour.	The icon uses this gradient as its fill. Older tablets show the first color.
+card-editor	To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.	To put a module behind others, use Placement on that module. Layers here sit on top of the color and image in Style.
 card-editor	Track colour	Track color
 card-editor	Up to 32 KB. Parts with fill="currentColor" take the icon colour, parts with class="mc-accent" the accent colour.	Up to 32 KB. Parts with fill="currentColor" take the icon color, parts with class="mc-accent" the accent color.
 card-editor	Use a hex colour, rgb(a) or var(--name).	Use a hex color, rgb(a) or var(--name).

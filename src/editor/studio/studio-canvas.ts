@@ -30,6 +30,12 @@ import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
 import { CanvasWidth, OPTION_LABELS, autoWidth } from './view-detect';
 import { t, tx } from '../i18n';
+import { CanvasLayers } from '../layers/canvas-layers';
+import { setLayerMeasurer, notifyLayerMeasure } from '../layers/layer-measure';
+import { requestOpenLayer, setStatus, clearStatuses, getPreview, onStatus } from '../layers/bg-status';
+import { isAutomatic, placementOf } from '../layers/placement-model';
+import type { HereEntry } from '../layers/layers-here';
+import '../layers/layers-sheet';
 
 /** A card row or a row module whose column gutters get resize handles. */
 interface ResizeTarget {
@@ -272,7 +278,24 @@ export class StudioCanvas extends LitElement {
       this._startConnect();
     },
   });
-  private _longPress = new LongPress((path, x, y) => this._contextAt(path, x, y));
+  private _longPress = new LongPress((path, x, y) => this._longPressAt(path, x, y));
+  /** Alt-click, Layers here and the float bar's layer buttons (background-layers; designer 11 H). */
+  private _layers = new CanvasLayers({
+    card: () => this._card as never,
+    config: () => this._state?.config,
+    selection: () => this._sel,
+    select: (sel) => this._select(sel),
+    openBackdrop: (index) => {
+      requestOpenLayer(index);
+      this._select({ kind: 'card' });
+      this.stateManager?.setActiveTab('design');
+    },
+    announce: (message) => this.showStatus(message),
+  });
+  /** The open Layers here sheet. */
+  @state() private _sheet?: { list: HereEntry[]; x: number; y: number };
+  /** Layers under the selected module (itself included): the float bar's "Layers here (n)". */
+  @state() private _hereCount = 0;
 
   /** Show a short status ("Row 2 YAML copied") in the capsule at the canvas foot, announced politely. */
   showStatus(message: string): void {
@@ -293,6 +316,16 @@ export class StudioCanvas extends LitElement {
     if (this.stateManager && !this._unsubscribe) this._subscribe();
     if (this.hasUpdated) this._observe();
     window.addEventListener('resize', this._queuePlace);
+    setLayerMeasurer(this._layers.measure);
+    this._stopPreview = onStatus(() => this._applyPreview());
+  }
+
+  private _stopPreview?: () => void;
+
+  /** The pan and zoom Preview seg of the Card backdrop editor (editor only, never saved) goes to the live stack. */
+  private _applyPreview(): void {
+    const stack = this._card?.shadowRoot?.querySelector('mc-bg-stack') as (HTMLElement & { preview?: 'play' | 'start' | 'end' }) | null | undefined;
+    if (stack && stack.preview !== getPreview()) stack.preview = getPreview();
   }
 
   disconnectedCallback(): void {
@@ -307,6 +340,9 @@ export class StudioCanvas extends LitElement {
     this._itemMenu.close(false);
     this._longPress.cancel();
     clearTimeout(this._statusTimer);
+    setLayerMeasurer(undefined);
+    this._stopPreview?.();
+    this._sheet = undefined;
   }
 
   protected willUpdate(changed: PropertyValues): void {
@@ -333,6 +369,8 @@ export class StudioCanvas extends LitElement {
     for (const type of BLOCKED) host.addEventListener(type, this._block, true);
     host.addEventListener('click', this._onCardClick, true);
     host.addEventListener('keydown', this._onCardKeydown, true);
+    // the card backdrop reports a layer that fell back or went stale; the Card backdrop group shows it
+    host.addEventListener('mc-bg-layer-status', this._onBgStatus);
     // long-press (touch) opens the item menu; capture: the card host swallows pointer events
     const canvas = this.shadowRoot!.querySelector<HTMLElement>('.canvas')!;
     canvas.addEventListener('pointerdown', this._onLongDown, true);
@@ -374,6 +412,7 @@ export class StudioCanvas extends LitElement {
     const card = this._card;
     const config = this._state?.config;
     if (!card || !config || config === this._cardConfig) return;
+    if (config.background_layers !== this._cardConfig?.background_layers) clearStatuses();
     this._cardConfig = config;
     // a linked card plays the template's custom animations too (the config holds only its own)
     const live = { ...withTemplateAnimations(config, this._state?.templateAnimations) };
@@ -422,6 +461,11 @@ export class StudioCanvas extends LitElement {
     e.stopPropagation();
     e.preventDefault();
     if (this._longPress.justFired) return; // the click that ends a long-press
+    // Alt-click (Option on a Mac): the next layer beneath the selected one at the pointer
+    if (e.altKey && !this._connectFrom && this._layers.altSelect(e.clientX, e.clientY)) {
+      this.focusCanvas();
+      return;
+    }
     const target = selectionFromEvent(e.composedPath()) ?? { kind: 'card' };
     if (this._connectFrom) {
       // Connect mode: another module ends the flow; anything else keeps waiting.
@@ -600,6 +644,53 @@ export class StudioCanvas extends LitElement {
     this._longPress.down(e);
   };
 
+  private _onBgStatus = (e: Event): void => {
+    setStatus((e as CustomEvent).detail);
+  };
+
+  /** Press and hold: several layers at the point open the Layers here sheet, otherwise the item menu. */
+  private _longPressAt(path: EventTarget[], x: number, y: number): void {
+    const here = this._connectFrom ? [] : this._layers.here(x, y);
+    if (here.length > 1) this._openSheet(here, x, y);
+    else this._contextAt(path, x, y);
+  }
+
+  private _openSheet(list: HereEntry[], x: number, y: number): void {
+    this._itemMenu.close(false);
+    this._sheet = { list, x, y };
+  }
+
+  private _closeSheet = (): void => {
+    this._sheet = undefined;
+    this.focusCanvas();
+  };
+
+  private _pickFromSheet = (e: Event): void => {
+    const sheet = this._sheet;
+    const entry = sheet?.list.find((h) => h.key === (e as CustomEvent<{ key: string }>).detail.key);
+    this._sheet = undefined;
+    if (sheet && entry) this._layers.pick(entry, sheet.list);
+    this.focusCanvas();
+  };
+
+  /** Float bar > Layers here (n): the sheet beside the bar. */
+  private _openSheetFromBar(e: Event): void {
+    const list = this._layers.hereForSelection();
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    if (list.length) this._openSheet(list, r.left, r.bottom + 4);
+  }
+
+  private _openPlacementMenu(e: Event): void {
+    const canvas = this.shadowRoot?.querySelector<HTMLElement>('.canvas');
+    const sel = this._sel;
+    if (canvas && sel.kind === 'module') this._itemMenu.open(sel, e.currentTarget as HTMLElement, { returnFocus: canvas }, 'placement');
+  }
+
+  private _stepLayer(dir: 1 | -1): void {
+    this._layers.step(dir);
+    this.focusCanvas();
+  }
+
   private _contextAt(path: EventTarget[], x: number, y: number): void {
     this._openContext(selectionFromEvent(path) ?? { kind: 'card' }, x, y);
   }
@@ -706,10 +797,15 @@ export class StudioCanvas extends LitElement {
       return;
     }
     const t = toLocal(tr);
-    const top = t.top - 6;
-    const left = t.left - 6;
-    const w = t.width + 12;
-    const h = t.height + 12;
+    // a module put behind others or on top is framed inside its box, so the card's rounded clip never cuts the outline
+    const selMod = sel.kind === 'module' && this._state ? moduleAt(this._state.config, sel) : undefined;
+    const layered = !!selMod && (placementOf(selMod) !== 'flow' || (isAutomatic(selMod) && selMod.type === 'video-bg'));
+    const pad = layered ? -3 : 6;
+    const top = t.top - pad;
+    const left = t.left - pad;
+    const w = t.width + pad * 2;
+    const h = t.height + pad * 2;
+    frame.toggleAttribute('data-layered', layered);
     frame.hidden = false;
     Object.assign(frame.style, { top: `${top}px`, left: `${left}px`, width: `${w}px`, height: `${h}px` });
     if (sel.kind !== 'module') {
@@ -741,6 +837,10 @@ export class StudioCanvas extends LitElement {
     }
     canvasEl?.classList.toggle('framed', !frame.hidden);
     this._placeHover();
+    const here = sel.kind === 'module' ? this._layers.hereForSelection().length : 0;
+    if (here !== this._hereCount) this._hereCount = here;
+    notifyLayerMeasure();
+    this._applyPreview();
   }
 
   // ── column resize ──
@@ -1025,6 +1125,8 @@ export class StudioCanvas extends LitElement {
     const first = sel.kind === 'module' && index === 0;
     const last = sel.kind === 'module' && index >= count - 1;
     const locked = sel.kind === 'module' && !!config && templateIdMissing(config, sel);
+    const selMod = sel.kind === 'module' && config ? moduleAt(config, sel) : undefined;
+    const layeredSel = !!selMod && placementOf(selMod) !== 'flow';
 
     return html`
       <div
@@ -1060,6 +1162,7 @@ export class StudioCanvas extends LitElement {
           </div>
           ${this._renderColumnHandles()}
           <div class="float-bar" role="toolbar" aria-label=${t('Module actions')} hidden>
+            ${this._renderLayerBar(label, layeredSel)}
             <button type="button" class="icon-btn sm" aria-label=${t('Move up')} title=${t('Move up (Alt+Up)')} ?disabled=${first}
               @click=${(e: Event) => this._onBarClick('up', e)}><ha-icon icon="mdi:arrow-up"></ha-icon></button>
             <button type="button" class="icon-btn sm" aria-label=${t('Move down')} title=${t('Move down (Alt+Down)')} ?disabled=${last}
@@ -1100,7 +1203,26 @@ export class StudioCanvas extends LitElement {
       </p>
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
+      ${this._sheet
+        ? html`<mc-layers-sheet .items=${this._layers.sheetItems(this._sheet.list)} .x=${this._sheet.x} .y=${this._sheet.y} @pick=${this._pickFromSheet} @close=${this._closeSheet}></mc-layers-sheet>`
+        : nothing}
     `;
+  }
+
+  /** Layer controls of the float bar: name and placement of a layered module, Layers here (n), above / below, Placement. */
+  private _renderLayerBar(label: string, layered: boolean): TemplateResult | typeof nothing {
+    if (this._sel.kind !== 'module') return nothing;
+    const n = this._hereCount;
+    const mod = this._state ? moduleAt(this._state.config, this._sel as ModuleSelection) : undefined;
+    const place = mod ? placementOf(mod) : 'flow';
+    return html`${layered ? html`<span class="fb-name">${place === 'background' ? t('{name}, Behind others', { name: label }) : t('{name}, On top', { name: label })}</span>` : nothing}
+      ${n > 1
+        ? html`<button type="button" class="btn btn-text btn-sm" data-act="layers-here" aria-haspopup="dialog" @click=${(e: Event) => this._openSheetFromBar(e)}>${t('Layers here ({n})', { n })}</button>
+            <button type="button" class="icon-btn sm" data-act="layer-above" aria-label=${t('Select layer above')} title=${t('Select layer above')} @click=${() => this._stepLayer(-1)}><ha-icon icon="mdi:chevron-up-box-outline"></ha-icon></button>
+            <button type="button" class="icon-btn sm" data-act="layer-below" aria-label=${t('Select layer below')} title=${t('Select layer below')} @click=${() => this._stepLayer(1)}><ha-icon icon="mdi:chevron-down-box-outline"></ha-icon></button>`
+        : nothing}
+      <button type="button" class="icon-btn sm" data-act="placement" aria-haspopup="menu" aria-label=${t('Placement')} title=${t('Placement: put behind others, put on top, back to normal')} @click=${(e: Event) => this._openPlacementMenu(e)}><ha-icon icon="mdi:layers-outline"></ha-icon></button>
+      <span class="sep" aria-hidden="true"></span>`;
   }
 
   static styles = [
@@ -1358,6 +1480,27 @@ export class StudioCanvas extends LitElement {
         border: 1px solid var(--mc-divider);
         box-shadow: var(--mc-shadow-float);
         transition: top 0.2s ease-out, left 0.2s ease-out;
+      }
+      .float-bar .fb-name {
+        align-self: center;
+        padding: 0 8px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        max-width: 240px;
+        overflow-wrap: anywhere;
+      }
+      .float-bar .btn-text {
+        white-space: nowrap;
+      }
+      /* a module behind others or on top: dashed white line over a black inner line, 3:1 on light and dark pictures, no canvas tag */
+      .sel-frame[data-layered] {
+        border: 2px dashed #fff;
+        border-radius: 8px;
+        box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(0, 0, 0, 0.85);
+      }
+      .sel-frame[data-layered] .tag,
+      .sel-frame[data-layered] .h {
+        display: none;
       }
       .float-bar .sep {
         width: 1px;

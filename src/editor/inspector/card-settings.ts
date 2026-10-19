@@ -42,6 +42,9 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
+import '../layers/bg-layers';
+import { backdropHasProblem, startRuleLayers } from '../layers/bg-layers-model';
+import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
 
 /** Write one top-level card property (marks it not_synced when the card is linked to a template). */
 export type CardUpdate = (propertyName: keyof MagicCardConfig, value: unknown) => void;
@@ -180,7 +183,7 @@ const NO_VIEW: DesignViewState = { view: 'default', set: () => {}, open: new Map
 type Ov = Record<string, unknown>;
 
 /** The design keys a rule can hold beyond the legacy appearance fields (counted on the Conditions tab). */
-const DESIGN_KEYS = ['ring', 'shape', 'value_background', 'seasonal'];
+const DESIGN_KEYS = ['ring', 'shape', 'value_background', 'seasonal', 'background_layers'];
 
 /** Where a field reads and writes: the card itself (Default) or one rule's overrides. */
 interface DesignSource {
@@ -279,6 +282,39 @@ export function renderCardDesign(
       ></mc-value-bg-editor>
       ${unset('value_background')}
     </div>`,
+    // Card backdrop (bg-stack 1.0.0): a rule that sets background_layers replaces the whole list; Hover never carries it
+    style_hint: () =>
+      !src.rule && (config.background_layers?.length ?? 0) > 0
+        ? html`<p class="help" data-hint="backdrop">${t('Card backdrop layers sit on top of this colour and image.')}</p>`
+        : nothing,
+    backdrop: () => {
+      const own = src.rule ? 'background_layers' in ov : true;
+      const layers = (src.rule ? ov.background_layers : config.background_layers) as BackgroundLayerConfig[] | undefined;
+      const write = (list: BackgroundLayerConfig[]) => {
+        if (src.rule) updateRule({ overrides: { ...ov, background_layers: list } as CardAppearanceOverrides });
+        else update('background_layers', list.length ? list : undefined);
+      };
+      return html`<div class="field">
+        ${lbl(t('Layers'), 'background_layers')}
+        <mc-bg-layers
+          .layers=${layers}
+          .hass=${hass}
+          .rule=${src.rule ? { own } : undefined}
+          .lowPower=${config.layers_low_power === true}
+          .cardEntity=${config.entity}
+          .onWrite=${write}
+          .onRule=${(act: 'start' | 'reset') => {
+            if (act === 'start') write(startRuleLayers(config.background_layers));
+            else {
+              const rest = { ...ov };
+              delete rest.background_layers;
+              updateRule({ overrides: rest as CardAppearanceOverrides });
+            }
+          }}
+          .onLowPower=${() => update('layers_low_power', config.layers_low_power ? undefined : true)}
+        ></mc-bg-layers>
+      </div>`;
+    },
     ring: () => html`<div class="field">
       ${lbl(t('Ring'), 'ring')}
       <mc-ring-editor
@@ -339,8 +375,9 @@ export function renderCardDesign(
       'style',
       t('Style'),
       true,
-      [['background', 'background'], ['background_image', 'background_image'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
+      [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
+    ['backdrop', t('Card backdrop'), false, [['backdrop', 'background_layers']]],
     ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
     ['advanced', t('Advanced'), false, [['css', 'css']]],
   ];
@@ -348,12 +385,14 @@ export function renderCardDesign(
     const body = entries.map(([f]) => fields[f]()).filter((t) => t !== nothing);
     if (!body.length) return nothing;
     const count = entries.filter(([, k]) => k && isSet(src.get(k))).length;
-    const open = design.open.get(id) ?? (defaultOpen || count > 0);
+    // the backdrop group is always at hand inside a rule (its first choice is made when the rule is created)
+    const open = design.open.get(id) ?? (defaultOpen || count > 0 || (id === 'backdrop' && src.rule));
     return html`<section class="dgroup" data-group=${id}>
       <button type="button" class="dgroup-btn" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`dg-${id}`} @click=${() => design.toggle(id, !open)}>
         <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
         <span class="nm">${name}</span>
         ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+        ${id === 'backdrop' && !src.rule && backdropHasProblem(config.background_layers) ? html`<span class="chip is-warn" data-warn="backdrop">⚠ ${t('Problem')}</span>` : nothing}
       </button>
       <div class="dgroup-body" id=${`dg-${id}`} ?hidden=${!open}>${body}</div>
     </section>`;
@@ -440,6 +479,10 @@ export function renderCardDesign(
         ? html`<section class="group">
             <div class="field">
               ${renderFieldHead(t('Hover'), 'hover', syncCtx, { reset: fieldReset(t('Hover'), !!config.hover, () => update('hover', undefined)) })}
+            </div>
+            <div class="field" data-hover-backdrop>
+              <span class="lbl">${t('Card backdrop')}</span>
+              <p class="help">${t('Backgrounds do not change on hover.')}</p>
             </div>
             <mc-design-panel
               class="card-hover"

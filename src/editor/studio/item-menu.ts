@@ -27,9 +27,11 @@ import {
   selectionToPath,
 } from './selection';
 import { t } from '../i18n';
+import { applyPlacement } from '../layers/layer-actions';
+import { placementOf } from '../layers/placement-model';
 
 /** The menu's list, or one of its second levels in the same popover. */
-export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete';
+export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete' | 'placement';
 
 /** Layout modules "Wrap in layout" offers, in this order. */
 export const WRAP_TYPES = ['vertical', 'horizontal', 'row', 'tabs', 'slider-layout'] as const;
@@ -527,6 +529,14 @@ export class ItemMenu implements ReactiveController {
         : t('Reset {name} to the template? Your changes to it are lost.', { name }));
     }
     const targets = this._moveTargets(config, sel);
+    // layer placement (layer-placement 1.0.0): the choices that apply to this module right now
+    const at = placementOf(mod);
+    const place: Entry[] = [
+      ...(at !== 'background' ? [{ icon: 'mdi:arrange-send-to-back', label: t('Put behind others'), run: () => void applyPlacement(sm, sel, 'background'), focus: 'selection' as const }] : []),
+      ...(at !== 'overlay' ? [{ icon: 'mdi:arrange-bring-to-front', label: t('Put on top'), run: () => void applyPlacement(sm, sel, 'overlay'), focus: 'selection' as const }] : []),
+      ...(at !== 'flow' ? [{ icon: 'mdi:view-sequential-outline', label: t('Back to normal'), run: () => void applyPlacement(sm, sel, 'flow'), focus: 'selection' as const }] : []),
+    ];
+    if (this.view === 'placement') return { label: actionsLabel, groups: [[cancel], place] };
     if (this.view === 'move') return { label: actionsLabel, groups: [[back], targets] };
     if (this.view === 'wrap') {
       return {
@@ -558,6 +568,7 @@ export class ItemMenu implements ReactiveController {
       label: actionsLabel,
       groups: [
         [{ icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' }, ...add, ...connect, rename],
+        place,
         [
           { icon: 'mdi:content-copy', label: t('Copy module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('{name} copied', { name })); } },
           paste(t('Paste module after'), where),
