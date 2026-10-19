@@ -37,7 +37,8 @@ import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
 import { particlesFailed } from '../anim-studio/compile';
 import { loadEditor } from '../utils/editor-loader';
-import { prefetchLazy } from '../utils/lazy-chunks';
+import { lazyChunks, prefetchLazy } from '../utils/lazy-chunks';
+import { hasFlowLook } from '../contracts/flow-look';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';
@@ -221,6 +222,7 @@ export class MagicCard extends LitElement {
   /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
   @state()
   private _templateNotice?: 'missing' | 'unavailable';
+  private _lookWait = false;
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
   private _customRendered = false;
   /** Re-render on library changes; only once a custom animation was looked up. */
@@ -817,6 +819,11 @@ export class MagicCard extends LitElement {
    */
   private _resolveFlows(c: MagicCardConfig): ResolvedFlow[] | undefined {
     if (!Array.isArray(c.flows) || !c.flows.length) return undefined;
+    // flow-look: a look flow drawn while the chunk is still loading is classic; resolve again once it arrives
+    if (!this._lookWait && !lazyChunks['flow-look'].ready() && c.flows.some((f) => hasFlowLook(f))) {
+      this._lookWait = true;
+      lazyChunks['flow-look'].whenReady(() => this.requestUpdate());
+    }
     const entities = flowModuleEntities(this._resolvedConfig ?? this._config ?? c);
     // The overlay keys a flow by id (data-flow): unique when ids are missing / repeated (the editor uses the same keys).
     const keys = flowKeys(c.flows);
