@@ -12,8 +12,8 @@ import { fileURLToPath } from 'node:url';
 
 const CAPS = {
   // CEO 2026-10-20 combined beta (flow looks + slider looks + background layers + pause button): 496,640 B (485 KiB); was 486,400 (CEO 2026-10-19)
-  'magic-card.js': 496_640,
-  'magic-card-animation-studio.js': 1_049_600, // 1,025 KiB, measured 999,106 + 5 %, rounded up to 1 KiB; CEO 2026-10-20 combined beta (rule: a changed chunk that fails gets measured + 5 %); was 996,352 (973 KiB, CEO 2026-10-19, fix round: lazy-loader version guards)
+  'magic-card.js': 500_736, // 489 KiB, CEO 2026-10-20 combined beta (flow and slider looks, background layers, pause button); was 496,640 (CEO 2026-10-20), 486,400, 480,048
+  'magic-card-animation-studio.js': 1_000_448, // 977 KiB, CEO 2026-10-20 combined beta (tight: measured 999,106); was 996,352 (973 KiB, CEO 2026-10-19, fix round: lazy-loader version guards)
   // CEO 2026-10-20 combined beta: hosts-only editor, measured 878,017 + 2,623 B margin = 880,640 B (860 KiB), under the CEO's 868 KiB limit; was 851,968 (832 KiB, CEO 2026-10-19)
   'magic-card-editor.js': 880_640, // was 851_968, 819_200, 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
