@@ -49,6 +49,8 @@ import './mc-flows';
 import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../utils/flow';
 import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
+import { childScope, effectiveEntity } from '../utils/entity-scope';
+import { ModuleRegistry } from '../modules/module-registry';
 import { entityStateColor } from '../utils/entity-color';
 import { mergeTemplateWithOverrides } from '../services/template-merge';
 import { ConfigValidator } from '../services/config-validator';
@@ -309,6 +311,10 @@ export class MagicCard extends LitElement {
   );
   /** Editor paths of the modules being rendered (innermost last); children extend the top one. */
   private _pathStack: string[] = [];
+  /** Entity-scope: the entity a module here follows (the card's, or the nearest sharing layout's). */
+  private _scope?: string;
+  /** A module's config with its effective entity, kept so the same object comes back while the id is unchanged. */
+  private readonly _effectiveCfg = new WeakMap<CardModule, [string | undefined, CardModule]>();
   /** UI state of layout modules (active tab, slide), per card and keyed by the module's path. */
   private readonly _uiState = new Map<string, unknown>();
   private readonly _renderContext: RenderContext = {
@@ -327,7 +333,7 @@ export class MagicCard extends LitElement {
       const parent = this._pathStack[this._pathStack.length - 1];
       return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
     },
-    childHidden: (child) => !this.editMode && this._isHidden(child),
+    childHidden: (child) => !this.editMode && this._withEntity(this._entityOf(child), () => this._isHidden(child)),
     uiState: <T>(key: string) => {
       const id = `${this._pathStack[this._pathStack.length - 1] ?? ''}#${key}`;
       return {
@@ -776,16 +782,18 @@ export class MagicCard extends LitElement {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
     }
 
+    const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
     const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
     // the card's own animations: motion / glow on ha-card, particle layers inside the content
-    const anim = resolveAnimations({ animations: resolved.animations }, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const v2Index = this._v2(anim);
+    const anim = resolveAnimations({ animations: resolved.animations }, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const v2Index = this._v2(anim, scopeState, scope);
     const themeStyle = this._buildThemeStyle(resolved);
     // a shaped card: ha-card is clipped to the shape, its theme border drawn along it, the shadow on a wrapper
     const shape = resolveShape(resolved, this._shapes);
     // ha-card clips its edge (overflow: hidden): the card ring is drawn inside it
-    const ring = resolveRing(resolved.ring, { states: this.hass?.states, clipped: true, shaped: !!shape });
+    const ring = resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: !!shape });
     // the card's box_shadow, else the theme's card shadow (--ha-card-box-shadow, read in updated())
     const shadow = shape ? (resolved.box_shadow ? boxShadowToDropShadow(resolved.box_shadow) : this._themeShadow) : undefined;
     this._readThemeShadow = !!shape && !resolved.box_shadow;
@@ -806,9 +814,9 @@ export class MagicCard extends LitElement {
     // flow lines: only a card with flows gets the overlay (and the content's stacking for it)
     const flows = this._resolveFlows(resolved);
     // a tank fill / sparkline behind the rows (the card needs its own entity)
-    const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass });
+    const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass, entity: scope });
     // the pop-up surface is not shaped: its ring keeps the rounded outline and the card's position
-    const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, clipped: true, shaped: false }) : ring;
+    const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: false }) : ring;
     // the card's lightning (its scene or a card preset): nested layers skip theirs
     const flash = (!!seasonal && sceneFlashes(seasonal.scenes)) || animFlashes(anim);
     const rows = (animShape: ResolvedShape | undefined = shape) => {
@@ -991,18 +999,20 @@ export class MagicCard extends LitElement {
     const gridTemplate = rowGridTemplate(row, DEFAULT_LAYOUT);
     const gap = row.gap || DEFAULT_GAP;
     const rowStyle = `grid-template-columns: ${gridTemplate}; gap: ${gap}${row.padding ? `; padding: ${row.padding}` : ''}`;
-    const design = resolveConditionalDesign(row.design, this.hass);
+    const scope = this._scope;
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
+    const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
-    const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
-    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
+    const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
+    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     // row actions (not on the studio canvas) run on taps outside its modules' own actions and
     // controls. No role: a button role would hide the row's content from assistive tech. Focusable
     // (Enter / Space) only without interactive content of its own (set in updated()).
-    const actor: Actor = { actions: row.actions };
-    const hasActions = !this.editMode && hasRunnableActions(row.actions);
+    const actor: Actor = { actions: row.actions, entity: scope };
+    const hasActions = !this.editMode && hasRunnableActions(row.actions, scope);
     const own = (e: Event) => !this._isRowControlEvent(e);
 
     return withShapeShadow(html`
@@ -1019,7 +1029,7 @@ export class MagicCard extends LitElement {
         data-mc-hover=${this._hover(`row-${ri}`, design?.hover, { shape: shape && { design, padding: row.padding }, borderLength: border })}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
-        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim) ?? nothing}
+        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim, scopeState, scope) ?? nothing}
         data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
         data-mc-flash=${animFlashes(anim) ? '' : nothing}
         data-mc-border-fx=${border ? '' : nothing}
@@ -1042,12 +1052,14 @@ export class MagicCard extends LitElement {
 
     const gap = col.gap || (nested === undefined ? DEFAULT_GAP : NESTED_COLUMN_GAP);
     const colStyle = `gap: ${gap}${col.padding ? `; padding: ${col.padding}` : ''}`;
-    const design = resolveConditionalDesign(col.design, this.hass);
+    const scope = this._scope;
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
+    const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
-    const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
-    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
+    const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
+    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
 
     return withShapeShadow(html`
@@ -1060,7 +1072,7 @@ export class MagicCard extends LitElement {
         data-mc-empty=${this.editMode && !col.modules?.length ? '' : nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
-        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim) ?? nothing}
+        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim, scopeState, scope) ?? nothing}
         data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
         data-mc-flash=${animFlashes(anim) ? '' : nothing}
         data-mc-border-fx=${border ? '' : nothing}
@@ -1079,7 +1091,38 @@ export class MagicCard extends LitElement {
    * conditions and (studio canvas) its editor path. Layout children come through here as well, with
    * the path "row.col.module/slot.index/..." (see RenderContext.renderChild).
    */
-  private _renderModule(mod: CardModule, path: string): TemplateResult {
+  private _renderModule(source: CardModule, path: string): TemplateResult {
+    // entity-scope: render with the effective entity; the children follow the nearest sharing layout
+    const up = this._scope;
+    const entity = this._entityOf(source);
+    const cached = this._effectiveCfg.get(source);
+    const mod = (source.entity || undefined) === entity ? source : cached && cached[0] === entity ? cached[1] : { ...source, entity };
+    if (mod !== source) this._effectiveCfg.set(source, [entity, mod]);
+    this._scope = childScope(source, up);
+    try {
+      return this._withEntity(entity, () => this._renderModuleAt(mod, path));
+    } finally {
+      this._scope = up;
+    }
+  }
+
+  private _entityOf(mod: CardModule): string | undefined {
+    return effectiveEntity(mod, this._scope, ModuleRegistry.get(mod.type)?.metadata.inherit);
+  }
+
+  /** Run fn with the entity template variables and conditions read (RenderContext.entity). */
+  private _withEntity<T>(entity: string | undefined, fn: () => T): T {
+    const ctx = this._renderContext;
+    const outer = ctx.entity;
+    ctx.entity = entity;
+    try {
+      return fn();
+    } finally {
+      ctx.entity = outer;
+    }
+  }
+
+  private _renderModuleAt(mod: CardModule, path: string): TemplateResult {
     const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;

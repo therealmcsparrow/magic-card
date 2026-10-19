@@ -33,6 +33,7 @@ class ForecastModule extends BaseLazyStub {
     description: lm('Display weather forecast data'),
     category: 'advanced',
     icon: 'mdi:calendar-week-outline',
+    inherit: ['weather'],
   };
 
   createDefault(): ForecastModuleConfig {

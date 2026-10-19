@@ -22,6 +22,7 @@ class WeatherModule extends BaseLazyStub {
     description: lm('Display weather entity information'),
     category: 'advanced',
     icon: 'mdi:weather-partly-cloudy',
+    inherit: ['weather'],
   };
 
   createDefault(): WeatherModuleConfig {

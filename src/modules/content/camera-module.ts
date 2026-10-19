@@ -22,6 +22,7 @@ class CameraModule extends BaseLazyStub {
     description: lm('Display a camera entity stream'),
     category: 'content',
     icon: 'mdi:camera-outline',
+    inherit: ['camera'],
   };
 
   createDefault(): CameraModuleConfig {
