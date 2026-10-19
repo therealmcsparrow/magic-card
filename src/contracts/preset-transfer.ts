@@ -201,52 +201,34 @@ export function decodeCssEscapes(value: string): string {
     });
 }
 
-const URL_CALL_RE = /\burl\(([^)]*)\)/gi;
-const STRING_RE = /"([^"]*)"|'([^']*)'/g;
-const NET_START_RE = /^(?:\/[/\\]|(?:https?|wss?|ftp):)/i;
 /** Longest value checked; the import already drops values over 1,024 characters, a longer one is refused as suspicious. */
 const CHECK_MAX_CHARS = 4096;
-/** Leading and trailing control characters and spaces removed, the way a URL parser does (a loop: no backtracking on long runs). */
-function trimCtl(s: string): string {
-  let i = 0;
-  let j = s.length;
-  while (i < j && s.charCodeAt(i) <= 32) i++;
-  while (j > i && s.charCodeAt(j - 1) <= 32) j--;
-  return s.slice(i, j);
-}
-/** The argument of a url(): trimmed, one pair of quotes removed, trimmed again. */
-const urlArg = (raw: string): string => {
-  const t = trimCtl(raw);
-  return trimCtl(/^(["']).*\1$/s.test(t) ? t.slice(1, -1) : t);
-};
-// Network schemes only: card-mod CSS is full of "color: red" and a generic "word:" test would flag all of it.
-// Any other scheme can only be fetched through url() or image functions, which are checked below.
-const BARE_SCHEME_RE = /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):(?!\/\/)/i;
-const IMAGE_FN_RE = /(?:^|[^a-z0-9-])(?:-webkit-)?(?:image-set|image|src|cross-fade|element)\(/i;
-const SAFE_URL_RE = /^(?:#|\/(?!\/)|data:image\/)/i;
+/** A url() whose argument is unquoted or simply quoted, closed, and holds no space, quote, bracket or backslash. */
+const SIMPLE_URL_RE = /\burl\(\s*(?:"([^"\s()\\]*)"|'([^'\s()\\]*)'|([^"'\s()\\]*))\s*\)/gi;
+/** Same-origin only: a path under /local/ (plain characters, checked for // and .. in code) or a #fragment. */
+const OWN_URL_RE = /^(?:\/local\/[\w\-./%~+=@,]*|#[\w-]+)$/;
+const FETCH_RE = /\burl\(|(?:^|[^a-z0-9-])(?:-webkit-)?(?:image-set|image|src|cross-fade|element)\(|@import/i;
+/** A quoted string that cannot be (part of) an address: no `:`, `/` or `\`. */
+const PLAIN_STRING_RE = /"[^"\\:/]*"|'[^'\\:/]*'/g;
 
 /**
- * True when a theme value can make the browser contact another host. Escapes are decoded first, so
- * `url(ht\74ps://x)` and `url("\2f\2f x")` count. Flagged: a `scheme://` or `//` host, a `http:`-style scheme
- * without slashes (`http:evil.example` is read as a host), a backslash left in the value, an
- * `@import`, and any url() that is not `#id`, a single-slash path or an inline image.
+ * True when a theme value is not provably safe, i.e. it can make the browser contact another website
+ * (strict allow-list, CEO 2026-10-19; the earlier trick-by-trick detection was bypassed three times).
+ * A value passes only when, after the allowed parts are taken out, it has no quote, no backslash, no `url(`,
+ * no image function (image-set, -webkit-image-set, image, src, cross-fade, element), no `@import` and no `/*`.
+ * Allowed parts: url() with a closed, trimmed argument that is exactly `/local/...` (no `//`, no `..`) or `#id`,
+ * and quoted strings outside url() and image functions that hold no `:`, `/` or `\` (font names such as "Segoe UI").
+ * Values over 4096 characters are refused. A `scheme://`, `//host` or `http:host` anywhere is also flagged.
  */
 export function contactsOtherHost(value: string): boolean {
-  // `\` and `/*` are refused outright: where a comment ends inside a string or url() is not worth reasoning about
   if (value.length > CHECK_MAX_CHARS || value.includes('\\') || value.includes('/*')) return true;
-  // browsers delete tab, CR and LF inside a URL: url("/<TAB>/evil.example") is //evil.example
-  const v = decodeCssEscapes(value).replace(/[\t\r\n]/g, '');
-  if (EXTERNAL_REF_RE.test(v) || BARE_SCHEME_RE.test(v) || /@import/i.test(v)) return true;
-  // a string can be built in one variable and used in another: image-set(var(--x) 1x). Any quoted string that
-  // starts like a host once control characters and spaces are gone is flagged, and so is an image function with var().
-  for (const s of v.matchAll(STRING_RE)) if (NET_START_RE.test(trimCtl(s[1] ?? s[2]))) return true;
-  const image = IMAGE_FN_RE.test(v) || /\burl\(/i.test(v);
-  if (image && /\bvar\(/i.test(v)) return true;
-  for (const m of v.matchAll(URL_CALL_RE)) if (!SAFE_URL_RE.test(urlArg(m[1]))) return true;
-  const rest = v.replace(URL_CALL_RE, '');
-  const at = rest.search(IMAGE_FN_RE);
-  // image-set(), -webkit-image-set(), image(), src()...: every string after the function name must be safe, not only the first
-  return at >= 0 && [...rest.slice(at).matchAll(STRING_RE)].some((s) => !SAFE_URL_RE.test(trimCtl(s[1] ?? s[2])));
+  if (EXTERNAL_REF_RE.test(value) || /(?:^|[^a-z0-9+.-])(?:https?|wss?|ftp):/i.test(value)) return true;
+  const rest = value.replace(SIMPLE_URL_RE, (m, a?: string, b?: string, c?: string) => {
+    const arg = a ?? b ?? c ?? '';
+    return OWN_URL_RE.test(arg) && !arg.includes('//') && !arg.includes('..') ? ' ' : m;
+  });
+  if (FETCH_RE.test(rest)) return true;
+  return /["']/.test(rest.replace(PLAIN_STRING_RE, ' '));
 }
 
 /** A value with a path on the sharer's own Home Assistant (info line only). */
