@@ -4,6 +4,12 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Documentation
+-   **Complete dashboards.** Twenty-five complete dashboards in the gallery, five each for sci-fi, fantasy, western, steampunk and dystopian homes. Each is a sections view made only of Magic Cards, with a matching theme, install steps and a list of the entities it uses. See [Complete dashboards](documentation/gallery/dashboards/README.md).
+-   **Gallery cards 81 and 82.** An operations console in a retro starship style, wide and phone-width.
+
 ## 2026.10.11-beta.2 (2026-10-19, pre-release)
 
 ### New

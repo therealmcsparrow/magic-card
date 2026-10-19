@@ -1,0 +1,2365 @@
+# Hunter's Keep dashboard (theme "Mountain Keep"). edit the generator, not this file.
+title: Hunter's Keep
+views:
+  - type: sections
+    max_columns: 4
+    path: keep
+    title: Hunter's Keep
+    icon: mdi:castle
+    theme: Mountain Keep
+    sections:
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Hero
+            background: 'radial-gradient(ellipse 70% 90% at 100% 0%, rgba(242,169,59,0.16), transparent 60%), radial-gradient(ellipse 60% 70% at 0% 100%, rgba(163,32,28,0.22), transparent 65%), repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 1px, transparent 1px 26px), repeating-linear-gradient(90deg, rgba(0,0,0,0.14) 0 1px, transparent 1px 54px), linear-gradient(170deg, #26221e 0%, #161311 100%)'
+            border_radius: 14px
+            padding: 18px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: ember-rise
+                name: Rising embers
+                kind: particles
+                duration: 5
+                iterations: infinite
+                particles: {count: 10, direction: rise, speed: 1, size: [2, 4], colors: ['#ffb347', '#ff7a2e', '#ffd27a'], fade: true, spread: 70, gravity: -0.2, layer: back}
+            animations: [{id: embers, preset: custom:ember-rise, color: '#f2a93b'}]
+            rows:
+              - id: crest
+                column_widths: [1fr, auto]
+                gap: 12px
+                columns:
+                  - gap: 2px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: High in the mountains
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Hunter's Keep
+                        design:
+                          font_family: '''Pirata One'', ''Playfair Display'', Georgia, serif'
+                          font_size: 46px
+                          color: '#d9dde2'
+                          line_height: '1.05'
+                          letter_spacing: 1px
+                          text_shadow: '0 2px 0 #000, 0 0 18px rgba(163,32,28,0.45)'
+                      - type: text
+                        use_template: true
+                        text: '{{ ''Good morning'' if now().hour < 12 else ''Good afternoon'' if now().hour < 18 else ''Good evening'' }}, hunter'
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 16px, font_style: italic, color: '#d6c08e', margin_top: 4px}
+                  - gap: 0px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%H:%M'') }}'
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 40px
+                          font_weight: '700'
+                          color: '#ffd27a'
+                          line_height: '1'
+                          text_align: right
+                          text_shadow: 0 0 16px rgba(242,169,59,0.45)
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%A %-d %B'') }}'
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478', text_align: right, margin_top: 6px, white_space: nowrap}
+              - id: rule
+                columns:
+                  - modules:
+                      - type: separator
+                        separator_style: none
+                        design: {height: 1px, margin: 2px 0, background: 'linear-gradient(90deg, transparent, #a3201c 18%, #d0342c 50%, #a3201c 82%, transparent)', opacity: '0.85'}
+              - id: status
+                layout: 1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design: {padding: 6px 10px, border_radius: 999px, background_color: 'rgba(0,0,0,0.35)', border: '1px solid rgba(217,221,226,0.14)', justify_content: center}
+                        modules:
+                          - {type: icon, icon: mdi:lock, size: 16px, design: {color: '#7fae6a', display: flex}}
+                          - {type: text, text: Gate barred, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}}
+                        display: {conditions: [{type: state, entity: lock.front_door, state: locked}]}
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design: {padding: 6px 10px, border_radius: 999px, background_color: 'rgba(0,0,0,0.35)', border: '1px solid rgba(217,221,226,0.14)', justify_content: center}
+                        modules:
+                          - {type: icon, icon: mdi:lock-open-variant, size: 16px, design: {color: '#d0342c', display: flex}}
+                          - {type: text, text: Gate open, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}}
+                        display: {conditions: [{type: state, entity: lock.front_door, state_not: locked}]}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design: {padding: 6px 10px, border_radius: 999px, background_color: 'rgba(0,0,0,0.35)', border: '1px solid rgba(217,221,226,0.14)', justify_content: center}
+                        modules:
+                          - {type: icon, icon: mdi:alert-decagram, size: 16px, design: {color: '#f2a93b', display: flex}}
+                          - {type: text, text: Charm hums, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}}
+                        display: {mode: any, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}, {type: state, entity: binary_sensor.patio_motion, state: 'on'}]}
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design: {padding: 6px 10px, border_radius: 999px, background_color: 'rgba(0,0,0,0.35)', border: '1px solid rgba(217,221,226,0.14)', justify_content: center}
+                        modules:
+                          - {type: icon, icon: mdi:shield-check, size: 16px, design: {color: '#7fae6a', display: flex}}
+                          - {type: text, text: Charm still, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}}
+                        display: {mode: every, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'off'}, {type: state, entity: binary_sensor.patio_motion, state: 'off'}]}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design: {padding: 6px 10px, border_radius: 999px, background_color: 'rgba(0,0,0,0.35)', border: '1px solid rgba(217,221,226,0.14)'}
+                        modules:
+                          - {type: icon, icon: mdi:paw, size: 16px, design: {color: '#d9dde2', display: flex}}
+                          - type: text
+                            use_template: true
+                            text: '{{ states.person | selectattr(''state'',''eq'',''home'') | list | count }} of 3 home'
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}
+              - id: foot
+                padding: 2px 0 0
+                columns:
+                  - modules:
+                      - type: text
+                        text: Wind howls over the high passes
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_style: italic, color: '#8f8478', text_align: center, letter_spacing: 0.5px}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Weather
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Weather
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Omens of the sky
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: sky
+                design:
+                  padding: 6px 10px
+                  border_radius: 10px
+                  background_color: rgba(0,0,0,0.28)
+                  border: 1px solid rgba(217,221,226,0.08)
+                  animations: [{id: mist, preset: fog, intensity: 40, strength: 35}]
+                columns:
+                  - modules:
+                      - type: weather
+                        entity: weather.home
+                        show_temperature: true
+                        show_condition: true
+                        show_forecast: true
+                        forecast_days: 5
+                        animated_icons: true
+                        design: {color: '#ece4d6', font_family: 'Alegreya, Lora, Georgia, serif'}
+              - id: stats
+                layout: 1-1-1
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 8px 4px, border_radius: 6px, background: 'linear-gradient(180deg, #e8d8b0, #d6c08e)', box_shadow: '0 4px 10px rgba(0,0,0,0.4)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:thermometer, size: 16px, design: {color: '#f2a93b', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.outdoor_temperature
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#2a1d10', white_space: nowrap}
+                          - type: text
+                            text: Outside
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#6a4a26'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 8px 4px, border_radius: 6px, background: 'linear-gradient(180deg, #e8d8b0, #d6c08e)', box_shadow: '0 4px 10px rgba(0,0,0,0.4)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:weather-windy, size: 16px, design: {color: '#f2a93b', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.wind_gust
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#2a1d10', white_space: nowrap}
+                          - type: text
+                            text: Gusts
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#6a4a26'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 8px 4px, border_radius: 6px, background: 'linear-gradient(180deg, #e8d8b0, #d6c08e)', box_shadow: '0 4px 10px rgba(0,0,0,0.4)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:weather-pouring, size: 16px, design: {color: '#f2a93b', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.rain_today
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#2a1d10', white_space: nowrap}
+                          - type: text
+                            text: Rain
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#6a4a26'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: People
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Household
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Who's home
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="60" cy="60" r="49" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55"/><path fill="currentColor" fill-rule="evenodd" d="M60 14 L68 46 L92 28 L74 52 L106 60 L74 68 L92 92 L68 74 L60 106 L52 74 L28 92 L46 68 L14 60 L46 52 L28 28 L52 46 Z M60 46 L72 60 L60 74 L48 60 Z"/><circle cx="60" cy="60" r="6" fill="currentColor" fill-opacity="0.75"/></svg>
+                        size: 34px
+                        design: {color: '#8c939c', display: flex}
+              - id: people
+                layout: 1-1-1
+                gap: 6px
+                padding: 6px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 6px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: image
+                            entity: person.anna
+                            entity_picture: true
+                            aspect_ratio: '1'
+                            design:
+                              width: 78px
+                              border_radius: 50%
+                              css: 'outline: 2px solid #8c939c; outline-offset: 3px;'
+                              conditional:
+                                - id: home
+                                  name: Home
+                                  conditions: [{type: state, entity: person.anna, state: home}]
+                                  design: {css: 'outline: 2px solid #f2a93b; outline-offset: 3px; box-shadow: 0 0 16px rgba(242,169,59,0.45);'}
+                                - {id: away, name: Away, conditions: [{type: state, entity: person.anna, state_not: home}], design: {filter: grayscale(0.85) brightness(0.8)}}
+                          - {type: text, text: Anna, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#d9dde2', margin_top: 4px}}
+                          - type: text
+                            text: At the keep
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#2a1d10'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: '#f2a93b'
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.anna, state: home}]}
+                          - type: text
+                            text: On the road
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(217,221,226,0.10)
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.anna, state: not_home}]}
+                          - type: text
+                            text: Out hunting
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#e8d8b0'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(163,32,28,0.45)
+                              white_space: nowrap
+                              text_align: center
+                            display: {mode: every, conditions: [{type: state, entity: person.anna, state_not: home}, {type: state, entity: person.anna, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.anna}}
+                  - modules:
+                      - type: vertical
+                        gap: 6px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: image
+                            entity: person.ben
+                            entity_picture: true
+                            aspect_ratio: '1'
+                            design:
+                              width: 78px
+                              border_radius: 50%
+                              css: 'outline: 2px solid #8c939c; outline-offset: 3px;'
+                              conditional:
+                                - id: home
+                                  name: Home
+                                  conditions: [{type: state, entity: person.ben, state: home}]
+                                  design: {css: 'outline: 2px solid #f2a93b; outline-offset: 3px; box-shadow: 0 0 16px rgba(242,169,59,0.45);'}
+                                - {id: away, name: Away, conditions: [{type: state, entity: person.ben, state_not: home}], design: {filter: grayscale(0.85) brightness(0.8)}}
+                          - {type: text, text: Ben, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#d9dde2', margin_top: 4px}}
+                          - type: text
+                            text: At the keep
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#2a1d10'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: '#f2a93b'
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.ben, state: home}]}
+                          - type: text
+                            text: On the road
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(217,221,226,0.10)
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.ben, state: not_home}]}
+                          - type: text
+                            text: Out hunting
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#e8d8b0'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(163,32,28,0.45)
+                              white_space: nowrap
+                              text_align: center
+                            display: {mode: every, conditions: [{type: state, entity: person.ben, state_not: home}, {type: state, entity: person.ben, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.ben}}
+                  - modules:
+                      - type: vertical
+                        gap: 6px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: image
+                            entity: person.lisa
+                            entity_picture: true
+                            aspect_ratio: '1'
+                            design:
+                              width: 78px
+                              border_radius: 50%
+                              css: 'outline: 2px solid #8c939c; outline-offset: 3px;'
+                              conditional:
+                                - id: home
+                                  name: Home
+                                  conditions: [{type: state, entity: person.lisa, state: home}]
+                                  design: {css: 'outline: 2px solid #f2a93b; outline-offset: 3px; box-shadow: 0 0 16px rgba(242,169,59,0.45);'}
+                                - {id: away, name: Away, conditions: [{type: state, entity: person.lisa, state_not: home}], design: {filter: grayscale(0.85) brightness(0.8)}}
+                          - {type: text, text: Lisa, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#d9dde2', margin_top: 4px}}
+                          - type: text
+                            text: At the keep
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#2a1d10'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: '#f2a93b'
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.lisa, state: home}]}
+                          - type: text
+                            text: On the road
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(217,221,226,0.10)
+                              white_space: nowrap
+                              text_align: center
+                            display: {conditions: [{type: state, entity: person.lisa, state: not_home}]}
+                          - type: text
+                            text: Out hunting
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#e8d8b0'
+                              padding: 2px 9px
+                              border_radius: 999px
+                              background_color: rgba(163,32,28,0.45)
+                              white_space: nowrap
+                              text_align: center
+                            display: {mode: every, conditions: [{type: state, entity: person.lisa, state_not: home}, {type: state, entity: person.lisa, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.lisa}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · The great hall
+            background: linear-gradient(90deg, rgba(163,32,28,0.26) 0%, rgba(20,16,13,0.55) 55%, rgba(20,16,13,0.15) 100%)
+            border_radius: 10px
+            padding: 12px 14px 10px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.35)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 12px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 L42 24 L24 44 L6 24 Z"/><path d="M24 14 V34 M16 24 H32" stroke-width="2.6"/></svg>
+                        size: 26px
+                        design: {color: '#f2a93b', display: flex, filter: 'drop-shadow(0 0 6px rgba(242,169,59,0.6))'}
+                  - gap: 1px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: The great hall
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#d9dde2'
+                          line_height: '1.1'
+                      - {type: text, text: 'Runes, candles and jobs', design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_style: italic, color: '#8f8478'}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Rune stones
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: rune-glow
+                name: Rune glow
+                kind: keyframes
+                duration: 3.2
+                iterations: infinite
+                target: icon
+                easing: ease-in-out
+                keyframes:
+                  - {at: 0, filter: 'drop-shadow(0 0 2px rgba(242,169,59,0.5)) brightness(0.95)'}
+                  - {at: 50, filter: 'drop-shadow(0 0 9px rgba(255,190,90,0.95)) brightness(1.2)'}
+                  - {at: 100, filter: 'drop-shadow(0 0 2px rgba(242,169,59,0.5)) brightness(0.95)'}
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Scenes
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Rune stones
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: runes
+                layout: 1-1-1-1-1
+                column_widths: [1fr, 1fr, 1fr, 1fr, 1fr]
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 2px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'radial-gradient(circle at 50% 30%, rgba(242,169,59,0.16), transparent 62%), linear-gradient(180deg, #2a2420, #191512)'
+                          border: 1px solid rgba(242,169,59,0.22)
+                          cursor: pointer
+                          transition: transform 0.15s, border-color 0.15s
+                          hover: {transform: translateY(-2px), border_color: 'rgba(255,210,122,0.6)'}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#f2a93b'}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5 C30 15 38 20 38 30 C38 38 32 43 24 43 C16 43 10 38 10 30 C10 22 16 18 18 11 C21 17 22 20 24 21 C26 15 25 10 24 5 Z"/><path d="M24 28 C27 32 29 34 29 37 C29 40 27 41 24 41 C21 41 19 40 19 37 C19 34 22 32 24 28 Z" stroke-width="2.2"/></svg>
+                            size: 40px
+                            design: {color: '#f2a93b', display: flex, animations: [{id: glow, preset: custom:rune-glow, target: icon, delay: 0s}]}
+                          - type: text
+                            text: Fire
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              letter_spacing: 1px
+                              text_align: center
+                              margin_top: 4px
+                          - {type: text, text: Hearth, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center}}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.relax}}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 2px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'radial-gradient(circle at 50% 30%, rgba(242,169,59,0.16), transparent 62%), linear-gradient(180deg, #2a2420, #191512)'
+                          border: 1px solid rgba(242,169,59,0.22)
+                          cursor: pointer
+                          transition: transform 0.15s, border-color 0.15s
+                          hover: {transform: translateY(-2px), border_color: 'rgba(255,210,122,0.6)'}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#f2a93b'}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16 H30 C35 16 37 12 35 9 C33 6 28 7 28 11"/><path d="M6 25 H38 C43 25 44 31 41 33 C38 35 34 33 35 30"/><path d="M6 34 H24 C28 34 30 38 28 41 C26 43 22 42 22 39" stroke-width="2.2"/></svg>
+                            size: 40px
+                            design: {color: '#f2a93b', display: flex, animations: [{id: glow, preset: custom:rune-glow, target: icon, delay: -0.6s}]}
+                          - type: text
+                            text: Gust
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              letter_spacing: 1px
+                              text_align: center
+                              margin_top: 4px
+                          - {type: text, text: Bright, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center}}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.focus}}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 2px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'radial-gradient(circle at 50% 30%, rgba(242,169,59,0.16), transparent 62%), linear-gradient(180deg, #2a2420, #191512)'
+                          border: 1px solid rgba(242,169,59,0.22)
+                          cursor: pointer
+                          transition: transform 0.15s, border-color 0.15s
+                          hover: {transform: translateY(-2px), border_color: 'rgba(255,210,122,0.6)'}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#f2a93b'}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5 L40 11 V23 C40 33 33 40 24 43 C15 40 8 33 8 23 V11 Z"/><path d="M24 13 V35 M15 22 H33" stroke-width="2.2"/></svg>
+                            size: 40px
+                            design: {color: '#f2a93b', display: flex, animations: [{id: glow, preset: custom:rune-glow, target: icon, delay: -1.2s}]}
+                          - type: text
+                            text: Shield
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              letter_spacing: 1px
+                              text_align: center
+                              margin_top: 4px
+                          - {type: text, text: Ward, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center}}
+                        actions: {tap_action: {action: perform-action, service: alarm_control_panel.alarm_arm_home, data: {entity_id: alarm_control_panel.home}}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 2px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'radial-gradient(circle at 50% 30%, rgba(242,169,59,0.16), transparent 62%), linear-gradient(180deg, #2a2420, #191512)'
+                          border: 1px solid rgba(242,169,59,0.22)
+                          cursor: pointer
+                          transition: transform 0.15s, border-color 0.15s
+                          hover: {transform: translateY(-2px), border_color: 'rgba(255,210,122,0.6)'}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#f2a93b'}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="9" stroke-width="2.2"/><path d="M24 2 V9 M24 39 V46 M2 24 H9 M39 24 H46" stroke-width="2.2"/></svg>
+                            size: 40px
+                            design: {color: '#f2a93b', display: flex, animations: [{id: glow, preset: custom:rune-glow, target: icon, delay: -1.7999999999999998s}]}
+                          - type: text
+                            text: Circle
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              letter_spacing: 1px
+                              text_align: center
+                              margin_top: 4px
+                          - {type: text, text: Cinema, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center}}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.movie}}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 2px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'radial-gradient(circle at 50% 30%, rgba(242,169,59,0.16), transparent 62%), linear-gradient(180deg, #2a2420, #191512)'
+                          border: 1px solid rgba(242,169,59,0.22)
+                          cursor: pointer
+                          transition: transform 0.15s, border-color 0.15s
+                          hover: {transform: translateY(-2px), border_color: 'rgba(255,210,122,0.6)'}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#f2a93b'}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M33 7 C21 8 13 17 14 28 C15 37 23 43 32 42 C24 38 20 31 21 23 C22 15 27 10 33 7 Z"/><circle cx="35" cy="20" r="2" fill="currentColor"/><circle cx="38" cy="31" r="1.6" fill="currentColor"/></svg>
+                            size: 40px
+                            design: {color: '#f2a93b', display: flex, animations: [{id: glow, preset: custom:rune-glow, target: icon, delay: -2.4s}]}
+                          - type: text
+                            text: Calm
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              letter_spacing: 1px
+                              text_align: center
+                              margin_top: 4px
+                          - {type: text, text: Rest, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center}}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.night}}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Lights
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: candle-glow
+                name: Candle glow
+                kind: keyframes
+                duration: 2.8
+                iterations: infinite
+                target: element
+                easing: ease-in-out
+                keyframes:
+                  - {at: 0, shadow: '0 0 14px rgba(242,169,59,0.22), inset 0 0 0 1px rgba(242,169,59,0.45)'}
+                  - {at: 40, shadow: '0 0 22px rgba(242,169,59,0.34), inset 0 0 0 1px rgba(255,210,122,0.6)'}
+                  - {at: 70, shadow: '0 0 12px rgba(242,169,59,0.18), inset 0 0 0 1px rgba(242,169,59,0.4)'}
+                  - {at: 100, shadow: '0 0 14px rgba(242,169,59,0.22), inset 0 0 0 1px rgba(242,169,59,0.45)'}
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Lights
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Candles
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+                  - vertical_align: center
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ [''light.living_room'',''light.kitchen'',''light.bedroom'',''light.hallway'',''light.porch'',''light.garden''] | select(''is_state'',''on'') | list | count }} of 6 lit'
+                        design:
+                          font_family: Alegreya, Lora, Georgia, serif
+                          font_size: 13px
+                          font_weight: '700'
+                          color: '#2a1d10'
+                          padding: 3px 10px
+                          border_radius: 999px
+                          background_color: '#f2a93b'
+                          white_space: nowrap
+              - id: a
+                layout: 1-1-1
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.living_room, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.living_room
+                          - type: text
+                            text: Great hall
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.living_room, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.living_room, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.living_room}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.kitchen, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.kitchen
+                          - type: text
+                            text: Kitchen
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.kitchen, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.kitchen, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.kitchen}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.bedroom, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.bedroom
+                          - type: text
+                            text: Chambers
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.bedroom, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.bedroom, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.bedroom}}
+              - id: b
+                layout: 1-1-1
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.hallway, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.hallway
+                          - type: text
+                            text: Corridor
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.hallway, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.hallway, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.hallway}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.porch, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.porch
+                          - type: text
+                            text: Gatehouse
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.porch, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.porch, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.porch}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 12px 4px 10px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1f1b18, #161311)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          transition: background 0.3s
+                          conditional:
+                            - id: lit
+                              name: Lit
+                              conditions: [{type: state, entity: light.garden, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 28%, rgba(255,190,90,0.28), transparent 60%), linear-gradient(180deg, #2e241a, #1a1410)'
+                                border: 1px solid rgba(242,169,59,0.35)
+                                animations: [{id: glow, preset: custom:candle-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:candle
+                            size: 30px
+                            design:
+                              color: '#5b554d'
+                              display: flex
+                              conditional:
+                                - id: lit
+                                  name: Lit
+                                  conditions: [{type: state, state: 'on'}]
+                                  design:
+                                    color: '#ffd27a'
+                                    filter: drop-shadow(0 0 8px rgba(255,190,90,0.85))
+                                    animations: [{id: flame, preset: flame-flicker, target: icon, intensity: 10, color: '#f2a93b'}]
+                            entity: light.garden
+                          - type: text
+                            text: Courtyard
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 4px
+                          - type: text
+                            text: Lit
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#f2a93b', text_align: center}
+                            display: {conditions: [{type: state, entity: light.garden, state: 'on'}]}
+                          - type: text
+                            text: Snuffed
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#8f8478', text_align: center}
+                            display: {conditions: [{type: state, entity: light.garden, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.garden}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Notice board
+            background: 'repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 2px, transparent 2px 13px), radial-gradient(ellipse at 50% 0%, rgba(255,200,120,0.12), transparent 60%), linear-gradient(170deg, #4b3322 0%, #33221a 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: '0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 4px #2a1b12, inset 0 0 0 5px rgba(217,221,226,0.08)'
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: seal-pulse
+                name: Seal pulse
+                kind: keyframes
+                duration: 3
+                iterations: infinite
+                target: element
+                easing: ease-in-out
+                keyframes: [{at: 0, transform: {scale: 1}}, {at: 50, transform: {scale: 1.05}}, {at: 100, transform: {scale: 1}}]
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Chores and calendar
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Notice board
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#e8d8b0', line_height: '1.15'}
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          width: 56px
+                          height: 56px
+                          padding: 11px 0 0
+                          box_sizing: border-box
+                          border_radius: 50%
+                          background: 'radial-gradient(circle at 35% 30%, #c7372f 0%, #8e1b17 55%, #5c100d 100%)'
+                          box_shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(255,255,255,0.10), inset 0 0 0 6px rgba(0,0,0,0.15)
+                          animations: [{id: pulse, preset: custom:seal-pulse}]
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: todo.chores
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 20px, font_weight: '700', color: '#ffe9dc', line_height: '1', text_align: center}
+                          - type: text
+                            text: open
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 10px
+                              font_weight: '700'
+                              color: '#ffd0c0'
+                              text_transform: uppercase
+                              letter_spacing: 1px
+                              text_align: center
+                        actions: {tap_action: {action: more-info, entity: todo.chores}}
+              - id: notes
+                layout: 1-1
+                gap: 12px
+                padding: 6px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design: {transform: rotate(-1.6deg)}
+                        modules:
+                          - type: vertical
+                            gap: 4px
+                            design:
+                              padding: 12px 12px 10px
+                              box_sizing: border-box
+                              border_radius: 3px
+                              min_height: 138px
+                              background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(ellipse at 90% 100%, rgba(120,80,30,0.25), transparent 55%), linear-gradient(180deg, #e8d8b0, #d6c08e)'
+                              box_shadow: 0 6px 12px rgba(0,0,0,0.5)
+                              cursor: pointer
+                            modules:
+                              - type: horizontal
+                                gap: 8px
+                                align: center
+                                justify: space-between
+                                design: {}
+                                modules:
+                                  - type: text
+                                    text: Contract
+                                    design:
+                                      font_family: Cinzel, 'Playfair Display', Georgia, serif
+                                      font_size: 10px
+                                      font_weight: '700'
+                                      color: '#a3201c'
+                                      letter_spacing: 2px
+                                      text_transform: uppercase
+                                  - {type: icon, icon: mdi:pin, size: 15px, design: {color: '#d0342c', display: flex}}
+                              - type: text
+                                text: The beast of the bins
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#2a1d10', line_height: '1.2'}
+                              - {type: text, text: Drag it to the road before dawn., design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#6a4a26', line_height: '1.25'}}
+                              - type: text
+                                text: 'Reward: 20 silver coins'
+                                design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#a3201c', line_height: '1.25', font_weight: '700'}
+                            actions: {tap_action: {action: more-info, entity: todo.chores}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design: {transform: rotate(1.4deg)}
+                        modules:
+                          - type: vertical
+                            gap: 4px
+                            design:
+                              padding: 12px 12px 10px
+                              box_sizing: border-box
+                              border_radius: 3px
+                              min_height: 138px
+                              background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(ellipse at 90% 100%, rgba(120,80,30,0.25), transparent 55%), linear-gradient(180deg, #e8d8b0, #d6c08e)'
+                              box_shadow: 0 6px 12px rgba(0,0,0,0.5)
+                              cursor: pointer
+                            modules:
+                              - type: horizontal
+                                gap: 8px
+                                align: center
+                                justify: space-between
+                                design: {}
+                                modules:
+                                  - type: text
+                                    text: Contract
+                                    design:
+                                      font_family: Cinzel, 'Playfair Display', Georgia, serif
+                                      font_size: 10px
+                                      font_weight: '700'
+                                      color: '#a3201c'
+                                      letter_spacing: 2px
+                                      text_transform: uppercase
+                                  - {type: icon, icon: mdi:pin, size: 15px, design: {color: '#d0342c', display: flex}}
+                              - type: text
+                                text: The washing wraith
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#2a1d10', line_height: '1.2'}
+                              - type: horizontal
+                                gap: 5px
+                                align: baseline
+                                design: {}
+                                modules:
+                                  - type: text
+                                    use_entity: true
+                                    entity: sensor.washer_progress
+                                    design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#a3201c'}
+                                  - {type: text, text: slain, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#6a4a26', line_height: '1.25'}}
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  height: 6px
+                                  border_radius: 3px
+                                  background_color: rgba(42,29,16,0.18)
+                                  value_background: {type: fill, entity: sensor.washer_progress, direction: right, color: '#a3201c', opacity: 90%, wave: false}
+                            actions: {tap_action: {action: more-info, entity: sensor.washer_progress}}
+              - id: cal
+                padding: 8px 0 2px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design: {transform: rotate(-0.6deg)}
+                        modules:
+                          - type: vertical
+                            gap: 4px
+                            design:
+                              padding: 12px 12px 10px
+                              box_sizing: border-box
+                              border_radius: 3px
+                              min_height: 0px
+                              background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.35), transparent 60%), radial-gradient(ellipse at 90% 100%, rgba(120,80,30,0.25), transparent 55%), linear-gradient(180deg, #e8d8b0, #d6c08e)'
+                              box_shadow: 0 6px 12px rgba(0,0,0,0.5)
+                              cursor: pointer
+                            modules:
+                              - type: horizontal
+                                gap: 8px
+                                align: center
+                                justify: space-between
+                                design: {}
+                                modules:
+                                  - type: text
+                                    text: By order of the keep
+                                    design:
+                                      font_family: Cinzel, 'Playfair Display', Georgia, serif
+                                      font_size: 10px
+                                      font_weight: '700'
+                                      color: '#a3201c'
+                                      letter_spacing: 2px
+                                      text_transform: uppercase
+                                  - {type: icon, icon: mdi:pin, size: 15px, design: {color: '#d0342c', display: flex}}
+                              - type: text
+                                use_template: true
+                                text: '{{ state_attr(''calendar.family'',''message'') or ''Free day'' }}'
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 16px, font_weight: '700', color: '#2a1d10'}
+                              - type: horizontal
+                                gap: 5px
+                                align: center
+                                design: {}
+                                modules:
+                                  - {type: icon, icon: mdi:calendar, size: 15px, design: {color: '#6a4a26', display: flex}}
+                                  - type: text
+                                    use_template: true
+                                    text: '{{ as_timestamp(state_attr(''calendar.family'',''start_time''), none) | timestamp_custom(''%a %-d %b'') if state_attr(''calendar.family'',''start_time'') else ''Nothing planned'' }} · {{ (state_attr(''calendar.family'',''start_time'') or '''')[11:16] or ''--:--'' }}'
+                                    design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#6a4a26'}
+                                  - {type: icon, icon: mdi:map-marker, size: 15px, design: {color: '#6a4a26', display: flex, margin_left: 6px}}
+                                  - type: text
+                                    use_template: true
+                                    text: '{{ state_attr(''calendar.family'',''location'') or ''No location'' }}'
+                                    design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#6a4a26', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}
+                            actions: {tap_action: {action: more-info, entity: calendar.family}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · The walls
+            background: linear-gradient(90deg, rgba(163,32,28,0.26) 0%, rgba(20,16,13,0.55) 55%, rgba(20,16,13,0.15) 100%)
+            border_radius: 10px
+            padding: 12px 14px 10px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.35)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 12px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 L42 24 L24 44 L6 24 Z"/><path d="M24 14 V34 M16 24 H32" stroke-width="2.6"/></svg>
+                        size: 26px
+                        design: {color: '#f2a93b', display: flex, filter: 'drop-shadow(0 0 6px rgba(242,169,59,0.6))'}
+                  - gap: 1px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: The walls
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#d9dde2'
+                          line_height: '1.1'
+                      - {type: text, text: 'Charm, wards and steel', design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_style: italic, color: '#8f8478'}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Wards
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: medallion-hum
+                name: Medallion hum
+                kind: keyframes
+                duration: 0.42
+                iterations: infinite
+                target: icon
+                easing: linear
+                keyframes:
+                  - {at: 0, transform: {x: 0, 'y': 0, rotate: 0}}
+                  - {at: 12, transform: {x: -2, 'y': 1, rotate: -2.5}}
+                  - {at: 25, transform: {x: 2, 'y': -1, rotate: 2}}
+                  - {at: 37, transform: {x: -1.5, 'y': -1, rotate: -1.5}}
+                  - {at: 50, transform: {x: 1.5, 'y': 1, rotate: 2.5}}
+                  - {at: 62, transform: {x: -2, 'y': 0, rotate: -2}}
+                  - {at: 75, transform: {x: 1, 'y': 1, rotate: 1}}
+                  - {at: 87, transform: {x: -1, 'y': -1, rotate: -1}}
+                  - {at: 100, transform: {x: 0, 'y': 0, rotate: 0}}
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Motion and security
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Watch charm
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: medallion
+                column_widths: [132px, 1fr]
+                gap: 12px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          width: 128px
+                          height: 128px
+                          box_sizing: border-box
+                          padding: 12px
+                          border_radius: 50%
+                          display: flex
+                          align_items: center
+                          justify_content: center
+                          background: 'radial-gradient(circle closest-side, #2b2724 0%, #171412 100%)'
+                          box_shadow: inset 0 0 0 1px rgba(217,221,226,0.12), 0 8px 18px rgba(0,0,0,0.5)
+                          conditional:
+                            - id: hum
+                              name: Motion
+                              mode: any
+                              conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}, {type: state, entity: binary_sensor.patio_motion, state: 'on'}]
+                              design: {ring: {mode: animated, animation: pulse, speed: 1.4s, width: 2, glow: 10, color: '#f2a93b', track_color: '#f2a93b', track_opacity: 12}}
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="60" cy="60" r="49" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.55"/><path fill="currentColor" fill-rule="evenodd" d="M60 14 L68 46 L92 28 L74 52 L106 60 L74 68 L92 92 L68 74 L60 106 L52 74 L28 92 L46 68 L14 60 L46 52 L28 28 L52 46 Z M60 46 L72 60 L60 74 L48 60 Z"/><circle cx="60" cy="60" r="6" fill="currentColor" fill-opacity="0.75"/></svg>
+                            size: 104px
+                            design:
+                              color: '#9ea5ad'
+                              display: flex
+                              filter: drop-shadow(0 3px 4px rgba(0,0,0,0.7))
+                              conditional:
+                                - id: hum
+                                  name: Motion
+                                  mode: any
+                                  conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}, {type: state, entity: binary_sensor.patio_motion, state: 'on'}]
+                                  design:
+                                    color: '#d9dde2'
+                                    filter: drop-shadow(0 0 10px rgba(242,169,59,0.75)) drop-shadow(0 3px 4px rgba(0,0,0,0.7))
+                                    animations: [{id: hum, preset: custom:medallion-hum, target: icon}]
+                  - gap: 6px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: It hums. Something stirs.
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 15px, font_style: italic, color: '#ffd27a', line_height: '1.25'}
+                        display: {mode: any, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}, {type: state, entity: binary_sensor.patio_motion, state: 'on'}]}
+                      - type: text
+                        text: Still. The keep is quiet.
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 15px, font_style: italic, color: '#8f8478', line_height: '1.25'}
+                        display: {mode: every, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'off'}, {type: state, entity: binary_sensor.patio_motion, state: 'off'}]}
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design: {padding: 7px 10px, border_radius: 8px, background_color: 'rgba(0,0,0,0.28)', border: '1px solid rgba(217,221,226,0.07)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:motion-sensor
+                            size: 18px
+                            design: {color: '#8c939c', display: flex, conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f2a93b'}}]}
+                            entity: binary_sensor.hall_motion
+                          - {type: text, text: Hall, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, color: '#ece4d6', flex: '1', white_space: nowrap}}
+                          - type: text
+                            text: Stirring
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 12px, font_weight: '700', color: '#f2a93b', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}]}
+                          - type: text
+                            text: Quiet
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 12px, font_weight: '700', color: '#7fae6a', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.hall_motion, state_not: 'on'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.hall_motion}}
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design: {padding: 7px 10px, border_radius: 8px, background_color: 'rgba(0,0,0,0.28)', border: '1px solid rgba(217,221,226,0.07)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:motion-sensor
+                            size: 18px
+                            design: {color: '#8c939c', display: flex, conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f2a93b'}}]}
+                            entity: binary_sensor.patio_motion
+                          - {type: text, text: Patio, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, color: '#ece4d6', flex: '1', white_space: nowrap}}
+                          - type: text
+                            text: Stirring
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 12px, font_weight: '700', color: '#f2a93b', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.patio_motion, state: 'on'}]}
+                          - type: text
+                            text: Quiet
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 12px, font_weight: '700', color: '#7fae6a', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.patio_motion, state_not: 'on'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.patio_motion}}
+              - id: rule
+                columns:
+                  - modules:
+                      - type: separator
+                        separator_style: none
+                        design: {height: 1px, margin: 2px 0, background: 'linear-gradient(90deg, transparent, #a3201c 18%, #d0342c 50%, #a3201c 82%, transparent)', opacity: '0.85'}
+              - id: wards
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 10px 4px 8px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #24201c, #171412)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:lock
+                            size: 24px
+                            design: {color: '#7fae6a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: locked}], design: {color: '#d0342c'}}]}
+                            entity: lock.front_door
+                          - type: text
+                            text: Gate
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 3px
+                              white_space: nowrap
+                          - type: text
+                            text: Barred
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#7fae6a', text_align: center}
+                            display: {conditions: [{type: state, entity: lock.front_door, state: locked}]}
+                          - type: text
+                            text: Open
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#d0342c', text_align: center, white_space: nowrap}
+                            display: {conditions: [{type: state, entity: lock.front_door, state_not: locked}]}
+                        actions: {tap_action: {action: more-info, entity: lock.front_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 10px 4px 8px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #24201c, #171412)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:door-closed
+                            size: 24px
+                            design: {color: '#7fae6a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#d0342c'}}]}
+                            entity: binary_sensor.front_door
+                          - type: text
+                            text: Front
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 3px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#7fae6a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state: 'off'}]}
+                          - type: text
+                            text: Open
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#d0342c', text_align: center, white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.front_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 10px 4px 8px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #24201c, #171412)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:door-closed
+                            size: 24px
+                            design: {color: '#7fae6a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#d0342c'}}]}
+                            entity: binary_sensor.back_door
+                          - type: text
+                            text: Back
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 3px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#7fae6a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.back_door, state: 'off'}]}
+                          - type: text
+                            text: Open
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#d0342c', text_align: center, white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.back_door, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.back_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 10px 4px 8px
+                          border_radius: 10px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #24201c, #171412)'
+                          border: 1px solid rgba(217,221,226,0.08)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:window-open-variant
+                            size: 24px
+                            design: {color: '#7fae6a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#d0342c'}}]}
+                            entity: binary_sensor.garage_window
+                          - type: text
+                            text: Garage
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 3px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#7fae6a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.garage_window, state: 'off'}]}
+                          - type: text
+                            text: Ajar
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, color: '#d0342c', text_align: center, white_space: nowrap}
+                            display: {conditions: [{type: state, entity: binary_sensor.garage_window, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.garage_window}}
+              - id: alarm
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design:
+                          padding: 9px 12px
+                          border_radius: 8px
+                          background: linear-gradient(90deg, rgba(163,32,28,0.30), rgba(0,0,0,0.25))
+                          border: 1px solid rgba(163,32,28,0.45)
+                          cursor: pointer
+                        modules:
+                          - {type: icon, icon: mdi:shield-half-full, size: 20px, design: {color: '#f2a93b', display: flex}}
+                          - {type: text, text: Ward, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 13px, font_weight: '700', color: '#d9dde2', letter_spacing: 1px}}
+                          - type: text
+                            use_entity: true
+                            entity: alarm_control_panel.home
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ffd27a', flex: '1', text_align: right, white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: alarm_control_panel.home}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Arsenal
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Batteries and car
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Arsenal and stable
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: steel
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 8px
+                        design: {padding: 10px 12px, border_radius: 10px, background_color: 'rgba(0,0,0,0.28)', border: '1px solid rgba(217,221,226,0.07)', cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: baseline
+                            design: {}
+                            modules:
+                              - {type: text, text: Short blade, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#d9dde2'}}
+                              - {type: text, text: · Phone, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478', flex: '1', white_space: nowrap}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.phone_battery
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#aeb6c0'}
+                          - type: horizontal
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.7))'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design: {width: 14px, min_width: 14px, height: 14px, border_radius: 50%, background: 'radial-gradient(circle at 35% 30%, #8a7a5a, #3a2a1a)', margin: '0'}
+                              - type: separator
+                                separator_style: none
+                                design: {width: 40px, min_width: 40px, height: 10px, margin: '0', background: 'repeating-linear-gradient(110deg, #3b2617 0 4px, #5a3a22 4px 7px)', border_radius: 2px}
+                              - type: separator
+                                separator_style: none
+                                design: {width: 7px, min_width: 7px, height: 34px, margin: '0', border_radius: 3px, background: 'linear-gradient(90deg, #6b6f75, #8a7a5a, #6b6f75)'}
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  flex: '1'
+                                  height: 20px
+                                  margin: '0'
+                                  background: 'linear-gradient(180deg, #34373c 0%, #1e2024 50%, #34373c 100%)'
+                                  css: 'clip-path: polygon(0 22%, 93% 22%, 100% 50%, 93% 78%, 0 78%);'
+                                  value_background: {type: fill, entity: sensor.phone_battery, min: 0, max: 100, direction: right, color: '#aeb6c0', opacity: 92%, wave: false}
+                                  conditional:
+                                    - id: low
+                                      name: Low
+                                      conditions: [{type: state, entity: sensor.phone_battery, below: 20}]
+                                      design: {value_background: {type: fill, entity: sensor.phone_battery, min: 0, max: 100, direction: right, color: '#d0342c', opacity: 92%, wave: false}}
+                        actions: {tap_action: {action: more-info, entity: sensor.phone_battery}}
+              - id: silver
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 8px
+                        design: {padding: 10px 12px, border_radius: 10px, background_color: 'rgba(0,0,0,0.28)', border: '1px solid rgba(217,221,226,0.07)', cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: baseline
+                            design: {}
+                            modules:
+                              - {type: text, text: Long blade, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#d9dde2'}}
+                              - {type: text, text: · Watch, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478', flex: '1', white_space: nowrap}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.watch_battery
+                                design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#eef1f5'}
+                          - type: horizontal
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.7))'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design: {width: 14px, min_width: 14px, height: 14px, border_radius: 50%, background: 'radial-gradient(circle at 35% 30%, #c9ccd1, #3a2a1a)', margin: '0'}
+                              - type: separator
+                                separator_style: none
+                                design: {width: 40px, min_width: 40px, height: 10px, margin: '0', background: 'repeating-linear-gradient(110deg, #3b2617 0 4px, #5a3a22 4px 7px)', border_radius: 2px}
+                              - type: separator
+                                separator_style: none
+                                design: {width: 7px, min_width: 7px, height: 34px, margin: '0', border_radius: 3px, background: 'linear-gradient(90deg, #6b6f75, #c9ccd1, #6b6f75)'}
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  flex: '1'
+                                  height: 20px
+                                  margin: '0'
+                                  background: 'linear-gradient(180deg, #34373c 0%, #1e2024 50%, #34373c 100%)'
+                                  css: 'clip-path: polygon(0 22%, 93% 22%, 100% 50%, 93% 78%, 0 78%);'
+                                  value_background: {type: fill, entity: sensor.watch_battery, min: 0, max: 100, direction: right, color: '#eef1f5', opacity: 92%, wave: false}
+                                  conditional:
+                                    - id: low
+                                      name: Low
+                                      conditions: [{type: state, entity: sensor.watch_battery, below: 20}]
+                                      design: {value_background: {type: fill, entity: sensor.watch_battery, min: 0, max: 100, direction: right, color: '#d0342c', opacity: 92%, wave: false}}
+                        actions: {tap_action: {action: more-info, entity: sensor.watch_battery}}
+              - id: steed
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 12px
+                        align: center
+                        design: {padding: 10px 12px, border_radius: 10px, background_color: 'rgba(0,0,0,0.28)', border: '1px solid rgba(217,221,226,0.07)', cursor: pointer}
+                        modules:
+                          - type: vertical
+                            gap: 0px
+                            design:
+                              width: 48px
+                              height: 48px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              background_color: rgba(0,0,0,0.35)
+                              border: 1px solid rgba(242,169,59,0.3)
+                            modules: [{type: icon, icon: mdi:horse, size: 28px, design: {color: '#f2a93b', display: flex}}]
+                          - type: vertical
+                            gap: 2px
+                            design: {flex: '1'}
+                            modules:
+                              - type: horizontal
+                                gap: 6px
+                                align: baseline
+                                design: {}
+                                modules:
+                                  - {type: text, text: The mare, design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 15px, font_weight: '700', color: '#d9dde2'}}
+                                  - {type: text, text: · Car, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478'}}
+                              - type: horizontal
+                                gap: 5px
+                                align: baseline
+                                design: {}
+                                modules:
+                                  - type: text
+                                    use_entity: true
+                                    entity: sensor.car_battery
+                                    design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ffd27a'}
+                                  - {type: text, text: rested ·, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, color: '#8f8478'}}
+                                  - type: text
+                                    use_entity: true
+                                    entity: sensor.car_range
+                                    design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6'}
+                                  - {type: text, text: to ride, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, color: '#8f8478'}}
+                        actions: {tap_action: {action: more-info, entity: sensor.car_battery}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · Alchemy and hearth
+            background: linear-gradient(90deg, rgba(163,32,28,0.26) 0%, rgba(20,16,13,0.55) 55%, rgba(20,16,13,0.15) 100%)
+            border_radius: 10px
+            padding: 12px 14px 10px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.35)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 12px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 L42 24 L24 44 L6 24 Z"/><path d="M24 14 V34 M16 24 H32" stroke-width="2.6"/></svg>
+                        size: 26px
+                        design: {color: '#f2a93b', display: flex, filter: 'drop-shadow(0 0 6px rgba(242,169,59,0.6))'}
+                  - gap: 1px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: Alchemy and hearth
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#d9dde2'
+                          line_height: '1.1'
+                      - {type: text, text: 'Potions, fire and song', design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_style: italic, color: '#8f8478'}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Potions
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Energy
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Potions
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: shelf
+                layout: 1-1-1-1
+                gap: 4px
+                padding: 6px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design: {width: 20px, height: 9px, margin: '0', border_radius: 3px 3px 1px 1px, background: 'linear-gradient(90deg, #7a5530, #a07850, #7a5530)'}
+                          - {type: separator, separator_style: none, design: {width: 26px, height: 4px, margin: 0 0 -1px, border_radius: 2px, background_color: '#8c939c'}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 0 1px rgba(217,221,226,0.75)) drop-shadow(0 0 8px #f2b53b55) drop-shadow(0 6px 6px rgba(0,0,0,0.6))'}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  width: 62px
+                                  height: 96px
+                                  margin: '0'
+                                  background: 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.20) 22%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.25) 100%), #120f0d'
+                                  css: 'clip-path: polygon(36% 0, 64% 0, 64% 26%, 90% 42%, 100% 58%, 100% 90%, 92% 100%, 8% 100%, 0 90%, 0 58%, 10% 42%, 36% 26%);'
+                                  value_background: {type: fill, entity: sensor.solar_power, min: 0, max: 5000, color: '#f2b53b', opacity: 88%, direction: up, wave: true}
+                                  animations: [{id: bubbles, preset: bubbles, color: '#ffffff', strength: 45, intensity: 4, delay: 0s}]
+                                modules: []
+                          - type: text
+                            text: Sunbrew
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 8px
+                              line_height: '1.15'
+                              min_height: 28px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                          - type: text
+                            text: Solar
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#f2b53b'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                          - type: text
+                            use_entity: true
+                            entity: sensor.solar_power
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: sensor.solar_power}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design: {width: 20px, height: 9px, margin: '0', border_radius: 3px 3px 1px 1px, background: 'linear-gradient(90deg, #6a4a2a, #a07850, #6a4a2a)'}
+                          - {type: separator, separator_style: none, design: {width: 26px, height: 4px, margin: 0 0 -1px, border_radius: 2px, background_color: '#8c939c'}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 0 1px rgba(217,221,226,0.75)) drop-shadow(0 0 8px #c8352c55) drop-shadow(0 6px 6px rgba(0,0,0,0.6))'}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  width: 62px
+                                  height: 96px
+                                  margin: '0'
+                                  background: 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.20) 22%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.25) 100%), #120f0d'
+                                  css: 'clip-path: polygon(36% 0, 64% 0, 64% 26%, 90% 42%, 100% 58%, 100% 90%, 92% 100%, 8% 100%, 0 90%, 0 58%, 10% 42%, 36% 26%);'
+                                  value_background: {type: fill, entity: sensor.house_power, min: 0, max: 3000, color: '#c8352c', opacity: 88%, direction: up, wave: true}
+                                  animations: [{id: bubbles, preset: bubbles, color: '#ffffff', strength: 45, intensity: 4, delay: -0.7s}]
+                                modules: []
+                          - type: text
+                            text: Emberbrew
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 8px
+                              line_height: '1.15'
+                              min_height: 28px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                          - type: text
+                            text: House
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#c8352c'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                          - type: text
+                            use_entity: true
+                            entity: sensor.house_power
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: sensor.house_power}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design: {width: 20px, height: 9px, margin: '0', border_radius: 3px 3px 1px 1px, background: 'linear-gradient(90deg, #5d4a32, #a07850, #5d4a32)'}
+                          - {type: separator, separator_style: none, design: {width: 26px, height: 4px, margin: 0 0 -1px, border_radius: 2px, background_color: '#8c939c'}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 0 1px rgba(217,221,226,0.75)) drop-shadow(0 0 8px #5fae7a55) drop-shadow(0 6px 6px rgba(0,0,0,0.6))'}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  width: 62px
+                                  height: 96px
+                                  margin: '0'
+                                  background: 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.20) 22%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.25) 100%), #120f0d'
+                                  css: 'clip-path: polygon(36% 0, 64% 0, 64% 26%, 90% 42%, 100% 58%, 100% 90%, 92% 100%, 8% 100%, 0 90%, 0 58%, 10% 42%, 36% 26%);'
+                                  value_background: {type: fill, entity: sensor.home_battery, min: 0, max: 100, color: '#5fae7a', opacity: 88%, direction: up, wave: true}
+                                  animations: [{id: bubbles, preset: bubbles, color: '#ffffff', strength: 45, intensity: 4, delay: -1.4s}]
+                                modules: []
+                          - type: text
+                            text: Moonbrew
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 8px
+                              line_height: '1.15'
+                              min_height: 28px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                          - type: text
+                            text: Battery
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#5fae7a'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                          - type: text
+                            use_entity: true
+                            entity: sensor.home_battery
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: sensor.home_battery}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design: {width: 20px, height: 9px, margin: '0', border_radius: 3px 3px 1px 1px, background: 'linear-gradient(90deg, #4f4436, #a07850, #4f4436)'}
+                          - {type: separator, separator_style: none, design: {width: 26px, height: 4px, margin: 0 0 -1px, border_radius: 2px, background_color: '#8c939c'}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design: {filter: 'drop-shadow(0 0 1px rgba(217,221,226,0.75)) drop-shadow(0 0 8px #6f9fd855) drop-shadow(0 6px 6px rgba(0,0,0,0.6))'}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  width: 62px
+                                  height: 96px
+                                  margin: '0'
+                                  background: 'linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.20) 22%, rgba(255,255,255,0.04) 40%, rgba(0,0,0,0.25) 100%), #120f0d'
+                                  css: 'clip-path: polygon(36% 0, 64% 0, 64% 26%, 90% 42%, 100% 58%, 100% 90%, 92% 100%, 8% 100%, 0 90%, 0 58%, 10% 42%, 36% 26%);'
+                                  value_background: {type: fill, entity: sensor.grid_power, min: -4000, max: 4000, color: '#6f9fd8', opacity: 88%, direction: up, wave: true}
+                                  animations: [{id: bubbles, preset: bubbles, color: '#ffffff', strength: 45, intensity: 4, delay: -2.0999999999999996s}]
+                                modules: []
+                          - type: text
+                            text: Stormbrew
+                            design:
+                              font_family: Cinzel, 'Playfair Display', Georgia, serif
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#d9dde2'
+                              text_align: center
+                              margin_top: 8px
+                              line_height: '1.15'
+                              min_height: 28px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                          - type: text
+                            text: Grid
+                            design:
+                              font_family: Alegreya, Lora, Georgia, serif
+                              font_size: 11px
+                              font_weight: '700'
+                              color: '#6f9fd8'
+                              text_transform: uppercase
+                              letter_spacing: 1.5px
+                              text_align: center
+                          - type: text
+                            use_entity: true
+                            entity: sensor.grid_power
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: sensor.grid_power}}
+              - id: plank
+                padding: '0'
+                columns:
+                  - modules:
+                      - type: separator
+                        separator_style: none
+                        design: {height: 8px, margin: '0', border_radius: 2px, background: 'linear-gradient(180deg, #5a3a22, #3a2416)', box_shadow: '0 4px 8px rgba(0,0,0,0.5)'}
+              - id: foot
+                column_widths: [1fr, auto]
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        design: {}
+                        modules:
+                          - {type: icon, icon: mdi:flask-round-bottom, size: 16px, design: {color: '#f2a93b', display: flex}}
+                          - {type: text, text: Brewed today, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478', line_height: '1.25'}}
+                          - type: text
+                            use_entity: true
+                            entity: sensor.energy_today
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: end
+                        design: {}
+                        modules:
+                          - {type: text, text: Price, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478', line_height: '1.25'}}
+                          - type: text
+                            use_entity: true
+                            entity: sensor.energy_price
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, font_weight: '700', color: '#ece4d6', white_space: nowrap}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Meditation
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            custom_animations:
+              - id: ember-rise
+                name: Rising embers
+                kind: particles
+                duration: 5
+                iterations: infinite
+                particles: {count: 10, direction: rise, speed: 1, size: [2, 4], colors: ['#ffb347', '#ff7a2e', '#ffd27a'], fade: true, spread: 70, gravity: -0.2, layer: back}
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Climate
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: Meditation
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: fire
+                column_widths: [1fr, 1fr]
+                gap: 12px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          height: 132px
+                          border_radius: 12px
+                          display: flex
+                          align_items: center
+                          justify_content: center
+                          overflow: hidden
+                          background: 'radial-gradient(ellipse 60% 55% at 50% 70%, rgba(242,120,40,0.30), transparent 70%), #120e0c'
+                          animations: [{id: embers, preset: custom:ember-rise}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 120 110"><ellipse cx="60" cy="100" rx="46" ry="6" fill="#000000" fill-opacity="0.45"/><path d="M18 96 L98 78" stroke="#5a3a22" stroke-width="11" stroke-linecap="round"/><path d="M22 78 L102 96" stroke="#6e4628" stroke-width="11" stroke-linecap="round"/><path d="M60 14 C66 30 84 40 82 62 C81 80 70 90 60 90 C48 90 38 80 38 66 C38 52 48 48 50 36 C54 44 56 48 60 50 C62 40 58 26 60 14 Z" fill="#e8601c"/><path d="M60 40 C64 52 74 58 72 72 C71 82 66 88 60 88 C53 88 47 82 47 74 C47 66 53 62 55 54 C57 60 59 62 61 63 C63 56 60 48 60 40 Z" fill="#f6a632"/><path d="M60 62 C62 70 67 73 66 80 C65 85 63 87 60 87 C57 87 54 84 54 80 C54 75 58 73 60 62 Z" fill="#ffe08a"/></svg>
+                            size: 112px
+                            design:
+                              display: flex
+                              animations: [{id: flicker, preset: flame-flicker, target: icon, intensity: 8, color: '#f2a93b', trigger: state, trigger_entity: climate.living_room, state: heat}]
+                  - gap: 4px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: By the fire
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 12px, font_weight: '700', color: '#8f8478', text_transform: uppercase, letter_spacing: 1.5px}
+                      - type: text
+                        use_entity: true
+                        entity: climate.living_room
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 34px, font_weight: '700', color: '#ffd27a', line_height: '1.05'}
+                        attribute: current_temperature
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        design: {}
+                        modules:
+                          - {type: icon, icon: mdi:fire, size: 15px, design: {color: '#f2a93b', display: flex}}
+                          - type: text
+                            text: Fire stoked
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#d6c08e'}
+                            display: {conditions: [{type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating}]}
+                          - type: text
+                            text: Embers resting
+                            design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 13px, color: '#8f8478'}
+                            display: {conditions: [{type: attribute, entity: climate.living_room, attribute: hvac_action, state_not: heating}]}
+                      - {type: spinbox, entity: climate.living_room, step: 0.5, design: {margin_top: 4px, color: '#ece4d6', font_family: 'Cinzel, ''Playfair Display'', Georgia, serif'}}
+              - id: rooms
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {padding: 6px 2px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(217,221,226,0.07)'}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.bedroom_temperature
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                          - {type: text, text: Chambers, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center, white_space: nowrap}}
+                        actions: {tap_action: {action: more-info, entity: sensor.bedroom_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {padding: 6px 2px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(217,221,226,0.07)'}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.kitchen_temperature
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                          - {type: text, text: Kitchen, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center, white_space: nowrap}}
+                        actions: {tap_action: {action: more-info, entity: sensor.kitchen_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {padding: 6px 2px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(217,221,226,0.07)'}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.office_temperature
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                          - {type: text, text: Study, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center, white_space: nowrap}}
+                        actions: {tap_action: {action: more-info, entity: sensor.office_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design: {padding: 6px 2px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(217,221,226,0.07)'}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.bathroom_temperature
+                            design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 14px, font_weight: '700', color: '#ece4d6', text_align: center, white_space: nowrap}
+                          - {type: text, text: Baths, design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 11px, color: '#8f8478', text_align: center, white_space: nowrap}}
+                        actions: {tap_action: {action: more-info, entity: sensor.bathroom_temperature}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Bard
+            background: 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(242,169,59,0.10), transparent 60%), repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px), linear-gradient(170deg, #1c1713 0%, #14100d 100%)'
+            border_radius: 14px
+            padding: 16px
+            box_shadow: 0 16px 34px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(217,221,226,0.10), inset 0 1px 0 rgba(255,210,122,0.08)
+            css: 'font-family: Alegreya, Lora, Georgia, serif; color: #ece4d6;'
+            rows:
+              - id: head
+                columns:
+                  - gap: 2px
+                    modules:
+                      - type: text
+                        text: Media
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 11px, font_weight: '700', letter_spacing: 3px, text_transform: uppercase, color: '#f2a93b'}
+                      - type: text
+                        text: The bard's lute
+                        design: {font_family: 'Cinzel, ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', letter_spacing: 1px, color: '#d9dde2', line_height: '1.15'}
+              - id: now
+                column_widths: [100px, 1fr]
+                gap: 14px
+                columns:
+                  - modules:
+                      - type: image
+                        entity: media_player.living_room
+                        entity_picture: true
+                        aspect_ratio: '1'
+                        design: {width: 96px, border_radius: 8px, box_shadow: '0 6px 14px rgba(0,0,0,0.55)', css: 'outline: 1px solid rgba(242,169,59,0.35); outline-offset: 2px;'}
+                  - gap: 2px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        use_entity: true
+                        entity: media_player.living_room
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 17px
+                          font_weight: '700'
+                          color: '#d9dde2'
+                          line_height: '1.2'
+                          white_space: nowrap
+                          overflow: hidden
+                          text_overflow: ellipsis
+                        attribute: media_title
+                      - type: text
+                        use_entity: true
+                        entity: media_player.living_room
+                        design: {font_family: 'Alegreya, Lora, Georgia, serif', font_size: 14px, font_style: italic, color: '#d6c08e', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}
+                        attribute: media_artist
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          height: 26px
+                          margin_top: 6px
+                          border_radius: 4px
+                          overflow: hidden
+                          animations: [{id: eq, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: '#f2a93b', intensity: 9, strength: 80}]
+                        modules: []
+              - id: ctl
+                padding: 4px 0 0
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 14px
+                        align: center
+                        justify: center
+                        design: {}
+                        modules:
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 40px
+                              height: 40px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: rgba(0,0,0,0.35)
+                              border: 1px solid rgba(217,221,226,0.14)
+                              box_shadow: none
+                            modules: [{type: icon, icon: mdi:skip-previous, size: 22px, design: {color: '#d9dde2', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_previous_track, data: {entity_id: media_player.living_room}}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 48px
+                              height: 48px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: 'radial-gradient(circle at 35% 30%, #ffd27a, #f2a93b 60%, #8a5a1c)'
+                              border: none
+                              box_shadow: 0 4px 12px rgba(242,169,59,0.35)
+                            modules: [{type: icon, icon: mdi:play-pause, size: 26px, design: {color: '#2a1d10', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_play_pause, data: {entity_id: media_player.living_room}}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 40px
+                              height: 40px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: rgba(0,0,0,0.35)
+                              border: 1px solid rgba(217,221,226,0.14)
+                              box_shadow: none
+                            modules: [{type: icon, icon: mdi:skip-next, size: 22px, design: {color: '#d9dde2', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_next_track, data: {entity_id: media_player.living_room}}}
+            grid_options: {columns: 12, rows: auto}

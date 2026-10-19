@@ -19,6 +19,10 @@ Eighty-two complete cards to copy and adapt, from a weather card to a Christmas 
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
 | [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board, Operations console, Operations console, phone-width |
 
+## Complete dashboards
+
+Twenty-five complete dashboards for sci-fi, fantasy, western, steampunk and dystopian homes. Each is a sections view made only of Magic Cards, with its own theme. See [Complete dashboards](dashboards/README.md).
+
 ## Animated cards
 
 On thirty-seven of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.

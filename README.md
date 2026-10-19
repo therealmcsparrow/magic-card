@@ -10,7 +10,7 @@
 
 Magic Card is a Home Assistant Lovelace custom card that you build from rows, columns and modules. A visual editor (a pane editor and a full-screen Studio) lets you set up the structure, styling, animations, rings and conditions without writing YAML, and the YAML stays editable at any time.
 
-This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of sixty cards with screenshots, twenty of them animated. Changes are listed in the [changelog](CHANGELOG.md).
+This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of eighty-two cards with screenshots, thirty-seven of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
 
 ## Features
 
