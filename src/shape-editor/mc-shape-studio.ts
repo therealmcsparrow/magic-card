@@ -1334,7 +1334,7 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
   }
 
   /** Banners float over the top of the canvas (below the float bar), so the canvas never resizes when one comes or goes. */
-  private banners(): TemplateResult {
+  private banners(): TemplateResult | typeof nothing {
     const list: Array<['warn' | 'info', string]> = [];
     if (this.notice) list.push(['warn', this.notice]);
     else if (this.linked) list.push(['info', t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked })]);
@@ -1342,7 +1342,8 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
       if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.')]);
       if (p.cross) list.push(['warn', t('The outline crosses itself at {where}.', { where: sh(p.id) })]);
     }
-    return html`<div class="banners">${this.mcuBar()}${list.map(([tone, text]) => notice({ tone, text }))}</div>`;
+    const m = this.mcuBar();
+    return list.length || m !== nothing ? html`<div class="banners">${m}${list.map(([tone, text]) => notice({ tone, text }))}</div>` : nothing;
   }
 
   // ── windows ──
