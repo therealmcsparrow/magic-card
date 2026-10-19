@@ -1,4 +1,4 @@
-import { parseGradient } from '../../utils/gradient';
+import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
 import { BLUR_MAX, LAYER_ANCHORS, type LayerAnchor } from '../../contracts/layer-placement';
 import type { BgPattern } from '../../contracts/bg-stack';
@@ -65,9 +65,10 @@ export function sanitiseStates(raw: unknown): Record<string, string> {
 export function gradientCss(v: unknown): string | undefined {
   if (typeof v !== 'string' || v.length > MAX_GRADIENT) return undefined;
   const g = parseGradient(v);
-  if (!g || !Number.isFinite(g.angle)) return undefined;
+  const angle = gradientHeadAngle(v);
+  if (!g || (!g.radial && (angle === undefined || !Number.isFinite(angle)))) return undefined;
   const stops = g.stops.join(',');
-  return g.radial ? `radial-gradient(circle,${stops})` : `linear-gradient(${g.angle}deg,${stops})`;
+  return g.radial ? `radial-gradient(circle,${stops})` : `linear-gradient(${angle}deg,${stops})`;
 }
 
 export interface PatternCss {

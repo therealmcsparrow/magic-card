@@ -297,6 +297,8 @@ export interface CardAppearanceOverrides {
   shape_options?: ShapeOptions;
   value_background?: ValueBackgroundConfig;
   seasonal?: SeasonalSetting;
+  /** Replaces the card's whole backdrop list while the rule matches (bg-stack 1.0.0 r3); never on `hover`. */
+  background_layers?: BackgroundLayerConfig[];
 }
 
 export interface RowConfig extends EntityScopeNode {

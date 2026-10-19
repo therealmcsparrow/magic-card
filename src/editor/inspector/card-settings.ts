@@ -42,7 +42,7 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
-import '../layers/bg-layers';
+import { layerEditorNote } from '../layers/layer-editor-loader';
 import { backdropHasProblem, startRuleLayers } from '../layers/bg-layers-model';
 import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
 
@@ -289,13 +289,14 @@ export function renderCardDesign(
         : nothing,
     backdrop: () => {
       const own = src.rule ? 'background_layers' in ov : true;
-      const layers = (src.rule ? ov.background_layers : config.background_layers) as BackgroundLayerConfig[] | undefined;
+      const layers = src.rule ? ov.background_layers : config.background_layers;
       const write = (list: BackgroundLayerConfig[]) => {
-        if (src.rule) updateRule({ overrides: { ...ov, background_layers: list } as CardAppearanceOverrides });
+        if (src.rule) updateRule({ overrides: { ...ov, background_layers: list } });
         else update('background_layers', list.length ? list : undefined);
       };
       return html`<div class="field">
         ${lbl(t('Layers'), 'background_layers')}
+        ${layerEditorNote()}
         <mc-bg-layers
           .layers=${layers}
           .hass=${hass}
@@ -308,7 +309,7 @@ export function renderCardDesign(
             else {
               const rest = { ...ov };
               delete rest.background_layers;
-              updateRule({ overrides: rest as CardAppearanceOverrides });
+              updateRule({ overrides: rest });
             }
           }}
           .onLowPower=${() => update('layers_low_power', config.layers_low_power ? undefined : true)}

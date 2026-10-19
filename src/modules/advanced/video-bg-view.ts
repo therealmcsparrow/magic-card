@@ -5,6 +5,7 @@ import type { ModuleView } from '../../contracts/lazy-module';
 import { mediaSrc } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
+import { StreamGate } from './stream-gate';
 
 /* Chunk-only (magic-card-modules-extra.js): nothing runs at evaluation; mc-bg-video is defined by install(). */
 
@@ -30,6 +31,8 @@ export class McBgVideo extends LitElement {
   @state() private _failed = false;
   private _visible = false;
   private _observer?: IntersectionObserver;
+  /** As a background: no frames off screen, page hidden or card paused (layer-placement, card-pause). */
+  private readonly _gate = new StreamGate(this, 'video-bg', () => this._sync());
 
   // the card's styles apply (no shadow root of its own)
   protected createRenderRoot(): HTMLElement {
@@ -38,6 +41,7 @@ export class McBgVideo extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this._gate.refresh();
     if (typeof IntersectionObserver === 'undefined') {
       this._visible = true;
       return;
@@ -53,6 +57,7 @@ export class McBgVideo extends LitElement {
     super.disconnectedCallback();
     this._observer?.disconnect();
     this._observer = undefined;
+    this._gate.stop();
     this._video?.pause();
   }
 
@@ -65,6 +70,7 @@ export class McBgVideo extends LitElement {
   }
 
   protected updated(): void {
+    this._gate.refresh();
     this._sync();
   }
 
@@ -76,7 +82,7 @@ export class McBgVideo extends LitElement {
     v.defaultMuted = this.muted;
     v.playsInline = true;
     v.loop = this.loop;
-    if (this.autoplay && this._visible && !reducedMotion()) {
+    if (this.autoplay && (this._gate.background ? this._gate.active : this._visible) && !reducedMotion()) {
       if (v.paused) v.play()?.catch(() => undefined); // blocked (sound on): the poster stays
     } else if (!v.paused) {
       v.pause();
