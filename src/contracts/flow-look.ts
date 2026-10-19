@@ -83,6 +83,8 @@ import type { ResolvedFlow } from '../utils/flow';
  * 7. Keeps `g.flow[data-flow]` and `path.line` (studio flowAt() and the selection halo, which
  *    mc-flows still draws, rely on them). `path.line` is the centre line (may be transparent).
  * 8. shape: icon without shape_icon draws a dot (never an empty line).
+ * 9. Paint values the chunk writes itself (defaults, derived shades) must work as SVG paint on
+ *    the browser floor (Chromium 85): rgb() / rgba() / hex, never color-mix() (browsers.M1/M3).
  *
  * Frame budget (AC15, Sanne's wall tablet): a card with 6 tube or neon flows, bubbles on, holds
  * >= 50 fps with no frame over 50 ms in Chromium DevTools at 4x CPU throttling on the gallery
@@ -108,12 +110,12 @@ export const FLOW_LOOK_DEFAULTS = {
   wavelength_wave: 32, // 8-80
   wavelength_zigzag: 24, // 8-80
   electric: false,
-  tube_tint: 'color-mix(in srgb, #fff 18%, transparent)',
+  tube_tint: 'rgba(255, 255, 255, 0.18)', // white 18 %; rgba, not color-mix (Chromium 85 SVG paint)
   bubbles: true, // on once line_style is tube
   bubble_count: 4, // 1-8
   tube_fill_value: false,
   flicker: 'off',
-  neon_core: 'color-mix(in srgb, #fff 85%, transparent)',
+  neon_core: 'rgba(255, 255, 255, 0.85)', // white 85 %; rgba, not color-mix (Chromium 85 SVG paint)
   neon_glow: 8, // `glow` unset on a neon line
   twisted: false,
   color_mode: 'single',
