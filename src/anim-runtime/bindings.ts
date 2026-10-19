@@ -171,6 +171,18 @@ interface WrapBindings {
 }
 const memory = new WeakMap<HTMLElement, WrapBindings>();
 const ramps = new WeakMap<Animation, number>();
+/** Wrappers whose card is paused or off screen: their spins hold still. */
+const held = new WeakSet<HTMLElement>();
+
+/** Pause or resume the wrapper's spins (the card is paused or scrolled out of view). */
+export function setPlaying(wrapper: HTMLElement, on: boolean): void {
+  if (on) held.delete(wrapper);
+  else held.add(wrapper);
+  for (const s of memory.get(wrapper)?.spins.values() ?? []) {
+    if (on) s.anim.play();
+    else s.anim.pause();
+  }
+}
 
 /** Ease an animation's playback rate to `to` over `seconds` (immediately without smoothing or rAF). */
 function setRate(anim: Animation, to: number, seconds: number | undefined): void {
@@ -236,6 +248,7 @@ function applyMotion(wrapper: HTMLElement): void {
           const anim = (el as HTMLElement).animate([{ rotate: '0deg' }, { rotate: '360deg' }], { duration: 1000, iterations: Infinity, composite: 'add' });
           anim.finished?.catch(() => {});
           anim.playbackRate = 0;
+          if (held.has(wrapper)) anim.pause();
           w.spins.set(key, (s = { el, anim }));
         }
         setRate(s.anim, rate, b.smoothing);
@@ -347,6 +360,7 @@ export function release(wrapper: HTMLElement): void {
   const w = memory.get(wrapper);
   if (!w) return;
   memory.delete(wrapper);
+  held.delete(wrapper);
   for (const s of w.spins.values()) s.anim.cancel();
   setRules(`b:${wrapperKey(wrapper)}`, '');
 }
