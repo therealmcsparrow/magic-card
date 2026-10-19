@@ -76,7 +76,8 @@ import type { AnimationDoc } from '../anim-studio/model';
 import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
 import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
 import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
-import { canGoStale, createStackHost } from '../layers/stack-host';
+import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
+import { CardPause } from './card-pause';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
 /**
@@ -318,6 +319,8 @@ export class MagicCard extends LitElement {
   private _layerOn = false;
   /** This card asked for a re-render when the layers chunk lands (once). */
   private _layersAsked = false;
+  /** The viewer's Pause motion button and state (contract card-pause 1.0.0). */
+  private readonly _pause = new CardPause(this);
   /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
   private _frames: FillFrame[] = [];
   private _card: FillFrame = { flow: false, row: false, out: [] };
@@ -437,6 +440,7 @@ export class MagicCard extends LitElement {
     }
 
     const prevTemplate = this._config?.template;
+    this._pause.config(config);
 
     // Every row / column / module (nested children included) gets a stable id
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
@@ -681,6 +685,7 @@ export class MagicCard extends LitElement {
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
     this._unsubShapes = undefined;
+    this._pause.disconnected();
     stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -730,6 +735,8 @@ export class MagicCard extends LitElement {
     if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
 
     // the scope first: the card's own display template reads entity / card_entity
+    // the viewer's pause: on the host and the observer before any child is built
+    const paused = this._pause.begin(config);
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
@@ -750,7 +757,7 @@ export class MagicCard extends LitElement {
     const shadow = shape ? (resolved.box_shadow ? boxShadowToDropShadow(resolved.box_shadow) : this._themeShadow) : undefined;
     this._readThemeShadow = !!shape && !resolved.box_shadow;
     // ha-card takes the card's corner radius too, so its outline (borders, glows, rings) matches the content
-    const haCardStyle = [themeStyle, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none']
+    const haCardStyle = [themeStyle, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none', paused && '--mc-paused: 1']
       .filter(Boolean)
       .join('; ');
     // the seasonal scene: a layer behind (or over) the rows and border decorations, which the
@@ -776,6 +783,7 @@ export class MagicCard extends LitElement {
     const layered = this._beginLayers(config, !!backdrop);
     const layerCss = layered && layerSlot.get() ? html`<style data-mc-layer-css>${layerSlot.get()!.css}</style>` : nothing;
     const lowPower = layered && resolved.layers_low_power;
+    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) this._pause.moving();
     const stack = backdrop ? html`<mc-bg-stack .layers=${backdrop} .hass=${this.hass} .host=${this._stackHost}></mc-bg-stack>` : nothing;
     const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
     const rows = (animShape: ResolvedShape | undefined = shape) => {
@@ -794,14 +802,14 @@ export class MagicCard extends LitElement {
     const inline = this._popup.hidden
       ? nothing
       : withShapeShadow(html`
-          <ha-card style=${haCardStyle || nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
+          <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${badge}
-            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}
+            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
           </ha-card>
         `, shadow, !!shape);
     if (!popup) return inline as TemplateResult;
@@ -810,14 +818,14 @@ export class MagicCard extends LitElement {
     const parts = splitDeclarations(cardStyle);
     const prop = (p: string) => p.slice(0, p.indexOf(':')).trim().toLowerCase();
     const onSurface = (p: string) => /^(background(-[a-z-]+)?|box-shadow)$/.test(prop(p));
-    const surfaceStyle = [themeStyle, anim?.style, ...parts.filter(onSurface)].filter(Boolean).join('; ');
+    const surfaceStyle = [themeStyle, anim?.style, ...parts.filter(onSurface), paused && '--mc-paused: 1'].filter(Boolean).join('; ');
     const contentStyle = [
       ...parts.filter((p) => !onSurface(p) && prop(p) !== 'border-radius'),
       insets && insetPaddingStyle(undefined, contentPad, { min: insets }),
     ].filter(Boolean).join('; ');
     const surface = this._popup.isOpen
       ? html`
-          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-layers=${layered ? '' : nothing}
+          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}${this._popup.renderHead(titleId)}
             <div class="mc-popup-body">
@@ -825,7 +833,7 @@ export class MagicCard extends LitElement {
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
                 data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
-            </div>${renderRing(popupRing)}
+            </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
           </ha-card>
         `
       : nothing;
@@ -1261,6 +1269,7 @@ export class MagicCard extends LitElement {
    * without any). Rows, columns and the card have no entity: their documents follow an entry's own.
    */
   private _v2(anim: ReturnType<typeof resolveAnimations>, stateObj?: HassEntity, entityId?: string): number | undefined {
+    if (anim) this._pause.moving();
     if (anim?.needsRuntime) this._v2Need = true;
     if (anim?.needsParticles) this._pNeed = true;
     return anim?.v2 ? this._v2Render.push({ entries: anim.v2, stateObj, entityId }) - 1 : undefined;

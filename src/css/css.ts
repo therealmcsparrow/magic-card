@@ -7,6 +7,7 @@ import { flowsCardStyles } from '../card/flows-css';
 import { shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
 import { LAYER_SYNC_CSS } from '../layers/layer-slot';
+import { pauseCardStyles } from '../card/pause-css';
 
 /** Module roots that are 100% wide (their own rules below); a layout gives their wrapper that width. */
 const FULL_WIDTH_ROOTS = [
@@ -1347,4 +1348,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseCardStyles];

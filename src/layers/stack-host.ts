@@ -3,7 +3,7 @@ import type { HomeAssistant } from '../types';
 import type { RenderContext } from '../services/render-context';
 import { withRenderContext } from '../services/render-context';
 import { t } from '../card/i18n';
-import { offscreenObserver, unwatchOffscreen } from '../icons/offscreen';
+import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { safeColor } from '../utils/animation';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { mediaSrc } from '../utils/media';
@@ -21,13 +21,19 @@ export function createStackHost(card: { hass?: HomeAssistant; renderRoot: Parent
     cssColor: (value, entity) =>
       isEntityColor(value) ? (entity && entityStateColor(card.hass?.states[entity])) || 'currentColor' : safeColor(value) ?? 'transparent',
     observeOffscreen: (el) => {
-      offscreenObserver()?.observe(el);
+      // a paused card reports it off screen; whether it moves is the card's call (pan_zoom, camera)
+      watchOffscreen(el, () => undefined, { counted: false });
       return () => unwatchOffscreen(el);
     },
     badgeHost: () => card.renderRoot.querySelector<HTMLElement>('.mc-bg-badge') ?? undefined,
     lowPower,
     staleText: (seconds) => t('Not updated {n} min', { n: Math.max(1, Math.round(seconds / 60)) }),
   };
+}
+
+/** Some layer moves on its own: a pan / zoom picture, or a camera.* snapshot that refreshes. */
+export function layersMove(layers: readonly BackgroundLayerConfig[], cardEntity: string | undefined): boolean {
+  return layers.some((l) => l?.type === 'image' && !l.hidden && (!!l.pan_zoom || (!l.states && String(l.entity ?? cardEntity).startsWith('camera.'))));
 }
 
 /** Some layer can go stale: a camera.* image layer (own entity, else the card's) that has not turned the badge off. */

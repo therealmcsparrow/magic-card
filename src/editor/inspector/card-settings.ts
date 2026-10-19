@@ -42,6 +42,7 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
+import type { PauseButtonCorner, PauseButtonMode } from '../../contracts/card-pause';
 import { layerEditorNote } from '../layers/layer-editor-loader';
 import { backdropHasProblem, startRuleLayers } from '../layers/bg-layers-model';
 import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
@@ -350,6 +351,36 @@ export function renderCardDesign(
             ></mc-animation-list>
           </div>`,
     template_animations: () => (src.rule || !write ? nothing : renderTemplateAnimations(config, templateDocs, write, syncCtx)),
+    // viewer pause button (card-pause 1.0.0): a card setting, not part of a rule's design
+    pause_button: () => {
+      if (src.rule) return nothing;
+      const cur = config.pause_button === 'always' || config.pause_button === 'hidden' ? config.pause_button : 'auto';
+      const modes: Array<[PauseButtonMode, string]> = [['auto', t('Automatic')], ['always', t('Always')], ['hidden', t('Hidden')]];
+      return html`<div class="field" data-field="pause_button">
+        ${renderFieldHead(t('Pause button'), 'pause_button', syncCtx)}
+        <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help">
+          ${modes.map(([m, label]) => html`<button type="button" role="radio" aria-checked=${cur === m ? 'true' : 'false'} @click=${() => update('pause_button', m === 'auto' ? undefined : m)}>${label}</button>`)}
+        </div>
+        <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t('Never shown.') : t('Shown while the card has motion. Viewers can pause it.')}</p>
+        ${cur === 'hidden'
+          ? html`<p class="help warn" role="note" data-warn="pause-hidden">${t('Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds.')}</p>`
+          : nothing}
+      </div>`;
+    },
+    pause_button_corner: () => {
+      if (src.rule || config.pause_button === 'hidden') return nothing;
+      const cur = config.pause_button_corner ?? 'bottom-left';
+      const corners: Array<[PauseButtonCorner, string]> = [['bottom-left', t('Bottom left')], ['bottom-right', t('Bottom right')], ['top-left', t('Top left')], ['top-right', t('Top right')]];
+      return html`<div class="field" data-field="pause_button_corner">
+        <div class="field-head"><label for="pause-corner">${t('Corner')}</label></div>
+        <div class="select">
+          <select class="input" id="pause-corner" @change=${(e: Event) => update('pause_button_corner', ((e.target as HTMLSelectElement).value as PauseButtonCorner) === 'bottom-left' ? undefined : ((e.target as HTMLSelectElement).value as PauseButtonCorner))}>
+            ${corners.map(([c, label]) => html`<option value=${c} ?selected=${cur === c}>${label}</option>`)}
+          </select>
+          <ha-icon icon="mdi:chevron-down"></ha-icon>
+        </div>
+      </div>`;
+    },
     css: () =>
       src.rule
         ? nothing
@@ -379,7 +410,7 @@ export function renderCardDesign(
       [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
     ['backdrop', t('Card backdrop'), false, [['backdrop', 'background_layers']]],
-    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
+    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations'], ['pause_button', 'pause_button'], ['pause_button_corner']]],
     ['advanced', t('Advanced'), false, [['css', 'css']]],
   ];
   const renderGroup = ([id, name, defaultOpen, entries]: (typeof groups)[number]) => {

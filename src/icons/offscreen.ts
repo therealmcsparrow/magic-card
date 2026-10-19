@@ -17,6 +17,8 @@ const tracked = new Set<Element>();
 const real = new WeakMap<Element, boolean>();
 /** Elements that keep updating while their card is paused (clocks, countdowns). */
 const fixed = new WeakSet<Element>();
+/** Watched elements that are not a sign of motion on their own (the card backdrop decides itself). */
+const uncounted = new WeakSet<Element>();
 /** <magic-card> hosts whose viewer pressed "Pause motion" (card-pause contract). */
 const paused = new WeakSet<Element>();
 
@@ -42,23 +44,33 @@ export function offscreenObserver(): IntersectionObserver | undefined {
         report(e.target, e.isIntersecting);
       }
     });
+    // whoever observes through the shared observer is tracked, so a card pause reaches it too
+    const [add, drop] = [io.observe.bind(io), io.unobserve.bind(io)];
+    io.observe = (el) => {
+      tracked.add(el);
+      add(el);
+    };
+    io.unobserve = (el) => {
+      tracked.delete(el);
+      real.delete(el);
+      drop(el);
+    };
   }
   return io;
 }
 
-function observe(el: Element, pausable = true): boolean {
+function observe(el: Element, pausable = true, counted = true): boolean {
   const obs = offscreenObserver();
   if (!obs) return false;
   if (pausable) fixed.delete(el);
   else fixed.add(el);
-  tracked.add(el);
+  if (counted) uncounted.delete(el);
+  else uncounted.add(el);
   obs.observe(el);
   return true;
 }
 
 function unobserve(el: Element): void {
-  tracked.delete(el);
-  real.delete(el);
   io?.unobserve(el);
   el.removeAttribute('offscreen');
 }
@@ -69,9 +81,9 @@ function unobserve(el: Element): void {
  * IntersectionObserver (nothing will report). Inside a paused card the element counts as off screen
  * unless `pausable` is false (content that updates but does not move).
  */
-export function watchOffscreen(el: Element, cb: (onScreen: boolean) => void, opts?: { pausable?: boolean }): boolean {
+export function watchOffscreen(el: Element, cb: (onScreen: boolean) => void, opts?: { pausable?: boolean; counted?: boolean }): boolean {
   listeners.set(el, cb);
-  return observe(el, opts?.pausable !== false);
+  return observe(el, opts?.pausable !== false, opts?.counted !== false);
 }
 
 export function unwatchOffscreen(el: Element): void {
@@ -97,7 +109,7 @@ export const isCardPaused = (host: Element): boolean => paused.has(host);
 /** Pausable observed elements inside `host` (the card has motion). */
 export function motionCount(host: Element): number {
   let n = 0;
-  for (const el of tracked) if (!fixed.has(el) && inPausedCard(el, host)) n++;
+  for (const el of tracked) if (!fixed.has(el) && !uncounted.has(el) && inPausedCard(el, host)) n++;
   return n;
 }
 
