@@ -16,14 +16,17 @@
  *   (data-mc-path) keeps them to select. A wrapper with focus rises above the overlays.
  * - Low power: no blur, no blend; pictures, opacity and scrims stay.
  */
-const BOXES = '.mc-column,.mc-row,.mc-horizontal,.mc-vertical,.mc-tabs-content,.mc-nested-row';
+const BOX_LIST = ['.mc-column', '.mc-row', '.mc-horizontal', '.mc-vertical', '.mc-tabs-content', '.mc-nested-row'];
+/** The layered containers, spelled out per selector (no :is(), Chromium 85 floor). */
+const boxes = (prefix: string, suffix: string) => BOX_LIST.map((b) => `${prefix}${b}${suffix}`).join(',');
 const BG = '.mc-module-wrapper[data-mc-placement=background]';
 
 export const LAYER_CSS = `
 ha-card[data-mc-layers]{isolation:isolate;display:flex;flex-direction:column}
-.mc-card-content[data-mc-layers],:is(${BOXES})[data-mc-layers]{position:relative;isolation:isolate}
+.mc-card-content[data-mc-layers]{position:relative;isolation:isolate}
+${boxes('', '[data-mc-layers]')}{position:relative;isolation:isolate}
 .mc-card-content[data-mc-layers]{flex:1 1 auto}
-.mc-card-content[data-mc-flows] :is(${BOXES})[data-mc-layers]{z-index:1}
+${boxes('.mc-card-content[data-mc-flows] ', '[data-mc-layers]')}{z-index:1}
 mc-bg-stack,${BG},.mc-layer-scrim{position:absolute;top:0;right:0;bottom:0;left:0}
 mc-bg-stack,${BG}{z-index:-1;overflow:hidden;border-radius:inherit}
 mc-bg-stack,.mc-layer-scrim{pointer-events:none}
