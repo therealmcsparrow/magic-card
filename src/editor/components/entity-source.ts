@@ -219,7 +219,12 @@ export class EntitySource extends LitElement {
   private _pickAndOpen = (): void => {
     this._pick();
     this._picking = true;
-    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement & { open?: () => void }>('mc-entity-picker')?.open?.());
+    // the button is gone once the picker shows: the field is the place focus returns to after Save or Cancel
+    void this.updateComplete.then(() => {
+      const picker = this.renderRoot.querySelector<HTMLElement & { open?: () => void; focusInput?: () => void }>('mc-entity-picker');
+      picker?.focusInput?.();
+      picker?.open?.();
+    });
   };
 
   private _openCardSettings = (): void => {
