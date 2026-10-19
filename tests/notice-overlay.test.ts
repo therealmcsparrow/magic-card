@@ -142,3 +142,19 @@ describe('shape editor: notices do not resize the canvas', () => {
     expect(floats(notice!, layerOf(el), css), 'no out-of-flow ancestor').toBe(true);
   });
 });
+
+describe('SVG editor: notice buttons are not inside the canvas stage', () => {
+  it('banners and result note are siblings of .stage, so the stage capture handlers never see their clicks or keys', async () => {
+    const el = await openSvg();
+    el.banners = [{ id: 'dropped', kind: 'warn', text: 'Removed 2 things.' }];
+    el.note = { tone: 'info', lines: ['Outlined stroke.'], action: { label: 'Undo', run() {} } };
+    el.tool = 'rect';
+    await el.updateComplete;
+    for (const sel of ['.banners .notice', '.result .notice']) {
+      const n = el.renderRoot.querySelector(sel)!;
+      expect(n, sel).not.toBeNull();
+      expect(n.closest('.stage'), sel).toBeNull();
+      expect(n.closest('.stagebox'), sel).not.toBeNull();
+    }
+  });
+});

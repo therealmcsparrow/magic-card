@@ -200,7 +200,7 @@ export const editorStyles: CSSResult[] = [
     [data-layout='stacked'] .insp {
       order: 6;
     }
-    [data-layout='stacked'] .stage {
+    [data-layout='stacked'] .stagebox {
       flex: none;
       min-height: max(320px, 70vh);
     }
@@ -279,10 +279,17 @@ export const editorStyles: CSSResult[] = [
       background: var(--mc-accent-tint);
       color: var(--mc-accent-ink);
     }
+    /* the notices are siblings of the stage inside this box: the stage keeps its pointer and key capture to itself */
+    .stagebox {
+      position: relative;
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 320px;
+    }
     .stage {
       position: relative;
       flex: 1 1 auto;
-      min-height: 320px;
+      min-width: 0;
       overflow: hidden;
       border-radius: var(--mc-radius-lg);
       background-color: var(--mc-canvas);
