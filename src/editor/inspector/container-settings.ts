@@ -14,7 +14,7 @@ import type {
 } from '../../types';
 import type { SyncContext } from '../../utils/sync-path';
 import type { ChildStep } from '../../utils/module-path';
-import { generateId } from '../../utils/id-generator';
+import { newColumn } from '../state/containers';
 import type { EditorStateManager } from '../state/editor-state';
 import { renderBoxField, renderIconField, renderSelectField, renderSyncMark, renderTextField, renderUnitField } from '../../utils/form-utils';
 import { renderConditionsList } from './conditions-list';
@@ -306,9 +306,9 @@ export function renderRowModuleGeneral(
   const grid: RowGrid = {
     row: { ...c, columns },
     setLayout: (layout) => write((next) => {
-      const cols = columns.map((col) => (col && typeof col === 'object' ? { ...col } : { id: generateId('col'), modules: [] }));
+      const cols = columns.map((col) => (col && typeof col === 'object' ? { ...col } : newColumn()));
       const shaped = { columns: cols } as { layout?: string; column_widths?: string[]; columns: NestedColumnConfig[] };
-      applyRowLayout(shaped, layout, () => ({ id: generateId('col'), modules: [] }));
+      applyRowLayout(shaped, layout, newColumn);
       if (cols.length !== columns.length) next.columns = cols;
       next.layout = layout;
       delete next.column_widths;

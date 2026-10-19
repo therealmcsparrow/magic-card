@@ -17,6 +17,8 @@ export function localiseCreationDefaults<M extends CardModule>(mod: M): M {
   const o = mod as unknown as Loose;
   // the one create path (palette add, wrap, add inside a layout): new layouts share their entity; paste and duplicate copy the YAML as it is
   if (SHARING_LAYOUTS.includes(mod.type)) o.share_entity = true;
+  // the columns of a new row module share too (entity-scope 1.1.0)
+  if (mod.type === 'row' && Array.isArray(o.columns)) for (const c of o.columns as Loose[]) c.share_entity = true;
   if (mod.type === 'text' && o.text === 'Hello World') o.text = t('Hello World');
   else if (mod.type === 'button' && o.label === 'Button') o.label = t('Button');
   else if (mod.type === 'tabs' && Array.isArray(o.tabs)) {
