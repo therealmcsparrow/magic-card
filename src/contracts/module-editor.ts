@@ -4,7 +4,7 @@ import type { EntitySourceInfo } from './entity-scope';
 import type { TransferChunk } from './preset-transfer';
 
 /*
- * Contract: per-module editors. Version 1.3.0 (Architect-owned). ADR 0007, ADR 0022.
+ * Contract: per-module editors. Version 1.3.0 revision 2 (Architect-owned). ADR 0007, ADR 0022.
  *
  * Seam: dashboard module classes (src/modules/**) keep metadata, createDefault, renderPreview,
  * validate, hints, migrate and getDependencies. Settings tabs are ModuleEditor entries in the editor
@@ -51,18 +51,23 @@ import type { TransferChunk } from './preset-transfer';
  *
  * - (1.3.0, additive, 2026-10-19, background-layers, layer-placement 1.0.0) The design tab of every
  *   module starts with the Placement group and, for background / overlay, the Layer group
- *   (03-ui-ux-designer.md sections 2-3). They edit the module's top-level `placement` and `layer`
+ *   (03-ui-ux-designer.md sections 2-3, 11). They edit the module's top-level `placement` and `layer`
  *   keys, never `design`, and are not shown in the Hover view or inside conditional design rules.
  *   The registry draws them in front of the design tab for every editor (default or own `design`),
  *   so no ModuleEditor changes; an editor that must hide them sets `layerGroups: false` (none does in
- *   1.3.0). Implementation: src/editor/layers/layer-groups.ts `renderLayerGroups(config, hass,
- *   onChange, ctx)`, with `ctx.siblings` (in-flow sibling count, for the video-bg implicit state and
- *   the in-flow fallback hint) and `ctx.canHoist` (offer fill row / card). The inspector supplies ctx.
+ *   1.3.0). The inspector supplies the context (LayerGroupContext; the layer-editor contract's
+ *   LayerEditorContext extends it).
+ *   r2 (2026-10-20, CEO size ruling): the groups are the <mc-layer-design> element of the editor-side
+ *   chunk 'layer-editor' (contract layer-editor 1.0.0). The registry keeps the light tag helper
+ *   src/editor/layers/layer-design.ts `renderLayerGroups(config, hass, onChange, ctx, below?)` and
+ *   calls loadLayerEditor() instead of importing the element; the loading and failure lines are those
+ *   of layer-editor 1.0.0.
  *
  * Types only (0 B), apart from the constants below.
  */
 
 export const MODULE_EDITOR_CONTRACT = '1.3.0';
+export const MODULE_EDITOR_CONTRACT_REVISION = 2;
 
 /** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
 export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];
@@ -89,7 +94,7 @@ export interface LayerGroupContext {
   siblings: number;
   /** fill: row / card may be offered (module directly in a card grid or row module column). */
   canHoist: boolean;
-  /** Position among the container's backgrounds or overlays, for "Background layer 2 of 3". */
+  /** Position among the container's backgrounds or overlays, for "2nd from the front, of 3". */
   rank?: { index: number; count: number };
 }
 
