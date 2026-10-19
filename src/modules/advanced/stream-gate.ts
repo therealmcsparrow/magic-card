@@ -4,7 +4,8 @@ import { unwatchOffscreen, watchOffscreen } from '../../icons/offscreen';
  * Streaming backgrounds (layer-placement 1.0.0 "Streaming backgrounds", card-pause 1.0.0 rule 1).
  * A camera or video-bg that renders as a background decodes no frames while it is off screen, the page
  * is hidden or its card is paused (shared offscreen observer), and resumes on return. In flow it
- * behaves as before: the gate is always open. Chunk-only (magic-card-modules-extra.js).
+ * behaves as before: the gate is always open, except for `pauseInFlow` (a video-bg): there it follows
+ * the shared observer too (off screen, card paused) but not the page-hidden rule. Chunk-only (magic-card-modules-extra.js).
  */
 
 export type StreamKind = 'camera' | 'video-bg';
@@ -28,26 +29,33 @@ export class StreamGate {
   background = false;
   private _onScreen = false;
   private _watching = false;
+  /** _start ran (also true when there is no IntersectionObserver and nothing is watched). */
+  private _watchAsked = false;
   private _listening = false;
 
   constructor(
     private readonly _host: HTMLElement,
     private readonly _kind: StreamKind,
     private readonly _onChange: () => void,
+    private readonly _pauseInFlow = false,
   ) {}
 
   get active(): boolean {
-    return !this.background || (this._onScreen && !document.hidden);
+    if (!this._watching && !this.background) return true;
+    return this._onScreen && (!this.background || !document.hidden);
   }
 
   /** Re-read the placement (the wrapper attributes may land after connect) and follow it. */
   refresh(): void {
     const before = this.active;
     const bg = rendersAsBackground(this._host, this._kind);
-    if (bg !== this.background) {
-      this.background = bg;
-      if (bg) this._start();
-      else this._stop();
+    this.background = bg;
+    if (bg || this._pauseInFlow) {
+      if (!this._watchAsked) this._start();
+      if (bg && !this._listening) this._listen();
+      if (!bg && this._listening) this._unlisten();
+    } else if (this._watchAsked) {
+      this._stop();
     }
     if (this.active !== before) this._onChange();
   }
@@ -62,15 +70,24 @@ export class StreamGate {
     // no IntersectionObserver: nothing will report, the page-hidden rule still applies
     if (!watchOffscreen(this._host, this._report)) this._onScreen = true;
     else this._watching = true;
+    this._watchAsked = true;
+  }
+
+  private _listen(): void {
     document.addEventListener('visibilitychange', this._visibility);
     this._listening = true;
+  }
+
+  private _unlisten(): void {
+    document.removeEventListener('visibilitychange', this._visibility);
+    this._listening = false;
   }
 
   private _stop(): void {
     if (this._watching) unwatchOffscreen(this._host);
     this._watching = false;
-    if (this._listening) document.removeEventListener('visibilitychange', this._visibility);
-    this._listening = false;
+    this._watchAsked = false;
+    if (this._listening) this._unlisten();
   }
 
   private readonly _report = (on: boolean): void => {

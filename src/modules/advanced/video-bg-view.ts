@@ -15,7 +15,7 @@ const reducedMotion = (): boolean =>
 /**
  * The background video element. Muted / playsInline / loop are set as properties before play()
  * (the `muted` attribute alone does not allow autoplay once Lit has created the element), it plays
- * only while visible (IntersectionObserver) and the poster stays when playback is not possible
+ * only while visible and its card runs (shared offscreen observer, StreamGate) and the poster stays when playback is not possible
  * (autoplay blocked, load error, reduced motion).
  */
 export class McBgVideo extends LitElement {
@@ -29,10 +29,8 @@ export class McBgVideo extends LitElement {
   @property({ attribute: false }) srcId?: string;
   @property({ attribute: false }) posterId?: string;
   @state() private _failed = false;
-  private _visible = false;
-  private _observer?: IntersectionObserver;
   /** As a background: no frames off screen, page hidden or card paused (layer-placement, card-pause). */
-  private readonly _gate = new StreamGate(this, 'video-bg', () => this._sync());
+  private readonly _gate = new StreamGate(this, 'video-bg', () => this._sync(), true);
 
   // the card's styles apply (no shadow root of its own)
   protected createRenderRoot(): HTMLElement {
@@ -42,21 +40,10 @@ export class McBgVideo extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this._gate.refresh();
-    if (typeof IntersectionObserver === 'undefined') {
-      this._visible = true;
-      return;
-    }
-    this._observer = new IntersectionObserver((entries) => {
-      this._visible = entries.some((e) => e.isIntersecting);
-      this._sync();
-    });
-    this._observer.observe(this);
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._observer?.disconnect();
-    this._observer = undefined;
     this._gate.stop();
     this._video?.pause();
   }
@@ -82,7 +69,7 @@ export class McBgVideo extends LitElement {
     v.defaultMuted = this.muted;
     v.playsInline = true;
     v.loop = this.loop;
-    if (this.autoplay && (this._gate.background ? this._gate.active : this._visible) && !reducedMotion()) {
+    if (this.autoplay && this._gate.active && !reducedMotion()) {
       if (v.paused) v.play()?.catch(() => undefined); // blocked (sound on): the poster stays
     } else if (!v.paused) {
       v.pause();
