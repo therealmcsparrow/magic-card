@@ -28,8 +28,12 @@ export interface Decl {
 
 export const MAX_NEST = 16;
 const SINGLE: Record<string, TokType> = { ',': 'comma', ':': 'colon', ';': 'semi', '(': 'open', '[': 'open', '{': 'open' };
-/** A name character, or one escape: a backslash and 1-6 hex digits plus one optional space, or any one character but a newline. */
-const ESC = String.raw`\\(?:[\da-f]{1,6}[ \t\n]?|[^\n])`;
+/**
+ * One escape: a backslash and 1-6 hex digits plus one optional space, or one character that is no newline or hex digit.
+ * The branches are disjoint (six hex digits, or one to five not followed by a hex digit, or a non-hex character),
+ * so a repeated group of them has one way to match and cannot backtrack (websec.M-SEC6).
+ */
+const ESC = String.raw`\\(?:(?:[\da-f]{6}|[\da-f]{1,5}(?![\da-f]))[ \t\n]?|[^\n\da-f])`;
 const NAME = String.raw`(?:[\w\u0080-\uffff-]|${ESC})`;
 const IDENT = new RegExp(String.raw`(?:--|-?(?:[a-z_\u0080-\uffff]|${ESC}))${NAME}*`, 'iy');
 /**

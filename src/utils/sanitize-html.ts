@@ -97,6 +97,31 @@ function safeToken(tok: Tok, prop: string, prev?: Tok): boolean {
   }
 }
 
+const MARGIN_KEYWORD = /^(auto|inherit|initial|unset|revert|revert-layer)$/i;
+const MARGIN_MATH = /^(calc|min|max|clamp)$/;
+/**
+ * Margin allow-list: unsigned numbers, lengths and percentages, keywords, a lone var(--x), and calc/min/max/clamp
+ * made only of unsigned operands with + * / operators. Inside math there is no `-`, ident (infinity, -infinity, nan)
+ * or var(), so the result cannot be negative.
+ */
+function safeMargin(value: Tok[]): boolean {
+  let math = 0;
+  for (let i = 0; i < value.length; i++) {
+    const t = value[i];
+    if (t.t === 'num' || t.t === 'dim' || t.t === 'pct') {
+      if (t.s[0] === '-') return false;
+    } else if (math && (t.t === 'comma' || (t.t === 'delim' && '+*/'.includes(t.s)) || t.t === 'open')) {
+      if (t.t === 'open') math++;
+    } else if (math && t.t === 'close') math--;
+    else if (t.t === 'fn' && MARGIN_MATH.test(t.v!)) math++;
+    else if (math) return false;
+    else if (t.t === 'id' && MARGIN_KEYWORD.test(t.s)) continue;
+    else if (t.t === 'fn' && t.v === 'var' && value[i + 1]?.s.startsWith('--') && value[i + 2]?.t === 'close') i += 2;
+    else return false;
+  }
+  return !math;
+}
+
 /** The declaration rebuilt as `prop: value` from its own tokens, or '' when any part is not allowed. */
 function safeDeclaration(toks: Tok[]): string {
   const sig = toks.filter((t) => t.t !== 'ws');
@@ -116,7 +141,7 @@ function safeDeclaration(toks: Tok[]): string {
   if (!value.length) return '';
   for (let i = 0; i < value.length; i++) if (!safeToken(value[i], prop, value[i - 1])) return '';
   // Rules on top of the token list: no negative margins, a visible opacity, a few display values.
-  if (prop.startsWith('margin') && value.some((t) => t.s[0] === '-' && t.t !== 'id')) return '';
+  if (prop.startsWith('margin') && !safeMargin(value)) return '';
   if (prop === 'display' && !(value.length === 1 && SAFE_DISPLAY.test(value[0].s))) return '';
   if (prop === 'opacity') {
     const one = value.length === 1 && (value[0].t === 'num' || value[0].t === 'pct') ? value[0] : null;
