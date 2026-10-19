@@ -1,5 +1,6 @@
 import type { CustomShapeOptions, CustomShapesConfig } from './contracts/custom-shape';
 import type { CustomIconsConfig } from './contracts/mcu-library';
+import type { EntityScopeNode } from './contracts/entity-scope';
 
 // ── Home Assistant types (subset) ──
 
@@ -288,7 +289,7 @@ export interface CardAppearanceOverrides {
   seasonal?: SeasonalSetting;
 }
 
-export interface RowConfig {
+export interface RowConfig extends EntityScopeNode {
   id: string;
   columns: ColumnConfig[];
   layout?: string; // '1' | '1-1' | '1-2' | '2-1' | '1-1-1' | custom grid
@@ -306,7 +307,7 @@ export interface RowConfig {
   not_synced?: string[]; // Property paths that are not synced for this row
 }
 
-export interface ColumnConfig {
+export interface ColumnConfig extends EntityScopeNode {
   id: string;
   modules: CardModule[];
   gap?: string;
@@ -940,7 +941,7 @@ export interface VerticalModuleConfig extends CardModule {
 }
 
 /** A row module's column: settings like a card column (ids are added by the editor; old configs have none). */
-export interface NestedColumnConfig {
+export interface NestedColumnConfig extends EntityScopeNode {
   id?: string;
   modules: CardModule[];
   gap?: string;

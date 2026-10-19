@@ -1,5 +1,5 @@
 /*
- * Contract: entity scope (card entity, layout sharing, effective module entity). Version 1.0.0
+ * Contract: entity scope (card entity, layout sharing, effective module entity). Version 1.1.0
  * (Architect-owned). ADR 0033. Brief .company/work/card-entity/01-product-manager.md, plan 02-architect.md.
  * CEO rulings 2026-10-19: Q1 nearest layout (only when it shares, see C), Q2 per card / never synced,
  * Q3 silent mismatch + editor hint, card modules never inherit, B `none` on a layout is a wall.
@@ -16,8 +16,10 @@
  *   Absent = false. The card editor writes `share_entity: true` on every layout it creates (one
  *   create path in the editor chunk); YAML written before this release has no key, so its layouts
  *   never pass their own entity down (AC1 holds).
- * - Card grid rows and columns, nested columns of the row module, tab entries: no own entity in 1.0.0;
- *   the scope passes through them unchanged.
+ * - Card grid rows and columns and the row module's columns (`EntityScopeNode`): `entity` and `share_entity`
+ *   exactly as layouts (own id for themselves; passed down only with `share_entity: true`; `none` is a wall).
+ *   The editor writes `share_entity: true` on every row and column it creates (one create helper per kind),
+ *   and so does the card-picker stub. Old YAML has neither key (AC1). Tab entries and slides have no own entity.
  *
  * ── Resolution (src/utils/entity-scope.ts, in magic-card.js, pure) ──
  * scope(card)                = entityKey(card.entity) as a string, else undefined
@@ -28,7 +30,8 @@
  *                              inherit -> undefined when ok === false (card module),
  *                                         undefined when ok is a domain list without up's domain
  *                                         (nearest source wins, no skipping), else up
- * rows / columns / card      : effective = current scope (card entity or undefined)
+ * rows / columns            : effective = effectiveEntity(node, up) without a domain list; children = childScope(node, up)
+ * card                       : effective = card entity
  * `ok` is MagicModuleMetadata.inherit (src/modules/module-types.ts):
  *   false             card module, never inherits: custom-card
  *   readonly string[] domains accepted when inherited: camera ['camera'], weather and forecast
@@ -42,7 +45,8 @@
  *   `entity` replaced), and uses that id for design rules, ring, value background, entity colour,
  *   animations / v2, hasRunnableActions and the action actor. It sets the scope for its children
  *   (childScope) before renderModuleContent, so renderChild / renderColumn children read it.
- * - _renderRow / _renderColumn / card-level ring, value background, animations: current scope.
+ * - _renderRow / _renderColumn: `_scoped(node)` (own effective entity + childScope for the children); the card-level
+ *   ring, value background and animations use the card entity.
  * - collectDependencies (src/services/card-dependencies.ts): the same walk rules; getDependencies
  *   receives the effective config. Parity with the render is tested.
  * - Display (visibility) state / attribute conditions do NOT use any module entity (unchanged).
@@ -61,12 +65,20 @@
  *
  * ── Editor (card-editor chunk) ──
  * resolveEntitySource(config, selection) in src/editor/entity-source.ts returns EntitySourceInfo
- * built only from the functions below (parity test against the card's resolver).
+ * built only from the functions below (parity test against the card's resolver). It also applies the row,
+ * column and nested-column nodes; resolveContainerSource(config, at) gives the EntitySourceInfo of a row or
+ * column (no domains, never cardModule).
  *
  * Types and one constant only (0 B in magic-card.js); the functions live in src/utils/entity-scope.ts.
  */
 
-export const ENTITY_SCOPE_CONTRACT = '1.0.0';
+export const ENTITY_SCOPE_CONTRACT = '1.1.0';
+
+/** (1.1.0) The keys a card grid row, column or row-module column holds beside a layout module. */
+export interface EntityScopeNode {
+  entity?: string;
+  share_entity?: boolean;
+}
 
 /** Layout module types that may share their own entity with their children. */
 export type EntityLayoutType = 'horizontal' | 'vertical' | 'row' | 'tabs' | 'slider-layout';
