@@ -36,6 +36,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Card design rules: a rule can change the card's ring, shape, value background or seasonal scene while its conditions match.
 -   Gradients for backgrounds, rings, icons and text, written as CSS gradients. See [Gradients](documentation/design/gradients.md).
 -   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
+-   Card entity: name the device a card is for once. Modules, rows and columns follow it unless they pick their own entity or `No entity`, and a layout can share its entity with the modules inside. Existing cards are unchanged. See [Card entity](documentation/card-entity/README.md).
 -   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
 -   SVG editor (pre-release, with Magic Card Utils): draw and edit icons on a 24 x 24 grid, with alignment, boolean operations, layers in groups with drag and drop, a dual-tone Accent colour, path tools (outline stroke, offset, simplify, join, split and knife), SVG import and export, and saving to the library. See [SVG editor](documentation/svg-editor/README.md).
 -   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).

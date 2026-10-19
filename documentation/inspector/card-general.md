@@ -5,6 +5,7 @@ Select the card (click its frame, or the card at the top of the outline or layer
 ## Contents
 
 -   [Fields](#fields)
+-   [Card entity](#card-entity)
 -   [Pop-up](#pop-up)
 
 ## Fields
@@ -12,10 +13,19 @@ Select the card (click its frame, or the card at the top of the outline or layer
 | UI label | YAML key | Type / values | Default | What it does |
 | --- | --- | --- | --- | --- |
 | Name | `name` | Text | none | A name for the card. Shown in the editor header, and used as the accessible name of a pop-up without a title. It is not drawn on the card. |
+| Card entity | `entity` | Entity id | none | The device this card is for. Optional. See [Card entity](#card-entity). |
 | Use dashboard theme | `use_page_theme` | `true` / `false` | `true` | On: the card uses the dashboard's theme. Turn off to pick a theme for this card only. |
 | Card theme | `theme` | A theme name from your Home Assistant themes | none | The theme for this card. Only active while Use dashboard theme is off. The list starts with Dashboard default, which removes the key. |
 
 With Use dashboard theme off and no Card theme picked, the card uses Home Assistant's default theme. The theme's variables are set on the card itself, so they apply to everything inside it.
+
+## Card entity
+
+Card entity is an optional entity picker with the placeholder "Pick a device". Modules, rows and columns without an entity of their own use it. Under the picker, a plain line says how many tiles follow it, for example "3 tiles follow it." The line is left out when none do. Clearing the picker removes the `entity` key.
+
+A Magic Card Utils template never holds the card entity, so one template fits any device, and applying a template keeps this card's entity. The card entity is not marked as a local override on a linked card, because it never takes part in the sync.
+
+A module's Entity field links to this field: when the card has no entity and a module has nothing to follow, the text under its buttons holds a link, "Card settings > General". It selects the card, opens General and puts the focus in this picker. How modules use the card entity is on [Card entity](../card-entity/README.md).
 
 ## Pop-up
 

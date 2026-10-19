@@ -4,6 +4,24 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### New
+-   **Card entity.** A card can name the device it is for with `entity`, and modules, rows and columns without an entity of their own use it. Set it in Card settings, General, in the new Card entity field. Change that one field to point the same card at another device. See [Card entity](documentation/card-entity/README.md).
+-   **Entity field with three buttons** in the General tab of every module that takes an entity: Same as card (or Same as row, Same as column), Pick one and No entity. `entity: none` gives a module no entity even when the card has one. The field says where the entity comes from, and the attribute list shows the attributes of that entity.
+-   **Share with tiles inside** on layouts (horizontal, vertical, row, tabs and slider layout, `share_entity: true`). The modules in a layout follow the layout's own entity before the card entity. `entity: none` on a layout gives every module inside no entity unless it picks its own.
+-   **`entity` and `card_entity` in templates.** Text templates, Markdown content and `template` conditions can read the entity of their module and the card's entity. A template gets them only when it mentions them.
+-   **Which device is this card for?** When you load a Magic Card Utils template into a card that has no entity, and the template has modules that would follow one, the confirmation asks for it. Magic Card Utils templates never hold the card entity, so one template fits any device.
+-   The structure outline marks modules that follow the card or a layout, and flags a module whose inherited entity is the wrong kind of device.
+
+### Improved
+-   A **toggle** action on an entity that comes from the card or a layout only toggles lights, switches, fans, input booleans, automations and humidifiers. For a lock, a cover or anything else it opens the more-info dialog instead. A slider that follows a cover still moves the cover.
+-   Camera, Weather, Forecast, Light and Dropdown modules follow the card entity only when it is the right kind of device. Otherwise they show nothing, and the editor says why in plain words. The Custom card module never follows the card entity.
+
+### Existing cards
+-   **Existing cards are unchanged.** A card without an `entity` key renders as before. A layout that already has an `entity` keeps it to itself until you switch on Share with tiles inside; layouts you add in the editor from now on start with it on, and pasting or duplicating a layout keeps its YAML as it was.
+-   `entity: none` had no meaning before, because entity ids always contain a dot.
+
 ## 2026.10.11-beta.1 (2026-10-18, pre-release)
 
 A pre-release: an SVG editor, a shape editor, a preset library with file export and import, and a smaller main file. HACS shows it only when you turn on Show beta versions. Each release has 23 files.
