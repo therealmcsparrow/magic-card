@@ -49,8 +49,12 @@ import './mc-flows';
 import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../utils/flow';
 import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
+import { childScope, effectiveEntity } from '../utils/entity-scope';
+import type { EntityScopeNode } from '../contracts/entity-scope';
+import { ModuleRegistry } from '../modules/module-registry';
 import { entityStateColor } from '../utils/entity-color';
 import { mergeTemplateWithOverrides } from '../services/template-merge';
+import { templateSource } from '../services/template-source';
 import { ConfigValidator } from '../services/config-validator';
 import { ConditionsService } from '../services/conditions-service';
 import { collectDependencies, CardDependencies } from '../services/card-dependencies';
@@ -62,7 +66,7 @@ import { configGoogleFonts, loadGoogleFonts } from '../utils/google-fonts';
 import { isRunnableAction } from '../utils/actions';
 import { RenderContext, withRenderContext } from '../services/render-context';
 import { renderModuleContent } from '../modules/render-module';
-import { runServiceCall, toggleCall } from '../utils/entity-control';
+import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity-control';
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
 import { PopupController } from './popup-controller';
@@ -71,20 +75,6 @@ import { animationLibrary, inlineAnimations } from '../services/animation-librar
 import type { AnimationDoc } from '../anim-studio/model';
 import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
 import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
-
-interface TemplateEntry {
-  config: Omit<MagicCardConfig, 'type'> & { type?: string };
-  description?: string;
-}
-
-type TemplateStore = Record<string, TemplateEntry>;
-
-interface TemplateUpdatedEvent {
-  data: {
-    name: string;
-    template: TemplateEntry;
-  };
-}
 
 /**
  * A module with an id, and the same for every nested layout child (graph history and other per-module
@@ -119,7 +109,7 @@ function hasRunnableActions(actions: ActionsConfig | undefined, entity?: string)
 }
 
 /** What runs actions: a module, or a row (no entity of its own). */
-type Actor = { actions?: ActionsConfig; entity?: string };
+type Actor = { actions?: ActionsConfig; entity?: string; /** The entity comes from the card or a layout, not from the module itself. */ inherited?: boolean };
 
 /**
  * Elements inside a row that handle a tap themselves: a tap there never also runs the row's action
@@ -224,7 +214,13 @@ export class MagicCard extends LitElement {
   /** The last render was a shaped card without its own box_shadow. */
   private _readThemeShadow = false;
 
-  private _unsubTemplateEvents?: () => void;
+  /** Unwatch of the template-source subscription, and the name it watches. */
+  private _unwatchTemplate?: () => void;
+  private _watchedTemplate?: string;
+  private _watchedConn?: unknown;
+  /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
+  @state()
+  private _templateNotice?: 'missing' | 'unavailable';
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
   private _customRendered = false;
   /** Re-render on library changes; only once a custom animation was looked up. */
@@ -271,7 +267,6 @@ export class MagicCard extends LitElement {
     },
     inline: (id) => (this._resolvedConfig ?? this._config)?.custom_shapes?.[id],
   };
-  private _templateFetched = false;
   /** Last fetched config of `_config.template`; re-merged with the local config on every setConfig. */
   private _templateConfig?: MagicCardConfig;
   private _boundRequestUpdate = () => this.requestUpdate();
@@ -309,6 +304,8 @@ export class MagicCard extends LitElement {
   );
   /** Editor paths of the modules being rendered (innermost last); children extend the top one. */
   private _pathStack: string[] = [];
+  /** Entity-scope: the entity a module here follows (the card's, or the nearest sharing layout's). */
+  private _scope?: string;
   /** UI state of layout modules (active tab, slide), per card and keyed by the module's path. */
   private readonly _uiState = new Map<string, unknown>();
   private readonly _renderContext: RenderContext = {
@@ -327,7 +324,7 @@ export class MagicCard extends LitElement {
       const parent = this._pathStack[this._pathStack.length - 1];
       return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
     },
-    childHidden: (child) => !this.editMode && this._isHidden(child),
+    childHidden: (child) => !this.editMode && this._withEntity(this._entityOf(child), () => this._isHidden(child)),
     uiState: <T>(key: string) => {
       const id = `${this._pathStack[this._pathStack.length - 1] ?? ''}#${key}`;
       return {
@@ -355,15 +352,11 @@ export class MagicCard extends LitElement {
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
-  private readonly _cardInstanceId: string = generateId('cardinst');
-  private _registeredTemplate?: string;
-  private _pendingRegisterTimer?: number;
   /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. */
   private readonly _popup = new PopupController(this, {
     config: () => (this._resolvedConfig ?? this._config)?.popup,
     editorPlace: () => this._editorPlace(),
   });
-  private static readonly _REGISTER_DEBOUNCE_MS = 1500;
   /** Seasonal particles of one render pass, over the card's scene and all its seasonal presets. */
   private readonly _seasonalBudget = new SeasonalBudget();
   /** The card's seasonal scene (config `seasonal`): resolution, midnight timer, editor preview date. */
@@ -389,10 +382,12 @@ export class MagicCard extends LitElement {
       rows: [
         {
           id: generateId('row'),
+          share_entity: true,
           layout: '1',
           columns: [
             {
               id: generateId('col'),
+              share_entity: true,
               modules: [
                 {
                   id: generateId('text'),
@@ -423,8 +418,8 @@ export class MagicCard extends LitElement {
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
 
     if (config.template !== prevTemplate) {
-      this._templateFetched = false;
       this._templateConfig = undefined;
+      this._templateNotice = undefined;
       this._resolvedConfig = undefined;
     }
 
@@ -475,6 +470,7 @@ export class MagicCard extends LitElement {
     this._subscriptions.hostConnected();
     this._media.hostConnected();
     if (this.hasUpdated) this._syncTicker();
+    if (this.hasUpdated) this._syncTemplateWatch();
     // re-attached (masonry rebuild, cached view): sequences were stopped and the library dropped;
     // the render restarts both
     if (this.hasUpdated && this._customRendered) this._onLibrary();
@@ -584,14 +580,7 @@ export class MagicCard extends LitElement {
 
     if (this.editMode) return;
 
-    this._reconcileInstanceRegistration();
-
-    if (!this.hass || !this._config?.template) return;
-    if (this._templateFetched) return;
-
-    this._templateFetched = true;
-    this._fetchTemplate(this._config.template);
-    this._subscribeTemplateEvents();
+    this._syncTemplateWatch();
   }
 
   private _isEditorPreview(): boolean {
@@ -609,67 +598,42 @@ export class MagicCard extends LitElement {
     return undefined;
   }
 
-  private _cancelPendingRegister(): void {
-    if (this._pendingRegisterTimer !== undefined) {
-      window.clearTimeout(this._pendingRegisterTimer);
-      this._pendingRegisterTimer = undefined;
-    }
-  }
-
-  private _reconcileInstanceRegistration(): void {
-    if (!this.hass || this.editMode) return;
-
-    const connectedWithTemplate = this.isConnected && !!this._config?.template;
-    const desired = connectedWithTemplate && !this._isEditorPreview()
-      ? this._config!.template!
-      : undefined;
-
-    // Already in sync with no pending work — nothing to do.
-    if (desired === this._registeredTemplate && this._pendingRegisterTimer === undefined) {
-      return;
-    }
-
-    // Any change invalidates a pending register
-    this._cancelPendingRegister();
-
-    // Unregister immediately if we had a live registration that's no longer desired
-    if (this._registeredTemplate && this._registeredTemplate !== desired) {
-      const previous = this._registeredTemplate;
-      this._registeredTemplate = undefined;
-      this.hass
-        .callWS({
-          type: 'magic_card_utils/unregister_card_instance',
-          name: previous,
-          card_id: this._cardInstanceId,
-        })
-        .catch(() => {
-          // Backend integration may not be installed — fail silently
-        });
-    }
-
-    if (!desired || this._registeredTemplate === desired) return;
-
-    // Debounce register so editor-preview flicker doesn't churn the backend.
-    this._pendingRegisterTimer = window.setTimeout(() => {
-      this._pendingRegisterTimer = undefined;
-      if (!this.hass) return;
-      if (!this.isConnected) return;
-      if (this._isEditorPreview()) return;
-      const current = this._config?.template || undefined;
-      if (current !== desired) return;
-      if (this._registeredTemplate === desired) return;
-
-      this._registeredTemplate = desired;
-      this.hass
-        .callWS({
-          type: 'magic_card_utils/register_card_instance',
-          name: desired,
-          card_id: this._cardInstanceId,
-        })
-        .catch(() => {
-          // Backend integration may not be installed — fail silently
-        });
-    }, MagicCard._REGISTER_DEBOUNCE_MS);
+  /**
+   * Watch `config.template` through the template source (one shared subscription per name and page).
+   * Starts and stops only when the connection or the name change, never on a new `hass` object.
+   */
+  private _syncTemplateWatch(): void {
+    const name = this.isConnected && !this.editMode && this.hass ? this._config?.template : undefined;
+    const conn = name ? this.hass!.connection : undefined;
+    if (name === this._watchedTemplate && conn === this._watchedConn) return;
+    this._unwatchTemplate?.();
+    this._unwatchTemplate = undefined;
+    this._watchedTemplate = name;
+    this._watchedConn = conn;
+    if (!name) return;
+    this._unwatchTemplate = templateSource.watch(this.hass as never, name, (state) => {
+      if (this._config?.template !== name) return;
+      this._templateNotice = state.status === 'missing' || state.status === 'unavailable' ? state.status : undefined;
+      if (state.status === 'ready') {
+        // the stored config comes from the server: validate it, never cast (a bad one shows the notice)
+        try {
+          const tpl = { type: 'custom:magic-card', ...state.config };
+          if (!ConfigValidator.validate(tpl).valid) throw new Error('invalid template config');
+          this._templateConfig = tpl as unknown as MagicCardConfig;
+          this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
+          prefetchLazy(this._resolvedConfig);
+        } catch (err) {
+          console.warn('Magic Card: template config is invalid', name, err);
+          this._templateNotice = 'unavailable';
+          this._templateConfig = undefined;
+          this._resolvedConfig = undefined;
+        }
+      } else if (state.status !== 'loading') {
+        this._templateConfig = undefined;
+        this._resolvedConfig = undefined;
+      }
+      this.requestUpdate();
+    });
   }
 
   disconnectedCallback(): void {
@@ -685,8 +649,10 @@ export class MagicCard extends LitElement {
     this._holdTimers = new WeakMap();
     this._tapTimers = new WeakMap();
     this._downAt = new WeakMap();
-    this._unsubTemplateEvents?.();
-    this._unsubTemplateEvents = undefined;
+    this._unwatchTemplate?.();
+    this._unwatchTemplate = undefined;
+    this._watchedTemplate = undefined;
+    this._watchedConn = undefined;
     this._unsubLibrary?.();
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
@@ -697,48 +663,6 @@ export class MagicCard extends LitElement {
     this._v2Applied = new Set();
     for (const el of this._pApplied) particlesIfLoaded()?.release(el);
     this._pApplied = new Set();
-    this._cancelPendingRegister();
-    this._reconcileInstanceRegistration();
-  }
-
-  private async _fetchTemplate(name: string): Promise<void> {
-    if (!this.hass || !this._config) return;
-    try {
-      const result = await this.hass.callWS<{ templates: TemplateStore }>({
-        type: 'magic_card_utils/get_templates',
-      });
-      const entry = result.templates?.[name];
-      // Ignore a late response for a template this card is no longer linked to.
-      if (entry && this._config?.template === name) {
-        this._templateConfig = entry.config as MagicCardConfig;
-        // Merge template with local overrides
-        this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-        prefetchLazy(this._resolvedConfig);
-      }
-    } catch (err) {
-      console.warn('Magic Card: Failed to fetch template', name, err);
-    }
-  }
-
-
-  private _subscribeTemplateEvents(): void {
-    if (this._unsubTemplateEvents || !this.hass) return;
-
-    this.hass.connection
-      .subscribeEvents<TemplateUpdatedEvent>(
-        (event) => {
-          if (
-            this._config?.template &&
-            event.data.name === this._config.template
-          ) {
-            this._fetchTemplate(this._config.template);
-          }
-        },
-        'magic_card_utils_template_updated',
-      )
-      .then((unsub) => {
-        this._unsubTemplateEvents = unsub;
-      });
   }
 
   protected render(): TemplateResult {
@@ -757,6 +681,15 @@ export class MagicCard extends LitElement {
     return withRenderContext(this._renderContext, () => this._renderCard());
   }
 
+  /** One status line when the linked template is missing or could not be loaded (the card shows its own settings). */
+  private _renderTemplateNotice(): TemplateResult | typeof nothing {
+    const name = this._config?.template;
+    if (!name || !this._templateNotice) return nothing;
+    return html`<div class="mc-template-notice" role="status" style="padding-block: 4px; font-size: 0.85em; line-height: 1.3; color: var(--secondary-text-color)">${this._templateNotice === 'missing'
+      ? t('Template "{name}" wasn\'t found. Showing this card\'s own settings.', { name })
+      : t('Template "{name}" couldn\'t be loaded. Showing this card\'s own settings.', { name })}</div>`;
+  }
+
   private _renderCard(): TemplateResult {
     const config = this._resolvedConfig ?? this._config;
     if (!config) {
@@ -772,20 +705,23 @@ export class MagicCard extends LitElement {
     // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers
     if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
 
+    // the scope first: the card's own display template reads entity / card_entity
+    const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
     }
 
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
     const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
     // the card's own animations: motion / glow on ha-card, particle layers inside the content
-    const anim = resolveAnimations({ animations: resolved.animations }, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const v2Index = this._v2(anim);
+    const anim = resolveAnimations({ animations: resolved.animations }, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const v2Index = this._v2(anim, scopeState, scope);
     const themeStyle = this._buildThemeStyle(resolved);
     // a shaped card: ha-card is clipped to the shape, its theme border drawn along it, the shadow on a wrapper
     const shape = resolveShape(resolved, this._shapes);
     // ha-card clips its edge (overflow: hidden): the card ring is drawn inside it
-    const ring = resolveRing(resolved.ring, { states: this.hass?.states, clipped: true, shaped: !!shape });
+    const ring = resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: !!shape });
     // the card's box_shadow, else the theme's card shadow (--ha-card-box-shadow, read in updated())
     const shadow = shape ? (resolved.box_shadow ? boxShadowToDropShadow(resolved.box_shadow) : this._themeShadow) : undefined;
     this._readThemeShadow = !!shape && !resolved.box_shadow;
@@ -806,9 +742,9 @@ export class MagicCard extends LitElement {
     // flow lines: only a card with flows gets the overlay (and the content's stacking for it)
     const flows = this._resolveFlows(resolved);
     // a tank fill / sparkline behind the rows (the card needs its own entity)
-    const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass });
+    const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass, entity: scope });
     // the pop-up surface is not shaped: its ring keeps the rounded outline and the card's position
-    const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, clipped: true, shaped: false }) : ring;
+    const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: false }) : ring;
     // the card's lightning (its scene or a card preset): nested layers skip theirs
     const flash = (!!seasonal && sceneFlashes(seasonal.scenes)) || animFlashes(anim);
     const rows = (animShape: ResolvedShape | undefined = shape) => {
@@ -832,7 +768,7 @@ export class MagicCard extends LitElement {
             <div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}>
-              ${rows()}${renderValueBg(valueBg, this.hass)}
+              ${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}
           </ha-card>
         `, shadow, !!shape);
@@ -982,7 +918,23 @@ export class MagicCard extends LitElement {
     return !!hidden || (!!display?.conditions?.length && !this._evaluateDisplay(display));
   }
 
+  /** A grid row / column: its own entity (design, ring, value background, animations, actions, conditions) and the scope below it. */
+  private _scoped<T>(node: EntityScopeNode, fn: (entity: string | undefined) => T): T {
+    const up = this._scope;
+    const entity = effectiveEntity(node, up);
+    this._scope = childScope(node, up);
+    try {
+      return this._withEntity(entity, () => fn(entity));
+    } finally {
+      this._scope = up;
+    }
+  }
+
   private _renderRow(row: RowConfig, ri: number): TemplateResult {
+    return this._scoped(row, (scope) => this._renderRowAt(row, ri, scope));
+  }
+
+  private _renderRowAt(row: RowConfig, ri: number, scope: string | undefined): TemplateResult {
     const hidden = this._isHidden(row);
     if (hidden && !this.editMode) {
       return html``;
@@ -991,18 +943,19 @@ export class MagicCard extends LitElement {
     const gridTemplate = rowGridTemplate(row, DEFAULT_LAYOUT);
     const gap = row.gap || DEFAULT_GAP;
     const rowStyle = `grid-template-columns: ${gridTemplate}; gap: ${gap}${row.padding ? `; padding: ${row.padding}` : ''}`;
-    const design = resolveConditionalDesign(row.design, this.hass);
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
+    const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
-    const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
-    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
+    const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
+    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     // row actions (not on the studio canvas) run on taps outside its modules' own actions and
     // controls. No role: a button role would hide the row's content from assistive tech. Focusable
     // (Enter / Space) only without interactive content of its own (set in updated()).
-    const actor: Actor = { actions: row.actions };
-    const hasActions = !this.editMode && hasRunnableActions(row.actions);
+    const actor: Actor = { actions: row.actions, entity: scope, inherited: scope !== row.entity };
+    const hasActions = !this.editMode && hasRunnableActions(row.actions, scope);
     const own = (e: Event) => !this._isRowControlEvent(e);
 
     return withShapeShadow(html`
@@ -1019,7 +972,7 @@ export class MagicCard extends LitElement {
         data-mc-hover=${this._hover(`row-${ri}`, design?.hover, { shape: shape && { design, padding: row.padding }, borderLength: border })}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
-        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim) ?? nothing}
+        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim, scopeState, scope) ?? nothing}
         data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
         data-mc-flash=${animFlashes(anim) ? '' : nothing}
         data-mc-border-fx=${border ? '' : nothing}
@@ -1035,6 +988,10 @@ export class MagicCard extends LitElement {
 
   /** A card column, or (`nested`: the row module's path) a row module's column. */
   private _renderColumn(col: ColumnConfig, ri: number, ci: number, nested?: string): TemplateResult {
+    return this._scoped(col, (scope) => this._renderColumnAt(col, ri, ci, nested, scope));
+  }
+
+  private _renderColumnAt(col: ColumnConfig, ri: number, ci: number, nested: string | undefined, scope: string | undefined): TemplateResult {
     const hidden = this._isHidden(col);
     if (hidden && !this.editMode) {
       return html``;
@@ -1042,12 +999,13 @@ export class MagicCard extends LitElement {
 
     const gap = col.gap || (nested === undefined ? DEFAULT_GAP : NESTED_COLUMN_GAP);
     const colStyle = `gap: ${gap}${col.padding ? `; padding: ${col.padding}` : ''}`;
-    const design = resolveConditionalDesign(col.design, this.hass);
+    const scopeState = scope ? this.hass?.states[scope] : undefined;
+    const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, undefined, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
-    const ring = resolveRing(design?.ring, { states: this.hass?.states, clipped: !!shape, shaped: !!shape });
-    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass });
+    const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
+    const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
 
     return withShapeShadow(html`
@@ -1060,7 +1018,7 @@ export class MagicCard extends LitElement {
         data-mc-empty=${this.editMode && !col.modules?.length ? '' : nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
-        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim) ?? nothing}
+        data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim, scopeState, scope) ?? nothing}
         data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
         data-mc-flash=${animFlashes(anim) ? '' : nothing}
         data-mc-border-fx=${border ? '' : nothing}
@@ -1079,7 +1037,39 @@ export class MagicCard extends LitElement {
    * conditions and (studio canvas) its editor path. Layout children come through here as well, with
    * the path "row.col.module/slot.index/..." (see RenderContext.renderChild).
    */
-  private _renderModule(mod: CardModule, path: string): TemplateResult {
+  private _renderModule(source: CardModule, path: string): TemplateResult {
+    // entity-scope: render with the effective entity; the children follow the nearest sharing layout
+    const up = this._scope;
+    const entity = this._entityOf(source);
+    // the same object while the id is unchanged (every config without a card entity), else a shallow copy
+    const mod = (source.entity || undefined) === entity ? source : { ...source, entity };
+    this._scope = childScope(source, up);
+    // editor preview only: a module that follows an entity of the wrong kind says so (also in the dashboard edit mode, never in normal viewing)
+    const needs = this.editMode && !entity && !!up && !source.entity && !!ModuleRegistry.get(source.type)?.metadata.inherit;
+    try {
+      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity, needs));
+    } finally {
+      this._scope = up;
+    }
+  }
+
+  private _entityOf(mod: CardModule): string | undefined {
+    return effectiveEntity(mod, this._scope, ModuleRegistry.get(mod.type)?.metadata.inherit);
+  }
+
+  /** Run fn with the entity template variables and conditions read (RenderContext.entity). */
+  private _withEntity<T>(entity: string | undefined, fn: () => T): T {
+    const ctx = this._renderContext;
+    const outer = ctx.entity;
+    ctx.entity = entity;
+    try {
+      return fn();
+    } finally {
+      ctx.entity = outer;
+    }
+  }
+
+  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean, needs: boolean): TemplateResult {
     const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;
@@ -1102,7 +1092,7 @@ export class MagicCard extends LitElement {
       .join('; ');
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)
     const actions = mod.actions;
-    const acting = mod;
+    const acting: Actor = { actions: mod.actions, entity: mod.entity, inherited };
     const hasActions = !this.editMode && hasRunnableActions(actions, mod.entity);
     this._pathStack.push(path);
     // v2: the runtime's icon rig hint reaches the module's main icon through the render context
@@ -1123,11 +1113,12 @@ export class MagicCard extends LitElement {
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
         role=${hasActions ? 'button' : nothing}
         tabindex=${hasActions ? 0 : nothing}
-        aria-label=${hasActions ? this._getActionLabel(acting) : nothing}
+        aria-label=${hasActions ? this._getActionLabel(mod) : nothing}
         data-mc-path=${this.editMode ? path : nothing}
         data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
+        data-mc-needs=${needs ? t('Needs another device') : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
         data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing}
         data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}
@@ -1450,7 +1441,9 @@ export class MagicCard extends LitElement {
 
     const entity = action.use_module_entity !== false ? (action.entity || mod.entity) : action.entity;
 
-    switch (action.action) {
+    // an inherited entity toggles only the safe domains (a lock or cover reached by way of the card entity opens more-info)
+    const kind = action.action === 'toggle' && mod.inherited && !action.entity && entity && !SAFE_TOGGLE_DOMAINS.has(entity.split('.')[0]) ? 'more-info' : action.action;
+    switch (kind) {
       case 'more-info':
         if (entity) {
           this.dispatchEvent(

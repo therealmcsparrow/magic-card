@@ -489,6 +489,7 @@ export function renderAttributeField(
   entityId?: string,
   propertyName?: string,
   syncContext?: SyncContext,
+  caption?: string,
 ): TemplateResult {
   if (!entityId || !hass) return html``;
 
@@ -503,7 +504,7 @@ export function renderAttributeField(
         .value=${value || ''}
         .entityId=${entityId}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
-      ></mc-attribute-picker>
+      ></mc-attribute-picker>${caption ? html`<p class="help">${caption}</p>` : nothing}
     </div>
   `;
 }

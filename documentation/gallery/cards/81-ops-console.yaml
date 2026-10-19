@@ -1,0 +1,1483 @@
+# Operations console: a retro starship-style panel with rounded elbow frames, a sidebar of command blocks, a number cascade and a pulsing power core.
+# Environment, power and security readouts sit side by side, the lights are four pills you tap to toggle. While the alarm is triggered the card turns red and the title becomes a flashing alert.
+# Entities: alarm_control_panel.home, lock.front_door, climate.living_room, sensor.indoor_temperature, sensor.indoor_humidity, sensor.outdoor_temperature, weather.home, sensor.house_power, sensor.solar_power, sensor.home_battery, sensor.grid_power, binary_sensor.front_door, binary_sensor.back_door, binary_sensor.hall_motion, light.living_room, light.kitchen, light.bedroom, light.hallway, script.all_lights_off, script.red_alert
+type: custom:magic-card
+name: Home operations panel
+background: '#000000'
+border_radius: 16px
+padding: 18px
+box_shadow: none
+css: 'font-family: Antonio, ''Oswald'', ''Arial Narrow'', sans-serif; text-transform: uppercase; color: #FFCC99;'
+custom_animations:
+  data-blink:
+    name: Data blink
+    kind: keyframes
+    duration: 2.6
+    iterations: infinite
+    target: element
+    easing: linear
+    keyframes: [{at: 0, opacity: 1}, {at: 46, opacity: 1}, {at: 48, opacity: 0.18}, {at: 70, opacity: 0.18}, {at: 72, opacity: 1}, {at: 100, opacity: 1}]
+  core-cell:
+    name: Core cell pulse
+    kind: keyframes
+    duration: 1.8
+    iterations: infinite
+    target: element
+    easing: ease-out
+    keyframes:
+      - {at: 0, background: '#2A2850', filter: brightness(1)}
+      - {at: 12, background: '#C8C8FF', filter: 'brightness(1.25) drop-shadow(0 0 6px #9999FF)'}
+      - {at: 45, background: '#2A2850', filter: brightness(1)}
+      - {at: 100, background: '#2A2850', filter: brightness(1)}
+  block-flash:
+    name: Block flash
+    kind: keyframes
+    duration: 9
+    iterations: infinite
+    target: element
+    easing: linear
+    keyframes: [{at: 0, filter: brightness(1)}, {at: 2, filter: brightness(1.45)}, {at: 5, filter: brightness(1)}, {at: 100, filter: brightness(1)}]
+  bar-scan:
+    name: Bar scan
+    kind: keyframes
+    duration: 3.2
+    iterations: infinite
+    target: element
+    easing: ease-in-out
+    keyframes: [{at: 0, transform: {x: 0}, opacity: 0}, {at: 8, opacity: 1}, {at: 92, opacity: 1}, {at: 100, transform: {x: 640}, opacity: 0}]
+  alert-strobe:
+    name: Alert strobe
+    kind: keyframes
+    duration: 1
+    iterations: infinite
+    target: element
+    easing: linear
+    keyframes: [{at: 0, opacity: 1}, {at: 50, opacity: 1}, {at: 52, opacity: 0.25}, {at: 98, opacity: 0.25}, {at: 100, opacity: 1}]
+conditional_appearance:
+  - id: red-alert
+    name: Alert
+    mode: every
+    conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+    overrides: {background: 'radial-gradient(ellipse at 60% 35%, #3a0000 0%, #120000 55%, #000000 100%)'}
+rows:
+  - id: frame_upper
+    column_widths: [150px, 1fr]
+    gap: 0px
+    columns:
+      - id: upper_sidebar
+        vertical_align: stretch
+        gap: 6px
+        modules:
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FFCC99'
+              height: 56px
+              min_height: 56px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}]
+            modules: [{type: text, text: OPS 0292, design: {color: '#000000', font_size: 16px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}]
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FF9900'
+              height: 84px
+              min_height: 84px
+              flex: '1'
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              border_bottom_left_radius: 72px
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+            modules: [{type: text, text: 02-4410, design: {color: '#000000', font_size: 14px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}]
+      - id: upper_content
+        vertical_align: stretch
+        gap: 0px
+        modules:
+          - type: vertical
+            gap: 16px
+            design: {flex: '1', padding: 4px 0 14px 22px, box_sizing: border-box, display: flex, flex_direction: column, justify_content: space-between}
+            modules:
+              - type: vertical
+                gap: 4px
+                design: {}
+                modules:
+                  - type: text
+                    text: Home operations
+                    design: {color: '#FF9900', font_size: 40px, font_weight: '500', line_height: '1', text_align: right, letter_spacing: 2px, white_space: nowrap}
+                    display: {conditions: [{type: state, entity: alarm_control_panel.home, state_not: triggered}]}
+                  - type: text
+                    text: Main console · Unit 0292
+                    design: {color: '#9999FF', font_size: 17px, line_height: '1.2', text_align: right, letter_spacing: 1.5px}
+                    display: {conditions: [{type: state, entity: alarm_control_panel.home, state_not: triggered}]}
+                  - type: text
+                    text: ■ Alert ■
+                    design: {color: '#FF3B3B', font_size: 40px, font_weight: '700', line_height: '1', text_align: right, letter_spacing: 4px, animations: [{preset: custom:alert-strobe}]}
+                    display: {conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]}
+                  - type: text
+                    text: Main console · Unit 0292
+                    design: {color: '#CC6666', font_size: 17px, line_height: '1.2', text_align: right, letter_spacing: 1.5px}
+                    display: {conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]}
+              - type: horizontal
+                gap: 24px
+                align: end
+                design: {}
+                modules:
+                  - type: vertical
+                    gap: 0px
+                    design: {flex: '1', min_width: 0px}
+                    modules:
+                      - type: horizontal
+                        gap: 18px
+                        align: start
+                        justify: start
+                        design: {overflow: hidden}
+                        modules:
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '217'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.00s, duration: 3.6s}]
+                              - type: text
+                                text: '962'
+                                design:
+                                  color: '#9999FF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.98s, duration: 3.2s}]
+                              - type: text
+                                text: '71950'
+                                design:
+                                  color: '#9999FF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.65s, duration: 3.7s}]
+                              - type: text
+                                text: '89'
+                                design:
+                                  color: '#99CCFF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.25s, duration: 2.4s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '31'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.62s, duration: 3.9s}]
+                              - type: text
+                                text: '316'
+                                design:
+                                  color: '#99CCFF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.27s, duration: 3.8s}]
+                              - type: text
+                                text: '5236'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.47s, duration: 2.1s}]
+                              - type: text
+                                text: '313'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.18s, duration: 2.4s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '91176'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.47s, duration: 2.4s}]
+                              - type: text
+                                text: '17336'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.47s, duration: 2.8s}]
+                              - type: text
+                                text: '02729'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.46s, duration: 3.6s}]
+                              - type: text
+                                text: '58775'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.47s, duration: 2.3s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '93'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.49s, duration: 2.4s}]
+                              - type: text
+                                text: '544'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.49s, duration: 3.0s}]
+                              - type: text
+                                text: '42'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.29s, duration: 3.5s}]
+                              - type: text
+                                text: '8825'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.12s, duration: 3.4s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '9479'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.67s, duration: 3.1s}]
+                              - type: text
+                                text: '5161'
+                                design:
+                                  color: '#99CCFF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.34s, duration: 4.0s}]
+                              - type: text
+                                text: '10'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.60s, duration: 3.8s}]
+                              - type: text
+                                text: '321'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.64s, duration: 4.1s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '93517'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.64s, duration: 3.8s}]
+                              - type: text
+                                text: '69368'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.72s, duration: 3.5s}]
+                              - type: text
+                                text: '748'
+                                design:
+                                  color: '#9999FF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.59s, duration: 3.8s}]
+                              - type: text
+                                text: '7685'
+                                design:
+                                  color: '#99CCFF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.61s, duration: 3.3s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '72075'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.12s, duration: 3.0s}]
+                              - type: text
+                                text: '311'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.76s, duration: 2.4s}]
+                              - type: text
+                                text: '09'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.26s, duration: 2.5s}]
+                              - type: text
+                                text: '273'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.61s, duration: 2.3s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '09'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.36s, duration: 2.6s}]
+                              - type: text
+                                text: '011'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.01s, duration: 4.1s}]
+                              - type: text
+                                text: '434'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.21s, duration: 4.0s}]
+                              - type: text
+                                text: '181'
+                                design:
+                                  color: '#9999FF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.60s, duration: 2.1s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '5882'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.88s, duration: 3.6s}]
+                              - type: text
+                                text: '28807'
+                                design:
+                                  color: '#CC99CC'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.32s, duration: 3.6s}]
+                              - type: text
+                                text: '65435'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.10s, duration: 3.6s}]
+                              - type: text
+                                text: '9123'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.08s, duration: 3.4s}]
+                          - type: vertical
+                            gap: 0px
+                            design: {min_width: 0px}
+                            modules:
+                              - type: text
+                                text: '91699'
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.58s, duration: 3.7s}]
+                              - type: text
+                                text: '59'
+                                design:
+                                  color: '#FF9966'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -0.08s, duration: 2.3s}]
+                              - type: text
+                                text: '0675'
+                                design:
+                                  color: '#FF9900'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -2.02s, duration: 3.8s}]
+                              - type: text
+                                text: '4047'
+                                design:
+                                  color: '#9999FF'
+                                  font_size: 13px
+                                  line_height: '1.25'
+                                  text_align: right
+                                  font_variant: tabular-nums
+                                  letter_spacing: 1px
+                                  animations: [{preset: custom:data-blink, delay: -1.59s, duration: 2.1s}]
+                  - type: vertical
+                    gap: 6px
+                    align: end
+                    design: {min_width: 150px}
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%H:%M'') }}'
+                        design: {color: '#FFCC99', font_size: 46px, line_height: '1', text_align: right, font_variant: tabular-nums, letter_spacing: 1px}
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: end
+                        design: {}
+                        modules:
+                          - {type: text, text: Cycle, design: {color: '#CC99CC', font_size: 15px, line_height: '1'}}
+                          - {type: text, use_template: true, text: '{{ now().strftime(''%Y.%j'') }}', design: {color: '#FF9900', font_size: 15px, line_height: '1', font_variant: tabular-nums}}
+          - type: horizontal
+            gap: 6px
+            align: stretch
+            design: {position: relative, overflow: visible}
+            modules:
+              - type: vertical
+                gap: 0px
+                design:
+                  height: 22px
+                  background_color: '#FF9900'
+                  flex: '5'
+                  min_width: 0px
+                  position: relative
+                  overflow: visible
+                  conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      conditional:
+                        - id: red
+                          name: Alert
+                          conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                          design: {background: 'radial-gradient(circle at 100% 0%, transparent 27.5px, #FF3B3B 28px)'}
+                      position: absolute
+                      left: 0px
+                      bottom: 100%
+                      width: 28px
+                      height: 28px
+                      pointer_events: none
+                      background: 'radial-gradient(circle at 100% 0%, transparent 27.5px, #FF9900 28px)'
+                  - type: vertical
+                    gap: 0px
+                    design: {position: absolute, inset: '0', overflow: hidden, pointer_events: none}
+                    modules:
+                      - type: separator
+                        separator_style: none
+                        design:
+                          position: absolute
+                          top: 0px
+                          left: -70px
+                          width: 70px
+                          height: 100%
+                          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent)
+                          animations: [{preset: custom:bar-scan, duration: 3.6s}]
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#CC99CC', flex: '1.4', min_width: 0px}}
+              - type: text
+                text: OPS 0292
+                design:
+                  height: 22px
+                  background_color: '#9999FF'
+                  flex: '2'
+                  min_width: 0px
+                  color: '#000000'
+                  font_size: 14px
+                  font_weight: '600'
+                  line_height: 22px
+                  text_align: right
+                  padding: 0 8px
+                  box_sizing: border-box
+                  white_space: nowrap
+                  overflow: hidden
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#FFCC99', flex: '0.6', min_width: 0px}}
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#FF9966', flex: '0.4', min_width: 0px, border_radius: 0 11px 11px 0}}
+  - id: frame_lower
+    column_widths: [150px, 1fr]
+    gap: 0px
+    columns:
+      - id: lower_sidebar
+        vertical_align: stretch
+        gap: 6px
+        modules:
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FF9900'
+              height: 68px
+              min_height: 68px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              border_top_left_radius: 72px
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+            modules: [{type: text, text: 03-3104, design: {color: '#000000', font_size: 13px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}]
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#CC99CC'
+              height: 50px
+              min_height: 50px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              cursor: pointer
+              transition: filter 0.15s
+              hover: {filter: brightness(1.25)}
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}]
+              animations: [{preset: custom:block-flash, delay: 0.0s}]
+            modules:
+              - {type: text, text: 21-0450, design: {color: '#000000', font_size: 11px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right, opacity: '0.7'}}
+              - {type: text, text: All lights off, design: {color: '#000000', font_size: 15px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}
+            actions: {tap_action: {action: perform-action, service: script.turn_on, data: {entity_id: script.all_lights_off}}}
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#9999FF'
+              height: 50px
+              min_height: 50px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              cursor: pointer
+              transition: filter 0.15s
+              hover: {filter: brightness(1.25)}
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}]
+              animations: [{preset: custom:block-flash, delay: 1.7s}]
+            modules:
+              - {type: text, text: 22-1187, design: {color: '#000000', font_size: 11px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right, opacity: '0.7'}}
+              - {type: text, text: Climate, design: {color: '#000000', font_size: 15px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}
+            actions: {tap_action: {action: more-info, entity: climate.living_room}}
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FFCC99'
+              height: 50px
+              min_height: 50px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              cursor: pointer
+              transition: filter 0.15s
+              hover: {filter: brightness(1.25)}
+              conditional:
+                - {id: open, name: Unlocked, conditions: [{type: state, entity: lock.front_door, state: unlocked}], design: {background_color: '#FFAA00'}}
+                - {id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}
+              animations: [{preset: custom:block-flash, delay: 3.4s}]
+            modules:
+              - {type: text, text: 23-6620, design: {color: '#000000', font_size: 11px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right, opacity: '0.7'}}
+              - {type: text, text: Front lock, design: {color: '#000000', font_size: 15px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}
+            actions: {tap_action: {action: more-info, entity: lock.front_door}}
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FF9966'
+              height: 50px
+              min_height: 50px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              cursor: pointer
+              transition: filter 0.15s
+              hover: {filter: brightness(1.25)}
+              conditional:
+                - {id: armed, name: Armed, conditions: [{type: state, entity: alarm_control_panel.home, state_not: disarmed}], design: {background_color: '#CC6666'}}
+                - {id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}
+              animations: [{preset: custom:block-flash, delay: 5.1s}]
+            modules:
+              - {type: text, text: 24-0077, design: {color: '#000000', font_size: 11px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right, opacity: '0.7'}}
+              - {type: text, text: Security, design: {color: '#000000', font_size: 15px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}
+            actions: {tap_action: {action: more-info, entity: alarm_control_panel.home}}
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#CC6666'
+              height: 50px
+              min_height: 50px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              cursor: pointer
+              transition: filter 0.15s
+              hover: {filter: brightness(1.25)}
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+              animations: [{preset: custom:block-flash, delay: 6.8s}]
+            modules:
+              - {type: text, text: 25-9000, design: {color: '#000000', font_size: 11px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right, opacity: '0.7'}}
+              - {type: text, text: Alert, design: {color: '#000000', font_size: 15px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}
+            actions: {tap_action: {action: perform-action, service: script.turn_on, data: {entity_id: script.red_alert}}, hold_action: {action: more-info, entity: alarm_control_panel.home}}
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FF9966'
+              height: 24px
+              min_height: 24px
+              flex: '1'
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#CC6666'}}]
+            modules: [{type: text, text: 05-1138, design: {color: '#000000', font_size: 12px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}]
+          - type: vertical
+            gap: 2px
+            design:
+              background_color: '#FF9900'
+              height: 56px
+              min_height: 56px
+              box_sizing: border-box
+              padding: 6px 10px 6px 8px
+              display: flex
+              flex_direction: column
+              justify_content: flex-end
+              align_items: flex-end
+              border_bottom_left_radius: 72px
+              conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+            modules: [{type: text, text: 04-7710, design: {color: '#000000', font_size: 13px, font_weight: '600', letter_spacing: 0.5px, line_height: '1', text_align: right}}]
+      - id: lower_content
+        vertical_align: stretch
+        gap: 0px
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: stretch
+            design: {position: relative, overflow: visible}
+            modules:
+              - type: vertical
+                gap: 0px
+                design:
+                  height: 22px
+                  background_color: '#FF9900'
+                  flex: '1.2'
+                  min_width: 0px
+                  position: relative
+                  overflow: visible
+                  conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      conditional:
+                        - id: red
+                          name: Alert
+                          conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                          design: {background: 'radial-gradient(circle at 100% 100%, transparent 27.5px, #FF3B3B 28px)'}
+                      position: absolute
+                      left: 0px
+                      top: 100%
+                      width: 28px
+                      height: 28px
+                      pointer_events: none
+                      background: 'radial-gradient(circle at 100% 100%, transparent 27.5px, #FF9900 28px)'
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#FFCC99', flex: '3', min_width: 0px}}
+              - type: text
+                use_entity: true
+                entity: alarm_control_panel.home
+                design:
+                  height: 22px
+                  background_color: '#CC99CC'
+                  flex: '1'
+                  min_width: 170px
+                  color: '#000000'
+                  font_size: 14px
+                  font_weight: '600'
+                  line_height: 22px
+                  text_align: right
+                  padding: 0 8px
+                  box_sizing: border-box
+                  white_space: nowrap
+                  overflow: hidden
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#9999FF', flex: '0.5', min_width: 0px, border_radius: 0 11px 11px 0}}
+          - type: vertical
+            gap: 22px
+            design: {padding: 20px 0 20px 22px, box_sizing: border-box, flex: '1'}
+            modules:
+              - type: row
+                column_widths: [1fr, 1.25fr, 1fr]
+                gap: 28px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 10px
+                        design: {min_width: 0px}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: separator, separator_style: none, design: {width: 14px, height: 17px, background_color: '#FF9900', border_radius: 8.5px 0 0 8.5px}}
+                              - {type: text, text: Environment, design: {color: '#FF9900', font_size: 18px, font_weight: '500', line_height: '1', white_space: nowrap, letter_spacing: 1px}}
+                              - {type: separator, separator_style: none, design: {flex: '1', height: 17px, background_color: '#FF9900', min_width: 12px}}
+                              - {type: separator, separator_style: none, design: {width: 10px, height: 17px, background_color: '#FF9900', border_radius: 0 8.5px 8.5px 0}}
+                          - type: horizontal
+                            gap: 6px
+                            align: end
+                            justify: space-between
+                            design: {}
+                            modules:
+                              - type: vertical
+                                gap: 2px
+                                design: {}
+                                modules:
+                                  - {type: text, use_entity: true, entity: sensor.indoor_temperature, design: {color: '#FFCC99', font_size: 38px, line_height: '1', font_variant: tabular-nums}}
+                                  - {type: text, text: Inside, design: {color: '#9999FF', font_size: 13px, line_height: '1.2'}}
+                              - type: vertical
+                                gap: 2px
+                                align: end
+                                design: {}
+                                modules:
+                                  - {type: text, use_entity: true, entity: sensor.indoor_humidity, design: {color: '#FFCC99', font_size: 38px, line_height: '1', font_variant: tabular-nums, text_align: right}}
+                                  - {type: text, text: Humidity, design: {color: '#9999FF', font_size: 13px, line_height: '1.2', text_align: right}}
+                          - type: vertical
+                            gap: 5px
+                            design: {}
+                            modules:
+                              - type: horizontal
+                                gap: 8px
+                                align: center
+                                justify: space-between
+                                design: {}
+                                modules:
+                                  - {type: text, text: Outside, design: {color: '#CC99CC', font_size: 15px, line_height: '1.1', white_space: nowrap}}
+                                  - type: text
+                                    use_entity: true
+                                    entity: sensor.outdoor_temperature
+                                    design: {color: '#FFCC99', font_size: 17px, line_height: '1.1', font_variant: tabular-nums, text_align: right, white_space: nowrap}
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  position: relative
+                                  height: 12px
+                                  background_color: '#2A2230'
+                                  overflow: hidden
+                                  border_radius: 0 6px 6px 0
+                                  value_background: {type: fill, entity: sensor.outdoor_temperature, direction: right, min: -10, max: 40, color: '#99CCFF', opacity: 100%, wave: false}
+                                  conditional:
+                                    - id: range-0
+                                      name: Warm
+                                      conditions: [{type: state, entity: sensor.outdoor_temperature, above: 25}]
+                                      design: {value_background: {type: fill, entity: sensor.outdoor_temperature, direction: right, min: -10, max: 40, color: '#FF9900', opacity: 100%, wave: false}}
+                                    - id: range-1
+                                      name: Hot
+                                      conditions: [{type: state, entity: sensor.outdoor_temperature, above: 30}]
+                                      design: {value_background: {type: fill, entity: sensor.outdoor_temperature, direction: right, min: -10, max: 40, color: '#CC6666', opacity: 100%, wave: false}}
+                                modules:
+                                  - type: separator
+                                    separator_style: none
+                                    design: {position: absolute, inset: '0', background: 'repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 3px), #000 calc(5% - 3px), #000 5%)'}
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            justify: space-between
+                            design: {}
+                            modules:
+                              - {type: text, text: Sky, design: {color: '#CC99CC', font_size: 15px}}
+                              - {type: text, use_entity: true, entity: weather.home, design: {color: '#FFCC99', font_size: 15px, text_align: right}}
+                          - type: graphs
+                            entity: sensor.indoor_temperature
+                            hours_to_show: 24
+                            points_per_hour: 2
+                            line_color: '#FF9900'
+                            fill: true
+                            show_labels: false
+                            design: {border_left: '6px solid #CC99CC', padding_left: 8px, height: 70px, overflow: hidden}
+                  - modules:
+                      - type: vertical
+                        gap: 10px
+                        design: {min_width: 0px}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: separator, separator_style: none, design: {width: 14px, height: 17px, background_color: '#9999FF', border_radius: 8.5px 0 0 8.5px}}
+                              - {type: text, text: Power · Core, design: {color: '#9999FF', font_size: 18px, font_weight: '500', line_height: '1', white_space: nowrap, letter_spacing: 1px}}
+                              - {type: separator, separator_style: none, design: {flex: '1', height: 17px, background_color: '#9999FF', min_width: 12px}}
+                              - {type: separator, separator_style: none, design: {width: 10px, height: 17px, background_color: '#9999FF', border_radius: 0 8.5px 8.5px 0}}
+                          - type: horizontal
+                            gap: 18px
+                            align: center
+                            design: {}
+                            modules:
+                              - type: vertical
+                                gap: 6px
+                                align: center
+                                design: {}
+                                modules:
+                                  - type: vertical
+                                    gap: 0px
+                                    design: {padding: 4px 10px, border_left: '3px solid #9999FF', border_right: '3px solid #9999FF', border_radius: 14px, box_sizing: border-box}
+                                    modules:
+                                      - {type: separator, separator_style: none, design: {width: 60px, height: 8px, background_color: '#9999FF', border_radius: 4px 4px 0 0, margin: 0 auto}}
+                                      - type: vertical
+                                        gap: 4px
+                                        design: {padding: 6px 0}
+                                        modules:
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 1.20s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 1.08s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.96s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.84s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.72s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.60s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.48s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.36s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.24s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.12s}]}
+                                          - type: separator
+                                            separator_style: none
+                                            design: {width: 40px, height: 9px, border_radius: 4.5px, background_color: '#2A2850', margin: 0 auto, animations: [{preset: custom:core-cell, delay: 0.00s}]}
+                                      - {type: separator, separator_style: none, design: {width: 60px, height: 8px, background_color: '#9999FF', border_radius: 0 0 4px 4px, margin: 0 auto}}
+                                  - {type: text, text: Power core, design: {color: '#9999FF', font_size: 12px, text_align: center, line_height: '1.2', white_space: nowrap}}
+                              - type: vertical
+                                gap: 12px
+                                design: {flex: '1', min_width: 0px}
+                                modules:
+                                  - type: vertical
+                                    gap: 5px
+                                    design: {}
+                                    modules:
+                                      - type: horizontal
+                                        gap: 8px
+                                        align: center
+                                        justify: space-between
+                                        design: {}
+                                        modules:
+                                          - {type: text, text: House load, design: {color: '#CC99CC', font_size: 15px, line_height: '1.1', white_space: nowrap}}
+                                          - type: text
+                                            use_entity: true
+                                            entity: sensor.house_power
+                                            design: {color: '#FFCC99', font_size: 17px, line_height: '1.1', font_variant: tabular-nums, text_align: right, white_space: nowrap}
+                                      - type: vertical
+                                        gap: 0px
+                                        design:
+                                          position: relative
+                                          height: 12px
+                                          background_color: '#2A2230'
+                                          overflow: hidden
+                                          border_radius: 0 6px 6px 0
+                                          value_background: {type: fill, entity: sensor.house_power, direction: right, min: 0, max: 5000, color: '#FFCC99', opacity: 100%, wave: false}
+                                          conditional:
+                                            - id: range-0
+                                              name: High
+                                              conditions: [{type: state, entity: sensor.house_power, above: 2500}]
+                                              design: {value_background: {type: fill, entity: sensor.house_power, direction: right, min: 0, max: 5000, color: '#FF9900', opacity: 100%, wave: false}}
+                                            - id: range-1
+                                              name: Overload
+                                              conditions: [{type: state, entity: sensor.house_power, above: 4000}]
+                                              design: {value_background: {type: fill, entity: sensor.house_power, direction: right, min: 0, max: 5000, color: '#CC6666', opacity: 100%, wave: false}}
+                                        modules:
+                                          - type: separator
+                                            separator_style: none
+                                            design: {position: absolute, inset: '0', background: 'repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 3px), #000 calc(5% - 3px), #000 5%)'}
+                                  - type: vertical
+                                    gap: 5px
+                                    design: {}
+                                    modules:
+                                      - type: horizontal
+                                        gap: 8px
+                                        align: center
+                                        justify: space-between
+                                        design: {}
+                                        modules:
+                                          - {type: text, text: Solar array, design: {color: '#CC99CC', font_size: 15px, line_height: '1.1', white_space: nowrap}}
+                                          - type: text
+                                            use_entity: true
+                                            entity: sensor.solar_power
+                                            design: {color: '#FFCC99', font_size: 17px, line_height: '1.1', font_variant: tabular-nums, text_align: right, white_space: nowrap}
+                                      - type: vertical
+                                        gap: 0px
+                                        design:
+                                          position: relative
+                                          height: 12px
+                                          background_color: '#2A2230'
+                                          overflow: hidden
+                                          border_radius: 0 6px 6px 0
+                                          value_background: {type: fill, entity: sensor.solar_power, direction: right, min: 0, max: 4000, color: '#FFAA00', opacity: 100%, wave: false}
+                                        modules:
+                                          - type: separator
+                                            separator_style: none
+                                            design: {position: absolute, inset: '0', background: 'repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 3px), #000 calc(5% - 3px), #000 5%)'}
+                                  - type: vertical
+                                    gap: 5px
+                                    design: {}
+                                    modules:
+                                      - type: horizontal
+                                        gap: 8px
+                                        align: center
+                                        justify: space-between
+                                        design: {}
+                                        modules:
+                                          - {type: text, text: Battery reserve, design: {color: '#CC99CC', font_size: 15px, line_height: '1.1', white_space: nowrap}}
+                                          - type: text
+                                            use_entity: true
+                                            entity: sensor.home_battery
+                                            design: {color: '#FFCC99', font_size: 17px, line_height: '1.1', font_variant: tabular-nums, text_align: right, white_space: nowrap}
+                                      - type: vertical
+                                        gap: 0px
+                                        design:
+                                          position: relative
+                                          height: 12px
+                                          background_color: '#2A2230'
+                                          overflow: hidden
+                                          border_radius: 0 6px 6px 0
+                                          value_background: {type: fill, entity: sensor.home_battery, direction: right, min: 0, max: 100, color: '#9999FF', opacity: 100%, wave: false}
+                                          conditional:
+                                            - id: range-0
+                                              name: Low
+                                              conditions: [{type: state, entity: sensor.home_battery, below: 50}]
+                                              design: {value_background: {type: fill, entity: sensor.home_battery, direction: right, min: 0, max: 100, color: '#FF9900', opacity: 100%, wave: false}}
+                                            - id: range-1
+                                              name: Critical
+                                              conditions: [{type: state, entity: sensor.home_battery, below: 20}]
+                                              design: {value_background: {type: fill, entity: sensor.home_battery, direction: right, min: 0, max: 100, color: '#CC6666', opacity: 100%, wave: false}}
+                                        modules:
+                                          - type: separator
+                                            separator_style: none
+                                            design: {position: absolute, inset: '0', background: 'repeating-linear-gradient(90deg, transparent 0px, transparent calc(5% - 3px), #000 calc(5% - 3px), #000 5%)'}
+                                  - type: horizontal
+                                    gap: 6px
+                                    align: center
+                                    justify: space-between
+                                    design: {}
+                                    modules:
+                                      - {type: text, text: Grid, design: {color: '#CC99CC', font_size: 15px}}
+                                      - {type: text, use_entity: true, entity: sensor.grid_power, design: {color: '#FFCC99', font_size: 17px, font_variant: tabular-nums, text_align: right}}
+                  - modules:
+                      - type: vertical
+                        gap: 6px
+                        design: {min_width: 0px}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: separator, separator_style: none, design: {width: 14px, height: 17px, background_color: '#CC99CC', border_radius: 8.5px 0 0 8.5px}}
+                              - {type: text, text: Security, design: {color: '#CC99CC', font_size: 18px, font_weight: '500', line_height: '1', white_space: nowrap, letter_spacing: 1px}}
+                              - {type: separator, separator_style: none, design: {flex: '1', height: 17px, background_color: '#CC99CC', min_width: 12px}}
+                              - {type: separator, separator_style: none, design: {width: 10px, height: 17px, background_color: '#CC99CC', border_radius: 0 8.5px 8.5px 0}}
+                          - type: horizontal
+                            gap: 8px
+                            align: center
+                            design: {padding: 3px 0, border_bottom: '1px solid #2A2230'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  width: 10px
+                                  height: 10px
+                                  border_radius: 50%
+                                  background_color: '#9999FF'
+                                  conditional:
+                                    - {id: active, name: Active, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B', box_shadow: '0 0 8px #FF3B3B'}}
+                                  animations: [{preset: blink, trigger: state, trigger_entity: alarm_control_panel.home, state: triggered, duration: 0.9s, intensity: 80}]
+                              - {type: text, text: Alarm, design: {color: '#CC99CC', font_size: 15px, flex: '1', white_space: nowrap, line_height: '1.2'}}
+                              - type: text
+                                use_entity: true
+                                entity: alarm_control_panel.home
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 15px
+                                  line_height: '1.2'
+                                  white_space: nowrap
+                                  text_align: right
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {color: '#FF3B3B'}}]
+                          - type: horizontal
+                            gap: 8px
+                            align: center
+                            design: {padding: 3px 0, border_bottom: '1px solid #2A2230'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  width: 10px
+                                  height: 10px
+                                  border_radius: 50%
+                                  background_color: '#9999FF'
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: lock.front_door, state: unlocked}], design: {background_color: '#FF9900', box_shadow: '0 0 8px #FF9900'}}]
+                                  animations: [{preset: blink, trigger: state, trigger_entity: lock.front_door, state: unlocked, duration: 0.9s, intensity: 80}]
+                              - {type: text, text: Front lock, design: {color: '#CC99CC', font_size: 15px, flex: '1', white_space: nowrap, line_height: '1.2'}}
+                              - type: text
+                                use_entity: true
+                                entity: lock.front_door
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 15px
+                                  line_height: '1.2'
+                                  white_space: nowrap
+                                  text_align: right
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: lock.front_door, state: unlocked}], design: {color: '#FF9900'}}]
+                          - type: horizontal
+                            gap: 8px
+                            align: center
+                            design: {padding: 3px 0, border_bottom: '1px solid #2A2230'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  width: 10px
+                                  height: 10px
+                                  border_radius: 50%
+                                  background_color: '#9999FF'
+                                  conditional:
+                                    - {id: active, name: Active, conditions: [{type: state, entity: binary_sensor.front_door, state: 'on'}], design: {background_color: '#FF9900', box_shadow: '0 0 8px #FF9900'}}
+                                  animations: [{preset: blink, trigger: state, trigger_entity: binary_sensor.front_door, state: 'on', duration: 0.9s, intensity: 80}]
+                              - {type: text, text: Front door, design: {color: '#CC99CC', font_size: 15px, flex: '1', white_space: nowrap, line_height: '1.2'}}
+                              - type: text
+                                use_entity: true
+                                entity: binary_sensor.front_door
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 15px
+                                  line_height: '1.2'
+                                  white_space: nowrap
+                                  text_align: right
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: binary_sensor.front_door, state: 'on'}], design: {color: '#FF9900'}}]
+                          - type: horizontal
+                            gap: 8px
+                            align: center
+                            design: {padding: 3px 0, border_bottom: '1px solid #2A2230'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  width: 10px
+                                  height: 10px
+                                  border_radius: 50%
+                                  background_color: '#9999FF'
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: binary_sensor.back_door, state: 'on'}], design: {background_color: '#FF9900', box_shadow: '0 0 8px #FF9900'}}]
+                                  animations: [{preset: blink, trigger: state, trigger_entity: binary_sensor.back_door, state: 'on', duration: 0.9s, intensity: 80}]
+                              - {type: text, text: Back door, design: {color: '#CC99CC', font_size: 15px, flex: '1', white_space: nowrap, line_height: '1.2'}}
+                              - type: text
+                                use_entity: true
+                                entity: binary_sensor.back_door
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 15px
+                                  line_height: '1.2'
+                                  white_space: nowrap
+                                  text_align: right
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: binary_sensor.back_door, state: 'on'}], design: {color: '#FF9900'}}]
+                          - type: horizontal
+                            gap: 8px
+                            align: center
+                            design: {padding: 3px 0, border_bottom: '1px solid #2A2230'}
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design:
+                                  width: 10px
+                                  height: 10px
+                                  border_radius: 50%
+                                  background_color: '#9999FF'
+                                  conditional:
+                                    - {id: active, name: Active, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}], design: {background_color: '#FFAA00', box_shadow: '0 0 8px #FFAA00'}}
+                                  animations: [{preset: blink, trigger: state, trigger_entity: binary_sensor.hall_motion, state: 'on', duration: 0.9s, intensity: 80}]
+                              - {type: text, text: Hall motion, design: {color: '#CC99CC', font_size: 15px, flex: '1', white_space: nowrap, line_height: '1.2'}}
+                              - type: text
+                                use_entity: true
+                                entity: binary_sensor.hall_motion
+                                design:
+                                  color: '#FFCC99'
+                                  font_size: 15px
+                                  line_height: '1.2'
+                                  white_space: nowrap
+                                  text_align: right
+                                  conditional: [{id: active, name: Active, conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}], design: {color: '#FFAA00'}}]
+              - type: vertical
+                gap: 10px
+                design: {}
+                modules:
+                  - type: horizontal
+                    gap: 6px
+                    align: center
+                    design: {}
+                    modules:
+                      - {type: separator, separator_style: none, design: {width: 14px, height: 17px, background_color: '#FFCC99', border_radius: 8.5px 0 0 8.5px}}
+                      - {type: text, text: Lighting, design: {color: '#FFCC99', font_size: 18px, font_weight: '500', line_height: '1', white_space: nowrap, letter_spacing: 1px}}
+                      - {type: separator, separator_style: none, design: {flex: '1', height: 17px, background_color: '#FFCC99', min_width: 12px}}
+                      - {type: separator, separator_style: none, design: {width: 10px, height: 17px, background_color: '#FFCC99', border_radius: 0 8.5px 8.5px 0}}
+                  - type: horizontal
+                    gap: 10px
+                    align: stretch
+                    design: {}
+                    modules:
+                      - type: vertical
+                        gap: 4px
+                        design:
+                          flex: '1'
+                          min_width: 0px
+                          height: 48px
+                          box_sizing: border-box
+                          padding: 0 18px
+                          display: flex
+                          flex_direction: column
+                          justify_content: center
+                          align_items: flex-end
+                          text_align: right
+                          border_radius: 24px
+                          background_color: '#1E1A24'
+                          color: '#FFCC99'
+                          cursor: pointer
+                          border: '2px solid #FFCC99'
+                          transition: background-color 0.3s, color 0.3s
+                          hover: {filter: brightness(1.2)}
+                          conditional: [{id: 'on', name: 'On', conditions: [{type: state, entity: light.living_room, state: 'on'}], design: {background_color: '#FFCC99', color: '#000000'}}]
+                          animations: [{preset: glow-pulse, trigger: entity_on, trigger_entity: light.living_room, color: '#FFCC99', intensity: 10, duration: 2.8s}]
+                        modules:
+                          - {type: text, text: Living room, design: {font_size: 15px, line_height: '1', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}}
+                          - {type: text, use_entity: true, entity: light.living_room, design: {font_size: 11px, line_height: '1', opacity: '0.75'}}
+                        actions: {tap_action: {action: toggle, entity: light.living_room}, hold_action: {action: more-info, entity: light.living_room}}
+                      - type: vertical
+                        gap: 4px
+                        design:
+                          flex: '1'
+                          min_width: 0px
+                          height: 48px
+                          box_sizing: border-box
+                          padding: 0 18px
+                          display: flex
+                          flex_direction: column
+                          justify_content: center
+                          align_items: flex-end
+                          text_align: right
+                          border_radius: 24px
+                          background_color: '#1E1A24'
+                          color: '#FF9900'
+                          cursor: pointer
+                          border: '2px solid #FF9900'
+                          transition: background-color 0.3s, color 0.3s
+                          hover: {filter: brightness(1.2)}
+                          conditional: [{id: 'on', name: 'On', conditions: [{type: state, entity: light.kitchen, state: 'on'}], design: {background_color: '#FF9900', color: '#000000'}}]
+                          animations: [{preset: glow-pulse, trigger: entity_on, trigger_entity: light.kitchen, color: '#FF9900', intensity: 10, duration: 2.8s}]
+                        modules:
+                          - {type: text, text: Kitchen, design: {font_size: 15px, line_height: '1', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}}
+                          - {type: text, use_entity: true, entity: light.kitchen, design: {font_size: 11px, line_height: '1', opacity: '0.75'}}
+                        actions: {tap_action: {action: toggle, entity: light.kitchen}, hold_action: {action: more-info, entity: light.kitchen}}
+                      - type: vertical
+                        gap: 4px
+                        design:
+                          flex: '1'
+                          min_width: 0px
+                          height: 48px
+                          box_sizing: border-box
+                          padding: 0 18px
+                          display: flex
+                          flex_direction: column
+                          justify_content: center
+                          align_items: flex-end
+                          text_align: right
+                          border_radius: 24px
+                          background_color: '#1E1A24'
+                          color: '#CC99CC'
+                          cursor: pointer
+                          border: '2px solid #CC99CC'
+                          transition: background-color 0.3s, color 0.3s
+                          hover: {filter: brightness(1.2)}
+                          conditional: [{id: 'on', name: 'On', conditions: [{type: state, entity: light.bedroom, state: 'on'}], design: {background_color: '#CC99CC', color: '#000000'}}]
+                          animations: [{preset: glow-pulse, trigger: entity_on, trigger_entity: light.bedroom, color: '#CC99CC', intensity: 10, duration: 2.8s}]
+                        modules:
+                          - {type: text, text: Bedroom, design: {font_size: 15px, line_height: '1', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}}
+                          - {type: text, use_entity: true, entity: light.bedroom, design: {font_size: 11px, line_height: '1', opacity: '0.75'}}
+                        actions: {tap_action: {action: toggle, entity: light.bedroom}, hold_action: {action: more-info, entity: light.bedroom}}
+                      - type: vertical
+                        gap: 4px
+                        design:
+                          flex: '1'
+                          min_width: 0px
+                          height: 48px
+                          box_sizing: border-box
+                          padding: 0 18px
+                          display: flex
+                          flex_direction: column
+                          justify_content: center
+                          align_items: flex-end
+                          text_align: right
+                          border_radius: 24px
+                          background_color: '#1E1A24'
+                          color: '#9999FF'
+                          cursor: pointer
+                          border: '2px solid #9999FF'
+                          transition: background-color 0.3s, color 0.3s
+                          hover: {filter: brightness(1.2)}
+                          conditional: [{id: 'on', name: 'On', conditions: [{type: state, entity: light.hallway, state: 'on'}], design: {background_color: '#9999FF', color: '#000000'}}]
+                          animations: [{preset: glow-pulse, trigger: entity_on, trigger_entity: light.hallway, color: '#9999FF', intensity: 10, duration: 2.8s}]
+                        modules:
+                          - {type: text, text: Hallway, design: {font_size: 15px, line_height: '1', white_space: nowrap, overflow: hidden, text_overflow: ellipsis}}
+                          - {type: text, use_entity: true, entity: light.hallway, design: {font_size: 11px, line_height: '1', opacity: '0.75'}}
+                        actions: {tap_action: {action: toggle, entity: light.hallway}, hold_action: {action: more-info, entity: light.hallway}}
+          - type: horizontal
+            gap: 6px
+            align: stretch
+            design: {position: relative, overflow: visible}
+            modules:
+              - type: vertical
+                gap: 0px
+                design:
+                  height: 22px
+                  background_color: '#FF9900'
+                  flex: '1'
+                  min_width: 0px
+                  position: relative
+                  overflow: visible
+                  conditional: [{id: red, name: Alert, conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}], design: {background_color: '#FF3B3B'}}]
+                modules:
+                  - type: separator
+                    separator_style: none
+                    design:
+                      conditional:
+                        - id: red
+                          name: Alert
+                          conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                          design: {background: 'radial-gradient(circle at 100% 0%, transparent 27.5px, #FF3B3B 28px)'}
+                      position: absolute
+                      left: 0px
+                      bottom: 100%
+                      width: 28px
+                      height: 28px
+                      pointer_events: none
+                      background: 'radial-gradient(circle at 100% 0%, transparent 27.5px, #FF9900 28px)'
+                  - type: vertical
+                    gap: 0px
+                    design: {position: absolute, inset: '0', overflow: hidden, pointer_events: none}
+                    modules:
+                      - type: separator
+                        separator_style: none
+                        design:
+                          position: absolute
+                          top: 0px
+                          left: -70px
+                          width: 70px
+                          height: 100%
+                          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent)
+                          animations: [{preset: custom:bar-scan, duration: 4.4s, delay: 1.3s}]
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#CC99CC', flex: '0.6', min_width: 0px}}
+              - type: text
+                text: Home operations · Console 2
+                design:
+                  height: 22px
+                  background_color: '#9999FF'
+                  flex: '3.4'
+                  min_width: 0px
+                  color: '#000000'
+                  font_size: 14px
+                  font_weight: '600'
+                  line_height: 22px
+                  text_align: right
+                  padding: 0 8px
+                  box_sizing: border-box
+                  white_space: nowrap
+                  overflow: hidden
+              - {type: separator, separator_style: none, design: {height: 22px, background_color: '#CC6666', flex: '0.35', min_width: 0px, border_radius: 0 11px 11px 0}}

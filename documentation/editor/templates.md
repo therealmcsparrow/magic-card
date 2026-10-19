@@ -60,6 +60,7 @@ From a card that is linked to another template, the new template gets the animat
 Load template… opens the "Load template" window with a search field ("Search templates") and the saved templates in alphabetical order, each with its description.
 
 -   Click a template (or press Enter or Space on it). The window asks "Load "…"? This will replace your current config." Press Load to confirm.
+-   When the card has no entity yet and the template has a module that would follow one, the confirmation also asks "Which device is this card for?" Pick a device to set the card entity of the loaded card, or leave it empty. See [Card entity](../card-entity/README.md#templates).
 -   Loading replaces the card's whole config with the template's content and links the card to it. Only the per-card Home Assistant keys (`grid_options`, `visibility` and similar) and other keys the template does not manage, such as `card_mod`, are kept from the old config. The card's own `custom_animations` and `hidden_animations` go: the template supplies its animations. Undo brings the old config back.
 
 Each template in the list also has two buttons:
@@ -139,9 +140,30 @@ Add row on a linked card asks "Update linked cards?" first. "Only this card" add
 
 Only Add row asks this. Other structural changes (columns, modules) stay local until you use Save to template.
 
+## Who can see a template
+
+Every signed-in user sees a card that is linked to a template, and the card follows changes to the template without a reload. Only administrators can create, change, rename or delete templates.
+
+A card asks Magic Card Utils for the one template it is linked to, and watches that template. Two cards that use the same template share one request. The card never asks for the full template list, so a dashboard that uses two templates costs two requests, however many templates you have saved. What a viewer receives is the card configuration, the card type and the time of the last save. The list of cards that use a template stays visible to administrators only.
+
+### When a template cannot be shown
+
+The card shows its own settings, with one line above them:
+
+-   Template "name" wasn't found. The template was deleted or renamed. A rename does not update linked cards, so link them to the new name.
+-   Template "name" couldn't be loaded. Magic Card Utils is missing, still starting, or too old for your user. The card tries again each time the connection to Home Assistant comes back and every 5 to 30 seconds while Magic Card Utils does not answer, so a card that opened while Magic Card Utils was still loading fills in without a page reload.
+
+Screen readers announce the line once.
+
+### Versions
+
+Viewers who are not administrators need both the Magic Card release and the Magic Card Utils release that add the per-template read commands. With an older Magic Card Utils, an administrator still sees the template (it is read from the full list, once per page, without live updates). Another user gets the second notice. An older Magic Card with the newer Magic Card Utils keeps working for administrators.
+
 ## What a template does not hold
 
 The keys Home Assistant keeps for one card on its dashboard are never part of a template: `grid_options`, `layout_options`, `visibility` and `view_layout`. Each linked card keeps its own.
+
+The card `entity` is not part of a template either. Saving leaves it out, loading and merging never take it from the template, and a card keeps its own entity when it links to or loads a template, so one template fits any device. See [Card entity](../card-entity/README.md#templates).
 
 ## Limits
 

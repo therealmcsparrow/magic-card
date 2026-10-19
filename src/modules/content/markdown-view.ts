@@ -8,6 +8,7 @@ import { sanitizeHtml, escapeHtml } from '../../utils/sanitize-html';
 import { currentRenderContext } from '../../services/render-context';
 import { markdownMinHeightEm } from '../lazy-heights';
 import { hasJinja, templateResultToString } from '../../services/template-controller';
+import { templateVars } from '../../utils/entity-scope';
 
 /* Chunk-only (magic-card-markdown.js): nothing runs at evaluation; install() calls configureMarked(). */
 
@@ -104,7 +105,8 @@ export class MarkdownView implements ModuleView {
     if (legacyOnly || !ctx) return resolveLegacy(content, hass, c.entity, c.attribute);
 
     const { template, variables } = toJinja(content, c.entity, c.attribute);
-    const result = ctx.template(template, variables);
+    const vars = templateVars(template, c.entity, ctx.cardEntity);
+    const result = ctx.template(template, vars || variables ? { ...variables, ...vars } : undefined);
     switch (result.status) {
       case 'ok':
         return templateResultToString(result.result);

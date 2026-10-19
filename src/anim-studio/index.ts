@@ -46,6 +46,7 @@ useParticlesCompiler(compile, particles.validateSim);
  * Entry of dist/magic-card-animation-studio.js (loaded by the magic-card-utils panel, never by a
  * dashboard). It defines only the studio's own elements; the preview uses the `magic-card` the page
  * already loaded (magic-card.js), so no element is ever defined twice.
+ * The entry is an ES module: load it with import() or <script type="module">, never a classic script.
  */
 
 export const STUDIO_ELEMENTS: Array<[string, CustomElementConstructor]> = [

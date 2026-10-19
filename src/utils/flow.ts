@@ -232,7 +232,7 @@ export function flowModuleEntities(config: MagicCardConfig): Map<string, string 
     }
     const rec = node as Record<string, unknown>;
     if (typeof rec.id === 'string' && typeof rec.type === 'string' && !out.has(rec.id)) {
-      out.set(rec.id, typeof rec.entity === 'string' ? rec.entity : undefined);
+      out.set(rec.id, typeof rec.entity === 'string' && rec.entity !== 'none' ? rec.entity : undefined);
     }
     for (const key of ['columns', 'modules', 'tabs']) walk(rec[key]);
   };

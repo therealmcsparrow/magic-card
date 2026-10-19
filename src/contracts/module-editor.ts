@@ -1,9 +1,10 @@
 import type { TemplateResult } from 'lit';
 import type { CardModule, EditorTab, HomeAssistant, ModuleType } from '../types';
+import type { EntitySourceInfo } from './entity-scope';
 import type { TransferChunk } from './preset-transfer';
 
 /*
- * Contract: per-module editors. Version 1.1.0 (Architect-owned). ADR 0007, ADR 0022.
+ * Contract: per-module editors. Version 1.2.0 (Architect-owned). ADR 0007, ADR 0022.
  *
  * Seam: dashboard module classes (src/modules/**) keep metadata, createDefault, renderPreview,
  * validate, hints, migrate and getDependencies. Settings tabs are ModuleEditor entries in the editor
@@ -40,10 +41,18 @@ import type { TransferChunk } from './preset-transfer';
  *   the type (an old magic-card.js lacks it): call `window.MagicCard?.setLocale?.(hass)`. +16 B in
  *   magic-card.js. apiVersion stays 1.
  *
+ * - (1.2.0, additive, 2026-10-19, card entity) `ModuleTabRender` takes an optional 5th argument `scope`
+ *   (EntitySourceInfo, contract entity-scope 1.0.0), which the inspector computes with
+ *   resolveEntitySource and `ModuleEditorRegistry.render` passes on as its 6th argument to every tab. The
+ *   default actions and design tabs use `scope.effective` instead of `config.entity`. A ModuleEditor with
+ *   `entityField: true` draws the entity field itself (renderEntitySourceField, in place of
+ *   renderEntityField); for every other editor the registry puts the field in front of General. Callers
+ *   that pass no scope get the plain entity field and `config.entity`, as in 1.1.0.
+ *
  * Types only (0 B), apart from the constants below.
  */
 
-export const MODULE_EDITOR_CONTRACT = '1.1.0';
+export const MODULE_EDITOR_CONTRACT = '1.2.0';
 
 /** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
 export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];
@@ -61,12 +70,15 @@ export type ModuleTabRender = (
   hass: HomeAssistant | undefined,
   onChange: (m: CardModule) => void,
   template?: string,
+  scope?: EntitySourceInfo,
 ) => TemplateResult;
 
 export interface ModuleEditor {
   type: ModuleType;
   /** Tabs in display order; missing = DEFAULT_MODULE_TABS. */
   tabs?: readonly EditorTab[];
+  /** (1.2.0) true: General draws the entity field itself; absent: the registry puts it in front. */
+  entityField?: true;
   general: ModuleTabRender;
   actions?: ModuleTabRender;
   conditions?: ModuleTabRender;
@@ -83,5 +95,6 @@ export interface ModuleEditorRegistry {
     hass: HomeAssistant | undefined,
     onChange: (m: CardModule) => void,
     template?: string,
+    scope?: EntitySourceInfo,
   ): TemplateResult;
 }

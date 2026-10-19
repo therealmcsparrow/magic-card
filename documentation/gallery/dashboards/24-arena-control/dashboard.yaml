@@ -1,0 +1,3229 @@
+# Arena Control dashboard (theme "Arena Control"). edit the generator, not this file.
+title: Arena Control
+views:
+  - type: sections
+    max_columns: 4
+    path: arena
+    title: Arena Control
+    icon: mdi:stadium
+    theme: Arena Control
+    sections:
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Hero
+            background: 'radial-gradient(ellipse 60% 70% at 12% 0%, rgba(255,255,255,0.95), transparent 60%), linear-gradient(118deg, transparent 38%, rgba(150,138,118,0.16) 40%, transparent 43%), linear-gradient(152deg, transparent 58%, rgba(150,138,118,0.12) 60%, transparent 62%), linear-gradient(100deg, transparent 75%, rgba(216,180,90,0.10) 78%, transparent 82%), linear-gradient(140deg, #f4f0e8 0%, #e4ddd0 100%)'
+            border_radius: 12px
+            padding: 18px 18px 14px
+            box_shadow: '0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 2px #d8b45a, inset 0 0 0 5px #f4f0e8, inset 0 0 0 6px rgba(138,109,42,0.55)'
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #1d1b18;'
+            rows:
+              - id: crest
+                column_widths: [52px, 1fr, auto]
+                gap: 10px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="50" cy="50" r="39.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-opacity="0.6"/><path fill="currentColor" d="M50.0 20.0 L55.0 38.0 L71.2 28.8 L62.0 45.0 L80.0 50.0 L62.0 55.0 L71.2 71.2 L55.0 62.0 L50.0 80.0 L45.0 62.0 L28.8 71.2 L38.0 55.0 L20.0 50.0 L38.0 45.0 L28.8 28.8 L45.0 38.0 Z"/><circle cx="50" cy="50" r="5" fill="#1d1b18" fill-opacity="0.5"/></svg>
+                        size: 52px
+                        design:
+                          color: '#8a6d2a'
+                          display: flex
+                          filter: drop-shadow(0 1px 0 rgba(255,255,255,0.8)) drop-shadow(0 3px 4px rgba(138,109,42,0.35))
+                          animations: [{id: shine, preset: shine-sweep, intensity: 60, duration: 4.5s}]
+                  - gap: 2px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: Home · Arena control
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 10px
+                          font_weight: '700'
+                          letter_spacing: 2.5px
+                          text_transform: uppercase
+                          color: '#e0338a'
+                          line_height: '1.3'
+                      - type: text
+                        text: Arena HQ
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 30px, font_weight: '700', color: '#1d1b18', line_height: '1.05', white_space: nowrap}
+                      - type: text
+                        use_template: true
+                        text: '{{ ''Good morning'' if now().hour < 12 else ''Good afternoon'' if now().hour < 18 else ''Good evening'' }}, controller'
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 15px, font_style: italic, color: '#5a5348', white_space: nowrap}
+                  - gap: 0px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%H:%M'') }}'
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 36px, font_weight: '700', color: '#8a6d2a', line_height: '1', text_align: right}
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%A'') }}'
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          color: '#5a5348'
+                          text_align: right
+                          margin_top: 5px
+                          white_space: nowrap
+                          letter_spacing: 1.5px
+                          text_transform: uppercase
+                      - type: text
+                        use_template: true
+                        text: '{{ now().strftime(''%-d %B'') }}'
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '600'
+                          color: '#5a5348'
+                          text_align: right
+                          white_space: nowrap
+                          letter_spacing: 0.5px
+              - id: rule
+                columns:
+                  - modules:
+                      - type: separator
+                        separator_style: none
+                        design: {height: 1px, margin: 2px 0, background: 'linear-gradient(90deg, transparent, #8a6d2a 12%, #f3d98b 50%, #8a6d2a 88%, transparent)'}
+              - id: status
+                layout: 1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 6px 8px
+                          border_radius: 999px
+                          background_color: rgba(29,27,24,0.06)
+                          border: '1px solid #d8b45a'
+                          justify_content: center
+                          box_shadow: inset 0 1px 0 rgba(255,255,255,0.7)
+                        modules:
+                          - {type: icon, icon: mdi:shield-lock, size: 16px, design: {color: '#2f8a5c', display: flex}}
+                          - type: text
+                            text: Arena sealed
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#1d1b18', white_space: nowrap}
+                        display: {conditions: [{type: state, entity: alarm_control_panel.home, state: armed_home}]}
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 6px 8px
+                          border_radius: 999px
+                          background_color: rgba(29,27,24,0.06)
+                          border: '1px solid #d8b45a'
+                          justify_content: center
+                          box_shadow: inset 0 1px 0 rgba(255,255,255,0.7)
+                        modules:
+                          - {type: icon, icon: mdi:shield-alert, size: 16px, design: {color: '#e0338a', display: flex}}
+                          - type: text
+                            text: Arena open
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#1d1b18', white_space: nowrap}
+                        display: {conditions: [{type: state, entity: alarm_control_panel.home, state_not: armed_home}]}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 6px 8px
+                          border_radius: 999px
+                          background_color: rgba(29,27,24,0.06)
+                          border: '1px solid #d8b45a'
+                          justify_content: center
+                          box_shadow: inset 0 1px 0 rgba(255,255,255,0.7)
+                        modules:
+                          - {type: icon, icon: mdi:account-group, size: 16px, design: {color: '#ff6a1f', display: flex}}
+                          - type: text
+                            use_template: true
+                            text: '{{ states.person | selectattr(''state'',''eq'',''home'') | list | count }} of 3 safe'
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#1d1b18', white_space: nowrap}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 6px 8px
+                          border_radius: 999px
+                          background_color: rgba(29,27,24,0.06)
+                          border: '1px solid #d8b45a'
+                          justify_content: center
+                          box_shadow: inset 0 1px 0 rgba(255,255,255,0.7)
+                        modules:
+                          - {type: icon, icon: mdi:thermometer, size: 16px, design: {color: '#0f5c56', display: flex}}
+                          - type: text
+                            use_entity: true
+                            entity: sensor.outdoor_temperature
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#1d1b18', white_space: nowrap}
+              - id: foot
+                padding: 2px 0 0
+                columns:
+                  - modules:
+                      - type: text
+                        text: Good luck out there
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 14px, font_style: italic, color: '#8a6d2a', text_align: center, letter_spacing: 0.3px}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Weather
+            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(31,200,184,0.13), transparent 65%), repeating-linear-gradient(0deg, rgba(31,200,184,0.035) 0 1px, transparent 1px 22px), repeating-linear-gradient(90deg, rgba(31,200,184,0.035) 0 1px, transparent 1px 22px), linear-gradient(170deg, #10181c 0%, #0a0e12 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(31,200,184,0.28), inset 0 1px 0 rgba(143,245,234,0.14)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                gap: 10px
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Arena climate control
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#1fc8b8'
+                          line_height: '1.3'
+                      - type: text
+                        text: Arena forecast
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+                  - vertical_align: center
+                    modules:
+                      - type: text
+                        text: Approved
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 10px
+                          font_weight: '700'
+                          letter_spacing: 2px
+                          text_transform: uppercase
+                          color: '#0b0d12'
+                          background_color: '#1fc8b8'
+                          padding: 4px 9px 3px
+                          border_radius: 3px
+                          white_space: nowrap
+              - id: sky
+                design:
+                  padding: 6px 10px
+                  border_radius: 10px
+                  background_color: rgba(0,0,0,0.30)
+                  border: 1px solid rgba(31,200,184,0.18)
+                  animations: [{id: scan, preset: scanline, color: '#1fc8b8', intensity: 25, duration: 5s}]
+                columns:
+                  - modules:
+                      - type: weather
+                        entity: weather.home
+                        show_temperature: true
+                        show_condition: true
+                        show_forecast: true
+                        forecast_days: 5
+                        animated_icons: true
+                        design: {color: '#ece8e0', font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'}
+              - id: stats
+                layout: 1-1-1
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 9px 4px 7px, border_radius: 8px, background_color: 'rgba(31,200,184,0.07)', border: '1px solid rgba(31,200,184,0.25)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:thermometer, size: 16px, design: {color: '#1fc8b8', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.outdoor_temperature
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 15px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                          - type: text
+                            text: Outside
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              text_transform: uppercase
+                              letter_spacing: 2px
+                              text_align: center
+                              opacity: '0.8'
+                        actions: {tap_action: {action: more-info, entity: sensor.outdoor_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 9px 4px 7px, border_radius: 8px, background_color: 'rgba(31,200,184,0.07)', border: '1px solid rgba(31,200,184,0.25)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:weather-windy, size: 16px, design: {color: '#1fc8b8', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.wind_gust
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 15px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                          - type: text
+                            text: Gusts
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              text_transform: uppercase
+                              letter_spacing: 2px
+                              text_align: center
+                              opacity: '0.8'
+                        actions: {tap_action: {action: more-info, entity: sensor.wind_gust}}
+                  - modules:
+                      - type: vertical
+                        gap: 3px
+                        align: center
+                        design: {padding: 9px 4px 7px, border_radius: 8px, background_color: 'rgba(31,200,184,0.07)', border: '1px solid rgba(31,200,184,0.25)'}
+                        modules:
+                          - type: horizontal
+                            gap: 5px
+                            align: center
+                            justify: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:weather-pouring, size: 16px, design: {color: '#1fc8b8', display: flex}}
+                              - type: text
+                                use_entity: true
+                                entity: sensor.rain_today
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 15px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                          - type: text
+                            text: Rain
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              text_transform: uppercase
+                              letter_spacing: 2px
+                              text_align: center
+                              opacity: '0.8'
+                        actions: {tap_action: {action: more-info, entity: sensor.rain_today}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Broadcast
+            background: 'radial-gradient(ellipse 55% 60% at 0% 0%, rgba(224,51,138,0.20), transparent 70%), radial-gradient(ellipse 50% 60% at 100% 10%, rgba(31,200,184,0.14), transparent 70%), linear-gradient(170deg, #1a1420 0%, #0d0f14 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(216,180,90,0.28), inset 0 1px 0 rgba(243,217,139,0.18)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            animations: [{id: spot, preset: spotlight, color: '#f3d98b', intensity: 22, duration: 9s}]
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                gap: 10px
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Live from the studio
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#ff6cb5'
+                          line_height: '1.3'
+                      - type: text
+                        text: The broadcast
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+                  - vertical_align: center
+                    modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        design:
+                          padding: 4px 9px 3px
+                          border_radius: 3px
+                          border: '1px solid #ff4b4b'
+                          background_color: rgba(255,75,75,0.12)
+                          animations: [{id: blink, preset: blink, intensity: 55, duration: 1.6s, trigger: state, trigger_entity: media_player.living_room, state: playing}]
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design: {width: 8px, min_width: 8px, height: 8px, margin: '0', border_radius: 50%, background_color: '#ff4b4b', box_shadow: '0 0 8px #ff4b4b'}
+                          - type: text
+                            text: On air
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 2px
+                              text_transform: uppercase
+                              color: '#f4f0e8'
+                              white_space: nowrap
+                        display: {conditions: [{type: state, entity: media_player.living_room, state: playing}]}
+              - id: now
+                column_widths: [108px, 1fr]
+                gap: 16px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          padding: 4px
+                          border_radius: 9px
+                          background: 'linear-gradient(135deg, #e0338a, #d8b45a 50%, #1fc8b8)'
+                          box_shadow: 0 8px 20px rgba(0,0,0,0.55), 0 0 22px rgba(224,51,138,0.25)
+                        modules: [{type: image, entity: media_player.living_room, entity_picture: true, aspect_ratio: '1', design: {width: 100px, border_radius: 6px}}]
+                  - gap: 3px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        use_entity: true
+                        entity: media_player.living_room
+                        design:
+                          font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif'
+                          font_size: 20px
+                          font_weight: '700'
+                          color: '#f4f0e8'
+                          line_height: '1.15'
+                          white_space: nowrap
+                          overflow: hidden
+                          text_overflow: ellipsis
+                        attribute: media_title
+                      - type: text
+                        use_entity: true
+                        entity: media_player.living_room
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 14px
+                          color: '#f3d98b'
+                          white_space: nowrap
+                          overflow: hidden
+                          text_overflow: ellipsis
+                        attribute: media_artist
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          height: 24px
+                          margin_top: 6px
+                          border_radius: 4px
+                          overflow: hidden
+                          animations: [{id: eq, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: '#e0338a', intensity: 9, strength: 85}]
+                        modules: []
+                      - type: horizontal
+                        gap: 10px
+                        align: center
+                        justify: start
+                        design: {margin_top: 4px}
+                        modules:
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 40px
+                              height: 40px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: rgba(255,255,255,0.05)
+                              border: 1px solid rgba(216,180,90,0.35)
+                              box_shadow: none
+                            modules: [{type: icon, icon: mdi:skip-previous, size: 21px, design: {color: '#f4f0e8', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_previous_track, data: {entity_id: media_player.living_room}}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 50px
+                              height: 50px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: 'radial-gradient(circle at 35% 30%, #ff6cb5, #e0338a 65%, #8c1552)'
+                              border: none
+                              box_shadow: 0 4px 16px rgba(224,51,138,0.45)
+                            modules: [{type: icon, icon: mdi:play-pause, size: 26px, design: {color: '#0b0d12', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_play_pause, data: {entity_id: media_player.living_room}}}
+                          - type: vertical
+                            gap: 0px
+                            align: center
+                            design:
+                              width: 40px
+                              height: 40px
+                              border_radius: 50%
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              cursor: pointer
+                              background: rgba(255,255,255,0.05)
+                              border: 1px solid rgba(216,180,90,0.35)
+                              box_shadow: none
+                            modules: [{type: icon, icon: mdi:skip-next, size: 21px, design: {color: '#f4f0e8', display: flex}}]
+                            actions: {tap_action: {action: perform-action, service: media_player.media_next_track, data: {entity_id: media_player.living_room}}}
+              - id: feeds
+                layout: 1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 7px
+                        align: center
+                        design: {padding: 6px 8px, border_radius: 6px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(216,180,90,0.14)', cursor: pointer}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design:
+                              width: 7px
+                              min_width: 7px
+                              height: 7px
+                              margin: '0'
+                              border_radius: 50%
+                              background_color: '#9c978e'
+                              conditional:
+                                - id: live
+                                  name: Live
+                                  conditions: [{type: state, entity: media_player.kitchen, state: playing}]
+                                  design: {background_color: '#e0338a', box_shadow: '0 0 6px #e0338a'}
+                          - type: vertical
+                            gap: 1px
+                            design: {}
+                            modules:
+                              - type: text
+                                text: Kitchen
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 10px
+                                  font_weight: '700'
+                                  color: '#9c978e'
+                                  text_transform: uppercase
+                                  letter_spacing: 1.5px
+                              - type: text
+                                use_entity: true
+                                entity: media_player.kitchen
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ece8e0', white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: media_player.kitchen}}
+                  - modules:
+                      - type: horizontal
+                        gap: 7px
+                        align: center
+                        design: {padding: 6px 8px, border_radius: 6px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(216,180,90,0.14)', cursor: pointer}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design:
+                              width: 7px
+                              min_width: 7px
+                              height: 7px
+                              margin: '0'
+                              border_radius: 50%
+                              background_color: '#9c978e'
+                              conditional:
+                                - {id: live, name: Live, conditions: [{type: state, entity: media_player.office, state: playing}], design: {background_color: '#e0338a', box_shadow: '0 0 6px #e0338a'}}
+                          - type: vertical
+                            gap: 1px
+                            design: {}
+                            modules:
+                              - type: text
+                                text: Office
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 10px
+                                  font_weight: '700'
+                                  color: '#9c978e'
+                                  text_transform: uppercase
+                                  letter_spacing: 1.5px
+                              - type: text
+                                use_entity: true
+                                entity: media_player.office
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ece8e0', white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: media_player.office}}
+                  - modules:
+                      - type: horizontal
+                        gap: 7px
+                        align: center
+                        design: {padding: 6px 8px, border_radius: 6px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(216,180,90,0.14)', cursor: pointer}
+                        modules:
+                          - type: separator
+                            separator_style: none
+                            design:
+                              width: 7px
+                              min_width: 7px
+                              height: 7px
+                              margin: '0'
+                              border_radius: 50%
+                              background_color: '#9c978e'
+                              conditional:
+                                - id: live
+                                  name: Live
+                                  conditions: [{type: state, entity: media_player.bedroom, state: playing}]
+                                  design: {background_color: '#e0338a', box_shadow: '0 0 6px #e0338a'}
+                          - type: vertical
+                            gap: 1px
+                            design: {}
+                            modules:
+                              - type: text
+                                text: Bedroom
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 10px
+                                  font_weight: '700'
+                                  color: '#9c978e'
+                                  text_transform: uppercase
+                                  letter_spacing: 1.5px
+                              - type: text
+                                use_entity: true
+                                entity: media_player.bedroom
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ece8e0', white_space: nowrap}
+                        actions: {tap_action: {action: more-info, entity: media_player.bedroom}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · The Arena
+            background: linear-gradient(90deg, rgba(31,200,184,0.22) 0%, rgba(10,14,18,0.85) 55%, rgba(10,14,18,0.6) 100%), repeating-linear-gradient(0deg, rgba(31,200,184,0.06) 0 1px, transparent 1px 4px)
+            border_radius: 6px
+            padding: 12px 16px 11px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(31,200,184,0.45), inset 0 -1px 0 rgba(31,200,184,0.45), inset 3px 0 0 rgba(31,200,184,0.45)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 14px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 64 48"><path d="M5 41 C9 23 24 9 47 6 C55 5 60 10 60 17 C60 25 54 30 46 30 C34 30 22 34 13 45 Z" fill="currentColor"/><ellipse cx="53" cy="17.5" rx="5.5" ry="10.5" fill="#0b0d12" fill-opacity="0.55"/><path d="M16 36 C24 27 34 22 44 21 M24 18 C30 26 34 28 40 29" stroke="#0b0d12" stroke-opacity="0.35" stroke-width="1.6" fill="none"/></svg>
+                        size: 30px
+                        design: {color: '#d8b45a', display: flex, filter: 'drop-shadow(0 0 6px rgba(216,180,90,0.6))'}
+                  - gap: 3px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: The Arena
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 4px
+                          text_transform: uppercase
+                          color: '#8ff5ea'
+                          line_height: '1.1'
+                          white_space: nowrap
+                      - type: text
+                        text: People, cannon and the force field
+                        design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', letter_spacing: 1px, color: '#1fc8b8'}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Arena map
+            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(31,200,184,0.13), transparent 65%), repeating-linear-gradient(0deg, rgba(31,200,184,0.035) 0 1px, transparent 1px 22px), repeating-linear-gradient(90deg, rgba(31,200,184,0.035) 0 1px, transparent 1px 22px), linear-gradient(170deg, #10181c 0%, #0a0e12 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(31,200,184,0.28), inset 0 1px 0 rgba(143,245,234,0.14)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: force-field
+                name: Force field shimmer
+                kind: keyframes
+                duration: 3.6
+                iterations: infinite
+                target: element
+                easing: ease-in-out
+                keyframes:
+                  - {at: 0, shadow: '0 0 0 2px rgba(224,51,138,0.55), 0 0 18px rgba(224,51,138,0.30), inset 0 0 24px rgba(31,200,184,0.25)'}
+                  - {at: 50, shadow: '0 0 0 2px rgba(255,108,181,0.85), 0 0 30px rgba(224,51,138,0.50), inset 0 0 34px rgba(31,200,184,0.40)'}
+                  - {at: 100, shadow: '0 0 0 2px rgba(224,51,138,0.55), 0 0 18px rgba(224,51,138,0.30), inset 0 0 24px rgba(31,200,184,0.25)'}
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                gap: 10px
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Hologram · who is where
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#1fc8b8'
+                          line_height: '1.3'
+                      - type: text
+                        text: Arena map
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+                  - vertical_align: center
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ states.person | selectattr(''state'',''eq'',''home'') | list | count }} of 3 safe'
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 12px
+                          font_weight: '700'
+                          color: '#0b0d12'
+                          padding: 4px 10px 3px
+                          border_radius: 999px
+                          background_color: '#ffb04a'
+                          white_space: nowrap
+              - id: map
+                padding: 4px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design: {position: relative, width: 356px, height: 270px, margin: 0 auto}
+                        modules:
+                          - type: vertical
+                            gap: 0px
+                            design:
+                              position: absolute
+                              left: 0px
+                              top: 8px
+                              width: 254px
+                              height: 254px
+                              border_radius: 50%
+                              background: 'radial-gradient(circle closest-side, transparent 0 29.6%, rgba(143,245,234,0.55) 29.8% 30.2%, transparent 30.4%), radial-gradient(circle closest-side, transparent 0 61.6%, rgba(143,245,234,0.25) 61.8% 62.2%, transparent 62.4%), radial-gradient(circle closest-side, transparent 0 91.6%, rgba(143,245,234,0.45) 91.8% 92.2%, transparent 92.4%), radial-gradient(circle closest-side, rgba(31,200,184,0.22) 0 26%, transparent 27%), repeating-conic-gradient(from 15deg, rgba(143,245,234,0.20) 0deg 0.7deg, transparent 0.7deg 30deg), radial-gradient(circle at 26% 70%, rgba(80,170,100,0.30), transparent 22%), radial-gradient(circle at 72% 30%, rgba(80,170,100,0.26), transparent 20%), radial-gradient(circle at 70% 76%, rgba(170,140,70,0.20), transparent 18%), radial-gradient(circle at 50% 50%, #0d3333 0%, #082022 60%, #04100f 100%)'
+                              animations: [{id: field, preset: custom:force-field}, {id: sweep, preset: radar-sweep, color: '#1fc8b8', intensity: 50, strength: 26, duration: 7s}]
+                            modules: []
+                          - type: text
+                            text: '1'
+                            design:
+                              position: absolute
+                              left: 169.2px
+                              top: 40.1px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '2'
+                            design:
+                              position: absolute
+                              left: 205.9px
+                              top: 76.8px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '3'
+                            design:
+                              position: absolute
+                              left: 219.3px
+                              top: 127px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '4'
+                            design:
+                              position: absolute
+                              left: 205.9px
+                              top: 177.2px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '5'
+                            design:
+                              position: absolute
+                              left: 169.2px
+                              top: 213.9px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '6'
+                            design:
+                              position: absolute
+                              left: 119px
+                              top: 227.3px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '7'
+                            design:
+                              position: absolute
+                              left: 68.8px
+                              top: 213.9px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '8'
+                            design:
+                              position: absolute
+                              left: 32.1px
+                              top: 177.2px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '9'
+                            design:
+                              position: absolute
+                              left: 18.7px
+                              top: 127px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '10'
+                            design:
+                              position: absolute
+                              left: 32.1px
+                              top: 76.8px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '11'
+                            design:
+                              position: absolute
+                              left: 68.8px
+                              top: 40.1px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: text
+                            text: '12'
+                            design:
+                              position: absolute
+                              left: 119px
+                              top: 26.7px
+                              width: 16px
+                              height: 16px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 9px
+                              font_weight: '700'
+                              color: '#8ff5ea'
+                              opacity: '0.75'
+                          - type: vertical
+                            gap: 0px
+                            design:
+                              position: absolute
+                              left: 105px
+                              top: 113px
+                              width: 44px
+                              height: 44px
+                              display: flex
+                              align_items: center
+                              justify_content: center
+                              border_radius: 50%
+                              background: radial-gradient(circle, rgba(216,180,90,0.25), transparent 70%)
+                              animations: [{id: glow, preset: glow-pulse, color: '#d8b45a', intensity: 12, duration: 3s}]
+                            modules:
+                              - type: icon
+                                icon: svg
+                                svg: <svg viewBox="0 0 64 48"><path d="M5 41 C9 23 24 9 47 6 C55 5 60 10 60 17 C60 25 54 30 46 30 C34 30 22 34 13 45 Z" fill="currentColor"/><ellipse cx="53" cy="17.5" rx="5.5" ry="10.5" fill="#0b0d12" fill-opacity="0.55"/><path d="M16 36 C24 27 34 22 44 21 M24 18 C30 26 34 28 40 29" stroke="#0b0d12" stroke-opacity="0.35" stroke-width="1.6" fill="none"/></svg>
+                                size: 34px
+                                design: {color: '#d8b45a', display: flex, filter: 'drop-shadow(0 0 8px rgba(216,180,90,0.8))'}
+                          - type: vertical
+                            gap: 0px
+                            design: {position: absolute, left: 69.1px, top: 163.1px, width: 40px, height: 52px}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  position: absolute
+                                  left: 3px
+                                  top: 0px
+                                  width: 34px
+                                  height: 34px
+                                  border_radius: 50%
+                                  animations: [{id: ping, preset: halo-ripple, color: '#e0338a', intensity: 10, duration: 2.2s, delay: 0s}]
+                                modules:
+                                  - type: image
+                                    entity: person.anna
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 34px, border_radius: 50%, css: 'outline: 2px solid #ff6cb5; outline-offset: 1px;'}
+                              - type: text
+                                text: Anna
+                                design:
+                                  position: absolute
+                                  left: -4px
+                                  top: 37px
+                                  width: 48px
+                                  height: 14px
+                                  display: flex
+                                  align_items: center
+                                  justify_content: center
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  text_transform: uppercase
+                                  color: '#0b0d12'
+                                  background_color: '#ff6cb5'
+                                  border_radius: 3px
+                                  box_sizing: border-box
+                                  padding_top: 1px
+                            display: {conditions: [{type: state, entity: person.anna, state_not: home}]}
+                          - type: vertical
+                            gap: 0px
+                            design: {position: absolute, left: 167px, top: 155.9px, width: 40px, height: 52px}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  position: absolute
+                                  left: 3px
+                                  top: 0px
+                                  width: 34px
+                                  height: 34px
+                                  border_radius: 50%
+                                  animations: [{id: ping, preset: halo-ripple, color: '#e0338a', intensity: 10, duration: 2.2s, delay: -0.7s}]
+                                modules:
+                                  - type: image
+                                    entity: person.ben
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 34px, border_radius: 50%, css: 'outline: 2px solid #ff6cb5; outline-offset: 1px;'}
+                              - type: text
+                                text: Ben
+                                design:
+                                  position: absolute
+                                  left: -4px
+                                  top: 37px
+                                  width: 48px
+                                  height: 14px
+                                  display: flex
+                                  align_items: center
+                                  justify_content: center
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  text_transform: uppercase
+                                  color: '#0b0d12'
+                                  background_color: '#ff6cb5'
+                                  border_radius: 3px
+                                  box_sizing: border-box
+                                  padding_top: 1px
+                            display: {conditions: [{type: state, entity: person.ben, state_not: home}]}
+                          - type: vertical
+                            gap: 0px
+                            design: {position: absolute, left: 57.7px, top: 54.3px, width: 40px, height: 52px}
+                            modules:
+                              - type: vertical
+                                gap: 0px
+                                design:
+                                  position: absolute
+                                  left: 3px
+                                  top: 0px
+                                  width: 34px
+                                  height: 34px
+                                  border_radius: 50%
+                                  animations: [{id: ping, preset: halo-ripple, color: '#e0338a', intensity: 10, duration: 2.2s, delay: -1.4s}]
+                                modules:
+                                  - type: image
+                                    entity: person.lisa
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 34px, border_radius: 50%, css: 'outline: 2px solid #ff6cb5; outline-offset: 1px;'}
+                              - type: text
+                                text: Lisa
+                                design:
+                                  position: absolute
+                                  left: -4px
+                                  top: 37px
+                                  width: 48px
+                                  height: 14px
+                                  display: flex
+                                  align_items: center
+                                  justify_content: center
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  text_transform: uppercase
+                                  color: '#0b0d12'
+                                  background_color: '#ff6cb5'
+                                  border_radius: 3px
+                                  box_sizing: border-box
+                                  padding_top: 1px
+                            display: {conditions: [{type: state, entity: person.lisa, state_not: home}]}
+                          - type: vertical
+                            gap: 6px
+                            align: center
+                            design:
+                              position: absolute
+                              left: 266px
+                              top: 8px
+                              width: 90px
+                              height: 254px
+                              box_sizing: border-box
+                              padding: 10px 6px 8px
+                              border_radius: 10px
+                              background: 'radial-gradient(ellipse 90% 50% at 50% 110%, rgba(255,106,31,0.28), transparent 70%), repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 8px), linear-gradient(180deg, #2b2825, #1a1816)'
+                              box_shadow: inset 0 0 0 1px rgba(255,106,31,0.4), 0 6px 14px rgba(0,0,0,0.5)
+                              border_bottom: 2px dashed rgba(255,106,31,0.55)
+                            modules:
+                              - type: text
+                                text: Home district
+                                design:
+                                  font_family: Cinzel, 'Playfair Display', Georgia, serif
+                                  font_size: 12px
+                                  font_weight: '700'
+                                  letter_spacing: 1.5px
+                                  color: '#ffb04a'
+                                  text_align: center
+                                  white_space: nowrap
+                              - type: text
+                                text: Safe zone
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 2px
+                                  text_transform: uppercase
+                                  color: '#c9a184'
+                                  text_align: center
+                                  margin_bottom: 6px
+                              - type: horizontal
+                                gap: 6px
+                                align: center
+                                design: {padding: 4px 6px 4px 5px, border_radius: 999px, background_color: 'rgba(255,106,31,0.14)', border: '1px solid rgba(255,106,31,0.35)'}
+                                modules:
+                                  - type: image
+                                    entity: person.anna
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 30px, border_radius: 50%, css: 'outline: 2px solid #ffb04a; outline-offset: 1px;'}
+                                  - type: text
+                                    text: Anna
+                                    design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                                display: {conditions: [{type: state, entity: person.anna, state: home}]}
+                              - type: horizontal
+                                gap: 6px
+                                align: center
+                                design: {padding: 4px 6px 4px 5px, border_radius: 999px, background_color: 'rgba(255,106,31,0.14)', border: '1px solid rgba(255,106,31,0.35)'}
+                                modules:
+                                  - type: image
+                                    entity: person.ben
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 30px, border_radius: 50%, css: 'outline: 2px solid #ffb04a; outline-offset: 1px;'}
+                                  - type: text
+                                    text: Ben
+                                    design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                                display: {conditions: [{type: state, entity: person.ben, state: home}]}
+                              - type: horizontal
+                                gap: 6px
+                                align: center
+                                design: {padding: 4px 6px 4px 5px, border_radius: 999px, background_color: 'rgba(255,106,31,0.14)', border: '1px solid rgba(255,106,31,0.35)'}
+                                modules:
+                                  - type: image
+                                    entity: person.lisa
+                                    entity_picture: true
+                                    aspect_ratio: '1'
+                                    design: {width: 30px, border_radius: 50%, css: 'outline: 2px solid #ffb04a; outline-offset: 1px;'}
+                                  - type: text
+                                    text: Lisa
+                                    design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                                display: {conditions: [{type: state, entity: person.lisa, state: home}]}
+                              - type: horizontal
+                                gap: 3px
+                                align: center
+                                justify: center
+                                design: {position: absolute, left: 0px, top: 224px, width: 90px, height: 18px}
+                                modules:
+                                  - {type: icon, icon: mdi:flash, size: 13px, design: {color: '#ff6a1f', display: flex}}
+                                  - type: text
+                                    text: Fence live
+                                    design:
+                                      font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                      font_size: 9px
+                                      font_weight: '700'
+                                      letter_spacing: 1.5px
+                                      text_transform: uppercase
+                                      color: '#ff6a1f'
+                                      white_space: nowrap
+              - id: roster
+                layout: 1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        design: {padding: 7px 9px, border_radius: 8px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(31,200,184,0.18)', cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: baseline
+                            justify: space-between
+                            design: {}
+                            modules:
+                              - {type: text, text: Anna, design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 16px, font_weight: '700', color: '#f4f0e8'}}
+                              - type: text
+                                text: No. 1
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  color: '#9c978e'
+                                  white_space: nowrap
+                          - type: text
+                            text: Safe at home
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ffb04a', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.anna, state: home}]}
+                          - type: text
+                            text: In the arena
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ff6cb5', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.anna, state: not_home}]}
+                          - type: horizontal
+                            gap: 4px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: text, text: Sector, design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea'}}
+                              - type: text
+                                use_entity: true
+                                entity: person.anna
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea', white_space: nowrap}
+                            display: {mode: every, conditions: [{type: state, entity: person.anna, state_not: home}, {type: state, entity: person.anna, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.anna}}
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        design: {padding: 7px 9px, border_radius: 8px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(31,200,184,0.18)', cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: baseline
+                            justify: space-between
+                            design: {}
+                            modules:
+                              - {type: text, text: Ben, design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 16px, font_weight: '700', color: '#f4f0e8'}}
+                              - type: text
+                                text: No. 2
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  color: '#9c978e'
+                                  white_space: nowrap
+                          - type: text
+                            text: Safe at home
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ffb04a', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.ben, state: home}]}
+                          - type: text
+                            text: In the arena
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ff6cb5', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.ben, state: not_home}]}
+                          - type: horizontal
+                            gap: 4px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: text, text: Sector, design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea'}}
+                              - type: text
+                                use_entity: true
+                                entity: person.ben
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea', white_space: nowrap}
+                            display: {mode: every, conditions: [{type: state, entity: person.ben, state_not: home}, {type: state, entity: person.ben, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.ben}}
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        design: {padding: 7px 9px, border_radius: 8px, background_color: 'rgba(255,255,255,0.03)', border: '1px solid rgba(31,200,184,0.18)', cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: baseline
+                            justify: space-between
+                            design: {}
+                            modules:
+                              - {type: text, text: Lisa, design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 16px, font_weight: '700', color: '#f4f0e8'}}
+                              - type: text
+                                text: No. 3
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 9px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  color: '#9c978e'
+                                  white_space: nowrap
+                          - type: text
+                            text: Safe at home
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ffb04a', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.lisa, state: home}]}
+                          - type: text
+                            text: In the arena
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#ff6cb5', white_space: nowrap}
+                            display: {conditions: [{type: state, entity: person.lisa, state: not_home}]}
+                          - type: horizontal
+                            gap: 4px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: text, text: Sector, design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea'}}
+                              - type: text
+                                use_entity: true
+                                entity: person.lisa
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 11px, font_weight: '700', color: '#8ff5ea', white_space: nowrap}
+                            display: {mode: every, conditions: [{type: state, entity: person.lisa, state_not: home}, {type: state, entity: person.lisa, state_not: not_home}]}
+                        actions: {tap_action: {action: more-info, entity: person.lisa}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Cannon
+            background: 'radial-gradient(ellipse 80% 55% at 50% -12%, rgba(216,180,90,0.13), transparent 62%), radial-gradient(ellipse 60% 50% at 100% 100%, rgba(224,51,138,0.08), transparent 70%), linear-gradient(170deg, #151820 0%, #0d0f14 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(216,180,90,0.28), inset 0 1px 0 rgba(243,217,139,0.18)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: cannon-flash
+                name: Cannon flash
+                kind: keyframes
+                duration: 2.2
+                iterations: infinite
+                target: element
+                easing: ease-out
+                keyframes:
+                  - {at: 0, opacity: 0, transform: {scale: 0.4}}
+                  - {at: 4, opacity: 1, transform: {scale: 1.25}}
+                  - {at: 22, opacity: 0.35, transform: {scale: 1.5}}
+                  - {at: 40, opacity: 0, transform: {scale: 1.7}}
+                  - {at: 100, opacity: 0, transform: {scale: 0.4}}
+              - id: cannon-recoil
+                name: Cannon recoil
+                kind: keyframes
+                duration: 2.2
+                iterations: infinite
+                target: icon
+                easing: ease-out
+                keyframes: [{at: 0, transform: {x: 0}}, {at: 4, transform: {x: -9, rotate: -3}}, {at: 20, transform: {x: 0, rotate: 0}}, {at: 100, transform: {x: 0}}]
+            conditional_appearance:
+              - id: fired
+                name: Cannon fired
+                conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                overrides:
+                  box_shadow: '0 0 0 2px #ff4b4b, 0 0 40px rgba(255,75,75,0.55), 0 18px 36px rgba(0,0,0,0.55)'
+                  background: 'radial-gradient(ellipse 80% 60% at 30% 20%, rgba(255,75,75,0.25), transparent 70%), linear-gradient(170deg, #241216 0%, #0d0f14 100%)'
+            rows:
+              - id: head
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Alarm, doors and motion
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#d8b45a'
+                          line_height: '1.3'
+                      - type: text
+                        text: The cannon
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+              - id: cannon
+                column_widths: [124px, 1fr]
+                gap: 14px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          position: relative
+                          width: 124px
+                          height: 92px
+                          border_radius: 10px
+                          overflow: hidden
+                          background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(216,180,90,0.14), transparent 70%), linear-gradient(180deg, #1b1e25, #0f1115)'
+                          box_shadow: inset 0 0 0 1px rgba(216,180,90,0.25)
+                          conditional:
+                            - id: fire
+                              name: Fired
+                              conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                              design:
+                                background: 'radial-gradient(ellipse 80% 70% at 80% 20%, rgba(255,240,200,0.6), rgba(255,75,75,0.35) 50%, #1a0b0d 100%)'
+                                box_shadow: 'inset 0 0 0 2px #ff4b4b, 0 0 24px rgba(255,75,75,0.6)'
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 120 90"><path fill="currentColor" d="M10 54 L86 22 C92 20 97 22 99 27 L103 37 C105 43 101 49 95 50 L20 67 C13 68 9 63 9 58 Z"/><path fill="currentColor" d="M97 19 L106 15 L114 41 L105 45 Z"/><circle cx="38" cy="66" r="15" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="38" cy="66" r="4" fill="currentColor"/><path d="M38 51 V81 M23 66 H53" stroke="currentColor" stroke-width="2.5"/><path d="M6 84 H112" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-opacity="0.45"/></svg>
+                            size: 96px
+                            design:
+                              color: '#7b8088'
+                              display: flex
+                              position: absolute
+                              left: 14px
+                              top: 10px
+                              width: 96px
+                              height: 72px
+                              filter: drop-shadow(0 3px 3px rgba(0,0,0,0.7))
+                              conditional:
+                                - id: fire
+                                  name: Fired
+                                  conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                                  design: {color: '#cfd3d9', animations: [{id: recoil, preset: custom:cannon-recoil, target: icon}]}
+                          - type: separator
+                            separator_style: none
+                            design:
+                              position: absolute
+                              left: 86px
+                              top: 4px
+                              width: 40px
+                              height: 40px
+                              margin: '0'
+                              border_radius: 50%
+                              background: 'radial-gradient(circle, #ffffff 0%, #ffe9a8 25%, rgba(255,106,31,0.85) 55%, transparent 72%)'
+                              animations: [{id: flash, preset: custom:cannon-flash}]
+                            display: {conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]}
+                  - gap: 4px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: BOOM. The cannon has fired.
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 16px, font_style: italic, font_weight: '700', color: '#ff4b4b', line_height: '1.2'}
+                        display: {conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]}
+                      - type: text
+                        text: Silent. Everyone stands.
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 16px, font_style: italic, color: '#f3d98b', line_height: '1.2'}
+                        display: {conditions: [{type: state, entity: alarm_control_panel.home, state_not: triggered}]}
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design:
+                          padding: 8px 10px
+                          border_radius: 8px
+                          background: linear-gradient(90deg, rgba(216,180,90,0.16), rgba(0,0,0,0.25))
+                          border: 1px solid rgba(216,180,90,0.35)
+                          cursor: pointer
+                          margin_top: 4px
+                          conditional:
+                            - id: trig
+                              name: Triggered
+                              conditions: [{type: state, entity: alarm_control_panel.home, state: triggered}]
+                              design: {background: 'linear-gradient(90deg, rgba(255,75,75,0.4), rgba(0,0,0,0.25))', border: '1px solid #ff4b4b'}
+                        modules:
+                          - {type: icon, icon: mdi:shield-home, size: 18px, design: {color: '#d8b45a', display: flex}}
+                          - type: text
+                            text: Alarm
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#9c978e'
+                          - type: text
+                            use_entity: true
+                            entity: alarm_control_panel.home
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 14px
+                              font_weight: '700'
+                              color: '#f4f0e8'
+                              flex: '1'
+                              text_align: right
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: alarm_control_panel.home}}
+              - id: wards
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design:
+                          padding: 10px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #1c1f27, #12141a)'
+                          border: 1px solid rgba(216,180,90,0.16)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:lock
+                            size: 22px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: locked}], design: {color: '#ff6cb5'}}]}
+                            entity: lock.front_door
+                          - type: text
+                            text: Lock
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#cfd3d9'
+                              text_align: center
+                              margin_top: 4px
+                              white_space: nowrap
+                          - type: text
+                            text: Locked
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, color: '#5fd39a', text_align: center}
+                            display: {conditions: [{type: state, entity: lock.front_door, state: locked}]}
+                          - type: text
+                            text: Open
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#ff6cb5'
+                              text_align: center
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: lock.front_door, state_not: locked}]}
+                        actions: {tap_action: {action: more-info, entity: lock.front_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design:
+                          padding: 10px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #1c1f27, #12141a)'
+                          border: 1px solid rgba(216,180,90,0.16)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:door-closed
+                            size: 22px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#ff6cb5'}}]}
+                            entity: binary_sensor.front_door
+                          - type: text
+                            text: Front
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#cfd3d9'
+                              text_align: center
+                              margin_top: 4px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, color: '#5fd39a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state: 'off'}]}
+                          - type: text
+                            text: Open
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#ff6cb5'
+                              text_align: center
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.front_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design:
+                          padding: 10px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #1c1f27, #12141a)'
+                          border: 1px solid rgba(216,180,90,0.16)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:door-closed
+                            size: 22px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#ff6cb5'}}]}
+                            entity: binary_sensor.back_door
+                          - type: text
+                            text: Back
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#cfd3d9'
+                              text_align: center
+                              margin_top: 4px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, color: '#5fd39a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.back_door, state: 'off'}]}
+                          - type: text
+                            text: Open
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#ff6cb5'
+                              text_align: center
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.back_door, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.back_door}}
+                  - modules:
+                      - type: vertical
+                        gap: 1px
+                        align: center
+                        design:
+                          padding: 10px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          background: 'linear-gradient(180deg, #1c1f27, #12141a)'
+                          border: 1px solid rgba(216,180,90,0.16)
+                          cursor: pointer
+                        modules:
+                          - type: icon
+                            icon: mdi:window-closed-variant
+                            size: 22px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#ff6cb5'}}]}
+                            entity: binary_sensor.garage_window
+                          - type: text
+                            text: Garage
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#cfd3d9'
+                              text_align: center
+                              margin_top: 4px
+                              white_space: nowrap
+                          - type: text
+                            text: Shut
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, color: '#5fd39a', text_align: center}
+                            display: {conditions: [{type: state, entity: binary_sensor.garage_window, state: 'off'}]}
+                          - type: text
+                            text: Ajar
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#ff6cb5'
+                              text_align: center
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.garage_window, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.garage_window}}
+              - id: motion
+                layout: 1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design: {padding: 7px 10px, border_radius: 8px, background_color: 'rgba(0,0,0,0.25)', border: '1px solid rgba(216,180,90,0.12)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:motion-sensor
+                            size: 18px
+                            design: {color: '#9c978e', display: flex, conditional: [{id: 'on', name: Moving, conditions: [{type: state, state: 'on'}], design: {color: '#ffb04a'}}]}
+                            entity: binary_sensor.hall_motion
+                          - type: text
+                            text: Hall
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ece8e0', flex: '1', white_space: nowrap}
+                          - type: text
+                            text: Movement
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#ffb04a'
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.hall_motion, state: 'on'}]}
+                          - type: text
+                            text: Still
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#5fd39a'
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.hall_motion, state_not: 'on'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.hall_motion}}
+                  - modules:
+                      - type: horizontal
+                        gap: 8px
+                        align: center
+                        design: {padding: 7px 10px, border_radius: 8px, background_color: 'rgba(0,0,0,0.25)', border: '1px solid rgba(216,180,90,0.12)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:motion-sensor
+                            size: 18px
+                            design: {color: '#9c978e', display: flex, conditional: [{id: 'on', name: Moving, conditions: [{type: state, state: 'on'}], design: {color: '#ffb04a'}}]}
+                            entity: binary_sensor.patio_motion
+                          - type: text
+                            text: Patio
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ece8e0', flex: '1', white_space: nowrap}
+                          - type: text
+                            text: Movement
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#ffb04a'
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.patio_motion, state: 'on'}]}
+                          - type: text
+                            text: Still
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#5fd39a'
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: binary_sensor.patio_motion, state_not: 'on'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.patio_motion}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · Home district
+            background: 'linear-gradient(90deg, rgba(255,106,31,0.30) 0%, rgba(26,24,22,0.92) 55%, rgba(26,24,22,0.75) 100%), repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 8px), #1f1c1a'
+            border_radius: 6px
+            padding: 12px 16px 11px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,106,31,0.5), inset 0 -1px 0 rgba(255,106,31,0.5), inset 3px 0 0 rgba(255,106,31,0.5)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 14px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M22 60 L30 6 H34 L42 60"/><path d="M14 16 H50 M18 28 H46"/><path d="M26 28 L38 44 L24 60 M38 28 L26 44 L40 60"/><path d="M14 16 V21 M50 16 V21"/></svg>
+                        size: 28px
+                        design: {color: '#ff6a1f', display: flex, filter: 'drop-shadow(0 0 6px rgba(255,106,31,0.7))'}
+                  - gap: 3px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: Home district
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 4px
+                          text_transform: uppercase
+                          color: '#ffb04a'
+                          line_height: '1.1'
+                          white_space: nowrap
+                      - type: text
+                        text: Coal, power and fire
+                        design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', letter_spacing: 1px, color: '#c9a184'}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: District power
+            background: 'radial-gradient(ellipse 70% 50% at 50% 115%, rgba(255,106,31,0.20), transparent 70%), repeating-linear-gradient(135deg, rgba(255,255,255,0.018) 0 2px, transparent 2px 9px), linear-gradient(175deg, #2b2825 0%, #1a1816 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,106,31,0.22), inset 0 1px 0 rgba(255,176,74,0.12)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: ember-rise
+                name: Rising embers
+                kind: particles
+                duration: 5
+                iterations: infinite
+                particles: {count: 12, direction: rise, speed: 1, size: [2, 4], colors: ['#ffb04a', '#ff6a1f', '#ffd27a'], fade: true, spread: 80, gravity: -0.2, layer: back}
+            animations: [{id: embers, preset: custom:ember-rise}]
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                gap: 10px
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Energy · the district grid
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#ff6a1f'
+                          line_height: '1.3'
+                      - type: text
+                        text: District power
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M22 60 L30 6 H34 L42 60"/><path d="M14 16 H50 M18 28 H46"/><path d="M26 28 L38 44 L24 60 M38 28 L26 44 L40 60"/><path d="M14 16 V21 M50 16 V21"/></svg>
+                        size: 38px
+                        design:
+                          color: '#ff6a1f'
+                          display: flex
+                          filter: drop-shadow(0 0 8px rgba(255,106,31,0.6))
+                          animations: [{id: hum, preset: neon-flicker, color: '#ff6a1f', intensity: 6, duration: 4s, target: icon}]
+              - id: big
+                column_widths: [1fr, auto]
+                gap: 10px
+                padding: 2px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        design: {}
+                        modules:
+                          - type: text
+                            text: Sun harvest
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 2px
+                              text_transform: uppercase
+                              color: '#c9a184'
+                          - type: text
+                            use_entity: true
+                            entity: sensor.solar_power
+                            design:
+                              font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif'
+                              font_size: 30px
+                              font_weight: '700'
+                              color: '#ffb04a'
+                              line_height: '1.1'
+                              text_shadow: 0 0 14px rgba(255,106,31,0.45)
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: sensor.solar_power}}
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 3px
+                        design: {}
+                        modules:
+                          - type: text
+                            text: Fence
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 2px
+                              text_transform: uppercase
+                              color: '#c9a184'
+                              text_align: right
+                          - type: text
+                            text: Exporting
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#1fc8b8'
+                              text_align: right
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: sensor.grid_power, below: 0}]}
+                          - type: text
+                            text: Importing
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 13px
+                              font_weight: '700'
+                              color: '#ff6cb5'
+                              text_align: right
+                              white_space: nowrap
+                            display: {conditions: [{type: state, entity: sensor.grid_power, above: -0.001}]}
+              - id: seams
+                padding: 4px 0 0
+                columns:
+                  - gap: 13px
+                    modules:
+                      - type: vertical
+                        gap: 5px
+                        design: {cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:solar-power-variant, size: 16px, design: {color: '#ffb04a', display: flex}}
+                              - type: text
+                                text: Solar
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                              - type: text
+                                text: roof panels
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 11px
+                                  color: '#a89a8c'
+                                  flex: '1'
+                                  white_space: nowrap
+                                  overflow: hidden
+                                  text_overflow: ellipsis
+                              - type: text
+                                use_entity: true
+                                entity: sensor.solar_power
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 14px, font_weight: '700', color: '#ffb04a', white_space: nowrap}
+                          - type: separator
+                            separator_style: none
+                            design:
+                              height: 9px
+                              margin: '0'
+                              border_radius: 2px
+                              background: 'repeating-linear-gradient(90deg, #141210 0 10px, #1d1a17 10px 12px)'
+                              box_shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,106,31,0.15)
+                              value_background: {type: fill, entity: sensor.solar_power, min: 0, max: 5000, direction: right, color: '#ffb04a', opacity: 90%, wave: false}
+                        actions: {tap_action: {action: more-info, entity: sensor.solar_power}}
+                      - type: vertical
+                        gap: 5px
+                        design: {cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:home-lightning-bolt, size: 16px, design: {color: '#ff6a1f', display: flex}}
+                              - type: text
+                                text: House
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                              - type: text
+                                text: district load
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 11px
+                                  color: '#a89a8c'
+                                  flex: '1'
+                                  white_space: nowrap
+                                  overflow: hidden
+                                  text_overflow: ellipsis
+                              - type: text
+                                use_entity: true
+                                entity: sensor.house_power
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 14px, font_weight: '700', color: '#ff6a1f', white_space: nowrap}
+                          - type: separator
+                            separator_style: none
+                            design:
+                              height: 9px
+                              margin: '0'
+                              border_radius: 2px
+                              background: 'repeating-linear-gradient(90deg, #141210 0 10px, #1d1a17 10px 12px)'
+                              box_shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,106,31,0.15)
+                              value_background: {type: fill, entity: sensor.house_power, min: 0, max: 3000, direction: right, color: '#ff6a1f', opacity: 90%, wave: false}
+                        actions: {tap_action: {action: more-info, entity: sensor.house_power}}
+                      - type: vertical
+                        gap: 5px
+                        design: {cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:battery-high, size: 16px, design: {color: '#5fd39a', display: flex}}
+                              - type: text
+                                text: Battery
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                              - type: text
+                                text: coal reserve
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 11px
+                                  color: '#a89a8c'
+                                  flex: '1'
+                                  white_space: nowrap
+                                  overflow: hidden
+                                  text_overflow: ellipsis
+                              - type: text
+                                use_entity: true
+                                entity: sensor.home_battery
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 14px, font_weight: '700', color: '#5fd39a', white_space: nowrap}
+                          - type: separator
+                            separator_style: none
+                            design:
+                              height: 9px
+                              margin: '0'
+                              border_radius: 2px
+                              background: 'repeating-linear-gradient(90deg, #141210 0 10px, #1d1a17 10px 12px)'
+                              box_shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,106,31,0.15)
+                              value_background: {type: fill, entity: sensor.home_battery, min: 0, max: 100, direction: right, color: '#5fd39a', opacity: 90%, wave: false}
+                        actions: {tap_action: {action: more-info, entity: sensor.home_battery}}
+                      - type: vertical
+                        gap: 5px
+                        design: {cursor: pointer}
+                        modules:
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design: {}
+                            modules:
+                              - {type: icon, icon: mdi:transmission-tower, size: 16px, design: {color: '#1fc8b8', display: flex}}
+                              - type: text
+                                text: Grid
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                              - type: text
+                                text: City grid
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 11px
+                                  color: '#a89a8c'
+                                  flex: '1'
+                                  white_space: nowrap
+                                  overflow: hidden
+                                  text_overflow: ellipsis
+                              - type: text
+                                use_entity: true
+                                entity: sensor.grid_power
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 14px, font_weight: '700', color: '#1fc8b8', white_space: nowrap}
+                          - type: separator
+                            separator_style: none
+                            design:
+                              height: 9px
+                              margin: '0'
+                              border_radius: 2px
+                              background: 'repeating-linear-gradient(90deg, #141210 0 10px, #1d1a17 10px 12px)'
+                              box_shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,106,31,0.15)
+                              value_background: {type: fill, entity: sensor.grid_power, min: -4000, max: 4000, direction: right, color: '#1fc8b8', opacity: 90%, wave: false}
+                        actions: {tap_action: {action: more-info, entity: sensor.grid_power}}
+              - id: rule
+                columns:
+                  - {modules: [{type: separator, separator_style: none, design: {height: 1px, margin: '0', background: 'linear-gradient(90deg, transparent, rgba(255,106,31,0.5), transparent)'}}]}
+              - id: foot
+                column_widths: [1fr, auto]
+                gap: 8px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        design: {}
+                        modules:
+                          - {type: icon, icon: mdi:fire, size: 15px, design: {color: '#ff6a1f', display: flex}}
+                          - type: text
+                            text: Mined today
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, color: '#a89a8c', line_height: '1.3'}
+                          - type: text
+                            use_entity: true
+                            entity: sensor.energy_today
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                  - modules:
+                      - type: horizontal
+                        gap: 6px
+                        align: center
+                        justify: end
+                        design: {}
+                        modules:
+                          - {type: text, text: Tariff, design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, color: '#a89a8c', line_height: '1.3'}}
+                          - type: text
+                            use_entity: true
+                            entity: sensor.energy_price
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Hearth
+            background: 'radial-gradient(ellipse 70% 50% at 50% 115%, rgba(255,106,31,0.20), transparent 70%), repeating-linear-gradient(135deg, rgba(255,255,255,0.018) 0 2px, transparent 2px 9px), linear-gradient(175deg, #2b2825 0%, #1a1816 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,106,31,0.22), inset 0 1px 0 rgba(255,176,74,0.12)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: ember-rise
+                name: Rising embers
+                kind: particles
+                duration: 5
+                iterations: infinite
+                particles: {count: 12, direction: rise, speed: 1, size: [2, 4], colors: ['#ffb04a', '#ff6a1f', '#ffd27a'], fade: true, spread: 80, gravity: -0.2, layer: back}
+            rows:
+              - id: head
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Climate · living room
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#ff6a1f'
+                          line_height: '1.3'
+                      - type: text
+                        text: The hearth
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+              - id: fire
+                column_widths: [1fr, 1fr]
+                gap: 14px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          height: 164px
+                          border_radius: 12px
+                          display: flex
+                          align_items: center
+                          justify_content: center
+                          overflow: hidden
+                          cursor: pointer
+                          background: 'radial-gradient(ellipse 60% 55% at 50% 75%, rgba(255,106,31,0.38), transparent 70%), radial-gradient(ellipse 100% 40% at 50% 100%, rgba(224,51,138,0.18), transparent 70%), #120d0b'
+                          box_shadow: inset 0 0 0 1px rgba(255,106,31,0.3)
+                          animations: [{id: embers, preset: custom:ember-rise}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 100 128"><path fill="#e8361c" d="M50 3 C58 24 78 34 80 58 C81 72 88 80 96 74 C97 102 77 125 50 125 C23 125 3 102 4 74 C12 80 19 72 20 58 C22 34 42 24 50 3 Z"/><path fill="#ff7a1f" d="M50 26 C56 44 72 54 71 76 C71 82 76 86 82 84 C80 104 67 119 50 119 C33 119 20 104 18 84 C24 86 29 82 29 76 C28 54 44 44 50 26 Z"/><path fill="#ffb04a" d="M50 50 C55 64 64 70 64 86 C64 102 58 113 50 113 C42 113 36 102 36 86 C36 70 45 64 50 50 Z"/><path fill="#ffe9a8" d="M50 74 C53 83 57 88 57 97 C57 105 54 109 50 109 C46 109 43 105 43 97 C43 88 47 83 50 74 Z"/></svg>
+                            size: 108px
+                            design:
+                              display: flex
+                              filter: drop-shadow(0 0 14px rgba(255,106,31,0.7))
+                              opacity: '0.55'
+                              conditional:
+                                - id: burn
+                                  name: Heating
+                                  conditions: [{type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating}]
+                                  design: {opacity: '1', animations: [{id: flicker, preset: flame-flicker, target: icon, intensity: 10, color: '#ff6a1f'}]}
+                        actions: {tap_action: {action: more-info, entity: climate.living_room}}
+                  - gap: 3px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: Living room
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 10px
+                          font_weight: '700'
+                          color: '#c9a184'
+                          text_transform: uppercase
+                          letter_spacing: 2px
+                      - type: text
+                        use_entity: true
+                        entity: climate.living_room
+                        design:
+                          font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif'
+                          font_size: 36px
+                          font_weight: '700'
+                          color: '#ffb04a'
+                          line_height: '1.05'
+                          text_shadow: 0 0 16px rgba(255,106,31,0.5)
+                        attribute: current_temperature
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        design: {}
+                        modules:
+                          - {type: icon, icon: mdi:fire, size: 15px, design: {color: '#ff6a1f', display: flex}}
+                          - type: text
+                            text: Burning, heating
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '600', color: '#ffb04a'}
+                            display: {conditions: [{type: attribute, entity: climate.living_room, attribute: hvac_action, state: heating}]}
+                          - type: text
+                            text: Smouldering
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, color: '#a89a8c'}
+                            display: {conditions: [{type: attribute, entity: climate.living_room, attribute: hvac_action, state_not: heating}]}
+                      - type: spinbox
+                        entity: climate.living_room
+                        step: 0.5
+                        design: {margin_top: 6px, color: '#f4f0e8', font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'}
+              - id: cool
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 10px
+                        align: center
+                        design:
+                          padding: 8px 12px
+                          border_radius: 8px
+                          background: linear-gradient(90deg, rgba(31,200,184,0.14), rgba(0,0,0,0.25))
+                          border: 1px solid rgba(31,200,184,0.3)
+                          cursor: pointer
+                        modules:
+                          - {type: icon, icon: mdi:snowflake, size: 18px, design: {color: '#1fc8b8', display: flex}}
+                          - type: vertical
+                            gap: 2px
+                            design: {flex: '1'}
+                            modules:
+                              - type: text
+                                text: Bedroom · air conditioning
+                                design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                              - type: horizontal
+                                gap: 4px
+                                align: center
+                                design: {}
+                                modules:
+                                  - type: text
+                                    use_entity: true
+                                    entity: climate.bedroom
+                                    design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', color: '#8ff5ea', white_space: nowrap}
+                                  - {type: text, text: · set, design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, color: '#a89a8c'}}
+                                  - type: text
+                                    use_entity: true
+                                    entity: climate.bedroom
+                                    design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                                    attribute: temperature
+                          - type: vertical
+                            gap: 1px
+                            design: {}
+                            modules:
+                              - type: text
+                                use_entity: true
+                                entity: sensor.indoor_humidity
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 15px
+                                  font_weight: '700'
+                                  color: '#f4f0e8'
+                                  text_align: right
+                                  white_space: nowrap
+                              - type: text
+                                text: Humidity
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 10px
+                                  font_weight: '700'
+                                  letter_spacing: 1px
+                                  text_transform: uppercase
+                                  color: '#a89a8c'
+                                  text_align: right
+                        actions: {tap_action: {action: more-info, entity: climate.bedroom}}
+              - id: rooms
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        align: center
+                        design: {padding: 7px 2px 6px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,106,31,0.16)', cursor: pointer}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.bedroom_temperature
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 14px
+                              font_weight: '700'
+                              color: '#f4f0e8'
+                              text_align: center
+                              white_space: nowrap
+                          - type: text
+                            text: Bedroom
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#a89a8c'
+                              text_align: center
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: sensor.bedroom_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        align: center
+                        design: {padding: 7px 2px 6px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,106,31,0.16)', cursor: pointer}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.kitchen_temperature
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 14px
+                              font_weight: '700'
+                              color: '#f4f0e8'
+                              text_align: center
+                              white_space: nowrap
+                          - type: text
+                            text: Kitchen
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#a89a8c'
+                              text_align: center
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: sensor.kitchen_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        align: center
+                        design: {padding: 7px 2px 6px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,106,31,0.16)', cursor: pointer}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.office_temperature
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 14px
+                              font_weight: '700'
+                              color: '#f4f0e8'
+                              text_align: center
+                              white_space: nowrap
+                          - type: text
+                            text: Office
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#a89a8c'
+                              text_align: center
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: sensor.office_temperature}}
+                  - modules:
+                      - type: vertical
+                        gap: 2px
+                        align: center
+                        design: {padding: 7px 2px 6px, border_radius: 8px, background_color: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,106,31,0.16)', cursor: pointer}
+                        modules:
+                          - type: text
+                            use_entity: true
+                            entity: sensor.bathroom_temperature
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 14px
+                              font_weight: '700'
+                              color: '#f4f0e8'
+                              text_align: center
+                              white_space: nowrap
+                          - type: text
+                            text: Bath
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#a89a8c'
+                              text_align: center
+                              white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: sensor.bathroom_temperature}}
+            grid_options: {columns: 12, rows: auto}
+      - type: grid
+        cards:
+          - type: custom:magic-card
+            name: Heading · Comforts
+            background: linear-gradient(90deg, rgba(224,51,138,0.30) 0%, rgba(13,15,20,0.92) 55%, rgba(13,15,20,0.75) 100%)
+            border_radius: 6px
+            padding: 12px 16px 11px
+            box_shadow: 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(216,180,90,0.6), inset 0 -1px 0 rgba(216,180,90,0.6), inset 3px 0 0 rgba(216,180,90,0.6)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            rows:
+              - id: h
+                column_widths: [auto, 1fr]
+                gap: 14px
+                columns:
+                  - vertical_align: center
+                    modules:
+                      - type: icon
+                        icon: svg
+                        svg: <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="50" cy="50" r="39.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-opacity="0.6"/><path fill="currentColor" d="M50.0 20.0 L55.0 38.0 L71.2 28.8 L62.0 45.0 L80.0 50.0 L62.0 55.0 L71.2 71.2 L55.0 62.0 L50.0 80.0 L45.0 62.0 L28.8 71.2 L38.0 55.0 L20.0 50.0 L38.0 45.0 L28.8 28.8 L45.0 38.0 Z"/><circle cx="50" cy="50" r="5" fill="#1d1b18" fill-opacity="0.5"/></svg>
+                        size: 30px
+                        design: {color: '#d8b45a', display: flex, filter: 'drop-shadow(0 0 6px rgba(216,180,90,0.55))'}
+                  - gap: 3px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: Comforts
+                        design:
+                          font_family: Cinzel, 'Playfair Display', Georgia, serif
+                          font_size: 20px
+                          font_weight: '700'
+                          letter_spacing: 4px
+                          text_transform: uppercase
+                          color: '#f3d98b'
+                          line_height: '1.1'
+                          white_space: nowrap
+                      - type: text
+                        text: Lights, deliveries and the show
+                        design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', letter_spacing: 1px, color: '#e7a9c8'}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Lights
+            background: 'radial-gradient(ellipse 80% 55% at 50% -12%, rgba(216,180,90,0.13), transparent 62%), radial-gradient(ellipse 60% 50% at 100% 100%, rgba(224,51,138,0.08), transparent 70%), linear-gradient(170deg, #151820 0%, #0d0f14 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(216,180,90,0.28), inset 0 1px 0 rgba(243,217,139,0.18)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: lamp-glow
+                name: Lamp glow
+                kind: keyframes
+                duration: 3.2
+                iterations: infinite
+                target: element
+                easing: ease-in-out
+                keyframes:
+                  - {at: 0, shadow: '0 0 12px rgba(216,180,90,0.20), inset 0 0 0 1px rgba(243,217,139,0.55)'}
+                  - {at: 50, shadow: '0 0 22px rgba(216,180,90,0.38), inset 0 0 0 1px rgba(243,217,139,0.85)'}
+                  - {at: 100, shadow: '0 0 12px rgba(216,180,90,0.20), inset 0 0 0 1px rgba(243,217,139,0.55)'}
+            rows:
+              - id: head
+                column_widths: [1fr, auto]
+                gap: 10px
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Lights and scenes
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#ff6cb5'
+                          line_height: '1.3'
+                      - type: text
+                        text: Lights
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+                  - vertical_align: center
+                    modules:
+                      - type: text
+                        use_template: true
+                        text: '{{ [''light.living_room'',''light.kitchen'',''light.bedroom'',''light.hallway'',''light.desk'',''light.porch'',''light.garden'',''light.nightlight''] | select(''is_state'',''on'') | list | count }} of 8 lit'
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 12px
+                          font_weight: '700'
+                          color: '#0b0d12'
+                          padding: 4px 10px 3px
+                          border_radius: 999px
+                          background_color: '#d8b45a'
+                          white_space: nowrap
+              - id: a
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.living_room, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:sofa
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.living_room
+                          - type: text
+                            text: Lounge
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.living_room, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.living_room, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.living_room}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.kitchen, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:silverware-fork-knife
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.kitchen
+                          - type: text
+                            text: Kitchen
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.kitchen, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.kitchen, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.kitchen}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.bedroom, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:bed
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.bedroom
+                          - type: text
+                            text: Bedroom
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.bedroom, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.bedroom, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.bedroom}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.hallway, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:door
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.hallway
+                          - type: text
+                            text: Hallway
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.hallway, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.hallway, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.hallway}}
+              - id: b
+                layout: 1-1-1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.desk, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:desk-lamp
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.desk
+                          - type: text
+                            text: Desk
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.desk, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.desk, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.desk}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.porch, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:outdoor-lamp
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.porch
+                          - type: text
+                            text: Porch
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.porch, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.porch, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.porch}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.garden, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:flower
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.garden
+                          - type: text
+                            text: Garden
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.garden, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.garden, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.garden}}
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        align: center
+                        design:
+                          padding: 11px 2px 8px
+                          border_radius: 8px
+                          box_sizing: border-box
+                          cursor: pointer
+                          background: 'linear-gradient(180deg, #1a1c22, #121318)'
+                          border: 1px solid rgba(255,255,255,0.06)
+                          transition: background 0.3s
+                          hover: {transform: translateY(-2px)}
+                          animations: [{id: press, preset: tap-ripple, trigger: tap, color: '#d8b45a'}]
+                          conditional:
+                            - id: 'on'
+                              name: 'On'
+                              conditions: [{type: state, entity: light.nightlight, state: 'on'}]
+                              design:
+                                background: 'radial-gradient(circle at 50% 25%, rgba(243,217,139,0.22), transparent 62%), linear-gradient(180deg, #2a2418, #17140f)'
+                                border: 1px solid rgba(216,180,90,0.45)
+                                animations: [{id: glow, preset: custom:lamp-glow}]
+                        modules:
+                          - type: icon
+                            icon: mdi:weather-night
+                            size: 24px
+                            design:
+                              color: '#5d5a55'
+                              display: flex
+                              conditional: [{id: 'on', name: 'On', conditions: [{type: state, state: 'on'}], design: {color: '#f3d98b', filter: 'drop-shadow(0 0 6px rgba(243,217,139,0.8))'}}]
+                            entity: light.nightlight
+                          - type: text
+                            text: Night
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 12px
+                              font_weight: '700'
+                              color: '#cfd3d9'
+                              text_align: center
+                              white_space: nowrap
+                              margin_top: 5px
+                          - type: text
+                            text: 'On'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#d8b45a'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.nightlight, state: 'on'}]}
+                          - type: text
+                            text: 'Off'
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 10px
+                              font_weight: '700'
+                              letter_spacing: 1.5px
+                              text_transform: uppercase
+                              color: '#6d6a64'
+                              text_align: center
+                              margin_top: 3px
+                            display: {conditions: [{type: state, entity: light.nightlight, state_not: 'on'}]}
+                        actions: {tap_action: {action: toggle, entity: light.nightlight}}
+              - id: rule
+                columns:
+                  - modules:
+                      - type: separator
+                        separator_style: none
+                        design: {height: 1px, margin: 2px 0, background: 'linear-gradient(90deg, transparent, #8a6d2a 12%, #f3d98b 50%, #8a6d2a 88%, transparent)', opacity: '0.7'}
+              - id: scenes
+                layout: 1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 8px 4px 7px
+                          border_radius: 999px
+                          background: linear-gradient(90deg, rgba(224,51,138,0.20), rgba(224,51,138,0.06))
+                          border: 1px solid rgba(224,51,138,0.40)
+                          cursor: pointer
+                          hover: {border_color: '#ff6cb5'}
+                        modules:
+                          - {type: icon, icon: mdi:sofa-outline, size: 16px, design: {color: '#ff6cb5', display: flex}}
+                          - type: text
+                            text: Relax
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.relax}}}
+                  - modules:
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 8px 4px 7px
+                          border_radius: 999px
+                          background: linear-gradient(90deg, rgba(224,51,138,0.20), rgba(224,51,138,0.06))
+                          border: 1px solid rgba(224,51,138,0.40)
+                          cursor: pointer
+                          hover: {border_color: '#ff6cb5'}
+                        modules:
+                          - {type: icon, icon: mdi:movie-open, size: 16px, design: {color: '#ff6cb5', display: flex}}
+                          - type: text
+                            text: Movie
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.movie}}}
+              - id: scenes2
+                layout: 1-1
+                gap: 6px
+                columns:
+                  - modules:
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 8px 4px 7px
+                          border_radius: 999px
+                          background: linear-gradient(90deg, rgba(224,51,138,0.20), rgba(224,51,138,0.06))
+                          border: 1px solid rgba(224,51,138,0.40)
+                          cursor: pointer
+                          hover: {border_color: '#ff6cb5'}
+                        modules:
+                          - {type: icon, icon: mdi:silverware-variant, size: 16px, design: {color: '#ff6cb5', display: flex}}
+                          - type: text
+                            text: Dinner
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.dinner}}}
+                  - modules:
+                      - type: horizontal
+                        gap: 5px
+                        align: center
+                        justify: center
+                        design:
+                          padding: 8px 4px 7px
+                          border_radius: 999px
+                          background: linear-gradient(90deg, rgba(224,51,138,0.20), rgba(224,51,138,0.06))
+                          border: 1px solid rgba(224,51,138,0.40)
+                          cursor: pointer
+                          hover: {border_color: '#ff6cb5'}
+                        modules:
+                          - {type: icon, icon: mdi:target, size: 16px, design: {color: '#ff6cb5', display: flex}}
+                          - type: text
+                            text: Focus
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '700', color: '#f4f0e8', white_space: nowrap}
+                        actions: {tap_action: {action: perform-action, service: scene.turn_on, data: {entity_id: scene.focus}}}
+            grid_options: {columns: 12, rows: auto}
+          - type: custom:magic-card
+            name: Deliveries
+            background: 'radial-gradient(ellipse 80% 55% at 50% -12%, rgba(216,180,90,0.13), transparent 62%), radial-gradient(ellipse 60% 50% at 100% 100%, rgba(224,51,138,0.08), transparent 70%), linear-gradient(170deg, #151820 0%, #0d0f14 100%)'
+            border_radius: 12px
+            padding: 16px
+            box_shadow: 0 18px 36px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(216,180,90,0.28), inset 0 1px 0 rgba(243,217,139,0.18)
+            css: 'font-family: ''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif; color: #ece8e0;'
+            custom_animations:
+              - id: parachute-drop
+                name: Parachute drop
+                kind: keyframes
+                duration: 5.5
+                iterations: infinite
+                target: icon
+                easing: ease-in-out
+                keyframes:
+                  - {at: 0, transform: {'y': -120, rotate: -10}, opacity: 0}
+                  - {at: 8, transform: {'y': -100, rotate: -8}, opacity: 1}
+                  - {at: 28, transform: {'y': -58, rotate: 9}}
+                  - {at: 48, transform: {'y': -20, rotate: -6}}
+                  - {at: 62, transform: {'y': 0, rotate: 2}}
+                  - {at: 70, transform: {'y': 0, rotate: 0}}
+                  - {at: 90, transform: {'y': 0, rotate: 0}, opacity: 1}
+                  - {at: 100, transform: {'y': 0, rotate: 0}, opacity: 0}
+            rows:
+              - id: head
+                columns:
+                  - gap: 3px
+                    modules:
+                      - type: text
+                        text: Front door · doorbell
+                        design:
+                          font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                          font_size: 11px
+                          font_weight: '700'
+                          letter_spacing: 3px
+                          text_transform: uppercase
+                          color: '#d8b45a'
+                          line_height: '1.3'
+                      - type: text
+                        text: Deliveries
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 23px, font_weight: '700', color: '#f4f0e8', line_height: '1.1'}
+              - id: drop
+                column_widths: [118px, 1fr]
+                gap: 14px
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design:
+                          height: 150px
+                          border_radius: 10px
+                          display: flex
+                          align_items: flex-end
+                          justify_content: center
+                          padding_bottom: 8px
+                          box_sizing: border-box
+                          overflow: hidden
+                          cursor: pointer
+                          background: 'radial-gradient(ellipse 70% 20% at 50% 100%, rgba(216,180,90,0.35), transparent 70%), radial-gradient(circle at 80% 18%, rgba(255,255,255,0.10), transparent 25%), linear-gradient(180deg, #16243a 0%, #1d2b3a 55%, #2a2622 100%)'
+                          box_shadow: inset 0 0 0 1px rgba(216,180,90,0.25)
+                          animations: [{id: stars, preset: twinkle, color: '#f3d98b', intensity: 6, duration: 4s}]
+                        modules:
+                          - type: icon
+                            icon: svg
+                            svg: <svg viewBox="0 0 100 124"><defs><linearGradient id="cv" x1="0" x2="1"><stop offset="0" stop-color="#9aa3ad"/><stop offset="0.45" stop-color="#f4f6f9"/><stop offset="1" stop-color="#8d96a1"/></linearGradient></defs><path fill="url(#cv)" d="M6 44 C6 18 27 4 50 4 C73 4 94 18 94 44 C88 40 81 40 76 44 C70 40 63 40 58 44 C53 40 47 40 42 44 C37 40 30 40 24 44 C18 40 12 40 6 44 Z"/><path d="M50 4 V44 M29 8 C25 24 26 34 29 43 M71 8 C75 24 74 34 71 43" stroke="#5f6874" stroke-width="1.3" fill="none"/><path d="M8 44 L44 94 M29 43 L46 94 M50 44 L50 94 M71 43 L54 94 M92 44 L56 94" stroke="#c3cad3" stroke-width="1.1" fill="none"/><rect x="39" y="92" width="22" height="27" rx="5" fill="#d8b45a"/><rect x="39" y="101" width="22" height="4" fill="#8a6d2a"/><circle cx="50" cy="111" r="3" fill="#ff6a1f"/></svg>
+                            size: 86px
+                            design:
+                              display: flex
+                              filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6))
+                              opacity: '0.35'
+                              conditional:
+                                - id: drop
+                                  name: Ringing
+                                  conditions: [{type: state, entity: binary_sensor.front_doorbell, state: 'on'}]
+                                  design: {opacity: '1', animations: [{id: drop, preset: custom:parachute-drop, target: icon}]}
+                        actions: {tap_action: {action: more-info, entity: camera.front_door}}
+                  - gap: 6px
+                    vertical_align: center
+                    modules:
+                      - type: text
+                        text: A gift is falling
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', color: '#f3d98b', line_height: '1.15'}
+                        display: {conditions: [{type: state, entity: binary_sensor.front_doorbell, state: 'on'}]}
+                      - type: text
+                        text: Someone is at the front door.
+                        design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, color: '#ece8e0', line_height: '1.35'}
+                        display: {conditions: [{type: state, entity: binary_sensor.front_doorbell, state: 'on'}]}
+                      - type: text
+                        text: Nothing yet
+                        design: {font_family: '''Bodoni Moda'', ''Playfair Display'', Georgia, serif', font_size: 19px, font_weight: '700', color: '#cfd3d9', line_height: '1.15'}
+                        display: {conditions: [{type: state, entity: binary_sensor.front_doorbell, state_not: 'on'}]}
+                      - type: text
+                        text: The doorbell is quiet.
+                        design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 13px, color: '#9c978e', line_height: '1.35'}
+                        display: {conditions: [{type: state, entity: binary_sensor.front_doorbell, state_not: 'on'}]}
+                      - type: horizontal
+                        gap: 7px
+                        align: center
+                        design: {padding: 6px 9px, border_radius: 7px, background_color: 'rgba(0,0,0,0.25)', border: '1px solid rgba(216,180,90,0.14)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:lock
+                            size: 16px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: locked}], design: {color: '#ff6cb5'}}]}
+                            entity: lock.front_door
+                          - type: text
+                            text: Front lock
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', color: '#ece8e0', flex: '1', white_space: nowrap}
+                          - type: text
+                            text: Locked
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#5fd39a'
+                            display: {conditions: [{type: state, entity: lock.front_door, state: locked}]}
+                          - type: text
+                            text: Open
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#ff6cb5'
+                            display: {conditions: [{type: state, entity: lock.front_door, state_not: locked}]}
+                        actions: {tap_action: {action: more-info, entity: lock.front_door}}
+                      - type: horizontal
+                        gap: 7px
+                        align: center
+                        design: {padding: 6px 9px, border_radius: 7px, background_color: 'rgba(0,0,0,0.25)', border: '1px solid rgba(216,180,90,0.14)', cursor: pointer}
+                        modules:
+                          - type: icon
+                            icon: mdi:door-closed
+                            size: 16px
+                            design: {color: '#5fd39a', display: flex, conditional: [{id: bad, name: Not safe, conditions: [{type: state, state_not: 'off'}], design: {color: '#ff6cb5'}}]}
+                            entity: binary_sensor.front_door
+                          - type: text
+                            text: Front door
+                            design: {font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif', font_size: 12px, font_weight: '600', color: '#ece8e0', flex: '1', white_space: nowrap}
+                          - type: text
+                            text: Shut
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#5fd39a'
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state: 'off'}]}
+                          - type: text
+                            text: Open
+                            design:
+                              font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                              font_size: 11px
+                              font_weight: '700'
+                              letter_spacing: 1px
+                              text_transform: uppercase
+                              color: '#ff6cb5'
+                            display: {conditions: [{type: state, entity: binary_sensor.front_door, state_not: 'off'}]}
+                        actions: {tap_action: {action: more-info, entity: binary_sensor.front_door}}
+              - id: cam
+                padding: 2px 0 0
+                columns:
+                  - modules:
+                      - type: vertical
+                        gap: 0px
+                        design: {position: relative, padding: 3px, border_radius: 10px, background: 'linear-gradient(135deg, #d8b45a, #8a6d2a 50%, #d8b45a)', cursor: pointer}
+                        modules:
+                          - {type: camera, entity: camera.front_door, camera_view: snapshot, refresh_interval: 10, aspect_ratio: '3.2', design: {border_radius: 8px, overflow: hidden}}
+                          - type: horizontal
+                            gap: 6px
+                            align: center
+                            design:
+                              position: absolute
+                              left: 8px
+                              top: 8px
+                              padding: 4px 8px 3px
+                              border_radius: 4px
+                              background_color: rgba(11,13,18,0.75)
+                              border: 1px solid rgba(216,180,90,0.35)
+                            modules:
+                              - type: separator
+                                separator_style: none
+                                design: {width: 7px, min_width: 7px, height: 7px, margin: '0', border_radius: 50%, background_color: '#ff4b4b', box_shadow: '0 0 6px #ff4b4b'}
+                              - type: text
+                                text: Door cam · front door
+                                design:
+                                  font_family: '''Josefin Sans'', Montserrat, ''Helvetica Neue'', sans-serif'
+                                  font_size: 10px
+                                  font_weight: '700'
+                                  letter_spacing: 1.5px
+                                  text_transform: uppercase
+                                  color: '#f4f0e8'
+                                  white_space: nowrap
+                        actions: {tap_action: {action: more-info, entity: camera.front_door}}
+            grid_options: {columns: 12, rows: auto}

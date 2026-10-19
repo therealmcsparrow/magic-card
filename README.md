@@ -10,7 +10,7 @@
 
 Magic Card is a Home Assistant Lovelace custom card that you build from rows, columns and modules. A visual editor (a pane editor and a full-screen Studio) lets you set up the structure, styling, animations, rings and conditions without writing YAML, and the YAML stays editable at any time.
 
-This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of sixty cards with screenshots, twenty of them animated. Changes are listed in the [changelog](CHANGELOG.md).
+This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of eighty-two cards with screenshots, thirty-seven of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
 
 ## Features
 
@@ -36,6 +36,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Card design rules: a rule can change the card's ring, shape, value background or seasonal scene while its conditions match.
 -   Gradients for backgrounds, rings, icons and text, written as CSS gradients. See [Gradients](documentation/design/gradients.md).
 -   Pop-up mode: show a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
+-   Card entity: name the device a card is for once. Modules, rows and columns follow it unless they pick their own entity or `No entity`, and a layout can share its entity with the modules inside. Existing cards are unchanged. See [Card entity](documentation/card-entity/README.md).
 -   Templates: save a card as a template and link other cards to it. Linked cards also get the template's own animations, and each card can replace, hide or opt out of them.
 -   SVG editor (pre-release, with Magic Card Utils): draw and edit icons on a 24 x 24 grid, with alignment, boolean operations, layers in groups with drag and drop, a dual-tone Accent colour, path tools (outline stroke, offset, simplify, join, split and knife), SVG import and export, and saving to the library. See [SVG editor](documentation/svg-editor/README.md).
 -   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
@@ -52,7 +53,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 
 Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
 
-The current release is a pre-release (2026.10.11-beta.1). HACS shows it only when Show beta versions is turned on in HACS.
+The current release is a pre-release (2026.10.11-beta.2). HACS shows it only when Show beta versions is turned on in HACS.
 
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
@@ -192,7 +193,7 @@ See [Templates](documentation/editor/templates.md) for the details.
 
 Settings that Home Assistant keeps for a single card (`grid_options`, `layout_options`, `visibility`, `view_layout`) are never part of a template.
 
-Templates are stored by the `magic_card_utils` backend integration (WebSocket commands `magic_card_utils/get_templates`, `save_template` and `delete_template`). Without it, templates cannot be loaded or saved.
+Templates are stored by the `magic_card_utils` backend integration. Without it, templates cannot be loaded or saved. Every user can see a linked card; only administrators can create, change or delete templates. A card reads just the templates it uses, and follows changes live. If a template is missing or cannot be loaded, the card shows its own settings with a short notice. Users who are not administrators need Magic Card Utils 2026.10.11-beta.2 or newer, which has the per-template read commands.
 
 ### Copy and paste design
 

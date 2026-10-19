@@ -1,34 +1,26 @@
 /*
  * Lazy chunks of the studio (magic-card-icon-library.js) load next to this bundle, wherever HA
- * serves it from (/hacsfiles/magic-card/, /local/...). The magic-card-utils panel loads it with
- * import(), so it runs as a module and has no document.currentScript; the bundle cannot read
- * import.meta either (that would not parse as a classic script). So: currentScript when loaded by a
- * <script> tag, else the URL of this file in the stack of its own evaluation. First import of
- * src/anim-studio/index.ts: set before anything calls import().
+ * serves it from (/hacsfiles/magic-card/, /local/...). The bundle is an ES module (the
+ * magic-card-utils panel loads it with import()), so import.meta.url is the URL of this file.
+ * chunkBase turns it into the directory URL, but only when it has the page's scheme and host:
+ * a chunk base from another host is refused ('') and the library shows its retry. Nothing here
+ * reads document.currentScript or an error stack, which page markup or another script can influence.
+ * First import of src/anim-studio/index.ts: set before anything calls import().
+ * src/theme-editor/public-path.ts is a copy (the entry may not import outside its folder).
  */
 
-/** A frame's script URL: Chrome `at fn (url:1:2)` / `at url:1:2`, Firefox and Safari `fn@url:1:2`. */
-const FRAME_RE = /((?:https?|file):\/\/[^\s()@]+?):\d+(?::\d+)?\)?\s*$/;
-
-/** The directory URL (no query, no hash) of the studio bundle, or '' when it cannot be told. */
-export function studioBase(currentSrc: string | undefined, stack: string | undefined): string {
-  let url = currentSrc || '';
-  if (!url && stack) {
-    const frames = stack
-      .split('\n')
-      .map((l) => FRAME_RE.exec(l.trim())?.[1])
-      .filter((u): u is string => !!u);
-    url = frames.find((u) => /\/magic-card-animation-studio\.js(?:[?#]|$)/.test(u)) ?? frames[0] ?? '';
-  }
+/** The directory URL (no query, no hash) of `url` when it shares scheme and host with `page`, else ''. */
+export function chunkBase(url: string, page: { protocol: string; host: string }): string {
   try {
-    return url ? new URL('.', url).href : '';
+    const u = new URL(url);
+    return u.protocol === page.protocol && u.host === page.host ? new URL('.', u).href : '';
   } catch {
     return '';
   }
 }
 
-if (typeof document !== 'undefined') {
-  const base = studioBase((document.currentScript as HTMLScriptElement | null)?.src, new Error().stack);
-  // '' leaves webpack's own '' (chunks resolve against the page; the library then shows its retry)
+if (typeof location !== 'undefined') {
+  const base = chunkBase(import.meta.url, location);
+  // '' leaves webpack's own '' (the chunk import fails; the library then shows its retry)
   if (base) __webpack_public_path__ = base;
 }

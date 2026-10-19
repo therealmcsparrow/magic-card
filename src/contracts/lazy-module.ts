@@ -111,7 +111,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
 export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   slider: 122_880,
   seasonal: 81_920,
-  markdown: 53_248,
+  markdown: 57_344,
   'modules-extra': 45_056,
 };
 

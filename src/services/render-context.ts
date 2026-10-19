@@ -56,6 +56,9 @@ export interface RenderContext {
   iconRig?: unknown;
   /** The card's `custom_icons` copies (markup by saved-icon id): drawn by `mcu:` icons the library does not answer. */
   customIcons?: Record<string, string>;
+  /** Entity-scope: effective entity of the node being rendered, and the card entity. */
+  entity?: string;
+  cardEntity?: string;
 }
 
 let current: RenderContext | undefined;

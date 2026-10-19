@@ -18,6 +18,7 @@ import { t } from '../i18n';
 import { followIcons } from '../components/icon-animator/loader';
 import { prunedConfig } from '../custom/library';
 import { applyRowLayout, columnWidthsList } from '../../utils/column-widths';
+import { dropUndefined, newColumn } from './containers';
 import { deepClone } from '../../utils/deep-merge';
 import { generateId } from '../../utils/id-generator';
 
@@ -284,13 +285,11 @@ export class EditorStateManager {
   addRow(layout = '1'): void {
     const config = deepClone(this.state.config);
     const colCount = layout.split('-').length;
-    const columns: ColumnConfig[] = Array.from({ length: colCount }, () => ({
-      id: generateId('col'),
-      modules: [],
-    }));
+    const columns: ColumnConfig[] = Array.from({ length: colCount }, newColumn);
 
     config.rows.push({
       id: generateId('row'),
+      share_entity: true,
       layout,
       columns,
     });
@@ -314,7 +313,7 @@ export class EditorStateManager {
 
   updateRow(rowIndex: number, updates: Partial<RowConfig>): void {
     const config = deepClone(this.state.config);
-    config.rows[rowIndex] = { ...config.rows[rowIndex], ...updates };
+    config.rows[rowIndex] = dropUndefined({ ...config.rows[rowIndex], ...updates }, updates);
     this.updateConfig(config);
   }
 
@@ -326,7 +325,7 @@ export class EditorStateManager {
     const config = deepClone(this.state.config);
     const row = config.rows[rowIndex];
     if (!row) return;
-    applyRowLayout(row, layout, () => ({ id: generateId('col'), modules: [] }));
+    applyRowLayout(row, layout, newColumn);
     this._markRowLocal(config, row, 'layout', 'column_widths');
     this.updateConfig(config);
   }
@@ -365,10 +364,7 @@ export class EditorStateManager {
   addColumn(rowIndex: number): void {
     const config = deepClone(this.state.config);
     const row = config.rows[rowIndex];
-    row.columns.push({
-      id: generateId('col'),
-      modules: [],
-    });
+    row.columns.push(newColumn());
     // custom widths keep theirs (the new column gets 1fr); a preset layout is re-equalised
     if (Array.isArray(row.column_widths) && row.column_widths.length) {
       row.column_widths = [...columnWidthsList(row.column_widths, row.columns.length - 1), '1fr'];
@@ -402,7 +398,7 @@ export class EditorStateManager {
 
   updateColumn(rowIndex: number, colIndex: number, updates: Partial<ColumnConfig>): void {
     const config = deepClone(this.state.config);
-    config.rows[rowIndex].columns[colIndex] = { ...config.rows[rowIndex].columns[colIndex], ...updates };
+    config.rows[rowIndex].columns[colIndex] = dropUndefined({ ...config.rows[rowIndex].columns[colIndex], ...updates }, updates);
     this.updateConfig(config);
   }
 
@@ -963,7 +959,7 @@ export class EditorStateManager {
   /** Add an empty column to a row module (custom widths get 1fr; a preset is re-equalised) and select it. */
   addNestedColumn(row: number, col: number, module: number, child?: ChildStep[]): void {
     this._rowEdit([row, col, module, child], ['columns', 'layout', 'column_widths'], (cols, layout) => {
-      cols.push({ id: generateId('col'), modules: [] });
+      cols.push(newColumn());
       if (Array.isArray(layout.column_widths) && layout.column_widths.length) {
         layout.column_widths = [...columnWidthsList(layout.column_widths, cols.length - 1), '1fr'];
       } else {
@@ -1032,7 +1028,7 @@ export class EditorStateManager {
     this._rowEdit([row, col, module, child], () => keys, (cols, mod) => {
       const count = cols.length;
       const before = mod.layout;
-      applyRowLayout({ ...mod, columns: cols }, layout, () => ({ id: generateId('col'), modules: [] }));
+      applyRowLayout({ ...mod, columns: cols }, layout, newColumn);
       mod.layout = layout;
       delete mod.column_widths;
       if (before !== layout) keys.push('layout');

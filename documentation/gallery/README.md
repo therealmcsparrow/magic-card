@@ -1,8 +1,8 @@
 # Card gallery
 
-Eighty complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
+Eighty-two complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
 
-![All eighty cards](images/all-cards.png)
+![All eighty-two cards](images/all-cards.png)
 
 ## Pages
 
@@ -17,11 +17,15 @@ Eighty complete cards to copy and adapt, from a weather card to a Christmas coun
 | [Garden and outdoors](garden-outdoors.md) | Plant care, Pool, Bin day, Garden irrigation, Aquarium |
 | [Seasonal](seasonal.md) | Autumn garden, Halloween porch, Christmas countdown |
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
-| [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board |
+| [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board, Operations console, Operations console, phone-width |
+
+## Complete dashboards
+
+Twenty-five complete dashboards for sci-fi, fantasy, western, steampunk and dystopian homes. Each is a sections view made only of Magic Cards, with its own theme. See [Complete dashboards](dashboards/README.md).
 
 ## Animated cards
 
-On thirty-five of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
+On thirty-seven of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
 
 | Card | Page |
 | --- | --- |
@@ -60,6 +64,8 @@ On thirty-five of the cards something moves, so their pictures are short recordi
 | [Weather tower](sci-fi-fantasy.md#weather-tower) | Sci-fi and fantasy |
 | [Herb garden](sci-fi-fantasy.md#herb-garden) | Sci-fi and fantasy |
 | [Minstrel hall](sci-fi-fantasy.md#minstrel-hall) | Sci-fi and fantasy |
+| [Operations console](sci-fi-fantasy.md#operations-console) | Sci-fi and fantasy |
+| [Operations console, phone-width](sci-fi-fantasy.md#operations-console-phone-width) | Sci-fi and fantasy |
 
 ## Before you paste
 

@@ -1,7 +1,7 @@
 import { HomeAssistant } from './types';
 
 declare global {
-  /** webpack's public path (chunk URLs); set from import.meta.url in src/index.ts. */
+  /** webpack's public path (chunk URLs); set from import.meta.url in src/index.ts and the two public-path.ts files (same-origin only). */
   var __webpack_public_path__: string;
 
   interface Window {

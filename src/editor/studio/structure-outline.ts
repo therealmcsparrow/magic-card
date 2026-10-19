@@ -6,6 +6,8 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { editorSystem } from '../../css/editor-stack';
 import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
+import { kindNoun, sourceWord } from '../components/entity-source';
+import { ignoresEntity, resolveContainerSource, resolveEntitySource, takesEntity } from '../entity-source';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
 import {
   Selection,
@@ -27,7 +29,7 @@ import {
   layerName,
 } from './selection';
 import type { SlotSelection } from './selection';
-import { ChildStep, childSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import { ChildStep, childSlots, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
 import { t } from '../i18n';
 
 type DragState =
@@ -812,8 +814,8 @@ export class StructureOutline extends LitElement {
             ${renaming
               ? this._renderRename(sel, t('Row name'))
               : this.variant === 'pane'
-                ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span></span>`
-                : html`<span class="text"><span class="name">${name}</span></span>${this._renderGlyph(row)}`}
+                ? html`${this._renderGlyph(row)}<span class="text"><span class="name">${name} · ${hasColumnWidths(row) ? 'custom' : row.layout || '1'}</span>${this._containerEntity(row, { row: ri })}</span>`
+                : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(row, { row: ri })}</span>${this._renderGlyph(row)}`}
             ${this._hiddenMark(row)}
           </div>
           <button
@@ -866,7 +868,7 @@ export class StructureOutline extends LitElement {
             data-hidden=${isHiddenItem(col) ? '' : nothing}
             data-current=${a.current ? '' : nothing}
           >
-            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span></span>`}
+            ${this._renaming === key ? this._renderRename(sel, t('Column name')) : html`<span class="text"><span class="name">${name}</span>${this._containerEntity(col, { row: ri, col: ci })}</span>`}
             ${this._hiddenMark(col)}
             ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('Own module list: not synced with the template. Reset column restores it.')}></ha-icon><span class="sr-only">${t('Own module list, not synced with the template')}</span>` : nothing}
             <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
@@ -943,6 +945,24 @@ export class StructureOutline extends LitElement {
     `;
   }
 
+  /**
+   * The line under a module that takes its entity from the card or a layout (R7): the id, muted, with the
+   * words "Same as card / row" in the wide variant; or, when the entity does not fit the module, what it needs.
+   * Nothing for own entities, `none`, card modules and modules that use no entity.
+   */
+  private _followedEntity(mod: CardModule, sel: ModuleSel): TemplateResult | typeof nothing {
+    const config = this._state?.config;
+    if (!config || ignoresEntity(mod) || !(takesEntity(mod.type) || hasChildSlots(mod))) return nothing;
+    const info = resolveEntitySource(config, sel);
+    const from = info.inherited;
+    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
+    if (info.choice !== 'inherit' || info.cardModule || !from) return nothing;
+    if (info.mismatch) {
+      return html`<span class="sub is-mismatch"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon>${t('Needs {kind}', { kind: kindNoun(info.domains?.length === 1 ? info.domains[0] : undefined) })}<span class="sr-only">${t('Entity does not fit this module')}</span></span>`;
+    }
+    return html`<span class="sub is-inherited"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Inherited entity')} </span>${this.variant === 'pane' ? html`${t('Same as {source}', { source: sourceWord(from.from) })} · ` : nothing}${this.variant === 'layers' ? from.id : breakableId(from.id)}</span>`;
+  }
+
   private _renderModule(
     mod: CardModule,
     ri: number,
@@ -959,6 +979,7 @@ export class StructureOutline extends LitElement {
     const icon = ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline';
     // Mockup: "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
+    const followed = sub ? nothing : this._followedEntity(mod, sel);
     const overrides = !!mod.not_synced?.length;
     const before = dropHere === mi;
     const after = mi === count - 1 && dropHere === count;
@@ -985,7 +1006,7 @@ export class StructureOutline extends LitElement {
               ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${moduleTitle(mod)}</span>
-                  ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : nothing}
+                  ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : followed}
                 </span>`}
             ${this._hiddenMark(mod)}
             ${overrides
@@ -1050,7 +1071,7 @@ export class StructureOutline extends LitElement {
                 ${isTabs ? html`<ha-icon icon=${icon}></ha-icon>` : nothing}
                 ${renaming
                   ? this._renderRename(sel, isTabs ? t('Tab name') : t('Column name'))
-                  : html`<span class="text"><span class="name">${label}</span></span>`}
+                  : html`<span class="text"><span class="name">${label}</span>${isTabs ? nothing : this._containerEntity(entry ?? {}, { row: owner.row, col: owner.col, module: owner.module, child: owner.child, slot })}</span>`}
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
                 <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
@@ -1083,6 +1104,17 @@ export class StructureOutline extends LitElement {
     </ul>`;
   }
 
+  /** A row, column or row module column that has an entity of its own: its id or No entity, and whether it shares. Nothing for "Same as ..." (every row would say it). */
+  private _containerEntity(node: { entity?: unknown; share_entity?: unknown }, at: Parameters<typeof resolveContainerSource>[1]): TemplateResult | typeof nothing {
+    const config = this._state?.config;
+    if (!config) return nothing;
+    const info = resolveContainerSource(config, at);
+    if (info.choice === 'none') return html`<span class="sub">${t('No entity')}</span>`;
+    const id = typeof node.entity === 'string' && ENTITY_RE.test(node.entity) ? node.entity : undefined;
+    if (!id) return nothing;
+    return html`<span class="sub is-entity">${node.share_entity === true ? html`<ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Shared with tiles inside')} </span>` : nothing}${breakableId(id)}</span>`;
+  }
+
   /** One layout child (and its own children). */
   private _renderChild(child: CardModule, owner: ModuleSel, slot: number, index: number, level: number, selKey: string, focusKey: string): TemplateResult {
     const steps = [...(owner.child ?? []), { slot, index }];
@@ -1092,6 +1124,7 @@ export class StructureOutline extends LitElement {
     const icon = ModuleRegistry.get(child.type)?.metadata.icon || 'mdi:puzzle-outline';
     const title = moduleTitle(child);
     const sub = typeof child.entity === 'string' && ENTITY_RE.test(child.entity) ? child.entity : undefined;
+    const followed = sub ? nothing : this._followedEntity(child, sel);
     return html`
       <li role="none" class="mod child">
         <div class="line mod-line k-module" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(child) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
@@ -1109,7 +1142,7 @@ export class StructureOutline extends LitElement {
               ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${title}</span>
-                  ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : nothing}
+                  ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : followed}
                 </span>`}
             ${this._hiddenMark(child)}
           </div>
@@ -1254,6 +1287,22 @@ export class StructureOutline extends LitElement {
       }
       .sub.is-entity {
         font-family: var(--mc-mono);
+      }
+      .sub.is-inherited,
+      .sub.is-mismatch {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+      }
+      .sub.is-inherited ha-icon,
+      .sub.is-mismatch ha-icon {
+        --mdc-icon-size: 16px;
+        flex: none;
+        align-self: center;
+      }
+      .sub.is-mismatch {
+        font-size: 0.8125rem;
+        color: var(--mc-warn-ink);
       }
       .mod-item {
         min-height: var(--o-mod-h);

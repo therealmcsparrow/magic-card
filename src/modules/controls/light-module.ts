@@ -56,6 +56,7 @@ class LightModule extends BaseMagicModule {
     description: lm('Light control with brightness, colour temperature, and colour options'),
     category: 'controls',
     icon: 'mdi:lightbulb-outline',
+    inherit: ['light'],
   };
 
   createDefault(): LightModuleConfig {

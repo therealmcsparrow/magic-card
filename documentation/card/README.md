@@ -5,6 +5,7 @@ The YAML reference for the card itself, its rows and columns, actions, display c
 ## Pages
 
 -   [Card options](card-options.md): card-level keys, themes, background, size, custom CSS, hover, shape, value background, seasonal scene, Home Assistant's `grid_options`
+-   [Card entity](../card-entity/README.md): one entity for the whole card, which modules, rows and columns follow
 -   [Rows and columns](rows-and-columns.md): layout, column widths, row actions, gap, padding, alignment
 -   [Actions](actions.md): tap, hold and double tap on modules and rows, every action type, pop-up actions
 -   [Display conditions](display-conditions.md): state, attribute, time and template conditions

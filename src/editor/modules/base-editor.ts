@@ -1,5 +1,6 @@
 import { html, TemplateResult } from 'lit';
 import type { ModuleTabRender } from '../../contracts/module-editor';
+import type { EntitySourceInfo } from '../../contracts/entity-scope';
 import type {
   ActionConfig,
   ActionsConfig,
@@ -50,7 +51,12 @@ export function syncedOnChange(
   };
 }
 
-export const renderDefaultActionsTab: ModuleTabRender = (config, hass, onChange, template) => {
+/** The module's entity for pickers: the effective one when the host passed a scope, else the config's. */
+export function entityFor(config: CardModule, scope?: EntitySourceInfo): string | undefined {
+  return scope ? scope.effective : config.entity;
+}
+
+export const renderDefaultActionsTab: ModuleTabRender = (config, hass, onChange, template, scope) => {
   const actions = config.actions as ActionsConfig | undefined;
   const syncCtx = buildSyncContext(config, template);
 
@@ -78,7 +84,7 @@ export const renderDefaultActionsTab: ModuleTabRender = (config, hass, onChange,
   };
 
   // one group per gesture (icon heading), a single "Action" select, then the fields that action needs
-  return renderActionGroups(actions, updateAction, hass, config.entity, (key) => actionSyncCtx(key));
+  return renderActionGroups(actions, updateAction, hass, entityFor(config, scope), (key) => actionSyncCtx(key));
 };
 
 export const renderDefaultConditionsTab: ModuleTabRender = (config, hass, onChange, template) => {
@@ -131,7 +137,7 @@ export const renderDefaultConditionsTab: ModuleTabRender = (config, hass, onChan
   );
 };
 
-export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, template) => {
+export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, template, scope) => {
   const design = (config.design as DesignConfig) || {};
   const hasTemplate = !!template;
   const notSynced = (config.not_synced || []) as string[];
@@ -170,7 +176,7 @@ export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, 
     .hass=${hass}
     .hasTemplate=${hasTemplate}
     .notSynced=${notSynced}
-    .moduleEntity=${config.entity || ''}
+    .moduleEntity=${entityFor(config, scope) || ''}
     .moduleType=${config.type || ''}
     .onChange=${updateDesign}
   ></mc-design-panel>`;

@@ -1,11 +1,14 @@
-import type { TemplateResult } from 'lit';
+import { html, type TemplateResult } from 'lit';
 import {
   DEFAULT_MODULE_TABS,
   type ModuleEditor,
   type ModuleEditorRegistry,
   type ModuleTabRender,
 } from '../../contracts/module-editor';
+import type { EntitySourceInfo } from '../../contracts/entity-scope';
 import type { CardModule, EditorTab, HomeAssistant, ModuleType } from '../../types';
+import { renderEntityBlock } from '../components/entity-source';
+import { buildSyncContext } from './base-editor';
 import { DEFAULT_TAB_RENDERERS, renderNoSettings } from './base-editor';
 
 /** A fresh registry (tests); the editor uses the shared `moduleEditors`. */
@@ -32,12 +35,17 @@ export function createModuleEditorRegistry(): ModuleEditorRegistry {
       hass: HomeAssistant | undefined,
       onChange: (m: CardModule) => void,
       template?: string,
+      scope?: EntitySourceInfo,
     ): TemplateResult {
       const editor = editors.get(config.type);
       if (!editor || !tabs(config.type).includes(tab)) return renderNoSettings();
       const own = (editor as unknown as Partial<Record<EditorTab, ModuleTabRender>>)[tab];
       const fn = tab === 'general' ? editor.general : own ?? DEFAULT_TAB_RENDERERS[tab];
-      return fn ? fn(config, hass, onChange, template) : renderNoSettings();
+      if (!fn) return renderNoSettings();
+      const body = fn(config, hass, onChange, template, scope);
+      // editors that draw no entity field of their own get it in front of General
+      if (tab !== 'general' || !scope || editor.entityField) return body;
+      return html`${renderEntityBlock(config, hass, onChange, scope, buildSyncContext(config, template))}${body}`;
     },
   };
 }

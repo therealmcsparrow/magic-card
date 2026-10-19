@@ -5,7 +5,8 @@ Magic Card is built to WCAG 2.2 AA. This is the standard we build to. We have no
 ## What the editors do
 
 -   **Every drag has a keyboard or form route.** You can reorder layers from a row menu, move a shape with the numeric fields and the arrow keys, and pick an icon with a file or a paste box. A drag is never the only way to do something.
--   **Targets are large enough.** Handles and rows in the SVG editor and the layers list are sized to at least 24 x 24 CSS pixels.
+-   **Choices that write to your YAML are made on purpose.** The Entity field of a module (Same as card, Pick one, No entity) moves the focus with the arrow keys and picks with Space or Enter. A status message announces what changed. See [Card entity](../card-entity/README.md#keyboard-and-screen-readers).
+-   **Targets are large enough.** Handles and rows in the SVG editor and the layers list are sized to at least 24 x 24 CSS pixels. On touch screens the Entity field's buttons and picker are 44 px high.
 -   **Focus is visible.** A focused control has a visible outline.
 -   **Labels on every field.** Every value in the shape editor and the SVG editor is a labelled field.
 -   **Changes are announced.** When a layer moves, the new position is announced. An import summary is announced when it appears.
