@@ -9,9 +9,9 @@ Install it from the [Magic Card Utils repository](https://github.com/therealmcsp
 The panel has six tabs:
 
 -   **Templates**: saved card templates. See [Templates](../editor/templates.md).
+-   **Library**: your saved icons, shapes, animations and theme presets. New icon and New shape open the editors. Edit opens a saved item.
 -   **Animations**: your own animations, in the [animation studio](../animation-studio/README.md).
 -   **Themes**: the [theme editor](../themes/README.md) and your theme presets.
--   **Library**: your saved icons and shapes. It shows all four kinds. New icon and New shape open the editors. Edit opens a saved item.
 -   **Icons**: your saved icons, with New icon, Edit, Rename, Delete and Export. New icon opens the [SVG editor](../svg-editor/README.md) without a card.
 -   **Shapes**: your saved shapes, for the `ref` key in a card. New shape opens the [shape editor](../shape-editor/README.md) without a card.
 
