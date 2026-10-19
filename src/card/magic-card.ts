@@ -73,13 +73,6 @@ import type { AnimationDoc } from '../anim-studio/model';
 import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
 import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
 
-interface TemplateEntry {
-  config: Omit<MagicCardConfig, 'type'> & { type?: string };
-  description?: string;
-}
-
-type TemplateStore = Record<string, TemplateEntry>;
-
 /**
  * A module with an id, and the same for every nested layout child (graph history and other per-module
  * state is keyed by id). A missing id is derived from the module's place, `${parentId}~${slot}.${index}`
@@ -221,7 +214,7 @@ export class MagicCard extends LitElement {
   /** Unwatch of the template-source subscription, and the name it watches. */
   private _unwatchTemplate?: () => void;
   private _watchedTemplate?: string;
-  private _watchedHass?: unknown;
+  private _watchedConn?: unknown;
   /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
   @state()
   private _templateNotice?: 'missing' | 'unavailable';
@@ -605,19 +598,29 @@ export class MagicCard extends LitElement {
   private _syncTemplateWatch(): void {
     const name = this.isConnected && !this.editMode && this.hass ? this._config?.template : undefined;
     const conn = name ? this.hass!.connection : undefined;
-    if (name === this._watchedTemplate && conn === this._watchedHass) return;
+    if (name === this._watchedTemplate && conn === this._watchedConn) return;
     this._unwatchTemplate?.();
     this._unwatchTemplate = undefined;
     this._watchedTemplate = name;
-    this._watchedHass = conn;
+    this._watchedConn = conn;
     if (!name) return;
     this._unwatchTemplate = templateSource.watch(this.hass as never, name, (state) => {
       if (this._config?.template !== name) return;
       this._templateNotice = state.status === 'missing' || state.status === 'unavailable' ? state.status : undefined;
       if (state.status === 'ready') {
-        this._templateConfig = state.config as unknown as MagicCardConfig;
-        this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-        prefetchLazy(this._resolvedConfig);
+        // the stored config comes from the server: validate it, never cast (a bad one shows the notice)
+        try {
+          const tpl = { type: 'custom:magic-card', ...state.config };
+          if (!ConfigValidator.validate(tpl).valid) throw new Error('invalid template config');
+          this._templateConfig = tpl as unknown as MagicCardConfig;
+          this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
+          prefetchLazy(this._resolvedConfig);
+        } catch (err) {
+          console.warn('Magic Card: template config is invalid', name, err);
+          this._templateNotice = 'unavailable';
+          this._templateConfig = undefined;
+          this._resolvedConfig = undefined;
+        }
       } else if (state.status !== 'loading') {
         this._templateConfig = undefined;
         this._resolvedConfig = undefined;
@@ -642,7 +645,7 @@ export class MagicCard extends LitElement {
     this._unwatchTemplate?.();
     this._unwatchTemplate = undefined;
     this._watchedTemplate = undefined;
-    this._watchedHass = undefined;
+    this._watchedConn = undefined;
     this._unsubLibrary?.();
     this._unsubLibrary = undefined;
     this._unsubShapes?.();

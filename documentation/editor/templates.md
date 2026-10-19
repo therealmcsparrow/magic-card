@@ -150,7 +150,7 @@ A card asks Magic Card Utils for the one template it is linked to, and watches t
 The card shows its own settings, with one line above them:
 
 -   Template "name" wasn't found. The template was deleted or renamed. A rename does not update linked cards, so link them to the new name.
--   Template "name" couldn't be loaded. Magic Card Utils is missing, still starting, or too old for your user.
+-   Template "name" couldn't be loaded. Magic Card Utils is missing, still starting, or too old for your user. The card tries again each time the connection to Home Assistant comes back, so a card that opened while Magic Card Utils was still loading fills in after the next reconnect.
 
 Screen readers announce the line once.
 

@@ -23,10 +23,13 @@
  *    in magic-card.js). The card element (Core) talks to it only through TemplateSource below.
  *    - One page-wide instance. Per HA connection and template name: one subscribe_template, shared by
  *      every card that watches that name (reference counted; the last unwatch unsubscribes).
- *    - home-assistant-js-websocket re-sends live subscriptions after a reconnect; the first event of
- *      the new subscription carries the current state again, so no refetch logic is needed for 'ready'.
+ *    - Subscribes with resubscribe:false: the library doesn't re-send after a reconnect. On the
+ *      connection's 'ready' event this module drops each live subscription and subscribes again, so it
+ *      sees a failed re-subscribe (for example MCU not loaded yet) and retries; the first event of the
+ *      new subscription carries the current state again.
  *    - unknown_command on subscribe_template: legacy mode for that connection. One get_templates for
  *      the whole page (one shared promise), every name read from it; no live updates (as before).
+ *      Legacy mode ends on the next 'ready': subscribe_template is probed again (MCU may have finished loading).
  *      unauthorized from that call (non-admin on an old MCU) -> status 'unavailable' for every name.
  *    - Any other failure (not_loaded, dropped socket): status 'unavailable'; retried once on the
  *      connection's next 'ready' event and after TEMPLATE_RETRY_MS while it stays up.
@@ -76,7 +79,7 @@ export interface TemplateState {
 export interface TemplateHass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;
   connection?: {
-    subscribeMessage<T>(callback: (msg: T) => void, msg: Record<string, unknown>): Promise<() => void>;
+    subscribeMessage<T>(callback: (msg: T) => void, msg: Record<string, unknown>, options?: { resubscribe?: boolean }): Promise<() => void>;
     addEventListener?(event: string, cb: () => void): void;
     removeEventListener?(event: string, cb: () => void): void;
   };

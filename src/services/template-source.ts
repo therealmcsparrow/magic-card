@@ -78,7 +78,7 @@ function readAll(link: Link, entry: Entry, n: string): void {
       set(entry, has(all, n) ? (toState(all[n]) ?? { status: 'missing' }) : { status: 'missing' });
     },
     (err) => {
-      // a non-admin on an older MCU (unauthorized) or no MCU: no retry, it won't change
+      // unauthorized / unknown_command: no timer retry; the next 'ready' probes subscribe_template again
       link.all = undefined;
       if (!entry.dead) fail(link, entry, n, err, !['unauthorized', 'unknown_command'].includes(codeOf(err)));
     },
@@ -99,7 +99,7 @@ function begin(link: Link, entry: Entry, n: string): void {
     } else fail(link, entry, n, err, true);
   };
   try {
-    Promise.resolve(link.hass.connection!.subscribeMessage<unknown>((msg) => !entry.dead && onEvent(link, entry, n, msg), { type: TEMPLATE_CMD.subscribeTemplate, name: n })).then((unsub) => {
+    Promise.resolve(link.hass.connection!.subscribeMessage<unknown>((msg) => !entry.dead && onEvent(link, entry, n, msg), { type: TEMPLATE_CMD.subscribeTemplate, name: n }, { resubscribe: false })).then((unsub) => {
       entry.busy = false;
       if (typeof unsub !== 'function') return;
       if (entry.dead) unsub();
@@ -117,9 +117,16 @@ function linkFor(hass: TemplateHass, conn: Conn): Link {
       hass,
       entries: new Map(),
       onReady: () => {
-        // reconnected: retry what failed; live subscriptions are re-sent by the websocket library
-        if (l.legacy) l.all = undefined;
-        for (const [n, e] of l.entries) if (e.retry || (l.legacy && e.state)) begin(l, e, n);
+        // reconnected: this module owns re-subscription (resubscribe:false), so it sees a failed one.
+        // Leave legacy mode and probe subscribe_template again: MCU may have finished loading.
+        l.legacy = false;
+        l.all = undefined;
+        for (const [n, e] of l.entries) {
+          const old = e.unsub;
+          e.unsub = undefined;
+          if (old) void Promise.resolve().then(old).catch(() => undefined);
+          begin(l, e, n);
+        }
       },
     };
     conn.addEventListener?.('ready', l.onReady);
