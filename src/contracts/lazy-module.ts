@@ -11,6 +11,8 @@ import type { MagicModule } from '../modules/module-types';
  * install() also carry BUILD and their loaders refuse a mismatch through sameBuild() (section
  * "Build-checked older chunks", SAME_BUILD_CHUNK_FILES, SameBuildModule). The four lazyChunk() chunks
  * are unchanged.
+ * 2026-10-19 (text only, version unchanged; code review 153): the typing sentence in "Build-checked
+ * older chunks" now says which loaders still cast instead of claiming that none do.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -38,13 +40,19 @@ import type { MagicModule } from '../modules/module-types';
  * console.warn with the same "Magic Card was updated, reload the page (...)" text, no export is used
  * or handed on, and the loader returns its own failure value (shape-custom false; anim-runtime,
  * particles and both preset-catalogue loaders undefined; icon-library and theme-presets reject). No
- * retry until the page reloads. Side effects at evaluation are not covered by this guard (the
- * anim-runtime entry imports compile-v2 for its registration); the AC13 rule below applies to new
- * chunks, these six keep their current evaluation behaviour. Loaders type the imported entry as
- * `E & SameBuildModule`, E being that entry's exports: PresetCatalogueModule (preset-catalogue 1.x),
- * src/particles/index.ts (its `particles` is ParticlesModule, particles-v2), src/anim-runtime/index.ts,
- * src/utils/shape-custom.ts, src/anim-studio/icon-library-chunk.ts and src/theme-editor/presets/chunk.ts.
- * So no cast is needed around sameBuild().
+ * retry until the page reloads. The theme-presets loader (src/theme-editor/presets/loader.ts) may not
+ * import src/utils either, so it compares BUILD with PRESETS_BUILD itself, with the same warning text.
+ * Side effects at evaluation are not covered by this guard (the anim-runtime entry imports compile-v2
+ * for its registration); the AC13 rule below applies to new chunks, these six keep their current
+ * evaluation behaviour. Typing: the entries are E & SameBuildModule, E being that entry's exports:
+ * PresetCatalogueModule (preset-catalogue 1.x), src/particles/index.ts (its `particles` is
+ * ParticlesModule, particles-v2), src/anim-runtime/index.ts, src/utils/shape-custom.ts,
+ * src/anim-studio/icon-library-chunk.ts and src/theme-editor/presets/chunk.ts. The anim-runtime,
+ * particles, shape-custom and icon-library loaders call sameBuild() without a cast. Some loaders still
+ * cast: both preset-catalogue loaders cast the result to `PresetCatalogueModule | undefined`
+ * (src/editor/components/preset-catalogue-loader.ts also casts the argument to `{ BUILD?: string }`),
+ * and the theme-presets loader reads BUILD through `{ BUILD?: string }`. Those casts are allowed;
+ * typing the imports so they can go is a cleanup, not a contract change.
  *
  * ── Chunk entries ──
  * Each chunk entry module exports LazyChunkModule and nothing runs at evaluation that changes

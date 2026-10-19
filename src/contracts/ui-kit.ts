@@ -35,6 +35,10 @@
  *   first render, so a footer button can take the first focus (an alert's initialFocus).
  * - 2026-10-19 (text only, revision number unchanged): the editorLegacy line names both chunks that bundle
  *   it, magic-card-editor.js and magic-card-animation-studio.js (its own webpack entry).
+ * - 2026-10-19, additive (revision number unchanged; code review 153 B1): KitRowOptions gets an optional
+ *   `lead`, a host's leading node drawn after the icon and before the name (the library view's shape
+ *   thumbnail, added to row() in 36134cf). Row templates only; no element changes, so
+ *   UI_KIT_CONTRACT_REVISION stays 4.
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -292,6 +296,9 @@ export interface KitRowOptions extends KitIcon {
   /** r3. Leading `.check` checkbox; the name becomes its <label> (multi-select list). The row tints
    *  while checked. `label` is the checkbox's accessible name. */
   check?: { label: string; checked: boolean; onChange: (v: boolean) => void };
+  /** 2026-10-19, additive. A host's leading node (e.g. a shape thumbnail), drawn after the icon and
+   *  before the name. Decorative content must be aria-hidden; the name stays the row's accessible text. */
+  lead?: KitTemplate | Node;
   /** r3. Replaces the name (inline rename input). */
   content?: KitTemplate;
   /** r3. Rendered after the actions (inline delete confirmation). */
