@@ -1,6 +1,8 @@
 import type { CustomShapeOptions, CustomShapesConfig } from './contracts/custom-shape';
 import type { CustomIconsConfig } from './contracts/mcu-library';
 import type { EntityScopeNode } from './contracts/entity-scope';
+import type { SliderLookConfig } from './contracts/slider-look';
+import type { FlowLookConfig } from './contracts/flow-look';
 
 // ── Home Assistant types (subset) ──
 
@@ -185,7 +187,7 @@ export interface SeasonalConfig {
 export type FlowSide = 'top' | 'right' | 'bottom' | 'left';
 
 /** One animated flow line between two modules (by module id), driven by an optional entity value. */
-export interface FlowConfig {
+export interface FlowConfig extends FlowLookConfig {
   /** Stable id of the flow (editor generated). */
   id: string;
   /** Module ids of the start and end module (any module, nested children included). */
@@ -869,7 +871,7 @@ export interface ButtonModuleConfig extends CardModule, IconFxKeys {
   button_style?: 'default' | 'outline' | 'flat' | 'icon-only';
 }
 
-export interface SliderModuleConfig extends CardModule {
+export interface SliderModuleConfig extends CardModule, SliderLookConfig {
   type: 'slider';
   attribute?: string;
   show_value?: boolean;

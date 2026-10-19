@@ -370,9 +370,14 @@ export function formatControlValue(hass: HomeAssistant | undefined, ctrl: Numeri
   return joinUnit(formatFixed(hass, value, d), ctrl.unit);
 }
 
-export function runServiceCall(hass: HomeAssistant, c: ServiceCall): void {
+export function runServiceCall(hass: HomeAssistant, c: ServiceCall, onError?: (err: unknown) => void): void {
   void Promise.resolve(hass.callService(c.domain, c.service, c.data)).catch((err: unknown) => {
     console.warn(`Magic Card: ${c.domain}.${c.service} failed`, err);
+    try {
+      onError?.(err);
+    } catch (e) {
+      console.warn('Magic Card: onError failed', e);
+    }
   });
 }
 

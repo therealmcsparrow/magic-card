@@ -7,6 +7,9 @@ import { generateId } from '../../utils/id-generator';
 import { formatControlValue, numericControl, runServiceCall } from '../../utils/entity-control';
 import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
 import { renderTrack } from '../../utils/slider-track';
+import { hasSliderLook } from '../../contracts/slider-look';
+import { lazyChunks } from '../../utils/lazy-chunks';
+import { sliderLookSlot } from './slider-look-slot';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
@@ -39,6 +42,17 @@ class SliderModule extends BaseMagicModule {
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as SliderModuleConfig;
+    if (hasSliderLook(c)) {
+      // a slider with a look: the slider-look chunk draws it; until it is there (or when it failed) today's markup
+      const view = sliderLookSlot.get();
+      if (view) return view.renderPreview(c, hass);
+      const chunk = lazyChunks['slider-look'];
+      if (!chunk.ready() && !chunk.failed()) {
+        void chunk.load();
+        const update = currentRenderContext()?.requestUpdate;
+        if (update) chunk.whenReady(update);
+      }
+    }
     const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
     const isVertical = c.direction === 'vertical';
     const design = (c.design || {}) as DesignConfig;

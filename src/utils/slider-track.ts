@@ -1,4 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
+import type { TrackOptionsLook } from '../contracts/slider-look';
+import { pauseOffscreen } from '../icons/offscreen';
 import { snapValue } from './entity-control';
 
 /** Events of an interactive control that must not reach the module wrapper (its tap / hold actions). */
@@ -7,7 +9,8 @@ export const stopControlEvent = (e: Event): void => e.stopPropagation();
 /** A touch moves this far along the track before the slider follows it (else it may be a scroll). */
 const DRAG_INTENT_PX = 8;
 
-export interface TrackOptions {
+/** (slider-look 1.0.0) The look hooks (parts, onInput, onRelease, snap, nextValue) are additive and optional. */
+export interface TrackOptions extends TrackOptionsLook {
   /** Current value (undefined: nothing to show, the bar is empty). */
   value: number | undefined;
   min: number;
@@ -41,7 +44,8 @@ export function renderTrack(o: TrackOptions): TemplateResult {
     if (o.vertical) return rect.height ? Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height)) : 0;
     return rect.width ? Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) : 0;
   };
-  const toValue = (f: number) => snapValue(o.min + f * range, o.min, o.max, o.step);
+  const clamp = (v: number) => Math.max(o.min, Math.min(o.max, v));
+  const toValue = (f: number) => (o.snap ? clamp(o.snap(o.min + f * range)) : snapValue(o.min + f * range, o.min, o.max, o.step));
 
   const onPointerDown = (e: PointerEvent) => {
     e.stopPropagation();
@@ -50,7 +54,11 @@ export function renderTrack(o: TrackOptions): TemplateResult {
     // the dragged value goes on the bar: a re-render mid-drag (a state update) rewrites the track's
     // style attribute, never the bar's, so the bar does not jump back to the entity value
     const bar = el.querySelector<HTMLElement>('.mc-tile-slider-bar');
-    const show = (f: number) => bar?.style.setProperty('--slider-value', String((toValue(f) - o.min) / range));
+    const show = (f: number) => {
+      const v = toValue(f);
+      bar?.style.setProperty('--slider-value', String((v - o.min) / range));
+      o.onInput?.(v);
+    };
     const start = { x: e.clientX, y: e.clientY };
     // touch / pen: the page may still scroll across the track (touch-action pan-y / pan-x; the
     // browser then sends pointercancel), so the bar only follows after a small move along it
@@ -84,10 +92,12 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       bar?.style.removeProperty('--slider-value');
       // a release is a drag or a tap on the track; a cancelled pointer (the page scrolled) never calls.
       // The track shows the picked value until the new state renders it.
-      if (!commit) return;
-      const v = toValue(fromPointer(el, ev));
-      el.style.setProperty('--slider-value', String((v - o.min) / range));
-      o.onCommit(v);
+      if (commit) {
+        const v = toValue(fromPointer(el, ev));
+        el.style.setProperty('--slider-value', String((v - o.min) / range));
+        o.onCommit(v);
+      }
+      o.onRelease?.();
     };
     const onUp = (ev: PointerEvent) => {
       ev.stopPropagation();
@@ -116,7 +126,8 @@ export function renderTrack(o: TrackOptions): TemplateResult {
     };
     if (!(e.key in next)) return;
     e.preventDefault();
-    const v = snapValue(next[e.key], o.min, o.max, o.step);
+    const custom = o.nextValue?.(current, e.key);
+    const v = custom === undefined ? snapValue(next[e.key], o.min, o.max, o.step) : clamp(custom);
     if (v !== o.value) o.onCommit(v);
   };
 
@@ -137,9 +148,10 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       @pointerup=${stopControlEvent}
       @click=${stopControlEvent}
       @keydown=${onKeyDown}
+      ${o.parts ? pauseOffscreen() : nothing}
     >
       <div class="mc-tile-slider-background"></div>
-      <div class="mc-tile-slider-bar"></div>
+      <div class="mc-tile-slider-bar"></div>${o.parts ?? nothing}
     </div>
   `;
 }

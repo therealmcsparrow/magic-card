@@ -102,6 +102,15 @@ export function setPendingValue(
   onChange?.();
 }
 
+/** Forget the pending value of `key` (a failed call: the control shows the entity's value again). */
+export function clearPendingValue(key: string): void {
+  const e = entries.get(key);
+  if (!e) return;
+  if (e.timer) clearTimeout(e.timer);
+  if (e.holdTimer) clearTimeout(e.holdTimer);
+  entries.delete(key);
+}
+
 /** Tests: forget every pending value. */
 export function clearPendingValues(): void {
   for (const e of entries.values()) {
