@@ -53,7 +53,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 
 Click the badge to open Magic Card in HACS on your own Home Assistant (HACS must be installed).
 
-The current release is a pre-release (2026.10.11-beta.1). HACS shows it only when Show beta versions is turned on in HACS.
+The current release is a pre-release (2026.10.11-beta.2). HACS shows it only when Show beta versions is turned on in HACS.
 
 1.  Install [HACS](https://hacs.xyz/) if you do not have it.
 2.  Open HACS, then Frontend.
