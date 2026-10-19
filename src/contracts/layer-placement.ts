@@ -2,17 +2,24 @@ import type { TemplateResult } from 'lit';
 import type { CardModule } from '../types';
 
 /*
- * Contract: layer placement (background and overlay modules). Version 1.0.0 (Architect-owned).
- * ADR 0038. Task background-layers (brief 01-product-manager.md, design 03-ui-ux-designer.md).
+ * Contract: layer placement (background and overlay modules). Version 1.0.0 revision 2
+ * (Architect-owned). ADR 0038. Task background-layers (brief 01-product-manager.md, design
+ * 03-ui-ux-designer.md + round-1 delta 11-ui-ux-designer.md, spikes 04 (S1) and 05 (S2)).
+ * r2 (2026-10-19, folded into 1.0.0, nothing built yet): overlay click-through default follows its
+ * actions; scrim fade shape; card key `layers_low_power`; floor-safe CSS (no `inset` shorthand);
+ * ha-card isolation per spike S2; blend scope; streaming backgrounds pause; blur max 24 px and the
+ * performance rules from spike S1.
  *
  * Seam: the layer-placement Module (src/layers/placement.ts + src/layers/layer-css.ts, in
- * magic-card.js, pure, no lit import in placement.ts) reads the two module keys below and tells the
+ * magic-card.js, pure, no lit import in placement.ts) reads the module keys below and tells the
  * render pipeline (Core, src/card/magic-card.ts) and the layout modules (horizontal, vertical, tabs,
- * row module columns, through src/modules/render-module.ts renderChildren()) in which DOM order to
- * render a container's children, which attributes and inline style each wrapper gets, and which
- * children are hoisted to the row or the card. Core gains one hook (arrange + hoist), no new Core item.
+ * through src/modules/render-module.ts renderChildren()) in which DOM order to render a container's
+ * children, which attributes and inline style each wrapper gets, and which children are hoisted to
+ * the row or the card. Core gains one hook (arrange + hoist), no new Core item.
  *
  * ── YAML (module level, any module type; NOT inside `design`) ──
+ * UI labels (11-ui-ux-designer.md C): flow = "Normal", background = "Behind others",
+ * overlay = "On top". Keys never follow label changes.
  *   placement: flow | background | overlay      absent = flow (video-bg exception below)
  *   layer:                                      read only when placement is background / overlay
  *     fill: container | row | card              background only; default container. row / card only
@@ -21,29 +28,44 @@ import type { CardModule } from '../types';
  *     anchor: top-left | top | top-right | left | center | right | bottom-left | bottom | bottom-right
  *                                               overlay only; default top-left (editor writes it)
  *     offset_x, offset_y: CSS length, px or %   overlay only; default 0. On an edge axis the value is
- *                                               clamped to >= 0 (inward from that edge). On a centred
- *                                               axis (top/center/bottom for x, left/center/right for y)
- *                                               it is signed: + moves right / down.
+ *                                               clamped to >= 0 (the editor shows an error instead of
+ *                                               clamping). On a centred axis (top/center/bottom for x,
+ *                                               left/center/right for y) it is signed: + right / down.
  *     opacity: 0-100 (%)                        default 100
- *     blur: 0-40 (px)                           default 0
+ *     blur: 0-24 (px)                           default 0 (S1). Above BLUR_LIGHT_MAX (12) counts as
+ *                                               heavy in the editor's cost meter.
  *     blend: normal | multiply | screen | overlay | darken | lighten | soft-light   default normal
- *     click_through: boolean                    default true for background, false for overlay
- *     scrim:                                    absent = no scrim
- *       style: dim | bottom | top | left | right   dim = flat; others = gradient from that edge
+ *     click_through: boolean                    default: background true; overlay false when the
+ *                                               module has runnable actions, true when it has none (r2)
+ *     scrim:                                    absent = no scrim ("Darken behind text")
+ *       style: dim | bottom | top | left | right   dim = flat; others = fade from that edge (below)
  *       color: CSS colour or `card` (card background colour); default black
  *       strength: 0-90 (%)                      default 60
- * Values outside a range are clamped; unknown enum values fall back to the default. Keys are not part
- * of DesignConfig: conditional design rules and the Hover view never change placement or layer.
- * Configs without `placement` render exactly as before (golden run, AC "pixel for pixel").
+ * Card level (r2):
+ *   layers_low_power: boolean                   default false. On: every layered module and every
+ *                                               background_layers entry of this card drops blur,
+ *                                               blend (normal) and pan / zoom (rests at the start
+ *                                               framing); pictures, opacity and scrims stay.
+ *                                               Output: `data-mc-low-power` on .mc-card-content.
+ * Values outside a range are clamped; unknown enum values fall back to the default. `placement` and
+ * `layer` are not DesignConfig keys: conditional design rules and the Hover view never change them.
+ * Configs without these keys render exactly as before (golden run, AC "pixel for pixel").
  *
  * video-bg (CEO Q1): without a `placement` key it keeps today's behaviour and today's CSS (css.ts
- * `.mc-video-bg--media` rules): a background when it has a sibling, a normal block when alone. Those
+ * `.mc-video-bg--media` rules): behind its siblings when it has any, a normal block when alone. Those
  * legacy selectors gain `:not([data-mc-placement])` so an explicit placement (any value) takes the
- * path below instead. The editor shows the implicit state as Background (with siblings) or In flow.
+ * path below instead. The editor shows no segment selected plus "Automatic" until the user picks.
  *
- * ── Measuring (designer Q-UX3: yes) ──
- * Fill and anchor offsets are measured from the container's padding box, i.e. its outer edge inside
- * any border; the container's padding is ignored (absolute positioning, inset 0).
+ * ── Scrim shape (r2) ──
+ * scrimCss(): dim = flat colour at `strength`. Edge styles = linear-gradient from that edge: colour
+ * at `strength` from 0 % to 35 % (SCRIM_HOLD), then linear to fully transparent at 100 % (the
+ * opposite edge). A colour with alpha: strength multiplies the colour's own alpha. `card` =
+ * var(--ha-card-background, var(--card-background-color, #fff)) with the strength applied as the
+ * scrim element's opacity (no color-mix(), Chromium 85 floor).
+ *
+ * ── Measuring (Q-UX3) ──
+ * Fill and anchor offsets are measured from the container's padding box (its outer edge inside
+ * any border); the container's padding is ignored.
  *
  * ── In-flow fallback ──
  * A container whose visible children are all background / overlay renders them in flow (as if
@@ -52,6 +74,7 @@ import type { CardModule } from '../types';
  * the row / card has no visible in-flow module at all, the module renders in flow in its column.
  *
  * ── Stacking (bottom to top). Final order; supersedes the brief's guess ──
+ * ha-card (theme colour, the clip box) is outside the blend group, see "Blend scope".
  * Card content (.mc-card-content, isolated when it has layers, seasonal, value bg or flows):
  *   1 content's own CSS background (`background`, `background_image`)            unchanged
  *   2 card `background_layers`, back to front (<mc-bg-stack>, z -1, first child)  bg-stack 1.0.0
@@ -63,6 +86,7 @@ import type { CardModule } from '../types';
  *   8 rows and their content (auto; module wrappers z 1 in a flows card)         unchanged
  *   9 seasonal front (auto, after the rows)                                      unchanged
  *  10 flows `layer: front` and flow labels (z 2)                                 flows Module
+ *  11 stale badge host .mc-bg-badge (z 3, bg-stack 1.0.0)                        new
  * Note: today seasonal back paints under the card value background (DOM order at equal z); the
  * brief's "value bg < seasonal back" is not what ships today, so the shipped order is kept.
  * Inside a container with layers (column, row for fill: row, .mc-horizontal, .mc-vertical,
@@ -75,6 +99,16 @@ import type { CardModule } from '../types';
  *   f a wrapper with :focus-within (position relative, z-index 50): its focus ring is never covered
  * Shapes, rings and border fx of the container keep their current z (above a to e).
  *
+ * ── Blend scope (r2, spike S2) ──
+ * Every stacking context is an isolated blend group. A layer's blend mixes with what is painted
+ * before it inside its nearest stacking context: for card-level layers that is the card content's
+ * own `background` / `background_image` and the layers behind it; for a background module, its
+ * container's own background, value background and the backgrounds behind it. The HA theme colour
+ * painted by ha-card is outside the group, so a card without its own `background` blends with
+ * transparent (the layer looks normal). Editor hint when a blend is picked and nothing opaque is
+ * behind it: "Add a colour at the back to blend with." <mc-bg-stack> and background wrappers are
+ * never isolated themselves (that would cut them off from step 1).
+ *
  * ── DOM order inside a container (= keyboard focus order) ──
  *   1 overlays anchored top-left, top, top-right (in that order, ties: config order)
  *   2 in-flow modules (config order)
@@ -86,20 +120,43 @@ import type { CardModule } from '../types';
  * Layout modules render through renderChildren(children, hass, slot); order 4 does not apply there
  * (their value background sits on the layout's wrapper, outside the container).
  *
+ * ── CSS floor (r2): Chromium 85 has no `inset` shorthand (87+). Every rule of this Module and of
+ * bg-stack writes top / right / bottom / left. Existing `inset:` uses elsewhere are not changed here.
+ *
+ * ── Performance rules (r2, spike S1; also binding for bg-stack) ──
+ * - `filter` (blur) sits on a wrapper that is never animated (.mc-layer-media here, the layer box
+ *   in bg-stack). Never animate filter, inset / top / right / bottom / left or background-position.
+ * - Motion on layers is a transform animation on the innermost image / media element only.
+ * - Off screen or page hidden: animations get animation-play-state paused and every timer of the
+ *   layer (camera refresh, idle check) is cleared, not just hidden; restarted on return.
+ *
  * ── Wrapper output (all on .mc-module-wrapper) ──
  *   data-mc-placement="background" | "overlay"
  *   data-mc-anchor="<anchor>" (overlay)
  *   data-mc-pass (present when click-through is on)
  *   style: --mc-layer-x, --mc-layer-y (overlay), opacity, mix-blend-mode, z-index (overlay rank)
- * Background: position absolute, inset 0, overflow hidden, border-radius inherit, margin 0.
- *   blur > 0 or scrim: the module content is wrapped in <div class="mc-layer-media"> (inset
- *   calc(-2 * blur), filter blur) and followed by <div class="mc-layer-scrim"> (inset 0,
- *   background from scrimCss()); the wrapper's overflow hidden clips both (no blur fringe).
+ * Background: position absolute, top / right / bottom / left 0, overflow hidden, border-radius
+ *   inherit, margin 0. blur > 0 or scrim: the module content is wrapped in
+ *   <div class="mc-layer-media"> (each side calc(-3 * blur), filter blur; the S2 bleed) and
+ *   followed by <div class="mc-layer-scrim"> (each side 0, background from scrimCss()); the
+ *   wrapper's overflow hidden clips both (no blur fringe).
  * Overlay: position absolute, no transform (module animations own transform). Edge axis:
- *   left/right/top/bottom = offset, max-width / max-height calc(100% - offset). Centred axis:
- *   left 0, right 0 (top 0, bottom 0), margin auto, width / height fit-content, and the signed
- *   offset added to left and subtracted from right. The overlay never leaves the container.
+ *   left / right / top / bottom = offset, max-width / max-height calc(100% - offset). Centred axis:
+ *   left 0, right 0 (top 0, bottom 0), margin auto, width / height fit-content (-webkit-fit-content
+ *   first for Safari), and the signed offset added to left and subtracted from right.
+ *   The overlay never leaves the container.
+ * Low power (`[data-mc-low-power]` on the card content): filter none on .mc-layer-media,
+ *   mix-blend-mode normal on layered wrappers. Scrims and opacity stay.
  * Unsupported mix-blend-mode or filter: the layer paints unblended / unblurred, never hidden.
+ *
+ * ── Clip box and FINDINGS #12 (r2, spike S2) ──
+ * ha-card gets `data-mc-layers` when the card has a non-empty background_layers or any layered
+ * module: overflow hidden (already) and isolation isolate; its border-radius or shape clip-path is
+ * the clip. .mc-card-content gets position relative when it has `data-mc-layers` or the card sets
+ * `overflow`, so every absolute layer has a containing block inside ha-card's clip. Escalation only
+ * if real-device QA (Safari 16.4) shows a leak, one rung at a time: (1) clip-path inset(0 round
+ * <radius>) on <mc-bg-stack> / the background wrapper; (2) -webkit-mask-image on ha-card;
+ * (3) transform translateZ(0). None ships pre-emptively.
  *
  * ── Pointer and focus ──
  * click_through on: pointer-events none on the wrapper; the module's actions are dropped (no role,
@@ -111,30 +168,35 @@ import type { CardModule } from '../types';
  * click_through off: the module keeps its own actions; a background with actions is a button, last
  *   in focus order (DOM order 5).
  * Edit mode (studio canvas): every layered wrapper keeps pointer events so it can be selected; the
- *   editor's hit test ignores click_through (designer section 6).
+ *   editor's hit test ignores click_through (designer 03 section 6, 11 H).
+ *
+ * ── Streaming backgrounds (r2, Q-R3) ──
+ * A camera module or video-bg that renders as a background (explicit placement, or video-bg's
+ * implicit one) decodes no frames while off screen (shared offscreen observer) or while
+ * document.hidden (visibilitychange), and resumes on return. Owned by the modules-extra views
+ * (camera, video-bg); they read `data-mc-placement` or the legacy video-bg state from their wrapper.
+ * In flow, camera and video-bg behave as today.
  *
  * ── Flows seam (shared with task flow-slider-styles; both rely on this, neither edits the other's files) ──
  * - A container with `data-mc-layers` is a stacking context. In a flows card it is lifted to z 1 like
  *   every other isolated container (rule in src/layers/layer-css.ts, not in flows-css.ts):
- *   flows `layer: back` pass under such a container (same as video-bg and value backgrounds today),
- *   flows `layer: front` and labels draw over every background module and overlay.
+ *   flows `layer: back` (SVG and HTML layer) pass under such a container (same as video-bg and
+ *   value backgrounds today); flows `layer: front` and labels draw over every background module and
+ *   overlay. Recorded on the flows side in flow-look.ts.
  * - fill: card background modules and the card's background_layers sit under both flow layers.
- * - The flows Module keeps its z levels (back 0, front 2, labels 2, html layers 0 / 2 per flow-look
- *   1.0.0); layer-placement never sets a z-index >= 2 outside an isolated container.
+ * - The flows Module keeps its z levels (back 0, front 2, labels 2); layer-placement never sets a
+ *   z-index >= 2 outside an isolated container, except the stale badge host (z 3, card content).
  * - Flow anchors (`from` / `to` module ids) on a background or overlay module are measured from the
  *   wrapper's box like any module (flow geometry reads boxes, not DOM order).
  *
- * ── FINDINGS #12 ──
- * .mc-card-content gets position relative when it has `data-mc-layers` or the card sets `overflow`,
- * so ha-card's own clip (overflow hidden, border-radius, or the shape's clip-path) contains every
- * absolute layer. Spike S2 checks the Safari 16.4 / Chromium 85 radius clip with blend and blur.
- *
  * ── Size ──
- * magic-card.js budget for this Module plus the bg-stack sync part: <= 2,560 B (shared headroom with
- * flow-slider-styles; Lead reconciles at the Plan Gate).
+ * magic-card.js budget for this Module, the Core hook and the bg-stack sync part (tag, host, badge
+ * host, prefetch, low-power CSS): <= 2,560 B. Shared headroom with flow-slider-styles (<= 3,072 B),
+ * 5,632 B together; the second branch to merge re-measures.
  */
 
 export const LAYER_PLACEMENT_CONTRACT = '1.0.0';
+export const LAYER_PLACEMENT_CONTRACT_REVISION = 2;
 
 export type Placement = 'flow' | 'background' | 'overlay';
 export type LayerAnchor =
@@ -152,6 +214,12 @@ export const LAYER_ANCHORS: readonly LayerAnchor[] = [
 export const LEADING_ANCHORS: readonly LayerAnchor[] = ['top-left', 'top', 'top-right'];
 export const LAYER_BLENDS: readonly LayerBlend[] = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'soft-light'];
 export const MAX_OVERLAY_RANK = 40;
+/** (r2, S1) Blur range for module layers and image layers; above BLUR_LIGHT_MAX is "heavy". */
+export const BLUR_MAX = 24;
+export const BLUR_LIGHT_MAX = 12;
+/** Scrim fade: full strength over this share of the length from the edge (r2). */
+export const SCRIM_HOLD = 0.35;
+export const SCRIM_DEFAULT_STRENGTH = 60;
 
 export interface ScrimConfig {
   style?: ScrimStyle;
@@ -177,6 +245,11 @@ export interface LayerConfig {
 export interface LayeredModuleKeys {
   placement?: Placement;
   layer?: LayerConfig;
+}
+
+/** (r2) Card key; MagicCardConfig gains it in src/types.ts. */
+export interface LayersLowPowerKey {
+  layers_low_power?: boolean;
 }
 
 /** A layered module after defaults and clamping. */
@@ -219,6 +292,8 @@ export interface Arranged<T = CardModule> {
 export interface ArrangeOptions {
   /** Same predicate the render uses to leave a child out. */
   hidden: (child: CardModule) => boolean;
+  /** (r2) The child has runnable actions (hasRunnableActions with its effective entity): overlay default. */
+  hasActions: (child: CardModule) => boolean;
   /** row / card fill allowed here (a card grid column or a row module column). */
   canHoist: boolean;
   /** For the in-flow fallback of hoisted modules: the row / card has another visible in-flow module. */
@@ -229,11 +304,11 @@ export interface ArrangeOptions {
 /** src/layers/placement.ts provides these (pure, synchronous). */
 export interface LayerPlacementApi {
   /** undefined: in flow (no placement, placement flow, video-bg legacy, or the in-flow fallback). */
-  resolveLayer(mod: CardModule, opts: { canHoist: boolean; overlayRank: number }): ResolvedLayer | undefined;
+  resolveLayer(mod: CardModule, opts: { canHoist: boolean; overlayRank: number; hasActions: boolean }): ResolvedLayer | undefined;
   arrange(children: readonly CardModule[], opts: ArrangeOptions): Arranged;
-  /** CSS background of a scrim, `card` resolved to var(--ha-card-background, var(--card-background-color)). */
+  /** CSS background of a scrim (shape above); `card` resolved to the card colour variable chain. */
   scrimCss(scrim: ScrimConfig): string;
-  /** Any module in the config has a placement (prefetch / CSS gating). */
+  /** Any module in the config has a placement other than flow (prefetch / CSS gating). */
   hasLayers(modules: readonly CardModule[]): boolean;
 }
 
