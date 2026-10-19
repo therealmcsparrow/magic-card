@@ -3,6 +3,9 @@ import type { CustomIconsConfig } from './contracts/mcu-library';
 import type { EntityScopeNode } from './contracts/entity-scope';
 import type { SliderLookConfig } from './contracts/slider-look';
 import type { FlowLookConfig } from './contracts/flow-look';
+import type { BackgroundLayerConfig } from './contracts/bg-stack';
+import type { LayerConfig, Placement } from './contracts/layer-placement';
+import type { PauseButtonCorner, PauseButtonMode } from './contracts/card-pause';
 
 // ── Home Assistant types (subset) ──
 
@@ -120,6 +123,13 @@ export interface MagicCardConfig {
   custom_animations?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
   /** Template-linked card: ids of the template's `custom_animations` this card leaves out. */
   hidden_animations?: string[];
+  /** Card backdrop: up to MAX_BACKGROUND_LAYERS layers, first = front (contract bg-stack 1.0.0). */
+  background_layers?: BackgroundLayerConfig[];
+  /** Layers drop blur, blend and pan / zoom (contract layer-placement 1.0.0 r2). */
+  layers_low_power?: boolean;
+  /** Viewer pause button visibility (contract card-pause 1.0.0). */
+  pause_button?: PauseButtonMode;
+  pause_button_corner?: PauseButtonCorner;
   /** Shape-following ring around the card (src/utils/ring.ts). */
   ring?: RingConfig;
   /** Outline shape of the card (src/utils/shape-path.ts); wins over border_radius. */
@@ -289,6 +299,8 @@ export interface CardAppearanceOverrides {
   shape_options?: ShapeOptions;
   value_background?: ValueBackgroundConfig;
   seasonal?: SeasonalSetting;
+  /** Replaces the card's whole backdrop list while the rule matches (bg-stack 1.0.0 r3); never on `hover`. */
+  background_layers?: BackgroundLayerConfig[];
 }
 
 export interface RowConfig extends EntityScopeNode {
@@ -336,6 +348,10 @@ export interface CardModule {
   actions?: ActionsConfig;
   /** Studio Hide: not shown on the dashboard (the studio shows it dimmed). */
   hidden?: boolean;
+  /** Where the module sits in its container: flow (default), behind the others or on top (layer-placement 1.0.0). */
+  placement?: Placement;
+  /** Fill, anchor, opacity, blur, blend, click-through and scrim; read only when placement is background or overlay. */
+  layer?: LayerConfig;
   /** Editor-only layer name (tree and canvas labels); never shown on the dashboard. */
   editor_name?: string;
   not_synced?: string[]; // Property paths that are not synced for this module

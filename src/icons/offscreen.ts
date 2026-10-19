@@ -11,40 +11,112 @@ import { AsyncDirective } from 'lit/async-directive.js';
 let io: IntersectionObserver | undefined;
 /** Elements told about every report (on screen or not), not only an attribute change. */
 const listeners = new WeakMap<Element, (onScreen: boolean) => void>();
+/** Observed elements (watchOffscreen and pauseOffscreen), for re-reporting when a card pauses. */
+const tracked = new Set<Element>();
+/** The last real intersection per element, restored when its card resumes. */
+const real = new WeakMap<Element, boolean>();
+/** Elements that keep updating while their card is paused (clocks, countdowns). */
+const fixed = new WeakSet<Element>();
+/** Watched elements that are not a sign of motion on their own (the card backdrop decides itself). */
+const uncounted = new WeakSet<Element>();
+/** <magic-card> hosts whose viewer pressed "Pause motion" (card-pause contract). */
+const paused = new WeakSet<Element>();
+
+/** Is `el` inside a paused card (parent and shadow-host walk)? */
+function inPausedCard(el: Element, only?: Element): boolean {
+  for (let n: Node | null = el; n; n = n.parentNode instanceof ShadowRoot ? n.parentNode.host : n.parentNode) {
+    if (only ? n === only : paused.has(n as Element)) return true;
+  }
+  return false;
+}
+
+function report(el: Element, onScreen: boolean): void {
+  const shown = onScreen && (fixed.has(el) || !inPausedCard(el));
+  el.toggleAttribute('offscreen', !shown);
+  listeners.get(el)?.(shown);
+}
+
 export function offscreenObserver(): IntersectionObserver | undefined {
   if (!io && typeof IntersectionObserver !== 'undefined') {
     io = new IntersectionObserver((entries) => {
       for (const e of entries) {
-        e.target.toggleAttribute('offscreen', !e.isIntersecting);
-        listeners.get(e.target)?.(e.isIntersecting);
+        real.set(e.target, e.isIntersecting);
+        report(e.target, e.isIntersecting);
       }
     });
+    // whoever observes through the shared observer is tracked, so a card pause reaches it too
+    const [add, drop] = [io.observe.bind(io), io.unobserve.bind(io)];
+    io.observe = (el) => {
+      tracked.add(el);
+      add(el);
+    };
+    io.unobserve = (el) => {
+      tracked.delete(el);
+      real.delete(el);
+      drop(el);
+    };
   }
   return io;
+}
+
+function observe(el: Element, pausable = true, counted = true): boolean {
+  const obs = offscreenObserver();
+  if (!obs) return false;
+  if (pausable) fixed.delete(el);
+  else fixed.add(el);
+  if (counted) uncounted.delete(el);
+  else uncounted.add(el);
+  obs.observe(el);
+  return true;
+}
+
+function unobserve(el: Element): void {
+  io?.unobserve(el);
+  el.removeAttribute('offscreen');
 }
 
 /**
  * Watch `el` with the shared observer and call `cb` on each report (the first one included, which
  * the `offscreen` attribute does not show for an element that starts on screen). False without an
- * IntersectionObserver (nothing will report).
+ * IntersectionObserver (nothing will report). Inside a paused card the element counts as off screen
+ * unless `pausable` is false (content that updates but does not move).
  */
-export function watchOffscreen(el: Element, cb: (onScreen: boolean) => void): boolean {
-  const obs = offscreenObserver();
-  if (!obs) return false;
+export function watchOffscreen(el: Element, cb: (onScreen: boolean) => void, opts?: { pausable?: boolean; counted?: boolean }): boolean {
   listeners.set(el, cb);
-  obs.observe(el);
-  return true;
+  return observe(el, opts?.pausable !== false, opts?.counted !== false);
 }
 
 export function unwatchOffscreen(el: Element): void {
   listeners.delete(el);
-  io?.unobserve(el);
-  el.removeAttribute('offscreen');
+  unobserve(el);
+}
+
+/** Mark a <magic-card> host paused / playing and re-report the observed elements inside it. */
+export function setCardPaused(host: Element, on: boolean): void {
+  if (paused.has(host) === on) return;
+  if (on) paused.add(host);
+  else paused.delete(host);
+  for (const el of tracked) {
+    if (fixed.has(el) || !inPausedCard(el, host)) continue;
+    // resumed before the first report: the observer reports soon
+    if (on) report(el, false);
+    else if (real.has(el)) report(el, real.get(el)!);
+  }
+}
+
+export const isCardPaused = (host: Element): boolean => paused.has(host);
+
+/** Pausable observed elements inside `host` (the card has motion). */
+export function motionCount(host: Element): number {
+  let n = 0;
+  for (const el of tracked) if (!fixed.has(el) && !uncounted.has(el) && inPausedCard(el, host)) n++;
+  return n;
 }
 
 export function __resetOffscreenObserverForTests(): void {
   io?.disconnect();
   io = undefined;
+  tracked.clear();
 }
 
 /** `<svg ${pauseOffscreen()}>`: watched by the shared observer while it is in the DOM. */
@@ -64,15 +136,13 @@ class PauseOffscreen extends AsyncDirective {
     if (part.element !== this._el) {
       this._unwatch();
       this._el = part.element;
-      if (this.isConnected) offscreenObserver()?.observe(this._el);
+      if (this.isConnected) observe(this._el);
     }
     return nothing;
   }
 
   private _unwatch(): void {
-    if (!this._el) return;
-    io?.unobserve(this._el);
-    this._el.removeAttribute('offscreen');
+    if (this._el) unobserve(this._el);
   }
 
   protected disconnected(): void {
@@ -80,7 +150,7 @@ class PauseOffscreen extends AsyncDirective {
   }
 
   protected reconnected(): void {
-    if (this._el) offscreenObserver()?.observe(this._el);
+    if (this._el) observe(this._el);
   }
 }
 

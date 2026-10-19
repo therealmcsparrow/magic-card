@@ -42,6 +42,10 @@ import {
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
 import { entityStats, resolveEntitySource } from '../entity-source';
 import { childListKey, replaceDescendant } from '../../utils/module-path';
+import { layerContext } from '../layers/placement-model';
+import { onStatus } from '../layers/bg-status';
+import { moveLayer, turnOnLowPower } from '../layers/layer-actions';
+import type { MoveTo } from '../layers/placement-model';
 import { withEditorKey } from '../../utils/editor-key';
 import {
   CardUpdate,
@@ -131,10 +135,15 @@ export class Inspector extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     if (this.stateManager && !this._unsubscribe) this._subscribe();
+    // a Card backdrop layer that fell back shows a warning mark on its group header
+    this._stopStatus = onStatus(() => this.requestUpdate());
   }
+
+  private _stopStatus?: () => void;
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    this._stopStatus?.();
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
@@ -637,8 +646,9 @@ export class Inspector extends LitElement {
       const updateTop = wrapOnChangeWithSync(top, (m: CardModule) => sm.replaceModule(sel.row, sel.col, sel.module, m));
       onChange = (m: CardModule) => updateTop(replaceDescendant(top, sel.child!, m));
     }
-    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template, resolveEntitySource(config, sel)));
-    return html`${this._renderChildListSync(config, sel)}${body}`;
+    const body = withEditorKey(selectionKey(sel), () => moduleEditors.render(tab, mod, this.hass, onChange, template, resolveEntitySource(config, sel), layerContext(config, sel)));
+    // the Layer group's order buttons and the Low-power button leave as events (they need the list and the card)
+    return html`<div class="mod-body" @mc-layer-move=${(e: CustomEvent<{ to: MoveTo }>) => { if (sm) moveLayer(sm, sel, e.detail.to); }} @mc-layers-low-power=${() => { if (sm) turnOnLowPower(sm); }}>${this._renderChildListSync(config, sel)}${body}</div>`;
   }
 
   /**
@@ -687,6 +697,9 @@ export class Inspector extends LitElement {
         display: grid;
         gap: 12px;
         border-bottom: 1px solid var(--mc-divider);
+      }
+      .mod-body {
+        display: contents;
       }
       .insp-body {
         padding: 16px;

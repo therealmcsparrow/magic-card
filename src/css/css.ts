@@ -6,6 +6,8 @@ import { weatherIconStyles } from '../icons/weather-icons';
 import { flowsCardStyles } from '../card/flows-css';
 import { shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
+import { LAYER_SYNC_CSS } from '../layers/layer-slot';
+import { pauseCardStyles } from '../card/pause-css';
 
 /** Module roots that are 100% wide (their own rules below); a layout gives their wrapper that width. */
 const FULL_WIDTH_ROOTS = [
@@ -1018,13 +1020,13 @@ const magicCardLocalStyles = css`
    * :has() would be checked against every element of the card on each change. Browsers without
    * :has() (older WebViews) show the video in the flow, above its siblings.
    */
-  :is(.mc-column, .mc-horizontal, .mc-vertical, .mc-tabs-content, .swiper-slide):has(> .mc-module-wrapper > .mc-video-bg--media) {
+  :is(.mc-column, .mc-horizontal, .mc-vertical, .mc-tabs-content, .swiper-slide):has(> .mc-module-wrapper:not([data-mc-placement]) > .mc-video-bg--media) {
     position: relative;
     isolation: isolate;
   }
 
-  .mc-module-wrapper ~ .mc-module-wrapper:has(> .mc-video-bg--media),
-  .mc-module-wrapper:has(> .mc-video-bg--media):has(~ .mc-module-wrapper) {
+  .mc-module-wrapper ~ .mc-module-wrapper:not([data-mc-placement]):has(> .mc-video-bg--media),
+  .mc-module-wrapper:not([data-mc-placement]):has(> .mc-video-bg--media):has(~ .mc-module-wrapper) {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -1035,14 +1037,14 @@ const magicCardLocalStyles = css`
   }
 
   /* studio canvas: the layer can still be clicked (where nothing covers it) to select it */
-  .mc-module-wrapper[data-mc-path]:has(> .mc-video-bg--media) {
+  .mc-module-wrapper[data-mc-path]:not([data-mc-placement]):has(> .mc-video-bg--media) {
     pointer-events: auto;
   }
 
-  .mc-module-wrapper ~ .mc-module-wrapper > .mc-video-bg--media,
-  .mc-module-wrapper:has(~ .mc-module-wrapper) > .mc-video-bg--media,
-  .mc-module-wrapper ~ .mc-module-wrapper > .mc-video-bg--media .mc-video-bg-media,
-  .mc-module-wrapper:has(~ .mc-module-wrapper) > .mc-video-bg--media .mc-video-bg-media {
+  .mc-module-wrapper ~ .mc-module-wrapper:not([data-mc-placement]) > .mc-video-bg--media,
+  .mc-module-wrapper:not([data-mc-placement]):has(~ .mc-module-wrapper) > .mc-video-bg--media,
+  .mc-module-wrapper ~ .mc-module-wrapper:not([data-mc-placement]) > .mc-video-bg--media .mc-video-bg-media,
+  .mc-module-wrapper:not([data-mc-placement]):has(~ .mc-module-wrapper) > .mc-video-bg--media .mc-video-bg-media {
     height: 100%;
   }
 
@@ -1346,4 +1348,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseCardStyles];

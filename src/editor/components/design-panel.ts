@@ -246,6 +246,11 @@ export class DesignPanel extends LitElement {
     if (this.hoverOnly) this._activeView = HOVER_VIEW;
   }
 
+  /** The module's Placement and Layer groups belong to Default only: tell the host which design is being edited (module-editor 1.3.0). */
+  protected updated(changed: Map<string, unknown>): void {
+    if (changed.has('_activeView') && !this.hoverOnly) this.dispatchEvent(new CustomEvent('mc-design-view', { bubbles: true, composed: true, detail: { view: this._activeView } }));
+  }
+
   private _getActiveRule(): ConditionalDesign | undefined {
     if (this._activeView === 'default') return undefined;
     return this.design.conditional?.find((r) => r.id === this._activeView);

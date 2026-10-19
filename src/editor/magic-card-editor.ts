@@ -25,6 +25,7 @@ import './studio/studio';
 import './panels/module-selector';
 import './components/template-picker';
 import { t, tx, locale } from './i18n';
+import { loadLayerEditor } from './layers/layer-editor-loader';
 import { setI18nLocale } from '../i18n/runtime';
 
 /**
@@ -131,6 +132,7 @@ export class MagicCardEditor extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this._stateManager.attached = true;
+    void loadLayerEditor(); // prefetch: the Placement, Layer and Card backdrop panels are a lazy chunk
     this.addEventListener('mc-template-reapply', this._onTemplateReapply);
     this._unsubscribe ??= this._stateManager.subscribe((s) => {
       this._editorState = s;

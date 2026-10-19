@@ -30,6 +30,29 @@ export function parseGradient(v: unknown): Gradient | undefined {
   return { radial: m[1] === 'radial', angle: /deg$/.test(head) ? parseFloat(head) : 180, stops: stops as string[] };
 }
 
+const SIDES: Record<string, number> = { top: 0, right: 90, bottom: 180, left: 270 };
+
+/**
+ * The angle of a linear gradient's head in degrees: `Ndeg`, `to <side>` (top 0, right 90, bottom 180,
+ * left 270) or `to <side> <side>` (corners 45 / 135 / 225 / 315, an approximation on non-square boxes),
+ * 180 without a head. Undefined for radial gradients and strings that are not a safe gradient.
+ * parseGradient() itself keeps reading only degrees.
+ */
+export function gradientHeadAngle(v: unknown): number | undefined {
+  const g = parseGradient(v);
+  if (!g || g.radial) return undefined;
+  const head = /^\s*linear-gradient\(\s*to\s+([a-z]+)(?:\s+([a-z]+))?\s*,/i.exec(v as string);
+  if (!head) return g.angle;
+  const a = SIDES[head[1].toLowerCase()];
+  if (a === undefined) return undefined;
+  if (!head[2]) return a;
+  const b = SIDES[head[2].toLowerCase()];
+  if (b === undefined || a % 180 === b % 180) return undefined;
+  const [vert, horiz] = a % 180 === 0 ? [a, b] : [b, a]; // vertical side (0 / 180), horizontal side (90 / 270)
+  if (vert === 0) return horiz === 90 ? 45 : 315;
+  return horiz === 90 ? 135 : 225;
+}
+
 const r3 = (n: number) => +n.toFixed(3);
 
 /**

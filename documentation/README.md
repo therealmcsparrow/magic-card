@@ -25,6 +25,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Modules](modules/README.md) | Every module type and its options, one page per module |
 | [Card entity](card-entity/README.md) | One entity for the whole card: modules, rows and columns follow it unless they pick their own or `none`, layouts that share an entity with the modules inside, modules that need one kind of device, toggles on an inherited entity, `entity` and `card_entity` in templates, and how Magic Card Utils templates treat it |
 | [Design](design/README.md) | The Design tab group by group, shapes, value backgrounds, hover, seasonal scenes, entity colours, conditional design, animations and catalogue presets, icon animations with their Quiet, Living and Glow styles, and rings, including timer rings |
+| [Layers](design/layers.md) | Modules behind others or on top of the card, with position, blend, blur, darkening behind text, click-through and the Pause motion button. The card backdrop is in [Backgrounds](design/backgrounds.md#card-backdrop) |
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
 

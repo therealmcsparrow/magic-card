@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { editorSystem } from '../../css/editor-stack';
 import { kitSlider } from '../../ui-kit/css/slider';
 import { slider } from '../../ui-kit/templates/slider';
-import { parseGradient } from '../../utils/gradient';
+import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
 import { t } from '../i18n';
 // the stops use <mc-color-picker> by tag: color-picker.ts imports this file and defines it
@@ -31,8 +31,9 @@ const squash = (s: string) => s.replace(/\s+/g, '');
 export function editableGradient(value: unknown, allowRadial: boolean): GradientModel | undefined {
   const p = parseGradient(value);
   if (!p || p.stops.length > MAX_STOPS || (p.radial && !allowRadial)) return undefined;
-  const g: GradientModel = { radial: p.radial, angle: p.angle, stops: p.stops };
-  return squash(gradientToString(g)) === squash(String(value)) ? g : undefined;
+  const g: GradientModel = { radial: p.radial, angle: gradientHeadAngle(value) ?? p.angle, stops: p.stops };
+  const text = String(value).replace(/^(\s*linear-gradient\()\s*to\s[a-z\s]+?(?=,)/i, `$1${g.angle}deg`);
+  return squash(gradientToString(g)) === squash(text) ? g : undefined;
 }
 
 export interface SegOption {

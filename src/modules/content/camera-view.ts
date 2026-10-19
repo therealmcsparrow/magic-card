@@ -87,15 +87,7 @@ export class CameraView implements ModuleView {
       !ctx?.editMode &&
       cameraStreamReady(stateObj.entity_id, ctx?.requestUpdate)
     ) {
-      body = html`<ha-camera-stream
-        class="mc-camera-stream"
-        .hass=${hass}
-        .stateObj=${stateObj}
-        .controls=${c.show_controls !== false}
-        .muted=${true}
-        .fitMode=${'cover'}
-        allow-exoplayer
-      ></ha-camera-stream>`;
+      body = html`<mc-camera-live .hass=${hass} .stateObj=${stateObj} .controls=${c.show_controls !== false}></mc-camera-live>`;
     } else {
       body = this._snapshot(c, hass, stateObj, name);
     }

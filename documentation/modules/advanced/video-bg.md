@@ -27,11 +27,18 @@ A video that plays behind the other modules of its column or layout. On its own 
 -   Alone in its container it is a normal block at its own size.
 -   Browsers without CSS `:has()` support (some older WebViews) show the video in the normal flow instead of behind its siblings.
 
+### Placement and layers
+
+The video background is a layer, so it takes the same placement options as other modules: Normal, Behind others or On top, with `placement: flow`, `background` or `overlay` in YAML. See [Layers](../../design/layers.md).
+
+Without a `placement` key, the video keeps the behaviour described above, and existing cards look the same. The editor shows "Automatic" with no option selected until you choose one. Choosing an option writes the key.
+
 Round the container's corners in its design and the video follows them.
 
 ## Playback
 
 -   The video only plays while it is on screen, and pauses when it scrolls out of view.
+-   Behind other modules, it also pauses when the page is hidden and when the viewer presses Pause motion on the card. See [Pause motion button](../../design/layers.md#pause-motion-button).
 -   With reduced motion turned on in the operating system, it does not autoplay. The poster stays.
 -   When autoplay is blocked (for example with sound on) or the video fails to load, the poster stays.
 -   A video or poster from the media browser is resolved again when its signed link has expired.

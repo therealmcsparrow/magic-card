@@ -31,6 +31,7 @@ import {
 import type { SlotSelection } from './selection';
 import { ChildStep, childSlots, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
 import { t } from '../i18n';
+import { countLayers, layerChipCss, renderLayerChip, renderLayerCount } from '../layers/tree-chip';
 
 type DragState =
   | { type: 'row'; row: number }
@@ -872,6 +873,7 @@ export class StructureOutline extends LitElement {
             ${this._hiddenMark(col)}
             ${this.stateManager?.ownsModuleList(sel) ? html`<ha-icon class="own-ico" icon="mdi:format-list-bulleted" title=${t('Own module list: not synced with the template. Reset column restores it.')}></ha-icon><span class="sr-only">${t('Own module list, not synced with the template')}</span>` : nothing}
             <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
+            ${renderLayerCount(countLayers(modules))}
           </div>
           <button
             type="button"
@@ -1008,6 +1010,8 @@ export class StructureOutline extends LitElement {
                   <span class="name">${moduleTitle(mod)}</span>
                   ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : followed}
                 </span>`}
+            ${renderLayerChip(mod)}
+            ${renderLayerCount(countLayers(childSlots(mod)?.flat()))}
             ${this._hiddenMark(mod)}
             ${overrides
               ? html`<span class="ovr-dot" title=${t('Has local overrides')}></span><span class="sr-only">${t('Has local overrides')}</span>`
@@ -1075,6 +1079,7 @@ export class StructureOutline extends LitElement {
                 ${this._hiddenMark(entry)}
                 ${isTabs ? nothing : html`<span class="slot-glyph">${renderLayoutGlyph(weights, slot)}</span>`}
                 <span class="chip is-count">${n}<span class="sr-only"> ${t('{n, plural, one {module} other {modules}}', { n })}</span></span>
+                ${renderLayerCount(countLayers(list))}
               </div>
               <button
                 type="button"
@@ -1144,6 +1149,8 @@ export class StructureOutline extends LitElement {
                   <span class="name">${title}</span>
                   ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : followed}
                 </span>`}
+            ${renderLayerChip(child)}
+            ${renderLayerCount(countLayers(childSlots(child)?.flat()))}
             ${this._hiddenMark(child)}
           </div>
           ${this._renderModuleMore(child, sel, a.tab)}
@@ -1190,6 +1197,7 @@ export class StructureOutline extends LitElement {
   static styles = [
     editorSystem,
     itemMenuStyles,
+    layerChipCss,
     css`
       :host {
         display: block;

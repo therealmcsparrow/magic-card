@@ -16,6 +16,7 @@ card-editor	Add colour	Add color
 card-editor	Animation colour	Animation color
 card-editor	Background colour	Background color
 card-editor	Bar colour	Bar color
+card-editor	Card backdrop layers sit on top of this colour and image.	Card backdrop layers sit on top of this color and image.
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
 card-editor	Colour	Color
@@ -71,6 +72,18 @@ card-editor	colour	color
 card-editor	colour temperature	color temperature
 card-editor	colours	colors
 card-editor	{name}: entity colour	{name}: entity color
+layer-editor	Add a colour at the back to blend with.	Add a color at the back to blend with.
+layer-editor	Card colour	Card color
+layer-editor	Colour	Color
+layer-editor	Colour wash	Color wash
+layer-editor	Custom colour	Custom color
+layer-editor	Distance from the centre. Negative values move it left or up.	Distance from the center. Negative values move it left or up.
+layer-editor	From the centre	From the center
+layer-editor	Keeps the darker colour	Keeps the darker color
+layer-editor	Keeps the lighter colour	Keeps the lighter color
+layer-editor	No layers yet. Add an image, gradient, pattern or colour behind the card content.	No layers yet. Add an image, gradient, pattern or color behind the card content.
+layer-editor	Pattern colour	Pattern color
+layer-editor	To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.	To put a module behind others, use Placement on that module. Layers here sit on top of the color and image in Style.
 path-canvas	Centre	Center
 svg-editor	Accent preview colour	Accent preview color
 svg-editor	Align centre	Align center

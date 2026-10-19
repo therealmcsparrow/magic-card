@@ -1,6 +1,7 @@
 import { VERSION } from '../../version';
 import { ModuleRegistry } from '../module-registry';
 import { CameraView } from '../content/camera-view';
+import { McCameraLive } from '../content/camera-live';
 import { GraphsView } from '../content/graphs-view';
 import { CustomCardView, EmbeddedCard } from '../advanced/custom-card-view';
 import { ForecastView } from '../advanced/forecast-view';
@@ -20,6 +21,7 @@ export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUI
 export function install(): void {
   if (!customElements.get('mc-embedded-card')) customElements.define('mc-embedded-card', EmbeddedCard);
   if (!customElements.get('mc-bg-video')) customElements.define('mc-bg-video', McBgVideo);
+  if (!customElements.get('mc-camera-live')) customElements.define('mc-camera-live', McCameraLive);
   ModuleRegistry.provideView('camera', new CameraView());
   ModuleRegistry.provideView('video-bg', new VideoBgView());
   ModuleRegistry.provideView('weather', new WeatherView());

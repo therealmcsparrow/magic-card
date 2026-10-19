@@ -72,6 +72,20 @@ interface Memory {
 }
 
 const memory = new Map<string, Memory>();
+/** Wrappers whose card is paused or off screen: a switch applies its end state, no fades. */
+const held = new WeakSet<HTMLElement>();
+
+/** Pause or resume the wrapper's running fades; while held, new switches skip them. */
+export function setPlaying(wrapper: HTMLElement, on: boolean): void {
+  if (on) held.delete(wrapper);
+  else held.add(wrapper);
+  const fades = [fadeIns.get(wrapper), fadeIns.get(moduleIcon(wrapper) ?? wrapper)];
+  for (const m of memory.values()) fades.push(m.fadeIn?.get(wrapper), m.pending?.fades.get(wrapper));
+  for (const a of fades) {
+    if (on) a?.play();
+    else a?.pause();
+  }
+}
 /** Memory keys per wrapper (prune / release). */
 const byWrapper = new WeakMap<HTMLElement, Map<string, string>>();
 
@@ -190,7 +204,7 @@ export function apply(wrapper: HTMLElement, v2: CompiledV2, ctx: ApplyCtx): void
     const out = m.fadeIn.get(wrapper);
     m.fadeIn.delete(wrapper);
     out?.cancel();
-    if (!ctx.reducedMotion && typeof el.animate === 'function') {
+    if (!ctx.reducedMotion && !held.has(wrapper) && typeof el.animate === 'function') {
       const fin = quiet(el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: HALF, easing: 'ease-out' }))!;
       fadeIns.set(el, fin);
     }
@@ -202,18 +216,18 @@ export function apply(wrapper: HTMLElement, v2: CompiledV2, ctx: ApplyCtx): void
   if (host) p.hosts.add(host);
   p.wrappers.add(wrapper);
   if (p.transition === 'crossfade') {
-    if (!p.fades.has(wrapper) && !ctx.reducedMotion && typeof el.animate === 'function') {
+    if (!p.fades.has(wrapper) && !ctx.reducedMotion && !held.has(wrapper) && typeof el.animate === 'function') {
       // a quick flip back: start from the opacity a running fade-in has reached
       const from: string | number = fadeIns.get(el)?.playState === 'running' ? getComputedStyle(el).opacity || 1 : 1;
       fadeIns.get(el)?.cancel();
       fadeIns.delete(el);
       p.fades.set(wrapper, quiet(el.animate([{ opacity: from }, { opacity: 0 }], { duration: HALF, fill: 'forwards', easing: 'ease-in' }))!);
     }
-    p.timer ??= setTimeout(() => switchNow(m, p), ctx.reducedMotion ? 0 : HALF);
+    p.timer ??= setTimeout(() => switchNow(m, p), ctx.reducedMotion || held.has(wrapper) ? 0 : HALF);
     return;
   }
   if (p.timer === undefined) {
-    const ms = ctx.reducedMotion ? 0 : remainingMs(animationsUnder(wrapper), nameTest(ctx.run, m));
+    const ms = ctx.reducedMotion || held.has(wrapper) ? 0 : remainingMs(animationsUnder(wrapper), nameTest(ctx.run, m));
     p.timer = setTimeout(() => switchNow(m, p), ms);
   }
 }
@@ -256,6 +270,7 @@ export function release(wrapper: HTMLElement): void {
   const mine = byWrapper.get(wrapper);
   if (!mine) return;
   byWrapper.delete(wrapper);
+  held.delete(wrapper);
   for (const id of mine.values()) forget(wrapper, id);
 }
 

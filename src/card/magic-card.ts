@@ -76,6 +76,10 @@ import { animationLibrary, inlineAnimations } from '../services/animation-librar
 import type { AnimationDoc } from '../anim-studio/model';
 import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
 import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
+import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
+import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
+import { CardPause } from './card-pause';
+import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
 /**
  * A module with an id, and the same for every nested layout child (graph history and other per-module
@@ -121,6 +125,13 @@ const ROW_TAP_EXCLUDE =
 
 /** Content of a row that takes the keyboard itself: a row with actions around it is not focusable. */
 const ROW_INTERACTIVE = `${ROW_TAP_EXCLUDE}, [tabindex]:not([tabindex="-1"])`;
+
+/** layer-placement: what a row (or the card) holds, and the fill backgrounds its columns handed up. */
+interface FillFrame {
+  flow: boolean;
+  row: boolean;
+  out: TemplateResult[];
+}
 
 /** Counter for RenderContext.instance. */
 let cardInstances = 0;
@@ -306,6 +317,17 @@ export class MagicCard extends LitElement {
   );
   /** Editor paths of the modules being rendered (innermost last); children extend the top one. */
   private _pathStack: string[] = [];
+  /** The card has background_layers or a layered module (layer-placement 1.0.0). */
+  private _layerOn = false;
+  /** This card asked for a re-render when the layers chunk lands (once). */
+  private _layersAsked = false;
+  /** The viewer's Pause motion button and state (contract card-pause 1.0.0). */
+  private readonly _pause = new CardPause(this);
+  /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
+  private _frames: FillFrame[] = [];
+  private _card: FillFrame = { flow: false, row: false, out: [] };
+  /** What <mc-bg-stack> takes from the card (bg-stack 1.0.0). */
+  private readonly _stackHost = createStackHost(this, () => this._renderContext, () => !!(this._resolvedConfig ?? this._config)?.layers_low_power);
   /** Entity-scope: the entity a module here follows (the card's, or the nearest sharing layout's). */
   private _scope?: string;
   /** UI state of layout modules (active tab, slide), per card and keyed by the module's path. */
@@ -316,17 +338,22 @@ export class MagicCard extends LitElement {
     subscribe: <T>(msg: Record<string, unknown>) => this._subscriptions.get<T>(msg),
     media: (id) => this._media.get(id),
     requestUpdate: () => this.requestUpdate(),
-    renderChild: (child, index, slot = 0) => {
+    renderChild: (child, index, slot = 0, layer) => {
       const parent = this._pathStack[this._pathStack.length - 1];
       if (parent === undefined) return renderModuleContent(child, this.hass);
-      return this._renderModule(child, `${parent}/${slot}.${index}`);
+      return this._renderModule(child, `${parent}/${slot}.${index}`, layer);
     },
     // a row module's column renders like a card column (design, conditions, valign, editor slot path)
     renderColumn: (col, slot) => {
       const parent = this._pathStack[this._pathStack.length - 1];
       return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
     },
-    childHidden: (child) => !this.editMode && this._withEntity(this._entityOf(child), () => this._isHidden(child)),
+    childHidden: (child) => this._hid(child),
+    childHasActions: (child) => hasRunnableActions(child.actions, this._entityOf(child)),
+    nestedRow: () => {
+      const f = this._frames[this._frames.length - 1];
+      return f && { layered: f.row && f.flow, hoisted: () => f.out };
+    },
     uiState: <T>(key: string) => {
       const id = `${this._pathStack[this._pathStack.length - 1] ?? ''}#${key}`;
       return {
@@ -415,6 +442,7 @@ export class MagicCard extends LitElement {
     }
 
     const prevTemplate = this._config?.template;
+    this._pause.config(config);
 
     // Every row / column / module (nested children included) gets a stable id
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
@@ -659,6 +687,7 @@ export class MagicCard extends LitElement {
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
     this._unsubShapes = undefined;
+    this._pause.disconnected();
     stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -708,6 +737,8 @@ export class MagicCard extends LitElement {
     if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
 
     // the scope first: the card's own display template reads entity / card_entity
+    // the viewer's pause: on the host and the observer before any child is built
+    const paused = this._pause.begin(config);
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
@@ -728,7 +759,7 @@ export class MagicCard extends LitElement {
     const shadow = shape ? (resolved.box_shadow ? boxShadowToDropShadow(resolved.box_shadow) : this._themeShadow) : undefined;
     this._readThemeShadow = !!shape && !resolved.box_shadow;
     // ha-card takes the card's corner radius too, so its outline (borders, glows, rings) matches the content
-    const haCardStyle = [themeStyle, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none']
+    const haCardStyle = [themeStyle, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none', paused && '--mc-paused: 1']
       .filter(Boolean)
       .join('; ');
     // the seasonal scene: a layer behind (or over) the rows and border decorations, which the
@@ -749,6 +780,14 @@ export class MagicCard extends LitElement {
     const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: false }) : ring;
     // the card's lightning (its scene or a card preset): nested layers skip theirs
     const flash = (!!seasonal && sceneFlashes(seasonal.scenes)) || animFlashes(anim);
+    // layer-placement / bg-stack: the card backdrop, and whether any module sits behind others or on top
+    const backdrop = Array.isArray(resolved.background_layers) && resolved.background_layers.length ? resolved.background_layers : undefined;
+    const layered = this._beginLayers(config, !!backdrop);
+    const layerCss = layered && layerSlot.get() ? html`<style data-mc-layer-css>${layerSlot.get()!.css}</style>` : nothing;
+    const lowPower = layered && resolved.layers_low_power;
+    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) this._pause.moving();
+    const stack = backdrop ? html`<mc-bg-stack .layers=${backdrop} .hass=${this.hass} .host=${this._stackHost}></mc-bg-stack>` : nothing;
+    const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
     const rows = (animShape: ResolvedShape | undefined = shape) => {
       // each rendering of the content has the whole budget; the card's own scene takes its share first
       this._seasonalBudget.begin();
@@ -765,13 +804,14 @@ export class MagicCard extends LitElement {
     const inline = this._popup.hidden
       ? nothing
       : withShapeShadow(html`
-          <ha-card style=${haCardStyle || nothing} data-mc-anim=${anim?.targets ?? nothing}
+          <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            <div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
+            ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
-              data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}>
-              ${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}
-            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}
+              data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
+              data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
+              ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${badge}
+            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
           </ha-card>
         `, shadow, !!shape);
     if (!popup) return inline as TemplateResult;
@@ -780,22 +820,22 @@ export class MagicCard extends LitElement {
     const parts = splitDeclarations(cardStyle);
     const prop = (p: string) => p.slice(0, p.indexOf(':')).trim().toLowerCase();
     const onSurface = (p: string) => /^(background(-[a-z-]+)?|box-shadow)$/.test(prop(p));
-    const surfaceStyle = [themeStyle, anim?.style, ...parts.filter(onSurface)].filter(Boolean).join('; ');
+    const surfaceStyle = [themeStyle, anim?.style, ...parts.filter(onSurface), paused && '--mc-paused: 1'].filter(Boolean).join('; ');
     const contentStyle = [
       ...parts.filter((p) => !onSurface(p) && prop(p) !== 'border-radius'),
       insets && insetPaddingStyle(undefined, contentPad, { min: insets }),
     ].filter(Boolean).join('; ');
     const surface = this._popup.isOpen
       ? html`
-          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing}
+          <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${this._popup.renderHead(titleId)}
+            ${layerCss}${this._popup.renderHead(titleId)}
             <div class="mc-popup-body">
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
-                data-mc-flash=${flash ? '' : nothing}>${rows(undefined)}</div>
-            </div>${renderRing(popupRing)}
+                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
+            </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
           </ha-card>
         `
       : nothing;
@@ -937,6 +977,68 @@ export class MagicCard extends LitElement {
     }
   }
 
+  /** Hidden on the live dashboard (display conditions, with the module's own entity); never in the studio. */
+  private _hid = (c: CardModule): boolean => !this.editMode && this._withEntity(this._entityOf(c), () => this._isHidden(c));
+
+  /** Start of a card render: layer-placement state; true when the card has layers. */
+  private _beginLayers(config: MagicCardConfig, backdrop: boolean): boolean {
+    this._frames = [];
+    const any = !!config.rows?.some((r) => r?.columns?.some((c) => hasLayers(c?.modules)));
+    this._layerOn = backdrop || any;
+    this._card = { flow: false, row: false, out: [] };
+    const rt = layerSlot.get();
+    if (any && rt) this._card.flow = rt.scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
+    // slot empty: this render lays children out in config order; ask for one more when the chunk lands
+    if (this._layerOn && !rt && !this._layersAsked) {
+      this._layersAsked = true;
+      void lazyChunks.layers.load();
+      lazyChunks.layers.whenReady(() => this.requestUpdate());
+    }
+    return this._layerOn;
+  }
+
+  /** A row, or a row module, is about to render its columns (undefined without layers). */
+  private _pushFrame(lists: ReadonlyArray<CardModule[] | undefined>): FillFrame | undefined {
+    const rt = layerSlot.get();
+    if (!this._layerOn || !rt) return undefined;
+    const { flow, row } = rt.scanFills(lists, this._hid);
+    const frame = { flow, row, out: [] };
+    this._frames.push(frame);
+    return frame;
+  }
+
+  private _popFrame(frame: FillFrame): TemplateResult[] {
+    this._frames.pop();
+    return frame.out;
+  }
+
+  /** A column's modules in layer-placement order (fill row / card allowed: it is a card or row module column). */
+  private _arrangeKids(mods: CardModule[]): Arranged {
+    const rt = layerSlot.get();
+    if (!rt) return inFlow(mods);
+    const frame = this._frames[this._frames.length - 1];
+    return rt.arrange(mods, {
+      hidden: this._hid,
+      hasActions: (c) => hasRunnableActions(c.actions, this._entityOf(c)),
+      canHoist: true,
+      rowHasFlow: frame?.flow,
+      cardHasFlow: this._card.flow,
+    });
+  }
+
+  /** The modules in flow and overlays; fill row / card backgrounds go to the row / card instead. */
+  private _front(kids: Arranged, pathOf: (i: number) => string): TemplateResult[] {
+    for (const h of kids.hoisted) {
+      const frame = h.layer!.fill === 'row' ? this._frames[this._frames.length - 1] : undefined;
+      (frame ?? this._card).out.push(this._renderModule(h.child, pathOf(h.index), h.layer));
+    }
+    return this._renderKids(kids.front, pathOf);
+  }
+
+  private _renderKids(list: ArrangedChild[], pathOf: (i: number) => string): TemplateResult[] {
+    return list.map((k) => this._renderModule(k.child, pathOf(k.index), k.layer));
+  }
+
   private _renderRow(row: RowConfig, ri: number): TemplateResult {
     return this._scoped(row, (scope) => this._renderRowAt(row, ri, scope));
   }
@@ -958,6 +1060,7 @@ export class MagicCard extends LitElement {
     // a shaped row clips its edge: the ring is drawn inside
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
+    const frame = this._pushFrame(row.columns.map((c) => c?.modules));
     // row actions (not on the studio canvas) run on taps outside its modules' own actions and
     // controls. No role: a button role would hide the row's content from assistive tech. Focusable
     // (Enter / Space) only without interactive content of its own (set in updated()).
@@ -976,6 +1079,7 @@ export class MagicCard extends LitElement {
         @pointerleave=${hasActions ? (e: PointerEvent) => this._onPointerCancel(e) : nothing}
         @keydown=${hasActions ? (e: KeyboardEvent) => e.composedPath()[0] === e.currentTarget && this._onKeyDown(e, actor) : nothing}
         data-mc-row=${this.editMode ? ri : nothing}
+        data-mc-layers=${frame?.row && frame.flow ? '' : nothing}
         data-mc-hover=${this._hover(`row-${ri}`, design?.hover, { shape: shape && { design, padding: row.padding }, borderLength: border })}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
@@ -988,7 +1092,7 @@ export class MagicCard extends LitElement {
         data-mc-value-bg=${valueBg ? '' : nothing}
         style="${rowStyle}; ${designStyle}${[anim?.style, border?.style, shapeStyle].filter(Boolean).map((x) => `; ${x}`).join('')}"
       >
-        ${row.columns.map((col, ci) => this._renderColumn(col, ri, ci))}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, row.id, this._dark, this._seasonalBudget)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
+        ${row.columns.map((col, ci) => this._renderColumn(col, ri, ci))}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, row.id, this._dark, this._seasonalBudget)}${frame && this._popFrame(frame)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
       </div>
     `, shadow);
   }
@@ -1014,6 +1118,8 @@ export class MagicCard extends LitElement {
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
+    const pathOf = (mi: number) => (nested === undefined ? `${key}.${mi}` : `${nested}/${ci}.${mi}`);
+    const kids = this._arrangeKids(col.modules || []);
 
     return withShapeShadow(html`
       <div
@@ -1023,6 +1129,7 @@ export class MagicCard extends LitElement {
         data-mc-slot=${this.editMode && nested !== undefined ? key : nothing}
         data-mc-hover=${this._hover(`col-${key}`, design?.hover, { shape: shape && { design, padding: col.padding }, borderLength: border })}
         data-mc-empty=${this.editMode && !col.modules?.length ? '' : nothing}
+        data-mc-layers=${kids.layered ? '' : nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-anim=${anim?.targets ?? nothing}
         data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${this._v2(anim, scopeState, scope) ?? nothing}
@@ -1034,7 +1141,7 @@ export class MagicCard extends LitElement {
         data-mc-value-bg=${valueBg ? '' : nothing}
         style="${colStyle}; ${designStyle}${[anim?.style, border?.style, shapeStyle].filter(Boolean).map((x) => `; ${x}`).join('')}"
       >
-        ${(col.modules || []).map((mod, mi) => this._renderModule(mod, nested === undefined ? `${key}.${mi}` : `${nested}/${ci}.${mi}`))}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, col.id ?? key, this._dark, this._seasonalBudget)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
+        ${this._front(kids, pathOf)}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, col.id ?? key, this._dark, this._seasonalBudget)}${this._renderKids(kids.backgrounds, pathOf)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
       </div>
     `, shadow);
   }
@@ -1044,7 +1151,7 @@ export class MagicCard extends LitElement {
    * conditions and (studio canvas) its editor path. Layout children come through here as well, with
    * the path "row.col.module/slot.index/..." (see RenderContext.renderChild).
    */
-  private _renderModule(source: CardModule, path: string): TemplateResult {
+  private _renderModule(source: CardModule, path: string, layer?: ResolvedLayer): TemplateResult {
     // entity-scope: render with the effective entity; the children follow the nearest sharing layout
     const up = this._scope;
     const entity = this._entityOf(source);
@@ -1054,7 +1161,7 @@ export class MagicCard extends LitElement {
     // editor preview only: a module that follows an entity of the wrong kind says so (also in the dashboard edit mode, never in normal viewing)
     const needs = this.editMode && !entity && !!up && !source.entity && !!ModuleRegistry.get(source.type)?.metadata.inherit;
     try {
-      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity, needs));
+      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity, needs, layer));
     } finally {
       this._scope = up;
     }
@@ -1076,7 +1183,7 @@ export class MagicCard extends LitElement {
     }
   }
 
-  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean, needs: boolean): TemplateResult {
+  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean, needs: boolean, layer?: ResolvedLayer): TemplateResult {
     const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;
@@ -1100,8 +1207,10 @@ export class MagicCard extends LitElement {
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)
     const actions = mod.actions;
     const acting: Actor = { actions: mod.actions, entity: mod.entity, inherited };
-    const hasActions = !this.editMode && hasRunnableActions(actions, mod.entity);
+    // a layer with click-through drops its actions: taps reach what is under it
+    const hasActions = !this.editMode && !layer?.clickThrough && hasRunnableActions(actions, mod.entity);
     this._pathStack.push(path);
+    const frame = mod.type === 'row' ? this._pushFrame(childSlots(mod) ?? []) : undefined;
     // v2: the runtime's icon rig hint reaches the module's main icon through the render context
     const ctx = this._renderContext;
     const outerRig = ctx.iconRig;
@@ -1112,12 +1221,25 @@ export class MagicCard extends LitElement {
       content = renderModuleContent(mod, this.hass);
     } finally {
       this._pathStack.pop();
+      if (frame) this._frames.pop();
       ctx.iconRig = outerRig;
     }
+    const at = layer?.attrs;
+    // a layered module before the chunk lands is out of flow and invisible (LAYER_SYNC_CSS); after a failed load it is plain
+    const pending = !layer && isLayered(mod) && !layerSlot.get() && !lazyChunks.layers.failed();
+    const media = layer?.media
+      ? html`<div class="mc-layer-media">${content}</div>${layer.scrim ? html`<div class="mc-layer-scrim"></div>` : nothing}`
+      : content;
 
     return withShapeShadow(html`
       <div
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
+        data-mc-placement=${at?.['data-mc-placement'] ?? (mod.type === 'video-bg' && mod.placement === 'flow' ? 'flow' : nothing)}
+        data-mc-layer-pending=${pending ? '' : nothing}
+        data-mc-anchor=${at?.['data-mc-anchor'] ?? nothing}
+        data-mc-pass=${at?.['data-mc-pass'] ?? nothing}
+        data-mc-blur=${at?.['data-mc-blur'] ?? nothing}
+        ?inert=${!this.editMode && layer?.placement === 'background' && !hasActions}
         role=${hasActions ? 'button' : nothing}
         tabindex=${hasActions ? 0 : nothing}
         aria-label=${hasActions ? this._getActionLabel(mod) : nothing}
@@ -1135,7 +1257,7 @@ export class MagicCard extends LitElement {
         data-mc-ring=${ring ? '' : nothing}
         data-mc-shape=${shape?.kind ?? nothing}
         data-mc-value-bg=${valueBg ? '' : nothing}
-        style=${designStyle}
+        style=${layer?.style ? [designStyle, layer.style].filter(Boolean).join('; ') : designStyle}
         @pointerdown=${hasActions ? (e: PointerEvent) => this._onPointerDown(e, acting) : nothing}
         @pointerup=${hasActions ? (e: PointerEvent) => this._onPointerUp(e, acting) : nothing}
         @pointermove=${hasActions ? (e: PointerEvent) => this._onPointerMove(e) : nothing}
@@ -1144,9 +1266,9 @@ export class MagicCard extends LitElement {
         @contextmenu=${hasActions ? (e: Event) => e.preventDefault() : nothing}
         @keydown=${hasActions ? (e: KeyboardEvent) => this._onKeyDown(e, acting) : nothing}
       >
-        ${content}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, mod.id, this._dark, this._seasonalBudget)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
+        ${media}${renderValueBg(valueBg, this.hass)}${renderAnimFx(anim, shape, mod.id, this._dark, this._seasonalBudget)}${renderBorderFx(border)}${renderShape(shape, stroke, edge)}${renderRing(ring, shape)}
       </div>
-    `, shadow);
+    `, layer ? undefined : shadow);
   }
 
   /**
@@ -1154,6 +1276,7 @@ export class MagicCard extends LitElement {
    * without any). Rows, columns and the card have no entity: their documents follow an entry's own.
    */
   private _v2(anim: ReturnType<typeof resolveAnimations>, stateObj?: HassEntity, entityId?: string): number | undefined {
+    if (anim) this._pause.moving();
     if (anim?.needsRuntime) this._v2Need = true;
     if (anim?.needsParticles) this._pNeed = true;
     return anim?.v2 ? this._v2Render.push({ entries: anim.v2, stateObj, entityId }) - 1 : undefined;

@@ -6,6 +6,7 @@ import * as rig from './rig';
 import * as targets from './targets';
 import * as bindings from './bindings';
 import * as clips from './clips';
+import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
 /*
@@ -44,8 +45,20 @@ const guard = (name: string, fn: () => void): void => {
 /** Wrappers with applied v2 data (for release). */
 const applied = new WeakSet<HTMLElement>();
 
+/**
+ * Each wrapper is watched by the shared offscreen observer (card-pause contract): scrolled out of
+ * view or in a paused card, its Web Animations (spins, fades) pause and resume from where they stopped.
+ */
+function watch(wrapper: HTMLElement): void {
+  watchOffscreen(wrapper, (on) => {
+    guard('bindings', () => bindings.setPlaying(wrapper, on));
+    guard('clips', () => clips.setPlaying(wrapper, on));
+  });
+}
+
 /** Apply a document's v2 data to a module wrapper; idempotent per render. */
 export function apply(wrapper: HTMLElement, v2: CompiledV2, ctx: ApplyCtx): void {
+  if (!applied.has(wrapper)) watch(wrapper);
   applied.add(wrapper);
   for (const m of MODULES) guard(m.name, () => m.apply(wrapper, v2, ctx));
 }
@@ -73,5 +86,6 @@ export function commit(wrapper: HTMLElement, runKeys: string[]): void {
 export function release(wrapper: HTMLElement): void {
   if (!applied.has(wrapper)) return;
   applied.delete(wrapper);
+  unwatchOffscreen(wrapper);
   for (const m of MODULES) guard(m.name, () => m.release(wrapper));
 }

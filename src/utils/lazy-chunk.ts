@@ -1,6 +1,5 @@
 import { BUILD_VERSION } from './build-version';
-import { LAZY_CHUNK_FILES } from '../contracts/lazy-module';
-import type { LazyChunk, LazyChunkModule, LazyChunkName } from '../contracts/lazy-module';
+import type { EditorLazyChunkName, LazyChunk, LazyChunkModule, LazyChunkName } from '../contracts/lazy-module';
 
 /*
  * The one loader for the lazy chunks of epic D (contract lazy-module 1.0.0, ADR 0024). Memoised load,
@@ -22,8 +21,9 @@ export interface LazyChunkControl extends LazyChunk {
   __reset(importer?: LazyImporter): void;
 }
 
-export function lazyChunk(name: LazyChunkName, realImporter: LazyImporter): LazyChunkControl {
-  const file = LAZY_CHUNK_FILES[name];
+export function lazyChunk(name: LazyChunkName | EditorLazyChunkName, realImporter: LazyImporter): LazyChunkControl {
+  // every chunk file is dist/magic-card-<name>.js (LAZY_CHUNK_FILES, EDITOR_LAZY_CHUNK_FILES)
+  const file = `magic-card-${name}.js`;
   let importer = realImporter;
   let pending: Promise<boolean> | undefined;
   let state: 'idle' | 'loading' | 'ready' | 'failed' = 'idle';

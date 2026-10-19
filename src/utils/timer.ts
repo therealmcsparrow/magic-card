@@ -93,8 +93,8 @@ export function onTick(cb: () => void): () => void {
 export const tickerState = (): { running: boolean; subscribers: number } => ({ running: interval !== undefined, subscribers: ticks.size });
 
 /**
- * Ticks `cb` every second while `run(true)` and `el` is on screen (the shared off-screen observer;
- * always on screen without IntersectionObserver). `run(false)` stops ticking and watching.
+ * Ticks `cb` every second while `run(true)` and `el` is on screen (the shared off-screen observer; always on screen
+ * without IntersectionObserver). Not pausable: a clock keeps ticking in a paused card. `run(false)` stops ticking and watching.
  */
 export class TimerTick {
   private _on = false;
@@ -111,7 +111,7 @@ export class TimerTick {
     if (!on) {
       unwatchOffscreen(this._el);
       this._tick(false);
-    } else if (!watchOffscreen(this._el, (visible) => this._tick(visible))) {
+    } else if (!watchOffscreen(this._el, (visible) => this._tick(visible), { pausable: false })) {
       this._tick(true);
     }
   }
