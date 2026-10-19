@@ -1,0 +1,75 @@
+# Slider look Neon: a thin glowing track, a round handle with a glow, and a bright fill.
+# Entities: light.living_room, light.kitchen, light.desk
+type: custom:magic-card
+name: Neon
+background: "#0a0614"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Neon
+            design: { font_size: 17px, font_weight: "700", color: "#e8edf5" }
+          - type: text
+            text: "A glowing line and a round handle that glows too."
+            design: { font_size: 12px, color: "#8f9bb0" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Magenta
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: thin
+            track_thickness: 6
+            thumb: circle
+            thumb_size: 18
+            thumb_border: 2
+            thumb_glow: 10
+            slider_color: "#ff4fd8"
+            track_color: "#ff4fd840"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Cyan
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            track_style: thin
+            track_thickness: 6
+            thumb: circle
+            thumb_size: 18
+            thumb_border: 2
+            thumb_glow: 10
+            slider_color: "#22e5ff"
+            track_color: "#22e5ff40"
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Lime, gradient"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_style: thin
+            track_thickness: 6
+            thumb: circle
+            thumb_size: 18
+            thumb_border: 2
+            thumb_glow: 12
+            fill_mode: gradient
+            slider_color: "#a3ff12"
+            slider_color_to: "#22e5ff"
+            track_color: "#a3ff1240"

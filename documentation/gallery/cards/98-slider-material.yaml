@@ -1,0 +1,69 @@
+# Slider look Material, on a light card: a 6 px bar with a round handle that has a 1 px border.
+# Entities: light.living_room, light.kitchen, light.desk
+type: custom:magic-card
+name: Material
+background: "#ffffff"
+border_radius: 26px
+padding: 20px
+css: "--primary-text-color: #1f2430; --secondary-text-color: #5b6472; --disabled-color: #9aa0ac; --mc-text-secondary: #5b6472;"
+box_shadow: "0 14px 34px rgba(30,40,70,0.14)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Material
+            design: { font_size: 17px, font_weight: "700", color: "#1f2430" }
+          - type: text
+            text: "A standard bar with a round handle and a thin ring."
+            design: { font_size: 12px, color: "#5b6472" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Living room"
+            design: { font_size: 11px, font_weight: "700", color: "#5b6472", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_thickness: 6
+            track_radius: 3
+            thumb: circle
+            thumb_size: 20
+            thumb_border: 1
+            slider_color: "#6750a4"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Kitchen
+            design: { font_size: 11px, font_weight: "700", color: "#5b6472", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            track_thickness: 6
+            track_radius: 3
+            thumb: circle
+            thumb_size: 20
+            thumb_border: 1
+            slider_color: "#00796b"
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "With end labels"
+            design: { font_size: 11px, font_weight: "700", color: "#5b6472", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_thickness: 6
+            track_radius: 3
+            thumb: circle
+            thumb_size: 20
+            thumb_border: 1
+            slider_color: "#c2185b"
+            show_limits: true

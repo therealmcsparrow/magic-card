@@ -1,0 +1,67 @@
+# Slider look Glass with the flat fill: a translucent track over a colourful card, a pill handle and the value in the track.
+# Entities: light.living_room, light.desk
+type: custom:magic-card
+name: "Glass, flat"
+background: "linear-gradient(135deg, #1e3a8a 0%, #7c3aed 55%, #db2777 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(60,20,120,0.45)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Glass, flat"
+            design: { font_size: 17px, font_weight: "700", color: "#ffffff" }
+          - type: text
+            text: "A see-through track with a pill handle and the value inside."
+            design: { font_size: 12px, color: "#dbe2ff" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Living room"
+            design: { font_size: 11px, font_weight: "700", color: "#dbe2ff", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: glass
+            track_thickness: 28
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#4fc3f7"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Living room, round handle"
+            design: { font_size: 11px, font_weight: "700", color: "#dbe2ff", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: glass
+            track_thickness: 28
+            thumb: circle
+            thumb_size: 28
+            value_position: track
+            slider_color: "#a5f3a0"
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Desk lamp"
+            design: { font_size: 11px, font_weight: "700", color: "#dbe2ff", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_style: glass
+            track_thickness: 28
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#fde68a"

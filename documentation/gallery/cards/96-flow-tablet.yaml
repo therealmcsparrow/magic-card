@@ -1,0 +1,131 @@
+# Wall tablet: six flows on one card, three tubes that fill with the value and three neon lines, with bubbles and flicker on.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power, sensor.battery_power, sensor.home_battery
+type: custom:magic-card
+name: "Wall tablet"
+background: "#0f1724"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.35)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Wall tablet"
+            design: { font_size: 17px, font_weight: "700", color: "#e6edf7" }
+          - type: text
+            text: "Six tube and neon flows with bubbles, drawn at the same time."
+            design: { font_size: 12px, color: "#8a98ad" }
+  - id: r0
+    column_widths: ["44px", "1fr", "44px", "36px", "44px", "1fr", "44px"]
+    padding: 20px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: l0
+            type: icon
+            icon: mdi:solar-power-variant
+            size: 18px
+            design: { color: "#ffd166", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ffd166", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: m0
+            type: icon
+            icon: mdi:home-variant
+            size: 18px
+            design: { color: "#6ee7b7", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #6ee7b7", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: n0
+            type: icon
+            icon: mdi:radiator
+            size: 18px
+            design: { color: "#fb923c", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb923c", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: o0
+            type: icon
+            icon: mdi:car-electric
+            size: 18px
+            design: { color: "#22d3ee", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #22d3ee", background_color: "rgba(255,255,255,0.05)" }
+  - id: r1
+    column_widths: ["44px", "1fr", "44px", "36px", "44px", "1fr", "44px"]
+    padding: 18px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: l1
+            type: icon
+            icon: mdi:transmission-tower
+            size: 18px
+            design: { color: "#8ecae6", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #8ecae6", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: m1
+            type: icon
+            icon: mdi:battery-charging
+            size: 18px
+            design: { color: "#c084fc", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c084fc", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: n1
+            type: icon
+            icon: mdi:heat-pump
+            size: 18px
+            design: { color: "#a3e635", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #a3e635", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: o1
+            type: icon
+            icon: mdi:fridge
+            size: 18px
+            design: { color: "#93c5fd", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #93c5fd", background_color: "rgba(255,255,255,0.05)" }
+  - id: r2
+    column_widths: ["44px", "1fr", "44px", "36px", "44px", "1fr", "44px"]
+    padding: 18px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: l2
+            type: icon
+            icon: mdi:ev-station
+            size: 18px
+            design: { color: "#fb7185", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: m2
+            type: icon
+            icon: mdi:water-boiler
+            size: 18px
+            design: { color: "#fdba74", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fdba74", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: n2
+            type: icon
+            icon: mdi:washing-machine
+            size: 18px
+            design: { color: "#f9a8d4", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #f9a8d4", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: o2
+            type: icon
+            icon: mdi:lightbulb-group
+            size: 18px
+            design: { color: "#fde68a", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fde68a", background_color: "rgba(255,255,255,0.05)" }
+flows:
+  - { id: tube-0, from: l0, to: m0, entity: sensor.solar_power, max: 5000, route: straight, line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, color: "#ffd166" }
+  - { id: tube-1, from: l1, to: m1, entity: sensor.house_power, max: 5000, route: straight, line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, color: "#8ecae6" }
+  - { id: tube-2, from: l2, to: m2, entity: sensor.battery_power, max: 3000, route: straight, line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, color: "#fb7185" }
+  - { id: neon-0, from: n0, to: o0, entity: sensor.grid_power, max: 5000, route: straight, line_style: neon, width: 3, glow: 8, flicker: subtle, color: "#fb923c", shape: spark, dot_size: 9, dots: 3 }
+  - { id: neon-1, from: n1, to: o1, entity: sensor.solar_power, max: 5000, route: straight, line_style: neon, width: 3, glow: 8, flicker: subtle, color: "#a3e635", shape: spark, dot_size: 9, dots: 3 }
+  - { id: neon-2, from: n2, to: o2, entity: sensor.house_power, max: 5000, route: straight, line_style: neon, width: 3, glow: 8, flicker: subtle, color: "#f9a8d4", shape: spark, dot_size: 9, dots: 3 }
