@@ -2,8 +2,9 @@ import type { EntityInherit, EntityKey } from '../contracts/entity-scope';
 
 /** Contract entity-scope 1.0.0: own id, null for `none`, undefined for inherit. */
 export function entityKey(value: unknown): EntityKey {
-  if (typeof value !== 'string' || /^\s*~?\s*$/.test(value)) return undefined;
-  return value === 'none' ? null : value;
+  const text = typeof value === 'string' ? value.trim() : '';
+  if (!text || text === '~') return undefined;
+  return text === 'none' && value === text ? null : (value as string);
 }
 
 /** What a layout hands down to its children. */

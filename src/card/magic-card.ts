@@ -64,7 +64,7 @@ import { configGoogleFonts, loadGoogleFonts } from '../utils/google-fonts';
 import { isRunnableAction } from '../utils/actions';
 import { RenderContext, withRenderContext } from '../services/render-context';
 import { renderModuleContent } from '../modules/render-module';
-import { runServiceCall, toggleCall } from '../utils/entity-control';
+import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity-control';
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
 import { PopupController } from './popup-controller';
@@ -121,7 +121,7 @@ function hasRunnableActions(actions: ActionsConfig | undefined, entity?: string)
 }
 
 /** What runs actions: a module, or a row (no entity of its own). */
-type Actor = { actions?: ActionsConfig; entity?: string };
+type Actor = { actions?: ActionsConfig; entity?: string; /** The entity comes from the card or a layout, not from the module itself. */ inherited?: boolean };
 
 /**
  * Elements inside a row that handle a tap themselves: a tap there never also runs the row's action
@@ -329,7 +329,7 @@ export class MagicCard extends LitElement {
     // a row module's column renders like a card column (design, conditions, valign, editor slot path)
     renderColumn: (col, slot) => {
       const parent = this._pathStack[this._pathStack.length - 1];
-      return parent === undefined ? undefined : this._renderColumn(col as ColumnConfig, 0, slot, parent);
+      return parent === undefined ? undefined : this._withEntity(this._scope, () => this._renderColumn(col as ColumnConfig, 0, slot, parent));
     },
     childHidden: (child) => !this.editMode && this._withEntity(this._entityOf(child), () => this._isHidden(child)),
     uiState: <T>(key: string) => {
@@ -776,11 +776,12 @@ export class MagicCard extends LitElement {
     // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers
     if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
 
+    // the scope first: the card's own display template reads entity / card_entity
+    const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
     }
 
-    const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
@@ -1009,7 +1010,7 @@ export class MagicCard extends LitElement {
     // row actions (not on the studio canvas) run on taps outside its modules' own actions and
     // controls. No role: a button role would hide the row's content from assistive tech. Focusable
     // (Enter / Space) only without interactive content of its own (set in updated()).
-    const actor: Actor = { actions: row.actions, entity: scope };
+    const actor: Actor = { actions: row.actions, entity: scope, inherited: true };
     const hasActions = !this.editMode && hasRunnableActions(row.actions, scope);
     const own = (e: Event) => !this._isRowControlEvent(e);
 
@@ -1097,7 +1098,7 @@ export class MagicCard extends LitElement {
     const mod = (source.entity || undefined) === entity ? source : { ...source, entity };
     this._scope = childScope(source, up);
     try {
-      return this._withEntity(entity, () => this._renderModuleAt(mod, path));
+      return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity));
     } finally {
       this._scope = up;
     }
@@ -1119,7 +1120,7 @@ export class MagicCard extends LitElement {
     }
   }
 
-  private _renderModuleAt(mod: CardModule, path: string): TemplateResult {
+  private _renderModuleAt(mod: CardModule, path: string, inherited: boolean): TemplateResult {
     const hidden = this._isHidden(mod);
     if (hidden && !this.editMode) {
       return html``;
@@ -1142,7 +1143,7 @@ export class MagicCard extends LitElement {
       .join('; ');
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)
     const actions = mod.actions;
-    const acting = mod;
+    const acting: Actor = { actions: mod.actions, entity: mod.entity, inherited };
     const hasActions = !this.editMode && hasRunnableActions(actions, mod.entity);
     this._pathStack.push(path);
     // v2: the runtime's icon rig hint reaches the module's main icon through the render context
@@ -1163,7 +1164,7 @@ export class MagicCard extends LitElement {
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
         role=${hasActions ? 'button' : nothing}
         tabindex=${hasActions ? 0 : nothing}
-        aria-label=${hasActions ? this._getActionLabel(acting) : nothing}
+        aria-label=${hasActions ? this._getActionLabel(mod) : nothing}
         data-mc-path=${this.editMode ? path : nothing}
         data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control })}
         data-mc-id=${mod.id || nothing}
@@ -1490,7 +1491,9 @@ export class MagicCard extends LitElement {
 
     const entity = action.use_module_entity !== false ? (action.entity || mod.entity) : action.entity;
 
-    switch (action.action) {
+    // an inherited entity toggles only the safe domains (a lock or cover reached by way of the card entity opens more-info)
+    const kind = action.action === 'toggle' && mod.inherited && !action.entity && entity && !SAFE_TOGGLE_DOMAINS.has(entity.split('.')[0]) ? 'more-info' : action.action;
+    switch (kind) {
       case 'more-info':
         if (entity) {
           this.dispatchEvent(
