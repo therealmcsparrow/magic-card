@@ -90,6 +90,8 @@ export interface MagicCardConfig {
   type: string;
   name?: string;
   template?: string;
+  /** Card entity: modules without their own `entity` follow it (contract entity-scope). Per card, never in a template. */
+  entity?: string;
   not_synced?: string[]; // Property paths that are not synced to template
   rows: RowConfig[];
   use_page_theme?: boolean;
@@ -919,6 +921,8 @@ export interface GaugeModuleConfig extends CardModule {
 }
 
 export interface HorizontalModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'horizontal';
   modules?: CardModule[];
   gap?: string;
@@ -927,6 +931,8 @@ export interface HorizontalModuleConfig extends CardModule {
 }
 
 export interface VerticalModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'vertical';
   modules?: CardModule[];
   gap?: string;
@@ -949,6 +955,8 @@ export interface NestedColumnConfig {
 }
 
 export interface RowModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'row';
   columns?: NestedColumnConfig[];
   layout?: string;
@@ -959,6 +967,8 @@ export interface RowModuleConfig extends CardModule {
 }
 
 export interface TabsModuleConfig extends CardModule, IconFxKeys {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'tabs';
   tabs?: Array<{
     label: string;
@@ -980,6 +990,8 @@ export interface SeparatorModuleConfig extends CardModule {
 }
 
 export interface SliderLayoutModuleConfig extends CardModule {
+  /** Pass this layout's own `entity` to the modules inside (absent = false). */
+  share_entity?: boolean;
   type: 'slider-layout';
   modules?: CardModule[];
   pagination?: boolean;
