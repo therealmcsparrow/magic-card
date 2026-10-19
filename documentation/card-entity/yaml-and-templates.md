@@ -83,7 +83,7 @@ The first module follows the card entity, so `entity` is `light.kitchen`. The se
 
 A template that mentions neither name gets no variables and behaves exactly as before. A template that used the name `entity` for something else, with no entity set anywhere, now reads an empty string where it used to read an undefined value.
 
-The editor lists both names under every template field.
+The template fields in the editor do not list these names. They are documented on this page and in [Card entity](README.md#templates).
 
 ## What does not follow the card entity
 
