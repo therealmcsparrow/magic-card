@@ -1,9 +1,9 @@
-import { html, TemplateResult } from 'lit';
+import { html, nothing, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, HorizontalModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
-import { renderChildModule, renderEmptySlot } from '../render-module';
+import { layoutChildren, renderEmptySlot } from '../render-module';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
@@ -31,13 +31,12 @@ class HorizontalModule extends BaseMagicModule {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     const c = config as HorizontalModuleConfig;
     const children = c.modules || [];
+    const laid = children.length > 0 ? layoutChildren(children, hass) : undefined;
 
     return html`
-      <div class="mc-module mc-horizontal"
+      <div class="mc-module mc-horizontal" data-mc-layers=${laid?.layered ? '' : nothing}
         style="gap:${c.gap || '8px'}; align-items:${c.align || 'center'}; justify-content:${c.justify || 'start'}">
-        ${children.length > 0
-          ? children.map((child, i) => renderChildModule(child, hass, i))
-          : renderEmptySlot(t('Empty row'))}
+        ${laid ? laid.content : renderEmptySlot(t('Empty row'))}
       </div>
     `;
   }

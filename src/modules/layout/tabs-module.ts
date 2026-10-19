@@ -4,7 +4,7 @@ import { BaseMagicModule } from '../base-module';
 import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
-import { renderChildModule, renderEmptySlot } from '../render-module';
+import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
@@ -47,6 +47,8 @@ class TabsModule extends BaseMagicModule {
     // every tab hidden: no content either
     const activeTab = shown.length ? tabs[activeIdx] : undefined;
 
+    const laid = activeTab?.modules?.length ? layoutChildren(activeTab.modules, hass, activeIdx) : undefined;
+
     const select = (i: number) => (e: Event) => {
       e.stopPropagation();
       if (!state || !ctx || i === activeIdx) return;
@@ -88,10 +90,8 @@ class TabsModule extends BaseMagicModule {
             `;
           })}
         </div>
-        <div class="mc-tabs-content" role="tabpanel">
-          ${activeTab?.modules?.length
-            ? activeTab.modules.map((child, i) => renderChildModule(child, hass, i, activeIdx))
-            : renderEmptySlot(t('Empty tab'))}
+        <div class="mc-tabs-content" role="tabpanel" data-mc-layers=${laid?.layered ? '' : nothing}>
+          ${laid ? laid.content : renderEmptySlot(t('Empty tab'))}
         </div>
       </div>
     `;

@@ -2,6 +2,7 @@ import type { TemplateResult } from 'lit';
 import type { TemplateState } from './template-controller';
 import type { SubscriptionState } from './subscription-controller';
 import type { CardModule, NestedColumnConfig } from '../types';
+import type { ResolvedLayer } from '../contracts/layer-placement';
 
 /**
  * What a module may ask of the card that is rendering it. Set by the card for the duration of its
@@ -27,8 +28,9 @@ export interface RenderContext {
   /**
    * Render a layout module's child through the card's module pipeline (design, animations, actions,
    * display conditions, validation errors, editor paths). `slot` is the column / tab (0 for flat lists).
+   * `layer`: the child sits behind the others or on top (layer-placement 1.0.0), see arrange().
    */
-  renderChild?(child: CardModule, index: number, slot?: number): TemplateResult;
+  renderChild?(child: CardModule, index: number, slot?: number, layer?: ResolvedLayer): TemplateResult;
   /** Render a row module's column like a card column (with its children), `slot` its index. */
   renderColumn?(col: NestedColumnConfig, slot: number): TemplateResult | undefined;
   /**
@@ -36,6 +38,13 @@ export interface RenderContext {
    * false in the studio canvas, which shows hidden modules dimmed.
    */
   childHidden?(child: CardModule): boolean;
+  /** The child has actions that would run (its effective entity); the default click-through of an overlay follows it. */
+  childHasActions?(child: CardModule): boolean;
+  /**
+   * A row module is being rendered (layer-placement fill: row): whether its grid is layered, and the
+   * backgrounds its columns handed up, to render inside the grid after the columns.
+   */
+  nestedRow?(): { layered: boolean; hoisted(): TemplateResult[] };
   /** Per-card UI state (active tab, current slide) of the module being rendered. */
   uiState?<T>(key: string): { get(): T | undefined; set(value: T): void };
   /** Studio canvas: the selected module is a descendant of the module being rendered, in this slot / index. */

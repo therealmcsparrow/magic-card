@@ -37,13 +37,14 @@ class RowModule extends BaseMagicModule {
     const c = config as RowModuleConfig;
     const columns = c.columns || [];
     const ctx = currentRenderContext();
+    const nested = ctx?.nestedRow?.();
     const style = `grid-template-columns: ${rowGridTemplate(c)}; gap: ${c.gap || DEFAULT_GAP}${c.padding ? `; padding: ${c.padding}` : ''}`;
     return html`
-      <div class="mc-module mc-nested-row" style=${style}>
+      <div class="mc-module mc-nested-row" data-mc-layers=${nested?.layered ? '' : nothing} style=${style}>
         ${columns.map((col, ci) => (!col || typeof col !== 'object'
           ? nothing // a YAML entry that is not a column (null)
           : ctx?.renderColumn?.(col, ci)
-            ?? html`<div class="mc-column" data-valign=${col.vertical_align || nothing} style=${`gap: ${col.gap || NESTED_COLUMN_GAP}`}>${(col.modules || []).map((child, i) => renderChildModule(child, hass, i, ci))}</div>`))}
+            ?? html`<div class="mc-column" data-valign=${col.vertical_align || nothing} style=${`gap: ${col.gap || NESTED_COLUMN_GAP}`}>${(col.modules || []).map((child, i) => renderChildModule(child, hass, i, ci))}</div>`))}${nested?.hoisted()}
       </div>
     `;
   }

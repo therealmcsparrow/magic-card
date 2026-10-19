@@ -2,6 +2,8 @@ import { html, nothing, TemplateResult } from 'lit';
 import { ModuleRegistry } from './module-registry';
 import type { CardModule, HomeAssistant, ModuleType } from '../types';
 import { currentRenderContext } from '../services/render-context';
+import { arrange } from '../layers/placement';
+import type { ArrangedChild, RenderChildren, ResolvedLayer } from '../contracts/layer-placement';
 import { t } from '../card/i18n';
 
 /** Small inline error state shown in place of one module; the rest of the card keeps rendering. */
@@ -52,10 +54,30 @@ export function renderChildModule(
   hass: HomeAssistant | undefined,
   index: number,
   slot = 0,
+  layer?: ResolvedLayer,
 ): TemplateResult {
   const ctx = currentRenderContext();
-  return ctx?.renderChild ? ctx.renderChild(child, index, slot) : renderModuleContent(child, hass);
+  return ctx?.renderChild ? ctx.renderChild(child, index, slot, layer) : renderModuleContent(child, hass);
 }
+
+/**
+ * A layout's children in the order layer-placement 1.0.0 asks for (overlays before and after the
+ * modules in flow, backgrounds last; the config index stays the editor path), and whether the layout
+ * needs `data-mc-layers`. Layout modules put `layered` on their container.
+ */
+export function layoutChildren(children: readonly CardModule[], hass: HomeAssistant | undefined, slot = 0): { layered: boolean; content: TemplateResult } {
+  const ctx = currentRenderContext();
+  const a = arrange(children, {
+    hidden: (c) => !!ctx?.childHidden?.(c),
+    hasActions: (c) => !!ctx?.childHasActions?.(c),
+    canHoist: false,
+  });
+  const one = ({ child, index, layer }: ArrangedChild) => renderChildModule(child, hass, index, slot, layer);
+  return { layered: a.layered, content: html`${a.front.map(one)}${a.backgrounds.map(one)}` };
+}
+
+/** The layer-placement contract's name for layoutChildren(): just the markup. */
+export const renderChildren: RenderChildren = (children, hass, slot) => layoutChildren(children, hass as HomeAssistant | undefined, slot).content;
 
 /**
  * A layout's children that render something, with their index in the config (the editor path keeps
