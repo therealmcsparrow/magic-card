@@ -6,37 +6,34 @@ import { editorSystem } from '../../css/editor-stack';
 import { editorKey } from '../../utils/editor-key';
 import { renderEntityField, renderFieldHead, renderToggleField } from '../../utils/form-utils';
 import type { SyncContext } from '../../utils/sync-path';
-import { t } from '../i18n';
+import { m, t, type MessageId } from '../i18n';
 import './entity-picker';
 
+const SOURCES: Record<EntitySourceKind, MessageId> = { card: m('card'), row: m('row'), column: m('column'), tabs: m('tabs'), slides: m('slides') };
+
 /** The nouns of the field, as plain words (no "domain", no "entity" jargon in the mismatch sentence). */
-function sourceWord(kind: EntitySourceKind): string {
-  switch (kind) {
-    case 'row': return t('row');
-    case 'column': return t('column');
-    case 'tabs': return t('tabs');
-    case 'slides': return t('slides');
-    default: return t('card');
-  }
-}
+export const sourceWord = (kind: EntitySourceKind): string => t(SOURCES[kind]);
+
+const KINDS: Record<string, MessageId> = {
+  camera: m('a camera'),
+  light: m('a light'),
+  weather: m('a weather source'),
+  sensor: m('a sensor'),
+  binary_sensor: m('a sensor'),
+  switch: m('a switch'),
+  input_select: m('a list of options'),
+  select: m('a list of options'),
+  other: m('a different kind of device'),
+};
 
 /** "a sensor", "a camera": what a Home Assistant domain is called in a sentence. */
-export function kindNoun(domain: string | undefined): string {
-  switch (domain) {
-    case 'camera': return t('a camera');
-    case 'light': return t('a light');
-    case 'weather': return t('a weather source');
-    case 'sensor':
-    case 'binary_sensor': return t('a sensor');
-    case 'switch': return t('a switch');
-    case 'climate': return t('a thermostat');
-    case 'cover': return t('a cover');
-    case 'media_player': return t('a media player');
-    case 'fan': return t('a fan');
-    case 'input_select':
-    case 'select': return t('a list of options');
-    default: return t('a different kind of device');
-  }
+export const kindNoun = (domain: string | undefined): string => t(KINDS[domain && domain in KINDS ? domain : 'other']);
+
+/** "Attributes of light.kitchen (card)": which entity the attribute list comes from, when it is not the module's own. */
+export function attributeCaption(scope?: EntitySourceInfo): string | undefined {
+  const from = scope?.inherited;
+  if (!scope || scope.choice !== 'inherit' || !from || !scope.effective) return undefined;
+  return t('Attributes of {id} ({source})', { id: scope.effective, source: sourceWord(from.from) });
 }
 
 /** Event: the user asked for Card settings > General (the Card entity field). */
@@ -66,7 +63,6 @@ export class EntitySource extends LitElement {
       }
       .src .seg > button {
         white-space: normal;
-        text-align: center;
         line-height: 1.2;
       }
       .src .seg > button[aria-pressed='true'] {
@@ -75,24 +71,24 @@ export class EntitySource extends LitElement {
         box-shadow: 0 0 0 1px var(--mc-divider), 0 1px 2px rgba(0, 0, 0, 0.08);
       }
       .src .seg > button[aria-disabled='true'] {
-        color: var(--mc-text-2);
         border: 1px dashed var(--mc-divider);
         cursor: default;
       }
-      .src .line {
+      .src .line,
+      .src .warn {
         display: flex;
         gap: 6px;
-        align-items: flex-start;
         margin: 0;
         font-size: 0.8125rem;
-        color: var(--mc-text);
         overflow-wrap: anywhere;
       }
-      .src .line ha-icon {
+      .src .warn {
+        font-size: 0.875rem;
+        color: var(--mc-warn-ink);
+      }
+      .src ha-icon {
         --mdc-icon-size: 16px;
         flex: none;
-        margin-top: 1px;
-        color: var(--mc-text-2);
       }
       .src .sub {
         margin: 0;
@@ -100,26 +96,12 @@ export class EntitySource extends LitElement {
         color: var(--mc-text-2);
         overflow-wrap: anywhere;
       }
-      .src .warn {
-        display: flex;
-        gap: 6px;
-        align-items: flex-start;
-        margin: 0;
-        font-size: 0.875rem;
-        color: var(--mc-warn-ink);
-        overflow-wrap: anywhere;
-      }
-      .src .warn ha-icon {
-        --mdc-icon-size: 18px;
-        flex: none;
-      }
       .src .acts {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
       }
       .src .link {
-        display: inline;
         padding: 0;
         border: 0;
         background: none;
@@ -129,19 +111,13 @@ export class EntitySource extends LitElement {
         cursor: pointer;
       }
       @media (pointer: coarse) {
+        .src .seg > button,
+        .src .acts .btn,
+        .src .link {
+          min-height: 44px;
+        }
         .src .seg > button {
-          min-height: 44px;
           font-size: 0.875rem;
-        }
-        .acts .btn,
-        .src .link {
-          min-height: 44px;
-        }
-        .src .link {
-          padding: 0 4px;
-        }
-        .src {
-          gap: 8px;
         }
       }
     `,
@@ -201,7 +177,7 @@ export class EntitySource extends LitElement {
   private _mismatchText(): string {
     const i = this.info;
     if (!i.mismatch || !i.inherited) return '';
-    const kind = i.domains?.length === 1 ? kindNoun(i.domains[0]) : t('a different kind of device');
+    const kind = kindNoun(i.domains?.length === 1 ? i.domains[0] : undefined);
     return t("This tile needs {kind}. The {source}'s device is {thing}, so the tile stays empty.", {
       kind,
       source: sourceWord(i.inherited.from),
@@ -289,9 +265,7 @@ export class EntitySource extends LitElement {
     if (i.choice === 'none') {
       return html`<p class="help" id="hint">${this.layout ? t('Tiles inside get no entity unless they pick one.') : t('This tile shows no device.')}</p>`;
     }
-    if (i.choice === 'own') {
-      return this.layout && !i.invalidOwn ? html`<p class="help" id="hint">${t('Tiles inside follow this entity unless they pick their own.')}</p>` : nothing;
-    }
+    if (i.choice === 'own') return nothing;
     if (this._canFollow && !this._picking) {
       const inh = i.inherited!;
       const stateObj = this.hass?.states?.[inh.id];
@@ -456,7 +430,7 @@ export function renderEntityBlock(
             (v) => onChange({ ...c, share_entity: v } as CardModule),
             'share_entity',
             syncCtx,
-            t('When on, tiles inside follow this entity unless they pick their own.'),
+            t('Tiles inside follow this entity unless they pick their own.'),
           )
         : nothing}
     </div>

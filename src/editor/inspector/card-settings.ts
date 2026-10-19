@@ -39,6 +39,7 @@ import '../components/popup-settings';
 import '../components/flows-editor';
 import '../components/seasonal-editor';
 import '../components/design-panel';
+import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
 
@@ -70,12 +71,42 @@ export function cardThemeOptions(hass?: HomeAssistant): ThemeOption[] {
 
 const newCondition = (): DisplayCondition => ({ id: generateId('cond'), type: 'state', entity: '', state: '' });
 
+/** The card's own entity (contract entity-scope 1.0.0): never part of a template, so no sync mark and no not_synced entry. */
+export interface CardEntityField {
+  /** Modules that follow it (the plain "N tiles follow it." line; hidden at 0). */
+  following: number;
+  /** undefined removes the key. */
+  onChange: (entity: string | undefined) => void;
+}
+
+function renderCardEntity(config: MagicCardConfig, hass: HomeAssistant | undefined, field: CardEntityField): TemplateResult {
+  return html`
+    <div class="mc-field">
+      <div class="field-head"><label>${t('Card entity')}</label><span class="help">${t('Optional')}</span></div>
+      <mc-entity-picker
+        data-card-entity
+        .hass=${hass}
+        .value=${typeof config.entity === 'string' ? config.entity : ''}
+        .label=${t('Card entity')}
+        .placeholder=${t('Pick a device')}
+        @value-changed=${(e: CustomEvent<{ value: string }>) => field.onChange(e.detail.value === '' ? undefined : e.detail.value)}
+      ></mc-entity-picker>
+      <p class="help">${t('The device this card is for. Tiles follow it unless you set one for them.')}</p>
+      <p class="help">${t("Magic Card Utils templates never include it. Applying one keeps this card's entity.")}</p>
+      ${field.following > 0
+        ? html`<p class="help follow">${t('{n, plural, one {# tile follows it.} other {# tiles follow it.}}', { n: field.following })}</p>`
+        : nothing}
+    </div>
+  `;
+}
+
 export function renderCardGeneral(
   config: MagicCardConfig,
   update: CardUpdate,
   syncCtx: SyncContext | undefined,
   hass: HomeAssistant | undefined,
   canvas = false,
+  entityField?: CardEntityField,
 ): TemplateResult {
   const usePageTheme = config.use_page_theme !== false;
   const popup = config.popup && typeof config.popup === 'object' ? config.popup : undefined;
@@ -83,6 +114,7 @@ export function renderCardGeneral(
   return html`
     <div class="group">
       ${renderTextField(t('Name'), config.name, (v) => update('name', v), 'name', syncCtx)}
+      ${entityField ? renderCardEntity(config, hass, entityField) : nothing}
       ${renderToggleField(
         t('Use dashboard theme'),
         usePageTheme,

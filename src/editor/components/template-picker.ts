@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult, nothing } from 'lit';
+import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { MagicCardConfig, HomeAssistant } from '../../types';
 import { deepClone } from '../../utils/deep-merge';
@@ -7,6 +7,9 @@ import { stripForTemplate } from '../state/template-sync';
 import { pickerStyles, templatePickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
+import { entityKey } from '../../utils/entity-scope';
+import { templateFollows } from '../entity-source';
+import './entity-picker';
 import { t } from '../i18n';
 
 interface TemplateEntry {
@@ -18,7 +21,20 @@ type TemplateStore = Record<string, TemplateEntry>;
 
 @customElement('mc-template-picker')
 export class TemplatePicker extends LitElement {
-  static styles = [editorSystem, pickerStyles, templatePickerStyles];
+  static styles = [
+    editorSystem,
+    pickerStyles,
+    templatePickerStyles,
+    css`
+      .mc-template-device {
+        display: grid;
+        gap: 6px;
+      }
+      .mc-template-device > p {
+        margin: 0;
+      }
+    `,
+  ];
 
   private _windowCtrl = new PickerWindowController(this, () => this._close());
 
@@ -31,6 +47,8 @@ export class TemplatePicker extends LitElement {
   @state() private _searchQuery = '';
   @state() private _error = '';
   @state() private _confirmLoad: string | null = null;
+  /** The answer to "Which device is this card for?" in the load confirm; empty = not answered. */
+  @state() private _device = '';
   @state() private _showOverwrite = false;
   @state() private _templates: TemplateStore = {};
   @state() private _loading = true;
@@ -42,6 +60,11 @@ export class TemplatePicker extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this._loadTemplates();
+  }
+
+  protected willUpdate(changed: Map<string, unknown>): void {
+    // each template asks its own question: an answer never carries over
+    if (changed.has('_confirmLoad')) this._device = '';
   }
 
   protected updated(changed: Map<string, unknown>): void {
@@ -166,6 +189,7 @@ export class TemplatePicker extends LitElement {
     const config = { ...fromTemplate, ...(this.config ? cardInstanceKeys(this.config) : {}) };
     config['type'] = 'custom:magic-card';
     config['template'] = name;
+    if (this._device) config['entity'] = this._device;
 
     this.dispatchEvent(
       new CustomEvent('template-selected', {
@@ -343,6 +367,13 @@ export class TemplatePicker extends LitElement {
     `;
   }
 
+  /** Whether to ask which device the card is for: the card has none and the template has a module that would follow it. */
+  private _asksDevice(name: string): boolean {
+    const rows = this._templates[name]?.config.rows;
+    if (!this.config || typeof entityKey(this.config.entity) === 'string' || !Array.isArray(rows)) return false;
+    return templateFollows(rows.flatMap((r) => (r.columns ?? []).flatMap((c) => c.modules ?? [])));
+  }
+
   private _renderLink(): TemplateResult {
     if (this._loading) {
       return html`<div class="mc-picker-loading">${t('Loading templates...')}</div>`;
@@ -360,6 +391,19 @@ export class TemplatePicker extends LitElement {
               <div class="mc-template-confirm-text">
                 ${t('Load "{name}"? This will replace your current config.', { name: this._confirmLoad })}
               </div>
+              ${this._asksDevice(this._confirmLoad)
+                ? html`<div class="mc-template-device" role="group" aria-labelledby="device-q">
+                    <p class="mc-template-confirm-text" id="device-q">${t('Which device is this card for?')}</p>
+                    <mc-entity-picker
+                      .hass=${this.hass}
+                      .value=${this._device}
+                      .label=${t('Which device is this card for?')}
+                      .placeholder=${t('Pick a device')}
+                      @value-changed=${(e: CustomEvent<{ value: string }>) => { this._device = e.detail.value; }}
+                    ></mc-entity-picker>
+                    <p class="help">${t('Tiles that follow the card will show it.')}</p>
+                  </div>`
+                : nothing}
               <div class="mc-template-confirm-actions">
                 <button type="button" class="btn btn-secondary btn-sm" @click=${() => { this._confirmLoad = null; }}>${t('Cancel')}</button>
                 <button type="button" class="btn btn-primary btn-sm" @click=${() => this._handleLoadConfirm(this._confirmLoad!)}>${t('Load')}</button>

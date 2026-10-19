@@ -5,7 +5,7 @@ import { renderTextField, renderToggleField, renderAttributeField, renderSelectF
 import { cssAspectRatio } from '../../../utils/media';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t, tc } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 export const imageEditor: ModuleEditor = {
   type: 'image',
@@ -22,7 +22,7 @@ export const imageEditor: ModuleEditor = {
               onChange({ ...c, entity_picture: v }), 'entity_picture', syncCtx,
               t("Shows the entity's picture (person, image, camera, media player)."))
           : nothing}
-        ${renderAttributeField(t('Image from attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)}
+        ${renderAttributeField(t('Image from attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${eid && c.attribute ? renderFieldHint(t('The attribute holds the image URL; it replaces the entity picture and the image URL.')) : nothing}
         ${!c.entity_picture && !(eid && c.attribute)
           ? renderMediaField(t('Image URL'), c.image, (v) => onChange({ ...c, image: v }), hass, 'image', 'image', syncCtx)

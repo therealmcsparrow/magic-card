@@ -13,7 +13,7 @@ import { entityIcon } from '../../../utils/entity-icon';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
-import { renderEntitySourceField, withEntityKey } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField, withEntityKey } from '../../components/entity-source';
 
 /**
  * The first entity picked for a new button (no entity, no actions yet) writes default actions
@@ -75,7 +75,7 @@ export const buttonEditor: ModuleEditor = {
           t("Shows the entity's state (or the attribute picked below) next to the label."),
         )}
         ${c.show_state
-          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)
+          ? renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))
           : nothing}
       </div>
     `;

@@ -8,7 +8,7 @@ import {
 } from '../../../utils/form-utils';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 export const markdownEditor: ModuleEditor = {
   type: 'markdown',
@@ -34,7 +34,7 @@ export const markdownEditor: ModuleEditor = {
           }),
         )}
         ${renderEntitySourceField(t('Entity (for templates)'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx)}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
       </div>
     `;
   },

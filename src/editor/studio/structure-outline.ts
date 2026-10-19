@@ -6,6 +6,8 @@ import { ModuleRegistry } from '../../modules/module-registry';
 import { editorSystem } from '../../css/editor-stack';
 import { ItemMenu, LongPress, itemMenuStyles, moduleTitle } from './item-menu';
 import { renderLayoutGlyph } from '../components/layout-glyph';
+import { kindNoun, sourceWord } from '../components/entity-source';
+import { resolveEntitySource, takesEntity } from '../entity-source';
 import { effectiveWidths, hasColumnWidths, widthWeights } from '../../utils/column-widths';
 import {
   Selection,
@@ -27,7 +29,7 @@ import {
   layerName,
 } from './selection';
 import type { SlotSelection } from './selection';
-import { ChildStep, childSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import { ChildStep, childSlots, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
 import { t } from '../i18n';
 
 type DragState =
@@ -943,6 +945,23 @@ export class StructureOutline extends LitElement {
     `;
   }
 
+  /**
+   * The line under a module that takes its entity from the card or a layout (R7): the id, muted, with the
+   * words "Same as card / row" in the wide variant; or, when the entity does not fit the module, what it needs.
+   * Nothing for own entities, `none`, card modules and modules that use no entity.
+   */
+  private _followedEntity(mod: CardModule, sel: ModuleSel): TemplateResult | typeof nothing {
+    const config = this._state?.config;
+    if (!config || !(takesEntity(mod.type) || hasChildSlots(mod))) return nothing;
+    const info = resolveEntitySource(config, sel);
+    const from = info.inherited;
+    if (info.choice !== 'inherit' || info.cardModule || !from) return nothing;
+    if (info.mismatch) {
+      return html`<span class="sub is-mismatch"><ha-icon icon="mdi:alert-outline" aria-hidden="true"></ha-icon>${t('Needs {kind}', { kind: kindNoun(info.domains?.length === 1 ? info.domains[0] : undefined) })}<span class="sr-only">${t('Entity does not fit this module')}</span></span>`;
+    }
+    return html`<span class="sub is-inherited"><ha-icon icon="mdi:link-variant" aria-hidden="true"></ha-icon><span class="sr-only">${t('Inherited entity')} </span>${this.variant === 'pane' ? html`${t('Same as {source}', { source: sourceWord(from.from) })} · ` : nothing}${this.variant === 'layers' ? from.id : breakableId(from.id)}</span>`;
+  }
+
   private _renderModule(
     mod: CardModule,
     ri: number,
@@ -959,6 +978,7 @@ export class StructureOutline extends LitElement {
     const icon = ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline';
     // Mockup: "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
+    const followed = sub ? nothing : this._followedEntity(mod, sel);
     const overrides = !!mod.not_synced?.length;
     const before = dropHere === mi;
     const after = mi === count - 1 && dropHere === count;
@@ -985,7 +1005,7 @@ export class StructureOutline extends LitElement {
               ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${moduleTitle(mod)}</span>
-                  ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : nothing}
+                  ${sub ? html`<span class="sub is-entity">${breakableId(sub)}</span>` : followed}
                 </span>`}
             ${this._hiddenMark(mod)}
             ${overrides
@@ -1092,6 +1112,7 @@ export class StructureOutline extends LitElement {
     const icon = ModuleRegistry.get(child.type)?.metadata.icon || 'mdi:puzzle-outline';
     const title = moduleTitle(child);
     const sub = typeof child.entity === 'string' && ENTITY_RE.test(child.entity) ? child.entity : undefined;
+    const followed = sub ? nothing : this._followedEntity(child, sel);
     return html`
       <li role="none" class="mod child">
         <div class="line mod-line k-module" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(child) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
@@ -1109,7 +1130,7 @@ export class StructureOutline extends LitElement {
               ? this._renderRename(sel, t('Module name'))
               : html`<span class="text">
                   <span class="name">${title}</span>
-                  ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : nothing}
+                  ${sub ? html`<span class="sub is-entity">${this.variant === 'layers' ? sub : breakableId(sub)}</span>` : followed}
                 </span>`}
             ${this._hiddenMark(child)}
           </div>
@@ -1254,6 +1275,22 @@ export class StructureOutline extends LitElement {
       }
       .sub.is-entity {
         font-family: var(--mc-mono);
+      }
+      .sub.is-inherited,
+      .sub.is-mismatch {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+      }
+      .sub.is-inherited ha-icon,
+      .sub.is-mismatch ha-icon {
+        --mdc-icon-size: 16px;
+        flex: none;
+        align-self: center;
+      }
+      .sub.is-mismatch {
+        font-size: 0.8125rem;
+        color: var(--mc-warn-ink);
       }
       .mod-item {
         min-height: var(--o-mod-h);

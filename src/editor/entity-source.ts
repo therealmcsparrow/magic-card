@@ -1,7 +1,8 @@
 import { ENTITY_SOURCE_KIND, type EntityLayoutType, type EntitySourceInfo, type EntitySourceKind } from '../contracts/entity-scope';
 import { ModuleRegistry } from '../modules/module-registry';
 import type { CardModule, MagicCardConfig } from '../types';
-import { childAt } from '../utils/module-path';
+import { childSlots } from '../utils/module-path';
+import { moduleEditors } from './modules/registry';
 import { childScope, effectiveEntity, entityKey } from '../utils/entity-scope';
 import type { ModuleSelection } from './studio/selection';
 
@@ -27,7 +28,7 @@ export function resolveEntitySource(config: MagicCardConfig, sel: Pick<ModuleSel
       from = { id: key, from: ENTITY_SOURCE_KIND[mod.type as EntityLayoutType] ?? 'row' };
     }
     up = next;
-    mod = childAt(mod, step);
+    mod = childSlots(mod)?.[step.slot]?.[step.index]; // childSlots is already in magic-card.js; childAt would add an export to it
   }
   const own = mod?.entity;
   const key = entityKey(own);
@@ -43,4 +44,38 @@ export function resolveEntitySource(config: MagicCardConfig, sel: Pick<ModuleSel
   }
   if (typeof key === 'string' && !key.includes('.')) info.invalidOwn = true;
   return info;
+}
+
+/** Whether the module type takes an entity at all (its editor draws the entity field itself). */
+export function takesEntity(type: string): boolean {
+  return moduleEditors.get(type as never)?.entityField === true;
+}
+
+/** Every module of the card, with the selection that points at it. */
+function walk(config: MagicCardConfig, visit: (mod: CardModule, sel: Pick<ModuleSelection, 'row' | 'col' | 'module' | 'child'>) => void): void {
+  const down = (mod: CardModule, row: number, col: number, module: number, child: Array<{ slot: number; index: number }>) => {
+    visit(mod, { row, col, module, child });
+    childSlots(mod)?.forEach((list, slot) => list.forEach((kid, index) => down(kid, row, col, module, [...child, { slot, index }])));
+  };
+  (config.rows ?? []).forEach((r, row) => r.columns?.forEach((c, col) => c.modules?.forEach((m, module) => down(m, row, col, module, []))));
+}
+
+/** How many modules take the card entity as their own (the "N tiles follow it" line). */
+export function countFollowing(config: MagicCardConfig): number {
+  if (typeof entityKey(config.entity) !== 'string') return 0;
+  let n = 0;
+  walk(config, (mod, sel) => {
+    if (!takesEntity(mod.type)) return;
+    const i = resolveEntitySource(config, sel);
+    if (i.choice === 'inherit' && i.inherited?.from === 'card' && !i.mismatch && !i.cardModule) n++;
+  });
+  return n;
+}
+
+/** Whether a template's modules include one that would follow a card entity (no entity of its own, takes an entity, not a card module). */
+export function templateFollows(modules: ReadonlyArray<CardModule>): boolean {
+  const check = (mod: CardModule): boolean =>
+    (takesEntity(mod.type) && entityKey(mod.entity) === undefined && ModuleRegistry.get(mod.type)?.metadata.inherit !== false) ||
+    (childSlots(mod) ?? []).some((list) => list.some(check));
+  return modules.some(check);
 }

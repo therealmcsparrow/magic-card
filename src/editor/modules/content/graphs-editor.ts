@@ -4,7 +4,7 @@ import type { GraphsModuleConfig } from '../../../types';
 import { renderNumberField, renderToggleField, renderAttributeField, renderColorField, renderFieldHint } from '../../../utils/form-utils';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 export const graphsEditor: ModuleEditor = {
   type: 'graphs',
@@ -16,7 +16,7 @@ export const graphsEditor: ModuleEditor = {
     return html`
       <div class="mc-tab-content">
         ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${renderNumberField(t('Hours to show'), c.hours_to_show, (v) => onChange({ ...c, hours_to_show: v }), { min: 1, max: 168 }, 'hours_to_show', syncCtx)}
         ${c.attribute && Number(c.hours_to_show) > 48
           ? renderFieldHint(t('An attribute graph loads every recorded state with all its attributes; long periods can load slowly.'))

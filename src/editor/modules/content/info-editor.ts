@@ -12,7 +12,7 @@ import { infoToggles } from '../../../modules/content/info-module';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 export const infoEditor: ModuleEditor = {
   type: 'info',
@@ -26,7 +26,7 @@ export const infoEditor: ModuleEditor = {
     return html`
       <div class="mc-tab-content">
         ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx)}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${renderToggleField(t('Show name'), shown.name, (v) => onChange({ ...c, show_name: v, show_state: shown.state }), 'show_name', syncCtx)}
         ${renderToggleField(t('Show state'), shown.state, (v) => onChange({ ...c, show_name: shown.name, show_state: v }), 'show_state', syncCtx,
           !shown.name && !shown.state && !c.secondary_info ? t('With nothing else shown, the state is shown anyway.') : undefined)}
@@ -49,7 +49,7 @@ export const infoEditor: ModuleEditor = {
         ${renderTextField(t('Prefix'), c.prefix, (v) => onChange({ ...c, prefix: v }), 'prefix', syncCtx)}
         ${renderTextField(t('Suffix'), c.suffix, (v) => onChange({ ...c, suffix: v }), 'suffix', syncCtx)}
         ${renderAttributeField(t('Secondary info'), c.secondary_info, (v) =>
-          onChange({ ...c, secondary_info: v }), hass, eid, 'secondary_info', syncCtx)}
+          onChange({ ...c, secondary_info: v }), hass, eid, 'secondary_info', syncCtx, attributeCaption(scope))}
       </div>
     `;
   },

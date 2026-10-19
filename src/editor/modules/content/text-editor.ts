@@ -11,7 +11,7 @@ import {
 } from '../../../utils/form-utils';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t, m, tl, type MessageId } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 type EntityDisplay = NonNullable<TextModuleConfig['entity_display']>;
 
@@ -48,7 +48,7 @@ export const textEditor: ModuleEditor = {
           ? html`
               ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
               ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }),
-                hass, eid, 'attribute', syncCtx)}
+                hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
               ${renderSegField(t('Display'), c.entity_display, tl(isTimer(eid) || c.entity_display === 'remaining' ? TIMER_DISPLAY_OPTIONS : DISPLAY_OPTIONS),
                 (v) => onChange({ ...c, entity_display: v as EntityDisplay }), 'entity_display', syncCtx)}
             `

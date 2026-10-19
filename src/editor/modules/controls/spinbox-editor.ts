@@ -6,7 +6,7 @@ import { numericControl } from '../../../utils/entity-control';
 import { climateRange } from '../../../modules/controls/spinbox-module';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
-import { renderEntitySourceField } from '../../components/entity-source';
+import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
 
 const optional = (v: number) => (Number.isFinite(v) ? v : undefined);
 
@@ -22,7 +22,7 @@ export const spinboxEditor: ModuleEditor = {
     return html`
       <div class="mc-tab-content">
         ${renderEntitySourceField(t('Entity'), c, onChange, hass, scope, { syncCtx })}
-        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx)}
+        ${renderAttributeField(t('Attribute'), c.attribute, (v) => onChange({ ...c, attribute: v || undefined }), hass, eid, 'attribute', syncCtx, attributeCaption(scope))}
         ${stateObj && own?.readOnly
           ? renderFieldHint(t('This value can only be shown: the entity (or this attribute) cannot be set from a spinbox.'))
           : nothing}
