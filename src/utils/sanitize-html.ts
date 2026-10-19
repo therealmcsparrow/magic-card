@@ -100,14 +100,13 @@ function safeToken(tok: Tok, prop: string, prev?: Tok): boolean {
 const MARGIN_KEYWORD = /^(auto|inherit|initial|unset|revert|revert-layer)$/i;
 const MARGIN_MATH = /^(calc|min|max|clamp)$/;
 /**
- * Margin allow-list: unsigned numbers, lengths and percentages, keywords, a lone var(--x), and calc/min/max/clamp
+ * Margin allow-list: unsigned numbers, lengths and percentages, keywords, and calc/min/max/clamp
  * made only of unsigned operands with + * / operators. Inside math there is no `-`, ident (infinity, -infinity, nan)
- * or var(), so the result cannot be negative.
+ * or var() (a custom property can hold a negative value), so the result cannot be negative.
  */
 function safeMargin(value: Tok[]): boolean {
   let math = 0;
-  for (let i = 0; i < value.length; i++) {
-    const t = value[i];
+  for (const t of value) {
     if (t.t === 'num' || t.t === 'dim' || t.t === 'pct') {
       if (t.s[0] === '-') return false;
     } else if (math && (t.t === 'comma' || (t.t === 'delim' && '+*/'.includes(t.s)) || t.t === 'open')) {
@@ -116,7 +115,6 @@ function safeMargin(value: Tok[]): boolean {
     else if (t.t === 'fn' && MARGIN_MATH.test(t.v!)) math++;
     else if (math) return false;
     else if (t.t === 'id' && MARGIN_KEYWORD.test(t.s)) continue;
-    else if (t.t === 'fn' && t.v === 'var' && value[i + 1]?.s.startsWith('--') && value[i + 2]?.t === 'close') i += 2;
     else return false;
   }
   return !math;

@@ -40,6 +40,7 @@ const IDENT = new RegExp(String.raw`(?:--|-?(?:[a-z_\u0080-\uffff]|${ESC}))${NAM
  * Sticky regexes, tried in order at each position. Each has one way to match at a given character
  * (no overlapping alternatives), so a run is linear. A string takes its escapes and a continuation
  * (backslash + newline) whole; it ends before a bare newline or at the end of the input.
+ * The branches are disjoint (not a backslash or the quote, or a backslash and one character; a lone backslash only at the very end), websec.M-SEC6.
  * `sym` holds hash, at-keyword, CDO and CDC: none of them is ever kept but a `#hex` colour.
  */
 const RULES: [TokType, RegExp][] = [
