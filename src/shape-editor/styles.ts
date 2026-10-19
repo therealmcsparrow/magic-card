@@ -20,7 +20,7 @@ const layout: CSSResult = css`
 .layer:focus{outline:none}
 h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
-.banners{display:grid;gap:6px;padding:8px 12px 0}
+.banners{top:56px;pointer-events:none}
 .work{flex:1;min-height:0;display:grid;grid-template-columns:240px minmax(0,1fr) 340px;grid-template-areas:'left center insp'}
 [data-layout=mid] .work{grid-template-columns:220px minmax(0,1fr) 320px}
 [data-layout=compact] .work{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:'center insp'}
@@ -43,8 +43,10 @@ h2,h3,h4,p,ul{margin:0}
 .stage>.empty-stage{position:absolute;inset:52px 0 0;display:grid;place-items:center;padding:16px;text-align:center}
 .float{position:absolute;z-index:3;top:10px;left:10px;right:10px;pointer-events:none}
 .float>*{pointer-events:auto}
-.dock{position:absolute;z-index:3;left:12px;right:12px;bottom:12px;display:grid;gap:8px;justify-items:start}
-.dock>*{max-width:min(100%,520px)}
+.dock,.banners{position:absolute;z-index:3;left:12px;right:12px;display:grid;gap:8px;justify-items:start}
+.dock{bottom:12px}
+.dock>*,.banners>*{max-width:min(100%,520px);pointer-events:auto}
+.banners>*{backdrop-filter:blur(8px)}
 .pen{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;background:var(--mc-surface);border:1px solid var(--mc-divider);border-radius:var(--mc-radius-lg);box-shadow:var(--mc-shadow-float)}
 .pen .why{flex:1 1 200px}
 .scale{position:absolute;left:12px;bottom:8px;z-index:1;font-size:.75rem;color:var(--mc-text-2)}

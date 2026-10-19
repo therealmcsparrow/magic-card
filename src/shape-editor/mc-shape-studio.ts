@@ -1272,7 +1272,7 @@ export class McShapeStudio extends LitElement {
     return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${title} tabindex="-1" data-layout=${this.layout}>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(true)}></span>
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => this.focusTo('.insp button, .insp input'))}</div>
-${this.top(title)}${this.mcuBar()}${this.banners()}
+${this.top(title)}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work">
 <aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? t('Points') : t('Outline')}>${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
@@ -1329,11 +1329,12 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
   private mcuBar(): TemplateResult | typeof nothing {
     if (this.host !== 'mcu' || (!this.conflict && !this.mcuError)) return nothing;
     return this.conflict
-      ? html`<div class="banners"><div class="notice warn" role="alert">${kitGlyph('alertCircle', 20)}<div class="body"><p>${t('This shape was changed somewhere else.')}</p><div class="actions">${btn(t('Save as a copy'), () => void this.saveMcu(true))}${btn(t('Reload'), () => void this.reloadMcu())}</div></div></div></div>`
-      : html`<div class="banners">${notice({ tone: 'error', text: this.mcuError })}</div>`;
+      ? html`<div class="notice warn" role="alert">${kitGlyph('alertCircle', 20)}<div class="body"><p>${t('This shape was changed somewhere else.')}</p><div class="actions">${btn(t('Save as a copy'), () => void this.saveMcu(true))}${btn(t('Reload'), () => void this.reloadMcu())}</div></div></div>`
+      : notice({ tone: 'error', text: this.mcuError });
   }
 
-  private banners(): TemplateResult | typeof nothing {
+  /** Banners float over the top of the canvas (below the float bar), so the canvas never resizes when one comes or goes. */
+  private banners(): TemplateResult {
     const list: Array<['warn' | 'info', string]> = [];
     if (this.notice) list.push(['warn', this.notice]);
     else if (this.linked) list.push(['info', t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked })]);
@@ -1341,7 +1342,7 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
       if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.')]);
       if (p.cross) list.push(['warn', t('The outline crosses itself at {where}.', { where: sh(p.id) })]);
     }
-    return list.length ? html`<div class="banners">${list.map(([tone, text]) => notice({ tone, text }))}</div>` : nothing;
+    return html`<div class="banners">${this.mcuBar()}${list.map(([tone, text]) => notice({ tone, text }))}</div>`;
   }
 
   // ── windows ──
@@ -1451,11 +1452,11 @@ ${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
     const { w, h } = this.size;
     const cur = this.cur;
     if (this.doc.mode === 'path') {
-      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('The path editor could not load. Check your connection and try again.')} ${btn(t('Try again'), () => void this.ensureCanvas())}</div>` : t('Loading the shape editor')}</div></div>`;
+      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}${this.banners()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('The path editor could not load. Check your connection and try again.')} ${btn(t('Try again'), () => void this.ensureCanvas())}</div>` : t('Loading the shape editor')}</div></div>`;
       return html`<div class="stage"><mc-path-canvas aria-label=${t('Shape editor')} aria-describedby="hint" loupeLabel=${t('at {name}', { name: sh(this.size.id) })}
 .frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain} .transform=${this.transformBox} .contextMenu=${this.pending?.kind !== 'pen'}
-@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('Click or tap to add points. Drag to curve.') : this.tool === 'add' ? t('Click on the outline to add a point.') : this.tool === 'remove' ? t('Click a point to remove it.') : t('Tab into the canvas. [ and ] choose a point. Arrows move it.')}</span>${this.dock()}</div>`;
+@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}${this.banners()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('Click or tap to add points. Drag to curve.') : this.tool === 'add' ? t('Click on the outline to add a point.') : this.tool === 'remove' ? t('Click a point to remove it.') : t('Tab into the canvas. [ and ] choose a point. Arrows move it.')}</span>${this.dock()}</div>`;
     }
     const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
     const f = this.doc.mode === 'corners' ? Math.min(1, ...clamped(this.doc.corners, w, h).map((c) => c.to / c.from)) : 1;
@@ -1465,7 +1466,7 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
       const o = Math.max(cornerPx(this.doc.corners[key], w, h) * f * 0.5, 14 / k);
       const [x, y] = [i === 0 || i === 3 ? o : w - o, i < 2 ? o : h - o];
       return svg`<g aria-hidden="true"><circle class="handle ${this.sel === key || this.together ? 'on' : ''}" cx=${x} cy=${y} r=${5 / k} /><circle class="hit" cx=${x} cy=${y} r=${hit} @pointerdown=${(e: PointerEvent) => this.handleDown(e, key)} @pointermove=${(e: PointerEvent) => this.handleMove(e)} @pointerup=${(e: PointerEvent) => this.handleUp(e)} @pointercancel=${(e: PointerEvent) => this.handleUp(e)} /></g>`;
-    }) : nothing}</svg>${this.floatBar()}${k < 0.995 ? html`<span class="scale">${t('shown at {pct}%', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
+    }) : nothing}</svg>${this.floatBar()}${this.banners()}${k < 0.995 ? html`<span class="scale">${t('shown at {pct}%', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
   }
 
   /** The foot of the canvas: the pen's Finish / Cancel bar and the result note (cleared by the next edit, a mode change or 8 s). */

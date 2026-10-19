@@ -192,7 +192,7 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${skipLinks(ed)} ${topBar(ed)} ${banners(ed)}
+    ${skipLinks(ed)} ${topBar(ed)}
     ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${t('The icon editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
@@ -270,8 +270,8 @@ function bannerView(ed: McSvgEditor, b: { kind: Banner['kind']; text: string; de
 }
 
 function banners(ed: McSvgEditor): TemplateResult | typeof nothing {
-  if (!ed.banners.length && !ed.conflict && !(ed.module && ed.stage === 'edit')) return nothing;
   const facts = ed.module && ed.stage === 'edit' && !ed.noticeGone ? moduleNotice(ed) : nothing;
+  if (!ed.banners.length && !ed.conflict && facts === nothing) return nothing;
   return html`<div class="banners">
     ${ed.banners.map((b) => bannerView(ed, { ...b, dismiss: b.id === 'over' || b.id === 'safe' ? undefined : () => (ed.banners = ed.banners.filter((x) => x !== b)) }))}
     ${facts}
@@ -457,9 +457,10 @@ function workspace(ed: McSvgEditor): TemplateResult {
           @mc-path-context=${ed.onContext}
         ></mc-path-canvas>
         ${overLayer(ed)}
+        ${banners(ed)}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<div class="hint">${empty({ title: t('Nothing here yet'), text: t('Pick a tool on the left, or press P to draw.') })}</div>` : nothing}
+        ${resultNote(ed)}
       </div>
-      ${resultNote(ed)}
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)}
     </section>
     ${inspector(ed)}
@@ -705,7 +706,7 @@ function pathSection(ed: McSvgEditor): TemplateResult {
 function resultNote(ed: McSvgEditor): TemplateResult | typeof nothing {
   const n = ed.note;
   if (!n) return nothing;
-  return notice({ tone: n.tone, text: n.lines, action: n.action ? { label: n.action.label, onClick: () => n.action!.run() } : undefined, transient: true });
+  return html`<div class="result">${notice({ tone: n.tone, text: n.lines, action: n.action ? { label: n.action.label, onClick: () => n.action!.run() } : undefined, transient: true })}</div>`;
 }
 
 /** A button that stays focusable when unavailable; the editor says why when it is pressed. */

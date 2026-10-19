@@ -65,11 +65,46 @@ export const editorStyles: CSSResult[] = [
     .sentinel {
       position: absolute;
     }
-    .banners {
+    .banners,
+    .result {
+      position: absolute;
+      z-index: 4;
+      left: 12px;
+      right: 12px;
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       gap: 8px;
-      padding: 8px 16px 0;
+      pointer-events: none;
+    }
+    .banners {
+      top: 12px;
+    }
+    .result {
+      bottom: 12px;
+    }
+    .banners > *,
+    .result > * {
+      max-width: min(100%, 560px);
+      pointer-events: auto;
+      box-shadow: var(--mc-shadow-float);
+    }
+    /* the kit tints are see-through: back them with the surface so the drawing under a notice never shows through the text */
+    .banners > .notice.notice,
+    .result > .notice.notice {
+      background: linear-gradient(var(--nt), var(--nt)) var(--mc-surface);
+    }
+    .notice.info {
+      --nt: var(--mc-accent-tint);
+    }
+    .notice.success {
+      --nt: var(--mc-success-tint);
+    }
+    .notice.warn {
+      --nt: var(--mc-warn-tint);
+    }
+    .notice.error {
+      --nt: var(--mc-error-tint);
     }
     .banners .notice > .icon-btn {
       align-self: flex-start;
