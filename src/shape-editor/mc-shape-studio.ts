@@ -72,6 +72,13 @@ const NONE: never[] = [];
 const nm = (id: string): string => t(SIZE[id in SIZE ? id : 'custom']);
 const sh = (id: string): string => t(SHORT[id in SHORT ? id : 'custom']);
 
+interface Msg {
+  id: string;
+  tone: 'warn' | 'error' | 'info';
+  text: string;
+  conflict?: boolean;
+}
+
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
   /** Contract svg-editor revision 5: the Magic Card Utils panel checks this before it creates the element. */
@@ -121,6 +128,12 @@ export class McShapeStudio extends LitElement {
   @state() caption = '';
   @state() notice = '';
   @state() live = '';
+  @state() side: 'draw' | 'messages' = 'draw';
+  @state() msgOpen?: string;
+  /** New warnings and errors, read out on their own so they never replace an action's own announcement. */
+  @state() msgLive = '';
+  private msgTimer?: ReturnType<typeof setTimeout>;
+  private seen = new Set<string>();
   @state() pvOpen = false;
   @state() helpOpen = false;
   @state() grid = false;
@@ -234,6 +247,14 @@ export class McShapeStudio extends LitElement {
     const foreign = this.host !== 'mcu' && changed.has('value') && !!this.value && JSON.stringify(this.value.shape_options) !== this.sent;
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
     if (['doc', 'size', 'ready', 'older', 'customShapes'].some((k) => changed.has(k))) this.analyse();
+    const now = this.msgs();
+    const fresh = now.find((m) => m.tone !== 'info' && !this.seen.has(m.id));
+    this.seen = new Set(now.map((m) => m.id));
+    if (fresh) {
+      this.msgLive = `${fresh.tone === 'error' ? t('Error') : t('Warning')}: ${fresh.text}`;
+      clearTimeout(this.msgTimer);
+      this.msgTimer = setTimeout(() => (this.msgLive = ''), 4000);
+    }
   }
 
   protected firstUpdated(): void {
@@ -1274,15 +1295,15 @@ export class McShapeStudio extends LitElement {
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => this.focusTo('.insp button, .insp input'))}</div>
 ${this.top(title)}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work">
-<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? t('Points') : t('Outline')}>${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}</aside>
+<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? t('Points') : t('Outline')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
 <aside class="insp" aria-label=${t('Inspector')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('Export / Import') : t('Outline actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
 <mc-ui-popover id="pv-pop" .label=${t('Preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>
 <mc-ui-popover id="help-pop" .label=${t('Shortcuts')} align="end" @mc-popover-close=${() => (this.helpOpen = false)}>${this.helpOpen ? this.shortcuts() : nothing}</mc-ui-popover>
-${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
-<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div>
+${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : nothing}${this.leaving ? this.leaveWin() : nothing}${this.xfer ? this.xferWin() : nothing}
+<mc-ui-toast @mc-toast-action=${() => (this.toastRun?.(), this.toastHide())}></mc-ui-toast><div class="sr-only" role="status" aria-live="polite">${this.live}</div><div class="sr-only" role="status" aria-live="polite" id="msglive">${this.msgLive}</div>
 <span class="sentinel" tabindex="0" @focus=${() => this.wrapFocus(false)}></span></div>`;
   }
 
@@ -1311,7 +1332,7 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
     const actions: KitButtonOptions[] = [];
     // narrow window or 200 % zoom: shorter words, Export / Import as a glyph, the title for screen readers only (styles.ts), so the bar needs one or two rows
     const tight = this.layout === 'compact' || this.layout === 'stacked';
-    if (this.layout === 'compact') actions.push({ label: this.tab === 'path' ? t('Points') : t('Outline'), expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
+    if (this.layout === 'compact') actions.push({ label: `${this.tab === 'path' ? t('Points') : t('Outline')}${this.msgCount() ? ` (${this.msgCount()})` : ''}`, expanded: this.sheet, onClick: () => (this.sheet = !this.sheet) });
     actions.push({ label: t('Export / Import'), icon: 'mdi:swap-vertical', iconOnly: tight, haspopup: 'menu', expanded: this.menu?.kind === 'xfer', onClick: (e) => (Date.now() - this.xferClosed < 400 ? (this.xferClosed = 0) : this.openXferMenu(e)) });
     if (mcu) actions.push({ label: t('Save'), variant: 'primary', disabledReason: this.saveBusy ? t('Working...') : undefined, onClick: () => void this.saveMcu() });
     else actions.push({ label: t('Save to library'), onClick: () => this.openSave() }, { label: t('Done'), variant: 'primary', onClick: () => this.done() });
@@ -1326,24 +1347,47 @@ ${this.picker ? this.pickerWin() : nothing}${this.saving ? this.saveWin() : noth
     });
   }
 
-  private mcuBar(): TemplateResult | typeof nothing {
-    if (this.host !== 'mcu' || (!this.conflict && !this.mcuError)) return nothing;
-    return this.conflict
-      ? html`<div class="notice warn" role="alert">${kitGlyph('alertCircle', 20)}<div class="body"><p>${t('This shape was changed somewhere else.')}</p><div class="actions">${btn(t('Save as a copy'), () => void this.saveMcu(true))}${btn(t('Reload'), () => void this.reloadMcu())}</div></div></div>`
-      : notice({ tone: 'error', text: this.mcuError });
+  /** Every warning and error of the editor, in the order they are shown in Messages. */
+  private msgs(): Msg[] {
+    const out: Msg[] = [];
+    if (this.host === 'mcu') {
+      if (this.conflict) out.push({ id: 'conflict', tone: 'warn', text: t('This shape was changed somewhere else.'), conflict: true });
+      else if (this.mcuError) out.push({ id: 'mcu', tone: 'error', text: this.mcuError });
+    }
+    if (this.notice) out.push({ id: 'notice', tone: 'warn', text: this.notice });
+    else if (this.linked) out.push({ id: 'linked', tone: 'info', text: t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked }) });
+    for (const p of this.an) {
+      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) out.push({ id: `cut-${p.id}`, tone: 'warn', text: this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.') });
+      if (p.cross) out.push({ id: `cross-${p.id}`, tone: 'warn', text: t('The outline crosses itself at {where}.', { where: sh(p.id) }) });
+    }
+    return out;
   }
 
-  /** Banners float over the top of the canvas (below the float bar), so the canvas never resizes when one comes or goes. */
-  private banners(): TemplateResult | typeof nothing {
-    const list: Array<['warn' | 'info', string]> = [];
-    if (this.notice) list.push(['warn', this.notice]);
-    else if (this.linked) list.push(['info', t('Linked to the saved shape "{id}". Your edits make it this card\'s own shape.', { id: this.linked })]);
-    for (const p of this.an) {
-      if (p.cut && (this.doc.mode === 'path' || p.id === this.size.id)) list.push(['warn', this.doc.mode === 'path' ? t('The outline cuts into the text area at {where}. Raise Extra space, or give the card a minimum height.', { where: sh(p.id) }) : t('The corners cut into the text area. Raise the extra space or make corners smaller.')]);
-      if (p.cross) list.push(['warn', t('The outline crosses itself at {where}.', { where: sh(p.id) })]);
-    }
-    const m = this.mcuBar();
-    return list.length || m !== nothing ? html`<div class="banners">${m}${list.map(([tone, text]) => notice({ tone, text }))}</div>` : nothing;
+  private msgCount(): number {
+    return this.msgs().filter((m) => m.tone !== 'info').length;
+  }
+
+  /** The left sidebar's tabs: Draw (the panels) and Messages (with a count). The tab is never switched for the user. */
+  private sideTabs(): TemplateResult {
+    const n = this.msgCount();
+    return seg('', [['draw', t('Draw')], ['messages', n ? `${t('Messages')} (${n})` : t('Messages')]], this.side, (v) => (this.side = v), true);
+  }
+
+  // prettier-ignore
+  private msgList(): TemplateResult {
+    const list = this.msgs();
+    if (!list.length) return html`<p class="help">${t('No messages.')}</p>`;
+    const kind = (m: Msg): string => (m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note'));
+    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('Show full message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: () => (this.msgOpen = m.id) })}</div>`)}</div>`;
+  }
+
+  // prettier-ignore
+  private msgWin(): TemplateResult | typeof nothing {
+    const m = this.msgs().find((x) => x.id === this.msgOpen);
+    if (!m) return nothing;
+    const heading = m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note');
+    const foot = html`${m.conflict ? html`${btn(t('Save as a copy'), () => (this.closeWindows(), void this.saveMcu(true)))}${btn(t('Reload'), () => (this.closeWindows(), void this.reloadMcu()))}` : nothing}${btn(t('Close'), () => this.closeWindows(), { variant: 'primary', size: 'md' })}`;
+    return this.win(heading, html`<p>${m.text}</p>`, foot, { size: 's', onClose: () => (this.msgOpen = undefined) });
   }
 
   // ── windows ──
@@ -1453,11 +1497,11 @@ ${group(t('Shapes'), PRIMITIVE_KINDS.length, shapes)}</div>`;
     const { w, h } = this.size;
     const cur = this.cur;
     if (this.doc.mode === 'path') {
-      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}${this.banners()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('The path editor could not load. Check your connection and try again.')} ${btn(t('Try again'), () => void this.ensureCanvas())}</div>` : t('Loading the shape editor')}</div></div>`;
+      if (this.canvas !== 'ready') return html`<div class="stage">${this.floatBar()}<div class="empty-stage" role=${this.canvas === 'fail' ? 'alert' : 'status'}>${this.canvas === 'fail' ? html`<div>${t('The path editor could not load. Check your connection and try again.')} ${btn(t('Try again'), () => void this.ensureCanvas())}</div>` : t('Loading the shape editor')}</div></div>`;
       return html`<div class="stage"><mc-path-canvas aria-label=${t('Shape editor')} aria-describedby="hint" loupeLabel=${t('at {name}', { name: sh(this.size.id) })}
 .frame=${{ x: 0, y: 0, w, h }} @pointerdown=${this.ptrDown} .paths=${this.pending?.path ? [this.path, this.pending.path] : [this.path]} .paint=${this.pending ? LOCKED : NONE} .selection=${this.cvSel} .mode=${this.cvMode} .maxPaths=${this.pending ? 2 : 1} .kinds=${['corner', 'smooth', 'symmetric']} .snap=${{ enabled: this.snapOn, grid: GRID, anchors: false, frame: true }} .pixelGrid=${this.grid} .gridStep=${GRID}
 .nudge=${1} .bigNudge=${10} .fineNudge=${0.1} .constrain=${this.constrain} .transform=${this.transformBox} .contextMenu=${this.pending?.kind !== 'pen'}
-@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}${this.banners()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('Click or tap to add points. Drag to curve.') : this.tool === 'add' ? t('Click on the outline to add a point.') : this.tool === 'remove' ? t('Click a point to remove it.') : t('Tab into the canvas. [ and ] choose a point. Arrows move it.')}</span>${this.dock()}</div>`;
+@mc-path-transform=${(e: CustomEvent<PathTransform>) => this.onTransform(e)} @mc-path-context=${(e: CustomEvent<PathContext>) => this.onContext(e)} @mc-path-change=${(e: CustomEvent<PathChange>) => this.onPathChange(e)} @mc-path-select=${(e: CustomEvent<PathSelection>) => this.onPathSelect(e)} @mc-path-fields=${(e: CustomEvent<{ anchor: number }>) => this.onFields(e)} @mc-path-limit=${(e: Event) => this.onLimit(e)}></mc-path-canvas>${this.floatBar()}<span class="sr-only" id="hint">${this.pending?.kind === 'pen' ? t('Click or tap to add points. Drag to curve.') : this.tool === 'add' ? t('Click on the outline to add a point.') : this.tool === 'remove' ? t('Click a point to remove it.') : t('Tab into the canvas. [ and ] choose a point. Arrows move it.')}</span>${this.dock()}</div>`;
     }
     const k = this.stageW ? this.stageW / (w + 2 * PAD) : 1;
     const f = this.doc.mode === 'corners' ? Math.min(1, ...clamped(this.doc.corners, w, h).map((c) => c.to / c.from)) : 1;
@@ -1467,7 +1511,7 @@ ${this.doc.mode === 'corners' ? KEYS.map((key, i) => {
       const o = Math.max(cornerPx(this.doc.corners[key], w, h) * f * 0.5, 14 / k);
       const [x, y] = [i === 0 || i === 3 ? o : w - o, i < 2 ? o : h - o];
       return svg`<g aria-hidden="true"><circle class="handle ${this.sel === key || this.together ? 'on' : ''}" cx=${x} cy=${y} r=${5 / k} /><circle class="hit" cx=${x} cy=${y} r=${hit} @pointerdown=${(e: PointerEvent) => this.handleDown(e, key)} @pointermove=${(e: PointerEvent) => this.handleMove(e)} @pointerup=${(e: PointerEvent) => this.handleUp(e)} @pointercancel=${(e: PointerEvent) => this.handleUp(e)} /></g>`;
-    }) : nothing}</svg>${this.floatBar()}${this.banners()}${k < 0.995 ? html`<span class="scale">${t('shown at {pct}%', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
+    }) : nothing}</svg>${this.floatBar()}${k < 0.995 ? html`<span class="scale">${t('shown at {pct}%', { pct: Math.round(k * 100) })}</span>` : nothing}${this.dock()}</div>`;
   }
 
   /** The foot of the canvas: the pen's Finish / Cancel bar and the result note (cleared by the next edit, a mode change or 8 s). */
