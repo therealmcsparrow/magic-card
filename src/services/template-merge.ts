@@ -6,7 +6,7 @@ import { animationDocList } from '../utils/custom-animations';
 import { mergeShapeOptions } from '../utils/shape-ref';
 
 /** Module keys whose absence is a local value: overridden without a value, the template's is dropped. */
-const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg']);
+const REMOVABLE_KEYS = new Set(['icon_fx', 'icon_on', 'icon_off', 'svg', 'entity']);
 
 /**
  * A linked card's own Hide and layer name of a row, column or module (not_synced marks them): kept,
@@ -120,6 +120,7 @@ export function mergeTemplateWithOverrides(
   own = false,
 ): MagicCardConfig {
   const result = deepClone(template);
+  delete result.entity; // the card entity is per card, never the template's
   result.type = local.type;
   result.template = local.template;
 

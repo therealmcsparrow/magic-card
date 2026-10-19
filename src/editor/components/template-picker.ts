@@ -161,10 +161,9 @@ export class TemplatePicker extends LitElement {
     if (!entry) return;
 
     // the template's content, plus what HA keeps for this card (grid_options, visibility, ...)
-    const config = {
-      ...(deepClone(entry.config) as unknown as Record<string, unknown>),
-      ...(this.config ? cardInstanceKeys(this.config) : {}),
-    };
+    const fromTemplate = deepClone(entry.config) as unknown as Record<string, unknown>;
+    delete fromTemplate['entity']; // the card keeps its own entity (in cardInstanceKeys), never the template's
+    const config = { ...fromTemplate, ...(this.config ? cardInstanceKeys(this.config) : {}) };
     config['type'] = 'custom:magic-card';
     config['template'] = name;
 

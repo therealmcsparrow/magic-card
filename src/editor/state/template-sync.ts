@@ -71,6 +71,7 @@ export function clearNotSynced(config: MagicCardConfig): MagicCardConfig {
 export function stripForTemplate(config: MagicCardConfig): Record<string, unknown> {
   const result = clearNotSynced(config) as unknown as Record<string, unknown>;
   delete result['template'];
+  delete result['entity']; // per card, so one template fits any device
   for (const key of HA_INSTANCE_KEYS) delete result[key];
   return result;
 }
