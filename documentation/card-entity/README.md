@@ -19,7 +19,9 @@ The YAML spellings, the template variables and the exact rules are on [YAML and 
 
 ## Set the card entity
 
-Open Card settings, General, and fill in **Card entity**. The field is optional. Under it the editor says how many tiles follow it, for example "3 tiles follow it." Clear the field to remove the key.
+Open Card settings, General, and fill in **Card entity**. The field is optional. Under it the editor says how many tiles follow it, for example "3 tiles follow it.", and how many need another kind of device, for example "1 tile needs another device." Clear the field to remove the key.
+
+Typing in the field shows matching entity ids. The card entity is saved when you press Enter or leave the field, and only when it is a real entity id or empty; anything else goes back to the last good value. The Browse window lists the kinds of device your modules need (lights for a Light module, for example) first, and it keeps its size when you pick a row.
 
 ```yaml
 type: custom:magic-card
@@ -72,7 +74,7 @@ Nested layouts: a module follows the nearest layout that shares an entity, then 
 
 ## Modules that need one kind of device
 
-Some modules only make sense for one kind of device. When the entity they would inherit is another kind, they show nothing, as if their entity were `none`. The dashboard stays quiet. The editor explains it under the buttons in plain words, with two buttons: one to pick the right kind and one for No entity.
+Some modules only make sense for one kind of device. When the entity they would inherit is another kind, they show nothing, as if their entity were `none`. The dashboard stays quiet. The editor explains it under the buttons in plain words, with two buttons: one that opens the entity window filtered to the right kind (Pick a light, Pick a camera) and one for No entity. In the editor preview, such a tile also shows a short "Needs another device" note under its content; the dashboard never shows it.
 
 | Module | Follows an entity of |
 | --- | --- |
@@ -103,7 +105,7 @@ Magic Card Utils templates, the saved cards you link to, never include the card 
 
 ## Keyboard and screen readers
 
-The three buttons are a group of toggle buttons, with one tab stop. The arrow keys, Home and End move the focus only. Space or Enter presses the focused button, because pressing one writes to the YAML. Pick one does not move the focus into the entity field. The next Tab stop is the field.
+The three buttons are a group of toggle buttons, with one tab stop that moves with the arrow keys. The chosen button is bold with an underline, so it does not depend on colour. A greyed-out Same as card looks dimmed with a dashed border. The arrow keys, Home and End move the focus only. Space or Enter presses the focused button, because pressing one writes to the YAML. Pick one does not move the focus into the entity field. When you load a Magic Card Utils template and the confirmation asks for a device, the focus goes to that question. The next Tab stop is the field.
 
 A greyed-out Same as card can still take the focus with the arrow keys, and its explanation is read out when it does.
 

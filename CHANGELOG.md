@@ -15,6 +15,11 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   The structure outline marks modules that follow the card or a layout, and flags a module whose inherited entity is the wrong kind of device.
 
 ### Improved
+-   **Pick a light** (or camera, weather source) in the editor hint opens the entity window filtered to that kind of device. In the editor preview, a tile that cannot use the card entity shows "Needs another device", and the Card entity field counts such tiles.
+-   The Card entity field suggests entity ids while you type and saves only a real entity id, when you press Enter or leave the field. The Browse window lists the kinds of device your modules need first, and no longer changes size when you pick a row.
+-   A Text module with a template has the Entity field, and its hint shows `entity` and `card_entity`.
+-   The chosen segment of every segmented control in the editor is bold with an underline, not only a paler fill. A disabled Same as card looks disabled. The tab stop of the entity buttons follows the arrow keys, and the device question of a template load takes the focus.
+-   The structure outline shows "No entity" under a module set to none, and no "Same as card" under a static text.
 -   A **toggle** action on an entity that comes from the card or a layout only toggles lights, switches, fans, input booleans, automations and humidifiers. For a lock, a cover or anything else it opens the more-info dialog instead. A slider that follows a cover still moves the cover.
 -   Camera, Weather, Forecast, Light and Dropdown modules follow the card entity only when it is the right kind of device. Otherwise they show nothing, and the editor says why in plain words. The Custom card module never follows the card entity.
 
