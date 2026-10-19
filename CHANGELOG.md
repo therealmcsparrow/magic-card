@@ -14,6 +14,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Which device is this card for?** When you load a Magic Card Utils template into a card that has no entity, and the template has modules that would follow one, the confirmation asks for it. Magic Card Utils templates never hold the card entity, so one template fits any device.
 -   The structure outline marks modules that follow the card or a layout, and flags a module whose inherited entity is the wrong kind of device.
 
+### Security
+-   **Lazy chunk location.** The animation studio and the theme editor now take the folder they load their extra files from out of their own module URL. They no longer read `document.currentScript` or an error stack, which a web page could influence. The folder is used only when it has the same scheme and host as the page. Otherwise the chunk fails to load and the usual retry message shows. Both files are ES modules, so load them with `import()` or `<script type="module">`.
+
 ### Improved
 -   **Rows and columns can have an entity.** Card rows, card columns and the columns of a row module get the same Entity field as a module (Same as card, Pick one, No entity) and, with an entity of their own, the Share with tiles inside switch. Rows and columns the editor creates start with the switch on. The structure outline shows their entity. Existing cards are unchanged: a row or column without the keys uses the card entity as before.
 -   **Pick a light** (or camera, weather source) in the editor hint opens the entity window filtered to that kind of device. In the editor preview, a tile that cannot use the card entity shows "Needs another device", and the Card entity field counts such tiles.

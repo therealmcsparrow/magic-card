@@ -1,24 +1,26 @@
 /*
- * The preset chunk (magic-card-theme-presets.js) loads next to this bundle, wherever HA serves it
- * from (/hacsfiles/magic-card/, /local/...). The magic-card-utils panel loads the bundle with
- * import(), so it runs as a module and has no document.currentScript, and the bundle cannot read
- * import.meta. So: the URL of this file from currentScript when a <script> tag loaded it, else
- * from the stack of its own evaluation (Chrome `at fn (url:1:2)`, Firefox and Safari `fn@url:1:2`).
- * First import of src/theme-editor/index.ts: set before anything calls import(). A smaller copy of
- * src/anim-studio/public-path.ts (the entry may not import outside src/theme-editor/).
+ * The preset chunk (magic-card-theme-presets.js) loads next to this bundle, wherever HA
+ * serves it from (/hacsfiles/magic-card/, /local/...). The bundle is an ES module (the
+ * magic-card-utils panel loads it with import()), so import.meta.url is the URL of this file.
+ * chunkBase turns it into the directory URL, but only when it has the page's scheme and host:
+ * a chunk base from another host is refused ('') and the dialog shows its retry. Nothing here
+ * reads document.currentScript or an error stack, which page markup or another script can influence.
+ * First import of src/theme-editor/index.ts: set before anything calls import().
+ * src/anim-studio/public-path.ts is a copy (the entry may not import outside its folder).
  */
 
-/** The directory URL of the theme editor bundle (with a trailing slash), or '' when it cannot be told. */
-export const editorBase = (currentSrc: string | undefined, stack: string | undefined): string =>
-  /((?:https?|file):\/\/[^\s()@]*\/)magic-card-theme-editor\.js/.exec(
-    currentSrc || stack || '',
-  )?.[1] ?? '';
+/** The directory URL (no query, no hash) of `url` when it shares scheme and host with `page`, else ''. */
+export function chunkBase(url: string, page: { protocol: string; host: string }): string {
+  try {
+    const u = new URL(url);
+    return u.protocol === page.protocol && u.host === page.host ? new URL('.', u).href : '';
+  } catch {
+    return '';
+  }
+}
 
-if (typeof document !== 'undefined') {
-  const base = editorBase(
-    (document.currentScript as HTMLScriptElement | null)?.src,
-    new Error().stack,
-  );
-  // '' leaves webpack's own '' (the chunk resolves against the page; the dialog then shows its retry)
+if (typeof location !== 'undefined') {
+  const base = chunkBase(import.meta.url, location);
+  // '' leaves webpack's own '' (the chunk import fails; the dialog then shows its retry)
   if (base) __webpack_public_path__ = base;
 }
