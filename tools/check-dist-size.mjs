@@ -34,7 +34,7 @@ const CAPS = {
   // shape editor (T7): the architect's ceiling of 48 KiB, ADR 0019. OVER the ceiling with the whole design scope
   // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
   // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
-  'magic-card-shape-editor.js': 101_376, // 99 KiB, held at the CEO-approved cap: measured 99,967 + 5 % would round to 105,472, which is higher (I11)
+  'magic-card-shape-editor.js': 105_472, // 103 KiB (CEO 2026-10-19, Messages tab); was 101_376, the cap held since I11
   // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
   'magic-card-slider.js': 97_280, // 95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)
   'magic-card-seasonal.js': 58_368, // 57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11)
