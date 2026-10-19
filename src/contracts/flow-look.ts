@@ -11,6 +11,10 @@ import type { ResolvedFlow } from '../utils/flow';
  * r3 2026-10-19 (spike S2, folded in place, nothing built yet): path grammar M L H V C A, gradient
  * method, rotation probe with a SMIL fallback (the one exception to rule 1), taper scaled on short
  * runs, Douglas-Peucker tolerance, overlapping rails accepted.
+ * r4 2026-10-20 (build deviations agreed after the build, still unreleased, so 1.0.0 in place):
+ * amplitude cap at T only where T < 12; neon glow also lights the shapes; pixel spacing draws at
+ * least one shape; icons travel upright under SMIL; round node 2/3 of cap_size; start arrowhead
+ * points out of the line; cable outline at 0.5.
  *
  * Seam: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts overlay, both in
  * magic-card.js) keeps today's look (solid line, dots or moving dashes, reduced-motion arrow) and
@@ -33,9 +37,10 @@ import type { ResolvedFlow } from '../utils/flow';
  *   value: the last `thresholds` entry whose `from` <= |value| (no match, or no value: `color`).
  *   The editor writes `color_mode` only when the user switches mode.
  * - Spacing: `spacing_mode` decides when set. Unset: `spacing` present -> pixels; else even.
- *   pixels / random: count = min(40, floor(length / spacing)) and `dots` is ignored; random
- *   jitters each gap by up to +-50 % (seeded by the flow key: stable across renders).
- *   motion: pulse places shapes evenly whatever spacing_mode says.
+ *   pixels / random: count = min(40, max(1, floor(L / spacing))) (r4: a line shorter than one
+ *   spacing still carries one shape) and `dots` is ignored; random jitters each gap by up to
+ *   +-50 % (seeded by the flow key: stable across renders). motion: pulse places shapes evenly
+ *   whatever spacing_mode says. The card budget (40) still applies on top.
  * - Value-dependent options without an entity (thresholds, tube_fill_value) fall back silently:
  *   single colour, full tube.
  *
@@ -48,13 +53,12 @@ import type { ResolvedFlow } from '../utils/flow';
  * Wave / zigzag: the offset is applied along the normal of the sampled centre line on every route.
  * Taper: the amplitude goes to 0 (smoothstep) at both path ends and on every elbow corner arc,
  * over T px on each side, T = min(12, run / 4), run = the straight or curved stretch between two
- * of those points; and the amplitude on that stretch is at most T (so a short stub never gets a
- * steep jump). Long runs keep the 12 px taper; short elbows (S2: 24 % full amplitude on a 67 px
- * elbow with the fixed 12 px) now show a smaller but visible wave. Amplitude is also capped at
- * 40 % of the local radius of curvature (no loops). Computed once per geometry change, never per
- * frame: the wave is still; its motion is a moving highlight dash plus the shapes on the centre
- * line. electric: three seeded zigzag variants stacked, switched by a CSS steps() opacity
- * animation (no per-frame JS).
+ * of those points. (r4) Only where T < 12 (a short stretch) is the amplitude on that stretch also
+ * capped at T, so a short stub never gets a steep jump; long stretches keep the full amplitude
+ * (up to 20 px) with the 12 px taper. Amplitude is also capped at 40 % of the local radius of
+ * curvature (no loops). Computed once per geometry change, never per frame: the wave is still;
+ * its motion is a moving highlight dash plus the shapes on the centre line. electric: three seeded
+ * zigzag variants stacked, switched by a CSS steps() opacity animation (no per-frame JS).
  * Double rail: exact offset curves at +-(rail_gap + width) / 2, loops cut, mitred inner corners.
  * Where parallel runs of one route lie closer than the rail offset (short elbows) the rails of
  * different runs overlap: accepted, documented, not capped.
@@ -63,11 +67,17 @@ import type { ResolvedFlow } from '../utils/flow';
  * (userSpaceOnUse; exact there). Every other route draws N = clamp(ceil(L / 10), 4, 32) segments
  * of the same `d` (stroke-dasharray / dashoffset, no extra geometry), each in its opaque colour at
  * its arc-length position, overlapping the next by 1 px, all inside one <g opacity="a">, where a
- * is the average of the two end colours' alpha (their colours are drawn opaque). Abutting
- * segments leave hairlines and translucent overlaps darken; this method was within 1/255 in all
- * three engines at DPR 1 and 2. Two very different end alphas are therefore approximated.
- * On wave / zigzag lines the segments run along the offset polyline (colour position off by the
- * wave's length ratio, a few %: accepted). Segments are static (no frame cost).
+ * is the average of the two end colours' alpha (their colours are drawn opaque). Two very
+ * different end alphas are therefore approximated. On wave / zigzag lines the segments run along
+ * the offset polyline (colour position off by the wave's length ratio, a few %: accepted).
+ * Segments are static (no frame cost).
+ *
+ * Caps (r4): start_cap / end_cap sit on the line's ends in the travel direction, size cap_size
+ * (unset 3 x width). round: a filled circle of diameter 2/3 x cap_size (2 x width by default)
+ * with a 1 px ring in the card background colour. arrow: a filled triangle cap_size long; the end
+ * arrow points forward along the tangent, the start arrow points out of the line (backwards,
+ * away from the line), so both ends read as arrowheads of a two-headed line; the direction of
+ * travel is carried by the end arrow and the shapes.
  *
  * ── Quality tiers (r2, designer R1; deterministic, no frame-time probe) ──
  * H = the number of heavy flows among the card's resolved flows (visible or not): line tube or
@@ -130,13 +140,18 @@ import type { ResolvedFlow } from '../utils/flow';
  * ── Renderer rules (the chunk) ──
  * 1. Pure templates from (flow, geo, opts); no requestAnimationFrame loops, no timers, no layout
  *    reads. Motion is CSS: offset-distance, transform, opacity, stroke-dashoffset only.
- *    Exception (r3), only when opts.motion is 'smil': shapes that turn with the path move by
+ *    Exception (r3), only when opts.motion is 'smil': SVG shapes that turn with the path move by
  *    <animateMotion rotate="auto" path=...> (same duration, delay and direction as the CSS
- *    version); shapes that never turn (dot, bubble) and every other animation stay CSS. Under
- *    reduced motion the animateMotion elements are not rendered.
+ *    version); shapes that never turn (dot, bubble) and every other animation stay CSS. (r4) MDI
+ *    icon shapes are HTML (no SMIL): under 'smil' they travel by CSS offset-path upright
+ *    (offset-rotate 0deg), as if shape_icon_rotate were false; spin still applies. Under reduced
+ *    motion the animateMotion elements are not rendered.
  * 2. No `filter` on an animated element or any ancestor of one. Shape glow and the neon mid layer
  *    are wider translucent strokes or shapes. (r2, S3) The neon outer layer may be a static
  *    blur(<= 8 px) when flicker is off; with flicker on it is stacked translucent strokes.
+ *    (r4) On a neon line the travelling shapes also get the neon glow: a translucent halo shape
+ *    of the neon glow size riding with each shape (the dot-glow pattern; it is the same moving
+ *    element for the 40 budget, never a filter).
  * 3. opts.reduced: nothing moves (no travel, highlight, bubbles, flicker, pulse, ripple, splash),
  *    travelling shapes are removed, so nothing spins either; the line stays in its style (wave
  *    keeps its shape, tube its level, neon full brightness), and a direction mark stays: the arrow
@@ -149,8 +164,9 @@ import type { ResolvedFlow } from '../utils/flow';
  *    reduce)`. Flicker never exceeds 2 dips per second (WCAG 2.3.1).
  * 5. Direction: start / end, caps, gradients and the tube fill follow the travel direction
  *    (direction -1: start is the `to` end). Shapes point along the path tangent (offset-rotate:
- *    auto, or animateMotion rotate="auto"; icons when shape_icon_rotate), through elbow corners
- *    (AC6, AC7). Spin is a rotation on an inner element, added to the tangent.
+ *    auto, or animateMotion rotate="auto"; icons when shape_icon_rotate and motion is css),
+ *    through elbow corners (AC6, AC7). Spin is a rotation on an inner element, added to the
+ *    tangent.
  * 6. Every route (curve, straight, elbow) and both layers (AC4), through the sampler above.
  * 7. Keeps `g.flow[data-flow]` and `path.line` (studio flowAt() and the selection halo, which
  *    mc-flows still draws, rely on them). `path.line` is the centre line (may be transparent).
@@ -166,7 +182,7 @@ import type { ResolvedFlow } from '../utils/flow';
  */
 
 export const FLOW_LOOK_CONTRACT = '1.0.0';
-export const FLOW_LOOK_CONTRACT_REVISION = 3;
+export const FLOW_LOOK_CONTRACT_REVISION = 4;
 
 export type FlowLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'wave' | 'zigzag' | 'tube' | 'neon' | 'cable';
 export type FlowShape = 'dot' | 'arrow' | 'chevron' | 'square' | 'diamond' | 'star' | 'comet' | 'spark' | 'bubble' | 'drop' | 'icon';
@@ -183,7 +199,7 @@ export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;
 export const FLOW_GEOMETRY = {
   /** Path commands flowPath() emits (absolute). */
   grammar: ['M', 'L', 'H', 'V', 'C', 'A'],
-  /** Taper length T = min(taperMax, run x taperRunShare); amplitude on that run <= T. */
+  /** Taper length T = min(taperMax, run x taperRunShare); (r4) amplitude capped at T only where T < taperMax. */
   taperMax: 12,
   taperRunShare: 0.25,
   /** Amplitude <= curvatureShare x local radius of curvature. */
@@ -192,6 +208,8 @@ export const FLOW_GEOMETRY = {
   simplifyPx: 0.2,
   /** Gradient segments: clamp(ceil(L / segmentPx), min, max), overlapping by overlapPx. */
   gradient: { segmentPx: 10, min: 4, max: 32, overlapPx: 1 },
+  /** (r4) Round cap diameter as a share of cap_size. */
+  roundCapShare: 2 / 3,
 } as const;
 
 /** Shapes the `shape_spin` switch applies to (CEO 2026-10-19). */
@@ -213,8 +231,8 @@ export const FLOW_LOOK_THEME = {
   /** neon_core unset on a dark card. Light card: line colour + black overlay stroke at 0.45. */
   neonCoreDark: { paint: '#ffffff', opacity: 0.85 },
   neonCoreLightShade: { paint: '#000000', opacity: 0.45 },
-  /** Cable outline (1 px): >= 3:1. */
-  cableOutline: { paint: TEXT, opacity: 0.45 },
+  /** Cable outline (1 px): >= 3:1 (r4: 0.5, measured by the contrast script). */
+  cableOutline: { paint: TEXT, opacity: 0.5 },
 } as const satisfies Record<string, FlowPaint>;
 
 /** Defaults and ranges (clamped by resolve(); the editor uses the same numbers). */
@@ -232,7 +250,7 @@ export const FLOW_LOOK_DEFAULTS = {
   bubble_count: 4, // 1-8
   tube_fill_value: false,
   flicker: 'off',
-  neon_glow: 8, // `glow` unset on a neon line; static blur radius at most 8 px (rule 2)
+  neon_glow: 8, // `glow` unset on a neon line; static blur radius at most 8 px (rule 2); also the shapes' halo (r4)
   twisted: false,
   color_mode: 'single',
   start_cap: 'none',
@@ -287,16 +305,16 @@ export interface FlowLookConfig {
   color_to?: string;
   /** value: ranges on |value| (same ColorRange as ring `thresholds`; `to` is ignored). */
   thresholds?: ColorRange[];
-  /** Caps at the start / end of the line, in the travel direction. */
+  /** Caps at the start / end of the line, in the travel direction (start arrow points out of the line). */
   start_cap?: FlowCap;
   end_cap?: FlowCap;
-  /** Cap size (px); unset = 3 x width. */
+  /** Cap size (px); unset = 3 x width. A round cap is 2/3 of it across. */
   cap_size?: number;
   /** Travelling shape; unset = dot. */
   shape?: FlowShape;
   /** shape: icon, the MDI icon (mdi:name). */
   shape_icon?: string;
-  /** shape: icon, turn with the line (default true; false keeps it upright). */
+  /** shape: icon, turn with the line (default true; false keeps it upright; upright anyway under the SMIL fallback). */
   shape_icon_rotate?: boolean;
   /**
    * Spin (CEO 2026-10-19): star, square, diamond and icon shapes turn a full circle every 3 s on
@@ -312,7 +330,7 @@ export interface FlowLookConfig {
   size_variation?: number;
   /** Spacing mode; precedence in the header. */
   spacing_mode?: 'even' | 'pixels' | 'random';
-  /** Gap between shapes (px). */
+  /** Gap between shapes (px); at least one shape on any line. */
   spacing?: number;
   /** travel (default) or pulse: shapes stay put and pulse, faster with a higher value. */
   motion?: 'travel' | 'pulse';

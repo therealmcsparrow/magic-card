@@ -8,6 +8,10 @@ import type { ModuleView } from './lazy-module';
  * ADR 0020, nothing built yet): entity colour combines with fill modes, touch-action / capture
  * rules, failed-call feedback through runServiceCall's onError, lingering bubble, outlines and
  * flat glass colours, rem label sizes, live on every style.
+ * r4 2026-10-20 (build deviations agreed after the build, still unreleased, so 1.0.0 in place):
+ * error state 5 s; outline opacity 0.55; in-track value as a chip; auto-brightness ramp as a 75 %
+ * black overlay; inline <style> exception (lit.S7); AC11 reading; no restore after a cancelled
+ * live drag; 12rem vertical big-fill height; show_icon / icon / icon_position confirmed.
  * Applies to `type: slider` only (the light module's track and the slider layout are unchanged).
  *
  * Seam: the slider Module (src/modules/controls/slider-module.ts, magic-card.js) keeps today's
@@ -26,19 +30,22 @@ import type { ModuleView } from './lazy-module';
  * Precedence:
  * - Value display: `show_value: false` hides the value whatever `value_position` says. The editor
  *   keeps them in sync (Hidden writes show_value: false; picking a position removes show_value).
- * - Fill colour source (r2, designer Q1: they combine): the start colour S is the light's rgb when
+ * - Fill colour source (they combine): the start colour S is the light's rgb when
  *   use_entity_color is on and the light reports one (lifted to 3:1 against the empty track),
  *   else slider_color. fill_mode then decides the shape of the fill:
  *   solid (also unset, for every entity, AC1) -> S;
  *   gradient -> S to slider_color_to;
- *   auto, brightness -> S from 25 % to 100 % lightness; auto, colour temperature (kelvin) ->
- *   #ffa94d to #bfe0ff (the temperature ramp is the meaning, S is not used); auto, any other
- *   entity -> solid S.
+ *   auto, brightness -> S under a linear rgba(0,0,0,0.75) -> rgba(0,0,0,0) overlay along the axis,
+ *   darkest at the low end (r4; replaces "25 % to 100 % lightness", which needs color-mix());
+ *   auto, colour temperature (kelvin) -> #ffa94d to #bfe0ff (S not used);
+ *   auto, any other entity -> solid S.
  *   The editor never disables Gradient or Auto because of use_entity_color.
  * - thumb options apply to circle / pill / square; thumb_icon only to those; none of them to
  *   line or none. Style-specific keys of another style are kept in YAML and ignored.
  * - stops outside [min, max] are ignored at render; with `snap`, drag and keys go stop to stop.
  * - live works on every track style (the Big fill preset sets it).
+ * - big-fill (r4, confirmed): show_icon (default true) shows the entity's icon or `icon`;
+ *   icon_position start (default) or center (center only for vertical).
  *
  * ── magic-card.js side (slider Module) ──
  * - types.ts: `SliderModuleConfig extends SliderLookConfig`.
@@ -49,12 +56,13 @@ import type { ModuleView } from './lazy-module';
  *   skipped) hasSliderLook.
  * - src/utils/slider-track.ts: TrackOptions extends TrackOptionsLook (below), additive;
  *   interaction, ARIA and keyboard stay in renderTrack; the chunk imports it, never copies it.
- *   Unchanged and now contractual (r2): touch-action pan-y (horizontal) / pan-x (vertical) on the
- *   track; pointer capture from pointerdown for a mouse and after the 8 px drag intent for touch
- *   and pen (so the page still scrolls across the track); pointercancel restores the value and
- *   sends nothing; pointer and click events never leave the track (a slider layout never swipes
- *   from a drag that started on it).
- * - (r2) src/utils/entity-control.ts runServiceCall(hass, call, onError?): additive optional
+ *   Contractual: touch-action pan-y (horizontal) / pan-x (vertical) on the track; pointer capture
+ *   from pointerdown for a mouse and after the 8 px drag intent for touch and pen (so the page
+ *   still scrolls across the track); pointercancel sends nothing and restores the value, except
+ *   during a live drag (r4): values already sent stay, so the fill keeps the last sent value
+ *   instead of jumping back to a value the entity no longer has; pointer and click events never
+ *   leave the track (a slider layout never swipes from a drag that started on it).
+ * - src/utils/entity-control.ts runServiceCall(hass, call, onError?): additive optional
  *   callback, called once when the call rejects (the console warning stays).
  *   src/utils/pending-value.ts gains clearPendingValue(key) if it has no equivalent, so a failed
  *   call snaps the fill back to the entity's value.
@@ -67,41 +75,52 @@ import type { ModuleView } from './lazy-module';
  *    the next / previous stop (nextValue).
  * 3. live (default false; the Big fill preset sets it, CEO 2026-10-19): during a drag service calls
  *    go out at most 4 per second (250 ms throttle, leading and trailing) through onInput, and the
- *    final value always goes out on release (onCommit). Without live: only on release (today).
+ *    final value always goes out on release (onCommit). AC11 reading (r4): the throttled calls are
+ *    at most 4 in any second; the release call is extra and may fall in the same second, so a
+ *    drag shorter than one second can send 5. Without live: only on release (today).
  * 4. Shape (track_shape): track and fill are clipped to shapePath() (src/utils/shape-path.ts, from
  *    magic-card.js; custom shapes through the custom-shape 1.0.0 loader); the clip sits on an inner
  *    element, never on the focusable element or its ancestors, so the focus ring is never clipped
  *    (AC13). A 1 px outline of the shape in the track colour at 40 % shows an empty fill.
  * 5. Contrast: thumb vs track >= 3:1; focus ring 2 px accent with a 1 px inner ring in the
- *    opposite of the surface (>= 3:1 on any fill); in-track value text and the big-fill icon flip
- *    light / dark for >= 4.5:1 (AC13). (r2) Thin, segmented and pill tracks, the Minimal and Neon
- *    presets and both glass states draw a 1 px outline in the theme text colour at 0.45 opacity
- *    (>= 3:1, carries the extent). Glass flat (glass_blur off): track = text colour at 0.08, fill =
- *    slider colour at 0.70 with a 0.25 top highlight in the surface colour; glass_blur adds
- *    backdrop-filter: blur(8px) on a static element, dropped where unsupported. Paint is
- *    floor-safe: separate opacity, never color-mix() (flow-look 1.0.0 r2 colour rule).
+ *    opposite of the surface (>= 3:1 on any fill); the big-fill icon flips light / dark for
+ *    >= 4.5:1 (AC13). (r4) The in-track value is a chip (text colour background, surface colour
+ *    text, like the bubble), so it reaches 4.5:1 on any fill without flipping. Thin, segmented and
+ *    pill tracks, the Minimal and Neon presets and both glass states draw a 1 px outline in the
+ *    theme text colour at 0.55 opacity (r4, was 0.45: 0.45 missed 3:1 on #f2f2f2). Glass flat
+ *    (glass_blur off): track = text colour at 0.08, fill = slider colour at 0.70 with a 0.25 top
+ *    highlight in the surface colour; glass_blur adds backdrop-filter: blur(8px) on a static
+ *    element, dropped where unsupported. Paint is floor-safe: rgba() / separate opacity, never
+ *    color-mix() (flow-look 1.0.0 colour rule).
  * 6. Motion: thumb scale on drag and the bubble fade are off under reduced motion (the bubble then
  *    appears and disappears without a fade). No animation runs while idle; the only timers are the
- *    live throttle, the 2 s bubble linger and the 1.5 s error state, all started by input.
+ *    live throttle, the 2 s bubble linger and the error state, all started by input.
  * 7. Thin and segmented tracks keep a 40 px hit area (touch).
- * 8. (r2) value_position bubble: shown while dragging, on keyboard focus, and for 2 s after release
+ * 8. value_position bubble: shown while dragging, on keyboard focus, and for 2 s after release
  *    or a tap (touch has no hover).
- * 9. (r2) Failed call (onError): the fill snaps back, and for 1.5 s the track shows a 2 px outline
- *    in var(--error-color) plus a 16 px mdi:alert at the value end (replacing the value beside it),
- *    and a visually hidden role=status says "Couldn't set {name}" (card i18n namespace). Never
- *    colour alone; no shake.
- * 10. (r2) Min / max, tick and stop labels use rem (0.75rem default), not px.
+ * 9. Failed call (onError): the fill snaps back, and for 5 s (r4, was 1.5 s: WCAG 2.2.1, testers
+ *    asked for >= 3 s) the track shows a 2 px outline in var(--error-color) plus a 16 px mdi:alert
+ *    at the value end (replacing the value beside it), and a visually hidden role=status says
+ *    "Couldn't set {name}" (card i18n namespace). Never colour alone; no shake.
+ * 10. Min / max, tick and stop labels use rem (0.75rem default), not px.
+ * 11. (r4) Styles: the view renders `<style>${css}</style>` as the first child of its template, a
+ *    written exception to lit.S7 (static styles): the view is a template inside the card's shadow
+ *    root, not its own element, so it has no `static styles`; the inline sheet also orders before
+ *    the card's adopted sheet as intended. Lit renders the same string once per instance; no
+ *    other chunk may copy this pattern without an exception of its own.
+ * 12. (r4) Vertical big-fill: 12rem tall (max 100 % minus 3rem), so it has a height inside an
+ *    auto-height column; module design height still wins where set.
  */
 
 export const SLIDER_LOOK_CONTRACT = '1.0.0';
-export const SLIDER_LOOK_CONTRACT_REVISION = 2;
+export const SLIDER_LOOK_CONTRACT_REVISION = 4;
 
 export type SliderTrackStyle = 'standard' | 'thin' | 'pill' | 'segmented' | 'glass' | 'big-fill';
 export type SliderThumb = 'line' | 'circle' | 'pill' | 'square' | 'none';
 
 export const SLIDER_LOOK_DEFAULTS = {
   track_style: 'standard',
-  /** Thickness per style (px, 2-96); vertical uses it as width. */
+  /** Thickness per style (px, 2-96); vertical uses it as width. Vertical big-fill height: 12rem. */
   track_thickness: { standard: 40, thin: 6, pill: 16, segmented: 16, glass: 28, 'big-fill': 64 },
   /** Track corners (px, 0-48): unset follows the style (standard: --mc-slider-radius; pill: 999; big-fill: 20). */
   segment_gap: 2, // 1-8 px; segments unset: from step, at most 20 (2-20)
@@ -119,8 +138,11 @@ export const SLIDER_LOOK_DEFAULTS = {
   thumb_glow: 0, // 0-30 px, colour follows the fill
   value_position: 'beside',
   bubble_linger_ms: 2000,
-  error_ms: 1500,
+  error_ms: 5000,
   live_throttle_ms: 250,
+  outline_opacity: 0.55,
+  brightness_overlay: 'rgba(0, 0, 0, 0.75)',
+  vertical_big_fill_height: '12rem',
   ticks: false,
   show_limits: false,
   snap: false,
@@ -152,6 +174,7 @@ export interface SliderLookConfig {
   use_entity_color?: boolean;
   /** big-fill: show the entity's icon (default true) or `icon`. */
   show_icon?: boolean;
+  /** big-fill: icon instead of the entity's (mdi:name). */
   icon?: string;
   /** big-fill: icon position; center only for vertical. */
   icon_position?: 'start' | 'center';
@@ -165,7 +188,7 @@ export interface SliderLookConfig {
   thumb_glow?: number;
   /** MDI icon in a circle / pill / square thumb. */
   thumb_icon?: string;
-  /** Where the value shows; precedence with show_value in the header. */
+  /** Where the value shows; precedence with show_value in the header. track = a chip in the track. */
   value_position?: 'beside' | 'bubble' | 'track' | 'hidden';
   /** Tick marks; tick_every unset = auto (5-10 ticks). */
   ticks?: boolean;
@@ -197,7 +220,7 @@ export interface TrackOptionsLook {
   parts?: TemplateResult;
   /** Each drag move, with the snapped value (live updates, bubble text). */
   onInput?: (value: number) => void;
-  /** (r2) Drag ended (release, tap or cancel): starts the bubble linger. */
+  /** Drag ended (release, tap or cancel): starts the bubble linger. */
   onRelease?: () => void;
   /** Drag snapping (stops); default snapValue to step. */
   snap?: (value: number) => number;

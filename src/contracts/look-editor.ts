@@ -9,6 +9,9 @@ import type { MessageId } from './i18n';
  * r2 2026-10-19 (designer round 1 request R4, folded into 1.0.0 in place per ADR 0020, nothing
  * built yet): manual activation, picture chips, 20 s toast, inline Undo, undoable Reset look,
  * settings count, tier notices from the budget.
+ * r4 2026-10-20 (build deviations agreed after the build, still unreleased, so 1.0.0 in place):
+ * LookPreset label / description typed MessageId; optional element props entityColor (flow) and
+ * entity (slider); `-name` entries in `open`; Reset look scope includes the existing Look-group keys.
  *
  * Seam: the card-editor Module (lazy chunk magic-card-editor.js) hosts two sub-views it never
  * imports: the Look group of each flow block (mc-flows-editor) and the Look block of the slider
@@ -37,6 +40,9 @@ import type { MessageId } from './i18n';
  * - The inspector keeps the open state of disclosure sections per flow key / module id, and the
  *   one-level Undo snapshot per flow key / module id, for the session; never written to YAML.
  * - The host passes the studio canvas' mc-flows `budget` when it has one (flows tier notices).
+ * - (r4) The host passes entityColor (flows: the flow's entity colour, else the From module's) and
+ *   entity (slider: the resolved entity, a template's or source entity included). Both optional;
+ *   without them the element falls back to the config's own entity.
  *
  * ── Element rules (look-editor) ──
  * 1. Round trip (AC3): nothing is written on mount or on open; chips and tiles are derived from
@@ -49,10 +55,13 @@ import type { MessageId } from './i18n';
  *    listed existing keys, then writes the preset's values (the Water preset writes
  *    tube_fill_value only when the flow has an entity). No preset key is stored. Status text, not
  *    a chip: the matching preset name, else "Your own look, started from {name}" (nearest preset,
- *    at least half its keys equal), else "Your own look"; no look keys: "Default look". Reset look
- *    removes every look key (flows: never Connection / Value and route / Label / Visibility;
- *    slider: never entity / attribute / min / max / step / direction / show_value).
- * 4. (r2) Undo, one level, two routes: <mc-ui-toast> with duration 20000 ms and the text
+ *    at least half its keys equal), else "Your own look"; no look keys: "Default look".
+ *    Reset look (r4) removes every look key plus the existing keys the Look group edits:
+ *    flows FLOW_LOOK_KEYS + FLOW_LOOK_EXISTING_KEYS (colour, idle colour, width, scale width,
+ *    glow, dots, dot size), never Connection / Value and route / Label / Visibility; slider
+ *    SLIDER_LOOK_KEYS + SLIDER_LOOK_EXISTING_KEYS, never entity / attribute / min / max / step /
+ *    direction / show_value. The toast count and Undo cover all of them.
+ * 4. Undo, one level, two routes: <mc-ui-toast> with duration 20000 ms and the text
  *    "{name} look applied. {n} settings changed. Undo" / "Look reset. {n} settings removed. Undo"
  *    (n = keys written plus keys removed), and a persistent "Undo {name} look" / "Undo reset"
  *    button in the Look header, kept until the next edit of a look field or until the editor
@@ -60,34 +69,38 @@ import type { MessageId } from './i18n';
  * 5. Colour mode and spacing mode switches write color_mode / spacing_mode and keep the other
  *    mode's keys (flow-look 1.0.0 precedence); an info line names the kept, unused keys.
  * 6. Shared controls come from ui-kit 1.1.0 (revision 5, additive), not Core:
- *    <mc-ui-disclosure>; <mc-ui-tile-group> and <mc-ui-chip-group> with MANUAL activation (r2):
+ *    <mc-ui-disclosure>; <mc-ui-tile-group> and <mc-ui-chip-group> with MANUAL activation:
  *    buttons with aria-pressed in role=group, roving tabindex, Left / Right / Home / End move focus
  *    only, Space / Enter / click select; chips carry an aria-hidden preview SVG and the name as
  *    text, and a description line for the focused or selected chip; they wrap at every width.
  *    <mc-ui-toast> (existing `duration`) additionally pauses on pointerdown within it.
  *    Small segmented controls (_seg) keep select-on-arrow.
  * 7. i18n: namespace 'look-editor' (i18n 1.0.0, additive namespace): en-GB ids, en-US and nl
- *    tables inside this chunk; I18N_RELEASE_STRICT applies.
+ *    tables inside this chunk; I18N_RELEASE_STRICT applies. Preset label and description are
+ *    MessageId marks (m()), read with t() (r4).
  * 8. Notices from `budget` (FlowBudget, flows): the 40-element notice when drawn < requested; the
  *    tier notices when its quality is lite ("4 or more glowing or tube lines...") or minimal
  *    ("7 or more..."). No budget, no notice.
  * 9. Tile and chip previews are static inline SVG (never animated).
+ * 10. (r4) `open` holds section names: `name` = opened by the user, `-name` = closed by the user,
+ *    neither = automatic (open when any of the section's keys is set). onToggle reports the name;
+ *    the inspector stores the matching entry and drops the opposite one.
  */
 
 export const LOOK_EDITOR_CONTRACT = '1.0.0';
-export const LOOK_EDITOR_CONTRACT_REVISION = 2;
+export const LOOK_EDITOR_CONTRACT_REVISION = 4;
 
 export const FLOW_LOOK_EDITOR_TAG = 'mc-flow-look-editor';
 export const SLIDER_LOOK_EDITOR_TAG = 'mc-slider-look-editor';
 
-/** (r2) Undo toast duration (ms). */
+/** Undo toast duration (ms). */
 export const LOOK_UNDO_TOAST_MS = 20_000;
 
-/** Existing flow keys the Look group edits (and presets may write) besides FLOW_LOOK_KEYS. */
+/** Existing flow keys the Look group edits (presets may write, Reset look removes) besides FLOW_LOOK_KEYS. */
 export const FLOW_LOOK_EXISTING_KEYS: readonly (keyof FlowConfig)[] = [
   'color', 'idle_color', 'width', 'scale_width', 'glow', 'dots', 'dot_size',
 ];
-/** Existing slider keys the Look block may write besides SLIDER_LOOK_KEYS (presets). */
+/** Existing slider keys the Look block may write (presets) and Reset look removes, besides SLIDER_LOOK_KEYS. */
 export const SLIDER_LOOK_EXISTING_KEYS: readonly (keyof SliderModuleConfig)[] = ['slider_color', 'track_color'];
 
 export type FlowPresetId = 'energy' | 'water' | 'data' | 'heat' | 'neon';
@@ -97,9 +110,9 @@ export interface LookPreset<Id extends string, Keys> {
   id: Id;
   /** en-GB message id (look-editor namespace): an m() mark, read with t(). */
   label: MessageId;
-  /** (r2) en-GB message id of the one-line description ("Blue tube with drops and a rising level."), an m() mark. */
+  /** en-GB message id of the one-line description ("Blue tube with drops and a rising level."), an m() mark. */
   description: MessageId;
-  /** (r2) Static 72 x 56 preview SVG markup in the preset's own colours (aria-hidden). */
+  /** Static 72 x 56 preview SVG markup in the preset's own colours (aria-hidden). */
   preview: string;
   values: Keys;
 }
@@ -113,14 +126,14 @@ export interface FlowLookEditorElement extends HTMLElement {
   hass?: HomeAssistant;
   /** The flow's key on the card (flowKeys); used for the budget lookup and section state. */
   flowKey: string;
-  /** (r2, additive) CSS colour the swatch of an 'entity' colour shows (the host resolves the flow's entity, else the From module's). */
+  /** (r4, optional) CSS colour the swatch of an 'entity' colour shows (the host resolves the flow's entity, else the From module's). */
   entityColor?: string;
   /** Requested / drawn / quality per flow key (quality = the card's tier). */
   budget?: FlowBudget;
-  /** Open sections (inspector-owned) and their toggle. */
+  /** Open sections (rule 10; inspector-owned) and their toggle. */
   open: ReadonlySet<string>;
   onToggle?: (section: string) => void;
-  /** (r2) The object before the last preset / reset (inspector-owned); shows the inline Undo. */
+  /** The object before the last preset / reset (inspector-owned); shows the inline Undo. */
   undo?: FlowConfig;
   onUndoChange?: (snapshot: FlowConfig | undefined) => void;
   onChange?: (next: FlowConfig) => void;
@@ -132,9 +145,12 @@ export interface SliderLookEditorElement extends HTMLElement {
   hass?: HomeAssistant;
   /** Template id for not_synced marking (same as the other module fields). */
   template?: string;
+  /** (r4, optional) The entity the slider controls (host-resolved: template or source entity); falls back to config.entity. */
+  entity?: string;
+  /** Open sections (rule 10; inspector-owned) and their toggle. */
   open: ReadonlySet<string>;
   onToggle?: (section: string) => void;
-  /** (r2) The object before the last preset / reset (inspector-owned); shows the inline Undo. */
+  /** The object before the last preset / reset (inspector-owned); shows the inline Undo. */
   undo?: SliderModuleConfig;
   onUndoChange?: (snapshot: SliderModuleConfig | undefined) => void;
   onChange?: (next: SliderModuleConfig) => void;
