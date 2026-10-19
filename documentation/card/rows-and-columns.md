@@ -16,6 +16,8 @@ Rows stack from top to bottom inside the card. Each row places its columns side 
 | Key | Type / values | Default | What it does |
 | --- | --- | --- | --- |
 | `columns` | List of columns | required | The columns of the row. |
+| `entity` | Entity id, or `none` | none | The row's own entity. Without it the row uses the card's. See [Card entity](../card-entity/README.md). |
+| `share_entity` | `true` / `false` | `false` | The row passes its own `entity` on to the columns and modules inside. The editor writes `true` on every row it creates. |
 | `layout` | Relative widths joined by dashes, or a CSS grid value | equal columns | Column widths. See [Layout](#layout). |
 | `column_widths` | List of widths, one per column | none | Exact column widths. Wins over `layout`. See [Column widths](#column-widths). |
 | `gap` | CSS length | `8px` | Space between the columns. |
@@ -92,6 +94,8 @@ A row takes `actions` with `tap_action`, `hold_action` and `double_tap_action`, 
 | Key | Type / values | Default | What it does |
 | --- | --- | --- | --- |
 | `modules` | List of modules | required | The modules, top to bottom. See [Modules](../modules/README.md). |
+| `entity` | Entity id, or `none` | none | The column's own entity. Without it the column uses the one from its row, or the card's. |
+| `share_entity` | `true` / `false` | `false` | The column passes its own `entity` on to the modules inside. The editor writes `true` on every column it creates. |
 | `vertical_align` | `start`, `center`, `end`, `stretch` | `start` | Where the modules sit when the column is taller than its content. |
 | `gap` | CSS length | `8px` | Space between the modules. |
 | `padding` | One to four CSS lengths | none | Space inside the column. |

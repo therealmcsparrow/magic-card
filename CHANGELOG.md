@@ -15,6 +15,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   The structure outline marks modules that follow the card or a layout, and flags a module whose inherited entity is the wrong kind of device.
 
 ### Improved
+-   **Rows and columns can have an entity.** Card rows, card columns and the columns of a row module get the same Entity field as a module (Same as card, Pick one, No entity) and, with an entity of their own, the Share with tiles inside switch. Rows and columns the editor creates start with the switch on. The structure outline shows their entity. Existing cards are unchanged: a row or column without the keys uses the card entity as before.
 -   **Pick a light** (or camera, weather source) in the editor hint opens the entity window filtered to that kind of device. In the editor preview, a tile that cannot use the card entity shows "Needs another device", and the Card entity field counts such tiles.
 -   The Card entity field suggests entity ids while you type and saves only a real entity id, when you press Enter or leave the field. The Browse window lists the kinds of device your modules need first, and no longer changes size when you pick a row.
 -   A Text module with a template has the Entity field, and its hint shows `entity` and `card_entity`.

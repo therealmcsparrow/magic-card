@@ -8,7 +8,7 @@ Existing cards are unchanged. A card without an `entity` key renders as it alway
 
 -   [Set the card entity](#set-the-card-entity)
 -   [The entity of a module](#the-entity-of-a-module)
--   [Layouts: Share with tiles inside](#layouts-share-with-tiles-inside)
+-   [Rows, columns and layouts: Share with tiles inside](#rows-columns-and-layouts-share-with-tiles-inside)
 -   [Modules that need one kind of device](#modules-that-need-one-kind-of-device)
 -   [Actions on an inherited entity](#actions-on-an-inherited-entity)
 -   [Templates](#templates)
@@ -57,9 +57,9 @@ An attribute picker under the field lists the attributes of the entity the modul
 
 The structure outline shows the same thing in one line under each module: an inherited entity in muted text with a link icon ("Same as card · light.kitchen" in the wide outline), and a warning when the entity does not fit the module ("Needs a camera").
 
-## Layouts: Share with tiles inside
+## Rows, columns and layouts: Share with tiles inside
 
-Rows (horizontal layouts), columns (vertical layouts), tabs, row modules and slider layouts can hold an entity of their own. By default it belongs to the layout alone. Turn on **Share with tiles inside** and the modules in it follow that entity before they follow the card. The switch appears once the layout has an entity of its own.
+Card rows, card columns, the columns of a row module, and the layout modules (horizontal, vertical, row, tabs and slider layout) can hold an entity of their own. Select a row or a column and the General tab starts with the same Entity field as a module, with Same as card, Pick one and No entity. By default it belongs to the layout alone. Turn on **Share with tiles inside** and the modules in it follow that entity before they follow the card. The switch appears once the layout has an entity of its own.
 
 | Layout | Modules inside use |
 | --- | --- |
@@ -68,9 +68,11 @@ Rows (horizontal layouts), columns (vertical layouts), tabs, row modules and sli
 | `entity: none` | No entity at all, whatever the card has. A module inside can still pick its own. |
 | No entity | The card entity. |
 
-Layouts that you add in the editor start with the switch on. Layouts that came from pasting or duplicating keep their YAML as it was, and so do all layouts from before this feature, which means they keep the switch off.
+Rows, columns and layouts that you add in the editor start with the switch on, and so does the first card from the card picker. Copies that came from pasting or duplicating keep their YAML as it was, and so do all rows, columns and layouts from before this feature, which means they keep the switch off.
 
-Nested layouts: a module follows the nearest layout that shares an entity, then the card. A sharing layout inside a layout with `entity: none` opens the entity again for its own children.
+A row or column with an entity of its own and the switch off uses that entity for itself: its design rules, ring, value background, animations, display conditions and its own tap action. With no entity of its own it uses the card entity, as before. A tap on a row with its own entity can toggle any kind of entity, because you picked it for the row; the care described under [Actions](#actions-on-an-inherited-entity) is for entities that come from somewhere else.
+
+Nested layouts: a module follows the nearest row, column or layout that shares an entity, then the card. A sharing layout inside a layout with `entity: none` opens the entity again for its own children.
 
 ## Modules that need one kind of device
 
@@ -91,7 +93,7 @@ An entity you pick yourself is never checked this way. The picker already narrow
 
 ## Actions on an inherited entity
 
-Tap, hold and double tap actions with `use_module_entity` (the default) act on the entity the module uses. Rows and columns use the card entity (or the nearest sharing layout) for their own actions.
+Tap, hold and double tap actions with `use_module_entity` (the default) act on the entity the module uses. Rows and columns use their own entity, else the card entity (or the nearest sharing row, column or layout), for their own actions.
 
 An entity that comes from the card or a layout is treated with more care than one you picked for the module. A **toggle** on an inherited entity only toggles lights, switches, fans, input booleans, automations and humidifiers. For a lock, a cover, a climate entity or anything else it opens the more-info dialog instead, so a card entity of `lock.front_door` cannot be unlocked by a stray tap on a tile that merely follows it. Pick the entity on the module, or set the action's own entity, to toggle it directly.
 
