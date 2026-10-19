@@ -11,6 +11,9 @@ import { safeColor } from '../utils/animation';
 import { currentRenderContext } from '../services/render-context';
 import { t } from '../card/i18n';
 import { css, lift, parseColour, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
+import { bigFillColours, bigFillIcon, fillSamples } from './big-fill';
+import { createLive, type Live } from './live';
+import { ShapeBox, trackShape } from './shape';
 import { ERROR_MS, HIT_PX, LINGER_MS, nearestStop, resolveLook, segmentCount, stopKey, stopsIn, tickValues } from './resolve';
 import { SLIDER_LOOK_CSS } from './css';
 
@@ -40,11 +43,23 @@ interface State {
   text: string;
   /** The current drag ended in a commit (the render shows the value then). */
   committed: boolean;
+  /** The drag in progress (fraction and text): a render meanwhile (the entity echoes a live call) keeps it. */
+  drag?: { f: number; text: string };
+  /** Live throttle (created on the first live drag) and the send of the latest render. */
+  live?: Live;
+  send?: (v: number) => void;
+  /** Track shape clip. */
+  shape: ShapeBox;
+  /** Stops the throttle when the slider is removed (Lit calls a ref callback with undefined then). */
+  gone: (el?: Element) => void;
 }
 const states = new Map<string, State>();
 const stateFor = (id: string): State => {
   let s = states.get(id);
-  if (!s) states.set(id, (s = { wrap: createRef(), status: createRef(), err: false, frac: 0, text: '', committed: false }));
+  if (!s) {
+    const st: State = { wrap: createRef(), status: createRef(), err: false, frac: 0, text: '', committed: false, shape: new ShapeBox(), gone: (el) => { if (!el) { st.live?.stop(); st.drag = undefined; } } };
+    states.set(id, (s = st));
+  }
   return s;
 };
 
@@ -102,18 +117,27 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const attr = c.attribute;
   const light = stateObj?.entity_id.startsWith('light.');
   let grad: string | undefined;
+  let sampleMode: 'solid' | 'gradient' | 'brightness' | 'kelvin' = look.fillMode === 'gradient' ? 'gradient' : 'solid';
   if (look.fillMode === 'gradient') grad = `linear-gradient(${dir}, ${fill}, ${look.fillTo ?? fill})`;
   else if (look.fillMode === 'auto' && light) {
     if (!attr || attr === 'brightness' || attr === 'brightness_pct') {
       // dark to bright: a black ramp over the colour, no colour maths needed
       grad = `linear-gradient(${dir}, rgba(0,0,0,0.75), rgba(0,0,0,0)), linear-gradient(${fill}, ${fill})`;
-    } else if (attr === 'color_temp_kelvin' || attr === 'color_temp') grad = `linear-gradient(${dir}, #ffa94d, #bfe0ff)`;
+      sampleMode = 'brightness';
+    } else if (attr === 'color_temp_kelvin' || attr === 'color_temp') {
+      grad = `linear-gradient(${dir}, #ffa94d, #bfe0ff)`;
+      sampleMode = 'kelvin';
+    }
   }
   const fillRgb = readColour(fill);
   const th = fillRgb ? thumbColours(fillRgb, surface) : undefined;
   const face = th ? css(th.face) : 'var(--text-primary-color, #fff)';
   const ring = th ? css(th.ring) : fill;
   const iconColour = th ? css(th.icon) : 'var(--primary-text-color, #212121)';
+  const bf = look.style === 'big-fill';
+  const bfc = bf ? bigFillColours(fillSamples(fillRgb, sampleMode, readColour(look.fillTo ?? ''))) : undefined;
+  const shape = trackShape(c, st.update);
+  st.shape.set(shape);
 
   // ── geometry
   const hasThumb = look.thumb === 'circle' || look.thumb === 'pill' || look.thumb === 'square';
@@ -122,7 +146,9 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const tw = vertical && look.thumb === 'pill' ? short : long;
   const thh = vertical && look.thumb === 'pill' ? long : short;
   const across = hasThumb ? (vertical ? tw : thh) : 0;
-  const radius = look.radius === 'var(--mc-slider-radius)'
+  const radius = shape && look.style !== 'segmented'
+    ? '0px'
+    : look.radius === 'var(--mc-slider-radius)'
     ? ['tl', 'tr', 'br', 'bl'].map((k) => `var(--mc-design-radius-${k}, var(--mc-slider-radius))`).join(' ')
     : look.radius;
   const segs = look.style === 'segmented' ? segmentCount(look, min, max, step) : 0;
@@ -140,6 +166,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     `--sl-ring: ${ring}`,
     `--sl-icon: ${iconColour}`,
     `--sl-bo: ${px(Math.max(across, look.thickness) / 2 + 10)}`,
+    bfc ? `--bf-text: ${bfc.text}; --bf-out: ${bfc.outline}` : '',
     hasThumb ? `--tw: ${px(tw)}; --th: ${px(thh)}; --tr: ${look.thumb === 'square' ? '4px' : look.thumb === 'circle' ? '50%' : '999px'}` : '',
     hasThumb ? `--sl-tb: ${px(look.thumbBorder)}; --sl-tbc: ${look.thumbBorderColour}; --sl-glow: ${px(look.thumbGlow)}` : '',
   ].filter(Boolean);
@@ -183,6 +210,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     }, ERROR_MS);
   };
 
+  st.send = ctrl?.call && hass ? (v) => runServiceCall(hass, ctrl.call!(v), fail) : undefined;
+
   // ── drag hooks: no render while dragging, the parts follow --v
   const texts = () => st.wrap.value?.closest('.mc-slider-container')?.querySelectorAll<HTMLElement>('[data-val]') ?? [];
   const show = (f: number, text: string) => {
@@ -191,9 +220,15 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   };
   const onInput = (v: number) => {
     st.committed = false;
-    show(range > 0 ? (v - min) / range : 0, fmt(v));
+    const f = range > 0 ? (v - min) / range : 0;
+    st.drag = { f, text: fmt(v) };
+    show(f, st.drag.text);
+    // live: the throttle sends the value; the final one goes out on release (onCommit)
+    if (look.live) (st.live ??= createLive((n) => st.send?.(n))).input(v);
   };
   const onRelease = () => {
+    st.live?.end();
+    st.drag = undefined;
     if (!st.committed) show(st.frac, st.text);
     st.committed = false;
     const wrap = st.wrap.value;
@@ -205,7 +240,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   };
 
   // ── the parts inside the track
-  const outline = look.style === 'thin' || look.style === 'pill' || look.style === 'glass';
+  const outline = (look.style === 'thin' || look.style === 'pill' || look.style === 'glass') && !shape;
   const fillBox = segs
     ? html`<div class="mc-sl-segs">${Array.from({ length: segs }, (_, i) => {
         const p = segs > 1 ? (vertical ? (segs - 1 - i) / (segs - 1) : i / (segs - 1)) * 100 : 0;
@@ -215,16 +250,17 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const thumb = hasThumb
     ? html`<div class="mc-sl-th">${look.thumbIcon ? html`<ha-icon icon=${look.thumbIcon}></ha-icon>` : nothing}</div>`
     : nothing;
-  const valueBox = (cls: string) => html`<div class=${cls} data-val aria-hidden="true" .textContent=${valueText}></div>`;
+  const valueBox = (cls: string) => html`<div class=${cls} data-val aria-hidden="true" .textContent=${st.drag?.text ?? valueText}></div>`;
   const showValue = !!stateObj && valueText !== '';
   const onTrack = look.position === 'track' && showValue;
   const bubble = look.position === 'bubble' && showValue;
   const mark = st.err && look.position !== 'beside' ? html`<div class="mc-sl-e">${alertIcon()}</div>` : nothing;
 
-  const parts = html`<div class="mc-sl-p" ${ref(st.wrap)} style="--v: ${frac}" ?data-error=${st.err}>
-    <div class="mc-sl-box">
-      <div class="mc-sl-t"></div>${fillBox}${outline ? html`<div class="mc-sl-o"></div>` : nothing}${look.thumb === 'line' && !segs ? html`<div class="mc-sl-g"></div>` : nothing}
-    </div>${tickParts}${labelParts}${thumb}${bubble ? valueBox('mc-sl-b') : nothing}${onTrack ? valueBox('mc-sl-v') : nothing}${mark}
+  const icon = bf && look.showIcon ? bigFillIcon(hass, c.entity, look.icon, vertical && look.iconPos === 'center') : nothing;
+  const parts = html`<div class="mc-sl-p" ${ref(st.wrap)} ${ref(st.gone)} style="--v: ${st.drag?.f ?? frac}" ?data-error=${st.err}>
+    <div class="mc-sl-box" ${shape ? ref(st.shape.ref) : nothing}>
+      <div class="mc-sl-t"></div>${fillBox}${shape ? html`<svg class="mc-sl-sh" aria-hidden="true"><path></path></svg>` : nothing}${outline ? html`<div class="mc-sl-o"></div>` : nothing}${look.thumb === 'line' && !segs ? html`<div class="mc-sl-g"></div>` : nothing}
+    </div>${tickParts}${labelParts}${icon}${thumb}${bubble ? valueBox('mc-sl-b') : nothing}${onTrack ? valueBox('mc-sl-v') : nothing}${mark}
   </div>`;
 
   const track = renderTrack({
@@ -253,14 +289,15 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       st.committed = true;
       if (!ctrl?.call || !hass) return;
       const call = ctrl.call;
-      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail), () => ctx?.requestUpdate(), 300);
+      // live: the final value goes out at once (the drag's own calls were throttled)
+      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail), () => ctx?.requestUpdate(), look.live ? 0 : 300);
     },
   });
 
   const beside = look.position === 'beside' && stateObj
     ? st.err
       ? html`<span class="mc-slider-value mc-sl-ev">${alertIcon()}</span>`
-      : html`<span class="mc-slider-value" data-val .textContent=${valueText}></span>`
+      : html`<span class="mc-slider-value" data-val .textContent=${st.drag?.text ?? valueText}></span>`
     : nothing;
 
   return html`<style>${SLIDER_LOOK_CSS}</style>

@@ -49,6 +49,12 @@ export interface Look {
   thumbBorderColour: string;
   thumbGlow: number;
   thumbIcon?: string;
+  /** Update the entity while dragging (any style). */
+  live: boolean;
+  /** big-fill: the icon (default on), an own icon id, and its place (centre only counts for vertical). */
+  showIcon: boolean;
+  icon?: string;
+  iconPos: 'start' | 'center';
   position: 'beside' | 'bubble' | 'track' | 'hidden';
   ticks: boolean;
   tickEvery?: number;
@@ -92,8 +98,12 @@ export function resolveLook(c: Partial<SliderModuleConfig>): Look {
     thumbBorderColour: colour(c.thumb_border_color) ?? '#ffffff',
     thumbGlow: clamp(c.thumb_glow, 0, 30, 0),
     thumbIcon: typeof c.thumb_icon === 'string' && isIconId(c.thumb_icon) ? c.thumb_icon.trim() : undefined,
-    // show_value: false hides the value whatever value_position says
-    position: c.show_value === false ? 'hidden' : oneOf(c.value_position, ['beside', 'bubble', 'track', 'hidden'] as const, 'beside'),
+    live: c.live === true,
+    showIcon: c.show_icon !== false,
+    icon: typeof c.icon === 'string' && isIconId(c.icon) ? c.icon.trim() : undefined,
+    iconPos: c.icon_position === 'center' ? 'center' : 'start',
+    // show_value: false hides the value whatever value_position says; big fill shows it in the track unless told otherwise
+    position: c.show_value === false ? 'hidden' : oneOf(c.value_position, ['beside', 'bubble', 'track', 'hidden'] as const, style === 'big-fill' ? 'track' : 'beside'),
     ticks: c.ticks === true,
     tickEvery: isNum(c.tick_every) && c.tick_every > 0 ? c.tick_every : undefined,
     limits: c.show_limits === true,

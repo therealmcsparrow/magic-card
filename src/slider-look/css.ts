@@ -68,6 +68,14 @@ export const SLIDER_LOOK_CSS = `
 .mc-sl-ev{display:inline-flex;align-items:center;justify-content:center;min-width:36px;color:var(--error-color,#db4437)}
 .mc-sl-p[data-error] .mc-sl-box{box-shadow:0 0 0 2px var(--error-color,#db4437)}
 .mc-sl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mc-sl-sh{position:absolute;top:0;left:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.mc-sl-sh path{fill:none;stroke:var(--mc-slider-background,var(--disabled-color,#9e9e9e));stroke-opacity:.4;stroke-width:2}
+.mc-sl--big-fill .mc-sl-i{position:absolute;left:16px;top:50%;width:28px;height:28px;margin-top:-14px;--mdc-icon-size:28px;color:var(--bf-text,#fff);pointer-events:none;filter:drop-shadow(1px 0 0 var(--bf-out,#000)) drop-shadow(-1px 0 0 var(--bf-out,#000)) drop-shadow(0 1px 0 var(--bf-out,#000)) drop-shadow(0 -1px 0 var(--bf-out,#000))}
+.mc-tile-slider--vertical.mc-sl--big-fill .mc-sl-i{left:50%;top:auto;bottom:16px;margin:0 0 0 -14px}
+.mc-tile-slider--vertical.mc-sl--big-fill .mc-sl-i--c{top:50%;bottom:auto;margin:-14px 0 0 -14px}
+.mc-sl--big-fill .mc-sl-v{right:16px;min-width:0;height:auto;padding:0;border-radius:0;background:none;color:var(--bf-text,#fff);font-size:1.25rem;font-weight:600;line-height:1.2;text-shadow:1px 0 0 var(--bf-out,#000),-1px 0 0 var(--bf-out,#000),0 1px 0 var(--bf-out,#000),0 -1px 0 var(--bf-out,#000)}
+.mc-tile-slider--vertical.mc-sl--big-fill .mc-sl-v{right:auto;top:16px}
+.mc-tile-slider.mc-sl.mc-sl--big-fill.mc-tile-slider--vertical{height:12rem;max-height:calc(100% - 3rem);margin-top:1.5rem;margin-bottom:1.5rem}
 .mc-tile-slider[offscreen] .mc-sl-p *{transition:none;animation:none}
 @media (prefers-reduced-motion:reduce){.mc-sl-f,.mc-sl-th,.mc-sl-b{transition:none}.mc-tile-slider.mc-dragging .mc-sl-th{--sc:1}}
 `.replace(/\n/g, '');
