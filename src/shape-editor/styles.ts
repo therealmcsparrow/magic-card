@@ -24,7 +24,8 @@ h2,h3,h4,p,ul{margin:0}
 [data-layout=mid] .work{grid-template-columns:220px minmax(0,1fr) 320px}
 [data-layout=compact] .work{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:'center insp'}
 [data-layout=stacked] .work{display:flex;flex-direction:column;overflow:auto}
-[data-layout=stacked] .center{order:1;overflow:visible}
+[data-layout=stacked] .center{order:1;flex:none;overflow:visible}
+[data-layout=stacked] .left,[data-layout=stacked] .insp,.left>*{flex:none}
 [data-layout=stacked] .left{order:2}
 [data-layout=stacked] .insp{order:3}
 .left,.insp{display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto;padding:12px;background:var(--mc-surface)}

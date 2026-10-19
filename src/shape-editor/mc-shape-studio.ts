@@ -133,6 +133,8 @@ export class McShapeStudio extends LitElement {
   /** New warnings and errors, read out on their own so they never replace an action's own announcement. */
   @state() msgLive = '';
   private msgTimer?: ReturnType<typeof setTimeout>;
+  /** The message window just closed: if its eye button is gone (the message was resolved), focus goes to the Messages tab. */
+  private msgReturn = false;
   private seen = new Set<string>();
   @state() pvOpen = false;
   @state() helpOpen = false;
@@ -248,8 +250,9 @@ export class McShapeStudio extends LitElement {
     if (this.ready && this.opened && (foreign || changed.has('preset'))) this.open();
     if (['doc', 'size', 'ready', 'older', 'customShapes'].some((k) => changed.has(k))) this.analyse();
     const now = this.msgs();
-    const fresh = now.find((m) => m.tone !== 'info' && !this.seen.has(m.id));
-    this.seen = new Set(now.map((m) => m.id));
+    const key = (m: Msg): string => `${m.id}|${m.text}`;
+    const fresh = now.find((m) => m.tone !== 'info' && !this.seen.has(key(m)));
+    this.seen = new Set(now.map(key));
     if (fresh) {
       this.msgLive = `${fresh.tone === 'error' ? t('Error') : t('Warning')}: ${fresh.text}`;
       clearTimeout(this.msgTimer);
@@ -263,6 +266,11 @@ export class McShapeStudio extends LitElement {
   }
 
   protected updated(): void {
+    if (this.msgOpen && !this.msgs().some((m) => m.id === this.msgOpen)) this.msgOpen = undefined;
+    if (this.msgReturn && !this.back?.isConnected) {
+      this.msgReturn = false;
+      this.shadowRoot?.querySelector<HTMLElement>('.left [role=tab][aria-selected=true]')?.focus();
+    }
     this.dataset.layout = this.layout;
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
@@ -1295,7 +1303,7 @@ export class McShapeStudio extends LitElement {
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => this.focusTo('.insp button, .insp input'))}</div>
 ${this.top(title)}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work">
-<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${inPath ? t('Points') : t('Outline')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>
+<aside class="left ${this.sheet ? 'sheet' : ''}" aria-label=${this.side === 'messages' ? t('Messages') : inPath ? t('Points') : t('Outline')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
 <aside class="insp" aria-label=${t('Inspector')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
@@ -1370,7 +1378,7 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
   /** The left sidebar's tabs: Draw (the panels) and Messages (with a count). The tab is never switched for the user. */
   private sideTabs(): TemplateResult {
     const n = this.msgCount();
-    return seg('', [['draw', t('Draw')], ['messages', n ? `${t('Messages')} (${n})` : t('Messages')]], this.side, (v) => (this.side = v), true);
+    return seg(t('Sidebar'), [['draw', t('Draw')], ['messages', n ? `${t('Messages')} (${n})` : t('Messages')]], this.side, (v) => (this.side = v), true);
   }
 
   // prettier-ignore
@@ -1378,7 +1386,7 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     const list = this.msgs();
     if (!list.length) return html`<p class="help">${t('No messages.')}</p>`;
     const kind = (m: Msg): string => (m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note'));
-    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('Show full message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: () => (this.msgOpen = m.id) })}</div>`)}</div>`;
+    return html`<div class="mlist">${list.map((m) => html`<div class="notice mrow ${m.tone}"><span class="sr-only">${kind(m)}: </span>${kitGlyph(m.tone === 'info' ? 'information' : 'alertCircle', 20)}<span class="ell" title=${m.text}>${m.text}</span>${button({ label: t('Show full message'), glyph: 'eyeOn', iconOnly: true, size: 'sm', onClick: (e) => ((this.back = e.currentTarget as HTMLElement), (this.msgOpen = m.id)) })}</div>`)}</div>`;
   }
 
   // prettier-ignore
@@ -1387,7 +1395,7 @@ ${this.msgOpen ? this.msgWin() : nothing}${this.picker ? this.pickerWin() : noth
     if (!m) return nothing;
     const heading = m.tone === 'error' ? t('Error') : m.tone === 'warn' ? t('Warning') : t('Note');
     const foot = html`${m.conflict ? html`${btn(t('Save as a copy'), () => (this.closeWindows(), void this.saveMcu(true)))}${btn(t('Reload'), () => (this.closeWindows(), void this.reloadMcu()))}` : nothing}${btn(t('Close'), () => this.closeWindows(), { variant: 'primary', size: 'md' })}`;
-    return this.win(heading, html`<p>${m.text}</p>`, foot, { size: 's', onClose: () => (this.msgOpen = undefined) });
+    return this.win(heading, html`<p>${m.text}</p>`, foot, { size: 's', onClose: () => ((this.msgOpen = undefined), (this.msgReturn = true), setTimeout(() => (this.msgReturn = false), 1500)) });
   }
 
   // ── windows ──
