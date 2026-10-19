@@ -76,7 +76,7 @@ Nested layouts: a module follows the nearest row, column or layout that shares a
 
 ## Modules that need one kind of device
 
-Some modules only make sense for one kind of device. When the entity they would inherit is another kind, they show nothing, as if their entity were `none`. The dashboard stays quiet. The editor explains it under the buttons in plain words, with two buttons: one that opens the entity window filtered to the right kind (Pick a light, Pick a camera) and one for No entity. In the editor preview, such a tile also shows a short "Needs another device" note under its content; the dashboard never shows it.
+Some modules only make sense for one kind of device. When the entity they would inherit is another kind, they show nothing, as if their entity were `none`. The dashboard stays quiet. The editor explains it under the buttons in plain words, with two buttons: one that opens the entity window filtered to the right kind (Pick a light, Pick a camera) and one for No entity. While you edit, such a tile also shows a short "Needs another device" note under its content: in the editor preview, and in the dashboard's own edit mode. Normal viewing of the dashboard never shows it.
 
 | Module | Follows an entity of |
 | --- | --- |

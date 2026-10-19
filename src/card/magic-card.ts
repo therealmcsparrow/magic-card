@@ -1118,7 +1118,7 @@ export class MagicCard extends LitElement {
     // the same object while the id is unchanged (every config without a card entity), else a shallow copy
     const mod = (source.entity || undefined) === entity ? source : { ...source, entity };
     this._scope = childScope(source, up);
-    // editor preview only: a module that follows an entity of the wrong kind says so (never on the dashboard)
+    // editor preview only: a module that follows an entity of the wrong kind says so (also in the dashboard edit mode, never in normal viewing)
     const needs = this.editMode && !entity && !!up && !source.entity && !!ModuleRegistry.get(source.type)?.metadata.inherit;
     try {
       return this._withEntity(entity, () => this._renderModuleAt(mod, path, entity !== undefined && entity !== source.entity, needs));
