@@ -11,6 +11,7 @@ The whole Magic Card config as one annotated tree, then a table per level. Per-m
 -   [Shared module keys](#shared-module-keys)
 -   [Layout modules and their children](#layout-modules-and-their-children)
     -   [Row module columns](#row-module-columns)
+-   [Slider look keys](#slider-look-keys)
 -   [Design](#design)
 -   [Actions](#actions)
 -   [Display conditions](#display-conditions)
@@ -227,6 +228,44 @@ Every module has these. The module-specific keys are in [Modules](../modules/REA
 A module with a missing or unknown `type` shows an error in its own place. The rest of the card keeps rendering.
 
 Modules that draw an icon (`icon`, `button`, `info`, `light`, `tabs`, `weather`, `forecast`) also take `icon_fx`, `icon_on` and `icon_off`. `svg` is for `icon`, `button` and `info`; the Light module has no Custom SVG switch. See [Icon effects](#icon-effects).
+
+## Slider look keys
+
+A `type: slider` module can take these optional keys. A slider without them looks and works as before. `show_value`, `slider_color` and `track_color` keep their meaning. Each key is described in [Slider](../modules/controls/slider.md#look). The keys are shown commented out here, so copying this block changes nothing.
+
+```yaml
+- type: slider
+  entity: light.desk
+  # track_style: standard          # standard | thin | pill | segmented | glass | big-fill
+  # track_thickness: 40            # px, 2-96
+  # track_radius: 12               # px, 0-48
+  # segments: 6                    # segmented; 2-20
+  # segment_gap: 2                 # px, 1-8
+  # glass_blur: false              # glass; blur what is behind the track
+  # fill_mode: solid               # solid | gradient | auto
+  # slider_color_to: "#ff9100"     # gradient end colour
+  # use_entity_color: false        # start the fill with the light's own colour
+  # show_icon: true                # big fill; the entity's icon
+  # icon: mdi:lightbulb            # big fill; overrides the entity's icon
+  # icon_position: start           # start | center (centre only when vertical)
+  # live: false                    # update while dragging, at most 4 a second
+  # thumb: line                    # line | circle | pill | square | none
+  # thumb_size: 20                 # px, 4-64
+  # thumb_border: 0                # px, 0-6
+  # thumb_border_color: "#ffffff"
+  # thumb_glow: 0                  # px, 0-30
+  # thumb_icon: mdi:star           # circle, pill and square only
+  # value_position: beside         # beside | bubble | track | hidden
+  # ticks: false
+  # tick_every: 10                 # unset = automatic, 5 to 10 ticks
+  # show_limits: false
+  # track_shape: circle            # custom | squircle | hexagon | octagon | blob | wave | notch | ticket | pill | circle | none
+  # track_shape_options: {}        # from the shape editor
+  # stops:                         # at most 12
+  #   - value: 0
+  #     label: Off
+  # snap: false
+```
 
 ## Layout modules and their children
 
@@ -730,9 +769,45 @@ flows:
     label_position: auto           # auto (default) | line | side | hidden
     show_when: always              # always (default) | flowing
     layer: back                    # back (default) | front
+    # Look keys, all optional and shown commented out. Any one of them gives the flow a look.
+    # line_style: solid              # solid | dashed | dotted | double | wave | zigzag | tube | neon | cable
+    # dash_length: 10                # dashed; 2-40 px
+    # dash_gap: 6                    # dashed, dotted; 2-40 px
+    # rail_gap: 6                    # double; 2-24 px
+    # amplitude: 6                   # wave, zigzag; height 1-20 px
+    # wavelength: 32                 # wave 32, zigzag 24; 8-80 px
+    # electric: false                # zigzag
+    # tube_tint: "#ffffff"           # tube; default theme text colour at 8 %
+    # bubbles: true                  # tube; default true
+    # bubble_count: 4                # tube; 1-8
+    # tube_fill_value: false         # tube; level follows the value, needs an entity
+    # flicker: "off"                 # neon; off | subtle | strong (quote "off", or YAML reads it as false)
+    # neon_core: "#ffffff"           # neon; default derived from the theme
+    # cable_color: "#333333"         # cable; default a darker shade of color
+    # twisted: false                 # cable
+    # color_mode: single             # single | gradient | value; unset: see Look in options
+    # color_to: "#ff9100"            # gradient end colour
+    # thresholds:                    # by value: list of from and color
+    #   - from: 0
+    #     color: "#4caf50"
+    # start_cap: none                # none | round | arrow
+    # end_cap: none                  # none | round | arrow
+    # cap_size: 8                    # px, 4-40; default 3 x width
+    # shape: dot                     # dot | arrow | chevron | square | diamond | star | comet | spark | bubble | drop | icon
+    # shape_icon: mdi:star           # shape icon, mdi:name
+    # shape_icon_rotate: true        # icon turns with the line
+    # shape_spin: false              # star, square, diamond, icon; one turn every 3 s
+    # shape_color: "#ffffff"         # default the line colour
+    # shape_alternate: dot           # every second shape
+    # size_variation: 0              # 0-60 %
+    # spacing_mode: even             # even | pixels | random
+    # spacing: 32                    # px, 4-400
+    # motion: travel                 # travel | pulse
+    # arrival: none                  # none | ring | splash
+    # arrival_size: 24               # px, 8-80
 ```
 
-A flow with a missing, unknown, hidden or identical `from` / `to` is not drawn. Detail: [Flow lines](../flows/README.md).
+A flow with a missing, unknown, hidden or identical `from` / `to` is not drawn. Detail: [Flow lines](../flows/README.md). The look keys are explained in [Look](../flows/options.md#look).
 
 ## Pop-up
 

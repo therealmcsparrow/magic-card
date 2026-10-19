@@ -7,7 +7,7 @@ Flows are stored in a list under `flows` at the top level of the card. A card wi
 ## Pages
 
 - [Creating flows](creating-flows.md): the Flows tab, the studio canvas, module ids
-- [Options](options.md): every key, its editor label and default
+- [Options](options.md): every key, its editor label and default, including the look keys
 - [Examples](examples.md): energy flows, plain connectors, labels
 
 ## Minimal example
@@ -56,14 +56,40 @@ flows:
 - Lines follow the layout: they are measured again when the card or a module resizes, scrolls or animates in.
 - A flow is not drawn when one of its modules is unknown, hidden by its display conditions on the dashboard, has no size, or lies outside the visible content (a slide that isn't shown).
 - A flow from a module to itself is not drawn.
-- With more than 40 dots on one card, each flow gets fewer dots (at least one).
-- Lines pause while the card is off-screen.
+- A card draws at most 40 moving things at once. See [Limits](#limits).
+- Lines pause while the card is off-screen or the page is hidden.
 
 See [Layer](options.md#layer) for how lines sit over or under module content.
 
+## Looks
+
+A look changes how a line is drawn and what travels on it: dashed, dotted, double rail, wave, zigzag, tube, neon or cable lines, gradients, end markers, travelling shapes (including MDI icons), bubbles and an arrival effect. Every look key is in [Look](options.md#look).
+
+Pick a look in the Look group of the Flows tab, or start from one of five presets: Energy, Water, Data, Heat and Neon. Each preset sets its keys in one step, and [Presets](options.md#presets) lists what each one sets.
+
+A flow without look keys is drawn as before, and the look code is not loaded.
+
+## Limits
+
+Tubes, neon lines and electric zigzags take more work to draw. The card counts them and picks a quality level. The count includes flows that are off-screen.
+
+| Level | When | What changes |
+| --- | --- | --- |
+| Full | Up to 3 heavy lines | Nothing |
+| Lite | Over 3, up to 6 | At most 2 bubbles per flow; flicker is off; electric zigzags do not flicker |
+| Minimal | Over 6 | No bubbles, no moving highlight, no arrival effect; at most 2 travelling shapes per flow |
+
+A tube or neon line counts 1. A zigzag with Electric counts half. The line style never changes at any level: a tube stays a tube.
+
+The card draws at most 40 moving things at once: dots, travelling shapes, bubbles, ripples and splash droplets. When a card goes over that, each moving flow gets fewer, and at least one. A spinning shape counts double. The editor shows a note when a card reaches Lite or Minimal.
+
 ## Reduced motion
 
-With reduced motion turned on in the system, a flow is a still line with an arrowhead pointing in the flow direction.
+With reduced motion turned on in the system, nothing moves: no travel, wave movement, bubbles, flicker, pulse, arrival effect or spin.
+
+- A flow with a look keeps its line style and shows a direction mark. That is the end marker arrow when one is set, or else a small chevron every 160 px.
+- A flow without a look is a still line with an arrowhead pointing in the flow direction.
+- At idle, a flow is a still line in its idle colour.
 
 ## Related
 

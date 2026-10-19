@@ -6,6 +6,11 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### New
+-   **Flow looks.** Flows can draw dashed, dotted, double-rail, wave, zigzag, tube, neon and cable lines, with gradient and value colours, end markers, travelling shapes (including MDI icons), bubbles and an arrival effect. Five presets fill the options in one click: Energy, Water, Data, Heat and Neon. Each option is in the Flows tab, with an Undo for presets and Reset look. A flow without look keys looks exactly as before. See [Flow options](documentation/flows/options.md#look).
+-   **Slider looks.** Sliders can have thin, pill, segmented and glass tracks, gradient and automatic fills, a handle of your choice, a value bubble, ticks, named stops and a track shape. The Big fill style shows the entity's icon and value, with live updates while you drag. Five presets: Minimal, Material, Neon, Glass and Big fill. A slider without look keys looks exactly as before. See [Slider](documentation/modules/controls/slider.md#look).
+-   **Looks load when used.** A card without flow or slider look keys does not load the extra code.
+
 ### Documentation
 -   **Complete dashboards.** Twenty-five complete dashboards in the gallery, five each for sci-fi, fantasy, western, steampunk and dystopian homes. Each is a sections view made only of Magic Cards, with a matching theme, install steps and a list of the entities it uses. See [Complete dashboards](documentation/gallery/dashboards/README.md).
 -   **Gallery cards 81 and 82.** An operations console in a retro starship style, wide and phone-width.

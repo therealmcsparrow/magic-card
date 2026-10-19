@@ -11,6 +11,7 @@ Every key of a `flows` entry, with its label in the Flows tab. See [Flow lines](
 - [Width, dots and speed](#width-dots-and-speed)
 - [Label](#label)
 - [Show and layer](#show-and-layer)
+- [Look](#look)
 
 ## All keys
 
@@ -121,3 +122,141 @@ Label position (shown while a label is set):
 - `front` draws it over module content. It never blocks taps.
 
 A back line also runs under a layout module's own background (a Horizontal or Vertical stack with a background) and under a Slider module. A row or column with animations, particle layers, a video background, a [shape](../design/shapes.md), a [value background](../design/value-backgrounds.md), or a filter, opacity, transform, clip or mask in its design is lifted above back lines, so its background covers them. Use `layer: front` for a flow that has to show over those.
+
+## Look
+
+A flow has a look when one of the look keys below is set. A flow without one draws exactly as before, and the look code is not loaded. Colour, width, dots, dot size, speed and glow keep their meaning in a look.
+
+Set the keys in YAML, or use the Look group in the Flows tab. The editor reads the keys back the same way, so opening and saving a flow without changes leaves its YAML as it was.
+
+### Presets
+
+Presets are an editor feature: the YAML holds the keys they write, not a preset name. A preset removes the look keys and the colour, idle colour, width, scale width, glow, dots and dot size settings, then writes its own.
+
+| Preset | Sets | Looks like |
+| --- | --- | --- |
+| Energy | Neon line, yellow to orange, spark shapes, subtle flicker | Glowing yellow-orange line with sparks |
+| Water | Tube with bubbles, drop shapes, width 12 px | Blue tube with drops and a rising level |
+| Data | Dashed line, chevron shapes, width 2 px | Cool dashed line with chevrons |
+| Heat | Wave, orange to yellow, comet shapes, glow 4 px | Warm wavy line with comets |
+| Neon | Neon line, pink, dot shapes, glow 10 px, no flicker | Pink glowing line with dots |
+
+Water writes `tube_fill_value` only for a flow with an `entity`. Without one, the tube is full.
+
+### Undo and Reset look
+
+- Reset look removes the look keys and the colour, idle colour, width, scale width, glow, dots and dot size. It keeps the connection (From, To, Entity), Value and route, Label and Visibility.
+- After a preset or Reset look, a notice says how many settings changed, with an **Undo** button. The notice stays for 20 seconds.
+- An **Undo** button also stays in the Look header until you change a look setting or close the editor.
+- Undo goes back one step.
+
+### Colour mode
+
+Single, gradient and by-value colours use these keys: `color`, `color_to`, `thresholds` and `color_mode`. The mode is chosen in this order:
+
+1. `color_mode`, when it is set.
+2. By value, when `thresholds` is set.
+3. Gradient, when `color_to` is set.
+4. Single.
+
+- Single uses `color`.
+- Gradient runs from `color` to `color_to`.
+- By value uses the last range whose `from` is at or below the value's size. With no match, or no value, it uses `color`.
+
+The keys of the other modes stay in the YAML and are not used. The editor writes `color_mode` only when you switch mode, and its help line names the colour in use.
+
+### Spacing
+
+Spacing uses `spacing_mode`, `spacing` and `dots`. The mode is chosen in this order:
+
+1. `spacing_mode`, when it is set.
+2. In pixels, when `spacing` is set.
+3. Even.
+
+- Even places `dots` shapes along the line.
+- In pixels puts one shape every `spacing` pixels, to 40 at most and at least one. `dots` is ignored.
+- Random varies each gap by up to 50 %. The pattern stays the same on every render.
+- Pulse motion places shapes evenly, whatever the spacing mode is.
+
+### Line styles
+
+| UI label | YAML key | Values | Default | Notes |
+| --- | --- | --- | --- | --- |
+| Line style | `line_style` | `solid`, `dashed`, `dotted`, `double`, `wave`, `zigzag`, `tube`, `neon`, `cable` | `solid` | Solid removes the key. `double` is labelled Double rail. |
+| Dash length (px) | `dash_length` | 2 to 40 | `10` | Dashed. |
+| Gap (px) | `dash_gap` | 2 to 40 | `6` | Dashed and dotted. |
+| Rail gap (px) | `rail_gap` | 2 to 24 | `6` | Double rail. Each rail is `width` wide. |
+| Wave height (px) | `amplitude` | 1 to 20 | `6` | Wave and zigzag. Lower on short elbows. |
+| Wavelength (px) | `wavelength` | 8 to 80 | `32` wave, `24` zigzag | Wave and zigzag. |
+| Electric | `electric` | `true`, `false` | `false` | Zigzag. A flickering zigzag. |
+
+- Double rail draws two parallel rails. On short elbows the rails of different runs can overlap.
+- Wave and zigzag keep their shape. A highlight runs along the line, and the shapes travel on the centre line.
+- Dotted lines use round dots `width` wide.
+
+### Tube, neon and cable
+
+| UI label | YAML key | Values | Default | Notes |
+| --- | --- | --- | --- | --- |
+| Glass tint | `tube_tint` | Any colour, used as written | Theme text colour at 8 % | Tube. |
+| Bubbles | `bubbles` | `true`, `false` | `true` | Tube. Bubbles rise inside the liquid. |
+| Bubble count | `bubble_count` | 1 to 8 | `4` | Tube. |
+| Level follows value | `tube_fill_value` | `true`, `false` | `false` | Tube. Needs an `entity`. |
+| Flicker | `flicker` | `"off"`, `"subtle"`, `"strong"` | `"off"` | Neon. Quote `"off"` in YAML, or it reads as false. |
+| Core colour | `neon_core` | Any colour, used as written | White on a dark card, the line colour with a black shade on a light card | Neon. |
+| Sheath colour | `cable_color` | Any colour, used as written | A darker shade of `color` | Cable. |
+| Twisted | `twisted` | `true`, `false` | `false` | Cable. Diagonal strand marks. |
+
+- For a tube, the liquid fills the tube from its start. With **Level follows value** and an entity, the level is the value's size between `min` and `max`, so an empty tube means the value is at or below `min`. The wall and a level mark at the start stay visible when the tube is empty. At idle the liquid is empty and the bubbles hide.
+- On neon, the glow (`glow`) also lights the travelling shapes. Flicker never dips more than twice a second.
+- A cable has a sheath with an outline, a core and optional strand marks.
+- Theme colours keep at least 3:1 contrast with the card, in light and dark themes.
+
+### Colours and ends
+
+| UI label | YAML key | Values | Default | Notes |
+| --- | --- | --- | --- | --- |
+| Colour mode | `color_mode` | `single`, `gradient`, `value` | Chosen as above | Written on a mode switch only. |
+| Line end colour | `color_to` | Any colour, `entity`, `entity N%` | None | Gradient end. `color` is the start. |
+| Colour ranges | `thresholds` | List of `from` and `color` | None | By value. The `to` key is ignored. See [Colour ranges](../yaml/schema.md#colour-ranges). |
+| Start marker | `start_cap` | `none`, `round`, `arrow` | `none` | A round node or an arrowhead at the start. The arrowhead points out of the line, so an arrow at both ends reads as a two-headed line. |
+| End marker | `end_cap` | `none`, `round`, `arrow` | `none` | A round node or an arrowhead at the end, pointing along the line. |
+| Marker size (px) | `cap_size` | 4 to 40 | 3 times `width` | Arrowhead length. A round node is two thirds of it. |
+
+The end marker takes the gradient's end colour. The start marker takes `color`.
+
+### Shapes
+
+| UI label | YAML key | Values | Default | Notes |
+| --- | --- | --- | --- | --- |
+| Shape | `shape` | `dot`, `arrow`, `chevron`, `square`, `diamond`, `star`, `comet`, `spark`, `bubble`, `drop`, `icon` | `dot` | Shapes point along the line, through corners. |
+| Icon | `shape_icon` | An MDI icon, `mdi:name` | None | Shape `icon`. Without an icon the shape is a dot. |
+| Rotate with the line | `shape_icon_rotate` | `true`, `false` | `true` | Shape `icon`. Off keeps the icon upright. |
+| Spin | `shape_spin` | `true`, `false` | `false` | `star`, `square`, `diamond` and `icon` only. Turns once every 3 seconds, on top of the direction. Off by default. Not used with pulse motion. |
+| Shape colour | `shape_color` | Any colour, used as written | The line colour | |
+| Alternate with | `shape_alternate` | Any shape | None | Every second shape is this one. |
+
+- Use **Dot size** (`dot_size`) for the shape size.
+- **Dots** (`dots`) sets how many shapes travel. Pixel spacing ignores it.
+- A **Glow** on a neon line also lights the shapes.
+
+### Motion, size and arrival
+
+| UI label | YAML key | Values | Default | Notes |
+| --- | --- | --- | --- | --- |
+| Motion | `motion` | `travel`, `pulse` | `travel` | Pulse: shapes stay put and pulse. The pulse speed follows `speed` and `min_speed`, faster at a higher value. |
+| Spacing mode | `spacing_mode` | `even`, `pixels`, `random` | Chosen as above | See Spacing above. |
+| Spacing (px) | `spacing` | 4 to 400 | `32` | Gap between shapes. |
+| Size variation (%) | `size_variation` | 0 to 60 | `0` | Shape sizes vary by up to this share. The sizes stay the same on every render. |
+| Arrival | `arrival` | `none`, `ring`, `splash` | `none` | An effect at the To module each time a shape arrives. Not with pulse motion. |
+| Splash size (px) | `arrival_size` | 8 to 80 | `24` | Diameter of the ring or splash. |
+
+- Arrival effects are off under reduced motion, in the Minimal quality level, and at idle.
+
+### Look keys
+
+Every look key, in the order the editor shows them. The list is the same as `FLOW_LOOK_KEYS`.
+
+`line_style`, `dash_length`, `dash_gap`, `rail_gap`, `amplitude`, `wavelength`, `electric`, `tube_tint`, `bubbles`, `bubble_count`, `tube_fill_value`, `flicker`, `neon_core`, `cable_color`, `twisted`, `color_mode`, `color_to`, `thresholds`, `start_cap`, `end_cap`, `cap_size`, `shape`, `shape_icon`, `shape_icon_rotate`, `shape_spin`, `shape_color`, `shape_alternate`, `size_variation`, `spacing_mode`, `spacing`, `motion`, `arrival`, `arrival_size`.
+
+Quality levels and the card's element limit are in [Flow lines](README.md#looks).
