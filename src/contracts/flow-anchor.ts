@@ -1,4 +1,3 @@
-import type { FlowSide } from '../types';
 
 /*
  * Contract: flow anchors. Version 1.1.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
@@ -136,6 +135,3 @@ export const FLOW_END_ATTR = 'data-mc-flow-end';
  * runtime never reads this list, it finds the marker). Editor-only import: keep it out of magic-card.js.
  */
 export const FLOW_ANCHOR_TYPES: readonly string[] = ['icon', 'button', 'info', 'light', 'weather', 'image', 'camera', 'gauge'];
-
-/** For reference: sides are still taken on the end rect (box or anchor). */
-export type FlowAnchorSide = FlowSide | 'auto';
