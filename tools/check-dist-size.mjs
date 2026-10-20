@@ -12,10 +12,12 @@
 // - siblings (ADR 0044): every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
 //   .js byte for byte, and a .br or .gz with no .js fails (an orphan, or a stale copy HA would keep serving). Siblings have no size cap of
 //   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
-// Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--digest]
+// Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--committed] [--digest]
 //   --base-file     compare with a file instead of a git ref (the self-test uses it).
 //   --require-base an unresolvable ref fails (CI); a ref that exists but has no caps file yet (first run) means no raises.
 //   --caps-only     check the caps file and the raises only, no dist (the quick CI job).
+//   --committed     check only that every committed .br/.gz unpacks to its committed .js byte for byte (run before the build, which
+//                   rewrites them). Sizes and caps are not checked.
 //   --digest        also print the sha256 of the gzip bytes after the 10-byte header (the header OS byte differs per platform).
 // Raising a cap or ceiling needs a CEO decision, written by the Lead into ceo_decisions in the same change.
 import { createHash } from 'node:crypto';
@@ -335,6 +337,11 @@ function main() {
     if (f.raw > f.ceiling) fail(`files["${name}"]: raw cap ${f.raw} B is above its ceiling ${f.ceiling} B. A ceiling raise needs a CEO decision`);
   }
   const activeCap = checkLadder(caps);
+  if (flag('--committed')) {
+    if (!existsSync(distDir)) fail(`${distDir} does not exist`);
+    else checkSiblings(caps, readdirSync(distDir).filter((f) => f.endsWith('.js')).sort(), activeCap, ' (committed copies)');
+    process.exit(failed ? 1 : 0);
+  }
   checkNvmrc(caps);
   if (baseRef || baseFile) checkRaises(caps, baseRef ?? baseFile);
   else note('no --base-ref: raises against the base branch were not checked');

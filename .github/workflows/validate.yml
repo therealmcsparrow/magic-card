@@ -41,6 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the entry graph step reads the base commit (push: the commit before, PR: the base branch)
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -49,21 +50,41 @@ jobs:
       - run: npm ci
       - name: Third-party notices up to date
         run: npm run notices -- --check
+      - name: Committed .br and .gz copies unpack to the committed .js (before the build rewrites them)
+        run: node tools/check-dist-size.mjs --committed
       - run: npm run build
       - name: Entry graph (proj.M11, debt list only shrinks)
-        # origin/main is fetched so the base debt list can be read (git show origin/main:tools/entry-graph.json)
+        # the base debt list is read with git show <base>:tools/entry-graph.json. Base: the commit before the push, or the PR base branch,
+        # the same as the size-caps job. A base that does not resolve fails (--require-base); only a new branch (no commit before) has none.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
         run: |
-          git fetch --no-tags --depth=1 origin main || true
           node tools/check-entry-graph.mjs --self-test
-          node tools/check-entry-graph.mjs
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): debt growth not compared"
+            node tools/check-entry-graph.mjs
+          else
+            ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
+          fi
       - name: Dist size budget
         run: npm run size
       - name: Size gate self-test (raised cap, unlisted file, other zlib)
         run: npm run size:selftest
       - name: Committed dist matches the build
-        # a warning here; the release workflow fails on it. Rebuild and commit dist/ in the release commit.
+        # fails on every PR and push (the .br and .gz copies are part of dist/). Rebuild and commit dist/ with the change.
         run: |
-          git diff --quiet -- dist src/version.ts && [ -z "$(git status --porcelain -- dist src/version.ts)" ] || echo "::warning::dist/ or src/version.ts differs from a fresh build, or the build made a file that is not committed. Run npm run build and commit dist/ before tagging a release."
+          if ! git diff --quiet -- dist src/version.ts || [ -n "$(git status --porcelain -- dist src/version.ts)" ]; then
+            git status --short -- dist src/version.ts
+            echo "::error::dist/ or src/version.ts differs from a fresh build, or the build made a file that is not committed. Run npm run build and commit dist/ with the change."
+            exit 1
+          fi
 
   size-caps:
     name: Size caps not raised
