@@ -1,5 +1,5 @@
 import { FLOW_LOOK_DEFAULTS, defaultCapSize, FLOW_SPIN_SHAPES, type FlowCap, type FlowLineStyle, type FlowLookResolved, type FlowShape } from '../contracts/flow-look';
-import { isWideFlowLook } from '../contracts/flow-anchor-wide';
+import { FLOW_SHAPES, SPACING_MODES, fin, isWideFlowLook } from '../contracts/flow-anchor-wide';
 import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
 import { FLOW_DEFAULTS, type ResolvedFlow } from '../utils/flow';
 import { safeColor } from '../utils/animation';
@@ -16,15 +16,16 @@ import { flowLookRegistry } from './registry';
 
 const LINES: ReadonlySet<string> = new Set(['solid', 'dashed', 'dotted', 'double', 'wave', 'zigzag', 'tube', 'neon', 'cable']);
 const CAPS: ReadonlySet<string> = new Set(['none', 'round', 'arrow']);
-const SHAPES: ReadonlySet<string> = new Set(['dot', 'arrow', 'chevron', 'square', 'diamond', 'star', 'comet', 'spark', 'bubble', 'drop', 'icon']);
+const SHAPES: ReadonlySet<string> = new Set(FLOW_SHAPES);
+const SPACING: ReadonlySet<string> = new Set(SPACING_MODES);
 const MAX_RANGES = 12;
 /** Same pattern as isIconId (src/utils/icon-list.ts), kept here so the chunk does not pull the icon list in. */
 const ICON_ID = /^[a-z0-9_-]+:[a-z0-9_.-]+$/i;
 
 /** A finite number in [lo, hi], else `def` (numeric strings count). */
 function num(v: unknown, lo: number, hi: number, def: number): number {
-  const n = typeof v === 'string' && v.trim() ? Number(v) : v;
-  return typeof n === 'number' && Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def;
+  const n = fin(v);
+  return n === undefined ? def : Math.min(hi, Math.max(lo, n));
 }
 
 const pick = <T extends string>(v: unknown, set: ReadonlySet<string>): T | undefined => (typeof v === 'string' && set.has(v) ? (v as T) : undefined);
@@ -70,7 +71,7 @@ export function resolveLook(f: FlowConfig, base: ResolvedFlow, hass: HomeAssista
   const max = num(f.max, -Infinity, Infinity, FLOW_DEFAULTS.max);
   const level = f.tube_fill_value === true && base.value !== undefined && max > min ? Math.min(1, Math.max(0, (Math.abs(base.value) - min) / (max - min))) : 1;
   const motion = f.motion === 'pulse' ? 'pulse' : 'travel';
-  const spacingMode = pick<'even' | 'pixels' | 'random'>(f.spacing_mode, new Set(['even', 'pixels', 'random'])) ?? (f.spacing !== undefined ? 'pixels' : 'even');
+  const spacingMode = pick<'even' | 'pixels' | 'random'>(f.spacing_mode, SPACING) ?? (f.spacing !== undefined ? 'pixels' : 'even');
   const shape = pick<FlowShape>(f.shape, SHAPES) ?? D.shape;
   const alt = pick<FlowShape>(f.shape_alternate, SHAPES);
   const arrival = pick<'none' | 'ring' | 'splash'>(f.arrival, new Set(['ring', 'splash'])) ?? 'none';

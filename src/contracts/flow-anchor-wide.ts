@@ -1,11 +1,11 @@
-/* flow-anchor 1.2.0 (see flow-anchor.ts). Chunk and editor only; the main bundle gets the answer via FlowLookResolved.wide. */
+/* flow-anchor 1.2.0 (see flow-anchor.ts). Chunk and editor only; the main bundle gets the answer via FlowLookResolved.wide. FLOW_SHAPES, SPACING_MODES and fin are also used by flow-look/resolve.ts; no API change. */
 const WIDE_STYLES = ['tube', 'cable', 'neon', 'zigzag'];
 /** The values resolve.ts accepts for shape_alternate (an unknown one is dropped there, so it must not count here). */
-const SHAPES = ['dot', 'arrow', 'chevron', 'square', 'diamond', 'star', 'comet', 'spark', 'bubble', 'drop', 'icon'];
-const SPACING_MODES = ['even', 'pixels', 'random'];
+export const FLOW_SHAPES = ['dot', 'arrow', 'chevron', 'square', 'diamond', 'star', 'comet', 'spark', 'bubble', 'drop', 'icon'];
+export const SPACING_MODES = ['even', 'pixels', 'random'];
 
 /** A finite number (numeric strings count), like resolve.ts num(). */
-const fin = (v: unknown): number | undefined => {
+export const fin = (v: unknown): number | undefined => {
   const n = typeof v === 'string' && v.trim() ? Number(v) : v;
   return typeof n === 'number' && Number.isFinite(n) ? n : undefined;
 };
@@ -23,5 +23,5 @@ export const isWideFlowLook = (f: object): boolean => {
   const travelling = r.motion !== 'pulse' && (mode !== 'even' || dots === undefined || Math.round(dots) > 0);
   if (!travelling) return false;
   const alt = r.shape_alternate;
-  return r.spacing_mode === 'random' || (fin(r.size_variation) ?? 0) > 0 || (typeof alt === 'string' && SHAPES.includes(alt));
+  return r.spacing_mode === 'random' || (fin(r.size_variation) ?? 0) > 0 || (typeof alt === 'string' && FLOW_SHAPES.includes(alt));
 };
