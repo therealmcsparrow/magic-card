@@ -175,7 +175,7 @@ rows:                              # required (a list, may be empty)
 | `background_layers` | list | | Card backdrop: at most 4 layers, first entry in front. A fifth entry is ignored. Keys in [Layers](#layers). See [Backgrounds](../design/backgrounds.md#card-backdrop). |
 | `layers_low_power` | boolean | `false` | Drops blur, blend and pan and zoom on this card's backdrop and layered modules. Pictures, opacity and darkening stay. |
 | `pause_button` | string | `hidden` | `hidden` (the default: no button), `auto` (shown on cards that have motion) or `always`. If anything on the card moves for more than 5 seconds, set `auto` or `always` so viewers can stop it. With `auto` or `always` the card keeps a 24 px strip at the button's edge, even when no button shows under `auto`. Set in the Design tab, Motion group. See [Pause motion button](../design/layers.md#pause-motion-button). |
-| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Used only when the button is shown. |
+| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Places the button, and with `auto` or `always` also sets the edge (top or bottom) that keeps the strip for it. |
 | `popup` | object | | See [Pop-up](#pop-up). |
 | `flows` | list | | See [Flows](#flows). |
 

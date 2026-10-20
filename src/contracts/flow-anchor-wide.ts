@@ -1,4 +1,4 @@
-/* flow-anchor 1.1.0 (see flow-anchor.ts). Chunk and editor only; the main bundle gets the answer via FlowLookResolved.wide. */
+/* flow-anchor 1.2.0 (see flow-anchor.ts). Chunk and editor only; the main bundle gets the answer via FlowLookResolved.wide. */
 const WIDE_STYLES = ['tube', 'cable', 'neon', 'zigzag'];
 /** The values resolve.ts accepts for shape_alternate (an unknown one is dropped there, so it must not count here). */
 const SHAPES = ['dot', 'arrow', 'chevron', 'square', 'diamond', 'star', 'comet', 'spark', 'bubble', 'drop', 'icon'];
@@ -11,7 +11,7 @@ const fin = (v: unknown): number | undefined => {
 };
 
 /**
- * 1.1.0: whether the flow's look is wide (the default anchor is then the box). Reads the YAML keys only.
+ * 1.2.0: whether the flow's look is wide (the default anchor is then the box). Reads the YAML keys only.
  * A swarm key (random spacing, size variation, alternate shape) counts only when shapes travel: motion is
  * not `pulse` and the flow draws shapes (a spacing in pixels or random mode, or `dots` above 0; unset = 3).
  */
