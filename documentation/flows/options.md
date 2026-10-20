@@ -61,7 +61,7 @@ Attach to picks what each end of the line touches on its module:
 
 Without a value, the default depends on the look:
 
-- A wide look ends at the module box. A wide look is a line style of tube, cable, neon or zigzag, or a swarm: `spacing_mode: random`, a `size_variation` above 0, or a `shape_alternate`. `electric`, `spacing` and `motion` do not make a look wide, and a swarm key at its default value does not either.
+- A wide look ends at the module box. A wide look is a line style of tube, cable, neon or zigzag, or a swarm: `spacing_mode: random`, a `size_variation` above 0, or a `shape_alternate`. `electric`, `spacing` and `motion` do not make a look wide, and a swarm key at its default value does not either. A swarm key counts only when shapes travel along the line: `shape_alternate: none` or an unknown shape name does not count, and neither does a swarm key with `motion: pulse` or with `dots: 0` and no spacing.
 - Every other line ends at the icon, picture or dial. That covers solid, dashed, dotted, double rail and wave lines, and a flow without a look.
 
 A value you choose always wins. `from_anchor: icon` on a tube sends that end to the icon, and `box` on a solid line sends it to the box.
