@@ -33,12 +33,17 @@ export class StreamGate {
   private _watchAsked = false;
   private _listening = false;
 
+  /** What the observer watches: the module wrapper (always a box); the host may be display:contents, which never reports on screen. */
+  private _watched: HTMLElement;
+
   constructor(
     private readonly _host: HTMLElement,
     private readonly _kind: StreamKind,
     private readonly _onChange: () => void,
     private readonly _pauseInFlow = false,
-  ) {}
+  ) {
+    this._watched = _host;
+  }
 
   get active(): boolean {
     if (!this._watching && !this.background) return true;
@@ -68,7 +73,8 @@ export class StreamGate {
   private _start(): void {
     this._onScreen = false;
     // no IntersectionObserver: nothing will report, the page-hidden rule still applies
-    if (!watchOffscreen(this._host, this._report)) this._onScreen = true;
+    this._watched = (this._host.closest('.mc-module-wrapper') as HTMLElement | null) ?? this._host;
+    if (!watchOffscreen(this._watched, this._report)) this._onScreen = true;
     else this._watching = true;
     this._watchAsked = true;
   }
@@ -84,7 +90,7 @@ export class StreamGate {
   }
 
   private _stop(): void {
-    if (this._watching) unwatchOffscreen(this._host);
+    if (this._watching) unwatchOffscreen(this._watched);
     this._watching = false;
     this._watchAsked = false;
     if (this._listening) this._unlisten();
