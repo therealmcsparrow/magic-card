@@ -10,6 +10,7 @@ import { field, switchRow } from '../../ui-kit/templates/field';
 import { seg } from '../../ui-kit/templates/choice';
 import { notice } from '../../ui-kit/templates/status';
 import { numericControl } from '../../utils/entity-control';
+import { entityStateColor } from '../../utils/entity-color';
 import { t } from '../i18n';
 import { SLIDER_PRESETS, TRACK_TILES } from './presets';
 import {
@@ -301,7 +302,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     return this._fieldOf(
       key,
       label,
-      html`<mc-color-picker id=${`sl-${key}`} .value=${v} .label=${label} @value-changed=${(e: CustomEvent<{ value: string }>) => this._set({ [key]: e.detail.value || undefined })}></mc-color-picker>`,
+      html`<mc-color-picker id=${`sl-${key}`} .value=${v} .label=${label} allowEntity allowAttribute .entityColor=${entityStateColor(this._stateObj) ?? 'currentColor'} .entityAttributes=${this._stateObj?.attributes} @value-changed=${(e: CustomEvent<{ value: string }>) => this._set({ [key]: e.detail.value || undefined })}></mc-color-picker>`,
     );
   }
 

@@ -3,7 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { pickerStyles, colorPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
 import { renderPickerWindow, PickerWindowController } from './picker-parts';
-import { parseEntityColor } from '../../utils/entity-color';
+import { parseEntityColor, attrRgb } from '../../utils/entity-color';
+import { ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/animation';
 import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
@@ -59,6 +60,10 @@ export class ColorPicker extends LitElement {
   @property({ type: Boolean }) allowEntity = false;
   /** The entity's live state colour (CSS), shown in the swatch while the entity colour is used. */
   @property({ type: String }) entityColor = '';
+  /** With allowEntity: also offer a colour read from an attribute of the entity (`entity.<attr>`, contract entity-colour 1.0.0). */
+  @property({ type: Boolean }) allowAttribute = false;
+  /** The entity's attributes, for the "Colour from" list (only the ones that hold a colour are offered). */
+  @property({ attribute: false }) entityAttributes?: Record<string, unknown>;
 
   /** Offer a Solid | Gradient switch: 'linear' (angle only, ring and icon) or 'css' (linear and radial). */
   @property({ type: String }) gradient: '' | 'linear' | 'css' = '';
@@ -372,11 +377,14 @@ export class ColorPicker extends LitElement {
     </button>`;
   }
 
-  /** The field while it uses the entity colour: live swatch, read-only name, opacity. */
-  private _renderEntity(opacity: number): TemplateResult {
-    const base = this.entityColor || 'currentColor';
+  /** The field while it uses the entity colour: live swatch, read-only name, source, opacity. */
+  private _renderEntity(opacity: number, attr?: string): TemplateResult {
+    let base = this.entityColor || 'currentColor';
+    const rgb = attr ? attrRgb(this.entityAttributes, attr) : undefined;
+    if (attr) base = rgb ? `rgb(${rgb.join(', ')})` : 'transparent';
     const preview = opacity >= 100 ? base : `color-mix(in srgb, ${base} ${opacity}%, transparent)`;
     const name = this.label || t('colour');
+    const emit = (a: string | undefined, o: number) => this._emitValue(`entity${a ? `.${a}` : ''}${o < 100 ? ` ${o}%` : ''}`);
     return html`
       <div class="color">
         <button type="button" class="swatch" disabled aria-label=${t('{name}: entity colour', { name })} title=${t("The entity's state colour")}>
@@ -385,6 +393,7 @@ export class ColorPicker extends LitElement {
         <input class="input" type="text" readonly .value=${t('Entity colour')} aria-label=${name} />
         ${this._renderEntityToggle(true)}
       </div>
+      ${this.allowAttribute ? this._renderSource(attr, (a) => emit(a, opacity)) : nothing}
       <div class="field entity-opacity">
         <div class="field-head"><span class="lbl">${t('Opacity')}</span></div>
         <mc-unit-field
@@ -395,9 +404,26 @@ export class ColorPicker extends LitElement {
           @value-changed=${(e: CustomEvent) => {
             e.stopPropagation();
             const n = parseFloat(String(e.detail.value));
-            this._emitValue(Number.isFinite(n) && n >= 0 && n < 100 ? `entity ${n}%` : 'entity');
+            emit(attr, Number.isFinite(n) && n >= 0 && n < 100 ? n : 100);
           }}
         ></mc-unit-field>
+      </div>
+    `;
+  }
+
+  /** "Colour from": the state colour, or an attribute of the entity that holds a colour (or the one already chosen). */
+  private _renderSource(attr: string | undefined, pick: (attr: string | undefined) => void): TemplateResult {
+    const attrs = this.entityAttributes;
+    const names = attrs ? Object.keys(attrs).filter((k) => /^[a-z0-9_]{1,64}$/.test(k) && attrRgb(attrs, k)).sort() : [];
+    if (attr && !names.includes(attr)) names.push(attr);
+    const id = 'src';
+    return html`
+      <div class="field">
+        <label class="lbl" for=${id}>${t('Colour from')}</label>
+        <select class="input" id=${id} @change=${(e: Event) => pick((e.target as HTMLSelectElement).value || undefined)}>
+          <option value="" ?selected=${!attr}>${t('State colour')}</option>
+          ${names.map((n) => html`<option value=${n} ?selected=${n === attr}>${n}</option>`)}
+        </select>
       </div>
     `;
   }
@@ -435,11 +461,17 @@ export class ColorPicker extends LitElement {
     )}`;
   }
 
+  /** The value as an entity colour: `entity` / `entity N%`, plus `entity.<attr>` where allowAttribute. */
+  private _entityValue(): { opacity: number; attr?: string } | undefined {
+    const m = this.value.trim().match(ENTITY_PAINT_RE);
+    return m && (this.allowAttribute || !m[1]) ? { attr: m[1], opacity: Math.min(100, Number(m[2] ?? 100)) } : undefined;
+  }
+
   protected render(): TemplateResult {
-    const entity = this.allowEntity ? parseEntityColor(this.value) : undefined;
+    const entity = this.allowEntity ? this._entityValue() : undefined;
     const g = this.gradient ? editableGradient(this.value, this.gradient === 'css') : undefined;
     const custom = !!this.gradient && !g && /gradient\(/i.test(this.value);
-    const body = entity ? this._renderEntity(entity.opacity) : g ? this._renderGradient(g) : this._renderSolid();
+    const body = entity ? this._renderEntity(entity.opacity, entity.attr) : g ? this._renderGradient(g) : this._renderSolid();
     return html`
       ${this.gradient ? this._renderMode(g) : nothing}
       ${body}

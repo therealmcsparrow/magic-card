@@ -20,6 +20,7 @@ card-editor	Card backdrop layers sit on top of this colour and image.	Card backd
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
 card-editor	Colour	Color
+card-editor	Colour from	Color from
 card-editor	Colour picker	Color picker
 card-editor	Colour ranges	Color ranges
 card-editor	Colour style	Color style
@@ -52,6 +53,7 @@ card-editor	Secondary colour	Secondary color
 card-editor	Show colour picker	Show color picker
 card-editor	Show colour temp	Show color temp
 card-editor	Slider colour	Slider color
+card-editor	State colour	State color
 card-editor	Stop {num} colour	Stop {num} color
 card-editor	Styles are removed; use fill attributes (for example fill="#f44336") for colours.	Styles are removed; use fill attributes (for example fill="#f44336") for colors.
 card-editor	Text uses this gradient as its fill. Older tablets show the first colour.	Text uses this gradient as its fill. Older tablets show the first color.

@@ -1,4 +1,5 @@
 import type { HassEntity } from '../types';
+import { ENTITY_PAINT_RE } from '../contracts/entity-colour';
 
 /** States that are never "active", whatever the domain (HA's OFF_STATES plus idle / standby). */
 const ALWAYS_INACTIVE = new Set(['off', 'unavailable', 'unknown', 'idle', 'standby']);
@@ -55,17 +56,22 @@ function hsToRgb(h: number, s: number): [number, number, number] {
   return [f(5), f(3), f(1)].map((v) => Math.round(v * 255)) as [number, number, number];
 }
 
+/**
+ * A colour from attribute `attr` as clamped integer [r, g, b]: a numeric array of three (hs_color:
+ * hue / saturation). Read as an own property only, never a string (hass data is untrusted).
+ */
+export function attrRgb(attrs: Record<string, unknown> | undefined, attr: string): number[] | undefined {
+  if (!attrs || !Object.prototype.hasOwnProperty.call(attrs, attr)) return undefined;
+  const v = attrs[attr];
+  if (!Array.isArray(v)) return undefined;
+  const n = [v[0], v[1], v[2]];
+  if (attr === 'hs_color' && n.slice(0, 2).every(Number.isFinite)) return hsToRgb(((n[0] % 360) + 360) % 360, n[1]);
+  return n.every(Number.isFinite) ? n.map((x) => Math.max(0, Math.min(255, Math.round(x)))) : undefined;
+}
+
 function lightColor(attrs: Record<string, unknown>): string | undefined {
-  const rgb = attrs.rgb_color;
-  if (Array.isArray(rgb) && rgb.length >= 3 && rgb.every((n) => typeof n === 'number')) {
-    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-  }
-  const hs = attrs.hs_color;
-  if (Array.isArray(hs) && hs.length >= 2 && typeof hs[0] === 'number' && typeof hs[1] === 'number') {
-    const [r, g, b] = hsToRgb(hs[0], hs[1]);
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-  return undefined;
+  const rgb = attrRgb(attrs, 'rgb_color') || attrRgb(attrs, 'hs_color');
+  return rgb ? `rgb(${rgb.join(', ')})` : undefined;
 }
 
 /**
@@ -114,4 +120,26 @@ export function entityColorCss(value: unknown): string | undefined {
   if (!parsed) return undefined;
   const color = `var(${ENTITY_COLOR_VAR}, currentColor)`;
   return parsed.opacity >= 100 ? color : `color-mix(in srgb, ${color} ${parsed.opacity}%, transparent)`;
+}
+
+let mixOk: boolean | undefined;
+
+/**
+ * CSS for a slider colour value (`entity`, `entity N%`, `entity.<attr>`, `entity.<attr> N%`; contract
+ * entity-colour 1.0.0) of `stateObj`; undefined when it is not one or gives no colour. A known rgb
+ * comes out as rgb() / rgba() computed here, a theme chain only gets color-mix() where supported.
+ */
+export function entityPaint(
+  value: unknown,
+  stateObj: { entity_id: string; state: string; attributes?: Record<string, unknown> } | undefined,
+): string | undefined {
+  const m = typeof value === 'string' ? value.trim().match(ENTITY_PAINT_RE) : null;
+  if (!m || !stateObj) return undefined;
+  const op = m[2] === undefined ? 100 : Math.min(100, Number(m[2]));
+  const state = m[1] ? undefined : entityStateColor(stateObj as HassEntity);
+  const rgb = m[1] ? attrRgb(stateObj.attributes, m[1]) : state?.match(/^rgb\((\d+), (\d+), (\d+)\)$/)?.slice(1);
+  if (rgb) return op >= 100 ? `rgb(${rgb.join(', ')})` : `rgba(${rgb.join(', ')}, ${+(op / 100).toFixed(2)})`;
+  if (!state || op >= 100) return state;
+  mixOk ??= typeof CSS !== 'undefined' && !!CSS.supports?.('color', 'color-mix(in srgb, red 50%, red)');
+  return mixOk ? `color-mix(in srgb, ${state} ${+op.toFixed(2)}%, transparent)` : state;
 }

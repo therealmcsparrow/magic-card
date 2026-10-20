@@ -355,6 +355,8 @@ export function renderColorField(
   /** Offer Solid | Gradient: 'linear' (angle only) or 'css' (linear and radial). Default: solid only. */
   gradient: '' | 'linear' | 'css' = '',
   gradientNote = '',
+  /** Offer "entity colour" with a colour from an attribute (slider colours, contract entity-colour 1.0.0): the entity's live state colour and attributes. */
+  entity?: { color?: string; attributes?: Record<string, unknown> },
 ): TemplateResult {
   return html`
     <div class="mc-field">
@@ -364,6 +366,10 @@ export function renderColorField(
         .label=${label}
         .gradient=${gradient}
         .gradientNote=${gradientNote}
+        .allowEntity=${!!entity}
+        .allowAttribute=${!!entity}
+        .entityColor=${entity?.color ?? ''}
+        .entityAttributes=${entity?.attributes}
         @value-changed=${(e: CustomEvent) => onChange(e.detail.value)}
       ></mc-color-picker>
     </div>
