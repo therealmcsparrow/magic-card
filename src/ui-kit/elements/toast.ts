@@ -170,7 +170,7 @@ export class UiToast extends LitElement {
   };
 
   protected render(): TemplateResult {
-    return html`<div class="live" role="status">
+    return html`<div class="live" role="status" aria-live="polite">
       ${this._open
         ? html`<div
             class="toast ${this.dismissLabel ? 'big' : ''}"
