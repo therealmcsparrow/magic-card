@@ -3,7 +3,7 @@ import type { CardModule } from '../types';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { hasLayers } from '../layers/layer-slot';
-import { getAnimationPreset } from './animation-presets';
+import { SEASONAL_PRESET_IDS } from './seasonal.needs';
 import { configHas } from './config-walk';
 import { lazyChunks } from './lazy-chunks';
 
@@ -45,7 +45,7 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   markdown: row('markdown', ofType('markdown')),
   'modules-extra': row('modules-extra', ofType('camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card')),
   // a `seasonal` setting or a seasonal animation preset
-  seasonal: row('seasonal', (c) => configHas(c, (n) => n.seasonal || (typeof n.preset === 'string' && getAnimationPreset(n.preset)?.seasonal))),
+  seasonal: row('seasonal', (c) => configHas(c, (n) => n.seasonal || (typeof n.preset === 'string' && SEASONAL_PRESET_IDS.includes(n.preset)))),
   'flow-look': row('flow-look', (c) => configHas(c, (n) => Array.isArray(n.flows) && n.flows.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj)))),
   'slider-look': row('slider-look', (c) => configHas(c, (n) => n.type === 'slider' && hasSliderLook(n))),
   layers: row('layers', wantsLayers),

@@ -2,6 +2,8 @@ import type { MessageId } from '../contracts/i18n';
 import { lm } from '../i18n/labels/mark';
 import type { AnimationConfig, AnimationDirection, DesignConfig, HassEntity } from '../types';
 import { entityStateColor, isEntityActive } from './entity-color';
+import { cssTime, safeColor, str } from './safe-css';
+import { animationTriggerActive } from './trigger';
 import { resolveEntityColors } from './css-utils';
 import type { ResolvedRing } from './ring';
 import { dayNightScene, weatherScene, type SceneId } from './seasonal';
@@ -25,6 +27,9 @@ import { useAnimationCss } from '../card/custom-anim-sheet';
 import { registerSequence } from '../card/sequence-player';
 
 export { ANIMATION_PRESETS, getAnimationPreset };
+// the plain helpers moved to their own files (ADR 0043, S1a.3); this re-export keeps the 17 importers until S2.2
+export { cssTime, safeColor } from './safe-css';
+export { animationTriggerActive } from './trigger';
 export type { AnimationPreset };
 
 /** Module types that render an icon hook (`.mc-anim-icon`), so Target = Icon makes sense. */
@@ -43,18 +48,7 @@ export const LEGACY_ANIMATION_KEYS = [
 const LEGACY_SPEEDS: Record<string, number> = { slow: 1.6, normal: 1, fast: 0.6 };
 const DIRECTIONS: AnimationDirection[] = ['normal', 'reverse', 'alternate', 'alternate-reverse'];
 
-const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() !== '' ? v.trim() : undefined);
-
 // ── values ──
-
-/** A CSS time ("2s", "600ms", a bare number = seconds), or undefined when it is not one. */
-export function cssTime(v: unknown): string | undefined {
-  if (typeof v === 'number' && Number.isFinite(v) && v >= 0) return `${+v.toFixed(3)}s`;
-  const s = str(v);
-  if (!s) return undefined;
-  if (/^\d*\.?\d+$/.test(s)) return `${+(+s).toFixed(3)}s`;
-  return /^\d*\.?\d+m?s$/.test(s) ? s : undefined;
-}
 
 /** Seconds of a CSS time (for scaling legacy speeds). */
 const seconds = (t: string): number => (t.endsWith('ms') ? parseFloat(t) / 1000 : parseFloat(t));
@@ -68,36 +62,6 @@ export function cssEasing(v: unknown): string | undefined {
   if (/^cubic-bezier\(\s*-?[\d.]+\s*(,\s*-?[\d.]+\s*){3}\)$/.test(s)) return s;
   if (/^steps\(\s*\d+\s*(,\s*(start|end|jump-start|jump-end|jump-none|jump-both)\s*)?\)$/.test(s)) return s;
   return undefined;
-}
-
-/**
- * CSS functions a colour may use: colour functions, var(), light-dark() and the math functions (calc,
- * min, max, clamp). Never url() / image functions, also not nested inside these.
- */
-const COLOR_FUNCTIONS = new Set([
-  'rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color', 'color-mix', 'var', 'light-dark',
-  'calc', 'min', 'max', 'clamp',
-]);
-
-/**
- * A colour that is safe inside an inline style: hex, named colours, currentColor / transparent and
- * the colour functions (rgb, hsl, color-mix, var(--x, fallback)...). No declaration / rule breakouts
- * and no url() or image functions (a colour must never fetch anything).
- */
-export function safeColor(v: unknown): string | undefined {
-  const s = str(v);
-  if (!s || !/^[#\w\s(),.%+*/-]+$/.test(s) || s.includes('/*') || s.includes('*/')) return undefined;
-  let depth = 0;
-  for (const ch of s) {
-    if (ch === '(') depth++;
-    else if (ch === ')' && --depth < 0) return undefined;
-  }
-  if (depth !== 0) return undefined;
-  // every "(" must open an allowed function
-  const opens = s.match(/\(/g)?.length ?? 0;
-  const fns = [...s.matchAll(/([a-z-]+)\s*\(/gi)];
-  if (fns.length !== opens || fns.some((m) => !COLOR_FUNCTIONS.has(m[1].toLowerCase()))) return undefined;
-  return s;
 }
 
 function iterations(v: unknown): string | undefined {
@@ -199,29 +163,6 @@ export function animationsUpdate(list: AnimationConfig[]): Record<string, unknow
   const out: Record<string, unknown> = { animations: list.length ? list : undefined };
   for (const k of LEGACY_ANIMATION_KEYS) out[k] = undefined;
   return out;
-}
-
-/**
- * Whether the entry plays (`always` when no trigger is set). The condition reads `trigger_entity`
- * from `states` when set, else `stateObj` (the module's entity; none for a card / row / column).
- */
-export function animationTriggerActive(
-  entry: Pick<AnimationConfig, 'trigger' | 'trigger_entity' | 'state'>,
-  stateObj?: HassEntity,
-  states?: Record<string, HassEntity>,
-): boolean {
-  const own = str(entry.trigger_entity);
-  if (own) stateObj = states?.[own];
-  switch (entry.trigger) {
-    case 'entity_on':
-      return isEntityActive(stateObj);
-    case 'state': {
-      const want = (entry.state || '').trim();
-      return !!want && !!stateObj && stateObj.state === want;
-    }
-    default:
-      return true;
-  }
 }
 
 // ── composition ──
