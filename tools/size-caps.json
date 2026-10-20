@@ -150,6 +150,11 @@
       "ceiling": 33792,
       "note": "33 KiB, measured 31,667 + 5 %, rounded up to 1 KiB (S1a.5). Icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client. The plan ceiling is 65,536 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
+    "magic-card-anim.js": {
+      "raw": 49152,
+      "ceiling": 81920,
+      "note": "48 KiB, measured 46,809 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB (S1a.3). Animation resolve, compiler, model and sequence player (ADR 0043). The plan ceiling is 81,920 B (lazy-module LAZY_CHUNK_CEILINGS); to be re-measured at S1a.close."
+    },
     "magic-card-flow-look.js": {
       "raw": 30720,
       "ceiling": 30720,
