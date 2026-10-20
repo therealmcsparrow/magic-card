@@ -207,6 +207,15 @@ export const layerStyles: CSSResult = css`
         border-radius: var(--mc-radius);
         font-size: 0.8125rem;
       }
+      /* the cost note and the Low-power switch under it are stacked with a gap, never touching */
+      .costbox {
+        display: grid;
+        gap: 12px;
+        min-width: 0;
+      }
+      .costbox > .sw-row {
+        align-items: center;
+      }
       .cost b {
         font-weight: 700;
       }
