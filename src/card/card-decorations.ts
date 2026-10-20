@@ -1,5 +1,5 @@
 import { html, nothing, TemplateResult } from 'lit';
-import type { FxLayer, ResolvedAnimations } from '../utils/animation';
+import type { FxLayer, ResolvedAnimations } from '../anim-studio/resolve';
 import type { ResolvedBorderLength } from '../utils/css-utils';
 import type { ResolvedRing } from '../utils/ring';
 import type { ShapeStroke } from '../utils/css-utils';

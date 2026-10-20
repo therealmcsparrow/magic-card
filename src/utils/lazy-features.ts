@@ -3,6 +3,7 @@ import type { CardModule } from '../types';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { hasLayers } from '../layers/layer-slot';
+import { hasAnimations } from './animation.needs';
 import { SEASONAL_PRESET_IDS } from './seasonal.needs';
 import { wantsSvgIcon } from '../icons/needs';
 import { configHas } from './config-walk';
@@ -52,6 +53,8 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   layers: row('layers', wantsLayers),
   // custom_icons, icon_fx, svg, or an icon that is not a plain MDI id (src/icons/needs.ts)
   'svg-icon': row('svg-icon', wantsSvgIcon),
+  // a design with animations, at any depth, in `hover` or in a `conditional` design (src/utils/animation.needs.ts)
+  anim: row('anim', (c) => configHas(c, hasAnimations)),
 };
 
 const seen = new WeakSet<object>();

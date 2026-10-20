@@ -18,6 +18,7 @@ import { t } from './i18n';
 /** At most 8 part names; the fallback names no part. Written out so the i18n extractor sees every id. */
 const part = (name: string): string =>
   ({
+    anim: t('The animation'),
     'anim-runtime': t('The animation'),
     particles: t('The animation'),
     'shape-custom': t('The custom shape'),

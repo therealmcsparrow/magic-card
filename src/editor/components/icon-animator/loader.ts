@@ -4,7 +4,7 @@ import type { AnimationConfig, CardModule, MagicCardConfig } from '../../../type
 import type { CataloguePreset } from '../../../contracts/preset-catalogue';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-stack';
-import { readAnimations } from '../../../utils/animation';
+import { readAnimations } from '../../../anim-studio/entries';
 import { animationLibrary } from '../../../services/animation-library';
 import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';
 import { customAnimationIds } from '../../../utils/custom-animations';

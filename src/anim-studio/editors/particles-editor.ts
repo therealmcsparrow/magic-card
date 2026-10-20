@@ -8,7 +8,7 @@ import type { LayerView } from '../../contracts/studio-layers';
 import { emitterIds, isLocked } from '../layer-view';
 import { lockBanner, lockBannerStyles } from './lock-banner';
 import { animationStyles } from '../../css/animations';
-import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../../utils/animation';
+import { resolveAnimations, type FxLayer, type ResolvedAnimations } from '../resolve';
 import { intensityLabel } from '../../utils/animation-presets';
 import type { DesignConfig, HomeAssistant } from '../../types';
 import { DEFAULT_GEOMETRY, PARTICLES_V2_CAPS, type BakedLoop, type BuiltinShape, type ParticleMode, type ParticleSlotV2, type ParticlesSim, type Range, type SubEmitter, type WeightedShape } from '../../contracts/particles-v2';

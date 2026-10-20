@@ -29,7 +29,7 @@ import {
   renderUnitField,
 } from '../../utils/form-utils';
 import { renderConditionsList } from './conditions-list';
-import { readAnimations } from '../../utils/animation';
+import { readAnimations } from '../../anim-studio/entries';
 import { fieldReset } from '../components/field-reset';
 import { animationDocList } from '../../utils/custom-animations';
 import { dropOwnAnimation, setAnimationHidden } from '../state/template-sync';

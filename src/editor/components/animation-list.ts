@@ -3,7 +3,8 @@ import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
-import { animationConflicts, applyPreset, newAnimation, resetToPreset } from '../../utils/animation';
+import { applyPreset, newAnimation, resetToPreset } from '../../anim-studio/entries';
+import { animationConflicts } from './animation-conflicts';
 import {
   ANIMATION_GROUPS,
   GROUP_LABELS,

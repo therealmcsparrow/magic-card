@@ -41,6 +41,15 @@ import type { MagicModule } from '../modules/module-types';
  * adoption (assign a new array, never push) in "Styles in the same frame" and on the host attribute `mc-fail`
  * in "Failure". S1a.0 also records what it built: whenReady callbacks survive a failure, OnDemandChunkName and
  * the notice element (sections "Failure, retry and timeout" and "import() sites").
+ * 1.4.0 r3 (2026-10-20, text only, no API change; 35-architect-s1a0-rulings.md): a request that never settles is waited on, never
+ * replaced (section "Failure, retry and timeout"); the on-demand loader slots are the ADR 0043 seam (section "import() sites").
+ * 1.4.0 (S1a.3, ADR 0043, Core list change): LazyChunkName gains 'anim' (dist/magic-card-anim.js, ceiling 81,920 B, chunk entry
+ * src/anim-studio/anim-chunk.ts). It holds the animation resolve (src/anim-studio/resolve.ts), the document compiler and model
+ * it calls (compile, model, model-v2-core, css-keyframes), the custom-animation stylesheet and the sequence player. It defines no
+ * element and fills no slot: the card reads the module through lazyChunks.anim.module() and draws a plain card until it has
+ * installed. Its needs() is hasAnimations (src/utils/animation.needs.ts): a non-empty `animations` list or the legacy
+ * `animation_preset`, on any design the config walk reaches (card, rows, columns, modules, `hover`, `conditional[].design`,
+ * conditional_appearance rules). The hook points of the compiler stay in Core (src/utils/anim-hooks.ts).
  * 1.4.0 r3 (2026-10-20, additive, no version change; S1a.5): LazyChunkName gains 'svg-icon' (dist/magic-card-svg-icon.js, ceiling
  * 65,536 B, chunk entry src/icons/chunk.ts). It holds the icon source (packs, the `mcu:` library client, own SVG), <mc-svg-icon>
  * and the SVG sanitiser. Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`, `svg`, any icon reference that is not a
@@ -189,7 +198,11 @@ import type { MagicModule } from '../modules/module-types';
  *   new attempt while that request is still in flight gets the same promise from webpack (no second
  *   request, so no `r=` number is used) with a fresh 10 s window: that is waiting, not a retry. Only an
  *   attempt that sends a request is a retry, and it carries an `r=<n>` not used before on the page
- *   (proj.M12 f); the attempt after a stalled request has failed sends one.
+ *   (proj.M12 f); the attempt after a stalled request has settled (the browser failed or abandoned it) sends one. With native
+ *   import() chunk loading webpack has no chunk timeout of its own and keeps the in-flight promise until the request settles,
+ *   so a request that never settles cannot be replaced on this page: background attempts and "Try again" keep waiting on it,
+ *   and the "Reload page" button shown after a failed "Try again" is the way out (Architect 35; Core never touches webpack's
+ *   private chunk state and adds no second import() of a chunk URL, proj.M12 a).
  * - A load error: one silent retry after SILENT_RETRY_MS (2 s) under a new URL (`r=<n>` appended, the
  *   theme-presets loader pattern: browsers cache a failed import() per URL). If that fails too, the
  *   chunk is 'failed' with failure() 'load' and every slot of it shows the notice. Then up to
@@ -222,7 +235,9 @@ import type { MagicModule } from '../modules/module-types';
  *   src/utils/lazy-chunk.ts. S1a.0 moves anim-runtime, particles and shape-custom onto lazyChunk(): their
  *   literal import() sits in the table too (src/utils/lazy-chunks.ts `onDemandChunks`, OnDemandChunkName),
  *   and the three loaders no longer call import(). The loaders do not import the table: it fills a slot in
- *   each of them (provideRuntimeChunk, provideParticlesChunk, provideShapeChunk). The animation studio bundle
+ *   each of them (provideRuntimeChunk, provideParticlesChunk, provideShapeChunk). These slots are the load request of the
+ *   ADR 0043 seam; src/utils/lazy-chunks.ts fills them once when it evaluates. An empty slot makes the load functions
+ *   resolve false or undefined and never throw; only magic-card.js, which evaluates the table, may rely on a load. The animation studio bundle
  *   imports a loader, and the table would pull every card chunk entry into its chunk graph (the studio and
  *   several chunks grew by 8 to 60 KB when it did); a bundle without the table has no chunk and loads nothing.
  *   src/utils/editor-loader.ts keeps its own retry and stays a registered site. Editor side: the
@@ -237,7 +252,7 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 2;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -248,6 +263,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
   'svg-icon': 'magic-card-svg-icon.js',
+  anim: 'magic-card-anim.js',
 };
 
 /**
@@ -264,12 +280,14 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   'slider-look': 28_672,
   /** r2: stack (15.3 KiB measured) + placement runtime and layer CSS (about 5-6 KiB). */
   layers: 24_576,
-  /** r3: icon source, <mc-svg-icon>, the SVG sanitiser and the `mcu:` library client. */
+  /** r3: icon source, <mc-svg-icon>, the SVG sanitiser and the `mcu:` library client (about 61 KiB raw measured before the move). */
   'svg-icon': 65_536,
+  /** S1a.3: the resolve, compiler and model of the animations (plan chunk ceilings; measured at S1a.close). */
+  anim: 81_920,
 };
 
 /** Which module types each chunk serves (seasonal, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon'>, readonly string[]> = {
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],

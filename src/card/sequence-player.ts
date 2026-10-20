@@ -1,5 +1,6 @@
 import { hashString, type Schedule } from '../anim-studio/compile';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
+import { reducedMotion } from '../utils/reduced-motion';
 
 /*
  * Custom sequences (src/anim-studio/compile.ts schedules) on Web Animations: the resolver
@@ -35,7 +36,7 @@ export function registerSequence(run: SequenceRun): string {
 
 export const sequenceRun = (key: string): SequenceRun | undefined => registry.get(key);
 
-export const reducedMotion = (): boolean => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+export { reducedMotion };
 
 /** Children a stagger runs on: content, not the decorative layers (aria-hidden, mc-* elements). */
 const contentChildren = (el: Element): HTMLElement[] =>

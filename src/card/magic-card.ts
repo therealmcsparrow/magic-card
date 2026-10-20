@@ -32,7 +32,10 @@ import {
   } from '../utils/css-utils';
 import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
-import { resolveAnimations, type FxLayer, type ResolvedV2 } from '../utils/animation';
+import type { FxLayer, ResolvedAnimations, ResolvedV2 } from '../anim-studio/resolve';
+import { animIfLoaded } from '../utils/anim-seam';
+import { hasAnimations } from '../utils/animation.needs';
+import { reducedMotion } from '../utils/reduced-motion';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { loadParticles, particlesFailed, particlesIfLoaded } from '../utils/particles-loader';
 import { loadEditor } from '../utils/editor-loader';
@@ -76,8 +79,7 @@ import { PopupController } from './popup-controller';
 import { EditorPlace, navigateToPopup, popupCoordinator } from './popup-coordinator';
 import { animationLibrary, inlineAnimations } from '../services/animation-library';
 import type { AnimationDoc } from '../anim-studio/model';
-import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
-import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
+import type { SequencePlayer } from './sequence-player';
 import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
 import { CardPause } from './card-pause';
@@ -249,6 +251,8 @@ export class MagicCard extends LitElement {
   private _lookWait = false;
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
   private _customRendered = false;
+  /** A render met a design with animations before the `anim` chunk installed: one render-again callback per card is waiting. */
+  private _animWait = false;
   /** Re-render on library changes; only once a custom animation was looked up. */
   private _unsubLibrary?: () => void;
   /** Custom sequences of the shadow root, by element (src/card/sequence-player.ts). */
@@ -618,8 +622,10 @@ export class MagicCard extends LitElement {
     this._syncHoverStyles();
     this._syncRowFocus();
     this._libDirty = false;
-    if (this._customRendered) adoptAnimationSheet(this.renderRoot as ShadowRoot);
-    if (this._customRendered || this._sequences.size) syncSequences(this.renderRoot, this._sequences);
+    // custom animations and sequences exist only once the `anim` chunk resolved them
+    const anim = animIfLoaded();
+    if (anim && this._customRendered) anim.adoptAnimationSheet(this.renderRoot as ShadowRoot);
+    if (anim && (this._customRendered || this._sequences.size)) anim.syncSequences(this.renderRoot, this._sequences);
     if (this._v2Need || this._v2Applied.size) this._syncRuntime();
     if (this._pNeed || this._pApplied.size) this._syncParticles();
     if (this._readThemeShadow) {
@@ -714,7 +720,7 @@ export class MagicCard extends LitElement {
     this._unsubShapes?.();
     this._unsubShapes = undefined;
     this._pause.disconnected();
-    stopSequences(this._sequences);
+    animIfLoaded()?.stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
     this._v2Applied = new Set();
@@ -774,7 +780,7 @@ export class MagicCard extends LitElement {
     const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
     // the card's own animations: motion / glow on ha-card, particle layers inside the content
-    const anim = resolveAnimations({ animations: resolved.animations }, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim({ animations: resolved.animations }, scopeState, { allowIcon: false });
     const v2Index = this._v2(anim, scopeState, scope);
     const themeStyle = this._buildThemeStyle(resolved);
     // a shaped card: ha-card is clipped to the shape, its theme border drawn along it, the shadow on a wrapper
@@ -1083,7 +1089,7 @@ export class MagicCard extends LitElement {
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
@@ -1141,7 +1147,7 @@ export class MagicCard extends LitElement {
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
@@ -1219,7 +1225,7 @@ export class MagicCard extends LitElement {
 
     const design = resolveConditionalDesign(mod.design as DesignConfig, this.hass, mod.entity);
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
-    const anim = resolveAnimations(design, stateObj, { states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim(design, stateObj);
     const v2Index = this._v2(anim, stateObj, mod.entity);
     const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(anim), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
@@ -1300,10 +1306,30 @@ export class MagicCard extends LitElement {
   }
 
   /**
+   * The one seam to the animation resolve (ADR 0043): a card / row / column / module design's animations once the `anim`
+   * chunk has installed, else undefined, so the card is drawn plain until then and stays plain, with the failure notice,
+   * when the chunk cannot load. The needs table starts the load from the config; a design that only shows up at render
+   * time (a rule that resolves now) starts it here, once per card, and the card renders again when it has installed.
+   */
+  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean } = {}): ResolvedAnimations | undefined {
+    const mod = animIfLoaded();
+    if (mod) return mod.resolveAnimations(design, stateObj, { ...opts, states: this.hass?.states, custom: this._customLookup });
+    if (!this._animWait && hasAnimations(design)) {
+      this._animWait = true;
+      lazyChunks.anim.whenReady(() => {
+        this._animWait = false;
+        this.requestUpdate();
+      });
+      void lazyChunks.anim.load();
+    }
+    return undefined;
+  }
+
+  /**
    * A card / row / column / module's v2 data for _syncRuntime: its `data-mc-v2` index (undefined
    * without any). Rows, columns and the card have no entity: their documents follow an entry's own.
    */
-  private _v2(anim: ReturnType<typeof resolveAnimations>, stateObj?: HassEntity, entityId?: string): number | undefined {
+  private _v2(anim: ResolvedAnimations | undefined, stateObj?: HassEntity, entityId?: string): number | undefined {
     if (anim) this._pause.moving();
     if (anim?.needsRuntime) this._v2Need = true;
     if (anim?.needsParticles) this._pNeed = true;
@@ -1386,7 +1412,7 @@ export class MagicCard extends LitElement {
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
         // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
         // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)
-        useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + (sim.part ? 'o' : '') + name.slice(name.lastIndexOf('-g')) : name, name, css),
+        useCss: (name, css) => animIfLoaded()?.useAnimationCss(name.startsWith('mcc-') ? sim.docId + (sim.part ? 'o' : '') + name.slice(name.lastIndexOf('-g')) : name, name, css),
         content: () =>
           sim.spec.sim.colliders.content === 'icon'
             ? [...w.querySelectorAll('.mc-anim-icon')].find((e) => e.closest('.mc-module-wrapper') === w)

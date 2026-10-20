@@ -20,7 +20,7 @@ import type { MessageId } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-stack';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
-import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../utils/animation';
+import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../anim-studio/entries';
 import { fieldReset } from './field-reset';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { entityStateColor } from '../../utils/entity-color';

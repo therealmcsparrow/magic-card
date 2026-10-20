@@ -1,5 +1,5 @@
 import { PARTICLES_CONTRACT_VERSION, type ParticlesCompiler, type ParticlesModule } from '../contracts/particles-v2';
-import { useParticlesValidator } from '../anim-studio/model';
+import { useParticlesValidator } from '../utils/anim-hooks';
 import { bake } from './bake';
 import { bakedCss } from './css';
 import { bakedSvg } from './svg';

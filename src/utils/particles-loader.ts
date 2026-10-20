@@ -1,5 +1,5 @@
 import type { ParticlesModule } from '../contracts/particles-v2';
-import { markSimFailed, useParticlesCompiler } from '../anim-studio/compile';
+import { markSimFailed, useParticlesCompiler } from './anim-hooks';
 import type { LazyChunkControl } from './lazy-chunk';
 
 /*
