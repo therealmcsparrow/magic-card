@@ -51,6 +51,9 @@ export interface ResolvedFlow {
   t: number;
   /** flow-look: the resolved look, only while the flow has look keys and the chunk filled the slot. */
   look?: FlowLookResolved;
+  /** flow-anchor 1.0.0: the YAML says `box` for that end (absent otherwise: the icon is the default). */
+  fromBox?: true;
+  toBox?: true;
   /** flow-look: gradient end colour (lifted from `look.colorTo`). */
   colorTo?: string;
 }
@@ -213,6 +216,8 @@ export function resolveFlow(
   if (labelText !== undefined) out.label = labelText;
   if (labelTemplate !== undefined) out.labelTemplate = labelTemplate;
   if (value !== undefined) out.value = value;
+  if (f.from_anchor === 'box') out.fromBox = true;
+  if (f.to_anchor === 'box') out.toBox = true;
   // flow-look: only flows with look keys reach the chunk; an empty slot (loading, failed) = classic look.
   // The renderer gets `out` as `base` and may set its colour (value mode); colorTo is lifted for the overlay.
   const renderer = hasFlowLook(f) ? flowLookSlot.get() : undefined;

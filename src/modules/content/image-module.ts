@@ -76,7 +76,7 @@ class ImageModule extends BaseMagicModule {
     const fit = ['contain', 'cover', 'fill', 'none'].includes(c.fit as string) ? c.fit : 'cover';
 
     return html`
-      <div class="mc-module mc-image" style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)};">
+      <div class="mc-module mc-image" data-mc-flow-end style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)};">
         ${src
           ? html`<img src=${stableSrc(src)} data-mc-media=${mediaId ?? nothing} style="object-fit: ${fit};" alt="" @error=${onImageError} @load=${onImageLoad} /><div
                 class="mc-image-fallback mc-image-error"><ha-icon icon="mdi:image-off"></ha-icon></div>`

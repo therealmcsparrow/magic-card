@@ -96,7 +96,7 @@ class GaugeModule extends BaseMagicModule {
       const endY = 50 + 40 * Math.sin(rad);
       const largeArc = angle > 180 ? 1 : 0;
       return wrap('full', html`
-        <svg viewBox="0 0 100 100" width="120" height="120">
+        <svg data-mc-flow-end viewBox="0 0 100 100" width="120" height="120">
           <circle data-mc-part="background" cx="50" cy="50" r="40" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
           ${pct > 0
             ? svg`<path d="M 50 10 A 40 40 0 ${largeArc} 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`
@@ -119,7 +119,7 @@ class GaugeModule extends BaseMagicModule {
       const endX = cx + r * Math.cos(endRad);
       const endY = cy + r * Math.sin(endRad);
       return wrap('quarter', html`
-        <svg viewBox="0 0 100 100" width="120" height="120">
+        <svg data-mc-flow-end viewBox="0 0 100 100" width="120" height="120">
           <path data-mc-part="background" d="M 10 46 A 44 44 0 0 1 54 90" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" />
           ${pct > 0
             ? svg`<path d="M ${startX} ${startY} A ${r} ${r} 0 0 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`
@@ -137,7 +137,7 @@ class GaugeModule extends BaseMagicModule {
     const endX = 50 + 40 * Math.cos(rad);
     const endY = 55 + 40 * Math.sin(rad);
     return wrap('half', html`
-      <svg viewBox="0 0 100 ${withNeedle ? 76 : 70}" width="140" height=${withNeedle ? 109 : 100}>
+      <svg data-mc-flow-end viewBox="0 0 100 ${withNeedle ? 76 : 70}" width="140" height=${withNeedle ? 109 : 100}>
         <path data-mc-part="background" d="M 10 55 A 40 40 0 0 1 90 55" fill="none" stroke="var(--divider-color, #e0e0e0)" stroke-width="8" stroke-linecap="round" />
         ${pct > 0
           ? svg`<path d="M 10 55 A 40 40 0 0 1 ${endX} ${endY}" fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" />`

@@ -93,7 +93,7 @@ export class CameraView implements ModuleView {
     }
 
     return html`
-      <div class="mc-module mc-camera" style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)}">${body}</div>
+      <div class="mc-module mc-camera" data-mc-flow-end style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)}">${body}</div>
     `;
   }
 }
