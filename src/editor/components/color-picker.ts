@@ -394,7 +394,7 @@ export class ColorPicker extends LitElement {
     if (attr) base = rgb ? `rgb(${rgb.join(', ')})` : 'transparent';
     const preview = opacity >= 100 ? base : `color-mix(in srgb, ${base} ${opacity}%, transparent)`;
     const name = this.label || t('colour');
-    const emit = (a: string | undefined, o: number) => this._emitValue(`entity${a ? `.${a}` : ''}${o < 100 ? ` ${o}%` : ''}`);
+    const emit = (a: string | undefined, o: number) => this._emitValue(`entity${a ? `.${a}` : ''}${o < 100 ? ` ${+o.toFixed(2)}%` : ''}`);
     return html`
       <div class="color">
         <button type="button" class="swatch" disabled aria-label=${t('{name}: entity colour', { name })} title=${t("The entity's state colour")}>
