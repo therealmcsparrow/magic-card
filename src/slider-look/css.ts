@@ -69,7 +69,7 @@ export const SLIDER_LOOK_CSS = `
 .mc-sl-e svg,.mc-sl-ev svg{width:16px;height:16px;fill:currentColor}
 .mc-sl-ev{display:inline-flex;align-items:center;justify-content:center;min-width:36px;color:var(--error-color,#db4437)}
 .mc-sl-p[data-error] .mc-sl-v{visibility:hidden}
-.mc-sl-m{position:absolute;left:50%;top:100%;margin:4px 0 0;transform:translateX(-50%);max-width:100%;box-sizing:border-box;padding:1px 6px;border-radius:4px;background:#b3261e;color:#fff;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.mc-sl-m{position:absolute;left:50%;top:100%;margin:4px 0 0;transform:translateX(-50%);width:max-content;max-width:100%;text-align:center;box-sizing:border-box;padding:1px 6px;border-radius:4px;background:#b3261e;color:#fff;font-size:.75rem;pointer-events:none}
 .mc-sl-m:empty{display:none}
 .mc-sl-p[data-error] .mc-sl-box{box-shadow:0 0 0 2px var(--error-color,#db4437)}
 .mc-sl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

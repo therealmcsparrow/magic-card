@@ -2,7 +2,7 @@ import { html, nothing, svg, TemplateResult } from 'lit';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import type { CardModule, DesignConfig, HomeAssistant, SliderModuleConfig } from '../types';
 import type { ModuleView } from '../contracts/lazy-module';
-import { formatControlValue, numericControl, runServiceCall } from '../utils/entity-control';
+import { formatControlValue, numericControl, runServiceCall, type ServiceCall } from '../utils/entity-control';
 import { clearPendingValue, controlKey, pendingValue, setPendingValue } from '../utils/pending-value';
 import { renderTrack } from '../utils/slider-track';
 import { entityStateColor } from '../utils/entity-color';
@@ -240,16 +240,21 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     trackEl()?.setAttribute('aria-invalid', 'true');
     setMessage(t("Couldn't set {name}", { name }));
     st.update?.();
-    st.errTimer = setTimeout(() => {
-      st.err = false;
-      st.wrap.value?.removeAttribute('data-error');
-      trackEl()?.removeAttribute('aria-invalid');
-      setMessage('');
-      st.update?.();
-    }, ERROR_MS);
+    st.errTimer = setTimeout(heal, ERROR_MS);
   };
+  /** The window ended or the next set went through: the hint, the mark and aria-invalid go. */
+  const heal = () => {
+    if (!st.err) return;
+    clearTimeout(st.errTimer);
+    st.err = false;
+    st.wrap.value?.removeAttribute('data-error');
+    trackEl()?.removeAttribute('aria-invalid');
+    setMessage('');
+    st.update?.();
+  };
+  const run = (c: ServiceCall) => runServiceCall(hass!, c, fail, heal);
 
-  st.send = ctrl?.call && hass ? (v) => runServiceCall(hass, ctrl.call!(v), fail) : undefined;
+  st.send = ctrl?.call && hass ? (v) => run(ctrl.call!(v)) : undefined;
 
   // ── drag hooks: no render while dragging, the parts follow --v
   const texts = () => st.wrap.value?.closest('.mc-slider-container')?.querySelectorAll<HTMLElement>('[data-val]') ?? [];
@@ -330,7 +335,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       if (!ctrl?.call || !hass) return;
       const call = ctrl.call;
       // live: the final value goes out at once (the drag's own calls were throttled)
-      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail), () => ctx?.requestUpdate(), look.live ? 0 : 300);
+      setPendingValue(key, v, ctrl.value, (sent) => run(call(sent)), () => ctx?.requestUpdate(), look.live ? 0 : 300);
     },
   });
 
