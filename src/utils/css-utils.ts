@@ -339,7 +339,9 @@ function countPresetColumns(layout: string): number | null {
   return null;
 }
 
-export function layoutToGridTemplate(layout?: string, columnCount?: number): string {
+export function layoutToGridTemplate(rawLayout?: string, columnCount?: number): string {
+  // YAML `layout: 1` is a number: read it like its string, ignore anything that is not text or a number
+  const layout = typeof rawLayout === 'string' || typeof rawLayout === 'number' ? String(rawLayout) : undefined;
   if (!layout) {
     return buildEqualTemplate(columnCount ?? 1);
   }
