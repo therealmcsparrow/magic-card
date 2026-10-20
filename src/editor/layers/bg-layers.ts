@@ -89,6 +89,10 @@ export class McBgLayers extends LitElement {
         min-width: 0;
         container-type: inline-size;
       }
+      .bgl {
+        display: grid;
+        gap: 12px;
+      }
       ol {
         list-style: none;
         margin: 0;
