@@ -455,7 +455,7 @@ Pause_button: always puts the Pause motion button top-right instead of the defau
 
 ![Pause button in another corner](images/113-pause-corner.png)
 
-The button is always shown here (`pause_button: always`). With `auto`, the default, it shows only on cards that have motion. Corners: `bottom-left` (default), `bottom-right`, `top-left` and `top-right`.
+The button is always shown here (`pause_button: always`). The default is `hidden`. With `auto` it shows only on cards that have motion; set `auto` or `always` on any card that moves for more than 5 seconds. Corners: `bottom-left` (default), `bottom-right`, `top-left` and `top-right`.
 
 File: [cards/113-pause-corner.yaml](cards/113-pause-corner.yaml)
 

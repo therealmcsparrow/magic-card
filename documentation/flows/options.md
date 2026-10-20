@@ -28,10 +28,10 @@ Every key of a `flows` entry, with its label in the Flows tab. See [Flow lines](
 | Route | `route` | `curve`, `straight`, `elbow` | `curve` |
 | From side | `from_side` | `auto`, `top`, `right`, `bottom`, `left` | `auto` |
 | To side | `to_side` | `auto`, `top`, `right`, `bottom`, `left` | `auto` |
-| Attach to (From) | `from_anchor` | `icon` (Icon or picture), `box` (Module box) | `icon` |
-| Attach to (To) | `to_anchor` | `icon` (Icon or picture), `box` (Module box) | `icon` |
-| Color | `color` | Any CSS colour, `entity`, `entity N%` | The theme's primary colour |
-| Idle color | `idle_color` | Any CSS colour, `entity`, or `N%` of `color` | Secondary text colour at 50% |
+| Attach to (From) | `from_anchor` | `icon` (Icon or picture), `box` (Module box) | `box` for a wide look, else `icon` |
+| Attach to (To) | `to_anchor` | `icon` (Icon or picture), `box` (Module box) | `box` for a wide look, else `icon` |
+| Colour | `color` | Any CSS colour, `entity`, `entity N%` | The theme's primary colour |
+| Idle colour | `idle_color` | Any CSS colour, `entity`, or `N%` of `color` | Secondary text colour at 50% |
 | Width (px) | `width` | 0.5 to 40 | `3` |
 | Glow (px) | `glow` | 0 to 30 | `0` |
 | Scale width | `scale_width` | `true`, `false` | `true` |
@@ -56,8 +56,17 @@ Out-of-range numbers are limited to the range. An unknown value of a choice key 
 
 Attach to picks what each end of the line touches on its module:
 
-- **Icon or picture** (`icon`, the default): the line ends at the module's main visual, its icon, picture or dial. Two icons side by side in one row get a line between their edges.
+- **Icon or picture** (`icon`): the line ends at the module's main visual, its icon, picture or dial. Two icons side by side in one row get a line between their edges.
 - **Module box** (`box`): the line ends at the module's outer box, as it did before this version.
+
+Without a value, the default depends on the look:
+
+- A wide look ends at the module box. A wide look is a line style of tube, cable, neon or zigzag, or `electric: true`, or a swarm: any of `spacing_mode`, `spacing`, `size_variation`, `shape_alternate` or `motion` in the flow. Such a key counts even when it holds its default value.
+- Every other line ends at the icon, picture or dial. That covers solid, dashed, dotted, double rail and wave lines, and a flow without a look.
+
+A value you choose always wins. `from_anchor: icon` on a tube sends that end to the icon, and `box` on a solid line sends it to the box.
+
+The default follows the keys in the flow, so a preset that sets a wide look also ends the line at the box. Reset look removes the keys, and the default goes back to the icon.
 
 Attach to appears under the From and To fields only for modules that have a main visual. It does not appear for the other modules, which always use the box.
 
@@ -76,10 +85,10 @@ Text, Markdown, Bar, Graph, Slider, Spinbox, Dropdown, Clock, Separator, layouts
 - A module whose icon is hidden, or that has no size, uses its box. Nothing is reported.
 - From side and To side work on the icon's box. A module with a shape still uses its icon's box, not the shape's outline.
 - The line follows the icon when it moves, for example after a state change, a resize, a slider slide or a tab change. An animated icon does not make the line jitter.
-- Opening and saving a flow without changes leaves its YAML as it was. Choosing Icon or picture removes the key. Choosing Module box writes `box`.
-- A value other than `icon` or `box` is read as `icon`. The editor keeps it in YAML until you pick an option.
+- Opening and saving a flow without changes leaves its YAML as it was. The Attach to select shows the default that applies: Module box for a tube, Icon or picture for a solid line. Picking the default removes the key. Picking the other option writes `icon` or `box`.
+- A value other than `icon` or `box` is read as the default for the look. The editor keeps it in YAML until you pick an option.
 
-**Dashboards you already have change look.** A flow without an attach key now ends at the icon, picture or dial of each module that has one. To keep the old look, set Module box on that end, or add `from_anchor: box` or `to_anchor: box` to the flow.
+**Dashboards you already have may change look.** A thin line without an attach key now ends at the icon, picture or dial of each module that has one. A wide look keeps the box, so its look does not change. To keep the old look of a thin line, set Module box on that end, or add `from_anchor: box` or `to_anchor: box` to the flow.
 
 **Tips when a line looks wrong:**
 
@@ -116,7 +125,7 @@ On a light card, a line colour or line end colour that is too pale to show is da
 - A colour, or `entity`, works as for `color`.
 - Unset: the theme's secondary text colour at 50% opacity, which reads on light and dark cards.
 
-The editor offers the entity colour button on Color only. Type `entity` in Idle color to use it there.
+The editor offers the entity colour button on Colour only. Type `entity` in Idle colour to use it there.
 
 ## Width, dots and speed
 

@@ -125,7 +125,9 @@ Each card can show a Pause motion button. It pauses everything on the card that 
 
 In the editor, the settings are in the card's Design tab, in a Motion group that sits under Layout and is open by default. "Pause button" offers Automatic, Always and Hidden. "Corner" appears only when the button is shown.
 
-A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. The button is off until you turn it on: the default is `hidden`.
+A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. The default is `hidden`, so a card shows no button until you set `auto` or `always`.
+
+If anything on the card moves for more than five seconds, set `pause_button` to `auto` or `always`, so viewers can stop the motion. WCAG 2.2.2 asks for a way to pause or stop moving content that runs for more than five seconds.
 
 - The button is a small round control in the chosen corner. Its name is always "Pause motion"; a screen reader hears whether it is pressed. Its touch area is 44 by 44 pixels. Tab reaches it after the card's content. Enter or Space toggles it.
 - Pressing it does not trigger the tap action of the card or module under it.
