@@ -18,8 +18,12 @@ export interface Gradient {
 
 const HEAD = /^\s*(to\s|circle|ellipse|at\s|closest|farthest|-?[\d.]+(deg|turn|rad|grad)$)[\w\s.%-]*$/i;
 
+/** Longest gradient string read: the stop pattern below backtracks on unclosed parentheses, so the input is capped first. */
+export const MAX_GRADIENT_LENGTH = 600;
+
 /** The gradient in `v`, or undefined when it is not one or has an unsafe stop. */
 export function parseGradient(v: unknown): Gradient | undefined {
+  if (typeof v !== 'string' || v.length > MAX_GRADIENT_LENGTH) return undefined;
   const m = /^\s*(linear|radial)-gradient\((.*)\)\s*$/is.exec(v as string);
   // top-level comma parts; anything the pattern skips (a stray parenthesis, an empty part) fails the join
   const a = m?.[2].match(/(?:[^(),]|\((?:[^()]|\([^()]*\))*\))+/g);
@@ -39,6 +43,7 @@ const SIDES: Record<string, number> = { top: 0, right: 90, bottom: 180, left: 27
  * parseGradient() itself keeps reading only degrees.
  */
 export function gradientHeadAngle(v: unknown): number | undefined {
+  if (typeof v !== 'string' || v.length > MAX_GRADIENT_LENGTH) return undefined;
   const g = parseGradient(v);
   if (!g || g.radial) return undefined;
   const head = /^\s*linear-gradient\(\s*to\s+([a-z]+)(?:\s+([a-z]+))?\s*,/i.exec(v as string);
