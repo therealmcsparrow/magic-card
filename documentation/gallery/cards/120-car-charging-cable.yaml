@@ -112,5 +112,5 @@ rows:
               - { value: 80, label: Daily }
               - { value: 100, label: Full }
 flows:
-  - { id: home-charger, from: home, to: charger, entity: sensor.house_power, max: 3000, route: straight, color: "#ffd166", line_style: cable, twisted: true, cable_color: "#3a3326", width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2 }
-  - { id: charger-car, from: charger, to: car, entity: sensor.car_charge_power, max: 11, route: straight, color: "#6ee7b7", line_style: cable, twisted: true, width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2, arrival: ring, arrival_size: 40, end_cap: arrow }
+  - { id: home-charger, from: home, to: charger, entity: sensor.house_power, max: 3000, route: straight, from_anchor: box, to_anchor: box, color: "#ffd166", line_style: cable, twisted: true, cable_color: "#3a3326", width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2 }
+  - { id: charger-car, from: charger, to: car, entity: sensor.car_charge_power, max: 11, route: straight, from_anchor: box, to_anchor: box, color: "#6ee7b7", line_style: cable, twisted: true, width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2, arrival: ring, arrival_size: 40, end_cap: arrow }

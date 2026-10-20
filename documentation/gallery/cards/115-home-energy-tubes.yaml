@@ -82,6 +82,6 @@ rows:
             thumb: none
             value_position: track
 flows:
-  - { id: solar-home, from: solar, to: home, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: home-grid, from: home, to: grid, entity: sensor.grid_power, min: 0, max: 5000, route: straight, reverse_negative: false, color: "#8ecae6", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: home-pack, from: home, to: pack, entity: sensor.battery_power, max: 3000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: solar-home, from: solar, to: home, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: home-grid, from: home, to: grid, entity: sensor.grid_power, min: 0, max: 5000, route: straight, reverse_negative: false, color: "#8ecae6", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: home-pack, from: home, to: pack, entity: sensor.battery_power, max: 3000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }

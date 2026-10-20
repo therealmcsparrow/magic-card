@@ -89,6 +89,6 @@ rows:
             value_position: bubble
             stops: [{ value: 0, label: Halt }, { value: 33, label: Crawl }, { value: 66, label: Cruise }, { value: 100, label: Burn }]
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#facc15", line_style: zigzag, electric: true, width: 3, amplitude: 8, wavelength: 22, glow: 6, shape: star, shape_spin: true, dot_size: 12, dots: 3, arrival: ring, arrival_size: 40 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#38bdf8", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, shape: star, shape_spin: true, dot_size: 10, dots: 3 }
-  - { id: c-a, from: c, to: a, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: bottom, color: "#a78bfa", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, end_cap: arrow }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#facc15", line_style: zigzag, electric: true, width: 3, amplitude: 8, wavelength: 22, glow: 6, shape: star, shape_spin: true, dot_size: 12, dots: 3, arrival: ring, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#38bdf8", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, shape: star, shape_spin: true, dot_size: 10, dots: 3 }
+  - { id: c-a, from: c, to: a, from_anchor: box, to_anchor: box, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: bottom, color: "#a78bfa", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, end_cap: arrow }

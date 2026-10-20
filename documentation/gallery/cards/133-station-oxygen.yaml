@@ -103,5 +103,5 @@ rows:
             fill_mode: gradient
             track_color: "rgba(255,255,255,0.1)"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#67e8f9", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", shape: bubble, dot_size: 8, dots: 3 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2000, route: straight, color: "#86efac", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", motion: pulse, dots: 5, dot_size: 8, shape: dot }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.home_battery, max: 100, route: straight, color: "#67e8f9", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", shape: bubble, dot_size: 8, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#86efac", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", motion: pulse, dots: 5, dot_size: 8, shape: dot }

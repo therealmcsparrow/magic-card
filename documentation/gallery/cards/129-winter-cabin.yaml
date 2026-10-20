@@ -84,5 +84,5 @@ rows:
             value_position: track
             slider_color: "#f59e0b"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#86efac", color_to: "#fb923c", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: drop, dot_size: 9, dots: 3 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#fb923c", color_to: "#fde047", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: comet, dot_size: 10, dots: 3, glow: 4, arrival: ring, arrival_size: 36 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#86efac", color_to: "#fb923c", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: drop, dot_size: 9, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#fb923c", color_to: "#fde047", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: comet, dot_size: 10, dots: 3, glow: 4, arrival: ring, arrival_size: 36 }

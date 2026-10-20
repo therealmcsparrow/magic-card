@@ -68,7 +68,7 @@ rows:
             size: 24px
             design: { color: "#fb7185", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(255,255,255,0.05)" }
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: curve, color: "#6ee7b7", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: c-d, from: c, to: d, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: top, color: "#8ecae6", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: c-e, from: c, to: e, entity: sensor.battery_power, max: 3000, route: elbow, from_side: right, to_side: top, color: "#c084fc", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: curve, color: "#6ee7b7", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: c-d, from: c, to: d, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: top, color: "#8ecae6", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: c-e, from: c, to: e, entity: sensor.battery_power, max: 3000, route: elbow, from_side: right, to_side: top, color: "#c084fc", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }

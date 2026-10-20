@@ -122,9 +122,9 @@ rows:
             thumb: none
             value_position: track
 flows:
-  - { id: solar-home, from: solar, to: home, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: home-grid, from: home, to: grid, entity: sensor.grid_power, min: 0, max: 5000, route: straight, reverse_negative: false, color: "#8ecae6", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
-  - { id: home-pack, from: home, to: pack, entity: sensor.battery_power, max: 3000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: solar-home, from: solar, to: home, entity: sensor.solar_power, max: 5000, route: straight, color: "#ffd166", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: home-grid, from: home, to: grid, entity: sensor.grid_power, min: 0, max: 5000, route: straight, reverse_negative: false, color: "#8ecae6", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
+  - { id: home-pack, from: home, to: pack, entity: sensor.battery_power, max: 3000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, from_anchor: box, to_anchor: box, width: 14, bubble_count: 4, tube_fill_value: true }
 ```
 
 ## Living room
@@ -552,9 +552,9 @@ rows:
             design: { color: "#a5b4fc", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #a5b4fc", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
 
 flows:
-  - { id: roof-tank, from: roof, to: level, entity: sensor.tank_inflow, max: 30, route: curve, from_side: right, to_side: left, color: "#7dd3fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
-  - { id: tank-garden, from: level, to: garden, entity: sensor.tank_garden_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#86efac", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }
-  - { id: tank-house, from: level, to: house, entity: sensor.tank_house_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#a5b4fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }
+  - { id: roof-tank, from: roof, to: level, entity: sensor.tank_inflow, max: 30, route: curve, from_side: right, to_side: left, color: "#7dd3fc", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
+  - { id: tank-garden, from: level, to: garden, entity: sensor.tank_garden_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#86efac", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true }
+  - { id: tank-house, from: level, to: house, entity: sensor.tank_house_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#a5b4fc", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true }
 ```
 
 ## Car charging
@@ -682,8 +682,8 @@ rows:
               - { value: 80, label: Daily }
               - { value: 100, label: Full }
 flows:
-  - { id: home-charger, from: home, to: charger, entity: sensor.house_power, max: 3000, route: straight, color: "#ffd166", line_style: cable, twisted: true, cable_color: "#3a3326", width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2 }
-  - { id: charger-car, from: charger, to: car, entity: sensor.car_charge_power, max: 11, route: straight, color: "#6ee7b7", line_style: cable, twisted: true, width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2, arrival: ring, arrival_size: 40, end_cap: arrow }
+  - { id: home-charger, from: home, to: charger, entity: sensor.house_power, max: 3000, route: straight, from_anchor: box, to_anchor: box, color: "#ffd166", line_style: cable, twisted: true, cable_color: "#3a3326", width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2 }
+  - { id: charger-car, from: charger, to: car, entity: sensor.car_charge_power, max: 11, route: straight, from_anchor: box, to_anchor: box, color: "#6ee7b7", line_style: cable, twisted: true, width: 8, shape: icon, shape_icon: "mdi:flash", shape_icon_rotate: false, dot_size: 14, dots: 2, arrival: ring, arrival_size: 40, end_cap: arrow }
 ```
 
 ## Garden irrigation
@@ -1235,9 +1235,9 @@ rows:
             slider_color_to: "#ff2fd6"
             track_color: "rgba(255,255,255,0.06)"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#fbbf24", color_to: "#ff2fd6", line_style: neon, width: 3, glow: 10, flicker: subtle, neon_core: "#fff1c2", end_cap: arrow, shape: spark, dots: 3, dot_size: 9 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#ff2fd6", color_to: "#22d3ee", line_style: neon, width: 3, glow: 10, flicker: strong, end_cap: round, shape: dot, dots: 3 }
-  - { id: c-a, from: c, to: a, entity: sensor.battery_power, max: 3000, route: elbow, from_side: left, to_side: bottom, color: "#22d3ee", color_to: "#fbbf24", line_style: neon, width: 3, glow: 8, flicker: subtle, end_cap: arrow, arrival: ring, arrival_size: 36 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#fbbf24", color_to: "#ff2fd6", line_style: neon, width: 3, glow: 10, flicker: subtle, neon_core: "#fff1c2", end_cap: arrow, shape: spark, dots: 3, dot_size: 9 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#ff2fd6", color_to: "#22d3ee", line_style: neon, width: 3, glow: 10, flicker: strong, end_cap: round, shape: dot, dots: 3 }
+  - { id: c-a, from: c, to: a, from_anchor: box, to_anchor: box, entity: sensor.battery_power, max: 3000, route: elbow, from_side: left, to_side: bottom, color: "#22d3ee", color_to: "#fbbf24", line_style: neon, width: 3, glow: 8, flicker: subtle, end_cap: arrow, arrival: ring, arrival_size: 36 }
 ```
 
 ## Potion lab
@@ -1336,9 +1336,9 @@ rows:
             value_position: track
             slider_color: "#fcd34d"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#4ade80", line_style: tube, width: 16, bubble_count: 5, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
-  - { id: b-c, from: b, to: c, entity: sensor.solar_power, max: 5000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
-  - { id: c-d, from: c, to: d, entity: sensor.house_power, max: 2000, route: straight, color: "#fb7185", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.home_battery, max: 100, route: straight, color: "#4ade80", line_style: tube, width: 16, bubble_count: 5, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: c-d, from: c, to: d, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#fb7185", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
 ```
 
 ## Engine room
@@ -1443,9 +1443,9 @@ rows:
             value_position: bubble
             stops: [{ value: 0, label: Halt }, { value: 33, label: Crawl }, { value: 66, label: Cruise }, { value: 100, label: Burn }]
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#facc15", line_style: zigzag, electric: true, width: 3, amplitude: 8, wavelength: 22, glow: 6, shape: star, shape_spin: true, dot_size: 12, dots: 3, arrival: ring, arrival_size: 40 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#38bdf8", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, shape: star, shape_spin: true, dot_size: 10, dots: 3 }
-  - { id: c-a, from: c, to: a, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: bottom, color: "#a78bfa", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, end_cap: arrow }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#facc15", line_style: zigzag, electric: true, width: 3, amplitude: 8, wavelength: 22, glow: 6, shape: star, shape_spin: true, dot_size: 12, dots: 3, arrival: ring, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#38bdf8", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, shape: star, shape_spin: true, dot_size: 10, dots: 3 }
+  - { id: c-a, from: c, to: a, from_anchor: box, to_anchor: box, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: bottom, color: "#a78bfa", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, end_cap: arrow }
 ```
 
 ## Dragon vault
@@ -1576,8 +1576,8 @@ rows:
             track_color: "rgba(13,8,4,0.6)"
             icon: mdi:gold
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#f59e0b", color_to: "#ffe08a", width: 5, shape: star, shape_spin: true, shape_alternate: diamond, shape_color: "#ffd25a", dot_size: 14, dots: 3, glow: 6, end_cap: round }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#ffe08a", color_to: "#fb923c", width: 5, shape: diamond, shape_spin: true, shape_color: "#fff3c4", dot_size: 12, dots: 3, arrival: ring, arrival_size: 40, end_cap: arrow }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#f59e0b", color_to: "#ffe08a", width: 5, shape: star, shape_spin: true, shape_alternate: diamond, shape_color: "#ffd25a", dot_size: 14, dots: 3, glow: 6, end_cap: round }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#ffe08a", color_to: "#fb923c", width: 5, shape: diamond, shape_spin: true, shape_color: "#fff3c4", dot_size: 12, dots: 3, arrival: ring, arrival_size: 40, end_cap: arrow }
 ```
 
 ## Winter cabin
@@ -1677,8 +1677,8 @@ rows:
             value_position: track
             slider_color: "#f59e0b"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#86efac", color_to: "#fb923c", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: drop, dot_size: 9, dots: 3 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#fb923c", color_to: "#fde047", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: comet, dot_size: 10, dots: 3, glow: 4, arrival: ring, arrival_size: 36 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#86efac", color_to: "#fb923c", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: drop, dot_size: 9, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#fb923c", color_to: "#fde047", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: comet, dot_size: 10, dots: 3, glow: 4, arrival: ring, arrival_size: 36 }
 ```
 
 ## Haunted attic
@@ -1778,7 +1778,7 @@ rows:
             track_color: "rgba(255,255,255,0.12)"
             value_position: beside
 flows:
-  - { id: a-b, from: a, to: b, route: curve, layer: front, color: "#f97316", color_to: "#a855f7", line_style: neon, width: 3, glow: 10, flicker: strong, shape: icon, shape_icon: "mdi:ghost-outline", dot_size: 18, dots: 2, arrival: splash, arrival_size: 44 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, route: curve, layer: front, color: "#f97316", color_to: "#a855f7", line_style: neon, width: 3, glow: 10, flicker: strong, shape: icon, shape_icon: "mdi:ghost-outline", dot_size: 18, dots: 2, arrival: splash, arrival_size: 44 }
 ```
 
 ## Synthwave deck
@@ -1873,7 +1873,7 @@ rows:
             track_color: "rgba(255,255,255,0.18)"
             value_position: beside
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.house_power, max: 2000, route: straight, color: "#ff4f9a", color_to: "#22d3ee", line_style: wave, width: 3, amplitude: 9, wavelength: 36, glow: 8, shape: icon, shape_icon: "mdi:music-note", shape_icon_rotate: false, dot_size: 20, dots: 3, arrival: ring, arrival_size: 40 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#ff4f9a", color_to: "#22d3ee", line_style: wave, width: 3, amplitude: 9, wavelength: 36, glow: 8, shape: icon, shape_icon: "mdi:music-note", shape_icon_rotate: false, dot_size: 20, dots: 3, arrival: ring, arrival_size: 40 }
 ```
 
 ## Reef tank
@@ -1974,8 +1974,8 @@ rows:
             track_color: "rgba(3,26,43,0.5)"
             icon: mdi:lightbulb-on
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#38bdf8", line_style: tube, width: 14, bubble_count: 6, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2000, route: elbow, from_side: bottom, to_side: right, color: "#5eead4", line_style: tube, width: 14, bubble_count: 5, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3, arrival: splash, arrival_size: 36 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.home_battery, max: 100, route: straight, color: "#38bdf8", line_style: tube, width: 14, bubble_count: 6, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: elbow, from_side: bottom, to_side: right, color: "#5eead4", line_style: tube, width: 14, bubble_count: 5, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3, arrival: splash, arrival_size: 36 }
 ```
 
 ## Station oxygen
@@ -2094,8 +2094,8 @@ rows:
             fill_mode: gradient
             track_color: "rgba(255,255,255,0.1)"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#67e8f9", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", shape: bubble, dot_size: 8, dots: 3 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2000, route: straight, color: "#86efac", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", motion: pulse, dots: 5, dot_size: 8, shape: dot }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.home_battery, max: 100, route: straight, color: "#67e8f9", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", shape: bubble, dot_size: 8, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#86efac", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", motion: pulse, dots: 5, dot_size: 8, shape: dot }
 ```
 
 ## Steam boiler
@@ -2217,6 +2217,6 @@ rows:
             snap: true
             stops: [{ value: 0, label: Shut }, { value: 50, label: Half }, { value: 100, label: Open }]
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, end_cap: round }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, arrival: splash, arrival_size: 40, end_cap: round }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, end_cap: round }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, arrival: splash, arrival_size: 40, end_cap: round }
 ```
