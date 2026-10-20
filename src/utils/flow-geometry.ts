@@ -1,7 +1,6 @@
 import type { ShapeKind, ShapeOptions } from '../types';
 import type { Side } from './flow';
 import { shapePoint } from './shape-path';
-import type { Pose } from './flow-motion';
 
 /**
  * Flow line geometry (pure): two module rects (px, relative to the card content box) + anchor sides
@@ -32,10 +31,6 @@ export interface FlowGeometry {
   run: number;
   /** Path length (px). */
   length: number;
-  /** Position and travel direction (degrees) at arc length `s` (clamped to 0..length). */
-  at: (s: number) => Pose;
-  /** Arc lengths of the corners: keyframes of the shapes riding the line always include them. */
-  knots?: number[];
 }
 
 /** Anchors sit this far outside the module's side. */
@@ -171,25 +166,11 @@ function curve(p0: Point, p1: Point, s0: Side, s1: Side): FlowGeometry {
   };
   let length = 0;
   let prev = p0;
-  const cum = [0];
   for (let i = 1; i <= 32; i++) {
     const p = at(i / 32);
     length += dist(prev, p);
-    cum.push(length);
     prev = p;
   }
-  // arc length -> t (linear inside each of the 32 pieces), then the point and the derivative there
-  const pose = (s: number): Pose => {
-    const c = Math.min(length, Math.max(0, s));
-    let i = 1;
-    while (i < 32 && cum[i] < c) i++;
-    const t = (i - 1 + (cum[i] > cum[i - 1] ? (c - cum[i - 1]) / (cum[i] - cum[i - 1]) : 0)) / 32;
-    const u = 1 - t;
-    const dx = 3 * (u * u * (c0.x - p0.x) + 2 * u * t * (c1.x - c0.x) + t * t * (p1.x - c1.x));
-    const dy = 3 * (u * u * (c0.y - p0.y) + 2 * u * t * (c1.y - c0.y) + t * t * (p1.y - c1.y));
-    const p = at(t);
-    return { x: p.x, y: p.y, a: (Math.atan2(dy, dx) * 180) / Math.PI };
-  };
   // B'(0.5)
   const dx = 0.75 * (c0.x - p0.x) + 1.5 * (c1.x - c0.x) + 0.75 * (p1.x - c1.x);
   const dy = 0.75 * (c0.y - p0.y) + 1.5 * (c1.y - c0.y) + 0.75 * (p1.y - c1.y);
@@ -199,7 +180,6 @@ function curve(p0: Point, p1: Point, s0: Side, s1: Side): FlowGeometry {
     tangent: Math.hypot(dx, dy) > 1e-6 ? unit({ x: 0, y: 0 }, { x: dx, y: dy }) : unit(p0, p1),
     run: length,
     length,
-    at: pose,
   };
 }
 
@@ -302,40 +282,16 @@ function elbow(p0: Point, p1: Point, s0: Side, s1: Side, a: Rect, b: Rect): Flow
   lineTo(p1);
   const len = (pc: Piece) => (pc.kind === 'line' ? dist(pc.a, pc.b) : (Math.PI * pc.r) / 2);
   const length = pieces.reduce((s, pc) => s + len(pc), 0);
-  // position and direction at arc length s: walk the pieces; corner arcs start and end at the knots
-  const knots: number[] = [];
-  const bounds: number[] = [];
-  let run0 = 0;
-  for (const pc of pieces) {
-    if (pc.kind === 'arc') knots.push(run0, run0 + len(pc) / 2, run0 + len(pc));
-    run0 += len(pc);
-    bounds.push(run0);
-  }
-  const pose = (s: number): Pose => {
-    const c = Math.min(length, Math.max(0, s));
-    let i = 0;
-    while (i < pieces.length - 1 && bounds[i] < c) i++;
-    const pc = pieces[i];
-    if (!pc) return { x: p0.x, y: p0.y, a: 0 };
-    const f = len(pc) > 0 ? Math.min(1, Math.max(0, (c - (bounds[i] - len(pc))) / len(pc))) : 0;
-    if (pc.kind === 'line') return { x: pc.a.x + (pc.b.x - pc.a.x) * f, y: pc.a.y + (pc.b.y - pc.a.y) * f, a: (Math.atan2(pc.b.y - pc.a.y, pc.b.x - pc.a.x) * 180) / Math.PI };
-    const th = f * (Math.PI / 2);
-    const cs = Math.cos(th);
-    const sn = Math.sin(th);
-    return { x: pc.c.x + pc.u.x * cs + pc.v.x * sn, y: pc.c.y + pc.u.y * cs + pc.v.y * sn, a: (Math.atan2(-pc.u.y * sn + pc.v.y * cs, -pc.u.x * sn + pc.v.x * cs) * 180) / Math.PI };
-  };
   // the label sits in the middle of the longest straight segment (never on a corner)
   let best: { a: Point; b: Point } | undefined;
   for (const pc of pieces) if (pc.kind === 'line' && (!best || dist(pc.a, pc.b) > dist(best.a, best.b))) best = pc;
-  if (!best) return { d: parts.join(' '), mid: p0, tangent: unit(p0, p1), run: 0, length, at: pose, knots };
+  if (!best) return { d: parts.join(' '), mid: p0, tangent: unit(p0, p1), run: 0, length };
   return {
     d: parts.join(' '),
     mid: { x: (best.a.x + best.b.x) / 2, y: (best.a.y + best.b.y) / 2 },
     tangent: unit(best.a, best.b),
     run: dist(best.a, best.b),
     length,
-    at: pose,
-    knots,
   };
 }
 
@@ -358,10 +314,5 @@ export function flowPath(a: Rect, b: Rect, sides: [Side, Side], route: 'curve' |
     tangent: unit(p0, p1),
     run: dist(p0, p1),
     length: dist(p0, p1),
-    at: (s) => {
-      const l = dist(p0, p1) || 1;
-      const f = Math.min(1, Math.max(0, s / l));
-      return { x: p0.x + (p1.x - p0.x) * f, y: p0.y + (p1.y - p0.y) * f, a: (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180) / Math.PI };
-    },
   };
 }

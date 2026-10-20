@@ -123,10 +123,9 @@ export const flowsOverlayStyles = css`
   :host([dark]) .flow[data-dots] .line {
     stroke-opacity: var(--mc-flow-track-opacity, 0.4);
   }
+  /* the animation-name and its keyframes (translate along the line: a compositor animation) are set per flow */
   .dot,
   .glow {
-    offset-rotate: 0deg;
-    animation-name: mc-flow-dot;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
   }
@@ -135,14 +134,6 @@ export const flowsOverlayStyles = css`
     animation-name: mc-flow-dash;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-  }
-  @keyframes mc-flow-dot {
-    from {
-      offset-distance: 0%;
-    }
-    to {
-      offset-distance: 100%;
-    }
   }
   @keyframes mc-flow-dash {
     from {

@@ -1,15 +1,19 @@
 import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
 import { FLOW_SPIN_SHAPES, type FlowShape } from '../../contracts/flow-look';
 import { at, fmt, rnd } from '../sampler';
+import { travelFrames } from '../../utils/flow-motion';
+import { stops } from '../motion';
 import { flowLookRegistry, unmix, type LineCtx } from '../registry';
 import { body, turns } from './geometry';
 
 /*
  * The travelling shapes (T4), registered as flowLookRegistry.shapes by the side-effect import in
  * ../parts.ts. Motion (flow-look rules 1 and 5, spike S1):
- * - css: one element per shape with `offset-path` + `offset-rotate: auto` (`reverse` for a flow that
- *   runs backwards, `0deg` for shapes that do not turn) and a negative animation-delay; no
- *   offset-anchor (Chromium 85). Spin is a second animation on an inner child (never the same element).
+ * - css: one element per shape playing transform keyframes sampled from the path (translate, plus
+ *   rotate to the travel direction for shapes that turn, 180 degrees more for a flow that runs backwards)
+ *   with a negative animation-delay: a compositor animation, no main-thread work per frame (offset-path
+ *   re-ran style, layout and paint for every shape every frame). Spin is a second animation on an inner
+ *   child (never the same element).
  * - smil (opts.motion): shapes that turn use <animateMotion rotate="auto">; dot and bubble stay css.
  *   Icons are HTML (<ha-icon>) and cannot use SMIL: under smil they travel upright.
  * - pulse: shapes stay at fixed places on the line (static transform) and an inner child pulses with a
@@ -75,6 +79,13 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
   const seed = seedOf(f.id);
   const parts: SVGTemplateResult[] = [];
   const icons: TemplateResult[] = [];
+  // keyframes of this flow: mv (no turn), ta (turns with the travel), tr (turns, flow runs backwards); only the ones used are written
+  const used = new Set<'mv' | 'ta' | 'tr'>();
+  const frame = (turns: boolean): string => {
+    const v = turns ? (sign < 0 ? 'tr' : 'ta') : 'mv';
+    used.add(v);
+    return `${c.id}-${v}`;
+  };
   let comet = false;
   for (let k = 0; k < n; k++) {
     const kind = kindOf(c, k);
@@ -93,8 +104,8 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
       if (place) {
         icons.push(html`<div class="ic" data-shape="icon" aria-hidden="true" style=${`${box}; left: ${fmt(place.x - px / 2)}px; top: ${fmt(place.y - px / 2)}px; transform: rotate(${fmt(angle)}deg)`}><div class="pl an" style=${beat}>${icon}</div></div>`);
       } else {
-        const rot = turn && o.motion === 'css' ? (sign < 0 ? 'reverse' : 'auto') : '0deg';
-        icons.push(html`<div class="ic dot an" data-shape="icon" aria-hidden="true" style=${`${box}; offset-path: path('${geo.d}'); offset-rotate: ${rot}; animation-duration: ${dur}; animation-delay: ${s3(-f.speedS * ph[k])}s; animation-direction: ${c.dir}`}>${spin ? html`<div class="spi an">${icon}</div>` : icon}</div>`);
+        // the box sits centred on the travelled point (the keyframes move its origin)
+        icons.push(html`<div class="ic dot an" data-shape="icon" aria-hidden="true" style=${`${box}; left: ${fmt(-px / 2)}px; top: ${fmt(-px / 2)}px; animation-name: ${frame(turn && o.motion === 'css')}; animation-duration: ${dur}; animation-delay: ${s3(-f.speedS * ph[k])}s; animation-direction: ${c.dir}`}>${spin ? html`<div class="spi an">${icon}</div>` : icon}</div>`);
       }
       continue;
     }
@@ -109,7 +120,7 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
       parts.push(svg`<g class="shp" data-shape=${kind}><animateMotion dur=${dur} begin=${`${delay}s`} repeatCount="indefinite" rotate=${sign < 0 ? 'auto-reverse' : 'auto'} path=${geo.d} calcMode="linear" keyPoints="0;1" keyTimes="0;1"></animateMotion>${glow}${shape}</g>`);
       continue;
     }
-    const m = `offset-path: path('${geo.d}'); offset-rotate: ${turn ? (sign < 0 ? 'reverse' : 'auto') : '0deg'}; animation-duration: ${dur}; animation-delay: ${delay}s; animation-direction: ${c.dir}`;
+    const m = `animation-name: ${frame(turn)}; animation-duration: ${dur}; animation-delay: ${delay}s; animation-direction: ${c.dir}`;
     if (kind === 'dot') {
       parts.push(svg`${f.glow > 0 ? svg`<circle class="glow gl an" r=${fmt(size / 2 + f.glow)} style=${m}></circle>` : ''}<circle class=${heavy ? 'dot an sf ol' : 'dot an sf'} data-shape="dot" r=${fmt(size / 2)} style=${m}></circle>`);
     } else {
@@ -119,8 +130,12 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
   const defs = comet
     ? svg`<defs><linearGradient id=${gid} x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color: var(--mc-sc); stop-opacity: 0.7"></stop><stop offset="1" style="stop-color: var(--mc-sc); stop-opacity: 0"></stop></linearGradient></defs>`
     : '';
+  // a <style> element swallows the rest of a lit template: it is a template of its own
+  const keyframes = used.size
+    ? svg`<style .textContent=${[...used].map((v) => travelFrames(`${c.id}-${v}`, stops(S, v !== 'mv'), v === 'tr')).join('')}></style>`
+    : '';
   return {
-    ...(parts.length ? { svg: svg`<g class="dots" style=${vars}>${defs}${parts}</g>` } : {}),
+    ...(parts.length ? { svg: svg`${keyframes}<g class="dots" style=${vars}>${defs}${parts}</g>` } : used.size ? { svg: keyframes as SVGTemplateResult } : {}),
     ...(icons.length ? { html: html`${icons}` } : {}),
   };
 }

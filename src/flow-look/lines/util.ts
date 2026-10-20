@@ -1,5 +1,7 @@
 import { svg, type SVGTemplateResult } from 'lit';
 import { fmt, lane, sample, toD, type Sampled, type XY } from '../sampler';
+import { travelFrames } from '../../utils/flow-motion';
+import { stops } from '../motion';
 import { flowLookRegistry, type LineCtx, type StrokeSpec } from '../registry';
 
 /* Shared helpers of the line modules. */
@@ -39,9 +41,30 @@ export const dashMotion = (c: LineCtx, p: number): string =>
 export const centre = (c: LineCtx): SVGTemplateResult =>
   svg`<path class="line" d=${c.geo.d} style="stroke: transparent; stroke-width: ${fmt(c.w)}px"></path>`;
 
-/** The moving highlight: short light dashes sliding along `d` (a wave's offset line, or the centre line). */
-export function highlight(c: LineCtx, d: string): SVGTemplateResult {
-  const len = Math.max(4, c.w * 2);
-  const p = len * 2.5;
-  return stroke(c, { d, w: c.w, color: '#fff', op: 0.5, dash: `${fmt(len)} ${fmt(p - len)}`, cap: 'butt', cls: 'dash an', style: dashMotion(c, p) });
+/** Most highlight dashes on one line. */
+const MAX_HIGHLIGHTS = 24;
+
+/**
+ * The moving highlight: short light dashes sliding along `d` (a wave's offset line, or the centre
+ * line). Each dash is a small bar that travels the whole line with transform keyframes (a compositor
+ * animation); an animated `stroke-dashoffset` would re-run style, paint and commit of the whole
+ * layer every frame. The dashes are spread evenly over the line, about 2.5 dash lengths apart (never
+ * more than 24), and move at the flow speed. A bar cannot bend: on a wave or zigzag it is at most `max`
+ * long (a third of the wavelength) so it stays inside the line.
+ */
+export function highlight(c: LineCtx, d: string, max = Infinity): SVGTemplateResult {
+  const S = d === c.geo.d ? c.S : sampled(d);
+  const len = Math.max(3, Math.min(max, Math.max(4, c.w * 2)));
+  const n = Math.min(MAX_HIGHLIGHTS, Math.max(1, Math.round(S.L / (len * 2.5))));
+  // one lap takes as long as the old dash pattern needed to cover the line once
+  const lap = c.geo.length > 0 ? (c.f.speedS * S.L) / c.geo.length : c.f.speedS;
+  const name = `${c.id}-hl`;
+  const bar = Array.from(
+    { length: n },
+    (_, k) =>
+      svg`<rect class="hlp an" x=${fmt(-len / 2)} y=${fmt(-c.w / 2)} width=${fmt(len)} height=${fmt(c.w)} style=${`fill: #fff; fill-opacity: 0.5; animation: ${name} ${lap.toFixed(3)}s linear ${(-(lap * k) / n).toFixed(3)}s infinite ${c.dir}`}></rect>`,
+  );
+  // a <style> element swallows the rest of a lit template: it is a template of its own
+  const keyframes = svg`<style .textContent=${travelFrames(name, stops(S, true))}></style>`;
+  return svg`${keyframes}<g class="hlg">${bar}</g>`;
 }

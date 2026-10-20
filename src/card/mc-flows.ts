@@ -6,13 +6,12 @@ import {
   type FlowBudget,
   type FlowLookQuality,
   type FlowLookResolved,
-  type FlowMotionSupport,
   type FlowWithLook,
 } from '../contracts/flow-look';
 import type { ResolvedFlow } from '../utils/flow';
 import { anchorSides, flowPath, spreadAnchors, type FlowGeometry, type Point, type Rect } from '../utils/flow-geometry';
-import { travelFrames } from '../utils/flow-motion';
-import { pauseOffscreen, unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
+import { flattenPath, travelFrames } from '../utils/flow-motion';
+import { pauseOffscreen } from '../icons/offscreen';
 import { flowLookSlot } from './flow-look-slot';
 import { flowsOverlayStyles } from './flows-css';
 
@@ -179,7 +178,7 @@ function layoutBox(el: HTMLElement, fromScreen: (r: DOMRect) => Rect, sx: number
  *
  * Motion is CSS only: dots play transform keyframes sampled from the line (compositor animations: no
  * main-thread work per frame; staggered negative delays, reverse direction), or a
- * dashed stroke moves (`dots: 0`, or no offset-path support). Reduced motion: a static line with an
+ * dashed stroke moves (`dots: 0`). Reduced motion: a static line with an
  * arrowhead in the flow direction. Off-screen overlays pause (src/icons/offscreen.ts).
  */
 @customElement('mc-flows')
@@ -224,19 +223,8 @@ export class McFlows extends LitElement {
   private _endsKey = '';
   /** The content's layout size (labels stay inside it). */
   private _bounds?: { w: number; h: number };
-  /**
-   * offset-path on SVG circles, checked once in this browser's layout (some WebViews accept the
-   * property but don't move SVG elements): undefined = not known yet, false = draw dashes.
-   */
-  private _offsetPathWorks?: boolean;
-  /** offset-rotate: auto turns SVG elements here (second probe); false -> SMIL animateMotion for turning shapes. */
-  private _rotationWorks?: boolean;
-  /** A look flow was drawn by the last render (the probe also runs for them). */
+  /** A look flow was drawn by the last render (the chunk's css is injected). */
   private _lookDrawn = false;
-  /** The last render drew look flows with SMIL motion: pause / unpause them with the page and the viewport. */
-  private _smil = false;
-  /** The layer SVGs watched for off-screen changes (SMIL ignores animation-play-state). */
-  private _smilWatched = new Set<Element>();
 
   /** Per flow, after each render: moving elements wanted, drawn after the card budget, and the card's tier. */
   budget: FlowBudget = new Map();
@@ -276,7 +264,6 @@ export class McFlows extends LitElement {
     document.fonts?.ready?.then(this._onFonts, () => undefined);
     this.toggleAttribute('page-hidden', document.visibilityState === 'hidden');
     document.addEventListener('visibilitychange', this._onVisibility);
-    if (this.hasUpdated) this._watchSmil();
   }
 
   disconnectedCallback(): void {
@@ -287,34 +274,10 @@ export class McFlows extends LitElement {
     if (this._raf) cancelAnimationFrame(this._raf);
     this._raf = 0;
     document.removeEventListener('visibilitychange', this._onVisibility);
-    for (const el of this._smilWatched) unwatchOffscreen(el);
-    this._smilWatched.clear();
   }
 
   /** page-hidden on the host: the CSS pauses classic dots and dashes, the chunk's css its animations. */
-  private _onVisibility = () => {
-    this.toggleAttribute('page-hidden', document.visibilityState === 'hidden');
-    this._syncSmil();
-  };
-
-  /** Watch the layer SVGs through the shared offscreen observer (no observer of our own). */
-  private _watchSmil(): void {
-    if (!this._smil) return;
-    for (const el of this.renderRoot.querySelectorAll('svg')) {
-      if (this._smilWatched.has(el)) continue;
-      if (watchOffscreen(el, this._syncSmil)) this._smilWatched.add(el);
-    }
-  }
-
-  /** SMIL ignores animation-play-state: pause the timeline of each layer SVG while off-screen or page-hidden. */
-  private _syncSmil = (): void => {
-    if (!this._smil) return;
-    const hidden = this.hasAttribute('page-hidden');
-    for (const el of this.renderRoot.querySelectorAll('svg')) {
-      if (hidden || el.hasAttribute('offscreen')) el.pauseAnimations?.();
-      else el.unpauseAnimations?.();
-    }
-  };
+  private _onVisibility = () => this.toggleAttribute('page-hidden', document.visibilityState === 'hidden');
 
   /** Watch the overlay's card content; true when it is a new one. */
   private _watch(): boolean {
@@ -352,51 +315,7 @@ export class McFlows extends LitElement {
     this._endsKey = '';
   }
 
-  /**
-   * Probe, once per browser, in the layout: offset-path on an SVG circle must land at the end of its
-   * 100 px path (else nothing travels), and (look flows only) offset-rotate: auto on a 20 x 4 rect
-   * at the end of a vertical 100 px path must measure about 4 wide and 20 tall (else turning shapes
-   * move by SMIL). Both run in one pass.
-   */
-  private _probeOffsetPath(): void {
-    const host = this.renderRoot.querySelector('svg.back');
-    if (!host) return;
-    const wantPath = this._offsetPathWorks === undefined && (this._lookDrawn || !!this.renderRoot.querySelector('circle.dot'));
-    const wantRot = this._lookDrawn && this._offsetPathWorks !== false && this._rotationWorks === undefined;
-    if (!wantPath && !wantRot) return;
-    const ns = 'http://www.w3.org/2000/svg';
-    let c: SVGElement | undefined;
-    let r: SVGElement | undefined;
-    if (wantPath) {
-      c = document.createElementNS(ns, 'circle');
-      c.setAttribute('class', 'probe');
-      c.setAttribute('r', '1');
-      c.setAttribute('style', "offset-path: path('M 0 0 L 100 0'); offset-distance: 100%; offset-rotate: 0deg; visibility: hidden");
-      host.append(c);
-    }
-    if (wantRot) {
-      r = document.createElementNS(ns, 'rect');
-      r.setAttribute('class', 'probe');
-      r.setAttribute('width', '20');
-      r.setAttribute('height', '4');
-      r.setAttribute('style', "offset-path: path('M 0 0 L 0 100'); offset-distance: 100%; offset-rotate: auto; visibility: hidden");
-      host.append(r);
-    }
-    const cb = c?.getBoundingClientRect();
-    const rb = r?.getBoundingClientRect();
-    const s = host.getBoundingClientRect();
-    c?.remove();
-    r?.remove();
-    // not laid out (hidden card, test DOM): ask again next time
-    if (!(s.width > 0) || (cb && !(cb.width > 0)) || (rb && !(rb.width > 0 && rb.height > 0))) return;
-    const scale = host instanceof SVGSVGElement && host.clientWidth > 0 ? s.width / host.clientWidth : 1;
-    if (cb) this._offsetPathWorks = cb.left + cb.width / 2 - s.left > 50 * scale;
-    if (rb && this._offsetPathWorks) this._rotationWorks = rb.width < rb.height;
-    if (!this._offsetPathWorks || this._rotationWorks === false) this.requestUpdate();
-  }
-
   protected updated(): void {
-    this._probeOffsetPath();
     // the card may have moved the overlay; new flows may name other endpoints (a value / colour
     // update alone moves nothing: the observers cover layout changes)
     const moved = this._watch();
@@ -415,8 +334,6 @@ export class McFlows extends LitElement {
       measured = true;
     }
     if (measured) this.requestUpdate();
-    this._watchSmil();
-    this._syncSmil();
   }
 
   /** Read the endpoint rects; re-render only when one changed. */
@@ -513,9 +430,6 @@ export class McFlows extends LitElement {
 
   protected render(): TemplateResult {
     const reduced = !!this._media?.matches;
-    const offsetPath =
-      this._offsetPathWorks !== false && typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('offset-path', 'path("M0 0")');
-    const motion: FlowMotionSupport = !offsetPath ? 'none' : this._rotationWorks === false ? 'smil' : 'css';
     const slot = flowLookSlot.get();
     const back: SVGTemplateResult[] = [];
     const front: SVGTemplateResult[] = [];
@@ -541,7 +455,7 @@ export class McFlows extends LitElement {
       return { f, i, look, arrow, geo: flowPath(a, b, sides, f.route, { t: spread[k], trim }) };
     });
     // moving elements per flow: classic dots, or what the look asks for after the tier caps (spin weighs 2)
-    const dotted = (f: ResolvedFlow) => f.active && f.direction !== 0 && !reduced && offsetPath && f.dots > 0;
+    const dotted = (f: ResolvedFlow) => f.active && f.direction !== 0 && !reduced && f.dots > 0;
     const wanted = items.map(({ f, look, geo }) => ({
       id: f.id,
       n: look ? slot!.requested(look, geo, reduced, quality) : dotted(f) ? f.dots : 0,
@@ -549,12 +463,11 @@ export class McFlows extends LitElement {
     }));
     const counts = allocateBudget(wanted);
     this._lookDrawn = items.some(({ look }) => look);
-    this._smil = this._lookDrawn && motion === 'smil';
     this.budget = new Map(wanted.map(({ id, n }) => [id, { requested: n, drawn: counts.get(id) ?? 0, quality }]));
     items.forEach(({ f, i, look, arrow, geo }) => {
       const count = counts.get(f.id) ?? 0;
       if (look) {
-        const parts = slot!.render(look, geo, { index: i, reduced, offsetPath, motion, count, dark: this.dark, quality });
+        const parts = slot!.render(look, geo, { index: i, reduced, offsetPath: true, motion: 'css', count, dark: this.dark, quality });
         const halo =
           !!this.selected && this.selected === f.id
             ? svg`<path class="sel" d=${geo.d} style="stroke-width: ${r1(f.width + 10)}px"></path>`
@@ -562,7 +475,7 @@ export class McFlows extends LitElement {
         (f.layer === 'front' ? front : back).push(svg`${halo}${parts.svg}`);
         if (parts.html) (f.layer === 'front' ? htmlFront : htmlBack).push(parts.html);
       } else {
-        (f.layer === 'front' ? front : back).push(this._flow(f, geo, i, reduced, offsetPath, count));
+        (f.layer === 'front' ? front : back).push(this._flow(f, geo, i, reduced, count));
       }
       const text = f.label;
       if (!text || f.labelPosition === 'hidden') return;
@@ -588,19 +501,19 @@ export class McFlows extends LitElement {
     `;
   }
 
-  private _flow(f: ResolvedFlow, geo: FlowGeometry, i: number, reduced: boolean, offsetPath: boolean, count: number): SVGTemplateResult {
+  private _flow(f: ResolvedFlow, geo: FlowGeometry, i: number, reduced: boolean, count: number): SVGTemplateResult {
     const color = f.color;
     const moving = f.active && f.direction !== 0;
     const dir = f.direction < 0 ? 'reverse' : 'normal';
-    const dots = moving && !reduced && f.dots > 0 && offsetPath;
+    const dots = moving && !reduced && f.dots > 0;
     const dash = moving && !reduced && !dots;
     const arrow = moving && reduced;
     const markerId = `mc-flow-arrow-${i}`;
     const frames = `mc-flow-${i}-mv`;
     // a <style> element swallows the rest of a lit template: it is a template of its own
-    const keyframes = dots ? svg`<style .textContent=${travelFrames(frames, geo.at, geo.length, false, geo.knots)}></style>` : nothing;
+    const keyframes = dots ? svg`<style .textContent=${travelFrames(frames, flattenPath(geo.d))}></style>` : nothing;
     const size = arrowSize(f.width);
-    // dots: 0 (or no offset-path): the line is the faint track, the dashes move over it in colour
+    // dots: 0: the line is the faint track, the dashes move over it in colour
     const lineColor = moving && !dash ? color : f.idleColor;
     const dashLen = Math.max(4, f.width * 2);
     const period = dashLen * 2.5;

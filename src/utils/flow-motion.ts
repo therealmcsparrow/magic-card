@@ -1,74 +1,81 @@
 /**
  * Compositor-friendly travel along a flow line. A dot or shape that rides a path is animated with
- * `transform` keyframes sampled from the path (translate, plus rotate for shapes that turn), not with
+ * `transform` keyframes taken from the path (translate, plus rotate for shapes that turn), not with
  * `offset-distance`: a transform animation runs on the compositor, so a running flow costs the main
- * thread nothing per frame (offset-distance re-runs style, layout and paint every frame, flow-look
+ * thread nothing per frame (offset-distance re-runs style, layout and paint every frame: flow-look
  * spike S3 and the 4x CPU measurements of the hands-on test). Pure: no DOM.
  */
 
-/** A place on a path: position in px and the direction of travel along the path in degrees. */
-export interface Pose {
+/** A place on a path; `a` is the direction of travel in degrees, for shapes that turn. */
+export interface Stop {
   x: number;
   y: number;
-  a: number;
+  a?: number;
 }
 
-/** Keyframe samples are about this far apart along the path (px) ... */
-const STEP = 6;
-/** ... and never more than this many per path. */
-const MAX_SAMPLES = 100;
-
-const r2 = (v: number): string => String(Math.round(v * 100) / 100 || 0);
-const deg = (rad: number): number => (rad * 180) / Math.PI;
+const r2 = (v: number): number => Math.round(v * 100) / 100 || 0;
 
 /**
- * `@keyframes name`: the path from 0 % to 100 % at constant speed. `turn`: 'auto' also rotates the
- * element to the direction of travel, 'reverse' to the opposite direction (a flow that runs backwards
- * plays these frames in reverse), false does not rotate. `knots` are arc lengths that always get a
- * keyframe (corners). Samples on a straight stretch are dropped: a straight line is two keyframes.
+ * `@keyframes name`: the stops from 0 % to 100 % at constant speed (the percent of a stop is its share
+ * of the polyline's length, so a straight line is just two keyframes). `reverse`: shapes face the
+ * other way (a flow that runs backwards plays these frames in reverse). Angles are made continuous.
  */
-export function travelFrames(name: string, at: (s: number) => Pose, length: number, turn: false | 'auto' | 'reverse', knots: readonly number[] = []): string {
-  const grid = new Set<number>([0, length]);
-  const n = Math.min(MAX_SAMPLES, Math.max(2, Math.ceil(length / STEP)));
-  for (let i = 1; i < n; i++) grid.add((length * i) / n);
-  for (const k of knots) if (k > 0 && k < length) grid.add(k);
-  const at0 = [...grid].sort((a, b) => a - b);
-  const extra = turn === 'reverse' ? 180 : 0;
-  // continuous angles: no 359 -> 0 jump between two samples
+export function travelFrames(name: string, P: readonly Stop[], reverse = false): string {
+  const cum = [0];
+  for (let i = 1; i < P.length; i++) cum.push(cum[i - 1] + Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y));
+  const total = cum[cum.length - 1];
   let prev = 0;
-  const poses = at0.map((s, i) => {
-    const p = at(s);
-    let a = p.a + extra;
-    if (i) a += Math.round((prev - a) / 360) * 360;
-    prev = a;
-    return { s, x: p.x, y: p.y, a };
+  const frames = P.map((p, i) => {
+    let turn = '';
+    if (p.a !== undefined) {
+      const a = p.a + (reverse ? 180 : 0);
+      prev = i ? a + Math.round((prev - a) / 360) * 360 : a;
+      turn = ` rotate(${r2(prev)}deg)`;
+    }
+    return `${total ? Math.round((cum[i] / total) * 1e5) / 1e3 : i ? 100 : 0}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn}}`;
   });
-  // a sample on the straight line between its neighbours (and not turning) adds nothing
-  const kept = poses.filter((p, i) => {
-    const q = poses[i - 1];
-    const z = poses[i + 1];
-    if (!q || !z) return true;
-    if (Math.abs(p.a - q.a) > 0.05 || Math.abs(z.a - p.a) > 0.05) return true;
-    const f = (p.s - q.s) / (z.s - q.s);
-    return Math.hypot(q.x + (z.x - q.x) * f - p.x, q.y + (z.y - q.y) * f - p.y) > 0.05;
-  });
-  const frames = kept.map((p) => `${r2((p.s / (length || 1)) * 100)}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn ? ` rotate(${r2(p.a)}deg)` : ''}}`);
   return `@keyframes ${name}{${frames.join('')}}`;
 }
 
-/** The pose function of a polyline (a lane beside the centre line): position by arc length. */
-export function polylineAt(P: ReadonlyArray<{ x: number; y: number }>): { at: (s: number) => Pose; length: number } {
-  const cum = [0];
-  for (let i = 1; i < P.length; i++) cum.push(cum[i - 1] + Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y));
-  const length = cum[cum.length - 1];
-  const at = (s: number): Pose => {
-    if (P.length < 2) return { x: P[0]?.x ?? 0, y: P[0]?.y ?? 0, a: 0 };
-    let i = 1;
-    while (i < P.length - 1 && cum[i] < s) i++;
-    const a = P[i - 1];
-    const b = P[i];
-    const f = cum[i] > cum[i - 1] ? Math.min(1, Math.max(0, (s - cum[i - 1]) / (cum[i] - cum[i - 1]))) : 0;
-    return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f, a: deg(Math.atan2(b.y - a.y, b.x - a.x)) };
-  };
-  return { at, length };
+/**
+ * The points of a path `d` as flow-geometry writes it (absolute M L H V C A; arcs are quarter turns,
+ * rx = ry): lines by their ends, curves and arcs cut into short straight pieces.
+ */
+export function flattenPath(d: string): Stop[] {
+  const P: Stop[] = [];
+  let x = 0;
+  let y = 0;
+  for (const [, c, args] of d.matchAll(/([MLHVCA])([^MLHVCA]*)/g)) {
+    const v = (args.match(/-?\d*\.?\d+/g) ?? []).map(Number);
+    if (c === 'C') {
+      for (let i = 1; i <= 24; i++) {
+        const t = i / 24;
+        const u = 1 - t;
+        const w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+        P.push({ x: w[0] * x + w[1] * v[0] + w[2] * v[2] + w[3] * v[4], y: w[0] * y + w[1] * v[1] + w[2] * v[3] + w[3] * v[5] });
+      }
+      [x, y] = v.slice(4);
+    } else if (c === 'A') {
+      const [r, , , , sweep, ex, ey] = v;
+      const h = Math.hypot(ex - x, ey - y) / 2 || 1;
+      const k = Math.sqrt(Math.max(0, r * r - h * h)) / h;
+      // the centre lies to one side of the chord: the one the sweep flag turns around
+      let cx = 0;
+      let cy = 0;
+      for (const g of [1, -1]) {
+        cx = (x + ex) / 2 - (g * k * (ey - y)) / 2;
+        cy = (y + ey) / 2 + (g * k * (ex - x)) / 2;
+        if (((x - cx) * (ey - cy) - (y - cy) * (ex - cx) > 0) === !!sweep) break;
+      }
+      const a0 = Math.atan2(y - cy, x - cx);
+      const da = (sweep ? 1 : -1) * (Math.PI / 2);
+      for (let i = 1; i <= 6; i++) P.push({ x: cx + r * Math.cos(a0 + (da * i) / 6), y: cy + r * Math.sin(a0 + (da * i) / 6) });
+      [x, y] = [ex, ey];
+    } else {
+      x = c === 'V' ? x : v[0];
+      y = c === 'H' ? y : c === 'V' ? v[0] : v[1];
+      P.push({ x, y });
+    }
+  }
+  return P;
 }

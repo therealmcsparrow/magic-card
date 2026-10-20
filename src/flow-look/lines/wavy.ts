@@ -27,5 +27,5 @@ export function waveLine(c: LineCtx): SVGTemplateResult {
     variants > 1
       ? svg`<g class="el an">${ds.map((d, k) => stroke(c, { d, w: c.w, cls: 'ln zz an', style: `animation-delay: ${(-k * 0.12).toFixed(2)}s` }))}</g>`
       : stroke(c, { d: ds[0], w: c.w });
-  return svg`${lines}${c.hl ? highlight(c, ds[0]) : ''}`;
+  return svg`${lines}${c.hl ? highlight(c, ds[0], l.wavelength / 3) : ''}`;
 }

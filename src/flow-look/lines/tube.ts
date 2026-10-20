@@ -1,6 +1,7 @@
 import { svg, type SVGTemplateResult } from 'lit';
 import { FLOW_LOOK_THEME } from '../../contracts/flow-look';
-import { at, fmt } from '../sampler';
+import { at, fmt, lane } from '../sampler';
+import { travelFrames } from '../../utils/flow-motion';
 import type { LineCtx } from '../registry';
 import { laneD, memo, span, stroke } from './util';
 
@@ -49,17 +50,19 @@ export function tube(c: LineCtx): SVGTemplateResult {
     <g mask="url(#${mid})">${stroke(c, { d: geo.d, w, color: T.tubeWall.paint, op: T.tubeWall.opacity })}</g>${mark}${bubbles(c, s0, s1)}`;
 }
 
-/** Bubbles ride three lanes inside the liquid at the flow speed (CSS offset-path, never rotated). */
+/** Bubbles ride three lanes inside the liquid at the flow speed (transform keyframes along each lane, never rotated). */
 function bubbles(c: LineCtx, s0: number, s1: number): SVGTemplateResult | '' {
   const n = c.nBubbles;
   if (!n || s1 - s0 < 4) return '';
   const room = Math.max(1, c.w - 4) / 4;
-  const lanes = [0, 1, 2].map((i) => memo(`b${c.geo.d}|${c.w}|${i}|${s0}|${s1}`, () => laneD(c, (i - 1) * room, s0, s1)));
+  const lanes = [0, 1, 2].map((i) => memo(`bp${c.geo.d}|${c.w}|${i}|${s0}|${s1}`, () => lane(c.S, (i - 1) * room, s0, s1)));
+  // one keyframe set per lane; a <style> element swallows the rest of a lit template: it is a template of its own
+  const keyframes = svg`<style .textContent=${lanes.map((p, i) => travelFrames(`${c.id}-b${i}`, p)).join('')}></style>`;
   const speed = c.f.speedS;
   const rMax = Math.max(1.5, c.w / 3);
-  return svg`<g class="bubbles" style="fill: #fff; fill-opacity: 0.55">${Array.from({ length: n }, (_, i) => {
+  return svg`${keyframes}<g class="bubbles" style="fill: #fff; fill-opacity: 0.55">${Array.from({ length: n }, (_, i) => {
     const dur = speed * (1.15 + 0.2 * (i % 3));
     const r = 1.5 + ((i * 7) % 5) * ((rMax - 1.5) / 4);
-    return svg`<circle class="dot an" r=${fmt(r)} style="offset-path: path('${lanes[i % 3]}'); animation-duration: ${dur.toFixed(3)}s; animation-delay: ${(-(dur * i) / n).toFixed(3)}s; animation-direction: ${c.dir}"></circle>`;
+    return svg`<circle class="dot an" r=${fmt(r)} style="animation-name: ${c.id}-b${i % 3}; animation-duration: ${dur.toFixed(3)}s; animation-delay: ${(-(dur * i) / n).toFixed(3)}s; animation-direction: ${c.dir}"></circle>`;
   })}</g>`;
 }

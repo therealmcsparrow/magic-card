@@ -8,7 +8,8 @@ import { unmix, type LineCtx } from './registry';
  * fading in 450 ms; `splash` adds 6 droplets that fly out 0.6 x size in the same time. It repeats
  * every time a shape arrives: the period is the travel time / shapes (evenly spaced shapes). Pure CSS
  * (transform and opacity on class `an`: paused offscreen, none under reduced motion, and not drawn
- * then). The keyframes are constant text with the generated flow id and numbers, inline in the
+ * then). The ring's stroke grows with it, 0 to 1.5 px: `vector-effect: non-scaling-stroke` would keep
+ * the animation off the compositor and cost the main thread every frame. The keyframes are constant text with the generated flow id and numbers, inline in the
  * group, so the shared css stays as it is. Not drawn while idle, in tier minimal, under pulse (resolve
  * sets arrival none), or when no shape travels.
  */
@@ -30,7 +31,7 @@ export function arrival(c: LineCtx): SVGTemplateResult | undefined {
   const anim = (name: string): string => `animation: ${c.id}-${name} ${fmt(period)}s ease-out infinite; opacity: 0`;
   const colour = (prop: string): string => `${prop}: ${col.paint}${col.opacity < 1 ? `; ${prop}-opacity: ${fmt(col.opacity)}` : ''}`;
   const R = l.arrivalSize / 2;
-  const ring = svg`<circle class="an" r=${fmt(R)} style=${`fill: none; ${colour('stroke')}; stroke-width: 1.5px; vector-effect: non-scaling-stroke; ${anim('rg')}; transform: scale(0)`}></circle>`;
+  const ring = svg`<circle class="an" r=${fmt(R)} style=${`fill: none; ${colour('stroke')}; stroke-width: 1.5px; ${anim('rg')}; transform: scale(0)`}></circle>`;
   const drops =
     l.arrival === 'splash'
       ? Array.from({ length: DROPS }, (_, i) => {
