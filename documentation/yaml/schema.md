@@ -871,7 +871,7 @@ A flow with a missing, unknown, hidden or identical `from` / `to` is not drawn. 
 | `from_anchor` | string | Unset: `box` for a wide look, else `icon` | `icon`: the module's icon, picture or dial (its box when it has none). `box`: the module's outer box. Any other value counts as unset. |
 | `to_anchor` | string | Unset: `box` for a wide look, else `icon` | Same as `from_anchor`, at the `to` module. |
 
-A wide look is `line_style` `tube`, `cable`, `neon` or `zigzag`, or `electric: true`, or any of `spacing_mode`, `spacing`, `size_variation`, `shape_alternate` or `motion` set in the flow (even to its default). Every other flow, including one with no look, ends at the icon. An explicit `icon` or `box` always wins. See [Attach to](../flows/options.md#attach-to).
+A wide look is `line_style` `tube`, `cable`, `neon` or `zigzag`, or a swarm: `spacing_mode: random`, a `size_variation` above 0, or a `shape_alternate`. `electric`, `spacing` and `motion` do not count. Every other flow, including one with no look, ends at the icon. An explicit `icon` or `box` always wins. See [Attach to](../flows/options.md#attach-to).
 
 ## Pop-up
 

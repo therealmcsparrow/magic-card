@@ -10,8 +10,9 @@ import type { FlowSide } from '../types';
  * ── 1.1.0 (CEO Ship Gate 2026-10-20): the default depends on the look ──
  * When from_anchor / to_anchor is NOT set (or unknown), a flow with a WIDE look defaults to `box`;
  * a thin look keeps `icon`. Wide = isWideFlowLook(flow): line_style tube, cable, neon or zigzag,
- * `electric: true`, or any swarm key set (spacing_mode, spacing, size_variation, shape_alternate,
- * motion). The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
+ * or a swarm: `spacing_mode: random`, `size_variation` above 0, or `shape_alternate` set (Lead
+ * decision, Fix round 1). `electric`, `spacing` and `motion` do not count, and neither does a swarm
+ * key at its default value. The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
  * removing the look removes the rule. An explicit `icon` or `box` always wins. The editor shows the
  * effective default in "Attach to"; it writes `icon` only when that differs from the look default
  * and removes the key when the pick equals the look default. Everything below is unchanged.
@@ -28,7 +29,7 @@ import type { FlowSide } from '../types';
  * Unset = `icon` for a thin look, `box` for a wide look (1.1.0; the editor writes `icon` only to
  * override a wide look). `box` = the module's outer box,
  * exactly as before 2026.10.11-beta.4 (pixel-identical: a config with `box` on both ends of every
- * flow renders as at base eab1c7b). Any other value is treated as the default (`icon`), the same
+ * flow renders as at base eab1c7b). Any other value is treated as the look default (`icon` thin, `box` wide), the same
  * rule as from_side (an unknown side is `auto`), and is kept in YAML untouched.
  * `icon` on a module without a main visual, or whose visual is hidden, missing, zero-sized or
  * clipped away, falls back to the box silently (no error, no hint at runtime).
@@ -107,17 +108,17 @@ import type { FlowSide } from '../types';
 
 export const FLOW_ANCHOR_CONTRACT = '1.1.0';
 
-/** YAML values of from_anchor / to_anchor. Unset (and anything unknown) = 'icon'. */
+/** YAML values of from_anchor / to_anchor. Unset (and anything unknown) = the look default (1.1.0). */
 export type FlowAnchor = 'icon' | 'box';
 
 export interface FlowAnchorConfig {
-  /** Where the line attaches at the `from` module; unset = icon (its main visual, else its box). */
+  /** Where the line attaches at the `from` module; unset = the look default (icon for a thin look, box for a wide one). */
   from_anchor?: FlowAnchor;
   /** Same for the `to` module. */
   to_anchor?: FlowAnchor;
 }
 
-/** Fields resolveFlow() adds to ResolvedFlow; present only when the YAML value is exactly 'box'. */
+/** Fields resolveFlow() adds to ResolvedFlow; present only when the end attaches to the box (YAML 'box', or the look default of a wide look). */
 export interface FlowResolvedAnchors {
   fromBox?: true;
   toBox?: true;
