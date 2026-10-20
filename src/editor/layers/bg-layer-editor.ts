@@ -36,6 +36,8 @@ export interface EditorHost {
   swap(i: number, next: BackgroundLayerConfig, message: string): void;
   preview?: PanPreview;
   setPreview(p?: PanPreview): void;
+  /** A live canvas draws the Preview (the studio); in the card dialog of Home Assistant there is none. */
+  canPreview?: boolean;
   /** Index with a blank state row waiting for its name. */
   blankRow?: number;
   addBlankRow(i: number): void;
@@ -234,11 +236,14 @@ function renderPanZoom(h: EditorHost, layer: BackgroundLayerConfig, i: number): 
             ${lyrSlider(h.idOf(i, 'dur'), t('Duration'), pz!.duration ?? 30, 10, 120, 's', (v) => set({ duration: v }))}
             ${lyrSwitch(h.idOf(i, 'alt'), t('Back and forth'), pz!.alternate !== false, (v) => set({ alternate: v ? undefined : false }))}
             ${lyrSwitch(h.idOf(i, 'idle'), t('Rest when nobody is there'), pz!.pause_when_idle === true, (v) => set({ pause_when_idle: v ? true : undefined }), t('Motion stops 2 minutes after the last touch, which saves power on a wall tablet.'))}
-            <div>
+            ${h.canPreview === false
+              ? nothing
+              : html`<div>
               <span class="lbl">${t('Preview (not saved)')}</span>
               ${lyrSeg(t('Preview'), prev, [{ value: 'play' as PanPreview, label: t('Play') }, { value: 'start' as PanPreview, label: t('Start') }, { value: 'end' as PanPreview, label: t('End') }], (v) => h.setPreview(prev === v ? undefined : v), 'preview')}
               <p class="help">${t('Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.')}</p>
-            </div>`
+              ${prev === 'play' ? html`<button type="button" class="lyr-btn" data-act="stop-preview" @click=${() => h.setPreview(undefined)}>${t('Stop preview')}</button>` : nothing}
+            </div>`}`
         : nothing}
     </div>
   </div>`;

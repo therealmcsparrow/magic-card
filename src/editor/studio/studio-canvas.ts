@@ -32,7 +32,7 @@ import { CanvasWidth, OPTION_LABELS, autoWidth } from './view-detect';
 import { t, tx } from '../i18n';
 import { CanvasLayers } from '../layers/canvas-layers';
 import { setLayerMeasurer, notifyLayerMeasure } from '../layers/layer-measure';
-import { requestOpenLayer, setStatus, clearStatuses, getPreview, onStatus } from '../layers/bg-status';
+import { requestOpenLayer, setStatus, clearStatuses, getPreview, onStatus, claimPreviewHost } from '../layers/bg-status';
 import { isAutomatic, placementOf } from '../layers/placement-model';
 import type { HereEntry } from '../layers/layers-here';
 import { layerEditorReady, loadLayerEditor } from '../layers/layer-editor-loader';
@@ -321,7 +321,12 @@ export class StudioCanvas extends LitElement {
     window.addEventListener('resize', this._queuePlace);
     setLayerMeasurer(this._layers.measure);
     void loadLayerEditor(); // prefetch: the Layers here sheet and the design panels live in a lazy chunk
-    this._stopPreview = onStatus(() => this._applyPreview());
+    const stop = onStatus(() => this._applyPreview());
+    const release = claimPreviewHost();
+    this._stopPreview = () => {
+      stop();
+      release();
+    };
   }
 
   private _stopPreview?: () => void;

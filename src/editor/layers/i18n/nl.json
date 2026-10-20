@@ -239,5 +239,6 @@
   "{name} restored.": "{name} hersteld.",
   "{n} of {max}": "{n} van {max}",
   "{n} set": "{n} ingesteld",
-  "{type}, layer {n}": "{type}, laag {n}"
+  "{type}, layer {n}": "{type}, laag {n}",
+  "Stop preview": "Voorbeeld stoppen"
 }

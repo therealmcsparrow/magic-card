@@ -10,7 +10,7 @@ import { m, t } from './i18n';
 import { renderLayerEditor, type EditorHost } from './bg-layer-editor';
 import { LAYER_TYPES, layerSummary } from './bg-layers-model';
 import { LIMIT_TEXT, addLayer, moveLayerIn, removeLayer, restoreLayer, setLayerKeys, statusSentence, thumbStyle, previewSrc } from './bg-layers-ops';
-import { getPreview, getStatus, onStatus, setPreview, takeOpenLayer, type PanPreview } from './bg-status';
+import { getPreview, getStatus, onStatus, previewAvailable, setPreview, takeOpenLayer, type PanPreview } from './bg-status';
 import { costFromBackdrop, type CostReason } from './cost';
 import { BACKDROP_LOOKS, addBackdropLook, type BackdropLook } from './looks';
 import { layerStyles } from './layer-styles';
@@ -74,6 +74,7 @@ export class McBgLayers extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._stop?.();
+    setPreview(undefined); // the preview belongs to this editor session
     this.removeEventListener('keydown', this._onKey);
     clearTimeout(this._timer);
   }
@@ -339,6 +340,8 @@ export class McBgLayers extends LitElement {
   }
 
   protected updated(): void {
+    // no layer has pan and zoom any more (turned off, removed): nothing left to preview
+    if (getPreview() && !this._list.some((l) => l.pan_zoom)) setPreview(undefined);
     const f = this._focus;
     if (!f) return;
     const rows = this.renderRoot.querySelectorAll<HTMLElement>('.row');
@@ -359,6 +362,7 @@ export class McBgLayers extends LitElement {
       swap: (i, n, msg) => this._swap(i, n, msg),
       preview: getPreview(),
       setPreview: (p?: PanPreview) => setPreview(p),
+      canPreview: previewAvailable(),
       blankRow: this._blank,
       addBlankRow: (i) => (this._blank = i),
       clearBlankRow: () => (this._blank = undefined),
@@ -376,6 +380,7 @@ export class McBgLayers extends LitElement {
   private _flip(key: '_pan' | '_yaml', i: number): void {
     const next = new Set(this[key]);
     if (!next.delete(i)) next.add(i);
+    else if (key === '_pan') setPreview(undefined); // collapsing the section ends the preview
     this[key] = next;
   }
 

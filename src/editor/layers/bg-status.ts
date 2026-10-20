@@ -25,6 +25,7 @@ export function getStatus(index: number): BgLayerStatus | undefined {
 
 export function clearStatuses(): void {
   statuses.clear();
+  preview = undefined;
   for (const fn of listeners) fn();
 }
 
@@ -55,6 +56,22 @@ export function setPreview(p: PanPreview | undefined): void {
   preview = p;
   for (const fn of listeners) fn();
 }
+
+/** Live canvases that draw the Preview (the studio canvas). The card dialog of Home Assistant has none: Play would do nothing there. */
+let previewHosts = 0;
+
+export function claimPreviewHost(): () => void {
+  previewHosts++;
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    previewHosts--;
+    if (!previewHosts) setPreview(undefined);
+  };
+}
+
+export const previewAvailable = (): boolean => previewHosts > 0;
 
 export function getPreview(): PanPreview | undefined {
   return preview;
