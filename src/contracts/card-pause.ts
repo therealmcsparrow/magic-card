@@ -3,6 +3,8 @@
  * (Architect-owned). ADR 0038 (addendum). CEO Plan Gate 2026-10-19 (00-ceo-decisions.md): a pause
  * button per card ships in this beta and stops every moving thing on the card. Shared seam with
  * task flow-slider-styles (flows, slider looks).
+ * r2 2026-10-20 (fix round B4, additive, still unreleased, so 1.0.0 in place): the `counted` option
+ * on watchOffscreen and the pauseOffscreen directive.
  *
  * ── One mechanism: paused = off screen ──
  * Every motion subsystem already pauses off screen through the shared offscreen observer (Core item
@@ -17,7 +19,16 @@
  * - setCardPaused(host, paused): records the state and re-reports every observed element inside that
  *   host at once: paused -> `offscreen` set and listener(false); resumed -> the remembered real state.
  * - watchOffscreen gains an optional third argument `{ pausable: false }` for content that updates
- *   but does not move (src/utils/timer.ts clocks and countdowns keep ticking). Default pausable.
+ *   but does not move (src/utils/timer.ts clocks and countdowns keep ticking; mc-value-bg's
+ *   sparkline background). Default pausable. A non-pausable element is never counted either.
+ * - (r2) `{ counted: false }` (watchOffscreen third argument, and the pauseOffscreen directive as
+ *   `pauseOffscreen({ counted: false })`) for an element that pauses with the card but is no sign
+ *   of motion on its own: it is left out of motionCount(host), so it never makes `auto` show the
+ *   button. Default counted. Users: the slider track parts (src/utils/slider-track.ts; the slider
+ *   look has no animation of its own, only transitions while the user drags) and the background
+ *   stack's host.observeOffscreen (src/layers/stack-host.ts; whether a layer moves, pan_zoom or a
+ *   refreshing camera, is the card's own motion-source check). Anything that does move on its own
+ *   must stay counted (rule 1).
  * So: flows (svg / html layers, pauseOffscreen), seasonal scenes and decorations, value backgrounds,
  * icon effects, weather icons, particles (live.ts), the sequence player and bg-stack (through
  * host.observeOffscreen) stop with no code of their own beyond what they do off screen today.
@@ -27,6 +38,8 @@
  *    is either watched through watchOffscreen / pauseOffscreen / bg-stack host.observeOffscreen, or
  *    sits in the card's own shadow tree under the CSS rule in 3. Own IntersectionObservers are not
  *    allowed for motion: video-bg-view.ts and the camera view move to watchOffscreen (task T10).
+ *    (r2) Such an element is counted (the default) unless the card's render already reports its
+ *    motion source (as for background layers).
  * 2. On listener(false): CSS animations paused (animation-play-state, via the `offscreen` attribute
  *    or the element's own class), WAAPI Animation.pause(), rAF loops stopped, <video>.pause(), motion
  *    timers cleared (bg-stack: pan/zoom, crossfade completes instantly, camera refresh timer and idle
@@ -62,8 +75,9 @@
  * - Shown when `pause_button` is `auto` (default) and the card has motion, or `always`; never with
  *   `hidden`. Card has motion = the render saw a motion source (animations / fx / v2 runtime,
  *   seasonal scene, particles, flows with moving shapes or dashes, background_layers with pan_zoom,
- *   a video-bg or a camera rendering as background) OR the observer has a pausable watched element
- *   inside the card (count kept per host; the card re-renders when it changes between 0 and 1).
+ *   a video-bg or a camera rendering as background) OR the observer has a pausable, counted watched
+ *   element inside the card (motionCount, kept per host; the card re-renders when it changes
+ *   between 0 and 1).
  *   Under `prefers-reduced-motion: reduce`, `auto` still shows it when a video or particles run.
  * - Studio canvas: shown and working (so authors see it), not selectable as a module.
  *
@@ -86,6 +100,7 @@
  */
 
 export const CARD_PAUSE_CONTRACT = '1.0.0';
+export const CARD_PAUSE_CONTRACT_REVISION = 2;
 
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
@@ -104,13 +119,21 @@ export interface PauseChangeDetail {
   paused: boolean;
 }
 
+/** (r2) Options of watchOffscreen and (counted only) the pauseOffscreen directive. */
+export interface OffscreenWatchOptions {
+  /** false: keeps running in a paused card (updates, does not move); never counted. Default true. */
+  pausable?: boolean;
+  /** false: pauses with the card but is left out of motionCount (no sign of motion on its own). Default true. */
+  counted?: boolean;
+}
+
 /** src/icons/offscreen.ts additions (Core item "Shared offscreen observer"). */
 export interface OffscreenPauseApi {
   /** Mark a <magic-card> host paused / playing and re-report its observed elements. */
   setCardPaused(host: Element, paused: boolean): void;
   isCardPaused(host: Element): boolean;
-  /** Pausable observed elements inside host (for `auto`). */
+  /** Pausable, counted observed elements inside host (for `auto`). */
   motionCount(host: Element): number;
-  /** Existing signature plus options; pausable defaults to true. */
-  watchOffscreen(el: Element, cb: (onScreen: boolean) => void, opts?: { pausable?: boolean }): boolean;
+  /** Existing signature plus options; pausable and counted default to true. */
+  watchOffscreen(el: Element, cb: (onScreen: boolean) => void, opts?: OffscreenWatchOptions): boolean;
 }

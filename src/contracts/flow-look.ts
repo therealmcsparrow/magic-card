@@ -15,13 +15,22 @@ import type { ResolvedFlow } from '../utils/flow';
  * amplitude cap at T only where T < 12; neon glow also lights the shapes; pixel spacing draws at
  * least one shape; icons travel upright under SMIL; round node 2/3 of cap_size; start arrowhead
  * points out of the line; cable outline at 0.5.
+ * r5 2026-10-20 (perf fix round, hands-on 42; still unreleased and nothing outside this branch
+ * depends on it, so 1.0.0 in place): travel is transform keyframes in each flow's own <style>
+ * (compositor), replacing offset-distance; the offset-path / rotation probe, the SMIL fallback and
+ * mc-flows' SMIL pause are gone, so the host always passes offsetPath: true and motion: 'css'
+ * (both options kept for compatibility, not produced); unset cap_size = 2 x width, at most 24 px
+ * (defaultCapSize, cap_size_default_max; was 3 x width); highlight dashes are travelling bars.
+ * Follow-up (separate Contract task, proj.M9): remove `offsetPath`, the 'smil' / 'none' values
+ * of FlowMotionSupport and the unreachable SMIL branch in src/flow-look/shapes/register.ts.
  *
  * Seam: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts overlay, both in
  * magic-card.js) keeps today's look (solid line, dots or moving dashes, reduced-motion arrow) and
  * owns one renderer slot (src/card/flow-look-slot.ts). The flow-look Module (lazy chunk
  * magic-card-flow-look.js, entry src/flow-look/chunk.ts, lazy-module 1.2.0 name 'flow-look';
  * 1.3.0 if the background-layers run merges first) fills the slot from install(). Nothing else
- * imports src/flow-look/**.
+ * imports src/flow-look/**. Both sides build travel keyframes with the shared pure helpers in
+ * src/utils/flow-motion.ts (travelFrames, flattenPath; magic-card.js, no DOM).
  *
  * ── YAML (flat keys on a flow, next to the existing ones; all optional) ──
  * FlowLookConfig below. A flow "has a look" when any FLOW_LOOK_KEYS key is not undefined
@@ -57,7 +66,7 @@ import type { ResolvedFlow } from '../utils/flow';
  * capped at T, so a short stub never gets a steep jump; long stretches keep the full amplitude
  * (up to 20 px) with the 12 px taper. Amplitude is also capped at 40 % of the local radius of
  * curvature (no loops). Computed once per geometry change, never per frame: the wave is still;
- * its motion is a moving highlight dash plus the shapes on the centre line. electric: three seeded
+ * its motion is a moving highlight plus the shapes on the centre line. electric: three seeded
  * zigzag variants stacked, switched by a CSS steps() opacity animation (no per-frame JS).
  * Double rail: exact offset curves at +-(rail_gap + width) / 2, loops cut, mitred inner corners.
  * Where parallel runs of one route lie closer than the rail offset (short elbows) the rails of
@@ -72,12 +81,14 @@ import type { ResolvedFlow } from '../utils/flow';
  * the offset polyline (colour position off by the wave's length ratio, a few %: accepted).
  * Segments are static (no frame cost).
  *
- * Caps (r4): start_cap / end_cap sit on the line's ends in the travel direction, size cap_size
- * (unset 2 x width, at most 24 px; r5, was 3 x width). round: a filled circle of diameter 2/3 x cap_size
- * with a 1 px ring in the card background colour. arrow: a filled triangle cap_size long; the end
- * arrow points forward along the tangent, the start arrow points out of the line (backwards,
- * away from the line), so both ends read as arrowheads of a two-headed line; the direction of
- * travel is carried by the end arrow and the shapes.
+ * Caps (r4, r5): start_cap / end_cap sit on the line's ends in the travel direction, size cap_size.
+ * Unset cap_size (r5, was 3 x width, a tube's arrowhead covered module text): defaultCapSize(width)
+ * = min(cap_size_default_max, cap_size_factor x width) = min(24, 2 x width) px; resolve() and the
+ * editor placeholder both use it. Set: 4-40 px as written. round: a filled circle of diameter
+ * 2/3 x cap_size with a 1 px ring in the card background colour. arrow: a filled triangle cap_size
+ * long; the end arrow points forward along the tangent, the start arrow points out of the line
+ * (backwards, away from the line), so both ends read as arrowheads of a two-headed line; the
+ * direction of travel is carried by the end arrow and the shapes.
  *
  * ── Quality tiers (r2, designer R1; deterministic, no frame-time probe) ──
  * H = the number of heavy flows among the card's resolved flows (visible or not): line tube or
@@ -86,11 +97,13 @@ import type { ResolvedFlow } from '../utils/flow';
  * - full (H <= 3): everything the YAML asks for.
  * - lite (3 < H <= 6): bubbles at most 2 per flow; flicker drawn as off; electric drawn as one
  *   still zigzag.
- * - minimal (H > 6): no bubbles, no moving highlight dash, no arrival ring or splash; travelling
+ * - minimal (H > 6): no bubbles, no moving highlight, no arrival ring or splash; travelling
  *   shapes at most 2 per flow; line style, level, static glow and the direction mark stay.
  * Tiers never change a line style (a tube stays a tube). Thresholds 3 and 6 are constants
  * (FLOW_QUALITY_THRESHOLDS); S3 showed the cost is the number of moving elements (about 8 ms/s of
  * main thread per element at 4x), which the 40 cap and these tiers bound, so no probe is needed.
+ * (r5) With transform keyframes a running flow measured about 0 % main thread at 4x (42), so the
+ * tiers now bound compositor layers, not main-thread time; they stay as specified.
  *
  * ── Colours and contrast (r2, designer R2; floor-safe) ──
  * Paint the chunk writes itself is hex, rgb() / rgba(), `var(--primary-text-color, #212121)` or
@@ -120,14 +133,12 @@ import type { ResolvedFlow } from '../utils/flow';
  * - mc-flows renders `<style>${slot.css}</style>` once in its shadow root while any flow has a
  *   look, and one HTML layer per z level (`div.html.back` z-index 0, `div.html.front` z-index 2,
  *   inset 0, pointer-events none, pauseOffscreen()) for `html` parts (MDI icon shapes, spike S1).
- * - (r3) _probeOffsetPath() also checks rotation, once, in the same pass: a 20 x 4 rect with
- *   offset-rotate: auto at the end of a vertical 100 px path must measure about 4 wide and 20 tall.
- *   Result -> opts.motion: 'css' (path and rotation work), 'smil' (path works, rotation fails),
- *   'none' (path fails: today's offsetPath false, moving dash instead). Classic dots never rotate
- *   and keep using the path result only.
- * - (r3) While any look flow renders with motion 'smil', mc-flows calls pauseAnimations() /
- *   unpauseAnimations() on its two SVGs whenever their `offscreen` attribute or its `page-hidden`
- *   host attribute changes (SMIL ignores animation-play-state).
+ * - (r5, replaces the r3 probe bullets) No motion probe and no layout reads: travel needs only CSS
+ *   transform animations, which every supported browser runs. mc-flows always passes
+ *   `offsetPath: true` and `motion: 'css'` to render(). Classic dots travel the same way: each
+ *   classic flow with dots writes its own `@keyframes` (travelFrames over flattenPath(geo.d)) in a
+ *   `<style>` next to its dots; the dash fallback is left only for `dots: 0`. mc-flows no longer
+ *   calls pauseAnimations() / unpauseAnimations() (there is no SMIL to pause).
  * - (r2) mc-flows reflects `page-hidden` on its host while document.visibilityState is 'hidden'
  *   (visibilitychange listener, removed on disconnect). flows-css.ts pauses the classic dots and
  *   dashes under :host([page-hidden]) too. The shared offscreen observer (Core) is not changed.
@@ -139,34 +150,46 @@ import type { ResolvedFlow } from '../utils/flow';
  *
  * ── Renderer rules (the chunk) ──
  * 1. Pure templates from (flow, geo, opts); no requestAnimationFrame loops, no timers, no layout
- *    reads. Motion is CSS: offset-distance, transform, opacity, stroke-dashoffset only.
- *    Exception (r3), only when opts.motion is 'smil': SVG shapes that turn with the path move by
- *    <animateMotion rotate="auto" path=...> (same duration, delay and direction as the CSS
- *    version); shapes that never turn (dot, bubble) and every other animation stay CSS. (r4) MDI
- *    icon shapes are HTML (no SMIL): under 'smil' they travel by CSS offset-path upright
- *    (offset-rotate 0deg), as if shape_icon_rotate were false; spin still applies. Under reduced
- *    motion the animateMotion elements are not rendered.
+ *    reads. Motion is CSS and stays on the compositor: transform and opacity only, with one
+ *    exception, the dashed / dotted line style sliding its own dash pattern by stroke-dashoffset
+ *    (main thread, same as the classic `dots: 0` dash; accepted). (r5) Travelling elements (dots,
+ *    shapes, tube bubbles, icon shapes, highlight bars) play `transform` keyframes sampled from the
+ *    centre line or the offset line: translate, plus rotate to the travel direction for shapes that
+ *    turn (src/flow-look/motion.ts stops(): a stop about every 5 px on curves and corner arcs, the
+ *    ends of straight pieces, and a snap to the new direction at a sharp corner). Each flow writes
+ *    its keyframes, named `mc-flow-<index>-<kind>` with numbers rounded to 0.01 px / 0.001 %, in a
+ *    `<style>` element of its own inside its template (per-instance geometry; deviates: lit.S7,
+ *    websec.M-SEC8 holds because no config text reaches it). Elements share one set of keyframes
+ *    per flow and are staggered by a negative animation-delay; a backwards flow plays them with
+ *    animation-direction reverse (turning shapes use a second set turned 180 degrees). Highlight
+ *    dashes are straight bars (at most 24 per line; on a wave or zigzag at most a third of the
+ *    wavelength long, so they do not bend at corners). No offset-path / offset-distance, no SMIL.
  * 2. No `filter` on an animated element or any ancestor of one. Shape glow and the neon mid layer
  *    are wider translucent strokes or shapes. (r2, S3) The neon outer layer may be a static
  *    blur(<= 8 px) when flicker is off; with flicker on it is stacked translucent strokes.
  *    (r4) On a neon line the travelling shapes also get the neon glow: a translucent halo shape
  *    of the neon glow size riding with each shape (the dot-glow pattern; it is the same moving
- *    element for the 40 budget, never a filter).
+ *    element for the 40 budget, never a filter). (r5) No `vector-effect: non-scaling-stroke` on an
+ *    animated element (it keeps a transform animation off the compositor): the arrival ring's
+ *    stroke scales with it.
  * 3. opts.reduced: nothing moves (no travel, highlight, bubbles, flicker, pulse, ripple, splash),
  *    travelling shapes are removed, so nothing spins either; the line stays in its style (wave
  *    keeps its shape, tube its level, neon full brightness), and a direction mark stays: the arrow
  *    end cap when set, else a 14 px chevron in the line colour every 160 px (at least one, at
  *    55 % on short lines), >= 3:1 against the surface. Idle (direction 0): still line in the idle
  *    colour, no shapes, bubbles hidden, liquid empty with the wall and a 2 px level mark at the
- *    start end kept (AC5).
- * 4. Every CSS animation in `css` pauses under `svg[offscreen]`, `div.html[offscreen]` and
- *    `:host([page-hidden])`, and is `animation: none` under `@media (prefers-reduced-motion:
- *    reduce)`. Flicker never exceeds 2 dips per second (WCAG 2.3.1).
+ *    start end kept (AC5). (r5) Reduced motion is decided in JS (no travelling elements are
+ *    rendered), so an inline animation-name can never outrank the reduced-motion CSS.
+ * 4. Every CSS animation of the chunk carries class `an` and pauses under `svg[offscreen]`,
+ *    `div.html[offscreen]` and `:host([page-hidden])` with `animation-play-state: paused
+ *    !important` (r5: inline `animation:` shorthands reset the play state, so the rule must win),
+ *    and is `animation: none` under `@media (prefers-reduced-motion: reduce)`. Flicker never
+ *    exceeds 2 dips per second (WCAG 2.3.1).
  * 5. Direction: start / end, caps, gradients and the tube fill follow the travel direction
- *    (direction -1: start is the `to` end). Shapes point along the path tangent (offset-rotate:
- *    auto, or animateMotion rotate="auto"; icons when shape_icon_rotate and motion is css),
- *    through elbow corners (AC6, AC7). Spin is a rotation on an inner element, added to the
- *    tangent.
+ *    (direction -1: start is the `to` end). Shapes point along the path tangent through elbow
+ *    corners (AC6, AC7): (r5) the rotate() in their transform keyframes; icons too when
+ *    shape_icon_rotate, else they travel upright (translate only). Spin is a second animation on
+ *    an inner element, added to the tangent (never on the travelling element itself).
  * 6. Every route (curve, straight, elbow) and both layers (AC4), through the sampler above.
  * 7. Keeps `g.flow[data-flow]` and `path.line` (studio flowAt() and the selection halo, which
  *    mc-flows still draws, rely on them). `path.line` is the centre line (may be transparent).
@@ -176,20 +199,24 @@ import type { ResolvedFlow } from '../utils/flow';
  * Frame budget (AC15, Sanne's wall tablet): a card with 6 tube or neon flows, bubbles on, holds
  * >= 50 fps with no frame over 50 ms at 4x CPU throttling on the gallery card built for it, and
  * costs 0 main-thread time per frame while off-screen or page-hidden. S3: 110-139 fps, worst
- * frame 35 ms, for 36-48 moving elements.
+ * frame 35 ms, for 36-48 moving elements. (r5, 42) Six heavy flows running: about 0 % main thread
+ * at 4x in headless Chrome (software drawing); a real tablet GPU is still to be checked by QA.
  * Device checks (QA, not provable by spike): Safari / iOS 16.4 rotation through elbows on the
  * gallery card; Chromium 85 floor.
  */
 
 export const FLOW_LOOK_CONTRACT = '1.0.0';
-export const FLOW_LOOK_CONTRACT_REVISION = 4;
+export const FLOW_LOOK_CONTRACT_REVISION = 5;
 
 export type FlowLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'wave' | 'zigzag' | 'tube' | 'neon' | 'cable';
 export type FlowShape = 'dot' | 'arrow' | 'chevron' | 'square' | 'diamond' | 'star' | 'comet' | 'spark' | 'bubble' | 'drop' | 'icon';
 export type FlowCap = 'none' | 'round' | 'arrow';
 /** (r2) Quality tier chosen by mc-flows from H. */
 export type FlowLookQuality = 'full' | 'lite' | 'minimal';
-/** (r3) How shapes move here (mc-flows' probe): CSS offset-path, SMIL for turning shapes, or no travel (moving dash). */
+/**
+ * (r3) How shapes move. (r5) The host always passes 'css' (transform keyframes); 'smil' and 'none'
+ * are kept for compatibility but never produced, and are removed by a follow-up Contract task.
+ */
 export type FlowMotionSupport = 'css' | 'smil' | 'none';
 
 /** (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
@@ -256,7 +283,7 @@ export const FLOW_LOOK_DEFAULTS = {
   start_cap: 'none',
   end_cap: 'none',
   cap_size_factor: 2, // cap_size unset: 2 x width, at most cap_size_default_max; set: 4-40 px (r5: was 3 x width, a tube's arrowhead covered module text)
-  cap_size_default_max: 24,
+  cap_size_default_max: 24, // (r5) px; upper bound of the unset default only, a set cap_size may go to 40
   shape: 'dot',
   shape_icon_rotate: true,
   shape_spin: false,
@@ -270,7 +297,7 @@ export const FLOW_LOOK_DEFAULTS = {
   width: { tube: 12, neon: 3, cable: 5 },
 } as const;
 
-/** The marker size when `cap_size` is unset: modest, 2 x the line width, at most 24 px. */
+/** (r5) The marker size when `cap_size` is unset: 2 x the line width, at most 24 px (resolve() and the editor). */
 export function defaultCapSize(width: number): number {
   return Math.min(FLOW_LOOK_DEFAULTS.cap_size_default_max, FLOW_LOOK_DEFAULTS.cap_size_factor * width);
 }
@@ -314,13 +341,13 @@ export interface FlowLookConfig {
   /** Caps at the start / end of the line, in the travel direction (start arrow points out of the line). */
   start_cap?: FlowCap;
   end_cap?: FlowCap;
-  /** Cap size (px); unset = 3 x width. A round cap is 2/3 of it across. */
+  /** Cap size (px, 4-40); unset = defaultCapSize(width): 2 x width, at most 24 (r5). A round cap is 2/3 of it across. */
   cap_size?: number;
   /** Travelling shape; unset = dot. */
   shape?: FlowShape;
   /** shape: icon, the MDI icon (mdi:name). */
   shape_icon?: string;
-  /** shape: icon, turn with the line (default true; false keeps it upright; upright anyway under the SMIL fallback). */
+  /** shape: icon, turn with the line (default true; false keeps it upright). */
   shape_icon_rotate?: boolean;
   /**
    * Spin (CEO 2026-10-19): star, square, diamond and icon shapes turn a full circle every 3 s on
@@ -382,6 +409,7 @@ export interface FlowLookResolved {
   colorTo?: string;
   startCap: FlowCap;
   endCap: FlowCap;
+  /** cap_size as set, else defaultCapSize(width) (r5). */
   capSize: number;
   shape: FlowShape;
   icon?: string;
@@ -397,15 +425,18 @@ export interface FlowLookResolved {
 }
 
 export interface FlowLookRenderOptions {
-  /** The flow's index on the card (unique ids: `mc-flow-<kind>-<index>`). */
+  /** The flow's index on the card (unique ids and keyframe names: `mc-flow-<index>-<kind>`). */
   index: number;
   reduced: boolean;
   /**
-   * offset-path works on SVG here (mc-flows' probe); false: no travelling shapes, a moving dash
-   * instead. Equals motion !== 'none'.
+   * (r5) Always true from the host: travel uses transform keyframes, which need no offset-path
+   * support. Kept for compatibility, not produced as false; removed by a follow-up Contract task.
    */
   offsetPath: boolean;
-  /** (r3) css / smil / none, from the extended probe (rule 1 exception for smil). */
+  /**
+   * (r5) Always 'css' from the host (no probe, no SMIL). 'smil' / 'none' are kept for
+   * compatibility, never produced; removed by a follow-up Contract task.
+   */
   motion: FlowMotionSupport;
   /** Moving elements this flow may draw (card budget applied). */
   count: number;
@@ -431,7 +462,7 @@ export interface FlowLookRenderer {
   /** Moving elements this flow wants after the tier caps, before the card budget (0 when idle or reduced). */
   requested(f: FlowWithLook, geo: FlowGeometry, reduced: boolean, quality: FlowLookQuality): number;
   render(f: FlowWithLook, geo: FlowGeometry, opts: FlowLookRenderOptions): FlowLookParts;
-  /** Styles for the mc-flows shadow root (rules 2-4). */
+  /** Styles for the mc-flows shadow root (rules 2-4); per-flow keyframes are not in it (rule 1). */
   readonly css: string;
 }
 
