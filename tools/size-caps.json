@@ -131,9 +131,9 @@
       "note": "95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)."
     },
     "magic-card-seasonal.js": {
-      "raw": 58368,
+      "raw": 72704,
       "ceiling": 81920,
-      "note": "57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11); ceiling 81,920 (plan chunk ceilings)."
+      "note": "71 KiB, CEO 2026-10-21 (CEO-2026-10-21-seasonal-raw): measured 69,155 at e4515c6 after the S1a moves out of the entry; was 58,368. Ceiling 81,920 (plan chunk ceilings)."
     },
     "magic-card-markdown.js": {
       "raw": 57344,
@@ -156,9 +156,9 @@
       "note": "48 KiB, measured 46,809 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB (S1a.3). Animation resolve, compiler, model and sequence player (ADR 0043). The plan ceiling is 81,920 B (lazy-module LAZY_CHUNK_CEILINGS); to be re-measured at S1a.close."
     },
     "magic-card-flow-look.js": {
-      "raw": 30720,
-      "ceiling": 30720,
-      "note": "30 KiB, CEO 2026-10-20 beta.5 (measured 30,088 + margin); was 29,696. The contract ceiling is 32,768 B; the ceiling here is the current cap (plan S0.1)."
+      "raw": 32768,
+      "ceiling": 32768,
+      "note": "32 KiB, CEO 2026-10-21 (CEO-2026-10-21-flow-look-raw/-ceiling): measured 30,728 at e4515c6; was 30,720 (beta.5). Equals the contract ceiling 32,768."
     },
     "magic-card-slider-look.js": {
       "raw": 25600,
@@ -196,5 +196,56 @@
       "note": "i18n icon-library table chunk (contract i18n 1.0.0 r3). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB (I11); was 23,552."
     }
   },
-  "ceo_decisions": []
+  "ceo_decisions": [
+    {
+      "id": "CEO-2026-10-21-seasonal-raw",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "seasonal 58,368→72,704, svg-icon 33,792→41,984, flow-look 30,720→32,768",
+      "field": "/files/magic-card-seasonal.js/raw",
+      "from": 58368,
+      "to": 72704,
+      "reason": "S1a: the seasonal code moved out of the entry (Architect 42: no alternative; measured 69,155 at e4515c6). Ceiling stays 81,920."
+    },
+    {
+      "id": "CEO-2026-10-21-svg-icon-raw",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "seasonal 58,368→72,704, svg-icon 33,792→41,984, flow-look 30,720→32,768",
+      "field": "/files/magic-card-svg-icon.js/raw",
+      "from": 33792,
+      "to": 41984,
+      "reason": "S1a.5: the chunk carries its own SVG sanitiser copy (AC14) because it loads without anim (Architect 42)."
+    },
+    {
+      "id": "CEO-2026-10-21-svg-icon-ceiling",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "seasonal 58,368→72,704, svg-icon 33,792→41,984, flow-look 30,720→32,768",
+      "field": "/files/magic-card-svg-icon.js/ceiling",
+      "from": 33792,
+      "to": 41984,
+      "reason": "S1a.5: as the raw cap (Architect 42)."
+    },
+    {
+      "id": "CEO-2026-10-21-flow-look-raw",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "seasonal 58,368→72,704, svg-icon 33,792→41,984, flow-look 30,720→32,768",
+      "field": "/files/magic-card-flow-look.js/raw",
+      "from": 30720,
+      "to": 32768,
+      "reason": "S1a: 30,728 after the F1 dedupe, 8 B over; 32,768 is the contract ceiling (Architect 42)."
+    },
+    {
+      "id": "CEO-2026-10-21-flow-look-ceiling",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "seasonal 58,368→72,704, svg-icon 33,792→41,984, flow-look 30,720→32,768",
+      "field": "/files/magic-card-flow-look.js/ceiling",
+      "from": 30720,
+      "to": 32768,
+      "reason": "S1a: equals the flow-look contract ceiling (Architect 42)."
+    }
+  ]
 }
