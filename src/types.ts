@@ -206,6 +206,9 @@ export interface FlowConfig extends FlowLookConfig {
   /** Anchor sides (auto = the facing pair). */
   from_side?: 'auto' | FlowSide;
   to_side?: FlowConfig['from_side'];
+  /** Where the line attaches (flow-anchor 1.0.0): unset = the module's icon, `box` = its outer box. */
+  from_anchor?: 'icon' | 'box';
+  to_anchor?: 'icon' | 'box';
   route?: 'curve' | 'straight' | 'elbow';
   /** Value source; no entity = always flowing at `speed`. */
   entity?: string;

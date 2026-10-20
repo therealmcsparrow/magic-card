@@ -2,6 +2,7 @@ import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { FlowConfig, HomeAssistant, MagicCardConfig } from '../../types';
 import type { FlowBudget } from '../../contracts/flow-look';
+import { FLOW_ANCHOR_TYPES } from '../../contracts/flow-anchor';
 import { FLOW_LOOK_EDITOR_TAG } from '../../contracts/look-editor';
 import { notice } from '../../ui-kit';
 import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
@@ -39,6 +40,10 @@ const SIDES: OptMark[] = [
   { value: 'right', label: m('Right') },
   { value: 'bottom', label: m('Bottom') },
   { value: 'left', label: m('Left') },
+];
+const ANCHORS: OptMark[] = [
+  { value: 'icon', label: m('Icon or picture') },
+  { value: 'box', label: m('Module box') },
 ];
 const LABELS: OptMark[] = [
   { value: 'none', label: m('None') },
@@ -420,7 +425,31 @@ export class FlowsEditor extends LitElement {
           ? nothing
           : html`<p class="help error" id=${hintId}>${t('Module not found')}</p>`}
       ${locked ? html`<p class="help" id=${lockedId}>${t('Modules marked (no id) come from the template. {hint} to connect it.', { hint: t(TEMPLATE_ID_HINT) })}</p>` : nothing}
+      ${this._anchorField(index, f, which, modules)}
     `;
+  }
+
+  /** Whether the module picked at this end has a main visual a line can attach to (flow-anchor 1.0.0). */
+  private _anchorable(f: FlowConfig, which: 'from' | 'to', modules: FlowModuleOption[]): boolean {
+    const v = f[which];
+    const type = typeof v === 'string' && v ? modules.find((o) => o.value === v)?.type : undefined;
+    return !!type && FLOW_ANCHOR_TYPES.includes(type);
+  }
+
+  /** "Attach to": Icon or picture (the default, no key) or Module box. An unknown stored value shows as the default and stays until the user picks. */
+  private _anchorField(index: number, f: FlowConfig, which: 'from' | 'to', modules: FlowModuleOption[]): TemplateResult | typeof nothing {
+    if (!this._anchorable(f, which, modules)) return nothing;
+    const key = `${which}_anchor` as const;
+    const id = `flow-${index}-${which}-anchor`;
+    const value = f[key] === 'box' ? 'box' : 'icon';
+    return this._keyField(
+      index,
+      f,
+      key,
+      t('Attach to'),
+      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === 'box' ? 'box' : undefined }), `flow-${index}-anchor-help`),
+      id,
+    );
   }
 
   /** The fields of the Look group that exist today (Colour ... Dot size); the fallback when the look editor is not there. */
@@ -501,6 +530,9 @@ export class FlowsEditor extends LitElement {
             <div>${this._endpoint(index, f, 'from', modules)}</div>
             <div>${this._endpoint(index, f, 'to', modules)}</div>
           </div>
+          ${this._anchorable(f, 'from', modules) || this._anchorable(f, 'to', modules)
+            ? html`<p class="help" id=${id('anchor-help')}>${t("Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.")}</p>`
+            : nothing}
           ${this._keyField(
             index,
             f,
