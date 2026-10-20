@@ -59,7 +59,7 @@ import type { MagicModule } from '../modules/module-types';
  * 1.4.0 r4 (2026-10-20, no API change; 39-architect-dup-rulings.md, ADR 0045): `anim` is the parent chunk of 'anim-runtime', 'particles'
  * and the editor chunk (their literal import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out
  * of them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon geometry, read by the editor
- * through svgIconApi()) and seasonal (CardSeasonal, SeasonalBudget, sceneDecorations, sceneFlashes, seasonalSeed; S1a.4). metChunk takes
+ * through svgIconApi()) and seasonal (CardSeasonal, SeasonalBudget, sceneDecorations, sceneFlashes, seasonalSeed, seasonalPreviewDate, setSeasonalPreviewDate; S1a.4). metChunk takes
  * a LazyChunkName or OnDemandChunkName. r3 and r4 land together at S1a close.
  *
  * ── Core (magic-card.js) ──

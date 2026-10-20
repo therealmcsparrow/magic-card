@@ -10,6 +10,9 @@
  * band any scene the config can show would need, so the box is the same before and after the chunk lands.
  */
 
+/** The window event the seasonal chunk fires when the editor's preview date changes (state: src/utils/seasonal-preview.ts, seasonal chunk only). */
+export const SEASONAL_PREVIEW_EVENT = 'mc-seasonal-preview';
+
 /** Ids of the animation presets that draw a seasonal scene: every scene name that has a preset, plus `weather` and `daynight`. */
 export const SEASONAL_PRESET_IDS: readonly string[] = [
   'winter', 'spring', 'summer', 'autumn', 'christmas', 'new_year', 'valentine', 'easter', 'halloween',

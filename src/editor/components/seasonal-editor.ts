@@ -4,9 +4,10 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalSceneSetting, SeasonalSetting } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import { autoScene, combineList, DEFAULT_CALENDAR, hemisphereOf, normalizeSeasonal, parseRange, SEASONAL_PICKS, zonedDay } from '../../utils/seasonal';
-import { SEASONAL_PREVIEW_EVENT } from '../../utils/seasonal-preview';
+import { SEASONAL_PREVIEW_EVENT } from '../../utils/seasonal.needs';
 import { SCENES } from '../../utils/seasonal-scenes';
-import { seasonalPreviewDate, setSeasonalPreviewDate } from '../../utils/seasonal-preview';
+import { seasonalApi } from '../../card/seasonal-seam';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { fieldReset } from './field-reset';
 
 import './entity-picker';
@@ -173,8 +174,13 @@ export class SeasonalEditor extends LitElement {
   @state() private _draft: Partial<Record<SeasonalHoliday, string>> = {};
   @state() private _preview = '';
 
+  /** The preview date lives in the seasonal chunk (one copy, read by the cards); nothing is set while it is not loaded. */
+  private _setPreview(d: Date | undefined): void {
+    void lazyChunks.seasonal.load().then((ok) => ok && seasonalApi()?.setSeasonalPreviewDate(d));
+  }
+
   private _onPreviewEvent = () => {
-    const d = seasonalPreviewDate();
+    const d = seasonalApi()?.seasonalPreviewDate();
     this._preview = d ? isoDay(d) : '';
   };
 
@@ -188,7 +194,7 @@ export class SeasonalEditor extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener(SEASONAL_PREVIEW_EVENT, this._onPreviewEvent);
     // the preview date belongs to this editing session only
-    if (this._preview) setSeasonalPreviewDate(undefined);
+    seasonalApi()?.setSeasonalPreviewDate(undefined);
   }
 
   /** The config as an object; a malformed `combine` (one name, junk) read as a list. */
@@ -229,7 +235,7 @@ export class SeasonalEditor extends LitElement {
 
   /** What auto shows on the preview date (else today). */
   private _today(): string {
-    const d = seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
+    const d = seasonalApi()?.seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
     const scene = autoScene(d, this._cfg);
     const l = SCENES[scene]?.label;
     return l === undefined ? (LABEL[scene] === undefined ? scene : t(LABEL[scene])) : lt(l);
@@ -440,7 +446,7 @@ export class SeasonalEditor extends LitElement {
     return html`<div class="field">
       <div class="field-head">
         <label for=${id}>${t('Preview date')}</label>
-        ${fieldReset(t('Preview date'), !!this._preview, () => setSeasonalPreviewDate(undefined))}
+        ${fieldReset(t('Preview date'), !!this._preview, () => this._setPreview(undefined))}
       </div>
       <input
         class="input"
@@ -450,7 +456,7 @@ export class SeasonalEditor extends LitElement {
         @change=${(e: Event) => {
           const v = (e.target as HTMLInputElement).value;
           const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-          setSeasonalPreviewDate(m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12) : undefined);
+          this._setPreview(m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12) : undefined);
         }}
       />
       <p class="help">${t('Shows Auto on another day in this preview only. Not saved.')}</p>
