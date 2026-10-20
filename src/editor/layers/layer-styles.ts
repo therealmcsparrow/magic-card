@@ -82,7 +82,7 @@ export const layerStyles: CSSResult = css`
       .warnrow {
         margin: 0;
         padding: 8px 10px;
-        border: 1px solid color-mix(in srgb, var(--mc-warn-ink) 40%, transparent);
+        border: 1px solid var(--mc-warn-ink);
         border-radius: var(--mc-radius);
         background: var(--mc-warn-tint);
         font-size: 0.8125rem;
@@ -175,11 +175,6 @@ export const layerStyles: CSSResult = css`
         font-weight: 600;
         cursor: pointer;
         text-align: start;
-      }
-      @media (hover: hover) {
-        .disc:hover {
-          background: color-mix(in srgb, var(--mc-text) 8%, var(--mc-surface-2));
-        }
       }
       .chev {
         flex: none;
@@ -291,5 +286,16 @@ export const layerStyles: CSSResult = css`
       }
       .group-head h3 {
         flex: 1;
+      }
+      /* the softer border and the hover bar need color-mix (Chromium 111); older browsers keep the solid border and no hover change */
+      @supports (color: color-mix(in srgb, red, red)) {
+        .warnrow {
+          border-color: color-mix(in srgb, var(--mc-warn-ink) 40%, transparent);
+        }
+        @media (hover: hover) {
+          .disc:hover {
+            background: color-mix(in srgb, var(--mc-text) 8%, var(--mc-surface-2));
+          }
+        }
       }
 `;
