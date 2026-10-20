@@ -8,6 +8,10 @@ export type RGB = [number, number, number];
 /** Surfaces a look is checked against (card background, light and dark; the tool for flows uses the same). */
 export const SURFACE_LIGHT: RGB = [255, 255, 255];
 export const SURFACE_DARK: RGB = [28, 28, 28];
+/** The lightest light card (a light grey theme card); white passes whenever this does. */
+export const LIGHT_CARD: RGB = [242, 242, 242];
+/** Black over the theme primary on a light card: HA's blue goes from 2.4:1 to 3.2:1 on #f2f2f2. */
+export const PRIMARY_SHADE = 0.15;
 
 const byte = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
 

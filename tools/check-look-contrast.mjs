@@ -11,9 +11,9 @@
 //     thumbColours(), text on a fill 4.5:1.
 //  3. Text parts: the in-track value chip (surface colour on text colour) and big-fill text on the worst fill
 //     sample, 4.5:1.
-// A preset accent colour (yellow, orange, cyan) is made for dark cards: it fails the build on the dark surfaces and is
-// a "note" on the light ones, where the outline, the wall or the lift carries the part. Everything theme-derived is
-// judged on all four surfaces. Exit code 1 when any "FAIL" line is printed.
+// A preset accent colour (yellow, orange, cyan) is made for dark cards; on a light card the renderers lift it (flows:
+// src/flow-look/light-lift.ts, sliders: lift() and a black shade over the theme primary in src/slider-look/view.ts) and
+// the lifted colour is judged here. Everything below 3:1 on any of the four surfaces is a FAIL. Exit code 1 when any "FAIL" line is printed.
 import path from 'node:path';
 import { register } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -24,7 +24,8 @@ const load = (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 const { FLOW_PRESETS } = await load('src/look-editor/presets.ts');
 const { SLIDER_PRESETS } = await load('src/look-editor/slider/presets.ts');
 const { FLOW_LOOK_THEME } = await load('src/contracts/flow-look.ts');
-const { parseColour, ratio, lift, readableOn, thumbColours } = await load('src/slider-look/colour.ts');
+const { parseColour, ratio, lift, readableOn, thumbColours, LIGHT_CARD, PRIMARY_SHADE } = await load('src/slider-look/colour.ts');
+const { liftColour } = await load('src/flow-look/light-lift.ts');
 
 const verbose = process.argv.includes('--verbose');
 const SURFACES = [
@@ -74,26 +75,33 @@ const allFlowColours = new Set();
 for (const p of FLOW_PRESETS) for (const c of flowColours(p.values)) allFlowColours.add(c);
 for (const s of SURFACES.filter((x) => !x.dark)) {
   for (const c of allFlowColours) {
-    const line = parseColour(c);
+    const line = parseColour(liftColour(c));
     const core = over([0, 0, 0], line, FLOW_LOOK_THEME.neonCoreLightShade.opacity);
     check(`neon core (${c} + black ${FLOW_LOOK_THEME.neonCoreLightShade.opacity}) on ${s.name}`, ratio(core, s.rgb), 3);
   }
 }
 
 // 2. Flow presets ---------------------------------------------------------------------------------------------------
+// On a light card the renderer lifts line and gradient-end colours (src/flow-look/light-lift.ts); shape colours keep
+// their own card-coloured outline and are judged on the dark surfaces only. Every light line below 3:1 is a FAIL.
 for (const p of FLOW_PRESETS) {
   const v = p.values;
   for (const c of flowColours(v)) {
     const rgb = parseColour(c);
+    const line = c === v.shape_color && c !== v.color && c !== v.color_to ? undefined : parseColour(liftColour(c));
     for (const s of SURFACES) {
-      check(`flow preset ${p.id}: ${c} on ${s.name}`, ratio(rgb, s.rgb), 3, s.dark ? 'FAIL' : 'note');
+      if (s.dark) check(`flow preset ${p.id}: ${c} on ${s.name}`, ratio(rgb, s.rgb), 3);
+      else if (line) check(`flow preset ${p.id}: ${c} lifted on ${s.name}`, ratio(line, s.rgb), 3);
     }
   }
 }
 
 // 3. Slider presets ---------------------------------------------------------------------------------------------------
 for (const p of [{ id: '(default)', values: {} }, ...SLIDER_PRESETS]) {
-  const fill = parseColour(p.values.slider_color) ?? PRIMARY;
+  const own = parseColour(p.values.slider_color);
+  const fill = own ?? PRIMARY;
+  // the light-card fill the view draws: a readable colour lifted to 3:1 on #f2f2f2, the theme primary under a black shade
+  const lightFill = own ? lift(own, LIGHT_CARD, 3) : over([0, 0, 0], PRIMARY, PRIMARY_SHADE);
   const trackStyle = p.values.track_style;
   for (const s of SURFACES) {
     const surface = s.rgb;
@@ -104,9 +112,8 @@ for (const p of [{ id: '(default)', values: {} }, ...SLIDER_PRESETS]) {
       check(`slider preset ${p.id}: handle ring on ${s.name}`, ratio(t.ring, surface), 3);
       check(`slider preset ${p.id}: handle icon on face, ${s.name}`, ratio(t.icon, t.face), 4.5);
     }
-    // Fill extent: the fill colour itself is carried by the 55 % outline on thin / pill / segmented / glass and by the
-    // light's colour lift; the bare colour is a note on the surfaces it does not reach 3:1 on.
-    check(`slider preset ${p.id}: fill ${p.values.slider_color ?? 'primary'} on ${s.name}`, ratio(fill, surface), 3, 'note');
+    // Fill extent: 3:1 on every surface (the view lifts it on a light card).
+    check(`slider preset ${p.id}: fill ${p.values.slider_color ?? 'primary'} on ${s.name}`, ratio(s.dark ? fill : lightFill, surface), 3);
   }
   // Text on the big fill: white or black, 4.5:1 on the worst sample (solid, brightness ramp dark end, kelvin ends).
   if (trackStyle === 'big-fill') {
@@ -118,5 +125,4 @@ for (const p of [{ id: '(default)', values: {} }, ...SLIDER_PRESETS]) {
 }
 
 console.log(`\ncheck-look-contrast: ${checks} checks on ${SURFACES.map((s) => s.name).join(', ')} | ${fails} FAIL, ${notes} note${notes === 1 ? '' : 's'}`);
-if (notes && !verbose) console.log('(note = a preset accent colour below 3:1 on a light card where the part has its own outline or lift; run with --verbose for every line)');
 process.exit(fails ? 1 : 0);

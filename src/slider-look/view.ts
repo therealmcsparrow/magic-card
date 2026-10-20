@@ -10,7 +10,7 @@ import { entityDisplayName, formatEntityValue } from '../utils/entity-value';
 import { safeColor } from '../utils/animation';
 import { currentRenderContext, currentRenderPass } from '../services/render-context';
 import { t } from '../card/i18n';
-import { css, lift, parseColour, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
+import { css, lift, LIGHT_CARD, parseColour, PRIMARY_SHADE, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
 import { bigFillColours, bigFillIcon, fillSamples } from './big-fill';
 import { createLive, type Live } from './live';
 import { ShapeBox, trackShape } from './shape';
@@ -143,6 +143,10 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     const own = parseColour(entityStateColor(stateObj));
     if (own) fill = css(lift(own, surface, 3));
   }
+  // a light card: the fill reaches 3:1 on the card (a colour we can read is lifted, the theme primary gets a black shade)
+  const own3 = dark ? undefined : parseColour(fill);
+  const lifted = own3 ? lift(own3, LIGHT_CARD, 3) : undefined;
+  if (lifted && lifted !== own3) fill = css(lifted);
   const dir = vertical ? 'to top' : 'to right';
   const attr = c.attribute;
   const light = stateObj?.entity_id.startsWith('light.');
@@ -159,6 +163,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       sampleMode = 'kelvin';
     }
   }
+  if (!dark && !grad && fill === DEFAULT_FILL) grad = `linear-gradient(rgba(0,0,0,${PRIMARY_SHADE}),rgba(0,0,0,${PRIMARY_SHADE})), linear-gradient(${fill}, ${fill})`;
   const fillRgb = readColour(fill);
   const th = fillRgb ? thumbColours(fillRgb, surface) : undefined;
   const face = th ? css(th.face) : 'var(--text-primary-color, #fff)';
