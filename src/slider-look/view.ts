@@ -319,7 +319,6 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       look.blur && look.style === 'glass' ? 'mc-sl--blur' : '',
       labels.length ? 'mc-sl--labels' : ticks.size ? 'mc-sl--ticks' : '',
       bubble ? 'mc-sl--bubble' : '',
-      bf && vertical && look.showIcon && look.iconPos === 'center' ? 'mc-sl--iconc' : '',
     ].filter(Boolean).join(' '),
     parts,
     onInput,
