@@ -15,7 +15,7 @@
       "raw": 503361
     },
     "final_cap": 61440,
-    "current_stage": "S0",
+    "current_stage": "S1a",
     "stages": [
       {
         "id": "S0",
@@ -26,9 +26,10 @@
       },
       {
         "id": "S1a",
-        "cap": null,
+        "cap": 127235,
         "target": 117760,
-        "landed_commit": null
+        "landed_commit": "09a85ba",
+        "measured": 127235
       },
       {
         "id": "S1b",
@@ -45,8 +46,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 129897,
-      "measured": 129897
+      "cap": 106378,
+      "measured": 106378
     }
   },
   "files": {
