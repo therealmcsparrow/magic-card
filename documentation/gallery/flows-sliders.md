@@ -505,7 +505,7 @@ rows:
             text: Zigzag
             design: { font_size: 17px, font_weight: "700", color: "#e6edf7" }
           - type: text
-            text: "Line style zigzag; the top-right line is electric."
+            text: "Line style zigzag; the bottom-right line is electric."
             design: { font_size: 12px, color: "#8a98ad" }
   - id: top
     column_widths: [52px, 1fr, 52px]
