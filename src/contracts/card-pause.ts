@@ -66,10 +66,10 @@
  * - A native <button> rendered by Core as the last child of ha-card (outside .mc-card-content), so it
  *   sits above every layer: position absolute, z-index 6 (over overlays, flows labels and the stale
  *   badge), 6 px from the chosen corner, 28 x 28 px visual and at least 24 x 24 px target (44 x 44 px
- *   hit area under `pointer: coarse` via a transparent outline box). Icon mdi:pause / mdi:play,
+ *   hit area on every pointer via a transparent ::after box; under `auto` the button sits 2 px, not 6 px, from its corner so it covers less of a corner icon). Icon mdi:pause / mdi:play,
  *   white on rgba(0,0,0,.6) circle (>= 3:1 against both the icon and a white or black backdrop: the
- *   circle carries a 1 px rgba(255,255,255,.7) ring), aria-pressed, aria-label "Pause motion" /
- *   "Play motion" (card i18n namespace), visible focus ring (2 px, 2 px offset). Keyboard: in the
+ *   circle carries a 1 px rgba(255,255,255,.7) ring), aria-pressed, one fixed aria-label "Pause motion" in both
+ *   states (WCAG 4.1.2; card i18n namespace), visible focus ring (2 px, 2 px offset). Keyboard: in the
  *   tab order after the card content; Enter / Space toggle. pointerdown / click stop propagation so
  *   card, row and module actions never fire.
  * - Shown when `pause_button` is `auto` (default) and the card has motion, or `always`; never with
