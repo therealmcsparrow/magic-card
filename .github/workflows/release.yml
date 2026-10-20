@@ -46,6 +46,12 @@ jobs:
       - name: Dist size budget
         run: npm run size
 
+      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in (browsers.S10, AC13)
+        # parse and token rules only; the debt-growth check against main is the validate workflow's (the checkout here has no main to compare with)
+        run: |
+          npm run syntax:selftest
+          node tools/check-es-syntax.mjs --no-base
+
       - name: i18n placement (runtime, tables and call sites per built file)
         # reads the module list of the build above (contract i18n r3, D7)
         run: node tools/check-i18n.mjs --ci --placement

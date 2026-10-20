@@ -82,6 +82,33 @@ jobs:
           fi
       - name: Dist size budget
         run: npm run size
+      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in (browsers.S10, AC13)
+        # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
+        # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit
+        # before) and a base that predates the debt file (bootstrap) skip the growth check, with a notice.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          npm run syntax:selftest
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): es-syntax debt growth not compared"
+            node tools/check-es-syntax.mjs --no-base
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif ! git cat-file -e "$base:tools/es-syntax-debt.json"; then
+            echo "::notice::base $base has no tools/es-syntax-debt.json yet (bootstrap): debt growth not compared"
+            node tools/check-es-syntax.mjs --no-base
+          else
+            ES_SYNTAX_BASE="$base" node tools/check-es-syntax.mjs --require-base
+          fi
       - name: Size gate self-test (raised cap, unlisted file, other zlib)
         run: npm run size:selftest
       - name: Committed dist matches the build

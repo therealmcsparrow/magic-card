@@ -161,7 +161,10 @@ function geometryOf(doc: AnimationDoc) {
 }
 type Geometry = ReturnType<typeof geometryOf>;
 
-const clone = (doc: AnimationDoc): AnimationDoc => structuredClone(doc);
+// structuredClone is Chromium 98; the floor is 85 (tools/check-es-syntax.mjs). An animation document is plain data: objects, arrays, numbers, strings, booleans.
+const deepCopy = <T>(v: T): T =>
+  Array.isArray(v) ? (v.map(deepCopy) as T) : v !== null && typeof v === 'object' ? (Object.fromEntries(Object.entries(v).map(([k, x]) => [k, deepCopy(x)])) as T) : v;
+const clone = (doc: AnimationDoc): AnimationDoc => deepCopy(doc);
 
 /** styleDoc options: the document id (default the entry's) and the user's glow colour (the entry's Color). */
 export interface StyleOptions {
