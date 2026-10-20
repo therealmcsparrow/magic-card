@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.11-beta.5 (2026-10-20, pre-release)
 
 ### Changed
 -   **Pause button keeps a strip.** While `pause_button` is `auto` or `always`, the card keeps a 24 px strip at the button's edge (the top for a top corner, the bottom for a bottom corner). Under `auto` the strip stays even when no button shows, so the layout does not move when motion starts or stops. Cards with `auto` or `always` are therefore taller by that strip. `hidden` reserves nothing. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
