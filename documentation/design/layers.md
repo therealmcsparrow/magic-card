@@ -120,17 +120,17 @@ Each card can show a Pause motion button. It pauses everything on the card that 
 
 | Key | Values | Default | Effect |
 | --- | --- | --- | --- |
-| `pause_button` | `auto`, `always`, `hidden` | `auto` | `auto` shows the button on every card that has motion. `always` shows it even when nothing moves. `hidden` removes it. |
+| `pause_button` | `auto`, `always`, `hidden` | `hidden` | `auto` shows the button on every card that has motion. `always` shows it even when nothing moves. `hidden` (the default) shows no button. |
 | `pause_button_corner` | `bottom-left`, `bottom-right`, `top-left`, `top-right` | `bottom-left` | The corner of the card where the button sits. |
 
 In the editor, the settings are in the card's Design tab, Effects group, as "Pause button" (Automatic, Always, Hidden) and "Corner".
 
-A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. Cards that existed before this version show the button too, because `auto` is the default.
+A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. The button is off until you turn it on: the default is `hidden`.
 
-- The button is a small round control in the chosen corner. Tab reaches it after the card's content. Enter or Space toggles it.
+- The button is a small round control in the chosen corner. Its name is always "Pause motion"; a screen reader hears whether it is pressed. Its touch area is 44 by 44 pixels. Tab reaches it after the card's content. Enter or Space toggles it.
 - Pressing it does not trigger the tap action of the card or module under it.
 - Under reduced motion, `auto` shows the button only when a video or particles run.
-- `hidden` removes the button, and the card plays even if it was paused before. The editor warns: "Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds."
+- `hidden` shows no button, and the card plays even if it was paused before. When you pick Hidden in the editor it warns: "Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds."
 - Editing the card's config starts the card playing again.
 - The paused state is remembered for each card in this browser.
 

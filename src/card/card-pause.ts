@@ -39,7 +39,7 @@ function storage(fn: (s: Storage) => void): void {
 export class CardPause {
   paused = false;
   private _key = '';
-  private _mode: PauseButtonMode = 'auto';
+  private _mode: PauseButtonMode = 'hidden';
   private _moves = false;
   private _shown = false;
   private _timer?: number;
@@ -66,7 +66,7 @@ export class CardPause {
 
   /** Start of a render: read the keys, apply the state to the host and the observer. True while paused. */
   begin(c: CardPauseKeys): boolean {
-    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : 'auto';
+    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : 'hidden';
     this._moves = false;
     return this._apply();
   }
@@ -102,7 +102,7 @@ export class CardPause {
     if (!show) return nothing;
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
     const label = t('Pause motion');
-    return html`<button type="button" class="mc-pause" data-corner=${corner} ?data-auto=${auto} aria-pressed=${on ? 'true' : 'false'}
+    return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
   }

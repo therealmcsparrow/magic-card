@@ -356,15 +356,15 @@ export function renderCardDesign(
     // viewer pause button (card-pause 1.0.0): a card setting, not part of a rule's design
     pause_button: () => {
       if (src.rule) return nothing;
-      const cur = config.pause_button === 'always' || config.pause_button === 'hidden' ? config.pause_button : 'auto';
+      const cur = config.pause_button === 'always' || config.pause_button === 'auto' ? config.pause_button : 'hidden';
       const modes: Array<[PauseButtonMode, string]> = [['auto', t('Automatic')], ['always', t('Always')], ['hidden', t('Hidden')]];
       return html`<div class="field" data-field="pause_button">
         ${renderFieldHead(t('Pause button'), 'pause_button', syncCtx)}
         <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help">
-          ${modes.map(([m, label]) => html`<button type="button" role="radio" aria-checked=${cur === m ? 'true' : 'false'} @click=${() => update('pause_button', m === 'auto' ? undefined : m)}>${label}</button>`)}
+          ${modes.map(([m, label]) => html`<button type="button" role="radio" aria-checked=${cur === m ? 'true' : 'false'} @click=${() => update('pause_button', m === 'hidden' ? undefined : m)}>${label}</button>`)}
         </div>
         <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t('Never shown.') : t('Shown while the card has motion. Viewers can pause it.')}</p>
-        ${cur === 'hidden'
+        ${config.pause_button === 'hidden'
           ? html`<p class="help warn" role="note" data-warn="pause-hidden">${t('Hide the pause button only if nothing on the card moves for more than 5 seconds.')}</p>`
           : nothing}
       </div>`;

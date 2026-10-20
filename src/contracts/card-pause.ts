@@ -66,14 +66,14 @@
  * - A native <button> rendered by Core as the last child of ha-card (outside .mc-card-content), so it
  *   sits above every layer: position absolute, z-index 6 (over overlays, flows labels and the stale
  *   badge), 6 px from the chosen corner, 28 x 28 px visual and at least 24 x 24 px target (44 x 44 px
- *   hit area on every pointer via a transparent ::after box; under `auto` the button sits 2 px, not 6 px, from its corner so it covers less of a corner icon). Icon mdi:pause / mdi:play,
+ *   hit area on every pointer via a transparent ::after box). Icon mdi:pause / mdi:play,
  *   white on rgba(0,0,0,.6) circle (>= 3:1 against both the icon and a white or black backdrop: the
  *   circle carries a 1 px rgba(255,255,255,.7) ring), aria-pressed, one fixed aria-label "Pause motion" in both
  *   states (WCAG 4.1.2; card i18n namespace), visible focus ring (2 px, 2 px offset). Keyboard: in the
  *   tab order after the card content; Enter / Space toggle. pointerdown / click stop propagation so
  *   card, row and module actions never fire.
- * - Shown when `pause_button` is `auto` (default) and the card has motion, or `always`; never with
- *   `hidden`. Card has motion = the render saw a motion source (animations / fx / v2 runtime,
+ * - Shown when `pause_button` is `auto` and the card has motion, or `always`; never with
+ *   `hidden`, which is the default (CEO 2026-10-20: an author turns the button on). Card has motion = the render saw a motion source (animations / fx / v2 runtime,
  *   seasonal scene, particles, flows with moving shapes or dashes, background_layers with pan_zoom,
  *   a video-bg or a camera rendering as background) OR the observer has a pausable, counted watched
  *   element inside the card (motionCount, kept per host; the card re-renders when it changes
@@ -82,7 +82,7 @@
  * - Studio canvas: shown and working (so authors see it), not selectable as a module.
  *
  * ── YAML (card level) ──
- *   pause_button: auto | always | hidden          default auto
+ *   pause_button: auto | always | hidden          default hidden
  *   pause_button_corner: bottom-left | bottom-right | top-left | top-right   default bottom-left
  * Editor: card Design tab, Effects group: "Pause button" (Automatic / Always / Hidden) and "Corner".
  * Help for Hidden: "Viewers can no longer stop the motion on this card. Only hide it if nothing on
