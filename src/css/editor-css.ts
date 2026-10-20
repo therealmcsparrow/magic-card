@@ -1036,6 +1036,7 @@ const pickerLocalStyles = css`
     padding: 8px;
     display: grid;
     align-content: start;
+    grid-auto-rows: max-content;
     gap: 2px;
   }
 

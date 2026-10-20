@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Entity picker window is wider.** The entity picker opened in the narrowest window size, so long entity names ran into the next row and long entity ids wrapped. It now opens in a wider window, ids stay on one line with an ellipsis and show in full on hover, and list rows grow with their content so wrapped names no longer overlap the next entry on narrow screens.
+
 ## 2026.10.11-beta.5 (2026-10-20, pre-release)
 
 ### Changed
