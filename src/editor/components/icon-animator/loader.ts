@@ -6,7 +6,7 @@ import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-stack';
 import { readAnimations } from '../../../anim-studio/entries';
 import { animationLibrary } from '../../../services/animation-library';
-import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';
+import { svgIconApi } from '../../../utils/svg-icon-loader';
 import { customAnimationIds } from '../../../utils/custom-animations';
 
 /*
@@ -21,6 +21,8 @@ import { customAnimationIds } from '../../../utils/custom-animations';
  * utils/animation-presets); everything else comes in here (short keys: their names are bytes in
  * magic-card.js).
  */
+type IconApi = NonNullable<ReturnType<typeof svgIconApi>>;
+
 export const host = {
   LitElement,
   html,
@@ -28,8 +30,8 @@ export const host = {
   editorSystem,
   readAnimations,
   library: animationLibrary,
-  resolveIcon: resolveIconGeometry,
-  setIcon: setIconGeometry,
+  resolveIcon: (...a: Parameters<IconApi['resolveIconGeometry']>) => svgIconApi()!.resolveIconGeometry(...a),
+  setIcon: (...a: Parameters<IconApi['setIconGeometry']>) => svgIconApi()!.setIconGeometry(...a),
   customIds: customAnimationIds,
 };
 export type IconAnimatorHost = typeof host;

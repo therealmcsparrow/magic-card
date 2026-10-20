@@ -7,7 +7,7 @@ import { entityStateColor } from '../../utils/entity-color';
 import { hasIconFx } from '../../icons/render-icon';
 import { autoDeviceAnim, autoDeviceRule } from '../../icons/device-anim';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
-import { onIconGeometry, resolveIconGeometry } from '../../icons/icon-source';
+import { svgIconApi } from '../../utils/svg-icon-loader';
 import { sanitizeSvg, SVG_MAX_BYTES } from '../../icons/svg-sanitize';
 import { fieldReset } from './field-reset';
 import { getFullPath, hasTemplate, isNotSynced, type SyncContext } from '../../utils/sync-path';
@@ -371,10 +371,10 @@ export class IconFxEditor extends LitElement {
     this._unlisten = undefined;
     this._noShape = false;
     if (!ref) return;
-    this._unlisten = onIconGeometry(ref, () => {
+    this._unlisten = svgIconApi()!.onIconGeometry(ref, () => {
       if (this._shapeFor === ref) this._noShape = false;
     });
-    void resolveIconGeometry(ref).then((g) => {
+    void svgIconApi()!.resolveIconGeometry(ref).then((g) => {
       if (this._shapeFor === ref) this._noShape = !g;
     });
   }

@@ -107,7 +107,7 @@ module.exports = (env, argv) => {
         { test: /\.ts$/, include: path.resolve(__dirname, 'src'), enforce: 'pre', use: path.resolve(__dirname, 'tools/i18n-loader.cjs') },
         // the card (src/card, src/css, src/modules; S1a.1, checked by tools/dom-diff.mjs), the entity source field (editor chunk, card entity), theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
         ...(isProduction
-          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/card'), path.resolve(__dirname, 'src/css'), path.resolve(__dirname, 'src/modules'), path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit'), path.resolve(__dirname, 'src/look-editor'), path.resolve(__dirname, 'src/editor/components/entity-source.ts'), path.resolve(__dirname, 'src/editor/components/mc-anchor-grid.ts'), path.resolve(__dirname, 'src/editor/layers')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
+          ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/card'), path.resolve(__dirname, 'src/css'), path.resolve(__dirname, 'src/modules'), path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit'), path.resolve(__dirname, 'src/look-editor'), path.resolve(__dirname, 'src/flow-look'), path.resolve(__dirname, 'src/slider-look'), path.resolve(__dirname, 'src/editor/components/entity-source.ts'), path.resolve(__dirname, 'src/editor/components/mc-anchor-grid.ts'), path.resolve(__dirname, 'src/editor/layers')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
         {
           test: /\.css$/,
@@ -142,7 +142,7 @@ module.exports = (env, argv) => {
             }),
           ]
         : [],
-      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk
+      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (ADR 0045: a chunk that always loads after another is its child)
       splitChunks: false,
       runtimeChunk: false,
     },

@@ -1,4 +1,6 @@
 import { VERSION } from '../version';
+import type { LazyChunkControl } from './lazy-chunk';
+import { lazyChunks } from './lazy-chunks';
 
 /*
  * The card editor (magic-card-editor, every module's settings tabs, the editor CSS and js-yaml) is a
@@ -24,7 +26,20 @@ interface EditorChunk {
   labelsReady(): Promise<boolean>;
 }
 
-const importEditor = (): Promise<EditorChunk> => import(/* webpackChunkName: "editor" */ '../editor/editor-entry');
+/**
+ * The editor chunk is a child of `anim` (ADR 0045, lazy-module 1.4.0 r4): its import() sits in src/anim-studio/anim-chunk.ts,
+ * so `anim` and `svg-icon` (the one copy of the icon source, read through svgIconApi()) load first. Either one failing is an
+ * editor load failure: false, the same warning, retried on the next call, and HA falls back to its YAML editor.
+ */
+/** Load a parent; one that has failed gets another attempt (a plain load() would hand back its failed verdict). */
+const ensure = (c: LazyChunkControl): Promise<boolean> => (c.failed() ? c.retry() : c.load());
+
+const importEditor = (): Promise<EditorChunk> =>
+  Promise.all([ensure(lazyChunks.anim), ensure(lazyChunks['svg-icon'])]).then(([a, s]) => {
+    const m = lazyChunks.anim.module() as { importEditor(): Promise<EditorChunk> } | undefined;
+    if (!a || !s || !m) throw new Error('editor parents');
+    return m.importEditor();
+  });
 
 let importer: () => Promise<EditorChunk> = importEditor;
 let pending: Promise<boolean> | undefined;

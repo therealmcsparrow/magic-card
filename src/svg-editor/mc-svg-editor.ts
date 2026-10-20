@@ -8,7 +8,7 @@ import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
 import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
-import { resolveIconGeometry } from '../icons/icon-source';
+import { svgIconApi } from '../utils/svg-icon-loader';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
@@ -398,7 +398,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   async openIcon(ref: string, first = false): Promise<boolean> {
-    const g = await resolveIconGeometry(ref.trim());
+    const g = await svgIconApi()!.resolveIconGeometry(ref.trim());
     if (!g) {
       this.startError = t('Could not find "{name}". Check the name, or wait for the icon packs to load.', { name: ref.trim() });
       this.startMode = 'icon';

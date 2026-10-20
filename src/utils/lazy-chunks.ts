@@ -1,9 +1,12 @@
-import type { LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
+import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
 import { provideRuntimeChunk } from './anim-runtime-loader';
+import type * as AnimChunk from '../anim-studio/anim-chunk';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
 import { provideParticlesChunk } from './particles-loader';
 import { provideShapeChunk } from './shape-custom-loader';
 import { provideSvgIconChunk } from './svg-icon-loader';
+
+type AnimModule = typeof AnimChunk;
 
 /*
  * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
@@ -32,13 +35,30 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
 };
 
 /** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
+/**
+ * anim-runtime and particles are children of `anim` (ADR 0045): their import()s sit in src/anim-studio/anim-chunk.ts.
+ * The importer calls it synchronously (no await or .then first), so a retry's `r=` reaches the request (proj.M12 f);
+ * it rejects while `anim` is not installed (the loader slots load `anim` first).
+ */
+const viaAnim = <M extends LazyChunkModule>(pick: (a: AnimModule) => () => Promise<M>) => (): Promise<M> => {
+  const a = lazyChunks.anim.module() as AnimModule | undefined;
+  return a ? pick(a)() : Promise.reject(new Error('anim not installed'));
+};
+
+/** The slot control of a child of `anim`: everything as is, but load() loads `anim` first and stays false when it fails. */
+const afterAnim = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.anim.load().then((ok) => ok && c.load()),
+});
+
+/** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
 export const onDemandChunks = {
-  'anim-runtime': lazyChunk('anim-runtime', () => import(/* webpackChunkName: "anim-runtime" */ '../anim-runtime')),
-  particles: lazyChunk('particles', () => import(/* webpackChunkName: "particles" */ '../particles')),
+  'anim-runtime': lazyChunk('anim-runtime', viaAnim((a) => a.importRuntime)),
+  particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
   'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
 };
-provideRuntimeChunk(onDemandChunks['anim-runtime']);
-provideParticlesChunk(onDemandChunks.particles);
+provideRuntimeChunk(afterAnim(onDemandChunks['anim-runtime']));
+provideParticlesChunk(afterAnim(onDemandChunks.particles));
 provideShapeChunk(onDemandChunks['shape-custom']);
 provideSvgIconChunk(lazyChunks['svg-icon']);
 

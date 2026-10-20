@@ -43,19 +43,24 @@ import type { MagicModule } from '../modules/module-types';
  * the notice element (sections "Failure, retry and timeout" and "import() sites").
  * 1.4.0 r3 (2026-10-20, text only, no API change; 35-architect-s1a0-rulings.md): a request that never settles is waited on, never
  * replaced (section "Failure, retry and timeout"); the on-demand loader slots are the ADR 0043 seam (section "import() sites").
- * 1.4.0 (S1a.3, ADR 0043, Core list change): LazyChunkName gains 'anim' (dist/magic-card-anim.js, ceiling 81,920 B, chunk entry
+ * 1.4.0 r4 (S1a.3, ADR 0043, Core list change approved at the Plan Gate): LazyChunkName gains 'anim' (dist/magic-card-anim.js, ceiling 81,920 B, chunk entry
  * src/anim-studio/anim-chunk.ts). It holds the animation resolve (src/anim-studio/resolve.ts), the document compiler and model
  * it calls (compile, model, model-v2-core, css-keyframes), the custom-animation stylesheet and the sequence player. It defines no
  * element and fills no slot: the card reads the module through lazyChunks.anim.module() and draws a plain card until it has
  * installed. Its needs() is hasAnimations (src/utils/animation.needs.ts): a non-empty `animations` list or the legacy
  * `animation_preset`, on any design the config walk reaches (card, rows, columns, modules, `hover`, `conditional[].design`,
  * conditional_appearance rules). The hook points of the compiler stay in Core (src/utils/anim-hooks.ts).
- * 1.4.0 r3 (2026-10-20, additive, no version change; S1a.5): LazyChunkName gains 'svg-icon' (dist/magic-card-svg-icon.js, ceiling
+ * 1.4.0 r4 (2026-10-20, additive, no version change; S1a.5): LazyChunkName gains 'svg-icon' (dist/magic-card-svg-icon.js, ceiling
  * 65,536 B, chunk entry src/icons/chunk.ts). It holds the icon source (packs, the `mcu:` library client, own SVG), <mc-svg-icon>
  * and the SVG sanitiser. Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`, `svg`, any icon reference that is not a
  * plain MDI id). A plain icon never loads it: renderIcon keeps <ha-icon>, no request (AC1). RenderContext gains the optional
  * `metChunk(name)`: a render that meets a feature whose chunk is not ready (a predicate miss, backstop rule 3) tells the card,
  * which then shows that chunk's failure notice if it fails.
+ * 1.4.0 r4 (2026-10-20, no API change; 39-architect-dup-rulings.md, ADR 0045): `anim` is the parent chunk of 'anim-runtime', 'particles'
+ * and the editor chunk (their literal import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out
+ * of them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon geometry, read by the editor
+ * through svgIconApi()) and seasonal (CardSeasonal, SeasonalBudget, sceneDecorations, sceneFlashes, seasonalSeed; S1a.4). metChunk takes
+ * a LazyChunkName or OnDemandChunkName. r3 and r4 land together at S1a close.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -67,7 +72,7 @@ import type { MagicModule } from '../modules/module-types';
  *   after a successful load (1.4.0: kept through a failure, so a later success still runs it).
  * - src/utils/lazy-chunks.ts: the chunk table, one `lazyChunk()` per LazyChunkName, each with its
  *   literal `import(/* webpackChunkName: "<name>" *\/ '<entry>')`. Nothing else calls import() for
- *   these entries.
+ *   these entries (r4: except the children of `anim`, section "import() sites").
  * - src/modules/module-registry.ts: `registerLazy(stub, chunk)`, `provideView(type, view)`,
  *   `prefetch(config)`, `isReady(type)`. get / getAll / has / search / createDefault /
  *   getMetadata are unchanged and include lazy entries from module evaluation on (AC7, AC8).
@@ -231,7 +236,7 @@ import type { MagicModule } from '../modules/module-types';
  *   default LazyChunkManifest. Entries keep fixed names.
  *
  * ── (1.4.0) import() sites (AC9) ──
- * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table) and the manifest check in
+ * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table), src/anim-studio/anim-chunk.ts (r4) and the manifest check in
  *   src/utils/lazy-chunk.ts. S1a.0 moves anim-runtime, particles and shape-custom onto lazyChunk(): their
  *   literal import() sits in the table too (src/utils/lazy-chunks.ts `onDemandChunks`, OnDemandChunkName),
  *   and the three loaders no longer call import(). The loaders do not import the table: it fills a slot in
@@ -240,7 +245,11 @@ import type { MagicModule } from '../modules/module-types';
  *   resolve false or undefined and never throw; only magic-card.js, which evaluates the table, may rely on a load. The animation studio bundle
  *   imports a loader, and the table would pull every card chunk entry into its chunk graph (the studio and
  *   several chunks grew by 8 to 60 KB when it did); a bundle without the table has no chunk and loads nothing.
- *   src/utils/editor-loader.ts keeps its own retry and stays a registered site. Editor side: the
+ *   (r4) The literal import()s of 'anim-runtime', 'particles' and the editor chunk sit in src/anim-studio/anim-chunk.ts (importRuntime,
+ *   importParticles, importEditor). The table's importers for 'anim-runtime' and 'particles' call them in the same synchronous call, so a
+ *   retry's `r=` reaches the request (proj.M12 f), and they reject while `anim` is not installed; their loader slots load `anim` first and
+ *   resolve false/undefined when it fails. src/utils/editor-loader.ts loads `anim` and `svg-icon` first, keeps its own retry, and is no
+ *   longer an import() site. Editor side: the
  *   existing loaders (transfer, preset-catalogue, icon-animator, look-editor, layer-editor,
  *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
  *   i18n tables) are registered sites. The ESLint rule (no-restricted-syntax ImportExpression with an
@@ -249,7 +258,7 @@ import type { MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 2;
+export const LAZY_MODULE_CONTRACT_REVISION = 4;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';

@@ -15,3 +15,12 @@ export function install(): void {}
 export { resolveAnimations } from './resolve';
 export { adoptAnimationSheet, useAnimationCss } from '../card/custom-anim-sheet';
 export { stopSequences, syncSequences } from '../card/sequence-player';
+
+/*
+ * Parent of anim-runtime, particles and editor (lazy-module 1.4.0 r4, ADR 0045). The three literal import()s sit here,
+ * so webpack leaves every module this chunk holds out of them. Each only returns the import() promise: the chunk table
+ * (src/utils/lazy-chunks.ts) and src/utils/editor-loader.ts call them in the same synchronous call as their retry.
+ */
+export const importRuntime = () => import(/* webpackChunkName: "anim-runtime" */ '../anim-runtime');
+export const importParticles = () => import(/* webpackChunkName: "particles" */ '../particles');
+export const importEditor = () => import(/* webpackChunkName: "editor" */ '../editor/editor-entry');

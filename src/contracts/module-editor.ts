@@ -24,6 +24,7 @@ import type { TransferChunk } from './preset-transfer';
  *   src/utils/editor-loader.ts. Memoised; false on failure and retried on the next call. The chunk's
  *   EDITOR_VERSION must equal magic-card.js VERSION; a mismatch counts as a failure with the console
  *   hint "Magic Card was updated, reload the page".
+ * - (r3, 2026-10-20, 39-architect-dup-rulings.md) loadEditor() loads the `anim` and `svg-icon` chunks first and calls anim's importEditor(); the editor chunk is a child of `anim` (ADR 0045) and reads icon geometry through svgIconApi(), never its own icon-source copy. Either chunk failing is an editor load failure (false, HA's YAML editor).
  * - `MagicCard.getConfigElement(): Promise<HTMLElement>` awaits loadEditor and throws when it is
  *   false, so HA falls back to its YAML editor. getStubConfig stays synchronous in magic-card.js.
  * - Window contract, additive: `window.MagicCard.loadEditor` (apiVersion stays 1). The studio bundle
@@ -67,7 +68,7 @@ import type { TransferChunk } from './preset-transfer';
  */
 
 export const MODULE_EDITOR_CONTRACT = '1.3.0';
-export const MODULE_EDITOR_CONTRACT_REVISION = 2;
+export const MODULE_EDITOR_CONTRACT_REVISION = 3;
 
 /** Elements the studio bundle uses by tag; defined once loadEditor() resolves true. */
 export const STUDIO_EDITOR_TAGS: readonly string[] = ['mc-unit-field', 'mc-color-picker', 'mc-icon-picker'];

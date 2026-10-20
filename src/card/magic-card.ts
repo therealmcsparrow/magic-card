@@ -469,6 +469,8 @@ export class MagicCard extends LitElement {
     }
 
     const prevTemplate = this._config?.template;
+    // a chunk met under the old config raises no notice under the new one
+    this._met.clear();
     this._pause.config(config);
 
     // Every row / column / module (nested children included) gets a stable id
