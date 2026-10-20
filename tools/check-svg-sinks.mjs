@@ -71,6 +71,22 @@ const ancestors = (chunk, byId) => {
   return out;
 };
 
+/**
+ * The sanitiser is installed before the chunk runs on EVERY path to it (ADR 0045): the chunk holds it, or it has parents and each
+ * one is available. A child's import() is code inside its parent, so what a parent holds is installed first. A chunk with a
+ * parent that lacks it (a second parent, a sibling, an entry without it) fails: one good ancestor on one path is not enough.
+ */
+const available = (chunk, byId, seen = new Set()) => {
+  if ((chunk.modules ?? []).includes(SANITIZER)) return true;
+  const parents = chunk.parents ?? [];
+  if (!parents.length || seen.has(chunk.id)) return false;
+  seen.add(chunk.id);
+  return parents.every((id) => {
+    const p = byId.get(id);
+    return !!p && available(p, byId, new Set(seen));
+  });
+};
+
 const label = (c) => (c.files ?? []).find((f) => f.endsWith('.js')) ?? (c.names ?? []).join('+') ?? String(c.id);
 
 /** Returns { problems, notes }. `sinks`: module names; `strict`: the sanitiser must sit in the sink's own chunk. */
@@ -87,8 +103,8 @@ export const evaluate = ({ chunks, sinks, strict = false }) => {
       continue;
     }
     const from = ancestors(c, byId).find((a) => (a.modules ?? []).includes(SANITIZER));
-    if (from && !strict) notes.push(`${label(c)}: ${held.length} sink module${held.length === 1 ? '' : 's'}, sanitiser from the ancestor chunk ${label(from)} (not a copy; strict mode wants one in this chunk)`);
-    else problems.push(`${label(c)} holds ${held[0]}${held.length > 1 ? ` and ${held.length - 1} more` : ''} without ${SANITIZER}${from ? ' in the same chunk (only in ' + label(from) + ')' : ' in the chunk or an ancestor'}`);
+    if (from && !strict && available(c, byId)) notes.push(`${label(c)}: ${held.length} sink module${held.length === 1 ? '' : 's'}, sanitiser from the ancestor chunk ${label(from)} (not a copy, and on every path to this chunk; strict mode wants one in this chunk)`);
+    else problems.push(`${label(c)} holds ${held[0]}${held.length > 1 ? ` and ${held.length - 1} more` : ''} without ${SANITIZER}${from ? (strict ? ' in the same chunk (only in ' + label(from) + ')' : ' on every path (only in ' + label(from) + ', not in each parent)') : ' in the chunk or an ancestor'}`);
   }
   const icon = chunks.find((c) => (c.names ?? []).includes('svg-icon'));
   if (!icon) problems.push('no svg-icon chunk in the build');
@@ -118,6 +134,9 @@ const selfTest = () => {
     ['entry holding the icon element fails', { chunks: [{ ...entry, modules: ['./src/index.ts', './src/icons/mc-svg-icon.ts', S] }, icon, particles], sinks }, 1],
     ['no svg-icon chunk fails', { chunks: [entry, particles], sinks }, 1],
     ['svg-icon chunk without icon-source fails', { chunks: [entry, { ...icon, modules: ['./src/icons/mc-svg-icon.ts', S] }, particles], sinks }, 1],
+    ['a child with two parents, one of them fed by the entry that holds the sanitiser, passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 6, parents: [0], files: ['magic-card-anim.js'], names: ['anim'], modules: [S] }, { id: 7, parents: [0], files: ['magic-card-other.js'], names: ['other'], modules: [] }, { ...icon, parents: [6, 7], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
+    ['a child with two parents that both hold the sanitiser passes', { chunks: [entry, { id: 6, parents: [0], files: ['magic-card-anim.js'], names: ['anim'], modules: [S] }, { id: 7, parents: [0], files: ['magic-card-other.js'], names: ['other'], modules: [S] }, { ...icon, parents: [6, 7], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
+    ['a child with two parents where only one holds the sanitiser fails', { chunks: [entry, { id: 6, parents: [0], files: ['magic-card-anim.js'], names: ['anim'], modules: [S] }, { id: 7, parents: [0], files: ['magic-card-other.js'], names: ['other'], modules: [] }, { ...icon, parents: [6, 7], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 1],
     ['sanitiser two chunks up passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 5, parents: [0], files: ['magic-card-editor.js'], names: ['editor'], modules: [] }, { ...icon, parents: [5], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
   ];
   let bad = 0;
