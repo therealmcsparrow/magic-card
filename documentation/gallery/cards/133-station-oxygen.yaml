@@ -1,0 +1,107 @@
+# Station oxygen: a nebula picture drifts behind a star pattern. Tubes carry the air from the tank through the hub to the crew deck with the level following the value, and a segmented fan slider with a badge on top shows the circulation.
+# Entities: sensor.home_battery, sensor.house_power, fan.bedroom
+type: custom:magic-card
+name: Station oxygen
+background: "#05060f"
+border_radius: 26px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.6)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: dots
+    color: "rgba(255,255,255,0.12)"
+    size: 40
+    thickness: 2
+  - type: gradient
+    gradient: "linear-gradient(to bottom, rgba(5,6,15,0.5) 0%, rgba(5,6,15,0) 50%, rgba(5,6,15,0.55) 100%)"
+  - type: image
+    image: /local/showcase-nebula.svg
+    size: cover
+    pan_zoom: { from: 100, to: 130, duration: 30, focus: center }
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Station oxygen
+            design: { font_size: 12px, font_weight: "700", color: "#67e8f9", text_transform: uppercase, letter_spacing: 2.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: text
+            text: "Deck 3 air is breathable"
+            design: { font_size: 12px, color: "#9aa7c7" }
+      - vertical_align: start
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.home_battery
+            placement: overlay
+            layer: { anchor: top-right }
+            design: { font_size: 12px, font_weight: "800", color: "#05060f", padding: 4px 10px, border_radius: 999px, background_color: "#67e8f9", font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+  - id: chain
+    column_widths: [56px, 1fr, 64px, 1fr, 56px]
+    padding: 40px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:gas-cylinder
+            size: 26px
+            design: { color: "#67e8f9", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #67e8f9", background_color: "rgba(5,6,15,0.7)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:space-station
+            size: 32px
+            design: { color: "#c4b5fd", width: 64px, height: 64px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c4b5fd", background_color: "rgba(5,6,15,0.7)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:account-group
+            size: 26px
+            design: { color: "#86efac", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #86efac", background_color: "rgba(5,6,15,0.7)" }
+  - id: labels
+    column_widths: [1fr, 1fr, 1fr]
+    padding: 10px 0 0
+    columns:
+      - modules:
+          - type: text
+            text: Tank
+            design: { font_size: 11px, color: "#9aa7c7", text_transform: uppercase, letter_spacing: 1.5px, text_align: left }
+      - modules:
+          - type: text
+            text: Hub
+            design: { font_size: 11px, color: "#9aa7c7", text_transform: uppercase, letter_spacing: 1.5px, text_align: center }
+      - modules:
+          - type: text
+            text: Crew
+            design: { font_size: 11px, color: "#9aa7c7", text_transform: uppercase, letter_spacing: 1.5px, text_align: right }
+  - id: fan
+    padding: 90px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Circulation
+            design: { font_size: 11px, font_weight: "700", color: "#9aa7c7", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: slider
+            entity: fan.bedroom
+            track_style: segmented
+            segments: 10
+            segment_gap: 3
+            track_thickness: 26
+            thumb: none
+            value_position: beside
+            slider_color: "#67e8f9"
+            slider_color_to: "#86efac"
+            fill_mode: gradient
+            track_color: "rgba(255,255,255,0.1)"
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#67e8f9", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", shape: bubble, dot_size: 8, dots: 3 }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2000, route: straight, color: "#86efac", line_style: tube, width: 14, bubble_count: 4, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.12)", motion: pulse, dots: 5, dot_size: 8, shape: dot }

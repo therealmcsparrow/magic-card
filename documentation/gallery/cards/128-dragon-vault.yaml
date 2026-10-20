@@ -1,0 +1,119 @@
+# Dragon vault: gold flows from the mine, through the vault and out to the market, with spinning gold stars and diamonds. A cave picture sits behind a pattern and a warm gradient, slowly zooming, and a ticket-shaped slider sets the price.
+# Entities: sensor.solar_power, sensor.house_power, sensor.battery_power, light.kitchen
+type: custom:magic-card
+name: Dragon vault
+background: "#0d0804"
+border_radius: 26px
+padding: 22px 22px 58px
+box_shadow: "0 22px 48px rgba(0,0,0,0.6)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: diagonal
+    color: "rgba(255,210,90,0.07)"
+    size: 16
+    thickness: 1
+  - type: gradient
+    gradient: "linear-gradient(to bottom, rgba(13,8,4,0.8) 0%, rgba(13,8,4,0.1) 60%, rgba(13,8,4,0.45) 100%)"
+  - type: image
+    image: /local/showcase-vault.svg
+    size: cover
+    pan_zoom: { from: 100, to: 125, duration: 24, focus: bottom }
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Dragon vault
+            design: { font_size: 22px, font_weight: "800", color: "#ffd25a", font_family: "Georgia, 'Times New Roman', serif", text_shadow: "0 2px 14px rgba(0,0,0,0.7)" }
+          - type: text
+            text: "The hoard grows while the sun shines"
+            design: { font_size: 12px, color: "#e6c88a", font_style: italic, text_shadow: "0 2px 10px rgba(0,0,0,0.7)" }
+      - modules:
+          - type: icon
+            icon: mdi:crown
+            size: 24px
+            design: { color: "#ffd25a" }
+  - id: chain
+    column_widths: [56px, 1fr, 64px, 1fr, 56px]
+    padding: 36px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:pickaxe
+            size: 26px
+            design: { color: "#ffd25a", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #ffd25a", background_color: "rgba(13,8,4,0.7)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:treasure-chest
+            size: 32px
+            design: { color: "#fff3c4", width: 64px, height: 64px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fff3c4", background_color: "rgba(13,8,4,0.7)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:store
+            size: 26px
+            design: { color: "#fb923c", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #fb923c", background_color: "rgba(13,8,4,0.7)" }
+  - id: stat
+    column_widths: [1fr, 1fr, 1fr]
+    padding: 14px 0 0
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.solar_power
+            design: { font_size: 18px, font_weight: "800", color: "#fff3c4", text_align: left, text_shadow: "0 2px 10px rgba(0,0,0,0.8)" }
+          - type: text
+            text: Mine
+            design: { font_size: 11px, color: "#e6c88a", text_transform: uppercase, letter_spacing: 1.5px, text_align: left }
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.home_battery
+            design: { font_size: 18px, font_weight: "800", color: "#fff3c4", text_align: center, text_shadow: "0 2px 10px rgba(0,0,0,0.8)" }
+          - type: text
+            text: Vault
+            design: { font_size: 11px, color: "#e6c88a", text_transform: uppercase, letter_spacing: 1.5px, text_align: center }
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.house_power
+            design: { font_size: 18px, font_weight: "800", color: "#fff3c4", text_align: right, text_shadow: "0 2px 10px rgba(0,0,0,0.8)" }
+          - type: text
+            text: Market
+            design: { font_size: 11px, color: "#e6c88a", text_transform: uppercase, letter_spacing: 1.5px, text_align: right }
+  - id: price
+    padding: 56px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Selling price
+            design: { font_size: 11px, font_weight: "700", color: "#e6c88a", text_transform: uppercase, letter_spacing: 1.5px, text_shadow: "0 2px 8px rgba(0,0,0,0.8)" }
+          - type: slider
+            entity: light.kitchen
+            track_shape: ticket
+            track_style: big-fill
+            track_thickness: 60
+            thumb: none
+            value_position: track
+            fill_mode: gradient
+            slider_color: "#a16207"
+            slider_color_to: "#ffd25a"
+            track_color: "rgba(13,8,4,0.6)"
+            icon: mdi:gold
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#f59e0b", color_to: "#ffe08a", width: 5, shape: star, shape_spin: true, shape_alternate: diamond, shape_color: "#ffd25a", dot_size: 14, dots: 3, glow: 6, end_cap: round }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#ffe08a", color_to: "#fb923c", width: 5, shape: diamond, shape_spin: true, shape_color: "#fff3c4", dot_size: 12, dots: 3, arrival: ring, arrival_size: 40, end_cap: arrow }

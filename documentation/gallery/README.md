@@ -1,8 +1,8 @@
 # Card gallery
 
-One hundred and fourteen complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
+One hundred and thirty-four complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
 
-![All one hundred and fourteen cards](images/all-cards.png)
+![All one hundred and thirty-four cards](images/all-cards.png)
 
 ## Pages
 
@@ -20,6 +20,7 @@ One hundred and fourteen complete cards to copy and adapt, from a weather card t
 | [Seasonal](seasonal.md) | Autumn garden, Halloween porch, Christmas countdown |
 | [Personal](personal.md) | Up next, Crypto prices, Health today |
 | [Sci-fi and fantasy](sci-fi-fantasy.md) | Reactor core, Shield grid, Life support, Airlock, Star chart, Comms array, Grow bay, Cargo bay, Orbital weather, Mainframe, Cauldron, Enchanted lanterns, Castle gate, Crystal ball, Rune ward, Weather tower, Dragon hoard, Herb garden, Minstrel hall, Quest board, Operations console, Operations console, phone-width |
+| [Showcase](showcase.md) | Whole-home energy, Living room, Bedroom at night, Heating, Rain water tank, Car charging, Garden irrigation, Kitchen power, Media room, Front door, Reactor bay, Potion lab, Engine room, Dragon vault, Winter cabin, Haunted attic, Synthwave deck, Reef tank, Station oxygen, Steam boiler |
 
 ## Complete dashboards
 
@@ -27,11 +28,28 @@ Twenty-five whole dashboards in sci-fi, fantasy, western, steampunk and dystopia
 
 ## Animated cards
 
-On fifty-two of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
+On sixty-nine of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
 
 | Card | Page |
 | --- | --- |
 | [Pan and zoom](layers.md#pan-and-zoom) | Layers |
+| [Whole-home energy](showcase.md#whole-home-energy) | Showcase |
+| [Heating](showcase.md#heating) | Showcase |
+| [Rain water tank](showcase.md#rain-water-tank) | Showcase |
+| [Car charging](showcase.md#car-charging) | Showcase |
+| [Garden irrigation](showcase.md#garden-irrigation) | Showcase |
+| [Kitchen power](showcase.md#kitchen-power) | Showcase |
+| [Media room](showcase.md#media-room) | Showcase |
+| [Reactor bay](showcase.md#reactor-bay) | Showcase |
+| [Potion lab](showcase.md#potion-lab) | Showcase |
+| [Engine room](showcase.md#engine-room) | Showcase |
+| [Dragon vault](showcase.md#dragon-vault) | Showcase |
+| [Winter cabin](showcase.md#winter-cabin) | Showcase |
+| [Haunted attic](showcase.md#haunted-attic) | Showcase |
+| [Synthwave deck](showcase.md#synthwave-deck) | Showcase |
+| [Reef tank](showcase.md#reef-tank) | Showcase |
+| [Station oxygen](showcase.md#station-oxygen) | Showcase |
+| [Steam boiler](showcase.md#steam-boiler) | Showcase |
 | [Ringing doorbell](security-presence.md#ringing-doorbell) | Security and presence |
 | [Storm watch](climate-weather.md#storm-watch) | Climate and weather |
 | [Heating](climate-weather.md#heating) | Climate and weather |

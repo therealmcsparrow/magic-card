@@ -1,0 +1,126 @@
+# Heating: neon flow lines run from the boiler to each room, brighter and faster for the radiators that draw more, with a neon slider for the living room target.
+# Entities: sensor.boiler_temperature, sensor.radiator_living, sensor.radiator_bedroom, sensor.radiator_bathroom, climate.living_room
+type: custom:magic-card
+name: Heating
+background: "#160f0c"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+pause_button_corner: top-right
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Heating
+            design: { font_size: 18px, font_weight: "700", color: "#fbeee3" }
+          - type: text
+            text: "Warmth flows from the boiler to the rooms that ask for it."
+            design: { font_size: 12px, color: "#b99a85" }
+  - id: house
+    padding: 18px 0 0
+    column_widths: [96px, 1fr, 190px]
+    columns:
+      - vertical_align: center
+        gap: 6px
+        modules:
+          - id: boiler
+            type: icon
+            icon: mdi:water-boiler
+            size: 34px
+            design: { color: "#ff8a3d", width: 76px, height: 76px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ff8a3d", background_color: "rgba(255,138,61,0.08)", margin: 0 auto }
+          - type: info
+            entity: sensor.boiler_temperature
+            show_name: false
+            show_state: true
+            design: { font_size: 14px, font_weight: "700", color: "#ffb37a", text_align: center }
+      - modules: []
+      - gap: 12px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: r1
+                type: icon
+                icon: mdi:sofa
+                size: 22px
+                design: { color: "#ff5a36", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ff5a36", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Living room
+                    design: { font_size: 13px, font_weight: "700", color: "#f1e6dc" }
+                  - type: info
+                    entity: sensor.radiator_living
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#c9a98f" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: r2
+                type: icon
+                icon: mdi:bed
+                size: 22px
+                design: { color: "#ffb02e", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ffb02e", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Bedroom
+                    design: { font_size: 13px, font_weight: "700", color: "#f1e6dc" }
+                  - type: info
+                    entity: sensor.radiator_bedroom
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#c9a98f" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: r3
+                type: icon
+                icon: mdi:shower-head
+                size: 22px
+                design: { color: "#ff7a59", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ff7a59", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Bathroom
+                    design: { font_size: 13px, font_weight: "700", color: "#f1e6dc" }
+                  - type: info
+                    entity: sensor.radiator_bathroom
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#c9a98f" }
+  - id: target
+    padding: 22px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Living room target
+            design: { font_size: 11px, font_weight: "700", color: "#b99a85", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: climate.living_room
+            track_style: thin
+            track_thickness: 6
+            thumb: circle
+            thumb_size: 18
+            thumb_border: 2
+            thumb_glow: 10
+            value_position: beside
+            slider_color: "#ff8a3d"
+            track_color: "#ff8a3d40"
+flows:
+  - { id: b-r1, from: boiler, to: r1, entity: sensor.radiator_living, max: 1500, route: curve, from_side: right, to_side: left, color: "#ff5a36", line_style: neon, width: 3, glow: 8, flicker: subtle, shape: spark, dot_size: 8, dots: 3 }
+  - { id: b-r2, from: boiler, to: r2, entity: sensor.radiator_bedroom, max: 1500, route: curve, from_side: right, to_side: left, color: "#ffb02e", line_style: neon, width: 3, glow: 8, flicker: subtle, shape: spark, dot_size: 8, dots: 3 }
+  - { id: b-r3, from: boiler, to: r3, entity: sensor.radiator_bathroom, max: 1500, route: curve, from_side: right, to_side: left, color: "#ff7a59", line_style: neon, width: 3, glow: 8, flicker: subtle, shape: spark, dot_size: 8, dots: 3 }

@@ -1,0 +1,89 @@
+# Reef tank: a reef picture slowly zooms behind a blue fade. Glass tubes with bubbles carry the water from the pump through the filter into the tank, the level following the value, and a wave-shaped Big fill slider dims the reef light.
+# Entities: sensor.home_battery, sensor.house_power, sensor.aquarium_temperature, light.garden
+type: custom:magic-card
+name: Reef tank
+background: "#06304a"
+border_radius: 28px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.5)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to bottom, rgba(6,48,74,0.55) 0%, rgba(6,48,74,0) 40%, rgba(3,26,43,0.6) 100%)"
+  - type: image
+    image: /local/showcase-reef.svg
+    size: cover
+    pan_zoom: { from: 100, to: 118, duration: 26, focus: center }
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Reef tank
+            design: { font_size: 22px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 14px rgba(0,0,0,0.5)" }
+          - type: text
+            text: "Water clear, fish fed"
+            design: { font_size: 12px, color: "#d4f1fb", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }
+      - vertical_align: start
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.aquarium_temperature
+            design: { font_size: 22px, font_weight: "800", color: "#fde68a", text_shadow: "0 2px 14px rgba(0,0,0,0.5)" }
+  - id: top
+    column_widths: [56px, 1fr, 56px]
+    padding: 30px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:water-pump
+            size: 26px
+            design: { color: "#67e8f9", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #67e8f9", background_color: "rgba(3,26,43,0.72)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:air-filter
+            size: 26px
+            design: { color: "#5eead4", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #5eead4", background_color: "rgba(3,26,43,0.72)" }
+  - id: bottom
+    column_widths: [1fr, 56px, 1fr]
+    padding: 28px 0 0
+    columns:
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:fish
+            size: 26px
+            design: { color: "#fcd34d", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fcd34d", background_color: "rgba(3,26,43,0.72)" }
+      - modules: []
+  - id: light
+    padding: 56px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Reef light
+            design: { font_size: 11px, font_weight: "700", color: "#d4f1fb", text_transform: uppercase, letter_spacing: 1.5px, text_shadow: "0 2px 8px rgba(0,0,0,0.7)" }
+          - type: slider
+            entity: light.garden
+            track_shape: wave
+            track_style: big-fill
+            track_thickness: 60
+            thumb: none
+            value_position: track
+            fill_mode: gradient
+            slider_color: "#22d3ee"
+            slider_color_to: "#a7f3d0"
+            track_color: "rgba(3,26,43,0.5)"
+            icon: mdi:lightbulb-on
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#38bdf8", line_style: tube, width: 14, bubble_count: 6, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3 }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2000, route: elbow, from_side: bottom, to_side: right, color: "#5eead4", line_style: tube, width: 14, bubble_count: 5, tube_fill_value: true, tube_tint: "rgba(255,255,255,0.14)", shape: bubble, dot_size: 8, dots: 3, arrival: splash, arrival_size: 36 }

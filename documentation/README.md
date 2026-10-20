@@ -40,7 +40,7 @@ This folder documents the Magic Card editor and every option the card supports. 
 
 | Folder | Covers |
 | --- | --- |
-| [Card gallery](gallery/README.md) | A hundred and fourteen complete cards with screenshots and YAML, fifty-two of them animated: weather, climate, energy, flows and sliders, layers, lights, media, security, appliances, garden, seasonal, sci-fi and fantasy |
+| [Card gallery](gallery/README.md) | A hundred and thirty-four complete cards with screenshots and YAML, sixty-nine of them animated: showcase cards that combine the new looks, weather, climate, energy, flows and sliders, layers, lights, media, security, appliances, garden, seasonal, sci-fi and fantasy |
 | [Complete dashboards](gallery/dashboards/README.md) | Twenty-five complete sections dashboards made of Magic Cards, each with its own theme: sci-fi, fantasy, western, steampunk and dystopian |
 | [Theme examples](themes/examples/README.md) | The 45 theme presets of the theme editor, each with a screenshot of its light and dark modes |
 

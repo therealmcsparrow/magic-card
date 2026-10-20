@@ -1,0 +1,90 @@
+# Rain water tank: tubes carry the water from the roof into the tank and out to the garden and the house, and the tank level is a tall fill.
+# Entities: sensor.water_tank, sensor.tank_inflow, sensor.tank_garden_flow, sensor.tank_house_flow
+type: custom:magic-card
+name: Rain water
+background: "#0b1620"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+pause_button_corner: top-right
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Rain water
+            design: { font_size: 18px, font_weight: "700", color: "#e4f1fb" }
+          - type: text
+            text: "In from the roof, out to the garden and the house."
+            design: { font_size: 12px, color: "#7f9bb8" }
+  - id: tank
+    padding: 16px 0 0
+    column_widths: [1fr, 96px, 1fr]
+    columns:
+      - vertical_align: center
+        gap: 6px
+        modules:
+          - type: text
+            text: Roof
+            design: { font_size: 11px, font_weight: "700", color: "#7f9bb8", text_transform: uppercase, letter_spacing: 1px, text_align: center }
+          - type: info
+            entity: sensor.tank_inflow
+            show_name: false
+            show_state: true
+            design: { font_size: 13px, font_weight: "700", color: "#7dd3fc", text_align: center, white_space: nowrap }
+          - id: roof
+            type: icon
+            icon: mdi:home-roof
+            size: 24px
+            design: { color: "#7dd3fc", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #7dd3fc", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+      - vertical_align: center
+        modules:
+          - id: level
+            type: slider
+            entity: sensor.water_tank
+            min: 0
+            max: 100
+            direction: vertical
+            track_style: big-fill
+            fill_mode: gradient
+            slider_color: "#38bdf8"
+            slider_color_to: "#0ea5e9"
+            icon: mdi:water
+            icon_position: center
+            thumb: none
+            value_position: track
+      - vertical_align: center
+        gap: 14px
+        modules:
+          - type: text
+            text: Garden
+            design: { font_size: 11px, font_weight: "700", color: "#7f9bb8", text_transform: uppercase, letter_spacing: 1px, text_align: center }
+          - type: info
+            entity: sensor.tank_garden_flow
+            show_name: false
+            show_state: true
+            design: { font_size: 13px, font_weight: "700", color: "#86efac", text_align: center, white_space: nowrap }
+          - id: garden
+            type: icon
+            icon: mdi:flower
+            size: 24px
+            design: { color: "#86efac", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #86efac", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+          - type: text
+            text: House
+            design: { font_size: 11px, font_weight: "700", color: "#7f9bb8", text_transform: uppercase, letter_spacing: 1px, text_align: center }
+          - type: info
+            entity: sensor.tank_house_flow
+            show_name: false
+            show_state: true
+            design: { font_size: 13px, font_weight: "700", color: "#a5b4fc", text_align: center, white_space: nowrap }
+          - id: house
+            type: icon
+            icon: mdi:toilet
+            size: 24px
+            design: { color: "#a5b4fc", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #a5b4fc", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+
+flows:
+  - { id: roof-tank, from: roof, to: level, entity: sensor.tank_inflow, max: 30, route: curve, from_side: right, to_side: left, color: "#7dd3fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
+  - { id: tank-garden, from: level, to: garden, entity: sensor.tank_garden_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#86efac", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }
+  - { id: tank-house, from: level, to: house, entity: sensor.tank_house_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#a5b4fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }

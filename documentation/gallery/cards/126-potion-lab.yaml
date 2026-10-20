@@ -1,0 +1,88 @@
+# Potion lab: glass tubes between flasks with rising bubbles. The liquid level follows the value, drops splash into each flask, and a Glass slider with blur sets the burner heat over a bubble pattern.
+# Entities: sensor.home_battery, sensor.solar_power, sensor.house_power, light.desk
+type: custom:magic-card
+name: Potion lab
+background: "#120a22"
+border_radius: 28px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: dots
+    color: "rgba(190,255,220,0.14)"
+    size: 22
+    thickness: 3
+  - type: gradient
+    gradient: "radial-gradient(circle at 20% 15%, rgba(74,222,128,0.30), rgba(18,10,34,0) 55%), radial-gradient(circle at 85% 85%, rgba(168,85,247,0.32), rgba(18,10,34,0) 60%)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Potion lab
+            design: { font_size: 20px, font_weight: "800", color: "#e9d5ff", font_family: "Georgia, 'Times New Roman', serif", letter_spacing: 0.5px }
+          - type: text
+            text: "Three brews, one slow simmer"
+            design: { font_size: 12px, color: "#a590c4", font_style: italic }
+  - id: top
+    column_widths: [60px, 1fr, 60px]
+    padding: 22px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:flask-round-bottom
+            size: 28px
+            design: { color: "#4ade80", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #4ade80", background_color: "rgba(74,222,128,0.12)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:flask
+            size: 28px
+            design: { color: "#c084fc", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c084fc", background_color: "rgba(192,132,252,0.12)" }
+  - id: bottom
+    column_widths: [60px, 1fr, 60px]
+    padding: 92px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: d
+            type: icon
+            icon: mdi:bottle-tonic-plus
+            size: 28px
+            design: { color: "#fb7185", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(251,113,133,0.12)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:pot-steam
+            size: 28px
+            design: { color: "#fbbf24", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fbbf24", background_color: "rgba(251,191,36,0.12)" }
+  - id: heat
+    padding: 30px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Burner heat
+            design: { font_size: 11px, font_weight: "700", color: "#a590c4", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: slider
+            entity: light.desk
+            track_style: glass
+            track_thickness: 40
+            glass_blur: true
+            thumb: pill
+            thumb_size: 40
+            thumb_icon: mdi:fire
+            value_position: track
+            slider_color: "#fcd34d"
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#4ade80", line_style: tube, width: 16, bubble_count: 5, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, entity: sensor.solar_power, max: 5000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: c-d, from: c, to: d, entity: sensor.house_power, max: 2000, route: straight, color: "#fb7185", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }

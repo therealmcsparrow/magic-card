@@ -1,0 +1,110 @@
+# Steam boiler: twisted brass cables with turning cogs carry the heat from the firebox to the boiler and out to the radiators, with a splash of steam on arrival. Darken behind text fades a glowing picture behind the title, and a notch-shaped Big fill slider with stops sets the valve.
+# Entities: sensor.solar_power, sensor.house_power, sensor.boiler_temperature, cover.living_blinds
+type: custom:magic-card
+name: Steam boiler
+background: "#1a0f07"
+border_radius: 22px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.6)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: lines
+    color: "rgba(217,164,65,0.07)"
+    size: 12
+    thickness: 2
+  - type: gradient
+    gradient: "linear-gradient(160deg, #3b2412 0%, #1a0f07 70%)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        design: { padding: 14px 16px, border_radius: 12px, overflow: hidden, position: relative }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer:
+              opacity: 90
+              scrim: { style: left, strength: 70, color: black }
+          - type: text
+            text: Steam boiler
+            design: { font_size: 22px, font_weight: "800", color: "#f3c76b", font_family: "Georgia, 'Times New Roman', serif", letter_spacing: 1px }
+          - type: text
+            text: "Pressure holding, firebox burning"
+            design: { font_size: 12px, color: "#e8d3a6", font_style: italic }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.boiler_temperature
+            design: { font_size: 22px, font_weight: "800", color: "#f3c76b", text_align: right }
+  - id: chain
+    column_widths: [56px, 1fr, 64px, 1fr, 56px]
+    padding: 36px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:fire
+            size: 26px
+            design: { color: "#fb923c", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "3px solid #b8832e", background_color: "rgba(26,15,7,0.85)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:gauge
+            size: 32px
+            design: { color: "#f3c76b", width: 64px, height: 64px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "3px solid #b8832e", background_color: "rgba(26,15,7,0.85)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:radiator
+            size: 26px
+            design: { color: "#e8d3a6", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "3px solid #b8832e", background_color: "rgba(26,15,7,0.85)" }
+  - id: labels
+    column_widths: [1fr, 1fr, 1fr]
+    padding: 10px 0 0
+    columns:
+      - modules:
+          - type: text
+            text: Firebox
+            design: { font_size: 11px, color: "#c9a96a", text_transform: uppercase, letter_spacing: 1.5px, text_align: left }
+      - modules:
+          - type: text
+            text: Boiler
+            design: { font_size: 11px, color: "#c9a96a", text_transform: uppercase, letter_spacing: 1.5px, text_align: center }
+      - modules:
+          - type: text
+            text: Radiators
+            design: { font_size: 11px, color: "#c9a96a", text_transform: uppercase, letter_spacing: 1.5px, text_align: right }
+  - id: valve
+    padding: 34px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Steam valve
+            design: { font_size: 11px, font_weight: "700", color: "#c9a96a", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: slider
+            entity: cover.living_blinds
+            track_shape: notch
+            track_style: big-fill
+            track_thickness: 60
+            thumb: none
+            value_position: track
+            fill_mode: gradient
+            slider_color: "#8a5a1a"
+            slider_color_to: "#f3c76b"
+            track_color: "rgba(255,255,255,0.07)"
+            icon: mdi:valve
+            snap: true
+            stops: [{ value: 0, label: Shut }, { value: 50, label: Half }, { value: 100, label: Open }]
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, end_cap: round }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, arrival: splash, arrival_size: 40, end_cap: round }

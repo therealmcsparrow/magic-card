@@ -1,0 +1,81 @@
+# Living room: the room camera fills the card behind the other modules, with a temperature badge on top and two glass light sliders in front.
+# Entities: camera.living_room, light.living_room, light.desk, sensor.indoor_temperature
+type: custom:magic-card
+name: Living room
+background: "#14110f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+pause_button_corner: top-left
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: camera
+            entity: camera.living_room
+            camera_view: snapshot
+            placement: background
+            layer:
+              fill: card
+              scrim:
+                style: bottom
+                strength: 70
+          - type: info
+            entity: sensor.indoor_temperature
+            show_name: false
+            show_state: true
+            prefix: "Indoor "
+            placement: overlay
+            layer:
+              anchor: top-right
+              offset_x: 12px
+              offset_y: 12px
+            design:
+              padding: 6px 12px
+              border_radius: 999px
+              background_color: "rgba(0,0,0,0.55)"
+              color: "#ffffff"
+              font_size: 12px
+          - type: text
+            text: Living room
+            design: { font_size: 20px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 10px rgba(0,0,0,0.6)", padding_top: 26px }
+          - type: text
+            text: "Drag a slider to dim a light. The picture is the room camera."
+            design: { font_size: 12px, color: "rgba(255,255,255,0.88)", text_shadow: "0 2px 10px rgba(0,0,0,0.6)" }
+  - id: s0
+    padding: 110px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: text
+            text: Ceiling light
+            design: { font_size: 11px, font_weight: "700", color: "rgba(255,255,255,0.85)", text_transform: uppercase, letter_spacing: 1px, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+          - type: slider
+            entity: light.living_room
+            track_style: glass
+            track_thickness: 30
+            glass_blur: true
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#ffd58a"
+            live: true
+  - id: s1
+    padding: 14px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: text
+            text: Desk lamp
+            design: { font_size: 11px, font_weight: "700", color: "rgba(255,255,255,0.85)", text_transform: uppercase, letter_spacing: 1px, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+          - type: slider
+            entity: light.desk
+            track_style: glass
+            track_thickness: 30
+            glass_blur: true
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            use_entity_color: true
+            live: true

@@ -1,0 +1,94 @@
+# Engine room: electric zigzag flows crackle between the reactor, the drive and the shields, with spinning stars as the charge. A slider with named stops and snapping sets the burn, over a faint scanline pattern.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power, sensor.battery_power, fan.bedroom
+type: custom:magic-card
+name: Engine room
+background: "#080c14"
+border_radius: 26px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: lines
+    color: "rgba(250,204,21,0.06)"
+    size: 10
+    thickness: 1
+  - type: gradient
+    gradient: "linear-gradient(160deg, rgba(250,204,21,0.12) 0%, rgba(8,12,20,0) 45%, rgba(56,189,248,0.16) 100%)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Engine room
+            design: { font_size: 12px, font_weight: "700", color: "#facc15", text_transform: uppercase, letter_spacing: 2.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: text
+            text: "Drive coupled, shields drawing power"
+            design: { font_size: 12px, color: "#7b8aa3" }
+      - modules:
+          - type: icon
+            icon: mdi:rocket-launch
+            size: 22px
+            design: { color: "#38bdf8" }
+  - id: top
+    column_widths: [60px, 1fr, 60px]
+    padding: 22px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:atom
+            size: 28px
+            design: { color: "#facc15", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #facc15", background_color: "rgba(250,204,21,0.1)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:rocket
+            size: 28px
+            design: { color: "#38bdf8", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #38bdf8", background_color: "rgba(56,189,248,0.1)" }
+  - id: bottom
+    column_widths: [1fr, 60px, 1fr]
+    padding: 34px 0 0
+    columns:
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:shield-half-full
+            size: 28px
+            design: { color: "#a78bfa", width: 60px, height: 60px, display: flex, align_items: center, justify_content: center, border_radius: 14px, border: "2px solid #a78bfa", background_color: "rgba(167,139,250,0.1)" }
+      - modules: []
+  - id: burn
+    padding: 26px 0 0
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Burn
+            design: { font_size: 11px, font_weight: "700", color: "#7b8aa3", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: slider
+            entity: fan.bedroom
+            min: 0
+            max: 100
+            track_style: pill
+            track_thickness: 14
+            thumb: circle
+            thumb_size: 26
+            thumb_border: 3
+            thumb_glow: 10
+            slider_color: "#facc15"
+            fill_mode: gradient
+            slider_color_to: "#38bdf8"
+            snap: true
+            value_position: bubble
+            stops: [{ value: 0, label: Halt }, { value: 33, label: Crawl }, { value: 66, label: Cruise }, { value: 100, label: Burn }]
+flows:
+  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#facc15", line_style: zigzag, electric: true, width: 3, amplitude: 8, wavelength: 22, glow: 6, shape: star, shape_spin: true, dot_size: 12, dots: 3, arrival: ring, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#38bdf8", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, shape: star, shape_spin: true, dot_size: 10, dots: 3 }
+  - { id: c-a, from: c, to: a, entity: sensor.grid_power, max: 5000, route: elbow, from_side: left, to_side: bottom, color: "#a78bfa", line_style: zigzag, electric: true, width: 3, amplitude: 7, wavelength: 22, end_cap: arrow }

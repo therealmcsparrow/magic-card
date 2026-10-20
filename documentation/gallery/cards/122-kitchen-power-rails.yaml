@@ -1,0 +1,120 @@
+# Kitchen power: double rails run from the kitchen circuit to each appliance, red for a hungry oven and green for a quiet fridge, with a kitchen light slider underneath.
+# Entities: sensor.kitchen_power, sensor.oven_power, sensor.dishwasher_power, sensor.fridge_power, sensor.kettle_power, light.kitchen
+type: custom:magic-card
+name: Kitchen
+background: "#17120f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+pause_button_corner: top-right
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Kitchen
+            design: { font_size: 18px, font_weight: "700", color: "#f6ecda" }
+          - type: text
+            text: "Who is using the power right now."
+            design: { font_size: 12px, color: "#b3a58e" }
+  - id: hub
+    padding: 16px 0 0
+    columns:
+      - gap: 4px
+        modules:
+          - type: info
+            entity: sensor.kitchen_power
+            show_name: false
+            show_state: true
+            design: { font_size: 13px, font_weight: "700", color: "#ffd166", text_align: center, white_space: nowrap }
+          - id: circuit
+            type: icon
+            icon: mdi:flash
+            size: 30px
+            design: { color: "#ffd166", width: 64px, height: 64px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ffd166", background_color: "rgba(255,209,102,0.08)", margin: 0 auto }
+  - id: appliances
+    padding: 58px 0 0
+    layout: "1-1-1-1"
+    columns:
+      - gap: 4px
+        modules:
+          - id: oven
+            type: icon
+            icon: mdi:stove
+            size: 24px
+            design: { color: "#e8d9c2", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid rgba(232,217,194,0.7)", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+          - type: text
+            text: Oven
+            design: { font_size: 12px, font_weight: "700", color: "#f3e9d8", text_align: center }
+          - type: info
+            entity: sensor.oven_power
+            show_name: false
+            show_state: true
+            design: { font_size: 12px, color: "#b3a58e", text_align: center, white_space: nowrap }
+      - gap: 4px
+        modules:
+          - id: dish
+            type: icon
+            icon: mdi:dishwasher
+            size: 24px
+            design: { color: "#e8d9c2", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid rgba(232,217,194,0.7)", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+          - type: text
+            text: Dishwasher
+            design: { font_size: 12px, font_weight: "700", color: "#f3e9d8", text_align: center }
+          - type: info
+            entity: sensor.dishwasher_power
+            show_name: false
+            show_state: true
+            design: { font_size: 12px, color: "#b3a58e", text_align: center, white_space: nowrap }
+      - gap: 4px
+        modules:
+          - id: fridge
+            type: icon
+            icon: mdi:fridge
+            size: 24px
+            design: { color: "#e8d9c2", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid rgba(232,217,194,0.7)", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+          - type: text
+            text: Fridge
+            design: { font_size: 12px, font_weight: "700", color: "#f3e9d8", text_align: center }
+          - type: info
+            entity: sensor.fridge_power
+            show_name: false
+            show_state: true
+            design: { font_size: 12px, color: "#b3a58e", text_align: center, white_space: nowrap }
+      - gap: 4px
+        modules:
+          - id: kettle
+            type: icon
+            icon: mdi:kettle
+            size: 24px
+            design: { color: "#e8d9c2", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid rgba(232,217,194,0.7)", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
+          - type: text
+            text: Kettle
+            design: { font_size: 12px, font_weight: "700", color: "#f3e9d8", text_align: center }
+          - type: info
+            entity: sensor.kettle_power
+            show_name: false
+            show_state: true
+            design: { font_size: 12px, color: "#b3a58e", text_align: center, white_space: nowrap }
+  - id: light
+    padding: 24px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Kitchen light
+            design: { font_size: 11px, font_weight: "700", color: "#b3a58e", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            track_style: standard
+            thumb: circle
+            thumb_size: 22
+            thumb_border: 3
+            value_position: beside
+            slider_color: "#ffd166"
+flows:
+  - { id: c-oven, from: circuit, to: oven, entity: sensor.oven_power, max: 2500, route: curve, from_side: bottom, to_side: top, color: "#4ade80", line_style: double, rail_gap: 5, width: 2.5, color_mode: value, thresholds: [{ from: 0, color: "#4ade80" }, { from: 500, color: "#facc15" }, { from: 1500, color: "#f87171" }], shape: chevron, dot_size: 8, dots: 3 }
+  - { id: c-dish, from: circuit, to: dish, entity: sensor.dishwasher_power, max: 2500, route: curve, from_side: bottom, to_side: top, color: "#4ade80", line_style: double, rail_gap: 5, width: 2.5, color_mode: value, thresholds: [{ from: 0, color: "#4ade80" }, { from: 500, color: "#facc15" }, { from: 1500, color: "#f87171" }], shape: chevron, dot_size: 8, dots: 3 }
+  - { id: c-fridge, from: circuit, to: fridge, entity: sensor.fridge_power, max: 2500, route: curve, from_side: bottom, to_side: top, color: "#4ade80", line_style: double, rail_gap: 5, width: 2.5, color_mode: value, thresholds: [{ from: 0, color: "#4ade80" }, { from: 500, color: "#facc15" }, { from: 1500, color: "#f87171" }], shape: chevron, dot_size: 8, dots: 3 }
+  - { id: c-kettle, from: circuit, to: kettle, entity: sensor.kettle_power, max: 2500, route: curve, from_side: bottom, to_side: top, color: "#4ade80", line_style: double, rail_gap: 5, width: 2.5, color_mode: value, thresholds: [{ from: 0, color: "#4ade80" }, { from: 500, color: "#facc15" }, { from: 1500, color: "#f87171" }], shape: chevron, dot_size: 8, dots: 3 }

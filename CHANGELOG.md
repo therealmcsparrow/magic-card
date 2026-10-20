@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Documentation
+-   **Showcase cards.** Twenty new gallery cards (115 to 134) that combine flow looks, slider looks and background layers: ten for everyday rooms and energy, ten in sci-fi, fantasy, seasonal and retro styles. See [Showcase](documentation/gallery/showcase.md).
+
 ## 2026.10.11-beta.3 (2026-10-20, pre-release)
 
 ### New
