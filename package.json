@@ -15,6 +15,7 @@
     "prelint": "npm run i18n",
     "prebuild:harness": "npm run i18n",
     "size": "node tools/check-dist-size.mjs",
+    "size:table": "node tools/size-table.mjs",
     "size:selftest": "node tools/size-caps-selftest.mjs",
     "notices": "node tools/third-party-notices.mjs",
     "sbom": "cyclonedx-npm --omit dev --output-format JSON --output-file sbom.cdx.json",
