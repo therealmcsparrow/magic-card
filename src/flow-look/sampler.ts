@@ -247,7 +247,7 @@ function grid(S: Sampled, every: number): number[] {
 /**
  * wave / zigzag: the points of the offset line (still shape, phase 0). Amplitude <= amp, <= 40 % of
  * the local radius of curvature, tapered per stretch (see taper). `jitter` (electric variants):
- * each zigzag peak is 55-100 % of the amplitude, seeded by `jitter`.
+ * each zigzag peak is 30-100 % of the amplitude, seeded by `jitter`.
  */
 export function wavy(S: Sampled, kind: 'wave' | 'zigzag', amp: number, wl: number, jitter = 0): XY[] {
   const tol = FLOW_GEOMETRY.simplifyPx;
@@ -257,7 +257,7 @@ export function wavy(S: Sampled, kind: 'wave' | 'zigzag', amp: number, wl: numbe
     const ph = (s / wl) % 1;
     const w = kind === 'wave' ? Math.sin(TAU * ph) : ph < 0.25 ? ph * 4 : ph < 0.75 ? 2 - ph * 4 : ph * 4 - 4;
     const [t, cap] = taper(S, s);
-    const j = jitter ? 0.55 + 0.45 * rnd(jitter, Math.floor((s + wl / 4) / (wl / 2))) : 1;
+    const j = jitter ? 0.3 + 0.7 * rnd(jitter, Math.floor((s + wl / 4) / (wl / 2))) : 1;
     const a = Math.min(amp * j, cap, c.k ? (FLOW_GEOMETRY.curvatureShare / Math.abs(c.k)) : Infinity) * t;
     return { x: c.x - c.ty * a * w, y: c.y + c.tx * a * w };
   });

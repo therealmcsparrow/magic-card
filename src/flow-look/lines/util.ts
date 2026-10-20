@@ -49,8 +49,8 @@ const MAX_HIGHLIGHTS = 24;
  * line). Each dash is a small bar that travels the whole line with transform keyframes (a compositor
  * animation); an animated `stroke-dashoffset` would re-run style, paint and commit of the whole
  * layer every frame. The dashes are spread evenly over the line, about 2.5 dash lengths apart (never
- * more than 24), and move at the flow speed. A bar cannot bend: on a wave or zigzag it is at most `max`
- * long (a third of the wavelength) so it stays inside the line.
+ * more than 24), and move at the flow speed. A bar cannot bend, so bending styles (wave, zigzag)
+ * draw none.
  */
 export function highlight(c: LineCtx, d: string, max = Infinity): SVGTemplateResult {
   const S = d === c.geo.d ? c.S : sampled(d);
