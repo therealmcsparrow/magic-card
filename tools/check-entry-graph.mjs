@@ -9,7 +9,13 @@
 //   3. the `debt` list holds an entry the base file (git show <base>:tools/entry-graph.json) did not (it grew).
 // Removing an entry from `debt` without fixing the import is failure 1.
 //
-// Usage: node tools/check-entry-graph.mjs [stats.json]    check the last production build
+// The proj.M11 lists (forbidden_dirs, contracts_allowed) are hard-coded below, like FINAL_CAP in the size gate.
+// tools/entry-graph.json may add forbidden dirs or drop allowed contracts (tighten) but a list that drops a
+// hard-coded forbidden dir or adds an allowed contract fails, and the checker enforces the hard-coded lists
+// either way. Changing the policy means editing this file, which review sees.
+//
+// Usage: node tools/check-entry-graph.mjs [--require-base] [stats.json]    check the last production build
+//        --require-base   fail when the base ref or its tools/entry-graph.json cannot be read (CI passes it)
 //        node tools/check-entry-graph.mjs --self-test     run the rule against synthetic graphs
 // Env:   ENTRY_GRAPH_BASE  git ref for the base debt list (default origin/main; no base file or ref = skip rule 3)
 import { readFileSync } from 'node:fs';
@@ -32,17 +38,30 @@ const readJson = (file, what) => {
 
 // the forbidden modules of one module list, sorted
 export const violations = (modules, rules) => {
-  const dirs = rules.forbidden_dirs.map((d) => `./${d.replace(/\/?$/, '/')}`);
-  const allowed = new Set(rules.contracts_allowed.map((c) => `./src/contracts/${c}.ts`));
+  const eff = effective(rules);
+  const dirs = eff.forbidden_dirs.map((d) => `./${d.replace(/\/?$/, '/')}`);
+  const allowed = new Set(eff.contracts_allowed.map((c) => `./src/contracts/${c}.ts`));
   const contractDir = './src/contracts/';
   return [...new Set(modules)]
     .filter((m) => dirs.some((d) => m.startsWith(d)) || (m.startsWith(contractDir) && !allowed.has(m) && !m.endsWith('.needs.ts')))
     .sort();
 };
 
+// proj.M11 policy, hard-coded so the editable rules file cannot switch the gate off
+export const FORBIDDEN_DIRS = ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor'];
+export const CONTRACTS_ALLOWED = ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'];
+
+// effective lists: the hard-coded policy, tightened (never loosened) by the rules file
+const effective = (rules) => ({
+  forbidden_dirs: [...new Set([...FORBIDDEN_DIRS, ...(rules.forbidden_dirs ?? [])])],
+  contracts_allowed: CONTRACTS_ALLOWED.filter((c) => (rules.contracts_allowed ?? []).includes(c)),
+});
+
 // pure rule: returns the list of problems (empty = pass)
 export const evaluate = ({ modules, rules, baseDebt = null }) => {
   const problems = [];
+  for (const d of FORBIDDEN_DIRS) if (!(rules.forbidden_dirs ?? []).includes(d)) problems.push(`forbidden_dirs in ${RULES_REL} dropped ${d} (the list is fixed in the checker)`);
+  for (const c of rules.contracts_allowed ?? []) if (!CONTRACTS_ALLOWED.includes(c)) problems.push(`contracts_allowed in ${RULES_REL} added ${c} (the list is fixed in the checker)`);
   const debt = rules.debt ?? [];
   if (new Set(debt).size !== debt.length) problems.push('debt list has duplicate entries');
   const found = violations(modules, rules);
@@ -62,12 +81,15 @@ const entryModules = (stats, entryFile) => {
   return chunk.modules;
 };
 
-const baseDebtList = () => {
+const baseDebtList = (requireBase) => {
   const ref = process.env.ENTRY_GRAPH_BASE || 'origin/main';
   try {
     const out = execFileSync('git', ['show', `${ref}:${RULES_REL}`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-    return JSON.parse(out).debt ?? [];
-  } catch {
+    const list = JSON.parse(out).debt;
+    if (!Array.isArray(list)) throw new Error('no debt list');
+    return list;
+  } catch (e) {
+    if (requireBase) throw new Error(`--require-base: cannot read ${ref}:${RULES_REL} (${e.message}); set ENTRY_GRAPH_BASE and fetch the ref`);
     return null; // no base ref or no base file yet: no raises possible
   }
 };
@@ -91,6 +113,11 @@ const selfTest = () => {
     ['fixed entry deleted from debt passes', { modules: [...clean, './src/anim-studio/compile.ts'], rules: { ...rules, debt: ['./src/anim-studio/compile.ts'] } }, 0],
     ['debt grown past the base fails', { modules: withDebt, rules, baseDebt: ['./src/anim-studio/compile.ts'] }, 1],
     ['debt equal to the base passes', { modules: withDebt, rules, baseDebt: withDebt.slice(-2) }, 0],
+    ['dropped forbidden dir fails', { modules: withDebt, rules: { ...rules, forbidden_dirs: rules.forbidden_dirs.slice(1) } }, 1],
+    ['emptied forbidden dirs still catch the import', { modules: [...withDebt, './src/editor/card-editor.ts'], rules: { ...rules, forbidden_dirs: [] } }, 6],
+    ['added allowed contract fails', { modules: withDebt, rules: { ...rules, contracts_allowed: [...rules.contracts_allowed, 'bg-stack'] } }, 1],
+    ['added allowed contract does not let the import in', { modules: [...withDebt, './src/contracts/bg-stack.ts'], rules: { ...rules, contracts_allowed: [...rules.contracts_allowed, 'bg-stack'] } }, 2],
+    ['extra forbidden dir tightens', { modules: [...withDebt, './src/extra/x.ts'], rules: { ...rules, forbidden_dirs: [...rules.forbidden_dirs, 'src/extra'] } }, 1],
     ['duplicate debt entry fails', { modules: withDebt, rules: { ...rules, debt: [...rules.debt, rules.debt[0]] } }, 1],
   ];
   let bad = 0;
@@ -101,17 +128,35 @@ const selfTest = () => {
       console.error(`self-test FAIL: ${name} (expected ${want} problems, got ${got})`);
     }
   }
+  // --require-base without a readable base must fail
+  const prev = process.env.ENTRY_GRAPH_BASE;
+  process.env.ENTRY_GRAPH_BASE = 'no-such-ref-for-self-test';
+  try {
+    baseDebtList(true);
+    bad++;
+    console.error('self-test FAIL: --require-base without a base did not fail');
+  } catch {
+    /* expected */
+  }
+  if (baseDebtList(false) !== null) {
+    bad++;
+    console.error('self-test FAIL: missing base without --require-base should skip');
+  }
+  if (prev === undefined) delete process.env.ENTRY_GRAPH_BASE;
+  else process.env.ENTRY_GRAPH_BASE = prev;
   if (bad) process.exit(1);
-  console.log(`entry-graph self-test: ${cases.length} cases ok`);
+  console.log(`entry-graph self-test: ${cases.length + 2} cases ok`);
 };
 
 const main = () => {
-  const arg = process.argv[2];
+  const args = process.argv.slice(2);
+  const requireBase = args.includes('--require-base');
+  const arg = args.find((a) => !a.startsWith('--') || a === '--self-test');
   if (arg === '--self-test') return selfTest();
   const rules = readJson(path.join(root, RULES_REL), RULES_REL);
   const stats = readJson(arg ? path.resolve(arg) : STATS_DEFAULT, 'entry-graph stats');
   const modules = entryModules(stats, rules.entry);
-  const baseDebt = baseDebtList();
+  const baseDebt = baseDebtList(requireBase);
   const problems = evaluate({ modules, rules, baseDebt });
   const n = violations(modules, rules).length;
   if (problems.length) {
