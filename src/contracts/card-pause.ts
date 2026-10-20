@@ -101,8 +101,8 @@
  *   mc-pause-change, and survives setConfig: CardPause.begin() re-applies it on every render, so a
  *   config edit (new storage key) keeps the preview frozen.
  * - Studio canvas (src/editor/studio/studio-canvas.ts, card-editor chunk): one toggle button in the
- *   canvas toolbar area (not the module float-bar), native <button>, aria-pressed, fixed aria-label
- *   "Pause preview motion" (card-editor namespace, en-US / nl tables), icon mdi:pause / mdi:play,
+ *   canvas toolbar area (not the module float-bar), native <button>, aria-pressed, aria-label
+ *   "Pause preview motion", "Resume preview motion" while paused (Fix round 1: the name states the action; card-editor namespace, en-US / nl tables), icon mdi:pause / mdi:play,
  *   24 x 24 px target at least, kit focus ring, Enter / Space. State lives in the canvas (session
  *   only, starts playing) and is written to its live card as `card.previewPaused`; a new card
  *   element (frame or device change) gets the current state on creation. Shown whatever

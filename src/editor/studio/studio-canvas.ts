@@ -1188,7 +1188,7 @@ export class StudioCanvas extends LitElement {
             <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
               : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
-                aria-label=${t('Pause preview motion')} title=${t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
+                aria-label=${this._previewPaused ? t('Resume preview motion') : t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
                 ><ha-icon icon=${this._previewPaused ? 'mdi:play' : 'mdi:pause'}></ha-icon></button></span></div>
             ${this._cardError
               ? html`<p class="card-error" role="status">${t('Preview not updated: {error}', { error: this._cardError })}</p>`
@@ -1340,7 +1340,7 @@ export class StudioCanvas extends LitElement {
         cursor: pointer;
       }
       .preview-pause:hover {
-        background: var(--mc-hover, rgba(127, 127, 127, 0.16));
+        background: rgba(127, 127, 127, 0.16);
       }
       .preview-pause[aria-pressed='true'] {
         color: var(--mc-accent, var(--primary-color));
