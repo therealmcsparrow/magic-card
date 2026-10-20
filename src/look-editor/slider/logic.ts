@@ -1,4 +1,6 @@
-import { SLIDER_LOOK_DEFAULTS, SLIDER_LOOK_KEYS, type SliderStop } from '../../contracts/slider-look';
+import { SLIDER_LOOK_DEFAULTS } from '../../contracts/slider-look.defaults';
+import { SLIDER_LOOK_KEYS } from '../../contracts/slider-look.needs';
+import type { SliderStop } from '../../contracts/slider-look';
 import { SLIDER_LOOK_EXISTING_KEYS, type SliderPresetId } from '../../contracts/look-editor';
 import type { SliderModuleConfig } from '../../types';
 import { SLIDER_PRESETS } from './presets';
