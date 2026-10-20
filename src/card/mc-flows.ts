@@ -11,6 +11,7 @@ import {
 } from '../contracts/flow-look';
 import type { ResolvedFlow } from '../utils/flow';
 import { anchorSides, flowPath, spreadAnchors, type FlowGeometry, type Point, type Rect } from '../utils/flow-geometry';
+import { travelFrames } from '../utils/flow-motion';
 import { pauseOffscreen, unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 import { flowLookSlot } from './flow-look-slot';
 import { flowsOverlayStyles } from './flows-css';
@@ -176,7 +177,8 @@ function layoutBox(el: HTMLElement, fromScreen: (r: DOMRect) => Rect, sx: number
  * the overlay only re-renders when a rect really changed. A flow whose endpoint is not rendered,
  * has no size or lies outside the content is not drawn.
  *
- * Motion is CSS only: dots ride `offset-path` (staggered negative delays, reverse direction), or a
+ * Motion is CSS only: dots play transform keyframes sampled from the line (compositor animations: no
+ * main-thread work per frame; staggered negative delays, reverse direction), or a
  * dashed stroke moves (`dots: 0`, or no offset-path support). Reduced motion: a static line with an
  * arrowhead in the flow direction. Off-screen overlays pause (src/icons/offscreen.ts).
  */
@@ -594,6 +596,9 @@ export class McFlows extends LitElement {
     const dash = moving && !reduced && !dots;
     const arrow = moving && reduced;
     const markerId = `mc-flow-arrow-${i}`;
+    const frames = `mc-flow-${i}-mv`;
+    // a <style> element swallows the rest of a lit template: it is a template of its own
+    const keyframes = dots ? svg`<style .textContent=${travelFrames(frames, geo.at, geo.length, false, geo.knots)}></style>` : nothing;
     const size = arrowSize(f.width);
     // dots: 0 (or no offset-path): the line is the faint track, the dashes move over it in colour
     const lineColor = moving && !dash ? color : f.idleColor;
@@ -614,8 +619,8 @@ export class McFlows extends LitElement {
         ? svg`<path class="dash" d=${geo.d} style="stroke: ${color}; stroke-width: ${r1(f.width)}px; stroke-dasharray: ${r1(dashLen)} ${r1(period - dashLen)}; --mc-flow-shift: ${-r1(period)}px; animation-duration: ${dashDur.toFixed(3)}s; animation-direction: ${dir}"></path>`
         : nothing}
       ${dots
-        ? svg`<g class="dots" style="fill: ${color}">${Array.from({ length: count }, (_, k) => {
-            const motion = `offset-path: path('${geo.d}'); animation-duration: ${f.speedS.toFixed(3)}s; animation-delay: ${+(-(f.speedS * k) / count).toFixed(3) || 0}s; animation-direction: ${dir}`;
+        ? svg`${keyframes}<g class="dots" style="fill: ${color}">${Array.from({ length: count }, (_, k) => {
+            const motion = `animation-name: ${frames}; animation-duration: ${f.speedS.toFixed(3)}s; animation-delay: ${+(-(f.speedS * k) / count).toFixed(3) || 0}s; animation-direction: ${dir}`;
             // glow: a larger faint circle riding with the dot (a filter would repaint every frame)
             return svg`${f.glow > 0 ? svg`<circle class="glow" r=${r1(f.dotSize / 2 + f.glow)} style=${motion}></circle>` : nothing}<circle
               class="dot" r=${f.dotSize / 2} style=${motion}></circle>`;
