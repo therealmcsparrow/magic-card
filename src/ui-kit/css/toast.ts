@@ -42,8 +42,10 @@ export const kitToast: CSSResult = /* @__PURE__ */ css`
     font: inherit;
     cursor: pointer;
   }
-  .toast .action:hover {
-    background: color-mix(in srgb, currentColor 14%, transparent);
+  @media (hover: hover) {
+    .toast .action:hover {
+      background: color-mix(in srgb, currentColor 14%, transparent);
+    }
   }
   .toast .action:focus-visible {
     outline: 2px solid currentColor;

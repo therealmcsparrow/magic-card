@@ -10,7 +10,7 @@ import { css } from 'lit';
 export const pauseCardStyles = css`
 ha-card[data-mc-paused],ha-card[data-mc-paused] *,ha-card[data-mc-paused] *::before,ha-card[data-mc-paused] *::after{animation-play-state:paused!important}
 .mc-pause{position:absolute;z-index:6;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:24px;min-height:24px;margin:0;padding:0;border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
-.mc-pause:hover{background:rgba(0,0,0,.75)}
+@media (hover:hover){.mc-pause:hover{background:rgba(0,0,0,.75)}}
 .mc-pause:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px rgba(0,0,0,.6)}
 .mc-pause svg{display:block;width:18px;height:18px;fill:currentColor;pointer-events:none}
 .mc-pause[data-corner=bottom-left]{bottom:calc(6px + var(--mc-shape-ib,0px));left:calc(6px + var(--mc-shape-il,0px))}

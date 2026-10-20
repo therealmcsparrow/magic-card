@@ -323,8 +323,10 @@ export const kitDisclosureElementCss: CSSResult = /* @__PURE__ */ css`
     text-align: start;
     cursor: pointer;
   }
-  .btn:hover {
-    background: var(--mc-surface-2, #f2f3f5);
+  @media (hover: hover) {
+    .btn:hover {
+      background: var(--mc-surface-2, #f2f3f5);
+    }
   }
   .btn:focus-visible {
     outline: 2px solid var(--mc-focus, var(--mc-accent, #03a9f4));
@@ -410,8 +412,10 @@ export const kitChoiceGroupElementCss: CSSResult = /* @__PURE__ */ css`
   .chip-grid .opt {
     min-height: 88px;
   }
-  .opt:hover {
-    border-color: var(--mc-field-border, #8a8f98);
+  @media (hover: hover) {
+    .opt:hover {
+      border-color: var(--mc-field-border, #8a8f98);
+    }
   }
   .opt[aria-pressed='true'] {
     border-color: var(--mc-accent, #03a9f4);

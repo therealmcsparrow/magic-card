@@ -42,8 +42,10 @@ export class UiToast extends LitElement {
         color: inherit;
         cursor: pointer;
       }
-      .toast .dismiss:hover {
-        background: rgba(128, 128, 128, 0.25);
+      @media (hover: hover) {
+        .toast .dismiss:hover {
+          background: rgba(128, 128, 128, 0.25);
+        }
       }
       .toast .dismiss:focus-visible {
         outline: 2px solid currentColor;
