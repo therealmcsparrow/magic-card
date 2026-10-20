@@ -45,8 +45,8 @@ import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../util
 import './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
-import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
-import { CardSeasonal } from './card-seasonal';
+import type { SeasonalBudget } from '../utils/seasonal-scenes';
+import { SeasonalSeam, seasonalApi } from './seasonal-seam';
 import { resolveValueBackground } from '../utils/value-background';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
@@ -404,11 +404,20 @@ export class MagicCard extends LitElement {
     config: () => (this._resolvedConfig ?? this._config)?.popup,
     editorPlace: () => this._editorPlace(),
   });
+  /** The card's `seasonal` setting of the config being rendered (a conditional rule can set it). */
+  private _seasonalSetting(): MagicCardConfig['seasonal'] {
+    return (this._look ?? this._resolvedConfig ?? this._config)?.seasonal;
+  }
   /** Seasonal particles of one render pass, over the card's scene and all its seasonal presets. */
-  private readonly _seasonalBudget = new SeasonalBudget();
+  private _budget?: SeasonalBudget;
+  /** Undefined until the seasonal chunk has loaded (nothing seasonal is drawn before that). */
+  private get _seasonalBudget(): SeasonalBudget | undefined {
+    const api = seasonalApi();
+    return (this._budget ??= api && new api.SeasonalBudget());
+  }
   /** The card's seasonal scene (config `seasonal`): resolution, midnight timer, editor preview date. */
-  private readonly _seasonal = new CardSeasonal(this, {
-    config: () => (this._look ?? this._resolvedConfig ?? this._config)?.seasonal,
+  private readonly _seasonal = new SeasonalSeam(this, {
+    config: () => this._seasonalSetting(),
     hass: () => this.hass,
     editorPreview: () => {
       const place = this._editorPlace();
@@ -478,7 +487,16 @@ export class MagicCard extends LitElement {
       this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
     }
     // lazy modules and the seasonal set: start their chunks now, all at once
-    prefetchLazy(this._resolvedConfig ?? this._config);
+    this._prefetch(this._resolvedConfig ?? this._config);
+  }
+
+  private _prefetchedCfg?: object;
+  /** Start the chunks this config needs; a card with a seasonal scene renders once more when its chunk is ready. */
+  private _prefetch(cfg: MagicCardConfig): void {
+    prefetchLazy(cfg);
+    if (cfg === this._prefetchedCfg || !LAZY_FEATURES.seasonal.needs(cfg)) return;
+    this._prefetchedCfg = cfg;
+    lazyChunks.seasonal.whenReady(() => this.isConnected && this.requestUpdate());
   }
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
@@ -618,7 +636,7 @@ export class MagicCard extends LitElement {
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     // the seasonal presets asked for another total: render again with the new share
-    if (this._seasonalBudget.settle()) this.requestUpdate();
+    if (this._seasonalBudget?.settle()) this.requestUpdate();
     this._syncHoverStyles();
     this._syncRowFocus();
     this._libDirty = false;
@@ -681,7 +699,7 @@ export class MagicCard extends LitElement {
           if (!ConfigValidator.validate(tpl).valid) throw new Error('invalid template config');
           this._templateConfig = tpl as unknown as MagicCardConfig;
           this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-          prefetchLazy(this._resolvedConfig);
+          this._prefetch(this._resolvedConfig);
         } catch (err) {
           console.warn('Magic Card: template config is invalid', name, err);
           this._templateNotice = 'unavailable';
@@ -799,7 +817,7 @@ export class MagicCard extends LitElement {
     const seasonal = this._seasonal.resolve();
     const dark = !!this.hass?.themes?.darkMode;
     const seasonalOpts = { shape, seed: this._seasonal.seed(config), dark };
-    const insets = seasonalInsets(anim, seasonal);
+    const insets = seasonalInsets({ animations: resolved.animations }, this._seasonalSetting());
     const contentPad = resolved.padding || 'var(--mc-padding)';
     const inlineContentStyle = shape
       ? [cardStyle, shapeElementStyle(undefined, contentPad, insets)].filter(Boolean).join('; ')
@@ -811,7 +829,7 @@ export class MagicCard extends LitElement {
     // the pop-up surface is not shaped: its ring keeps the rounded outline and the card's position
     const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: false }) : ring;
     // the card's lightning (its scene or a card preset): nested layers skip theirs
-    const flash = (!!seasonal && sceneFlashes(seasonal.scenes)) || animFlashes(anim);
+    const flash = (!!seasonal && !!seasonalApi()?.sceneFlashes(seasonal.scenes)) || animFlashes(anim);
     // layer-placement / bg-stack: the card backdrop, and whether any module sits behind others or on top
     const backdrop = Array.isArray(resolved.background_layers) && resolved.background_layers.length ? resolved.background_layers : undefined;
     const layered = this._beginLayers(config, !!backdrop);
@@ -822,8 +840,8 @@ export class MagicCard extends LitElement {
     const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
     const rows = (animShape: ResolvedShape | undefined = shape) => {
       // each rendering of the content has the whole budget; the card's own scene takes its share first
-      this._seasonalBudget.begin();
-      const grant = seasonal ? this._seasonalBudget.own(seasonal.scenes, seasonal.intensity) : undefined;
+      this._seasonalBudget?.begin();
+      const grant = seasonal ? this._seasonalBudget?.own(seasonal.scenes, seasonal.intensity) : undefined;
       const opts = { ...seasonalOpts, grant };
       return html`${renderSeasonal(seasonal, 'back', { ...opts, shape: animShape })}${config.rows.map((row, ri) =>
         this._renderRow(row, ri),
@@ -1090,7 +1108,7 @@ export class MagicCard extends LitElement {
     const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
     const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(design), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
@@ -1148,7 +1166,7 @@ export class MagicCard extends LitElement {
     const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);
     const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
@@ -1227,7 +1245,7 @@ export class MagicCard extends LitElement {
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
     const anim = this._resolveAnim(design, stateObj);
     const v2Index = this._v2(anim, stateObj, mod.entity);
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(anim), this._shapes);
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: mod.entity });
     // `entity` design colours read this var (currentColor when unset); only set when one is used

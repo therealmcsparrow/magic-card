@@ -7,9 +7,10 @@ import type { ResolvedShape } from './mc-shape';
 import type { HomeAssistant } from '../types';
 import type { ResolvedValueBackground } from '../utils/value-background';
 import type { ResolvedSeasonal } from '../utils/seasonal';
-import { sceneDecorations, sceneFlashes, type BudgetGrant, type SeasonalBudget } from '../utils/seasonal-scenes';
-import { decoInsets } from '../utils/seasonal-deco-insets';
+import type { BudgetGrant, SeasonalBudget } from '../utils/seasonal-scenes';
+import { seasonalInsets as configInsets } from '../utils/seasonal.needs';
 import { loadSeasonal } from '../utils/lazy-chunks';
+import { seasonalApi } from './seasonal-seam';
 import './mc-ring';
 import './mc-shape';
 import './mc-value-bg';
@@ -30,7 +31,8 @@ export function renderBorderFx(border: ResolvedBorderLength | undefined): Templa
 
 /** A seasonal layer of these animations draws lightning (its element carries `data-mc-flash`). */
 export function animFlashes(anim: ResolvedAnimations | undefined): boolean {
-  return !!anim?.fx.some((l) => l.seasonal && sceneFlashes(l.seasonal.scenes));
+  const api = seasonalApi();
+  return !!api && !!anim?.fx.some((l) => l.seasonal && api.sceneFlashes(l.seasonal.scenes));
 }
 
 /**
@@ -48,7 +50,11 @@ export function renderAnimFx(
 ): TemplateResult | typeof nothing {
   if (!anim?.fx.length) return nothing;
   return html`${anim.fx.map((l) => {
-    if (l.seasonal) void loadSeasonal();
+    // a seasonal layer needs its chunk: nothing is drawn (and the card keeps its band) until it is there
+    if (l.seasonal && !seasonalApi()) {
+      void loadSeasonal();
+      return nothing;
+    }
     const g: BudgetGrant | undefined = l.seasonal && budget?.preset(l.seasonal.scenes, l.seasonal.intensity);
     return l.seasonal
       ? html`<mc-seasonal class="mc-anim-seasonal" data-fx=${l.preset} style=${l.style || nothing} .scenes=${l.seasonal.scenes}
@@ -98,7 +104,7 @@ export function renderValueBg(value: ResolvedValueBackground | undefined, hass: 
 
 /** Border decorations of `scenes` along the parent's outline; nothing when the scenes have none. */
 function renderSeasonalDeco(scenes: ResolvedSeasonal['scenes'], shape: ResolvedShape | undefined, seed: string, dark: boolean): TemplateResult | typeof nothing {
-  return sceneDecorations(scenes).length
+  return seasonalApi()?.sceneDecorations(scenes).length
     ? html`<mc-seasonal-deco class="mc-seasonal-deco" .scenes=${scenes} .shape=${shape} .seed=${seed} ?dark=${dark}></mc-seasonal-deco>`
     : nothing;
 }
@@ -114,7 +120,6 @@ export function renderSeasonal(
   opts: { shape?: ResolvedShape; seed: string; dark: boolean; grant?: BudgetGrant },
 ): TemplateResult | typeof nothing {
   if (!seasonal) return nothing;
-  void loadSeasonal();
   const layer =
     seasonal.layer === part
       ? html`<mc-seasonal class="mc-card-seasonal" .scenes=${seasonal.scenes} .intensity=${opts.grant?.intensity ?? seasonal.intensity}
@@ -126,12 +131,9 @@ export function renderSeasonal(
 
 /**
  * Padding (px per side) an element keeps so its seasonal decorations never cover the content: the
- * largest of its seasonal presets' and (the card) its own scene's. Undefined without decorations.
+ * widest of its design's seasonal presets and (the card) its `seasonal` setting. From the config alone, so the
+ * box is the same before and after the seasonal chunk loads (src/utils/seasonal.needs.ts). Undefined without decorations.
  */
-export function seasonalInsets(anim: ResolvedAnimations | undefined, seasonal?: ResolvedSeasonal): number[] | undefined {
-  const scenes = [
-    ...(anim?.fx.flatMap((l) => (l.seasonal?.decorations ? l.seasonal.scenes : [])) ?? []),
-    ...(seasonal?.decorations ? seasonal.scenes : []),
-  ];
-  return scenes.length ? decoInsets(sceneDecorations(scenes)) : undefined;
+export function seasonalInsets(design: unknown, seasonal?: unknown): number[] | undefined {
+  return configInsets(design, seasonal);
 }
