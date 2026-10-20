@@ -12,7 +12,8 @@ import type { FlowSide } from '../types';
  * a thin look keeps `icon`. Wide = isWideFlowLook(flow): line_style tube, cable, neon or zigzag,
  * or a swarm: `spacing_mode: random`, `size_variation` above 0, or `shape_alternate` set (Lead
  * decision, Fix round 1). `electric`, `spacing` and `motion` do not count, and neither does a swarm
- * key at its default value. The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
+ * key at its default value, an unknown `shape_alternate` value (only the shape list counts) or a
+ * swarm key on a flow with no travelling shapes (`motion: pulse`, or no shapes: `dots` 0 without a spacing). The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
  * removing the look removes the rule. An explicit `icon` or `box` always wins. The editor shows the
  * effective default in "Attach to"; it writes `icon` only when that differs from the look default
  * and removes the key when the pick equals the look default. Everything below is unchanged.
