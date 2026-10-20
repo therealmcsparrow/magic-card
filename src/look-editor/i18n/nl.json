@@ -221,5 +221,7 @@
   "{n} characters of each label show on the card. Screen readers get the full label.": "{n} tekens van elk label staan op de kaart. Schermlezers krijgen het volledige label.",
   "{n} px": "{n} px",
   "{n} stops is the most.": "Meer dan {n} stops kan niet.",
-  "{used} is used. Kept but not used: {kept}.": "{used} wordt gebruikt. Bewaard maar niet gebruikt: {kept}."
+  "{used} is used. Kept but not used: {kept}.": "{used} wordt gebruikt. Bewaard maar niet gebruikt: {kept}.",
+  "The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.": "De sliderlook kon niet worden geladen, dus de kaart houdt de standaardslider. Je instellingen zijn opgeslagen.",
+  "The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.": "De flowlook kon niet worden geladen, dus de kaart houdt de klassieke flow. Je instellingen zijn opgeslagen."
 }

@@ -5,6 +5,7 @@ import { LOOK_UNDO_TOAST_MS, SLIDER_LOOK_EDITOR_TAG, type SliderLookEditorElemen
 import { SLIDER_LOOK_DEFAULTS, type SliderStop, type SliderThumb, type SliderTrackStyle } from '../../contracts/slider-look';
 import { editorSystem } from '../../css/editor-stack';
 import { kitNotice } from '../../ui-kit/css';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { field, switchRow } from '../../ui-kit/templates/field';
 import { seg } from '../../ui-kit/templates/choice';
 import { notice } from '../../ui-kit/templates/status';
@@ -174,6 +175,11 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     el?.show?.({ text, action: undoable ? { id: 'undo', label: t('Undo') } : undefined, duration: LOOK_UNDO_TOAST_MS });
   }
 
+  /** The card draws the look with the slider-look chunk: when it cannot load, say so here (the settings are saved, the card keeps the standard slider). */
+  private _watchChunk(): void {
+    void lazyChunks['slider-look'].load().then(() => this.requestUpdate());
+  }
+
   private _applyPreset(id: string): void {
     const p = SLIDER_PRESETS.find((x) => x.id === id);
     if (!p) return;
@@ -190,6 +196,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._undoLabel = t('Undo {name} look', { name });
     this.onUndoChange?.(prev);
     this.onChange?.(next);
+    this._watchChunk();
     this._toast(t('{name} look applied. {count}.', { name, count: this._countText(n) }), true);
   }
 
@@ -402,6 +409,9 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         .value=${chipValue}
         @mc-pick=${(e: CustomEvent<{ value: string }>) => this._applyPreset(e.detail.value)}
       ></mc-ui-chip-group>
+      ${lazyChunks['slider-look'].failed()
+        ? notice({ tone: 'warn', text: t('The slider look could not be loaded, so the card keeps the standard slider. Your settings are saved.') })
+        : nothing}
       ${this._rm ? notice({ tone: 'info', text: this._rmText() }) : nothing}
       ${this._trackSection()} ${this._thumbSection()} ${this._valueSection()} ${this._shapeSection()} ${this._stopsSection()}
       <mc-ui-toast .offset=${88} .dismissLabel=${t('Close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>

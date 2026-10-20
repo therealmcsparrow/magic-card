@@ -7,6 +7,7 @@ import { FLOW_LOOK_EDITOR_TAG, LOOK_UNDO_TOAST_MS, type FlowLookEditorElement, t
 import type { UiChoice, UiChoicePick, UiToastElement } from '../../contracts/ui-kit';
 import { editorSystem } from '../../css/editor-stack';
 import { kitNotice } from '../../ui-kit/css';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { notice } from '../../ui-kit/templates';
 import { fieldReset } from '../../editor/components/field-reset';
 import { renderColorRangesField } from '../../editor/components/color-ranges-field';
@@ -123,6 +124,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     this._undoName = name;
     this.onUndoChange?.(this.flow);
     this.onChange?.(next);
+    void lazyChunks['flow-look'].load().then(() => this.requestUpdate());
     const toast = this._toast();
     if (typeof toast?.show === 'function') toast.show({ text, action: { id: 'undo', label: t('Undo') }, duration: LOOK_UNDO_TOAST_MS });
     this._still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -332,6 +334,8 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
   // ── parts of the Look group ──
 
   private _notices(): TemplateResult | typeof nothing {
+    // the card draws the look with the flow-look chunk: when it cannot load, say so (the settings are saved, the card keeps the classic flow)
+    if (lazyChunks['flow-look'].failed()) return notice({ tone: 'warn', text: t('The flow look could not be loaded, so the card keeps the classic flow. Your settings are saved.') });
     const b = this.budget?.get(this.flowKey);
     if (!b) return nothing;
     const show = (id: string, text: string): TemplateResult | typeof nothing =>
