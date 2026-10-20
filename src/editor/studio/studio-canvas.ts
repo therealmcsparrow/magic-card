@@ -99,6 +99,9 @@ function inPopupPreview(e: Event): boolean {
   return e.composedPath().some((t) => t instanceof HTMLElement && t.hasAttribute('data-mc-popup'));
 }
 
+/** The card's own Pause motion button (card-pause.ts): inside the canvas it drives the preview pause like the toggle beside the status. */
+const onPauseButton = (e: Event): boolean => e.composedPath().some((t) => t instanceof HTMLElement && t.classList.contains('mc-pause'));
+
 /** Whether a websocket message type is read-only and may reach Home Assistant from the live preview. */
 export function isReadOnlyWsType(type: unknown): boolean {
   if (typeof type !== 'string' || !type) return false;
@@ -479,6 +482,11 @@ export class StudioCanvas extends LitElement {
 
   private _onCardClick = (e: MouseEvent): void => {
     if (inPopupPreview(e)) return;
+    if (onPauseButton(e)) {
+      e.preventDefault();
+      this._togglePreviewPause(e);
+      return;
+    }
     e.stopPropagation();
     e.preventDefault();
     if (this._longPress.justFired) return; // the click that ends a long-press
@@ -547,6 +555,8 @@ export class StudioCanvas extends LitElement {
     // A clone continues from the canvas so canvas and studio shortcuts keep working.
     if (e.key === 'Tab') return;
     e.stopPropagation();
+    // Enter and Space on the card's pause button: the native click that follows toggles the preview pause
+    if ((e.key === 'Enter' || e.key === ' ') && onPauseButton(e)) return;
     // Focus in a field inside the live card: Delete / Backspace / Alt+Arrow / Ctrl+D belong to that field,
     // never to the module. Only Escape still continues to the canvas (parent selection, close).
     if (isTyping(e) && e.key !== 'Escape') {
