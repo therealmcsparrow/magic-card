@@ -17,6 +17,6 @@ ha-card[data-mc-paused],ha-card[data-mc-paused] *,ha-card[data-mc-paused] *::bef
 .mc-pause[data-corner=bottom-right]{bottom:calc(6px + var(--mc-shape-ib,0px));right:calc(6px + var(--mc-shape-ir,0px))}
 .mc-pause[data-corner=top-left]{top:calc(6px + var(--mc-shape-it,0px));left:calc(6px + var(--mc-shape-il,0px))}
 .mc-pause[data-corner=top-right]{top:calc(6px + var(--mc-shape-it,0px));right:calc(6px + var(--mc-shape-ir,0px))}
-@media (pointer:coarse){.mc-pause::after{content:'';position:absolute;top:-8px;right:-8px;bottom:-8px;left:-8px}}
+.mc-pause::after{content:'';position:absolute;top:-8px;right:-8px;bottom:-8px;left:-8px}
 @media (forced-colors:active){.mc-pause{border-color:ButtonText;background:ButtonFace;color:ButtonText}}
 `;

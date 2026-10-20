@@ -14,8 +14,6 @@ import { body, turns } from './geometry';
  *   with a negative animation-delay: a compositor animation, no main-thread work per frame (offset-path
  *   re-ran style, layout and paint for every shape every frame). Spin is a second animation on an inner
  *   child (never the same element).
- * - smil (opts.motion): shapes that turn use <animateMotion rotate="auto">; dot and bubble stay css.
- *   Icons are HTML (<ha-icon>) and cannot use SMIL: under smil they travel upright.
  * - pulse: shapes stay at fixed places on the line (static transform) and an inner child pulses with a
  *   period of travel time / count, rippling by phase.
  * The card budget counts elements (spin weighs 2 in mc-flows' allocateBudget), so nothing here weighs.
@@ -105,7 +103,7 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
         icons.push(html`<div class="ic" data-shape="icon" aria-hidden="true" style=${`${box}; left: ${fmt(place.x - px / 2)}px; top: ${fmt(place.y - px / 2)}px; transform: rotate(${fmt(angle)}deg)`}><div class="pl an" style=${beat}>${icon}</div></div>`);
       } else {
         // the box sits centred on the travelled point (the keyframes move its origin)
-        icons.push(html`<div class="ic dot an" data-shape="icon" aria-hidden="true" style=${`${box}; left: ${fmt(-px / 2)}px; top: ${fmt(-px / 2)}px; animation-name: ${frame(turn && o.motion === 'css')}; animation-duration: ${dur}; animation-delay: ${s3(-f.speedS * ph[k])}s; animation-direction: ${c.dir}`}>${spin ? html`<div class="spi an">${icon}</div>` : icon}</div>`);
+        icons.push(html`<div class="ic dot an" data-shape="icon" aria-hidden="true" style=${`${box}; left: ${fmt(-px / 2)}px; top: ${fmt(-px / 2)}px; animation-name: ${frame(turn)}; animation-duration: ${dur}; animation-delay: ${s3(-f.speedS * ph[k])}s; animation-direction: ${c.dir}`}>${spin ? html`<div class="spi an">${icon}</div>` : icon}</div>`);
       }
       continue;
     }
@@ -116,10 +114,6 @@ function render(c: LineCtx): { svg?: SVGTemplateResult; html?: TemplateResult } 
     }
     const delay = s3(-f.speedS * ph[k]);
     const shape = spin ? svg`<g class="sp an">${b}</g>` : b;
-    if (turn && o.motion === 'smil') {
-      parts.push(svg`<g class="shp" data-shape=${kind}><animateMotion dur=${dur} begin=${`${delay}s`} repeatCount="indefinite" rotate=${sign < 0 ? 'auto-reverse' : 'auto'} path=${geo.d} calcMode="linear" keyPoints="0;1" keyTimes="0;1"></animateMotion>${glow}${shape}</g>`);
-      continue;
-    }
     const m = `animation-name: ${frame(turn)}; animation-duration: ${dur}; animation-delay: ${delay}s; animation-direction: ${c.dir}`;
     if (kind === 'dot') {
       parts.push(svg`${f.glow > 0 ? svg`<circle class="glow gl an" r=${fmt(size / 2 + f.glow)} style=${m}></circle>` : ''}<circle class=${heavy ? 'dot an sf ol' : 'dot an sf'} data-shape="dot" r=${fmt(size / 2)} style=${m}></circle>`);

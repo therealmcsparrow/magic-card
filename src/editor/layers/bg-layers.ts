@@ -15,7 +15,7 @@ import { costFromBackdrop, type CostReason } from './cost';
 import { BACKDROP_LOOKS, addBackdropLook, type BackdropLook } from './looks';
 import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
-import { lyrSwitch } from './controls';
+import { chevron, lyrSwitch } from './controls';
 
 /*
  * Card backdrop group (designer 03 section 4, 11 B, E, F, K): `background_layers`, first entry = front, at most
@@ -89,22 +89,29 @@ export class McBgLayers extends LitElement {
         min-width: 0;
         container-type: inline-size;
       }
+      .bgl {
+        display: grid;
+        gap: 12px;
+      }
       ol {
         list-style: none;
         margin: 0;
         padding: 0;
         display: grid;
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
+      /* a layer row is a container, so it takes the kit divider; the controls inside carry the 3:1 line */
       .row {
-        border: 1px solid var(--mc-ed-ctl-line);
-        border-radius: var(--mc-radius);
-        padding: 8px;
+        border: 1px solid var(--mc-divider);
+        border-radius: var(--mc-radius-lg, 12px);
+        background: var(--mc-surface);
+        padding: 10px;
         display: grid;
         gap: 8px;
       }
+      /* the open row: an accent edge plus a 4 px bar on the leading side, and the chevron turned (not a hue alone) */
       .row[data-open] {
-        border: 2px solid var(--mc-text);
+        border-color: var(--mc-accent-ink);
         box-shadow: inset 4px 0 0 var(--mc-accent-fill, #0277bd);
       }
       .r1 {
@@ -141,8 +148,8 @@ export class McBgLayers extends LitElement {
         flex: none;
         width: 32px;
         height: 32px;
-        border-radius: 4px;
-        border: 1px solid var(--mc-ed-ctl-line);
+        border-radius: 6px;
+        border: 1px solid var(--mc-divider);
         display: grid;
         place-items: center;
         overflow: hidden;
@@ -154,16 +161,10 @@ export class McBgLayers extends LitElement {
         height: 100%;
         object-fit: cover;
       }
-      .chev {
-        transition: transform 0.15s ease-out;
-      }
-      .rhead[aria-expanded='true'] .chev {
-        transform: rotate(90deg);
-      }
       .r2 {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
       .r2 .del {
         margin-left: auto;
@@ -184,7 +185,7 @@ export class McBgLayers extends LitElement {
         gap: 12px;
         flex-wrap: wrap;
         padding: 8px;
-        border: 1px dashed var(--mc-ed-ctl-line);
+        border: 1px dashed var(--mc-field-border);
         border-radius: var(--mc-radius);
       }
       .state-row {
@@ -397,16 +398,16 @@ export class McBgLayers extends LitElement {
         <button type="button" class="rhead" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`${this._id}-${i}-ed`} aria-label=${name} @click=${() => (this._open = open ? -1 : i)}>
           <span class="thumb ${st.loading ? 'skeleton' : ''}" style=${style} aria-hidden="true">${src ? html`<img src=${src} alt="" loading="lazy" referrerpolicy="no-referrer" />` : style ? nothing : html`<ha-icon icon=${TYPE_ICONS[layer.type] ?? 'mdi:layers-outline'}></ha-icon>`}</span>
           <span><span class="title">${te(s.type)}</span><span class="sum">${s.detail ?? ''}</span></span>
-          <span class="chev" aria-hidden="true">▸</span>
+          ${chevron()}
         </button>
-        ${hidden ? html`<span class="chip2" data-chip="hidden">${t('Hidden')}</span>` : nothing}
-        ${st.chip ? html`<span class="chip2 ${st.stale ? 'stale' : ''}" data-chip=${st.stale ? 'stale' : 'problem'}>${st.stale ? '' : '⚠ '}${st.chip}</span>` : nothing}
+        ${hidden ? html`<span class="chip" data-chip="hidden">${t('Hidden')}</span>` : nothing}
+        ${st.chip ? html`<span class="chip ${st.stale ? 'stale' : 'is-warn'}" data-chip=${st.stale ? 'stale' : 'problem'}>${st.stale ? '' : '⚠ '}${st.chip}</span>` : nothing}
       </div>
       <div class="r2">
-        <button type="button" class="lyr-btn" data-act="hide" aria-label=${hidden ? t('Show {name}', { name }) : t('Hide {name}', { name })} @click=${() => this._patch(i, { hidden: hidden ? undefined : true })}>${hidden ? t('Show') : t('Hide')}</button>
-        <button type="button" class="lyr-btn" data-act="forward" aria-label=${t('Move {name} forward', { name })} aria-disabled=${i === 0 ? 'true' : 'false'} @click=${() => this._move(i, 'forward')}>↑ ${t('Forward')}</button>
-        <button type="button" class="lyr-btn" data-act="backward" aria-label=${t('Move {name} backward', { name })} aria-disabled=${i === count - 1 ? 'true' : 'false'} @click=${() => this._move(i, 'backward')}>↓ ${t('Backward')}</button>
-        <button type="button" class="lyr-btn del" data-act="delete" aria-label=${t('Delete {name}', { name })} @click=${() => this._delete(i)}>${t('Delete')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="hide" aria-label=${hidden ? t('Show {name}', { name }) : t('Hide {name}', { name })} @click=${() => this._patch(i, { hidden: hidden ? undefined : true })}>${hidden ? t('Show') : t('Hide')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="forward" aria-label=${t('Move {name} forward', { name })} aria-disabled=${i === 0 ? 'true' : 'false'} @click=${() => this._move(i, 'forward')}>↑ ${t('Forward')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="backward" aria-label=${t('Move {name} backward', { name })} aria-disabled=${i === count - 1 ? 'true' : 'false'} @click=${() => this._move(i, 'backward')}>↓ ${t('Backward')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm del" data-act="delete" aria-label=${t('Delete {name}', { name })} @click=${() => this._delete(i)}>${t('Delete')}</button>
       </div>
       ${st.sentence ? html`<p class="warnrow" data-status role="status">${st.sentence}</p>` : nothing}
       <div id=${`${this._id}-${i}-ed`} ?hidden=${!open}>${open ? renderLayerEditor(host, layer, i) : nothing}</div>
@@ -417,7 +418,7 @@ export class McBgLayers extends LitElement {
     const d = this._deleted!;
     return html`<li class="gone" data-gone @mouseenter=${() => this._hold(true)} @mouseleave=${() => this._hold(false)} @focusin=${() => this._hold(true)} @focusout=${() => this._hold(false)}>
       <span>${t('{name} deleted.', { name: d.name })}</span>
-      <button type="button" class="lyr-btn" data-act="undo-delete" @click=${() => this._restore()}>${t('Undo')}</button>
+      <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-delete" @click=${() => this._restore()}>${t('Undo')}</button>
     </li>`;
   }
 
@@ -445,7 +446,7 @@ export class McBgLayers extends LitElement {
     if (rule && !rule.own) {
       return html`<div class="bgl">
         <p class="help" data-rule="none">${t('This rule does not change the backgrounds.')}</p>
-        <div class="acts"><button type="button" class="lyr-btn" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Change backgrounds in this rule')}</button></div>
+        <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Change backgrounds in this rule')}</button></div>
       </div>`;
     }
     const list = this._list;
@@ -456,18 +457,18 @@ export class McBgLayers extends LitElement {
     return html`<div class="bgl">
       ${rule
         ? html`<div class="field">
-            <span class="chip2" data-rule="own">${t('This rule uses its own backgrounds instead of the normal ones.')}</span>
+            <span class="chip is-accent" data-rule="own">${t('This rule uses its own backgrounds instead of the normal ones.')}</span>
             <div class="acts">
-              <button type="button" class="lyr-btn" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Start again from the normal ones')}</button>
-              <button type="button" class="lyr-btn" data-act="rule-reset" @click=${() => this.onRule?.('reset')}>${t('Use the normal backgrounds')}</button>
+              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-start" @click=${() => this.onRule?.('start')}>${t('Start again from the normal ones')}</button>
+              <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="rule-reset" @click=${() => this.onRule?.('reset')}>${t('Use the normal backgrounds')}</button>
             </div>
           </div>`
         : html`<p class="help">${t('To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.')}</p>`}
-      <div class="head2"><span class="chip2" data-count>${t('{n} of {max}', { n: list.length, max: MAX_BACKGROUND_LAYERS })}</span></div>
+      <div class="head2"><span class="chip is-count" data-count>${t('{n} of {max}', { n: list.length, max: MAX_BACKGROUND_LAYERS })}</span></div>
       ${list.length || this._deleted ? html`<ol aria-label=${t('Card backdrop layers, front first')}>${rows}</ol>` : html`<p class="help" data-empty>${t('No layers yet. Add an image, gradient, pattern or colour behind the card content.')}</p>`}
-      ${this._undo ? html`<p class="undo"><span>${this._undo.message}</span> <button type="button" class="lyr-btn" data-act="undo" @click=${() => this._runUndo()}>${t('Undo')}</button></p>` : nothing}
+      ${this._undo ? html`<p class="undo"><span>${this._undo.message}</span> <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo" @click=${() => this._runUndo()}>${t('Undo')}</button></p>` : nothing}
       <div class="add">
-        <button type="button" class="lyr-btn" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
         ${full ? html`<p class="warnrow" id=${`${this._id}-limit`} data-limit>${t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })}</p>` : nothing}
         ${this._adding && !full
           ? html`<div class="lseg" role="group" aria-label=${t('Layer type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${te(it.label)}</button>`)}</div>`

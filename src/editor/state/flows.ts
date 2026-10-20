@@ -19,6 +19,8 @@ export interface FlowModuleOption {
   /** Short name for headers: "Toggle" (its own label), its entity's name, or "Button". */
   name: string;
   sel: ModuleSelection;
+  /** The module's `type` (the editor shows "Attach to" for the types in FLOW_ANCHOR_TYPES). */
+  type?: string;
   /** Template-linked card, a template module without an id: not pickable (`templateIdMissing`). */
   locked?: boolean;
 }
@@ -68,6 +70,7 @@ export function flowModuleOptions(config: MagicCardConfig, hass?: HomeAssistant)
       id,
       label: [...trail, type, ...(own ? [own] : [])].join(' · '),
       name: own ?? type,
+      ...(typeof mod.type === 'string' ? { type: mod.type } : {}),
       sel,
       ...(templateIdMissing(config, sel) ? { locked: true } : {}),
     });

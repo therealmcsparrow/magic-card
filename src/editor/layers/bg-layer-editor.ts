@@ -16,7 +16,7 @@ import { parseGradient } from '../../utils/gradient';
 import { LAYER_TYPES } from './bg-layers-model';
 import { isCameraEntity, imageSource, setImageSource, setStateRow, removeStateRow, renameStateRow, stateRows, switchType, type ImageSource } from './bg-layers-ops';
 import type { PanPreview } from './bg-status';
-import { blendTiles, lyrSeg, lyrSlider, lyrSwitch } from './controls';
+import { blendTiles, chevron, lyrSeg, lyrSlider, lyrSwitch } from './controls';
 import { isAnchor } from './placement-model';
 
 /*
@@ -145,7 +145,7 @@ function renderCamera(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
     <p class="help" data-hint="camera">${t('Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.', { n: refresh })}</p>
     <label for=${h.idOf(i, 'refresh')}>${t('Refresh every')}</label>
     <div class="inline">
-      <input class="lyr-input" id=${h.idOf(i, 'refresh')} type="number" min="5" step="1" .value=${String(refresh)} @change=${(e: Event) => h.patch(i, { refresh: Math.max(5, Math.round(num(e)) || 10) })} />
+      <input class="lyr-input input" id=${h.idOf(i, 'refresh')} type="number" min="5" step="1" .value=${String(refresh)} @change=${(e: Event) => h.patch(i, { refresh: Math.max(5, Math.round(num(e)) || 10) })} />
       <span aria-hidden="true">${t('seconds')}</span>
     </div>
     ${lyrSwitch(h.idOf(i, 'stale'), t('Show "Not updated" when snapshots fail'), layer.stale_badge !== false, (v) => h.patch(i, { stale_badge: v ? undefined : false }), t('Dims the frame and shows how long ago the last good picture arrived.'))}
@@ -160,21 +160,21 @@ function renderStates(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
     <datalist id=${listId}>${hints.map((s) => html`<option value=${s}></option>`)}</datalist>
     ${rows.map(
       ([state, image]) => html`<div class="state-row" data-state=${state}>
-        <label>${t('When state is')}<input class="lyr-input" list=${listId} .value=${state} @change=${(e: Event) => h.swap(i, renameStateRow(layer, state, val(e)), t('State renamed.'))} /></label>
+        <label>${t('When state is')}<input class="lyr-input input" list=${listId} .value=${state} @change=${(e: Event) => h.swap(i, renameStateRow(layer, state, val(e)), t('State renamed.'))} /></label>
         <mc-media-picker .hass=${h.hass} .value=${image} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => h.patch(i, setStateRow(layer, state, String(e.detail.value)))}></mc-media-picker>
-        <button type="button" class="lyr-btn" data-act="remove-state" aria-label=${t('Remove state {state}', { state })} @click=${() => h.patch(i, removeStateRow(layer, state))}>${t('Remove')}</button>
+        <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="remove-state" aria-label=${t('Remove state {state}', { state })} @click=${() => h.patch(i, removeStateRow(layer, state))}>${t('Remove')}</button>
       </div>`,
     )}
     ${h.blankRow === i
       ? html`<div class="state-row" data-state="">
-          <label>${t('When state is')}<input class="lyr-input" list=${listId} .value=${''} @change=${(e: Event) => {
+          <label>${t('When state is')}<input class="lyr-input input" list=${listId} .value=${''} @change=${(e: Event) => {
             const name = val(e).trim();
             h.clearBlankRow();
             if (name) h.patch(i, setStateRow(layer, name, ''));
           }} /></label>
         </div>`
       : nothing}
-    <div class="acts"><button type="button" class="lyr-btn" data-act="add-state" @click=${() => h.addBlankRow(i)}>${t('Add state')}</button></div>
+    <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="add-state" @click=${() => h.addBlankRow(i)}>${t('Add state')}</button></div>
     <div>
       <span class="lbl">${t('Any other state')}</span>
       <mc-media-picker .hass=${h.hass} .value=${layer.image ?? ''} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => h.patch(i, { image: String(e.detail.value) || undefined })}></mc-media-picker>
@@ -197,14 +197,14 @@ function renderFit(h: EditorHost, layer: BackgroundLayerConfig, i: number): Temp
         ${lyrSeg(t('Size'), kind, SIZES.map((s) => ({ value: s.value, label: t(s.label) })), (v) => h.patch(i, { size: v === 'cover' ? undefined : v === 'custom' ? '100%' : v }), 'size')}
         ${kind === 'custom'
           ? html`<label for=${h.idOf(i, 'size')}>${t('Size in %')}</label>
-              <input class="lyr-input" id=${h.idOf(i, 'size')} type="number" min="1" max="400" step="1" .value=${String(customPercent(layer))} @change=${(e: Event) => h.patch(i, { size: `${Math.max(1, Math.min(400, Math.round(num(e)) || 100))}%` })} />`
+              <input class="lyr-input input" id=${h.idOf(i, 'size')} type="number" min="1" max="400" step="1" .value=${String(customPercent(layer))} @change=${(e: Event) => h.patch(i, { size: `${Math.max(1, Math.min(400, Math.round(num(e)) || 100))}%` })} />`
           : nothing}
       </div>
     </div>
     ${kind !== 'cover'
       ? html`<div>
           <label for=${h.idOf(i, 'repeat')}>${t('Repeat')}</label>
-          <select class="lyr-input" id=${h.idOf(i, 'repeat')} @change=${(e: Event) => h.patch(i, { repeat: val(e) === 'no-repeat' ? undefined : (val(e) as BackgroundLayerConfig['repeat']) })}>
+          <select class="lyr-input input" id=${h.idOf(i, 'repeat')} @change=${(e: Event) => h.patch(i, { repeat: val(e) === 'no-repeat' ? undefined : (val(e) as BackgroundLayerConfig['repeat']) })}>
             ${REPEATS.map((r) => html`<option value=${r.value} ?selected=${(layer.repeat ?? 'no-repeat') === r.value}>${t(r.label)}</option>`)}
           </select>
         </div>`
@@ -220,8 +220,8 @@ function renderPanZoom(h: EditorHost, layer: BackgroundLayerConfig, i: number): 
   const camera = isCameraEntity(typeof layer.entity === 'string' ? layer.entity : undefined);
   const prev = h.preview;
   return html`<div class="pan">
-    <button type="button" class="lyr-btn disc" aria-expanded=${open ? 'true' : 'false'} aria-controls=${h.idOf(i, 'pan')} @click=${() => h.togglePan(i)}>
-      <span class="arrow" aria-hidden="true">▸</span><span>${t('Pan and zoom')}</span>${on ? html`<span class="chip2">${t('On')}</span>` : nothing}
+    <button type="button" class="disc" aria-expanded=${open ? 'true' : 'false'} aria-controls=${h.idOf(i, 'pan')} @click=${() => h.togglePan(i)}>
+      <span>${t('Pan and zoom')}</span>${on ? html`<span class="chip is-count">${t('On')}</span>` : nothing}${chevron()}
     </button>
     <div class="effects" id=${h.idOf(i, 'pan')} ?hidden=${!open}>
       ${lyrSwitch(h.idOf(i, 'panon'), t('Pan and zoom'), on, (v) => h.patch(i, { pan_zoom: v ? { from: 100, to: 115, duration: 30, alternate: true, pause_when_idle: true } : undefined }), t('Moves slowly, pauses when the card is off screen and stays still when the device asks for reduced motion.'))}
@@ -242,11 +242,17 @@ function renderPanZoom(h: EditorHost, layer: BackgroundLayerConfig, i: number): 
               <span class="lbl">${t('Preview (not saved)')}</span>
               ${lyrSeg(t('Preview'), prev, [{ value: 'play' as PanPreview, label: t('Play') }, { value: 'start' as PanPreview, label: t('Start') }, { value: 'end' as PanPreview, label: t('End') }], (v) => h.setPreview(prev === v ? undefined : v), 'preview')}
               <p class="help">${t('Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.')}</p>
-              ${prev === 'play' ? html`<button type="button" class="lyr-btn" data-act="stop-preview" @click=${() => h.setPreview(undefined)}>${t('Stop preview')}</button>` : nothing}
+              ${prev === 'play' ? html`<button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="stop-preview" @click=${(e: Event) => stopPreview(h, e)}>${t('Stop preview')}</button>` : nothing}
             </div>`}`
         : nothing}
     </div>
   </div>`;
+}
+
+/** Stop preview removes itself: focus goes to Play first, so it does not fall to the page (WCAG 2.4.3). */
+function stopPreview(h: EditorHost, e: Event): void {
+  (e.currentTarget as HTMLElement).parentElement?.querySelector<HTMLElement>('[data-seg=preview] [data-val=play]')?.focus();
+  h.setPreview(undefined);
 }
 
 function renderImage(h: EditorHost, layer: BackgroundLayerConfig, i: number): TemplateResult {
@@ -268,13 +274,13 @@ function renderGradient(h: EditorHost, layer: BackgroundLayerConfig, i: number):
   ];
   return html`<div class="field">
     <div class="acts" role="group" aria-label=${t('Quick gradients')}>
-      ${quick.map((q) => html`<button type="button" class="lyr-btn" data-quick=${q.id} @click=${() => h.patch(i, { gradient: q.value })}>${q.label}</button>`)}
+      ${quick.map((q) => html`<button type="button" class="lyr-btn btn btn-secondary btn-sm" data-quick=${q.id} @click=${() => h.patch(i, { gradient: q.value })}>${q.label}</button>`)}
     </div>
     ${model
       ? html`<mc-gradient-editor .model=${model} .label=${t('Gradient')} .allowRadial=${true} @value-changed=${(e: CustomEvent) => h.patch(i, { gradient: String(e.detail.value) })}></mc-gradient-editor>`
       : html`<div>
           <label for=${h.idOf(i, 'css')}>${t('Gradient (CSS)')}</label>
-          <input class="lyr-input" id=${h.idOf(i, 'css')} type="text" spellcheck="false" .value=${layer.gradient ?? ''} aria-invalid=${layer.gradient && !parseGradient(layer.gradient) ? 'true' : 'false'} @change=${(e: Event) => h.patch(i, { gradient: val(e).trim() || undefined })} />
+          <input class="lyr-input input" id=${h.idOf(i, 'css')} type="text" spellcheck="false" .value=${layer.gradient ?? ''} aria-invalid=${layer.gradient && !parseGradient(layer.gradient) ? 'true' : 'false'} @change=${(e: Event) => h.patch(i, { gradient: val(e).trim() || undefined })} />
           ${layer.gradient && !parseGradient(layer.gradient) ? html`<p class="err" role="alert">${t('This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).')}</p>` : nothing}
           <p class="help">${t('This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.')}</p>
         </div>`}
@@ -319,10 +325,10 @@ export function renderLayerEditor(h: EditorHost, layer: BackgroundLayerConfig, i
     ${lyrSlider(h.idOf(i, 'op'), t('Opacity'), Math.max(0, Math.min(100, layer.opacity ?? 100)), 0, 100, '%', (v) => h.patch(i, { opacity: v === 100 ? undefined : v }))}
     ${blendTiles(h.idOf(i, 'bl'), layer.blend, (v) => h.patch(i, { blend: v }))}
     <div>
-      <button type="button" class="lyr-btn disc" aria-expanded=${h.yamlOpen(i) ? 'true' : 'false'} aria-controls=${h.idOf(i, 'y')} @click=${() => h.toggleYaml(i)}><span class="arrow" aria-hidden="true">▸</span><span>${t('Show YAML')}</span></button>
+      <button type="button" class="disc" aria-expanded=${h.yamlOpen(i) ? 'true' : 'false'} aria-controls=${h.idOf(i, 'y')} @click=${() => h.toggleYaml(i)}><span>${t('Show YAML')}</span>${chevron()}</button>
       <div id=${h.idOf(i, 'y')} ?hidden=${!h.yamlOpen(i)}>
         <pre class="yaml" data-yaml>${yaml}</pre>
-        <div class="acts"><button type="button" class="lyr-btn" data-act="copy-yaml" @click=${() => h.copyYaml(yaml)}>${h.copied ? t('Copied') : t('Copy YAML')}</button></div>
+        <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="copy-yaml" @click=${() => h.copyYaml(yaml)}>${h.copied ? t('Copied') : t('Copy YAML')}</button></div>
       </div>
     </div>
   </div>`;

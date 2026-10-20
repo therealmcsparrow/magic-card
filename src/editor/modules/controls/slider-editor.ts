@@ -10,6 +10,7 @@ import {
   renderFieldHint,
 } from '../../../utils/form-utils';
 import { numericControl } from '../../../utils/entity-control';
+import { entityStateColor } from '../../../utils/entity-color';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';
@@ -25,6 +26,7 @@ export const sliderEditor: ModuleEditor = {
     const c = config as SliderModuleConfig;
     const eid = entityFor(c, scope);
     const stateObj = eid ? hass?.states[eid] : undefined;
+    const paint = { color: entityStateColor(stateObj) ?? 'currentColor', attributes: stateObj?.attributes };
     const own = stateObj ? numericControl(hass, stateObj, c.attribute) : undefined;
     return html`
       <div class="mc-tab-content">
@@ -55,8 +57,8 @@ export const sliderEditor: ModuleEditor = {
               <div class="field-head"><span class="lbl">${t('Slider colour')}</span></div>
               <p class="help">${t('Following the light')} <button type="button" class="btn sm ghost" @click=${() => onChange({ ...c, use_entity_color: undefined })}>${t('Use own colour')}</button></p>
             </div>`
-          : renderColorField(t('Slider colour'), c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx)}
-        ${renderColorField(t('Track colour'), c.track_color, (v) => onChange({ ...c, track_color: v || undefined }), 'track_color', syncCtx)}
+          : renderColorField(t('Slider colour'), c.slider_color, (v) => onChange({ ...c, slider_color: v || undefined }), 'slider_color', syncCtx, '', '', paint)}
+        ${renderColorField(t('Track colour'), c.track_color, (v) => onChange({ ...c, track_color: v || undefined }), 'track_color', syncCtx, '', '', paint)}
         <mc-slider-look-host .config=${c} .hass=${hass} .template=${template} .entity=${eid} .onChange=${(next: SliderModuleConfig) => onChange(next)}></mc-slider-look-host>
       </div>
     `;

@@ -8,6 +8,10 @@ export type RGB = [number, number, number];
 /** Surfaces a look is checked against (card background, light and dark; the tool for flows uses the same). */
 export const SURFACE_LIGHT: RGB = [255, 255, 255];
 export const SURFACE_DARK: RGB = [28, 28, 28];
+/** The lightest light card (a light grey theme card); white passes whenever this does. */
+export const LIGHT_CARD: RGB = [242, 242, 242];
+/** Black over the theme primary on a light card: HA's blue goes from 2.4:1 to 3.2:1 on #f2f2f2. */
+export const PRIMARY_SHADE = 0.15;
 
 const byte = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
 
@@ -22,6 +26,15 @@ export function parseColour(s: string | undefined): RGB | undefined {
   }
   m = /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)/i.exec(v);
   return m ? [byte(+m[1]), byte(+m[2]), byte(+m[3])] : undefined;
+}
+
+/** The alpha of a colour string (8-digit hex, rgba() or `/ a`), 1 when it has none or cannot be read. */
+export function alphaOf(s: string | undefined): number {
+  const v = (s ?? '').trim();
+  const hex = /^#(?:[0-9a-f]{6})([0-9a-f]{2})$/i.exec(v);
+  if (hex) return parseInt(hex[1], 16) / 255;
+  const fn = /^rgba?\((?:[^,/)]+,[^,/)]+,[^,/)]+,|[^,/)]+\/)\s*(\d*\.?\d+)(%?)\s*\)$/i.exec(v);
+  return fn ? Math.min(1, +fn[1] / (fn[2] ? 100 : 1)) : 1;
 }
 
 export const css = (c: RGB): string => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;

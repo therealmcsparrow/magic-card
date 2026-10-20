@@ -11,6 +11,8 @@ export interface Stop {
   x: number;
   y: number;
   a?: number;
+  /** Opacity at this stop (keyframes also fade the shape); absent: not animated. */
+  o?: number;
 }
 
 const r2 = (v: number): number => Math.round(v * 100) / 100 || 0;
@@ -32,7 +34,7 @@ export function travelFrames(name: string, P: readonly Stop[], reverse = false):
       prev = i ? a + Math.round((prev - a) / 360) * 360 : a;
       turn = ` rotate(${r2(prev)}deg)`;
     }
-    return `${total ? Math.round((cum[i] / total) * 1e5) / 1e3 : i ? 100 : 0}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn}}`;
+    return `${total ? Math.round((cum[i] / total) * 1e5) / 1e3 : i ? 100 : 0}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn}${p.o === undefined ? '' : ';opacity:' + p.o}}`;
   });
   return `@keyframes ${name}{${frames.join('')}}`;
 }

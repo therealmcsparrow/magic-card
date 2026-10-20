@@ -4,7 +4,7 @@ import { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, ImageModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { cssAspectRatio, mediaSrc, resolveMediaUrl } from '../../utils/media';
+import { cssAspectRatio, mediaSrc, safeSnapshotSrc } from '../../utils/media';
 import { mediaSourceId, reportMediaError } from '../../services/media-resolver';
 import { stableSrc } from '../../utils/stable-src';
 import { t } from '../../card/i18n';
@@ -49,23 +49,23 @@ class ImageModule extends BaseMagicModule {
    * The image URL: an entity's attribute (when one is picked and its value is a URL, e.g. a
    * cover URL or `entity_picture_local`), else its `entity_picture` (person, image.*, camera.*,
    * media players) with "Use entity picture", else the static image. Relative HA URLs go through
-   * hass.hassUrl.
+   * hass.hassUrl; an entity's value is parsed like the browser does and kept only as http(s) or a raster
+   * data: URL (safeSnapshotSrc), anything else shows the placeholder.
    */
   imageSource(c: ImageModuleConfig, hass?: HomeAssistant): string {
     const entity = c.entity && hass ? hass.states[c.entity] : undefined;
     let src = '';
     if (entity && c.attribute) {
       const v = entity.attributes[c.attribute];
-      if (typeof v === 'string' && URL_LIKE.test(v.trim())) src = v.trim();
+      if (typeof v === 'string' && URL_LIKE.test(v.trim())) src = safeSnapshotSrc(hass, v.trim()) ?? '';
     }
     if (!src && c.entity_picture) {
-      const v = entity?.attributes.entity_picture;
-      if (typeof v === 'string') src = v;
+      src = safeSnapshotSrc(hass, entity?.attributes.entity_picture) ?? '';
     } else if (!src) {
       // a browsed image is written as CSS url('...')
       return mediaSrc(hass, c.image);
     }
-    return resolveMediaUrl(hass, src);
+    return src;
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -76,7 +76,7 @@ class ImageModule extends BaseMagicModule {
     const fit = ['contain', 'cover', 'fill', 'none'].includes(c.fit as string) ? c.fit : 'cover';
 
     return html`
-      <div class="mc-module mc-image" style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)};">
+      <div class="mc-module mc-image" data-mc-flow-end style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)};">
         ${src
           ? html`<img src=${stableSrc(src)} data-mc-media=${mediaId ?? nothing} style="object-fit: ${fit};" alt="" @error=${onImageError} @load=${onImageLoad} /><div
                 class="mc-image-fallback mc-image-error"><ha-icon icon="mdi:image-off"></ha-icon></div>`

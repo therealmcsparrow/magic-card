@@ -74,7 +74,7 @@ export class McLayersSheet extends LitElement {
         overflow: auto;
         padding: 8px;
         border-radius: 12px;
-        border: 1px solid var(--mc-ed-ctl-line);
+        border: 1px solid var(--mc-divider);
         background: var(--mc-surface);
         box-shadow: var(--mc-shadow-float);
         box-sizing: border-box;
@@ -104,6 +104,7 @@ export class McLayersSheet extends LitElement {
         justify-content: space-between;
         gap: 8px;
         padding: 6px 10px;
+        white-space: normal;
         text-align: left;
         cursor: pointer;
       }
@@ -162,7 +163,7 @@ export class McLayersSheet extends LitElement {
           ${this.items.map(
             (it, i) => html`<li><button
               type="button"
-              class="item lyr-btn"
+              class="item lyr-btn btn btn-secondary btn-sm"
               data-key=${it.key}
               aria-current=${it.current ? 'true' : 'false'}
               @click=${() => {

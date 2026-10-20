@@ -3,7 +3,7 @@ import type { ShapeKind, ShapeOptions, SliderModuleConfig } from '../types';
 import type { ModuleView } from './lazy-module';
 
 /*
- * Contract: slider looks. Version 1.0.0 (Architect-owned). ADR 0037. Task flow-slider-styles.
+ * Contract: slider looks. Version 1.1.0 (Architect-owned). ADR 0037. Task flow-slider-styles.
  * r2 2026-10-19 (designer round 1 request R5 and question 1, folded into 1.0.0 in place per
  * ADR 0020, nothing built yet): entity colour combines with fill modes, touch-action / capture
  * rules, failed-call feedback through runServiceCall's onError, lingering bubble, outlines and
@@ -12,6 +12,10 @@ import type { ModuleView } from './lazy-module';
  * error state 5 s; outline opacity 0.55; in-track value as a chip; auto-brightness ramp as a 75 %
  * black overlay; inline <style> exception (lit.S7); AC11 reading; no restore after a cancelled
  * live drag; 12rem vertical big-fill height; show_icon / icon / icon_position confirmed.
+ * r5 1.1.0 2026-10-20 (task flow-anchors-polish, CEO 2026-10-20, additive): slider_color,
+ * track_color, slider_color_to and thumb_border_color accept the entity colour grammar of contract
+ * entity-colour 1.0.0 (`entity`, `entity N%`, `entity.<attr>`, `entity.<attr> N%`). The host
+ * resolves them before calling the view, so the chunk is unchanged (see "Entity colours").
  * Applies to `type: slider` only (the light module's track and the slider layout are unchanged).
  *
  * Seam: the slider Module (src/modules/controls/slider-module.ts, magic-card.js) keeps today's
@@ -26,6 +30,21 @@ import type { ModuleView } from './lazy-module';
  * (hasSliderLook). Without a look the module renders exactly as before (AC1) and never loads the
  * chunk. Existing keys keep their meaning: `slider_color` (fill colour; the gradient's start),
  * `track_color`, `show_value`, `direction`, `min` / `max` / `step`.
+ *
+ * ── Entity colours (r5) ──
+ * slider-module.ts renderPreview resolves ENTITY_PAINT_KEYS (entity-colour 1.0.0) with
+ * entityPaint(value, stateObj of c.entity) before either rendering:
+ * - a value that is not an entity value: kept as written (today);
+ * - an entity value that gives a colour: replaced by the CSS entityPaint returns (rgb() / rgba()
+ *   when the rgb is known, else the theme chain, colour-mix only where supported);
+ * - an entity value that gives no colour (sensor without a state colour, attribute missing or not
+ *   numeric): treated as unset (design colour, then the default).
+ * Today's markup uses the resolved slider_color / track_color in its CSS variables. A slider with a
+ * look calls view.renderPreview with a shallow copy holding the resolved keys (unset ones deleted),
+ * so the view's safeColor / parseColour / lift / thumb contrast work on concrete colours and the
+ * chunk needs no new code (its cap stays). hasSliderLook is not affected (slider_color and
+ * track_color are not look keys; slider_color_to and thumb_border_color stay look keys whatever
+ * their value). use_entity_color keeps its meaning below and still wins for a light.
  *
  * Precedence:
  * - Value display: `show_value: false` hides the value whatever `value_position` says. The editor
@@ -49,7 +68,8 @@ import type { ModuleView } from './lazy-module';
  *
  * ── magic-card.js side (slider Module) ──
  * - types.ts: `SliderModuleConfig extends SliderLookConfig`.
- * - renderPreview: hasSliderLook(c) and the slot is filled -> slot.renderPreview(c, hass). Slot
+ * - renderPreview: hasSliderLook(c) and the slot is filled -> slot.renderPreview(c', hass), c' the
+ *   copy with resolved entity colours (r5). Slot
  *   empty -> start the 'slider-look' load, whenReady -> currentRenderContext()?.requestUpdate, and
  *   render today's markup meanwhile (failed: today's markup for good, no retry).
  * - prefetchLazy(config) loads 'slider-look' when a slider module (nested included, card_config
@@ -91,7 +111,8 @@ import type { ModuleView } from './lazy-module';
  *    (glass_blur off): track = text colour at 0.08, fill = slider colour at 0.70 with a 0.25 top
  *    highlight in the surface colour; glass_blur adds backdrop-filter: blur(8px) on a static
  *    element, dropped where unsupported. Paint is floor-safe: rgba() / separate opacity, never
- *    color-mix() (flow-look 1.0.0 colour rule).
+ *    color-mix() (flow-look 1.0.0 colour rule). (r5) The one exception is an `entity N%` theme
+ *    chain, which the host emits as color-mix() only where CSS.supports it (entity-colour 1.0.0).
  * 6. Motion: thumb scale on drag and the bubble fade are off under reduced motion (the bubble then
  *    appears and disappears without a fade). No animation runs while idle; the only timers are the
  *    live throttle, the 2 s bubble linger and the error state, all started by input.
@@ -110,10 +131,14 @@ import type { ModuleView } from './lazy-module';
  *    other chunk may copy this pattern without an exception of its own.
  * 12. (r4) Vertical big-fill: 12rem tall (max 100 % minus 3rem), so it has a height inside an
  *    auto-height column; module design height still wins where set.
+ *
+ * ── Editor (r5) ──
+ * slider-editor.ts (Slider colour, Track colour) and mc-slider-look-editor.ts (End colour, thumb
+ * Border colour) set allowEntity and allowAttribute on the colour picker (entity-colour 1.0.0).
  */
 
-export const SLIDER_LOOK_CONTRACT = '1.0.0';
-export const SLIDER_LOOK_CONTRACT_REVISION = 4;
+export const SLIDER_LOOK_CONTRACT = '1.1.0';
+export const SLIDER_LOOK_CONTRACT_REVISION = 5;
 
 export type SliderTrackStyle = 'standard' | 'thin' | 'pill' | 'segmented' | 'glass' | 'big-fill';
 export type SliderThumb = 'line' | 'circle' | 'pill' | 'square' | 'none';
@@ -168,7 +193,7 @@ export interface SliderLookConfig {
   glass_blur?: boolean;
   /** Fill shape; precedence in the header. */
   fill_mode?: 'solid' | 'gradient' | 'auto';
-  /** gradient: end colour (the start is the fill colour source). */
+  /** gradient: end colour (the start is the fill colour source). (r5) Entity colour grammar allowed. */
   slider_color_to?: string;
   /** P5 The light's own colour as the fill's start colour (combines with fill_mode). */
   use_entity_color?: boolean;
@@ -184,6 +209,7 @@ export interface SliderLookConfig {
   thumb?: SliderThumb;
   thumb_size?: number;
   thumb_border?: number;
+  /** (r5) Entity colour grammar allowed. */
   thumb_border_color?: string;
   thumb_glow?: number;
   /** MDI icon in a circle / pill / square thumb. */

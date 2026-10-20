@@ -10,7 +10,7 @@ import { entityDisplayName, formatEntityValue } from '../utils/entity-value';
 import { safeColor } from '../utils/animation';
 import { currentRenderContext, currentRenderPass } from '../services/render-context';
 import { t } from '../card/i18n';
-import { css, lift, parseColour, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
+import { alphaOf, css, lift, LIGHT_CARD, parseColour, PRIMARY_SHADE, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
 import { bigFillColours, bigFillIcon, fillSamples } from './big-fill';
 import { createLive, type Live } from './live';
 import { ShapeBox, trackShape } from './shape';
@@ -98,6 +98,9 @@ const px = (n: number) => `${+n.toFixed(2)}px`;
 /** var(--x, #hex) reads as its fallback for the contrast maths; the CSS value itself stays. */
 const readColour = (c: string): RGB | undefined => parseColour(c) ?? parseColour(/^var\([^,]+,\s*([^)]+)\)$/.exec(c.trim())?.[1]);
 
+/** A colour with an alpha below 1 (8-digit hex, rgba() or `/ a`): the contrast lift would make it opaque, so it is left as written. */
+const translucent = (c: string): boolean => alphaOf(c) < 1;
+
 const alertIcon = () => html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d=${ALERT}></path>`}</svg>`;
 
 function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -143,6 +146,10 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     const own = parseColour(entityStateColor(stateObj));
     if (own) fill = css(lift(own, surface, 3));
   }
+  // a light card: the fill reaches 3:1 on the card (a colour we can read is lifted, the theme primary gets a black shade)
+  const own3 = dark || translucent(fill) ? undefined : parseColour(fill);
+  const lifted = own3 && lift(own3, LIGHT_CARD, 3);
+  if (lifted && lifted !== own3) fill = css(lifted);
   const dir = vertical ? 'to top' : 'to right';
   const attr = c.attribute;
   const light = stateObj?.entity_id.startsWith('light.');
@@ -159,6 +166,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       sampleMode = 'kelvin';
     }
   }
+  const shade = `rgba(0,0,0,${PRIMARY_SHADE})`;
+  if (!dark && !grad && fill === DEFAULT_FILL) grad = `linear-gradient(${shade},${shade}), linear-gradient(${fill}, ${fill})`;
   const fillRgb = readColour(fill);
   const th = fillRgb ? thumbColours(fillRgb, surface) : undefined;
   const face = th ? css(th.face) : 'var(--text-primary-color, #fff)';
@@ -224,7 +233,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   if (labels.length) vars.push(`--nl: ${labels.length}`);
 
   // ── the failed call: snap back, show the hint, say it
-  const message = st.err ? t("Couldn't set {name}", { name }) : '';
+  const couldnt = () => t("Couldn't set {name}", { name });
+  const message = st.err ? couldnt() : '';
   const trackEl = () => st.wrap.value?.closest('.mc-tile-slider');
   /** The failed-call text: spoken (the status line) and shown for the same few seconds (under the track). */
   const setMessage = (text: string) => {
@@ -238,18 +248,22 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     if (st.errTimer) clearTimeout(st.errTimer);
     st.wrap.value?.setAttribute('data-error', '');
     trackEl()?.setAttribute('aria-invalid', 'true');
-    setMessage(t("Couldn't set {name}", { name }));
+    setMessage(couldnt());
     st.update?.();
-    st.errTimer = setTimeout(() => {
-      st.err = false;
-      st.wrap.value?.removeAttribute('data-error');
-      trackEl()?.removeAttribute('aria-invalid');
-      setMessage('');
-      st.update?.();
-    }, ERROR_MS);
+    st.errTimer = setTimeout(heal, ERROR_MS);
+  };
+  /** The window ended or the next set went through: the hint, the mark and aria-invalid go. */
+  const heal = () => {
+    if (!st.err) return;
+    clearTimeout(st.errTimer);
+    st.err = false;
+    st.wrap.value?.removeAttribute('data-error');
+    trackEl()?.removeAttribute('aria-invalid');
+    setMessage('');
+    st.update?.();
   };
 
-  st.send = ctrl?.call && hass ? (v) => runServiceCall(hass, ctrl.call!(v), fail) : undefined;
+  st.send = ctrl?.call && hass ? (v) => runServiceCall(hass, ctrl.call!(v), fail, heal) : undefined;
 
   // ── drag hooks: no render while dragging, the parts follow --v
   const texts = () => st.wrap.value?.closest('.mc-slider-container')?.querySelectorAll<HTMLElement>('[data-val]') ?? [];
@@ -330,7 +344,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       if (!ctrl?.call || !hass) return;
       const call = ctrl.call;
       // live: the final value goes out at once (the drag's own calls were throttled)
-      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail), () => ctx?.requestUpdate(), look.live ? 0 : 300);
+      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail, heal), () => ctx?.requestUpdate(), look.live ? 0 : 300);
     },
   });
 

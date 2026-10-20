@@ -79,4 +79,4 @@ rows:
             track_color: "rgba(255,255,255,0.18)"
             value_position: beside
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.house_power, max: 2000, route: straight, color: "#ff4f9a", color_to: "#22d3ee", line_style: wave, width: 3, amplitude: 9, wavelength: 36, glow: 8, shape: icon, shape_icon: "mdi:music-note", shape_icon_rotate: false, dot_size: 20, dots: 3, arrival: ring, arrival_size: 40 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#ff4f9a", color_to: "#22d3ee", line_style: wave, width: 3, amplitude: 9, wavelength: 36, glow: 8, shape: icon, shape_icon: "mdi:music-note", shape_icon_rotate: false, dot_size: 20, dots: 3, arrival: ring, arrival_size: 40 }

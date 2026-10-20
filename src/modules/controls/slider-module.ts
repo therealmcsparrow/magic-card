@@ -11,10 +11,27 @@ import { hasSliderLook } from '../../contracts/slider-look';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { sliderLookSlot } from './slider-look-slot';
 import { currentRenderContext } from '../../services/render-context';
+import { entityPaint } from '../../utils/entity-color';
+import { ENTITY_PAINT_KEYS, ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
 
+
+/** The config with `entity` colour values replaced by their CSS (unset when they give none); the same object without any. */
+function paintedColours(c: SliderModuleConfig, hass?: HomeAssistant): SliderModuleConfig {
+  const bag = c as unknown as Record<string, unknown>;
+  let out = bag;
+  for (const k of ENTITY_PAINT_KEYS) {
+    const v = bag[k];
+    if (typeof v !== 'string' || !ENTITY_PAINT_RE.test(v.trim())) continue;
+    if (out === bag) out = { ...bag };
+    const css = entityPaint(v, c.entity ? hass?.states[c.entity] : undefined);
+    if (css) out[k] = css;
+    else delete out[k];
+  }
+  return out as unknown as SliderModuleConfig;
+}
 
 /**
  * Slider for an entity's numeric value. Per domain (see numericControl): input_number / number
@@ -41,8 +58,10 @@ class SliderModule extends BaseMagicModule {
   }
 
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
-    const c = config as SliderModuleConfig;
-    if (hasSliderLook(c)) {
+    // colours of the entity (contract entity-colour 1.0.0) are resolved here, so both renderings get plain CSS
+    const c = paintedColours(config as SliderModuleConfig, hass);
+    // the look decision reads the config as written: a look key whose entity colour resolves to nothing (light off) stays a look key
+    if (hasSliderLook(config as SliderModuleConfig)) {
       // a slider with a look: the slider-look chunk draws it; until it is there (or when it failed) today's markup
       const view = sliderLookSlot.get();
       if (view) return view.renderPreview(c, hass);

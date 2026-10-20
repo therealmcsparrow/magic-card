@@ -8,6 +8,7 @@ import {
   type FlowLookResolved,
   type FlowWithLook,
 } from '../contracts/flow-look';
+import { FLOW_END_SELECTOR } from '../contracts/flow-anchor';
 import type { ResolvedFlow } from '../utils/flow';
 import { anchorSides, flowPath, spreadAnchors, type FlowGeometry, type Point, type Rect } from '../utils/flow-geometry';
 import { flattenPath, travelFrames } from '../utils/flow-motion';
@@ -166,6 +167,48 @@ function layoutBox(el: HTMLElement, fromScreen: (r: DOMRect) => Rect, sx: number
 }
 
 /**
+ * A module's main visual (flow-anchor 1.0.0) as a rect in content px, or undefined (the box is used).
+ * `full` is the wrapper's unclipped layout box, `box` the same cut to the clipping ancestors. Measured
+ * from layout offsets scaled by the wrapper box (k), never from the visual's own transform, so a spin,
+ * a bounce or the tap scale cannot move the end. An SVG root has no offsetParent: its centre comes
+ * from the screen boxes, divided by the wrapper's own screen scale. Every number must be finite.
+ */
+function visualRect(w: HTMLElement, v: Element, full: Rect, box: Rect): Rect | undefined {
+  const k = full.w / w.offsetWidth;
+  let ox = w.clientLeft;
+  let oy = w.clientTop;
+  let vw: number;
+  let vh: number;
+  if (v instanceof HTMLElement) {
+    // offsets summed up the offsetParent chain to the wrapper; a chain that skips or leaves it = box
+    vw = v.offsetWidth;
+    vh = v.offsetHeight;
+    let n: HTMLElement | null = v;
+    while (n && n !== w) {
+      ox += n.offsetLeft;
+      oy += n.offsetTop;
+      n = n.offsetParent as HTMLElement | null;
+      if (n && n !== w) {
+        ox += n.clientLeft;
+        oy += n.clientTop;
+      }
+    }
+    if (n !== w) return;
+  } else {
+    // clientWidth is 0 for a nested <svg> or an element without a CSS box: the screen size then
+    const a = v.getBoundingClientRect();
+    const b = w.getBoundingClientRect();
+    const s = b.width / w.offsetWidth;
+    vw = v.clientWidth || a.width / s;
+    vh = v.clientHeight || a.height / s;
+    ox = (a.left + a.width / 2 - b.left) / s - vw / 2;
+    oy = (a.top + a.height / 2 - b.top) / s - vh / 2;
+  }
+  // intersect() drops a NaN, infinite or empty rect (its width / height test is false), so only finite, positive rects pass
+  return intersect({ x: full.x + ox * k, y: full.y + oy * k, w: vw * k, h: vh * k }, box);
+}
+
+/**
  * Flow lines of a card: one overlay over the card content (`inset: 0`, aria-hidden, never takes
  * pointer events) with a back SVG layer (behind module content), a front one and the labels.
  *
@@ -218,6 +261,8 @@ export class McFlows extends LitElement {
   }
 
   private _rects = new Map<string, Rect>();
+  /** Main-visual rects by module id (flow-anchor 1.0.0), only for modules that have a drawable one. */
+  private _anchors = new Map<string, Rect>();
   private _rectKey = '';
   /** The drawn flows' endpoints at the last measure from updated(). */
   private _endsKey = '';
@@ -319,7 +364,7 @@ export class McFlows extends LitElement {
     // the card may have moved the overlay; new flows may name other endpoints (a value / colour
     // update alone moves nothing: the observers cover layout changes)
     const moved = this._watch();
-    const ends = JSON.stringify((this.flows ?? []).filter((f) => f.visible).map((f) => [f.from, f.to]));
+    const ends = JSON.stringify((this.flows ?? []).filter((f) => f.visible).map((f) => [f.from, f.to, f.fromBox, f.toBox]));
     if (moved || ends !== this._endsKey) {
       this._endsKey = ends;
       this.measure();
@@ -341,8 +386,13 @@ export class McFlows extends LitElement {
     const content = this._content;
     if (!content) return;
     const ids = new Set<string>();
+    // ends that attach to the main visual (the default); a `box` end needs only the wrapper
+    const iconIds = new Set<string>();
     for (const f of this.flows ?? []) {
-      if (f.visible) ids.add(f.from).add(f.to);
+      if (!f.visible) continue;
+      ids.add(f.from).add(f.to);
+      if (!f.fromBox) iconIds.add(f.from);
+      if (!f.toBox) iconIds.add(f.to);
     }
     const els = new Map<string, HTMLElement>();
     // every module wrapper and column is observed too: any module changing size (an endpoint or a
@@ -353,6 +403,16 @@ export class McFlows extends LitElement {
         watch.add(el);
         const id = el.dataset.mcId;
         if (id && ids.has(id) && !els.has(id)) els.set(id, el);
+      }
+    }
+    // the visual of a module is found by the fixed marker selector: nothing here is built from config
+    const marks = new Map<string, Element>();
+    for (const id of iconIds) {
+      const w = els.get(id);
+      const v = w && [...w.querySelectorAll(FLOW_END_SELECTOR)].find((e) => e.closest('.mc-module-wrapper') === w);
+      if (v) {
+        marks.set(id, v);
+        watch.add(v);
       }
     }
     for (const el of [...this._observed]) {
@@ -403,9 +463,11 @@ export class McFlows extends LitElement {
       return c;
     };
     const rects = new Map<string, Rect>();
+    const anchors = new Map<string, Rect>();
     for (const [id, el] of els) {
       if (typeof el.checkVisibility === 'function' && !el.checkVisibility()) continue;
-      let box = layoutBox(el, fromScreen, sx, sy);
+      const full = layoutBox(el, fromScreen, sx, sy);
+      let box = full;
       // only the part inside every clipping ancestor (slider, scrolled container) counts
       for (let a = parentOf(el); box && a && a !== content; a = parentOf(a)) {
         const c = clipOf(a);
@@ -419,11 +481,15 @@ export class McFlows extends LitElement {
       // outside the content (an inactive slide): not drawn
       if (cw && ch && (rect.x >= cw || rect.y >= ch || rect.x + rect.w <= 0 || rect.y + rect.h <= 0)) continue;
       rects.set(id, rect);
+      const v = marks.get(id);
+      const vr = v && full && visualRect(el, v, full, box);
+      if (vr && vr.w > 0 && vr.h > 0) anchors.set(id, { x: r1(vr.x), y: r1(vr.y), w: r1(vr.w), h: r1(vr.h) });
     }
-    const key = JSON.stringify([cw, ch, ...rects]);
+    const key = JSON.stringify([cw, ch, ...rects, ...anchors]);
     if (key === this._rectKey) return;
     this._rectKey = key;
     this._rects = rects;
+    this._anchors = anchors;
     this._bounds = cw && ch ? { w: cw, h: ch } : undefined;
     this.requestUpdate();
   }
@@ -439,13 +505,27 @@ export class McFlows extends LitElement {
     const all = this.flows ?? [];
     const quality = pickFlowQuality(all);
     // the sides of every drawn flow first: flows sharing a side spread along it
+    // an end is its module's main visual unless `box` or none was measured; spreading groups an icon end apart from a box end
+    const ends = new Map(this._rects);
+    const obstacleRects = new Map(this._rects);
+    const end = (id: string, box: boolean | undefined): [string, Rect | undefined, boolean] => {
+      const icon = box ? undefined : this._anchors.get(id);
+      return icon ? [`${id}~`, icon, true] : [id, this._rects.get(id), false];
+    };
     const drawn = all.flatMap((f, i) => {
-      const a = this._rects.get(f.from);
-      const b = this._rects.get(f.to);
-      return f.visible && a && b ? [{ f, i, a, b, from: f.from, to: f.to, sides: anchorSides(a, b, f.fromSide, f.toSide) }] : [];
+      if (!f.visible) return [];
+      const [from, a, ia] = end(f.from, f.fromBox);
+      const [to, b, ib] = end(f.to, f.toBox);
+      if (!a || !b) return [];
+      for (const [id, key, r, icon] of [[f.from, from, a, ia], [f.to, to, b, ib]] as const) {
+        if (!icon) continue;
+        ends.set(key, r);
+        obstacleRects.set(id, r);
+      }
+      return [{ f, i, a, b, from, to, sides: anchorSides(a, b, f.fromSide, f.toSide) }];
     });
-    const spread = spreadAnchors(drawn, this._rects);
-    const obstacles = [...this._rects.values()];
+    const spread = spreadAnchors(drawn, ends);
+    const obstacles = [...obstacleRects.values()];
     // geometry first: the card budget needs what each look flow asks for
     const items = drawn.map(({ f, i, a, b, sides }, k) => {
       const look = slot && f.look ? (f as FlowWithLook) : undefined;
@@ -467,7 +547,7 @@ export class McFlows extends LitElement {
     items.forEach(({ f, i, look, arrow, geo }) => {
       const count = counts.get(f.id) ?? 0;
       if (look) {
-        const parts = slot!.render(look, geo, { index: i, reduced, offsetPath: true, motion: 'css', count, dark: this.dark, quality });
+        const parts = slot!.render(look, geo, { index: i, reduced, count, dark: this.dark, quality });
         const halo =
           !!this.selected && this.selected === f.id
             ? svg`<path class="sel" d=${geo.d} style="stroke-width: ${r1(f.width + 10)}px"></path>`

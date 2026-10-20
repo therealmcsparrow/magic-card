@@ -120,21 +120,31 @@ Each card can show a Pause motion button. It pauses everything on the card that 
 
 | Key | Values | Default | Effect |
 | --- | --- | --- | --- |
-| `pause_button` | `auto`, `always`, `hidden` | `auto` | `auto` shows the button on every card that has motion. `always` shows it even when nothing moves. `hidden` removes it. |
+| `pause_button` | `auto`, `always`, `hidden` | `hidden` | `auto` shows the button on every card that has motion. `always` shows it even when nothing moves. `hidden` (the default) shows no button. |
 | `pause_button_corner` | `bottom-left`, `bottom-right`, `top-left`, `top-right` | `bottom-left` | The corner of the card where the button sits. |
 
-In the editor, the settings are in the card's Design tab, Effects group, as "Pause button" (Automatic, Always, Hidden) and "Corner".
+In the editor, the settings are in the card's Design tab, in a Motion group that sits under Layout and is open by default. "Pause button" offers Automatic, Always and Hidden. "Corner" appears only when the button is shown.
 
-A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. Cards that existed before this version show the button too, because `auto` is the default.
+A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. The default is `hidden`, so a card shows no button until you set `auto` or `always`.
 
-- The button is a small round control in the chosen corner. Tab reaches it after the card's content. Enter or Space toggles it.
+If anything on the card moves for more than five seconds, set `pause_button` to `auto` or `always`, so viewers can stop the motion. WCAG 2.2.2 asks for a way to pause or stop moving content that runs for more than five seconds.
+
+- The button is a small round control in the chosen corner. Its name is always "Pause motion"; a screen reader hears whether it is pressed. Its touch area is 44 by 44 pixels. Tab reaches it after the card's content. Enter or Space toggles it.
 - Pressing it does not trigger the tap action of the card or module under it.
 - Under reduced motion, `auto` shows the button only when a video or particles run.
-- `hidden` removes the button, and the card plays even if it was paused before. The editor warns: "Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds."
+- `hidden` shows no button, and the card plays even if it was paused before. In the editor, the help under Hidden says: "Viewers can't pause the motion on this card. Turn the button on if anything moves for more than 5 seconds."
 - Editing the card's config starts the card playing again.
 - The paused state is remembered for each card in this browser.
 
 **What the pause button stores.** When you press pause, your browser keeps a small note on your own device (in its local storage, under a key starting `mc-paused:`) so the card stays paused when you come back to the page. The note is written only after you press the button, and it is removed when you press play. It holds no personal information, it never leaves your device, and Magic Card does not track you. Because the note only remembers a choice you made, no consent banner is needed; you can also clear it any time by clearing the site data for your Home Assistant address.
+
+### Preview pause in the studio
+
+While you edit, the studio canvas has a "Pause preview motion" button beside the preview status. Press it to freeze the card's motion so you can read the layout, and press it again to play. It works whatever `pause_button` says.
+
+- It is for editing only. It is not saved in the card, it does not change what viewers see, and it is not remembered: a reload starts the preview playing.
+- It stays on while you change the card's settings.
+- The card's own pause button does not save a pause while you edit.
 
 ## Reduced motion and what pauses
 

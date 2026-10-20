@@ -4,7 +4,22 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.11-beta.4 (2026-10-20, pre-release)
+
+### New
+-   **Flow lines attach to icons.** A thin line (solid, dashed, dotted, double rail or wave, or a flow with no look) ends at the module's icon, picture or dial, so two icons side by side in one row get a line between them. Icon, Button, Info, Light, Weather, Image, Camera and Gauge modules have one; other modules use their box. A wide look (tube, cable, neon, zigzag or swarm, meaning random spacing, size variation or an alternate shape) ends at the box by default. Choose Attach to, or set `from_anchor` or `to_anchor`, to pick either. See [Attach to](documentation/flows/options.md#attach-to).
+-   **Motion group.** The pause button settings are in a Motion group in the card's Design tab, under Layout and open by default. Corner shows only when the button is shown.
+-   **Preview pause.** The studio canvas has a Pause preview motion button that freezes the card while you edit. It is not saved and does not change what viewers see.
+-   **Slider colours from an entity.** Slider colour, Track colour, End colour and Border colour accept `entity`, `entity N%`, `entity.<attr>` and `entity.<attr> N%`, for example `entity.rgb_color`. Pick the source in the new Colour from list. See [Slider](documentation/modules/controls/slider.md#entity-colours).
+
+### Changed
+-   **Existing flows change look.** A thin line without an attach key now ends at the icon, picture or dial of each module that has one. Wide looks keep the box, so they do not change. To keep the old look of a thin line, set Module box on that end, or add `from_anchor: box` or `to_anchor: box`.
+-   **Pause motion button is off by default.** `pause_button` now defaults to `hidden`; set `auto` or `always` to show it. The editor lists Hidden as the default.
+-   **Pause motion button.** One fixed name, "Pause motion", with a pressed state for screen readers, and a 44 by 44 pixel touch area on every pointer.
+-   **Slider.** The failed-call message wraps instead of being cut off, and the slider is no longer marked invalid once the next change goes through.
+-   **Light cards.** Flow lines and the slider fill are darkened where they would be under 3:1 contrast against a light card.
+-   **Flows.** The moving highlight on solid and double lines fades out over corner arcs, so it no longer sticks out at sharp elbows.
+-   **Background layers.** After Stop preview, focus moves to Play.
 
 ### Documentation
 -   **Showcase cards.** Twenty new gallery cards (115 to 134) that combine flow looks, slider looks and background layers: ten for everyday rooms and energy, ten in sci-fi, fantasy, seasonal and retro styles. See [Showcase](documentation/gallery/showcase.md).

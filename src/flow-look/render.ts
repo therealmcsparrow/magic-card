@@ -4,6 +4,7 @@ import type { FlowLookParts, FlowLookQuality, FlowLookRenderOptions, FlowWithLoo
 import { at, fmt } from './sampler';
 import { flowLookRegistry, unmix, type LineCtx } from './registry';
 import { arrivalWanted } from './arrival';
+import { liftFlow } from './light-lift';
 import { cable } from './lines/cable';
 import { double, dashed, dotted, solid } from './lines/plain';
 import { neon } from './lines/neon';
@@ -50,11 +51,12 @@ function chevrons(c: LineCtx): SVGTemplateResult | typeof nothing {
   return stroke(c, { d, w: 2.5, cap: 'round', cls: 'ln mark' });
 }
 
-export function renderFlow(f: FlowWithLook, geo: FlowGeometry, o: FlowLookRenderOptions): FlowLookParts {
+export function renderFlow(flow: FlowWithLook, geo: FlowGeometry, o: FlowLookRenderOptions): FlowLookParts {
+  const f = liftFlow(flow, o.dark);
   const l = f.look;
   const active = flowing(f);
   const S = sampled(geo.d);
-  const shapeReq = o.reduced || !active || o.motion === 'none' ? 0 : flowLookRegistry.shapes.requested(f, geo, o.quality);
+  const shapeReq = o.reduced || !active ? 0 : flowLookRegistry.shapes.requested(f, geo, o.quality);
   const nShapes = Math.min(shapeReq, o.count);
   const c: LineCtx = {
     f,
@@ -67,7 +69,7 @@ export function renderFlow(f: FlowWithLook, geo: FlowGeometry, o: FlowLookRender
     w: f.width,
     paint: unmix(active ? f.color : f.idleColor),
     nShapes,
-    nBubbles: o.motion === 'none' || o.reduced ? 0 : Math.min(bubblesWanted(f, o.quality), Math.max(0, o.count - nShapes)),
+    nBubbles: o.reduced ? 0 : Math.min(bubblesWanted(f, o.quality), Math.max(0, o.count - nShapes)),
     level: active ? l.level : 0,
     dir: f.direction < 0 ? 'reverse' : 'normal',
     hl: active && !o.reduced && o.quality !== 'minimal',

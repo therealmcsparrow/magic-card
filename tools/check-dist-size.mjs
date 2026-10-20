@@ -12,10 +12,10 @@ import { fileURLToPath } from 'node:url';
 
 const CAPS = {
   // CEO 2026-10-20 combined beta (flow looks + slider looks + background layers + pause button): 496,640 B (485 KiB); was 486,400 (CEO 2026-10-19)
-  'magic-card.js': 500_736, // 489 KiB, CEO 2026-10-20 combined beta (flow and slider looks, background layers, pause button); was 496,640 (CEO 2026-10-20), 486,400, 480,048
+  'magic-card.js': 502_784, // 491 KiB, CEO 2026-10-20 beta.4 (flow icon anchors, pause changes, slider entity colours); was 500_736, // 489 KiB, CEO 2026-10-20 combined beta (flow and slider looks, background layers, pause button); was 496,640 (CEO 2026-10-20), 486,400, 480,048
   'magic-card-animation-studio.js': 1_000_448, // 977 KiB, CEO 2026-10-20 combined beta (tight: measured 999,106); was 996,352 (973 KiB, CEO 2026-10-19, fix round: lazy-loader version guards)
   // CEO 2026-10-20 combined beta: hosts-only editor, measured 878,017 + 2,623 B margin = 880,640 B (860 KiB), under the CEO's 868 KiB limit; was 851,968 (832 KiB, CEO 2026-10-19)
-  'magic-card-editor.js': 880_640, // was 851_968, 819_200, 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
+  'magic-card-editor.js': 885_760, // 865 KiB, CEO 2026-10-20 beta.4; was 880_640, // was 851_968, 819_200, 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
   'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
   'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
   'magic-card-particles.js': 38_912, // 38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)
@@ -48,7 +48,7 @@ const CAPS = {
   'magic-card-transfer.js': 63_488, // 62 KiB, CEO 2026-10-19 (fix rounds: URL checks, focus, thumbnail hook; measured 60,032)
   // flow-slider-styles T13: measured + 5 %, rounded up to 1 KiB, under the lazy-module ceilings (CEO 2026-10-20 combined beta)
   'magic-card-flow-look.js': 29_696, // 29 KiB, measured 27,835; ceiling 32,768; was a 32 KiB placeholder
-  'magic-card-slider-look.js': 24_576, // 24 KiB, measured 22,969; ceiling 28,672; was a 28 KiB placeholder
+  'magic-card-slider-look.js': 25_600, // 25 KiB, CEO 2026-10-20 beta.4 (light-card lift, failed-call chip); was 24_576, // 24 KiB, measured 22,969; ceiling 28,672; was a 28 KiB placeholder
   // look editors (editor-only chunk, contract look-editor 1.0.0): measured 58,323 + 5 %; plan ceiling 73,728 B (72 KiB); was a 72 KiB placeholder
   'magic-card-look-editor.js': 61_440, // 60 KiB
   // video background gets placement keys (background layers): measured 25,492 + 5 %, rounded up to 1 KiB; ceiling 45,056 B. CEO 2026-10-20 combined beta

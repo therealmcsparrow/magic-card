@@ -1,4 +1,4 @@
-import { html, nothing, type TemplateResult } from 'lit';
+import { html, nothing, svg, type TemplateResult } from 'lit';
 import { LAYER_BLENDS, type LayerBlend } from '../../contracts/layer-placement';
 import { m, t } from './i18n';
 
@@ -6,6 +6,11 @@ import { m, t } from './i18n';
  * Small controls shared by the Layer group and the Card backdrop group. Each one carries the Marco N1 cues:
  * a 3:1 edge (layerControlCss), On / Off words beside a switch, and a check mark on a pressed button.
  */
+
+/** The kit disclosure chevron (same path as <mc-ui-disclosure>); the sheet rotates it when the button is expanded. */
+export function chevron(): TemplateResult {
+  return html`<svg class="chev" viewBox="0 0 24 24" aria-hidden="true">${svg`<path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path>`}</svg>`;
+}
 
 /** A switch with its On / Off word. */
 export function lyrSwitch(id: string, label: string, checked: boolean, on: (v: boolean) => void, help?: string): TemplateResult {
@@ -30,7 +35,7 @@ export function lyrSlider(id: string, label: string, value: number, min: number,
     <label for=${id}>${label}</label>
     <div class="inline">
       <input class="lyr-range" id=${id} type="range" min=${min} max=${max} step="1" .value=${String(value)} aria-valuetext=${`${value}${unit}`} @change=${set} />
-      <input class="lyr-input" type="number" min=${min} max=${max} step="1" aria-label=${t('{label} value', { label })} .value=${String(value)} @change=${set} />
+      <input class="lyr-input input" type="number" min=${min} max=${max} step="1" aria-label=${t('{label} value', { label })} .value=${String(value)} @change=${set} />
       <span aria-hidden="true">${unit}</span>
     </div>
   </div>`;

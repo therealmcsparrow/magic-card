@@ -87,6 +87,6 @@ rows:
             slider_color_to: "#ff2fd6"
             track_color: "rgba(255,255,255,0.06)"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#fbbf24", color_to: "#ff2fd6", line_style: neon, width: 3, glow: 10, flicker: subtle, neon_core: "#fff1c2", end_cap: arrow, shape: spark, dots: 3, dot_size: 9 }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#ff2fd6", color_to: "#22d3ee", line_style: neon, width: 3, glow: 10, flicker: strong, end_cap: round, shape: dot, dots: 3 }
-  - { id: c-a, from: c, to: a, entity: sensor.battery_power, max: 3000, route: elbow, from_side: left, to_side: bottom, color: "#22d3ee", color_to: "#fbbf24", line_style: neon, width: 3, glow: 8, flicker: subtle, end_cap: arrow, arrival: ring, arrival_size: 36 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#fbbf24", color_to: "#ff2fd6", line_style: neon, width: 3, glow: 10, flicker: subtle, neon_core: "#fff1c2", end_cap: arrow, shape: spark, dots: 3, dot_size: 9 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#ff2fd6", color_to: "#22d3ee", line_style: neon, width: 3, glow: 10, flicker: strong, end_cap: round, shape: dot, dots: 3 }
+  - { id: c-a, from: c, to: a, from_anchor: box, to_anchor: box, entity: sensor.battery_power, max: 3000, route: elbow, from_side: left, to_side: bottom, color: "#22d3ee", color_to: "#fbbf24", line_style: neon, width: 3, glow: 8, flicker: subtle, end_cap: arrow, arrival: ring, arrival_size: 36 }

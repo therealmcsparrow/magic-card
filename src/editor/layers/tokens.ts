@@ -5,13 +5,13 @@ import { css, unsafeCSS, type CSSResult } from 'lit';
  * Card backdrop groups uses --mc-ed-ctl-line (>= 3:1 against its panel, WCAG 1.4.11); selected and on / off
  * states carry a non-colour cue as well (check mark, bold label, 2 px border, "On" / "Off" text).
  *
- * The line is the theme's text colour mixed into the panel colour. LAYER_TOKENS are the fixed fallback for
- * a browser without color-mix and the values the sampler test measures; the test also samples the theme
- * mix on the HA default light and dark themes and on one custom theme.
+ * The line is the kit field border (--mc-field-border: the theme text colour at 50 %), so these controls look like
+ * the other editor panels. At 50 % it holds 3:1 on the HA default light and dark themes and on two custom ones.
+ * LAYER_TOKENS are the fixed fallback for a browser without color-mix and the values the sampler test measures.
  */
 
 /** Share of the text colour in the control line (theme mix). */
-export const CTL_LINE_STRENGTH = 0.65;
+export const CTL_LINE_STRENGTH = 0.5;
 
 export interface LayerTokenSet {
   panel: string;
@@ -61,17 +61,22 @@ export function mixLine(text: string, panel: string, strength = CTL_LINE_STRENGT
   return `#${ch(0)}${ch(1)}${ch(2)}`;
 }
 
-/** Control edges, selected cues, focus ring and the coarse-pointer sizes shared by the layer editor components. */
+/**
+ * Layer editor controls on the ui-kit look. Buttons, inputs and chips take the kit classes (btn, input, chip) in the
+ * markup; this sheet only holds what the kit has no class for: the pressed segment and tile, the switch with its
+ * On / Off word, the range, the coarse-pointer sizes. Every control edge is --mc-ed-ctl-line (the kit field border,
+ * >= 3:1); containers (rows, boxes) use the kit divider.
+ */
 export const layerControlCss: CSSResult = css`
   :host {
     --mc-ed-ctl-line: ${unsafeCSS(LAYER_TOKENS.light.ctlLine)};
-    --mc-ed-divider: var(--divider-color, rgba(0, 0, 0, 0.12));
+    --mc-ed-divider: var(--mc-divider, var(--divider-color, rgba(0, 0, 0, 0.12)));
     --lyr-hit: 32px;
     --lyr-gap: 4px;
   }
   @supports (color: color-mix(in srgb, red, blue)) {
     :host {
-      --mc-ed-ctl-line: color-mix(in srgb, var(--primary-text-color, #212121) ${Math.round(CTL_LINE_STRENGTH * 100)}%, var(--card-background-color, #fff));
+      --mc-ed-ctl-line: var(--mc-field-border, color-mix(in srgb, var(--primary-text-color, #212121) ${Math.round(CTL_LINE_STRENGTH * 100)}%, var(--card-background-color, #fff)));
     }
   }
   @media (pointer: coarse) {
@@ -80,12 +85,9 @@ export const layerControlCss: CSSResult = css`
       --lyr-gap: 8px;
     }
   }
-  .lyr-btn,
-  .lseg > button,
-  .lyr-order button,
-  .lyr-tile,
-  .lyr-input,
-  select.lyr-input {
+  /* the kit secondary button's edge, for hosts that do not load the kit stylesheet (the position grid); the layer
+     groups also put the kit classes btn btn-secondary btn-sm on it, which draw the same thing */
+  .lyr-btn {
     box-sizing: border-box;
     min-height: var(--lyr-hit);
     border: 1px solid var(--mc-ed-ctl-line);
@@ -96,26 +98,71 @@ export const layerControlCss: CSSResult = css`
     font-size: 0.8125rem;
   }
   .lyr-input {
-    padding: 0 10px;
+    min-height: var(--mc-hit, 40px);
     min-width: 0;
+  }
+  .lseg > button,
+  .lyr-order button {
+    box-sizing: border-box;
+    min-height: var(--lyr-hit);
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--mc-text-2, #5f6368);
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+  .lyr-tile {
+    box-sizing: border-box;
+    min-height: var(--lyr-hit);
+    border: 1px solid var(--mc-ed-ctl-line);
+    border-radius: var(--mc-radius, 8px);
+    background: var(--mc-surface, var(--card-background-color, #fff));
+    color: var(--mc-text, var(--primary-text-color, #212121));
+    font: inherit;
+    font-size: 0.8125rem;
+  }
+  @media (hover: hover) {
+    .lseg > button:hover,
+    .lyr-order button:hover {
+      background: var(--mc-surface, var(--card-background-color, #fff));
+      color: var(--mc-text, var(--primary-text-color, #212121));
+    }
+    .lyr-tile:hover {
+      background: var(--mc-surface-2, #f2f3f5);
+    }
   }
   button:focus-visible,
   select:focus-visible,
   input:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid var(--mc-text, var(--primary-text-color, #212121));
+    outline: 2px solid var(--mc-focus, var(--mc-text, #212121));
     outline-offset: 2px;
-    box-shadow: 0 0 0 1px var(--mc-surface, var(--card-background-color, #fff));
   }
-  /* selected = fill + check mark + 2 px border in the text colour + bold label (never a hue alone) */
+  /* the kit segmented control: a tray with the 3:1 edge; the pressed segment lifts, is bold, underlined and ticked */
+  .lseg {
+    padding: 3px;
+    border: 1px solid var(--mc-ed-ctl-line);
+    border-radius: 10px;
+    background: var(--mc-surface-2, #f2f3f5);
+    gap: 2px;
+  }
   .lseg > button[aria-pressed='true'],
-  .lyr-tile[aria-pressed='true'],
   .lyr-order button[aria-pressed='true'] {
-    border: 2px solid var(--mc-text, var(--primary-text-color, #212121));
+    background: var(--mc-surface, var(--card-background-color, #fff));
+    color: var(--mc-accent-ink, var(--mc-text, #212121));
+    box-shadow: 0 0 0 1px var(--mc-divider, rgba(0, 0, 0, 0.12)), inset 0 -3px 0 var(--mc-accent-ink, currentColor);
+    font-weight: 700;
+  }
+  /* the kit tile: pressed = accent ring doubled to 2 px, tint, bold label and the tick in the label */
+  .lyr-tile[aria-pressed='true'] {
+    border-color: var(--mc-accent-ink, var(--mc-text, #212121));
+    box-shadow: inset 0 0 0 1px var(--mc-accent-ink, var(--mc-text, #212121));
     background: var(--mc-accent-tint, rgba(3, 169, 244, 0.12));
     font-weight: 700;
   }
-  /* off-state edge of a switch and a slider track: the same 3:1 line, plus the On / Off words */
+  /* the kit switch pill, with the On / Off word beside it (the word and the thumb position carry the state) */
   .lyr-switch {
     position: relative;
     display: inline-flex;
@@ -123,35 +170,41 @@ export const layerControlCss: CSSResult = css`
     gap: 8px;
     min-height: var(--lyr-hit);
     min-width: var(--lyr-hit);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
   }
   .lyr-switch .track {
     position: relative;
     flex: none;
-    width: 44px;
+    width: 40px;
     height: 24px;
     box-sizing: border-box;
     border-radius: 9999px;
-    border: 2px solid var(--mc-ed-ctl-line);
-    background: transparent;
+    border: 0;
+    background: var(--mc-ed-ctl-line);
+    transition: background-color 0.15s ease-out;
     padding: 0;
   }
   .lyr-switch .track::after {
     content: '';
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    background: var(--mc-ed-ctl-line);
+    background: var(--mc-on-accent, var(--mc-surface, var(--card-background-color, #fff)));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease-out;
   }
   .lyr-switch[aria-checked='true'] .track {
-    border-color: var(--mc-text, var(--primary-text-color, #212121));
     background: var(--mc-accent-fill, #0277bd);
   }
   .lyr-switch[aria-checked='true'] .track::after {
-    transform: translateX(20px);
-    background: #fff;
+    transform: translateX(16px);
   }
   .lyr-switch .state {
     font-size: 0.75rem;
@@ -185,7 +238,7 @@ export const layerControlCss: CSSResult = css`
     margin-top: -8px;
     border-radius: 50%;
     border: 2px solid var(--mc-surface, var(--card-background-color, #fff));
-    background: var(--mc-text, var(--primary-text-color, #212121));
+    background: var(--mc-accent-fill, var(--mc-text, #212121));
     box-shadow: 0 0 0 1px var(--mc-ed-ctl-line);
   }
   .lyr-range::-moz-range-thumb {
@@ -193,7 +246,7 @@ export const layerControlCss: CSSResult = css`
     height: 18px;
     border-radius: 50%;
     border: 2px solid var(--mc-surface, var(--card-background-color, #fff));
-    background: var(--mc-text, var(--primary-text-color, #212121));
+    background: var(--mc-accent-fill, var(--mc-text, #212121));
     box-shadow: 0 0 0 1px var(--mc-ed-ctl-line);
   }
   @media (forced-colors: active) {
@@ -203,10 +256,13 @@ export const layerControlCss: CSSResult = css`
       color: HighlightText;
       border-color: CanvasText;
     }
-    .lyr-btn,
-    .lseg > button,
+    .lyr-tile,
+    .lseg,
     .lyr-input {
       border-color: CanvasText;
+    }
+    .lyr-switch .track {
+      border: 2px solid CanvasText;
     }
   }
   @media (prefers-reduced-motion: reduce) {

@@ -115,5 +115,5 @@ rows:
             track_color: "rgba(13,8,4,0.6)"
             icon: mdi:gold
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#f59e0b", color_to: "#ffe08a", width: 5, shape: star, shape_spin: true, shape_alternate: diamond, shape_color: "#ffd25a", dot_size: 14, dots: 3, glow: 6, end_cap: round }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#ffe08a", color_to: "#fb923c", width: 5, shape: diamond, shape_spin: true, shape_color: "#fff3c4", dot_size: 12, dots: 3, arrival: ring, arrival_size: 40, end_cap: arrow }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#f59e0b", color_to: "#ffe08a", width: 5, shape: star, shape_spin: true, shape_alternate: diamond, shape_color: "#ffd25a", dot_size: 14, dots: 3, glow: 6, end_cap: round }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#ffe08a", color_to: "#fb923c", width: 5, shape: diamond, shape_spin: true, shape_color: "#fff3c4", dot_size: 12, dots: 3, arrival: ring, arrival_size: 40, end_cap: arrow }

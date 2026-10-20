@@ -102,6 +102,6 @@ rows:
                 entity: sensor.home_battery
                 design: { font_size: 13px, font_weight: "800", color: "#4c1d95" }
 flows:
-  - { id: sun-house, from: solar, to: house, entity: sensor.solar_power, max: 5000, color: "#f59e0b", width: 3, dots: 0, route: elbow, from_side: bottom, to_side: top, label: value, label_position: side }
+  - { id: sun-house, from: solar, to: house, entity: sensor.solar_power, max: 5000, color: "#f59e0b", width: 3, dots: 0, route: elbow, layer: front, from_side: bottom, to_side: top, label: value, label_position: side }
   - { id: house-grid, from: house, to: grid, entity: sensor.grid_power, max: 5000, color: "#0ea5e9", width: 3, dots: 3, dot_size: 7, glow: 4 }
   - { id: house-battery, from: house, to: battery, entity: sensor.battery_power, max: 3000, color: "#8b5cf6", width: 3, dots: 3, dot_size: 7, glow: 4 }

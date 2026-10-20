@@ -83,6 +83,6 @@ rows:
             value_position: track
             slider_color: "#fcd34d"
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.home_battery, max: 100, route: straight, color: "#4ade80", line_style: tube, width: 16, bubble_count: 5, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
-  - { id: b-c, from: b, to: c, entity: sensor.solar_power, max: 5000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
-  - { id: c-d, from: c, to: d, entity: sensor.house_power, max: 2000, route: straight, color: "#fb7185", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.home_battery, max: 100, route: straight, color: "#4ade80", line_style: tube, width: 16, bubble_count: 5, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, from_side: bottom, to_side: top, color: "#c084fc", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }
+  - { id: c-d, from: c, to: d, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2000, route: straight, color: "#fb7185", line_style: tube, width: 16, bubble_count: 4, tube_fill_value: true, shape: drop, dots: 3, dot_size: 9, arrival: splash, arrival_size: 40 }

@@ -85,6 +85,6 @@ rows:
             design: { color: "#a5b4fc", width: 52px, height: 52px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #a5b4fc", background_color: "rgba(255,255,255,0.05)", margin: 0 auto }
 
 flows:
-  - { id: roof-tank, from: roof, to: level, entity: sensor.tank_inflow, max: 30, route: curve, from_side: right, to_side: left, color: "#7dd3fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
-  - { id: tank-garden, from: level, to: garden, entity: sensor.tank_garden_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#86efac", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }
-  - { id: tank-house, from: level, to: house, entity: sensor.tank_house_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#a5b4fc", line_style: tube, width: 12, bubble_count: 4, tube_fill_value: true }
+  - { id: roof-tank, from: roof, to: level, entity: sensor.tank_inflow, max: 30, route: curve, from_side: right, to_side: left, color: "#7dd3fc", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
+  - { id: tank-garden, from: level, to: garden, entity: sensor.tank_garden_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#86efac", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true }
+  - { id: tank-house, from: level, to: house, entity: sensor.tank_house_flow, max: 30, route: curve, from_side: right, to_side: left, color: "#a5b4fc", line_style: tube, from_anchor: box, to_anchor: box, width: 12, bubble_count: 4, tube_fill_value: true }

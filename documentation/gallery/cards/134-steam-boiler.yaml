@@ -106,5 +106,5 @@ rows:
             snap: true
             stops: [{ value: 0, label: Shut }, { value: 50, label: Half }, { value: 100, label: Open }]
 flows:
-  - { id: a-b, from: a, to: b, entity: sensor.solar_power, max: 5000, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, end_cap: round }
-  - { id: b-c, from: b, to: c, entity: sensor.house_power, max: 2500, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, arrival: splash, arrival_size: 40, end_cap: round }
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, end_cap: round }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#d9a441", line_style: cable, width: 8, twisted: true, cable_color: "#5b3a1a", shape: icon, shape_icon: "mdi:cog", shape_spin: true, shape_icon_rotate: false, dot_size: 16, dots: 2, arrival: splash, arrival_size: 40, end_cap: round }

@@ -113,4 +113,4 @@ flows:
   - { id: wave, from: a1, to: b1, entity: sensor.solar_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#ffd166", line_style: wave, amplitude: 14, wavelength: 28, width: 3 }
   - { id: zigzag, from: a2, to: b2, entity: sensor.house_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#fb7185", line_style: zigzag, amplitude: 14, wavelength: 24, width: 3 }
   - { id: double, from: a3, to: b3, entity: sensor.grid_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#8ecae6", line_style: double, rail_gap: 12, width: 2 }
-  - { id: tube, from: a4, to: b4, entity: sensor.battery_power, max: 3000, route: elbow, from_side: right, to_side: top, color: "#fde047", line_style: tube, width: 12 }
+  - { id: tube, from: a4, to: b4, entity: sensor.battery_power, max: 3000, route: elbow, from_side: right, to_side: top, color: "#fde047", line_style: tube, from_anchor: box, to_anchor: box, width: 12 }

@@ -49,7 +49,7 @@ class CameraModule extends BaseLazyStub {
   /** The camera's box at its aspect ratio, so the layout does not move when the view arrives. */
   placeholder(config: CardModule): TemplateResult {
     const c = config as CameraModuleConfig;
-    return html`<div class="mc-module mc-camera" style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)}"></div>`;
+    return html`<div class="mc-module mc-camera" data-mc-flow-end style="aspect-ratio: ${cssAspectRatio(c.aspect_ratio)}"></div>`;
   }
 }
 

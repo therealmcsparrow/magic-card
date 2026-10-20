@@ -15,7 +15,7 @@ import {
   SCRIM_DEFAULT, SCRIM_PRESETS, axisKind, clampStrength, effectiveClickThrough, frontNumber, hasModuleAction, isAnchor, isAutomatic,
   layerOf, layerYaml, offsetError, offsetSide, patchLayer, patchScrim, placementOf, scrimLabel, setPlacement, type LayerEditorContext, type MoveTo, type OffsetAxis,
 } from './placement-model';
-import { blendTiles, lyrSlider, lyrSwitch } from './controls';
+import { blendTiles, chevron, lyrSlider, lyrSwitch } from './controls';
 import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
 
@@ -153,7 +153,7 @@ export class McLayerGroups extends LitElement {
     return html`<div class="f">
       <label for=${id}>${label}</label>
       <input
-        class="lyr-input"
+        class="lyr-input input"
         id=${id}
         type="text"
         inputmode="decimal"
@@ -190,7 +190,7 @@ export class McLayerGroups extends LitElement {
       </div>
       ${this._undo
         ? html`<p class="undo" role="status"><span>${t('Applied {name}.', { name: this._undo.name })}</span>
-            <button type="button" class="lyr-btn" data-act="undo-look" @click=${() => this._runUndo()}>${t('Undo')}</button></p>`
+            <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="undo-look" @click=${() => this._runUndo()}>${t('Undo')}</button></p>`
         : html`<p class="undo" role="status"></p>`}
     </div>`;
   }
@@ -220,7 +220,7 @@ export class McLayerGroups extends LitElement {
     const ctx = this.ctx;
     const camera = mod.type === 'camera' && p === 'background';
     return html`<section class="group" aria-labelledby=${`${this._id}-ph`}>
-      <div class="group-head"><h3 id=${`${this._id}-ph`}>${t('Placement')}</h3>${auto ? html`<span class="chip2">${t('Automatic')}</span>` : nothing}</div>
+      <div class="group-head"><h3 id=${`${this._id}-ph`}>${t('Placement')}</h3>${auto ? html`<span class="chip is-count">${t('Automatic')}</span>` : nothing}</div>
       <div class="lseg" role="group" aria-label=${t('Placement')}>
         ${PLACEMENT_ITEMS.map((it) => {
           const on = !auto && p === it.value;
@@ -242,7 +242,7 @@ export class McLayerGroups extends LitElement {
       ${p === 'background' && ctx?.canHoist
         ? html`<div>
             <label for=${`${this._id}-fill`}>${t('Fills')}</label>
-            <select class="lyr-input" id=${`${this._id}-fill`} @change=${(e: Event) => this._commit(patchLayer(mod, { fill: this._fillValue((e.target as HTMLSelectElement).value) }))}>
+            <select class="lyr-input input" id=${`${this._id}-fill`} @change=${(e: Event) => this._commit(patchLayer(mod, { fill: this._fillValue((e.target as HTMLSelectElement).value) }))}>
               ${FILLS.map((f) => html`<option value=${f.value} ?selected=${(layer.fill ?? 'container') === f.value}>${t(f.label)}</option>`)}
             </select>
           </div>`
@@ -302,7 +302,7 @@ export class McLayerGroups extends LitElement {
         ${buttons.map(
           (b) => html`<button
             type="button"
-            class="lyr-btn"
+            class="lyr-btn btn btn-secondary btn-sm"
             data-move=${b.to}
             aria-label=${b.aria}
             aria-disabled=${b.off ? 'true' : 'false'}
@@ -346,9 +346,10 @@ export class McLayerGroups extends LitElement {
     const count = this._effectsCount();
     const blur = Math.max(0, Math.min(BLUR_MAX, l.blur ?? 0));
     return html`<div>
-      <button type="button" class="lyr-btn disc" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`${this._id}-fx`} @click=${() => (this._effects = !open)}>
-        <span class="arrow" aria-hidden="true">▸</span><span>${t('Effects and darkening')}</span>
-        ${count ? html`<span class="chip2">${t('{n} set', { n: count })}</span>` : nothing}
+      <button type="button" class="disc" aria-expanded=${open ? 'true' : 'false'} aria-controls=${`${this._id}-fx`} @click=${() => (this._effects = !open)}>
+        <span>${t('Effects and darkening')}</span>
+        ${count ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+        ${chevron()}
       </button>
       <div class="effects" id=${`${this._id}-fx`} ?hidden=${!open}>
         ${this._slider(`${this._id}-blur`, t('Blur'), blur, 0, BLUR_MAX, 'px', (v) => this._commit(patchLayer(mod, { blur: v || undefined })))}
@@ -389,7 +390,7 @@ export class McLayerGroups extends LitElement {
               </div>
               ${colour === 'custom'
                 ? html`<label for=${`${this._id}-cc`}>${t('Custom colour')}</label>
-                    <input class="lyr-input" id=${`${this._id}-cc`} type="text" .value=${s?.color ?? ''} placeholder="#003366" @change=${(e: Event) => this._commit(patchScrim(mod, { color: (e.target as HTMLInputElement).value.trim() || undefined }))} />
+                    <input class="lyr-input input" id=${`${this._id}-cc`} type="text" .value=${s?.color ?? ''} placeholder="#003366" @change=${(e: Event) => this._commit(patchScrim(mod, { color: (e.target as HTMLInputElement).value.trim() || undefined }))} />
                     <p class="help">${t('Check the text yourself.')}</p>`
                 : nothing}
             </div>
@@ -426,7 +427,7 @@ export class McLayerGroups extends LitElement {
     return html`<div class="costbox">
       <p class="cost" data-level=${cost.level} data-cost>${t('Cost on older tablets:')} <b>${word}</b>${cost.reasons.length ? ` (${cost.reasons.map(reason).join(', ')})` : ''}.</p>
       ${cost.level !== 'light'
-        ? html`<div class="acts"><button type="button" class="lyr-btn" data-act="low-power" @click=${() => this.dispatchEvent(new CustomEvent('mc-layers-low-power', { bubbles: true, composed: true }))}>${t('Turn on Low-power mode')}</button></div>
+        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="low-power" @click=${() => this.dispatchEvent(new CustomEvent('mc-layers-low-power', { bubbles: true, composed: true }))}>${t('Turn on Low-power mode')}</button></div>
             <p class="help">${t('Low-power mode drops blur, blend and pan and zoom for this card and keeps the pictures.')}</p>`
         : nothing}
     </div>`;
@@ -447,8 +448,8 @@ export class McLayerGroups extends LitElement {
       (c) => html`<div class="check" data-check="overlap">
         <p class="warnrow">${t('Covers {name} at this width. Taps on the overlap go to this module.', { name: `“${c.name}”` })}</p>
         <div class="acts">
-          <button type="button" class="lyr-btn" data-act="pass" @click=${() => this._commit(patchLayer(mod, { click_through: true }))}>${t('Let clicks and taps go through')}</button>
-          <button type="button" class="lyr-btn" data-act="reposition" @click=${() => this.renderRoot.querySelector<HTMLElement>('mc-anchor-grid')?.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]')?.focus()}>${t('Change position')}</button>
+          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="pass" @click=${() => this._commit(patchLayer(mod, { click_through: true }))}>${t('Let clicks and taps go through')}</button>
+          <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="reposition" @click=${() => this.renderRoot.querySelector<HTMLElement>('mc-anchor-grid')?.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]')?.focus()}>${t('Change position')}</button>
         </div>
       </div>`,
     )}
@@ -465,7 +466,7 @@ export class McLayerGroups extends LitElement {
       ${this._slider(`${this._id}-op`, t('Opacity'), Math.max(0, Math.min(100, layer.opacity ?? 100)), 0, 100, '%', (v) => this._commit(patchLayer(mod, { opacity: v === 100 ? undefined : v })))}
       ${this._renderClickThrough()}
       ${bg && !layer.scrim
-        ? html`<div class="acts"><button type="button" class="lyr-btn" data-act="darken" @click=${() => this._commit(patchScrim(mod, 'on'))}>${t('Text hard to read? Darken behind text')}</button></div>`
+        ? html`<div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="darken" @click=${() => this._commit(patchScrim(mod, 'on'))}>${t('Text hard to read? Darken behind text')}</button></div>`
         : nothing}
       ${this._renderEffects()}
       ${this._renderCost()}
@@ -479,12 +480,12 @@ export class McLayerGroups extends LitElement {
     const text = layerYaml(this.mod);
     if (!text) return nothing;
     return html`<div>
-      <button type="button" class="lyr-btn disc" aria-expanded=${this._yaml ? 'true' : 'false'} aria-controls=${`${this._id}-y`} @click=${() => (this._yaml = !this._yaml)}>
-        <span class="arrow" aria-hidden="true">▸</span><span>${t('Show YAML')}</span>
+      <button type="button" class="disc" aria-expanded=${this._yaml ? 'true' : 'false'} aria-controls=${`${this._id}-y`} @click=${() => (this._yaml = !this._yaml)}>
+        <span>${t('Show YAML')}</span>${chevron()}
       </button>
       <div id=${`${this._id}-y`} ?hidden=${!this._yaml}>
         <pre class="yaml" data-yaml>${text}</pre>
-        <div class="acts"><button type="button" class="lyr-btn" data-act="copy-yaml" @click=${async () => {
+        <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="copy-yaml" @click=${async () => {
           this._copied = await copyText(text, this.renderRoot);
         }}>${this._copied ? t('Copied') : t('Copy YAML')}</button></div>
       </div>

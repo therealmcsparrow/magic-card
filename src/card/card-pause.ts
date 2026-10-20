@@ -7,9 +7,12 @@ import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /*
- * The viewer's "Pause motion" button of one card (contract card-pause 1.0.0). The motion itself is
+ * The viewer's "Pause motion" button of one card (contract card-pause 2.0.0). The motion itself is
  * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
  * state, remembers it per page and card, and renders the button.
+ *
+ * deviates: hacard.S11 — CEO 2026-10-20 default hidden, so the viewer pause is no longer on by default;
+ * proj.M10 and proj.S4 still hold (offscreen and reduced-motion pauses never depend on the button).
  */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
@@ -39,10 +42,12 @@ function storage(fn: (s: Storage) => void): void {
 export class CardPause {
   paused = false;
   private _key = '';
-  private _mode: PauseButtonMode = 'auto';
+  private _mode: PauseButtonMode = 'hidden';
   private _moves = false;
   private _shown = false;
   private _timer?: number;
+  /** Editor preview pause (r3): never remembered, applied on every render. */
+  preview = false;
 
   constructor(private readonly _host: LitElement) {}
 
@@ -66,14 +71,14 @@ export class CardPause {
 
   /** Start of a render: read the keys, apply the state to the host and the observer. True while paused. */
   begin(c: CardPauseKeys): boolean {
-    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : 'auto';
+    this._mode = MODES.includes(String(c.pause_button)) ? (c.pause_button as PauseButtonMode) : 'hidden';
     this._moves = false;
     return this._apply();
   }
 
   /** Host attribute and observer; hidden means the card plays (nobody could resume it). */
   private _apply(): boolean {
-    const on = this.paused && this._mode !== 'hidden';
+    const on = (this.paused && this._mode !== 'hidden') || this.preview;
     this._host.toggleAttribute(PAUSE_ATTRIBUTE, on);
     setCardPaused(this._host, on);
     return on;
@@ -88,7 +93,8 @@ export class CardPause {
     e.stopPropagation();
     const on = !this.paused;
     this._set(on);
-    storage((s) => (on ? s.setItem(this._key, '1') : s.removeItem(this._key)));
+    // in the editor the saved dashboard card must not start paused
+    if (!(this._host as { editMode?: boolean }).editMode) storage((s) => (on ? s.setItem(this._key, '1') : s.removeItem(this._key)));
   };
 
   private _stop = (e: Event): void => e.stopPropagation();
@@ -101,7 +107,7 @@ export class CardPause {
     if (auto) this._recheck();
     if (!show) return nothing;
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
-    const label = on ? t('Play motion') : t('Pause motion');
+    const label = t('Pause motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
