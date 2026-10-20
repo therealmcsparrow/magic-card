@@ -50,6 +50,12 @@ jobs:
       - name: Third-party notices up to date
         run: npm run notices -- --check
       - run: npm run build
+      - name: Entry graph (proj.M11, debt list only shrinks)
+        # origin/main is fetched so the base debt list can be read (git show origin/main:tools/entry-graph.json)
+        run: |
+          git fetch --no-tags --depth=1 origin main || true
+          node tools/check-entry-graph.mjs --self-test
+          node tools/check-entry-graph.mjs
       - name: Dist size budget
         run: npm run size
       - name: Committed dist matches the build
