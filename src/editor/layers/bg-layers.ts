@@ -55,7 +55,7 @@ export class McBgLayers extends LitElement {
   @state() private _tick = 0;
   private _timer = 0;
   private _paused = false;
-  private _focus?: { sel: string; index?: number };
+  private _focus?: { sel: string; index?: number; tries?: number };
   private _stop?: () => void;
   private readonly _id = `bgl${++uid}`;
 
@@ -341,10 +341,13 @@ export class McBgLayers extends LitElement {
   protected updated(): void {
     const f = this._focus;
     if (!f) return;
-    this._focus = undefined;
     const rows = this.renderRoot.querySelectorAll<HTMLElement>('.row');
     const scope = f.index === undefined ? this.renderRoot : rows[f.index];
-    scope?.querySelector<HTMLElement>(f.sel)?.focus();
+    const target = scope?.querySelector<HTMLElement>(f.sel);
+    // the first layer: this render may come before the host hands the new list back, so the row is not there yet; try the next render
+    if (!target && (f.tries = (f.tries ?? 0) + 1) < 6) return;
+    this._focus = undefined;
+    target?.focus();
   }
 
   private _host(): EditorHost {
