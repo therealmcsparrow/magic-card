@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.11-beta.4 (2026-10-20, pre-release)
 
 ### New
 -   **Flow lines attach to icons.** A thin line (solid, dashed, dotted, double rail or wave, or a flow with no look) ends at the module's icon, picture or dial, so two icons side by side in one row get a line between them. Icon, Button, Info, Light, Weather, Image, Camera and Gauge modules have one; other modules use their box. A wide look (tube, cable, neon, zigzag or swarm, meaning random spacing, size variation or an alternate shape) ends at the box by default. Choose Attach to, or set `from_anchor` or `to_anchor`, to pick either. See [Attach to](documentation/flows/options.md#attach-to).
