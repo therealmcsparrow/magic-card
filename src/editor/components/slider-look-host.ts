@@ -1,5 +1,5 @@
 import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import type { HomeAssistant, SliderModuleConfig } from '../../types';
 import { SLIDER_LOOK_EDITOR_TAG } from '../../contracts/look-editor';
 import { notice } from '../../ui-kit';
@@ -34,7 +34,6 @@ const sessionOf = (key: string): Session => {
   return s;
 };
 
-@customElement('mc-slider-look-host')
 export class SliderLookHost extends LitElement {
   static styles = [
     editorSystem,
@@ -138,3 +137,6 @@ export class SliderLookHost extends LitElement {
     </section>`;
   }
 }
+
+// guarded: a second copy of the bundle (or a hot reload) must not throw on a double define
+if (!customElements.get('mc-slider-look-host')) customElements.define('mc-slider-look-host', SliderLookHost);
