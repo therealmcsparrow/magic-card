@@ -1,5 +1,8 @@
 import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalScenePick, SeasonalSceneSetting, SeasonalSetting } from '../types';
 import { localeTimeZone } from './locale-format';
+import { dayNightScene, weatherScene } from './seasonal-state';
+
+export { dayNightScene, TWILIGHT, WEATHER, weatherScene } from './seasonal-state';
 
 /*
  * Seasonal scenes: which scene a card shows right now, from its `seasonal` config, the date and
@@ -164,38 +167,6 @@ export function hemisphereOf(v: unknown): Hemisphere {
 /** What auto shows on `date` by the calendar alone (a holiday, else the season). */
 export function autoScene(date: Date, cfg: Pick<SeasonalConfig, 'hemisphere' | 'calendar'> = {}): SceneId {
   return holidayFor(date, cfg.calendar) ?? seasonFor(date, hemisphereOf(cfg.hemisphere));
-}
-
-const WEATHER: Record<string, SceneId> = {
-  snowy: 'snow',
-  'snowy-rainy': 'snow',
-  rainy: 'rain',
-  pouring: 'rain',
-  hail: 'rain',
-  lightning: 'storm',
-  'lightning-rainy': 'storm',
-  sunny: 'sun',
-  'clear-night': 'night',
-  cloudy: 'clouds',
-  partlycloudy: 'clouds',
-  fog: 'fog',
-  windy: 'wind',
-  'windy-variant': 'wind',
-};
-
-/** A `weather.*` state as a scene; undefined for unknown / unavailable / exceptional. */
-export function weatherScene(state: string | undefined): SceneId | undefined {
-  return state ? WEATHER[state] : undefined;
-}
-
-/** Sun elevation (deg) within which it counts as dusk / dawn. */
-const TWILIGHT = 6;
-
-/** `sun.sun` as a scene: night below the horizon, dusk / dawn near it, nothing by day. */
-export function dayNightScene(state: string | undefined, elevation?: number): SceneId | undefined {
-  if (state !== 'below_horizon' && state !== 'above_horizon') return undefined;
-  if (typeof elevation === 'number' && Number.isFinite(elevation) && Math.abs(elevation) <= TWILIGHT) return 'dusk';
-  return state === 'below_horizon' ? 'night' : undefined;
 }
 
 type ZoneHass = Pick<HomeAssistant, 'language' | 'locale' | 'config'> | undefined;
