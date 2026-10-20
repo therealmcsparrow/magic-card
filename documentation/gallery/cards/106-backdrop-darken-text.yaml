@@ -1,0 +1,29 @@
+# Darken behind text: a bright meadow picture sits behind the text, and a dark fade from the bottom keeps the white text readable.
+# Entities: none
+type: custom:magic-card
+name: Darken behind text
+background: "#1c1f26"
+border_radius: 26px
+padding: 0
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: art
+    padding: 150px 22px 22px
+    columns:
+      - gap: 4px
+        modules:
+          - type: image
+            image: /local/meadow.svg
+            placement: background
+            layer:
+              fill: card
+              scrim:
+                style: bottom
+                color: "#000000"
+                strength: 60
+          - type: text
+            text: Saturday at the lake house
+            design: { font_size: 20px, font_weight: "800", color: "#ffffff" }
+          - type: text
+            text: "Sunny until six, then a light breeze. Bring a jumper for the evening."
+            design: { font_size: 13px, line_height: "1.4", color: "rgba(255,255,255,0.92)" }

@@ -1,8 +1,8 @@
 # Card gallery
 
-One hundred and four complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
+One hundred and fourteen complete cards to copy and adapt, from a weather card to a Christmas countdown. Each card is one Magic Card: paste its YAML into the code editor of a new card and change the entity ids to your own. Every page shows the card, the entities it reads and the full YAML. The same YAML is in [cards](cards/) as one file per card.
 
-![All one hundred and four cards](images/all-cards.png)
+![All one hundred and fourteen cards](images/all-cards.png)
 
 ## Pages
 
@@ -11,6 +11,7 @@ One hundred and four complete cards to copy and adapt, from a weather card to a 
 | [Climate and weather](climate-weather.md) | Weather hero, Thermostat, Clock and greeting, Air quality, Sensor tiles, Room temperatures, Sunrise and sunset, Hot water boiler, Storm watch, Heating, Cooling |
 | [Energy](energy.md) | Energy flow, Device batteries, Water tank, Electric car, Solar today, Solar house, EV charger, Home battery |
 | [Flows and sliders](flows-sliders.md) | Flow line style solid, Flow line style dashed, Flow line style dotted, Flow line style double, Flow line style wave, Flow line style zigzag, Flow line style tube, Flow line style neon, Flow line style cable, Flow shapes, Flow shapes in a swarm, Flow gradients and ends, Flow lines on short elbows, Wall tablet, Slider look Minimal, Slider look Material, on a light card, Slider look Neon, Slider look Glass with the flat fill, Slider look Glass with blur behind, Slider look Big fill, Slider stops, Slider track shapes |
+| [Layers](layers.md) | Camera behind a gauge, Darken behind text, Stacked backdrop, A picture chosen by state, Pan and zoom, An overlay badge, Low-power mode, Blend modes, Pause button in another corner, Pause button on a shaped card |
 | [Lights, rooms and scenes](lights-rooms.md) | Room card, Scenes, Fan, Light dimmer, Blinds, House modes, Party mode, Good night, Sunrise alarm |
 | [Media](media.md) | Now playing, Mini player, Speaker group, Vinyl player |
 | [Security and presence](security-presence.md) | Security, Who's home, Garage door, Doorbell, Leak alert, Ringing doorbell, Alarm triggered |
@@ -26,10 +27,11 @@ Twenty-five whole dashboards in sci-fi, fantasy, western, steampunk and dystopia
 
 ## Animated cards
 
-On fifty-one of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
+On fifty-two of the cards something moves, so their pictures are short recordings that loop. They use animation presets, icon effects, flow lines, rings, value backgrounds, seasonal scenes and small animations stored in the card itself (`custom_animations`). None of them needs the Magic Card Utils integration.
 
 | Card | Page |
 | --- | --- |
+| [Pan and zoom](layers.md#pan-and-zoom) | Layers |
 | [Ringing doorbell](security-presence.md#ringing-doorbell) | Security and presence |
 | [Storm watch](climate-weather.md#storm-watch) | Climate and weather |
 | [Heating](climate-weather.md#heating) | Climate and weather |

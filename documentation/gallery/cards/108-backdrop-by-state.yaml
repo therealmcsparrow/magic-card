@@ -1,0 +1,30 @@
+# A picture chosen by state: the backdrop follows sun.sun, a daytime skyline above the horizon and a night skyline below it. Any other state uses the image key.
+# Entities: sun.sun
+type: custom:magic-card
+name: Backdrop by state
+entity: sun.sun
+background: "#10131a"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0))"
+  - type: image
+    entity: sun.sun
+    image: /local/skyline-night.svg
+    states:
+      above_horizon: /local/skyline-day.svg
+      below_horizon: /local/skyline-night.svg
+rows:
+  - id: copy
+    padding: 60px 0 4px
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Sun above the horizon
+            design: { font_size: 24px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 12px rgba(0,0,0,0.5)" }
+          - type: text
+            text: "The picture changes with the sun state: below_horizon shows the night skyline."
+            design: { font_size: 12px, color: "rgba(255,255,255,0.9)", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }

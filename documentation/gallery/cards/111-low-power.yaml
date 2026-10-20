@@ -1,0 +1,32 @@
+# Low-power mode: layers_low_power drops blur, blend and pan and zoom, so a wall tablet draws a still picture. The picture, the darkening and the opacity stay.
+# Entities: none
+type: custom:magic-card
+name: Low-power mode
+layers_low_power: true
+background: "#14161c"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0))"
+  - type: image
+    image: /local/hills.svg
+    blur: 16
+    blend: overlay
+    pan_zoom:
+      from: 100
+      to: 150
+      duration: 20
+rows:
+  - id: copy
+    padding: 90px 0 4px
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Wall tablet
+            design: { font_size: 22px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 12px rgba(0,0,0,0.5)" }
+          - type: text
+            text: "The same layers would blur 16 px and zoom to 150%. With layers_low_power the picture rests sharp."
+            design: { font_size: 12px, line_height: "1.4", color: "rgba(255,255,255,0.92)", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }
