@@ -114,7 +114,9 @@ function attribute(code, map) {
 }
 
 const normalise = (s) => {
-  const p = s.replace(/^webpack:\/\/[^/]*\//, '').replace(/^\.\//, '');
+  let p = s.replace(/\\/g, '/').replace(/^webpack:\/\/[^/]*\//, '').replace(/^\.\//, '');
+  const nm = p.lastIndexOf('node_modules/'); // a symlinked or junctioned node_modules resolves to an absolute path
+  if (nm > 0) p = p.slice(nm);
   return p.replace(/\?.*$/, '');
 };
 
@@ -191,6 +193,7 @@ function render() {
   L.push('');
   L.push(`- Pinned Node (.nvmrc): ${nvmrc}. This table was made on Node ${process.versions.node}, zlib ${process.versions.zlib}: **${auth ? 'authoritative' : 'NOT AUTHORITATIVE (off the pinned Node or zlib), gzip figures may differ by a few bytes'}**.`);
   L.push(`- Gzip: level 9, one-shot \`gzipSync\`. Total: **${fmt(totalGz)} B gzip**, ${fmt(total)} B raw (minified), ${fmt(rows.length)} attributed files.`);
+  L.push('- Source of the figures: a build of a clean LF checkout (`git archive HEAD`), as CI builds. A working copy with CRLF template strings (Windows autocrlf) gives a few bytes more.');
   L.push('- raw = minified bytes attributed to the file or group. gzip share = that raw share of the real total gzip (sums to the total). gzip alone = the attributed text compressed on its own (upper bound; the sum is above the total).');
   L.push('');
   L.push('### By module group', '', '| Group | Files | Raw B | % raw | Gzip share B | % gzip | Gzip alone B |', '|---|---:|---:|---:|---:|---:|---:|');
