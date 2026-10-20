@@ -37,32 +37,22 @@ const FADE = 0.05;
  * The stops of a highlight bar and its opacity at each: 0 while any part of the bar (`half` = half its
  * length) is over a corner arc, 1 elsewhere. A straight bar cannot bend, so on an arc its ends would
  * overhang the line; opacity keyframes run on the compositor like the transform ones. A line with no
- * corner arcs comes back as stops() gives it, with no opacities.
+ * corner arcs comes back as stops() gives it, with no opacities (o is a Stop field).
  */
-export function barStops(S: Sampled, half: number): { P: Stop[]; o?: number[] } {
+export function barStops(S: Sampled, half: number): Stop[] {
   const base = stops(S, true);
-  if (!S.corners.length) return { P: base };
-  // the hide windows, merged where they touch
-  const win: [number, number][] = [];
-  for (const [a, b] of S.corners) {
-    const last = win[win.length - 1];
-    if (last && a - half <= last[1]) last[1] = b + half;
-    else win.push([a - half, b + half]);
-  }
+  if (!S.corners.length) return base;
+  const win = S.corners.map(([a, b]) => [a - half, b + half]);
   const hidden = (s: number) => win.some(([a, b]) => s > a && s < b);
   // a stop's place along the line = the chord length so far (what travelFrames turns into percentages)
   let s = 0;
-  const items = base.map((p, i) => {
-    if (i) s += Math.hypot(p.x - base[i - 1].x, p.y - base[i - 1].y);
-    return { s, p, o: hidden(s) ? 0 : 1 };
-  });
+  const items = base.map((p, i) => ({ s: (s += i ? Math.hypot(p.x - base[i - 1].x, p.y - base[i - 1].y) : 0), p: { ...p, o: +!hidden(s) } }));
+  // the edges of each window; a fade-in edge that lies inside a neighbouring window is dropped
   for (const [a, b] of win) {
     for (const [x, o] of [[a - FADE, 1], [a, 0], [b, 0], [b + FADE, 1]]) {
-      if (x < 0 || x > S.L) continue;
       const q = at(S, x);
-      items.push({ s: x, p: { x: q.x, y: q.y, a: (Math.atan2(q.ty, q.tx) * 180) / Math.PI }, o });
+      if (!o || !hidden(x)) items.push({ s: x, p: { x: q.x, y: q.y, a: (Math.atan2(q.ty, q.tx) * 180) / Math.PI, o } });
     }
   }
-  items.sort((u, v) => u.s - v.s);
-  return { P: items.map((i) => i.p), o: items.map((i) => i.o) };
+  return items.sort((u, v) => u.s - v.s).map((i) => i.p);
 }
