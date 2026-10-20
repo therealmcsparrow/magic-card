@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -44,7 +44,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - name: Third-party notices up to date
@@ -58,9 +58,41 @@ jobs:
           node tools/check-entry-graph.mjs
       - name: Dist size budget
         run: npm run size
+      - name: Size gate self-test (raised cap, unlisted file, other zlib)
+        run: npm run size:selftest
       - name: Committed dist matches the build
         # a warning here; the release workflow fails on it. Rebuild and commit dist/ in the release commit.
         run: git diff --quiet -- dist src/version.ts || echo "::warning::dist/ or src/version.ts differs from a fresh build. Run npm run build and commit dist/ before tagging a release."
+
+  size-caps:
+    name: Size caps not raised
+    # fails a raised cap or ceiling in tools/size-caps.json that has no ceo_decisions entry (ADR 0042). Needs git history, not dependencies.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Compare tools/size-caps.json with the base branch
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): raises not compared"
+            node tools/check-dist-size.mjs --caps-only
+          else
+            node tools/check-dist-size.mjs --caps-only --base-ref "$base" --require-base
+          fi
 
   audit:
     name: Dependency audit (production)
@@ -71,5 +103,5 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
       - run: npm audit --omit=dev --audit-level=high

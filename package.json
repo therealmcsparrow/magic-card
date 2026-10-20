@@ -3,6 +3,9 @@
   "version": "2026.10.11-beta.5",
   "description": "A fully open-source Home Assistant Lovelace custom card with multi-mode configuration editor",
   "main": "dist/magic-card.js",
+  "engines": {
+    "node": "^24.22.0"
+  },
   "scripts": {
     "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts && npm run i18n",
     "i18n": "node tools/i18n-build.mjs",
@@ -12,6 +15,7 @@
     "prelint": "npm run i18n",
     "prebuild:harness": "npm run i18n",
     "size": "node tools/check-dist-size.mjs",
+    "size:selftest": "node tools/size-caps-selftest.mjs",
     "notices": "node tools/third-party-notices.mjs",
     "sbom": "cyclonedx-npm --omit dev --output-format JSON --output-file sbom.cdx.json",
     "dev": "webpack serve --mode development",

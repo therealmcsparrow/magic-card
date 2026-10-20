@@ -1,88 +1,307 @@
-// Fails when a built dist/*.js grows past its budget, or when an unlisted .js file appears.
-// Budgets, set by the CEO on 2026-10-17 (sizes then in comments):
-// - magic-card.js, which every dashboard loads: 496,640 B since 2026-10-20 (see CAPS); before that B2 + 8,192 B. B2 = 471,856 B, the magic-card.js measured on 2026-10-18 after
-//   epic D (swiper, marked, the seasonal decorations and six rare modules moved into lazy chunks); CEO decision 2026-10-18.
-//   B1 = 679,875 B was the 2026.10.04 baseline.
-// - lazy chunks: the 2026.10.07 size + 5 %, rounded up to 1 KiB.
-// I11 (2026-10-18) ratcheted every lazy-chunk cap to the measured size of a clean git archive build + 5 %, never above the cap it had.
-// Raise a budget only on purpose, in the same PR. A new chunk gets the same +5 % rule.
-import { readdirSync, statSync } from 'node:fs';
+// Size gate for the built dist/*.js. Every number lives in tools/size-caps.json (shape: tools/size-caps.schema.json,
+// ADR 0042); this file holds only the final-cap constant. Rules:
+// - magic-card.js, which every dashboard loads, is gated on gzip bytes: zlib.gzipSync(buffer, { level: 9 }), one shot on the whole file
+//   (node.M5, node.S5). The active stage cap applies; while the S0 cap is null (until S0.close) the cap is entry.base.gzip.
+//   Gzip bytes depend on the zlib build, so the result is authoritative only on the Node pinned in .nvmrc (zlib and brotli versions are
+//   recorded in the caps file). Another zlib or brotli: CI fails, a local run prints "not authoritative".
+// - every other dist .js is gated on raw bytes: size <= raw cap <= Architect ceiling. File names are matched with the content hash
+//   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails (AC7).
+// - raises: with --base-ref the caps file is compared with the same file at that git ref. Any entry cap, stage cap, br cap, ceiling or
+//   base figure that went up (or a number that was removed) fails unless ceo_decisions carries a matching entry (field, from, to).
+//   Only the Lead writes ceo_decisions after the CEO says yes in chat; entries already in the base file must stay as they are.
+// Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--digest]
+//   --base-file     compare with a file instead of a git ref (the self-test uses it).
+//   --require-base an unresolvable ref fails (CI); a ref that exists but has no caps file yet (first run) means no raises.
+//   --caps-only     check the caps file and the raises only, no dist (the quick CI job).
+//   --digest        also print the sha256 of the gzip bytes after the 10-byte header (the header OS byte differs per platform).
+// Raising a cap or ceiling needs a CEO decision, written by the Lead into ceo_decisions in the same change.
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
-const CAPS = {
-  // CEO 2026-10-20 combined beta (flow looks + slider looks + background layers + pause button): 496,640 B (485 KiB); was 486,400 (CEO 2026-10-19)
-  'magic-card.js': 503_808, // 492 KiB, CEO 2026-10-20 beta.5 (beta.4 nits, measured 503,258 + margin); was 502_784, // 491 KiB, CEO 2026-10-20 beta.4 (flow icon anchors, pause changes, slider entity colours); was 500_736, // 489 KiB, CEO 2026-10-20 combined beta (flow and slider looks, background layers, pause button); was 496,640 (CEO 2026-10-20), 486,400, 480,048
-  'magic-card-animation-studio.js': 1_000_448, // 977 KiB, CEO 2026-10-20 combined beta (tight: measured 999,106); was 996,352 (973 KiB, CEO 2026-10-19, fix round: lazy-loader version guards)
-  // CEO 2026-10-20 combined beta: hosts-only editor, measured 878,017 + 2,623 B margin = 880,640 B (860 KiB), under the CEO's 868 KiB limit; was 851,968 (832 KiB, CEO 2026-10-19)
-  'magic-card-editor.js': 887_808, // 867 KiB, CEO 2026-10-20 beta.5 (measured 887,112 + margin); was 885_760, // 865 KiB, CEO 2026-10-20 beta.4; was 880_640, // was 851_968, 819_200, 800 KiB (CEO 2026-10-19, rows and columns entity); was 818,176 (CEO 2026-10-19, card entity fixes), 814,080 (card entity), 805,888 before
-  'magic-card-icon-animator.js': 231_424, // 226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11); was 233,472
-  'magic-card-icon-library.js': 175_104, // 171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11); was 188,416
-  'magic-card-particles.js': 38_912, // 38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)
-  'magic-card-preset-catalogue.js': 26_624, // 26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB (I11)
-  'magic-card-theme-editor.js': 277_504, // 271 KiB, measured 263,917 + 5 %, rounded up to 1 KiB (I11)
-  'magic-card-theme-presets.js': 31_744, // 31 KiB, measured 29,584 + 5 %, rounded up to 1 KiB (I11)
-  // shape: custom builder (T2, ADR 0021): 2,873 B measured + 5 %, rounded up to 1 KiB; hard ceiling 5,120 B (more means shape-path.ts was copied in)
-  'magic-card-shape-custom.js': 3_072, // 3 KiB, measured 2,873 + 5 %, rounded up to 1 KiB (I11)
-  'magic-card-anim-runtime.js': 40_960, // 40 KiB, measured 38,670 + 5 %, rounded up to 1 KiB (I11)
-  // path canvas for the SVG and shape editors (T4): 47,935 B measured + 5 %. The architect's ceiling was 40 KiB;
-  // draw.ts (6.2 KB) is in this chunk by contract and is the main reason it is over. The chunk is only emitted
-  // once an editor chunk imports src/path-canvas/loader.ts; until then this entry reports "missing from dist".
-  'magic-card-path-canvas.js': 67_584, // 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB (I11); was 68,608
-  // SVG editor (T10): the architect's ceiling of 96 KiB, ADR 0019. Like the canvas chunk it is only emitted once the card-editor
-  // chunk imports src/svg-editor/loader.ts (T11); until then this entry reports "missing from dist".
-  'magic-card-svg-editor.js': 158_720, // 155 KiB, held at the CEO-approved cap: measured 152,791 + 5 % would round to 160,768, which is higher (I11)
-  // shape editor (T7): the architect's ceiling of 48 KiB, ADR 0019. OVER the ceiling with the whole design scope
-  // (about 64 KB, see 20-frontend-engineer-t7.md): the CEO rules on the number. Emitted once the card-editor
-  // chunk imports src/shape-editor/loader.ts (T8); until then this entry reports "missing from dist".
-  'magic-card-shape-editor.js': 105_472, // 103 KiB (CEO 2026-10-19, Messages tab); was 101_376, the cap held since I11
-  // epic D lazy chunks (D1 stubs, empty install): placeholder caps; D6 sets measured + 5 %, rounded up to 1 KiB, under the ceilings in src/contracts/lazy-module.ts
-  // background layers <mc-bg-stack> + layer placement runtime (T5/T9, ADR 0038): measured 21,047 + 5 %, rounded up to 1 KiB; ceiling 24,576 B (contract lazy-module 1.3.0). CEO 2026-10-20 combined beta
-  'magic-card-layers.js': 22_528, // 22 KiB, was 16,384 (provisional, CEO 2026-10-20 combined beta)
-  // layer editor panels (T9, editor-only chunk, contract layer-editor 1.0.0): measured 83,543 + 5 %, rounded up to 1 KiB; ceiling 114,688 B. CEO 2026-10-20 combined beta
-  'magic-card-layer-editor.js': 88_064, // 86 KiB
-  'magic-card-slider.js': 97_280, // 95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)
-  'magic-card-seasonal.js': 58_368, // 57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11)
-  'magic-card-markdown.js': 57_344, // 56 KiB, raised from 55,296 for the style allow-list tokenizer (CEO 2026-10-19)
-  // preset transfer (T16, ADR 0022): codec + validators, <mc-transfer-panel>, <mc-library-view>. Cap and TRANSFER_CHUNK_CEILING are 63,488 B (62 KiB), CEO 2026-10-19 (js-yaml, sanitizeSvg, model.ts and the validators are NOT in it, see 33-frontend-engineer-t16.md)
-  'magic-card-transfer.js': 63_488, // 62 KiB, CEO 2026-10-19 (fix rounds: URL checks, focus, thumbnail hook; measured 60,032)
-  // flow-slider-styles T13: measured + 5 %, rounded up to 1 KiB, under the lazy-module ceilings (CEO 2026-10-20 combined beta)
-  'magic-card-flow-look.js': 30_720, // 30 KiB, CEO 2026-10-20 beta.5 (measured 30,088 + margin); was 29_696, // 29 KiB, measured 27,835; ceiling 32,768; was a 32 KiB placeholder
-  'magic-card-slider-look.js': 25_600, // 25 KiB, CEO 2026-10-20 beta.4 (light-card lift, failed-call chip); was 24_576, // 24 KiB, measured 22,969; ceiling 28,672; was a 28 KiB placeholder
-  // look editors (editor-only chunk, contract look-editor 1.0.0): measured 58,323 + 5 %; plan ceiling 73,728 B (72 KiB); was a 72 KiB placeholder
-  'magic-card-look-editor.js': 61_440, // 60 KiB
-  // video background gets placement keys (background layers): measured 25,492 + 5 %, rounded up to 1 KiB; ceiling 45,056 B. CEO 2026-10-20 combined beta
-  'magic-card-modules-extra.js': 27_648, // 27 KiB, was 24,576 (24 KiB, measured 23,013 + 5 %, I11)
-  // path booleans (T23, ADR 0025): 7,884 B measured + 5 %, rounded up to 1 KiB; ceiling 16,384 B (PATH_BOOLEANS_CEILING_BYTES). Only emitted once an editor chunk imports src/path-booleans/loader.ts (T25/T27); until then this entry reports "missing from dist".
-  'magic-card-svg-booleans.js': 8_192, // 8 KiB, measured 7,723 + 5 %, rounded up to 1 KiB (I11); was 9,216
-  // path tools (T37, ADR 0027): 17,784 B measured (production build under a parent that holds lit; webpack stats list only src/path-tools/* and the contract, no lit, core.ts or booleans code) + 5 %, rounded up to 1 KiB; ceiling 20,480 B (PATH_TOOLS_CEILING_BYTES). Only emitted once the SVG editor chunk imports src/path-tools/loader.ts (T38); until then this entry reports "missing from dist".
-  'magic-card-path-tools.js': 20_480, // 20 KiB, measured 19,447 + 5 %, rounded up to 1 KiB (I11); was 22,528
-  // i18n table chunks (contract i18n 1.0.0 r3, Handoff 108): the lazy tables of namespace 'labels' (editor and studio, editor-only labels that magic-card.js carries as numbers) and of 'icon-library' (the icon library and icon animator chunks). Caps are measured + 5 %, rounded up to 1 KiB (ratcheted in I11).
-  'magic-card-i18n-labels.js': 22_528, // 22 KiB, measured 21,416 + 5 %, rounded up to 1 KiB (I11); was 26,624
-  'magic-card-i18n-icons.js': 17_408, // 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB (I11); was 23,552
+/** 60 KiB, CEO Brief Gate 2026-10-20. Held here as well, so editing the JSON cannot move it. */
+const FINAL_CAP = 61_440;
+const STAGES = ['S0', 'S1a', 'S1b', 'S2'];
+const ROOT = fileURLToPath(new URL('../', import.meta.url));
+
+const args = process.argv.slice(2);
+const opt = (name) => {
+  const i = args.indexOf(name);
+  return i === -1 ? undefined : args[i + 1];
 };
+const flag = (name) => args.includes(name);
+const capsPath = opt('--caps') ?? join(ROOT, 'tools', 'size-caps.json');
+const distDir = opt('--dist') ?? join(ROOT, 'dist');
+const baseRef = opt('--base-ref');
+const baseFile = opt('--base-file');
+const inCi = process.env.GITHUB_ACTIONS === 'true' || process.env.CI === 'true';
 
-const dir = fileURLToPath(new URL('../dist/', import.meta.url));
-const files = readdirSync(dir).filter((f) => f.endsWith('.js'));
 let failed = false;
+const fail = (msg) => {
+  console.error(`FAIL ${msg}`);
+  failed = true;
+};
+const ok = (msg) => console.log(`ok   ${msg}`);
+const note = (msg) => console.log(`note ${msg}`);
 
-for (const f of files) {
-  const size = statSync(join(dir, f)).size;
-  const cap = CAPS[f];
-  if (cap === undefined) {
-    console.error(`FAIL ${f}: ${size} B, new file with no size cap. Add an entry for it to CAPS in tools/check-dist-size.mjs (its production size + 5 %, rounded up to 1 KiB) in the same PR`);
-    failed = true;
-  } else if (size > cap) {
-    console.error(`FAIL ${f}: ${size} B > cap ${cap} B (+${size - cap} B)`);
-    failed = true;
-  } else {
-    console.log(`ok   ${f}: ${size} B <= ${cap} B (headroom ${cap - size} B)`);
+const isObj = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+const isInt = (v) => Number.isInteger(v) && v >= 1;
+const COMMIT = /^[0-9a-f]{7,40}$/;
+
+/** Hand-written check of the parts of tools/size-caps.schema.json the gate relies on (no validator dependency). */
+function validateShape(c) {
+  const errs = [];
+  const need = (cond, msg) => {
+    if (!cond) errs.push(msg);
+  };
+  const keys = (o, allowed, where) => {
+    for (const k of Object.keys(o)) need(allowed.includes(k), `${where}: unknown key "${k}"`);
+  };
+  if (!isObj(c)) return ['the caps file is not a JSON object'];
+  keys(c, ['$schema', 'version', 'gzip', 'entry', 'files', 'ceo_decisions'], 'root');
+  need(c.version === 1, 'version must be 1');
+  const g = c.gzip;
+  if (isObj(g)) {
+    keys(g, ['level', 'node', 'zlib', 'brotli'], 'gzip');
+    need(g.level === 9, 'gzip.level must be 9');
+    for (const k of ['node', 'zlib', 'brotli']) need(typeof g[k] === 'string' && g[k] !== '', `gzip.${k} must be a non-empty string`);
+  } else errs.push('gzip must be an object');
+  const e = c.entry;
+  if (isObj(e)) {
+    keys(e, ['file', 'base', 'final_cap', 'current_stage', 'stages', 'br'], 'entry');
+    need(e.file === 'magic-card.js', 'entry.file must be magic-card.js');
+    need(isObj(e.base) && COMMIT.test(String(e.base.commit)) && isInt(e.base.gzip) && isInt(e.base.raw), 'entry.base needs commit, gzip and raw');
+    need(e.final_cap === FINAL_CAP, `entry.final_cap must be ${FINAL_CAP}`);
+    need(STAGES.includes(e.current_stage), 'entry.current_stage must be one of S0, S1a, S1b, S2');
+    if (Array.isArray(e.stages) && e.stages.length === 4) {
+      e.stages.forEach((s, i) => {
+        const w = `entry.stages[${i}]`;
+        need(isObj(s) && s.id === STAGES[i], `${w}.id must be ${STAGES[i]}`);
+        if (!isObj(s)) return;
+        keys(s, ['id', 'cap', 'target', 'landed_commit', 'measured', 'trace_ms'], w);
+        need(s.cap === null || isInt(s.cap), `${w}.cap must be an integer or null`);
+        need(isInt(s.target), `${w}.target must be an integer`);
+        need(s.landed_commit === null || COMMIT.test(String(s.landed_commit)), `${w}.landed_commit must be a commit or null`);
+      });
+    } else errs.push('entry.stages must hold the four stages S0, S1a, S1b, S2');
+    const br = e.br;
+    if (isObj(br)) {
+      keys(br, ['quality', 'cap', 'measured'], 'entry.br');
+      need(br.quality === 11, 'entry.br.quality must be 11');
+      need(br.cap === null || isInt(br.cap), 'entry.br.cap must be an integer or null');
+      need(br.measured === null || Number.isInteger(br.measured), 'entry.br.measured must be an integer or null');
+    } else errs.push('entry.br must be an object');
+  } else errs.push('entry must be an object');
+  if (isObj(c.files)) {
+    for (const [name, f] of Object.entries(c.files)) {
+      const w = `files["${name}"]`;
+      need(/^[a-z0-9][a-z0-9-]*\.js$/.test(name) && name !== 'magic-card.js', `${w}: name must be a logical dist .js name without a hash`);
+      if (!isObj(f)) {
+        errs.push(`${w} must be an object`);
+        continue;
+      }
+      keys(f, ['raw', 'ceiling', 'optional', 'note'], w);
+      need(isInt(f.raw) && isInt(f.ceiling), `${w}: raw and ceiling must be integers`);
+      need(typeof f.note === 'string' && f.note !== '', `${w}: note must say what the file holds`);
+      need(f.optional === undefined || typeof f.optional === 'boolean', `${w}.optional must be a boolean`);
+    }
+  } else errs.push('files must be an object');
+  if (Array.isArray(c.ceo_decisions)) {
+    c.ceo_decisions.forEach((d, i) => {
+      const w = `ceo_decisions[${i}]`;
+      need(isObj(d), `${w} must be an object`);
+      if (!isObj(d)) return;
+      keys(d, ['id', 'date', 'source', 'quote', 'field', 'from', 'to', 'reason'], w);
+      need(/^CEO-\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(String(d.id)), `${w}.id must look like CEO-2026-10-20-name`);
+      need(/^\d{4}-\d{2}-\d{2}$/.test(String(d.date)), `${w}.date must be YYYY-MM-DD`);
+      need(d.source === 'chat', `${w}.source must be "chat"`);
+      need(typeof d.quote === 'string' && d.quote.length >= 3, `${w}.quote must hold the CEO's words`);
+      need(typeof d.field === 'string' && d.field.startsWith('/'), `${w}.field must be a JSON pointer`);
+      need(d.from === null || Number.isInteger(d.from), `${w}.from must be an integer or null`);
+      need(Number.isInteger(d.to), `${w}.to must be an integer`);
+    });
+  } else errs.push('ceo_decisions must be an array');
+  return errs;
+}
+
+/** The active entry cap: the stage cap, or entry.base.gzip while the S0 cap is still null. */
+function stageCaps(c) {
+  const eff = [];
+  c.entry.stages.forEach((s, i) => {
+    eff.push(s.cap ?? (i === 0 ? c.entry.base.gzip : null));
+  });
+  return eff;
+}
+
+/** Ladder rules: each cap <= the previous one, S2 <= final cap, the active stage has a cap. */
+function checkLadder(c) {
+  const eff = stageCaps(c);
+  let prev = Infinity;
+  eff.forEach((cap, i) => {
+    if (cap === null) return;
+    if (cap > prev) fail(`entry.stages[${i}] (${STAGES[i]}) cap ${cap} B is above the stage before it (${prev} B): the ladder only steps down`);
+    prev = cap;
+  });
+  const s0 = c.entry.stages[0].cap;
+  if (s0 !== null && s0 > c.entry.base.gzip) fail(`S0 cap ${s0} B is above the base figure ${c.entry.base.gzip} B (entry.base.gzip)`);
+  const s2 = eff[3];
+  if (s2 !== null && s2 > FINAL_CAP) fail(`S2 cap ${s2} B is above the final cap ${FINAL_CAP} B`);
+  const active = STAGES.indexOf(c.entry.current_stage);
+  if (eff[active] === null) fail(`current_stage ${c.entry.current_stage} has no cap: set its cap in the stage-close change first`);
+  return eff[active];
+}
+
+/** Every number the CEO path guards, as { pointer: value } (null = absent or unset). */
+function guarded(c) {
+  const m = new Map();
+  m.set('/entry/base/gzip', c.entry.base.gzip);
+  c.entry.stages.forEach((st, i) => m.set(`/entry/stages/${i}/cap`, st.cap));
+  m.set('/entry/br/cap', c.entry.br.cap);
+  for (const [name, f] of Object.entries(c.files)) m.set(`/files/${name}/ceiling`, f.ceiling);
+  return m;
+}
+
+function loadBase(ref) {
+  let blob;
+  if (baseFile) return existsSync(baseFile) ? { caps: JSON.parse(readFileSync(baseFile, 'utf8')) } : { missingFile: true };
+  try {
+    execFileSync('git', ['rev-parse', '--verify', '--quiet', `${ref}^{commit}`], { cwd: ROOT, stdio: 'pipe' });
+  } catch {
+    return { missingRef: true };
+  }
+  try {
+    blob = execFileSync('git', ['show', `${ref}:tools/size-caps.json`], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 1 << 24 }).toString('utf8');
+  } catch {
+    return { missingFile: true };
+  }
+  return { caps: JSON.parse(blob) };
+}
+
+function checkRaises(c, ref) {
+  const base = loadBase(ref);
+  if (base.missingRef) {
+    const msg = `base ref "${ref}" does not resolve, so raises against the base branch were not checked`;
+    if (flag('--require-base')) fail(msg);
+    else note(msg);
+    return;
+  }
+  if (base.missingFile) {
+    note(`${ref} has no tools/size-caps.json (first run): no raises`);
+    return;
+  }
+  const b = base.caps;
+  const before = guarded(b);
+  const after = guarded(c);
+  const decisions = c.ceo_decisions;
+  // append-only: the entries of the base file stay, in place
+  b.ceo_decisions.forEach((d, i) => {
+    if (JSON.stringify(decisions[i]) !== JSON.stringify(d)) fail(`ceo_decisions[${i}] (${d.id}) differs from ${ref}: the list is append-only`);
+  });
+  if (STAGES.indexOf(c.entry.current_stage) < STAGES.indexOf(b.entry.current_stage)) fail(`entry.current_stage moved back from ${b.entry.current_stage} to ${c.entry.current_stage}`);
+  let raises = 0;
+  for (const [ptr, was] of before) {
+    if (!after.has(ptr)) continue; // file entry removed: lower by definition
+    const now = after.get(ptr);
+    const raised = was !== null && (now === null || now > was);
+    if (!raised) continue;
+    raises++;
+    const hit = decisions.find((d) => d.field === ptr && d.from === was && d.to === now);
+    if (hit) ok(`${ptr} ${was} -> ${now} (${hit.id})`);
+    else fail(`${ptr} was raised from ${was} to ${now} with no ceo_decisions entry (field "${ptr}", from ${was}, to ${now}). Only the Lead writes one, after the CEO says yes in chat`);
+  }
+  for (const [name, f] of Object.entries(c.files)) {
+    if (!b.files[name]) note(`new size entry ${name}: raw ${f.raw} B, ceiling ${f.ceiling} B (the Architect sets the ceiling; review it)`);
+  }
+  if (raises === 0) ok(`no cap or ceiling went up against ${ref}`);
+}
+
+/** zlib and brotli versions against the caps file. Returns true when this run is authoritative. */
+function checkAuthority(c) {
+  const g = c.gzip;
+  const diffs = [];
+  if (process.versions.zlib !== g.zlib) diffs.push(`zlib ${process.versions.zlib} (recorded ${g.zlib})`);
+  if (process.versions.brotli !== g.brotli) diffs.push(`brotli ${process.versions.brotli} (recorded ${g.brotli})`);
+  if (diffs.length === 0) {
+    if (process.versions.node !== g.node) note(`Node ${process.versions.node} differs from the pinned ${g.node}, but zlib and brotli match`);
+    return true;
+  }
+  if (inCi) fail(`CI runs another compressor than the caps file records: ${diffs.join(', ')}. Pin Node ${g.node} in .nvmrc (setup-node node-version-file) or record the new versions in tools/size-caps.json`);
+  else console.warn(`WARN gzip result NOT AUTHORITATIVE on Node ${process.versions.node}: ${diffs.join(', ')}. Pinned Node is ${g.node}; CI decides`);
+  return false;
+}
+
+function checkNvmrc(c) {
+  const p = join(ROOT, '.nvmrc');
+  if (!existsSync(p)) return fail('.nvmrc is missing: it pins the exact Node (major.minor.patch) the gzip figures were made with');
+  const v = readFileSync(p, 'utf8').trim().replace(/^v/, '');
+  if (!/^\d+\.\d+\.\d+$/.test(v)) fail(`.nvmrc "${v}" is not an exact major.minor.patch version`);
+  else if (v !== c.gzip.node) fail(`.nvmrc ${v} differs from gzip.node ${c.gzip.node} in tools/size-caps.json`);
+}
+
+/** Logical name of a dist file: content hash stripped. */
+const logicalName = (f) => f.replace(/\.[0-9a-f]{8}\.js$/, '.js');
+
+function checkDist(c, activeCap, authoritative) {
+  if (!existsSync(distDir)) return fail(`${distDir} does not exist: run npm run build first`);
+  const files = readdirSync(distDir).filter((f) => f.endsWith('.js')).sort();
+  const seen = new Map();
+  for (const f of files) {
+    const name = logicalName(f);
+    if (seen.has(name)) fail(`${f} and ${seen.get(name)} both map to ${name}`);
+    seen.set(name, f);
+  }
+  const tag = authoritative ? '' : ' (not authoritative)';
+  const entry = c.entry.file;
+  if (!seen.has(entry)) fail(`${entry}: missing from dist/`);
+  else {
+    const buf = readFileSync(join(distDir, entry));
+    const gz = gzipSync(buf, { level: c.gzip.level });
+    const digest = flag('--digest') ? ` sha256(after header) ${createHash('sha256').update(gz.subarray(10)).digest('hex')}` : '';
+    if (gz.length > activeCap) fail(`${entry}: ${gz.length} B gzip > cap ${activeCap} B (+${gz.length - activeCap} B), stage ${c.entry.current_stage}${tag}${digest}`);
+    else ok(`${entry}: ${gz.length} B gzip <= ${activeCap} B (headroom ${activeCap - gz.length} B), ${buf.length} B raw, stage ${c.entry.current_stage}${tag}${digest}`);
+  }
+  for (const [name, file] of seen) {
+    if (name === entry) continue;
+    const size = statSync(join(distDir, file)).size;
+    const f = c.files[name];
+    if (!f) fail(`${file}: ${size} B, new file with no entry in tools/size-caps.json. Add one (raw = its production size + 5 %, rounded up to 1 KiB, under an Architect ceiling) in the same PR`);
+    else if (size > f.raw) fail(`${file}: ${size} B > cap ${f.raw} B (+${size - f.raw} B)`);
+    else ok(`${file}: ${size} B <= ${f.raw} B (headroom ${f.raw - size} B)`);
+  }
+  for (const [name, f] of Object.entries(c.files)) {
+    if (!seen.has(name) && !f.optional) fail(`${name}: missing from dist/`);
   }
 }
-for (const f of Object.keys(CAPS)) {
-  if (!files.includes(f)) {
-    console.error(`FAIL ${f}: missing from dist/`);
-    failed = true;
+
+function main() {
+  let caps;
+  try {
+    caps = JSON.parse(readFileSync(capsPath, 'utf8'));
+  } catch (e) {
+    console.error(`FAIL cannot read ${capsPath}: ${e.message}`);
+    process.exit(1);
   }
+  const errs = validateShape(caps);
+  if (errs.length) {
+    for (const e of errs) fail(`size-caps.json: ${e}`);
+    process.exit(1);
+  }
+  for (const [name, f] of Object.entries(caps.files)) {
+    if (f.raw > f.ceiling) fail(`files["${name}"]: raw cap ${f.raw} B is above its ceiling ${f.ceiling} B. A ceiling raise needs a CEO decision`);
+  }
+  const activeCap = checkLadder(caps);
+  checkNvmrc(caps);
+  if (baseRef || baseFile) checkRaises(caps, baseRef ?? baseFile);
+  else note('no --base-ref: raises against the base branch were not checked');
+  if (!flag('--caps-only')) {
+    const authoritative = checkAuthority(caps);
+    checkDist(caps, activeCap, authoritative);
+    if (!authoritative && !failed) console.warn('WARN passed here, but the gzip figure is not authoritative; CI on the pinned Node decides');
+  }
+  process.exit(failed ? 1 : 0);
 }
-process.exit(failed ? 1 : 0);
+
+main();

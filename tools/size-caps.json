@@ -1,0 +1,189 @@
+{
+  "$schema": "./size-caps.schema.json",
+  "version": 1,
+  "gzip": {
+    "level": 9,
+    "node": "24.22.0",
+    "zlib": "1.3.2.1-motley-285e94b",
+    "brotli": "1.2.0"
+  },
+  "entry": {
+    "file": "magic-card.js",
+    "base": {
+      "commit": "edc5d05",
+      "gzip": 156490,
+      "raw": 503361
+    },
+    "final_cap": 61440,
+    "current_stage": "S0",
+    "stages": [
+      {
+        "id": "S0",
+        "cap": null,
+        "target": 156490,
+        "landed_commit": null
+      },
+      {
+        "id": "S1a",
+        "cap": null,
+        "target": 117760,
+        "landed_commit": null
+      },
+      {
+        "id": "S1b",
+        "cap": null,
+        "target": 67584,
+        "landed_commit": null
+      },
+      {
+        "id": "S2",
+        "cap": null,
+        "target": 61440,
+        "landed_commit": null
+      }
+    ],
+    "br": {
+      "quality": 11,
+      "cap": null,
+      "measured": null
+    }
+  },
+  "files": {
+    "magic-card-animation-studio.js": {
+      "raw": 1000448,
+      "ceiling": 1000448,
+      "note": "Animation studio the magic-card-utils panel loads. 977 KiB, CEO 2026-10-20 combined beta (tight: measured 999,106); was 996,352."
+    },
+    "magic-card-editor.js": {
+      "raw": 887808,
+      "ceiling": 887808,
+      "note": "Card editor. 867 KiB, CEO 2026-10-20 beta.5 (measured 887,112 + margin); was 885,760, 880,640."
+    },
+    "magic-card-icon-animator.js": {
+      "raw": 231424,
+      "ceiling": 231424,
+      "note": "226 KiB, measured 219,499 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-icon-library.js": {
+      "raw": 175104,
+      "ceiling": 175104,
+      "note": "171 KiB, measured 166,118 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-particles.js": {
+      "raw": 38912,
+      "ceiling": 38912,
+      "note": "38 KiB, held at the CEO-approved cap: measured 37,422 + 5 % would round to 39,936, which is higher (I11)."
+    },
+    "magic-card-preset-catalogue.js": {
+      "raw": 26624,
+      "ceiling": 26624,
+      "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-theme-editor.js": {
+      "raw": 277504,
+      "ceiling": 277504,
+      "note": "271 KiB, measured 263,917 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-theme-presets.js": {
+      "raw": 31744,
+      "ceiling": 31744,
+      "note": "31 KiB, measured 29,584 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-shape-custom.js": {
+      "raw": 3072,
+      "ceiling": 3072,
+      "note": "Shape custom builder (T2, ADR 0021). 3 KiB, measured 2,873 + 5 %, rounded up to 1 KiB (I11). The contract hard ceiling is 5,120 B (CUSTOM_SHAPE_CHUNK_CEILING); the ceiling here is the current cap (plan S0.1)."
+    },
+    "magic-card-anim-runtime.js": {
+      "raw": 40960,
+      "ceiling": 40960,
+      "note": "40 KiB, measured 38,670 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-path-canvas.js": {
+      "raw": 67584,
+      "ceiling": 67584,
+      "note": "Path canvas for the SVG and shape editors (T4). 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB (I11); was 68,608."
+    },
+    "magic-card-svg-editor.js": {
+      "raw": 158720,
+      "ceiling": 158720,
+      "note": "SVG editor (T10, ADR 0019). 155 KiB, held at the CEO-approved cap: measured 152,791 + 5 % would round to 160,768, which is higher (I11)."
+    },
+    "magic-card-shape-editor.js": {
+      "raw": 105472,
+      "ceiling": 105472,
+      "note": "Shape editor (T7, ADR 0019). 103 KiB (CEO 2026-10-19, Messages tab); was 101,376, the cap held since I11."
+    },
+    "magic-card-layers.js": {
+      "raw": 22528,
+      "ceiling": 24576,
+      "note": "Background layers <mc-bg-stack> and layer placement runtime (T5/T9, ADR 0038). 22 KiB, measured 21,047 + 5 %; ceiling 24,576 (lazy-module 1.3.0; the plan says it shrinks). CEO 2026-10-20 combined beta."
+    },
+    "magic-card-layer-editor.js": {
+      "raw": 88064,
+      "ceiling": 88064,
+      "note": "Layer editor panels (T9, editor-only chunk, contract layer-editor 1.0.0). 86 KiB, measured 83,543 + 5 %. The contract ceiling is 114,688 B; the ceiling here is the current cap (plan S0.1)."
+    },
+    "magic-card-slider.js": {
+      "raw": 97280,
+      "ceiling": 97280,
+      "note": "95 KiB, measured 92,092 + 5 %, rounded up to 1 KiB (I11)."
+    },
+    "magic-card-seasonal.js": {
+      "raw": 58368,
+      "ceiling": 81920,
+      "note": "57 KiB, measured 55,031 + 5 %, rounded up to 1 KiB (I11); ceiling 81,920 (plan chunk ceilings)."
+    },
+    "magic-card-markdown.js": {
+      "raw": 57344,
+      "ceiling": 57344,
+      "note": "56 KiB, raised from 55,296 for the style allow-list tokenizer (CEO 2026-10-19)."
+    },
+    "magic-card-transfer.js": {
+      "raw": 63488,
+      "ceiling": 63488,
+      "note": "Preset transfer (T16, ADR 0022). 62 KiB, CEO 2026-10-19 (fix rounds: URL checks, focus, thumbnail hook; measured 60,032); equals TRANSFER_CHUNK_CEILING."
+    },
+    "magic-card-flow-look.js": {
+      "raw": 30720,
+      "ceiling": 30720,
+      "note": "30 KiB, CEO 2026-10-20 beta.5 (measured 30,088 + margin); was 29,696. The contract ceiling is 32,768 B; the ceiling here is the current cap (plan S0.1)."
+    },
+    "magic-card-slider-look.js": {
+      "raw": 25600,
+      "ceiling": 25600,
+      "note": "25 KiB, CEO 2026-10-20 beta.4 (light-card lift, failed-call chip); was 24,576. The contract ceiling is 28,672 B; the ceiling here is the current cap (plan S0.1)."
+    },
+    "magic-card-look-editor.js": {
+      "raw": 61440,
+      "ceiling": 61440,
+      "note": "Look editors (editor-only chunk, contract look-editor 1.0.0). 60 KiB, measured 58,323 + 5 %. The plan ceiling is 73,728 B; the ceiling here is the current cap (plan S0.1)."
+    },
+    "magic-card-modules-extra.js": {
+      "raw": 27648,
+      "ceiling": 53248,
+      "note": "Video background gets placement keys (background layers). 27 KiB, was 24,576 (I11); ceiling 53,248 (plan chunk ceilings, tabs added)."
+    },
+    "magic-card-svg-booleans.js": {
+      "raw": 8192,
+      "ceiling": 8192,
+      "note": "Path booleans (T23, ADR 0025). 8 KiB, measured 7,723 + 5 %, rounded up to 1 KiB (I11); was 9,216."
+    },
+    "magic-card-path-tools.js": {
+      "raw": 20480,
+      "ceiling": 20480,
+      "note": "Path tools (T37, ADR 0027). 20 KiB, measured 19,447 + 5 %, rounded up to 1 KiB (I11); was 22,528."
+    },
+    "magic-card-i18n-labels.js": {
+      "raw": 22528,
+      "ceiling": 22528,
+      "note": "i18n labels table chunk (contract i18n 1.0.0 r3). 22 KiB, measured 21,416 + 5 %, rounded up to 1 KiB (I11); was 26,624."
+    },
+    "magic-card-i18n-icons.js": {
+      "raw": 17408,
+      "ceiling": 17408,
+      "note": "i18n icon-library table chunk (contract i18n 1.0.0 r3). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB (I11); was 23,552."
+    }
+  },
+  "ceo_decisions": []
+}
