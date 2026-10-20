@@ -29,11 +29,12 @@ function expect(name, cond, detail = '') {
   }
 }
 /** Writes a fixture dist and caps file; returns the checker arguments for it. */
-function fixture(caps, dist) {
+function fixture(caps, dist, siblings = true) {
   const d = join(tmp, `f${n++}`);
   mkdirSync(join(d, 'dist'), { recursive: true });
   for (const [f, content] of Object.entries(dist)) writeFileSync(join(d, 'dist', f), content);
   writeFileSync(join(d, 'caps.json'), JSON.stringify(caps));
+  if (siblings) spawnSync(process.execPath, [join(root, 'tools', 'compress-dist.mjs'), '--dist', join(d, 'dist')], { stdio: 'ignore' });
   return ['--caps', join(d, 'caps.json'), '--dist', join(d, 'dist')];
 }
 
@@ -140,6 +141,39 @@ const fin = clone(here);
 fin.entry.final_cap = 70000;
 r = run([...fixture(fin, dist), '--caps-only']);
 expect('editing final_cap fails (constant 61,440)', r.code === 1, r.out);
+
+// 8. siblings (ADR 0044): missing, stale, orphan, corrupt and the br gate
+r = run(fixture(here, dist, false));
+expect('dist with no .br/.gz fails', r.code === 1 && /.js.br: missing/.test(r.out) && /.js.gz: missing/.test(r.out), r.out);
+{
+  const args = fixture(here, dist);
+  const dd = args[3];
+  writeFileSync(join(dd, 'magic-card.js.br'), readFileSync(join(dd, 'magic-card-a.0a1b2c3d.js.br')));
+  r = run(args);
+  expect('a stale .br (another build) fails', r.code === 1 && /magic-card.js.br: unpacks to/.test(r.out), r.out);
+}
+{
+  const args = fixture(here, dist);
+  writeFileSync(join(args[3], 'magic-card-gone.js.gz'), 'x');
+  r = run(args);
+  expect('an orphan .gz fails', r.code === 1 && /magic-card-gone.js.gz: orphan/.test(r.out), r.out);
+}
+{
+  const args = fixture(here, dist);
+  writeFileSync(join(args[3], 'magic-card.js.gz'), 'not gzip');
+  r = run(args);
+  expect('a corrupt .gz fails', r.code === 1 && /magic-card.js.gz: does not unpack/.test(r.out), r.out);
+}
+{
+  const capped = clone(here);
+  capped.entry.br.cap = 100;
+  r = run(fixture(capped, dist));
+  expect('magic-card.js.br over entry.br.cap fails', r.code === 1 && /br cap 100 B/.test(r.out), r.out);
+  const loose = clone(here);
+  loose.entry.br.cap = 100000;
+  r = run(fixture(loose, dist));
+  expect('magic-card.js.br under entry.br.cap passes', r.code === 0 && /br cap 100000/.test(r.out), r.out);
+}
 
 rmSync(tmp, { recursive: true, force: true });
 if (bad) {

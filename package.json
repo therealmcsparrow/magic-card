@@ -9,7 +9,7 @@
   "scripts": {
     "prebuild": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts && npm run i18n",
     "i18n": "node tools/i18n-build.mjs",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production && node tools/compress-dist.mjs",
     "predev": "npm run i18n",
     "prewatch": "npm run i18n",
     "prelint": "npm run i18n",

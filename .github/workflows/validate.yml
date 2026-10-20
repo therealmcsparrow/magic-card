@@ -62,7 +62,8 @@ jobs:
         run: npm run size:selftest
       - name: Committed dist matches the build
         # a warning here; the release workflow fails on it. Rebuild and commit dist/ in the release commit.
-        run: git diff --quiet -- dist src/version.ts || echo "::warning::dist/ or src/version.ts differs from a fresh build. Run npm run build and commit dist/ before tagging a release."
+        run: |
+          git diff --quiet -- dist src/version.ts && [ -z "$(git status --porcelain -- dist src/version.ts)" ] || echo "::warning::dist/ or src/version.ts differs from a fresh build, or the build made a file that is not committed. Run npm run build and commit dist/ before tagging a release."
 
   size-caps:
     name: Size caps not raised

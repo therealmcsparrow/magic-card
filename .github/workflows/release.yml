@@ -35,9 +35,11 @@ jobs:
 
       - name: Committed dist matches the build
         run: |
-          if ! git diff --quiet -- dist src/version.ts; then
+          # git diff does not see a new untracked file (a .br or .gz sibling nobody committed), so git status is checked too
+          if ! git diff --quiet -- dist src/version.ts || [ -n "$(git status --porcelain -- dist src/version.ts)" ]; then
             git diff --stat -- dist src/version.ts
-            echo "::error::dist/ or src/version.ts in the tagged commit differs from a fresh build. Run npm run build, commit dist/ and tag again."
+            git status --porcelain -- dist src/version.ts
+            echo "::error::dist/ or src/version.ts in the tagged commit differs from a fresh build, or the build made a file that is not committed. Run npm run build, commit dist/ and tag again."
             exit 1
           fi
 
@@ -56,9 +58,11 @@ jobs:
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           # the card (HACS installs every .js asset), its lazy chunks (magic-card-anim-runtime.js) and
-          # the animation studio the magic-card-utils panel loads; plus the SBOM and licence notices
+          # the animation studio the magic-card-utils panel loads; the .br and .gz copy of each (HA serves them, ADR 0044); plus the SBOM and licence notices
           files: |
             dist/*.js
+            dist/*.js.br
+            dist/*.js.gz
             sbom.cdx.json
             THIRD-PARTY-NOTICES.md
           fail_on_unmatched_files: true

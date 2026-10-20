@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Improved
+-   **Compressed copies of every file.** Each release now carries a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to every `.js` file. Home Assistant sends the copy a browser accepts, and sends the raw file when there is none, so `magic-card.js` goes over the network as 129,897 B (Brotli) or 156,490 B (gzip) instead of 503,361 B. HACS in single mode never deletes old files, so every later release keeps shipping both copies. See [Manual](README.md#manual) for updating by hand.
+
 ## 2026.10.11-beta.5 (2026-10-20, pre-release)
 
 ### Changed

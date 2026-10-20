@@ -70,9 +70,11 @@ HACS also downloads the other 27 files of the release into the same folder. Magi
 
 ### Manual
 
-1.  Download the 28 files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases). The table under [Loading the other files](#loading-the-other-files) lists them all.
+1.  Download the 28 `.js` files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases), with the `.js.br` and `.js.gz` file next to each one (84 files in all). The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
+
+Each `.js.br` and `.js.gz` file is a compressed copy of the `.js` file beside it. Home Assistant sends the copy the browser accepts, so a dashboard downloads about 130 KB of `magic-card.js` instead of 503 KB. When you update by hand, replace or delete the three files of a name together. If an old `.br` stays behind, Home Assistant keeps sending it in place of the new `.js`.
 
 Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
 

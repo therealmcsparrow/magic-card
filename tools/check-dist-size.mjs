@@ -9,6 +9,9 @@
 // - raises: with --base-ref the caps file is compared with the same file at that git ref. Any entry cap, stage cap, br cap, ceiling or
 //   base figure that went up (or a number that was removed) fails unless ceo_decisions carries a matching entry (field, from, to).
 //   Only the Lead writes ceo_decisions after the CEO says yes in chat; entries already in the base file must stay as they are.
+// - siblings (ADR 0044): every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
+//   .js byte for byte, and a .br or .gz with no .js fails (an orphan, or a stale copy HA would keep serving). Siblings have no size cap of
+//   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
 // Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--digest]
 //   --base-file     compare with a file instead of a git ref (the self-test uses it).
 //   --require-base an unresolvable ref fails (CI); a ref that exists but has no caps file yet (first run) means no raises.
@@ -20,7 +23,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { gzipSync } from 'node:zlib';
+import { brotliDecompressSync, gunzipSync, gzipSync } from 'node:zlib';
 
 /** 60 KiB, CEO Brief Gate 2026-10-20. Held here as well, so editing the JSON cannot move it. */
 const FINAL_CAP = 61_440;
@@ -274,6 +277,45 @@ function checkDist(c, activeCap, authoritative) {
   for (const [name, f] of Object.entries(c.files)) {
     if (!seen.has(name) && !f.optional) fail(`${name}: missing from dist/`);
   }
+  checkSiblings(c, files, activeCap, tag);
+}
+
+/** ADR 0044: .js.br and .js.gz next to every .js, each unpacking to it byte for byte; no copy without its .js. */
+function checkSiblings(c, files, activeCap, tag) {
+  for (const f of readdirSync(distDir)) {
+    const m = /^(.*.js).(br|gz)$/.exec(f);
+    if (m && !files.includes(m[1])) fail(`${f}: orphan copy with no ${m[1]} next to it (HA would keep serving it). Delete it together with the .js`);
+  }
+  let good = 0;
+  for (const f of files) {
+    const raw = readFileSync(join(distDir, f));
+    for (const [ext, unpack] of [['br', brotliDecompressSync], ['gz', gunzipSync]]) {
+      const p = join(distDir, `${f}.${ext}`);
+      if (!existsSync(p)) {
+        fail(`${f}.${ext}: missing. Run npm run build (it ends with tools/compress-dist.mjs)`);
+        continue;
+      }
+      let back;
+      try {
+        back = unpack(readFileSync(p));
+      } catch (e) {
+        fail(`${f}.${ext}: does not unpack (${e.code ?? e.message})`);
+        continue;
+      }
+      if (Buffer.compare(back, raw) !== 0) fail(`${f}.${ext}: unpacks to ${back.length} B that differ from ${f} (${raw.length} B): stale copy, rebuild`);
+      else good++;
+    }
+  }
+  const entry = c.entry.file;
+  const p = join(distDir, `${entry}.br`);
+  if (existsSync(p)) {
+    const size = statSync(p).size;
+    const cap = c.entry.br.cap;
+    if (cap !== null && size > cap) fail(`${entry}.br: ${size} B > br cap ${cap} B (+${size - cap} B)${tag}`);
+    else if (size > activeCap) fail(`${entry}.br: ${size} B > the stage ${c.entry.current_stage} gzip cap ${activeCap} B${tag}`);
+    else ok(`${entry}.br: ${size} B brotli <= ${cap === null ? 'stage gzip cap ' + activeCap : 'br cap ' + cap} B${tag}`);
+  }
+  if (!failed) ok(`${good} sibling copies unpack to their .js byte for byte`);
 }
 
 function main() {
