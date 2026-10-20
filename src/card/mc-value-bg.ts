@@ -147,6 +147,8 @@ export class McValueBg extends LitElement {
   private _onFetched = () => this.requestUpdate();
   private _watchingSize = false;
   private _watchingScreen = false;
+  /** Was the screen watch started as pausable (a moving wave) or not (a sparkline)? */
+  private _watchPausable = true;
   /** The last off-screen report: undefined before the first one (nothing is fetched until then). */
   private _onScreen?: boolean;
   private _timer?: ReturnType<typeof setTimeout>;
@@ -249,11 +251,14 @@ export class McValueBg extends LitElement {
       this.measure();
     } else if (!spark) this._unwatchSize();
     const watch = spark || this._waveMoves();
+    // a sparkline updates but does not move: it keeps updating in a paused card and is no motion (card-pause 1.0.0)
+    if (watch && this._watchingScreen && this._watchPausable === spark) this._unwatchScreen();
     if (watch && !this._watchingScreen) {
       this._watchingScreen = true;
+      this._watchPausable = !spark;
       this._onScreen = undefined;
       // nothing reports without an IntersectionObserver: on screen
-      if (!watchOffscreen(this, this._onReport)) this._onScreen = true;
+      if (!watchOffscreen(this, this._onReport, { pausable: !spark })) this._onScreen = true;
     } else if (!watch) this._unwatchScreen();
     // the cached history goes stale 5 minutes after its fetch: ask again just after that. Already
     // stale or missing: a fetch is running or starts once on screen, and its re-render arms the timer.

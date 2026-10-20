@@ -148,7 +148,7 @@ export function renderTrack(o: TrackOptions): TemplateResult {
       @pointerup=${stopControlEvent}
       @click=${stopControlEvent}
       @keydown=${onKeyDown}
-      ${o.parts ? pauseOffscreen() : nothing}
+      ${o.parts ? pauseOffscreen({ counted: false }) : nothing}
     >
       <div class="mc-tile-slider-background"></div>
       <div class="mc-tile-slider-bar"></div>${o.parts ?? nothing}

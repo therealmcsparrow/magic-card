@@ -122,21 +122,28 @@ export function __resetOffscreenObserverForTests(): void {
 /** `<svg ${pauseOffscreen()}>`: watched by the shared observer while it is in the DOM. */
 class PauseOffscreen extends AsyncDirective {
   private _el?: Element;
+  private _counted = true;
 
   constructor(part: PartInfo) {
     super(part);
     if (part.type !== PartType.ELEMENT) throw new Error('pauseOffscreen() is an element directive');
   }
 
-  render(): typeof nothing {
+  /** `counted: false` pauses with the card but is no sign of motion on its own (a still track). */
+  render(_opts?: { counted?: boolean }): typeof nothing {
     return nothing;
   }
 
-  update(part: ElementPart): typeof nothing {
+  update(part: ElementPart, [opts]: [{ counted?: boolean }?]): typeof nothing {
+    const counted = opts?.counted !== false;
     if (part.element !== this._el) {
       this._unwatch();
       this._el = part.element;
-      if (this.isConnected) observe(this._el);
+      this._counted = counted;
+      if (this.isConnected) observe(this._el, true, counted);
+    } else if (counted !== this._counted) {
+      this._counted = counted;
+      if (this.isConnected) observe(this._el, true, counted);
     }
     return nothing;
   }
@@ -150,7 +157,7 @@ class PauseOffscreen extends AsyncDirective {
   }
 
   protected reconnected(): void {
-    if (this._el) observe(this._el);
+    if (this._el) observe(this._el, true, this._counted);
   }
 }
 
