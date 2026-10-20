@@ -60,7 +60,8 @@ class SliderModule extends BaseMagicModule {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
     // colours of the entity (contract entity-colour 1.0.0) are resolved here, so both renderings get plain CSS
     const c = paintedColours(config as SliderModuleConfig, hass);
-    if (hasSliderLook(c)) {
+    // the look decision reads the config as written: a look key whose entity colour resolves to nothing (light off) stays a look key
+    if (hasSliderLook(config as SliderModuleConfig)) {
       // a slider with a look: the slider-look chunk draws it; until it is there (or when it failed) today's markup
       const view = sliderLookSlot.get();
       if (view) return view.renderPreview(c, hass);
