@@ -34,7 +34,6 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   anim: lazyChunk('anim', () => import(/* webpackChunkName: "anim" */ '../anim-studio/anim-chunk')),
 };
 
-/** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
 /**
  * anim-runtime and particles are children of `anim` (ADR 0045): their import()s sit in src/anim-studio/anim-chunk.ts.
  * The importer calls it synchronously (no await or .then first), so a retry's `r=` reaches the request (proj.M12 f);
