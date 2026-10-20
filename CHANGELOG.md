@@ -6,6 +6,14 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Changed
+-   **Pause motion button is off by default.** `pause_button` now defaults to `hidden`; set `auto` or `always` to show it. The editor lists Hidden as the default.
+-   **Pause motion button.** One fixed name, "Pause motion", with a pressed state for screen readers, and a 44 by 44 pixel touch area on every pointer.
+-   **Slider.** The failed-call message wraps instead of being cut off, and the slider is no longer marked invalid once the next change goes through.
+-   **Light cards.** Flow lines and the slider fill are darkened where they would be under 3:1 contrast against a light card.
+-   **Flows.** The moving highlight on solid and double lines fades out over corner arcs, so it no longer sticks out at sharp elbows.
+-   **Background layers.** After Stop preview, focus moves to Play.
+
 ### Documentation
 -   **Showcase cards.** Twenty new gallery cards (115 to 134) that combine flow looks, slider looks and background layers: ten for everyday rooms and energy, ten in sci-fi, fantasy, seasonal and retro styles. See [Showcase](documentation/gallery/showcase.md).
 
