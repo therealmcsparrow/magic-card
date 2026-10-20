@@ -123,11 +123,19 @@ Each card can show a Pause motion button. It pauses everything on the card that 
 | `pause_button` | `auto`, `always`, `hidden` | `hidden` | `auto` shows the button on every card that has motion. `always` shows it even when nothing moves. `hidden` (the default) shows no button. |
 | `pause_button_corner` | `bottom-left`, `bottom-right`, `top-left`, `top-right` | `bottom-left` | The corner of the card where the button sits. |
 
-In the editor, the settings are in the card's Design tab, in a Motion group that sits under Layout and is open by default. "Pause button" offers Automatic, Always and Hidden. "Corner" appears only when the button is shown.
+In the editor, the settings are in the card's Design tab, in a Motion group that sits under Layout and is open by default. "Pause button" offers Automatic, Always and Hidden, as a radio group: Tab reaches the chosen one, and the arrow keys move between the three. "Corner" appears only when the button is shown.
 
 A card has motion when something on it moves: an animation, a seasonal scene, flows, particles, a picture with pan and zoom, or a live camera or video behind other modules. The default is `hidden`, so a card shows no button until you set `auto` or `always`.
 
 If anything on the card moves for more than five seconds, set `pause_button` to `auto` or `always`, so viewers can stop the motion. WCAG 2.2.2 asks for a way to pause or stop moving content that runs for more than five seconds.
+
+### Space for the button
+
+With `auto` or `always`, the card keeps a 24 px strip at the button's edge: the top for a top corner, the bottom for a bottom corner. The button sits over that strip, so it does not cover a module in the normal case. The strip adds to the card's padding and gap.
+
+- Under `auto`, the strip stays even when no button shows, so the layout does not move when motion starts or stops. A card with `auto` is therefore taller by the strip than it was before this version, whether or not it has motion.
+- With `hidden`, the card reserves no strip.
+- A card whose padding and gap add up to less than 10 px, for example `padding: 0`, can still be touched by the button, because the button reaches 34 px from its corner. Give such a card a little padding or gap if its modules sit at the edge.
 
 - The button is a small round control in the chosen corner. Its name is always "Pause motion"; a screen reader hears whether it is pressed. Its touch area is 44 by 44 pixels. Tab reaches it after the card's content. Enter or Space toggles it.
 - Pressing it does not trigger the tap action of the card or module under it.

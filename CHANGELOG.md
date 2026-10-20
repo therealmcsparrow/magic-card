@@ -4,6 +4,21 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **Pause button keeps a strip.** While `pause_button` is `auto` or `always`, the card keeps a 24 px strip at the button's edge (the top for a top corner, the bottom for a bottom corner). Under `auto` the strip stays even when no button shows, so the layout does not move when motion starts or stops. Cards with `auto` or `always` are therefore taller by that strip. `hidden` reserves nothing. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
+-   **Slider colours are checked.** Slider colour and Track colour, and the background of a basic slider, go through the same colour check as the slider looks. A gradient in design `background` no longer fills the track, so use a colour there.
+-   **Swarm lines need travelling shapes.** A swarm key (random spacing, size variation or a known alternate shape) makes a wide look, which ends the line at the box by default, only when the shapes travel along the line. A swarm with `motion: pulse`, or with `dots: 0` and no spacing, ends at the icon again, as a thin line does. An unknown `shape_alternate` value does not count. Set [Attach to](documentation/flows/options.md#attach-to) to keep the box.
+
+### Improved
+-   **Arrow keys in the Pause button setting.** The editor's Automatic, Always and Hidden choices work as a radio group: Tab reaches the chosen one, and the arrow keys move between them.
+
+### Fixed
+-   **Pause button no longer covers modules** when the card has room for it. A card with very small padding and gap (for example `padding: 0`) can still be touched by the button.
+-   **Flows editor header.** When both ends of a flow have the same name, the header shows where each end is, so the two can be told apart.
+-   **Opacity values** are no longer written in exponent form. `#rgba` colours read their alpha correctly.
+
 ## 2026.10.11-beta.4 (2026-10-20, pre-release)
 
 ### New

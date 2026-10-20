@@ -53,7 +53,7 @@ flows:
 
 - A line runs from a side of the From module to a side of the To module. `auto` picks the facing sides. Several lines on the same side of a module spread out along it.
 - A thin line ends at the module's icon, picture or dial, where the module has one. Two icons side by side in one row get a line between their edges.
-- A wide look (tube, cable, neon, zigzag or swarm, meaning random spacing, size variation or an alternate shape) ends at the module's outer box by default. Set [Attach to](options.md#attach-to) to pick the box or the icon for any look. An explicit value always wins over the default.
+- A wide look (tube, cable, neon, zigzag, or a swarm whose shapes travel: random spacing, size variation or a known alternate shape) ends at the module's outer box by default. Set [Attach to](options.md#attach-to) to pick the box or the icon for any look. An explicit value always wins over the default.
 - On a module with a [shape](../design/shapes.md), a line attaches where it meets the shape's outline instead of the edge of the box, so it touches a hexagon's point or a circle's curve. When the line ends at the icon, it uses the icon's box instead.
 - Lines follow the layout: they are measured again when the card or a module resizes, scrolls or animates in.
 - A flow is not drawn when one of its modules is unknown, hidden by its display conditions on the dashboard, has no size, or lies outside the visible content (a slide that isn't shown).
