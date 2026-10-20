@@ -510,7 +510,7 @@ export class McFlows extends LitElement {
     const obstacleRects = new Map(this._rects);
     const end = (id: string, box: boolean | undefined): [string, Rect | undefined, boolean] => {
       const icon = box ? undefined : this._anchors.get(id);
-      return icon ? [`${id}`, icon, true] : [id, this._rects.get(id), false];
+      return icon ? [`${id}~`, icon, true] : [id, this._rects.get(id), false];
     };
     const drawn = all.flatMap((f, i) => {
       if (!f.visible) return [];
