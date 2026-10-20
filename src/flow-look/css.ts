@@ -16,6 +16,6 @@ export const FLOW_LOOK_CSS = `
 .el{animation:mc-flow-el 1s linear infinite}
 .fk-s{animation:mc-flow-fs 1s linear infinite}
 .fk-t{animation:mc-flow-ft 2s linear infinite}
-svg[offscreen] .an,div.html[offscreen] .an,:host([page-hidden]) .an{animation-play-state:paused}
+svg[offscreen] .an,div.html[offscreen] .an,:host([page-hidden]) .an{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.an{animation:none}.flow[data-line] path{transition:none}}
 ` + SHAPE_CSS;
