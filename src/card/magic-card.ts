@@ -991,8 +991,8 @@ export class MagicCard extends LitElement {
     // slot empty: this render lays children out in config order; ask for one more when the chunk lands
     if (this._layerOn && !rt && !this._layersAsked) {
       this._layersAsked = true;
-      void lazyChunks.layers.load();
-      lazyChunks.layers.whenReady(() => this.requestUpdate());
+      // load() settles false on a failure (whenReady callbacks are dropped then): render once more so layered modules show in flow
+      void lazyChunks.layers.load().then(() => this.requestUpdate());
     }
     return this._layerOn;
   }
