@@ -162,8 +162,10 @@ function buildFromArchive(rev) {
   sh('tar', ['-xf', path.basename(tarFile), '-C', sha], { cwd: CACHE });
   rmSync(tarFile, { force: true });
   console.log(`building ${rev} (${sha.slice(0, 12)}) from git archive ...`);
-  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  const r = spawnSync(npm, ['run', 'build'], { cwd: dir, encoding: 'utf8', maxBuffer: 1 << 28, shell: process.platform === 'win32' });
+  // Windows needs a shell for npm.cmd; pass one fixed string, never an argument list with shell:true (node.M3)
+  const r = process.platform === 'win32'
+    ? spawnSync('npm run build', { cwd: dir, encoding: 'utf8', maxBuffer: 1 << 28, shell: true })
+    : spawnSync('npm', ['run', 'build'], { cwd: dir, encoding: 'utf8', maxBuffer: 1 << 28, shell: false });
   if (r.status !== 0) throw new Error(`build of ${rev} failed\n${(r.stdout || '').slice(-3000)}\n${(r.stderr || '').slice(-2000)}`);
   writeFileSync(path.join(dir, '.built'), `${sha}\n`);
   return { dist, sha };
@@ -486,6 +488,10 @@ async function main() {
   }
   if (diffs.length > 20) console.log(`... and ${diffs.length - 20} more`);
   for (const f of failures) console.log(`FAIL ${f}`);
+  if (!ids.length) {
+    console.log('FAIL no fixture rendered');
+    return 2;
+  }
   if (failures.length) return 2;
   return diffs.length ? 1 : 0;
 }

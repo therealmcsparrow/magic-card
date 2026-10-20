@@ -43,6 +43,25 @@ const SCAN_RULES = [
   ['tracker-entity', /\b(device_tracker|zone)\.[a-z0-9_]+/],
 ];
 
+/**
+ * Personal-name deny-list: one case-insensitive term per line (# comments allowed), read from the file named by
+ * PRIVACY_DENYLIST, else .company/privacy-denylist.txt (git-ignored). PRIVACY_DENYLIST_TERMS (comma separated) is
+ * added on top. No term lives in a tracked file. With no list the user-name rule is skipped and a note is printed.
+ */
+function loadDenyList() {
+  const terms = [];
+  const file = process.env.PRIVACY_DENYLIST || join(dirname(fileURLToPath(import.meta.url)), '..', '.company', 'privacy-denylist.txt');
+  if (existsSync(file)) terms.push(...readFileSync(file, 'utf8').split(/\r?\n/));
+  if (process.env.PRIVACY_DENYLIST_TERMS) terms.push(...process.env.PRIVACY_DENYLIST_TERMS.split(','));
+  const clean = terms.map((t) => t.trim()).filter((t) => t && !t.startsWith('#'));
+  if (!clean.length) {
+    console.log('note: no privacy deny-list (PRIVACY_DENYLIST, PRIVACY_DENYLIST_TERMS or .company/privacy-denylist.txt); user-name rule skipped');
+    return null;
+  }
+  return new RegExp(clean.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'i');
+}
+const DENY_RE = loadDenyList();
+
 /** Returns [{ line, rule, text }] for one fixture text. */
 export function scanText(text) {
   const hits = [];
@@ -50,6 +69,7 @@ export function scanText(text) {
     for (const [rule, re] of SCAN_RULES) {
       if (re.test(line)) hits.push({ line: i + 1, rule, text: line.trim().slice(0, 120) });
     }
+    if (DENY_RE && DENY_RE.test(line)) hits.push({ line: i + 1, rule: 'user-name', text: line.trim().slice(0, 120) });
     for (const m of line.matchAll(/\bperson\.[a-z0-9_]+/g)) {
       if (!DEMO_PERSONS.has(m[0])) hits.push({ line: i + 1, rule: 'person-entity', text: line.trim().slice(0, 120) });
     }
