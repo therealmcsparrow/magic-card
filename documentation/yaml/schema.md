@@ -747,6 +747,8 @@ seasonal:
 
 `auto` shows a holiday while its range holds the date (new year is checked first, then christmas, valentine, easter, halloween), and otherwise the meteorological season: December to February is winter in the north. `weather` follows the state of `weather_entity`. `daynight` follows `sun.sun`: stars at night, a glow at dusk and dawn, nothing by day. Auto goes by the date in the time zone your Home Assistant profile shows times in.
 
+Room for decorations: a card with `seasonal` keeps at least as much padding as its decorations need, worked out from the setting alone, so the card is the same size in every month and before the scene has loaded. `auto` keeps room for the widest scene it can show: 20 px at the top, right and left and 30 px at the bottom. This is a minimum. A card whose padding is already larger does not change, and the default padding of 16 px grows by 4 px at the top, right and left and by 14 px at the bottom. To keep less room, set `decorations: false`, name a scene (`winter` keeps 20 px at the top only), or switch holidays off in `calendar`: with `christmas` and `halloween` both `off`, `auto` keeps 20 px at the top and left and 18 px at the bottom. A seasonal animation preset on a module, row or column keeps its room whether or not its trigger is active.
+
 `seasonal: none`, `seasonal: false` or a missing key draws nothing. Detail: [Design](../design/README.md).
 
 ## Icon effects

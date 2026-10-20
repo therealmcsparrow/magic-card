@@ -6,6 +6,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Changed
+-   **Seasonal cards keep their room all year.** A card with `seasonal: auto` now keeps at least 20 px of padding at the top, right and left and 30 px at the bottom in every month, the most that a Christmas or Halloween decoration needs. Before, the card added that room only while a decoration showed, so the layout moved on 1 December and on 24 October. A card with the default padding of 16 px grows by 4 px at the top, right and left and by 14 px at the bottom; a card whose padding is already larger does not change. To keep less room, set `decorations: false`, name one scene, or switch Christmas and Halloween off in `calendar`. A seasonal animation preset on a module, row or column keeps its room the same way, whether or not its trigger is active. See [Seasonal scenes](documentation/yaml/schema.md#seasonal-scenes).
+
 ### New
 -   **A part that cannot load says so.** When a part of a card, such as the slider, a background or an animation, cannot be fetched, the card tries once more after two seconds. If that fails too, a short notice appears in place of the part with a **Try again** button, and the card keeps trying in the background (after 30 seconds, 90 seconds and 5 minutes). The rest of the card keeps working. If the card file and its parts come from different releases, the notice offers **Reload page** instead.
 
