@@ -25,7 +25,7 @@ export const layerStyles: CSSResult = css`
       .lseg {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
       .lseg > button {
         flex: 1 1 96px;
@@ -82,7 +82,7 @@ export const layerStyles: CSSResult = css`
       .warnrow {
         margin: 0;
         padding: 8px 10px;
-        border: 1px solid var(--mc-warn-ink);
+        border: 1px solid color-mix(in srgb, var(--mc-warn-ink) 40%, transparent);
         border-radius: var(--mc-radius);
         background: var(--mc-warn-tint);
         font-size: 0.8125rem;
@@ -90,7 +90,7 @@ export const layerStyles: CSSResult = css`
       .tiles2 {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
       .lyr-tile {
         display: grid;
@@ -102,7 +102,7 @@ export const layerStyles: CSSResult = css`
       .lyr-tile .pv {
         height: 40px;
         border-radius: 4px;
-        border: 1px solid var(--mc-ed-ctl-line);
+        border: 1px solid var(--mc-divider);
       }
       .lyr-tile .nm {
         font-size: 0.8125rem;
@@ -114,7 +114,7 @@ export const layerStyles: CSSResult = css`
       .order {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
       .order button {
         display: inline-flex;
@@ -158,29 +158,44 @@ export const layerStyles: CSSResult = css`
         font-size: 10px;
         line-height: 1;
       }
-      .chip2 {
-        display: inline-block;
-        padding: 0 8px;
-        border: 1px solid var(--mc-ed-ctl-line);
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
+      /* the kit disclosure row: a quiet bar with the chevron at the end, like Layout and Style in the same panel */
       .disc {
         display: flex;
         align-items: center;
         gap: 8px;
         width: 100%;
-        padding: 0 10px;
+        min-height: var(--mc-hit, 40px);
+        padding: 6px 12px;
+        border: 0;
+        border-radius: var(--mc-radius);
+        background: var(--mc-surface-2);
+        color: var(--mc-text);
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
         cursor: pointer;
-        text-align: left;
+        text-align: start;
       }
-      .disc .arrow {
-        display: inline-block;
+      @media (hover: hover) {
+        .disc:hover {
+          background: color-mix(in srgb, var(--mc-text) 8%, var(--mc-surface-2));
+        }
+      }
+      .chev {
+        flex: none;
+        width: 20px;
+        height: 20px;
+        margin-inline-start: auto;
+        color: var(--mc-text-2);
         transition: transform 0.15s ease-out;
       }
-      .disc[aria-expanded='true'] .arrow {
-        transform: rotate(90deg);
+      [aria-expanded='true'] > .chev {
+        transform: rotate(180deg);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .chev {
+          transition: none;
+        }
       }
       .effects {
         display: grid;
@@ -203,8 +218,9 @@ export const layerStyles: CSSResult = css`
       .cost {
         margin: 0;
         padding: 8px 10px;
-        border: 1px solid var(--mc-ed-ctl-line);
+        border: 1px solid var(--mc-divider);
         border-radius: var(--mc-radius);
+        background: var(--mc-surface-2);
         font-size: 0.8125rem;
       }
       /* the cost note and the Low-power switch under it are stacked with a gap, never touching */
@@ -234,17 +250,13 @@ export const layerStyles: CSSResult = css`
         overflow-wrap: anywhere;
       }
       .lyr-btn {
-        padding: 0 12px;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
         gap: 6px;
-        justify-content: center;
       }
       .acts {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--lyr-gap);
+        gap: 8px;
       }
       .undo {
         margin: 0;
