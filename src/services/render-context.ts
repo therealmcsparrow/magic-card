@@ -72,14 +72,25 @@ export interface RenderContext {
 
 let current: RenderContext | undefined;
 
+/** One object per outermost card render (nested contexts share it); lets a module tell two renders of the same config apart. */
+let pass: object | undefined;
+
 export function withRenderContext<T>(ctx: RenderContext, fn: () => T): T {
   const previous = current;
+  const outer = pass;
   current = ctx;
+  if (!outer) pass = {};
   try {
     return fn();
   } finally {
     current = previous;
+    pass = outer;
   }
+}
+
+/** The render pass in progress (undefined outside a card render). */
+export function currentRenderPass(): object | undefined {
+  return pass;
 }
 
 export function currentRenderContext(): RenderContext | undefined {

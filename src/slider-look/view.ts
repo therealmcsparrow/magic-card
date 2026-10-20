@@ -8,7 +8,7 @@ import { renderTrack } from '../utils/slider-track';
 import { entityStateColor } from '../utils/entity-color';
 import { entityDisplayName, formatEntityValue } from '../utils/entity-value';
 import { safeColor } from '../utils/animation';
-import { currentRenderContext } from '../services/render-context';
+import { currentRenderContext, currentRenderPass } from '../services/render-context';
 import { t } from '../card/i18n';
 import { css, lift, parseColour, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
 import { bigFillColours, bigFillIcon, fillSamples } from './big-fill';
@@ -54,14 +54,42 @@ interface State {
   gone: (el?: Element) => void;
 }
 const states = new Map<string, State>();
-const stateFor = (id: string): State => {
+/** How often a key was asked for in a render pass: the second slider with the same entity and id (the pop-up copy) gets its own state. */
+const seen = new WeakMap<object, Map<string, number>>();
+
+const stateFor = (base: string): State => {
+  const pass = currentRenderPass();
+  let n = 0;
+  if (pass) {
+    let counts = seen.get(pass);
+    if (!counts) seen.set(pass, (counts = new Map()));
+    n = counts.get(base) ?? 0;
+    counts.set(base, n + 1);
+  }
+  const id = n ? `${base}|${n}` : base;
   let s = states.get(id);
   if (!s) {
-    const st: State = { wrap: createRef(), status: createRef(), err: false, frac: 0, text: '', committed: false, shape: new ShapeBox(), gone: (el) => { if (!el) { st.live?.stop(); st.drag = undefined; } } };
+    const st: State = {
+      wrap: createRef(), status: createRef(), err: false, frac: 0, text: '', committed: false, shape: new ShapeBox(),
+      // the slider left the DOM: stop its throttle and timers and forget the state (Lit calls a ref callback with undefined then)
+      gone: (el) => {
+        if (el) return;
+        st.live?.stop();
+        st.drag = undefined;
+        clearTimeout(st.errTimer);
+        clearTimeout(st.lingerTimer);
+        st.errTimer = st.lingerTimer = undefined;
+        st.err = false;
+        if (states.get(id) === st) states.delete(id);
+      },
+    };
     states.set(id, (s = st));
   }
   return s;
 };
+
+/** Tests: how many slider states are alive. */
+export const __sliderStateCountForTests = (): number => states.size;
 
 const px = (n: number) => `${+n.toFixed(2)}px`;
 
@@ -79,7 +107,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const ctrl = stateObj ? numericControl(hass, stateObj, c.attribute, { min: c.min, max: c.max, step: c.step }) : undefined;
   const key = controlKey(c.entity, c.attribute, 'slider');
   const ctx = currentRenderContext();
-  const st = stateFor(`${key}|${c.id}`);
+  const st = stateFor(`${ctx?.instance ?? ''}|${key}|${c.id}`);
   st.update = ctx?.requestUpdate;
 
   const min = ctrl?.min ?? c.min ?? 0;
