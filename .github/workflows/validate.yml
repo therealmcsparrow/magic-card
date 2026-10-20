@@ -112,11 +112,39 @@ jobs:
       - name: Size gate self-test (raised cap, unlisted file, other zlib)
         run: npm run size:selftest
       - name: Committed dist matches the build
-        # fails on every PR and push (the .br and .gz copies are part of dist/). Rebuild and commit dist/ with the change.
+        # This repo rebuilds dist/ only in the release "Build dist" commit, so source commits leave the committed dist stale on purpose.
+        # The match is therefore required only when the push or PR changes something under dist/ (diff against the same base as the entry
+        # graph step; no base or an all-zero before counts as changed). A swapped .br/.gz or an unreviewed dist change still fails: the .br/.gz
+        # copies are checked against the committed .js before the build, and a changed dist/ must equal a fresh build. release.yml stays strict.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
         run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): treating dist/ as changed"
+            changed=1
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif git diff --quiet "$base" HEAD -- dist; then
+            changed=0
+          else
+            changed=1
+          fi
+          if [ "$changed" = "0" ]; then
+            echo "::notice::this change leaves dist/ untouched: committed dist is stale until the release build, match not required"
+            exit 0
+          fi
+          git diff --stat "$base" HEAD -- dist 2>/dev/null || true
           if ! git diff --quiet -- dist src/version.ts || [ -n "$(git status --porcelain -- dist src/version.ts)" ]; then
             git status --short -- dist src/version.ts
-            echo "::error::dist/ or src/version.ts differs from a fresh build, or the build made a file that is not committed. Run npm run build and commit dist/ with the change."
+            echo "::error::dist/ changed in this push or PR but differs from a fresh build (or the build made a file that is not committed). Run npm run build and commit dist/ with the change."
             exit 1
           fi
 
