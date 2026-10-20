@@ -62,11 +62,11 @@ The current release is a pre-release (2026.10.11-beta.2). HACS shows it only whe
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the other 22 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+HACS also downloads the other 27 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
 ### Manual
 
-1.  Download the 23 files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases). The table under [Loading the other files](#loading-the-other-files) lists them all.
+1.  Download the 28 files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases). The table under [Loading the other files](#loading-the-other-files) lists them all.
 2.  Copy them together to `config/www/`.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
@@ -98,8 +98,13 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-preset-catalogue.js` | The card editor's Animations list and the animation studio's Customise a preset window. Dashboards never load it. |
 | `magic-card-theme-editor.js` | The Themes tab in the Magic Card Utils panel. Dashboards and the card editor never load it. |
 | `magic-card-theme-presets.js` | The Themes tab's create dialog, when it opens, for the 57 presets. Dashboards and the card editor never load it. |
+| `magic-card-flow-look.js` | Cards with a flow look (animated lines that run across the card). Loaded when the card config uses one. |
+| `magic-card-slider-look.js` | Cards with a slider look (the styled slider track, fill and handle). Loaded when the card config uses one. |
+| `magic-card-layers.js` | Cards with Card backdrop layers (pictures, gradients, patterns, colours and cameras behind the card content). |
+| `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
+| `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
 
-Keep all 23 files in one folder. `magic-card.js` is the only file a dashboard loads at once. At 472 KB it is down from about 680 KB in 2026.10.10, because the rarely used parts moved into the other files.
+Keep all 28 files in one folder. `magic-card.js` is the only file a dashboard loads at once. At 489 KB it is down from about 680 KB in 2026.10.10, because the rarely used parts moved into the other files.
 
 ### Loading
 
