@@ -73,7 +73,7 @@ import type { ResolvedFlow } from '../utils/flow';
  * Segments are static (no frame cost).
  *
  * Caps (r4): start_cap / end_cap sit on the line's ends in the travel direction, size cap_size
- * (unset 3 x width). round: a filled circle of diameter 2/3 x cap_size (2 x width by default)
+ * (unset 2 x width, at most 24 px; r5, was 3 x width). round: a filled circle of diameter 2/3 x cap_size
  * with a 1 px ring in the card background colour. arrow: a filled triangle cap_size long; the end
  * arrow points forward along the tangent, the start arrow points out of the line (backwards,
  * away from the line), so both ends read as arrowheads of a two-headed line; the direction of
@@ -255,7 +255,8 @@ export const FLOW_LOOK_DEFAULTS = {
   color_mode: 'single',
   start_cap: 'none',
   end_cap: 'none',
-  cap_size_factor: 3, // cap_size unset: 3 x width; set: 4-40 px
+  cap_size_factor: 2, // cap_size unset: 2 x width, at most cap_size_default_max; set: 4-40 px (r5: was 3 x width, a tube's arrowhead covered module text)
+  cap_size_default_max: 24,
   shape: 'dot',
   shape_icon_rotate: true,
   shape_spin: false,
@@ -268,6 +269,11 @@ export const FLOW_LOOK_DEFAULTS = {
   /** Style default widths (placeholder of `width` while it is unset). */
   width: { tube: 12, neon: 3, cable: 5 },
 } as const;
+
+/** The marker size when `cap_size` is unset: modest, 2 x the line width, at most 24 px. */
+export function defaultCapSize(width: number): number {
+  return Math.min(FLOW_LOOK_DEFAULTS.cap_size_default_max, FLOW_LOOK_DEFAULTS.cap_size_factor * width);
+}
 
 export interface FlowLookConfig {
   /** Line style; unset = solid (today's line). Picking solid in the editor removes the key. */

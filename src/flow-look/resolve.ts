@@ -1,4 +1,4 @@
-import { FLOW_LOOK_DEFAULTS, FLOW_SPIN_SHAPES, type FlowCap, type FlowLineStyle, type FlowLookResolved, type FlowShape } from '../contracts/flow-look';
+import { FLOW_LOOK_DEFAULTS, defaultCapSize, FLOW_SPIN_SHAPES, type FlowCap, type FlowLineStyle, type FlowLookResolved, type FlowShape } from '../contracts/flow-look';
 import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
 import { FLOW_DEFAULTS, type ResolvedFlow } from '../utils/flow';
 import { safeColor } from '../utils/animation';
@@ -87,7 +87,7 @@ export function resolveLook(f: FlowConfig, base: ResolvedFlow, hass: HomeAssista
     twisted: f.twisted === true,
     startCap: pick<FlowCap>(f.start_cap, CAPS) ?? 'none',
     endCap: pick<FlowCap>(f.end_cap, CAPS) ?? 'none',
-    capSize: f.cap_size !== undefined ? num(f.cap_size, 4, 40, D.cap_size_factor * base.width) : D.cap_size_factor * base.width,
+    capSize: f.cap_size !== undefined ? num(f.cap_size, 4, 40, defaultCapSize(base.width)) : defaultCapSize(base.width),
     shape,
     iconRotate: f.shape_icon_rotate !== false,
     spin: f.shape_spin === true && FLOW_SPIN_SHAPES.some((s) => s === shape || s === alt),

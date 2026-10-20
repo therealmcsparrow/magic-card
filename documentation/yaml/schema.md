@@ -847,7 +847,7 @@ flows:
     #     color: "#4caf50"
     # start_cap: none                # none | round | arrow
     # end_cap: none                  # none | round | arrow
-    # cap_size: 8                    # px, 4-40; default 3 x width
+    # cap_size: 8                    # px, 4-40; default 2 x width, at most 24
     # shape: dot                     # dot | arrow | chevron | square | diamond | star | comet | spark | bubble | drop | icon
     # shape_icon: mdi:star           # shape icon, mdi:name
     # shape_icon_rotate: true        # icon turns with the line

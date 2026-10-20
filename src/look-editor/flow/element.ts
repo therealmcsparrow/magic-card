@@ -2,7 +2,7 @@ import { LitElement, css, html, nothing, type TemplateResult } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import type { ColorRange, FlowConfig, HomeAssistant } from '../../types';
 import type { FlowBudget, FlowLineStyle, FlowShape } from '../../contracts/flow-look';
-import { FLOW_LOOK_DEFAULTS, FLOW_SPIN_SHAPES } from '../../contracts/flow-look';
+import { FLOW_LOOK_DEFAULTS, defaultCapSize, FLOW_SPIN_SHAPES } from '../../contracts/flow-look';
 import { FLOW_LOOK_EDITOR_TAG, LOOK_UNDO_TOAST_MS, type FlowLookEditorElement, type FlowPreset } from '../../contracts/look-editor';
 import type { UiChoice, UiChoicePick, UiToastElement } from '../../contracts/ui-kit';
 import { editorSystem } from '../../css/editor-stack';
@@ -504,10 +504,16 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     }
   }
 
+  /** The line width the look draws when `width` is unset (a tube is 12, neon 3, cable 5). */
+  private _defaultWidth(): number {
+    const style = this.flow.line_style;
+    return style === 'tube' || style === 'neon' || style === 'cable' ? FLOW_LOOK_DEFAULTS.width[style] : DEFAULT_WIDTH;
+  }
+
   private _lineFold(): TemplateResult {
     const f = this.flow;
     const style = f.line_style;
-    const dw = style === 'tube' || style === 'neon' || style === 'cable' ? FLOW_LOOK_DEFAULTS.width[style] : DEFAULT_WIDTH;
+    const dw = this._defaultWidth();
     const dg = style === 'neon' ? FLOW_LOOK_DEFAULTS.neon_glow : 0;
     return this._fold(
       'line',
@@ -538,7 +544,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
         ${showStart
           ? capSel('start_cap', t('Start marker'))
           : html`<div><button type="button" class="btn btn-text btn-sm" aria-expanded="false" @click=${() => (this._startShown = true)}>${t('Different start marker')}</button></div>`}
-        ${this._num('cap_size', t('Marker size (px)'), Math.round((f.width ?? DEFAULT_WIDTH) * FLOW_LOOK_DEFAULTS.cap_size_factor), 4, 40)}`,
+        ${this._num('cap_size', t('Marker size (px)'), Math.round(defaultCapSize(f.width ?? this._defaultWidth())), 4, 40)}`,
     );
   }
 
