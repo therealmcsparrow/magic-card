@@ -7,9 +7,12 @@ import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /*
- * The viewer's "Pause motion" button of one card (contract card-pause 1.0.0). The motion itself is
+ * The viewer's "Pause motion" button of one card (contract card-pause 2.0.0). The motion itself is
  * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
  * state, remembers it per page and card, and renders the button.
+ *
+ * deviates: hacard.S11 — CEO 2026-10-20 default hidden, so the viewer pause is no longer on by default;
+ * proj.M10 and proj.S4 still hold (offscreen and reduced-motion pauses never depend on the button).
  */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
@@ -43,6 +46,8 @@ export class CardPause {
   private _moves = false;
   private _shown = false;
   private _timer?: number;
+  /** Editor preview pause (r3): never remembered, applied on every render. */
+  preview = false;
 
   constructor(private readonly _host: LitElement) {}
 
@@ -73,7 +78,7 @@ export class CardPause {
 
   /** Host attribute and observer; hidden means the card plays (nobody could resume it). */
   private _apply(): boolean {
-    const on = this.paused && this._mode !== 'hidden';
+    const on = (this.paused && this._mode !== 'hidden') || this.preview;
     this._host.toggleAttribute(PAUSE_ATTRIBUTE, on);
     setCardPaused(this._host, on);
     return on;
@@ -88,7 +93,8 @@ export class CardPause {
     e.stopPropagation();
     const on = !this.paused;
     this._set(on);
-    storage((s) => (on ? s.setItem(this._key, '1') : s.removeItem(this._key)));
+    // in the editor the saved dashboard card must not start paused
+    if (!(this._host as { editMode?: boolean }).editMode) storage((s) => (on ? s.setItem(this._key, '1') : s.removeItem(this._key)));
   };
 
   private _stop = (e: Event): void => e.stopPropagation();

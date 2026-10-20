@@ -240,6 +240,8 @@ export class StudioCanvas extends LitElement {
 
   @state() private _state?: EditorState;
   @state() private _hoverLabel = '';
+  /** Editor preview pause (card-pause 2.0.0): session only, starts playing, never stored. */
+  @state() private _previewPaused = false;
   @state() private _hoverSel: Selection | null = null;
   @state() private _cardError = '';
   /** Connect mode ("Add flow from here"): the start module; the next module clicked ends the flow. */
@@ -372,6 +374,7 @@ export class StudioCanvas extends LitElement {
   protected firstUpdated(): void {
     const card = document.createElement(CARD_TAG) as MagicCard;
     card.editMode = true; // before setConfig / connect: no template registration in the studio
+    card.previewPaused = this._previewPaused;
     this._card = card;
     if (this.hass) card.hass = inertHass(this.hass);
     this._syncCard();
@@ -405,6 +408,7 @@ export class StudioCanvas extends LitElement {
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('hass') && this._card && this.hass) this._card.hass = inertHass(this.hass);
+    if (changed.has('_previewPaused') && this._card) this._card.previewPaused = this._previewPaused;
     if (changed.has('_state')) {
       this._syncCard();
       // Tabs / slider layouts show the tab or slide holding a selected child.
@@ -419,6 +423,11 @@ export class StudioCanvas extends LitElement {
     }
     this._queuePlace();
   }
+
+  private _togglePreviewPause = (e: Event): void => {
+    e.stopPropagation(); // not a click on the ground: the selection stays
+    this._previewPaused = !this._previewPaused;
+  };
 
   private _syncCard(): void {
     const card = this._card;
@@ -1178,7 +1187,9 @@ export class StudioCanvas extends LitElement {
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
             <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
-              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}</span></div>
+              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
+                aria-label=${t('Pause preview motion')} title=${t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
+                ><ha-icon icon=${this._previewPaused ? 'mdi:play' : 'mdi:pause'}></ha-icon></button></span></div>
             ${this._cardError
               ? html`<p class="card-error" role="status">${t('Preview not updated: {error}', { error: this._cardError })}</p>`
               : nothing}
@@ -1312,6 +1323,31 @@ export class StudioCanvas extends LitElement {
         margin-bottom: 8px;
         font-size: 0.75rem;
         color: var(--mc-text-2);
+      }
+      .preview-pause {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 44px;
+        height: 44px;
+        margin: -12px -8px -12px 4px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--mc-text-2);
+        cursor: pointer;
+      }
+      .preview-pause:hover {
+        background: var(--mc-hover, rgba(127, 127, 127, 0.16));
+      }
+      .preview-pause[aria-pressed='true'] {
+        color: var(--mc-accent, var(--primary-color));
+      }
+      .preview-pause:focus-visible {
+        outline: 2px solid var(--mc-focus, #03a9f4);
+        outline-offset: -2px;
       }
       .card-host {
         cursor: default;

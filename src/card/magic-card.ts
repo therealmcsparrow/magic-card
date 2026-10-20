@@ -197,6 +197,17 @@ export class MagicCard extends LitElement {
   @property({ attribute: false })
   editMode = false;
 
+  /** Editor preview pause (card-pause 2.0.0): freezes all motion while editing; never remembered, survives setConfig. */
+  get previewPaused(): boolean {
+    return this._pause.preview;
+  }
+  set previewPaused(on: boolean) {
+    const old = this._pause.preview;
+    if (on === old) return;
+    this._pause.preview = on;
+    this.requestUpdate('previewPaused', old);
+  }
+
   /** Set by HA's hui-card: the card is shown as a preview (card editor, dashboard in edit mode). */
   @property({ attribute: false })
   preview = false;
@@ -541,7 +552,7 @@ export class MagicCard extends LitElement {
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
     }
-    if (changedProperties.has('preview') || changedProperties.has('editMode')) return true;
+    if (changedProperties.has('preview') || changedProperties.has('editMode') || changedProperties.has('previewPaused')) return true;
 
     if (changedProperties.has('hass') && this.hass) {
       const oldHass = changedProperties.get('hass') as HomeAssistant | undefined;

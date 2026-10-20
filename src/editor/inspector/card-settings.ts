@@ -353,7 +353,7 @@ export function renderCardDesign(
             ></mc-animation-list>
           </div>`,
     template_animations: () => (src.rule || !write ? nothing : renderTemplateAnimations(config, templateDocs, write, syncCtx)),
-    // viewer pause button (card-pause 1.0.0): a card setting, not part of a rule's design
+    // viewer pause button (card-pause 2.0.0, Motion group): a card setting, not part of a rule's design
     pause_button: () => {
       if (src.rule) return nothing;
       const cur = config.pause_button === 'always' || config.pause_button === 'auto' ? config.pause_button : 'hidden';
@@ -363,14 +363,11 @@ export function renderCardDesign(
         <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help">
           ${modes.map(([m, label]) => html`<button type="button" role="radio" aria-checked=${cur === m ? 'true' : 'false'} @click=${() => update('pause_button', m === 'hidden' ? undefined : m)}>${label}</button>`)}
         </div>
-        <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t('Never shown.') : t('Shown while the card has motion. Viewers can pause it.')}</p>
-        ${config.pause_button === 'hidden'
-          ? html`<p class="help warn" role="note" data-warn="pause-hidden">${t('Hide the pause button only if nothing on the card moves for more than 5 seconds.')}</p>`
-          : nothing}
+        <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t("Viewers can't pause the motion on this card. Turn the button on if anything moves for more than 5 seconds.") : t('Shown while the card has motion. Viewers can pause it.')}</p>
       </div>`;
     },
     pause_button_corner: () => {
-      if (src.rule || config.pause_button === 'hidden') return nothing;
+      if (src.rule || (config.pause_button !== 'auto' && config.pause_button !== 'always')) return nothing; // unset counts as hidden
       const cur = config.pause_button_corner ?? 'bottom-left';
       const corners: Array<[PauseButtonCorner, string]> = [['bottom-left', t('Bottom left')], ['bottom-right', t('Bottom right')], ['top-left', t('Top left')], ['top-right', t('Top right')]];
       return html`<div class="field" data-field="pause_button_corner">
@@ -405,6 +402,7 @@ export function renderCardDesign(
   // [group id, name, open by default, [field, counted key][]]
   const groups: Array<[string, string, boolean, Array<[string, string?]>]> = [
     ['layout', t('Layout'), true, [['card_height', 'card_height'], ['padding', 'padding']]],
+    ['motion', t('Motion'), true, [['pause_button', 'pause_button'], ['pause_button_corner']]],
     [
       'style',
       t('Style'),
@@ -412,7 +410,7 @@ export function renderCardDesign(
       [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
     ['backdrop', t('Card backdrop'), false, [['backdrop', 'background_layers']]],
-    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations'], ['pause_button', 'pause_button'], ['pause_button_corner']]],
+    ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
     ['advanced', t('Advanced'), false, [['css', 'css']]],
   ];
   const renderGroup = ([id, name, defaultOpen, entries]: (typeof groups)[number]) => {
