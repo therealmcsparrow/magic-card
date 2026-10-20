@@ -140,7 +140,7 @@ export class AttributePicker extends LitElement {
                     <span class="mc-picker-item-icon"><ha-icon icon="mdi:tag-text-outline"></ha-icon></span>
                     <span class="mc-picker-item-content">
                       <span class="mc-picker-item-name">${attr.name}</span>
-                      <span class="mc-picker-item-id">${attr.value.length > 60 ? attr.value.slice(0, 60) + '...' : attr.value}</span>
+                      <span class="mc-picker-item-id" title=${attr.value}>${attr.value.length > 60 ? attr.value.slice(0, 60) + '...' : attr.value}</span>
                     </span>
                   </button>
                 `)

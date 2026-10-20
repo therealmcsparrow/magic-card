@@ -222,7 +222,7 @@ export class EntityPicker extends LitElement {
     const entities = this._getFilteredEntities();
 
     return html`
-      ${renderPickerWindow(t('Select entity'), () => this._closeModal(), 's', html`
+      ${renderPickerWindow(t('Select entity'), () => this._closeModal(), 'l', html`
           <div class="mc-picker-search">
             ${renderPickerSearch(t('Search entities'), this._searchQuery, (v) => { this._searchQuery = v; })}
           </div>
@@ -239,7 +239,7 @@ export class EntityPicker extends LitElement {
                     <span class="mc-picker-item-icon"><ha-icon icon=${entity.icon}></ha-icon></span>
                     <span class="mc-picker-item-content">
                       <span class="mc-picker-item-name">${entity.name}</span>
-                      <span class="mc-picker-item-id">${entity.id}</span>
+                      <span class="mc-picker-item-id" title=${entity.id}>${entity.id}</span>
                     </span>
                     <span class="chip">${entity.state}</span>
                   </button>
