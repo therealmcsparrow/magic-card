@@ -1,4 +1,4 @@
-import type { TemplateResult } from 'lit';
+import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
 import type { MagicModule } from '../modules/module-types';
 
@@ -33,6 +33,9 @@ import type { MagicModule } from '../modules/module-types';
  * 1.2.0; background-layers merged second and renumbers to 1.3.0, all chunks kept: flow-look, slider-look, layers (card
  * side); look-editor (magic-card-look-editor.js, contract look-editor 1.0.0, loaded by src/editor/look-editor-loader.ts,
  * its own loader, not in LazyChunkName) and layer-editor (editor side).
+ * 1.4.0 (2026-10-20, additive; task smallest-fastest-card-viewer, ADRs 0040-0043): written now, implemented in
+ * step S1a.0 (needs table, styles, retry, timeout) and S1b.1 (hashed names, manifest). The builder of S1a.0
+ * sets LAZY_MODULE_CONTRACT to '1.4.0'. See section "(1.4.0)" at the end of this comment.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -89,6 +92,7 @@ import type { MagicModule } from '../modules/module-types';
  * 3. No view, chunk not failed: start the load, add currentRenderContext()?.requestUpdate to
  *    chunk.whenReady (once per callback), return stub.placeholder(config, 'pending').
  * 4. Chunk failed: stub.placeholder(config, 'failed'): same box, no text, no busy state (AC10).
+ *    (1.4.0: the failed box holds the failure notice, see "(1.4.0) Failure, retry and timeout".)
  * Validation (validate, hints), getDependencies, createDefault, migrate and metadata are on the
  * stub and stay synchronous. renderModuleContent and every other caller keep using MagicModule.
  *
@@ -101,6 +105,7 @@ import type { MagicModule } from '../modules/module-types';
  * card-decorations.ts whenever it renders <mc-seasonal> / <mc-seasonal-deco>. (1.2.0) The layers
  * chunk likewise for `background_layers` and <mc-bg-stack>; (r2) also for any module with a
  * placement other than flow (hasLayers, in magic-card.js), and on demand when a render meets one.
+ * (1.4.0: replaced by the needs table, see "(1.4.0) needs(config)".)
  *
  * ── Editors ──
  * The editor chunk, the studio and the theme editor never import a *-view.ts file or a chunk entry
@@ -125,6 +130,80 @@ import type { MagicModule } from '../modules/module-types';
  * state; `__loadAllLazyChunksForTests()` loads and installs every chunk (vitest setup, so existing
  * renderPreview tests keep their synchronous output). (r2) The editor test setup also awaits
  * loadLayerEditor().
+ *
+ * ══ (1.4.0) Additive. Plain cards need no chunk; every feature declares needs(config) ══
+ *
+ * ── (1.4.0) Plain and feature ──
+ * ADR 0040 lists the plain keys. A card that uses only those renders from magic-card.js with zero
+ * chunk requests and no placeholder (AC1). Every other key belongs to exactly one LazyChunkName.
+ *
+ * ── (1.4.0) needs(config) ──
+ * - Every LazyChunkName has one LazyFeature in the needs table, src/utils/lazy-features.ts (Core):
+ *   `LAZY_FEATURES: Record<LazyChunkName, LazyFeature>`. prefetchLazy(config) becomes: for each
+ *   feature whose needs(config) is true, load() at once, all in parallel (no waterfall). It runs in
+ *   setConfig and after the template merge, once per config object (WeakSet, as today).
+ * - needs() lives in a predicate file: `src/contracts/<contract>.needs.ts` for a contract-owned
+ *   feature (flow-look.needs.ts, slider-look.needs.ts, card-pause.needs.ts, bg-stack.needs.ts,
+ *   particles-v2.needs.ts, custom-shape.needs.ts, ...), or `src/<module>/needs.ts`. A predicate file
+ *   has only `import type` imports, plus src/utils/config-walk.ts and other *.needs.ts files. It holds
+ *   key lists and reserve numbers, never data tables, defaults, themes or renderers. The contract's
+ *   data stays in `src/contracts/<contract>.ts`, which magic-card.js no longer imports at run time
+ *   (type-only imports are fine). The entry-graph check (tools/check-entry-graph.mjs) enforces it.
+ * - needs() is pure, synchronous and total: it never throws (malformed input -> false) and never reads
+ *   hass, the DOM, the date or chunk state. Walk rules: src/utils/config-walk.ts, the
+ *   collectDependencies walk (nested layout children yes, `card_config` no, the first 32
+ *   conditional_appearance overrides yes), stopping at the first hit.
+ * - Backstop: a render that meets a feature whose chunk is not ready calls load() and whenReady
+ *   (rendering rule 3), so a predicate miss costs a late paint, never a blank. Under
+ *   `__strictNeedsForTests(true)` that path throws instead, so QA catches every miss on the gallery.
+ *
+ * ── (1.4.0) Styles in the same frame (AC11) ──
+ * - A chunk entry may export `styles` (CSSResultGroup). Before whenReady callbacks run, Core adds those
+ *   sheets to the card's sheet list and to the adoptedStyleSheets of every connected card, so the
+ *   feature's CSS and its first render land in the same frame. Feature CSS lives only in its chunk;
+ *   src/css/css.ts keeps the plain sheet. Spike SP2 proves this on Chromium 85, Safari 16.4 and
+ *   Firefox ESR before S1b.2 relies on it.
+ *
+ * ── (1.4.0) Reserve ──
+ * - A late slot reserves SlotReserve from config only (ADR 0040 "Reserves"; lesson: never runtime
+ *   state). LazyModuleStub.placeholder() and the slot features (pause strip, seasonal insets) use
+ *   `reserve(node)` from the predicate file. The reserve stays after the chunk installs.
+ *
+ * ── (1.4.0) Failure, retry and timeout (AC10; designer 03 round 1 and 2) ──
+ * - One attempt = the import() plus install(), timed out after CHUNK_TIMEOUT_MS (10 s). A timeout counts
+ *   as a failure; the request may still finish, and a late success installs and clears the notice. A
+ *   new attempt after a timeout gets the same in-flight promise from webpack (no second request) with a
+ *   fresh 10 s window.
+ * - A load error: one silent retry after SILENT_RETRY_MS (2 s) under a new URL (`r=<n>` appended, the
+ *   theme-presets loader pattern: browsers cache a failed import() per URL). If that fails too, the
+ *   chunk is 'failed' with failure() 'load' and every slot of it shows the notice. Then up to
+ *   BACKGROUND_RETRY_MS.length (3) background attempts at +30 s, +90 s and +5 min, per chunk (the
+ *   loader is shared, so 20 cards on one dashboard cause one request per attempt). A success removes
+ *   every notice of that chunk. retry() (the "Try again" button) is one extra attempt at any time and
+ *   does not reset the background count.
+ * - Mismatch: when a load fails, Core imports the manifest once per page (`magic-card-manifest.js` with a
+ *   new `r=` query, memoised). Its `build` differs from BUILD_VERSION, or a chunk's BUILD differs ->
+ *   failure() 'mismatch': no silent or background retry, the notice shows the "Reload page" variant
+ *   (location.reload()) at once. Manifest unreachable or equal build -> 'load'.
+ * - Timing: the first notice appears 2 s after a fast failure (a 404) and about 22 s after two stalls.
+ * - Strings: a short part-name table keyed by LazyChunkName (at most 8 names, fallback "Part of this
+ *   card"), British ids through the card i18n namespace. The chunk name and key go to console.warn.
+ *
+ * ── (1.4.0) File names and manifest (S1b.1, ADR 0041, spike SP1) ──
+ * - Chunks: `magic-card-<name>.<contenthash:8>.js`; LAZY_CHUNK_FILES keeps the logical name
+ *   (`magic-card-<name>.js`) used by caps, tests and messages. `dist/magic-card-manifest.js` exports
+ *   default LazyChunkManifest. Entries keep fixed names. If SP1 fails, the `?v=` names stay and only
+ *   the manifest lands.
+ *
+ * ── (1.4.0) import() sites (AC9) ──
+ * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table) and the manifest check in
+ *   src/utils/lazy-chunk.ts. S1a.0 moves anim-runtime, particles and shape-custom onto lazyChunk().
+ *   src/utils/editor-loader.ts keeps its own retry and stays a registered site. Editor side: the
+ *   existing loaders (transfer, preset-catalogue, icon-animator, look-editor, layer-editor,
+ *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
+ *   i18n tables) are registered sites. The ESLint rule (no-restricted-syntax ImportExpression with an
+ *   override for the registered files) fails any other import(). Moving editor loaders onto
+ *   lazyChunk() is debt, not part of 1.4.0.
  */
 
 export const LAZY_MODULE_CONTRACT = '1.3.0';
@@ -185,6 +264,8 @@ export interface LazyChunkModule {
   readonly BUILD: string;
   /** Define elements, provide views, set library options. Called once, only when BUILD matches. */
   install(): void;
+  /** (1.4.0) The feature's CSS, adopted by every card before whenReady callbacks run (same frame). */
+  readonly styles?: CSSResultGroup;
 }
 
 /** (1.1.0) The older chunks guarded by sameBuild() instead of lazyChunk() (dist file names). */
@@ -234,3 +315,45 @@ export interface LazyModuleStub extends Omit<MagicModule, 'renderPreview'> {
    */
   placeholder(config: CardModule, state: 'pending' | 'failed'): TemplateResult;
 }
+
+// ── (1.4.0) additive types; Core implements them in S1a.0 and S1b.1 ──
+
+/** (1.4.0) Pure, synchronous, total check on a card config (section "needs(config)"). */
+export type NeedsCheck = (config: unknown) => boolean;
+
+/** (1.4.0) One row of the needs table, src/utils/lazy-features.ts. */
+export interface LazyFeature {
+  readonly chunk: LazyChunkName;
+  readonly needs: NeedsCheck;
+}
+
+/**
+ * (1.4.0) Space a late slot holds before its chunk installs, from config only (ADR 0040). 'none': an
+ * overlay. 'px': a configured or per-key default height (24 px floor). 'ratio': padding-top percent
+ * (no aspect-ratio, Chromium 85). 'grid': HA grid_options rows (rows x 56 px + gaps x 8 px).
+ */
+export type SlotReserve = { kind: 'none' } | { kind: 'px'; px: number } | { kind: 'ratio'; percent: number } | { kind: 'grid'; rows: number };
+
+/** (1.4.0) Why a chunk failed: 'load' (network, 404, timeout, install error) or 'mismatch' (another release). */
+export type LazyChunkFailure = 'load' | 'mismatch';
+
+/** (1.4.0) LazyChunk plus retry; lazyChunk() returns this from S1a.0 on. */
+export interface RetryableLazyChunk extends LazyChunk {
+  /** One extra attempt under a new URL; only in the failed state; never resets the background count. */
+  retry(): Promise<boolean>;
+  /** Set once failed(). */
+  failure(): LazyChunkFailure | undefined;
+}
+
+/** (1.4.0) Default export of dist/magic-card-manifest.js (ADR 0041). */
+export interface LazyChunkManifest {
+  /** __MC_BUILD_VERSION__ of the release. */
+  readonly build: string;
+  /** Logical name (magic-card-<name>.js) -> emitted file (magic-card-<name>.<hash8>.js). */
+  readonly chunks: Readonly<Record<string, string>>;
+}
+
+/** (1.4.0) Timing of one chunk's attempts (designer 03 round 1, confirmed by the Architect). */
+export const CHUNK_TIMEOUT_MS = 10_000;
+export const SILENT_RETRY_MS = 2_000;
+export const BACKGROUND_RETRY_MS: readonly number[] = [30_000, 90_000, 300_000];

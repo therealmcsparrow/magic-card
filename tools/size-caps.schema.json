@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tools/size-caps.schema.json",
+  "title": "Magic Card size caps (ADR 0042)",
+  "description": "Shape of tools/size-caps.json, the one source of every dist size cap. Read by tools/check-dist-size.mjs. magic-card.js is gated on gzip bytes through a stage ladder; every other file on raw bytes under an Architect ceiling. A raised cap or ceiling needs a ceo_decisions entry written by the Lead after the CEO said yes in chat; agents never write one.",
+  "type": "object",
+  "required": ["version", "gzip", "entry", "files", "ceo_decisions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "gzip": {
+      "description": "How gzip bytes are measured. zlib.gzipSync(buffer, { level }) on the pinned Node. CI fails when process.versions.zlib differs from `zlib`; a local run with another zlib prints the result as not authoritative.",
+      "type": "object",
+      "required": ["level", "node", "zlib"],
+      "additionalProperties": false,
+      "properties": {
+        "level": { "const": 9 },
+        "node": { "type": "string", "description": "Exact Node version, equal to .nvmrc and the CI setup-node version, e.g. 24.11.1" },
+        "zlib": { "type": "string", "description": "process.versions.zlib of that Node" }
+      }
+    },
+    "entry": {
+      "description": "magic-card.js, loaded by every dashboard.",
+      "type": "object",
+      "required": ["file", "base", "final_cap", "current_stage", "stages"],
+      "additionalProperties": false,
+      "properties": {
+        "file": { "const": "magic-card.js" },
+        "base": {
+          "type": "object",
+          "required": ["commit", "gzip", "raw"],
+          "additionalProperties": false,
+          "properties": {
+            "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+            "gzip": { "type": "integer", "minimum": 1 },
+            "raw": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "final_cap": { "const": 61440, "description": "60 KiB, CEO Brief Gate 2026-10-20. The checker also holds this number as a constant, so editing the JSON cannot move it." },
+        "current_stage": { "enum": ["S0", "S1a", "S1b", "S2"], "description": "The stage whose cap is active. Moved forward only, by the stage-close commit." },
+        "stages": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["id", "cap", "target", "landed_commit"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "enum": ["S0", "S1a", "S1b", "S2"] },
+              "cap": { "type": ["integer", "null"], "minimum": 1, "description": "gzip bytes. null until the stage closes; then the measured gzip of the landing commit (no margin). Each cap <= the previous stage's cap; S2 cap <= final_cap." },
+              "target": { "type": "integer", "minimum": 1, "description": "Planning figure, informational (S1a 117760, S1b 67584, S2 61440)." },
+              "landed_commit": { "type": ["string", "null"], "pattern": "^[0-9a-f]{7,40}$" },
+              "measured": { "type": ["integer", "null"], "description": "gzip at landed_commit, kept for the record." },
+              "trace_ms": { "type": ["object", "null"], "description": "Warn-only time to first card, median of 3: { plain, effect }." }
+            }
+          }
+        }
+      }
+    },
+    "files": {
+      "description": "Every other dist .js file by logical name (the content hash stripped: magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails (AC7). An entry with no file fails unless `optional` is true.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["raw", "ceiling", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "raw": { "type": "integer", "minimum": 1, "description": "Cap: measured + 5 %, rounded up to 1 KiB, never above `ceiling`." },
+          "ceiling": { "type": "integer", "minimum": 1, "description": "Architect ceiling. A measured size above it means code was copied in: report it. Raising it needs a CEO decision." },
+          "optional": { "type": "boolean" },
+          "note": { "type": "string", "description": "What the old CAPS comment said: what is in it and who set the number." }
+        }
+      }
+    },
+    "ceo_decisions": {
+      "description": "Append-only. Written by the Lead only, after the CEO said yes in chat. CI compares tools/size-caps.json with the base branch: every entry cap, stage cap, file ceiling or raw cap above a new file's ceiling that went up must have an entry here with matching field and to.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "date", "source", "quote", "field", "from", "to"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^CEO-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$" },
+          "date": { "type": "string", "format": "date", "description": "Date of the CEO's chat message." },
+          "source": { "const": "chat" },
+          "quote": { "type": "string", "minLength": 3, "description": "The CEO's words." },
+          "field": { "type": "string", "description": "JSON pointer of the raised value, e.g. /entry/stages/1/cap or /files/magic-card-flows.js/ceiling" },
+          "from": { "type": ["integer", "null"] },
+          "to": { "type": "integer" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}
