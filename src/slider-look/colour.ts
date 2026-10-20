@@ -28,6 +28,15 @@ export function parseColour(s: string | undefined): RGB | undefined {
   return m ? [byte(+m[1]), byte(+m[2]), byte(+m[3])] : undefined;
 }
 
+/** The alpha of a colour string (8-digit hex, rgba() or `/ a`), 1 when it has none or cannot be read. */
+export function alphaOf(s: string | undefined): number {
+  const v = (s ?? '').trim();
+  const hex = /^#(?:[0-9a-f]{6})([0-9a-f]{2})$/i.exec(v);
+  if (hex) return parseInt(hex[1], 16) / 255;
+  const fn = /^rgba?\((?:[^,/)]+,[^,/)]+,[^,/)]+,|[^,/)]+\/)\s*(\d*\.?\d+)(%?)\s*\)$/i.exec(v);
+  return fn ? Math.min(1, +fn[1] / (fn[2] ? 100 : 1)) : 1;
+}
+
 export const css = (c: RGB): string => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 
 const lin = (c: number) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);

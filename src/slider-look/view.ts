@@ -10,7 +10,7 @@ import { entityDisplayName, formatEntityValue } from '../utils/entity-value';
 import { safeColor } from '../utils/animation';
 import { currentRenderContext, currentRenderPass } from '../services/render-context';
 import { t } from '../card/i18n';
-import { css, lift, LIGHT_CARD, parseColour, PRIMARY_SHADE, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
+import { alphaOf, css, lift, LIGHT_CARD, parseColour, PRIMARY_SHADE, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';
 import { bigFillColours, bigFillIcon, fillSamples } from './big-fill';
 import { createLive, type Live } from './live';
 import { ShapeBox, trackShape } from './shape';
@@ -99,7 +99,7 @@ const px = (n: number) => `${+n.toFixed(2)}px`;
 const readColour = (c: string): RGB | undefined => parseColour(c) ?? parseColour(/^var\([^,]+,\s*([^)]+)\)$/.exec(c.trim())?.[1]);
 
 /** A colour with an alpha below 1 (8-digit hex, rgba() or `/ a`): the contrast lift would make it opaque, so it is left as written. */
-const translucent = (c: string): boolean => /^#[0-9a-f]{6}(?!ff$)[0-9a-f]{2}$|^rgba?([^)]*[,/]s*(?!1s*))/i.test(c.trim());
+const translucent = (c: string): boolean => alphaOf(c) < 1;
 
 const alertIcon = () => html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d=${ALERT}></path>`}</svg>`;
 

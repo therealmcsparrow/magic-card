@@ -461,6 +461,8 @@ export class StudioCanvas extends LitElement {
 
   private _block = (e: Event): void => {
     if (inPopupPreview(e)) return;
+    // Space fires the card's own pause button on keyup: let that one through, or the click is cancelled
+    if (e.type === 'keyup' && (e as KeyboardEvent).key === ' ' && onPauseButton(e)) return;
     if (e.type === 'contextmenu') {
       // the item under the pointer gets its menu; Shift+right-click keeps the browser's menu
       e.stopPropagation();
@@ -1353,7 +1355,8 @@ export class StudioCanvas extends LitElement {
         background: rgba(127, 127, 127, 0.16);
       }
       .preview-pause[aria-pressed='true'] {
-        color: var(--mc-accent, var(--primary-color));
+        color: var(--mc-text, #212121);
+        box-shadow: inset 0 0 0 2px var(--mc-text, #212121);
       }
       .preview-pause:focus-visible {
         outline: 2px solid var(--mc-focus, #03a9f4);
