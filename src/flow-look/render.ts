@@ -56,7 +56,7 @@ export function renderFlow(flow: FlowWithLook, geo: FlowGeometry, o: FlowLookRen
   const l = f.look;
   const active = flowing(f);
   const S = sampled(geo.d);
-  const shapeReq = o.reduced || !active || o.motion === 'none' ? 0 : flowLookRegistry.shapes.requested(f, geo, o.quality);
+  const shapeReq = o.reduced || !active ? 0 : flowLookRegistry.shapes.requested(f, geo, o.quality);
   const nShapes = Math.min(shapeReq, o.count);
   const c: LineCtx = {
     f,
@@ -69,7 +69,7 @@ export function renderFlow(flow: FlowWithLook, geo: FlowGeometry, o: FlowLookRen
     w: f.width,
     paint: unmix(active ? f.color : f.idleColor),
     nShapes,
-    nBubbles: o.motion === 'none' || o.reduced ? 0 : Math.min(bubblesWanted(f, o.quality), Math.max(0, o.count - nShapes)),
+    nBubbles: o.reduced ? 0 : Math.min(bubblesWanted(f, o.quality), Math.max(0, o.count - nShapes)),
     level: active ? l.level : 0,
     dir: f.direction < 0 ? 'reverse' : 'normal',
     hl: active && !o.reduced && o.quality !== 'minimal',

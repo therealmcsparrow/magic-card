@@ -4,7 +4,7 @@ import type { FlowGeometry } from '../utils/flow-geometry';
 import type { ResolvedFlow } from '../utils/flow';
 
 /*
- * Contract: flow looks. Version 1.0.0 (Architect-owned). ADR 0037. Task flow-slider-styles.
+ * Contract: flow looks. Version 2.0.0 (Architect-owned). ADR 0037. Task flow-slider-styles.
  * r2 2026-10-19 (designer round 1 requests R1-R3 and spike S3, folded into 1.0.0 in place per
  * ADR 0020 because nothing is built against it yet): quality tiers, page-hidden pause, theme-derived
  * defaults with a contrast check, static neon blur allowed, spin wording, background-layers seam.
@@ -18,11 +18,12 @@ import type { ResolvedFlow } from '../utils/flow';
  * r5 2026-10-20 (perf fix round, hands-on 42; still unreleased and nothing outside this branch
  * depends on it, so 1.0.0 in place): travel is transform keyframes in each flow's own <style>
  * (compositor), replacing offset-distance; the offset-path / rotation probe, the SMIL fallback and
- * mc-flows' SMIL pause are gone, so the host always passes offsetPath: true and motion: 'css'
- * (both options kept for compatibility, not produced); unset cap_size = 2 x width, at most 24 px
+ * mc-flows' SMIL pause are gone, so the options offsetPath and motion no longer
+ * matter (removed in r6); unset cap_size = 2 x width, at most 24 px
  * (defaultCapSize, cap_size_default_max; was 3 x width); highlight dashes are travelling bars.
- * Follow-up (separate Contract task, proj.M9): remove `offsetPath`, the 'smil' / 'none' values
- * of FlowMotionSupport and the unreachable SMIL branch in src/flow-look/shapes/register.ts.
+ * r6 2026-10-20 (proj.M9 cleanup, task flow-anchors-polish; breaking, so 2.0.0): `offsetPath`,
+ * `motion` and `FlowMotionSupport` are removed from FlowLookRenderOptions, with the SMIL branch in
+ * src/flow-look/shapes/register.ts. Hosts pass neither.
  *
  * Seam: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts overlay, both in
  * magic-card.js) keeps today's look (solid line, dots or moving dashes, reduced-motion arrow) and
@@ -134,8 +135,7 @@ import type { ResolvedFlow } from '../utils/flow';
  *   look, and one HTML layer per z level (`div.html.back` z-index 0, `div.html.front` z-index 2,
  *   inset 0, pointer-events none, pauseOffscreen()) for `html` parts (MDI icon shapes, spike S1).
  * - (r5, replaces the r3 probe bullets) No motion probe and no layout reads: travel needs only CSS
- *   transform animations, which every supported browser runs. mc-flows always passes
- *   `offsetPath: true` and `motion: 'css'` to render(). Classic dots travel the same way: each
+ *   transform animations, which every supported browser runs. Classic dots travel the same way: each
  *   classic flow with dots writes its own `@keyframes` (travelFrames over flattenPath(geo.d)) in a
  *   `<style>` next to its dots; the dash fallback is left only for `dots: 0`. mc-flows no longer
  *   calls pauseAnimations() / unpauseAnimations() (there is no SMIL to pause).
@@ -205,19 +205,14 @@ import type { ResolvedFlow } from '../utils/flow';
  * gallery card; Chromium 85 floor.
  */
 
-export const FLOW_LOOK_CONTRACT = '1.0.0';
-export const FLOW_LOOK_CONTRACT_REVISION = 5;
+export const FLOW_LOOK_CONTRACT = '2.0.0';
+export const FLOW_LOOK_CONTRACT_REVISION = 6;
 
 export type FlowLineStyle = 'solid' | 'dashed' | 'dotted' | 'double' | 'wave' | 'zigzag' | 'tube' | 'neon' | 'cable';
 export type FlowShape = 'dot' | 'arrow' | 'chevron' | 'square' | 'diamond' | 'star' | 'comet' | 'spark' | 'bubble' | 'drop' | 'icon';
 export type FlowCap = 'none' | 'round' | 'arrow';
 /** (r2) Quality tier chosen by mc-flows from H. */
 export type FlowLookQuality = 'full' | 'lite' | 'minimal';
-/**
- * (r3) How shapes move. (r5) The host always passes 'css' (transform keyframes); 'smil' and 'none'
- * are kept for compatibility but never produced, and are removed by a follow-up Contract task.
- */
-export type FlowMotionSupport = 'css' | 'smil' | 'none';
 
 /** (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
 export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;
@@ -428,16 +423,6 @@ export interface FlowLookRenderOptions {
   /** The flow's index on the card (unique ids and keyframe names: `mc-flow-<index>-<kind>`). */
   index: number;
   reduced: boolean;
-  /**
-   * (r5) Always true from the host: travel uses transform keyframes, which need no offset-path
-   * support. Kept for compatibility, not produced as false; removed by a follow-up Contract task.
-   */
-  offsetPath: boolean;
-  /**
-   * (r5) Always 'css' from the host (no probe, no SMIL). 'smil' / 'none' are kept for
-   * compatibility, never produced; removed by a follow-up Contract task.
-   */
-  motion: FlowMotionSupport;
   /** Moving elements this flow may draw (card budget applied). */
   count: number;
   /** HA dark mode (mc-flows `dark`): picks the theme-derived neon core. */

@@ -547,7 +547,7 @@ export class McFlows extends LitElement {
     items.forEach(({ f, i, look, arrow, geo }) => {
       const count = counts.get(f.id) ?? 0;
       if (look) {
-        const parts = slot!.render(look, geo, { index: i, reduced, offsetPath: true, motion: 'css', count, dark: this.dark, quality });
+        const parts = slot!.render(look, geo, { index: i, reduced, count, dark: this.dark, quality });
         const halo =
           !!this.selected && this.selected === f.id
             ? svg`<path class="sel" d=${geo.d} style="stroke-width: ${r1(f.width + 10)}px"></path>`
