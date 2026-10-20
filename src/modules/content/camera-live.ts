@@ -1,7 +1,7 @@
 import { html, LitElement, nothing, TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant } from '../../types';
-import { resolveMediaUrl } from '../../utils/media';
+import { safeSnapshotSrc } from '../../utils/media';
 import { StreamGate } from '../advanced/stream-gate';
 
 /* Chunk-only (magic-card-modules-extra.js): defined by install() as mc-camera-live. */
@@ -40,10 +40,8 @@ export class McCameraLive extends LitElement {
 
   protected render(): TemplateResult | typeof nothing {
     if (!this._gate.active) {
-      const picture = this.stateObj?.attributes.entity_picture;
-      return typeof picture === 'string' && picture
-        ? html`<img class="mc-camera-snapshot" src=${resolveMediaUrl(this.hass, picture)} alt="" />`
-        : nothing;
+      const src = safeSnapshotSrc(this.hass, this.stateObj?.attributes.entity_picture);
+      return src ? html`<img class="mc-camera-snapshot" src=${src} alt="" />` : nothing;
     }
     return html`<ha-camera-stream
       class="mc-camera-stream"

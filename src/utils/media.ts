@@ -1,4 +1,5 @@
 import type { HomeAssistant } from '../types';
+import { safeImageUrl } from './safe-url';
 import { currentRenderContext } from '../services/render-context';
 import { cachedMediaUrl, mediaSourceId, unwrapCssUrl } from '../services/media-resolver';
 
@@ -47,6 +48,16 @@ export function resolveMediaUrl(hass: HomeAssistant | undefined, url: string): s
     }
   }
   return url;
+}
+
+/**
+ * A camera's `entity_picture` as a snapshot `src`: resolved against the HA URL, then parsed like the
+ * browser does and kept only for http(s) and raster data: URLs. Anything else (javascript:, a data:
+ * document, a protocol-relative host) gives undefined and the caller shows no picture.
+ */
+export function safeSnapshotSrc(hass: HomeAssistant | undefined, picture: unknown): string | undefined {
+  if (typeof picture !== 'string' || !picture) return undefined;
+  return safeImageUrl(resolveMediaUrl(hass, picture), location.href);
 }
 
 /**

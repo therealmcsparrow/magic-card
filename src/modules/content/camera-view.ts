@@ -4,7 +4,7 @@ import { CardModule, HomeAssistant, CameraModuleConfig, HassEntity } from '../..
 import type { ModuleView } from '../../contracts/lazy-module';
 import { invalidateDependencyCache } from '../../services/card-dependencies';
 import { currentRenderContext } from '../../services/render-context';
-import { cssAspectRatio, resolveMediaUrl, withRefreshParam } from '../../utils/media';
+import { cssAspectRatio, safeSnapshotSrc, withRefreshParam } from '../../utils/media';
 import { entityDisplayName, isUnavailable } from '../../utils/entity-value';
 import { getCardHelpers } from '../../utils/card-helpers';
 import { STREAM_TAG, refreshMs } from './camera-module';
@@ -59,9 +59,9 @@ function cameraStreamReady(entityId: string, onReady?: () => void): boolean {
 
 export class CameraView implements ModuleView {
   private _snapshot(c: CameraModuleConfig, hass: HomeAssistant | undefined, stateObj: HassEntity, name: string): TemplateResult {
-    const picture = stateObj.attributes.entity_picture;
-    if (typeof picture !== 'string' || !picture) return this._fallback(name, 'mdi:cctv-off');
-    const src = withRefreshParam(resolveMediaUrl(hass, picture), refreshMs(c));
+    const safe = safeSnapshotSrc(hass, stateObj.attributes.entity_picture);
+    if (!safe) return this._fallback(name, 'mdi:cctv-off');
+    const src = withRefreshParam(safe, refreshMs(c));
     return html`<img class="mc-camera-snapshot" src=${src} alt=${name} />`;
   }
 

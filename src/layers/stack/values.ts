@@ -1,4 +1,5 @@
 import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
+import { safeImageUrl } from '../../utils/safe-url';
 import { safeColor } from '../../utils/animation';
 import { BLUR_MAX, LAYER_ANCHORS, type LayerAnchor } from '../../contracts/layer-placement';
 import type { BgPattern } from '../../contracts/bg-stack';
@@ -8,8 +9,6 @@ import type { BgPattern } from '../../contracts/bg-stack';
  * URL load goes through one of these allow-lists (proj.M1, proj.M2). No lit, no DOM except `URL`.
  */
 
-const MAX_URL = 8192;
-const MAX_DATA_URL = 2_000_000;
 const MAX_GRADIENT = 600;
 export const MAX_STATES = 32;
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
@@ -19,27 +18,7 @@ const num = (v: unknown, min: number, max: number, dflt: number): number => {
   return typeof n === 'number' && Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : dflt;
 };
 
-/**
- * An image URL the card may load, parsed the way the browser parses it: http(s) or same-origin
- * relative, plus raster data: URLs. Returns the serialised URL, or undefined.
- */
-export function safeImageUrl(v: unknown, base: string): string | undefined {
-  if (typeof v !== 'string') return undefined;
-  const s = v.trim();
-  if (!s || s.length > (/^data:/i.test(s) ? MAX_DATA_URL : MAX_URL)) return undefined;
-  // protocol-relative and breakouts: a typed path starts with one slash, nothing here needs braces or quotes
-  if (/^[\\/]{2}/.test(s) || /[{}<>\\"`]/.test(s) || /\burl\s*\(/i.test(s)) return undefined;
-  let u: URL;
-  try {
-    u = new URL(s, base);
-  } catch {
-    return undefined;
-  }
-  if (u.username || u.password) return undefined;
-  if (u.protocol === 'http:' || u.protocol === 'https:') return u.href;
-  if (u.protocol === 'data:' && /^data:image\/(png|jpe?g|gif|webp|avif|bmp)[;,]/i.test(u.href)) return u.href;
-  return undefined;
-}
+export { safeImageUrl };
 
 /** `url("...")` for an already validated URL; the characters that would end the string are escaped. */
 export function cssUrl(href: string): string {
