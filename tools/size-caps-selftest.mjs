@@ -44,6 +44,16 @@ here.gzip.zlib = process.versions.zlib;
 here.gzip.brotli = process.versions.brotli;
 here.files = { 'magic-card-a.js': { raw: 2048, ceiling: 4096, note: 'fixture' } };
 here.entry.base.gzip = 3000;
+// the real file moves on as stages close, so the fixtures start from an open ladder: no stage caps, no br cap
+here.entry.current_stage = 'S0';
+for (const st of here.entry.stages) {
+  st.cap = null;
+  st.landed_commit = null;
+  delete st.measured;
+  delete st.trace_ms;
+}
+here.entry.br.cap = null;
+here.entry.br.measured = null;
 // hex of a hash chain: it does not compress below about 55 %, so the gzip figure sits near 2 KB
 let h = 'seed';
 let hex = '';
@@ -141,6 +151,20 @@ const fin = clone(here);
 fin.entry.final_cap = 70000;
 r = run([...fixture(fin, dist), '--caps-only']);
 expect('editing final_cap fails (constant 61,440)', r.code === 1, r.out);
+
+// 7b. a closed S0 (cap = base figure, landed commit, measured) passes; a later stage cap above it fails
+const closed = clone(here);
+Object.assign(closed.entry.stages[0], { cap: 3000, landed_commit: 'ad04a81', measured: 3000 });
+r = run([...fixture(closed, dist), '--caps-only']);
+expect('a closed S0 (cap equal to the base figure) passes', r.code === 0, r.out);
+const above = clone(closed);
+above.entry.stages[1].cap = 3001;
+r = run([...fixture(above, dist), '--caps-only']);
+expect('a stage cap above a closed S0 fails', r.code === 1 && /only steps down/.test(r.out), r.out);
+const s0high = clone(closed);
+s0high.entry.stages[0].cap = 3001;
+r = run([...fixture(s0high, dist), '--caps-only']);
+expect('an S0 cap above the base figure fails', r.code === 1 && /above the base figure/.test(r.out), r.out);
 
 // 8. siblings (ADR 0044): missing, stale, orphan, corrupt and the br gate
 r = run(fixture(here, dist, false));

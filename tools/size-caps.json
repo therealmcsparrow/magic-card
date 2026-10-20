@@ -19,9 +19,10 @@
     "stages": [
       {
         "id": "S0",
-        "cap": null,
+        "cap": 156490,
         "target": 156490,
-        "landed_commit": null
+        "landed_commit": "ad04a81",
+        "measured": 156490
       },
       {
         "id": "S1a",
@@ -44,8 +45,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": null,
-      "measured": null
+      "cap": 129897,
+      "measured": 129897
     }
   },
   "files": {
