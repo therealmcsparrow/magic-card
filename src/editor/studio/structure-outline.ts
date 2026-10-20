@@ -1238,6 +1238,8 @@ export class StructureOutline extends LitElement {
         flex: 1;
         min-width: 0;
         display: flex;
+        /* a chip that does not fit drops to the next line instead of squeezing the name to one letter per line */
+        flex-wrap: wrap;
         align-items: center;
         gap: var(--o-gap);
         min-height: var(--o-item-h);
@@ -1279,8 +1281,8 @@ export class StructureOutline extends LitElement {
         color: var(--k-ink);
       }
       .text {
-        flex: 1;
-        min-width: 0;
+        flex: 1 1 6ch;
+        min-width: min(6ch, 100%);
         display: grid;
       }
       .name {
