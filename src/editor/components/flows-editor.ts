@@ -310,9 +310,9 @@ export class FlowsEditor extends LitElement {
     </div>`;
   }
 
-  private _select(id: string, value: string, options: SelectOpt[], onPick: (v: string) => void, describedBy?: string): TemplateResult {
+  private _select(id: string, value: string, options: SelectOpt[], onPick: (v: string) => void, describedBy?: string, name?: string): TemplateResult {
     return html`<div class="select">
-      <select class="input" id=${id} aria-describedby=${describedBy || nothing} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
+      <select class="input" id=${id} aria-label=${name || nothing} aria-describedby=${describedBy || nothing} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
         ${options.map((o) => html`<option value=${o.value} ?selected=${o.value === value} ?disabled=${!!o.disabled} title=${o.title ?? nothing}>${o.label}</option>`)}
       </select>
       <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -447,7 +447,7 @@ export class FlowsEditor extends LitElement {
       f,
       key,
       t('Attach to'),
-      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === 'box' ? 'box' : undefined }), `flow-${index}-anchor-help`),
+      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === 'box' ? 'box' : undefined }), `flow-${index}-anchor-help`, which === 'from' ? t('Start: attach to') : t('End: attach to')),
       id,
     );
   }
