@@ -1,7 +1,7 @@
 import { svg, type SVGTemplateResult } from 'lit';
 import { fmt, lane, sample, toD, type Sampled, type XY } from '../sampler';
 import { travelFrames } from '../../utils/flow-motion';
-import { stops } from '../motion';
+import { barStops } from '../motion';
 import { flowLookRegistry, type LineCtx, type StrokeSpec } from '../registry';
 
 /* Shared helpers of the line modules. */
@@ -65,6 +65,10 @@ export function highlight(c: LineCtx, d: string, max = Infinity): SVGTemplateRes
       svg`<rect class="hlp an" x=${fmt(-len / 2)} y=${fmt(-c.w / 2)} width=${fmt(len)} height=${fmt(c.w)} style=${`fill: #fff; fill-opacity: 0.5; animation: ${name} ${lap.toFixed(3)}s linear ${(-(lap * k) / n).toFixed(3)}s infinite ${c.dir}`}></rect>`,
   );
   // a <style> element swallows the rest of a lit template: it is a template of its own
-  const keyframes = svg`<style .textContent=${travelFrames(name, stops(S, true))}></style>`;
+  // over a corner arc a straight bar would overhang the line: it fades out for the arc (opacity runs on the compositor too)
+  const { P, o } = barStops(S, len / 2);
+  let k = 0;
+  const frames = travelFrames(name, P);
+  const keyframes = svg`<style .textContent=${o ? frames.replace(/\)\}/g, () => `);opacity:${o[k++]}}`) : frames}></style>`;
   return svg`${keyframes}<g class="hlg">${bar}</g>`;
 }
