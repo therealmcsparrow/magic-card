@@ -59,8 +59,10 @@ for (const s of SURFACES) {
   for (const [name, p] of Object.entries(themeParts)) {
     check(`${name} on ${s.name}`, ratio(over(textOn(s), s.rgb, p.opacity), s.rgb), 3);
   }
-  // Slider: outline of thin / pill / segmented / glass, ticks and the glass border are the text colour at .55.
+  // Slider: outline of standard / thin / pill / segmented / glass, ticks and the glass border are the text colour at .55.
   check(`slider outline, ticks and glass border on ${s.name}`, ratio(over(textOn(s), s.rgb, 0.55), s.rgb), 3);
+  // The failed-call text chip (.mc-sl-m): white on #b3261e, on any card.
+  check(`failed-call text (white on #b3261e) on ${s.name}`, ratio([255, 255, 255], [179, 38, 30]), 4.5);
   // Value chip: surface colour on the text colour, and its text.
   check(`value chip text on ${s.name}`, ratio(s.rgb, textOn(s)), 4.5);
   if (s.dark) check(`neon core (white ${FLOW_LOOK_THEME.neonCoreDark.opacity}) on ${s.name}`, ratio(over([255, 255, 255], s.rgb, FLOW_LOOK_THEME.neonCoreDark.opacity), s.rgb), 3);

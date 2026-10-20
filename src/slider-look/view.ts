@@ -280,7 +280,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   };
 
   // ── the parts inside the track
-  const outline = (look.style === 'thin' || look.style === 'pill' || look.style === 'glass') && !shape;
+  const outline = (look.style === 'standard' || look.style === 'thin' || look.style === 'pill' || look.style === 'glass') && !shape;
   const fillBox = segs
     ? html`<div class="mc-sl-segs">${Array.from({ length: segs }, (_, i) => {
         const p = segs > 1 ? (vertical ? (segs - 1 - i) / (segs - 1) : i / (segs - 1)) * 100 : 0;
