@@ -20,7 +20,7 @@ const writeI18nStats = (stats) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out));
   // the same module lists, with the entry flag and names, for tools/check-entry-graph.mjs (proj.M11)
-  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, files: c.files, modules: out.chunks[i].modules })) };
+  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules })) };
   fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
 };
 

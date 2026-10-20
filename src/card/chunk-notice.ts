@@ -27,6 +27,7 @@ const part = (name: string): string =>
     'slider-look': t('The slider'),
     slider: t('The slider'),
     markdown: t('The text block'),
+    'svg-icon': t('The icon'),
   })[name as 'slider'] ?? t('Part of this card');
 
 const reload = (): void => location.reload();

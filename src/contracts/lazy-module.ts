@@ -41,6 +41,12 @@ import type { MagicModule } from '../modules/module-types';
  * adoption (assign a new array, never push) in "Styles in the same frame" and on the host attribute `mc-fail`
  * in "Failure". S1a.0 also records what it built: whenReady callbacks survive a failure, OnDemandChunkName and
  * the notice element (sections "Failure, retry and timeout" and "import() sites").
+ * 1.4.0 r3 (2026-10-20, additive, no version change; S1a.5): LazyChunkName gains 'svg-icon' (dist/magic-card-svg-icon.js, ceiling
+ * 65,536 B, chunk entry src/icons/chunk.ts). It holds the icon source (packs, the `mcu:` library client, own SVG), <mc-svg-icon>
+ * and the SVG sanitiser. Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`, `svg`, any icon reference that is not a
+ * plain MDI id). A plain icon never loads it: renderIcon keeps <ha-icon>, no request (AC1). RenderContext gains the optional
+ * `metChunk(name)`: a render that meets a feature whose chunk is not ready (a predicate miss, backstop rule 3) tells the card,
+ * which then shows that chunk's failure notice if it fails.
  *
  * ── Core (magic-card.js) ──
  * - src/utils/lazy-chunk.ts: `lazyChunk(file, importer): LazyChunk`, the one helper every chunk below
@@ -231,7 +237,7 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 2;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -241,6 +247,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   'flow-look': 'magic-card-flow-look.js',
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
+  'svg-icon': 'magic-card-svg-icon.js',
 };
 
 /**
@@ -257,10 +264,12 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   'slider-look': 28_672,
   /** r2: stack (15.3 KiB measured) + placement runtime and layer CSS (about 5-6 KiB). */
   layers: 24_576,
+  /** r3: icon source, <mc-svg-icon>, the SVG sanitiser and the `mcu:` library client. */
+  'svg-icon': 65_536,
 };
 
 /** Which module types each chunk serves (seasonal, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look' | 'layers'>, readonly string[]> = {
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],

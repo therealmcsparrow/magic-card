@@ -1,5 +1,5 @@
 import { LitElement, html, svg, nothing, PropertyValues, SVGTemplateResult, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { HassEntity, HomeAssistant, IconFxConfig } from '../types';
@@ -78,11 +78,11 @@ const PRIMARY_VAR = 'var(--icon-primary-color, currentColor)';
 const themed = (paint: string): string => (paint === 'currentColor' ? PRIMARY_VAR : paint);
 
 /**
+ * Defined by the svg-icon chunk's install() (src/icons/chunk.ts), not at module level (lazy-module 1.4.0).
  * Inline SVG icon for icon effects. Draws the icon's path once its geometry is known; until then (or
  * when it can't be resolved: unknown icon, timeout, multi-colour logo) it renders <ha-icon>, so the
  * icon is never blank and colour / size still apply. Effect layers join in later tasks.
  */
-@customElement('mc-svg-icon')
 export class McSvgIcon extends LitElement {
   static styles = iconBaseStyles;
 

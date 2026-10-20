@@ -3,6 +3,7 @@ import { provideRuntimeChunk } from './anim-runtime-loader';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
 import { provideParticlesChunk } from './particles-loader';
 import { provideShapeChunk } from './shape-custom-loader';
+import { provideSvgIconChunk } from './svg-icon-loader';
 
 /*
  * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
@@ -24,6 +25,8 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
   // <mc-bg-stack>, the card backdrop (background-layers T5, ADR 0038)
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
+  // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts
+  'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),
 };
 
 /** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
@@ -35,6 +38,7 @@ export const onDemandChunks = {
 provideRuntimeChunk(onDemandChunks['anim-runtime']);
 provideParticlesChunk(onDemandChunks.particles);
 provideShapeChunk(onDemandChunks['shape-custom']);
+provideSvgIconChunk(lazyChunks['svg-icon']);
 
 /** window.MagicCard.loadSeasonal: true once <mc-seasonal> and <mc-seasonal-deco> are defined. */
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();

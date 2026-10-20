@@ -145,6 +145,11 @@
       "ceiling": 63488,
       "note": "Preset transfer (T16, ADR 0022). 62 KiB, CEO 2026-10-19 (fix rounds: URL checks, focus, thumbnail hook; measured 60,032); equals TRANSFER_CHUNK_CEILING."
     },
+    "magic-card-svg-icon.js": {
+      "raw": 33792,
+      "ceiling": 33792,
+      "note": "33 KiB, measured 31,667 + 5 %, rounded up to 1 KiB (S1a.5). Icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client. The plan ceiling is 65,536 B (lazy-module LAZY_CHUNK_CEILINGS)."
+    },
     "magic-card-flow-look.js": {
       "raw": 30720,
       "ceiling": 30720,

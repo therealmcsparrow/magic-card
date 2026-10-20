@@ -80,6 +80,10 @@ jobs:
           else
             ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
           fi
+      - name: SVG sanitiser sits in the chunk of every SVG sink (AC14)
+        run: |
+          node tools/check-svg-sinks.mjs --self-test
+          node tools/check-svg-sinks.mjs
       - name: Dist size budget
         run: npm run size
       - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in (browsers.S10, AC13)

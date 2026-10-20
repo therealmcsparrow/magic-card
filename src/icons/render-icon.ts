@@ -2,7 +2,7 @@ import { html, nothing, TemplateResult } from 'lit';
 import type { HomeAssistant, IconFxConfig } from '../types';
 import { entityIcon, renderEntityIcon, stateIcon } from '../utils/entity-icon';
 import { currentRenderContext } from '../services/render-context';
-import './mc-svg-icon';
+import { svgIconChunk } from '../utils/svg-icon-loader';
 
 export interface RenderIconOpts {
   icon?: string;
@@ -62,12 +62,24 @@ export function renderIcon(opts: RenderIconOpts): TemplateResult {
   // `mcu:` (saved library icons) always go to <mc-svg-icon> too, so HA's single-colour silhouette never shows.
   const own = (o.icon === 'svg' && !!o.svg) || !!icon?.startsWith('mcu:');
   const rig = o.rig ?? (o.part === 'icon' ? currentRenderContext()?.iconRig : undefined);
-  if (!hasIconFx(o.fx) && !own && !rig) {
-    const part = o.part ?? nothing;
+  const part = o.part ?? nothing;
+  const plain = (): TemplateResult => {
     if (byState) return html`<ha-icon class=${className} data-mc-part=${part} .icon=${byState}></ha-icon>`;
     return useEntity
       ? renderEntityIcon(o.hass, o.entity, o.icon ?? '', className, o.part)
       : html`<ha-icon class=${className} data-mc-part=${part} .icon=${o.icon}></ha-icon>`;
+  };
+  if (!hasIconFx(o.fx) && !own && !rig) return plain();
+  // <mc-svg-icon> lives in the svg-icon chunk (lazy-module 1.4.0). Until it is ready the icon keeps the size <ha-icon> has
+  // (module CSS sizes both alike): effects and rigs draw their base icon, an own or saved icon an empty box, then the
+  // module's default icon if the chunk failed (never blank; the card shows the failure notice, magic-card.ts _failNotices).
+  const chunk = svgIconChunk();
+  if (chunk && !chunk.ready()) {
+    const ctx = currentRenderContext();
+    void chunk.load();
+    ctx?.metChunk?.('svg-icon');
+    if (ctx) chunk.whenReady(ctx.requestUpdate);
+    return own ? html`<ha-icon class=${className} data-mc-part=${part} .icon=${chunk.failed() ? o.fallbackIcon || 'mdi:help' : undefined}></ha-icon>` : plain();
   }
   // Inside HA, <ha-state-icon> knows the icon (translations, device class): mc-svg-icon reads it.
   const stateObj = useEntity && typeof customElements !== 'undefined' && customElements.get('ha-state-icon') ? o.hass?.states?.[o.entity!] : undefined;

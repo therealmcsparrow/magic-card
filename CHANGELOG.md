@@ -10,6 +10,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **A part that cannot load says so.** When a part of a card, such as the slider, a background or an animation, cannot be fetched, the card tries once more after two seconds. If that fails too, a short notice appears in place of the part with a **Try again** button, and the card keeps trying in the background (after 30 seconds, 90 seconds and 5 minutes). The rest of the card keeps working. If the card file and its parts come from different releases, the notice offers **Reload page** instead.
 
 ### Improved
+-   **Saved and custom icons load on demand.** Icons from the library, your own SVG and icon effects now load their code only when a card uses them. A card with plain Material Design icons keeps using Home Assistant's own icon and makes no extra request. If that code cannot load, the card shows the default icon and the same notice with **Try again** as other parts.
 -   **Compressed copies of every file.** Each release now carries a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to every `.js` file. Home Assistant sends the copy a browser accepts, and sends the raw file when there is none, so `magic-card.js` goes over the network as 129,897 B (Brotli) or 156,490 B (gzip) instead of 503,361 B. HACS in single mode never deletes old files, so every later release keeps shipping both copies. See [Manual](README.md#manual) for updating by hand.
 
 ## 2026.10.11-beta.5 (2026-10-20, pre-release)

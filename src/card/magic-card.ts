@@ -351,6 +351,7 @@ export class MagicCard extends LitElement {
     subscribe: <T>(msg: Record<string, unknown>) => this._subscriptions.get<T>(msg),
     media: (id) => this._media.get(id),
     requestUpdate: () => this.requestUpdate(),
+    metChunk: (name) => void this._met.add(name),
     renderChild: (child, index, slot = 0, layer) => {
       const parent = this._pathStack[this._pathStack.length - 1];
       if (parent === undefined) return renderModuleContent(child, this.hass);
@@ -480,6 +481,8 @@ export class MagicCard extends LitElement {
   private _shapeCfg?: object;
   /** The config uses `shape: custom` (its chunk may fail: the notice). */
   private _customShape = false;
+  /** Chunks a render met that the needs table did not list for this config (renderIcon): their failure notice shows too. */
+  private readonly _met = new Set<string>();
   private _offChunks?: () => void;
   private _wantShapes(cfg: object): void {
     if (cfg === this._shapeCfg || customShapesReady()) return;
@@ -1408,7 +1411,7 @@ export class MagicCard extends LitElement {
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
-      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra'].includes(n) && LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config);
+      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra'].includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
       return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
     });
     return names.length

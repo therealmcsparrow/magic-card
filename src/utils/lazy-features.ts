@@ -4,6 +4,7 @@ import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { hasLayers } from '../layers/layer-slot';
 import { SEASONAL_PRESET_IDS } from './seasonal.needs';
+import { wantsSvgIcon } from '../icons/needs';
 import { configHas } from './config-walk';
 import { lazyChunks } from './lazy-chunks';
 
@@ -49,6 +50,8 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   'flow-look': row('flow-look', (c) => configHas(c, (n) => Array.isArray(n.flows) && n.flows.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj)))),
   'slider-look': row('slider-look', (c) => configHas(c, (n) => n.type === 'slider' && hasSliderLook(n))),
   layers: row('layers', wantsLayers),
+  // custom_icons, icon_fx, svg, or an icon that is not a plain MDI id (src/icons/needs.ts)
+  'svg-icon': row('svg-icon', wantsSvgIcon),
 };
 
 const seen = new WeakSet<object>();
