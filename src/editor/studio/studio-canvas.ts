@@ -1334,6 +1334,7 @@ export class StudioCanvas extends LitElement {
         left: 24px;
         max-width: calc(100vw - 48px);
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         gap: 8px;
         margin-bottom: 8px;

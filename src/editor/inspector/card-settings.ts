@@ -361,11 +361,17 @@ export function renderCardDesign(
       const pick = (m: PauseButtonMode) => update('pause_button', m === 'hidden' ? undefined : m);
       // roving tabindex and arrow keys, as the segmented control of the flows editor
       const onKey = (e: KeyboardEvent) => {
-        const step: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
-        if (!(e.key in step)) return;
-        e.preventDefault();
-        const next = modes[(modes.findIndex(([m]) => m === cur) + step[e.key] + modes.length) % modes.length][0];
         const group = e.currentTarget as HTMLElement;
+        const rtl = getComputedStyle(group).direction === 'rtl' ? -1 : 1;
+        const step: Record<string, number> = { ArrowRight: rtl, ArrowDown: 1, ArrowLeft: -rtl, ArrowUp: -1 };
+        const at = modes.findIndex(([m]) => m === cur);
+        let to: number;
+        if (e.key === 'Home') to = 0;
+        else if (e.key === 'End') to = modes.length - 1;
+        else if (Object.prototype.hasOwnProperty.call(step, e.key)) to = (at + step[e.key] + modes.length) % modes.length;
+        else return;
+        e.preventDefault();
+        const next = modes[to][0];
         pick(next);
         requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
       };

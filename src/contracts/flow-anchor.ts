@@ -1,6 +1,13 @@
 
 /*
- * Contract: flow anchors. Version 1.1.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ * Contract: flow anchors. Version 1.2.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ *
+ * ── 1.2.0 (2026-10-20, task beta4-nits): narrower wide rule ──
+ * A swarm key (`spacing_mode: random`, `size_variation` above 0, `shape_alternate`) makes a look wide
+ * only when the flow has travelling shapes (not `motion: pulse`, not `dots: 0` without a spacing) and
+ * the `shape_alternate` value is a known shape. A beta.4 flow with such a key and no travelling shapes
+ * defaulted to `box` and now defaults to `icon`. The unused type export FlowAnchorSide is removed (no
+ * users in the repo).
  *
  * A flow end attaches to the module's main visual (its icon, picture or dial) by default, and to
  * the module's box only when the YAML says `box` or the module has no main visual (CEO Brief Gate
@@ -106,7 +113,7 @@
  * nl tables complete (check-i18n --ci). Keyboard and 200 % zoom as the existing selects.
  */
 
-export const FLOW_ANCHOR_CONTRACT = '1.1.0';
+export const FLOW_ANCHOR_CONTRACT = '1.2.0';
 
 /** YAML values of from_anchor / to_anchor. Unset (and anything unknown) = the look default (1.1.0). */
 export type FlowAnchor = 'icon' | 'box';
