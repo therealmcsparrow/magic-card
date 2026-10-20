@@ -85,7 +85,14 @@ export class ColorPicker extends LitElement {
     this._parseValue(this.value);
   }
 
+  /** The entity toggle swaps its button when the mode changes; focus goes back to the new one (keyboard users stay in place). */
+  private _refocusToggle = false;
+
   updated(changedProps: Map<string, unknown>): void {
+    if (this._refocusToggle) {
+      this._refocusToggle = false;
+      this.renderRoot.querySelector<HTMLElement>('.entity-toggle')?.focus();
+    }
     if (changedProps.has('value') && !this._isOpen) {
       this._parseValue(this.value);
     }
@@ -371,7 +378,10 @@ export class ColorPicker extends LitElement {
       aria-pressed=${on ? 'true' : 'false'}
       aria-label=${t('Entity colour for {name}', { name: (this.label || t('colour')).toLowerCase() })}
       title=${t("Use the entity's state colour")}
-      @click=${() => this._emitValue(on ? '' : 'entity')}
+      @click=${() => {
+        this._refocusToggle = true;
+        this._emitValue(on ? '' : 'entity');
+      }}
     >
       <ha-icon icon="mdi:palette-swatch-variant"></ha-icon>
     </button>`;
@@ -420,7 +430,7 @@ export class ColorPicker extends LitElement {
     return html`
       <div class="field">
         <label class="lbl" for=${id}>${t('Colour from')}</label>
-        <select class="input" id=${id} @change=${(e: Event) => pick((e.target as HTMLSelectElement).value || undefined)}>
+        <select class="input" id=${id} aria-label=${t('{name}: colour from', { name: this.label || t('colour') })} @change=${(e: Event) => pick((e.target as HTMLSelectElement).value || undefined)}>
           <option value="" ?selected=${!attr}>${t('State colour')}</option>
           ${names.map((n) => html`<option value=${n} ?selected=${n === attr}>${n}</option>`)}
         </select>
