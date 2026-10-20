@@ -4,6 +4,7 @@ import type { HomeAssistant, SliderModuleConfig } from '../../types';
 import { LOOK_UNDO_TOAST_MS, SLIDER_LOOK_EDITOR_TAG, type SliderLookEditorElement } from '../../contracts/look-editor';
 import { SLIDER_LOOK_DEFAULTS, type SliderStop, type SliderThumb, type SliderTrackStyle } from '../../contracts/slider-look';
 import { editorSystem } from '../../css/editor-stack';
+import { kitNotice } from '../../ui-kit/css';
 import { field, switchRow } from '../../ui-kit/templates/field';
 import { seg } from '../../ui-kit/templates/choice';
 import { notice } from '../../ui-kit/templates/status';
@@ -29,6 +30,7 @@ const AUTO_ATTRS = new Set(['brightness', 'color_temp', 'color_temp_kelvin']);
 export class SliderLookEditor extends LitElement implements SliderLookEditorElement {
   static styles = [
     editorSystem,
+    kitNotice,
     css`
       :host {
         display: block;
@@ -378,7 +380,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       ? t('On iPad: Settings, Accessibility, Motion.')
       : /Mac/.test(ua)
         ? t('On a Mac: System Settings, Accessibility, Display.')
-        : t('On Windows: Settings, Accessibility, Visual effects.');
+        : t('In your system settings, turn on reduced motion (Accessibility).');
     return `${t('Your system has reduced motion on, so this look stays still.')} ${where}`;
   }
 
@@ -402,7 +404,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
       ></mc-ui-chip-group>
       ${this._rm ? notice({ tone: 'info', text: this._rmText() }) : nothing}
       ${this._trackSection()} ${this._thumbSection()} ${this._valueSection()} ${this._shapeSection()} ${this._stopsSection()}
-      <mc-ui-toast .dismissLabel=${t('Close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
+      <mc-ui-toast .offset=${88} .dismissLabel=${t('Close')} @mc-toast-action=${(e: CustomEvent<{ id: string }>) => e.detail.id === 'undo' && this._undo()}></mc-ui-toast>
     </div>`;
   }
 

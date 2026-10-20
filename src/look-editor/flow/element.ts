@@ -6,6 +6,7 @@ import { FLOW_LOOK_DEFAULTS, FLOW_SPIN_SHAPES } from '../../contracts/flow-look'
 import { FLOW_LOOK_EDITOR_TAG, LOOK_UNDO_TOAST_MS, type FlowLookEditorElement, type FlowPreset } from '../../contracts/look-editor';
 import type { UiChoice, UiChoicePick, UiToastElement } from '../../contracts/ui-kit';
 import { editorSystem } from '../../css/editor-stack';
+import { kitNotice } from '../../ui-kit/css';
 import { notice } from '../../ui-kit/templates';
 import { fieldReset } from '../../editor/components/field-reset';
 import { renderColorRangesField } from '../../editor/components/color-ranges-field';
@@ -44,6 +45,7 @@ const strip = (s: string): string => s.replace(/\s*\([^)]*\)$/, '');
 export class FlowLookEditor extends LitElement implements FlowLookEditorElement {
   static styles = [
     editorSystem,
+    kitNotice,
     css`
       :host {
         display: grid;
@@ -680,7 +682,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
       <div class="stack">${this._tiles()} ${this._styleFields()}</div>
       ${this._lineFold()} ${this._endsFold()} ${this._shapesFold()} ${this._swarmFold()} ${this._arrivalFold()}
       <div class="sr" role="status" aria-live="polite">${this._announce}</div>
-      <mc-ui-toast .dismissLabel=${t('Dismiss')} @mc-toast-action=${this._undo}></mc-ui-toast>
+      <mc-ui-toast .offset=${88} .dismissLabel=${t('Dismiss')} @mc-toast-action=${this._undo}></mc-ui-toast>
     `;
   }
 }

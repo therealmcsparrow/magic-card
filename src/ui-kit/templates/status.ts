@@ -4,7 +4,7 @@ import { glyph } from '../glyphs';
 import { button } from './button';
 import { iconOf } from './icon';
 
-const TONE_GLYPH = { info: 'help', success: 'check', warn: 'help', error: 'close' } as const;
+const TONE_GLYPH = { info: 'information', success: 'check', warn: 'help', error: 'close' } as const;
 
 /**
  * Inline banner. Tone is carried by glyph and words, not by colour alone. role=status (polite) for info, success and
