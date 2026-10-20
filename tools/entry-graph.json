@@ -6,11 +6,6 @@
     "./src/anim-studio/compile.ts",
     "./src/anim-studio/css-keyframes.ts",
     "./src/anim-studio/model-v2-core.ts",
-    "./src/anim-studio/model.ts",
-    "./src/contracts/card-pause.ts",
-    "./src/contracts/flow-anchor.ts",
-    "./src/contracts/flow-look.ts",
-    "./src/contracts/mcu-library.ts",
-    "./src/contracts/slider-look.ts"
+    "./src/anim-studio/model.ts"
   ]
 }

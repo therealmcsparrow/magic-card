@@ -3,7 +3,7 @@ import type { LitElement, TemplateResult } from 'lit';
 import { t } from './i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
 import { reducedMotion } from './sequence-player';
-import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts/card-pause';
+import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /*

@@ -24,6 +24,9 @@ import type { ResolvedFlow } from '../utils/flow';
  * r6 2026-10-20 (proj.M9 cleanup, task flow-anchors-polish; breaking, so 2.0.0): `offsetPath`,
  * `motion` and `FlowMotionSupport` are removed from FlowLookRenderOptions, with the SMIL branch in
  * src/flow-look/shapes/register.ts. Hosts pass neither.
+ * Text revision 2026-10-20 (task smallest-fastest-card-viewer S1a.2, no API change, revision number stays 6; a test pins it): FLOW_QUALITY_THRESHOLDS,
+ * FLOW_SPIN_SHAPES, FLOW_LOOK_KEYS and hasFlowLook moved to src/contracts/flow-look.needs.ts, the only file
+ * of this contract magic-card.js imports (proj.M11); this file re-exports them.
  *
  * Seam: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts overlay, both in
  * magic-card.js) keeps today's look (solid line, dots or moving dashes, reduced-motion arrow) and
@@ -214,8 +217,10 @@ export type FlowCap = 'none' | 'round' | 'arrow';
 /** (r2) Quality tier chosen by mc-flows from H. */
 export type FlowLookQuality = 'full' | 'lite' | 'minimal';
 
-/** (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
-export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;
+// (S1a.2) FLOW_QUALITY_THRESHOLDS, FLOW_SPIN_SHAPES, FLOW_LOOK_KEYS and hasFlowLook live in flow-look.needs.ts, which
+// magic-card.js imports; re-exported unchanged. (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full,
+// <= 6 lite, > 6 minimal).
+export { FLOW_QUALITY_THRESHOLDS, FLOW_SPIN_SHAPES, FLOW_LOOK_KEYS, hasFlowLook } from './flow-look.needs';
 
 /** (r3) Sampler and geometry constants (spike S2). */
 export const FLOW_GEOMETRY = {
@@ -233,9 +238,6 @@ export const FLOW_GEOMETRY = {
   /** (r4) Round cap diameter as a share of cap_size. */
   roundCapShare: 2 / 3,
 } as const;
-
-/** Shapes the `shape_spin` switch applies to (CEO 2026-10-19). */
-export const FLOW_SPIN_SHAPES: readonly FlowShape[] = ['star', 'square', 'diamond', 'icon'];
 
 /** (r2) A floor-safe paint: colour plus a separate opacity (fill-opacity / stroke-opacity). */
 export interface FlowPaint {
@@ -366,17 +368,6 @@ export interface FlowLookConfig {
   arrival?: 'none' | 'ring' | 'splash';
   arrival_size?: number;
 }
-
-/** Every look key; any of them set = the flow needs the flow-look chunk. */
-export const FLOW_LOOK_KEYS: readonly (keyof FlowLookConfig)[] = [
-  'line_style', 'dash_length', 'dash_gap', 'rail_gap', 'amplitude', 'wavelength', 'electric', 'tube_tint', 'bubbles',
-  'bubble_count', 'tube_fill_value', 'flicker', 'neon_core', 'cable_color', 'twisted', 'color_mode', 'color_to',
-  'thresholds', 'start_cap', 'end_cap', 'cap_size', 'shape', 'shape_icon', 'shape_icon_rotate', 'shape_spin',
-  'shape_color', 'shape_alternate', 'size_variation', 'spacing_mode', 'spacing', 'motion', 'arrival', 'arrival_size',
-];
-
-export const hasFlowLook = (f: Partial<FlowConfig> | undefined): boolean =>
-  !!f && FLOW_LOOK_KEYS.some((k) => (f as Record<string, unknown>)[k] !== undefined);
 
 /**
  * What resolve() returns, stored as ResolvedFlow.look: JSON-safe (mc-flows compares flows by

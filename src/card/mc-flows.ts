@@ -1,14 +1,8 @@
 import { LitElement, html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import {
-  FLOW_QUALITY_THRESHOLDS,
-  FLOW_SPIN_SHAPES,
-  type FlowBudget,
-  type FlowLookQuality,
-  type FlowLookResolved,
-  type FlowWithLook,
-} from '../contracts/flow-look';
-import { FLOW_END_SELECTOR } from '../contracts/flow-anchor';
+import { FLOW_QUALITY_THRESHOLDS, FLOW_SPIN_SHAPES } from '../contracts/flow-look.needs';
+import type { FlowBudget, FlowLookQuality, FlowLookResolved, FlowWithLook } from '../contracts/flow-look';
+import { FLOW_END_SELECTOR } from '../contracts/flow-anchor.needs';
 import type { ResolvedFlow } from '../utils/flow';
 import { anchorSides, flowPath, spreadAnchors, type FlowGeometry, type Point, type Rect } from '../utils/flow-geometry';
 import { flattenPath, travelFrames } from '../utils/flow-motion';

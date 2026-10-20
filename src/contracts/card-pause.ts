@@ -5,6 +5,9 @@
  * task flow-slider-styles (flows, slider looks).
  * r2 2026-10-20 (fix round B4, additive, still unreleased, so 1.0.0 in place): the `counted` option
  * on watchOffscreen and the pauseOffscreen directive.
+ * Text revision 2026-10-20 (task smallest-fastest-card-viewer S1a.2, no API change, revision number stays 3): PAUSE_ATTRIBUTE,
+ * PAUSE_EVENT and PAUSE_STORAGE_PREFIX moved to card-pause.needs.ts (proj.M11: the entry imports only
+ * *.needs.ts of a contract); this file re-exports them.
  * r3 2.0.0 2026-10-20 (task flow-anchors-polish, CEO 2026-10-20; breaking because 1.0.0 shipped in
  * 2026.10.11-beta.3 with default `auto`): `pause_button` default is `hidden`; the editor shows the
  * setting in its own "Motion" group, open by default; the editor preview pause (MagicCard
@@ -148,9 +151,8 @@ export interface CardPauseKeys {
   pause_button_corner?: PauseButtonCorner;
 }
 
-export const PAUSE_ATTRIBUTE = 'data-mc-paused';
-export const PAUSE_EVENT = 'mc-pause-change';
-export const PAUSE_STORAGE_PREFIX = 'mc-paused:';
+// (S1a.2) The three names live in card-pause.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from './card-pause.needs';
 
 export interface PauseChangeDetail {
   paused: boolean;

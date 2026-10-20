@@ -2,6 +2,10 @@
 /*
  * Contract: flow anchors. Version 1.2.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
  *
+ * Text revision (2026-10-20, task smallest-fastest-card-viewer S1a.2, no API change): FLOW_END_SELECTOR
+ * moved to src/contracts/flow-anchor.needs.ts, the only file of this contract the entry imports
+ * (proj.M11); this file re-exports it.
+ *
  * ── 1.2.0 (2026-10-20, task beta4-nits): narrower wide rule ──
  * A swarm key (`spacing_mode: random`, `size_variation` above 0, `shape_alternate`) makes a look wide
  * only when the flow has travelling shapes (not `motion: pulse`, not `dots: 0` without a spacing) and
@@ -131,8 +135,8 @@ export interface FlowResolvedAnchors {
   toBox?: true;
 }
 
-/** The two main-visual markers (DOM seam). magic-card.js inlines this string once (mc-flows). */
-export const FLOW_END_SELECTOR = '.mc-anim-icon,[data-mc-flow-end]';
+// The two main-visual markers (DOM seam) live in flow-anchor.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { FLOW_END_SELECTOR } from './flow-anchor.needs';
 
 /** Marker attribute for modules without an `.mc-anim-icon` hook. */
 export const FLOW_END_ATTR = 'data-mc-flow-end';

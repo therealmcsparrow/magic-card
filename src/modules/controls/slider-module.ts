@@ -7,7 +7,7 @@ import { generateId } from '../../utils/id-generator';
 import { formatControlValue, numericControl, runServiceCall } from '../../utils/entity-control';
 import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
 import { renderTrack } from '../../utils/slider-track';
-import { hasSliderLook } from '../../contracts/slider-look';
+import { hasSliderLook } from '../../contracts/slider-look.needs';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { sliderLookSlot } from './slider-look-slot';
 import { currentRenderContext } from '../../services/render-context';

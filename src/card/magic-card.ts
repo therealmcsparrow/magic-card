@@ -40,7 +40,7 @@ import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
 import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
 import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
 import './chunk-notice';
-import { hasFlowLook } from '../contracts/flow-look';
+import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
 import { CardSeasonal } from './card-seasonal';

@@ -2,7 +2,7 @@ import { LitElement, html, nothing, PropertyValues, svg, TemplateResult } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { DesignConfig, ShapeKind, ShapeOptions } from '../types';
 import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
-import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
+import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
 import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mcu-library';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
 import { resolveCustomShape } from '../utils/shape-ref';

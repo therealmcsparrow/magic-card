@@ -1,7 +1,7 @@
 import type { LazyChunkName, LazyFeature, NeedsCheck } from '../contracts/lazy-module';
 import type { CardModule } from '../types';
-import { hasFlowLook } from '../contracts/flow-look';
-import { hasSliderLook } from '../contracts/slider-look';
+import { hasFlowLook } from '../contracts/flow-look.needs';
+import { hasSliderLook } from '../contracts/slider-look.needs';
 import { hasLayers } from '../layers/layer-slot';
 import { getAnimationPreset } from './animation-presets';
 import { configHas } from './config-walk';

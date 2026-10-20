@@ -1,5 +1,5 @@
 import type { TemplateResult } from 'lit';
-import type { ShapeKind, ShapeOptions, SliderModuleConfig } from '../types';
+import type { ShapeKind, ShapeOptions } from '../types';
 import type { ModuleView } from './lazy-module';
 
 /*
@@ -229,16 +229,8 @@ export interface SliderLookConfig {
   snap?: boolean;
 }
 
-/** Every look key; any of them set = the slider needs the slider-look chunk. */
-export const SLIDER_LOOK_KEYS: readonly (keyof SliderLookConfig)[] = [
-  'track_style', 'track_thickness', 'track_radius', 'segments', 'segment_gap', 'glass_blur', 'fill_mode',
-  'slider_color_to', 'use_entity_color', 'show_icon', 'icon', 'icon_position', 'live', 'thumb', 'thumb_size',
-  'thumb_border', 'thumb_border_color', 'thumb_glow', 'thumb_icon', 'value_position', 'ticks', 'tick_every',
-  'show_limits', 'track_shape', 'track_shape_options', 'stops', 'snap',
-];
-
-export const hasSliderLook = (c: Partial<SliderModuleConfig> | undefined): boolean =>
-  !!c && SLIDER_LOOK_KEYS.some((k) => (c as Record<string, unknown>)[k] !== undefined);
+// (S1a.2) SLIDER_LOOK_KEYS and hasSliderLook live in slider-look.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { SLIDER_LOOK_KEYS, hasSliderLook } from './slider-look.needs';
 
 /** Additive options of renderTrack (src/utils/slider-track.ts TrackOptions extends this). */
 export interface TrackOptionsLook {

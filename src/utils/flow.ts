@@ -1,6 +1,7 @@
 import type { FlowConfig, FlowSide, HomeAssistant, MagicCardConfig } from '../types';
 import { flowLookSlot } from '../card/flow-look-slot';
-import { hasFlowLook, type FlowLookResolved } from '../contracts/flow-look';
+import { hasFlowLook } from '../contracts/flow-look.needs';
+import type { FlowLookResolved } from '../contracts/flow-look';
 import { safeColor } from './animation';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';

@@ -243,6 +243,10 @@ import type { ThemeDoc } from './theme-editor';
  * - Won't: editing card YAML from the panel. Later: deep links to an editor, duplicate from library,
  *   folders / tags.
  *
+ * ── Text revision, task smallest-fastest-card-viewer S1a.2, no API change, revision number stays 4 ──
+ * LIBRARY_CHANGED_EVENT moved to src/contracts/mcu-library.needs.ts, the only file of this contract
+ * magic-card.js imports (proj.M11); this file re-exports it.
+ *
  * ── (r4) Panel adapter shapes ──
  * ThemeBackend.presets (theme-editor 1.1.0 ThemePresetStore) is the shape of record: list() resolves
  * SavedThemePreset[] (the array), save() resolves the SavedThemePreset, remove() resolves undefined. The
@@ -390,4 +394,5 @@ export interface LibraryChangedDetail {
   kind: 'icons' | 'shapes';
   ids: string[];
 }
-export const LIBRARY_CHANGED_EVENT = 'mcu-library-changed';
+// (S1a.2) The event name lives in mcu-library.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { LIBRARY_CHANGED_EVENT } from './mcu-library.needs';
