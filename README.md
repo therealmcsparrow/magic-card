@@ -10,7 +10,7 @@
 
 Magic Card is a Home Assistant Lovelace custom card that you build from rows, columns and modules. A visual editor (a pane editor and a full-screen Studio) lets you set up the structure, styling, animations, rings and conditions without writing YAML, and the YAML stays editable at any time.
 
-This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of eighty-two cards with screenshots, thirty-seven of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
+This README is an overview. The [documentation](documentation/README.md) folder has a page for every part of the editor and every option, plus a full YAML reference with examples and a [card gallery](documentation/gallery/README.md) of a hundred and fourteen cards with screenshots, fifty-two of them animated, and twenty-five [complete dashboards](documentation/gallery/dashboards/README.md). Changes are listed in the [changelog](CHANGELOG.md).
 
 ## Features
 
@@ -29,6 +29,10 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Shapes: squircle, pill, circle, hexagon, octagon, notched corners, ticket, wave edge and blob outlines, with the border and ring drawn along them.
 -   Value backgrounds: a tank that fills up to an entity value, or a faint history sparkline behind the content.
 -   Flow lines: animated lines with moving dots between two modules (solar to house to grid), driven by an entity value.
+-   Flow looks: dashed, dotted, wave, zigzag, tube, neon and cable lines, with gradient and value colours, end markers, travelling shapes and icons, and five presets (Energy, Water, Data, Heat and Neon). A flow without look keys looks as before. See [Flow options](documentation/flows/options.md#look).
+-   Slider looks: thin, pill, segmented and glass tracks, gradient and automatic fills, and a choice of handle. The Big fill style shows the entity's icon and value and updates while you drag. Five presets: Minimal, Material, Neon, Glass and Big fill. A slider without look keys looks as before. See [Slider](documentation/modules/controls/slider.md#look).
+-   Card backdrop layers: up to four layers behind the card's content, made of pictures, gradients, patterns and colours. A picture can come from an entity or change with an entity's state. A module can also sit behind the other modules (Behind others) or at a fixed spot above them (On top), with position, opacity, blur and a blend mode. See [Backgrounds](documentation/design/backgrounds.md#card-backdrop) and [Layers](documentation/design/layers.md).
+-   Pause motion button: a card with motion shows a button that pauses everything on it that moves. Set `pause_button` to `auto` (the default), `always` or `hidden`, and pick the corner with `pause_button_corner`. See [Pause motion button](documentation/design/layers.md#pause-motion-button).
 -   Seasonal scenes: snow, falling leaves, Christmas lights, fireworks, bats and more, picked by date or by hand, or driven by the weather and the sun.
 -   Icon effects: liquid fill, device animations, line draw, morphing state icons, duotone and gradient colours, and your own SVG icons.
 -   Tap, hold and double-tap actions, including opening and closing pop-ups.

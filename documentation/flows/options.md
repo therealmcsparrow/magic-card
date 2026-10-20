@@ -221,7 +221,7 @@ Spacing uses `spacing_mode`, `spacing` and `dots`. The mode is chosen in this or
 | Colour ranges | `thresholds` | List of `from` and `color` | None | By value. The `to` key is ignored. See [Colour ranges](../yaml/schema.md#colour-ranges). |
 | Start marker | `start_cap` | `none`, `round`, `arrow` | `none` | A round node or an arrowhead at the start. The arrowhead points out of the line, so an arrow at both ends reads as a two-headed line. |
 | End marker | `end_cap` | `none`, `round`, `arrow` | `none` | A round node or an arrowhead at the end, pointing along the line. |
-| Marker size (px) | `cap_size` | 4 to 40 | 3 times `width` | Arrowhead length. A round node is two thirds of it. |
+| Marker size (px) | `cap_size` | 4 to 40 | 2 times `width`, at most 24 | Arrowhead length. A round node is two thirds of it. |
 
 The end marker takes the gradient's end colour. The start marker takes `color`.
 
