@@ -51,6 +51,14 @@ export const MODULE_LOOKS: readonly ModuleLook[] = [
   },
 ];
 
+/** Module types a picture or light effect behind the container makes sense for. */
+const MEDIA_TYPES = new Set(['image', 'camera', 'video-bg']);
+
+/** The looks offered for a module: overlay looks for any module, background looks only for pictures, cameras and video (a text turned into the backdrop is never the goal). */
+export function looksFor(mod: CardModule): readonly ModuleLook[] {
+  return MEDIA_TYPES.has(mod.type) ? MODULE_LOOKS : MODULE_LOOKS.filter((l) => l.placement === 'overlay');
+}
+
 /** The module with the look's keys. The layer is replaced wholesale; the module's own keys stay. */
 export function applyModuleLook(mod: CardModule, look: ModuleLook): CardModule {
   return { ...mod, placement: look.placement, layer: JSON.parse(JSON.stringify(look.layer)) as LayerConfig };

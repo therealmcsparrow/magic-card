@@ -10,7 +10,7 @@ import { m, t } from './i18n';
 import { overlapWith, isSmallTarget } from './checks';
 import { costFromModule, type CostReason } from './cost';
 import { measureBoxes, onLayerMeasure } from './layer-measure';
-import { MODULE_LOOKS, applyModuleLook, type ModuleLook } from './looks';
+import { applyModuleLook, looksFor, type ModuleLook } from './looks';
 import {
   SCRIM_DEFAULT, SCRIM_PRESETS, axisKind, clampStrength, effectiveClickThrough, frontNumber, hasModuleAction, isAnchor, isAutomatic,
   layerOf, layerYaml, offsetError, offsetSide, patchLayer, patchScrim, placementOf, scrimLabel, setPlacement, type LayerEditorContext, type MoveTo, type OffsetAxis,
@@ -182,7 +182,7 @@ export class McLayerGroups extends LitElement {
     return html`<div class="looks">
       <span class="lbl" id=${`${this._id}-looks`}>${t('Looks')}</span>
       <div class="tiles2" role="group" aria-labelledby=${`${this._id}-looks`}>
-        ${MODULE_LOOKS.map(
+        ${looksFor(this.mod).map(
           (look) => html`<button type="button" class="lyr-tile" data-look=${look.id} @click=${() => apply(look)}>
             <span class="pv" style=${`background:${look.preview}`}></span><span class="nm">${t(look.name)}</span>
           </button>`,
