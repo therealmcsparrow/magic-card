@@ -78,7 +78,9 @@ export function resolveLook(c: Partial<SliderModuleConfig>): Look {
   const rawStops: Stop[] = [];
   for (const s of raw.slice(0, MAX_STOPS)) {
     if (!s || !isNum(s.value)) continue;
-    const label = typeof s.label === 'string' && s.label.trim() ? s.label.trim() : undefined;
+    // an unquoted YAML Off / On is a boolean: show it as the word (YAML 1.1), not as a missing label
+    const raw: unknown = s.label;
+    const label = typeof raw === 'string' && raw.trim() ? raw.trim() : typeof raw === 'boolean' ? (raw ? 'On' : 'Off') : undefined;
     rawStops.push({ value: s.value, label, short: label ? [...label].slice(0, MAX_LABEL).join('') : undefined });
   }
   const colour = (v: unknown) => safeColor(v);

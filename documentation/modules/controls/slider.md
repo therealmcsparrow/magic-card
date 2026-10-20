@@ -128,7 +128,7 @@ The track and fill are clipped to the shape. The handle stays on the track and i
   entity: light.desk
   stops:
     - value: 0
-      label: Off
+      label: "Off"
     - value: 30
       label: Dim
     - value: 100
