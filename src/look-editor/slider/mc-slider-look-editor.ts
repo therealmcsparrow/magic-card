@@ -225,6 +225,14 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
     this._rm = false;
     this.onUndoChange?.(undefined);
     this.onChange?.(snap);
+    // the Undo button is gone after this: keep focus in the group (Reset look) and say what happened
+    this._toast(t('Look change undone.'), false);
+    void this.updateComplete.then(() => {
+      const reset = this.renderRoot.querySelector<HTMLButtonElement>('[data-role=reset]');
+      // Reset look is disabled when the undo left no look keys: the preset chips are the next place
+      const chip = this.renderRoot.querySelector('mc-ui-chip-group')?.shadowRoot?.querySelector<HTMLElement>('[tabindex="0"]');
+      (reset && !reset.disabled ? reset : chip)?.focus();
+    });
   }
 
   // ── field helpers ──
@@ -400,7 +408,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
         <p class="help status" id="sl-status">${this._status()}</p>
         <div class="btns">
           ${this.undo ? html`<button type="button" class="btn secondary sm" @click=${() => this._undo()}>${this._undoLabel || t('Undo look change')}</button>` : nothing}
-          <button type="button" class="btn secondary sm" ?disabled=${!hasLookKeys(c)} @click=${() => this._reset()}>${t('Reset look')}</button>
+          <button type="button" class="btn secondary sm" data-role="reset" ?disabled=${!hasLookKeys(c)} @click=${() => this._reset()}>${t('Reset look')}</button>
         </div>
       </div>
       <mc-ui-chip-group

@@ -93,6 +93,7 @@
   "Line": "Line",
   "Line end colour": "Line end color",
   "Line style": "Line style",
+  "Look change undone.": "Look change undone.",
   "Look reset. {count}.": "Look reset. {count}.",
   "Look reset. {n, plural, one {# setting} other {# settings}} removed.": "Look reset. {n, plural, one {# setting} other {# settings}} removed.",
   "Marker size (px)": "Marker size (px)",

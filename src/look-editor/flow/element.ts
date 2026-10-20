@@ -153,6 +153,9 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
     this._before = undefined;
     this._undoName = undefined;
     this._toast()?.close();
+    // the Undo button is gone after this: keep focus in the group (Reset look) and say what happened
+    this._announce = t('Look change undone.');
+    void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('[data-role=reset]')?.focus());
   };
 
   // ── sections ──
