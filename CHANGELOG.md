@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.11-beta.3 (2026-10-20, pre-release)
 
 ### New
 -   **Flow looks.** Flows can draw dashed, dotted, double-rail, wave, zigzag, tube, neon and cable lines, with gradient and value colours, end markers, travelling shapes (including MDI icons), bubbles and an arrival effect. Five presets fill the options in one click: Energy, Water, Data, Heat and Neon. Each option is in the Flows tab, with an Undo for presets and Reset look. A flow without look keys looks exactly as before. See [Flow options](documentation/flows/options.md#look).
