@@ -1025,6 +1025,7 @@
   "This entity has no {type} forecast; {fallback} is shown.": "This entity has no {type} forecast; {fallback} is shown.",
   "This is custom gradient CSS. Choose Gradient to replace it with the editor's version.": "This is custom gradient CSS. Choose Gradient to replace it with the editor's version.",
   "This light has no {what}; the control is hidden.": "This light has no {what}; the control is hidden.",
+  "This line look is wide, so it attaches to the module box until you pick Icon or picture.": "This line look is wide, so it attaches to the module box until you pick Icon or picture.",
   "This module is part of its layout; the layout's modules differ from the template.": "This module is part of its layout; the layout's modules differ from the template.",
   "This module is part of its layout; they follow the template as one list.": "This module is part of its layout; they follow the template as one list.",
   "This shape can not be saved.": "This shape can not be saved.",

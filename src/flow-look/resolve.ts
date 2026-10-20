@@ -1,4 +1,5 @@
 import { FLOW_LOOK_DEFAULTS, defaultCapSize, FLOW_SPIN_SHAPES, type FlowCap, type FlowLineStyle, type FlowLookResolved, type FlowShape } from '../contracts/flow-look';
+import { isWideFlowLook } from '../contracts/flow-anchor-wide';
 import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
 import { FLOW_DEFAULTS, type ResolvedFlow } from '../utils/flow';
 import { safeColor } from '../utils/animation';
@@ -81,6 +82,7 @@ export function resolveLook(f: FlowConfig, base: ResolvedFlow, hass: HomeAssista
     amplitude: num(f.amplitude, 1, 20, D.amplitude),
     wavelength: num(f.wavelength, 8, 80, line === 'zigzag' ? D.wavelength_zigzag : D.wavelength_wave),
     electric: f.electric === true,
+    wide: isWideFlowLook(f),
     bubbles: line === 'tube' && f.bubbles !== false ? Math.round(num(f.bubble_count, 1, 8, D.bubble_count)) : 0,
     level,
     flicker: line === 'neon' && (f.flicker === 'subtle' || f.flicker === 'strong') ? f.flicker : 'off',

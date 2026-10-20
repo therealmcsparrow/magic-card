@@ -455,6 +455,7 @@
   "Icon only": "Alleen pictogram",
   "Icon or picture": "Pictogram of afbeelding",
   "Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.": "Pictogram of afbeelding laat de lijn eindigen bij het pictogram, de afbeelding of de meter van de module. Modulevak laat de lijn eindigen aan de rand van de module.",
+  "This line look is wide, so it attaches to the module box until you pick Icon or picture.": "Deze lijnstijl is breed en hecht daarom aan het modulevak, tot je Pictogram of afbeelding kiest.",
   "Icon source": "Pictogrambron",
   "Icon when off": "Pictogram als uit",
   "Icon when on": "Pictogram als aan",

@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { FlowConfig, HomeAssistant, MagicCardConfig } from '../../types';
 import type { FlowBudget } from '../../contracts/flow-look';
 import { FLOW_ANCHOR_TYPES } from '../../contracts/flow-anchor';
+import { isWideFlowLook } from '../../contracts/flow-anchor-wide';
 import { FLOW_LOOK_EDITOR_TAG } from '../../contracts/look-editor';
 import { notice } from '../../ui-kit';
 import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
@@ -441,13 +442,15 @@ export class FlowsEditor extends LitElement {
     if (!this._anchorable(f, which, modules)) return nothing;
     const key = `${which}_anchor` as const;
     const id = `flow-${index}-${which}-anchor`;
-    const value = f[key] === 'box' ? 'box' : 'icon';
+    // 1.1.0: the shown value is the effective one; the key is written only when it differs from the look's default.
+    const dflt = isWideFlowLook(f) ? 'box' : 'icon';
+    const value = f[key] === 'box' || f[key] === 'icon' ? f[key]! : dflt;
     return this._keyField(
       index,
       f,
       key,
       t('Attach to'),
-      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === 'box' ? 'box' : undefined }), `flow-${index}-anchor-help`, which === 'from' ? t('Start: attach to') : t('End: attach to')),
+      this._select(id, value, tl(ANCHORS), (v) => this._patch(index, { [key]: v === dflt ? undefined : v }), `flow-${index}-anchor-help`, which === 'from' ? t('Start: attach to') : t('End: attach to')),
       id,
     );
   }
@@ -531,7 +534,7 @@ export class FlowsEditor extends LitElement {
             <div>${this._endpoint(index, f, 'to', modules)}</div>
           </div>
           ${this._anchorable(f, 'from', modules) || this._anchorable(f, 'to', modules)
-            ? html`<p class="help" id=${id('anchor-help')}>${t("Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.")}</p>`
+            ? html`<p class="help" id=${id('anchor-help')}>${t("Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the module's edge.")}${isWideFlowLook(f) ? ' ' + t('This line look is wide, so it attaches to the module box until you pick Icon or picture.') : ''}</p>`
             : nothing}
           ${this._keyField(
             index,

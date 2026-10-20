@@ -392,6 +392,8 @@ export interface FlowLookResolved {
   amplitude: number;
   wavelength: number;
   electric: boolean;
+  /** flow-anchor 1.1.0: a wide look (isWideFlowLook); resolveFlow() then defaults unset anchors to the box. */
+  wide: boolean;
   tubeTint?: string;
   /** Bubble count; 0 = none. */
   bubbles: number;

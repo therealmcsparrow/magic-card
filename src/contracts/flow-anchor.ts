@@ -1,17 +1,32 @@
 import type { FlowSide } from '../types';
 
 /*
- * Contract: flow anchors. Version 1.0.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ * Contract: flow anchors. Version 1.1.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
  *
  * A flow end attaches to the module's main visual (its icon, picture or dial) by default, and to
  * the module's box only when the YAML says `box` or the module has no main visual (CEO Brief Gate
- * 2026-10-20). Providers: every module type in FLOW_ANCHOR_TYPES (marks its main visual in the
+ * 2026-10-20).
+ *
+ * ── 1.1.0 (CEO Ship Gate 2026-10-20): the default depends on the look ──
+ * When from_anchor / to_anchor is NOT set (or unknown), a flow with a WIDE look defaults to `box`;
+ * a thin look keeps `icon`. Wide = isWideFlowLook(flow): line_style tube, cable, neon or zigzag,
+ * `electric: true`, or any swarm key set (spacing_mode, spacing, size_variation, shape_alternate,
+ * motion). The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
+ * removing the look removes the rule. An explicit `icon` or `box` always wins. The editor shows the
+ * effective default in "Attach to"; it writes `icon` only when that differs from the look default
+ * and removes the key when the pick equals the look default. Everything below is unchanged.
+ *
+ * The predicate lives in its own file, src/contracts/flow-anchor-wide.ts (isWideFlowLook), so that it
+ * stays out of magic-card.js: the flow-look chunk calls it and puts the result in FlowLookResolved.wide.
+ *
+ * Providers: every module type in FLOW_ANCHOR_TYPES (marks its main visual in the
  * DOM, see "DOM seam"). Consumer: the flows Module (src/utils/flow.ts resolver, src/card/mc-flows.ts
  * overlay, both in magic-card.js) and the card editor's Flows tab (lazy editor chunk).
  *
  * ── YAML (flat keys on a flow, next to from_side / to_side; both optional) ──
  *   from_anchor: icon | box     to_anchor: icon | box
- * Unset = `icon` (the default; the editor never writes `icon`). `box` = the module's outer box,
+ * Unset = `icon` for a thin look, `box` for a wide look (1.1.0; the editor writes `icon` only to
+ * override a wide look). `box` = the module's outer box,
  * exactly as before 2026.10.11-beta.4 (pixel-identical: a config with `box` on both ends of every
  * flow renders as at base eab1c7b). Any other value is treated as the default (`icon`), the same
  * rule as from_side (an unknown side is `auto`), and is kept in YAML untouched.
@@ -19,7 +34,8 @@ import type { FlowSide } from '../types';
  * clipped away, falls back to the box silently (no error, no hint at runtime).
  *
  * ── Resolver (src/utils/flow.ts, magic-card.js) ──
- * ResolvedFlow gains `fromBox?: true` and `toBox?: true`, set only when the key is exactly 'box'
+ * ResolvedFlow gains `fromBox?: true` and `toBox?: true`, set when the key is exactly 'box', or
+ * when it is not exactly 'icon' and the look is wide (1.1.0)
  * (absent otherwise, so ResolvedFlow JSON and sameFlows() stay small). FlowResolvedAnchors below.
  *
  * ── DOM seam (providers; one marker per module, rendered inside its .mc-module-wrapper) ──
@@ -89,7 +105,7 @@ import type { FlowSide } from '../types';
  * nl tables complete (check-i18n --ci). Keyboard and 200 % zoom as the existing selects.
  */
 
-export const FLOW_ANCHOR_CONTRACT = '1.0.0';
+export const FLOW_ANCHOR_CONTRACT = '1.1.0';
 
 /** YAML values of from_anchor / to_anchor. Unset (and anything unknown) = 'icon'. */
 export type FlowAnchor = 'icon' | 'box';
