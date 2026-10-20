@@ -105,8 +105,11 @@ export class CardPause {
     const show = this._mode === 'always' || (auto && this._wants(on));
     this._shown = show;
     if (auto) this._recheck();
-    if (!show) return nothing;
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
+    // the content leaves a strip at the button's edge (css: data-mc-pause-gap), so the button never covers a module
+    if (show) this._host.setAttribute('data-mc-pause-gap', corner.split('-')[0]);
+    else this._host.removeAttribute('data-mc-pause-gap');
+    if (!show) return nothing;
     const label = t('Pause motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
