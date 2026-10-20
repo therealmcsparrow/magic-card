@@ -13,7 +13,9 @@ export function liftColour(c: string): string {
   const rgb = parseColour(paint);
   const l = rgb ? lum(rgb) : 0;
   if (!rgb || l <= MAX) return c;
-  const out = `rgb(${rgb.slice(0, 3).map((v) => Math.round(v * (MAX / l) ** (1 / 2.2)))})`;
+  const k = (MAX / l) ** (1 / 2.2);
+  const [r, g, b, a] = rgb;
+  const out = `rgb${a < 1 ? 'a' : ''}(${[r, g, b].map((v) => Math.round(v * k))}${a < 1 ? `,${+a.toFixed(3)}` : ''})`;
   return opacity < 1 ? `color-mix(in srgb, ${out} ${Math.round(opacity * 100)}%, transparent)` : out;
 }
 
