@@ -74,7 +74,6 @@ card-editor	colour	color
 card-editor	colour temperature	color temperature
 card-editor	colours	colors
 card-editor	{name}: colour from	{name}: color from
-card-editor	{name}: entity colour	{name}: entity color
 layer-editor	Add a colour at the back to blend with.	Add a color at the back to blend with.
 layer-editor	Card colour	Card color
 layer-editor	Colour	Color
