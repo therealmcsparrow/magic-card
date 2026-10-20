@@ -1,0 +1,50 @@
+# Status bar: a slim row with the clock on the left and three buttons on the right.
+# Tap the light or the lamp to toggle it. The third button opens the climate view.
+# Entities: light.living_room, light.desk
+# gallery: width=460
+type: custom:magic-card
+name: Status bar
+background: "#1e293b"
+border_radius: 18px
+padding: 10px 14px
+rows:
+  - id: bar
+    column_widths: [1fr, auto]
+    gap: 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: clock
+            show_date: true
+            date_format: "ddd D MMM"
+            design: { font_size: 22px, font_weight: "600", color: "#f1f5f9" }
+      - vertical_align: center
+        modules:
+          - type: row
+            gap: 8px
+            columns:
+              - modules:
+                  - type: button
+                    entity: light.living_room
+                    icon_on: mdi:ceiling-light
+                    icon_off: mdi:ceiling-light-outline
+                    label: Living
+                    actions:
+                      tap_action: { action: toggle }
+                    design: { color: "#f8fafc", padding: 6px 10px, border_radius: 12px, background: "rgba(255,255,255,0.08)" }
+              - modules:
+                  - type: button
+                    entity: light.desk
+                    icon_on: mdi:desk-lamp
+                    icon_off: mdi:desk-lamp-off
+                    label: Desk
+                    actions:
+                      tap_action: { action: toggle }
+                    design: { color: "#f8fafc", padding: 6px 10px, border_radius: 12px, background: "rgba(255,255,255,0.08)" }
+              - modules:
+                  - type: button
+                    icon: mdi:thermostat
+                    label: Climate
+                    actions:
+                      tap_action: { action: navigate, navigation_path: /lovelace/climate }
+                    design: { color: "#f8fafc", padding: 6px 10px, border_radius: 12px, background: "rgba(255,255,255,0.08)" }

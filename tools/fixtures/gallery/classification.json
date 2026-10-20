@@ -1,10 +1,10 @@
 {
   "adr": "docs/adr/0040-plain-key-allowlist.md",
   "plain_keys_sha256": "cf3e7075d547b53dbf6f06e50567cfe273959f18225643d9bc09d2049b0af09b",
-  "count": 134,
-  "plain": 15,
+  "count": 137,
+  "plain": 18,
   "feature": 119,
-  "plain_share_percent": 11.2,
+  "plain_share_percent": 13.1,
   "trace_fixtures": {
     "plain": "080",
     "effect": "063"
@@ -21,7 +21,7 @@
     "svg-icon": 18
   },
   "reserve_counts": {
-    "none": 15,
+    "none": 18,
     "overlay": 47,
     "configured": 18,
     "default": 54
@@ -2337,6 +2337,42 @@
       ],
       "unknown_keys": [],
       "modules": 12
+    },
+    {
+      "id": "135",
+      "source": "status-bar",
+      "sha256": "4291cbefdd526ca703f0f07df5b7cbe1866ee326094c866f9439751202eb6e03",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 5
+    },
+    {
+      "id": "136",
+      "source": "mode-card",
+      "sha256": "688a8098e7f9df51af78a05be7b7ababca47a29be504cf30b377fa9c67050387",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "137",
+      "source": "pattern-panel",
+      "sha256": "45ff732e1f6d1ff1c449b310cff7fe2fc1df995731c687909ad710055d2dbbab",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 3
     }
   ]
 }

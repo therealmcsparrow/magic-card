@@ -1,0 +1,34 @@
+# Mode card: the card turns warm when the desk light is on, greets by the hour in a Jinja template,
+# and shows a night note only between 22:00 and 06:00.
+# Entities: light.desk, sensor.indoor_temperature
+# gallery: width=380
+type: custom:magic-card
+name: Mode
+background: "#ffffff"
+border_radius: 22px
+padding: 18px
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(160deg, #e0f2fe 0%, #f8fafc 100%)"
+conditional_appearance:
+  - id: desk-on
+    name: Desk light on
+    conditions: [{ type: state, entity: light.desk, state: "on" }]
+    overrides:
+      background: "#fff7ed"
+      background_layers:
+        - type: gradient
+          gradient: "linear-gradient(160deg, #fed7aa 0%, #fff7ed 100%)"
+rows:
+  - id: main
+    columns:
+      - modules:
+          - type: text
+            use_template: true
+            text: "{{ 'Good morning' if now().hour < 12 else 'Good afternoon' if now().hour < 18 else 'Good evening' }}, it is {{ states('sensor.indoor_temperature') }} degrees inside"
+            design: { font_size: 17px, font_weight: "600", color: "#0f172a" }
+          - type: text
+            text: Night mode is on. Lights fade out at midnight.
+            display:
+              conditions: [{ type: time, after: "22:00", before: "06:00" }]
+            design: { font_size: 13px, color: "#475569", margin_top: 8px }

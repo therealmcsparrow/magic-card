@@ -6,7 +6,7 @@
 //   node tools/classify-gallery.mjs --check            classify, compare with the committed file, exit 1 on any difference
 //   node tools/classify-gallery.mjs --scan             only run the token and personal-data scan
 //   node tools/classify-gallery.mjs --explain NNN      print every feature found in one fixture, with its path
-//   node tools/classify-gallery.mjs --import <dir>     copy <dir>/<n>-<slug>.yaml (n = 1..134) to fixtures/gallery/NNN.yaml, then classify
+//   node tools/classify-gallery.mjs --import <dir>     copy <dir>/<n>-<slug>.yaml (n = 1..137) to fixtures/gallery/NNN.yaml, then classify
 //
 // The output has no timestamps and no absolute paths: the same inputs give the same bytes.
 // Every run scans first and refuses to classify a fixture the scan flags (rules jsyaml.M-SEC1..M-SEC6, hacard.M-SEC3).
@@ -21,7 +21,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURES = join(ROOT, 'tools', 'fixtures', 'gallery');
 const KEYS_FILE = join(ROOT, 'tools', 'plain-keys.json');
 const OUT_FILE = join(FIXTURES, 'classification.json');
-const EXPECTED_COUNT = 134;
+const EXPECTED_COUNT = 137;
 const MAX_FIXTURE_BYTES = 262144; // jsyaml.M-SEC3: refuse above this
 const MAX_ALIASES = 1000; // jsyaml.M-SEC4
 
