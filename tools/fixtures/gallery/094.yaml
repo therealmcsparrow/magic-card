@@ -1,0 +1,166 @@
+# Flow gradients and ends: a colour that fades along the line, round and arrow caps, colours by value, and a ring or splash where each shape arrives.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power, sensor.battery_power, sensor.home_battery
+# gallery: width=420 record=4
+type: custom:magic-card
+name: "Gradients and ends"
+background: "#0f1724"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.35)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Gradients and ends"
+            design: { font_size: 17px, font_weight: "700", color: "#e6edf7" }
+          - type: text
+            text: "Colour to colour, caps, thresholds and an arrival effect."
+            design: { font_size: 12px, color: "#8a98ad" }
+  - id: r0
+    column_widths: ["1fr"]
+    padding: 14px 0 0
+    columns:
+      - vertical_align: end
+        modules:
+          - type: text
+            text: gradient
+            design: { font_size: 11px, font_weight: "700", color: "#8a98ad", text_transform: uppercase, letter_spacing: 1px }
+  - id: r1
+    column_widths: ["36px", "1fr", "36px"]
+    padding: 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a0
+            type: icon
+            icon: mdi:solar-power-variant
+            size: 18px
+            design: { color: "#ffd166", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ffd166", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b0
+            type: icon
+            icon: mdi:home-variant
+            size: 18px
+            design: { color: "#6ee7b7", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #6ee7b7", background_color: "rgba(255,255,255,0.05)" }
+  - id: r2
+    column_widths: ["1fr"]
+    padding: 10px 0 0
+    columns:
+      - vertical_align: end
+        modules:
+          - type: text
+            text: "round start, arrow end"
+            design: { font_size: 11px, font_weight: "700", color: "#8a98ad", text_transform: uppercase, letter_spacing: 1px }
+  - id: r3
+    column_widths: ["36px", "1fr", "36px"]
+    padding: 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a1
+            type: icon
+            icon: mdi:home-variant
+            size: 18px
+            design: { color: "#6ee7b7", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #6ee7b7", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b1
+            type: icon
+            icon: mdi:transmission-tower
+            size: 18px
+            design: { color: "#8ecae6", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #8ecae6", background_color: "rgba(255,255,255,0.05)" }
+  - id: r4
+    column_widths: ["1fr"]
+    padding: 10px 0 0
+    columns:
+      - vertical_align: end
+        modules:
+          - type: text
+            text: "colour by value (3,240 W is red)"
+            design: { font_size: 11px, font_weight: "700", color: "#8a98ad", text_transform: uppercase, letter_spacing: 1px }
+  - id: r5
+    column_widths: ["36px", "1fr", "36px"]
+    padding: 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a2
+            type: icon
+            icon: mdi:transmission-tower
+            size: 18px
+            design: { color: "#8ecae6", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #8ecae6", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b2
+            type: icon
+            icon: mdi:battery-charging
+            size: 18px
+            design: { color: "#c084fc", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c084fc", background_color: "rgba(255,255,255,0.05)" }
+  - id: r6
+    column_widths: ["1fr"]
+    padding: 10px 0 0
+    columns:
+      - vertical_align: end
+        modules:
+          - type: text
+            text: "arrival ring"
+            design: { font_size: 11px, font_weight: "700", color: "#8a98ad", text_transform: uppercase, letter_spacing: 1px }
+  - id: r7
+    column_widths: ["36px", "1fr", "36px"]
+    padding: 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a3
+            type: icon
+            icon: mdi:battery-charging
+            size: 18px
+            design: { color: "#c084fc", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c084fc", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b3
+            type: icon
+            icon: mdi:ev-station
+            size: 18px
+            design: { color: "#fb7185", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(255,255,255,0.05)" }
+  - id: r8
+    column_widths: ["1fr"]
+    padding: 10px 0 0
+    columns:
+      - vertical_align: end
+        modules:
+          - type: text
+            text: "arrival splash"
+            design: { font_size: 11px, font_weight: "700", color: "#8a98ad", text_transform: uppercase, letter_spacing: 1px }
+  - id: r9
+    column_widths: ["36px", "1fr", "36px"]
+    padding: 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a4
+            type: icon
+            icon: mdi:ev-station
+            size: 18px
+            design: { color: "#fb7185", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b4
+            type: icon
+            icon: mdi:water-boiler
+            size: 18px
+            design: { color: "#fdba74", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fdba74", background_color: "rgba(255,255,255,0.05)" }
+flows:
+  - { id: lane-0, from: a0, to: b0, entity: sensor.solar_power, max: 5000, route: straight, color: "#22d3ee", width: 5, color_to: "#c084fc", dots: 3 }
+  - { id: lane-1, from: a1, to: b1, entity: sensor.house_power, max: 5000, route: straight, color: "#fbbf24", width: 4, color_to: "#f87171", start_cap: round, end_cap: arrow, dots: 3 }
+  - { id: lane-2, from: a2, to: b2, entity: sensor.solar_power, max: 5000, route: straight, color: "#8ecae6", width: 5, color_mode: value, thresholds: [{ from: 0, color: "#4ade80" }, { from: 2000, color: "#facc15" }, { from: 3000, color: "#f87171" }], end_cap: round, dots: 3 }
+  - { id: lane-3, from: a3, to: b3, entity: sensor.battery_power, max: 3000, route: straight, color: "#38bdf8", width: 3, shape: dot, dot_size: 8, dots: 3, arrival: ring, arrival_size: 26, end_cap: round }
+  - { id: lane-4, from: a4, to: b4, entity: sensor.solar_power, max: 5000, route: straight, color: "#a3e635", width: 3, shape: drop, dot_size: 9, dots: 3, arrival: splash, arrival_size: 30 }

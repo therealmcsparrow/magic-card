@@ -1,0 +1,78 @@
+# Slider stops: named stops under the track, the handle snaps to them (drag and arrow keys), plus ticks and the end labels.
+# Entities: light.living_room, light.kitchen, light.desk
+# gallery: width=400
+type: custom:magic-card
+name: Stops
+background: "#12161f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Stops
+            design: { font_size: 17px, font_weight: "700", color: "#e8edf5" }
+          - type: text
+            text: "Named steps that the handle snaps to, with ticks and end labels."
+            design: { font_size: 12px, color: "#8f9bb0" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Snap to stops"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            min: 0
+            max: 100
+            track_thickness: 8
+            track_radius: 4
+            thumb: circle
+            thumb_size: 22
+            thumb_border: 2
+            slider_color: "#38bdf8"
+            snap: true
+            value_position: bubble
+            stops: [{ value: 0, label: Off }, { value: 25, label: Low }, { value: 50, label: Mid }, { value: 75, label: High }, { value: 100, label: Max }]
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Ticks and limits"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            min: 0
+            max: 100
+            track_style: pill
+            track_thickness: 16
+            thumb: line
+            slider_color: "#a3e635"
+            ticks: true
+            tick_every: 10
+            show_limits: true
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Segments
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            min: 0
+            max: 100
+            track_style: segmented
+            track_thickness: 18
+            segments: 10
+            segment_gap: 3
+            thumb: none
+            slider_color: "#f472b6"

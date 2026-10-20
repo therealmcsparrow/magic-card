@@ -1,0 +1,90 @@
+# Christmas countdown: the Christmas scene with falling snow, twinkling stars and lights along the border, a swaying tree, and switches for the tree and the window lights.
+# `seasonal: christmas` keeps the scene all year. Use `seasonal: auto` to show it only from 1 to 26 December.
+# Entities: light.christmas_tree, switch.christmas_lights
+# gallery: width=380 record=6 stage=linear-gradient(135deg,#052e16,#14532d)
+type: custom:magic-card
+name: Christmas
+background: "linear-gradient(170deg, #14532d 0%, #052e16 100%)"
+border_radius: 28px
+padding: 24px
+box_shadow: "0 20px 48px rgba(5, 46, 22, 0.55)"
+seasonal:
+  scene: christmas
+  intensity: 75%
+rows:
+  - id: tree
+    padding: 8px 0 0
+    columns:
+      - modules:
+          - type: icon
+            entity: light.christmas_tree
+            icon: mdi:pine-tree
+            size: 76px
+            icon_fx:
+              colors: { style: gradient, gradient: ["#4ade80", "#15803d"], angle: 90 }
+            design:
+              display: flex
+              justify_content: center
+              filter: "drop-shadow(0 0 18px rgba(250,204,21,0.45))"
+              animations:
+                - { id: sway, preset: sway, target: icon, intensity: 3, duration: 3s }
+                - { id: stars, preset: twinkle, color: "#fde047", strength: 90, intensity: 8 }
+  - id: text
+    padding: 6px 0 0
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: 69 days to Christmas
+            design: { text_align: center, font_size: 23px, font_weight: "800", color: "#fefce8" }
+          - type: text
+            text: Lights come on at sunset
+            design: { text_align: center, font_size: 13px, color: "#bbf7d0" }
+  - id: switches
+    layout: "1-1"
+    gap: 10px
+    padding: 18px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            justify: center
+            align: center
+            design: &tile
+              padding: 12px
+              border_radius: 18px
+              background_color: "rgba(254,252,232,0.1)"
+              border: "1px solid rgba(250,204,21,0.3)"
+            actions:
+              tap_action: { action: toggle, entity: light.christmas_tree }
+            modules:
+              - type: icon
+                entity: light.christmas_tree
+                icon: mdi:string-lights
+                size: 22px
+                use_entity_color: true
+                icon_fx:
+                  device: auto
+              - type: text
+                text: Tree
+                design: { font_size: 14px, font_weight: "800", color: "#fefce8" }
+      - modules:
+          - type: horizontal
+            gap: 8px
+            justify: center
+            align: center
+            design: *tile
+            actions:
+              tap_action: { action: toggle, entity: switch.christmas_lights }
+            modules:
+              - type: icon
+                entity: switch.christmas_lights
+                icon: mdi:window-closed-variant
+                size: 22px
+                design:
+                  color: "#fca5a5"
+                  animations:
+                    - { id: glow, preset: neon-flicker, target: icon, trigger: entity_on, color: "#f87171", intensity: 8 }
+              - type: text
+                text: Windows
+                design: { font_size: 14px, font_weight: "800", color: "#fefce8" }

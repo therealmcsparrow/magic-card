@@ -1,0 +1,33 @@
+# Stacked backdrop: a dot pattern in front of a picture in front of a gradient. The first entry is the front layer.
+# Entities: none
+# gallery: width=400
+type: custom:magic-card
+name: Stacked backdrop
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+background: "#14161c"
+background_layers:
+  - type: pattern
+    pattern: dots
+    color: "rgba(255,255,255,0.22)"
+    size: 14
+    thickness: 2
+  - type: image
+    image: /local/hills.svg
+    size: cover
+    opacity: 55
+  - type: gradient
+    gradient: "linear-gradient(160deg, #1f2a6b 0%, #7a3b8f 55%, #f08a5d 100%)"
+rows:
+  - id: copy
+    padding: 40px 0 70px
+    columns:
+      - gap: 4px
+        modules:
+          - type: text
+            text: Evening mode
+            design: { font_size: 26px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 14px rgba(0,0,0,0.45)" }
+          - type: text
+            text: "A gradient at the back, a picture over it and a pattern on top."
+            design: { font_size: 13px, color: "rgba(255,255,255,0.9)", text_shadow: "0 2px 10px rgba(0,0,0,0.45)" }

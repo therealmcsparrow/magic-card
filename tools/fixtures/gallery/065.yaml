@@ -1,0 +1,199 @@
+# Star chart: a round map with three orbits and a gold home star. People at home drift on the inner orbit, people away wait on the outer one with a pulse.
+# Each dot moves to the inner orbit with a state rule on its own person entity.
+# Entities: person.anna, person.ben, person.lisa
+# gallery: width=400 record=6 stage=linear-gradient(135deg,#050818,#101640)
+type: custom:magic-card
+name: Star chart
+background: "linear-gradient(160deg, #0d1233 0%, #070a1f 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 22px 48px rgba(0,0,10,0.6)"
+rows:
+  - id: head
+    padding: 0 0 12px
+    columns:
+      - modules:
+          - type: text
+            text: Star chart
+            design: { font_size: 12px, font_weight: "700", color: "#aab6e6", text_transform: uppercase, letter_spacing: 2px }
+  - id: chart
+    column_widths: [200px, 1fr]
+    gap: 22px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              position: relative
+              width: 200px
+              height: 200px
+              border_radius: 50%
+              overflow: hidden
+              background: "radial-gradient(circle closest-side, transparent 0 31%, rgba(207,216,255,0.40) 31.5% 32.5%, transparent 33%), radial-gradient(circle closest-side, transparent 0 59%, rgba(207,216,255,0.32) 59.5% 60.5%, transparent 61%), radial-gradient(circle closest-side, transparent 0 79%, rgba(207,216,255,0.30) 79.5% 80.5%, transparent 81%), radial-gradient(circle at 50% 50%, #1a2460 0%, #070b1f 100%)"
+              box_shadow: "0 0 0 2px rgba(207,216,255,0.18), 0 16px 34px rgba(0,0,0,0.5)"
+              animations:
+                - { id: stars, preset: twinkle, color: "#cfd8ff", intensity: 6, duration: 6s }
+            modules:
+              - type: icon
+                icon: mdi:home
+                size: 14px
+                design:
+                  position: absolute
+                  left: 88px
+                  top: 88px
+                  width: 24px
+                  height: 24px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#ffd36e"
+                  color: "#2a1d00"
+                  box_shadow: "0 0 18px rgba(255,211,110,0.7)"
+              - type: text
+                text: A
+                design:
+                  position: absolute
+                  left: 137.4px
+                  top: 24.7px
+                  width: 28px
+                  height: 28px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#6fe3ff"
+                  color: "#0a1030"
+                  font_size: 13px
+                  font_weight: "800"
+                  box_shadow: "0 0 0 3px rgba(7,11,31,0.8)"
+                  animations:
+                    - { id: away, preset: halo-ripple, color: "#6fe3ff", intensity: 8, duration: 3s }
+                  conditional:
+                    - id: home
+                      name: At home
+                      conditions: [{ type: state, entity: person.anna, state: home }]
+                      design:
+                        left: 110.5px
+                        top: 65.4px
+                        animations:
+                          - { id: lap, preset: orbit, intensity: 5, duration: 6s, easing: linear }
+              - type: text
+                text: B
+                design:
+                  position: absolute
+                  left: 16.7px
+                  top: 126px
+                  width: 28px
+                  height: 28px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#ff8fd1"
+                  color: "#0a1030"
+                  font_size: 13px
+                  font_weight: "800"
+                  box_shadow: "0 0 0 3px rgba(7,11,31,0.8)"
+                  animations:
+                    - { id: away, preset: halo-ripple, color: "#ff8fd1", intensity: 8, duration: 3s }
+                  conditional:
+                    - id: home
+                      name: At home
+                      conditions: [{ type: state, entity: person.ben, state: home }]
+                      design:
+                        left: 56px
+                        top: 97px
+                        animations:
+                          - { id: lap, preset: orbit, intensity: 5, duration: 6s, easing: linear }
+              - type: text
+                text: L
+                design:
+                  position: absolute
+                  left: 151.5px
+                  top: 131.9px
+                  width: 28px
+                  height: 28px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#9dff8f"
+                  color: "#0a1030"
+                  font_size: 13px
+                  font_weight: "800"
+                  box_shadow: "0 0 0 3px rgba(7,11,31,0.8)"
+                  animations:
+                    - { id: away, preset: halo-ripple, color: "#9dff8f", intensity: 8, duration: 3s }
+                  conditional:
+                    - id: home
+                      name: At home
+                      conditions: [{ type: state, entity: person.lisa, state: home }]
+                      design:
+                        left: 86px
+                        top: 118px
+                        animations:
+                          - { id: lap, preset: orbit, intensity: 5, duration: 6s, easing: linear }
+      - vertical_align: center
+        gap: 16px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design: { color: "#6fe3ff" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    use_entity: true
+                    entity: person.anna
+                    entity_display: name
+                    design: { font_size: 15px, font_weight: "800", color: "#f1f4ff" }
+                  - type: text
+                    use_entity: true
+                    entity: person.anna
+                    design: { font_size: 12px, color: "#aab6e6" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design: { color: "#ff8fd1" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    use_entity: true
+                    entity: person.ben
+                    entity_display: name
+                    design: { font_size: 15px, font_weight: "800", color: "#f1f4ff" }
+                  - type: text
+                    use_entity: true
+                    entity: person.ben
+                    design: { font_size: 12px, color: "#aab6e6" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 12px
+                design: { color: "#9dff8f" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    use_entity: true
+                    entity: person.lisa
+                    entity_display: name
+                    design: { font_size: 15px, font_weight: "800", color: "#f1f4ff" }
+                  - type: text
+                    use_entity: true
+                    entity: person.lisa
+                    design: { font_size: 12px, color: "#aab6e6" }

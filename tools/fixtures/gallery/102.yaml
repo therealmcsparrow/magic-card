@@ -1,0 +1,100 @@
+# Slider look Big fill: a large rounded fill that carries the entity icon and the value, horizontal and vertical. The brightness ramp follows the light, and live updates the light while you drag.
+# Entities: light.living_room, light.desk
+# gallery: width=420
+type: custom:magic-card
+name: "Big fill"
+background: "#12161f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Big fill"
+            design: { font_size: 17px, font_weight: "700", color: "#e8edf5" }
+          - type: text
+            text: "A large fill with the icon and value in it, in both directions. Updates while you drag."
+            design: { font_size: 12px, color: "#8f9bb0" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Horizontal
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: big-fill
+            fill_mode: auto
+            thumb: none
+            value_position: track
+            live: true
+            slider_color: "#f59e0b"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Horizontal, colour of the lamp"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_style: big-fill
+            use_entity_color: true
+            thumb: none
+            value_position: track
+            live: true
+  - id: vertical
+    padding: 18px 0 0
+    layout: "1-1-1"
+    columns:
+      - gap: 6px
+        modules:
+          - type: text
+            text: Living room
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            direction: vertical
+            design: { css: "--mc-slider-vertical-height: 15rem;" }
+            track_style: big-fill
+            fill_mode: auto
+            thumb: none
+            value_position: track
+            live: true
+            slider_color: "#f59e0b"
+      - gap: 6px
+        modules:
+          - type: text
+            text: Kitchen
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            direction: vertical
+            design: { css: "--mc-slider-vertical-height: 15rem;" }
+            track_style: big-fill
+            fill_mode: auto
+            thumb: none
+            value_position: track
+            live: true
+            slider_color: "#22d3ee"
+      - gap: 6px
+        modules:
+          - type: text
+            text: Desk lamp
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            direction: vertical
+            design: { css: "--mc-slider-vertical-height: 15rem;" }
+            track_style: big-fill
+            fill_mode: auto
+            thumb: none
+            value_position: track
+            live: true
+            slider_color: "#c084fc"

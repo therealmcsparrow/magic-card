@@ -1,0 +1,102 @@
+# Health today: steps toward a goal in a ring, sleep and heart rate.
+# Entities: sensor.steps, sensor.sleep, sensor.heart_rate
+# gallery: width=380
+type: custom:magic-card
+name: Health
+background: "linear-gradient(160deg, #1a0f1f 0%, #0f0a14 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 18px 40px rgba(219, 39, 119, 0.2)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 20px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 128px
+              height: 128px
+              justify_content: center
+              shape: circle
+              background_color: "rgba(255,255,255,0.03)"
+              ring:
+                mode: value
+                entity: sensor.steps
+                min: 0
+                max: 10000
+                width: 12
+                glow: 10
+                color: "#f472b6"
+                track_color: "rgba(244,114,182,0.12)"
+            modules:
+              - type: icon
+                icon: mdi:shoe-print
+                size: 20px
+                design: { color: "#f9a8d4" }
+              - type: text
+                use_entity: true
+                entity: sensor.steps
+                design: { font_size: 22px, font_weight: "800", color: "#fdf2f8" }
+              - type: text
+                text: of 10,000
+                design: { font_size: 11px, color: "#9d6b86" }
+      - vertical_align: center
+        gap: 10px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:sleep
+                size: 20px
+                design:
+                  color: "#a78bfa"
+                  width: 40px
+                  height: 40px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 12px
+                  background_color: "rgba(167,139,250,0.14)"
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Sleep
+                    design: &lab { font_size: 11px, color: "#9d6b86", text_transform: uppercase, letter_spacing: 1px }
+                  - type: text
+                    use_entity: true
+                    entity: sensor.sleep
+                    design: &val { font_size: 18px, font_weight: "800", color: "#fdf2f8" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:heart-pulse
+                size: 20px
+                design:
+                  color: "#fb7185"
+                  width: 40px
+                  height: 40px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 12px
+                  background_color: "rgba(251,113,133,0.14)"
+                  animations: [{ preset: glow-pulse, color: "#fb7185", intensity: 8, duration: 1s }]
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Resting heart rate
+                    design: *lab
+                  - type: text
+                    use_entity: true
+                    entity: sensor.heart_rate
+                    design: *val

@@ -1,0 +1,96 @@
+# Vinyl player: the album art turns like a record while music plays, over a slow aurora, with an equalizer under the title.
+# Entities: media_player.living_room
+# gallery: width=400 record=5 stage=linear-gradient(135deg,#0c0a1d,#1a1033)
+type: custom:magic-card
+name: Vinyl
+background: "#0e0b1c"
+border_radius: 30px
+padding: 22px
+box_shadow: "0 22px 48px rgba(0, 0, 0, 0.6)"
+animations:
+  - { id: aurora, preset: aurora, color: "#8b5cf6", strength: 45 }
+rows:
+  - id: record
+    column_widths: [150px, 1fr]
+    gap: 18px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              width: 150px
+              height: 150px
+              padding: 40px
+              box_sizing: border-box
+              border_radius: 50%
+              background: "repeating-radial-gradient(circle, #111 0px, #111 2px, #1c1c1c 3px, #111 4px)"
+              box_shadow: "0 14px 30px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.06)"
+              animations:
+                - { id: spin, preset: spin, trigger: state, trigger_entity: media_player.living_room, state: playing, duration: 3.6s, easing: linear }
+            modules:
+              - type: image
+                entity: media_player.living_room
+                entity_picture: true
+                aspect_ratio: "1"
+                design:
+                  border_radius: 50%
+                  box_shadow: "0 0 0 4px #0b0b0b"
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            text: Now spinning
+            design: { font_size: 11px, font_weight: "700", color: "#a78bfa", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_title
+            design: { font_size: 21px, font_weight: "800", color: "#ffffff", line_height: "1.15" }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_artist
+            design: { font_size: 14px, color: "#c4b5fd" }
+          - type: separator
+            separator_style: none
+            design:
+              height: 30px
+              margin_top: 8px
+              animations:
+                - { id: eq, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: "#a78bfa", strength: 90, intensity: 8 }
+  - id: controls
+    padding: 16px 10px 0
+    columns:
+      - modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:skip-previous
+                size: 28px
+                design: { color: "#ddd6fe", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_previous_track, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:pause
+                size: 30px
+                design:
+                  color: "#1e1033"
+                  width: 60px
+                  height: 60px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#ffffff"
+                  animations:
+                    - { id: halo, preset: halo-ripple, color: "#a78bfa", strength: 70, intensity: 10 }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:skip-next
+                size: 28px
+                design: { color: "#ddd6fe", padding: 8px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }

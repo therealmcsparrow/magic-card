@@ -1,0 +1,90 @@
+# Up next: the next calendar event as a big date tile with title, time and place.
+# Entities: calendar.family
+# gallery: width=360 stage=linear-gradient(135deg,#fff1eb,#ffe3d8)
+type: custom:magic-card
+name: Up next
+background: "#ffffff"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 14px 34px rgba(234, 88, 12, 0.14)"
+rows:
+  - id: label
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:calendar-clock
+                size: 16px
+                design: { color: "#ea580c" }
+              - type: text
+                text: Up next
+                design: { font_size: 12px, font_weight: "800", color: "#ea580c", text_transform: uppercase, letter_spacing: 1.5px }
+  - id: event
+    column_widths: [76px, 1fr]
+    gap: 14px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              padding: 10px 0
+              border_radius: 18px
+              background: "linear-gradient(160deg, #fb923c, #ea580c)"
+              box_shadow: "0 10px 22px rgba(234,88,12,0.3)"
+            modules:
+              - type: text
+                text: SUN
+                design: { font_size: 11px, font_weight: "800", color: "#ffedd5", letter_spacing: 1.5px }
+              - type: text
+                text: "18"
+                design: { font_size: 32px, font_weight: "800", color: "#ffffff", line_height: "1.05" }
+              - type: text
+                text: OCT
+                design: { font_size: 11px, font_weight: "700", color: "#ffedd5", letter_spacing: 1.5px }
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            use_entity: true
+            entity: calendar.family
+            attribute: message
+            design: { font_size: 19px, font_weight: "800", color: "#1c1917" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:clock-outline
+                size: 15px
+                design: { color: "#a8a29e" }
+              - type: text
+                text: "09:30 – 10:15"
+                design: { font_size: 13px, color: "#57534e" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:map-marker-outline
+                size: 15px
+                design: { color: "#a8a29e" }
+              - type: text
+                use_entity: true
+                entity: calendar.family
+                attribute: location
+                design: { font_size: 13px, color: "#57534e" }
+  - id: footer
+    columns:
+      - modules:
+          - type: text
+            text: "Then: football practice 14:00 · Dinner at grandma's 18:30"
+            design:
+              font_size: 12px
+              color: "#78716c"
+              padding: 10px 12px
+              border_radius: 14px
+              background_color: "#fafaf9"

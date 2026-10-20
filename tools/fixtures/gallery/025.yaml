@@ -1,0 +1,100 @@
+# Room temperatures: one row per room with a colour-coded value pill.
+# Cold rooms show blue, comfortable green, warm orange.
+# Entities: sensor.indoor_temperature, sensor.kitchen_temperature,
+#           sensor.bedroom_temperature, sensor.office_temperature, sensor.bathroom_temperature
+# gallery: width=340
+type: custom:magic-card
+name: Temperatures
+background: "#12151c"
+border_radius: 24px
+padding: 16px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: title
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            design: { padding: 2px 4px 4px }
+            modules:
+              - type: icon
+                icon: mdi:home-thermometer-outline
+                size: 20px
+                design: { color: "#fb923c" }
+              - type: text
+                text: Temperatures
+                design: { font_size: 16px, font_weight: "800", color: "#f1f5f9" }
+  - id: list
+    columns:
+      - gap: 6px
+        modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            design: &row { padding: 10px 12px, border_radius: 14px, background_color: "#1a1e27" }
+            modules:
+              - type: text
+                text: Living room
+                design: &room { font_size: 14px, font_weight: "600", color: "#cbd5e1" }
+              - type: text
+                use_entity: true
+                entity: sensor.indoor_temperature
+                design: &pill
+                  font_size: 13px
+                  font_weight: "800"
+                  padding: 3px 10px
+                  border_radius: 999px
+                  color: "#4ade80"
+                  background_color: "rgba(74,222,128,0.12)"
+                  conditional:
+                    - { id: cold, name: Cold, conditions: [{ type: state, below: 19 }], design: { color: "#60a5fa", background_color: "rgba(96,165,250,0.14)" } }
+                    - { id: warm, name: Warm, conditions: [{ type: state, above: 22.9 }], design: { color: "#fb923c", background_color: "rgba(251,146,60,0.14)" } }
+          - type: horizontal
+            justify: space-between
+            align: center
+            design: *row
+            modules:
+              - type: text
+                text: Kitchen
+                design: *room
+              - type: text
+                use_entity: true
+                entity: sensor.kitchen_temperature
+                design: *pill
+          - type: horizontal
+            justify: space-between
+            align: center
+            design: *row
+            modules:
+              - type: text
+                text: Bedroom
+                design: *room
+              - type: text
+                use_entity: true
+                entity: sensor.bedroom_temperature
+                design: *pill
+          - type: horizontal
+            justify: space-between
+            align: center
+            design: *row
+            modules:
+              - type: text
+                text: Office
+                design: *room
+              - type: text
+                use_entity: true
+                entity: sensor.office_temperature
+                design: *pill
+          - type: horizontal
+            justify: space-between
+            align: center
+            design: *row
+            modules:
+              - type: text
+                text: Bathroom
+                design: *room
+              - type: text
+                use_entity: true
+                entity: sensor.bathroom_temperature
+                design: *pill

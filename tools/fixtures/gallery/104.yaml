@@ -1,0 +1,80 @@
+# Slider track shapes: the track and fill follow a hexagon, a squircle, a wave and a ticket from the shape system.
+# Entities: light.living_room, light.kitchen, light.desk
+# gallery: width=400
+type: custom:magic-card
+name: "Track shapes"
+background: "#12161f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Track shapes"
+            design: { font_size: 17px, font_weight: "700", color: "#e8edf5" }
+          - type: text
+            text: "The track and its fill cut to a shape. The focus ring stays whole."
+            design: { font_size: 12px, color: "#8f9bb0" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Hexagon
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_shape: hexagon
+            track_thickness: 56
+            thumb: none
+            value_position: track
+            slider_color: "#38bdf8"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Squircle
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            track_shape: squircle
+            track_thickness: 56
+            thumb: none
+            value_position: track
+            slider_color: "#a3e635"
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Wave
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_shape: wave
+            track_thickness: 56
+            thumb: none
+            value_position: track
+            slider_color: "#f472b6"
+  - id: s3
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Ticket
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_shape: ticket
+            track_thickness: 56
+            thumb: none
+            value_position: track
+            slider_color: "#fbbf24"

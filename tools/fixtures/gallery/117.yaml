@@ -1,0 +1,82 @@
+# Bedroom at night: the backdrop follows the sun, a moonlit skyline after dark and a day skyline before it, with glass sliders for the bedside lamp and the blinds in front.
+# Entities: sun.sun, light.bedside, cover.living_blinds, sensor.bedroom_temperature
+# gallery: width=400
+type: custom:magic-card
+name: Bedroom
+entity: sun.sun
+background: "#0b1233"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(5,8,25,0.75), rgba(5,8,25,0.05) 70%)"
+  - type: image
+    entity: sun.sun
+    image: /local/skyline-night.svg
+    position: "85% 30%"
+    states:
+      above_horizon: /local/skyline-day.svg
+      below_horizon: /local/skyline-night.svg
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: info
+            entity: sensor.bedroom_temperature
+            show_name: false
+            show_state: true
+            prefix: "Room "
+            placement: overlay
+            layer:
+              anchor: top-left
+              offset_x: 12px
+              offset_y: 12px
+            design:
+              padding: 6px 12px
+              border_radius: 999px
+              background_color: "rgba(0,0,0,0.45)"
+              color: "#dbe2ff"
+              font_size: 12px
+          - type: text
+            text: Good night
+            design: { font_size: 24px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 12px rgba(0,0,0,0.5)", padding_top: 50px }
+          - type: text
+            text: "The sky behind follows the sun."
+            design: { font_size: 12px, color: "rgba(226,232,255,0.92)", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }
+  - id: lamp
+    padding: 84px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: text
+            text: Bedside lamp
+            design: { font_size: 11px, font_weight: "700", color: "rgba(226,232,255,0.85)", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.bedside
+            track_style: glass
+            track_thickness: 30
+            glass_blur: true
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#ffcf8a"
+            live: true
+  - id: blinds
+    padding: 14px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: text
+            text: Blinds
+            design: { font_size: 11px, font_weight: "700", color: "rgba(226,232,255,0.85)", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: cover.living_blinds
+            track_style: glass
+            track_thickness: 30
+            glass_blur: true
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#9db4ff"

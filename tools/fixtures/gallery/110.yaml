@@ -1,0 +1,43 @@
+# An overlay badge: a temperature chip anchored top-right, 12 px from the edges, on top of a picture backdrop. Taps go through it.
+# Entities: sensor.indoor_temperature
+# gallery: width=400
+type: custom:magic-card
+name: Overlay badge
+background: "#14161c"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0))"
+  - type: image
+    image: /local/meadow.svg
+rows:
+  - id: copy
+    columns:
+      - gap: 2px
+        vertical_align: end
+        design: { min_height: 170px }
+        modules:
+          - type: info
+            entity: sensor.indoor_temperature
+            show_name: false
+            show_state: true
+            prefix: "Indoor "
+            placement: overlay
+            layer:
+              anchor: top-right
+              offset_x: 12px
+              offset_y: 12px
+            design:
+              padding: 6px 12px
+              border_radius: 999px
+              background_color: "rgba(0,0,0,0.55)"
+              color: "#ffffff"
+              font_size: 12px
+          - type: text
+            text: Lake house
+            design: { font_size: 22px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 12px rgba(0,0,0,0.5)" }
+          - type: text
+            text: "The badge is a normal module with placement: overlay."
+            design: { font_size: 12px, color: "rgba(255,255,255,0.92)", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }

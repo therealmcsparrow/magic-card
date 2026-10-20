@@ -1,0 +1,194 @@
+# Minstrel hall: a stage with three arched alcoves, one per speaker. Tap an alcove to play or pause that room.
+# A playing alcove glows and shows bouncing bars, a paused one stays dark. The thin bar is the volume.
+# Entities: media_player.kitchen, media_player.living_room, media_player.bedroom
+# gallery: width=420 record=3 stage=linear-gradient(135deg,#1c0910,#3a1020)
+type: custom:magic-card
+name: Minstrel hall
+background: "linear-gradient(170deg, #3a1220 0%, #230a14 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 22px 48px rgba(20,0,10,0.6)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    padding: 0 0 14px
+    columns:
+      - modules:
+          - type: text
+            text: Minstrel hall
+            design: { font_size: 22px, font_weight: "700", color: "#fbeee0", font_family: "Georgia, 'Iowan Old Style', serif" }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:music-clef-treble
+            size: 24px
+            design: { color: "#d9b45a" }
+  - id: alcoves
+    layout: "1-1-1"
+    gap: 12px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 200px
+              padding: 16px 8px 14px
+              box_sizing: border-box
+              border_radius: 70px 70px 14px 14px
+              border: "2px solid #d9b45a"
+              overflow: hidden
+              background: "linear-gradient(90deg, #7a1f2e 0%, #5b1623 16%, #2a0f18 30%, #2a0f18 70%, #5b1623 84%, #7a1f2e 100%)"
+              conditional:
+                - id: playing
+                  name: Playing
+                  conditions: [{ type: state, entity: media_player.kitchen, state: playing }]
+                  design: { box_shadow: "0 0 18px rgba(217,180,90,0.35)" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.kitchen } }
+              hold_action: { action: more-info, entity: media_player.kitchen }
+            modules:
+              - type: icon
+                entity: media_player.kitchen
+                icon: mdi:music-note-off
+                icon_on: mdi:music-note
+                icon_off: mdi:music-note-off
+                size: 22px
+                design: { color: "#2a0f18", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#d9b45a" }
+              - type: text
+                text: Kitchen
+                design: { text_align: center, font_size: 15px, font_weight: "700", color: "#fbeee0", margin_top: 12px, font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: text
+                use_entity: true
+                entity: media_player.kitchen
+                design: { text_align: center, font_size: 11px, font_weight: "700", color: "#f0d9a8", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: bar
+                entity: media_player.kitchen
+                attribute: volume_level
+                min: 0
+                max: 1
+                bar_height: 6px
+                show_value: false
+                bar_color: "#d9b45a"
+                bar_background: "rgba(251,238,224,0.25)"
+                design: { width: 70%, margin: 12px auto 0 }
+              - type: separator
+                separator_style: none
+                design:
+                  position: relative
+                  left: 5px
+                  width: 100%
+                  height: 52px
+                  margin_top: 10px
+                  animations:
+                    - { id: bars, preset: equalizer-bars, trigger: state, trigger_entity: media_player.kitchen, state: playing, color: "#d9b45a", strength: 90, intensity: 5, duration: 1.5s }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 200px
+              padding: 16px 8px 14px
+              box_sizing: border-box
+              border_radius: 70px 70px 14px 14px
+              border: "2px solid #d9b45a"
+              overflow: hidden
+              background: "linear-gradient(90deg, #7a1f2e 0%, #5b1623 16%, #2a0f18 30%, #2a0f18 70%, #5b1623 84%, #7a1f2e 100%)"
+              conditional:
+                - id: playing
+                  name: Playing
+                  conditions: [{ type: state, entity: media_player.living_room, state: playing }]
+                  design: { box_shadow: "0 0 18px rgba(217,180,90,0.35)" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.living_room } }
+              hold_action: { action: more-info, entity: media_player.living_room }
+            modules:
+              - type: icon
+                entity: media_player.living_room
+                icon: mdi:music-note-off
+                icon_on: mdi:music-note
+                icon_off: mdi:music-note-off
+                size: 22px
+                design: { color: "#2a0f18", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#d9b45a" }
+              - type: text
+                text: Living room
+                design: { text_align: center, font_size: 15px, font_weight: "700", color: "#fbeee0", margin_top: 12px, font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: text
+                use_entity: true
+                entity: media_player.living_room
+                design: { text_align: center, font_size: 11px, font_weight: "700", color: "#f0d9a8", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: bar
+                entity: media_player.living_room
+                attribute: volume_level
+                min: 0
+                max: 1
+                bar_height: 6px
+                show_value: false
+                bar_color: "#d9b45a"
+                bar_background: "rgba(251,238,224,0.25)"
+                design: { width: 70%, margin: 12px auto 0 }
+              - type: separator
+                separator_style: none
+                design:
+                  position: relative
+                  left: 5px
+                  width: 100%
+                  height: 52px
+                  margin_top: 10px
+                  animations:
+                    - { id: bars, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: "#d9b45a", strength: 90, intensity: 5, duration: 1.5s, delay: -0.7s }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 200px
+              padding: 16px 8px 14px
+              box_sizing: border-box
+              border_radius: 70px 70px 14px 14px
+              border: "2px solid #d9b45a"
+              overflow: hidden
+              background: "linear-gradient(90deg, #7a1f2e 0%, #5b1623 16%, #2a0f18 30%, #2a0f18 70%, #5b1623 84%, #7a1f2e 100%)"
+              conditional:
+                - id: playing
+                  name: Playing
+                  conditions: [{ type: state, entity: media_player.bedroom, state: playing }]
+                  design: { box_shadow: "0 0 18px rgba(217,180,90,0.35)" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.bedroom } }
+              hold_action: { action: more-info, entity: media_player.bedroom }
+            modules:
+              - type: icon
+                entity: media_player.bedroom
+                icon: mdi:music-note-off
+                icon_on: mdi:music-note
+                icon_off: mdi:music-note-off
+                size: 22px
+                design: { color: "#2a0f18", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, background_color: "#d9b45a" }
+              - type: text
+                text: Bedroom
+                design: { text_align: center, font_size: 15px, font_weight: "700", color: "#fbeee0", margin_top: 12px, font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: text
+                use_entity: true
+                entity: media_player.bedroom
+                design: { text_align: center, font_size: 11px, font_weight: "700", color: "#f0d9a8", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: bar
+                entity: media_player.bedroom
+                attribute: volume_level
+                min: 0
+                max: 1
+                bar_height: 6px
+                show_value: false
+                bar_color: "#d9b45a"
+                bar_background: "rgba(251,238,224,0.25)"
+                design: { width: 70%, margin: 12px auto 0 }
+              - type: separator
+                separator_style: none
+                design:
+                  position: relative
+                  left: 5px
+                  width: 100%
+                  height: 52px
+                  margin_top: 10px
+                  animations:
+                    - { id: bars, preset: equalizer-bars, trigger: state, trigger_entity: media_player.bedroom, state: playing, color: "#d9b45a", strength: 90, intensity: 5, duration: 1.5s }

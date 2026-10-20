@@ -1,0 +1,93 @@
+# Reactor bay: neon flows with a glow and a flicker link the solar array, the core and the cell bank, and a hexagon Big fill slider sets the output limit. A grid pattern over a deep gradient sits behind it all.
+# Entities: sensor.solar_power, sensor.house_power, sensor.battery_power, light.living_room
+# gallery: width=400 record=5 stage=linear-gradient(135deg,#05080f,#0f1a2b)
+type: custom:magic-card
+name: Reactor bay
+background: "#070b14"
+border_radius: 26px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: grid
+    color: "rgba(80,220,255,0.08)"
+    size: 28
+    thickness: 1
+  - type: gradient
+    gradient: "radial-gradient(circle at 70% 20%, rgba(255,47,214,0.22), rgba(7,11,20,0) 60%)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Reactor bay
+            design: { font_size: 12px, font_weight: "700", color: "#7dd3fc", text_transform: uppercase, letter_spacing: 2.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+          - type: text
+            text: "Core stable, output within limits"
+            design: { font_size: 12px, color: "#7b8aa3" }
+      - vertical_align: start
+        modules:
+          - type: icon
+            icon: mdi:atom
+            size: 22px
+            design: { color: "#ff2fd6" }
+  - id: top
+    column_widths: [56px, 1fr, 56px]
+    padding: 22px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:solar-power-variant
+            size: 26px
+            design: { color: "#fbbf24", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 16px, border: "2px solid #fbbf24", background_color: "rgba(251,191,36,0.1)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:atom-variant
+            size: 26px
+            design: { color: "#ff2fd6", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 16px, border: "2px solid #ff2fd6", background_color: "rgba(255,47,214,0.1)" }
+  - id: middle
+    column_widths: [1fr, 56px, 1fr]
+    padding: 12px 0 0
+    columns:
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:battery-charging-high
+            size: 26px
+            design: { color: "#22d3ee", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 16px, border: "2px solid #22d3ee", background_color: "rgba(34,211,238,0.1)" }
+      - modules: []
+  - id: limit
+    padding: 22px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Output limit
+            design: { font_size: 11px, font_weight: "700", color: "#7b8aa3", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: slider
+            entity: light.living_room
+            track_shape: hexagon
+            track_style: big-fill
+            track_thickness: 60
+            thumb: none
+            value_position: track
+            live: true
+            icon: mdi:flash
+            fill_mode: gradient
+            slider_color: "#22d3ee"
+            slider_color_to: "#ff2fd6"
+            track_color: "rgba(255,255,255,0.06)"
+flows:
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#fbbf24", color_to: "#ff2fd6", line_style: neon, width: 3, glow: 10, flicker: subtle, neon_core: "#fff1c2", end_cap: arrow, shape: spark, dots: 3, dot_size: 9 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 5000, route: elbow, from_side: bottom, to_side: right, color: "#ff2fd6", color_to: "#22d3ee", line_style: neon, width: 3, glow: 10, flicker: strong, end_cap: round, shape: dot, dots: 3 }
+  - { id: c-a, from: c, to: a, from_anchor: box, to_anchor: box, entity: sensor.battery_power, max: 3000, route: elbow, from_side: left, to_side: bottom, color: "#22d3ee", color_to: "#fbbf24", line_style: neon, width: 3, glow: 8, flicker: subtle, end_cap: arrow, arrival: ring, arrival_size: 36 }

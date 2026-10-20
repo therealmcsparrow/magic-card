@@ -1,0 +1,68 @@
+# Slider look Minimal: a thin track with a round handle and the value beside it, in three colours.
+# Entities: light.living_room, light.kitchen, light.desk
+# gallery: width=400
+type: custom:magic-card
+name: Minimal
+background: "#12161f"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Minimal
+            design: { font_size: 17px, font_weight: "700", color: "#e8edf5" }
+          - type: text
+            text: "A thin line, a round handle and the value beside it."
+            design: { font_size: 12px, color: "#8f9bb0" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Living room"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: thin
+            track_thickness: 4
+            thumb: circle
+            thumb_size: 16
+            value_position: beside
+            slider_color: "#38bdf8"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Kitchen
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.kitchen
+            track_style: thin
+            track_thickness: 4
+            thumb: circle
+            thumb_size: 16
+            value_position: beside
+            slider_color: "#a3e635"
+  - id: s2
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Desk lamp"
+            design: { font_size: 11px, font_weight: "700", color: "#8f9bb0", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.desk
+            track_style: thin
+            track_thickness: 4
+            thumb: circle
+            thumb_size: 16
+            value_position: beside
+            slider_color: "#f472b6"

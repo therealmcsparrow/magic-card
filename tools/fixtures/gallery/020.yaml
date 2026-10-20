@@ -1,0 +1,107 @@
+# Electric car: charge level as a glowing ring, range, charging power (only while
+# charging) and a glowing charge bar.
+# Entities: sensor.car_battery, sensor.car_range, sensor.car_charge_power,
+#           binary_sensor.car_charging, switch.car_charger
+# gallery: width=400
+type: custom:magic-card
+name: Car
+background: "radial-gradient(120% 100% at 0% 0%, #10243a 0%, #0a1220 60%, #070c16 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 44px rgba(14, 165, 233, 0.18)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 20px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 120px
+              height: 120px
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle at 50% 35%, #12304d 0%, #0b1626 75%)"
+              ring:
+                mode: value
+                entity: sensor.car_battery
+                width: 9
+                glow: 12
+                color: "#38bdf8"
+                track_color: "rgba(56,189,248,0.1)"
+            modules:
+              - type: icon
+                icon: mdi:car-electric
+                size: 26px
+                design: { color: "#7dd3fc" }
+              - type: text
+                use_entity: true
+                entity: sensor.car_battery
+                design: { font_size: 24px, font_weight: "800", color: "#f0f9ff" }
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            text: Model 3
+            design: { font_size: 20px, font_weight: "800", color: "#f0f9ff" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:map-marker-distance
+                size: 16px
+                design: { color: "#7dd3fc" }
+              - type: text
+                use_entity: true
+                entity: sensor.car_range
+                design: { font_size: 14px, font_weight: "700", color: "#bae6fd" }
+              - type: text
+                text: range
+                design: { font_size: 13px, color: "#64809b" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            display:
+              conditions: [{ type: state, entity: binary_sensor.car_charging, state: "on" }]
+            modules:
+              - type: icon
+                icon: mdi:ev-station
+                size: 16px
+                design: { color: "#4ade80" }
+              - type: text
+                use_entity: true
+                entity: sensor.car_charge_power
+                design: { font_size: 14px, font_weight: "700", color: "#4ade80" }
+              - type: text
+                text: · full at 23:10
+                design: { font_size: 13px, color: "#64809b" }
+  - id: bar
+    padding: 4px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: bar
+            entity: sensor.car_battery
+            show_value: false
+            bar_height: 12px
+            bar_color: "#38bdf8"
+            bar_background: "rgba(255,255,255,0.06)"
+            design:
+              border_radius: 999px
+              filter: "drop-shadow(0 0 8px rgba(56,189,248,0.45))"
+          - type: horizontal
+            justify: space-between
+            modules:
+              - type: text
+                text: "0%"
+                design: &tick { font_size: 11px, color: "#475a70" }
+              - type: text
+                text: "Charging to 90%"
+                design: { font_size: 11px, color: "#7dd3fc", font_weight: "600" }
+              - type: text
+                text: "100%"
+                design: *tick

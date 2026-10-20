@@ -1,0 +1,108 @@
+# Solar house: a sunny sky with turning rays over the panels, and dashed power lines with live values running to the house, the battery and the grid.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power, sensor.battery_power, sensor.home_battery
+# gallery: width=420 record=5 stage=linear-gradient(135deg,#e0f2fe,#fef9c3)
+type: custom:magic-card
+name: Solar house
+background: "#ffffff"
+border_radius: 28px
+padding: 0px
+box_shadow: "0 16px 38px rgba(30, 64, 175, 0.16)"
+rows:
+  - id: sky
+    padding: 18px 20px 28px
+    design:
+      background: "linear-gradient(180deg, #7dd3fc 0%, #bae6fd 70%, #e0f2fe 100%)"
+      animations:
+        - { id: rays, preset: sun-rays, color: "#fde047", strength: 55, intensity: 7 }
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Making power
+            design: { font_size: 13px, font_weight: "700", color: "#075985" }
+          - type: text
+            use_entity: true
+            entity: sensor.solar_power
+            design: { font_size: 34px, font_weight: "800", color: "#0c4a6e", letter_spacing: -1px }
+      - vertical_align: center
+        modules:
+          - id: solar
+            type: icon
+            icon: mdi:solar-panel-large
+            size: 34px
+            design:
+              color: "#1e3a8a"
+              width: 70px
+              height: 70px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 22px
+              background: "linear-gradient(140deg, #ffffff, #dbeafe)"
+              box_shadow: "0 10px 24px rgba(30,64,175,0.25)"
+              animations:
+                - { id: shine, preset: shine-sweep, strength: 80, intensity: 70, duration: 2.6s }
+  - id: house
+    layout: "1-1-1"
+    gap: 34px
+    padding: 34px 18px 20px
+    columns:
+      - modules:
+          - id: grid
+            type: vertical
+            align: center
+            gap: 4px
+            design: &node
+              padding: 12px 6px
+              border_radius: 20px
+              background_color: "#f1f5f9"
+            modules:
+              - type: icon
+                icon: mdi:transmission-tower-export
+                size: 26px
+                design: { color: "#0ea5e9" }
+              - type: text
+                text: Grid
+                design: &cap { font_size: 11px, font_weight: "700", color: "#64748b", text_transform: uppercase, letter_spacing: 1px }
+      - modules:
+          - id: house
+            type: vertical
+            align: center
+            gap: 4px
+            design:
+              padding: 12px 6px
+              border_radius: 20px
+              background: "linear-gradient(160deg, #dcfce7, #bbf7d0)"
+            modules:
+              - type: icon
+                icon: mdi:home-lightning-bolt
+                size: 26px
+                design: { color: "#15803d" }
+              - type: text
+                use_entity: true
+                entity: sensor.house_power
+                design: { font_size: 13px, font_weight: "800", color: "#14532d" }
+      - modules:
+          - id: battery
+            type: vertical
+            align: center
+            gap: 4px
+            design: *node
+            modules:
+              - type: icon
+                entity: sensor.home_battery
+                icon: mdi:battery
+                size: 26px
+                icon_fx:
+                  fill: { color: "#8b5cf6", empty_color: 25% }
+                design: { color: "#8b5cf6" }
+              - type: text
+                use_entity: true
+                entity: sensor.home_battery
+                design: { font_size: 13px, font_weight: "800", color: "#4c1d95" }
+flows:
+  - { id: sun-house, from: solar, to: house, entity: sensor.solar_power, max: 5000, color: "#f59e0b", width: 3, dots: 0, route: elbow, layer: front, from_side: bottom, to_side: top, label: value, label_position: side }
+  - { id: house-grid, from: house, to: grid, entity: sensor.grid_power, max: 5000, color: "#0ea5e9", width: 3, dots: 3, dot_size: 7, glow: 4 }
+  - { id: house-battery, from: house, to: battery, entity: sensor.battery_power, max: 3000, color: "#8b5cf6", width: 3, dots: 3, dot_size: 7, glow: 4 }

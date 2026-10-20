@@ -1,0 +1,64 @@
+# Hot water boiler: tank temperature as a vertical fill with a heat shimmer,
+# set point, mode and a 24-hour sparkline.
+# Entities: water_heater.boiler, sensor.boiler_temperature
+# gallery: width=360
+type: custom:magic-card
+name: Boiler
+background: "linear-gradient(160deg, #26140f 0%, #160c09 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: main
+    column_widths: [70px, 1fr]
+    gap: 18px
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:fire
+            size: 24px
+            design:
+              color: "#fff7ed"
+              height: 140px
+              display: flex
+              align_items: flex-end
+              justify_content: center
+              padding_bottom: 12px
+              border_radius: 35px
+              background_color: "rgba(255,255,255,0.05)"
+              border: "1px solid rgba(251,146,60,0.25)"
+              value_background:
+                type: fill
+                entity: sensor.boiler_temperature
+                min: 20
+                max: 75
+                color: "#f97316"
+                opacity: 85%
+                wave: true
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Hot water
+            design: { font_size: 13px, font_weight: "700", color: "#fdba74" }
+          - type: text
+            use_entity: true
+            entity: sensor.boiler_temperature
+            design: { font_size: 44px, font_weight: "800", color: "#fff7ed", letter_spacing: -1px, line_height: "1.05" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            modules:
+              - type: text
+                text: Eco
+                design: { font_size: 12px, font_weight: "800", color: "#1c0d06", padding: 2px 10px, border_radius: 999px, background_color: "#fdba74" }
+              - type: text
+                text: "Set 60°C"
+                design: { font_size: 13px, color: "#c2a491" }
+          - type: horizontal
+            design:
+              height: 46px
+              margin_top: 10px
+              border_radius: 12px
+              value_background: { type: sparkline, entity: sensor.boiler_temperature, color: "#fb923c", opacity: 20%, line_width: 2 }
+            modules: []

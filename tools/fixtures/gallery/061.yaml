@@ -1,0 +1,136 @@
+# Reactor core: a tall capsule of lit cells shows the battery charge, with the solar and house power on either side.
+# The cells are teal and sweep while charging, amber while draining and red under 15 %.
+# Entities: sensor.home_battery, sensor.battery_power, sensor.solar_power, sensor.house_power
+# gallery: width=380 record=4 stage=linear-gradient(135deg,#0b0e13,#161c25)
+type: custom:magic-card
+name: Reactor core
+background: "#0e1116"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - modules:
+          - type: text
+            text: Reactor core
+            design: { font_size: 12px, font_weight: "700", color: "#8d99a6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+      - modules:
+          - type: text
+            use_entity: true
+            entity: sensor.home_battery
+            design: { font_size: 12px, font_weight: "700", color: "#c8d0d8", font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+  - id: core
+    column_widths: [1fr, 120px, 1fr]
+    gap: 14px
+    padding: 12px 0 8px
+    columns:
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: icon
+            icon: mdi:white-balance-sunny
+            size: 24px
+            design: { color: "#ffb020", width: 48px, height: 48px, display: flex, align_items: center, justify_content: center, border_radius: 14px, background_color: "rgba(255,176,32,0.12)" }
+          - type: text
+            use_entity: true
+            entity: sensor.solar_power
+            design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
+          - type: text
+            text: Solar
+            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              height: 240px
+              position: relative
+              overflow: hidden
+              border_radius: 30px
+              border: "2px solid #2a323c"
+              background_color: "#151a21"
+              value_background:
+                type: fill
+                entity: sensor.home_battery
+                color: "#ffb020"
+                opacity: 85%
+                wave: false
+              animations:
+                - { id: glow, preset: glow-pulse, color: "#ffb020", strength: 35, intensity: 14, duration: 4s }
+              conditional:
+                - id: charging
+                  name: Charging
+                  conditions: [{ type: state, entity: sensor.battery_power, above: 0 }]
+                  design:
+                    value_background: { type: fill, entity: sensor.home_battery, color: "#2ee6c4", opacity: 85%, wave: false }
+                    animations:
+                      - { id: sweep, preset: scanline, color: "#d9fff7", strength: 70, intensity: 45, duration: 4s, direction: reverse }
+                      - { id: glow, preset: glow-pulse, color: "#2ee6c4", strength: 45, intensity: 16, duration: 4s }
+                - id: low
+                  name: Under 15 %
+                  conditions: [{ type: state, entity: sensor.home_battery, below: 15 }]
+                  design:
+                    value_background: { type: fill, entity: sensor.home_battery, color: "#ff5a5a", opacity: 85%, wave: false }
+                    animations:
+                      - { id: glow, preset: glow-pulse, color: "#ff5a5a", strength: 50, intensity: 16, duration: 2s }
+            modules:
+              - type: separator
+                separator_style: none
+                design:
+                  position: absolute
+                  inset: 0
+                  background: "repeating-linear-gradient(180deg, transparent 0px, transparent 20px, #0e1116 20px, #0e1116 24px)"
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: icon
+            icon: mdi:home-lightning-bolt-outline
+            size: 24px
+            design: { color: "#4dd8ff", width: 48px, height: 48px, display: flex, align_items: center, justify_content: center, border_radius: 14px, background_color: "rgba(77,216,255,0.12)" }
+          - type: text
+            use_entity: true
+            entity: sensor.house_power
+            design: { font_size: 20px, font_weight: "800", color: "#f3f6f9", margin_top: 6px }
+          - type: text
+            text: House
+            design: { font_size: 11px, color: "#8d99a6", text_transform: uppercase, letter_spacing: 1.5px }
+  - id: status
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 10px
+              border_radius: 14px
+              background_color: "rgba(255,176,32,0.12)"
+              conditional:
+                - id: charging
+                  name: Charging
+                  conditions: [{ type: state, entity: sensor.battery_power, above: 0 }]
+                  design: { background_color: "rgba(46,230,196,0.12)" }
+            modules:
+              - type: icon
+                icon: mdi:battery-arrow-down
+                size: 18px
+                design: { color: "#ffb020" }
+                display: { conditions: [{ type: state, entity: sensor.battery_power, below: 1 }] }
+              - type: icon
+                icon: mdi:battery-charging
+                size: 18px
+                design: { color: "#2ee6c4" }
+                display: { conditions: [{ type: state, entity: sensor.battery_power, above: 0 }] }
+              - type: text
+                text: Charging
+                design: { font_size: 13px, font_weight: "700", color: "#2ee6c4", letter_spacing: 0.5px }
+                display: { conditions: [{ type: state, entity: sensor.battery_power, above: 0 }] }
+              - type: text
+                text: Draining
+                design: { font_size: 13px, font_weight: "700", color: "#ffb020", letter_spacing: 0.5px }
+                display: { conditions: [{ type: state, entity: sensor.battery_power, below: 1 }] }
+              - type: text
+                use_entity: true
+                entity: sensor.battery_power
+                design: { font_size: 13px, color: "#c8d0d8" }

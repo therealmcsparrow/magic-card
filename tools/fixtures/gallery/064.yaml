@@ -1,0 +1,192 @@
+# Airlock: a round hatch for the front door lock. Tap the hatch only while the door is unlocked to lock it. In any other state, a tap opens the lock's own dialog, so unlocking is a second, deliberate step. Hold the hatch for the lock's details. Two lamps show the latch and the door contact.
+# The hatch is two tiles that look the same, and the lock state decides which one shows. Replace the two entities with your own lock and door sensor.
+# Entities: lock.front_door, binary_sensor.front_door
+# gallery: width=340 stage=linear-gradient(135deg,#10151a,#1e262e)
+type: custom:magic-card
+name: Airlock
+background: "#1b2128"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+rows:
+  - id: caption
+    column_widths: [1fr, auto]
+    columns:
+      - modules:
+          - type: text
+            text: Outer door
+            design: { font_size: 12px, font_weight: "700", color: "#9aa5b1", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+      - modules:
+          - type: text
+            use_entity: true
+            entity: lock.front_door
+            design: { font_size: 12px, font_weight: "700", color: "#3ddc84", text_transform: uppercase, letter_spacing: 1.5px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+  - id: hatch
+    padding: 14px 0 6px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 220px
+              height: 220px
+              margin: 0 auto
+              padding: 35px
+              box_sizing: border-box
+              border_radius: 50%
+              background: "radial-gradient(circle closest-side, #aab4bf 0 76%, transparent 76%), repeating-conic-gradient(from 22.5deg, #2a313a 0deg 7deg, #8e99a5 7deg 45deg)"
+              box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
+              transition: transform 0.15s
+              hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state: unlocked }] }
+            actions:
+              tap_action: { action: perform-action, service: lock.lock, data: { entity_id: lock.front_door } }
+              hold_action: { action: more-info, entity: lock.front_door }
+            modules:
+              - type: vertical
+                align: center
+                justify: center
+                gap: 0px
+                design:
+                  width: 150px
+                  height: 150px
+                  padding: 33px
+                  box_sizing: border-box
+                  border_radius: 50%
+                  background: "conic-gradient(from 20deg, #c9d1d9, #7d8793, #c9d1d9, #6d7782, #c9d1d9, #7d8793, #c9d1d9)"
+                  box_shadow: "inset 0 0 0 5px #5c6671, inset 0 0 0 7px rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.4)"
+                modules:
+                  - type: icon
+                    entity: lock.front_door
+                    icon: mdi:lock
+                    icon_on: mdi:lock
+                    icon_off: mdi:lock-open-variant
+                    size: 56px
+                    design:
+                      color: "#1b2128"
+                      width: 84px
+                      height: 84px
+                      display: flex
+                      align_items: center
+                      justify_content: center
+                      border_radius: 50%
+                      background: "radial-gradient(circle, #e1e7ed 0%, #aab4bf 100%)"
+                      box_shadow: "inset 0 2px 6px rgba(0,0,0,0.3)"
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 220px
+              height: 220px
+              margin: 0 auto
+              padding: 35px
+              box_sizing: border-box
+              border_radius: 50%
+              background: "radial-gradient(circle closest-side, #aab4bf 0 76%, transparent 76%), repeating-conic-gradient(from 22.5deg, #2a313a 0deg 7deg, #8e99a5 7deg 45deg)"
+              box_shadow: "0 18px 34px rgba(0,0,0,0.55), inset 0 0 0 2px rgba(255,255,255,0.08)"
+              transition: transform 0.15s
+              hover: { transform: scale(1.01) }
+            display: { conditions: [{ type: state, entity: lock.front_door, state_not: unlocked }] }
+            actions:
+              tap_action: { action: more-info, entity: lock.front_door }
+              hold_action: { action: more-info, entity: lock.front_door }
+            modules:
+              - type: vertical
+                align: center
+                justify: center
+                gap: 0px
+                design:
+                  width: 150px
+                  height: 150px
+                  padding: 33px
+                  box_sizing: border-box
+                  border_radius: 50%
+                  background: "conic-gradient(from 20deg, #c9d1d9, #7d8793, #c9d1d9, #6d7782, #c9d1d9, #7d8793, #c9d1d9)"
+                  box_shadow: "inset 0 0 0 5px #5c6671, inset 0 0 0 7px rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.4)"
+                modules:
+                  - type: icon
+                    entity: lock.front_door
+                    icon: mdi:lock
+                    icon_on: mdi:lock
+                    icon_off: mdi:lock-open-variant
+                    size: 56px
+                    design:
+                      color: "#1b2128"
+                      width: 84px
+                      height: 84px
+                      display: flex
+                      align_items: center
+                      justify_content: center
+                      border_radius: 50%
+                      background: "radial-gradient(circle, #e1e7ed 0%, #aab4bf 100%)"
+                      box_shadow: "inset 0 2px 6px rgba(0,0,0,0.3)"
+  - id: lamps
+    layout: "1-1"
+    gap: 10px
+    padding: 12px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 12px 14px
+              border_radius: 14px
+              background_color: "#141a20"
+              border: "1px solid #2a323c"
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 14px
+                design:
+                  color: "#3ddc84"
+                  conditional:
+                    - { id: open, name: Unlocked, conditions: [{ type: state, entity: lock.front_door, state: unlocked }], design: { color: "#ffb020" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Latch
+                    design: { font_size: 11px, color: "#9aa5b1", text_transform: uppercase, letter_spacing: 1.2px }
+                  - type: text
+                    text: Sealed
+                    design: { font_size: 15px, font_weight: "800", color: "#e6ebf0" }
+                    display: { conditions: [{ type: state, entity: lock.front_door, state: locked }] }
+                  - type: text
+                    text: Open
+                    design: { font_size: 15px, font_weight: "800", color: "#ffb020" }
+                    display: { conditions: [{ type: state, entity: lock.front_door, state_not: locked }] }
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 12px 14px
+              border_radius: 14px
+              background_color: "#141a20"
+              border: "1px solid #2a323c"
+            modules:
+              - type: icon
+                icon: mdi:circle
+                size: 14px
+                design:
+                  color: "#3ddc84"
+                  conditional:
+                    - { id: open, name: Door open, conditions: [{ type: state, entity: binary_sensor.front_door, state: "on" }], design: { color: "#ff5a5a" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Door
+                    design: { font_size: 11px, color: "#9aa5b1", text_transform: uppercase, letter_spacing: 1.2px }
+                  - type: text
+                    text: Closed
+                    design: { font_size: 15px, font_weight: "800", color: "#e6ebf0" }
+                    display: { conditions: [{ type: state, entity: binary_sensor.front_door, state: "off" }] }
+                  - type: text
+                    text: Open
+                    design: { font_size: 15px, font_weight: "800", color: "#ff8a8a" }
+                    display: { conditions: [{ type: state, entity: binary_sensor.front_door, state: "on" }] }

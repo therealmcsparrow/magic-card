@@ -1,0 +1,123 @@
+# Fan: a spinning fan icon (faster at higher speeds) with three speed pills.
+# The active speed is highlighted.
+# Entities: fan.bedroom
+# gallery: width=360 stage=linear-gradient(135deg,#e6f6f8,#d4ecf1)
+type: custom:magic-card
+name: Bedroom fan
+background: "linear-gradient(165deg, #ffffff 0%, #effafb 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 14px 34px rgba(8, 145, 178, 0.16)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr, auto]
+    gap: 14px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: fan.bedroom
+            icon: mdi:fan
+            size: 40px
+            icon_fx:
+              device: spin
+            design:
+              color: "#0891b2"
+              width: 72px
+              height: 72px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle, #cffafe 0%, #a5f3fc 100%)"
+            actions:
+              tap_action: { action: toggle }
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Bedroom fan
+            design: { font_size: 17px, font_weight: "800", color: "#083344" }
+          - type: text
+            use_entity: true
+            entity: fan.bedroom
+            attribute: percentage
+            design: { font_size: 13px, font_weight: "600", color: "#0e7490" }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:power
+            size: 20px
+            design:
+              color: "#ffffff"
+              width: 40px
+              height: 40px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background_color: "#0891b2"
+              box_shadow: "0 6px 14px rgba(8,145,178,0.4)"
+            actions:
+              tap_action: { action: toggle, entity: fan.bedroom }
+  - id: speeds
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: text
+            text: Low
+            design: &speed
+              text_align: center
+              font_size: 13px
+              font_weight: "700"
+              padding: 10px
+              border_radius: 14px
+              color: "#0e7490"
+              background_color: "#ecfeff"
+              border: "1px solid #cffafe"
+              conditional:
+                - id: active
+                  name: Active
+                  conditions: [{ type: attribute, entity: fan.bedroom, attribute: percentage, above: 0, below: 34 }]
+                  design: { color: "#ffffff", background_color: "#0891b2", border: "1px solid #0891b2" }
+            actions:
+              tap_action: { action: perform-action, service: fan.set_percentage, data: { entity_id: fan.bedroom, percentage: 33 } }
+      - modules:
+          - type: text
+            text: Medium
+            design:
+              text_align: center
+              font_size: 13px
+              font_weight: "700"
+              padding: 10px
+              border_radius: 14px
+              color: "#0e7490"
+              background_color: "#ecfeff"
+              border: "1px solid #cffafe"
+              conditional:
+                - id: active
+                  name: Active
+                  conditions: [{ type: attribute, entity: fan.bedroom, attribute: percentage, above: 33, below: 67 }]
+                  design: { color: "#ffffff", background_color: "#0891b2", border: "1px solid #0891b2", box_shadow: "0 6px 14px rgba(8,145,178,0.35)" }
+            actions:
+              tap_action: { action: perform-action, service: fan.set_percentage, data: { entity_id: fan.bedroom, percentage: 66 } }
+      - modules:
+          - type: text
+            text: High
+            design:
+              text_align: center
+              font_size: 13px
+              font_weight: "700"
+              padding: 10px
+              border_radius: 14px
+              color: "#0e7490"
+              background_color: "#ecfeff"
+              border: "1px solid #cffafe"
+              conditional:
+                - id: active
+                  name: Active
+                  conditions: [{ type: attribute, entity: fan.bedroom, attribute: percentage, above: 66 }]
+                  design: { color: "#ffffff", background_color: "#0891b2", border: "1px solid #0891b2" }
+            actions:
+              tap_action: { action: perform-action, service: fan.set_percentage, data: { entity_id: fan.bedroom, percentage: 100 } }

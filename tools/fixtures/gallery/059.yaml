@@ -1,0 +1,86 @@
+# Halloween porch: the Halloween scene with bats, fog, a cobweb and a pumpkin, a flickering jack-o'-lantern, and switches for the porch light and the fog machine.
+# `seasonal: halloween` keeps the scene all year. Use `seasonal: auto` to show it only from 24 to 31 October.
+# Entities: light.porch, switch.fog_machine
+# gallery: width=380 record=6 stage=linear-gradient(135deg,#0c0a09,#1c1917)
+type: custom:magic-card
+name: Halloween
+background: "linear-gradient(170deg, #1f1033 0%, #0c0614 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 48px rgba(234, 88, 12, 0.25)"
+seasonal:
+  scene: halloween
+  intensity: 80%
+rows:
+  - id: head
+    column_widths: [auto, 1fr]
+    gap: 16px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:halloween
+            size: 52px
+            design:
+              color: "#fb923c"
+              filter: "drop-shadow(0 0 16px rgba(251,146,60,0.75))"
+              animations:
+                - { id: flicker, preset: flame-flicker, target: icon, intensity: 14 }
+                - { id: bob, preset: float, target: icon, intensity: 4, duration: 2.6s }
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Trick or treat
+            design: { font_size: 24px, font_weight: "900", color: "#fed7aa", letter_spacing: 0.5px }
+          - type: text
+            text: Halloween in 14 days
+            design: { font_size: 13px, color: "#c4b5fd" }
+  - id: switches
+    layout: "1-1"
+    gap: 10px
+    padding: 34px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: &tile
+              padding: 12px
+              border_radius: 18px
+              background_color: "rgba(251,146,60,0.12)"
+              border: "1px solid rgba(251,146,60,0.3)"
+            actions:
+              tap_action: { action: toggle, entity: light.porch }
+            modules:
+              - type: icon
+                entity: light.porch
+                icon: mdi:coach-lamp
+                size: 24px
+                use_entity_color: true
+                icon_fx:
+                  device: auto
+              - type: text
+                text: Porch
+                design: { font_size: 14px, font_weight: "800", color: "#ffedd5" }
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 12px
+              border_radius: 18px
+              background_color: "rgba(167,139,250,0.12)"
+              border: "1px solid rgba(167,139,250,0.3)"
+              animations:
+                - { id: smoke, preset: smoke, trigger: entity_on, trigger_entity: switch.fog_machine, color: "#ddd6fe", strength: 60, intensity: 5 }
+            actions:
+              tap_action: { action: toggle, entity: switch.fog_machine }
+            modules:
+              - type: icon
+                icon: mdi:weather-fog
+                size: 24px
+                design: { color: "#c4b5fd" }
+              - type: text
+                text: Fog machine
+                design: { font_size: 14px, font_weight: "800", color: "#ede9fe" }

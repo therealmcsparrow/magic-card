@@ -1,0 +1,124 @@
+# Garden irrigation: wave lines carry water from the tap to each zone, thicker for the zone that uses more, with a minimal slider for the run time.
+# Entities: sensor.irrigation_flow, sensor.zone_lawn_flow, sensor.zone_beds_flow, sensor.zone_hedge_flow, input_number.zone_minutes
+# gallery: width=420 record=5
+type: custom:magic-card
+name: Irrigation
+background: "#0c1a14"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.4)"
+pause_button_corner: top-right
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Irrigation
+            design: { font_size: 18px, font_weight: "700", color: "#e6f6ec" }
+          - type: text
+            text: "Water runs from the tap to each zone, the lawn most of all."
+            design: { font_size: 12px, color: "#86a894" }
+  - id: zones
+    padding: 18px 0 0
+    column_widths: [96px, 1fr, 190px]
+    columns:
+      - vertical_align: center
+        gap: 6px
+        modules:
+          - id: tap
+            type: icon
+            icon: mdi:water-pump
+            size: 32px
+            design: { color: "#7dd3fc", width: 72px, height: 72px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #7dd3fc", background_color: "rgba(125,211,252,0.08)", margin: 0 auto }
+          - type: info
+            entity: sensor.irrigation_flow
+            show_name: false
+            show_state: true
+            design: { font_size: 13px, font_weight: "700", color: "#7dd3fc", text_align: center, white_space: nowrap }
+      - modules: []
+      - gap: 12px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: lawn
+                type: icon
+                icon: mdi:grass
+                size: 22px
+                design: { color: "#86efac", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #86efac", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Lawn
+                    design: { font_size: 13px, font_weight: "700", color: "#e6f6ec" }
+                  - type: info
+                    entity: sensor.zone_lawn_flow
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#86a894" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: beds
+                type: icon
+                icon: mdi:flower-tulip
+                size: 22px
+                design: { color: "#f9a8d4", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #f9a8d4", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Flower beds
+                    design: { font_size: 13px, font_weight: "700", color: "#e6f6ec" }
+                  - type: info
+                    entity: sensor.zone_beds_flow
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#86a894" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: { padding: 8px 12px, border_radius: 16px, background_color: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            modules:
+              - id: hedge
+                type: icon
+                icon: mdi:tree
+                size: 22px
+                design: { color: "#a3e635", width: 40px, height: 40px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #a3e635", background_color: "rgba(255,255,255,0.05)" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Hedge
+                    design: { font_size: 13px, font_weight: "700", color: "#e6f6ec" }
+                  - type: info
+                    entity: sensor.zone_hedge_flow
+                    show_name: false
+                    show_state: true
+                    design: { font_size: 12px, color: "#86a894" }
+  - id: runtime
+    padding: 22px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Run time per zone
+            design: { font_size: 11px, font_weight: "700", color: "#86a894", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: input_number.zone_minutes
+            track_style: thin
+            track_thickness: 4
+            thumb: circle
+            thumb_size: 16
+            value_position: beside
+            slider_color: "#86efac"
+flows:
+  - { id: tap-lawn, from: tap, to: lawn, entity: sensor.zone_lawn_flow, max: 15, route: curve, from_side: right, to_side: left, color: "#38bdf8", color_to: "#86efac", line_style: wave, amplitude: 4, wavelength: 26, width: 3, shape: drop, dot_size: 7, dots: 3, arrival: splash, arrival_size: 26 }
+  - { id: tap-beds, from: tap, to: beds, entity: sensor.zone_beds_flow, max: 15, route: curve, from_side: right, to_side: left, color: "#38bdf8", color_to: "#f9a8d4", line_style: wave, amplitude: 4, wavelength: 26, width: 3, shape: drop, dot_size: 7, dots: 3 }
+  - { id: tap-hedge, from: tap, to: hedge, entity: sensor.zone_hedge_flow, max: 15, route: curve, from_side: right, to_side: left, color: "#38bdf8", color_to: "#a3e635", line_style: wave, amplitude: 4, wavelength: 26, width: 3, shape: drop, dot_size: 7, dots: 3 }

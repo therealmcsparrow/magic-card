@@ -1,0 +1,98 @@
+# Thermostat: the room temperature inside a glowing ring that fills with the heat.
+# Entities: climate.living_room
+# gallery: width=360
+type: custom:magic-card
+name: Thermostat
+background: "radial-gradient(120% 90% at 50% 0%, #2b1a12 0%, #17120f 60%, #110e0c 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Living room
+            design: { font_size: 17px, font_weight: "600", color: "#f6e7dc" }
+          - type: text
+            use_entity: true
+            entity: climate.living_room
+            attribute: hvac_action
+            design: { font_size: 13px, color: "#ff9a5a" }
+      - modules:
+          - type: icon
+            entity: climate.living_room
+            icon: mdi:fire
+            size: 22px
+            design:
+              color: "#ff7a3d"
+              padding: 9px
+              border_radius: 50%
+              background_color: "rgba(255,122,61,0.16)"
+              animations:
+                - preset: flame-flicker
+  - id: dial
+    columns:
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            modules:
+              - type: text
+                use_entity: true
+                entity: climate.living_room
+                attribute: current_temperature
+                design:
+                  font_size: 54px
+                  font_weight: "300"
+                  color: "#fff4ec"
+                  letter_spacing: -1px
+                  line_height: "1"
+              - type: text
+                text: Inside now
+                design: { font_size: 12px, color: "#b59c8c", letter_spacing: 1px, text_transform: uppercase }
+            design:
+              width: 210px
+              height: 210px
+              margin: 8px auto
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle at 50% 35%, #3a241a 0%, #1d1511 70%)"
+              ring:
+                mode: value
+                entity: climate.living_room
+                attribute: current_temperature
+                min: 10
+                max: 30
+                width: 12
+                glow: 10
+                color: "#ff7a3d"
+                track_color: "rgba(255,255,255,0.07)"
+                linecap: round
+  - id: target
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Target · preset
+            design: { font_size: 12px, color: "#b59c8c", text_transform: uppercase, letter_spacing: 1px }
+          - type: text
+            use_entity: true
+            entity: climate.living_room
+            attribute: preset_mode
+            design: { font_size: 17px, font_weight: "600", color: "#ffb88a" }
+      - vertical_align: center
+        modules:
+          - type: spinbox
+            entity: climate.living_room
+            design:
+              color: "#ffffff"
+              background_color: "rgba(255,255,255,0.06)"
+              border_radius: 999px
+              padding: 5px
+              css: "--mc-spinbox-btn-color: #ff7a3d; --mc-spinbox-btn-size: 34px; --mc-spinbox-value-font-size: 17px; --mc-spinbox-gap: 12px;"
