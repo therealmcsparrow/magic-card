@@ -59,7 +59,8 @@ export const SLIDER_LOOK_CSS = `
 .mc-sl-b::after{content:'';position:absolute;left:50%;top:100%;margin-left:-4px;border:4px solid transparent;border-top-color:var(--primary-text-color,#212121)}
 .mc-tile-slider--vertical .mc-sl-b{left:calc(50% + var(--sl-bo));bottom:auto;top:calc((1 - var(--v)) * 100%);transform:translateY(-50%)}
 .mc-tile-slider--vertical .mc-sl-b::after{left:auto;right:100%;top:50%;margin:-4px 0 0;border-top-color:transparent;border-right-color:var(--primary-text-color,#212121)}
-.mc-tile-slider.mc-dragging .mc-sl-b,.mc-tile-slider:focus-visible .mc-sl-b,.mc-sl-p[data-linger] .mc-sl-b{opacity:1}
+.mc-tile-slider.mc-dragging .mc-sl-b,.mc-sl-p[data-linger] .mc-sl-b{opacity:1}
+.mc-tile-slider:focus-visible .mc-sl-b{opacity:1}
 @media (hover:hover){.mc-tile-slider:hover .mc-sl-b{opacity:1}}
 @media (hover:none){.mc-sl-b{opacity:1}}
 .mc-sl-v{position:absolute;right:8px;top:50%;transform:translateY(-50%)}
