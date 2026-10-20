@@ -10,6 +10,10 @@
     "note": "Keys Home Assistant itself reads on every card. They are not Magic Card config and load no chunk. Not in the ADR list; recorded as an S0.4 decision.",
     "keys": ["grid_options", "view_layout", "layout_options", "visibility"]
   },
+  "noop_keys": {
+    "note": "Known keys the renderer ignores, listed as plain so needs() (false) and this file agree (ADR 0040, amendment 2026-10-20). Only named keys qualify; an unlisted key stays unknown = feature.",
+    "keys": { "vertical": ["justify"] }
+  },
   "card": ["type", "name", "template", "entity", "not_synced", "rows", "use_page_theme", "theme", "background", "background_image", "border_radius", "padding", "box_shadow", "card_height", "overflow", "css", "hover", "display", "conditional_appearance", "background_layers"],
   "appearance_override": ["background", "background_image", "border_radius", "padding", "box_shadow", "card_height", "use_page_theme", "theme", "background_layers"],
   "appearance_rule": ["id", "name", "conditions", "mode", "overrides"],
@@ -17,7 +21,7 @@
   "module_common": ["id", "type", "entity", "attribute", "display", "design", "actions", "hidden", "editor_name", "not_synced", "placement", "layer"],
   "module_types": {
     "horizontal": ["modules", "gap", "align", "justify", "share_entity"],
-    "vertical": ["modules", "gap", "align", "share_entity"],
+    "vertical": ["modules", "gap", "align", "justify", "share_entity"],
     "row": ["columns", "layout", "column_widths", "gap", "padding", "share_entity"],
     "text": ["text", "use_template", "use_entity", "entity_display"],
     "icon": ["icon", "size", "icon_color", "use_entity_icon", "use_entity_color", "icon_on", "icon_off"],
@@ -50,14 +54,12 @@
     "note": "Other keys on an action object are an opaque payload (fire-dom-event takes arbitrary keys); only `action` decides."
   },
   "background_layers": {
-    "plain_types": ["color", "gradient", "image"],
-    "plain_keys": ["type", "hidden", "opacity", "blend", "image", "entity", "attribute", "states", "position", "size", "repeat", "blur", "gradient", "color"],
+    "plain_types": ["color", "gradient", "image", "pattern"],
+    "plain_keys": ["type", "hidden", "opacity", "blend", "image", "entity", "attribute", "states", "position", "size", "repeat", "blur", "gradient", "color", "pattern", "thickness"],
     "feature_keys": {
       "pan_zoom": "motion",
       "refresh": "snapshot refresh timer",
-      "stale_badge": "snapshot refresh timer",
-      "pattern": "pattern layer",
-      "thickness": "pattern layer"
+      "stale_badge": "snapshot refresh timer"
     },
     "camera_entity_is_feature": true
   },

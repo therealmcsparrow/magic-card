@@ -1,10 +1,10 @@
 {
   "adr": "docs/adr/0040-plain-key-allowlist.md",
-  "plain_keys_sha256": "a70692ab294d51e390e9d4a4eb02afc7a69f6429579bbc858fb136eaf2cc6c27",
+  "plain_keys_sha256": "cf3e7075d547b53dbf6f06e50567cfe273959f18225643d9bc09d2049b0af09b",
   "count": 134,
-  "plain": 13,
-  "feature": 121,
-  "plain_share_percent": 9.7,
+  "plain": 15,
+  "feature": 119,
+  "plain_share_percent": 11.2,
   "trace_fixtures": {
     "plain": "080",
     "effect": "063"
@@ -14,24 +14,19 @@
     "controls": 32,
     "decor": 34,
     "flows": 33,
-    "layers": 16,
+    "layers": 10,
     "modules-extra": 10,
     "pause": 20,
     "seasonal": 5,
     "svg-icon": 18
   },
   "reserve_counts": {
-    "none": 13,
+    "none": 15,
     "overlay": 47,
-    "configured": 16,
-    "default": 58
+    "configured": 18,
+    "default": 54
   },
-  "unknown_key_cards": [
-    "047",
-    "055",
-    "062",
-    "064"
-  ],
+  "unknown_key_cards": [],
   "cards": [
     {
       "id": "001",
@@ -807,16 +802,13 @@
         "anim",
         "decor"
       ],
-      "reserve_kind": "default",
+      "reserve_kind": "overlay",
       "grid_rows": false,
       "features": [
         "design.animations",
-        "design.value_background",
-        "vertical.justify"
+        "design.value_background"
       ],
-      "unknown_keys": [
-        "vertical.justify"
-      ],
+      "unknown_keys": [],
       "modules": 22
     },
     {
@@ -960,17 +952,14 @@
         "anim",
         "decor"
       ],
-      "reserve_kind": "default",
+      "reserve_kind": "configured",
       "grid_rows": false,
       "features": [
         "design.animations",
         "design.ring",
-        "design.shape",
-        "vertical.justify"
+        "design.shape"
       ],
-      "unknown_keys": [
-        "vertical.justify"
-      ],
+      "unknown_keys": [],
       "modules": 7
     },
     {
@@ -1096,17 +1085,14 @@
         "anim",
         "decor"
       ],
-      "reserve_kind": "default",
+      "reserve_kind": "configured",
       "grid_rows": false,
       "features": [
         "card.animations",
         "design.animations",
-        "design.shape",
-        "vertical.justify"
+        "design.shape"
       ],
-      "unknown_keys": [
-        "vertical.justify"
-      ],
+      "unknown_keys": [],
       "modules": 25
     },
     {
@@ -1129,16 +1115,12 @@
       "id": "064",
       "source": "airlock",
       "sha256": "1f888110cd31e21e38be96ff3f9dfa7df8ab99fd2888382c647a3f2168484f1f",
-      "class": "feature",
+      "class": "plain",
       "chunks": [],
-      "reserve_kind": "default",
+      "reserve_kind": "none",
       "grid_rows": false,
-      "features": [
-        "vertical.justify"
-      ],
-      "unknown_keys": [
-        "vertical.justify"
-      ],
+      "features": [],
+      "unknown_keys": [],
       "modules": 20
     },
     {
@@ -1835,17 +1817,11 @@
       "id": "107",
       "source": "stacked-backdrop",
       "sha256": "3c0a9d2a2c507f816244b63a784b35b9bc47635ea514f434a356ed568f457478",
-      "class": "feature",
-      "chunks": [
-        "layers"
-      ],
-      "reserve_kind": "overlay",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
       "grid_rows": false,
-      "features": [
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern"
-      ],
+      "features": [],
       "unknown_keys": [],
       "modules": 2
     },
@@ -2160,7 +2136,6 @@
       "chunks": [
         "controls",
         "flows",
-        "layers",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2168,9 +2143,6 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2184,7 +2156,6 @@
       "chunks": [
         "controls",
         "flows",
-        "layers",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2192,9 +2163,6 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2208,7 +2176,6 @@
       "chunks": [
         "controls",
         "flows",
-        "layers",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2216,9 +2183,6 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2241,9 +2205,6 @@
         "card.flows",
         "card.pause_button_corner",
         "layer-pan_zoom",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2266,9 +2227,6 @@
         "card.flows",
         "card.pause_button_corner",
         "layer-pan_zoom",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2282,7 +2240,6 @@
       "chunks": [
         "controls",
         "flows",
-        "layers",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2290,9 +2247,6 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2315,9 +2269,6 @@
         "card.flows",
         "card.pause_button_corner",
         "layer-pan_zoom",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2362,9 +2313,6 @@
         "card.flows",
         "card.pause_button_corner",
         "layer-pan_zoom",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2378,7 +2326,6 @@
       "chunks": [
         "controls",
         "flows",
-        "layers",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2386,9 +2333,6 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
-        "layer-pattern",
-        "layer-thickness",
-        "layer-type:pattern",
         "module:slider"
       ],
       "unknown_keys": [],
