@@ -70,6 +70,13 @@ jobs:
           if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
             echo "::notice::no base commit (new branch): debt growth not compared"
             node tools/check-entry-graph.mjs
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif ! git cat-file -e "$base:tools/entry-graph.json"; then
+            # bootstrap: the base commit predates the debt file, so there is no list to compare with. Visible, and only this case.
+            echo "::notice::base $base has no tools/entry-graph.json yet (bootstrap): debt growth not compared"
+            node tools/check-entry-graph.mjs
           else
             ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
           fi
