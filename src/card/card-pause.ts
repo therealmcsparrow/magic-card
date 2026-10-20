@@ -105,12 +105,22 @@ export class CardPause {
     const show = this._mode === 'always' || (auto && this._wants(on));
     this._shown = show;
     if (auto) this._recheck();
-    if (!show) return nothing;
     const corner = CORNERS.includes(String(c.pause_button_corner)) ? (c.pause_button_corner as PauseButtonCorner) : 'bottom-left';
+    if (!show) return nothing;
     const label = t('Pause motion');
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
+  }
+
+  /**
+   * Value of data-mc-pause-gap on .mc-card-content (bound in the template, not written to the host):
+   * the edge that keeps a 24 px strip for the button. Reserved for `auto` and `always` alike, so the
+   * layout does not move when motion starts or stops; `hidden` reserves nothing.
+   */
+  gap(c: CardPauseKeys): string | typeof nothing {
+    if (this._mode === 'hidden') return nothing;
+    return CORNERS.includes(String(c.pause_button_corner)) ? String(c.pause_button_corner).split('-')[0] : 'bottom';
   }
 
   private _wants(on: boolean): boolean {

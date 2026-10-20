@@ -26,6 +26,8 @@ A slider for an entity's numeric value. What it sets depends on the entity's dom
 
 Empty Min, Max and Step use the entity's own range and step. The editor shows them as placeholders.
 
+Slider color and Track color are checked the same way as the slider look colours. A value that is not a colour falls back to the next choice in the table. A gradient in design `background` does not fill the track: set Track color to a colour instead.
+
 The look options (track, fill, handle, value display, shape, stops and live updates) are in [Look](#look) below.
 
 -   Min and max only narrow the entity's range. Values outside what the entity accepts fall back to the entity's own limits, so the slider never sends a value the entity refuses.

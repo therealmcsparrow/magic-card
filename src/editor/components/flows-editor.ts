@@ -444,7 +444,7 @@ export class FlowsEditor extends LitElement {
     const id = `flow-${index}-${which}-anchor`;
     // 1.1.0: the shown value is the effective one; the key is written only when it differs from the look's default.
     const dflt = isWideFlowLook(f) ? 'box' : 'icon';
-    const value = f[key] === 'box' || f[key] === 'icon' ? f[key]! : dflt;
+    const value = f[key] === 'box' ? 'box' : f[key] === 'icon' ? 'icon' : dflt;
     return this._keyField(
       index,
       f,
@@ -650,8 +650,13 @@ export class FlowsEditor extends LitElement {
   private _block(f: FlowConfig, index: number, key: string, modules: FlowModuleOption[]): TemplateResult {
     const open = this.expanded.has(key);
     const bodyId = `flow-body-${index}`;
-    const name = (v: unknown) =>
-      typeof v === 'string' && v ? modules.find((m) => m.id === v)?.name ?? t('Module not found') : '…';
+    const found = (v: unknown) => (typeof v === 'string' && v ? modules.find((m) => m.id === v) : undefined);
+    // two ends that share a name ("Sun → Sun") are told apart by their position label ("Row 1 · Column 2 · Icon · Sun")
+    const same = !!found(f.from) && found(f.from)?.name === found(f.to)?.name;
+    const name = (v: unknown) => {
+      const m = found(v);
+      return m ? (same ? m.label : m.name) : typeof v === 'string' && v ? t('Module not found') : '…';
+    };
     const missing = [f.from, f.to].some((v) => typeof v === 'string' && v && !modules.some((m) => m.id === v));
     return html`
       <div class="cond flow" data-flow=${key} data-selected=${this.selected === key ? '' : nothing}>

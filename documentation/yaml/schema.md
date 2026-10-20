@@ -174,8 +174,8 @@ rows:                              # required (a list, may be empty)
 | `seasonal` | object, string or boolean | | Seasonal scene. See [Seasonal scenes](#seasonal-scenes). |
 | `background_layers` | list | | Card backdrop: at most 4 layers, first entry in front. A fifth entry is ignored. Keys in [Layers](#layers). See [Backgrounds](../design/backgrounds.md#card-backdrop). |
 | `layers_low_power` | boolean | `false` | Drops blur, blend and pan and zoom on this card's backdrop and layered modules. Pictures, opacity and darkening stay. |
-| `pause_button` | string | `hidden` | `hidden` (the default: no button), `auto` (shown on cards that have motion) or `always`. If anything on the card moves for more than 5 seconds, set `auto` or `always` so viewers can stop it. Set in the Design tab, Motion group. See [Pause motion button](../design/layers.md#pause-motion-button). |
-| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Used only when the button is shown. |
+| `pause_button` | string | `hidden` | `hidden` (the default: no button), `auto` (shown on cards that have motion) or `always`. If anything on the card moves for more than 5 seconds, set `auto` or `always` so viewers can stop it. With `auto` or `always` the card keeps a 24 px strip at the button's edge, even when no button shows under `auto`. Set in the Design tab, Motion group. See [Pause motion button](../design/layers.md#pause-motion-button). |
+| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Places the button, and with `auto` or `always` also sets the edge (top or bottom) that keeps the strip for it. |
 | `popup` | object | | See [Pop-up](#pop-up). |
 | `flows` | list | | See [Flows](#flows). |
 
@@ -871,7 +871,7 @@ A flow with a missing, unknown, hidden or identical `from` / `to` is not drawn. 
 | `from_anchor` | string | Unset: `box` for a wide look, else `icon` | `icon`: the module's icon, picture or dial (its box when it has none). `box`: the module's outer box. Any other value counts as unset. |
 | `to_anchor` | string | Unset: `box` for a wide look, else `icon` | Same as `from_anchor`, at the `to` module. |
 
-A wide look is `line_style` `tube`, `cable`, `neon` or `zigzag`, or a swarm: `spacing_mode: random`, a `size_variation` above 0, or a `shape_alternate`. `electric`, `spacing` and `motion` do not count. Every other flow, including one with no look, ends at the icon. An explicit `icon` or `box` always wins. See [Attach to](../flows/options.md#attach-to).
+A wide look is `line_style` `tube`, `cable`, `neon` or `zigzag`, or a swarm whose shapes travel: `spacing_mode: random`, a `size_variation` above 0, or a known `shape_alternate`. A swarm does not count with `motion: pulse`, or with `dots: 0` and no spacing. `electric`, `spacing` and `motion` do not count. Every other flow, including one with no look, ends at the icon. An explicit `icon` or `box` always wins. See [Attach to](../flows/options.md#attach-to).
 
 ## Pop-up
 

@@ -28,12 +28,14 @@ export function parseColour(s: string | undefined): RGB | undefined {
   return m ? [byte(+m[1]), byte(+m[2]), byte(+m[3])] : undefined;
 }
 
-/** The alpha of a colour string (8-digit hex, rgba() or `/ a`), 1 when it has none or cannot be read. */
+/** The alpha of a colour string (#rgba or #rrggbbaa, rgba() or `/ a`, exponent alphas like 1e-1 too), 1 when it has none or cannot be read. */
 export function alphaOf(s: string | undefined): number {
   const v = (s ?? '').trim();
   const hex = /^#(?:[0-9a-f]{6})([0-9a-f]{2})$/i.exec(v);
   if (hex) return parseInt(hex[1], 16) / 255;
-  const fn = /^rgba?\((?:[^,/)]+,[^,/)]+,[^,/)]+,|[^,/)]+\/)\s*(\d*\.?\d+)(%?)\s*\)$/i.exec(v);
+  const short = /^#[0-9a-f]{3}([0-9a-f])$/i.exec(v);
+  if (short) return parseInt(short[1], 16) / 15;
+  const fn = /^rgba?\((?:[^,/)]+,[^,/)]+,[^,/)]+,|[^,/)]+\/)\s*(\d*\.?\d+(?:e[+-]?\d+)?)(%?)\s*\)$/i.exec(v);
   return fn ? Math.min(1, +fn[1] / (fn[2] ? 100 : 1)) : 1;
 }
 

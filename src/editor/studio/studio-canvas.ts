@@ -1328,8 +1328,13 @@ export class StudioCanvas extends LitElement {
         gap: 4px;
         text-align: right;
       }
+      /* the device may be wider than a narrow canvas (it scrolls sideways): the label, with the preview-pause toggle at its end, stays within the screen and pinned to the left edge while scrolled */
       .device-label {
+        position: sticky;
+        left: 24px;
+        max-width: calc(100vw - 48px);
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         gap: 8px;
         margin-bottom: 8px;

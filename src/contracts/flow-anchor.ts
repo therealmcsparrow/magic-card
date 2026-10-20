@@ -1,7 +1,13 @@
-import type { FlowSide } from '../types';
 
 /*
- * Contract: flow anchors. Version 1.1.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ * Contract: flow anchors. Version 1.2.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ *
+ * ── 1.2.0 (2026-10-20, task beta4-nits): narrower wide rule ──
+ * A swarm key (`spacing_mode: random`, `size_variation` above 0, `shape_alternate`) makes a look wide
+ * only when the flow has travelling shapes (not `motion: pulse`, not `dots: 0` without a spacing) and
+ * the `shape_alternate` value is a known shape. A beta.4 flow with such a key and no travelling shapes
+ * defaulted to `box` and now defaults to `icon`. The unused type export FlowAnchorSide is removed (no
+ * users in the repo).
  *
  * A flow end attaches to the module's main visual (its icon, picture or dial) by default, and to
  * the module's box only when the YAML says `box` or the module has no main visual (CEO Brief Gate
@@ -12,7 +18,8 @@ import type { FlowSide } from '../types';
  * a thin look keeps `icon`. Wide = isWideFlowLook(flow): line_style tube, cable, neon or zigzag,
  * or a swarm: `spacing_mode: random`, `size_variation` above 0, or `shape_alternate` set (Lead
  * decision, Fix round 1). `electric`, `spacing` and `motion` do not count, and neither does a swarm
- * key at its default value. The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
+ * key at its default value, an unknown `shape_alternate` value (only the shape list counts) or a
+ * swarm key on a flow with no travelling shapes (`motion: pulse`, or no shapes: `dots` 0 without a spacing). The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
  * removing the look removes the rule. An explicit `icon` or `box` always wins. The editor shows the
  * effective default in "Attach to"; it writes `icon` only when that differs from the look default
  * and removes the key when the pick equals the look default. Everything below is unchanged.
@@ -106,7 +113,7 @@ import type { FlowSide } from '../types';
  * nl tables complete (check-i18n --ci). Keyboard and 200 % zoom as the existing selects.
  */
 
-export const FLOW_ANCHOR_CONTRACT = '1.1.0';
+export const FLOW_ANCHOR_CONTRACT = '1.2.0';
 
 /** YAML values of from_anchor / to_anchor. Unset (and anything unknown) = the look default (1.1.0). */
 export type FlowAnchor = 'icon' | 'box';
@@ -135,6 +142,3 @@ export const FLOW_END_ATTR = 'data-mc-flow-end';
  * runtime never reads this list, it finds the marker). Editor-only import: keep it out of magic-card.js.
  */
 export const FLOW_ANCHOR_TYPES: readonly string[] = ['icon', 'button', 'info', 'light', 'weather', 'image', 'camera', 'gauge'];
-
-/** For reference: sides are still taken on the end rect (box or anchor). */
-export type FlowAnchorSide = FlowSide | 'auto';

@@ -358,10 +358,27 @@ export function renderCardDesign(
       if (src.rule) return nothing;
       const cur = config.pause_button === 'always' || config.pause_button === 'auto' ? config.pause_button : 'hidden';
       const modes: Array<[PauseButtonMode, string]> = [['auto', t('Automatic')], ['always', t('Always')], ['hidden', t('Hidden')]];
+      const pick = (m: PauseButtonMode) => update('pause_button', m === 'hidden' ? undefined : m);
+      // roving tabindex and arrow keys, as the segmented control of the flows editor
+      const onKey = (e: KeyboardEvent) => {
+        const group = e.currentTarget as HTMLElement;
+        const rtl = getComputedStyle(group).direction === 'rtl' ? -1 : 1;
+        const step: Record<string, number> = { ArrowRight: rtl, ArrowDown: 1, ArrowLeft: -rtl, ArrowUp: -1 };
+        const at = modes.findIndex(([m]) => m === cur);
+        let to: number;
+        if (e.key === 'Home') to = 0;
+        else if (e.key === 'End') to = modes.length - 1;
+        else if (Object.prototype.hasOwnProperty.call(step, e.key)) to = (at + step[e.key] + modes.length) % modes.length;
+        else return;
+        e.preventDefault();
+        const next = modes[to][0];
+        pick(next);
+        requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());
+      };
       return html`<div class="field" data-field="pause_button">
         ${renderFieldHead(t('Pause button'), 'pause_button', syncCtx)}
-        <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help">
-          ${modes.map(([m, label]) => html`<button type="button" role="radio" aria-checked=${cur === m ? 'true' : 'false'} @click=${() => update('pause_button', m === 'hidden' ? undefined : m)}>${label}</button>`)}
+        <div class="seg full" role="radiogroup" aria-label=${t('Pause button')} aria-describedby="pause-button-help" @keydown=${onKey}>
+          ${modes.map(([m, label]) => html`<button type="button" role="radio" data-val=${m} tabindex=${cur === m ? '0' : '-1'} aria-checked=${cur === m ? 'true' : 'false'} @click=${() => pick(m)}>${label}</button>`)}
         </div>
         <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t("Viewers can't pause the motion on this card. Turn the button on if anything moves for more than 5 seconds.") : t('Shown while the card has motion. Viewers can pause it.')}</p>
       </div>`;

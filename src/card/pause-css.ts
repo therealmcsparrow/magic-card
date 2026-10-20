@@ -5,7 +5,9 @@ import { css } from 'lit';
  * (z 6; overlays live in the content's own stacking context), 6 px from its corner: 28 px visible,
  * 24 px at least, 44 px to hit under a coarse pointer (a transparent ::after box, no `inset`).
  * On a shaped card each offset adds the shape's content inset (--mc-shape-i*, 0 otherwise), so the
- * button stays inside the clip. Written compact: css`` text goes into the bundle as is.
+ * button stays inside the clip. While pause_button is auto or always (shown or not, so the layout never
+ * jumps), .mc-card-content carries data-mc-pause-gap=top|bottom and gets a 24 px strip (a flex ::before / ::after of .mc-card-content, on top of its
+ * padding and gap) at that edge, so the button sits in free space and covers no module. Written compact: css`` text goes into the bundle as is.
  */
 export const pauseCardStyles = css`
 ha-card[data-mc-paused],ha-card[data-mc-paused] *,ha-card[data-mc-paused] *::before,ha-card[data-mc-paused] *::after{animation-play-state:paused!important}
@@ -17,6 +19,8 @@ ha-card[data-mc-paused],ha-card[data-mc-paused] *,ha-card[data-mc-paused] *::bef
 .mc-pause[data-corner=bottom-right]{bottom:calc(6px + var(--mc-shape-ib,0px));right:calc(6px + var(--mc-shape-ir,0px))}
 .mc-pause[data-corner=top-left]{top:calc(6px + var(--mc-shape-it,0px));left:calc(6px + var(--mc-shape-il,0px))}
 .mc-pause[data-corner=top-right]{top:calc(6px + var(--mc-shape-it,0px));right:calc(6px + var(--mc-shape-ir,0px))}
+.mc-card-content[data-mc-pause-gap]::before,.mc-card-content[data-mc-pause-gap]::after{content:'';flex:none;height:24px}
+.mc-card-content[data-mc-pause-gap=top]::after,.mc-card-content[data-mc-pause-gap=bottom]::before{display:none}
 .mc-pause::after{content:'';position:absolute;top:-8px;right:-8px;bottom:-8px;left:-8px}
 @media (forced-colors:active){.mc-pause{border-color:ButtonText;background:ButtonFace;color:ButtonText}}
 `;
