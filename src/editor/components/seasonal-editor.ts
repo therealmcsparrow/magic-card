@@ -5,7 +5,7 @@ import type { HomeAssistant, SeasonalConfig, SeasonalHoliday, SeasonalSceneSetti
 import { editorSystem } from '../../css/editor-stack';
 import { autoScene, combineList, DEFAULT_CALENDAR, hemisphereOf, normalizeSeasonal, parseRange, SEASONAL_PICKS, zonedDay } from '../../utils/seasonal';
 import { SEASONAL_PREVIEW_EVENT } from '../../utils/seasonal.needs';
-import { SCENES } from '../../utils/seasonal-scenes';
+import { SCENE_LABELS } from '../../utils/seasonal-labels';
 import { seasonalApi } from '../../card/seasonal-seam';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { fieldReset } from './field-reset';
@@ -237,7 +237,7 @@ export class SeasonalEditor extends LitElement {
   private _today(): string {
     const d = seasonalApi()?.seasonalPreviewDate() ?? zonedDay(new Date(), this.hass);
     const scene = autoScene(d, this._cfg);
-    const l = SCENES[scene]?.label;
+    const l = SCENE_LABELS[scene];
     return l === undefined ? (LABEL[scene] === undefined ? scene : t(LABEL[scene])) : lt(l);
   }
 

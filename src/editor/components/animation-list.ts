@@ -16,7 +16,7 @@ import {
   intensityLabel,
 } from '../../utils/animation-presets';
 import { generateId } from '../../utils/id-generator';
-import { isSceneId, sceneDecorations } from '../../utils/seasonal-scenes';
+import { SCENE_INSETS } from '../../utils/seasonal.needs';
 import type { AnimationPreset } from '../../utils/animation-presets';
 import { animationLibrary, type LibraryHass } from '../../services/animation-library';
 import { CUSTOM_PREFIX, customRefId, isCustomRef, validateAnimationDoc, type AnimationDoc } from '../../anim-studio/model';
@@ -385,7 +385,7 @@ export class AnimationList extends LitElement {
     const id = (k: string) => `an-${index}-${k}`;
     const trigger = a.trigger ?? 'always';
     const scene = p.seasonal;
-    const deco = isSceneId(scene) && sceneDecorations([scene]).length > 0;
+    const deco = !!SCENE_INSETS[scene ?? ''];
     const decoOn = a.decorations !== false;
     const help =
       scene === 'weather'
