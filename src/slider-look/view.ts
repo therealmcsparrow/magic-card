@@ -98,6 +98,9 @@ const px = (n: number) => `${+n.toFixed(2)}px`;
 /** var(--x, #hex) reads as its fallback for the contrast maths; the CSS value itself stays. */
 const readColour = (c: string): RGB | undefined => parseColour(c) ?? parseColour(/^var\([^,]+,\s*([^)]+)\)$/.exec(c.trim())?.[1]);
 
+/** A colour with an alpha below 1 (8-digit hex, rgba() or `/ a`): the contrast lift would make it opaque, so it is left as written. */
+const translucent = (c: string): boolean => /^#[0-9a-f]{6}(?!ff$)[0-9a-f]{2}$|^rgba?([^)]*[,/]s*(?!1s*))/i.test(c.trim());
+
 const alertIcon = () => html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d=${ALERT}></path>`}</svg>`;
 
 function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -144,7 +147,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     if (own) fill = css(lift(own, surface, 3));
   }
   // a light card: the fill reaches 3:1 on the card (a colour we can read is lifted, the theme primary gets a black shade)
-  const own3 = dark ? undefined : parseColour(fill);
+  const own3 = dark || translucent(fill) ? undefined : parseColour(fill);
   const lifted = own3 && lift(own3, LIGHT_CARD, 3);
   if (lifted && lifted !== own3) fill = css(lifted);
   const dir = vertical ? 'to top' : 'to right';
