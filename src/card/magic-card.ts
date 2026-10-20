@@ -34,10 +34,12 @@ import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
 import { resolveAnimations, type FxLayer, type ResolvedV2 } from '../utils/animation';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
-import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
-import { particlesFailed } from '../anim-studio/compile';
+import { loadParticles, particlesFailed, particlesIfLoaded } from '../utils/particles-loader';
 import { loadEditor } from '../utils/editor-loader';
-import { lazyChunks, prefetchLazy } from '../utils/lazy-chunks';
+import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
+import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
+import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
+import './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
@@ -476,10 +478,14 @@ export class MagicCard extends LitElement {
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
   private _shapeCfg?: object;
+  /** The config uses `shape: custom` (its chunk may fail: the notice). */
+  private _customShape = false;
+  private _offChunks?: () => void;
   private _wantShapes(cfg: object): void {
     if (cfg === this._shapeCfg || customShapesReady()) return;
     this._shapeCfg = cfg;
-    if (JSON.stringify(cfg).includes('"shape":"custom"')) void loadCustomShapes().then((ok) => ok && this.isConnected && this.requestUpdate());
+    this._customShape = JSON.stringify(cfg).includes('"shape":"custom"');
+    if (this._customShape) void loadCustomShapes().then((ok) => ok && this.isConnected && this.requestUpdate());
   }
 
   getCardSize(): number {
@@ -505,6 +511,10 @@ export class MagicCard extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    // chunk styles that landed while this card was away, and from now on in the same task as they land (AC11)
+    trackHost(this);
+    // a chunk failed or recovered: render again (the notice, or the feature)
+    this._offChunks = onChunkChange(() => this.requestUpdate());
     this.addEventListener('mc-request-update', this._boundRequestUpdate);
     this.addEventListener('pointerdown', this._onTapAnimations);
     this._templates.hostConnected();
@@ -679,6 +689,8 @@ export class MagicCard extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    untrackHost(this);
+    this._offChunks?.();
     this.removeEventListener('mc-request-update', this._boundRequestUpdate);
     this.removeEventListener('pointerdown', this._onTapAnimations);
     this._templates.hostDisconnected();
@@ -822,7 +834,7 @@ export class MagicCard extends LitElement {
               data-mc-pause-gap=${this._pause.gap(config)}
               data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
-              ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${badge}
+              ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
           </ha-card>
         `, shadow, !!shape);
@@ -847,7 +859,7 @@ export class MagicCard extends LitElement {
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-pause-gap=${this._pause.gap(config)}
                 data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
-                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
+                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${this._failNotices(config, badge)}</div>
             </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
           </ha-card>
         `
@@ -1385,6 +1397,23 @@ export class MagicCard extends LitElement {
     }
     for (const el of this._pApplied) if (!seen.has(el)) pm.release(el);
     this._pApplied = seen;
+  }
+
+  /**
+   * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
+   * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
+   * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
+   * until a chunk fails, so a healthy or plain card has no notice, no status container (AC1). They share the part of
+   * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
+   */
+  private _failNotices(config: MagicCardConfig, rest: unknown) {
+    const names = [...failedChunkNames()].filter((n) => {
+      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra'].includes(n) && LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config);
+      return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
+    });
+    return names.length
+      ? html`${rest}${names.map((n) => html`<mc-chunk-notice .chunk=${n in lazyChunks ? lazyChunks[n as keyof typeof lazyChunks] : onDemandChunks[n as keyof typeof onDemandChunks]}></mc-chunk-notice>`)}`
+      : rest;
   }
 
   /** The theme is dark (seasonal decorations soften their frost). */

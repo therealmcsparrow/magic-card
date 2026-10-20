@@ -1,16 +1,18 @@
-import type { LazyChunkName } from '../contracts/lazy-module';
-import { hasLayers } from '../layers/layer-slot';
-import { ModuleRegistry } from '../modules/module-registry';
-import { hasFlowLook } from '../contracts/flow-look';
-import { hasSliderLook } from '../contracts/slider-look';
-import type { CardModule } from '../types';
-import { getAnimationPreset } from './animation-presets';
+import type { LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
+import { provideRuntimeChunk } from './anim-runtime-loader';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
+import { provideParticlesChunk } from './particles-loader';
+import { provideShapeChunk } from './shape-custom-loader';
 
 /*
- * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(). Nothing else
- * calls import() for these entries (contract lazy-module 1.0.0). Output file names come from the
- * webpackChunkName: dist/magic-card-<name>.js.
+ * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
+ * on demand (the animation runtime, particles and the custom shape builder; no needs() row, because only the render
+ * knows). Nothing else calls import() for these entries (contract lazy-module 1.4.0 "import() sites"). Output file
+ * names come from the webpackChunkName: dist/magic-card-<name>.js.
+ *
+ * Only the card bundle imports this file. The three loaders (src/utils/*-loader.ts) get their chunk from a slot filled
+ * at the end of this file instead of importing it: the animation studio bundle imports one of them, and this table
+ * would pull every card chunk entry into that bundle's chunk graph (the studio and several chunks grew by 8 to 60 KB).
  */
 
 export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
@@ -24,74 +26,22 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
 };
 
+/** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
+export const onDemandChunks = {
+  'anim-runtime': lazyChunk('anim-runtime', () => import(/* webpackChunkName: "anim-runtime" */ '../anim-runtime')),
+  particles: lazyChunk('particles', () => import(/* webpackChunkName: "particles" */ '../particles')),
+  'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
+};
+provideRuntimeChunk(onDemandChunks['anim-runtime']);
+provideParticlesChunk(onDemandChunks.particles);
+provideShapeChunk(onDemandChunks['shape-custom']);
+
 /** window.MagicCard.loadSeasonal: true once <mc-seasonal> and <mc-seasonal-deco> are defined. */
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();
 
-const seen = new WeakSet<object>();
-
-const wantsSeasonal = (node: unknown, visited = new Set<unknown>()): boolean => {
-  if (!node || typeof node !== 'object' || visited.has(node)) return false;
-  visited.add(node);
-  if (Array.isArray(node)) return node.some((n) => wantsSeasonal(n, visited));
-  for (const [key, value] of Object.entries(node)) {
-    if (key === 'card_config') continue;
-    if (key === 'seasonal' && value) return true;
-    if (key === 'preset' && typeof value === 'string' && getAnimationPreset(value)?.seasonal) return true;
-    if (value && typeof value === 'object' && wantsSeasonal(value, visited)) return true;
-  }
-  return false;
-};
-
-type Obj = Record<string, unknown>;
-type Wanted = { flow: boolean; slider: boolean };
-
-/** (1.2.0) Same walk as wantsSeasonal: a `flows` entry with a look key, a `slider` module with one. */
-const wantsLooks = (node: unknown, found: Wanted = { flow: false, slider: false }, visited = new Set<unknown>()): Wanted => {
-  if (!node || typeof node !== 'object' || visited.has(node) || (found.flow && found.slider)) return found;
-  visited.add(node);
-  if (Array.isArray(node)) {
-    for (const n of node) wantsLooks(n, found, visited);
-    return found;
-  }
-  if ((node as Obj).type === 'slider' && hasSliderLook(node as Obj)) found.slider = true;
-  for (const [key, value] of Object.entries(node)) {
-    if (key === 'card_config') continue;
-    if (key === 'flows' && Array.isArray(value) && value.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj))) found.flow = true;
-    if (value && typeof value === 'object') wantsLooks(value, found, visited);
-  }
-  return found;
-};
-const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
-
-/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it) or any layered module. */
-export function wantsLayers(config: unknown): boolean {
-  const c = config as { background_layers?: unknown; conditional_appearance?: unknown; rows?: Array<{ columns?: Array<{ modules?: CardModule[] }> } | null> } | null;
-  if (!c || typeof c !== 'object') return false;
-  if (nonEmpty(c.background_layers)) return true;
-  if (Array.isArray(c.rows) && c.rows.some((r) => Array.isArray(r?.columns) && r!.columns!.some((col) => hasLayers(col?.modules ?? [])))) return true;
-  const rules = c.conditional_appearance;
-  return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
-}
-
-/**
- * Start every chunk this card config needs, at once (nested lazy modules never wait on their
- * parent): the chunks of the lazy module types in it, the seasonal chunk for a `seasonal`
- * setting or a seasonal animation preset, and the flow-look / slider-look chunks for look keys. Called by setConfig and after the template merge.
- */
-export function prefetchLazy(config: unknown): void {
-  if (!config || typeof config !== 'object' || seen.has(config)) return;
-  seen.add(config);
-  ModuleRegistry.prefetch(config);
-  if (wantsSeasonal(config)) void lazyChunks.seasonal.load();
-  const looks = wantsLooks(config);
-  if (looks.flow) void lazyChunks['flow-look'].load();
-  if (looks.slider) void lazyChunks['slider-look'].load();
-  if (wantsLayers(config)) void lazyChunks.layers.load();
-}
-
 /** Tests: replace one chunk import (undefined restores it) and forget its state. */
-export function __setLazyImporterForTests(name: LazyChunkName, importer: LazyImporter | undefined): void {
-  lazyChunks[name].__reset(importer);
+export function __setLazyImporterForTests(name: LazyChunkName | OnDemandChunkName, importer: LazyImporter | undefined): void {
+  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as OnDemandChunkName]).__reset(importer as never);
 }
 
 /** Tests (vitest setup): load and install every chunk so renderPreview output stays synchronous. */

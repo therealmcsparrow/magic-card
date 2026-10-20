@@ -4,6 +4,9 @@ import { clamp, cornerArc, cornerCentres, dedupeSegs, p, parseShapeLength, SHAPE
 import type { Outline, Pt, Seg } from './shape-path';
 export { BUILD_VERSION as BUILD } from './build-version';
 
+/** LazyChunkModule (lazy-module 1.4.0): the builder is registered by src/utils/shape-custom-loader.ts, which owns the entry's side. */
+export const install = (): void => {};
+
 /*
  * `shape: custom` (contract custom-shape 1.0.0): per-corner types and sizes, or anchored free-path
  * points, built into the same Outline the presets use. Nothing here runs unless the kind is 'custom'.

@@ -1,39 +1,36 @@
 import { useCustomBuilder } from './shape-path';
-import { sameBuild } from './build-version';
+import type { LazyChunkControl } from './lazy-chunk';
 
 /*
  * The `shape: custom` builder (src/utils/shape-custom.ts) is a lazy chunk, dist/magic-card-shape-custom.js
- * (ADR 0021). A card that uses a custom shape starts the load; until the builder is registered the
- * element renders as `shape: none`, and the card re-renders once when the load resolves. When the load
- * fails (one console warning, no retry until the page reloads) the element stays unshaped.
+ * (ADR 0021), loaded through lazyChunk() (lazy-module 1.4.0). A card that uses a custom shape starts the load;
+ * until the builder is registered the element renders as `shape: none`, and the card renders again when the
+ * load resolves. A failed load is retried (silent, then in the background) with the failure notice; the
+ * element stays unshaped meanwhile. The chunk comes from a slot the chunk table (src/utils/lazy-chunks.ts)
+ * fills, like in anim-runtime-loader.ts.
  */
 
-let pending: Promise<boolean> | undefined;
-let ready = false;
+type Chunk = LazyChunkControl<typeof import('./shape-custom')>;
+let chunk: Chunk | undefined;
 
-/** Load the builder chunk once and register it; resolves false (and warns once) when it cannot be loaded. */
-export function loadCustomShapes(): Promise<boolean> {
-  pending ??= import(/* webpackChunkName: "shape-custom" */ './shape-custom').then(
-    (m) => {
-      // a cached older magic-card.js must not run a newer builder: warned once, the element stays unshaped
-      if (!sameBuild('magic-card-shape-custom.js', m)) return false;
-      useCustomBuilder(m.buildCustom);
-      return (ready = true);
-    },
-    (err: unknown) => {
-      console.warn('Magic Card: magic-card-shape-custom.js did not load', err);
-      return false;
-    },
-  );
-  return pending;
-}
+// runs in the install step, also for a load that succeeds on a background retry
+const register = (): void => void chunk?.whenReady(() => useCustomBuilder(chunk!.module()!.buildCustom));
+
+/** Called by src/utils/lazy-chunks.ts. */
+export const provideShapeChunk = (c: Chunk): void => {
+  chunk = c;
+  register();
+};
+
+/** Load the builder chunk once and register it; resolves false when it cannot be loaded. */
+export const loadCustomShapes = (): Promise<boolean> => chunk?.load() ?? Promise.resolve(false);
 
 /** The builder is registered (never starts a load). */
-export const customShapesReady = (): boolean => ready;
+export const customShapesReady = (): boolean => !!chunk?.ready();
 
 /** Tests: forget the load and the registered builder. */
 export function __resetCustomShapesForTests(): void {
-  pending = undefined;
-  ready = false;
+  chunk?.__reset();
   useCustomBuilder(undefined);
+  register();
 }

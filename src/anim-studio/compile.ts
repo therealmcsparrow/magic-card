@@ -581,9 +581,10 @@ const failedSims = new Set<string>();
 /**
  * The particles chunk could not set up a layer of document `id` (the card saw apply fail): until the
  * page reloads the document compiles its v1 fallback (FALLBACK_DIRECTION, first own shape), as when the
- * chunk cannot load. A compiler that throws does the same.
+ * chunk cannot load. A compiler that throws does the same. The card calls particlesFailed in
+ * src/utils/particles-loader.ts, which forwards here.
  */
-export const particlesFailed = (id: string): void => void failedSims.add(id);
+export const markSimFailed = (id: string): void => void failedSims.add(id);
 
 /** Compiles a document's v2 data (compile-v2.ts compileV2, registered when that file loads). */
 export type V2Compiler = (doc: AnimationDoc, opts: CompileOptions) => CompiledV2;

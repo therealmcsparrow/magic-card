@@ -7,6 +7,9 @@ import { validateSim } from './validate';
 import { apply, compileParticles, release } from './apply';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
+/** LazyChunkModule (lazy-module 1.4.0): the compiler is registered by src/utils/particles-loader.ts, which owns the entry's side. */
+export const install = (): void => {};
+
 /*
  * The particles module (particles-v2 1.0.0): the lazy chunk dist/magic-card-particles.js
  * (webpackChunkName "particles", loaded by src/utils/particles-loader.ts), and imported directly
