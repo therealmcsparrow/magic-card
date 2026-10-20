@@ -365,7 +365,7 @@ export function renderCardDesign(
         </div>
         <p class="help" id="pause-button-help">${cur === 'always' ? t('Always shown, even when nothing moves.') : cur === 'hidden' ? t('Never shown.') : t('Shown while the card has motion. Viewers can pause it.')}</p>
         ${cur === 'hidden'
-          ? html`<p class="help warn" role="note" data-warn="pause-hidden">${t('Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds.')}</p>`
+          ? html`<p class="help warn" role="note" data-warn="pause-hidden">${t('Hide the pause button only if nothing on the card moves for more than 5 seconds.')}</p>`
           : nothing}
       </div>`;
     },

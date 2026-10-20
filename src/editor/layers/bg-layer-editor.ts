@@ -140,7 +140,7 @@ function renderSource(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
 function renderCamera(h: EditorHost, layer: BackgroundLayerConfig, i: number): TemplateResult {
   const refresh = Math.max(5, layer.refresh ?? 10);
   return html`<div class="camera">
-    <p class="help" data-hint="camera">${t('Still picture, refreshed every {n} s. Live video behind modules is heavier: use the camera as a module set to Behind others instead only if you need live video.', { n: refresh })}</p>
+    <p class="help" data-hint="camera">${t('Still picture, refreshed every {n} s: the light choice for a quiet backdrop. Use a live camera behind other modules only when live video is really needed.', { n: refresh })}</p>
     <label for=${h.idOf(i, 'refresh')}>${t('Refresh every')}</label>
     <div class="inline">
       <input class="lyr-input" id=${h.idOf(i, 'refresh')} type="number" min="5" step="1" .value=${String(refresh)} @change=${(e: Event) => h.patch(i, { refresh: Math.max(5, Math.round(num(e)) || 10) })} />

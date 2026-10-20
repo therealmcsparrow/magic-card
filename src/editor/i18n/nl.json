@@ -1103,7 +1103,7 @@
   "View": "Weergave",
   "View type {type} isn't supported": "Weergavetype {type} wordt niet ondersteund",
   "Visibility": "Zichtbaarheid",
-  "Viewers can no longer stop the motion on this card. Only hide it if nothing on the card moves for more than 5 seconds.": "Bezoekers kunnen de beweging op deze kaart niet meer stoppen. Verberg de knop alleen als niets op de kaart langer dan 5 seconden beweegt.",
+  "Hide the pause button only if nothing on the card moves for more than 5 seconds.": "Verberg de pauzeknop alleen als niets op de kaart langer dan 5 seconden beweegt.",
   "Wave": "Golf",
   "Wave edge": "Golfrand",
   "Wave height": "Golfhoogte",

@@ -252,13 +252,13 @@ export class McBgLayers extends LitElement {
     const next = addLayer(this._list, type);
     this._adding = false;
     if (!next) {
-      this._live = t(LIMIT_TEXT);
+      this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS });
       return;
     }
     this._write(next);
     this._open = 0;
     this._focus = { sel: '.rhead', index: 0 };
-    this._live = t('Layer added. {n} of 4.', { n: next.length });
+    this._live = t('Layer added. {n} of {max}.', { n: next.length, max: MAX_BACKGROUND_LAYERS });
   }
 
   private _move(i: number, dir: 'forward' | 'backward'): void {
@@ -455,12 +455,12 @@ export class McBgLayers extends LitElement {
             </div>
           </div>`
         : html`<p class="help">${t('To put a module behind others, use Placement on that module. Layers here sit on top of the colour and image in Style.')}</p>`}
-      <div class="head2"><span class="chip2" data-count>${t('{n} of 4', { n: list.length })}</span></div>
+      <div class="head2"><span class="chip2" data-count>${t('{n} of {max}', { n: list.length, max: MAX_BACKGROUND_LAYERS })}</span></div>
       ${list.length || this._deleted ? html`<ol aria-label=${t('Card backdrop layers, front first')}>${rows}</ol>` : html`<p class="help" data-empty>${t('No layers yet. Add an image, gradient, pattern or colour behind the card content.')}</p>`}
       ${this._undo ? html`<p class="undo"><span>${this._undo.message}</span> <button type="button" class="lyr-btn" data-act="undo" @click=${() => this._runUndo()}>${t('Undo')}</button></p>` : nothing}
       <div class="add">
-        <button type="button" class="lyr-btn" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT)) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
-        ${full ? html`<p class="warnrow" id=${`${this._id}-limit`} data-limit>${t(LIMIT_TEXT)}</p>` : nothing}
+        <button type="button" class="lyr-btn" data-act="add" aria-haspopup="true" aria-expanded=${this._adding ? 'true' : 'false'} aria-disabled=${full ? 'true' : 'false'} aria-describedby=${full ? `${this._id}-limit` : nothing} @click=${() => (full ? (this._live = t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })) : (this._adding = !this._adding))}>${full ? t('Add layer') : t('Add layer ({n} left)', { n: MAX_BACKGROUND_LAYERS - list.length })}</button>
+        ${full ? html`<p class="warnrow" id=${`${this._id}-limit`} data-limit>${t(LIMIT_TEXT, { max: MAX_BACKGROUND_LAYERS })}</p>` : nothing}
         ${this._adding && !full
           ? html`<div class="lseg" role="group" aria-label=${t('Layer type')}>${ADD_ITEMS.map((it) => html`<button type="button" data-add=${it.value} aria-pressed="false" @click=${() => this._add(it.value)}>${te(it.label)}</button>`)}</div>`
           : nothing}
