@@ -28,6 +28,8 @@ import { SLIDER_LOOK_CSS } from './css';
 const DEFAULT_FILL = 'var(--primary-color, #03a9f4)';
 const ALERT = 'M13 14H11V10H13M13 18H11V16H13M1 21H23L12 2L1 21Z';
 const MAX_NAME = 80;
+/** Above this fill the Big fill value moves to the far end, away from the thumb. */
+const HIGH = 0.7;
 
 /** Per-slider state that outlives a render: timers started by input and the elements they touch. */
 interface State {
@@ -223,17 +225,26 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
 
   // ── the failed call: snap back, show the hint, say it
   const message = st.err ? t("Couldn't set {name}", { name }) : '';
+  const trackEl = () => st.wrap.value?.closest('.mc-tile-slider');
+  /** The failed-call text: spoken (the status line) and shown for the same few seconds (under the track). */
+  const setMessage = (text: string) => {
+    if (st.status.value) st.status.value.textContent = text;
+    const m = st.wrap.value?.querySelector('.mc-sl-m');
+    if (m) m.textContent = text;
+  };
   const fail = () => {
     clearPendingValue(key);
     st.err = true;
     if (st.errTimer) clearTimeout(st.errTimer);
     st.wrap.value?.setAttribute('data-error', '');
-    if (st.status.value) st.status.value.textContent = t("Couldn't set {name}", { name });
+    trackEl()?.setAttribute('aria-invalid', 'true');
+    setMessage(t("Couldn't set {name}", { name }));
     st.update?.();
     st.errTimer = setTimeout(() => {
       st.err = false;
       st.wrap.value?.removeAttribute('data-error');
-      if (st.status.value) st.status.value.textContent = '';
+      trackEl()?.removeAttribute('aria-invalid');
+      setMessage('');
       st.update?.();
     }, ERROR_MS);
   };
@@ -244,6 +255,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const texts = () => st.wrap.value?.closest('.mc-slider-container')?.querySelectorAll<HTMLElement>('[data-val]') ?? [];
   const show = (f: number, text: string) => {
     st.wrap.value?.style.setProperty('--v', String(f));
+    st.wrap.value?.toggleAttribute('data-vl', f > HIGH);
     for (const n of texts()) n.textContent = text;
   };
   const onInput = (v: number) => {
@@ -285,10 +297,10 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   const mark = st.err && look.position !== 'beside' ? html`<div class="mc-sl-e">${alertIcon()}</div>` : nothing;
 
   const icon = bf && look.showIcon ? bigFillIcon(hass, c.entity, look.icon, vertical && look.iconPos === 'center') : nothing;
-  const parts = html`<div class="mc-sl-p" ${ref(st.wrap)} ${ref(st.gone)} style="--v: ${st.drag?.f ?? frac}" ?data-error=${st.err}>
+  const parts = html`<div class="mc-sl-p" ${ref(st.wrap)} ${ref(st.gone)} style="--v: ${st.drag?.f ?? frac}" ?data-error=${st.err} ?data-vl=${(st.drag?.f ?? frac) > HIGH}>
     <div class="mc-sl-box" ${shape ? ref(st.shape.ref) : nothing}>
       <div class="mc-sl-t"></div>${fillBox}${shape ? html`<svg class="mc-sl-sh" aria-hidden="true"><path></path></svg>` : nothing}${outline ? html`<div class="mc-sl-o"></div>` : nothing}${look.thumb === 'line' && !segs ? html`<div class="mc-sl-g"></div>` : nothing}
-    </div>${tickParts}${labelParts}${icon}${thumb}${bubble ? valueBox('mc-sl-b') : nothing}${onTrack ? valueBox('mc-sl-v') : nothing}${mark}
+    </div>${tickParts}${labelParts}${icon}${thumb}${bubble ? valueBox('mc-sl-b') : nothing}${onTrack ? valueBox('mc-sl-v') : nothing}${mark}<span class="mc-sl-m" aria-hidden="true" .textContent=${message}></span>
   </div>`;
 
   const track = renderTrack({
@@ -307,6 +319,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       look.blur && look.style === 'glass' ? 'mc-sl--blur' : '',
       labels.length ? 'mc-sl--labels' : ticks.size ? 'mc-sl--ticks' : '',
       bubble ? 'mc-sl--bubble' : '',
+      bf && vertical && look.showIcon && look.iconPos === 'center' ? 'mc-sl--iconc' : '',
     ].filter(Boolean).join(' '),
     parts,
     onInput,
@@ -329,7 +342,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     : nothing;
 
   return html`<style>${SLIDER_LOOK_CSS}</style>
-    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'}">
+    <div class="mc-module mc-slider mc-slider-container ${vertical ? 'mc-slider-container--vertical' : 'mc-slider-container--horizontal'} ${vertical && bf ? 'mc-slider-container--bigfill' : ''}">
       ${track}${beside}
       <span class="mc-sl-sr" role="status" ${ref(st.status)} .textContent=${message}></span>
     </div>`;
