@@ -21,7 +21,8 @@ export const editorTokens: CSSResult = css`
     --mc-text: var(--primary-text-color, #212121);
     --mc-text-2: var(--secondary-text-color, #5f6368);
     --mc-divider: var(--divider-color, rgba(0, 0, 0, 0.12));
-    --mc-field-border: color-mix(in srgb, var(--primary-text-color, #212121) 50%, transparent);
+    /* floor for a browser without color-mix (Chromium 85); a feature query below sets the mixed values */
+    --mc-field-border: var(--secondary-text-color, #727272);
     --mc-warn-ink: color-mix(in srgb, var(--warning-color, #ff9800) 45%, var(--primary-text-color, #212121));
     --mc-warn-tint: color-mix(in srgb, var(--warning-color, #ff9800) 12%, transparent);
     --mc-error-ink: color-mix(in srgb, var(--error-color, #db4437) 75%, var(--primary-text-color, #212121));
@@ -56,7 +57,7 @@ export const editorTokens: CSSResult = css`
     /* ui-kit tokens (contract ui-kit 1.0.0, ADR 0030); the layers and the theme editor use the same names */
     --mc-hit: 40px;
     --mc-font: var(--ha-font-family-body, var(--paper-font-body1_-_font-family, Roboto, system-ui, sans-serif));
-    --mc-focus: color-mix(in srgb, var(--mc-accent) 80%, var(--mc-text));
+    --mc-focus: var(--mc-accent);
     --mc-error-tint: color-mix(in srgb, var(--error-color, #db4437) 12%, transparent);
     --mc-error-fill: color-mix(in srgb, var(--error-color, #db4437) 75%, #000);
     --mc-success-ink: color-mix(in srgb, var(--success-color, #43a047) 55%, var(--primary-text-color, #212121));
@@ -65,6 +66,12 @@ export const editorTokens: CSSResult = css`
     font-family: inherit;
     color: var(--mc-text);
     caret-color: var(--mc-accent);
+  }
+  @supports (color: color-mix(in srgb, red 50%, blue)) {
+    :host {
+      --mc-field-border: color-mix(in srgb, var(--primary-text-color, #212121) 50%, transparent);
+      --mc-focus: color-mix(in srgb, var(--mc-accent) 80%, var(--mc-text));
+    }
   }
   @media (pointer: coarse) {
     :host {

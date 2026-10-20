@@ -12,6 +12,7 @@ import { lazyChunks } from '../../utils/lazy-chunks';
 import { sliderLookSlot } from './slider-look-slot';
 import { currentRenderContext } from '../../services/render-context';
 import { entityPaint } from '../../utils/entity-color';
+import { safeColor } from '../../utils/animation';
 import { ENTITY_PAINT_KEYS, ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
@@ -76,8 +77,9 @@ class SliderModule extends BaseMagicModule {
     const isVertical = c.direction === 'vertical';
     const design = (c.design || {}) as DesignConfig;
     // the module's own colours beat the design colours (like the icon colour of the icon module)
-    const sliderColor = c.slider_color || (design.color as string | undefined) || 'var(--primary-color, #03a9f4)';
-    const trackColor = c.track_color || (design.background as string | undefined);
+    // config colours go into a style= string: only values the colour allow-list accepts (websec.M-SEC12)
+    const sliderColor = safeColor(c.slider_color) || safeColor(design.color) || 'var(--primary-color, #03a9f4)';
+    const trackColor = safeColor(c.track_color) || safeColor(design.background);
     const style = `--mc-slider-color: ${sliderColor}; ${trackColor ? `--mc-slider-background: ${trackColor};` : ''}`;
     const ctrl = stateObj ? numericControl(hass, stateObj, c.attribute, { min: c.min, max: c.max, step: c.step }) : undefined;
 

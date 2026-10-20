@@ -15,7 +15,8 @@ export interface Stop {
   o?: number;
 }
 
-const r2 = (v: number): number => Math.round(v * 100) / 100 || 0;
+/** Two decimals; a non-finite value (NaN, Infinity) becomes 0, so it never reaches the CSS text. */
+const r2 = (v: number): number => (Number.isFinite(v) ? Math.round(v * 100) / 100 || 0 : 0);
 
 /**
  * `@keyframes name`: the stops from 0 % to 100 % at constant speed (the percent of a stop is its share
@@ -34,7 +35,7 @@ export function travelFrames(name: string, P: readonly Stop[], reverse = false):
       prev = i ? a + Math.round((prev - a) / 360) * 360 : a;
       turn = ` rotate(${r2(prev)}deg)`;
     }
-    return `${total ? Math.round((cum[i] / total) * 1e5) / 1e3 : i ? 100 : 0}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn}${p.o === undefined ? '' : ';opacity:' + p.o}}`;
+    return `${total && Number.isFinite(total) ? Math.round((cum[i] / total) * 1e5) / 1e3 : i ? 100 : 0}%{transform:translate(${r2(p.x)}px,${r2(p.y)}px)${turn}${p.o === undefined || !Number.isFinite(p.o) ? '' : ';opacity:' + p.o}}`;
   });
   return `@keyframes ${name}{${frames.join('')}}`;
 }
