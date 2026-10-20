@@ -28,6 +28,8 @@ Every key of a `flows` entry, with its label in the Flows tab. See [Flow lines](
 | Route | `route` | `curve`, `straight`, `elbow` | `curve` |
 | From side | `from_side` | `auto`, `top`, `right`, `bottom`, `left` | `auto` |
 | To side | `to_side` | `auto`, `top`, `right`, `bottom`, `left` | `auto` |
+| Attach to (From) | `from_anchor` | `icon` (Icon or picture), `box` (Module box) | `icon` |
+| Attach to (To) | `to_anchor` | `icon` (Icon or picture), `box` (Module box) | `icon` |
 | Color | `color` | Any CSS colour, `entity`, `entity N%` | The theme's primary colour |
 | Idle color | `idle_color` | Any CSS colour, `entity`, or `N%` of `color` | Secondary text colour at 50% |
 | Width (px) | `width` | 0.5 to 40 | `3` |
@@ -49,6 +51,40 @@ Out-of-range numbers are limited to the range. An unknown value of a choice key 
 
 - `from` and `to` are module ids. Any module of the card can be an end, including modules inside layout modules.
 - From side and To side pick the side of each module the line attaches to. Auto picks the pair of sides that face each other. On a shaped module the line meets the shape's outline on that side.
+
+### Attach to
+
+Attach to picks what each end of the line touches on its module:
+
+- **Icon or picture** (`icon`, the default): the line ends at the module's main visual, its icon, picture or dial. Two icons side by side in one row get a line between their edges.
+- **Module box** (`box`): the line ends at the module's outer box, as it did before this version.
+
+Attach to appears under the From and To fields only for modules that have a main visual. It does not appear for the other modules, which always use the box.
+
+| Module | The line ends at |
+| --- | --- |
+| Icon | The icon |
+| Button, Info | Their icon, when it is shown. Without one, the box. |
+| Light | Its icon |
+| Weather | Its icon |
+| Image | The picture, or its fallback picture |
+| Camera | The picture or video |
+| Gauge | The dial |
+
+Text, Markdown, Bar, Graph, Slider, Spinbox, Dropdown, Clock, Separator, layouts, Custom card and Video background have no main visual. A flow to one of them uses its box.
+
+- A module whose icon is hidden, or that has no size, uses its box. Nothing is reported.
+- From side and To side work on the icon's box. A module with a shape still uses its icon's box, not the shape's outline.
+- The line follows the icon when it moves, for example after a state change, a resize, a slider slide or a tab change. An animated icon does not make the line jitter.
+- Opening and saving a flow without changes leaves its YAML as it was. Choosing Icon or picture removes the key. Choosing Module box writes `box`.
+- A value other than `icon` or `box` is read as `icon`. The editor keeps it in YAML until you pick an option.
+
+**Dashboards you already have change look.** A flow without an attach key now ends at the icon, picture or dial of each module that has one. To keep the old look, set Module box on that end, or add `from_anchor: box` or `to_anchor: box` to the flow.
+
+**Tips when a line looks wrong:**
+
+- A line can run under a module's name, such as a button's label. Set Module box on that end so the line stops at the box edge.
+- A back line that runs behind a module with its own opaque background is hidden up to the icon, caps included. Set `layer: front` on the flow so the line draws over the module.
 - Route:
 
 | UI label | `route` | Line |
@@ -71,6 +107,8 @@ Out-of-range numbers are limited to the range. An unknown value of a choice key 
 
 - `entity` uses the state colour of the flow's entity. A flow without an entity uses the From module's entity. `entity 40%` is that colour at 40% opacity. The swatch in the editor previews the same colour.
 - An entity without a state colour (a sensor, for example) falls back to the theme's primary colour. See [Entity colours](../design/entity-colours.md) for which entities have one.
+
+On a light card, a line colour or line end colour that is too pale to show is darkened until it has a contrast of 3:1 against the card. Dark cards are not changed. Shape colours are not changed.
 
 `idle_color` is the line's colour while it idles.
 
@@ -108,6 +146,8 @@ Label position (shown while a label is set):
 | On the line | `line` | Always on the line |
 | Beside the line | `side` | Always beside the line |
 | Hidden | `hidden` | Not shown |
+
+A label may sit over the empty part of an end module's box, between two icons. It never covers an icon, picture or dial. It can cover the module's own text, such as a button's name beside its icon. Use `label_position: side`, or Module box on that end, to avoid this.
 
 ## Show and layer
 

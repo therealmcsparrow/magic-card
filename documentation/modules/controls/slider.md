@@ -21,8 +21,8 @@ A slider for an entity's numeric value. What it sets depends on the entity's dom
 | Step | `step` | number above 0 | the entity's step | The step. |
 | Show value | `show_value` | boolean | `true` | Shows the value next to the slider. `false` hides it. |
 | Direction | `direction` | `horizontal`, `vertical` | `horizontal` | Orientation. |
-| Slider color | `slider_color` | colour | design text colour, else theme primary | Colour of the slider. |
-| Track color | `track_color` | colour | design `background`, else the default track | Colour of the track. |
+| Slider color | `slider_color` | colour, or an entity colour | design text colour, else theme primary | Colour of the slider. See [Entity colours](#entity-colours). |
+| Track color | `track_color` | colour, or an entity colour | design `background`, else the default track | Colour of the track. See [Entity colours](#entity-colours). |
 
 Empty Min, Max and Step use the entity's own range and step. The editor shows them as placeholders.
 
@@ -33,6 +33,27 @@ The look options (track, fill, handle, value display, shape, stops and live upda
 -   Min greater than or equal to max shows "Min must be less than max". A step of 0 or less shows "Step must be greater than 0".
 
 When the entity or attribute cannot be set, the slider is disabled and the editor says so.
+
+## Entity colours
+
+Slider color, Track color, End colour and Border colour take an entity colour, as other colour fields do. Turn on **Entity colour** for the field, then pick a source in **Colour from**:
+
+- **State colour** (`entity`): the entity's state colour. A light shows its own colour while it is on. Other entities use the theme colour for their state.
+- **An attribute** (`entity.<attr>`), for example `rgb_color` or `hs_color`. The list offers only the attributes of the entity that hold a colour.
+
+Add an opacity with a percentage: `entity 50%`, or `entity.rgb_color 50%`. Choosing 100% removes it.
+
+| Value | Meaning |
+| --- | --- |
+| `entity` | The state colour, at full opacity |
+| `entity 50%` | The state colour at 50% opacity |
+| `entity.rgb_color` | The colour in the entity's `rgb_color` attribute |
+| `entity.hs_color 50%` | The colour in the entity's `hs_color` attribute, at 50% opacity |
+
+- An entity with no colour for the chosen source counts as not set. For example, a sensor has no state colour, and a missing or non-colour attribute gives none. The slider then uses its design colour, else its default.
+- Plain colours, such as `#ff9800` or a theme variable, work as before.
+- Use the light's colour still wins for the fill of a light, as described under [Look](#look).
+- On browsers without `color-mix()`, a theme colour at less than 100% shows at full opacity.
 
 ## Look
 
@@ -61,7 +82,7 @@ Reset look removes the look keys, Slider colour and Track colour. After a preset
 | Gap (px) | `segment_gap` | 1 to 8 | `2` | Segmented only. |
 | Blur behind | `glass_blur` | `true`, `false` | `false` | Glass only. Blurs what is behind the track. Off gives a flat, see-through fill. Blur can slow down older wall tablets. |
 | Fill | `fill_mode` | `solid`, `gradient`, `auto` | `solid` | The shape of the fill. See below. |
-| End colour | `slider_color_to` | Any colour | None | Gradient only. The fill runs from the start colour to this one. |
+| End colour | `slider_color_to` | Any colour, or an entity colour | None | Gradient only. The fill runs from the start colour to this one. |
 | Use the light's colour | `use_entity_color` | `true`, `false` | `false` | Starts the fill with the light's own colour. Lights only. |
 | Update while dragging | `live` | `true`, `false` | `false` | Sends changes while you drag, at most 4 a second. The final value always goes out when you let go. Works on every track style. The Big fill preset turns it on. |
 
@@ -72,6 +93,8 @@ The start colour is the light's own colour when Use the light's colour is on and
 - Auto, brightness: the start colour with a dark overlay. The overlay is black at 75 % at the low end and fades to nothing at the high end.
 - Auto, colour temperature: from warm to cool, whatever the start colour is.
 - Auto, any other entity: solid.
+
+On a light card, the fill is darkened where it is too pale to show against the card (a contrast of 3:1), as the handle is. Dark cards are not changed.
 
 Use the light's colour combines with every fill. Auto works with brightness and colour temperature sliders. The editor disables it for other entities and says why.
 
@@ -84,7 +107,7 @@ Handle is the grip of the slider. The key is `thumb`.
 | Handle | `thumb` | `line`, `circle`, `pill`, `square`, `none` | `line` | Line removes the key. None draws a track with no handle. |
 | Size (px) | `thumb_size` | 4 to 64 | `20` circle, `28` pill, `18` square | The long side. Line uses half the thickness. A pill's short side is 0.57 times its size. |
 | Border (px) | `thumb_border` | 0 to 6 | `0` | Circle, pill and square. |
-| Border colour | `thumb_border_color` | Any colour | White | |
+| Border colour | `thumb_border_color` | Any colour, or an entity colour | White | |
 | Glow (px) | `thumb_glow` | 0 to 30 | `0` | Glows in the fill colour. |
 | Icon | `thumb_icon` | `mdi:name` | None | Circle, pill and square only. |
 

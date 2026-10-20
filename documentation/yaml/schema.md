@@ -174,8 +174,8 @@ rows:                              # required (a list, may be empty)
 | `seasonal` | object, string or boolean | | Seasonal scene. See [Seasonal scenes](#seasonal-scenes). |
 | `background_layers` | list | | Card backdrop: at most 4 layers, first entry in front. A fifth entry is ignored. Keys in [Layers](#layers). See [Backgrounds](../design/backgrounds.md#card-backdrop). |
 | `layers_low_power` | boolean | `false` | Drops blur, blend and pan and zoom on this card's backdrop and layered modules. Pictures, opacity and darkening stay. |
-| `pause_button` | string | `auto` | `auto` (shown on cards that have motion), `always` or `hidden`. See [Pause motion button](../design/layers.md#pause-motion-button). |
-| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. |
+| `pause_button` | string | `hidden` | `hidden` (the default: no button), `auto` (shown on cards that have motion) or `always`. Set in the Design tab, Motion group. See [Pause motion button](../design/layers.md#pause-motion-button). |
+| `pause_button_corner` | string | `bottom-left` | `bottom-left`, `bottom-right`, `top-left` or `top-right`. Used only when the button is shown. |
 | `popup` | object | | See [Pop-up](#pop-up). |
 | `flows` | list | | See [Flows](#flows). |
 
@@ -286,7 +286,7 @@ Modules that draw an icon (`icon`, `button`, `info`, `light`, `tabs`, `weather`,
 
 ## Slider look keys
 
-A `type: slider` module can take these optional keys. A slider without them looks and works as before. `show_value`, `slider_color` and `track_color` keep their meaning. Each key is described in [Slider](../modules/controls/slider.md#look). The keys are shown commented out here, so copying this block changes nothing.
+A `type: slider` module can take these optional keys. A slider without them looks and works as before. `show_value`, `slider_color` and `track_color` keep their meaning. `slider_color`, `track_color`, `slider_color_to` and `thumb_border_color` also accept an entity colour: `entity`, `entity 50%`, `entity.rgb_color` or `entity.hs_color 50%`. Each key is described in [Slider](../modules/controls/slider.md#look) and [Entity colours for sliders](../modules/controls/slider.md#entity-colours). The keys are shown commented out here, so copying this block changes nothing.
 
 ```yaml
 - type: slider
@@ -804,6 +804,8 @@ flows:
     to: house                      # module id (required)
     from_side: auto                # auto (default) | top | right | bottom | left
     to_side: auto
+    from_anchor: icon              # icon (default: the module's icon, picture or dial) | box (its outer box)
+    to_anchor: icon
     route: curve                   # curve (default) | straight | elbow
     entity: sensor.solar_power     # no entity: always flowing at `speed`
     attribute: ""

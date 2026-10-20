@@ -6,7 +6,14 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### New
+-   **Flow lines attach to icons.** By default a line ends at the module's icon, picture or dial, so two icons side by side in one row get a line between them. Icon, Button, Info, Light, Weather, Image, Camera and Gauge modules have one; other modules use their box. Choose Attach to > Module box, or set `from_anchor: box` or `to_anchor: box`, to end the line at the box instead. See [Attach to](documentation/flows/options.md#attach-to).
+-   **Motion group.** The pause button settings are in a Motion group in the card's Design tab, under Layout and open by default. Corner shows only when the button is shown.
+-   **Preview pause.** The studio canvas has a Pause preview motion button that freezes the card while you edit. It is not saved and does not change what viewers see.
+-   **Slider colours from an entity.** Slider colour, Track colour, End colour and Border colour accept `entity`, `entity N%`, `entity.<attr>` and `entity.<attr> N%`, for example `entity.rgb_color`. Pick the source in the new Colour from list. See [Slider](documentation/modules/controls/slider.md#entity-colours).
+
 ### Changed
+-   **Existing flows change look.** A flow without an attach key now ends at the icon, picture or dial of each module that has one. To keep the old look, set Module box on that end, or add `from_anchor: box` or `to_anchor: box`.
 -   **Pause motion button is off by default.** `pause_button` now defaults to `hidden`; set `auto` or `always` to show it. The editor lists Hidden as the default.
 -   **Pause motion button.** One fixed name, "Pause motion", with a pressed state for screen readers, and a 44 by 44 pixel touch area on every pointer.
 -   **Slider.** The failed-call message wraps instead of being cut off, and the slider is no longer marked invalid once the next change goes through.
