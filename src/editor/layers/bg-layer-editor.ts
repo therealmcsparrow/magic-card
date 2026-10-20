@@ -242,11 +242,17 @@ function renderPanZoom(h: EditorHost, layer: BackgroundLayerConfig, i: number): 
               <span class="lbl">${t('Preview (not saved)')}</span>
               ${lyrSeg(t('Preview'), prev, [{ value: 'play' as PanPreview, label: t('Play') }, { value: 'start' as PanPreview, label: t('Start') }, { value: 'end' as PanPreview, label: t('End') }], (v) => h.setPreview(prev === v ? undefined : v), 'preview')}
               <p class="help">${t('Shows the framing in the preview. It plays even if the device asks for reduced motion, because you asked for it.')}</p>
-              ${prev === 'play' ? html`<button type="button" class="lyr-btn" data-act="stop-preview" @click=${() => h.setPreview(undefined)}>${t('Stop preview')}</button>` : nothing}
+              ${prev === 'play' ? html`<button type="button" class="lyr-btn" data-act="stop-preview" @click=${(e: Event) => stopPreview(h, e)}>${t('Stop preview')}</button>` : nothing}
             </div>`}`
         : nothing}
     </div>
   </div>`;
+}
+
+/** Stop preview removes itself: focus goes to Play first, so it does not fall to the page (WCAG 2.4.3). */
+function stopPreview(h: EditorHost, e: Event): void {
+  (e.currentTarget as HTMLElement).parentElement?.querySelector<HTMLElement>('[data-seg=preview] [data-val=play]')?.focus();
+  h.setPreview(undefined);
 }
 
 function renderImage(h: EditorHost, layer: BackgroundLayerConfig, i: number): TemplateResult {
