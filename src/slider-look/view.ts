@@ -2,7 +2,7 @@ import { html, nothing, svg, TemplateResult } from 'lit';
 import { createRef, ref, type Ref } from 'lit/directives/ref.js';
 import type { CardModule, DesignConfig, HomeAssistant, SliderModuleConfig } from '../types';
 import type { ModuleView } from '../contracts/lazy-module';
-import { formatControlValue, numericControl, runServiceCall, type ServiceCall } from '../utils/entity-control';
+import { formatControlValue, numericControl, runServiceCall } from '../utils/entity-control';
 import { clearPendingValue, controlKey, pendingValue, setPendingValue } from '../utils/pending-value';
 import { renderTrack } from '../utils/slider-track';
 import { entityStateColor } from '../utils/entity-color';
@@ -145,7 +145,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   }
   // a light card: the fill reaches 3:1 on the card (a colour we can read is lifted, the theme primary gets a black shade)
   const own3 = dark ? undefined : parseColour(fill);
-  const lifted = own3 ? lift(own3, LIGHT_CARD, 3) : undefined;
+  const lifted = own3 && lift(own3, LIGHT_CARD, 3);
   if (lifted && lifted !== own3) fill = css(lifted);
   const dir = vertical ? 'to top' : 'to right';
   const attr = c.attribute;
@@ -163,7 +163,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       sampleMode = 'kelvin';
     }
   }
-  if (!dark && !grad && fill === DEFAULT_FILL) grad = `linear-gradient(rgba(0,0,0,${PRIMARY_SHADE}),rgba(0,0,0,${PRIMARY_SHADE})), linear-gradient(${fill}, ${fill})`;
+  const shade = `rgba(0,0,0,${PRIMARY_SHADE})`;
+  if (!dark && !grad && fill === DEFAULT_FILL) grad = `linear-gradient(${shade},${shade}), linear-gradient(${fill}, ${fill})`;
   const fillRgb = readColour(fill);
   const th = fillRgb ? thumbColours(fillRgb, surface) : undefined;
   const face = th ? css(th.face) : 'var(--text-primary-color, #fff)';
@@ -229,7 +230,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
   if (labels.length) vars.push(`--nl: ${labels.length}`);
 
   // ── the failed call: snap back, show the hint, say it
-  const message = st.err ? t("Couldn't set {name}", { name }) : '';
+  const couldnt = () => t("Couldn't set {name}", { name });
+  const message = st.err ? couldnt() : '';
   const trackEl = () => st.wrap.value?.closest('.mc-tile-slider');
   /** The failed-call text: spoken (the status line) and shown for the same few seconds (under the track). */
   const setMessage = (text: string) => {
@@ -243,7 +245,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     if (st.errTimer) clearTimeout(st.errTimer);
     st.wrap.value?.setAttribute('data-error', '');
     trackEl()?.setAttribute('aria-invalid', 'true');
-    setMessage(t("Couldn't set {name}", { name }));
+    setMessage(couldnt());
     st.update?.();
     st.errTimer = setTimeout(heal, ERROR_MS);
   };
@@ -257,9 +259,8 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
     setMessage('');
     st.update?.();
   };
-  const run = (c: ServiceCall) => runServiceCall(hass!, c, fail, heal);
 
-  st.send = ctrl?.call && hass ? (v) => run(ctrl.call!(v)) : undefined;
+  st.send = ctrl?.call && hass ? (v) => runServiceCall(hass, ctrl.call!(v), fail, heal) : undefined;
 
   // ── drag hooks: no render while dragging, the parts follow --v
   const texts = () => st.wrap.value?.closest('.mc-slider-container')?.querySelectorAll<HTMLElement>('[data-val]') ?? [];
@@ -340,7 +341,7 @@ function renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult
       if (!ctrl?.call || !hass) return;
       const call = ctrl.call;
       // live: the final value goes out at once (the drag's own calls were throttled)
-      setPendingValue(key, v, ctrl.value, (sent) => run(call(sent)), () => ctx?.requestUpdate(), look.live ? 0 : 300);
+      setPendingValue(key, v, ctrl.value, (sent) => runServiceCall(hass, call(sent), fail, heal), () => ctx?.requestUpdate(), look.live ? 0 : 300);
     },
   });
 
