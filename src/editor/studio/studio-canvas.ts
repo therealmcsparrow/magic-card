@@ -293,7 +293,10 @@ export class StudioCanvas extends LitElement {
     announce: (message) => this.showStatus(message),
   });
   /** The open Layers here sheet. */
-  @state() private _sheet?: { list: HereEntry[]; x: number; y: number };
+  /** Press and hold in progress (touch): a ring grows under the finger until the menu opens. */
+  @state() private _press?: { x: number; y: number };
+  private _pressTimer = 0;
+  @state() private _sheet?: { list: HereEntry[]; x: number; y: number; hold?: boolean };
   /** Layers under the selected module (itself included): the float bar's "Layers here (n)". */
   @state() private _hereCount = 0;
 
@@ -340,6 +343,7 @@ export class StudioCanvas extends LitElement {
     this._endColumnDrag(false);
     this._itemMenu.close(false);
     this._longPress.cancel();
+    this._clearPress();
     clearTimeout(this._statusTimer);
     setLayerMeasurer(undefined);
     this._stopPreview?.();
@@ -377,6 +381,8 @@ export class StudioCanvas extends LitElement {
     canvas.addEventListener('pointerdown', this._onLongDown, true);
     canvas.addEventListener('pointermove', this._longPress.move, true);
     for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._longPress.cancel, true);
+    for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._clearPress, true);
+    canvas.addEventListener('pointermove', this._pressMove, true);
     for (const type of HA_ACTION_EVENTS) host.addEventListener(type, this._stop);
     host.appendChild(card);
     this._observe();
@@ -643,6 +649,24 @@ export class StudioCanvas extends LitElement {
     const path = e.composedPath();
     if (inPopupPreview(e) || path.some((t) => t instanceof HTMLElement && (t.classList.contains('col-handle') || t.classList.contains('float-bar')))) return;
     this._longPress.down(e);
+    this._clearPress();
+    if (e.pointerType === 'touch') {
+      const { clientX: x, clientY: y } = e;
+      // the cue starts after a tap would be over (150 ms), then runs to the 500 ms that opens the menu
+      this._pressTimer = window.setTimeout(() => (this._press = { x, y }), 150);
+    }
+  };
+
+  /** The finger left the 8 px of a press: no cue (and no menu, LongPress drops it too). */
+  private _pressMove = (e: PointerEvent): void => {
+    const p = this._press;
+    if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > 8) this._clearPress();
+  };
+
+  private _clearPress = (): void => {
+    clearTimeout(this._pressTimer);
+    this._pressTimer = 0;
+    if (this._press) this._press = undefined;
   };
 
   private _onBgStatus = (e: Event): void => {
@@ -651,15 +675,16 @@ export class StudioCanvas extends LitElement {
 
   /** Press and hold: several layers at the point open the Layers here sheet, otherwise the item menu. */
   private _longPressAt(path: EventTarget[], x: number, y: number): void {
+    this._clearPress();
     const here = this._connectFrom ? [] : this._layers.here(x, y);
     // until the layer editor chunk is ready the sheet is not defined: the item menu answers, as before layers
-    if (here.length > 1 && layerEditorReady()) this._openSheet(here, x, y);
+    if (here.length > 1 && layerEditorReady()) this._openSheet(here, x, y, true);
     else this._contextAt(path, x, y);
   }
 
-  private _openSheet(list: HereEntry[], x: number, y: number): void {
+  private _openSheet(list: HereEntry[], x: number, y: number, hold = false): void {
     this._itemMenu.close(false);
-    this._sheet = { list, x, y };
+    this._sheet = { list, x, y, hold };
   }
 
   private _closeSheet = (): void => {
@@ -1205,8 +1230,9 @@ export class StudioCanvas extends LitElement {
       </p>
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
+      ${this._press ? html`<span class="press-ring" style=${`left:${this._press.x}px;top:${this._press.y}px`} aria-hidden="true"></span>` : nothing}
       ${this._sheet
-        ? html`<mc-layers-sheet .items=${this._layers.sheetItems(this._sheet.list)} .x=${this._sheet.x} .y=${this._sheet.y} @pick=${this._pickFromSheet} @close=${this._closeSheet}></mc-layers-sheet>`
+        ? html`<mc-layers-sheet .items=${this._layers.sheetItems(this._sheet.list)} .x=${this._sheet.x} .y=${this._sheet.y} .holdOpen=${!!this._sheet.hold} @pick=${this._pickFromSheet} @close=${this._closeSheet}></mc-layers-sheet>`
         : nothing}
     `;
   }
@@ -1287,6 +1313,35 @@ export class StudioCanvas extends LitElement {
         /* no iOS callout or text selection on a long-press (it opens the item menu) */
         -webkit-touch-callout: none;
         user-select: none;
+      }
+      /* press and hold cue: a ring under the finger that closes in until the menu opens (500 ms) */
+      .press-ring {
+        position: fixed;
+        z-index: 19;
+        width: 64px;
+        height: 64px;
+        margin: -32px 0 0 -32px;
+        box-sizing: border-box;
+        border: 3px solid var(--mc-focus, #03a9f4);
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--mc-focus, #03a9f4) 18%, transparent);
+        pointer-events: none;
+        animation: mc-press-ring 350ms ease-out forwards;
+      }
+      @keyframes mc-press-ring {
+        from {
+          transform: scale(1.5);
+          opacity: 0.3;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .press-ring {
+          animation: none;
+        }
       }
       /* copy / paste feedback: a capsule at the canvas foot (like the connect hint), 3 s */
       .status-capsule {

@@ -17,6 +17,35 @@ export class McLayersSheet extends LitElement {
   /** Viewport point the sheet opens at. */
   @property({ type: Number }) x = 0;
   @property({ type: Number }) y = 0;
+  /**
+   * Opened by press and hold, finger still down: the click that ends the press lands on the sheet (on the
+   * backdrop, or on the first row under the finger) and must not close it or pick. Ignored until the finger
+   * has lifted and a moment has passed.
+   */
+  @property({ type: Boolean }) holdOpen = false;
+  private _guard = false;
+  private _guardTimer = 0;
+
+  private readonly _lifted = (): void => {
+    clearTimeout(this._guardTimer);
+    this._guardTimer = window.setTimeout(() => (this._guard = false), 350);
+  };
+
+  private _unguard(): void {
+    for (const type of ['pointerup', 'pointercancel', 'touchend', 'touchcancel']) window.removeEventListener(type, this._lifted, true);
+  }
+
+  protected firstUpdated(): void {
+    if (!this.holdOpen) return;
+    this._guard = true;
+    for (const type of ['pointerup', 'pointercancel', 'touchend', 'touchcancel']) window.addEventListener(type, this._lifted, { capture: true, once: true });
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    clearTimeout(this._guardTimer);
+    this._unguard();
+  }
 
   static styles = [
     editorSystem,
@@ -100,6 +129,7 @@ export class McLayersSheet extends LitElement {
   }
 
   private _close(): void {
+    if (this._guard) return;
     this.dispatchEvent(new CustomEvent('close', { bubbles: true, composed: true }));
   }
 
@@ -135,7 +165,9 @@ export class McLayersSheet extends LitElement {
               class="item lyr-btn"
               data-key=${it.key}
               aria-current=${it.current ? 'true' : 'false'}
-              @click=${() => this.dispatchEvent(new CustomEvent('pick', { detail: { key: it.key }, bubbles: true, composed: true }))}
+              @click=${() => {
+                if (!this._guard) this.dispatchEvent(new CustomEvent('pick', { detail: { key: it.key }, bubbles: true, composed: true }));
+              }}
             ><span><span class="nm">${it.current ? '✓ ' : ''}${it.name}</span><span class="sub">${it.detail}, ${t('{n, select, 1 {1st} 2 {2nd} 3 {3rd} other {{n}th}} from the front here', { n: i + 1 })}</span></span></button></li>`,
           )}
         </ul>
