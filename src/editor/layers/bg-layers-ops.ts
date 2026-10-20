@@ -13,7 +13,7 @@ import { m, t } from './i18n';
  * backdropHasProblem) stays in bg-layers-model.ts.
  */
 
-export const LIMIT_TEXT = m('Limit of 4 layers reached. More layers slow down older wall tablets. Remove one to add another.');
+export const LIMIT_TEXT = m('Limit of {max} layers reached. More layers slow down older wall tablets. Remove one to add another.');
 
 const MAX_STATE_ROWS = 32;
 const BLOCKED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
@@ -167,7 +167,7 @@ export function statusSentence(s: BgLayerStatus, layer: BackgroundLayerConfig | 
     case 'no-state-image':
       return layer?.image
         ? t('No picture for state {state}. The Any other state picture is used.', { state: detail })
-        : t('No picture for state {state}. No Any other state picture is set, so the next layer is shown.', { state: detail });
+        : t('No picture for state {state}. No "Any other state" picture is set, so the next layer is shown.', { state: detail });
     case 'load-failed': return t('The picture could not be loaded. The next layer is shown.');
     case 'snapshot-failed': return t('Snapshot failed. The last good frame stays visible.');
     case 'stale': return t('Not updated {n} min', { n: staleMinutes(Number(s.detail) || 0) });
@@ -218,7 +218,8 @@ export function thumbStyle(layer: BackgroundLayerConfig): string {
   }
   if (layer.type === 'pattern') {
     const ink = safeColor(layer.color) ?? 'rgba(128,128,128,.6)';
-    return (PATTERN_THUMBS[layer.pattern ?? 'dots'] ?? PATTERN_THUMBS.dots)(ink);
+    const name = layer.pattern ?? 'dots';
+    return (Object.prototype.hasOwnProperty.call(PATTERN_THUMBS, name) ? PATTERN_THUMBS[name] : PATTERN_THUMBS.dots)(ink);
   }
   return '';
 }

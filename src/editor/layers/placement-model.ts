@@ -33,9 +33,11 @@ export function layerOf(mod: CardModule): LayerConfig {
   return l && typeof l === 'object' && !Array.isArray(l) ? (l as LayerConfig) : {};
 }
 
+const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 const clean = (layer: LayerConfig): LayerConfig | undefined => {
   const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(layer)) if (v !== undefined) out[k] = v;
+  for (const [k, v] of Object.entries(layer)) if (v !== undefined && !FORBIDDEN_KEYS.has(k)) out[k] = v;
   return Object.keys(out).length ? (out as LayerConfig) : undefined;
 };
 
