@@ -49,7 +49,7 @@ export const violations = (modules, rules) => {
 
 // Policy, hard-coded so the editable rules file cannot switch the gate off
 export const FORBIDDEN_DIRS = ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor', 'src/path'];
-export const CONTRACTS_ALLOWED = ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'];
+export const CONTRACTS_ALLOWED = ['entity-colour'];
 
 // effective lists: the hard-coded policy, tightened (never loosened) by the rules file
 const effective = (rules) => ({
@@ -97,17 +97,18 @@ const baseDebtList = (requireBase) => {
 const selfTest = () => {
   const rules = {
     forbidden_dirs: ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor', 'src/path'],
-    contracts_allowed: ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'],
+    contracts_allowed: ['entity-colour'],
     debt: ['./src/anim-studio/compile.ts', './src/contracts/card-pause.ts'],
   };
-  const clean = ['./src/index.ts', './src/card/magic-card.ts', './src/contracts/entity-scope.ts', './src/contracts/slider-look.needs.ts', './src/editor-loader-like.ts'];
+  const clean = ['./src/index.ts', './src/card/magic-card.ts', './src/contracts/entity-colour.ts', './src/contracts/slider-look.needs.ts', './src/editor-loader-like.ts'];
   const withDebt = [...clean, './src/anim-studio/compile.ts', './src/contracts/card-pause.ts'];
   const cases = [
     ['today passes', { modules: withDebt, rules }, 0],
     ['new editor import fails', { modules: [...withDebt, './src/editor/card-editor.ts'], rules }, 1],
     ['new ui-kit import fails', { modules: [...withDebt, './src/ui-kit/button.ts'], rules }, 1],
     ['new non-allowed contract fails', { modules: [...withDebt, './src/contracts/bg-stack.ts'], rules }, 1],
-    ['allowed contract and *.needs.ts pass', { modules: [...withDebt, './src/contracts/i18n.ts', './src/contracts/x.needs.ts'], rules }, 0],
+    ['allowed contract and *.needs.ts pass', { modules: [...withDebt, './src/contracts/entity-colour.ts', './src/contracts/x.needs.ts'], rules }, 0],
+    ['dropped contract import fails', { modules: [...withDebt, './src/contracts/mcu-templates.ts'], rules }, 1],
     ['debt entry removed without a fix fails', { modules: withDebt, rules: { ...rules, debt: ['./src/anim-studio/compile.ts'] } }, 1],
     ['fixed entry left in debt fails', { modules: clean, rules }, 2],
     ['fixed entry deleted from debt passes', { modules: [...clean, './src/anim-studio/compile.ts'], rules: { ...rules, debt: ['./src/anim-studio/compile.ts'] } }, 0],

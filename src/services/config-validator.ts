@@ -1,7 +1,7 @@
 import { MagicCardConfig, RowConfig, ColumnConfig, CardModule, ModuleType } from '../types';
 import { ModuleRegistry } from '../modules/module-registry';
 import { t } from '../card/i18n';
-import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack';
+import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack.needs';
 
 const PLACEMENTS = ['flow', 'background', 'overlay'];
 const LAYER_TYPES = ['image', 'gradient', 'pattern', 'color'];
