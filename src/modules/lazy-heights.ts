@@ -111,11 +111,10 @@ export function clockMinHeight(config: { show_date?: boolean; design?: { height?
   const lh = d?.line_height;
   const v = typeof lh === 'string' ? lh.trim() : lh;
   const lines = date ? 2 : 1;
-  // the unit is the regex's own alternation, so only a number and px, em or rem reach the style
-  const length = typeof v === 'string' ? /^\d*\.?\d+(px|em|rem)$/.exec(v) : null;
+  // the unit is the regex's own alternation, so only a number and px, em or rem reach the style; a percentage becomes em
+  const length = typeof v === 'string' ? /^\d*\.?\d+(px|em|rem|%)$/.exec(v) : null;
   const n = parseFloat(v as string);
-  if (length && n > 0) return `calc(${n}${length[1]} * ${lines})`;
-  if (typeof v === 'string' && /^\d*\.?\d+%$/.test(v) && n > 0) return `calc(${n / 100}em * ${lines})`;
+  if (length && n > 0) return length[1] === '%' ? `calc(${n / 100}em * ${lines})` : `calc(${n}${length[1]} * ${lines})`;
   const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? Number(v) : v;
   const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.17;
   return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
