@@ -1,8 +1,7 @@
-import type { DeviceAnim, HassEntity, HomeAssistant, IconFxConfig } from '../types';
-import { cssTime, safeColor } from '../utils/safe-css';
-import { ENTITY_COLOR_VAR, entityStateColor, parseEntityColor } from '../utils/entity-color';
-import { entityNumber, isUnavailable } from '../utils/entity-value';
+import type { DeviceAnim, HomeAssistant, IconFxConfig } from '../types';
+import { cssTime } from '../utils/safe-css';
 import { resolveDeviceAnim } from './device-anim';
+import { clamp, colour, entityLevel, FX_RANGE, mix, num, share } from './fx-values';
 
 /*
  * `icon_fx` resolved against the entity states: what <mc-svg-icon> draws. Pure (no DOM), so the
@@ -28,8 +27,7 @@ export interface ResolvedIconFx {
 }
 
 export const ICON_FX_DEFAULTS = {
-  min: 0,
-  max: 100,
+  ...FX_RANGE,
   emptyOpacity: 0.25,
   angle: 90,
   drawDuration: 1.2,
@@ -42,31 +40,7 @@ const DIRECTIONS: FillDirection[] = ['up', 'down', 'left', 'right'];
 const STYLES: ColorStyle[] = ['solid', 'duotone', 'gradient', 'value'];
 const DRAWS: ResolvedIconFx['draw'][] = ['off', 'load', 'change', 'loop'];
 
-const num = (v: unknown): number | undefined => {
-  const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;
-  return typeof n === 'number' && Number.isFinite(n) ? n : undefined;
-};
-const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 const pick = <T>(v: unknown, list: T[], def: T): T => (list.includes(v as T) ? (v as T) : def);
-const mix = (c: string, pct: number) => (pct >= 100 ? c : `color-mix(in srgb, ${c} ${clamp(pct, 0, 100)}%, transparent)`);
-
-/** `25%`, `0.25` or 25 → 0.25; undefined when not a share. */
-export function share(v: unknown): number | undefined {
-  if (typeof v === 'string' && /^\s*\d*\.?\d+\s*%\s*$/.test(v)) return clamp(parseFloat(v) / 100, 0, 1);
-  const n = num(v);
-  if (n === undefined) return undefined;
-  return clamp(n > 1 ? n / 100 : n, 0, 1);
-}
-
-/**
- * A colour value: `entity` / `entity N%` (the entity's state colour, else the wrapper's entity
- * colour var, else currentColor) or a safe CSS colour; undefined when unset / unsafe.
- */
-export function colour(v: unknown, stateObj: HassEntity | undefined): string | undefined {
-  const ent = parseEntityColor(v);
-  if (ent) return mix(entityStateColor(stateObj) ?? `var(${ENTITY_COLOR_VAR}, currentColor)`, ent.opacity);
-  return safeColor(v);
-}
 
 interface Rgb { r: number; g: number; b: number }
 
@@ -104,19 +78,6 @@ function valueLevel(fx: IconFxConfig, ctx: { hass?: HomeAssistant; entity?: stri
   const f = fx.fill && typeof fx.fill === 'object' ? fx.fill : {};
   const id = f.entity || ctx.entity;
   return entityLevel(id ? ctx.hass?.states?.[id] : undefined, f.attribute || undefined, f.min, f.max);
-}
-
-/**
- * 0..1 of an entity's state (or attribute) between min and max (default 0..100), clamped; undefined
- * when unavailable / not numeric or the range is empty. Shared by liquid fill and value backgrounds.
- */
-export function entityLevel(stateObj: HassEntity | undefined, attribute: string | undefined, minV: unknown, maxV: unknown): number | undefined {
-  if (isUnavailable(stateObj, attribute)) return undefined;
-  const v = entityNumber(stateObj, attribute);
-  const min = num(minV) ?? ICON_FX_DEFAULTS.min;
-  const max = num(maxV) ?? ICON_FX_DEFAULTS.max;
-  if (v === undefined || max === min) return undefined;
-  return clamp((v - min) / (max - min), 0, 1);
 }
 
 export function resolveIconFx(
