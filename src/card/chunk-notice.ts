@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import type { RetryableLazyChunk } from '../contracts/lazy-module';
 import { onChunkChange } from '../utils/lazy-chunk';
 import { t } from './i18n';
@@ -33,7 +33,6 @@ const part = (name: string): string =>
 
 const reload = (): void => location.reload();
 
-@customElement('mc-chunk-notice')
 export class McChunkNotice extends LitElement {
   static styles = css`
     :host {
@@ -98,6 +97,7 @@ export class McChunkNotice extends LitElement {
   @state() private _shown = false;
   private _off?: () => void;
   private _refocus = false;
+  private _doneTimer?: ReturnType<typeof setTimeout>;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -107,6 +107,7 @@ export class McChunkNotice extends LitElement {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     this._off?.();
+    clearTimeout(this._doneTimer);
   }
 
   protected willUpdate(): void {
@@ -116,7 +117,8 @@ export class McChunkNotice extends LitElement {
       this._refocus = !!this.shadowRoot?.activeElement;
       this._shown = this._busy = this._again = false;
       this._done = t('{part} loaded.', { part: part(c.name) });
-      setTimeout(() => (this._done = ''), 1500);
+      clearTimeout(this._doneTimer);
+      this._doneTimer = setTimeout(() => (this._done = ''), 1500);
     }
   }
 
@@ -163,3 +165,5 @@ export class McChunkNotice extends LitElement {
     return html`<div role="status" aria-live="polite" aria-busy=${this._busy ? 'true' : 'false'}>${body}</div>`;
   }
 }
+
+if (!customElements.get('mc-chunk-notice')) customElements.define('mc-chunk-notice', McChunkNotice);
