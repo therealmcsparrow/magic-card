@@ -1,5 +1,4 @@
 import { LitElement, html, nothing, PropertyValues, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import type { SceneId } from '../utils/seasonal';
 import type { Particle, SceneLayout } from '../utils/seasonal-scenes';
 import { layoutScenes } from './seasonal-layout';
@@ -75,18 +74,27 @@ function ambientArt(kind: string): TemplateResult {
  * still composition. Renders nothing (and watches nothing) without a known scene.
  */
 export class McSeasonal extends LitElement {
+  static properties = {
+    scenes: { attribute: false, hasChanged: (a?: SceneId[], b?: SceneId[]) => !sameList(a, b) },
+    intensity: { type: Number },
+    layer: { reflect: true },
+    seed: {},
+    noflash: { type: Boolean, reflect: true },
+    _static: { state: true },
+  };
+
   static styles = seasonalStyles;
 
-  @property({ attribute: false, hasChanged: (a?: SceneId[], b?: SceneId[]) => !sameList(a, b) }) scenes: SceneId[] = [];
+  scenes: SceneId[] = [];
   /** Particle density 0..1. */
-  @property({ type: Number }) intensity = 0.5;
-  @property({ reflect: true }) layer: 'back' | 'front' = 'back';
+  intensity = 0.5;
+  layer: 'back' | 'front' = 'back';
   /** Layout seed (e.g. the card / element id): the same seed always lays out the same. */
-  @property() seed = 'mc';
+  seed = 'mc';
   /** Skip the storm flash (the card has enough flashing layers). */
-  @property({ type: Boolean, reflect: true }) noflash = false;
+  noflash = false;
 
-  @state() private _static = false;
+  private _static = false;
 
   private _media?: MediaQueryList;
   private _watching = false;

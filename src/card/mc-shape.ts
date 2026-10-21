@@ -1,5 +1,4 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
 import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
@@ -132,6 +131,14 @@ function contentHeight(el: HTMLElement): number | undefined {
 }
 
 export class McShape extends LitElement {
+  static properties = {
+    shape: { attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) },
+    stroke: { attribute: false, hasChanged: (a?: ShapeStroke, b?: ShapeStroke) => JSON.stringify(a) !== JSON.stringify(b) },
+    edge: { attribute: false, hasChanged: (a?: readonly number[], b?: readonly number[]) => JSON.stringify(a) !== JSON.stringify(b) },
+    offscreen: { type: Boolean, reflect: false },
+    _box: { state: true },
+  };
+
   static styles = css`
     :host {
       position: absolute;
@@ -148,10 +155,8 @@ export class McShape extends LitElement {
     }
   `;
 
-  @property({ attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) })
   shape?: ResolvedShape;
 
-  @property({ attribute: false, hasChanged: (a?: ShapeStroke, b?: ShapeStroke) => JSON.stringify(a) !== JSON.stringify(b) })
   stroke?: ShapeStroke;
 
   /**
@@ -159,13 +164,12 @@ export class McShape extends LitElement {
    * bottom left): the content rectangle grown by it lies inside the shape, so every content point is
    * at least that far inside.
    */
-  @property({ attribute: false, hasChanged: (a?: readonly number[], b?: readonly number[]) => JSON.stringify(a) !== JSON.stringify(b) })
   edge?: readonly number[];
 
   /** Set by the shared off-screen observer while the shape animates. */
-  @property({ type: Boolean, reflect: false }) offscreen = false;
+  offscreen = false;
 
-  @state() private _box?: Box;
+  private _box?: Box;
 
   private _parent?: HTMLElement;
   private _mutations?: MutationObserver;

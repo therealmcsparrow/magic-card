@@ -1,5 +1,4 @@
 import { LitElement, html, svg, nothing, PropertyValues, SVGTemplateResult, TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { HassEntity, HomeAssistant, IconFxConfig } from '../types';
@@ -84,27 +83,42 @@ const themed = (paint: string): string => (paint === 'currentColor' ? PRIMARY_VA
  * icon is never blank and colour / size still apply. Effect layers join in later tasks.
  */
 export class McSvgIcon extends LitElement {
+  static properties = {
+    hass: { attribute: false },
+    icon: { attribute: false },
+    entity: { attribute: false },
+    fx: { attribute: false },
+    iconOn: { attribute: false },
+    iconOff: { attribute: false },
+    svg: { attribute: false },
+    fallback: { attribute: false },
+    kept: { attribute: false },
+    stateObj: { attribute: false },
+    decorative: { attribute: false },
+    rig: { attribute: false },
+  };
+
   static styles = iconBaseStyles;
 
-  @property({ attribute: false }) hass?: HomeAssistant;
-  @property({ attribute: false }) icon?: string;
-  @property({ attribute: false }) entity?: string;
-  @property({ attribute: false }) fx?: IconFxConfig;
-  @property({ attribute: false }) iconOn?: string;
-  @property({ attribute: false }) iconOff?: string;
-  @property({ attribute: false }) svg?: string;
+  hass?: HomeAssistant;
+  icon?: string;
+  entity?: string;
+  fx?: IconFxConfig;
+  iconOn?: string;
+  iconOff?: string;
+  svg?: string;
   /** The module's default icon: drawn for an `mcu:` icon nothing answers and for an SVG that was rejected. */
-  @property({ attribute: false }) fallback?: string;
+  fallback?: string;
   /** The card's `custom_icons` copies (markup by saved-icon id). */
-  @property({ attribute: false }) kept?: Record<string, string>;
+  kept?: Record<string, string>;
   /**
    * Entity icons inside HA: a hidden <ha-state-icon> picks the icon (registry, attribute, icon
    * translations, device class) and this draws it; until then it is the visible fallback.
    */
-  @property({ attribute: false }) stateObj?: HassEntity;
+  stateObj?: HassEntity;
   /** The host is aria-hidden or labelled: the fallback icon is hidden from assistive tech too. */
-  @property({ attribute: false }) decorative = false;
-  @property({ attribute: false }) rig?: IconRig;
+  decorative = false;
+  rig?: IconRig;
 
   private _unsub?: () => void;
   private _watched?: string;

@@ -1,5 +1,4 @@
 import { LitElement, html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
 import { FLOW_QUALITY_THRESHOLDS, FLOW_SPIN_SHAPES } from '../contracts/flow-look.needs';
 import type { FlowBudget, FlowLookQuality, FlowLookResolved, FlowWithLook } from '../contracts/flow-look';
 import { FLOW_END_SELECTOR } from '../contracts/flow-anchor.needs';
@@ -219,17 +218,22 @@ function visualRect(w: HTMLElement, v: Element, full: Rect, box: Rect): Rect | u
  * arrowhead in the flow direction. Off-screen overlays pause (src/icons/offscreen.ts).
  */
 export class McFlows extends LitElement {
+  static properties = {
+    flows: { attribute: false, hasChanged: (a?: ResolvedFlow[], b?: ResolvedFlow[]) => !sameFlows(a, b) },
+    dark: { type: Boolean, reflect: true },
+    selected: { attribute: false },
+  };
+
   static styles = flowsOverlayStyles;
 
   /** Resolved flows (labels already rendered by the card). */
-  @property({ attribute: false, hasChanged: (a?: ResolvedFlow[], b?: ResolvedFlow[]) => !sameFlows(a, b) })
   flows: ResolvedFlow[] = [];
 
   /** HA dark mode: the track under the dots is lighter there. */
-  @property({ type: Boolean, reflect: true }) dark = false;
+  dark = false;
 
   /** Studio canvas: key of the selected flow, drawn with a highlight halo under its line. */
-  @property({ attribute: false }) selected?: string | null;
+  selected?: string | null;
 
   /**
    * Studio canvas: key of the drawn flow whose line passes within `tolerance` screen px of a client

@@ -1,5 +1,4 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import { readRadii, shapeRingPath } from '../utils/ring-path';
 import { ringPath } from '../utils/ring-outline';
 import type { ResolvedShape } from './shape-resolve';
@@ -26,6 +25,12 @@ function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boo
  * all rings) or its inline style / class changes (radius from a rule or appearance), not per render.
  */
 export class McRing extends LitElement {
+  static properties = {
+    ring: { attribute: false, hasChanged: (a?: ResolvedRing, b?: ResolvedRing) => !sameRing(a, b) },
+    shape: { attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) },
+    _box: { state: true },
+  };
+
   static styles = css`
     :host {
       position: absolute;
@@ -68,14 +73,13 @@ export class McRing extends LitElement {
     }
   `;
 
-  @property({ attribute: false, hasChanged: (a?: ResolvedRing, b?: ResolvedRing) => !sameRing(a, b) }) ring?: ResolvedRing;
+  ring?: ResolvedRing;
 
   /** The parent's outline shape: the ring follows it instead of the rounded rectangle. */
-  @property({ attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) })
   shape?: ResolvedShape;
 
   /** Parent border box and radii, as measured. */
-  @state() private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
+  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
 
   private _observed?: Element;
   private _mutations?: MutationObserver;

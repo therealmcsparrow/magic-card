@@ -1,6 +1,5 @@
 import { t } from './i18n';
 import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
 import {
   ActionsConfig,
   MagicCardConfig,
@@ -203,15 +202,24 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
 
 defineBgStack();
 
-@customElement(CARD_TAG)
 export class MagicCard extends LitElement {
   static styles = [...magicCardStyles, noticeStyles];
 
-  @property({ attribute: false })
+  static properties = {
+    hass: { attribute: false },
+    editMode: { attribute: false },
+    preview: { attribute: false },
+    selectedPath: { attribute: false },
+    selectedFlow: { attribute: false },
+    _config: { state: true },
+    _resolvedConfig: { state: true },
+    _themeShadow: { state: true },
+    _templateNotice: { state: true },
+  };
+
   hass?: HomeAssistant;
 
   /** Studio canvas mode: tags elements with editor paths, disables actions and template side effects. */
-  @property({ attribute: false })
   editMode = false;
 
   /** Editor preview pause (card-pause 2.0.0): freezes all motion while editing; never remembered, survives setConfig. */
@@ -227,30 +235,24 @@ export class MagicCard extends LitElement {
   }
 
   /** Set by HA's hui-card: the card is shown as a preview (card editor, dashboard in edit mode). */
-  @property({ attribute: false })
   preview = false;
 
   /**
    * Studio canvas: editor path of the selected module ("row.col.module/slot.index/..."), so a tabs or
    * slider layout shows the tab / slide holding a selected child.
    */
-  @property({ attribute: false })
   selectedPath?: string;
 
   /** Studio canvas: key of the selected flow (highlighted by the flows overlay). */
-  @property({ attribute: false })
   selectedFlow?: string | null;
 
-  @state()
   private _config?: MagicCardConfig;
 
-  @state()
   private _resolvedConfig?: MagicCardConfig;
   /** The last render's config with the matching conditional_appearance rules applied (a rule can set `seasonal`). */
   private _look?: MagicCardConfig;
 
   /** A shaped card without its own box_shadow: the theme's card shadow as a drop-shadow (read after render). */
-  @state()
   private _themeShadow?: string;
   /** The last render was a shaped card without its own box_shadow. */
   private _readThemeShadow = false;
@@ -260,7 +262,6 @@ export class MagicCard extends LitElement {
   private _watchedTemplate?: string;
   private _watchedConn?: unknown;
   /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
-  @state()
   private _templateNotice?: 'missing' | 'unavailable';
   private _lookWait = false;
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
@@ -1887,3 +1888,5 @@ export class MagicCard extends LitElement {
     }
   }
 }
+
+customElements.define(CARD_TAG, MagicCard);

@@ -1,5 +1,4 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import type { HomeAssistant } from '../types';
 import { ResolvedValueBackground, sparklineHistory, sparklinePath } from '../utils/value-background';
 import { entityNumber, isUnavailable } from '../utils/entity-value';
@@ -34,6 +33,12 @@ const same = (a?: ResolvedValueBackground, b?: ResolvedValueBackground) => JSON.
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
 export class McValueBg extends LitElement {
+  static properties = {
+    value: { attribute: false, hasChanged: (a?: ResolvedValueBackground, b?: ResolvedValueBackground) => !same(a, b) },
+    offscreen: { type: Boolean },
+    _size: { state: true },
+  };
+
   static styles = css`
     :host {
       position: absolute;
@@ -132,13 +137,12 @@ export class McValueBg extends LitElement {
     }
   `;
 
-  @property({ attribute: false, hasChanged: (a?: ResolvedValueBackground, b?: ResolvedValueBackground) => !same(a, b) })
   value?: ResolvedValueBackground;
 
   /** Set by the shared off-screen observer while the layer is watched (a moving wave, a sparkline). */
-  @property({ type: Boolean }) offscreen = false;
+  offscreen = false;
 
-  @state() private _size?: { w: number; h: number };
+  private _size?: { w: number; h: number };
 
   private _hass?: HomeAssistant;
   private _media?: MediaQueryList;
