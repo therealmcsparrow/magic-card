@@ -35,7 +35,8 @@ const everFailed = new Set<string>();
 
 /** Run cb when any chunk fails, recovers or ends a retry; returns the unsubscribe. The notices and the card use it. */
 export const onChunkChange = (cb: () => void): (() => void) => (listeners.add(cb), () => void listeners.delete(cb));
-const emit = (): void => listeners.forEach((cb) => cb());
+/** Tell every subscriber to render again (the notices call it when their own state changes). */
+export const notifyChunks = (): void => listeners.forEach((cb) => cb());
 
 /** Names of the chunks that have failed on this page (they keep their notice element for the recovery message). */
 export const failedChunkNames = (): ReadonlySet<string> => everFailed;
@@ -153,8 +154,6 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
   let busy: Promise<boolean> | undefined;
   let waiting = new Set<() => void>();
   let generation = 0;
-  let background = 0;
-  let timer: ReturnType<typeof setTimeout> | undefined;
   let last: unknown;
 
   const stop = (g: number, kind: LazyChunkFailure, message: string, err?: unknown): false => {
@@ -163,15 +162,17 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
     why = kind;
     everFailed.add(name);
     console.warn(message, ...(err === undefined ? [] : [err]));
-    emit();
+    notifyChunks();
     return false;
   };
+
+  const stale = (g: number, other: string): false => stop(g, 'mismatch', `Magic Card was updated, reload the page (magic-card.js ${BUILD_VERSION}, ${file} ${other}).`);
 
   /** Check, install, adopt the styles, then run the whenReady callbacks. A late success (after a timeout) comes through here too. */
   const install = (g: number, m: LazyChunkModule): boolean => {
     if (g !== generation) return false;
     if (state === 'ready') return true;
-    if (m?.BUILD !== BUILD_VERSION) return stop(g, 'mismatch', `Magic Card was updated, reload the page (magic-card.js ${BUILD_VERSION}, ${file} ${String(m?.BUILD)}).`);
+    if (m?.BUILD !== BUILD_VERSION) return stale(g, String(m?.BUILD));
     try {
       m.install();
       if ('styles' in m && m.styles) adopt(m.styles);
@@ -183,7 +184,6 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
     state = 'ready';
     why = undefined;
     pending = Promise.resolve(true);
-    clearTimeout(timer);
     const callbacks = [...waiting];
     waiting.clear();
     for (const cb of callbacks) {
@@ -194,7 +194,7 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
       }
     }
     // only a chunk that had failed has a notice to clear; a first-time success needs no second render
-    if (everFailed.has(name)) emit();
+    if (everFailed.has(name)) notifyChunks();
     return true;
   };
 
@@ -208,41 +208,40 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
       );
     });
 
-  /** An extra attempt from the failed state (background timer or the button); one at a time. */
+  /** An extra attempt from the failed state (the retry list or the button); one at a time. */
   const extra = (): Promise<boolean> => {
     const g = generation;
     return (busy ??= attempt(g, true).then((ok) => {
       busy = undefined;
-      if (g === generation && !ok && state === 'failed') emit();
+      if (g === generation && !ok && state === 'failed') notifyChunks();
       return ok;
     }));
-  };
-
-  const later = (): void => {
-    if (state !== 'failed' || why !== 'load' || background >= TIMING.background.length) return;
-    const g = generation;
-    timer = setTimeout(() => {
-      background++;
-      void extra().then(() => g === generation && later());
-    }, TIMING.background[background]);
   };
 
   // state after an await: a late success may have changed it
   const now = () => state;
 
-  const first = async (g: number): Promise<boolean> => {
-    if (await attempt(g, false)) return true;
-    if (g !== generation || now() === 'failed') return false;
-    // another release next to this entry cannot be fixed by retrying: say so at once
-    if (await otherRelease()) return stop(g, 'mismatch', `Magic Card was updated, reload the page (magic-card.js ${BUILD_VERSION}, ${file}).`);
-    await sleep(TIMING.silent);
-    if (g !== generation || now() !== 'loading') return now() === 'ready';
-    if (await attempt(g, true)) return true;
-    if (g !== generation || now() !== 'loading') return now() === 'ready';
-    stop(g, 'load', `Magic Card: ${file} did not load`, last);
-    later();
-    return false;
-  };
+  /**
+   * The first attempt, then the retries on one delay list: the silent retry, then the background ones. The promise
+   * settles false at the first failure, while the later retries go on; a late success or a build mismatch ends them.
+   */
+  const first = (g: number): Promise<boolean> =>
+    new Promise<boolean>((settle) => {
+      void (async () => {
+        let ok = await attempt(g, false);
+        // another release next to this entry cannot be fixed by retrying: say so at once
+        if (!ok && g === generation && now() === 'loading' && (await otherRelease())) stale(g, 'manifest');
+        const delays = [TIMING.silent, ...TIMING.background];
+        for (let i = 0; !ok && g === generation && now() !== 'ready' && why !== 'mismatch' && i < delays.length; i++) {
+          await sleep(delays[i]);
+          if (g !== generation || now() === 'ready') break;
+          ok = await extra();
+          if (!ok && now() === 'loading') stop(g, 'load', `Magic Card: ${file} did not load`, last);
+          settle(ok);
+        }
+        settle(ok || now() === 'ready');
+      })();
+    });
 
   const load = (): Promise<boolean> => {
     if (!pending) {
@@ -269,11 +268,9 @@ export function lazyChunk<M extends LazyChunkModule = LazyChunkModule>(name: Laz
     module: () => mod as M | undefined,
     __reset(next) {
       generation++;
-      clearTimeout(timer);
       importer = next ?? realImporter;
       pending = busy = mod = why = undefined;
       state = 'idle';
-      background = 0;
       waiting = new Set();
       everFailed.delete(name);
     },

@@ -78,7 +78,6 @@
   "Timeout waiting for {tag}": "Timeout waiting for {tag}",
   "Toggle {name}": "Toggle {name}",
   "Try again": "Try again",
-  "Trying again...": "Trying again...",
   "Unavailable": "Unavailable",
   "Unknown module: {type}": "Unknown module: {type}",
   "background_layers must be a list": "background_layers must be a list",

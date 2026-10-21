@@ -42,8 +42,7 @@ import { loadEditor } from '../utils/editor-loader';
 import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
 import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
 import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
-import './chunk-notice';
-import type { McChunkNotice } from './chunk-notice';
+import { chunkNotice, noticeStyles } from './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import type { SeasonalBudget } from '../utils/seasonal-scenes';
@@ -193,7 +192,7 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
 
 @customElement(CARD_TAG)
 export class MagicCard extends LitElement {
-  static styles = magicCardStyles;
+  static styles = [...magicCardStyles, noticeStyles];
 
   @property({ attribute: false })
   hass?: HomeAssistant;
@@ -662,7 +661,7 @@ export class MagicCard extends LitElement {
     this._media.end();
     this._syncTicker();
     // a notice of a failed chunk shows: the css makes ha-card the scroll box (the attribute is on no other render)
-    this.toggleAttribute('mc-fail', [...(this.renderRoot?.querySelectorAll<McChunkNotice>('mc-chunk-notice') ?? [])].some((n) => n.chunk?.failed()));
+    this.toggleAttribute('mc-fail', !!this.renderRoot?.querySelector('.mc-n'));
 
     if (this.editMode) return;
 
@@ -1467,7 +1466,7 @@ export class MagicCard extends LitElement {
       return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
     });
     return names.length
-      ? html`${rest}${names.map((n) => html`<mc-chunk-notice .chunk=${n in lazyChunks ? lazyChunks[n as keyof typeof lazyChunks] : onDemandChunks[n as keyof typeof onDemandChunks]}></mc-chunk-notice>`)}`
+      ? html`${rest}${names.map((n) => chunkNotice(n in lazyChunks ? lazyChunks[n as keyof typeof lazyChunks] : onDemandChunks[n as keyof typeof onDemandChunks]))}`
       : rest;
   }
 

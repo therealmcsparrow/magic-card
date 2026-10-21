@@ -214,8 +214,8 @@ import type { MagicModule } from '../modules/module-types';
  *   card"), British ids through the card i18n namespace. The chunk name and key go to console.warn.
  * - While a slot of the card shows a notice, the host carries the `mc-fail` attribute; in that state ha-card
  *   is the scroll box and the layout-shift rule does not apply.
- * - The notice is the element <mc-chunk-notice> (src/card/chunk-notice.ts, in magic-card.js): a module
- *   slot whose chunk failed renders it after the stub's failed box; the card renders one per failed chunk its
+ * - The notice is a template, chunkNotice(chunk) (src/card/chunk-notice.ts, in magic-card.js), rendered in the card's own
+ *   shadow root: a module slot whose chunk failed renders it after the stub's failed box; the card renders one per failed chunk its
  *   config needs (or its render met, for the on-demand chunks) as the last child of the card content. It exists
  *   only after a failure, so a plain or healthy card has none.
  *

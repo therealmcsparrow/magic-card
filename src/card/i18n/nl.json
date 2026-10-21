@@ -78,7 +78,6 @@
   "Timeout waiting for {tag}": "Time-out bij het wachten op {tag}",
   "Toggle {name}": "{name} aan- of uitzetten",
   "Try again": "Opnieuw proberen",
-  "Trying again...": "Opnieuw proberen...",
   "Unavailable": "Niet beschikbaar",
   "Unknown module: {type}": "Onbekende module: {type}",
   "background_layers must be a list": "background_layers moet een lijst zijn",

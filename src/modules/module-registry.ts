@@ -4,7 +4,7 @@ import { html } from 'lit';
 import type { LazyModuleStub, ModuleView, RetryableLazyChunk } from '../contracts/lazy-module';
 import type { MessageId } from '../contracts/i18n';
 import { currentRenderContext } from '../services/render-context';
-import '../card/chunk-notice';
+import { chunkNotice } from '../card/chunk-notice';
 
 class ModuleRegistryImpl {
   private modules = new Map<ModuleType, MagicModule>();
@@ -51,7 +51,7 @@ class ModuleRegistryImpl {
     const view = this.views.get(stub.metadata.type);
     if (view) return view.renderPreview(config, hass);
     // the notice (lazy-module 1.4.0 "Failure"): after the stub's own box, so the slot keeps the size its config gives it
-    const notice = () => html`<mc-chunk-notice .chunk=${chunk}></mc-chunk-notice>`;
+    const notice = () => chunkNotice(chunk);
     if (stub.renderPreview) {
       void chunk.load();
       const preview = stub.renderPreview(config, hass);
