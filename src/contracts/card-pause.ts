@@ -116,21 +116,24 @@
  *
  * ── Remembered ──
  * localStorage key `mc-paused:<location.pathname>:<fnv1a32 of the card config JSON>` = "1" while
- * paused, removed on resume; read once on first render. A config edit gives a new key (starts
- * playing). No personal data; functional storage the viewer asked for (no consent banner needed;
+ * paused, removed on resume; read once per config by the card bundle (src/card/pause-memory.ts), which applies a remembered
+ * pause (attribute, observer, rule 3) from the first paint, before the pause chunk has loaded, while `pause_button` is auto
+ * or always. The chunk adopts that state when it installs: no `mc-pause-change` event, the attribute is never removed, the
+ * button shows pressed. A failed chunk keeps the pause held (the load-failure notice still shows); a held pause without its
+ * button is undone by clearing the stored key. A config edit gives a new key (starts playing). No personal data; functional storage the viewer asked for (no consent banner needed;
  * GDPR / ePrivacy note for legal at docs time). localStorage unavailable: pause lasts the page visit.
  * Never written while the card is in editMode or by previewPaused.
  *
  * ── Size ──
- * magic-card.js: observer extension, the strip rules and three i18n strings (en-GB ids, en-US and nl tables).
+ * magic-card.js: observer extension, the strip rules, the remembered-pause read, rule 3 (the paused animation rule) and three i18n strings (en-GB ids, en-US and nl tables).
  * magic-card-pause.js (lazy-module chunk `pause`, loaded when pause_button is auto or always or an editor preview pause
- * asks): the CardPause class, button template, storage and the button rules.
+ * asks): the CardPause class, button template, storage writes and the button rules.
  * previewPaused plus the editMode storage guard: about 80-150 B in magic-card.js; the canvas
  * toggle and the Motion group are in magic-card-editor.js.
  */
 
 export const CARD_PAUSE_CONTRACT = '2.0.0';
-export const CARD_PAUSE_CONTRACT_REVISION = 4;
+export const CARD_PAUSE_CONTRACT_REVISION = 5;
 
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';

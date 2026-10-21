@@ -1,14 +1,13 @@
 import { css } from 'lit';
 
 /*
- * The Pause motion button and rule 3 of contract card-pause 1.0.0, the styles of the pause chunk. The button sits above
+ * The Pause motion button, the styles of the pause chunk (rule 3, which stops the card's CSS animations, is in pause-gap-css.ts). The button sits above
  * every layer (z 6; overlays live in the content's own stacking context), 6 px from its corner: 28 px visible,
  * 24 px at least, 44 px to hit under a coarse pointer (a transparent ::after box, no `inset`).
  * On a shaped card each offset adds the shape's content inset (--mc-shape-i*, 0 otherwise), so the
  * button stays inside the clip. The strip it sits in is pause-gap-css.ts. Written compact: css`` text goes into the bundle as is.
  */
 export const pauseCardStyles = css`
-ha-card[data-mc-paused],ha-card[data-mc-paused] *,ha-card[data-mc-paused] *::before,ha-card[data-mc-paused] *::after{animation-play-state:paused!important}
 .mc-pause{position:absolute;z-index:6;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:28px;height:28px;min-width:24px;min-height:24px;margin:0;padding:0;border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;cursor:pointer}
 @media (hover:hover){.mc-pause:hover{background:rgba(0,0,0,.75)}}
 .mc-pause:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px rgba(0,0,0,.6)}

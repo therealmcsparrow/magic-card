@@ -88,7 +88,9 @@ import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
 import { defineBgStack } from '../layers/stack/mc-bg-stack';
 import type { CardPause } from './card-pause';
 import { pauseIfLoaded } from './pause-seam';
-import { pauseGap, wantsPause } from '../contracts/card-pause.needs';
+import { setCardPaused } from '../icons/offscreen';
+import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
+import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
 /**
@@ -348,8 +350,9 @@ export class MagicCard extends LitElement {
   private _preview = false;
   /** The viewer's Pause motion button and state (contract card-pause 1.0.0); made once the `pause` chunk has installed and a pause is wanted. */
   private _pause?: CardPause;
-  /** The config setConfig received: the remembered pause is keyed by it. */
-  private _pauseSource?: object;
+  /** Storage key of the config setConfig received, and whether that key was left paused (read once per config). */
+  private _pauseKey = '';
+  private _remembered = false;
   private _pauseWait = false;
   private _pauseReady = (): void => {
     if (this.isConnected) this.requestUpdate();
@@ -373,8 +376,23 @@ export class MagicCard extends LitElement {
     }
     const pause = (this._pause = mod.api.create(this));
     pause.preview = this._preview;
-    pause.config(this._pauseSource ?? c);
+    if (!this._pauseKey) this._remember(c);
+    pause.config(this._pauseKey, this._remembered);
     return pause;
+  }
+  private _remember(config: object): void {
+    this._pauseKey = pauseKey(config);
+    this._remembered = rememberedPause(this._pauseKey);
+  }
+  /**
+   * The pause before the `pause` chunk has installed (or when it never does): a pause the viewer left on holds from the
+   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause waits for the chunk.
+   */
+  private _earlyPause(c: MagicCardConfig): boolean {
+    const on = this._remembered && wantsPause(c);
+    this.toggleAttribute(PAUSE_ATTRIBUTE, on);
+    setCardPaused(this, on);
+    return on;
   }
   /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
   private _frames: FillFrame[] = [];
@@ -540,8 +558,8 @@ export class MagicCard extends LitElement {
     const prevTemplate = this._config?.template;
     // a chunk met under the old config raises no notice under the new one
     this._met.clear();
-    this._pauseSource = config;
-    this._pause?.config(config);
+    this._remember(config);
+    this._pause?.config(this._pauseKey, this._remembered);
 
     // Every row / column / module (nested children included) gets a stable id
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
@@ -873,7 +891,7 @@ export class MagicCard extends LitElement {
     // the scope first: the card's own display template reads entity / card_entity
     // the viewer's pause: on the host and the observer before any child is built
     const pause = this._pauseFor(config);
-    const paused = pause?.begin(config) ?? false;
+    const paused = pause ? pause.begin(config) : this._earlyPause(config);
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return popupHere && popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;

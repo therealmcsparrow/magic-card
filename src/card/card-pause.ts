@@ -3,7 +3,7 @@ import type { LitElement, TemplateResult } from 'lit';
 import { t } from './i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
 import { reducedMotion } from '../utils/reduced-motion';
-import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts/card-pause.needs';
+import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /*
@@ -11,6 +11,7 @@ import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contr
  * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
  * state, remembers it per page and card, and renders the button.
  *
+ * The remembered state is read by the card bundle (pause-memory.ts), which holds the pause from the first paint; this class adopts it.
  * The pause button is hidden by default. Offscreen and reduced-motion pauses never depend on the button.
  */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
@@ -18,16 +19,6 @@ const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', '
 /** mdi:pause, mdi:play */
 const PAUSE_PATH = 'M14,19H18V5H14M6,19H10V5H6V19Z';
 const PLAY_PATH = 'M8,5.14V19.14L19,12.14L8,5.14Z';
-
-/** FNV-1a (32 bit) as 8 hex digits. */
-function fnv(text: string): string {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(16).padStart(8, '0');
-}
 
 /** localStorage can be missing, full or blocked: the pause then lasts the page visit. */
 function storage(fn: (s: Storage) => void): void {
@@ -50,14 +41,17 @@ export class CardPause {
 
   constructor(private readonly _host: LitElement) {}
 
-  /** A card config arrived: the same config keeps its state, an edited one starts as remembered (playing). */
-  config(config: object): void {
-    const key = PAUSE_STORAGE_PREFIX + location.pathname + ':' + fnv(JSON.stringify(config));
+  /**
+   * A card config arrived with its storage key and whether that key was left paused. The same key keeps its state, an edited
+   * config starts as remembered (playing). The first call adopts a pause the card already applied before this chunk
+   * installed: no event, the host attribute stays as it is.
+   */
+  config(key: string, on: boolean): void {
     if (key === this._key) return;
+    const first = this._key === '';
     this._key = key;
-    let on = false;
-    storage((s) => (on = s.getItem(key) === '1'));
-    this._set(on);
+    if (first) this.paused = on;
+    else this._set(on);
   }
 
   private _set(on: boolean): void {
