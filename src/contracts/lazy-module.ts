@@ -260,7 +260,7 @@ import type { MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 6;
+export const LAZY_MODULE_CONTRACT_REVISION = 7;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flows' | 'pause' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
