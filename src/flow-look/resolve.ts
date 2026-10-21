@@ -1,7 +1,8 @@
 import { FLOW_LOOK_DEFAULTS, defaultCapSize, FLOW_SPIN_SHAPES, type FlowCap, type FlowLineStyle, type FlowLookResolved, type FlowShape } from '../contracts/flow-look';
 import { FLOW_SHAPES, SPACING_MODES, fin, isWideFlowLook } from '../contracts/flow-anchor-wide';
 import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
-import { FLOW_DEFAULTS, type ResolvedFlow } from '../utils/flow';
+import { FLOW_DEFAULTS } from '../utils/flow-keys';
+import type { ResolvedFlow } from '../utils/flow';
 import { safeColor } from '../utils/animation';
 import { entityStateColor, parseEntityColor } from '../utils/entity-color';
 import { flowLookRegistry } from './registry';

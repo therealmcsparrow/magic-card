@@ -57,7 +57,7 @@ import { withTemplateAnimations } from '../../services/template-merge';
 import { animationLibrary } from '../../services/animation-library';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
-import { flowKeys } from '../../utils/flow';
+import { flowKeys } from '../../utils/flow-keys';
 import type { ModuleSelection, Selection } from '../studio/selection';
 
 /** A module (or a layout child below it: `child`), column or row, by index. */

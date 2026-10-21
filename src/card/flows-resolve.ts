@@ -1,9 +1,10 @@
 import type { HomeAssistant, MagicCardConfig } from '../types';
-import { flowKeys, flowModuleEntities, resolveFlow, type ResolvedFlow } from '../utils/flow';
+import { flowKeys, flowModuleEntities } from '../utils/flow-keys';
+import { resolveFlow, type ResolvedFlow } from '../utils/flow';
 import { flowLookSlot } from './flow-look-slot';
 
 /**
- * The card's flows resolved for the overlay (src/utils/flow.ts); undefined without a flow entry.
+ * The card's flows resolved for the overlay (src/utils/flow.ts, flow-keys.ts); undefined without a flow entry.
  * `c` is the config the flows come from, `entityConfig` the one whose module ids name the endpoint
  * entities. `label` turns a label template into the text to show ('' shows no label), so the card keeps
  * its template subscriptions.

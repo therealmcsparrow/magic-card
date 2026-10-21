@@ -8,7 +8,7 @@ import { FLOW_LOOK_EDITOR_TAG } from '../../contracts/look-editor';
 import { notice } from '../../ui-kit';
 import { loadLookEditor, lookEditorLoaded } from '../look-editor-loader';
 import { editorSystem } from '../../css/editor-stack';
-import { FLOW_DEFAULTS, flowKeys, flowModuleEntities } from '../../utils/flow';
+import { FLOW_DEFAULTS, flowKeys, flowModuleEntities } from '../../utils/flow-keys';
 import { deepClone } from '../../utils/deep-merge';
 import { entityStateColor } from '../../utils/entity-color';
 import { FlowModuleOption, TEMPLATE_ID_HINT, flowModuleOptions, newFlow, resolveFlowEndpoint } from '../state/flows';

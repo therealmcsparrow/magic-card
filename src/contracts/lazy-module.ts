@@ -49,7 +49,7 @@ import type { MagicModule } from '../modules/module-types';
  *   whose chunk is not ready (a predicate miss, backstop rule 3) tells the card, which then shows that
  *   chunk's failure notice if it fails. metChunk takes a LazyChunkName or OnDemandChunkName.
  * - LazyChunkName includes 'flows' (dist/magic-card-flows.js, ceiling 57,344 B, chunk entry src/card/flows-chunk.ts).
- *   It holds the flow resolver (src/utils/flow.ts), the line geometry and motion, <mc-flows> (defined in install())
+ *   It holds the flow resolver (src/utils/flow.ts, with the key helpers of src/utils/flow-keys.ts, which the editor also uses), the line geometry and motion, <mc-flows> (defined in install())
  *   and the card-side flow rules (`styles`); the card reads `api.resolveCardFlows` through lazyChunks.flows.module()
  *   (src/card/flows-seam.ts). Its needs() is hasFlows (src/utils/flows.needs.ts). The card marks its content
  *   `data-mc-flows` from the config and draws no overlay until the chunk has installed; the overlay is absolutely

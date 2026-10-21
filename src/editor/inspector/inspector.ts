@@ -60,7 +60,7 @@ import {
   renderCardGeneral,
 } from './card-settings';
 import { markFlowsOverridden } from '../state/flows';
-import { flowKeys } from '../../utils/flow';
+import { flowKeys } from '../../utils/flow-keys';
 import {
   renderColumnConditions,
   renderColumnDesign,
