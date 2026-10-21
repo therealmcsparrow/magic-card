@@ -4,13 +4,13 @@ import type { FlowLookConfig, FlowShape } from './flow-look';
 /*
  * flow-look 2.0.0, the predicates, key list and numbers magic-card.js needs at run time (mc-flows, flow.ts, magic-card.ts,
  * lazy-features). They sit in this file, not in flow-look.ts, because the entry may import only *.needs.ts of a contract
- * (proj.M11, tools/check-entry-graph.mjs); flow-look.ts re-exports them. Text revision S1a.2, no API change.
+ * (see tools/check-entry-graph.mjs); flow-look.ts re-exports them.
  */
 
-/** (r2) H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
+/** H above `lite` -> lite; above `minimal` -> minimal (H <= 3 full, <= 6 lite, > 6 minimal). */
 export const FLOW_QUALITY_THRESHOLDS = { lite: 3, minimal: 6 } as const;
 
-/** Shapes the `shape_spin` switch applies to (CEO 2026-10-19). */
+/** Shapes the `shape_spin` switch applies to. */
 export const FLOW_SPIN_SHAPES: readonly FlowShape[] = ['star', 'square', 'diamond', 'icon'];
 
 /** Every look key; any of them set = the flow needs the flow-look chunk. */

@@ -1,20 +1,12 @@
 /*
- * Contract: card pause (viewer-side "Pause motion" button, WCAG 2.2.2). Version 2.0.0
- * (Architect-owned). ADR 0038 (addendum). CEO Plan Gate 2026-10-19 (00-ceo-decisions.md): a pause
- * button per card ships in this beta and stops every moving thing on the card. Shared seam with
- * task flow-slider-styles (flows, slider looks).
- * r2 2026-10-20 (fix round B4, additive, still unreleased, so 1.0.0 in place): the `counted` option
- * on watchOffscreen and the pauseOffscreen directive.
- * Text revision 2026-10-20 (task smallest-fastest-card-viewer S1a.2, no API change, revision number stays 3): PAUSE_ATTRIBUTE,
- * PAUSE_EVENT and PAUSE_STORAGE_PREFIX moved to card-pause.needs.ts (proj.M11: the entry imports only
- * *.needs.ts of a contract); this file re-exports them.
- * r3 2.0.0 2026-10-20 (task flow-anchors-polish, CEO 2026-10-20; breaking because 1.0.0 shipped in
- * 2026.10.11-beta.3 with default `auto`): `pause_button` default is `hidden`; the editor shows the
+ * Contract: card pause (viewer-side "Pause motion" button, WCAG 2.2.2). Version 2.0.0.
+ * A pause button per card stops every moving thing on the card. watchOffscreen and the pauseOffscreen
+ * directive take a `counted` option.
+ * PAUSE_ATTRIBUTE, PAUSE_EVENT and PAUSE_STORAGE_PREFIX live in card-pause.needs.ts (the entry imports
+ * only *.needs.ts of a contract); this file re-exports them.
+ * `pause_button` default is `hidden`; the editor shows the
  * setting in its own "Motion" group, open by default; the editor preview pause (MagicCard
- * `previewPaused`, additive) freezes motion while editing without the storage key. The TypeScript
- * shapes below are unchanged apart from the new PreviewPauseApi; no code consumer to migrate.
- * Deviation recorded by the builder: `deviates: hacard.S11 — CEO 2026-10-20 default hidden; the
- * viewer pause is no longer on by default; proj.M10 and proj.S4 still hold`. The offscreen and
+ * `previewPaused`, additive) freezes motion while editing without the storage key. The offscreen and
  * reduced-motion pauses never depend on the button.
  *
  * ── One mechanism: paused = off screen ──
@@ -32,7 +24,7 @@
  * - watchOffscreen gains an optional third argument `{ pausable: false }` for content that updates
  *   but does not move (src/utils/timer.ts clocks and countdowns keep ticking; mc-value-bg's
  *   sparkline background). Default pausable. A non-pausable element is never counted either.
- * - (r2) `{ counted: false }` (watchOffscreen third argument, and the pauseOffscreen directive as
+ * - `{ counted: false }` (watchOffscreen third argument, and the pauseOffscreen directive as
  *   `pauseOffscreen({ counted: false })`) for an element that pauses with the card but is no sign
  *   of motion on its own: it is left out of motionCount(host), so it never makes `auto` show the
  *   button. Default counted. Users: the slider track parts (src/utils/slider-track.ts; the slider
@@ -48,8 +40,8 @@
  * 1. Any element that moves on its own (CSS animation, WAAPI, rAF, video, timer-driven image swap)
  *    is either watched through watchOffscreen / pauseOffscreen / bg-stack host.observeOffscreen, or
  *    sits in the card's own shadow tree under the CSS rule in 3. Own IntersectionObservers are not
- *    allowed for motion: video-bg-view.ts and the camera view move to watchOffscreen (task T10).
- *    (r2) Such an element is counted (the default) unless the card's render already reports its
+ *    allowed for motion: video-bg-view.ts and the camera view move to watchOffscreen.
+ *    Such an element is counted (the default) unless the card's render already reports its
  *    motion source (as for background layers).
  * 2. On listener(false): CSS animations paused (animation-play-state, via the `offscreen` attribute
  *    or the element's own class), WAAPI Animation.pause(), rAF loops stopped, <video>.pause(), motion
@@ -85,7 +77,7 @@
  *   tab order after the card content; Enter / Space toggle. pointerdown / click stop propagation so
  *   card, row and module actions never fire.
  * - Shown when `pause_button` is `auto` and the card has motion, or `always`; never with
- *   `hidden`, which is the default (r3, CEO 2026-10-20: an author turns the button on). Card has
+ *   `hidden`, which is the default (an author turns the button on). Card has
  *   motion = the render saw a motion source (animations / fx / v2 runtime,
  *   seasonal scene, particles, flows with moving shapes or dashes, background_layers with pan_zoom,
  *   a video-bg or a camera rendering as background) OR the observer has a pausable, counted watched
@@ -93,10 +85,10 @@
  *   between 0 and 1).
  *   Under `prefers-reduced-motion: reduce`, `auto` still shows it when a video or particles run.
  * - Studio canvas: shown and working when the config shows it (so authors see it), not selectable
- *   as a module. (r3) In editMode its click never writes the storage key (the saved dashboard card
+ *   as a module. In editMode its click never writes the storage key (the saved dashboard card
  *   would otherwise start paused).
  *
- * ── Editor preview pause (r3, additive) ──
+ * ── Editor preview pause ──
  * - MagicCard gains a public property `previewPaused: boolean` (attribute: false, default false;
  *   PreviewPauseApi). The card is paused while `viewer paused && mode !== 'hidden'` OR
  *   `previewPaused`, whatever `pause_button` says. previewPaused sets the same attribute, custom
@@ -105,7 +97,7 @@
  *   config edit (new storage key) keeps the preview frozen.
  * - Studio canvas (src/editor/studio/studio-canvas.ts, card-editor chunk): one toggle button in the
  *   canvas toolbar area (not the module float-bar), native <button>, aria-pressed, aria-label
- *   "Pause preview motion", "Resume preview motion" while paused (Fix round 1: the name states the action; card-editor namespace, en-US / nl tables), icon mdi:pause / mdi:play,
+ *   "Pause preview motion", "Resume preview motion" while paused (the name states the action; card-editor namespace, en-US / nl tables), icon mdi:pause / mdi:play,
  *   24 x 24 px target at least, kit focus ring, Enter / Space. State lives in the canvas (session
  *   only, starts playing) and is written to its live card as `card.previewPaused`; a new card
  *   element (frame or device change) gets the current state on creation. Shown whatever
@@ -113,9 +105,9 @@
  * - The dashboard edit-mode preview HA draws in its own dialog is not ours: no control there.
  *
  * ── YAML (card level) ──
- *   pause_button: auto | always | hidden          default hidden (r3; was auto)
+ *   pause_button: auto | always | hidden          default hidden
  *   pause_button_corner: bottom-left | bottom-right | top-left | top-right   default bottom-left
- * Editor (r3): card Design tab, its own group "Motion" (id `motion`) right after Layout, open by
+ * Editor: card Design tab, its own group "Motion" (id `motion`) right after Layout, open by
  * default, holding "Pause button" (Automatic / Always / Hidden) and "Corner"; removed from Effects.
  * Hidden (the default) removes the key; Automatic writes `auto`. Corner shows only while the
  * resolved mode is auto or always (unset counts as hidden). Inside a design rule the group is empty
@@ -127,12 +119,12 @@
  * paused, removed on resume; read once on first render. A config edit gives a new key (starts
  * playing). No personal data; functional storage the viewer asked for (no consent banner needed;
  * GDPR / ePrivacy note for legal at docs time). localStorage unavailable: pause lasts the page visit.
- * (r3) Never written while the card is in editMode or by previewPaused.
+ * Never written while the card is in editMode or by previewPaused.
  *
  * ── Size ──
  * magic-card.js: button template, storage, observer extension, CSS rule and three i18n strings
- * (en-GB ids, en-US and nl tables) about 1,024 B, beyond this run's 2,560 B allowance (Lead / CEO).
- * (r3) previewPaused plus the editMode storage guard: about 80-150 B in magic-card.js; the canvas
+ * (en-GB ids, en-US and nl tables) about 1,024 B.
+ * previewPaused plus the editMode storage guard: about 80-150 B in magic-card.js; the canvas
  * toggle and the Motion group are in magic-card-editor.js.
  */
 
@@ -142,7 +134,7 @@ export const CARD_PAUSE_CONTRACT_REVISION = 3;
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
 
-/** (r3) Default of `pause_button` (was 'auto' in 1.0.0). */
+/** Default of `pause_button`. */
 export const PAUSE_BUTTON_DEFAULT: PauseButtonMode = 'hidden';
 
 /** Card keys; MagicCardConfig gains them in src/types.ts. */
@@ -151,20 +143,20 @@ export interface CardPauseKeys {
   pause_button_corner?: PauseButtonCorner;
 }
 
-// (S1a.2) The three names live in card-pause.needs.ts, which magic-card.js imports; re-exported unchanged.
+// The three names live in card-pause.needs.ts, which magic-card.js imports; re-exported unchanged.
 export { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from './card-pause.needs';
 
 export interface PauseChangeDetail {
   paused: boolean;
 }
 
-/** (r3) The editor preview pause on <magic-card> (Core card element, additive public property). */
+/** The editor preview pause on <magic-card> (Core card element, additive public property). */
 export interface PreviewPauseApi {
   /** Freeze the card's motion while editing; never remembered, survives setConfig. Default false. */
   previewPaused: boolean;
 }
 
-/** (r2) Options of watchOffscreen and (counted only) the pauseOffscreen directive. */
+/** Options of watchOffscreen and (counted only) the pauseOffscreen directive. */
 export interface OffscreenWatchOptions {
   /** false: keeps running in a paused card (updates, does not move); never counted. Default true. */
   pausable?: boolean;

@@ -2,21 +2,18 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { CompiledEmitterSlots } from './particles-v2';
 
 /*
- * Contract: studio layers. Revision 1 (2026-10-18, epic F, brief 61 with the CEO's answers of
- * 2026-10-18; ADR 0029). Architect-owned. Not released, so later revisions are made in place (ADR 0020).
- * Amended in place 2026-10-18 (Plan Gate: placement per emitter, ADR 0028 revision): section 1, the
- * particles move rule.
- * Amended in place 2026-10-18 (spike F-S2, 65-spike-frontend-f-s2.md; ADR 0029 revision): section 3,
- * how hide reaches the preview. Hides of rows that are drawn (parts, groups, shapes, card parts,
+ * Contract: studio layers.
+ * Section 1 holds the particles move rule (placement per emitter).
+ * Section 3 says how hide reaches the preview. Hides of rows that are drawn (parts, groups, shapes, card parts,
  * emitters, children) are a stage-only stylesheet (StageHide), not a change to the preview document.
- * The preview document (ApplyLayerView) now carries only lane and step hides. Reason: a document
+ * The preview document (ApplyLayerView) carries only lane and step hides. Reason: a document
  * opacity override fails for finite iterations, reduced motion, a clip other than `self` and the
  * clip crossfade, and rewriting the document to hide an emitter costs 173-364 ms median at 4x CPU
  * (budget 150 ms); the stage rule measured 14-16 ms median and passed every case.
  *
  * Extends the studio v2 slot contract (src/anim-studio/slots.ts) for panels registered with
  * `place: 'layers'`. Provided by the studio shell (src/anim-studio/studio.ts) and
- * src/anim-studio/layer-view.ts (plus src/anim-studio/stage-hide.ts, new); used by every layers panel:
+ * src/anim-studio/layer-view.ts (plus src/anim-studio/stage-hide.ts); used by every layers panel:
  * Card parts (targets-layers.ts), Icon parts (parts-layers.ts), Shapes over / under the icon
  * (draw-layers.ts), Particle layers (particles-layers.ts, new), Path layers and Sequence steps
  * (path-layers.ts, sequence-layers.ts, new). Everything here lives in the studio chunk
@@ -51,7 +48,7 @@ import type { CompiledEmitterSlots } from './particles-v2';
  *    `path` `subject`            path doc: the motion path and what moves along it
  *    `step:<n>`                  sequence step n (the panel remaps keys of the LayerView on a move)
  *
- * 3. Hide / solo / lock (CEO Q3: all lists, preview only, never saved).
+ * 3. Hide / solo / lock (all lists, preview only, never saved).
  *    - The view is studio state per document id for the session (cleared when the studio closes or
  *      the page reloads). It is never in the document, the undo history, the dirty flag, YAML, the
  *      saved JSON, transfer files or exports. Keys of rows that no longer exist are pruned.
@@ -97,21 +94,21 @@ import type { CompiledEmitterSlots } from './particles-v2';
  *      lane: that property is removed from every key of that target (including clips' tracks); its
  *        bindings are dropped; the target rests at its base value.
  *      step: removed from the preview's steps.
- *      ApplyLayerView never changes opacity to hide a row. If a later revision brings a document
- *      opacity override back, it must also add keys at 0 % and 100 % when the track lacks them (a
+ *      ApplyLayerView never changes opacity to hide a row. If a document
+ *      opacity override is brought back, it must also add keys at 0 % and 100 % when the track lacks them (a
  *      track with keys at 30 / 70 % shows its rest value outside them), and still cannot cover
  *      finite iterations, reduced motion or a clip other than `self`.
  *    3c. path / subject / content / pshape: no hide.
  *    - Stage tools, inspectors, timeline, save and export always get the real `doc`.
  *
- * 4. Density (CEO Q1: the narrow view shows the full list). Below RAIL_BELOW (1000 px) the column
+ * 4. Density (the narrow view shows the full list). Below RAIL_BELOW (1000 px) the column
  *    no longer collapses to icons by default: it renders every layers panel with density 'compact'
  *    (one-line rows: icon, name truncated with the full name as title and accessible name, state
  *    glyphs for hidden / solo / locked, and one "Layer actions" menu button holding Move up / down,
  *    Hide, Solo, Lock). The icons-only rail stays as an explicit user choice ("Collapse layers",
  *    stored as today in the layers preference). Wide view: density 'full' (buttons inline).
  *
- * 5. Keyboard and access (WCAG 2.2 AA, brief AC8-AC10). Each panel is a list with an accessible
+ * 5. Keyboard and access (WCAG 2.2 AA). Each panel is a list with an accessible
  *    name; rows are buttons with aria-pressed (selected). Up / Down move between rows across the
  *    column's lists, Home / End jump, Enter / Space select (opens and scrolls to the matching editor
  *    section), Right / Left open / close a disclosure, Alt+ArrowUp / Down move, and with a row focused

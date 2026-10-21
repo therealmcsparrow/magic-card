@@ -2,25 +2,22 @@ import type { SavedThemePreset, SavedThemePresetInput } from './mcu-library';
 import type { MessageId } from './i18n';
 
 /*
- * Contract: theme editor host. Version 1.2.0 (Architect-owned).
+ * Contract: theme editor host. Version 1.2.0.
  *
- * Revision 2026-10-18 (i18n slice I8; no version change, nothing outside the editor sees it): the chunk rule below widens by
- * `src/i18n/` (the runtime copy of this entry and the search fold; i18n contract 1.0.0 r3). The editor speaks en-GB, en-US
+ * The chunk rule below allows `src/i18n/` (the runtime copy of this entry and the search fold; i18n contract 1.0.0). The editor speaks en-GB, en-US
  * and nl: namespace 'theme-editor' (tables in the entry) and 'theme-presets' (tables in the preset chunk), the language
  * comes from `hass` (`lang` on the host follows it). `ThemePreset.name` / `blurb` / `note` are MessageId (see below) and
  * theme-catalogue labels are MessageId too. The element API, the events and the backend adapter do not change.
  *
- * 1.2.0 (2026-10-18, UI kit migration, plan UI8, ADR 0030; additive, the panel's major-1 check still passes): the
- * editor is built on the ui-kit Module (ui-kit 1.0.0 r2). The chunk rule below widens by exactly two sources:
+ * The editor is built on the ui-kit Module (ui-kit 1.0.0). The chunk rule below allows exactly two further sources:
  * `src/ui-kit/` and, from Core, `editorTokens` of `src/css/editor-system.ts` (tokens only). The entry compiles its own
  * copy of the kit parts it imports and calls defineUiKit() once; it may therefore also define the kit's `mc-ui-*`
  * elements, guarded (the kit's own rule). The editor keeps its fixed accent as an override of the accent tokens on
- * :host (a11y S1). Dialogs are <mc-ui-window variant="sheet">: a bottom sheet on phones, never full screen
- * (CEO D8); transient messages are <mc-ui-toast>; glyphs are the kit's MDI set. No change to the backend adapter,
- * the element API or the events.
+ * :host. Dialogs are <mc-ui-window variant="sheet">: a bottom sheet on phones, never full screen;
+ * transient messages are <mc-ui-toast>; glyphs are the kit's MDI set. No change to the backend adapter,
+ * the element API or the events. The panel's major-1 check passes.
  *
- * 1.1.0 (2026-10-18, epic C, additive; the panel's major-1 check still passes): optional
- * ThemeBackend.presets (My theme presets, mcu-library 1.0.0 r3), "Save as my preset", the
+ * Optional ThemeBackend.presets (My theme presets, mcu-library 1.0.0), "Save as my preset", the
  * "My presets" picker group (theme-presets 1.2.0), and export / import through the transfer
  * chunk (preset-transfer 1.0.0) reached via window.MagicCard (no new import() in this entry).
  *
@@ -28,8 +25,8 @@ import type { MessageId } from './i18n';
  * dist/magic-card-theme-editor.js). Consumer: the Magic Card Utils panel's "Themes" tab
  * (magic-card-utils: custom_components/magic_card_utils/www/magic_card_utils_panel.js).
  * Backend it talks to (through the panel's adapter only): Contract theme-files 1.0.0
- * (magic-card-utils: custom_components/magic_card_utils/themes_contract.py) and (1.1.0) the
- * theme_presets commands of mcu-library 1.0.0 r3 (library_contract.py).
+ * (magic-card-utils: custom_components/magic_card_utils/themes_contract.py) and the
+ * theme_presets commands of mcu-library 1.0.0 (library_contract.py).
  *
  * Loading (same pattern as the animation studio entry):
  * - The entry is an ES module: load it with import() or <script type="module">, never a classic script.
@@ -39,10 +36,10 @@ import type { MessageId } from './i18n';
  *   guarded by customElements.get. It never defines mc-color-picker / mc-unit-field: it asks
  *   magic-card.js for the editor chunk with `window.MagicCard.loadEditor()` (module-editor 1.0.0)
  *   and uses those elements by tag.
- * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/, `lit`, `src/ui-kit/`, `src/i18n/` (r3) and
- *   `editorTokens` from src/css/editor-system.ts (1.2.0; before that: `lit` only; types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
+ * - Chunk rule: src/theme-editor/ has no runtime import outside src/theme-editor/, `lit`, `src/ui-kit/`, `src/i18n/` and
+ *   `editorTokens` from src/css/editor-system.ts (plus `lit`; types from src/contracts/ are fine). Exactly one dynamic import(): the preset chunk, which
  *   holds the preset library and the create dialog's picker (THEME_PRESETS_CHUNK_FILE, section
- *   "theme presets" below, ADR 0014). Its public path is set by src/theme-editor/public-path.ts,
+ *   "theme presets" below). Its public path is set by src/theme-editor/public-path.ts,
  *   the entry's first import. magic-card.js is untouched (+0 B).
  *   The panel still imports one file; it never loads the preset chunk itself.
  * - (1.1.0) Export / import: after loadEditor() resolves true, `window.MagicCard.loadTransfer()`
@@ -68,8 +65,8 @@ import type { MessageId } from './i18n';
  *   ("Create from file") and refuses lists with "Update Magic Card Utils to keep theme presets".
  * - Import (with presets): every valid item is saved as a My preset after the clash choice; a
  *   single item also offers "Open as new theme". Imported values with external references and
- *   card-mod-* keys are KEPT and listed in the import warning (preset-transfer 1.0.0, CEO
- *   2026-10-18). The editor runs docErrors on an imported doc before it opens it, as for any doc.
+ *   card-mod-* keys are KEPT and listed in the import warning (preset-transfer 1.0.0).
+ *   The editor runs docErrors on an imported doc before it opens it, as for any doc.
  * - "Copy as HA theme" (Export menu): haThemeYaml(name, doc) to the clipboard.
  */
 
@@ -186,7 +183,7 @@ export interface ThemeBackendError extends Error {
   errors?: Array<{ path: string; message: string }>;
 }
 
-/** (1.1.0) My theme presets, on mcu-library 1.0.0 r3 theme_presets_* commands. */
+/** My theme presets, on mcu-library 1.0.0 theme_presets_* commands. */
 export interface ThemePresetStore {
   list(): Promise<SavedThemePreset[]>;
   save(preset: SavedThemePresetInput, baseUpdatedAt?: string): Promise<SavedThemePreset>;
@@ -244,7 +241,7 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
  * stylesheets' `html` / `:root` rules), or `initial` when no default is known. Nothing is written
  * outside the editor's shadow root while previewing.
  *
- * Trial ("Try on dashboards", tab-local, ADR 0012): one <style id="mc-theme-trial"> in
+ * Trial ("Try on dashboards", tab-local): one <style id="mc-theme-trial"> in
  * document.head with a single `html {}` rule whose declarations are set with
  * rule.style.setProperty(name, value, 'important') (never string-built CSS). Removed by Revert, by
  * Discard, by a successful save, or a page reload; never persisted. While it is active the
@@ -253,7 +250,7 @@ export const THEME_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 export const PREVIEW_RULES_VERSION = '1.0.0';
 export const TRIAL_STYLE_ID = 'mc-theme-trial';
 
-// ── theme presets (Contract theme-presets 1.2.0, ADR 0014, ADR 0015, ADR 0022) ──
+// ── theme presets (Contract theme-presets 1.2.0) ──
 
 /**
  * The preset chunk: every editor preset (25 original, 20 inspired, 12 genre: 57 in all) and the
@@ -262,11 +259,11 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * `?v=<contenthash>`, next to the entry). The entry holds no preset data and no picker markup or
  * styles.
  *
- * Changes in 1.1.0 (additive; the loader accepts any major 1): group 'genre' ("Sci-fi & fantasy"
- * in the UI) and the optional `tags` field. Every 1.0.0 preset keeps its id, name, blurb, note,
- * group, credit and resolved doc (deep-equal), whatever the source encoding (ADR 0015).
+ * The loader accepts any major 1. Group 'genre' ("Sci-fi & fantasy"
+ * in the UI) and the optional `tags` field exist. Every preset keeps its id, name, blurb, note,
+ * group, credit and resolved doc (deep-equal), whatever the source encoding.
  *
- * Changes in 1.2.0 (additive, epic C): group 'mine' ("My presets"), first in the picker when the
+ * Group 'mine' ("My presets") comes first in the picker when the
  * user has any. Its items are SavedThemePresets mapped by the entry to ThemePreset (id, name,
  * blurb = description ?? '', group 'mine', doc) and handed to the picker in PickerView; the
  * built-in library never contains 'mine' (data rule) and its 57 presets are unchanged. Search
@@ -322,8 +319,8 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  *   No built-in preset has group 'mine'.
  * - `group` 'genre' requires `tags` whose first word is 'sci-fi' or 'fantasy'. No preset names a
  *   franchise or an in-universe term: id, name, blurb, note, tags and keywords (when a preset or
- *   the designer source file carries them) hold no term from the blocked list
- *   (tests/fixtures/franchise-blocked-terms.json, from legal 02-legal.md; its `match` field is the
+ *   its source file carries them) hold no term from the blocked list
+ *   (tests/fixtures/franchise-blocked-terms.json; its `match` field is the
  *   rule of record). The check is word-level: field and term are lowercased and split into words
  *   on /[^a-z0-9]+/. A term hits when its words appear consecutively in the field's words, the
  *   last one matching as a prefix (dune hits dunes), or when the term's words joined (bladerunner)

@@ -1,25 +1,22 @@
 import type { AnimationDoc, LaneId } from '../anim-studio/model';
 
 /*
- * Contract: animated icon library. Version 1.2.1 (Architect-owned).
+ * Contract: animated icon library. Version 1.2.1.
  *
- * 1.0.0 is what shipped in 2026.10.03 (src/icon-anim/library.ts LibraryEntry, ICON_LIBRARY,
- * LIBRARY_DOMAINS, libraryFor, searchLibrary). 1.1.0 is additive: `domain` may also be one of
- * LIBRARY_CATEGORIES for icons without a Home Assistant domain, and every entry must pass the
- * split rules below. 1.2.0 is additive: every entry plays in three Styles (Quiet, Living, Glow),
- * all derived from its one Living rig by styleDoc() (ADR 0006), plus the card-entry fields that
- * record a library pick. 1.2.1 (patch, Lead ruling in fix round 1 of T4.2): the Style text below
- * now describes the derivation as built (hero choice, spins, accents, card-aware colours, the
- * styleDoc options, the hand-edit rule); no type or export changed. library.ts re-exports
- * LibraryEntry from here.
+ * Exports (src/icon-anim/library.ts): LibraryEntry, ICON_LIBRARY, LIBRARY_DOMAINS, libraryFor,
+ * searchLibrary. `domain` may also be one of LIBRARY_CATEGORIES for icons without a Home Assistant
+ * domain, and every entry must pass the split rules below. Every entry plays in three Styles
+ * (Quiet, Living, Glow), all derived from its one Living rig by styleDoc(), plus the card-entry
+ * fields that record a library pick. The Style text below describes the derivation (hero choice,
+ * spins, accents, card-aware colours, the styleDoc options, the hand-edit rule). library.ts
+ * re-exports LibraryEntry from here.
  *
  * Implementation: module `icon-library` (src/icon-anim/library.ts and its data files, the style
  * derivation in src/icon-anim/style.ts). Placement is unchanged: the studio's lazy chunk
  * magic-card-icon-library.js and the card editor's lazy chunk magic-card-icon-animator.js. Never
  * magic-card.js: a card stores the derived document inline and plays it like any other.
  * Consumers: the animated icon grid (the icon picker's Animated icons tab, the only place the
- * Style control lives; the Animate icon panel was removed in T0.2) and the studio's icon start
- * (Living only in this run).
+ * Style control lives) and the studio's icon start (Living only).
  */
 
 export const ICON_LIBRARY_CONTRACT_VERSION = '1.2.1';
@@ -102,9 +99,8 @@ export interface LibraryEntry {
  *   glow colour, halo in it. Light card (brightness above about 0.6): the darker colour (the
  *   theme_on_light partner, or 70 % of the user's colour) and transparent halos. A browser
  *   without relative colours draws no halo and no accent colour: Glow then looks like Living.
- * - No CSS filter or blur anywhere (tablet CPU; the brand artist's objection to direction C).
- * - Not built (they need code on the dashboard, against the CEO's pick-time ruling): the brand's
- *   radial bloom, glow only while the entity is active, and the 2:1 contrast step.
+ * - No CSS filter or blur anywhere (tablet CPU).
+ * - Not built (they need code on the dashboard): a radial bloom, glow only while the entity is active, and the 2:1 contrast step.
  * - Reduced motion: the card's existing rule holds the rest pose; the halo stays at GLOW.opacity[0].
  */
 export const QUIET_LANE_ORDER = ['rotate', 'y', 'x', 'scale', 'opacity'] as const;

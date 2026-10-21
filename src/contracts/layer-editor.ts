@@ -4,11 +4,9 @@ import type { LayerAnchor } from './layer-placement';
 import type { LayerGroupContext } from './module-editor';
 
 /*
- * Contract: layer editor panels. Version 1.0.0 revision 2 (Architect-owned). ADR 0038. CEO size
- * ruling 2026-10-20: the Placement / Layer groups and the Card backdrop group leave
- * magic-card-editor.js for the editor-side lazy chunk 'layer-editor' (lazy-module 1.2.0 r2,
- * magic-card-layer-editor.js). Builder proposal: 16-frontend-engineer-t6-t7.md.
- * r2 (2026-10-20, T13 finding 19-frontend-engineer-t13.md): bg-layer-editor.ts is a render function
+ * Contract: layer editor panels. Version 1.0.0. The Placement / Layer groups and the
+ * Card backdrop group live in the editor-side lazy chunk 'layer-editor' (lazy-module 1.2.0,
+ * magic-card-layer-editor.js), not in magic-card-editor.js. bg-layer-editor.ts is a render function
  * used by <mc-bg-layers>, not an element; LAYER_EDITOR_TAGS lists the five elements install() defines.
  *
  * ── Seam ──
@@ -36,7 +34,7 @@ import type { LayerGroupContext } from './module-editor';
  * every lazyChunk): "Layer settings could not load. Reload the page." The YAML tab keeps working.
  * The canvas press-and-hold sheet falls back to the item menu until the chunk is ready.
  *
- * ── Elements (tags, properties, events); unchanged from the T6 / T7 build ──
+ * ── Elements (tags, properties, events) ──
  * <mc-layer-design>  .config CardModule, .hass, .onChange (m) => void, .ctx LayerEditorContext;
  *                    slot: the rest of the design tab. Wraps <mc-layer-groups> (same properties).
  *   events (bubbles, composed): `mc-layer-move` { to: LayerMoveTo }, `mc-layers-low-power` (no detail).
@@ -54,11 +52,11 @@ import type { LayerGroupContext } from './module-editor';
  * float bar, canvas announcements, bg-status sentences, the loading and failure lines) stay in
  * `card-editor`. A string used on both sides lives in `card-editor`.
  *
- * ── Builder rules carried over ──
- * Marco 12 N1 (3:1 control boundary, non-colour on/off and selected cue, token sampler test); no
+ * ── Rules ──
+ * Controls: 3:1 boundary, non-colour on/off and selected cue (token sampler test); no
  * `inset` shorthand; British UI text through t() / m().
  *
- * ── Gradients (T6 / T7 note, settled) ──
+ * ── Gradients ──
  * `to <side>` heads are read as angles everywhere a backdrop gradient is parsed (bg-stack values and
  * the gradient editor through one helper, gradientHeadAngle() in src/utils/gradient.ts): to top 0deg,
  * to right 90deg, to bottom 180deg, to left 270deg; corners (to top right ...) 45 / 135 / 225 /
@@ -124,6 +122,6 @@ export interface AnchorGridProps {
   showName: boolean;
 }
 
-/** (r2) The five elements install() defines. */
+/** The five elements install() defines. */
 export const LAYER_EDITOR_TAGS = ['mc-layer-design', 'mc-layer-groups', 'mc-bg-layers', 'mc-layers-sheet', 'mc-anchor-grid'] as const;
 export const LAYER_EDITOR_I18N_NAMESPACE = 'layer-editor';

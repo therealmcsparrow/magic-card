@@ -1,5 +1,5 @@
 /*
- * Contract: theme variable catalogue. Version 1.0.0 (Architect-owned).
+ * Contract: theme variable catalogue. Version 1.1.0.
  *
  * Implementation: src/theme-editor/catalogue/ (one file per source: ha.ts, magic-card.ts, tile.ts,
  * mushroom.ts, bubble-card.ts, ultra-card.ts, button-card.ts; index.ts exports CATALOGUE).
@@ -11,7 +11,7 @@
  * 2. Third-party entries (source != 'ha' and != 'magic-card') ship only with `ref` (a URL to the
  *    upstream doc or source file at a tag or commit) and `verified` (ISO date). Names nobody could
  *    verify are left out; there is no "probably" entry.
- * 3. Magic Card entries list only variables a theme can reach (ADR 0013): HA variables the card
+ * 3. Magic Card entries list only variables a theme can reach: HA variables the card
  *    follows, and `--mc-*` names the card reads with var() but never declares on :host
  *    (src/css/tokens.ts) or inline. A test fails when a `magic-card` entry named `mc-*` is declared
  *    in tokens.ts.
@@ -19,8 +19,7 @@
  *    variables it reads (kind 'follows'), each verified like rule 2.
  * 5. Variables a theme sets that are not in the catalogue are kept and shown in "Other" (raw row).
  *
- * 1.1.0 (2026-10-18, i18n; was 1.0.0, a reader typed for string labels needs the render step below): `label` and `hint` of an entry and the
- * `label` of a group are MessageId, not string. The catalogue marks each text with m() (namespace 'theme-editor',
+ * Text: `label` and `hint` of an entry and the `label` of a group are MessageId, not string. The catalogue marks each text with m() (namespace 'theme-editor',
  * src/theme-editor/i18n); the editor renders it with t(). In a test or a plain build m() returns the British
  * text, so `entry.label` is still that string there. A custom variable (group Other) has no catalogue entry and
  * is shown by its name.
@@ -32,7 +31,7 @@ export const THEME_CATALOGUE_CONTRACT_VERSION = '1.1.0';
 
 export type CatalogueSource = 'ha' | 'magic-card' | 'tile' | 'mushroom' | 'bubble-card' | 'ultra-card' | 'button-card';
 
-/** HA groups from the brief, then one group per card source. */
+/** HA groups first, then one group per card source. */
 export type CatalogueGroupId =
   | 'primary'      // Primary and accent
   | 'backgrounds'  // Backgrounds and cards
@@ -51,7 +50,7 @@ export type CatalogueGroupId =
 /**
  * Field kind: decides the input and the value check.
  * - color: colour or var(); check CSS.supports('color', v) (var() always passes).
- * - background: colour or gradient (ADR 0009 strings or any CSS image); CSS.supports('background', v).
+ * - background: colour or gradient (gradient strings or any CSS image); CSS.supports('background', v).
  *   The only kind that offers the Gradient switch (mc-color-picker gradient="css").
  * - size: a length (px, rem, em, %, vw, calc()); CSS.supports('width', v).
  * - number: a plain number (opacity, weight, line height); finite number.

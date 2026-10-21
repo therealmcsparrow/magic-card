@@ -2,21 +2,18 @@ import type { HomeAssistant } from '../types';
 import type { LayerAnchor, LayerBlend } from './layer-placement';
 
 /*
- * Contract: card background stack ("Card backdrop" in the UI). Version 1.0.0 revision 3
- * (Architect-owned). ADR 0038. Task background-layers (brief topic 4; CEO: max 4 layers, pan/zoom on
- * images and camera snapshots only, this topic is trimmed first if the magic-card.js budget runs
- * short). r2 (2026-10-19, folded into 1.0.0; designer 11-ui-ux-designer.md, spikes S1 and S2):
- * pan_zoom.pause_when_idle, stale_badge and the badge host, status reason `stale`, page-hidden pause,
- * first-paint fade, low power, floor-safe CSS, blend scope, blur max 24 px and the performance rules
- * (layer-placement 1.0.0 "Performance rules" bind here too). r3 (2026-10-20, folded into 1.0.0):
- * the 'layers' chunk also carries the layer-placement runtime; `to <side>` gradient heads;
- * CardAppearanceOverrides gains `background_layers`; card pause stops the stack.
+ * Contract: card background stack ("Card backdrop" in the UI). Version 1.0.0.
+ * At most 4 layers; pan/zoom on images and camera snapshots only. Covers pan_zoom.pause_when_idle,
+ * stale_badge and the badge host, status reason `stale`, page-hidden pause, first-paint fade, low power,
+ * floor-safe CSS, blend scope, blur max 24 px and the performance rules (layer-placement 1.0.0
+ * "Performance rules" bind here too). The 'layers' chunk also carries the layer-placement runtime;
+ * `to <side>` gradient heads; CardAppearanceOverrides has `background_layers`; card pause stops the stack.
  *
  * Seam: magic-card.js (Core render pipeline) renders `<mc-bg-stack>` as the first child of
  * .mc-card-content when the resolved card config has a non-empty `background_layers`, and prefetches
- * the lazy chunk 'layers' (dist/magic-card-layers.js, lazy-module 1.2.0 r2, entry
+ * the lazy chunk 'layers' (dist/magic-card-layers.js, lazy-module 1.2.0, entry
  * src/layers/stack/chunk.ts) from setConfig / template merge when the key is present. The chunk's
- * install() defines <mc-bg-stack> and fills the layer slot (layer-placement 1.0.0 r3). Everything the
+ * install() defines <mc-bg-stack> and fills the layer slot (layer-placement 1.0.0). Everything the
  * element needs from magic-card.js comes through its `host` property (BgStackHost), so the chunk
  * never imports magic-card.js modules other than shared utils that stay there (ceiling 24 KiB for
  * the whole chunk; cap = measured + 5 %, rounded up to 1 KiB).
@@ -25,7 +22,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *
  * ── YAML (card level; also allowed in conditional_appearance overrides) ──
  *   background_layers:            at most MAX_BACKGROUND_LAYERS; extra entries are ignored (editor
- *                                 blocks adding a 5th). FIRST ENTRY = FRONT (CSS convention, Q-UX5).
+ *                                 blocks adding a 5th). FIRST ENTRY = FRONT (CSS convention).
  *     - type: image | gradient | pattern | color
  *       hidden: boolean           eye toggle; hidden layers render nothing and stay in YAML
  *       opacity: 0-100            default 100
@@ -42,7 +39,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *       position: LayerAnchor | "<x>% <y>%"   default center
  *       size: cover | contain | auto | "<n>%"  default cover
  *       repeat: no-repeat | repeat | repeat-x | repeat-y   default no-repeat; ignored with cover
- *       blur: 0-24 px             image only (BLUR_MAX, S1); above 12 is "heavy" in the cost meter;
+ *       blur: 0-24 px             image only (BLUR_MAX); above 12 is "heavy" in the cost meter;
  *                                 bleed 3 x blur on each side inside the clip
  *       pan_zoom:                 image only (pictures and camera snapshots; never live streams)
  *         from: 100-200 (%)       default 100
@@ -53,7 +50,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *         pause_when_idle: boolean  default false in YAML (the editor writes true when the switch
  *                                 is first turned on). See "Motion".
  *       # gradient
- *       gradient: CSS gradient    linear / radial, 2-8 stops. Head: `<n>deg` or (r3) `to <side>` /
+ *       gradient: CSS gradient    linear / radial, 2-8 stops. Head: `<n>deg` or `to <side>` /
  *                                 `to <corner>`, read through gradientHeadAngle() (src/utils/
  *                                 gradient.ts): top 0, right 90, bottom 180, left 270, corners 45 /
  *                                 135 / 225 / 315 (approximate on non-square cards). No head = 180.
@@ -70,7 +67,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * Card key `layers_low_power` (layer-placement 1.0.0) also applies here: no blur, blend normal,
  * pan / zoom rests at the start framing.
  * Conditional appearance (Q-UX2: yes): a rule that sets `background_layers` replaces the whole list
- * (the existing shallow merge), an empty list included; (r3) CardAppearanceOverrides in src/types.ts
+ * (the existing shallow merge), an empty list included; CardAppearanceOverrides in src/types.ts
  * gains `background_layers?: BackgroundLayerConfig[]` (no cast in the rule code). `hover` never carries
  * it (not a DesignConfig key).
  * Template merge: `background_layers` is a whole value like `background` (no per-entry merge).
@@ -97,14 +94,14 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * ── Motion and timers (pan / zoom, camera refresh) ──
  * Pan / zoom is a CSS keyframe animation of `transform` (scale + translate toward `focus`) on the
  * image element only, no requestAnimationFrame; filter, position offsets and background-position
- * are never animated (S1). It plays only while all hold: on screen and card not paused
+ * are never animated. It plays only while all hold: on screen and card not paused
  * (host.observeOffscreen; card-pause 1.0.0 reports a paused card as off screen), page visible
  * (visibilitychange; Fully Kiosk raises it when the screen turns off), not low power, no
  * `prefers-reduced-motion: reduce`, and, with pause_when_idle, input seen within the last
  * IDLE_PAUSE_MS (pointerdown, pointermove, keydown, touchstart on the document; one passive
  * listener per page shared by every stack, throttled to 1 Hz). Not playing = animation-play-state
  * paused; under reduced motion or low power the image rests at the start framing. Off screen, page
- * hidden or paused, the camera refresh timer and any idle timer are cleared (S1: a running timer
+ * hidden or paused, the camera refresh timer and any idle timer are cleared (a running timer
  * costs about 3 ms/s off screen) and restarted on return, with one immediate refresh if one is due.
  * The studio Preview seg (`preview`) overrides this in the editor only (Play works under reduced
  * motion as a user action).
@@ -121,7 +118,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *
  * ── Errors for the editor ──
  * The element fires `mc-bg-layer-status` (bubbles, composed) with BgLayerStatus whenever a layer's
- * status changes; the studio maps `reason` to the designer's sentences (03 section 8, 11 J). The
+ * status changes; the studio maps `reason` to the sentences it shows. The
  * dashboard ignores it.
  */
 
@@ -170,12 +167,12 @@ export interface BackgroundLayerConfig {
   thickness?: number;
 }
 
-/** MagicCardConfig and (r3) CardAppearanceOverrides gain `background_layers` (src/types.ts). */
+/** MagicCardConfig and CardAppearanceOverrides gain `background_layers` (src/types.ts). */
 export interface BackgroundLayersKey {
   background_layers?: BackgroundLayerConfig[];
 }
 
-/** (r3) src/utils/gradient.ts: a gradient head (`<n>deg`, `to <side>`, `to <corner>`) as degrees; undefined when it is not a head. */
+/** src/utils/gradient.ts: a gradient head (`<n>deg`, `to <side>`, `to <corner>`) as degrees; undefined when it is not a head. */
 export type GradientHeadAngle = (head: string) => number | undefined;
 
 /** What magic-card.js hands the element (property `host`); stable object per card instance. */

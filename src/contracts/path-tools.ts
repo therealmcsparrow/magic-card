@@ -2,17 +2,14 @@ import type { BooleanResult, PathBooleansChunk } from './path-booleans';
 import type { Box, EditPath, PathDraw, Pt } from './path-model';
 
 /*
- * Contract: path tools (SVG editor epic E4). Version 1.0.0 (Architect-owned). ADR 0027, ADR 0019 (ceiling),
- * ADR 0020.
- * Revision 1 (2026-10-18, CEO decisions on brief 48: all of E in this release; PROPOSED, the chunk ceiling
- * needs the CEO): new contract, before any implementation. Outline stroke, Offset path, Simplify (doubles
- * as smooth), Join, Split at an anchor and a straight Knife.
+ * Contract: path tools (SVG editor). Version 1.0.0.
+ * Tools: Outline stroke, Offset path, Simplify (doubles as smooth), Join, Split at an anchor and a
+ * straight Knife.
  *
  * Implementation: module `path-tools`, folder src/path-tools/, lazy chunk PATH_TOOLS_CHUNK_FILE
  * (webpackChunkName PATH_TOOLS_CHUNK). Loaded with import() through src/path-tools/loader.ts by the
  * svg-editor chunk only, on the FIRST use of a path tool (button, menu item or key), never when the editor
- * opens, never by magic-card.js, the card-editor chunk or the shape editor (tools in Free shape mode are
- * "Later" in brief 48). Loader rules as path-booleans: memoised, 8 s timeout, a failure resolves undefined,
+ * opens, never by magic-card.js, the card-editor chunk or the shape editor. Loader rules as path-booleans: memoised, 8 s timeout, a failure resolves undefined,
  * clears the memo and the editor shows "Couldn't load the path tools. Try again." with the drawing unchanged.
  *
  * One-copy rule (splitChunks is false, so a static import copies a module into this chunk):
@@ -77,14 +74,14 @@ import type { Box, EditPath, PathDraw, Pt } from './path-model';
  * src/path-tools/strings.ts (en, externalised like the editor's). The SVG editor owns the state, the
  * debounced preview run (PREVIEW_DEBOUNCE_MS) and the dashed preview drawing on the canvas.
  *
- * ── Messages (first sentence of the message; svg-editor r4 message rule) ──
+ * ── Messages (first sentence of the message) ──
  * 'too-complex' "This shape has too many points for this tool." 'empty' "Nothing would be left of this
  * shape." 'no-stroke' "This shape has no stroke to outline." 'no-area' "Select a closed shape. Open lines
  * have no area." 'no-change' "This shape is already as simple as this setting allows." 'not-open' "Join works
  * on open paths. Use Split first to open a closed one." 'at-end' "Pick a point between the ends to split
  * here." 'no-line' "Draw a longer cut line."
  *
- * Contract tests (QA, tests/path-tools.contract.test.ts): 2 px round-cap line -> one filled path within
+ * Contract tests (tests/path-tools.contract.test.ts): 2 px round-cap line -> one filled path within
  * OUTLINE_ACCURACY of the true stroke at 96 px (sampled 256 points on both edges); each cap and join; a closed
  * stroked circle gives a ring with a hole; miter limit falls back to bevel; Offset +1 / -1 round trip on a
  * square, a circle and a rounded rect within OUTLINE_ACCURACY; Offset -big gives 'empty'; a self-crossing
@@ -101,7 +98,7 @@ export const PATH_TOOLS_CONTRACT_VERSION = '1.0.0';
 export const PATH_TOOLS_CONTRACT_REVISION = 1;
 export const PATH_TOOLS_CHUNK = 'path-tools';
 export const PATH_TOOLS_CHUNK_FILE = 'magic-card-path-tools.js';
-/** ADR 0027 ceiling (CEO ruling pending); the CAPS entry is measured + 5 % below it. */
+/** 20 KiB ceiling; the CAPS entry is measured + 5 % below it. */
 export const PATH_TOOLS_CEILING_BYTES = 20_480;
 
 export const MAX_TOOL_SEGMENTS = 4_000;

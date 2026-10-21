@@ -1,7 +1,7 @@
 /*
  * lazy-module 1.4.0, the numbers magic-card.js needs at run time. They sit in this predicate file, not in
- * lazy-module.ts, because the entry may import only *.needs.ts of a contract (proj.M11, tools/check-entry-graph.mjs);
- * lazy-module.ts re-exports them. Designer 03 rounds 1 and 2, confirmed by the Architect (02-architect.md).
+ * lazy-module.ts, because the entry may import only *.needs.ts of a contract (see tools/check-entry-graph.mjs);
+ * lazy-module.ts re-exports them.
  */
 
 /** One attempt (the import plus install) is a failure after this long. */

@@ -2,7 +2,7 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { AnimationGroup } from '../utils/animation-presets';
 
 /*
- * Contract: preset catalogue and preset tiles. Version 1.1.0 (Architect-owned).
+ * Contract: preset catalogue and preset tiles. Version 1.1.0.
  *
  * Implementation: module `preset-catalogue` (src/preset-catalogue/, lazy chunk
  * dist/magic-card-preset-catalogue.js, webpackChunkName "preset-catalogue" in both loaders).
@@ -12,9 +12,9 @@ import type { AnimationGroup } from '../utils/animation-presets';
  *   via src/anim-studio/preset-catalogue-loader.ts when the "Customise a preset" dialog opens;
  * - 1.1.0: the card editor's Animations preset dropdown (src/editor/components/animation-list.ts),
  *   loaded via src/editor/components/preset-catalogue-loader.ts when the list connects (editor
- *   only; dashboards never load it). See ADR 0005.
+ *   only; dashboards never load it).
  *
- * A catalogue preset is a ready animation document, not a new built-in preset id (ADR 0003).
+ * A catalogue preset is a ready animation document, not a new built-in preset id.
  * - Studio pick: copies the document into My animations under uniqueId(presetDocId(entry.id)),
  *   cards play it as `preset: custom:<id>` (needs the Magic Card Utils integration).
  * - Card editor pick (1.1.0): stores the document inline in the card's `custom_animations` under
@@ -25,7 +25,7 @@ import type { AnimationGroup } from '../utils/animation-presets';
  * Chunk rule (1.1.0): the chunk is loaded by both bundles, so src/preset-catalogue/ imports types
  * only (plus its own files). No runtime import of model.ts, from-preset.ts or anything else either
  * bundle holds: such a module would be copied into the chunk or stop being scope-hoisted into
- * magic-card.js. The builder checks dist/ holds exactly one magic-card-preset-catalogue.js.
+ * magic-card.js. dist/ holds exactly one magic-card-preset-catalogue.js.
  */
 
 export const PRESET_CATALOGUE_CONTRACT_VERSION = '1.1.0';
