@@ -1,6 +1,6 @@
 {
   "adr": "AC14, proj.M11 security clause (task smallest-fastest-card-viewer, S1a.5)",
-  "rule": "src/icons/svg-sanitize.ts is statically imported in the same chunk as every module that writes SVG markup or takes an SVG from the config. tools/check-svg-sinks.mjs finds sinks by scanning src (unsafeSVG, or a value import of svg-sanitize) and adds the modules below.",
+  "rule": "src/icons/svg-sanitize.ts is statically imported in every chunk that holds an SVG sink, or in a chunk on every chain of parent chunks from magic-card.js to it (ADR 0045); never only in a sibling or behind its own import(). tools/check-svg-sinks.mjs finds sinks by scanning src (unsafeSVG, or a value import of svg-sanitize) and adds the modules below.",
   "sinks": [
     "./src/icons/mc-svg-icon.ts",
     "./src/icons/icon-source.ts",

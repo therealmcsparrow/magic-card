@@ -1,6 +1,6 @@
-// SVG sink gate (AC14, proj.M11 security clause). The SVG sanitiser (src/icons/svg-sanitize.ts) must be statically
-// imported in the same chunk as every module that writes SVG markup into the page or takes an SVG from the config,
-// so no chunk can run a sink without its sanitiser (a sanitiser behind its own import() could be missing, late or failed).
+// SVG sink gate (AC14, proj.M11 security clause). Every chunk of the card bundle that holds an SVG sink must hold the
+// sanitiser (src/icons/svg-sanitize.ts, statically imported) itself, or every chain of parent chunks from magic-card.js to
+// it must pass through a chunk that does (ADR 0045); never only in a sibling, never behind its own import().
 //
 // A sink is a source module that (a) calls unsafeSVG() / imports lit's unsafe-svg directive, or (b) imports the sanitiser
 // (it handles untrusted SVG), found by scanning src/**/*.ts, plus the modules named in tools/svg-sinks.json `sinks`.

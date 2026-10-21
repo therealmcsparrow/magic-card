@@ -19,7 +19,7 @@ export function cssTime(v: unknown): string | undefined {
  * CSS functions a colour may use: colour functions, var(), light-dark() and the math functions (calc,
  * min, max, clamp). Never url() / image functions, also not nested inside these.
  */
-export const COLOR_FUNCTIONS = new Set([
+export const COLOR_FUNCTIONS: ReadonlySet<string> = new Set([
   'rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color', 'color-mix', 'var', 'light-dark',
   'calc', 'min', 'max', 'clamp',
 ]);

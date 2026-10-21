@@ -176,7 +176,7 @@ export class SeasonalEditor extends LitElement {
 
   /** The preview date lives in the seasonal chunk (one copy, read by the cards); nothing is set while it is not loaded. */
   private _setPreview(d: Date | undefined): void {
-    void lazyChunks.seasonal.load().then((ok) => ok && seasonalApi()?.setSeasonalPreviewDate(d));
+    void lazyChunks.seasonal.load().then((ok) => ok && this.isConnected && seasonalApi()?.setSeasonalPreviewDate(d));
   }
 
   private _onPreviewEvent = () => {
