@@ -27,11 +27,15 @@ class SpinboxModule extends BaseLazyStub {
     };
   }
 
-  /** The spinbox's box with the height it has by default, so the layout does not move when the view arrives. */
+  /**
+   * The spinbox's box with the height it has by default, so the layout does not move when the view arrives. The
+   * buttons set the height, so the reserve follows the button size variable (a theme or the module's `css` may set it)
+   * and falls back to the default size.
+   */
   placeholder(config: CardModule): TemplateResult {
     const c = config as SpinboxModuleConfig;
     const min = controlReserve('spinbox', c);
-    return html`<div class="mc-module mc-spinbox" style=${min ? `min-height: ${min}px` : nothing}></div>`;
+    return html`<div class="mc-module mc-spinbox" style=${min ? `min-height: var(--mc-spinbox-btn-size, ${min}px)` : nothing}></div>`;
   }
 
   validate(config: CardModule): string[] {
