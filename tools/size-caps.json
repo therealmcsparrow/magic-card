@@ -26,10 +26,10 @@
       },
       {
         "id": "S1a",
-        "cap": 127235,
+        "cap": 127299,
         "target": 117760,
-        "landed_commit": "09a85ba",
-        "measured": 127235
+        "landed_commit": "64bb70f",
+        "measured": 127293
       },
       {
         "id": "S1b",
@@ -46,8 +46,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 106378,
-      "measured": 106378
+      "cap": 106394,
+      "measured": 106386
     }
   },
   "files": {
@@ -247,6 +247,26 @@
       "from": 30720,
       "to": 32768,
       "reason": "S1a: equals the flow-look contract ceiling (Architect 42)."
+    },
+    {
+      "id": "CEO-2026-10-21-s1a-fix1-gzip",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "Raise 64 B / 16 B (Recommended)",
+      "field": "/entry/stages/1/cap",
+      "from": 127235,
+      "to": 127299,
+      "reason": "S1a Fix round 1 (own-key SCENE_INSETS, chunk-notice timer and seasonal wait leaks, customElements guard): measured 127,293 at 64bb70f, 58 B over the close cap."
+    },
+    {
+      "id": "CEO-2026-10-21-s1a-fix1-br",
+      "date": "2026-10-21",
+      "source": "chat",
+      "quote": "Raise 64 B / 16 B (Recommended)",
+      "field": "/entry/br/cap",
+      "from": 106378,
+      "to": 106394,
+      "reason": "S1a Fix round 1: magic-card.js.br measured 106,386 at 64bb70f, 8 B over."
     }
   ]
 }
