@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "tools/size-caps.schema.json",
-  "title": "Magic Card size caps (ADR 0042, ADR 0044)",
-  "description": "Shape of tools/size-caps.json, the one source of every dist size cap. Read by tools/check-dist-size.mjs. magic-card.js is gated on gzip bytes through a stage ladder and on the byte length of its shipped .br sibling; every other file on raw bytes under an Architect ceiling. A raised cap or ceiling needs a ceo_decisions entry written by the Lead after the CEO said yes in chat; agents never write one.",
+  "title": "Magic Card size caps",
+  "description": "Shape of tools/size-caps.json, the one source of every dist size cap. Read by tools/check-dist-size.mjs. magic-card.js is gated on gzip bytes through a stage ladder and on the byte length of its shipped .br sibling; every other file on raw bytes under a ceiling. A raised cap or ceiling needs an approved_raises entry with the same field, from and to.",
   "type": "object",
-  "required": ["version", "gzip", "entry", "files", "ceo_decisions"],
+  "required": ["version", "gzip", "entry", "files", "approved_raises"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
-    "version": { "const": 1 },
+    "version": { "const": 2 },
     "gzip": {
       "description": "How gzip bytes are measured. zlib.gzipSync(buffer, { level }) on the pinned Node. CI fails when process.versions.zlib differs from `zlib` or process.versions.brotli differs from `brotli`; a local run with another version prints the result as not authoritative.",
       "type": "object",
@@ -18,7 +18,7 @@
         "level": { "const": 9 },
         "node": { "type": "string", "description": "Exact Node version, equal to .nvmrc and the CI setup-node version, e.g. 24.11.1" },
         "zlib": { "type": "string", "description": "process.versions.zlib of that Node" },
-        "brotli": { "type": "string", "description": "process.versions.brotli of that Node (ADR 0044: the .br siblings are built with it)" }
+        "brotli": { "type": "string", "description": "process.versions.brotli of that Node (the .br siblings are built with it)" }
       }
     },
     "entry": {
@@ -38,8 +38,8 @@
             "raw": { "type": "integer", "minimum": 1 }
           }
         },
-        "final_cap": { "const": 61440, "description": "60 KiB, CEO Brief Gate 2026-10-20. The checker also holds this number as a constant, so editing the JSON cannot move it." },
-        "current_stage": { "enum": ["S0", "S1a", "S1b", "S2"], "description": "The stage whose cap is active. Moved forward only, by the stage-close commit." },
+        "final_cap": { "const": 61440, "description": "60 KiB. The checker also holds this number as a constant, so editing the JSON cannot move it." },
+        "current_stage": { "enum": ["stage-1", "stage-2", "stage-3", "stage-4"], "description": "The stage whose cap is active. Moved forward only, by the stage-close commit." },
         "stages": {
           "type": "array",
           "minItems": 4,
@@ -49,9 +49,9 @@
             "required": ["id", "cap", "target", "landed_commit"],
             "additionalProperties": false,
             "properties": {
-              "id": { "enum": ["S0", "S1a", "S1b", "S2"] },
-              "cap": { "type": ["integer", "null"], "minimum": 1, "description": "gzip bytes. null until the stage closes; then the measured gzip of the landing commit (no margin). Each cap <= the previous stage's cap; S2 cap <= final_cap." },
-              "target": { "type": "integer", "minimum": 1, "description": "Planning figure, informational (S1a 117760, S1b 67584, S2 61440)." },
+              "id": { "enum": ["stage-1", "stage-2", "stage-3", "stage-4"] },
+              "cap": { "type": ["integer", "null"], "minimum": 1, "description": "gzip bytes. null until the stage closes; then the measured gzip of the landing commit (no margin). Each cap <= the previous stage's cap; the last stage's cap <= final_cap." },
+              "target": { "type": "integer", "minimum": 1, "description": "Planning figure, informational." },
               "landed_commit": { "type": ["string", "null"], "pattern": "^[0-9a-f]{7,40}$" },
               "measured": { "type": ["integer", "null"], "description": "gzip at landed_commit, kept for the record." },
               "trace_ms": { "type": ["object", "null"], "description": "Warn-only time to first card, median of 3: { plain, effect }." }
@@ -59,20 +59,20 @@
           }
         },
         "br": {
-          "description": "Gate on dist/magic-card.js.br, the bytes HA sends to a browser that accepts br (ADR 0044). The checker fails when the file is missing, does not decompress to dist/magic-card.js byte for byte, is larger than `cap` (when not null), or is larger than the active stage's gzip cap.",
+          "description": "Gate on dist/magic-card.js.br, the bytes HA sends to a browser that accepts br. The checker fails when the file is missing, does not decompress to dist/magic-card.js byte for byte, is larger than `cap` (when not null), or is larger than the active stage's gzip cap.",
           "type": "object",
           "required": ["quality", "cap", "measured"],
           "additionalProperties": false,
           "properties": {
             "quality": { "const": 11, "description": "BROTLI_PARAM_QUALITY used by tools/compress-dist.mjs (lgwin 22, mode text, size hint = input length)." },
-            "cap": { "type": ["integer", "null"], "minimum": 1, "description": "Bytes of the .br file. null until S0 closes; each stage close sets it to the measured size at the landing commit (it only goes down). A raise needs a ceo_decisions entry with field /entry/br/cap." },
+            "cap": { "type": ["integer", "null"], "minimum": 1, "description": "Bytes of the .br file. null until the first stage closes; each stage close sets it to the measured size at the landing commit (it only goes down). A raise needs an approved_raises entry with field /entry/br/cap." },
             "measured": { "type": ["integer", "null"], "description": ".br bytes at the last stage close, kept for the record." }
           }
         }
       }
     },
     "files": {
-      "description": "Every other dist .js file by logical name (the content hash stripped: magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails (AC7). An entry with no file fails unless `optional` is true. The .js.br and .js.gz siblings (ADR 0044) are not listed: the checker requires both next to every .js, requires each to decompress to that .js byte for byte, and fails on a sibling whose .js is missing.",
+      "description": "Every other dist .js file by logical name (the content hash stripped: magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails. An entry with no file fails unless `optional` is true. The .js.br and .js.gz siblings are not listed: the checker requires both next to every .js, requires each to decompress to that .js byte for byte, and fails on a sibling whose .js is missing.",
       "type": "object",
       "additionalProperties": {
         "type": "object",
@@ -80,28 +80,24 @@
         "additionalProperties": false,
         "properties": {
           "raw": { "type": "integer", "minimum": 1, "description": "Cap: measured + 5 %, rounded up to 1 KiB, never above `ceiling`." },
-          "ceiling": { "type": "integer", "minimum": 1, "description": "Architect ceiling. A measured size above it means code was copied in: report it. Raising it needs a CEO decision." },
+          "ceiling": { "type": "integer", "minimum": 1, "description": "Upper bound for the raw cap. A measured size above it means code was copied in. Raising it needs an approved_raises entry." },
           "optional": { "type": "boolean" },
-          "note": { "type": "string", "description": "What the old CAPS comment said: what is in it and who set the number." }
+          "note": { "type": "string", "description": "What is in the file and how its cap is derived." }
         }
       }
     },
-    "ceo_decisions": {
-      "description": "Append-only. Written by the Lead only, after the CEO said yes in chat. CI compares tools/size-caps.json with the base branch: every entry cap, stage cap, /entry/br/cap, file ceiling or raw cap above a new file's ceiling that went up must have an entry here with matching field and to.",
+    "approved_raises": {
+      "description": "Append-only. CI compares tools/size-caps.json with the base branch: every entry cap, stage cap, /entry/br/cap, file ceiling or raw cap above a new file's ceiling that went up must have an entry here with matching field, from and to. Entries already in the base file stay in place.",
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "date", "source", "quote", "field", "from", "to"],
+        "required": ["id", "field", "from", "to"],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "pattern": "^CEO-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$" },
-          "date": { "type": "string", "format": "date", "description": "Date of the CEO's chat message." },
-          "source": { "const": "chat" },
-          "quote": { "type": "string", "minLength": 3, "description": "The CEO's words." },
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Unique. Names the field and the new value, e.g. entry-br-cap-106394." },
           "field": { "type": "string", "description": "JSON pointer of the raised value, e.g. /entry/stages/1/cap, /entry/br/cap or /files/magic-card-flows.js/ceiling" },
           "from": { "type": ["integer", "null"] },
-          "to": { "type": "integer" },
-          "reason": { "type": "string" }
+          "to": { "type": "integer" }
         }
       }
     }

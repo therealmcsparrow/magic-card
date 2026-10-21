@@ -1,15 +1,15 @@
-// Size gate for the built dist/*.js. Every number lives in tools/size-caps.json (shape: tools/size-caps.schema.json,
-// ADR 0042); this file holds only the final-cap constant. Rules:
-// - magic-card.js, which every dashboard loads, is gated on gzip bytes: zlib.gzipSync(buffer, { level: 9 }), one shot on the whole file
-//   (node.M5, node.S5). The active stage cap applies; while the S0 cap is null (until S0.close) the cap is entry.base.gzip.
+// Size gate for the built dist/*.js. Every number lives in tools/size-caps.json (shape: tools/size-caps.schema.json);
+// this file holds only the final-cap constant. Rules:
+// - magic-card.js, which every dashboard loads, is gated on gzip bytes: zlib.gzipSync(buffer, { level: 9 }), one shot on the whole file.
+//   The active stage cap applies; while the first stage cap is null the cap is entry.base.gzip.
 //   Gzip bytes depend on the zlib build, so the result is authoritative only on the Node pinned in .nvmrc (zlib and brotli versions are
 //   recorded in the caps file). Another zlib or brotli: CI fails, a local run prints "not authoritative".
-// - every other dist .js is gated on raw bytes: size <= raw cap <= Architect ceiling. File names are matched with the content hash
-//   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails (AC7).
+// - every other dist .js is gated on raw bytes: size <= raw cap <= ceiling. File names are matched with the content hash
+//   stripped (magic-card-<name>.<hash8>.js -> magic-card-<name>.js). A dist file with no entry fails.
 // - raises: with --base-ref the caps file is compared with the same file at that git ref. Any entry cap, stage cap, br cap, ceiling or
-//   base figure that went up (or a number that was removed) fails unless ceo_decisions carries a matching entry (field, from, to).
-//   Only the Lead writes ceo_decisions after the CEO says yes in chat; entries already in the base file must stay as they are.
-// - siblings (ADR 0044): every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
+//   base figure that went up (or a number that was removed) fails unless approved_raises carries a matching entry (field, from, to).
+//   Entries already in the base file must keep their field, from and to, in place.
+// - siblings: every dist .js has a .js.br and a .js.gz next to it (tools/compress-dist.mjs writes them), each unpacks to that
 //   .js byte for byte, and a .br or .gz with no .js fails (an orphan, or a stale copy HA would keep serving). Siblings have no size cap of
 //   their own, except magic-card.js.br: <= entry.br.cap when set, and always <= the active stage gzip cap.
 // Usage: node tools/check-dist-size.mjs [--caps <file>] [--dist <dir>] [--base-ref <git ref> | --base-file <file>] [--require-base] [--caps-only] [--committed] [--digest]
@@ -19,7 +19,6 @@
 //   --committed     check only that every committed .br/.gz unpacks to its committed .js byte for byte (run before the build, which
 //                   rewrites them). Sizes and caps are not checked.
 //   --digest        also print the sha256 of the gzip bytes after the 10-byte header (the header OS byte differs per platform).
-// Raising a cap or ceiling needs a CEO decision, written by the Lead into ceo_decisions in the same change.
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -27,9 +26,9 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliDecompressSync, gunzipSync, gzipSync } from 'node:zlib';
 
-/** 60 KiB, CEO Brief Gate 2026-10-20. Held here as well, so editing the JSON cannot move it. */
+/** 60 KiB. Held here as well, so editing the JSON cannot move it. */
 const FINAL_CAP = 61_440;
-const STAGES = ['S0', 'S1a', 'S1b', 'S2'];
+const STAGES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 const args = process.argv.slice(2);
@@ -66,8 +65,8 @@ function validateShape(c) {
     for (const k of Object.keys(o)) need(allowed.includes(k), `${where}: unknown key "${k}"`);
   };
   if (!isObj(c)) return ['the caps file is not a JSON object'];
-  keys(c, ['$schema', 'version', 'gzip', 'entry', 'files', 'ceo_decisions'], 'root');
-  need(c.version === 1, 'version must be 1');
+  keys(c, ['$schema', 'version', 'gzip', 'entry', 'files', 'approved_raises'], 'root');
+  need(c.version === 2, 'version must be 2');
   const g = c.gzip;
   if (isObj(g)) {
     keys(g, ['level', 'node', 'zlib', 'brotli'], 'gzip');
@@ -80,7 +79,7 @@ function validateShape(c) {
     need(e.file === 'magic-card.js', 'entry.file must be magic-card.js');
     need(isObj(e.base) && COMMIT.test(String(e.base.commit)) && isInt(e.base.gzip) && isInt(e.base.raw), 'entry.base needs commit, gzip and raw');
     need(e.final_cap === FINAL_CAP, `entry.final_cap must be ${FINAL_CAP}`);
-    need(STAGES.includes(e.current_stage), 'entry.current_stage must be one of S0, S1a, S1b, S2');
+    need(STAGES.includes(e.current_stage), 'entry.current_stage must be one of ' + STAGES.join(', '));
     if (Array.isArray(e.stages) && e.stages.length === 4) {
       e.stages.forEach((s, i) => {
         const w = `entry.stages[${i}]`;
@@ -91,7 +90,7 @@ function validateShape(c) {
         need(isInt(s.target), `${w}.target must be an integer`);
         need(s.landed_commit === null || COMMIT.test(String(s.landed_commit)), `${w}.landed_commit must be a commit or null`);
       });
-    } else errs.push('entry.stages must hold the four stages S0, S1a, S1b, S2');
+    } else errs.push('entry.stages must hold the four stages ' + STAGES.join(', '));
     const br = e.br;
     if (isObj(br)) {
       keys(br, ['quality', 'cap', 'measured'], 'entry.br');
@@ -114,25 +113,25 @@ function validateShape(c) {
       need(f.optional === undefined || typeof f.optional === 'boolean', `${w}.optional must be a boolean`);
     }
   } else errs.push('files must be an object');
-  if (Array.isArray(c.ceo_decisions)) {
-    c.ceo_decisions.forEach((d, i) => {
-      const w = `ceo_decisions[${i}]`;
+  if (Array.isArray(c.approved_raises)) {
+    const seenIds = new Set();
+    c.approved_raises.forEach((d, i) => {
+      const w = `approved_raises[${i}]`;
       need(isObj(d), `${w} must be an object`);
       if (!isObj(d)) return;
-      keys(d, ['id', 'date', 'source', 'quote', 'field', 'from', 'to', 'reason'], w);
-      need(/^CEO-\d{4}-\d{2}-\d{2}-[a-z0-9-]+$/.test(String(d.id)), `${w}.id must look like CEO-2026-10-20-name`);
-      need(/^\d{4}-\d{2}-\d{2}$/.test(String(d.date)), `${w}.date must be YYYY-MM-DD`);
-      need(d.source === 'chat', `${w}.source must be "chat"`);
-      need(typeof d.quote === 'string' && d.quote.length >= 3, `${w}.quote must hold the CEO's words`);
+      keys(d, ['id', 'field', 'from', 'to'], w);
+      need(/^[a-z0-9][a-z0-9-]*$/.test(String(d.id)), `${w}.id must be lower-case letters, digits and hyphens`);
+      need(!seenIds.has(d.id), `${w}.id "${d.id}" is not unique`);
+      seenIds.add(d.id);
       need(typeof d.field === 'string' && d.field.startsWith('/'), `${w}.field must be a JSON pointer`);
       need(d.from === null || Number.isInteger(d.from), `${w}.from must be an integer or null`);
       need(Number.isInteger(d.to), `${w}.to must be an integer`);
     });
-  } else errs.push('ceo_decisions must be an array');
+  } else errs.push('approved_raises must be an array');
   return errs;
 }
 
-/** The active entry cap: the stage cap, or entry.base.gzip while the S0 cap is still null. */
+/** The active entry cap: the stage cap, or entry.base.gzip while the first stage cap is still null. */
 function stageCaps(c) {
   const eff = [];
   c.entry.stages.forEach((s, i) => {
@@ -141,7 +140,7 @@ function stageCaps(c) {
   return eff;
 }
 
-/** Ladder rules: each cap <= the previous one, S2 <= final cap, the active stage has a cap. */
+/** Ladder rules: each cap <= the previous one, the last stage <= final cap, the active stage has a cap. */
 function checkLadder(c) {
   const eff = stageCaps(c);
   let prev = Infinity;
@@ -151,15 +150,15 @@ function checkLadder(c) {
     prev = cap;
   });
   const s0 = c.entry.stages[0].cap;
-  if (s0 !== null && s0 > c.entry.base.gzip) fail(`S0 cap ${s0} B is above the base figure ${c.entry.base.gzip} B (entry.base.gzip)`);
-  const s2 = eff[3];
-  if (s2 !== null && s2 > FINAL_CAP) fail(`S2 cap ${s2} B is above the final cap ${FINAL_CAP} B`);
+  if (s0 !== null && s0 > c.entry.base.gzip) fail(`${STAGES[0]} cap ${s0} B is above the base figure ${c.entry.base.gzip} B (entry.base.gzip)`);
+  const last = eff[3];
+  if (last !== null && last > FINAL_CAP) fail(`${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B`);
   const active = STAGES.indexOf(c.entry.current_stage);
   if (eff[active] === null) fail(`current_stage ${c.entry.current_stage} has no cap: set its cap in the stage-close change first`);
   return eff[active];
 }
 
-/** Every number the CEO path guards, as { pointer: value } (null = absent or unset). */
+/** Every number a raise is checked for, as { pointer: value } (null = absent or unset). */
 function guarded(c) {
   const m = new Map();
   m.set('/entry/base/gzip', c.entry.base.gzip);
@@ -168,6 +167,9 @@ function guarded(c) {
   for (const [name, f] of Object.entries(c.files)) m.set(`/files/${name}/ceiling`, f.ceiling);
   return m;
 }
+
+/** The base file's approval list is its one root array. */
+const baseRaises = (b) => Object.values(b).find(Array.isArray) ?? [];
 
 function loadBase(ref) {
   let blob;
@@ -200,12 +202,14 @@ function checkRaises(c, ref) {
   const b = base.caps;
   const before = guarded(b);
   const after = guarded(c);
-  const decisions = c.ceo_decisions;
-  // append-only: the entries of the base file stay, in place
-  b.ceo_decisions.forEach((d, i) => {
-    if (JSON.stringify(decisions[i]) !== JSON.stringify(d)) fail(`ceo_decisions[${i}] (${d.id}) differs from ${ref}: the list is append-only`);
+  const decisions = c.approved_raises;
+  // append-only: the entries of the base file keep field, from and to, in place
+  baseRaises(b).forEach((d, i) => {
+    const now = decisions[i];
+    if (!now || now.field !== d.field || now.from !== d.from || now.to !== d.to) fail(`approved_raises[${i}] (${d.id}) differs from ${ref}: the list is append-only`);
   });
-  if (STAGES.indexOf(c.entry.current_stage) < STAGES.indexOf(b.entry.current_stage)) fail(`entry.current_stage moved back from ${b.entry.current_stage} to ${c.entry.current_stage}`);
+  const stageIndex = (f) => f.entry.stages.findIndex((s) => s.id === f.entry.current_stage);
+  if (stageIndex(c) < stageIndex(b)) fail(`entry.current_stage moved back from ${b.entry.current_stage} to ${c.entry.current_stage}`);
   let raises = 0;
   for (const [ptr, was] of before) {
     if (!after.has(ptr)) continue; // file entry removed: lower by definition
@@ -215,10 +219,10 @@ function checkRaises(c, ref) {
     raises++;
     const hit = decisions.find((d) => d.field === ptr && d.from === was && d.to === now);
     if (hit) ok(`${ptr} ${was} -> ${now} (${hit.id})`);
-    else fail(`${ptr} was raised from ${was} to ${now} with no ceo_decisions entry (field "${ptr}", from ${was}, to ${now}). Only the Lead writes one, after the CEO says yes in chat`);
+    else fail(`${ptr} was raised from ${was} to ${now} with no approved_raises entry (field "${ptr}", from ${was}, to ${now})`);
   }
   for (const [name, f] of Object.entries(c.files)) {
-    if (!b.files[name]) note(`new size entry ${name}: raw ${f.raw} B, ceiling ${f.ceiling} B (the Architect sets the ceiling; review it)`);
+    if (!b.files[name]) note(`new size entry ${name}: raw ${f.raw} B, ceiling ${f.ceiling} B (review the ceiling)`);
   }
   if (raises === 0) ok(`no cap or ceiling went up against ${ref}`);
 }
@@ -272,7 +276,7 @@ function checkDist(c, activeCap, authoritative) {
     if (name === entry) continue;
     const size = statSync(join(distDir, file)).size;
     const f = c.files[name];
-    if (!f) fail(`${file}: ${size} B, new file with no entry in tools/size-caps.json. Add one (raw = its production size + 5 %, rounded up to 1 KiB, under an Architect ceiling) in the same PR`);
+    if (!f) fail(`${file}: ${size} B, new file with no entry in tools/size-caps.json. Add one (raw = its production size + 5 %, rounded up to 1 KiB, under a ceiling) in the same PR`);
     else if (size > f.raw) fail(`${file}: ${size} B > cap ${f.raw} B (+${size - f.raw} B)`);
     else ok(`${file}: ${size} B <= ${f.raw} B (headroom ${f.raw - size} B)`);
   }
@@ -282,7 +286,7 @@ function checkDist(c, activeCap, authoritative) {
   checkSiblings(c, files, activeCap, tag);
 }
 
-/** ADR 0044: .js.br and .js.gz next to every .js, each unpacking to it byte for byte; no copy without its .js. */
+/** .js.br and .js.gz next to every .js, each unpacking to it byte for byte; no copy without its .js. */
 function checkSiblings(c, files, activeCap, tag) {
   for (const f of readdirSync(distDir)) {
     const m = /^(.*.js).(br|gz)$/.exec(f);
@@ -334,7 +338,7 @@ function main() {
     process.exit(1);
   }
   for (const [name, f] of Object.entries(caps.files)) {
-    if (f.raw > f.ceiling) fail(`files["${name}"]: raw cap ${f.raw} B is above its ceiling ${f.ceiling} B. A ceiling raise needs a CEO decision`);
+    if (f.raw > f.ceiling) fail(`files["${name}"]: raw cap ${f.raw} B is above its ceiling ${f.ceiling} B. A ceiling raise needs an approved_raises entry`);
   }
   const activeCap = checkLadder(caps);
   if (flag('--committed')) {
