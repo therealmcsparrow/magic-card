@@ -37,7 +37,7 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   slider: row('slider', ofType('slider-layout')),
   markdown: row('markdown', ofType('markdown')),
   controls: row('controls', ofType(...CONTROL_MODULE_TYPES)),
-  'modules-extra': row('modules-extra', ofType('camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs')),
+  'modules-extra': row('modules-extra', ofType('camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs', 'clock', 'image')),
   // a `seasonal` setting or a seasonal animation preset
   seasonal: row('seasonal', (c) => configHas(c, (n) => n.seasonal || (typeof n.preset === 'string' && SEASONAL_PRESET_IDS.includes(n.preset)))),
   // a `flows` list with an entry

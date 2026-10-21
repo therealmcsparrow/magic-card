@@ -28,9 +28,7 @@
     "info": ["prefix", "suffix", "show_name", "show_state", "show_unit", "secondary_info", "show_icon", "icon", "icon_on", "icon_off"],
     "button": ["label", "icon", "show_state", "use_entity_icon", "use_entity_color", "button_style", "icon_on", "icon_off"],
     "bar": ["min", "max", "severity", "decimals", "bar_height", "bar_color", "bar_background", "show_value", "direction"],
-    "separator": ["separator_style", "separator_color", "separator_width", "direction"],
-    "image": ["image", "entity_picture", "aspect_ratio", "fit"],
-    "clock": ["format_12h", "show_seconds", "show_date", "date_format"]
+    "separator": ["separator_style", "separator_color", "separator_width", "direction"]
   },
   "tab_keys_walked": ["label", "icon", "modules", "hidden"],
   "icon_keys": {
@@ -114,6 +112,8 @@
       "light": { "chunk": "controls", "reserve": "default" },
       "gauge": { "chunk": "controls", "reserve": "default", "size_keys": ["design.height", "design.min_height"], "size_reserve": "configured" },
       "tabs": { "chunk": "modules-extra", "reserve": "default" },
+      "clock": { "chunk": "modules-extra", "reserve": "default", "size_keys": ["design.height", "design.min_height"], "size_reserve": "configured" },
+      "image": { "chunk": "modules-extra", "reserve": "configured" },
       "slider-layout": { "chunk": "modules-extra", "reserve": "default", "size_keys": ["design.height", "design.min_height"], "size_reserve": "configured" },
       "weather": { "chunk": "modules-extra", "reserve": "default" },
       "forecast": { "chunk": "modules-extra", "reserve": "configured" },

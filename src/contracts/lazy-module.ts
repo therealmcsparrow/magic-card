@@ -36,7 +36,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   src/modules/lazy/controls-chunk.ts). It holds the views of the slider, spinbox, dropdown, light and gauge
  *   modules (src/modules/controls/*-view.ts); their stubs (metadata, defaults, validation and a placeholder
  *   that reserves the default height, src/modules/controls/controls.needs.ts) stay in Core. Its needs() is the
- *   presence of one of those module types. The tabs view is in 'modules-extra' (ceiling 57,344 B). The chunk
+ *   presence of one of those module types. The tabs, clock and image views are in 'modules-extra' (ceiling 57,344 B); the clock stub reserves its min-height
+ *   (clockMinHeight, src/modules/lazy-heights.ts) and the image stub its aspect-ratio (src/utils/aspect-ratio.ts), both from the config. The chunk
  *   is the parent of 'slider-look' (the literal import() sits in controls-chunk.ts), so its load() loads
  *   'controls' first. The editor imports no stub or view: climateRange, supportsEffect and the dropdown
  *   option helpers are in small pure files (spinbox-range, light-effect, dropdown-options).
@@ -381,7 +382,7 @@ export const LAZY_SHARED_CHUNK_CEILINGS: Record<LazySharedChunkName, number> = {
 export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
-  'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs'],
+  'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs', 'clock', 'image'],
   controls: ['slider', 'spinbox', 'dropdown', 'light', 'gauge'],
 };
 
