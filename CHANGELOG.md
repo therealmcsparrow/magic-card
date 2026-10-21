@@ -6,17 +6,42 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
-### Changed
+Magic Card's card file, `magic-card.js`, is about 48% smaller: 156,490 B to 81,838 B with gzip, and 129,897 B to 69,792 B with Brotli. A plain card downloads nothing else.
+
+### Loads only when used
+-   **Animations** (`magic-card-anim.js`, `magic-card-anim-runtime.js`). The code that plays a card's animations loads only when a card has one, in any row, column, module, hover or conditional design. A card without animations makes no extra request. A card with one is drawn still first and starts moving a moment later. The animation library ships with this file too.
+-   **Animation styles.** The keyframes and rules of the animation presets come with the animation code, so a card without animations downloads about 9.6 KB less with gzip (7.5 KB with Brotli). A card with animations gets them in the same frame its animation starts.
+-   **Icons and icon effects** (`magic-card-svg-icon.js`). Icons from the library, your own SVG and icon effects load only when a card uses them. A card with plain Material Design icons keeps using Home Assistant's own icon and makes no extra request. The helpers that icon effects and value backgrounds share moved out of the card file too, about 2.1 KB less with gzip.
+-   **Flow lines** (`magic-card-flows.js`). Cards without flows download about 8.8 KB less with gzip.
+-   **Pause button** (`magic-card-pause.js`). Only cards that turn it on load it, about 0.7 KB less with gzip for the others.
+-   **Pop-up cards** (`magic-card-popup.js`). About 3.5 KB less with gzip for cards that are not pop-ups.
+-   **Sliders, spinboxes, dropdowns, lights, gauges and tabs** (`magic-card-controls.js`, and tabs in `magic-card-modules-extra.js`). About 5.7 KB less with gzip for cards without them.
+-   **Rings, outline shapes and value backgrounds** (`magic-card-decor.js`). About 7.8 KB less with gzip for cards without them.
+-   **Templates** (`magic-card-templates.js`). Only linked cards load the template source and merge, about 2.7 KB less with gzip for the others.
+-   **Path parser** (`magic-card-path-core.js`). The animation, icon, decoration and slider-look features load it with their own file. Plain cards never fetch it, and the card file is about 3.2 KB smaller.
+-   **Weather icon animation, clock and image modules** (`magic-card-modules-extra.js`). They load with the extra modules file, about 0.7 KB and 1.3 KB less with gzip in the card file.
+-   **Moving backdrops** (`magic-card-layers.js`). Colour, gradient, pattern and picture backdrops draw without it. Only pan and zoom and camera snapshots load it.
+-   **Editor texts** (`magic-card-editor.js`, `magic-card-i18n-labels.js`). Module names, icons, CSS property labels and options load with the editor. The Google Fonts family names load with the font picker.
+
+### Behaviour changes
+-   **Failed parts say so.** When a part of a card, such as the slider, a background or an animation, cannot be fetched, the card tries once more after two seconds. If that fails too, a short notice takes the place of the part, reading "{part} did not load. The rest of this card works.", with a **Try again** button. The card keeps trying in the background (after 30 seconds, 90 seconds and 5 minutes). If the card file and its parts come from different releases, the notice reads "Magic Card was updated. Reload the page to see this part." with a **Reload page** button.
+-   **Shape cards wait for the decor file.** A card with an outline shape waits for `magic-card-decor.js` before it shows, so its content does not jump.
+-   **Tabs cards can change height.** A tabs card grows with its content. To fix its height, set `grid_options.rows` on the card or `design.height` on the tabs module. A spinbox in an `auto` column may change width when it arrives.
+-   **Empty boxes keep the space.** A slider, spinbox, dropdown, light, gauge or tabs module shows an empty box of its usual height until its file arrives, so the cards below do not move. Clock and image boxes keep their size while their file loads.
+-   **Flow lines draw a moment later.** A card with flows shows its modules first and draws the lines a moment later, without moving anything.
+-   **Template cards show their own settings first.** A card linked to a template shows its own settings until the template arrives. If the template cannot load, the card shows its own settings and the line "Template "name" couldn't be loaded. Showing this card's own settings."
+-   **Pop-up cards wait for their file.** A pop-up card stays out of the layout until its file arrives, then opens if the page address already ends in its `#id`.
+-   **A paused card stays paused.** A card you paused stays paused from the moment it appears, before the Pause button has loaded, and its flow lines stay paused when they load. If the button's code cannot load, the card stays paused and shows the usual notice. To play the card again, delete the stored `mc-paused:` entry in your browser. The card keeps room for the button from the first paint, so nothing moves when the button appears.
 -   **Seasonal cards keep their room all year.** A card with `seasonal: auto` now keeps at least 20 px of padding at the top, right and left and 30 px at the bottom in every month, the most that a Christmas or Halloween decoration needs. Before, the card added that room only while a decoration showed, so the layout moved on 1 December and on 24 October. A card with the default padding of 16 px grows by 4 px at the top, right and left and by 14 px at the bottom; a card whose padding is already larger does not change. To keep less room, set `decorations: false`, name one scene, or switch Christmas and Halloween off in `calendar`. A seasonal animation preset on a module, row or column keeps its room the same way, whether or not its trigger is active. See [Seasonal scenes](documentation/yaml/schema.md#seasonal-scenes).
 
-### New
--   **A part that cannot load says so.** When a part of a card, such as the slider, a background or an animation, cannot be fetched, the card tries once more after two seconds. If that fails too, a short notice appears in place of the part with a **Try again** button, and the card keeps trying in the background (after 30 seconds, 90 seconds and 5 minutes). The rest of the card keeps working. If the card file and its parts come from different releases, the notice offers **Reload page** instead.
+### Install and update
+-   **Hashed files and compressed copies.** Most chunk files now carry a short hash in their name, and the release includes a `magic-card-manifest.js`. Each `.js` file has a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to it. Home Assistant sends the copy a browser accepts, so `magic-card.js` goes over the network as 69,792 B (Brotli) or 81,838 B (gzip). See [Manual](README.md#manual).
+-   **Manual installs copy every file.** Copy every file of the release, including the `.br` and `.gz` copies. Replace or delete the three files of a name together.
+-   **Old files after an update.** HACS does not delete the files of an earlier release. After a HACS update, the older hashed chunk files that the new release no longer uses can be deleted. Keep every file of the new release.
 
-### Improved
--   **Animations load on demand.** The code that plays a card's animations now loads only when a card has one, in any row, column, module, hover or conditional design. A card without animations makes no extra request. A card with one is drawn still first and starts moving a moment later; if that code cannot load, the card stays still and shows the same notice with **Try again** as other parts.
--   **Animation styles load with the animation code.** The keyframes and rules of all animation presets used to sit in `magic-card.js` for every card. They now come with the animation code, so a card without animations downloads about 9.6 KB less with gzip (7.5 KB with Brotli). A card with animations gets them in the same frame its animation starts.
--   **Saved and custom icons load on demand.** Icons from the library, your own SVG and icon effects now load their code only when a card uses them. A card with plain Material Design icons keeps using Home Assistant's own icon and makes no extra request. If that code cannot load, the card shows the default icon and the same notice with **Try again** as other parts.
--   **Compressed copies of every file.** Each release now carries a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to every `.js` file. Home Assistant sends the copy a browser accepts, and sends the raw file when there is none, so `magic-card.js` goes over the network as 106,378 B (Brotli) or 127,235 B (gzip) instead of 503,361 B. HACS in single mode never deletes old files, so every later release keeps shipping both copies. See [Manual](README.md#manual) for updating by hand.
+### Internal
+-   **Build checks.** The build fails when a file, its compressed copies or the card file grows past its cap in `tools/size-caps.json`, and when a shared file holds modules other than the ones it lists.
+-   **Smaller code.** Small colour, time and trigger helpers have their own files, Lit properties are declared statically, and the card defines its element once even if its resource loads twice.
 
 ## 2026.10.11-beta.5 (2026-10-20, pre-release)
 

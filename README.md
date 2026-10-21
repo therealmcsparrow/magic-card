@@ -66,15 +66,15 @@ The current release is a pre-release (2026.10.11-beta.2). HACS shows it only whe
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the other 27 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+HACS also downloads the other 37 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
 ### Manual
 
-1.  Download the 28 `.js` files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases), with the `.js.br` and `.js.gz` file next to each one (84 files in all). The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
-2.  Copy them together to `config/www/`.
+1.  Download the 38 `.js` files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases), together with the `.js.br` and `.js.gz` file next to each one (114 files in all). The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
+2.  Copy every file to `config/www/`, including the `.br` and `.gz` copies. Leave none out.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-Each `.js.br` and `.js.gz` file is a compressed copy of the `.js` file beside it. Home Assistant sends the copy the browser accepts, so a dashboard downloads about 130 KB of `magic-card.js` instead of 503 KB. When you update by hand, replace or delete the three files of a name together. If an old `.br` stays behind, Home Assistant keeps sending it in place of the new `.js`.
+Each `.js.br` and `.js.gz` file is a compressed copy of the `.js` file beside it. Home Assistant sends the copy the browser accepts, so a dashboard downloads about 70 KB of `magic-card.js` with Brotli, or about 82 KB with gzip. When you update by hand, copy the whole new release and replace or delete the three files of a name together. If an old `.br` stays behind, Home Assistant keeps sending it in place of the new `.js`.
 
 Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
 
@@ -111,11 +111,14 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-decor.js` | Cards with a ring, an outline shape or a value background (also a ring animation). A card with a shape waits for this file before it shows, so its content never moves. |
 | `magic-card-flow-look.js` | Cards with a flow look (animated lines that run across the card). Loaded when the card config uses one. |
 | `magic-card-slider-look.js` | Cards with a slider look (the styled slider track, fill and handle). Loaded when the card config uses one. |
-| `magic-card-layers.js` | Cards with Card backdrop layers (pictures, gradients, patterns, colours and cameras behind the card content). |
+| `magic-card-layers.js` | Cards with a moving card backdrop (pan and zoom, or camera snapshots). Colour, gradient, pattern and picture backdrops draw without it. |
+| `magic-card-templates.js` | Cards linked to a template. Other cards never load it. A linked card shows its own settings until it arrives. |
+| `magic-card-path-core.js` | The path parser shared by animations, icons, decorations and slider looks. Plain cards never load it; cards that use those features load it alongside their own file. |
+| `magic-card-manifest.js` | Read only when a part fails to load, so the card can tell that its file comes from a different release than its parts. |
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
 
-Keep all 28 files in one folder. `magic-card.js` is the only file a dashboard loads at once. At 489 KB it is down from about 680 KB in 2026.10.10, because the rarely used parts moved into the other files.
+Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard loads at once. Uncompressed it is 256,630 B, down from 503,361 B before the size work, because the rarely used parts moved into the other files. Most files carry a short hash in their name, such as `magic-card-anim.06551dee.js`. The table shows the names without the hash, and the hash stays in the name when you copy the file.
 
 ### Loading
 
@@ -124,6 +127,8 @@ Keep all 28 files in one folder. `magic-card.js` is the only file a dashboard lo
 ### Updating
 
 Update through HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
+
+HACS does not delete the files of an earlier release. After an update you can delete the older hashed files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
 
 ## The editor
 

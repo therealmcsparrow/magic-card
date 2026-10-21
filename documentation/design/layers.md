@@ -129,6 +129,12 @@ A card has motion when something on it moves: an animation, a seasonal scene, fl
 
 If anything on the card moves for more than five seconds, set `pause_button` to `auto` or `always`, so viewers can stop the motion. WCAG 2.2.2 asks for a way to pause or stop moving content that runs for more than five seconds.
 
+### Remembered pause
+
+A paused card stays paused. The browser remembers the pause for each card on each dashboard page, so the card is still paused after you reload the page. It is paused from the moment it appears, before the Pause button has loaded, and flow lines that load later stay paused too.
+
+If the button's code cannot load, the card stays paused and shows the usual notice. To play the card again, delete its `mc-paused:` entry in your browser's storage (in the developer tools, under Local storage or Storage) and reload the page. If the browser does not allow storage, a pause lasts only for the page visit.
+
 ### Space for the button
 
 With `auto` or `always`, the card keeps a 24 px strip at the button's edge: the top for a top corner, the bottom for a bottom corner. The button sits over that strip, so it does not cover a module in the normal case. The strip adds to the card's padding and gap.
