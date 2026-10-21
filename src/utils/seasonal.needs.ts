@@ -34,6 +34,10 @@ export const SCENE_INSETS: Readonly<Partial<Record<string, Inset>>> = {
   halloween: [0, 0, 30, 0],
 };
 
+/** The band of a scene by own key: a config string such as constructor or __proto__ is not a scene (proj.M1, M4). */
+export const sceneInset = (name: unknown): Inset | undefined =>
+  typeof name === 'string' && Object.prototype.hasOwnProperty.call(SCENE_INSETS, name) ? SCENE_INSETS[name] : undefined;
+
 /** Holidays whose scene has decorations; `calendar.<holiday>: off` removes it from what `auto` can show. */
 const DECORATED_HOLIDAYS = ['christmas', 'halloween'] as const;
 
@@ -60,9 +64,9 @@ export function seasonalSettingInsets(setting: unknown): Inset | undefined {
   for (const s of [cfg.scene === undefined ? 'auto' : cfg.scene, ...combine]) {
     if (s === 'auto') {
       // the seasons come round every year; a holiday only while its calendar entry is on
-      out = widest(out, widest(SCENE_INSETS.winter, SCENE_INSETS.spring));
-      for (const h of DECORATED_HOLIDAYS) if (!isOff(calendar[h])) out = widest(out, SCENE_INSETS[h]);
-    } else if (typeof s === 'string') out = widest(out, SCENE_INSETS[s]);
+      out = widest(out, widest(sceneInset('winter'), sceneInset('spring')));
+      for (const h of DECORATED_HOLIDAYS) if (!isOff(calendar[h])) out = widest(out, sceneInset(h));
+    } else out = widest(out, sceneInset(s));
   }
   return out;
 }
@@ -72,9 +76,9 @@ export function animationInsets(design: unknown): Inset | undefined {
   if (!isObj(design)) return undefined;
   let out: Inset | undefined;
   if (Array.isArray(design.animations)) {
-    for (const e of design.animations) if (isObj(e) && e.decorations !== false) out = widest(out, SCENE_INSETS[str(e.preset) ?? '']);
+    for (const e of design.animations) if (isObj(e) && e.decorations !== false) out = widest(out, sceneInset(str(e.preset)));
   } else {
-    out = SCENE_INSETS[str(design.animation_preset) ?? ''];
+    out = sceneInset(str(design.animation_preset));
   }
   return out;
 }
