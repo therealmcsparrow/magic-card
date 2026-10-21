@@ -19,6 +19,8 @@ declare const __MC_BUILD_VERSION__: string | undefined;
 
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
 
+export { weatherIconStyles as styles } from '../../icons/weather-icons';
+
 export function install(): void {
   if (!customElements.get('mc-embedded-card')) customElements.define('mc-embedded-card', EmbeddedCard);
   if (!customElements.get('mc-bg-video')) customElements.define('mc-bg-video', McBgVideo);
