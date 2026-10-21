@@ -1,6 +1,6 @@
 import { LAYER_ANCHORS, LAYER_BLENDS, LEADING_ANCHORS, BLUR_MAX, MAX_OVERLAY_RANK, SCRIM_HOLD, SCRIM_DEFAULT_STRENGTH } from '../contracts/layer-placement.needs';
 import type { Arranged, ArrangedChild, ArrangeOptions, ResolvedLayer, ScrimConfig } from '../contracts/layer-placement';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 import { isLayered, placementOf } from './layer-kind';
 import type { CardModule } from '../types';
 

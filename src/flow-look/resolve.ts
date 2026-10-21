@@ -3,7 +3,7 @@ import { FLOW_SHAPES, SPACING_MODES, fin, isWideFlowLook } from '../contracts/fl
 import type { ColorRange, FlowConfig, HomeAssistant } from '../types';
 import { FLOW_DEFAULTS } from '../utils/flow-keys';
 import type { ResolvedFlow } from '../utils/flow';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 import { entityStateColor, parseEntityColor } from '../utils/entity-color';
 import { flowLookRegistry } from './registry';
 

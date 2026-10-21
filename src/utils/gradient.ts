@@ -1,5 +1,5 @@
 import { svg, SVGTemplateResult } from 'lit';
-import { safeColor } from './animation';
+import { safeColor } from './safe-css';
 
 /*
  * A gradient colour value: `linear-gradient(<n>deg, c1, c2[, ...])` or

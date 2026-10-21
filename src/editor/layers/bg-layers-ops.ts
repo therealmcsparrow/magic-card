@@ -2,7 +2,7 @@ import { MAX_BACKGROUND_LAYERS, type BackgroundLayerConfig, type BgLayerStatus, 
 import { BLUR_MAX } from '../../contracts/layer-placement';
 import type { HomeAssistant } from '../../types';
 import { mediaSrc } from '../../utils/media';
-import { safeColor } from '../../utils/animation';
+import { safeColor } from '../../utils/safe-css';
 import { parseGradient } from '../../utils/gradient';
 import { m, t } from './i18n';
 

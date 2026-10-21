@@ -4,7 +4,7 @@ import type { RenderContext } from '../services/render-context';
 import { withRenderContext } from '../services/render-context';
 import { t } from '../card/i18n';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { mediaSrc } from '../utils/media';
 

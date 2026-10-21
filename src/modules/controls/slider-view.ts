@@ -9,7 +9,7 @@ import { lazyChunks } from '../../utils/lazy-chunks';
 import { sliderLookSlot } from './slider-look-slot';
 import { currentRenderContext } from '../../services/render-context';
 import { entityPaint } from '../../utils/entity-color';
-import { safeColor } from '../../utils/animation';
+import { safeColor } from '../../utils/safe-css';
 import { ENTITY_PAINT_KEYS, ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';

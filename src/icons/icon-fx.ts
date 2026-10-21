@@ -1,5 +1,5 @@
 import type { DeviceAnim, HassEntity, HomeAssistant, IconFxConfig } from '../types';
-import { cssTime, safeColor } from '../utils/animation';
+import { cssTime, safeColor } from '../utils/safe-css';
 import { ENTITY_COLOR_VAR, entityStateColor, parseEntityColor } from '../utils/entity-color';
 import { entityNumber, isUnavailable } from '../utils/entity-value';
 import { resolveDeviceAnim } from './device-anim';

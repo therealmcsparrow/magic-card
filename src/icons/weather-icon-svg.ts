@@ -1,5 +1,5 @@
 import { html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 import { pauseOffscreen } from './offscreen';
 
 /*

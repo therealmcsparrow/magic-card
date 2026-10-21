@@ -1,6 +1,6 @@
 import type { SliderModuleConfig } from '../types';
 import type { SliderThumb, SliderTrackStyle } from '../contracts/slider-look';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 
 /*
  * Config to a plain, clamped look model (CFG rules): every number is narrowed and clamped, every

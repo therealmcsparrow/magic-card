@@ -7,7 +7,7 @@ import { clearPendingValue, controlKey, pendingValue, setPendingValue } from '..
 import { renderTrack } from '../utils/slider-track';
 import { entityStateColor } from '../utils/entity-color';
 import { entityDisplayName, formatEntityValue } from '../utils/entity-value';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 import { currentRenderContext, currentRenderPass } from '../services/render-context';
 import { t } from '../card/i18n';
 import { alphaOf, css, lift, LIGHT_CARD, parseColour, PRIMARY_SHADE, SURFACE_DARK, SURFACE_LIGHT, thumbColours, type RGB } from './colour';

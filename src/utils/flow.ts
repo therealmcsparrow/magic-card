@@ -1,7 +1,7 @@
 import type { FlowConfig, FlowSide, HomeAssistant } from '../types';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import type { FlowLookRenderer, FlowLookResolved } from '../contracts/flow-look';
-import { safeColor } from './animation';
+import { safeColor } from './safe-css';
 import { FLOW_DEFAULTS } from './flow-keys';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
