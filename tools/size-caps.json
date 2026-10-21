@@ -61,7 +61,7 @@
     "magic-card-editor.js": {
       "raw": 925696,
       "ceiling": 925696,
-      "note": "Card editor. 904 KiB, the pre-approved maximum: measured 916,352 (+1 % would round to 926,720)."
+      "note": "Card editor. 904 KiB, measured 916,352."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -211,7 +211,7 @@
     "magic-card-modules-extra.js": {
       "raw": 35840,
       "ceiling": 57344,
-      "note": "Video background with placement keys (background layers), weather icon CSS, clock and image views. 35 KiB (measured 33,596 + 5 %); ceiling 57,344 (lazy-module chunk ceilings)."
+      "note": "Video background with placement keys (background layers), weather icon CSS, clock and image views. 35 KiB, measured 32,993; ceiling 57,344 (lazy-module chunk ceilings)."
     },
     "magic-card-svg-booleans.js": {
       "raw": 8192,
