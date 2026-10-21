@@ -193,11 +193,11 @@ exempt.approved_raises.push({ id: 's2-final-cap-measured', field: '/entry/stages
 r = run([...fixture(exempt, dist), '--caps-only']);
 expect('a last-stage cap over 61,440 with the entry passes and warns', r.code === 0 && /WARN.*above the final cap 61440/.test(r.out), r.out);
 const wrongTo = clone(exempt);
-wrongTo.approved_raises[0].to = 61000;
+wrongTo.approved_raises.at(-1).to = 61000;
 r = run([...fixture(wrongTo, dist), '--caps-only']);
 expect('the entry must name the cap it allows', r.code === 1, r.out);
 const wrongId = clone(exempt);
-wrongId.approved_raises[0].id = 'another-id';
+wrongId.approved_raises.at(-1).id = 'another-id';
 r = run([...fixture(wrongId, dist), '--caps-only']);
 expect('another id does not allow a cap over 61,440', r.code === 1, r.out);
 
