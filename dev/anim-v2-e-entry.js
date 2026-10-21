@@ -1,6 +1,6 @@
-// Dev-only entry for dev/anim-v2-e.html (track E: per-state clips and value bindings). The page loads
+// Dev-only entry for dev/anim-v2-e.html (per-state clips and value bindings). The page loads
 // the real magic-card.js (module, with its lazy runtime chunk) first; this bundle adds the studio
-// panels of track E and a tiny shell that feeds them like the studio does (doc-change,
+// panels for states and value bindings and a tiny shell that feeds them like the studio does (doc-change,
 // preview-change, panelsFor). It never defines the card's own elements.
 import { panelsFor, NO_SELECTION } from '../src/anim-studio/slots';
 import { previewConfig } from '../src/anim-studio/studio-model';

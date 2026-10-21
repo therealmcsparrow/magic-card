@@ -2,7 +2,7 @@ import { SVG_EDITOR_CONTRACT_VERSION, SVG_EDITOR_TAG } from '../contracts/svg-ed
 import { McSvgEditor } from './mc-svg-editor';
 
 /*
- * The SVG editor chunk (dist/magic-card-svg-editor.js, contract svg-editor 1.0.0 rev 2). Loaded with
+ * The SVG editor chunk (dist/magic-card-svg-editor.js, contract svg-editor 1.0.0). Loaded with
  * import() by the card-editor chunk (loader.ts), never by magic-card.js. It defines <mc-svg-editor>
  * once. Chunk rules: imports lit, src/contracts/, src/path/core.ts, src/icons/ (the
  * sanitiser and icon source, already in magic-card.js), src/css/editor-system.ts (editorTokens) and src/ui-kit/ (held by

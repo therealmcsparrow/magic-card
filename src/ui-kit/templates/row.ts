@@ -4,7 +4,7 @@ import { glyph } from '../glyphs';
 import { iconOf } from './icon';
 
 /**
- * The list or tree row (design/10 section 4.9). Renders in the caller's root, so the caller's kit CSS styles it.
+ * The list or tree row. Renders in the caller's root, so the caller's kit CSS styles it.
  * `level` makes it a treeitem (aria-level, aria-selected, aria-expanded); without it it is a listitem and `selected`
  * only tints it (aria-selected is not allowed there). Additive to KitRowOptions, used by the library view:
  * - `sub` a second line under the name (mono),

@@ -38,7 +38,7 @@ import {
 import { t, m } from '../i18n';
 
 /*
- * Icon parts in the Layers column (studio slot 'layers', track B2). Splits the icon into parts
+ * Icon parts in the Layers column (studio slot 'layers'). Splits the icon into parts
  * ("Split icon": each separate shape a part, holes kept with their shape), lists parts and groups
  * as a tree, selects them (click, Shift range, Ctrl / Cmd toggle; the selection is the studio's:
  * selection-change with target 'part:<id>' / 'group:<id>', so the timeline adds keys to that

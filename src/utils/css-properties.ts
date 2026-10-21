@@ -73,7 +73,7 @@ export interface CssSector {
   icon: string;
   /** Cascade order: designToStyle emits properties in this order (shorthands before longhands). */
   properties: CssPropertyDef[];
-  /** Keys shown first in the editor (mockup order); the rest follow in `properties` order. */
+  /** Keys shown first in the editor; the rest follow in `properties` order. */
   leading?: string[];
 }
 

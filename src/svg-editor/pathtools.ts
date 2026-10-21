@@ -10,7 +10,7 @@ import { t } from './i18n';
 import { PT_NAME } from './names';
 
 /*
- * Path tools in the editor (contract svg-editor rev 5, path-tools 1.0.0): which layers a tool works on, why it
+ * Path tools in the editor (contract svg-editor, path-tools 1.0.0): which layers a tool works on, why it
  * can't, the document after a result, and the panel flow (open, preview, Apply, Cancel). The geometry, the panel
  * template and their words are in the lazy chunk; nothing here runs before a tool is first used.
  */

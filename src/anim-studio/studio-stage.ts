@@ -27,7 +27,7 @@ import { t, m, type MessageId } from './i18n';
  *
  * A document with states or bindings (or a panel's `preview-change`, `.preview`) plays from a
  * simulated entity: the animation entry gets `entity: PREVIEW_ENTITY` and the preview hass carries
- * its state and attributes (track E's states-sim). The tile's own entities (the card tile's sensor)
+ * its state and attributes (the states simulation). The tile's own entities (the card tile's sensor)
  * are added with tileHass.
  */
 
@@ -43,7 +43,7 @@ export const FRAME_WIDTH = 360;
 /** Canvas padding around the scaled card (px). */
 const FIT_PAD = 16;
 
-/** The preview card's simulated entity (track E's SIM_ENTITY; a panel's `preview-change` sets its state). */
+/** The preview card's simulated entity (SIM_ENTITY; a panel's `preview-change` sets its state). */
 export const PREVIEW_ENTITY = SIM_ENTITY;
 
 /** The simulation the stage plays: the default one with the panels' preview-change merged in. */

@@ -115,7 +115,7 @@ import type { ModuleView } from './lazy-module';
  * 7. Thin and segmented tracks keep a 40 px hit area (touch).
  * 8. value_position bubble: shown while dragging, on keyboard focus, and for 2 s after release
  *    or a tap (touch has no hover).
- * 9. Failed call (onError): the fill snaps back, and for 5 s (WCAG 2.2.1 asks for at least 3 s)
+ * 9. Failed call (onError): the fill snaps back, and for 5 s (never less than 3 s)
  *    the track shows a 2 px outline in var(--error-color) plus a 16 px mdi:alert
  *    at the value end (replacing the value beside it), and a visually hidden role=status says
  *    "Couldn't set {name}" (card i18n namespace). Never colour alone; no shake.

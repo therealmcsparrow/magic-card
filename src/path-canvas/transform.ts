@@ -2,7 +2,7 @@ import { MIN_BOX_SIDE, type Matrix6 } from '../contracts/path-canvas';
 import type { Box, Pt } from '../contracts/path-model';
 
 /*
- * Pure maths of the selection box (path-canvas rev 5): where the handles sit, what a scale or a
+ * Pure maths of the selection box: where the handles sit, what a scale or a
  * rotate drag leads to, the matrices the host applies, and the keyboard resize. No DOM, no lit.
  */
 

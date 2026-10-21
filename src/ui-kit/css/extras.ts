@@ -310,7 +310,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
   }
 `;
 
-/** Full-screen layer header (design/10 4.8, the card editor's studio bar): 56 high, Surface, Divider under it. */
+/** Full-screen layer header: 56 high, Surface, Divider under it. */
 export const kitTopbar: CSSResult = /* @__PURE__ */ css`
   .topbar {
     display: flex;

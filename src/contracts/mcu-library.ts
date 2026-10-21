@@ -220,7 +220,7 @@ import type { ThemeDoc } from './theme-editor';
  *   mc-svg-save / mc-shape-save it refreshes its lists. On mc-svg-close / mc-shape-close it removes the
  *   element, shows the tab again and returns focus to the opener (or the row's replacement found by
  *   data-focus-key).
- * - Library tab: <mc-library-view> (preset-transfer 1.0.0 revision 2) with context 'mcu-panel', hass and
+ * - Library tab: <mc-library-view> (preset-transfer 1.0.0) with context 'mcu-panel', hass and
  *   presets (the same adapter object as the Themes tab). It lists icons, shapes, animations and theme
  *   presets from Magic Card Utils only (no "This card" source); search, rename, delete, export and import
  *   as in the card editor. "New icon" / "New shape" in its header and "Edit" on icon and shape rows fire

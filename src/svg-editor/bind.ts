@@ -3,7 +3,7 @@ import type { PathDraw, PathEdit, PathTidy } from '../contracts/path-model';
 
 /*
  * The editor-only path-model parts (edit, tidy, draw) come from the path canvas chunk's exports, not from
- * imports of src/path/edit.ts, tidy.ts or draw.ts (path-canvas 1.0.0 rev 4, one copy rule). The editor binds them once
+ * imports of src/path/edit.ts, tidy.ts or draw.ts (path-canvas 1.0.0, one copy rule). The editor binds them once
  * the chunk has loaded; nothing here runs before that.
  */
 

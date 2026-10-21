@@ -76,7 +76,7 @@ function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModul
 
 const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 
-// ── manifest check (off until a build writes dist/magic-card-manifest.js) ──────────────────────────
+// ── manifest check (off: no build writes dist/magic-card-manifest.js; tests switch it on) ──────────────
 
 const pageId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -87,7 +87,7 @@ export const manifestUrl = (id: string = pageId): string => {
   return url.href;
 };
 
-let manifestOn = false; // off until a build writes dist/magic-card-manifest.js
+let manifestOn = false; // off: no build writes dist/magic-card-manifest.js; only __manifestForTests switches it on
 let loadManifest = (url: string): Promise<{ default?: { build?: string } }> => import(/* webpackIgnore: true */ url);
 let manifest: Promise<boolean> | undefined;
 
@@ -115,7 +115,7 @@ const sheetOf = (s: CSSResultOrNative): CSSStyleSheet => (s instanceof CSSStyleS
 /**
  * Give one card the sheets adopted so far: its class (cards made later) and its shadow root (this one), same task.
  * Without adoptedStyleSheets (below the browser floor, Chromium 85 and Safari 16.4) the root is left alone: the
- * `<style>` element path is not used.
+ * no `<style>` fallback is inserted.
  */
 function catchUp(el: LitElement): void {
   const cls = el.constructor as typeof LitElement;

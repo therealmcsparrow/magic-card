@@ -1,5 +1,5 @@
 /*
- * Path model, runtime-safe part (contract path-model 1.0.0 rev 2, src/contracts/path-model.ts).
+ * Path model, runtime-safe part (contract path-model 1.0.0, src/contracts/path-model.ts).
  * Pure: no DOM, no lit. One parser for every SVG path command, the outline maths the shapes and
  * rings use (restart, reverse, flatten, nearest) and the cubic maths the icon morphs use.
  * The editor-only parts live in edit.ts, tidy.ts and draw.ts and are never imported from here.

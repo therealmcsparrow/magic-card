@@ -26,7 +26,7 @@ export function field(o: KitFieldOptions): TemplateResult {
   </div>`;
 }
 
-/** A boolean setting: always a switch (design/10 section 4.4), never a native checkbox. */
+/** A boolean setting: always a switch, never a native checkbox. */
 export function switchRow(o: { id: string; label: string; help?: string; checked: boolean; disabled?: boolean; onChange: (v: boolean) => void }): TemplateResult {
   return html`<div class="switch-row">
     <div class="txt">

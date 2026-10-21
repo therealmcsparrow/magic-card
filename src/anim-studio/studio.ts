@@ -1648,7 +1648,7 @@ export class AnimationStudio extends LitElement {
     e.stopPropagation();
     const d = (e as CustomEvent).detail as PreviewChangeDetail | undefined;
     if (!d || typeof d !== 'object') return;
-    // merged into the current simulation (a value alone keeps the state), like track E's applyPreviewChange
+    // merged into the current simulation (a value alone keeps the state), like applyPreviewChange
     const next: PreviewChangeDetail = { ...(this._preview ?? {}) };
     if (typeof d.state === 'string') next.state = d.state;
     if (typeof d.value === 'number' && Number.isFinite(d.value)) next.value = d.value;

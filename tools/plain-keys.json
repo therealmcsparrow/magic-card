@@ -4,7 +4,7 @@
   "provenance": {
     "design_css": "key names of src/utils/css-properties.ts (prop() entries, plus the per-side longhands of BOX_LONGHANDS and border_length*), copied 2026-10-20 at base 0ce341e",
     "module_keys": "interfaces in src/types.ts (TextModuleConfig ... ClockModuleConfig), copied 2026-10-20",
-    "seasonal_presets": "SEASONAL_PRESETS in src/utils/animation-presets.ts, copied 2026-10-20"
+    "seasonal_presets": "SEASONAL_PRESETS in src/utils/animation-presets.ts; the ids are listed in SEASONAL_PRESET_IDS in src/utils/seasonal.needs.ts"
   },
   "host_keys_ignored": {
     "note": "Keys Home Assistant itself reads on every card. They are not Magic Card config and load no chunk.",

@@ -982,7 +982,7 @@ export class DesignPanel extends LitElement {
     `;
   }
 
-  /** Compact fields (unit / select / number) pair up side by side, like the mockup's Width + Min height. */
+  /** Compact fields (unit / select / number) pair up side by side, like Width + Min height. */
   private _renderPropertyList(props: CssPropertyDef[]): TemplateResult[] {
     const compact = (p?: CssPropertyDef) => !!p && (p.type === 'unit' || p.type === 'select' || p.type === 'number');
     const out: TemplateResult[] = [];

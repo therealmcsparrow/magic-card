@@ -13,7 +13,7 @@ import { iconOf } from './icon';
 
 let seq = 0;
 
-/** The full-screen layer header, design/10 4.8: Back | title | name | spacer | Undo, Redo | actions | Help. */
+/** The full-screen layer header: Back | title | name | spacer | Undo, Redo | actions | Help. */
 export function topBar(o: KitTopBarOptions): TemplateResult {
   const errId = o.name?.error ? `tb-name-err-${++seq}` : '';
   return html`<header class="topbar">

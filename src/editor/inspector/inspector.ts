@@ -813,7 +813,7 @@ export class Inspector extends LitElement {
         gap: 4px;
         --mdc-icon-size: 14px;
       }
-      /* path segments navigate up, but read as the mockup's plain path text */
+      /* path segments navigate up, but read as plain path text */
       .crumb {
         border: 0;
         background: transparent;
@@ -829,7 +829,7 @@ export class Inspector extends LitElement {
       .tabs {
         position: relative;
       }
-      /* studio: fixed 340px panel, tighter padding so all four tabs fit (mockup) */
+      /* studio: fixed 340px panel, tighter padding so all four tabs fit */
       :host([variant='studio']) .tabs > button {
         padding: 0 8px;
       }

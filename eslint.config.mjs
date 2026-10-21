@@ -29,7 +29,7 @@ const REGISTERED_IMPORT_SITES = [
 const MANIFEST_SITE = 'src/utils/lazy-chunk.ts';
 
 const noWebpackIgnore = {
-  meta: { type: 'problem', schema: [], messages: { ignore: 'webpackIgnore is allowed only in ' + MANIFEST_SITE + '' } },
+  meta: { type: 'problem', schema: [], messages: { ignore: 'webpackIgnore is allowed only in ' + MANIFEST_SITE + '.' } },
   create(context) {
     return {
       Program() {

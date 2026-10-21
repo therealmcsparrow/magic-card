@@ -66,7 +66,7 @@ const STEP = { close: 'Close path', add: 'Add point', rotate: 'Rotate', scale: '
 import { anchorsInRect, effectiveKind, moveAll, moveSet, removeSet, stopIndex, stops, toggleKind } from './ops';
 
 /*
- * <mc-path-canvas> (contract path-canvas 1.0.0 rev 2). Controlled: it renders `paths` and every edit
+ * <mc-path-canvas> (contract path-canvas 1.0.0). Controlled: it renders `paths` and every edit
  * is an `mc-path-change` the host applies. The drag works from a snapshot taken at pointer-down, so a
  * host that refuses a change cannot corrupt it. Hit testing is geometric (a square of 24 / 44 CSS px
  * around each point), so the glyphs stay small and there are no thousands of hit nodes.
@@ -127,12 +127,12 @@ export class PathCanvas extends LitElement {
   @property({ attribute: false }) loupeLabel?: string;
   @property({ type: Number }) safeArea?: number;
   @property({ type: Boolean }) pixelGrid = false;
-  /** Grid line spacing in frame units (path-canvas rev 4). */
+  /** Grid line spacing in frame units. */
   @property({ type: Number }) gridStep = 1;
   @property({ type: Number }) maxPaths = 64;
   @property({ attribute: false }) kinds: readonly AnchorKind[] = ['corner', 'smooth', 'symmetric'];
   @property({ attribute: false }) constrain?: ConstrainPoint;
-  /** Selection box with scale and rotate handles ('select' mode only; path-canvas rev 5). */
+  /** Selection box with scale and rotate handles ('select' mode only). */
   @property({ attribute: false }) transform?: TransformBox;
   @property() rotateLabel?: string;
   /** Emit `mc-path-context` and keep the browser menu off the drawing surface. */
