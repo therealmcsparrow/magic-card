@@ -97,6 +97,8 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
   return TABS_BAR[config.tab_style === 'pills' ? 1 : config.tab_style === 'underline' ? 2 : 0];
 }
 
+const LENGTH_UNITS = ['px', 'em', 'rem'] as const;
+
 /**
  * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
  * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
@@ -111,7 +113,9 @@ export function clockMinHeight(config: { show_date?: boolean; design?: { height?
   const lh = d?.line_height;
   const v = typeof lh === 'string' ? lh.trim() : lh;
   const lines = date ? 2 : 1;
-  if (typeof v === 'string' && /^\d*\.?\d+(px|em|rem)$/.test(v) && parseFloat(v) > 0) return `calc(${v} * ${lines})`;
+  const length = typeof v === 'string' ? /^\d*\.?\d+(px|em|rem)$/.exec(v) : null;
+  const unit = LENGTH_UNITS.find((u) => u === length?.[1]);
+  if (typeof v === 'string' && unit && parseFloat(v) > 0) return `calc(${parseFloat(v)}${unit} * ${lines})`;
   if (typeof v === 'string' && /^\d*\.?\d+%$/.test(v) && parseFloat(v) > 0) return `calc(${parseFloat(v) / 100}em * ${lines})`;
   const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? Number(v) : v;
   const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.17;
