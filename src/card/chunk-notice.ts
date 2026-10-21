@@ -16,20 +16,25 @@ import { t } from './i18n';
  */
 
 /** At most 8 part names; the fallback names no part. Written out so the i18n extractor sees every id. */
-const part = (name: string): string =>
-  ({
-    anim: t('The animation'),
-    'anim-runtime': t('The animation'),
-    particles: t('The animation'),
-    'shape-custom': t('The custom shape'),
-    seasonal: t('The seasonal effect'),
-    layers: t('The background'),
-    'flow-look': t('The flow style'),
-    'slider-look': t('The slider'),
-    slider: t('The slider'),
-    markdown: t('The text block'),
-    'svg-icon': t('The icon'),
-  })[name as 'slider'] ?? t('Part of this card');
+const part = (name: string): string => {
+  const anim = t('The animation');
+  const slider = t('The slider');
+  return (
+    {
+      anim,
+      'anim-runtime': anim,
+      particles: anim,
+      'shape-custom': t('The custom shape'),
+      seasonal: t('The seasonal effect'),
+      layers: t('The background'),
+      'flow-look': t('The flow style'),
+      'slider-look': slider,
+      slider,
+      markdown: t('The text block'),
+      'svg-icon': t('The icon'),
+    }[name as 'slider'] ?? t('Part of this card')
+  );
+};
 
 const reload = (): void => location.reload();
 
