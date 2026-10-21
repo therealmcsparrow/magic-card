@@ -5,8 +5,8 @@ import { sceneDecorations, type DecoMotif } from '../utils/seasonal-scenes';
 import { layoutDeco, type DecoBox, type DecoLayout } from '../utils/seasonal-deco';
 import { readRadii } from '../utils/ring-path';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
-import { borderBoxSize, unwatchSize, watchSize } from './mc-ring';
-import type { ResolvedShape } from './mc-shape';
+import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
+import type { ResolvedShape } from './shape-resolve';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
 

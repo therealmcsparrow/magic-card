@@ -49,7 +49,7 @@ import type { SeasonalBudget } from '../utils/seasonal-scenes';
 import { SeasonalSeam, seasonalApi } from './seasonal-seam';
 import { resolveValueBackground } from '../utils/value-background';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
-import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
+import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './shape-resolve';
 import type { ShapeLookup } from '../contracts/custom-shape';
 import type { ResolvedFlow } from '../utils/flow';
 import { hasFlows } from '../utils/flows.needs';
@@ -733,6 +733,7 @@ export class MagicCard extends LitElement {
     holdOutOfFlow(this, this._popupHidden && this.isConnected);
     // a notice of a failed chunk shows: the css makes ha-card the scroll box (the attribute is on no other render)
     this.toggleAttribute('mc-fail', !!this.renderRoot?.querySelector('.mc-n'));
+    this._syncDecor();
 
     if (this.editMode) return;
 
@@ -987,6 +988,30 @@ export class MagicCard extends LitElement {
       </div>
       ${inline}${dialog}
     `;
+  }
+
+  private _decorWait = false;
+  private _decorReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
+  /**
+   * A ring, shape or value background in the DOM needs the `decor` chunk (the config walk may have missed it, e.g. a ring
+   * preset of a library animation): ask for it once. A shape's content inset is measured by the chunk's element, so the
+   * card stays hidden until it has installed (or failed) and its content never moves in view.
+   */
+  private _syncDecor(): void {
+    const decor = lazyChunks.decor;
+    let hold = false;
+    if (!decor.ready() && this.renderRoot?.querySelector('mc-ring,mc-shape,mc-value-bg')) {
+      this._met.add('decor');
+      if (!this._decorWait) {
+        this._decorWait = true;
+        decor.whenReady(this._decorReady);
+        void decor.load();
+      }
+      hold = !decor.failed() && !!this.renderRoot.querySelector('mc-shape');
+    }
+    this.toggleAttribute('data-mc-decor-wait', hold);
   }
 
   /**

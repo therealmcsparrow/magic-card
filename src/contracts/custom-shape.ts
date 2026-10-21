@@ -10,7 +10,7 @@ import type { Outline } from '../utils/shape-path';
  * Implementation (runtime), module `shape-runtime`, split in two:
  * - magic-card.js (sync, Core-adjacent glue, at most 2,560 B net):
  *   - src/utils/shape-ref.ts: resolveCustomShape() and mergeShapeOptions() (moved out of
- *     shape-custom.ts; template-merge.ts and mc-shape.ts import them from here).
+ *     shape-custom.ts; template-merge.ts and shape-resolve.ts import them from here).
  *   - src/utils/shape-path.ts: KINDS has 'custom'; the shared helpers the builder imports
  *     (cornerArc, cornerCentres, dedupeSegs, translate, clamp, p, parseShapeLength, SHAPE_DEFAULTS);
  *     toPath, flatten, the memo and everything after the Outline. It holds the builder in a slot:
@@ -19,9 +19,9 @@ import type { Outline } from '../utils/shape-path';
  *   - src/utils/shape-custom-loader.ts (Core lazy-loader list, particles-loader.ts pattern):
  *     loadCustomShapes(): Promise<boolean> loads the chunk once, calls useCustomBuilder, resolves
  *     false and warns once when the load fails (no retry until reload); customShapesReady(): boolean.
- *   - mc-shape.ts resolveShape(): for 'custom' without the builder it starts the load and returns
+ *   - src/card/shape-resolve.ts resolveShape(): for 'custom' without the builder it starts the load and returns
  *     undefined, so the element is drawn exactly as `shape: none` (no clip, no inset vars, no
- *     mc-shape, rectangle rings, flows on the box). It never paints a half-shaped state.
+ *     mc-shape, rectangle rings, flows on the box). The <mc-shape> element itself is in the `decor` chunk. It never paints a half-shaped state.
  *   - magic-card.ts: starts the load in setConfig when the raw config text contains
  *     `"shape":"custom"` (so a cached chunk usually lands before the first paint), and when any
  *     resolveShape call reported a pending custom shape; when the load resolves true and the card
@@ -146,7 +146,7 @@ import type { Outline } from '../utils/shape-path';
  * ── Performance budget (shaped elements) ──
  * Reference page: dev/shape-perf.html, 30 cards, each with a custom-shaped card plus 3 custom-shaped
  * modules (120 shaped elements, half of them free paths), Chrome with 4x CPU throttling:
- * - One ResizeObserver for all of them (the existing shared one, mc-ring.ts watchSize); no
+ * - One ResizeObserver for all of them (the existing shared one, src/card/size-watch.ts watchSize); no
  *   per-element observer, no MutationObserver, no timers.
  * - Idle: zero animation-frame callbacks and zero timers from shape code over 10 s.
  * - First render: shape main-thread time for all 120 together <= SHAPE_FIRST_RENDER_BUDGET_MS, and
@@ -197,7 +197,7 @@ import type { Outline } from '../utils/shape-path';
  */
 
 export const CUSTOM_SHAPE_CONTRACT_VERSION = '1.0.0';
-export const CUSTOM_SHAPE_CONTRACT_REVISION = 3;
+export const CUSTOM_SHAPE_CONTRACT_REVISION = 4;
 export const MAX_SHAPE_POINTS = 64;
 export const CUSTOM_SHAPE_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 /** Editor W6: a text line sample farther than this outside the outline counts as cut (px). */

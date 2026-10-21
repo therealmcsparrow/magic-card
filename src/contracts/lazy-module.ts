@@ -79,6 +79,16 @@ import type { MagicModule } from '../modules/module-types';
  *   card, hui-card and grid cell: src/card/popup-nav.ts), so a pop-up card never shows in the layout early and installing
  *   the chunk moves nothing. navigateToPopup and the PopupHandle types are in popup-nav.ts too. The controller attaches
  *   after the install and opens a pop-up whose #id is already in the URL, without a history entry.
+ * - LazyChunkName includes 'decor' (dist/magic-card-decor.js, ceiling 49,152 B, chunk entry src/card/decor-chunk.ts). It defines
+ *   <mc-ring>, <mc-shape> and <mc-value-bg> in install(); the card renders their tags from its config and the entity states
+ *   (src/card/card-decorations.ts), so they upgrade in place and `api` is empty. Its needs() is wantsDecor
+ *   (src/utils/decor.needs.ts: a ring, shape or value background in any design, or a ring animation preset); the card
+ *   also asks for it when a decor tag is in its DOM (a ring preset of a library animation the config walk cannot see).
+ *   What stays in the card bundle: the size watcher the elements, <mc-seasonal-deco> and <mc-value-bg> share
+ *   (src/card/size-watch.ts: one ResizeObserver), the shape resolve side (src/card/shape-resolve.ts), shape-custom-loader,
+ *   the timer ticker and the offscreen observer; shape-custom stays an on-demand chunk of the card bundle. The plain sheet
+ *   keeps the shaped element's rules. A shape's content inset is measured, not configured, so a card with a shape stays
+ *   hidden (host attribute `data-mc-decor-wait`) until the chunk has installed, or has failed, and its content never moves.
  * - `anim` is the parent chunk of 'anim-runtime', 'particles' and the editor chunk (their literal
  *   import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out of
  *   them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon
@@ -281,7 +291,7 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 10;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -292,6 +302,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   pause: 'magic-card-pause.js',
   popup: 'magic-card-popup.js',
   controls: 'magic-card-controls.js',
+  decor: 'magic-card-decor.js',
   'flow-look': 'magic-card-flow-look.js',
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
@@ -317,6 +328,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   pause: 16_384,
   /** The pop-up controller, the page's pop-up coordinator and the pop-up rules. */
   popup: 20_480,
+  /** <mc-ring>, <mc-shape>, <mc-value-bg> and the ring path. */
+  decor: 49_152,
   'flow-look': 32_768,
   'slider-look': 28_672,
   /** Stack (15.3 KiB measured) + placement runtime and layer CSS (about 5-6 KiB). */
@@ -327,8 +340,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   anim: 90_112,
 };
 
-/** Which module types each chunk serves (seasonal, flows, pause, popup, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look and layers serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs'],

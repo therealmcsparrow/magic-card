@@ -1,11 +1,11 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import type { HomeAssistant } from '../types';
 import { ResolvedValueBackground, sparklineHistory, sparklinePath } from '../utils/value-background';
 import { entityNumber, isUnavailable } from '../utils/entity-value';
 import { CachedHistory, getHistory, HISTORY_TTL_MS, HistorySample, peekHistory } from '../services/history-cache';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
-import { borderBoxSize, unwatchSize, watchSize } from './mc-ring';
+import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 
 /*
  * Value background of a module / row / column wrapper or the card (design `value_background`,
@@ -33,7 +33,6 @@ const SPARK_TOP = 0.35;
 const same = (a?: ResolvedValueBackground, b?: ResolvedValueBackground) => JSON.stringify(a) === JSON.stringify(b);
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
-@customElement('mc-value-bg')
 export class McValueBg extends LitElement {
   static styles = css`
     :host {

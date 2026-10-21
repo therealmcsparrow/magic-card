@@ -2,6 +2,7 @@ import type { LazyChunkName, LazyFeature, NeedsCheck } from '../contracts/lazy-m
 import { wantsPopup } from './popup';
 import { wantsPause } from '../contracts/card-pause.needs';
 import { wantsBgFx } from '../contracts/bg-stack.needs';
+import { wantsDecor } from './decor.needs';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { CONTROL_MODULE_TYPES } from '../modules/controls/controls.needs';
@@ -45,6 +46,8 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   pause: row('pause', wantsPause),
   // `popup.enabled` is true
   popup: row('popup', wantsPopup),
+  // a ring, shape or value background, or a ring animation preset
+  decor: row('decor', (c) => configHas(c, wantsDecor)),
   'flow-look': row('flow-look', (c) => configHas(c, (n) => Array.isArray(n.flows) && n.flows.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj)))),
   'slider-look': row('slider-look', (c) => configHas(c, (n) => n.type === 'slider' && hasSliderLook(n))),
   layers: row('layers', wantsLayers),

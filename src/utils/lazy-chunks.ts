@@ -62,6 +62,8 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   popup: lazyChunk('popup', () => import(/* webpackChunkName: "popup" */ '../card/popup-chunk')),
   // the views of the slider, spinbox, dropdown, light and gauge modules
   controls: lazyChunk('controls', () => import(/* webpackChunkName: "controls" */ '../modules/lazy/controls-chunk')),
+  // <mc-ring>, <mc-shape> and <mc-value-bg>; the card renders their tags and reads nothing from the chunk
+  decor: lazyChunk('decor', () => import(/* webpackChunkName: "decor" */ '../card/decor-chunk')),
   'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
   'slider-look': afterControls(lazyChunk('slider-look', viaControls((c) => c.importSliderLook))),
   // <mc-bg-stack>, the card backdrop

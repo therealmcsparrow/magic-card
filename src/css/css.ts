@@ -2,7 +2,7 @@ import { css, unsafeCSS } from 'lit';
 import { mcVariables } from './tokens';
 import { popupHostStyles } from '../card/popup-host-css';
 import { weatherIconStyles } from '../icons/weather-icons';
-import { shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
+import { decorTagStyles, shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
 import { LAYER_SYNC_CSS } from '../layers/layer-slot';
 import { pauseGapStyles } from '../card/pause-gap-css';
@@ -48,6 +48,11 @@ const magicCardLocalStyles = css`
   }
   :host([mc-fail]) .mc-card-content {
     flex: none;
+  }
+
+  /* A shaped card waits for the decor chunk: the shape's content inset is measured there, so nothing shows until it is in. */
+  :host([data-mc-decor-wait]) ha-card {
+    visibility: hidden;
   }
 
   /* Columns fill their grid cell (stretch): vertical_align then has room to work and the studio
@@ -1360,4 +1365,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupHostStyles, weatherIconStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseGapStyles];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupHostStyles, weatherIconStyles, shapeCardStyles, valueBgCardStyles, decorTagStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseGapStyles];

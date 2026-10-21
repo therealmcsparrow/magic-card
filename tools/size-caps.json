@@ -176,6 +176,11 @@
       "ceiling": 20480,
       "note": "15 KiB, measured 13,982 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The pop-up controller, the page coordinator and the pop-up rules. The contract ceiling is 20,480 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
+    "magic-card-decor.js": {
+      "raw": 26624,
+      "ceiling": 49152,
+      "note": "26 KiB, measured 25,319 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. <mc-ring>, <mc-shape>, <mc-value-bg>, the ring outline and its copy of the radii and shape-ring path. The contract ceiling is 49,152 B (lazy-module LAZY_CHUNK_CEILINGS)."
+    },
     "magic-card-flow-look.js": {
       "raw": 32768,
       "ceiling": 32768,

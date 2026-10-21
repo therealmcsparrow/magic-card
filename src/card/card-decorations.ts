@@ -3,7 +3,7 @@ import type { FxLayer, ResolvedAnimations } from '../anim-studio/resolve';
 import type { ResolvedBorderLength } from '../utils/css-utils';
 import type { ResolvedRing } from '../utils/ring';
 import type { ShapeStroke } from '../utils/css-utils';
-import type { ResolvedShape } from './mc-shape';
+import type { ResolvedShape } from './shape-resolve';
 import type { HomeAssistant } from '../types';
 import type { ResolvedValueBackground } from '../utils/value-background';
 import type { ResolvedSeasonal } from '../utils/seasonal';
@@ -11,14 +11,14 @@ import type { BudgetGrant, SeasonalBudget } from '../utils/seasonal-scenes';
 import { seasonalInsets as configInsets } from '../utils/seasonal.needs';
 import { loadSeasonal } from '../utils/lazy-chunks';
 import { seasonalApi } from './seasonal-seam';
-import './mc-ring';
-import './mc-shape';
-import './mc-value-bg';
+// held in this bundle so the decor and seasonal chunks, which both measure with it, share its one ResizeObserver
+import './size-watch';
 
 /*
  * Decorative layers the card adds inside a module / row / column wrapper or the card itself:
  * animation particle layers, shortened border lines, the ring, the shape and the value background.
- * All aria-hidden, never in the layout.
+ * All aria-hidden, never in the layout. The ring, shape and value background are tags of the `decor` chunk
+ * (src/card/decor-chunk.ts): inert until it has installed, then they upgrade in place.
  */
 
 /** Shortened border lines (border_length), drawn over the wrapper's transparent border. */
