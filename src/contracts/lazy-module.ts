@@ -30,11 +30,13 @@ import type { MagicModule } from '../modules/module-types';
  *   survive a failure. OnDemandChunkName and the notice element are described in sections "Failure, retry
  *   and timeout" and "import() sites". A request that never settles is waited on, never replaced; the
  *   on-demand loader slots are the seam between a loader and the chunk table.
- * - LazyChunkName includes 'anim' (dist/magic-card-anim.js, ceiling 81,920 B, chunk entry
+ * - LazyChunkName includes 'anim' (dist/magic-card-anim.js, ceiling 90,112 B, chunk entry
  *   src/anim-studio/anim-chunk.ts). It holds the animation resolve (src/anim-studio/resolve.ts), the
  *   document compiler and model it calls (compile, model, model-v2-core, css-keyframes), the
- *   custom-animation stylesheet and the sequence player. It defines no element and fills no slot: the card
- *   reads the module through lazyChunks.anim.module() and draws a plain card until it has installed. Its
+ *   custom-animation stylesheet, the sequence player, the preset table (src/utils/animation-presets.ts)
+ *   and the preset keyframe and particle tables (src/css/animation-keyframes.ts, animation-scenes.ts,
+ *   animation-extra.ts), and exports the preset keyframes and animation rules as `styles`. It defines no
+ *   element and fills no slot: the card reads the module through lazyChunks.anim.module() and draws a plain card until it has installed. Its
  *   needs() is hasAnimations (src/utils/animation.needs.ts): a non-empty `animations` list or the legacy
  *   `animation_preset`, on any design the config walk reaches (card, rows, columns, modules, `hover`,
  *   `conditional[].design`, conditional_appearance rules). The hook points of the compiler stay in Core
@@ -246,7 +248,7 @@ import type { MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 4;
+export const LAZY_MODULE_CONTRACT_REVISION = 5;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
@@ -279,8 +281,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   layers: 24_576,
   /** Icon source, <mc-svg-icon>, the SVG sanitiser and the `mcu:` library client (about 61 KiB raw measured before the move). */
   'svg-icon': 65_536,
-  /** The resolve, compiler and model of the animations. */
-  anim: 81_920,
+  /** The resolve, compiler and model of the animations, the preset and keyframe tables and the animation rules (`styles`). */
+  anim: 90_112,
 };
 
 /** Which module types each chunk serves (seasonal, flow-look, slider-look and layers serve no module type). */

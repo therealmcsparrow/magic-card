@@ -30,7 +30,7 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
   // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts
   'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),
-  // the animation resolve, compiler and model; the card reads it through src/utils/anim-seam.ts
+  // the animation resolve, compiler and model, the preset tables and the animation rules; the card reads it through src/utils/anim-seam.ts
   anim: lazyChunk('anim', () => import(/* webpackChunkName: "anim" */ '../anim-studio/anim-chunk')),
 };
 
