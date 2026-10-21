@@ -1,0 +1,4 @@
+{
+  "description": "Modules copied into more than one chunk of the card bundle that hold no module-level state, each with the technical reason it holds none.",
+  "stateless": []
+}

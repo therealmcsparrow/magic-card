@@ -84,6 +84,10 @@ jobs:
         run: |
           node tools/check-svg-sinks.mjs --self-test
           node tools/check-svg-sinks.mjs
+      - name: No module with state sits in two chunks of the card bundle
+        run: |
+          npm run dups:selftest
+          npm run dups
       - name: Dist size budget
         run: npm run size
       - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
