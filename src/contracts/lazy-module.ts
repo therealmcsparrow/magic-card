@@ -19,9 +19,7 @@ import type { MagicModule } from '../modules/module-types';
  * - Chunk 'layers' (magic-card-layers.js, entry src/layers/stack/chunk.ts, bg-stack 1.0.0) defines
  *   <mc-bg-stack>; it serves no module type, like 'seasonal'. Prefetch: when the config has a non-empty
  *   card `background_layers` (also in a conditional_appearance override); loaded on demand when the card
- *   renders <mc-bg-stack>. It also carries the layer-placement runtime (arrange, scanFills, layer CSS) and
- *   fills the layer slot (layer-placement 1.0.0); it is prefetched when the config has any layered module
- *   too (hasLayers), and its ceiling is 24 KiB.
+ *   renders <mc-bg-stack>. The layer-placement runtime (arrange, scanFills, layer CSS) is part of magic-card.js and fills the layer slot from the first render, so a layered module does not load this chunk; its ceiling is 24 KiB.
  * - Section "Editor-side chunks": chunk 'layer-editor' (magic-card-layer-editor.js, layer-editor 1.0.0),
  *   loaded by the editor chunk, and 'look-editor' (magic-card-look-editor.js, contract look-editor 1.0.0,
  *   loaded by src/editor/look-editor-loader.ts, its own loader, not in LazyChunkName).
@@ -149,15 +147,14 @@ import type { MagicModule } from '../modules/module-types';
  * nested lazy modules never wait on their parent (no waterfall). The seasonal chunk is prefetched
  * when the config has a `seasonal` setting or a seasonal animation preset, and loaded on demand by
  * card-decorations.ts whenever it renders <mc-seasonal> / <mc-seasonal-deco>. The layers
- * chunk likewise for `background_layers` and <mc-bg-stack>, also for any module with a
- * placement other than flow (hasLayers, in magic-card.js), and on demand when a render meets one.
+ * chunk likewise for `background_layers` and <mc-bg-stack> (not for a layered module).
  * (The needs table decides this, see "needs(config)".)
  *
  * ── Editors ──
  * The editor chunk, the studio and the theme editor never import a *-view.ts file or a chunk entry
  * (that would copy the code into their chunk). Module editors import constants and helpers from
  * the stub files (src/modules/** /*-module.ts) or from sync utils. They never import
- * src/layers/placement.ts, src/layers/layer-css.ts or src/layers/stack/**: those are chunk-only; the
+ * src/layers/placement.ts, src/layers/layer-css.ts or src/layers/stack/**; the
  * editor reads the layer slot (src/layers/layer-slot.ts, in magic-card.js) when it needs arrange().
  *
  * ── Editor-side chunks ──

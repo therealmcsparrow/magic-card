@@ -83,7 +83,7 @@ import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import { animationLibrary, inlineAnimations } from '../services/animation-library';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { SequencePlayer } from './sequence-player';
-import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
+import { hasLayers, inFlow, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
 import type { CardPause } from './card-pause';
 import { pauseIfLoaded } from './pause-seam';
@@ -1121,10 +1121,9 @@ export class MagicCard extends LitElement {
     this._card = { flow: false, row: false, out: [] };
     const rt = layerSlot.get();
     if (any && rt) this._card.flow = rt.scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
-    // slot empty: this render lays children out in config order; ask for one more when the chunk lands
-    if (this._layerOn && !rt && !this._layersAsked) {
+    // the backdrop element comes with the chunk: ask for it once, draw again when it is defined
+    if (backdrop && !this._layersAsked) {
       this._layersAsked = true;
-      // load() settles false on a failure (whenReady callbacks are dropped then): render once more so layered modules show in flow
       void lazyChunks.layers.load().then(() => this.requestUpdate());
     }
     return this._layerOn;
@@ -1358,8 +1357,6 @@ export class MagicCard extends LitElement {
       ctx.iconRig = outerRig;
     }
     const at = layer?.attrs;
-    // a layered module before the chunk lands is out of flow and invisible (LAYER_SYNC_CSS); after a failed load it is plain
-    const pending = !layer && isLayered(mod) && !layerSlot.get() && !lazyChunks.layers.failed();
     const media = layer?.media
       ? html`<div class="mc-layer-media">${content}</div>${layer.scrim ? html`<div class="mc-layer-scrim"></div>` : nothing}`
       : content;
@@ -1368,7 +1365,6 @@ export class MagicCard extends LitElement {
       <div
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
         data-mc-placement=${at?.['data-mc-placement'] ?? (mod.type === 'video-bg' && mod.placement === 'flow' ? 'flow' : nothing)}
-        data-mc-layer-pending=${pending ? '' : nothing}
         data-mc-anchor=${at?.['data-mc-anchor'] ?? nothing}
         data-mc-pass=${at?.['data-mc-pass'] ?? nothing}
         data-mc-blur=${at?.['data-mc-blur'] ?? nothing}

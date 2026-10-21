@@ -1,11 +1,9 @@
 import type { LazyChunkName, LazyFeature, NeedsCheck } from '../contracts/lazy-module';
-import type { CardModule } from '../types';
 import { wantsPopup } from './popup';
 import { wantsPause } from '../contracts/card-pause.needs';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { CONTROL_MODULE_TYPES } from '../modules/controls/controls.needs';
-import { hasLayers } from '../layers/layer-slot';
 import { hasAnimations } from './animation.needs';
 import { hasFlows } from './flows.needs';
 import { SEASONAL_PRESET_IDS } from './seasonal.needs';
@@ -31,13 +29,12 @@ const ofType =
 
 const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
 
-/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it) or any layered module. */
+/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it). */
 export function wantsLayers(config: unknown): boolean {
-  const c = config as { background_layers?: unknown; conditional_appearance?: unknown; rows?: Array<{ columns?: Array<{ modules?: CardModule[] }> } | null> } | null;
+  const c = config as { background_layers?: unknown; conditional_appearance?: unknown } | null;
   try {
     if (!c || typeof c !== 'object') return false;
     if (nonEmpty(c.background_layers)) return true;
-    if (Array.isArray(c.rows) && c.rows.some((r) => Array.isArray(r?.columns) && r!.columns!.some((col) => hasLayers(col?.modules ?? [])))) return true;
     const rules = c.conditional_appearance;
     return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
   } catch {

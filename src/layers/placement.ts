@@ -1,15 +1,15 @@
-import { LAYER_ANCHORS, LAYER_BLENDS, LEADING_ANCHORS, BLUR_MAX, MAX_OVERLAY_RANK, SCRIM_HOLD, SCRIM_DEFAULT_STRENGTH } from '../contracts/layer-placement';
+import { LAYER_ANCHORS, LAYER_BLENDS, LEADING_ANCHORS, BLUR_MAX, MAX_OVERLAY_RANK, SCRIM_HOLD, SCRIM_DEFAULT_STRENGTH } from '../contracts/layer-placement.needs';
 import type { Arranged, ArrangedChild, ArrangeOptions, ResolvedLayer, ScrimConfig } from '../contracts/layer-placement';
 import { safeColor } from '../utils/animation';
-import { isLayered, placementOf } from './layer-slot';
+import { isLayered, placementOf } from './layer-kind';
 import type { CardModule } from '../types';
 
 /*
  * Layer placement (contract layer-placement 1.0.0): which children of a container are in flow,
  * behind the others or on top, and what each wrapper gets. Pure: no lit, no DOM. Every value that
  * reaches an attribute or a style is clamped, matched against an allow-list or parsed from a strict
- * grammar here; nothing is copied from the config as text. Lives in the 'layers' chunk
- * (src/layers/stack/chunk.ts hands it to the slot); only that entry imports this file.
+ * grammar here; nothing is copied from the config as text. Part of magic-card.js
+ * (src/layers/layer-slot.ts assembles it).
  */
 
 const CARD_COLOR = 'var(--ha-card-background, var(--card-background-color, #fff))';

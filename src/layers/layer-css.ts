@@ -1,6 +1,6 @@
 /*
- * Layer CSS (contract layer-placement 1.0.0). Part of the 'layers' chunk, handed to the card as
- * text and injected once per shadow root as <style data-mc-layer-css>. Chromium 85 floor: top / right / bottom / left, never the `inset`
+ * Layer CSS (contract layer-placement 1.0.0). Part of magic-card.js, handed to the card as
+ * text by the layer slot and injected once per shadow root as <style data-mc-layer-css>. Chromium 85 floor: top / right / bottom / left, never the `inset`
  * shorthand; no color-mix(). Nothing here animates: filter, offsets and background-position stay
  * still. Every rule hangs on a data attribute the render hook sets only for layered
  * cards, so a card without layers is untouched.

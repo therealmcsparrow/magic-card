@@ -6,16 +6,15 @@ import type { CardModule } from '../types';
  * Overlay click-through default follows its actions; scrim fade shape; card key `layers_low_power`;
  * floor-safe CSS (no `inset` shorthand); ha-card isolation; blend scope; streaming backgrounds pause;
  * blur max 24 px and the performance rules. The placement logic and the
- * layer CSS live in the lazy 'layers' chunk behind a slot (section "Runtime slot and
- * first render"); magic-card.js keeps only the detector, the slot, two CSS rules and the render hook.
+ * layer CSS are part of magic-card.js: the slot
+ * holds them from the first render, and no file is requested for a layered module.
  *
  * Seam: the layer-placement Module has two halves.
- * - magic-card.js (sync): src/layers/layer-slot.ts: the LayerSlot, isLayered(), hasLayers() (the
- *   config walk for prefetch and gating, childSlots included) and LAYER_SYNC_CSS (two rules, below).
- * - 'layers' chunk (lazy-module 1.2.0): src/layers/placement.ts (resolveLayer, arrange, scanFills,
- *   scrimCss) and src/layers/layer-css.ts (every other rule of this contract, as a string), both
- *   handed to the slot by the chunk's install() as one LayerRuntime. Nothing in magic-card.js, the
- *   editor chunk or the studio imports these two files.
+ * - src/layers/layer-kind.ts: isLayered(), hasLayers() (the config walk for gating, childSlots included),
+ *   placementOf() and inFlow().
+ * - src/layers/placement.ts (resolveLayer, arrange, scanFills, scrimCss) and src/layers/layer-css.ts
+ *   (every rule of this contract, as a string), assembled as one LayerRuntime by src/layers/layer-slot.ts,
+ *   which also holds LAYER_SYNC_CSS (the clip-box rule).
  * The render pipeline (Core, src/card/magic-card.ts) and the layout modules (horizontal, vertical,
  * tabs, through src/modules/render-module.ts layoutChildren()) call slot.get()?.arrange(); they decide
  * DOM order, wrapper attributes and inline style from its result. No new Core item.
@@ -62,27 +61,16 @@ import type { CardModule } from '../types';
  * ── Runtime slot and first render ──
  * - isLayered(m) (sync): `placement` is 'background' or 'overlay'. hasLayers(modules): any isLayered
  *   at any depth. A render "meets layers" when some container it renders has an isLayered child.
- * - Prefetch: MagicCard.setConfig and the template merge load the 'layers' chunk when
- *   hasLayers(config) or `background_layers` is non-empty; a render that meets layers with the chunk
- *   not loaded starts the load and adds requestUpdate to chunk.whenReady (once per card).
- * - Slot filled (chunk installed): everything in this contract applies. The card renders the
- *   runtime's CSS once into its shadow root as `<style data-mc-layer-css>` (first child of ha-card,
- *   also in the pop-up surface) while it meets layers or has background_layers.
- * - Slot empty, chunk loading (first render, usually one frame): containers render their children in
- *   config order with no arrange; each isLayered wrapper gets `data-mc-layer-pending` and no other
- *   layer attribute; fill row / card modules stay in their column. LAYER_SYNC_CSS rule 1 makes a
- *   pending wrapper absolute and invisible, so it takes no space and nothing flashes; in-flow siblings
- *   are laid out where they will stay. Containers whose children are all pending collapse for that
- *   frame (they come back through the in-flow fallback once the chunk lands).
- * - Slot empty, chunk failed: no `data-mc-layer-pending`; layered modules render in flow as plain
- *   modules for the rest of the page visit (the lazyChunk warning is the only report).
- * - Editor and studio: the same; the editor chunk reads slot.get() (src/layers/layer-slot.ts) when it
- *   needs arrange() and shows the in-flow order while it is empty.
+ * - Prefetch: the 'layers' chunk is for the card backdrop only (bg-stack); a layered module never loads it.
+ * - The slot is filled from the first render: everything in this contract applies at once. The card
+ *   renders the runtime's CSS once into its shadow root as `<style data-mc-layer-css>` (first child of
+ *   ha-card, also in the pop-up surface) while it meets layers or has background_layers.
+ * - A failed 'layers' load changes nothing here; only the backdrop element is missing.
+ * - Editor and studio: the editor chunk reads slot.get() (src/layers/layer-slot.ts) when it needs arrange().
  *
  * ── LAYER_SYNC_CSS (magic-card.js, part of magicCardStyles; nothing else of this contract) ──
- *   1 .mc-module-wrapper[data-mc-layer-pending] { position: absolute; visibility: hidden; }
- *   2 .mc-card-content[data-mc-clip] { position: relative; }   set when the card sets `overflow`
- *     (FINDINGS #12 for cards without layers; layered cards get the same from the chunk CSS).
+ *   .mc-card-content[data-mc-clip] { position: relative; }   set when the card sets `overflow`
+ *   (FINDINGS #12 for cards without layers; layered cards get the same from the layer CSS).
  *
  * ── Scrim shape ──
  * scrimCss(): dim = flat colour at `strength`. Edge styles = linear-gradient from that edge: colour
@@ -221,13 +209,13 @@ import type { CardModule } from '../types';
  *   wrapper's box like any module (flow geometry reads boxes, not DOM order).
  *
  * ── Size ──
- * magic-card.js keeps layer-slot.ts, LAYER_SYNC_CSS, the render hook, the bg-stack tag / host / badge
- * host and prefetch. Cap 496,640 B. The 'layers' chunk ceiling is
- * 24 KiB (lazy-module 1.2.0).
+ * magic-card.js holds layer-kind.ts, placement.ts, layer-css.ts, layer-slot.ts, LAYER_SYNC_CSS, the
+ * render hook, the bg-stack tag / host / badge host and prefetch. The 'layers' chunk no longer carries
+ * any of it.
  */
 
 export const LAYER_PLACEMENT_CONTRACT = '1.0.0';
-export const LAYER_PLACEMENT_CONTRACT_REVISION = 3;
+export const LAYER_PLACEMENT_CONTRACT_REVISION = 4;
 
 export type Placement = 'flow' | 'background' | 'overlay';
 export type LayerAnchor =
@@ -238,21 +226,9 @@ export type LayerFill = 'container' | 'row' | 'card';
 export type LayerBlend = 'normal' | 'multiply' | 'screen' | 'overlay' | 'darken' | 'lighten' | 'soft-light';
 export type ScrimStyle = 'dim' | 'bottom' | 'top' | 'left' | 'right';
 
-export const LAYER_ANCHORS: readonly LayerAnchor[] = [
-  'top-left', 'top', 'top-right', 'left', 'center', 'right', 'bottom-left', 'bottom', 'bottom-right',
-];
-/** Overlays with these anchors come before the in-flow modules in DOM / focus order. */
-export const LEADING_ANCHORS: readonly LayerAnchor[] = ['top-left', 'top', 'top-right'];
-export const LAYER_BLENDS: readonly LayerBlend[] = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'soft-light'];
-export const MAX_OVERLAY_RANK = 40;
-/** Blur range for module layers and image layers; above BLUR_LIGHT_MAX is "heavy". */
-export const BLUR_MAX = 24;
+export { LAYER_ANCHORS, LEADING_ANCHORS, LAYER_BLENDS, MAX_OVERLAY_RANK, BLUR_MAX, SCRIM_HOLD, SCRIM_DEFAULT_STRENGTH } from './layer-placement.needs';
+/** Above this blur an image is "heavy" in the editor's cost meter. */
 export const BLUR_LIGHT_MAX = 12;
-/** Scrim fade: full strength over this share of the length from the edge. */
-export const SCRIM_HOLD = 0.35;
-export const SCRIM_DEFAULT_STRENGTH = 60;
-/** Attribute on an isLayered wrapper while the layers chunk is loading. */
-export const LAYER_PENDING_ATTRIBUTE = 'data-mc-layer-pending';
 
 export interface ScrimConfig {
   style?: ScrimStyle;
