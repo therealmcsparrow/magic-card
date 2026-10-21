@@ -26,12 +26,19 @@ const ENTRY = 'magic-card.js';
 const CONTRACT_REL = 'src/contracts/lazy-module.ts';
 
 /** File names of the shared chunks, read from LAZY_SHARED_CHUNK_FILES in the lazy-module contract. */
-export const sharedChunkFiles = (file = path.join(root, CONTRACT_REL)) => {
-  const block = /LAZY_SHARED_CHUNK_FILES[^=]*=\s*\{([^}]*)\}/.exec(readFileSync(file, 'utf8'));
+export const sharedChunkFiles = (file = path.join(root, CONTRACT_REL)) => parseSharedChunkFiles(readFileSync(file, 'utf8'), file);
+
+export const parseSharedChunkFiles = (text, file = CONTRACT_REL) => {
+  const block = /^export const LAZY_SHARED_CHUNK_FILES\b[^=]*=\s*\{([^}]*)\}/m.exec(text);
   const files = block ? [...block[1].matchAll(/:\s*'([^']+\.js)'/g)].map((m) => m[1]) : [];
   if (!files.length) throw new Error(`no LAZY_SHARED_CHUNK_FILES in ${file}`);
   return files;
 };
+
+// The modules each shared chunk may hold (the cacheGroup in webpack.config.js matches the same file). A listed module
+// must contain no import(): then the chunk has no chunk group of its own that loads anything, and is never a loader.
+export const SHARED_CHUNK_MODULES = { 'magic-card-path-core.js': ['./src/path/core.ts'] };
+export const hasDynamicImport = (text) => /(^|[^.\w$])import\s*\(/.test(text);
 
 const readJson = (file, what) => {
   try {
@@ -72,6 +79,25 @@ const unhashed = (f) => f.replace(/\.[0-9a-f]{6,}\.js$/, '.js');
 const isShared = (c, shared) => (c.files ?? []).some((f) => shared.includes(unhashed(f)));
 const loaders = (chunk, byId, shared) => (chunk.parents ?? []).filter((id) => !(byId.get(id) && isShared(byId.get(id), shared)));
 
+/** Problems with the shared chunks of a build: each holds exactly its listed modules, is not initial, and its modules have no import(). */
+export const sharedChunkProblems = ({ chunks, shared = sharedChunkFiles(), modules = SHARED_CHUNK_MODULES, read = (m) => readFileSync(path.join(root, m), 'utf8') }) => {
+  const problems = [];
+  for (const f of shared) {
+    const listed = modules[f];
+    if (!listed) {
+      problems.push(`shared chunk ${f} has no module list in SHARED_CHUNK_MODULES (tools/check-svg-sinks.mjs)`);
+      continue;
+    }
+    for (const m of listed) if (hasDynamicImport(read(m))) problems.push(`${m} (shared chunk ${f}) contains an import(): a shared chunk must not load anything`);
+    for (const c of chunks.filter((x) => (x.files ?? []).some((n) => unhashed(n) === f))) {
+      const held = c.modules ?? [];
+      if (held.length !== listed.length || !listed.every((m) => held.includes(m))) problems.push(`shared chunk ${f} holds ${held.join(', ') || 'no modules'}, not exactly ${listed.join(', ')}`);
+      if (c.entry || c.initial) problems.push(`shared chunk ${f} is an initial chunk (it must load beside its user, never with the page)`);
+    }
+  }
+  return problems;
+};
+
 const ancestors = (chunk, byId, shared) => {
   const out = [];
   const seen = new Set([chunk.id]);
@@ -107,8 +133,8 @@ const available = (chunk, byId, shared, seen = new Set()) => {
 const label = (c) => (c.files ?? []).find((f) => f.endsWith('.js')) ?? (c.names ?? []).join('+') ?? String(c.id);
 
 /** Returns { problems, notes }. `sinks`: module names; `strict`: the sanitiser must sit in the sink's own chunk. */
-export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFiles() }) => {
-  const problems = [];
+export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFiles(), modules, read }) => {
+  const problems = sharedChunkProblems({ chunks, shared, ...(modules ? { modules } : {}), ...(read ? { read } : {}) });
   const notes = [];
   const byId = new Map(chunks.map((c) => [c.id, c]));
   for (const c of chunks) {
@@ -157,8 +183,13 @@ const selfTest = () => {
     ['a child with two parents where only one holds the sanitiser fails', { chunks: [entry, { id: 6, parents: [0], files: ['magic-card-anim.js'], names: ['anim'], modules: [S] }, { id: 7, parents: [0], files: ['magic-card-other.js'], names: ['other'], modules: [] }, { ...icon, parents: [6, 7], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 1],
     ['a shared chunk listed as a parent next to the real parent that holds the sanitiser passes', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE.replace('.js', '.cb8d4820.js')], names: ['path-core'], modules: ['./src/path/core.ts'] }, { id: 6, parents: [0], files: ['magic-card-anim.js'], names: ['anim'], modules: [S] }, { ...icon, parents: [6, 8], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
     ['a real parent without the sanitiser still fails beside a shared one', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, { id: 7, parents: [0], files: ['magic-card-other.js'], names: ['other'], modules: [] }, { ...icon, parents: [7, 8], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 1],
-    ['a sink chunk whose only parent is a shared chunk fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts', S] }, { ...icon, parents: [8], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 1],
-    ['a shared chunk that holds a sink without the sanitiser fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts', './src/particles/svg.ts'] }, icon, particles], sinks }, 1],
+    ['a sink chunk whose only parent is a shared chunk fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts', S] }, { ...icon, parents: [8], modules: icon.modules.filter((m) => m !== S) }, particles], sinks, modules: { [PATH_CORE]: ["./src/path/core.ts", S] } }, 1],
+    ['a shared chunk that holds a sink without the sanitiser fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts', './src/particles/svg.ts'] }, icon, particles], sinks, modules: { [PATH_CORE]: ["./src/path/core.ts", "./src/particles/svg.ts"] } }, 1],
+    ['a shared chunk holding another module fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts', './src/path/other.ts'] }, icon, particles], sinks, read: () => '' }, 1],
+    ['a shared chunk missing its module fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: [] }, icon, particles], sinks, read: () => '' }, 1],
+    ['an initial shared chunk fails', { chunks: [entry, { id: 8, parents: [0], initial: true, files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => '' }, 1],
+    ['a shared module with an import() fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => "const x = import('./x');" }, 1],
+    ['a shared chunk with exactly its module and no import() passes', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE.replace('.js', '.cb8d4820.js')], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => 'export const a = 1;' }, 0],
     ['sanitiser two chunks up passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 5, parents: [0], files: ['magic-card-editor.js'], names: ['editor'], modules: [] }, { ...icon, parents: [5], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
   ];
   let bad = 0;
@@ -167,6 +198,20 @@ const selfTest = () => {
     if (got !== want) {
       bad++;
       console.error(`self-test FAIL: ${name} (expected ${want} problems, got ${got})`);
+    }
+  }
+  // the shared chunk list is read from the declaration, not from a mention of its name
+  const decl = "export const LAZY_SHARED_CHUNK_FILES: Record<X, string> = {\n  'path-core': 'magic-card-path-core.js',\n};";
+  const parseCases = [
+    ['the real contract lists path-core only', JSON.stringify(sharedChunkFiles()) === JSON.stringify(['magic-card-path-core.js'])],
+    ['a comment naming the table above another `= {` is skipped', JSON.stringify(parseSharedChunkFiles(`// see LAZY_SHARED_CHUNK_FILES = {\nconst Z = { a: 'magic-card-z.js' };\n${decl}`)) === JSON.stringify(['magic-card-path-core.js'])],
+    ['import( is found, a method call .import( is not', hasDynamicImport("x = import('./a')") && hasDynamicImport('await import (y)') && !hasDynamicImport('obj.import(y)') && !hasDynamicImport('// import statement')],
+    ['the real shared modules have no import()', sharedChunkProblems({ chunks: [] }).length === 0],
+  ];
+  for (const [name, ok] of parseCases) {
+    if (!ok) {
+      bad++;
+      console.error(`self-test FAIL: ${name}`);
     }
   }
   // the source scan
@@ -185,7 +230,7 @@ const selfTest = () => {
     }
   }
   if (bad) process.exit(1);
-  console.log(`svg-sinks self-test: ${cases.length + scan.length} cases ok`);
+  console.log(`svg-sinks self-test: ${cases.length + parseCases.length + scan.length} cases ok`);
 };
 
 const main = () => {
