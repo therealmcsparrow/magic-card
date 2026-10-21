@@ -51,8 +51,9 @@ import { resolveValueBackground } from '../utils/value-background';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
 import type { ShapeLookup } from '../contracts/custom-shape';
-import './mc-flows';
-import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../utils/flow';
+import type { ResolvedFlow } from '../utils/flow';
+import { hasFlows } from '../utils/flows.needs';
+import { flowsIfLoaded } from './flows-seam';
 import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
 import { childScope, effectiveEntity } from '../utils/entity-scope';
@@ -830,7 +831,8 @@ export class MagicCard extends LitElement {
       ? [cardStyle, shapeElementStyle(undefined, contentPad, insets)].filter(Boolean).join('; ')
       : [cardStyle, insets && insetPaddingStyle(undefined, contentPad, { min: insets })].filter(Boolean).join('; ');
     // flow lines: only a card with flows gets the overlay (and the content's stacking for it)
-    const flows = this._resolveFlows(resolved);
+    const hasFlowList = hasFlows(resolved);
+    const flows = hasFlowList ? this._resolveFlows(resolved) : undefined;
     // a tank fill / sparkline behind the rows (the card needs its own entity)
     const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass, entity: scope });
     // the pop-up surface is not shaped: its ring keeps the rounded outline and the card's position
@@ -866,7 +868,7 @@ export class MagicCard extends LitElement {
             ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
               data-mc-pause-gap=${this._pause.gap(config)}
-              data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
+              data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
@@ -892,7 +894,7 @@ export class MagicCard extends LitElement {
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
                 data-mc-pause-gap=${this._pause.gap(config)}
-                data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
+                data-mc-flows=${hasFlowList ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
                 data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${this._failNotices(config, badge)}</div>
             </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
           </ha-card>
@@ -912,38 +914,35 @@ export class MagicCard extends LitElement {
   }
 
   /**
-   * The card's flows resolved for the overlay (src/utils/flow.ts); undefined without flows. A
-   * template label is rendered here (the card's render_template subscriptions); a Jinja one shows
+   * The card's flows resolved for the overlay (src/card/flows-resolve.ts, in the flows chunk); undefined until the chunk has
+   * installed. A template label is rendered here (the card's render_template subscriptions); a Jinja one shows
    * nothing until it has a result (no raw Jinja on the line without a connection, e.g. the studio).
    */
   private _resolveFlows(c: MagicCardConfig): ResolvedFlow[] | undefined {
-    if (!Array.isArray(c.flows) || !c.flows.length) return undefined;
+    const mod = flowsIfLoaded();
+    if (!mod) {
+      // flows the config walk did not reach: ask for the chunk and draw again when it is there
+      this._met.add('flows');
+      if (!this._flowsWait) {
+        this._flowsWait = true;
+        lazyChunks.flows.whenReady(this._flowsReady);
+        void lazyChunks.flows.load();
+      }
+      return undefined;
+    }
     // flow-look: a look flow drawn while the chunk is still loading is classic; resolve again once it arrives
-    if (!this._lookWait && !lazyChunks['flow-look'].ready() && c.flows.some((f) => hasFlowLook(f))) {
+    if (!this._lookWait && !lazyChunks['flow-look'].ready() && c.flows!.some((f) => hasFlowLook(f))) {
       this._lookWait = true;
       lazyChunks['flow-look'].whenReady(() => this.requestUpdate());
     }
-    const entities = flowModuleEntities(this._resolvedConfig ?? this._config ?? c);
-    // The overlay keys a flow by id (data-flow): unique when ids are missing / repeated (the editor uses the same keys).
-    const keys = flowKeys(c.flows);
-    const out = c.flows
-      .map((f, i) => [f, i] as const)
-      .filter(([f]) => f && typeof f === 'object')
-      .map(([f, i]) => {
-        const r = resolveFlow(f, this.hass, entities.get(f.from), i);
-        r.id = keys[i];
-        if (r.labelTemplate) {
-          const label = hasJinja(r.labelTemplate)
-            ? this._templates.get(r.labelTemplate).status === 'ok'
-              ? this._templateText(r.labelTemplate)
-              : ''
-            : r.labelTemplate;
-          if (label) r.label = label;
-        }
-        return r;
-      });
-    return out.length ? out : undefined;
+    return mod.api.resolveCardFlows(c, this._resolvedConfig ?? this._config ?? c, this.hass, (template) =>
+      hasJinja(template) ? (this._templates.get(template).status === 'ok' ? this._templateText(template) : '') : template,
+    );
   }
+  private _flowsWait = false;
+  private _flowsReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
 
   /** A template's current text: the raw text without Jinja or without a connection; '' while pending / on error. */
   private _templateText(template: string): string {

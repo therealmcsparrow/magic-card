@@ -48,6 +48,13 @@ import type { MagicModule } from '../modules/module-types';
  *   <ha-icon>, no request. RenderContext has the optional `metChunk(name)`: a render that meets a feature
  *   whose chunk is not ready (a predicate miss, backstop rule 3) tells the card, which then shows that
  *   chunk's failure notice if it fails. metChunk takes a LazyChunkName or OnDemandChunkName.
+ * - LazyChunkName includes 'flows' (dist/magic-card-flows.js, ceiling 57,344 B, chunk entry src/card/flows-chunk.ts).
+ *   It holds the flow resolver (src/utils/flow.ts), the line geometry and motion, <mc-flows> (defined in install())
+ *   and the card-side flow rules (`styles`); the card reads `api.resolveCardFlows` through lazyChunks.flows.module()
+ *   (src/card/flows-seam.ts). Its needs() is hasFlows (src/utils/flows.needs.ts). The card marks its content
+ *   `data-mc-flows` from the config and draws no overlay until the chunk has installed; the overlay is absolutely
+ *   positioned, so a late line moves nothing. 'flow-look' is a child of 'flows' (its literal import() sits in
+ *   src/card/flows-chunk.ts), so its load() loads 'flows' first.
  * - `anim` is the parent chunk of 'anim-runtime', 'particles' and the editor chunk (their literal
  *   import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out of
  *   them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon
@@ -251,13 +258,14 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 5;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flows' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
   seasonal: 'magic-card-seasonal.js',
   markdown: 'magic-card-markdown.js',
   'modules-extra': 'magic-card-modules-extra.js',
+  flows: 'magic-card-flows.js',
   'flow-look': 'magic-card-flow-look.js',
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
@@ -275,6 +283,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   seasonal: 81_920,
   markdown: 57_344,
   'modules-extra': 45_056,
+  /** The flow resolver, line geometry, <mc-flows> and its card rules. */
+  flows: 57_344,
   'flow-look': 32_768,
   'slider-look': 28_672,
   /** Stack (15.3 KiB measured) + placement runtime and layer CSS (about 5-6 KiB). */
@@ -285,8 +295,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   anim: 90_112,
 };
 
-/** Which module types each chunk serves (seasonal, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal, flows, flow-look, slider-look and layers serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],

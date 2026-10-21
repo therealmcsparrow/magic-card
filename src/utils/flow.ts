@@ -1,7 +1,6 @@
 import type { FlowConfig, FlowSide, HomeAssistant, MagicCardConfig } from '../types';
-import { flowLookSlot } from '../card/flow-look-slot';
 import { hasFlowLook } from '../contracts/flow-look.needs';
-import type { FlowLookResolved } from '../contracts/flow-look';
+import type { FlowLookRenderer, FlowLookResolved } from '../contracts/flow-look';
 import { safeColor } from './animation';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
@@ -123,13 +122,15 @@ function resolveColor(value: unknown, hass: HomeAssistant | undefined, entityId:
 
 /**
  * `index` (the flow's position in `flows`) names a flow that has no id and no endpoints; with
- * endpoints the fallback id is `from>to` (the card makes duplicates unique).
+ * endpoints the fallback id is `from>to` (the card makes duplicates unique). `look` is the flow-look
+ * renderer (flowLookSlot.get()); without it a flow with look keys resolves as the classic look.
  */
 export function resolveFlow(
   f: FlowConfig,
   hass: HomeAssistant | undefined,
   moduleEntity?: string,
   index = 0,
+  look?: FlowLookRenderer,
 ): ResolvedFlow {
   // Compared with |v|: a negative min would make 0 count as flowing.
   const min = Math.max(0, finite(f.min) ?? FLOW_DEFAULTS.min);
@@ -221,7 +222,7 @@ export function resolveFlow(
   if (f.to_anchor === 'box') out.toBox = true;
   // flow-look: only flows with look keys reach the chunk; an empty slot (loading, failed) = classic look.
   // The renderer gets `out` as `base` and may set its colour (value mode); colorTo is lifted for the overlay.
-  const renderer = hasFlowLook(f) ? flowLookSlot.get() : undefined;
+  const renderer = hasFlowLook(f) ? look : undefined;
   if (renderer) {
     out.look = renderer.resolve(f, out, hass, colorEntity);
     if (out.look.colorTo !== undefined) out.colorTo = out.look.colorTo;

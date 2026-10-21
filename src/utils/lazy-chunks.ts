@@ -1,12 +1,14 @@
 import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
 import { provideRuntimeChunk } from './anim-runtime-loader';
 import type * as AnimChunk from '../anim-studio/anim-chunk';
+import type * as FlowsChunk from '../card/flows-chunk';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
 import { provideParticlesChunk } from './particles-loader';
 import { provideShapeChunk } from './shape-custom-loader';
 import { provideSvgIconChunk } from './svg-icon-loader';
 
 type AnimModule = typeof AnimChunk;
+type FlowsModule = typeof FlowsChunk;
 
 /*
  * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
@@ -19,12 +21,27 @@ type AnimModule = typeof AnimChunk;
  * would pull every card chunk entry into that bundle's chunk graph (the studio and several chunks grew by 8 to 60 KB).
  */
 
+/**
+ * flow-look is a child of `flows`: its import() sits in src/card/flows-chunk.ts. The importer calls it synchronously, so a
+ * retry's `r=` reaches the request; it rejects while `flows` is not installed (load() below loads `flows` first).
+ */
+const viaFlows = <M extends LazyChunkModule>(pick: (f: FlowsModule) => () => Promise<M>) => (): Promise<M> => {
+  const f = lazyChunks.flows.module() as FlowsModule | undefined;
+  return f ? pick(f)() : Promise.reject(new Error('flows not installed'));
+};
+const afterFlows = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.flows.load().then((ok) => ok && c.load()),
+});
+
 export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   slider: lazyChunk('slider', () => import(/* webpackChunkName: "slider" */ '../modules/lazy/slider-chunk')),
   seasonal: lazyChunk('seasonal', () => import(/* webpackChunkName: "seasonal" */ '../card/seasonal-chunk')),
   markdown: lazyChunk('markdown', () => import(/* webpackChunkName: "markdown" */ '../modules/lazy/markdown-chunk')),
   'modules-extra': lazyChunk('modules-extra', () => import(/* webpackChunkName: "modules-extra" */ '../modules/lazy/extras-chunk')),
-  'flow-look': lazyChunk('flow-look', () => import(/* webpackChunkName: "flow-look" */ '../flow-look/chunk')),
+  // the flow resolver, line geometry, <mc-flows> and the card rules of a card with flows; the card reads it through src/card/flows-seam.ts
+  flows: lazyChunk('flows', () => import(/* webpackChunkName: "flows" */ '../card/flows-chunk')),
+  'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
   'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
   // <mc-bg-stack>, the card backdrop
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),

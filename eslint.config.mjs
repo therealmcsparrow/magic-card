@@ -7,6 +7,7 @@ import tseslint from 'typescript-eslint';
 const REGISTERED_IMPORT_SITES = [
   'src/utils/lazy-chunks.ts',
   'src/anim-studio/anim-chunk.ts',
+  'src/card/flows-chunk.ts',
   'src/anim-studio/icon-library-loader.ts',
   'src/anim-studio/preset-catalogue-loader.ts',
   'src/editor/components/icon-animator/loader.ts',

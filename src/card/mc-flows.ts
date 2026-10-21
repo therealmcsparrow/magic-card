@@ -1,5 +1,5 @@
 import { LitElement, html, nothing, svg, SVGTemplateResult, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { FLOW_QUALITY_THRESHOLDS, FLOW_SPIN_SHAPES } from '../contracts/flow-look.needs';
 import type { FlowBudget, FlowLookQuality, FlowLookResolved, FlowWithLook } from '../contracts/flow-look';
 import { FLOW_END_SELECTOR } from '../contracts/flow-anchor.needs';
@@ -218,7 +218,6 @@ function visualRect(w: HTMLElement, v: Element, full: Rect, box: Rect): Rect | u
  * dashed stroke moves (`dots: 0`). Reduced motion: a static line with an
  * arrowhead in the flow direction. Off-screen overlays pause (src/icons/offscreen.ts).
  */
-@customElement('mc-flows')
 export class McFlows extends LitElement {
   static styles = flowsOverlayStyles;
 

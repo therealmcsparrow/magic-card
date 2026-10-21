@@ -2,6 +2,10 @@
   "description": "Modules copied into more than one chunk of the card bundle that hold no module-level state, each with the technical reason it holds none.",
   "stateless": [
     {
+      "module": "./src/utils/flow.ts",
+      "reason": "Its only module-level state is a WeakMap memo of flowModuleEntities keyed by the config object; each copy fills its own and returns the same map for the same config."
+    },
+    {
       "module": "./src/anim-studio/model-v2.ts",
       "reason": "No module-level state of its own; its only top-level statement registers validateV2 in the single copy of src/anim-studio/model.ts, so a second evaluation registers an equivalent validator."
     }
