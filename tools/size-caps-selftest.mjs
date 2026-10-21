@@ -182,6 +182,8 @@ expect('editing final_cap fails (constant 61,440)', r.code === 1, r.out);
 
 // 7a. the last stage cap above the final cap needs the approved_raises entry s2-final-cap-measured
 const overFinal = clone(here);
+// the real file may already carry the entry; each case below adds its own
+overFinal.approved_raises = overFinal.approved_raises.filter((e) => e.id !== 's2-final-cap-measured');
 overFinal.entry.current_stage = 'stage-4';
 overFinal.entry.base.gzip = 70000;
 overFinal.entry.stages[0].cap = 70000;
