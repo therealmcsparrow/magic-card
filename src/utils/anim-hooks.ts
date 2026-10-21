@@ -1,6 +1,7 @@
+import type { AnimationLibrary } from '../anim-studio/animation-library';
 import type { ParticlesCompiler, ParticlesModule } from '../contracts/particles-v2';
 import type { V2Compiler } from '../anim-studio/compile';
-import type { ParticlesValidator, validateAnimationDoc, validateAnimationLibrary } from '../anim-studio/model';
+import type { ParticlesValidator } from '../anim-studio/model';
 
 /*
  * The hook points of the animation compiler ("Core keeps the seam, not the compiler"). The compiler and the
@@ -10,11 +11,6 @@ import type { ParticlesValidator, validateAnimationDoc, validateAnimationLibrary
  * finds the same ones. Plain code with no runtime imports. The setters keep their old names and are re-exported from
  * compile.ts and model.ts, so no caller changed.
  */
-
-export interface AnimationValidators {
-  doc: typeof validateAnimationDoc;
-  library: typeof validateAnimationLibrary;
-}
 
 export const animHooks: {
   /** particles v2 compiler (the particles chunk, via src/utils/particles-loader.ts) and its lenient `sim` check. */
@@ -28,8 +24,8 @@ export const animHooks: {
   v2?: V2Compiler;
   /** `particles.sim` checking in validateAnimationDoc (the particles chunk and the studio). */
   simValidator?: ParticlesValidator;
-  /** The document validators, registered when model.ts loads: the animation library service (Core) uses them. */
-  validators?: AnimationValidators;
+  /** The page's animation library, registered when animation-library.ts loads (the `anim` chunk): the editor, the transfer view and the icon animator read it. */
+  library?: AnimationLibrary;
 } = { epoch: 0, failedSims: new Set() };
 
 /**
@@ -63,7 +59,14 @@ export function useParticlesValidator(fn: ParticlesValidator | undefined): void 
   animHooks.simValidator = fn;
 }
 
-/** model.ts registers its validators when it loads, for the animation library service. */
-export function useAnimationValidators(v: AnimationValidators): void {
-  animHooks.validators = v;
+/** animation-library.ts registers the page's library when it loads. */
+export function useAnimationLibrary(lib: AnimationLibrary): void {
+  animHooks.library = lib;
+}
+
+/** The page's animation library. The editor loads the `anim` chunk before it renders, which registers it. */
+export function animLibrary(): AnimationLibrary {
+  const lib = animHooks.library;
+  if (!lib) throw new Error('the animation library has not loaded');
+  return lib;
 }

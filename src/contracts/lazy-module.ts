@@ -40,17 +40,18 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   is the parent of 'slider-look' (the literal import() sits in controls-chunk.ts), so its load() loads
  *   'controls' first. The editor imports no stub or view: climateRange, supportsEffect and the dropdown
  *   option helpers are in small pure files (spinbox-range, light-effect, dropdown-options).
- * - LazyChunkName includes 'anim' (dist/magic-card-anim.js, ceiling 90,112 B, chunk entry
+ * - LazyChunkName includes 'anim' (dist/magic-card-anim.js, ceiling 94,208 B, chunk entry
  *   src/anim-studio/anim-chunk.ts). It holds the animation resolve (src/anim-studio/resolve.ts), the
  *   document compiler and model it calls (compile, model, model-v2-core, css-keyframes), the
- *   custom-animation stylesheet, the sequence player, the preset table (src/utils/animation-presets.ts)
+ *   custom-animation stylesheet, the animation library (src/anim-studio/animation-library.ts), the sequence player, the preset table (src/utils/animation-presets.ts)
  *   and the preset keyframe and particle tables (src/css/animation-keyframes.ts, animation-scenes.ts,
  *   animation-extra.ts), and exports the preset keyframes and animation rules as `styles`. It defines no
  *   element and fills no slot: the card reads the module through lazyChunks.anim.module() and draws a plain card until it has installed. Its
  *   needs() is hasAnimations (src/utils/animation.needs.ts): a non-empty `animations` list or the legacy
  *   `animation_preset`, on any design the config walk reaches (card, rows, columns, modules, `hover`,
  *   `conditional[].design`, conditional_appearance rules). The hook points of the compiler stay in Core
- *   (src/utils/anim-hooks.ts).
+ *   (src/utils/anim-hooks.ts), and so does the slot where `anim` registers the library (useAnimationLibrary), which the editor, the
+ *   transfer view and the icon animator read through animLibrary().
  * - LazyChunkName includes 'svg-icon' (dist/magic-card-svg-icon.js, ceiling 65,536 B, chunk entry
  *   src/icons/chunk.ts). It holds the icon source (packs, the `mcu:` library client, own SVG),
  *   <mc-svg-icon> and the SVG sanitiser. Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`,
@@ -348,8 +349,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   layers: 24_576,
   /** Icon source, <mc-svg-icon>, the SVG sanitiser and the `mcu:` library client (about 61 KiB raw measured before the move). */
   'svg-icon': 65_536,
-  /** The resolve, compiler and model of the animations, the preset and keyframe tables and the animation rules (`styles`). */
-  anim: 90_112,
+  /** The resolve, compiler and model of the animations, the preset and keyframe tables and the animation rules (`styles`), and the animation library. */
+  anim: 94_208,
 };
 
 /** Chunks that only hold shared source (section "Shared chunks"): no install, no BUILD, no notice. */
