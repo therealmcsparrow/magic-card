@@ -55,6 +55,15 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   'svg-icon': row('svg-icon', wantsSvgIcon),
   // a design with animations, at any depth, in `hover` or in a `conditional` design (src/utils/animation.needs.ts)
   anim: row('anim', (c) => configHas(c, hasAnimations)),
+  // the card is linked to a template (card level only)
+  templates: row('templates', (c) => {
+    try {
+      const t = (c as Obj).template;
+      return typeof t === 'string' && t !== '';
+    } catch {
+      return false;
+    }
+  }),
 };
 
 const seen = new WeakSet<object>();

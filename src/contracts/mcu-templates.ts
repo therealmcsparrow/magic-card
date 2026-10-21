@@ -20,7 +20,8 @@
  *    Errors: invalid_format, not_loaded, unauthorized (admin commands), unknown_command (MCU before 1.0.0).
  *
  * 2. The card's template source (Magic Card Module `template-source`, src/services/template-source.ts,
- *    in magic-card.js). The card element (Core) talks to it only through TemplateSource below.
+ *    in the `templates` chunk, dist/magic-card-templates.js, lazy-module 1.4.0). The card element (Core) talks to it only through
+ *    TemplateSource below, after the chunk has installed (src/card/templates-seam.ts).
  *    - One page-wide instance. Per HA connection and template name: one subscribe_template, shared by
  *      every card that watches that name (reference counted; the last unwatch unsubscribes).
  *    - Subscribes with resubscribe:false: the library doesn't re-send after a reconnect. On the
@@ -40,7 +41,8 @@
  *      bus event magic_card_utils_template_updated (they don't exist).
  *    - At most one console.warn per page per failure kind; 'missing' is not warned (the notice says it).
  *
- * Card behaviour: status 'loading' renders the card's local config, as today.
+ * Card behaviour: status 'loading', and the time before the `templates` chunk has installed, render the card's local config.
+ * A chunk that cannot load shows the 'unavailable' notice once and keeps the local config; a later load clears it.
  * 'ready' renders mergeTemplateWithOverrides(config, localConfig). 'missing' and 'unavailable'
  * render the local config plus one notice line (TEMPLATE_NOTICE), in the card namespace of i18n,
  * British ids, inside an element with role="status" so screen readers announce it once. Nothing throws.

@@ -90,6 +90,13 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   the timer ticker and the offscreen observer; shape-custom stays an on-demand chunk of the card bundle. The plain sheet
  *   keeps the shaped element's rules. A shape's content inset is measured, not configured, so a card with a shape stays
  *   hidden (host attribute `data-mc-decor-wait`) until the chunk has installed, or has failed, and its content never moves.
+ * - LazyChunkName includes 'templates' (dist/magic-card-templates.js, ceiling 12,288 B, chunk entry src/services/templates-chunk.ts). It holds
+ *   the template source (src/services/template-source.ts: one `subscribe_template` per connection and template name, mcu-templates 1.0.0)
+ *   and the merge of a template with the card's overrides (src/services/template-merge.ts); the card reads `api` through
+ *   src/card/templates-seam.ts. Its needs() is card level and inline in src/utils/lazy-features.ts: `config.template` is a non-empty
+ *   string. setConfig prefetches it, and the watch and the re-merge run when it is ready. Until the merged config arrives the card
+ *   renders its own settings, as it does while the template is fetched. The editor keeps its own stateless copy of template-merge.ts and
+ *   never imports template-source.ts. `template` is not a plain key.
  * - `anim` is the parent chunk of 'anim-runtime', 'particles' and the editor chunk (their literal
  *   import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out of
  *   them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon
@@ -257,6 +264,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * - Timing: the first notice appears 2 s after a fast failure (a 404) and about 22 s after two stalls.
  * - Strings: a short part-name table keyed by LazyChunkName (at most 8 names, fallback "Part of this
  *   card"), British ids through the card i18n namespace. The chunk name and key go to console.warn.
+ * - templates: a failed load shows the card's template notice (mcu-templates `unavailable`: "Template "{name}" couldn't be loaded. Showing this card's own settings.") in place of the chunk notice, once, and the card keeps its local config; a later success clears it.
  * - While a slot of the card shows a notice, the host carries the `mc-fail` attribute; in that state ha-card
  *   is the scroll box and the layout-shift rule does not apply.
  * - The notice is a template, chunkNotice(chunk) (src/card/chunk-notice.ts, in magic-card.js), rendered in the card's own
@@ -301,10 +309,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.5.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 15;
+export const LAZY_MODULE_CONTRACT_REVISION = 16;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -321,6 +329,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   layers: 'magic-card-layers.js',
   'svg-icon': 'magic-card-svg-icon.js',
   anim: 'magic-card-anim.js',
+  templates: 'magic-card-templates.js',
 };
 
 /**
@@ -351,6 +360,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   'svg-icon': 65_536,
   /** The resolve, compiler and model of the animations, the preset and keyframe tables and the animation rules (`styles`), and the animation library. */
   anim: 94_208,
+  /** The template source (one subscription per connection and name) and the template merge. */
+  templates: 12_288,
 };
 
 /** Chunks that only hold shared source (section "Shared chunks"): no install, no BUILD, no notice. */
@@ -366,8 +377,8 @@ export const LAZY_SHARED_CHUNK_CEILINGS: Record<LazySharedChunkName, number> = {
   'path-core': 10_240,
 };
 
-/** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look, layers, svg-icon, anim and templates serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs'],

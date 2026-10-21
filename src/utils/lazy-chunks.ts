@@ -72,6 +72,8 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),
   // the animation resolve, compiler and model, the preset tables and the animation rules; the card reads it through src/utils/anim-seam.ts
   anim: lazyChunk('anim', () => import(/* webpackChunkName: "anim" */ '../anim-studio/anim-chunk')),
+  // the template source and the template merge; the card reads it through src/card/templates-seam.ts
+  templates: lazyChunk('templates', () => import(/* webpackChunkName: "templates" */ '../services/templates-chunk')),
 };
 
 /**
