@@ -5,7 +5,7 @@ import { UiPopover } from '../ui-kit/elements/popover';
 import { UiWindow } from '../ui-kit/elements/window';
 
 /*
- * The animation studio's own copy of the ui kit (contract ui-kit 1.0.0, ADR 0030): this entry compiles the kit
+ * The animation studio's own copy of the ui kit (contract ui-kit 1.0.0): this entry compiles the kit
  * elements itself and defines them once, guarded, so a card editor chunk or the theme editor on the same page that
  * defined a tag first keeps it. Only the three the studio renders (window, menu, popover): defineUiKit() would add the
  * toast. Imported for its effect by the entry and by every file that renders a kit element, so unit tests that mount

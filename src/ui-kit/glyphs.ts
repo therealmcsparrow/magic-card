@@ -1,6 +1,6 @@
 import { html, svg, type SVGTemplateResult, type TemplateResult } from 'lit';
 
-/* The kit glyph set: 24 x 24 outlines drawn with currentColor, so they follow the button colour. The SVG editor's own set (src/svg-editor/icons.ts) is gone: it draws with the MDI names below (UI4). */
+/* The kit glyph set: 24 x 24 outlines drawn with currentColor, so they follow the button colour. The SVG editor's own set (src/svg-editor/icons.ts) is gone: it draws with the MDI names below. */
 
 const G = {
   select: 'M6 3l12 8-5.5 1.3L10 18z',
@@ -66,7 +66,7 @@ const G = {
 } as const;
 
 /*
- * Material Design Icons (CEO D4: MDI everywhere), filled 24 x 24 paths, only the ones the kit's own templates draw.
+ * Material Design Icons (MDI everywhere), filled 24 x 24 paths, only the ones the kit's own templates draw.
  * A name here wins over the same name in the stroke set above, so the window close button, the topbar and the
  * section head show the HA icon family. Other kit glyph names stay on the stroke set until their screen migrates.
  */
@@ -88,7 +88,7 @@ const M = {
   information: 'M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z',
   dotsHorizontal: 'M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z',
   restart: 'M12,5V1L7,6L12,11V7A6,6 0 0,1 18,13A6,6 0 0,1 12,19A6,6 0 0,1 6,13H4A8,8 0 0,0 12,21A8,8 0 0,0 20,13A8,8 0 0,0 12,5Z',
-  /* SVG editor (UI4): the tool rail, layer rows, inspector and start tiles. Paths from @mdi/js 7.4.47. */
+  /* SVG editor: the tool rail, layer rows, inspector and start tiles. Paths from @mdi/js 7.4.47. */
   cursorDefault: 'M13.64,21.97C13.14,22.21 12.54,22 12.31,21.5L10.13,16.76L7.62,18.78C7.45,18.92 7.24,19 7,19A1,1 0 0,1 6,18V3A1,1 0 0,1 7,2C7.24,2 7.47,2.09 7.64,2.23L7.65,2.22L19.14,11.86C19.57,12.22 19.62,12.85 19.27,13.27C19.12,13.45 18.91,13.57 18.7,13.61L15.54,14.23L17.74,18.96C18,19.46 17.76,20.05 17.26,20.28L13.64,21.97Z',
   vectorPolylineEdit: 'M2 3V9H4.95L6.95 15H6V21H12V16.41L17.41 11H22V5H16V9.57L10.59 15H9.06L7.06 9H8V3H2M4 5H6V7H4V5M18 7H20V9H18V7M21.15 13C21 13 20.87 13.05 20.76 13.16L19.75 14.18L21.82 16.25L22.84 15.24C23.05 15.03 23.05 14.67 22.84 14.46L21.54 13.16C21.43 13.05 21.29 13 21.15 13M19.15 14.76L13 20.91V23H15.09L21.23 16.84L19.15 14.76M8 17H10V19H8V17Z',
   pen: 'M20.71,7.04C20.37,7.38 20.04,7.71 20.03,8.04C20,8.36 20.34,8.69 20.66,9C21.14,9.5 21.61,9.95 21.59,10.44C21.57,10.93 21.06,11.44 20.55,11.94L16.42,16.08L15,14.66L19.25,10.42L18.29,9.46L16.87,10.87L13.12,7.12L16.96,3.29C17.35,2.9 18,2.9 18.37,3.29L20.71,5.63C21.1,6 21.1,6.65 20.71,7.04M3,17.25L12.56,7.68L16.31,11.43L6.75,21H3V17.25Z',

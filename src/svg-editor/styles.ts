@@ -4,7 +4,7 @@ import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitCss } from '../ui-kit/css/extras';
 
 /*
- * Styles of <mc-svg-editor> (contract svg-editor 1.0.0 r6, ui-kit 1.0.0). The look is the kit's: Core's tokens, the card
+ * Styles of <mc-svg-editor> (contract svg-editor 1.0.0, ui-kit 1.0.0). The look is the kit's: Core's tokens, the card
  * editor's primitives (buttons, fields, segmented control, chips, switch, menu rows) and the kit parts (topbar, rail,
  * float toolbar, notices, tiles, rows). They live in the card-editor chunk that loads this one, so they cost this chunk
  * nothing. What is left here is layout only: where things sit, the canvas stack, the tree row's drag states and the
@@ -441,7 +441,7 @@ export const editorStyles: CSSResult[] = [
       grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
     }
 
-    /* the layer tree: kit rows, nowrap, borderless 24 px buttons (CEO) */
+    /* the layer tree: kit rows, nowrap, borderless 24 px buttons */
     .tree {
       display: grid;
       gap: 2px;

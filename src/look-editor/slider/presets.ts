@@ -3,7 +3,7 @@ import type { SliderTrackStyle } from '../../contracts/slider-look';
 import { m } from '../i18n';
 
 /*
- * The five slider presets (P1, designer 03 2.2 with the 12 deltas) and the static previews of presets and track styles.
+ * The five slider presets and the static previews of presets and track styles.
  * Previews are chunk constants: inline SVG, aria-hidden by the tile group, never animated, never config text. Filters
  * are avoided (ids would clash inside one shadow root); glow is drawn with stacked translucent strokes.
  */
@@ -54,7 +54,7 @@ export const SLIDER_PRESETS: readonly SliderPreset[] = [
     label: m('Glass'),
     description: m('See-through track, pill handle.'),
     preview: preview('glass'),
-    // glass_blur stays off: the flat see-through fill is the default (designer 12, 4.2)
+    // glass_blur stays off: the flat see-through fill is the default
     values: { track_style: 'glass', track_thickness: 28, thumb: 'pill', thumb_size: 28, value_position: 'track' },
   },
   {
@@ -62,12 +62,12 @@ export const SLIDER_PRESETS: readonly SliderPreset[] = [
     label: m('Big fill'),
     description: m('Large fill with icon and value. Updates while you drag.'),
     preview: preview('big-fill'),
-    // CEO 2026-10-19: Big fill is the one preset that updates while dragging
+    // Big fill is the one preset that updates while dragging
     values: { track_style: 'big-fill', fill_mode: 'auto', thumb: 'none', value_position: 'track', live: true },
   },
 ];
 
-/** Track-style tiles (56 x 32, 2 px strokes), in the designer's order. */
+/** Track-style tiles (56 x 32, 2 px strokes), in display order. */
 const tile = (body: string): string => svg(56, 32, body);
 const bar = (y: number, h: number, r: number, fill: number, extra = ''): string =>
   `<rect x="4" y="${y}" width="48" height="${h}" rx="${r}" ${track} stroke-width="2"${extra}/><rect x="4" y="${y}" width="${fill}" height="${h}" rx="${r}" fill="currentColor"/>`;

@@ -409,9 +409,9 @@ export class LayerRows implements ReactiveController {
 }
 
 /*
- * The row on the kit (design/10 4.9, CEO 2026-10-18): every in-row control is the kit's borderless 24 px `.icon-btn.xs`, the
+ * The row on the kit: every in-row control is the kit's borderless 24 px `.icon-btn.xs`, the
  * row never wraps, and the name is what gives way (an ellipsis; the full name is the button's title). The container
- * breakpoints are epic F's: under 200 px the toggles live in the Layer actions menu, 200 to 319 px they stay inline
+ * breakpoints: under 200 px the toggles live in the Layer actions menu, 200 to 319 px they stay inline
  * (move up and down go to the menu), from 320 px everything is inline.
  */
 export const layerRowStyles = css`

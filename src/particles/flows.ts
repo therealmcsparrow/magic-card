@@ -32,7 +32,7 @@ export interface FlowBody {
 }
 
 export interface FlowDef {
-  /** Lives the whole loop and blends back to its start over the last 15 % (orbit, wander; ADR 0004). */
+  /** Lives the whole loop and blends back to its start over the last 15 % (orbit, wander). */
   persistent: boolean;
   /** Rotation follows the direction of travel (rain streaks). */
   align?: boolean;

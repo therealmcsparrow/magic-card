@@ -462,7 +462,7 @@ export function windOf(angle: number): number {
 }
 
 /**
- * Wind angle for Rain (Lead ruling: particles-v2 1.0.0 has no wind field, so it writes the gravity
+ * Wind angle for Rain (particles-v2 1.0.0 has no wind field, so it writes the gravity
  * direction and rain falls slanted). Without gravity it also sets half strength, else nothing would slant.
  */
 export function setWind(doc: AnimationDoc, seed: number, wind: number): AnimationDoc {
@@ -553,7 +553,7 @@ export function childrenSummary(sim: ParticlesSim): string {
 let studioParticles: ParticlesModule | undefined;
 
 /**
- * The studio registers the particles module (src/particles/index.ts) here once it exists (T2.3):
+ * The studio registers the particles module (src/particles/index.ts) here once it exists:
  * the editor then shows bake stats, runs Live in its preview and offers the animated SVG export.
  * Without it the preview plays the v1 fallback.
  */
@@ -584,7 +584,7 @@ export function bakedParticlesSvg(doc: AnimationDoc): { svg: string; warnings: s
   return { svg: m.bakedSvg(loop, { width: w, height: Math.round(w / DEFAULT_GEOMETRY.aspect) }), warnings };
 }
 
-// ── emitters (particles-v2 1.2.0, ADR 0028) ──
+// ── emitters (particles-v2 1.2.0) ──
 // Index 0 is the primary emitter (spec count / size / colors / fade / spread / layer plus the sim's own fields), index i the
 // extra sim.emitters[i - 1]. Every op is pure and returns the SAME document when it changes nothing (so a no-op is no undo step
 // and a single-emitter document is never rewritten). Ids and names exist only with 2+ emitters; going back to one drops them

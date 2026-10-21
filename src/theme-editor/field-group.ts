@@ -233,7 +233,7 @@ export class McteFieldGroup extends LitElement {
     </div>`;
   }
 
-  /** True for a non-colour variable that only one mode sets: the other mode gets nothing (Ruben: sizes land in one mode). */
+  /** True for a non-colour variable that only one mode sets: the other mode gets nothing (sizes land in one mode). */
   private _onlyIn(row: FieldRow, name: string): ThemeMode | null {
     const { doc, scope, hasModes } = this.ctx;
     if (!hasModes || scope === 'shared' || isColour(row.entry) || row.entry.kind === 'rgb') return null;

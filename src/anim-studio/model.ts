@@ -479,7 +479,7 @@ function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean
 /** Checks a raw `particles.sim` (particles-v2 ParticlesModule.validateSim; error paths `particles.sim.*`). */
 export type ParticlesValidator = (raw: unknown, mode: 'strict' | 'lenient', spec?: { count: number; layer: 'back' | 'front' }) => { sim?: ParticlesSim; errors: FieldError[] };
 
-// the slot lives in the entry (src/utils/anim-hooks.ts, ADR 0043); the name stays available here
+// the slot lives in the entry (src/utils/anim-hooks.ts); the name stays available here
 export { useParticlesValidator };
 
 /** The document plays a v2 simulation, which only the particles chunk can compile (a preset-based doc ignores `sim`). */
@@ -673,5 +673,5 @@ export function validateAnimationLibrary(input: unknown, opts: ValidateOptions =
   return { docs, errors };
 }
 
-// the animation library service (Core, src/services/animation-library.ts) validates with these; it cannot import this file (ADR 0043)
+// the animation library service (Core, src/services/animation-library.ts) validates with these; it cannot import this file
 useAnimationValidators({ doc: validateAnimationDoc, library: validateAnimationLibrary });

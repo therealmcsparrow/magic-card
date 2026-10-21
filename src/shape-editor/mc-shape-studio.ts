@@ -81,7 +81,7 @@ interface Msg {
 
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
-  /** Contract svg-editor revision 5: the Magic Card Utils panel checks this before it creates the element. */
+  /** Contract svg-editor: the Magic Card Utils panel checks this before it creates the element. */
   static contractRevision = 5;
 
   @property({ attribute: false }) hass?: Hass;

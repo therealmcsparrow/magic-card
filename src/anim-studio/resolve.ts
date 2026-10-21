@@ -18,7 +18,7 @@ import { registerSequence } from '../card/sequence-player';
 import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, readAnimations, seconds, strength } from './entries';
 
 /*
- * What the card renders for a design with animations: the resolve (ADR 0043). It lives in the lazy `anim` chunk, so a
+ * What the card renders for a design with animations: the resolve. It lives in the lazy `anim` chunk, so a
  * plain card never downloads it; the card calls it through one seam (resolveAnim in src/card/magic-card.ts) once the
  * chunk is installed and draws a plain card until then. Moved verbatim from src/utils/animation.ts. Its svg-sanitize
  * guard: this file has no SVG sink (the sinks are compile.ts and model.ts, which import src/icons/svg-sanitize themselves).

@@ -1,5 +1,5 @@
 /*
- * Placement maths of <mc-ui-window> (contract ui-kit r3): the rectangle rules for drag, resize, dock, width steps and
+ * Placement maths of <mc-ui-window> (contract ui-kit): the rectangle rules for drag, resize, dock, width steps and
  * maximise. Pure functions, so the window element only wires events.
  */
 export interface Rect {

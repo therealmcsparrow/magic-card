@@ -6,7 +6,7 @@ import { animationDocList } from '../../utils/custom-animations';
 import type { CardState } from './bridge';
 
 /*
- * "Keep a copy in this card" for a library animation (mcu-library 1.0.0 r3): the document goes into
+ * "Keep a copy in this card" for a library animation (mcu-library 1.0.0): the document goes into
  * the card's `custom_animations` under its library id, so the card still plays it when Magic Card
  * Utils or the item is gone. On when the document's compact JSON is at most
  * KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES (rigs and particles get large), off above; the Animations

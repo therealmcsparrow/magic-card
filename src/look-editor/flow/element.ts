@@ -20,7 +20,7 @@ import { LINE_TILES, SHAPE_TILES } from '../tiles';
 import { applyPreset, appliedPreset, changeCount, colourMode, lookStatus, resetLook, spacingMode, unusedColourKeys, withKeys } from './model';
 
 /*
- * <mc-flow-look-editor> (contract look-editor 1.0.0 r2; designer 03 + 12): the Look group of a flow block. It renders
+ * <mc-flow-look-editor> (contract look-editor 1.0.0): the Look group of a flow block. It renders
  * from the keys and writes only on a user action, one onChange with the whole next flow. Presets and Reset look keep one
  * level of Undo (toast for 20 s plus an inline button). Every control carries data-key (its YAML key) for the tests.
  * Section state: `open` holds the sections the user opened; a "-name" entry means the user closed a section that opens
@@ -701,7 +701,7 @@ export class FlowLookEditor extends LitElement implements FlowLookEditorElement 
   }
 }
 
-/** lit.M5: define once, keep a tag another bundle already claimed. */
+/** Define once; keep a tag another bundle already claimed. */
 export function defineFlowLookEditor(): void {
   if (!customElements.get(FLOW_LOOK_EDITOR_TAG)) customElements.define(FLOW_LOOK_EDITOR_TAG, FlowLookEditor);
 }

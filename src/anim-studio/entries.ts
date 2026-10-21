@@ -6,7 +6,7 @@ import { isCustomRef } from '../utils/custom-ref';
 /*
  * The entries of a design's `animations` list: reading them (with the legacy single keys of v0.0.14), the preset values an
  * entry starts from, and the small value readers the resolve shares. Lives in the lazy `anim` chunk with the resolve
- * (src/anim-studio/resolve.ts, ADR 0043); the card editor imports the editing helpers from here. Moved verbatim from
+ * (src/anim-studio/resolve.ts); the card editor imports the editing helpers from here. Moved verbatim from
  * src/utils/animation.ts.
  */
 

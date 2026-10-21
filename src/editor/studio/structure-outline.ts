@@ -948,7 +948,7 @@ export class StructureOutline extends LitElement {
   }
 
   /**
-   * The line under a module that takes its entity from the card or a layout (R7): the id, muted, with the
+   * The line under a module that takes its entity from the card or a layout: the id, muted, with the
    * words "Same as card / row" in the wide variant; or, when the entity does not fit the module, what it needs.
    * Nothing for own entities, `none`, card modules and modules that use no entity.
    */

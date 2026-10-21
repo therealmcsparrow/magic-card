@@ -3,7 +3,7 @@ import { m } from '../i18n';
 import type { CatalogueEntry, FieldKind } from '../../contracts/theme-catalogue';
 
 /**
- * What a theme can change on a Magic Card (ADR 0013). The card sets its own --mc-* tokens on :host
+ * What a theme can change on a Magic Card. The card sets its own --mc-* tokens on :host
  * (src/css/tokens.ts), so a theme cannot reach those. It does reach:
  * - the HA variables the card reads with var() ('follows' rows below: the HA groups own the entry,
  *   index.ts lists Magic Card in its alsoUsedBy), and

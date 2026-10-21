@@ -70,7 +70,7 @@ const read = new WeakMap<object, AnimationDoc | undefined>();
  * colour, strength, timing, intensity), "Add animation" below. Choosing a preset writes its values into the
  * fields; "Reset to preset" restores them. A muted note marks an entry that overrides an earlier
  * one on the same element and channel. The preset dropdown also lists the preset catalogue (lazy
- * chunk, ADR 0005): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
+ * chunk): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
  */
 @customElement('mc-animation-list')
 export class AnimationList extends LitElement {

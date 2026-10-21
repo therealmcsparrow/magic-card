@@ -5,7 +5,7 @@ import type { CardModule, HomeAssistant } from '../../types';
 import { m } from './i18n';
 
 /*
- * Looks (designer 11 I): one-tap tiles that write plain YAML (placement + layer, or background_layers
+ * Looks: one-tap tiles that write plain YAML (placement + layer, or background_layers
  * entries). A look is never stored by name. Data plus CSS gradients for the thumbnails, no images.
  */
 
@@ -64,7 +64,7 @@ export function applyModuleLook(mod: CardModule, look: ModuleLook): CardModule {
   return { ...mod, placement: look.placement, layer: JSON.parse(JSON.stringify(look.layer)) as LayerConfig };
 }
 
-// ── Card backdrop looks (T7) ──
+// ── Card backdrop looks ──
 
 export interface BackdropLook {
   id: string;

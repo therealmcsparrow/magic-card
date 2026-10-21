@@ -6,7 +6,7 @@ import type { SliderModuleConfig } from '../../types';
 import { SLIDER_PRESETS } from './presets';
 
 /*
- * Pure rules of the slider look editor (contract look-editor 1.0.0 r2, element rules 1 to 5; designer 12). No DOM.
+ * Pure rules of the slider look editor (contract look-editor 1.0.0, element rules 1 to 5). No DOM.
  * Every function returns a new object and never touches the one it is given (the host keeps it as the Undo snapshot).
  */
 

@@ -7,7 +7,7 @@ import { cycleTarget } from './layers-at';
 import type { SheetItem } from '../../contracts/layer-editor';
 
 /*
- * The studio canvas side of layer selection (designer 03 section 6, 11 H): Alt-click cycling, the layers
+ * The studio canvas side of layer selection: Alt-click cycling, the layers
  * under the pointer or under the selection, step above / below for the float bar, and the box measurer the
  * Layer group's overlap and small-target checks use. Hit testing reads the config, not the runtime
  * click-through, so a background is always selectable in the editor.

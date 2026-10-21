@@ -22,7 +22,7 @@ import { t } from './i18n';
 import { t as tn } from './library/i18n';
 
 /*
- * Icon Styles (module icon-library, contract icon-library 1.2.1, ADR 0006): every library entry
+ * Icon Styles (module icon-library, contract icon-library 1.2.1): every library entry
  * plays as Quiet, Living or Glow, all derived from its one Living rig when the user picks it in the
  * card editor. The card stores the result inline and plays it like any other document, so neither
  * magic-card.js nor the runtime chunk knows about Styles. Pure and deterministic.
@@ -48,7 +48,7 @@ import { t as tn } from './library/i18n';
  *   parts the first part with a track gets the halo.
  * - Glow-only shapes (GLOW_SHAPES: the jack-o'-lantern's face light) are added lit, moving with
  *   their part.
- * - Colour (fixed when picked, CEO ruling): the entry's Color field (a plain colour), else the theme
+ * - Colour (fixed when picked): the entry's Color field (a plain colour), else the theme
  *   pair, else GLOW_FALLBACK's. Light or dark is the card background's brightness, read by CSS
  *   relative colour from the theme's card background variables (cardSwitch), so it follows Home
  *   Assistant's dark mode and a theme change without any card code. On light cards the colour is

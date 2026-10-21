@@ -24,7 +24,7 @@ export interface StudioWindow {
 
 /**
  * One window of the ui kit for the studio's dialogs and the drawing tools' SVG dialog: a title, a body and a footer of
- * buttons (slot="footer"), movable, resizable and maximisable (contract ui-kit r3). The caller shows it with show()
+ * buttons (slot="footer"), movable, resizable and maximisable (contract ui-kit). The caller shows it with show()
  * once it is rendered.
  */
 export function studioWindow(o: StudioWindow, body: unknown, footer?: unknown): TemplateResult {

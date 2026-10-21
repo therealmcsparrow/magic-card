@@ -79,7 +79,7 @@ export function allKeys(doc: ThemeDoc): string[] {
 export const isSetAnywhere = (doc: ThemeDoc, name: string): boolean =>
   ownValue(doc, 'shared', name) !== undefined || ownValue(doc, 'light', name) !== undefined || ownValue(doc, 'dark', name) !== undefined;
 
-/** True when some colour variable lives inside a mode block (round 1, 16.1: decides the opening scope). */
+/** True when some colour variable lives inside a mode block (decides the opening scope). */
 export function hasModeColors(doc: ThemeDoc): boolean {
   for (const m of ['light', 'dark'] as const) {
     for (const k of Object.keys(doc.modes?.[m] ?? {})) {

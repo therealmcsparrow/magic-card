@@ -25,7 +25,7 @@ export function closeDialog(root: ParentNode): void {
 }
 
 /**
- * One window of the ui kit: title, body and a footer of buttons, movable, resizable and maximisable on a desktop. Phones get the bottom sheet (no grips), never a full screen (CEO D8).
+ * One window of the ui kit: title, body and a footer of buttons, movable, resizable and maximisable on a desktop. Phones get the bottom sheet (no grips), never a full screen.
  * `close` runs when the window closes (Esc, scrim, the X, Cancel). With `submit` the window sits inside a <form>, so a
  * submit button in the footer and Enter in a field both reach it.
  */

@@ -7,7 +7,7 @@ import { t } from '../i18n';
 import { isAnchor, layerOf, placementOf } from './placement-model';
 
 /*
- * Structure tree chips (designer 03 section 5, 11 L). A module put behind others or on top carries a chip
+ * Structure tree chips. A module put behind others or on top carries a chip
  * with the word always visible (never an icon alone); an overlay adds a 14 px mini 3 x 3 glyph with its
  * anchor dot. The anchor is in the accessible name and a tooltip. Under 280 px the name wraps first, then
  * the glyph hides (container query on the outline host). A container holding layers shows "{n} layers".

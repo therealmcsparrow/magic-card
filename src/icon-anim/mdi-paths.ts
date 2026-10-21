@@ -317,7 +317,6 @@ export const MDI_PATHS: Record<string, string> = {
   'mdi:heart-pulse': mdiHeartPulse,
   'mdi:home': mdiHome,
   'mdi:gauge': mdiGauge,
-  // P4 (animation-studio-upgrade, p4-spec.json)
   'mdi:campfire': mdiCampfire,
   'mdi:candle': mdiCandle,
   'mdi:fire-alert': mdiFireAlert,

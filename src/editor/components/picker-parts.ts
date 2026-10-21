@@ -216,7 +216,7 @@ export function renderPickerSearch(
   `;
 }
 
-/** Phone width: the kit window is a bottom sheet there (CEO D8) and has no grips. */
+/** Phone width: the kit window is a bottom sheet there and has no grips. */
 const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 599px)').matches;
 
 /**

@@ -4,10 +4,10 @@ import type { CardModule } from '../../types';
 import { layerOf, placementOf } from './placement-model';
 
 /*
- * Cost meter (designer 11 J): "Cost on older tablets: light / medium / heavy", with the reasons.
+ * Cost meter: "Cost on older tablets: light / medium / heavy", with the reasons.
  * Heavy: blur over BLUR_LIGHT_MAX (12 px), two or more costly factors, or three or more layers with any
  * factor. Medium: exactly one factor. Light otherwise. Factors: a non-normal blend, pan and zoom, a live
- * camera behind others. Thresholds are revisited after Spike S1 on real hardware.
+ * camera behind others.
  */
 
 export type CostLevel = 'light' | 'medium' | 'heavy';

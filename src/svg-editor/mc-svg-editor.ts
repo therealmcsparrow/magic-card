@@ -122,9 +122,9 @@ export class McSvgEditor extends LitElement implements StageHost {
   libraryAvailable = true;
   savedId?: string;
   module?: SvgEditorModuleFacts;
-  /** Revision 5: 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
+  /** 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
   host: SvgEditorHost = 'card';
-  /** Revision 5: the element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
+  /** The element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
   static contractRevision = 5;
   conflict = false;
   pvMain = MCU_PREVIEW_MAIN;

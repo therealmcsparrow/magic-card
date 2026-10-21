@@ -3,7 +3,7 @@ import { kitRow } from './rows';
 import { kitSlider } from './slider';
 
 /*
- * Kit parts that the card editor does not have (design/10-ui-kit.md sections 4.1 to 4.11), derived from its tokens and
+ * Kit parts that the card editor does not have, derived from its tokens and
  * patterns. Not part of editorSystem: a screen adds them with `kitCss`, so the card editor renders as before.
  */
 

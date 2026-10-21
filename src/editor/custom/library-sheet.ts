@@ -27,7 +27,7 @@ export function withImported(c: MagicCardConfig, kind: TransferKind, items: Tran
   return withDocs(c, items.map((i) => ({ ...(i.data as object), id: i.id, name: i.name }) as Record<string, unknown>));
 }
 
-/** Phone width: the kit window is a bottom sheet (CEO D8), else the wide picker window. */
+/** Phone width: the kit window is a bottom sheet, else the wide picker window. */
 const compact = (): boolean => typeof matchMedia === 'function' && matchMedia('(max-width: 599px)').matches;
 
 @customElement('mc-library-sheet')

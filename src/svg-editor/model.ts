@@ -389,7 +389,7 @@ function locate(root: TNode[]): Loc {
 
 const height = (n: TNode): number => (n.kids ? 1 + Math.max(0, ...n.kids.map(height)) : 0);
 
-/** Drops groups with no layer under them (I4). */
+/** Drops groups with no layer under them. */
 export function pruneGroups(d: Doc): Doc {
   const used = new Set(d.shapes.flatMap((s) => groupChain(d, s.group).map((g) => g.id)));
   return d.groups.every((g) => used.has(g.id)) ? d : { ...d, groups: d.groups.filter((g) => used.has(g.id)) };

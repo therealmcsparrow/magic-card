@@ -3,7 +3,7 @@ import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 import { PRESETS_BUILD } from './build';
 
 /*
- * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js (ADR 0014), loaded
+ * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js, loaded
  * next to the editor bundle (public path: ../public-path.ts) when the create dialog first opens.
  * A load that takes over 8 s counts as failed (a stalled request would hang for minutes).
  * Memoised while pending and once loaded; a failure or timeout clears the memo so "Try again" can

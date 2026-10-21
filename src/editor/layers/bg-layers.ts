@@ -18,7 +18,7 @@ import { layerControlCss } from './tokens';
 import { chevron, lyrSwitch } from './controls';
 
 /*
- * Card backdrop group (designer 03 section 4, 11 B, E, F, K): `background_layers`, first entry = front, at most
+ * Card backdrop group: `background_layers`, first entry = front, at most
  * four. A list of two-line rows (thumbnail, title, summary, status; then Hide, Forward, Backward, Delete), an
  * inline editor per row, Looks, the cost meter and the rule view. Delete replaces the row in place with
  * "Deleted. Undo" (12 s, paused on hover or focus, Ctrl or Cmd+Z answers). Switching a type or source, applying

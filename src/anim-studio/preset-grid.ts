@@ -61,7 +61,7 @@ const GROUP_ICON: Record<TileGroupName, string> = {
 let builtins: BuiltinSource[] | undefined;
 let builtinsLocale: string | undefined;
 
-/** A group's heading: the built-in groups come from the labels tables, the catalogue's own are plain text (I10). */
+/** A group's heading: the built-in groups come from the labels tables, the catalogue's own are plain text. */
 const groupLabel = (g: TileGroupName): string => (g in GROUP_LABELS ? tl(GROUP_LABELS[g as AnimationGroup]) : g);
 
 /** One tile source per built-in preset (built once): `tap` from the trigger, `heavy` for seasonal scenes. */

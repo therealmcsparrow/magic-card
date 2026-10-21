@@ -533,7 +533,7 @@ export function compileAnimationDoc(doc: AnimationDoc, opts: CompileOptions = {}
 let simCache = new WeakMap<AnimationDoc, CompiledAnimation>();
 let simEpoch = 0; // animHooks.epoch of simCache: a new compiler or check empties it
 
-// the slots live in the entry (src/utils/anim-hooks.ts, ADR 0043); the names stay available here
+// the slots live in the entry (src/utils/anim-hooks.ts); the names stay available here
 export { markSimFailed, useParticlesCompiler, useV2Compiler } from '../utils/anim-hooks';
 
 /** A v2 particles document through the chunk's compiler; undefined (the v1 fallback plays) when its `sim` is unusable. */

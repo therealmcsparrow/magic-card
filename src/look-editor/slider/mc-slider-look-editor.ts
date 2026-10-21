@@ -20,8 +20,8 @@ import {
 } from './logic';
 
 /*
- * <mc-slider-look-editor> (contract look-editor 1.0.0 r2, designer 03 section 2 with the 12 deltas). The Look block of the
- * slider editor: presets, then Track and fill, Handle, Value display, Shape and Stops. Nothing is written on mount (AC3);
+ * <mc-slider-look-editor> (contract look-editor 1.0.0). The Look block of the
+ * slider editor: presets, then Track and fill, Handle, Value display, Shape and Stops. Nothing is written on mount;
  * every change is one `onChange` with the whole next config; presets and Reset look are one change each with the Undo
  * routes (toast, 20 s, and a persistent button). Only SLIDER_LOOK_KEYS, slider_color, track_color and show_value are written.
  */
@@ -662,7 +662,7 @@ export class SliderLookEditor extends LitElement implements SliderLookEditorElem
   }
 }
 
-/** Guarded define (lit.M5): called from install(), never at evaluation. */
+/** Guarded define: called from install(), never at evaluation. */
 export function defineSliderLookEditor(): void {
   if (!customElements.get(SLIDER_LOOK_EDITOR_TAG)) customElements.define(SLIDER_LOOK_EDITOR_TAG, SliderLookEditor);
 }

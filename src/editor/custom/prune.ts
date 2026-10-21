@@ -3,7 +3,7 @@ import { animationDocList, customAnimationIds } from '../../utils/custom-animati
 import { CUSTOM_PREFIX, customRefId } from '../../anim-studio/model';
 
 /*
- * Kept copies of saved items (mcu-library 1.0.0 r3 "Pruning"): an entry of the card's `custom_icons`
+ * Kept copies of saved items (mcu-library 1.0.0 "Pruning"): an entry of the card's `custom_icons`
  * or `custom_shapes` goes only when no module uses it AND its id is in the loaded library (so it is a
  * copy of a saved item). Entries the library does not know are the card's own (hand-written YAML,
  * imports made without Magic Card Utils) and stay. A library that is not loaded or not installed

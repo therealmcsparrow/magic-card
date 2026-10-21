@@ -9,7 +9,7 @@ import { inlineDocs, removeInlineDoc, storedDoc, upsertInlineDoc } from './quick
 
 /*
  * Catalogue presets picked in the card editor's Animations dropdown (contract preset-catalogue
- * 1.1.0, ADR 0005): the document is stored inline in the card's `custom_animations` under
+ * 1.1.0): the document is stored inline in the card's `custom_animations` under
  * `cat-<entry id>` and the entry plays `custom:cat-<entry id>`, so the card needs no Magic Card
  * Utils. One copy per catalogue entry per card, shared by every entry playing it; a copy already in
  * the card (or its template) is kept as it is. Copies nothing plays any more are pruned.

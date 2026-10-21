@@ -158,7 +158,7 @@ export interface DocChangeDetail {
 
 /**
  * The particle designer of the animation studio (particles v2, contract src/contracts/particles-
- * v2.ts; design .company/work/animation-studio-upgrade/design/p2-particles-editor.md). Open
+ * v2.ts). Open
  * sections: Mode (Baked loop / Live simulation), Shape (a weighted mix of up to 4 shapes),
  * Movement (13 flows, loop and particle speed, spread) and Look. Closed sections with a live
  * summary: Variation (seed, spin, delay, lifetime), Physics, Collisions and Child particles. A
@@ -1047,7 +1047,7 @@ export class AnimParticlesEditor extends LitElement {
       } as unknown as DesignConfig;
       return { anim: resolveAnimations(design), css: '' };
     }
-    // a v2 document compiles its v1 fallback until compile.ts has the particles compiler (T2.4)
+    // a v2 document compiles its v1 fallback until compile.ts has the particles compiler
     const c = compileAnimationDoc(doc);
     if (!c.layer || !c.name) return { css: '' };
     const cycle = +(doc.duration / c.layer.speed).toFixed(3);
@@ -1728,7 +1728,7 @@ export class AnimParticlesEditor extends LitElement {
     </section>`;
   }
 
-  /** Rain only: the wind angle, written as the gravity direction (Lead ruling, no contract field). */
+  /** Rain only: the wind angle, written as the gravity direction (no contract field). */
   private _renderWind(sim: ParticlesSim): TemplateResult {
     const w = windOf(sim.physics.gravity.angle);
     return html`<div class="field">

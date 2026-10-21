@@ -12,7 +12,7 @@ import {
  * Native <dialog> + showModal() in the shadow root: top layer (so it works inside Home Assistant's transformed
  * card dialog), a real focus trap, ::backdrop scrim. Escape closes this window only and never reaches the card
  * dialog. Content is slotted (the caller's light DOM, styled by the caller's kit CSS). No strings of its own.
- * Placement (contract r3): movable (header drag + move grip), resizable (corner grip), maximizable (button). Keyboard on
+ * Placement: movable (header drag + move grip), resizable (corner grip), maximizable (button). Keyboard on
  * the grips; a click on a grip is the single-pointer alternative (WCAG 2.5.7). No persistence: close() forgets it all.
  */
 
@@ -44,11 +44,11 @@ export class UiWindow extends LitElement {
   @property({ attribute: false }) opener?: HTMLElement;
   /** Scrim click closes (default true, never for 'alert'). */
   @property({ type: Boolean }) dismissible = true;
-  /** Header drag and the move grip (r3). */
+  /** Header drag and the move grip. */
   @property({ type: Boolean }) movable = false;
-  /** Corner resize grip (r3). */
+  /** Corner resize grip. */
   @property({ type: Boolean }) resizable = false;
-  /** Maximise / restore button (r3). */
+  /** Maximise / restore button. */
   @property({ type: Boolean }) maximizable = false;
   @property({ type: Boolean, reflect: true }) maximized = false;
   @property() moveLabel = '';
@@ -199,7 +199,7 @@ export class UiWindow extends LitElement {
     this._hasFooter = (e.target as HTMLSlotElement).assignedNodes().length > 0;
   };
 
-  // ---- placement (contract r3) --------------------------------------------------------------------------------
+  // ---- placement --------------------------------------------------------------------------------
 
   private _begin(e: PointerEvent, mode: 'move' | 'size', grip: boolean): void {
     if (this.maximized || (e.pointerType === 'mouse' && e.button !== 0)) return;

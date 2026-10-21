@@ -15,7 +15,7 @@ export const install = (): void => {};
  * (webpackChunkName "particles", loaded by src/utils/particles-loader.ts), and imported directly
  * by the studio bundle. Loading it turns on `particles.sim` checking in the importing bundle's
  * validateAnimationDoc (lenient on the card, strict in the studio). The compile hook is `compile`;
- * the card registers it (useParticlesCompiler, T2.4).
+ * the card registers it (useParticlesCompiler).
  */
 
 useParticlesValidator(validateSim);

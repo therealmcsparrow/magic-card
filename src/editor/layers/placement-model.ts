@@ -7,8 +7,8 @@ import { toYaml } from '../../utils/yaml-utils';
 import { moduleDisplayName, moduleLabel, modulePathAttr, moduleSelection, type ModuleSelection } from '../studio/selection';
 
 /*
- * Pure model of the Placement and Layer groups (designer 03 sections 2-3, 11 B-G). The controls write the
- * contract keys (layer-placement 1.0.0 r2) and nothing else: `placement` and `layer` on the module, never
+ * Pure model of the Placement and Layer groups. The controls write the
+ * contract keys (layer-placement 1.0.0) and nothing else: `placement` and `layer` on the module, never
  * `design`, never a preset name. Nothing here mutates its input.
  */
 
@@ -23,7 +23,7 @@ export function placementOf(mod: CardModule): Placement {
   return p === 'background' || p === 'overlay' ? p : 'flow';
 }
 
-/** video-bg without a `placement` key: it sits behind its siblings by its own rule (CEO Q1); the editor shows "Automatic". */
+/** video-bg without a `placement` key: it sits behind its siblings by its own rule; the editor shows "Automatic". */
 export function isAutomatic(mod: CardModule): boolean {
   return mod.type === 'video-bg' && mod.placement === undefined;
 }
@@ -81,7 +81,7 @@ export function patchLayer(mod: CardModule, patch: Partial<LayerConfig>): CardMo
 export const SCRIM_DEFAULT: Required<Pick<ScrimConfig, 'style' | 'strength'>> = { style: 'bottom', strength: 60 };
 export const SCRIM_STYLES: readonly ScrimStyle[] = ['dim', 'bottom', 'top', 'left', 'right'];
 
-/** Strength chips (designer 11 G): the white-text-on-white worst case with black darkening. */
+/** Strength chips: the white-text-on-white worst case with black darkening. */
 export const SCRIM_PRESETS = [
   { id: 'light', strength: 25 },
   { id: 'medium', strength: 45 },
@@ -152,7 +152,7 @@ export function hasModuleAction(mod: CardModule): boolean {
   return [a?.tap_action, a?.hold_action, a?.double_tap_action].some((x) => isRunnableAction(x, entity));
 }
 
-/** The runtime default (contract r2): background passes clicks; an overlay does when it has no action. */
+/** The runtime default: background passes clicks; an overlay does when it has no action. */
 export function clickThroughDefault(mod: CardModule): boolean {
   return placementOf(mod) === 'overlay' ? !hasModuleAction(mod) : true;
 }

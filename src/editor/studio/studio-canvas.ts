@@ -284,7 +284,7 @@ export class StudioCanvas extends LitElement {
     },
   });
   private _longPress = new LongPress((path, x, y) => this._longPressAt(path, x, y));
-  /** Alt-click, Layers here and the float bar's layer buttons (background-layers; designer 11 H). */
+  /** Alt-click, Layers here and the float bar's layer buttons. */
   private _layers = new CanvasLayers({
     card: () => this._card as never,
     config: () => this._state?.config,

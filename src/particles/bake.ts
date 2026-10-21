@@ -6,7 +6,7 @@ import { BASE_TOLERANCE, rankStops, simplifyRanked, type RawStop } from './simpl
 import { emitterPlan, type Plan } from './emitters';
 
 const CAPS = PARTICLES_V2_CAPS;
-/** Bytes of one element's CSS besides its stops (slot rule and @keyframes wrapper); the CSS writer (T2.3) should stay near it. */
+/** Bytes of one element's CSS besides its stops (slot rule and @keyframes wrapper); the CSS writer should stay near it. */
 export const ELEMENT_OVERHEAD = 160;
 /** Tolerances tried, % of the layer, until the layer fits maxBytes. */
 const TOLERANCES = [BASE_TOLERANCE, 1, 2, 4, 8, 16, 32];
@@ -49,7 +49,7 @@ const lerpPoint = (a: TimedPoint, b: TimedPoint, tau: number): TimedPoint => {
 };
 
 /**
- * A particle's life as stops over one period (ADR 0004): born at `birth`, invisible outside its life,
+ * A particle's life as stops over one period: born at `birth`, invisible outside its life,
  * a life that crosses the period end wraps, t=0 equals t=1. Persistent flows cover the whole period;
  * their rotation turns a whole number of times per loop so the CSS loop point is seamless too.
  */

@@ -348,7 +348,7 @@ export class IconFxEditor extends LitElement {
     `;
   }
 
-  /** An `mcu:` icon that neither the library nor a kept copy in the card can draw (design R4). */
+  /** An `mcu:` icon that neither the library nor a kept copy in the card can draw. */
   private _savedMissing(): boolean {
     const icon = this.moduleIcon;
     if (!icon.startsWith('mcu:') || !this._saved) return false;

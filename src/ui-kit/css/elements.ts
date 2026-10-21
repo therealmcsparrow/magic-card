@@ -3,7 +3,7 @@ import { css, CSSResult } from 'lit';
 /*
  * Shadow-root styles of the three kit elements (contract ui-kit 1.0.0). They read tokens with fallbacks, because an
  * element can sit in a root that never loaded editorTokens (the elements add no :host token block of their own, so a
- * screen that overrides tokens on its :host keeps its look). Provisional until design/10-ui-kit.md lands.
+ * screen that overrides tokens on its :host keeps its look).
  */
 
 const inherit = /* @__PURE__ */ css`
@@ -191,7 +191,7 @@ const windowCss = /* @__PURE__ */ css`
     cursor: not-allowed;
     background: transparent;
   }
-  /* Placement (contract r3). Once placed, the panel has an explicit size and the body scrolls. */
+  /* Placement. Once placed, the panel has an explicit size and the body scrolls. */
   .header.movable {
     padding-inline-start: 8px;
     cursor: grab;
@@ -246,7 +246,7 @@ const windowCss = /* @__PURE__ */ css`
   .footer[hidden] {
     display: none;
   }
-  /* Phones (CEO D8): a window is never full screen. It keeps its rounded corners and a margin; the sheet variant docks to the bottom edge. */
+  /* Phones: a window is never full screen. It keeps its rounded corners and a margin; the sheet variant docks to the bottom edge. */
   @media (max-width: 599px) {
     dialog.sheet {
       width: 100vw;
@@ -296,7 +296,7 @@ export const kitPopoverElementCss: CSSResult = /* @__PURE__ */ css`
 `;
 
 /*
- * ui-kit 1.1.0 r5: disclosure row and the tile / chip groups. Same token-with-fallback rule as above.
+ * ui-kit 1.1.0: disclosure row and the tile / chip groups. Same token-with-fallback rule as above.
  * The groups wrap at every width without media queries (auto-fill with a percentage floor), so 320 px and 200 %
  * zoom show two tiles or three chips per row and never scroll sideways (Chromium 85 has no container queries).
  */
