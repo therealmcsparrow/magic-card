@@ -62,7 +62,7 @@ function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModul
       const u = __webpack_require__.u;
       __webpack_require__.u = (id) => {
         const url = u(id);
-        return retrying ? url + (url.includes('?') ? '&' : '?') + 'r=' + ++retries : url;
+        return retrying ? url + '?r=' + ++retries : url;
       };
     }
     retrying = true;
@@ -76,7 +76,7 @@ function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModul
 
 const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 
-// ── manifest check (off: no build writes dist/magic-card-manifest.js; tests switch it on) ──────────────
+// ── manifest check ───────────────────────────────────────────────────────────────────────────────
 
 const pageId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
@@ -87,7 +87,7 @@ export const manifestUrl = (id: string = pageId): string => {
   return url.href;
 };
 
-let manifestOn = false; // off: no build writes dist/magic-card-manifest.js; only __manifestForTests switches it on
+let manifestOn = true;
 let loadManifest = (url: string): Promise<{ default?: { build?: string } }> => import(/* webpackIgnore: true */ url);
 let manifest: Promise<boolean> | undefined;
 

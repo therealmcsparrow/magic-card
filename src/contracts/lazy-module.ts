@@ -96,8 +96,8 @@ import type { MagicModule } from '../modules/module-types';
  * Each chunk entry module exports LazyChunkModule and nothing runs at evaluation that changes
  * global state: no customElements.define, no @customElement decorator, no ModuleRegistry call, no
  * marked.setOptions at module top level, in the entry or in any file only the chunk contains. All of
- * that happens in install(). Reason: the server ignores the `?v=<contenthash>` query, so an
- * old cached magic-card.js can receive a newer chunk for the old URL; evaluating it must be
+ * that happens in install(). Reason: a cached magic-card.js of another release can still load a
+ * chunk file next to it (the files of older releases stay on disk); evaluating it must be
  * harmless, and install() is never called on a mismatch.
  *
  * ── Rendering rules (registry wrapper around a LazyModuleStub) ──

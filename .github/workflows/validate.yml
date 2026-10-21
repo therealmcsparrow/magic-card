@@ -90,6 +90,10 @@ jobs:
           npm run dups
       - name: Dist size budget
         run: npm run size
+      - name: Manifest matches dist (.js names only)
+        run: |
+          npm run manifest:selftest
+          npm run manifest
       - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
         # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
         # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit

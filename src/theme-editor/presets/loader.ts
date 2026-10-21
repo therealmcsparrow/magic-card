@@ -26,7 +26,10 @@ const real: Importer = () => {
   if (tries++ && typeof __webpack_require__ !== 'undefined') {
     const u = __webpack_require__.u;
     const n = tries;
-    __webpack_require__.u = (id) => `${u(id)}&r=${n}`;
+    __webpack_require__.u = (id) => {
+      const url = u(id);
+      return `${url}${url.includes('?') ? '&' : '?'}r=${n}`;
+    };
   }
   return import(/* webpackChunkName: "theme-presets" */ './chunk');
 };

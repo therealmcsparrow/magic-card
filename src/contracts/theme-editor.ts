@@ -255,8 +255,8 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
 /**
  * The preset chunk: every editor preset (25 original, 20 inspired, 12 genre: 57 in all) and the
  * create dialog's picker live in one lazy webpack chunk of the theme editor entry,
- * webpackChunkName THEME_PRESETS_CHUNK, emitted as dist/THEME_PRESETS_CHUNK_FILE (served with
- * `?v=<contenthash>`, next to the entry). The entry holds no preset data and no picker markup or
+ * webpackChunkName THEME_PRESETS_CHUNK, emitted as dist/THEME_PRESETS_CHUNK_FILE (with the
+ * content hash in its file name, next to the entry). The entry holds no preset data and no picker markup or
  * styles.
  *
  * The loader accepts any major 1. Group 'genre' ("Sci-fi & fantasy"
@@ -294,7 +294,7 @@ export const TRIAL_STYLE_ID = 'mc-theme-trial';
  * THEME_PRESET_LIBRARY.version is not major 1 or `presets` is not a non-empty array; every
  * rejection clears the memo so "Try again" calls import() again.
  * Retry: browsers cache a failed native import() per URL, so every import() call after the first
- * rewrites the chunk URL (`&r=<n>` appended to the `?v=` query through webpack's chunk-URL
+ * rewrites the chunk URL (`r=<n>` appended as a query through webpack's chunk-URL
  * function). webpack reads that URL only when it starts a new request, and it keeps the chunk's
  * in-flight request until that request fails. So:
  * - after a load error, Try again requests the chunk under a new URL;

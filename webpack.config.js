@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const { ManifestPlugin } = require('./tools/manifest-plugin.cjs');
 
 // The release src/version.ts holds, as a literal for the editor chunk's EDITOR_VERSION: the chunk must
 // carry its own copy so a cached magic-card.js from another release notices (src/utils/editor-loader.ts)
@@ -49,8 +50,8 @@ module.exports = (env, argv) => {
     },
     output: {
       filename: '[name].js',
-      // the query busts caches when the chunk changes (HACS' ?hacstag= only reaches the entry URL)
-      chunkFilename: 'magic-card-[name].js?v=[contenthash:8]',
+      // the hash is in the file name: HA's file server ignores any query, so a changed chunk needs a new name
+      chunkFilename: 'magic-card-[name].[contenthash:8].js',
       // set at run time from import.meta.url (src/index.ts, src/*/public-path.ts); '' keeps webpack's document.currentScript probe out
       publicPath: '',
       // chunks are ES modules loaded with native import() (smallest loader; works from the module
@@ -120,6 +121,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({ __MC_BUILD_VERSION__: JSON.stringify(buildVersion()) }),
+      // dist/magic-card-manifest.js: the release and the logical -> hashed chunk file names (read by the card after a chunk failed)
+      new ManifestPlugin({ build: buildVersion() }),
       // the module list per built file for the i18n placement check (tools/i18n/placement.mjs, D7); git-ignored cache
       ...(isProduction ? [{ apply: (compiler) => compiler.hooks.done.tap('mc-i18n-stats', writeI18nStats) }] : []),
     ],

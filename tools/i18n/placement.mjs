@@ -11,7 +11,7 @@ export const STATS_FILE = path.join(lib.ROOT, 'node_modules/.cache/magic-card/i1
 /** Files that carry their own copy of src/i18n/runtime.ts (three entries; chunks below reuse a copy). */
 const RUNTIME_FILES = ['magic-card.js', 'magic-card-animation-studio.js', 'magic-card-theme-editor.js'];
 
-const fileOf = (name) => name.replace(/\?.*$/, '');
+const fileOf = (name) => name.replace(/\?.*$/, '').replace(/\.[0-9a-f]{8}\.js$/, '.js');
 
 /** dist file names an I18N_MODULES `bundle` / `chunk` text names; text in parentheses is a remark. */
 const filesIn = (text) => [...(text ?? '').replace(/\((?:[^()]|\([^()]*\))*\)/g, ' ').matchAll(/magic-card[\w-]*\.js/g)].map((m) => m[0]);
