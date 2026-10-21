@@ -3,7 +3,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import type { HomeAssistant, PopupConfig, PopupTrigger } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import { POPUP_DEFAULTS, isValidPopupHash, normalizePopupHash, popupHashError } from '../../utils/popup';
-import { popupCoordinator } from '../../card/popup-coordinator';
+import { popupIfLoaded } from '../../card/popup-seam';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { fieldReset } from './field-reset';
 
 import './unit-field';
@@ -208,8 +209,10 @@ export class PopupSettings extends LitElement {
     }
   }
 
-  private _preview(): void {
-    this._say(popupCoordinator.preview(this.canvas) ? '' : t('No preview of this card to open yet'));
+  /** The coordinator is in the popup chunk: load it (a previewed pop-up card has already asked for it), then ask. */
+  private async _preview(): Promise<void> {
+    await lazyChunks.popup.load();
+    this._say(popupIfLoaded()?.api.preview(this.canvas) ? '' : t('No preview of this card to open yet'));
   }
 
   protected render(): TemplateResult {

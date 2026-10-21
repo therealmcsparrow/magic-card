@@ -76,8 +76,10 @@ import { renderModuleContent } from '../modules/render-module';
 import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity-control';
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
-import { PopupController } from './popup-controller';
-import { EditorPlace, navigateToPopup, popupCoordinator } from './popup-coordinator';
+import type { PopupController } from './popup-controller';
+import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
+import { popupIfLoaded } from './popup-seam';
+import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import { animationLibrary, inlineAnimations } from '../services/animation-library';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { SequencePlayer } from './sequence-player';
@@ -432,11 +434,44 @@ export class MagicCard extends LitElement {
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
-  /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. */
-  private readonly _popup = new PopupController(this, {
-    config: () => (this._resolvedConfig ?? this._config)?.popup,
-    editorPlace: () => this._editorPlace(),
-  });
+  /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. Made once the `popup` chunk has installed and the config sets up a pop-up. */
+  private _popupCtl?: PopupController;
+  private _popupWait = false;
+  private _popupReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
+  /**
+   * A pop-up card on a live dashboard takes no room. It follows the config and the place alone, so it holds before the
+   * chunk has loaded; if the chunk failed, the card shows its notice in the flow instead.
+   */
+  private get _popupHidden(): boolean {
+    return popupHidden((this._resolvedConfig ?? this._config)?.popup, this._editorPlace()) && !this._popupFailed;
+  }
+  private get _popupFailed(): boolean {
+    return failedChunkNames().has('popup') && !popupIfLoaded();
+  }
+  private get _popupOpen(): boolean {
+    return !!this._popupCtl?.isOpen;
+  }
+  /** The controller when the chunk is there; else the card asks for the chunk once and draws again when it has installed. */
+  private _popupFor(c: MagicCardConfig): PopupController | undefined {
+    if (this._popupCtl) return this._popupCtl;
+    if (!wantsPopup(c)) return undefined;
+    const mod = popupIfLoaded();
+    if (!mod) {
+      this._met.add('popup');
+      if (!this._popupWait) {
+        this._popupWait = true;
+        lazyChunks.popup.whenReady(this._popupReady);
+        void lazyChunks.popup.load();
+      }
+      return undefined;
+    }
+    return (this._popupCtl = mod.api.create(this, {
+      config: () => (this._resolvedConfig ?? this._config)?.popup,
+      editorPlace: () => this._editorPlace(),
+    }));
+  }
   /** The card's `seasonal` setting of the config being rendered (a conditional rule can set it). */
   private _seasonalSetting(): MagicCardConfig['seasonal'] {
     return (this._look ?? this._resolvedConfig ?? this._config)?.seasonal;
@@ -456,7 +491,7 @@ export class MagicCard extends LitElement {
       const place = this._editorPlace();
       return place === 'canvas' || place === 'card-editor';
     },
-    idle: () => this._popup.hidden && !this._popup.isOpen,
+    idle: () => this._popupHidden && !this._popupOpen,
   });
 
   /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
@@ -554,7 +589,7 @@ export class MagicCard extends LitElement {
 
   getCardSize(): number {
     // a pop-up on a live dashboard takes no room (masonry places the next card right here)
-    if (this._popup.hidden) return 0;
+    if (this._popupHidden) return 0;
     if (!this._config?.rows) return 1;
     return Math.max(this._config.rows.length, 1);
   }
@@ -565,12 +600,12 @@ export class MagicCard extends LitElement {
    * the card then takes out of the flow (see PopupController).
    */
   getGridOptions(): Record<string, unknown> {
-    return this._popup.hidden ? { columns: 'full', rows: 'auto', min_rows: 0 } : {};
+    return this._popupHidden ? { columns: 'full', rows: 'auto', min_rows: 0 } : {};
   }
 
   /** Older HA (before getGridOptions). */
   getLayoutOptions(): Record<string, unknown> {
-    return this._popup.hidden ? { grid_columns: 'full', grid_rows: 'auto', grid_min_rows: 0 } : {};
+    return this._popupHidden ? { grid_columns: 'full', grid_rows: 'auto', grid_min_rows: 0 } : {};
   }
 
   connectedCallback(): void {
@@ -600,7 +635,7 @@ export class MagicCard extends LitElement {
   /** Re-render on a timer when a module or a time condition asks for it, aligned to the interval. */
   private _syncTicker(): void {
     // a closed pop-up has nothing on screen to refresh
-    const idle = this._popup.hidden && !this._popup.isOpen;
+    const idle = this._popupHidden && !this._popupOpen;
     const interval = this.isConnected && !idle ? this._dependencies().refreshInterval : undefined;
     if (interval === this._tickInterval && (interval === undefined || this._tickTimer !== undefined)) return;
     if (this._tickTimer !== undefined) window.clearTimeout(this._tickTimer);
@@ -621,7 +656,7 @@ export class MagicCard extends LitElement {
     // Module texts in the user's language from the first hass on (not only when it changes later).
     if (changedProperties.has('hass') && this.hass) setI18nLocale(this.hass);
     if (changedProperties.has('hass')) {
-      this._popup.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
+      this._popupCtl?.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
     }
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
@@ -645,7 +680,7 @@ export class MagicCard extends LitElement {
       }
 
       // A closed pop-up renders nothing but its (empty) dialog: no entity re-renders.
-      if (this._popup.hidden && !this._popup.isOpen) return false;
+      if (this._popupHidden && !this._popupOpen) return false;
 
       // the seasonal scene's own entities (off switch, weather, sun): only when the scene changes
       if (this._seasonal.changed(oldHass)) return true;
@@ -694,6 +729,7 @@ export class MagicCard extends LitElement {
     this._subscriptions.end();
     this._media.end();
     this._syncTicker();
+    holdOutOfFlow(this, this._popupHidden && this.isConnected);
     // a notice of a failed chunk shows: the css makes ha-card the scroll box (the attribute is on no other render)
     this.toggleAttribute('mc-fail', !!this.renderRoot?.querySelector('.mc-n'));
 
@@ -764,6 +800,7 @@ export class MagicCard extends LitElement {
     this._templates.hostDisconnected();
     this._subscriptions.hostDisconnected();
     this._media.hostDisconnected();
+    holdOutOfFlow(this, false);
     this._syncTicker();
     for (const timer of this._pendingTimers) window.clearTimeout(timer);
     this._pendingTimers.clear();
@@ -820,12 +857,16 @@ export class MagicCard extends LitElement {
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
     loadGoogleFonts(configGoogleFonts(config));
-    const popup = this._popup.isPopup();
-    this.toggleAttribute('data-mc-popup-hidden', this._popup.hidden);
-    this.toggleAttribute('data-mc-popup-editor', popup && !this._popup.hidden);
+    const popup = isPopupEnabled(config.popup);
+    const popupCtl = this._popupFor(config);
+    const popupHere = this._popupHidden;
+    this.toggleAttribute('data-mc-popup-hidden', popupHere);
+    this.toggleAttribute('data-mc-popup-editor', popup && !popupHere);
     const titleId = `${this._renderContext.instance}-popup-title`;
-    // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers
-    if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
+    // the popup chunk failed: the pop-up cannot open, so the card shows only its notice
+    if (popup && this._popupFailed) return html`<ha-card><div class="mc-card-content">${this._failNotices(config, nothing)}</div></ha-card>`;
+    // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers (nothing until the chunk is there)
+    if (popupHere && !popupCtl?.isOpen) return popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
 
     // the scope first: the card's own display template reads entity / card_entity
     // the viewer's pause: on the host and the observer before any child is built
@@ -833,7 +874,7 @@ export class MagicCard extends LitElement {
     const paused = pause?.begin(config) ?? false;
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
-      return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
+      return popupHere && popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
     }
 
     const scopeState = scope ? this.hass?.states[scope] : undefined;
@@ -894,7 +935,7 @@ export class MagicCard extends LitElement {
         : nothing}`;
     };
 
-    const inline = this._popup.hidden
+    const inline = popupHere
       ? nothing
       : withShapeShadow(html`
           <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
@@ -908,7 +949,7 @@ export class MagicCard extends LitElement {
             </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `, shadow, !!shape);
-    if (!popup) return inline as TemplateResult;
+    if (!popup || !popupCtl) return inline as TemplateResult;
 
     // the pop-up surface: the card's background, shadow and theme on ha-card, padding etc. inside
     const parts = splitDeclarations(cardStyle);
@@ -919,11 +960,11 @@ export class MagicCard extends LitElement {
       ...parts.filter((p) => !onSurface(p) && prop(p) !== 'border-radius'),
       insets && insetPaddingStyle(undefined, contentPad, { min: insets }),
     ].filter(Boolean).join('; ');
-    const surface = this._popup.isOpen
+    const surface = popupCtl.isOpen
       ? html`
           <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${layerCss}${this._popup.renderHead(titleId)}
+            ${layerCss}${popupCtl.renderHead(titleId)}
             <div class="mc-popup-body">
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
@@ -935,10 +976,10 @@ export class MagicCard extends LitElement {
         `
       : nothing;
     const label = config.popup?.title?.trim() || config.name || t('Pop-up');
-    const dialog = this._popup.renderDialog(surface, label, titleId, resolved.border_radius);
-    if (this._popup.hidden) return dialog;
+    const dialog = popupCtl.renderDialog(surface, label, titleId, resolved.border_radius);
+    if (popupHere) return dialog;
     // in an editor the card stays inline, marked as a pop-up
-    const id = this._popup.popupId();
+    const id = popupCtl.popupId();
     return html`
       <div class="mc-popup-badge" aria-hidden="true">
         <ha-icon icon="mdi:dock-window"></ha-icon>${t('Pop-up')}${id ? html` · #${id}` : nothing}
@@ -1774,7 +1815,8 @@ export class MagicCard extends LitElement {
         break;
 
       case 'close-popup':
-        popupCoordinator.closeOpen();
+        // no chunk loaded: no pop-up can be open
+        popupIfLoaded()?.api.closeOpen();
         break;
 
       case 'fire-dom-event':

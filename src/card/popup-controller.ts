@@ -1,17 +1,9 @@
 import { html, nothing, TemplateResult, ReactiveController, ReactiveControllerHost } from 'lit';
 import type { HomeAssistant, PopupConfig } from '../types';
-import {
-  SwipeTracker,
-  autoCloseMs,
-  hashMatches,
-  isPopupEnabled,
-  popupHash,
-  popupStyle,
-  popupStyleVars,
-  triggerFired,
-  urlWithHash,
-} from '../utils/popup';
-import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupCoordinator } from './popup-coordinator';
+import { isPopupEnabled, popupHash, urlWithHash } from '../utils/popup';
+import { SwipeTracker, autoCloseMs, hashMatches, popupStyle, popupStyleVars, triggerFired } from '../utils/popup-run';
+import { popupCoordinator } from './popup-coordinator';
+import { EditorPlace, LocationChange, PopupHandle, navigateToPopup, popupHidden } from './popup-nav';
 import { t } from './i18n';
 
 export type PopupPhase = 'closed' | 'open' | 'closing';
@@ -21,16 +13,6 @@ type CloseReason = 'user' | 'location' | 'other' | 'silent';
 
 /** Close animation length (CSS: 0.28s); none with reduced motion. */
 export const POPUP_CLOSE_MS = 280;
-
-const PLACEHOLDER_STYLE: Record<string, string> = {
-  position: 'absolute',
-  width: '0',
-  height: '0',
-  margin: '0',
-  padding: '0',
-  'min-height': '0',
-  overflow: 'visible',
-};
 
 export interface PopupControllerOptions {
   /** The card's pop-up settings (resolved config). */
@@ -72,7 +54,6 @@ export class PopupController implements ReactiveController, PopupHandle {
   private _autoTimer?: number;
   private _initialChecked = false;
   private _returnFocus: HTMLElement | null = null;
-  private _placeholders: Array<{ el: HTMLElement; saved: Record<string, string> }> = [];
   private readonly _swipe = new SwipeTracker();
 
   constructor(
@@ -98,7 +79,7 @@ export class PopupController implements ReactiveController, PopupHandle {
 
   /** Pop-up mode on a live dashboard: the card itself is not in the flow. */
   get hidden(): boolean {
-    return this.isPopup() && !this.editorPlace();
+    return popupHidden(this.opts.config(), this.editorPlace());
   }
 
   get isOpen(): boolean {
@@ -120,13 +101,11 @@ export class PopupController implements ReactiveController, PopupHandle {
   hostDisconnected(): void {
     popupCoordinator.unregister(this);
     this._finish(false);
-    this._restorePlaceholders();
     window.clearTimeout(this._awaitPopTimer);
     this._awaitPop = false;
   }
 
   hostUpdated(): void {
-    this._syncPlaceholders();
     if (!this._listening()) {
       this._initialChecked = false;
       // left pop-up mode or moved into an editor: a hash / trigger pop-up closes (a preview stays)
@@ -161,47 +140,6 @@ export class PopupController implements ReactiveController, PopupHandle {
   private _focusInside(dlg: HTMLDialogElement): void {
     const target = dlg.querySelector<HTMLElement>('.mc-popup-close') ?? dlg.querySelector<HTMLElement>('.mc-popup-surface');
     target?.focus({ preventScroll: true });
-  }
-
-  // ── the card's layout placeholder ──
-
-  /**
-   * A live pop-up card takes no room: the card, HA's hui-card around it and the sections grid
-   * cell (div.card) are taken out of the flow with zero size. Not display: none, which would hide
-   * the top-layer dialog inside them too (HA hides a hidden card's cell that way).
-   */
-  private _syncPlaceholders(): void {
-    const want = this.hidden && this.host.isConnected;
-    if (!want) {
-      this._restorePlaceholders();
-      return;
-    }
-    if (this._placeholders.length) return;
-    const els: HTMLElement[] = [this.host];
-    const card = this.host.parentElement;
-    if (card?.localName === 'hui-card') {
-      els.push(card);
-      const cell = card.parentElement;
-      if (cell?.localName === 'div' && cell.classList.contains('card')) els.push(cell);
-    }
-    this._placeholders = els.map((el) => {
-      const saved: Record<string, string> = {};
-      for (const [prop, value] of Object.entries(PLACEHOLDER_STYLE)) {
-        saved[prop] = el.style.getPropertyValue(prop);
-        el.style.setProperty(prop, value);
-      }
-      return { el, saved };
-    });
-  }
-
-  private _restorePlaceholders(): void {
-    for (const { el, saved } of this._placeholders) {
-      for (const [prop, value] of Object.entries(saved)) {
-        if (value) el.style.setProperty(prop, value);
-        else el.style.removeProperty(prop);
-      }
-    }
-    this._placeholders = [];
   }
 
   // ── opening and closing ──

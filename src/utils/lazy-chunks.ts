@@ -43,6 +43,8 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   flows: lazyChunk('flows', () => import(/* webpackChunkName: "flows" */ '../card/flows-chunk')),
   // the Pause motion button; the card reads it through src/card/pause-seam.ts
   pause: lazyChunk('pause', () => import(/* webpackChunkName: "pause" */ '../card/pause-chunk')),
+  // the pop-up controller and the page's pop-up coordinator; the card and the editor read it through src/card/popup-seam.ts
+  popup: lazyChunk('popup', () => import(/* webpackChunkName: "popup" */ '../card/popup-chunk')),
   'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
   'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
   // <mc-bg-stack>, the card backdrop

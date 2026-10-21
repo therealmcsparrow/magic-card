@@ -106,6 +106,7 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-theme-presets.js` | The Themes tab's create dialog, when it opens, for the 57 presets. Dashboards and the card editor never load it. |
 | `magic-card-flows.js` | Cards with flow lines. The card shows without the lines until this file has loaded. |
 | `magic-card-pause.js` | Cards that show the Pause motion button (`pause_button` set to auto or always). The card keeps room for the button and draws it when this file has loaded. |
+| `magic-card-popup.js` | Cards set up as a pop-up. The card stays out of the layout until this file has loaded, then opens if the page address already ends in its `#id`. |
 | `magic-card-flow-look.js` | Cards with a flow look (animated lines that run across the card). Loaded when the card config uses one. |
 | `magic-card-slider-look.js` | Cards with a slider look (the styled slider track, fill and handle). Loaded when the card config uses one. |
 | `magic-card-layers.js` | Cards with Card backdrop layers (pictures, gradients, patterns, colours and cameras behind the card content). |

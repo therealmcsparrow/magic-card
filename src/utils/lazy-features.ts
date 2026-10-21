@@ -1,5 +1,6 @@
 import type { LazyChunkName, LazyFeature, NeedsCheck } from '../contracts/lazy-module';
 import type { CardModule } from '../types';
+import { wantsPopup } from './popup';
 import { wantsPause } from '../contracts/card-pause.needs';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
@@ -54,6 +55,8 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   flows: row('flows', (c) => configHas(c, hasFlows)),
   // `pause_button` auto or always
   pause: row('pause', wantsPause),
+  // `popup.enabled` is true
+  popup: row('popup', wantsPopup),
   'flow-look': row('flow-look', (c) => configHas(c, (n) => Array.isArray(n.flows) && n.flows.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj)))),
   'slider-look': row('slider-look', (c) => configHas(c, (n) => n.type === 'slider' && hasSliderLook(n))),
   layers: row('layers', wantsLayers),

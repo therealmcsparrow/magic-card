@@ -171,6 +171,11 @@
       "ceiling": 16384,
       "note": "4 KiB, measured 3,763 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The Pause motion button class and its rules. The contract ceiling is 16,384 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
+    "magic-card-popup.js": {
+      "raw": 15360,
+      "ceiling": 20480,
+      "note": "15 KiB, measured 13,982 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. The pop-up controller, the page coordinator and the pop-up rules. The contract ceiling is 20,480 B (lazy-module LAZY_CHUNK_CEILINGS)."
+    },
     "magic-card-flow-look.js": {
       "raw": 32768,
       "ceiling": 32768,

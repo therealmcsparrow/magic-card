@@ -60,6 +60,15 @@ import type { MagicModule } from '../modules/module-types';
  *   `api.create` (src/card/pause-seam.ts). Its needs() is wantsPause (src/contracts/card-pause.needs.ts). The 24 px strip
  *   the button sits in follows the config (`data-mc-pause-gap`, plain sheet), not the chunk, so installing it moves nothing.
  *   The offscreen observer hooks (src/icons/offscreen.ts) stay in the card bundle.
+ * - LazyChunkName includes 'popup' (dist/magic-card-popup.js, ceiling 20,480 B, chunk entry src/card/popup-chunk.ts). It holds
+ *   the PopupController (open and close, dialog, focus, history, triggers, swipe), the page's one PopupCoordinator (no other
+ *   bundle may hold a copy, so the editor reaches it only through the chunk `api`: knownIds, preview, closeOpen) and the
+ *   pop-up rules (`styles`). The card and the editor read the chunk through src/card/popup-seam.ts; its needs() is wantsPopup
+ *   (src/utils/popup.ts). What must hold before the chunk loads stays in the entry and follows the config alone: whether
+ *   the card is a hidden pop-up (popupHidden, `data-mc-popup-hidden`, `data-mc-popup-editor` and their host rules in the plain sheet, the taken-out-of-flow styles of the
+ *   card, hui-card and grid cell: src/card/popup-nav.ts), so a pop-up card never shows in the layout early and installing
+ *   the chunk moves nothing. navigateToPopup and the PopupHandle types are in popup-nav.ts too. The controller attaches
+ *   after the install and opens a pop-up whose #id is already in the URL, without a history entry.
  * - `anim` is the parent chunk of 'anim-runtime', 'particles' and the editor chunk (their literal
  *   import()s sit in src/anim-studio/anim-chunk.ts), so webpack leaves the modules `anim` holds out of
  *   them. Chunk entries may export `api` for the one copy of their stateful modules: svg-icon (icon
@@ -263,7 +272,7 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 7;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flows' | 'pause' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -272,6 +281,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   'modules-extra': 'magic-card-modules-extra.js',
   flows: 'magic-card-flows.js',
   pause: 'magic-card-pause.js',
+  popup: 'magic-card-popup.js',
   'flow-look': 'magic-card-flow-look.js',
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
@@ -293,6 +303,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   flows: 57_344,
   /** The Pause motion button class and its rules. */
   pause: 16_384,
+  /** The pop-up controller, the page's pop-up coordinator and the pop-up rules. */
+  popup: 20_480,
   'flow-look': 32_768,
   'slider-look': 28_672,
   /** Stack (15.3 KiB measured) + placement runtime and layer CSS (about 5-6 KiB). */
@@ -303,8 +315,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   anim: 90_112,
 };
 
-/** Which module types each chunk serves (seasonal, flows, pause, flow-look, slider-look and layers serve no module type). */
-export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
+/** Which module types each chunk serves (seasonal, flows, pause, popup, flow-look, slider-look and layers serve no module type). */
+export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
   'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],
