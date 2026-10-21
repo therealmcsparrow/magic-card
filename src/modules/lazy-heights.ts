@@ -102,7 +102,7 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
  * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
  * `design.line_height` as a number or a numeric string; a length counts per line, and a percentage too, because
  * the line boxes inherit it as the length it computes to (150% of 16 px is 24 px on both lines), not as a factor;
- * anything else is 1.2, about the `normal` line height of the theme font.
+ * anything else is 1.17, about the `normal` line height of the theme font.
  */
 export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
   const d = config.design;
@@ -114,6 +114,6 @@ export function clockMinHeight(config: { show_date?: boolean; design?: { height?
   if (typeof v === 'string' && /^\d*\.?\d+(px|em|rem)$/.test(v) && parseFloat(v) > 0) return `calc(${v} * ${lines})`;
   if (typeof v === 'string' && /^\d*\.?\d+%$/.test(v) && parseFloat(v) > 0) return `calc(${parseFloat(v) / 100}em * ${lines})`;
   const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? Number(v) : v;
-  const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.2;
+  const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.17;
   return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
 }

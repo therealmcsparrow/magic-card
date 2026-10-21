@@ -1,5 +1,5 @@
 // Reserve probe for the lazy clock and image stubs: renders each case in a 400 px card with the modules-extra chunk held
-// back, measures the module's wrapper, releases the chunk and measures again. The clock may differ by at most 2.5 px (the system sans-serif fallback has a normal line height of 1.15, the reserve assumes 1.2), the image by 0.
+// back, measures the module's wrapper, releases the chunk and measures again. The clock may differ by at most 1.5 px (the system sans-serif fallback has a normal line height of 1.15, the reserve assumes 1.17), the image by 0.
 // Usage: node dev/probe-lazy-reserve.mjs <dist dir>   (a production build of magic-card.js and its chunks)
 import puppeteer from 'puppeteer-core';
 import http from 'node:http';
@@ -15,13 +15,13 @@ const CHROME = [
 const DIST = path.resolve(process.argv[2] ?? 'dist');
 
 const cases = [
-  { name: 'clock', module: { type: 'clock' }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, no date', module: { type: 'clock', show_date: false }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, line_height 1.6', module: { type: 'clock', design: { line_height: 1.6 } }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, line_height 1.6 no date', module: { type: 'clock', show_date: false, design: { line_height: 1.6 } }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, line_height 24px', module: { type: 'clock', design: { line_height: '24px' } }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, line_height 150%', module: { type: 'clock', design: { line_height: '150%' } }, sel: '.mc-clock', tol: 2.5 },
-  { name: 'clock, seconds and long date', module: { type: 'clock', show_seconds: true, date_format: 'long' }, sel: '.mc-clock', tol: 2.5 },
+  { name: 'clock', module: { type: 'clock' }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, no date', module: { type: 'clock', show_date: false }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, line_height 1.6', module: { type: 'clock', design: { line_height: 1.6 } }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, line_height 1.6 no date', module: { type: 'clock', show_date: false, design: { line_height: 1.6 } }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, line_height 24px', module: { type: 'clock', design: { line_height: '24px' } }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, line_height 150%', module: { type: 'clock', design: { line_height: '150%' } }, sel: '.mc-clock', tol: 1.5 },
+  { name: 'clock, seconds and long date', module: { type: 'clock', show_seconds: true, date_format: 'long' }, sel: '.mc-clock', tol: 1.5 },
   { name: 'clock, design height', module: { type: 'clock', design: { height: '80px' } }, sel: '.mc-clock', tol: 0 },
   ...['16:9', '4/3', 1.5, '56.25%', undefined, 'bad', 0].map((r) => ({
     name: `image ${r}`, module: { type: 'image', image: 'data:image/gif;base64,R0lGODlhAQABAAAAACw=', aspect_ratio: r }, sel: '.mc-image', tol: 0,
