@@ -8,7 +8,7 @@ import { __resetIconSourceForTests } from '../src/icons/icon-source';
 import type { McSvgEditor } from '../src/svg-editor/mc-svg-editor';
 
 /*
- * Outline stroke (CEO report 2026-10-18: "does not make it from a line to a shape"). Path tools > Outline stroke must
+ * Outline stroke ("does not make it from a line to a shape"). Path tools > Outline stroke must
  * turn a stroked layer into a filled, closed shape: stroke removed, the former stroke paint (main / accent) becomes
  * the fill; a layer that had fill and stroke keeps its fill and gains "<name> outline" (contract path-tools 1.0.0,
  * host mapping src/svg-editor/pathtools.ts plan()). Four cases from the report, then the one defect found on the way.
