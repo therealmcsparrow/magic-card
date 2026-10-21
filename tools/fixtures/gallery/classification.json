@@ -1,6 +1,6 @@
 {
   "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
-  "plain_keys_sha256": "c9b044eaa818bf32de576af8219bd5f15409f346a27fcadb96c21ff7acd234b0",
+  "plain_keys_sha256": "f8796e655d5bc276cd1dd815993b2720aab7b504827337a5f84e4affae7a323d",
   "count": 137,
   "plain": 18,
   "feature": 119,

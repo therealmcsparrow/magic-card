@@ -59,8 +59,7 @@ import { childScope, effectiveEntity } from '../utils/entity-scope';
 import type { EntityScopeNode } from '../contracts/entity-scope';
 import { ModuleRegistry } from '../modules/module-registry';
 import { entityStateColor } from '../utils/entity-color';
-import { mergeTemplateWithOverrides } from '../services/template-merge';
-import { templateSource } from '../services/template-source';
+import { templatesIfLoaded } from './templates-seam';
 import { ConfigValidator } from '../services/config-validator';
 import { ConditionsService } from '../services/conditions-service';
 import { collectDependencies, CardDependencies } from '../services/card-dependencies';
@@ -143,8 +142,11 @@ interface FillFrame {
   out: TemplateResult[];
 }
 
-/** The chunks whose lazy modules show their own failure notice in the module slot: the card adds none (the keys of LAZY_MODULE_TYPES). */
-export const SLOT_NOTICE_CHUNKS: readonly string[] = ['slider', 'markdown', 'modules-extra', 'controls'];
+/**
+ * The chunks whose failure the card shows in its own place and not with the chunk notice: the keys of LAZY_MODULE_TYPES (their
+ * module slot) and `templates` (the template notice).
+ */
+export const SLOT_NOTICE_CHUNKS: readonly string[] = ['slider', 'markdown', 'modules-extra', 'controls', 'templates'];
 
 /** Counter for RenderContext.instance. */
 let cardInstances = 0;
@@ -578,9 +580,7 @@ export class MagicCard extends LitElement {
     this._wantShapes(this._config);
 
     // Same template: re-merge the new local config (overrides may have changed) without refetching.
-    if (this._templateConfig) {
-      this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-    }
+    if (this._templateConfig) lazyChunks.templates.whenReady(this._remerge);
     // lazy modules and the seasonal set: start their chunks now, all at once
     this._prefetch(this._resolvedConfig ?? this._config);
   }
@@ -812,7 +812,28 @@ export class MagicCard extends LitElement {
     this._watchedTemplate = name;
     this._watchedConn = conn;
     if (!name) return;
-    this._unwatchTemplate = templateSource.watch(this.hass as never, name, (state) => {
+    // the card shows its own settings until the chunk and then the template arrive; a chunk that cannot load leaves them with the notice
+    lazyChunks.templates.whenReady(this._templateReady);
+    void lazyChunks.templates.load().then(() => {
+      if (!lazyChunks.templates.failed() || this._watchedTemplate !== name) return;
+      this._templateNotice = 'unavailable';
+      this.requestUpdate();
+    });
+  }
+
+  /** Merge the fetched template with this card's config (the chunk is installed whenever a template config is held). */
+  private _remerge = (): void => {
+    const m = templatesIfLoaded();
+    if (m && this._templateConfig && this._config) this._resolvedConfig = withConfigIds(m.api.mergeTemplateWithOverrides(this._templateConfig, this._config));
+  };
+
+  /** The `templates` chunk has installed: watch the template this card is linked to (once per name and connection). */
+  private _templateReady = (): void => {
+    const name = this._watchedTemplate;
+    const m = templatesIfLoaded();
+    if (!name || !m || !this.hass || this._unwatchTemplate) return;
+    this._templateNotice = undefined;
+    this._unwatchTemplate = m.api.templateSource.watch(this.hass as never, name, (state) => {
       if (this._config?.template !== name) return;
       this._templateNotice = state.status === 'missing' || state.status === 'unavailable' ? state.status : undefined;
       if (state.status === 'ready') {
@@ -821,8 +842,8 @@ export class MagicCard extends LitElement {
           const tpl = { type: 'custom:magic-card', ...state.config };
           if (!ConfigValidator.validate(tpl).valid) throw new Error('invalid template config');
           this._templateConfig = tpl as unknown as MagicCardConfig;
-          this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-          this._prefetch(this._resolvedConfig);
+          this._remerge();
+          this._prefetch(this._resolvedConfig!);
         } catch (err) {
           console.warn('Magic Card: template config is invalid', name, err);
           this._templateNotice = 'unavailable';
@@ -835,7 +856,7 @@ export class MagicCard extends LitElement {
       }
       this.requestUpdate();
     });
-  }
+  };
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
