@@ -99,7 +99,7 @@ import type { ParticleSlot } from '../anim-studio/compile';
  * - compile.ts compileSim: CompiledAnimation.css = part 0 css + part 1 css (unmeasured pools);
  *   CompiledAnimation gets optional `split: { name, layer: CompiledLayer, sim }` from
  *   CompiledParticlesV2.other, with sim.part = 1. Absent when there is no part 1.
- * - utils/animation.ts customEntry: after part 0's FxLayer it pushes part 1's FxLayer (same style,
+ * - anim-studio/resolve.ts customEntry: after part 0's FxLayer it pushes part 1's FxLayer (same style,
  *   tap and timing, its own `front`, `particles`, `sim`). The two spans are adjacent in the wrapper,
  *   in the entry's place, so their order against other entries' layers, seasonal, ring, value
  *   background, border lines and shape is what one layer had. Back parts sit at z-index -1, front
@@ -110,7 +110,7 @@ import type { ParticleSlot } from '../anim-studio/compile';
  *
  * Implementation: module `particles` (src/particles/, lazy chunk dist/magic-card-particles.js, cap
  * 38,912 B; the studio bundle imports src/particles/index.ts directly).
- * Consumers: the card (src/utils/animation.ts, src/card/*) only through src/utils/particles-loader.ts,
+ * Consumers: the card (src/anim-studio/resolve.ts, src/card/*) only through src/utils/particles-loader.ts,
  * the particles editor, the studio's stage hide (emitterSlots) and the studio's animated SVG export.
  *
  * Compatibility:

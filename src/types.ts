@@ -470,7 +470,7 @@ export interface DesignConfig {
   // Animation
   /** Unused legacy shape, kept for old configs. */
   animation?: CssAnimationConfig;
-  /** Preset animations (src/utils/animation.ts); not CSS, the card renders them itself. */
+  /** Preset animations (src/anim-studio/resolve.ts); not CSS, the card renders them itself. */
   animations?: AnimationConfig[];
   /** @deprecated single-animation keys (v0.0.14): read as one `animations` entry, removed on edit. */
   animation_preset?: string;

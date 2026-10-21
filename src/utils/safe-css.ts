@@ -1,6 +1,6 @@
 /*
  * The safe CSS value helpers every card feature shares: a trimmed string, a CSS time, a colour that cannot break out of
- * an inline style. Plain code with no imports, so the entry keeps it while the animation resolve is a lazy chunk. Moved verbatim from src/utils/animation.ts.
+ * an inline style. Plain code with no imports, so the entry keeps it while the animation resolve is a lazy chunk.
  */
 
 export const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() !== '' ? v.trim() : undefined);

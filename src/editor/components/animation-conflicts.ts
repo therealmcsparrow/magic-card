@@ -6,7 +6,6 @@ import { getAnimationPreset, type AnimationChannel } from '../../utils/animation
 
 /*
  * Which earlier animation an entry overrides (the Animations list in the editor). Editor side: the card never needs it.
- * Moved verbatim from src/utils/animation.ts.
  */
 
 type Prop = 'rotate' | 'translate' | 'scale' | 'opacity' | 'filter' | 'box-shadow';

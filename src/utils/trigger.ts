@@ -4,8 +4,7 @@ import { str } from './safe-css';
 
 /*
  * The play condition of an animation entry (not animation-specific: the ring's show condition uses it too). Plain
- * code, kept in the entry while the animation resolve is a lazy chunk. Moved verbatim from
- * src/utils/animation.ts.
+ * code, kept in the entry while the animation resolve is a lazy chunk.
  */
 
 /**
