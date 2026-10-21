@@ -96,3 +96,22 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
   if (d && (d.height !== undefined || d.min_height !== undefined)) return 0;
   return TABS_BAR[config.tab_style === 'pills' ? 1 : config.tab_style === 'underline' ? 2 : 0];
 }
+
+/**
+ * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
+ * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
+ * `design.line_height` as a number, a numeric string or a percentage; a px / em / rem length counts per line;
+ * anything else is 1.2, the `normal` line height of the theme font.
+ */
+export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
+  const d = config.design;
+  if (d && (d.height !== undefined || d.min_height !== undefined)) return '';
+  const date = config.show_date !== false;
+  const lh = d?.line_height;
+  const v = typeof lh === 'string' ? lh.trim() : lh;
+  if (typeof v === 'string' && /^\d*\.?\d+(px|em|rem)$/.test(v) && parseFloat(v) > 0) return `calc(${v} * ${date ? 2 : 1})`;
+  const percent = typeof v === 'string' && /^\d*\.?\d+%$/.test(v) ? parseFloat(v) / 100 : undefined;
+  const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? Number(v) : v;
+  const factor = percent ?? (typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.2);
+  return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
+}

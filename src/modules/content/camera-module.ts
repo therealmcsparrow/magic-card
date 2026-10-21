@@ -5,7 +5,7 @@ import { CardModule, CameraModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import type { DependencyContext, ModuleDependencies } from '../../services/card-dependencies';
-import { cssAspectRatio } from '../../utils/media';
+import { cssAspectRatio } from '../../utils/aspect-ratio';
 import { lazyChunks } from '../../utils/lazy-chunks';
 
 export const STREAM_TAG = 'ha-camera-stream';

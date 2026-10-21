@@ -3,7 +3,7 @@ import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { ClockModuleConfig } from '../../../types';
 import { renderToggleField, renderTextField, renderSelectField, renderFieldHint } from '../../../utils/form-utils';
 import { uses12h } from '../../../utils/locale-format';
-import { ISO, dateFormatOf, formatClockDate, isPreset } from '../../../modules/advanced/clock-module';
+import { ISO, dateFormatOf, formatClockDate, isPreset } from '../../../modules/advanced/clock-format';
 import { buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 
