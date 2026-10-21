@@ -3,27 +3,19 @@ import type { ThemeDoc } from './theme-editor';
 
 /*
  * Contract: Magic Card Utils library of saved icons, shapes and theme presets, plus the shared
- * library view over the existing animation store. Version 1.0.0 (Architect-owned).
- * ADR 0018, ADR 0020, ADR 0022. Python side of record: magic-card-utils
- * custom_components/magic_card_utils/library_contract.py (same version; this file mirrors it).
- * Revision 2 (2026-10-18, before any implementation): spike S1 passed (no Plan B); provider rules
- * from S1; unknown getIcon answer; never-blank icon fallback (design R3, R4); "Keep a copy"
- * default; copies pruned and template-merged.
- * Revision 3 (2026-10-18, epic C, nothing released yet, ADR 0020): theme presets store and
- * commands; optional author / description on icons, shapes and theme presets; the animation store
- * joins the library view (no migration); kept animation copies; pruning narrowed to library copies.
- * Preset files: preset-transfer 1.0.0.
- * Revision 4 (2026-10-18, epic E1, brief 48, CEO 2026-10-18: entry points in the Library view AND an
- * "Editors" tab; nothing released yet, ADR 0020, ADR 0027): the panel gets a "Library" tab and an
- * "Editors" tab and hosts the SVG editor and shape editor without a card (section "(r4) Editors in the
- * panel"). No new command and no storage change. Also settles the theme presets adapter shape (section
- * "(r4) Panel adapter shapes"): the panel side changes.
- * Revision 5 (2026-10-19, provider behaviour only; mirrors the "(r5)" line of library_contract.py;
- * nothing released): the provider reads shapes lazily. `ready` covers the subscription only; the first
+ * library view over the existing animation store. Version 1.0.0.
+ * Python side of record: magic-card-utils custom_components/magic_card_utils/library_contract.py
+ * (same version; this file mirrors it).
+ *
+ * Icons, shapes and theme presets carry an optional author / description. Theme presets have their
+ * own store and commands; preset files: preset-transfer 1.0.0. The animation store joins the library
+ * view with no migration. The panel has a "Library" tab and an "Editors" tab and hosts the SVG editor
+ * and shape editor without a card (section "Editors in the panel", section "Panel adapter shapes").
+ * The provider reads shapes lazily. `ready` covers the subscription only; the first
  * shapes.get / shapes.ids sends shapes_list once per page; until that answer lands they answer
- * undefined / [], then the provider fires `mcu-library-changed` { kind: 'shapes', ids: [] }. No command,
- * window API or storage change: PROVIDER_API_VERSION stays 1 and MCU_LIBRARY_CONTRACT_REVISION stays 4,
- * as on the Python side (MCU tests pin 4).
+ * undefined / [], then the provider fires `mcu-library-changed` { kind: 'shapes', ids: [] }.
+ * PROVIDER_API_VERSION stays 1 and MCU_LIBRARY_CONTRACT_REVISION stays 4, as on the Python side
+ * (MCU tests pin 4).
  *
  * Two parts:
  * 1. WebSocket commands (MCU backend module `library`, library.py). Storage: HA Store
@@ -35,7 +27,7 @@ import type { ThemeDoc } from './theme-editor';
  *    (window.magicCardUtils). Magic Card never calls the library commands from magic-card.js; it
  *    only reads the provider. Only the editors (lazy chunks) call the commands. Theme presets are
  *    never on the provider (cards do not use them).
- * (r4) 3. The panel (MCU module `panel`, www/magic_card_utils_panel.js): Library and Editors tabs
+ * 3. The panel (MCU module `panel`, www/magic_card_utils_panel.js): Library and Editors tabs
  *    hosting Magic Card's editors (below).
  *
  * ── 1. WebSocket commands ──
@@ -47,10 +39,10 @@ import type { ThemeDoc } from './theme-editor';
  *   magic_card_utils/shapes_list  {}            -> { shapes: SavedShape[] }    (shapes are small: full items)
  *   magic_card_utils/shapes_save  { shape: SavedShapeInput, base_updated_at? } -> { shape: SavedShape }
  *   magic_card_utils/shapes_delete { shape_id } -> {}
- *   (r3) magic_card_utils/theme_presets_list   {} -> { theme_presets: SavedThemePreset[] } (full items)
- *   (r3) magic_card_utils/theme_presets_save   { theme_preset: SavedThemePresetInput, base_updated_at? }
+ *   magic_card_utils/theme_presets_list   {} -> { theme_presets: SavedThemePreset[] } (full items)
+ *   magic_card_utils/theme_presets_save   { theme_preset: SavedThemePresetInput, base_updated_at? }
  *                                                 -> { theme_preset: SavedThemePreset }
- *   (r3) magic_card_utils/theme_presets_delete { theme_preset_id } -> {}      (unknown id: success)
+ *   magic_card_utils/theme_presets_delete { theme_preset_id } -> {}      (unknown id: success)
  *   magic_card_utils/subscribe_library {}       -> events LibraryEvent (any authenticated user; no initial state)
  * `icon_id` / `shape_id` / `theme_preset_id`, never `id` (that is the WebSocket message id).
  * Save = create or replace by id. base_updated_at given and different on the server -> `conflict`.
@@ -59,22 +51,22 @@ import type { ThemeDoc } from './theme-editor';
  * Server validation (defence in depth; the card sanitises every SVG again with sanitizeSvg before
  * use, which stays the one security boundary):
  * - id matches LIBRARY_ID_RE; name 1..80 chars after trim; keywords at most 10 words of 1..32 chars.
- * - (r3) author (optional) 1..AUTHOR_MAX_CHARS, description (optional) 1..DESCRIPTION_MAX_CHARS,
+ * - author (optional) 1..AUTHOR_MAX_CHARS, description (optional) 1..DESCRIPTION_MAX_CHARS,
  *   after trim, on icons, shapes and theme presets. Not on IconSummary.
  * - icons: svg is a string of at most ICON_MAX_BYTES UTF-8 bytes, starts with "<svg", and every
  *   element name is in the sanitiser's allowlist (svg g path circle ellipse rect line polyline
  *   polygon defs linearGradient radialGradient stop clipPath mask title); no attribute named on*,
  *   style, href or xlink:href; no "javascript:", "<!ENTITY", "<!DOCTYPE" or "<?" anywhere; url()
  *   only as url(#id). path / secondary_path match ^[MmZzLlHhVvCcSsQqTtAa0-9eE.,+\- \n]*$ and are at
- *   most ICON_MAX_BYTES each; view_box is four finite numbers. (r4) Nested <g> (svg-editor r5, up to
+ *   most ICON_MAX_BYTES each; view_box is four finite numbers. Nested <g> (svg-editor, up to
  *   4 levels) passes these rules unchanged; the server does not count depth.
  * - shapes: `shape` is an object of at most SHAPE_MAX_BYTES compact JSON, with only the
  *   CustomShapeOptions keys (minus `ref`); points at most 64. Deeper value checks are the card's job
  *   (it ignores invalid values one by one).
- * - (r3) theme presets: `doc` is an object of at most THEME_PRESET_MAX_BYTES compact JSON; every
+ * - theme presets: `doc` is an object of at most THEME_PRESET_MAX_BYTES compact JSON; every
  *   key matches THEME_VAR_RE or is "modes"; modes holds only "light" / "dark" objects with
  *   THEME_VAR_RE keys; every value is a string of at most THEME_VALUE_MAX_CHARS or a finite number
- *   (not a bool). External references and card-mod-* keys are ACCEPTED (CEO 2026-10-18: kept with
+ *   (not a bool). External references and card-mod-* keys are ACCEPTED (kept with
  *   a warning shown by the importing editor); the server neither strips nor flags them. Contrast
  *   and required variables are not checked (a preset is a starting point; the theme editor runs
  *   docErrors when it opens one).
@@ -83,7 +75,7 @@ import type { ThemeDoc } from './theme-editor';
  * Errors: invalid_format (with errors: [{path, message}]), not_found, conflict, library_full,
  * not_loaded, save_failed; non-admin writers get HA's `unauthorized`.
  *
- * ── (r3) Animations: the existing store, one library view ──
+ * ── Animations: the existing store, one library view ──
  * My animations stay where they are: MCU animations.py, Store `magic_card_utils.animations`,
  * commands get_animations / subscribe_animations / save_animation / delete_animation (contract
  * in src/services/animation-library.ts, unchanged). No data migration and no new command: ids and
@@ -93,7 +85,7 @@ import type { ThemeDoc } from './theme-editor';
  * and a new name; delete = delete_animation. Animation docs carry no author / description.
  *
  * ── 2. Frontend provider (window surface) ──
- * Load and connection (spike S1, HA core 2026.10.2: the extra module is import()ed by an inline
+ * Load and connection (verified on HA core 2026.10.2: the extra module is import()ed by an inline
  * script, not ordered against HA's core.js):
  * - ESM, the whole body in try/catch, no DOM writes, no innerHTML, under PROVIDER_MAX_BYTES
  *   unminified. Safe mode skips extra modules: cards then use their kept copies (below).
@@ -118,7 +110,7 @@ import type { ThemeDoc } from './theme-editor';
  *   editor appears in HA's picker after a page reload (Magic Card's own picker refreshes at once).
  *   Docs say so.
  * - window.magicCardUtils = { apiVersion: PROVIDER_API_VERSION, ready: Promise<void>,
- *   shapes: { get(id): CustomShapeOptions | undefined, ids(): string[] } }. (r5) Shapes load lazily:
+ *   shapes: { get(id): CustomShapeOptions | undefined, ids(): string[] } }. Shapes load lazily:
  *   `ready` covers the subscription only. The first shapes.get or shapes.ids sends shapes_list once per
  *   page; until that answer lands, get answers undefined and ids []. When it lands the provider fires
  *   `mcu-library-changed` { kind: 'shapes', ids: [] }, and cards re-render from the library (mc-shape
@@ -127,12 +119,12 @@ import type { ThemeDoc } from './theme-editor';
  * - After the first load and after every library change it dispatches on window:
  *   `iconset-registered` (Magic Card's icon-source already re-checks pending refs on it) and
  *   `mcu-library-changed` with detail { kind: 'icons' | 'shapes', ids: string[] } (ids changed or
- *   deleted; [] = everything may have changed). (r3) theme_presets events are ignored by the
+ *   deleted; [] = everything may have changed). theme_presets events are ignored by the
  *   provider (no window event for them).
  * - Icons are fetched lazily: the list once (names only), getIcon fetches the item on first use
  *   (batched per animation frame into one icons_get), cached for the page.
- * - Verified on the web frontend (S1). Companion apps (iOS, Android) and ingress iframes are not
- *   verified: T6 tries the Android app when one is at hand; not a release blocker.
+ * - Verified on the web frontend. Companion apps (iOS, Android) and ingress iframes are not
+ *   verified.
  *
  * ── Saved icon `path` (what HA draws) ──
  * The SVG editor computes `path` and `secondary_path` on save: every filled, non-accent shape in
@@ -141,9 +133,9 @@ import type { ThemeDoc } from './theme-editor';
  * so subpaths of an evenodd shape that sit inside an odd number of others are written with
  * reversed winding (holes stay holes). The editor previews this "In Home Assistant" form at 24 px
  * next to the full icon and shows W11 when `path` is empty or loses more than half of the
- * drawing's filled area. (r3) An imported icon without a valid path is saved with path '' and
- * the import summary says to open and save it in the SVG editor. (r4) Unchanged by Dual-tone
- * (svg-editor r5): Accent = secondary_path; the editor's preview strip shows both forms. A user who
+ * drawing's filled area. An imported icon without a valid path is saved with path '' and
+ * the import summary says to open and save it in the SVG editor. Unchanged by Dual-tone
+ * (svg-editor): Accent = secondary_path; the editor's preview strip shows both forms. A user who
  * wants open strokes in HA's form converts them first with Outline stroke (path-tools 1.0.0).
  *
  * ── How cards reference saved items ──
@@ -156,37 +148,36 @@ import type { ThemeDoc } from './theme-editor';
  *   2. the card's `custom_icons[<id>]` (inline sanitised markup), used when 1 has no provider yet,
  *      or the provider answered the blank icon.
  *   3. otherwise the module's default icon (fallbackIcon), or the entity's icon when the module has
- *      an entity. Never <ha-icon> with the mcu: name, never blank (design R4).
- *   The same never-blank rule covers `icon: svg` whose markup the sanitiser rejects (design R3):
+ *      an entity. Never <ha-icon> with the mcu: name, never blank.
+ *   The same never-blank rule covers `icon: svg` whose markup the sanitiser rejects:
  *   <mc-svg-icon> draws the module's default or entity icon instead of BROKEN_ICON. The editor
- *   shows the R3 / R4 notices; the runtime is silent. Budget: ADR 0019's 768 B covers both.
+ *   shows a notice; the runtime is silent. Both together cost at most 768 B.
  *   `mcu-library-changed` (icons) drops the cached geometry of the listed mcu: refs and
  *   re-resolves them (listeners notified as today).
  * - Shape: `shape: custom` + `shape_options.ref: <id>` (custom-shape 1.0.0), with an inline copy
  *   the editor always writes to the card's `custom_shapes[<id>]`.
- * - (r3) Animation: `preset: custom:<id>` as today. Library first, then the card's
+ * - Animation: `preset: custom:<id>` as today. Library first, then the card's
  *   `custom_animations[<id>]` (animation-library.ts inlineAnimations, unchanged: magic-card.js
  *   +0 B).
- * - Theme: none (CEO 2026-10-18, option a). Cards keep `theme: <HA theme name>`; a theme preset is
+ * - Theme: none. Cards keep `theme: <HA theme name>`; a theme preset is
  *   a starting point in the theme editor, never referenced by a card, never copied into one.
  * - A ref is a live link for icons and animations too (same rule as custom-shape: the library wins
- *   once loaded, the kept copy only covers a missing provider, store or item). (r4) So an icon or
+ *   once loaded, the kept copy only covers a missing provider, store or item). So an icon or
  *   shape edited in the panel shows on every card that references it after a reload (kept copies in
  *   cards are refreshed the next time that card's editor saves; they only cover a missing library).
  *
- * ── Kept copies (`custom_icons`, `custom_shapes`, (r3) `custom_animations`) ──
+ * ── Kept copies (`custom_icons`, `custom_shapes`, `custom_animations`) ──
  * - "Keep a copy in this card" for icons defaults ON when the sanitised markup is at most
- *   KEEP_COPY_DEFAULT_MAX_BYTES (UTF-8), OFF above. (r3) For a picked My animation it defaults ON
+ *   KEEP_COPY_DEFAULT_MAX_BYTES (UTF-8), OFF above. For a picked My animation it defaults ON
  *   when the doc's compact JSON is at most KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES, OFF above
  *   (rigs and particles get large). The editor shows the size; the user can switch it either
  *   way. Shapes always keep a copy. Export / copy of a card always writes the copies.
- * - (r3) Pruning, on every save of the card editor: an entry of custom_icons, custom_shapes or
+ * - Pruning, on every save of the card editor: an entry of custom_icons, custom_shapes or
  *   custom_animations is removed only when (a) no module of the card uses it (for animations:
  *   neither a module's preset nor a step of another kept animation), AND (b) its id is in the
  *   loaded library of that kind (it is a copy). Entries whose id is not in the library are the
  *   card's own (hand-written YAML, imports without Magic Card Utils) and are never pruned. With
- *   the library not loaded or not installed, nothing is pruned. This narrows revision 2's rule;
- *   T8 and T11 implement it this way.
+ *   the library not loaded or not installed, nothing is pruned.
  * - Template-linked cards: `custom_icons` is template-merged like `custom_animations` (the card's
  *   entry wins per id; TEMPLATE_CARD_KEYS gains it).
  *
@@ -196,18 +187,18 @@ import type { ThemeDoc } from './theme-editor';
  * - The shape editor writes `shape: custom` with the options inline; "Save as shape" is disabled
  *   the same way. An existing `ref` still renders from `custom_shapes`.
  * - A card with `icon: mcu:<id>` renders from `custom_icons` when present, else the default icon.
- * - (r3) Imports in the card editor, shape editor and SVG editor go to the card's custom_*
+ * - Imports in the card editor, shape editor and SVG editor go to the card's custom_*
  *   copies (preset-transfer 1.0.0). Theme presets need Magic Card Utils (the theme editor lives
  *   in its panel).
  * - Detection: the editor calls icons_list; `unknown_command` means not installed (cached per page,
  *   as AnimationLibrary does). Cards never call commands, so there is nothing to detect at render.
- *   (r3) The theme editor detects theme presets through ThemeBackend.presets (theme-editor 1.1.0):
+ *   The theme editor detects theme presets through ThemeBackend.presets (theme-editor 1.1.0):
  *   absent = an older Magic Card Utils.
  *
- * ── (r4) 3. Editors in the panel (E1) ──
+ * ── 3. Editors in the panel ──
  * - Tabs: MCU_PANEL_TABS; "Library" and "Editors" come after "Themes". Both lead to the same editor
  *   shell (below).
- * - Loading, no card and no new Magic Card file (the Themes tab pattern, ADR 0010 / 0027): the panel's
+ * - Loading, no card and no new Magic Card file (the Themes tab pattern): the panel's
  *   _ensureMagicCard() (magic-card.js from lovelace/resources, imported once), then
  *   `await window.MagicCard.loadEditor()` (the card-editor chunk), then on first use
  *   window.MagicCard.loadSvgEditor() / loadShapeEditor() (svg-editor 1.0.0 loaders) and, for the Library
@@ -217,9 +208,9 @@ import type { ThemeDoc } from './theme-editor';
  *   dashboard, no request to another host. magic-card.js and magic-card-editor.js grow 0 B.
  * - Version gate: Magic Card not found -> "Install Magic Card to draw icons and shapes here." Loaders
  *   missing, or customElements.get(tag).contractRevision below SVG_EDITOR_MCU_MIN_REVISION (svg-editor
- *   r5) -> "Drawing icons and shapes here needs Magic Card <version> or newer. Update Magic Card." with
- *   <version> = the panel constant MIN_MAGIC_CARD_FOR_EDITORS (the Lead sets it to the Magic Card release
- *   that ships E). Nothing else loads; the tabs stay usable for the message and the Library list.
+ *   contract) -> "Drawing icons and shapes here needs Magic Card <version> or newer. Update Magic Card." with
+ *   <version> = the panel constant MIN_MAGIC_CARD_FOR_EDITORS (the Magic Card release
+ *   that ships the panel editors). Nothing else loads; the tabs stay usable for the message and the Library list.
  * - Shell: one panel method _openEditor({ kind: 'icon' | 'shape', id?, opener }) for both tabs. It hides
  *   the tab bar and the tab content and mounts the element in a host that fills the panel's content area
  *   under the toolbar: icon -> <mc-svg-editor host="mcu"> with hass, source ({ kind: 'blank' } or
@@ -243,15 +234,15 @@ import type { ThemeDoc } from './theme-editor';
  * - Won't: editing card YAML from the panel. Later: deep links to an editor, duplicate from library,
  *   folders / tags.
  *
- * ── Text revision, task smallest-fastest-card-viewer S1a.2, no API change, revision number stays 4 ──
- * LIBRARY_CHANGED_EVENT moved to src/contracts/mcu-library.needs.ts, the only file of this contract
- * magic-card.js imports (proj.M11); this file re-exports it.
+ * ── Event name ──
+ * LIBRARY_CHANGED_EVENT lives in src/contracts/mcu-library.needs.ts, the only file of this contract
+ * magic-card.js imports; this file re-exports it.
  *
- * ── (r4) Panel adapter shapes ──
+ * ── Panel adapter shapes ──
  * ThemeBackend.presets (theme-editor 1.1.0 ThemePresetStore) is the shape of record: list() resolves
  * SavedThemePreset[] (the array), save() resolves the SavedThemePreset, remove() resolves undefined. The
- * MCU panel adapter (_createPresetBackend) changes to match; until now it answered { theme_presets } and
- * { theme_preset } (found live in T19). Magic Card's readers (theme-editor.ts _loadMine and
+ * MCU panel adapter (_createPresetBackend) changes to match; an older adapter answered { theme_presets } and
+ * { theme_preset }. Magic Card's readers (theme-editor.ts _loadMine and
  * library-view.ts) keep accepting both shapes (tolerant reader, 0 B change), to be simplified in a later
  * cleanup once no MCU build with the old adapter is in use.
  */
@@ -265,15 +256,15 @@ export const ICON_MAX_BYTES = 32 * 1024;
 export const SHAPE_MAX_BYTES = 8 * 1024;
 export const MAX_ICONS = 500;
 export const MAX_SHAPES = 200;
-/** (r3) */
+/** */
 export const MAX_THEME_PRESETS = 100;
-/** (r3) Compact JSON of one theme preset's doc. */
+/** Compact JSON of one theme preset's doc. */
 export const THEME_PRESET_MAX_BYTES = 32 * 1024;
-/** (r3) One theme variable's string value. */
+/** One theme variable's string value. */
 export const THEME_VALUE_MAX_CHARS = 1024;
-/** (r3) */
+/** */
 export const AUTHOR_MAX_CHARS = 80;
-/** (r3) */
+/** */
 export const DESCRIPTION_MAX_CHARS = 280;
 /** Provider script size cap, unminified (it loads on every HA page). */
 export const PROVIDER_MAX_BYTES = 6 * 1024;
@@ -281,11 +272,11 @@ export const CONNECTION_POLL_MS = 50;
 export const CONNECTION_WAIT_MS = 30_000;
 /** "Keep a copy in this card" is on by default up to this sanitised markup size. */
 export const KEEP_COPY_DEFAULT_MAX_BYTES = 2 * 1024;
-/** (r3) Same rule for a picked My animation (compact JSON of the doc). */
+/** Same rule for a picked My animation (compact JSON of the doc). */
 export const KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES = 8 * 1024;
-/** (r4) Panel tabs, in order. */
+/** Panel tabs, in order. */
 export const MCU_PANEL_TABS = ['templates', 'animations', 'themes', 'library', 'editors'] as const;
-/** (r4) Items per "Recent" list in the Editors tab. */
+/** Items per "Recent" list in the Editors tab. */
 export const MCU_RECENT_ITEMS = 8;
 
 export const CMD = {
@@ -302,7 +293,7 @@ export const CMD = {
   subscribe: 'magic_card_utils/subscribe_library',
 } as const;
 
-/** (r3) Optional credit and text, on icons, shapes and theme presets. */
+/** Optional credit and text, on icons, shapes and theme presets. */
 export interface ItemMeta {
   author?: string;
   description?: string;
@@ -345,7 +336,7 @@ export interface SavedShape extends SavedShapeInput {
   updated_at: string;
 }
 
-/** (r3) A My theme preset. description is the picker blurb. */
+/** A My theme preset. description is the picker blurb. */
 export interface SavedThemePresetInput extends ItemMeta {
   id: string;
   name: string;
@@ -384,9 +375,9 @@ export const BLANK_ICON: Readonly<ProviderIcon> = Object.freeze({ path: '', view
 
 export interface MagicCardUtilsWindow {
   apiVersion: number;
-  /** (r5) Resolves once the library subscription is up; shapes load lazily on first get / ids. */
+  /** Resolves once the library subscription is up; shapes load lazily on first get / ids. */
   ready: Promise<void>;
-  /** (r5) get: undefined and ids: [] until the lazy shapes_list lands (then mcu-library-changed, kind shapes). */
+  /** get: undefined and ids: [] until the lazy shapes_list lands (then mcu-library-changed, kind shapes). */
   shapes: { get(id: string): CustomShapeOptions | undefined; ids(): string[] };
 }
 
@@ -394,5 +385,5 @@ export interface LibraryChangedDetail {
   kind: 'icons' | 'shapes';
   ids: string[];
 }
-// (S1a.2) The event name lives in mcu-library.needs.ts, which magic-card.js imports; re-exported unchanged.
+// The event name lives in mcu-library.needs.ts, which magic-card.js imports; re-exported unchanged.
 export { LIBRARY_CHANGED_EVENT } from './mcu-library.needs';

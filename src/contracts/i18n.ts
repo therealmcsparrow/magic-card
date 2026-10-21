@@ -1,13 +1,11 @@
 /*
- * Contract: i18n. Version 1.0.0, revision 3 (Architect-owned). ADR 0032.
- * r1 2026-10-18: first draft (British text as id, runtime en-US word list, lazy nl chunks).
- * r2 2026-10-18, CEO Plan Gate answers: en-US is a FULL shipped table (generated at dev time from en-GB,
- *    EN_US_WORDS and reviewed exceptions, then committed); no separate locale files: en-GB, en-US and nl
- *    are bundled into each screen's own file; every message must exist in all three locales; compact
- *    tables (one string per locale, entries indexed by a build-time number) to limit the cost; the CEO
- *    spot-checks machine-drafted Dutch per batch at the Ship Gate. Runtime word list and lazy nl dropped.
- * r3 2026-10-18, after spike S-I1 (Handoff 97; ruling Handoff 108). Tables live with the bundle that
- *    RENDERS the text, not with the file that holds the literal:
+ * Contract: i18n. Version 1.0.0.
+ * en-US is a FULL shipped table (generated at dev time from en-GB, EN_US_WORDS and reviewed
+ * exceptions, then committed); no separate locale files: en-GB, en-US and nl are bundled into each
+ * screen's own file; every message must exist in all three locales; compact tables (one string per
+ * locale, entries indexed by a build-time number) limit the cost. There is no runtime word list and
+ * no lazy nl.
+ * Tables live with the bundle that RENDERS the text, not with the file that holds the literal:
  *    - 'card' holds only text a dashboard can render. Editor-only labels in files magic-card.js carries
  *      (CSS property data, animation presets, seasonal scenes, font groups, module descriptions) are
  *      marked lm() and ship in magic-card.js as numbers; their text is in namespace 'labels'.
@@ -15,16 +13,13 @@
  *      in a lazy table chunk (magic-card-i18n-<ns>.js): 'labels' (card editor, studio) and
  *      'icon-library' (icon-library chunk, icon-animator chunk). 'card' stays inline in magic-card.js
  *      (dashboards never wait for a second request); the studio entry keeps its own copy of the card
- *      tables (about 5 KB, accepted, see "Where tables live").
+ *      tables (about 5 KB, see "Where tables live").
  *    - Runtime copies: magic-card.js (reused at 0 B by every chunk below it), the studio entry and the
- *      theme-editor entry (own entries, own copy, own locale state). r2's "0 B below magic-card.js" was
- *      wrong for the two entries. I18N_RUNTIME_MAX_BYTES 1,536 -> 2,048 per copy.
+ *      theme-editor entry (own entries, own copy, own locale state). I18N_RUNTIME_MAX_BYTES is 2,048
+ *      per copy.
  *    - Table separator '|' instead of '\n' (Terser writes '\n' as two bytes; saves 3 B per message).
- *    - S-I1 confirmed dashboard: false for icon-library and preset-catalogue.
- * CEO request 2026-10-18, verbatim: "add us english to the i18n". CEO decisions the same day: UI copy is
- * British (colour, customise, centre, grey); config keys stay as they are; nl complete in this
- * pre-release; each screen's i18n slice runs right after its UI-kit slice, in the same lane.
- * Replaces src/localize/ (73 keys, en + nl JSON, both inlined in magic-card.js).
+ *    - dashboard: false for icon-library and preset-catalogue.
+ * UI copy is British (colour, customise, centre, grey); config keys stay as they are; nl is complete.
  *
  * ── Locales ──
  * en-GB  base and source text. Authors write t('Background colour') in the source.
@@ -49,15 +44,15 @@
  * Every screen root sets lang="<locale>" (WCAG 3.1.2). HA-owned words (states, domains, attributes) come
  * from hass.localize / hass.formatEntityState, never from our tables.
  *
- * ── Ids and the compact format (ADR 0032 r2) ──
+ * ── Ids and the compact format ──
  * Authoring id: the en-GB text (t('Background colour'); tc('verb', 'Clear') when one British text needs
  * two translations, table key 'verb|Clear'; m('Flame') marks data literals such as icon, preset, theme
- * and CSS option names, rendered later with t(item.name)). (r3) lm('Background colour') is m() for the
+ * and CSS option names, rendered later with t(item.name)). lm('Background colour') is m() for the
  * 'labels' namespace in files magic-card.js carries; it comes from src/i18n/labels/mark.ts (identity,
  * no tables, no import()), so magic-card.js gets the number and nothing else.
  * Shipped id: a number. Per namespace, tools/i18n-build.mjs (prebuild, also the vitest setup) extracts
  * every id, sorts them (stable diffs), and writes src/<folder>/i18n/messages.gen.ts (git-ignored):
- *   export default ['<en-GB 0>|<en-GB 1>...', '<en-US 0>|...', '<nl 0>|...']  // LOCALES order, r3 '|'
+ *   export default ['<en-GB 0>|<en-GB 1>...', '<en-US 0>|...', '<nl 0>|...']  // LOCALES order, '|'
  * tools/i18n-loader.cjs (webpack pre-loader, production and development) rewrites t('text') to t(17) and
  * m('text') / lm('text') to 17 in that namespace's files, so each text is stored once per locale and
  * never at the call site. Messages may not contain '|' or a newline (D6). At run time a locale's string
@@ -65,13 +60,13 @@
  * Without the loader (vitest, MCU plain JS) t() also accepts the British text and finds its index through
  * a Map built once from the en-GB string. Both paths return the same text.
  * Per namespace module src/<folder>/i18n/index.ts: inline tables
- * `export const { t, tc, tx, m } = i18nFor(ns, tables)`; table chunk (r3)
+ * `export const { t, tc, tx, m } = i18nFor(ns, tables)`; table chunk
  * `export const { t, tc, tx, m, ready } = i18nForLazy(ns, () => import(/* webpackChunkName: "i18n-<ns>" *\/ './messages.gen'))`.
  * Both create closures only (allowed at module top level of a lazy chunk, lazy-module 1.0.0).
  * Call sites in the runtime lazy chunks (slider, seasonal, markdown, modules-extra) use the 'card'
  * namespace, whose tables live in magic-card.js.
  *
- * ── Where tables live (r3) ──
+ * ── Where tables live ──
  * Rule 1, by renderer: a message goes to 'card' only when a dashboard can render it (card content,
  *   config errors on the card, empty states, screen-reader labels). Text only an editor, the studio or
  *   a picker shows goes to that screen's namespace, or to 'labels' when the literal sits in a file
@@ -107,7 +102,7 @@
  * D2 Completeness: every extracted id of a namespace has a non-empty entry in en-US.json and nl.json with
  *    the same argument names and valid plural/select branches; no stale entries. A namespace with
  *    status 'pending' is skipped; the release gate needs every namespace 'complete'
- *    (I18N_RELEASE_STRICT, on from slice I11).
+ *    (I18N_RELEASE_STRICT, on).
  * D3 British: no American form from EN_US_WORDS in an en-GB id (allowlist tools/i18n/allow.json, e.g.
  *    the CSS property background-color shown as code); an en-GB word ending -ise / -isation / -our that is
  *    neither in EN_US_WORDS nor allowlisted fails, so new copy extends the list in the same PR.
@@ -119,7 +114,7 @@
  *    SVG, MDI, CSS, px, proper names). Per-namespace baseline tools/i18n/baseline.json may only go down;
  *    0 when the slice is done.
  * D6 Syntax: every message in every locale parses; no braces outside the syntax; no newline; no '|'.
- * D7 Placement (r3; import scan plus the production stats.json):
+ * D7 Placement (import scan plus the production stats.json):
  *    - magic-card.js holds src/i18n/runtime.ts (<= I18N_RUNTIME_MAX_BYTES), the 'card' tables and lm()
  *      numbers; never src/i18n/labels/index.ts, an import() of a table chunk, or any other table.
  *    - Every namespace's tables sit in exactly the file its I18N_MODULES entry names (`bundle` when
@@ -130,7 +125,7 @@
  * Characterization (local vitest; tests/ is not committed): per screen, a text snapshot (text nodes,
  * aria-label, title, placeholder, alt) in en-GB and en-US before extraction, unchanged after extraction,
  * changed only by the reviewed spelling list after the British pass; YAML of the 60 gallery cards unchanged.
- * (r3) The text snapshot of the 80 gallery cards is unchanged when labels move to lm() (proof that no
+ * The text snapshot of the 80 gallery cards is unchanged when labels move to lm() (proof that no
  * dashboard renders a 'labels' message).
  *
  * ── Magic Card Utils ──
@@ -144,9 +139,9 @@
  * ── Error cases ──
  * unknown locale -> en-GB | empty entry in en-US or nl -> en-GB text | unknown string id (no loader, not
  * extracted) -> the text itself, console.debug once | malformed message -> en-GB text, console.debug once
- * | missing argument -> empty string, console.debug once | (r3) t() of a table-chunk namespace before
+ * | missing argument -> empty string, console.debug once | t() of a table-chunk namespace before
  * ready() resolved, or after it resolved false -> empty string, console.debug once (Rule 3 keeps this
- * off screen) | (r3) table chunk fails to load -> ready() resolves false, never rejects.
+ * off screen) | table chunk fails to load -> ready() resolves false, never rejects.
  */
 
 export const I18N_CONTRACT_VERSION = '1.0.0';
@@ -158,7 +153,7 @@ export const LOCALES: readonly Locale[] = ['en-GB', 'en-US', 'nl'];
 export const BASE_LOCALE: Locale = 'en-GB';
 /** English variants that read British spelling; every other en-* is American. */
 export const BRITISH_ENGLISH: readonly string[] = ['en-gb', 'en-au', 'en-nz', 'en-ie', 'en-za', 'en-in'];
-/** r3. Joins the entries of one locale table (was '\n' in r2). Forbidden inside messages (D6). */
+/** Joins the entries of one locale table. Forbidden inside messages (D6). */
 export const TABLE_SEPARATOR = '|';
 
 /** Authoring id: the en-GB text (or 'context|text'). */
@@ -193,15 +188,15 @@ export interface ModuleI18n {
   m(id: MessageText): MessageId;
 }
 export type I18nFor = (ns: I18nNamespace, tables: LocaleTables) => ModuleI18n;
-/** r3. A table-chunk namespace. */
+/** A table-chunk namespace. */
 export interface LazyModuleI18n extends ModuleI18n {
   /** Resolves true once the tables are usable, false when the table chunk failed to load. Never
    *  rejects. One shared promise per namespace per bundle; the first call starts the import(). */
   ready(): Promise<boolean>;
 }
-/** r3. `load` is the namespace's import() of its messages.gen module (webpackChunkName "i18n-<ns>"). */
+/** `load` is the namespace's import() of its messages.gen module (webpackChunkName "i18n-<ns>"). */
 export type I18nForLazy = (ns: I18nNamespace, load: () => Promise<{ default: LocaleTables }>) => LazyModuleI18n;
-/** r3. src/i18n/labels/mark.ts: identity marker for 'labels' literals in files magic-card.js carries. */
+/** src/i18n/labels/mark.ts: identity marker for 'labels' literals in files magic-card.js carries. */
 export type LabelMark = (id: MessageText) => MessageId;
 
 export type NsStatus = 'pending' | 'complete';
@@ -209,15 +204,15 @@ export type NsStatus = 'pending' | 'complete';
 export interface I18nModuleEntry {
   /** Bundle file(s) that carry the call sites. */
   bundle: string;
-  /** Source folders or files whose call sites belong to this namespace (I0b confirms them against stats.json). */
+  /** Source folders or files whose call sites belong to this namespace (checked against stats.json). */
   folders: readonly string[];
-  /** r3. 'inline': tables in `bundle`; 'chunk': tables in `chunk`, import()ed by every bundle in `bundle`. */
+  /** 'inline': tables in `bundle`; 'chunk': tables in `chunk`, import()ed by every bundle in `bundle`. */
   tables: 'inline' | 'chunk';
-  /** r3. Table chunk file, when tables is 'chunk'. */
+  /** Table chunk file, when tables is 'chunk'. */
   chunk?: string;
-  /** Set to 'complete' by the localizer step of the slice (en-US and nl both complete). */
+  /** 'complete' once en-US and nl are both complete. */
   status: NsStatus;
-  /** Slice in the plan that owns the extraction. */
+  /** Label of the extraction batch that owns this namespace. */
   slice: string;
   /** Downloaded when a dashboard renders (must stay about +0). */
   dashboard: boolean;
@@ -252,13 +247,13 @@ export const I18N_MODULES = {
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
 export type I18nNamespace = keyof typeof I18N_MODULES;
-// dashboard: false for icon-library and preset-catalogue: confirmed by spike S-I1 (Handoff 97: chunk
-// graph, import() sites and an 80-card Chromium run that loaded neither).
+// dashboard: false for icon-library and preset-catalogue: checked against the chunk graph, the
+// import() sites and an 80-card Chromium run that loaded neither.
 
 /** Minified bytes of src/i18n/runtime.ts per copy (magic-card.js, studio entry, theme-editor entry),
- *  tables excluded. r3: 2,048 (r2 1,536; S-I1 measured 1,257 before i18nForLazy). */
+ *  tables excluded. Measured 1,257 before i18nForLazy. */
 export const I18N_RUNTIME_MAX_BYTES = 2_048;
-/** On since slice I11: the release gate needs every namespace 'complete' and every baseline at 0. */
+/** On: the release gate needs every namespace 'complete' and every baseline at 0. */
 export const I18N_RELEASE_STRICT = true;
 
 /** html`` attributes and lit properties whose letter strings must go through t (D5). */

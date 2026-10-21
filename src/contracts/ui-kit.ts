@@ -1,51 +1,38 @@
 /*
- * Contract: ui kit. Version 1.1.0, revision 5 (Architect-owned, 2026-10-18; r5 2026-10-19). ADR 0030.
- * CEO request 2026-10-18: "the styling in shape and svg editor of buttons, fields etc are not
- * the same as in card studio, please create centralized components so all screens have the same look
- * and feel". CEO confirmation the same day: the card editor (src/editor/ + src/css/editor-system) is the
- * base look; the kit is extracted FROM it (single source), not designed in parallel.
+ * Contract: ui kit. Version 1.1.0.
+ * The card editor (src/editor/ + src/css/editor-system) is the base look; the kit is extracted FROM it
+ * (single source), not designed in parallel, so every screen has the same look and feel.
  *
- * Revisions (ADR 0020: unreleased contracts are revised in place):
- * - r1 2026-10-18: first text, names provisional.
- * - r2 2026-10-18 (names ruling, Handoff 99): names are FINAL. Tags stay `mc-ui-*` (shipped in UI1, and
- *   `mc-*` alone is the namespace of the card's own elements such as mc-path-menu). design/10-ui-kit.md
- *   names map as follows; builders use the right-hand column only:
- *     mc-dialog -> <mc-ui-window>      mc-menu -> <mc-ui-menu>       mc-toast -> <mc-ui-toast> (new, r2)
- *     popover   -> <mc-ui-popover>     .dialog -> .win-* parts        confirm -> variant 'alert'
- *     window S/M/L/XL -> size 's'|'m'|'l'|'xl' (new, r2)            sheet   -> variant 'sheet'
- *     --mc-h / -h-sm / -h-xs -> --mc-hit / --mc-hit-sm / --mc-hit-xs
- *     --mc-radius-sm -> --mc-radius-tag (the card's src/css/tokens.ts already has --mc-radius-sm: 4px)
- *     notice "result of an action" -> .notice.result-note (notice({ transient: true }))
- *     .tree .row .b -> .row + .icon-btn.xs                            topbar 56 px (r1 said 52)
- *   Additive in r2: <mc-ui-toast>, UiWindowElement.size, kit-scoped tokens (KIT_SCOPED_TOKENS), `.toast`
- *   and `.check` in KIT_CLASSES, dialog width 480 (r1 said 440). Not adopted: --mc-accent-src (it would
- *   rewrite every accent formula in Core editorTokens; the theme editor keeps overriding the accent tokens
- *   on its :host, as allowed below). Window header drag and Maximize: not in 1.x until a screen needs them
- *   (superseded by r3).
- * - r3 2026-10-18 (CEO decision 2026-10-18, Handoff 108), all additive: the window gets header drag,
- *   corner resize and maximise (UiWindowElement movable / resizable / maximizable / maximized and four
- *   caller labels; parts move, resize, maximize), with keyboard and single-pointer alternatives (WCAG
- *   2.1.1, 2.5.7) and no persistence. Every non-alert window turns all three on, so the nine card-editor
- *   pickers, the module selector, the SVG editor's Start window and the studio dialogs behave the same.
- *   A scrim close needs press and release on the scrim (the old picker rule). Folded in from the builds:
- *   KitSliderOptions valueText / numberLabel / disabled (UI2), KitRowOptions sub / check / content / trail
- *   and an optional onSelect (UI6).
- * - r4 2026-10-18 (CEO decision 2026-10-18, additive): UiMenuEntry gets an optional `sub`, a help line under the
- *   label (also the item's accessible description unless `reason` is set). <mc-ui-window> shows its footer from the
- *   first render, so a footer button can take the first focus (an alert's initialFocus).
- * - 2026-10-19 (text only, revision number unchanged): the editorLegacy line names both chunks that bundle
- *   it, magic-card-editor.js and magic-card-animation-studio.js (its own webpack entry).
- * - 2026-10-19, additive (revision number unchanged; code review 153 B1): KitRowOptions gets an optional
- *   `lead`, a host's leading node drawn after the icon and before the name (the library view's shape
- *   thumbnail, added to row() in 36134cf). Row templates only; no element changes, so
- *   UI_KIT_CONTRACT_REVISION stays 4.
+ * Names:
+ * - Tags are `mc-ui-*` (`mc-*` alone is the namespace of the card's own elements such as mc-path-menu):
+ *   <mc-ui-window> (size 's'|'m'|'l'|'xl'; variant 'alert' for a confirm, 'sheet'), <mc-ui-menu>,
+ *   <mc-ui-popover>, <mc-ui-toast>, <mc-ui-disclosure>, <mc-ui-tile-group>, <mc-ui-chip-group>.
+ * - Hit size tokens are --mc-hit / --mc-hit-sm / --mc-hit-xs; --mc-radius-tag is the tag radius (the
+ *   card's src/css/tokens.ts already has --mc-radius-sm: 4px). A "result of an action" notice is
+ *   .notice.result-note (notice({ transient: true })); a tree row's small button is .row + .icon-btn.xs;
+ *   the topbar is 56 px; the dialog width is 480.
+ * - Kit-scoped tokens (KIT_SCOPED_TOKENS), `.toast` and `.check` are in KIT_CLASSES. --mc-accent-src is
+ *   not used (it would rewrite every accent formula in Core editorTokens; the theme editor keeps
+ *   overriding the accent tokens on its :host, as allowed below).
  *
- * - 1.1.0 r5 2026-10-19 (flow-slider-styles T9, additive): three elements, <mc-ui-disclosure>,
- *   <mc-ui-tile-group> and <mc-ui-chip-group> (UiDisclosureElement, UiChoiceGroupElement below), and
- *   <mc-ui-toast> gains `dismissLabel` (a 44 px close button), Escape closes it, and a press inside it
- *   pauses the timer until the pointer is released. Tile and chip groups use MANUAL activation: aria-pressed
- *   buttons in role=group with a roving tabindex; arrows, Home and End move focus only; Space, Enter or a
- *   click select. Existing elements are unchanged.
+ * Behaviour:
+ * - Window: header drag, corner resize and maximise (UiWindowElement movable / resizable / maximizable /
+ *   maximized and four caller labels; parts move, resize, maximize), with keyboard and single-pointer
+ *   alternatives (WCAG 2.1.1, 2.5.7) and no persistence. Every non-alert window turns all three on, so
+ *   the nine card-editor pickers, the module selector, the SVG editor's Start window and the studio
+ *   dialogs behave the same. A scrim close needs press and release on the scrim. The footer shows from
+ *   the first render, so a footer button can take the first focus (an alert's initialFocus).
+ * - KitSliderOptions has valueText / numberLabel / disabled; KitRowOptions has sub / check / content /
+ *   trail, an optional onSelect and an optional `lead`, a host's leading node drawn after the icon and
+ *   before the name (the library view's shape thumbnail). Row templates only; no element changes.
+ * - UiMenuEntry has an optional `sub`, a help line under the label (also the item's accessible
+ *   description unless `reason` is set).
+ * - <mc-ui-toast> has `dismissLabel` (a 44 px close button), Escape closes it, and a press inside it
+ *   pauses the timer until the pointer is released.
+ * - <mc-ui-disclosure>, <mc-ui-tile-group> and <mc-ui-chip-group> (UiDisclosureElement,
+ *   UiChoiceGroupElement below). Tile and chip groups use MANUAL activation: aria-pressed buttons in
+ *   role=group with a roving tabindex; arrows, Home and End move focus only; Space, Enter or a click
+ *   select.
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -64,7 +51,7 @@
  *   Every chunk loaded below it (svg-editor, shape-editor, path-canvas, path-tools, svg-booleans,
  *   transfer) imports src/ui-kit/** statically and webpack leaves those modules out, because they are
  *   available in a parent chunk (the same rule that keeps lit, js-yaml and model.ts out of the transfer
- *   and path-tools chunks today). Spike S-UI1 proves this with stats.json before any migration.
+ *   and path-tools chunks today). The stats.json of a build shows it.
  *   Rule: a child chunk may import only src/ui-kit/ files that src/ui-kit/index.ts reaches.
  * - magic-card-animation-studio.js and magic-card-theme-editor.js (own entries, own lit) compile their
  *   own copy of the parts they import. Same source, same release.
@@ -96,33 +83,33 @@
  * ── Styling rules (drift guard, tested) ──
  * - A screen styles its own LAYOUT only. It may not write rules for kit class names (KIT_CLASSES) in its
  *   own sheets; selector scan test over src/ (excluding src/ui-kit/ and the legacy sheet).
- * - A screen may override TOKENS on its :host (the theme editor keeps its fixed accent, a11y S1).
+ * - A screen may override TOKENS on its :host (the theme editor keeps its fixed accent).
  * - Hit size comes from --mc-hit / --mc-hit-sm / --mc-hit-xs (40 / 32 / 24 px fine, all 44 px coarse);
- *   focus is :focus-visible 2 px --mc-focus (CEO D1).
+ *   focus is :focus-visible 2 px --mc-focus.
  * - Font: --mc-font (HA's body font with Roboto, system-ui fallback). Layers stop setting system-ui.
  * - Kit CSS is in the minify-templates loader include list (webpack.config.js) in production builds.
  *
  * ── Layer 1: CSS parts (class conventions) ──
  * Each part is a CSSResult in src/ui-kit/css/; names from editor-system.ts where they exist.
- * kitTokens   (r2) :host declarations of KIT_SCOPED_TOKENS, coarse-pointer overrides included
+ * kitTokens   :host declarations of KIT_SCOPED_TOKENS, coarse-pointer overrides included
  * kitBase     *, focus-visible, ::selection, .sr-only, [hidden], scrollbars, .mono, reduced motion
  * kitButton   .btn + .btn-primary | .btn-secondary | .btn-text | .btn-danger (new) | .btn-sm;
  *             .icon-btn (+ .sm, .xs, .danger); states :hover, :active, [aria-pressed=true] (new), :disabled
  *             and [aria-disabled=true] (new, keeps focus), coarse 44 px via --mc-hit
  * kitField    .field, .field-head, .lbl, .help (.error, .lead), .input (input, textarea), .select,
- *             .unit, .with-icon, .with-action, .field-action, .color, .swatch, .field-reset; .check (r2)
+ *             .unit, .with-icon, .with-action, .field-action, .color, .swatch, .field-reset; .check
  * kitSwitch   .switch-row, .switch (button role=switch aria-checked); replaces native checkboxes
  * kitChip     .chip (.is-accent, .is-warn, .is-error, .is-count), button.chip, [aria-pressed=true]
  * kitSeg      .seg (.full): the one tab bar AND segmented control (role tablist | radiogroup)
  * kitTile     .tiles, .tile (new: picture tile with always-visible 12 px label; aria-checked)
  * kitSection  .group, .group-head (h3), .sectors, .sector, .sector-btn (collapsible), .sector-body
  * kitRow      .rows, .row (new: tree / list row: grip, glyph, name, trailing .icon-btn.xs;
- *             aria-level, aria-selected, aria-expanded; 40 px fine / 44 px coarse, design/10 4.9)
+ *             aria-level, aria-selected, aria-expanded; 40 px fine / 44 px coarse)
  * kitToolbar  .toolbar (new: floating capsule), .rail (new: vertical 56 px tool rail),
- *             .topbar (new: full-screen layer header, 56 px, order per design/10 4.8)
+ *             .topbar (new: full-screen layer header, 56 px)
  * kitNotice   .notice (new: inline banner .info | .warn | .error | .success, persists while true;
  *             + .result-note modifier: result of an action, cleared on the next edit), .empty,
- *             .toast (r2: inverse chip look, used by UI_TOAST_TAG and by the MCU CSS-only copy)
+ *             .toast (inverse chip look, used by UI_TOAST_TAG and by the MCU CSS-only copy)
  * kitSlider   .slider-row (new: label, range, number field, unit)
  * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
  * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
@@ -135,8 +122,8 @@
  * ── Layer 2: template helpers (signatures in UiKitTemplates; typed loosely, no lit import here) ──
  * Icons: `icon` is an HA icon name ("mdi:...", rendered as <ha-icon>) or `glyph` a GlyphName from the
  * kit's 24 x 24 stroke set (src/ui-kit/glyphs.ts: a copy of src/svg-editor/icons.ts plus the shape
- * editor's additions until UI4 switches the SVG editor over and deletes icons.ts). Every label string
- * comes from the caller (aico:i18n); helpers hold no strings.
+ * editor's additions ). Every label string
+ * comes from the caller (see the i18n contract); helpers hold no strings.
  *
  * ── Layer 3: elements ──
  * See UiMenuElement, UiWindowElement, UiPopoverElement, UiToastElement below.
@@ -147,7 +134,7 @@
  * rule of svg-editor 1.0.0: stopPropagation so HA's card dialog does not close), LongPress (from the
  * path canvas gesture, 8 px cancel rule).
  *
- * ── Tests (QA writes them; tests/ is git-ignored) ──
+ * ── Tests ──
  * 1. Gallery page: every part and element in every state (default, hover, focus-visible, pressed,
  *    disabled, error), light and dark theme, fine and coarse pointer, 100 % and 200 % zoom, 320 px
  *    reflow. Screenshots compared per component against a baseline (pixel diff threshold 0.1 %).
@@ -160,7 +147,7 @@
  *    85-113), Escape never closes HA's dialog, define twice is harmless, a lower-revision definition
  *    keeps working, DOM-only API (a caller built on a different lit copy can drive it), a toast shown
  *    while a window is open renders above its scrim.
- *    (r3) Window placement: header drag and corner resize with mouse and touch; arrows on the move and
+ *    Window placement: header drag and corner resize with mouse and touch; arrows on the move and
  *    resize grips (16 px, Shift 64), Home resets; a click without movement docks / steps the size; the
  *    maximise button toggles and restores the previous rect; min 320 x 240, header clamp after a
  *    viewport resize; Escape during a drag cancels it and leaves the window open; a press inside the
@@ -170,7 +157,7 @@
  *    src/ui-kit/index.ts reaches; stats.json lists src/ui-kit/** only in magic-card-editor.js, the
  *    studio entry and the theme editor entry.
  * 5. Selector scan: no kit class rule outside src/ui-kit/ (allow list for layout-only modifiers).
- * 6. (r3) Window scan: every `<mc-ui-window` in src/ whose variant is not 'alert' sets movable,
+ * 6. Window scan: every `<mc-ui-window` in src/ whose variant is not 'alert' sets movable,
  *    resizable and maximizable and binds all four placement labels.
  */
 
@@ -180,9 +167,9 @@ export const UI_KIT_CONTRACT_REVISION = 5;
 export const UI_MENU_TAG = 'mc-ui-menu';
 export const UI_WINDOW_TAG = 'mc-ui-window';
 export const UI_POPOVER_TAG = 'mc-ui-popover';
-/** r2. Built with the first screen that shows a toast (plan: UI8). */
+/** Toast element. */
 export const UI_TOAST_TAG = 'mc-ui-toast';
-/** 1.1.0 r5 (flow-slider-styles T9). Disclosure row, picture tiles and picture chips with manual activation. */
+/** Disclosure row, picture tiles and picture chips with manual activation. */
 export const UI_DISCLOSURE_TAG = 'mc-ui-disclosure';
 export const UI_TILE_GROUP_TAG = 'mc-ui-tile-group';
 export const UI_CHIP_GROUP_TAG = 'mc-ui-chip-group';
@@ -204,13 +191,13 @@ export const KIT_TOKENS = [
   '--mc-field-border', '--mc-warn-ink', '--mc-warn-tint', '--mc-error-ink', '--mc-success',
   '--mc-shadow-float', '--mc-mono', '--mc-radius', '--mc-radius-lg',
 ] as const;
-/** Added to editorTokens (Core) in r1, CEO-approved: the only Core token change. */
+/** Added to editorTokens (Core): the only Core token change. */
 export const NEW_TOKENS = [
   '--mc-hit', '--mc-font', '--mc-focus', '--mc-error-tint', '--mc-error-fill', '--mc-success-ink', '--mc-success-tint',
   '--mc-scrim',
 ] as const;
 /**
- * r2. Kit-scoped geometry and motion tokens, declared by the `kitTokens` part on :host (Module, not
+ * Kit-scoped geometry and motion tokens, declared by the `kitTokens` part on :host (Module, not
  * Core; no colours). A screen may override them on its :host like any token. Values (fine / coarse):
  *   --mc-hit-sm       32px / 44px     small controls, float-toolbar buttons, row menu button
  *   --mc-hit-xs       24px / 44px     in-row .icon-btn.xs
@@ -300,19 +287,19 @@ export interface KitRowOptions extends KitIcon {
   grip?: boolean;
   /** Trailing icon buttons (hide, lock, more). */
   actions?: KitButtonOptions[];
-  /** r3: optional; a `check` row selects through its checkbox. */
+  /** Optional; a `check` row selects through its checkbox. */
   onSelect?: (e: MouseEvent | KeyboardEvent) => void;
-  /** r3. Second line under the name (mono), e.g. the id. */
+  /** Second line under the name (mono), e.g. the id. */
   sub?: string;
-  /** r3. Leading `.check` checkbox; the name becomes its <label> (multi-select list). The row tints
+  /** Leading `.check` checkbox; the name becomes its <label> (multi-select list). The row tints
    *  while checked. `label` is the checkbox's accessible name. */
   check?: { label: string; checked: boolean; onChange: (v: boolean) => void };
-  /** 2026-10-19, additive. A host's leading node (e.g. a shape thumbnail), drawn after the icon and
+  /** A host's leading node (e.g. a shape thumbnail), drawn after the icon and
    *  before the name. Decorative content must be aria-hidden; the name stays the row's accessible text. */
   lead?: KitTemplate | Node;
-  /** r3. Replaces the name (inline rename input). */
+  /** Replaces the name (inline rename input). */
   content?: KitTemplate;
-  /** r3. Rendered after the actions (inline delete confirmation). */
+  /** Rendered after the actions (inline delete confirmation). */
   trail?: KitTemplate;
 }
 
@@ -335,11 +322,11 @@ export interface KitSliderOptions {
   unit?: string;
   onInput: (v: number) => void;
   onChange: (v: number) => void;
-  /** r3. aria-valuetext of the range (e.g. "90 degrees, pointing right"). */
+  /** Aria-valuetext of the range (e.g. "90 degrees, pointing right"). */
   valueText?: string;
-  /** r3. Accessible name of the number field; default `label`. */
+  /** Accessible name of the number field; default `label`. */
   numberLabel?: string;
-  /** r3. Disables the range and the number field. */
+  /** Disables the range and the number field. */
   disabled?: boolean;
 }
 
@@ -374,11 +361,11 @@ export interface UiKitTemplates {
 
 // ── Layer 3: elements ────────────────────────────────────────────────────────
 
-/** Same shape as path-canvas MenuEntry (r5); the path canvas re-exports this from revision 6. */
+/** Same shape as path-canvas MenuEntry; the path canvas re-exports this. */
 export interface UiMenuEntry {
   id: string;
   label: string;
-  /** Optional help line under the label (r4, additive); also the item's accessible description unless `reason` is set. */
+  /** Optional help line under the label ; also the item's accessible description unless `reason` is set. */
   sub?: string;
   /** Shortcut hint on fine pointers and aria-keyshortcuts, e.g. "Control+D". */
   keys?: string;
@@ -395,7 +382,7 @@ export interface UiMenuEntry {
   items?: UiMenuEntry[];
 }
 
-/** Event 'mc-menu-pick' (bubbles, composed). Same name and detail as path-canvas r5. */
+/** Event 'mc-menu-pick' (bubbles, composed). Same name and detail as path-canvas. */
 export interface UiMenuPick {
   id: string;
 }
@@ -439,11 +426,11 @@ export interface UiWindowClose {
  * never reaches HA's card dialog. Focus returns to `opener`. `aria-modal` is true because it is.
  * Content is slotted (light DOM in the caller's root, styled by the caller's kit CSS).
  * Slots: default (body), "footer" (buttons, primary last), "header-actions" (optional icon buttons).
- * CSS parts: panel, header, title, close, body, footer; (r3) move, resize, maximize.
- * (r3) Scrim close: only when the press AND the release are on the scrim (a drag or a text selection
+ * CSS parts: panel, header, title, close, body, footer; move, resize, maximize.
+ * Scrim close: only when the press AND the release are on the scrim (a drag or a text selection
  * that starts in the panel and ends outside never closes; the old PickerDialogController rule).
  *
- * (r3) Placement (CEO 2026-10-18: every window behaves the same). Each flag is off by default; every
+ * Placement (every window behaves the same). Each flag is off by default; every
  * caller of a non-alert window sets all three (test 6). Ignored, and their controls not rendered, for
  * variant 'alert' and for 'sheet' at compact width (the bottom sheet under 600 px).
  * - movable: drag by the header with mouse, pen or touch (pointer capture, touch-action none on the
@@ -477,7 +464,7 @@ export interface UiWindowElement extends HTMLElement {
   /** dialog: size m; picker: size l; alert: role=alertdialog, size s, no scrim close;
    *  sheet: bottom sheet (r 16 16 0 0, max 60vh) at compact width, dialog otherwise. */
   variant: 'dialog' | 'picker' | 'alert' | 'sheet';
-  /** r2. Width, overriding the variant's default: s 420, m 480, l 640, xl 880 px (preset grids);
+  /** Width, overriding the variant's default: s 420, m 480, l 640, xl 880 px (preset grids);
    *  always max-width 100 %, max-height min(80vh, 720px). Attribute `size`. The xl rule is added by the
    *  first screen that opens an 880 px grid; until then no caller passes 'xl'. */
   size?: 's' | 'm' | 'l' | 'xl';
@@ -486,15 +473,15 @@ export interface UiWindowElement extends HTMLElement {
   opener?: HTMLElement;
   /** Scrim click closes (default true, never for 'alert'). */
   dismissible?: boolean;
-  /** r3. Header drag plus the move grip. Attribute `movable`. Default false. */
+  /** Header drag plus the move grip. Attribute `movable`. Default false. */
   movable?: boolean;
-  /** r3. Corner resize grip. Attribute `resizable`. Default false. */
+  /** Corner resize grip. Attribute `resizable`. Default false. */
   resizable?: boolean;
-  /** r3. Maximise / restore button. Attribute `maximizable`. Default false. */
+  /** Maximise / restore button. Attribute `maximizable`. Default false. */
   maximizable?: boolean;
-  /** r3. Current maximised state; settable, reflected as attribute `maximized`. Reset to false on close. */
+  /** Current maximised state; settable, reflected as attribute `maximized`. Reset to false on close. */
   maximized?: boolean;
-  /** r3. Accessible names from the caller (British copy, e.g. "Move window", "Resize window",
+  /** Accessible names from the caller (British copy, e.g. "Move window", "Resize window",
    *  "Maximise", "Restore size"). */
   moveLabel?: string;
   resizeLabel?: string;
@@ -525,23 +512,23 @@ export interface UiPopoverElement extends HTMLElement {
   close(reason?: UiPopoverClose['reason']): void;
 }
 
-/** r2. Event 'mc-toast-action' (bubbles, composed): the toast's action button was pressed. */
+/** Event 'mc-toast-action' (bubbles, composed): the toast's action button was pressed. */
 export interface UiToastAction {
   id: string;
 }
 
 /**
- * r2. <mc-ui-toast>: transient confirmation of an action that needs no decision ("Copied SVG").
- * One per screen root; a new show() replaces the current message. Look: `.toast` (design/10 4.11),
+ * <mc-ui-toast>: transient confirmation of an action that needs no decision ("Copied SVG").
+ * One per screen root; a new show() replaces the current message. Look: `.toast`,
  * bottom centre, `offset` px above the bottom edge. Top layer (popover="manual") so it shows above an
  * open <mc-ui-window>. Live region role=status (polite), never focus-stealing. Hides after `duration`
- * ms (default 6000), paused while hovered or focused within, and (r5) while pressed. Never the only place a failure is
+ * ms (default 6000), paused while hovered or focused within, and while pressed. Never the only place a failure is
  * reported (failures are a .notice). No strings of its own. CSS parts: toast, text, action.
  */
 export interface UiToastElement extends HTMLElement {
   /** Default 16. Raise it when a save bar sits at the bottom. */
   offset?: number;
-  /** r5. Accessible name of the close button (44 px). Without it there is no button; Escape still closes. */
+  /** Accessible name of the close button (44 px). Without it there is no button; Escape still closes. */
   dismissLabel?: string;
   readonly open: boolean;
   show(o: { text: string; action?: { id: string; label: string }; duration?: number }): void;
@@ -549,7 +536,7 @@ export interface UiToastElement extends HTMLElement {
 }
 
 /**
- * r5. <mc-ui-disclosure>: a collapsible section row (button with aria-expanded, a heading around it).
+ * <mc-ui-disclosure>: a collapsible section row (button with aria-expanded, a heading around it).
  * `heading` is the title (never truncated), `summary` a short state line after it (truncates, wraps under the
  * title when narrow; part of the button's accessible name). `open` is settable and reflects; a click toggles
  * it and fires 'mc-toggle' { open } (bubbles, composed), so an inspector that owns the state can set `open`
@@ -562,7 +549,7 @@ export interface UiDisclosureElement extends HTMLElement {
   level?: number;
 }
 
-/** r5. One choice of a tile or chip group. `preview` is static SVG markup from a chunk constant (never config). */
+/** One choice of a tile or chip group. `preview` is static SVG markup from a chunk constant (never config). */
 export interface UiChoice {
   value: string;
   label: string;
@@ -571,13 +558,13 @@ export interface UiChoice {
   preview?: string;
 }
 
-/** r5. Event 'mc-pick' (bubbles, composed): a choice was selected (Space, Enter or click). */
+/** Event 'mc-pick' (bubbles, composed): a choice was selected (Space, Enter or click). */
 export interface UiChoicePick {
   value: string;
 }
 
 /**
- * r5. <mc-ui-tile-group> and <mc-ui-chip-group>: MANUAL activation. Buttons with aria-pressed in a role=group
+ * <mc-ui-tile-group> and <mc-ui-chip-group>: MANUAL activation. Buttons with aria-pressed in a role=group
  * named `label`; one tab stop (roving); Left / Right / Up / Down / Home / End move focus only; Space, Enter or
  * a click fire 'mc-pick'. `value` is owned by the host (the groups never change it themselves), so a group
  * never applies a choice on focus. Previews are aria-hidden; the label is the accessible name. They wrap at
