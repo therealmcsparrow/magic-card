@@ -1536,7 +1536,7 @@ export class MagicCard extends LitElement {
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
-      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra'].includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
+      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra', 'controls'].includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
       return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
     });
     return names.length
