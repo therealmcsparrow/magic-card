@@ -1,6 +1,6 @@
-// Emitted-syntax gate (proj.M15, browsers.S10, AC13). The browser floor is Chromium 85 (proj.M6), so every shipped dist/*.js
+// Emitted-syntax gate. The browser floor is Chromium 85, so every shipped dist/*.js
 // must be ES2021, and must not call the built-ins that arrived after it. Minifiers and bundler runtimes can write syntax the
-// source never had, and tsc does not check DOM or newer built-ins (browsers.S2), so this reads the output.
+// source never had, and tsc does not check DOM or newer built-ins, so this reads the output.
 //
 // 1. Syntax. Every dist .js is parsed with acorn at ecmaVersion 2021, sourceType "module" (HA loads magic-card.js as a module
 //    script, the entries use import.meta, and the chunks are ES modules). If that fails, the file is parsed again at 2022 and
@@ -13,7 +13,7 @@
 //    tools/es-syntax-debt.json ({file, token, count}): a count above the recorded one fails, a count below it fails too (lower
 //    the number, so the debt only shrinks), and with a base ref the debt file may not grow against it.
 //    One guarded use is accepted: magic-card-markdown.js holds marked, which calls `.at(` and `Object.hasOwn`, and the same
-//    chunk defines both when missing (polyfillForMarked in src/modules/content/markdown-view.ts, browsers.M3). The scan
+//    chunk defines both when missing (polyfillForMarked in src/modules/content/markdown-view.ts). The scan
 //    accepts those two tokens there only while the chunk still holds the polyfill's property names as string literals.
 //
 // Usage: node tools/check-es-syntax.mjs [--dist <dir>] [--debt <file>] [--print-debt] [--no-base | --require-base]

@@ -19,7 +19,7 @@ const writeI18nStats = (stats) => {
   const file = path.resolve(__dirname, 'node_modules/.cache/magic-card/i18n-stats.json');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out));
-  // the same module lists, with the entry flag and names, for tools/check-entry-graph.mjs (proj.M11)
+  // the same module lists, with the entry flag and names, for tools/check-entry-graph.mjs
   const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules })) };
   fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
 };
@@ -28,11 +28,11 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
   return {
-    // The ES ceiling of the browser floor (Chromium 85, proj.M6): webpack writes its own runtime and chunk loader in ES2021
-    // (webpack.M4), and Terser's `ecma` below follows it (terser.M1). tools/check-es-syntax.mjs parses every dist .js at 2021.
+    // The ES ceiling of the browser floor (Chromium 85): webpack writes its own runtime and chunk loader in ES2021
+    // and Terser's `ecma` below follows it. tools/check-es-syntax.mjs parses every dist .js at 2021.
     target: ['web', 'es2021'],
     // Three bundles: the card, the animation studio and the theme editor the magic-card-utils panel
-    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js, ADR 0007,
+    // loads (each defines only its own elements; the theme editor is one file, no chunks). The card editor is a lazy chunk (magic-card-editor.js,
     // loaded by src/utils/editor-loader.ts). The card's v2 animation runtime is a lazy chunk
     // (magic-card-anim-runtime.js, loaded next to magic-card.js via the public path set from
     // import.meta.url in src/index.ts). The studio's icon library is its lazy chunk
@@ -56,7 +56,7 @@ module.exports = (env, argv) => {
       chunkFormat: 'module',
       path: path.resolve(__dirname, 'dist'),
       clean: true,
-      // Written out in full, next to `target` (webpack.S8): a webpack minor upgrade cannot change the runtime syntax without a
+      // Written out in full, next to `target`: a webpack minor upgrade cannot change the runtime syntax without a
       // config change. These are the flags `['web', 'es2021']` resolves to today. `hasOwn` stays false (Object.hasOwn is Chromium 93),
       // and top-level await is not an `environment` flag (it is rejected by tools/check-es-syntax.mjs).
       environment: {
@@ -103,9 +103,9 @@ module.exports = (env, argv) => {
           use: 'ts-loader',
           exclude: /node_modules/,
         },
-        // i18n: t('British text') becomes t(17) per namespace (tools/i18n-loader.cjs, contract i18n 1.0.0 r2); runs before ts-loader and the template minifier
+        // i18n: t('British text') becomes t(17) per namespace (tools/i18n-loader.cjs, contract i18n 1.0.0); runs before ts-loader and the template minifier
         { test: /\.ts$/, include: path.resolve(__dirname, 'src'), enforce: 'pre', use: path.resolve(__dirname, 'tools/i18n-loader.cjs') },
-        // the card (src/card, src/css, src/modules; S1a.1, checked by tools/dom-diff.mjs), the entity source field (editor chunk, card entity), theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
+        // the card (src/card, src/css, src/modules; checked by tools/dom-diff.mjs), the entity source field (editor chunk, card entity), theme editor chunk (160 KB cap), path canvas chunk (44 KiB cap), SVG editor chunk (96 KiB cap) and path tools chunk (20 KiB ceiling): shrink css`` / html`` template text in production builds
         ...(isProduction
           ? [{ test: /\.ts$/, include: [path.resolve(__dirname, 'src/card'), path.resolve(__dirname, 'src/css'), path.resolve(__dirname, 'src/modules'), path.resolve(__dirname, 'src/theme-editor'), path.resolve(__dirname, 'src/path-canvas'), path.resolve(__dirname, 'src/svg-editor'), path.resolve(__dirname, 'src/transfer'), path.resolve(__dirname, 'src/path-tools'), path.resolve(__dirname, 'src/ui-kit'), path.resolve(__dirname, 'src/look-editor'), path.resolve(__dirname, 'src/flow-look'), path.resolve(__dirname, 'src/slider-look'), path.resolve(__dirname, 'src/editor/components/entity-source.ts'), path.resolve(__dirname, 'src/editor/components/mc-anchor-grid.ts'), path.resolve(__dirname, 'src/editor/layers')], enforce: 'pre', use: path.resolve(__dirname, 'tools/minify-templates-loader.cjs') }]
           : []),
@@ -126,11 +126,11 @@ module.exports = (env, argv) => {
       minimizer: isProduction
         ? [
             new TerserPlugin({
-              // `minimizerOptions` and `format`, not the deprecated `terserOptions` and `output` aliases (terser.S1).
-              // No `unsafe*` flag (terser.M2, terser.M-SEC1) and no `mangle.properties` (terser.M3). `module` and `toplevel` are
-              // left to the plugin, which sets `module` from the asset's javascriptModule info (terser.M4). `pure_getters` stays at its default (terser.S3).
+              // `minimizerOptions` and `format`, not the deprecated `terserOptions` and `output` aliases.
+              // No `unsafe*` flag and no `mangle.properties`. `module` and `toplevel` are
+              // left to the plugin, which sets `module` from the asset's javascriptModule info. `pure_getters` stays at its default.
               minimizerOptions: {
-                // the ES ceiling of the floor, at the top level so it covers compress and format (terser.M1); the plugin would derive 2020
+                // the ES ceiling of the floor, at the top level so it covers compress and format; the plugin would derive 2020
                 ecma: 2021,
                 compress: { passes: 2 },
                 format: {
@@ -142,7 +142,7 @@ module.exports = (env, argv) => {
             }),
           ]
         : [],
-      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (ADR 0045: a chunk that always loads after another is its child)
+      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk: a chunk that always loads after another is its child
       splitChunks: false,
       runtimeChunk: false,
     },

@@ -5,7 +5,7 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 const ROOT = 'Z:/projects/hass/magic-card';
 const tag = process.argv[2] || 'after';
-const OUT = path.join(ROOT, '.company/work/svg-and-shape-editors/t103/shots');
+const OUT = process.env.SHOTS_DIR || path.join(ROOT, '.harness-build/shots');
 const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].find(existsSync);
 const V = `window.__view.shadowRoot`;
 const click = (sel, text) => `[...${V}.querySelectorAll('${sel}')].find(b=>(b.getAttribute('aria-label')||b.textContent).trim().startsWith('${text}')).click()`;

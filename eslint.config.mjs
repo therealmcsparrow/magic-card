@@ -2,8 +2,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// proj.M12(a), lazy-module 1.4.0 "import() sites": a bare import() on the card side fails lint.
-// Add a file here only with an ADR/Contract change; moving a loader onto lazyChunk() shrinks the list.
+// lazy-module 1.4.0 "import() sites": a bare import() on the card side fails lint.
+// Add a file here only with a Contract change; moving a loader onto lazyChunk() shrinks the list.
 const REGISTERED_IMPORT_SITES = [
   'src/utils/lazy-chunks.ts',
   'src/anim-studio/anim-chunk.ts',
@@ -29,7 +29,7 @@ const REGISTERED_IMPORT_SITES = [
 const MANIFEST_SITE = 'src/utils/lazy-chunk.ts';
 
 const noWebpackIgnore = {
-  meta: { type: 'problem', schema: [], messages: { ignore: 'webpackIgnore is allowed only in ' + MANIFEST_SITE + ' (proj.M12 a).' } },
+  meta: { type: 'problem', schema: [], messages: { ignore: 'webpackIgnore is allowed only in ' + MANIFEST_SITE + '' } },
   create(context) {
     return {
       Program() {
@@ -71,7 +71,7 @@ export default tseslint.config(
         'error',
         {
           selector: 'ImportExpression',
-          message: 'Bare import() is not allowed (proj.M12 a). Use lazyChunk() in src/utils/lazy-chunks.ts, or register the loader in eslint.config.mjs with a Contract change.',
+          message: 'Bare import() is not allowed. Use lazyChunk() in src/utils/lazy-chunks.ts, or register the loader in eslint.config.mjs.',
         },
       ],
     },

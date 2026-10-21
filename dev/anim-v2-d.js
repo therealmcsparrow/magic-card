@@ -1,4 +1,4 @@
-// dev/anim-v2-d.html: card-part targets (Task D1) on real magic-cards plus the layers panel.
+// dev/anim-v2-d.html: card-part targets on real magic-cards plus the layers panel.
 (() => {
   const params = new URLSearchParams(location.search);
   const theme = params.get('theme') || 'light';

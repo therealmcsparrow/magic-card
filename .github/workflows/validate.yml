@@ -53,7 +53,7 @@ jobs:
       - name: Committed .br and .gz copies unpack to the committed .js (before the build rewrites them)
         run: node tools/check-dist-size.mjs --committed
       - run: npm run build
-      - name: Entry graph (proj.M11, debt list only shrinks)
+      - name: Entry graph (debt list only shrinks)
         # the base debt list is read with git show <base>:tools/entry-graph.json. Base: the commit before the push, or the PR base branch,
         # the same as the size-caps job. A base that does not resolve fails (--require-base); only a new branch (no commit before) has none.
         env:
@@ -80,13 +80,13 @@ jobs:
           else
             ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
           fi
-      - name: SVG sanitiser sits in the chunk of every SVG sink (AC14)
+      - name: SVG sanitiser sits in the chunk of every SVG sink
         run: |
           node tools/check-svg-sinks.mjs --self-test
           node tools/check-svg-sinks.mjs
       - name: Dist size budget
         run: npm run size
-      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in (browsers.S10, AC13)
+      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
         # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
         # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit
         # before) and a base that predates the debt file (bootstrap) skip the growth check, with a notice.
@@ -154,7 +154,7 @@ jobs:
 
   size-caps:
     name: Size caps not raised
-    # fails a raised cap or ceiling in tools/size-caps.json that has no ceo_decisions entry (ADR 0042). Needs git history, not dependencies.
+    # fails a raised cap or ceiling in tools/size-caps.json that has no approved_raises entry. Needs git history, not dependencies.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

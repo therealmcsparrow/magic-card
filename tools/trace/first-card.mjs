@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Time-to-first-card trace (proj.S5, plan S0.5). Warn-only: it never exits non-zero for a slow run.
+// Time-to-first-card trace. Warn-only: it never exits non-zero for a slow run.
 //
 //   node tools/trace/first-card.mjs [--port 18123] [--runs 3] [--fixtures 080,063] [--json]
 //

@@ -1,4 +1,4 @@
-// Entry-graph gate (proj.M11, AC8). Reads the webpack stats written by webpack.config.js
+// Entry-graph gate. Reads the webpack stats written by webpack.config.js
 // (node_modules/.cache/magic-card/entry-graph.json, production build) and the rules in tools/entry-graph.json.
 //
 // The modules of the chunk that holds magic-card.js are the run-time graph of the card entry: ts-loader
@@ -9,7 +9,7 @@
 //   3. the `debt` list holds an entry the base file (git show <base>:tools/entry-graph.json) did not (it grew).
 // Removing an entry from `debt` without fixing the import is failure 1.
 //
-// The proj.M11 lists (forbidden_dirs, contracts_allowed) are hard-coded below, like FINAL_CAP in the size gate.
+// The lists (forbidden_dirs, contracts_allowed) are hard-coded below, like FINAL_CAP in the size gate.
 // tools/entry-graph.json may add forbidden dirs or drop allowed contracts (tighten) but a list that drops a
 // hard-coded forbidden dir or adds an allowed contract fails, and the checker enforces the hard-coded lists
 // either way. Changing the policy means editing this file, which review sees.
@@ -47,7 +47,7 @@ export const violations = (modules, rules) => {
     .sort();
 };
 
-// proj.M11 policy, hard-coded so the editable rules file cannot switch the gate off
+// Policy, hard-coded so the editable rules file cannot switch the gate off
 export const FORBIDDEN_DIRS = ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor'];
 export const CONTRACTS_ALLOWED = ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'];
 

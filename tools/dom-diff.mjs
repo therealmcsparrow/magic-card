@@ -1,4 +1,4 @@
-// DOM-diff gate (proj.M15, AC12). Renders every gallery fixture (tools/fixtures/gallery/NNN.yaml) through the
+// DOM-diff gate. Renders every gallery fixture (tools/fixtures/gallery/NNN.yaml) through the
 // real MagicCard.setConfig in happy-dom, with a fixed hass mock, once with the current build and once with the
 // reference build (git archive edc5d05, built in .cache/dom-diff/), serialises the shadow trees and compares them.
 //
@@ -16,8 +16,7 @@
 //   2. a whitespace-only text node equals an empty one (it is dropped);
 //   3. attributes are sorted by name.
 // Nothing else is normalised: comments (lit part markers) stay, class order stays, style text stays, attribute
-// values stay, so a template-minifier change (S1a.1) shows up as a difference. Anything more lenient needs
-// Architect sign-off.
+// values stay, so a template-minifier change shows up as a difference.
 //
 // Fixed inputs: Date, Math.random and performance.now are pinned (the same sequence in both builds), the hass
 // mock is built from the entity ids the fixture itself names, every fixture is rendered through the real
@@ -162,7 +161,7 @@ function buildFromArchive(rev) {
   sh('tar', ['-xf', path.basename(tarFile), '-C', sha], { cwd: CACHE });
   rmSync(tarFile, { force: true });
   console.log(`building ${rev} (${sha.slice(0, 12)}) from git archive ...`);
-  // Windows needs a shell for npm.cmd; pass one fixed string, never an argument list with shell:true (node.M3)
+  // Windows needs a shell for npm.cmd; pass one fixed string, never an argument list with shell:true
   const r = process.platform === 'win32'
     ? spawnSync('npm run build', { cwd: dir, encoding: 'utf8', maxBuffer: 1 << 28, shell: true })
     : spawnSync('npm', ['run', 'build'], { cwd: dir, encoding: 'utf8', maxBuffer: 1 << 28, shell: false });
@@ -285,7 +284,7 @@ async function loadYaml(file) {
   const text = readFileSync(file, 'utf8');
   if (Buffer.byteLength(text) > MAX_FIXTURE_BYTES) throw new Error(`${file}: larger than ${MAX_FIXTURE_BYTES} bytes`);
   const doc = jsYaml.load(text, { schema: jsYaml.CORE_SCHEMA, maxAliases: MAX_ALIASES });
-  // plain objects, prototype-polluting keys dropped (jsyaml.M-SEC6)
+  // plain objects, prototype-polluting keys dropped
   return JSON.parse(JSON.stringify(doc), (k, v) => (k === '__proto__' || k === 'constructor' || k === 'prototype' ? undefined : v));
 }
 

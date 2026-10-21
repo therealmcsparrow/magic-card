@@ -1,5 +1,5 @@
 /* global console, process */
-// Contrast check of the flow and slider looks (flow-slider-styles T12). Node only, no browser.
+// Contrast check of the flow and slider looks. Node only, no browser.
 // Usage: node tools/check-look-contrast.mjs [--verbose]
 //
 // Checks, against four card surfaces (#ffffff and #f2f2f2 = light, #111111 and #1c1c1c = dark):

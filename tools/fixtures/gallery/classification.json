@@ -1,6 +1,6 @@
 {
-  "adr": "docs/adr/0040-plain-key-allowlist.md",
-  "plain_keys_sha256": "cf3e7075d547b53dbf6f06e50567cfe273959f18225643d9bc09d2049b0af09b",
+  "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
+  "plain_keys_sha256": "c9b044eaa818bf32de576af8219bd5f15409f346a27fcadb96c21ff7acd234b0",
   "count": 137,
   "plain": 18,
   "feature": 119,

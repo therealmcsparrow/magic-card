@@ -1,4 +1,4 @@
-// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0 r3). Run as `npm run i18n -- --check` or
+// Drift check D1-D7 (contract src/contracts/i18n.ts 1.0.0). Run as `npm run i18n -- --check` or
 // `node tools/check-i18n.mjs [--ci] [--strict] [--verbose] [--update-baseline] [--placement]`.
 //   D1 every id is a string literal      D2 every id has en-US and nl entries with the same arguments
 //   D3 en-GB spelling                    D4 en-US.json equals the generator output
@@ -7,7 +7,7 @@
 //   production build's module list, node_modules/.cache/magic-card/i18n-stats.json, written by webpack.config.js;
 //   --placement requires it and runs after `npm run build`, without it the placement part is skipped)
 // Namespaces whose status in I18N_MODULES is 'pending' report D2 as warnings. --strict (or
-// I18N_RELEASE_STRICT in the contract, on from slice I11) makes them errors, requires every namespace to be
+// I18N_RELEASE_STRICT in the contract) makes them errors, requires every namespace to be
 // 'complete' and every D5 baseline to be 0. --ci adds GitHub annotations. Exit 1 on any error.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -75,7 +75,7 @@ export async function main(argv = process.argv.slice(2)) {
   // strict: every namespace of the contract is complete and has an i18n folder
   if (strict) {
     for (const [ns, e] of Object.entries(modules)) {
-      if (ns === 'mcu-panel') continue; // lives in the Magic Card Utils repository (slice I9)
+      if (ns === 'mcu-panel') continue; // lives in the Magic Card Utils repository
       if (e.status !== 'complete') err('D2', `${ns}: status is '${e.status}', the release gate needs 'complete'`);
       if (!nsList.some((n) => n.ns === ns)) err('D2', `${ns}: no src/<folder>/i18n folder yet`);
     }
@@ -160,7 +160,7 @@ export async function main(argv = process.argv.slice(2)) {
 
   for (const w of warnings) console.warn(`${ci ? '::warning::' : 'warn '}${w}`);
   for (const e of errors) console.error(`${ci ? '::error::' : 'FAIL '}${e}`);
-  console.log(`i18n check: ${nsList.length} namespaces, ${errors.length} errors, ${warnings.length} warnings${strict ? ' (strict)' : ' (non-strict until I11)'}`);
+  console.log(`i18n check: ${nsList.length} namespaces, ${errors.length} errors, ${warnings.length} warnings${strict ? ' (strict)' : ' (non-strict)'}`);
   return errors.length ? 1 : 0;
 }
 

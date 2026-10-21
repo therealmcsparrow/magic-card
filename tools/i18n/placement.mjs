@@ -1,4 +1,4 @@
-// D7 placement (contract src/contracts/i18n.ts 1.0.0 r3, "Where tables live"): which built file holds the
+// D7 placement (contract src/contracts/i18n.ts 1.0.0, "Where tables live"): which built file holds the
 // runtime, the tables and the call sites. Input: the module list of the production build that
 // webpack.config.js writes (STATS_FILE). Pure; returns { errors, notes }.
 import fs from 'node:fs';

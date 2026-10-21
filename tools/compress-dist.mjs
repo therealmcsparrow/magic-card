@@ -1,4 +1,4 @@
-// Writes <file>.js.br and <file>.js.gz next to every dist/*.js (ADR 0044). Home Assistant's static file server sends a sibling
+// Writes <file>.js.br and <file>.js.gz next to every dist/*.js. Home Assistant's static file server sends a sibling
 // .br or .gz when the browser accepts it and the raw file otherwise, so without the siblings every dashboard downloads the raw bundle.
 // Deterministic: brotli quality 11, lgwin 22, text mode, size hint = input length; gzip level 9 with the header OS byte fixed to 3
 // (zlib writes the host's code, 11 on Windows and 3 on Linux; mtime is already 0). Sorted order, no timestamps, no dependency.

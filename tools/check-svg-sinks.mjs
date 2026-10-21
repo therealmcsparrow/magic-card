@@ -1,6 +1,6 @@
-// SVG sink gate (AC14, proj.M11 security clause). Every chunk of the card bundle that holds an SVG sink must hold the
+// SVG sink gate. Every chunk of the card bundle that holds an SVG sink must hold the
 // sanitiser (src/icons/svg-sanitize.ts, statically imported) itself, or every chain of parent chunks from magic-card.js to
-// it must pass through a chunk that does (ADR 0045); never only in a sibling, never behind its own import().
+// it must pass through a chunk that does; never only in a sibling, never behind its own import().
 //
 // A sink is a source module that (a) calls unsafeSVG() / imports lit's unsafe-svg directive, or (b) imports the sanitiser
 // (it handles untrusted SVG), found by scanning src/**/*.ts, plus the modules named in tools/svg-sinks.json `sinks`.
@@ -72,7 +72,7 @@ const ancestors = (chunk, byId) => {
 };
 
 /**
- * The sanitiser is installed before the chunk runs on EVERY path to it (ADR 0045): the chunk holds it, or it has parents and each
+ * The sanitiser is installed before the chunk runs on EVERY path to it: the chunk holds it, or it has parents and each
  * one is available. A child's import() is code inside its parent, so what a parent holds is installed first. A chunk with a
  * parent that lacks it (a second parent, a sibling, an entry without it) fails: one good ancestor on one path is not enough.
  */

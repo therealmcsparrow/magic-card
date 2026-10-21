@@ -11,7 +11,7 @@
  *             space of a block never shows), and whitespace before the > that ends a tag.
  *             Parts holding <pre or <textarea are left alone.
  * An html`` part that sets white-space: pre* (pre, pre-wrap, pre-line) is left alone: there the
- * whitespace is content (S1a.1). css``, whose source whitespace never reaches the page, is still shrunk, but quoted strings
+ * whitespace is content. css``, whose source whitespace never reaches the page, is still shrunk, but quoted strings
  * and url() in it are copied as written: only the code around them shrinks.
  */
 const ts = require('typescript');

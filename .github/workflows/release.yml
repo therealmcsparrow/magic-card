@@ -28,7 +28,7 @@ jobs:
         run: npm run notices -- --check
 
       - name: i18n drift check (en-GB, en-US, nl)
-        # before the build: the build regenerates en-US.json, so a stale committed file is caught here. Strict since slice I11 (I18N_RELEASE_STRICT in the contract)
+        # before the build: the build regenerates en-US.json, so a stale committed file is caught here. Strict through I18N_RELEASE_STRICT in the contract.
         run: node tools/check-i18n.mjs --ci
 
       - run: npm run build
@@ -46,14 +46,14 @@ jobs:
       - name: Dist size budget
         run: npm run size
 
-      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in (browsers.S10, AC13)
+      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
         # parse and token rules only; the debt-growth check against main is the validate workflow's (the checkout here has no main to compare with)
         run: |
           npm run syntax:selftest
           node tools/check-es-syntax.mjs --no-base
 
       - name: i18n placement (runtime, tables and call sites per built file)
-        # reads the module list of the build above (contract i18n r3, D7)
+        # reads the module list of the build above (contract i18n, D7)
         run: node tools/check-i18n.mjs --ci --placement
 
       - name: Generate CycloneDX SBOM (production dependencies)
@@ -64,7 +64,7 @@ jobs:
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           # the card (HACS installs every .js asset), its lazy chunks (magic-card-anim-runtime.js) and
-          # the animation studio the magic-card-utils panel loads; the .br and .gz copy of each (HA serves them, ADR 0044); plus the SBOM and licence notices
+          # the animation studio the magic-card-utils panel loads; the .br and .gz copy of each (HA serves them); plus the SBOM and licence notices
           files: |
             dist/*.js
             dist/*.js.br

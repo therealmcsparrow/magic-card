@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Classifies the gallery fixtures (tools/fixtures/gallery/NNN.yaml) as plain or feature against the
-// ADR 0040 key allowlist (tools/plain-keys.json) and writes tools/fixtures/gallery/classification.json.
+// key allowlist (tools/plain-keys.json) and writes tools/fixtures/gallery/classification.json.
 //
 //   node tools/classify-gallery.mjs                    classify the committed fixtures, write classification.json
 //   node tools/classify-gallery.mjs --check            classify, compare with the committed file, exit 1 on any difference
@@ -9,7 +9,7 @@
 //   node tools/classify-gallery.mjs --import <dir>     copy <dir>/<n>-<slug>.yaml (n = 1..137) to fixtures/gallery/NNN.yaml, then classify
 //
 // The output has no timestamps and no absolute paths: the same inputs give the same bytes.
-// Every run scans first and refuses to classify a fixture the scan flags (rules jsyaml.M-SEC1..M-SEC6, hacard.M-SEC3).
+// Every run scans first and refuses to classify a fixture the scan flags.
 
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -22,8 +22,8 @@ const FIXTURES = join(ROOT, 'tools', 'fixtures', 'gallery');
 const KEYS_FILE = join(ROOT, 'tools', 'plain-keys.json');
 const OUT_FILE = join(FIXTURES, 'classification.json');
 const EXPECTED_COUNT = 137;
-const MAX_FIXTURE_BYTES = 262144; // jsyaml.M-SEC3: refuse above this
-const MAX_ALIASES = 1000; // jsyaml.M-SEC4
+const MAX_FIXTURE_BYTES = 262144; // refuse above this
+const MAX_ALIASES = 1000; // bound on YAML aliases (alias-expansion limit)
 
 // ── token and personal-data scan ─────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ const SCAN_RULES = [
 
 /**
  * Personal-name deny-list: one case-insensitive term per line (# comments allowed), read from the file named by
- * PRIVACY_DENYLIST, else .company/privacy-denylist.txt (git-ignored). PRIVACY_DENYLIST_TERMS (comma separated) is
+ * PRIVACY_DENYLIST, else .company/privacy-denylist.txt (a git-ignored file). PRIVACY_DENYLIST_TERMS (comma separated) is
  * added on top. No term lives in a tracked file. With no list the user-name rule is skipped and a note is printed.
  */
 function loadDenyList() {
@@ -89,14 +89,14 @@ function fixtureFiles() {
     .sort();
 }
 
-/** js-yaml 5, CORE_SCHEMA, no merge tag, bounded aliases (jsyaml.M-SEC2, M-SEC3, M-SEC4, M-SEC5). */
+/** js-yaml 5, CORE_SCHEMA, no merge tag, bounded aliases. */
 function parseYaml(text, name) {
   if (Buffer.byteLength(text) > MAX_FIXTURE_BYTES) throw new Error(`${name}: larger than ${MAX_FIXTURE_BYTES} bytes`);
   const doc = jsYaml.load(text, { schema: jsYaml.CORE_SCHEMA, maxAliases: MAX_ALIASES });
   return stripUnsafeKeys(doc);
 }
 
-/** jsyaml.M-SEC6: drop prototype-polluting keys; also counts nodes and bounds the walk. */
+/** Drop prototype-polluting keys; also counts nodes and bounds the walk. */
 function stripUnsafeKeys(root) {
   const seen = new Map();
   let visits = 0;
@@ -425,13 +425,13 @@ function build() {
   const plain = cards.filter((c) => c.class === 'plain');
   const feature = cards.filter((c) => c.class === 'feature');
 
-  // Trace fixtures for S0.5: the plain card with the most modules; the effect card that needs the
+  // Trace fixtures: the plain card with the most modules; the effect card that needs the
   // `anim` chunk only (no other chunk), with the most modules. Ties: lowest id.
   const pick = (list) => list.slice().sort((a, b) => b.modules - a.modules || a.id.localeCompare(b.id))[0]?.id ?? null;
   const effectPool = feature.filter((c) => c.chunks.length === 1 && c.chunks[0] === 'anim' && c.unknown_keys.length === 0);
 
   const out = {
-    adr: keys.adr,
+    description: keys.description,
     plain_keys_sha256: sha256(keysText),
     count: cards.length,
     plain: plain.length,
