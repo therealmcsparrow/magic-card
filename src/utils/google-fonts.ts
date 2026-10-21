@@ -1,48 +1,44 @@
 /**
- * Google Fonts offered by the font picker. A design font family naming one of them gets the font
- * loaded (a stylesheet link in document.head, once per family); system fonts and Roboto (Home
- * Assistant's own font) load nothing.
+ * Google Fonts the card can load. A design font family naming one of them gets the font loaded (a
+ * stylesheet link in document.head, once per family); system fonts and Roboto (Home Assistant's own
+ * font) load nothing. The editor's font list (font-picker.ts) carries the family strings and categories.
  */
-export interface GoogleFont {
-  name: string;
-  family: string;
-  category: string;
-  /** Upright weights the family has of COMMON_WEIGHTS, when not all of them (css2 rejects a missing weight). */
-  weights?: number[];
-}
 
 /** The weights requested (upright only), so light, medium and bold are real faces, not synthesised. */
 export const COMMON_WEIGHTS = [300, 400, 500, 700];
 
-export const GOOGLE_FONTS: GoogleFont[] = [
-  { name: 'Roboto', family: 'Roboto, sans-serif', category: 'Sans-serif' },
-  { name: 'Open Sans', family: '"Open Sans", sans-serif', category: 'Sans-serif' },
-  { name: 'Lato', family: 'Lato, sans-serif', category: 'Sans-serif', weights: [300, 400, 700] },
-  { name: 'Montserrat', family: 'Montserrat, sans-serif', category: 'Sans-serif' },
-  { name: 'Oswald', family: 'Oswald, sans-serif', category: 'Sans-serif' },
-  { name: 'Source Sans Pro', family: '"Source Sans Pro", sans-serif', category: 'Sans-serif', weights: [300, 400, 700] },
-  { name: 'Raleway', family: 'Raleway, sans-serif', category: 'Sans-serif' },
-  { name: 'PT Sans', family: '"PT Sans", sans-serif', category: 'Sans-serif', weights: [400, 700] },
-  { name: 'Merriweather', family: 'Merriweather, serif', category: 'Serif' },
-  { name: 'Playfair Display', family: '"Playfair Display", serif', category: 'Serif', weights: [400, 500, 700] },
-  { name: 'Lora', family: 'Lora, serif', category: 'Serif', weights: [400, 500, 700] },
-  { name: 'PT Serif', family: '"PT Serif", serif', category: 'Serif', weights: [400, 700] },
-  { name: 'Noto Sans', family: '"Noto Sans", sans-serif', category: 'Sans-serif' },
-  { name: 'Ubuntu', family: 'Ubuntu, sans-serif', category: 'Sans-serif' },
-  { name: 'Poppins', family: 'Poppins, sans-serif', category: 'Sans-serif' },
-  { name: 'Nunito', family: 'Nunito, sans-serif', category: 'Sans-serif' },
-  { name: 'Inconsolata', family: 'Inconsolata, monospace', category: 'Monospace' },
-  { name: 'Fira Code', family: '"Fira Code", monospace', category: 'Monospace' },
-  { name: 'Source Code Pro', family: '"Source Code Pro", monospace', category: 'Monospace' },
-  { name: 'Dancing Script', family: '"Dancing Script", cursive', category: 'Cursive', weights: [400, 500, 700] },
-];
+const LIGHT_REGULAR_BOLD = [300, 400, 700];
+const REGULAR_BOLD = [400, 700];
+const REGULAR_MEDIUM_BOLD = [400, 500, 700];
 
-const BY_NAME = new Map(GOOGLE_FONTS.map((f) => [f.name.toLowerCase(), f.name]));
-const WEIGHTS = new Map(GOOGLE_FONTS.map((f) => [f.name, f.weights ?? COMMON_WEIGHTS]));
+/** Each offered family with the upright weights it has when not all of the common ones (css2 rejects a missing weight). */
+export const GOOGLE_FONT_WEIGHTS: Record<string, number[] | undefined> = {
+  Roboto: undefined,
+  'Open Sans': undefined,
+  Lato: LIGHT_REGULAR_BOLD,
+  Montserrat: undefined,
+  Oswald: undefined,
+  'Source Sans Pro': LIGHT_REGULAR_BOLD,
+  Raleway: undefined,
+  'PT Sans': REGULAR_BOLD,
+  Merriweather: undefined,
+  'Playfair Display': REGULAR_MEDIUM_BOLD,
+  Lora: REGULAR_MEDIUM_BOLD,
+  'PT Serif': REGULAR_BOLD,
+  'Noto Sans': undefined,
+  Ubuntu: undefined,
+  Poppins: undefined,
+  Nunito: undefined,
+  Inconsolata: undefined,
+  'Fira Code': undefined,
+  'Source Code Pro': undefined,
+  'Dancing Script': REGULAR_MEDIUM_BOLD,
+};
 
+const BY_NAME = new Map(Object.keys(GOOGLE_FONT_WEIGHTS).map((name) => [name.toLowerCase(), name]));
 /** The css2 stylesheet URL of a family with its common upright weights (`Open+Sans:wght@300;400;500;700`). */
 export function googleFontUrl(family: string): string {
-  const weights = (WEIGHTS.get(family) ?? COMMON_WEIGHTS).join(';');
+  const weights = (GOOGLE_FONT_WEIGHTS[family] ?? COMMON_WEIGHTS).join(';');
   return `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@${weights}&display=swap`;
 }
 

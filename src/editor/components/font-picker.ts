@@ -3,9 +3,43 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { HomeAssistant } from '../../types';
 import { pickerStyles, fontPickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
-import { GOOGLE_FONTS, loadGoogleFonts } from '../../utils/google-fonts';
+import { loadGoogleFonts } from '../../utils/google-fonts';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from './picker-parts';
 import { t } from '../i18n';
+
+interface GoogleFont {
+  name: string;
+  family: string;
+  category: string;
+  /** Upright weights the family has of the common ones, when not all of them. */
+  weights?: number[];
+}
+
+/** The weights requested (upright only), so light, medium and bold are real faces, not synthesised. */
+export const COMMON_WEIGHTS = [300, 400, 500, 700];
+
+export const GOOGLE_FONTS: GoogleFont[] = [
+  { name: 'Roboto', family: 'Roboto, sans-serif', category: 'Sans-serif' },
+  { name: 'Open Sans', family: '"Open Sans", sans-serif', category: 'Sans-serif' },
+  { name: 'Lato', family: 'Lato, sans-serif', category: 'Sans-serif', weights: [300, 400, 700] },
+  { name: 'Montserrat', family: 'Montserrat, sans-serif', category: 'Sans-serif' },
+  { name: 'Oswald', family: 'Oswald, sans-serif', category: 'Sans-serif' },
+  { name: 'Source Sans Pro', family: '"Source Sans Pro", sans-serif', category: 'Sans-serif', weights: [300, 400, 700] },
+  { name: 'Raleway', family: 'Raleway, sans-serif', category: 'Sans-serif' },
+  { name: 'PT Sans', family: '"PT Sans", sans-serif', category: 'Sans-serif', weights: [400, 700] },
+  { name: 'Merriweather', family: 'Merriweather, serif', category: 'Serif' },
+  { name: 'Playfair Display', family: '"Playfair Display", serif', category: 'Serif', weights: [400, 500, 700] },
+  { name: 'Lora', family: 'Lora, serif', category: 'Serif', weights: [400, 500, 700] },
+  { name: 'PT Serif', family: '"PT Serif", serif', category: 'Serif', weights: [400, 700] },
+  { name: 'Noto Sans', family: '"Noto Sans", sans-serif', category: 'Sans-serif' },
+  { name: 'Ubuntu', family: 'Ubuntu, sans-serif', category: 'Sans-serif' },
+  { name: 'Poppins', family: 'Poppins, sans-serif', category: 'Sans-serif' },
+  { name: 'Nunito', family: 'Nunito, sans-serif', category: 'Sans-serif' },
+  { name: 'Inconsolata', family: 'Inconsolata, monospace', category: 'Monospace' },
+  { name: 'Fira Code', family: '"Fira Code", monospace', category: 'Monospace' },
+  { name: 'Source Code Pro', family: '"Source Code Pro", monospace', category: 'Monospace' },
+  { name: 'Dancing Script', family: '"Dancing Script", cursive', category: 'Cursive', weights: [400, 500, 700] },
+];
 
 interface FontOption {
   name: string;

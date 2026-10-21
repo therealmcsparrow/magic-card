@@ -224,7 +224,7 @@ export const I18N_MODULES = {
     bundle: 'magic-card-editor.js, magic-card-animation-studio.js (lm() numbers also in magic-card.js)',
     folders: [
       'src/utils/css-properties.ts', 'src/utils/css-property-options.ts', 'src/utils/animation-presets.ts',
-      'src/utils/google-fonts.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',
+      'src/editor/components/font-picker.ts (group names; family names are not messages)', 'src/utils/seasonal-scenes.ts',
       'src/modules (module descriptions)',
       'files compiled into both magic-card-editor.js and the studio entry (I0b lists them from stats.json)',
     ],
