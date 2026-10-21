@@ -500,9 +500,7 @@ export class MagicCard extends LitElement {
     this._prefetchedCfg = cfg;
     lazyChunks.seasonal.whenReady(this._seasonalReady); // the same function each time: the chunk's waiting set holds it once, not one closure per edited config (lit.M3)
   }
-  private _seasonalReady = (): void => {
-    if (this.isConnected) this.requestUpdate();
-  };
+  private _seasonalReady = (): void => this.requestUpdate();
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
   private _shapeCfg?: object;
