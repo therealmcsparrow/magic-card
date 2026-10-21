@@ -2,8 +2,8 @@
  * Contract: card pause (viewer-side "Pause motion" button, WCAG 2.2.2). Version 2.0.0.
  * A pause button per card stops every moving thing on the card. watchOffscreen and the pauseOffscreen
  * directive take a `counted` option.
- * PAUSE_ATTRIBUTE, PAUSE_EVENT and PAUSE_STORAGE_PREFIX live in card-pause.needs.ts (the entry imports
- * only *.needs.ts of a contract); this file re-exports them.
+ * PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX, wantsPause and pauseGap live in card-pause.needs.ts (the entry imports
+ * only *.needs.ts of a contract); this file re-exports the first three.
  * `pause_button` default is `hidden`; the editor shows the
  * setting in its own "Motion" group, open by default; the editor preview pause (MagicCard
  * `previewPaused`, additive) freezes motion while editing without the storage key. The offscreen and
@@ -122,14 +122,15 @@
  * Never written while the card is in editMode or by previewPaused.
  *
  * ── Size ──
- * magic-card.js: button template, storage, observer extension, CSS rule and three i18n strings
- * (en-GB ids, en-US and nl tables) about 1,024 B.
+ * magic-card.js: observer extension, the strip rules and three i18n strings (en-GB ids, en-US and nl tables).
+ * magic-card-pause.js (lazy-module chunk `pause`, loaded when pause_button is auto or always or an editor preview pause
+ * asks): the CardPause class, button template, storage and the button rules.
  * previewPaused plus the editMode storage guard: about 80-150 B in magic-card.js; the canvas
  * toggle and the Motion group are in magic-card-editor.js.
  */
 
 export const CARD_PAUSE_CONTRACT = '2.0.0';
-export const CARD_PAUSE_CONTRACT_REVISION = 3;
+export const CARD_PAUSE_CONTRACT_REVISION = 4;
 
 export type PauseButtonMode = 'auto' | 'always' | 'hidden';
 export type PauseButtonCorner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';

@@ -41,6 +41,8 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   'modules-extra': lazyChunk('modules-extra', () => import(/* webpackChunkName: "modules-extra" */ '../modules/lazy/extras-chunk')),
   // the flow resolver, line geometry, <mc-flows> and the card rules of a card with flows; the card reads it through src/card/flows-seam.ts
   flows: lazyChunk('flows', () => import(/* webpackChunkName: "flows" */ '../card/flows-chunk')),
+  // the Pause motion button; the card reads it through src/card/pause-seam.ts
+  pause: lazyChunk('pause', () => import(/* webpackChunkName: "pause" */ '../card/pause-chunk')),
   'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
   'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
   // <mc-bg-stack>, the card backdrop

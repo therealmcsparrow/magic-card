@@ -112,16 +112,6 @@ export class CardPause {
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
   }
 
-  /**
-   * Value of data-mc-pause-gap on .mc-card-content (bound in the template, not written to the host):
-   * the edge that keeps a 24 px strip for the button. Reserved for `auto` and `always` alike, so the
-   * layout does not move when motion starts or stops; `hidden` reserves nothing.
-   */
-  gap(c: CardPauseKeys): string | typeof nothing {
-    if (this._mode === 'hidden') return nothing;
-    return CORNERS.includes(String(c.pause_button_corner)) ? String(c.pause_button_corner).split('-')[0] : 'bottom';
-  }
-
   private _wants(on: boolean): boolean {
     return on || this._moves || motionCount(this._host) > 0;
   }

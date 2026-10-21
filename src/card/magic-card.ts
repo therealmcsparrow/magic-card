@@ -83,7 +83,9 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { SequencePlayer } from './sequence-player';
 import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
-import { CardPause } from './card-pause';
+import type { CardPause } from './card-pause';
+import { pauseIfLoaded } from './pause-seam';
+import { pauseGap, wantsPause } from '../contracts/card-pause.needs';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
 /**
@@ -204,12 +206,13 @@ export class MagicCard extends LitElement {
 
   /** Editor preview pause (card-pause 2.0.0): freezes all motion while editing; never remembered, survives setConfig. */
   get previewPaused(): boolean {
-    return this._pause.preview;
+    return this._preview;
   }
   set previewPaused(on: boolean) {
-    const old = this._pause.preview;
+    const old = this._preview;
     if (on === old) return;
-    this._pause.preview = on;
+    this._preview = on;
+    if (this._pause) this._pause.preview = on;
     this.requestUpdate('previewPaused', old);
   }
 
@@ -339,8 +342,37 @@ export class MagicCard extends LitElement {
   private _layerOn = false;
   /** This card asked for a re-render when the layers chunk lands (once). */
   private _layersAsked = false;
-  /** The viewer's Pause motion button and state (contract card-pause 1.0.0). */
-  private readonly _pause = new CardPause(this);
+  private _preview = false;
+  /** The viewer's Pause motion button and state (contract card-pause 1.0.0); made once the `pause` chunk has installed and a pause is wanted. */
+  private _pause?: CardPause;
+  /** The config setConfig received: the remembered pause is keyed by it. */
+  private _pauseSource?: object;
+  private _pauseWait = false;
+  private _pauseReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
+  /**
+   * The pause state when this card shows the button (or an editor preview pause) and the chunk is there; else undefined.
+   * While the chunk loads the card renders without pause state and draws again when it has installed.
+   */
+  private _pauseFor(c: MagicCardConfig): CardPause | undefined {
+    if (this._pause) return this._pause;
+    if (!this._preview && !wantsPause(c)) return undefined;
+    const mod = pauseIfLoaded();
+    if (!mod) {
+      this._met.add('pause');
+      if (!this._pauseWait) {
+        this._pauseWait = true;
+        lazyChunks.pause.whenReady(this._pauseReady);
+        void lazyChunks.pause.load();
+      }
+      return undefined;
+    }
+    const pause = (this._pause = mod.api.create(this));
+    pause.preview = this._preview;
+    pause.config(this._pauseSource ?? c);
+    return pause;
+  }
   /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
   private _frames: FillFrame[] = [];
   private _card: FillFrame = { flow: false, row: false, out: [] };
@@ -472,7 +504,8 @@ export class MagicCard extends LitElement {
     const prevTemplate = this._config?.template;
     // a chunk met under the old config raises no notice under the new one
     this._met.clear();
-    this._pause.config(config);
+    this._pauseSource = config;
+    this._pause?.config(config);
 
     // Every row / column / module (nested children included) gets a stable id
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
@@ -745,7 +778,7 @@ export class MagicCard extends LitElement {
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
     this._unsubShapes = undefined;
-    this._pause.disconnected();
+    this._pause?.disconnected();
     animIfLoaded()?.stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
@@ -796,7 +829,8 @@ export class MagicCard extends LitElement {
 
     // the scope first: the card's own display template reads entity / card_entity
     // the viewer's pause: on the host and the observer before any child is built
-    const paused = this._pause.begin(config);
+    const pause = this._pauseFor(config);
+    const paused = pause?.begin(config) ?? false;
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
@@ -844,7 +878,7 @@ export class MagicCard extends LitElement {
     const layered = this._beginLayers(config, !!backdrop);
     const layerCss = layered && layerSlot.get() ? html`<style data-mc-layer-css>${layerSlot.get()!.css}</style>` : nothing;
     const lowPower = layered && resolved.layers_low_power;
-    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) this._pause.moving();
+    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) pause?.moving();
     const stack = backdrop ? html`<mc-bg-stack .layers=${backdrop} .hass=${this.hass} .host=${this._stackHost}></mc-bg-stack>` : nothing;
     const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
     const rows = (animShape: ResolvedShape | undefined = shape) => {
@@ -867,11 +901,11 @@ export class MagicCard extends LitElement {
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
-              data-mc-pause-gap=${this._pause.gap(config)}
+              data-mc-pause-gap=${pauseGap(config) ?? nothing}
               data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
-            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
+            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `, shadow, !!shape);
     if (!popup) return inline as TemplateResult;
@@ -893,10 +927,10 @@ export class MagicCard extends LitElement {
             <div class="mc-popup-body">
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
-                data-mc-pause-gap=${this._pause.gap(config)}
+                data-mc-pause-gap=${pauseGap(config) ?? nothing}
                 data-mc-flows=${hasFlowList ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
                 data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${this._failNotices(config, badge)}</div>
-            </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
+            </div>${renderRing(popupRing)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `
       : nothing;
@@ -1354,7 +1388,7 @@ export class MagicCard extends LitElement {
    * without any). Rows, columns and the card have no entity: their documents follow an entry's own.
    */
   private _v2(anim: ResolvedAnimations | undefined, stateObj?: HassEntity, entityId?: string): number | undefined {
-    if (anim) this._pause.moving();
+    if (anim) this._pause?.moving();
     if (anim?.needsRuntime) this._v2Need = true;
     if (anim?.needsParticles) this._pNeed = true;
     return anim?.v2 ? this._v2Render.push({ entries: anim.v2, stateObj, entityId }) - 1 : undefined;
