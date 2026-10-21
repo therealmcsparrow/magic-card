@@ -38,6 +38,20 @@ const magicCardLocalStyles = css`
     gap: var(--mc-gap);
   }
 
+  /* A failure notice shows (host attribute mc-fail): ha-card is the scroll box, so the card keeps its grid cell. */
+  :host([mc-fail]) {
+    height: 100%;
+  }
+  :host([mc-fail]) ha-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden auto;
+    scroll-padding-block: 8px;
+  }
+  :host([mc-fail]) .mc-card-content {
+    flex: none;
+  }
+
   /* Columns fill their grid cell (stretch): vertical_align then has room to work and the studio
      frames the cell, not just the column's modules. */
   .mc-row {

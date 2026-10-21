@@ -43,6 +43,7 @@ import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
 import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
 import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
 import './chunk-notice';
+import type { McChunkNotice } from './chunk-notice';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
 import type { SeasonalBudget } from '../utils/seasonal-scenes';
@@ -660,6 +661,8 @@ export class MagicCard extends LitElement {
     this._subscriptions.end();
     this._media.end();
     this._syncTicker();
+    // a notice of a failed chunk shows: the css makes ha-card the scroll box (the attribute is on no other render)
+    this.toggleAttribute('mc-fail', [...(this.renderRoot?.querySelectorAll<McChunkNotice>('mc-chunk-notice') ?? [])].some((n) => n.chunk?.failed()));
 
     if (this.editMode) return;
 
