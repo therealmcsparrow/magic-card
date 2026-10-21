@@ -143,9 +143,9 @@
       "note": "56 KiB, sized for the style allow-list tokenizer."
     },
     "magic-card-manifest.js": {
-      "raw": 2048,
-      "ceiling": 2048,
-      "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 1,758 B measured with 26 chunks."
+      "raw": 3072,
+      "ceiling": 3072,
+      "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
       "raw": 63488,
@@ -159,7 +159,7 @@
     },
     "magic-card-anim.js": {
       "raw": 89088,
-      "ceiling": 90112,
+      "ceiling": 94208,
       "note": "87 KiB, measured 84,236 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. Animation resolve, compiler, model, animation library, sequence player, the preset and keyframe tables and the animation rules. The contract ceiling is 94,208 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-flows.js": {
@@ -340,6 +340,24 @@
       "field": "/files/magic-card-modules-extra.js/ceiling",
       "from": 53248,
       "to": 57344
+    },
+    {
+      "id": "manifest-raw-3072",
+      "field": "/files/magic-card-manifest.js/raw",
+      "from": 2048,
+      "to": 3072
+    },
+    {
+      "id": "manifest-ceiling-3072",
+      "field": "/files/magic-card-manifest.js/ceiling",
+      "from": 2048,
+      "to": 3072
+    },
+    {
+      "id": "anim-ceiling-94208",
+      "field": "/files/magic-card-anim.js/ceiling",
+      "from": 90112,
+      "to": 94208
     }
   ]
 }
