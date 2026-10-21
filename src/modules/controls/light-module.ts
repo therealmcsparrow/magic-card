@@ -23,9 +23,7 @@ import { selectValue } from '../../utils/select-value';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
-
-/** LightEntityFeature.EFFECT */
-const FEATURE_EFFECT = 4;
+import { supportsEffect } from './light-effect';
 
 const hex2 = (n: number) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
 
@@ -38,11 +36,6 @@ function lightHex(stateObj: HassEntity | undefined): string {
   const color = stateObj ? entityStateColor(stateObj) : undefined;
   const m = color?.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
   return m ? `#${hex2(+m[1])}${hex2(+m[2])}${hex2(+m[3])}` : '#ffffff';
-}
-
-export function supportsEffect(stateObj: HassEntity): boolean {
-  const list = stateObj.attributes?.effect_list;
-  return Array.isArray(list) && list.length > 0 && (Number(stateObj.attributes?.supported_features ?? FEATURE_EFFECT) & FEATURE_EFFECT) !== 0;
 }
 
 /**

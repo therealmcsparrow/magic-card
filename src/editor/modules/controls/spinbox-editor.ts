@@ -3,7 +3,7 @@ import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { SpinboxModuleConfig } from '../../../types';
 import { renderNumberField, renderAttributeField, renderFieldHint } from '../../../utils/form-utils';
 import { numericControl } from '../../../utils/entity-control';
-import { climateRange } from '../../../modules/controls/spinbox-module';
+import { climateRange } from '../../../modules/controls/spinbox-range';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';

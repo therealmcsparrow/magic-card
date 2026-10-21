@@ -11,19 +11,8 @@ import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
+import { climateRange } from './spinbox-range';
 
-
-/**
- * A thermostat in a range mode (heat_cool) has no single target temperature: its low / high ends,
- * when the spinbox shows the target temperature.
- */
-export function climateRange(stateObj: HassEntity | undefined, attribute: string | undefined): [number, number] | undefined {
-  if (!stateObj?.entity_id.startsWith('climate.') || (attribute && attribute !== 'temperature')) return undefined;
-  const a = stateObj.attributes || {};
-  const low = typeof a.target_temp_low === 'number' ? a.target_temp_low : undefined;
-  const high = typeof a.target_temp_high === 'number' ? a.target_temp_high : undefined;
-  return low !== undefined && high !== undefined && typeof a.temperature !== 'number' ? [low, high] : undefined;
-}
 
 /**
  * Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the

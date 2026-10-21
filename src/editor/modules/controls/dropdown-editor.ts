@@ -13,7 +13,7 @@ import {
   normalizeOptions,
   validOptions,
   type DropdownOption,
-} from '../../../modules/controls/dropdown-module';
+} from '../../../modules/controls/dropdown-options';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
 import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';

@@ -4,7 +4,7 @@ import type { LightModuleConfig } from '../../../types';
 import { renderToggleField, renderFieldHint, renderIconField } from '../../../utils/form-utils';
 import { lightSupportsBrightness, lightSupportsColor, lightSupportsColorTemp } from '../../../utils/entity-control';
 import { entityIcon } from '../../../utils/entity-icon';
-import { supportsEffect } from '../../../modules/controls/light-module';
+import { supportsEffect } from '../../../modules/controls/light-effect';
 import { renderIconFxEditor } from '../../components/icon-fx-editor';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t } from '../../i18n';
