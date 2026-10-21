@@ -188,7 +188,7 @@ export class ServicePicker extends LitElement {
                       <span class="mc-picker-item-icon"><ha-icon icon=${this._domainIcon(service.domain)}></ha-icon></span>
                       <span class="mc-picker-item-content">
                         <span class="mc-picker-item-name">${service.name}</span>
-                        <span class="mc-picker-item-id">${service.domain}.${service.service}</span>
+                        <span class="mc-picker-item-id" title="${service.domain}.${service.service}">${service.domain}.${service.service}</span>
                         ${service.description
                           ? html`<span class="mc-picker-item-desc">${service.description}</span>`
                           : ''

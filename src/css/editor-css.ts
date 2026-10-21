@@ -1036,6 +1036,7 @@ const pickerLocalStyles = css`
     padding: 8px;
     display: grid;
     align-content: start;
+    grid-auto-rows: max-content;
     gap: 2px;
   }
 
@@ -1120,7 +1121,9 @@ const pickerLocalStyles = css`
     font-family: var(--mc-mono);
     font-size: 0.75rem;
     color: var(--mc-text-2);
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mc-picker-item-desc,

@@ -460,7 +460,7 @@ export class IconPicker extends LitElement {
                       <span class="mc-picker-item-icon"><ha-icon .icon=${icon.id}></ha-icon></span>
                       <span class="mc-picker-item-content">
                         <span class="mc-picker-item-name">${icon.name}</span>
-                        <span class="mc-picker-item-id">${icon.id}</span>
+                        <span class="mc-picker-item-id" title=${icon.id}>${icon.id}</span>
                       </span>
                       ${icon.prefix !== 'mdi' ? html`<span class="chip">${icon.prefix}</span>` : ''}
                     </button>

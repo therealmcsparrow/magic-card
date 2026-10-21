@@ -196,7 +196,7 @@ export class CardPicker extends LitElement {
         <span class="mc-picker-item-icon"><ha-icon icon=${card.icon}></ha-icon></span>
         <span class="mc-picker-item-content">
           <span class="mc-picker-item-name">${card.name}</span>
-          <span class="mc-picker-item-id">${card.type}</span>
+          <span class="mc-picker-item-id" title=${card.type}>${card.type}</span>
         </span>
         <span class="chip">${card.category === 'custom' ? t('Custom') : t('Built-in')}</span>
       </button>
