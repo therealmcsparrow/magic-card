@@ -1911,4 +1911,4 @@ export class MagicCard extends LitElement {
   }
 }
 
-customElements.define(CARD_TAG, MagicCard);
+if (!customElements.get(CARD_TAG)) customElements.define(CARD_TAG, MagicCard);

@@ -38,7 +38,7 @@ export const GOOGLE_FONT_WEIGHTS: Record<string, number[] | undefined> = {
 const BY_NAME = new Map(Object.keys(GOOGLE_FONT_WEIGHTS).map((name) => [name.toLowerCase(), name]));
 /** The css2 stylesheet URL of a family with its common upright weights (`Open+Sans:wght@300;400;500;700`). */
 export function googleFontUrl(family: string): string {
-  const weights = (GOOGLE_FONT_WEIGHTS[family] ?? COMMON_WEIGHTS).join(';');
+  const weights = ((Object.prototype.hasOwnProperty.call(GOOGLE_FONT_WEIGHTS, family) ? GOOGLE_FONT_WEIGHTS[family] : undefined) ?? COMMON_WEIGHTS).join(';');
   return `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@${weights}&display=swap`;
 }
 
