@@ -1,6 +1,6 @@
 import { KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES } from '../../contracts/mcu-library';
 import { CUSTOM_PREFIX, customRefId, type AnimationDoc } from '../../anim-studio/model';
-import { animationLibrary } from '../../services/animation-library';
+import { animLibrary } from '../../utils/anim-hooks';
 import type { MagicCardConfig } from '../../types';
 import { animationDocList } from '../../utils/custom-animations';
 import type { CardState } from './bridge';
@@ -22,7 +22,7 @@ export function libraryDocs(id: string): AnimationDoc[] {
   const queue = [id];
   while (queue.length) {
     const x = queue.shift()!;
-    const doc = animationLibrary.get(x);
+    const doc = animLibrary().get(x);
     if (!doc || out.has(x)) continue;
     out.set(x, doc);
     for (const s of doc.steps ?? []) if (typeof s?.animation === 'string' && s.animation.startsWith(CUSTOM_PREFIX)) queue.push(customRefId(s.animation));
@@ -62,6 +62,6 @@ export function setAnimationCopy(sm: CardState | undefined, id: string, on: bool
 
 /** A pick of library animation `id`: the copy is kept when the document is small enough. */
 export function keepPicked(sm: CardState | undefined, id: string): void {
-  const doc = animationLibrary.get(id);
+  const doc = animLibrary().get(id);
   if (doc && docBytes(doc) <= KEEP_COPY_ANIMATION_DEFAULT_MAX_BYTES) setAnimationCopy(sm, id, true, true);
 }

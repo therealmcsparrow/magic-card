@@ -18,7 +18,8 @@ import {
 import { generateId } from '../../utils/id-generator';
 import { SCENE_INSETS } from '../../utils/seasonal.needs';
 import type { AnimationPreset } from '../../utils/animation-presets';
-import { animationLibrary, type LibraryHass } from '../../services/animation-library';
+import type { LibraryHass } from '../../anim-studio/animation-library';
+import { animLibrary } from '../../utils/anim-hooks';
 import { CUSTOM_PREFIX, customRefId, isCustomRef, validateAnimationDoc, type AnimationDoc } from '../../anim-studio/model';
 import type { CataloguePreset } from '../../contracts/preset-catalogue';
 import type { CardState } from './icon-animator/card-request';
@@ -125,8 +126,8 @@ export class AnimationList extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._unsubLibrary ??= animationLibrary.subscribe(() => {
-      this._libVersion = animationLibrary.version;
+    this._unsubLibrary ??= animLibrary().subscribe(() => {
+      this._libVersion = animLibrary().version;
     });
     if (!this._catalogue)
       void loadCatalogue().then((m) => {
@@ -142,12 +143,12 @@ export class AnimationList extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     // the picker needs the library: one shared fetch / subscription per page (lazy)
-    if (changed.has('hass')) animationLibrary.ensure(this.hass as unknown as LibraryHass | undefined);
+    if (changed.has('hass')) animLibrary().ensure(this.hass as unknown as LibraryHass | undefined);
   }
 
   /** "My animations": the library's documents, only once it answered. */
   private _mine(): AnimationDoc[] {
-    return animationLibrary.status === 'ready' ? animationLibrary.list() : [];
+    return animLibrary().status === 'ready' ? animLibrary().list() : [];
   }
 
   /**
@@ -157,7 +158,7 @@ export class AnimationList extends LitElement {
   private _doc(preset: string): AnimationDoc | undefined {
     if (!isCustomRef(preset)) return undefined;
     const id = customRefId(preset);
-    const lib = animationLibrary.status === 'ready' ? animationLibrary.get(id) : undefined;
+    const lib = animLibrary().status === 'ready' ? animLibrary().get(id) : undefined;
     if (lib || !id.startsWith(CAT_PREFIX)) return lib;
     const raw = this._stored(id);
     if (raw) {
@@ -622,7 +623,7 @@ export class AnimationList extends LitElement {
 
   /** Why a `custom:` entry has no document here. */
   private _missingHelp(): string {
-    switch (animationLibrary.status) {
+    switch (animLibrary().status) {
       case 'unavailable':
         return t('Not found. My animations needs the Magic Card Utils integration; the card plays its embedded copy if it has one.');
       case 'ready':
@@ -634,7 +635,7 @@ export class AnimationList extends LitElement {
 
   /** "Keep a copy in this card" for a library animation (animation-copies.ts). */
   private _keepCopy(ref: string, id: string): TemplateResult | typeof nothing {
-    const lib = animationLibrary.get(ref);
+    const lib = animLibrary().get(ref);
     const sm = lib ? cardStateOf(this) : undefined;
     if (!lib || !sm) return nothing;
     const on = hasCopy(sm.getConfig(), ref);

@@ -4,7 +4,7 @@ import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { EASING_LANE_IDS, type Binding, type Clip, type EasingLaneId, type Rig, type Track } from './model-v2-core';
 import type { ParticlesSim } from '../contracts/particles-v2';
-import { animHooks, useAnimationValidators, useParticlesValidator } from '../utils/anim-hooks';
+import { animHooks, useParticlesValidator } from '../utils/anim-hooks';
 import { CUSTOM_PREFIX, customRefId, isCustomRef } from '../utils/custom-ref';
 
 export * from './model-v2-core';
@@ -673,5 +673,3 @@ export function validateAnimationLibrary(input: unknown, opts: ValidateOptions =
   return { docs, errors };
 }
 
-// the animation library service (Core, src/services/animation-library.ts) validates with these; it cannot import this file
-useAnimationValidators({ doc: validateAnimationDoc, library: validateAnimationLibrary });

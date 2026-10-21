@@ -2,7 +2,7 @@ import { BUILD_VERSION } from '../utils/build-version';
 
 /*
  * Chunk entry of dist/magic-card-anim.js (lazy-module 1.4.0 chunk `anim`): the animation resolve, the
- * document compiler and model it calls, the custom-animation stylesheet, the sequence player and the preset keyframes and animation rules (`styles`). It defines no
+ * document compiler and model it calls, the custom-animation stylesheet, the animation library (the page's one instance and the `custom:` lookup), the sequence player and the preset keyframes and animation rules (`styles`). It defines no
  * element and fills no slot: the card reads this module through lazyChunks.anim.module() (src/utils/anim-seam.ts) and
  * draws a plain card until it has installed. Nothing here runs at import time except model.ts and compile-v2's
  * registration of their hooks (src/utils/anim-hooks.ts, in the entry).
@@ -16,6 +16,7 @@ export { animationStyles as styles } from '../css/animations';
 export function install(): void {}
 
 export { resolveAnimations } from './resolve';
+export { animationLibrary } from './animation-library';
 export { adoptAnimationSheet, useAnimationCss } from '../card/custom-anim-sheet';
 export { stopSequences, syncSequences } from '../card/sequence-player';
 

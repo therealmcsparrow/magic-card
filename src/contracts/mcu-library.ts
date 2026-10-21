@@ -78,7 +78,7 @@ import type { ThemeDoc } from './theme-editor';
  * ── Animations: the existing store, one library view ──
  * My animations stay where they are: MCU animations.py, Store `magic_card_utils.animations`,
  * commands get_animations / subscribe_animations / save_animation / delete_animation (contract
- * in src/services/animation-library.ts, unchanged). No data migration and no new command: ids and
+ * in src/anim-studio/animation-library.ts, unchanged). No data migration and no new command: ids and
  * `preset: custom:<id>` refs keep working. The library view (preset-transfer 1.0.0,
  * <mc-library-view>) lists them next to icons and shapes from two sources: animationLibrary (the
  * page's shared AnimationLibrary) and the commands above. Rename = save_animation with the same id

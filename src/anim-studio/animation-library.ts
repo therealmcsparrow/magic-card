@@ -1,5 +1,5 @@
-import type { AnimationDoc } from '../anim-studio/model';
-import { animHooks, type AnimationValidators } from '../utils/anim-hooks';
+import { validateAnimationDoc, validateAnimationLibrary, type AnimationDoc } from './model';
+import { useAnimationLibrary } from '../utils/anim-hooks';
 
 /*
  * The global animation library of the magic-card-utils integration, shared by every card on the
@@ -29,17 +29,6 @@ import { animHooks, type AnimationValidators } from '../utils/anim-hooks';
  * connection's next `ready`, and after 5 s, 15 s and 60 s while it stays up. Meanwhile `custom:`
  * references fall back to the card's inline `custom_animations`, else render nothing.
  */
-
-/**
- * The document validators. model.ts registers them when it loads (the `anim` chunk, the editor and the studio bundles all
- * carry it); this service is Core and may not import it. The card starts the library from a custom-animation
- * lookup, which only the `anim` chunk makes, so they are there; a start without them is a failed fetch (retried).
- */
-function validators(): AnimationValidators {
-  const v = animHooks.validators;
-  if (!v) throw new Error('the animation model has not loaded');
-  return v;
-}
 
 /** Retry delays (ms) after a failed first fetch that may work later. */
 const RETRY_MS = [5000, 15000, 60000];
@@ -170,7 +159,7 @@ export class AnimationLibrary {
 
   private _replace(input: unknown): void {
     // lenient v2: an invalid part, track, clip or binding is dropped, not the whole document
-    const { docs, errors } = validators().library(input ?? {}, { v2: 'lenient' });
+    const { docs, errors } = validateAnimationLibrary(input ?? {}, { v2: 'lenient' });
     if (errors.length) console.warn('Magic Card: invalid animations in the library', errors);
     // keep the objects of unchanged documents (compiled results are cached per object)
     for (const [id, doc] of docs) {
@@ -186,7 +175,7 @@ export class AnimationLibrary {
     if (m.action === 'deleted') {
       if (!this._docs.delete(m.id)) return;
     } else if (m.action === 'saved') {
-      const r = validators().doc(m.animation, { v2: 'lenient' });
+      const r = validateAnimationDoc(m.animation, { v2: 'lenient' });
       if (!r.ok) {
         console.warn('Magic Card: invalid animation from the library', r.errors);
         return;
@@ -220,6 +209,16 @@ export class AnimationLibrary {
     this.status = 'idle';
   }
 
+  /** A card's inline `custom_animations`, validated once per config object. */
+  inlineDocs(config: { custom_animations?: unknown } | undefined): Map<string, AnimationDoc> | undefined {
+    return inlineAnimations(config);
+  }
+
+  /** The document of a `custom:<id>` preset: the library's, else the card's inline `custom_animations`. */
+  custom(id: string, config: { custom_animations?: unknown } | undefined): AnimationDoc | undefined {
+    return this.get(id) ?? inlineAnimations(config)?.get(id);
+  }
+
   /** Tests: forget everything (listeners too). */
   reset(): void {
     this._teardown();
@@ -231,6 +230,8 @@ export class AnimationLibrary {
 
 /** The page's library (one per page; every card shares it). */
 export const animationLibrary = new AnimationLibrary();
+// the editor, the transfer view and the icon animator read this instance through src/utils/anim-hooks.ts
+useAnimationLibrary(animationLibrary);
 
 const inline = new WeakMap<object, Map<string, AnimationDoc>>();
 
@@ -243,7 +244,7 @@ export function inlineAnimations(config: { custom_animations?: unknown } | undef
   if (!raw || typeof raw !== 'object') return undefined;
   let docs = inline.get(raw as object);
   if (!docs) {
-    const r = validators().library(raw, { v2: 'lenient' });
+    const r = validateAnimationLibrary(raw, { v2: 'lenient' });
     if (r.errors.length) console.warn('Magic Card: invalid custom_animations', r.errors);
     docs = r.docs;
     inline.set(raw as object, docs);

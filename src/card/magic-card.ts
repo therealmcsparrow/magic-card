@@ -79,7 +79,6 @@ import type { PopupController } from './popup-controller';
 import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
 import { popupIfLoaded } from './popup-seam';
 import { isPopupEnabled, wantsPopup } from '../utils/popup';
-import { animationLibrary, inlineAnimations } from '../services/animation-library';
 import type { AnimationDoc } from '../anim-studio/model';
 import type { SequencePlayer } from './sequence-player';
 import { hasLayers, inFlow, layerSlot } from '../layers/layer-slot';
@@ -290,9 +289,11 @@ export class MagicCard extends LitElement {
    */
   private readonly _customLookup = (id: string): AnimationDoc | undefined => {
     this._customRendered = true;
-    animationLibrary.ensure(this.hass);
-    if (!this._unsubLibrary && this.isConnected) this._unsubLibrary = animationLibrary.subscribe(this._onLibrary);
-    return animationLibrary.get(id) ?? inlineAnimations(this._resolvedConfig ?? this._config)?.get(id);
+    const a = animIfLoaded();
+    if (!a) return undefined;
+    a.animationLibrary.ensure(this.hass);
+    if (!this._unsubLibrary && this.isConnected) this._unsubLibrary = a.animationLibrary.subscribe(this._onLibrary);
+    return a.animationLibrary.custom(id, this._resolvedConfig ?? this._config);
   };
   /** A library change waits for its render (shouldUpdate must not drop it). */
   private _libDirty?: boolean;
@@ -1513,7 +1514,7 @@ export class MagicCard extends LitElement {
     }
     const root = this.renderRoot as ShadowRoot;
     const reducedMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const lookup = (id: string): AnimationDoc | undefined => animationLibrary.get(id) ?? inlineAnimations(this._resolvedConfig ?? this._config)?.get(id);
+    const lookup = (id: string): AnimationDoc | undefined => animIfLoaded()?.animationLibrary.custom(id, this._resolvedConfig ?? this._config);
     const seen = new Set<HTMLElement>();
     for (const el of root.querySelectorAll<HTMLElement>('[data-mc-v2]')) {
       const job = jobs[Number(el.dataset.mcV2)];

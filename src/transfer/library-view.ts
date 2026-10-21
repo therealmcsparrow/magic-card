@@ -3,9 +3,9 @@ import type { TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { editorTokens } from '../css/editor-system';
 import { button, defineUiKit, editorPrimitives, empty, field, kitCss, notice, row, seg } from '../ui-kit';
+import type { LibraryHass } from '../anim-studio/animation-library';
+import { animLibrary } from '../utils/anim-hooks';
 import { animationDocList } from '../utils/custom-animations';
-import { animationLibrary } from '../services/animation-library';
-import type { LibraryHass } from '../services/animation-library';
 import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
 import type { ThemePresetStore } from '../contracts/theme-editor';
@@ -147,7 +147,7 @@ export class LibraryView extends LitElement {
     defineUiKit();
     const ks = this._kinds;
     this._kind = this.startKind && ks.includes(this.startKind) ? this.startKind : this.context === 'mcu-panel' ? ks[0] : ks.includes(this._kind) ? this._kind : ks[0];
-    this._unsub = animationLibrary.subscribe(() => this._kind === 'animation' && void this._load());
+    this._unsub = animLibrary().subscribe(() => this._kind === 'animation' && void this._load());
     window.addEventListener(LIBRARY_CHANGED_EVENT, this._onChanged);
   }
 
@@ -160,7 +160,7 @@ export class LibraryView extends LitElement {
   protected willUpdate(changed: PropertyValues): void {
     if (changed.has('hass')) {
       setI18nLocale(this.hass as never);
-      animationLibrary.ensure(this.hass);
+      animLibrary().ensure(this.hass);
     }
   }
 
@@ -211,8 +211,8 @@ export class LibraryView extends LitElement {
       else if (kind === 'shape') rows = Object.entries(c.custom_shapes ?? {}).map(([id, s]) => row(id, id, s));
       else if (kind === 'icon') rows = Object.entries(c.custom_icons ?? {}).map(([id, s]) => row(id, id, s));
     } else if (kind === 'animation') {
-      status = animationLibrary.status === 'ready' ? 'ok' : animationLibrary.status === 'unavailable' ? 'missing' : 'loading';
-      rows = animationLibrary.list().map((d) => row(d.id, d.name, d));
+      status = animLibrary().status === 'ready' ? 'ok' : animLibrary().status === 'unavailable' ? 'missing' : 'loading';
+      rows = animLibrary().list().map((d) => row(d.id, d.name, d));
     } else if (kind === 'theme') {
       if (!this.presets) status = 'missing';
       else
@@ -269,7 +269,7 @@ export class LibraryView extends LitElement {
       return kind === 'animation' ? animationDocList(c?.custom_animations).some((d) => d.id === id) : kind === 'shape' ? !!c?.custom_shapes?.[id] : !!c?.custom_icons?.[id];
     }
     if (kind === this._kind && this._source === 'mcu') return this._rows.some((r) => r.id === id);
-    if (kind === 'animation') return !!animationLibrary.get(id) || animationDocList(this.config?.custom_animations).some((d) => d.id === id);
+    if (kind === 'animation') return !!animLibrary().get(id) || animationDocList(this.config?.custom_animations).some((d) => d.id === id);
     // a copy that shares an id with a saved item would be pruned from the card as unused
     if (kind === 'shape') return !!this.config?.custom_shapes?.[id] || this._src.isSaved('shapes', id);
     return kind === 'icon' && (!!this.config?.custom_icons?.[id] || this._src.isSaved('icons', id));
@@ -277,13 +277,13 @@ export class LibraryView extends LitElement {
 
   /** Into the card: ids Magic Card Utils holds too. They are renamed without asking, since a copy under a saved id would be pruned. */
   private _reserved = (kind: TransferKind, id: string): boolean =>
-    this._intoCard && (kind === 'animation' ? !!animationLibrary.get(id) : kind === 'shape' ? this._src.isSaved('shapes', id) : kind === 'icon' && this._src.isSaved('icons', id));
+    this._intoCard && (kind === 'animation' ? !!animLibrary().get(id) : kind === 'shape' ? this._src.isSaved('shapes', id) : kind === 'icon' && this._src.isSaved('icons', id));
 
   /** Animation names the target already shows, so an import of "Pendulum" arrives as "Pendulum 2". */
   private _takenName = (kind: TransferKind, name: string): boolean => {
     if (kind !== 'animation') return false;
     const n = name.trim().toLowerCase();
-    const docs = this._intoCard ? animationDocList(this.config?.custom_animations) : animationLibrary.list();
+    const docs = this._intoCard ? animationDocList(this.config?.custom_animations) : animLibrary().list();
     return docs.some((d) => String(d.name ?? d.id).trim().toLowerCase() === n);
   };
 

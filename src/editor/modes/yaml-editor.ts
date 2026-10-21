@@ -5,7 +5,8 @@ import { EditorStateManager } from '../state/editor-state';
 import { editorStyles, yamlEditorStyles } from '../../css/editor-css';
 import { editorTokens } from '../../css/editor-system';
 import { editorPrimitives } from '../../ui-kit/css/primitives';
-import { animationLibrary, inlineAnimations, type LibraryHass } from '../../services/animation-library';
+import type { LibraryHass } from '../../anim-studio/animation-library';
+import { animLibrary } from '../../utils/anim-hooks';
 import { customAnimationIds, embedCustomAnimations } from '../../utils/custom-animations';
 import { toYaml } from '../../utils/yaml-utils';
 import { withTemplateAnimations } from '../../services/template-merge';
@@ -31,8 +32,8 @@ export function exportYaml(
   let missing: string[] = [];
   if (embed) {
     // a linked card: the template's documents are found too (templateDocs: the editor's copy)
-    const inline = inlineAnimations(withTemplateAnimations(config, templateDocs));
-    const r = embedCustomAnimations(out, (id) => animationLibrary.get(id) ?? inline?.get(id));
+    const inline = animLibrary().inlineDocs(withTemplateAnimations(config, templateDocs));
+    const r = embedCustomAnimations(out, (id) => animLibrary().get(id) ?? inline?.get(id));
     out = r.config;
     missing = r.missing;
   }
@@ -107,8 +108,8 @@ export class YamlEditor extends LitElement {
         this._editorState = s;
       });
     }
-    this._unsubLibrary ??= animationLibrary.subscribe(() => {
-      this._libVersion = animationLibrary.version;
+    this._unsubLibrary ??= animLibrary().subscribe(() => {
+      this._libVersion = animLibrary().version;
     });
   }
 
@@ -122,7 +123,7 @@ export class YamlEditor extends LitElement {
   protected willUpdate(changed: PropertyValues): void {
     // only a card that uses animations from the library needs it (to embed them)
     if ((changed.has('hass') || changed.has('_editorState')) && this._customIds().length) {
-      animationLibrary.ensure(this.hass as unknown as LibraryHass | undefined);
+      animLibrary().ensure(this.hass as unknown as LibraryHass | undefined);
     }
   }
 

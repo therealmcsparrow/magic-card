@@ -5,7 +5,7 @@ import type { CataloguePreset } from '../../../contracts/preset-catalogue';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-stack';
 import { readAnimations } from '../../../anim-studio/entries';
-import { animationLibrary } from '../../../services/animation-library';
+import { animLibrary } from '../../../utils/anim-hooks';
 import { svgIconApi } from '../../../utils/svg-icon-loader';
 import { customAnimationIds } from '../../../utils/custom-animations';
 
@@ -29,7 +29,10 @@ export const host = {
   css,
   editorSystem,
   readAnimations,
-  library: animationLibrary,
+  /** Read at use: the `anim` chunk registers the library when it loads. */
+  get library() {
+    return animLibrary();
+  },
   resolveIcon: (...a: Parameters<IconApi['resolveIconGeometry']>) => svgIconApi()!.resolveIconGeometry(...a),
   setIcon: (...a: Parameters<IconApi['setIconGeometry']>) => svgIconApi()!.setIconGeometry(...a),
   customIds: customAnimationIds,
