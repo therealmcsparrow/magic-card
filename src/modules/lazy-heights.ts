@@ -100,8 +100,9 @@ export function tabsMinHeight(config: { tab_style?: string; design?: { height?: 
 /**
  * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
  * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
- * `design.line_height` as a number, a numeric string or a percentage; a px / em / rem length counts per line;
- * anything else is 1.2, the `normal` line height of the theme font.
+ * `design.line_height` as a number or a numeric string; a length counts per line, and a percentage too, because
+ * the line boxes inherit it as the length it computes to (150% of 16 px is 24 px on both lines), not as a factor;
+ * anything else is 1.2, about the `normal` line height of the theme font.
  */
 export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
   const d = config.design;
@@ -109,9 +110,10 @@ export function clockMinHeight(config: { show_date?: boolean; design?: { height?
   const date = config.show_date !== false;
   const lh = d?.line_height;
   const v = typeof lh === 'string' ? lh.trim() : lh;
-  if (typeof v === 'string' && /^\d*\.?\d+(px|em|rem)$/.test(v) && parseFloat(v) > 0) return `calc(${v} * ${date ? 2 : 1})`;
-  const percent = typeof v === 'string' && /^\d*\.?\d+%$/.test(v) ? parseFloat(v) / 100 : undefined;
+  const lines = date ? 2 : 1;
+  if (typeof v === 'string' && /^\d*\.?\d+(px|em|rem)$/.test(v) && parseFloat(v) > 0) return `calc(${v} * ${lines})`;
+  if (typeof v === 'string' && /^\d*\.?\d+%$/.test(v) && parseFloat(v) > 0) return `calc(${parseFloat(v) / 100}em * ${lines})`;
   const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? Number(v) : v;
-  const factor = percent ?? (typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.2);
+  const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.2;
   return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
 }
