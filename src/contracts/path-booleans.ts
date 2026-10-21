@@ -13,7 +13,7 @@ import type { Box, EditPath } from './path-model';
  * magic-card.js or the card-editor chunk. Loader: memoised, 8 s timeout, retried on the next call after a
  * failure (same as the path-canvas loader); the button shows busy while it loads and a failure shows
  * "Couldn't load the shape tools. Try again." with nothing changed.
- * Imports: this contract, src/contracts/path-model.ts types and src/path/core.ts (already in magic-card.js,
+ * Imports: this contract, src/contracts/path-model.ts types and src/path/core.ts (in the shared path-core chunk,
  * so not copied). NOT src/path/edit.ts, draw.ts or tidy.ts (they live in the path-canvas chunk and would be
  * copied), nothing from src/svg-editor/, src/shape-editor/, src/path-canvas/, src/anim-studio/, lit
  * (import scan test). Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, never above
@@ -69,7 +69,7 @@ import type { Box, EditPath } from './path-model';
  */
 
 export const PATH_BOOLEANS_CONTRACT_VERSION = '1.0.0';
-export const PATH_BOOLEANS_CONTRACT_REVISION = 1;
+export const PATH_BOOLEANS_CONTRACT_REVISION = 2;
 export const PATH_BOOLEANS_CHUNK = 'svg-booleans';
 export const PATH_BOOLEANS_CHUNK_FILE = 'magic-card-svg-booleans.js';
 /** 16 KiB; the CAPS entry is measured + 5 % below it. */

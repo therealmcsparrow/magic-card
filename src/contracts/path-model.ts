@@ -15,7 +15,8 @@
  * - src/anim-studio/editors/path-utils.ts (anchor/handle edit model)
  *
  * Implementation: module `path-model`, folder src/path/:
- * - src/path/core.ts  RUNTIME-SAFE. Pure, no DOM, no lit. The only part magic-card.js may import.
+ * - src/path/core.ts  RUNTIME-SAFE. Pure, no DOM, no lit. Not in magic-card.js: it is the shared lazy
+ *                     chunk path-core, fetched with each chunk that uses it (lazy-module, Shared chunks).
  *                     Everything in PathCore below.
  * - src/path/edit.ts  EDITOR-ONLY. Anchor model and edit operations (PathEdit below). Never in the
  *                     src/index.ts static graph (contract test: the built magic-card.js holds none of
@@ -61,7 +62,7 @@
  */
 
 export const PATH_MODEL_CONTRACT_VERSION = '1.0.0';
-export const PATH_MODEL_CONTRACT_REVISION = 4;
+export const PATH_MODEL_CONTRACT_REVISION = 5;
 
 export type Pt = [number, number];
 /** start, c1, c2, end (morph and math code). */

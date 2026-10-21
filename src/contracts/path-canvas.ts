@@ -99,8 +99,8 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
  * (edit, tidy, draw) from this chunk's exports and do not import src/path/edit.ts, tidy.ts or
- * draw.ts themselves (import scan test). They may import src/path/core.ts (small, also in
- * the card). Boolean operations are their own chunk (path-booleans 1.0.0), not part of this one.
+ * draw.ts themselves (import scan test). They may import src/path/core.ts (small, in the shared
+ * path-core chunk). Boolean operations are their own chunk (path-booleans 1.0.0), not part of this one.
  *
  * The canvas is controlled: it never keeps its own copy of the paths. It renders `paths`, and every
  * change is an `mc-path-change` event the host applies (or refuses) and passes back.
@@ -190,7 +190,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  */
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
-export const PATH_CANVAS_CONTRACT_REVISION = 6;
+export const PATH_CANVAS_CONTRACT_REVISION = 7;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';

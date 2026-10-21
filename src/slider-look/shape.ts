@@ -1,5 +1,6 @@
 import type { SliderModuleConfig } from '../types';
-import { resolveShape, shapeClip, type ResolvedShape } from '../card/shape-resolve';
+import { shapeClip } from '../card/shape-clip';
+import { resolveShape, type ResolvedShape } from '../card/shape-resolve';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { shapePath } from '../utils/shape-path';
 

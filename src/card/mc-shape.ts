@@ -4,7 +4,8 @@ import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
 import { offscreenObserver } from '../icons/offscreen';
 import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
-import { shapeClip, type ResolvedShape } from './shape-resolve';
+import { shapeClip } from './shape-clip';
+import type { ResolvedShape } from './shape-resolve';
 
 /*
  * Outline shapes on a module / row / column wrapper or the card (design `shape`, src/utils/shape-path.ts).

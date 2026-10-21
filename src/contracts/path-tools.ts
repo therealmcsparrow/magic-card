@@ -13,7 +13,7 @@ import type { Box, EditPath, PathDraw, Pt } from './path-model';
  * clears the memo and the editor shows "Couldn't load the path tools. Try again." with the drawing unchanged.
  *
  * One-copy rule (splitChunks is false, so a static import copies a module into this chunk):
- * - Imports: this contract, path-model / path-booleans types, src/path/core.ts (already in magic-card.js),
+ * - Imports: this contract, path-model / path-booleans types, src/path/core.ts (in the shared path-core chunk),
  *   `lit` (already in magic-card.js) for the panel template only.
  * - NOT src/path/edit.ts, draw.ts, primitives.ts, tidy.ts (path-canvas chunk), NOT src/path-booleans/**
  *   (booleans chunk), nothing from src/svg-editor/, src/shape-editor/, src/path-canvas/, src/anim-studio/,
@@ -95,7 +95,7 @@ import type { Box, EditPath, PathDraw, Pt } from './path-model';
  */
 
 export const PATH_TOOLS_CONTRACT_VERSION = '1.0.0';
-export const PATH_TOOLS_CONTRACT_REVISION = 1;
+export const PATH_TOOLS_CONTRACT_REVISION = 2;
 export const PATH_TOOLS_CHUNK = 'path-tools';
 export const PATH_TOOLS_CHUNK_FILE = 'magic-card-path-tools.js';
 /** 20 KiB ceiling; the CAPS entry is measured + 5 % below it. */

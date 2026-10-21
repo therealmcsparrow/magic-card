@@ -15,9 +15,9 @@ import type { BooleanOp } from './path-booleans';
  * Neither imports src/path/edit.ts, tidy.ts or draw.ts (import scan test). Both import() the
  * path-booleans chunk (path-booleans 1.0.0) through src/path-booleans/loader.ts on the first press of
  * a boolean button, never on open, and import nothing else from src/path-booleans/. Modules
- * already in magic-card.js (src/path/core.ts, src/icons/svg-sanitize.ts, src/icons/icon-source.ts,
- * src/utils/shape-path.ts) are imported normally; webpack does not copy modules a parent chunk
- * already holds. The animation studio entry imports the same src/path/ files (shared source, its
+ * already in magic-card.js (src/icons/svg-sanitize.ts, src/icons/icon-source.ts,
+ * src/utils/shape-path.ts) are imported normally, and src/path/core.ts comes from the shared path-core
+ * chunk; webpack does not copy modules a parent chunk already holds. The animation studio entry imports the same src/path/ files (shared source, its
  * own bundle). Neither editor chunk imports src/anim-studio/** (import scan test).
  * The menu element comes from the path-canvas chunk: it is <mc-ui-menu> of the ui-kit (UI_MENU_TAG).
  * Neither editor ships a menu of its own or imports src/editor/components/menu-popover.ts.

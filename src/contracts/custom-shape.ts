@@ -22,6 +22,8 @@ import type { Outline } from '../utils/shape-path';
  *   - src/card/shape-resolve.ts resolveShape(): for 'custom' without the builder it starts the load and returns
  *     undefined, so the element is drawn exactly as `shape: none` (no clip, no inset vars, no
  *     mc-shape, rectangle rings, flows on the box). The <mc-shape> element itself is in the `decor` chunk. It never paints a half-shaped state.
+ *   - src/card/shape-clip.ts shapeClip(): the clip-path value of a shape path (path(), or the polygon when path() is
+ *     unsupported). The `decor` and `slider-look` chunks import it; the entry does not.
  *   - magic-card.ts: starts the load in setConfig when the raw config text contains
  *     `"shape":"custom"` (so a cached chunk usually lands before the first paint), and when any
  *     resolveShape call reported a pending custom shape; when the load resolves true and the card
@@ -197,7 +199,7 @@ import type { Outline } from '../utils/shape-path';
  */
 
 export const CUSTOM_SHAPE_CONTRACT_VERSION = '1.0.0';
-export const CUSTOM_SHAPE_CONTRACT_REVISION = 4;
+export const CUSTOM_SHAPE_CONTRACT_REVISION = 5;
 export const MAX_SHAPE_POINTS = 64;
 export const CUSTOM_SHAPE_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 /** Editor W6: a text line sample farther than this outside the outline counts as cut (px). */

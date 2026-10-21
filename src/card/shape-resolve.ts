@@ -4,7 +4,6 @@ import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library.needs';
 import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mcu-library';
 import { resolveCustomShape } from '../utils/shape-ref';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
-import { parseClosed, polygonCss } from '../path/core';
 
 /*
  * The resolve side of outline shapes (design `shape`): which shape a design asks for, the provider's shape library and
@@ -60,11 +59,4 @@ export function clipPathSupported(): boolean {
 /** Test hook: forget the clip-path path() support check. */
 export function __resetClipPathSupport(value?: boolean): void {
   pathSupport = value;
-}
-
-/** The clip-path value of a shape path. */
-export function shapeClip(d: string): string {
-  if (clipPathSupported()) return `path('${d}')`;
-  const o = parseClosed(d);
-  return o ? polygonCss(o) : 'none';
 }
