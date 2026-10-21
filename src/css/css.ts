@@ -1,7 +1,6 @@
 import { css, unsafeCSS } from 'lit';
 import { mcVariables } from './tokens';
 import { popupHostStyles } from '../card/popup-host-css';
-import { weatherIconStyles } from '../icons/weather-icons';
 import { decorTagStyles, shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
 import { LAYER_SYNC_CSS } from '../layers/layer-slot';
@@ -1365,4 +1364,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupHostStyles, weatherIconStyles, shapeCardStyles, valueBgCardStyles, decorTagStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseGapStyles];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupHostStyles, shapeCardStyles, valueBgCardStyles, decorTagStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseGapStyles];

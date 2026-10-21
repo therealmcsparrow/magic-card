@@ -36,7 +36,7 @@ import type { MagicModule } from '../modules/module-types';
  *   src/modules/lazy/controls-chunk.ts). It holds the views of the slider, spinbox, dropdown, light and gauge
  *   modules (src/modules/controls/*-view.ts); their stubs (metadata, defaults, validation and a placeholder
  *   that reserves the default height, src/modules/controls/controls.needs.ts) stay in Core. Its needs() is the
- *   presence of one of those module types. The tabs view is in 'modules-extra' (ceiling 53,248 B). The chunk
+ *   presence of one of those module types. The tabs view is in 'modules-extra' (ceiling 57,344 B). The chunk
  *   is the parent of 'slider-look' (the literal import() sits in controls-chunk.ts), so its load() loads
  *   'controls' first. The editor imports no stub or view: climateRange, supportsEffect and the dropdown
  *   option helpers are in small pure files (spinbox-range, light-effect, dropdown-options).
@@ -322,7 +322,7 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   slider: 122_880,
   seasonal: 81_920,
   markdown: 57_344,
-  'modules-extra': 53_248,
+  'modules-extra': 57_344,
   /** The views of the slider, spinbox, dropdown, light and gauge modules and the code only they use. */
   controls: 61_440,
   /** The flow resolver, line geometry, <mc-flows> and its card rules. */
