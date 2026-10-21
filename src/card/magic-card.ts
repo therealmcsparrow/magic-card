@@ -505,7 +505,7 @@ export class MagicCard extends LitElement {
       if (this.isConnected) this.requestUpdate();
     });
   }
-  private _seasonalWait = false;
+  private _seasonalWait?: boolean;
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
   private _shapeCfg?: object;
