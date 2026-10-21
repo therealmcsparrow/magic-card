@@ -30,6 +30,14 @@ import type { MagicModule } from '../modules/module-types';
  *   survive a failure. OnDemandChunkName and the notice element are described in sections "Failure, retry
  *   and timeout" and "import() sites". A request that never settles is waited on, never replaced; the
  *   on-demand loader slots are the seam between a loader and the chunk table.
+ * - LazyChunkName includes 'controls' (dist/magic-card-controls.js, ceiling 61,440 B, chunk entry
+ *   src/modules/lazy/controls-chunk.ts). It holds the views of the slider, spinbox, dropdown, light and gauge
+ *   modules (src/modules/controls/*-view.ts); their stubs (metadata, defaults, validation and a placeholder
+ *   that reserves the default height, src/modules/controls/controls.needs.ts) stay in Core. Its needs() is the
+ *   presence of one of those module types. The tabs view is in 'modules-extra' (ceiling 53,248 B). The chunk
+ *   is the parent of 'slider-look' (the literal import() sits in controls-chunk.ts), so its load() loads
+ *   'controls' first. The editor imports no stub or view: climateRange, supportsEffect and the dropdown
+ *   option helpers are in small pure files (spinbox-range, light-effect, dropdown-options).
  * - LazyChunkName includes 'anim' (dist/magic-card-anim.js, ceiling 90,112 B, chunk entry
  *   src/anim-studio/anim-chunk.ts). It holds the animation resolve (src/anim-studio/resolve.ts), the
  *   document compiler and model it calls (compile, model, model-v2-core, css-keyframes), the
@@ -272,7 +280,7 @@ export const LAZY_MODULE_CONTRACT = '1.4.0';
 export const LAZY_MODULE_CONTRACT_REVISION = 8;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
-export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
+export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
 
 export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   slider: 'magic-card-slider.js',
@@ -282,6 +290,7 @@ export const LAZY_CHUNK_FILES: Record<LazyChunkName, string> = {
   flows: 'magic-card-flows.js',
   pause: 'magic-card-pause.js',
   popup: 'magic-card-popup.js',
+  controls: 'magic-card-controls.js',
   'flow-look': 'magic-card-flow-look.js',
   'slider-look': 'magic-card-slider-look.js',
   layers: 'magic-card-layers.js',
@@ -298,7 +307,9 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   slider: 122_880,
   seasonal: 81_920,
   markdown: 57_344,
-  'modules-extra': 45_056,
+  'modules-extra': 53_248,
+  /** The views of the slider, spinbox, dropdown, light and gauge modules and the code only they use. */
+  controls: 61_440,
   /** The flow resolver, line geometry, <mc-flows> and its card rules. */
   flows: 57_344,
   /** The Pause motion button class and its rules. */
@@ -319,7 +330,8 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
 export const LAZY_MODULE_TYPES: Record<Exclude<LazyChunkName, 'seasonal' | 'flows' | 'pause' | 'popup' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim'>, readonly string[]> = {
   slider: ['slider-layout'],
   markdown: ['markdown'],
-  'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card'],
+  'modules-extra': ['camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs'],
+  controls: ['slider', 'spinbox', 'dropdown', 'light', 'gauge'],
 };
 
 /** Chunks only an editor loads (section "Editor-side chunks"). */

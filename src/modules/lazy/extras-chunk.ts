@@ -7,6 +7,7 @@ import { CustomCardView, EmbeddedCard } from '../advanced/custom-card-view';
 import { ForecastView } from '../advanced/forecast-view';
 import { VideoBgView, McBgVideo } from '../advanced/video-bg-view';
 import { WeatherView } from '../advanced/weather-view';
+import { TabsView } from '../layout/tabs-view';
 
 /*
  * Chunk entry of dist/magic-card-modules-extra.js (contract lazy-module 1.0.0). Evaluating this file changes
@@ -28,4 +29,5 @@ export function install(): void {
   ModuleRegistry.provideView('forecast', new ForecastView());
   ModuleRegistry.provideView('graphs', new GraphsView());
   ModuleRegistry.provideView('custom-card', new CustomCardView());
+  ModuleRegistry.provideView('tabs', new TabsView());
 }

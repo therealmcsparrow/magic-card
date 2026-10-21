@@ -86,7 +86,8 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-slider.js` | Cards with a `slider-layout` module (the swipeable carousel). |
 | `magic-card-seasonal.js` | Cards with a seasonal scene or a seasonal animation preset. |
 | `magic-card-markdown.js` | Cards with a `markdown` module. |
-| `magic-card-modules-extra.js` | Cards with a camera, video-bg, weather, forecast, graphs or custom-card module. |
+| `magic-card-modules-extra.js` | Cards with a camera, video-bg, weather, forecast, graphs, tabs or custom-card module. |
+| `magic-card-controls.js` | Cards with a slider, spinbox, dropdown, light or gauge module. |
 | `magic-card-shape-custom.js` | Cards with `shape: custom`. |
 | `magic-card-svg-editor.js` | The SVG editor in the Magic Card Utils panel. Dashboards never load it. |
 | `magic-card-shape-editor.js` | The shape editor in the Magic Card Utils panel. Dashboards never load it. |

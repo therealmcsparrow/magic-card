@@ -16,6 +16,8 @@ const HEADING = [
 ];
 const LINE = 1.5;
 const TABLE_ROW = 1.83;
+/** The tab bar in px by style: default, pills, underline. */
+const TABS_BAR = [39, 36, 41];
 
 /**
  * Height in em of the markdown text `content` renders to: a line is 1.5 em (line breaks count, long
@@ -86,4 +88,11 @@ export function forecastMinHeight(config: { forecast_type?: string; show_tempera
   const label = config.forecast_type === 'twice_daily' ? 36 : 18;
   const low = temp && !config.forecast_type?.match(/hourly|twice/) ? 22 : 0;
   return 16 + label + 29 + (temp ? 23 : 0) + low + (config.show_precipitation !== false ? 19 : 0);
+}
+
+/** Height in px of the tabs module's tab bar (it depends on the style); the tab content sits below it and has no reserve. */
+export function tabsMinHeight(config: { tab_style?: string; design?: { height?: unknown; min_height?: unknown } | null }): number {
+  const d = config.design;
+  if (d && (d.height !== undefined || d.min_height !== undefined)) return 0;
+  return TABS_BAR[config.tab_style === 'pills' ? 1 : config.tab_style === 'underline' ? 2 : 0];
 }

@@ -1,25 +1,22 @@
-import { html, TemplateResult, nothing } from 'lit';
-import { BaseMagicModule } from '../base-module';
+import { html, nothing, TemplateResult } from 'lit';
+import { BaseLazyStub } from '../base-lazy-stub';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HassEntity, HomeAssistant, DropdownModuleConfig } from '../../types';
+import { CardModule, DropdownModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { runServiceCall, ServiceCall } from '../../utils/entity-control';
-import { selectValue } from '../../utils/select-value';
-import { stopControlEvent } from '../../utils/slider-track';
-import { entityDisplayName } from '../../utils/entity-value';
-import { t } from '../../card/i18n';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { lm } from '../../i18n/labels/mark';
-import { ADAPTERS, adapterFor, normalizeOptions, validOptions, type DropdownOption, type SelectAdapter } from './dropdown-options';
+import { controlReserve } from './controls.needs';
 
-class DropdownModule extends BaseMagicModule {
+/** The dropdown (its view is in the controls chunk): metadata, defaults, validation and the box shown until the view arrives. */
+class DropdownModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'dropdown',
     name: lm('Dropdown'),
     description: lm('Select dropdown for choosing from a list of options'),
     category: 'controls',
     icon: 'mdi:form-dropdown',
-    inherit: Object.keys(ADAPTERS),
+    inherit: ['input_select', 'select', 'input_text', 'text', 'climate', 'fan', 'light', 'media_player', 'water_heater', 'humidifier'],
   };
 
   createDefault(): DropdownModuleConfig {
@@ -30,92 +27,12 @@ class DropdownModule extends BaseMagicModule {
     };
   }
 
-  /** An option translated like HA shows it (select states, climate modes, presets, ...). */
-  private _optionLabel(hass: HomeAssistant | undefined, stateObj: HassEntity, ad: SelectAdapter, option: string): string {
-    try {
-      const text = ad.current
-        ? hass?.formatEntityAttributeValue?.(stateObj, ad.current, option)
-        : hass?.formatEntityState?.(stateObj, option);
-      return text || option;
-    } catch {
-      return option;
-    }
-  }
-
-  renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
+  /** The dropdown's box with the height it has by default, so the layout does not move when the view arrives. */
+  placeholder(config: CardModule): TemplateResult {
     const c = config as DropdownModuleConfig;
-    const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
-    const ad = stateObj ? adapterFor(stateObj, c.attribute) : undefined;
-    const custom = normalizeOptions(c.options);
-    const valid = validOptions(stateObj, ad, custom);
-    const unavailable = !!stateObj && (stateObj.state === 'unavailable' || stateObj.state === 'unknown');
-
-    // Custom options relabel / pick from the entity's options; without an entity they are a static list.
-    let options: Array<DropdownOption & { disabled?: boolean }>;
-    if (custom.length) {
-      options = custom.map((o) => ({ ...o, disabled: !!stateObj && (!ad || !valid.includes(o.value)) }));
-    } else if (stateObj && ad) {
-      options = valid.map((v) => ({ label: this._optionLabel(hass, stateObj, ad, v), value: v }));
-    } else {
-      options = [];
-    }
-
-    const current = stateObj
-      ? ad?.current
-        ? String(stateObj.attributes?.[ad.current] ?? '')
-        : c.attribute
-          ? String(stateObj.attributes?.[c.attribute] ?? '')
-          : stateObj.state
-      : undefined;
-    const known = current !== undefined && options.some((o) => o.value === current);
-    const currentLabel = stateObj && current
-      ? ad
-        ? this._optionLabel(hass, stateObj, ad, current)
-        : current
-      : '';
-    const canSet = !!stateObj && !!ad && !unavailable && !!hass;
-
-    const handleChange = (e: Event) => {
-      e.stopPropagation();
-      const select = e.target as HTMLSelectElement;
-      const value = select.value;
-      if (!canSet || !stateObj || !ad || !hass || !valid.includes(value)) {
-        select.value = known ? current! : ''; // not sendable: show the entity's option again
-        return;
-      }
-      const call: ServiceCall = {
-        domain: stateObj.entity_id.split('.')[0],
-        service: ad.service,
-        data: { entity_id: stateObj.entity_id, [ad.field]: value },
-      };
-      runServiceCall(hass, call);
-    };
-
-    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Dropdown');
-    return html`
-      <div class="mc-module mc-dropdown">
-        <select
-          aria-label=${name}
-          ?disabled=${!canSet}
-          @change=${handleChange}
-          @click=${stopControlEvent}
-          @pointerdown=${stopControlEvent}
-          @pointerup=${stopControlEvent}
-          @keydown=${stopControlEvent}
-        >
-          ${!known && stateObj
-            ? html`<option value="" disabled selected hidden>${unavailable ? (hass?.formatEntityState?.(stateObj) ?? stateObj.state) : currentLabel}</option>`
-            : nothing}
-          ${options.length > 0
-            ? options.map(
-                (opt) => html`<option value=${opt.value} ?disabled=${opt.disabled} ?selected=${current === opt.value}>${opt.label}</option>`,
-              )
-            : html`<option disabled ?selected=${!stateObj}>${t('No options')}</option>`}
-          ${stateObj && options.length ? selectValue(known ? current! : '') : nothing}
-        </select>
-      </div>
-    `;
+    const min = controlReserve('dropdown', c);
+    return html`<div class="mc-module mc-dropdown" style=${min ? `min-height: ${min}px` : nothing}></div>`;
   }
 }
 
-ModuleRegistry.register(new DropdownModule());
+ModuleRegistry.registerLazy(new DropdownModule(), lazyChunks.controls);

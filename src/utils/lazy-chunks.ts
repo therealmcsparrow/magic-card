@@ -2,6 +2,7 @@ import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contr
 import { provideRuntimeChunk } from './anim-runtime-loader';
 import type * as AnimChunk from '../anim-studio/anim-chunk';
 import type * as FlowsChunk from '../card/flows-chunk';
+import type * as ControlsChunk from '../modules/lazy/controls-chunk';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
 import { provideParticlesChunk } from './particles-loader';
 import { provideShapeChunk } from './shape-custom-loader';
@@ -9,6 +10,7 @@ import { provideSvgIconChunk } from './svg-icon-loader';
 
 type AnimModule = typeof AnimChunk;
 type FlowsModule = typeof FlowsChunk;
+type ControlsModule = typeof ControlsChunk;
 
 /*
  * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
@@ -34,6 +36,19 @@ const afterFlows = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChun
   load: () => lazyChunks.flows.load().then((ok) => ok && c.load()),
 });
 
+/**
+ * slider-look is a child of `controls`: its import() sits in src/modules/lazy/controls-chunk.ts. The importer calls it synchronously,
+ * so a retry's `r=` reaches the request; it rejects while `controls` is not installed (load() below loads `controls` first).
+ */
+const viaControls = <M extends LazyChunkModule>(pick: (c: ControlsModule) => () => Promise<M>) => (): Promise<M> => {
+  const c = lazyChunks.controls.module() as ControlsModule | undefined;
+  return c ? pick(c)() : Promise.reject(new Error('controls not installed'));
+};
+const afterControls = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.controls.load().then((ok) => ok && c.load()),
+});
+
 export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   slider: lazyChunk('slider', () => import(/* webpackChunkName: "slider" */ '../modules/lazy/slider-chunk')),
   seasonal: lazyChunk('seasonal', () => import(/* webpackChunkName: "seasonal" */ '../card/seasonal-chunk')),
@@ -45,8 +60,10 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   pause: lazyChunk('pause', () => import(/* webpackChunkName: "pause" */ '../card/pause-chunk')),
   // the pop-up controller and the page's pop-up coordinator; the card and the editor read it through src/card/popup-seam.ts
   popup: lazyChunk('popup', () => import(/* webpackChunkName: "popup" */ '../card/popup-chunk')),
+  // the views of the slider, spinbox, dropdown, light and gauge modules
+  controls: lazyChunk('controls', () => import(/* webpackChunkName: "controls" */ '../modules/lazy/controls-chunk')),
   'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
-  'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
+  'slider-look': afterControls(lazyChunk('slider-look', viaControls((c) => c.importSliderLook))),
   // <mc-bg-stack>, the card backdrop
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
   // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts

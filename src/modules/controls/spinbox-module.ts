@@ -1,25 +1,16 @@
-import { html, TemplateResult } from 'lit';
-import { BaseMagicModule } from '../base-module';
+import { html, nothing, TemplateResult } from 'lit';
+import { BaseLazyStub } from '../base-lazy-stub';
 import { MagicModuleMetadata } from '../module-types';
-import { CardModule, HassEntity, HomeAssistant, SpinboxModuleConfig } from '../../types';
+import { CardModule, SpinboxModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
-import { formatControlValue, numericControl, runServiceCall, snapValue } from '../../utils/entity-control';
-import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-value';
-import { stopControlEvent } from '../../utils/slider-track';
-import { currentRenderContext } from '../../services/render-context';
-import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
+import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
-import { climateRange } from './spinbox-range';
+import { controlReserve } from './controls.needs';
 
-
-/**
- * Minus / value / plus for an entity's numeric value, with the same per-domain adapters as the
- * slider (input_number / number, climate target temperature, light brightness in %, fan speed, ...).
- * Clicks are collected and sent once after a short pause.
- */
-class SpinboxModule extends BaseMagicModule {
+/** The spinbox (its view is in the controls chunk): metadata, defaults, validation and the box shown until the view arrives. */
+class SpinboxModule extends BaseLazyStub {
   readonly metadata: MagicModuleMetadata = {
     type: 'spinbox',
     name: lm('Spinbox'),
@@ -36,60 +27,11 @@ class SpinboxModule extends BaseMagicModule {
     };
   }
 
-  renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
+  /** The spinbox's box with the height it has by default, so the layout does not move when the view arrives. */
+  placeholder(config: CardModule): TemplateResult {
     const c = config as SpinboxModuleConfig;
-    const stateObj = c.entity && hass ? hass.states[c.entity] : undefined;
-    const ctrl = stateObj ? numericControl(hass, stateObj, c.attribute, { min: c.min, max: c.max, step: c.step }) : undefined;
-    const key = controlKey(c.entity, c.attribute, 'spinbox');
-    const value = ctrl ? pendingValue(key, ctrl.value) ?? ctrl.value : undefined;
-    const ctx = currentRenderContext();
-
-    const range = ctrl && value === undefined ? climateRange(stateObj, c.attribute) : undefined;
-    let text: string;
-    if (ctrl && value !== undefined) text = formatControlValue(hass, ctrl, value);
-    else if (ctrl && range) text = `${formatControlValue(hass, { ...ctrl, unit: '' }, range[0])} – ${formatControlValue(hass, ctrl, range[1])}`;
-    else if (stateObj) text = formatEntityValue(hass, stateObj).text;
-    else text = '–';
-
-    // without a current value there is nothing to step from (no jump to an end of the range)
-    const disabled = !ctrl || ctrl.readOnly || !hass || value === undefined;
-    const change = (dir: 1 | -1) => (e: Event) => {
-      e.stopPropagation();
-      if (!ctrl?.call || !hass || disabled || value === undefined) return;
-      const call = ctrl.call;
-      const next = snapValue(value + dir * ctrl.step, ctrl.min, ctrl.max, ctrl.step);
-      if (next === value) return;
-      setPendingValue(key, next, ctrl.value, (v) => runServiceCall(hass, call(v)), () => ctx?.requestUpdate());
-    };
-    const name = stateObj ? entityDisplayName(hass, stateObj) : t('Spinbox');
-    const atMin = value !== undefined && ctrl !== undefined && value <= ctrl.min;
-    const atMax = value !== undefined && ctrl !== undefined && value >= ctrl.max;
-
-    return html`
-      <div class="mc-module mc-spinbox" role="group" aria-label=${name}>
-        <button
-          type="button"
-          class="mc-spinbox-btn mc-spinbox-decrement"
-          aria-label=${t('Decrease {name}', { name })}
-          ?disabled=${disabled || atMin}
-          @click=${change(-1)}
-          @pointerdown=${stopControlEvent}
-          @pointerup=${stopControlEvent}
-          @keydown=${stopControlEvent}
-        >&minus;</button>
-        <span class="mc-spinbox-value ${ctrl && value !== undefined ? '' : 'mc-spinbox-value--text'}" aria-live="polite">${text}</span>
-        <button
-          type="button"
-          class="mc-spinbox-btn mc-spinbox-increment"
-          aria-label=${t('Increase {name}', { name })}
-          ?disabled=${disabled || atMax}
-          @click=${change(1)}
-          @pointerdown=${stopControlEvent}
-          @pointerup=${stopControlEvent}
-          @keydown=${stopControlEvent}
-        >+</button>
-      </div>
-    `;
+    const min = controlReserve('spinbox', c);
+    return html`<div class="mc-module mc-spinbox" style=${min ? `min-height: ${min}px` : nothing}></div>`;
   }
 
   validate(config: CardModule): string[] {
@@ -100,4 +42,4 @@ class SpinboxModule extends BaseMagicModule {
   }
 }
 
-ModuleRegistry.register(new SpinboxModule());
+ModuleRegistry.registerLazy(new SpinboxModule(), lazyChunks.controls);
