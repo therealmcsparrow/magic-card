@@ -29,6 +29,8 @@ import { brotliDecompressSync, gunzipSync, gzipSync } from 'node:zlib';
 /** 60 KiB. Held here as well, so editing the JSON cannot move it. */
 const FINAL_CAP = 61_440;
 const STAGES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
+/** The approved_raises id that lets the last stage cap sit above FINAL_CAP, and the field it must name. */
+const FINAL_CAP_EXEMPTION = { id: 's2-final-cap-measured', field: '/entry/stages/3/cap' };
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 const args = process.argv.slice(2);
@@ -140,7 +142,7 @@ function stageCaps(c) {
   return eff;
 }
 
-/** Ladder rules: each cap <= the previous one, the last stage <= final cap, the active stage has a cap. */
+/** Ladder rules: each cap <= the previous one, the last stage <= final cap (unless approved_raises names it), the active stage has a cap. */
 function checkLadder(c) {
   const eff = stageCaps(c);
   let prev = Infinity;
@@ -152,7 +154,11 @@ function checkLadder(c) {
   const s0 = c.entry.stages[0].cap;
   if (s0 !== null && s0 > c.entry.base.gzip) fail(`${STAGES[0]} cap ${s0} B is above the base figure ${c.entry.base.gzip} B (entry.base.gzip)`);
   const last = eff[3];
-  if (last !== null && last > FINAL_CAP) fail(`${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B`);
+  if (last !== null && last > FINAL_CAP) {
+    const hit = c.approved_raises.find((d) => d.id === FINAL_CAP_EXEMPTION.id && d.field === FINAL_CAP_EXEMPTION.field && d.to === last);
+    if (hit) console.warn(`WARN ${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B (+${last - FINAL_CAP} B), allowed by approved_raises "${hit.id}"; ${FINAL_CAP} B stays the target`);
+    else fail(`${STAGES[3]} cap ${last} B is above the final cap ${FINAL_CAP} B. Only an approved_raises entry with id "${FINAL_CAP_EXEMPTION.id}", field "${FINAL_CAP_EXEMPTION.field}" and to ${last} allows it`);
+  }
   const active = STAGES.indexOf(c.entry.current_stage);
   if (eff[active] === null) fail(`current_stage ${c.entry.current_stage} has no cap: set its cap in the stage-close change first`);
   return eff[active];

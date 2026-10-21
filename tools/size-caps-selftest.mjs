@@ -180,6 +180,27 @@ fin.entry.final_cap = 70000;
 r = run([...fixture(fin, dist), '--caps-only']);
 expect('editing final_cap fails (constant 61,440)', r.code === 1, r.out);
 
+// 7a. the last stage cap above the final cap needs the approved_raises entry s2-final-cap-measured
+const overFinal = clone(here);
+overFinal.entry.current_stage = 'stage-4';
+overFinal.entry.base.gzip = 70000;
+overFinal.entry.stages[0].cap = 70000;
+overFinal.entry.stages[3].cap = 61441;
+r = run([...fixture(overFinal, dist), '--caps-only']);
+expect('a last-stage cap over 61,440 with no entry fails', r.code === 1 && /above the final cap 61440/.test(r.out), r.out);
+const exempt = clone(overFinal);
+exempt.approved_raises.push({ id: 's2-final-cap-measured', field: '/entry/stages/3/cap', from: null, to: 61441 });
+r = run([...fixture(exempt, dist), '--caps-only']);
+expect('a last-stage cap over 61,440 with the entry passes and warns', r.code === 0 && /WARN.*above the final cap 61440/.test(r.out), r.out);
+const wrongTo = clone(exempt);
+wrongTo.approved_raises[0].to = 61000;
+r = run([...fixture(wrongTo, dist), '--caps-only']);
+expect('the entry must name the cap it allows', r.code === 1, r.out);
+const wrongId = clone(exempt);
+wrongId.approved_raises[0].id = 'another-id';
+r = run([...fixture(wrongId, dist), '--caps-only']);
+expect('another id does not allow a cap over 61,440', r.code === 1, r.out);
+
 // 7b. a closed first stage (cap = base figure, landed commit, measured) passes; a later stage cap above it fails
 const closed = clone(here);
 Object.assign(closed.entry.stages[0], { cap: 3000, landed_commit: 'ad04a81', measured: 3000 });
