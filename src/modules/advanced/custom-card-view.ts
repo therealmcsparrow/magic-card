@@ -1,4 +1,5 @@
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
+import { t as cardT } from '../../card/i18n';
 import { LitElement, html, css, TemplateResult, nothing, PropertyValues } from 'lit';
 import { CardModule, HomeAssistant, CustomCardModuleConfig } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
@@ -194,7 +195,7 @@ export class EmbeddedCard extends LitElement {
   // The container is filled by hand (_createElement), so it holds no Lit parts of its own.
   protected render(): TemplateResult {
     return html`${!this._element && this.cardType
-      ? html`<div class="mc-embedded-loading">${t('Loading card...')}</div>`
+      ? html`<div class="mc-embedded-loading">${cardT('Loading card...')}</div>`
       : nothing}<div class="mc-embedded-container"></div>`;
   }
 }

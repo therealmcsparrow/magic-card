@@ -1,0 +1,12 @@
+{
+  "Dropdown": "Keuzelijst",
+  "No options": "Geen opties",
+  "Light": "Licht",
+  "Toggle {name}": "{name} aan- of uitzetten",
+  "{name} colour": "{name} kleur",
+  "{name} effect": "{name} effect",
+  "Effect": "Effect",
+  "Spinbox": "Getalkiezer",
+  "Decrease {name}": "{name} verlagen",
+  "Increase {name}": "{name} verhogen"
+}

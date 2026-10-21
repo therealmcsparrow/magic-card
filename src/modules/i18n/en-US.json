@@ -1,0 +1,15 @@
+{
+  "Day": "Day",
+  "Empty tab": "Empty tab",
+  "Failed to load \"{type}\": {error}": "Failed to load \"{type}\": {error}",
+  "Forecast not available: {error}": "Forecast not available: {error}",
+  "History unavailable": "History unavailable",
+  "Home Assistant card helpers are not available": "Home Assistant card helpers are not available",
+  "Loading history…": "Loading history…",
+  "Night": "Night",
+  "No camera": "No camera",
+  "No forecast data": "No forecast data",
+  "No numeric history": "No numeric history",
+  "This entity has no forecast": "This entity has no forecast",
+  "{name}: last {hours, plural, one {# hour} other {# hours}}": "{name}: last {hours, plural, one {# hour} other {# hours}}"
+}

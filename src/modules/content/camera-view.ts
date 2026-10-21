@@ -1,4 +1,4 @@
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
 import { html, TemplateResult } from 'lit';
 import { CardModule, HomeAssistant, CameraModuleConfig, HassEntity } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';

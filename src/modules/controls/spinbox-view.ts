@@ -6,7 +6,7 @@ import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-v
 import { stopControlEvent } from '../../utils/slider-track';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, formatEntityValue } from '../../utils/entity-value';
-import { t } from '../../card/i18n';
+import { t } from './i18n';
 import { climateRange } from './spinbox-range';
 
 /**

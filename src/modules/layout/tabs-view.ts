@@ -4,7 +4,7 @@ import { hasIconFx, renderIcon } from '../../icons/render-icon';
 import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
 
 export class TabsView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {

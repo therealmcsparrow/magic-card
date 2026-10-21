@@ -18,7 +18,7 @@ import { controlKey, pendingValue, setPendingValue } from '../../utils/pending-v
 import { renderTrack, stopControlEvent } from '../../utils/slider-track';
 import { selectValue } from '../../utils/select-value';
 import { currentRenderContext } from '../../services/render-context';
-import { t } from '../../card/i18n';
+import { t } from './i18n';
 import { supportsEffect } from './light-effect';
 
 const hex2 = (n: number) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');

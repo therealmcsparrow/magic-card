@@ -4,7 +4,8 @@ import type { ModuleView } from '../../contracts/lazy-module';
 import { currentRenderContext } from '../../services/render-context';
 import { entityDisplayName, entityNumber, formatEntityValue } from '../../utils/entity-value';
 import { downsample, getHistory, type HistorySample } from '../../services/history-cache';
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
+import { t as cardT } from '../../card/i18n';
 
 /* Chunk-only (magic-card-modules-extra.js): no effects at evaluation. */
 
@@ -79,7 +80,7 @@ export class GraphsView implements ModuleView {
       </svg>`;
     } else {
       const text = {
-        none: t('No entity'),
+        none: cardT('No entity'),
         loading: t('Loading history…'),
         error: t('History unavailable'),
         empty: t('No numeric history'),
@@ -94,7 +95,7 @@ export class GraphsView implements ModuleView {
         ${body}
         ${c.show_labels !== false
           ? html`<div class="mc-graphs-label">
-              <span class="mc-graphs-name">${entity ? entityDisplayName(hass, entity) : c.entity || t('No entity')}${c.attribute ? ` · ${(entity && hass?.formatEntityAttributeName?.(entity, c.attribute)) || c.attribute}` : ''}</span>
+              <span class="mc-graphs-name">${entity ? entityDisplayName(hass, entity) : c.entity || cardT('No entity')}${c.attribute ? ` · ${(entity && hass?.formatEntityAttributeName?.(entity, c.attribute)) || c.attribute}` : ''}</span>
               <span class="mc-graphs-meta">${value ? `${value} · ` : ''}${hours}h</span>
             </div>`
           : nothing}

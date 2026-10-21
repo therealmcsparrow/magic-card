@@ -5,7 +5,7 @@ import { runServiceCall, ServiceCall } from '../../utils/entity-control';
 import { selectValue } from '../../utils/select-value';
 import { stopControlEvent } from '../../utils/slider-track';
 import { entityDisplayName } from '../../utils/entity-value';
-import { t } from '../../card/i18n';
+import { t } from './i18n';
 import { adapterFor, normalizeOptions, validOptions, type DropdownOption, type SelectAdapter } from './dropdown-options';
 
 export class DropdownView implements ModuleView {
