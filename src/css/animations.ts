@@ -54,7 +54,7 @@ function generated(): string {
   return [...keyframes, ...strength, ...layers, ...fx].join('\n');
 }
 
-export const animationStyles = css`
+const rulesBefore = css`
   [data-mc-anim],
   [data-mc-anim-fx] {
     --mc-anim-c: var(--mc-anim-color, var(--mc-design-color, var(--primary-color, #03a9f4)));
@@ -118,9 +118,9 @@ export const animationStyles = css`
   .mc-anim-ring[data-tap]:not([data-tapped]) {
     display: none;
   }
+`;
 
-  ${unsafeCSS(generated())}
-
+const rulesAfter = css`
   @media (prefers-reduced-motion: reduce) {
     [data-mc-anim],
     [data-mc-anim] .mc-anim-icon,
@@ -134,3 +134,6 @@ export const animationStyles = css`
     }
   }
 `;
+
+/** The animation rules in one sheet: the static rules, the generated keyframes and particle styles, then the reduced-motion block. */
+export const animationStyles = unsafeCSS(rulesBefore.cssText + generated() + rulesAfter.cssText);
