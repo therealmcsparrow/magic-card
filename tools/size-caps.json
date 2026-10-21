@@ -203,9 +203,9 @@
       "note": "20 KiB, measured 18,674 + 5 %, rounded up to 1 KiB. The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-modules-extra.js": {
-      "raw": 27648,
-      "ceiling": 53248,
-      "note": "Video background with placement keys (background layers). 27 KiB; ceiling 53,248 (lazy-module chunk ceilings)."
+      "raw": 30720,
+      "ceiling": 57344,
+      "note": "Video background with placement keys (background layers), weather icon CSS. 30 KiB (measured 28,420 + 5 %); ceiling 57,344 (lazy-module chunk ceilings)."
     },
     "magic-card-svg-booleans.js": {
       "raw": 8192,
@@ -318,6 +318,18 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 901120,
       "to": 915456
+    },
+    {
+      "id": "modules-extra-raw-30720",
+      "field": "/files/magic-card-modules-extra.js/raw",
+      "from": 27648,
+      "to": 30720
+    },
+    {
+      "id": "modules-extra-ceiling-57344",
+      "field": "/files/magic-card-modules-extra.js/ceiling",
+      "from": 53248,
+      "to": 57344
     }
   ]
 }
