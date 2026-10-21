@@ -66,7 +66,7 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   decor: lazyChunk('decor', () => import(/* webpackChunkName: "decor" */ '../card/decor-chunk')),
   'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
   'slider-look': afterControls(lazyChunk('slider-look', viaControls((c) => c.importSliderLook))),
-  // <mc-bg-stack>, the card backdrop
+  // the motion and refresh part of <mc-bg-stack> (the element itself is in magic-card.js)
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
   // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts
   'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),

@@ -119,6 +119,13 @@ export function __resetOffscreenObserverForTests(): void {
   tracked.clear();
 }
 
+/** Watched inside a paused card: off screen from the commit on, not from the observer's first report a frame or two later. */
+function holdPaused(el: Element): void {
+  queueMicrotask(() => {
+    if (el.isConnected && inPausedCard(el) && !fixed.has(el)) report(el, false);
+  });
+}
+
 /** `<svg ${pauseOffscreen()}>`: watched by the shared observer while it is in the DOM. */
 class PauseOffscreen extends AsyncDirective {
   private _el?: Element;
@@ -140,7 +147,7 @@ class PauseOffscreen extends AsyncDirective {
       this._unwatch();
       this._el = part.element;
       this._counted = counted;
-      if (this.isConnected) observe(this._el, true, counted);
+      if (this.isConnected && observe(this._el, true, counted)) holdPaused(this._el);
     } else if (counted !== this._counted) {
       this._counted = counted;
       if (this.isConnected) observe(this._el, true, counted);

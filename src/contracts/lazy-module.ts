@@ -275,6 +275,9 @@ import type { MagicModule } from '../modules/module-types';
  *   resolve false or undefined and never throw; only magic-card.js, which evaluates the table, may rely on a load. The animation studio bundle
  *   imports a loader, and the table would pull every card chunk entry into its chunk graph (the studio and
  *   several chunks grew by 8 to 60 KB when it did); a bundle without the table has no chunk and loads nothing.
+ *   The literal import() of the child chunk 'flow-look' sits in src/card/flows-chunk.ts (importFlowLook) and that of 'slider-look'
+ *   in src/modules/lazy/controls-chunk.ts (importSliderLook); the table's importers call them in the same synchronous call as their retry,
+ *   and both files are registered sites.
  *   The literal import()s of 'anim-runtime', 'particles' and the editor chunk sit in src/anim-studio/anim-chunk.ts (importRuntime,
  *   importParticles, importEditor). The table's importers for 'anim-runtime' and 'particles' call them in the same synchronous call, so a
  *   retry's `r=` reaches the request, and they reject while `anim` is not installed; their loader slots load `anim` first and
@@ -288,7 +291,7 @@ import type { MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 11;
+export const LAZY_MODULE_CONTRACT_REVISION = 12;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';

@@ -145,6 +145,9 @@ interface FillFrame {
   out: TemplateResult[];
 }
 
+/** The chunks whose lazy modules show their own failure notice in the module slot: the card adds none (the keys of LAZY_MODULE_TYPES). */
+export const SLOT_NOTICE_CHUNKS: readonly string[] = ['slider', 'markdown', 'modules-extra', 'controls'];
+
 /** Counter for RenderContext.instance. */
 let cardInstances = 0;
 
@@ -726,6 +729,28 @@ export class MagicCard extends LitElement {
     }
   }
 
+  /** The pause state of the render to come (set in willUpdate). */
+  private _paused = false;
+
+  /**
+   * Before the render, so before the first paint: the pop-up controller and its host attributes, and the viewer's pause
+   * on the host and the observer before any child is built.
+   */
+  protected willUpdate(changedProperties: PropertyValues): void {
+    super.willUpdate(changedProperties);
+    const config = this._resolvedConfig ?? this._config;
+    if (!config) return;
+    const popup = isPopupEnabled(config.popup);
+    const popupCtl = this._popupFor(config);
+    const popupHere = this._popupHidden;
+    this.toggleAttribute('data-mc-popup-hidden', popupHere);
+    this.toggleAttribute('data-mc-popup-editor', popup && !popupHere);
+    // a card that renders only its notice or its closed pop-up has no pause
+    if ((popup && this._popupFailed) || (popupHere && !popupCtl?.isOpen)) return;
+    const pause = this._pauseFor(config);
+    this._paused = pause ? pause.begin(config) : this._earlyPause(config);
+  }
+
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     // the seasonal presets asked for another total: render again with the new share
@@ -878,10 +903,8 @@ export class MagicCard extends LitElement {
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
     loadGoogleFonts(configGoogleFonts(config));
     const popup = isPopupEnabled(config.popup);
-    const popupCtl = this._popupFor(config);
+    const popupCtl = this._popupCtl;
     const popupHere = this._popupHidden;
-    this.toggleAttribute('data-mc-popup-hidden', popupHere);
-    this.toggleAttribute('data-mc-popup-editor', popup && !popupHere);
     const titleId = `${this._renderContext.instance}-popup-title`;
     // the popup chunk failed: the pop-up cannot open, so the card shows only its notice
     if (popup && this._popupFailed) return html`<ha-card><div class="mc-card-content">${this._failNotices(config, nothing)}</div></ha-card>`;
@@ -889,9 +912,8 @@ export class MagicCard extends LitElement {
     if (popupHere && !popupCtl?.isOpen) return popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
 
     // the scope first: the card's own display template reads entity / card_entity
-    // the viewer's pause: on the host and the observer before any child is built
-    const pause = this._pauseFor(config);
-    const paused = pause ? pause.begin(config) : this._earlyPause(config);
+    const pause = this._pause;
+    const paused = this._paused;
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
       return popupHere && popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
@@ -1571,7 +1593,7 @@ export class MagicCard extends LitElement {
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
-      if (n in LAZY_FEATURES) return !['slider', 'markdown', 'modules-extra', 'controls'].includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
+      if (n in LAZY_FEATURES) return !SLOT_NOTICE_CHUNKS.includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
       return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
     });
     return names.length

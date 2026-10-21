@@ -16,8 +16,8 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * 'layers' (dist/magic-card-layers.js, entry src/layers/stack/chunk.ts) is loaded when bg-stack.needs
  * says so: an image layer with `pan_zoom`, or with a `camera.*` entity and no `states`. Its install()
  * provides BgStackFx (pan/zoom motion, camera refresh, stale state and pill, idle input, visibility and
- * reduced-motion wiring) to every live and future stack. On install, each pan/zoom picture crossfades
- * (300 ms, instant under reduced motion or while paused) from its still frame to its moving frame; no
+ * reduced-motion wiring) to every live and future stack. On install, each pan/zoom picture whose start framing is scaled or moved crossfades
+ * (300 ms, instant under reduced motion or while paused) from its still frame to its moving frame; a picture whose start framing is unscaled (`from` 100) swaps in place, because both frames are the same pixels; no
  * box, size or position changes. Until then, or if the chunk fails, pan/zoom pictures show the unscaled
  * picture and camera layers keep their first frame. Everything the element needs from magic-card.js
  * comes through its `host` property (BgStackHost). Ceiling 24 KiB for the chunk; cap = measured + 5 %,
@@ -126,7 +126,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  */
 
 export const BG_STACK_CONTRACT = '1.1.0';
-export const BG_STACK_CONTRACT_REVISION = 4;
+export const BG_STACK_CONTRACT_REVISION = 5;
 export { MAX_BACKGROUND_LAYERS, BG_LAYER_STATUS_EVENT } from './bg-stack.needs';
 /** pause_when_idle: motion rests this long after the last input. */
 export const IDLE_PAUSE_MS = 120_000;

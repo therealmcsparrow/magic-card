@@ -120,7 +120,7 @@
     "magic-card-layers.js": {
       "raw": 5120,
       "ceiling": 24576,
-      "note": "Motion and refresh part of <mc-bg-stack> (pan / zoom, camera refresh, stale state). 5 KiB, measured 4,836 + 5 %; ceiling 24,576 (lazy-module 1.3.0)."
+      "note": "Motion and refresh part of <mc-bg-stack> (pan / zoom, camera refresh, stale state). 5 KiB, measured 4,836 + 5 %; ceiling 24,576 (lazy-module 1.4.0)."
     },
     "magic-card-layer-editor.js": {
       "raw": 88064,
