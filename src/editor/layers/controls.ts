@@ -3,7 +3,7 @@ import { LAYER_BLENDS, type LayerBlend } from '../../contracts/layer-placement';
 import { m, t } from './i18n';
 
 /*
- * Small controls shared by the Layer group and the Card backdrop group. Each one carries the Marco N1 cues:
+ * Small controls shared by the Layer group and the Card backdrop group. Each one carries these cues:
  * a 3:1 edge (layerControlCss), On / Off words beside a switch, and a check mark on a pressed button.
  */
 

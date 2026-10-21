@@ -1,24 +1,23 @@
 import type { Box, EditPath } from './path-model';
 
 /*
- * Contract: path booleans. Version 1.0.0 (Architect-owned). ADR 0025, ADR 0019 (ceiling), ADR 0020.
- * Revision 1 (2026-10-18, CEO decisions after the hands-on demo): new contract, before any implementation.
+ * Contract: path booleans. Version 1.0.0.
  *
  * Combine (union), subtract, intersect and exclude for closed outlines. One implementation shared by the
  * SVG editor and the shape editor.
  *
  * Implementation: module `path-booleans`, folder src/path-booleans/, lazy chunk PATH_BOOLEANS_CHUNK_FILE
- * (webpackChunkName PATH_BOOLEANS_CHUNK). Own code, no dependency (ADR 0025: martinez-polygon-clipping
- * was the alternative). Loaded with import() through src/path-booleans/loader.ts by the svg-editor and
+ * (webpackChunkName PATH_BOOLEANS_CHUNK). Own code, no dependency (no polygon-clipping library).
+ * Loaded with import() through src/path-booleans/loader.ts by the svg-editor and
  * shape-editor chunks, on the FIRST press of a boolean button, never when an editor opens, never by
  * magic-card.js or the card-editor chunk. Loader: memoised, 8 s timeout, retried on the next call after a
  * failure (same as the path-canvas loader); the button shows busy while it loads and a failure shows
  * "Couldn't load the shape tools. Try again." with nothing changed.
- * Imports: this contract, src/contracts/path-model.ts types and src/path/core.ts (already in magic-card.js,
+ * Imports: this contract, src/contracts/path-model.ts types and src/path/core.ts (in the shared path-core chunk,
  * so not copied). NOT src/path/edit.ts, draw.ts or tidy.ts (they live in the path-canvas chunk and would be
  * copied), nothing from src/svg-editor/, src/shape-editor/, src/path-canvas/, src/anim-studio/, lit
  * (import scan test). Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, never above
- * PATH_BOOLEANS_CEILING_BYTES (ADR 0019's reserved 16 KiB line).
+ * PATH_BOOLEANS_CEILING_BYTES (16 KiB).
  *
  * ── Semantics ──
  * - Input: operands in drawing order. Each operand is the AREA of its closed subpaths under its own fill
@@ -58,7 +57,7 @@ import type { Box, EditPath } from './path-model';
  * take at most 100 ms on the 4x throttled CPU profile; run synchronously (no worker), no timers, no DOM.
  * Pure function: same input, same output (no Date, no Math.random), so undo and tests are stable.
  *
- * Contract tests (QA, tests/path-booleans.contract.test.ts): the four ops on two overlapping squares
+ * Contract tests (tests/path-booleans.contract.test.ts): the four ops on two overlapping squares
  * (areas exact within tolerance); circle minus circle keeps curves (anchor count of the untouched arc is
  * the source's, sub-curves within tolerance of the source); identical operands; shared edge; touching
  * vertex; collinear overlap; tangent circles; ring with a hole under nonzero and under evenodd; disjoint
@@ -70,10 +69,10 @@ import type { Box, EditPath } from './path-model';
  */
 
 export const PATH_BOOLEANS_CONTRACT_VERSION = '1.0.0';
-export const PATH_BOOLEANS_CONTRACT_REVISION = 1;
+export const PATH_BOOLEANS_CONTRACT_REVISION = 2;
 export const PATH_BOOLEANS_CHUNK = 'svg-booleans';
 export const PATH_BOOLEANS_CHUNK_FILE = 'magic-card-svg-booleans.js';
-/** ADR 0019 reserved line; the CAPS entry is measured + 5 % below it. */
+/** 16 KiB; the CAPS entry is measured + 5 % below it. */
 export const PATH_BOOLEANS_CEILING_BYTES = 16_384;
 /** Default flatten tolerance = longest frame side / this. */
 export const FLATTEN_DIVISOR = 2400;

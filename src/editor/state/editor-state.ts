@@ -54,10 +54,10 @@ import { ChildStep, childListKey, childSlots, descendantAt, hasSlotNodes, mutabl
 import { copyModuleToClipboard, docPool, pasteAnimations, readModuleClip, referencedDocs } from './module-clipboard';
 import { animationDocList, customAnimationIds } from '../../utils/custom-animations';
 import { withTemplateAnimations } from '../../services/template-merge';
-import { animationLibrary } from '../../services/animation-library';
+import { animLibrary } from '../../utils/anim-hooks';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
-import { flowKeys } from '../../utils/flow';
+import { flowKeys } from '../../utils/flow-keys';
 import type { ModuleSelection, Selection } from '../studio/selection';
 
 /** A module (or a layout child below it: `child`), column or row, by index. */
@@ -710,7 +710,7 @@ export class EditorStateManager {
     // the documents it plays that this card lacks (renamed on a clash), in the same undo step
     const own = animationDocList(config.custom_animations);
     // new ids stay clear of the card's ids, its references and the animation library's
-    const taken = [...customAnimationIds(config), ...animationLibrary.list().map((d) => d.id)];
+    const taken = [...customAnimationIds(config), ...animLibrary().list().map((d) => d.id)];
     const add = pasteAnimations(mod, clip.docs, docPool(this._playedDocs(config)), taken);
     if (add.length) config.custom_animations = [...own, ...add] as typeof config.custom_animations;
     let path: EditorPath;

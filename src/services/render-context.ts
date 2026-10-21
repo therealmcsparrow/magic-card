@@ -3,6 +3,7 @@ import type { TemplateState } from './template-controller';
 import type { SubscriptionState } from './subscription-controller';
 import type { CardModule, NestedColumnConfig } from '../types';
 import type { ResolvedLayer } from '../contracts/layer-placement';
+import type { LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
 
 /**
  * What a module may ask of the card that is rendering it. Set by the card for the duration of its
@@ -25,6 +26,8 @@ export interface RenderContext {
   media?(id: string): string | undefined;
   /** Ask the card to render again (e.g. asynchronous data arrived). */
   requestUpdate(): void;
+  /** A render met a feature whose chunk is not ready (the needs() predicate missed it): the card shows that chunk's failure notice if it fails. */
+  metChunk?(name: LazyChunkName | OnDemandChunkName): void;
   /**
    * Render a layout module's child through the card's module pipeline (design, animations, actions,
    * display conditions, validation errors, editor paths). `slot` is the column / tab (0 for flat lists).

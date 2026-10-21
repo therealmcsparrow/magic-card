@@ -1,5 +1,5 @@
 /*
- * Shared code of the i18n tools (contract src/contracts/i18n.ts 1.0.0 r2, ADR 0032 r2): contract loading,
+ * Shared code of the i18n tools (contract src/contracts/i18n.ts 1.0.0): contract loading,
  * source scan (t / tc / tx / m calls found through the imports of a namespace's i18n folder), catalogues,
  * messages.gen.ts writer, en-US generator, message validator. CommonJS so the webpack pre-loader
  * (tools/i18n-loader.cjs) and the .mjs tools use the same code.
@@ -55,7 +55,7 @@ const SKIP_DIRS = ['src/i18n/', 'src/contracts/'];
 const isScanned = (file) => !SKIP_DIRS.some((d) => rel(file).startsWith(d));
 
 const FNS = new Set(['t', 'tc', 'tx', 'm']);
-/** r3: lm() (src/i18n/labels/mark.ts) is m() for the 'labels' namespace in files magic-card.js carries. */
+/** lm() (src/i18n/labels/mark.ts) is m() for the 'labels' namespace in files magic-card.js carries. */
 const LABEL_MARK = 'i18n/labels/mark';
 /** Joins the entries of a table (contract TABLE_SEPARATOR). A tc() id is 'context|text' in the tools; the en-GB table keeps the context apart with CTX. */
 const SEP = '|';

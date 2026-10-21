@@ -42,7 +42,7 @@ export const OPEN_CARD_ENTITY = 'mc-open-card-entity';
 type Choice = 'same' | 'pick' | 'none';
 
 /**
- * The entity source of one module: Same as card / row / column, Pick one, No entity (designer R2-R8).
+ * The entity source of one module: Same as card / row / column, Pick one, No entity.
  * Three buttons with aria-pressed; arrow keys only move focus, Space or Enter selects, nothing moves
  * focus into the picker. One live region is always present and speaks only after a change by the user.
  * Writes through `onChange`: undefined = no `entity` key, 'none', or an id.

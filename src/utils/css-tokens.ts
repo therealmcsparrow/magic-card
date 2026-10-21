@@ -31,7 +31,7 @@ const SINGLE: Record<string, TokType> = { ',': 'comma', ':': 'colon', ';': 'semi
 /**
  * One escape: a backslash and 1-6 hex digits plus one optional space, or one character that is no newline or hex digit.
  * The branches are disjoint (six hex digits, or one to five not followed by a hex digit, or a non-hex character),
- * so a repeated group of them has one way to match and cannot backtrack (websec.M-SEC6).
+ * so a repeated group of them has one way to match and cannot backtrack.
  */
 const ESC = String.raw`\\(?:(?:[\da-f]{6}|[\da-f]{1,5}(?![\da-f]))[ \t\n]?|[^\n\da-f])`;
 const NAME = String.raw`(?:[\w\u0080-\uffff-]|${ESC})`;
@@ -40,7 +40,7 @@ const IDENT = new RegExp(String.raw`(?:--|-?(?:[a-z_\u0080-\uffff]|${ESC}))${NAM
  * Sticky regexes, tried in order at each position. Each has one way to match at a given character
  * (no overlapping alternatives), so a run is linear. A string takes its escapes and a continuation
  * (backslash + newline) whole; it ends before a bare newline or at the end of the input.
- * The branches are disjoint (not a backslash, the quote or a newline; a backslash and one character; a lone backslash only at the very end of the input), websec.M-SEC6.
+ * The branches are disjoint (not a backslash, the quote or a newline; a backslash and one character; a lone backslash only at the very end of the input).
  * `sym` holds hash, at-keyword, CDO and CDC: none of them is ever kept but a `#hex` colour.
  */
 const RULES: [TokType, RegExp][] = [

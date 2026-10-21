@@ -48,7 +48,7 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
   return { operands, leftOut, lockedOnly: leftOut > 0 && nLocked === leftOut, openOnly, openLayers, merge: operands.length === 1 && closedOf(operands[0]) >= 2 };
 }
 
-/** Why the operation can not run, or undefined when it can. First match wins (design 7.3). */
+/** Why the operation can not run, or undefined when it can. First match wins. */
 export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   const n = st.operands.length;
   if (n >= 2 || (n === 1 && op === 'union' && st.merge)) return undefined;

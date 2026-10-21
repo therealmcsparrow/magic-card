@@ -1,4 +1,5 @@
-import { CUSTOM_PREFIX, customRefId, isCustomRef, type AnimationDoc } from '../anim-studio/model';
+import type { AnimationDoc } from '../anim-studio/model';
+import { CUSTOM_PREFIX, customRefId, isCustomRef } from './custom-ref';
 
 /*
  * Card-editor helper for animations from the library (`preset: custom:<id>`): the export that embeds

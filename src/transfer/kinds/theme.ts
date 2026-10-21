@@ -13,7 +13,7 @@ export function hostsOf(value: string): string[] {
 
 /**
  * A theme item: flat variables and/or modes.light / modes.dark. External references and card-mod-*
- * keys are KEPT and listed (CEO 2026-10-18). The theme editor runs its own docErrors afterwards.
+ * keys are KEPT and listed. The theme editor runs its own docErrors afterwards.
  */
 export function readTheme(index: number, data: unknown): KindResult<TransferDataByKind['theme']> {
   if (!isObj(data)) return { ok: false, notes: [note('invalid_item', index, 'data', t('The theme data is missing.'))] };

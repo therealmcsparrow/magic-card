@@ -6,7 +6,7 @@ import { layerControlCss } from './tokens';
 import { t } from './i18n';
 
 /*
- * "Layers here" sheet (designer 11 H): every layer at one point of the canvas, front first, modules and card
+ * "Layers here" sheet: every layer at one point of the canvas, front first, modules and card
  * backdrop layers alike. One tap (44 px target) selects. Opened by press and hold (touch) or the float bar's
  * Layers here button; Alt-click is the mouse shortcut. Not the only route: the structure list stays.
  * Events: `pick` (detail { key }), `close`.

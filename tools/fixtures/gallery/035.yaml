@@ -1,0 +1,62 @@
+# Mini player: a slim pill with cover art, title, artist and a play/pause button.
+# Entities: media_player.living_room
+# gallery: width=380
+type: custom:magic-card
+name: Mini player
+background: "linear-gradient(90deg, #1f1033 0%, #2d1650 100%)"
+border_radius: 999px
+padding: 8px
+box_shadow: "0 14px 30px rgba(91, 33, 182, 0.35)"
+rows:
+  - id: pill
+    column_widths: [56px, 1fr, auto]
+    gap: 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: image
+            entity: media_player.living_room
+            entity_picture: true
+            aspect_ratio: "1"
+            design:
+              border_radius: 50%
+              animations: [{ preset: fast-spin, duration: 12s }]
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_title
+            design: { font_size: 15px, font_weight: "800", color: "#ffffff", white_space: nowrap, overflow: hidden, text_overflow: ellipsis }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_artist
+            design: { font_size: 12px, color: "#c4b5fd" }
+      - vertical_align: center
+        modules:
+          - type: horizontal
+            gap: 4px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:skip-next
+                size: 24px
+                design: { color: "#c4b5fd", padding: 6px }
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }
+              - type: icon
+                icon: mdi:pause
+                size: 26px
+                design:
+                  color: "#2d1650"
+                  width: 52px
+                  height: 52px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "#ffffff"
+                actions:
+                  tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.living_room } }

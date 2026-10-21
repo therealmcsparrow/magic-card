@@ -3,7 +3,8 @@ import { LitElement, html, css, TemplateResult, PropertyValues, nothing } from '
 import { customElement, property, state } from 'lit/decorators.js';
 import type { AnimationConfig, AnimationDirection, AnimationTrigger, HomeAssistant } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
-import { animationConflicts, applyPreset, newAnimation, resetToPreset } from '../../utils/animation';
+import { applyPreset, newAnimation, resetToPreset } from '../../anim-studio/entries';
+import { animationConflicts } from './animation-conflicts';
 import {
   ANIMATION_GROUPS,
   GROUP_LABELS,
@@ -15,9 +16,10 @@ import {
   intensityLabel,
 } from '../../utils/animation-presets';
 import { generateId } from '../../utils/id-generator';
-import { isSceneId, sceneDecorations } from '../../utils/seasonal-scenes';
+import { SCENE_INSETS } from '../../utils/seasonal.needs';
 import type { AnimationPreset } from '../../utils/animation-presets';
-import { animationLibrary, type LibraryHass } from '../../services/animation-library';
+import type { LibraryHass } from '../../anim-studio/animation-library';
+import { animLibrary } from '../../utils/anim-hooks';
 import { CUSTOM_PREFIX, customRefId, isCustomRef, validateAnimationDoc, type AnimationDoc } from '../../anim-studio/model';
 import type { CataloguePreset } from '../../contracts/preset-catalogue';
 import type { CardState } from './icon-animator/card-request';
@@ -69,7 +71,7 @@ const read = new WeakMap<object, AnimationDoc | undefined>();
  * colour, strength, timing, intensity), "Add animation" below. Choosing a preset writes its values into the
  * fields; "Reset to preset" restores them. A muted note marks an entry that overrides an earlier
  * one on the same element and channel. The preset dropdown also lists the preset catalogue (lazy
- * chunk, ADR 0005): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
+ * chunk): a pick plays `custom:cat-<entry id>` from a copy stored in the card.
  */
 @customElement('mc-animation-list')
 export class AnimationList extends LitElement {
@@ -124,8 +126,8 @@ export class AnimationList extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this._unsubLibrary ??= animationLibrary.subscribe(() => {
-      this._libVersion = animationLibrary.version;
+    this._unsubLibrary ??= animLibrary().subscribe(() => {
+      this._libVersion = animLibrary().version;
     });
     if (!this._catalogue)
       void loadCatalogue().then((m) => {
@@ -141,12 +143,12 @@ export class AnimationList extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     // the picker needs the library: one shared fetch / subscription per page (lazy)
-    if (changed.has('hass')) animationLibrary.ensure(this.hass as unknown as LibraryHass | undefined);
+    if (changed.has('hass')) animLibrary().ensure(this.hass as unknown as LibraryHass | undefined);
   }
 
   /** "My animations": the library's documents, only once it answered. */
   private _mine(): AnimationDoc[] {
-    return animationLibrary.status === 'ready' ? animationLibrary.list() : [];
+    return animLibrary().status === 'ready' ? animLibrary().list() : [];
   }
 
   /**
@@ -156,7 +158,7 @@ export class AnimationList extends LitElement {
   private _doc(preset: string): AnimationDoc | undefined {
     if (!isCustomRef(preset)) return undefined;
     const id = customRefId(preset);
-    const lib = animationLibrary.status === 'ready' ? animationLibrary.get(id) : undefined;
+    const lib = animLibrary().status === 'ready' ? animLibrary().get(id) : undefined;
     if (lib || !id.startsWith(CAT_PREFIX)) return lib;
     const raw = this._stored(id);
     if (raw) {
@@ -384,7 +386,7 @@ export class AnimationList extends LitElement {
     const id = (k: string) => `an-${index}-${k}`;
     const trigger = a.trigger ?? 'always';
     const scene = p.seasonal;
-    const deco = isSceneId(scene) && sceneDecorations([scene]).length > 0;
+    const deco = !!SCENE_INSETS[scene ?? ''];
     const decoOn = a.decorations !== false;
     const help =
       scene === 'weather'
@@ -621,7 +623,7 @@ export class AnimationList extends LitElement {
 
   /** Why a `custom:` entry has no document here. */
   private _missingHelp(): string {
-    switch (animationLibrary.status) {
+    switch (animLibrary().status) {
       case 'unavailable':
         return t('Not found. My animations needs the Magic Card Utils integration; the card plays its embedded copy if it has one.');
       case 'ready':
@@ -633,7 +635,7 @@ export class AnimationList extends LitElement {
 
   /** "Keep a copy in this card" for a library animation (animation-copies.ts). */
   private _keepCopy(ref: string, id: string): TemplateResult | typeof nothing {
-    const lib = animationLibrary.get(ref);
+    const lib = animLibrary().get(ref);
     const sm = lib ? cardStateOf(this) : undefined;
     if (!lib || !sm) return nothing;
     const on = hasCopy(sm.getConfig(), ref);

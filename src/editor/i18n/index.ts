@@ -5,7 +5,7 @@ import tables from './messages.gen';
 export type { MessageId };
 
 /**
- * Messages of the card editor (namespace 'card-editor', contract i18n 1.0.0 r3; the tables sit inline in
+ * Messages of the card editor (namespace 'card-editor', contract i18n 1.0.0; the tables sit inline in
  * magic-card-editor.js). Write t('British text'); a module-level table of labels holds m('British text')
  * and is read through tl() / t(item.label) where it is rendered.
  */

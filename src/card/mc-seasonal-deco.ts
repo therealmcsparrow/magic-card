@@ -1,12 +1,11 @@
 import { LitElement, css, html, unsafeCSS, nothing, PropertyValues, svg, SVGTemplateResult, TemplateResult } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import type { SceneId } from '../utils/seasonal';
 import { sceneDecorations, type DecoMotif } from '../utils/seasonal-scenes';
 import { layoutDeco, type DecoBox, type DecoLayout } from '../utils/seasonal-deco';
 import { readRadii } from '../utils/ring-path';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
-import { borderBoxSize, unwatchSize, watchSize } from './mc-ring';
-import type { ResolvedShape } from './mc-shape';
+import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
+import type { ResolvedShape } from './shape-resolve';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
 
@@ -136,6 +135,16 @@ function vine(l: NonNullable<DecoLayout['vine']>): SVGTemplateResult {
  * motion); the other motifs are static. Without motifs it renders and observes nothing.
  */
 export class McSeasonalDeco extends LitElement {
+  static properties = {
+    motifs: { attribute: false, hasChanged: (a?: DecoMotif[], b?: DecoMotif[]) => !sameList(a, b) },
+    scenes: { attribute: false, hasChanged: (a?: SceneId[], b?: SceneId[]) => !sameList(a, b) },
+    shape: { attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) },
+    seed: {},
+    dark: { type: Boolean, reflect: true },
+    _box: { state: true },
+    _static: { state: true },
+  };
+
   static styles = css`
     :host {
       position: absolute;
@@ -381,18 +390,17 @@ export class McSeasonalDeco extends LitElement {
   `;
 
   /** Motifs to draw (wins over `scenes`). */
-  @property({ attribute: false, hasChanged: (a?: DecoMotif[], b?: DecoMotif[]) => !sameList(a, b) }) motifs?: DecoMotif[];
+  motifs?: DecoMotif[];
   /** Scenes whose decorations to draw (src/utils/seasonal-scenes.ts). */
-  @property({ attribute: false, hasChanged: (a?: SceneId[], b?: SceneId[]) => !sameList(a, b) }) scenes?: SceneId[];
+  scenes?: SceneId[];
   /** The parent's outline shape: decorations follow it instead of the rounded rectangle. */
-  @property({ attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) })
   shape?: ResolvedShape;
-  @property() seed = 'mc';
+  seed = 'mc';
   /** The card is on a dark theme: softer frost. */
-  @property({ type: Boolean, reflect: true }) dark = false;
+  dark = false;
 
-  @state() private _box?: DecoBox & { top: number; left: number };
-  @state() private _static = false;
+  private _box?: DecoBox & { top: number; left: number };
+  private _static = false;
 
   private _observed?: Element;
   private _mutations?: MutationObserver;

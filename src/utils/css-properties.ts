@@ -73,7 +73,7 @@ export interface CssSector {
   icon: string;
   /** Cascade order: designToStyle emits properties in this order (shorthands before longhands). */
   properties: CssPropertyDef[];
-  /** Keys shown first in the editor (mockup order); the rest follow in `properties` order. */
+  /** Keys shown first in the editor; the rest follow in `properties` order. */
   leading?: string[];
 }
 
@@ -392,41 +392,4 @@ export function displayProperties(sector: CssSector): CssPropertyDef[] {
     .map((k) => sector.properties.find((p) => p.key === k))
     .filter((p): p is CssPropertyDef => !!p);
   return [...first, ...sector.properties.filter((p) => !lead.includes(p.key))];
-}
-
-/**
- * Per-side longhands of the `box` properties, as written by mc-box-field (design key → CSS property).
- * They are not separate fields in the panel (the box field edits them), but they are design keys
- * that must reach the CSS, count as "set" and sync with their box field.
- */
-export const BOX_LONGHANDS: Record<string, Array<{ key: string; cssProperty: string }>> = {
-  margin: ['top', 'right', 'bottom', 'left'].map((s) => ({ key: `margin_${s}`, cssProperty: `margin-${s}` })),
-  padding: ['top', 'right', 'bottom', 'left'].map((s) => ({ key: `padding_${s}`, cssProperty: `padding-${s}` })),
-  border_radius: ['top_left', 'top_right', 'bottom_right', 'bottom_left'].map((c) => ({
-    key: `border_${c}_radius`,
-    cssProperty: `border-${c.replace('_', '-')}-radius`,
-  })),
-};
-
-/** Design keys edited (and synced with a template) together with another one: the shape and its options. */
-const GROUPED_KEYS: Record<string, string[]> = {
-  shape: ['shape_options'],
-};
-
-/** Design keys a property covers: itself plus its per-side longhands (box properties) or grouped keys. */
-export function propertyKeys(key: string): string[] {
-  return [key, ...(BOX_LONGHANDS[key] || []).map((l) => l.key), ...(GROUPED_KEYS[key] || [])];
-}
-
-export function buildDesignToCssMap(): Record<string, string> {
-  const map: Record<string, string> = {};
-  for (const sector of CSS_SECTORS) {
-    for (const p of sector.properties) {
-      if (p.virtual) continue;
-      map[p.key] = p.cssProperty;
-      // longhands right after their shorthand, so a side overrides the shorthand
-      for (const l of BOX_LONGHANDS[p.key] || []) map[l.key] = l.cssProperty;
-    }
-  }
-  return map;
 }

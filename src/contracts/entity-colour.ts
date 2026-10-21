@@ -1,7 +1,7 @@
 /*
- * Contract: entity colour values for slider colours. Version 1.0.0 (Architect-owned). Task
- * flow-anchors-polish (CEO 2026-10-20: slider colour fields get the same "use entity colour" option
- * as other colour fields, including `entity N%` and a colour from an entity attribute).
+ * Contract: entity colour values for slider colours. Version 1.0.0. Slider colour
+ * fields get the same "use entity colour" option as other colour fields, including `entity N%` and a
+ * colour from an entity attribute.
  *
  * Provider: src/utils/entity-color.ts (magic-card.js), new pure function entityPaint() below.
  * Consumers: the slider Module (src/modules/controls/slider-module.ts, magic-card.js) for both its

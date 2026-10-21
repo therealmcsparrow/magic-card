@@ -1,0 +1,269 @@
+# Enchanted lanterns: four lanterns hang from a beam at different heights, one per room. Tap a lantern to switch its light.
+# Lit lanterns flicker out of step, and the small bar under the name shows the brightness.
+# It uses theme colours only, so it follows the dashboard's theme.
+# Entities: light.living_room, light.kitchen, light.bedroom, light.hallway
+# gallery: width=400 record=3 theme=candlelit-cloister mode=dark
+type: custom:magic-card
+name: Enchanted lanterns
+border_radius: 26px
+padding: 18px
+rows:
+  - id: head
+    padding: 0 0 12px
+    columns:
+      - modules:
+          - type: text
+            text: Lanterns
+            design: { font_size: 22px, font_weight: "700", color: var(--primary-text-color), font_family: "Georgia, 'Iowan Old Style', serif" }
+  - id: beam
+    padding: 0 0 0
+    columns:
+      - modules:
+          - type: separator
+            separator_style: none
+            design: { height: 8px, border_radius: 4px 4px 0 0, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)" }
+  - id: lanterns
+    design: { margin_top: -8px }
+    layout: "1-1-1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 196px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
+              border_style: solid
+              border_color: var(--divider-color)
+              background_color: var(--card-background-color)
+              overflow: hidden
+              transition: background-color 0.3s
+              conditional:
+                - id: lit
+                  name: Lit
+                  conditions: [{ type: state, entity: light.living_room, state: "on" }]
+                  design:
+                    border_color: "color-mix(in srgb, var(--accent-color) 55%, transparent)"
+                    background_color: "color-mix(in srgb, var(--accent-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: toggle, entity: light.living_room }
+            modules:
+              - type: vertical
+                gap: 0px
+                align: center
+                design: { height: 128px }
+                modules:
+                  - type: vertical
+                    gap: 0px
+                    design: { width: 2px, height: 34px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)", margin: 0 auto }
+                    modules: []
+                  - type: icon
+                    entity: light.living_room
+                    icon: svg
+                    svg: '<svg viewBox="0 0 48 64"><circle cx="24" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 18 L24 10 L35 18 Z" fill="currentColor"/><path d="M14 18 H34 V48 Q34 54 28 54 H20 Q14 54 14 48 Z" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 26 C31 33 31 41 24 46 C17 41 17 33 24 26 Z" fill="currentColor"/><rect x="16" y="56" width="16" height="4" rx="2" fill="currentColor"/></svg>'
+                    size: 62px
+                    design:
+                      color: "color-mix(in srgb, var(--secondary-text-color) 55%, transparent)"
+                      conditional:
+                        - { id: lit, name: Lit, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color), animations: [{ id: flicker, preset: flame-flicker, target: icon, intensity: 6, duration: 3s, delay: 0.0s }, { id: glow, preset: glow-pulse, target: icon, color: var(--accent-color), strength: 70, intensity: 14, duration: 3s, delay: 0.0s }] } }
+              - type: text
+                use_entity: true
+                entity: light.living_room
+                entity_display: name
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color), margin_top: auto, padding: 10px 0 0 }
+              - type: text
+                use_entity: true
+                entity: light.living_room
+                design: { font_size: 11px, color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1px }
+              - type: bar
+                entity: light.living_room
+                attribute: brightness
+                min: 0
+                max: 255
+                bar_height: 4px
+                show_value: false
+                bar_color: var(--accent-color)
+                bar_background: var(--divider-color)
+                design: { width: 60%, margin: 6px auto 12px }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 196px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
+              border_style: solid
+              border_color: var(--divider-color)
+              background_color: var(--card-background-color)
+              overflow: hidden
+              transition: background-color 0.3s
+              conditional:
+                - id: lit
+                  name: Lit
+                  conditions: [{ type: state, entity: light.kitchen, state: "on" }]
+                  design:
+                    border_color: "color-mix(in srgb, var(--accent-color) 55%, transparent)"
+                    background_color: "color-mix(in srgb, var(--accent-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: toggle, entity: light.kitchen }
+            modules:
+              - type: vertical
+                gap: 0px
+                align: center
+                design: { height: 128px }
+                modules:
+                  - type: vertical
+                    gap: 0px
+                    design: { width: 2px, height: 12px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)", margin: 0 auto }
+                    modules: []
+                  - type: icon
+                    entity: light.kitchen
+                    icon: svg
+                    svg: '<svg viewBox="0 0 48 64"><circle cx="24" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 18 L24 10 L35 18 Z" fill="currentColor"/><path d="M14 18 H34 V48 Q34 54 28 54 H20 Q14 54 14 48 Z" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 26 C31 33 31 41 24 46 C17 41 17 33 24 26 Z" fill="currentColor"/><rect x="16" y="56" width="16" height="4" rx="2" fill="currentColor"/></svg>'
+                    size: 62px
+                    design:
+                      color: "color-mix(in srgb, var(--secondary-text-color) 55%, transparent)"
+                      conditional:
+                        - { id: lit, name: Lit, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color), animations: [{ id: flicker, preset: flame-flicker, target: icon, intensity: 6, duration: 3s, delay: -0.8s }, { id: glow, preset: glow-pulse, target: icon, color: var(--accent-color), strength: 70, intensity: 14, duration: 3s, delay: -0.8s }] } }
+              - type: text
+                use_entity: true
+                entity: light.kitchen
+                entity_display: name
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color), margin_top: auto, padding: 10px 0 0 }
+              - type: text
+                use_entity: true
+                entity: light.kitchen
+                design: { font_size: 11px, color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1px }
+              - type: bar
+                entity: light.kitchen
+                attribute: brightness
+                min: 0
+                max: 255
+                bar_height: 4px
+                show_value: false
+                bar_color: var(--accent-color)
+                bar_background: var(--divider-color)
+                design: { width: 60%, margin: 6px auto 12px }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 196px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
+              border_style: solid
+              border_color: var(--divider-color)
+              background_color: var(--card-background-color)
+              overflow: hidden
+              transition: background-color 0.3s
+              conditional:
+                - id: lit
+                  name: Lit
+                  conditions: [{ type: state, entity: light.bedroom, state: "on" }]
+                  design:
+                    border_color: "color-mix(in srgb, var(--accent-color) 55%, transparent)"
+                    background_color: "color-mix(in srgb, var(--accent-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: toggle, entity: light.bedroom }
+            modules:
+              - type: vertical
+                gap: 0px
+                align: center
+                design: { height: 128px }
+                modules:
+                  - type: vertical
+                    gap: 0px
+                    design: { width: 2px, height: 46px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)", margin: 0 auto }
+                    modules: []
+                  - type: icon
+                    entity: light.bedroom
+                    icon: svg
+                    svg: '<svg viewBox="0 0 48 64"><circle cx="24" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 18 L24 10 L35 18 Z" fill="currentColor"/><path d="M14 18 H34 V48 Q34 54 28 54 H20 Q14 54 14 48 Z" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 26 C31 33 31 41 24 46 C17 41 17 33 24 26 Z" fill="currentColor"/><rect x="16" y="56" width="16" height="4" rx="2" fill="currentColor"/></svg>'
+                    size: 62px
+                    design:
+                      color: "color-mix(in srgb, var(--secondary-text-color) 55%, transparent)"
+                      conditional:
+                        - { id: lit, name: Lit, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color), animations: [{ id: flicker, preset: flame-flicker, target: icon, intensity: 6, duration: 3s, delay: -1.6s }, { id: glow, preset: glow-pulse, target: icon, color: var(--accent-color), strength: 70, intensity: 14, duration: 3s, delay: -1.6s }] } }
+              - type: text
+                use_entity: true
+                entity: light.bedroom
+                entity_display: name
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color), margin_top: auto, padding: 10px 0 0 }
+              - type: text
+                use_entity: true
+                entity: light.bedroom
+                design: { font_size: 11px, color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1px }
+              - type: bar
+                entity: light.bedroom
+                attribute: brightness
+                min: 0
+                max: 255
+                bar_height: 4px
+                show_value: false
+                bar_color: var(--accent-color)
+                bar_background: var(--divider-color)
+                design: { width: 60%, margin: 6px auto 12px }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 196px
+              border_radius: 0 0 16px 16px
+              border_width: 0 1px 1px 1px
+              border_style: solid
+              border_color: var(--divider-color)
+              background_color: var(--card-background-color)
+              overflow: hidden
+              transition: background-color 0.3s
+              conditional:
+                - id: lit
+                  name: Lit
+                  conditions: [{ type: state, entity: light.hallway, state: "on" }]
+                  design:
+                    border_color: "color-mix(in srgb, var(--accent-color) 55%, transparent)"
+                    background_color: "color-mix(in srgb, var(--accent-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: toggle, entity: light.hallway }
+            modules:
+              - type: vertical
+                gap: 0px
+                align: center
+                design: { height: 128px }
+                modules:
+                  - type: vertical
+                    gap: 0px
+                    design: { width: 2px, height: 24px, background_color: "color-mix(in srgb, var(--secondary-text-color) 60%, transparent)", margin: 0 auto }
+                    modules: []
+                  - type: icon
+                    entity: light.hallway
+                    icon: svg
+                    svg: '<svg viewBox="0 0 48 64"><circle cx="24" cy="6" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 18 L24 10 L35 18 Z" fill="currentColor"/><path d="M14 18 H34 V48 Q34 54 28 54 H20 Q14 54 14 48 Z" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 26 C31 33 31 41 24 46 C17 41 17 33 24 26 Z" fill="currentColor"/><rect x="16" y="56" width="16" height="4" rx="2" fill="currentColor"/></svg>'
+                    size: 62px
+                    design:
+                      color: "color-mix(in srgb, var(--secondary-text-color) 55%, transparent)"
+                      conditional:
+                        - { id: lit, name: Lit, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color), animations: [{ id: flicker, preset: flame-flicker, target: icon, intensity: 6, duration: 3s, delay: -2.2s }, { id: glow, preset: glow-pulse, target: icon, color: var(--accent-color), strength: 70, intensity: 14, duration: 3s, delay: -2.2s }] } }
+              - type: text
+                use_entity: true
+                entity: light.hallway
+                entity_display: name
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color), margin_top: auto, padding: 10px 0 0 }
+              - type: text
+                use_entity: true
+                entity: light.hallway
+                design: { font_size: 11px, color: var(--secondary-text-color), text_transform: uppercase, letter_spacing: 1px }
+              - type: bar
+                entity: light.hallway
+                attribute: brightness
+                min: 0
+                max: 255
+                bar_height: 4px
+                show_value: false
+                bar_color: var(--accent-color)
+                bar_background: var(--divider-color)
+                design: { width: 60%, margin: 6px auto 12px }

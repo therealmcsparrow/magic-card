@@ -1,6 +1,6 @@
 import { css } from 'lit';
 
-/* Card styles for the animated weather icons (sync, magic-card.js); the SVG templates are in weather-icon-svg.ts (modules-extra chunk). */
+/* Card styles for the animated weather icons (the modules-extra chunk adopts them); the SVG templates are in weather-icon-svg.ts. */
 
 /** Card styles for the animated weather icons (sized like ha-icon through --mdc-icon-size). */
 export const weatherIconStyles = css`

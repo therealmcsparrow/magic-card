@@ -104,7 +104,7 @@ export function pickAnimatedIcon(
 
   if (pick.kind === 'mine') {
     referenceMine(h, from, list, pick.doc.id, (l) => write(pick.doc.rig?.icon, l));
-    // keep a copy (small documents by default, mcu-library r3): folded into the pick's undo step
+    // keep a copy (small documents by default, mcu-library): folded into the pick's undo step
     if (new TextEncoder().encode(JSON.stringify(pick.doc)).length <= KEEP_COPY_MAX_BYTES) patchCard(from, (c) => upsertInlineDoc(c, pick.doc, h.customIds(c)), true);
     return true;
   }

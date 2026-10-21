@@ -96,7 +96,7 @@ const HINT_DELAY_MS = 800;
 const clock = (): string => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 /**
- * <mcte-editor-view>: one theme open for editing (design 4 to 9, round 1 in 16). It owns the draft
+ * <mcte-editor-view>: one theme open for editing. It owns the draft
  * (`_doc`), the scope and the preview mode, saves through the ThemeBackend and drives the trial.
  * Events up to the host: `mcte-back`, `mcte-dirty` { dirty }, `mcte-saved` { name }, `mcte-deleted` { name },
  * `mcte-recheck` (include).
@@ -228,7 +228,7 @@ export class McteEditorView extends LitElement {
     }
   }
 
-  /** Keeps the editor's chrome on the HA theme while a trial applies the draft to the whole page (Marco F8, a11y). */
+  /** Keeps the editor's chrome on the HA theme while a trial applies the draft to the whole page. */
   private _pin(doc: ThemeDoc): void {
     const cs = getComputedStyle(this);
     for (const k of [...PIN_BASE, ...Object.keys(resolveTheme(doc, browserMode(this.hass)))]) {

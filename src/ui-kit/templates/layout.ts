@@ -7,13 +7,13 @@ import { button } from './button';
 import { iconOf } from './icon';
 
 /*
- * Layout helpers (contract ui-kit 1.0.0 r2): topBar, toolbar (float capsule or vertical rail) and sectionHead.
+ * Layout helpers (contract ui-kit 1.0.0): topBar, toolbar (float capsule or vertical rail) and sectionHead.
  * They render in the caller's root with the kit classes; the strings all come from the caller.
  */
 
 let seq = 0;
 
-/** The full-screen layer header, design/10 4.8: Back | title | name | spacer | Undo, Redo | actions | Help. */
+/** The full-screen layer header: Back | title | name | spacer | Undo, Redo | actions | Help. */
 export function topBar(o: KitTopBarOptions): TemplateResult {
   const errId = o.name?.error ? `tb-name-err-${++seq}` : '';
   return html`<header class="topbar">

@@ -9,6 +9,9 @@ import * as clips from './clips';
 import { unwatchOffscreen, watchOffscreen } from '../icons/offscreen';
 export { BUILD_VERSION as BUILD } from '../utils/build-version';
 
+/** LazyChunkModule (lazy-module 1.4.0): the loader (src/utils/anim-runtime-loader.ts) registers nothing here, evaluation did it. */
+export const install = (): void => {};
+
 /*
  * The v2 animation runtime: a lazy chunk (dist/magic-card-anim-runtime.js) the card loads through
  * src/utils/anim-runtime-loader.ts only when a resolved animation document has a rig, tracks, clips

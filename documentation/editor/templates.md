@@ -148,7 +148,7 @@ A card asks Magic Card Utils for the one template it is linked to, and watches t
 
 ### When a template cannot be shown
 
-The card shows its own settings, with one line above them:
+Until the template arrives, a linked card shows its own settings. The template code, `magic-card-templates.js`, loads only for linked cards. If the template cannot be shown, the card shows its own settings with one line above them:
 
 -   Template "name" wasn't found. The template was deleted or renamed. A rename does not update linked cards, so link them to the new name.
 -   Template "name" couldn't be loaded. Magic Card Utils is missing, still starting, or too old for your user. The card tries again each time the connection to Home Assistant comes back and every 5 to 30 seconds while Magic Card Utils does not answer, so a card that opened while Magic Card Utils was still loading fills in without a page reload.

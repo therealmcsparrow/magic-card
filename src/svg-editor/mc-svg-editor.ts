@@ -8,7 +8,7 @@ import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
 import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
-import { resolveIconGeometry } from '../icons/icon-source';
+import { svgIconApi } from '../utils/svg-icon-loader';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
@@ -70,7 +70,7 @@ import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOp
 import { renderEditor } from './views';
 
 /*
- * <mc-svg-editor> (contract svg-editor 1.0.0 rev 2): the 24 x 24 icon editor. The document is a list of
+ * <mc-svg-editor> (contract svg-editor 1.0.0): the 24 x 24 icon editor. The document is a list of
  * layers; <mc-path-canvas> (path-canvas 1.0.0) is the editing surface for their anchors, and this element
  * is its host: it passes every subpath as one canvas path, draws the artwork underneath, and turns the
  * canvas's `mc-path-change` events back into layer edits. History keeps whole documents.
@@ -122,9 +122,9 @@ export class McSvgEditor extends LitElement implements StageHost {
   libraryAvailable = true;
   savedId?: string;
   module?: SvgEditorModuleFacts;
-  /** Revision 5: 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
+  /** 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
   host: SvgEditorHost = 'card';
-  /** Revision 5: the element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
+  /** The element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
   static contractRevision = 5;
   conflict = false;
   pvMain = MCU_PREVIEW_MAIN;
@@ -160,7 +160,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   notes?: ImportNotes;
   /** What Align is relative to. */
   alignTarget: SvgAlignTarget = 'selection';
-  /** The status strip under the canvas (design 7.6). */
+  /** The status strip under the canvas. */
   note?: { tone: 'info' | 'warn' | 'error'; lines: string[]; action?: { label: string; run: () => void } };
   /** The boolean button waiting for the chunk. */
   boolBusy?: BooleanOp;
@@ -398,7 +398,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   async openIcon(ref: string, first = false): Promise<boolean> {
-    const g = await resolveIconGeometry(ref.trim());
+    const g = await svgIconApi()!.resolveIconGeometry(ref.trim());
     if (!g) {
       this.startError = t('Could not find "{name}". Check the name, or wait for the icon packs to load.', { name: ref.trim() });
       this.startMode = 'icon';

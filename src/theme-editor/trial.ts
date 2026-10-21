@@ -9,7 +9,7 @@ import { browserMode, docFromHass, hassOf } from './util';
 import './trial-bar';
 
 /*
- * Try on dashboards (ADR 0012): the draft's variables applied to Home Assistant in this browser tab
+ * Try on dashboards: the draft's variables applied to Home Assistant in this browser tab
  * only, with a Revert bar that stays on screen after the editor panel is left.
  *
  * Mechanism: one <style id="mc-theme-trial"> in document.head holding a single `html {}` rule. The

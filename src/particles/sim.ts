@@ -212,7 +212,7 @@ export function stepParticle(w: World, p: Particle, dt: number): Hit | undefined
 
 /**
  * Steps a particle through its life at the fixed dt (the last step is shorter so it ends exactly
- * at `life`). Persistent flows blend back to their start over the last 15 % (ADR 0004).
+ * at `life`). Persistent flows blend back to their start over the last 15 %.
  */
 export function simulateLife(w: World, p: Particle, at?: number): { samples: Sample[]; hits: Emit[]; at?: Emit; end: Emit } {
   const samples: Sample[] = [sample(w, p)];

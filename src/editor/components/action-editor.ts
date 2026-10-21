@@ -11,7 +11,7 @@ import {
 } from '../../utils/form-utils';
 import { fromYaml, toYaml } from '../../utils/yaml-utils';
 import { normalizePopupHash, popupHashError } from '../../utils/popup';
-import { popupCoordinator } from '../../card/popup-coordinator';
+import { popupIfLoaded } from '../../card/popup-seam';
 import { t, tx, m, tl, type MessageId } from '../i18n';
 
 /** The gestures of an Actions tab, in order. */
@@ -113,7 +113,7 @@ export function renderActionConfig(
                 @input=${(e: InputEvent) => onChange({ ...currentAction, hash: normalizePopupHash((e.target as HTMLInputElement).value) || undefined })}
               />
               <datalist id=${listId}>
-                ${popupCoordinator.knownIds().map((id) => html`<option value=${id}></option>`)}
+                ${(popupIfLoaded()?.api.knownIds() ?? []).map((id) => html`<option value=${id}></option>`)}
               </datalist>
               ${popupError
                 ? html`<p class="help error" role="alert">${popupError}</p>`

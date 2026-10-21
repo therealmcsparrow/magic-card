@@ -1,0 +1,89 @@
+# Winter cabin: a snowy night picture slowly zooms behind falling-snow dots and a dark fade. Wave flows carry warmth from the woodpile through the stove to the thermometer, and a Glass slider with blur sets the target temperature.
+# Entities: sensor.indoor_temperature, climate.living_room, sensor.solar_power, sensor.house_power
+# gallery: width=400 record=5 stage=linear-gradient(135deg,#0b1424,#1d2f4d)
+type: custom:magic-card
+name: Winter cabin
+background: "#0d1b3a"
+border_radius: 28px
+padding: 22px 22px 58px
+box_shadow: "0 20px 44px rgba(0,0,0,0.5)"
+pause_button_corner: bottom-right
+background_layers:
+  - type: pattern
+    pattern: dots
+    color: "rgba(255,255,255,0.4)"
+    size: 34
+    thickness: 2
+  - type: gradient
+    gradient: "linear-gradient(to bottom, rgba(8,16,36,0.65) 0%, rgba(8,16,36,0) 35%, rgba(8,16,36,0.55) 100%)"
+  - type: image
+    image: /local/showcase-cabin.svg
+    size: cover
+    pan_zoom: { from: 100, to: 120, duration: 24, focus: bottom }
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Winter cabin
+            design: { font_size: 22px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 14px rgba(0,0,0,0.6)" }
+          - type: text
+            text: "Snowed in, stove lit"
+            design: { font_size: 12px, color: "#dbe7f7", text_shadow: "0 2px 10px rgba(0,0,0,0.6)" }
+      - vertical_align: start
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.indoor_temperature
+            design: { font_size: 22px, font_weight: "800", color: "#ffd27a", text_shadow: "0 2px 14px rgba(0,0,0,0.6)" }
+  - id: nodes
+    column_widths: [56px, 1fr, 56px, 1fr, 56px]
+    padding: 70px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a
+            type: icon
+            icon: mdi:pine-tree
+            size: 26px
+            design: { color: "#86efac", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #86efac", background_color: "rgba(8,16,36,0.72)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b
+            type: icon
+            icon: mdi:fireplace
+            size: 28px
+            design: { color: "#fb923c", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb923c", background_color: "rgba(8,16,36,0.72)" }
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: c
+            type: icon
+            icon: mdi:thermometer
+            size: 26px
+            design: { color: "#fcd34d", width: 56px, height: 56px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fcd34d", background_color: "rgba(8,16,36,0.72)" }
+  - id: heat
+    padding: 130px 0 0
+    columns:
+      - gap: 0px
+        design: { background_color: "rgba(8,16,36,0.6)", border_radius: 18px, padding: 12px 14px 14px }
+        modules:
+          - type: text
+            text: Target temperature
+            design: { font_size: 11px, font_weight: "700", color: "#e6eefb", text_transform: uppercase, letter_spacing: 1.5px, text_shadow: "0 2px 8px rgba(0,0,0,0.7)" }
+          - type: slider
+            entity: climate.living_room
+            track_style: glass
+            track_thickness: 44
+            glass_blur: true
+            thumb: pill
+            thumb_size: 44
+            thumb_icon: mdi:snowflake
+            value_position: track
+            slider_color: "#f59e0b"
+flows:
+  - { id: a-b, from: a, to: b, from_anchor: box, to_anchor: box, entity: sensor.solar_power, max: 5000, route: straight, color: "#86efac", color_to: "#fb923c", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: drop, dot_size: 9, dots: 3 }
+  - { id: b-c, from: b, to: c, from_anchor: box, to_anchor: box, entity: sensor.house_power, max: 2500, route: straight, color: "#fb923c", color_to: "#fde047", line_style: wave, width: 3, amplitude: 6, wavelength: 28, shape: comet, dot_size: 10, dots: 3, glow: 4, arrival: ring, arrival_size: 36 }

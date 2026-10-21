@@ -1,0 +1,9 @@
+{
+  "description": "Modules that hold an SVG sink and must sit behind the sanitiser",
+  "rule": "src/icons/svg-sanitize.ts is statically imported in every chunk that holds an SVG sink, or in a chunk on every chain of parent chunks from magic-card.js to it; never only in a sibling or behind its own import(). tools/check-svg-sinks.mjs finds sinks by scanning src (unsafeSVG, or a value import of svg-sanitize) and adds the modules below.",
+  "sinks": [
+    "./src/icons/mc-svg-icon.ts",
+    "./src/icons/icon-source.ts",
+    "./src/anim-runtime/rig.ts"
+  ]
+}

@@ -5,7 +5,7 @@ import { iconOf } from './icon';
 
 /*
  * Seg: the one tab bar and segmented control (role tablist or radiogroup). Arrow keys, Home and End move AND
- * select (radio and tab semantics of design/10 section 4.2), one tab stop.
+ * select (radio and tab semantics), one tab stop.
  */
 export function seg<V extends string>(o: KitSegOptions<V>): TemplateResult {
   const tabs = o.role === 'tablist';

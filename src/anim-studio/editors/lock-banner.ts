@@ -5,7 +5,7 @@ import { unlockKeys } from '../layer-view';
 import { t } from '../i18n';
 
 /*
- * The "Locked. Unlock to edit." line at the top of an inspector or editor (design 08, Lock behaviour).
+ * The "Locked. Unlock to edit." line at the top of an inspector or editor.
  * The Unlock button removes the locks that hold the rows (own and inherited) and tells the shell through
  * `layer-view-change`. Fields below it are disabled by the owner: values stay readable, nothing is edited.
  */

@@ -1,0 +1,75 @@
+# Media room: the album art, blurred and slowly zooming, glows behind the player, and the volume is a large live fill.
+# Entities: media_player.media_room
+# gallery: width=400 record=6
+type: custom:magic-card
+name: Media room
+entity: media_player.media_room
+background: "#0b0a14"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+pause_button_corner: top-right
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(8,6,20,0.8), rgba(8,6,20,0.25))"
+  - type: image
+    entity: media_player.media_room
+    attribute: entity_picture
+    blur: 18
+    pan_zoom:
+      from: 110
+      to: 150
+      focus: center
+      duration: 12
+      alternate: true
+      pause_when_idle: true
+rows:
+  - id: now
+    column_widths: [128px, 1fr]
+    columns:
+      - modules:
+          - type: image
+            entity: media_player.media_room
+            entity_picture: true
+            aspect_ratio: "1"
+            design:
+              border_radius: 18px
+              box_shadow: "0 14px 30px rgba(0,0,0,0.55)"
+      - vertical_align: center
+        gap: 4px
+        modules:
+          - type: text
+            text: "Now playing"
+            design: { font_size: 11px, font_weight: "700", color: "rgba(255,255,255,0.7)", text_transform: uppercase, letter_spacing: 1px }
+          - type: info
+            entity: media_player.media_room
+            attribute: media_title
+            show_name: false
+            show_state: true
+            design: { font_size: 20px, font_weight: "800", color: "#ffffff" }
+          - type: info
+            entity: media_player.media_room
+            attribute: media_artist
+            show_name: false
+            show_state: true
+            design: { font_size: 14px, color: "rgba(255,255,255,0.85)" }
+  - id: volume
+    padding: 26px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: Volume
+            design: { font_size: 11px, font_weight: "700", color: "rgba(255,255,255,0.7)", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: media_player.media_room
+            attribute: volume_level
+            track_style: big-fill
+            track_thickness: 56
+            icon: mdi:volume-high
+            fill_mode: solid
+            slider_color: "#ff8fa3"
+            track_color: "rgba(255,255,255,0.14)"
+            thumb: none
+            value_position: track
+            live: true

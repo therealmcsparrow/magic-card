@@ -2,12 +2,12 @@ import { MAX_BACKGROUND_LAYERS, type BackgroundLayerConfig, type BgLayerStatus, 
 import { BLUR_MAX } from '../../contracts/layer-placement';
 import type { HomeAssistant } from '../../types';
 import { mediaSrc } from '../../utils/media';
-import { safeColor } from '../../utils/animation';
+import { safeColor } from '../../utils/safe-css';
 import { parseGradient } from '../../utils/gradient';
 import { m, t } from './i18n';
 
 /*
- * The heavy half of the Card backdrop model (designer 03 section 4, 11 B, E, F, K), carried by
+ * The heavy half of the Card backdrop model, carried by
  * magic-card-layer-editor.js only. `background_layers`: first entry = front, at most MAX_BACKGROUND_LAYERS.
  * Every function returns new data; nothing mutates a layer. The light half (layerSummary, the rule view,
  * backdropHasProblem) stays in bg-layers-model.ts.
@@ -158,7 +158,7 @@ export function switchType(layer: BackgroundLayerConfig, type: BgLayerType): Bac
 
 export const staleMinutes = (seconds: number): number => Math.max(1, Math.ceil(seconds / 60));
 
-/** The designer's sentence for a layer status; undefined when there is nothing to say. */
+/** The sentence for a layer status; undefined when there is nothing to say. */
 export function statusSentence(s: BgLayerStatus, layer: BackgroundLayerConfig | undefined): string | undefined {
   const detail = s.detail === undefined ? '' : String(s.detail);
   switch (s.reason) {

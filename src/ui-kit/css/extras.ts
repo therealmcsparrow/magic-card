@@ -3,7 +3,7 @@ import { kitRow } from './rows';
 import { kitSlider } from './slider';
 
 /*
- * Kit parts that the card editor does not have (design/10-ui-kit.md sections 4.1 to 4.11), derived from its tokens and
+ * Kit parts that the card editor does not have, derived from its tokens and
  * patterns. Not part of editorSystem: a screen adds them with `kitCss`, so the card editor renders as before.
  */
 
@@ -310,7 +310,7 @@ export const kitToolbar: CSSResult = /* @__PURE__ */ css`
   }
 `;
 
-/** Full-screen layer header (design/10 4.8, the card editor's studio bar): 56 high, Surface, Divider under it. */
+/** Full-screen layer header: 56 high, Surface, Divider under it. */
 export const kitTopbar: CSSResult = /* @__PURE__ */ css`
   .topbar {
     display: flex;

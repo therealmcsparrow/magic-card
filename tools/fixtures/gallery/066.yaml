@@ -1,0 +1,120 @@
+# Comms array: an oscilloscope window that shows the track as a live trace while it plays, over a slim transport strip.
+# While the player is paused the trace goes quiet. The title and artist stay on one line.
+# Entities: media_player.living_room
+# gallery: width=400 record=3 stage=linear-gradient(135deg,#020a06,#0a1f14)
+type: custom:magic-card
+name: Comms array
+background: "#04120b"
+border_radius: 24px
+padding: 18px
+box_shadow: "0 20px 44px rgba(0,0,0,0.6), inset 0 0 0 1px #0f3a24"
+rows:
+  - id: source
+    column_widths: [1fr, auto]
+    columns:
+      - modules:
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            entity_display: name
+            design: { font_size: 11px, font_weight: "700", color: "#5dff9a", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+      - modules:
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            design: { font_size: 11px, font_weight: "700", color: "#d6ffe6", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+  - id: track
+    padding: 8px 0 12px
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_title
+            design: { font_size: 20px, font_weight: "800", color: "#d6ffe6", white_space: nowrap, overflow: hidden, text_overflow: ellipsis }
+          - type: text
+            use_entity: true
+            entity: media_player.living_room
+            attribute: media_artist
+            design: { font_size: 13px, color: "#8fd9ae", font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+  - id: scope
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              height: 120px
+              border_radius: 14px
+              border: "1px solid #14502f"
+              background: "repeating-linear-gradient(0deg, transparent 0px, transparent 19px, #0f3a24 19px, #0f3a24 20px), repeating-linear-gradient(90deg, transparent 0px, transparent 19px, #0f3a24 19px, #0f3a24 20px), #03170d"
+              animations:
+                - { id: trace, preset: equalizer-bars, trigger: state, trigger_entity: media_player.living_room, state: playing, color: "#5dff9a", strength: 90, intensity: 12, duration: 1.5s }
+                - { id: sweep, preset: scanline, trigger: state, trigger_entity: media_player.living_room, state: playing, color: "#5dff9a", strength: 40, intensity: 40, duration: 3s }
+            modules: []
+  - id: transport
+    layout: "1-1-1"
+    gap: 10px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_previous_track, data: { entity_id: media_player.living_room } }
+            modules:
+              - type: icon
+                icon: mdi:skip-previous
+                size: 24px
+                design: { color: "#5dff9a" }
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #5dff9a", background_color: "#0d3a22" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_play_pause, data: { entity_id: media_player.living_room } }
+            modules:
+              - type: icon
+                entity: media_player.living_room
+                icon: mdi:play
+                icon_on: mdi:pause
+                icon_off: mdi:play
+                size: 24px
+                design: { color: "#d6ffe6" }
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #14502f", background_color: "#072516" }
+            actions:
+              tap_action: { action: perform-action, service: media_player.media_next_track, data: { entity_id: media_player.living_room } }
+            modules:
+              - type: icon
+                icon: mdi:skip-next
+                size: 24px
+                design: { color: "#5dff9a" }
+  - id: volume
+    column_widths: [auto, 1fr]
+    gap: 10px
+    padding: 14px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:volume-medium
+            size: 18px
+            design: { color: "#8fd9ae" }
+      - vertical_align: center
+        modules:
+          - type: bar
+            entity: media_player.living_room
+            attribute: volume_level
+            min: 0
+            max: 1
+            bar_height: 6px
+            show_value: false
+            bar_color: "#5dff9a"
+            bar_background: "#0f3a24"

@@ -4,7 +4,7 @@ import { editorSystem } from '../../css/editor-stack';
 import { kitSlider } from '../../ui-kit/css/slider';
 import { slider } from '../../ui-kit/templates/slider';
 import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
-import { safeColor } from '../../utils/animation';
+import { safeColor } from '../../utils/safe-css';
 import { t } from '../i18n';
 // the stops use <mc-color-picker> by tag: color-picker.ts imports this file and defines it
 

@@ -1,0 +1,100 @@
+# Crypto prices: two coins with their price, 24-hour change and a sparkline.
+# Entities: sensor.btc_price, sensor.eth_price
+# gallery: width=380
+type: custom:magic-card
+name: Crypto
+background: "#0b0e14"
+border_radius: 24px
+padding: 14px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: btc
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 12px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 18px
+              background_color: "#121722"
+              value_background: { type: sparkline, entity: sensor.btc_price, min: 56000, max: 72000, color: "#f7931a", opacity: 14%, line_width: 2 }
+            modules:
+              - type: icon
+                icon: mdi:bitcoin
+                size: 26px
+                design:
+                  color: "#f7931a"
+                  width: 44px
+                  height: 44px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "rgba(247,147,26,0.14)"
+              - type: vertical
+                gap: 0px
+                design: { flex: "1" }
+                modules:
+                  - type: text
+                    text: Bitcoin
+                    design: &name { font_size: 15px, font_weight: "800", color: "#f1f5f9" }
+                  - type: text
+                    text: BTC
+                    design: &tick { font_size: 11px, color: "#64748b", letter_spacing: 1px }
+              - type: vertical
+                gap: 0px
+                align: end
+                modules:
+                  - type: text
+                    use_entity: true
+                    entity: sensor.btc_price
+                    design: &price { font_size: 16px, font_weight: "800", color: "#f1f5f9", font_variant: tabular-nums }
+                  - type: text
+                    text: "▲ 2.4%"
+                    design: { font_size: 12px, font_weight: "700", color: "#22c55e" }
+  - id: eth
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 12px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 18px
+              background_color: "#121722"
+              value_background: { type: sparkline, entity: sensor.eth_price, min: 2200, max: 2800, color: "#8b9cff", opacity: 14%, line_width: 2 }
+            modules:
+              - type: icon
+                icon: mdi:ethereum
+                size: 26px
+                design:
+                  color: "#8b9cff"
+                  width: 44px
+                  height: 44px
+                  display: flex
+                  align_items: center
+                  justify_content: center
+                  border_radius: 50%
+                  background_color: "rgba(139,156,255,0.14)"
+              - type: vertical
+                gap: 0px
+                design: { flex: "1" }
+                modules:
+                  - type: text
+                    text: Ethereum
+                    design: *name
+                  - type: text
+                    text: ETH
+                    design: *tick
+              - type: vertical
+                gap: 0px
+                align: end
+                modules:
+                  - type: text
+                    use_entity: true
+                    entity: sensor.eth_price
+                    design: *price
+                  - type: text
+                    text: "▼ 0.8%"
+                    design: { font_size: 12px, font_weight: "700", color: "#ef4444" }

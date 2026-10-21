@@ -16,6 +16,8 @@ const HEADING = [
 ];
 const LINE = 1.5;
 const TABLE_ROW = 1.83;
+/** The tab bar in px by style: default, pills, underline. */
+const TABS_BAR = [39, 36, 41];
 
 /**
  * Height in em of the markdown text `content` renders to: a line is 1.5 em (line breaks count, long
@@ -86,4 +88,34 @@ export function forecastMinHeight(config: { forecast_type?: string; show_tempera
   const label = config.forecast_type === 'twice_daily' ? 36 : 18;
   const low = temp && !config.forecast_type?.match(/hourly|twice/) ? 22 : 0;
   return 16 + label + 29 + (temp ? 23 : 0) + low + (config.show_precipitation !== false ? 19 : 0);
+}
+
+/** Height in px of the tabs module's tab bar (it depends on the style); the tab content sits below it and has no reserve. */
+export function tabsMinHeight(config: { tab_style?: string; design?: { height?: unknown; min_height?: unknown } | null }): number {
+  const d = config.design;
+  if (d && (d.height !== undefined || d.min_height !== undefined)) return 0;
+  return TABS_BAR[config.tab_style === 'pills' ? 1 : config.tab_style === 'underline' ? 2 : 0];
+}
+
+/**
+ * The clock module's `min-height` as a CSS length, or '' for none (a design height or min-height decides the box).
+ * The time line is 2 rem and the date line 0.875 rem (both fixed in the sheet), times the line height:
+ * `design.line_height` as a number or a numeric string; a length counts per line, and a percentage too, because
+ * the line boxes inherit it as the length it computes to (150% of 16 px is 24 px on both lines), not as a factor;
+ * anything else is 1.17, about the `normal` line height of the theme font.
+ */
+export function clockMinHeight(config: { show_date?: boolean; design?: { height?: unknown; min_height?: unknown; line_height?: unknown } | null }): string {
+  const d = config.design;
+  if (d && (d.height !== undefined || d.min_height !== undefined)) return '';
+  const date = config.show_date !== false;
+  const lh = d?.line_height;
+  const v = typeof lh === 'string' ? lh.trim() : lh;
+  const lines = date ? 2 : 1;
+  // the unit is the regex's own alternation, so only a number and px, em or rem reach the style; a percentage becomes em
+  const length = typeof v === 'string' ? /^\d*\.?\d+(px|em|rem|%)$/.exec(v) : null;
+  const n = parseFloat(v as string);
+  if (length && n > 0) return length[1] === '%' ? `calc(${n / 100}em * ${lines})` : `calc(${n}${length[1]} * ${lines})`;
+  const plain = typeof v === 'string' && /^\d*\.?\d+$/.test(v) ? n : v;
+  const factor = typeof plain === 'number' && plain > 0 && Number.isFinite(plain) ? plain : 1.17;
+  return `calc(${date ? '2.875rem' : '2rem'} * ${factor})`;
 }

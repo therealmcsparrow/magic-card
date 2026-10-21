@@ -33,7 +33,7 @@ import { studioStyles } from './styles';
 import { btn, num, r1, seg } from './ui';
 
 /*
- * <mc-shape-studio> (contract svg-editor 1.0.0 rev 2, shape part; custom-shape 1.0.0 rev 3): the card shape
+ * <mc-shape-studio> (contract svg-editor 1.0.0, shape part; custom-shape 1.0.0): the card shape
  * editor. Corner mode needs no canvas (type tiles, sizes, a drawing with corner handles); free path mode
  * hosts <mc-path-canvas> (path-canvas 1.0.0), loaded when it is first needed. Every change is a
  * `mc-shape-change` event (commit false while dragging); the builder comes from the shape-custom chunk
@@ -81,7 +81,7 @@ interface Msg {
 
 export class McShapeStudio extends LitElement {
   static styles = studioStyles;
-  /** Contract svg-editor revision 5: the Magic Card Utils panel checks this before it creates the element. */
+  /** Contract svg-editor: the Magic Card Utils panel checks this before it creates the element. */
   static contractRevision = 5;
 
   @property({ attribute: false }) hass?: Hass;

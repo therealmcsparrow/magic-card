@@ -129,6 +129,12 @@ A card has motion when something on it moves: an animation, a seasonal scene, fl
 
 If anything on the card moves for more than five seconds, set `pause_button` to `auto` or `always`, so viewers can stop the motion. WCAG 2.2.2 asks for a way to pause or stop moving content that runs for more than five seconds.
 
+### Remembered pause
+
+A paused card stays paused. The browser remembers the pause for each card on each dashboard page, so the card is still paused after you reload the page. It is paused from the moment it appears, before the Pause button has loaded, and flow lines that load later stay paused too.
+
+If the button's code cannot load, the card stays paused and shows the usual notice. To play the card again, delete its `mc-paused:` entry in your browser's storage (in the developer tools, under Local storage or Storage) and reload the page. If the browser does not allow storage, a pause lasts only for the page visit.
+
 ### Space for the button
 
 With `auto` or `always`, the card keeps a 24 px strip at the button's edge: the top for a top corner, the bottom for a bottom corner. The button sits over that strip, so it does not cover a module in the normal case. The strip adds to the card's padding and gap.
@@ -143,8 +149,9 @@ With `auto` or `always`, the card keeps a 24 px strip at the button's edge: the 
 - `hidden` shows no button, and the card plays even if it was paused before. In the editor, the help under Hidden says: "Viewers can't pause the motion on this card. Turn the button on if anything moves for more than 5 seconds."
 - Editing the card's config starts the card playing again.
 - The paused state is remembered for each card in this browser.
+- A remembered pause holds from the moment the card appears, before the button has loaded. The button itself appears a moment later and shows as pressed. If the button's code cannot load (offline, blocked, a very slow link), the card stays paused, shows the usual notice that part of the card did not load, and has no button. To play it again, clear the stored note (see below) or fix the connection and reload, then press the button.
 
-**What the pause button stores.** When you press pause, your browser keeps a small note on your own device (in its local storage, under a key starting `mc-paused:`) so the card stays paused when you come back to the page. The note is written only after you press the button, and it is removed when you press play. It holds no personal information, it never leaves your device, and Magic Card does not track you. Because the note only remembers a choice you made, no consent banner is needed; you can also clear it any time by clearing the site data for your Home Assistant address.
+**What the pause button stores.** When you press pause, your browser keeps a small note on your own device (in its local storage, under a key starting `mc-paused:`) so the card stays paused when you come back to the page. The note is written only after you press the button, and it is removed when you press play. It holds no personal information, it never leaves your device, and Magic Card does not track you. Because the note only remembers a choice you made, no consent banner is needed; you can also clear it any time by clearing the site data for your Home Assistant address. To undo one held pause without the button, open your browser's developer tools, find the local storage entry whose key starts with `mc-paused:` and delete it, then reload.
 
 ### Preview pause in the studio
 

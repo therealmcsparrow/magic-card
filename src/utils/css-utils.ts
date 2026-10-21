@@ -1,5 +1,5 @@
 import { DesignConfig, DisplayCondition, HomeAssistant } from '../types';
-import { BOX_LONGHANDS, buildDesignToCssMap, CSS_SECTORS } from './css-properties';
+import { buildDesignToCssMap, COLOR_KEYS, IMAGE_KEYS, NUMBER_UNITS as DESIGN_NUMBER_UNITS } from './css-design-map';
 import { ConditionsService } from '../services/conditions-service';
 import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
@@ -7,27 +7,8 @@ import { mediaCssImage } from './media';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
-/** Design keys edited as a colour field: the ones that accept `entity` / `entity N%`. */
-const COLOR_KEYS = CSS_SECTORS.flatMap((s) => s.properties).filter((p) => p.type === 'color').map((p) => p.key);
-/** Design keys edited with the media picker (browsed media is a media-source id resolved at render). */
-const IMAGE_KEYS = new Set(CSS_SECTORS.flatMap((s) => s.properties).filter((p) => p.type === 'image').map((p) => p.key));
-
-/**
- * Unit a bare number gets per design key: lengths (unit and box fields, their sides) px, times s,
- * border length % (a share of the side, like its default). Keys not listed (opacity, z-index,
- * flex-grow, font-weight, line-height, ...) take the number as is.
- */
-const NUMBER_UNITS: Record<string, string> = {
-  ...Object.fromEntries(
-    CSS_SECTORS.flatMap((s) => s.properties)
-      .filter((p) => p.type === 'unit' || p.type === 'box')
-      .flatMap((p) => {
-        const unit = p.units?.includes('s') ? 's' : 'px';
-        return [[p.key, unit], ...(BOX_LONGHANDS[p.key] || []).map((l) => [l.key, unit])];
-      }),
-  ),
-  border_length: '%',
-};
+/** Bare-number units: lengths px, times s (css-design-map), border length % (a share of the side, like its default). */
+const NUMBER_UNITS: Record<string, string> = { ...DESIGN_NUMBER_UNITS, border_length: '%' };
 
 /**
  * The design with numeric values (YAML `opacity: 0.5`, `padding: 8`) written as CSS text: a finite

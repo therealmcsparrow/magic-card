@@ -5,7 +5,7 @@ export interface RawStop extends BakedStop {
   keep?: boolean;
 }
 
-/** Start tolerance, % of the layer (ADR 0004 / plan T2.2). */
+/** Start tolerance, % of the layer. */
 export const BASE_TOLERANCE = 0.5;
 
 /**

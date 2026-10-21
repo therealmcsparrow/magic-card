@@ -262,7 +262,7 @@ function isSelection(v: unknown): v is StudioSelection {
   return !!s && typeof s === 'object' && ['none', 'keys', 'target', 'tool'].includes(s.kind);
 }
 
-/** The labels tables (namespace 'labels', chunk magic-card-i18n-labels.js) load before the studio renders its first screen (contract i18n r3, Rule 3). */
+/** The labels tables (namespace 'labels', chunk magic-card-i18n-labels.js) load before the studio renders its first screen (contract i18n). */
 let labelsState: 'loading' | 'ready' | 'failed' = 'loading';
 const labelsLoad = labelsReady().then((ok) => (labelsState = ok ? 'ready' : 'failed'));
 const LABELS_FAILED = 'The studio texts (magic-card-i18n-labels.js) could not be loaded. Reload the page.';
@@ -1648,7 +1648,7 @@ export class AnimationStudio extends LitElement {
     e.stopPropagation();
     const d = (e as CustomEvent).detail as PreviewChangeDetail | undefined;
     if (!d || typeof d !== 'object') return;
-    // merged into the current simulation (a value alone keeps the state), like track E's applyPreviewChange
+    // merged into the current simulation (a value alone keeps the state), like applyPreviewChange
     const next: PreviewChangeDetail = { ...(this._preview ?? {}) };
     if (typeof d.state === 'string') next.state = d.state;
     if (typeof d.value === 'number' && Number.isFinite(d.value)) next.value = d.value;

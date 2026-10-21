@@ -9,7 +9,7 @@ import { anchorName } from '../layers/anchor-names';
 export { anchorName };
 
 /*
- * mc-anchor-grid: the 3 x 3 position picker (designer 03 section 2, 11 H). A radiogroup with one tab stop
+ * mc-anchor-grid: the 3 x 3 position picker. A radiogroup with one tab stop
  * (roving tabindex), 2-D arrow keys, Home / End to the first / last cell. 32 px cells with a 4 px gap, 44 px
  * with an 8 px gap on coarse pointers. The chosen cell carries a check mark, a 2 px border in the text
  * colour and a bold name below the grid, so selection never rests on a hue (WCAG 1.4.1). There is no

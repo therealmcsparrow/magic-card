@@ -10,7 +10,7 @@ import { laneD, memo, span, stroke } from './util';
  * (inset 2 px, rounded, from the start end, as long as the level), a highlight along the upper
  * edge, a 2 px level mark across the tube at the liquid surface (shown while the level is below
  * full or while idle, so a pale liquid still reads) and rising bubbles on lanes of the liquid.
- * Idle: no liquid, no bubbles, the wall and the mark at the start end stay (AC5).
+ * Idle: no liquid, no bubbles, the wall and the mark at the start end stay.
  */
 
 const T = FLOW_LOOK_THEME;

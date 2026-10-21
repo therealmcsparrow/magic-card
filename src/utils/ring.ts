@@ -1,5 +1,6 @@
 import type { ColorRange, HassEntity, RingAnimation, RingConfig, RingPosition, RingStart } from '../types';
-import { animationTriggerActive, cssTime, safeColor } from './animation';
+import { cssTime, safeColor } from './safe-css';
+import { animationTriggerActive } from './trigger';
 import { rangeColor } from './color-ranges';
 import { entityColorCss } from './entity-color';
 import { parseGradient } from './gradient';

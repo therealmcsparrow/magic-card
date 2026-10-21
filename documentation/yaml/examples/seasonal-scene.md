@@ -52,6 +52,7 @@ rows:
 Notes:
 
 -   `scene: auto` picks a holiday while its date range holds the date, and the season otherwise. Here Christmas starts on 6 December instead of the default 1 December, and Valentine's Day is skipped.
+-   `scene: auto` keeps room at the edges for Christmas and Halloween decorations in every month. Set `decorations: false` if you want none.
 -   Quote `"off"` in the calendar, or write `false`. In YAML-mode dashboards a bare `off` is read as a boolean.
 -   `combine: [daynight]` adds stars and fireflies after sunset and a glow at dusk and dawn, read from `sun.sun`.
 -   While `input_boolean.festive` is `off` the scene is hidden. Use the same switch on every card to turn them all off at once.

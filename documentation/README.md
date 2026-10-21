@@ -29,6 +29,12 @@ This folder documents the Magic Card editor and every option the card supports. 
 | [Icon effects](icon-effects/README.md) | Liquid fill, device animations, line draw, morphing icons, duotone and gradient colours, custom SVG icons |
 | [Flow lines](flows/README.md) | Animated lines between modules |
 
+## Loading and size
+
+| Folder | Covers |
+| --- | --- |
+| [Loading and size](loading-and-size/README.md) | Which file loads when, the sizes of the card file, the notices a card shows when a part fails, offline and failed loads, and how to undo a remembered pause |
+
 ## Languages and accessibility
 
 | Folder | Covers |

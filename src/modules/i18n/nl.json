@@ -1,0 +1,15 @@
+{
+  "Home Assistant card helpers are not available": "De kaarthulpfuncties van Home Assistant zijn niet beschikbaar",
+  "Failed to load \"{type}\": {error}": "Laden van \"{type}\" mislukt: {error}",
+  "Day": "Dag",
+  "Night": "Nacht",
+  "This entity has no forecast": "Deze entiteit heeft geen weersverwachting",
+  "Forecast not available: {error}": "Weersverwachting niet beschikbaar: {error}",
+  "No forecast data": "Geen weersverwachting",
+  "No camera": "Geen camera",
+  "{name}: last {hours, plural, one {# hour} other {# hours}}": "{name}: afgelopen {hours, plural, one {# uur} other {# uur}}",
+  "Loading history…": "Geschiedenis laden…",
+  "History unavailable": "Geschiedenis niet beschikbaar",
+  "No numeric history": "Geen numerieke geschiedenis",
+  "Empty tab": "Leeg tabblad"
+}

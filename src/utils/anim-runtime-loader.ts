@@ -1,41 +1,40 @@
-import { sameBuild } from './build-version';
-import { docNeedsRuntime, type AnimationDoc } from '../anim-studio/model';
+import type { LazyChunkControl } from './lazy-chunk';
 
 /*
  * The v2 animation runtime (icon rigs, card-part targets, clips, bindings) is a lazy chunk,
  * dist/magic-card-anim-runtime.js, loaded next to magic-card.js (public path: src/index.ts). Cards
- * whose animations need none of it never load it. One import per page: the promise is cached, also
- * after a failure (offline, file missing), which is logged once and leaves the base animation
- * playing until the next page load.
+ * whose animations need none of it never load it. It loads through lazyChunk() (lazy-module 1.4.0): one
+ * import per page, a failure is retried (silent, then in the background) and shows the failure notice;
+ * until it lands, or when it cannot be loaded, the base animation plays.
+ *
+ * The chunk comes from a slot that the chunk table (src/utils/lazy-chunks.ts) fills. This file never imports the
+ * table: the animation studio bundle imports it through resolve.ts, and the table would pull every card chunk
+ * entry into that bundle's chunk graph. A bundle without the table has no chunk, loads nothing and
+ * runtimeIfLoaded() stays undefined, as it always did there.
  */
 
 export type AnimRuntime = typeof import('../anim-runtime');
 
+let chunk: LazyChunkControl<AnimRuntime> | undefined;
 let pending: Promise<AnimRuntime | undefined> | undefined;
-let loaded: AnimRuntime | undefined;
 
-/** The document needs the runtime chunk (rig, tracks, clips or bindings). */
-export const needsRuntime = (doc: AnimationDoc): boolean => docNeedsRuntime(doc);
+/** Called by src/utils/lazy-chunks.ts. */
+export const provideRuntimeChunk = (c: LazyChunkControl<AnimRuntime>): void => void (chunk = c);
 
-/** Load the runtime chunk once; resolves undefined (and logs once) when it cannot be loaded. */
+/** Load the runtime chunk once; resolves undefined when it cannot be loaded (the chunk retries on its own). */
 export function loadRuntime(): Promise<AnimRuntime | undefined> {
-  pending ??= import(/* webpackChunkName: "anim-runtime" */ '../anim-runtime').then(
-    (m) => (loaded = sameBuild('magic-card-anim-runtime.js', m)),
-    (err: unknown) => {
-      console.warn('Magic Card: the animation runtime (magic-card-anim-runtime.js) could not be loaded; animations play without parts, clips and bindings.', err);
-      return undefined;
-    },
-  );
-  return pending;
+  if (!chunk) return Promise.resolve(undefined);
+  return (pending ??= chunk.load().then((ok) => {
+    if (!ok) pending = undefined;
+    return ok ? chunk!.module() : undefined;
+  }));
 }
 
 /** The runtime when it has loaded, else undefined (never starts a load). */
-export function runtimeIfLoaded(): AnimRuntime | undefined {
-  return loaded;
-}
+export const runtimeIfLoaded = (): AnimRuntime | undefined => chunk?.module();
 
 /** Tests: forget the cached load. */
 export function __resetRuntimeLoaderForTests(): void {
+  chunk?.__reset();
   pending = undefined;
-  loaded = undefined;
 }

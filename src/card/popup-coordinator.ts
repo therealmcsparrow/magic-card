@@ -1,34 +1,10 @@
-import { isValidPopupHash, normalizePopupHash, urlWithHash } from '../utils/popup';
-
-/** How the URL changed: a new history entry, a replaced one, or back / forward. */
-export type LocationChange = 'push' | 'replace' | 'pop';
-
-export type EditorPlace = 'canvas' | 'card-editor' | 'dashboard-edit';
-
-/** One Magic Card that can show a pop-up (src/card/popup-controller.ts). */
-export interface PopupHandle {
-  /** The card is set to show as a pop-up. */
-  isPopup(): boolean;
-  /** Its valid pop-up ID while it is a pop-up, else undefined. */
-  popupId(): string | undefined;
-  /**
-   * Where an editor shows it: the studio canvas, HA's card editor preview, a dashboard in edit
-   * mode; undefined on a live dashboard.
-   */
-  editorPlace(): EditorPlace | undefined;
-  /** Close because another pop-up opens. */
-  closeForOther(): void;
-  /** Close (a "Close pop-up" action). */
-  closeByAction(): void;
-  /** Open the real pop-up from the editor ("Preview pop-up"). */
-  openPreview(): void;
-  locationChanged(change: LocationChange): void;
-}
+import type { EditorPlace, LocationChange, PopupHandle } from './popup-nav';
 
 /**
  * The one coordinator of every Magic Card pop-up on the page: one set of window listeners for the
  * URL (hashchange, popstate and HA's `location-changed`, fired by its navigate action after
- * pushState), and at most one open pop-up (opening another closes the first).
+ * pushState), and at most one open pop-up (opening another closes the first). It lives in the `popup` chunk and nowhere
+ * else: a second copy would be a second, empty coordinator.
  */
 class PopupCoordinator {
   private readonly _handles = new Set<PopupHandle>();
@@ -112,20 +88,3 @@ class PopupCoordinator {
 }
 
 export const popupCoordinator = new PopupCoordinator();
-
-/**
- * Open the pop-up `id` the way HA's navigate action does: push `#id` onto the current URL and fire
- * `location-changed`, so it works across cards (and with HA's own navigate to `#id`).
- */
-export function navigateToPopup(rawId: unknown): boolean {
-  const id = normalizePopupHash(rawId);
-  if (!isValidPopupHash(id)) return false;
-  if (window.location.hash === `#${id}`) {
-    // already the URL (e.g. its pop-up was closed by a trigger): let the cards look again
-    window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: true } }));
-    return true;
-  }
-  history.pushState(history.state, '', urlWithHash(window.location.href, id));
-  window.dispatchEvent(new CustomEvent('location-changed', { detail: { replace: false } }));
-  return true;
-}

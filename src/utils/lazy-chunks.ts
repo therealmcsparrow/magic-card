@@ -1,97 +1,114 @@
-import type { LazyChunkName } from '../contracts/lazy-module';
-import { hasLayers } from '../layers/layer-slot';
-import { ModuleRegistry } from '../modules/module-registry';
-import { hasFlowLook } from '../contracts/flow-look';
-import { hasSliderLook } from '../contracts/slider-look';
-import type { CardModule } from '../types';
-import { getAnimationPreset } from './animation-presets';
+import type { LazyChunkModule, LazyChunkName, OnDemandChunkName } from '../contracts/lazy-module';
+import { provideRuntimeChunk } from './anim-runtime-loader';
+import type * as AnimChunk from '../anim-studio/anim-chunk';
+import type * as FlowsChunk from '../card/flows-chunk';
+import type * as ControlsChunk from '../modules/lazy/controls-chunk';
 import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chunk';
+import { provideParticlesChunk } from './particles-loader';
+import { provideShapeChunk } from './shape-custom-loader';
+import { provideSvgIconChunk } from './svg-icon-loader';
+
+type AnimModule = typeof AnimChunk;
+type FlowsModule = typeof FlowsChunk;
+type ControlsModule = typeof ControlsChunk;
 
 /*
- * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(). Nothing else
- * calls import() for these entries (contract lazy-module 1.0.0). Output file names come from the
- * webpackChunkName: dist/magic-card-<name>.js.
+ * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
+ * on demand (the animation runtime, particles and the custom shape builder; no needs() row, because only the render
+ * knows). Nothing else calls import() for these entries (contract lazy-module 1.4.0 "import() sites"). Output file
+ * names come from the webpackChunkName: dist/magic-card-<name>.js.
+ *
+ * Only the card bundle imports this file. The three loaders (src/utils/*-loader.ts) get their chunk from a slot filled
+ * at the end of this file instead of importing it: the animation studio bundle imports one of them, and this table
+ * would pull every card chunk entry into that bundle's chunk graph (the studio and several chunks grew by 8 to 60 KB).
  */
+
+/**
+ * flow-look is a child of `flows`: its import() sits in src/card/flows-chunk.ts. The importer calls it synchronously, so a
+ * retry's `r=` reaches the request; it rejects while `flows` is not installed (load() below loads `flows` first).
+ */
+const viaFlows = <M extends LazyChunkModule>(pick: (f: FlowsModule) => () => Promise<M>) => (): Promise<M> => {
+  const f = lazyChunks.flows.module() as FlowsModule | undefined;
+  return f ? pick(f)() : Promise.reject(new Error('flows not installed'));
+};
+const afterFlows = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.flows.load().then((ok) => ok && c.load()),
+});
+
+/**
+ * slider-look is a child of `controls`: its import() sits in src/modules/lazy/controls-chunk.ts. The importer calls it synchronously,
+ * so a retry's `r=` reaches the request; it rejects while `controls` is not installed (load() below loads `controls` first).
+ */
+const viaControls = <M extends LazyChunkModule>(pick: (c: ControlsModule) => () => Promise<M>) => (): Promise<M> => {
+  const c = lazyChunks.controls.module() as ControlsModule | undefined;
+  return c ? pick(c)() : Promise.reject(new Error('controls not installed'));
+};
+const afterControls = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.controls.load().then((ok) => ok && c.load()),
+});
 
 export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   slider: lazyChunk('slider', () => import(/* webpackChunkName: "slider" */ '../modules/lazy/slider-chunk')),
   seasonal: lazyChunk('seasonal', () => import(/* webpackChunkName: "seasonal" */ '../card/seasonal-chunk')),
   markdown: lazyChunk('markdown', () => import(/* webpackChunkName: "markdown" */ '../modules/lazy/markdown-chunk')),
   'modules-extra': lazyChunk('modules-extra', () => import(/* webpackChunkName: "modules-extra" */ '../modules/lazy/extras-chunk')),
-  'flow-look': lazyChunk('flow-look', () => import(/* webpackChunkName: "flow-look" */ '../flow-look/chunk')),
-  'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
-  // <mc-bg-stack>, the card backdrop (background-layers T5, ADR 0038)
+  // the flow resolver, line geometry, <mc-flows> and the card rules of a card with flows; the card reads it through src/card/flows-seam.ts
+  flows: lazyChunk('flows', () => import(/* webpackChunkName: "flows" */ '../card/flows-chunk')),
+  // the Pause motion button; the card reads it through src/card/pause-seam.ts
+  pause: lazyChunk('pause', () => import(/* webpackChunkName: "pause" */ '../card/pause-chunk')),
+  // the pop-up controller and the page's pop-up coordinator; the card and the editor read it through src/card/popup-seam.ts
+  popup: lazyChunk('popup', () => import(/* webpackChunkName: "popup" */ '../card/popup-chunk')),
+  // the views of the slider, spinbox, dropdown, light and gauge modules
+  controls: lazyChunk('controls', () => import(/* webpackChunkName: "controls" */ '../modules/lazy/controls-chunk')),
+  // <mc-ring>, <mc-shape> and <mc-value-bg>; the card renders their tags and reads nothing from the chunk
+  decor: lazyChunk('decor', () => import(/* webpackChunkName: "decor" */ '../card/decor-chunk')),
+  'flow-look': afterFlows(lazyChunk('flow-look', viaFlows((f) => f.importFlowLook))),
+  'slider-look': afterControls(lazyChunk('slider-look', viaControls((c) => c.importSliderLook))),
+  // the motion and refresh part of <mc-bg-stack> (the element itself is in magic-card.js)
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
+  // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts
+  'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),
+  // the animation resolve, compiler and model, the preset tables and the animation rules; the card reads it through src/utils/anim-seam.ts
+  anim: lazyChunk('anim', () => import(/* webpackChunkName: "anim" */ '../anim-studio/anim-chunk')),
+  // the template source and the template merge; the card reads it through src/card/templates-seam.ts
+  templates: lazyChunk('templates', () => import(/* webpackChunkName: "templates" */ '../services/templates-chunk')),
 };
+
+/**
+ * anim-runtime and particles are children of `anim`: their import()s sit in src/anim-studio/anim-chunk.ts.
+ * The importer calls it synchronously (no await or .then first), so a retry's `r=` reaches the request;
+ * it rejects while `anim` is not installed (the loader slots load `anim` first).
+ */
+const viaAnim = <M extends LazyChunkModule>(pick: (a: AnimModule) => () => Promise<M>) => (): Promise<M> => {
+  const a = lazyChunks.anim.module() as AnimModule | undefined;
+  return a ? pick(a)() : Promise.reject(new Error('anim not installed'));
+};
+
+/** The slot control of a child of `anim`: everything as is, but load() loads `anim` first and stays false when it fails. */
+const afterAnim = <M extends LazyChunkModule>(c: LazyChunkControl<M>): LazyChunkControl<M> => ({
+  ...c,
+  load: () => lazyChunks.anim.load().then((ok) => ok && c.load()),
+});
+
+/** Chunks a render starts when it meets the need (not from the config alone). Their loaders: src/utils/*-loader.ts. */
+export const onDemandChunks = {
+  'anim-runtime': lazyChunk('anim-runtime', viaAnim((a) => a.importRuntime)),
+  particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
+  'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
+};
+provideRuntimeChunk(afterAnim(onDemandChunks['anim-runtime']));
+provideParticlesChunk(afterAnim(onDemandChunks.particles));
+provideShapeChunk(onDemandChunks['shape-custom']);
+provideSvgIconChunk(lazyChunks['svg-icon']);
 
 /** window.MagicCard.loadSeasonal: true once <mc-seasonal> and <mc-seasonal-deco> are defined. */
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();
 
-const seen = new WeakSet<object>();
-
-const wantsSeasonal = (node: unknown, visited = new Set<unknown>()): boolean => {
-  if (!node || typeof node !== 'object' || visited.has(node)) return false;
-  visited.add(node);
-  if (Array.isArray(node)) return node.some((n) => wantsSeasonal(n, visited));
-  for (const [key, value] of Object.entries(node)) {
-    if (key === 'card_config') continue;
-    if (key === 'seasonal' && value) return true;
-    if (key === 'preset' && typeof value === 'string' && getAnimationPreset(value)?.seasonal) return true;
-    if (value && typeof value === 'object' && wantsSeasonal(value, visited)) return true;
-  }
-  return false;
-};
-
-type Obj = Record<string, unknown>;
-type Wanted = { flow: boolean; slider: boolean };
-
-/** (1.2.0) Same walk as wantsSeasonal: a `flows` entry with a look key, a `slider` module with one. */
-const wantsLooks = (node: unknown, found: Wanted = { flow: false, slider: false }, visited = new Set<unknown>()): Wanted => {
-  if (!node || typeof node !== 'object' || visited.has(node) || (found.flow && found.slider)) return found;
-  visited.add(node);
-  if (Array.isArray(node)) {
-    for (const n of node) wantsLooks(n, found, visited);
-    return found;
-  }
-  if ((node as Obj).type === 'slider' && hasSliderLook(node as Obj)) found.slider = true;
-  for (const [key, value] of Object.entries(node)) {
-    if (key === 'card_config') continue;
-    if (key === 'flows' && Array.isArray(value) && value.some((f) => !!f && typeof f === 'object' && hasFlowLook(f as Obj))) found.flow = true;
-    if (value && typeof value === 'object') wantsLooks(value, found, visited);
-  }
-  return found;
-};
-const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
-
-/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it) or any layered module. */
-export function wantsLayers(config: unknown): boolean {
-  const c = config as { background_layers?: unknown; conditional_appearance?: unknown; rows?: Array<{ columns?: Array<{ modules?: CardModule[] }> } | null> } | null;
-  if (!c || typeof c !== 'object') return false;
-  if (nonEmpty(c.background_layers)) return true;
-  if (Array.isArray(c.rows) && c.rows.some((r) => Array.isArray(r?.columns) && r!.columns!.some((col) => hasLayers(col?.modules ?? [])))) return true;
-  const rules = c.conditional_appearance;
-  return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
-}
-
-/**
- * Start every chunk this card config needs, at once (nested lazy modules never wait on their
- * parent): the chunks of the lazy module types in it, the seasonal chunk for a `seasonal`
- * setting or a seasonal animation preset, and the flow-look / slider-look chunks for look keys. Called by setConfig and after the template merge.
- */
-export function prefetchLazy(config: unknown): void {
-  if (!config || typeof config !== 'object' || seen.has(config)) return;
-  seen.add(config);
-  ModuleRegistry.prefetch(config);
-  if (wantsSeasonal(config)) void lazyChunks.seasonal.load();
-  const looks = wantsLooks(config);
-  if (looks.flow) void lazyChunks['flow-look'].load();
-  if (looks.slider) void lazyChunks['slider-look'].load();
-  if (wantsLayers(config)) void lazyChunks.layers.load();
-}
-
 /** Tests: replace one chunk import (undefined restores it) and forget its state. */
-export function __setLazyImporterForTests(name: LazyChunkName, importer: LazyImporter | undefined): void {
-  lazyChunks[name].__reset(importer);
+export function __setLazyImporterForTests(name: LazyChunkName | OnDemandChunkName, importer: LazyImporter | undefined): void {
+  (name in lazyChunks ? lazyChunks[name as LazyChunkName] : onDemandChunks[name as OnDemandChunkName]).__reset(importer as never);
 }
 
 /** Tests (vitest setup): load and install every chunk so renderPreview output stays synchronous. */

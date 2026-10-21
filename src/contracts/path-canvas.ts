@@ -2,11 +2,10 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
 import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-kit';
 
 /*
- * Contract: path canvas. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0020.
- * Revision 2 (2026-10-18, before any implementation; the designer's "1.1.0" is folded in here):
- * hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard aligned with design 03 (`[` / `]`,
- * H, fine step, Enter to fields, C and double-click for the kind), Esc cancels a drag, imports over
- * MAX_ANCHORS stay editable, drag performance with large paths.
+ * Contract: path canvas. Version 1.0.0.
+ * Hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard (`[` / `]`, H, fine step, Enter to
+ * fields, C and double-click for the kind), Esc cancels a drag, imports over MAX_ANCHORS stay
+ * editable, drag performance with large paths.
  *
  * One editing surface for anchors and handles, used by the SVG editor (many subpaths in a fixed
  * viewBox) and the shape editor (one closed subpath in a resizable box with anchored coordinates).
@@ -18,37 +17,25 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * PathCanvasChunk below. Uses path-model 1.0.0. Imports nothing from src/anim-studio/,
  * src/editor/, src/svg-editor/, src/shape-editor/ or src/path-booleans/.
  *
- * Revision 3 (2026-10-18, CEO decision after T4 measured 47,935 B against the 40 KiB ceiling): the chunk
- * no longer exports `pathDraw`; src/path/draw.ts is imported by the SVG editor chunk itself. The chunk
- * cap is 44 KiB (45,056 B), see ADR 0019. SUPERSEDED by revision 4.
+ * The chunk exports `pathDraw` (path-model PathDraw, incl. the new primitives): the shape editor draws
+ * too (pen, starter outlines), so the draw generators are shared by both editors. Neither editor
+ * chunk imports src/path/draw.ts or src/path/edit.ts (with splitChunks false that would copy them:
+ * draw 6.2 KB + edit 5.9 KB measured). Element properties: `gridStep` (drawn grid spacing, the SVG
+ * editor's grid size setting) and `underlay` (ground and frame see-through so the host can draw the
+ * artwork underneath).
  *
- * Revision 4 (2026-10-18, CEO decisions after the hands-on demo, ADR 0025): the shape editor now draws
- * too (pen, starter outlines), so the draw generators come back into this chunk and are shared by both
- * editors: the chunk exports `pathDraw` (path-model PathDraw, incl. the new primitives). Neither editor
- * chunk imports src/path/draw.ts or src/path/edit.ts any more (with splitChunks false that would copy
- * them; T10 measured draw 6.2 KB + edit 5.9 KB copied into the SVG editor chunk). Additive element
- * properties: `gridStep` (drawn grid spacing, the SVG editor's grid size setting) and `underlay` (T10:
- * ground and frame see-through so the host can draw the artwork underneath). Ceiling 54 KiB = 55,296 B
- * (CEO, ADR 0025).
+ * The chunk defines no menu. <mc-ui-menu> (UI_MENU_TAG, UiMenuElement) comes from the ui-kit Module,
+ * which the card-editor chunk defines once (defineUiKit()); the svg-editor and shape-editor layers
+ * render it inside their own shadow root. PathMenuElement is an alias of UiMenuElement;
+ * MenuEntry = UiMenuEntry, MenuPick = UiMenuPick, MenuClose = UiMenuClose. Events 'mc-menu-pick' and
+ * 'mc-menu-close'. Open the menu with show(); `open` is the read-only state.
+ * Menu behaviour: right-click, long-press, ContextMenu / Shift+F10, roving focus, one submenu
+ * level, Esc, Tab, focus back to `opener`, 8 px viewport margin, reasons as aria-description; the items
+ * follow the kit look: --mc-hit high (44 on coarse), MDI glyphs, kit tokens. The canvas's styles read
+ * the kit tokens (--mc-*) directly.
  *
- * Revision 6 (2026-10-18, UI3, ADR 0030, ui-kit 1.0.0 r2): the chunk no longer defines a menu. <mc-path-menu> is
- * replaced by <mc-ui-menu> (UI_MENU_TAG, UiMenuElement) from the ui-kit Module, which the card-editor chunk
- * defines once (defineUiKit()); the svg-editor and shape-editor layers render it inside their own shadow root.
- * Removed: PATH_MENU_TAG and the chunk's menu element. PathMenuElement stays as an alias of UiMenuElement;
- * MenuEntry = UiMenuEntry, MenuPick = UiMenuPick, MenuClose = UiMenuClose. Events unchanged ('mc-menu-pick',
- * 'mc-menu-close', same detail). One API difference: open the menu with show() (was open(); `open` is now the
- * read-only state).
- * Menu behaviour of r5 is kept (right-click, long-press, ContextMenu / Shift+F10, roving focus, one submenu
- * level, Esc, Tab, focus back to `opener`, 8 px viewport margin, reasons as aria-description); the items
- * follow the kit look: --mc-hit high (44 on coarse), MDI glyphs, kit tokens. The canvas's local --pc-* token
- * block is gone: its styles read the kit tokens (--mc-*) directly. The canvas element, its events, cursors
- * (cursor.ts) are unchanged. Additive for hosts that already pass MenuEntry data.
- *
- * Revision 5 (2026-10-18, CEO scope added after revision 4: on-canvas scale / rotate handles, snapping
- * to the safe area, the context menu; design 02 s7.8-7.10 and 03 s9; ADR 0026; PROPOSED, the chunk
- * ceiling needs the CEO). Additive only: no existing property, event or key changes meaning.
- * PATH_CANVAS_CONTRACT_REVISION moves to 5 in T29 and stays 4 until then, so suites written against r4
- * keep passing while T24 / T26 run.
+ * Transform handles, box snapping and the context gesture are additive: no existing property, event
+ * or key changes meaning.
  * - Transform box: property `transform` (TransformBox). In 'select' mode only, the canvas draws the
  *   host's box with eight scale handles (corners, edge midpoints) and, when `rotate`, a rotate handle on
  *   a stem ROTATE_STEM_PX (ROTATE_STEM_COARSE_PX on coarse) above the top centre, below the box when there
@@ -92,8 +79,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   Android long-press) is prevented and ignored. The pointer-up that ends a long-press does nothing else.
  *   The drawing surface has `-webkit-touch-callout: none` and `user-select: none`. With `contextMenu`
  *   false (default) the canvas leaves the browser's behaviour alone. The canvas never opens a menu itself.
- * - (r5; superseded by r6: the element is <mc-ui-menu>) Menu element: the chunk also defined PATH_MENU_TAG (`<mc-path-menu>`, PathMenuElement, guarded by
- *   customElements.get), a generic menu both editors use for the canvas, layer rows and a "More actions"
+ * - Menu element (<mc-ui-menu>): a generic menu both editors use for the canvas, layer rows and a "More actions"
  *   button. role="menu" named by `label`; items role menuitem (menuitemcheckbox when `checked` is set);
  *   `separatorBefore` renders role="separator"; an item with `items` is a submenu parent
  *   (aria-haspopup="menu", aria-expanded); at most one submenu level. Keys: Up / Down (wrap), Home / End,
@@ -108,15 +94,13 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   `opener`; after a pick the host moves focus. Esc that closed the menu is stopped there (editor Esc
  *   order: gesture, then overlay). No motion under reduced motion. No strings of its own: the host passes
  *   every label. The host places the element inside its own layer (shadow root), so focus stays inside.
- * - Size: transform box, context gesture and menu were estimated at about 7.9 KB minified; T29 measured
- *   about 15.1 KB (menu 6.0 KB, canvas 9.1 KB). Ceiling 62 KiB = 63,488 B (ADR 0026); the CAPS entry
- *   follows the CEO's ruling on the measured size (handoff 45).
+ * - Size: the chunk measures about 15.1 KB minified (menu 6.0 KB, canvas 9.1 KB). Ceiling 62 KiB = 63,488 B.
  *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
  * (edit, tidy, draw) from this chunk's exports and do not import src/path/edit.ts, tidy.ts or
- * draw.ts themselves (import scan test, revision 4). They may import src/path/core.ts (small, also in
- * the card). Boolean operations are their own chunk (path-booleans 1.0.0), not part of this one.
+ * draw.ts themselves (import scan test). They may import src/path/core.ts (small, in the shared
+ * path-core chunk). Boolean operations are their own chunk (path-booleans 1.0.0), not part of this one.
  *
  * The canvas is controlled: it never keeps its own copy of the paths. It renders `paths`, and every
  * change is an `mc-path-change` event the host applies (or refuses) and passes back.
@@ -136,7 +120,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   near the canvas edge, never below the finger; label "x 19, y 9" (the host may pass a suffix via
  *   `loupeLabel`). Shown after LOUPE_DELAY_MS of movement or at once on a second finger; aria-hidden;
  *   no fade under reduced motion; a second small SVG of the same path data, redrawn per animation
- *   frame during the drag only. Design 03 section 3 is the visual spec.
+ *   frame during the drag only.
  * - Drag an anchor or handle; Alt+click on a segment, double-click on a segment (Node mode), or the
  *   "Add point" mode then tap, inserts. Double-click on an anchor, or C, toggles corner <-> smooth
  *   (symmetric through the host's kind control, within `kinds`).
@@ -156,9 +140,9 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   anything; the editor layer root stops Escape (svg-editor 1.0.0).
  * - Snapping (when `snap.enabled`; Shift held during a drag suspends it; Alt never does): grid step,
  *   other anchors, frame edges and centre, 15 degree handle angles, plus host lines in `snap.extra`.
- *   (r5) Plus the safe area with `snap.safeArea`; on scale handle drags Shift is the ratio key, so there
+ *   Plus the safe area with `snap.safeArea`; on scale handle drags Shift is the ratio key, so there
  *   snapping is suspended by Ctrl / Cmd instead.
- * - Grid drawing (revision 4): with `pixelGrid` on, lines every `gridStep` frame units from the frame
+ * - Grid drawing: with `pixelGrid` on, lines every `gridStep` frame units from the frame
  *   origin (default 1). When gridStep x zoom is under 8 CSS px the canvas draws every k-th line, k the
  *   smallest whole number that reaches 8 px; at most 256 lines per axis. Hosts keep snap.grid and
  *   gridStep equal.
@@ -181,19 +165,19 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * - `mc-path-view` detail { zoom, pan }: the host may keep it for the next open.
  * - `mc-path-fields` detail { path, anchor }: Enter on a focused anchor.
  * - `mc-path-limit` detail { path, max: MAX_ANCHORS }: an add was refused at the cap.
- * - (r5) `mc-path-transform` detail PathTransform: a scale or rotate from the transform box or its keys.
- * - (r5) `mc-path-context` detail PathContext: a context gesture (only with `contextMenu` true).
- * - (r5) From the menu (r6: <mc-ui-menu>): `mc-menu-pick` detail MenuPick, `mc-menu-close` detail MenuClose.
+ * - `mc-path-transform` detail PathTransform: a scale or rotate from the transform box or its keys.
+ * - `mc-path-context` detail PathContext: a context gesture (only with `contextMenu` true).
+ * - From the menu (<mc-ui-menu>): `mc-menu-pick` detail MenuPick, `mc-menu-close` detail MenuClose.
  *
- * Contract tests (QA, tests/path-canvas.contract.test.ts): controlled rendering, commit sequence of
+ * Contract tests (tests/path-canvas.contract.test.ts): controlled rendering, commit sequence of
  * a drag (n x false, then one true), Esc during a drag (start paths, no commit), keyboard-only add /
  * move / delete / kind change, `[` / `]` by event.code, H target cycle, fine step unsnapped, fine
  * and coarse hit size, slop, loupe only for touch, snapping on / off / Shift / Alt, 140-anchor
  * import editable and add refused with mc-path-limit, history coalescing and limit, listbox and
- * live-region text. Revision 4: the chunk exports `pathDraw` with every PathDraw member; every
+ * live-region text. The chunk exports `pathDraw` with every PathDraw member; every
  * PRIMITIVE_KINDS entry gives one closed clockwise subpath inside its box with at most
  * PRIMITIVE_MAX_ANCHORS anchors at 24 x 24 and 360 x 120; gridStep 0.5 / 2 / 3 line positions and
- * the 8 px thinning; `underlay` leaves ground and frame unpainted. Revision 5: corner scale keeps the
+ * the 8 px thinning; `underlay` leaves ground and frame unpainted. Corner scale keeps the
  * ratio with keepRatio and Shift inverts it, Alt scales about the centre, edge handles scale one axis,
  * MIN_BOX_SIDE and `bounds` hold; rotate about the centre with Shift 15 degree steps; commit sequence
  * and Esc cancel for both; edge handles hide on a small box; no box outside 'select'; Ctrl/Cmd+Shift+
@@ -206,8 +190,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  */
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
-/** Revision 5 is implemented (T29). */
-export const PATH_CANVAS_CONTRACT_REVISION = 6;
+export const PATH_CANVAS_CONTRACT_REVISION = 7;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';
@@ -221,21 +204,21 @@ export const LOUPE_SIZE_PX = 72;
 export const LOUPE_ZOOM = 3;
 export const LOUPE_OFFSET_PX = 64;
 export const LOUPE_DELAY_MS = 120;
-/** Revision 4: drawn grid lines are at least this far apart on screen. */
+/** Drawn grid lines are at least this far apart on screen. */
 export const GRID_MIN_PX = 8;
-/** Revision 5: transform box handles. */
+/** Transform box handles. */
 export const HANDLE_GLYPH_PX = 10;
 export const ROTATE_STEM_PX = 24;
 export const ROTATE_STEM_COARSE_PX = 32;
-/** Revision 5: smallest box side a scale may leave, in frame units. */
+/** Smallest box side a scale may leave, in frame units. */
 export const MIN_BOX_SIDE = 0.05;
-/** Revision 5: snap reach of lines in CSS px. */
+/** Snap reach of lines in CSS px. */
 export const SNAP_REACH_PX = 6;
 export const SNAP_REACH_COARSE_PX = 12;
-/** Revision 5: touch long-press for the context menu. */
+/** Touch long-press for the context menu. */
 export const LONG_PRESS_MS = 500;
 export const LONG_PRESS_SLOP_PX = 8;
-/** Revision 5: a contextmenu event this soon after an emitted context gesture is ignored. */
+/** A contextmenu event this soon after an emitted context gesture is ignored. */
 export const CONTEXT_DEDUPE_MS = 500;
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
@@ -248,7 +231,7 @@ export interface SnapConfig {
   frame: boolean;
   /** Extra snap lines in frame units: vertical x = n, horizontal y = n. */
   extra?: { x?: number[]; y?: number[] };
-  /** Revision 5: snap to the safe-area edges and centre lines (needs `safeArea` > 0). */
+  /** Snap to the safe-area edges and centre lines (needs `safeArea` > 0). */
   safeArea?: boolean;
 }
 
@@ -284,10 +267,10 @@ export interface PathPaint {
  */
 export type ConstrainPoint = (pt: Pt, ctx: { path: number; anchor: number; which: 'anchor' | 'in' | 'out' }) => Pt;
 
-/** Revision 5: SVG matrix order, (x, y) -> (a x + c y + e, b x + d y + f), as PathEdit.transform takes it. */
+/** SVG matrix order, (x, y) -> (a x + c y + e, b x + d y + f), as PathEdit.transform takes it. */
 export type Matrix6 = [number, number, number, number, number, number];
 
-/** Revision 5: the selection box the host asks the canvas to draw with handles ('select' mode only). */
+/** The selection box the host asks the canvas to draw with handles ('select' mode only). */
 export interface TransformBox {
   /** Axis-aligned box in frame units (the host's bounds of what is selected). */
   box: Box;
@@ -303,7 +286,7 @@ export interface TransformBox {
   bounds?: Box;
 }
 
-/** Revision 5: detail of `mc-path-transform`. */
+/** Detail of `mc-path-transform`. */
 export interface PathTransform {
   kind: 'scale' | 'rotate';
   /** Relative to the geometry at gesture start (a keyboard step: relative to the current geometry). */
@@ -317,7 +300,7 @@ export interface PathTransform {
   source: 'pointer' | 'keyboard';
 }
 
-/** Revision 5: detail of `mc-path-context`. */
+/** Detail of `mc-path-context`. */
 export interface PathContext {
   /** Where to open a menu, client CSS px. */
   client: Pt;
@@ -328,11 +311,11 @@ export interface PathContext {
   source: 'mouse' | 'touch' | 'pen' | 'keyboard';
 }
 
-/** Revision 6: the menu data and events are the ui-kit's (same shape as r5). */
+/** The menu data and events are the ui-kit's. */
 export type MenuEntry = UiMenuEntry;
 export type MenuPick = UiMenuPick;
 export type MenuClose = UiMenuClose;
-/** Revision 6: the menu element is <mc-ui-menu>; open it with show(). */
+/** The menu element is <mc-ui-menu>; open it with show(). */
 export type PathMenuElement = UiMenuElement;
 
 /** <mc-path-canvas> properties. */
@@ -356,20 +339,20 @@ export interface PathCanvasElement extends HTMLElement {
   safeArea?: number;
   /** Show the grid (lines every `gridStep`, thinned below GRID_MIN_PX). */
   pixelGrid: boolean;
-  /** Revision 4: grid line spacing in frame units, default 1. */
+  /** Grid line spacing in frame units, default 1. */
   gridStep?: number;
-  /** Revision 4 (T10): boolean attribute; ground and frame are transparent, the host draws underneath. */
+  /** Boolean attribute; ground and frame are transparent, the host draws underneath. */
   underlay?: boolean;
   /** At most this many subpaths (shape editor: 1; 2 while a boolean operand or a pen outline is pending). */
   maxPaths: number;
   /** Anchor kinds offered. */
   kinds: readonly AnchorKind[];
   constrain?: ConstrainPoint;
-  /** Revision 5: selection box with handles ('select' mode only; undefined = none). */
+  /** Selection box with handles ('select' mode only; undefined = none). */
   transform?: TransformBox;
-  /** Revision 5: name of the rotate slider (default "Rotation"). */
+  /** Name of the rotate slider (default "Rotation"). */
   rotateLabel?: string;
-  /** Revision 5: emit `mc-path-context` and prevent the browser menu on the drawing surface. Default false. */
+  /** Emit `mc-path-context` and prevent the browser menu on the drawing surface. Default false. */
   contextMenu?: boolean;
   /** Fit the frame into the element. */
   fit(): void;
@@ -388,7 +371,7 @@ export interface History<T> {
   clear(state: T): void;
 }
 
-/** What `import()` of the chunk resolves to. Revision 4: `pathDraw` is back (shared by both editors). */
+/** What `import()` of the chunk resolves to. `pathDraw` is shared by both editors. */
 export interface PathCanvasChunk {
   PATH_CANVAS_CONTRACT_VERSION: string;
   /** Default limit 100 steps. */

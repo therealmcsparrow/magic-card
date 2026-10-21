@@ -1,0 +1,79 @@
+# Blend modes: the same picture over the same pink tile in six blend modes. A blend mixes with what is painted behind the layer in its own container, here the column.
+# Entities: none
+# gallery: width=420
+type: custom:magic-card
+name: Blend modes
+background: "#14161c"
+border_radius: 26px
+padding: 16px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: a
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: multiply }
+          - type: text
+            text: Multiply
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: screen }
+          - type: text
+            text: Screen
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: overlay }
+          - type: text
+            text: Overlay
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+  - id: b
+    layout: "1-1-1"
+    gap: 8px
+    design: { margin_top: 8px }
+    columns:
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: darken }
+          - type: text
+            text: Darken
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: lighten }
+          - type: text
+            text: Lighten
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }
+      - vertical_align: end
+        design: { background_color: "#e0457b", border_radius: 14px, min_height: 110px, padding: 8px }
+        modules:
+          - type: image
+            image: /local/hills.svg
+            placement: background
+            layer: { blend: soft-light }
+          - type: text
+            text: Soft light
+            design: { font_size: 12px, font_weight: "700", color: "#ffffff", text_align: center, text_shadow: "0 1px 6px rgba(0,0,0,0.7)" }

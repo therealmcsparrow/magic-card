@@ -1,7 +1,8 @@
-import type { FlowConfig, FlowSide, HomeAssistant, MagicCardConfig } from '../types';
-import { flowLookSlot } from '../card/flow-look-slot';
-import { hasFlowLook, type FlowLookResolved } from '../contracts/flow-look';
-import { safeColor } from './animation';
+import type { FlowConfig, FlowSide, HomeAssistant } from '../types';
+import { hasFlowLook } from '../contracts/flow-look.needs';
+import type { FlowLookRenderer, FlowLookResolved } from '../contracts/flow-look';
+import { safeColor } from './safe-css';
+import { FLOW_DEFAULTS } from './flow-keys';
 import { entityStateColor, parseEntityColor } from './entity-color';
 import { entityNumber, formatEntityValue } from './entity-value';
 
@@ -58,27 +59,6 @@ export interface ResolvedFlow {
   colorTo?: string;
 }
 
-export const FLOW_DEFAULTS = {
-  route: 'curve',
-  min: 0,
-  max: 1000,
-  reverse_negative: true,
-  color: 'var(--primary-color)',
-  /** Unset: the theme's secondary text colour, half transparent (reads on light and dark cards). */
-  idle_color: 'color-mix(in srgb, var(--secondary-text-color, #727272) 50%, transparent)',
-  width: 3,
-  scale_width: true,
-  dots: 3,
-  dot_size: 6,
-  speed: 2,
-  min_speed: 8,
-  glow: 0,
-  label: 'none',
-  label_position: 'auto',
-  show_when: 'always',
-  layer: 'back',
-} as const;
-
 const SIDES: ReadonlySet<string> = new Set(['top', 'right', 'bottom', 'left']);
 const ROUTES: ReadonlySet<string> = new Set(['curve', 'straight', 'elbow']);
 const LABEL_POSITIONS: ReadonlySet<string> = new Set(['auto', 'line', 'side', 'hidden']);
@@ -122,13 +102,15 @@ function resolveColor(value: unknown, hass: HomeAssistant | undefined, entityId:
 
 /**
  * `index` (the flow's position in `flows`) names a flow that has no id and no endpoints; with
- * endpoints the fallback id is `from>to` (the card makes duplicates unique).
+ * endpoints the fallback id is `from>to` (the card makes duplicates unique). `look` is the flow-look
+ * renderer (flowLookSlot.get()); without it a flow with look keys resolves as the classic look.
  */
 export function resolveFlow(
   f: FlowConfig,
   hass: HomeAssistant | undefined,
   moduleEntity?: string,
   index = 0,
+  look?: FlowLookRenderer,
 ): ResolvedFlow {
   // Compared with |v|: a negative min would make 0 count as flowing.
   const min = Math.max(0, finite(f.min) ?? FLOW_DEFAULTS.min);
@@ -220,7 +202,7 @@ export function resolveFlow(
   if (f.to_anchor === 'box') out.toBox = true;
   // flow-look: only flows with look keys reach the chunk; an empty slot (loading, failed) = classic look.
   // The renderer gets `out` as `base` and may set its colour (value mode); colorTo is lifted for the overlay.
-  const renderer = hasFlowLook(f) ? flowLookSlot.get() : undefined;
+  const renderer = hasFlowLook(f) ? look : undefined;
   if (renderer) {
     out.look = renderer.resolve(f, out, hass, colorEntity);
     if (out.look.colorTo !== undefined) out.colorTo = out.look.colorTo;
@@ -231,46 +213,4 @@ export function resolveFlow(
     }
   }
   return out;
-}
-
-/**
- * The key of every entry of `flows` as the card draws it (`data-flow` in `<mc-flows>`): its id, or
- * `from>to` / `flow~i` when it has none, made unique with `~i` when repeated. The editor uses the
- * same keys to select a flow from the canvas.
- */
-export function flowKeys(flows: readonly unknown[] | undefined): string[] {
-  const seen = new Set<string>();
-  return (flows ?? []).map((raw, i) => {
-    const f = (raw && typeof raw === 'object' ? raw : {}) as Partial<FlowConfig>;
-    const from = typeof f.from === 'string' ? f.from : '';
-    const to = typeof f.to === 'string' ? f.to : '';
-    let id = typeof f.id === 'string' && f.id ? f.id : from && to ? `${from}>${to}` : `flow~${i}`;
-    if (seen.has(id)) id = `${id}~${i}`;
-    seen.add(id);
-    return id;
-  });
-}
-
-/** Module id -> the module's entity (flow `color: entity`), nested children included; per config. */
-const moduleEntityCache = new WeakMap<object, Map<string, string | undefined>>();
-export function flowModuleEntities(config: MagicCardConfig): Map<string, string | undefined> {
-  let map = moduleEntityCache.get(config);
-  if (map) return map;
-  const out = new Map<string, string | undefined>();
-  const walk = (node: unknown): void => {
-    if (!node || typeof node !== 'object') return;
-    if (Array.isArray(node)) {
-      node.forEach(walk);
-      return;
-    }
-    const rec = node as Record<string, unknown>;
-    if (typeof rec.id === 'string' && typeof rec.type === 'string' && !out.has(rec.id)) {
-      out.set(rec.id, typeof rec.entity === 'string' && rec.entity !== 'none' ? rec.entity : undefined);
-    }
-    for (const key of ['columns', 'modules', 'tabs']) walk(rec[key]);
-  };
-  walk(config.rows);
-  map = out;
-  moduleEntityCache.set(config, map);
-  return map;
 }

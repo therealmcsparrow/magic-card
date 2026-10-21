@@ -1,0 +1,96 @@
+# Pool: water temperature over a rippling water background, pH and chlorine,
+# and the pump state.
+# Entities: sensor.pool_temperature, sensor.pool_ph, sensor.pool_chlorine, switch.pool_pump
+# gallery: width=380
+type: custom:magic-card
+name: Pool
+background: "linear-gradient(170deg, #0891b2 0%, #0e7490 50%, #155e75 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 20px 44px rgba(8, 145, 178, 0.35)"
+rows:
+  - id: main
+    design:
+      animations:
+        - { preset: water-ripple, color: "#a5f3fc", strength: 40 }
+    column_widths: [1fr, auto]
+    columns:
+      - gap: 0px
+        modules:
+          - type: text
+            text: Pool water
+            design: { font_size: 14px, font_weight: "700", color: "#cffafe" }
+          - type: text
+            use_entity: true
+            entity: sensor.pool_temperature
+            design: { font_size: 54px, font_weight: "800", color: "#ffffff", letter_spacing: -2px, line_height: "1.05", text_shadow: "0 4px 18px rgba(8,51,68,0.35)" }
+          - type: text
+            text: Perfect for a swim
+            design: { font_size: 13px, color: "#a5f3fc" }
+      - modules:
+          - type: icon
+            icon: mdi:pool
+            size: 30px
+            design:
+              color: "#ffffff"
+              width: 56px
+              height: 56px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background_color: "rgba(255,255,255,0.16)"
+  - id: chem
+    layout: "1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: &glass { padding: 10px 6px, border_radius: 16px, background_color: "rgba(255,255,255,0.14)", backdrop_filter: blur(6px) }
+            modules:
+              - type: text
+                text: pH
+                design: &lab { font_size: 11px, color: "#cffafe", text_transform: uppercase, letter_spacing: 1px }
+              - type: text
+                use_entity: true
+                entity: sensor.pool_ph
+                design: &val { font_size: 17px, font_weight: "800", color: "#ffffff" }
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: *glass
+            modules:
+              - type: text
+                text: Chlorine
+                design: *lab
+              - type: text
+                use_entity: true
+                entity: sensor.pool_chlorine
+                design: *val
+      - modules:
+          - type: vertical
+            gap: 0px
+            align: center
+            design: *glass
+            actions:
+              tap_action: { action: toggle, entity: switch.pool_pump }
+            modules:
+              - type: text
+                text: Pump
+                design: *lab
+              - type: horizontal
+                gap: 4px
+                align: center
+                modules:
+                  - type: icon
+                    entity: switch.pool_pump
+                    icon: mdi:pump
+                    size: 16px
+                    design: { color: "#ffffff", animations: [{ preset: fast-spin, trigger: entity_on, target: icon, duration: 3s }] }
+                  - type: text
+                    use_entity: true
+                    entity: switch.pool_pump
+                    design: *val

@@ -1,0 +1,85 @@
+# Cauldron: an iron pot with a glowing brew. While the switch is on the surface bubbles and steam rises, and the word reads Brewing.
+# Off, the pot rests and the liquid turns to amber. The big number is the boiler temperature.
+# Entities: switch.coffee_machine, sensor.coffee_boiler
+# gallery: width=360 record=4 stage=linear-gradient(135deg,#0f0a18,#241636)
+type: custom:magic-card
+name: Cauldron
+background: "linear-gradient(170deg, #241636 0%, #150e22 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 22px 48px rgba(10,0,30,0.6)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Brew pot
+            design: { font_size: 12px, font_weight: "700", color: "#c4b0e6", text_transform: uppercase, letter_spacing: 2px }
+          - type: text
+            use_entity: true
+            entity: sensor.coffee_boiler
+            design: { font_size: 44px, font_weight: "700", color: "#fff4e0", line_height: "1.1", font_family: "Georgia, 'Iowan Old Style', serif" }
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Brewing
+            design: { font_size: 13px, font_weight: "800", color: "#a8f0a8", padding: 6px 14px, border_radius: 999px, border: "1px solid #7bdc7b", background_color: "rgba(123,220,123,0.14)", text_transform: uppercase, letter_spacing: 1.2px }
+            display: { conditions: [{ type: state, entity: switch.coffee_machine, state: "on" }] }
+          - type: text
+            text: Ready
+            design: { font_size: 13px, font_weight: "800", color: "#f0c890", padding: 6px 14px, border_radius: 999px, border: "1px solid #c58b4e", background_color: "rgba(197,139,78,0.14)", text_transform: uppercase, letter_spacing: 1.2px }
+            display: { mode: every, conditions: [{ type: state, entity: switch.coffee_machine, state: "off" }, { type: state, entity: sensor.coffee_boiler, above: 80 }] }
+          - type: text
+            text: Resting
+            design: { font_size: 13px, font_weight: "800", color: "#c4b0e6", padding: 6px 14px, border_radius: 999px, border: "1px solid #6d5a92", text_transform: uppercase, letter_spacing: 1.2px }
+            display: { mode: every, conditions: [{ type: state, entity: switch.coffee_machine, state: "off" }, { type: state, entity: sensor.coffee_boiler, below: 80.01 }] }
+  - id: pot
+    padding: 4px 0
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 190px
+              border_radius: 22px
+              overflow: hidden
+              background: "radial-gradient(ellipse 48% 42% at 50% 68%, rgba(123,220,123,0.26) 0%, rgba(123,220,123,0) 100%)"
+              animations:
+                - { id: bubbles, preset: bubbles, trigger: entity_on, trigger_entity: switch.coffee_machine, color: "#d6ffd6", strength: 85, intensity: 5, duration: 4s }
+                - { id: steam, preset: steam-rise, trigger: entity_on, trigger_entity: switch.coffee_machine, color: "#ffffff", strength: 35, intensity: 3, duration: 4s }
+            modules:
+              - type: icon
+                icon: svg
+                svg: '<svg viewBox="0 0 120 120"><path d="M14 50 C14 96 36 108 60 108 C84 108 106 96 106 50 Z" fill="#3b3b4b"/><path d="M26 98 L22 112 M94 98 L98 112" stroke="#3b3b4b" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M14 56 C4 56 4 76 18 78 M106 56 C116 56 116 76 102 78" stroke="#5c5c72" stroke-width="5" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="50" rx="48" ry="9" fill="#5c5c72"/><ellipse cx="60" cy="50" rx="42" ry="6.5" fill="#7bdc7b"/><path d="M22 66 C24 88 38 98 52 100" stroke="#ffffff" stroke-opacity="0.16" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'
+                size: 150px
+                design: { margin_top: 26px }
+                display: { conditions: [{ type: state, entity: switch.coffee_machine, state: "on" }] }
+              - type: icon
+                icon: svg
+                svg: '<svg viewBox="0 0 120 120"><path d="M14 50 C14 96 36 108 60 108 C84 108 106 96 106 50 Z" fill="#3b3b4b"/><path d="M26 98 L22 112 M94 98 L98 112" stroke="#3b3b4b" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M14 56 C4 56 4 76 18 78 M106 56 C116 56 116 76 102 78" stroke="#5c5c72" stroke-width="5" stroke-linecap="round" fill="none"/><ellipse cx="60" cy="50" rx="48" ry="9" fill="#5c5c72"/><ellipse cx="60" cy="50" rx="42" ry="6.5" fill="#a8794a"/><path d="M22 66 C24 88 38 98 52 100" stroke="#ffffff" stroke-opacity="0.16" stroke-width="4" stroke-linecap="round" fill="none"/></svg>'
+                size: 150px
+                design: { margin_top: 26px }
+                display: { conditions: [{ type: state, entity: switch.coffee_machine, state: "off" }] }
+  - id: toggle
+    padding: 8px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 14px 0, border_radius: 16px, background: "linear-gradient(135deg, #7c3aed, #a855f7)", box_shadow: "0 10px 22px rgba(124,58,237,0.35)" }
+            actions:
+              tap_action: { action: toggle, entity: switch.coffee_machine }
+            modules:
+              - type: icon
+                icon: mdi:fire
+                size: 20px
+                design: { color: "#ffffff" }
+              - type: text
+                text: Stir the brew
+                design: { font_size: 15px, font_weight: "700", color: "#ffffff" }

@@ -77,11 +77,7 @@ export class CardSeasonal implements ReactiveController {
    * and module id, plus a short hash of the card's entity ids (cards built from one template differ).
    */
   seed(config: MagicCardConfig): string {
-    const first = config.rows?.[0];
-    const base = [config.name ?? '', first?.id ?? '', first?.columns?.[0]?.modules?.[0]?.id ?? ''].join('|');
-    const ids = entityIds(config);
-    const tag = ids.length ? Math.floor(seededRandom(ids.join(','))() * 0x100000000).toString(36) : '';
-    return [base, tag].filter((x) => x && x !== '||').join('|') || 'card';
+    return seasonalSeed(config);
   }
 
   /** Whether a timer is waiting for midnight (tests). */
@@ -129,6 +125,18 @@ export class CardSeasonal implements ReactiveController {
       this._sync();
     }, ms);
   }
+}
+
+/**
+ * Layout seed of a card's layers: stable for the card, different between cards. Name, first row
+ * and module id, plus a short hash of the card's entity ids (cards built from one template differ).
+ */
+export function seasonalSeed(config: MagicCardConfig): string {
+  const first = config.rows?.[0];
+  const base = [config.name ?? '', first?.id ?? '', first?.columns?.[0]?.modules?.[0]?.id ?? ''].join('|');
+  const ids = entityIds(config);
+  const tag = ids.length ? Math.floor(seededRandom(ids.join(','))() * 0x100000000).toString(36) : '';
+  return [base, tag].filter((x) => x && x !== '||').join('|') || 'card';
 }
 
 /** Entity ids anywhere in the config (`entity`, `entity_id`, `*_entity` strings), in order, once each. */

@@ -1,5 +1,4 @@
 import { html, TemplateResult, nothing, PropertyValues, LitElement } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant, VideoBgModuleConfig } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { mediaSrc } from '../../utils/media';
@@ -19,16 +18,28 @@ const reducedMotion = (): boolean =>
  * (autoplay blocked, load error, reduced motion).
  */
 export class McBgVideo extends LitElement {
-  @property({ attribute: false }) src = '';
-  @property({ attribute: false }) poster = '';
-  @property({ attribute: false }) autoplay = true;
-  @property({ attribute: false }) loop = true;
-  @property({ attribute: false }) muted = true;
-  @property({ attribute: false }) fit: 'cover' | 'contain' = 'cover';
+  static properties = {
+    src: { attribute: false },
+    poster: { attribute: false },
+    autoplay: { attribute: false },
+    loop: { attribute: false },
+    muted: { attribute: false },
+    fit: { attribute: false },
+    srcId: { attribute: false },
+    posterId: { attribute: false },
+    _failed: { state: true },
+  };
+
+  src = '';
+  poster = '';
+  autoplay = true;
+  loop = true;
+  muted = true;
+  fit: 'cover' | 'contain' = 'cover';
   /** Media-source ids of src / poster (browsed media): resolved again when they fail to load. */
-  @property({ attribute: false }) srcId?: string;
-  @property({ attribute: false }) posterId?: string;
-  @state() private _failed = false;
+  srcId?: string;
+  posterId?: string;
+  private _failed = false;
   /** As a background: no frames off screen, page hidden or card paused (layer-placement, card-pause). */
   private readonly _gate = new StreamGate(this, 'video-bg', () => this._sync(), true);
 

@@ -15,18 +15,18 @@ import './editors/path-editor';
 import './editors/path-overlay';
 import './editors/sequence-editor';
 // studio v2 panels (each registers itself with slots.ts registerPanel when imported)
-// icon parts (track B)
+// icon parts
 import './editors/parts-layers';
 import './editors/parts-overlay';
 import './editors/part-inspector';
-// drawing tools, shape layers and inspector, SVG dialog (track C; draw-tools imports the rest)
+// drawing tools, shape layers and inspector, SVG dialog (draw-tools imports the rest)
 import './editors/draw-tools';
-// card parts (track D)
+// card parts
 import './editors/targets-layers';
 import './editors/particles-layers';
 import './editors/path-layers';
 import './editors/sequence-layers';
-// states, value bindings, preview entity (track E)
+// states, value bindings, preview entity
 import './editors/states-panel';
 import './editors/bindings-panel';
 import './editors/stage-sim';

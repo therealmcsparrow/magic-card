@@ -1,5 +1,5 @@
 import type { FlowConfig } from '../../types';
-import { FLOW_LOOK_KEYS, hasFlowLook } from '../../contracts/flow-look';
+import { FLOW_LOOK_KEYS, hasFlowLook } from '../../contracts/flow-look.needs';
 import { FLOW_LOOK_EXISTING_KEYS, type FlowPreset } from '../../contracts/look-editor';
 import { FLOW_PRESETS } from '../presets';
 

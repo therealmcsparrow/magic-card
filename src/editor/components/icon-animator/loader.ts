@@ -4,9 +4,9 @@ import type { AnimationConfig, CardModule, MagicCardConfig } from '../../../type
 import type { CataloguePreset } from '../../../contracts/preset-catalogue';
 import type { CardState } from './card-request';
 import { editorSystem } from '../../../css/editor-stack';
-import { readAnimations } from '../../../utils/animation';
-import { animationLibrary } from '../../../services/animation-library';
-import { resolveIconGeometry, setIconGeometry } from '../../../icons/icon-source';
+import { readAnimations } from '../../../anim-studio/entries';
+import { animLibrary } from '../../../utils/anim-hooks';
+import { svgIconApi } from '../../../utils/svg-icon-loader';
 import { customAnimationIds } from '../../../utils/custom-animations';
 
 /*
@@ -21,15 +21,20 @@ import { customAnimationIds } from '../../../utils/custom-animations';
  * utils/animation-presets); everything else comes in here (short keys: their names are bytes in
  * magic-card.js).
  */
+type IconApi = NonNullable<ReturnType<typeof svgIconApi>>;
+
 export const host = {
   LitElement,
   html,
   css,
   editorSystem,
   readAnimations,
-  library: animationLibrary,
-  resolveIcon: resolveIconGeometry,
-  setIcon: setIconGeometry,
+  /** Read at use: the `anim` chunk registers the library when it loads. */
+  get library() {
+    return animLibrary();
+  },
+  resolveIcon: (...a: Parameters<IconApi['resolveIconGeometry']>) => svgIconApi()!.resolveIconGeometry(...a),
+  setIcon: (...a: Parameters<IconApi['setIconGeometry']>) => svgIconApi()!.setIconGeometry(...a),
   customIds: customAnimationIds,
 };
 export type IconAnimatorHost = typeof host;

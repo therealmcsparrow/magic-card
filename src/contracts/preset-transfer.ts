@@ -4,12 +4,10 @@ import type { ThemeDoc } from './theme-editor';
 import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
 
 /*
- * Contract: preset files (export / import) and the transfer chunk. Version 1.0.0 (Architect-owned).
- * ADR 0022. Epic C of svg-and-shape-editors (brief addendum 21-product-manager.md, CEO 2026-10-18).
- * Revision 2 (2026-10-18, epic E1, ADR 0020 / 0027; nothing released, additive): host 'mcu-panel' (the
- * Magic Card Utils panel's Library tab, mcu-library 1.0.0 r4) for <mc-library-view>, with New / Edit
- * actions that fire `mc-library-open`. Sections marked (r2).
- * Revision 3 (2026-10-19, additive; nothing released): <mc-library-view> reads saved icons and shapes
+ * Contract: preset files (export / import) and the transfer chunk. Version 1.0.0.
+ * Host 'mcu-panel' (the Magic Card Utils panel's Library tab, mcu-library 1.0.0) for <mc-library-view>,
+ * with New / Edit actions that fire `mc-library-open`.
+ * <mc-library-view> reads saved icons and shapes
  * through `LibrarySource` (property `source`; without one it calls the mcu-library commands itself, so
  * it never imports a feature Module). resolveClashes gains opts `reserved` (ids another library holds:
  * renamed whatever the choice, so in 'replace' mode an id the target does not hold is still renamed when
@@ -18,8 +16,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * `takenName(kind, name)` passed through to it. External-host detection (contactsOtherHost) decodes CSS
  * escapes, removes tab/CR/LF, flags any value with a backslash or a comment opener, and checks every
  * argument of image-set() and similar functions.
- * 2026-10-19 (text only, version unchanged; code review 153): TRANSFER_CHUNK_CEILING follows the CEO's 62 KiB ruling.
- * Row thumbnail hook (r3): <mc-library-view> property `rowExtra?: (kind, id) => { thumb?: Node; meta?: string }`;
+ * Row thumbnail hook: <mc-library-view> property `rowExtra?: (kind, id) => { thumb?: Node; meta?: string }`;
  * `thumb` is drawn decorative before the row name, `meta` is appended to the id line (e.g. "10 points").
  * A host never reads or writes the view's shadow DOM; the Magic Card Utils Shapes tab uses this hook.
  *
@@ -31,7 +28,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  *   items:
  *     - id: sunrise                 LIBRARY_ID_RE (animations: ANIMATION_ID_RE, the same pattern)
  *       name: Sunrise               1..80 chars after trim
- *       author: Ruben               optional, 1..AUTHOR_MAX_CHARS
+ *       author: Alex                optional, 1..AUTHOR_MAX_CHARS
  *       description: ...            optional, 1..DESCRIPTION_MAX_CHARS
  *       keywords: [sun, morning]    optional, icons only (<= 10 words of 1..32 chars)
  *       data: { ... }               per kind, below
@@ -60,7 +57,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  *   null, objects and lists are dropped and listed); compact JSON <= THEME_PRESET_MAX_BYTES. The
  *   theme editor runs its own docErrors on the result before it saves or opens it (the transfer
  *   chunk never imports src/theme-editor/**).
- *   CEO 2026-10-18: values that reference another host (EXTERNAL_REF_RE) and card-mod-* keys
+ *   Values that reference another host (EXTERNAL_REF_RE) and card-mod-* keys
  *   (CARD_MOD_KEY_RE, in the flat part or a mode) are KEPT, not stripped. The import summary
  *   shows a warning that lists every such variable (with mode) and every host name, BEFORE the
  *   user confirms; the confirm button reads "Import anyway" while that warning is shown. Values
@@ -106,14 +103,14 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  *    first limit hit (it never builds the expanded value).
  * 5. Only the copy reaches the per-kind validators. Budget: steps 1-4 refuse a 2 MB file or a
  *    10,000-alias bomb in under IMPORT_REFUSE_MS on desktop Chrome with 4x CPU throttle, and a
- *    valid 1 MB file parses without a long task over 200 ms on the same setup (QA measures).
+ *    valid 1 MB file parses without a long task over 200 ms on the same setup .
  *
  * ── Clashes and targets ──
- * Target per host: with Magic Card Utils, the library store of the kind (mcu-library 1.0.0 r3;
+ * Target per host: with Magic Card Utils, the library store of the kind (mcu-library 1.0.0;
  * animations through the existing animation commands). Without it (card editor, shape editor, SVG
  * editor only): animation / shape / icon items become inline copies on the card being edited
  * (custom_animations / custom_shapes / custom_icons[id]); themes need Magic Card Utils anyway.
- * (r2) 'mcu-panel' always has Magic Card Utils: every kind goes to its store.
+ * 'mcu-panel' always has Magic Card Utils: every kind goes to its store.
  * An item whose id exists in the target is a clash. When any item clashes, the summary lists them
  * and asks once: "Replace" (overwrite, no base_updated_at) or "Keep both" (the imported ones get
  * uniqueId(id): id-2, id-3, ...). Cancel saves nothing. A library cap that is reached imports what
@@ -139,15 +136,15 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * - theme editor and animation studio entries: await window.MagicCard.loadEditor(), then
  *   window.MagicCard.loadTransfer() (module-editor 1.1.0, set by the editor chunk). Neither entry
  *   gets a new import(): the theme editor's one-import() rule stays.
- * - (r2) the Magic Card Utils panel: the same two calls (mcu-library 1.0.0 r4).
- * magic-card.js grows 0 B (no runtime parsing of preset files; CEO 2026-10-18 option a: no theme
+ * - the Magic Card Utils panel: the same two calls (mcu-library 1.0.0).
+ * magic-card.js grows 0 B (no runtime parsing of preset files; no theme
  * copy in cards). Dashboards that open no editor never fetch the chunk.
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
  * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING (62 KiB =
- * 63,488 B, CEO 2026-10-19; was 28 KiB). Over the ceiling means a parent module got copied in (check
- * js-yaml first) or the library view grew: report it; only the CEO raises it.
+ * 63,488 B). Over the ceiling means a parent module got copied in (check
+ * js-yaml first) or the library view grew.
  *
  * ── Accessibility (WCAG 2.2 AA, our bar) ──
  * The file control is a real <input type=file> behind a labelled button ("Choose a file"), accept
@@ -167,7 +164,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
-export const TRANSFER_CHUNK_CEILING = 62 * 1024; // 63,488 B, CEO 2026-10-19 (was 28 KiB)
+export const TRANSFER_CHUNK_CEILING = 62 * 1024; // 63,488 B
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const MAX_IMPORT_BYTES = 1024 * 1024;
@@ -188,7 +185,7 @@ export const THEME_PRESET_MAX_BYTES = 32 * 1024;
 /**
  * A theme value that makes the browser contact another host: an absolute or protocol-relative URL
  * anywhere in the value (url(), image-set(), @import or a bare string). data: and url(#id) do not
- * match. Matching values are kept and listed (CEO 2026-10-18).
+ * match. Matching values are kept and listed.
  */
 export const EXTERNAL_REF_RE = /(?:\b[a-z][a-z0-9+.-]*:\/\/|(?:^|[\s,("'])\/\/[^\s/)"'])/i;
 /** CSS escapes (`\74 ` and `\/`) resolved the way a browser reads them. */
@@ -213,7 +210,7 @@ const PLAIN_STRING_RE = /"[^"\\:/]*"|'[^'\\:/]*'/g;
 
 /**
  * True when a theme value is not provably safe, i.e. it can make the browser contact another website
- * (strict allow-list, CEO 2026-10-19; the earlier trick-by-trick detection was bypassed three times).
+ * (strict allow-list, not trick-by-trick detection).
  * A value passes only when, after the allowed parts are taken out, it has no quote, no backslash, no `url(`,
  * no image function (image-set, -webkit-image-set, image, src, cross-fade, element), no `@import` and no `/*`.
  * Allowed parts: url() with a closed, trimmed argument that is exactly `/local/...` (no `//`, no `..`) or `#id`,
@@ -239,7 +236,7 @@ export type TransferKind = 'animation' | 'theme' | 'shape' | 'icon';
 export type TransferFormat = 'yaml' | 'json';
 export type TransferHost = 'card-editor' | 'shape-editor' | 'svg-editor' | 'animation-studio' | 'theme-editor' | 'mcu-panel';
 
-/** Kinds each host accepts on import (and offers on export). (r2) mcu-panel. */
+/** Kinds each host accepts on import (and offers on export). */
 export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>> = {
   'card-editor': ['animation', 'shape', 'icon'],
   'shape-editor': ['shape'],
@@ -252,7 +249,7 @@ export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>>
 /** A saved-item list as the library source answers it. */
 export type LibraryListing<T> = { state: 'ok'; items: T[] } | { state: 'missing' | 'error'; items: [] };
 /**
- * (r3, additive) What <mc-library-view> reads saved icons and shapes through. The card editor passes
+ * What <mc-library-view> reads saved icons and shapes through. The card editor passes
  * its own cached lists as `source`; without one the view calls the mcu-library commands itself. The view
  * never imports a feature Module.
  */
@@ -266,9 +263,9 @@ export interface LibrarySource {
   reset(): void;
 }
 
-/** (r2) Where <mc-library-view> runs. */
+/** Where <mc-library-view> runs. */
 export type LibraryViewContext = 'card-editor' | 'mcu-panel';
-/** (r2) Fired by the library view in 'mcu-panel': New (no id) or Edit of an icon or shape. */
+/** Fired by the library view in 'mcu-panel': New (no id) or Edit of an icon or shape. */
 export const LIBRARY_OPEN_EVENT = 'mc-library-open';
 export interface LibraryOpenDetail {
   kind: 'icon' | 'shape';
@@ -375,7 +372,7 @@ export interface TransferChunk {
  * mcu-library commands) and "This card" (the card's custom_* copies). List, search (name,
  * keywords), rename, delete (with confirm), export, import. Rename and delete need admin (the
  * commands say so); non-admin users see the list read-only.
- * (r2) Property `context: LibraryViewContext`, default 'card-editor' (all of the above). 'mcu-panel'
+ * Property `context: LibraryViewContext`, default 'card-editor' (all of the above). 'mcu-panel'
  * (the Magic Card Utils Library tab): kinds HOST_KINDS['mcu-panel'], source "Magic Card Utils" only (no
  * "This card", no `config`, `inline` false), `presets` = the panel's theme presets adapter, the transfer
  * panel opened with host 'mcu-panel'. Its header gets "New icon" (icons kind) / "New shape" (shapes

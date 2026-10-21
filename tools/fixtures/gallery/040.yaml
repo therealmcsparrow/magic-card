@@ -1,0 +1,140 @@
+# House modes: four switches as a 2x2 grid of toggle tiles. A tile lights up in
+# its own colour while its mode is on.
+# Entities: input_boolean.night_mode, input_boolean.guest_mode,
+#           input_boolean.vacation, input_boolean.do_not_disturb
+# gallery: width=360
+type: custom:magic-card
+name: Modes
+background: "#101218"
+border_radius: 26px
+padding: 14px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: r1
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#181b23"
+              conditional:
+                - id: "on"
+                  name: "On"
+                  conditions: [{ type: state, entity: input_boolean.night_mode, state: "on" }]
+                  design: { background: "linear-gradient(140deg, #4338ca, #312e81)", box_shadow: "0 10px 22px rgba(67,56,202,0.4)" }
+            actions:
+              tap_action: { action: toggle, entity: input_boolean.night_mode }
+            modules:
+              - type: icon
+                icon: mdi:weather-night
+                size: 22px
+                design: { color: "#c7d2fe" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Night
+                    design: &name { font_size: 14px, font_weight: "800", color: "#f1f5f9" }
+                  - type: text
+                    use_entity: true
+                    entity: input_boolean.night_mode
+                    design: &st { font_size: 12px, color: "#94a3b8" }
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#181b23"
+              conditional:
+                - id: "on"
+                  name: "On"
+                  conditions: [{ type: state, entity: input_boolean.guest_mode, state: "on" }]
+                  design: { background: "linear-gradient(140deg, #059669, #065f46)" }
+            actions:
+              tap_action: { action: toggle, entity: input_boolean.guest_mode }
+            modules:
+              - type: icon
+                icon: mdi:account-group
+                size: 22px
+                design: { color: "#6ee7b7" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Guests
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: input_boolean.guest_mode
+                    design: *st
+  - id: r2
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#181b23"
+              conditional:
+                - id: "on"
+                  name: "On"
+                  conditions: [{ type: state, entity: input_boolean.vacation, state: "on" }]
+                  design: { background: "linear-gradient(140deg, #d97706, #92400e)" }
+            actions:
+              tap_action: { action: toggle, entity: input_boolean.vacation }
+            modules:
+              - type: icon
+                icon: mdi:airplane
+                size: 22px
+                design: { color: "#fcd34d" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Vacation
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: input_boolean.vacation
+                    design: *st
+      - modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 14px
+              border_radius: 20px
+              background_color: "#181b23"
+              conditional:
+                - id: "on"
+                  name: "On"
+                  conditions: [{ type: state, entity: input_boolean.do_not_disturb, state: "on" }]
+                  design: { background: "linear-gradient(140deg, #e11d48, #881337)" }
+            actions:
+              tap_action: { action: toggle, entity: input_boolean.do_not_disturb }
+            modules:
+              - type: icon
+                icon: mdi:bell-off-outline
+                size: 22px
+                design: { color: "#fda4af" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Quiet
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: input_boolean.do_not_disturb
+                    design: *st

@@ -1,4 +1,5 @@
-import { validateAnimationLibrary, validateAnimationDoc, type AnimationDoc } from '../anim-studio/model';
+import { validateAnimationDoc, validateAnimationLibrary, type AnimationDoc } from './model';
+import { useAnimationLibrary } from '../utils/anim-hooks';
 
 /*
  * The global animation library of the magic-card-utils integration, shared by every card on the
@@ -208,6 +209,16 @@ export class AnimationLibrary {
     this.status = 'idle';
   }
 
+  /** A card's inline `custom_animations`, validated once per config object. */
+  inlineDocs(config: { custom_animations?: unknown } | undefined): Map<string, AnimationDoc> | undefined {
+    return inlineAnimations(config);
+  }
+
+  /** The document of a `custom:<id>` preset: the library's, else the card's inline `custom_animations`. */
+  custom(id: string, config: { custom_animations?: unknown } | undefined): AnimationDoc | undefined {
+    return this.get(id) ?? inlineAnimations(config)?.get(id);
+  }
+
   /** Tests: forget everything (listeners too). */
   reset(): void {
     this._teardown();
@@ -219,6 +230,8 @@ export class AnimationLibrary {
 
 /** The page's library (one per page; every card shares it). */
 export const animationLibrary = new AnimationLibrary();
+// the editor, the transfer view and the icon animator read this instance through src/utils/anim-hooks.ts
+useAnimationLibrary(animationLibrary);
 
 const inline = new WeakMap<object, Map<string, AnimationDoc>>();
 

@@ -348,7 +348,7 @@ export const editorPrimitives: CSSResult = css`
     color: var(--mc-text-2);
     cursor: not-allowed;
   }
-  /* error state (design/10 4.3): the border carries it, the message below says what to fix */
+  /* error state: the border carries it, the message below says what to fix */
   .input[aria-invalid='true'] {
     border-color: var(--mc-error-ink);
   }

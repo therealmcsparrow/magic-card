@@ -1,6 +1,6 @@
 import { TemplateResult } from 'lit';
 import type { LazyModuleStub } from '../contracts/lazy-module';
-import { MagicModuleMetadata } from './module-types';
+import type { LazyStubMetadata } from './module-types';
 import { CardModule } from '../types';
 
 /**
@@ -8,7 +8,7 @@ import { CardModule } from '../types';
  * metadata, defaults, validation and the placeholder shown until the view exists.
  */
 export abstract class BaseLazyStub implements LazyModuleStub {
-  abstract readonly metadata: MagicModuleMetadata;
+  abstract readonly metadata: LazyStubMetadata;
 
   abstract createDefault(): CardModule;
 

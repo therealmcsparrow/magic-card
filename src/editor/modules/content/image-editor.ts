@@ -2,7 +2,7 @@ import { html, nothing } from 'lit';
 import type { ModuleEditor } from '../../../contracts/module-editor';
 import type { ImageModuleConfig } from '../../../types';
 import { renderTextField, renderToggleField, renderAttributeField, renderSelectField, renderMediaField, renderFieldHint } from '../../../utils/form-utils';
-import { cssAspectRatio } from '../../../utils/media';
+import { cssAspectRatio } from '../../../utils/aspect-ratio';
 import { entityFor, buildSyncContext } from '../base-editor';
 import { t, tc } from '../../i18n';
 import { attributeCaption, renderEntitySourceField } from '../../components/entity-source';

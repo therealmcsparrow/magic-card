@@ -1,6 +1,6 @@
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
+import { t as cardT } from '../../card/i18n';
 import { LitElement, html, css, TemplateResult, nothing, PropertyValues } from 'lit';
-import { property, state } from 'lit/decorators.js';
 import { CardModule, HomeAssistant, CustomCardModuleConfig } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { currentRenderContext } from '../../services/render-context';
@@ -53,6 +53,15 @@ const isErrorCard = (el: Element): boolean => el.localName === 'hui-error-card' 
  * with Lit template diffing disrupting the embedded card's state.
  */
 export class EmbeddedCard extends LitElement {
+  static properties = {
+    hass: { attribute: false },
+    cardType: { type: String, attribute: 'card-type' },
+    cardConfig: { attribute: false },
+    preview: { attribute: false },
+    editMode: { attribute: false },
+    _element: { state: true },
+  };
+
   static styles = css`
     :host { display: block; }
     .mc-embedded-loading {
@@ -70,14 +79,14 @@ export class EmbeddedCard extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) hass?: HomeAssistant;
-  @property({ type: String, attribute: 'card-type' }) cardType?: string;
-  @property({ attribute: false }) cardConfig?: Record<string, unknown>;
+  hass?: HomeAssistant;
+  cardType?: string;
+  cardConfig?: Record<string, unknown>;
   /** Like hui-card: the card is shown as a preview / in edit mode (handed to the embedded card). */
-  @property({ attribute: false }) preview = false;
-  @property({ attribute: false }) editMode = false;
+  preview = false;
+  editMode = false;
 
-  @state() private _element?: HTMLElement;
+  private _element?: HTMLElement;
   /** Card type of the element shown (or being created). */
   private _currentCardType?: string;
   /** JSON of the config the element last received. */
@@ -186,7 +195,7 @@ export class EmbeddedCard extends LitElement {
   // The container is filled by hand (_createElement), so it holds no Lit parts of its own.
   protected render(): TemplateResult {
     return html`${!this._element && this.cardType
-      ? html`<div class="mc-embedded-loading">${t('Loading card...')}</div>`
+      ? html`<div class="mc-embedded-loading">${cardT('Loading card...')}</div>`
       : nothing}<div class="mc-embedded-container"></div>`;
   }
 }

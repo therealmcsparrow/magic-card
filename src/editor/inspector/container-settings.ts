@@ -34,7 +34,7 @@ import { t, m, tl } from '../i18n';
 
 const equalLayout = (n: number) => Array.from({ length: Math.max(n, 1) }, () => '1').join('-');
 
-/** Mockup presets: picking one with another column count adds empty columns or merges removed ones left. */
+/** Presets: picking one with another column count adds empty columns or merges removed ones left. */
 const LAYOUT_PRESETS = ['1', '1-1', '2-1', '1-2', '1-1-1'];
 
 /** The picker's option for a row with its own column widths (checked; picking a preset replaces them). */

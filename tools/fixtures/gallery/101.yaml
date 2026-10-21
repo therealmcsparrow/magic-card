@@ -1,0 +1,53 @@
+# Slider look Glass with blur behind: the track blurs the bright stripes of the card behind it. Needs a browser that supports backdrop-filter; without it the flat glass shows.
+# Entities: light.living_room
+# gallery: width=400 stage=linear-gradient(135deg,#0b1020,#1b1030)
+type: custom:magic-card
+name: "Glass, blur behind"
+background: "repeating-linear-gradient(115deg, #f43f5e 0 18px, #fbbf24 18px 36px, #22d3ee 36px 54px, #7c3aed 54px 72px)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Glass, blur behind"
+            design: { font_size: 17px, font_weight: "700", color: "#ffffff" }
+          - type: text
+            text: "The same track with glass_blur on: what is behind it blurs."
+            design: { font_size: 12px, color: "#ffffff" }
+  - id: s0
+    padding: 18px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Flat glass"
+            design: { font_size: 11px, font_weight: "700", color: "#ffffff", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: glass
+            track_thickness: 28
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#ffffff"
+  - id: s1
+    padding: 16px 0 0
+    columns:
+      - gap: 8px
+        modules:
+          - type: text
+            text: "Blur behind"
+            design: { font_size: 11px, font_weight: "700", color: "#ffffff", text_transform: uppercase, letter_spacing: 1px }
+          - type: slider
+            entity: light.living_room
+            track_style: glass
+            track_thickness: 28
+            thumb: pill
+            thumb_size: 28
+            value_position: track
+            slider_color: "#ffffff"
+            glass_blur: true

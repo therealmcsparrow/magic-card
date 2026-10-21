@@ -29,7 +29,7 @@ import {
   renderUnitField,
 } from '../../utils/form-utils';
 import { renderConditionsList } from './conditions-list';
-import { readAnimations } from '../../utils/animation';
+import { readAnimations } from '../../anim-studio/entries';
 import { fieldReset } from '../components/field-reset';
 import { animationDocList } from '../../utils/custom-animations';
 import { dropOwnAnimation, setAnimationHidden } from '../state/template-sync';
@@ -779,7 +779,7 @@ export function renderCardFlows(
   `;
 }
 
-/** Mockup: the card's Conditions tab holds Conditional appearance, then Display conditions. */
+/** The card's Conditions tab holds Conditional appearance, then Display conditions. */
 export function renderCardConditions(
   config: MagicCardConfig,
   writeDisplay: (next: DisplayConfig) => void,

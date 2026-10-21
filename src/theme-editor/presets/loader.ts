@@ -3,7 +3,7 @@ import type { ThemePresetLibrary } from '../../contracts/theme-editor';
 import { PRESETS_BUILD } from './build';
 
 /*
- * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js (ADR 0014), loaded
+ * The 45 presets and their picker are a lazy chunk, magic-card-theme-presets.js, loaded
  * next to the editor bundle (public path: ../public-path.ts) when the create dialog first opens.
  * A load that takes over 8 s counts as failed (a stalled request would hang for minutes).
  * Memoised while pending and once loaded; a failure or timeout clears the memo so "Try again" can
@@ -26,7 +26,10 @@ const real: Importer = () => {
   if (tries++ && typeof __webpack_require__ !== 'undefined') {
     const u = __webpack_require__.u;
     const n = tries;
-    __webpack_require__.u = (id) => `${u(id)}&r=${n}`;
+    __webpack_require__.u = (id) => {
+      const url = u(id);
+      return `${url}${url.includes('?') ? '&' : '?'}r=${n}`;
+    };
   }
   return import(/* webpackChunkName: "theme-presets" */ './chunk');
 };

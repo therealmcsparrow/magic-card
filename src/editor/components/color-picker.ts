@@ -6,7 +6,7 @@ import { renderPickerWindow, PickerWindowController } from './picker-parts';
 import { parseEntityColor, attrRgb } from '../../utils/entity-color';
 import { ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { parseGradient } from '../../utils/gradient';
-import { safeColor } from '../../utils/animation';
+import { safeColor } from '../../utils/safe-css';
 import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
 import './unit-field';
 import { t } from '../i18n';

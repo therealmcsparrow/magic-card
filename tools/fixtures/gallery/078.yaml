@@ -1,0 +1,168 @@
+# Herb garden: two planter boxes, one per irrigation zone. Tap a box to start or stop its water.
+# A watering zone gets falling drops and swaying leaves, an idle zone stays still. The bar at the bottom is the soil moisture.
+# Entities: switch.zone_lawn, switch.zone_beds, sensor.soil_moisture
+# gallery: width=380 record=4 stage=linear-gradient(135deg,#0c1508,#1b2c13)
+type: custom:magic-card
+name: Herb garden
+background: "linear-gradient(170deg, #1c3014 0%, #121f0c 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0,0,0,0.5)"
+rows:
+  - id: head
+    padding: 0 0 12px
+    columns:
+      - modules:
+          - type: text
+            text: Herb garden
+            design: { font_size: 22px, font_weight: "700", color: "#f1f6e8", font_family: "Georgia, 'Iowan Old Style', serif" }
+  - id: beds
+    layout: "1-1"
+    gap: 12px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 220px
+              padding: 14px 8px
+              box_sizing: border-box
+              border_radius: 20px
+              overflow: hidden
+              background_color: "rgba(255,255,255,0.05)"
+              border: "1px solid rgba(190,220,150,0.18)"
+              animations:
+                - { id: drops, preset: rain-fall, trigger: entity_on, trigger_entity: switch.zone_lawn, color: "#5ec8ff", strength: 90, intensity: 10, duration: 1s }
+              conditional:
+                - id: watering
+                  name: Watering
+                  conditions: [{ type: state, entity: switch.zone_lawn, state: "on" }]
+                  design: { background_color: "rgba(94,200,255,0.1)", border: "1px solid rgba(94,200,255,0.45)" }
+            actions:
+              tap_action: { action: toggle, entity: switch.zone_lawn }
+            modules:
+              - type: icon
+                entity: switch.zone_lawn
+                icon: svg
+                svg: '<svg viewBox="0 0 120 110"><path d="M38 74 V44 M60 74 V30 M82 74 V48" stroke="#4e9a38" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M38 52 C26 48 24 36 26 32 C36 34 40 44 38 52 Z" fill="#6fbf4b" transform="rotate(-10 38 52)"/><path d="M38 60 C26 56 24 44 26 40 C36 42 40 52 38 60 Z" fill="#6fbf4b" transform="rotate(35 38 60)"/><path d="M60 38 C48 34 46 22 48 18 C58 20 62 30 60 38 Z" fill="#6fbf4b" transform="rotate(-5 60 38)"/><path d="M60 50 C48 46 46 34 48 30 C58 32 62 42 60 50 Z" fill="#6fbf4b" transform="rotate(40 60 50)"/><path d="M60 60 C48 56 46 44 48 40 C58 42 62 52 60 60 Z" fill="#6fbf4b" transform="rotate(-40 60 60)"/><path d="M82 56 C70 52 68 40 70 36 C80 38 84 48 82 56 Z" fill="#6fbf4b" transform="rotate(10 82 56)"/><path d="M82 64 C70 60 68 48 70 44 C80 46 84 56 82 64 Z" fill="#6fbf4b" transform="rotate(-35 82 64)"/><ellipse cx="60" cy="76" rx="50" ry="6" fill="#2a1d12"/><path d="M10 76 H110 L102 104 H18 Z" fill="#8a5a2b"/><path d="M10 76 H110 V82 H10 Z" fill="#a8723a"/><path d="M26 88 H94 M24 96 H96" stroke="#6a421c" stroke-width="2" fill="none"/></svg>'
+                size: 112px
+                design:
+                  color: "#6fbf4b"
+                  animations: [{ id: sway, preset: sway, target: icon, trigger: entity_on, intensity: 3, duration: 4s }]
+              - type: text
+                text: Kitchen herbs
+                design: { text_align: center, font_size: 17px, font_weight: "700", color: "#f1f6e8", margin_top: 8px, font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design: { margin_top: 10px }
+                display: { conditions: [{ type: state, entity: switch.zone_lawn, state: "on" }] }
+                modules:
+                  - type: icon
+                    icon: mdi:water
+                    size: 14px
+                    design: { color: "#5ec8ff" }
+                  - type: text
+                    text: Watering
+                    design: { font_size: 12px, font_weight: "800", color: "#a8e2ff", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design: { margin_top: 10px }
+                display: { conditions: [{ type: state, entity: switch.zone_lawn, state: "off" }] }
+                modules:
+                  - type: icon
+                    icon: mdi:water-off-outline
+                    size: 14px
+                    design: { color: "#a9b79a" }
+                  - type: text
+                    text: Idle
+                    design: { font_size: 12px, font_weight: "800", color: "#bccaa9", text_transform: uppercase, letter_spacing: 1.2px }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              height: 220px
+              padding: 14px 8px
+              box_sizing: border-box
+              border_radius: 20px
+              overflow: hidden
+              background_color: "rgba(255,255,255,0.05)"
+              border: "1px solid rgba(190,220,150,0.18)"
+              animations:
+                - { id: drops, preset: rain-fall, trigger: entity_on, trigger_entity: switch.zone_beds, color: "#5ec8ff", strength: 90, intensity: 10, duration: 1s }
+              conditional:
+                - id: watering
+                  name: Watering
+                  conditions: [{ type: state, entity: switch.zone_beds, state: "on" }]
+                  design: { background_color: "rgba(94,200,255,0.1)", border: "1px solid rgba(94,200,255,0.45)" }
+            actions:
+              tap_action: { action: toggle, entity: switch.zone_beds }
+            modules:
+              - type: icon
+                entity: switch.zone_beds
+                icon: svg
+                svg: '<svg viewBox="0 0 120 110"><path d="M38 74 V44 M60 74 V30 M82 74 V48" stroke="#4e9a38" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M38 52 C26 48 24 36 26 32 C36 34 40 44 38 52 Z" fill="#6fbf4b" transform="rotate(-10 38 52)"/><path d="M38 60 C26 56 24 44 26 40 C36 42 40 52 38 60 Z" fill="#6fbf4b" transform="rotate(35 38 60)"/><path d="M60 38 C48 34 46 22 48 18 C58 20 62 30 60 38 Z" fill="#6fbf4b" transform="rotate(-5 60 38)"/><path d="M60 50 C48 46 46 34 48 30 C58 32 62 42 60 50 Z" fill="#6fbf4b" transform="rotate(40 60 50)"/><path d="M60 60 C48 56 46 44 48 40 C58 42 62 52 60 60 Z" fill="#6fbf4b" transform="rotate(-40 60 60)"/><path d="M82 56 C70 52 68 40 70 36 C80 38 84 48 82 56 Z" fill="#6fbf4b" transform="rotate(10 82 56)"/><path d="M82 64 C70 60 68 48 70 44 C80 46 84 56 82 64 Z" fill="#6fbf4b" transform="rotate(-35 82 64)"/><ellipse cx="60" cy="76" rx="50" ry="6" fill="#2a1d12"/><path d="M10 76 H110 L102 104 H18 Z" fill="#8a5a2b"/><path d="M10 76 H110 V82 H10 Z" fill="#a8723a"/><path d="M26 88 H94 M24 96 H96" stroke="#6a421c" stroke-width="2" fill="none"/></svg>'
+                size: 112px
+                design:
+                  color: "#6fbf4b"
+                  animations: [{ id: sway, preset: sway, target: icon, trigger: entity_on, intensity: 3, duration: 4s }]
+              - type: text
+                text: Window pots
+                design: { text_align: center, font_size: 17px, font_weight: "700", color: "#f1f6e8", margin_top: 8px, font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design: { margin_top: 10px }
+                display: { conditions: [{ type: state, entity: switch.zone_beds, state: "on" }] }
+                modules:
+                  - type: icon
+                    icon: mdi:water
+                    size: 14px
+                    design: { color: "#5ec8ff" }
+                  - type: text
+                    text: Watering
+                    design: { font_size: 12px, font_weight: "800", color: "#a8e2ff", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: horizontal
+                gap: 6px
+                align: center
+                justify: center
+                design: { margin_top: 10px }
+                display: { conditions: [{ type: state, entity: switch.zone_beds, state: "off" }] }
+                modules:
+                  - type: icon
+                    icon: mdi:water-off-outline
+                    size: 14px
+                    design: { color: "#a9b79a" }
+                  - type: text
+                    text: Idle
+                    design: { font_size: 12px, font_weight: "800", color: "#bccaa9", text_transform: uppercase, letter_spacing: 1.2px }
+  - id: soil
+    padding: 16px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: horizontal
+            justify: space-between
+            align: center
+            modules:
+              - type: text
+                text: Soil moisture
+                design: { font_size: 12px, font_weight: "700", color: "#bccaa9", text_transform: uppercase, letter_spacing: 1.2px }
+              - type: text
+                use_entity: true
+                entity: sensor.soil_moisture
+                design: { font_size: 14px, font_weight: "800", color: "#f1f6e8" }
+          - type: bar
+            entity: sensor.soil_moisture
+            min: 0
+            max: 100
+            bar_height: 8px
+            show_value: false
+            bar_color: "#5ec8ff"
+            bar_background: "#2a1d12"

@@ -1,7 +1,7 @@
 import { MagicCardConfig, RowConfig, ColumnConfig, CardModule, ModuleType } from '../types';
 import { ModuleRegistry } from '../modules/module-registry';
 import { t } from '../card/i18n';
-import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack';
+import { MAX_BACKGROUND_LAYERS } from '../contracts/bg-stack.needs';
 
 const PLACEMENTS = ['flow', 'background', 'overlay'];
 const LAYER_TYPES = ['image', 'gradient', 'pattern', 'color'];
@@ -17,7 +17,7 @@ function layerWarnings(c: Record<string, unknown>): string[] {
     if (!Array.isArray(bl)) w.push(t('background_layers must be a list'));
     else {
       if (bl.length > MAX_BACKGROUND_LAYERS) w.push(t('background_layers: only the first {max} layers are used', { max: MAX_BACKGROUND_LAYERS }));
-      // proj.M3: never walk more than the cap
+      // never walk more than the cap
       bl.slice(0, MAX_BACKGROUND_LAYERS).forEach((l, i) => {
         if (!isObj(l) || !LAYER_TYPES.includes(String((l as Record<string, unknown>).type))) w.push(t('background_layers {index}: unknown layer type', { index: i }));
       });

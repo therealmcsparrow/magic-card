@@ -1,0 +1,78 @@
+# Sunrise alarm: the sun climbs over the horizon in a slowly shifting dawn gradient, with a countdown to the wake-up light.
+# The sun's climb is a small keyframes animation stored in the card.
+# Entities: light.bedroom, input_boolean.night_mode
+# gallery: width=380 record=6 stage=linear-gradient(135deg,#fde7d4,#fbcfe8)
+type: custom:magic-card
+name: Sunrise alarm
+background: "#ffffff"
+border_radius: 28px
+padding: 0px
+box_shadow: "0 18px 40px rgba(190, 24, 93, 0.18)"
+custom_animations:
+  sun-climb:
+    name: Sun climb
+    kind: keyframes
+    duration: 6
+    easing: ease-out
+    iterations: infinite
+    keyframes:
+      - { at: 0, transform: { y: 60, scale: 0.85 }, opacity: 0 }
+      - { at: 15, transform: { y: 44, scale: 0.9 }, opacity: 1 }
+      - { at: 80, transform: { y: -4, scale: 1 }, opacity: 1 }
+      - { at: 100, transform: { y: -6, scale: 1 }, opacity: 0 }
+rows:
+  - id: sky
+    padding: 26px 22px 0
+    design:
+      height: 176px
+      background: "linear-gradient(180deg, #7c3aed 0%, #db2777 38%, #fb923c 68%, #fde68a 85%, #431407 85%, #1c0a03 100%)"
+      animations:
+        - { id: flow, preset: gradient-flow, strength: 50 }
+        - { id: rays, preset: sun-rays, color: "#fef3c7", strength: 30, intensity: 8 }
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:white-balance-sunny
+            size: 64px
+            design:
+              color: "#fef08a"
+              display: flex
+              justify_content: center
+              filter: "drop-shadow(0 0 20px rgba(254,240,138,0.9))"
+              animations:
+                - { id: climb, preset: custom:sun-climb, target: icon }
+  - id: info
+    padding: 18px 22px 22px
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Wake-up light in 20 min
+            design: { font_size: 13px, font_weight: "700", color: "#be185d" }
+          - type: text
+            text: "06:40"
+            design: { font_size: 40px, font_weight: "800", color: "#1f2937", letter_spacing: -1.5px, line_height: "1.05" }
+          - type: text
+            text: Bedroom · 30 min fade to 80%
+            design: { font_size: 12px, color: "#6b7280" }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:alarm
+            size: 26px
+            design:
+              color: "#ffffff"
+              width: 56px
+              height: 56px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background: "linear-gradient(135deg, #f472b6, #fb923c)"
+              box_shadow: "0 10px 22px rgba(244,114,182,0.4)"
+              animations:
+                - { id: wiggle, preset: wiggle, target: icon, intensity: 12 }
+            actions:
+              tap_action: { action: toggle, entity: input_boolean.night_mode }

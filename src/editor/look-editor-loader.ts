@@ -1,11 +1,11 @@
 import { BUILD_VERSION } from '../utils/build-version';
 
 /*
- * The card editor's loader of the look-editor chunk (magic-card-look-editor.js, contract look-editor 1.0.0, ADR 0037).
+ * The card editor's loader of the look-editor chunk (magic-card-look-editor.js, contract look-editor 1.0.0).
  * `loadLookEditor()` resolves true once the chunk matches this build and has defined <mc-flow-look-editor> and
  * <mc-slider-look-editor>; false on an import failure, a timeout, a build mismatch (a cached older file) or an install
  * error. One promise is shared while it is pending and after success; a failure clears it, so the "Try again" button of
- * the Look host loads again (webpack.S3: a user action retries, nothing loops by itself). Hosts treat false as "show the
+ * the Look host loads again (a user action retries, nothing loops by itself). Hosts treat false as "show the
  * fallback fields", never as an error that blocks editing.
  */
 

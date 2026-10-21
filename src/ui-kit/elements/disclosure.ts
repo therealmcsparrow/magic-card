@@ -4,7 +4,7 @@ import { UI_KIT_CONTRACT_REVISION } from '../../contracts/ui-kit';
 import { kitDisclosureElementCss } from '../css/elements';
 
 /*
- * <mc-ui-disclosure> (contract ui-kit 1.1.0 r5): a collapsible section. The heading wraps one button
+ * <mc-ui-disclosure> (contract ui-kit 1.1.0): a collapsible section. The heading wraps one button
  * (aria-expanded, aria-controls); the summary is inside the button, so it is part of the accessible name. `open` is
  * settable (an inspector that owns the state sets it again after 'mc-toggle'); the body stays in the DOM, hidden.
  * Holds no strings: heading and summary come from the caller.

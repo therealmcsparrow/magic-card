@@ -2,8 +2,9 @@ import { toCubicSubpaths, type Cubic, type Pt } from '../path/core';
 import { sanitizeSvg } from '../icons/svg-sanitize';
 import { EASINGS, getAnimationPreset } from '../utils/animation-presets';
 import type { CompiledV2 } from './compile-v2';
-import type { ParticleSlotV2, ParticlesApplyCtx, ParticlesCompiler, ParticlesModule, ParticlesSpecV2 } from '../contracts/particles-v2';
+import type { ParticleSlotV2, ParticlesApplyCtx, ParticlesSpecV2 } from '../contracts/particles-v2';
 import { presetFrames } from './css-keyframes';
+import { animHooks } from '../utils/anim-hooks';
 import {
   customRefId,
   docNeedsParticles,
@@ -524,38 +525,33 @@ const cache = new WeakMap<AnimationDoc, CompiledAnimation>();
 export function compileAnimationDoc(doc: AnimationDoc, opts: CompileOptions = {}): CompiledAnimation {
   const sim = !opts.reducedMotion && docNeedsParticles(doc);
   let base = (sim && compileSim(doc)) || compileBase(doc, opts);
-  if (sim && !particlesCompiler) base = { ...base, needsParticles: true };
+  if (sim && !animHooks.particles) base = { ...base, needsParticles: true };
   // v2 data depend on the lookup (clip recursion guard), so they are added per call, never cached
-  return v2Compiler && docNeedsRuntime(doc) ? { ...base, v2: v2Compiler(doc, opts) } : base;
+  return animHooks.v2 && docNeedsRuntime(doc) ? { ...base, v2: animHooks.v2(doc, opts) } : base;
 }
 
-let particlesCompiler: ParticlesCompiler | undefined;
-let checkSim: ParticlesModule['validateSim'] | undefined;
 let simCache = new WeakMap<AnimationDoc, CompiledAnimation>();
+let simEpoch = 0; // animHooks.epoch of simCache: a new compiler or check empties it
 
-/**
- * Turn on particles v2 (particles-v2 ParticlesCompiler; the card's particles loader and the studio
- * call this). `check` re-checks `sim` lenient (documents validated before the chunk arrived keep it
- * as stored); without it nothing compiles. Until then a v2 document compiles its v1 fallback and flags `needsParticles`.
- */
-export function useParticlesCompiler(fn: ParticlesCompiler | undefined, check?: ParticlesModule['validateSim']): void {
-  particlesCompiler = fn;
-  checkSim = check;
-  simCache = new WeakMap();
-}
+// the slots live in the entry (src/utils/anim-hooks.ts); the names stay available here
+export { markSimFailed, useParticlesCompiler, useV2Compiler } from '../utils/anim-hooks';
 
 /** A v2 particles document through the chunk's compiler; undefined (the v1 fallback plays) when its `sim` is unusable. */
 function compileSim(doc: AnimationDoc): CompiledAnimation | undefined {
-  if (failedSims.has(doc.id)) return undefined;
+  if (animHooks.failedSims.has(doc.id)) return undefined;
+  if (simEpoch !== animHooks.epoch) {
+    simCache = new WeakMap();
+    simEpoch = animHooks.epoch;
+  }
   let out = simCache.get(doc);
   const p = doc.particles!;
   try {
-    const sim = particlesCompiler && !out && checkSim?.(p.sim, 'lenient', { count: p.count, layer: p.layer }).sim;
+    const sim = animHooks.particles && !out && animHooks.checkSim?.(p.sim, 'lenient', { count: p.count, layer: p.layer }).sim;
     if (sim) {
       const spec: ParticlesSpecV2 = { ...p, sim };
       const period = doc.duration / p.speed;
       // aspect 0: the slot pool only; the chunk's apply bakes once the layer is measured
-      const v = particlesCompiler!(doc.id, spec, period, { aspect: 0 });
+      const v = animHooks.particles!(doc.id, spec, period, { aspect: 0 });
       const o = v.other;
       simCache.set(
         doc,
@@ -571,31 +567,13 @@ ${o.css}` : v.css,
       );
     }
   } catch {
-    failedSims.add(doc.id);
+    animHooks.failedSims.add(doc.id);
   }
   return out;
 }
 
-const failedSims = new Set<string>();
-
-/**
- * The particles chunk could not set up a layer of document `id` (the card saw apply fail): until the
- * page reloads the document compiles its v1 fallback (FALLBACK_DIRECTION, first own shape), as when the
- * chunk cannot load. A compiler that throws does the same.
- */
-export const particlesFailed = (id: string): void => void failedSims.add(id);
-
 /** Compiles a document's v2 data (compile-v2.ts compileV2, registered when that file loads). */
 export type V2Compiler = (doc: AnimationDoc, opts: CompileOptions) => CompiledV2;
-let v2Compiler: V2Compiler | undefined;
-
-/**
- * Turn on `CompiledAnimation.v2` (compile-v2.ts calls this when it loads: the studio bundle and the
- * card's lazy runtime chunk). Until then, documents compile to their base animation only.
- */
-export function useV2Compiler(fn: V2Compiler | undefined): void {
-  v2Compiler = fn;
-}
 
 function compileBase(doc: AnimationDoc, opts: CompileOptions): CompiledAnimation {
   if (opts.reducedMotion) return { kind: doc.kind, name: '', css: '', reduced: true, ...(doc.kind === 'sequence' ? { schedule: { steps: [], total: 0, loop: false, target: doc.target, skipped: [] } } : {}) };

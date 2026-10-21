@@ -1,4 +1,4 @@
-/** A floor-safe paint: colour plus a separate opacity (never color-mix, browsers.M1/M3). */
+/** A floor-safe paint: colour plus a separate opacity (never color-mix). */
 export interface Paint {
   paint: string;
   opacity: number;

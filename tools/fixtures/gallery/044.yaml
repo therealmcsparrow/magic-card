@@ -1,0 +1,106 @@
+# Cooling: the air conditioner shows falling snow on its icon while it cools, the fan spins at its own speed, and wind lines drift through the card.
+# Both icons use the Auto device animation, so they react to the entities by themselves.
+# Entities: climate.bedroom, fan.bedroom
+# gallery: width=380 record=4 stage=linear-gradient(135deg,#dff3ff,#c7e6fb)
+type: custom:magic-card
+name: Bedroom cooling
+background: "linear-gradient(160deg, #ffffff 0%, #eef8ff 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 16px 36px rgba(14, 116, 144, 0.18)"
+animations:
+  - { id: wind, preset: wind-lines, color: "#38bdf8", strength: 35, intensity: 5 }
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Bedroom
+            design: { font_size: 20px, font_weight: "800", color: "#0c4a6e" }
+          - type: horizontal
+            gap: 4px
+            align: center
+            modules:
+              - type: text
+                use_entity: true
+                entity: climate.bedroom
+                attribute: current_temperature
+                design: { font_size: 13px, font_weight: "700", color: "#0369a1" }
+              - type: icon
+                icon: mdi:arrow-right-thin
+                size: 16px
+                design: { color: "#7dd3fc" }
+              - type: text
+                use_entity: true
+                entity: climate.bedroom
+                attribute: temperature
+                design: { font_size: 13px, font_weight: "700", color: "#0369a1" }
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Cooling
+            design: { font_size: 12px, font_weight: "800", color: "#ffffff", padding: 5px 12px, border_radius: 999px, background: "linear-gradient(135deg, #38bdf8, #0284c7)" }
+  - id: tiles
+    layout: "1-1"
+    gap: 12px
+    padding: 16px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 10px
+            design: &tile
+              padding: 16px
+              border_radius: 22px
+              background: "linear-gradient(160deg, #e0f2fe, #bae6fd)"
+            actions:
+              tap_action: { action: more-info, entity: climate.bedroom }
+            modules:
+              - type: icon
+                entity: climate.bedroom
+                icon: mdi:air-conditioner
+                size: 40px
+                icon_fx:
+                  device: auto
+                  colors: { style: duotone, primary: "#0284c7", secondary: "#7dd3fc" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Air conditioner
+                    design: { font_size: 14px, font_weight: "800", color: "#0c4a6e" }
+                  - type: text
+                    use_entity: true
+                    entity: climate.bedroom
+                    attribute: fan_mode
+                    design: { font_size: 12px, color: "#0369a1" }
+      - modules:
+          - type: vertical
+            gap: 10px
+            design:
+              padding: 16px
+              border_radius: 22px
+              background: "linear-gradient(160deg, #ecfeff, #cffafe)"
+            actions:
+              tap_action: { action: toggle, entity: fan.bedroom }
+            modules:
+              - type: icon
+                entity: fan.bedroom
+                icon: mdi:fan
+                size: 40px
+                icon_fx:
+                  device: auto
+                  colors: { style: gradient, gradient: ["#06b6d4", "#0ea5e9"], angle: 45 }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Ceiling fan
+                    design: { font_size: 14px, font_weight: "800", color: "#164e63" }
+                  - type: text
+                    use_entity: true
+                    entity: fan.bedroom
+                    attribute: percentage
+                    design: { font_size: 12px, color: "#0e7490" }

@@ -30,7 +30,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -41,20 +41,154 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the entry graph step reads the base commit (push: the commit before, PR: the base branch)
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - name: Third-party notices up to date
         run: npm run notices -- --check
+      - name: Committed .br and .gz copies unpack to the committed .js (before the build rewrites them)
+        run: node tools/check-dist-size.mjs --committed
       - run: npm run build
+      - name: Entry graph (debt list only shrinks)
+        # the base debt list is read with git show <base>:tools/entry-graph.json. Base: the commit before the push, or the PR base branch,
+        # the same as the size-caps job. A base that does not resolve fails (--require-base); only a new branch (no commit before) has none.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          node tools/check-entry-graph.mjs --self-test
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): debt growth not compared"
+            node tools/check-entry-graph.mjs
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif ! git cat-file -e "$base:tools/entry-graph.json"; then
+            # bootstrap: the base commit predates the debt file, so there is no list to compare with. Visible, and only this case.
+            echo "::notice::base $base has no tools/entry-graph.json yet (bootstrap): debt growth not compared"
+            node tools/check-entry-graph.mjs
+          else
+            ENTRY_GRAPH_BASE="$base" node tools/check-entry-graph.mjs --require-base
+          fi
+      - name: SVG sanitiser sits in the chunk of every SVG sink
+        run: |
+          node tools/check-svg-sinks.mjs --self-test
+          node tools/check-svg-sinks.mjs
+      - name: No module with state sits in two chunks of the card bundle
+        run: |
+          npm run dups:selftest
+          npm run dups
       - name: Dist size budget
         run: npm run size
+      - name: Manifest matches dist (.js names only)
+        run: |
+          npm run manifest:selftest
+          npm run manifest
+      - name: Emitted syntax is ES2021 and uses no post-Chromium-85 built-in
+        # The debt file (tools/es-syntax-debt.json, editor side only) may not grow against the base: the commit before the push, or the PR
+        # base branch, the same as the entry graph step. A base that does not resolve fails (--require-base); only a new branch (no commit
+        # before) and a base that predates the debt file (bootstrap) skip the growth check, with a notice.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          npm run syntax:selftest
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): es-syntax debt growth not compared"
+            node tools/check-es-syntax.mjs --no-base
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif ! git cat-file -e "$base:tools/es-syntax-debt.json"; then
+            echo "::notice::base $base has no tools/es-syntax-debt.json yet (bootstrap): debt growth not compared"
+            node tools/check-es-syntax.mjs --no-base
+          else
+            ES_SYNTAX_BASE="$base" node tools/check-es-syntax.mjs --require-base
+          fi
+      - name: Size gate self-test (raised cap, unlisted file, other zlib)
+        run: npm run size:selftest
       - name: Committed dist matches the build
-        # a warning here; the release workflow fails on it. Rebuild and commit dist/ in the release commit.
-        run: git diff --quiet -- dist src/version.ts || echo "::warning::dist/ or src/version.ts differs from a fresh build. Run npm run build and commit dist/ before tagging a release."
+        # This repo rebuilds dist/ only in the release "Build dist" commit, so source commits leave the committed dist stale on purpose.
+        # The match is therefore required only when the push or PR changes something under dist/ (diff against the same base as the entry
+        # graph step; no base or an all-zero before counts as changed). A swapped .br/.gz or an unreviewed dist change still fails: the .br/.gz
+        # copies are checked against the committed .js before the build, and a changed dist/ must equal a fresh build. release.yml stays strict.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): treating dist/ as changed"
+            changed=1
+          elif ! git cat-file -e "$base^{commit}"; then
+            echo "::error::base $base does not resolve to a commit (shallow checkout or wrong ref)"
+            exit 1
+          elif git diff --quiet "$base" HEAD -- dist; then
+            changed=0
+          else
+            changed=1
+          fi
+          if [ "$changed" = "0" ]; then
+            echo "::notice::this change leaves dist/ untouched: committed dist is stale until the release build, match not required"
+            exit 0
+          fi
+          git diff --stat "$base" HEAD -- dist 2>/dev/null || true
+          if ! git diff --quiet -- dist src/version.ts || [ -n "$(git status --porcelain -- dist src/version.ts)" ]; then
+            git status --short -- dist src/version.ts
+            echo "::error::dist/ changed in this push or PR but differs from a fresh build (or the build made a file that is not committed). Run npm run build and commit dist/ with the change."
+            exit 1
+          fi
+
+  size-caps:
+    name: Size caps not raised
+    # fails a raised cap or ceiling in tools/size-caps.json that has no approved_raises entry. Needs git history, not dependencies.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Compare tools/size-caps.json with the base branch
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base="origin/$BASE_BRANCH"
+          else
+            base="$PUSH_BEFORE"
+          fi
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            echo "::notice::no base commit (new branch): raises not compared"
+            node tools/check-dist-size.mjs --caps-only
+          else
+            node tools/check-dist-size.mjs --caps-only --base-ref "$base" --require-base
+          fi
 
   audit:
     name: Dependency audit (production)
@@ -65,5 +199,5 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version-file: .nvmrc
       - run: npm audit --omit=dev --audit-level=high

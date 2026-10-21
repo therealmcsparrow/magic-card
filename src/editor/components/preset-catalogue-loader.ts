@@ -3,7 +3,7 @@ import { sameBuild } from '../../utils/build-version';
 
 /*
  * The card editor's loader of the preset catalogue chunk (magic-card-preset-catalogue.js, contract
- * preset-catalogue 1.1.0, ADR 0005), called when the Animations list connects. Same chunk name as
+ * preset-catalogue 1.1.0), called when the Animations list connects. Same chunk name as
  * the studio's loader, so both bundles share one file. One shared promise; a failure resolves
  * undefined (console.warn) and the next call tries again.
  */

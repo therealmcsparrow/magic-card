@@ -1,24 +1,17 @@
 import { html, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, VideoBgModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { lm } from '../../i18n/labels/mark';
 
 /**
  * Video background: plays behind the other modules of its column or layout (row, column, tab,
  * horizontal / vertical layout). On its own in a column it shows at its own size.
  */
 class VideoBgModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'video-bg',
-    name: lm('Video background'),
-    description: lm('Video playing behind the other modules of its column or layout'),
-    category: 'advanced',
-    icon: 'mdi:video-outline',
-  };
+  readonly metadata: LazyStubMetadata = { type: 'video-bg' };
 
   createDefault(): VideoBgModuleConfig {
     return {

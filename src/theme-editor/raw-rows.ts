@@ -51,7 +51,7 @@ export function rawValueError(name: string, value: string): string | null {
 }
 
 /**
- * <mcte-raw-rows>: "Add any variable" (design 5.5, 16.7). Name accepts a leading `--` and a pasted
+ * <mcte-raw-rows>: "Add any variable". Name accepts a leading `--` and a pasted
  * block of `key: value` lines. Event: `mcte-add` { entries } (the parent writes them to the scope).
  * `existing` are the names the scope already holds (the button then reads "Update").
  */

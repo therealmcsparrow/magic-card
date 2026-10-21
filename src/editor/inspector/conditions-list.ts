@@ -87,7 +87,7 @@ export function renderMatchSeg(
   `;
 }
 
-/** Mockup: Operator (equals / not equals) + value, stored as `state` or `state_not`. */
+/** Operator (equals / not equals) + value, stored as `state` or `state_not`. */
 function renderStateMatch(
   cond: DisplayCondition,
   update: (patch: Partial<DisplayCondition>) => void,

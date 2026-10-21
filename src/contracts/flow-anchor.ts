@@ -1,28 +1,29 @@
 
 /*
- * Contract: flow anchors. Version 1.2.0 (Architect-owned). ADR 0039. Task flow-anchors-polish.
+ * Contract: flow anchors. Version 1.2.0.
  *
- * ── 1.2.0 (2026-10-20, task beta4-nits): narrower wide rule ──
+ * FLOW_END_SELECTOR lives in src/contracts/flow-anchor.needs.ts, the only file of this contract the
+ * entry imports; this file re-exports it.
+ *
+ * ── Wide rule ──
  * A swarm key (`spacing_mode: random`, `size_variation` above 0, `shape_alternate`) makes a look wide
  * only when the flow has travelling shapes (not `motion: pulse`, not `dots: 0` without a spacing) and
- * the `shape_alternate` value is a known shape. A beta.4 flow with such a key and no travelling shapes
- * defaulted to `box` and now defaults to `icon`. The unused type export FlowAnchorSide is removed (no
- * users in the repo).
+ * the `shape_alternate` value is a known shape. A flow with such a key and no travelling shapes defaults
+ * to `icon`.
  *
  * A flow end attaches to the module's main visual (its icon, picture or dial) by default, and to
- * the module's box only when the YAML says `box` or the module has no main visual (CEO Brief Gate
- * 2026-10-20).
+ * the module's box only when the YAML says `box` or the module has no main visual.
  *
- * ── 1.1.0 (CEO Ship Gate 2026-10-20): the default depends on the look ──
+ * ── The default depends on the look ──
  * When from_anchor / to_anchor is NOT set (or unknown), a flow with a WIDE look defaults to `box`;
  * a thin look keeps `icon`. Wide = isWideFlowLook(flow): line_style tube, cable, neon or zigzag,
- * or a swarm: `spacing_mode: random`, `size_variation` above 0, or `shape_alternate` set (Lead
- * decision, Fix round 1). `electric`, `spacing` and `motion` do not count, and neither does a swarm
+ * or a swarm: `spacing_mode: random`, `size_variation` above 0, or `shape_alternate` set.
+ * `electric`, `spacing` and `motion` do not count, and neither does a swarm
  * key at its default value, an unknown `shape_alternate` value (only the shape list counts) or a
  * swarm key on a flow with no travelling shapes (`motion: pulse`, or no shapes: `dots` 0 without a spacing). The rule reads the flow's YAML keys, so a preset that sets a wide look is wide, and
  * removing the look removes the rule. An explicit `icon` or `box` always wins. The editor shows the
  * effective default in "Attach to"; it writes `icon` only when that differs from the look default
- * and removes the key when the pick equals the look default. Everything below is unchanged.
+ * and removes the key when the pick equals the look default.
  *
  * The predicate lives in its own file, src/contracts/flow-anchor-wide.ts (isWideFlowLook), so that it
  * stays out of magic-card.js: the flow-look chunk calls it and puts the result in FlowLookResolved.wide.
@@ -67,7 +68,7 @@
  *     reaches the wrapper (the wrapper is positioned on a card with flows, flows-css.ts). Size =
  *     offsetWidth / offsetHeight. Rect = { B.x + ox * k, B.y + oy * k, w * k, h * k }. Transforms on
  *     V, on the wrapper (tap scale, module animations) and in between never enter offsets, so an
- *     animated icon (spin, bounce, Living rig, tap scale) gives a still line end (AC5).
+ *     animated icon (spin, bounce, Living rig, tap scale) gives a still line end.
  *     The chain ends before the wrapper (offsetParent null, display: contents, fixed): fall back to B.
  *  2. SVG root V (no offsetParent: gauge dial, weather's animated icon): centre from the screen box
  *     relative to the wrapper's screen box, divided by the wrapper's screen scale
@@ -77,22 +78,22 @@
  *     animation on V itself (weather icon with an icon-target bounce) can leave the end off by its
  *     travel until the next measure. Accepted and documented; never jitters (no per-frame read).
  *  3. Rect = intersect(that, B). Empty, or zero width / height: no anchor rect (box used).
- * Anchor rects have no `shape` (AC4: an icon-anchored end of a shaped module sits on the icon box).
+ * Anchor rects have no `shape` (an icon-anchored end of a shaped module sits on the icon box).
  * mc-flows keeps them in a second map keyed by module id beside the box map, includes them in the
  * change key (re-render only when one changed), and adds each V to its ResizeObserver set so an
- * icon that resizes by layout moves the line in the same frame (AC6). Existing triggers (content and
+ * icon that resizes by layout moves the line in the same frame. Existing triggers (content and
  * wrapper resizes, MutationObserver, scroll / transitionend / animationend) are unchanged.
  *
  * ── Drawing ──
  * End rect = box when `fromBox` / `toBox`, else the anchor rect when there is one, else the box.
  * anchorSides, spreadAnchors and flowPath take the end rects unchanged (sides, `auto`, spreading and
- * ANCHOR_OFFSET apply to the icon box, AC4); spreadAnchors groups by end key (`id` for a box end,
+ * ANCHOR_OFFSET apply to the icon box); spreadAnchors groups by end key (`id` for a box end,
  * `id` plus a suffix for an anchor end) so icon-anchored and box-anchored ends spread separately.
- * Layers, reduced motion, pause, caps and arrival effects follow from the geometry and are untouched
- * (AC7, AC8). A module with its own opaque background covers a `layer: back` line up to its icon,
- * caps included: docs say "use layer: front" (AC7).
+ * Layers, reduced motion, pause, caps and arrival effects follow from the geometry and are untouched.
+ * A module with its own opaque background covers a `layer: back` line up to its icon,
+ * caps included: docs say "use layer: front".
  *
- * ── Label obstacles (brief AC9) ──
+ * ── Label obstacles ──
  * placeLabel() is unchanged. Its obstacle list per render = every measured module box, except that
  * a module which is the icon-anchored end of any drawn flow contributes its anchor rect instead of
  * its box; labels already placed are still added as they are placed. So a label may sit over the
@@ -109,7 +110,7 @@
  * until the user picks. One help line under the pair, aria-describedby from both selects:
  * "Icon or picture ends the line at the module's icon, picture or dial. Module box ends it at the
  * module's edge." Other module types: no control, no help line. Opening and saving a flow without
- * changes leaves YAML unchanged (AC11). Strings: en-GB ids in the card-editor namespace, en-US and
+ * changes leaves YAML unchanged. Strings: en-GB ids in the card-editor namespace, en-US and
  * nl tables complete (check-i18n --ci). Keyboard and 200 % zoom as the existing selects.
  */
 
@@ -131,8 +132,8 @@ export interface FlowResolvedAnchors {
   toBox?: true;
 }
 
-/** The two main-visual markers (DOM seam). magic-card.js inlines this string once (mc-flows). */
-export const FLOW_END_SELECTOR = '.mc-anim-icon,[data-mc-flow-end]';
+// The two main-visual markers (DOM seam) live in flow-anchor.needs.ts, which magic-card.js imports; re-exported unchanged.
+export { FLOW_END_SELECTOR } from './flow-anchor.needs';
 
 /** Marker attribute for modules without an `.mc-anim-icon` hook. */
 export const FLOW_END_ATTR = 'data-mc-flow-end';

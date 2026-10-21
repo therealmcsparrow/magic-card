@@ -6,20 +6,7 @@ import { css } from 'lit';
  * bottom edge; dialog: centred, fades and scales. Reduced motion: no movement.
  */
 export const popupStyles = css`
-  /* live dashboard: the card itself is out of the flow, zero size (the dialog is in the top layer) */
-  :host([data-mc-popup-hidden]) {
-    display: block;
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: visible;
-  }
-
-  /* editor: inline card, marked as a pop-up */
-  :host([data-mc-popup-editor]) {
-    position: relative;
-  }
-  /* on the card's top edge, so it covers as little of the content as possible */
+  /* editor: inline card, marked as a pop-up (its host rules are in src/card/popup-host-css.ts); the badge sits on the card's top edge, so it covers as little of the content as possible */
   .mc-popup-badge {
     position: absolute;
     top: -12px;

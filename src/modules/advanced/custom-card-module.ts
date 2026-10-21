@@ -1,13 +1,12 @@
 import { html, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, CustomCardModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
-import { lm } from '../../i18n/labels/mark';
 
 // Shared card helpers live in a sync util (the camera view and the editor use them too).
 export { getCardHelpers, whenDefined, stableJson, fullConfig } from '../../utils/card-helpers';
@@ -22,14 +21,7 @@ export const customCardEmpty = (): TemplateResult => html`
 `;
 
 class CustomCardModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'custom-card',
-    name: lm('Custom card'),
-    description: lm('Embed any 3rd party Lovelace card'),
-    category: 'advanced',
-    icon: 'mdi:card-plus-outline',
-    inherit: false,
-  };
+  readonly metadata: LazyStubMetadata = { type: 'custom-card', inherit: false };
 
   createDefault(): CustomCardModuleConfig {
     return {

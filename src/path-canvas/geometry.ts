@@ -153,7 +153,7 @@ export function stepValue(v: number, delta: number, snapped: boolean): number {
   return clean(next * step);
 }
 
-/** Default keyboard steps by frame size (design 03 section 5). */
+/** Default keyboard steps by frame size. */
 export function defaultSteps(frame: Box): { nudge: number; bigNudge: number; fineNudge: number } {
   const small = frame.w <= 24 && frame.h <= 24;
   return { nudge: small ? 0.5 : 1, bigNudge: small ? 4 : 10, fineNudge: 0.1 };

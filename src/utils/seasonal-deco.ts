@@ -167,11 +167,11 @@ export function polylineLength(pts: Pt[], closed = true): number {
 }
 
 /** The point at arc length `s` (wrapping) of a closed polyline, with tangent and inward normal. */
-function sampler(pts: Pt[]): { length: number; at: (s: number) => OutlineSample } {
+function sampler(pts: Pt[]): { length: number; pointAt: (s: number) => OutlineSample } {
   const cum = [0];
   for (let i = 0; i < pts.length; i++) cum.push(cum[i] + dist(pts[i], pts[(i + 1) % pts.length]));
   const length = cum[cum.length - 1];
-  const at = (s0: number): OutlineSample => {
+  const pointAt = (s0: number): OutlineSample => {
     const s = ((s0 % length) + length) % length;
     let lo = 0;
     let hi = pts.length - 1;
@@ -189,14 +189,14 @@ function sampler(pts: Pt[]): { length: number; at: (s: number) => OutlineSample 
     // clockwise on screen: the inside is to the right of the direction of travel
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, tx, ty, nx: -ty, ny: tx };
   };
-  return { length, at };
+  return { length, pointAt };
 }
 
 /** `n` points evenly spaced along the closed outline (half a gap from its start). */
 export function samplesAlong(pts: Pt[], n: number, phase = 0.5): OutlineSample[] {
   if (pts.length < 2 || n <= 0) return [];
   const s = sampler(pts);
-  return Array.from({ length: n }, (_, k) => s.at(((k + phase) * s.length) / n));
+  return Array.from({ length: n }, (_, k) => s.pointAt(((k + phase) * s.length) / n));
 }
 
 /** The outline point nearest to `p` (arc length and sample). */
@@ -213,7 +213,7 @@ function nearestOn(pts: Pt[], p: Pt): { s: number; sample: OutlineSample } {
     if (d < best.d) best = { s: acc + t * len, d };
     acc += len;
   }
-  return { s: best.s, sample: sm.at(best.s) };
+  return { s: best.s, sample: sm.pointAt(best.s) };
 }
 
 const pathOf = (pts: Pt[], close = true) => (pts.length ? `M${pts.map(fmt).join('L')}${close ? 'Z' : ''}` : '');
@@ -415,7 +415,7 @@ export function vineLayout(box: DecoBox, seed: string): VineLayout | undefined {
   const along = clamp(box.w * 0.36, 40, 150);
   const n = Math.max(8, Math.round((up + along) / 6));
   const path: OutlineSample[] = [];
-  for (let k = 0; k <= n; k++) path.push(sm.at(s0 + up - ((up + along) * k) / n));
+  for (let k = 0; k <= n; k++) path.push(sm.pointAt(s0 + up - ((up + along) * k) / n));
   const wob = path.map((p, k) => {
     const amp = 1.6 * Math.sin(((k / n) * (up + along)) / 3.5);
     return P(p.x + p.nx * amp, p.y + p.ny * amp);

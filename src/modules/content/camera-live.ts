@@ -1,5 +1,4 @@
 import { html, LitElement, nothing, TemplateResult } from 'lit';
-import { property } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant } from '../../types';
 import { safeSnapshotSrc } from '../../utils/media';
 import { StreamGate } from '../advanced/stream-gate';
@@ -12,9 +11,15 @@ import { StreamGate } from '../advanced/stream-gate';
  * and comes back on return (layer-placement "Streaming backgrounds", card-pause rule 1).
  */
 export class McCameraLive extends LitElement {
-  @property({ attribute: false }) hass?: HomeAssistant;
-  @property({ attribute: false }) stateObj?: HassEntity;
-  @property({ attribute: false }) controls = true;
+  static properties = {
+    hass: { attribute: false },
+    stateObj: { attribute: false },
+    controls: { attribute: false },
+  };
+
+  hass?: HomeAssistant;
+  stateObj?: HassEntity;
+  controls = true;
 
   private readonly _gate = new StreamGate(this, 'camera', () => this.requestUpdate());
 

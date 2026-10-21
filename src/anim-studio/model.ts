@@ -4,6 +4,8 @@ import { ANIMATION_PRESETS, EASINGS } from '../utils/animation-presets';
 import type { AnimationDirection } from '../types';
 import { EASING_LANE_IDS, type Binding, type Clip, type EasingLaneId, type Rig, type Track } from './model-v2-core';
 import type { ParticlesSim } from '../contracts/particles-v2';
+import { animHooks, useParticlesValidator } from '../utils/anim-hooks';
+import { CUSTOM_PREFIX, customRefId, isCustomRef } from '../utils/custom-ref';
 
 export * from './model-v2-core';
 
@@ -177,9 +179,8 @@ export const ANIMATION_CAPS = {
 } as const;
 
 export const ANIMATION_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
-export const CUSTOM_PREFIX = 'custom:';
-export const isCustomRef = (preset: unknown): preset is string => typeof preset === 'string' && preset.startsWith(CUSTOM_PREFIX);
-export const customRefId = (preset: string): string => preset.slice(CUSTOM_PREFIX.length).trim();
+// the `custom:<id>` helpers are plain code the entry needs: src/utils/custom-ref.ts
+export { CUSTOM_PREFIX, customRefId, isCustomRef };
 
 export const DEFAULT_PARTICLES: ParticlesSpec = {
   count: 12,
@@ -465,9 +466,9 @@ function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean
   // v2 `sim`: as stored without the particles validator (the card before its chunk); else checked
   // (strict: errors fail the doc; lenient: the cleaned sim, or none so the v1 fallback plays)
   if (o.sim !== undefined && o.sim !== null && (lenient ? new Checker() : c).obj(o.sim, `${path}.sim`)) {
-    if (!particlesValidator) out.sim = o.sim as ParticlesSim;
+    if (!animHooks.simValidator) out.sim = o.sim as ParticlesSim;
     else {
-      const r = particlesValidator(o.sim, lenient ? 'lenient' : 'strict', { count: out.count, layer: out.layer });
+      const r = animHooks.simValidator(o.sim, lenient ? 'lenient' : 'strict', { count: out.count, layer: out.layer });
       if (!lenient) c.errors.push(...r.errors);
       if (r.sim && (lenient || !r.errors.length)) out.sim = r.sim;
     }
@@ -477,12 +478,9 @@ function checkParticles(c: Checker, raw: unknown, path: string, lenient: boolean
 
 /** Checks a raw `particles.sim` (particles-v2 ParticlesModule.validateSim; error paths `particles.sim.*`). */
 export type ParticlesValidator = (raw: unknown, mode: 'strict' | 'lenient', spec?: { count: number; layer: 'back' | 'front' }) => { sim?: ParticlesSim; errors: FieldError[] };
-let particlesValidator: ParticlesValidator | undefined;
 
-/** Turn on `particles.sim` checking in validateAnimationDoc (the particles chunk and the studio call this). */
-export function useParticlesValidator(fn: ParticlesValidator | undefined): void {
-  particlesValidator = fn;
-}
+// the slot lives in the entry (src/utils/anim-hooks.ts); the name stays available here
+export { useParticlesValidator };
 
 /** The document plays a v2 simulation, which only the particles chunk can compile (a preset-based doc ignores `sim`). */
 export const docNeedsParticles = (doc: AnimationDoc): boolean => doc.kind === 'particles' && !!doc.particles?.sim && !doc.particles.preset;
@@ -674,3 +672,4 @@ export function validateAnimationLibrary(input: unknown, opts: ValidateOptions =
   });
   return { docs, errors };
 }
+

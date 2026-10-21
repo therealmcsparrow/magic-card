@@ -7,7 +7,7 @@ import type { StudioSelection } from '../slots';
 import { t } from '../i18n';
 
 /*
- * Icon parts in the studio (track B2): pure document edits for the parts layers, overlay and
+ * Icon parts in the studio: pure document edits for the parts layers, overlay and
  * inspector. Every function returns a new document (never mutates) and keeps the v2 references
  * valid: a removed part / group drops its tracks and bindings and leaves its groups.
  * Ids are unique across parts, groups and shapes (one namespace, `data-p` / `data-g` / `data-s`).

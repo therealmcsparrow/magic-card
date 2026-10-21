@@ -1,0 +1,95 @@
+# Bin day: the next pickup per bin type. The bin that goes out today pulses.
+# Entities: sensor.trash_organic, sensor.trash_paper, sensor.trash_plastic, sensor.trash_rest
+#   (text sensors with "Today", "Tomorrow" or a date, e.g. from the Waste Collection integration)
+# gallery: width=380 stage=linear-gradient(135deg,#eef3ea,#e1e9dc)
+type: custom:magic-card
+name: Bins
+background: "#ffffff"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 14px 34px rgba(30, 41, 59, 0.12)"
+rows:
+  - id: title
+    columns:
+      - modules:
+          - type: text
+            text: Bin day
+            design: { font_size: 17px, font_weight: "800", color: "#1f2937" }
+  - id: bins
+    layout: "1-1-1-1"
+    gap: 8px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design:
+              padding: 12px 4px
+              border_radius: 18px
+              background_color: "#ecfdf5"
+              border: "2px solid #10b981"
+            modules:
+              - type: icon
+                icon: mdi:trash-can
+                size: 30px
+                design:
+                  color: "#10b981"
+                  animations: [{ preset: rubber-band, duration: 2.4s }]
+              - type: text
+                text: Organic
+                design: &name { font_size: 12px, font_weight: "800", color: "#1f2937" }
+              - type: text
+                use_entity: true
+                entity: sensor.trash_organic
+                design: { font_size: 11px, font_weight: "800", color: "#ffffff", padding: 2px 8px, border_radius: 999px, background_color: "#10b981" }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design: &bin { padding: 12px 4px, border_radius: 18px, background_color: "#f8fafc", border: "2px solid transparent" }
+            modules:
+              - type: icon
+                icon: mdi:trash-can
+                size: 30px
+                design: { color: "#3b82f6" }
+              - type: text
+                text: Paper
+                design: *name
+              - type: text
+                use_entity: true
+                entity: sensor.trash_paper
+                design: &when { font_size: 11px, font_weight: "600", color: "#64748b", text_align: center }
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design: *bin
+            modules:
+              - type: icon
+                icon: mdi:trash-can
+                size: 30px
+                design: { color: "#f59e0b" }
+              - type: text
+                text: Plastic
+                design: *name
+              - type: text
+                use_entity: true
+                entity: sensor.trash_plastic
+                design: *when
+      - modules:
+          - type: vertical
+            align: center
+            gap: 6px
+            design: *bin
+            modules:
+              - type: icon
+                icon: mdi:trash-can
+                size: 30px
+                design: { color: "#6b7280" }
+              - type: text
+                text: General
+                design: *name
+              - type: text
+                use_entity: true
+                entity: sensor.trash_rest
+                design: *when

@@ -1,3 +1,4 @@
+import './lazy-metadata';
 import { moduleEditors } from './registry';
 import { textEditor } from './content/text-editor';
 import { iconEditor } from './content/icon-editor';

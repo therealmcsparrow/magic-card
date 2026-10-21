@@ -1,0 +1,126 @@
+# Speaker group: one volume bar per room. Playing rooms get a moving equaliser
+# and a coloured bar; idle rooms are greyed out.
+# Entities: media_player.kitchen, media_player.bedroom, media_player.office
+# gallery: width=360
+type: custom:magic-card
+name: Speakers
+background: "linear-gradient(165deg, #10172a 0%, #0b1020 100%)"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 18px 40px rgba(0,0,0,0.5)"
+rows:
+  - id: title
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:speaker-multiple
+                size: 20px
+                design: { color: "#38bdf8" }
+              - type: text
+                text: Speakers
+                design: { font_size: 16px, font_weight: "800", color: "#f1f5f9" }
+  - id: list
+    columns:
+      - gap: 14px
+        modules:
+          - type: vertical
+            gap: 6px
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: horizontal
+                    gap: 8px
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:music-note
+                        size: 16px
+                        design: { color: "#38bdf8", animations: [{ preset: squash-stretch, duration: 0.9s }] }
+                      - type: text
+                        text: Kitchen
+                        design: &room { font_size: 14px, font_weight: "700", color: "#e2e8f0" }
+                  - type: text
+                    use_entity: true
+                    entity: media_player.kitchen
+                    design: &st { font_size: 12px, color: "#38bdf8" }
+              - type: bar
+                entity: media_player.kitchen
+                attribute: volume_level
+                min: 0
+                max: 1
+                show_value: false
+                bar_height: 8px
+                bar_color: "#38bdf8"
+                bar_background: "rgba(255,255,255,0.07)"
+                design: { border_radius: 999px }
+          - type: vertical
+            gap: 6px
+            design: { opacity: "0.5" }
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: horizontal
+                    gap: 8px
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:music-note-off
+                        size: 16px
+                        design: { color: "#94a3b8" }
+                      - type: text
+                        text: Bedroom
+                        design: *room
+                  - type: text
+                    use_entity: true
+                    entity: media_player.bedroom
+                    design: { font_size: 12px, color: "#94a3b8" }
+              - type: bar
+                entity: media_player.bedroom
+                attribute: volume_level
+                min: 0
+                max: 1
+                show_value: false
+                bar_height: 8px
+                bar_color: "#94a3b8"
+                bar_background: "rgba(255,255,255,0.07)"
+                design: { border_radius: 999px }
+          - type: vertical
+            gap: 6px
+            modules:
+              - type: horizontal
+                justify: space-between
+                align: center
+                modules:
+                  - type: horizontal
+                    gap: 8px
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:music-note
+                        size: 16px
+                        design: { color: "#a78bfa", animations: [{ preset: squash-stretch, duration: 0.9s, delay: 0.3s }] }
+                      - type: text
+                        text: Office
+                        design: *room
+                  - type: text
+                    use_entity: true
+                    entity: media_player.office
+                    design: { font_size: 12px, color: "#a78bfa" }
+              - type: bar
+                entity: media_player.office
+                attribute: volume_level
+                min: 0
+                max: 1
+                show_value: false
+                bar_height: 8px
+                bar_color: "#a78bfa"
+                bar_background: "rgba(255,255,255,0.07)"
+                design: { border_radius: 999px }

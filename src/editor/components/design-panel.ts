@@ -3,7 +3,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { AnimationConfig, DesignConfig, ConditionalDesign, DisplayCondition, HomeAssistant, RingConfig, ShapeOptions, ValueBackgroundConfig } from '../../types';
 import type { ShapePatch } from './shape-editor';
 import {
-  BOX_LONGHANDS,
   DEPENDENT_OPTIONS,
   CSS_SECTORS,
   CUSTOM_CSS_ENTRY,
@@ -13,14 +12,14 @@ import {
   CssPropertyDef,
   CssPropertyOption,
   displayProperties,
-  propertyKeys,
 } from '../../utils/css-properties';
+import { BOX_LONGHANDS, propertyKeys } from '../../utils/css-design-map';
 import { t as lt } from '../../i18n/labels';
 import type { MessageId } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-stack';
 import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
-import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../utils/animation';
+import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../anim-studio/entries';
 import { fieldReset } from './field-reset';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { entityStateColor } from '../../utils/entity-color';
@@ -41,7 +40,7 @@ import { parseGradient } from '../../utils/gradient';
 import { t, fold } from '../i18n';
 import { thisTarget } from '../target-name';
 
-/** Mockup placeholders: sizes read "auto", font size "inherit", everything else "0". */
+/** Placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
   if (/^(min_|max_)?(width|height)$/.test(key) || key === 'flex_basis') return 'auto';
   if (key === 'font_size') return 'inherit';
@@ -982,7 +981,7 @@ export class DesignPanel extends LitElement {
     `;
   }
 
-  /** Compact fields (unit / select / number) pair up side by side, like the mockup's Width + Min height. */
+  /** Compact fields (unit / select / number) pair up side by side, like Width + Min height. */
   private _renderPropertyList(props: CssPropertyDef[]): TemplateResult[] {
     const compact = (p?: CssPropertyDef) => !!p && (p.type === 'unit' || p.type === 'select' || p.type === 'number');
     const out: TemplateResult[] = [];
@@ -998,7 +997,7 @@ export class DesignPanel extends LitElement {
     return out;
   }
 
-  /** Mockup: "Editing design for" select (Default + one option per rule), help line, "Add conditional rule". */
+  /** "Editing design for" select (Default + one option per rule), help line, "Add conditional rule". */
   private _renderRulePicker(): TemplateResult {
     const rules = this.design.conditional || [];
     const n = rules.length;

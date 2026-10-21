@@ -5,7 +5,7 @@ import './magic-card-editor';
 import './modules';
 // window.MagicCard.loadSvgEditor / loadShapeEditor (svg-editor 1.0.0)
 import './custom/loaders';
-// the ui-kit Module (ADR 0030): one copy for the editor family; the lazy chunks below it import it too and call this copy
+// the ui-kit Module: one copy for the editor family; the lazy chunks below it import it too and call this copy
 import { defineUiKit } from '../ui-kit';
 // namespace 'labels' (css-properties, animation presets, module names, ...): its tables are the lazy chunk magic-card-i18n-labels.js
 import { ready as labelsReady } from '../i18n/labels';
@@ -14,7 +14,7 @@ import { ready as labelsReady } from '../i18n/labels';
 defineUiKit();
 
 /*
- * Entry of the lazy editor chunk, dist/magic-card-editor.js (ADR 0007). Only
+ * Entry of the lazy editor chunk, dist/magic-card-editor.js. Only
  * src/utils/editor-loader.ts imports it, through import(). It may import dashboard modules;
  * dashboard code never imports this file or anything under src/editor/.
  */

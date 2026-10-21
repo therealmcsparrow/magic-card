@@ -1,5 +1,5 @@
 /*
- * Path model, editor-only: the primitive outlines (contract path-model 1.0.0 rev 3). Each is one
+ * Path model, editor-only: the primitive outlines (contract path-model 1.0.0). Each is one
  * closed clockwise subpath (y down) inside its box, straight sides and cubics only, at most
  * PRIMITIVE_MAX_ANCHORS anchors. Proportions are fixed per kind and scale with the box.
  */

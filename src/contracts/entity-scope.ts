@@ -1,8 +1,8 @@
 /*
- * Contract: entity scope (card entity, layout sharing, effective module entity). Version 1.1.0
- * (Architect-owned). ADR 0033. Brief .company/work/card-entity/01-product-manager.md, plan 02-architect.md.
- * CEO rulings 2026-10-19: Q1 nearest layout (only when it shares, see C), Q2 per card / never synced,
- * Q3 silent mismatch + editor hint, card modules never inherit, B `none` on a layout is a wall.
+ * Contract: entity scope (card entity, layout sharing, effective module entity). Version 1.1.0.
+ * Rules: the nearest layout supplies the entity (only when it shares); the card entity is per card and
+ * never synced; a mismatch is silent, with an editor hint; card modules never inherit; `none` on a layout
+ * is a wall.
  *
  * ── YAML (types in src/types.ts) ──
  * - Card: `entity?: string`. Per card; never part of a Magic Card Utils template (stripped on save,
@@ -14,12 +14,12 @@
  *   (`None`, `NONE`, `' none '` are own ids that resolve to nothing; the editor flags them.)
  * - Layout modules (horizontal, vertical, row, tabs, slider-layout): `share_entity?: boolean`.
  *   Absent = false. The card editor writes `share_entity: true` on every layout it creates (one
- *   create path in the editor chunk); YAML written before this release has no key, so its layouts
- *   never pass their own entity down (AC1 holds).
+ *   create path in the editor chunk); older YAML has no key, so its layouts
+ *   never pass their own entity down.
  * - Card grid rows and columns and the row module's columns (`EntityScopeNode`): `entity` and `share_entity`
  *   exactly as layouts (own id for themselves; passed down only with `share_entity: true`; `none` is a wall).
  *   The editor writes `share_entity: true` on every row and column it creates (one create helper per kind),
- *   and so does the card-picker stub. Old YAML has neither key (AC1). Tab entries and slides have no own entity.
+ *   and so does the card-picker stub. Old YAML has neither key. Tab entries and slides have no own entity.
  *
  * ── Resolution (src/utils/entity-scope.ts, in magic-card.js, pure) ──
  * scope(card)                = entityKey(card.entity) as a string, else undefined

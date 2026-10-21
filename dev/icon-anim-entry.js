@@ -1,4 +1,4 @@
-// Dev-only entry (0.0.34 track I): the icon animator's path table and library for the harness pages.
+// Dev-only entry: the icon animator's path table and library for the harness pages.
 // Serves the table's icons as a fake `mdi` icon pack, so the card's rig runtime and the studio
 // resolve real MDI geometry without Home Assistant. Never shipped.
 import { MDI_PATHS } from '../src/icon-anim/mdi-paths';

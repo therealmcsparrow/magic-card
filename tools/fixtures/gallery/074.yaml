@@ -1,0 +1,84 @@
+# Crystal ball: the next calendar event floats inside a glass sphere with a slow mist and a soft glow.
+# The time comes from the event start. The location sits under the stand.
+# Entities: calendar.family
+# gallery: width=340 record=6 stage=linear-gradient(135deg,#0b0820,#1c1250)
+type: custom:magic-card
+name: Crystal ball
+background: "linear-gradient(170deg, #1d1448 0%, #0f0a2a 100%)"
+border_radius: 28px
+padding: 22px
+box_shadow: "0 22px 48px rgba(10,0,40,0.6)"
+rows:
+  - id: head
+    columns:
+      - modules:
+          - type: text
+            text: Next on the calendar
+            design: { text_align: center, font_size: 12px, font_weight: "700", color: "#b9a8f0", text_transform: uppercase, letter_spacing: 2px }
+  - id: sphere
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 2px
+            design:
+              width: 220px
+              height: 220px
+              margin: 0 auto
+              padding: 50px 30px 0
+              box_sizing: border-box
+              border_radius: 50%
+              overflow: hidden
+              background: "radial-gradient(ellipse 38% 22% at 30% 20%, rgba(255,255,255,0.34), rgba(255,255,255,0) 100%), radial-gradient(circle at 50% 58%, #5b45c8 0%, #2c1d7c 58%, #150f3c 100%)"
+              box_shadow: "0 0 0 2px rgba(185,168,240,0.35), 0 0 38px rgba(106,79,216,0.55), inset 0 -14px 28px rgba(0,0,0,0.35)"
+              animations:
+                - { id: mist, preset: smoke, color: "#cbbcff", strength: 40, intensity: 4, duration: 6s }
+                - { id: glow, preset: aura, color: "#8b6cf0", strength: 60, intensity: 26, duration: 6s }
+            modules:
+              - type: text
+                use_template: true
+                text: "{{ (state_attr('calendar.family','start_time') or '')[11:16] or '--:--' }}"
+                design: { text_align: center, font_size: 40px, font_weight: "700", color: "#f4f0ff", line_height: "1.05", font_family: "Georgia, 'Iowan Old Style', serif" }
+              - type: text
+                use_template: true
+                text: "{{ as_timestamp(state_attr('calendar.family','start_time'), none) | timestamp_custom('%a %-d %b') if state_attr('calendar.family','start_time') else 'Nothing planned' }}"
+                design: { text_align: center, font_size: 12px, color: "#e0d8ff", text_transform: uppercase, letter_spacing: 1.5px }
+              - type: text
+                use_template: true
+                text: "{{ state_attr('calendar.family','message') or 'Free day' }}"
+                design: { text_align: center, font_size: 17px, font_weight: "700", color: "#f4f0ff", line_height: "1.2", margin_top: 8px }
+  - id: stand
+    padding: 0
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design: { margin_top: -12px }
+            modules:
+              - type: vertical
+                gap: 0px
+                design: { width: 96px, height: 16px, border_radius: "0 0 40px 40px", background: "linear-gradient(180deg, #8d7a4a, #4f4228)" }
+                modules: []
+              - type: vertical
+                gap: 0px
+                design: { width: 150px, height: 12px, border_radius: 8px, background: "linear-gradient(180deg, #a68f58, #5d4d2c)", box_shadow: "0 8px 14px rgba(0,0,0,0.45)" }
+                modules: []
+  - id: place
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            justify: center
+            modules:
+              - type: icon
+                icon: mdi:map-marker-outline
+                size: 16px
+                design: { color: "#b9a8f0" }
+              - type: text
+                use_template: true
+                text: "{{ state_attr('calendar.family','location') or 'No location' }}"
+                design: { font_size: 13px, color: "#d9d0f7" }

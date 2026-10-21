@@ -1,19 +1,20 @@
 import { gradientHeadAngle, parseGradient } from '../../utils/gradient';
 import { safeImageUrl } from '../../utils/safe-url';
-import { safeColor } from '../../utils/animation';
-import { BLUR_MAX, LAYER_ANCHORS, type LayerAnchor } from '../../contracts/layer-placement';
+import { safeColor } from '../../utils/safe-css';
+import { BLUR_MAX, LAYER_ANCHORS } from '../../contracts/layer-placement.needs';
+import type { LayerAnchor } from '../../contracts/layer-placement';
 import type { BgPattern } from '../../contracts/bg-stack';
 
 /*
- * Pure value checks of <mc-bg-stack> (contract bg-stack 1.0.0 r2): every value that reaches CSS or a
- * URL load goes through one of these allow-lists (proj.M1, proj.M2). No lit, no DOM except `URL`.
+ * Pure value checks of <mc-bg-stack> (contract bg-stack): every value that reaches CSS or a
+ * URL load goes through one of these allow-lists. No lit, no DOM except `URL`.
  */
 
 const MAX_GRADIENT = 600;
 export const MAX_STATES = 32;
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
-const num = (v: unknown, min: number, max: number, dflt: number): number => {
+export const num = (v: unknown, min: number, max: number, dflt: number): number => {
   const n = typeof v === 'string' && v.trim() !== '' ? Number(v) : v;
   return typeof n === 'number' && Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : dflt;
 };
@@ -81,11 +82,11 @@ export const blurOf = (v: unknown): number => num(v, 0, BLUR_MAX, 0);
 export const opacityOf = (v: unknown): number => num(v, 0, 100, 100) / 100;
 
 /** Anchor -> [x, y] in -1..1 (left/top = -1): LAYER_ANCHORS is row-major. */
-const anchorXY = (a: LayerAnchor): [number, number] => {
+export const anchorXY = (a: LayerAnchor): [number, number] => {
   const i = LAYER_ANCHORS.indexOf(a);
   return [(i % 3) - 1, Math.floor(i / 3) - 1];
 };
-const isAnchor = (v: unknown): v is LayerAnchor => typeof v === 'string' && (LAYER_ANCHORS as readonly string[]).includes(v);
+export const isAnchor = (v: unknown): v is LayerAnchor => typeof v === 'string' && (LAYER_ANCHORS as readonly string[]).includes(v);
 const XW = ['left', 'center', 'right'];
 const YW = ['top', 'center', 'bottom'];
 
@@ -113,31 +114,4 @@ export function sizeCss(v: unknown): string {
 export function repeatCss(v: unknown, size: string): string {
   if (size === 'cover') return 'no-repeat';
   return v === 'repeat' || v === 'repeat-x' || v === 'repeat-y' ? v : 'no-repeat';
-}
-
-export interface PanZoom {
-  from: number;
-  to: number;
-  /** Focus direction, -1..1. */
-  fx: number;
-  fy: number;
-  duration: number;
-  alternate: boolean;
-  idle: boolean;
-}
-
-/** Pan / zoom settings with the contract defaults and clamps; undefined when the key is not an object. */
-export function panZoomOf(v: unknown): PanZoom | undefined {
-  if (!v || typeof v !== 'object' || Array.isArray(v)) return undefined;
-  const o = v as Record<string, unknown>;
-  const [fx, fy] = anchorXY(isAnchor(o.focus) ? o.focus : 'center');
-  return {
-    from: num(o.from, 100, 200, 100) / 100,
-    to: num(o.to, 100, 200, 115) / 100,
-    fx,
-    fy,
-    duration: num(o.duration, 10, 120, 30),
-    alternate: o.alternate !== false,
-    idle: o.pause_when_idle === true,
-  };
 }

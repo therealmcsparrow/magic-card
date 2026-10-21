@@ -2,8 +2,8 @@ import { html, nothing } from 'lit';
 import type { LitElement, TemplateResult } from 'lit';
 import { t } from './i18n';
 import { motionCount, setCardPaused } from '../icons/offscreen';
-import { reducedMotion } from './sequence-player';
-import { PAUSE_ATTRIBUTE, PAUSE_EVENT, PAUSE_STORAGE_PREFIX } from '../contracts/card-pause';
+import { reducedMotion } from '../utils/reduced-motion';
+import { PAUSE_ATTRIBUTE, PAUSE_EVENT } from '../contracts/card-pause.needs';
 import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contracts/card-pause';
 
 /*
@@ -11,24 +11,14 @@ import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contr
  * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
  * state, remembers it per page and card, and renders the button.
  *
- * deviates: hacard.S11 — CEO 2026-10-20 default hidden, so the viewer pause is no longer on by default;
- * proj.M10 and proj.S4 still hold (offscreen and reduced-motion pauses never depend on the button).
+ * The remembered state is read by the card bundle (pause-memory.ts), which holds the pause from the first paint; this class adopts it.
+ * The pause button is hidden by default. Offscreen and reduced-motion pauses never depend on the button.
  */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 /** mdi:pause, mdi:play */
 const PAUSE_PATH = 'M14,19H18V5H14M6,19H10V5H6V19Z';
 const PLAY_PATH = 'M8,5.14V19.14L19,12.14L8,5.14Z';
-
-/** FNV-1a (32 bit) as 8 hex digits. */
-function fnv(text: string): string {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(16).padStart(8, '0');
-}
 
 /** localStorage can be missing, full or blocked: the pause then lasts the page visit. */
 function storage(fn: (s: Storage) => void): void {
@@ -46,19 +36,22 @@ export class CardPause {
   private _moves = false;
   private _shown = false;
   private _timer?: number;
-  /** Editor preview pause (r3): never remembered, applied on every render. */
+  /** Editor preview pause: never remembered, applied on every render. */
   preview = false;
 
   constructor(private readonly _host: LitElement) {}
 
-  /** A card config arrived: the same config keeps its state, an edited one starts as remembered (playing). */
-  config(config: object): void {
-    const key = PAUSE_STORAGE_PREFIX + location.pathname + ':' + fnv(JSON.stringify(config));
+  /**
+   * A card config arrived with its storage key and whether that key was left paused. The same key keeps its state, an edited
+   * config starts as remembered (playing). The first call adopts a pause the card already applied before this chunk
+   * installed: no event, the host attribute stays as it is.
+   */
+  config(key: string, on: boolean): void {
     if (key === this._key) return;
+    const first = this._key === '';
     this._key = key;
-    let on = false;
-    storage((s) => (on = s.getItem(key) === '1'));
-    this._set(on);
+    if (first) this.paused = on;
+    else this._set(on);
   }
 
   private _set(on: boolean): void {
@@ -111,16 +104,6 @@ export class CardPause {
     return html`<button type="button" class="mc-pause" data-corner=${corner} aria-pressed=${on ? 'true' : 'false'}
       aria-label=${label} title=${label} @pointerdown=${this._stop} @click=${this._toggle}
       ><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d=${on ? PLAY_PATH : PAUSE_PATH}></path></svg></button>`;
-  }
-
-  /**
-   * Value of data-mc-pause-gap on .mc-card-content (bound in the template, not written to the host):
-   * the edge that keeps a 24 px strip for the button. Reserved for `auto` and `always` alike, so the
-   * layout does not move when motion starts or stops; `hidden` reserves nothing.
-   */
-  gap(c: CardPauseKeys): string | typeof nothing {
-    if (this._mode === 'hidden') return nothing;
-    return CORNERS.includes(String(c.pause_button_corner)) ? String(c.pause_button_corner).split('-')[0] : 'bottom';
   }
 
   private _wants(on: boolean): boolean {

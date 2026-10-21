@@ -1,14 +1,11 @@
 import { VERSION } from '../../version';
-import { LAYER_CSS } from '../layer-css';
-import { layerSlot } from '../layer-slot';
-import { arrange, resolveLayer, scanFills, scrimCss } from '../placement';
-import { defineBgStack } from './mc-bg-stack';
+import { bgFx } from './fx';
+import { provideBgFx } from './fx-slot';
 
 /*
  * Chunk entry of dist/magic-card-layers.js (contract lazy-module 1.2.0). Evaluating this file changes
- * nothing global: install() defines <mc-bg-stack> (contract bg-stack 1.0.0 r2), guarded, and fills the layer slot with
- * the placement runtime and its CSS (layer-placement 1.0.0 r3). placement.ts and layer-css.ts are
- * imported by this file only.
+ * nothing global: install() hands the motion and refresh part of <mc-bg-stack> (contract bg-stack) to
+ * every live and future stack. <mc-bg-stack> and the layer placement runtime are part of magic-card.js.
  */
 
 declare const __MC_BUILD_VERSION__: string | undefined;
@@ -16,6 +13,5 @@ declare const __MC_BUILD_VERSION__: string | undefined;
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
 
 export function install(): void {
-  defineBgStack();
-  layerSlot.provide({ resolveLayer, arrange, scanFills, scrimCss, css: LAYER_CSS });
+  provideBgFx(bgFx);
 }

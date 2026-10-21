@@ -1,5 +1,5 @@
 import type { AnimationConfig, ConditionalDesign, DesignConfig } from '../types';
-import { animationsUpdate, readAnimations } from './animation';
+import { animationsUpdate, readAnimations } from '../anim-studio/entries';
 import { deepClone } from './deep-merge';
 import { generateId } from './id-generator';
 import { toYaml } from './yaml-utils';

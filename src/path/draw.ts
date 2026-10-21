@@ -1,5 +1,5 @@
 /*
- * Path model, editor-only: pure generators for the draw tools (contract path-model 1.0.0 rev 2).
+ * Path model, editor-only: pure generators for the draw tools (contract path-model 1.0.0).
  * Freehand simplification (Ramer-Douglas-Peucker for corners, then a least-squares cubic fit per
  * stretch, after Schneider's "An algorithm for automatically fitting digitized curves", Graphics
  * Gems 1990) and shape paths: line, rectangle, ellipse, polygon, star. Shared by the SVG editor and

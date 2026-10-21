@@ -1,0 +1,76 @@
+# Oven: a flickering fire over a shimmering hot window, a timer ring that empties live, and the oven temperature.
+# Entities: sensor.oven_temperature, timer.oven
+# gallery: width=360 record=4 stage=linear-gradient(135deg,#1c1917,#292524)
+type: custom:magic-card
+name: Oven
+background: "linear-gradient(170deg, #292524 0%, #1c1917 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0, 0, 0, 0.55)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    columns:
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Roast chicken
+            design: { font_size: 18px, font_weight: "800", color: "#fafaf9" }
+          - type: text
+            text: Fan oven · top and bottom
+            design: { font_size: 12px, color: "#a8a29e" }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: sensor.oven_temperature
+            design: { font_size: 13px, font_weight: "800", color: "#fdba74", padding: 4px 10px, border_radius: 999px, background_color: "rgba(249,115,22,0.16)" }
+  - id: window
+    column_widths: [1fr, 128px]
+    gap: 14px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: icon
+            icon: mdi:fire
+            size: 56px
+            design:
+              color: "#fb923c"
+              height: 128px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 20px
+              border: "6px solid #44403c"
+              background: "radial-gradient(ellipse at 50% 80%, #c2410c 0%, #7c2d12 45%, #1c0f08 100%)"
+              animations:
+                - { id: flicker, preset: flame-flicker, target: icon, intensity: 12 }
+                - { id: glow, preset: aura, color: "#f97316", strength: 50, intensity: 18 }
+                - { id: shimmer, preset: heat-shimmer, intensity: 2 }
+      - modules:
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 128px
+              height: 128px
+              shape: circle
+              background_color: "rgba(255,255,255,0.04)"
+              ring:
+                mode: value
+                entity: timer.oven
+                width: 8
+                glow: 6
+                color: "#f97316"
+                track_color: "rgba(249,115,22,0.14)"
+            modules:
+              - type: text
+                use_entity: true
+                entity: timer.oven
+                entity_display: remaining
+                design: { font_size: 24px, font_weight: "800", color: "#ffffff", font_variant: tabular-nums }
+              - type: text
+                text: left
+                design: { font_size: 11px, color: "#a8a29e", text_transform: uppercase, letter_spacing: 1.5px }

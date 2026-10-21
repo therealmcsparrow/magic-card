@@ -1,7 +1,7 @@
 import { css, type CSSResult } from 'lit';
 
 /*
- * Styles of <mc-path-canvas> (path-canvas r6). Colours are the ui-kit tokens (Core editorTokens, DESIGN.md): one accent for
+ * Styles of <mc-path-canvas> (path-canvas). Colours are the ui-kit tokens (Core editorTokens, DESIGN.md): one accent for
  * the selection, the tool and live state; points are told apart by shape, never by colour alone. The canvas imports no
  * token CSS (27 KB this chunk cannot afford): it reads the --mc-* tokens its editor layer sets on an ancestor (custom
  * properties inherit through the shadow root). No local alias block.

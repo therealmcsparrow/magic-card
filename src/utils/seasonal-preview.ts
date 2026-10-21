@@ -4,7 +4,9 @@
  * when the editor closes. Cards with `seasonal` listen for SEASONAL_PREVIEW_EVENT on window.
  */
 
-export const SEASONAL_PREVIEW_EVENT = 'mc-seasonal-preview';
+import { SEASONAL_PREVIEW_EVENT } from './seasonal.needs';
+
+export { SEASONAL_PREVIEW_EVENT };
 
 let previewDate: Date | undefined;
 

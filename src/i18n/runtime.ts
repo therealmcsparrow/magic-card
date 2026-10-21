@@ -1,5 +1,5 @@
 /*
- * Module i18n (contract src/contracts/i18n.ts 1.0.0 r3, ADR 0032 r2): locale pick, compact tables and the
+ * Module i18n (contract src/contracts/i18n.ts 1.0.0): locale pick, compact tables and the
  * ICU-subset formatter. One copy per entry (magic-card.js, the studio entry, the theme-editor entry; each
  * <= I18N_RUNTIME_MAX_BYTES minified); every lazy chunk below an entry reuses its copy. Messages come from
  * per-namespace tables: three '|'-joined strings (en-GB, en-US, nl), entry i of each is message i. Ids are

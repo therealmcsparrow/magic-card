@@ -1,0 +1,6 @@
+{
+  "$comment": "Post-Chromium-85 built-ins (tools/check-es-syntax.mjs) still used by editor-side files. The card side has none and may not get any. Counts only shrink: a number above the recorded one fails, a number below it fails until this file is lowered, and a new entry fails against the base ref.",
+  "entries": [
+    { "file": "magic-card-animation-studio.js", "token": "structuredClone", "count": 4 }
+  ]
+}

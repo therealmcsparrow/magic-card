@@ -1,0 +1,101 @@
+# Washing machine: progress ring around a shaking washer, cycle phase and time left.
+# The ring and the shake only show while the washer runs.
+# Entities: switch.washer, sensor.washer_state, sensor.washer_progress, sensor.washer_remaining
+# gallery: width=360 stage=linear-gradient(135deg,#e8eef6,#d6e2f0)
+type: custom:magic-card
+name: Washer
+background: "linear-gradient(160deg, #ffffff 0%, #f3f7fc 100%)"
+border_radius: 28px
+padding: 20px
+box_shadow: "0 14px 34px rgba(37, 99, 235, 0.14)"
+rows:
+  - id: main
+    column_widths: [auto, 1fr]
+    gap: 18px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            entity: switch.washer
+            icon: mdi:washing-machine
+            size: 44px
+            design:
+              color: "#2563eb"
+              width: 96px
+              height: 96px
+              display: flex
+              align_items: center
+              justify_content: center
+              shape: circle
+              background: "radial-gradient(circle at 50% 40%, #eff6ff 0%, #dbeafe 100%)"
+              ring:
+                mode: value
+                entity: sensor.washer_progress
+                width: 7
+                color: "#2563eb"
+                track_color: "rgba(37,99,235,0.12)"
+                glow: 4
+              animations:
+                - { preset: head-shake, target: icon, trigger: entity_on, duration: 0.9s, intensity: 3 }
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            text: Washing machine
+            design: { font_size: 13px, font_weight: "600", color: "#64748b" }
+          - type: text
+            use_entity: true
+            entity: sensor.washer_state
+            design: { font_size: 26px, font_weight: "800", color: "#0f172a", letter_spacing: -0.5px }
+          - type: horizontal
+            gap: 6px
+            align: center
+            modules:
+              - type: icon
+                icon: mdi:timer-sand
+                size: 16px
+                design: { color: "#2563eb" }
+              - type: text
+                use_entity: true
+                entity: sensor.washer_remaining
+                design: { font_size: 14px, font_weight: "700", color: "#2563eb" }
+              - type: text
+                text: left
+                design: { font_size: 14px, color: "#64748b" }
+  - id: phases
+    layout: "1-1-1-1"
+    gap: 6px
+    padding: 6px 0 0
+    columns:
+      - gap: 6px
+        modules:
+          - type: separator
+            separator_style: none
+            design: &done { height: 5px, border_radius: 999px, background_color: "#2563eb" }
+          - type: text
+            text: Wash
+            design: &phase { font_size: 11px, font_weight: "600", color: "#94a3b8", text_align: center }
+      - gap: 6px
+        modules:
+          - type: separator
+            separator_style: none
+            design: *done
+          - type: text
+            text: Rinse
+            design: *phase
+      - gap: 6px
+        modules:
+          - type: separator
+            separator_style: none
+            design: { height: 5px, border_radius: 999px, background: "linear-gradient(90deg, #2563eb 0%, #2563eb 50%, #dbeafe 50%)" }
+          - type: text
+            text: Spin
+            design: { font_size: 11px, font_weight: "700", color: "#2563eb", text_align: center }
+      - gap: 6px
+        modules:
+          - type: separator
+            separator_style: none
+            design: { height: 5px, border_radius: 999px, background_color: "#dbeafe" }
+          - type: text
+            text: Done
+            design: *phase

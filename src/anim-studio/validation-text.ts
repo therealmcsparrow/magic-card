@@ -2,7 +2,7 @@ import { t } from './i18n';
 
 /*
  * Field errors come from the document validators in English: the animation model and the particles module sit in
- * magic-card.js and the particles chunk, which carry no studio text (contract i18n 1.0.0 r3, Rule 1). The studio
+ * magic-card.js and the particles chunk, which carry no studio text (contract i18n 1.0.0). The studio
  * shows them through this table: a message it knows reads in the current language (formatted ones by their shape),
  * anything else stays as the validator wrote it. A new validator message needs a line here, or it shows in English.
  */

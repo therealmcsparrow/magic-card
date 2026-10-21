@@ -1,5 +1,5 @@
 import type { HomeAssistant, ValueBackgroundConfig } from '../types';
-import { colour, entityLevel, share } from '../icons/icon-fx';
+import { colour, entityLevel, share } from '../icons/fx-values';
 import { parseGradient } from './gradient';
 import { chainPath } from './shape-path';
 import { bucketWindow } from '../services/history-cache';

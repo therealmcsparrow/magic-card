@@ -1,10 +1,11 @@
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
 import { html, TemplateResult } from 'lit';
 import { CardModule, HomeAssistant, CameraModuleConfig, HassEntity } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { invalidateDependencyCache } from '../../services/card-dependencies';
 import { currentRenderContext } from '../../services/render-context';
-import { cssAspectRatio, safeSnapshotSrc, withRefreshParam } from '../../utils/media';
+import { cssAspectRatio } from '../../utils/aspect-ratio';
+import { safeSnapshotSrc, withRefreshParam } from '../../utils/media';
 import { entityDisplayName, isUnavailable } from '../../utils/entity-value';
 import { getCardHelpers } from '../../utils/card-helpers';
 import { STREAM_TAG, refreshMs } from './camera-module';

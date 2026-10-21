@@ -1,13 +1,10 @@
 import { css, unsafeCSS } from 'lit';
 import { mcVariables } from './tokens';
-import { animationStyles } from './animations';
-import { popupStyles } from './popup';
-import { weatherIconStyles } from '../icons/weather-icons';
-import { flowsCardStyles } from '../card/flows-css';
-import { shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
+import { popupHostStyles } from '../card/popup-host-css';
+import { decorTagStyles, shapeCardStyles, valueBgCardStyles } from '../card/shape-css';
 import { seasonalCardStyles } from '../card/seasonal-card-css';
 import { LAYER_SYNC_CSS } from '../layers/layer-slot';
-import { pauseCardStyles } from '../card/pause-css';
+import { pauseGapStyles } from '../card/pause-gap-css';
 
 /** Module roots that are 100% wide (their own rules below); a layout gives their wrapper that width. */
 const FULL_WIDTH_ROOTS = [
@@ -36,6 +33,25 @@ const magicCardLocalStyles = css`
     flex-direction: column;
     padding: var(--mc-padding);
     gap: var(--mc-gap);
+  }
+
+  /* A failure notice shows (host attribute mc-fail): ha-card is the scroll box, so the card keeps its grid cell. */
+  :host([mc-fail]) {
+    height: 100%;
+  }
+  :host([mc-fail]) ha-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden auto;
+    scroll-padding-block: 8px;
+  }
+  :host([mc-fail]) .mc-card-content {
+    flex: none;
+  }
+
+  /* A shaped card waits for the decor chunk: the shape's content inset is measured there, so nothing shows until it is in. */
+  :host([data-mc-decor-wait]) ha-card {
+    visibility: hidden;
   }
 
   /* Columns fill their grid cell (stretch): vertical_align then has room to work and the studio
@@ -1348,4 +1364,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseCardStyles];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupHostStyles, shapeCardStyles, valueBgCardStyles, decorTagStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseGapStyles];

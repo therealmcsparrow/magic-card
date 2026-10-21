@@ -5,7 +5,7 @@ import { McLayerDesign, McLayerGroups } from './layer-groups';
 import { McLayersSheet } from './layers-sheet';
 
 /*
- * Chunk entry of dist/magic-card-layer-editor.js (contracts layer-editor 1.0.0 and lazy-module 1.2.0 r2).
+ * Chunk entry of dist/magic-card-layer-editor.js (contracts layer-editor 1.0.0 and lazy-module 1.2.0).
  * Evaluating this file changes nothing global: install() defines the elements, each guarded, and runs only
  * when BUILD matches the loading magic-card.js. The host (magic-card-editor.js) never imports a file of
  * this chunk; it renders the tags and loads this entry through layer-editor-loader.ts.

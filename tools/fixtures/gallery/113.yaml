@@ -1,0 +1,29 @@
+# Pause button in another corner: pause_button: always puts the Pause motion button top-right instead of the default bottom-left.
+# Entities: none
+# gallery: width=400
+type: custom:magic-card
+name: Pause corner
+pause_button: always
+pause_button_corner: top-right
+background: "#14161c"
+border_radius: 26px
+padding: 22px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+background_layers:
+  - type: gradient
+    gradient: "linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0))"
+  - type: image
+    image: /local/hills.svg
+    pan_zoom: { from: 100, to: 130, duration: 20 }
+rows:
+  - id: copy
+    padding: 90px 0 4px
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: Keep the corner clear
+            design: { font_size: 22px, font_weight: "800", color: "#ffffff", text_shadow: "0 2px 12px rgba(0,0,0,0.5)" }
+          - type: text
+            text: "pause_button_corner: top-right moves the button away from the text."
+            design: { font_size: 12px, color: "rgba(255,255,255,0.92)", text_shadow: "0 2px 10px rgba(0,0,0,0.5)" }

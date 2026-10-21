@@ -1,0 +1,95 @@
+# Orbital weather: the weather seen from orbit. The sky shows the condition, the horizon of the planet glows underneath.
+# Rain streaks fall when it rains, clouds drift when it is cloudy, and stars twinkle in the sky in every weather.
+# Entities: weather.harbor
+# gallery: width=380 record=5 stage=linear-gradient(135deg,#02030a,#0a1230)
+type: custom:magic-card
+name: Orbital weather
+background: "#03040a"
+border_radius: 26px
+padding: 0px
+overflow: hidden
+box_shadow: "0 22px 48px rgba(0,0,0,0.6)"
+rows:
+  - id: sky
+    column_widths: [1fr, auto]
+    gap: 12px
+    padding: 24px 24px 18px
+    design:
+      animations:
+        - { id: stars, preset: twinkle, color: "#dbe7ff", intensity: 8, duration: 5s }
+      conditional:
+        - id: rainy
+          name: Rainy
+          conditions: [{ type: state, entity: weather.harbor, state: rainy }]
+          design:
+            animations:
+              - { id: rain, preset: rain-fall, color: "#9ad0ff", strength: 70, intensity: 10, duration: 1s }
+              - { id: flash, preset: twinkle, color: "#dbe7ff", intensity: 4, duration: 5s }
+        - id: cloudy
+          name: Cloudy
+          conditions: [{ type: state, entity: weather.harbor, state: cloudy }]
+          design:
+            animations:
+              - { id: clouds, preset: clouds-drift, color: "#7f93b8", strength: 50, intensity: 3, duration: 5s }
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: weather.harbor
+            design: { font_size: 12px, font_weight: "700", color: "#9ad0ff", text_transform: uppercase, letter_spacing: 2px }
+          - type: text
+            use_entity: true
+            entity: weather.harbor
+            attribute: temperature
+            design: { font_size: 52px, font_weight: "800", color: "#f2f6ff", line_height: "1.05" }
+      - vertical_align: start
+        gap: 6px
+        modules:
+          - type: horizontal
+            gap: 6px
+            align: center
+            justify: end
+            modules:
+              - type: icon
+                icon: mdi:weather-windy
+                size: 16px
+                design: { color: "#9ad0ff" }
+              - type: text
+                use_entity: true
+                entity: weather.harbor
+                attribute: wind_speed
+                design: { font_size: 13px, font_weight: "700", color: "#e4ecff" }
+          - type: horizontal
+            gap: 6px
+            align: center
+            justify: end
+            modules:
+              - type: icon
+                icon: mdi:water-percent
+                size: 16px
+                design: { color: "#9ad0ff" }
+              - type: text
+                use_entity: true
+                entity: weather.harbor
+                attribute: humidity
+                design: { font_size: 13px, font_weight: "700", color: "#e4ecff" }
+  - id: horizon
+    padding: 0px
+    design:
+      position: relative
+      height: 92px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              position: absolute
+              left: -35%
+              top: 34px
+              width: 170%
+              height: 360px
+              border_radius: 50%
+              background: "radial-gradient(ellipse at 50% 0%, #6fc3ff 0%, #2a6fc8 3%, #123a80 7%, #0b1020 16%, #070a16 100%)"
+              box_shadow: "0 -10px 36px rgba(111,195,255,0.55), inset 0 3px 0 rgba(190,230,255,0.7)"
+            modules: []

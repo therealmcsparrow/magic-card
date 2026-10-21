@@ -1,63 +1,13 @@
 import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { readRadii, ringPath, shapeRingPath } from '../utils/ring-path';
-import type { ResolvedShape } from './mc-shape';
+import { readRadii, shapeRingPath } from '../utils/ring-path';
+import { ringPath } from '../utils/ring-outline';
+import type { ResolvedShape } from './shape-resolve';
+import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
 import { linearGradientSvg, parseGradient } from '../utils/gradient';
 import { ResolvedRing, ringInset, ringStroke, ringTimerTick } from '../utils/ring';
 import { TimerTick } from '../utils/timer';
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
-
-/** Something re-measured when its observed element resizes (rings, shapes). */
-export interface SizeWatcher {
-  measure(): void;
-}
-
-/**
- * An element's border box size, sub-pixel (offsetWidth / offsetHeight are rounded) unless a
- * transform scales it (then its layout size).
- */
-export function borderBoxSize(el: HTMLElement): { w: number; h: number } {
-  const w = el.offsetWidth;
-  const h = el.offsetHeight;
-  const r = typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : undefined;
-  if (r && Math.abs(r.width - w) < 1 && Math.abs(r.height - h) < 1) return { w: r.width, h: r.height };
-  return { w, h };
-}
-
-/** Rings / shapes per observed parent, for the one ResizeObserver they all share. */
-const watchers = new Map<Element, Set<SizeWatcher>>();
-let shared: ResizeObserver | undefined;
-
-/** The ResizeObserver every ring's parent is observed by (created on first use; none without the API). */
-export function ringResizeObserver(): ResizeObserver | undefined {
-  if (!shared && typeof ResizeObserver === 'function') {
-    shared = new ResizeObserver((entries) => {
-      for (const e of entries) watchers.get(e.target)?.forEach((r) => r.measure());
-    });
-  }
-  return shared;
-}
-
-/** Re-measure `ring` whenever `parent` resizes (the shared ResizeObserver). */
-export function watchSize(parent: Element, ring: SizeWatcher): void {
-  let set = watchers.get(parent);
-  if (!set) {
-    set = new Set();
-    watchers.set(parent, set);
-    ringResizeObserver()?.observe(parent);
-  }
-  set.add(ring);
-}
-
-export function unwatchSize(parent: Element, ring: SizeWatcher): void {
-  const set = watchers.get(parent);
-  if (!set) return;
-  set.delete(ring);
-  if (set.size) return;
-  watchers.delete(parent);
-  shared?.unobserve(parent);
-}
 
 /** Two resolved rings draw the same (a card render makes a new object every time). */
 function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boolean {
@@ -74,8 +24,13 @@ function sameRing(a: ResolvedRing | undefined, b: ResolvedRing | undefined): boo
  * (`[data-mc-ring]`). Measuring only happens when the parent resizes (one ResizeObserver shared by
  * all rings) or its inline style / class changes (radius from a rule or appearance), not per render.
  */
-@customElement('mc-ring')
 export class McRing extends LitElement {
+  static properties = {
+    ring: { attribute: false, hasChanged: (a?: ResolvedRing, b?: ResolvedRing) => !sameRing(a, b) },
+    shape: { attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) },
+    _box: { state: true },
+  };
+
   static styles = css`
     :host {
       position: absolute;
@@ -118,14 +73,13 @@ export class McRing extends LitElement {
     }
   `;
 
-  @property({ attribute: false, hasChanged: (a?: ResolvedRing, b?: ResolvedRing) => !sameRing(a, b) }) ring?: ResolvedRing;
+  ring?: ResolvedRing;
 
   /** The parent's outline shape: the ring follows it instead of the rounded rectangle. */
-  @property({ attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) })
   shape?: ResolvedShape;
 
   /** Parent border box and radii, as measured. */
-  @state() private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
+  private _box?: { w: number; h: number; top: number; left: number; radii: ReturnType<typeof readRadii> };
 
   private _observed?: Element;
   private _mutations?: MutationObserver;

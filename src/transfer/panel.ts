@@ -67,7 +67,7 @@ export class TransferPanel extends LitElement {
   @property({ attribute: false }) exportItems?: { kind: TransferKind; items: TransferItem[] };
   @property({ attribute: false }) taken: (kind: TransferKind, id: string) => boolean = () => false;
   @property({ type: Boolean }) hasLibrary = true;
-  /** (r3, optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
+  /** (optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
   @property({ attribute: false }) reserved?: (kind: TransferKind, id: string) => boolean;
   @property({ attribute: false }) takenName?: (kind: TransferKind, name: string) => boolean;
 

@@ -125,7 +125,7 @@ export interface MagicCardConfig {
   hidden_animations?: string[];
   /** Card backdrop: up to MAX_BACKGROUND_LAYERS layers, first = front (contract bg-stack 1.0.0). */
   background_layers?: BackgroundLayerConfig[];
-  /** Layers drop blur, blend and pan / zoom (contract layer-placement 1.0.0 r2). */
+  /** Layers drop blur, blend and pan / zoom (contract layer-placement 1.0.0). */
   layers_low_power?: boolean;
   /** Viewer pause button visibility (contract card-pause 1.0.0). */
   pause_button?: PauseButtonMode;
@@ -296,13 +296,13 @@ export interface CardAppearanceOverrides {
   card_height?: string;
   use_page_theme?: boolean;
   theme?: string;
-  /** Design rules (ADR 0008): each key replaces the card's own value while the rule matches. `{}`, `none` or `type: none` switch it off. */
+  /** Design rules: each key replaces the card's own value while the rule matches. `{}`, `none` or `type: none` switch it off. */
   ring?: RingConfig;
   shape?: ShapeKind;
   shape_options?: ShapeOptions;
   value_background?: ValueBackgroundConfig;
   seasonal?: SeasonalSetting;
-  /** Replaces the card's whole backdrop list while the rule matches (bg-stack 1.0.0 r3); never on `hover`. */
+  /** Replaces the card's whole backdrop list while the rule matches (bg-stack 1.0.0); never on `hover`. */
   background_layers?: BackgroundLayerConfig[];
 }
 
@@ -470,7 +470,7 @@ export interface DesignConfig {
   // Animation
   /** Unused legacy shape, kept for old configs. */
   animation?: CssAnimationConfig;
-  /** Preset animations (src/utils/animation.ts); not CSS, the card renders them itself. */
+  /** Preset animations (src/anim-studio/resolve.ts); not CSS, the card renders them itself. */
   animations?: AnimationConfig[];
   /** @deprecated single-animation keys (v0.0.14): read as one `animations` entry, removed on edit. */
   animation_preset?: string;

@@ -3,7 +3,7 @@ import type { ThemeDoc, ThemePreset, ThemePresetGroup, ThemePresetLibrary } from
 import { m } from './i18n';
 
 /*
- * The preset library (Contract theme-presets 1.2.0, ADR 0014 and 0015): 57 themes, each with a light and a
+ * The preset library (Contract theme-presets 1.2.0): 57 themes, each with a light and a
  * dark mode, in one lazy chunk (magic-card-theme-presets.js) that the create dialog loads on first
  * open. It imports the namespace's m() marker (i18n/index.ts), so Node needs tools/ui-kit-ts-hooks.mjs to load it; the chunk holds
  * no UI code. The first 5 are the original starters (ids and values unchanged since 2026.10.06).
@@ -53,7 +53,7 @@ const doc = (light: Mode, dark: Mode, root: Mode = {}): ThemeDoc => ({
 });
 
 /**
- * A plain preset (ADR 0015): its 14 base colours (7 light, then 7 dark) as one 84-character string of
+ * A plain preset: its 14 base colours (7 light, then 7 dark) as one 84-character string of
  * 6-digit hex, unpacked here into the same resolved objects the long form gives. The `more` argument adds note,
  * inspiredBy or tags; `dark` overrides state colours in the dark mode only.
  */

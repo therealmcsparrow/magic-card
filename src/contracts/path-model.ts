@@ -1,16 +1,13 @@
 /*
- * Contract: path model. Version 1.0.0 (Architect-owned). ADR 0017, ADR 0020.
- * Revision 2 (2026-10-18, before any implementation): MAX_ANCHORS limits adding only; imported
- * paths of any anchor count load and stay editable (design W10).
- * Revision 3 (2026-10-18, CEO decisions after the hands-on demo, ADR 0025; nothing shipped, so in
- * place): PathDraw is written down (it was only named) and gains `primitive()` with PRIMITIVE_KINDS
- * (rounded rectangle, arrow, heart, speech bubble, ticket, tab, leaf, ...), used by the SVG editor's
- * Shapes tool and the shape editor's starter outlines. draw.ts is now reached by both editors through
- * the path-canvas chunk (path-canvas revision 4). PathEdit lists `toggleSmooth` (T10 found it missing;
- * edit.ts already exports it).
- * Revision 4 (2026-10-19, additive; nothing shipped, so in place): PRIMITIVE_KINDS grows from 14 to 19
- * with circle, ellipse, semicircle, star and hexagon. One exception to "proportions scale with the
- * box": circle takes the shorter side of the box as its diameter and sits centred, so it stays round.
+ * Contract: path model. Version 1.0.0.
+ * MAX_ANCHORS limits adding only; imported paths of any anchor count load and stay editable.
+ * PathDraw has `primitive()` with PRIMITIVE_KINDS (rounded rectangle, arrow, heart, speech bubble,
+ * ticket, tab, leaf, ...), used by the SVG editor's Shapes tool and the shape editor's starter
+ * outlines. draw.ts is reached by both editors through the path-canvas chunk. PathEdit lists
+ * `toggleSmooth` (edit.ts exports it).
+ * PRIMITIVE_KINDS has 19 entries, including circle, ellipse, semicircle, star and hexagon. One
+ * exception to "proportions scale with the box": circle takes the shorter side of the box as its
+ * diameter and sits centred, so it stays round.
  *
  * One path model for the whole product. It replaces three private copies:
  * - src/icons/path-math.ts      (parser for every SVG command, arcs to cubics, resample, morph)
@@ -18,7 +15,8 @@
  * - src/anim-studio/editors/path-utils.ts (anchor/handle edit model)
  *
  * Implementation: module `path-model`, folder src/path/:
- * - src/path/core.ts  RUNTIME-SAFE. Pure, no DOM, no lit. The only part magic-card.js may import.
+ * - src/path/core.ts  RUNTIME-SAFE. Pure, no DOM, no lit. Not in magic-card.js: it is the shared lazy
+ *                     chunk path-core, fetched with each chunk that uses it (lazy-module, Shared chunks).
  *                     Everything in PathCore below.
  * - src/path/edit.ts  EDITOR-ONLY. Anchor model and edit operations (PathEdit below). Never in the
  *                     src/index.ts static graph (contract test: the built magic-card.js holds none of
@@ -26,7 +24,7 @@
  * - src/path/tidy.ts  EDITOR-ONLY. Export rounding and clean-up (PathTidy below).
  * - src/path/draw.ts  EDITOR-ONLY. Pure generators for draw tools (rect, ellipse, polygon, star,
  *                     freehand fit, primitives; PathDraw below). Shared by the SVG editor and the
- *                     shape editor (both through the path-canvas chunk's `pathDraw`, revision 3) and
+ *                     shape editor (both through the path-canvas chunk's `pathDraw`) and
  *                     the animation studio (its own bundle, static import).
  *
  * Migration rules (the merge must not grow magic-card.js; target is a net saving because the
@@ -45,16 +43,16 @@
  *   accept any anchor count. The only bound on an imported path is its source size (an icon's
  *   ICON_MAX_BYTES, mcu-library 1.0.0).
  * - insertAt and append on a subpath that already has MAX_ANCHORS or more return the path unchanged
- *   with index -1. canAdd() tells the canvas and the tools beforehand (design W10).
+ *   with index -1. canAdd() tells the canvas and the tools beforehand.
  * - The animation studio keeps its own cap behaviour through the path-utils shim (unchanged).
  *
- * Primitives (revision 3, kinds extended in revision 4):
+ * Primitives:
  * - primitive(kind, box) returns ONE closed subpath inside `box`, clockwise (y down), at most
  *   PRIMITIVE_MAX_ANCHORS anchors, so every kind is also a valid card shape outline (custom-shape
  *   MAX_SHAPE_POINTS 64) and a valid boolean operand. Only straight sides and cubics, no arcs.
  * - Proportions are fixed per kind and scale with the box (rounded-rect radius = 20 % of the shorter
  *   side; speech bubble tail at the bottom left, 20 % of the height; arrow points right, head 40 % of
- *   the width). Exception (r4): circle uses the shorter side as its diameter, centred in the box;
+ *   the width). Exception: circle uses the shorter side as its diameter, centred in the box;
  *   ellipse fills the box. Not parametric after insertion: the result is a plain editable path. The
  *   rect tool keeps its own radius field.
  * - Existing generators (rectPath, ellipsePath, polygonPath, starPath, linePath, fitFreehand,
@@ -64,7 +62,7 @@
  */
 
 export const PATH_MODEL_CONTRACT_VERSION = '1.0.0';
-export const PATH_MODEL_CONTRACT_REVISION = 4;
+export const PATH_MODEL_CONTRACT_REVISION = 5;
 
 export type Pt = [number, number];
 /** start, c1, c2, end (morph and math code). */
@@ -158,7 +156,7 @@ export interface PathEdit {
   moveAnchor(p: EditPath, i: number, x: number, y: number): EditPath;
   setHandle(p: EditPath, i: number, which: 'in' | 'out', q: Pt): EditPath;
   setKind(p: EditPath, i: number, kind: AnchorKind): EditPath;
-  /** Revision 3: corner -> smooth with automatic handles, smooth -> corner without handles. */
+  /** Corner -> smooth with automatic handles, smooth -> corner without handles. */
   toggleSmooth(p: EditPath, i: number): EditPath;
   setClosed(p: EditPath, closed: boolean): EditPath;
   reverse(p: EditPath): EditPath;
@@ -183,9 +181,9 @@ export interface PathTidy {
   tidyPath(p: PathData, o?: TidyOptions): string;
 }
 
-// ── editor-only: draw generators (src/path/draw.ts), revision 3 ──
+// ── editor-only: draw generators (src/path/draw.ts) ──
 
-/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines. Revision 4 (2026-10-19, additive): circle, ellipse, semicircle, star and hexagon joined the first 14. */
+/** Shapes offered by the SVG editor's Shapes tool and as the shape editor's starter outlines. Circle, ellipse, semicircle, star and hexagon are the last five of 19. */
 export const PRIMITIVE_KINDS = [
   'rounded-rect',
   'triangle',

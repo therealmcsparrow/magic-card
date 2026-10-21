@@ -1,0 +1,140 @@
+# Cargo bay: a roll-up door of steel slats inside a hazard-striped frame. The door rises with the cover position.
+# While the door moves, an amber beacon blinks and dashes run around the opening. Open, stop and close are one tap each.
+# Entities: cover.workshop_door
+# gallery: width=380 record=3 stage=linear-gradient(135deg,#14171a,#262b30)
+type: custom:magic-card
+name: Cargo bay
+background: "#1d2024"
+border_radius: 24px
+padding: 20px
+box_shadow: "0 20px 44px rgba(0,0,0,0.55)"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    padding: 0 0 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Cargo bay
+            design: { font_size: 12px, font_weight: "700", color: "#a9b1ba", text_transform: uppercase, letter_spacing: 2px, font_family: "ui-monospace, 'Cascadia Mono', Menlo, monospace" }
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:alarm-light-outline
+            size: 22px
+            design:
+              color: "#5c646d"
+              conditional:
+                - id: moving
+                  name: Moving
+                  mode: any
+                  conditions: [{ type: state, entity: cover.workshop_door, state: opening }, { type: state, entity: cover.workshop_door, state: closing }]
+                  design:
+                    color: "#ffb020"
+                    animations:
+                      - { id: beacon, preset: blink, target: icon, intensity: 80, duration: 1s }
+  - id: door
+    column_widths: [1fr, 112px]
+    gap: 16px
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design:
+              padding: 9px
+              border_radius: 14px
+              background: "repeating-linear-gradient(135deg, #f5c518 0px, #f5c518 12px, #1d2024 12px, #1d2024 24px)"
+            modules:
+              - type: vertical
+                gap: 0px
+                design:
+                  height: 150px
+                  border_radius: 6px
+                  background: "repeating-linear-gradient(180deg, #4a515a 0px, #3a4048 7px, #2a2f35 15px, #14171a 15px, #14171a 18px)"
+                  box_shadow: "inset 0 0 0 2px #0f1215"
+                  value_background:
+                    type: fill
+                    entity: cover.workshop_door
+                    attribute: current_position
+                    color: "#0d1013"
+                    opacity: 100%
+                    wave: false
+                  ring:
+                    mode: animated
+                    animation: dashes
+                    speed: 2s
+                    width: 3
+                    color: "#ffb020"
+                    trigger: state
+                    trigger_entity: cover.workshop_door
+                    state: opening
+                modules: []
+      - vertical_align: center
+        gap: 2px
+        modules:
+          - type: text
+            use_entity: true
+            entity: cover.workshop_door
+            attribute: current_position
+            design: { font_size: 30px, font_weight: "800", color: "#f3f5f7", line_height: "1.05" }
+          - type: text
+            text: "% raised"
+            design: { font_size: 11px, color: "#a9b1ba", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: cover.workshop_door
+            design: { font_size: 14px, font_weight: "800", color: "#ffb020", margin_top: 8px, text_transform: uppercase, letter_spacing: 1.2px }
+  - id: actions
+    layout: "1-1-1"
+    gap: 10px
+    padding: 16px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            gap: 6px
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
+            actions:
+              tap_action: { action: perform-action, service: cover.open_cover, data: { entity_id: cover.workshop_door } }
+            modules:
+              - type: icon
+                icon: mdi:arrow-up
+                size: 18px
+                design: { color: "#f3f5f7" }
+              - type: text
+                text: Open
+                design: { font_size: 13px, font_weight: "700", color: "#f3f5f7" }
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            gap: 6px
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
+            actions:
+              tap_action: { action: perform-action, service: cover.stop_cover, data: { entity_id: cover.workshop_door } }
+            modules:
+              - type: icon
+                icon: mdi:stop
+                size: 18px
+                design: { color: "#ffb020" }
+              - type: text
+                text: Stop
+                design: { font_size: 13px, font_weight: "700", color: "#f3f5f7" }
+      - modules:
+          - type: horizontal
+            align: center
+            justify: center
+            gap: 6px
+            design: { padding: 13px 0, border_radius: 12px, border: "1px solid #3a4048", background_color: "#252a30" }
+            actions:
+              tap_action: { action: perform-action, service: cover.close_cover, data: { entity_id: cover.workshop_door } }
+            modules:
+              - type: icon
+                icon: mdi:arrow-down
+                size: 18px
+                design: { color: "#f3f5f7" }
+              - type: text
+                text: Close
+                design: { font_size: 13px, font_weight: "700", color: "#f3f5f7" }

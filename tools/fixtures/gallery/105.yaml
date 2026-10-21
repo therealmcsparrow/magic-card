@@ -1,0 +1,47 @@
+# Camera behind a gauge: the door camera fills the card behind the other modules, darkened from the bottom, and a temperature gauge sits in front.
+# Entities: camera.front_door, sensor.outdoor_temperature
+# gallery: width=400
+type: custom:magic-card
+name: Garden camera
+background: "#0e1116"
+border_radius: 26px
+padding: 18px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: head
+    columns:
+      - gap: 0px
+        modules:
+          - type: camera
+            entity: camera.front_door
+            camera_view: snapshot
+            placement: background
+            layer:
+              fill: card
+              scrim:
+                style: bottom
+                strength: 50
+          - type: text
+            text: Front garden
+            design: { font_size: 17px, font_weight: "700", color: "#ffffff", text_shadow: "0 2px 10px rgba(0,0,0,0.6)" }
+          - type: text
+            text: Camera view with the air temperature
+            design: { font_size: 12px, color: "rgba(255,255,255,0.85)", text_shadow: "0 2px 10px rgba(0,0,0,0.6)" }
+  - id: gauge
+    design: { margin_top: 56px }
+    columns:
+      - modules:
+          - type: gauge
+            entity: sensor.outdoor_temperature
+            min: -10
+            max: 40
+            gauge_style: half
+            needle: false
+            show_name: false
+            decimals: 1
+            severity:
+              - { from: -10, color: "#7dd3fc" }
+              - { from: 10, color: "#86efac" }
+              - { from: 25, color: "#fbbf24" }
+              - { from: 33, color: "#f87171" }
+            design: { color: "#ffffff", max_width: 220px, margin: 0 auto }

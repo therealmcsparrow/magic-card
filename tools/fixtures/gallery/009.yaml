@@ -1,0 +1,181 @@
+# Security: alarm state with a rippling shield, and sensor tiles that turn red when
+# a door or window is open or the lock is unlocked.
+# Entities: alarm_control_panel.home, lock.front_door, binary_sensor.back_door,
+#           binary_sensor.garage_window, binary_sensor.hall_motion
+# gallery: width=400
+type: custom:magic-card
+name: Security
+background: "linear-gradient(160deg, #0d1b16 0%, #0a1411 100%)"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.45)"
+rows:
+  - id: head
+    column_widths: [auto, 1fr, auto]
+    gap: 14px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: icon
+            icon: mdi:shield-check
+            size: 30px
+            design:
+              color: "#34d399"
+              width: 60px
+              height: 60px
+              display: flex
+              align_items: center
+              justify_content: center
+              border_radius: 50%
+              background_color: "rgba(52,211,153,0.12)"
+              animations:
+                - preset: ripple-rings
+                  color: "#34d399"
+                  duration: 2.6s
+      - vertical_align: center
+        gap: 0px
+        modules:
+          - type: text
+            text: Alarm
+            design: { font_size: 11px, color: "#6b8f80", text_transform: uppercase, letter_spacing: 1.5px }
+          - type: text
+            use_entity: true
+            entity: alarm_control_panel.home
+            design: { font_size: 22px, font_weight: "700", color: "#ecfdf5" }
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Disarm
+            design:
+              font_size: 13px
+              font_weight: "600"
+              color: "#34d399"
+              padding: 7px 16px
+              border_radius: 999px
+              border: "1px solid rgba(52,211,153,0.6)"
+            actions:
+              tap_action: { action: more-info, entity: alarm_control_panel.home }
+  - id: sensors
+    layout: "1-1"
+    gap: 10px
+    columns:
+      - gap: 10px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: &ok
+              padding: 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.04)"
+              border: "1px solid rgba(52,211,153,0.14)"
+              conditional:
+                - id: alert
+                  name: Unlocked
+                  conditions: [{ type: state, entity: lock.front_door, state: unlocked }]
+                  design: { background_color: "rgba(239,68,68,0.14)", border: "1px solid rgba(239,68,68,0.5)" }
+            modules:
+              - type: icon
+                entity: lock.front_door
+                icon: mdi:lock
+                size: 22px
+                design: { color: "#34d399" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Front door
+                    design: &name { font_size: 12px, color: "#7fa596" }
+                  - type: text
+                    use_entity: true
+                    entity: lock.front_door
+                    design: &state { font_size: 15px, font_weight: "700", color: "#ecfdf5" }
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.04)"
+              border: "1px solid rgba(52,211,153,0.14)"
+              conditional:
+                - id: alert
+                  name: Open
+                  conditions: [{ type: state, entity: binary_sensor.back_door, state: "on" }]
+                  design: { background_color: "rgba(239,68,68,0.14)", border: "1px solid rgba(239,68,68,0.5)" }
+            modules:
+              - type: icon
+                entity: binary_sensor.back_door
+                icon_on: mdi:door-open
+                icon_off: mdi:door-closed
+                icon: mdi:door-closed
+                size: 22px
+                design: { color: "#34d399" }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Back door
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: binary_sensor.back_door
+                    design: *state
+      - gap: 10px
+        modules:
+          - type: horizontal
+            gap: 10px
+            align: center
+            design:
+              padding: 12px
+              border_radius: 16px
+              background_color: "rgba(255,255,255,0.04)"
+              border: "1px solid rgba(52,211,153,0.14)"
+              conditional:
+                - id: alert
+                  name: Open
+                  conditions: [{ type: state, entity: binary_sensor.garage_window, state: "on" }]
+                  design: { background_color: "rgba(239,68,68,0.14)", border: "1px solid rgba(239,68,68,0.5)" }
+            modules:
+              - type: icon
+                entity: binary_sensor.garage_window
+                icon_on: mdi:window-open-variant
+                icon_off: mdi:window-closed-variant
+                icon: mdi:window-closed-variant
+                size: 22px
+                design:
+                  color: "#34d399"
+                  conditional:
+                    - { id: open, name: Open, conditions: [{ type: state, state: "on" }], design: { color: "#f87171" } }
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Garage window
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: binary_sensor.garage_window
+                    design: *state
+          - type: horizontal
+            gap: 10px
+            align: center
+            design: *ok
+            modules:
+              - type: icon
+                entity: binary_sensor.hall_motion
+                icon: mdi:motion-sensor
+                size: 22px
+                design:
+                  color: "#34d399"
+                  animations: [{ preset: fade-pulse, trigger: entity_on, duration: 1.4s }]
+              - type: vertical
+                gap: 0px
+                modules:
+                  - type: text
+                    text: Hallway
+                    design: *name
+                  - type: text
+                    use_entity: true
+                    entity: binary_sensor.hall_motion
+                    design: *state

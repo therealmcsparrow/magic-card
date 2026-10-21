@@ -1,12 +1,13 @@
 import type { SliderModuleConfig } from '../types';
-import { resolveShape, shapeClip, type ResolvedShape } from '../card/mc-shape';
+import { shapeClip } from '../card/shape-clip';
+import { resolveShape, type ResolvedShape } from '../card/shape-resolve';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
 import { shapePath } from '../utils/shape-path';
 
 /*
  * track_shape (slider-look 1.0.0 rule 4): the track box (.mc-sl-box, which holds the empty track, the
  * fill and the segments) is clipped to the shape from the card's shape system. The clip sits on that
- * inner box only, never on the focusable element or above it, so the focus ring stays whole (AC13).
+ * inner box only, never on the focusable element or above it, so the focus ring stays whole.
  * The shape's outline is drawn inside the box as a 2 px stroke in the track colour at 40 % (half of
  * it is clipped, so 1 px shows), which keeps an empty fill visible. The box size is measured from the
  * rendered element, on mount, on a resize and after each render; a ResizeObserver exists only while

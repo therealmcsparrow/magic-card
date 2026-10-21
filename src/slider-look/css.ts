@@ -1,6 +1,6 @@
 /*
  * The slider-look styles: one constant string (no config value is ever inside it; per-slider values
- * arrive as custom properties on the track, lit.M-SEC2). Selectors start with .mc-tile-slider.mc-sl so
+ * arrive as custom properties on the track). Selectors start with .mc-tile-slider.mc-sl so
  * they beat the card's own sheet, which an adopted sheet orders after a <style> in the shadow root.
  * Floor-safe (Chromium 85): no inset property, no color-mix, no individual transforms; separate
  * opacity for every tint. Nothing animates while idle; the [offscreen] rule is the pause hook.

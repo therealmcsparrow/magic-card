@@ -1,7 +1,7 @@
 import { css, unsafeCSS, type CSSResult } from 'lit';
 
 /*
- * Layer editor tokens (designer 11 section A; Marco 12 N1). Every control edge in the Placement, Layer and
+ * Layer editor tokens. Every control edge in the Placement, Layer and
  * Card backdrop groups uses --mc-ed-ctl-line (>= 3:1 against its panel, WCAG 1.4.11); selected and on / off
  * states carry a non-colour cue as well (check mark, bold label, 2 px border, "On" / "Off" text).
  *

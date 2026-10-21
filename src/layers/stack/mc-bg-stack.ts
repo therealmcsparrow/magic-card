@@ -2,58 +2,32 @@ import { LitElement, css, html, nothing, type PropertyValues, type TemplateResul
 import { keyed } from 'lit/directives/keyed.js';
 import { Directive, directive, PartType, type ElementPart, type PartInfo } from 'lit/directive.js';
 import type { HomeAssistant } from '../../types';
-import {
-  BG_LAYER_STATUS_EVENT, IDLE_PAUSE_MS, MAX_BACKGROUND_LAYERS, STALE_FAILED_REFRESHES, STALE_MIN_AGE_MS,
-  type BackgroundLayerConfig, type BgLayerProblem, type BgLayerStatus, type BgStackHost,
-} from '../../contracts/bg-stack';
-import { LAYER_BLENDS } from '../../contracts/layer-placement';
-import { safeColor } from '../../utils/animation';
-import {
-  blurOf, cssUrl, gradientCss, opacityOf, panZoomOf, patternCss, positionCss, repeatCss, safeImageUrl, sanitiseStates, sizeCss,
-  type PanZoom,
-} from './values';
+import { BG_LAYER_STATUS_EVENT, MAX_BACKGROUND_LAYERS } from '../../contracts/bg-stack.needs';
+import { LAYER_BLENDS } from '../../contracts/layer-placement.needs';
+import type { BackgroundLayerConfig, BgLayerProblem, BgLayerStatus, BgStackHost, BgStackItem, BgStackRun, BgStackView } from '../../contracts/bg-stack';
+import { safeColor } from '../../utils/safe-css';
+import { blurOf, cssUrl, gradientCss, opacityOf, patternCss, positionCss, repeatCss, safeImageUrl, sanitiseStates, sizeCss } from './values';
+import { currentFx, liveStacks } from './fx-slot';
 
 /*
- * <mc-bg-stack> (contract bg-stack 1.0.0 r2, ADR 0038): the card backdrop, defined by the lazy chunk
- * 'layers'. Everything it needs from magic-card.js comes through `host`. Rules this file keeps:
+ * <mc-bg-stack>: the card backdrop. Everything it needs from magic-card.js comes through `host`.
+ * Rules this file keeps:
  * - every URL goes through safeImageUrl, every colour through host.cssColor + safeColor, gradients are
  *   rebuilt from parseGradient output, enums are allow-listed (values.ts); per-instance CSS only through the CSSOM (sty directive, one validated value per property);
- * - pan / zoom is a transform animation on the inner image box, blur sits on a static outer box;
- * - nothing runs while off screen, page hidden or card paused (host.observeOffscreen sets `offscreen`):
- *   camera refresh, stale ticker and idle timers are cleared and restarted on return (card-pause rule 2);
+ * - blur sits on a static outer box; a moving picture (pan / zoom) is a transform animation on the inner image box;
+ * - pan / zoom, camera refresh, the stale state and the idle, visibility and reduced-motion wiring belong to
+ *   the BgStackRun that fx-slot.ts hands over (host.observeOffscreen sets `offscreen`); without it a picture
+ *   shows unscaled and a camera layer keeps its first frame;
  * - a decode that resolves after disconnect, or for an older source, writes nothing.
  */
 
 const TAG = 'mc-bg-stack';
 const FADE_MS = 300;
-const PILL_TICK_MS = 60_000;
 const REDUCED = '(prefers-reduced-motion: reduce)';
 const ENTITY = /^[a-z0-9_]+\.[a-z0-9_]+$/;
 const ATTR = /^[A-Za-z0-9_]{1,64}$/;
 const PATTERNS: readonly string[] = ['dots', 'grid', 'lines', 'diagonal', 'checks'];
 const BLENDS = LAYER_BLENDS as readonly string[];
-const PILL_STYLE = 'display:inline-block;font:13px/1.4 sans-serif;color:#fff;background:rgba(0,0,0,.85);padding:2px 8px;border-radius:999px';
-const INPUT_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'touchstart'] as const;
-
-// ── one passive input listener per page, shared by every stack, throttled to 1 Hz ──
-const inputSubs = new Set<() => void>();
-let lastInputAt = 0;
-let lastInputTick = 0;
-const onInput = (): void => {
-  const now = Date.now();
-  if (now - lastInputTick < 1000) return;
-  lastInputTick = lastInputAt = now;
-  inputSubs.forEach((f) => f());
-};
-function subscribeInput(f: () => void): () => void {
-  if (!inputSubs.size) for (const e of INPUT_EVENTS) document.addEventListener(e, onInput, { passive: true });
-  inputSubs.add(f);
-  lastInputAt = Date.now();
-  return () => {
-    inputSubs.delete(f);
-    if (!inputSubs.size) for (const e of INPUT_EVENTS) document.removeEventListener(e, onInput);
-  };
-}
 
 /** Decode off the DOM (Image.decode, onload fallback); false on any failure. */
 function decodeImage(url: string): Promise<boolean> {
@@ -66,18 +40,6 @@ function decodeImage(url: string): Promise<boolean> {
   });
 }
 
-/** `href` with a changing query parameter, set on the parsed URL (never string concatenation). */
-function busted(href: string): string {
-  if (/^data:/i.test(href)) return href;
-  try {
-    const u = new URL(href);
-    u.searchParams.set('mc_t', String(Date.now()));
-    return u.href;
-  } catch {
-    return href;
-  }
-}
-
 interface Src {
   url?: string;
   pending?: boolean;
@@ -85,29 +47,7 @@ interface Src {
   detail?: string;
 }
 
-interface Item {
-  index: number;
-  cfg: BackgroundLayerConfig;
-  states: Record<string, string>;
-  hasStates: boolean;
-  pz?: PanZoom;
-  camera: boolean;
-  /** Refresh period in ms (camera layers). */
-  refresh: number;
-  base?: string;
-  shown?: string;
-  prev?: string;
-  gen: number;
-  loading: boolean;
-  failures: number;
-  lastGood: number;
-  lastTry: number;
-  since: number;
-  stale: boolean;
-  evKey: string;
-  timer?: ReturnType<typeof setTimeout>;
-  fadeTimer?: ReturnType<typeof setTimeout>;
-}
+type Item = BgStackItem;
 
 /** Sets one validated value per property through the CSSOM (never a concatenated style string). */
 class StyleSet extends Directive {
@@ -134,7 +74,7 @@ const sty = directive(StyleSet);
 
 const srcKey = (s: Src): string => `${s.url ?? ''}|${s.pending ? 1 : 0}|${s.problem ?? ''}|${s.detail ?? ''}`;
 
-export class McBgStack extends LitElement {
+export class McBgStack extends LitElement implements BgStackView {
   static styles = css`
     :host{display:block;position:absolute;top:0;right:0;bottom:0;left:0;z-index:-1;overflow:hidden;border-radius:inherit;pointer-events:none}
     .l,.img,.fill,.pic{position:absolute;top:0;right:0;bottom:0;left:0}
@@ -148,7 +88,6 @@ export class McBgStack extends LitElement {
     @keyframes mcbg-pz{from{transform:scale(var(--f))}to{transform:translate(var(--tx),var(--ty)) scale(var(--t))}}
     @media (prefers-reduced-motion:reduce){.img{animation:none}}
   `;
-
   static properties = {
     layers: { attribute: false },
     hass: { attribute: false },
@@ -162,53 +101,35 @@ export class McBgStack extends LitElement {
   /** Studio Preview seg for pan / zoom (editor only). */
   declare preview?: 'play' | 'start' | 'end';
 
-  private _items: Item[] = [];
+  items: Item[] = [];
 
   private _sig0 = '';
-  private _onScreen = true;
-  private _visible = true;
-  private _reduced = false;
-  private _idle = false;
-  private _mq?: MediaQueryList;
-  private _mo?: MutationObserver;
   private _obsHost?: BgStackHost;
   private _stopObs?: () => void;
-  private _stopInput?: () => void;
-  private _idleTimer?: ReturnType<typeof setTimeout>;
-  private _pillTimer?: ReturnType<typeof setInterval>;
-  private _pill?: HTMLElement;
+  private _run?: BgStackRun;
 
   // ── lifecycle ──
 
   connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute('aria-hidden', 'true');
-    this._visible = document.visibilityState !== 'hidden';
-    this._onScreen = !this.hasAttribute('offscreen');
-    this._mq = typeof window.matchMedia === 'function' ? window.matchMedia(REDUCED) : undefined;
-    this._reduced = !!this._mq?.matches;
-    this._mq?.addEventListener?.('change', this._onMotion);
-    document.addEventListener('visibilitychange', this._onVisibility);
-    this._mo = new MutationObserver(this._onOffscreen);
-    this._mo.observe(this, { attributes: true, attributeFilter: ['offscreen'] });
+    liveStacks.add(this);
+    this.fxOn();
     this._watch();
     if (this.hasUpdated) {
       this._sync();
-      this._arm();
       this.requestUpdate();
     }
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
-    this._mq?.removeEventListener?.('change', this._onMotion);
-    document.removeEventListener('visibilitychange', this._onVisibility);
-    this._mo?.disconnect();
-    this._mo = undefined;
+    liveStacks.delete(this);
     this._stopObs?.();
     this._stopObs = this._obsHost = undefined;
-    this._disarm();
-    for (const i of this._items) {
+    this._run?.stop();
+    this._run = undefined;
+    for (const i of this.items) {
       clearTimeout(i.fadeTimer);
       i.fadeTimer = undefined;
       i.prev = undefined;
@@ -218,7 +139,24 @@ export class McBgStack extends LitElement {
         i.base = undefined;
       }
     }
-    this._removePill();
+  }
+
+  /** Take the motion and refresh part once it exists; a shown moving picture whose start framing is scaled fades in over its still frame. */
+  fxOn(): void {
+    const fx = currentFx();
+    if (!fx || this._run || !this.isConnected) return;
+    this._run = fx.attach(this);
+    if (!this.hasUpdated) return;
+    this._rebuild();
+    for (const i of this.items) {
+      if (i.camera && !i.shown) i.base = undefined;
+      if (i.pz && i.pz.from !== 1 && i.shown && !i.prev) {
+        i.prev = i.shown;
+        this._fade(i);
+      }
+    }
+    this._sync();
+    this.requestUpdate();
   }
 
   private _watch(): void {
@@ -228,83 +166,10 @@ export class McBgStack extends LitElement {
     this._stopObs = this.host.observeOffscreen(this);
   }
 
-  private _onOffscreen = (): void => {
-    const on = !this.hasAttribute('offscreen');
-    if (on === this._onScreen) return;
-    this._onScreen = on;
-    this._arm();
-    this.requestUpdate();
-  };
-
-  private _onVisibility = (): void => {
-    this._visible = document.visibilityState !== 'hidden';
-    this._arm();
-    this.requestUpdate();
-  };
-
-  private _onMotion = (): void => {
-    this._reduced = !!this._mq?.matches;
-    this.requestUpdate();
-  };
-
-  private _active(): boolean {
-    return this.isConnected && this._onScreen && this._visible;
-  }
-
-  /** Start or clear every timer and listener for the current on-screen / visible state. */
-  private _arm(): void {
-    if (!this._active()) {
-      this._disarm();
-      return;
-    }
-    for (const i of this._items) this._schedule(i);
-    if (this._items.some((i) => i.pz?.idle && !i.cfg.hidden)) {
-      if (!this._stopInput) {
-        this._idle = false;
-        this._stopInput = subscribeInput(this._wake);
-      }
-      this._armIdle();
-    } else {
-      this._stopInput?.();
-      this._stopInput = undefined;
-    }
-    this._armPill();
-  }
-
-  private _disarm(): void {
-    for (const i of this._items) {
-      clearTimeout(i.timer);
-      i.timer = undefined;
-    }
-    clearTimeout(this._idleTimer);
-    this._idleTimer = undefined;
-    clearInterval(this._pillTimer);
-    this._pillTimer = undefined;
-    this._stopInput?.();
-    this._stopInput = undefined;
-  }
-
-  private _wake = (): void => {
-    const was = this._idle;
-    this._idle = false;
-    this._armIdle();
-    if (was) this.requestUpdate();
-  };
-
-  private _armIdle(): void {
-    clearTimeout(this._idleTimer);
-    if (!this._stopInput) return;
-    this._idleTimer = setTimeout(() => {
-      this._idleTimer = undefined;
-      this._idle = true;
-      this.requestUpdate();
-    }, Math.max(0, IDLE_PAUSE_MS - (Date.now() - lastInputAt)));
-  }
-
   // ── Lit ──
 
   protected shouldUpdate(changed: PropertyValues): boolean {
-    // a hass push only re-renders when a layer's own picture source changed (hacard.M2)
+    // a hass push only re-renders when a layer's own picture source changed
     if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0;
     return true;
   }
@@ -316,12 +181,12 @@ export class McBgStack extends LitElement {
 
   protected updated(): void {
     this._watch();
-    this._arm();
+    this._run?.arm();
   }
 
   protected render(): TemplateResult | typeof nothing {
     if (!this.host) return nothing;
-    const shown = this._items.filter((i) => !i.cfg.hidden).reverse(); // back to front
+    const shown = this.items.filter((i) => !i.cfg.hidden).reverse(); // back to front
     return html`${shown.map((i) => keyed(i.index, this._box(i)))}`;
   }
 
@@ -329,21 +194,19 @@ export class McBgStack extends LitElement {
 
   private _rebuild(): void {
     const list = Array.isArray(this.layers) ? this.layers.slice(0, MAX_BACKGROUND_LAYERS) : [];
-    const old = this._items;
+    const old = this.items;
     const next: Item[] = [];
     list.forEach((cfg, index) => {
       if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) return;
       const prev = old.find((o) => o.index === index && o.cfg.type === 'image' && cfg.type === 'image');
       const item: Item = prev ?? {
-        index, cfg, states: Object.create(null), hasStates: false, camera: false, refresh: 10_000, gen: 0, loading: false,
-        failures: 0, lastGood: 0, lastTry: 0, since: Date.now(), stale: false, evKey: '',
+        index, cfg, states: Object.create(null), hasStates: false, camera: false, gen: 0, loading: false,
+        lastTry: 0, since: Date.now(), stale: false, evKey: '',
       };
       item.cfg = cfg;
       item.states = cfg.type === 'image' ? sanitiseStates(cfg.states) : item.states;
       item.hasStates = cfg.type === 'image' && cfg.states !== undefined && cfg.states !== null;
-      item.pz = cfg.type === 'image' ? panZoomOf(cfg.pan_zoom) : undefined;
-      const r = typeof cfg.refresh === 'number' && Number.isFinite(cfg.refresh) ? cfg.refresh : 10;
-      item.refresh = Math.min(3600, Math.max(5, r)) * 1000;
+      item.pz = cfg.type === 'image' ? this._run?.pan(cfg.pan_zoom) : undefined;
       next.push(item);
     });
     for (const o of old) {
@@ -352,7 +215,7 @@ export class McBgStack extends LitElement {
         clearTimeout(o.fadeTimer);
       }
     }
-    this._items = next;
+    this.items = next;
   }
 
   private _color(v: unknown, entity: string | undefined): string | undefined {
@@ -398,16 +261,16 @@ export class McBgStack extends LitElement {
   }
 
   private _signature(): string {
-    return this._items.map((i) => (i.cfg.type === 'image' && !i.cfg.hidden ? srcKey(this._source(i)) : '')).join('\n');
+    return this.items.map((i) => (i.cfg.type === 'image' && !i.cfg.hidden ? srcKey(this._source(i)) : '')).join('\n');
   }
 
   /** Bring every layer in line with the config and hass: start loads, drop what has no picture, report status. */
   private _sync(): void {
     this._sig0 = this._signature();
-    for (const i of this._items) {
+    for (const i of this.items) {
       const c = i.cfg;
       if (c.hidden) {
-        this._status(i, 'empty');
+        this.status(i, 'empty');
       } else if (c.type === 'image') {
         const s = this._source(i);
         if (s.problem) {
@@ -415,23 +278,23 @@ export class McBgStack extends LitElement {
           i.gen++;
           i.loading = false;
           i.shown = i.prev = undefined;
-          this._status(i, s.problem === 'load-failed' ? 'error' : 'empty', s.problem, s.detail);
+          this.status(i, s.problem === 'load-failed' ? 'error' : 'empty', s.problem, s.detail);
         } else if (s.pending) {
-          if (!i.shown) this._status(i, 'loading');
+          if (!i.shown) this.status(i, 'loading');
         } else if (s.url !== i.base) {
           i.base = s.url;
           i.camera = !i.hasStates && !!this._entityOf(i)?.startsWith('camera.');
-          void this._load(i, s.url!, false);
+          void this.load(i, s.url!);
         }
       } else {
         const ok =
           c.type === 'gradient' ? !!gradientCss(c.gradient) : c.type === 'color' ? !!this._color(c.color, this._entityOf(i)) : c.type === 'pattern' && PATTERNS.includes(c.pattern as string);
-        this._status(i, ok ? 'ok' : 'empty');
+        this.status(i, ok ? 'ok' : 'empty');
       }
     }
   }
 
-  private _status(i: Item, status: BgLayerStatus['status'], reason?: BgLayerProblem, detail?: string | number): void {
+  status(i: Item, status: BgLayerStatus['status'], reason?: BgLayerProblem, detail?: string | number): void {
     const key = `${status}|${reason ?? ''}`;
     if (key === i.evKey) return;
     i.evKey = key;
@@ -439,33 +302,30 @@ export class McBgStack extends LitElement {
     this.dispatchEvent(new CustomEvent<BgLayerStatus>(BG_LAYER_STATUS_EVENT, { bubbles: true, composed: true, detail: d }));
   }
 
-  // ── loading, crossfade, refresh, stale ──
+  // ── loading, crossfade ──
 
-  private async _load(i: Item, base: string, bust: boolean): Promise<void> {
+  /** Decode `url` (default `base`) off the DOM, then swap it in. A refresh passes a cache-busted `url`. */
+  async load(i: Item, base: string, url: string = base): Promise<void> {
     const gen = ++i.gen;
     i.loading = true;
     i.lastTry = Date.now();
-    if (!i.shown) this._status(i, 'loading');
-    const ok = await decodeImage(bust ? busted(base) : base).then((r) => r, () => false);
+    if (!i.shown) this.status(i, 'loading');
+    const ok = await decodeImage(url).then((r) => r, () => false);
     // a decode for an older source, or one that lands after disconnect, writes nothing
-    if (gen !== i.gen || !this.isConnected || !this._items.includes(i)) return;
+    if (gen !== i.gen || !this.isConnected || !this.items.includes(i)) return;
     i.loading = false;
     if (ok) {
-      this._swap(i, bust ? busted(base) : base);
-      i.failures = 0;
-      i.lastGood = Date.now();
-      this._evalStale(i);
-      if (!i.stale) this._status(i, 'ok');
-    } else if (i.camera) {
-      i.failures++;
-      this._evalStale(i);
-      if (!i.stale) this._status(i, i.shown ? 'ok' : 'error', i.shown ? undefined : 'snapshot-failed', i.shown ? undefined : this._entityOf(i));
+      this._swap(i, url);
+      this._run?.good(i);
+      if (!i.stale) this.status(i, 'ok');
+    } else if (i.camera && this._run) {
+      this._run.bad(i);
     } else {
       i.shown = i.prev = undefined;
-      this._status(i, 'error', 'load-failed');
+      this.status(i, 'error', 'load-failed');
     }
     this.requestUpdate();
-    this._schedule(i);
+    this._run?.schedule(i);
   }
 
   private _swap(i: Item, url: string): void {
@@ -473,10 +333,16 @@ export class McBgStack extends LitElement {
     if (i.shown === url) return;
     i.prev = i.shown;
     i.shown = url;
+    this._fade(i);
+  }
+
+  /** Keep `prev` under the new picture for FADE_MS; no fade under reduced motion or while off screen or paused. */
+  private _fade(i: Item): void {
     clearTimeout(i.fadeTimer);
     i.fadeTimer = undefined;
-    if (i.prev && this._reduced) i.prev = undefined;
-    else if (i.prev) {
+    if (!i.prev) return;
+    if (window.matchMedia?.(REDUCED).matches || this.hasAttribute('offscreen')) i.prev = undefined;
+    else {
       i.fadeTimer = setTimeout(() => {
         i.fadeTimer = undefined;
         i.prev = undefined;
@@ -485,65 +351,7 @@ export class McBgStack extends LitElement {
     }
   }
 
-  private _schedule(i: Item): void {
-    if (!i.camera || i.cfg.hidden || i.timer !== undefined || i.loading || !i.base || !this._active()) return;
-    const delay = i.lastTry ? Math.max(0, i.lastTry + i.refresh - Date.now()) : 0;
-    i.timer = setTimeout(() => {
-      i.timer = undefined;
-      if (this._active() && i.base) void this._load(i, i.base, true);
-    }, delay);
-  }
-
-  private _evalStale(i: Item): void {
-    if (!i.camera || i.cfg.stale_badge === false) return;
-    const age = Date.now() - (i.lastGood || i.since);
-    const stale = i.failures >= STALE_FAILED_REFRESHES || age > Math.max(3 * i.refresh, STALE_MIN_AGE_MS);
-    if (stale === i.stale) return;
-    i.stale = stale;
-    if (stale && i.shown) this._status(i, 'ok', 'stale', Math.floor(age / 1000));
-    else if (stale) this._status(i, 'error', 'snapshot-failed', this._entityOf(i));
-    this._updatePill();
-    this._armPill();
-  }
-
-  private _armPill(): void {
-    const any = this._items.some((i) => i.stale);
-    if (any && this._active() && this._pillTimer === undefined) this._pillTimer = setInterval(() => this._updatePill(), PILL_TICK_MS);
-    else if (!any || !this._active()) {
-      clearInterval(this._pillTimer);
-      this._pillTimer = undefined;
-    }
-  }
-
-  private _updatePill(): void {
-    const stale = this._items.filter((i) => i.stale);
-    const badge = this.host?.badgeHost();
-    if (!stale.length || !badge || !this.host) {
-      this._removePill();
-      return;
-    }
-    const secs = Math.floor(Math.max(...stale.map((i) => Date.now() - (i.lastGood || i.since))) / 1000);
-    if (!this._pill) {
-      this._pill = document.createElement('span');
-      this._pill.setAttribute('style', PILL_STYLE);
-      badge.appendChild(this._pill);
-    }
-    this._pill.textContent = this.host.staleText(secs);
-    this.requestUpdate();
-  }
-
-  private _removePill(): void {
-    this._pill?.remove();
-    this._pill = undefined;
-  }
-
   // ── render ──
-
-  private _motion(pz: PanZoom): 'play' | 'pause' | 'start' | 'end' {
-    if (this.preview) return this.preview;
-    if (this._reduced || this.host?.lowPower()) return 'start';
-    return this._active() && !(pz.idle && this._idle) ? 'play' : 'pause';
-  }
 
   private _box(i: Item): TemplateResult {
     const c = i.cfg;
@@ -565,7 +373,7 @@ export class McBgStack extends LitElement {
     const c = i.cfg;
     if (c.type === 'image') {
       const urls = [i.prev, i.shown].filter((u): u is string => !!u);
-      return html`${urls.map((u) => keyed(u, this._pic(i, u)))}`;
+      return html`${urls.map((u, k) => keyed(u, this._pic(i, u, !k && i.prev === i.shown)))}`;
     }
     const ent = this._entityOf(i);
     if (c.type === 'color') {
@@ -583,7 +391,7 @@ export class McBgStack extends LitElement {
     return nothing;
   }
 
-  private _pic(i: Item, url: string): TemplateResult {
+  private _pic(i: Item, url: string, still: boolean): TemplateResult {
     const c = i.cfg;
     const size = sizeCss(c.size);
     const style: Record<string, string> = {
@@ -592,7 +400,8 @@ export class McBgStack extends LitElement {
       'background-size': size,
       'background-repeat': repeatCss(c.repeat, size),
     };
-    const pz = i.pz;
+    // the still frame under a moving picture of the same URL fading in stays unscaled
+    const pz = still ? undefined : i.pz;
     if (pz) {
       const k = (n: number) => `${+n.toFixed(2)}`;
       const reach = ((pz.to - 1) / 2) * 100;
@@ -601,11 +410,11 @@ export class McBgStack extends LitElement {
         '--d': `${pz.duration}s`, '--dir': pz.alternate ? 'alternate' : 'normal',
       });
     }
-    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? this._motion(pz) : nothing} ${sty(style)}></div></div>`;
+    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}></div></div>`;
   }
 }
 
-/** Define <mc-bg-stack> once (guarded: a second copy of the chunk must not throw). */
+/** Define <mc-bg-stack> once (guarded: a second copy of the module must not throw). */
 export function defineBgStack(): void {
   if (!customElements.get(TAG)) customElements.define(TAG, McBgStack);
 }

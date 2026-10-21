@@ -2,7 +2,7 @@
   "_note": "Namespace -> i18n folder (holds index.ts, en-US.json, nl.json and the git-ignored messages.gen.ts). A namespace is active once its folder exists. roots: source folders the D5 hard-coded-text baseline counts for it (longest prefix wins).",
   "namespaces": {
     "card": { "dir": "src/card/i18n", "roots": ["src/card", "src/modules", "src/icons"] },
-    "labels": { "dir": "src/i18n/labels", "roots": ["src/utils/css-properties.ts", "src/utils/css-property-options.ts", "src/utils/animation-presets.ts", "src/utils/seasonal-scenes.ts"] },
+    "labels": { "dir": "src/i18n/labels", "roots": ["src/utils/css-properties.ts", "src/utils/css-property-options.ts", "src/utils/animation-presets.ts", "src/utils/seasonal-scenes.ts", "src/utils/seasonal-labels.ts"] },
     "card-editor": { "dir": "src/editor/i18n", "roots": ["src/editor"] },
     "layer-editor": { "dir": "src/editor/layers/i18n", "roots": ["src/editor/layers/layer-groups.ts", "src/editor/layers/layer-styles.ts", "src/editor/layers/tokens.ts", "src/editor/layers/controls.ts", "src/editor/layers/cost.ts", "src/editor/layers/looks.ts", "src/editor/layers/bg-layers.ts", "src/editor/layers/bg-layer-editor.ts", "src/editor/layers/bg-layers-ops.ts", "src/editor/layers/layers-sheet.ts", "src/editor/components/mc-anchor-grid.ts"] },
     "path-canvas": { "dir": "src/path-canvas/i18n", "roots": ["src/path-canvas"] },
@@ -15,6 +15,8 @@
     "theme-editor": { "dir": "src/theme-editor/i18n", "roots": ["src/theme-editor"] },
     "icon-library": { "dir": "src/icon-anim/library/i18n", "roots": ["src/icon-anim/library", "src/icon-anim/library.ts"] },
     "preset-catalogue": { "dir": "src/preset-catalogue/i18n", "roots": ["src/preset-catalogue"] },
+    "controls": { "dir": "src/modules/controls/i18n", "roots": ["src/modules/controls/dropdown-view.ts", "src/modules/controls/light-view.ts", "src/modules/controls/spinbox-view.ts"] },
+    "modules-extra": { "dir": "src/modules/i18n", "roots": ["src/modules/advanced/custom-card-view.ts", "src/modules/advanced/forecast-view.ts", "src/modules/content/camera-view.ts", "src/modules/content/graphs-view.ts", "src/modules/layout/tabs-view.ts"] },
     "look-editor": { "dir": "src/look-editor/i18n", "roots": ["src/look-editor"] },
     "theme-presets": { "dir": "src/theme-editor/presets/i18n", "roots": ["src/theme-editor/presets"] }
   }

@@ -15,7 +15,8 @@ import type { PaneEditor } from './studio/pane-editor';
 import type { Studio } from './studio/studio';
 import type { CardRequestDetail } from './components/icon-animator/card-request';
 import { listIcons, listShapes, needsLists } from './custom/library';
-import { animationLibrary, type LibraryHass } from '../services/animation-library';
+import type { LibraryHass } from '../anim-studio/animation-library';
+import { animLibrary } from '../utils/anim-hooks';
 
 type Docs = Array<Record<string, unknown>>;
 type TemplateEntry = { config: Omit<MagicCardConfig, 'type'> & { type?: string }; description?: string };
@@ -236,7 +237,7 @@ export class MagicCardEditor extends LitElement {
     if (this.hass && need.icons) void listIcons(this.hass);
     if (this.hass && need.shapes) void listShapes(this.hass);
     // kept copies of library animations: the library must be loaded before a copy can be pruned
-    if (this.hass && s.config.custom_animations) animationLibrary.ensure(this.hass as unknown as LibraryHass);
+    if (this.hass && s.config.custom_animations) animLibrary().ensure(this.hass as unknown as LibraryHass);
   };
 
   /** Every template, fetched now (one request at a time); their custom_animations go to the cache. */

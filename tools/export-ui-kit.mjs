@@ -1,4 +1,4 @@
-// Writes the Magic Card Utils panel's copy of the UI kit (contract ui-kit 1.0.0, ADR 0030, task UI9):
+// Writes the Magic Card Utils panel's copy of the UI kit (contract ui-kit 1.0.0):
 //   <MCU>/custom_components/magic_card_utils/www/mc-ui-kit.js
 // CSS only, no templates and no elements: the editor tokens (Core), the kit's geometry tokens, the kit parts
 // the card editor's shared primitives and the .toast look (contract: the MCU copy), as one Lit `css` template, plus the few MDI glyphs the panel draws.

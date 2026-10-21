@@ -1,12 +1,11 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, ForecastModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { t } from '../../card/i18n';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { lm } from '../../i18n/labels/mark';
 import { forecastMinHeight } from '../lazy-heights';
 
 /** No entity yet, or the forecast has not arrived: the "Day 1..N / --°" skeleton. */
@@ -27,14 +26,7 @@ export function forecastSkeleton(count: number, config?: ForecastModuleConfig): 
 }
 
 class ForecastModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'forecast',
-    name: lm('Forecast'),
-    description: lm('Display weather forecast data'),
-    category: 'advanced',
-    icon: 'mdi:calendar-week-outline',
-    inherit: ['weather'],
-  };
+  readonly metadata: LazyStubMetadata = { type: 'forecast', inherit: ['weather'] };
 
   createDefault(): ForecastModuleConfig {
     return {

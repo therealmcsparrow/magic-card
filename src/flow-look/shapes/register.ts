@@ -7,8 +7,8 @@ import { flowLookRegistry, unmix, type LineCtx } from '../registry';
 import { body, turns } from './geometry';
 
 /*
- * The travelling shapes (T4), registered as flowLookRegistry.shapes by the side-effect import in
- * ../parts.ts. Motion (flow-look rules 1 and 5, spike S1):
+ * The travelling shapes, registered as flowLookRegistry.shapes by the side-effect import in
+ * ../parts.ts. Motion (flow-look rules 1 and 5):
  * - css: one element per shape playing transform keyframes sampled from the path (translate, plus
  *   rotate to the travel direction for shapes that turn, 180 degrees more for a flow that runs backwards)
  *   with a negative animation-delay: a compositor animation, no main-thread work per frame (offset-path

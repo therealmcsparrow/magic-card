@@ -4,7 +4,8 @@ import { weatherIconSvg } from '../../icons/weather-icon-svg';
 import { CardModule, HomeAssistant, HassEntity, ForecastModuleConfig } from '../../types';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { currentRenderContext } from '../../services/render-context';
-import { t } from '../../card/i18n';
+import { t } from '../i18n';
+import { t as cardT } from '../../card/i18n';
 import { dateTimeFormat, formatNumber, uses12h } from '../../utils/locale-format';
 import {
   ForecastItem,
@@ -74,7 +75,7 @@ export class ForecastView implements ModuleView {
       } catch {
         // the translated state is optional
       }
-      return this._message(state || t('Unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
+      return this._message(state || cardT('Unavailable'), 'mc-forecast-empty mc-forecast-unavailable');
     }
     if (result.status === 'none') return this._message(t('This entity has no forecast'));
     if (result.status === 'error') return this._message(t('Forecast not available: {error}', { error: result.error }));

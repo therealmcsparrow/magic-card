@@ -180,6 +180,7 @@ Each module's keys are in [Modules](../modules/README.md).
 -   A sparkline draws nothing until the entity has recorded history.
 -   A seasonal scene is hidden while its `entity` is `off`. The `weather` scene needs `weather_entity`, and `daynight` draws nothing by day.
 -   With `seasonal: auto`, the scene follows the date: check the [calendar](schema.md#seasonal-scenes) and `hemisphere`.
+-   A card with `seasonal: auto` has empty space at its edges in months with no decoration. That room is kept on purpose so the layout does not move when a holiday starts. See [Seasonal scenes](schema.md#seasonal-scenes) for how to keep less.
 -   With reduced motion turned on, scenes and animated shapes are still pictures.
 
 ## A change on a template-linked card is undone

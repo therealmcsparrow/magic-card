@@ -19,6 +19,9 @@ export interface MagicModuleMetadata {
   inherit?: EntityInherit;
 }
 
+/** What a lazy stub carries in magic-card.js: the type and the entity-scope rule. The rest is added by the editor chunk (src/editor/modules/lazy-metadata.ts). */
+export type LazyStubMetadata = Pick<MagicModuleMetadata, 'type' | 'inherit'> & Partial<MagicModuleMetadata>;
+
 export interface MagicModule {
   readonly metadata: MagicModuleMetadata;
 

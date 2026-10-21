@@ -1,0 +1,117 @@
+# Flow lines on short elbows: the wave and zigzag get lower where the run is short and stay flat through the corner, and double rails may overlap there.
+# Entities: sensor.solar_power, sensor.house_power, sensor.grid_power, sensor.battery_power, sensor.home_battery
+# gallery: width=420 record=4
+type: custom:magic-card
+name: "Short elbows"
+background: "#0f1724"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 18px 40px rgba(0,0,0,0.35)"
+rows:
+  - id: head
+    columns:
+      - gap: 2px
+        modules:
+          - type: text
+            text: "Short elbows"
+            design: { font_size: 17px, font_weight: "700", color: "#e6edf7" }
+          - type: text
+            text: "Waves and rails on stretches of 50 to 90 px."
+            design: { font_size: 12px, color: "#8a98ad" }
+  - id: r0
+    column_widths: ["52px", "56px", "52px", "1fr", "52px", "56px", "52px"]
+    padding: 18px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a1
+            type: icon
+            icon: mdi:solar-power-variant
+            size: 18px
+            design: { color: "#ffd166", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #ffd166", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: a2
+            type: icon
+            icon: mdi:ev-station
+            size: 18px
+            design: { color: "#fb7185", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb7185", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+  - id: r1
+    column_widths: ["52px", "56px", "52px", "1fr", "52px", "56px", "52px"]
+    padding: 34px 0 0
+    columns:
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b1
+            type: icon
+            icon: mdi:home-variant
+            size: 18px
+            design: { color: "#6ee7b7", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #6ee7b7", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b2
+            type: icon
+            icon: mdi:water-boiler
+            size: 18px
+            design: { color: "#fdba74", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fdba74", background_color: "rgba(255,255,255,0.05)" }
+  - id: r2
+    column_widths: ["52px", "56px", "52px", "1fr", "52px", "56px", "52px"]
+    padding: 26px 0 0
+    columns:
+      - vertical_align: center
+        modules:
+          - id: a3
+            type: icon
+            icon: mdi:transmission-tower
+            size: 18px
+            design: { color: "#8ecae6", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #8ecae6", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: a4
+            type: icon
+            icon: mdi:fire
+            size: 18px
+            design: { color: "#fb923c", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fb923c", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+  - id: r3
+    column_widths: ["52px", "56px", "52px", "1fr", "52px", "56px", "52px"]
+    padding: 34px 0 0
+    columns:
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b3
+            type: icon
+            icon: mdi:battery-charging
+            size: 18px
+            design: { color: "#c084fc", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #c084fc", background_color: "rgba(255,255,255,0.05)" }
+      - modules: []
+      - modules: []
+      - modules: []
+      - vertical_align: center
+        modules:
+          - id: b4
+            type: icon
+            icon: mdi:flash
+            size: 18px
+            design: { color: "#fde047", width: 36px, height: 36px, display: flex, align_items: center, justify_content: center, border_radius: 50%, border: "2px solid #fde047", background_color: "rgba(255,255,255,0.05)" }
+flows:
+  - { id: wave, from: a1, to: b1, entity: sensor.solar_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#ffd166", line_style: wave, amplitude: 14, wavelength: 28, width: 3 }
+  - { id: zigzag, from: a2, to: b2, entity: sensor.house_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#fb7185", line_style: zigzag, amplitude: 14, wavelength: 24, width: 3 }
+  - { id: double, from: a3, to: b3, entity: sensor.grid_power, max: 5000, route: elbow, from_side: right, to_side: top, color: "#8ecae6", line_style: double, rail_gap: 12, width: 2 }
+  - { id: tube, from: a4, to: b4, entity: sensor.battery_power, max: 3000, route: elbow, from_side: right, to_side: top, color: "#fde047", line_style: tube, from_anchor: box, to_anchor: box, width: 12 }

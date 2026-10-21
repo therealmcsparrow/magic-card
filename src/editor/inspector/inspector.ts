@@ -60,7 +60,7 @@ import {
   renderCardGeneral,
 } from './card-settings';
 import { markFlowsOverridden } from '../state/flows';
-import { flowKeys } from '../../utils/flow';
+import { flowKeys } from '../../utils/flow-keys';
 import {
   renderColumnConditions,
   renderColumnDesign,
@@ -450,7 +450,7 @@ export class Inspector extends LitElement {
     const columns = (n: number) => t('{n, plural, one {# column} other {# columns}}', { n });
     const modules = (n: number) => t('{n, plural, one {# module} other {# modules}}', { n });
 
-    // Mockup header: "<Type> · <label>" with a one-line path under it.
+    // Header: "<Type> · <label>" with a one-line path under it.
     let title = info.title;
     let icon = info.icon;
     let path: TemplateResult;
@@ -813,7 +813,7 @@ export class Inspector extends LitElement {
         gap: 4px;
         --mdc-icon-size: 14px;
       }
-      /* path segments navigate up, but read as the mockup's plain path text */
+      /* path segments navigate up, but read as plain path text */
       .crumb {
         border: 0;
         background: transparent;
@@ -829,7 +829,7 @@ export class Inspector extends LitElement {
       .tabs {
         position: relative;
       }
-      /* studio: fixed 340px panel, tighter padding so all four tabs fit (mockup) */
+      /* studio: fixed 340px panel, tighter padding so all four tabs fit */
       :host([variant='studio']) .tabs > button {
         padding: 0 8px;
       }

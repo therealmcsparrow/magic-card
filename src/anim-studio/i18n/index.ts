@@ -5,7 +5,7 @@ import tables from './messages.gen';
 export type { MessageId };
 
 /**
- * Messages of the animation studio (namespace 'anim-studio', contract i18n 1.0.0 r3; the tables sit inline in
+ * Messages of the animation studio (namespace 'anim-studio', contract i18n 1.0.0; the tables sit inline in
  * magic-card-animation-studio.js). Write t('British text'); a module-level table of labels holds m('British text')
  * and is read through t(item.label) or tr() where it is rendered. Files the card editor or the card also compile use
  * the 'labels' namespace (src/i18n/labels) instead.

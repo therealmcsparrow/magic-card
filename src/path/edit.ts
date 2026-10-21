@@ -1,5 +1,5 @@
 /*
- * Path model, editor-only part (contract path-model 1.0.0 rev 2): the anchor model and the edit
+ * Path model, editor-only part (contract path-model 1.0.0): the anchor model and the edit
  * operations. Pure; every operation returns a new path and never changes its input. Never imported
  * from src/index.ts's graph (magic-card.js holds none of this).
  *

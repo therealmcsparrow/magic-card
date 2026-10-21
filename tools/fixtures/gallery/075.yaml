@@ -1,0 +1,105 @@
+# Rune ward: a ring of eight custom marks around a central sigil shows the alarm. Armed, a light runs once around the ring each loop.
+# Triggered, the marks flash red. Disarmed, the ring is grey and still. The three tiles arm and disarm the alarm.
+# Entities: alarm_control_panel.home
+# gallery: width=400 record=5 stage=linear-gradient(135deg,#0f1113,#22262b)
+type: custom:magic-card
+name: Rune ward
+background: "#181a1d"
+border_radius: 26px
+padding: 20px
+box_shadow: "0 22px 48px rgba(0,0,0,0.55)"
+rows:
+  - id: ward
+    column_widths: [180px, 1fr]
+    gap: 16px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 176px
+              height: 176px
+              padding: 6px
+              box_sizing: border-box
+              border_radius: 50%
+              background: "radial-gradient(circle closest-side, #23272c 0%, #181a1d 100%)"
+              conditional:
+                - id: armed
+                  name: Armed
+                  mode: any
+                  conditions: [{ type: state, entity: alarm_control_panel.home, state: armed_home }, { type: state, entity: alarm_control_panel.home, state: armed_away }]
+                  design:
+                    ring: { mode: animated, animation: snake, length: 16, speed: 5s, width: 3, glow: 8, color: "#5df0c8", track_color: "#5df0c8", track_opacity: 15 }
+                - id: triggered
+                  name: Triggered
+                  conditions: [{ type: state, entity: alarm_control_panel.home, state: triggered }]
+                  design:
+                    ring: { mode: animated, animation: pulse, speed: 1s, width: 3, glow: 10, color: "#ff4d6d" }
+            modules:
+              - type: icon
+                entity: alarm_control_panel.home
+                icon: svg
+                svg: '<svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="100" r="66" stroke-opacity="0.35" stroke-width="1.5"/><path d="M100 10 V28 M94 16 H106" transform="rotate(0 100 100)"/><path d="M93 28 L100 12 L107 28" transform="rotate(45 100 100)"/><path d="M100 10 L107 19 L100 28 L93 19 Z" transform="rotate(90 100 100)"/><path d="M100 10 V28 M95 14 H105 M95 24 H105" transform="rotate(135 100 100)"/><path d="M100 10 L108 28 H92 Z" transform="rotate(180 100 100)"/><path d="M92 11 L100 20 L108 11 M100 20 V28" transform="rotate(225 100 100)"/><path d="M107 19 A7 7 0 1 1 93 19 A7 7 0 1 1 107 19 M100 19 V19.1" transform="rotate(270 100 100)"/><path d="M95 10 L105 16 L95 22 L105 28" transform="rotate(315 100 100)"/><circle cx="100" cy="100" r="40"/><path d="M100 70 L126 115 H74 Z"/><circle cx="100" cy="100" r="7"/><path d="M100 60 V70 M100 130 V140 M60 100 H70 M130 100 H140"/></svg>'
+                size: 160px
+                design:
+                  color: "#8a8f98"
+                  conditional:
+                    - { id: armed, name: Armed, mode: any, conditions: [{ type: state, state: armed_home }, { type: state, state: armed_away }], design: { color: "#5df0c8" } }
+                    - { id: triggered, name: Triggered, conditions: [{ type: state, state: triggered }], design: { color: "#ff4d6d", animations: [{ id: flash, preset: blink, target: icon, intensity: 80, duration: 1s }] } }
+      - vertical_align: center
+        gap: 8px
+        modules:
+          - type: text
+            text: Ward
+            design: { font_size: 11px, font_weight: "700", color: "#9aa0a8", text_transform: uppercase, letter_spacing: 2px }
+          - type: text
+            use_entity: true
+            entity: alarm_control_panel.home
+            design: { font_size: 22px, font_weight: "700", color: "#f1f4f6", line_height: "1.1", margin_bottom: 6px, font_family: "Georgia, 'Iowan Old Style', serif" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #2e3237", background_color: "#22252a" }
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_arm_home, data: { entity_id: alarm_control_panel.home } }
+            modules:
+              - type: icon
+                icon: mdi:shield-home
+                size: 18px
+                design: { color: "#5df0c8" }
+              - type: text
+                text: Arm home
+                design: { font_size: 13px, font_weight: "700", color: "#eceff2" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #2e3237", background_color: "#22252a" }
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_arm_away, data: { entity_id: alarm_control_panel.home } }
+            modules:
+              - type: icon
+                icon: mdi:shield-lock
+                size: 18px
+                design: { color: "#5df0c8" }
+              - type: text
+                text: Arm away
+                design: { font_size: 13px, font_weight: "700", color: "#eceff2" }
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design: { padding: 12px 0, border_radius: 12px, border: "1px solid #2e3237", background_color: "#22252a" }
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_disarm, data: { entity_id: alarm_control_panel.home } }
+            modules:
+              - type: icon
+                icon: mdi:shield-off
+                size: 18px
+                design: { color: "#5df0c8" }
+              - type: text
+                text: Disarm
+                design: { font_size: 13px, font_weight: "700", color: "#eceff2" }

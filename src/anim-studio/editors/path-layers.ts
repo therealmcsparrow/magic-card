@@ -10,7 +10,7 @@ import { t, m } from '../i18n';
 /*
  * mc-anim-path-layers (place 'layers', path documents): the motion path and what moves along it. Not a
  * paint stack: no stacking order, no move, no hide; both rows can be locked (the lock itself is enforced
- * by the path editor and overlay, F-H1). The rows select within this list only: the path overlay is always
+ * by the path editor and overlay). The rows select within this list only: the path overlay is always
  * on the stage.
  */
 

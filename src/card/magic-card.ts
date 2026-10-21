@@ -1,6 +1,5 @@
 import { t } from './i18n';
 import { LitElement, html, TemplateResult, nothing, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
 import {
   ActionsConfig,
   MagicCardConfig,
@@ -32,30 +31,35 @@ import {
   } from '../utils/css-utils';
 import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
-import { resolveAnimations, type FxLayer, type ResolvedV2 } from '../utils/animation';
+import type { FxLayer, ResolvedAnimations, ResolvedV2 } from '../anim-studio/resolve';
+import { animIfLoaded } from '../utils/anim-seam';
+import { hasAnimations } from '../utils/animation.needs';
+import { reducedMotion } from '../utils/reduced-motion';
 import { loadRuntime, runtimeIfLoaded } from '../utils/anim-runtime-loader';
-import { loadParticles, particlesIfLoaded } from '../utils/particles-loader';
-import { particlesFailed } from '../anim-studio/compile';
+import { loadParticles, particlesFailed, particlesIfLoaded } from '../utils/particles-loader';
 import { loadEditor } from '../utils/editor-loader';
-import { lazyChunks, prefetchLazy } from '../utils/lazy-chunks';
-import { hasFlowLook } from '../contracts/flow-look';
+import { lazyChunks, onDemandChunks } from '../utils/lazy-chunks';
+import { LAZY_FEATURES, prefetchLazy } from '../utils/lazy-features';
+import { failedChunkNames, onChunkChange, trackHost, untrackHost } from '../utils/lazy-chunk';
+import { chunkNotice, noticeStyles } from './chunk-notice';
+import { hasFlowLook } from '../contracts/flow-look.needs';
 import { animFlashes, renderAnimFx, renderBorderFx, renderRing, renderSeasonal, renderShape, renderValueBg, seasonalInsets, withShapeShadow } from './card-decorations';
-import { SeasonalBudget, sceneFlashes } from '../utils/seasonal-scenes';
-import { CardSeasonal } from './card-seasonal';
+import type { SeasonalBudget } from '../utils/seasonal-scenes';
+import { SeasonalSeam, seasonalApi } from './seasonal-seam';
 import { resolveValueBackground } from '../utils/value-background';
 import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
-import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './mc-shape';
+import { libraryShape, resolveShape, ResolvedShape, watchShapes } from './shape-resolve';
 import type { ShapeLookup } from '../contracts/custom-shape';
-import './mc-flows';
-import { flowKeys, flowModuleEntities, resolveFlow, ResolvedFlow } from '../utils/flow';
+import type { ResolvedFlow } from '../utils/flow';
+import { hasFlows } from '../utils/flows.needs';
+import { flowsIfLoaded } from './flows-seam';
 import { playTapAnimations } from './tap-fx';
 import { resolveRing } from '../utils/ring';
 import { childScope, effectiveEntity } from '../utils/entity-scope';
 import type { EntityScopeNode } from '../contracts/entity-scope';
 import { ModuleRegistry } from '../modules/module-registry';
 import { entityStateColor } from '../utils/entity-color';
-import { mergeTemplateWithOverrides } from '../services/template-merge';
-import { templateSource } from '../services/template-source';
+import { templatesIfLoaded } from './templates-seam';
 import { ConfigValidator } from '../services/config-validator';
 import { ConditionsService } from '../services/conditions-service';
 import { collectDependencies, CardDependencies } from '../services/card-dependencies';
@@ -70,15 +74,20 @@ import { renderModuleContent } from '../modules/render-module';
 import { runServiceCall, toggleCall, SAFE_TOGGLE_DOMAINS } from '../utils/entity-control';
 import { childSlots, parseChildChain } from '../utils/module-path';
 import { setI18nLocale } from '../i18n/runtime';
-import { PopupController } from './popup-controller';
-import { EditorPlace, navigateToPopup, popupCoordinator } from './popup-coordinator';
-import { animationLibrary, inlineAnimations } from '../services/animation-library';
+import type { PopupController } from './popup-controller';
+import { EditorPlace, holdOutOfFlow, navigateToPopup, popupHidden } from './popup-nav';
+import { popupIfLoaded } from './popup-seam';
+import { isPopupEnabled, wantsPopup } from '../utils/popup';
 import type { AnimationDoc } from '../anim-studio/model';
-import { adoptAnimationSheet, useAnimationCss } from './custom-anim-sheet';
-import { reducedMotion, stopSequences, syncSequences, type SequencePlayer } from './sequence-player';
-import { hasLayers, inFlow, isLayered, layerSlot } from '../layers/layer-slot';
+import type { SequencePlayer } from './sequence-player';
+import { hasLayers, inFlow, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
-import { CardPause } from './card-pause';
+import { defineBgStack } from '../layers/stack/mc-bg-stack';
+import type { CardPause } from './card-pause';
+import { pauseIfLoaded } from './pause-seam';
+import { setCardPaused } from '../icons/offscreen';
+import { PAUSE_ATTRIBUTE, pauseGap, wantsPause } from '../contracts/card-pause.needs';
+import { pauseKey, rememberedPause } from './pause-memory';
 import type { Arranged, ArrangedChild, ResolvedLayer } from '../contracts/layer-placement';
 
 /**
@@ -133,6 +142,12 @@ interface FillFrame {
   out: TemplateResult[];
 }
 
+/**
+ * The chunks whose failure the card shows in its own place and not with the chunk notice: the keys of LAZY_MODULE_TYPES (their
+ * module slot) and `templates` (the template notice).
+ */
+export const SLOT_NOTICE_CHUNKS: readonly string[] = ['slider', 'markdown', 'modules-extra', 'controls', 'templates'];
+
 /** Counter for RenderContext.instance. */
 let cardInstances = 0;
 
@@ -186,53 +201,59 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
   };
 }
 
-@customElement(CARD_TAG)
-export class MagicCard extends LitElement {
-  static styles = magicCardStyles;
+defineBgStack();
 
-  @property({ attribute: false })
+export class MagicCard extends LitElement {
+  static styles = [...magicCardStyles, noticeStyles];
+
+  static properties = {
+    hass: { attribute: false },
+    editMode: { attribute: false },
+    preview: { attribute: false },
+    selectedPath: { attribute: false },
+    selectedFlow: { attribute: false },
+    _config: { state: true },
+    _resolvedConfig: { state: true },
+    _themeShadow: { state: true },
+    _templateNotice: { state: true },
+  };
+
   hass?: HomeAssistant;
 
   /** Studio canvas mode: tags elements with editor paths, disables actions and template side effects. */
-  @property({ attribute: false })
   editMode = false;
 
   /** Editor preview pause (card-pause 2.0.0): freezes all motion while editing; never remembered, survives setConfig. */
   get previewPaused(): boolean {
-    return this._pause.preview;
+    return this._preview;
   }
   set previewPaused(on: boolean) {
-    const old = this._pause.preview;
+    const old = this._preview;
     if (on === old) return;
-    this._pause.preview = on;
+    this._preview = on;
+    if (this._pause) this._pause.preview = on;
     this.requestUpdate('previewPaused', old);
   }
 
   /** Set by HA's hui-card: the card is shown as a preview (card editor, dashboard in edit mode). */
-  @property({ attribute: false })
   preview = false;
 
   /**
    * Studio canvas: editor path of the selected module ("row.col.module/slot.index/..."), so a tabs or
    * slider layout shows the tab / slide holding a selected child.
    */
-  @property({ attribute: false })
   selectedPath?: string;
 
   /** Studio canvas: key of the selected flow (highlighted by the flows overlay). */
-  @property({ attribute: false })
   selectedFlow?: string | null;
 
-  @state()
   private _config?: MagicCardConfig;
 
-  @state()
   private _resolvedConfig?: MagicCardConfig;
   /** The last render's config with the matching conditional_appearance rules applied (a rule can set `seasonal`). */
   private _look?: MagicCardConfig;
 
   /** A shaped card without its own box_shadow: the theme's card shadow as a drop-shadow (read after render). */
-  @state()
   private _themeShadow?: string;
   /** The last render was a shaped card without its own box_shadow. */
   private _readThemeShadow = false;
@@ -242,11 +263,12 @@ export class MagicCard extends LitElement {
   private _watchedTemplate?: string;
   private _watchedConn?: unknown;
   /** The template could not be shown: the notice says why (status 'missing' | 'unavailable'). */
-  @state()
   private _templateNotice?: 'missing' | 'unavailable';
   private _lookWait = false;
   /** The last render resolved a `custom:` animation (adopt the shared sheet, sync sequences). */
   private _customRendered = false;
+  /** A render met a design with animations before the `anim` chunk installed: one render-again callback per card is waiting. */
+  private _animWait = false;
   /** Re-render on library changes; only once a custom animation was looked up. */
   private _unsubLibrary?: () => void;
   /** Custom sequences of the shadow root, by element (src/card/sequence-player.ts). */
@@ -269,9 +291,11 @@ export class MagicCard extends LitElement {
    */
   private readonly _customLookup = (id: string): AnimationDoc | undefined => {
     this._customRendered = true;
-    animationLibrary.ensure(this.hass);
-    if (!this._unsubLibrary && this.isConnected) this._unsubLibrary = animationLibrary.subscribe(this._onLibrary);
-    return animationLibrary.get(id) ?? inlineAnimations(this._resolvedConfig ?? this._config)?.get(id);
+    const a = animIfLoaded();
+    if (!a) return undefined;
+    a.animationLibrary.ensure(this.hass);
+    if (!this._unsubLibrary && this.isConnected) this._unsubLibrary = a.animationLibrary.subscribe(this._onLibrary);
+    return a.animationLibrary.custom(id, this._resolvedConfig ?? this._config);
   };
   /** A library change waits for its render (shouldUpdate must not drop it). */
   private _libDirty?: boolean;
@@ -330,10 +354,53 @@ export class MagicCard extends LitElement {
   private _pathStack: string[] = [];
   /** The card has background_layers or a layered module (layer-placement 1.0.0). */
   private _layerOn = false;
-  /** This card asked for a re-render when the layers chunk lands (once). */
-  private _layersAsked = false;
-  /** The viewer's Pause motion button and state (contract card-pause 1.0.0). */
-  private readonly _pause = new CardPause(this);
+  private _preview = false;
+  /** The viewer's Pause motion button and state (contract card-pause 1.0.0); made once the `pause` chunk has installed and a pause is wanted. */
+  private _pause?: CardPause;
+  /** Storage key of the config setConfig received, and whether that key was left paused (read once per config). */
+  private _pauseKey = '';
+  private _remembered = false;
+  private _pauseWait = false;
+  private _pauseReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
+  /**
+   * The pause state when this card shows the button (or an editor preview pause) and the chunk is there; else undefined.
+   * While the chunk loads the card renders without pause state and draws again when it has installed.
+   */
+  private _pauseFor(c: MagicCardConfig): CardPause | undefined {
+    if (this._pause) return this._pause;
+    if (!this._preview && !wantsPause(c)) return undefined;
+    const mod = pauseIfLoaded();
+    if (!mod) {
+      this._met.add('pause');
+      if (!this._pauseWait) {
+        this._pauseWait = true;
+        lazyChunks.pause.whenReady(this._pauseReady);
+        void lazyChunks.pause.load();
+      }
+      return undefined;
+    }
+    const pause = (this._pause = mod.api.create(this));
+    pause.preview = this._preview;
+    if (!this._pauseKey) this._remember(c);
+    pause.config(this._pauseKey, this._remembered);
+    return pause;
+  }
+  private _remember(config: object): void {
+    this._pauseKey = pauseKey(config);
+    this._remembered = rememberedPause(this._pauseKey);
+  }
+  /**
+   * The pause before the `pause` chunk has installed (or when it never does): a pause the viewer left on holds from the
+   * first paint, only while the card shows the button, and stays if the chunk fails. The editor preview pause waits for the chunk.
+   */
+  private _earlyPause(c: MagicCardConfig): boolean {
+    const on = this._remembered && wantsPause(c);
+    this.toggleAttribute(PAUSE_ATTRIBUTE, on);
+    setCardPaused(this, on);
+    return on;
+  }
   /** Rows being rendered (innermost last) and the card: fill row / card backgrounds handed up. */
   private _frames: FillFrame[] = [];
   private _card: FillFrame = { flow: false, row: false, out: [] };
@@ -349,6 +416,7 @@ export class MagicCard extends LitElement {
     subscribe: <T>(msg: Record<string, unknown>) => this._subscriptions.get<T>(msg),
     media: (id) => this._media.get(id),
     requestUpdate: () => this.requestUpdate(),
+    metChunk: (name) => void this._met.add(name),
     renderChild: (child, index, slot = 0, layer) => {
       const parent = this._pathStack[this._pathStack.length - 1];
       if (parent === undefined) return renderModuleContent(child, this.hass);
@@ -392,22 +460,64 @@ export class MagicCard extends LitElement {
   /** Periodic refresh for clocks, time conditions, graph history. */
   private _tickTimer?: number;
   private _tickInterval?: number;
-  /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. */
-  private readonly _popup = new PopupController(this, {
-    config: () => (this._resolvedConfig ?? this._config)?.popup,
-    editorPlace: () => this._editorPlace(),
-  });
+  /** Pop-up mode (config `popup`): hidden on the dashboard, shown in a top-layer dialog. Made once the `popup` chunk has installed and the config sets up a pop-up. */
+  private _popupCtl?: PopupController;
+  private _popupWait = false;
+  private _popupReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
+  /**
+   * A pop-up card on a live dashboard takes no room. It follows the config and the place alone, so it holds before the
+   * chunk has loaded; if the chunk failed, the card shows its notice in the flow instead.
+   */
+  private get _popupHidden(): boolean {
+    return popupHidden((this._resolvedConfig ?? this._config)?.popup, this._editorPlace()) && !this._popupFailed;
+  }
+  private get _popupFailed(): boolean {
+    return failedChunkNames().has('popup') && !popupIfLoaded();
+  }
+  private get _popupOpen(): boolean {
+    return !!this._popupCtl?.isOpen;
+  }
+  /** The controller when the chunk is there; else the card asks for the chunk once and draws again when it has installed. */
+  private _popupFor(c: MagicCardConfig): PopupController | undefined {
+    if (this._popupCtl) return this._popupCtl;
+    if (!wantsPopup(c)) return undefined;
+    const mod = popupIfLoaded();
+    if (!mod) {
+      this._met.add('popup');
+      if (!this._popupWait) {
+        this._popupWait = true;
+        lazyChunks.popup.whenReady(this._popupReady);
+        void lazyChunks.popup.load();
+      }
+      return undefined;
+    }
+    return (this._popupCtl = mod.api.create(this, {
+      config: () => (this._resolvedConfig ?? this._config)?.popup,
+      editorPlace: () => this._editorPlace(),
+    }));
+  }
+  /** The card's `seasonal` setting of the config being rendered (a conditional rule can set it). */
+  private _seasonalSetting(): MagicCardConfig['seasonal'] {
+    return (this._look ?? this._resolvedConfig ?? this._config)?.seasonal;
+  }
   /** Seasonal particles of one render pass, over the card's scene and all its seasonal presets. */
-  private readonly _seasonalBudget = new SeasonalBudget();
+  private _budget?: SeasonalBudget;
+  /** Undefined until the seasonal chunk has loaded (nothing seasonal is drawn before that). */
+  private get _seasonalBudget(): SeasonalBudget | undefined {
+    const api = seasonalApi();
+    return (this._budget ??= api && new api.SeasonalBudget());
+  }
   /** The card's seasonal scene (config `seasonal`): resolution, midnight timer, editor preview date. */
-  private readonly _seasonal = new CardSeasonal(this, {
-    config: () => (this._look ?? this._resolvedConfig ?? this._config)?.seasonal,
+  private readonly _seasonal = new SeasonalSeam(this, {
+    config: () => this._seasonalSetting(),
     hass: () => this.hass,
     editorPreview: () => {
       const place = this._editorPlace();
       return place === 'canvas' || place === 'card-editor';
     },
-    idle: () => this._popup.hidden && !this._popup.isOpen,
+    idle: () => this._popupHidden && !this._popupOpen,
   });
 
   /** The editor is a lazy chunk; a rejection makes HA open its YAML editor instead. */
@@ -453,7 +563,10 @@ export class MagicCard extends LitElement {
     }
 
     const prevTemplate = this._config?.template;
-    this._pause.config(config);
+    // a chunk met under the old config raises no notice under the new one
+    this._met.clear();
+    this._remember(config);
+    this._pause?.config(this._pauseKey, this._remembered);
 
     // Every row / column / module (nested children included) gets a stable id
     this._config = withConfigIds({ ...config, rows: config.rows || [] });
@@ -467,24 +580,40 @@ export class MagicCard extends LitElement {
     this._wantShapes(this._config);
 
     // Same template: re-merge the new local config (overrides may have changed) without refetching.
-    if (this._templateConfig) {
-      this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-    }
+    if (this._templateConfig) lazyChunks.templates.whenReady(this._remerge);
     // lazy modules and the seasonal set: start their chunks now, all at once
-    prefetchLazy(this._resolvedConfig ?? this._config);
+    this._prefetch(this._resolvedConfig ?? this._config);
   }
+
+  private _prefetchedCfg?: object;
+  /** Start the chunks this config needs; a card with a seasonal scene renders once more when its chunk is ready. */
+  private _prefetch(cfg: MagicCardConfig): void {
+    prefetchLazy(cfg);
+    if (cfg === this._prefetchedCfg || !LAZY_FEATURES.seasonal.needs(cfg)) return;
+    this._prefetchedCfg = cfg;
+    lazyChunks.seasonal.whenReady(this._seasonalReady); // the same function each time: the chunk's waiting set holds it once, not one closure per edited config
+  }
+  private _seasonalReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
 
   /** Start the custom-shape builder chunk when the config uses `shape: custom`; one re-render when it lands. */
   private _shapeCfg?: object;
+  /** The config uses `shape: custom` (its chunk may fail: the notice). */
+  private _customShape = false;
+  /** Chunks a render met that the needs table did not list for this config (renderIcon): their failure notice shows too. */
+  private readonly _met = new Set<string>();
+  private _offChunks?: () => void;
   private _wantShapes(cfg: object): void {
     if (cfg === this._shapeCfg || customShapesReady()) return;
     this._shapeCfg = cfg;
-    if (JSON.stringify(cfg).includes('"shape":"custom"')) void loadCustomShapes().then((ok) => ok && this.isConnected && this.requestUpdate());
+    this._customShape = JSON.stringify(cfg).includes('"shape":"custom"');
+    if (this._customShape) void loadCustomShapes().then((ok) => ok && this.isConnected && this.requestUpdate());
   }
 
   getCardSize(): number {
     // a pop-up on a live dashboard takes no room (masonry places the next card right here)
-    if (this._popup.hidden) return 0;
+    if (this._popupHidden) return 0;
     if (!this._config?.rows) return 1;
     return Math.max(this._config.rows.length, 1);
   }
@@ -495,16 +624,20 @@ export class MagicCard extends LitElement {
    * the card then takes out of the flow (see PopupController).
    */
   getGridOptions(): Record<string, unknown> {
-    return this._popup.hidden ? { columns: 'full', rows: 'auto', min_rows: 0 } : {};
+    return this._popupHidden ? { columns: 'full', rows: 'auto', min_rows: 0 } : {};
   }
 
   /** Older HA (before getGridOptions). */
   getLayoutOptions(): Record<string, unknown> {
-    return this._popup.hidden ? { grid_columns: 'full', grid_rows: 'auto', grid_min_rows: 0 } : {};
+    return this._popupHidden ? { grid_columns: 'full', grid_rows: 'auto', grid_min_rows: 0 } : {};
   }
 
   connectedCallback(): void {
     super.connectedCallback();
+    // chunk styles that landed while this card was away, and from now on in the same task as they land
+    trackHost(this);
+    // a chunk failed or recovered: render again (the notice, or the feature)
+    this._offChunks = onChunkChange(() => this.requestUpdate());
     this.addEventListener('mc-request-update', this._boundRequestUpdate);
     this.addEventListener('pointerdown', this._onTapAnimations);
     this._templates.hostConnected();
@@ -526,7 +659,7 @@ export class MagicCard extends LitElement {
   /** Re-render on a timer when a module or a time condition asks for it, aligned to the interval. */
   private _syncTicker(): void {
     // a closed pop-up has nothing on screen to refresh
-    const idle = this._popup.hidden && !this._popup.isOpen;
+    const idle = this._popupHidden && !this._popupOpen;
     const interval = this.isConnected && !idle ? this._dependencies().refreshInterval : undefined;
     if (interval === this._tickInterval && (interval === undefined || this._tickTimer !== undefined)) return;
     if (this._tickTimer !== undefined) window.clearTimeout(this._tickTimer);
@@ -547,7 +680,7 @@ export class MagicCard extends LitElement {
     // Module texts in the user's language from the first hass on (not only when it changes later).
     if (changedProperties.has('hass') && this.hass) setI18nLocale(this.hass);
     if (changedProperties.has('hass')) {
-      this._popup.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
+      this._popupCtl?.hassChanged(changedProperties.get('hass') as HomeAssistant | undefined, this.hass);
     }
     if (this._libDirty || changedProperties.has('_config') || changedProperties.has('_resolvedConfig')) {
       return true;
@@ -571,7 +704,7 @@ export class MagicCard extends LitElement {
       }
 
       // A closed pop-up renders nothing but its (empty) dialog: no entity re-renders.
-      if (this._popup.hidden && !this._popup.isOpen) return false;
+      if (this._popupHidden && !this._popupOpen) return false;
 
       // the seasonal scene's own entities (off switch, weather, sun): only when the scene changes
       if (this._seasonal.changed(oldHass)) return true;
@@ -598,15 +731,38 @@ export class MagicCard extends LitElement {
     }
   }
 
+  /** The pause state of the render to come (set in willUpdate). */
+  private _paused = false;
+
+  /**
+   * Before the render, so before the first paint: the pop-up controller and its host attributes, and the viewer's pause
+   * on the host and the observer before any child is built.
+   */
+  protected willUpdate(): void {
+    const config = this._resolvedConfig ?? this._config;
+    if (!config) return;
+    const popup = isPopupEnabled(config.popup);
+    const popupCtl = this._popupFor(config);
+    const popupHere = this._popupHidden;
+    this.toggleAttribute('data-mc-popup-hidden', popupHere);
+    this.toggleAttribute('data-mc-popup-editor', popup && !popupHere);
+    // a card that renders only its notice or its closed pop-up has no pause
+    if ((popup && this._popupFailed) || (popupHere && !popupCtl?.isOpen)) return;
+    const pause = this._pauseFor(config);
+    this._paused = pause ? pause.begin(config) : this._earlyPause(config);
+  }
+
   protected updated(changedProperties: PropertyValues): void {
     super.updated(changedProperties);
     // the seasonal presets asked for another total: render again with the new share
-    if (this._seasonalBudget.settle()) this.requestUpdate();
+    if (this._seasonalBudget?.settle()) this.requestUpdate();
     this._syncHoverStyles();
     this._syncRowFocus();
     this._libDirty = false;
-    if (this._customRendered) adoptAnimationSheet(this.renderRoot as ShadowRoot);
-    if (this._customRendered || this._sequences.size) syncSequences(this.renderRoot, this._sequences);
+    // custom animations and sequences exist only once the `anim` chunk resolved them
+    const anim = animIfLoaded();
+    if (anim && this._customRendered) anim.adoptAnimationSheet(this.renderRoot as ShadowRoot);
+    if (anim && (this._customRendered || this._sequences.size)) anim.syncSequences(this.renderRoot, this._sequences);
     if (this._v2Need || this._v2Applied.size) this._syncRuntime();
     if (this._pNeed || this._pApplied.size) this._syncParticles();
     if (this._readThemeShadow) {
@@ -618,6 +774,10 @@ export class MagicCard extends LitElement {
     this._subscriptions.end();
     this._media.end();
     this._syncTicker();
+    holdOutOfFlow(this, this._popupHidden && this.isConnected);
+    // a notice of a failed chunk shows: the css makes ha-card the scroll box (the attribute is on no other render)
+    this.toggleAttribute('mc-fail', !!this.renderRoot?.querySelector('.mc-n'));
+    this._syncDecor();
 
     if (this.editMode) return;
 
@@ -652,7 +812,28 @@ export class MagicCard extends LitElement {
     this._watchedTemplate = name;
     this._watchedConn = conn;
     if (!name) return;
-    this._unwatchTemplate = templateSource.watch(this.hass as never, name, (state) => {
+    // the card shows its own settings until the chunk and then the template arrive; a chunk that cannot load leaves them with the notice
+    lazyChunks.templates.whenReady(this._templateReady);
+    void lazyChunks.templates.load().then(() => {
+      if (!lazyChunks.templates.failed() || this._watchedTemplate !== name) return;
+      this._templateNotice = 'unavailable';
+      this.requestUpdate();
+    });
+  }
+
+  /** Merge the fetched template with this card's config (the chunk is installed whenever a template config is held). */
+  private _remerge = (): void => {
+    const m = templatesIfLoaded();
+    if (m && this._templateConfig && this._config) this._resolvedConfig = withConfigIds(m.api.mergeTemplateWithOverrides(this._templateConfig, this._config));
+  };
+
+  /** The `templates` chunk has installed: watch the template this card is linked to (once per name and connection). */
+  private _templateReady = (): void => {
+    const name = this._watchedTemplate;
+    const m = templatesIfLoaded();
+    if (!name || !m || !this.hass || this._unwatchTemplate) return;
+    this._templateNotice = undefined;
+    this._unwatchTemplate = m.api.templateSource.watch(this.hass as never, name, (state) => {
       if (this._config?.template !== name) return;
       this._templateNotice = state.status === 'missing' || state.status === 'unavailable' ? state.status : undefined;
       if (state.status === 'ready') {
@@ -661,8 +842,8 @@ export class MagicCard extends LitElement {
           const tpl = { type: 'custom:magic-card', ...state.config };
           if (!ConfigValidator.validate(tpl).valid) throw new Error('invalid template config');
           this._templateConfig = tpl as unknown as MagicCardConfig;
-          this._resolvedConfig = withConfigIds(mergeTemplateWithOverrides(this._templateConfig, this._config));
-          prefetchLazy(this._resolvedConfig);
+          this._remerge();
+          this._prefetch(this._resolvedConfig!);
         } catch (err) {
           console.warn('Magic Card: template config is invalid', name, err);
           this._templateNotice = 'unavailable';
@@ -675,15 +856,18 @@ export class MagicCard extends LitElement {
       }
       this.requestUpdate();
     });
-  }
+  };
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    untrackHost(this);
+    this._offChunks?.();
     this.removeEventListener('mc-request-update', this._boundRequestUpdate);
     this.removeEventListener('pointerdown', this._onTapAnimations);
     this._templates.hostDisconnected();
     this._subscriptions.hostDisconnected();
     this._media.hostDisconnected();
+    holdOutOfFlow(this, false);
     this._syncTicker();
     for (const timer of this._pendingTimers) window.clearTimeout(timer);
     this._pendingTimers.clear();
@@ -698,8 +882,8 @@ export class MagicCard extends LitElement {
     this._unsubLibrary = undefined;
     this._unsubShapes?.();
     this._unsubShapes = undefined;
-    this._pause.disconnected();
-    stopSequences(this._sequences);
+    this._pause?.disconnected();
+    animIfLoaded()?.stopSequences(this._sequences);
     const rt = runtimeIfLoaded();
     for (const el of this._v2Applied) rt?.release(el);
     this._v2Applied = new Set();
@@ -740,26 +924,28 @@ export class MagicCard extends LitElement {
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
     loadGoogleFonts(configGoogleFonts(config));
-    const popup = this._popup.isPopup();
-    this.toggleAttribute('data-mc-popup-hidden', this._popup.hidden);
-    this.toggleAttribute('data-mc-popup-editor', popup && !this._popup.hidden);
+    const popup = isPopupEnabled(config.popup);
+    const popupCtl = this._popupCtl;
+    const popupHere = this._popupHidden;
     const titleId = `${this._renderContext.instance}-popup-title`;
-    // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers
-    if (this._popup.hidden && !this._popup.isOpen) return this._popup.renderDialog(nothing, '', titleId);
+    // the popup chunk failed: the pop-up cannot open, so the card shows only its notice
+    if (popup && this._popupFailed) return html`<ha-card><div class="mc-card-content">${this._failNotices(config, nothing)}</div></ha-card>`;
+    // a closed pop-up renders only its empty dialog: no rows, templates, subscriptions or timers (nothing until the chunk is there)
+    if (popupHere && !popupCtl?.isOpen) return popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
 
     // the scope first: the card's own display template reads entity / card_entity
-    // the viewer's pause: on the host and the observer before any child is built
-    const paused = this._pause.begin(config);
+    const pause = this._pause;
+    const paused = this._paused;
     const scope = (this._scope = this._renderContext.entity = this._renderContext.cardEntity = effectiveEntity(config, undefined));
     if (!this.editMode && config.display?.conditions?.length && !this._evaluateDisplay(config.display)) {
-      return this._popup.hidden ? this._popup.renderDialog(nothing, '', titleId) : html``;
+      return popupHere && popupCtl ? popupCtl.renderDialog(nothing, '', titleId) : html``;
     }
 
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const resolved = (this._look = this._resolveCardAppearance(config));
     const cardStyle = this._buildCardStyle(resolved);
     // the card's own animations: motion / glow on ha-card, particle layers inside the content
-    const anim = resolveAnimations({ animations: resolved.animations }, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim({ animations: resolved.animations }, scopeState, { allowIcon: false });
     const v2Index = this._v2(anim, scopeState, scope);
     const themeStyle = this._buildThemeStyle(resolved);
     // a shaped card: ha-card is clipped to the shape, its theme border drawn along it, the shadow on a wrapper
@@ -778,31 +964,32 @@ export class MagicCard extends LitElement {
     const seasonal = this._seasonal.resolve();
     const dark = !!this.hass?.themes?.darkMode;
     const seasonalOpts = { shape, seed: this._seasonal.seed(config), dark };
-    const insets = seasonalInsets(anim, seasonal);
+    const insets = seasonalInsets({ animations: resolved.animations }, this._seasonalSetting());
     const contentPad = resolved.padding || 'var(--mc-padding)';
     const inlineContentStyle = shape
       ? [cardStyle, shapeElementStyle(undefined, contentPad, insets)].filter(Boolean).join('; ')
       : [cardStyle, insets && insetPaddingStyle(undefined, contentPad, { min: insets })].filter(Boolean).join('; ');
     // flow lines: only a card with flows gets the overlay (and the content's stacking for it)
-    const flows = this._resolveFlows(resolved);
+    const hasFlowList = hasFlows(resolved);
+    const flows = hasFlowList ? this._resolveFlows(resolved) : undefined;
     // a tank fill / sparkline behind the rows (the card needs its own entity)
     const valueBg = resolveValueBackground(resolved.value_background, { hass: this.hass, entity: scope });
     // the pop-up surface is not shaped: its ring keeps the rounded outline and the card's position
     const popupRing = shape ? resolveRing(resolved.ring, { states: this.hass?.states, defaultEntity: scope, clipped: true, shaped: false }) : ring;
     // the card's lightning (its scene or a card preset): nested layers skip theirs
-    const flash = (!!seasonal && sceneFlashes(seasonal.scenes)) || animFlashes(anim);
+    const flash = (!!seasonal && !!seasonalApi()?.sceneFlashes(seasonal.scenes)) || animFlashes(anim);
     // layer-placement / bg-stack: the card backdrop, and whether any module sits behind others or on top
     const backdrop = Array.isArray(resolved.background_layers) && resolved.background_layers.length ? resolved.background_layers : undefined;
     const layered = this._beginLayers(config, !!backdrop);
     const layerCss = layered && layerSlot.get() ? html`<style data-mc-layer-css>${layerSlot.get()!.css}</style>` : nothing;
     const lowPower = layered && resolved.layers_low_power;
-    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) this._pause.moving();
+    if (seasonal || flows?.some((f) => f.visible && f.active) || (backdrop && layersMove(backdrop, scope))) pause?.moving();
     const stack = backdrop ? html`<mc-bg-stack .layers=${backdrop} .hass=${this.hass} .host=${this._stackHost}></mc-bg-stack>` : nothing;
     const badge = backdrop && canGoStale(backdrop, scope) ? html`<div class="mc-bg-badge" inert></div>` : nothing;
     const rows = (animShape: ResolvedShape | undefined = shape) => {
       // each rendering of the content has the whole budget; the card's own scene takes its share first
-      this._seasonalBudget.begin();
-      const grant = seasonal ? this._seasonalBudget.own(seasonal.scenes, seasonal.intensity) : undefined;
+      this._seasonalBudget?.begin();
+      const grant = seasonal ? this._seasonalBudget?.own(seasonal.scenes, seasonal.intensity) : undefined;
       const opts = { ...seasonalOpts, grant };
       return html`${renderSeasonal(seasonal, 'back', { ...opts, shape: animShape })}${config.rows.map((row, ri) =>
         this._renderRow(row, ri),
@@ -812,21 +999,21 @@ export class MagicCard extends LitElement {
         : nothing}`;
     };
 
-    const inline = this._popup.hidden
+    const inline = popupHere
       ? nothing
       : withShapeShadow(html`
           <ha-card style=${haCardStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-anim=${anim?.targets ?? nothing}
             data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${ring ? '' : nothing} data-mc-shape=${shape?.kind ?? nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
             ${layerCss}<div class="mc-card-content" style=${inlineContentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
               data-mc-hover=${this._hover('card', resolved.hover, shape ? { shape: { padding: resolved.padding || 'var(--mc-padding)', card: true } } : undefined)}
-              data-mc-pause-gap=${this._pause.gap(config)}
-              data-mc-flows=${flows ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
+              data-mc-pause-gap=${pauseGap(config) ?? nothing}
+              data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
-              ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${badge}
-            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${this._pause.button(config, paused)}
+              ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
+            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `, shadow, !!shape);
-    if (!popup) return inline as TemplateResult;
+    if (!popup || !popupCtl) return inline as TemplateResult;
 
     // the pop-up surface: the card's background, shadow and theme on ha-card, padding etc. inside
     const parts = splitDeclarations(cardStyle);
@@ -837,26 +1024,26 @@ export class MagicCard extends LitElement {
       ...parts.filter((p) => !onSurface(p) && prop(p) !== 'border-radius'),
       insets && insetPaddingStyle(undefined, contentPad, { min: insets }),
     ].filter(Boolean).join('; ');
-    const surface = this._popup.isOpen
+    const surface = popupCtl.isOpen
       ? html`
           <ha-card class="mc-popup-surface" tabindex="-1" style=${surfaceStyle || nothing} data-mc-paused=${paused ? '' : nothing} data-mc-layers=${layered ? '' : nothing}
             data-mc-anim=${anim?.targets ?? nothing} data-mc-tap=${anim?.tap ? '' : nothing} data-mc-seq=${anim?.seq ?? nothing} data-mc-ring=${popupRing ? '' : nothing} data-mc-run=${anim?.run ?? nothing} data-mc-v2=${v2Index ?? nothing}>
-            ${layerCss}${this._popup.renderHead(titleId)}
+            ${layerCss}${popupCtl.renderHead(titleId)}
             <div class="mc-popup-body">
               <div class="mc-card-content" style=${contentStyle} data-mc-anim-fx=${anim?.fx.length ? '' : nothing}
                 data-mc-hover=${this._hover('popup', resolved.hover)}
-                data-mc-pause-gap=${this._pause.gap(config)}
-                data-mc-flows=${flows ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
-                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${badge}</div>
-            </div>${renderRing(popupRing)}${this._pause.button(config, paused)}
+                data-mc-pause-gap=${pauseGap(config) ?? nothing}
+                data-mc-flows=${hasFlowList ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing}
+                data-mc-flash=${flash ? '' : nothing} data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>${stack}${rows(undefined)}${this._card.out.splice(0)}${this._failNotices(config, badge)}</div>
+            </div>${renderRing(popupRing)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `
       : nothing;
     const label = config.popup?.title?.trim() || config.name || t('Pop-up');
-    const dialog = this._popup.renderDialog(surface, label, titleId, resolved.border_radius);
-    if (this._popup.hidden) return dialog;
+    const dialog = popupCtl.renderDialog(surface, label, titleId, resolved.border_radius);
+    if (popupHere) return dialog;
     // in an editor the card stays inline, marked as a pop-up
-    const id = this._popup.popupId();
+    const id = popupCtl.popupId();
     return html`
       <div class="mc-popup-badge" aria-hidden="true">
         <ha-icon icon="mdi:dock-window"></ha-icon>${t('Pop-up')}${id ? html` · #${id}` : nothing}
@@ -865,39 +1052,60 @@ export class MagicCard extends LitElement {
     `;
   }
 
+  private _decorWait = false;
+  private _decorReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
   /**
-   * The card's flows resolved for the overlay (src/utils/flow.ts); undefined without flows. A
-   * template label is rendered here (the card's render_template subscriptions); a Jinja one shows
+   * A ring, shape or value background in the DOM needs the `decor` chunk (the config walk may have missed it, e.g. a ring
+   * preset of a library animation): ask for it once. A shape's content inset is measured by the chunk's element, so the
+   * card stays hidden until it has installed (or failed) and its content never moves in view.
+   */
+  private _syncDecor(): void {
+    const decor = lazyChunks.decor;
+    let hold = false;
+    if (!decor.ready() && this.renderRoot?.querySelector('mc-ring,mc-shape,mc-value-bg')) {
+      this._met.add('decor');
+      if (!this._decorWait) {
+        this._decorWait = true;
+        decor.whenReady(this._decorReady);
+        void decor.load();
+      }
+      hold = !decor.failed() && !!this.renderRoot.querySelector('mc-shape');
+    }
+    this.toggleAttribute('data-mc-decor-wait', hold);
+  }
+
+  /**
+   * The card's flows resolved for the overlay (src/card/flows-resolve.ts, in the flows chunk); undefined until the chunk has
+   * installed. A template label is rendered here (the card's render_template subscriptions); a Jinja one shows
    * nothing until it has a result (no raw Jinja on the line without a connection, e.g. the studio).
    */
   private _resolveFlows(c: MagicCardConfig): ResolvedFlow[] | undefined {
-    if (!Array.isArray(c.flows) || !c.flows.length) return undefined;
+    const mod = flowsIfLoaded();
+    if (!mod) {
+      // flows the config walk did not reach: ask for the chunk and draw again when it is there
+      this._met.add('flows');
+      if (!this._flowsWait) {
+        this._flowsWait = true;
+        lazyChunks.flows.whenReady(this._flowsReady);
+        void lazyChunks.flows.load();
+      }
+      return undefined;
+    }
     // flow-look: a look flow drawn while the chunk is still loading is classic; resolve again once it arrives
-    if (!this._lookWait && !lazyChunks['flow-look'].ready() && c.flows.some((f) => hasFlowLook(f))) {
+    if (!this._lookWait && !lazyChunks['flow-look'].ready() && c.flows!.some((f) => hasFlowLook(f))) {
       this._lookWait = true;
       lazyChunks['flow-look'].whenReady(() => this.requestUpdate());
     }
-    const entities = flowModuleEntities(this._resolvedConfig ?? this._config ?? c);
-    // The overlay keys a flow by id (data-flow): unique when ids are missing / repeated (the editor uses the same keys).
-    const keys = flowKeys(c.flows);
-    const out = c.flows
-      .map((f, i) => [f, i] as const)
-      .filter(([f]) => f && typeof f === 'object')
-      .map(([f, i]) => {
-        const r = resolveFlow(f, this.hass, entities.get(f.from), i);
-        r.id = keys[i];
-        if (r.labelTemplate) {
-          const label = hasJinja(r.labelTemplate)
-            ? this._templates.get(r.labelTemplate).status === 'ok'
-              ? this._templateText(r.labelTemplate)
-              : ''
-            : r.labelTemplate;
-          if (label) r.label = label;
-        }
-        return r;
-      });
-    return out.length ? out : undefined;
+    return mod.api.resolveCardFlows(c, this._resolvedConfig ?? this._config ?? c, this.hass, (template) =>
+      hasJinja(template) ? (this._templates.get(template).status === 'ok' ? this._templateText(template) : '') : template,
+    );
   }
+  private _flowsWait = false;
+  private _flowsReady = (): void => {
+    if (this.isConnected) this.requestUpdate();
+  };
 
   /** A template's current text: the raw text without Jinja or without a connection; '' while pending / on error. */
   private _templateText(template: string): string {
@@ -1001,12 +1209,6 @@ export class MagicCard extends LitElement {
     this._card = { flow: false, row: false, out: [] };
     const rt = layerSlot.get();
     if (any && rt) this._card.flow = rt.scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
-    // slot empty: this render lays children out in config order; ask for one more when the chunk lands
-    if (this._layerOn && !rt && !this._layersAsked) {
-      this._layersAsked = true;
-      // load() settles false on a failure (whenReady callbacks are dropped then): render once more so layered modules show in flow
-      void lazyChunks.layers.load().then(() => this.requestUpdate());
-    }
     return this._layerOn;
   }
 
@@ -1068,8 +1270,8 @@ export class MagicCard extends LitElement {
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(row.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(anim), this._shapes);
+    const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, row.padding, seasonalInsets(design), this._shapes);
     // a shaped row clips its edge: the ring is drawn inside
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
@@ -1126,8 +1328,8 @@ export class MagicCard extends LitElement {
     const scopeState = scope ? this.hass?.states[scope] : undefined;
     const design = resolveConditionalDesign(col.design, this.hass, scope);
     const designStyle = designToStyle(design);
-    const anim = resolveAnimations(design, scopeState, { allowIcon: false, states: this.hass?.states, custom: this._customLookup });
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(anim), this._shapes);
+    const anim = this._resolveAnim(design, scopeState, { allowIcon: false });
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, col.padding, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: scope, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: scope });
     const key = nested === undefined ? `${ri}.${ci}` : `${nested}#${ci}`;
@@ -1204,9 +1406,9 @@ export class MagicCard extends LitElement {
 
     const design = resolveConditionalDesign(mod.design as DesignConfig, this.hass, mod.entity);
     const stateObj = mod.entity ? this.hass?.states[mod.entity] : undefined;
-    const anim = resolveAnimations(design, stateObj, { states: this.hass?.states, custom: this._customLookup });
+    const anim = this._resolveAnim(design, stateObj);
     const v2Index = this._v2(anim, stateObj, mod.entity);
-    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(anim), this._shapes);
+    const { shape, border, stroke, shadow, style: shapeStyle, edge } = shapeParts(design, undefined, seasonalInsets(design), this._shapes);
     const ring = resolveRing(design?.ring, { states: this.hass?.states, defaultEntity: mod.entity, clipped: !!shape, shaped: !!shape });
     const valueBg = resolveValueBackground(design?.value_background, { hass: this.hass, entity: mod.entity });
     // `entity` design colours read this var (currentColor when unset); only set when one is used
@@ -1238,8 +1440,6 @@ export class MagicCard extends LitElement {
       ctx.iconRig = outerRig;
     }
     const at = layer?.attrs;
-    // a layered module before the chunk lands is out of flow and invisible (LAYER_SYNC_CSS); after a failed load it is plain
-    const pending = !layer && isLayered(mod) && !layerSlot.get() && !lazyChunks.layers.failed();
     const media = layer?.media
       ? html`<div class="mc-layer-media">${content}</div>${layer.scrim ? html`<div class="mc-layer-scrim"></div>` : nothing}`
       : content;
@@ -1248,7 +1448,6 @@ export class MagicCard extends LitElement {
       <div
         class="mc-module-wrapper ${hasActions ? 'mc-hoverable' : ''}"
         data-mc-placement=${at?.['data-mc-placement'] ?? (mod.type === 'video-bg' && mod.placement === 'flow' ? 'flow' : nothing)}
-        data-mc-layer-pending=${pending ? '' : nothing}
         data-mc-anchor=${at?.['data-mc-anchor'] ?? nothing}
         data-mc-pass=${at?.['data-mc-pass'] ?? nothing}
         data-mc-blur=${at?.['data-mc-blur'] ?? nothing}
@@ -1285,11 +1484,31 @@ export class MagicCard extends LitElement {
   }
 
   /**
+   * The one seam to the animation resolve: a card / row / column / module design's animations once the `anim`
+   * chunk has installed, else undefined, so the card is drawn plain until then and stays plain, with the failure notice,
+   * when the chunk cannot load. The needs table starts the load from the config; a design that only shows up at render
+   * time (a rule that resolves now) starts it here, once per card, and the card renders again when it has installed.
+   */
+  private _resolveAnim(design: DesignConfig | undefined, stateObj: HassEntity | undefined, opts: { allowIcon?: boolean } = {}): ResolvedAnimations | undefined {
+    const mod = animIfLoaded();
+    if (mod) return mod.resolveAnimations(design, stateObj, { ...opts, states: this.hass?.states, custom: this._customLookup });
+    if (!this._animWait && hasAnimations(design)) {
+      this._animWait = true;
+      lazyChunks.anim.whenReady(() => {
+        this._animWait = false;
+        this.requestUpdate();
+      });
+      void lazyChunks.anim.load();
+    }
+    return undefined;
+  }
+
+  /**
    * A card / row / column / module's v2 data for _syncRuntime: its `data-mc-v2` index (undefined
    * without any). Rows, columns and the card have no entity: their documents follow an entry's own.
    */
-  private _v2(anim: ReturnType<typeof resolveAnimations>, stateObj?: HassEntity, entityId?: string): number | undefined {
-    if (anim) this._pause.moving();
+  private _v2(anim: ResolvedAnimations | undefined, stateObj?: HassEntity, entityId?: string): number | undefined {
+    if (anim) this._pause?.moving();
     if (anim?.needsRuntime) this._v2Need = true;
     if (anim?.needsParticles) this._pNeed = true;
     return anim?.v2 ? this._v2Render.push({ entries: anim.v2, stateObj, entityId }) - 1 : undefined;
@@ -1316,7 +1535,7 @@ export class MagicCard extends LitElement {
     }
     const root = this.renderRoot as ShadowRoot;
     const reducedMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const lookup = (id: string): AnimationDoc | undefined => animationLibrary.get(id) ?? inlineAnimations(this._resolvedConfig ?? this._config)?.get(id);
+    const lookup = (id: string): AnimationDoc | undefined => animIfLoaded()?.animationLibrary.custom(id, this._resolvedConfig ?? this._config);
     const seen = new Set<HTMLElement>();
     for (const el of root.querySelectorAll<HTMLElement>('[data-mc-v2]')) {
       const job = jobs[Number(el.dataset.mcV2)];
@@ -1371,7 +1590,7 @@ export class MagicCard extends LitElement {
         // a geometry variant replaces the same doc's older bake for that geometry (sheet key without the spec hash);
         // content collider: `icon` = this module's own icon hook (not a nested module's; rows, columns
         // and the card have none: off), `text` = the first child that is not a decoration (all aria-hidden)
-        useCss: (name, css) => useAnimationCss(name.startsWith('mcc-') ? sim.docId + (sim.part ? 'o' : '') + name.slice(name.lastIndexOf('-g')) : name, name, css),
+        useCss: (name, css) => animIfLoaded()?.useAnimationCss(name.startsWith('mcc-') ? sim.docId + (sim.part ? 'o' : '') + name.slice(name.lastIndexOf('-g')) : name, name, css),
         content: () =>
           sim.spec.sim.colliders.content === 'icon'
             ? [...w.querySelectorAll('.mc-anim-icon')].find((e) => e.closest('.mc-module-wrapper') === w)
@@ -1385,6 +1604,23 @@ export class MagicCard extends LitElement {
     }
     for (const el of this._pApplied) if (!seen.has(el)) pm.release(el);
     this._pApplied = seen;
+  }
+
+  /**
+   * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
+   * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
+   * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
+   * until a chunk fails, so a healthy or plain card has no notice, no status container. They share the part of
+   * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
+   */
+  private _failNotices(config: MagicCardConfig, rest: unknown) {
+    const names = [...failedChunkNames()].filter((n) => {
+      if (n in LAZY_FEATURES) return !SLOT_NOTICE_CHUNKS.includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
+      return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
+    });
+    return names.length
+      ? html`${rest}${names.map((n) => chunkNotice(n in lazyChunks ? lazyChunks[n as keyof typeof lazyChunks] : onDemandChunks[n as keyof typeof onDemandChunks]))}`
+      : rest;
   }
 
   /** The theme is dark (seasonal decorations soften their frost). */
@@ -1658,7 +1894,8 @@ export class MagicCard extends LitElement {
         break;
 
       case 'close-popup':
-        popupCoordinator.closeOpen();
+        // no chunk loaded: no pop-up can be open
+        popupIfLoaded()?.api.closeOpen();
         break;
 
       case 'fire-dom-event':
@@ -1673,3 +1910,5 @@ export class MagicCard extends LitElement {
     }
   }
 }
+
+if (!customElements.get(CARD_TAG)) customElements.define(CARD_TAG, MagicCard);

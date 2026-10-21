@@ -1,0 +1,248 @@
+# Shield grid: a honeycomb of hex cells for the doors and the hallway motion sensor.
+# A tripped cell turns to the accent colour and flashes. A light wave crosses the grid each time the alarm is set to armed home.
+# It uses theme colours only, so it follows the dashboard's theme.
+# Entities: alarm_control_panel.home, binary_sensor.front_door, binary_sensor.back_door, binary_sensor.hall_motion
+# gallery: width=380 record=5 theme=cobalt-prism mode=dark
+type: custom:magic-card
+name: Shield grid
+border_radius: 26px
+padding: 16px
+animations:
+  - { id: wave, preset: shine-sweep, trigger: state, trigger_entity: alarm_control_panel.home, state: armed_home, color: var(--primary-color), strength: 35, intensity: 30, duration: 5s }
+rows:
+  - id: title
+    column_widths: [1fr, auto]
+    padding: 2px 4px 10px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Perimeter
+            design: { font_size: 20px, font_weight: "800", color: var(--primary-text-color), letter_spacing: 0.5px }
+      - vertical_align: center
+        modules:
+          - type: text
+            use_entity: true
+            entity: alarm_control_panel.home
+            design:
+              font_size: 12px
+              font_weight: "700"
+              color: var(--primary-text-color)
+              padding: 5px 12px
+              border_radius: 999px
+              border_width: 1px
+              border_style: solid
+              border_color: var(--primary-color)
+              background_color: "color-mix(in srgb, var(--primary-color) 18%, var(--card-background-color))"
+  - id: r1
+    column_widths: [76px, 76px, 76px, 76px]
+    gap: 6px
+    padding: 0 13px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+      - modules:
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 76px
+              height: 64px
+              shape: hexagon
+              display: flex
+              justify_content: center
+              border_width: 1.5px
+              border_style: solid
+              border_color: var(--primary-color)
+              background_color: "color-mix(in srgb, var(--primary-color) 20%, var(--card-background-color))"
+              conditional:
+                - id: tripped
+                  name: Tripped
+                  conditions: [{ type: state, entity: binary_sensor.front_door, state: "on" }]
+                  design:
+                    border_color: var(--accent-color)
+                    background_color: "color-mix(in srgb, var(--accent-color) 30%, var(--card-background-color))"
+                    animations:
+                      - { id: flash, preset: blink, trigger: entity_on, trigger_entity: binary_sensor.front_door, color: var(--accent-color), intensity: 45, duration: 1s }
+            modules:
+              - type: icon
+                entity: binary_sensor.front_door
+                icon: mdi:door
+                size: 20px
+                design:
+                  color: var(--primary-color)
+                  conditional:
+                    - { id: tripped, name: Tripped, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color) } }
+              - type: text
+                text: Front
+                design: { font_size: 10px, font_weight: "700", color: var(--primary-text-color), text_transform: uppercase, letter_spacing: 1px }
+      - modules:
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 76px
+              height: 64px
+              shape: hexagon
+              display: flex
+              justify_content: center
+              border_width: 1.5px
+              border_style: solid
+              border_color: var(--primary-color)
+              background_color: "color-mix(in srgb, var(--primary-color) 20%, var(--card-background-color))"
+              conditional:
+                - id: tripped
+                  name: Tripped
+                  conditions: [{ type: state, entity: binary_sensor.back_door, state: "on" }]
+                  design:
+                    border_color: var(--accent-color)
+                    background_color: "color-mix(in srgb, var(--accent-color) 30%, var(--card-background-color))"
+                    animations:
+                      - { id: flash, preset: blink, trigger: entity_on, trigger_entity: binary_sensor.back_door, color: var(--accent-color), intensity: 45, duration: 1s }
+            modules:
+              - type: icon
+                entity: binary_sensor.back_door
+                icon: mdi:door-open
+                size: 20px
+                design:
+                  color: var(--primary-color)
+                  conditional:
+                    - { id: tripped, name: Tripped, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color) } }
+              - type: text
+                text: Back
+                design: { font_size: 10px, font_weight: "700", color: var(--primary-text-color), text_transform: uppercase, letter_spacing: 1px }
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+  - id: r2
+    column_widths: [76px, 76px, 76px]
+    gap: 6px
+    padding: 0 54px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+      - modules:
+          - type: vertical
+            align: center
+            justify: center
+            gap: 0px
+            design:
+              width: 76px
+              height: 64px
+              shape: hexagon
+              display: flex
+              justify_content: center
+              border_width: 1.5px
+              border_style: solid
+              border_color: var(--primary-color)
+              background_color: "color-mix(in srgb, var(--primary-color) 20%, var(--card-background-color))"
+              conditional:
+                - id: tripped
+                  name: Tripped
+                  conditions: [{ type: state, entity: binary_sensor.hall_motion, state: "on" }]
+                  design:
+                    border_color: var(--accent-color)
+                    background_color: "color-mix(in srgb, var(--accent-color) 30%, var(--card-background-color))"
+                    animations:
+                      - { id: flash, preset: blink, trigger: entity_on, trigger_entity: binary_sensor.hall_motion, color: var(--accent-color), intensity: 45, duration: 1s }
+            modules:
+              - type: icon
+                entity: binary_sensor.hall_motion
+                icon: mdi:motion-sensor
+                size: 20px
+                design:
+                  color: var(--primary-color)
+                  conditional:
+                    - { id: tripped, name: Tripped, conditions: [{ type: state, state: "on" }], design: { color: var(--accent-color) } }
+              - type: text
+                text: Hall
+                design: { font_size: 10px, font_weight: "700", color: var(--primary-text-color), text_transform: uppercase, letter_spacing: 1px }
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+  - id: r3
+    column_widths: [76px, 76px, 76px, 76px]
+    gap: 6px
+    padding: 0 13px
+    columns:
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+      - modules:
+          - type: vertical
+            align: center
+            design: { width: 76px, height: 64px, shape: hexagon, border_width: 1px, border_style: solid, border_color: "color-mix(in srgb, var(--primary-color) 22%, transparent)", background_color: "color-mix(in srgb, var(--primary-color) 6%, var(--card-background-color))" }
+            modules: []
+  - id: actions
+    layout: "1-1"
+    gap: 10px
+    padding: 14px 0 0
+    columns:
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 14px 0
+              border_radius: 12px
+              border_width: 1px
+              border_style: solid
+              border_color: "color-mix(in srgb, var(--primary-color) 45%, transparent)"
+              background_color: "color-mix(in srgb, var(--primary-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_arm_home, data: { entity_id: alarm_control_panel.home } }
+            modules:
+              - type: icon
+                icon: mdi:shield-lock
+                size: 18px
+                design: { color: var(--primary-color) }
+              - type: text
+                text: Arm
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }
+      - modules:
+          - type: horizontal
+            gap: 8px
+            align: center
+            justify: center
+            design:
+              padding: 14px 0
+              border_radius: 12px
+              border_width: 1px
+              border_style: solid
+              border_color: "color-mix(in srgb, var(--primary-color) 45%, transparent)"
+              background_color: "color-mix(in srgb, var(--primary-color) 12%, var(--card-background-color))"
+            actions:
+              tap_action: { action: perform-action, service: alarm_control_panel.alarm_disarm, data: { entity_id: alarm_control_panel.home } }
+            modules:
+              - type: icon
+                icon: mdi:shield-off
+                size: 18px
+                design: { color: var(--primary-color) }
+              - type: text
+                text: Disarm
+                design: { font_size: 13px, font_weight: "700", color: var(--primary-text-color) }

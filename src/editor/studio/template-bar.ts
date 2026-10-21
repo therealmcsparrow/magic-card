@@ -46,7 +46,7 @@ export class TemplateBar extends LitElement {
   };
 
   /**
-   * Mockup: the template chip is the menu button (link · name · chevron), next to the override chip;
+   * The template chip is the menu button (link · name · chevron), next to the override chip;
    * in the pane, a "Re-sync N overrides" text button sits on the right while anything is overridden.
    */
   protected render(): TemplateResult {

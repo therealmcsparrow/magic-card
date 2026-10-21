@@ -135,7 +135,7 @@ export class McSwiper extends HTMLElement {
   }
 }
 
-/** Called by the slider chunk's install(); evaluating this file defines nothing (AC13). */
+/** Called by the slider chunk's install(); evaluating this file defines nothing. */
 export function defineSwiper(): void {
   if (!customElements.get('mc-swiper')) customElements.define('mc-swiper', McSwiper);
 }

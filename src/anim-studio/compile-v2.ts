@@ -14,7 +14,7 @@ import { validateV2, type Binding, type Clip, type Rig, type TargetRef } from '.
 /*
  * The v2 parts of a document for the lazy runtime chunk (src/anim-runtime): per-target keyframes
  * (tracks), and the rig, clips and bindings as validated. Pure. Loading this file registers
- * compileV2 with compile.ts, which then attaches it as `CompiledAnimation.v2` when
+ * compileV2 with compile.ts (through src/utils/anim-hooks.ts), which then attaches it as `CompiledAnimation.v2` when
  * docNeedsRuntime(doc). The card bundle does not import it (its runtime chunk does), so
  * magic-card.js stays small.
  */

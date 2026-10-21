@@ -1,5 +1,5 @@
 /*
- * Overlap and small-target checks (designer 11 J). Pure geometry; the studio canvas measures the boxes
+ * Overlap and small-target checks. Pure geometry; the studio canvas measures the boxes
  * (layer-measure.ts) and the Layer group shows the sentences.
  */
 

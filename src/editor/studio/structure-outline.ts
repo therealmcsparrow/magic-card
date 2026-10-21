@@ -948,7 +948,7 @@ export class StructureOutline extends LitElement {
   }
 
   /**
-   * The line under a module that takes its entity from the card or a layout (R7): the id, muted, with the
+   * The line under a module that takes its entity from the card or a layout: the id, muted, with the
    * words "Same as card / row" in the wide variant; or, when the entity does not fit the module, what it needs.
    * Nothing for own entities, `none`, card modules and modules that use no entity.
    */
@@ -979,7 +979,7 @@ export class StructureOutline extends LitElement {
     const key = selectionKey(sel);
     const a = this._itemAttrs(key, selKey, focusKey);
     const icon = ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline';
-    // Mockup: "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
+    // "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
     const followed = sub ? nothing : this._followedEntity(mod, sel);
     const overrides = !!mod.not_synced?.length;

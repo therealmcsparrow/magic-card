@@ -1,18 +1,11 @@
-import { LitElement, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import type { DesignConfig, ShapeKind, ShapeOptions } from '../types';
-import type { CustomShapeOptions, ShapeLookup } from '../contracts/custom-shape';
-import { LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
-import type { LibraryChangedDetail, MagicCardUtilsWindow } from '../contracts/mcu-library';
+import { LitElement, css, html, nothing, PropertyValues, svg, TemplateResult } from 'lit';
 import { parseShapeLength, shapePath } from '../utils/shape-path';
-import { resolveCustomShape } from '../utils/shape-ref';
-import { customShapesReady, loadCustomShapes } from '../utils/shape-custom-loader';
-import { parseClosed, polygonCss } from '../path/core';
 import { shapeRingPath } from '../utils/ring-path';
 import type { ShapeStroke } from '../utils/css-utils';
 import { offscreenObserver } from '../icons/offscreen';
-import { borderBoxSize, unwatchSize, watchSize } from './mc-ring';
-import { shapeLayerStyles } from './shape-css';
+import { borderBoxSize, unwatchSize, watchSize } from './size-watch';
+import { shapeClip } from './shape-clip';
+import type { ResolvedShape } from './shape-resolve';
 
 /*
  * Outline shapes on a module / row / column wrapper or the card (design `shape`, src/utils/shape-path.ts).
@@ -32,68 +25,11 @@ import { shapeLayerStyles } from './shape-css';
  */
 
 const REDUCED = '(prefers-reduced-motion: reduce)';
-const KINDS = new Set<ShapeKind>(['custom', 'squircle', 'hexagon', 'octagon', 'blob', 'wave', 'notch', 'ticket', 'pill', 'circle']);
 const INSET_VARS = ['--mc-shape-it', '--mc-shape-ir', '--mc-shape-ib', '--mc-shape-il'] as const;
 /** Wave animation: frames per period and the period; blob: seconds per morph cycle. */
 const WAVE_FRAMES = 8;
 const WAVE_PERIOD_S = 3;
 const BLOB_CYCLE_S = 12;
-
-export interface ResolvedShape {
-  kind: ShapeKind;
-  options?: ShapeOptions;
-}
-
-/**
- * The design's shape, or undefined for none / unknown (the element is not shaped at all). A custom
- * shape's `ref` is resolved here (library, then the card's inline copy), so everything downstream
- * (clip, stroke, rings, flows, decorations) reads the finished options. A custom shape whose builder
- * chunk is not loaded yet starts the load and is undefined (unshaped) meanwhile.
- */
-export function resolveShape(design: Pick<DesignConfig, 'shape' | 'shape_options'> | undefined, lookup?: ShapeLookup): ResolvedShape | undefined {
-  const kind = design?.shape;
-  if (!kind || !KINDS.has(kind)) return undefined;
-  // until the builder chunk is in, a custom shape renders as `none` (the card re-renders when it lands)
-  if (kind === 'custom' && !customShapesReady()) {
-    void loadCustomShapes();
-    return undefined;
-  }
-  let o = design?.shape_options;
-  if (kind === 'custom' && o && typeof o === 'object') o = resolveCustomShape(o, lookup);
-  return o && typeof o === 'object' && Object.keys(o).length ? { kind, options: o } : { kind };
-}
-
-/** A saved shape of the provider's library (Magic Card Utils); undefined until it is ready and for unknown ids. */
-export const libraryShape = (id: string): CustomShapeOptions | undefined =>
-  (window as unknown as { magicCardUtils?: Partial<MagicCardUtilsWindow> }).magicCardUtils?.shapes?.get(id);
-
-/** Call `cb` when the library's shapes change; returns the stop function. */
-export function watchShapes(cb: () => void): () => void {
-  const on = (e: Event) => (e as CustomEvent<LibraryChangedDetail>).detail?.kind === 'shapes' && cb();
-  window.addEventListener(LIBRARY_CHANGED_EVENT, on);
-  return () => window.removeEventListener(LIBRARY_CHANGED_EVENT, on);
-}
-
-let pathSupport: boolean | undefined;
-/** `clip-path: path()` support (checked once). */
-export function clipPathSupported(): boolean {
-  if (pathSupport === undefined) {
-    pathSupport = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' ? CSS.supports('clip-path', 'path("M0 0")') : true;
-  }
-  return pathSupport;
-}
-
-/** Test hook: forget the clip-path path() support check. */
-export function __resetClipPathSupport(value?: boolean): void {
-  pathSupport = value;
-}
-
-/** The clip-path value of a shape path. */
-export function shapeClip(d: string): string {
-  if (clipPathSupported()) return `path('${d}')`;
-  const o = parseClosed(d);
-  return o ? polygonCss(o) : 'none';
-}
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 type Pt = { x: number; y: number };
@@ -195,14 +131,33 @@ function contentHeight(el: HTMLElement): number | undefined {
   return bottom > top ? bottom - top : undefined;
 }
 
-@customElement('mc-shape')
 export class McShape extends LitElement {
-  static styles = shapeLayerStyles;
+  static properties = {
+    shape: { attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) },
+    stroke: { attribute: false, hasChanged: (a?: ShapeStroke, b?: ShapeStroke) => JSON.stringify(a) !== JSON.stringify(b) },
+    edge: { attribute: false, hasChanged: (a?: readonly number[], b?: readonly number[]) => JSON.stringify(a) !== JSON.stringify(b) },
+    offscreen: { type: Boolean, reflect: false },
+    _box: { state: true },
+  };
 
-  @property({ attribute: false, hasChanged: (a?: ResolvedShape, b?: ResolvedShape) => JSON.stringify(a) !== JSON.stringify(b) })
+  static styles = css`
+    :host {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+    svg {
+      position: absolute;
+      overflow: visible;
+    }
+    path {
+      fill: none;
+    }
+  `;
+
   shape?: ResolvedShape;
 
-  @property({ attribute: false, hasChanged: (a?: ShapeStroke, b?: ShapeStroke) => JSON.stringify(a) !== JSON.stringify(b) })
   stroke?: ShapeStroke;
 
   /**
@@ -210,13 +165,12 @@ export class McShape extends LitElement {
    * bottom left): the content rectangle grown by it lies inside the shape, so every content point is
    * at least that far inside.
    */
-  @property({ attribute: false, hasChanged: (a?: readonly number[], b?: readonly number[]) => JSON.stringify(a) !== JSON.stringify(b) })
   edge?: readonly number[];
 
   /** Set by the shared off-screen observer while the shape animates. */
-  @property({ type: Boolean, reflect: false }) offscreen = false;
+  offscreen = false;
 
-  @state() private _box?: Box;
+  private _box?: Box;
 
   private _parent?: HTMLElement;
   private _mutations?: MutationObserver;

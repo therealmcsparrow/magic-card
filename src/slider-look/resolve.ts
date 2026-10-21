@@ -1,6 +1,6 @@
 import type { SliderModuleConfig } from '../types';
 import type { SliderThumb, SliderTrackStyle } from '../contracts/slider-look';
-import { safeColor } from '../utils/animation';
+import { safeColor } from '../utils/safe-css';
 
 /*
  * Config to a plain, clamped look model (CFG rules): every number is narrowed and clamped, every
@@ -18,7 +18,7 @@ const MAX_LABEL = 8;
 
 /** Bubble linger after a release or a tap (touch has no hover), ms. */
 export const LINGER_MS = 2000;
-/** The failed-call hint stays this long (Marco / Sanne round 1: at least 3 s, 5 s for low vision). */
+/** The failed-call hint stays this long (at least 3 s, 5 s for low vision). */
 export const ERROR_MS = 5000;
 /** The touch area of every track is at least this tall (px). */
 export const HIT_PX = 40;

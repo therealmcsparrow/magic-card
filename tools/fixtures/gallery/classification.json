@@ -1,0 +1,2408 @@
+{
+  "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
+  "plain_keys_sha256": "2b45eb3e80a153643f9ae17ccc08b4021ef30a51f235868446cc27728fe3f336",
+  "count": 137,
+  "plain": 13,
+  "feature": 124,
+  "plain_share_percent": 9.5,
+  "trace_fixtures": {
+    "plain": "080",
+    "effect": "063"
+  },
+  "chunk_counts": {
+    "anim": 54,
+    "controls": 32,
+    "decor": 34,
+    "flows": 33,
+    "layers": 10,
+    "modules-extra": 20,
+    "pause": 20,
+    "seasonal": 5,
+    "svg-icon": 18
+  },
+  "reserve_counts": {
+    "none": 13,
+    "overlay": 45,
+    "configured": 24,
+    "default": 55
+  },
+  "unknown_key_cards": [],
+  "cards": [
+    {
+      "id": "001",
+      "source": "weather-hero",
+      "sha256": "df4d11edcca26c0c1fd76c4ddf54d6ba7117eb0e1b27100f75f8af67497ea56f",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:forecast",
+        "module:weather"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "002",
+      "source": "thermostat-ring",
+      "sha256": "4c92cd23c936f8ab735c37902e1843602d5002bfef9635f1818ab1abdb6e32ad",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "controls",
+        "decor"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape",
+        "module:spinbox"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "003",
+      "source": "energy-flow",
+      "sha256": "362df8b305cf34a91234a383206775d33ee5ff664a4c898f55abf13487070f91",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "flows",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "004",
+      "source": "now-playing",
+      "sha256": "bc0b5923b2e4881e85f79227589c02f6eb66a0412a27e0209954010bb6206aac",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "005",
+      "source": "room-living",
+      "sha256": "d33ae1d7e5d3e73dd7190347aa1809dd537770e3da39074fdd7530babfe2e2f1",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 24
+    },
+    {
+      "id": "006",
+      "source": "phone-battery",
+      "sha256": "201491e1a282f46278302490f3c6fcdd327a185838f35e944bb48936d0c7a9c2",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 18
+    },
+    {
+      "id": "007",
+      "source": "water-tank",
+      "sha256": "113be7aad6d5a52dcc1e73f75756c1ac5f95414711d41f4449413fc15922b33d",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 5
+    },
+    {
+      "id": "008",
+      "source": "clock-greeting",
+      "sha256": "5090b2c7db70a9927a3b011018aa16988386179d9eddbe69329223e077de26cf",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:weather"
+      ],
+      "unknown_keys": [],
+      "modules": 11
+    },
+    {
+      "id": "009",
+      "source": "security",
+      "sha256": "f0e5289f170a182f1fde11cc7d95f428badfa7d97fac778e3fb8fbd008c69412",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 24
+    },
+    {
+      "id": "010",
+      "source": "scenes",
+      "sha256": "955d90a6e6843f77c103ad1b28ad191fafaa6c5edefe078b55318972f00ea4df",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 21
+    },
+    {
+      "id": "011",
+      "source": "washing-machine",
+      "sha256": "6a2c65ab9bda18f92aaef4f71dab1f8cd149820df14d5a521ba159e34d44559b",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "012",
+      "source": "air-quality",
+      "sha256": "7db1b3301da2c8e0df009b7756dd247a0d8849dcd86346ae518ddcf2d2b8bae6",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "decor"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.value_background",
+        "module:gauge"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "013",
+      "source": "people",
+      "sha256": "6b8a07bb01b11b8eac1104f387f1f2ac4eb6efbc04640901b633490acf76b378",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 14
+    },
+    {
+      "id": "014",
+      "source": "sensor-sparklines",
+      "sha256": "addcb564230123475c23a66cfb85c11461c678f1781a3a099d3e08d7cf534593",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "015",
+      "source": "garage-door",
+      "sha256": "0a1df5542c168745efdbea6f9ecc92cb9e7a940ff02fb82230ed1475830e07b2",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "016",
+      "source": "plants",
+      "sha256": "e29a1c52f3426500ecfff1c26fb1239728e92f352ffe0eb42f15e2a5f6247e1e",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 23
+    },
+    {
+      "id": "017",
+      "source": "doorbell-camera",
+      "sha256": "407f0e48dd789200084f2af6b1b6392cb66bf35e3b7fa42c22ab557058ec86f5",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "module:camera"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "018",
+      "source": "server-stats",
+      "sha256": "afdd326bb1b2f0b7df5e399c366cb47fa2d6eb9e31edbd786a0cb25d7219bc86",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 26
+    },
+    {
+      "id": "019",
+      "source": "fan-control",
+      "sha256": "7da2cb301cd79b00fefb268dad801297028712ce1d0579a04d8def92cd76c9d6",
+      "class": "feature",
+      "chunks": [
+        "decor",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.shape",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "020",
+      "source": "ev-charging",
+      "sha256": "c9f4bfdf84e2e607c4e4a2a90d6674b182b558e84c5bc7a8f40887a7e492b90b",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 17
+    },
+    {
+      "id": "021",
+      "source": "robot-vacuum",
+      "sha256": "2e12044724a5e3d1b744a860f818d49c6c876c7e668bdc664a517fd4157146aa",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 19
+    },
+    {
+      "id": "022",
+      "source": "up-next",
+      "sha256": "fcbfea06206b249e1e0069daf2dddb71a75720407ef57045a3639dc0c42524a8",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "023",
+      "source": "light-dimmer",
+      "sha256": "01cc445a42d9274dac1ba96bc7dc4b8b661c0c3ef0c6b1f75a59e3472e7519a0",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "024",
+      "source": "solar-today",
+      "sha256": "6b438046f8913f695697b27f97efc802da1afd40ea0daa7e920f775dfe9468a8",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "module:graphs"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "025",
+      "source": "room-temperatures",
+      "sha256": "c5fd0c06d080fc9b0bce42937bf6c059868a0e9494b0ca9fecef2146783c71d3",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 18
+    },
+    {
+      "id": "026",
+      "source": "sun-times",
+      "sha256": "6cbd3ae9c1c0005f462980a8d4dfe0a64dfc74475b5a92957bf256d0bf758099",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 13
+    },
+    {
+      "id": "027",
+      "source": "3d-printer",
+      "sha256": "0512f743ee4b878428dfd8f76d3d4dbbb193c1e0ab5cc5589ba924ab325da1c0",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 17
+    },
+    {
+      "id": "028",
+      "source": "coffee-machine",
+      "sha256": "a0b9d4da61b29458814e90105b0775e183800929a429211d7696637ac5ec3afb",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "029",
+      "source": "pool",
+      "sha256": "35ab1da0ff35c12d1212ae0b536b7a60bdac01ae709f98d95d989800cf029c80",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "030",
+      "source": "blinds",
+      "sha256": "8b4afc375c1f928d8c59a1babe4a980601bb83b442c281d3f4794c2eaa904db2",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "031",
+      "source": "trash-pickup",
+      "sha256": "050d7c52234fc022dbe34d74f05277de602fb761c20be2ede127c13a03b85d4b",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 17
+    },
+    {
+      "id": "032",
+      "source": "leak-alert",
+      "sha256": "bfb6897ddabbcebee7be86944ee10d34ab15ff4d387b5602dc260e40fe16d495",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "033",
+      "source": "kitchen-timer",
+      "sha256": "7aae191ddb9bb04d9c65e9bd0ee7ae49d7477328cc5abdf8f4267714f09bfe5f",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "034",
+      "source": "boiler",
+      "sha256": "62c41810dbfec208c6455aebed92f060d805352ee2b8d5c5daaf80b74e5c8d03",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "035",
+      "source": "mini-player",
+      "sha256": "4c5beaab9adf6488601e8038353bba1e4a642dd126fc0341326a95f93ec4399d",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 6
+    },
+    {
+      "id": "036",
+      "source": "crypto",
+      "sha256": "4f884f1a3ab01edef5109fa928a47ef5fd0236d19899cf986c8d8e32ff65aa3f",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "037",
+      "source": "speaker-volumes",
+      "sha256": "ebdb76f65424b7a051b427297134c5669d2bed752e2ca26bc9b305eceaec8ccc",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 24
+    },
+    {
+      "id": "038",
+      "source": "irrigation",
+      "sha256": "7c1889671e56620a18a0b0a6dcfcedff57aab548489390c28f67291dc1979c5c",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 19
+    },
+    {
+      "id": "039",
+      "source": "health",
+      "sha256": "4a796a9e5d39e402b6eba552599410757431d3775d956f70e2d69a5df445ad7a",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 14
+    },
+    {
+      "id": "040",
+      "source": "house-modes",
+      "sha256": "833bd33fbfbaf164f58c0b69f8e3b82428e02398612f3f5b8d0ba20c68dcb976",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "041",
+      "source": "doorbell-ring",
+      "sha256": "bad8a5bf82f3080f696cf8fbbb2d467262fe96ef0cf755251f5bdfd758fef309",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "042",
+      "source": "storm-watch",
+      "sha256": "e7a050ffcf68b5fb1f77e19f558b6d94d7eb44da936ec0c3fc3be5c882bdce33",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "modules-extra",
+        "seasonal"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.seasonal",
+        "design.animations",
+        "module:weather"
+      ],
+      "unknown_keys": [],
+      "modules": 18
+    },
+    {
+      "id": "043",
+      "source": "heating",
+      "sha256": "ef480b901f2d378690e0ba7cdc25313d39441849c79d89a0093b9b7e178d649c",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "044",
+      "source": "cooling",
+      "sha256": "9e6fb4f0a997ddfb0fa8a8c4a7ecebbca6b4c1fb5365e058f467d2f27f30dae6",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "045",
+      "source": "solar-house",
+      "sha256": "70e8512a909bf6590881952f09541d10d71f7dfcda2e5d5b80b0da507fc34d0c",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "flows",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "046",
+      "source": "ev-charger",
+      "sha256": "4da611a5039b971b5355fca0ee2662bbbbde3dc49dd6a6a7d63e51b2bb9d14b5",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.ring",
+        "design.animations",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "047",
+      "source": "home-battery",
+      "sha256": "0902409d58f801aacb076b2990fccf4a3576bd1bb65e18ce6338cc3b8b4ac90d",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 22
+    },
+    {
+      "id": "048",
+      "source": "party-lights",
+      "sha256": "fc33bdae9b8a25826b00ef251586f8cad3f21ca0d8910f4d5196375a5de7335b",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "049",
+      "source": "night-light",
+      "sha256": "5709e5750c8bc4683cadf8da901c08dd7af3b870f96da9d2ea320b0a336d9714",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "seasonal",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "design.animations",
+        "module.icon_fx",
+        "seasonal-preset:night"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "050",
+      "source": "sunrise-alarm",
+      "sha256": "abfe8ec3d27a953ccb70a6618064a5a0b8c2cc848e6833c03ada9b9e7cb1ff03",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 5
+    },
+    {
+      "id": "051",
+      "source": "vinyl-player",
+      "sha256": "38ba08eb403176fe079496d383c47ed99ac0f12fef1b9d7aae08717e5913da7a",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "design.animations",
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "052",
+      "source": "alarm-triggered",
+      "sha256": "70167a0c78217957f900730151f52ad2a5b7b6e3a4ee0da6b29f099d2084f947",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "053",
+      "source": "network",
+      "sha256": "ef1a1d5cb5eb75c30f6add6490648a448d55d6e16334b343ac3e7ea5e127d0d8",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "design.animations",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 13
+    },
+    {
+      "id": "054",
+      "source": "dishwasher",
+      "sha256": "0d53716d829121ec8f4b68087ffe6a73e36262e4aecced107d9c6aae8e347c79",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.ring",
+        "design.animations",
+        "design.shape",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "055",
+      "source": "oven",
+      "sha256": "9c4191d8ceae313faa4f009aee59d0c54e933e5b0c0d28c5dcc9b8ac03f25091",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "056",
+      "source": "vacuum-map",
+      "sha256": "392e0e963896cfc3c603301de97b3aa57762005a50384c967a6b77b7d71200f7",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "057",
+      "source": "autumn-garden",
+      "sha256": "f8067c6e1182877601b0047fd827ee81de3434b316e42bd3cead496f6c5ce9ed",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "seasonal",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.seasonal",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "058",
+      "source": "aquarium",
+      "sha256": "743f4f9b922e9452b4eed1f9460a36af7dc2870693607fec93a1baacb743c8e2",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "059",
+      "source": "halloween",
+      "sha256": "03989ebe01c1ff6ed28fd9a49364463e56ba46edfaa19e7f556c2b45f2ea9278",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "seasonal",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.seasonal",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "060",
+      "source": "christmas",
+      "sha256": "423cf9607f2032c375af9d0ae482dd00bf86df64b055d675bf947d42b8c253b3",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "seasonal",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.seasonal",
+        "design.animations",
+        "module.icon_fx"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "061",
+      "source": "reactor-core",
+      "sha256": "f09267f04f3817e9fd4ac2ffc99582a172d1639ffad9bb32d42f3c2716e9d962",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "062",
+      "source": "shield-grid",
+      "sha256": "aa51389949f4b2662eb297d3fa4bb3b168674fd5be644b7ba63efa652c9c2f7d",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.animations",
+        "design.animations",
+        "design.shape"
+      ],
+      "unknown_keys": [],
+      "modules": 25
+    },
+    {
+      "id": "063",
+      "source": "life-support",
+      "sha256": "7c417968cf27182407ce588b61a458efae64718150a83d246fea9dcdf7fc540d",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 36
+    },
+    {
+      "id": "064",
+      "source": "airlock",
+      "sha256": "1f888110cd31e21e38be96ff3f9dfa7df8ab99fd2888382c647a3f2168484f1f",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "065",
+      "source": "star-chart",
+      "sha256": "111ff71386b1d1d70d46347be04a7dc857f1465403709a0037ddcf2bef4a5ce0",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 21
+    },
+    {
+      "id": "066",
+      "source": "comms-array",
+      "sha256": "01a40c47d89cd0ae700f4bfd0b6793701861f47f2bed5f01e21d2348a722062c",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 13
+    },
+    {
+      "id": "067",
+      "source": "grow-bay",
+      "sha256": "de48e85dc8e8df117f420a74de3a5dd5d41243f915c7122917a4f73dc67f8e9c",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 28
+    },
+    {
+      "id": "068",
+      "source": "cargo-bay",
+      "sha256": "0011a1a4ae65d03d602247738a396bf09e16efda14f8ba04ce41bdb23b7f08ca",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 16
+    },
+    {
+      "id": "069",
+      "source": "orbital-weather",
+      "sha256": "e8d4f847cfe77d83af6b0b212add2067492b696056cd5624bdc7c5916dbf6de1",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 9
+    },
+    {
+      "id": "070",
+      "source": "mainframe",
+      "sha256": "0de28c602748001b3a1fcd0337bcee305556d2e358b8715bd80b2ffdc04e83b6",
+      "class": "feature",
+      "chunks": [
+        "decor"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.value_background"
+      ],
+      "unknown_keys": [],
+      "modules": 27
+    },
+    {
+      "id": "071",
+      "source": "cauldron",
+      "sha256": "fa7d0ddcc8ee01a29bd4ffbfce9e45930191168f7bc49ab43d10960d9c32cfdb",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "icon:svg",
+        "module.svg"
+      ],
+      "unknown_keys": [],
+      "modules": 11
+    },
+    {
+      "id": "072",
+      "source": "enchanted-lanterns",
+      "sha256": "b6658fa0aafcc8dc7342a947a04417fecaad8e7f00fe33580647f87f2a6b8b93",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "icon:svg",
+        "module.svg"
+      ],
+      "unknown_keys": [],
+      "modules": 30
+    },
+    {
+      "id": "073",
+      "source": "castle-gate",
+      "sha256": "2e19436d9f7e5252cde66eb2ddd7727f194a52159fec4b6a53b08006c12f87cc",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 11
+    },
+    {
+      "id": "074",
+      "source": "crystal-ball",
+      "sha256": "c2a3b31f29a53e2443b8c61442a09516a017ef3725d39e3726569379cfd4f5b7",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 11
+    },
+    {
+      "id": "075",
+      "source": "rune-ward",
+      "sha256": "203b82892127f3062480a855252375395f70bcbfcb56eaa88833915d425e8dc4",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "design.ring",
+        "icon:svg",
+        "module.svg"
+      ],
+      "unknown_keys": [],
+      "modules": 13
+    },
+    {
+      "id": "076",
+      "source": "weather-tower",
+      "sha256": "65b94a6e47b2cf8b8f916610f1b60b1fd58f67d339209f0b50fa2c33d3b3b593",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "icon:svg",
+        "module.svg"
+      ],
+      "unknown_keys": [],
+      "modules": 18
+    },
+    {
+      "id": "077",
+      "source": "dragon-hoard",
+      "sha256": "0c93e69f0a5d0dd83427d6c5a04295e32896dd8443b419834be0b2d1ee0c0f83",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 13
+    },
+    {
+      "id": "078",
+      "source": "herb-garden",
+      "sha256": "ddd08ef2b8086e368782705186334db641337693c01c93f085d8db4c5e6e6bc5",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "svg-icon"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "design.animations",
+        "icon:svg",
+        "module.svg"
+      ],
+      "unknown_keys": [],
+      "modules": 23
+    },
+    {
+      "id": "079",
+      "source": "minstrel-hall",
+      "sha256": "e34a02d46a8534b09cbe879b19d81cac5312508f2a122ed5762a11513e1e8b3b",
+      "class": "feature",
+      "chunks": [
+        "anim"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "design.animations"
+      ],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "080",
+      "source": "quest-board",
+      "sha256": "4033fd27094a23211c7ddf2c7123f9e6bba978837d80a40e32b3a2432b7ade00",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 32
+    },
+    {
+      "id": "081",
+      "source": "ops-console",
+      "sha256": "310b6cabbefaa83cf791d88f38ba1ede9e5665941953497bcd94ae607042eba4",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations",
+        "design.value_background",
+        "module:graphs"
+      ],
+      "unknown_keys": [],
+      "modules": 228
+    },
+    {
+      "id": "082",
+      "source": "ops-console-mobile",
+      "sha256": "2897630f8bda9d658ca3eff58304e7802274b4baeceac366db88c3166c56fcf9",
+      "class": "feature",
+      "chunks": [
+        "anim",
+        "decor",
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.custom_animations",
+        "design.animations",
+        "design.value_background",
+        "module:graphs"
+      ],
+      "unknown_keys": [],
+      "modules": 183
+    },
+    {
+      "id": "083",
+      "source": "flow-solid",
+      "sha256": "062acaa6c96456cf8c9a289c27750e498e62832d30eb53c104c820aade0dcf83",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "084",
+      "source": "flow-dashed",
+      "sha256": "44a24e75d96fe52eedcf4eff4a6dfb0bdb0dee5d7eed3d8a2a2223a06629312c",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "085",
+      "source": "flow-dotted",
+      "sha256": "d6aee7d5f0c408076f22e904943e8969eb706a27b096aec9db4d1d2b1d3ccbac",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "086",
+      "source": "flow-double",
+      "sha256": "1000932bccd1fdbcd27b2a78f48e793d332b85541e18b879dd7384c46676f322",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "087",
+      "source": "flow-wave",
+      "sha256": "109443aed6c63e8773821206f9b4eb916a72065982e98b94cef15a01c9e4f76d",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "088",
+      "source": "flow-zigzag",
+      "sha256": "b412e93cefd77630ff58c535ea16f4cc7c3b8e0558a048f49758f8b355048236",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "089",
+      "source": "flow-tube",
+      "sha256": "5bf91e48c13affeb75ccb0a4b80cc523dd6b99fa8166d27a51266c81b18ae3fe",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "090",
+      "source": "flow-neon",
+      "sha256": "13cbd26ea7c82e7dcb91e4233521ca82b58fd52a1f66dc25d76b4888e3f83a74",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "091",
+      "source": "flow-cable",
+      "sha256": "45accdb51bbb7b53206068bc0a976e2c40a8df26c4b0d0639a6866964e0cd0f9",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "092",
+      "source": "flow-shapes",
+      "sha256": "fc4053fd13e727f1b3b2b8a51655c4c5395470824362e2b0300ed873e60f335e",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 20
+    },
+    {
+      "id": "093",
+      "source": "flow-swarm",
+      "sha256": "9b64adae3c408a113eb4d3096dda4d41ec70e942197b51eebc70002f9d003457",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 17
+    },
+    {
+      "id": "094",
+      "source": "flow-gradient-ends",
+      "sha256": "2d2b81e7b4a2e024e684369e25a4a3d31b994ef986289c3417002b6f569704f3",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 17
+    },
+    {
+      "id": "095",
+      "source": "flow-short-elbow-wave",
+      "sha256": "f0a916ccf4e924aa7157ada5f1cd1dc8a327a1551470b3810064ea3710090842",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "096",
+      "source": "flow-tablet",
+      "sha256": "a58d58225d8c56e5059bb0e24f4ecd5d4736222bbe123cdd135bb927634d07df",
+      "class": "feature",
+      "chunks": [
+        "flows"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.flows"
+      ],
+      "unknown_keys": [],
+      "modules": 14
+    },
+    {
+      "id": "097",
+      "source": "slider-minimal",
+      "sha256": "69d936aad8259aefbd7ad3d6891a14687deeb0b3f1cb171cb7589cd4f0fa6b23",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "098",
+      "source": "slider-material",
+      "sha256": "b04e4c8e1719863252e142dfebd5cb6cdf93080bcf92c5f1b843f8e6f93ab865",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "099",
+      "source": "slider-neon",
+      "sha256": "6c36fe16d3ed5270661c9cb3576f86336c2e63fda324026698fd7149e1205152",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "100",
+      "source": "slider-glass-flat",
+      "sha256": "315f8aa48bda4efba48089ada26828f94f7ecaa39cebd0753bd84f76bb7be47b",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "101",
+      "source": "slider-glass-blur",
+      "sha256": "c448f6b6be92884799f5bfa37b3e0c08b3b54adeca5401424d6e494ac07d7f53",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 6
+    },
+    {
+      "id": "102",
+      "source": "slider-big-fill",
+      "sha256": "1919a55d6b2a5972ec55c0522aad6849edb83f3c8b06fa4920cd4ff376fea639",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "103",
+      "source": "slider-stops",
+      "sha256": "9e37c800736efebbcf0584b3bb3113e12a4c918e18de8abc5cc775da59db591e",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "104",
+      "source": "slider-track-shape",
+      "sha256": "1aeb6b78bd86c37439856dfe9d3a92b52dfa3f9568176526ff7642e33559e7f4",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "105",
+      "source": "camera-behind-gauge",
+      "sha256": "ae6ef1f80c67875cb109488c4d85629759cc79c1bc375df5b37d4ee9340fad03",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:camera",
+        "module:gauge"
+      ],
+      "unknown_keys": [],
+      "modules": 4
+    },
+    {
+      "id": "106",
+      "source": "backdrop-darken-text",
+      "sha256": "7927ef8e63b1a81093f174303c52d09b3589ccbabc7eee64f9e3ea3c6388c5be",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 3
+    },
+    {
+      "id": "107",
+      "source": "stacked-backdrop",
+      "sha256": "3c0a9d2a2c507f816244b63a784b35b9bc47635ea514f434a356ed568f457478",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "108",
+      "source": "backdrop-by-state",
+      "sha256": "2f60d3130496533efb9eb62f85442b1e5a475e431f4d88c85bdd0abed4b0ec99",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "109",
+      "source": "backdrop-pan-zoom",
+      "sha256": "4cd6429e18858969d9e5d98f0be8f82a6aa5aae5769c67bb70875e89f9010730",
+      "class": "feature",
+      "chunks": [
+        "layers"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "layer-pan_zoom"
+      ],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "110",
+      "source": "overlay-badge",
+      "sha256": "6a8e2791a135cfad22e09700076aefc79d5062c0c2931bf28c6ef1ca797e32d3",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 3
+    },
+    {
+      "id": "111",
+      "source": "low-power",
+      "sha256": "d1c56091f314de3b0490c5e0f7037d81cf8e58e744c51a699fb21eb7b9a22306",
+      "class": "feature",
+      "chunks": [
+        "layers"
+      ],
+      "reserve_kind": "overlay",
+      "grid_rows": false,
+      "features": [
+        "card.layers_low_power",
+        "layer-pan_zoom"
+      ],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "112",
+      "source": "blend-modes",
+      "sha256": "287ac9d3030c293bba7db2081fe3b03741e99812b603e72fa110ef64b3e91d8e",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "module:image"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "113",
+      "source": "pause-corner",
+      "sha256": "06d44935b8389a8487c66fff9a4e952b237c5e44bff9084771608b134d37a9fc",
+      "class": "feature",
+      "chunks": [
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.pause_button",
+        "card.pause_button_corner",
+        "layer-pan_zoom"
+      ],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "114",
+      "source": "pause-shaped-card",
+      "sha256": "d57082c858df9968c86a52e8e5faf5a10656ec5d1921ed7ba7dce5b4f5397179",
+      "class": "feature",
+      "chunks": [
+        "decor",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "configured",
+      "grid_rows": false,
+      "features": [
+        "card.pause_button",
+        "card.pause_button_corner",
+        "card.shape",
+        "layer-pan_zoom"
+      ],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "115",
+      "source": "home-energy-tubes",
+      "sha256": "51cff8eb270fe6c2ce0dbe768cf8c64bfea76fe96d185d442355c74c7bc6fdf8",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "116",
+      "source": "living-room-camera",
+      "sha256": "bfc5f5870a12fe978c6b2eff44616aa1bb093636e372fc1911f6ae66032ce70f",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "modules-extra",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.pause_button_corner",
+        "module:camera",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "117",
+      "source": "bedroom-night",
+      "sha256": "b22e5c032cb93a1c5d6f3c6939b837ab49227980e6e485de1b6bbe35ae103e10",
+      "class": "feature",
+      "chunks": [
+        "controls"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "118",
+      "source": "heating-neon",
+      "sha256": "16641bce7383934190ba633ee8a7c2dea8b3869bfc47dc84a758331d7c8bcb25",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 21
+    },
+    {
+      "id": "119",
+      "source": "rain-water-tank",
+      "sha256": "aa49d1acbdb71b6fa3c75b90f135fddbde68b100249e8a99094440329d3cb8c8",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "120",
+      "source": "car-charging-cable",
+      "sha256": "b7eea1c14dfbe14134c4d7973020e71ac32a4fc2031487ebc8af764ea514ae2b",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 15
+    },
+    {
+      "id": "121",
+      "source": "garden-irrigation-waves",
+      "sha256": "2125d948cc0a19582e56fdbf6bc424ad65a733b48721efa58ee2bdf4f4c31a3d",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 21
+    },
+    {
+      "id": "122",
+      "source": "kitchen-power-rails",
+      "sha256": "0d54ff3707776bf5e72223339052d12424bfdab7bb0a866bf1f6ac7551a7ddc8",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 18
+    },
+    {
+      "id": "123",
+      "source": "media-room-album-glow",
+      "sha256": "12ac5800b2079b274979001c79a10f2f3a20557f4e2bdaba513e2043ffd5cf8d",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "layers",
+        "modules-extra",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:image",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 6
+    },
+    {
+      "id": "124",
+      "source": "doorbell-security",
+      "sha256": "2cbb29975e9cd026ac39de38eb0db211f6f25066452f9d184c0ed8971b8f8359",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:camera",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "125",
+      "source": "reactor-bay",
+      "sha256": "70fe0196c5781a64c5e911bb85b55dbd65b3cfce26c37f5377946f0dc33082ec",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "126",
+      "source": "potion-lab",
+      "sha256": "12bdce66aef1d442ebc35f54c1b5df35e2448660d6e047842ce42b6c71da8946",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "127",
+      "source": "engine-room",
+      "sha256": "fa50f45547493b5d53f1d6105f7a1e3716ffec56df98fc246c38ec24f3ed8da4",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "128",
+      "source": "dragon-vault",
+      "sha256": "93fd20e0df5eabd26247266c3bb2398f2d83e82d5f5fa8ede1cb5dee3187b129",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 14
+    },
+    {
+      "id": "129",
+      "source": "winter-cabin",
+      "sha256": "0109d05d5e1bc4b4c0766c64e90ce0c1f81cddfb98686d619919229718cf4370",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "130",
+      "source": "haunted-attic",
+      "sha256": "49ad3b58922c96cceaf5e26cc3d26727cb22e0837addf2d26250da84cc6a8ae1",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "modules-extra",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:image",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 10
+    },
+    {
+      "id": "131",
+      "source": "synthwave-deck",
+      "sha256": "03a636fb7b368200b99ec50ec7475cb0902bc0781fa0b211c985e96810740a1c",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 7
+    },
+    {
+      "id": "132",
+      "source": "reef-tank",
+      "sha256": "1bd2398b4f53a525a973d26bdac3d535b6ba386bcd3f82ba8d73fb73cb2839bd",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 8
+    },
+    {
+      "id": "133",
+      "source": "station-oxygen",
+      "sha256": "080d186c0a0b93af61dccd9fcb4f1b3f9fb540a08db2f9d180e6e36bc143f931",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "layers",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "layer-pan_zoom",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 11
+    },
+    {
+      "id": "134",
+      "source": "steam-boiler",
+      "sha256": "5e4cf2b1fd309c6ff02c37f19feb097efa4978e6efdf6f4d8fee02e1b8be39b7",
+      "class": "feature",
+      "chunks": [
+        "controls",
+        "flows",
+        "modules-extra",
+        "pause"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "card.flows",
+        "card.pause_button_corner",
+        "module:image",
+        "module:slider"
+      ],
+      "unknown_keys": [],
+      "modules": 12
+    },
+    {
+      "id": "135",
+      "source": "status-bar",
+      "sha256": "4291cbefdd526ca703f0f07df5b7cbe1866ee326094c866f9439751202eb6e03",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
+      "grid_rows": false,
+      "features": [
+        "module:clock"
+      ],
+      "unknown_keys": [],
+      "modules": 5
+    },
+    {
+      "id": "136",
+      "source": "mode-card",
+      "sha256": "688a8098e7f9df51af78a05be7b7ababca47a29be504cf30b377fa9c67050387",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 2
+    },
+    {
+      "id": "137",
+      "source": "pattern-panel",
+      "sha256": "45ff732e1f6d1ff1c449b310cff7fe2fc1df995731c687909ad710055d2dbbab",
+      "class": "plain",
+      "chunks": [],
+      "reserve_kind": "none",
+      "grid_rows": false,
+      "features": [],
+      "unknown_keys": [],
+      "modules": 3
+    }
+  ]
+}

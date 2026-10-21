@@ -1,0 +1,198 @@
+# Quest board: a wooden board with four pinned parchment notes and a wax seal that counts the open chores.
+# The seal shows how many items on the to-do list are open. Tap a note to open the list. Replace the four titles with your own chores.
+# Entities: todo.chores
+# gallery: width=380 stage=linear-gradient(135deg,#2a1c10,#4a3220)
+type: custom:magic-card
+name: Quest board
+background: "repeating-linear-gradient(90deg, rgba(0,0,0,0.07) 0px, rgba(0,0,0,0.07) 2px, transparent 2px, transparent 11px), linear-gradient(170deg, #7a5638 0%, #5f4029 100%)"
+border_radius: 18px
+padding: 20px
+box_shadow: "0 22px 48px rgba(0,0,0,0.55), inset 0 0 0 5px #4a3220"
+rows:
+  - id: head
+    column_widths: [1fr, auto]
+    gap: 12px
+    columns:
+      - vertical_align: center
+        modules:
+          - type: text
+            text: Today's quests
+            design:
+              font_size: 17px
+              font_weight: "700"
+              color: "#fbeee0"
+              padding: 10px 26px
+              background_color: "#9c1f2e"
+              css: "clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%); box-shadow: 0 4px 8px rgba(0,0,0,0.4)"
+              font_family: "Georgia, 'Iowan Old Style', serif"
+      - vertical_align: center
+        modules:
+          - type: vertical
+            align: center
+            gap: 0px
+            design:
+              width: 62px
+              height: 62px
+              padding: 12px 0 0
+              box_sizing: border-box
+              border_radius: 50%
+              background: "radial-gradient(circle at 35% 30%, #d04a58 0%, #9c1f2e 55%, #6e1220 100%)"
+              box_shadow: "0 4px 10px rgba(0,0,0,0.45), inset 0 0 0 3px rgba(255,255,255,0.12)"
+            modules:
+              - type: text
+                use_entity: true
+                entity: todo.chores
+                design: { text_align: center, font_size: 20px, font_weight: "800", color: "#fff1e6", line_height: "1" }
+              - type: text
+                text: open
+                design: { text_align: center, font_size: 9px, font_weight: "700", color: "#ffd9c9", text_transform: uppercase, letter_spacing: 1px }
+  - id: notes1
+    layout: "1-1"
+    gap: 14px
+    padding: 12px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { transform: "rotate(-2deg)", padding: 0 }
+            modules:
+              - type: vertical
+                gap: 6px
+                design:
+                  height: 108px
+                  padding: 12px 12px 10px
+                  box_sizing: border-box
+                  border_radius: 4px
+                  background: "linear-gradient(180deg, #f6ebcc, #ecdcb2)"
+                  box_shadow: "0 6px 12px rgba(0,0,0,0.35)"
+                actions:
+                  tap_action: { action: more-info, entity: todo.chores }
+                modules:
+                  - type: horizontal
+                    justify: space-between
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:pin
+                        size: 16px
+                        design: { color: "#9c1f2e" }
+                      - type: icon
+                        icon: mdi:circle-outline
+                        size: 18px
+                        design: { color: "#7a3b12" }
+                  - type: text
+                    text: Water the herbs
+                    design: { font_size: 15px, font_weight: "700", color: "#2b1d10", line_height: "1.2", font_family: "Georgia, 'Iowan Old Style', serif" }
+                  - type: text
+                    text: Today
+                    design: { font_size: 11px, font_weight: "800", color: "#7a3b12", text_transform: uppercase, letter_spacing: 1.2px }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { transform: "rotate(1.5deg)", padding: 0 }
+            modules:
+              - type: vertical
+                gap: 6px
+                design:
+                  height: 108px
+                  padding: 12px 12px 10px
+                  box_sizing: border-box
+                  border_radius: 4px
+                  background: "linear-gradient(180deg, #f6ebcc, #ecdcb2)"
+                  box_shadow: "0 6px 12px rgba(0,0,0,0.35)"
+                actions:
+                  tap_action: { action: more-info, entity: todo.chores }
+                modules:
+                  - type: horizontal
+                    justify: space-between
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:pin
+                        size: 16px
+                        design: { color: "#9c1f2e" }
+                      - type: icon
+                        icon: mdi:circle-outline
+                        size: 18px
+                        design: { color: "#7a3b12" }
+                  - type: text
+                    text: Take out the bins
+                    design: { font_size: 15px, font_weight: "700", color: "#2b1d10", line_height: "1.2", font_family: "Georgia, 'Iowan Old Style', serif" }
+                  - type: text
+                    text: Tonight
+                    design: { font_size: 11px, font_weight: "800", color: "#7a3b12", text_transform: uppercase, letter_spacing: 1.2px }
+  - id: notes2
+    layout: "1-1"
+    gap: 14px
+    padding: 12px 0 0
+    columns:
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { transform: "rotate(2deg)", padding: 0 }
+            modules:
+              - type: vertical
+                gap: 6px
+                design:
+                  height: 108px
+                  padding: 12px 12px 10px
+                  box_sizing: border-box
+                  border_radius: 4px
+                  background: "linear-gradient(180deg, #f6ebcc, #ecdcb2)"
+                  box_shadow: "0 6px 12px rgba(0,0,0,0.35)"
+                actions:
+                  tap_action: { action: more-info, entity: todo.chores }
+                modules:
+                  - type: horizontal
+                    justify: space-between
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:pin
+                        size: 16px
+                        design: { color: "#9c1f2e" }
+                      - type: icon
+                        icon: mdi:circle-outline
+                        size: 18px
+                        design: { color: "#7a3b12" }
+                  - type: text
+                    text: Sort the post
+                    design: { font_size: 15px, font_weight: "700", color: "#2b1d10", line_height: "1.2", font_family: "Georgia, 'Iowan Old Style', serif" }
+                  - type: text
+                    text: Tomorrow
+                    design: { font_size: 11px, font_weight: "800", color: "#7a3b12", text_transform: uppercase, letter_spacing: 1.2px }
+      - modules:
+          - type: vertical
+            gap: 0px
+            design: { transform: "rotate(-1.5deg)", padding: 0 }
+            modules:
+              - type: vertical
+                gap: 6px
+                design:
+                  height: 108px
+                  padding: 12px 12px 10px
+                  box_sizing: border-box
+                  border_radius: 4px
+                  background: "linear-gradient(180deg, #f6ebcc, #ecdcb2)"
+                  box_shadow: "0 6px 12px rgba(0,0,0,0.35)"
+                actions:
+                  tap_action: { action: more-info, entity: todo.chores }
+                modules:
+                  - type: horizontal
+                    justify: space-between
+                    align: center
+                    modules:
+                      - type: icon
+                        icon: mdi:pin
+                        size: 16px
+                        design: { color: "#9c1f2e" }
+                      - type: icon
+                        icon: mdi:check-circle
+                        size: 18px
+                        design: { color: "#3f7a2c" }
+                  - type: text
+                    text: Feed the cat
+                    design: { font_size: 15px, font_weight: "700", color: "#6d5a43", line_height: "1.2", font_family: "Georgia, 'Iowan Old Style', serif", text_decoration: line-through }
+                  - type: text
+                    text: Done
+                    design: { font_size: 11px, font_weight: "800", color: "#3f7a2c", text_transform: uppercase, letter_spacing: 1.2px }

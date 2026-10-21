@@ -2,7 +2,7 @@ import { MAX_BACKGROUND_LAYERS, type BgLayerStatus } from '../../contracts/bg-st
 
 /*
  * Status of the card backdrop layers as the live preview reports them (`mc-bg-layer-status`, bg-stack 1.0.0).
- * The studio canvas feeds this store; the Card backdrop group reads it and shows the designer's sentences
+ * The studio canvas feeds this store; the Card backdrop group reads it and shows the sentences
  * on the layer rows. The dashboard ignores the event. Keyed by YAML index, so a status is only shown in
  * the Default view (a rule's list has its own indices).
  */

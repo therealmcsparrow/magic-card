@@ -19,7 +19,7 @@ const intro = (state: string): string =>
         : t('The editor could not read configuration.yaml to check. If themes are not set up, these lines do it:');
 
 /**
- * <mcte-include-notice>: the calm "one setup step" callout (design 6 and 16.3). Draws nothing when
+ * <mcte-include-notice>: the calm "one setup step" callout. Draws nothing when
  * the include state is ok. Events: `mcte-recheck` (the parent asks the backend again and sets
  * `checking` and `result`).
  */

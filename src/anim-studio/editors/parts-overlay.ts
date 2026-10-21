@@ -36,7 +36,7 @@ import {
 import { t, m } from '../i18n';
 
 /*
- * Icon parts on the stage (studio slot 'stage-tool', track B2): drawn over the preview card, exactly
+ * Icon parts on the stage (studio slot 'stage-tool'): drawn over the preview card, exactly
  * on the rigged icon. Hover highlights a part, click selects it (Shift / Ctrl / Cmd add or toggle),
  * dragging on empty stage draws a selection band (parts fully inside it); selected parts show their box and pivot, the
  * pivot drags (snaps to 0.25 icon units, Shift places freely; arrow keys nudge it). The pivot is the one the part
