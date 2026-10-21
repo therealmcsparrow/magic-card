@@ -1,6 +1,6 @@
 import { MagicCardConfig, RowConfig, ColumnConfig, CardModule } from '../types';
 import { deepClone } from '../utils/deep-merge';
-import { propertyKeys } from '../utils/css-properties';
+import { propertyKeys } from '../utils/css-design-map';
 import { childListKey } from '../utils/module-path';
 import { animationDocList } from '../utils/custom-animations';
 import { mergeShapeOptions } from '../utils/shape-ref';

@@ -3,7 +3,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { AnimationConfig, DesignConfig, ConditionalDesign, DisplayCondition, HomeAssistant, RingConfig, ShapeOptions, ValueBackgroundConfig } from '../../types';
 import type { ShapePatch } from './shape-editor';
 import {
-  BOX_LONGHANDS,
   DEPENDENT_OPTIONS,
   CSS_SECTORS,
   CUSTOM_CSS_ENTRY,
@@ -13,8 +12,8 @@ import {
   CssPropertyDef,
   CssPropertyOption,
   displayProperties,
-  propertyKeys,
 } from '../../utils/css-properties';
+import { BOX_LONGHANDS, propertyKeys } from '../../utils/css-design-map';
 import { t as lt } from '../../i18n/labels';
 import type { MessageId } from '../../contracts/i18n';
 import { editorSystem } from '../../css/editor-stack';
