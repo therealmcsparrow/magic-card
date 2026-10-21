@@ -52,7 +52,7 @@ export const fieldErrorText = (entry: CatalogueEntry, message: string): string =
 };
 
 /**
- * <mcte-field-group>: one accordion group of variable fields (design 5.3 and 5.4). Closed groups
+ * <mcte-field-group>: one accordion group of variable fields. Closed groups
  * render nothing inside. Events (all composed): `mcte-toggle` { id }, `mcte-set` { name, value } (an
  * empty value removes the key), `mcte-reset` { name }, `mcte-set-modes` { name, modes }, `mcte-copy`
  * { text, what }. Colour fields use `mc-color-picker` by tag (defined by magic-card.js).

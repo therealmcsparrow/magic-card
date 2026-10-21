@@ -160,7 +160,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   notes?: ImportNotes;
   /** What Align is relative to. */
   alignTarget: SvgAlignTarget = 'selection';
-  /** The status strip under the canvas (design 7.6). */
+  /** The status strip under the canvas. */
   note?: { tone: 'info' | 'warn' | 'error'; lines: string[]; action?: { label: string; run: () => void } };
   /** The boolean button waiting for the chunk. */
   boolBusy?: BooleanOp;

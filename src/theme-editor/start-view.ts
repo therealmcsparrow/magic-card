@@ -57,7 +57,7 @@ export const reasonText = (reason: ReadOnlyReason): string => {
 };
 
 /**
- * <mcte-start-view>: the theme list and the create dialog (design 2, 3 and 16.2). Properties are
+ * <mcte-start-view>: the theme list and the create dialog. Properties are
  * set by the host (`mcte-*`): `files`, `loaded`, `include`, `phase`, `error`, `hass`, `backend`.
  * Events: `mcte-open` { name }, `mcte-create` { name, doc, from }, `mcte-reload`,
  * `mcte-recheck` (from the include notice), `mcte-deleted` { name }.
