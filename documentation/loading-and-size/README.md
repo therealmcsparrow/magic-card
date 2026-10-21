@@ -10,9 +10,9 @@ These are the sizes of `magic-card.js`, the card file, in the current release, m
 
 | Copy of `magic-card.js` | Before the size work | Now |
 | --- | ---: | ---: |
-| Brotli (`.br`) | 129,897 B | 69,792 B |
-| gzip (`.gz`) | 156,490 B | 81,838 B |
-| Uncompressed | 503,361 B | 256,630 B |
+| Brotli (`.br`) | 129,897 B | 69,894 B |
+| gzip (`.gz`) | 156,490 B | 81,825 B |
+| Uncompressed | 503,361 B | 256,616 B |
 
 A browser downloads the Brotli or gzip copy it accepts, so a viewer receives the first two rows, not the uncompressed file.
 

@@ -2,21 +2,9 @@
 node_modules/
 
 # Build output
-# (the directory is un-ignored first: a global `dist/` rule would hide the files below)
+# (the release commit tracks all of dist/: the card, its hashed chunks, their .br and .gz copies and the manifest;
+# the directory is un-ignored in case a global `dist/` rule would hide it)
 !dist/
-dist/*
-!dist/magic-card.js
-!dist/magic-card-anim-runtime.*.js
-!dist/magic-card-icon-animator.*.js
-!dist/magic-card.js.br
-!dist/magic-card.js.gz
-!dist/magic-card-anim-runtime.*.js.br
-!dist/magic-card-anim-runtime.*.js.gz
-!dist/magic-card-icon-animator.*.js.br
-!dist/magic-card-icon-animator.*.js.gz
-!dist/magic-card-manifest.js
-!dist/magic-card-manifest.js.br
-!dist/magic-card-manifest.js.gz
 
 # Environment and secrets
 .env

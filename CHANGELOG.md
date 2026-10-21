@@ -6,7 +6,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## 2026.10.11 (2026-10-22)
 
-Magic Card's card file, `magic-card.js`, is about 48% smaller: 156,490 B to 81,838 B with gzip, and 129,897 B to 69,792 B with Brotli. A plain card downloads nothing else.
+Magic Card's card file, `magic-card.js`, is about 48% smaller: 156,490 B to 81,825 B with gzip, and 129,897 B to 69,894 B with Brotli. A plain card downloads nothing else.
 
 ### Loads only when used
 -   **Animations** (`magic-card-anim.js`, `magic-card-anim-runtime.js`). The code that plays a card's animations loads only when a card has one, in any row, column, module, hover or conditional design. A card without animations makes no extra request. A card with one is drawn still first and starts moving a moment later. The animation library ships with this file too.
@@ -35,7 +35,7 @@ Magic Card's card file, `magic-card.js`, is about 48% smaller: 156,490 B to 81,8
 -   **Seasonal cards keep their room all year.** A card with `seasonal: auto` now keeps at least 20 px of padding at the top, right and left and 30 px at the bottom in every month, the most that a Christmas or Halloween decoration needs. Before, the card added that room only while a decoration showed, so the layout moved on 1 December and on 24 October. A card with the default padding of 16 px grows by 4 px at the top, right and left and by 14 px at the bottom; a card whose padding is already larger does not change. To keep less room, set `decorations: false`, name one scene, or switch Christmas and Halloween off in `calendar`. A seasonal animation preset on a module, row or column keeps its room the same way, whether or not its trigger is active. See [Seasonal scenes](documentation/yaml/schema.md#seasonal-scenes).
 
 ### Install and update
--   **Hashed files and compressed copies.** Most chunk files now carry a short hash in their name, and the release includes a `magic-card-manifest.js`. Each `.js` file has a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to it. Home Assistant sends the copy a browser accepts, so `magic-card.js` goes over the network as 69,792 B (Brotli) or 81,838 B (gzip). See [Manual](README.md#manual).
+-   **Hashed files and compressed copies.** Most chunk files now carry a short hash in their name, and the release includes a `magic-card-manifest.js`. Each `.js` file has a `.js.br` (Brotli) and a `.js.gz` (gzip) copy next to it. Home Assistant sends the copy a browser accepts, so `magic-card.js` goes over the network as 69,894 B (Brotli) or 81,825 B (gzip). See [Manual](README.md#manual).
 -   **Manual installs copy every file.** Copy every file of the release, including the `.br` and `.gz` copies. Replace or delete the three files of a name together.
 -   **Old files after an update.** HACS does not delete the files of an earlier release. After a HACS update, the older hashed chunk files that the new release no longer uses can be deleted. Keep every file of the new release.
 

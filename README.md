@@ -118,7 +118,7 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
 
-Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard loads at once. Uncompressed it is 256,630 B, down from 503,361 B before the size work, because the rarely used parts moved into the other files. Most files carry a short hash in their name, such as `magic-card-anim.06551dee.js`. The table shows the names without the hash, and the hash stays in the name when you copy the file.
+Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard loads at once. Uncompressed it is 256,616 B, down from 503,361 B before the size work, because the rarely used parts moved into the other files. Most files carry a short hash in their name, such as `magic-card-anim.06551dee.js`. The table shows the names without the hash, and the hash stays in the name when you copy the file.
 
 ### Loading
 
