@@ -1,6 +1,5 @@
 import { css, unsafeCSS } from 'lit';
 import { mcVariables } from './tokens';
-import { animationStyles } from './animations';
 import { popupStyles } from './popup';
 import { weatherIconStyles } from '../icons/weather-icons';
 import { flowsCardStyles } from '../card/flows-css';
@@ -1362,4 +1361,4 @@ const magicCardLocalStyles = css`
   }
 `;
 
-export const magicCardStyles = [mcVariables, magicCardLocalStyles, animationStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseCardStyles];
+export const magicCardStyles = [mcVariables, magicCardLocalStyles, popupStyles, weatherIconStyles, flowsCardStyles, shapeCardStyles, valueBgCardStyles, seasonalCardStyles, LAYER_SYNC_CSS, pauseCardStyles];

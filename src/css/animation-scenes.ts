@@ -4,6 +4,8 @@
  * (0-1, pseudo-random) and --mc-anim-k (index / count, for even spacing) from the card.
  */
 
+import { SHARED_SCENE_KEYFRAMES } from './scene-keyframes';
+
 /** Delay by index instead of phase: evenly spaced rings / orbits / dots. */
 const BY_INDEX = 'animation-delay: calc(var(--mc-fx-delay, 0s) - var(--mc-anim-k) * var(--mc-fx-dur, 1s));';
 
@@ -49,12 +51,7 @@ export const SCENE_KEYFRAMES: Record<string, string> = {
     55% { translate: -8px 55cqh; rotate: -20deg; }
     80% { translate: 12px 80cqh; rotate: 80deg; }
     100% { translate: 0 calc(100cqh + 16px); rotate: 20deg; opacity: 0.8; }`,
-  lightning: `
-    0%, 89%, 100% { opacity: 0; }
-    90% { opacity: calc($i / 100); }
-    91.5% { opacity: 0.15; }
-    93% { opacity: calc($i / 100); }
-    96% { opacity: 0; }`,
+  lightning: SHARED_SCENE_KEYFRAMES.lightning,
   'ocean-waves': `
     from { translate: 0 0; }
     to { translate: -40px 0; }`,
@@ -66,11 +63,7 @@ export const SCENE_KEYFRAMES: Record<string, string> = {
     25% { translate: calc($i * 0.5px) calc($i * -0.5px); filter: blur(calc($i * 0.3px)); }
     50% { translate: calc($i * -0.5px) 0; filter: blur(0); }
     75% { translate: 0 calc($i * 0.5px); filter: blur(calc($i * 0.2px)); }`,
-  'wind-lines': `
-    0% { translate: 0 0; opacity: 0; }
-    15% { opacity: 1; }
-    85% { opacity: 0.8; }
-    100% { translate: calc(100cqw + 100%) 0; opacity: 0; }`,
+  'wind-lines': SHARED_SCENE_KEYFRAMES['wind-lines'],
   drip: `
     0% { translate: 0 0; scale: 0.4 0.2; opacity: 0; }
     15% { scale: 1 1; opacity: 1; }

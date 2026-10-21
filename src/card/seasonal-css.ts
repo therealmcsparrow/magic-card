@@ -1,5 +1,5 @@
 import { css, unsafeCSS } from 'lit';
-import { SCENE_KEYFRAMES } from '../css/animation-scenes';
+import { SHARED_SCENE_KEYFRAMES } from '../css/scene-keyframes';
 
 /*
  * Styles of <mc-seasonal>: the particle motions (CSS keyframes only), the particle artwork and the
@@ -11,8 +11,8 @@ import { SCENE_KEYFRAMES } from '../css/animation-scenes';
  */
 
 /** The existing scene keyframes, reused: the storm flash (at a fixed brightness) and the wind gusts. */
-const reuse = (name: string, from: string, intensity: number) =>
-  `@keyframes ${name} {${SCENE_KEYFRAMES[from].replace(/\$i/g, String(intensity))}}`;
+const reuse = (name: string, from: keyof typeof SHARED_SCENE_KEYFRAMES, intensity: number) =>
+  `@keyframes ${name} {${SHARED_SCENE_KEYFRAMES[from].replace(/\$i/g, String(intensity))}}`;
 
 /** The still composition of reduced motion, every selector under `pre`. */
 const still = (pre: string) => `

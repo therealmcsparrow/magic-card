@@ -2,13 +2,16 @@ import { BUILD_VERSION } from '../utils/build-version';
 
 /*
  * Chunk entry of dist/magic-card-anim.js (lazy-module 1.4.0 chunk `anim`): the animation resolve, the
- * document compiler and model it calls, the custom-animation stylesheet and the sequence player. It defines no
+ * document compiler and model it calls, the custom-animation stylesheet, the sequence player and the preset keyframes and animation rules (`styles`). It defines no
  * element and fills no slot: the card reads this module through lazyChunks.anim.module() (src/utils/anim-seam.ts) and
  * draws a plain card until it has installed. Nothing here runs at import time except model.ts and compile-v2's
  * registration of their hooks (src/utils/anim-hooks.ts, in the entry).
  */
 
 export const BUILD: string = BUILD_VERSION;
+
+/** The preset keyframes, particle layers and animation rules of the card; Core adopts them with the chunk. */
+export { animationStyles as styles } from '../css/animations';
 
 export function install(): void {}
 
