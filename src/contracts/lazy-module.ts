@@ -1,6 +1,6 @@
 import type { CSSResultGroup, TemplateResult } from 'lit';
 import type { CardModule, HomeAssistant } from '../types';
-import type { MagicModule } from '../modules/module-types';
+import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
  * Contract: lazy modules and lazy card chunks. Version 1.4.0.
@@ -108,7 +108,9 @@ import type { MagicModule } from '../modules/module-types';
  *   these entries (except the children of `anim`, section "import() sites").
  * - src/modules/module-registry.ts: `registerLazy(stub, chunk)`, `provideView(type, view)`,
  *   `prefetch(config)`, `isReady(type)`. get / getAll / has / search / createDefault /
- *   getMetadata are unchanged and include lazy entries from module evaluation on.
+ *   getMetadata are unchanged and include lazy entries from module evaluation on; a lazy entry's
+ *   `metadata` holds `type` and `inherit` then, and `name`, `description`, `category` and `icon` once
+ *   the editor chunk has evaluated (src/editor/modules/lazy-metadata.ts). Only the editor reads those four.
  * - window.MagicCard.loadSeasonal: `() => Promise<boolean>`, additive (apiVersion stays 1); the
  *   animation studio calls it before it shows a seasonal preset (it uses <mc-seasonal> by tag).
  *
@@ -151,7 +153,7 @@ import type { MagicModule } from '../modules/module-types';
  *    chunk.whenReady (once per callback), return stub.placeholder(config, 'pending').
  * 4. Chunk failed: stub.placeholder(config, 'failed'): same box, no text, no busy state.
  *    (The failed box holds the failure notice, see "Failure, retry and timeout".)
- * Validation (validate, hints), getDependencies, createDefault, migrate and metadata are on the
+ * Validation (validate, hints), getDependencies, createDefault, migrate and metadata (type, inherit) are on the
  * stub and stay synchronous. renderModuleContent and every other caller keep using MagicModule.
  *
  * ── Prefetch ──
@@ -291,7 +293,7 @@ import type { MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 12;
+export const LAZY_MODULE_CONTRACT_REVISION = 13;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
@@ -419,7 +421,9 @@ export interface ModuleView {
  * The synchronous half of a lazy module, registered from magic-card.js. Everything a MagicModule
  * has, with renderPreview optional (present only for the element kind) and a placeholder.
  */
-export interface LazyModuleStub extends Omit<MagicModule, 'renderPreview'> {
+export interface LazyModuleStub extends Omit<MagicModule, 'renderPreview' | 'metadata'> {
+  /** type and inherit at once; name, description, category and icon once the editor chunk has evaluated. */
+  readonly metadata: LazyStubMetadata;
   renderPreview?: MagicModule['renderPreview'];
   /**
    * The module's box before its view exists: same outer classes and, where the config fixes it,
