@@ -1,6 +1,7 @@
 import type { LazyChunkName, LazyFeature, NeedsCheck } from '../contracts/lazy-module';
 import { wantsPopup } from './popup';
 import { wantsPause } from '../contracts/card-pause.needs';
+import { wantsBgFx } from '../contracts/bg-stack.needs';
 import { hasFlowLook } from '../contracts/flow-look.needs';
 import { hasSliderLook } from '../contracts/slider-look.needs';
 import { CONTROL_MODULE_TYPES } from '../modules/controls/controls.needs';
@@ -27,20 +28,8 @@ const ofType =
   (config) =>
     configHas(config, (n) => typeof n.type === 'string' && types.includes(n.type));
 
-const nonEmpty = (v: unknown): boolean => Array.isArray(v) && v.length > 0;
-
-/** The card has a backdrop (`background_layers`, or a conditional appearance rule that sets it). */
-export function wantsLayers(config: unknown): boolean {
-  const c = config as { background_layers?: unknown; conditional_appearance?: unknown } | null;
-  try {
-    if (!c || typeof c !== 'object') return false;
-    if (nonEmpty(c.background_layers)) return true;
-    const rules = c.conditional_appearance;
-    return Array.isArray(rules) && rules.slice(0, 32).some((r) => nonEmpty((r as { overrides?: { background_layers?: unknown } } | null)?.overrides?.background_layers));
-  } catch {
-    return false; // a needs() never throws (lazy-module 1.4.0)
-  }
-}
+/** The backdrop moves: a pan / zoom or camera image layer (src/contracts/bg-stack.needs.ts). */
+export const wantsLayers: NeedsCheck = wantsBgFx;
 
 /** Module types per lazy module chunk; tests compare these with LAZY_MODULE_TYPES in the contract. */
 export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {

@@ -117,9 +117,9 @@
       "note": "Shape editor. 103 KiB."
     },
     "magic-card-layers.js": {
-      "raw": 22528,
+      "raw": 5120,
       "ceiling": 24576,
-      "note": "Background layers <mc-bg-stack> and layer placement runtime. 22 KiB, measured 21,047 + 5 %; ceiling 24,576 (lazy-module 1.3.0)."
+      "note": "Motion and refresh part of <mc-bg-stack> (pan / zoom, camera refresh, stale state). 5 KiB, measured 4,836 + 5 %; ceiling 24,576 (lazy-module 1.3.0)."
     },
     "magic-card-layer-editor.js": {
       "raw": 88064,

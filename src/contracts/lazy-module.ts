@@ -16,10 +16,14 @@ import type { MagicModule } from '../modules/module-types';
  *   slider-look 1.0.0). prefetchLazy() loads flow-look when a `flows` entry has a look key (hasFlowLook)
  *   and slider-look when a `slider` module has one (hasSliderLook); same walk rules (nested children yes,
  *   `card_config` no).
- * - Chunk 'layers' (magic-card-layers.js, entry src/layers/stack/chunk.ts, bg-stack 1.0.0) defines
- *   <mc-bg-stack>; it serves no module type, like 'seasonal'. Prefetch: when the config has a non-empty
- *   card `background_layers` (also in a conditional_appearance override); loaded on demand when the card
- *   renders <mc-bg-stack>. The layer-placement runtime (arrange, scanFills, layer CSS) is part of magic-card.js and fills the layer slot from the first render, so a layered module does not load this chunk; its ceiling is 24 KiB.
+ * - Chunk 'layers' (magic-card-layers.js, entry src/layers/stack/chunk.ts, bg-stack 1.1.0) carries the
+ *   motion and refresh part of <mc-bg-stack>: pan / zoom, camera refresh, stale state, idle, visibility
+ *   and reduced-motion wiring. install() hands it to every stack through src/layers/stack/fx-slot.ts. It
+ *   serves no module type, like 'seasonal'. Prefetch: when an image layer of `background_layers` (also in a
+ *   conditional_appearance override, hidden entries included) has `pan_zoom` or a `camera.*` entity without
+ *   `states` (wantsBgFx, src/contracts/bg-stack.needs.ts). <mc-bg-stack> and the layer-placement runtime
+ *   (arrange, scanFills, layer CSS) are part of magic-card.js and draw from the first render, so a static
+ *   backdrop or a layered module does not load this chunk; its ceiling is 24 KiB.
  * - Section "Editor-side chunks": chunk 'layer-editor' (magic-card-layer-editor.js, layer-editor 1.0.0),
  *   loaded by the editor chunk, and 'look-editor' (magic-card-look-editor.js, contract look-editor 1.0.0,
  *   loaded by src/editor/look-editor-loader.ts, its own loader, not in LazyChunkName).

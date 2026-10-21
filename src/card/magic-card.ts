@@ -85,6 +85,7 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { SequencePlayer } from './sequence-player';
 import { hasLayers, inFlow, layerSlot } from '../layers/layer-slot';
 import { canGoStale, createStackHost, layersMove } from '../layers/stack-host';
+import { defineBgStack } from '../layers/stack/mc-bg-stack';
 import type { CardPause } from './card-pause';
 import { pauseIfLoaded } from './pause-seam';
 import { pauseGap, wantsPause } from '../contracts/card-pause.needs';
@@ -194,6 +195,8 @@ function withConfigIds(config: MagicCardConfig): MagicCardConfig {
     }),
   };
 }
+
+defineBgStack();
 
 @customElement(CARD_TAG)
 export class MagicCard extends LitElement {
@@ -342,8 +345,6 @@ export class MagicCard extends LitElement {
   private _pathStack: string[] = [];
   /** The card has background_layers or a layered module (layer-placement 1.0.0). */
   private _layerOn = false;
-  /** This card asked for a re-render when the layers chunk lands (once). */
-  private _layersAsked = false;
   private _preview = false;
   /** The viewer's Pause motion button and state (contract card-pause 1.0.0); made once the `pause` chunk has installed and a pause is wanted. */
   private _pause?: CardPause;
@@ -1121,11 +1122,6 @@ export class MagicCard extends LitElement {
     this._card = { flow: false, row: false, out: [] };
     const rt = layerSlot.get();
     if (any && rt) this._card.flow = rt.scanFills(config.rows.flatMap((r) => (r?.columns ?? []).map((c) => c?.modules)), this._hid).flow;
-    // the backdrop element comes with the chunk: ask for it once, draw again when it is defined
-    if (backdrop && !this._layersAsked) {
-      this._layersAsked = true;
-      void lazyChunks.layers.load().then(() => this.requestUpdate());
-    }
     return this._layerOn;
   }
 

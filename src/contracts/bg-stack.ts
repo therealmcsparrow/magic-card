@@ -2,23 +2,26 @@ import type { HomeAssistant } from '../types';
 import type { LayerAnchor, LayerBlend } from './layer-placement';
 
 /*
- * Contract: card background stack ("Card backdrop" in the UI). Version 1.0.0.
+ * Contract: card background stack ("Card backdrop" in the UI). Version 1.1.0.
  * At most 4 layers; pan/zoom on images and camera snapshots only. Covers pan_zoom.pause_when_idle,
  * stale_badge and the badge host, status reason `stale`, page-hidden pause, first-paint fade, low power,
  * floor-safe CSS, blend scope, blur max 24 px and the performance rules (layer-placement 1.0.0
- * "Performance rules" bind here too). The 'layers' chunk also carries the layer-placement runtime;
+ * "Performance rules" bind here too). The layer-placement runtime and <mc-bg-stack> are part of
+ * magic-card.js; the 'layers' chunk carries only the motion and refresh part (BgStackFx).
  * `to <side>` gradient heads; CardAppearanceOverrides has `background_layers`; card pause stops the stack.
  *
- * Seam: magic-card.js (Core render pipeline) renders `<mc-bg-stack>` as the first child of
- * .mc-card-content when the resolved card config has a non-empty `background_layers`, and prefetches
- * the lazy chunk 'layers' (dist/magic-card-layers.js, lazy-module 1.2.0, entry
- * src/layers/stack/chunk.ts) from setConfig / template merge when the key is present. The chunk's
- * install() defines <mc-bg-stack> and fills the layer slot (layer-placement 1.0.0). Everything the
- * element needs from magic-card.js comes through its `host` property (BgStackHost), so the chunk
- * never imports magic-card.js modules other than shared utils that stay there (ceiling 24 KiB for
- * the whole chunk; cap = measured + 5 %, rounded up to 1 KiB).
- * Before the chunk is defined the element is empty: the card shows its own `background` /
- * `background_image` only (fallback = the bottom of the stack).
+ * Seam: magic-card.js defines <mc-bg-stack> at load and renders it as the first child of .mc-card-content
+ * when the resolved card config has a non-empty `background_layers`. It draws colour, gradient, pattern
+ * and image layers (sources, decode, crossfade, status events) without any chunk. The lazy chunk
+ * 'layers' (dist/magic-card-layers.js, entry src/layers/stack/chunk.ts) is loaded when bg-stack.needs
+ * says so: an image layer with `pan_zoom`, or with a `camera.*` entity and no `states`. Its install()
+ * provides BgStackFx (pan/zoom motion, camera refresh, stale state and pill, idle input, visibility and
+ * reduced-motion wiring) to every live and future stack. On install, each pan/zoom picture crossfades
+ * (300 ms, instant under reduced motion or while paused) from its still frame to its moving frame; no
+ * box, size or position changes. Until then, or if the chunk fails, pan/zoom pictures show the unscaled
+ * picture and camera layers keep their first frame. Everything the element needs from magic-card.js
+ * comes through its `host` property (BgStackHost). Ceiling 24 KiB for the chunk; cap = measured + 5 %,
+ * rounded up to 1 KiB.
  *
  * ── YAML (card level; also allowed in conditional_appearance overrides) ──
  *   background_layers:            at most MAX_BACKGROUND_LAYERS; extra entries are ignored (editor
@@ -72,7 +75,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * it (not a DesignConfig key).
  * Template merge: `background_layers` is a whole value like `background` (no per-entry merge).
  *
- * ── Rendering (inside the chunk) ──
+ * ── Rendering ──
  * - <mc-bg-stack>: position absolute, top / right / bottom / left 0 (no `inset`, Chromium 85),
  *   z-index -1, overflow hidden, border-radius inherit, pointer-events none, aria-hidden true, never
  *   isolated (blends must reach the card content's own background). One layer box per visible layer,
@@ -88,10 +91,10 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *   it show (AC fallback), silently on the dashboard.
  * - Patterns are CSS gradients only (no images, no canvas). Colours go through host.cssColor.
  * - URLs only from host.resolveImage (media-source ids, /api/ paths with the HA base, entity
- *   pictures); the chunk never builds an authenticated URL itself and adds no network request
+ *   pictures); the stack never builds an authenticated URL itself and adds no network request
  *   other than the image fetches the browser makes. GDPR: images stay inside the user's HA.
  *
- * ── Motion and timers (pan / zoom, camera refresh) ──
+ * ── Motion and timers (BgStackFx, chunk 'layers'; pan / zoom, camera refresh) ──
  * Pan / zoom is a CSS keyframe animation of `transform` (scale + translate toward `focus`) on the
  * image element only, no requestAnimationFrame; filter, position offsets and background-position
  * are never animated. It plays only while all hold: on screen and card not paused
@@ -106,7 +109,7 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * The studio Preview seg (`preview`) overrides this in the editor only (Play works under reduced
  * motion as a user action).
  *
- * ── Stale snapshots ──
+ * ── Stale snapshots (BgStackFx, chunk 'layers') ──
  * For image layers whose entity is camera.* and stale_badge !== false: stale = 3 failed refreshes
  * in a row, or the last good frame older than max(3 x refresh, 60 s) while on screen and not paused.
  * While stale the frame is dimmed (opacity 0.6, grayscale) and a pill "Not updated {time}" ({time}
@@ -122,9 +125,9 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  * dashboard ignores it.
  */
 
-export const BG_STACK_CONTRACT = '1.0.0';
-export const BG_STACK_CONTRACT_REVISION = 3;
-export const MAX_BACKGROUND_LAYERS = 4;
+export const BG_STACK_CONTRACT = '1.1.0';
+export const BG_STACK_CONTRACT_REVISION = 4;
+export { MAX_BACKGROUND_LAYERS, BG_LAYER_STATUS_EVENT } from './bg-stack.needs';
 /** pause_when_idle: motion rests this long after the last input. */
 export const IDLE_PAUSE_MS = 120_000;
 /** Stale rule. */
@@ -213,4 +216,71 @@ export interface BgLayerStatus {
   detail?: string | number;
 }
 
-export const BG_LAYER_STATUS_EVENT = 'mc-bg-layer-status';
+/** Pan / zoom settings after the contract defaults and clamps. */
+export interface BgPanZoom {
+  from: number;
+  to: number;
+  /** Focus direction, -1..1. */
+  fx: number;
+  fy: number;
+  duration: number;
+  alternate: boolean;
+  idle: boolean;
+}
+
+/** The state <mc-bg-stack> keeps per layer; BgStackFx reads and writes the camera fields. */
+export interface BgStackItem {
+  index: number;
+  cfg: BackgroundLayerConfig;
+  states: Record<string, string>;
+  hasStates: boolean;
+  pz?: BgPanZoom;
+  camera: boolean;
+  base?: string;
+  shown?: string;
+  prev?: string;
+  gen: number;
+  loading: boolean;
+  failures?: number;
+  lastGood?: number;
+  lastTry: number;
+  since: number;
+  stale: boolean;
+  evKey: string;
+  timer?: ReturnType<typeof setTimeout>;
+  fadeTimer?: ReturnType<typeof setTimeout>;
+}
+
+/** What BgStackFx may use of a stack. */
+export interface BgStackView extends HTMLElement {
+  items: BgStackItem[];
+  host?: BgStackHost;
+  preview?: 'play' | 'start' | 'end';
+  /** Decode `url` (a cache-busted form of `base` for a refresh) and swap it in. */
+  load(item: BgStackItem, base: string, url?: string): Promise<void>;
+  status(item: BgStackItem, status: BgLayerStatus['status'], reason?: BgLayerProblem, detail?: string | number): void;
+  requestUpdate(): void;
+}
+
+/** The motion and refresh part of one stack, made by BgStackFx.attach. */
+export interface BgStackRun {
+  /** Pan / zoom settings of a layer's `pan_zoom` value; undefined when it is not an object. */
+  pan(value: unknown): BgPanZoom | undefined;
+  /** The `data-pz` state of a moving picture. */
+  motion(pz: BgPanZoom): 'play' | 'pause' | 'start' | 'end';
+  /** Start or clear every timer and listener for the current on-screen / visible state. */
+  arm(): void;
+  /** Plan the next camera refresh of a layer. */
+  schedule(item: BgStackItem): void;
+  /** A frame loaded. */
+  good(item: BgStackItem): void;
+  /** A camera refresh failed. */
+  bad(item: BgStackItem): void;
+  /** The stack is disconnected: remove listeners, timers and the pill. */
+  stop(): void;
+}
+
+/** What the 'layers' chunk provides (provideBgFx in src/layers/stack/fx-slot.ts). */
+export interface BgStackFx {
+  attach(el: BgStackView): BgStackRun;
+}
