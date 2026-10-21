@@ -20,7 +20,10 @@ const writeI18nStats = (stats) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, JSON.stringify(out));
   // the same module lists, with the entry flag and names, for tools/check-entry-graph.mjs
-  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules })) };
+  // `size`: the source bytes of each module in that chunk (concatenated modules by their own size), for the byte counts of tools/check-chunk-dups.mjs
+  const sized = (m) => (m.modules?.length ? m.modules.flatMap(sized) : [[m.name, m.size ?? 0]]);
+  const sizeOf = (c) => Object.fromEntries((c.modules ?? []).flatMap(sized).filter(([n]) => n?.startsWith('./src/')));
+  const graph = { chunks: j.chunks.map((c, i) => ({ id: c.id, names: c.names, entry: c.entry, initial: c.initial, parents: c.parents, files: c.files, modules: out.chunks[i].modules, size: sizeOf(c) })) };
   fs.writeFileSync(path.resolve(path.dirname(file), 'entry-graph.json'), JSON.stringify(graph));
 };
 
