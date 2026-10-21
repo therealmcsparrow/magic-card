@@ -217,6 +217,11 @@
       "ceiling": 20480,
       "note": "Path tools. 20 KiB, measured 19,447 + 5 %, rounded up to 1 KiB."
     },
+    "magic-card-path-core.js": {
+      "raw": 9216,
+      "ceiling": 10240,
+      "note": "Shared path parser and outline maths (src/path/core.ts only). 9 KiB, measured 7,807 + 5 %, rounded up to 1 KiB. The contract ceiling is 10,240 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
+    },
     "magic-card-i18n-labels.js": {
       "raw": 22528,
       "ceiling": 22528,

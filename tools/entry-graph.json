@@ -1,6 +1,6 @@
 {
   "entry": "magic-card.js",
-  "forbidden_dirs": ["src/editor", "src/ui-kit", "src/anim-studio", "src/flow-look", "src/look-editor"],
+  "forbidden_dirs": ["src/editor", "src/ui-kit", "src/anim-studio", "src/flow-look", "src/look-editor", "src/path"],
   "contracts_allowed": ["entity-scope", "entity-colour", "i18n", "mcu-templates"],
   "debt": []
 }

@@ -148,8 +148,16 @@ module.exports = (env, argv) => {
             }),
           ]
         : [],
-      // No shared or vendor chunks: every entry is self-contained; only dynamic import() makes a chunk: a chunk that always loads after another is its child
-      splitChunks: false,
+      // No vendor chunks: every entry is self-contained; only dynamic import() makes a chunk (a chunk that always loads after another is its child). The one shared chunk is src/path/core.ts
+      splitChunks: {
+        chunks: 'async',
+        minSize: 0,
+        cacheGroups: {
+          default: false,
+          defaultVendors: false,
+          'path-core': { test: /[\\/]src[\\/]path[\\/]core\.ts$/, name: 'path-core', chunks: 'async', enforce: true },
+        },
+      },
       runtimeChunk: false,
     },
     devServer: {

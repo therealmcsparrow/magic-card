@@ -3,7 +3,7 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.4.0.
+ * Contract: lazy modules and lazy card chunks. Version 1.5.0.
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
@@ -268,6 +268,13 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   (`magic-card-<name>.js`) used by caps, tests and messages. `dist/magic-card-manifest.js` exports
  *   default LazyChunkManifest. Entries keep fixed names.
  *
+ * ── Shared chunks ──
+ * - path-core (dist/magic-card-path-core.js, ceiling 10,240 B) holds src/path/core.ts only, the one copy of the
+ *   path parser and outline maths. webpack requests it in the same import() call as every chunk whose modules use it
+ *   (today anim, seasonal, decor, svg-icon and slider-look; the entry graph lists them). It has no install, BUILD
+ *   export, needs row, part name or notice. A failed load fails the requesting chunk's import(), which shows that
+ *   chunk's notice and retries both URLs with `r=`. No other module may join a shared chunk without a change to this contract.
+ *
  * ── import() sites ──
  * - Card side: import() only in src/utils/lazy-chunks.ts (the chunk table), src/anim-studio/anim-chunk.ts and the manifest check in
  *   src/utils/lazy-chunk.ts. anim-runtime, particles and shape-custom go through lazyChunk(): their
@@ -292,8 +299,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   lazyChunk() is debt.
  */
 
-export const LAZY_MODULE_CONTRACT = '1.4.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 13;
+export const LAZY_MODULE_CONTRACT = '1.5.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 14;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim';
@@ -343,6 +350,19 @@ export const LAZY_CHUNK_CEILINGS: Record<LazyChunkName, number> = {
   'svg-icon': 65_536,
   /** The resolve, compiler and model of the animations, the preset and keyframe tables and the animation rules (`styles`). */
   anim: 90_112,
+};
+
+/** Chunks that only hold shared source (section "Shared chunks"): no install, no BUILD, no notice. */
+export type LazySharedChunkName = 'path-core';
+
+export const LAZY_SHARED_CHUNK_FILES: Record<LazySharedChunkName, string> = {
+  'path-core': 'magic-card-path-core.js',
+};
+
+/** Sanity ceilings (B, minified), as LAZY_CHUNK_CEILINGS. */
+export const LAZY_SHARED_CHUNK_CEILINGS: Record<LazySharedChunkName, number> = {
+  /** src/path/core.ts only. */
+  'path-core': 10_240,
 };
 
 /** Which module types each chunk serves (seasonal, flows, pause, popup, decor, flow-look, slider-look and layers serve no module type). */

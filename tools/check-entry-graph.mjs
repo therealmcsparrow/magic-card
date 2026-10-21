@@ -48,7 +48,7 @@ export const violations = (modules, rules) => {
 };
 
 // Policy, hard-coded so the editable rules file cannot switch the gate off
-export const FORBIDDEN_DIRS = ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor'];
+export const FORBIDDEN_DIRS = ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor', 'src/path'];
 export const CONTRACTS_ALLOWED = ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'];
 
 // effective lists: the hard-coded policy, tightened (never loosened) by the rules file
@@ -96,7 +96,7 @@ const baseDebtList = (requireBase) => {
 
 const selfTest = () => {
   const rules = {
-    forbidden_dirs: ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor'],
+    forbidden_dirs: ['src/editor', 'src/ui-kit', 'src/anim-studio', 'src/flow-look', 'src/look-editor', 'src/path'],
     contracts_allowed: ['entity-scope', 'entity-colour', 'i18n', 'mcu-templates'],
     debt: ['./src/anim-studio/compile.ts', './src/contracts/card-pause.ts'],
   };
@@ -114,7 +114,7 @@ const selfTest = () => {
     ['debt grown past the base fails', { modules: withDebt, rules, baseDebt: ['./src/anim-studio/compile.ts'] }, 1],
     ['debt equal to the base passes', { modules: withDebt, rules, baseDebt: withDebt.slice(-2) }, 0],
     ['dropped forbidden dir fails', { modules: withDebt, rules: { ...rules, forbidden_dirs: rules.forbidden_dirs.slice(1) } }, 1],
-    ['emptied forbidden dirs still catch the import', { modules: [...withDebt, './src/editor/card-editor.ts'], rules: { ...rules, forbidden_dirs: [] } }, 6],
+    ['emptied forbidden dirs still catch the import', { modules: [...withDebt, './src/editor/card-editor.ts'], rules: { ...rules, forbidden_dirs: [] } }, 7],
     ['added allowed contract fails', { modules: withDebt, rules: { ...rules, contracts_allowed: [...rules.contracts_allowed, 'bg-stack'] } }, 1],
     ['added allowed contract does not let the import in', { modules: [...withDebt, './src/contracts/bg-stack.ts'], rules: { ...rules, contracts_allowed: [...rules.contracts_allowed, 'bg-stack'] } }, 2],
     ['extra forbidden dir tightens', { modules: [...withDebt, './src/extra/x.ts'], rules: { ...rules, forbidden_dirs: [...rules.forbidden_dirs, 'src/extra'] } }, 1],
