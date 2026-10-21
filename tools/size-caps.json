@@ -141,6 +141,11 @@
       "ceiling": 57344,
       "note": "56 KiB, sized for the style allow-list tokenizer."
     },
+    "magic-card-manifest.js": {
+      "raw": 2048,
+      "ceiling": 2048,
+      "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 1,758 B measured with 26 chunks."
+    },
     "magic-card-transfer.js": {
       "raw": 63488,
       "ceiling": 63488,

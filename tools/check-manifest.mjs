@@ -24,10 +24,11 @@ export function check(dist, build) {
   } catch {
     return [`${MANIFEST} is missing from ${dist}`];
   }
-  const m = /^export default (\{.*\});?\s*$/s.exec(text);
+  const m = /^export default\s*(\{.*\});?\s*$/s.exec(text);
   let doc;
   try {
-    doc = JSON.parse(m?.[1] ?? '');
+    // the build minifies the file: `build` and `chunks` may be bare keys, the chunk names stay quoted
+    doc = JSON.parse((m?.[1] ?? '').replace(/([{,])(build|chunks):/g, '$1"$2":'));
   } catch {
     return [`${MANIFEST} is not "export default { build, chunks }" with JSON values`];
   }
@@ -68,6 +69,7 @@ function selfTest() {
   const a = 'magic-card-a.0123abcd.js';
   const ok = { files: [a], manifest: doc({ 'magic-card-a.js': a }) };
   run('a consistent dist passes', ok, null);
+  run('the minified form passes', { ...ok, manifest: `export default{build:"1.0.0",chunks:{"magic-card-a.js":"${a}"}};` }, null);
   run('the .br and .gz copies are ignored', { ...ok, files: [a, `${a}.br`, `${a}.gz`] }, null);
   run('no manifest fails', { files: [a] }, 'is missing');
   run('a manifest that is not an export fails', { files: [a], manifest: 'nope' }, 'is not');
