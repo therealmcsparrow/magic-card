@@ -15,7 +15,7 @@
       "raw": 503361
     },
     "final_cap": 61440,
-    "current_stage": "stage-3",
+    "current_stage": "stage-4",
     "stages": [
       {
         "id": "stage-1",
@@ -40,15 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": null,
+        "cap": 81839,
         "target": 61440,
-        "landed_commit": null
+        "landed_commit": "774abb6",
+        "measured": 81839
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 82337,
-      "measured": 82337
+      "cap": 69839,
+      "measured": 69839
     }
   },
   "files": {
@@ -376,6 +377,12 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 915456,
       "to": 925696
+    },
+    {
+      "id": "s2-final-cap-measured",
+      "field": "/entry/stages/3/cap",
+      "from": null,
+      "to": 81839
     }
   ]
 }
