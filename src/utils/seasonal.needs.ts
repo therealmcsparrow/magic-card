@@ -28,12 +28,13 @@ export type Inset = readonly [number, number, number, number];
  * src/utils/seasonal-deco-insets.ts (decoInsets) and the scene table (sceneDecorations); a test compares them.
  * No prototype: a config string such as constructor or __proto__ finds nothing (proj.M1, M4).
  */
-export const SCENE_INSETS: Readonly<Partial<Record<string, Inset>>> = Object.assign(Object.create(null), {
+export const SCENE_INSETS: Readonly<Partial<Record<string, Inset>>> = {
+  __proto__: null,
   winter: [20, 0, 0, 0],
   spring: [0, 0, 18, 20],
   christmas: [20, 20, 20, 20],
   halloween: [0, 0, 30, 0],
-});
+} as unknown as Record<string, Inset>;
 
 /** Holidays whose scene has decorations; `calendar.<holiday>: off` removes it from what `auto` can show. */
 const DECORATED_HOLIDAYS = ['christmas', 'halloween'] as const;

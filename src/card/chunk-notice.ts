@@ -117,7 +117,6 @@ export class McChunkNotice extends LitElement {
       this._refocus = !!this.shadowRoot?.activeElement;
       this._shown = this._busy = this._again = false;
       this._done = t('{part} loaded.', { part: part(c.name) });
-      clearTimeout(this._doneTimer);
       this._doneTimer = setTimeout(() => (this._done = ''), 1500);
     }
   }

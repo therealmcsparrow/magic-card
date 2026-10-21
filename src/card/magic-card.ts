@@ -498,8 +498,7 @@ export class MagicCard extends LitElement {
     prefetchLazy(cfg);
     if (cfg === this._prefetchedCfg || !LAZY_FEATURES.seasonal.needs(cfg)) return;
     this._prefetchedCfg = cfg;
-    // one waiting closure at most: a failed chunk must not collect one per edited config (lit.M3)
-    if (this._seasonalWait) return;
+    if (this._seasonalWait) return; // one waiting closure at most: a failed chunk must not collect one per edited config (lit.M3)
     this._seasonalWait = true;
     lazyChunks.seasonal.whenReady(() => {
       this._seasonalWait = false;
