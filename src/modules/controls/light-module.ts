@@ -1,23 +1,15 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, LightModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { lm } from '../../i18n/labels/mark';
 import { controlReserve } from './controls.needs';
 
 /** The light (its view is in the controls chunk): metadata, defaults, validation and the box shown until the view arrives. */
 class LightModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'light',
-    name: lm('Light'),
-    description: lm('Light control with brightness, colour temperature, and colour options'),
-    category: 'controls',
-    icon: 'mdi:lightbulb-outline',
-    inherit: ['light'],
-  };
+  readonly metadata: LazyStubMetadata = { type: 'light', inherit: ['light'] };
 
   createDefault(): LightModuleConfig {
     return {

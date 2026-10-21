@@ -1,23 +1,16 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, SpinboxModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
-import { lm } from '../../i18n/labels/mark';
 import { controlReserve } from './controls.needs';
 
 /** The spinbox (its view is in the controls chunk): metadata, defaults, validation and the box shown until the view arrives. */
 class SpinboxModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'spinbox',
-    name: lm('Spinbox'),
-    description: lm('Numeric input with increment and decrement buttons'),
-    category: 'controls',
-    icon: 'mdi:numeric',
-  };
+  readonly metadata: LazyStubMetadata = { type: 'spinbox' };
 
   createDefault(): SpinboxModuleConfig {
     // no min / max / step: the entity's own range and step apply

@@ -1,23 +1,16 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, SliderModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
-import { lm } from '../../i18n/labels/mark';
 import { controlReserve } from './controls.needs';
 
 /** The slider (its view is in the controls chunk): metadata, defaults, validation and the box shown until the view arrives. */
 class SliderModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'slider',
-    name: lm('Slider'),
-    description: lm('Range slider for controlling numeric values'),
-    category: 'controls',
-    icon: 'mdi:tune-vertical',
-  };
+  readonly metadata: LazyStubMetadata = { type: 'slider' };
 
   createDefault(): SliderModuleConfig {
     return {

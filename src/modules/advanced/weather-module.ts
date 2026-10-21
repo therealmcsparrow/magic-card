@@ -1,12 +1,11 @@
 import { html, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import type { ModuleDependencies } from '../../services/card-dependencies';
 import { CardModule, HomeAssistant, WeatherModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { lm } from '../../i18n/labels/mark';
 import { weatherMinHeight } from '../lazy-heights';
 
 export const isNight = (hass: HomeAssistant | undefined): boolean => hass?.states?.['sun.sun']?.state === 'below_horizon';
@@ -16,14 +15,7 @@ export const isNight = (hass: HomeAssistant | undefined): boolean => hass?.state
  * temperature, translated condition and optionally the daily forecast.
  */
 class WeatherModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'weather',
-    name: lm('Weather'),
-    description: lm('Display weather entity information'),
-    category: 'advanced',
-    icon: 'mdi:weather-partly-cloudy',
-    inherit: ['weather'],
-  };
+  readonly metadata: LazyStubMetadata = { type: 'weather', inherit: ['weather'] };
 
   createDefault(): WeatherModuleConfig {
     return {

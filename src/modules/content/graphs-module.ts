@@ -1,24 +1,17 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, GraphsModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import type { ModuleDependencies } from '../../services/card-dependencies';
 import { lazyChunks } from '../../utils/lazy-chunks';
-import { lm } from '../../i18n/labels/mark';
 
 export { clearHistoryCache, downsample, historyRequest, parseHistory } from '../../services/history-cache';
 export type { HistorySample } from '../../services/history-cache';
 
 class GraphsModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'graphs',
-    name: lm('Graph'),
-    description: lm('Display entity history as a line graph'),
-    category: 'content',
-    icon: 'mdi:chart-line',
-  };
+  readonly metadata: LazyStubMetadata = { type: 'graphs' };
 
   createDefault(): GraphsModuleConfig {
     return {

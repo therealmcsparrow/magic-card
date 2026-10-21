@@ -1,6 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
 import { BaseMagicModule } from '../base-module';
-import { MagicModuleMetadata } from '../module-types';
+import type { MagicModuleMetadata } from '../module-types';
 import { CardModule, HomeAssistant, SliderLayoutModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { renderChildModule, renderEmptySlot, visibleChildren } from '../render-module';
@@ -9,7 +9,6 @@ import { generateId } from '../../utils/id-generator';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import type { McSwiperOptions } from './mc-swiper';
 import { t } from '../../card/i18n';
-import { lm } from '../../i18n/labels/mark';
 
 /** Swiper options from the module config; unset keys keep the defaults (1 slide, 8 px gap). */
 export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): McSwiperOptions {
@@ -28,13 +27,8 @@ export function sliderOptions(c: SliderLayoutModuleConfig, editMode: boolean): M
 }
 
 class SliderLayoutModule extends BaseMagicModule {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'slider-layout',
-    name: lm('Slider layout'),
-    description: lm('Arrange child modules in a slider'),
-    category: 'layout',
-    icon: 'mdi:view-carousel-outline',
-  };
+  // the editor chunk adds name, description, category and icon (src/editor/modules/lazy-metadata.ts)
+  readonly metadata = { type: 'slider-layout' } as MagicModuleMetadata;
 
   createDefault(): SliderLayoutModuleConfig {
     return {
