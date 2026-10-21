@@ -1,10 +1,10 @@
 {
   "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
-  "plain_keys_sha256": "f8796e655d5bc276cd1dd815993b2720aab7b504827337a5f84e4affae7a323d",
+  "plain_keys_sha256": "2b45eb3e80a153643f9ae17ccc08b4021ef30a51f235868446cc27728fe3f336",
   "count": 137,
-  "plain": 18,
-  "feature": 119,
-  "plain_share_percent": 13.1,
+  "plain": 13,
+  "feature": 124,
+  "plain_share_percent": 9.5,
   "trace_fixtures": {
     "plain": "080",
     "effect": "063"
@@ -15,16 +15,16 @@
     "decor": 34,
     "flows": 33,
     "layers": 10,
-    "modules-extra": 10,
+    "modules-extra": 20,
     "pause": 20,
     "seasonal": 5,
     "svg-icon": 18
   },
   "reserve_counts": {
-    "none": 18,
-    "overlay": 47,
-    "configured": 18,
-    "default": 54
+    "none": 13,
+    "overlay": 45,
+    "configured": 24,
+    "default": 55
   },
   "unknown_key_cards": [],
   "cards": [
@@ -90,11 +90,15 @@
       "id": "004",
       "source": "now-playing",
       "sha256": "bc0b5923b2e4881e85f79227589c02f6eb66a0412a27e0209954010bb6206aac",
-      "class": "plain",
-      "chunks": [],
-      "reserve_kind": "none",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
       "grid_rows": false,
-      "features": [],
+      "features": [
+        "module:image"
+      ],
       "unknown_keys": [],
       "modules": 15
     },
@@ -233,11 +237,15 @@
       "id": "013",
       "source": "people",
       "sha256": "6b8a07bb01b11b8eac1104f387f1f2ac4eb6efbc04640901b633490acf76b378",
-      "class": "plain",
-      "chunks": [],
-      "reserve_kind": "none",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
       "grid_rows": false,
-      "features": [],
+      "features": [
+        "module:image"
+      ],
       "unknown_keys": [],
       "modules": 14
     },
@@ -589,12 +597,14 @@
       "sha256": "4c5beaab9adf6488601e8038353bba1e4a642dd126fc0341326a95f93ec4399d",
       "class": "feature",
       "chunks": [
-        "anim"
+        "anim",
+        "modules-extra"
       ],
-      "reserve_kind": "overlay",
+      "reserve_kind": "configured",
       "grid_rows": false,
       "features": [
-        "design.animations"
+        "design.animations",
+        "module:image"
       ],
       "unknown_keys": [],
       "modules": 6
@@ -872,13 +882,15 @@
       "sha256": "38ba08eb403176fe079496d383c47ed99ac0f12fef1b9d7aae08717e5913da7a",
       "class": "feature",
       "chunks": [
-        "anim"
+        "anim",
+        "modules-extra"
       ],
-      "reserve_kind": "overlay",
+      "reserve_kind": "configured",
       "grid_rows": false,
       "features": [
         "card.animations",
-        "design.animations"
+        "design.animations",
+        "module:image"
       ],
       "unknown_keys": [],
       "modules": 10
@@ -1805,11 +1817,15 @@
       "id": "106",
       "source": "backdrop-darken-text",
       "sha256": "7927ef8e63b1a81093f174303c52d09b3589ccbabc7eee64f9e3ea3c6388c5be",
-      "class": "plain",
-      "chunks": [],
-      "reserve_kind": "none",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
       "grid_rows": false,
-      "features": [],
+      "features": [
+        "module:image"
+      ],
       "unknown_keys": [],
       "modules": 3
     },
@@ -1886,11 +1902,15 @@
       "id": "112",
       "source": "blend-modes",
       "sha256": "287ac9d3030c293bba7db2081fe3b03741e99812b603e72fa110ef64b3e91d8e",
-      "class": "plain",
-      "chunks": [],
-      "reserve_kind": "none",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "configured",
       "grid_rows": false,
-      "features": [],
+      "features": [
+        "module:image"
+      ],
       "unknown_keys": [],
       "modules": 12
     },
@@ -2098,6 +2118,7 @@
       "chunks": [
         "controls",
         "layers",
+        "modules-extra",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2105,6 +2126,7 @@
       "features": [
         "card.pause_button_corner",
         "layer-pan_zoom",
+        "module:image",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2240,6 +2262,7 @@
       "chunks": [
         "controls",
         "flows",
+        "modules-extra",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2247,6 +2270,7 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
+        "module:image",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2326,6 +2350,7 @@
       "chunks": [
         "controls",
         "flows",
+        "modules-extra",
         "pause"
       ],
       "reserve_kind": "default",
@@ -2333,6 +2358,7 @@
       "features": [
         "card.flows",
         "card.pause_button_corner",
+        "module:image",
         "module:slider"
       ],
       "unknown_keys": [],
@@ -2342,11 +2368,15 @@
       "id": "135",
       "source": "status-bar",
       "sha256": "4291cbefdd526ca703f0f07df5b7cbe1866ee326094c866f9439751202eb6e03",
-      "class": "plain",
-      "chunks": [],
-      "reserve_kind": "none",
+      "class": "feature",
+      "chunks": [
+        "modules-extra"
+      ],
+      "reserve_kind": "default",
       "grid_rows": false,
-      "features": [],
+      "features": [
+        "module:clock"
+      ],
       "unknown_keys": [],
       "modules": 5
     },

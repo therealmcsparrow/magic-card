@@ -29,6 +29,12 @@ const ofType =
   (config) =>
     configHas(config, (n) => typeof n.type === 'string' && types.includes(n.type));
 
+/** Like ofType, but a background layer of the same name (an image layer) is not a module, so `background_layers` is not searched. */
+const modulesOutsideLayers =
+  (...types: string[]): NeedsCheck =>
+  (config) =>
+    configHas(config, (n) => typeof n.type === 'string' && types.includes(n.type), ['background_layers']);
+
 /** The backdrop moves: a pan / zoom or camera image layer (src/contracts/bg-stack.needs.ts). */
 export const wantsLayers: NeedsCheck = wantsBgFx;
 
@@ -37,7 +43,7 @@ export const LAZY_FEATURES: Record<LazyChunkName, LazyFeature> = {
   slider: row('slider', ofType('slider-layout')),
   markdown: row('markdown', ofType('markdown')),
   controls: row('controls', ofType(...CONTROL_MODULE_TYPES)),
-  'modules-extra': row('modules-extra', ofType('camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs', 'clock', 'image')),
+  'modules-extra': row('modules-extra', (config) => ofType('camera', 'video-bg', 'weather', 'forecast', 'graphs', 'custom-card', 'tabs')(config) || modulesOutsideLayers('clock', 'image')(config)),
   // a `seasonal` setting or a seasonal animation preset
   seasonal: row('seasonal', (c) => configHas(c, (n) => n.seasonal || (typeof n.preset === 'string' && SEASONAL_PRESET_IDS.includes(n.preset)))),
   // a `flows` list with an entry
