@@ -78,7 +78,7 @@ function commandSource(): LibrarySource {
 
 @customElement('mc-library-view')
 export class LibraryView extends LitElement {
-  /** The Magic Card Utils panel gates on this (svg-editor revision 5), so the Library tab needs no SVG editor fetch. */
+  /** The Magic Card Utils panel gates on this (svg-editor contract), so the Library tab needs no SVG editor fetch. */
   static contractRevision = SVG_EDITOR_CONTRACT_REVISION;
   // kit parts plus layout only (contract ui-kit 1.0.0: a screen styles its own layout, never a kit class)
   static styles = [
@@ -113,16 +113,16 @@ export class LibraryView extends LitElement {
   @property({ type: String }) startKind?: TransferKind;
   /** The theme editor's backend.presets; absent = an older Magic Card Utils (or none). */
   @property({ attribute: false }) presets?: ThemePresetStore;
-  /** (r3) Where saved icons and shapes are read; absent = the view calls the mcu-library commands itself. */
+  /** Where saved icons and shapes are read; absent = the view calls the mcu-library commands itself. */
   @property({ attribute: false }) source?: LibrarySource;
-  /** (r3) A host's extra for a row: a leading node (a thumbnail) and a short text after the id. Read on every render; absent = none. */
+  /** A host's extra for a row: a leading node (a thumbnail) and a short text after the id. Read on every render; absent = none. */
   @property({ attribute: false }) rowExtra?: (kind: TransferKind, id: string) => { thumb?: Node; meta?: string } | undefined;
   private _own?: LibrarySource;
   private get _src(): LibrarySource {
     return this.source ?? (this._own ??= commandSource());
   }
 
-  /** (r2) 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
+  /** 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
   @property({ type: String }) context: LibraryViewContext = 'card-editor';
 
   @state() private _kind: TransferKind = 'animation';
@@ -180,7 +180,7 @@ export class LibraryView extends LitElement {
   }
 
   private get _kinds(): readonly TransferKind[] {
-    // (r2) in the panel context a `kinds` set by the host narrows the four kinds (the Shapes tab); left alone it shows them all
+    // in the panel context a `kinds` set by the host narrows the four kinds (the Shapes tab); left alone it shows them all
     if (this.context !== 'mcu-panel') return this.kinds;
     const some = this.kinds !== DEFAULT_KINDS ? HOST_KINDS['mcu-panel'].filter((k) => this.kinds.includes(k)) : [];
     return some.length ? some : HOST_KINDS['mcu-panel'];

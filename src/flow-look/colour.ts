@@ -5,7 +5,7 @@ import { defaultStroke, unmix, type LineCtx, type Paint, type StrokeSpec } from 
 import { memo, sampled } from './lines/util';
 
 /*
- * Gradient paint of the flow-look chunk (flow-look 1.0.0 r3, spike S2). `color` -> `colorTo` along the
+ * Gradient paint of the flow-look chunk (flow-look 1.0.0). `color` -> `colorTo` along the
  * travel direction, only while flowing (idle = the idle colour).
  * - Straight centre line: one userSpaceOnUse linearGradient from the travel start to the travel end.
  *   Exact there, whatever offset line (wave, rails) is painted, and dashes need nothing special.

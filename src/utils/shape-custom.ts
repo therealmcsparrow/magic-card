@@ -10,7 +10,7 @@ export const install = (): void => {};
 /*
  * `shape: custom` (contract custom-shape 1.0.0): per-corner types and sizes, or anchored free-path
  * points, built into the same Outline the presets use. Nothing here runs unless the kind is 'custom'.
- * A lazy chunk (dist/magic-card-shape-custom.js, ADR 0021): only the loader imports it. The reference
+ * A lazy chunk (dist/magic-card-shape-custom.js): only the loader imports it. The reference
  * resolution and the option merge stay in src/utils/shape-ref.ts.
  */
 

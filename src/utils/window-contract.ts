@@ -10,7 +10,7 @@ export const API_VERSION = 1;
  * Publish `window.MagicCard`, merging into an existing object so other keys survive. `loadEditor`
  * (additive, module-editor 1.0.0) loads the editor chunk, which defines the elements the animation
  * studio uses by tag (STUDIO_EDITOR_TAGS). `loadSeasonal` (additive, lazy-module 1.0.0) loads the
- * chunk that defines <mc-seasonal> and <mc-seasonal-deco>. `setLocale` (additive, 2026-10-18, module-editor
+ * chunk that defines <mc-seasonal> and <mc-seasonal-deco>. `setLocale` (additive, module-editor
  * contract) is `setI18nLocale`: an entry with its own runtime copy (the animation studio) calls it so the
  * pickers that run on this bundle's runtime follow the Home Assistant language.
  */

@@ -6,8 +6,8 @@ import { defineBgStack } from './mc-bg-stack';
 
 /*
  * Chunk entry of dist/magic-card-layers.js (contract lazy-module 1.2.0). Evaluating this file changes
- * nothing global: install() defines <mc-bg-stack> (contract bg-stack 1.0.0 r2), guarded, and fills the layer slot with
- * the placement runtime and its CSS (layer-placement 1.0.0 r3). placement.ts and layer-css.ts are
+ * nothing global: install() defines <mc-bg-stack> (contract bg-stack 1.0.0), guarded, and fills the layer slot with
+ * the placement runtime and its CSS (layer-placement 1.0.0). placement.ts and layer-css.ts are
  * imported by this file only.
  */
 

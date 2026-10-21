@@ -30,7 +30,7 @@ export function polyfillForMarked(): void {
   if (!(String.prototype as { at?: unknown }).at) define(String.prototype, 'at', function (this: string, n: number) { return at.call(this, n); });
 }
 
-/** Markdown options (breaks, GFM): set by the chunk's install(), never at evaluation (AC13). */
+/** Markdown options (breaks, GFM): set by the chunk's install(), never at evaluation. */
 export function configureMarked(): void {
   polyfillForMarked();
   marked.setOptions({

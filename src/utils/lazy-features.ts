@@ -11,9 +11,9 @@ import { lazyChunks } from './lazy-chunks';
 
 /*
  * The needs table (contract lazy-module 1.4.0 "needs(config)"): one row per card chunk. A row's needs() reads
- * the card config only (proj.M13), never hass, the DOM, the date or chunk state; it is total (a throw is false).
+ * the card config only, never hass, the DOM, the date or chunk state; it is total (a throw is false).
  * prefetchLazy loads every chunk whose row says yes, all at once. The predicates read their key lists and the
- * preset ids from the *.needs.ts files (S1a.2, S1a.3), so this table pulls in none of the chunks' own code.
+ * preset ids from the *.needs.ts files, so this table pulls in none of the chunks' own code.
  */
 
 type Obj = Record<string, unknown>;

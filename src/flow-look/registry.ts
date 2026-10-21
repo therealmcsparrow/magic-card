@@ -9,7 +9,7 @@ import { defaultShapes } from './lines/dots';
 
 /*
  * The registry of the flow-look chunk: the seams where the other parts plug in without editing the
- * line modules. T3 (lines) fills the defaults; T4 (shapes) replaces `shapes`, T5 (colour and ends)
+ * line modules. The lines fill the defaults; the shapes part replaces `shapes`, the colour and ends part
  * replaces `stroke` (gradient paint), sets `ends` (caps, arrival) and may replace `colour`. A part
  * registers itself from src/flow-look/parts.ts (the one list of side-effect imports).
  */
@@ -80,7 +80,7 @@ export interface ShapeOut {
 }
 
 export interface FlowLookRegistry {
-  /** Draws one stroked path in the flow's paint (T5: gradient on straight and segmented routes). */
+  /** Draws one stroked path in the flow's paint (gradient on straight and segmented routes). */
   stroke(c: LineCtx, s: StrokeSpec): SVGTemplateResult;
   shapes: {
     /** Travelling shapes this flow wants after the tier caps (0 when idle or reduced). */

@@ -59,7 +59,7 @@ const SAFE_STYLE_PROPS = new RegExp(
     ].join('|') +
     ')$',
 );
-/** Longest style attribute looked at (proj.M3): a longer one is dropped before it is tokenized. */
+/** Longest style attribute looked at: a longer one is dropped before it is tokenized. */
 const MAX_STYLE = 4096;
 const SAFE_DISPLAY = /^(none|inline|block|inline-block)$/i;
 const MIN_OPACITY = 0.3;

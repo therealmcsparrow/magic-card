@@ -5,10 +5,10 @@ import { isLayered, placementOf } from './layer-slot';
 import type { CardModule } from '../types';
 
 /*
- * Layer placement (contract layer-placement 1.0.0 r2): which children of a container are in flow,
+ * Layer placement (contract layer-placement 1.0.0): which children of a container are in flow,
  * behind the others or on top, and what each wrapper gets. Pure: no lit, no DOM. Every value that
  * reaches an attribute or a style is clamped, matched against an allow-list or parsed from a strict
- * grammar here (proj.M2); nothing is copied from the config as text. Lives in the 'layers' chunk
+ * grammar here; nothing is copied from the config as text. Lives in the 'layers' chunk
  * (src/layers/stack/chunk.ts hands it to the slot); only that entry imports this file.
  */
 

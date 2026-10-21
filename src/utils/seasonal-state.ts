@@ -2,7 +2,7 @@ import type { SceneId } from './seasonal';
 
 /*
  * The weather and sun-elevation tables of the seasonal scenes. They sit apart from seasonal.ts so the lazy `anim` chunk
- * (resolve.ts) reads them without holding the whole calendar (ADR 0045: no copy of utils/seasonal.ts in `anim`).
+ * (resolve.ts) reads them without holding the whole calendar (no copy of utils/seasonal.ts in `anim`).
  * utils/seasonal.ts re-exports them.
  */
 

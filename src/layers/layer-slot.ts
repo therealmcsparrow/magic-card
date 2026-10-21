@@ -4,7 +4,7 @@ import { childSlots } from '../utils/module-path';
 import type { CardModule } from '../types';
 
 /*
- * The sync half of layer placement (contract layer-placement 1.0.0 r3), the only part of it in
+ * The sync half of layer placement (contract layer-placement 1.0.0), the only part of it in
  * magic-card.js: the slot the 'layers' chunk fills from install(), the two checks that need no
  * runtime, and the two CSS rules that must hold before the chunk lands. placement.ts and
  * layer-css.ts live in the chunk; nothing outside src/layers/stack/chunk.ts imports them.

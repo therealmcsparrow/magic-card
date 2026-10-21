@@ -9,7 +9,7 @@ import { entityStateColor, isEntityColor } from '../utils/entity-color';
 import { mediaSrc } from '../utils/media';
 
 /*
- * What the card hands <mc-bg-stack> (contract bg-stack 1.0.0 r2, `host`): the Core side of the card
+ * What the card hands <mc-bg-stack> (contract bg-stack 1.0.0, `host`): the Core side of the card
  * backdrop. Part of magic-card.js; the stack itself lives in the lazy chunk and imports none of this.
  * It does not vet image URLs: the chunk's safeImageUrl does, for every URL it loads.
  */

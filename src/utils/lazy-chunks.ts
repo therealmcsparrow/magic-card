@@ -26,17 +26,17 @@ export const lazyChunks: Record<LazyChunkName, LazyChunkControl> = {
   'modules-extra': lazyChunk('modules-extra', () => import(/* webpackChunkName: "modules-extra" */ '../modules/lazy/extras-chunk')),
   'flow-look': lazyChunk('flow-look', () => import(/* webpackChunkName: "flow-look" */ '../flow-look/chunk')),
   'slider-look': lazyChunk('slider-look', () => import(/* webpackChunkName: "slider-look" */ '../slider-look/chunk')),
-  // <mc-bg-stack>, the card backdrop (background-layers T5, ADR 0038)
+  // <mc-bg-stack>, the card backdrop
   layers: lazyChunk('layers', () => import(/* webpackChunkName: "layers" */ '../layers/stack/chunk')),
   // icon source, <mc-svg-icon>, the SVG sanitiser and the mcu: library client; renderIcon reads it through svg-icon-loader.ts
   'svg-icon': lazyChunk('svg-icon', () => import(/* webpackChunkName: "svg-icon" */ '../icons/chunk')),
-  // the animation resolve, compiler and model (ADR 0043); the card reads it through src/utils/anim-seam.ts
+  // the animation resolve, compiler and model; the card reads it through src/utils/anim-seam.ts
   anim: lazyChunk('anim', () => import(/* webpackChunkName: "anim" */ '../anim-studio/anim-chunk')),
 };
 
 /**
- * anim-runtime and particles are children of `anim` (ADR 0045): their import()s sit in src/anim-studio/anim-chunk.ts.
- * The importer calls it synchronously (no await or .then first), so a retry's `r=` reaches the request (proj.M12 f);
+ * anim-runtime and particles are children of `anim`: their import()s sit in src/anim-studio/anim-chunk.ts.
+ * The importer calls it synchronously (no await or .then first), so a retry's `r=` reaches the request;
  * it rejects while `anim` is not installed (the loader slots load `anim` first).
  */
 const viaAnim = <M extends LazyChunkModule>(pick: (a: AnimModule) => () => Promise<M>) => (): Promise<M> => {

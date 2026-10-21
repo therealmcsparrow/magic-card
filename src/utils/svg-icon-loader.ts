@@ -15,7 +15,7 @@ export const provideSvgIconChunk = (c: Slot | undefined): void => void (chunk = 
 export const svgIconChunk = (): RetryableLazyChunk | undefined => chunk;
 
 /**
- * The icon source's one copy (ADR 0045 rule 3): the installed chunk's `api`. The card editor and the editors it loads call
+ * The icon source's one copy: the installed chunk's `api`. The card editor and the editors it loads call
  * it with `!`: loadEditor() loads `svg-icon` before the editor chunk runs. Undefined until the chunk has installed.
  */
 export const svgIconApi = (): typeof IconChunk.api | undefined => (chunk?.module() as typeof IconChunk | undefined)?.api;

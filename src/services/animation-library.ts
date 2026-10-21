@@ -32,7 +32,7 @@ import { animHooks, type AnimationValidators } from '../utils/anim-hooks';
 
 /**
  * The document validators. model.ts registers them when it loads (the `anim` chunk, the editor and the studio bundles all
- * carry it); this service is Core and may not import it (ADR 0043). The card starts the library from a custom-animation
+ * carry it); this service is Core and may not import it. The card starts the library from a custom-animation
  * lookup, which only the `anim` chunk makes, so they are there; a start without them is a failed fetch (retried).
  */
 function validators(): AnimationValidators {

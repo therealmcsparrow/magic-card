@@ -5,14 +5,14 @@ import { onChunkChange } from '../utils/lazy-chunk';
 import { t } from './i18n';
 
 /*
- * The failure notice of a lazy chunk (lazy-module 1.4.0 "Failure, retry and timeout", designer 03 round 2). It is
+ * The failure notice of a lazy chunk (lazy-module 1.4.0 "Failure, retry and timeout"). It is
  * always in flow (never absolute, no fixed height, nothing clipped), so no text, control or focus ring can sit under
- * it; the failure state may shift the layout (proj.M14 exception) and the shift reverses on recovery. One anatomy:
+ * it; the failure state may shift the layout and the shift reverses on recovery. One anatomy:
  * icon, message that names the part and says the rest works, a real <button> of at least 44 px. The element exists
  * only after a failure; its role="status" container is created empty and filled a frame later, so screen readers
  * announce it, and it outlives the notice for the "loaded" message. Colours: text and focus ring --mc-text on
  * --mc-bg (never --mc-primary on text). The button border is --mc-text too, not --mc-primary: HA's default light primary
- * (#03a9f4) is 2.63:1 on white, under the 3:1 a control border needs (designer 03: then the border falls back to --mc-text).
+ * (#03a9f4) is 2.63:1 on white, under the 3:1 a control border needs (the border then falls back to --mc-text).
  */
 
 /** At most 8 part names; the fallback names no part. Written out so the i18n extractor sees every id. */

@@ -3,7 +3,7 @@ import type { V2Compiler } from '../anim-studio/compile';
 import type { ParticlesValidator, validateAnimationDoc, validateAnimationLibrary } from '../anim-studio/model';
 
 /*
- * The hook points of the animation compiler (ADR 0043: "Core keeps the seam, not the compiler"). The compiler and the
+ * The hook points of the animation compiler ("Core keeps the seam, not the compiler"). The compiler and the
  * document model live in the lazy `anim` chunk, and the chunks that plug into them (the v2 runtime registers its
  * compileV2, the particles chunk its compiler and sim validator, the model its document validators) are separate
  * files that each carry their own copy of that code. The slots therefore sit here, in the entry, where every copy

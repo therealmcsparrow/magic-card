@@ -5,7 +5,7 @@ import { stops } from '../motion';
 import { unmix } from '../paint';
 
 /*
- * The default travelling shape: round dots on the centre line, like today's classic dots (T4 replaces
+ * The default travelling shape: round dots on the centre line, like today's classic dots (the shapes part replaces
  * the registry's `shapes` with the full set). Pure CSS motion (rule 1: transform keyframes along the line), never rotates.
  */
 

@@ -1,11 +1,11 @@
 /*
- * Layer CSS (contract layer-placement 1.0.0 r2). Part of the 'layers' chunk, handed to the card as
+ * Layer CSS (contract layer-placement 1.0.0). Part of the 'layers' chunk, handed to the card as
  * text and injected once per shadow root as <style data-mc-layer-css>. Chromium 85 floor: top / right / bottom / left, never the `inset`
  * shorthand; no color-mix(). Nothing here animates: filter, offsets and background-position stay
- * still (spike S1). Every rule hangs on a data attribute the render hook sets only for layered
+ * still. Every rule hangs on a data attribute the render hook sets only for layered
  * cards, so a card without layers is untouched.
  *
- * - ha-card[data-mc-layers] is the isolated clip box (spike S2), .mc-card-content the containing
+ * - ha-card[data-mc-layers] is the isolated clip box, .mc-card-content the containing
  *   block and blend group; a layered container is positioned and isolated.
  * - In a flows card a layered container is lifted to z 1, so flows "back" pass under it.
  * - A background fills its container's padding box behind the others; --mc-bleed is 3 x blur, so the

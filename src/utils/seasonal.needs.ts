@@ -1,6 +1,6 @@
 /*
- * What magic-card.js needs at run time about seasonal scenes without loading the seasonal chunk (proj.M11, M14), so the
- * card entry need not carry the animation preset table or the scene tables (ADR 0043; plan S1a.3 step 1, S1a.4). Plain
+ * What magic-card.js needs at run time about seasonal scenes without loading the seasonal chunk, so the
+ * card entry need not carry the animation preset table or the scene tables . Plain
  * data and pure functions of the card config: no imports, no hass, no date, no DOM, no chunk state.
  * tests/seasonal-needs-drift.test.ts compares the preset list with the preset table; tests/seasonal-split.test.ts the inset table with the scene table.
  *
@@ -26,7 +26,7 @@ export type Inset = readonly [number, number, number, number];
 /**
  * The band each scene's decorations keep clear (the scenes without an entry have none). Derived from
  * src/utils/seasonal-deco-insets.ts (decoInsets) and the scene table (sceneDecorations); a test compares them.
- * No prototype: a config string such as constructor or __proto__ finds nothing (proj.M1, M4).
+ * No prototype: a config string such as constructor or __proto__ finds nothing.
  */
 export const SCENE_INSETS: Readonly<Partial<Record<string, Inset>>> = {
   __proto__: null,

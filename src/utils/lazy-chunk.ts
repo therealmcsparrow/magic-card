@@ -4,10 +4,10 @@ import { BACKGROUND_RETRY_MS, CHUNK_TIMEOUT_MS, SILENT_RETRY_MS } from '../contr
 import type { EditorLazyChunkName, LazyChunkFailure, LazyChunkModule, LazyChunkName, OnDemandChunkName, RetryableLazyChunk } from '../contracts/lazy-module';
 
 /*
- * The one loader for the lazy chunks (contract lazy-module 1.4.0, ADRs 0024 and 0041). Memoised load,
+ * The one loader for the lazy chunks (contract lazy-module 1.4.0). Memoised load,
  * 10 s per attempt, one silent retry after 2 s, then the failed state (the notice, src/card/chunk-notice.ts)
  * and three background retries, BUILD check, install, styles adoption. The timing numbers come from
- * src/contracts/lazy-module.needs.ts: the entry may not import lazy-module.ts itself at run time (proj.M11).
+ * src/contracts/lazy-module.needs.ts: the entry may not import lazy-module.ts itself at run time.
  */
 
 /** The release this magic-card.js was built from; chunk entries carry their own copy as BUILD. */
@@ -42,7 +42,7 @@ export const failedChunkNames = (): ReadonlySet<string> => everFailed;
 
 declare const __webpack_require__: { u: (id: unknown) => string } | undefined;
 // seeded with the time, so a retry URL is new on this page and on an earlier one: a 404 is cached for a month, and the
-// number would otherwise restart at 1 on every page load and meet the cached answer of the page before (proj.M12 f)
+// number would otherwise restart at 1 on every page load and meet the cached answer of the page before
 let retries = Date.now();
 let retrying = false;
 let hooked = false;
@@ -50,7 +50,7 @@ let hooked = false;
 /**
  * Call the chunk import. A retry asks for the chunk under a URL that has not been requested on this page
  * (`r=<n>`, n counts every retry request of every chunk): browsers remember a failed import() and may cache a
- * 404 for the URL (proj.M12 f). webpack reads the chunk URL (`__webpack_require__.u`) inside the import() call
+ * 404 for the URL. webpack reads the chunk URL (`__webpack_require__.u`) inside the import() call
  * itself, and only when it sends a request, so the number is taken there and lives only for that synchronous
  * call. An attempt that finds the request still in flight gets webpack's promise: no request, no number used,
  * and it is waiting, not a retry (lazy-module 1.4.0 "Failure, retry and timeout").
@@ -76,18 +76,18 @@ function request(importer: LazyImporter, again: boolean): Promise<LazyChunkModul
 
 const sleep = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
 
-// ── manifest check (stub until S1b.1 ships dist/magic-card-manifest.js) ──────────────────────────
+// ── manifest check (off until a build writes dist/magic-card-manifest.js) ──────────────────────────
 
 const pageId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
-/** The one manifest URL: fixed name next to this entry, a query unique to this page load (proj.M12 e). Never ?v=, never hashed. */
+/** The one manifest URL: fixed name next to this entry, a query unique to this page load. Never ?v=, never hashed. */
 export const manifestUrl = (id: string = pageId): string => {
   const url = new URL('magic-card-manifest.js', import.meta.url);
   url.search = '?r=' + id;
   return url.href;
 };
 
-let manifestOn = false; // S1b.1 turns this on together with the webpack plugin that writes the file
+let manifestOn = false; // off until a build writes dist/magic-card-manifest.js
 let loadManifest = (url: string): Promise<{ default?: { build?: string } }> => import(/* webpackIgnore: true */ url);
 let manifest: Promise<boolean> | undefined;
 
@@ -104,7 +104,7 @@ export function __manifestForTests(on = false, fn?: typeof loadManifest): void {
   if (fn) loadManifest = fn;
 }
 
-// ── styles adoption (AC11, SP2) ──────────────────────────────────────────────────────────────────
+// ── styles adoption ──────────────────────────────────────────────────────────────────
 
 const hosts = new Set<LitElement>();
 let sheets: CSSResultOrNative[] = [];
@@ -115,7 +115,7 @@ const sheetOf = (s: CSSResultOrNative): CSSStyleSheet => (s instanceof CSSStyleS
 /**
  * Give one card the sheets adopted so far: its class (cards made later) and its shadow root (this one), same task.
  * Without adoptedStyleSheets (below the browser floor, Chromium 85 and Safari 16.4) the root is left alone: the
- * `<style>` element path is S1b.2, if the Safari 16.4 check says it must be used everywhere.
+ * `<style>` element path is not used.
  */
 function catchUp(el: LitElement): void {
   const cls = el.constructor as typeof LitElement;

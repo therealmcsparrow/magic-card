@@ -3,7 +3,7 @@ import type { LazyChunkControl } from './lazy-chunk';
 
 /*
  * The `shape: custom` builder (src/utils/shape-custom.ts) is a lazy chunk, dist/magic-card-shape-custom.js
- * (ADR 0021), loaded through lazyChunk() (lazy-module 1.4.0). A card that uses a custom shape starts the load;
+ *, loaded through lazyChunk() (lazy-module 1.4.0). A card that uses a custom shape starts the load;
  * until the builder is registered the element renders as `shape: none`, and the card renders again when the
  * load resolves. A failed load is retried (silent, then in the background) with the failure notice; the
  * element stays unshaped meanwhile. The chunk comes from a slot the chunk table (src/utils/lazy-chunks.ts)

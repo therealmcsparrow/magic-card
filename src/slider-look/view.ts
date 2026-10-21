@@ -18,7 +18,7 @@ import { ERROR_MS, HIT_PX, LINGER_MS, nearestStop, resolveLook, segmentCount, st
 import { SLIDER_LOOK_CSS } from './css';
 
 /*
- * The slider-look view (slider-look 1.0.0 r2): the whole slider for a module with look keys. The
+ * The slider-look view (slider-look 1.0.0): the whole slider for a module with look keys. The
  * interaction, ARIA and keys stay in renderTrack (src/utils/slider-track.ts); this file only draws
  * the parts and keeps the transient state (bubble linger, failed-call hint). The renderTrack bar and
  * background are hidden by the css; the fill, ticks, thumb and value are drawn here from one custom

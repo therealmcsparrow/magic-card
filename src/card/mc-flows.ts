@@ -15,7 +15,7 @@ const REDUCED = '(prefers-reduced-motion: reduce)';
 const MAX_CARD_DOTS = 40;
 
 /**
- * Tier H (flow-look 1.0.0 r2): the heavy flows among all of the card's resolved flows, visible or
+ * Tier H (flow-look 1.0.0): the heavy flows among all of the card's resolved flows, visible or
  * not. A tube or neon line counts 1, a zigzag with electric 0.5. full up to 3, lite up to 6, else
  * minimal. Deterministic: no frame-time probe.
  */
@@ -31,7 +31,7 @@ export function pickFlowQuality(flows: ReadonlyArray<{ look?: Pick<FlowLookResol
 
 /**
  * The card budget: `n` moving elements per flow (after the tier caps), `weight` 2 for flows whose
- * shapes spin (spike S1: spin is the dearest variant), 1 otherwise. Over the cap every moving flow is
+ * shapes spin (spin is the dearest variant), 1 otherwise. Over the cap every moving flow is
  * scaled to floor(n * max / total) with total = sum of n x weight, at least 1; idle flows stay 0.
  */
 export function allocateBudget(items: ReadonlyArray<{ id: string; n: number; weight: number }>, max = MAX_CARD_DOTS): Map<string, number> {
@@ -565,7 +565,7 @@ export class McFlows extends LitElement {
       obstacles.push({ x: at.x - size.w / 2, y: at.y - size.h / 2, w: size.w, h: size.h });
       labels.push(html`<div class="label" style="left: ${r1(at.x)}px; top: ${r1(at.y)}px; --mc-flow-color: ${color}">${text}</div>`);
     });
-    // deviates: lit.S7 - flow-look 1.0.0 injects the chunk's constant css once per shadow root while a flow has a look (no config value is in it)
+    // flow-look 1.0.0 injects the chunk's constant css once per shadow root while a flow has a look (no config value is in it)
     return html`${this._lookDrawn ? html`<style>${slot!.css}</style>` : nothing}
       <svg class="back" ${pauseOffscreen()} focusable="false">${back}</svg>
       ${htmlBack.length ? html`<div class="html back" ${pauseOffscreen()}>${htmlBack}</div>` : nothing}

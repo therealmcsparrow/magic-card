@@ -77,7 +77,7 @@ class SliderModule extends BaseMagicModule {
     const isVertical = c.direction === 'vertical';
     const design = (c.design || {}) as DesignConfig;
     // the module's own colours beat the design colours (like the icon colour of the icon module)
-    // config colours go into a style= string: only values the colour allow-list accepts (websec.M-SEC12)
+    // config colours go into a style= string: only values the colour allow-list accepts
     const sliderColor = safeColor(c.slider_color) || safeColor(design.color) || 'var(--primary-color, #03a9f4)';
     const trackColor = safeColor(c.track_color) || safeColor(design.background);
     const style = `--mc-slider-color: ${sliderColor}; ${trackColor ? `--mc-slider-background: ${trackColor};` : ''}`;

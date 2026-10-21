@@ -8,7 +8,7 @@ import { flowLookRegistry } from './registry';
 
 /*
  * resolve() of the flow-look slot: every look key narrowed, clamped and defaulted (JSON-safe), the
- * colour mode decided. Value-mode colour (decision, T3): resolve() writes the range colour into
+ * colour mode decided. Value-mode colour: resolve() writes the range colour into
  * base.color (contract: "the colour mode result is applied to ResolvedFlow.color"), so mc-flows,
  * the label and the lines all see one colour; the gradient end colour comes back as look.colorTo.
  * Style default widths and the neon glow are applied to base as well (placeholders of unset keys).

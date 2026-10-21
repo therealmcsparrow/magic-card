@@ -498,7 +498,7 @@ export class MagicCard extends LitElement {
     prefetchLazy(cfg);
     if (cfg === this._prefetchedCfg || !LAZY_FEATURES.seasonal.needs(cfg)) return;
     this._prefetchedCfg = cfg;
-    lazyChunks.seasonal.whenReady(this._seasonalReady); // the same function each time: the chunk's waiting set holds it once, not one closure per edited config (lit.M3)
+    lazyChunks.seasonal.whenReady(this._seasonalReady); // the same function each time: the chunk's waiting set holds it once, not one closure per edited config
   }
   private _seasonalReady = (): void => {
     if (this.isConnected) this.requestUpdate();
@@ -541,7 +541,7 @@ export class MagicCard extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    // chunk styles that landed while this card was away, and from now on in the same task as they land (AC11)
+    // chunk styles that landed while this card was away, and from now on in the same task as they land
     trackHost(this);
     // a chunk failed or recovered: render again (the notice, or the feature)
     this._offChunks = onChunkChange(() => this.requestUpdate());
@@ -1329,7 +1329,7 @@ export class MagicCard extends LitElement {
   }
 
   /**
-   * The one seam to the animation resolve (ADR 0043): a card / row / column / module design's animations once the `anim`
+   * The one seam to the animation resolve: a card / row / column / module design's animations once the `anim`
    * chunk has installed, else undefined, so the card is drawn plain until then and stays plain, with the failure notice,
    * when the chunk cannot load. The needs table starts the load from the config; a design that only shows up at render
    * time (a rule that resolves now) starts it here, once per card, and the card renders again when it has installed.
@@ -1455,7 +1455,7 @@ export class MagicCard extends LitElement {
    * The failure notices of this card (lazy-module 1.4.0 "Failure"): one per chunk that failed on this page and that
    * this card needs, in flow as the last child of the content. The lazy modules show theirs in their own slot. A
    * chunk that has failed keeps its element (empty once it recovered) for the "loaded" message. Nothing is rendered
-   * until a chunk fails, so a healthy or plain card has no notice, no status container (AC1). They share the part of
+   * until a chunk fails, so a healthy or plain card has no notice, no status container. They share the part of
    * `rest` (the last thing in the content): a template part of their own would add a marker node to every card.
    */
   private _failNotices(config: MagicCardConfig, rest: unknown) {

@@ -1,6 +1,6 @@
 /*
  * The `custom:<id>` reference of an animation preset: plain string helpers the entry needs (template merge, the card's
- * custom-animation lookup) while the document model lives in the lazy `anim` chunk (ADR 0043). Moved verbatim from
+ * custom-animation lookup) while the document model lives in the lazy `anim` chunk. Moved verbatim from
  * src/anim-studio/model.ts, which re-exports them.
  */
 

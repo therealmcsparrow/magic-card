@@ -14,7 +14,7 @@ import {
 } from './values';
 
 /*
- * <mc-bg-stack> (contract bg-stack 1.0.0 r2, ADR 0038): the card backdrop, defined by the lazy chunk
+ * <mc-bg-stack> (contract bg-stack 1.0.0): the card backdrop, defined by the lazy chunk
  * 'layers'. Everything it needs from magic-card.js comes through `host`. Rules this file keeps:
  * - every URL goes through safeImageUrl, every colour through host.cssColor + safeColor, gradients are
  *   rebuilt from parseGradient output, enums are allow-listed (values.ts); per-instance CSS only through the CSSOM (sty directive, one validated value per property);
@@ -304,7 +304,7 @@ export class McBgStack extends LitElement {
   // ── Lit ──
 
   protected shouldUpdate(changed: PropertyValues): boolean {
-    // a hass push only re-renders when a layer's own picture source changed (hacard.M2)
+    // a hass push only re-renders when a layer's own picture source changed
     if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0;
     return true;
   }

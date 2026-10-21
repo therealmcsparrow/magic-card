@@ -54,7 +54,7 @@ export const editorTokens: CSSResult = css`
     --mc-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
     --mc-radius: 8px;
     --mc-radius-lg: 12px;
-    /* ui-kit tokens (contract ui-kit 1.0.0, ADR 0030); the layers and the theme editor use the same names */
+    /* ui-kit tokens (contract ui-kit 1.0.0); the layers and the theme editor use the same names */
     --mc-hit: 40px;
     --mc-font: var(--ha-font-family-body, var(--paper-font-body1_-_font-family, Roboto, system-ui, sans-serif));
     --mc-focus: var(--mc-accent);

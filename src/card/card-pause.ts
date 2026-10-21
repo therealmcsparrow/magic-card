@@ -11,8 +11,7 @@ import type { CardPauseKeys, PauseButtonCorner, PauseButtonMode } from '../contr
  * stopped by the shared offscreen observer (setCardPaused) and one CSS rule; this class holds the
  * state, remembers it per page and card, and renders the button.
  *
- * deviates: hacard.S11 — CEO 2026-10-20 default hidden, so the viewer pause is no longer on by default;
- * proj.M10 and proj.S4 still hold (offscreen and reduced-motion pauses never depend on the button).
+ * The pause button is hidden by default. Offscreen and reduced-motion pauses never depend on the button.
  */
 const MODES: readonly string[] = ['auto', 'always', 'hidden'];
 const CORNERS: readonly string[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
@@ -46,7 +45,7 @@ export class CardPause {
   private _moves = false;
   private _shown = false;
   private _timer?: number;
-  /** Editor preview pause (r3): never remembered, applied on every render. */
+  /** Editor preview pause: never remembered, applied on every render. */
   preview = false;
 
   constructor(private readonly _host: LitElement) {}
