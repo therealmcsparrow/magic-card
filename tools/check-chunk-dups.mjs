@@ -14,7 +14,8 @@
 // Every module under src/anim-studio/ and src/icons/icon-source.ts counts as stateful (STATEFUL below), and so does a module
 // whose exported const another module mutates: the checker reads one file at a time, so such a module is added to STATEFUL.
 // False positives go in tools/chunk-dups.json `stateless` as { module, reason } where the reason is a technical fact about the
-// module. An entry that matches no duplicated stateful module is stale and fails.
+// module. For a module that STATEFUL lists, the entry waives only that listing: the source is still scanned and any state found
+// there fails. An entry that matches no duplicated stateful module is stale and fails.
 //
 // Usage: node tools/check-chunk-dups.mjs [stats.json]    check the last production build
 //        node tools/check-chunk-dups.mjs --self-test      the rule against synthetic graphs and sources
@@ -241,8 +242,9 @@ export const evaluate = ({ chunks, stateless = [], sourceOf }) => {
   for (const [m, copies] of [...where].filter(([, cs]) => cs.length > 1).sort(([a], [b]) => (a < b ? -1 : 1))) {
     const bytes = (c) => c.size?.[m];
     const list = copies.map((c) => `${label(c)}${bytes(c) === undefined ? '' : ` ${bytes(c)} B`}`).join(', ');
-    let reasons = fixedState(m);
-    if (!reasons.length && m.endsWith('.ts')) {
+    const fixed = fixedState(m);
+    let reasons = fixed;
+    if ((!fixed.length || allowed.has(m)) && m.endsWith('.ts')) {
       let text;
       try {
         text = sourceOf(m);
@@ -252,13 +254,14 @@ export const evaluate = ({ chunks, stateless = [], sourceOf }) => {
       }
       reasons = analyse(m, text);
     }
-    if (reasons.length) flaggedStateful.add(m);
+    if (reasons.length || fixed.length) flaggedStateful.add(m);
     const why = reasons.map((r) => (r.line ? `${r.what} (line ${r.line})` : r.what)).join('; ');
-    if (!reasons.length) {
+    if (fixed.length && allowed.has(m) && !reasons.length) notes.push(`${m} is copied in ${copies.length} chunks (${list}); listed as stateless: ${allowed.get(m)}`);
+    else if (!reasons.length) {
       stateless_n++;
       stateless_bytes += copies.slice(1).reduce((s, c) => s + (bytes(c) ?? 0), 0);
       notes.push(`${m} is copied in ${copies.length} chunks (${list}); no module-level state`);
-    } else if (allowed.has(m)) notes.push(`${m} is copied in ${copies.length} chunks (${list}); listed as stateless: ${allowed.get(m)}`);
+    } else if (allowed.has(m) && !fixed.length) notes.push(`${m} is copied in ${copies.length} chunks (${list}); listed as stateless: ${allowed.get(m)}`);
     else problems.push(`${m} is in ${copies.length} chunks of ${ENTRY}'s bundle (${list}) and holds state: ${why}`);
   }
   for (const m of allowed.keys()) if (!flaggedStateful.has(m)) problems.push(`chunk-dups.json: ${m} is stale (not a stateful module copied in several chunks)`);
@@ -288,7 +291,7 @@ const selfTest = () => {
     anim: 'export const x = 1;',
   };
   const sourceOf = (m) => {
-    const key = m.startsWith('./src/anim-studio/') ? 'anim' : m.endsWith('/anim-hooks.ts') ? 'hooks' : m.endsWith('/map.ts') ? 'map' : m.endsWith('/leaf.ts') ? 'constLeaf' : m.endsWith('/define.ts') ? 'define' : m.endsWith('/local.ts') ? 'local' : m.endsWith('/declare.ts') ? 'declare' : m.endsWith('/exportlet.ts') ? 'exportLet' : m.endsWith('/var.ts') ? 'var' : 'let';
+    const key = m.endsWith('/anim-let.ts') ? 'let' : m.startsWith('./src/anim-studio/') ? 'anim' : m.endsWith('/anim-hooks.ts') ? 'hooks' : m.endsWith('/map.ts') ? 'map' : m.endsWith('/leaf.ts') ? 'constLeaf' : m.endsWith('/define.ts') ? 'define' : m.endsWith('/local.ts') ? 'local' : m.endsWith('/declare.ts') ? 'declare' : m.endsWith('/exportlet.ts') ? 'exportLet' : m.endsWith('/var.ts') ? 'var' : 'let';
     return src[key];
   };
   const two = (mod) => [entry, chunk(1, 'magic-card-a.js', [mod], { parents: [0] }), chunk(2, 'magic-card-b.js', [mod], { parents: [0] })];
@@ -298,6 +301,8 @@ const selfTest = () => {
     ['export let in two chunks fails', { chunks: two('./src/x/exportlet.ts') }, 1],
     ['var in two chunks fails', { chunks: two('./src/x/var.ts') }, 1],
     ['an anim-studio module in two chunks fails', { chunks: two('./src/anim-studio/helper.ts') }, 1],
+    ['a stateless-listed anim-studio module without state passes', { chunks: two('./src/anim-studio/helper.ts'), stateless: [{ module: './src/anim-studio/helper.ts', reason: 'a test reason' }] }, 0],
+    ['a stateless-listed anim-studio module that gains a top-level let fails', { chunks: two('./src/anim-studio/anim-let.ts'), stateless: [{ module: './src/anim-studio/anim-let.ts', reason: 'a test reason' }] }, 1],
     ['a stale stateless entry fails', { chunks: [entry, seasonal], stateless: [{ module: P, reason: 'stale' }] }, 1],
     ['customElements.define in two chunks fails', { chunks: two('./src/x/define.ts') }, 1],
     ['an unmutated const leaf in two chunks passes', { chunks: two('./src/x/leaf.ts') }, 0],
