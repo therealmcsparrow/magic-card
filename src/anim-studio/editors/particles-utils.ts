@@ -796,7 +796,7 @@ export function editEmitter(doc: AnimationDoc, seed: number, i: number, fn: (vie
 }
 
 /**
- * The name shown for emitter `i`: its own, else "Particles" / "Particles 2" ... (design 08). The number is the one in its
+ * The name shown for emitter `i`: its own, else "Particles" / "Particles 2" ... The number is the one in its
  * `e<n>` id, so it stays with the emitter when the list is reordered; a single emitter is always "Particles".
  */
 export function emitterLabel(doc: AnimationDoc, seed: number, i: number): string {

@@ -17,7 +17,7 @@ import { t } from '../i18n';
 
 /** Most rows the list renders at once (MDI alone has 7000+ icons): refine the search for the rest. */
 export const ICON_LIST_CAP = 150;
-/** Saved icons shown first in the All view, before the full My icons list (design 05). */
+/** Saved icons shown first in the All view, before the full My icons list. */
 export const MINE_GROUP_CAP = 6;
 
 /**

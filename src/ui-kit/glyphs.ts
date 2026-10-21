@@ -146,7 +146,7 @@ export const glyph = (n: GlyphName, size = 20): TemplateResult =>
 
 /*
  * The corner type glyphs of the shape editor: 24 x 24, stroke 1.5, a top left corner drawn in the style of the
- * type (design 04 section 1). The mini card turns them to the other corners. Keys are the CornerType names of
+ * type. The mini card turns them to the other corners. Keys are the CornerType names of
  * contracts/custom-shape, spelled as strings so the kit imports no contract.
  */
 const CORNERS = {

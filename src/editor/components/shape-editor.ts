@@ -45,7 +45,7 @@ export const SHAPE_TILES: ShapeTile[] = [
   { kind: 'custom', label: m('Custom'), options: [] },
 ];
 
-/** Presets "Edit as custom" can convert to corners or a path (shape editor, design 04 section 0). */
+/** Presets "Edit as custom" can convert to corners or a path. */
 const EDITABLE: ShapeKind[] = ['squircle', 'pill', 'circle', 'hexagon', 'octagon', 'notch'];
 /** Presets that cannot be edited yet: the line under the picker says so. */
 const NOT_EDITABLE: ShapeKind[] = ['ticket', 'wave', 'blob'];

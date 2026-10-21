@@ -69,7 +69,7 @@ import type { CompiledEmitterSlots } from './particles-v2';
  *      styles and live particle frames) in two places of the preview card only, never on a
  *      dashboard card:
  *      - icon sheet, adopted into the rig icon's shadow root next to the rig's own sheet (the rig
- *        swaps only its own sheet, so a re-render keeps this one; F-L0 tests it):
+ *        swaps only its own sheet, so a re-render keeps this one):
  *        part `[data-p="<id>"]`, group `[data-g="<id>"]`, shape `[data-s="<id>"]`.
  *      - card sheet, adopted into the preview card's shadow root:
  *        name / state / icon `[data-mc-part="<target>"]`, scoped to the animated wrapper's own parts
@@ -83,7 +83,7 @@ import type { CompiledEmitterSlots } from './particles-v2';
  *        children = first+parents+1 .. first+parents+children (no rule when children is 0).
  *      The selectors above (data-p, data-g, data-s, data-mc-part, data-mc-gen-bg, .mc-module-wrapper,
  *      .mc-anim-fx, data-fx names, slot order) become a studio-facing surface of the runtime: a
- *      change to any of them is a change to this contract (guard test tests/stage-hide.test.ts, F-L0).
+ *      change to any of them is a change to this contract (guard test tests/stage-hide.test.ts).
  *      element: no hide (the whole card would vanish). The `data-s` rule is only ever put in the
  *      icon sheet (particle slots use `data-s` for built-in shapes in the card's shadow root).
  *      Emitter slot ranges do not depend on geometry (the pool is the same at every geometry), so

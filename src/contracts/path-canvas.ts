@@ -120,7 +120,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   near the canvas edge, never below the finger; label "x 19, y 9" (the host may pass a suffix via
  *   `loupeLabel`). Shown after LOUPE_DELAY_MS of movement or at once on a second finger; aria-hidden;
  *   no fade under reduced motion; a second small SVG of the same path data, redrawn per animation
- *   frame during the drag only. Design 03 section 3 is the visual spec.
+ *   frame during the drag only.
  * - Drag an anchor or handle; Alt+click on a segment, double-click on a segment (Node mode), or the
  *   "Add point" mode then tap, inserts. Double-click on an anchor, or C, toggles corner <-> smooth
  *   (symmetric through the host's kind control, within `kinds`).

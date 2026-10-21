@@ -8,7 +8,7 @@ import type { LayerRows } from './layer-row';
 import { t } from '../i18n';
 
 /*
- * Keyframe tracks as lane rows (design 08 section 6): under a target row (card part, icon part, group,
+ * Keyframe tracks as lane rows: under a target row (card part, icon part, group,
  * shape) a disclosure lists one row per animated property. The disclosure state is `LayerView.open`
  * (keyed by the target row); a lane has hide / solo / lock but no order and no move. Choosing one
  * selects that track in the timeline.

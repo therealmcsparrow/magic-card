@@ -779,7 +779,7 @@ export function renderCardFlows(
   `;
 }
 
-/** Mockup: the card's Conditions tab holds Conditional appearance, then Display conditions. */
+/** The card's Conditions tab holds Conditional appearance, then Display conditions. */
 export function renderCardConditions(
   config: MagicCardConfig,
   writeDisplay: (next: DisplayConfig) => void,

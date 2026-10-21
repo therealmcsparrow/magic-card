@@ -5,7 +5,7 @@ import { editorPrimitives, kitCss } from '../ui-kit';
 /*
  * Styles of <mc-shape-studio>: the card editor's tokens and primitives plus the kit parts (contract ui-kit 1.0.0),
  * then this layer's own layout only. No rule here targets a kit class. Layout follows the width of the
- * layer, never the device (data-layout, design 02 section 5); the tool rail turns into a row under 800 px of viewport,
+ * layer, never the device (data-layout); the tool rail turns into a row under 800 px of viewport,
  * the same media query as the kit's rail.
  */
 // prettier-ignore

@@ -450,7 +450,7 @@ export class Inspector extends LitElement {
     const columns = (n: number) => t('{n, plural, one {# column} other {# columns}}', { n });
     const modules = (n: number) => t('{n, plural, one {# module} other {# modules}}', { n });
 
-    // Mockup header: "<Type> · <label>" with a one-line path under it.
+    // Header: "<Type> · <label>" with a one-line path under it.
     let title = info.title;
     let icon = info.icon;
     let path: TemplateResult;

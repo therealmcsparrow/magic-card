@@ -979,7 +979,7 @@ export class StructureOutline extends LitElement {
     const key = selectionKey(sel);
     const a = this._itemAttrs(key, selKey, focusKey);
     const icon = ModuleRegistry.get(mod.type)?.metadata.icon || 'mdi:puzzle-outline';
-    // Mockup: "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
+    // "<Type> · <label>" (or its layer name) with the entity id (mono) under it.
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
     const followed = sub ? nothing : this._followedEntity(mod, sel);
     const overrides = !!mod.not_synced?.length;

@@ -8,7 +8,7 @@ import { hideReason, isLocked, markedBelow, parentKey, toggleLayer } from '../la
 import { t, m, type MessageId } from '../i18n';
 
 /*
- * The shared layer row and its keyboard model (contract studio-layers.ts sections 4 and 5, design 08).
+ * The shared layer row and its keyboard model (contract studio-layers.ts sections 4 and 5).
  * Every layers panel (Card parts, Icon parts, Shapes over / under the icon, later particles, tracks,
  * steps) renders its rows with `LayerRows.row()` and gets: a roving tab stop for the whole column,
  * Up / Down / Home / End across the panels, Right / Left for a disclosure, Alt+Up / Down to move, H S L

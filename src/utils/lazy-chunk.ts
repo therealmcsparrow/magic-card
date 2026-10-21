@@ -114,8 +114,8 @@ const sheetOf = (s: CSSResultOrNative): CSSStyleSheet => (s instanceof CSSStyleS
 
 /**
  * Give one card the sheets adopted so far: its class (cards made later) and its shadow root (this one), same task.
- * Without adoptedStyleSheets (below the browser floor, Chromium 85 and Safari 16.4) the root is left alone: the
- * no `<style>` fallback is inserted.
+ * Without adoptedStyleSheets (below the browser floor, Chromium 85 and Safari 16.4) the root is left alone; no
+ * `<style>` fallback is inserted.
  */
 function catchUp(el: LitElement): void {
   const cls = el.constructor as typeof LitElement;

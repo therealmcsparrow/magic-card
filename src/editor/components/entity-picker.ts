@@ -176,7 +176,7 @@ export class EntityPicker extends LitElement {
     const entityInfo = this._getEntityInfo();
     const icon = entityInfo?.icon || (this.value.includes('.') ? this._domainIcon(this.value.split('.')[0]) : 'mdi:shape-outline');
 
-    // Mockup: an editable mono entity id with the entity's icon, a browse button inside the field,
+    // An editable mono entity id with the entity's icon, a browse button inside the field,
     // and a status line (dot · friendly name · state) under it.
     return html`
       <div class="with-icon with-action">

@@ -41,7 +41,7 @@ import { parseGradient } from '../../utils/gradient';
 import { t, fold } from '../i18n';
 import { thisTarget } from '../target-name';
 
-/** Mockup placeholders: sizes read "auto", font size "inherit", everything else "0". */
+/** Placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
   if (/^(min_|max_)?(width|height)$/.test(key) || key === 'flex_basis') return 'auto';
   if (key === 'font_size') return 'inherit';
@@ -998,7 +998,7 @@ export class DesignPanel extends LitElement {
     return out;
   }
 
-  /** Mockup: "Editing design for" select (Default + one option per rule), help line, "Add conditional rule". */
+  /** "Editing design for" select (Default + one option per rule), help line, "Add conditional rule". */
   private _renderRulePicker(): TemplateResult {
     const rules = this.design.conditional || [];
     const n = rules.length;

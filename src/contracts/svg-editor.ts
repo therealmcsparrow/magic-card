@@ -493,7 +493,7 @@ export type SvgEditorSource =
   | { kind: 'svg'; svg: string }
   | { kind: 'library'; id: string };
 
-/** What the host tells the editor about the module, for the notice (design 01 section 2b). */
+/** What the host tells the editor about the module, for the notice. */
 export interface SvgEditorModuleFacts {
   /** The icon before, e.g. 'mdi:lightbulb' ('' = the entity's or type's icon). */
   icon: string;
