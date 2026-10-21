@@ -8,8 +8,8 @@ import type { ParticlesValidator } from '../anim-studio/model';
  * document model live in the lazy `anim` chunk, and the chunks that plug into them (the v2 runtime registers its
  * compileV2, the particles chunk its compiler and sim validator, animation-library.ts the page's library) are separate
  * files that each carry their own copy of that code. The slots therefore sit here, in the entry, where every copy
- * finds the same ones. Plain code with no runtime imports. The compiler and particles setters keep their old names and are re-exported from
- * compile.ts and model.ts, so no caller changed.
+ * finds the same ones. Plain code with no runtime imports. The compiler and particles setters are re-exported from
+ * compile.ts and model.ts.
  */
 
 export const animHooks: {

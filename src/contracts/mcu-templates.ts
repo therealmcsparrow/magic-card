@@ -20,7 +20,7 @@
  *    Errors: invalid_format, not_loaded, unauthorized (admin commands), unknown_command (MCU before 1.0.0).
  *
  * 2. The card's template source (Magic Card Module `template-source`, src/services/template-source.ts,
- *    in the `templates` chunk, dist/magic-card-templates.js, lazy-module 1.4.0). The card element (Core) talks to it only through
+ *    in the `templates` chunk, dist/magic-card-templates.js, lazy-module 1.5.0). The card element (Core) talks to it only through
  *    TemplateSource below, after the chunk has installed (src/card/templates-seam.ts).
  *    - One page-wide instance. Per HA connection and template name: one subscribe_template, shared by
  *      every card that watches that name (reference counted; the last unwatch unsubscribes).

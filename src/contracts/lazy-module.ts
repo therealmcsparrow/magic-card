@@ -36,7 +36,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   src/modules/lazy/controls-chunk.ts). It holds the views of the slider, spinbox, dropdown, light and gauge
  *   modules (src/modules/controls/*-view.ts); their stubs (metadata, defaults, validation and a placeholder
  *   that reserves the default height, src/modules/controls/controls.needs.ts) stay in Core. Its needs() is the
- *   presence of one of those module types. The tabs, clock and image views are in 'modules-extra' (ceiling 57,344 B); the clock stub reserves its min-height
+ *   presence of one of those module types. The tabs, clock and image views are in 'modules-extra' (ceiling 57,344 B); its needs() also matches a clock or image module anywhere outside `background_layers`; the clock stub reserves its min-height
  *   (clockMinHeight, src/modules/lazy-heights.ts) and the image stub its aspect-ratio (src/utils/aspect-ratio.ts), both from the config. The chunk
  *   is the parent of 'slider-look' (the literal import() sits in controls-chunk.ts), so its load() loads
  *   'controls' first. The editor imports no stub or view: climateRange, supportsEffect and the dropdown
@@ -310,7 +310,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  */
 
 export const LAZY_MODULE_CONTRACT = '1.5.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 17;
+export const LAZY_MODULE_CONTRACT_REVISION = 18;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
