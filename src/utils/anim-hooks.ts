@@ -6,9 +6,9 @@ import type { ParticlesValidator } from '../anim-studio/model';
 /*
  * The hook points of the animation compiler ("Core keeps the seam, not the compiler"). The compiler and the
  * document model live in the lazy `anim` chunk, and the chunks that plug into them (the v2 runtime registers its
- * compileV2, the particles chunk its compiler and sim validator, the model its document validators) are separate
+ * compileV2, the particles chunk its compiler and sim validator, animation-library.ts the page's library) are separate
  * files that each carry their own copy of that code. The slots therefore sit here, in the entry, where every copy
- * finds the same ones. Plain code with no runtime imports. The setters keep their old names and are re-exported from
+ * finds the same ones. Plain code with no runtime imports. The compiler and particles setters keep their old names and are re-exported from
  * compile.ts and model.ts, so no caller changed.
  */
 
