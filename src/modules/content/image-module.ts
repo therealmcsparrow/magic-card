@@ -1,23 +1,16 @@
 import { html, TemplateResult } from 'lit';
 import { BaseLazyStub } from '../base-lazy-stub';
-import { MagicModuleMetadata } from '../module-types';
+import type { LazyStubMetadata } from '../module-types';
 import { CardModule, ImageModuleConfig } from '../../types';
 import { ModuleRegistry } from '../module-registry';
 import { generateId } from '../../utils/id-generator';
 import { cssAspectRatio } from '../../utils/aspect-ratio';
 import { lazyChunks } from '../../utils/lazy-chunks';
 import { t } from '../../card/i18n';
-import { lm } from '../../i18n/labels/mark';
 
 /** Static or entity image (its view is in the modules-extra chunk): metadata, defaults, hints and the box shown until the view arrives. */
 class ImageModule extends BaseLazyStub {
-  readonly metadata: MagicModuleMetadata = {
-    type: 'image',
-    name: lm('Image'),
-    description: lm('Display a static image or entity picture'),
-    category: 'content',
-    icon: 'mdi:image-outline',
-  };
+  readonly metadata: LazyStubMetadata = { type: 'image' };
 
   createDefault(): ImageModuleConfig {
     return {

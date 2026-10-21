@@ -7,6 +7,8 @@ import { lm } from '../../i18n/labels/mark';
  * entity-scope rule; the module picker, the outline and the search read the rest, so it ships with the editor chunk.
  */
 const LAZY_METADATA: Record<string, Omit<MagicModuleMetadata, 'type' | 'inherit'>> = {
+  clock: { name: lm('Clock'), description: lm('Display current time and date'), category: 'advanced', icon: 'mdi:clock-outline' },
+  image: { name: lm('Image'), description: lm('Display a static image or entity picture'), category: 'content', icon: 'mdi:image-outline' },
   'custom-card': { name: lm('Custom card'), description: lm('Embed any 3rd party Lovelace card'), category: 'advanced', icon: 'mdi:card-plus-outline' },
   forecast: { name: lm('Forecast'), description: lm('Display weather forecast data'), category: 'advanced', icon: 'mdi:calendar-week-outline' },
   'video-bg': { name: lm('Video background'), description: lm('Video playing behind the other modules of its column or layout'), category: 'advanced', icon: 'mdi:video-outline' },
