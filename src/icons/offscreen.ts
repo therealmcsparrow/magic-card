@@ -121,9 +121,7 @@ export function __resetOffscreenObserverForTests(): void {
 
 /** Watched inside a paused card: off screen from the commit on, not from the observer's first report a frame or two later. */
 function holdPaused(el: Element): void {
-  queueMicrotask(() => {
-    if (el.isConnected && inPausedCard(el) && !fixed.has(el)) report(el, false);
-  });
+  queueMicrotask(() => inPausedCard(el) && report(el, false));
 }
 
 /** `<svg ${pauseOffscreen()}>`: watched by the shared observer while it is in the DOM. */

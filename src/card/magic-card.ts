@@ -736,8 +736,7 @@ export class MagicCard extends LitElement {
    * Before the render, so before the first paint: the pop-up controller and its host attributes, and the viewer's pause
    * on the host and the observer before any child is built.
    */
-  protected willUpdate(changedProperties: PropertyValues): void {
-    super.willUpdate(changedProperties);
+  protected willUpdate(): void {
     const config = this._resolvedConfig ?? this._config;
     if (!config) return;
     const popup = isPopupEnabled(config.popup);
