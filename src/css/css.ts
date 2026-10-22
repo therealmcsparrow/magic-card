@@ -298,6 +298,7 @@ const magicCardLocalStyles = css`
   .mc-button-inner {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     flex: 1;
     gap: var(--mc-gap-sm);
     padding: var(--mc-button-padding);
