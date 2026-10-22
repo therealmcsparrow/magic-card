@@ -102,6 +102,11 @@ function option(
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
+/** A button part key: allowed in the hover design and in rules. */
+const bo = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { hover: true, ...extra });
+const LABEL = { hideForVariant: ['icon-only'] };
+const LENGTH = ['px', 'em', 'rem'];
+const PCT = [...LENGTH, '%'];
 
 /** Design keys that only matter once another key is set (key → the key it depends on). */
 export const DEPENDENT_OPTIONS: Record<string, string> = {
@@ -378,51 +383,44 @@ export const CSS_SECTORS: CssSector[] = [
     icon: 'mdi:format-align-center',
     modules: ['button'],
     properties: [
-      option('icon_position', lm('Icon position'), 'segmented', {
+      bo('icon_position', lm('Icon position'), 'segmented', {
         options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
         defaultValue: 'left',
         help: lm('Left and right follow the text direction.'),
-        hover: true,
       }),
-      option('content_align', lm('Content alignment'), 'segmented', {
+      bo('content_align', lm('Content alignment'), 'segmented', {
         options: [{ label: lm('Start'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('End'), value: 'end' }],
         defaultValue: 'center',
-        hover: true,
       }),
-      option('content_vertical_align', lm('Vertical content alignment'), 'segmented', {
+      bo('content_vertical_align', lm('Vertical content alignment'), 'segmented', {
         options: [{ label: lm('Top'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('Bottom'), value: 'end' }],
         defaultValue: 'center',
-        hover: true,
       }),
-      option('icon_size', lm('Icon size'), 'unit', { units: ['px', 'em', 'rem'], hover: true }),
-      option('icon_gap', lm('Icon gap'), 'unit', { units: ['px', 'em', 'rem'], hover: true }),
-      option('icon_color', lm('Icon colour'), 'color', { hover: true }),
-      option('icon_background', lm('Icon background'), 'color', { hover: true }),
-      option('icon_background_shape', lm('Icon background shape'), 'segmented', {
+      bo('icon_size', lm('Icon size'), 'unit', { units: LENGTH }),
+      bo('icon_gap', lm('Icon gap'), 'unit', { units: LENGTH }),
+      bo('icon_color', lm('Icon colour'), 'color'),
+      bo('icon_background', lm('Icon background'), 'color'),
+      bo('icon_background_shape', lm('Icon background shape'), 'segmented', {
         options: [{ label: lm('Circle'), value: 'circle' }, { label: lm('Rounded'), value: 'rounded' }],
         defaultValue: 'circle',
-        hover: true,
       }),
-      option('label_overflow', lm('Label overflow'), 'segmented', {
+      bo('label_overflow', lm('Label overflow'), 'segmented', {
         options: [{ label: lm('Wrap'), value: 'wrap' }, { label: lm('Truncate'), value: 'truncate' }],
         defaultValue: 'wrap',
         help: lm('A truncated label ends in an ellipsis and shows in full as a tooltip.'),
-        hover: true,
-        hideForVariant: ['icon-only'],
+        ...LABEL,
       }),
-      option('label_color', lm('Label colour'), 'color', { hover: true, hideForVariant: ['icon-only'] }),
-      option('label_font_family', lm('Label font family'), 'font', { hover: true, hideForVariant: ['icon-only'] }),
-      option('label_font_size', lm('Label font size'), 'unit', { units: ['px', 'em', 'rem', '%'], hover: true, hideForVariant: ['icon-only'] }),
-      option('label_font_weight', lm('Label font weight'), 'select', { options: FONT_WEIGHT_OPTS, hover: true, hideForVariant: ['icon-only'] }),
-      option('label_text_transform', lm('Label text transform'), 'select', { options: TEXT_TRANSFORM_OPTS, hover: true, hideForVariant: ['icon-only'] }),
-      option('state_position', lm('State position'), 'segmented', {
+      bo('label_color', lm('Label colour'), 'color', LABEL),
+      bo('label_font_family', lm('Label font family'), 'font', LABEL),
+      bo('label_font_size', lm('Label font size'), 'unit', { ...LABEL, units: PCT }),
+      bo('label_font_weight', lm('Label font weight'), 'select', { ...LABEL, options: FONT_WEIGHT_OPTS }),
+      bo('label_text_transform', lm('Label text transform'), 'select', { ...LABEL, options: TEXT_TRANSFORM_OPTS }),
+      bo('state_position', lm('State position'), 'segmented', {
         options: [{ label: lm('Beside'), value: 'beside' }, { label: lm('Below'), value: 'below' }],
         defaultValue: 'beside',
-        hover: true,
-        hideForVariant: ['icon-only'],
       }),
-      option('state_color', lm('State colour'), 'color', { hover: true, hideForVariant: ['icon-only'] }),
-      option('state_font_size', lm('State font size'), 'unit', { units: ['px', 'em', 'rem', '%'], hover: true, hideForVariant: ['icon-only'] }),
+      bo('state_color', lm('State colour'), 'color'),
+      bo('state_font_size', lm('State font size'), 'unit', { units: PCT }),
     ],
   },
 ];

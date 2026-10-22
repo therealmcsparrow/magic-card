@@ -57,7 +57,7 @@ class Run {
 
   private _targets(): HTMLElement[] {
     const base = this._run.stagger !== undefined ? contentChildren(this._el) : [this._el];
-    const part = this._run.target === 'icon' ? '.mc-anim-icon' : this._run.target === 'label' ? '[data-mc-part="name"]' : '';
+    const part = { icon: '.mc-anim-icon', label: '[data-mc-part="name"]' }[this._run.target as string];
     return base.map((t) => (part ? (t.querySelector<HTMLElement>(part) ?? t) : t));
   }
 

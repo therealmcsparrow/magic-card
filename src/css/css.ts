@@ -302,7 +302,7 @@ const magicCardLocalStyles = css`
     justify-content: var(--mc-bi-jc, center);
     justify-items: var(--mc-bi-ji, normal);
     align-content: var(--mc-bi-ac, normal);
-    text-align: var(--mc-bi-ta, center);
+    text-align: var(--mc-bi-jc, center);
     min-width: var(--mc-bi-mw, auto);
     flex: 1;
     gap: var(--mc-bi-g0, var(--mc-bi-gap, var(--mc-gap-sm)));
@@ -333,38 +333,13 @@ const magicCardLocalStyles = css`
     --mdc-icon-size: var(--mc-button-icon-size);
   }
 
-  .mc-button-inner > .mc-button-icon,
-  .mc-button-inner > [data-mc-part='icon'] {
-    grid-area: var(--mc-bi-ia, auto);
-    margin: var(--mc-bi-im, 0);
-    color: var(--mc-bi-c, inherit);
-    flex-shrink: var(--mc-bi-fs, 1);
-  }
+  .mc-button-inner > .mc-button-icon, .mc-button-inner > [data-mc-part='icon']{grid-area: var(--mc-bi-ia, auto); margin: var(--mc-bi-mt, 0) 0 var(--mc-bi-mb, 0); margin-inline-start: var(--mc-bi-ms, 0); margin-inline-end: var(--mc-bi-me, 0); color: var(--mc-bi-c, inherit); flex-shrink: var(--mc-bi-fs, 1)}
 
-  .mc-button-inner--icon-only > .mc-button-icon,
-  .mc-button-inner--icon-only > [data-mc-part='icon'] {
-    margin: 0;
-  }
+  .mc-button-inner--icon-only > .mc-button-icon, .mc-button-inner--icon-only > [data-mc-part='icon']{margin: 0}
 
-  .mc-button-inner [data-mc-part='icon'] {
-    background: var(--mc-bi-bg, none);
-    border-radius: var(--mc-bi-br, 0);
-    padding: var(--mc-bi-pad, 0);
-  }
+  .mc-button-inner [data-mc-part='icon']{background: var(--mc-bi-bg, none); border-radius: var(--mc-bi-br, 0); padding: var(--mc-bi-pad, 0)}
 
-  .mc-button-inner > [data-mc-part='name'] {
-    grid-area: var(--mc-bl-a, auto);
-    max-width: var(--mc-bl-mxw, none);
-    min-width: var(--mc-bi-mw, auto);
-    color: var(--mc-bl-c, inherit);
-    font-family: var(--mc-bl-ff, inherit);
-    font-size: var(--mc-bl-fs, inherit);
-    font-weight: var(--mc-bl-fw, inherit);
-    text-transform: var(--mc-bl-tt, inherit);
-    white-space: var(--mc-bl-ws, inherit);
-    overflow: var(--mc-bl-ov, visible);
-    text-overflow: var(--mc-bl-to, clip);
-  }
+  .mc-button-inner > [data-mc-part='name']{grid-area: var(--mc-bl-a, auto); max-width: var(--mc-bl-mxw, none); color: var(--mc-bl-c, inherit); font-family: var(--mc-bl-ff, inherit); font-size: var(--mc-bl-fs, inherit); font-weight: var(--mc-bl-fw, inherit); text-transform: var(--mc-bl-tt, inherit); white-space: var(--mc-bl-ws, inherit); overflow: var(--mc-bl-ov, visible); text-overflow: var(--mc-bl-to, clip)}
 
   .mc-button-icon {
     display: inline-flex;
@@ -397,7 +372,8 @@ const magicCardLocalStyles = css`
     font-size: var(--mc-bs-fs, var(--mc-font-size-xs));
     white-space: nowrap;
     grid-area: var(--mc-bs-a, auto);
-    margin: var(--mc-bs-m, 0);
+    margin-top: var(--mc-bs-mt, 0);
+    margin-inline-start: var(--mc-bs-ms, 0);
     color: var(--mc-bs-c, inherit);
   }
 
@@ -1284,7 +1260,7 @@ const magicCardLocalStyles = css`
     background: none !important;
   }
 
-  .mc-module-wrapper>.mc-button{height:100%;min-height:inherit;max-height:inherit;min-width:inherit;max-width:inherit}
+  .mc-module-wrapper>.mc-button{height:100%;min-height:inherit;max-height:inherit;min-width:inherit;max-width:var(--mc-bl-mxw,inherit)}
   .mc-module-wrapper[style^='width:']>.mc-button,.mc-module-wrapper[style*=' width:']>.mc-button{width:100%}
 
   .mc-module-wrapper[role='button'],

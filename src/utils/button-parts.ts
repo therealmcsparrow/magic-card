@@ -9,12 +9,12 @@ import { cssLengths, safeColor, str } from './safe-css';
  */
 
 const GAP = 'var(--mc-bi-gap,var(--mc-gap-sm))';
-/** Icon grid lines (row start / column start / row end / column end) and the margin that holds the gap to the label. */
+/** Icon grid lines (row start / column start / row end / column end) and which margin holds the gap to the label: top, bottom, inline start, inline end. */
 const ICON = new Map([
-  ['left', ['2/1/4/2', `0 ${GAP} 0 0`]],
-  ['right', ['2/4/4/5', `0 0 0 ${GAP}`]],
-  ['above', ['1/2/2/4', `0 0 ${GAP} 0`]],
-  ['below', ['4/2/5/4', `${GAP} 0 0 0`]],
+  ['left', ['2/1/4/2', 3]],
+  ['right', ['2/4/4/5', 2]],
+  ['above', ['1/2/2/4', 1]],
+  ['below', ['4/2/5/4', 0]],
 ]);
 const ALIGN = new Set(['start', 'center', 'end']);
 /** Length keys: key, custom property, whether a percentage is allowed. */
@@ -42,10 +42,11 @@ export function buttonPartDecls(r: Record<string, unknown>): string[] {
   const down = word(r.content_vertical_align);
   const state = word(r.state_position);
   if (pos || ALIGN.has(across) || ALIGN.has(down) || state === 'beside' || state === 'below') {
-    const [area, margin] = pos ?? ICON.get('left')!;
+    const [area, side] = pos ?? ICON.get('left')!;
     out.push('--mc-bi-d:inline-grid', '--mc-bi-g0:0', '--mc-bl-a:2/2', `--mc-bi-ac:${ALIGN.has(down) ? down : 'center'}`, `--mc-bi-ji:${ALIGN.has(across) ? across : 'center'}`);
-    if (ALIGN.has(across)) out.push(`--mc-bi-jc:${across}`, `--mc-bi-ta:${across}`);
-    out.push(`--mc-bs-a:${state === 'below' ? '3/2' : '2/3'}`, `--mc-bs-m:${state === 'below' ? '2px 0 0 0' : `0 0 0 ${GAP}`}`, `--mc-bi-ia:${area}`, `--mc-bi-im:${margin}`);
+    if (ALIGN.has(across)) out.push(`--mc-bi-jc:${across}`);
+    out.push(`--mc-bs-a:${state === 'below' ? '3/2' : '2/3'}`, `--mc-bs-mt:${state === 'below' ? '2px' : '0'}`, `--mc-bs-ms:${state === 'below' ? '0' : GAP}`, `--mc-bi-ia:${area}`);
+    ['t', 'b', 's', 'e'].forEach((k, i) => out.push(`--mc-bi-m${k}:${i === side ? GAP : '0'}`));
   }
   for (const [key, prop, pct] of LENGTHS) {
     const v = cssLengths(r[key], 1);
@@ -59,7 +60,7 @@ export function buttonPartDecls(r: Record<string, unknown>): string[] {
     if (!c) continue;
     out.push(`${prop}:${c}`);
     if (key === 'icon_color') out.push('--icon-primary-color:currentColor');
-    if (key === 'icon_background') out.push('--mc-bi-pad:calc(var(--mc-button-icon-size) * .3)', `--mc-bi-br:${word(r.icon_background_shape) === 'rounded' ? '25%' : '50%'}`);
+    if (key === 'icon_background') out.push('--mc-bi-pad:calc(var(--mc-button-icon-size) *.3)', `--mc-bi-br:${word(r.icon_background_shape) === 'rounded' ? '25%' : '50%'}`);
   }
   for (const [key, re, prop] of WORDS) {
     const w = word(r[key]);

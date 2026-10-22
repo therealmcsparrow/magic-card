@@ -86,9 +86,11 @@ export function controlLook(type: string | undefined, variant?: string): Control
  * inside: the wrapper gets none of them, the control reads --mc-design-bw / -bs / -bc (four values,
  * top right bottom left, unset sides filled with the control's own default) and --mc-design-shadow.
  * Other modules, shaped elements and border-length overlays draw them on the wrapper.
- * `button`: a button module, whose icon, label and state keys become custom properties its parts read.
+ * `button`: a button module, whose icon, label and state keys become custom properties its parts read. For a hover
+ * design it is the module's base design: a hover that sets a part key writes the keys of base and hover together,
+ * so it leaves the others as the base has them.
  */
-export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean): string {
+export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean | Partial<DesignConfig>): string {
   if (!input) return '';
   const design = resolveEntityColors(designNumbersToCss(input));
 
@@ -134,7 +136,10 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
     if (shadow) parts.push(`--mc-design-shadow: ${shadow}`);
   }
 
-  if (button) parts.push(...buttonPartDecls(rec));
+  if (button) {
+    const own = buttonPartDecls(rec);
+    parts.push(...(button !== true && (own.length || input.icon_background_shape) ? buttonPartDecls(resolveEntityColors(designNumbersToCss({ ...button, ...input } as DesignConfig)) as Record<string, unknown>) : own));
+  }
 
   if (design.css) {
     parts.push(design.css);
@@ -239,8 +244,8 @@ export interface HoverTarget {
   borderLength?: ResolvedBorderLength;
   /** A button / dropdown wrapper: the hover border and shadow reach the control (designToStyle `control`). */
   control?: ControlLook;
-  /** A button module: the hover design may carry the icon, label and state keys. */
-  parts?: boolean;
+  /** A button module's base design: the hover design may carry the icon, label and state keys. */
+  parts?: Partial<DesignConfig>;
 }
 
 const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !important`);
