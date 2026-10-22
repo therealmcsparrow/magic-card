@@ -1,7 +1,7 @@
 import type { MessageId } from '../../contracts/i18n';
 import { lm } from '../../i18n/labels/mark';
 import type { AnimationConfig } from '../../types';
-import { onIcon } from '../../anim-studio/entries';
+import { onIcon, onLabel } from '../../anim-studio/entries';
 import { getAnimationPreset, type AnimationChannel } from '../../utils/animation-presets';
 
 /*
@@ -37,13 +37,15 @@ function props(channels: AnimationChannel[], onIcon: boolean): Prop[] {
  */
 export function animationConflicts(list: AnimationConfig[], opts: { allowIcon?: boolean } = {}): Array<ConflictNote | undefined> {
   const allowIcon = opts.allowIcon !== false;
+  // the module, its icon and its label are three elements: an entry only overrides one on the same element
+  const part = (x: AnimationConfig) => (onLabel(x, allowIcon) ? 2 : onIcon(x, allowIcon) ? 1 : 0);
   return list.map((e, i) => {
     const p = getAnimationPreset(e.preset);
     if (!p) return undefined;
     const mine = props(p.channels, onIcon(e, allowIcon));
     for (let j = i - 1; j >= 0; j--) {
       const q = getAnimationPreset(list[j].preset);
-      if (!q || onIcon(list[j], allowIcon) !== onIcon(e, allowIcon)) continue;
+      if (!q || part(list[j]) !== part(e)) continue;
       const shared = props(q.channels, onIcon(list[j], allowIcon)).find((x) => mine.includes(x));
       if (!shared) continue;
       const glow = p.channels.includes('glow') || q.channels.includes('glow');

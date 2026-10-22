@@ -5,11 +5,14 @@ labels	Centre	Center
 labels	Colour	Color
 labels	Colour cycle background	Color cycle background
 labels	Glow while on, in the light's colour and brightness	Glow while on, in the light's color and brightness
+labels	Icon colour	Icon color
+labels	Label colour	Label color
 labels	Light & colour	Light & color
 labels	Light control with brightness, colour temperature, and colour options	Light control with brightness, color temperature, and color options
 labels	Outline colour	Outline color
 labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
+labels	State colour	State color
 card-editor	Accent colour	Accent color
 card-editor	Add colour	Add color
 card-editor	Animation colour	Animation color

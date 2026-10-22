@@ -105,6 +105,8 @@ export class AnimationList extends LitElement {
   @property({ attribute: false }) animations: AnimationConfig[] = [];
   /** The module has an icon hook: show Target. */
   @property({ type: Boolean }) allowIcon = false;
+  /** The module has a label (a button): Target also offers Label. */
+  @property({ type: Boolean }) allowLabel = false;
   @property({ attribute: false }) hass?: HomeAssistant;
   /** The module's entity: what Play reads when an entry sets no entity of its own. */
   @property({ type: String }) defaultEntity = '';
@@ -331,13 +333,15 @@ export class AnimationList extends LitElement {
     const opts = [
       { value: 'module', label: t('Module') },
       { value: 'icon', label: t('Icon') },
+      ...(this.allowLabel ? [{ value: 'label', label: t('Label') }] : []),
     ];
-    const current = a.target === 'icon' || a.target === 'module' ? a.target : fallback;
+    const current = opts.some((o) => o.value === a.target) ? a.target : fallback;
     const pick = (v: string) => this._patch(index, { target: v as AnimationConfig['target'] });
     const onKey = (e: KeyboardEvent) => {
       if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
       e.preventDefault();
-      const next = current === 'module' ? 'icon' : 'module';
+      const at = opts.findIndex((o) => o.value === current);
+      const next = opts[e.key === 'Home' ? 0 : e.key === 'End' ? opts.length - 1 : (at + (e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 1) + opts.length) % opts.length].value;
       const group = e.currentTarget as HTMLElement;
       pick(next);
       requestAnimationFrame(() => group.querySelector<HTMLElement>(`[data-val="${next}"]`)?.focus());

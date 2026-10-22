@@ -178,6 +178,7 @@ export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, 
     .notSynced=${notSynced}
     .moduleEntity=${entityFor(config, scope) || ''}
     .moduleType=${config.type || ''}
+    .moduleVariant=${(config as { button_style?: string }).button_style || ''}
     .onChange=${updateDesign}
   ></mc-design-panel>`;
 };

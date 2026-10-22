@@ -65,6 +65,10 @@ export interface CssPropertyDef {
   defaultValue?: string;
   /** Units offered by a unit field (default: all). */
   units?: string[];
+  /** A virtual key that is still valid in the hover design and in conditional rules (the button part keys). */
+  hover?: boolean;
+  /** Button variants (`button_style`) that do not show this field. */
+  hideForVariant?: string[];
 }
 
 export interface CssSector {
@@ -75,6 +79,8 @@ export interface CssSector {
   properties: CssPropertyDef[];
   /** Keys shown first in the editor; the rest follow in `properties` order. */
   leading?: string[];
+  /** Module types that show this sector (default: every design). */
+  modules?: string[];
 }
 
 function prop(
@@ -92,7 +98,7 @@ function option(
   key: string,
   label: MessageId,
   type: CssPropertyType,
-  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units'>> = {},
+  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant'>> = {},
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
@@ -101,6 +107,7 @@ function option(
 export const DEPENDENT_OPTIONS: Record<string, string> = {
   border_length_align: 'border_length',
   border_length_sides: 'border_length',
+  icon_background_shape: 'icon_background',
 };
 
 export const CSS_SECTORS: CssSector[] = [
@@ -363,6 +370,61 @@ export const CSS_SECTORS: CssSector[] = [
       prop('caption_side', 'caption-side', lm('Caption side'), 'select', CAPTION_SIDE_OPTS),
     ],
   },
+
+  // 10. Button icon and text: the part keys a button reads (src/utils/button-parts.ts); virtual, so hover and rules carry them
+  {
+    id: 'button-content',
+    name: lm('Icon & text'),
+    icon: 'mdi:format-align-center',
+    modules: ['button'],
+    properties: [
+      option('icon_position', lm('Icon position'), 'segmented', {
+        options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
+        defaultValue: 'left',
+        help: lm('Left and right follow the text direction.'),
+        hover: true,
+      }),
+      option('content_align', lm('Content alignment'), 'segmented', {
+        options: [{ label: lm('Start'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('End'), value: 'end' }],
+        defaultValue: 'center',
+        hover: true,
+      }),
+      option('content_vertical_align', lm('Vertical content alignment'), 'segmented', {
+        options: [{ label: lm('Top'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('Bottom'), value: 'end' }],
+        defaultValue: 'center',
+        hover: true,
+      }),
+      option('icon_size', lm('Icon size'), 'unit', { units: ['px', 'em', 'rem'], hover: true }),
+      option('icon_gap', lm('Icon gap'), 'unit', { units: ['px', 'em', 'rem'], hover: true }),
+      option('icon_color', lm('Icon colour'), 'color', { hover: true }),
+      option('icon_background', lm('Icon background'), 'color', { hover: true }),
+      option('icon_background_shape', lm('Icon background shape'), 'segmented', {
+        options: [{ label: lm('Circle'), value: 'circle' }, { label: lm('Rounded'), value: 'rounded' }],
+        defaultValue: 'circle',
+        hover: true,
+      }),
+      option('label_overflow', lm('Label overflow'), 'segmented', {
+        options: [{ label: lm('Wrap'), value: 'wrap' }, { label: lm('Truncate'), value: 'truncate' }],
+        defaultValue: 'wrap',
+        help: lm('A truncated label ends in an ellipsis and shows in full as a tooltip.'),
+        hover: true,
+        hideForVariant: ['icon-only'],
+      }),
+      option('label_color', lm('Label colour'), 'color', { hover: true, hideForVariant: ['icon-only'] }),
+      option('label_font_family', lm('Label font family'), 'font', { hover: true, hideForVariant: ['icon-only'] }),
+      option('label_font_size', lm('Label font size'), 'unit', { units: ['px', 'em', 'rem', '%'], hover: true, hideForVariant: ['icon-only'] }),
+      option('label_font_weight', lm('Label font weight'), 'select', { options: FONT_WEIGHT_OPTS, hover: true, hideForVariant: ['icon-only'] }),
+      option('label_text_transform', lm('Label text transform'), 'select', { options: TEXT_TRANSFORM_OPTS, hover: true, hideForVariant: ['icon-only'] }),
+      option('state_position', lm('State position'), 'segmented', {
+        options: [{ label: lm('Beside'), value: 'beside' }, { label: lm('Below'), value: 'below' }],
+        defaultValue: 'beside',
+        hover: true,
+        hideForVariant: ['icon-only'],
+      }),
+      option('state_color', lm('State colour'), 'color', { hover: true, hideForVariant: ['icon-only'] }),
+      option('state_font_size', lm('State font size'), 'unit', { units: ['px', 'em', 'rem', '%'], hover: true, hideForVariant: ['icon-only'] }),
+    ],
+  },
 ];
 
 /** The Custom CSS field's entry in a design group (it is not a CSS sector). */
@@ -380,7 +442,7 @@ export interface DesignGroup {
 /** The Design tab's headed groups, in display order. Every CSS sector belongs to exactly one group. */
 export const DESIGN_GROUPS: DesignGroup[] = [
   { id: 'layout', name: lm('Layout'), entries: ['spacing', 'positioning', 'flexbox', 'grid'], defaultOpen: true },
-  { id: 'style', name: lm('Style'), entries: ['backgrounds', 'borders', 'typography', 'shape', 'value-background'], defaultOpen: true },
+  { id: 'style', name: lm('Style'), entries: ['backgrounds', 'borders', 'typography', 'button-content', 'shape', 'value-background'], defaultOpen: true },
   { id: 'effects', name: lm('Effects'), entries: ['ring', 'transitions'], defaultOpen: false },
   { id: 'advanced', name: lm('Advanced'), entries: ['lists-tables', CUSTOM_CSS_ENTRY], defaultOpen: false },
 ];

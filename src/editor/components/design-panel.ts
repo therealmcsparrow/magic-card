@@ -205,6 +205,8 @@ export class DesignPanel extends LitElement {
   @property({ type: String }) target = 'module';
   /** Module type, for the animation Target (only modules with an icon hook). */
   @property({ type: String }) moduleType = '';
+  /** The module's variant (a button's `button_style`): fields that do not apply to it are hidden. */
+  @property({ type: String }) moduleVariant = '';
   /**
    * Edit only `design.hover` (the card's Hover section): no Default view, rules or copy / paste.
    * Writes still go out as `{ hover }`.
@@ -473,6 +475,7 @@ export class DesignPanel extends LitElement {
   /** Options that depend on another one stay hidden until it is set (border length alignment). */
   private _isVisible(p: CssPropertyDef): boolean {
     const merged = { ...(this.design as Record<string, unknown>), ...this._getActiveDesign() };
+    if (p.hideForVariant?.includes(this.moduleVariant)) return false;
     if (DEPENDENT_OPTIONS[p.key]) return !!merged[DEPENDENT_OPTIONS[p.key]];
     return true;
   }
@@ -480,7 +483,7 @@ export class DesignPanel extends LitElement {
   private _filterProperties(all: CssPropertyDef[]): CssPropertyDef[] {
     // hover is a CSS rule: only CSS properties (no card-drawn options like the ring or border length)
     const hover = this._isHoverView();
-    const properties = all.filter((p) => this._isVisible(p) && !(hover && (p.virtual || NO_HOVER_TYPES.has(p.type))));
+    const properties = all.filter((p) => this._isVisible(p) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
     const q = fold(this._searchQuery);
     return properties.filter(
@@ -684,6 +687,7 @@ export class DesignPanel extends LitElement {
             <mc-animation-list
               .animations=${readAnimations(this._getActiveDesign() as DesignConfig)}
               .allowIcon=${isModule && ANIMATION_ICON_MODULES.includes(this.moduleType)}
+              .allowLabel=${isModule && this.moduleType === 'button'}
               .hass=${this.hass}
               .defaultEntity=${isModule ? this.moduleEntity : ''}
               .requireTriggerEntity=${!isModule}
@@ -1140,7 +1144,7 @@ export class DesignPanel extends LitElement {
   private _renderGroup(group: DesignGroup): TemplateResult | typeof nothing {
     const sectors = group.entries
       .map((id) => CSS_SECTORS.find((s) => s.id === id))
-      .filter((s): s is CssSector => !!s && this._filterProperties(s.properties).length > 0);
+      .filter((s): s is CssSector => !!s && (!s.modules || s.modules.includes(this.moduleType)) && this._filterProperties(s.properties).length > 0);
     const showCss = group.entries.includes(CUSTOM_CSS_ENTRY) && this._customCssMatches();
     if (!sectors.length && !showCss) return nothing;
 
