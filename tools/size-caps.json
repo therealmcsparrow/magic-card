@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 69839,
-      "measured": 69839
+      "cap": 69894,
+      "measured": 69894
     }
   },
   "files": {
@@ -383,6 +383,12 @@
       "field": "/entry/stages/3/cap",
       "from": null,
       "to": 81839
+    },
+    {
+      "id": "entry-br-cap-69894",
+      "field": "/entry/br/cap",
+      "from": 69839,
+      "to": 69894
     }
   ]
 }
