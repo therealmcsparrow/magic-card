@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 81839,
+        "cap": 83921,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 81839
+        "measured": 83921
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 69894,
-      "measured": 69894
+      "cap": 71628,
+      "measured": 71628
     }
   },
   "files": {
@@ -229,9 +229,9 @@
       "note": "Shared path parser and outline maths (src/path/core.ts only). 9 KiB, measured 7,807 + 5 %, rounded up to 1 KiB. The contract ceiling is 10,240 B (lazy-module LAZY_SHARED_CHUNK_CEILINGS)."
     },
     "magic-card-i18n-labels.js": {
-      "raw": 22528,
-      "ceiling": 22528,
-      "note": "i18n labels table chunk (contract i18n 1.0.0). 22 KiB, measured 21,416 + 5 %, rounded up to 1 KiB."
+      "raw": 24576,
+      "ceiling": 24576,
+      "note": "i18n labels table chunk (contract i18n 1.0.0). 24 KiB, measured 22,809 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-i18n-icons.js": {
       "raw": 17408,
@@ -389,6 +389,30 @@
       "field": "/entry/br/cap",
       "from": 69839,
       "to": 69894
+    },
+    {
+      "id": "entry-gzip-cap-83921",
+      "field": "/entry/stages/3/cap",
+      "from": 81839,
+      "to": 83921
+    },
+    {
+      "id": "entry-br-cap-71628",
+      "field": "/entry/br/cap",
+      "from": 69894,
+      "to": 71628
+    },
+    {
+      "id": "i18n-labels-raw-24576",
+      "field": "/files/magic-card-i18n-labels.js/raw",
+      "from": 22528,
+      "to": 24576
+    },
+    {
+      "id": "i18n-labels-ceiling-24576",
+      "field": "/files/magic-card-i18n-labels.js/ceiling",
+      "from": 22528,
+      "to": 24576
     }
   ]
 }
