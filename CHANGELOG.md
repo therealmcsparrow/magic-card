@@ -7,7 +7,12 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ## Unreleased
 
 ### Added
+-   **Button icon and text controls.** A button's Design tab has an Icon & text section with 17 settings: icon position (left, right, above, below), content alignment, icon size and gap, icon colour, an icon background (circle or rounded), label overflow (wrap or truncate with a tooltip), label colour, font family, size, weight and letter case, and the state's position, colour and size. They are `design` keys (`icon_position`, `content_align`, `content_vertical_align`, `icon_size`, `icon_gap`, `icon_color`, `icon_background`, `icon_background_shape`, `label_overflow`, `label_color`, `label_font_family`, `label_font_size`, `label_font_weight`, `label_text_transform`, `state_position`, `state_color`, `state_font_size`), so the hover design and conditional design rules can change them too. Colours accept `entity` and `entity 30%`, not gradients. An icon colour set by Use entity color still wins. A button that uses none of them draws exactly as before. An animation can now target `label` to play on the label alone.
 -   **Card border, opacity, backdrop filter and margin.** The card's Design tab has Border width, Border style and Border colour, Opacity and Backdrop filter in Style, and Margin in Layout. The keys are `border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter` and `margin`. Design rules can change them and templates sync them. A shaped card draws its border along the shape. Anything you leave unset keeps the theme's value. Values are checked before use, so a value that isn't a plain length, colour, number or filter is ignored. Backdrop filter only shows through a see-through card background.
+
+### Changed
+-   **Colour length.** A colour value in a design or animation can now be up to 256 characters (it was 128), enough for nested `light-dark()` and `color-mix()` values.
+-   **Card border width units.** The card's Border width field no longer offers `%`, which is not a valid border width.
 
 ### Fixed
 -   **Button size.** Design > Size now resizes the button itself. Before, the box around it changed and the button stayed the size of its label. A button with no size set still fits its label. The label and icon are now centred inside the button.

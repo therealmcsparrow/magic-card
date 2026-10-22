@@ -284,7 +284,7 @@ Every module accepts `entity` where it makes sense, plus `design`, `actions` and
 
 | `type` | What it does | Key options |
 | --- | --- | --- |
-| `button` | A button that runs its actions | `label`, `icon`, `entity`, `use_entity_icon`, `use_entity_color`, `show_state`, `attribute`, `button_style` (`default`, `outline`, `flat`, `icon-only`) |
+| `button` | A button that runs its actions | `label`, `icon`, `entity`, `use_entity_icon`, `use_entity_color`, `show_state`, `attribute`, `button_style` (`default`, `outline`, `flat`, `icon-only`). Design keys for the icon and text: `icon_position`, `content_align`, `content_vertical_align`, `icon_size`, `icon_gap`, `icon_color`, `icon_background`, `icon_background_shape`, `label_overflow`, `label_color`, `label_font_family`, `label_font_size`, `label_font_weight`, `label_text_transform`, `state_position`, `state_color`, `state_font_size` (see [Button](documentation/modules/controls/button.md#icon-and-text)) |
 | `slider` | Sets a number, a light brightness and similar | `entity`, `attribute`, `min`, `max`, `step`, `show_value`, `slider_color`, `track_color`, `direction` |
 | `spinbox` | Plus and minus buttons for a number | `entity`, `attribute`, `min`, `max`, `step` |
 | `dropdown` | Select from options | `entity`, `attribute`, `options` (a list of `{label, value}` or plain strings; empty uses the entity's own options) |
@@ -377,7 +377,7 @@ Animations are presets that the card renders itself, not CSS keyframes you write
 | Field | Meaning |
 | --- | --- |
 | `preset` | Preset id (list below) |
-| `target` | `module` (the whole module, default) or `icon` (only the icon; the editor offers it for icon, button, light and weather modules, and it also works on info in YAML). Cards, rows and columns animate themselves. |
+| `target` | `module` (the whole module, default), `icon` (only the icon; the editor offers it for icon, button, light and weather modules, and it also works on info in YAML) or `label` (only the label of a button). Cards, rows and columns animate themselves. |
 | `trigger` | Play condition: `always` (default), `entity_on` (while the entity is active), `state` (while the entity state equals `state`), `tap` (plays once from the pointer position on every tap) |
 | `trigger_entity` | Entity read by the play condition. Default: the module's entity. Required on cards, rows and columns, which have none. |
 | `state` | State value for `trigger: state` |
