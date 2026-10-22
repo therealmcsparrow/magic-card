@@ -23,6 +23,7 @@ import {
   renderBoxField,
   renderColorField,
   renderMediaField,
+  renderNumberField,
   renderSelectField,
   renderTextField,
   renderToggleField,
@@ -44,6 +45,8 @@ import '../components/design-panel';
 import '../components/entity-picker';
 import '../components/condition-row';
 import { t } from '../i18n';
+import { t as lt } from '../../i18n/labels';
+import { BORDER_STYLE_OPTS } from '../../utils/css-property-options';
 import type { PauseButtonCorner, PauseButtonMode } from '../../contracts/card-pause';
 import { layerEditorNote } from '../layers/layer-editor-loader';
 import { backdropHasProblem, startRuleLayers } from '../layers/bg-layers-model';
@@ -254,6 +257,17 @@ export function renderCardDesign(
   const fields: Record<string, () => TemplateResult | typeof nothing> = {
     card_height: () => html`${renderUnitField(t('Card height'), str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
     padding: () => html`${renderBoxField(t('Padding'), str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
+    margin: () => html`${renderBoxField(lt('Margin'), str('margin'), (v) => src.set('margin', v), 'margin', 'margin', sc)}${unset('margin')}`,
+    border_width: () => html`${renderUnitField(lt('Border width'), str('border_width'), (v) => src.set('border_width', v), 'border_width', sc, t('Theme default'))}${unset('border_width')}`,
+    border_style: () =>
+      html`${renderSelectField(lt('Border style'), str('border_style') ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => src.set('border_style', v || undefined), 'border_style', sc)}${unset('border_style')}`,
+    border_color: () => html`${renderColorField(lt('Border colour'), str('border_color'), (v) => src.set('border_color', v), 'border_color', sc)}${unset('border_color')}`,
+    opacity: () =>
+      html`${renderNumberField(t('Opacity'), src.get('opacity') as number | undefined, (v) => src.set('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true }, 'opacity', sc)}
+        <p class="help">${t('Below 1 the whole card fades, text included, which lowers contrast.')}</p>${unset('opacity')}`,
+    backdrop_filter: () =>
+      html`${renderTextField(lt('Backdrop filter'), str('backdrop_filter'), (v) => src.set('backdrop_filter', v), 'backdrop_filter', sc, { placeholder: 'blur(8px)', mono: true })}
+        <p class="help">${t('Blurs what is behind the card. It only shows through a see-through background, for example rgba(0, 0, 0, 0.3).')}</p>${unset('backdrop_filter')}`,
     background: () => html`${renderColorField(t('Background colour'), str('background'), (v) => src.set('background', v), 'background', sc, 'css')}${unset('background')}`,
     background_image: () =>
       html`${renderMediaField(t('Background image'), str('background_image'), (v) => src.set('background_image', v), hass, 'image', 'background_image', sc)}${unset('background_image')}`,
@@ -418,13 +432,13 @@ export function renderCardDesign(
   };
   // [group id, name, open by default, [field, counted key][]]
   const groups: Array<[string, string, boolean, Array<[string, string?]>]> = [
-    ['layout', t('Layout'), true, [['card_height', 'card_height'], ['padding', 'padding']]],
+    ['layout', t('Layout'), true, [['card_height', 'card_height'], ['padding', 'padding'], ['margin', 'margin']]],
     ['motion', t('Motion'), true, [['pause_button', 'pause_button'], ['pause_button_corner']]],
     [
       'style',
       t('Style'),
       true,
-      [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['box_shadow', 'box_shadow'], ['shape', 'shape'], ['value_background', 'value_background']],
+      [['background', 'background'], ['background_image', 'background_image'], ['style_hint'], ['border_radius', 'border_radius'], ['border_width', 'border_width'], ['border_style', 'border_style'], ['border_color', 'border_color'], ['box_shadow', 'box_shadow'], ['opacity', 'opacity'], ['backdrop_filter', 'backdrop_filter'], ['shape', 'shape'], ['value_background', 'value_background']],
     ],
     ['backdrop', t('Card backdrop'), false, [['backdrop', 'background_layers']]],
     ['effects', t('Effects'), false, [['ring', 'ring'], ['seasonal', 'seasonal'], ['animations', 'animations'], ['template_animations']]],
@@ -720,7 +734,13 @@ function renderAppearanceRule(
                 : nothing}
               ${renderUnitField(t('Border radius'), overrides.border_radius, (v) => updateOverride('border_radius', v))}
               ${renderBoxField(t('Padding'), overrides.padding, (v) => updateOverride('padding', v), 'padding')}
+              ${renderBoxField(lt('Margin'), overrides.margin as string | undefined, (v) => updateOverride('margin', v), 'margin')}
+              ${renderUnitField(lt('Border width'), overrides.border_width as string | undefined, (v) => updateOverride('border_width', v))}
+              ${renderSelectField(lt('Border style'), overrides.border_style ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => updateOverride('border_style', v || undefined))}
+              ${renderColorField(lt('Border colour'), overrides.border_color, (v) => updateOverride('border_color', v))}
               ${renderTextField(t('Box shadow'), overrides.box_shadow, (v) => updateOverride('box_shadow', v))}
+              ${renderNumberField(t('Opacity'), overrides.opacity as number | undefined, (v) => updateOverride('opacity', Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : undefined), { min: 0, max: 1, step: 0.05, placeholder: '1', optional: true })}
+              ${renderTextField(lt('Backdrop filter'), overrides.backdrop_filter, (v) => updateOverride('backdrop_filter', v), undefined, undefined, { placeholder: 'blur(8px)', mono: true })}
               ${renderUnitField(t('Card height'), overrides.card_height, (v) => updateOverride('card_height', v))}
             </div>
           `
