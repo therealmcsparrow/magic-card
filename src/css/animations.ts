@@ -12,9 +12,9 @@ export const ALL_LAYER_STYLES: Record<string, string> = { ...SCENE_LAYER_STYLES 
 /*
  * Design animations (DesignConfig.animations, resolved by resolveAnimations). On the animated
  * wrapper (module, row or column) the card sets:
- *   data-mc-anim="module icon"     which elements animate
- *   --mc-anim-m / -i / -mi         comma-separated animation lists: wrapper, icon, both (a module
- *                                  whose icon is missing animates itself with both)
+ *   data-mc-anim="module icon label"  which elements animate
+ *   --mc-anim-m / -i / -mi / -n    comma-separated animation lists: wrapper, icon, both (a module
+ *                                  whose icon is missing animates itself with both), button label
  *   --mc-anim-om / -oi             transform-origin, --mca-<id>-i / -c / -s intensity, colour, strength
  *   data-mc-anim-fx                when it renders particle layers (.mc-anim-fx[data-fx] > i)
  *   data-mc-tap / --mc-anim-t      "On tap" animations of the element, played while data-mc-tapped
@@ -75,6 +75,13 @@ const rulesBefore = css`
     transform-origin: var(--mc-anim-oi, center);
   }
 
+  /* the button label: an inline box takes no transform, so it becomes inline-block */
+  [data-mc-anim~='label'] [data-mc-part='name'] {
+    display: inline-block;
+    animation: var(--mc-anim-n);
+    transform-origin: var(--mc-anim-on, center);
+  }
+
   /* a module without its icon (a button with no icon set) animates itself with both lists */
   [data-mc-anim~='icon']:not(:has(.mc-anim-icon)) {
     animation: var(--mc-anim-mi);
@@ -124,6 +131,7 @@ const rulesAfter = css`
   @media (prefers-reduced-motion: reduce) {
     [data-mc-anim],
     [data-mc-anim] .mc-anim-icon,
+    [data-mc-anim~='label'] [data-mc-part='name'],
     [data-mc-tap],
     .mc-anim-fx > i {
       animation: none !important;

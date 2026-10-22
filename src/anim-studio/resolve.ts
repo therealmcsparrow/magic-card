@@ -15,7 +15,7 @@ import { runtimeIfLoaded } from '../utils/anim-runtime-loader';
 import { customRefId, docNeedsRuntime, isCustomRef, type AnimationDoc } from './model';
 import { useAnimationCss } from '../card/custom-anim-sheet';
 import { registerSequence } from '../card/sequence-player';
-import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, readAnimations, seconds, strength } from './entries';
+import { cssEasing, DIRECTIONS, intensity, iterations, onIcon, onLabel, readAnimations, seconds, strength } from './entries';
 
 /*
  * What the card renders for a design with animations: the resolve. It lives in the lazy `anim` chunk, so a
@@ -91,7 +91,7 @@ function seasonalScene(
 }
 
 export interface ResolvedAnimations {
-  /** `data-mc-anim` tokens: "module", "icon" or both; undefined with particle layers only. */
+  /** `data-mc-anim` tokens: "module", "icon", "label" or several; undefined with particle layers only. */
   targets?: string;
   /** Inline custom properties for the wrapper (animation lists, intensities, colours). */
   style: string;
@@ -159,9 +159,9 @@ export function resolveAnimations(
 ): ResolvedAnimations | undefined {
   design = resolveEntityColors(design);
   const allowIcon = opts.allowIcon !== false;
-  const lists = { m: [] as string[], i: [] as string[], mi: [] as string[], t: [] as string[] };
+  const lists = { m: [] as string[], i: [] as string[], mi: [] as string[], t: [] as string[], n: [] as string[] };
   const vars: string[] = [];
-  const origins: { m?: string; i?: string } = {};
+  const origins: { m?: string; i?: string; n?: string } = {};
   const fx: FxLayer[] = [];
   const seq: string[] = [];
   const v2: ResolvedV2[] = [];
@@ -229,6 +229,11 @@ export function resolveAnimations(
       if (p.origin && !origins.m) origins.m = p.origin;
       continue;
     }
+    if (onLabel(e, allowIcon)) {
+      lists.n.push(`mc-anim-${p.id} ${timing}`);
+      if (p.origin && !origins.n) origins.n = p.origin;
+      continue;
+    }
     const icon = onIcon(e, allowIcon);
     lists.mi.push(`mc-anim-${p.id} ${timing}`);
     if (icon) {
@@ -240,19 +245,21 @@ export function resolveAnimations(
     }
   }
 
-  if (!lists.mi.length && !lists.t.length && !fx.length && !seq.length && !runtime.need) return undefined;
+  if (!lists.mi.length && !lists.n.length && !lists.t.length && !fx.length && !seq.length && !runtime.need) return undefined;
 
   const style: string[] = [];
   if (lists.m.length) style.push(`--mc-anim-m: ${lists.m.join(', ')}`);
   if (lists.t.length) style.push(`--mc-anim-t: ${lists.t.join(', ')}`);
   if (lists.i.length) style.push(`--mc-anim-i: ${lists.i.join(', ')}`, `--mc-anim-mi: ${lists.mi.join(', ')}`);
+  if (lists.n.length) style.push(`--mc-anim-n: ${lists.n.join(', ')}`);
   if (origins.m) style.push(`--mc-anim-om: ${origins.m}`);
   if (origins.i) style.push(`--mc-anim-oi: ${origins.i}`);
+  if (origins.n) style.push(`--mc-anim-on: ${origins.n}`);
   style.push(...dedupe(vars));
   const color = safeColor(design?.color) ?? safeColor(entityStateColor(stateObj));
   if (color) style.push(`--mc-anim-color: ${color}`);
 
-  const targets = [lists.m.length ? 'module' : '', lists.i.length ? 'icon' : ''].filter(Boolean).join(' ');
+  const targets = [lists.m.length ? 'module' : '', lists.i.length ? 'icon' : '', lists.n.length ? 'label' : ''].filter(Boolean).join(' ');
   return {
     ...(targets ? { targets } : {}),
     style: style.join('; '),
@@ -266,9 +273,9 @@ export function resolveAnimations(
 }
 
 interface CustomCtx {
-  lists: { m: string[]; i: string[]; mi: string[]; t: string[] };
+  lists: { m: string[]; i: string[]; mi: string[]; t: string[]; n: string[] };
   vars: string[];
-  origins: { m?: string; i?: string };
+  origins: { m?: string; i?: string; n?: string };
   fx: FxLayer[];
   seq: string[];
   v2: ResolvedV2[];
@@ -296,6 +303,7 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
   if (tap && iter === 'infinite') iter = '1';
   const dir = DIRECTIONS.includes(e.direction!) ? e.direction : (doc.direction ?? 'normal');
   const tail = `${cssEasing(e.easing) ?? cssEasing(doc.easing) ?? 'ease'} ${delay} ${iter} ${dir}`;
+  const label = onLabel(e, ctx.allowIcon);
   const icon = ctx.allowIcon && (e.target === 'icon' || (!e.target && c.motion?.target === 'icon'));
   // v2 data (rig, tracks, clips, bindings), also for documents based on a preset: the runtime chunk
   // applies them after the render; the base animation plays meanwhile (and alone when the chunk
@@ -309,7 +317,7 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
       const entityId = own ?? ctx.stateObj?.entity_id;
       // a document based on a preset compiles without a name: its run key is still its own
       const run = c.name || animationName(doc);
-      const hints = runtimeIfLoaded()?.resolveHints(c.v2, { stateObj, states: ctx.states, run, timing: `${dur} ${tail}`, icon: ctx.allowIcon && e.target !== 'module', active: isEntityActive(stateObj) }) ?? {};
+      const hints = runtimeIfLoaded()?.resolveHints(c.v2, { stateObj, states: ctx.states, run, timing: `${dur} ${tail}`, icon: ctx.allowIcon && e.target !== 'module' && !label, active: isEntityActive(stateObj) }) ?? {};
       clip = hints.clip?.animation;
       // a clip replaces the document's own timeline: its card-part and rig tracks stop too
       ctx.v2.push({ run, docId: doc.id, v2: clip ? { ...c.v2, tracks: [] } : c.v2, timing: `${dur} ${tail}`, icon, ...(entityId ? { entityId } : {}), ...(stateObj ? { stateObj } : {}), hints });
@@ -342,7 +350,7 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
     const want = cssTime(e.duration);
     const scale = want && s.total > 0 ? seconds(want) / s.total : 1;
     const cycles = typeof e.iterations === 'number' && e.iterations > 0 ? Math.round(e.iterations) : undefined;
-    if (s.steps.length) ctx.seq.push(registerSequence({ ...s, delay: seconds(delay), scale, ...(cycles ? { cycles } : {}) }));
+    if (s.steps.length) ctx.seq.push(registerSequence({ ...s, delay: seconds(delay), scale, ...(cycles ? { cycles } : {}), ...(label ? { target: 'label' as const } : {}) }));
     return undefined;
   }
 
@@ -381,6 +389,11 @@ function customEntry(doc: AnimationDoc, e: AnimationConfig, ctx: CustomCtx): Ani
   if (tap) {
     ctx.lists.t.push(entry);
     if (origin && !ctx.origins.m) ctx.origins.m = origin;
+    return undefined;
+  }
+  if (label) {
+    ctx.lists.n.push(entry);
+    if (origin && !ctx.origins.n) ctx.origins.n = origin;
     return undefined;
   }
   ctx.lists.mi.push(entry);

@@ -143,3 +143,5 @@ export function animationsUpdate(list: AnimationConfig[]): Record<string, unknow
 }
 
 export const onIcon = (e: AnimationConfig, allowIcon: boolean) => allowIcon && e.target === 'icon';
+/** The entry plays on the button label (rows and columns have none: their entries play on the module). */
+export const onLabel = (e: AnimationConfig, allowIcon: boolean) => allowIcon && e.target === 'label';

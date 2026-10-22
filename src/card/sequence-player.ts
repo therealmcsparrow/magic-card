@@ -10,7 +10,9 @@ import { reducedMotion } from '../utils/reduced-motion';
  * reduced motion. A staggered sequence runs on the element's children one after another.
  */
 
-export interface SequenceRun extends Schedule {
+export interface SequenceRun extends Omit<Schedule, 'target'> {
+  /** What the sequence plays on: the element, its icon or (a button) its label. */
+  target: Schedule['target'] | 'label';
   /** s before the first cycle */
   delay: number;
   /** Times to play the cycle; undefined: the schedule's loop (forever, or once). */
@@ -55,7 +57,8 @@ class Run {
 
   private _targets(): HTMLElement[] {
     const base = this._run.stagger !== undefined ? contentChildren(this._el) : [this._el];
-    return base.map((t) => (this._run.target === 'icon' ? (t.querySelector<HTMLElement>('.mc-anim-icon') ?? t) : t));
+    const part = this._run.target === 'icon' ? '.mc-anim-icon' : this._run.target === 'label' ? '[data-mc-part="name"]' : '';
+    return base.map((t) => (part ? (t.querySelector<HTMLElement>(part) ?? t) : t));
   }
 
   private _start(): void {
