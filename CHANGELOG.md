@@ -10,7 +10,7 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Card border, opacity, backdrop filter and margin.** The card's Design tab has Border width, Border style and Border colour, Opacity and Backdrop filter in Style, and Margin in Layout. The keys are `border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter` and `margin`. Design rules can change them and templates sync them. A shaped card draws its border along the shape. Anything you leave unset keeps the theme's value. Values are checked before use, so a value that isn't a plain length, colour, number or filter is ignored. Backdrop filter only shows through a see-through card background.
 
 ### Fixed
--   **Button size.** Design > Size now resizes the button itself. Before, the box around it changed and the button stayed the size of its label. A button with no size set still fits its label.
+-   **Button size.** Design > Size now resizes the button itself. Before, the box around it changed and the button stayed the size of its label. A button with no size set still fits its label. The label and icon are now centred inside the button.
 
 ## 2026.10.11 (2026-10-22)
 

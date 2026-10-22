@@ -5,13 +5,18 @@
 
 export const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() !== '' ? v.trim() : undefined);
 
+/** Longest value the number grammars below look at (a backdrop filter list gets more). */
+const MAX_VALUE = 64;
+const MAX_FILTER = 256;
+const MAX_COLOR = 128;
+
 /** A CSS time ("2s", "600ms", a bare number = seconds), or undefined when it is not one. */
 export function cssTime(v: unknown): string | undefined {
   if (typeof v === 'number' && Number.isFinite(v) && v >= 0) return `${+v.toFixed(3)}s`;
   const s = str(v);
   if (!s) return undefined;
-  if (/^\d*\.?\d+$/.test(s)) return `${+(+s).toFixed(3)}s`;
-  return /^\d*\.?\d+m?s$/.test(s) ? s : undefined;
+  const m = s.length <= MAX_VALUE ? /^(?:\d+(?:\.\d+)?|\.\d+)(m?s)?$/.exec(s) : null;
+  return m ? (m[1] ? s : `${+(+s).toFixed(3)}s`) : undefined;
 }
 
 /**
@@ -30,7 +35,7 @@ export const COLOR_FUNCTIONS: ReadonlySet<string> = new Set([
  */
 export function safeColor(v: unknown): string | undefined {
   const s = str(v);
-  if (!s || !/^[#\w\s(),.%+*/-]+$/.test(s) || s.includes('/*') || s.includes('*/')) return undefined;
+  if (!s || s.length > MAX_COLOR || !/^[#\w\s(),.%+*/-]+$/.test(s) || s.includes('/*') || s.includes('*/')) return undefined;
   let depth = 0;
   for (const ch of s) {
     if (ch === '(') depth++;
@@ -44,12 +49,13 @@ export function safeColor(v: unknown): string | undefined {
   return s;
 }
 
-const LENGTH = /^(\d*\.?\d+)(px|em|rem|%|vw|vh)?$/;
+// the number grammars: digits with an optional fraction, or a bare fraction (linear to match, unlike `\d*\.?\d+`)
+const LENGTH = /^(\d+(?:\.\d+)?|\.\d+)(px|em|rem|%|vw|vh)?$/;
 
 /** 1 to `max` CSS lengths (a bare number is px, no negatives, no functions); undefined when any token is not one. */
 export function cssLengths(v: unknown, max = 4): string | undefined {
   const s = typeof v === 'number' ? (Number.isFinite(v) ? String(v) : '') : str(v);
-  const tokens = s?.split(/\s+/);
+  const tokens = s && s.length <= MAX_VALUE ? s.split(/\s+/) : undefined;
   if (!tokens || tokens.length > max) return undefined;
   const out: string[] = [];
   for (const t of tokens) {
@@ -68,14 +74,15 @@ export function safeBorderStyle(v: unknown): string | undefined {
 
 /** An opacity from 0 to 1 (a number or its plain text); the parsed number, never the raw text. */
 export function unitOpacity(v: unknown): number | undefined {
-  const n = typeof v === 'number' ? v : typeof v === 'string' && /^\s*\d*\.?\d+\s*$/.test(v) ? Number(v) : NaN;
+  const s = str(v);
+  const n = typeof v === 'number' ? v : s && s.length <= MAX_VALUE && /^(\d+(\.\d+)?|\.\d+)$/.test(s) ? Number(s) : NaN;
   return n >= 0 && n <= 1 ? n : undefined;
 }
 
-const PERCENT = /^(\d*\.?\d+)(%)?$/;
+const PERCENT = /^(\d+(?:\.\d+)?|\.\d+)(%)?$/;
 const FILTER_ARG = new Map<string, RegExp>([
-  ['blur', /^(\d*\.?\d+)(px|em|rem)?$/],
-  ['hue-rotate', /^(-?\d*\.?\d+)(deg|grad|rad|turn)$/],
+  ['blur', /^(\d+(?:\.\d+)?|\.\d+)(px|em|rem)?$/],
+  ['hue-rotate', /^(-?(?:\d+(?:\.\d+)?|\.\d+))(deg|grad|rad|turn)$/],
   ...['brightness', 'contrast', 'grayscale', 'invert', 'opacity', 'saturate', 'sepia'].map((f): [string, RegExp] => [f, PERCENT]),
 ]);
 
@@ -87,7 +94,7 @@ const FILTER_ARG = new Map<string, RegExp>([
 export function safeFilter(v: unknown): string | undefined {
   const s = str(v)?.toLowerCase();
   if (s === 'none') return s;
-  if (!s) return undefined;
+  if (!s || s.length > MAX_FILTER) return undefined;
   const out: string[] = [];
   const re = /\s*([a-z-]+)\(\s*([^()\s]*)\s*\)(?=\s|$)\s*/y;
   let at = 0;
@@ -101,18 +108,22 @@ export function safeFilter(v: unknown): string | undefined {
   return out.join(' ');
 }
 
-/** The ha-card declarations of the card's border, opacity and backdrop filter keys (those that passed). */
-export function cardFrame(c: { border_width?: unknown; border_style?: unknown; border_color?: unknown; opacity?: unknown; backdrop_filter?: unknown }): string[] {
+/**
+ * The ha-card declarations of the card's border, opacity and backdrop filter keys (those that passed), with the
+ * parsed border style and colour for a shaped card's stroke.
+ */
+export function cardFrame(c: { border_width?: unknown; border_style?: unknown; border_color?: unknown; opacity?: unknown; backdrop_filter?: unknown }): { css: string[]; style?: string; color?: string } {
   const w = cssLengths(c.border_width);
   const s = safeBorderStyle(c.border_style);
   const col = safeColor(c.border_color);
   const o = unitOpacity(c.opacity);
   const b = safeFilter(c.backdrop_filter);
-  return [
-    w && `border-width: ${w}`,
+  const css = [
+    w && !w.includes('%') && `border-width: ${w}`,
     s && `border-style: ${s}`,
     col && `border-color: ${col}`,
     o !== undefined && `opacity: ${o}`,
     b && `backdrop-filter: ${b}; -webkit-backdrop-filter: ${b}`,
   ].filter((p): p is string => !!p);
+  return { css, style: s, color: col };
 }

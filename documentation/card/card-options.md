@@ -30,8 +30,8 @@ Keys at the top level of the card. Back to [Card configuration](README.md).
 | `border_radius` | CSS length | Theme card radius | Corner radius. |
 | `padding` | One to four CSS lengths | `16px` | Space inside the card around the rows. |
 | `margin` | One to four CSS lengths | none | Space around the card. See [Border and frame](#border-and-frame). |
-| `border_width` | One to four CSS lengths | Theme border width | Width of the card border. |
-| `border_style` | `none`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` | Theme border style | Style of the card border. |
+| `border_width` | One to four lengths in `px`, `em`, `rem`, `vw` or `vh` (no `%`) | Theme border width | Width of the card border. |
+| `border_style` | `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` | Theme border style | Style of the card border. |
 | `border_color` | CSS colour | Theme border colour | Colour of the card border. |
 | `opacity` | Number from 0 to 1 | `1` | Opacity of the whole card. |
 | `backdrop_filter` | A filter such as `blur(8px)` | none | Filter on what is behind the card. |

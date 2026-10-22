@@ -49,7 +49,7 @@ border_radius: 16px                # card corners; also the pop-up corners
 padding: 16px                      # default 16px
 margin: 8px                        # space around the card, 1 to 4 lengths
 border_width: 2px                  # 1 to 4 lengths; unset keeps the theme's border
-border_style: dashed               # none, solid, dashed, dotted, double, groove, ridge, inset, outset
+border_style: dashed               # none, hidden, solid, dashed, dotted, double, groove, ridge, inset, outset
 border_color: "#03a9f4"
 opacity: 0.9                       # 0 to 1
 backdrop_filter: blur(8px)         # needs a see-through background to show
@@ -165,7 +165,7 @@ rows:                              # required (a list, may be empty)
 | `border_radius` | string | theme | CSS length. Also rounds the pop-up surface. |
 | `padding` | string | `16px` | CSS padding. |
 | `margin` | string or number | | Space around the card: one to four lengths (`px`, `em`, `rem`, `%`, `vw`, `vh`; a bare number is px; no negatives). It is padding on the card's outer element, so a card that fills a grid cell keeps its cell. Not applied to a pop-up. |
-| `border_width` | string or number | theme | One to four lengths, same rules as `margin`. |
+| `border_width` | string or number | theme | One to four lengths, same rules as `margin` except that `%` does not apply. |
 | `border_style` | string | theme | `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset` or `outset`. |
 | `border_color` | string | theme | A CSS colour (hex, name, `rgb()`, `var(--x)` and so on). Never `url()`. |
 | `opacity` | number | | 0 to 1. Fades the whole card, text included. |
