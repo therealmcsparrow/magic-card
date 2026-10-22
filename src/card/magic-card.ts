@@ -29,6 +29,7 @@ import {
   ShapeStroke,
   ResolvedBorderLength,
   } from '../utils/css-utils';
+import { cardFrame, cssLengths, safeBorderStyle, safeColor } from '../utils/safe-css';
 import { generateId } from '../utils/id-generator';
 import { rowGridTemplate } from '../utils/column-widths';
 import type { FxLayer, ResolvedAnimations, ResolvedV2 } from '../anim-studio/resolve';
@@ -921,6 +922,8 @@ export class MagicCard extends LitElement {
     if (!config) {
       return html`<ha-card><div class="mc-error">${t('No configuration')}</div></ha-card>`;
     }
+    // the card's margin is the host's padding (set below); a hidden card or a pop-up leaves no space
+    this.style.padding = '';
     this._wantShapes(config);
     // Google Fonts named in the config's designs / css: a stylesheet link each, once per page
     loadGoogleFonts(configGoogleFonts(config));
@@ -956,7 +959,15 @@ export class MagicCard extends LitElement {
     const shadow = shape ? (resolved.box_shadow ? boxShadowToDropShadow(resolved.box_shadow) : this._themeShadow) : undefined;
     this._readThemeShadow = !!shape && !resolved.box_shadow;
     // ha-card takes the card's corner radius too, so its outline (borders, glows, rings) matches the content
-    const haCardStyle = [themeStyle, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none', paused && '--mc-paused: 1']
+    const frame = cardFrame(resolved);
+    if (!popupHere) this.style.padding = cssLengths(resolved.margin) ?? '';
+    // a shaped card draws the border keys as its stroke (the width is ha-card's computed one)
+    const frameStyle = safeBorderStyle(resolved.border_style);
+    const stroke: ShapeStroke | undefined =
+      !shape || frameStyle === 'none' || frameStyle === 'hidden'
+        ? undefined
+        : { ...CARD_STROKE, style: frameStyle === 'dashed' || frameStyle === 'dotted' ? frameStyle : 'solid', color: safeColor(resolved.border_color) || CARD_STROKE.color };
+    const haCardStyle = [themeStyle, ...frame, resolved.border_radius && `border-radius: ${resolved.border_radius}`, anim?.style, shape && 'border-color: transparent; box-shadow: none', paused && '--mc-paused: 1']
       .filter(Boolean)
       .join('; ');
     // the seasonal scene: a layer behind (or over) the rows and border decorations, which the
@@ -1010,7 +1021,7 @@ export class MagicCard extends LitElement {
               data-mc-flows=${hasFlowList ? '' : nothing} data-mc-value-bg=${valueBg ? '' : nothing} data-mc-seasonal=${seasonal ? '' : nothing} data-mc-flash=${flash ? '' : nothing}
               data-mc-clip=${resolved.overflow ? '' : nothing} data-mc-layers=${layered ? '' : nothing} data-mc-low-power=${lowPower ? '' : nothing}>
               ${stack}${this._renderTemplateNotice()}${rows()}${renderValueBg(valueBg, this.hass)}${this._card.out.splice(0)}${this._failNotices(config, badge)}
-            </div>${renderShape(shape, shape ? CARD_STROKE : undefined, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
+            </div>${renderShape(shape, stroke, insets)}${renderRing(ring, shape)}${pause?.button(config, paused) ?? nothing}
           </ha-card>
         `, shadow, !!shape);
     if (!popup || !popupCtl) return inline as TemplateResult;
@@ -1019,7 +1030,7 @@ export class MagicCard extends LitElement {
     const parts = splitDeclarations(cardStyle);
     const prop = (p: string) => p.slice(0, p.indexOf(':')).trim().toLowerCase();
     const onSurface = (p: string) => /^(background(-[a-z-]+)?|box-shadow)$/.test(prop(p));
-    const surfaceStyle = [themeStyle, anim?.style, ...parts.filter(onSurface), paused && '--mc-paused: 1'].filter(Boolean).join('; ');
+    const surfaceStyle = [themeStyle, ...frame, anim?.style, ...parts.filter(onSurface), paused && '--mc-paused: 1'].filter(Boolean).join('; ');
     const contentStyle = [
       ...parts.filter((p) => !onSurface(p) && prop(p) !== 'border-radius'),
       insets && insetPaddingStyle(undefined, contentPad, { min: insets }),

@@ -106,6 +106,16 @@ export interface MagicCardConfig {
   background_image?: string;
   border_radius?: string;
   padding?: string;
+  /** Card frame (ha-card): a border of 1 to 4 lengths (a bare number is px), a border-style keyword and a colour; unset keeps the theme's. */
+  border_width?: string | number;
+  border_style?: string;
+  border_color?: string;
+  /** 0 to 1. */
+  opacity?: number | string;
+  /** A backdrop-filter list such as `blur(8px)` (blur, brightness, contrast, grayscale, hue-rotate, invert, opacity, saturate, sepia). */
+  backdrop_filter?: string;
+  /** Space outside the card, 1 to 4 lengths (the host's padding). */
+  margin?: string | number;
   box_shadow?: string;
   card_height?: string;
   overflow?: 'visible' | 'hidden' | 'auto';
@@ -292,6 +302,13 @@ export interface CardAppearanceOverrides {
   background_image?: string;
   border_radius?: string;
   padding?: string;
+  /** Card frame (see MagicCardConfig): a border of 1 to 4 lengths (a bare number is px), a border-style keyword and a colour; unset keeps the theme's. */
+  border_width?: string | number;
+  border_style?: string;
+  border_color?: string;
+  opacity?: number | string;
+  backdrop_filter?: string;
+  margin?: string | number;
   box_shadow?: string;
   card_height?: string;
   use_page_theme?: boolean;

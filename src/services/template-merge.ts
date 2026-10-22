@@ -25,6 +25,7 @@ function keepLocal(item: object, local: object, marks: Set<string>): void {
 export const CARD_SYNC_KEYS = [
   'use_page_theme', 'theme',
   'background', 'background_image', 'border_radius', 'padding',
+  'border_width', 'border_style', 'border_color', 'opacity', 'backdrop_filter', 'margin',
   'box_shadow', 'card_height', 'overflow', 'css', 'animations', 'ring', 'popup', 'flows',
   'shape', 'value_background', 'seasonal', 'hover', 'background_layers',
 ];

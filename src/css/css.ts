@@ -21,6 +21,7 @@ const SHRINKING_ROOTS = ['.mc-horizontal', '.mc-vertical', '.mc-gauge'].join(', 
 const magicCardLocalStyles = css`
   :host {
     display: block;
+    box-sizing: border-box;
   }
 
   ha-card {
