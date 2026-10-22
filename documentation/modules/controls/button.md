@@ -19,7 +19,7 @@ A button with an icon, a label and optionally the entity's state. What it does i
 | Use entity icon | `use_entity_icon` | boolean | `false` | Uses the entity's icon as Home Assistant picks it. Only shown with an entity. |
 | Icon | `icon` | icon name | none | The icon. Hidden while Use entity icon is on. `svg` draws your own SVG. |
 | Icon effects | `icon_fx`, `icon_on`, `icon_off`, `svg` | | none | See [Icon effects](../../icon-effects/README.md). |
-| Use entity color | `use_entity_color` | boolean | `false` | Colours the icon like Home Assistant does for the entity's state. Only shown with an entity. |
+| Use entity colour | `use_entity_color` | boolean | `false` | Colours the icon like Home Assistant does for the entity's state. Only shown with an entity. |
 | Button style | `button_style` | `default`, `outline`, `flat`, `icon-only` | `default` | The look. Icon only hides the label and shows it as a tooltip. |
 | Show state | `show_state` | boolean | `false` | Shows the state next to the label. |
 | Attribute | `attribute` | attribute name | none | With Show state: shows this attribute instead of the state. |
@@ -50,16 +50,16 @@ The Design tab has an Icon & text section in the Style group, for buttons only. 
 | Label text transform | `label_text_transform` | `none`, `uppercase`, `lowercase`, `capitalize` | `none` | Letter case of the label. |
 | State position | `state_position` | `beside`, `below` | `beside` | Where the state text sits relative to the label. |
 | State colour | `state_color` | colour, `entity` or `entity 30%` | the text colour | Colour of the state text. |
-| State font size | `state_font_size` | one length: `px`, `em`, `rem`, `%` | `11px` | Size of the state text. |
+| State font size | `state_font_size` | one length: `px`, `em`, `rem`, `%` | `0.75rem` | Size of the state text. |
 
 Things to know:
 
--   Setting any position or alignment key lays the icon, label and state out on a grid. Each key then works on its own, so a hover design or a rule can change only `icon_position`.
+-   Setting any position or alignment key lays the icon, label and state out on a grid. Each key then works on its own, so a hover design or a rule can change only `icon_position` and the rest stays as the base design has it.
 -   `left` and `right` follow the writing direction, so in a right-to-left language they swap. `start` and `end` do the same.
 -   A truncated label shows its full text as a tooltip, whether `truncate` is set in the base design, the hover design or a rule.
 -   Part colours take one colour. Gradients are not accepted. `entity 30%` needs a browser that supports `color-mix` (Chromium 111 and newer). In older ones the part keeps the colour it would inherit.
--   With Use entity color on, the icon keeps the entity colour. Otherwise `icon_color` wins over the design colour.
--   Icon only buttons have no label and no state. The editor hides those settings and the card ignores them.
+-   With Use entity colour on, the icon keeps the entity colour. Otherwise `icon_color` wins over the design colour.
+-   Icon-only buttons have no label, so the label settings are hidden and ignored. They still show the state when Show state is on, and the state settings apply.
 -   `label_font_family` loads a Google Font the same way the Font family setting does. The same notes apply, see [Typography](../../design/typography.md).
 -   A value that is not a plain length (no negative numbers, no `calc()`), a colour or one of the listed words is ignored.
 -   The animation `target: label` plays an animation on the label only. See [Animations](../../design/animations.md).

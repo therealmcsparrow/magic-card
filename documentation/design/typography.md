@@ -47,7 +47,7 @@ On a module with an entity, `color: entity` uses the entity's state colour. See 
 
 ## Fonts
 
-The font picker offers common local fonts and a list of Google Fonts. The card loads a listed Google font that a design or custom CSS uses, in the weights 300, 400, 500 and 700 where the family has them. The device needs internet access for it, and the request goes to Google, which can see the visitor's IP address. Roboto is never loaded, because Home Assistant ships it. See [Font family](README.md#font-family).
+The font picker offers common local fonts and a list of Google Fonts. The card loads a listed Google font that a design or custom CSS uses, in the weights 300, 400, 500 and 700 where the family has them. The device needs internet access for it, and the request goes to Google (`fonts.googleapis.com` for the stylesheet and `fonts.gstatic.com` for the font files), which can see the visitor's IP address. Roboto is never loaded, because Home Assistant ships it. See [Font family](README.md#font-family).
 
 ## Text overflow
 

@@ -1092,7 +1092,7 @@ Magic Card and Magic Card Utils have no telemetry and send nothing to the author
 
 Magic Card Utils makes no requests to other websites. Magic Card makes them only when your own configuration asks for it:
 
--   A card that uses a Google font from the font picker loads that font from `fonts.googleapis.com`. Google can see the visitor's IP address. To avoid this, use a font that is installed on the device.
+-   A card that uses a Google font from the font picker loads that font from Google (`fonts.googleapis.com` and `fonts.gstatic.com`). Google can see the visitor's IP address. This also applies to a font set for a button label. To avoid it, use a font that is installed on the device.
 -   An address you typed, such as an image, is requested by the browser, and that website can see the visitor's IP address.
 -   A theme file kept with **Import anyway** that points to another website is requested the same way.
 

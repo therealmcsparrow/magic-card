@@ -134,7 +134,7 @@ A text input with a Browse button. Browse opens Select font with two tabs, Local
 
 The Google Fonts tab lists 20 popular families. Opening that tab loads them, so each one previews in its own face.
 
-The card loads each listed Google font it uses, wherever it is set: `font_family` in any design, hover design or conditional rule, and `font-family` in any custom CSS. Each family gets one stylesheet link from `fonts.googleapis.com` per page, in the weights 300, 400, 500 and 700 where the family has them, so bold text uses a real bold face. Roboto is never loaded, because Home Assistant already ships it.
+The card loads each listed Google font it uses, wherever it is set: `font_family` in any design, hover design or conditional rule, `label_font_family` on a button, and `font-family` in any custom CSS. Each family gets one stylesheet link from `fonts.googleapis.com` per page, in the weights 300, 400, 500 and 700 where the family has them, so bold text uses a real bold face. Roboto is never loaded, because Home Assistant already ships it.
 
 - The device that shows the card needs internet access for the font. Without it, the generic family at the end of the stack is used.
 - Loading a font sends a request to Google, a third party, from every device that shows the card.
