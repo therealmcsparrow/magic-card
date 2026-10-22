@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.1 (2026-10-23)
 
 ### Added
 -   **Button icon and text controls.** A button's Design tab has an Icon & text section with 17 settings: icon position (left, right, above, below), content alignment, icon size and gap, icon colour, an icon background (circle or rounded), label overflow (wrap or truncate with a tooltip), label colour, font family, size, weight and letter case, and the state's position, colour and size. They are `design` keys (`icon_position`, `content_align`, `content_vertical_align`, `icon_size`, `icon_gap`, `icon_color`, `icon_background`, `icon_background_shape`, `label_overflow`, `label_color`, `label_font_family`, `label_font_size`, `label_font_weight`, `label_text_transform`, `state_position`, `state_color`, `state_font_size`), so the hover design and conditional design rules can change them too. Colours accept `entity` and `entity 30%`, not gradients. An icon colour set by Use entity colour still wins. A button that uses none of them draws exactly as before. An animation can now target `label` to play on the label alone.

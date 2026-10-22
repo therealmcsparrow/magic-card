@@ -1,6 +1,6 @@
 {
   "name": "magic-card",
-  "version": "2026.10.11",
+  "version": "2026.10.12-beta.1",
   "description": "A fully open-source Home Assistant Lovelace custom card with multi-mode configuration editor",
   "main": "dist/magic-card.js",
   "engines": {
