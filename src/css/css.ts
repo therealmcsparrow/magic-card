@@ -35,7 +35,7 @@ const magicCardLocalStyles = css`
     gap: var(--mc-gap);
   }
 
-  /* A failure notice shows (host attribute mc-fail): ha-card is the scroll box, so the card keeps its grid cell. */
+  /* Failure notice (mc-fail): ha-card scrolls, the card keeps its grid cell. */
   :host([mc-fail]) {
     height: 100%;
   }
@@ -49,7 +49,7 @@ const magicCardLocalStyles = css`
     flex: none;
   }
 
-  /* A shaped card waits for the decor chunk: the shape's content inset is measured there, so nothing shows until it is in. */
+  /* A shaped card waits for the decor chunk, which measures the content inset. */
   :host([data-mc-decor-wait]) ha-card {
     visibility: hidden;
   }
@@ -977,7 +977,7 @@ const magicCardLocalStyles = css`
     align-items: center;
     gap: var(--mc-gap-xs);
     padding: var(--mc-gap-sm) var(--mc-gap-xs);
-    /* 60 px wide, shrinking to 44 px in a narrow column so five days fit 331 px; more than fit scroll */
+    /* 60 px wide, 44 px in a narrow column; more days scroll */
     flex: 0 1 60px;
     min-width: 44px;
   }
@@ -1242,7 +1242,8 @@ const magicCardLocalStyles = css`
     background: none !important;
   }
 
-  .mc-module-wrapper[style*='width:']:has(>.mc-button),.mc-module-wrapper[style*='height:']:has(>.mc-button){display:flex;width:fit-content}
+  .mc-module-wrapper>.mc-button{height:100%;min-height:inherit;max-height:inherit;min-width:inherit;max-width:inherit}
+  .mc-module-wrapper[style^='width:']>.mc-button,.mc-module-wrapper[style*=' width:']>.mc-button{width:100%}
 
   .mc-module-wrapper[role='button'],
   .mc-row[data-mc-row-actions] {
@@ -1280,7 +1281,7 @@ const magicCardLocalStyles = css`
     box-sizing: border-box;
   }
 
-  /* Editor canvas: rows, columns, modules and tabs hidden (Hide or display conditions) stay selectable */
+  /* Editor canvas: hidden rows, columns, modules and tabs stay selectable */
   [data-mc-hidden] {
     opacity: 0.45;
   }
@@ -1305,7 +1306,7 @@ const magicCardLocalStyles = css`
     font-size: var(--mc-font-size-md);
   }
 
-  /* One module's own error (invalid config, failed render or template): the rest of the card renders. */
+  /* One module's own error: the rest of the card renders. */
   .mc-module-error,
   .mc-module-hint {
     display: flex;
