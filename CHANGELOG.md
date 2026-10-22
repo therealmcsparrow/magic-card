@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Button size.** Design > Size now resizes the button itself. Before, the box around it changed and the button stayed the size of its label. A button with no size set still fits its label.
+
 ## 2026.10.11 (2026-10-22)
 
 Magic Card's card file, `magic-card.js`, is about 48% smaller: 156,490 B to 81,825 B with gzip, and 129,897 B to 69,894 B with Brotli. A plain card downloads nothing else.

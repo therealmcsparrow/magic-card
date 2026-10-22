@@ -282,10 +282,10 @@ const magicCardLocalStyles = css`
     margin: 0 var(--mc-gap-xs);
   }
 
-  /* Button module wrapper: layout only; the clickable .mc-button-inner carries the look */
+  /* Button: layout only; .mc-button-inner carries the look */
   .mc-button {
     display: inline-flex;
-    align-items: center;
+    flex:1;
     gap: var(--mc-gap-sm);
     border-top-left-radius: var(--mc-design-radius-tl, var(--mc-button-radius));
     border-top-right-radius: var(--mc-design-radius-tr, var(--mc-button-radius));
@@ -295,10 +295,10 @@ const magicCardLocalStyles = css`
     font-size: var(--mc-button-font-size);
   }
 
-  /* Button inner element + variants */
   .mc-button-inner {
     display: inline-flex;
     align-items: center;
+    flex: 1;
     gap: var(--mc-gap-sm);
     padding: var(--mc-button-padding);
     border-top-left-radius: var(--mc-design-radius-tl, var(--mc-button-radius));
@@ -1242,6 +1242,8 @@ const magicCardLocalStyles = css`
     background: none !important;
   }
 
+  .mc-module-wrapper[style*='width:']:has(>.mc-button),.mc-module-wrapper[style*='height:']:has(>.mc-button){display:flex;width:fit-content}
+
   .mc-module-wrapper[role='button'],
   .mc-row[data-mc-row-actions] {
     cursor: pointer;
@@ -1334,7 +1336,7 @@ const magicCardLocalStyles = css`
     font-size: 0.8125rem;
   }
 
-  /* Interactive feedback — focus-visible, active, tap highlight */
+  /* Interactive feedback */
   .mc-button,
   .mc-button-inner,
   .mc-tab-button,
