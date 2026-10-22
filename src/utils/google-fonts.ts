@@ -57,7 +57,7 @@ const CSS_FONT_FAMILY = /font-family\s*:\s*([^;]+)/gi;
 const configCache = new WeakMap<object, string[]>();
 
 /**
- * Every Google Font a card config uses: `font_family` anywhere (row / column / module designs,
+ * Every Google Font a card config uses: `font_family` and `label_font_family` anywhere (row / column / module designs,
  * nested children, hover, conditional rules) and `font-family` declarations in any `css` text.
  */
 export function configGoogleFonts(config: object): string[] {
@@ -73,7 +73,7 @@ export function configGoogleFonts(config: object): string[] {
       return;
     }
     for (const [key, value] of Object.entries(node)) {
-      if (key === 'font_family') googleFontFamilies(value).forEach((f) => found.add(f));
+      if (key === 'font_family' || key === 'label_font_family') googleFontFamilies(value).forEach((f) => found.add(f));
       else if (key === 'css' && typeof value === 'string') {
         for (const m of value.matchAll(CSS_FONT_FAMILY)) googleFontFamilies(m[1]).forEach((f) => found.add(f));
       } else if (value && typeof value === 'object') walk(value);

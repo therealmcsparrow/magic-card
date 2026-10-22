@@ -506,6 +506,25 @@ export interface DesignConfig {
   /** Tank fill / history sparkline behind the content (src/utils/value-background.ts). */
   value_background?: ValueBackgroundConfig;
 
+  // Button parts (icon, label, state text); a button module reads them, see src/utils/button-parts.ts
+  icon_position?: 'left' | 'right' | 'above' | 'below';
+  content_align?: 'start' | 'center' | 'end';
+  content_vertical_align?: 'start' | 'center' | 'end';
+  icon_size?: string;
+  icon_gap?: string;
+  label_overflow?: 'wrap' | 'truncate';
+  state_position?: 'beside' | 'below';
+  icon_color?: string;
+  label_color?: string;
+  state_color?: string;
+  icon_background?: string;
+  icon_background_shape?: 'circle' | 'rounded';
+  label_font_family?: string;
+  label_font_size?: string;
+  label_font_weight?: string;
+  label_text_transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  state_font_size?: string;
+
   // Hover
   hover?: Partial<DesignConfig>;
 
@@ -533,7 +552,7 @@ export interface AnimationConfig {
   id: string;
   /** ANIMATION_PRESETS id (src/utils/animation-presets.ts). */
   preset: string;
-  target?: 'module' | 'icon';
+  target?: 'module' | 'icon' | 'label';
   trigger?: AnimationTrigger;
   /** Entity the Play condition reads; default the module's entity (card / row / column: required). */
   trigger_entity?: string;

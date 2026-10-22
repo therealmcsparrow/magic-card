@@ -4,6 +4,7 @@ import { ConditionsService } from '../services/conditions-service';
 import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
+import { buttonPartDecls } from './button-parts';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
@@ -85,8 +86,9 @@ export function controlLook(type: string | undefined, variant?: string): Control
  * inside: the wrapper gets none of them, the control reads --mc-design-bw / -bs / -bc (four values,
  * top right bottom left, unset sides filled with the control's own default) and --mc-design-shadow.
  * Other modules, shaped elements and border-length overlays draw them on the wrapper.
+ * `button`: a button module, whose icon, label and state keys become custom properties its parts read.
  */
-export function designToStyle(input?: DesignConfig, control?: ControlLook): string {
+export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean): string {
   if (!input) return '';
   const design = resolveEntityColors(designNumbersToCss(input));
 
@@ -131,6 +133,8 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook): stri
     const shadow = nonEmpty(rec.box_shadow);
     if (shadow) parts.push(`--mc-design-shadow: ${shadow}`);
   }
+
+  if (button) parts.push(...buttonPartDecls(rec));
 
   if (design.css) {
     parts.push(design.css);
@@ -235,6 +239,8 @@ export interface HoverTarget {
   borderLength?: ResolvedBorderLength;
   /** A button / dropdown wrapper: the hover border and shadow reach the control (designToStyle `control`). */
   control?: ControlLook;
+  /** A button module: the hover design may carry the icon, label and state keys. */
+  parts?: boolean;
 }
 
 const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !important`);
@@ -253,7 +259,7 @@ const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
  */
 export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
   if (!hover || typeof hover !== 'object') return '';
-  const decls = splitDeclarations(hoverSafe(designToStyle(hover as DesignConfig, target.control)))
+  const decls = splitDeclarations(hoverSafe(designToStyle(hover as DesignConfig, target.control, target.parts)))
     .filter((d) => d.includes(':'))
     .map(important);
   if (!decls.length) return '';

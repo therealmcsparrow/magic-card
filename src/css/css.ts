@@ -297,11 +297,15 @@ const magicCardLocalStyles = css`
   }
 
   .mc-button-inner {
-    display: inline-flex;
+    display: var(--mc-bi-d, inline-flex);
     align-items: center;
-    justify-content: center;
+    justify-content: var(--mc-bi-jc, center);
+    justify-items: var(--mc-bi-ji, normal);
+    align-content: var(--mc-bi-ac, normal);
+    text-align: var(--mc-bi-ta, center);
+    min-width: var(--mc-bi-mw, auto);
     flex: 1;
-    gap: var(--mc-gap-sm);
+    gap: var(--mc-bi-g0, var(--mc-bi-gap, var(--mc-gap-sm)));
     padding: var(--mc-button-padding);
     border-top-left-radius: var(--mc-design-radius-tl, var(--mc-button-radius));
     border-top-right-radius: var(--mc-design-radius-tr, var(--mc-button-radius));
@@ -327,6 +331,39 @@ const magicCardLocalStyles = css`
   .mc-button-inner ha-state-icon,
   .mc-button-inner mc-svg-icon {
     --mdc-icon-size: var(--mc-button-icon-size);
+  }
+
+  .mc-button-inner > .mc-button-icon,
+  .mc-button-inner > [data-mc-part='icon'] {
+    grid-area: var(--mc-bi-ia, auto);
+    margin: var(--mc-bi-im, 0);
+    color: var(--mc-bi-c, inherit);
+    flex-shrink: var(--mc-bi-fs, 1);
+  }
+
+  .mc-button-inner--icon-only > .mc-button-icon,
+  .mc-button-inner--icon-only > [data-mc-part='icon'] {
+    margin: 0;
+  }
+
+  .mc-button-inner [data-mc-part='icon'] {
+    background: var(--mc-bi-bg, none);
+    border-radius: var(--mc-bi-br, 0);
+    padding: var(--mc-bi-pad, 0);
+  }
+
+  .mc-button-inner > [data-mc-part='name'] {
+    grid-area: var(--mc-bl-a, auto);
+    max-width: var(--mc-bl-mxw, none);
+    min-width: var(--mc-bi-mw, auto);
+    color: var(--mc-bl-c, inherit);
+    font-family: var(--mc-bl-ff, inherit);
+    font-size: var(--mc-bl-fs, inherit);
+    font-weight: var(--mc-bl-fw, inherit);
+    text-transform: var(--mc-bl-tt, inherit);
+    white-space: var(--mc-bl-ws, inherit);
+    overflow: var(--mc-bl-ov, visible);
+    text-overflow: var(--mc-bl-to, clip);
   }
 
   .mc-button-icon {
@@ -357,8 +394,11 @@ const magicCardLocalStyles = css`
 
   .mc-button-state {
     opacity: 0.8;
-    font-size: var(--mc-font-size-xs);
+    font-size: var(--mc-bs-fs, var(--mc-font-size-xs));
     white-space: nowrap;
+    grid-area: var(--mc-bs-a, auto);
+    margin: var(--mc-bs-m, 0);
+    color: var(--mc-bs-c, inherit);
   }
 
   .mc-tile-slider {

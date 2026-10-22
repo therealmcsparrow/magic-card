@@ -10,6 +10,7 @@ import { stateIcon } from '../../utils/entity-icon';
 import { formatEntityValue } from '../../utils/entity-value';
 import { t } from '../../card/i18n';
 import { lm } from '../../i18n/labels/mark';
+import { truncates } from '../../utils/button-parts';
 
 class ButtonModule extends BaseMagicModule {
   readonly metadata: MagicModuleMetadata = {
@@ -55,7 +56,7 @@ class ButtonModule extends BaseMagicModule {
           type="button"
           tabindex="-1"
           class="mc-button-inner mc-button-inner--${c.button_style || 'default'} ${isIconOnly ? 'mc-button-inner--icon-only' : ''}"
-          title=${isIconOnly ? label : nothing}
+          title=${isIconOnly || truncates(c.design) ? label : nothing}
         >
           ${iconColor && iconEl !== nothing ? html`<span class="mc-button-icon" style="color: ${iconColor}">${iconEl}</span>` : iconEl}
           ${!isIconOnly ? html`<span data-mc-part="name">${label}</span>` : nothing}

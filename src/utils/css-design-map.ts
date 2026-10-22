@@ -61,7 +61,7 @@ export function buildDesignToCssMap(): Record<string, string> {
 }
 
 /** Design keys edited as a colour field: the ones that accept `entity` / `entity N%`. */
-export const COLOR_KEYS = ENTRIES.filter((e) => e.flag === 'c').map((e) => e.key);
+export const COLOR_KEYS = [...ENTRIES.filter((e) => e.flag === 'c').map((e) => e.key), 'icon_color', 'icon_background', 'label_color', 'state_color'];
 /** Design keys edited with the media picker (browsed media is a media-source id resolved at render). */
 export const IMAGE_KEYS = new Set(ENTRIES.filter((e) => e.flag === 'i').map((e) => e.key));
 

@@ -1431,7 +1431,7 @@ export class MagicCard extends LitElement {
     // a button / dropdown draws the design border and shadow on the control, unless a shape or a border length owns the outline
     const look = shape || border ? undefined : controlLook(mod.type, (mod as { button_style?: string }).button_style);
     const control = look && { ...look, base: design };
-    const designStyle = [designToStyle(design, control), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
+    const designStyle = [designToStyle(design, control, mod.type === 'button'), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
       .filter(Boolean)
       .join('; ');
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)
@@ -1471,7 +1471,7 @@ export class MagicCard extends LitElement {
         tabindex=${hasActions ? 0 : nothing}
         aria-label=${hasActions ? this._getActionLabel(mod) : nothing}
         data-mc-path=${this.editMode ? path : nothing}
-        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control })}
+        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control, parts: mod.type === 'button' })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-needs=${needs ? t('Needs another device') : nothing}
