@@ -29,6 +29,12 @@ Keys at the top level of the card. Back to [Card configuration](README.md).
 | `background_image` | Media source id, a path or URL such as `/local/bg.jpg`, or a CSS image value | none | Background image, set to cover and centred. |
 | `border_radius` | CSS length | Theme card radius | Corner radius. |
 | `padding` | One to four CSS lengths | `16px` | Space inside the card around the rows. |
+| `margin` | One to four CSS lengths | none | Space around the card. See [Border and frame](#border-and-frame). |
+| `border_width` | One to four CSS lengths | Theme border width | Width of the card border. |
+| `border_style` | `none`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` | Theme border style | Style of the card border. |
+| `border_color` | CSS colour | Theme border colour | Colour of the card border. |
+| `opacity` | Number from 0 to 1 | `1` | Opacity of the whole card. |
+| `backdrop_filter` | A filter such as `blur(8px)` | none | Filter on what is behind the card. |
 | `box_shadow` | CSS `box-shadow` | none | Shadow of the card content. |
 | `card_height` | CSS length | auto | Minimum height of the card content. |
 | `overflow` | `visible`, `hidden`, `auto` | not set | Overflow of the card content. YAML only. |
@@ -98,6 +104,27 @@ card_height: 180px
 `card_height` is a minimum: the card still grows with its content. `padding` takes the CSS shorthand (one to four values). In a pop-up, `border_radius` shapes the pop-up surface when it is a single value.
 
 With a `shape`, or with seasonal border decorations, the padding grows where needed so the rows keep clear of the edge.
+
+## Border and frame
+
+```yaml
+border_width: 2px
+border_style: dashed
+border_color: "#03a9f4"
+opacity: 0.9
+backdrop_filter: blur(8px)
+margin: 8px
+```
+
+The border, opacity and backdrop filter are drawn on the card's outer element, the one that holds Home Assistant's own border. A key you leave out keeps the theme's value. Setting only `border_color` recolours the theme border. If your theme has no border (width 0), set `border_width` too. `border_style: none` removes the border. A bare number is px, so `border_width: 2` is `2px`.
+
+On a card with a `shape` the border is drawn along the shape, as a solid, dashed or dotted line.
+
+`opacity` fades the whole card, text included, so a low value lowers contrast.
+
+`backdrop_filter` blurs or tints what is behind the card. It only shows through a see-through background, so give the card a translucent `background` such as `rgba(0, 0, 0, 0.3)`, or use a theme with a see-through card. It takes `none` or up to six of `blur()`, `brightness()`, `contrast()`, `grayscale()`, `hue-rotate()`, `invert()`, `opacity()`, `saturate()` and `sepia()`, each with one plain number. A value that does not fit is ignored.
+
+`margin` adds space around the card. It takes one to four lengths and no negative values. On a Sections dashboard the card keeps its cell and the space is inside it. A pop-up has no margin. All six keys also work in [conditional appearance](conditional-appearance.md) and sync from a template.
 
 ## Custom CSS
 

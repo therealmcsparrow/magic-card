@@ -11,6 +11,12 @@ At the top, "Editing design for" picks Default, Hover or a rule. Hover is the de
 | Border radius | `border_radius` | CSS length | Theme default | Corner radius of the card. A pop-up uses it for its surface too (a single value only). A shape replaces it. |
 | Card height | `card_height` | CSS length | auto | Minimum height of the card content. |
 | Padding | `padding` | One to four CSS lengths | `16px` | Space inside the card around the rows. Edit per side, or link the sides with Same on all sides. Stored as one CSS shorthand string. |
+| Margin | `margin` | One to four CSS lengths | none | Space around the card, inside its cell on a Sections dashboard. A pop-up has none. |
+| Border width | `border_width` | CSS length | Theme default | Width of the card border. One to four lengths in YAML. A bare number is px. |
+| Border style | `border_style` | Theme default, None, Solid, Dashed, Dotted, Double, Groove, Ridge, Inset, Outset | Theme default | Style of the card border. None removes it. |
+| Border colour | `border_color` | CSS colour | Theme default | Colour of the card border. Setting only the colour recolours the theme border. |
+| Opacity | `opacity` | Number from 0 to 1 | 1 | Fades the whole card, text included. |
+| Backdrop filter | `backdrop_filter` | `none` or filters such as `blur(8px)` | none | Blurs what is behind the card. It shows only through a see-through background. |
 | Box shadow | `box_shadow` | CSS `box-shadow` value | none | Shadow of the card content (in a pop-up, of the pop-up surface), for example `0 4px 12px rgba(0,0,0,0.3)`. On a shaped card the first shadow follows the shape as a drop shadow. |
 | Animations | `animations` | List of preset animations | none | Animations of the whole card. Default only, not in a rule. A card animation needs a trigger entity when its trigger reads an entity. See [Design](../design/README.md). |
 | Template animations | `hidden_animations`, `custom_animations` | Hide, Show or Use template per document | none | Only on a card linked to a template that has `custom_animations`. Lists the template's animation documents with their state on this card. See [Template animations](#template-animations). |

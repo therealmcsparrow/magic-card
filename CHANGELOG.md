@@ -6,6 +6,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Added
+-   **Card border, opacity, backdrop filter and margin.** The card's Design tab has Border width, Border style and Border colour, Opacity and Backdrop filter in Style, and Margin in Layout. The keys are `border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter` and `margin`. Design rules can change them and templates sync them. A shaped card draws its border along the shape. Anything you leave unset keeps the theme's value. Values are checked before use, so a value that isn't a plain length, colour, number or filter is ignored. Backdrop filter only shows through a see-through card background.
+
 ### Fixed
 -   **Button size.** Design > Size now resizes the button itself. Before, the box around it changed and the button stayed the size of its label. A button with no size set still fits its label.
 
@@ -366,7 +369,7 @@ The first public release. It covers everything built since the initial build.
 -   Pop-up mode: a card as a bottom sheet or dialog, opened by a `#hash`, an action or an entity state.
 
 ### Design
--   A Design panel for every card, row, column and module, grouped under Layout, Style, Effects and Advanced: spacing, borders and border length, typography with Google Fonts, backgrounds and video backgrounds, flexbox, grid, hover, custom CSS, entity colours and conditional design rules.
+-   A Design panel for every row, column and module, grouped under Layout, Style, Effects and Advanced: spacing, borders and border length, typography with Google Fonts, backgrounds and video backgrounds, flexbox, grid, hover, custom CSS, entity colours and conditional design rules.
 -   Shapes: squircle, pill, circle, hexagon, octagon, notch, ticket, wave and blob, with the border, ring and flow-line anchors following the shape.
 -   Value backgrounds: a tank that fills to an entity's value, or a history sparkline behind the content.
 -   Rings: a value ring or an animated ring that follows the exact border radius. A ring on a `timer` entity counts down live, and `min` and `max` can come from an entity.

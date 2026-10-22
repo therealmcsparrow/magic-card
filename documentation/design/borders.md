@@ -31,6 +31,10 @@ design:
   border_radius: 12px
 ```
 
+## The card's own border
+
+The card's Design tab has its own Border width, Border style and Border colour, plus Opacity, Backdrop filter and Margin. They use the same key names (`border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter`, `margin`) as the design keys on this page, but they are card keys, set at the top level of the card. Rows, columns and modules keep their design keys. Card keys you leave unset keep the Home Assistant theme's card border. See [Card options](../card/card-options.md#border-and-frame).
+
 ## Border radius and module surfaces
 
 The border radius is also passed to modules that draw their own rounded surface (button, dropdown, slider, bar track, image), so the visible surface follows it. A [ring](ring.md) follows the rendered radius too.

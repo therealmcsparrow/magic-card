@@ -47,6 +47,12 @@ background: "#1c1c1c"              # CSS background value
 background_image: url('/local/bg.jpg')   # url(), gradient or media-source:// id
 border_radius: 16px                # card corners; also the pop-up corners
 padding: 16px                      # default 16px
+margin: 8px                        # space around the card, 1 to 4 lengths
+border_width: 2px                  # 1 to 4 lengths; unset keeps the theme's border
+border_style: dashed               # none, solid, dashed, dotted, double, groove, ridge, inset, outset
+border_color: "#03a9f4"
+opacity: 0.9                       # 0 to 1
+backdrop_filter: blur(8px)         # needs a see-through background to show
 box_shadow: 0 2px 8px rgba(0,0,0,.3)
 card_height: 220px                 # minimum height
 overflow: hidden                   # visible | hidden | auto
@@ -64,7 +70,8 @@ conditional_appearance:            # override card fields while conditions match
     mode: every
     conditions: []
     overrides:
-      background: "#0d1b2a"        # background, background_image, border_radius, padding,
+      background: "#0d1b2a"        # background, background_image, border_radius, padding, margin,
+                                   # border_width, border_style, border_color, opacity, backdrop_filter,
                                    # box_shadow, card_height, use_page_theme, theme
 
 animations: []                     # card animations (see Animations); trigger_entity required
@@ -157,6 +164,12 @@ rows:                              # required (a list, may be empty)
 | `background_image` | string | | `url('...')`, a gradient, or a `media-source://` id. Drawn with `cover`, centred, no repeat. |
 | `border_radius` | string | theme | CSS length. Also rounds the pop-up surface. |
 | `padding` | string | `16px` | CSS padding. |
+| `margin` | string or number | | Space around the card: one to four lengths (`px`, `em`, `rem`, `%`, `vw`, `vh`; a bare number is px; no negatives). It is padding on the card's outer element, so a card that fills a grid cell keeps its cell. Not applied to a pop-up. |
+| `border_width` | string or number | theme | One to four lengths, same rules as `margin`. |
+| `border_style` | string | theme | `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset` or `outset`. |
+| `border_color` | string | theme | A CSS colour (hex, name, `rgb()`, `var(--x)` and so on). Never `url()`. |
+| `opacity` | number | | 0 to 1. Fades the whole card, text included. |
+| `backdrop_filter` | string | | `none`, or up to six of `blur()`, `brightness()`, `contrast()`, `grayscale()`, `hue-rotate()`, `invert()`, `opacity()`, `saturate()`, `sepia()`, for example `blur(8px) saturate(140%)`. Shows only through a see-through card background. No `url()`, `var()` or `calc()`. |
 | `box_shadow` | string | theme | CSS box shadow. |
 | `card_height` | string | | Written as `min-height`. |
 | `overflow` | string | | `visible`, `hidden` or `auto`. |
@@ -521,7 +534,7 @@ Card-level rules: while a rule's conditions match, its `overrides` replace card 
 | `id`, `name` | Give each rule a unique `id` |
 | `mode` | `every` (default) or `any` |
 | `conditions` | Same as display conditions. There is no module entity here. |
-| `overrides` | Any of `background`, `background_image`, `border_radius`, `padding`, `box_shadow`, `card_height`, `use_page_theme`, `theme` |
+| `overrides` | Any of `background`, `background_image`, `border_radius`, `padding`, `margin`, `border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter`, `box_shadow`, `card_height`, `use_page_theme`, `theme` |
 
 As with conditional design rules, a rule without conditions, or with a condition that is not filled in, changes nothing.
 
@@ -900,7 +913,7 @@ Detail: [Card, rows and columns](../card/README.md).
 | Key | Where | Notes |
 | --- | --- | --- |
 | `template` | card | Name of a template saved with the `magic_card_utils` integration. The card fetches it and follows it. |
-| `not_synced` | card | Card keys kept local: `use_page_theme`, `theme`, `background`, `background_image`, `border_radius`, `padding`, `box_shadow`, `card_height`, `overflow`, `css`, `hover`, `animations`, `ring`, `shape` (with `shape_options`), `value_background`, `seasonal`, `popup`, `flows`. `name`, `display` and `conditional_appearance` always come from the template. |
+| `not_synced` | card | Card keys kept local: `use_page_theme`, `theme`, `background`, `background_image`, `border_radius`, `padding`, `margin`, `border_width`, `border_style`, `border_color`, `opacity`, `backdrop_filter`, `box_shadow`, `card_height`, `overflow`, `css`, `hover`, `animations`, `ring`, `shape` (with `shape_options`), `value_background`, `seasonal`, `popup`, `flows`. `name`, `display` and `conditional_appearance` always come from the template. |
 | `not_synced` | card | `custom_animations`: the card uses only its own `custom_animations` and none of the template's. |
 | `hidden_animations` | card | Ids of template animation documents this card leaves out. Each item is an id string; any other value hides nothing. A document of the card's own with that id still plays. A template's own `hidden_animations` has no effect. |
 | `not_synced` | row | `layout`, `column_widths`, `gap`, `padding`, `design`, `actions`, `hidden`, `editor_name`. `column_widths` or `actions` listed without a local value removes the template's. So does `hidden` or `editor_name` listed without a local value. |

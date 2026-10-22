@@ -19,7 +19,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
 -   Studio: a full-screen editor with layers, a clickable live canvas and keyboard shortcuts. The canvas is Narrow, Wide or Panel wide, picked from the dashboard view the card sits in.
 -   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Copy its YAML, copy and paste a module (also into another card), wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
--   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules.
+-   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules. The card itself has a border (width, style and colour), margin, opacity and backdrop filter.
 -   More than 100 preset animations, several per element, with play conditions, plus 46 themed catalogue presets (see [Catalogue presets](#catalogue-presets)).
 -   Animated icons: pick one of 192 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. Each ready-made one plays in a Quiet, Living or Glow style. The card stores the result itself, so it needs no integration.
 -   Theme editor: create and edit Home Assistant themes in the Magic Card Utils Themes tab, with a live preview beside the fields, light and dark modes, 57 presets in three groups (see the [theme examples](documentation/themes/examples/README.md) for a screenshot of each), and a Try on dashboard button that shows a theme in your browser tab until you revert it. Needs the Magic Card Utils integration, version 2026.10.08 or newer. See [Themes](documentation/themes/README.md).
@@ -246,6 +246,10 @@ Card-level options:
 | `theme` | Theme name when `use_page_theme` is `false` |
 | `background`, `background_image` | Card background |
 | `border_radius`, `padding`, `box_shadow` | Card shape and spacing |
+| `border_width`, `border_style`, `border_color` | Card border. Width takes one to four lengths (a bare number is px), style a border style such as `solid` or `dashed`. Unset keys keep the theme's border |
+| `opacity` | Card opacity, 0 to 1 |
+| `backdrop_filter` | Filter on what is behind the card, for example `blur(8px)`. It only shows through a see-through background |
+| `margin` | Space around the card, one to four lengths (a bare number is px) |
 | `card_height` | Minimum height of the card |
 | `overflow` | `visible`, `hidden` or `auto` |
 | `css` | Free CSS for the card's content, applied after the fields above (Custom CSS in the card's Design tab) |

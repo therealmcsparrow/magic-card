@@ -22,6 +22,10 @@ Conditional appearance changes card fields, like the background or the theme, wh
 | `background_image` | `background_image` |
 | `border_radius` | `border_radius` |
 | `padding` | `padding` |
+| `margin` | `margin` |
+| `border_width`, `border_style`, `border_color` | The card border keys of the same name |
+| `opacity` | `opacity` |
+| `backdrop_filter` | `backdrop_filter` |
 | `box_shadow` | `box_shadow` |
 | `card_height` | `card_height` |
 | `ring` | The whole ring. `{}` turns the Default ring off while the rule matches. |
