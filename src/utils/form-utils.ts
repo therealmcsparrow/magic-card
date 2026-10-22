@@ -383,11 +383,13 @@ export function renderUnitField(
   propertyName?: string,
   syncContext?: SyncContext,
   placeholder?: string,
+  units?: string[],
 ): TemplateResult {
   return html`
     <div class="mc-field">
       ${renderFieldHead(label, propertyName, syncContext)}
       <mc-unit-field
+        .units=${units}
         .value=${value || ''}
         .label=${label}
         .placeholder=${placeholder || ''}

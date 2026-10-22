@@ -52,6 +52,9 @@ import { layerEditorNote } from '../layers/layer-editor-loader';
 import { backdropHasProblem, startRuleLayers } from '../layers/bg-layers-model';
 import type { BackgroundLayerConfig } from '../../contracts/bg-stack';
 
+/** Border width units: a percentage border is not valid CSS, so the card frame ignores it. */
+const BORDER_UNITS = ['px', 'em', 'rem', 'vw', 'vh'];
+
 /** Write one top-level card property (marks it not_synced when the card is linked to a template). */
 export type CardUpdate = (propertyName: keyof MagicCardConfig, value: unknown) => void;
 
@@ -258,7 +261,7 @@ export function renderCardDesign(
     card_height: () => html`${renderUnitField(t('Card height'), str('card_height'), (v) => src.set('card_height', v), 'card_height', sc, 'auto')}${unset('card_height')}`,
     padding: () => html`${renderBoxField(t('Padding'), str('padding'), (v) => src.set('padding', v), 'padding', 'padding', sc)}${unset('padding')}`,
     margin: () => html`${renderBoxField(lt('Margin'), str('margin'), (v) => src.set('margin', v), 'margin', 'margin', sc)}${unset('margin')}`,
-    border_width: () => html`${renderUnitField(lt('Border width'), str('border_width'), (v) => src.set('border_width', v), 'border_width', sc, t('Theme default'))}${unset('border_width')}`,
+    border_width: () => html`${renderUnitField(lt('Border width'), str('border_width'), (v) => src.set('border_width', v), 'border_width', sc, t('Theme default'), BORDER_UNITS)}${unset('border_width')}`,
     border_style: () =>
       html`${renderSelectField(lt('Border style'), str('border_style') ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => src.set('border_style', v || undefined), 'border_style', sc)}${unset('border_style')}`,
     border_color: () => html`${renderColorField(lt('Border colour'), str('border_color'), (v) => src.set('border_color', v), 'border_color', sc)}${unset('border_color')}`,
@@ -735,7 +738,7 @@ function renderAppearanceRule(
               ${renderUnitField(t('Border radius'), overrides.border_radius, (v) => updateOverride('border_radius', v))}
               ${renderBoxField(t('Padding'), overrides.padding, (v) => updateOverride('padding', v), 'padding')}
               ${renderBoxField(lt('Margin'), overrides.margin as string | undefined, (v) => updateOverride('margin', v), 'margin')}
-              ${renderUnitField(lt('Border width'), overrides.border_width as string | undefined, (v) => updateOverride('border_width', v))}
+              ${renderUnitField(lt('Border width'), overrides.border_width as string | undefined, (v) => updateOverride('border_width', v), undefined, undefined, undefined, BORDER_UNITS)}
               ${renderSelectField(lt('Border style'), overrides.border_style ?? '', [{ label: t('Theme default'), value: '' }, ...BORDER_STYLE_OPTS.map((o) => ({ label: lt(o.label), value: o.value }))], (v) => updateOverride('border_style', v || undefined))}
               ${renderColorField(lt('Border colour'), overrides.border_color, (v) => updateOverride('border_color', v))}
               ${renderTextField(t('Box shadow'), overrides.box_shadow, (v) => updateOverride('box_shadow', v))}

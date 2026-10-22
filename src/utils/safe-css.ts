@@ -8,7 +8,7 @@ export const str = (v: unknown): string | undefined => (typeof v === 'string' &&
 /** Longest value the number grammars below look at (a backdrop filter list gets more). */
 const MAX_VALUE = 64;
 const MAX_FILTER = 256;
-const MAX_COLOR = 128;
+const MAX_COLOR = 256;
 
 /** A CSS time ("2s", "600ms", a bare number = seconds), or undefined when it is not one. */
 export function cssTime(v: unknown): string | undefined {
