@@ -439,9 +439,25 @@ export interface DisplayCondition {
 export interface TabStateDesign {
   tab_color?: string;
   tab_background?: string;
+  /** One to four lengths, as in CSS border-width */
+  tab_border_width?: string;
+  tab_border_style?: string;
   tab_border_color?: string;
+  tab_radius?: string;
+  tab_padding?: string;
+  tab_font_family?: string;
+  tab_font_size?: string;
   tab_font_weight?: string;
+  tab_text_transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  tab_letter_spacing?: string;
+  tab_shadow?: string;
+  tab_icon_size?: string;
+  tab_icon_color?: string;
   tab_opacity?: number;
+  /** Animations that play on the tab in this state */
+  tab_animations?: AnimationConfig[];
+  /** Icon effects for the tab in this state (not used in hover) */
+  tab_icon_fx?: Pick<IconFxConfig, 'device' | 'draw' | 'draw_duration'>;
 }
 
 export interface DesignConfig {
@@ -547,8 +563,15 @@ export interface DesignConfig {
   tab_active_color?: string;
   tab_active_background?: string;
   tab_indicator_color?: string;
+  /** One to four lengths, as in CSS border-width */
   tab_border_width?: string;
+  tab_border_style?: string;
   tab_border_color?: string;
+  tab_letter_spacing?: string;
+  tab_shadow?: string;
+  tab_icon_color?: string;
+  tab_animations?: AnimationConfig[];
+  tab_icon_fx?: Pick<IconFxConfig, 'device' | 'draw' | 'draw_duration'>;
   tab_radius?: string;
   tab_padding?: string;
   tab_font_family?: string;
@@ -1075,6 +1098,8 @@ export interface TabsModuleConfig extends CardModule, IconFxKeys {
     modules: CardModule[];
     /** Studio Hide: the tab is left out on the dashboard. */
     hidden?: boolean;
+    /** Icon shown while this tab is active (absent = `icon`). */
+    active_icon?: string;
   }>;
   active_tab?: number;
   tab_style?: 'default' | 'pills' | 'underline';
