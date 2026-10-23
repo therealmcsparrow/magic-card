@@ -26,10 +26,13 @@ export class TabsView implements ModuleView {
 
     const laid = activeTab?.modules?.length ? layoutChildren(activeTab.modules, hass, activeIdx) : undefined;
 
+    // counts the switches, so the animation name alternates on every one
+    const flips = ctx?.uiState?.<number>('tab-flips');
     const select = (i: number) => (e: Event) => {
       e.stopPropagation();
       if (!state || !ctx || i === activeIdx) return;
       state.set(i);
+      flips?.set((flips.get() ?? 0) + 1);
       ctx.requestUpdate();
     };
     // Switching a tab is not a tap on the tabs module itself (its own actions stay on the wrapper).
@@ -47,7 +50,7 @@ export class TabsView implements ModuleView {
       queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[p]?.focus());
     };
 
-    const look = tabLook(c.design, activeIdx);
+    const look = tabLook(c.design, flips?.get() ?? 0);
     const header = html`
         <div class="mc-tabs-header" role="tablist">
           ${shown.map((i) => {
