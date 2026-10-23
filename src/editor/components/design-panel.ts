@@ -11,6 +11,7 @@ import {
   DesignGroup,
   CssPropertyDef,
   CssPropertyOption,
+  TAB_SUBGROUPS,
   displayProperties,
 } from '../../utils/css-properties';
 import { BOX_LONGHANDS, propertyKeys } from '../../utils/css-design-map';
@@ -21,6 +22,8 @@ import { DEFAULT_BORDER_LENGTH_WIDTH } from '../../utils/css-utils';
 import { generateId } from '../../utils/id-generator';
 import { ANIMATION_ICON_MODULES, animationsUpdate, readAnimations } from '../../anim-studio/entries';
 import { fieldReset } from './field-reset';
+import { DEVICES, DRAWS } from './icon-fx-options';
+import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { MenuPopover } from '../../ui-kit/controllers/menu-popover';
 import { entityStateColor } from '../../utils/entity-color';
 import { PasteMode, copyDesign, designUpdates, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
@@ -71,7 +74,7 @@ const isStr = (v: unknown): v is string => typeof v === 'string' && v !== '';
 const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : lt(id));
 
 /** Field types a hover rule cannot apply (the card draws them itself, not through CSS). */
-const NO_HOVER_TYPES = new Set(['animations', 'ring', 'shape', 'value_bg']);
+const NO_HOVER_TYPES = new Set(['animations', 'icon_anim', 'ring', 'shape', 'value_bg']);
 
 /** The edited part of the design besides Default: a conditional rule's design or the hover design. */
 interface SubDesign {
@@ -165,6 +168,74 @@ export class DesignPanel extends LitElement {
         justify-content: flex-end;
         margin: -4px -8px -8px 0;
       }
+      /* the collapsible groups inside the Tab bar sector */
+      .subgroup {
+        display: grid;
+        gap: 12px;
+      }
+      .subgroup-head {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .subgroup-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        min-height: 32px;
+        padding: 0 8px 0 2px;
+        border: 0;
+        border-radius: var(--mc-radius);
+        background: transparent;
+        text-align: left;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--mc-text);
+      }
+      .subgroup-btn:hover {
+        background: var(--mc-surface-2);
+      }
+      .subgroup-btn .nm {
+        flex: 1;
+        min-width: 0;
+      }
+      .subgroup-btn .chev {
+        --mdc-icon-size: 18px;
+        color: var(--mc-text-2);
+        transition: transform 0.15s ease-out;
+      }
+      .subgroup-btn[aria-expanded='false'] .chev {
+        transform: rotate(-90deg);
+      }
+      .subgroup-body,
+      .tab-notes {
+        display: grid;
+        gap: 16px;
+      }
+      .tab-notes {
+        gap: 4px;
+      }
+      .subgroup-caption {
+        margin: 4px 0 -4px;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--mc-text-2);
+      }
+      .fx-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 8px;
+      }
+      .sublbl {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.75rem;
+        color: var(--mc-text-2);
+      }
       /* headed groups (Layout, Style, Effects, Advanced) in one scrolling list */
       .dgroups {
         display: grid;
@@ -209,7 +280,8 @@ export class DesignPanel extends LitElement {
         gap: 16px;
       }
       @media (prefers-reduced-motion: reduce) {
-        .dgroup-btn .chev {
+        .dgroup-btn .chev,
+        .subgroup-btn .chev {
           transition: none;
         }
       }
@@ -237,6 +309,9 @@ export class DesignPanel extends LitElement {
   @property({ attribute: false }) tabs: { labels: string[]; style?: string } = { labels: [] };
 
   @state() private _openSectors = new Set<string>();
+  /** Tab bar groups the user opened or closed; the rest follow Bar and Text open, else open once they hold a value. */
+  @state() private _subOpen = new Map<string, boolean>();
+  private _subOpenedForValue = new Set<string>();
   /** Groups the user opened or closed in this panel; the rest follow defaultOpen / a set value. */
   @state() private _groupOpen = new Map<string, boolean>();
   /** Groups shown open because they held a set value (not reactive: written while rendering). */
@@ -324,7 +399,7 @@ export class DesignPanel extends LitElement {
    * same change.
    */
   private _stateSub(state: TabState, rule: ConditionalDesign | undefined): SubDesign {
-    const container = (rule ? rule.design : this.design) as Record<string, unknown>;
+    const container = ((rule ? rule.design : this.design) ?? {}) as Record<string, unknown>;
     const own = isRec(container[state]) ? (container[state] as Record<string, unknown>) : {};
     const legacy = state === 'tab_active' ? LEGACY_ACTIVE_KEYS.filter((k) => container[k] !== undefined) : [];
     const design: Record<string, unknown> = {};
@@ -362,6 +437,50 @@ export class DesignPanel extends LitElement {
 
   private _getActiveDesign(): Record<string, unknown> {
     return this._sub()?.design ?? (this.design as Record<string, unknown>);
+  }
+
+  /** Number of values a tab state holds (the old Active tab keys included). */
+  private _stateCount(state: TabState, rule?: ConditionalDesign): number {
+    return Object.values(this._stateSub(state, rule).design).filter((v) => v !== undefined && v !== '').length;
+  }
+
+  /** "Active tab (3 set)": a view's name with the number of values it holds. */
+  private _withCount(name: string, n: number): string {
+    return n > 0 ? t('{name} ({n} set)', { name, n }) : name;
+  }
+
+  /** The name of the edited view, for labels: Default, Hover, Active tab, Disabled tab or the rule. */
+  private _viewName(): string {
+    const { id, state } = this._viewParts();
+    const rule = this._getActiveRule();
+    if (rule) {
+      const name = rule.name || t('Rule {n}', { n: (this.design.conditional ?? []).findIndex((r) => r.id === id) + 1 });
+      return state === 'tab_active' ? t('Rule: {name}, active tab', { name }) : state === 'tab_disabled' ? t('Rule: {name}, disabled tab', { name }) : t('Rule: {name}', { name });
+    }
+    return state === 'tab_active' ? t('Active tab') : state === 'tab_disabled' ? t('Disabled tab') : this._isHoverView() ? t('Hover') : t('Default');
+  }
+
+  /**
+   * The value a per-tab field takes from the design below the edited one, for the Active tab, Disabled
+   * tab and Hover views: the rule's own, else Default's. Undefined in the other views.
+   */
+  private _inherited(key: string): string | undefined {
+    if (!this._viewParts().state && !this._isHoverView()) return undefined;
+    const rule = this._getActiveRule();
+    const pick = (d: unknown): string => {
+      const v = isRec(d) ? d[key] : undefined;
+      return typeof v === 'number' ? String(v) : typeof v === 'string' ? v : '';
+    };
+    return pick(rule?.design) || pick(this.design);
+  }
+
+  /** The Active tab or Disabled tab view: clear everything it sets, in one change. */
+  private _resetState(): void {
+    const state = this._viewParts().state;
+    const sub = this._sub();
+    if (!state || !sub) return;
+    sub.write({});
+    this._announce(t('{state} reset', { state: state === 'tab_active' ? t('Active tab') : t('Disabled tab') }));
   }
 
   private _getValue(key: string): string {
@@ -763,10 +882,15 @@ export class DesignPanel extends LitElement {
           ></mc-sync-indicator>
         `
       : nothing;
+    // a tab state or Hover takes an empty per-tab field from the design below it: show that value as a hint
+    const inherited = p.tabState && !value ? this._inherited(p.key) : undefined;
+    const inheritsHere = p.tabState && this._inherited(p.key) !== undefined;
     // the animation list has its own per-entry "Reset to preset", the ring editor per-field resets and Off
-    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]));
+    const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]), inheritsHere ? t('Use Default value') : undefined);
     const field = (control: TemplateResult, sync: TemplateResult | typeof nothing = nothing, forId?: string, help?: string) =>
       this._renderField(lt(p.label), control, sync, forId, help, reset);
+    /** The help line of a colour or font field: its own help, else where an empty field takes its value from. */
+    const hint = (own?: string): string | undefined => own ?? (inherited ? t('Inherited from Default: {value}', { value: inherited }) : undefined);
 
     switch (p.type) {
       case 'animations': {
@@ -788,6 +912,33 @@ export class DesignPanel extends LitElement {
           syncIndicator,
         );
       }
+
+      case 'tab_animations': {
+        const raw = this._getActiveDesign()[p.key];
+        const list = Array.isArray(raw) ? (raw.filter(isRec) as unknown as AnimationConfig[]) : [];
+        return field(
+          html`
+            <mc-animation-list
+              .animations=${list}
+              .allowIcon=${true}
+              .allowLabel=${true}
+              .motionOnly=${true}
+              .moduleLabel=${t('Tab')}
+              .hass=${this.hass}
+              .defaultEntity=${this.moduleEntity}
+              .allowEntityColor=${this._allowEntityColor}
+              .entityColor=${this._entityColor}
+              .onChange=${(next: AnimationConfig[]) => this._handleObjectChange(p.key, next.length ? next : undefined)}
+            ></mc-animation-list>
+          `,
+          syncIndicator,
+          undefined,
+          lbl(p.help),
+        );
+      }
+
+      case 'icon_anim':
+        return field(this._renderIconAnim(p.key), syncIndicator, undefined, lbl(p.help));
 
       case 'ring': {
         const isModule = this.target === 'module';
@@ -877,7 +1028,8 @@ export class DesignPanel extends LitElement {
               .value=${value}
               .label=${lt(p.label)}
               .units=${p.units}
-              .placeholder=${unitPlaceholder(p.key, { ...(this.design as Record<string, unknown>), ...this._getActiveDesign() })}
+              data-key=${p.key}
+              .placeholder=${inherited?.match(/^-?\d*\.?\d+/)?.[0] ?? unitPlaceholder(p.key, { ...(this.design as Record<string, unknown>), ...this._getActiveDesign() })}
               @value-changed=${(e: CustomEvent) => this._handlePropertyChange(p.key, e.detail.value)}
             ></mc-unit-field>
           `,
@@ -891,6 +1043,7 @@ export class DesignPanel extends LitElement {
         return field(
           html`
             <mc-color-picker
+              data-key=${p.key}
               .value=${value}
               .label=${lt(p.label)}
               .allowEntity=${this._allowEntityColor && !p.baseOnly && !p.key.startsWith('tab_')}
@@ -903,7 +1056,7 @@ export class DesignPanel extends LitElement {
           `,
           syncIndicator,
           undefined,
-          bgBlock || undefined,
+          hint(bgBlock || undefined),
         );
       }
 
@@ -930,6 +1083,8 @@ export class DesignPanel extends LitElement {
             ></mc-font-picker>
           `,
           syncIndicator,
+          undefined,
+          hint(),
         );
 
       case 'select':
@@ -941,7 +1096,7 @@ export class DesignPanel extends LitElement {
                 id=${id}
                 @change=${(e: Event) => this._handlePropertyChange(p.key, (e.target as HTMLSelectElement).value)}
               >
-                <option value="" ?selected=${!value}>${p.emptyLabel === undefined ? t('Not set') : lt(p.emptyLabel)}</option>
+                <option value="" ?selected=${!value}>${inherited ? t('Inherit ({value})', { value: this._optionLabel(p, inherited) }) : p.emptyLabel === undefined ? t('Not set') : lt(p.emptyLabel)}</option>
                 ${this._renderOptions(p.options || [], value)}
               </select>
               <ha-icon icon="mdi:chevron-down"></ha-icon>
@@ -1018,6 +1173,7 @@ export class DesignPanel extends LitElement {
               min=${p.range?.[0] ?? nothing}
               max=${p.range?.[1] ?? nothing}
               step=${p.range?.[2] ?? nothing}
+              placeholder=${inheritsHere ? inherited || t('Theme default') : nothing}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
@@ -1035,13 +1191,14 @@ export class DesignPanel extends LitElement {
               id=${id}
               type="text"
               spellcheck="false"
-              placeholder=${TEXT_PLACEHOLDERS[p.key] ?? nothing}
+              placeholder=${inheritsHere ? inherited || t('Theme default') : TEXT_PLACEHOLDERS[p.key] ?? nothing}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
           `,
           syncIndicator,
           id,
+          lbl(p.help),
         );
     }
   }
@@ -1054,6 +1211,69 @@ export class DesignPanel extends LitElement {
     return groups.map(
       (g) => html`<optgroup label=${g ?? ''}>${options.filter((o) => o.group === g).map(opt)}</optgroup>`,
     );
+  }
+
+  /** The label of a select field's option for a stored value (the value itself when it is not listed). */
+  private _optionLabel(p: CssPropertyDef, value: string): string {
+    const o = p.options?.find((x) => x.value === value);
+    return o ? lt(o.label) : value;
+  }
+
+  /**
+   * `tab_icon_fx`: the device animation and the line draw of a tab's icon (and its duration), the
+   * three keys a tab state can set. Empty is Off in Default and rules, Same as Default in a state.
+   */
+  private _renderIconAnim(key: string): TemplateResult {
+    const raw = this._getActiveDesign()[key];
+    const fx = isRec(raw) ? raw : {};
+    const inState = !!this._viewParts().state;
+    const device = typeof fx.device === 'string' ? fx.device : '';
+    const draw = typeof fx.draw === 'string' ? fx.draw : '';
+    const duration = typeof fx.draw_duration === 'string' ? fx.draw_duration : '';
+    const write = (patch: Record<string, string>) => {
+      const next: Record<string, string> = {};
+      const merged = { device, draw, draw_duration: duration, ...patch };
+      if (merged.device) next.device = merged.device;
+      if (merged.draw && (inState || merged.draw !== 'off')) {
+        next.draw = merged.draw;
+        if (merged.draw !== 'off' && merged.draw_duration) next.draw_duration = merged.draw_duration;
+      }
+      this._handleObjectChange(key, Object.keys(next).length ? next : undefined);
+    };
+    const first = { value: '', label: inState ? t('Same as Default') : t('Off') };
+    const select = (id: string, label: string, value: string, opts: Array<{ value: string; label: string }>, onPick: (v: string) => void) => html`
+      <div>
+        <label class="sublbl" for=${id}>${label}</label>
+        <div class="select">
+          <select class="input" id=${id} @change=${(e: Event) => onPick((e.target as HTMLSelectElement).value)}>
+            ${[first, ...opts].map((o) => html`<option value=${o.value} ?selected=${o.value === value}>${o.label}</option>`)}
+          </select>
+          <ha-icon icon="mdi:chevron-down"></ha-icon>
+        </div>
+      </div>
+    `;
+    const keep = (o: { value: string }) => inState || o.value !== 'off';
+    const devices = DEVICES.filter((o) => keep(o) && (o.value !== 'auto' || !!this.moduleEntity || device === 'auto')).map((o) => ({ value: o.value, label: t(o.label) }));
+    const draws = DRAWS.filter(keep).map((o) => ({ value: o.value, label: t(o.label) }));
+    return html`
+      <div class="fx-pair">
+        ${select(`dp-${key}-device`, t('Device animation'), device, devices, (v) => write({ device: v }))}
+        ${select(`dp-${key}-draw`, t('Line draw'), draw, draws, (v) => write({ draw: v }))}
+      </div>
+      ${draw && draw !== 'off'
+        ? html`<div>
+            <span class="sublbl">${t('Draw duration')}</span>
+            <mc-unit-field
+              data-key="${key}-duration"
+              .value=${duration}
+              .label=${t('Draw duration')}
+              .units=${['s', 'ms']}
+              .placeholder=${String(ICON_FX_DEFAULTS.drawDuration)}
+              @value-changed=${(e: CustomEvent) => write({ draw_duration: e.detail.value || '' })}
+            ></mc-unit-field>
+          </div>`
+        : nothing}
+    `;
   }
 
   private _renderSector(sector: CssSector): TemplateResult | typeof nothing {
@@ -1087,14 +1307,16 @@ export class DesignPanel extends LitElement {
                       type="button"
                       class="btn btn-text btn-sm sector-reset"
                       aria-label=${t('Reset section {name}', { name: lt(sector.name) })}
-                      title=${t('Clear every value in this section')}
+                      title=${sector.id === 'tabs-bar' ? t('Resets Default values only.') : t('Clear every value in this section')}
                       @click=${() => this._reset(sector.properties.filter((p) => this._isSet(p)))}
                     >
                       <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}
                     </button>
                   </div>`
                 : nothing}
+              ${sector.id === 'tabs-bar' ? this._renderTabNotes() : nothing}
               ${this._renderPropertyList(filtered)}
+              ${sector.id === 'tabs-bar' ? this._renderStateReset() : nothing}
             </div>`
           : nothing}
       </div>
@@ -1103,6 +1325,117 @@ export class DesignPanel extends LitElement {
 
   /** Compact fields (unit / select / number) pair up side by side, like Width + Min height. */
   private _renderPropertyList(props: CssPropertyDef[]): TemplateResult[] {
+    return props.some((p) => p.subgroup) ? this._renderSubgroups(props) : this._renderFlatList(props);
+  }
+
+  /**
+   * The fields of a sector that has collapsible groups (the Tab bar): a heading button per group with
+   * its set count and Reset. The per-tab groups sit under a "Tabs" caption.
+   */
+  private _renderSubgroups(props: CssPropertyDef[]): TemplateResult[] {
+    const runs: Array<{ id: string | undefined; props: CssPropertyDef[] }> = [];
+    for (const p of props) {
+      const last = runs[runs.length - 1];
+      if (last && last.id === p.subgroup) last.props.push(p);
+      else runs.push({ id: p.subgroup, props: [p] });
+    }
+    const state = this._viewParts().state;
+    const out: TemplateResult[] = [];
+    let captioned = false;
+    for (const run of runs) {
+      const def = TAB_SUBGROUPS.find((g) => g.id === run.id);
+      if (!def) {
+        out.push(...this._renderFlatList(run.props));
+        continue;
+      }
+      if (run.id !== 'bar' && !captioned) {
+        captioned = true;
+        out.push(html`<h4 class="subgroup-caption">${t('Tabs')}</h4>`);
+      }
+      const setProps = run.props.filter((p) => this._isSet(p));
+      const count = setProps.length;
+      if (count > 0) this._subOpenedForValue.add(def.id);
+      const open = !!this._searchQuery || (this._subOpen.get(def.id) ?? (def.id === 'bar' || def.id === 'text' || this._subOpenedForValue.has(def.id)));
+      const bodyId = `sg-${def.id}`;
+      const name = lt(def.name);
+      out.push(html`
+        <div class="subgroup" data-subgroup=${def.id}>
+          <div class="subgroup-head">
+            <button
+              type="button"
+              class="subgroup-btn"
+              aria-expanded=${open ? 'true' : 'false'}
+              aria-controls=${bodyId}
+              @click=${() => {
+                this._subOpen = new Map(this._subOpen).set(def.id, !open);
+              }}
+            >
+              <ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>
+              <span class="nm">${name}</span>
+              ${count > 0 ? html`<span class="chip is-count">${t('{n} set', { n: count })}</span>` : nothing}
+            </button>
+            ${count > 0
+              ? html`<button type="button" class="btn btn-text btn-sm subgroup-reset" aria-label=${t('Reset {group} in {state}', { group: name, state: this._viewName() })} @click=${() => this._reset(setProps)}>
+                  ${t('Reset')}
+                </button>`
+              : nothing}
+          </div>
+          ${open
+            ? html`<div class="subgroup-body" id=${bodyId}>
+                ${this._renderFlatList(run.props)}
+                ${def.id === 'icon' && state === 'tab_active' ? html`<p class="help">${t('Icon when active is set per tab in the structure tree.')}</p>` : nothing}
+              </div>`
+            : nothing}
+        </div>
+      `);
+    }
+    return out;
+  }
+
+  /** In a tab state or Hover: why the Bar group is missing, the way back to it, and what an empty state means. */
+  private _renderTabNotes(): TemplateResult | typeof nothing {
+    const { id, state } = this._viewParts();
+    if (!state && !this._isHoverView()) return nothing;
+    const rule = this._getActiveRule();
+    const own = this._getActiveDesign();
+    const empty = !Object.values(own).some((v) => v !== undefined && v !== '');
+    const disabled = (rule?.design as Record<string, unknown> | undefined)?.tab_disabled_tabs ?? (this.design as Record<string, unknown>).tab_disabled_tabs;
+    const noneDisabled = state === 'tab_disabled' && !(Array.isArray(disabled) && disabled.length);
+    return html`
+      <div class="tab-notes">
+        <p class="help">${rule ? t('Bar settings apply to every tab and live in the rule.') : t('Bar settings apply to every tab and live in Default.')}</p>
+        ${state && empty ? html`<p class="help">${t('Nothing set. This state looks like Default.')}</p>` : nothing}
+        ${noneDisabled ? html`<p class="help">${t('No tab is disabled yet. Tick tabs under Bar > Disabled tabs in Default.')}</p>` : nothing}
+        <div>
+          <button
+            type="button"
+            class="btn btn-text btn-sm go-default"
+            @click=${async () => {
+              this._activeView = rule ? id : 'default';
+              await this.updateComplete;
+              this.shadowRoot?.querySelector<HTMLElement>('.subgroup-btn')?.focus();
+            }}
+          >
+            ${rule ? t('Go to rule') : t('Go to Default')}
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /** "Reset Active tab" at the end of a tab state view, while it holds a value. */
+  private _renderStateReset(): TemplateResult | typeof nothing {
+    const state = this._viewParts().state;
+    if (!state || !Object.values(this._getActiveDesign()).some((v) => v !== undefined && v !== '')) return nothing;
+    const name = state === 'tab_active' ? t('Active tab') : t('Disabled tab');
+    return html`<div>
+      <button type="button" class="btn btn-secondary btn-sm reset-state" @click=${() => this._resetState()}>
+        <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset {state}', { state: name })}
+      </button>
+    </div>`;
+  }
+
+  private _renderFlatList(props: CssPropertyDef[]): TemplateResult[] {
     const compact = (p?: CssPropertyDef) => !!p && (p.type === 'unit' || p.type === 'select' || p.type === 'number');
     const out: TemplateResult[] = [];
     for (let i = 0; i < props.length; i++) {
@@ -1146,18 +1479,18 @@ export class DesignPanel extends LitElement {
               }}
             >
               <option value="default" ?selected=${this._activeView === 'default'}>${t('Default')}</option>
-              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${t('Hover')}</option>
+              <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${isTabs ? this._withCount(t('Hover'), Object.values(this.design?.hover ?? {}).filter((v) => v !== undefined && v !== '').length) : t('Hover')}</option>
               ${isTabs
-                ? html`<option value=${TAB_ACTIVE_VIEW} ?selected=${this._activeView === TAB_ACTIVE_VIEW}>${t('Active tab')}</option>
-                    <option value=${TAB_DISABLED_VIEW} ?selected=${this._activeView === TAB_DISABLED_VIEW}>${t('Disabled tab')}</option>`
+                ? html`<option value=${TAB_ACTIVE_VIEW} ?selected=${this._activeView === TAB_ACTIVE_VIEW}>${this._withCount(t('Active tab'), this._stateCount('tab_active', undefined))}</option>
+                    <option value=${TAB_DISABLED_VIEW} ?selected=${this._activeView === TAB_DISABLED_VIEW}>${this._withCount(t('Disabled tab'), this._stateCount('tab_disabled', undefined))}</option>`
                 : nothing}
               ${rules.map((r, i) => {
                 const name = r.name || t('Rule {n}', { n: i + 1 });
                 const view = (state?: TabState) => (state ? `${r.id}${STATE_SEP}${state}` : r.id);
                 return html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('Rule: {name}', { name })}</option>
                   ${isTabs
-                    ? html`<option value=${view('tab_active')} ?selected=${this._activeView === view('tab_active')}>${t('Rule: {name}, active tab', { name })}</option>
-                        <option value=${view('tab_disabled')} ?selected=${this._activeView === view('tab_disabled')}>${t('Rule: {name}, disabled tab', { name })}</option>`
+                    ? html`<option value=${view('tab_active')} ?selected=${this._activeView === view('tab_active')}>${this._withCount(t('Rule: {name}, active tab', { name }), this._stateCount('tab_active', r))}</option>
+                        <option value=${view('tab_disabled')} ?selected=${this._activeView === view('tab_disabled')}>${this._withCount(t('Rule: {name}, disabled tab', { name }), this._stateCount('tab_disabled', r))}</option>`
                     : nothing}`;
               })}
             </select>

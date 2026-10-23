@@ -15,6 +15,7 @@ labels	Pulse in the alert colour while on	Pulse in the alert color while on
 labels	Pulse in the alert colour while triggered	Pulse in the alert color while triggered
 labels	State colour	State color
 labels	Tab border colour	Tab border color
+labels	Tab icon colour	Tab icon color
 labels	Tab text colour	Tab text color
 card-editor	Accent colour	Accent color
 card-editor	Add colour	Add color

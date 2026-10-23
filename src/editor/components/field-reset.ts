@@ -6,13 +6,13 @@ import { t } from '../../i18n/labels';
  * only while the field has a value. Resetting removes the value, so the default / inherited value
  * applies again; the caller makes it one (undoable) edit.
  */
-export function fieldReset(label: string, visible: boolean, onReset: () => void): TemplateResult | typeof nothing {
+export function fieldReset(label: string, visible: boolean, onReset: () => void, title?: string): TemplateResult | typeof nothing {
   if (!visible) return nothing;
   return html`<button
     type="button"
     class="icon-btn sm field-reset"
     aria-label=${t('Reset {label}', { label })}
-    title=${t('Reset to default')}
+    title=${title ?? t('Reset to default')}
     @click=${(e: Event) => {
       e.stopPropagation();
       onReset();

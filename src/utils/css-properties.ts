@@ -39,7 +39,7 @@ import {
 } from './css-property-options';
 import { lm } from '../i18n/labels/mark';
 
-export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'tab_list' | 'animations' | 'ring' | 'shape' | 'value_bg';
+export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'tab_list' | 'animations' | 'tab_animations' | 'icon_anim' | 'ring' | 'shape' | 'value_bg';
 
 export interface CssPropertyOption {
   label: MessageId;
@@ -71,8 +71,10 @@ export interface CssPropertyDef {
   hideForVariant?: string[];
   /** Read from the module's own design only: not offered in the hover design or in conditional rules. */
   baseOnly?: boolean;
-  /** A tab look field that also shows in the Active tab and Disabled tab designs (and in Hover). */
+  /** A per-tab field that also shows in the Active tab and Disabled tab designs (and in Hover). */
   tabState?: boolean;
+  /** The collapsible group of the Tab bar sector this field sits in (see TAB_SUBGROUPS). */
+  subgroup?: string;
   /** Number field bounds: min, max and step. */
   range?: [number, number, number];
 }
@@ -104,13 +106,13 @@ function option(
   key: string,
   label: MessageId,
   type: CssPropertyType,
-  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly' | 'tabState' | 'range'>> = {},
+  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly' | 'tabState' | 'subgroup' | 'range'>> = {},
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
-/** A tab bar key: a tabs module reads it from its design, its hover design and its rules. */
+/** A bar-wide tab key: a tabs module reads it from its design and its rules (not from a tab state or the hover design). */
 const tb = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, extra);
-/** A tab look key that a tab state (active, disabled, hover) can also set. */
+/** A per-tab key that every tab state (active, disabled, hover) can also set. */
 const ts = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => tb(key, label, type, { hover: true, tabState: true, ...extra });
 /** A button part key: allowed in the hover design and in rules. */
 const bo = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { hover: true, ...extra });
@@ -118,6 +120,15 @@ const LABEL = { hideForVariant: ['icon-only'] };
 const LENGTH = ['px', 'em', 'rem'];
 const PCT = [...LENGTH, '%'];
 const TAB_LENGTHS_HELP = lm('One to four lengths, for example 4px 8px.');
+
+/** The collapsible groups of the Tab bar sector, in display order: Bar is bar-wide, the others hold per-tab fields. */
+export const TAB_SUBGROUPS: Array<{ id: string; name: MessageId }> = [
+  { id: 'bar', name: lm('Bar') },
+  { id: 'text', name: lm('Text') },
+  { id: 'border', name: lm('Border') },
+  { id: 'icon', name: lm('Icon') },
+  { id: 'effects', name: lm('Effects') },
+];
 
 /** Design keys that only matter once another key is set (key → the key it depends on). */
 export const DEPENDENT_OPTIONS: Record<string, string> = {
@@ -387,49 +398,59 @@ export const CSS_SECTORS: CssSector[] = [
     ],
   },
 
-  // 9b. Tab bar: the tab_ keys a tabs module reads (src/modules/layout/tabs-look.ts); virtual; the state subset also shows in Hover, Active tab and Disabled tab
+  // 9b. Tab bar: the tab_ keys a tabs module reads (src/modules/layout/tabs-look.ts); virtual; every per-tab (ts) field also shows in Hover, Active tab and Disabled tab. The properties of a sub-group sit together.
   {
     id: 'tabs-bar',
     name: lm('Tab bar'),
     icon: 'mdi:tab',
     modules: ['tabs'],
     properties: [
-      tb('tab_disabled_tabs', lm('Disabled tabs'), 'tab_list', { help: lm('Tick the tabs that cannot be opened.') }),
+      tb('tab_disabled_tabs', lm('Disabled tabs'), 'tab_list', { help: lm('Tick the tabs that cannot be opened.'), subgroup: 'bar' }),
       tb('tab_bar_position', lm('Bar position'), 'segmented', {
         options: [{ label: lm('Top'), value: 'top' }, { label: lm('Bottom'), value: 'bottom' }],
         defaultValue: 'top',
+        subgroup: 'bar',
       }),
       tb('tab_align', lm('Tab alignment'), 'segmented', {
         options: [{ label: lm('Start'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('End'), value: 'end' }, { label: lm('Stretch'), value: 'stretch' }],
         defaultValue: 'start',
+        subgroup: 'bar',
       }),
-      tb('tab_bar_background', lm('Bar background'), 'color'),
-      tb('tab_bar_border_color', lm('Bar border colour'), 'color'),
-      tb('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'] }),
-      tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP }),
-      tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT }),
-      ts('tab_color', lm('Tab text colour'), 'color'),
-      ts('tab_background', lm('Tab background'), 'color'),
-      tb('tab_font_size', lm('Tab font size'), 'unit', { units: PCT }),
-      ts('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
-      tb('tab_font_family', lm('Tab font family'), 'font'),
-      tb('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS }),
-      ts('tab_border_color', lm('Tab border colour'), 'color'),
-      tb('tab_border_width', lm('Tab border width'), 'unit', { units: ['px'] }),
-      tb('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP }),
-      tb('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP }),
-      ts('tab_opacity', lm('Tab opacity'), 'number', { range: [0, 1, 0.1] }),
-      tb('tab_icon_position', lm('Tab icon position'), 'segmented', {
-        options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
-        defaultValue: 'left',
-        help: lm('Left and right follow the text direction.'),
-      }),
-      tb('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'] }),
+      tb('tab_bar_background', lm('Bar background'), 'color', { subgroup: 'bar' }),
+      tb('tab_bar_border_color', lm('Bar border colour'), 'color', { subgroup: 'bar' }),
+      tb('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'], subgroup: 'bar' }),
+      tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'bar' }),
+      tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT, subgroup: 'bar' }),
       tb('tab_animation', lm('Tab switch animation'), 'segmented', {
         options: [{ label: lm('None'), value: 'none' }, { label: lm('Fade'), value: 'fade' }, { label: lm('Slide'), value: 'slide' }],
         defaultValue: 'none',
         help: lm('Ignored when the viewer prefers reduced motion.'),
+        subgroup: 'bar',
       }),
+      ts('tab_color', lm('Tab text colour'), 'color', { subgroup: 'text' }),
+      ts('tab_font_family', lm('Tab font family'), 'font', { subgroup: 'text' }),
+      ts('tab_font_size', lm('Tab font size'), 'unit', { units: PCT, subgroup: 'text' }),
+      ts('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)), subgroup: 'text' }),
+      ts('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS, subgroup: 'text' }),
+      ts('tab_letter_spacing', lm('Tab letter spacing'), 'text', { help: lm('normal, or one length, for example 0.05em.'), subgroup: 'text' }),
+      ts('tab_border_color', lm('Tab border colour'), 'color', { subgroup: 'border' }),
+      ts('tab_border_width', lm('Tab border width'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
+      ts('tab_border_style', lm('Tab border style'), 'select', { options: BORDER_STYLE_OPTS.filter((o) => /^(?:none|solid|dashed|dotted|double)$/.test(o.value)), subgroup: 'border' }),
+      ts('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
+      ts('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
+      ts('tab_icon_color', lm('Tab icon colour'), 'color', { subgroup: 'icon' }),
+      ts('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'], subgroup: 'icon' }),
+      tb('tab_icon_position', lm('Tab icon position'), 'segmented', {
+        options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
+        defaultValue: 'left',
+        help: lm('Left and right follow the text direction.'),
+        subgroup: 'icon',
+      }),
+      ts('tab_icon_fx', lm('Tab icon animation'), 'icon_anim', { help: lm('Ignored when the viewer prefers reduced motion.'), subgroup: 'icon' }),
+      ts('tab_background', lm('Tab background'), 'color', { subgroup: 'effects' }),
+      ts('tab_opacity', lm('Tab opacity'), 'number', { range: [0, 1, 0.1], subgroup: 'effects' }),
+      ts('tab_shadow', lm('Tab shadow'), 'text', { help: lm('none, or up to two shadows, for example 0 2px 6px rgba(0, 0, 0, .25).'), subgroup: 'effects' }),
+      ts('tab_animations', lm('Tab animations'), 'tab_animations', { help: lm('Plays on the tab button. The content fade or slide is set under Bar.'), subgroup: 'effects' }),
     ],
   },
 
