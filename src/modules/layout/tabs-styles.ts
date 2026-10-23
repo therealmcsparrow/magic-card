@@ -152,7 +152,10 @@ const TYPE =
   UNDERLINE(ACTIVE, 700);
 
 // A gradient colour of the design (--mc-text-paint on the tab bar) paints the tab labels, as it paints the text of other modules.
-const PAINT = '@supports (-webkit-background-clip:text){.mc-tabs-header[style*=--mc-text-paint]{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}}';
+// The tab buttons paint the gradient themselves, so a tab_ bar background stays under them. The active pill has a background of its own and keeps the plain text colour.
+const PAINT =
+  '@supports (-webkit-background-clip:text){.mc-tabs-header[style*=--mc-text-paint] .mc-tab-button{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}' +
+  '[data-style=pills] .mc-tab-button.active{-webkit-text-fill-color:currentcolor}}';
 
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(
