@@ -6,6 +6,7 @@ import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
+import { tabAnims, tabIconFx } from './tabs-anim';
 import { tabLook } from './tabs-look';
 import { MAX_DISABLED_TABS, resolveTabsDesign } from './tabs-resolve';
 
@@ -59,22 +60,31 @@ export class TabsView implements ModuleView {
     };
 
     const look = tabLook(design, flips?.get() ?? 0, c.tab_style);
+    // animations of the tabs (undefined until the animation chunk is ready); the hover list rides on the bar
+    const anims = tabAnims(design, hass, c.entity);
+    const vars = anims?.hover ? { ...look.vars, ...anims.hover.vars } : look.vars;
+    const tokens = anims?.hover ? [...look.tokens, ...anims.hover.tokens] : look.tokens;
     const header = html`
         <div class="mc-tabs-header" role="tablist">
           ${shown.map((i) => {
             const tab = tabs[i];
+            const active = i === activeIdx;
+            const a = anims && (off.has(i) ? anims.disabled : active ? anims.active : anims.base);
+            const ref = [active ? tab?.active_icon : undefined, tab?.icon].find((v): v is string => typeof v === 'string' && v !== '');
+            const fx = tabIconFx(c.icon_fx, design, active, off.has(i));
             return html`
               <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}" data-mc-hidden=${tab?.hidden ? '' : nothing}
+                data-mc-anim=${a?.targets ?? nothing} style=${a ? a.style : nothing}
                 aria-selected=${i === activeIdx ? 'true' : 'false'}
                 aria-disabled=${off.has(i) ? 'true' : nothing}
                 tabindex=${i === activeIdx && !off.has(i) ? 0 : -1}
                 @click=${select(i)} @pointerdown=${stop} @pointerup=${stop} @keydown=${onKeydown}>
-                ${tab?.icon
-                  ? hasIconFx(c.icon_fx)
-                    ? renderIcon({ icon: tab.icon, hass, fx: c.icon_fx, svg: c.svg })
-                    : html`<ha-icon icon=${tab.icon}></ha-icon>`
+                ${ref
+                  ? hasIconFx(fx) || anims?.icon || ref.startsWith('mcu:')
+                    ? renderIcon({ icon: ref, hass, fx, svg: c.svg, className: anims?.icon ? 'mc-anim-icon' : undefined })
+                    : html`<ha-icon icon=${ref}></ha-icon>`
                   : nothing}
-                ${tab?.label ?? ''}
+                ${anims?.label ? html`<span data-mc-part="name">${tab?.label ?? ''}</span>` : tab?.label ?? ''}
               </button>
             `;
           })}
@@ -85,8 +95,8 @@ export class TabsView implements ModuleView {
         </div>`;
     // a bottom bar comes after the panel, so the focus order follows the visual order
     return html`
-      <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'} data-mc-tab=${look.tokens.length ? look.tokens.join(' ') : nothing}
-        style=${look.tokens.length ? styleMap(look.vars) : nothing}>${look.tokens.includes('bottom') ? html`${panel}${header}` : html`${header}${panel}`}
+      <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'} data-mc-tab=${tokens.length ? tokens.join(' ') : nothing}
+        style=${tokens.length ? styleMap(vars) : nothing}>${tokens.includes('bottom') ? html`${panel}${header}` : html`${header}${panel}`}
       </div>
     `;
   }

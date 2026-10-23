@@ -1,4 +1,4 @@
-import { cssLengths, safeColor, str, unitOpacity } from '../../utils/safe-css';
+import { cssLengths, safeBorderStyle, safeColor, str, unitOpacity } from '../../utils/safe-css';
 
 /*
  * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
@@ -13,40 +13,44 @@ export interface TabLook {
   tokens: string[];
 }
 
+/** Bar-wide colours: key, property, token. */
 const COLOURS: ReadonlyArray<readonly [string, string, string]> = [
   ['tab_bar_background', '--mc-tb-bg', 'bar-bg'],
   ['tab_bar_border_color', '--mc-tb-bc', 'bar-border'],
-  ['tab_color', '--mc-tt-c', 'color'],
-  ['tab_background', '--mc-tt-bg', 'bg'],
-  ['tab_border_color', '--mc-tt-bc', 'border'],
 ];
 
-/** key, property, token, most lengths, largest number, whether a percentage is allowed */
+/** Bar-wide lengths: key, property, token, most lengths, largest number, whether a percentage is allowed */
 const LENGTHS: ReadonlyArray<readonly [string, string, string, number, number, boolean]> = [
   ['tab_bar_border_width', '--mc-tb-bw', 'bar-border', 1, 32, false],
   ['tab_bar_padding', '--mc-tb-pad', 'bar-pad', 4, 256, true],
   ['tab_gap', '--mc-tb-gap', 'gap', 1, 256, true],
-  ['tab_border_width', '--mc-tt-bw', 'border', 1, 32, false],
-  ['tab_radius', '--mc-tt-r', 'radius', 4, 999, true],
-  ['tab_padding', '--mc-tt-pad', 'pad', 4, 256, true],
-  ['tab_font_size', '--mc-tt-fs', 'size', 1, 512, true],
-  ['tab_icon_size', '--mc-tt-is', 'icon-size', 1, 256, false],
 ];
 
-/** key, accepted words, property, token */
-const WORDS: ReadonlyArray<readonly [string, RegExp, string, string]> = [
-  ['tab_font_weight', /^(?:normal|bold|[1-9]00)$/, '--mc-tt-fw', 'weight'],
-  ['tab_text_transform', /^(?:none|uppercase|lowercase|capitalize)$/, '--mc-tt-tt', 'transform'],
+type Kind = 'colour' | 'bw' | 'bs' | 'radius' | 'pad' | 'size' | 'isize' | 'weight' | 'transform' | 'family' | 'spacing' | 'shadow' | 'opacity';
+
+/**
+ * Every per-tab key, valid in the base design and in each state: key, grammar, property suffix (--mc-tt-<s> for the
+ * base, --mc-t{h,a,d}-<s> for a state), base token, state token (`{h,a,d}-<token>`).
+ */
+export const TAB_FIELDS: ReadonlyArray<readonly [string, Kind, string, string, string]> = [
+  ['tab_color', 'colour', 'c', 'color', 'color'],
+  ['tab_background', 'colour', 'bg', 'bg', 'bg'],
+  ['tab_border_color', 'colour', 'bc', 'border', 'border'],
+  ['tab_border_width', 'bw', 'bw', 'border', 'bw'],
+  ['tab_border_style', 'bs', 'bs', 'border', 'bs'],
+  ['tab_radius', 'radius', 'r', 'radius', 'radius'],
+  ['tab_padding', 'pad', 'pad', 'pad', 'pad'],
+  ['tab_font_family', 'family', 'ff', 'family', 'family'],
+  ['tab_font_size', 'size', 'fs', 'size', 'size'],
+  ['tab_font_weight', 'weight', 'fw', 'weight', 'weight'],
+  ['tab_text_transform', 'transform', 'tt', 'transform', 'transform'],
+  ['tab_letter_spacing', 'spacing', 'ls', 'spacing', 'spacing'],
+  ['tab_icon_color', 'colour', 'ic', 'icon-color', 'icon-color'],
+  ['tab_icon_size', 'isize', 'is', 'icon-size', 'icon-size'],
+  ['tab_shadow', 'shadow', 'sh', 'shadow', 'shadow'],
+  ['tab_opacity', 'opacity', 'o', 'opacity', 'opacity'],
 ];
 
-/** The keys of one tab state (tab_active, tab_disabled, design.hover): key, property suffix, token suffix. */
-const STATE_KEYS: ReadonlyArray<readonly [string, string, string]> = [
-  ['tab_color', 'c', 'color'],
-  ['tab_background', 'bg', 'bg'],
-  ['tab_border_color', 'bc', 'border'],
-  ['tab_font_weight', 'fw', 'weight'],
-  ['tab_opacity', 'o', 'opacity'],
-];
 /** The design object that holds each state, and its prefix: --mc-t{a,h,d}-*, tokens a-*, h-*, d-*. */
 const STATES: ReadonlyArray<readonly [string, string]> = [
   ['hover', 'h'],
@@ -54,12 +58,15 @@ const STATES: ReadonlyArray<readonly [string, string]> = [
   ['tab_disabled', 'd'],
 ];
 const WEIGHT = /^(?:normal|bold|[1-9]00)$/;
+const TRANSFORM = /^(?:none|uppercase|lowercase|capitalize)$/;
 
 /** Read as aliases of tab_active.tab_color, .tab_background and .tab_border_color (the border is the fill for Pills). */
 const LEGACY = ['tab_active_color', 'tab_active_background', 'tab_indicator_color'] as const;
 
 const FAMILY = /^(?:[\w -]+|"[\w -]+"|'[\w -]+')$/;
 const FAMILY_MAX = 128;
+const SHADOW_MAX = 128;
+const SHADOW_LAYERS = 2;
 
 /** Keyword keys: the word is the token suffix; the first word of each list is the default and adds no token. */
 const CHOICES: ReadonlyArray<readonly [string, string, readonly string[]]> = [
@@ -69,19 +76,21 @@ const CHOICES: ReadonlyArray<readonly [string, string, readonly string[]]> = [
   ['tab_animation', 'anim-', ['none', 'fade', 'slide']],
 ];
 
+/** The keys whose value is not CSS: animation entries and icon effects (tabs-anim.ts, tabs-view.ts). */
+const EXTRA_KEYS = ['tab_animations', 'tab_icon_fx'] as const;
+
 /** The flat design keys this file reads (the old active and indicator keys are in LEGACY_TAB_KEYS). */
 export const TAB_KEYS: readonly string[] = [
   ...COLOURS.map((c) => c[0]),
-  'tab_opacity',
   'tab_disabled_tabs',
   ...LENGTHS.map((c) => c[0]),
-  ...WORDS.map((c) => c[0]),
+  ...TAB_FIELDS.map((c) => c[0]),
   ...CHOICES.map((c) => c[0]),
-  'tab_font_family',
+  ...EXTRA_KEYS,
 ];
 
-/** The keys of a tab state object. */
-export const TAB_STATE_KEYS: readonly string[] = STATE_KEYS.map((k) => k[0]);
+/** The keys of a tab state object: every per-tab key. */
+export const TAB_STATE_KEYS: readonly string[] = [...TAB_FIELDS.map((k) => k[0]), ...EXTRA_KEYS];
 export const LEGACY_TAB_KEYS: readonly string[] = LEGACY;
 
 const word = (v: unknown): string => (typeof v === 'number' && Number.isFinite(v) ? String(v) : str(v)?.toLowerCase() ?? '');
@@ -95,6 +104,112 @@ function colour(v: unknown): string | undefined {
 function length(v: unknown, most: number, max: number, pct: boolean): string | undefined {
   const s = cssLengths(v, most);
   return s && s.split(' ').every((t) => parseFloat(t) <= max && (pct || !t.endsWith('%'))) ? s : undefined;
+}
+
+const SIGNED = /^(-?(?:\d+(?:\.\d+)?|\.\d+))(px|em|rem)?$/;
+
+/** One signed length in px, em or rem (a bare number is px), at most `px` px or `rel` em / rem; rebuilt from the number. */
+function signed(t: string, px: number, rel: number): string | undefined {
+  const m = t.length <= 16 ? SIGNED.exec(t) : null;
+  if (!m) return undefined;
+  const n = Number(m[1]);
+  const unit = m[2] ?? 'px';
+  return Math.abs(n) <= (unit === 'px' ? px : rel) ? `${n}${unit}` : undefined;
+}
+
+/** Splits at depth 0 on a comma or on whitespace, so a colour function keeps its own commas and spaces. */
+function splitTop(s: string, sep: ',' | ' '): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let from = 0;
+  for (let i = 0; i <= s.length; i++) {
+    const ch = s[i];
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    if (i === s.length || (depth === 0 && (sep === ',' ? ch === ',' : /\s/.test(ch)))) {
+      const part = s.slice(from, i).trim();
+      if (part) out.push(part);
+      from = i + 1;
+    }
+  }
+  return out;
+}
+
+/** `none`, or one or two layers of `[inset] x y [blur [spread]] [colour]`; rebuilt from the parsed parts. */
+function shadow(v: unknown): string | undefined {
+  const s = str(v);
+  if (!s || s.length > SHADOW_MAX) return undefined;
+  if (s.toLowerCase() === 'none') return 'none';
+  const layers = splitTop(s, ',');
+  if (!layers.length || layers.length > SHADOW_LAYERS) return undefined;
+  const out: string[] = [];
+  for (const layer of layers) {
+    let inset = false;
+    let paint: string | undefined;
+    const lens: string[] = [];
+    for (const tok of splitTop(layer, ' ')) {
+      if (tok.toLowerCase() === 'inset') {
+        if (inset) return undefined;
+        inset = true;
+        continue;
+      }
+      const l = signed(tok, 256, 16);
+      if (l !== undefined) {
+        lens.push(l);
+        continue;
+      }
+      if (paint) return undefined;
+      paint = colour(tok);
+      if (!paint) return undefined;
+    }
+    // x and y are needed; the blur cannot be negative
+    if (lens.length < 2 || lens.length > 4 || (lens[2] !== undefined && parseFloat(lens[2]) < 0)) return undefined;
+    out.push([inset ? 'inset' : '', ...lens, paint ?? ''].filter(Boolean).join(' '));
+  }
+  return out.join(', ');
+}
+
+/** One value of one per-tab key, checked against its grammar; undefined when it fails. */
+function parse(kind: Kind, v: unknown): string | undefined {
+  switch (kind) {
+    case 'colour':
+      return colour(v);
+    case 'bw':
+      return length(v, 4, 32, false);
+    case 'bs':
+      return safeBorderStyle(v);
+    case 'radius':
+      return length(v, 4, 999, true);
+    case 'pad':
+      return length(v, 4, 256, true);
+    case 'size':
+      return length(v, 1, 512, true);
+    case 'isize':
+      return length(v, 1, 256, false);
+    case 'weight': {
+      const w = word(v);
+      return WEIGHT.test(w) ? w : undefined;
+    }
+    case 'transform': {
+      const w = word(v);
+      return TRANSFORM.test(w) ? w : undefined;
+    }
+    case 'family': {
+      const family = str(v);
+      const names = family && family.length <= FAMILY_MAX ? family.split(',').map((n) => n.trim()) : [];
+      return names.length && names.every((n) => FAMILY.test(n)) ? names.join(', ') : undefined;
+    }
+    case 'spacing': {
+      const w = word(v);
+      return w === 'normal' ? w : typeof v === 'number' || typeof v === 'string' ? signed(typeof v === 'number' ? String(v) : v.trim(), 32, 2) : undefined;
+    }
+    case 'shadow':
+      return shadow(v);
+    case 'opacity': {
+      const n = unitOpacity(v);
+      return n === undefined ? undefined : String(n);
+    }
+  }
 }
 
 const plain = (v: unknown): Record<string, unknown> | undefined => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
@@ -119,19 +234,14 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
     const l = length(d[key], most, max, pct);
     if (l) put(prop, l, token);
   }
-  for (const [key, re, prop, token] of WORDS) {
-    const w = word(d[key]);
-    if (re.test(w)) put(prop, w, token);
+  for (const [key, kind, suffix, token] of TAB_FIELDS) {
+    const v = parse(kind, d[key]);
+    if (v) put(`--mc-tt-${suffix}`, v, token);
   }
-  const family = str(d.tab_font_family);
-  const names = family && family.length <= FAMILY_MAX ? family.split(',').map((n) => n.trim()) : [];
-  if (names.length && names.every((n) => FAMILY.test(n))) put('--mc-tt-ff', names.join(', '), 'family');
   for (const [key, prefix, words] of CHOICES) {
     const w = word(d[key]);
     if (w !== words[0] && words.includes(w)) tokens.add(prefix + w);
   }
-  const o = unitOpacity(d.tab_opacity);
-  if (o !== undefined) put('--mc-tt-o', String(o), 'opacity');
   for (const [obj, p] of STATES) {
     const st = { ...plain(d[obj]) };
     if (obj === 'tab_active') {
@@ -142,15 +252,8 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
       st.tab_background = colour(st.tab_background) ?? colour(d.tab_active_background) ?? (pill ? ind : undefined);
       st.tab_border_color = colour(st.tab_border_color) ?? (pill ? undefined : ind);
     }
-    for (const [key, suffix, token] of STATE_KEYS) {
-      let v: string | undefined;
-      if (key === 'tab_opacity') {
-        const n = unitOpacity(st[key]);
-        v = n === undefined ? undefined : String(n);
-      } else if (key === 'tab_font_weight') {
-        const w = word(st[key]);
-        v = WEIGHT.test(w) ? w : undefined;
-      } else v = colour(st[key]);
+    for (const [key, kind, suffix, , token] of TAB_FIELDS) {
+      const v = parse(kind, st[key]);
       if (v) put(`--mc-t${p}-${suffix}`, v, `${p}-${token}`);
     }
   }

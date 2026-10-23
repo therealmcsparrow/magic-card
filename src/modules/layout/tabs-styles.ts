@@ -1,4 +1,5 @@
 import { unsafeCSS } from 'lit';
+import { TAB_FIELDS } from './tabs-look';
 
 /*
  * Rules for the tab_ design keys (tabs-look.ts). Each one is gated on a token of `data-mc-tab`, so a tabs module
@@ -11,11 +12,12 @@ import { unsafeCSS } from 'lit';
 const BAR = '>.mc-tabs-header';
 const TAB = `${BAR}>.mc-tab-button`;
 const ACTIVE = `${TAB}.active`;
-const ICON = `${TAB} ha-icon,.mc-tabs[data-style][data-mc-tab~='icon-size']${TAB} mc-svg-icon`;
 const CONTENT = '>.mc-tabs-content';
 const DIRECT = `${TAB}:not(.active)`;
 const DISABLED = `${TAB}[aria-disabled='true']`;
 const HOVERED = `${TAB}:hover:not(.active):not([aria-disabled='true'])`;
+/** The icon element of a tab: <ha-icon>, or <mc-svg-icon> when it draws effects or an own icon. */
+const ICONS = (sel: string): string[] => [`${sel} ha-icon`, `${sel} mc-svg-icon`];
 
 /** Rules gated on one token: [token, descendant selector, declarations]. */
 const RULES: ReadonlyArray<readonly [string, string, string]> = [
@@ -38,7 +40,7 @@ const MORE: ReadonlyArray<readonly [string, string, string]> = [
   ['bar-border', BAR, 'border:var(--mc-tb-bw,1px) solid var(--mc-tb-bc,var(--mc-border))'],
   ['color', DIRECT, 'color:var(--mc-tt-c)'],
   ['bg', DIRECT, 'background:var(--mc-tt-bg)'],
-  ['border', TAB, 'border:var(--mc-tt-bw,1px) solid var(--mc-tt-bc,var(--mc-border))'],
+  ['border', TAB, 'border-style:var(--mc-tt-bs,solid);border-width:var(--mc-tt-bw,1px);border-color:var(--mc-tt-bc,var(--mc-border))'],
 ];
 
 const TAIL: ReadonlyArray<readonly [string, string, string]> = [
@@ -53,34 +55,62 @@ const TAIL: ReadonlyArray<readonly [string, string, string]> = [
   ['icon-right', TAB, 'flex-direction:row-reverse'],
   ['icon-above', TAB, 'flex-direction:column'],
   ['icon-below', TAB, 'flex-direction:column-reverse'],
-  ['icon-size', ICON, '--mdc-icon-size:var(--mc-tt-is)'],
+  ['spacing', TAB, 'letter-spacing:var(--mc-tt-ls)'],
+  ['shadow', TAB, 'box-shadow:var(--mc-tt-sh)'],
   ['anim-fade', CONTENT, 'animation:var(--mc-tt-an) .2s ease-out'],
   ['anim-slide', CONTENT, 'animation:var(--mc-tt-an) .2s ease-out'],
 ];
 
 const gated = (rules: ReadonlyArray<readonly [string, string, string]>): string =>
   rules.map(([token, tail, decl]) => `.mc-tabs[data-style][data-mc-tab~='${token}']${tail}{${decl}}`).join('');
+/** One rule on several selectors, each gated on the same token. */
+const gatedAll = (token: string, selectors: string[], decl: string): string =>
+  `${selectors.map((sel) => `.mc-tabs[data-style][data-mc-tab~='${token}']${sel}`).join(',')}{${decl}}`;
+const ICON_RULES = gatedAll('icon-size', ICONS(TAB), '--mdc-icon-size:var(--mc-tt-is)') + gatedAll('icon-color', ICONS(TAB), 'color:var(--mc-tt-ic)');
 const variants = VARIANTS.map(([sel, tail, decl]) => `.mc-tabs${sel}${tail}{${decl}}`).join('');
 
 // The line of the active tab is its own border (tab_active.tab_border_color); a tab border that is set is the same on every side.
 const BORDER_EDGE = `.mc-tabs[data-style='underline'][data-mc-tab~='bar-border']${BAR}{border-width:var(--mc-tb-bw,2px)}`;
 
-/** The look of one tab state, one rule per token: [token, declaration]. */
+/** What each field of TAB_FIELDS sets on a state (`p`: h, a or d); `icon` ones go on the tab's icon element. */
+const STATE_DECLS: Record<string, (p: string) => string> = {
+  c: (p) => `color:var(--mc-t${p}-c)`,
+  bg: (p) => `background:var(--mc-t${p}-bg)`,
+  bc: (p) => `border-color:var(--mc-t${p}-bc)`,
+  // a width needs a style to show; the base look's style, else solid
+  bw: (p) => `border-width:var(--mc-t${p}-bw);border-style:var(--mc-t${p}-bs,var(--mc-tt-bs,solid))`,
+  bs: (p) => `border-style:var(--mc-t${p}-bs)`,
+  r: (p) => `border-radius:var(--mc-t${p}-r)`,
+  pad: (p) => `padding:var(--mc-t${p}-pad);min-width:24px;min-height:24px`,
+  ff: (p) => `font-family:var(--mc-t${p}-ff)`,
+  fs: (p) => `font-size:var(--mc-t${p}-fs)`,
+  fw: (p) => `font-weight:var(--mc-t${p}-fw)`,
+  tt: (p) => `text-transform:var(--mc-t${p}-tt)`,
+  ls: (p) => `letter-spacing:var(--mc-t${p}-ls)`,
+  ic: (p) => `color:var(--mc-t${p}-ic)`,
+  is: (p) => `--mdc-icon-size:var(--mc-t${p}-is)`,
+  sh: (p) => `box-shadow:var(--mc-t${p}-sh)`,
+  o: (p) => `opacity:var(--mc-t${p}-o)`,
+};
+const ON_ICON = new Set(['ic', 'is']);
+
+/** The look of one tab state, one rule per token; the state's `name` is h, a or d. */
 const stateRules = (selector: string, p: string, name: string): string =>
-  [
-    [`${name}-color`, `color:var(--mc-t${p}-c)`],
-    [`${name}-bg`, `background:var(--mc-t${p}-bg)`],
-    [`${name}-border`, `border-color:var(--mc-t${p}-bc)`],
-    [`${name}-weight`, `font-weight:var(--mc-t${p}-fw)`],
-    [`${name}-opacity`, `opacity:var(--mc-t${p}-o)`],
-  ]
-    .map(([token, decl]) => `.mc-tabs[data-style][data-mc-tab~='${token}']${selector}{${decl}}`)
-    .join('');
+  TAB_FIELDS.map(([, , suffix, , token]) =>
+    gatedAll(`${name}-${token}`, ON_ICON.has(suffix) ? ICONS(selector) : [selector], STATE_DECLS[suffix](p)),
+  ).join('');
 
 // A disabled tab is dimmed and shows no pointer or press movement, with or without a tab_ key; tab_disabled.tab_opacity replaces the dimming.
 const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default;transform:none}`;
 // Hover only where there is a pointer.
-const HOVER = `@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}`;
+// Its animations (tabs-anim.ts) play on top of the tab's own list; the leaked lists of the module around are reset.
+const ANIM_RESET = `.mc-tabs[data-style][data-mc-tab~='h-anim']${TAB}{--mc-anim-m:none;--mc-anim-i:none;--mc-anim-n:none}`;
+const HOVER_ANIM =
+  gatedAll('h-anim', [HOVERED], 'animation:var(--mc-anim-m,none),var(--mc-th-anim-m,none);transform-origin:var(--mc-th-anim-om,center)') +
+  gatedAll('h-anim-i', [`${HOVERED} .mc-anim-icon`], 'display:inline-block;animation:var(--mc-anim-i,none),var(--mc-th-anim-i,none);transform-origin:var(--mc-th-anim-oi,center)') +
+  gatedAll('h-anim-n', [`${HOVERED} [data-mc-part='name']`], 'display:inline-block;animation:var(--mc-anim-n,none),var(--mc-th-anim-n,none);transform-origin:var(--mc-th-anim-on,center)');
+// A visitor who asks for less motion gets none of it.
+const HOVER = `${ANIM_RESET}@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}@media (hover:hover) and (prefers-reduced-motion:no-preference){${HOVER_ANIM}}`;
 // The keyboard focus ring follows the active tab's border, then its text, then the tab border colour.
 const FOCUS = `.mc-tabs[data-style]${TAB}:focus-visible{outline-color:var(--mc-ta-bc,var(--mc-ta-c,var(--mc-tt-bc,var(--mc-primary))))}`;
 
@@ -89,9 +119,14 @@ const KEYFRAMES = [0, 1]
   .map((n) => `@keyframes mc-tabs-fade-${n}{from{opacity:0}}@keyframes mc-tabs-slide-${n}{from{opacity:0;transform:translateX(12px)}}`)
   .join('');
 
-// The properties that a rule without a token reads (with a fallback) are the only ones that would otherwise reach a nested tabs module.
-const NESTED =
-  '.mc-tabs[data-mc-tab] .mc-tabs{--mc-tb-bw:initial;--mc-tb-bc:initial;--mc-tt-bw:initial;--mc-tt-bc:initial;--mc-ta-bc:initial;--mc-ta-c:initial}';
+// Every variable a rule reads would otherwise reach a nested tabs module through inheritance.
+const NESTED_VARS = [
+  '--mc-tb-bw', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
+  '--mc-tt-an',
+  ...['tt', 'th', 'ta', 'td'].flatMap((p) => TAB_FIELDS.map((f) => `--mc-${p}-${f[2]}`)),
+  ...['m', 'i', 'n', 'om', 'oi', 'on'].map((k) => `--mc-th-anim-${k}`),
+];
+const NESTED = `.mc-tabs[data-mc-tab] .mc-tabs{${NESTED_VARS.map((v) => `${v}:initial`).join(';')}}`;
 
 const MOTION =
   KEYFRAMES +
@@ -99,5 +134,5 @@ const MOTION =
 
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(
-  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + FOCUS + NESTED + MOTION,
+  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + ICON_RULES + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + FOCUS + NESTED + MOTION,
 );
