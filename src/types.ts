@@ -441,8 +441,12 @@ export interface TabStateDesign {
   tab_background?: string;
   /** One to four lengths, as in CSS border-width */
   tab_border_width?: string;
+  /** One to four border-style words, in CSS side order (top, right, bottom, left) */
   tab_border_style?: string;
+  /** One to four colours, in CSS side order */
   tab_border_color?: string;
+  /** One to four lengths, in CSS corner order (top-left, top-right, bottom-right, bottom-left) */
+  /** One to four lengths, in CSS corner order (top-left, top-right, bottom-right, bottom-left) */
   tab_radius?: string;
   tab_padding?: string;
   tab_font_family?: string;
@@ -552,7 +556,9 @@ export interface DesignConfig {
 
   // Tab bar; a tabs module reads them, see src/modules/layout/tabs-look.ts
   tab_bar_background?: string;
+  /** One to four lengths, as in CSS border-width */
   tab_bar_border_width?: string;
+  /** One to four colours, in CSS side order */
   tab_bar_border_color?: string;
   tab_bar_padding?: string;
   tab_bar_position?: 'top' | 'bottom';
@@ -565,7 +571,9 @@ export interface DesignConfig {
   tab_indicator_color?: string;
   /** One to four lengths, as in CSS border-width */
   tab_border_width?: string;
+  /** One to four border-style words, in CSS side order (top, right, bottom, left) */
   tab_border_style?: string;
+  /** One to four colours, in CSS side order */
   tab_border_color?: string;
   tab_letter_spacing?: string;
   tab_shadow?: string;

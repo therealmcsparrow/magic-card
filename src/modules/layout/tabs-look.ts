@@ -1,4 +1,4 @@
-import { cssLengths, safeBorderStyle, safeColor, str, unitOpacity } from '../../utils/safe-css';
+import { cssLengths, safeColor, str, unitOpacity } from '../../utils/safe-css';
 
 /*
  * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
@@ -14,19 +14,16 @@ export interface TabLook {
 }
 
 /** Bar-wide colours: key, property, token. */
-const COLOURS: ReadonlyArray<readonly [string, string, string]> = [
-  ['tab_bar_background', '--mc-tb-bg', 'bar-bg'],
-  ['tab_bar_border_color', '--mc-tb-bc', 'bar-border'],
-];
+const COLOURS: ReadonlyArray<readonly [string, string, string]> = [['tab_bar_background', '--mc-tb-bg', 'bar-bg']];
 
 /** Bar-wide lengths: key, property, token, most lengths, largest number, whether a percentage is allowed */
 const LENGTHS: ReadonlyArray<readonly [string, string, string, number, number, boolean]> = [
-  ['tab_bar_border_width', '--mc-tb-bw', 'bar-border', 1, 32, false],
+  ['tab_bar_border_width', '--mc-tb-bw', 'bar-border', 4, 32, false],
   ['tab_bar_padding', '--mc-tb-pad', 'bar-pad', 4, 256, true],
   ['tab_gap', '--mc-tb-gap', 'gap', 1, 256, true],
 ];
 
-type Kind = 'colour' | 'bw' | 'bs' | 'radius' | 'pad' | 'size' | 'isize' | 'weight' | 'transform' | 'family' | 'spacing' | 'shadow' | 'opacity';
+type Kind = 'colour' | 'sides' | 'bw' | 'bs' | 'radius' | 'pad' | 'size' | 'isize' | 'weight' | 'transform' | 'family' | 'spacing' | 'shadow' | 'opacity';
 
 /**
  * Every per-tab key, valid in the base design and in each state: key, grammar, property suffix (--mc-tt-<s> for the
@@ -35,7 +32,7 @@ type Kind = 'colour' | 'bw' | 'bs' | 'radius' | 'pad' | 'size' | 'isize' | 'weig
 export const TAB_FIELDS: ReadonlyArray<readonly [string, Kind, string, string, string]> = [
   ['tab_color', 'colour', 'c', 'color', 'color'],
   ['tab_background', 'colour', 'bg', 'bg', 'bg'],
-  ['tab_border_color', 'colour', 'bc', 'border', 'border'],
+  ['tab_border_color', 'sides', 'bc', 'border', 'border'],
   ['tab_border_width', 'bw', 'bw', 'border', 'bw'],
   ['tab_border_style', 'bs', 'bs', 'border', 'bs'],
   ['tab_radius', 'radius', 'r', 'radius', 'radius'],
@@ -58,6 +55,8 @@ const STATES: ReadonlyArray<readonly [string, string]> = [
   ['tab_disabled', 'd'],
 ];
 const WEIGHT = /^(?:normal|bold|[1-9]00)$/;
+// The border-style words (safe-css has the same list; a second user there would add a function to the card bundle).
+const BORDER_STYLE = /^(?:none|hidden|solid|dashed|dotted|double|groove|ridge|inset|outset)$/;
 const TRANSFORM = /^(?:none|uppercase|lowercase|capitalize)$/;
 
 /** Read as aliases of tab_active.tab_color, .tab_background and .tab_border_color (the border is the fill for Pills). */
@@ -66,6 +65,9 @@ const LEGACY = ['tab_active_color', 'tab_active_background', 'tab_indicator_colo
 const FAMILY = /^(?:[\w -]+|"[\w -]+"|'[\w -]+')$/;
 const FAMILY_MAX = 128;
 const SHADOW_MAX = 128;
+/** Border sides or corners, and the longest list of colours or style words. */
+const SIDES = 4;
+const SIDES_MAX = 256;
 const SHADOW_LAYERS = 2;
 
 /** Keyword keys: the word is the token suffix; the first word of each list is the default and adds no token. */
@@ -82,6 +84,7 @@ const EXTRA_KEYS = ['tab_animations', 'tab_icon_fx'] as const;
 /** The flat design keys this file reads (the old active and indicator keys are in LEGACY_TAB_KEYS). */
 export const TAB_KEYS: readonly string[] = [
   ...COLOURS.map((c) => c[0]),
+  'tab_bar_border_color',
   'tab_disabled_tabs',
   ...LENGTHS.map((c) => c[0]),
   ...TAB_FIELDS.map((c) => c[0]),
@@ -169,6 +172,25 @@ function shadow(v: unknown): string | undefined {
   return out.join(', ');
 }
 
+/** One to four colours, one per side in CSS order; one colour is read exactly as any other colour. */
+function colours(v: unknown): string | undefined {
+  const s = str(v);
+  if (!s || s.length > SIDES_MAX) return undefined;
+  const parts = splitTop(s, ' ');
+  if (parts.length === 1) return colour(s);
+  if (parts.length > SIDES) return undefined;
+  const out = parts.map(colour);
+  return out.every(Boolean) ? out.join(' ') : undefined;
+}
+
+/** One to four border-style words, one per side in CSS order. */
+function styles(v: unknown): string | undefined {
+  const s = str(v)?.toLowerCase();
+  if (!s || s.length > SIDES_MAX) return undefined;
+  const parts = s.split(/\s+/);
+  return parts.length <= SIDES && parts.every((w) => BORDER_STYLE.test(w)) ? parts.join(' ') : undefined;
+}
+
 /** One value of one per-tab key, checked against its grammar; undefined when it fails. */
 function parse(kind: Kind, v: unknown): string | undefined {
   switch (kind) {
@@ -176,8 +198,10 @@ function parse(kind: Kind, v: unknown): string | undefined {
       return colour(v);
     case 'bw':
       return length(v, 4, 32, false);
+    case 'sides':
+      return colours(v);
     case 'bs':
-      return safeBorderStyle(v);
+      return styles(v);
     case 'radius':
       return length(v, 4, 999, true);
     case 'pad':
@@ -230,6 +254,8 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
     const c = colour(d[key]);
     if (c) put(prop, c, token);
   }
+  const barBorder = colours(d.tab_bar_border_color);
+  if (barBorder) put('--mc-tb-bc', barBorder, 'bar-border');
   for (const [key, prop, token, most, max, pct] of LENGTHS) {
     const l = length(d[key], most, max, pct);
     if (l) put(prop, l, token);

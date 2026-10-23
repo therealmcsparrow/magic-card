@@ -37,7 +37,7 @@ const VARIANTS: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const MORE: ReadonlyArray<readonly [string, string, string]> = [
-  ['bar-border', BAR, 'border:var(--mc-tb-bw,1px) solid var(--mc-tb-bc,var(--mc-border))'],
+  ['bar-border', BAR, 'border-style:solid;border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
   ['color', DIRECT, 'color:var(--mc-tt-c)'],
   ['bg', DIRECT, 'background:var(--mc-tt-bg)'],
   ['border', TAB, 'border-style:var(--mc-tt-bs,solid);border-width:var(--mc-tt-bw,1px);border-color:var(--mc-tt-bc,var(--mc-border))'],
