@@ -309,6 +309,8 @@ export class StudioCanvas extends LitElement {
   @state() private _hereCount = 0;
   /** No spot beside the selection fits: the float bar sits in a strip above the canvas instead of on the module. */
   @state() private _docked = false;
+  /** Button index and old bar element while keyboard focus rides along when the bar moves to or from the dock. */
+  private _barFocus?: { index: number; from: HTMLElement };
 
   /** Show a short status ("Row 2 YAML copied") in the capsule at the canvas foot, announced politely. */
   showStatus(message: string): void {
@@ -954,7 +956,17 @@ export class StudioCanvas extends LitElement {
         obstacles,
         viewport,
       );
-      this._docked = !pos;
+      const docked = !pos;
+      if (docked !== this._docked) {
+        const buttons = [...bar.querySelectorAll('button')];
+        const index = buttons.findIndex((b) => b === root?.activeElement);
+        if (index >= 0) this._barFocus = { index, from: bar };
+      }
+      this._docked = docked;
+      if (this._barFocus && this._barFocus.from !== bar) {
+        bar.querySelectorAll('button')[this._barFocus.index]?.focus({ preventScroll: true });
+        this._barFocus = undefined;
+      }
       if (pos) Object.assign(bar.style, { top: `${pos.top}px`, left: `${pos.left}px` });
     }
     canvasEl?.classList.toggle('framed', !frame.hidden);
@@ -1381,6 +1393,9 @@ export class StudioCanvas extends LitElement {
         overflow-x: auto;
         background: var(--mc-surface);
         border-bottom: 1px solid var(--mc-divider);
+      }
+      .bar-dock:has(.float-bar[hidden]) {
+        display: none;
       }
       .bar-dock .float-bar {
         position: static;
