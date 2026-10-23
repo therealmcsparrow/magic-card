@@ -180,10 +180,10 @@ fin.entry.final_cap = 70000;
 r = run([...fixture(fin, dist), '--caps-only']);
 expect('editing final_cap fails (constant 61,440)', r.code === 1, r.out);
 
-// 7a. the last stage cap above the final cap needs the approved_raises entry s2-final-cap-measured
+// 7a. the last stage cap above the final cap needs the latest approved_raises entry for /entry/stages/3/cap to name it
 const overFinal = clone(here);
 // the real file may already carry the entry; each case below adds its own
-overFinal.approved_raises = overFinal.approved_raises.filter((e) => e.id !== 's2-final-cap-measured');
+overFinal.approved_raises = overFinal.approved_raises.filter((e) => e.field !== '/entry/stages/3/cap');
 overFinal.entry.current_stage = 'stage-4';
 overFinal.entry.base.gzip = 70000;
 overFinal.entry.stages[0].cap = 70000;
@@ -201,7 +201,20 @@ expect('the entry must name the cap it allows', r.code === 1, r.out);
 const wrongId = clone(exempt);
 wrongId.approved_raises.at(-1).id = 'another-id';
 r = run([...fixture(wrongId, dist), '--caps-only']);
-expect('another id does not allow a cap over 61,440', r.code === 1, r.out);
+expect('another id with the same field and to still allows a cap over 61,440', r.code === 0, r.out);
+const laterEntry = clone(exempt);
+laterEntry.entry.stages[3].cap = 61500;
+laterEntry.approved_raises.push({ id: 'later-raise', field: '/entry/stages/3/cap', from: 61441, to: 61500 });
+r = run([...fixture(laterEntry, dist), '--caps-only']);
+expect('a later entry for the same field allows the raised cap', r.code === 0 && /WARN.*above the final cap 61440/.test(r.out), r.out);
+const noMatch = clone(laterEntry);
+noMatch.entry.stages[3].cap = 61600;
+r = run([...fixture(noMatch, dist), '--caps-only']);
+expect('a cap that no latest entry names fails', r.code === 1 && /above the final cap 61440/.test(r.out), r.out);
+const otherField = clone(overFinal);
+otherField.approved_raises.push({ id: 'other-field', field: '/entry/stages/2/cap', from: null, to: 61441 });
+r = run([...fixture(otherField, dist), '--caps-only']);
+expect('an entry for another field does not allow a cap over 61,440', r.code === 1, r.out);
 
 // 7b. a closed first stage (cap = base figure, landed commit, measured) passes; a later stage cap above it fails
 const closed = clone(here);
