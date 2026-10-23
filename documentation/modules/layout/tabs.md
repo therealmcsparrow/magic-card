@@ -33,6 +33,8 @@ The keys work with every `tab_style` (default, pills and underline). A key that 
 
 A conditional design rule can set any of these keys, and the rule's value replaces the base value while the rule matches. The hover design changes only the tab states described in [Tab states](#tab-states).
 
+In the editor, the Tab bar section of the Design tab groups these keys into five collapsible groups: Bar, Text, Border, Icon and Effects. A group shows how many of its keys are set, and its Reset button clears them in the view you are editing (the base design, Active tab, Disabled tab or Hover). Reset Active tab and Reset Disabled tab clear a whole state. A state field that is not set shows the Default value as a hint.
+
 | Key | Values | Default | Effect |
 | --- | --- | --- | --- |
 | `tab_bar_background` | colour | not set | Background of the bar. |
@@ -46,7 +48,7 @@ A conditional design rule can set any of these keys, and the rule's value replac
 | `tab_background` | colour | not set | Background of each tab that is not active. |
 | `tab_border_color` | 1 to 4 colours, one per side | not set | Colour of each tab's border. One colour, or one for each side in the order top, right, bottom, left. |
 | `tab_border_width` | 1 to 4 lengths from 0 to 32, no % | not set | Width of each tab's border, one value or one per side in the same order. Set it, or `tab_border_color`, and every tab has a border on all four sides. See [The active line](#the-active-line). |
-| `tab_border_style` | 1 to 4 words: `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` | `solid` | Style of each tab's border, one word or one per side in the same order. |
+| `tab_border_style` | 1 to 4 words: `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset`. The editor offers all ten. | `solid` | Style of each tab's border, one word or one per side in the same order. |
 | `tab_radius` | 1 to 4 lengths, each up to 999 | not set | Corner radius of each tab. One value for all corners, or one per corner from top left, clockwise: top left, top right, bottom right, bottom left. |
 | `tab_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside each tab. |
 | `tab_font_family` | font names separated by commas | not set | Font of the tab labels. Names may be in quotes. Up to 128 characters. A Google Font chosen in the editor's font picker loads from Google. |
@@ -210,7 +212,7 @@ Each state has its own list:
 -   `tab_disabled.tab_animations` plays on the disabled tabs, on top of the base list.
 -   `hover.tab_animations` plays under the pointer, only with a pointer that can hover. It does not play on the active or a disabled tab.
 
-Custom animations (`custom:` presets) and entries with the On tap trigger do not play on tabs. Reduced motion and the card's pause button stop tab animations, as they stop module animations. The animation code loads when a tab uses an animation. Until it has loaded, the tabs draw without it and update when it is ready.
+The editor offers motion presets only. Particle, ring and seasonal presets, custom animations (`custom:` presets) and the On tap trigger do not play on tabs: the card leaves out custom and On tap entries, and the other presets draw nothing on a tab button. Reduced motion and the card's pause button stop tab animations, as they stop module animations. The animation code loads when a tab uses an animation. Until it has loaded, the tabs draw without it and update when it is ready.
 
 ```yaml
 design:
