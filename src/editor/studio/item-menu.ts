@@ -29,6 +29,7 @@ import {
 import { t } from '../i18n';
 import { applyPlacement } from '../layers/layer-actions';
 import { placementOf } from '../layers/placement-model';
+import { replaceTypes } from '../state/retype-module';
 
 /** The menu's list, or one of its second levels in the same popover. */
 export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete' | 'placement' | 'add' | 'arrange' | 'design' | 'clipboard';
@@ -629,6 +630,12 @@ export class ItemMenu implements ReactiveController {
       icon: 'mdi:transit-connection-variant', label: t('Add flow from here'), run: () => this.opts.connect!(sel), focus: 'none',
       disabled: locked, why: locked ? t(TEMPLATE_ID_HINT) : undefined,
     }] : [];
+    const swap = replaceTypes(mod).length > 0;
+    const replace: Entry = {
+      icon: 'mdi:swap-horizontal', label: t('Replace with…'), focus: 'none',
+      run: () => this._fire('replace-module', { sel, status: this.opts.status }),
+      disabled: locked || !swap, why: locked ? t(TEMPLATE_ID_HINT) : swap ? undefined : t('No other module type to replace with'),
+    };
     const where = nested ? describeSelection(config, parentSelection(sel, config)).title : rowColumn(sel.row, sel.col);
     const adds = [...add, ...connect];
     if (this.view === 'add') return sub(t('Add'), adds);
@@ -659,6 +666,7 @@ export class ItemMenu implements ReactiveController {
           { icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' },
           rename,
           { icon: 'mdi:content-duplicate', label: t('Duplicate'), run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
+          replace,
           { icon: 'mdi:arrow-up', label: t('Move up'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
           { icon: 'mdi:arrow-down', label: t('Move down'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
         ],

@@ -1,13 +1,16 @@
 import { LitElement, html, css, TemplateResult, nothing, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { MagicCardConfig, HomeAssistant, EditorState } from '../types';
+import { MagicCardConfig, HomeAssistant, EditorState, CardModule, ModuleType } from '../types';
 import { mergeTemplateWithOverrides, withTemplateAnimations } from '../services/template-merge';
 import { animationDocList } from '../utils/custom-animations';
 import { EDITOR_TAG } from '../utils/constants';
 import { editorSystem } from '../css/editor-stack';
 import { EditorStateManager } from './state/editor-state';
 import { clearNotSynced, countNotSynced, stripForTemplate } from './state/template-sync';
-import { selectionFromKey, selectionToPath } from './studio/selection';
+import { moduleAt, moduleDisplayName, selectionFromKey, selectionToPath } from './studio/selection';
+import type { ModuleSelection } from './studio/selection';
+import { replaceTypes, retypeModule } from './state/retype-module';
+import { childSlots } from '../utils/module-path';
 import type { Selection as ItemSelection } from './studio/selection';
 import { PickerDialogController } from './components/picker-parts';
 import type { ChildStep } from '../utils/module-path';
@@ -62,6 +65,10 @@ export class MagicCardEditor extends LitElement {
   /** Where the picked module goes: a column, or (moduleIndex, child, slot) a layout module's slot. */
   private _moduleSelectorTarget?: { rowIndex: number; colIndex: number; moduleIndex?: number; child?: ChildStep[]; slot?: number };
 
+  /** Replace with…: the module the picker was opened for, and where to say what happened. */
+  @state()
+  private _replaceTarget?: { sel: ModuleSelection; status?: (message: string) => void };
+
   @state()
   private _showTemplatePicker: 'create' | 'link' | null = null;
 
@@ -105,6 +112,7 @@ export class MagicCardEditor extends LitElement {
     super();
     // Pane and studio fire the same composed events; listen once on the host.
     this.addEventListener('add-module', this._onAddModule as EventListener);
+    this.addEventListener('replace-module', this._onReplaceModule as EventListener);
     this.addEventListener('request-add-row', this._handleAddRow);
     this.addEventListener('template-create', () => { this._showTemplatePicker = 'create'; });
     this.addEventListener('template-load', () => { this._showTemplatePicker = 'link'; });
@@ -302,8 +310,8 @@ ${this._studioOpen ? nothing : overlays}`;
   private _renderOverlays(state: EditorState): TemplateResult {
     // compact markup: Lit keeps a template's whitespace in the bundle
     return html`${this._showModuleSelector
-  ? html`<mc-module-selector @module-selected=${this._onModuleSelected}
-@mc-picker-close=${() => { this._showModuleSelector = false; }}></mc-module-selector>`
+  ? html`<mc-module-selector .mode=${this._replaceTarget ? 'replace' : 'add'} .types=${this._replaceTypes(state.config)} @module-selected=${this._onModuleSelected}
+@mc-picker-close=${() => { this._showModuleSelector = false; this._replaceTarget = undefined; }}></mc-module-selector>`
   : nothing}
 ${this._showTemplatePicker
   ? html`<mc-template-picker .mode=${this._showTemplatePicker} .hass=${this.hass}
@@ -433,7 +441,45 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
     this._showModuleSelector = true;
   };
 
+  private _onReplaceModule = (e: CustomEvent): void => {
+    this._replaceTarget = e.detail;
+    this._showModuleSelector = true;
+  };
+
+  /** The types the open picker offers: those that can replace the module (undefined when it adds). */
+  private _replaceTypes(config: MagicCardConfig) {
+    const sel = this._replaceTarget?.sel;
+    const mod = sel && moduleAt(config, sel);
+    return mod ? replaceTypes(mod) : undefined;
+  }
+
+  /** One undo step; the module stays selected in the same place. */
+  private _replaceModule(target: { sel: ModuleSelection; status?: (message: string) => void }, type: string): void {
+    const sm = this._stateManager;
+    const config = sm.getConfig();
+    const old = moduleAt(config, target.sel);
+    const made = retypeModule(config, target.sel, type as ModuleType);
+    if (!old || !made) return;
+    sm.updateConfig(made.config);
+    sm.setSelectedPath(made.path);
+    const was = moduleDisplayName(old);
+    const now = moduleDisplayName({ type } as CardModule);
+    const tabs = old.type === 'tabs' ? childSlots(old)?.length ?? 0 : 0;
+    let message = t('Replaced {old} with {new}.', { old: was, new: now });
+    if (tabs > 1) message = t('Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.', { old: was, new: now, n: tabs });
+    else if (type === 'tabs' && (childSlots(old)?.flat().length ?? 0) > 0) message = t('Replaced {old} with {new}. All modules are in the first tab.', { old: was, new: now });
+    if (made.dropped) message += ' ' + t('{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.', { n: made.dropped });
+    target.status?.(message);
+  }
+
   private _onModuleSelected = (e: CustomEvent) => {
+    const replace = this._replaceTarget;
+    if (replace) {
+      this._replaceModule(replace, e.detail.type);
+      this._showModuleSelector = false;
+      this._replaceTarget = undefined;
+      return;
+    }
     const t = this._moduleSelectorTarget;
     if (t?.moduleIndex !== undefined) this._stateManager.addChildModule(t.rowIndex, t.colIndex, t.moduleIndex, t.child, t.slot ?? 0, e.detail.type);
     else if (t) this._stateManager.addModule(t.rowIndex, t.colIndex, e.detail.type);

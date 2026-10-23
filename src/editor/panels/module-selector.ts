@@ -1,10 +1,10 @@
 import { t as lt } from '../../i18n/labels';
 import { LitElement, html, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { MODULE_CATEGORIES } from '../../utils/constants';
 import { MagicModuleMetadata } from '../../modules/module-types';
-import { ModuleCategory } from '../../types';
+import { ModuleCategory, ModuleType } from '../../types';
 import { pickerStyles } from '../../css/editor-css';
 import { editorSystem } from '../../css/editor-stack';
 import { renderPickerSearch, renderPickerWindow, PickerWindowController } from '../components/picker-parts';
@@ -26,13 +26,20 @@ export class ModuleSelector extends LitElement {
 
   private _windowCtrl = new PickerWindowController(this, () => this._onClose());
 
+  /** Add (default) a module, or pick the type that replaces one. */
+  @property() mode: 'add' | 'replace' = 'add';
+  /** Only these types are offered (Replace with…). */
+  @property({ attribute: false }) types?: readonly ModuleType[];
+
   @state() private _searchQuery = '';
   @state() private _category: CategoryFilter = 'all';
 
   protected render(): TemplateResult {
-    const modules = this._searchQuery
+    const replacing = this.mode === 'replace';
+    const all = this._searchQuery
       ? ModuleRegistry.search(fold(this._searchQuery), (id) => fold(lt(id)))
       : ModuleRegistry.getAll();
+    const modules = this.types ? all.filter((m) => this.types!.includes(m.metadata.type)) : all;
 
     const grouped = new Map<ModuleCategory, MagicModuleMetadata[]>();
     for (const cat of MODULE_CATEGORIES) {
@@ -45,10 +52,10 @@ export class ModuleSelector extends LitElement {
       }
     }
 
-    const filters: CategoryFilter[] = ['all', ...MODULE_CATEGORIES];
+    const filters: CategoryFilter[] = ['all', ...MODULE_CATEGORIES.filter((c) => !this.types || modules.some((m) => m.metadata.category === c))];
 
     return html`
-      ${renderPickerWindow(t('Add module'), () => this._onClose(), 'm', html`
+      ${renderPickerWindow(replacing ? t('Replace with…') : t('Add module'), () => this._onClose(), 'm', html`
           <div class="mc-picker-search">
             ${renderPickerSearch(t('Search modules'), this._searchQuery, (v) => { this._searchQuery = v; })}
             <div class="seg full" role="radiogroup" aria-label=${t('Module category')}>
@@ -82,7 +89,7 @@ export class ModuleSelector extends LitElement {
                       type="button"
                       class="mc-picker-item"
                       @click=${() => this._onSelect(meta)}
-                      aria-label=${t('Add {name} module', { name: lt(meta.name) })}
+                      aria-label=${replacing ? t('Replace with {name}', { name: lt(meta.name) }) : t('Add {name} module', { name: lt(meta.name) })}
                     >
                       <span class="mc-picker-item-icon"><ha-icon icon=${meta.icon}></ha-icon></span>
                       <span class="mc-picker-item-content">
