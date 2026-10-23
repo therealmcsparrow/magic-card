@@ -1,5 +1,6 @@
 import { LitElement, html, css, TemplateResult, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { keyed } from 'lit/directives/keyed.js';
 import { AnimationConfig, DesignConfig, ConditionalDesign, DisplayCondition, HomeAssistant, RingConfig, ShapeOptions, ValueBackgroundConfig } from '../../types';
 import type { ShapePatch } from './shape-editor';
 import {
@@ -941,8 +942,9 @@ export class DesignPanel extends LitElement {
         return field(this._renderIconAnim(p.key), syncIndicator, undefined, lbl(p.help));
 
       case 'sides':
+        // keyed by the view: Same on all sides starts again in each design and state
         return field(
-          html`
+          html`${keyed(this._activeView, html`
             <mc-box-field
               .shorthand=${true}
               .baseName=${p.key}
@@ -955,7 +957,7 @@ export class DesignPanel extends LitElement {
               .inherited=${(p.tabState && this._inherited(p.key)) || ''}
               .onChange=${(updates: Record<string, unknown>) => this._handlePropertyChange(p.key, String(updates[p.key] ?? ''))}
             ></mc-box-field>
-          `,
+          `)}`,
           syncIndicator,
           undefined,
           p.sides?.cell === 'color' ? hint(lbl(p.help)) : lbl(p.help),
@@ -1250,10 +1252,12 @@ export class DesignPanel extends LitElement {
     const inState = !!this._viewParts().state;
     const device = typeof fx.device === 'string' ? fx.device : '';
     const draw = typeof fx.draw === 'string' ? fx.draw : '';
-    const duration = typeof fx.draw_duration === 'string' ? fx.draw_duration : '';
+    // a number (YAML `draw_duration: 2`) reads as seconds and is kept as it is until it is edited
+    const rawDuration = typeof fx.draw_duration === 'string' || typeof fx.draw_duration === 'number' ? fx.draw_duration : '';
+    const duration = String(rawDuration);
     const write = (patch: Record<string, string>) => {
-      const next: Record<string, string> = {};
-      const merged = { device, draw, draw_duration: duration, ...patch };
+      const next: Record<string, string | number> = {};
+      const merged: Record<string, string | number> = { device, draw, draw_duration: 'draw_duration' in patch ? patch.draw_duration : rawDuration, ...patch };
       if (merged.device) next.device = merged.device;
       if (merged.draw && (inState || merged.draw !== 'off')) {
         next.draw = merged.draw;

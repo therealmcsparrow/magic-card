@@ -61,7 +61,7 @@ function collapse(s: Record<Side, string>): string {
   return `${s.top} ${s.right} ${s.bottom} ${s.left}`;
 }
 
-/** What a side takes when it is left empty in an unlinked shorthand (the CSS default for it). */
+/** What a side takes when it is left empty in an unlinked shorthand and the design below has no value for it. */
 const EMPTY_SIDE: Record<SideCell, string> = { length: '0', style: 'none', color: 'currentcolor' };
 
 /**
@@ -186,14 +186,18 @@ export class BoxField extends LitElement {
     return equal && (this._link ?? true);
   }
 
-  /** Writes the sides as the shortest shorthand; an empty side takes its CSS default, none left removes the key. */
+  /**
+   * Writes the sides as the shortest shorthand; none left removes the key. An empty side takes the
+   * value of the design below this one (the hint it showed), else its CSS default.
+   */
   private _shEmit(next: Record<Side, string>): void {
     if (SIDES.every((s) => !next[s])) {
       this.onChange({ [this.baseName]: undefined });
       return;
     }
-    const fill = EMPTY_SIDE[this.cell];
-    this.onChange({ [this.baseName]: collapse({ top: next.top || fill, right: next.right || fill, bottom: next.bottom || fill, left: next.left || fill }) });
+    const below = expand(this.inherited);
+    const fill = (s: Side) => next[s] || below?.[s] || EMPTY_SIDE[this.cell];
+    this.onChange({ [this.baseName]: collapse({ top: fill('top'), right: fill('right'), bottom: fill('bottom'), left: fill('left') }) });
   }
 
   private _shSide(position: Side | 'all', value: string): void {
@@ -224,10 +228,12 @@ export class BoxField extends LitElement {
     }
     if (this.cell === 'style') {
       const shown = this.options.find((o) => o.value === hint)?.label ?? hint;
+      // a stored word the list does not offer stays visible and selectable
+      const extra = own && !this.options.some((o) => o.value === own) ? [{ value: own, label: own }] : [];
       return html`<div class="select">
         <select class="input side-select" data-side=${position} aria-label=${label} @change=${(e: Event) => write((e.target as HTMLSelectElement).value)}>
           <option value="" ?selected=${!own}>${hint ? t('Inherit ({value})', { value: shown }) : t('Not set')}</option>
-          ${this.options.map((o) => html`<option value=${o.value} ?selected=${o.value === own}>${o.label}</option>`)}
+          ${[...this.options, ...extra].map((o) => html`<option value=${o.value} ?selected=${o.value === own}>${o.label}</option>`)}
         </select>
         <ha-icon icon="mdi:chevron-down"></ha-icon>
       </div>`;

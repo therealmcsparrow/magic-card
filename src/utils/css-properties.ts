@@ -437,7 +437,7 @@ export const CSS_SECTORS: CssSector[] = [
       ts('tab_letter_spacing', lm('Tab letter spacing'), 'text', { help: lm('normal, or one length, for example 0.05em.'), subgroup: 'text' }),
       ts('tab_border_color', lm('Tab border colour'), 'sides', { sides: { cell: 'color' }, subgroup: 'border' }),
       ts('tab_border_width', lm('Tab border width'), 'sides', { sides: { cell: 'length' }, units: ['px', 'em', 'rem'], subgroup: 'border' }),
-      ts('tab_border_style', lm('Tab border style'), 'sides', { sides: { cell: 'style' }, options: BORDER_STYLE_OPTS.filter((o) => /^(?:none|solid|dashed|dotted|double)$/.test(o.value)), subgroup: 'border' }),
+      ts('tab_border_style', lm('Tab border style'), 'sides', { sides: { cell: 'style' }, options: [...BORDER_STYLE_OPTS, { label: lm('Hidden'), value: 'hidden' }], subgroup: 'border' }),
       ts('tab_radius', lm('Tab corner radius'), 'sides', { sides: { cell: 'length', corners: true }, units: PCT, subgroup: 'border' }),
       ts('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
       ts('tab_icon_color', lm('Tab icon colour'), 'color', { subgroup: 'icon' }),
