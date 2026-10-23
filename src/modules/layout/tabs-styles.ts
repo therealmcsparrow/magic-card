@@ -136,7 +136,24 @@ const MOTION =
   KEYFRAMES +
   `@media (prefers-reduced-motion:reduce){.mc-tabs[data-style][data-mc-tab]${CONTENT}{animation:none}}`;
 
+// The Typography keys of the design (tabs-type.ts): the tab button takes them, or its own look where one is unset.
+// The underline style's weights (card sheet) give way to a font weight of the design.
+const UNDERLINE = (sel: string, weight: number): string =>
+  `.mc-tabs[data-style='underline'][data-mc-tab~='type']${sel}{font-weight:var(--mc-design-font-weight,${weight})}`;
+const TYPE =
+  gated([
+    [
+      'type',
+      TAB,
+      'font-size:var(--mc-design-font-size,var(--mc-font-size-sm));font-weight:var(--mc-design-font-weight,normal);' +
+        'text-transform:var(--mc-design-text-transform,none);letter-spacing:var(--mc-design-letter-spacing,normal);' +
+        'word-spacing:inherit;text-indent:inherit;text-shadow:inherit;text-align:var(--mc-design-text-align,center)',
+    ],
+  ]) +
+  UNDERLINE(TAB, 500) +
+  UNDERLINE(ACTIVE, 700);
+
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(
-  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + ICON_RULES + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + stateRules(FORCED_OFF, 'd', 'd') + FOCUS + NESTED + MOTION,
+  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + TYPE + gated(TAIL) + ICON_RULES + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + stateRules(FORCED_OFF, 'd', 'd') + FOCUS + NESTED + MOTION,
 );

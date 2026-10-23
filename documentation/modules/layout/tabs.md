@@ -31,6 +31,8 @@ The Design tab of a tabs module has a Tab bar section. Its keys style the bar, t
 
 The keys work with every `tab_style` (default, pills and underline). A key that is not set leaves that part of the bar as it was before these keys existed, so a tabs module that uses none of them looks exactly as before. A key with a value the editor does not accept is ignored.
 
+The Typography section of the Design tab (`font_family`, `font_size`, `font_weight`, `font_style`, `font_variant`, `color`, `text_align`, `text_decoration`, `text_transform`, `text_indent`, `text_overflow`, `text_shadow`, `line_height`, `letter_spacing`, `word_spacing`, `white_space`, `word_break` and `overflow_wrap`) styles the tab buttons only. It does not reach the content of the tabs. The `tab_` keys above, and the per-state fields, override it. A font weight set there also replaces the weights the underline style gives the tabs (500, and 700 for the active tab).
+
 A conditional design rule can set any of these keys, and the rule's value replaces the base value while the rule matches. The hover design changes only the tab states described in [Tab states](#tab-states).
 
 In the editor, the Tab bar section of the Design tab groups these keys into five collapsible groups: Bar, Text, Border, Icon and Effects. A group shows how many of its keys are set, and its Reset button clears them in the view you are editing (the base design, Active tab, Disabled tab or Hover). Reset Active tab and Reset Disabled tab clear a whole state. A state field that is not set shows the Default value as a hint.

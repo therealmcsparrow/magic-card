@@ -1431,7 +1431,7 @@ export class MagicCard extends LitElement {
     // a button / dropdown draws the design border and shadow on the control, unless a shape or a border length owns the outline
     const look = shape || border ? undefined : controlLook(mod.type, (mod as { button_style?: string }).button_style);
     const control = look && { ...look, base: design };
-    const designStyle = [designToStyle(design, control, mod.type === 'button'), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
+    const designStyle = [designToStyle(design, control, mod.type === 'button', mod.type === 'tabs'), anim?.style, border?.style, shapeStyle, entityColor && `--mc-entity-color: ${entityColor}`]
       .filter(Boolean)
       .join('; ');
     // only the configured actions: a module without them stays inert (and never claims its layout's tap)

@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Fixed
+-   **Typography on a tabs module styles the tab buttons.** The Typography section of a tabs module's Design tab (font size, weight, family, case, letter spacing, colour and the other typography keys) now applies to the tab buttons and no longer reaches the content of the tabs. Before, the font size, weight, case and letter spacing missed the buttons and landed on the content. The Tab bar section's `tab_` keys and the per-state fields still override it, and a font weight set in Typography replaces the underline style's own weights. See [Tabs](documentation/modules/layout/tabs.md#tab-bar-design).
+
 ## 2026.10.12-beta.4 (2026-10-23)
 
 ### Added

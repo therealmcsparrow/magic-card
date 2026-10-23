@@ -6,6 +6,7 @@ import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
+import { tabTypeStyle } from './tabs-type';
 import { tabAnims, tabIconFx } from './tabs-anim';
 import { tabLook } from './tabs-look';
 import { MAX_DISABLED_TABS, resolveTabsDesign } from './tabs-resolve';
@@ -63,9 +64,11 @@ export class TabsView implements ModuleView {
     // animations of the tabs (undefined until the animation chunk is ready); the hover list rides on the tab bar element only, so the panels and nested tabs never inherit it
     const anims = tabAnims(design, hass, c.entity);
     const vars = look.vars;
-    const tokens = anims?.on ? [...look.tokens, 'tab-anim', ...(anims.hover?.tokens ?? [])] : look.tokens;
+    const typeStyle = tabTypeStyle(design);
+    const tokens = [...look.tokens, ...(typeStyle ? ['type'] : []), ...(anims?.on ? ['tab-anim', ...(anims.hover?.tokens ?? [])] : [])];
+    const barStyle = [typeStyle, ...Object.entries(anims?.hover?.vars ?? {}).map(([k, v]) => `${k}: ${v}`)].filter(Boolean).join('; ');
     const header = html`
-        <div class="mc-tabs-header" role="tablist" style=${anims?.hover ? styleMap(anims.hover.vars) : nothing}>
+        <div class="mc-tabs-header" role="tablist" style=${barStyle || nothing}>
           ${shown.map((i) => {
             const tab = tabs[i];
             const active = i === activeIdx;

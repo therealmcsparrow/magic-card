@@ -90,7 +90,7 @@ export function controlLook(type: string | undefined, variant?: string): Control
  * design it is the module's base design: a hover that sets a part key writes the keys of base and hover together,
  * so it leaves the others as the base has them.
  */
-export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean | Partial<DesignConfig>): string {
+export function designToStyle(input?: DesignConfig, control?: ControlLook, button?: boolean | Partial<DesignConfig>, tabs?: boolean): string {
   if (!input) return '';
   const design = resolveEntityColors(designNumbersToCss(input));
 
@@ -100,7 +100,7 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
   const gradient = parseGradient(design.color)?.stops[0];
 
   for (const [key, cssProperty] of Object.entries(ALL_CSS_MAP)) {
-    if (control && CONTROL_KEYS.has(key)) continue;
+    if ((control && CONTROL_KEYS.has(key)) || (tabs && isTabType(key))) continue;
     let value = gradient && key === 'color' ? gradient : rec[key];
     if (typeof value === 'string' && IMAGE_KEYS.has(key)) value = mediaCssImage(undefined, value);
     if (value !== undefined && typeof value === 'string' && value !== '') {
@@ -113,7 +113,7 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
 
   // Module text that sets its own colour (button label, info value, ...) reads this, so the
   // design colour reaches it; descendants without a colour of their own inherit `color` as usual.
-  if (typeof design.color === 'string' && design.color !== '') {
+  if (!tabs && typeof design.color === 'string' && design.color !== '') {
     parts.push(`--mc-design-color: ${gradient ?? design.color}`);
     if (gradient) parts.push(`--mc-text-paint: ${design.color}`);
     // HA's ha-icon fills with var(--icon-primary-color, currentcolor); a theme that sets that var would
@@ -209,6 +209,9 @@ export function designToHoverStyle(design?: DesignConfig): string {
   if (!design?.hover) return '';
   return designToStyle(design.hover as DesignConfig);
 }
+
+/** A key of the Typography section: on a tabs module it styles the tab buttons, not the panel. */
+export const isTabType = (key: string): boolean => /^(font_|text_|word_|color$|line_height|letter_spacing|white_space|overflow_wrap)/.test(key);
 
 /** Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). */
 export function splitDeclarations(style: string): string[] {
