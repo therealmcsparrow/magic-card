@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.4 (2026-10-23)
 
 ### Added
 -   **Every tab setting in each tab state.** The Active tab, Disabled tab and Hover states, and conditional design rules, take the same tab settings as the base look: text colour, background, border colour, border width, border style, corner radius, padding, font family, size, weight and case, letter spacing, icon colour, icon size, shadow and opacity. See [Tab states](documentation/modules/layout/tabs.md#tab-states).
