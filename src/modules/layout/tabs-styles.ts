@@ -7,11 +7,12 @@ import { unsafeCSS } from 'lit';
  * only, no config text reaches it.
  */
 
-const BAR = ' .mc-tabs-header';
-const TAB = ' .mc-tab-button';
+// Child combinators: a tabs module nested in a tab never takes the look of the one around it.
+const BAR = '>.mc-tabs-header';
+const TAB = `${BAR}>.mc-tab-button`;
 const ACTIVE = `${TAB}.active`;
 const ICON = `${TAB} ha-icon,.mc-tabs[data-style][data-mc-tab~='icon-size']${TAB} mc-svg-icon`;
-const CONTENT = ' .mc-tabs-content';
+const CONTENT = '>.mc-tabs-content';
 const DIRECT = `${TAB}:not(.active)`;
 
 /** Rules gated on one token: [token, descendant selector, declarations]. */
@@ -53,8 +54,8 @@ const TAIL: ReadonlyArray<readonly [string, string, string]> = [
   ['icon-above', TAB, 'flex-direction:column'],
   ['icon-below', TAB, 'flex-direction:column-reverse'],
   ['icon-size', ICON, '--mdc-icon-size:var(--mc-tt-is)'],
-  ['anim-fade', CONTENT, 'animation:mc-tabs-fade .2s ease-out'],
-  ['anim-slide', CONTENT, 'animation:mc-tabs-slide .2s ease-out'],
+  ['anim-fade', CONTENT, 'animation:var(--mc-tt-an) .2s ease-out'],
+  ['anim-slide', CONTENT, 'animation:var(--mc-tt-an) .2s ease-out'],
 ];
 
 const gated = (rules: ReadonlyArray<readonly [string, string, string]>): string =>
@@ -70,10 +71,19 @@ const BORDER_EDGE =
 
 const PILL_FILL = `.mc-tabs[data-style='pills'][data-mc-tab~='indicator']${ACTIVE}{background:var(--mc-tt-ind)}`;
 
+// A tab switch flips the animation name (-0 / -1, set by the view), which restarts it without rebuilding the panel.
+const KEYFRAMES = [0, 1]
+  .map((n) => `@keyframes mc-tabs-fade-${n}{from{opacity:0}}@keyframes mc-tabs-slide-${n}{from{opacity:0;transform:translateX(12px)}}`)
+  .join('');
+
+// The widths with a fallback are the only custom properties that would otherwise reach a nested tabs module.
+const NESTED = ".mc-tabs[data-mc-tab] .mc-tabs{--mc-tb-bw:initial;--mc-tb-bc:initial;--mc-tt-bw:initial;--mc-tt-bc:initial}";
+
+const KEEP_BOLD = `.mc-tabs[data-style='underline'][data-mc-tab~='weight']${ACTIVE}{font-weight:700}`;
+
 const MOTION =
-  '@keyframes mc-tabs-fade{from{opacity:0}}' +
-  '@keyframes mc-tabs-slide{from{opacity:0;transform:translateX(12px)}}' +
+  KEYFRAMES +
   `@media (prefers-reduced-motion:reduce){.mc-tabs[data-style][data-mc-tab]${CONTENT}{animation:none}}`;
 
 // The order matters: equal specificity, the later rule wins.
-export const tabsStyles = unsafeCSS(gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL.slice(0, 1)) + PILL_FILL + gated(TAIL.slice(1)) + MOTION);
+export const tabsStyles = unsafeCSS(gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL.slice(0, 1)) + PILL_FILL + gated(TAIL.slice(1)) + KEEP_BOLD + NESTED + MOTION);

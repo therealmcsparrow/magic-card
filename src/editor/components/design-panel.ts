@@ -483,7 +483,8 @@ export class DesignPanel extends LitElement {
   private _filterProperties(all: CssPropertyDef[]): CssPropertyDef[] {
     // hover is a CSS rule: only CSS properties (no card-drawn options like the ring or border length)
     const hover = this._isHoverView();
-    const properties = all.filter((p) => this._isVisible(p) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
+    const base = this._activeView === 'default';
+    const properties = all.filter((p) => this._isVisible(p) && !(p.baseOnly && !base) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
     const q = fold(this._searchQuery);
     return properties.filter(
@@ -804,7 +805,7 @@ export class DesignPanel extends LitElement {
             <mc-color-picker
               .value=${value}
               .label=${lt(p.label)}
-              .allowEntity=${this._allowEntityColor}
+              .allowEntity=${this._allowEntityColor && !p.baseOnly}
               .entityColor=${this._entityColor}
               .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
               .gradientNote=${p.key === 'color' ? t('Text uses this gradient as its fill. Older tablets show the first colour.') : ''}

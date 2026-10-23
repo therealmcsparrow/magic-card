@@ -1,5 +1,4 @@
 import { html, nothing, TemplateResult } from 'lit';
-import { keyed } from 'lit/directives/keyed.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { hasIconFx, renderIcon } from '../../icons/render-icon';
@@ -48,7 +47,7 @@ export class TabsView implements ModuleView {
       queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[p]?.focus());
     };
 
-    const look = tabLook(c.design);
+    const look = tabLook(c.design, activeIdx);
     const header = html`
         <div class="mc-tabs-header" role="tablist">
           ${shown.map((i) => {
@@ -72,11 +71,10 @@ export class TabsView implements ModuleView {
         <div class="mc-tabs-content" role="tabpanel" data-mc-layers=${laid?.layered ? '' : nothing}>
           ${laid ? laid.content : renderEmptySlot(t('Empty tab'))}
         </div>`;
-    // an animated switch builds the panel afresh per tab, so its entry animation runs; the bar after the panel keeps the focus order
-    const body = look.tokens.some((k) => k.startsWith('anim-')) ? keyed(activeIdx, panel) : panel;
+    // a bottom bar comes after the panel, so the focus order follows the visual order
     return html`
       <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'} data-mc-tab=${look.tokens.length ? look.tokens.join(' ') : nothing}
-        style=${look.tokens.length ? styleMap(look.vars) : nothing}>${look.tokens.includes('bottom') ? html`${body}${header}` : html`${header}${body}`}
+        style=${look.tokens.length ? styleMap(look.vars) : nothing}>${look.tokens.includes('bottom') ? html`${panel}${header}` : html`${header}${panel}`}
       </div>
     `;
   }

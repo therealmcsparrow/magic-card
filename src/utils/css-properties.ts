@@ -69,6 +69,8 @@ export interface CssPropertyDef {
   hover?: boolean;
   /** Button variants (`button_style`) that do not show this field. */
   hideForVariant?: string[];
+  /** Read from the module's own design only: not offered in the hover design or in conditional rules. */
+  baseOnly?: boolean;
 }
 
 export interface CssSector {
@@ -98,10 +100,12 @@ function option(
   key: string,
   label: MessageId,
   type: CssPropertyType,
-  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant'>> = {},
+  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly'>> = {},
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
+/** A tab bar key: read from the module's own design only. */
+const tb = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { baseOnly: true, ...extra });
 /** A button part key: allowed in the hover design and in rules. */
 const bo = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { hover: true, ...extra });
 const LABEL = { hideForVariant: ['icon-only'] };
@@ -384,39 +388,39 @@ export const CSS_SECTORS: CssSector[] = [
     icon: 'mdi:tab',
     modules: ['tabs'],
     properties: [
-      option('tab_bar_position', lm('Bar position'), 'segmented', {
+      tb('tab_bar_position', lm('Bar position'), 'segmented', {
         options: [{ label: lm('Top'), value: 'top' }, { label: lm('Bottom'), value: 'bottom' }],
         defaultValue: 'top',
       }),
-      option('tab_align', lm('Tab alignment'), 'segmented', {
+      tb('tab_align', lm('Tab alignment'), 'segmented', {
         options: [{ label: lm('Start'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('End'), value: 'end' }, { label: lm('Stretch'), value: 'stretch' }],
         defaultValue: 'start',
       }),
-      option('tab_bar_background', lm('Bar background'), 'color'),
-      option('tab_bar_border_color', lm('Bar border colour'), 'color'),
-      option('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'] }),
-      option('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP }),
-      option('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT }),
-      option('tab_color', lm('Tab text colour'), 'color'),
-      option('tab_background', lm('Tab background'), 'color'),
-      option('tab_font_size', lm('Tab font size'), 'unit', { units: PCT }),
-      option('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
-      option('tab_font_family', lm('Tab font family'), 'font'),
-      option('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS }),
-      option('tab_border_color', lm('Tab border colour'), 'color'),
-      option('tab_border_width', lm('Tab border width'), 'unit', { units: ['px'] }),
-      option('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP }),
-      option('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP }),
-      option('tab_active_color', lm('Active tab text colour'), 'color'),
-      option('tab_active_background', lm('Active tab background'), 'color'),
-      option('tab_indicator_color', lm('Indicator colour'), 'color', { help: lm('Underline line for Default and Underline, pill fill for Pills.') }),
-      option('tab_icon_position', lm('Tab icon position'), 'segmented', {
+      tb('tab_bar_background', lm('Bar background'), 'color'),
+      tb('tab_bar_border_color', lm('Bar border colour'), 'color'),
+      tb('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'] }),
+      tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP }),
+      tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT }),
+      tb('tab_color', lm('Tab text colour'), 'color'),
+      tb('tab_background', lm('Tab background'), 'color'),
+      tb('tab_font_size', lm('Tab font size'), 'unit', { units: PCT }),
+      tb('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
+      tb('tab_font_family', lm('Tab font family'), 'font'),
+      tb('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS }),
+      tb('tab_border_color', lm('Tab border colour'), 'color'),
+      tb('tab_border_width', lm('Tab border width'), 'unit', { units: ['px'] }),
+      tb('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP }),
+      tb('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP }),
+      tb('tab_active_color', lm('Active tab text colour'), 'color'),
+      tb('tab_active_background', lm('Active tab background'), 'color'),
+      tb('tab_indicator_color', lm('Indicator colour'), 'color', { help: lm('Underline line for Default and Underline, pill fill for Pills.') }),
+      tb('tab_icon_position', lm('Tab icon position'), 'segmented', {
         options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
         defaultValue: 'left',
         help: lm('Left and right follow the text direction.'),
       }),
-      option('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'] }),
-      option('tab_animation', lm('Tab switch animation'), 'segmented', {
+      tb('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'] }),
+      tb('tab_animation', lm('Tab switch animation'), 'segmented', {
         options: [{ label: lm('None'), value: 'none' }, { label: lm('Fade'), value: 'fade' }, { label: lm('Slide'), value: 'slide' }],
         defaultValue: 'none',
         help: lm('Ignored when the viewer prefers reduced motion.'),

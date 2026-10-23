@@ -1,7 +1,7 @@
 import { cssLengths, safeColor, str } from '../../utils/safe-css';
 
 /*
- * The tab_ design keys of a tabs module (ADR 0049) as custom properties plus `data-mc-tab` tokens. Every value
+ * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
  * is checked against its own grammar and rebuilt from the parsed parts; the tokens are constants of this file,
  * never text from the config. tabs-styles.ts holds the rules that read them.
  */
@@ -75,7 +75,8 @@ function length(v: unknown, most: number, max: number, pct: boolean): string | u
   return s && s.split(' ').every((t) => parseFloat(t) <= max && (pct || !t.endsWith('%'))) ? s : undefined;
 }
 
-export function tabLook(design: unknown): TabLook {
+/** `phase`: the active tab's index, so a switch alternates the animation name and restarts it. */
+export function tabLook(design: unknown, phase = 0): TabLook {
   const vars: Record<string, string> = {};
   const tokens = new Set<string>();
   const d = (design && typeof design === 'object' ? design : {}) as Record<string, unknown>;
@@ -102,6 +103,7 @@ export function tabLook(design: unknown): TabLook {
     const w = word(d[key]);
     if (w !== words[0] && words.includes(w)) tokens.add(prefix + w);
   }
+  for (const kind of ['fade', 'slide']) if (tokens.has(`anim-${kind}`)) vars['--mc-tt-an'] = `mc-tabs-${kind}-${phase & 1}`;
   if (tokens.has('icon-right') || tokens.has('icon-above') || tokens.has('icon-below')) tokens.add('icon-flex');
   return { vars, tokens: [...tokens] };
 }

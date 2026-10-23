@@ -2,7 +2,7 @@
   "description": "Allowlist of config keys that load no chunk (plain keys), with the feature and host keys",
   "rule": "A config is plain when every key the walker meets is in this file as plain. A key found in `features` is a feature (its chunk and reserve kind come from here). Any other key is unknown and counts as a feature (a missed key costs a fetch, never a blank card).",
   "provenance": {
-    "design_css": "key names of src/utils/css-properties.ts (prop() entries, plus the per-side longhands of BOX_LONGHANDS and border_length*), copied 2026-10-20 at base 0ce341e",
+    "design_css": "key names of src/utils/css-properties.ts (prop() entries, plus the per-side longhands of BOX_LONGHANDS and border_length*), copied 2026-10-20 at base 0ce341e; also holds the virtual tab_* design keys, which only the tabs module reads",
     "module_keys": "interfaces in src/types.ts (TextModuleConfig ... ClockModuleConfig), copied 2026-10-20",
     "seasonal_presets": "SEASONAL_PRESETS in src/utils/animation-presets.ts; the ids are listed in SEASONAL_PRESET_IDS in src/utils/seasonal.needs.ts"
   },
