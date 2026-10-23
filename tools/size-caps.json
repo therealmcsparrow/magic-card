@@ -59,9 +59,9 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 955392,
-      "ceiling": 955392,
-      "note": "Card editor. 933 KiB, measured 954,507."
+      "raw": 975872,
+      "ceiling": 975872,
+      "note": "Card editor. 953 KiB, measured 975,392."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -209,9 +209,9 @@
       "note": "20 KiB, measured 18,674 + 5 %, rounded up to 1 KiB. The views of the slider, spinbox, dropdown, light and gauge modules. The contract ceiling is 61,440 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-modules-extra.js": {
-      "raw": 41984,
+      "raw": 49152,
       "ceiling": 57344,
-      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image and tabs views with the tab bar design styles. 41 KiB, measured 41,658; ceiling 57,344 (lazy-module chunk ceilings)."
+      "note": "Video background with placement keys (background layers), weather icon CSS, clock, image and tabs views with the tab bar design styles. 48 KiB, measured 48,210; ceiling 57,344 (lazy-module chunk ceilings)."
     },
     "magic-card-svg-booleans.js": {
       "raw": 8192,
@@ -467,6 +467,24 @@
       "field": "/files/magic-card-modules-extra.js/raw",
       "from": 39936,
       "to": 41984
+    },
+    {
+      "id": "editor-raw-975872",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 955392,
+      "to": 975872
+    },
+    {
+      "id": "editor-ceiling-975872",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 955392,
+      "to": 975872
+    },
+    {
+      "id": "modules-extra-raw-49152",
+      "field": "/files/magic-card-modules-extra.js/raw",
+      "from": 41984,
+      "to": 49152
     }
   ]
 }
