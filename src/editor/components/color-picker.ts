@@ -51,11 +51,20 @@ export class ColorPicker extends LitElement {
       .help:empty {
         display: none;
       }
+      /* an empty field that takes this colour from the design below: dimmed, hatched */
+      .swatch-fill[data-hint] > span {
+        opacity: 0.5;
+      }
+      .swatch-fill[data-hint] {
+        background-image: repeating-linear-gradient(135deg, transparent 0 3px, color-mix(in srgb, var(--mc-text) 35%, transparent) 3px 4px);
+      }
     `,
   ];
 
   @property({ type: String }) value = '';
   @property({ type: String }) label = '';
+  /** What an empty field shows: the colour it takes from the design below (a dimmed swatch and the text). */
+  @property({ type: String }) placeholder = '';
   /** Offer the "Entity color" toggle (a module design with an entity): the value becomes `entity` / `entity N%`. */
   @property({ type: Boolean }) allowEntity = false;
   /** The entity's live state colour (CSS), shown in the swatch while the entity colour is used. */
@@ -501,7 +510,8 @@ export class ColorPicker extends LitElement {
   }
 
   private _renderSolid(): TemplateResult {
-    const displayColor = this.value || 'transparent';
+    const hinted = !this.value && !!this.placeholder;
+    const displayColor = this.value || this.placeholder || 'transparent';
     const name = this.label || t('colour');
 
     return html`
@@ -513,14 +523,14 @@ export class ColorPicker extends LitElement {
           title=${t('Open colour picker')}
           @click=${this._openModal}
         >
-          <span class="swatch-fill"><span style="background: ${displayColor}"></span></span>
+          <span class="swatch-fill" data-hint=${hinted ? '' : nothing}><span style="background: ${displayColor}"></span></span>
         </button>
         <input
           class="input mono"
           type="text"
           spellcheck="false"
           .value=${this.value || ''}
-          placeholder="#rrggbb or var(--name)"
+          placeholder=${this.placeholder || '#rrggbb or var(--name)'}
           aria-label=${name}
           @input=${this._handleTextInput}
         />

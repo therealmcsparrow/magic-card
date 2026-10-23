@@ -221,7 +221,7 @@ export class BoxField extends LitElement {
     const hint = expand(this.inherited)?.[source] ?? '';
     const write = (v: string) => this._shSide(position, v);
     if (this.cell === 'color') {
-      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .allowEntity=${false} @value-changed=${(e: CustomEvent) => {
+      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .placeholder=${own ? '' : hint} .allowEntity=${false} @value-changed=${(e: CustomEvent) => {
         e.stopPropagation();
         write(String(e.detail.value ?? ''));
       }}></mc-color-picker>`;
