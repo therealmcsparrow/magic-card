@@ -174,10 +174,10 @@ Keyboard in the outline: Up, Down, Home and End move focus between items, and En
 Open it with Open studio. It is a full-screen dialog with:
 
 -   Layers on the left: the same outline as the pane editor, with an Add module row under every column. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas.
--   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas. The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
+-   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas, except in Preview (see [Preview](documentation/studio/preview.md)). The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
 -   The inspector on the right, with the same tabs as in the pane editor. Its header and tab bar stay at the top while the settings below them scroll, and a tab switch starts the settings at the top.
 -   A canvas width switch: Narrow (400 px), Wide (800 px) and Panel (the whole canvas). When the Studio opens it picks the width that matches the dashboard view: masonry, sections (scaled to the card's columns), panel or sidebar. Pick another width to override it, and Match view to go back. See [Canvas width](documentation/studio/device-widths.md).
--   The Form and YAML switch, the template bar, and undo and redo buttons.
+-   The Form and YAML switch, the template bar, undo and redo buttons, and the Preview button. Preview runs the card as on the dashboard, with live actions. It hides the layers and the inspector, and the Form and YAML switch, the template bar, undo and redo are off until you leave it. See [Preview](documentation/studio/preview.md).
 
 A floating bar next to the selected module moves it up or down, duplicates it, deletes it, or adds a flow line from it: choose Add flow from here, then click the module the flow goes to (Escape cancels). The new flow opens in Card settings, Flows. Click a flow line on the canvas to select it there; the selected flow is highlighted on the canvas. Connecting on the canvas needs a mouse or touch; with a keyboard, use the Flows tab in Card settings.
 
@@ -192,7 +192,7 @@ Keyboard shortcuts:
 | Ctrl/Cmd+D | Duplicate the selected module or row (canvas focused) |
 | Shift+F10 or the Menu key | Open the selection's item menu (canvas focused) |
 | F2 | Rename the selection in Layers (canvas focused) |
-| Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. |
+| Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. In Preview, it closes a dialog opened from the card first, then leaves Preview; it never closes the studio while Preview is on. |
 | Arrow keys, Home, End in Layers | Move between items |
 
 The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Escape in Layers, the inspector or the top bar closes the studio.

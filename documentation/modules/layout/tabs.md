@@ -26,7 +26,7 @@ The General tab of the Tabs module holds Tab style, Default tab and the icon eff
 
 ## Tab bar design
 
-The Design tab of a tabs module has a Tab bar section. It holds 23 `tab_` keys that style the bar, the tabs, the active tab, the icons and the switch between tabs. Set them as you set other design keys. Copy design, Paste design and card templates carry them too (see [Copy and paste design](../../editor/copy-paste-design.md)).
+The Design tab of a tabs module has a Tab bar section. Its keys style the bar, the tabs, the icons and the switch between tabs. The active, hover and disabled looks of a tab are in [Tab states](#tab-states). Set them as you set other design keys. Copy design, Paste design and card templates carry them too (see [Copy and paste design](../../editor/copy-paste-design.md)).
 
 The keys work with every `tab_style` (default, pills and underline). A key that is not set leaves that part of the bar as it was before these keys existed, so a tabs module that uses none of them looks exactly as before. A key with a value the editor does not accept is ignored.
 
@@ -36,15 +36,15 @@ A conditional design rule can set any of these keys, and the rule's value replac
 | --- | --- | --- | --- |
 | `tab_bar_background` | colour | not set | Background of the bar. |
 | `tab_bar_border_color` | colour | not set | Colour of the line round the bar. |
-| `tab_bar_border_width` | length, 0 to 32 px | not set | Width of that line. |
+| `tab_bar_border_width` | length from 0 to 32, any unit except % | not set | Width of that line. |
 | `tab_bar_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside the bar, round the tabs. |
 | `tab_bar_position` | `top`, `bottom` | `top` | Puts the bar above or below the content. Keyboard focus follows the visual order. |
 | `tab_align` | `start`, `center`, `end`, `stretch` | `start` | Places the tabs in the bar. `stretch` makes the tabs fill the bar. |
 | `tab_gap` | length or %, up to 256 | not set | Space between tabs. |
 | `tab_color` | colour | not set | Text colour of the tabs that are not active. |
-| `tab_background` | colour | not set | Background of each tab. |
+| `tab_background` | colour | not set | Background of each tab that is not active. |
 | `tab_border_color` | colour | not set | Colour of each tab's border. |
-| `tab_border_width` | length, 0 to 32 px | not set | Width of each tab's border. With no width set, the active tab's line is the bottom edge only (see [Tab states](#tab-states)). |
+| `tab_border_width` | length from 0 to 32, any unit except % | not set | Width of each tab's border. Set it, or `tab_border_color`, and every tab has a border on all four sides. See [The active line](#the-active-line). |
 | `tab_radius` | 1 to 4 lengths, each up to 999 | not set | Corner radius of each tab. |
 | `tab_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside each tab. |
 | `tab_font_family` | font names separated by commas | not set | Font of the tab labels. Names may be in quotes. Up to 128 characters. A Google Font chosen in the editor's font picker loads from Google. |
@@ -54,6 +54,7 @@ A conditional design rule can set any of these keys, and the rule's value replac
 | `tab_icon_position` | `left`, `right`, `above`, `below` | `left` | Where the icon sits in the tab. `left` and `right` follow the writing direction. |
 | `tab_icon_size` | length, up to 256 px, no % | not set | Size of the tab icons. |
 | `tab_animation` | `none`, `fade`, `slide` | `none` | Animation when the tab switches. It does not play when the viewer prefers reduced motion. |
+| `tab_opacity` | number from 0 to 1 | not set | Opacity of every tab. The active, hover and disabled states can set their own, see [Tab states](#tab-states). |
 
 A length is a plain number, which counts as px, or a number with px, em, rem, %, vw or vh. Negative values are not accepted. A colour is any CSS colour the editor accepts, such as `#1c7ed6`.
 
@@ -73,7 +74,7 @@ A length is a plain number, which counts as px, or a number with px, em, rem, %,
 
 ## Tab states
 
-A tab can have four looks: the base look from the keys above, and three states that change it. Each state takes the same five settings:
+A tab can have four looks: the base look from the keys above, and three states that change it. `tab_disabled_tabs`, `tab_active` and `tab_disabled` are set in this section too. Each state takes the same five settings:
 
 | Setting | Key | Values |
 | --- | --- | --- |
@@ -108,7 +109,9 @@ design:
 
 ### The active line
 
-The active tab has no separate indicator. The line under it is the tab's border. Its colour is `tab_border_color` in `tab_active`. Unless `tab_border_width` is set, only the bottom edge of the active tab has a width, so the line sits under the tab. With `tab_bar_position: bottom`, the line stays on the tab's bottom edge. When `tab_border_width` is set, the border of a tab is the same on all four sides, and the active tab differs only in its `tab_active` settings.
+The active tab has no separate indicator. The line under it is the tab's border. Its colour is `tab_border_color` in `tab_active`. Unless `tab_border_width` or `tab_border_color` is set, the active tab's line is its bottom edge only, so it sits under the tab. Once either is set, every tab has a border on all four sides, and the active tab differs only in its `tab_active` settings. With `tab_bar_position: bottom`, the line stays on the tab's bottom edge.
+
+In Pills, the tabs have no bottom line of their own, so the active tab's colour shows only in a border on all four sides. That needs `tab_border_width` or `tab_border_color` to be set.
 
 ### Disabled tabs
 
@@ -118,7 +121,7 @@ A disabled tab stays in the bar but cannot be opened.
 -   A disabled tab is dimmed. The default opacity is 0.5, and `tab_disabled.tab_opacity` changes it.
 -   Clicks do nothing. Arrow keys, Home and End skip the tab, and screen readers hear it as disabled.
 -   If the tab that `active_tab` names is disabled, the first tab that is not disabled opens instead. If every tab is disabled, the tab named by `active_tab` stays shown and none of them can be clicked.
--   In the Studio, the canvas opens the tab that `active_tab` names, even when it is disabled, and a click on it opens it so you can edit its content. The dashboard does not open it.
+-   In the Studio, outside Preview, the canvas opens the tab that `active_tab` names, even when it is disabled, and a click on a disabled tab opens it so you can edit its content. In Preview the dashboard rules apply.
 
 ### Tab states in rules
 
@@ -130,7 +133,9 @@ In the editor, the Editing design for list has an Active tab entry and a Disable
 design:
   tab_disabled_tabs: [1]
   conditional:
-    - conditions:
+    - id: guest
+      name: Guest mode
+      conditions:
         - type: state
           entity: input_boolean.guest_mode
           state: "on"

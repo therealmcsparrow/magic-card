@@ -58,7 +58,7 @@ The frame stays on its item when the canvas scrolls, the window resizes or the c
 
 The canvas card uses your real entity states, but it cannot change anything:
 
--   Clicks, taps, holds and double taps select. They never run the tap, hold or double-tap actions of a module or a row.
+-   Clicks, taps, holds and double taps select. Outside Preview they never run the tap, hold or double-tap actions of a module or a row. In Preview the actions run on the real entities, as on the dashboard. See [Preview](preview.md).
 -   Service calls are blocked. Only read-only requests reach Home Assistant (states, history, statistics, templates, camera images, media browsing, weather forecasts).
 -   Requests from embedded cards to open more-info or run an action are stopped.
 -   Keys pressed inside the card are not passed to the modules. Tab still moves focus. Other keys work as canvas shortcuts.
