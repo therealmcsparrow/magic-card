@@ -2,7 +2,8 @@ import { t as lt } from '../../i18n/labels';
 import { html, TemplateResult } from 'lit';
 import { CardModule, EditorPath, MagicCardConfig } from '../../types';
 import { ModuleRegistry } from '../../modules/module-registry';
-import { ChildStep, childSlots, descendantAt, formatChildChain, hasSlotNodes, parseChildChain, slotLabel } from '../../utils/module-path';
+import { ChildStep, childSlots, descendantAt, formatChildChain, hasSlotNodes, parseChildChain } from '../../utils/module-path';
+import { slotLabel } from '../slot-label';
 import { hasColumnWidths } from '../../utils/column-widths';
 import { t } from '../i18n';
 

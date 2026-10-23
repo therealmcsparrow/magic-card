@@ -1,6 +1,7 @@
 import type { CardModule, FlowConfig, HomeAssistant, MagicCardConfig } from '../../types';
 import { generateId } from '../../utils/id-generator';
-import { childListKey, childSlots, slotLabel } from '../../utils/module-path';
+import { childListKey, childSlots } from '../../utils/module-path';
+import { slotLabel } from '../slot-label';
 import { ModuleSelection, moduleAt, moduleDisplayName, moduleLabel, moduleSelection, modulePathAttr } from '../studio/selection';
 import { t, m } from '../i18n';
 

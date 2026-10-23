@@ -29,7 +29,8 @@ import {
   layerName,
 } from './selection';
 import type { ModuleSelection, SlotSelection } from './selection';
-import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes } from '../../utils/module-path';
+import { slotLabel } from '../slot-label';
 import { t } from '../i18n';
 import { moveModuleTo, type DropPlace } from '../state/tree-move';
 import { autoScroll, canDropAt, placeFor, zoneAt, type DropZone, type PlaceTarget } from './tree-dnd';

@@ -47,16 +47,6 @@ export function hasSlotNodes(mod: CardModule | undefined): boolean {
   return mod?.type === 'row' || mod?.type === 'tabs';
 }
 
-/** Name of a slot as the editor shows it ("Column 2", "Tab label"); undefined for flat layouts. */
-export function slotLabel(mod: CardModule, slot: number): string | undefined {
-  if (mod.type === 'row') return `Column ${slot + 1}`;
-  if (mod.type === 'tabs') {
-    const tab = (mod as { tabs?: Array<{ label?: string }> }).tabs?.[slot];
-    return tab?.label?.trim() || `Tab ${slot + 1}`;
-  }
-  return undefined;
-}
-
 export function childAt(mod: CardModule | undefined, step: ChildStep): CardModule | undefined {
   return childSlots(mod)?.[step.slot]?.[step.index];
 }
