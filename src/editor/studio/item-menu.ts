@@ -30,6 +30,8 @@ import { t } from '../i18n';
 import { applyPlacement } from '../layers/layer-actions';
 import { placementOf } from '../layers/placement-model';
 import { replaceTypes } from '../state/retype-module';
+import { DropPlace, insideSource, moveModuleTo } from '../state/tree-move';
+import { placeFor } from './tree-dnd';
 
 /** The menu's list, or one of its second levels in the same popover. */
 export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete' | 'placement' | 'add' | 'arrange' | 'design' | 'clipboard';
@@ -419,21 +421,61 @@ export class ItemMenu implements ReactiveController {
 
   // ── model ──
 
-  /** "Move to…" targets: the card's other columns, or for a layout child the other slots of its layout. */
+  /**
+   * "Move to…" targets: the card's other columns, or for a layout child the other slots of its layout;
+   * then "Into {container}" for every other layout slot of the card (never the module's own subtree) and,
+   * for a layout child, "Out to {parent}" (placed after the parent). The keyboard path of the tree drag.
+   */
   private _moveTargets(config: MagicCardConfig, sel: ModuleSelection): Entry[] {
     const sm = this._sm!;
     const child = sel.child;
     const go = (label: string, run: () => void): Entry => ({ icon: 'mdi:arrow-right', label, run, focus: 'selection' });
+    const near: Entry[] = [];
     if (child?.length) {
       const parent = descendantAt(config.rows[sel.row]?.columns[sel.col]?.modules?.[sel.module], child.slice(0, -1));
       const slots = parent ? childSlots(parent) : undefined;
       const current = child[child.length - 1].slot;
       if (!parent || !slots) return [];
-      return slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? t('Slot {n}', { n: slot + 1 }),
-        () => sm.moveChildToSlot(sel.row, sel.col, sel.module, child, slot))]));
+      near.push(...slots.flatMap((_, slot) => (slot === current ? [] : [go(slotLabel(parent, slot) ?? t('Slot {n}', { n: slot + 1 }),
+        () => sm.moveChildToSlot(sel.row, sel.col, sel.module, child, slot))])));
+    } else {
+      near.push(...config.rows.flatMap((row, r) => row.columns.flatMap((_, c) => (r === sel.row && c === sel.col ? [] : [go(
+        rowColumn(r, c), () => sm.moveModuleToColumn(sel.row, sel.col, sel.module, r, c))]))));
     }
-    return config.rows.flatMap((row, r) => row.columns.flatMap((_, c) => (r === sel.row && c === sel.col ? [] : [go(
-      rowColumn(r, c), () => sm.moveModuleToColumn(sel.row, sel.col, sel.module, r, c))])));
+    const move = (place: DropPlace, where: string): void => {
+      const r = moveModuleTo(sm.getConfig(), sel, place);
+      if (!r) return;
+      sm.updateConfig(r.config);
+      sm.setSelectedPath(r.path);
+      this.opts.status(t('Moved {name} to {where}', { name: moduleTitle(moduleAt(config, sel)!), where }));
+    };
+    const into: Entry[] = [];
+    const ownerSteps = child?.slice(0, -1) ?? [];
+    const sameSteps = (a: readonly { slot: number; index: number }[], b: readonly { slot: number; index: number }[]) =>
+      a.length === b.length && a.every((x, i) => x.slot === b[i].slot && x.index === b[i].index);
+    config.rows.forEach((row, r) => row.columns.forEach((col, c) => {
+      const visit = (mod: CardModule, topIndex: number, steps: Array<{ slot: number; index: number }>, trail: string): void => {
+        const slots = childSlots(mod);
+        if (!slots) return;
+        const label = `${trail} > ${moduleTitle(mod)}`;
+        slots.forEach((list, slot) => {
+          const place: DropPlace = { row: r, col: c, module: topIndex, ...(steps.length ? { child: steps.map((x) => ({ ...x })) } : {}), slot, index: list.length };
+          const here = hasSlotNodes(mod) ? `${label} > ${slotLabel(mod, slot) ?? ''}` : label;
+          const sameOwner = r === sel.row && c === sel.col && topIndex === sel.module && sameSteps(steps, ownerSteps);
+          if (!sameOwner && !insideSource(sel, place)) into.push(go(t('Into {container}', { container: here }), () => move(place, here)));
+          list.forEach((kid, index) => visit(kid, topIndex, [...steps, { slot, index }], here));
+        });
+      };
+      (col.modules ?? []).forEach((mod, index) => visit(mod, index, [], rowColumn(r, c)));
+    }));
+    const out: Entry[] = [];
+    if (child?.length) {
+      const owner = { kind: 'module' as const, row: sel.row, col: sel.col, module: sel.module, ...(ownerSteps.length ? { child: ownerSteps } : {}) };
+      const place = placeFor(config, owner, 'after');
+      const ownerMod = moduleAt(config, owner);
+      if (place && ownerMod) out.push(go(t('Out to {parent}', { parent: moduleTitle(ownerMod) }), () => move(place, moduleTitle(ownerMod))));
+    }
+    return [...near, ...into, ...out];
   }
 
   /** The groups of the open menu (separators between them) and its accessible name. */
