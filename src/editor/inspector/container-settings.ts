@@ -378,10 +378,10 @@ export function renderNestedColumnConditions(at: SlotOwner, slot: number, mod: R
     sm.updateNestedColumn(at.row, at.col, at.module, at.child, slot, { display: display.conditions?.length || display.mode ? display : undefined }), hass);
 }
 
-/** A tab (slot view): its label and icon. */
+/** A tab (slot view): its label, icon and the icon it shows while active. */
 export function renderTabGeneral(at: SlotOwner, slot: number, mod: TabsModuleConfig, sm: EditorStateManager, hass?: HomeAssistant): TemplateResult {
   const tab = mod.tabs?.[slot];
-  const update = (patch: { label?: string; icon?: string }) => sm.updateTab(at.row, at.col, at.module, at.child, slot, patch);
+  const update = (patch: { label?: string; icon?: string; active_icon?: string }) => sm.updateTab(at.row, at.col, at.module, at.child, slot, patch);
   // A blank label is not stored; leaving the field blank shows the tab's label again.
   const restore = (e: Event) => {
     const input = e.target as HTMLInputElement;
@@ -393,6 +393,8 @@ export function renderTabGeneral(at: SlotOwner, slot: number, mod: TabsModuleCon
         ${renderTextField(t('Label'), tab?.label, (v) => { if (v.trim()) update({ label: v }); })}
       </div>
       ${renderIconField(t('Icon'), tab?.icon, (v) => update({ icon: v || undefined }), hass)}
+      ${renderIconField(t('Icon when active'), tab?.active_icon, (v) => update({ active_icon: v || undefined }), hass)}
+      <p class="help">${t('Leave empty to keep the tab icon.')}</p>
     </div>
   `;
 }

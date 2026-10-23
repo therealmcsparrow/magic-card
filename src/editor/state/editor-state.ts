@@ -941,8 +941,8 @@ export class EditorStateManager {
     this.updateTab(row, col, module, child, slot, { label });
   }
 
-  /** Patch a tab (label, icon); undefined removes a key. A blank label keeps the tab's label (else "Tab N"). */
-  updateTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, patch: { label?: string; icon?: string }): void {
+  /** Patch a tab (label, icon, icon when active); undefined removes a key. A blank label keeps the tab's label (else "Tab N"). */
+  updateTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, patch: { label?: string; icon?: string; active_icon?: string }): void {
     this._tabsEdit([row, col, module, child], (tabs) => {
       if (!tabs[slot]) return false;
       if ('label' in patch && !patch.label?.trim()) {

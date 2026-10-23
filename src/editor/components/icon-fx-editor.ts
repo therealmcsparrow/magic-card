@@ -22,27 +22,12 @@ import './entity-picker';
 import './attribute-picker';
 import './icon-picker';
 import './sync-indicator';
-import { t, m, type MessageId } from '../i18n';
+import { t, m } from '../i18n';
+import { DEVICES, DEVICE_LABEL, DRAWS, type Opt } from './icon-fx-options';
 
 /** A change of the module's icon keys; a key set to undefined is removed. */
 export type IconFxPatch = Partial<Pick<IconFxKeys, 'icon_fx' | 'icon_on' | 'icon_off' | 'svg'>> & { icon?: string };
 
-type Opt = { value: string; label: MessageId };
-
-const DEVICE_LABEL: Record<string, MessageId> = {
-  spin: m('Spin'), glow: m('Glow'), flame: m('Flame'), drum: m('Drum'), swing: m('Swing'), pulse: m('Pulse'), snow: m('Snow'), shake: m('Shake'), eq: m('Equalizer'),
-};
-const DEVICES: Opt[] = [
-  { value: 'off', label: m('Off') },
-  { value: 'auto', label: m('Auto') },
-  ...Object.entries(DEVICE_LABEL).map(([value, label]) => ({ value, label })),
-];
-const DRAWS: Opt[] = [
-  { value: 'off', label: m('Off') },
-  { value: 'load', label: m('On load') },
-  { value: 'change', label: m('On change') },
-  { value: 'loop', label: m('Loop') },
-];
 const DIRECTIONS: Opt[] = [
   { value: 'up', label: m('Up') },
   { value: 'down', label: m('Down') },

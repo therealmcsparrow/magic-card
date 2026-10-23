@@ -61,6 +61,9 @@ const LIGHT_GROUP = 'Light & colour';
 export const CAT_PREFIX = 'cat-';
 const catRef = (entryId: string) => `${CUSTOM_PREFIX}${CAT_PREFIX}${entryId}`;
 
+/** A preset an element without particle, ring or seasonal layers can play: moves, glows and fades, not "On tap". */
+export const isMotionPreset = (p: AnimationPreset): boolean => !p.channels.includes('fx') && !p.particles && !p.ring && !p.seasonal && p.trigger !== 'tap';
+
 /** Catalogue documents built for field defaults, per entry id (build() is fresh on every call). */
 const built = new Map<string, AnimationDoc>();
 /** Inline catalogue copies as read for field defaults, per stored object. */
@@ -107,6 +110,13 @@ export class AnimationList extends LitElement {
   @property({ type: Boolean }) allowIcon = false;
   /** The module has a label (a button): Target also offers Label. */
   @property({ type: Boolean }) allowLabel = false;
+  /**
+   * Motion presets only (a tab): no library, card copies or catalogue, no particle, ring or seasonal
+   * presets and no "On tap" play, because the element has no layer for them.
+   */
+  @property({ type: Boolean }) motionOnly = false;
+  /** What the Target "Module" choice is called (a tabs module's tab button reads "Tab"). */
+  @property({ type: String }) moduleLabel = '';
   @property({ attribute: false }) hass?: HomeAssistant;
   /** The module's entity: what Play reads when an entry sets no entity of its own. */
   @property({ type: String }) defaultEntity = '';
@@ -131,7 +141,7 @@ export class AnimationList extends LitElement {
     this._unsubLibrary ??= animLibrary().subscribe(() => {
       this._libVersion = animLibrary().version;
     });
-    if (!this._catalogue)
+    if (!this._catalogue && !this.motionOnly)
       void loadCatalogue().then((m) => {
         if (m) this._catalogue = m.CATALOGUE;
       });
@@ -145,7 +155,7 @@ export class AnimationList extends LitElement {
 
   protected willUpdate(changed: PropertyValues): void {
     // the picker needs the library: one shared fetch / subscription per page (lazy)
-    if (changed.has('hass')) animLibrary().ensure(this.hass as unknown as LibraryHass | undefined);
+    if (changed.has('hass') && !this.motionOnly) animLibrary().ensure(this.hass as unknown as LibraryHass | undefined);
   }
 
   /** "My animations": the library's documents, only once it answered. */
@@ -233,7 +243,8 @@ export class AnimationList extends LitElement {
   }
 
   private _add(): void {
-    this._write([...this.animations, newAnimation(ANIMATION_PRESETS[0].id, generateId('anim'))]);
+    const first = this.motionOnly ? ANIMATION_PRESETS.find(isMotionPreset) ?? ANIMATION_PRESETS[0] : ANIMATION_PRESETS[0];
+    this._write([...this.animations, newAnimation(first.id, generateId('anim'))]);
   }
 
   private _remove(index: number): void {
@@ -276,21 +287,25 @@ export class AnimationList extends LitElement {
   }
 
   private _presetSelect(id: string, index: number, value: string): TemplateResult {
-    const mine = this._mine();
-    const card = this._cardDocs();
+    const motion = this.motionOnly;
+    const mine = motion ? [] : this._mine();
+    const card = motion ? [] : this._cardDocs();
     // two entries that read the same (a built-in "Pendulum" and an imported one) show the id after the name
     const seen = new Map<string, number>();
     const key = (n: string): string => n.trim().toLowerCase();
     for (const n of [...mine.map((d) => d.name), ...card.map((d) => d.name), ...ANIMATION_PRESETS.map((p) => lt(p.name))]) seen.set(key(n), (seen.get(key(n)) ?? 0) + 1);
     const label = (name: string, docId: string): string => ((seen.get(key(name)) ?? 0) > 1 ? t('{name} ({id})', { name, id: docId }) : name);
     const cat = isCustomRef(value) && customRefId(value).startsWith(CAT_PREFIX);
-    const known = !!getAnimationPreset(value) || !!this._catEntry(value) || (!cat && !!this._doc(value)) || (isCustomRef(value) && card.some((d) => d.id === customRefId(value)));
+    const preset = getAnimationPreset(value);
+    const known = (motion ? !!preset && isMotionPreset(preset) : !!preset) || !!this._catEntry(value) || (!cat && !!this._doc(value)) || (isCustomRef(value) && card.some((d) => d.id === customRefId(value)));
     // a stored catalogue pick reads as its id until the catalogue loaded (or when it is not in it)
-    const unknown = cat
-      ? this._doc(value)?.name ?? customRefId(value)
-      : isCustomRef(value)
-        ? t('{id} (not found)', { id: customRefId(value) })
-        : t('{id} (unknown)', { id: value });
+    const unknown = motion && (preset || isCustomRef(value))
+      ? t('{name} (not played on tabs)', { name: preset ? lt(preset.name) : customRefId(value) })
+      : cat
+        ? this._doc(value)?.name ?? customRefId(value)
+        : isCustomRef(value)
+          ? t('{id} (not found)', { id: customRefId(value) })
+          : t('{id} (unknown)', { id: value });
     return html`
       <div class="select">
         <select
@@ -309,15 +324,15 @@ export class AnimationList extends LitElement {
                 ${card.map((d) => html`<option value=${CUSTOM_PREFIX + d.id} ?selected=${CUSTOM_PREFIX + d.id === value}>${label(d.name, d.id)}</option>`)}
               </optgroup>`
             : nothing}
-          ${ANIMATION_GROUPS.map(
+          ${ANIMATION_GROUPS.filter((g) => !motion || ANIMATION_PRESETS.some((p) => p.group === g && isMotionPreset(p))).map(
             (g) => html`<optgroup label=${lt(GROUP_LABELS[g])}>
-              ${ANIMATION_PRESETS.filter((p) => p.group === g).map(
+              ${ANIMATION_PRESETS.filter((p) => p.group === g && (!motion || isMotionPreset(p))).map(
                 (p) => html`<option value=${p.id} ?selected=${p.id === value}>${lt(p.name)}</option>`,
               )}
-              ${g === LIGHT_GROUP ? this._catOptions(g, value) : nothing}
+              ${g === LIGHT_GROUP && !motion ? this._catOptions(g, value) : nothing}
             </optgroup>`,
           )}
-          ${this._catalogue
+          ${this._catalogue && !motion
             ? // the catalogue comes in CATALOGUE_GROUPS order
               [...new Set(this._catalogue.map((e) => e.group))].filter((g) => g !== LIGHT_GROUP).map(
                 (g) => html`<optgroup label=${g}>${this._catOptions(g, value)}</optgroup>`,
@@ -331,7 +346,7 @@ export class AnimationList extends LitElement {
 
   private _target(index: number, a: AnimationConfig, fallback: 'module' | 'icon' = 'module'): TemplateResult {
     const opts = [
-      { value: 'module', label: t('Module') },
+      { value: 'module', label: this.moduleLabel || t('Module') },
       { value: 'icon', label: t('Icon') },
       ...(this.allowLabel ? [{ value: 'label', label: t('Label') }] : []),
     ];
@@ -801,7 +816,11 @@ export class AnimationList extends LitElement {
    */
   private _play(index: number, a: AnimationConfig, trigger: string, playId: string): TemplateResult {
     const hasEntity = !!(a.trigger_entity || (!this.requireTriggerEntity && this.defaultEntity));
-    const opts = TRIGGERS.map((tr) => ({ ...tr, label: t(tr.label), disabled: !!tr.entity && !hasEntity && tr.value !== trigger }));
+    const opts = TRIGGERS.filter((tr) => !this.motionOnly || tr.value !== 'tap' || trigger === 'tap').map((tr) => ({
+      ...tr,
+      label: t(tr.label),
+      disabled: !!tr.entity && !hasEntity && tr.value !== trigger,
+    }));
     return html`
       ${this._field(
         t('Entity for play condition'),
@@ -844,7 +863,9 @@ export class AnimationList extends LitElement {
           <button type="button" class="btn btn-text btn-sm" @click=${() => this._add()}>
             <ha-icon icon="mdi:plus"></ha-icon>${t('Add animation')}
           </button>
-          <button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'animation')}>${t('Library')}</button>
+          ${this.motionOnly
+            ? nothing
+            : html`<button type="button" class="btn btn-text btn-sm" @click=${(e: Event) => void openLibrary(e.currentTarget as HTMLElement, this.hass, 'animation')}>${t('Library')}</button>`}
         </div>
       </div>
     `;
