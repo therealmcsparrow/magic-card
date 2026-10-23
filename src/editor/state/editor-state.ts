@@ -58,6 +58,7 @@ import { animLibrary } from '../../utils/anim-hooks';
 import { PasteMode, copyDesign, pastedDesign, readDesignClipboard } from '../../utils/design-clipboard';
 import { ensureModuleId, markFlowsOverridden, newFlow, pruneFlows } from './flows';
 import { flowKeys } from '../../utils/flow-keys';
+import { markChildList, markColumnModules } from './template-marks';
 import type { ModuleSelection, Selection } from '../studio/selection';
 
 /** A module (or a layout child below it: `child`), column or row, by index. */
@@ -159,17 +160,9 @@ export class EditorStateManager {
     return { rowIndex, columnIndex: colIndex, moduleIndex, childPath: chain };
   }
 
-  /**
-   * Template-linked card: a change to a layout's children (any depth) overrides the top-level layout
-   * module's whole child list, the same as editing a child in the inspector (mutates: a clone).
-   */
+  /** Template-linked card: see markChildList (mutates: a clone). */
   private _markChildList(config: MagicCardConfig, rowIndex: number, colIndex: number, moduleIndex: number): void {
-    if (!config.template) return;
-    const top = config.rows[rowIndex]?.columns[colIndex]?.modules[moduleIndex];
-    const key = childListKey(top);
-    if (!top || !key) return;
-    const marks = (top.not_synced || []) as string[];
-    if (!marks.includes(key)) top.not_synced = [...marks, key];
+    markChildList(config, rowIndex, colIndex, moduleIndex);
   }
 
   // ── Config Management ──
@@ -762,12 +755,9 @@ export class EditorStateManager {
     slot.splice(0, slot.length, at.list[at.index]);
     at.list[at.index] = wrapper;
     if (sel.child?.length) this._markChildList(config, sel.row, sel.col, sel.module);
-    else if (config.template) {
-      // the template merge matches top-level modules by id: the column's module list becomes this
-      // card's own, else the template module would come back in its old place next to the wrapper
-      const col = config.rows[sel.row].columns[sel.col];
-      if (!col.not_synced?.includes('modules')) col.not_synced = [...(col.not_synced || []), 'modules'];
-    }
+    // the column's module list becomes this card's own, else the template module would come back
+    // in its old place next to the wrapper
+    else markColumnModules(config, sel.row, sel.col);
     this.state = { ...this.state, selectedPath: this._pathWithIndex(sel.row, sel.col, sel.module, sel.child, at.index) };
     this.updateConfig(config);
     return true;
