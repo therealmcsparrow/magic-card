@@ -236,6 +236,12 @@ function parse(kind: Kind, v: unknown): string | undefined {
   }
 }
 
+/** A list of border colours cannot be an outline colour: the keyboard focus ring takes the first one (the top side). */
+function focusColour(vars: Record<string, string>, prefix: string, list: string): void {
+  const first = splitTop(list, ' ');
+  if (first.length > 1) vars[`--mc-${prefix}-fc`] = first[0];
+}
+
 const plain = (v: unknown): Record<string, unknown> | undefined => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
 
 /**
@@ -263,6 +269,7 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
   for (const [key, kind, suffix, token] of TAB_FIELDS) {
     const v = parse(kind, d[key]);
     if (v) put(`--mc-tt-${suffix}`, v, token);
+    if (v && kind === 'sides') focusColour(vars, 'tt', v);
   }
   for (const [key, prefix, words] of CHOICES) {
     const w = word(d[key]);
@@ -276,11 +283,12 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
       const pill = style === 'pills';
       st.tab_color = colour(st.tab_color) ?? colour(d.tab_active_color);
       st.tab_background = colour(st.tab_background) ?? colour(d.tab_active_background) ?? (pill ? ind : undefined);
-      st.tab_border_color = colour(st.tab_border_color) ?? (pill ? undefined : ind);
+      st.tab_border_color = colours(st.tab_border_color) ?? (pill ? undefined : ind);
     }
     for (const [key, kind, suffix, , token] of TAB_FIELDS) {
       const v = parse(kind, st[key]);
       if (v) put(`--mc-t${p}-${suffix}`, v, `${p}-${token}`);
+      if (v && kind === 'sides') focusColour(vars, `t${p}`, v);
     }
   }
   for (const kind of ['fade', 'slide']) if (tokens.has(`anim-${kind}`)) vars['--mc-tt-an'] = `mc-tabs-${kind}-${phase & 1}`;

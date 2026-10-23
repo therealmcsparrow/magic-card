@@ -104,7 +104,7 @@ const stateRules = (selector: string, p: string, name: string): string =>
 const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default;transform:none}`;
 // Hover only where there is a pointer.
 // Its animations (tabs-anim.ts) play on top of the tab's own list; the leaked lists of the module around are reset.
-const ANIM_RESET = `.mc-tabs[data-style][data-mc-tab~='h-anim']${TAB}{--mc-anim-m:none;--mc-anim-i:none;--mc-anim-n:none}`;
+const ANIM_RESET = `.mc-tabs[data-style][data-mc-tab~='tab-anim']${TAB}{--mc-anim-m:none;--mc-anim-i:none;--mc-anim-n:none}`;
 const HOVER_ANIM =
   gatedAll('h-anim', [HOVERED], 'animation:var(--mc-anim-m,none),var(--mc-th-anim-m,none);transform-origin:var(--mc-th-anim-om,center)') +
   gatedAll('h-anim-i', [`${HOVERED} .mc-anim-icon`], 'display:inline-block;animation:var(--mc-anim-i,none),var(--mc-th-anim-i,none);transform-origin:var(--mc-th-anim-oi,center)') +
@@ -112,7 +112,7 @@ const HOVER_ANIM =
 // A visitor who asks for less motion gets none of it.
 const HOVER = `${ANIM_RESET}@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}@media (hover:hover) and (prefers-reduced-motion:no-preference){${HOVER_ANIM}}`;
 // The keyboard focus ring follows the active tab's border, then its text, then the tab border colour.
-const FOCUS = `.mc-tabs[data-style]${TAB}:focus-visible{outline-color:var(--mc-ta-bc,var(--mc-ta-c,var(--mc-tt-bc,var(--mc-primary))))}`;
+const FOCUS = `.mc-tabs[data-style]${TAB}:focus-visible{outline-color:var(--mc-ta-fc,var(--mc-ta-bc,var(--mc-ta-c,var(--mc-tt-fc,var(--mc-tt-bc,var(--mc-primary))))))}`;
 
 // A tab switch flips the animation name (-0 / -1, set by the view), which restarts it without rebuilding the panel.
 const KEYFRAMES = [0, 1]
@@ -122,7 +122,7 @@ const KEYFRAMES = [0, 1]
 // Every variable a rule reads would otherwise reach a nested tabs module through inheritance.
 const NESTED_VARS = [
   '--mc-tb-bw', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
-  '--mc-tt-an',
+  '--mc-tt-an', '--mc-tt-fc', '--mc-th-fc', '--mc-ta-fc', '--mc-td-fc',
   ...['tt', 'th', 'ta', 'td'].flatMap((p) => TAB_FIELDS.map((f) => `--mc-${p}-${f[2]}`)),
   ...['m', 'i', 'n', 'om', 'oi', 'on'].map((k) => `--mc-th-anim-${k}`),
 ];

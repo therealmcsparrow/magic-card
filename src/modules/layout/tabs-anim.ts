@@ -25,6 +25,8 @@ export interface TabAnims {
   disabled?: TabAnimAttrs;
   /** Custom properties and `data-mc-tab` tokens for the `.mc-tabs` element (the hover list plays through CSS). */
   hover?: { vars: Record<string, string>; tokens: string[] };
+  /** Some list puts an animation on a tab (the buttons then reset the animation lists they would inherit). */
+  on: boolean;
   /** Some list animates the tab icon (the icon gets the class the animation rules look for). */
   icon: boolean;
   /** Some list animates the label (it is wrapped in `data-mc-part="name"`). */
@@ -89,6 +91,7 @@ export function tabAnims(design: Record<string, unknown> | undefined, hass: Home
     base: b,
     active: active.length ? run([...base, ...active]) : b,
     disabled: disabled.length ? run([...base, ...disabled]) : b,
+    on: false,
     icon: false,
     label: false,
   };
@@ -103,6 +106,7 @@ export function tabAnims(design: Record<string, unknown> | undefined, hass: Home
     if (tokens.length) out.hover = { vars, tokens };
   }
   const targets = [out.base, out.active, out.disabled].map((a) => a?.targets ?? '').join(' ');
+  out.on = !!(out.base || out.active || out.disabled || out.hover);
   out.icon = /\bicon\b/.test(targets) || !!out.hover?.vars['--mc-th-anim-i'];
   out.label = /\blabel\b/.test(targets) || !!out.hover?.vars['--mc-th-anim-n'];
   return out;

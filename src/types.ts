@@ -446,7 +446,6 @@ export interface TabStateDesign {
   /** One to four colours, in CSS side order */
   tab_border_color?: string;
   /** One to four lengths, in CSS corner order (top-left, top-right, bottom-right, bottom-left) */
-  /** One to four lengths, in CSS corner order (top-left, top-right, bottom-right, bottom-left) */
   tab_radius?: string;
   tab_padding?: string;
   tab_font_family?: string;

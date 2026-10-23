@@ -60,12 +60,12 @@ export class TabsView implements ModuleView {
     };
 
     const look = tabLook(design, flips?.get() ?? 0, c.tab_style);
-    // animations of the tabs (undefined until the animation chunk is ready); the hover list rides on the bar
+    // animations of the tabs (undefined until the animation chunk is ready); the hover list rides on the tab bar element only, so the panels and nested tabs never inherit it
     const anims = tabAnims(design, hass, c.entity);
-    const vars = anims?.hover ? { ...look.vars, ...anims.hover.vars } : look.vars;
-    const tokens = anims?.hover ? [...look.tokens, ...anims.hover.tokens] : look.tokens;
+    const vars = look.vars;
+    const tokens = anims?.on ? [...look.tokens, 'tab-anim', ...(anims.hover?.tokens ?? [])] : look.tokens;
     const header = html`
-        <div class="mc-tabs-header" role="tablist">
+        <div class="mc-tabs-header" role="tablist" style=${anims?.hover ? styleMap(anims.hover.vars) : nothing}>
           ${shown.map((i) => {
             const tab = tabs[i];
             const active = i === activeIdx;
