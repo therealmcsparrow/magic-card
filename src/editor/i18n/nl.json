@@ -1238,5 +1238,20 @@
   "{rows, plural, one {# row} other {# rows}} · {mods, plural, one {# module} other {# modules}}. Build visually with layers, canvas and the full inspector.": "{rows, plural, one {# rij} other {# rijen}} · {mods, plural, one {# module} other {# modules}}. Bouw visueel met lagen, canvas en de volledige inspecteur.",
   "{size} KB": "{size} KB",
   "{title}. Press Ctrl+C (⌘C on a Mac) to copy.": "{title}. Druk op Ctrl+C (⌘C op een Mac) om te kopiëren.",
-  "{type} (not provided by this entity)": "{type} (niet geleverd door deze entiteit)"
+  "{type} (not provided by this entity)": "{type} (niet geleverd door deze entiteit)",
+  "Add": "Toevoegen",
+  "Arrange": "Ordenen",
+  "Copy and paste": "Kopiëren en plakken",
+  "Into {container}": "In {container}",
+  "Moved {name} to {where}": "{name} verplaatst naar {where}",
+  "No other module type to replace with": "Er is geen ander moduletype om mee te vervangen",
+  "Out to {parent}": "Uit naar {parent}",
+  "Replace with {name}": "Vervangen door {name}",
+  "Replace with…": "Vervangen door…",
+  "Replaced {old} with {new}.": "{old} vervangen door {new}.",
+  "Replaced {old} with {new}. All modules are in the first tab.": "{old} vervangen door {new}. Alle modules staan in het eerste tabblad.",
+  "Replaced {old} with {new}. The modules of all {n} tabs are kept in tab order.": "{old} vervangen door {new}. De modules van alle {n} tabbladen blijven in tabbladvolgorde staan.",
+  "Row {row} Column {column}": "Rij {row}, kolom {column}",
+  "{n, plural, one {# setting it does not support was} other {# settings it does not support were}} removed. Undo to get them back.": "{n, plural, one {# instelling die de nieuwe module niet ondersteunt} other {# instellingen die de nieuwe module niet ondersteunen}} verwijderd. Maak ongedaan om ze terug te halen.",
+  "{name} {slot}": "{name}, {slot}"
 }
