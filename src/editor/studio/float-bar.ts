@@ -28,7 +28,7 @@ function clamp(v: number, min: number, max: number): number {
 
 /**
  * Position of the module float bar. Never covers a neighbouring module:
- * below the frame first, then above it (clear of the frame's name tag), then right of the frame,
+ * below the frame first, then above it (clear of the frame's name tag), then right and left of the frame,
  * and as a last resort inside the frame's top-right corner. Always clamped to the visible canvas.
  */
 export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } {
@@ -37,6 +37,9 @@ export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport:
   const vLeft = viewport.left + EDGE;
   const vRight = viewport.left + viewport.width - EDGE;
   const alignedLeft = clamp(frame.left + frame.width - bar.width, vLeft, vRight - bar.width);
+
+  // Beside the frame the bar slides along it, so a frame scrolled partly out of view still gets a spot.
+  const sideTop = clamp(frame.top, vTop, vBottom - bar.height);
 
   const fits = (top: number, left: number): boolean => {
     const box = { top, left, width: bar.width, height: bar.height };
@@ -48,7 +51,8 @@ export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport:
   const candidates: Array<[number, number]> = [
     [frame.top + frame.height + GAP, alignedLeft],
     [frame.top - TAG - GAP - bar.height, alignedLeft],
-    [frame.top, frame.left + frame.width + GAP],
+    [sideTop, frame.left + frame.width + GAP],
+    [sideTop, frame.left - GAP - bar.width],
   ];
   for (const [top, left] of candidates) if (fits(top, left)) return { top, left };
 
