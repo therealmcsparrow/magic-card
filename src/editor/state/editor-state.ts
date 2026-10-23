@@ -228,13 +228,21 @@ export class EditorStateManager {
   }
 
   /** Counts selections; with `selectionReveal` it lets every inspector see whether the last one should scroll into view. */
-  selectionSeq = 0;
-  selectionReveal = true;
+  private _selectionSeq = 0;
+  private _selectionReveal = true;
+
+  get selectionSeq(): number {
+    return this._selectionSeq;
+  }
+
+  get selectionReveal(): boolean {
+    return this._selectionReveal;
+  }
 
   /** `reveal: false` (context click): select without scrolling the inspector into view. */
   setSelectedPath(path: EditorPath | null, opts: { reveal?: boolean } = {}): void {
-    this.selectionSeq++;
-    this.selectionReveal = opts.reveal !== false;
+    this._selectionSeq++;
+    this._selectionReveal = opts.reveal !== false;
     const selectedPath = this._clampedPath(this.state.config, path);
     this.state = { ...this.state, selectedPath, selectedFlow: selectedPath ? null : this.state.selectedFlow };
     this.notify();

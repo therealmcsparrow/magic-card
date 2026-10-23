@@ -185,25 +185,24 @@ export class Inspector extends LitElement {
 
   private _scrollKey = '';
   private _seenSeq = 0;
-  private _skipReveal = false;
 
   /** Studio: a tab switch or new selection starts at the top of the (only) scrolling body. */
   private _syncScroller(): void {
     const body = this.shadowRoot?.querySelector<HTMLElement>('.insp-body');
     if (!body) return;
     const sel = this._selection();
-    const key = `${JSON.stringify(this._state?.selectedPath ?? null)}|${this._activeTab(sel, this._tabsFor(sel))}`;
+    const key = `${this._state?.selectedPath ?? ''}|${this._activeTab(sel, this._tabsFor(sel))}`;
     const seq = this.stateManager?.selectionSeq ?? 0;
     const seqChanged = seq !== this._seenSeq;
     this._seenSeq = seq;
-    if (seqChanged) this._skipReveal = this.stateManager?.selectionReveal === false;
+    const skip = seqChanged && this.stateManager?.selectionReveal === false;
     if (key !== this._scrollKey) {
       const switched = this._scrollKey !== '';
       this._scrollKey = key;
       body.scrollTop = 0;
       // Narrow or short layout: the page scrolls, not the body, so bring the panel's head into view.
       // A context click selects without it, so the page does not move under the open menu.
-      if (switched && !(seqChanged && this._skipReveal) && getComputedStyle(body).overflowY === 'visible') this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.scrollIntoView?.({ block: 'nearest' });
+      if (switched && !skip && getComputedStyle(body).overflowY === 'visible') this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.scrollIntoView?.({ block: 'nearest' });
     }
   }
 
