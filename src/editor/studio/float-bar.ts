@@ -32,6 +32,11 @@ function clamp(v: number, min: number, max: number): number {
  * and as a last resort inside the frame's top-right corner. Always clamped to the visible canvas.
  */
 export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } {
+  return findFloatBarSpot(frame, bar, obstacles, viewport) ?? insideCorner(frame, bar, viewport);
+}
+
+/** A spot outside the frame that is clear of every obstacle and inside the visible canvas, or null when none fits. */
+export function findFloatBarSpot(frame: Box, bar: Size, obstacles: Box[], viewport: Box): { top: number; left: number } | null {
   const vTop = viewport.top + EDGE;
   const vBottom = viewport.top + viewport.height - EDGE;
   const vLeft = viewport.left + EDGE;
@@ -55,8 +60,15 @@ export function placeFloatBar(frame: Box, bar: Size, obstacles: Box[], viewport:
     [sideTop, frame.left - GAP - bar.width],
   ];
   for (const [top, left] of candidates) if (fits(top, left)) return { top, left };
+  return null;
+}
 
-  // Inside the frame's top-right corner, kept on screen.
+/** Inside the frame's top-right corner, kept on screen. */
+function insideCorner(frame: Box, bar: Size, viewport: Box): { top: number; left: number } {
+  const vTop = viewport.top + EDGE;
+  const vBottom = viewport.top + viewport.height - EDGE;
+  const vLeft = viewport.left + EDGE;
+  const vRight = viewport.left + viewport.width - EDGE;
   return {
     top: clamp(frame.top + GAP, vTop, vBottom - bar.height),
     left: clamp(frame.left + frame.width - bar.width - GAP, vLeft, vRight - bar.width),

@@ -5,7 +5,7 @@ import type { EditorStateManager } from '../state/editor-state';
 import type { MagicCard } from '../../card/magic-card';
 import { CARD_TAG } from '../../utils/constants';
 import { editorSystem } from '../../css/editor-stack';
-import { placeFloatBar } from './float-bar';
+import { findFloatBarSpot } from './float-bar';
 import { ItemMenu, LongPress, itemMenuStyles } from './item-menu';
 import {
   ModuleSelection,
@@ -304,6 +304,8 @@ export class StudioCanvas extends LitElement {
   @state() private _sheet?: { list: HereEntry[]; x: number; y: number; hold?: boolean };
   /** Layers under the selected module (itself included): the float bar's "Layers here (n)". */
   @state() private _hereCount = 0;
+  /** No spot beside the selection fits: the float bar sits in a strip above the canvas instead of on the module. */
+  @state() private _docked = false;
 
   /** Show a short status ("Row 2 YAML copied") in the capsule at the canvas foot, announced politely. */
   showStatus(message: string): void {
@@ -843,6 +845,7 @@ export class StudioCanvas extends LitElement {
     const toLocal = layoutSpace(inner);
     this._placeColumnHandles(toLocal);
     if (!tr) {
+      this._docked = false;
       frame.hidden = true;
       bar.hidden = true;
       canvasEl?.classList.remove('framed');
@@ -862,6 +865,7 @@ export class StudioCanvas extends LitElement {
     frame.hidden = false;
     Object.assign(frame.style, { top: `${top}px`, left: `${left}px`, width: `${w}px`, height: `${h}px` });
     if (sel.kind !== 'module') {
+      this._docked = false;
       bar.hidden = true;
     } else {
       bar.hidden = false;
@@ -878,15 +882,17 @@ export class StudioCanvas extends LitElement {
         top: canvas.scrollTop,
         left: canvas.scrollLeft,
         width: Math.min(canvas.clientWidth, inner.clientWidth),
-        height: canvas.clientHeight,
+        // the dock strip takes its height from the canvas while docked; judge the spots against the canvas without it
+        height: canvas.clientHeight + (root?.querySelector<HTMLElement>('.bar-dock')?.offsetHeight ?? 0),
       };
-      const pos = placeFloatBar(
+      const pos = findFloatBarSpot(
         { top, left, width: w, height: h },
-        { width: bar.offsetWidth, height: bar.offsetHeight },
+        { width: Math.max(bar.offsetWidth, bar.scrollWidth), height: bar.offsetHeight },
         obstacles,
         viewport,
       );
-      Object.assign(bar.style, { top: `${pos.top}px`, left: `${pos.left}px` });
+      this._docked = !pos;
+      if (pos) Object.assign(bar.style, { top: `${pos.top}px`, left: `${pos.left}px` });
     }
     canvasEl?.classList.toggle('framed', !frame.hidden);
     this._placeHover();
@@ -1181,7 +1187,27 @@ export class StudioCanvas extends LitElement {
     const selMod = sel.kind === 'module' && config ? moduleAt(config, sel) : undefined;
     const layeredSel = !!selMod && placementOf(selMod) !== 'flow';
 
+    const floatBar = html`
+          <div class="float-bar" role="toolbar" aria-label=${t('Module actions')} hidden>
+            ${this._renderLayerBar(label, layeredSel)}
+            <button type="button" class="icon-btn sm" aria-label=${t('Move up')} title=${t('Move up (Alt+Up)')} ?disabled=${first}
+              @click=${(e: Event) => this._onBarClick('up', e)}><ha-icon icon="mdi:arrow-up"></ha-icon></button>
+            <button type="button" class="icon-btn sm" aria-label=${t('Move down')} title=${t('Move down (Alt+Down)')} ?disabled=${last}
+              @click=${(e: Event) => this._onBarClick('down', e)}><ha-icon icon="mdi:arrow-down"></ha-icon></button>
+            <span class="sep" aria-hidden="true"></span>
+            <button type="button" class="icon-btn sm" aria-label=${t('Duplicate')} title=${t('Duplicate (Ctrl+D)')}
+              @click=${(e: Event) => this._onBarClick('duplicate', e)}><ha-icon icon="mdi:content-copy"></ha-icon></button>
+            <button type="button" class="icon-btn sm" aria-label=${t('Add flow from here')}
+              title=${locked ? t('Add flow from here. {hint}', { hint: t(TEMPLATE_ID_HINT) }) : t('Add flow from here')} ?disabled=${locked}
+              aria-pressed=${this._connectFrom ? 'true' : 'false'}
+              @click=${() => (this._connectFrom ? this._cancelConnect() : this._startConnect())}><ha-icon icon="mdi:transit-connection-variant"></ha-icon></button>
+            <button type="button" class="icon-btn sm danger" aria-label=${t('Delete')} title=${t('Delete (Del)')}
+              @click=${(e: Event) => this._onBarClick('delete', e)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
+          </div>
+    `;
+
     return html`
+      ${this._docked ? html`<div class="bar-dock">${floatBar}</div>` : nothing}
       <div
         class="canvas ${this._connectFrom ? 'connecting' : ''}"
         tabindex="0"
@@ -1216,22 +1242,7 @@ export class StudioCanvas extends LitElement {
               : nothing}
           </div>
           ${this._renderColumnHandles()}
-          <div class="float-bar" role="toolbar" aria-label=${t('Module actions')} hidden>
-            ${this._renderLayerBar(label, layeredSel)}
-            <button type="button" class="icon-btn sm" aria-label=${t('Move up')} title=${t('Move up (Alt+Up)')} ?disabled=${first}
-              @click=${(e: Event) => this._onBarClick('up', e)}><ha-icon icon="mdi:arrow-up"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label=${t('Move down')} title=${t('Move down (Alt+Down)')} ?disabled=${last}
-              @click=${(e: Event) => this._onBarClick('down', e)}><ha-icon icon="mdi:arrow-down"></ha-icon></button>
-            <span class="sep" aria-hidden="true"></span>
-            <button type="button" class="icon-btn sm" aria-label=${t('Duplicate')} title=${t('Duplicate (Ctrl+D)')}
-              @click=${(e: Event) => this._onBarClick('duplicate', e)}><ha-icon icon="mdi:content-copy"></ha-icon></button>
-            <button type="button" class="icon-btn sm" aria-label=${t('Add flow from here')}
-              title=${locked ? t('Add flow from here. {hint}', { hint: t(TEMPLATE_ID_HINT) }) : t('Add flow from here')} ?disabled=${locked}
-              aria-pressed=${this._connectFrom ? 'true' : 'false'}
-              @click=${() => (this._connectFrom ? this._cancelConnect() : this._startConnect())}><ha-icon icon="mdi:transit-connection-variant"></ha-icon></button>
-            <button type="button" class="icon-btn sm danger" aria-label=${t('Delete')} title=${t('Delete (Del)')}
-              @click=${(e: Event) => this._onBarClick('delete', e)}><ha-icon icon="mdi:delete-outline"></ha-icon></button>
-          </div>
+          ${this._docked ? nothing : floatBar}
         </div>
       </div>
       ${this._connectFrom
@@ -1288,11 +1299,27 @@ export class StudioCanvas extends LitElement {
       :host {
         position: relative;
         display: grid;
-        grid-template-rows: minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
         min-height: 0;
         min-width: 0;
       }
+      /* strip above the canvas for the float bar when no spot beside the selection fits; takes room only while docked */
+      .bar-dock {
+        grid-row: 1;
+        display: flex;
+        justify-content: safe center;
+        padding: 6px 8px;
+        overflow-x: auto;
+        background: var(--mc-surface);
+        border-bottom: 1px solid var(--mc-divider);
+      }
+      .bar-dock .float-bar {
+        position: static;
+        flex: none;
+        max-width: none;
+      }
       .canvas {
+        grid-row: 2;
         overflow: auto;
         min-height: 0;
         background-color: var(--mc-canvas);
