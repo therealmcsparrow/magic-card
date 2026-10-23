@@ -195,7 +195,7 @@ Keyboard shortcuts:
 | Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. In Preview, it closes a dialog opened from the card first, then leaves Preview; it never closes the studio while Preview is on. |
 | Arrow keys, Home, End in Layers | Move between items |
 
-The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Escape in Layers, the inspector or the top bar closes the studio.
+The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Outside Preview, Escape in Layers, the inspector or the top bar closes the studio.
 
 ### Templates
 

@@ -111,7 +111,7 @@ design:
 
 The active tab has no separate indicator. The line under it is the tab's border. Its colour is `tab_border_color` in `tab_active`. Unless `tab_border_width` or `tab_border_color` is set, the active tab's line is its bottom edge only, so it sits under the tab. Once either is set, every tab has a border on all four sides, and the active tab differs only in its `tab_active` settings. With `tab_bar_position: bottom`, the line stays on the tab's bottom edge.
 
-In Pills, the tabs have no bottom line of their own, so the active tab's colour shows only in a border on all four sides. That needs `tab_border_width` or `tab_border_color` to be set.
+In Pills, the tabs have no bottom line of their own, so the active tab's border colour shows only in a border on all four sides. That needs `tab_border_width` or `tab_border_color` to be set.
 
 ### Disabled tabs
 
