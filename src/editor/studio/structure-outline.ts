@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { CardModule, EditorState, RowConfig, RowModuleConfig, TabsModuleConfig } from '../../types';
+import { CardModule, EditorState, MagicCardConfig, RowConfig, RowModuleConfig, TabsModuleConfig } from '../../types';
 import { EditorStateManager } from '../state/editor-state';
 import { ModuleRegistry } from '../../modules/module-registry';
 import { editorSystem } from '../../css/editor-stack';
@@ -28,19 +28,21 @@ import {
   isHiddenItem,
   layerName,
 } from './selection';
-import type { SlotSelection } from './selection';
-import { ChildStep, childSlots, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
+import type { ModuleSelection, SlotSelection } from './selection';
+import { ChildStep, childSlots, descendantAt, hasChildSlots, hasSlotNodes, slotLabel } from '../../utils/module-path';
 import { t } from '../i18n';
+import { moveModuleTo, type DropPlace } from '../state/tree-move';
+import { autoScroll, canDropAt, placeFor, zoneAt, type DropZone, type PlaceTarget } from './tree-dnd';
 import { countLayers, layerChipCss, renderLayerChip, renderLayerCount } from '../layers/tree-chip';
 
 type DragState =
   | { type: 'row'; row: number }
-  | { type: 'module'; row: number; col: number; module: number };
+  | { type: 'module'; sel: ModuleSelection };
 
-/** Where a drop would land: before row `index`, or at module slot `index` in column `col`. */
+/** Where a drop would land: before row `index`, or beside / inside a module, tab or column. */
 type DropTarget =
   | { type: 'row'; index: number }
-  | { type: 'module'; row: number; col: number; index: number };
+  | PlaceTarget;
 
 type ModuleSel = Extract<Selection, { kind: 'module' }>;
 
@@ -581,10 +583,10 @@ export class StructureOutline extends LitElement {
     e.stopPropagation();
   }
 
-  private _onModuleDragStart(e: DragEvent, row: number, col: number, module: number): void {
+  private _onModuleDragStart(e: DragEvent, sel: ModuleSelection): void {
     this._itemMenu.close(false);
     this._longPress.cancel();
-    this._drag = { type: 'module', row, col, module };
+    this._drag = { type: 'module', sel };
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/plain', JSON.stringify(this._drag));
@@ -600,6 +602,16 @@ export class StructureOutline extends LitElement {
     this._ignoreClickUntil = Date.now() + 250;
   }
 
+  /** The zone of the current drop indicator when it sits on the tree item `key`. */
+  private _dropZone(key: string): DropZone | undefined {
+    const drop = this._drop;
+    return drop?.type === 'place' && drop.key === key ? drop.zone : undefined;
+  }
+
+  private _zoneClass(zone: DropZone | undefined): string {
+    return zone === 'before' ? 'drop-before' : zone === 'after' ? 'drop-after' : zone === 'inside' ? 'drop-into' : '';
+  }
+
   private _isLowerHalf(e: DragEvent, el: Element): boolean {
     const r = el.getBoundingClientRect();
     return e.clientY > r.top + r.height / 2;
@@ -607,8 +619,8 @@ export class StructureOutline extends LitElement {
 
   private _setDrop(target: DropTarget | null): void {
     const a = this._drop;
-    const same = a && target && a.type === target.type && a.index === target.index &&
-      (a.type === 'row' || (target.type === 'module' && a.row === target.row && a.col === target.col));
+    const same = a && target && a.type === target.type &&
+      (a.type === 'row' ? a.index === (target as { index: number }).index : a.key === (target as PlaceTarget).key && a.zone === (target as PlaceTarget).zone);
     if (!same && (a || target)) this._drop = target;
   }
 
@@ -630,23 +642,31 @@ export class StructureOutline extends LitElement {
     this._moveRow(drag.row, to);
   }
 
-  /** Hovering a module item: insertion line above or below it. */
-  private _onModuleDragOver(e: DragEvent, row: number, col: number, module: number): void {
-    if (this._drag?.type !== 'module') return;
-    e.preventDefault();
+  /**
+   * Hovering a module, tab or column during a module drag: work out the zone and the place a drop
+   * would use. Stops the event so the enclosing items (a layout's own row) do not override it; a
+   * place inside the dragged module itself shows no indicator and takes no drop.
+   */
+  private _onItemDragOver(e: DragEvent, sel: Selection): void {
+    const drag = this._drag;
+    if (drag?.type !== 'module' || !this._state) return;
     e.stopPropagation();
-    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
-    const index = this._isLowerHalf(e, e.currentTarget as Element) ? module + 1 : module;
-    this._setDrop({ type: 'module', row, col, index });
-  }
-
-  /** Hovering a column label or its empty box: drop at a fixed slot. */
-  private _onSlotDragOver(e: DragEvent, row: number, col: number, index: number): void {
-    if (this._drag?.type !== 'module') return;
+    const el = e.currentTarget as HTMLElement;
+    autoScroll(el, e.clientY);
+    const mod = sel.kind === 'module' ? moduleAt(this._state.config, sel) : undefined;
+    // a layout's own row, not the whole item with its children, gives the pointer's position
+    const box = (hasChildSlots(mod) && el.querySelector(':scope > .line') || el).getBoundingClientRect();
+    const fraction = box.height ? (e.clientY - box.top) / box.height : 0.5;
+    const zone: DropZone = sel.kind === 'module' ? zoneAt(mod, fraction) : 'inside';
+    const place = placeFor(this._state.config, sel, zone);
+    if (!place || !canDropAt(drag.sel, place)) {
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'none';
+      this._setDrop(null);
+      return;
+    }
     e.preventDefault();
-    e.stopPropagation();
     if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
-    this._setDrop({ type: 'module', row, col, index });
+    this._setDrop({ type: 'place', key: selectionKey(sel), zone, place });
   }
 
   private _dropModule(e: DragEvent): void {
@@ -659,12 +679,23 @@ export class StructureOutline extends LitElement {
     this._drag = null;
     this._drop = null;
     this._ignoreClickUntil = Date.now() + 300;
-    if (drag?.type !== 'module' || drop?.type !== 'module' || !this.stateManager) return;
-    let target = drop.index;
-    if (drag.row === drop.row && drag.col === drop.col && drag.module < target) target -= 1;
-    if (drag.row === drop.row && drag.col === drop.col && drag.module === target) return;
-    this.stateManager.moveModule(drag.row, drag.col, drag.module, drop.row, drop.col, target);
-    this.stateManager.setSelectedPath({ rowIndex: drop.row, columnIndex: drop.col, moduleIndex: target });
+    if (drop?.type !== 'place' || !this.stateManager) return;
+    const moved = moveModuleTo(this.stateManager.getConfig(), drag.sel, drop.place);
+    if (!moved) return;
+    this.stateManager.updateConfig(moved.config);
+    this.stateManager.setSelectedPath(moved.path);
+    this._status(t('Moved {name} into {where}', { name: this._moduleName(moduleAt(moved.config, selectionFromPath(moved.path))!), where: this._placeName(moved.config, drop.place) }));
+  }
+
+  /** The list a drop landed in, in words: "Row 1 Column 2", "Tabs Kitchen", "Vertical". */
+  private _placeName(config: MagicCardConfig, place: DropPlace): string {
+    const column = t('Row {row} Column {column}', { row: place.row + 1, column: place.col + 1 });
+    if (place.module === undefined) return column;
+    const top = config.rows[place.row]?.columns[place.col]?.modules[place.module];
+    const owner = descendantAt(top, place.child ?? []);
+    if (!owner) return column;
+    const slot = slotLabel(owner, place.slot ?? 0);
+    return slot ? `${this._moduleName(owner)} ${slot}` : this._moduleName(owner);
   }
 
   private _onTreeDragLeave(e: DragEvent): void {
@@ -850,9 +881,8 @@ export class StructureOutline extends LitElement {
     const key = selectionKey({ kind: 'column', row: ri, col: ci });
     const a = this._itemAttrs(key, selKey, focusKey);
     const n = modules.length;
-    const drop = this._drop;
-    const dropHere = drop?.type === 'module' && drop.row === ri && drop.col === ci ? drop.index : -1;
     const sel: Selection = { kind: 'column', row: ri, col: ci };
+    const dropInto = this._dropZone(key) === 'inside';
     const menuOpen = this._menuOpenFor(sel);
     const col = this._rows[ri]?.columns[ci];
     const name = layerName(col) ?? t('Column {n}', { n: ci + 1 });
@@ -862,7 +892,7 @@ export class StructureOutline extends LitElement {
         <div class="line k-column" role="treeitem" aria-level="3" data-key=${key} data-hidden=${isHiddenItem(col) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
           aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
           @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}
-          @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)} @drop=${this._dropModule}>
+          @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)} @drop=${this._dropModule}>
           <div
             class="item col-item k-column"
             id=${`i-${key}`}
@@ -888,16 +918,16 @@ export class StructureOutline extends LitElement {
         </div>
         ${n
           ? html`<ul role="group">
-              ${modules.map((m, mi) => this._renderModule(m, ri, ci, mi, n, dropHere, selKey, focusKey))}
+              ${modules.map((m, mi) => this._renderModule(m, ri, ci, mi, selKey, focusKey))}
               ${this.variant === 'layers' ? this._renderAddRow(ri, ci) : nothing}
             </ul>`
           : html`
               <div
-                class="empty col-empty ${dropHere === 0 ? 'drop-into' : ''}"
+                class="empty col-empty ${dropInto ? 'drop-into' : ''}"
                 role="treeitem"
                 aria-level="4"
                 data-empty=${key}
-                @dragover=${(e: DragEvent) => this._onSlotDragOver(e, ri, ci, 0)}
+                @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)}
                 @drop=${this._dropModule}
               >
                 <p>${t('Empty column')}</p>
@@ -970,8 +1000,6 @@ export class StructureOutline extends LitElement {
     ri: number,
     ci: number,
     mi: number,
-    count: number,
-    dropHere: number,
     selKey: string,
     focusKey: string,
   ): TemplateResult {
@@ -983,19 +1011,18 @@ export class StructureOutline extends LitElement {
     const sub = typeof mod.entity === 'string' && ENTITY_RE.test(mod.entity) ? mod.entity : undefined;
     const followed = sub ? nothing : this._followedEntity(mod, sel);
     const overrides = !!mod.not_synced?.length;
-    const before = dropHere === mi;
-    const after = mi === count - 1 && dropHere === count;
+    const zone = this._dropZone(key);
 
     return html`
       <li
         role="none"
-        class="mod ${before ? 'drop-before' : ''} ${after ? 'drop-after' : ''}"
-        @dragover=${(e: DragEvent) => this._onModuleDragOver(e, ri, ci, mi)}
+        class="mod ${this._zoneClass(zone)}"
+        @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)}
         @drop=${this._dropModule}
       >
         <div class="line mod-line k-module" role="treeitem" aria-level="4" data-key=${key} data-hidden=${isHiddenItem(mod) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
           aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
-          draggable=${this._renaming === key ? 'false' : 'true'} @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, ri, ci, mi)} @dragend=${this._onDragEnd}
+          draggable=${this._renaming === key ? 'false' : 'true'} @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, sel)} @dragend=${this._onDragEnd}
           @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
           <div
             class="item mod-item k-module"
@@ -1062,7 +1089,10 @@ export class StructureOutline extends LitElement {
         const menuOpen = this._menuOpenFor(sel);
         const renaming = this._renaming === key;
         return html`
-          <li role="none" class="col slot">
+          <li role="none" class="col slot ${this._zoneClass(this._dropZone(key))}"
+            @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)}
+            @drop=${this._dropModule}
+          >
             <div class="line mod-line k-column" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(entry) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
               aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
               @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
@@ -1131,9 +1161,13 @@ export class StructureOutline extends LitElement {
     const sub = typeof child.entity === 'string' && ENTITY_RE.test(child.entity) ? child.entity : undefined;
     const followed = sub ? nothing : this._followedEntity(child, sel);
     return html`
-      <li role="none" class="mod child">
+      <li role="none" class="mod child ${this._zoneClass(this._dropZone(key))}"
+        @dragover=${(e: DragEvent) => this._onItemDragOver(e, sel)}
+        @drop=${this._dropModule}
+      >
         <div class="line mod-line k-module" role="treeitem" aria-level=${level} data-key=${key} data-hidden=${isHiddenItem(child) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
           aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
+          draggable=${this._renaming === key ? 'false' : 'true'} @dragstart=${(e: DragEvent) => this._onModuleDragStart(e, sel)} @dragend=${this._onDragEnd}
           title=${this.variant === 'layers' ? `${title}${sub ? ` · ${sub}` : ''}` : nothing}
           @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}>
           <div
@@ -1453,6 +1487,30 @@ export class StructureOutline extends LitElement {
       .col-empty.drop-into {
         border-color: var(--mc-accent);
         background: var(--mc-accent-tint);
+      }
+      .mod.drop-into > .line,
+      .slot.drop-into > .line {
+        outline: 2px dashed var(--mc-accent);
+        outline-offset: -2px;
+        background: var(--mc-accent-tint);
+      }
+      .drop-before::before,
+      .drop-after::after {
+        /* a round dot at the start of the line shows the depth without colour */
+        height: 6px;
+        border-radius: 0;
+        background:
+          linear-gradient(var(--mc-accent), var(--mc-accent)) 0 50% / 100% 2px no-repeat,
+          radial-gradient(circle, var(--mc-accent) 2.5px, transparent 3px) 0 50% / 6px 6px no-repeat;
+      }
+      .drop-before::before {
+        top: -3px;
+      }
+      .drop-after::after {
+        bottom: -3px;
+      }
+      .slot {
+        position: relative;
       }
       .dragging {
         opacity: 0.5;
