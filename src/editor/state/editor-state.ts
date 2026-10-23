@@ -227,7 +227,18 @@ export class EditorStateManager {
     this.notify();
   }
 
-  setSelectedPath(path: EditorPath | null): void {
+  private _reveal = true;
+
+  /** Whether the last selection brings the inspector into view; reading it resets it for the next one. */
+  takeReveal(): boolean {
+    const reveal = this._reveal;
+    this._reveal = true;
+    return reveal;
+  }
+
+  /** `reveal: false` (context click): select without scrolling the inspector into view. */
+  setSelectedPath(path: EditorPath | null, opts: { reveal?: boolean } = {}): void {
+    this._reveal = opts.reveal !== false;
     const selectedPath = this._clampedPath(this.state.config, path);
     this.state = { ...this.state, selectedPath, selectedFlow: selectedPath ? null : this.state.selectedFlow };
     this.notify();

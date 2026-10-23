@@ -752,7 +752,7 @@ export class StudioCanvas extends LitElement {
   private _openContext(sel: Selection, x: number, y: number): void {
     const canvas = this.shadowRoot?.querySelector<HTMLElement>('.canvas');
     if (!canvas || this._connectFrom || !this.stateManager) return;
-    this._select(sel);
+    this.stateManager.setSelectedPath(selectionToPath(sel), { reveal: false });
     this.focusCanvas();
     this._itemMenu.open(sel, canvas, { point: { x, y }, returnFocus: canvas });
   }

@@ -372,7 +372,8 @@ export class StructureOutline extends LitElement {
     const item = this._itemOnPath(path);
     if (!item || !this.stateManager) return;
     const sel = selectionFromKey(item.dataset.key || 'card');
-    this._select(sel);
+    this._focusKey = selectionKey(sel);
+    this.stateManager.setSelectedPath(selectionToPath(sel), { reveal: false });
     this._ignoreClickUntil = Date.now() + 400;
     this._itemMenu.open(sel, item, { point: { x, y }, returnFocus: item });
   }

@@ -21,8 +21,6 @@ export interface MenuPopoverOptions {
 
 const GAP = 4;
 const EDGE = 8;
-/** Scrolls this soon after a pointer menu opened come from the selection, not the user. */
-const SETTLE_MS = 500;
 const ITEMS = '[role="menuitem"]:not([disabled])';
 
 /** Where a context menu opens: a viewport point (pointer) and the element focus returns to. */
@@ -55,7 +53,6 @@ export class MenuPopover implements ReactiveController {
   private _shown: HTMLElement | null = null;
   private _scrollRoots: EventTarget[] = [];
   private _raf = 0;
-  private _openedAt = 0;
 
   constructor(private readonly host: ReactiveControllerHost & HTMLElement, private readonly opts: MenuPopoverOptions) {
     host.addController(this);
@@ -92,7 +89,6 @@ export class MenuPopover implements ReactiveController {
     if (this.trigger) this.close(false);
     this.trigger = trigger;
     this._at = at;
-    this._openedAt = performance.now();
     document.addEventListener('pointerdown', this._onOutside, true);
     window.addEventListener('resize', this._onResize);
     this._scrollRoots = scrollRoots(trigger);
@@ -223,9 +219,6 @@ export class MenuPopover implements ReactiveController {
   /** A scroll anywhere around the trigger: follow it; close once the trigger has left the viewport. */
   private _onScroll = (e: Event): void => {
     if (this._inMenu(e)) return;
-    // a pointer menu opened on an unselected item: the selection scrolls the inspector into view
-    // right after, which is not the user moving away
-    if (this._at.point && performance.now() - this._openedAt < SETTLE_MS) return;
     cancelAnimationFrame(this._raf);
     this._raf = requestAnimationFrame(() => {
       const t = this.trigger;

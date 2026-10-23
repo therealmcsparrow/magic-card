@@ -196,7 +196,9 @@ export class Inspector extends LitElement {
       this._scrollKey = key;
       body.scrollTop = 0;
       // Narrow or short layout: the page scrolls, not the body, so bring the panel's head into view.
-      if (switched && getComputedStyle(body).overflowY === 'visible') this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.scrollIntoView?.({ block: 'nearest' });
+      // A context click selects without it, so the page does not move under the open menu.
+      const reveal = this.stateManager?.takeReveal() ?? true;
+      if (switched && reveal && getComputedStyle(body).overflowY === 'visible') this.shadowRoot?.querySelector<HTMLElement>('.insp-head')?.scrollIntoView?.({ block: 'nearest' });
     }
   }
 
