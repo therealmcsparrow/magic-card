@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.3 (2026-10-23)
 
 ### Added
 -   **Studio Preview.** A Preview button in the Studio's top bar runs the card on the canvas as it runs on the dashboard. Taps, holds and double taps, sliders, switches and tabs act on the real entities, and animations play. The notice "Preview: actions are live" shows beside the button. Navigate and URL actions do not leave the editor: the card shows "Navigation is off in Preview" instead. The layers panel and the inspector are hidden, the canvas width buttons still work, and Undo, Redo and the mode switch are off. Press Preview again or Escape to return to editing with the same selection. Escape closes a dialog opened from the card first and never closes the Studio while Preview is on. Preview works in Form and YAML mode. See [Studio preview](documentation/studio/preview.md).
