@@ -675,7 +675,7 @@ export class ItemMenu implements ReactiveController {
     const swap = replaceTypes(mod).length > 0;
     const replace: Entry = {
       icon: 'mdi:swap-horizontal', label: t('Replace with…'), focus: 'none',
-      run: () => this._fire('replace-module', { sel, status: this.opts.status }),
+      run: () => this._fire('replace-module', { sel, status: this.opts.status, focus: () => this.opts.focusSelection() }),
       disabled: locked || !swap, why: locked ? t(TEMPLATE_ID_HINT) : swap ? undefined : t('No other module type to replace with'),
     };
     const where = nested ? describeSelection(config, parentSelection(sel, config)).title : rowColumn(sel.row, sel.col);

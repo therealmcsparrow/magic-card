@@ -67,7 +67,7 @@ export class MagicCardEditor extends LitElement {
 
   /** Replace with…: the module the picker was opened for, and where to say what happened. */
   @state()
-  private _replaceTarget?: { sel: ModuleSelection; status?: (message: string) => void };
+  private _replaceTarget?: { sel: ModuleSelection; status?: (message: string) => void; focus?: () => void };
 
   @state()
   private _showTemplatePicker: 'create' | 'link' | null = null;
@@ -311,7 +311,7 @@ ${this._studioOpen ? nothing : overlays}`;
     // compact markup: Lit keeps a template's whitespace in the bundle
     return html`${this._showModuleSelector
   ? html`<mc-module-selector .mode=${this._replaceTarget ? 'replace' : 'add'} .types=${this._replaceTypes(state.config)} @module-selected=${this._onModuleSelected}
-@mc-picker-close=${() => { this._showModuleSelector = false; this._replaceTarget = undefined; }}></mc-module-selector>`
+@mc-picker-close=${this._onPickerClose}></mc-module-selector>`
   : nothing}
 ${this._showTemplatePicker
   ? html`<mc-template-picker .mode=${this._showTemplatePicker} .hass=${this.hass}
@@ -454,7 +454,7 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
   }
 
   /** One undo step; the module stays selected in the same place. */
-  private _replaceModule(target: { sel: ModuleSelection; status?: (message: string) => void }, type: string): void {
+  private _replaceModule(target: { sel: ModuleSelection; status?: (message: string) => void; focus?: () => void }, type: string): void {
     const sm = this._stateManager;
     const config = sm.getConfig();
     const old = moduleAt(config, target.sel);
@@ -472,12 +472,26 @@ ${this._showSyncDialog ? this._renderSyncDialog() : nothing}`;
     target.status?.(message);
   }
 
+  /** Once the picker is gone, focus goes back to the replaced item (the picker's own return to the opener is gone with the menu). */
+  private _focusAfterPicker(target: { focus?: () => void } | undefined): void {
+    if (!target?.focus) return;
+    void this.updateComplete.then(() => setTimeout(() => target.focus!(), 0));
+  }
+
+  private _onPickerClose = (): void => {
+    const replace = this._replaceTarget;
+    this._showModuleSelector = false;
+    this._replaceTarget = undefined;
+    this._focusAfterPicker(replace);
+  };
+
   private _onModuleSelected = (e: CustomEvent) => {
     const replace = this._replaceTarget;
     if (replace) {
       this._replaceModule(replace, e.detail.type);
       this._showModuleSelector = false;
       this._replaceTarget = undefined;
+      this._focusAfterPicker(replace);
       return;
     }
     const t = this._moduleSelectorTarget;
