@@ -684,7 +684,7 @@ export class StructureOutline extends LitElement {
     if (!moved) return;
     this.stateManager.updateConfig(moved.config);
     this.stateManager.setSelectedPath(moved.path);
-    this._status(t('Moved {name} into {where}', { name: this._moduleName(moduleAt(moved.config, selectionFromPath(moved.path))!), where: this._placeName(moved.config, drop.place) }));
+    this._status(t('Moved {name} to {where}', { name: this._moduleName(moduleAt(moved.config, selectionFromPath(moved.path))!), where: this._placeName(moved.config, drop.place) }));
   }
 
   /** The list a drop landed in, in words: "Row 1 Column 2", "Tabs Kitchen", "Vertical". */
@@ -695,7 +695,7 @@ export class StructureOutline extends LitElement {
     const owner = descendantAt(top, place.child ?? []);
     if (!owner) return column;
     const slot = slotLabel(owner, place.slot ?? 0);
-    return slot ? `${this._moduleName(owner)} ${slot}` : this._moduleName(owner);
+    return slot ? t('{name} {slot}', { name: this._moduleName(owner), slot }) : this._moduleName(owner);
   }
 
   private _onTreeDragLeave(e: DragEvent): void {
@@ -888,7 +888,7 @@ export class StructureOutline extends LitElement {
     const name = layerName(col) ?? t('Column {n}', { n: ci + 1 });
 
     return html`
-      <li role="none" class="col">
+      <li role="none" class="col ${dropInto && n ? 'drop-into' : ''}">
         <div class="line k-column" role="treeitem" aria-level="3" data-key=${key} data-hidden=${isHiddenItem(col) ? '' : nothing} tabindex=${a.tab} aria-labelledby=${`i-${key}`}
           aria-selected=${a.current ? 'true' : 'false'} aria-current=${a.current ? 'true' : nothing}
           @click=${this._onItemClick} @dblclick=${(e: Event) => this._rename(e, key)}
@@ -1472,33 +1472,10 @@ export class StructureOutline extends LitElement {
         position: absolute;
         left: 0;
         right: 0;
-        height: 2px;
-        border-radius: 1px;
-        background: var(--mc-accent);
         pointer-events: none;
         z-index: 1;
-      }
-      .drop-before::before {
-        top: -1px;
-      }
-      .drop-after::after {
-        bottom: -1px;
-      }
-      .col-empty.drop-into {
-        border-color: var(--mc-accent);
-        background: var(--mc-accent-tint);
-      }
-      .mod.drop-into > .line,
-      .slot.drop-into > .line {
-        outline: 2px dashed var(--mc-accent);
-        outline-offset: -2px;
-        background: var(--mc-accent-tint);
-      }
-      .drop-before::before,
-      .drop-after::after {
         /* a round dot at the start of the line shows the depth without colour */
         height: 6px;
-        border-radius: 0;
         background:
           linear-gradient(var(--mc-accent), var(--mc-accent)) 0 50% / 100% 2px no-repeat,
           radial-gradient(circle, var(--mc-accent) 2.5px, transparent 3px) 0 50% / 6px 6px no-repeat;
@@ -1508,6 +1485,17 @@ export class StructureOutline extends LitElement {
       }
       .drop-after::after {
         bottom: -3px;
+      }
+      .col-empty.drop-into {
+        border-color: var(--mc-accent);
+        background: var(--mc-accent-tint);
+      }
+      .mod.drop-into > .line,
+      .slot.drop-into > .line,
+      .col.drop-into > .line {
+        outline: 2px dashed var(--mc-accent);
+        outline-offset: -2px;
+        background: var(--mc-accent-tint);
       }
       .slot {
         position: relative;

@@ -51,9 +51,22 @@ export function placeFor(config: MagicCardConfig, target: Selection, zone: DropZ
 
 const stepsOf = (child: ModuleSelection['child']) => (child?.length ? { child: child.map((s) => ({ ...s })) } : {});
 
-/** Whether dragging `from` onto `place` is allowed (not into itself or its descendants). */
+/** Whether dropping `from` at `place` would leave the module where it is (right before or after itself). */
+function isNoOp(from: ModuleSelection, place: DropPlace): boolean {
+  if (place.row !== from.row || place.col !== from.col) return false;
+  const steps = from.child ?? [];
+  if (!steps.length) return place.module === undefined && (place.index === from.module || place.index === from.module + 1);
+  const last = steps[steps.length - 1];
+  const owner = steps.slice(0, -1);
+  const dst = place.child ?? [];
+  const sameOwner = place.module === from.module && place.slot === last.slot && dst.length === owner.length &&
+    owner.every((s, i) => dst[i].slot === s.slot && dst[i].index === s.index);
+  return sameOwner && (place.index === last.index || place.index === last.index + 1);
+}
+
+/** Whether dragging `from` onto `place` is allowed (not into itself or its descendants) and changes something. */
 export function canDropAt(from: ModuleSelection, place: DropPlace): boolean {
-  return !insideSource(from, place);
+  return !insideSource(from, place) && !isNoOp(from, place);
 }
 
 /** Scroll the nearest scrollable ancestor of `el` while the pointer is within 32 px of its top or bottom edge. */
