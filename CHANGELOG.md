@@ -16,6 +16,10 @@ Magic Card uses calendar versions: year, month and a release number within the m
 -   **Item menus are grouped into submenus.** A module's menu starts with Edit, Rename, Duplicate, Replace with…, Move up, Move down and Delete. Add (when it has an entry), Arrange, Design and Copy and paste open as submenus. Rows and columns group their copy and paste design actions, Hide on dashboard and Copy YAML under Design. A tab's Design submenu holds Hide tab on dashboard and Copy YAML. Card menus are unchanged. A submenu replaces the list, with Back at the top. See [Item menus](documentation/editor/item-menus.md#submenus).
 -   **Escape goes back one level.** Inside a submenu, Escape, Left Arrow or Backspace returns to the list above, and focus returns to the row that opened it. Escape in the main list still closes the menu.
 
+### Fixed
+-   **Right-click on an unselected item.** In the Studio, right-clicking an item that was not selected yet opened its menu and closed it straight away. Selecting by right-click or long-press no longer scrolls the inspector into view, so the menu stays open and the item stays where it was.
+-   **Column and tab names in Dutch.** Generated names such as Column 1 and Tab 1 in the structure tree, Move to… and the selection path are now translated.
+
 ## 2026.10.12-beta.1 (2026-10-23)
 
 ### Added
