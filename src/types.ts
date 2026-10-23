@@ -435,6 +435,15 @@ export interface DisplayCondition {
 
 // ── Design / Styling ──
 
+/** The look a tab can take in one state (active, disabled, hover). */
+export interface TabStateDesign {
+  tab_color?: string;
+  tab_background?: string;
+  tab_border_color?: string;
+  tab_font_weight?: string;
+  tab_opacity?: number;
+}
+
 export interface DesignConfig {
   // Typography
   font_size?: string;
@@ -525,7 +534,7 @@ export interface DesignConfig {
   label_text_transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
   state_font_size?: string;
 
-  // Tab bar; a tabs module reads them, see src/modules/layout/tabs-look.ts (base design only)
+  // Tab bar; a tabs module reads them, see src/modules/layout/tabs-look.ts
   tab_bar_background?: string;
   tab_bar_border_width?: string;
   tab_bar_border_color?: string;
@@ -549,6 +558,13 @@ export interface DesignConfig {
   tab_icon_position?: 'left' | 'right' | 'above' | 'below';
   tab_icon_size?: string;
   tab_animation?: 'none' | 'fade' | 'slide';
+  tab_opacity?: number;
+  /** Look of the active tab; the legacy tab_active_color, tab_active_background and tab_indicator_color are still read */
+  tab_active?: TabStateDesign;
+  /** Look of a disabled tab */
+  tab_disabled?: TabStateDesign;
+  /** 0-based positions of the disabled tabs; matching rules add theirs */
+  tab_disabled_tabs?: number[];
 
   // Hover
   hover?: Partial<DesignConfig>;
