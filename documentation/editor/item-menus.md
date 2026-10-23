@@ -40,12 +40,12 @@ Some actions sit in submenus, so each menu stays short. A row with a chevron ope
 | Item | Top level | Submenus |
 | --- | --- | --- |
 | Card | Edit card settings, Add row, Rename, Copy YAML, Reset card to template… when it applies | None |
-| Row | Add column, Duplicate row, Rename, Move up, Move down, Delete row | Design |
-| Column | Add module, Paste module, Rename, Delete column | Design |
-| Tab | Add module, Paste module, Rename, Move up, Move down, Delete tab | Design |
-| Module | Edit, Rename, Duplicate, Replace with…, Move up, Move down, Delete | Add (layouts only), Arrange, Design, Copy and paste |
+| Row | Add column, Duplicate row, Rename, Move up, Move down, Delete row | Design: Copy design, Paste design, Merge pasted design, Hide on dashboard, Copy YAML, Reset row to template… when it applies |
+| Column | Add module, Paste module, Rename, Delete column | Design: Copy design, Paste design, Merge pasted design, Hide on dashboard, Copy YAML, Reset column to template… when it applies |
+| Tab | Add module, Paste module, Rename, Move up, Move down, Delete tab | Design: Hide tab on dashboard, Copy YAML |
+| Module | Edit, Rename, Duplicate, Replace with…, Move up, Move down, Delete | Add: Add module, Add tab or Add column when the module has one, and Add flow from here on the canvas. Arrange: Move to…, Wrap in layout, and Put behind others, Put on top or Back to normal when they apply. Design: Copy design, Paste design, Merge pasted design, Hide on dashboard, Reset to template… when it applies. Copy and paste: Copy module, Paste module after, Copy YAML |
 
-The Arrange submenu holds Move to… and Wrap in layout. The Design submenu holds Copy design, Paste design, Merge pasted design and Hide on dashboard, and Reset to template… when it applies. The Copy and paste submenu holds Copy module, Paste module after and Copy YAML.
+The Add submenu appears only when it has an entry. A layout offers Add module (Vertical, Horizontal and Slider layout), Add tab (Tabs) or Add column (Row). On the canvas, every module offers Add flow from here, so the Add submenu appears there for any module. The Arrange submenu holds Move to… and Wrap in layout, plus the placement entries, which are listed only when they differ from the module's current placement. Tabs have no Copy design or Paste design in their Design submenu.
 
 ## Card
 
@@ -104,7 +104,7 @@ Columns have no move items.
 | Hide on dashboard / Show on dashboard | |
 | Reset to template… | Template-linked card only. |
 | Move up, Move down | Moves the module within its column. Alt+Up and Alt+Down do the same. |
-| Move to… | Opens a list of places the module can go. The card's other columns come first. Every other container of the card follows, as Into {container}, indented by depth so you can see where it sits. The module goes to the end of the place you pick. Disabled when there is no other place to go. |
+| Move to… | Opens a list of places the module can go. The card's other columns come first. Every other container of the card follows, as Into {container}, labelled with its path, for example Row 1 · Column 1 > Tabs > Tab 1. The module goes to the end of the place you pick. Disabled when there is no other place to go. |
 | Delete | Removes the module. Delete does the same; use undo to bring it back. |
 
 ## Layout child
@@ -155,12 +155,13 @@ On a template-linked card, wrapping a module directly in a column makes that col
 
 ## Replace with…
 
-Replace with… changes a module to another module type of the same kind. It sits at the top level of a module's menu, under Duplicate. A module that is not a layout can become any other module that is not a layout. A layout can become another layout: Row, Column, Vertical, Horizontal, Tabs or Slider. The current type is not listed. Choosing a type closes the menu, and the new module takes the old one's place in its parent and is selected. Undo restores the original module in one step. On a template-linked card, the entry is disabled when the template fixes the module's id.
+Replace with… changes a module to another module type of the same kind. It sits at the top level of a module's menu, under Duplicate. A module that is not a layout can become any other module that is not a layout. A layout can become another layout: Vertical, Horizontal, Row, Tabs or Slider layout. The current type is not listed. Choosing a type closes the menu, and the new module takes the old one's place in its parent and is selected. Undo restores the original module in one step. On a template-linked card, the entry is disabled when the template fixes the module's id.
 
 What the new module keeps:
 
--   Its design, layer name, icon, actions, conditions and animations, and every other setting the new type supports, keep their values.
--   A setting that the new type does not support is removed. The status line says how many were removed. Undo brings them back.
+-   Its layer name, actions, display conditions and design keep their values, as does every other setting the new type supports.
+-   The icon stays when the new type supports one.
+-   A setting the new type does not support is removed, and so is a design key of a part the new type does not show, such as the tab bar keys when leaving Tabs or the button part keys when leaving Button. The status line says how many were removed. Undo brings them back.
 -   Layout to layout keeps every child module, in order. From Tabs, the modules of every tab are kept, in tab order. Into Tabs, all the modules go into the first tab.
 -   Modules in a hidden tab or column stay hidden.
 

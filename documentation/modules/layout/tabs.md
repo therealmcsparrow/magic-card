@@ -63,10 +63,11 @@ A length is a plain number, which counts as px, or a number with px, em, rem, %,
 ```yaml
 - type: tabs
   tab_style: underline
-  tab_bar_position: bottom
-  tab_active_color: "#1c7ed6"
-  tab_indicator_color: "#1c7ed6"
-  tab_animation: fade
+  design:
+    tab_bar_position: bottom
+    tab_active_color: "#1c7ed6"
+    tab_indicator_color: "#1c7ed6"
+    tab_animation: fade
   tabs:
     - label: Lights
       modules: []
