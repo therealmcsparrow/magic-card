@@ -482,6 +482,22 @@ export class DesignPanel extends LitElement {
     return pick(rule?.design) || pick(this.design);
   }
 
+  /**
+   * What a state's field shows when nothing is set and the design below does not apply: the built-in
+   * look of the active tab (theme accent) and of a disabled one (half opacity). Undefined where the
+   * field takes the Default value.
+   */
+  private _builtin(key: string): string | undefined {
+    const state = this._viewParts().state;
+    const pills = this.tabs?.style === 'pills';
+    if (state === 'tab_active') {
+      if (key === 'tab_color') return pills ? t('light text on theme accent') : t('theme accent');
+      if (key === 'tab_background') return pills ? t('theme accent') : t('none');
+    }
+    if (state === 'tab_disabled' && key === 'tab_opacity') return '0.5';
+    return undefined;
+  }
+
   /** The Active tab or Disabled tab view: clear everything it sets, in one change. */
   private _resetState(): void {
     const state = this._viewParts().state;
@@ -892,14 +908,16 @@ export class DesignPanel extends LitElement {
         `
       : nothing;
     // a tab state or Hover takes an empty per-tab field from the design below it: show that value as a hint
-    const inherited = p.tabState && !value ? this._inherited(p.key) : undefined;
-    const inheritsHere = p.tabState && this._inherited(p.key) !== undefined;
+    const builtin = p.tabState && !value ? this._builtin(p.key) : undefined;
+    const inherited = p.tabState && !value && builtin === undefined ? this._inherited(p.key) : undefined;
+    const inheritsHere = p.tabState && this._inherited(p.key) !== undefined && !this._builtin(p.key);
     // the animation list has its own per-entry "Reset to preset", the ring editor per-field resets and Off
     const reset = p.type === 'animations' || p.type === 'ring' || p.type === 'value_bg' ? nothing : fieldReset(lt(p.label), this._isSet(p), () => this._reset([p]), inheritsHere ? t('Use Default value') : undefined);
     const field = (control: TemplateResult, sync: TemplateResult | typeof nothing = nothing, forId?: string, help?: string) =>
       this._renderField(lt(p.label), control, sync, forId, help, reset);
     /** The help line of a colour or font field: its own help, else where an empty field takes its value from. */
-    const hint = (own?: string): string | undefined => own ?? (inherited ? t('Inherited from Default: {value}', { value: inherited }) : undefined);
+    const hint = (own?: string): string | undefined =>
+      own ?? (builtin ? t('Built-in: {value}', { value: builtin }) : inherited ? t('Inherited from Default: {value}', { value: inherited }) : undefined);
 
     switch (p.type) {
       case 'animations': {
@@ -962,7 +980,7 @@ export class DesignPanel extends LitElement {
               .corners=${!!p.sides?.corners}
               .units=${p.units ?? ['px', 'em', 'rem', '%']}
               .options=${(p.options ?? []).map((o) => ({ value: o.value, label: lt(o.label) }))}
-              .inherited=${(p.tabState && this._inherited(p.key)) || ''}
+              .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || ''}
               .onChange=${(updates: Record<string, unknown>) => this._handlePropertyChange(p.key, String(updates[p.key] ?? ''))}
             ></mc-box-field>
           `)}`,
@@ -1204,7 +1222,7 @@ export class DesignPanel extends LitElement {
               min=${p.range?.[0] ?? nothing}
               max=${p.range?.[1] ?? nothing}
               step=${p.range?.[2] ?? nothing}
-              placeholder=${inheritsHere ? inherited || t('Theme default') : nothing}
+              placeholder=${builtin ?? (inheritsHere ? inherited || t('Theme default') : nothing)}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
@@ -1222,7 +1240,7 @@ export class DesignPanel extends LitElement {
               id=${id}
               type="text"
               spellcheck="false"
-              placeholder=${inheritsHere ? inherited || t('Theme default') : TEXT_PLACEHOLDERS[p.key] ?? nothing}
+              placeholder=${builtin ?? (inheritsHere ? inherited || t('Theme default') : TEXT_PLACEHOLDERS[p.key] ?? nothing)}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
