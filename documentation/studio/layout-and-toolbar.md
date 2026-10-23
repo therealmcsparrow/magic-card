@@ -18,7 +18,8 @@ From left to right:
 | Template bar | A compact template bar: the template name and override count, or a No template button. See [Templates](../editor/templates.md). |
 | Form / YAML | Switches the editor mode. Shared with the pane editor. |
 | Canvas width | Narrow, Wide, Panel. Follows the dashboard view. Hidden in YAML mode. See [Canvas width](device-widths.md). |
-| Undo, Redo | Same as Ctrl+Z and Ctrl+Y. Disabled when there is nothing to undo or redo. |
+| Preview | Runs the card as on the dashboard, with live actions. Shows the notice "Preview: actions are live". Press again or Escape to return to editing. See [Preview](preview.md). |
+| Undo, Redo | Same as Ctrl+Z and Ctrl+Y. Disabled when there is nothing to undo or redo, and while Preview is on. |
 | Done | Closes the Studio. |
 
 ## Workspace

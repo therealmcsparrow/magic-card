@@ -26,7 +26,9 @@ The bar never covers a neighbouring module. It tries these places in order:
 
 1.  Below the selection frame, aligned to its right edge.
 2.  Above the frame, clear of its name tag.
-3.  To the right of the frame.
-4.  Inside the frame's top-right corner, as a last resort.
+3.  Beside the frame, on its right. The bar slides up or down along the frame, so it stays in view when the frame is partly scrolled out of sight.
+4.  Beside the frame, on its left, in the same way.
+
+When none of these places is clear, the bar moves into a strip above the canvas, so it still covers nothing. The strip appears only while the bar is there. Keyboard focus stays on the same bar button when the bar moves between the module and the strip.
 
 It always stays inside the visible part of the canvas and moves with the selection when the canvas scrolls or resizes.

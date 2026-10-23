@@ -4,6 +4,20 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Studio Preview.** A Preview button in the Studio's top bar runs the card on the canvas as it runs on the dashboard. Taps, holds and double taps, sliders, switches and tabs act on the real entities, and animations play. The notice "Preview: actions are live" shows beside the button. Navigate and URL actions do not leave the editor: the card shows "Navigation is off in Preview" instead. The layers panel and the inspector are hidden, the canvas width buttons still work, and Undo, Redo and the mode switch are off. Press Preview again or Escape to return to editing with the same selection. Escape closes a dialog opened from the card first and never closes the Studio while Preview is on. Preview works in Form and YAML mode. See [Studio preview](documentation/studio/preview.md).
+-   **Tab states.** A tabs module can style its active tab, the tab under the pointer and disabled tabs, in the base design and in conditional rules. Choose Active tab or Disabled tab in the Editing design for list. Each state takes text colour, background, border colour, font weight and opacity. The line under the active tab is now the active tab's border, so there is no separate indicator setting.
+-   **Disabled tabs.** Tick the tabs that cannot be opened under Disabled tabs (`tab_disabled_tabs`). A disabled tab stays visible and dimmed, cannot be clicked, and arrow keys skip it. Rules add up: two rules can each disable their own tab, and a rule cannot enable a tab that the base design disables. Moving or deleting a tab moves the disabled list with it. See [Tabs](documentation/modules/layout/tabs.md#tab-states).
+
+### Changed
+-   **Active tab line and older keys.** The line under the active tab is the active tab's border. `tab_active_color`, `tab_active_background` and `tab_indicator_color` still work. The editor moves them into `tab_active` the first time you change the Active tab design. Two effects on existing cards: a card that combines an indicator colour with a tab border now gets a coloured border on all four sides of the active tab, and a card with a tab border loses the separate underline under the active tab.
+
+### Fixed
+-   **Tab fonts.** A Google Font chosen for the tabs now loads. A set tab font weight applies to the active tab in the underline style, where it used to stay bold.
+-   **Float bar in the Studio.** The float bar no longer covers the selected module. It slides beside the module when there is room, and sits in a strip above the canvas when there is none.
+
 ## 2026.10.12-beta.2 (2026-10-23)
 
 ### Added

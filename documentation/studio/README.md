@@ -15,6 +15,7 @@ When the Studio closes, focus returns to the Open studio button. The Studio keep
 
 -   [Layout and top bar](layout-and-toolbar.md): the top bar, Layers, canvas, inspector, narrow screens and YAML mode.
 -   [Canvas width](device-widths.md): Narrow, Wide and Panel, matched to the dashboard view.
+-   [Preview](preview.md): run the card on the canvas as on the dashboard, with live actions, and return to editing.
 -   [Canvas and selection](canvas-and-selection.md): clicking (also the columns of Row modules), hovering, selection colours and how the live card behaves on the canvas.
 -   [Floating bar](floating-bar.md): the module toolbar next to the selection.
 -   [Item menus](../editor/item-menus.md): right-click, long-press or Shift+F10 on the canvas and in Layers; copy YAML, copy and paste modules, wrap in a layout, hide on the dashboard, rename, reset to template.

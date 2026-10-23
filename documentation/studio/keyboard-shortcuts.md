@@ -58,6 +58,7 @@ Escape is handled by the innermost thing that uses it:
 | The Copy this YAML window | Closes the window only |
 | A column resize drag in progress | Cancels the drag and restores the widths |
 | A picker window or dialog opened from the Studio | Closes that window only |
+| Preview is on | Closes a dialog opened from the card first (such as more-info). With no dialog open, leaves Preview and keeps the Studio open. See [Preview](preview.md) |
 | The connect hint bar or the canvas in connect mode | Cancels adding a flow |
 | The canvas, with a row, column or module selected | Selects the parent |
 | The Layers overlay on a narrow screen (900 px or less) | Closes the overlay and focuses the Layers button |
