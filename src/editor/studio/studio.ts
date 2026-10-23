@@ -527,8 +527,12 @@ export class Studio extends LitElement {
       .live-chip[hidden] {
         display: none;
       }
-      mc-template-bar.dim {
+      mc-template-bar.dim,
+      .mode button:disabled {
         opacity: 0.5;
+      }
+      .mode button:disabled {
+        cursor: default;
       }
 
       /* workspace */
