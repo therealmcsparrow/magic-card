@@ -913,7 +913,6 @@ const magicCardLocalStyles = css`
   .mc-tabs[data-style='pills'] .mc-tab-button {
     border-bottom: none;
     border-radius: var(--mc-radius-md);
-    background: transparent;
   }
 
   .mc-tabs[data-style='pills'] .mc-tab-button.active {
@@ -932,7 +931,6 @@ const magicCardLocalStyles = css`
   }
 
   .mc-tabs[data-style='underline'] .mc-tab-button.active {
-    border-bottom-width: 3px;
     font-weight: 700;
   }
 

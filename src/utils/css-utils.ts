@@ -211,7 +211,13 @@ export function designToHoverStyle(design?: DesignConfig): string {
 }
 
 /** A key of the Typography section: on a tabs module it styles the tab buttons, not the panel. */
-export const isTabType = (key: string): boolean => /^(font_|text_|word_|color$|line_height|letter_spacing|white_space|overflow_wrap)/.test(key);
+export const isTabType = (key: string): boolean => /^(font_|text_|word_|line_|letter_|white_|overflow_w|color$)/.test(key);
+
+/** The Typography keys of a tabs module as the style of its tab bar; the font weight also as the variable the underline style reads. */
+export function tabTypeStyle(design?: Partial<DesignConfig>): string {
+  const type = Object.fromEntries(Object.entries(design ?? {}).filter(([k]) => isTabType(k)));
+  return [designToStyle(type as DesignConfig), type.font_weight && `--mc-design-font-weight: ${type.font_weight}`].filter(Boolean).join('; ');
+}
 
 /** Split a declaration list on `;` outside parentheses and quotes (a data: URL keeps its `;`). */
 export function splitDeclarations(style: string): string[] {
@@ -249,6 +255,8 @@ export interface HoverTarget {
   control?: ControlLook;
   /** A button module's base design: the hover design may carry the icon, label and state keys. */
   parts?: Partial<DesignConfig>;
+  /** A tabs module: its Typography keys go to the tab bar, so the tab buttons take them. */
+  tabs?: boolean;
 }
 
 const important = (d: string) => (/!important\s*$/i.test(d) ? d : `${d} !important`);
@@ -267,10 +275,10 @@ const hoverSafe = (t: string) => t.replace(/[{}@]/g, '');
  */
 export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, target: HoverTarget = {}): string {
   if (!hover || typeof hover !== 'object') return '';
-  const decls = splitDeclarations(hoverSafe(designToStyle(hover as DesignConfig, target.control, target.parts)))
-    .filter((d) => d.includes(':'))
-    .map(important);
-  if (!decls.length) return '';
+  const list = (style: string) => splitDeclarations(hoverSafe(style)).filter((d) => d.includes(':')).map(important);
+  const decls = list(designToStyle(hover as DesignConfig, target.control, target.parts, target.tabs));
+  const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
+  if (!decls.length && !bar.length) return '';
   const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));
@@ -289,6 +297,7 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
     decls.push(...splitDeclarations(borderLength.style).map(important));
     if (color) extra.push(`${sel} > .mc-border-fx > i { border-color: ${color} !important; }`);
   }
+  if (bar.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header { ${bar.join('; ')}; }`);
   return [`${sel} { ${decls.join('; ')}; }`, ...extra].join(' ');
 }
 

@@ -1471,7 +1471,7 @@ export class MagicCard extends LitElement {
         tabindex=${hasActions ? 0 : nothing}
         aria-label=${hasActions ? this._getActionLabel(mod) : nothing}
         data-mc-path=${this.editMode ? path : nothing}
-        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control, parts: mod.type === 'button' ? design : undefined })}
+        data-mc-hover=${this._hover(`mod-${path}`, design?.hover, { shape: shape && { design }, borderLength: border, control, parts: mod.type === 'button' ? design : undefined, tabs: mod.type === 'tabs' })}
         data-mc-id=${mod.id || nothing}
         data-mc-hidden=${this.editMode && hidden ? '' : nothing}
         data-mc-needs=${needs ? t('Needs another device') : nothing}

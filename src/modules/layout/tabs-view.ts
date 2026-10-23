@@ -2,14 +2,17 @@ import { html, nothing, TemplateResult } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { hasIconFx, renderIcon } from '../../icons/render-icon';
-import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
+import { CardModule, DesignConfig, HomeAssistant, TabsModuleConfig } from '../../types';
 import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
-import { tabTypeStyle } from './tabs-type';
+import { tabTypeStyle } from '../../utils/css-utils';
 import { tabAnims, tabIconFx } from './tabs-anim';
 import { tabLook } from './tabs-look';
 import { MAX_DISABLED_TABS, resolveTabsDesign } from './tabs-resolve';
+
+// What the tab bar gives the buttons when the design sets none of these (the buttons inherit them from the bar).
+const TYPE_DEFAULTS = 'font-size: var(--mc-font-size-sm); font-weight: normal; text-transform: none; letter-spacing: normal; text-align: center';
 
 export class TabsView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -65,8 +68,8 @@ export class TabsView implements ModuleView {
     const anims = tabAnims(design, hass, c.entity);
     const vars = look.vars;
     const typeStyle = tabTypeStyle(design);
-    const tokens = [...look.tokens, ...(typeStyle ? ['type'] : []), ...(anims?.on ? ['tab-anim', ...(anims.hover?.tokens ?? [])] : [])];
-    const barStyle = [typeStyle, ...Object.entries(anims?.hover?.vars ?? {}).map(([k, v]) => `${k}: ${v}`)].filter(Boolean).join('; ');
+    const tokens = [...look.tokens, ...(typeStyle || tabTypeStyle(design?.hover as Partial<DesignConfig>) ? ['type'] : []), ...(anims?.on ? ['tab-anim', ...(anims.hover?.tokens ?? [])] : [])];
+    const barStyle = [tokens.includes('type') && TYPE_DEFAULTS, typeStyle, ...Object.entries(anims?.hover?.vars ?? {}).map(([k, v]) => `${k}: ${v}`)].filter(Boolean).join('; ');
     const header = html`
         <div class="mc-tabs-header" role="tablist" style=${barStyle || nothing}>
           ${shown.map((i) => {
