@@ -54,7 +54,7 @@ Escape is handled by the innermost thing that uses it:
 
 | Where | Escape does |
 | --- | --- |
-| An open menu (item menu, template, paste) | Closes the menu and returns focus to where it was opened: the three-dot button, the tree item or the canvas |
+| An open menu (item menu, template, paste) | In a submenu, goes back one level to the list above. In the main list, closes the menu and returns focus to where it was opened: the three-dot button, the tree item or the canvas |
 | The Copy this YAML window | Closes the window only |
 | A column resize drag in progress | Cancels the drag and restores the widths |
 | A picker window or dialog opened from the Studio | Closes that window only |

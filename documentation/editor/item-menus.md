@@ -33,6 +33,20 @@ A right-click on another item while a menu is open closes it, selects the new it
 
 Shortcuts that work in both the tree and on the canvas are shown on the right of their menu item.
 
+## Submenus
+
+Some actions sit in submenus, so each menu stays short. A row with a chevron opens its submenu in place: the list is replaced, and its first row is Back. Back, Left Arrow, Backspace or Escape returns to the list you came from, and focus goes back to the row that opened it. In right-to-left layouts, Left Arrow and Right Arrow swap roles.
+
+| Item | Top level | Submenus |
+| --- | --- | --- |
+| Card | Edit card settings, Add row, Rename, Copy YAML, Reset card to template… when it applies | None |
+| Row | Add column, Duplicate row, Rename, Move up, Move down, Delete row | Design |
+| Column | Add module, Paste module, Rename, Delete column | Design |
+| Tab | Add module, Paste module, Rename, Move up, Move down, Delete tab | Design |
+| Module | Edit, Rename, Duplicate, Replace with…, Move up, Move down, Delete | Add (layouts only), Arrange, Design, Copy and paste |
+
+The Arrange submenu holds Move to… and Wrap in layout. The Design submenu holds Copy design, Paste design, Merge pasted design and Hide on dashboard, and Reset to template… when it applies. The Copy and paste submenu holds Copy module, Paste module after and Copy YAML.
+
 ## Card
 
 | Item | Action |
@@ -83,20 +97,21 @@ Columns have no move items.
 | Copy module | Copies the module, with its children. See [Copy and paste a module](#copy-and-paste-a-module). |
 | Paste module after | Pastes the copied module right after this one. |
 | Duplicate | Inserts a copy below with new ids. Ctrl+D does the same. |
+| Replace with… | Changes the module to another type of the same kind. See [Replace with…](#replace-with). |
 | Wrap in layout | Opens a list of layouts. See [Wrap in layout](#wrap-in-layout). |
 | Copy YAML | Copies the module, children included. |
 | Copy design, Paste design, Merge pasted design | As for rows. |
 | Hide on dashboard / Show on dashboard | |
 | Reset to template… | Template-linked card only. |
 | Move up, Move down | Moves the module within its column. Alt+Up and Alt+Down do the same. |
-| Move to… | Opens a list of the card's other columns. The module goes to the end of the one you pick. Disabled when there is no other column. |
+| Move to… | Opens a list of places the module can go. The card's other columns come first. Every other container of the card follows, as Into {container}, indented by depth so you can see where it sits. The module goes to the end of the place you pick. Disabled when there is no other place to go. |
 | Delete | Removes the module. Delete does the same; use undo to bring it back. |
 
 ## Layout child
 
 A module inside a Horizontal, Vertical, Slider layout, Tabs or Row module has the module menu with three differences:
 
--   Move to… lists the other tabs or columns of its layout.
+-   Move to… lists the other tabs or columns of its layout, then every other container of the card as Into {container}, and Out to {parent}. Out to {parent} places the child just after its layout.
 -   Wrap in layout wraps the child where it is, inside its layout.
 -   Reset to template… reads Reset layout to template…. A child has no overrides of its own: it resets the whole child list of the top-level layout module. The question names that layout.
 
@@ -137,6 +152,17 @@ Paste module after inserts it after the module whose menu you used. Paste module
 Wrap in layout opens a second list in the same menu: Vertical, Horizontal, Row, Tabs and Slider layout. The module moves into a new layout module of that type, in its first slot (the first column of a Row, the first tab of Tabs), and the new layout module takes its place and is selected. Back returns to the main list. Undo removes the layout again.
 
 On a template-linked card, wrapping a module directly in a column makes that column's module list the card's own (`modules` in the column's `not_synced`). Template changes to that column's modules then stop reaching this card until you use Reset column to template…, which gives the column the template's modules again. If the template cannot be loaded at that moment, the column stays as it is and a message says so.
+
+## Replace with…
+
+Replace with… changes a module to another module type of the same kind. It sits at the top level of a module's menu, under Duplicate. A module that is not a layout can become any other module that is not a layout. A layout can become another layout: Row, Column, Vertical, Horizontal, Tabs or Slider. The current type is not listed. Choosing a type closes the menu, and the new module takes the old one's place in its parent and is selected. Undo restores the original module in one step. On a template-linked card, the entry is disabled when the template fixes the module's id.
+
+What the new module keeps:
+
+-   Its design, layer name, icon, actions, conditions and animations, and every other setting the new type supports, keep their values.
+-   A setting that the new type does not support is removed. The status line says how many were removed. Undo brings them back.
+-   Layout to layout keeps every child module, in order. From Tabs, the modules of every tab are kept, in tab order. Into Tabs, all the modules go into the first tab.
+-   Modules in a hidden tab or column stay hidden.
 
 ## Hide on dashboard
 
@@ -179,7 +205,9 @@ Reset is shown only on a template-linked card and is disabled when the item has 
 | Home / End | First / last item |
 | A letter | The next item starting with that letter |
 | Enter or Space | Run the focused item |
-| Escape | Close the menu; focus goes back to where you opened it |
+| Right Arrow | Open the focused submenu |
+| Left Arrow or Backspace | In a submenu, go back one level |
+| Escape | In a submenu, go back one level. In the main list, close the menu; focus goes back to where you opened it |
 | Tab | Close the menu; focus goes back to where you opened it |
 
 Clicking outside the menu closes it. A menu opened with the mouse also takes focus, so you can continue with the arrow keys.

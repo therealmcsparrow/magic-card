@@ -100,8 +100,15 @@ After a move, delete or duplicate, focus follows the module (or goes to a neighb
 ## Drag and drop
 
 -   Drag a row by its item to reorder rows. A line shows where it will land.
--   Drag a top-level module onto another module, a column item or an empty column. It can move to any column of the card. The moved module is selected.
--   Layout children, tabs and row-module columns cannot be dragged. Use Alt+Up / Alt+Down or Move to… instead.
+-   Drag any module, including a layout child, onto another item in the tree. The indicator shows where it lands:
+    -   A line before or after an item, indented to the depth of its list.
+    -   A dashed outline round a container (a row, column, horizontal, vertical or slider layout, or a tab) when the module goes inside it. An empty container takes the drop too.
+    -   Nothing, when the drop would put a module inside itself or one of its own children. Dropping there changes nothing.
+-   Hover over a collapsed container for a moment to expand it. Drag near the top or bottom of the tree to scroll it.
+-   Drag a module out of its container by dropping it on its parent, or on a row of the card.
+-   The moved module is selected, and one undo step puts it back.
+-   Tabs and row-module columns cannot be dragged. Use Alt+Up / Alt+Down or Move to… instead.
+-   Touch screens do not start a tree drag. Long-press an item and use Move to… in its menu.
 
 ## Pane and Layers differences
 

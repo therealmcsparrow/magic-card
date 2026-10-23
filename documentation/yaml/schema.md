@@ -344,7 +344,7 @@ Children are full modules: they take `id`, `entity`, `design`, `actions`, `displ
 | `horizontal` | `modules: [...]` | `gap`, `align` (`start`, `center`, `end`, `stretch`), `justify` (`start`, `center`, `end`, `space-between`, `space-around`) |
 | `vertical` | `modules: [...]` | `gap`, `align` |
 | `row` | `columns: [{ modules: [...] }, ...]`, see [Row module columns](#row-module-columns) | `layout` (same syntax as a card row), `column_widths` (one width per column, wins over `layout`, as on a card row), `gap` (default `8px`), `padding` |
-| `tabs` | `tabs: [{ label, icon, hidden, modules: [...] }, ...]`; a tab with `hidden: true` is left out on the dashboard (`active_tab` still counts every tab; when it names a hidden tab, the first shown tab opens) | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`) |
+| `tabs` | `tabs: [{ label, icon, hidden, modules: [...] }, ...]`; a tab with `hidden: true` is left out on the dashboard (`active_tab` still counts every tab; when it names a hidden tab, the first shown tab opens) | `active_tab` (index of the tab shown first, default 0), `tab_style` (`default`, `pills`, `underline`). The 23 `tab_` design keys are listed in [Tabs](../modules/layout/tabs.md#tab-bar-design) |
 | `slider-layout` | `modules: [...]`, one slide each | `pagination`, `navigation`, `slides_per_view` (default 1), `space_between` (px, default 8), `loop`, `autoplay`, `autoplay_delay` (ms, default 5000) |
 
 A child hidden by its display conditions is left out. A slider then builds no empty slide for it.

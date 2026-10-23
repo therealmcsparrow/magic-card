@@ -4,6 +4,18 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Tab bar design keys.** The Design tab of a tabs module has a Tab bar section with 23 `tab_` keys. They style the bar, the tabs, the active tab, the icons and the switch between tabs: colours, lengths, font, bar position (top or bottom), alignment, icon position and the animation (none, fade or slide). A tabs module that uses none of them looks exactly as before. The keys apply to the base design only. Hover and conditional design rules do not change the tab bar. Copy design and Paste design carry them. See [Tabs](documentation/modules/layout/tabs.md#tab-bar-design).
+-   **Tree drag and drop into and out of containers.** Drag any module in the structure tree onto a row, column, horizontal, vertical or slider layout, a tab, or an empty container, at any depth. An indicator shows whether the module lands before, after or inside. Drag a module out onto its parent or a row of the card. A container cannot be dropped into itself or one of its own children. One undo step reverts the move.
+-   **Replace a module.** The module menu's Replace with… changes a module to another type of the same kind: a non-layout module to any other non-layout type, or a layout to another layout type. The design, layer name, icon, actions, conditions and animations carry over. Settings the new type does not support are removed, and the status line says how many. Undo restores the original module.
+-   **Move to… into and out of containers.** Move to… lists every container in the card under Into, with its depth shown. A layout child can also move Out to its parent. Use it when dragging is hard, for example on a touch screen.
+
+### Changed
+-   **Item menus are grouped into submenus.** A module's menu starts with Edit, Rename, Duplicate, Replace with…, Move up, Move down and Delete. Add, Arrange, Design and Copy and paste open as submenus. Rows, columns and tabs group their Design actions the same way. Card menus are unchanged. A submenu replaces the list, with Back at the top. See [Item menus](documentation/editor/item-menus.md#submenus).
+-   **Escape goes back one level.** Inside a submenu, Escape, Left Arrow or Backspace returns to the list above, and focus returns to the row that opened it. Escape in the main list still closes the menu.
+
 ## 2026.10.12-beta.1 (2026-10-23)
 
 ### Added

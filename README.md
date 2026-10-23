@@ -14,11 +14,11 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 
 ## Features
 
--   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, and the row module has the layout presets, column widths and per-column settings of a card row.
+-   Rows, columns and modules, with layout modules (horizontal, vertical, row, tabs, slider) that nest other modules. Their children, tabs and columns are managed in the structure tree, where you can drag a module into or out of any container, at any depth. The row module has the layout presets, column widths and per-column settings of a card row.
 -   25 module types for content, controls, layout and advanced use (see [Modules](#modules)).
 -   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
 -   Studio: a full-screen editor with layers, a clickable live canvas and keyboard shortcuts. The canvas is Narrow, Wide or Panel wide, picked from the dashboard view the card sits in.
--   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Copy its YAML, copy and paste a module (also into another card), wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
+-   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Their actions are grouped into submenus. Copy its YAML, copy and paste a module (also into another card), replace a module with another type of the same kind, wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules. The card itself has a border (width, style and colour), margin, opacity and backdrop filter.
 -   More than 100 preset animations, several per element, with play conditions, plus 46 themed catalogue presets (see [Catalogue presets](#catalogue-presets)).
 -   Animated icons: pick one of 192 ready-made icon animations, or one of your own, in the icon picker's Animated icons tab. Each ready-made one plays in a Quiet, Living or Glow style. The card stores the result itself, so it needs no integration.
