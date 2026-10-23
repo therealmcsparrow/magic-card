@@ -121,7 +121,7 @@ A disabled tab stays in the bar but cannot be opened.
 -   A disabled tab is dimmed. The default opacity is 0.5, and `tab_disabled.tab_opacity` changes it.
 -   Clicks do nothing. Arrow keys, Home and End skip the tab, and screen readers hear it as disabled.
 -   If the tab that `active_tab` names is disabled, the first tab that is not disabled opens instead. If every tab is disabled, the tab named by `active_tab` stays shown and none of them can be clicked.
--   In the Studio, outside Preview, the canvas opens the tab that `active_tab` names, even when it is disabled, and a click on a disabled tab opens it so you can edit its content. In Preview the dashboard rules apply.
+-   In the Studio, outside Preview, the canvas opens the tab that `active_tab` names, even when it is disabled. Clicking a tab on the canvas does not switch tabs. A disabled tab also opens when you select it in Layers, or a module inside it, so you can edit its content. In Preview the dashboard rules apply.
 
 ### Tab states in rules
 
