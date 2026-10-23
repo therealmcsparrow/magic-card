@@ -43,6 +43,7 @@ import './value-bg-editor';
 import { parseGradient } from '../../utils/gradient';
 import { t, fold } from '../i18n';
 import { thisTarget } from '../target-name';
+import { setStatePreview } from '../studio/tab-state-preview';
 
 /** Placeholders: sizes read "auto", font size "inherit", everything else "0". */
 function unitPlaceholder(key: string, design: Record<string, unknown>): string {
@@ -226,6 +227,11 @@ export class DesignPanel extends LitElement {
         text-transform: uppercase;
         color: var(--mc-text-2);
       }
+      .tree-note {
+        display: grid;
+        gap: 4px;
+        justify-items: start;
+      }
       .fx-pair {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -349,6 +355,7 @@ export class DesignPanel extends LitElement {
 
   /** The module's Placement and Layer groups belong to Default only: tell the host which design is being edited (module-editor 1.3.0). */
   protected updated(changed: Map<string, unknown>): void {
+    if (changed.has('_activeView') || changed.has('moduleType')) setStatePreview(this.moduleType === 'tabs' && !this.hoverOnly ? this._activeView : 'default');
     if (changed.has('_activeView') && !this.hoverOnly) this.dispatchEvent(new CustomEvent('mc-design-view', { bubbles: true, composed: true, detail: { view: this._activeView } }));
   }
 
@@ -746,6 +753,7 @@ export class DesignPanel extends LitElement {
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    setStatePreview('default');
     window.clearTimeout(this._clipTimer);
   }
 
@@ -1408,7 +1416,12 @@ export class DesignPanel extends LitElement {
           ${open
             ? html`<div class="subgroup-body" id=${bodyId}>
                 ${this._renderFlatList(run.props)}
-                ${def.id === 'icon' && state === 'tab_active' ? html`<p class="help">${t('Icon when active is set per tab in the structure tree.')}</p>` : nothing}
+                ${def.id === 'icon' && state === 'tab_active'
+                  ? html`<div class="tree-note">
+                      <p class="help">${t('Icon when active is set per tab in the structure tree.')}</p>
+                      <button type="button" class="btn btn-text btn-sm show-tree" @click=${() => this.dispatchEvent(new CustomEvent('mc-select-first-tab', { bubbles: true, composed: true }))}>${t('Show in tree')}</button>
+                    </div>`
+                  : nothing}
               </div>`
             : nothing}
         </div>

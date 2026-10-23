@@ -23,6 +23,7 @@ import {
   slotSelection,
   selectionToPath,
 } from './selection';
+import { applyTabState, getStatePreview, onStatePreview, stateOfView, type TabPreviewState } from './tab-state-preview';
 import { childSlots } from '../../utils/module-path';
 import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
 import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from '../../utils/column-widths';
@@ -247,6 +248,10 @@ export class StudioCanvas extends LitElement {
 
   @state() private _state?: EditorState;
   @state() private _hoverLabel = '';
+  /** The state of a tabs module shown on its tab (the design panel's Hover, Active tab or Disabled tab view). */
+  @state() private _tabState: TabPreviewState | null = null;
+  private _forcedIn?: Element;
+  private _stopTabState?: () => void;
   /** Editor preview pause (card-pause 2.0.0): session only, starts playing, never stored. */
   @state() private _previewPaused = false;
   @state() private _hoverSel: Selection | null = null;
@@ -338,9 +343,11 @@ export class StudioCanvas extends LitElement {
     void loadLayerEditor(); // prefetch: the Layers here sheet and the design panels live in a lazy chunk
     const stop = onStatus(() => this._applyPreview());
     const release = claimPreviewHost();
+    const stopTabs = onStatePreview(() => this._syncTabState());
     this._stopPreview = () => {
       stop();
       release();
+      stopTabs();
     };
   }
 
@@ -473,6 +480,7 @@ export class StudioCanvas extends LitElement {
     if (changed.has('live') && changed.get('live') !== undefined) this._applyLive();
     else if (changed.has('hass') && this._card && this.hass) this._card.hass = this.live ? this.hass : inertHass(this.hass);
     if (changed.has('_previewPaused') && this._card && !this.live) this._card.previewPaused = this._previewPaused;
+    this._syncTabState();
     if (changed.has('_state')) {
       this._syncCard();
       const sel = this._sel;
@@ -481,6 +489,20 @@ export class StudioCanvas extends LitElement {
       if (this._connectFrom && (!sameSelection(sel, this._connectFrom) || this._state?.config !== this._connectConfig)) this._connectFrom = null;
     }
     this._queuePlace();
+  }
+
+  /** Shows the design panel's state on the selected tabs module: a mark on one of its tabs, and the chip. */
+  private _syncTabState(): void {
+    const card = this._card;
+    const sel = this._sel;
+    const config = this._state?.config;
+    const mod = card && !this.live && sel.kind === 'module' && config ? moduleAt(config, sel) : undefined;
+    const want = mod?.type === 'tabs' ? stateOfView(getStatePreview()) : null;
+    const wrapper = want && sel.kind === 'module' ? card?.shadowRoot?.querySelector(`[data-mc-path="${modulePathAttr(sel)}"]`) : null;
+    if (this._forcedIn && this._forcedIn !== wrapper) applyTabState(this._forcedIn, null);
+    this._forcedIn = wrapper ?? undefined;
+    const shown = wrapper ? applyTabState(wrapper, want) : null;
+    if (shown !== this._tabState) this._tabState = shown;
   }
 
   private _togglePreviewPause = (e: Event): void => {
@@ -502,6 +524,8 @@ export class StudioCanvas extends LitElement {
       // live: navigation actions turn into a notice, the editor stays where it is
       card.setConfig(this.live ? blockNavigation(shown) : shown);
       this._cardError = '';
+      // the tabs are drawn again: mark the previewed state on the new ones
+      void card.updateComplete.then(() => this._syncTabState());
     } catch (err) {
       this._cardError = err instanceof Error ? err.message : String(err);
     }
@@ -1321,7 +1345,9 @@ export class StudioCanvas extends LitElement {
       >
         <div class="canvas-inner">
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
-            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
+            <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span>${this._tabState
+              ? html`<span class="state-chip" role="status">${t('Showing: {state}', { state: this._tabState === 'hover' ? t('Hover') : this._tabState === 'active' ? t('Active tab') : t('Disabled tab') })}</span>`
+              : nothing}<span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
               : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}${live ? nothing : html`<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
                 aria-label=${this._previewPaused ? t('Resume preview motion') : t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
@@ -1453,6 +1479,13 @@ export class StudioCanvas extends LitElement {
       /* panel view: HA draws the card without its border */
       .device.borderless {
         --ha-card-border-width: 0;
+      }
+      .state-chip {
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: var(--mc-accent-tint);
+        color: var(--mc-primary);
+        font-weight: 600;
       }
       .device-note {
         display: inline-flex;

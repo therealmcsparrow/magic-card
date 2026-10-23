@@ -37,6 +37,7 @@ import {
   layerName,
   selectionFromPath,
   selectionKey,
+  slotSelection,
   selectionToPath,
 } from '../studio/selection';
 import { toggleNotSynced, wrapOnChangeWithSync } from '../state/template-sync';
@@ -242,6 +243,12 @@ export class Inspector extends LitElement {
     this.requestUpdate();
   };
 
+  /** "Show in tree" of a tabs module's design: select its first tab, where the tab settings are. */
+  private _showFirstTab = (): void => {
+    const sel = this._selection();
+    if (sel.kind === 'module') this._goTo(slotSelection(sel.row, sel.col, sel.module, sel.child, 0));
+  };
+
   /** Move keyboard focus to the inspector (its active tab) once the current selection has rendered. */
   focusInspector(): void {
     this._focusTab = true;
@@ -414,7 +421,7 @@ export class Inspector extends LitElement {
     const tab = this._activeTab(sel, tabs);
 
     return html`
-      <div class="insp" @field-sync-toggle=${this._onSyncToggle} @mc-open-card-entity=${this._openCardEntity}>
+      <div class="insp" @field-sync-toggle=${this._onSyncToggle} @mc-open-card-entity=${this._openCardEntity} @mc-select-first-tab=${this._showFirstTab}>
         <div class="insp-head">
           ${this._renderIdentity(config, sel)}
           <div class="seg full tabs" role="tablist" aria-label=${t('Settings')}>

@@ -16,6 +16,8 @@ const CONTENT = '>.mc-tabs-content';
 const DIRECT = `${TAB}:not(.active)`;
 const DISABLED = `${TAB}[aria-disabled='true']`;
 const HOVERED = `${TAB}:hover:not(.active):not([aria-disabled='true'])`;
+/** The studio sets this on one tab to show the Hover look without a pointer. */
+const FORCED = `${TAB}[data-mc-force='hover']:not(.active):not([aria-disabled='true'])`;
 /** The icon element of a tab: <ha-icon>, or <mc-svg-icon> when it draws effects or an own icon. */
 const ICONS = (sel: string): string[] => [`${sel} ha-icon`, `${sel} mc-svg-icon`];
 
@@ -110,7 +112,7 @@ const HOVER_ANIM =
   gatedAll('h-anim-i', [`${HOVERED} .mc-anim-icon`], 'display:inline-block;animation:var(--mc-anim-i,none),var(--mc-th-anim-i,none);transform-origin:var(--mc-th-anim-oi,center)') +
   gatedAll('h-anim-n', [`${HOVERED} [data-mc-part='name']`], 'display:inline-block;animation:var(--mc-anim-n,none),var(--mc-th-anim-n,none);transform-origin:var(--mc-th-anim-on,center)');
 // A visitor who asks for less motion gets none of it.
-const HOVER = `${ANIM_RESET}@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}@media (hover:hover) and (prefers-reduced-motion:no-preference){${HOVER_ANIM}}`;
+const HOVER = `${ANIM_RESET}@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}${stateRules(FORCED, 'h', 'h')}@media (hover:hover) and (prefers-reduced-motion:no-preference){${HOVER_ANIM}}`;
 // The keyboard focus ring follows the active tab's border, then its text, then the tab border colour.
 const FOCUS = `.mc-tabs[data-style]${TAB}:focus-visible{outline-color:var(--mc-ta-fc,var(--mc-ta-bc,var(--mc-ta-c,var(--mc-tt-fc,var(--mc-tt-bc,var(--mc-primary))))))}`;
 
