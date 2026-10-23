@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.2 (2026-10-23)
 
 ### Added
 -   **Tab bar design keys.** The Design tab of a tabs module has a Tab bar section with 23 `tab_` keys. They style the bar, the tabs, the active tab, the icons and the switch between tabs: colours, lengths, font, bar position (top or bottom), alignment, icon position and the animation (none, fade or slide). A tabs module that uses none of them looks exactly as before. The keys apply to the base design only. Hover and conditional design rules do not change the tab bar. Copy design and Paste design carry them. See [Tabs](documentation/modules/layout/tabs.md#tab-bar-design).
