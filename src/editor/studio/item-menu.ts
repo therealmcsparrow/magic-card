@@ -31,7 +31,7 @@ import { applyPlacement } from '../layers/layer-actions';
 import { placementOf } from '../layers/placement-model';
 
 /** The menu's list, or one of its second levels in the same popover. */
-export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete' | 'placement';
+export type ItemMenuView = 'main' | 'move' | 'wrap' | 'reset' | 'delete' | 'placement' | 'add' | 'arrange' | 'design' | 'clipboard';
 
 /** Layout modules "Wrap in layout" offers, in this order. */
 export const WRAP_TYPES = ['vertical', 'horizontal', 'row', 'tabs', 'slider-layout'] as const;
@@ -52,6 +52,8 @@ interface Entry {
   kbd?: [string, string];
   /** Opens a second level instead of acting (the menu stays open). */
   view?: ItemMenuView;
+  /** Goes back one level (Back, Cancel) instead of acting. */
+  back?: boolean;
   /** The second level is a list of choices (aria-haspopup, a chevron); confirms are not. */
   sub?: boolean;
   /** Where focus goes after the action: back to the origin (default) or to the new selection. */
@@ -108,6 +110,9 @@ export class ItemMenu implements ReactiveController {
   view: ItemMenuView = 'main';
   private readonly _pop: MenuPopover;
   private _focusFirst = false;
+  /** The levels above the open one (a submenu goes back to where it was opened from) and the row that opened it. */
+  private _trail: Array<{ view: ItemMenuView; opener: string }> = [];
+  private _focusLabel: string | null = null;
   /** Copy YAML fallback: the text to copy by hand (a dialog), and where focus goes after it. */
   private _copy: { text: string; title: string } | null = null;
   private _origin: HTMLElement | null = null;
@@ -118,6 +123,7 @@ export class ItemMenu implements ReactiveController {
       onClose: () => {
         this.sel = null;
         this.view = 'main';
+        this._trail = [];
       },
       align: opts.surface === 'tree' ? 'end' : 'start',
       fixedFallback: true,
@@ -150,6 +156,7 @@ export class ItemMenu implements ReactiveController {
     this._pop.close(false);
     this.sel = sel;
     this.view = view;
+    this._trail = [];
     this._origin = at.returnFocus ?? trigger;
     this._pop.openAt(trigger, at);
   }
@@ -159,21 +166,76 @@ export class ItemMenu implements ReactiveController {
     else {
       this.sel = null;
       this.view = 'main';
+      this._trail = [];
     }
   }
 
-  /** Switch between the main list and a second level; focus lands on its first item. */
-  setView(view: ItemMenuView): void {
+  /** Open a second level from the row labelled `opener`; focus lands on its first action. */
+  setView(view: ItemMenuView, opener = ''): void {
+    this._trail.push({ view: this.view, opener });
     this.view = view;
     this._focusFirst = true;
+    this._focusLabel = null;
     this.host.requestUpdate();
   }
+
+  /** One level back, focus on the row that opened the level. False when this level was the first one shown. */
+  back(): boolean {
+    const prev = this._trail.pop();
+    if (!prev) {
+      if (this.view === 'main') return false;
+      this.view = 'main';
+      this._focusFirst = true;
+      this.host.requestUpdate();
+      return true;
+    }
+    this.view = prev.view;
+    this._focusFirst = true;
+    this._focusLabel = prev.opener || null;
+    this.host.requestUpdate();
+    return true;
+  }
+
+  /** Escape, ArrowLeft and Backspace go back inside a submenu (Left/Right swap in RTL); ArrowRight opens a submenu row. */
+  private _onKey = (e: KeyboardEvent): void => {
+    const inSub = this._trail.length > 0;
+    const rtl = getComputedStyle(this.host).direction === 'rtl';
+    const open = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const close = rtl ? 'ArrowRight' : 'ArrowLeft';
+    if (inSub && (e.key === 'Escape' || e.key === close || e.key === 'Backspace') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.back();
+      return;
+    }
+    if (e.key === open) {
+      const active = (this.host.shadowRoot?.activeElement ?? null) as HTMLElement | null;
+      if (active?.getAttribute('aria-haspopup') === 'menu' && !active.hasAttribute('disabled')) {
+        e.preventDefault();
+        e.stopPropagation();
+        active.click();
+        return;
+      }
+    }
+    // Backspace is a tree shortcut for delete: never while a menu is open
+    if (e.key === 'Backspace') {
+      e.stopPropagation();
+      return;
+    }
+    this._pop.onKeydown(e);
+  };
 
   hostUpdated(): void {
     if (this._focusFirst) {
       this._focusFirst = false;
       this._pop.position();
-      this.host.shadowRoot?.querySelector<HTMLElement>('.item-menu [role="menuitem"]:not([disabled])')?.focus({ preventScroll: true });
+      const items = Array.from(this.host.shadowRoot?.querySelectorAll<HTMLElement>('.item-menu [role="menuitem"]:not([disabled])') ?? []);
+      const opener = this._focusLabel;
+      this._focusLabel = null;
+      const hit = opener ? items.find((b) => b.textContent?.trim() === opener) : undefined;
+      // a submenu opens on its first action, not on Back (Enter, Enter would undo itself)
+      const first = items[0]?.hasAttribute('data-back') ? items[1] ?? items[0] : items[0];
+      (hit ?? first)?.focus({ preventScroll: true });
     }
     const dlg = this.host.shadowRoot?.querySelector<HTMLDialogElement>('dialog.copy-dlg');
     if (dlg && this._copy && !dlg.open) {
@@ -341,8 +403,12 @@ export class ItemMenu implements ReactiveController {
   }
 
   private _run(e: Entry): void {
+    if (e.back) {
+      this.back();
+      return;
+    }
     if (e.view) {
-      this.setView(e.view);
+      this.setView(e.view, e.label);
       return;
     }
     this._pop.close(e.focus === undefined);
@@ -374,8 +440,12 @@ export class ItemMenu implements ReactiveController {
     const sm = this._sm!;
     const linked = !!config.template;
     const name = this._name(config, sel);
-    const back: Entry = { icon: 'mdi:arrow-left', label: t('Back'), run: () => undefined, view: 'main' };
-    const cancel: Entry = { icon: 'mdi:arrow-left', label: t('Cancel'), run: () => undefined, view: 'main' };
+    const back: Entry = { icon: 'mdi:arrow-left', label: t('Back'), run: () => undefined, back: true };
+    const cancel: Entry = { icon: 'mdi:arrow-left', label: t('Cancel'), run: () => undefined, back: true };
+    const submenu = (icon: string, label: string, view: ItemMenuView, disabled = false, why?: string): Entry => ({
+      icon, label, run: () => undefined, view, sub: true, disabled, why,
+    });
+    const sub = (title: string, ...groups: Entry[][]) => ({ label: `${t('{name} actions', { name })}, ${title}`, groups: [[back], ...groups] });
     const rename: Entry = { icon: 'mdi:rename-box', label: t('Rename'), run: () => this.opts.rename(sel), kbd: KBD.rename, focus: 'none' };
     const yaml: Entry = { icon: 'mdi:code-braces', label: t('Copy YAML'), run: () => void this._copyYaml(sel, name) };
     const noDesign = !readDesignClipboard();
@@ -436,6 +506,7 @@ export class ItemMenu implements ReactiveController {
     if (sel.kind === 'row') {
       if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
       const r = sel.row;
+      if (this.view === 'design') return sub(t('Design'), designItems({ row: r }), [hide(), yaml], reset(t('Reset row to template…')));
       return {
         label: actionsLabel,
         groups: [
@@ -443,13 +514,10 @@ export class ItemMenu implements ReactiveController {
             { icon: 'mdi:table-column-plus-after', label: t('Add column'), run: () => { sm.addColumn(r); this._select({ kind: 'column', row: r, col: sm.getConfig().rows[r].columns.length - 1 }); }, focus: 'selection' },
             { icon: 'mdi:content-duplicate', label: t('Duplicate row'), run: () => sm.duplicateRow(r), kbd: KBD.dup, focus: 'selection' },
             rename,
-          ],
-          [yaml, ...designItems({ row: r })],
-          [hide(), ...reset(t('Reset row to template…'))],
-          [
             { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveRow(r, r - 1), disabled: r === 0, kbd: KBD.up, focus: 'none' },
             { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveRow(r, r + 1), disabled: r >= config.rows.length - 1, kbd: KBD.down, focus: 'none' },
           ],
+          [submenu('mdi:palette-outline', t('Design'), 'design')],
           [{ icon: 'mdi:delete-outline', label: t('Delete row'), run: () => this._deleteRow(r), danger: true, kbd: KBD.del, focus: 'none' }],
         ],
       };
@@ -458,16 +526,19 @@ export class ItemMenu implements ReactiveController {
     if (sel.kind === 'column') {
       if (this.view === 'reset') return resetView(t('Reset {name} to the template? Your changes to it are lost.', { name }));
       const only = row.columns.length <= 1;
+      const colLabel = t('Row {row} column {column} actions', { row: sel.row + 1, column: sel.col + 1 });
+      if (this.view === 'design') {
+        return { label: `${colLabel}, ${t('Design')}`, groups: [[back], designItems({ row: sel.row, col: sel.col }), [hide(), yaml], reset(t('Reset column to template…'))] };
+      }
       return {
-        label: t('Row {row} column {column} actions', { row: sel.row + 1, column: sel.col + 1 }),
+        label: colLabel,
         groups: [
           [
             { icon: 'mdi:plus', label: t('Add module'), run: () => this._fire('add-module', { rowIndex: sel.row, colIndex: sel.col }), focus: 'none' },
             paste(t('Paste module'), rowColumn(sel.row, sel.col)),
             rename,
           ],
-          [yaml, ...designItems({ row: sel.row, col: sel.col })],
-          [hide(), ...reset(t('Reset column to template…'))],
+          [submenu('mdi:palette-outline', t('Design'), 'design')],
           [{
             icon: 'mdi:delete-outline', label: t('Delete column'), danger: true, kbd: KBD.del, focus: 'selection',
             run: () => sm.deleteColumn(sel.row, sel.col), disabled: only, why: only ? t('A row needs one column') : undefined,
@@ -495,6 +566,7 @@ export class ItemMenu implements ReactiveController {
         };
       }
       const target = { row: sel.row, col: sel.col, module: sel.module, child: sel.child, slot: sel.slot };
+      if (this.view === 'design') return sub(t('Design'), ...(isTabs ? [] : [designItems(target)]), [hide(isTabs), yaml]);
       return {
         label: actionsLabel,
         groups: [
@@ -502,13 +574,10 @@ export class ItemMenu implements ReactiveController {
             { icon: 'mdi:plus', label: t('Add module'), run: () => this._addChild(ownerSel, sel.slot), focus: 'none' },
             paste(t('Paste module'), `${moduleTitle(owner)} · ${name}`),
             rename,
-          ],
-          isTabs ? [yaml] : [yaml, ...designItems(target)],
-          [hide(isTabs)],
-          [
             { icon: 'mdi:arrow-up', label: t('Move up'), run: () => this._moveSlot(sel, -1), disabled: sel.slot <= 0, kbd: KBD.up, focus: 'selection' },
             { icon: 'mdi:arrow-down', label: t('Move down'), run: () => this._moveSlot(sel, 1), disabled: sel.slot >= slots.length - 1, kbd: KBD.down, focus: 'selection' },
           ],
+          [submenu('mdi:palette-outline', t('Design'), 'design')],
           [{
             icon: 'mdi:delete-outline', label: isTabs ? t('Delete tab') : t('Delete column'), danger: true, kbd: KBD.del,
             run: del, view: n && !only ? 'delete' : undefined, focus: 'none',
@@ -537,15 +606,12 @@ export class ItemMenu implements ReactiveController {
       ...(at !== 'flow' ? [{ icon: 'mdi:view-sequential-outline', label: t('Back to normal'), run: () => void applyPlacement(sm, sel, 'flow'), focus: 'selection' as const }] : []),
     ];
     if (this.view === 'placement') return { label: actionsLabel, groups: [[cancel], place] };
-    if (this.view === 'move') return { label: actionsLabel, groups: [[back], targets] };
+    if (this.view === 'move') return sub(t('Move to…'), targets);
     if (this.view === 'wrap') {
-      return {
-        label: actionsLabel,
-        groups: [[back], WRAP_TYPES.map((type) => {
-          const meta = ModuleRegistry.get(type)?.metadata;
-          return { icon: meta?.icon || 'mdi:view-grid-outline', label: moduleDisplayName({ type } as CardModule), run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
-        })],
-      };
+      return sub(t('Wrap in layout'), WRAP_TYPES.map((type) => {
+        const meta = ModuleRegistry.get(type)?.metadata;
+        return { icon: meta?.icon || 'mdi:view-grid-outline', label: moduleDisplayName({ type } as CardModule), run: () => sm.wrapInLayout(sel, type), focus: 'selection' } as Entry;
+      }));
     }
     const index = nested ? sel.child![sel.child!.length - 1].index : sel.module;
     const list = nested
@@ -564,24 +630,43 @@ export class ItemMenu implements ReactiveController {
       disabled: locked, why: locked ? t(TEMPLATE_ID_HINT) : undefined,
     }] : [];
     const where = nested ? describeSelection(config, parentSelection(sel, config)).title : rowColumn(sel.row, sel.col);
+    const adds = [...add, ...connect];
+    if (this.view === 'add') return sub(t('Add'), adds);
+    if (this.view === 'arrange') {
+      return sub(t('Arrange'),
+        [
+          { icon: 'mdi:folder-move-outline', label: t('Move to…'), run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : t('No other column to move to') },
+          { icon: 'mdi:group', label: t('Wrap in layout'), run: () => undefined, view: 'wrap', sub: true },
+        ],
+        place);
+    }
+    if (this.view === 'design') {
+      return sub(t('Design'),
+        designItems({ row: sel.row, col: sel.col, module: sel.module, child: sel.child }),
+        [hide(), ...reset(nested ? t('Reset layout to template…') : t('Reset to template…'))]);
+    }
+    if (this.view === 'clipboard') {
+      return sub(t('Copy and paste'), [
+        { icon: 'mdi:content-copy', label: t('Copy module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('{name} copied', { name })); } },
+        paste(t('Paste module after'), where),
+        yaml,
+      ]);
+    }
     return {
       label: actionsLabel,
       groups: [
-        [{ icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' }, ...add, ...connect, rename],
-        place,
         [
-          { icon: 'mdi:content-copy', label: t('Copy module'), run: () => { if (sm.copyModule(sel)) this.opts.status(t('{name} copied', { name })); } },
-          paste(t('Paste module after'), where),
+          { icon: 'mdi:pencil-outline', label: t('Edit'), run: () => this._edit(sel), focus: 'none' },
+          rename,
           { icon: 'mdi:content-duplicate', label: t('Duplicate'), run: () => sm.duplicateModule(sel.row, sel.col, sel.module, sel.child), kbd: KBD.dup, focus: 'selection' },
-          { icon: 'mdi:group', label: t('Wrap in layout'), run: () => undefined, view: 'wrap', sub: true },
-          yaml,
-        ],
-        designItems({ row: sel.row, col: sel.col, module: sel.module, child: sel.child }),
-        [hide(), ...reset(nested ? t('Reset layout to template…') : t('Reset to template…'))],
-        [
           { icon: 'mdi:arrow-up', label: t('Move up'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, -1, sel.child), disabled: index <= 0, kbd: KBD.up, focus: 'selection' },
           { icon: 'mdi:arrow-down', label: t('Move down'), run: () => sm.moveModuleBy(sel.row, sel.col, sel.module, 1, sel.child), disabled: index >= count - 1, kbd: KBD.down, focus: 'selection' },
-          { icon: 'mdi:folder-move-outline', label: t('Move to…'), run: () => undefined, view: 'move', sub: true, disabled: !targets.length, why: targets.length ? undefined : t('No other column to move to') },
+        ],
+        [
+          ...(adds.length ? [submenu('mdi:plus', t('Add'), 'add')] : []),
+          submenu('mdi:arrange-bring-forward', t('Arrange'), 'arrange'),
+          submenu('mdi:palette-outline', t('Design'), 'design'),
+          submenu('mdi:content-copy', t('Copy and paste'), 'clipboard'),
         ],
         [{ icon: 'mdi:delete-outline', label: t('Delete'), run: () => this._deleteModule(sel), danger: true, kbd: KBD.del, focus: 'none' }],
       ],
@@ -600,6 +685,7 @@ export class ItemMenu implements ReactiveController {
       aria-haspopup=${e.sub ? 'menu' : nothing}
       aria-keyshortcuts=${e.kbd?.[1] ?? nothing}
       data-kbd=${e.kbd?.[0] ?? nothing}
+      data-back=${e.back && e.label === t('Back') ? '' : nothing}
       ?disabled=${e.disabled}
       @click=${() => this._run(e)}
     ><ha-icon icon=${e.icon}></ha-icon>${e.label}</button>`;
@@ -612,7 +698,7 @@ export class ItemMenu implements ReactiveController {
     const model = this.isOpen && sel && sm ? this._model(sm.getConfig(), sel) : null;
     const groups = model?.groups.filter((g) => g.length) ?? [];
     const menu = model
-      ? html`<div class="menu item-menu" role="menu" aria-label=${model.label} aria-describedby=${model.note ? 'menu-note' : nothing} @keydown=${this._pop.onKeydown}>
+      ? html`<div class="menu item-menu" role="menu" aria-label=${model.label} aria-describedby=${model.note ? 'menu-note' : nothing} @keydown=${this._onKey}>
           ${model.note ? html`<p class="menu-note" id="menu-note">${model.note}</p>` : nothing}
           ${groups.map((g, i) => html`${i ? html`<hr />` : nothing}${g.map((e) => this._renderEntry(e))}`)}
         </div>`
