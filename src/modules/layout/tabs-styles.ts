@@ -18,6 +18,8 @@ const DISABLED = `${TAB}[aria-disabled='true']`;
 const HOVERED = `${TAB}:hover:not(.active):not([aria-disabled='true'])`;
 /** The studio sets this on one tab to show the Hover look without a pointer. */
 const FORCED = `${TAB}[data-mc-force='hover']:not(.active):not([aria-disabled='true'])`;
+/** The studio sets this on one tab to show the Disabled look; the tab's own aria-disabled is never written. */
+const FORCED_OFF = `${TAB}[data-mc-force='disabled']:not(.active)`;
 /** The icon element of a tab: <ha-icon>, or <mc-svg-icon> when it draws effects or an own icon. */
 const ICONS = (sel: string): string[] => [`${sel} ha-icon`, `${sel} mc-svg-icon`];
 
@@ -103,7 +105,7 @@ const stateRules = (selector: string, p: string, name: string): string =>
   ).join('');
 
 // A disabled tab is dimmed and shows no pointer or press movement, with or without a tab_ key; tab_disabled.tab_opacity replaces the dimming.
-const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default;transform:none}`;
+const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default;transform:none}.mc-tabs[data-style]${FORCED_OFF}{opacity:.5;cursor:default;transform:none}`;
 // Hover only where there is a pointer.
 // Its animations (tabs-anim.ts) play on top of the tab's own list; the leaked lists of the module around are reset.
 const ANIM_RESET = `.mc-tabs[data-style][data-mc-tab~='tab-anim']${TAB}{--mc-anim-m:none;--mc-anim-i:none;--mc-anim-n:none}`;
@@ -136,5 +138,5 @@ const MOTION =
 
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(
-  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + ICON_RULES + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + FOCUS + NESTED + MOTION,
+  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + ICON_RULES + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + stateRules(FORCED_OFF, 'd', 'd') + FOCUS + NESTED + MOTION,
 );

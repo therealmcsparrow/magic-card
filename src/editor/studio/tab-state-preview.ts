@@ -12,8 +12,8 @@ const listeners = new Set<(view: string) => void>();
 /** The state an "Editing design for" value stands for, or null for Default and a rule's own design. */
 export function stateOfView(v: string): TabPreviewState | null {
   if (v === '__hover__') return 'hover';
-  if (v.includes('tab_active')) return 'active';
-  if (v.includes('tab_disabled')) return 'disabled';
+  if (v === '__tab_active__' || v.endsWith('::tab_active')) return 'active';
+  if (v === '__tab_disabled__' || v.endsWith('::tab_disabled')) return 'disabled';
   return null;
 }
 
@@ -31,28 +31,21 @@ export function onStatePreview(fn: (view: string) => void): () => void {
 }
 
 const MARK = 'data-mc-force';
-const FORCED_OFF = 'data-mc-forced-off';
 
 /**
- * Applies `state` to the tabs module inside `root` (its canvas wrapper): Hover is shown on the first
- * tab that is not active, Disabled on the first that is not active or disabled already. Earlier marks
+ * Applies `state` to the tabs module inside `root` (its canvas wrapper): Hover and Disabled are marked on the first
+ * tab that is not active or disabled. Earlier marks
  * go first. Returns the state that is showing, for the chip.
  */
 export function applyTabState(root: ParentNode, state: TabPreviewState | null): TabPreviewState | null {
   const buttons = [...(root.querySelector('.mc-tabs > .mc-tabs-header')?.querySelectorAll<HTMLElement>(':scope > .mc-tab-button') ?? [])];
   for (const b of buttons) {
     b.removeAttribute(MARK);
-    if (b.hasAttribute(FORCED_OFF)) {
-      b.removeAttribute(FORCED_OFF);
-      b.removeAttribute('aria-disabled');
-    }
   }
   if (!state) return null;
   const free = buttons.find((b) => !b.classList.contains('active') && b.getAttribute('aria-disabled') !== 'true');
-  if (state === 'hover') free?.setAttribute(MARK, 'hover');
-  if (state === 'disabled' && !buttons.some((b) => b.getAttribute('aria-disabled') === 'true' && !b.classList.contains('active'))) {
-    free?.setAttribute('aria-disabled', 'true');
-    free?.setAttribute(FORCED_OFF, '');
-  }
+  // a tab that is disabled already shows the state itself
+  const shown = state === 'disabled' && buttons.some((b) => b.getAttribute('aria-disabled') === 'true' && !b.classList.contains('active'));
+  if (state !== 'active' && !shown) free?.setAttribute(MARK, state);
   return state;
 }
