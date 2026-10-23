@@ -8,6 +8,8 @@ import { ForecastView } from '../advanced/forecast-view';
 import { VideoBgView, McBgVideo } from '../advanced/video-bg-view';
 import { WeatherView } from '../advanced/weather-view';
 import { TabsView } from '../layout/tabs-view';
+import { tabsStyles } from '../layout/tabs-styles';
+import { weatherIconStyles } from '../../icons/weather-icons';
 import { ClockView } from '../advanced/clock-view';
 import { ImageView } from '../content/image-view';
 
@@ -21,7 +23,7 @@ declare const __MC_BUILD_VERSION__: string | undefined;
 
 export const BUILD: string = typeof __MC_BUILD_VERSION__ === 'string' ? __MC_BUILD_VERSION__ : VERSION;
 
-export { weatherIconStyles as styles } from '../../icons/weather-icons';
+export const styles = [weatherIconStyles, tabsStyles];
 
 export function install(): void {
   if (!customElements.get('mc-embedded-card')) customElements.define('mc-embedded-card', EmbeddedCard);

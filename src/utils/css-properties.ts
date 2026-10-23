@@ -107,6 +107,7 @@ const bo = (key: string, label: MessageId, type: CssPropertyType, extra: Paramet
 const LABEL = { hideForVariant: ['icon-only'] };
 const LENGTH = ['px', 'em', 'rem'];
 const PCT = [...LENGTH, '%'];
+const TAB_LENGTHS_HELP = lm('One to four lengths, for example 4px 8px.');
 
 /** Design keys that only matter once another key is set (key → the key it depends on). */
 export const DEPENDENT_OPTIONS: Record<string, string> = {
@@ -376,6 +377,53 @@ export const CSS_SECTORS: CssSector[] = [
     ],
   },
 
+  // 9b. Tab bar: the tab_ keys a tabs module reads (src/modules/layout/tabs-look.ts); virtual and base design only
+  {
+    id: 'tabs-bar',
+    name: lm('Tab bar'),
+    icon: 'mdi:tab',
+    modules: ['tabs'],
+    properties: [
+      option('tab_bar_position', lm('Bar position'), 'segmented', {
+        options: [{ label: lm('Top'), value: 'top' }, { label: lm('Bottom'), value: 'bottom' }],
+        defaultValue: 'top',
+      }),
+      option('tab_align', lm('Tab alignment'), 'segmented', {
+        options: [{ label: lm('Start'), value: 'start' }, { label: lm('Centre'), value: 'center' }, { label: lm('End'), value: 'end' }, { label: lm('Stretch'), value: 'stretch' }],
+        defaultValue: 'start',
+      }),
+      option('tab_bar_background', lm('Bar background'), 'color'),
+      option('tab_bar_border_color', lm('Bar border colour'), 'color'),
+      option('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'] }),
+      option('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP }),
+      option('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT }),
+      option('tab_color', lm('Tab text colour'), 'color'),
+      option('tab_background', lm('Tab background'), 'color'),
+      option('tab_font_size', lm('Tab font size'), 'unit', { units: PCT }),
+      option('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
+      option('tab_font_family', lm('Tab font family'), 'font'),
+      option('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS }),
+      option('tab_border_color', lm('Tab border colour'), 'color'),
+      option('tab_border_width', lm('Tab border width'), 'unit', { units: ['px'] }),
+      option('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP }),
+      option('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP }),
+      option('tab_active_color', lm('Active tab text colour'), 'color'),
+      option('tab_active_background', lm('Active tab background'), 'color'),
+      option('tab_indicator_color', lm('Indicator colour'), 'color', { help: lm('Underline line for Default and Underline, pill fill for Pills.') }),
+      option('tab_icon_position', lm('Tab icon position'), 'segmented', {
+        options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
+        defaultValue: 'left',
+        help: lm('Left and right follow the text direction.'),
+      }),
+      option('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'] }),
+      option('tab_animation', lm('Tab switch animation'), 'segmented', {
+        options: [{ label: lm('None'), value: 'none' }, { label: lm('Fade'), value: 'fade' }, { label: lm('Slide'), value: 'slide' }],
+        defaultValue: 'none',
+        help: lm('Ignored when the viewer prefers reduced motion.'),
+      }),
+    ],
+  },
+
   // 10. Button icon and text: the part keys a button reads (src/utils/button-parts.ts); virtual, so hover and rules carry them
   {
     id: 'button-content',
@@ -440,7 +488,7 @@ export interface DesignGroup {
 /** The Design tab's headed groups, in display order. Every CSS sector belongs to exactly one group. */
 export const DESIGN_GROUPS: DesignGroup[] = [
   { id: 'layout', name: lm('Layout'), entries: ['spacing', 'positioning', 'flexbox', 'grid'], defaultOpen: true },
-  { id: 'style', name: lm('Style'), entries: ['backgrounds', 'borders', 'typography', 'button-content', 'shape', 'value-background'], defaultOpen: true },
+  { id: 'style', name: lm('Style'), entries: ['backgrounds', 'borders', 'typography', 'button-content', 'tabs-bar', 'shape', 'value-background'], defaultOpen: true },
   { id: 'effects', name: lm('Effects'), entries: ['ring', 'transitions'], defaultOpen: false },
   { id: 'advanced', name: lm('Advanced'), entries: ['lists-tables', CUSTOM_CSS_ENTRY], defaultOpen: false },
 ];

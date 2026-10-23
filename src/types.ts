@@ -525,6 +525,31 @@ export interface DesignConfig {
   label_text_transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
   state_font_size?: string;
 
+  // Tab bar; a tabs module reads them, see src/modules/layout/tabs-look.ts (base design only)
+  tab_bar_background?: string;
+  tab_bar_border_width?: string;
+  tab_bar_border_color?: string;
+  tab_bar_padding?: string;
+  tab_bar_position?: 'top' | 'bottom';
+  tab_align?: 'start' | 'center' | 'end' | 'stretch';
+  tab_gap?: string;
+  tab_color?: string;
+  tab_background?: string;
+  tab_active_color?: string;
+  tab_active_background?: string;
+  tab_indicator_color?: string;
+  tab_border_width?: string;
+  tab_border_color?: string;
+  tab_radius?: string;
+  tab_padding?: string;
+  tab_font_family?: string;
+  tab_font_size?: string;
+  tab_font_weight?: string;
+  tab_text_transform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
+  tab_icon_position?: 'left' | 'right' | 'above' | 'below';
+  tab_icon_size?: string;
+  tab_animation?: 'none' | 'fade' | 'slide';
+
   // Hover
   hover?: Partial<DesignConfig>;
 

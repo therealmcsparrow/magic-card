@@ -1,10 +1,13 @@
 import { html, nothing, TemplateResult } from 'lit';
+import { keyed } from 'lit/directives/keyed.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import type { ModuleView } from '../../contracts/lazy-module';
 import { hasIconFx, renderIcon } from '../../icons/render-icon';
 import { CardModule, HomeAssistant, TabsModuleConfig } from '../../types';
 import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
+import { tabLook } from './tabs-look';
 
 export class TabsView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -45,8 +48,8 @@ export class TabsView implements ModuleView {
       queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[p]?.focus());
     };
 
-    return html`
-      <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'}>
+    const look = tabLook(c.design);
+    const header = html`
         <div class="mc-tabs-header" role="tablist">
           ${shown.map((i) => {
             const tab = tabs[i];
@@ -64,10 +67,16 @@ export class TabsView implements ModuleView {
               </button>
             `;
           })}
-        </div>
+        </div>`;
+    const panel = html`
         <div class="mc-tabs-content" role="tabpanel" data-mc-layers=${laid?.layered ? '' : nothing}>
           ${laid ? laid.content : renderEmptySlot(t('Empty tab'))}
-        </div>
+        </div>`;
+    // an animated switch builds the panel afresh per tab, so its entry animation runs; the bar after the panel keeps the focus order
+    const body = look.tokens.some((k) => k.startsWith('anim-')) ? keyed(activeIdx, panel) : panel;
+    return html`
+      <div class="mc-module mc-tabs" data-style=${c.tab_style || 'default'} data-mc-tab=${look.tokens.length ? look.tokens.join(' ') : nothing}
+        style=${look.tokens.length ? styleMap(look.vars) : nothing}>${look.tokens.includes('bottom') ? html`${body}${header}` : html`${header}${body}`}
       </div>
     `;
   }
