@@ -7,7 +7,7 @@ import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
 import { tabLook } from './tabs-look';
-import { resolveTabsDesign } from './tabs-resolve';
+import { MAX_DISABLED_TABS, resolveTabsDesign } from './tabs-resolve';
 
 export class TabsView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -19,7 +19,7 @@ export class TabsView implements ModuleView {
     const shown = tabs.flatMap((t, i) => (ctx?.editMode || !t?.hidden ? [i] : []));
     // the design with the matching rules applied; positions in tab_disabled_tabs count every tab, like active_tab
     const design = resolveTabsDesign(c.design, hass, c.entity);
-    const off = new Set<number>(Array.isArray(design?.tab_disabled_tabs) ? design.tab_disabled_tabs.filter((n): n is number => Number.isInteger(n)) : []);
+    const off = new Set<number>(Array.isArray(design?.tab_disabled_tabs) ? design.tab_disabled_tabs.slice(0, MAX_DISABLED_TABS).filter((n): n is number => Number.isInteger(n)) : []);
     const enabled = shown.filter((i) => !off.has(i));
     // Per card and per module (keyed by its path), so two cards or two tabs modules never share it.
     const state = ctx?.uiState?.<number>('active-tab');
@@ -27,7 +27,7 @@ export class TabsView implements ModuleView {
     const want = Math.trunc(Number(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0));
     // the studio's selected tab stays, so a disabled tab's content can still be edited
     const picked = ctx?.selectedChild?.()?.slot !== undefined;
-    const activeIdx = shown.includes(want) && (picked || !off.has(want) || !enabled.length) ? want : enabled[0] ?? shown[0] ?? 0;
+    const activeIdx = shown.includes(want) && (picked || ctx?.editMode || !off.has(want) || !enabled.length) ? want : enabled[0] ?? shown[0] ?? 0;
     // every tab hidden: no content either
     const activeTab = shown.length ? tabs[activeIdx] : undefined;
 
@@ -37,7 +37,7 @@ export class TabsView implements ModuleView {
     const flips = ctx?.uiState?.<number>('tab-flips');
     const select = (i: number) => (e: Event) => {
       e.stopPropagation();
-      if (!state || !ctx || i === activeIdx || off.has(i)) return;
+      if (!state || !ctx || i === activeIdx || (off.has(i) && !ctx.editMode)) return;
       state.set(i);
       flips?.set((flips.get() ?? 0) + 1);
       ctx.requestUpdate();

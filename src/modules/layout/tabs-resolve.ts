@@ -9,6 +9,8 @@ import type { DisplayCondition, HomeAssistant } from '../../types';
  */
 
 const MAX_RULES = 64;
+/** Most disabled tab positions read from a design. */
+export const MAX_DISABLED_TABS = 64;
 const isObject = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 
 export function resolveTabsDesign(
@@ -45,6 +47,6 @@ export function resolveTabsDesign(
       }
     }
   }
-  if (Array.isArray(merged.tab_disabled_tabs)) merged.tab_disabled_tabs = [...new Set(merged.tab_disabled_tabs)];
+  if (Array.isArray(merged.tab_disabled_tabs)) merged.tab_disabled_tabs = [...new Set(merged.tab_disabled_tabs)].slice(0, MAX_DISABLED_TABS);
   return merged;
 }

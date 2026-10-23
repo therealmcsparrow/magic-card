@@ -77,8 +77,8 @@ const stateRules = (selector: string, p: string, name: string): string =>
     .map(([token, decl]) => `.mc-tabs[data-style][data-mc-tab~='${token}']${selector}{${decl}}`)
     .join('');
 
-// A disabled tab is dimmed and shows no pointer, with or without a tab_ key; tab_disabled.tab_opacity replaces the dimming.
-const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default}`;
+// A disabled tab is dimmed and shows no pointer or press movement, with or without a tab_ key; tab_disabled.tab_opacity replaces the dimming.
+const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default;transform:none}`;
 // Hover only where there is a pointer.
 const HOVER = `@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}`;
 // The keyboard focus ring follows the active tab's border, then its text, then the tab border colour.
