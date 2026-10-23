@@ -98,6 +98,8 @@ export class Studio extends LitElement {
     if (changed.has('stateManager') && this.stateManager !== this._subscribedTo) this._subscribe();
     // The view is read when the studio opens, and again when `lovelace` arrives later.
     if ((changed.has('open') && this.open) || changed.has('lovelace')) this._detect();
+    // every opening and closing starts in editing (here, so it costs no second update)
+    if (changed.has('open')) this._live = false;
   }
 
   private _detect(): void {
@@ -135,7 +137,6 @@ export class Studio extends LitElement {
   }
 
   private _syncOpen(): void {
-    this._live = false;
     this._closeMoreInfo();
     const dlg = this._dialog;
     if (!dlg) return;
@@ -213,6 +214,7 @@ export class Studio extends LitElement {
 
   /** A more-info action in the live card: HA's dialog opens inside the studio, above it. */
   private _onMoreInfo = (e: Event): void => {
+    e.stopPropagation(); // handled here: it must not keep bubbling into HA's dialog
     const host = this._moreInfoHost;
     const entityId = (e as CustomEvent<{ entityId?: string }>).detail?.entityId;
     if (this._live && host && entityId) openMoreInfo(host, this.hass, entityId);
@@ -312,7 +314,7 @@ export class Studio extends LitElement {
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
             <strong>${s.config.name?.trim() || t('Untitled card')}</strong>
-            <mc-template-bar compact .config=${s.config} .hass=${this.hass} ?inert=${live} aria-disabled=${live ? 'true' : nothing} class=${live ? 'dim' : ''}></mc-template-bar>
+            <mc-template-bar compact .config=${s.config} .hass=${this.hass} .disabled=${live} class=${live ? 'dim' : ''}></mc-template-bar>
           </div>
         </div>
         <span class="spacer"></span>

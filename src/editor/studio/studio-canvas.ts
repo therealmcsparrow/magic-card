@@ -28,6 +28,7 @@ import { TEMPLATE_ID_HINT, templateIdMissing } from '../state/flows';
 import { GridRowLike, columnWidthsTemplate, effectiveWidths, widthWeights } from '../../utils/column-widths';
 import { equalizePair, resizePair, stepPair } from './column-resize';
 import { withTemplateAnimations } from '../../services/template-merge';
+import { BLOCKED_KEY, blockNavigation, forwardToDashboard, isNavigationRequest } from './studio-live-actions';
 import { CanvasWidth, OPTION_LABELS, autoWidth } from './view-detect';
 import { t, tx } from '../i18n';
 import { CanvasLayers } from '../layers/canvas-layers';
@@ -261,6 +262,8 @@ export class StudioCanvas extends LitElement {
   private _subscribedTo?: EditorStateManager;
   private _card?: MagicCard;
   private _cardConfig?: MagicCardConfig;
+  /** Whether the config on the card was shaped for live mode (navigation blocked). */
+  private _cardLive = false;
   private _ro?: ResizeObserver;
   private _hoverEl: HTMLElement | null = null;
   private _placeQueued = false;
@@ -379,8 +382,11 @@ export class StudioCanvas extends LitElement {
       card.previewPaused = this._previewPaused;
       this._syncSelection();
     }
-    this._applyPreview();
+    this._syncCard();
     this._queuePlace();
+    // the backdrop stack may be drawn again by the render that follows the mode switch
+    void card.updateComplete.then(() => this._applyPreview());
+    this._applyPreview();
   }
 
   /** Tabs / slider layouts show the tab or slide holding a selected child; flows highlight the selected flow. */
@@ -446,7 +452,8 @@ export class StudioCanvas extends LitElement {
     for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._longPress.cancel, true);
     for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._clearPress, true);
     canvas.addEventListener('pointermove', this._pressMove, true);
-    host.addEventListener('hass-action', this._onHassAction);
+    host.addEventListener('hass-action', this._onForwarded);
+    host.addEventListener('ll-custom', this._onForwarded);
     host.addEventListener('hass-more-info', this._onMoreInfo);
     host.appendChild(card);
     this._observe();
@@ -484,14 +491,16 @@ export class StudioCanvas extends LitElement {
   private _syncCard(): void {
     const card = this._card;
     const config = this._state?.config;
-    if (!card || !config || config === this._cardConfig) return;
+    if (!card || !config || (config === this._cardConfig && this._cardLive === this.live)) return;
     if (config.background_layers !== this._cardConfig?.background_layers) clearStatuses();
     this._cardConfig = config;
+    this._cardLive = this.live;
     // a linked card plays the template's custom animations too (the config holds only its own)
-    const live = { ...withTemplateAnimations(config, this._state?.templateAnimations) };
-    delete live.template;
+    const shown = { ...withTemplateAnimations(config, this._state?.templateAnimations) };
+    delete shown.template;
     try {
-      card.setConfig(live);
+      // live: navigation actions turn into a notice, the editor stays where it is
+      card.setConfig(this.live ? blockNavigation(shown) : shown);
       this._cardError = '';
     } catch (err) {
       this._cardError = err instanceof Error ? err.message : String(err);
@@ -531,9 +540,21 @@ export class StudioCanvas extends LitElement {
     e.stopPropagation();
   };
 
-  /** Events HA cards use to ask the frontend to act: swallowed while editing, passed on while live. */
-  private _onHassAction = (e: Event): void => {
-    if (!this.live) e.stopPropagation();
+  /**
+   * `hass-action` (HA cards embedded in the card) and `ll-custom` (fire-dom-event, browser_mod): the editor
+   * element contains both, so while live they are re-dispatched where the dashboard receives them
+   * (`<home-assistant>` listens for hass-action). Editing swallows them. A navigation never goes out.
+   */
+  private _onForwarded = (e: Event): void => {
+    e.stopPropagation();
+    if (!this.live) return;
+    const detail = (e as CustomEvent<unknown>).detail;
+    const blocked = (detail as Record<string, unknown> | null | undefined)?.[BLOCKED_KEY];
+    if (blocked !== undefined || (e.type === 'hass-action' && isNavigationRequest(detail))) {
+      this.showStatus(t('Navigation is off in Preview'));
+      return;
+    }
+    forwardToDashboard(e.type, detail);
   };
 
   /** More-info never leaves the studio's own dialog: while live the studio opens it inside itself (HA's would sit behind). */
@@ -1287,7 +1308,7 @@ export class StudioCanvas extends LitElement {
       ${this._docked && !live ? html`<div class="bar-dock">${floatBar}</div>` : nothing}
       <div
         class="canvas ${this._connectFrom ? 'connecting' : ''} ${live ? 'live' : ''}"
-        tabindex="0"
+        tabindex=${live ? nothing : '0'}
         role="region"
         aria-label=${live ? t('Canvas, live preview') : t('Canvas, {label} selected', { label })}
         aria-describedby=${live ? nothing : this._connectFrom ? 'connect-hint' : 'canvas-hint'}
@@ -1347,8 +1368,8 @@ export class StudioCanvas extends LitElement {
           remove: html`<kbd>${t('Del')}</kbd>`,
           menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
         })}
-      </p>
-      <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>`}
+      </p>`}
+      <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
       ${this._press ? html`<span class="press-ring" style=${`left:${this._press.x}px;top:${this._press.y}px`} aria-hidden="true"></span>` : nothing}
       ${this._sheet

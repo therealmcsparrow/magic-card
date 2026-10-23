@@ -16,6 +16,8 @@ export class TemplateBar extends LitElement {
   @property({ attribute: false }) hass?: HomeAssistant;
   /** Studio topbar: chips + Manage only, no surface; unlinked state collapses into a "No template" menu chip. */
   @property({ type: Boolean, reflect: true }) compact = false;
+  /** The template chip stays in view but cannot open its menu (the studio's Preview). */
+  @property({ type: Boolean, reflect: true }) disabled = false;
 
   @state() private _menuOpen = false;
 
@@ -60,6 +62,7 @@ export class TemplateBar extends LitElement {
               type="button"
               class="chip manage"
               aria-haspopup="menu"
+              ?disabled=${this.disabled}
               aria-expanded=${this._menuOpen ? 'true' : 'false'}
               @click=${this._toggleMenu}
             >
@@ -94,6 +97,7 @@ export class TemplateBar extends LitElement {
               class="chip is-accent manage"
               title=${t('Template actions')}
               aria-haspopup="menu"
+              ?disabled=${this.disabled}
               aria-expanded=${this._menuOpen ? 'true' : 'false'}
               @click=${this._toggleMenu}
             >
