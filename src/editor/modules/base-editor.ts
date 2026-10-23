@@ -179,9 +179,17 @@ export const renderDefaultDesignTab: ModuleTabRender = (config, hass, onChange, 
     .moduleEntity=${entityFor(config, scope) || ''}
     .moduleType=${config.type || ''}
     .moduleVariant=${(config as { button_style?: string }).button_style || ''}
+    .tabs=${config.type === 'tabs' ? tabsInfo(config) : undefined}
     .onChange=${updateDesign}
   ></mc-design-panel>`;
 };
+
+/** The tab labels and style of a tabs module, for the design panel's Disabled tabs list. */
+function tabsInfo(config: CardModule): { labels: string[]; style?: string } {
+  const c = config as unknown as { tabs?: unknown; tab_style?: unknown };
+  const list = Array.isArray(c.tabs) ? c.tabs : [];
+  return { labels: list.map((x) => (x && typeof x === 'object' && typeof (x as { label?: unknown }).label === 'string' ? (x as { label: string }).label : '')), style: typeof c.tab_style === 'string' ? c.tab_style : undefined };
+}
 
 /** Default renderer per tab; general has none (every ModuleEditor brings its own). */
 export const DEFAULT_TAB_RENDERERS: Partial<Record<EditorTab, ModuleTabRender>> = {

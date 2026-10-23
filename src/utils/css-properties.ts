@@ -39,7 +39,7 @@ import {
 } from './css-property-options';
 import { lm } from '../i18n/labels/mark';
 
-export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'animations' | 'ring' | 'shape' | 'value_bg';
+export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'tab_list' | 'animations' | 'ring' | 'shape' | 'value_bg';
 
 export interface CssPropertyOption {
   label: MessageId;
@@ -71,6 +71,10 @@ export interface CssPropertyDef {
   hideForVariant?: string[];
   /** Read from the module's own design only: not offered in the hover design or in conditional rules. */
   baseOnly?: boolean;
+  /** A tab look field that also shows in the Active tab and Disabled tab designs (and in Hover). */
+  tabState?: boolean;
+  /** Number field bounds: min, max and step. */
+  range?: [number, number, number];
 }
 
 export interface CssSector {
@@ -100,12 +104,14 @@ function option(
   key: string,
   label: MessageId,
   type: CssPropertyType,
-  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly'>> = {},
+  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly' | 'tabState' | 'range'>> = {},
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
-/** A tab bar key: read from the module's own design only. */
-const tb = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { baseOnly: true, ...extra });
+/** A tab bar key: a tabs module reads it from its design, its hover design and its rules. */
+const tb = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, extra);
+/** A tab look key that a tab state (active, disabled, hover) can also set. */
+const ts = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => tb(key, label, type, { hover: true, tabState: true, ...extra });
 /** A button part key: allowed in the hover design and in rules. */
 const bo = (key: string, label: MessageId, type: CssPropertyType, extra: Parameters<typeof option>[3] = {}) => option(key, label, type, { hover: true, ...extra });
 const LABEL = { hideForVariant: ['icon-only'] };
@@ -381,13 +387,14 @@ export const CSS_SECTORS: CssSector[] = [
     ],
   },
 
-  // 9b. Tab bar: the tab_ keys a tabs module reads (src/modules/layout/tabs-look.ts); virtual and base design only
+  // 9b. Tab bar: the tab_ keys a tabs module reads (src/modules/layout/tabs-look.ts); virtual; the state subset also shows in Hover, Active tab and Disabled tab
   {
     id: 'tabs-bar',
     name: lm('Tab bar'),
     icon: 'mdi:tab',
     modules: ['tabs'],
     properties: [
+      tb('tab_disabled_tabs', lm('Disabled tabs'), 'tab_list', { help: lm('Tick the tabs that cannot be opened.') }),
       tb('tab_bar_position', lm('Bar position'), 'segmented', {
         options: [{ label: lm('Top'), value: 'top' }, { label: lm('Bottom'), value: 'bottom' }],
         defaultValue: 'top',
@@ -401,19 +408,17 @@ export const CSS_SECTORS: CssSector[] = [
       tb('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'] }),
       tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP }),
       tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT }),
-      tb('tab_color', lm('Tab text colour'), 'color'),
-      tb('tab_background', lm('Tab background'), 'color'),
+      ts('tab_color', lm('Tab text colour'), 'color'),
+      ts('tab_background', lm('Tab background'), 'color'),
       tb('tab_font_size', lm('Tab font size'), 'unit', { units: PCT }),
-      tb('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
+      ts('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)) }),
       tb('tab_font_family', lm('Tab font family'), 'font'),
       tb('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS }),
-      tb('tab_border_color', lm('Tab border colour'), 'color'),
+      ts('tab_border_color', lm('Tab border colour'), 'color'),
       tb('tab_border_width', lm('Tab border width'), 'unit', { units: ['px'] }),
       tb('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP }),
       tb('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP }),
-      tb('tab_active_color', lm('Active tab text colour'), 'color'),
-      tb('tab_active_background', lm('Active tab background'), 'color'),
-      tb('tab_indicator_color', lm('Indicator colour'), 'color', { help: lm('Underline line for Default and Underline, pill fill for Pills.') }),
+      ts('tab_opacity', lm('Tab opacity'), 'number', { range: [0, 1, 0.1] }),
       tb('tab_icon_position', lm('Tab icon position'), 'segmented', {
         options: [{ label: lm('Left'), value: 'left' }, { label: lm('Right'), value: 'right' }, { label: lm('Above'), value: 'above' }, { label: lm('Below'), value: 'below' }],
         defaultValue: 'left',

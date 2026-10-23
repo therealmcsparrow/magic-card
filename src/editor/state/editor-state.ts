@@ -81,6 +81,36 @@ type LayoutRec = CardModule & {
   active_tab?: number;
 };
 
+/** Which designs of a tabs module had a tab_disabled_tabs list rewritten. */
+interface DisabledTabsTouched {
+  base: boolean;
+  rules: boolean;
+}
+
+const isRec = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/** Rewrites one design's tab_disabled_tabs through `map` (-1 drops a position); true when the design had a list. */
+function remapList(design: unknown, map: (i: number) => number): boolean {
+  if (!isRec(design) || !Array.isArray(design.tab_disabled_tabs)) return false;
+  const next = [...new Set((design.tab_disabled_tabs as unknown[]).map((n) => (typeof n === 'number' ? map(n) : -1)).filter((n) => n >= 0))].sort((a, b) => a - b);
+  if (next.length) design.tab_disabled_tabs = next;
+  else delete design.tab_disabled_tabs;
+  return true;
+}
+
+/** Positions of the disabled tabs follow a moved or deleted tab, in the base design and in every rule. */
+function remapDisabledTabs(layout: LayoutRec, map: (i: number) => number): DisabledTabsTouched {
+  const design = (layout as { design?: unknown }).design;
+  const base = remapList(design, map);
+  let rules = false;
+  const list = isRec(design) && Array.isArray(design.conditional) ? design.conditional : [];
+  for (const rule of list) if (isRec(rule) && remapList(rule.design, map)) rules = true;
+  return { base, rules };
+}
+
+/** The module's own keys a template-linked tabs module marks once its disabled lists moved. */
+const disabledTabsKeys = (t: DisabledTabsTouched): string[] => [...(t.base ? ['design.tab_disabled_tabs'] : []), ...(t.rules ? ['design.conditional'] : [])];
+
 type StateListener = (state: EditorState) => void;
 
 export class EditorStateManager {
@@ -893,8 +923,8 @@ export class EditorStateManager {
     }, () => ({ rowIndex: row, columnIndex: col, moduleIndex: module, childPath: [...(child ?? []).map((s) => ({ ...s })), { slot, index }] }));
   }
 
-  private _tabsEdit(at: [number, number, number, (readonly ChildStep[] | undefined)?], fn: (tabs: TabEntry[], layout: LayoutRec) => boolean | void, select?: (layout: LayoutRec) => EditorPath | null): void {
-    this._editLayout(at, ['tabs'], (layout) => {
+  private _tabsEdit(at: [number, number, number, (readonly ChildStep[] | undefined)?], fn: (tabs: TabEntry[], layout: LayoutRec) => boolean | void, select?: (layout: LayoutRec) => EditorPath | null, extraKeys: () => string[] = () => []): void {
+    this._editLayout(at, () => ['tabs', ...extraKeys()], (layout) => {
       if (layout.type !== 'tabs') return false;
       if (!Array.isArray(layout.tabs)) layout.tabs = [];
       return fn(layout.tabs, layout);
@@ -926,6 +956,7 @@ export class EditorStateManager {
 
   moveTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number, delta: -1 | 1): void {
     const to = slot + delta;
+    let touched: DisabledTabsTouched = { base: false, rules: false };
     this._tabsEdit([row, col, module, child], (tabs, layout) => {
       if (!tabs[slot] || to < 0 || to >= tabs.length) return false;
       const [tab] = tabs.splice(slot, 1);
@@ -934,11 +965,13 @@ export class EditorStateManager {
       const active = Number(layout.active_tab ?? 0);
       if (active === slot) layout.active_tab = to;
       else if (active === to) layout.active_tab = slot;
-    }, () => this._slotPath(row, col, module, child, to));
+      touched = remapDisabledTabs(layout, (i) => (i === slot ? to : i === to ? slot : i));
+    }, () => this._slotPath(row, col, module, child, to), () => disabledTabsKeys(touched));
   }
 
   /** Delete a tab and its modules (their flows go in the same step; never the only tab); the next tab is selected. */
   deleteTab(row: number, col: number, module: number, child: ChildStep[] | undefined, slot: number): void {
+    let touched: DisabledTabsTouched = { base: false, rules: false };
     this._tabsEdit([row, col, module, child], (tabs, layout) => {
       if (!tabs[slot] || tabs.length <= 1) return false;
       tabs.splice(slot, 1);
@@ -948,9 +981,10 @@ export class EditorStateManager {
         if (tabs.length > 1) layout.active_tab = tabs.length - 1;
         else delete layout.active_tab;
       }
+      touched = remapDisabledTabs(layout, (i) => (i === slot ? -1 : i > slot ? i - 1 : i));
     }, (l) => (l.tabs!.length
       ? this._slotPath(row, col, module, child, Math.min(slot, l.tabs!.length - 1))
-      : { rowIndex: row, columnIndex: col, moduleIndex: module, ...(child?.length ? { childPath: child.map((s) => ({ ...s })) } : {}) }));
+      : { rowIndex: row, columnIndex: col, moduleIndex: module, ...(child?.length ? { childPath: child.map((s) => ({ ...s })) } : {}) }), () => disabledTabsKeys(touched));
   }
 
   private _rowEdit(at: [number, number, number, (readonly ChildStep[] | undefined)?], keys: string[] | ((layout: CardModule) => string[]), fn: (cols: NestedColumnConfig[], layout: LayoutRec) => boolean | void, select?: (layout: LayoutRec) => EditorPath | null, coalesce = false): void {

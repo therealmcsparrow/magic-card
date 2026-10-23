@@ -55,6 +55,17 @@ function unitPlaceholder(key: string, design: Record<string, unknown>): string {
 export const TEXT_GRADIENT_MODULES = ['text', 'info', 'markdown'];
 
 const HOVER_VIEW = '__hover__';
+/** The Active tab and Disabled tab designs of a tabs module; a rule's own are `<rule id>::tab_active` and `<rule id>::tab_disabled`. */
+const TAB_ACTIVE_VIEW = '__tab_active__';
+const TAB_DISABLED_VIEW = '__tab_disabled__';
+const STATE_SEP = '::';
+type TabState = 'tab_active' | 'tab_disabled';
+const TAB_STATES: TabState[] = ['tab_active', 'tab_disabled'];
+/** Keys of the old Active tab fields; the first edit in the Active tab view moves them into `tab_active`. */
+const LEGACY_ACTIVE_KEYS = ['tab_active_color', 'tab_active_background', 'tab_indicator_color'];
+
+const isRec = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
+const isStr = (v: unknown): v is string => typeof v === 'string' && v !== '';
 
 /** Label text of an optional message (labels namespace). */
 const lbl = (id: MessageId | undefined): string | undefined => (id === undefined ? undefined : lt(id));
@@ -109,6 +120,16 @@ export class DesignPanel extends LitElement {
         flex: 1;
         font-size: 0.875rem;
         font-weight: 500;
+      }
+      .tab-list {
+        display: grid;
+        gap: 4px;
+      }
+      .tab-list label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 36px;
       }
       .danger-text {
         color: var(--mc-error-ink);
@@ -212,6 +233,8 @@ export class DesignPanel extends LitElement {
    * Writes still go out as `{ hover }`.
    */
   @property({ type: Boolean }) hoverOnly = false;
+  /** A tabs module's tab labels (the Disabled tabs list) and style (where a legacy indicator colour goes). */
+  @property({ attribute: false }) tabs: { labels: string[]; style?: string } = { labels: [] };
 
   @state() private _openSectors = new Set<string>();
   /** Groups the user opened or closed in this panel; the rest follow defaultOpen / a set value. */
@@ -245,6 +268,7 @@ export class DesignPanel extends LitElement {
 
   protected willUpdate(): void {
     if (this.hoverOnly) this._activeView = HOVER_VIEW;
+    else if (this.moduleType !== 'tabs' && this._viewParts().state) this._activeView = 'default';
   }
 
   /** The module's Placement and Layer groups belong to Default only: tell the host which design is being edited (module-editor 1.3.0). */
@@ -252,9 +276,20 @@ export class DesignPanel extends LitElement {
     if (changed.has('_activeView') && !this.hoverOnly) this.dispatchEvent(new CustomEvent('mc-design-view', { bubbles: true, composed: true, detail: { view: this._activeView } }));
   }
 
+  /** The design (Default or a rule id) and the tab state of the current view. */
+  private _viewParts(): { id: string; state?: TabState } {
+    const v = this._activeView;
+    if (v === TAB_ACTIVE_VIEW) return { id: 'default', state: 'tab_active' };
+    if (v === TAB_DISABLED_VIEW) return { id: 'default', state: 'tab_disabled' };
+    const at = v.lastIndexOf(STATE_SEP);
+    const state = at > 0 ? TAB_STATES.find((x) => x === v.slice(at + STATE_SEP.length)) : undefined;
+    return state ? { id: v.slice(0, at), state } : { id: v };
+  }
+
   private _getActiveRule(): ConditionalDesign | undefined {
-    if (this._activeView === 'default') return undefined;
-    return this.design.conditional?.find((r) => r.id === this._activeView);
+    const { id } = this._viewParts();
+    if (id === 'default') return undefined;
+    return this.design.conditional?.find((r) => r.id === id);
   }
 
   private _isHoverView(): boolean {
@@ -267,6 +302,8 @@ export class DesignPanel extends LitElement {
    */
   private _sub(): SubDesign | undefined {
     const rule = this._getActiveRule();
+    const { state } = this._viewParts();
+    if (state && (rule || this._viewParts().id === 'default')) return this._stateSub(state, rule);
     if (rule) return { design: rule.design as Record<string, unknown>, write: (d) => this._updateRule(rule.id, { design: d as DesignConfig }) };
     if (!this._isHoverView()) return undefined;
     return {
@@ -281,6 +318,48 @@ export class DesignPanel extends LitElement {
     };
   }
 
+  /**
+   * The Active tab or Disabled tab design (of Default or of a rule): the state object, with the old
+   * active keys folded in for Active tab. A write puts the object back and removes the old keys in the
+   * same change.
+   */
+  private _stateSub(state: TabState, rule: ConditionalDesign | undefined): SubDesign {
+    const container = (rule ? rule.design : this.design) as Record<string, unknown>;
+    const own = isRec(container[state]) ? (container[state] as Record<string, unknown>) : {};
+    const legacy = state === 'tab_active' ? LEGACY_ACTIVE_KEYS.filter((k) => container[k] !== undefined) : [];
+    const design: Record<string, unknown> = {};
+    if (legacy.length) {
+      if (isStr(container.tab_active_color)) design.tab_color = container.tab_active_color;
+      if (isStr(container.tab_active_background)) design.tab_background = container.tab_active_background;
+    }
+    Object.assign(design, own);
+    const indicator = legacy.length ? container.tab_indicator_color : undefined;
+    if (isStr(indicator)) {
+      if (this.tabs?.style === 'pills') design.tab_background ??= indicator;
+      else design.tab_border_color ??= indicator;
+    }
+    return {
+      design,
+      write: (d) => {
+        const next = { ...d };
+        for (const k of Object.keys(next)) if (next[k] === undefined || next[k] === '') delete next[k];
+        const value = Object.keys(next).length ? next : undefined;
+        if (rule) {
+          const out = { ...rule.design } as Record<string, unknown>;
+          for (const k of legacy) delete out[k];
+          if (value) out[state] = value;
+          else delete out[state];
+          this._updateRule(rule.id, { design: out as DesignConfig });
+          return;
+        }
+        const updates: Record<string, unknown> = { [state]: value };
+        for (const k of legacy) updates[k] = undefined;
+        if (this.hasTemplate) updates._markNotSynced = [state, ...legacy];
+        this.onChange(updates);
+      },
+    };
+  }
+
   private _getActiveDesign(): Record<string, unknown> {
     return this._sub()?.design ?? (this.design as Record<string, unknown>);
   }
@@ -289,7 +368,15 @@ export class DesignPanel extends LitElement {
     const rec = this._getActiveDesign();
     // a gradient in the `background` shorthand shows as the Background color's Gradient
     if (key === 'background_color' && !rec.background_color && parseGradient(rec.background)) return rec.background as string;
-    return (rec[key] as string) || '';
+    const v = rec[key];
+    return typeof v === 'number' ? String(v) : (v as string) || '';
+  }
+
+  /** The stored value of a field's text: the tab opacity is a number from 0 to 1, the rest stays text. */
+  private _fieldValue(key: string, value: string): unknown {
+    if (key !== 'tab_opacity') return value || undefined;
+    const n = Number(value);
+    return value.trim() === '' || Number.isNaN(n) ? undefined : Math.min(1, Math.max(0, n));
   }
 
   /**
@@ -362,11 +449,11 @@ export class DesignPanel extends LitElement {
   private _handlePropertyChange(key: string, value: string): void {
     const sub = this._sub();
     if (sub) {
-      sub.write({ ...sub.design, [key]: value || undefined });
+      sub.write({ ...sub.design, [key]: this._fieldValue(key, value) });
       return;
     }
 
-    const updates: Record<string, unknown> = { [key]: value || undefined };
+    const updates: Record<string, unknown> = { [key]: this._fieldValue(key, value) };
 
     // If this card is linked to a template, mark this property as not_synced
     if (this.hasTemplate) {
@@ -484,7 +571,8 @@ export class DesignPanel extends LitElement {
     // hover is a CSS rule: only CSS properties (no card-drawn options like the ring or border length)
     const hover = this._isHoverView();
     const base = this._activeView === 'default';
-    const properties = all.filter((p) => this._isVisible(p) && !(p.baseOnly && !base) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
+    const state = this._viewParts().state;
+    const properties = all.filter((p) => this._isVisible(p) && !(p.baseOnly && !base) && !(state && !p.tabState) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
     const q = fold(this._searchQuery);
     return properties.filter(
@@ -805,7 +893,7 @@ export class DesignPanel extends LitElement {
             <mc-color-picker
               .value=${value}
               .label=${lt(p.label)}
-              .allowEntity=${this._allowEntityColor && !p.baseOnly}
+              .allowEntity=${this._allowEntityColor && !p.baseOnly && !p.key.startsWith('tab_')}
               .entityColor=${this._entityColor}
               .gradient=${(p.key === 'background_color' && !bgBlock) || (p.key === 'color' && this.target === 'module' && TEXT_GRADIENT_MODULES.includes(this.moduleType)) ? 'css' : ''}
               .gradientNote=${p.key === 'color' ? t('Text uses this gradient as its fill. Older tablets show the first colour.') : ''}
@@ -896,6 +984,30 @@ export class DesignPanel extends LitElement {
         );
       }
 
+      case 'tab_list': {
+        const names = this.tabs?.labels ?? [];
+        if (!names.length) return html``;
+        const raw = this._getActiveDesign()[p.key];
+        const on = new Set(Array.isArray(raw) ? raw.filter((n): n is number => typeof n === 'number') : []);
+        const toggle = (i: number, checked: boolean) => {
+          const next = new Set(on);
+          if (checked) next.add(i);
+          else next.delete(i);
+          const list = [...next].sort((a, b) => a - b);
+          this._handleObjectChange(p.key, list.length ? list : undefined);
+        };
+        return field(
+          html`<div class="tab-list" role="group" aria-label=${lt(p.label)}>
+            ${names.map(
+              (name, i) => html`<label><input type="checkbox" .checked=${on.has(i)} @change=${(e: Event) => toggle(i, (e.target as HTMLInputElement).checked)} /><span>${name || t('Tab {n}', { n: i + 1 })}</span></label>`,
+            )}
+          </div>`,
+          syncIndicator,
+          undefined,
+          lbl(p.help),
+        );
+      }
+
       case 'number':
         return field(
           html`
@@ -903,6 +1015,9 @@ export class DesignPanel extends LitElement {
               class="input"
               id=${id}
               type="number"
+              min=${p.range?.[0] ?? nothing}
+              max=${p.range?.[1] ?? nothing}
+              step=${p.range?.[2] ?? nothing}
               .value=${value}
               @input=${(e: InputEvent) => this._handlePropertyChange(p.key, (e.target as HTMLInputElement).value)}
             />
@@ -1006,7 +1121,13 @@ export class DesignPanel extends LitElement {
   private _renderRulePicker(): TemplateResult {
     const rules = this.design.conditional || [];
     const n = rules.length;
-    const help = this._isHoverView()
+    const isTabs = this.moduleType === 'tabs';
+    const state = this._viewParts().state;
+    const help = state
+      ? state === 'tab_active'
+        ? t('Applied to the active tab, on top of Default and matching rules. Only these settings apply to it.')
+        : t('Applied to the disabled tabs, on top of Default and matching rules. Only these settings apply to them.')
+      : this._isHoverView()
       ? t('Applied while the pointer is over {thing}, on top of Default and matching rules.', { thing: thisTarget(this.target) })
       : n
         ? t('{n, plural, one {# conditional rule} other {# conditional rules}}. Rules override Default only while their conditions match.', { n })
@@ -1026,9 +1147,19 @@ export class DesignPanel extends LitElement {
             >
               <option value="default" ?selected=${this._activeView === 'default'}>${t('Default')}</option>
               <option value=${HOVER_VIEW} ?selected=${this._isHoverView()}>${t('Hover')}</option>
-              ${rules.map(
-                (r, i) => html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('Rule: {name}', { name: r.name || t('Rule {n}', { n: i + 1 }) })}</option>`,
-              )}
+              ${isTabs
+                ? html`<option value=${TAB_ACTIVE_VIEW} ?selected=${this._activeView === TAB_ACTIVE_VIEW}>${t('Active tab')}</option>
+                    <option value=${TAB_DISABLED_VIEW} ?selected=${this._activeView === TAB_DISABLED_VIEW}>${t('Disabled tab')}</option>`
+                : nothing}
+              ${rules.map((r, i) => {
+                const name = r.name || t('Rule {n}', { n: i + 1 });
+                const view = (state?: TabState) => (state ? `${r.id}${STATE_SEP}${state}` : r.id);
+                return html`<option value=${r.id} ?selected=${this._activeView === r.id}>${t('Rule: {name}', { name })}</option>
+                  ${isTabs
+                    ? html`<option value=${view('tab_active')} ?selected=${this._activeView === view('tab_active')}>${t('Rule: {name}, active tab', { name })}</option>
+                        <option value=${view('tab_disabled')} ?selected=${this._activeView === view('tab_disabled')}>${t('Rule: {name}, disabled tab', { name })}</option>`
+                    : nothing}`;
+              })}
             </select>
             <ha-icon icon="mdi:chevron-down"></ha-icon>
           </div>
@@ -1146,7 +1277,7 @@ export class DesignPanel extends LitElement {
     const sectors = group.entries
       .map((id) => CSS_SECTORS.find((s) => s.id === id))
       .filter((s): s is CssSector => !!s && (!s.modules || s.modules.includes(this.moduleType)) && this._filterProperties(s.properties).length > 0);
-    const showCss = group.entries.includes(CUSTOM_CSS_ENTRY) && this._customCssMatches();
+    const showCss = group.entries.includes(CUSTOM_CSS_ENTRY) && this._customCssMatches() && !this._viewParts().state;
     if (!sectors.length && !showCss) return nothing;
 
     const count = this._countGroup(group);
@@ -1199,7 +1330,7 @@ export class DesignPanel extends LitElement {
     const activeRule = this._getActiveRule();
 
     // If active view references a deleted rule, reset to default
-    if (this._activeView !== 'default' && !this._isHoverView() && !activeRule) {
+    if (this._viewParts().id !== 'default' && !this._isHoverView() && !activeRule) {
       this._activeView = 'default';
     }
     const groups = DESIGN_GROUPS.map((g) => this._renderGroup(g));

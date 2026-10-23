@@ -29,6 +29,8 @@ function foreignDesignKeys(type: ModuleType): Set<string> {
   for (const sector of CSS_SECTORS) {
     if (sector.modules && !sector.modules.includes(type)) for (const p of sector.properties) keys.add(p.key);
   }
+  // the tab state objects are not fields of their own: the tabs module is their only reader
+  if (type !== 'tabs') for (const k of ['tab_active', 'tab_disabled', 'tab_disabled_tabs']) keys.add(k);
   return keys;
 }
 
