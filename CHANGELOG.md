@@ -4,6 +4,15 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Every tab setting in each tab state.** The Active tab, Disabled tab and Hover states, and conditional design rules, take the same tab settings as the base look: text colour, background, border colour, border width, border style, corner radius, padding, font family, size, weight and case, letter spacing, icon colour, icon size, shadow and opacity. See [Tab states](documentation/modules/layout/tabs.md#tab-states).
+-   **Tab borders and corners per side.** The tab border width, border style and border colour take one to four values, and so do the bar border width and colour. The tab corner radius takes one to four values, one per corner. The values follow the CSS shorthand order. The editor offers one value for all sides or four separate values.
+-   **Icon when active.** A tab can show a different icon while it is the active tab. Set Icon when active in the tab's settings, or `active_icon` in YAML. Without it the tab keeps its icon. See [Tab icons](documentation/modules/layout/tabs.md#tab-icons).
+-   **Icon animation per state.** `tab_icon_fx` sets the device animation and line draw of the tab icons in the base design and in the Active and Disabled states. Hover does not use it.
+-   **Tab animations per state.** Tab animations are set in the Tab bar section of the Design tab, with the same motion presets as a module. Each state has its own list (base, Active, Disabled and Hover), and each entry can play on the tab button, its icon or its label. Reduced motion and the card's pause button stop them. See [Tab animations](documentation/modules/layout/tabs.md#tab-animations).
+
 ## 2026.10.12-beta.3 (2026-10-23)
 
 ### Added

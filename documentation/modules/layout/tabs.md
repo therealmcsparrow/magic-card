@@ -20,6 +20,7 @@ A row of tab buttons with the content of the selected tab below. Each tab holds 
 | (tree) | `tabs` | list | two tabs | The tabs, in order. Each is an item in the structure tree. |
 | Label (tab) | `tabs[].label` | text | `Tab N` | The text on the tab button. Set it when the tab is selected, or rename the tab in the tree. |
 | Icon (tab) | `tabs[].icon` | icon name | none | An icon before the label. Set it when the tab is selected. |
+| Icon when active (tab) | `tabs[].active_icon` | icon name | none | The icon the tab shows while it is the active tab. Without it, the tab keeps `icon`. Set it when the tab is selected, under Icon when active. |
 | (tree) | `tabs[].modules` | list of modules | empty | The tab's children. |
 
 The General tab of the Tabs module holds Tab style, Default tab and the icon effects, and ends with "Add, rename and order tabs, and add their modules, in the structure tree."
@@ -35,25 +36,31 @@ A conditional design rule can set any of these keys, and the rule's value replac
 | Key | Values | Default | Effect |
 | --- | --- | --- | --- |
 | `tab_bar_background` | colour | not set | Background of the bar. |
-| `tab_bar_border_color` | colour | not set | Colour of the line round the bar. |
-| `tab_bar_border_width` | length from 0 to 32, any unit except % | not set | Width of that line. |
+| `tab_bar_border_color` | 1 to 4 colours, one per side | not set | Colour of the line round the bar. One colour, or one for each side in the order top, right, bottom, left. |
+| `tab_bar_border_width` | 1 to 4 lengths from 0 to 32, no % | not set | Width of that line. One length, or one for each side in the same order. |
 | `tab_bar_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside the bar, round the tabs. |
 | `tab_bar_position` | `top`, `bottom` | `top` | Puts the bar above or below the content. Keyboard focus follows the visual order. |
 | `tab_align` | `start`, `center`, `end`, `stretch` | `start` | Places the tabs in the bar. `stretch` makes the tabs fill the bar. |
 | `tab_gap` | length or %, up to 256 | not set | Space between tabs. |
 | `tab_color` | colour | not set | Text colour of the tabs that are not active. |
 | `tab_background` | colour | not set | Background of each tab that is not active. |
-| `tab_border_color` | colour | not set | Colour of each tab's border. |
-| `tab_border_width` | length from 0 to 32, any unit except % | not set | Width of each tab's border. Set it, or `tab_border_color`, and every tab has a border on all four sides. See [The active line](#the-active-line). |
-| `tab_radius` | 1 to 4 lengths, each up to 999 | not set | Corner radius of each tab. |
+| `tab_border_color` | 1 to 4 colours, one per side | not set | Colour of each tab's border. One colour, or one for each side in the order top, right, bottom, left. |
+| `tab_border_width` | 1 to 4 lengths from 0 to 32, no % | not set | Width of each tab's border, one value or one per side in the same order. Set it, or `tab_border_color`, and every tab has a border on all four sides. See [The active line](#the-active-line). |
+| `tab_border_style` | 1 to 4 words: `none`, `hidden`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` | `solid` | Style of each tab's border, one word or one per side in the same order. |
+| `tab_radius` | 1 to 4 lengths, each up to 999 | not set | Corner radius of each tab. One value for all corners, or one per corner from top left, clockwise: top left, top right, bottom right, bottom left. |
 | `tab_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside each tab. |
 | `tab_font_family` | font names separated by commas | not set | Font of the tab labels. Names may be in quotes. Up to 128 characters. A Google Font chosen in the editor's font picker loads from Google. |
 | `tab_font_size` | length or %, up to 512 | not set | Size of the tab labels. |
 | `tab_font_weight` | `normal`, `bold`, or `100` to `900` in steps of 100 | not set | Weight of the tab labels. |
 | `tab_text_transform` | `none`, `uppercase`, `lowercase`, `capitalize` | not set | Letter case of the tab labels. |
+| `tab_letter_spacing` | `normal`, or one length: px up to 32, em or rem up to 2. Negative values are accepted. | not set | Space between the letters of the tab labels. |
 | `tab_icon_position` | `left`, `right`, `above`, `below` | `left` | Where the icon sits in the tab. `left` and `right` follow the writing direction. |
 | `tab_icon_size` | length, up to 256 px, no % | not set | Size of the tab icons. |
-| `tab_animation` | `none`, `fade`, `slide` | `none` | Animation when the tab switches. It does not play when the viewer prefers reduced motion. |
+| `tab_icon_color` | colour | not set | Colour of the tab icons. |
+| `tab_icon_fx` | `device`, `draw` and `draw_duration`, as in [Icon effects](../../icon-effects/README.md) | not set | Animation of the tab icons. Not in the hover state. See [Tab icons](#tab-icons). |
+| `tab_shadow` | `none`, or one or two shadows, each `[inset] x y [blur [spread]] [colour]`. Up to 128 characters. | not set | Shadow of each tab. |
+| `tab_animation` | `none`, `fade`, `slide` | `none` | Animation of the content when the tab switches. It does not play when the viewer prefers reduced motion. |
+| `tab_animations` | a list of up to 12 animation entries | not set | Animations on the tab buttons, their icons or their labels. See [Tab animations](#tab-animations). |
 | `tab_opacity` | number from 0 to 1 | not set | Opacity of every tab. The active, hover and disabled states can set their own, see [Tab states](#tab-states). |
 
 A length is a plain number, which counts as px, or a number with px, em, rem, %, vw or vh. Negative values are not accepted. A colour is any CSS colour the editor accepts, such as `#1c7ed6`.
@@ -74,23 +81,27 @@ A length is a plain number, which counts as px, or a number with px, em, rem, %,
 
 ## Tab states
 
-A tab can have four looks: the base look from the keys above, and three states that change it. `tab_disabled_tabs`, `tab_active` and `tab_disabled` are set in this section too. Each state takes the same five settings:
+A tab can have four looks: the base look from the keys above, and three states that change it. `tab_disabled_tabs`, `tab_active` and `tab_disabled` are set in this section too.
 
-| Setting | Key | Values |
-| --- | --- | --- |
-| Text colour | `tab_color` | colour |
-| Background | `tab_background` | colour |
-| Border colour | `tab_border_color` | colour |
-| Font weight | `tab_font_weight` | `normal`, `bold`, or `100` to `900` in steps of 100 |
-| Opacity | `tab_opacity` | number from 0 to 1 |
+Each state takes every per-tab key from the [Tab bar design](#tab-bar-design) table: the keys that style a tab, its border, its text, its icon and its effects. The keys for the bar as a whole (`tab_bar_*`, `tab_gap`, `tab_align`, `tab_bar_position`, `tab_icon_position`, `tab_animation`) and `tab_disabled_tabs` are not state keys.
+
+| Group | Keys |
+| --- | --- |
+| Colour and fill | `tab_color`, `tab_background`, `tab_border_color`, `tab_icon_color` |
+| Border and corners | `tab_border_width`, `tab_border_style`, `tab_radius` |
+| Space and text | `tab_padding`, `tab_font_family`, `tab_font_size`, `tab_font_weight`, `tab_text_transform`, `tab_letter_spacing` |
+| Icon | `tab_icon_size`, `tab_icon_fx` (not in the hover state) |
+| Effects | `tab_shadow`, `tab_opacity`, `tab_animations` |
+
+A state with a value the editor does not accept ignores that value and keeps the value of the base look.
 
 The states are:
 
 | State | Where it is set | Applies to |
 | --- | --- | --- |
-| Hover | `hover:` in the design, with the five keys | A tab under the pointer. Only with a pointer that can hover (a mouse or pen), not on a touch screen. Never the active or a disabled tab. |
-| Active | `tab_active:` in the design, with the five keys | The tab that is open. |
-| Disabled | `tab_disabled:` in the design, with the five keys, and `tab_disabled_tabs` | The tabs listed in `tab_disabled_tabs`. |
+| Hover | `hover:` in the design, with the state keys | A tab under the pointer. Only with a pointer that can hover (a mouse or pen), not on a touch screen. Never the active or a disabled tab. |
+| Active | `tab_active:` in the design, with the state keys | The tab that is open. |
+| Disabled | `tab_disabled:` in the design, with the state keys, and `tab_disabled_tabs` | The tabs listed in `tab_disabled_tabs`. |
 
 When a tab is in more than one state, the later one in this list wins: base, then hover, then active, then disabled.
 
@@ -160,6 +171,59 @@ Two things change on an existing card:
 -   A card that sets `tab_indicator_color` and a tab border gives the active tab a coloured border on all four sides, not only a line underneath it.
 -   A card that has a tab border loses the separate underline under the active tab. The active tab's border now carries the active line.
 
+### Tab icons
+
+A tab shows its `active_icon` while it is the active tab. Set it under Icon when active in the tab's settings, or with `active_icon` in YAML. Without it, the tab keeps its `icon`.
+
+```yaml
+- type: tabs
+  tabs:
+    - label: Lights
+      icon: mdi:lightbulb-outline
+      active_icon: mdi:lightbulb-group
+      modules: []
+```
+
+The icon colour is set with `tab_icon_color`, in the base design or in a state. The icon animation is set with `tab_icon_fx`: the device animation and the line draw of [Icon effects](../../icon-effects/README.md), with `draw_duration` for the line draw. It takes only those three keys. It works in the base design and in the Active and Disabled states, not in Hover.
+
+A tab's icon effects are the module's `icon_fx`, merged with the base `tab_icon_fx`, then the Active tab's, then the Disabled tab's. A key set later wins. The viewer's reduced motion setting stops the icon animation.
+
+```yaml
+design:
+  tab_icon_color: "#8a8f98"
+  tab_icon_fx:
+    device: pulse
+  tab_active:
+    tab_icon_color: "#1c7ed6"
+    tab_icon_fx:
+      device: spin
+```
+
+### Tab animations
+
+`tab_animations` plays animations on the tab buttons. Each list takes the same entries as the animation list of a module, with the same presets and settings, and each entry can target the tab button, the tab's icon or its label. See [Animations](../../design/animations.md). The editor offers motion presets only. A list can have up to 12 entries.
+
+Each state has its own list:
+
+-   `tab_animations` in the base design plays on every tab.
+-   `tab_active.tab_animations` plays on the active tab, on top of the base list. It starts when the tab becomes active, and it stops on the tab that was active before.
+-   `tab_disabled.tab_animations` plays on the disabled tabs, on top of the base list.
+-   `hover.tab_animations` plays under the pointer, only with a pointer that can hover. It does not play on the active or a disabled tab.
+
+Custom animations (`custom:` presets) and entries with the On tap trigger do not play on tabs. Reduced motion and the card's pause button stop tab animations, as they stop module animations. The animation code loads when a tab uses an animation. Until it has loaded, the tabs draw without it and update when it is ready.
+
+```yaml
+design:
+  tab_animations:
+    - preset: glow-pulse
+  tab_active:
+    tab_animations:
+      - preset: spin
+        target: icon
+```
+
+The same preset used in the Hover list and in the base or Active list shares its settings for that tab, and the tab button's own settings win. Use a different preset for the hover if its timing must differ. The hover icon animation does nothing on a tab without an icon.
+
 ## Tabs in the tree
 
 Each tab is an item under the Tabs module in the [structure outline](../../editor/structure-outline.md#layout-modules-in-the-tree), with its icon, its label and its children. An Add module row under each tab adds a child to it, and an Add tab row after the last tab adds a tab.
@@ -177,7 +241,7 @@ Moving a tab keeps Default tab on the same tab. After a delete, Default tab is c
 
 -   Clicking a tab switches the content. This does not trigger the tabs module's own actions.
 -   A disabled tab cannot be clicked or reached with the arrow keys. See [Disabled tabs](#disabled-tabs).
--   Tab icons cannot play [icon animations](../../design/quick-icon-animator.md).
+-   Tab icons can play icon effects (`tab_icon_fx`) and icon animations (`tab_animations` with `target: icon`). See [Tab icons](#tab-icons) and [Tab animations](#tab-animations).
 -   With a tab button focused, the left and right arrow keys move between tabs (wrapping round), Home goes to the first and End to the last.
 -   The card remembers the selected tab in memory only. It is not saved: a card that loads again starts at `active_tab`.
 -   In the studio, selecting a child on the canvas or in the layers shows the tab that holds it. Selecting a tab in the layers shows that tab and frames the whole Tabs module.
