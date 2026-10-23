@@ -1,4 +1,4 @@
-import { LitElement, html, css, TemplateResult, PropertyValues } from 'lit';
+import { LitElement, html, css, nothing, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import type { EditorMode, EditorState, HomeAssistant } from '../../types';
 import type { EditorStateManager } from '../state/editor-state';
@@ -12,6 +12,7 @@ import type { StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
 import { countModules } from './selection';
 
+import { closeMoreInfo, feedMoreInfo, openMoreInfo } from './studio-more-info';
 import './studio-canvas';
 import './structure-outline';
 import './template-bar';
@@ -59,6 +60,13 @@ export class Studio extends LitElement {
   /** The user's pick; null = follow the view. Lives as long as this dialog. */
   @state() private _override: CanvasWidthOption | null = null;
   @state() private _showLayers = false;
+  /**
+   * Preview: the canvas card runs live (real actions) and the studio is read-only. Layers, inspector and
+   * the YAML editor stay mounted (hidden), so leaving brings everything back as it was. Never kept across openings.
+   */
+  @state() private _live = false;
+  /** The Escape that left Preview also raises a dialog `cancel` in the same task: that one must not close the studio. */
+  private _swallowCancel = false;
 
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
@@ -116,6 +124,10 @@ export class Studio extends LitElement {
 
   protected updated(changed: PropertyValues): void {
     if (changed.has('open')) this._syncOpen();
+    if (changed.has('hass')) {
+      const host = this._moreInfoHost;
+      if (host) feedMoreInfo(host, this.hass);
+    }
     if (this._focusSel) {
       this.shadowRoot?.querySelector<HTMLElement>(this._focusSel)?.focus();
       this._focusSel = null;
@@ -123,6 +135,8 @@ export class Studio extends LitElement {
   }
 
   private _syncOpen(): void {
+    this._live = false;
+    this._closeMoreInfo();
     const dlg = this._dialog;
     if (!dlg) return;
     if (this.open && !dlg.open) {
@@ -172,7 +186,36 @@ export class Studio extends LitElement {
 
   private _onCancel = (e: Event): void => {
     e.preventDefault();
+    if (this._live || this._swallowCancel) {
+      // Escape in Preview ends Preview, never the studio
+      if (this._live) this._setLive(false);
+      return;
+    }
     this._close();
+  };
+
+  /** Preview on or off. Both ways leave focus on the toggle (the control just used; never on a live card control). */
+  private _setLive(on: boolean): void {
+    if (on === this._live) return;
+    this._live = on;
+    this._focusSel = '.preview-toggle';
+    if (!on) this._closeMoreInfo();
+  }
+
+  private get _moreInfoHost(): HTMLElement | null {
+    return this.shadowRoot?.querySelector<HTMLElement>('.more-info-host') ?? null;
+  }
+
+  private _closeMoreInfo(): void {
+    const host = this._moreInfoHost;
+    if (host) closeMoreInfo(host);
+  }
+
+  /** A more-info action in the live card: HA's dialog opens inside the studio, above it. */
+  private _onMoreInfo = (e: Event): void => {
+    const host = this._moreInfoHost;
+    const entityId = (e as CustomEvent<{ entityId?: string }>).detail?.entityId;
+    if (this._live && host && entityId) openMoreInfo(host, this.hass, entityId);
   };
 
   /** Native close without a cancel event (e.g. the browser's repeated-Escape escape hatch). */
@@ -193,12 +236,13 @@ export class Studio extends LitElement {
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (key === 'z' || key === 'y')) {
       if (isTyping(e)) return; // native text undo
       e.preventDefault();
+      if (this._live) return; // the config is read-only in Preview
       if (key === 'y' || e.shiftKey) sm.redo();
       else sm.undo();
       return;
     }
     if (e.key !== 'Escape') return;
-    if (this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) {
+    if (!this._live && this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) {
       e.preventDefault();
       this._showLayers = false;
       this._focusSel = '.layers-toggle';
@@ -209,7 +253,16 @@ export class Studio extends LitElement {
     const path = e.composedPath();
     const inner = path.slice(0, Math.max(0, path.indexOf(e.currentTarget as EventTarget)));
     const nested = inner.some((t) => t instanceof HTMLDialogElement || (t instanceof HTMLElement && t.getAttribute('role') === 'dialog'));
-    if (nested) e.preventDefault();
+    if (nested) {
+      e.preventDefault();
+      return;
+    }
+    if (this._live) {
+      e.preventDefault();
+      this._setLive(false);
+      this._swallowCancel = true;
+      setTimeout(() => { this._swallowCancel = false; }, 0);
+    }
   };
 
   // ── topbar ──
@@ -237,6 +290,7 @@ export class Studio extends LitElement {
 
   private _renderTopbar(s: EditorState, mode: EditorMode): TemplateResult {
     const sm = this.stateManager!;
+    const live = this._live;
     return html`
       <header class="topbar">
         <div class="grp">
@@ -250,6 +304,7 @@ export class Studio extends LitElement {
             title=${t('Layers')}
             aria-controls="layers"
             aria-expanded=${this._showLayers ? 'true' : 'false'}
+            ?hidden=${live}
             @click=${() => { this._showLayers = !this._showLayers; }}
           >
             <ha-icon icon="mdi:layers-outline"></ha-icon>
@@ -257,7 +312,7 @@ export class Studio extends LitElement {
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
             <strong>${s.config.name?.trim() || t('Untitled card')}</strong>
-            <mc-template-bar compact .config=${s.config} .hass=${this.hass}></mc-template-bar>
+            <mc-template-bar compact .config=${s.config} .hass=${this.hass} ?inert=${live} aria-disabled=${live ? 'true' : nothing} class=${live ? 'dim' : ''}></mc-template-bar>
           </div>
         </div>
         <span class="spacer"></span>
@@ -270,12 +325,13 @@ export class Studio extends LitElement {
                 role="tab"
                 aria-selected=${on ? 'true' : 'false'}
                 tabindex=${on ? '0' : '-1'}
+                ?disabled=${live}
                 @click=${() => sm.setEditorMode(m.id)}
                 @keydown=${(e: KeyboardEvent) => this._onModeKeydown(e, mode)}
               >${t(m.label)}</button>`;
             })}
           </div>
-          <div class="seg devices" role="radiogroup" aria-label=${t('Canvas width')} ?hidden=${mode !== 'form'}>
+          <div class="seg devices" role="radiogroup" aria-label=${t('Canvas width')} ?hidden=${mode !== 'form' && !live}>
             ${OPTION_IDS.map((id) => {
               const on = id === this._width.option;
               return html`<button
@@ -292,11 +348,20 @@ export class Studio extends LitElement {
           </div>
         </div>
         <span class="spacer"></span>
-        <div class="grp">
+        <div class="grp end">
+          <button type="button" class="btn btn-secondary btn-sm preview-toggle" aria-pressed=${live ? 'true' : 'false'}
+            title=${live ? t('Preview (Esc to return)') : t('Preview the card with live actions')}
+            @click=${() => this._setLive(!live)}>
+            <ha-icon icon=${live ? 'mdi:play-circle' : 'mdi:play-circle-outline'}></ha-icon><span class="lbl">${t('Preview')}</span>
+          </button>
+          <span class="live-chip" aria-hidden="true" ?hidden=${!live}>
+            <ha-icon icon="mdi:flash-outline"></ha-icon>${t('Preview: actions are live')}
+          </span>
+          <span class="sr-only" role="status" aria-live="polite">${live ? t('Preview: actions are live') : ''}</span>
           <button type="button" class="icon-btn" aria-label=${t('Undo (Ctrl+Z)')} title=${t('Undo (Ctrl+Z)')}
-            ?disabled=${!sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
+            ?disabled=${live || !sm.canUndo()} @click=${() => sm.undo()}><ha-icon icon="mdi:undo"></ha-icon></button>
           <button type="button" class="icon-btn" aria-label=${t('Redo (Ctrl+Y)')} title=${t('Redo (Ctrl+Y)')}
-            ?disabled=${!sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
+            ?disabled=${live || !sm.canRedo()} @click=${() => sm.redo()}><ha-icon icon="mdi:redo"></ha-icon></button>
           <button type="button" class="btn btn-primary btn-sm" @click=${this._close}>
             <ha-icon icon="mdi:check"></ha-icon>${t('Done')}
           </button>
@@ -313,6 +378,7 @@ export class Studio extends LitElement {
     const sm = this.stateManager;
     const mode: EditorMode = s?.editorMode === 'yaml' ? 'yaml' : 'form';
     const mods = s ? countModules(s.config) : 0;
+    const live = this._live;
 
     return html`
       <dialog
@@ -325,8 +391,8 @@ export class Studio extends LitElement {
         ${s && sm && this.open
           ? html`
               ${this._renderTopbar(s, mode)}
-              <div class="workspace">
-                <nav class="panel layers" id="layers" aria-label=${t('Layers')}>
+              <div class="workspace ${live ? 'live' : ''}">
+                <nav class="panel layers" id="layers" aria-label=${t('Layers')} ?hidden=${live} ?inert=${live}>
                   <div class="panel-title">
                     <h2>${t('Layers')}</h2>
                     <span class="chip is-count">${t('{mods, plural, one {# module} other {# modules}}', { mods })}</span>
@@ -335,22 +401,27 @@ export class Studio extends LitElement {
                     @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
                 </nav>
                 <div class="center">
-                  ${mode === 'form'
-                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} @mc-match-view=${this._onMatchView}
-                        @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}></mc-studio-canvas>`
-                    : html`
-                        <div class="center-alt">
+                  ${mode === 'form' || live
+                    ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} .live=${live} @mc-match-view=${this._onMatchView}
+                        @mc-edit-module=${this._onEditModule} @mc-rename-request=${this._onRenameRequest}
+                        @mc-studio-more-info=${this._onMoreInfo}></mc-studio-canvas>`
+                    : nothing}
+                  ${mode === 'yaml'
+                    ? html`
+                        <div class="center-alt" ?hidden=${live}>
                           <div class="yaml-view"><mc-yaml-editor .stateManager=${sm} .hass=${this.hass}></mc-yaml-editor></div>
                         </div>
-                      `}
+                      `
+                    : nothing}
                 </div>
-                <aside class="panel inspector" aria-label=${t('Inspector')}>
+                <aside class="panel inspector" aria-label=${t('Inspector')} ?hidden=${live} ?inert=${live}>
                   <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
                 </aside>
               </div>
             `
           : html``}
         <slot></slot>
+        <div class="more-info-host"></div>
       </dialog>
     `;
   }
@@ -431,6 +502,34 @@ export class Studio extends LitElement {
       .layers-toggle {
         display: none;
       }
+      .more-info-host {
+        display: contents;
+      }
+
+      /* Preview: the pressed state uses the float bar's accent pair; the icon and the chip carry it too, not colour alone */
+      .preview-toggle[aria-pressed='true'] {
+        background: var(--mc-accent-tint);
+        color: var(--mc-accent-ink);
+      }
+      .live-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        background: var(--mc-warn-tint);
+        color: var(--mc-warn-ink);
+        --mdc-icon-size: 16px;
+      }
+      .live-chip[hidden] {
+        display: none;
+      }
+      mc-template-bar.dim {
+        opacity: 0.5;
+      }
 
       /* workspace */
       .workspace {
@@ -487,6 +586,16 @@ export class Studio extends LitElement {
         overflow: hidden;
       }
 
+      /* Preview: one column, the canvas takes the width; layers and inspector stay mounted, out of the layout */
+      .workspace.live {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .workspace.live .layers,
+      .workspace.live .inspector,
+      .layers-toggle[hidden] {
+        display: none;
+      }
+
       @media (max-width: 1180px) {
         .workspace {
           grid-template-columns: 220px minmax(0, 1fr) 320px;
@@ -511,6 +620,25 @@ export class Studio extends LitElement {
         }
         .layers-toggle {
           display: inline-grid;
+        }
+        /* the label drops out of sight, the button keeps its name; the notice takes its own line under the buttons */
+        .preview-toggle .lbl {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
+        .grp.end {
+          flex-wrap: wrap;
+        }
+        .live-chip {
+          order: 9;
+          flex: 1 0 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       @media (max-height: 480px) {

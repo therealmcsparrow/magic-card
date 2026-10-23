@@ -76,8 +76,6 @@ const KEY_COALESCE_MS = 500;
 const BLOCKED = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'touchstart', 'touchend', 'dblclick', 'contextmenu', 'keyup'];
 /** Event types whose default must survive (scrolling, the tap's click, pointer capture). */
 const KEEP_DEFAULT = new Set(['pointerdown', 'pointerup', 'touchstart', 'touchend']);
-/** Events HA cards use to ask the frontend to act (toggle, more-info). */
-const HA_ACTION_EVENTS = ['hass-action', 'hass-more-info'];
 /** Read-only websocket types allowed by name, besides the get / list / subscribe patterns. */
 const WS_READ_ONLY = new Set([
   'render_template',
@@ -238,6 +236,11 @@ export class StudioCanvas extends LitElement {
   @property({ attribute: false }) stateManager?: EditorStateManager;
   @property({ attribute: false }) hass?: HomeAssistant;
   @property({ attribute: false }) width: CanvasWidth = autoWidth({ kind: 'masonry', reason: '' });
+  /**
+   * Live mode (the studio's Preview): the card runs as on the dashboard, with the real hass, no editor
+   * chrome and no selection. Every editor handler stands down; leaving puts the inert hass back.
+   */
+  @property({ type: Boolean, attribute: false }) live = false;
   /** The drawn width, measured (Panel's label, and "shown at" when the window is narrower). */
   @state() private _fillPx = 0;
 
@@ -341,7 +344,51 @@ export class StudioCanvas extends LitElement {
   /** The pan and zoom Preview seg of the Card backdrop editor (editor only, never saved) goes to the live stack. */
   private _applyPreview(): void {
     const stack = this._card?.shadowRoot?.querySelector('mc-bg-stack') as (HTMLElement & { preview?: 'play' | 'start' | 'end' }) | null | undefined;
-    if (stack && stack.preview !== getPreview()) stack.preview = getPreview();
+    const want = this.live ? 'play' : getPreview();
+    if (stack && stack.preview !== want) stack.preview = want;
+  }
+
+  /**
+   * Puts the card in the mode `live` asks for. Entering ends everything the editor had going (connect
+   * mode, menus, a column drag, a press); leaving restores the editing card, selection included.
+   */
+  private _applyLive(): void {
+    const card = this._card;
+    if (!card) return;
+    if (this.live) {
+      this._connectFrom = null;
+      this._connectNote = '';
+      this._itemMenu.close(false);
+      this._sheet = undefined;
+      this._endColumnDrag(false);
+      this._longPress.cancel();
+      this._clearPress();
+      this._hoverEl = null;
+      this._hoverSel = null;
+      this._docked = false;
+      card.selectedPath = undefined;
+      card.selectedFlow = null;
+      card.previewPaused = false;
+      if (this.hass) card.hass = this.hass;
+      card.editMode = false;
+    } else {
+      if (this.hass) card.hass = inertHass(this.hass);
+      card.editMode = true;
+      card.previewPaused = this._previewPaused;
+      this._syncSelection();
+    }
+    this._applyPreview();
+    this._queuePlace();
+  }
+
+  /** Tabs / slider layouts show the tab or slide holding a selected child; flows highlight the selected flow. */
+  private _syncSelection(): void {
+    const card = this._card;
+    if (!card) return;
+    const sel = this._sel;
+    card.selectedPath = sel.kind === 'module' ? modulePathAttr(sel)
+      : sel.kind === 'slot' ? `${modulePathAttr(parentSelection(sel) as ModuleSelection)}#${sel.slot}` : undefined;
+    card.selectedFlow = this._state?.selectedFlow ?? null;
   }
 
   disconnectedCallback(): void {
@@ -378,10 +425,11 @@ export class StudioCanvas extends LitElement {
 
   protected firstUpdated(): void {
     const card = document.createElement(CARD_TAG) as MagicCard;
-    card.editMode = true; // before setConfig / connect: no template registration in the studio
-    card.previewPaused = this._previewPaused;
+    // editMode before setConfig / connect: no template registration in the studio (live mode strips `template` too)
+    card.editMode = !this.live;
+    card.previewPaused = this.live ? false : this._previewPaused;
     this._card = card;
-    if (this.hass) card.hass = inertHass(this.hass);
+    if (this.hass) card.hass = this.live ? this.hass : inertHass(this.hass);
     this._syncCard();
     const host = this.shadowRoot!.querySelector<HTMLElement>('.card-host')!;
     for (const type of BLOCKED) host.addEventListener(type, this._block, true);
@@ -396,7 +444,8 @@ export class StudioCanvas extends LitElement {
     for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._longPress.cancel, true);
     for (const type of ['pointerup', 'pointercancel', 'scroll']) canvas.addEventListener(type, this._clearPress, true);
     canvas.addEventListener('pointermove', this._pressMove, true);
-    for (const type of HA_ACTION_EVENTS) host.addEventListener(type, this._stop);
+    host.addEventListener('hass-action', this._onHassAction);
+    host.addEventListener('hass-more-info', this._onMoreInfo);
     host.appendChild(card);
     this._observe();
     // Late web fonts move the card without resizing what the ResizeObserver watches.
@@ -412,17 +461,13 @@ export class StudioCanvas extends LitElement {
   }
 
   protected updated(changed: PropertyValues): void {
-    if (changed.has('hass') && this._card && this.hass) this._card.hass = inertHass(this.hass);
-    if (changed.has('_previewPaused') && this._card) this._card.previewPaused = this._previewPaused;
+    if (changed.has('live') && changed.get('live') !== undefined) this._applyLive();
+    else if (changed.has('hass') && this._card && this.hass) this._card.hass = this.live ? this.hass : inertHass(this.hass);
+    if (changed.has('_previewPaused') && this._card && !this.live) this._card.previewPaused = this._previewPaused;
     if (changed.has('_state')) {
       this._syncCard();
-      // Tabs / slider layouts show the tab or slide holding a selected child.
       const sel = this._sel;
-      if (this._card) {
-        this._card.selectedPath = sel.kind === 'module' ? modulePathAttr(sel)
-          : sel.kind === 'slot' ? `${modulePathAttr(parentSelection(sel) as ModuleSelection)}#${sel.slot}` : undefined;
-        this._card.selectedFlow = this._state?.selectedFlow ?? null;
-      }
+      if (!this.live) this._syncSelection();
       // Another selection (Layers, undo, delete) or any config change: connect mode ends.
       if (this._connectFrom && (!sameSelection(sel, this._connectFrom) || this._state?.config !== this._connectConfig)) this._connectFrom = null;
     }
@@ -462,7 +507,7 @@ export class StudioCanvas extends LitElement {
   }
 
   private _block = (e: Event): void => {
-    if (inPopupPreview(e)) return;
+    if (this.live || inPopupPreview(e)) return;
     // Space fires the card's own pause button on keyup: let that one through, or the click is cancelled
     if (e.type === 'keyup' && (e as KeyboardEvent).key === ' ' && onPauseButton(e)) return;
     if (e.type === 'contextmenu') {
@@ -484,8 +529,23 @@ export class StudioCanvas extends LitElement {
     e.stopPropagation();
   };
 
+  /** Events HA cards use to ask the frontend to act: swallowed while editing, passed on while live. */
+  private _onHassAction = (e: Event): void => {
+    if (!this.live) e.stopPropagation();
+  };
+
+  /** More-info never leaves the studio's own dialog: while live the studio opens it inside itself (HA's would sit behind). */
+  private _onMoreInfo = (e: Event): void => {
+    e.stopPropagation();
+    if (!this.live) return;
+    const entityId = (e as CustomEvent<{ entityId?: unknown }>).detail?.entityId;
+    if (typeof entityId === 'string' && entityId) {
+      this.dispatchEvent(new CustomEvent('mc-studio-more-info', { bubbles: true, composed: true, detail: { entityId } }));
+    }
+  };
+
   private _onCardClick = (e: MouseEvent): void => {
-    if (inPopupPreview(e)) return;
+    if (this.live || inPopupPreview(e)) return;
     if (onPauseButton(e)) {
       e.preventDefault();
       this._togglePreviewPause(e);
@@ -554,7 +614,7 @@ export class StudioCanvas extends LitElement {
   };
 
   private _onCardKeydown = (e: KeyboardEvent): void => {
-    if (inPopupPreview(e)) return;
+    if (this.live || inPopupPreview(e)) return;
     // Keep keyboard activation away from module previews; Tab still moves focus.
     // A clone continues from the canvas so canvas and studio shortcuts keep working.
     if (e.key === 'Tab') return;
@@ -575,6 +635,7 @@ export class StudioCanvas extends LitElement {
   };
 
   private _onGroundClick = (e: MouseEvent): void => {
+    if (this.live) return;
     if (e.composedPath().some((t) => t instanceof HTMLElement && t.classList.contains('float-bar'))) return;
     if (this._longPress.justFired) return;
     if (this._connectFrom) {
@@ -587,7 +648,7 @@ export class StudioCanvas extends LitElement {
   };
 
   private _onKeydown = (e: KeyboardEvent): void => {
-    if (isTyping(e) || !this.stateManager) return;
+    if (this.live || isTyping(e) || !this.stateManager) return;
     if (this._connectFrom && e.key === 'Escape') {
       // Escape leaves connect mode only (no parent selection, the studio stays open).
       e.preventDefault();
@@ -665,7 +726,7 @@ export class StudioCanvas extends LitElement {
   /** Right-click on the dotted ground: the card's menu (the float bar: the selection's). */
   private _onGroundContext = (e: MouseEvent): void => {
     const path = e.composedPath();
-    if (e.shiftKey || inPopupPreview(e)) return;
+    if (this.live || e.shiftKey || inPopupPreview(e)) return;
     e.preventDefault();
     if (this._longPress.justFired) return;
     if (path.some((t) => t instanceof HTMLElement && t.classList.contains('col-handle'))) return;
@@ -675,7 +736,7 @@ export class StudioCanvas extends LitElement {
 
   private _onLongDown = (e: PointerEvent): void => {
     const path = e.composedPath();
-    if (inPopupPreview(e) || path.some((t) => t instanceof HTMLElement && (t.classList.contains('col-handle') || t.classList.contains('float-bar')))) return;
+    if (this.live || inPopupPreview(e) || path.some((t) => t instanceof HTMLElement && (t.classList.contains('col-handle') || t.classList.contains('float-bar')))) return;
     this._longPress.down(e);
     this._clearPress();
     if (e.pointerType === 'touch') {
@@ -688,7 +749,7 @@ export class StudioCanvas extends LitElement {
   /** The finger left the 8 px of a press: no cue (and no menu, LongPress drops it too). */
   private _pressMove = (e: PointerEvent): void => {
     const p = this._press;
-    if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > 8) this._clearPress();
+    if (!this.live && p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > 8) this._clearPress();
   };
 
   private _clearPress = (): void => {
@@ -785,6 +846,7 @@ export class StudioCanvas extends LitElement {
 
   /** Hover previews what a click would select: module, column, row, or the card itself. */
   private _onPointerMove = (e: PointerEvent): void => {
+    if (this.live) return;
     const path = e.composedPath();
     const card = this._card;
     const hit = targetFromEvent(path)
@@ -799,6 +861,7 @@ export class StudioCanvas extends LitElement {
   };
 
   private _onPointerLeave = (): void => {
+    if (this.live) return;
     this._hoverEl = null;
     this._hoverSel = null;
     this._placeHover();
@@ -814,7 +877,7 @@ export class StudioCanvas extends LitElement {
     wait.then(() => requestAnimationFrame(() => {
       this._placeQueued = false;
       this._measureFill();
-      this._place();
+      if (!this.live) this._place();
     }));
   };
 
@@ -912,7 +975,7 @@ export class StudioCanvas extends LitElement {
     const sel = this._sel;
     const config = this._state?.config;
     const sm = this.stateManager;
-    if (this._connectFrom || !config || !sm) return null;
+    if (this.live || this._connectFrom || !config || !sm) return null;
     if (sel.kind === 'row' || sel.kind === 'column') {
       const row = config.rows[sel.row];
       return row && row.columns.length > 1
@@ -994,6 +1057,7 @@ export class StudioCanvas extends LitElement {
   }
 
   private _onHandleDown = (e: PointerEvent): void => {
+    if (this.live) return;
     const row = this._resizeRow;
     const handle = e.currentTarget as HTMLElement;
     if (row === null || e.button !== 0 || this._colDrag) return;
@@ -1075,7 +1139,7 @@ export class StudioCanvas extends LitElement {
    * handle keeps focus. A held key or quick presses on one gutter are one undo step.
    */
   private _onHandleKey = (e: KeyboardEvent): void => {
-    if (this._colDrag || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    if (this.live || this._colDrag || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
     e.stopPropagation();
     const row = this._resizeRow;
@@ -1160,6 +1224,7 @@ export class StudioCanvas extends LitElement {
 
   protected render(): TemplateResult {
     const s = this._state;
+    const live = this.live;
     const wd = this.width;
     const shown = wd.px ?? this._fillPx;
     const squeezed = wd.px !== null && this._fillPx > 0 && this._fillPx < wd.px - 1 ? t(', shown at {px} px', { px: this._fillPx }) : '';
@@ -1207,13 +1272,13 @@ export class StudioCanvas extends LitElement {
     `;
 
     return html`
-      ${this._docked ? html`<div class="bar-dock">${floatBar}</div>` : nothing}
+      ${this._docked && !live ? html`<div class="bar-dock">${floatBar}</div>` : nothing}
       <div
-        class="canvas ${this._connectFrom ? 'connecting' : ''}"
+        class="canvas ${this._connectFrom ? 'connecting' : ''} ${live ? 'live' : ''}"
         tabindex="0"
         role="region"
-        aria-label=${t('Canvas, {label} selected', { label })}
-        aria-describedby=${this._connectFrom ? 'connect-hint' : 'canvas-hint'}
+        aria-label=${live ? t('Canvas, live preview') : t('Canvas, {label} selected', { label })}
+        aria-describedby=${live ? nothing : this._connectFrom ? 'connect-hint' : 'canvas-hint'}
         @click=${this._onGroundClick}
         @contextmenu=${this._onGroundContext}
         @keydown=${this._onKeydown}
@@ -1225,15 +1290,17 @@ export class StudioCanvas extends LitElement {
           <div class="device ${wd.borderless ? 'borderless' : ''}" style="--device-w:${wd.px === null ? '100%' : `${wd.px}px`}" @transitionend=${this._queuePlace}>
             <div class="device-label"><span>${t(OPTION_LABELS[wd.option])}${shown ? ` · ${shown} px${squeezed}` : ''}</span><span class="device-note">${wd.canMatch
               ? html`<button type="button" class="btn btn-text btn-sm" @click=${() => this.dispatchEvent(new CustomEvent('mc-match-view', { bubbles: true, composed: true }))}>${t('Match view')}</button>`
-              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
+              : wd.note}${wd.note || wd.canMatch ? ' · ' : ''}${t('Live data')}${live ? nothing : html`<button type="button" class="preview-pause" data-preview-pause aria-pressed=${this._previewPaused ? 'true' : 'false'}
                 aria-label=${this._previewPaused ? t('Resume preview motion') : t('Pause preview motion')} @click=${this._togglePreviewPause} @keydown=${this._stop}
-                ><ha-icon icon=${this._previewPaused ? 'mdi:play' : 'mdi:pause'}></ha-icon></button></span></div>
+                ><ha-icon icon=${this._previewPaused ? 'mdi:play' : 'mdi:pause'}></ha-icon></button>`}</span></div>
             ${this._cardError
               ? html`<p class="card-error" role="status">${t('Preview not updated: {error}', { error: this._cardError })}</p>`
               : nothing}
             <div class="card-host"></div>
           </div>
-          <div class="hover-frame ${levelClass(this._hoverSel ?? { kind: 'module', row: 0, col: 0, module: 0 })}"
+          ${live
+            ? nothing
+            : html`<div class="hover-frame ${levelClass(this._hoverSel ?? { kind: 'module', row: 0, col: 0, module: 0 })}"
             hidden aria-hidden="true">${this._hoverLabel ? html`<span class="tag">${this._hoverLabel}</span>` : nothing}</div>
           <div class="sel-frame ${levelClass(sel)}" hidden aria-hidden="true">
             ${sel.kind === 'card' ? nothing : html`<span class="tag">${label}</span>`}
@@ -1242,7 +1309,7 @@ export class StudioCanvas extends LitElement {
               : nothing}
           </div>
           ${this._renderColumnHandles()}
-          ${this._docked ? nothing : floatBar}
+          ${this._docked ? nothing : floatBar}`}
         </div>
       </div>
       ${this._connectFrom
@@ -1259,7 +1326,9 @@ export class StudioCanvas extends LitElement {
           ? t('{note}, or pick another. Escape cancels.', { note: this._connectNote })
           : t('Click the module to connect to. Escape cancels.')
         : ''}</p>
-      <p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
+      ${live
+        ? nothing
+        : html`<p class="canvas-hint" id="canvas-hint" ?hidden=${!!this._connectFrom}>
         ${tx('Click a module to select it. {move} moves it, {remove} removes it, {menu} opens its menu.', {
           // the named keys are words in the user's language, like the icon editor's hints (Alt+Omhoog)
           move: html`<kbd>Alt</kbd> + <kbd>${t('Up')}</kbd>/<kbd>${t('Down')}</kbd>`,
@@ -1267,7 +1336,7 @@ export class StudioCanvas extends LitElement {
           menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
         })}
       </p>
-      <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
+      <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>`}
       ${this._itemMenu.render()}
       ${this._press ? html`<span class="press-ring" style=${`left:${this._press.x}px;top:${this._press.y}px`} aria-hidden="true"></span>` : nothing}
       ${this._sheet
@@ -1399,6 +1468,11 @@ export class StudioCanvas extends LitElement {
         /* no iOS callout or text selection on a long-press (it opens the item menu) */
         -webkit-touch-callout: none;
         user-select: none;
+      }
+      /* live: the card behaves as on the dashboard (no menu on a long-press) */
+      .canvas.live .card-host {
+        -webkit-touch-callout: default;
+        user-select: auto;
       }
       /* press and hold cue: a ring under the finger that closes in until the menu opens (500 ms) */
       .press-ring {
