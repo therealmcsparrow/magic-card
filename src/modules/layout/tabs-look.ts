@@ -1,4 +1,4 @@
-import { cssLengths, safeColor, str } from '../../utils/safe-css';
+import { cssLengths, safeColor, str, unitOpacity } from '../../utils/safe-css';
 
 /*
  * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
@@ -18,9 +18,6 @@ const COLOURS: ReadonlyArray<readonly [string, string, string]> = [
   ['tab_bar_border_color', '--mc-tb-bc', 'bar-border'],
   ['tab_color', '--mc-tt-c', 'color'],
   ['tab_background', '--mc-tt-bg', 'bg'],
-  ['tab_active_color', '--mc-tt-ac', 'active-color'],
-  ['tab_active_background', '--mc-tt-abg', 'active-bg'],
-  ['tab_indicator_color', '--mc-tt-ind', 'indicator'],
   ['tab_border_color', '--mc-tt-bc', 'border'],
 ];
 
@@ -42,6 +39,25 @@ const WORDS: ReadonlyArray<readonly [string, RegExp, string, string]> = [
   ['tab_text_transform', /^(?:none|uppercase|lowercase|capitalize)$/, '--mc-tt-tt', 'transform'],
 ];
 
+/** The keys of one tab state (tab_active, tab_disabled, design.hover): key, property suffix, token suffix. */
+const STATE_KEYS: ReadonlyArray<readonly [string, string, string]> = [
+  ['tab_color', 'c', 'color'],
+  ['tab_background', 'bg', 'bg'],
+  ['tab_border_color', 'bc', 'border'],
+  ['tab_font_weight', 'fw', 'weight'],
+  ['tab_opacity', 'o', 'opacity'],
+];
+/** The design object that holds each state, and its prefix: --mc-t{a,h,d}-*, tokens a-*, h-*, d-*. */
+const STATES: ReadonlyArray<readonly [string, string]> = [
+  ['hover', 'h'],
+  ['tab_active', 'a'],
+  ['tab_disabled', 'd'],
+];
+const WEIGHT = /^(?:normal|bold|[1-9]00)$/;
+
+/** Read as aliases of tab_active.tab_color, .tab_background and .tab_border_color (the border is the fill for Pills). */
+const LEGACY = ['tab_active_color', 'tab_active_background', 'tab_indicator_color'] as const;
+
 const FAMILY = /^(?:[\w -]+|"[\w -]+"|'[\w -]+')$/;
 const FAMILY_MAX = 128;
 
@@ -53,14 +69,20 @@ const CHOICES: ReadonlyArray<readonly [string, string, readonly string[]]> = [
   ['tab_animation', 'anim-', ['none', 'fade', 'slide']],
 ];
 
-/** Every design key this file reads. */
+/** The flat design keys this file reads (the old active and indicator keys are in LEGACY_TAB_KEYS). */
 export const TAB_KEYS: readonly string[] = [
   ...COLOURS.map((c) => c[0]),
+  'tab_opacity',
+  'tab_disabled_tabs',
   ...LENGTHS.map((c) => c[0]),
   ...WORDS.map((c) => c[0]),
   ...CHOICES.map((c) => c[0]),
   'tab_font_family',
 ];
+
+/** The keys of a tab state object. */
+export const TAB_STATE_KEYS: readonly string[] = STATE_KEYS.map((k) => k[0]);
+export const LEGACY_TAB_KEYS: readonly string[] = LEGACY;
 
 const word = (v: unknown): string => (typeof v === 'number' && Number.isFinite(v) ? String(v) : str(v)?.toLowerCase() ?? '');
 
@@ -75,11 +97,16 @@ function length(v: unknown, most: number, max: number, pct: boolean): string | u
   return s && s.split(' ').every((t) => parseFloat(t) <= max && (pct || !t.endsWith('%'))) ? s : undefined;
 }
 
-/** `phase`: the active tab's index, so a switch alternates the animation name and restarts it. */
-export function tabLook(design: unknown, phase = 0): TabLook {
+const plain = (v: unknown): Record<string, unknown> | undefined => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
+
+/**
+ * `phase`: the active tab's index, so a switch alternates the animation name and restarts it.
+ * `style`: the tab style, for the Pills reading of the old indicator colour.
+ */
+export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook {
   const vars: Record<string, string> = {};
   const tokens = new Set<string>();
-  const d = (design && typeof design === 'object' ? design : {}) as Record<string, unknown>;
+  const d = plain(design) ?? {};
   const put = (prop: string, value: string, token: string): void => {
     vars[prop] = value;
     tokens.add(token);
@@ -102,6 +129,30 @@ export function tabLook(design: unknown, phase = 0): TabLook {
   for (const [key, prefix, words] of CHOICES) {
     const w = word(d[key]);
     if (w !== words[0] && words.includes(w)) tokens.add(prefix + w);
+  }
+  const o = unitOpacity(d.tab_opacity);
+  if (o !== undefined) put('--mc-tt-o', String(o), 'opacity');
+  for (const [obj, p] of STATES) {
+    const st = { ...plain(d[obj]) };
+    if (obj === 'tab_active') {
+      // the new keys win; an old key fills in only what is not set
+      const ind = colour(d.tab_indicator_color);
+      const pill = style === 'pills';
+      st.tab_color = colour(st.tab_color) ?? colour(d.tab_active_color);
+      st.tab_background = colour(st.tab_background) ?? colour(d.tab_active_background) ?? (pill ? ind : undefined);
+      st.tab_border_color = colour(st.tab_border_color) ?? (pill ? undefined : ind);
+    }
+    for (const [key, suffix, token] of STATE_KEYS) {
+      let v: string | undefined;
+      if (key === 'tab_opacity') {
+        const n = unitOpacity(st[key]);
+        v = n === undefined ? undefined : String(n);
+      } else if (key === 'tab_font_weight') {
+        const w = word(st[key]);
+        v = WEIGHT.test(w) ? w : undefined;
+      } else v = colour(st[key]);
+      if (v) put(`--mc-t${p}-${suffix}`, v, `${p}-${token}`);
+    }
   }
   for (const kind of ['fade', 'slide']) if (tokens.has(`anim-${kind}`)) vars['--mc-tt-an'] = `mc-tabs-${kind}-${phase & 1}`;
   if (tokens.has('icon-right') || tokens.has('icon-above') || tokens.has('icon-below')) tokens.add('icon-flex');

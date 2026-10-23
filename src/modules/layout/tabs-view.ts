@@ -7,6 +7,7 @@ import { layoutChildren, renderEmptySlot } from '../render-module';
 import { currentRenderContext } from '../../services/render-context';
 import { t } from '../i18n';
 import { tabLook } from './tabs-look';
+import { resolveTabsDesign } from './tabs-resolve';
 
 export class TabsView implements ModuleView {
   renderPreview(config: CardModule, hass?: HomeAssistant): TemplateResult {
@@ -16,11 +17,17 @@ export class TabsView implements ModuleView {
     // the tabs shown, by their index in `tabs`: a hidden tab is left out on the dashboard (the studio
     // shows it dimmed); active_tab and the stored tab keep counting every tab, like the editor
     const shown = tabs.flatMap((t, i) => (ctx?.editMode || !t?.hidden ? [i] : []));
+    // the design with the matching rules applied; positions in tab_disabled_tabs count every tab, like active_tab
+    const design = resolveTabsDesign(c.design, hass, c.entity);
+    const off = new Set<number>(Array.isArray(design?.tab_disabled_tabs) ? design.tab_disabled_tabs.filter((n): n is number => Number.isInteger(n)) : []);
+    const enabled = shown.filter((i) => !off.has(i));
     // Per card and per module (keyed by its path), so two cards or two tabs modules never share it.
     const state = ctx?.uiState?.<number>('active-tab');
     // Studio canvas: the tab that holds the selected child is shown. A hidden or missing tab: the first shown.
     const want = Math.trunc(Number(ctx?.selectedChild?.()?.slot ?? state?.get() ?? c.active_tab ?? 0));
-    const activeIdx = shown.includes(want) ? want : shown[0] ?? 0;
+    // the studio's selected tab stays, so a disabled tab's content can still be edited
+    const picked = ctx?.selectedChild?.()?.slot !== undefined;
+    const activeIdx = shown.includes(want) && (picked || !off.has(want) || !enabled.length) ? want : enabled[0] ?? shown[0] ?? 0;
     // every tab hidden: no content either
     const activeTab = shown.length ? tabs[activeIdx] : undefined;
 
@@ -30,7 +37,7 @@ export class TabsView implements ModuleView {
     const flips = ctx?.uiState?.<number>('tab-flips');
     const select = (i: number) => (e: Event) => {
       e.stopPropagation();
-      if (!state || !ctx || i === activeIdx) return;
+      if (!state || !ctx || i === activeIdx || off.has(i)) return;
       state.set(i);
       flips?.set((flips.get() ?? 0) + 1);
       ctx.requestUpdate();
@@ -39,18 +46,19 @@ export class TabsView implements ModuleView {
     const stop = (e: Event) => e.stopPropagation();
     const onKeydown = (e: KeyboardEvent) => {
       e.stopPropagation();
-      const n = shown.length;
-      const at = shown.indexOf(activeIdx);
+      // disabled tabs are skipped
+      const n = enabled.length;
+      const at = enabled.indexOf(activeIdx);
       const next = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: n - 1 }[e.key];
       if (next === undefined || !n) return;
       e.preventDefault();
-      const p = (next + n) % n;
-      select(shown[p])(e);
+      const target = enabled[(next + n) % n];
+      select(target)(e);
       const header = (e.currentTarget as HTMLElement).parentElement;
-      queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[p]?.focus());
+      queueMicrotask(() => header?.querySelectorAll<HTMLElement>('[role="tab"]')[shown.indexOf(target)]?.focus());
     };
 
-    const look = tabLook(c.design, flips?.get() ?? 0);
+    const look = tabLook(design, flips?.get() ?? 0, c.tab_style);
     const header = html`
         <div class="mc-tabs-header" role="tablist">
           ${shown.map((i) => {
@@ -58,7 +66,8 @@ export class TabsView implements ModuleView {
             return html`
               <button type="button" role="tab" class="mc-tab-button ${i === activeIdx ? 'active' : ''}" data-mc-hidden=${tab?.hidden ? '' : nothing}
                 aria-selected=${i === activeIdx ? 'true' : 'false'}
-                tabindex=${i === activeIdx ? 0 : -1}
+                aria-disabled=${off.has(i) ? 'true' : nothing}
+                tabindex=${i === activeIdx && !off.has(i) ? 0 : -1}
                 @click=${select(i)} @pointerdown=${stop} @pointerup=${stop} @keydown=${onKeydown}>
                 ${tab?.icon
                   ? hasIconFx(c.icon_fx)

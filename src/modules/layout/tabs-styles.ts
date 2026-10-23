@@ -14,6 +14,8 @@ const ACTIVE = `${TAB}.active`;
 const ICON = `${TAB} ha-icon,.mc-tabs[data-style][data-mc-tab~='icon-size']${TAB} mc-svg-icon`;
 const CONTENT = '>.mc-tabs-content';
 const DIRECT = `${TAB}:not(.active)`;
+const DISABLED = `${TAB}[aria-disabled='true']`;
+const HOVERED = `${TAB}:hover:not(.active):not([aria-disabled='true'])`;
 
 /** Rules gated on one token: [token, descendant selector, declarations]. */
 const RULES: ReadonlyArray<readonly [string, string, string]> = [
@@ -40,9 +42,7 @@ const MORE: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const TAIL: ReadonlyArray<readonly [string, string, string]> = [
-  ['indicator', ACTIVE, 'border-bottom-color:var(--mc-tt-ind)'],
-  ['active-color', ACTIVE, 'color:var(--mc-tt-ac)'],
-  ['active-bg', ACTIVE, 'background:var(--mc-tt-abg)'],
+  ['opacity', TAB, 'opacity:var(--mc-tt-o)'],
   ['radius', TAB, 'border-radius:var(--mc-tt-r)'],
   ['pad', TAB, 'padding:var(--mc-tt-pad);min-width:24px;min-height:24px'],
   ['family', TAB, 'font-family:var(--mc-tt-ff)'],
@@ -62,26 +62,42 @@ const gated = (rules: ReadonlyArray<readonly [string, string, string]>): string 
   rules.map(([token, tail, decl]) => `.mc-tabs[data-style][data-mc-tab~='${token}']${tail}{${decl}}`).join('');
 const variants = VARIANTS.map(([sel, tail, decl]) => `.mc-tabs${sel}${tail}{${decl}}`).join('');
 
-// Pills and underline keep their own bottom line and indicator when every tab has a border.
-const BORDER_EDGE =
-  `.mc-tabs[data-style='underline'][data-mc-tab~='bar-border']${BAR}{border-width:var(--mc-tb-bw,2px)}` +
-  `.mc-tabs[data-style='default'][data-mc-tab~='border']${TAB},.mc-tabs[data-style='underline'][data-mc-tab~='border']${TAB}{border-bottom:2px solid transparent}` +
-  `.mc-tabs[data-style='underline'][data-mc-tab~='border']${TAB}{border-bottom-width:3px}` +
-  `.mc-tabs[data-style='default'][data-mc-tab~='border']${ACTIVE},.mc-tabs[data-style='underline'][data-mc-tab~='border']${ACTIVE}{border-bottom-color:var(--mc-primary)}`;
+// The line of the active tab is its own border (tab_active.tab_border_color); a tab border that is set is the same on every side.
+const BORDER_EDGE = `.mc-tabs[data-style='underline'][data-mc-tab~='bar-border']${BAR}{border-width:var(--mc-tb-bw,2px)}`;
 
-const PILL_FILL = `.mc-tabs[data-style='pills'][data-mc-tab~='indicator']${ACTIVE}{background:var(--mc-tt-ind)}`;
+/** The look of one tab state, one rule per token: [token, declaration]. */
+const stateRules = (selector: string, p: string, name: string): string =>
+  [
+    [`${name}-color`, `color:var(--mc-t${p}-c)`],
+    [`${name}-bg`, `background:var(--mc-t${p}-bg)`],
+    [`${name}-border`, `border-color:var(--mc-t${p}-bc)`],
+    [`${name}-weight`, `font-weight:var(--mc-t${p}-fw)`],
+    [`${name}-opacity`, `opacity:var(--mc-t${p}-o)`],
+  ]
+    .map(([token, decl]) => `.mc-tabs[data-style][data-mc-tab~='${token}']${selector}{${decl}}`)
+    .join('');
+
+// A disabled tab is dimmed and shows no pointer, with or without a tab_ key; tab_disabled.tab_opacity replaces the dimming.
+const DIM = `.mc-tabs[data-style]${DISABLED}{opacity:.5;cursor:default}`;
+// Hover only where there is a pointer.
+const HOVER = `@media (hover:hover){${stateRules(HOVERED, 'h', 'h')}}`;
+// The keyboard focus ring follows the active tab's border, then its text, then the tab border colour.
+const FOCUS = `.mc-tabs[data-style]${TAB}:focus-visible{outline-color:var(--mc-ta-bc,var(--mc-ta-c,var(--mc-tt-bc,var(--mc-primary))))}`;
 
 // A tab switch flips the animation name (-0 / -1, set by the view), which restarts it without rebuilding the panel.
 const KEYFRAMES = [0, 1]
   .map((n) => `@keyframes mc-tabs-fade-${n}{from{opacity:0}}@keyframes mc-tabs-slide-${n}{from{opacity:0;transform:translateX(12px)}}`)
   .join('');
 
-// The widths with a fallback are the only custom properties that would otherwise reach a nested tabs module.
-const NESTED = ".mc-tabs[data-mc-tab] .mc-tabs{--mc-tb-bw:initial;--mc-tb-bc:initial;--mc-tt-bw:initial;--mc-tt-bc:initial}";
+// The properties that a rule without a token reads (with a fallback) are the only ones that would otherwise reach a nested tabs module.
+const NESTED =
+  '.mc-tabs[data-mc-tab] .mc-tabs{--mc-tb-bw:initial;--mc-tb-bc:initial;--mc-tt-bw:initial;--mc-tt-bc:initial;--mc-ta-bc:initial;--mc-ta-c:initial}';
 
 const MOTION =
   KEYFRAMES +
   `@media (prefers-reduced-motion:reduce){.mc-tabs[data-style][data-mc-tab]${CONTENT}{animation:none}}`;
 
-// The order matters: equal specificity, the later rule wins.
-export const tabsStyles = unsafeCSS(gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL.slice(0, 1)) + PILL_FILL + gated(TAIL.slice(1)) + NESTED + MOTION);
+// The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
+export const tabsStyles = unsafeCSS(
+  gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL) + DIM + HOVER + stateRules(ACTIVE, 'a', 'a') + stateRules(DISABLED, 'd', 'd') + FOCUS + NESTED + MOTION,
+);
