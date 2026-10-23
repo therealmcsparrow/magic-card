@@ -79,11 +79,9 @@ const KEYFRAMES = [0, 1]
 // The widths with a fallback are the only custom properties that would otherwise reach a nested tabs module.
 const NESTED = ".mc-tabs[data-mc-tab] .mc-tabs{--mc-tb-bw:initial;--mc-tb-bc:initial;--mc-tt-bw:initial;--mc-tt-bc:initial}";
 
-const KEEP_BOLD = `.mc-tabs[data-style='underline'][data-mc-tab~='weight']${ACTIVE}{font-weight:700}`;
-
 const MOTION =
   KEYFRAMES +
   `@media (prefers-reduced-motion:reduce){.mc-tabs[data-style][data-mc-tab]${CONTENT}{animation:none}}`;
 
 // The order matters: equal specificity, the later rule wins.
-export const tabsStyles = unsafeCSS(gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL.slice(0, 1)) + PILL_FILL + gated(TAIL.slice(1)) + KEEP_BOLD + NESTED + MOTION);
+export const tabsStyles = unsafeCSS(gated(RULES) + variants + gated(MORE) + BORDER_EDGE + gated(TAIL.slice(0, 1)) + PILL_FILL + gated(TAIL.slice(1)) + NESTED + MOTION);
