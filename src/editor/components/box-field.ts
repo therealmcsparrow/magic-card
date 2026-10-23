@@ -3,6 +3,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
 import './unit-field';
+import './color-picker';
 import { t, m, type MessageId } from '../i18n';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
@@ -25,10 +26,53 @@ const CORNER_META: Record<Side, { label: MessageId; icon: string }> = {
   left: { label: m('Bottom left'), icon: 'mdi:border-left-variant' },
 };
 
+/** What a side holds in shorthand mode: a length, a colour or a word from `options` (a border style). */
+export type SideCell = 'length' | 'color' | 'style';
+
+/** A CSS shorthand split at spaces outside parentheses (`rgb(1, 2, 3) red` is two values). */
+function tokens(raw: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of raw.trim()) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth = Math.max(0, depth - 1);
+    if (/\s/.test(ch) && depth === 0) {
+      if (cur) out.push(cur);
+      cur = '';
+    } else cur += ch;
+  }
+  if (cur) out.push(cur);
+  return out;
+}
+
+/** The four sides of a 1 to 4 value shorthand (top, right, bottom, left; corners in the same order). */
+function expand(raw: string): Record<Side, string> | undefined {
+  const [top, right = top, bottom = top, left = right] = tokens(raw).slice(0, 4);
+  return top === undefined ? undefined : { top, right, bottom, left };
+}
+
+/** The shortest shorthand that gives these four sides. */
+function collapse(s: Record<Side, string>): string {
+  if (s.left === s.right) {
+    if (s.top === s.bottom) return s.top === s.right ? s.top : `${s.top} ${s.right}`;
+    return `${s.top} ${s.right} ${s.bottom}`;
+  }
+  return `${s.top} ${s.right} ${s.bottom} ${s.left}`;
+}
+
+/** What a side takes when it is left empty in an unlinked shorthand (the CSS default for it). */
+const EMPTY_SIDE: Record<SideCell, string> = { length: '0', style: 'none', color: 'currentcolor' };
+
 /**
  * Four-side value (padding / margin / border radius): a 2x2 grid where every side is a compact
  * mc-unit-field (number + unit, written on commit; Custom for auto / calc(…)), and a
  * "Same on all sides" link toggle in the foot row.
+ *
+ * In `shorthand` mode (a tab's border and corners) the field holds one design key with a 1 to 4 value
+ * CSS shorthand in `value`: one input while the sides are linked, four when they are not; the
+ * cells hold lengths, colours or words (`cell`), and `inherited` is the shorthand an empty side falls
+ * back to (shown as that side's hint).
  */
 @customElement('mc-box-field')
 export class BoxField extends LitElement {
@@ -44,6 +88,9 @@ export class BoxField extends LitElement {
         display: grid;
         gap: 8px;
       }
+      .box-grid.one-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
       .box-foot .btn[aria-pressed='true'] {
         background: var(--mc-accent-tint);
       }
@@ -58,9 +105,24 @@ export class BoxField extends LitElement {
 
   @property({ attribute: false }) design: DesignConfig = {};
   @property({ attribute: false }) onChange!: (updates: Record<string, unknown>) => void;
-  @property({ type: String }) baseName: 'padding' | 'margin' | 'border_radius' = 'padding';
+  @property({ type: String }) baseName: string = 'padding';
+  /** One design key holding a 1 to 4 value shorthand (`baseName`), instead of one key per side. */
+  @property({ type: Boolean }) shorthand = false;
+  @property({ type: String }) value = '';
+  /** Names the field for assistive tech while the sides are linked (shorthand mode). */
+  @property({ type: String }) label = '';
+  @property({ type: String }) cell: SideCell = 'length';
+  /** The four sides are corners (Top left ... Bottom left). */
+  @property({ type: Boolean }) corners = false;
+  @property({ attribute: false }) units: string[] = UNITS;
+  /** The words of a `style` cell. */
+  @property({ attribute: false }) options: Array<{ value: string; label: string }> = [];
+  /** Shorthand mode: what the empty sides take from the design below this one. */
+  @property({ type: String }) inherited = '';
 
   @state() private _linked = false;
+  /** Shorthand mode: the user chose Same on all sides (unset: linked until the sides differ). */
+  @state() private _link?: boolean;
 
   private _getSuffixKey(baseName: string, suffix: string): string {
     // Handle border-radius special naming
@@ -78,7 +140,7 @@ export class BoxField extends LitElement {
 
   /** Sides from the CSS shorthand (1–4 values, mixed units allowed), or undefined when there is none. */
   private _shorthandSides(): Record<Side, string> | undefined {
-    const raw = String(this.design[this.baseName] ?? '').trim();
+    const raw = String((this.design as Record<string, unknown>)[this.baseName] ?? '').trim();
     if (!raw) return undefined;
     const [t, r = t, b = t, l = r] = raw.split(/\s+/);
     return { top: t, right: r, bottom: b, left: l };
@@ -111,7 +173,85 @@ export class BoxField extends LitElement {
     else this._emitSides({ [position]: value });
   }
 
+  // ── shorthand mode ──
+
+  private get _sh(): Record<Side, string> | undefined {
+    return expand(this.value);
+  }
+
+  /** Linked while the four sides agree, unless the user unlinked them. */
+  private get _shLinked(): boolean {
+    const s = this._sh;
+    const equal = !s || (s.top === s.right && s.right === s.bottom && s.bottom === s.left);
+    return equal && (this._link ?? true);
+  }
+
+  /** Writes the sides as the shortest shorthand; an empty side takes its CSS default, none left removes the key. */
+  private _shEmit(next: Record<Side, string>): void {
+    if (SIDES.every((s) => !next[s])) {
+      this.onChange({ [this.baseName]: undefined });
+      return;
+    }
+    const fill = EMPTY_SIDE[this.cell];
+    this.onChange({ [this.baseName]: collapse({ top: next.top || fill, right: next.right || fill, bottom: next.bottom || fill, left: next.left || fill }) });
+  }
+
+  private _shSide(position: Side | 'all', value: string): void {
+    if (position === 'all' || this._shLinked) this._shEmit({ top: value, right: value, bottom: value, left: value });
+    else this._shEmit({ ...(this._sh ?? { top: '', right: '', bottom: '', left: '' }), [position]: value });
+  }
+
+  private _shToggle(): void {
+    if (this._shLinked) {
+      this._link = false;
+      return;
+    }
+    this._link = true;
+    const top = this._sh?.top ?? '';
+    this._shEmit({ top, right: top, bottom: top, left: top });
+  }
+
+  /** One side's control (or the single control of the linked sides, `position` all). */
+  private _renderCell(source: Side, position: Side | 'all', label: string): TemplateResult {
+    const own = this._sh?.[source] ?? '';
+    const hint = expand(this.inherited)?.[source] ?? '';
+    const write = (v: string) => this._shSide(position, v);
+    if (this.cell === 'color') {
+      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .allowEntity=${false} @value-changed=${(e: CustomEvent) => {
+        e.stopPropagation();
+        write(String(e.detail.value ?? ''));
+      }}></mc-color-picker>`;
+    }
+    if (this.cell === 'style') {
+      const shown = this.options.find((o) => o.value === hint)?.label ?? hint;
+      return html`<div class="select">
+        <select class="input side-select" data-side=${position} aria-label=${label} @change=${(e: Event) => write((e.target as HTMLSelectElement).value)}>
+          <option value="" ?selected=${!own}>${hint ? t('Inherit ({value})', { value: shown }) : t('Not set')}</option>
+          ${this.options.map((o) => html`<option value=${o.value} ?selected=${o.value === own}>${o.label}</option>`)}
+        </select>
+        <ha-icon icon="mdi:chevron-down"></ha-icon>
+      </div>`;
+    }
+    return html`<mc-unit-field
+      compact
+      data-side=${position}
+      .inputId=${`side-${position}`}
+      .label=${label}
+      .units=${this.units}
+      .value=${own}
+      .placeholder=${hint.match(/^-?\d*\.?\d+/)?.[0] ?? '0'}
+      @value-changed=${(e: CustomEvent) => {
+        e.stopPropagation();
+        write(String(e.detail.value ?? ''));
+      }}
+    ></mc-unit-field>`;
+  }
+
   private _toggleLink(): void {
+    if (this.shorthand) {
+      this._shToggle();
+      return;
+    }
     this._linked = !this._linked;
     if (!this._linked) return;
     // Linking copies the top side (value and unit) to all sides.
@@ -122,15 +262,17 @@ export class BoxField extends LitElement {
   }
 
   private _renderSide(position: Side): TemplateResult {
-    const meta = this.baseName === 'border_radius' ? CORNER_META[position] : SIDE_META[position];
+    const meta = this.baseName === 'border_radius' || this.corners ? CORNER_META[position] : SIDE_META[position];
     const sideLabel = t(meta.label);
     const source: Side = this._linked ? 'top' : position;
     return html`
       <div class="box-side">
-        <span class="box-side-label" @click=${() => this.renderRoot.querySelector<HTMLElement>(`mc-unit-field[data-side="${position}"]`)?.focus()}>
+        <span class="box-side-label" @click=${() => this.renderRoot.querySelector<HTMLElement>(`[data-side="${position}"]`)?.focus()}>
           <ha-icon icon=${meta.icon}></ha-icon>${sideLabel}
         </span>
-        <mc-unit-field
+        ${this.shorthand
+          ? this._renderCell(position, position, sideLabel)
+          : html`<mc-unit-field
           compact
           data-side=${position}
           .inputId=${`side-${position}`}
@@ -141,20 +283,23 @@ export class BoxField extends LitElement {
             e.stopPropagation();
             this._handleSideChange(position, String(e.detail.value ?? ''));
           }}
-        ></mc-unit-field>
+        ></mc-unit-field>`}
       </div>
     `;
   }
 
   protected render(): TemplateResult {
+    const linkedOne = this.shorthand && this._shLinked;
     return html`
       <div class="box">
-        <div class="box-grid">${SIDES.map((side) => this._renderSide(side))}</div>
+        ${linkedOne
+          ? this._renderCell('top', 'all', this.label)
+          : html`<div class="box-grid ${this.shorthand && this.cell !== 'length' ? 'one-col' : ''}">${SIDES.map((side) => this._renderSide(side))}</div>`}
         <div class="box-foot">
           <button
             type="button"
             class="btn btn-text btn-sm"
-            aria-pressed=${this._linked ? 'true' : 'false'}
+            aria-pressed=${(this.shorthand ? this._shLinked : this._linked) ? 'true' : 'false'}
             @click=${this._toggleLink}
           >
             <ha-icon icon="mdi:link-variant"></ha-icon>${t('Same on all sides')}

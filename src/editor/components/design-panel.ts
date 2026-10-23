@@ -940,6 +940,27 @@ export class DesignPanel extends LitElement {
       case 'icon_anim':
         return field(this._renderIconAnim(p.key), syncIndicator, undefined, lbl(p.help));
 
+      case 'sides':
+        return field(
+          html`
+            <mc-box-field
+              .shorthand=${true}
+              .baseName=${p.key}
+              .value=${value}
+              .label=${lt(p.label)}
+              .cell=${p.sides?.cell ?? 'length'}
+              .corners=${!!p.sides?.corners}
+              .units=${p.units ?? ['px', 'em', 'rem', '%']}
+              .options=${(p.options ?? []).map((o) => ({ value: o.value, label: lt(o.label) }))}
+              .inherited=${(p.tabState && this._inherited(p.key)) || ''}
+              .onChange=${(updates: Record<string, unknown>) => this._handlePropertyChange(p.key, String(updates[p.key] ?? ''))}
+            ></mc-box-field>
+          `,
+          syncIndicator,
+          undefined,
+          p.sides?.cell === 'color' ? hint(lbl(p.help)) : lbl(p.help),
+        );
+
       case 'ring': {
         const isModule = this.target === 'module';
         return field(
@@ -1307,7 +1328,7 @@ export class DesignPanel extends LitElement {
                       type="button"
                       class="btn btn-text btn-sm sector-reset"
                       aria-label=${t('Reset section {name}', { name: lt(sector.name) })}
-                      title=${sector.id === 'tabs-bar' ? t('Resets Default values only.') : t('Clear every value in this section')}
+                      title=${sector.id === 'tabs-bar' && this._activeView === 'default' ? t('Resets Default values only.') : t('Clear every value in this section')}
                       @click=${() => this._reset(sector.properties.filter((p) => this._isSet(p)))}
                     >
                       <ha-icon icon="mdi:backup-restore"></ha-icon>${t('Reset section')}

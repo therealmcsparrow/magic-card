@@ -39,7 +39,7 @@ import {
 } from './css-property-options';
 import { lm } from '../i18n/labels/mark';
 
-export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'tab_list' | 'animations' | 'tab_animations' | 'icon_anim' | 'ring' | 'shape' | 'value_bg';
+export type CssPropertyType = 'unit' | 'color' | 'text' | 'select' | 'number' | 'box' | 'image' | 'font' | 'segmented' | 'tab_list' | 'animations' | 'tab_animations' | 'icon_anim' | 'sides' | 'ring' | 'shape' | 'value_bg';
 
 export interface CssPropertyOption {
   label: MessageId;
@@ -73,6 +73,8 @@ export interface CssPropertyDef {
   baseOnly?: boolean;
   /** A per-tab field that also shows in the Active tab and Disabled tab designs (and in Hover). */
   tabState?: boolean;
+  /** A `sides` field: one key holding a 1 to 4 value shorthand, edited per side (what a side holds; corners name the four corners). */
+  sides?: { cell: 'length' | 'color' | 'style'; corners?: boolean };
   /** The collapsible group of the Tab bar sector this field sits in (see TAB_SUBGROUPS). */
   subgroup?: string;
   /** Number field bounds: min, max and step. */
@@ -106,7 +108,7 @@ function option(
   key: string,
   label: MessageId,
   type: CssPropertyType,
-  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly' | 'tabState' | 'subgroup' | 'range'>> = {},
+  extra: Partial<Pick<CssPropertyDef, 'options' | 'emptyLabel' | 'help' | 'defaultValue' | 'units' | 'hover' | 'hideForVariant' | 'baseOnly' | 'tabState' | 'subgroup' | 'sides' | 'range'>> = {},
 ): CssPropertyDef {
   return { key, cssProperty: '', label, type, virtual: true, ...extra };
 }
@@ -417,8 +419,8 @@ export const CSS_SECTORS: CssSector[] = [
         subgroup: 'bar',
       }),
       tb('tab_bar_background', lm('Bar background'), 'color', { subgroup: 'bar' }),
-      tb('tab_bar_border_color', lm('Bar border colour'), 'color', { subgroup: 'bar' }),
-      tb('tab_bar_border_width', lm('Bar border width'), 'unit', { units: ['px'], subgroup: 'bar' }),
+      tb('tab_bar_border_color', lm('Bar border colour'), 'sides', { sides: { cell: 'color' }, subgroup: 'bar' }),
+      tb('tab_bar_border_width', lm('Bar border width'), 'sides', { sides: { cell: 'length' }, units: ['px', 'em', 'rem'], subgroup: 'bar' }),
       tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'bar' }),
       tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT, subgroup: 'bar' }),
       tb('tab_animation', lm('Tab switch animation'), 'segmented', {
@@ -433,10 +435,10 @@ export const CSS_SECTORS: CssSector[] = [
       ts('tab_font_weight', lm('Tab font weight'), 'select', { options: FONT_WEIGHT_OPTS.filter((o) => /^(?:normal|bold|[1-9]00)$/.test(o.value)), subgroup: 'text' }),
       ts('tab_text_transform', lm('Tab text transform'), 'select', { options: TEXT_TRANSFORM_OPTS, subgroup: 'text' }),
       ts('tab_letter_spacing', lm('Tab letter spacing'), 'text', { help: lm('normal, or one length, for example 0.05em.'), subgroup: 'text' }),
-      ts('tab_border_color', lm('Tab border colour'), 'color', { subgroup: 'border' }),
-      ts('tab_border_width', lm('Tab border width'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
-      ts('tab_border_style', lm('Tab border style'), 'select', { options: BORDER_STYLE_OPTS.filter((o) => /^(?:none|solid|dashed|dotted|double)$/.test(o.value)), subgroup: 'border' }),
-      ts('tab_radius', lm('Tab corner radius'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
+      ts('tab_border_color', lm('Tab border colour'), 'sides', { sides: { cell: 'color' }, subgroup: 'border' }),
+      ts('tab_border_width', lm('Tab border width'), 'sides', { sides: { cell: 'length' }, units: ['px', 'em', 'rem'], subgroup: 'border' }),
+      ts('tab_border_style', lm('Tab border style'), 'sides', { sides: { cell: 'style' }, options: BORDER_STYLE_OPTS.filter((o) => /^(?:none|solid|dashed|dotted|double)$/.test(o.value)), subgroup: 'border' }),
+      ts('tab_radius', lm('Tab corner radius'), 'sides', { sides: { cell: 'length', corners: true }, units: PCT, subgroup: 'border' }),
       ts('tab_padding', lm('Tab padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'border' }),
       ts('tab_icon_color', lm('Tab icon colour'), 'color', { subgroup: 'icon' }),
       ts('tab_icon_size', lm('Tab icon size'), 'unit', { units: ['px'], subgroup: 'icon' }),
