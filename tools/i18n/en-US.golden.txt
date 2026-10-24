@@ -26,6 +26,7 @@ card-editor	Card backdrop layers sit on top of this colour and image.	Card backd
 card-editor	Centre	Center
 card-editor	Change card fields, like background colour, while conditions match. For ring, shape and more, use a design rule on the Design tab.	Change card fields, like background color, while conditions match. For ring, shape and more, use a design rule on the Design tab.
 card-editor	Colour	Color
+card-editor	Colour format	Color format
 card-editor	Colour from	Color from
 card-editor	Colour picker	Color picker
 card-editor	Colour ranges	Color ranges
@@ -47,6 +48,7 @@ card-editor	Idle colour	Idle color
 card-editor	Line colour	Line color
 card-editor	Maximise	Maximize
 card-editor	Open colour picker	Open color picker
+card-editor	Pick a colour from the screen	Pick a color from the screen
 card-editor	Primary colour	Primary color
 card-editor	Remove colour	Remove color
 card-editor	Remove colour {n}	Remove color {n}

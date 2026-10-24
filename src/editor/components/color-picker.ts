@@ -8,6 +8,7 @@ import { ENTITY_PAINT_RE } from '../../contracts/entity-colour';
 import { parseGradient } from '../../utils/gradient';
 import { safeColor } from '../../utils/safe-css';
 import { editableGradient, gradientToString, renderSeg, MAX_STOPS, type GradientModel } from './gradient-editor';
+import { COLOUR_FORMATS, formatOf, parseColour, writeColour, type ColourFormat } from './colour-formats';
 import './unit-field';
 import { t } from '../i18n';
 
@@ -48,6 +49,14 @@ export class ColorPicker extends LitElement {
       .help + .help {
         margin-top: 6px;
       }
+      .mc-color-tools {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mc-color-tools .seg {
+        flex: 1;
+      }
       .help:empty {
         display: none;
       }
@@ -84,6 +93,9 @@ export class ColorPicker extends LitElement {
   @state() private _hsva: HSVA = { h: 0, s: 100, v: 100, a: 1 };
   @state() private _savedColors: string[] = [];
   @state() private _hexInput = '';
+  @state() private _format: ColourFormat = 'HEXA';
+  /** An OKLCH colour outside sRGB, as written: kept until the popup edits the colour. */
+  private _asWritten = '';
 
   private _windowCtrl = new PickerWindowController(this, () => this._closeModal());
   private _dragging: 'area' | 'hue' | 'opacity' | null = null;
@@ -125,12 +137,15 @@ export class ColorPicker extends LitElement {
   }
 
   private _parseValue(value: string): void {
+    this._asWritten = '';
     if (!value) {
       this._hsva = { h: 0, s: 0, v: 100, a: 1 };
       this._hexInput = '';
+      this._format = 'HEXA';
       return;
     }
 
+    this._format = formatOf(value);
     // If it's a CSS variable, keep as-is
     if (value.startsWith('var(')) {
       this._hexInput = value;
@@ -140,41 +155,46 @@ export class ColorPicker extends LitElement {
     const hsva = this._colorToHsva(value);
     if (hsva) {
       this._hsva = hsva;
-      this._hexInput = this._hsvaToHex(hsva);
+      this._hexInput = this._text(hsva);
+      if (parseColour(value)?.wide) this._asWritten = this._hexInput = value.trim();
     } else {
       this._hexInput = value;
     }
   }
 
+  /** The colour in the chosen format. */
+  private _text(hsva: HSVA): string {
+    return writeColour(this._hsvaToRgb(hsva), this._format);
+  }
+
+  /** A change made in the popup: the colour, and its text in the chosen format. */
+  private _setHsva(hsva: HSVA): void {
+    this._hsva = hsva;
+    this._asWritten = '';
+    this._hexInput = this._text(hsva);
+  }
+
+  private _setFormat(format: ColourFormat): void {
+    this._format = format;
+    if (this._hexInput.startsWith('var(') || !this._colorToHsva(this._hexInput)) return;
+    this._asWritten = '';
+    this._hexInput = this._text(this._hsva);
+  }
+
+  /** Takes the colour from the screen, like choosing a swatch. A cancel changes nothing. */
+  private async _pipette(): Promise<void> {
+    const Dropper = (window as unknown as { EyeDropper?: new () => { open(): Promise<{ sRGBHex: string }> } }).EyeDropper;
+    if (!Dropper) return;
+    try {
+      this._selectPreset((await new Dropper().open()).sRGBHex);
+    } catch {
+      // closed without a pick
+    }
+  }
+
   private _colorToHsva(color: string): HSVA | null {
-    // Handle hex
-    const hexMatch = color.match(/^#([0-9a-f]{3,8})$/i);
-    if (hexMatch) {
-      let hex = hexMatch[1];
-      if (hex.length === 3) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-      }
-      if (hex.length === 4) {
-        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
-      }
-      const r = parseInt(hex.slice(0, 2), 16) / 255;
-      const g = parseInt(hex.slice(2, 4), 16) / 255;
-      const b = parseInt(hex.slice(4, 6), 16) / 255;
-      const a = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1;
-      return this._rgbToHsva(r, g, b, a);
-    }
-
-    // Handle rgba
-    const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-    if (rgbaMatch) {
-      const r = parseInt(rgbaMatch[1]) / 255;
-      const g = parseInt(rgbaMatch[2]) / 255;
-      const b = parseInt(rgbaMatch[3]) / 255;
-      const a = rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1;
-      return this._rgbToHsva(r, g, b, a);
-    }
-
-    return null;
+    const c = parseColour(color);
+    return c ? this._rgbToHsva(c.r / 255, c.g / 255, c.b / 255, c.a) : null;
   }
 
   private _rgbToHsva(r: number, g: number, b: number, a: number): HSVA {
@@ -250,7 +270,7 @@ export class ColorPicker extends LitElement {
     if (this._hexInput.startsWith('var(')) {
       return this._hexInput;
     }
-    return this._hsvaToHex(this._hsva);
+    return this._asWritten || this._text(this._hsva);
   }
 
   private _emitChange(): void {
@@ -311,22 +331,19 @@ export class ColorPicker extends LitElement {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    this._hsva = { ...this._hsva, s: x * 100, v: (1 - y) * 100 };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, s: x * 100, v: (1 - y) * 100 });
   }
 
   private _updateHue(e: PointerEvent): void {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    this._hsva = { ...this._hsva, h: x * 360 };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, h: x * 360 });
   }
 
   private _updateOpacity(e: PointerEvent): void {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    this._hsva = { ...this._hsva, a: x };
-    this._hexInput = this._hsvaToHex(this._hsva);
+    this._setHsva({ ...this._hsva, a: x });
   }
 
   private _handleHexInput(e: InputEvent): void {
@@ -335,6 +352,7 @@ export class ColorPicker extends LitElement {
     const hsva = this._colorToHsva(value);
     if (hsva) {
       this._hsva = hsva;
+      this._asWritten = '';
     }
   }
 
@@ -343,10 +361,7 @@ export class ColorPicker extends LitElement {
       this._hexInput = color;
     } else {
       const hsva = this._colorToHsva(color);
-      if (hsva) {
-        this._hsva = hsva;
-        this._hexInput = this._hsvaToHex(hsva);
-      }
+      if (hsva) this._setHsva(hsva);
     }
   }
 
@@ -586,8 +601,7 @@ export class ColorPicker extends LitElement {
                 .value=${Math.round(this._hsva.h).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._hsva = { ...this._hsva, h: Math.max(0, Math.min(360, v)) };
-                  this._hexInput = this._hsvaToHex(this._hsva);
+                  this._setHsva({ ...this._hsva, h: Math.max(0, Math.min(360, v)) });
                 }}
               />
             </div>
@@ -617,15 +631,34 @@ export class ColorPicker extends LitElement {
                 .value=${Math.round(this._hsva.a * 100).toString()}
                 @input=${(e: InputEvent) => {
                   const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._hsva = { ...this._hsva, a: Math.max(0, Math.min(100, v)) / 100 };
-                  this._hexInput = this._hsvaToHex(this._hsva);
+                  this._setHsva({ ...this._hsva, a: Math.max(0, Math.min(100, v)) / 100 });
                 }}
               />
             </div>
 
+            <div class="mc-color-tools">
+              ${renderSeg(
+                t('Colour format'),
+                this._format,
+                COLOUR_FORMATS.map((f) => ({ value: f, label: f })),
+                (v) => this._setFormat(v as ColourFormat),
+              )}
+              ${'EyeDropper' in window
+                ? html`<button
+                    type="button"
+                    class="icon-btn"
+                    title=${t('Pick a colour from the screen')}
+                    aria-label=${t('Pick a colour from the screen')}
+                    @click=${() => void this._pipette()}
+                  >
+                    <ha-icon icon="mdi:eyedropper"></ha-icon>
+                  </button>`
+                : nothing}
+            </div>
+
             <div class="mc-input-row">
               <label class="field">
-                <span class="lbl">${t('Hex')}</span>
+                <span class="lbl">${this._format}</span>
                 <input class="input" type="text" spellcheck="false" .value=${this._hexInput} @input=${this._handleHexInput} />
               </label>
               <label class="field">

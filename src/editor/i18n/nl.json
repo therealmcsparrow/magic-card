@@ -1,4 +1,6 @@
 {
+  "Colour format": "Kleurnotatie",
+  "Pick a colour from the screen": "Kies een kleur van het scherm",
   "\"{value}\" is not one of the entity's options.": "\"{value}\" is geen van de opties van de entiteit.",
   "**Bold**, _italic_, `code`": "**Vet**, _cursief_, `code`",
   "+ {n, plural, one {# design field} other {# design fields}}": "+ {n, plural, one {# ontwerpveld} other {# ontwerpvelden}}",
@@ -434,7 +436,6 @@
   "Heading": "Kop",
   "Hello World": "Hallo wereld",
   "Hemisphere": "Halfrond",
-  "Hex": "Hex",
   "Hexagon": "Zeshoek",
   "Hidden": "Verborgen",
   "Hidden on dashboard": "Verborgen op dashboard",

@@ -4,6 +4,16 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Changed
+-   **An active tab has no look of its own.** Without `tab_active` settings the active tab looks like the other tabs: no line under it, no accent text colour and no Pills fill. Set the `tab_active` keys to mark it. The bar's own line stays. See [The active line](documentation/modules/layout/tabs.md#the-active-line).
+-   **Border width, style and colour take one to four values.** The Design tab shows them as the four-side field, like padding. On a tabs module they draw on the tab buttons, in the base design and in the Hover view.
+
+### Added
+-   **Bar border style.** `tab_bar_border_style` sets the style of the tab bar's line per side. A width of 0 or the style `none` removes the line in every tab style. See [The bar line](documentation/modules/layout/tabs.md#the-bar-line).
+-   **Colour picker pipette and formats.** The colour popup picks a colour from the screen where the browser offers it, and switches the field between HEXA, RGBA, HSLA and OKLCH. Save writes the chosen format.
+
 ## 2026.10.12-beta.5 (2026-10-24)
 
 ### Fixed
