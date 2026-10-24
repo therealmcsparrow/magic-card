@@ -978,6 +978,8 @@ export class DesignPanel extends LitElement {
               .label=${lt(p.label)}
               .cell=${p.sides?.cell ?? 'length'}
               .corners=${!!p.sides?.corners}
+              .entity=${p.key === 'border_color' && this._allowEntityColor && this.moduleType !== 'tabs'}
+              .entityColor=${this._entityColor}
               .units=${p.units ?? ['px', 'em', 'rem', '%']}
               .options=${(p.options ?? []).map((o) => ({ value: o.value, label: lt(o.label) }))}
               .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || (p.key === 'border_width' && this._getActiveDesign().border_length ? '2px' : '')}

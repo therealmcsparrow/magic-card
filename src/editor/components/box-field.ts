@@ -43,7 +43,8 @@ function tokens(raw: string): string[] {
     } else cur += ch;
   }
   if (cur) out.push(cur);
-  return out;
+  // an entity colour with an opacity is one value
+  return out.reduce<string[]>((all, v) => (/^\d+(?:\.\d+)?%$/.test(v) && all[all.length - 1] === 'entity' ? [...all.slice(0, -1), `entity ${v}`] : [...all, v]), []);
 }
 
 /** The four sides of a 1 to 4 value shorthand (top, right, bottom, left; corners in the same order). */
@@ -119,6 +120,9 @@ export class BoxField extends LitElement {
   @property({ attribute: false }) options: Array<{ value: string; label: string }> = [];
   /** Shorthand mode: what the empty sides take from the design below this one. */
   @property({ type: String }) inherited = '';
+  /** A colour cell offers the entity's colour (`entity`, `entity N%`). */
+  @property({ type: Boolean }) entity = false;
+  @property({ type: String }) entityColor = '';
 
   @state() private _linked = false;
   /** Shorthand mode: the user chose Same on all sides (unset: linked until the sides differ). */
@@ -221,7 +225,7 @@ export class BoxField extends LitElement {
     const hint = expand(this.inherited)?.[source] ?? '';
     const write = (v: string) => this._shSide(position, v);
     if (this.cell === 'color') {
-      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .placeholder=${own ? '' : hint} .allowEntity=${false} @value-changed=${(e: CustomEvent) => {
+      return html`<mc-color-picker data-side=${position} .value=${own} .label=${label} .placeholder=${own ? '' : hint} .allowEntity=${this.entity} .entityColor=${this.entityColor} @value-changed=${(e: CustomEvent) => {
         e.stopPropagation();
         write(String(e.detail.value ?? ''));
       }}></mc-color-picker>`;

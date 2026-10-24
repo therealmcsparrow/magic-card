@@ -8,6 +8,15 @@ import { buttonPartDecls } from './button-parts';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
+const ENTITY_WORD = /(?<![\w-])entity(?: \d+(?:\.\d+)?%)?(?![\w-])/g;
+
+/** A colour value with its entity colours (`entity`, `entity N%`, one per side in a list) written as CSS; undefined without one. */
+function entityList(v: unknown): string | undefined {
+  if (typeof v !== 'string' || v.length > 256 || !v.includes('entity')) return undefined;
+  const css = v.replace(ENTITY_WORD, (m) => entityColorCss(m) ?? m);
+  return css === v ? undefined : css;
+}
+
 /** Bare-number units: lengths px, times s (css-design-map), border length % (a share of the side, like its default). */
 const NUMBER_UNITS: Record<string, string> = { ...DESIGN_NUMBER_UNITS, border_length: '%' };
 
@@ -38,7 +47,7 @@ export function resolveEntityColors<T extends DesignConfig | undefined>(design: 
   const rec = design as Record<string, unknown>;
   let out: Record<string, unknown> | undefined;
   for (const key of COLOR_KEYS) {
-    const css = entityColorCss(rec[key]);
+    const css = entityList(rec[key]);
     if (css) (out ??= { ...rec })[key] = css;
   }
   if (Array.isArray(rec.animations) && rec.animations.some((a) => isEntityColor(a?.color))) {
@@ -51,7 +60,7 @@ export function resolveEntityColors<T extends DesignConfig | undefined>(design: 
 export function designUsesEntityColor(design: DesignConfig | undefined): boolean {
   if (!design) return false;
   const rec = design as Record<string, unknown>;
-  if (COLOR_KEYS.some((k) => isEntityColor(rec[k]))) return true;
+  if (COLOR_KEYS.some((k) => entityList(rec[k]))) return true;
   if (Array.isArray(rec.animations) && rec.animations.some((a) => isEntityColor(a?.color))) return true;
   const ring = rec.ring as Record<string, unknown> | undefined;
   if (ring && (isEntityColor(ring.color) || isEntityColor(ring.track_color))) return true;
