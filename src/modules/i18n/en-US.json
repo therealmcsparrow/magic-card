@@ -10,6 +10,7 @@
   "No camera": "No camera",
   "No forecast data": "No forecast data",
   "No numeric history": "No numeric history",
+  "Picture not available": "Picture not available",
   "This entity has no forecast": "This entity has no forecast",
   "{name}: last {hours, plural, one {# hour} other {# hours}}": "{name}: last {hours, plural, one {# hour} other {# hours}}"
 }

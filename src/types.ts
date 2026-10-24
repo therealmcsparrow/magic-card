@@ -942,6 +942,12 @@ export interface ImageModuleConfig extends CardModule {
   /** `16:9`, `16/9`, a number (1.5) or a percentage of the width (56.25%). */
   aspect_ratio?: string | number;
   fit?: 'contain' | 'cover' | 'fill' | 'none';
+  /** Main and Accent of a library image; design colour values. */
+  colors?: { main?: string; accent?: string };
+  /** Text alternative for screen readers; unset = decorative. Any image source. */
+  description?: string;
+  /** Library images with bindings: a visually hidden list of bound entities and their states. */
+  state_summary?: boolean;
 }
 
 export interface MarkdownModuleConfig extends CardModule {
