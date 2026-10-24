@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../src/editor/components/color-picker';
 
 /*
- * CEO request: a pipette in the colour popup (src/editor/components/color-picker.ts) when the browser has the
+ * A pipette in the colour popup (src/editor/components/color-picker.ts) when the browser has the
  * EyeDropper API; hidden otherwise. A pick takes the same path as choosing a swatch (_selectPreset: the hex field,
  * saved by Save); a cancel (AbortError) changes nothing.
  */

@@ -2,10 +2,9 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import '../src/editor/editor-entry';
 
 /*
- * CEO request: the Border section of the Design panel edits width, colour and style as one 4-side box each, like
+ * The Border section of the Design panel edits width, colour and style as one 4-side box each, like
  * padding and margin (mc-box-field with "Same on all sides"), for every module. The tab border fields already do.
- * Suspected: src/utils/css-properties.ts (borders sector: type 'unit' / 'select' / 'color' -> 'sides'),
- * src/editor/components/design-panel.ts (case 'sides').
+ * Covers src/utils/css-properties.ts (borders sector, type sides) and src/editor/components/design-panel.ts (case sides).
  */
 type Panel = HTMLElement & {
   design: Record<string, unknown>;

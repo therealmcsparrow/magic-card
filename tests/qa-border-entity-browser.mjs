@@ -1,4 +1,4 @@
-// By-hand browser QA (not vitest): active tab indicator and where the borders land. Own dashboard mc-border-entity.
+// By-hand browser check (not vitest): Border colour with an entity colour, per side and linked. Own dashboard mc-border-entity.
 import { launch, ev, sleep, B } from './qa-tabs-dnd-lib.mjs';
 const URL = 'mc-border-entity';
 const mods = [

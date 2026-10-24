@@ -1,4 +1,4 @@
-// By-hand browser QA (not vitest): active tab indicator and where the borders land. Own dashboard mc-tabs-border.
+// By-hand browser check (not vitest): where the tab borders land, in every tab style and state. Own dashboard mc-tabs-border.
 import { launch, ev, sleep, B } from './qa-tabs-dnd-lib.mjs';
 const URL = 'mc-tabs-border';
 const mk = (id, style, design) => ({ id, type: 'tabs', tab_style: style, ...(design ? { design } : {}), tabs: [{ label: 'One', modules: [{ id: id + 'a', type: 'text', text: 'a' }] }, { label: 'Two', modules: [{ id: id + 'b', type: 'text', text: 'b' }] }] });
@@ -15,6 +15,9 @@ for (const s of ['default', 'pills', 'underline']) {
   mods.push(t('tabhover', { hover: { tab_border_width: '3px', tab_border_color: 'rgb(255,128,0)' } }));
   mods.push(t('disabled', { tab_disabled_tabs: [1], tab_disabled: { tab_border_width: '2px', tab_border_color: 'rgb(90,90,90)' } }));
   mods.push(t('sides', { border_width: '1px 0 3px 0', border_style: 'solid', border_color: 'rgb(1,2,3) rgb(4,5,6) rgb(7,8,9) rgb(10,11,12)' }));
+  mods.push(t('type', { font_size: 18 }));
+  mods.push(t('gradient', { color: 'linear-gradient(90deg, rgb(255,0,0), rgb(0,0,255))' }));
+  mods.push(t('shorthand', { border: '2px solid rgb(5,5,5)' }));
   mods.push(t('bar0', { tab_bar_border_width: '0' }));
   mods.push(t('barnone', { tab_bar_border_style: 'none' }));
   mods.push(t('barsides', { tab_bar_border_width: '0 0 4px 0', tab_bar_border_style: 'none none dashed none', tab_bar_border_color: 'rgb(9,9,9)' }));
@@ -32,7 +35,7 @@ await page.goto(`${B}/${URL}/0`, { waitUntil: 'domcontentloaded' }); await sleep
 const info = await ev(page, `const sr = deepFind(document, e => e.tagName === 'MAGIC-CARD').shadowRoot; const g = (e,p)=>getComputedStyle(e).getPropertyValue(p);
   const edge = (e)=>['top','right','bottom','left'].map(s=>{const w=g(e,'border-'+s+'-width'); const st=g(e,'border-'+s+'-style'); return st==='none'||w==='0px'?'-':w+' '+g(e,'border-'+s+'-color');}).join(' | ');
   return JSON.stringify([...sr.querySelectorAll('.mc-module-wrapper')].filter(w=>w.querySelector(':scope > .mc-tabs')).map(w => { const t = w.querySelector(':scope > .mc-tabs'); const a = t.querySelector('.mc-tab-button.active'); const o = t.querySelector('.mc-tab-button:not(.active)'); const h = t.querySelector('.mc-tabs-header');
-    return { id: w.getAttribute('data-mc-id'), wrapper: edge(w), tabs: edge(t), bar: edge(h), active: edge(a), other: edge(o), look: [a, o].map((x) => g(x, 'color') + ' ' + g(x, 'background-color') + ' ' + g(x, 'font-weight')).join(' || ') }; }));`).then(JSON.parse);
+    return { id: w.getAttribute('data-mc-id'), wrapper: edge(w), tabs: edge(t), bar: edge(h), active: edge(a), other: edge(o), look: [a, o].map((x) => g(x, 'color') + ' ' + g(x, 'background-color') + ' ' + g(x, 'font-weight') + ' ' + g(x, '-webkit-text-fill-color')).join(' || ') }; }));`).then(JSON.parse);
 info.forEach((i) => console.log(JSON.stringify(i)));
 const hovered = {};
 for (const id of ['hoverdesign', 'tabhover']) for (const s of ['default', 'pills', 'underline']) {

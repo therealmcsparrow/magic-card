@@ -548,6 +548,7 @@ export class ColorPicker extends LitElement {
           placeholder=${this.placeholder || '#rrggbb or var(--name)'}
           aria-label=${name}
           @input=${this._handleTextInput}
+          @focus=${(e: FocusEvent) => (e.target as HTMLInputElement).select()}
         />
         ${this._renderEntityToggle(false)}
       </div>

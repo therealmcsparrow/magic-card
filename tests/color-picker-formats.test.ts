@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import '../src/editor/components/color-picker';
 
 /*
- * CEO request: a format switch in the colour popup (src/editor/components/color-picker.ts): HEXA | RGBA | HSLA | OKLCH.
+ * A format switch in the colour popup (src/editor/components/color-picker.ts): HEXA | RGBA | HSLA | OKLCH.
  * The text input shows and accepts the colour in the chosen format; Save writes that format. The switch is a group of
  * four buttons labelled exactly like that; the chosen one carries aria-checked="true" or aria-pressed="true".
  * The text field is the first input of `.mc-input-row`.
@@ -295,5 +295,18 @@ describe('colour popup: oklch outside sRGB', () => {
     await save(el);
     expect(events).toHaveLength(1);
     expect(events[0]).not.toBe(WIDE);
+  });
+});
+
+describe('the text field of the picker', () => {
+  it('selects its text on focus, so typing replaces the value', async () => {
+    const el = document.createElement('mc-color-picker') as El;
+    el.value = 'currentcolor';
+    el.label = 'Fill';
+    document.body.appendChild(el);
+    await el.updateComplete;
+    const input = el.shadowRoot!.querySelector<HTMLInputElement>('input.input.mono')!;
+    input.dispatchEvent(new FocusEvent('focus'));
+    expect([input.selectionStart, input.selectionEnd]).toEqual([0, 'currentcolor'.length]);
   });
 });
