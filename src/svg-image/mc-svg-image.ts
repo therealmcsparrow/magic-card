@@ -1,7 +1,6 @@
 import { LitElement, css, html, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
 import type { HassEntity, HomeAssistant } from '../types';
-import { BG_LAYER_STATUS_EVENT } from '../contracts/bg-stack.needs';
 import type { BackgroundLayerConfig, BgLayerStatus } from '../contracts/bg-stack';
 import { IMAGE_MAX_DESCRIPTION_CHARS, IMAGE_REF_PREFIX, IMAGE_REF_RE, IMAGE_SKELETON_MS, MAX_LAYER_PREFETCH, type ImagePoint } from '../contracts/svg-image';
 import { entityStateColor, isEntityColor } from '../utils/entity-color';
@@ -15,6 +14,8 @@ export type ImageStatus = 'waiting' | 'ready' | 'missing';
 const DEFAULT_MAIN = 'var(--primary-text-color)';
 const DEFAULT_ACCENT = 'var(--accent-color)';
 const STATUS_EVENT = 'mc-svg-image-status';
+/** BG_LAYER_STATUS_EVENT of bg-stack 1.2.0, written out: a value import would split that module out of magic-card.js's scope (about 70 B gzip). */
+const BG_LAYER_STATUS_EVENT = 'mc-bg-layer-status';
 
 /**
  * A library image drawn inline (contract svg-image 1.0.0): in an image module, or as the drawing of a background layer
