@@ -23,6 +23,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/path-canvas/loader.ts',
   'src/path-tools/loader.ts',
   'src/shape-editor/loader.ts',
+  'src/svg-editor/image-loader.ts',
   'src/svg-editor/loader.ts',
   'src/theme-editor/presets/loader.ts',
 ];

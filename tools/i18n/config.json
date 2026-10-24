@@ -7,6 +7,7 @@
     "layer-editor": { "dir": "src/editor/layers/i18n", "roots": ["src/editor/layers/layer-groups.ts", "src/editor/layers/layer-styles.ts", "src/editor/layers/tokens.ts", "src/editor/layers/controls.ts", "src/editor/layers/cost.ts", "src/editor/layers/looks.ts", "src/editor/layers/bg-layers.ts", "src/editor/layers/bg-layer-editor.ts", "src/editor/layers/bg-layers-ops.ts", "src/editor/layers/layers-sheet.ts", "src/editor/components/mc-anchor-grid.ts"] },
     "path-canvas": { "dir": "src/path-canvas/i18n", "roots": ["src/path-canvas"] },
     "svg-editor": { "dir": "src/svg-editor/i18n", "roots": ["src/svg-editor"] },
+    "image-editor": { "dir": "src/image-editor/i18n", "roots": ["src/image-editor"] },
     "path-tools": { "dir": "src/path-tools/i18n", "roots": ["src/path-tools"] },
     "shape-editor": { "dir": "src/shape-editor/i18n", "roots": ["src/shape-editor"] },
     "transfer": { "dir": "src/transfer/i18n", "roots": ["src/transfer"] },

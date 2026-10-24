@@ -1,4 +1,4 @@
-import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
+import { LitElement, adoptStyles, type PropertyValues, type TemplateResult } from 'lit';
 import type { History, PathCanvasChunk, PathChange, PathContext, PathPaint, PathSelection, PathTransform, TransformBox } from '../contracts/path-canvas';
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { UiPopoverElement, UiToastElement, UiWindowElement } from '../contracts/ui-kit';
@@ -68,6 +68,8 @@ import { svgErrorKind } from '../icons/svg-error';
 import { PRIM, ARRANGE, BOOL_OPS, PT_NAME } from './names';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
 import { renderEditor } from './views';
+import { imageApi, loadImageEditor } from './image-loader';
+import type { ImageShell, ImageUi } from './image-seam';
 
 /*
  * <mc-svg-editor> (contract svg-editor 1.0.0): the 24 x 24 icon editor. The document is a list of
@@ -114,7 +116,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     savedId: { attribute: false },
     module: { attribute: false },
     host: { type: String },
-    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg'].map((n) => [n, { state: true }])),
+    ...Object.fromEntries(['stage', 'doc', 'sel', 'tool', 'cvSel', 'view', 'snapOn', 'pixelGrid', 'grid', 'safe', 'decimals', 'nudgePad', 'lockRatio', 'opts', 'panel', 'pvTheme', 'out', 'ha', 'banners', 'notes', 'dlg', 'leaving', 'live', 'dirty', 'layout', 'overlay', 'renaming', 'startMode', 'startIcon', 'startError', 'liveShape', 'note', 'boolBusy', 'pt', 'ptBusy', 'alignTarget', 'picker', 'gridCustom', 'gridMsg', 'coarse', 'nudgeBig', 'lib', 'saved', 'keepCopy', 'saveName', 'saveError', 'saveBusy', 'deleted', 'escHinted', 'noticeGone', 'xfer', 'menu', 'conflict', 'pvMain', 'pvAccent', 'dual', 'pvOpen', 'startOpen', 'newAsk', 'cur', 'drag', 'tmsg', 'moving'].map((n) => [n, { state: true }])),
   };
 
   hass?: Hass;
@@ -125,12 +127,22 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** 'mcu' = hosted by the Magic Card Utils panel (no card, no module). */
   host: SvgEditorHost = 'card';
   /** The element revision the panel checks against SVG_EDITOR_MCU_MIN_REVISION. */
-  static contractRevision = 5;
+  static contractRevision = 6;
+  /** Set when the editor was opened on an image source: everything image-only goes through it. */
+  img?: ImageUi;
+  /** Layers being dragged, moved by handles or nudged: they carry will-change until the gesture ends. */
+  moving: ReadonlySet<string> = new Set();
+  private movingTimer?: ReturnType<typeof setTimeout>;
   conflict = false;
   pvMain = MCU_PREVIEW_MAIN;
   pvAccent = MCU_PREVIEW_ACCENT;
   get mcu(): boolean {
     return this.host === 'mcu';
+  }
+
+  /** Library writes are allowed: Magic Card Utils is present and the user is an administrator (the server enforces it too). */
+  get canWrite(): boolean {
+    return this.libraryAvailable && !!this.hass && (this.hass as { user?: { is_admin?: boolean } }).user?.is_admin === true;
   }
 
   stage: Stage = 'loading';
@@ -274,7 +286,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     for (const [d, f] of this.dialogs) d.removeEventListener('cancel', f);
     this.dialogs = [];
     cancelAnimationFrame(this.raf);
-    for (const t of [this.outTimer, this.liveTimer]) clearTimeout(t);
+    for (const t of [this.outTimer, this.liveTimer, this.movingTimer]) clearTimeout(t);
+    this.img?.dispose();
     if (this.deleted) void this.flushDelete();
     const o = this.opener;
     if (o) {
@@ -294,6 +307,8 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   async start(): Promise<void> {
     this.stage = 'loading';
+    const src = this.source;
+    const imageLoad = src.kind === 'image' || src.kind === 'image-blank' || src.kind === 'image-svg' ? loadImageEditor() : undefined;
     const chunk = await loadPathCanvas();
     if (!chunk) {
       this.stage = 'fail';
@@ -302,13 +317,34 @@ export class McSvgEditor extends LitElement implements StageHost {
     bind(chunk);
     this.chunk = chunk;
     this.measure();
-    const src = this.source;
+    if (imageLoad) return this.startImage(await imageLoad);
     if (src.kind === 'svg') this.openSvg(src.svg, t('My icon'), true);
     else if (src.kind === 'icon') await this.openIcon(src.icon, true);
     else if (src.kind === 'library') await this.openLibrary(src.id);
     else this.showStart();
     if (this.stage === 'loading') this.showStart();
     if (this.savedId && this.libraryAvailable) void this.loadLib();
+  }
+
+  /** An image source: the image-editor chunk makes the first document and the shell begins on it. */
+  private async startImage(create: Awaited<ReturnType<typeof loadImageEditor>>): Promise<void> {
+    const api = imageApi();
+    this.img?.dispose();
+    this.img = undefined;
+    if (!create || !api) {
+      this.stage = 'fail';
+      return;
+    }
+    const img = create(this as unknown as ImageShell, api);
+    this.img = img;
+    adoptStyles(this.renderRoot as ShadowRoot, [...editorStyles, ...img.styles]);
+    const doc = await img.open(this.source);
+    if (!doc) {
+      this.stage = 'fail';
+      return;
+    }
+    this.begin(doc);
+    img.ready();
   }
 
   /** First open without a start: a blank editor with the start dialog over it. */
@@ -494,10 +530,24 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.penHold = !(last && !last.closed && last.anchors.length > 0 && !s?.locked);
   }
 
+  /** Mark layers as moving (will-change) until `ms` pass without another call, or until the gesture ends. */
+  private setMoving(ids: readonly string[], ms = 0): void {
+    if (!this.img) return;
+    clearTimeout(this.movingTimer);
+    if (ids.length !== this.moving.size || ids.some((i) => !this.moving.has(i))) this.moving = new Set(ids);
+    if (ms) this.movingTimer = setTimeout(() => this.endMoving(), ms);
+  }
+
+  private endMoving(): void {
+    clearTimeout(this.movingTimer);
+    if (this.moving.size) this.moving = new Set();
+  }
+
   onChange = (e: Event): void => {
     const { paths, commit, label } = (e as CustomEvent<PathChange>).detail;
     const doc = this.reconcile(paths);
     if (!doc) return;
+    if (!commit) this.setMoving(this.sel);
     this.setDoc(doc);
     this.syncPen();
     if (commit) this.commit(label);
@@ -549,7 +599,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** A scale or rotate from the handles or keys: the matrix applies to the document at gesture start. */
   onTransform = (e: Event): void => {
     const d = (e as CustomEvent<PathTransform>).detail;
-    if (d.label === 'Cancel') return this.setDoc(this.base);
+    if (d.label === 'Cancel') return this.endMoving(), this.setDoc(this.base);
+    if (!d.commit) this.setMoving(this.sel);
     const sel = this.selected.filter((s) => !isOff(this.doc, s, 'locked') && !isOff(this.doc, s, 'hidden'));
     const from = boxOf(this.base.shapes.filter((s) => sel.some((x) => x.id === s.id)));
     if (!from) return;
@@ -626,6 +677,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const row = this.menu?.opener;
     this.menu = undefined;
     const id = (e as CustomEvent<{ id: string }>).detail.id;
+    if (this.img && id.startsWith('img:')) return this.img.pick(id.slice(4));
     runMenu(this, id, row);
     if (id.startsWith('x:')) return;
     this.updateComplete.then(() => (row?.isConnected && (row.classList.contains('row') || row.tagName === 'BUTTON') ? row : this.canvas())?.focus({ preventScroll: true }));
@@ -691,6 +743,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** Make the live document the new committed one: one history step. */
   commit(label: string, merge?: string): void {
+    this.endMoving();
     this.note = undefined;
     this.base = this.doc;
     this.flatBase = this.flat;
@@ -700,6 +753,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** An edit that is finished in one go (a button, a field, a tool). */
   apply(doc: Doc, label: string, merge?: string): void {
+    if (this.img?.readOnly) return;
     this.setDoc(doc);
     this.syncPen();
     this.commit(label, merge);
@@ -733,6 +787,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.flatBase = this.makeFlat(this.base);
     this.out = this.buildOut(this.base);
     this.dirty = toSvg(this.base) !== this.baseline;
+    if (this.img) {
+      this.img.changed(this.out);
+      this.checks();
+      return;
+    }
     clearTimeout(this.outTimer);
     this.outTimer = setTimeout(() => {
       this.ha = this.doc.shapes.length ? haForm(this.base) : undefined;
@@ -746,15 +805,16 @@ export class McSvgEditor extends LitElement implements StageHost {
     const keep = this.banners.filter((b) => !['over', 'safe', 'limit'].includes(b.id));
     const add: Banner[] = [];
     const o = this.out;
-    if (o.error === 'over') add.push({ id: 'over', kind: 'error', text: t('This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.', { used: kbOf(o.bytes) }), action: { label: t('Tidy now'), run: () => this.tidyNow() } });
+    if (o.error === 'over' && !this.img) add.push({ id: 'over', kind: 'error', text: t('This icon is {used} KB and the limit is 32 KB. Tidy it, remove hidden layers, or simplify paths.', { used: kbOf(o.bytes) }), action: { label: t('Tidy now'), run: () => this.tidyNow() } });
     const most = Math.max(0, ...this.base.shapes.flatMap((x) => x.paths.map((q) => q.anchors.length)));
     if (most >= 100) add.push({ id: 'limit', kind: 'info', text: t('This icon has {c} points. You can edit and move them, but not add points until it has fewer than 100.', { c: most }) });
     const out = outsideSafe(this.base);
-    if (out.length && this.safe) add.push({ id: 'safe', kind: 'warn', text: t('{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.', { c: out.length }), action: { label: t('Fit to 20'), run: () => this.fitSafe() } });
+    if (out.length && this.safe && !this.img) add.push({ id: 'safe', kind: 'warn', text: t('{c, plural, one {# layer reaches} other {# layers reach}} outside the 20 x 20 safe area. Home Assistant may clip the edges.', { c: out.length }), action: { label: t('Fit to 20'), run: () => this.fitSafe() } });
     this.banners = [...keep, ...add];
   }
 
   buildOut(doc: Doc): Out {
+    if (this.img) return this.img.buildOut(doc, this.decimals);
     const points = pointCount(doc);
     const raw = toSvg(doc, this.decimals);
     const vb = `${doc.vb.x} ${doc.vb.y} ${doc.vb.w} ${doc.vb.h}`;
@@ -807,15 +867,17 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** The custom size field: valid values apply at once, others stay as typed with a reason. */
   typeGrid(raw: string, final: boolean): void {
     const n = parseFloat(raw);
-    const ok = Number.isFinite(n) && n >= GRID_MIN && n <= GRID_MAX;
+    const g = this.img?.grid;
+    const [lo, hi, chips] = g ? [g.min, g.max, g.chips] : [GRID_MIN, GRID_MAX, GRID_CHIPS];
+    const ok = Number.isFinite(n) && n >= lo && n <= hi;
     if (ok) {
       this.grid = n;
       this.gridMsg = undefined;
-      if (final && GRID_CHIPS.includes(n)) this.gridCustom = false;
+      if (final && chips.includes(n)) this.gridCustom = false;
     } else if (final && Number.isFinite(n)) {
-      this.grid = Math.min(GRID_MAX, Math.max(GRID_MIN, n));
+      this.grid = Math.min(hi, Math.max(lo, n));
       this.gridMsg = { text: t('Grid size set to {size}, the nearest allowed size.', { size: this.grid }), error: false };
-    } else this.gridMsg = { text: t('Use 0.1 to 12.'), error: true };
+    } else this.gridMsg = { text: g ? t('Use {min} to {max}.', { min: lo, max: hi }) : t('Use 0.1 to 12.'), error: true };
   }
 
   /** The polygon window's way back: the options and the tool as they were when it opened. */
@@ -1099,7 +1161,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   get dualOn(): boolean {
-    return this.dual || this.accentCount > 0;
+    return !!this.img || this.dual || this.accentCount > 0;
   }
 
   /** On at once; off asks first while Accent layers exist. */
@@ -1198,6 +1260,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.escape(e);
       return;
     }
+    if (this.img?.readOnly) return;
     if (mod && e.key === 'Enter') {
       e.preventDefault();
       this.done();
@@ -1312,6 +1375,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   };
 
   onStageUp = (e: PointerEvent): void => {
+    this.endMoving();
     this.stopSync();
     if (this.gestures.up(e)) {
       e.stopPropagation();
@@ -1411,13 +1475,25 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** A window, popover or confirmation is open: the layer's own keys wait. */
   get modal(): boolean {
-    return this.startOpen || this.newAsk || this.leaving || !!this.xfer || this.dlg === 'save' || this.dlg === 'single' || this.dlg === 'poly';
+    return this.startOpen || this.newAsk || this.leaving || !!this.xfer || this.dlg === 'save' || this.dlg === 'single' || this.dlg === 'poly' || !!this.img?.modal;
   }
 
   // ── events out ──
 
-  private fire<T>(name: string, detail: T): void {
+  fire<T>(name: string, detail: T): void {
     this.dispatchEvent(new CustomEvent(name, { detail, bubbles: true, composed: true }));
+  }
+
+  /** The saved drawing is the current one (image mode). */
+  markSaved(): void {
+    this.baseline = toSvg(this.base);
+    this.dirty = false;
+  }
+
+  /** A menu under `opener` whose picks go to the image editor. */
+  openMenu(items: MenuEntry[], opener: HTMLElement): void {
+    const r = opener.getBoundingClientRect();
+    this.menu = { items, at: [r.left, r.bottom], touch: false, opener, key: 'xfer' };
   }
 
   get libraryMissing(): boolean {
@@ -1429,10 +1505,12 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   get blockReason(): string | undefined {
+    if (this.img) return this.img.blockReason(this.out);
     return this.out.error === 'empty' ? t('Draw something first') : this.out.error === 'over' ? t('Over the 32 KB limit') : this.out.error === 'invalid' ? this.errorText(this.out.message) : undefined;
   }
 
   done(): void {
+    if (this.img) return this.img.save();
     if (this.mcu) return void this.saveMcu();
     if (this.blockReason || !this.out.svg) {
       this.say(this.blockReason ?? '');
@@ -1522,6 +1600,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   openSave(): void {
     if (this.stage !== 'edit') return;
+    if (this.img) return this.img.save();
     if (this.mcu) return void this.saveMcu();
     if (this.libraryMissing) {
       this.say(t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.'));
@@ -1653,6 +1732,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   download(): void {
+    if (this.img) return this.img.download();
     if (!this.out.svg) return;
     const url = URL.createObjectURL(new Blob([this.out.svg], { type: 'image/svg+xml' }));
     const a = document.createElement('a');
@@ -1828,10 +1908,12 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The arrow buttons of the nudge pad. */
   nudge(dx: number, dy: number): void {
+    if (this.img?.readOnly) return;
     const k = this.nudgeBig ? 4 : 1;
     const c = this.pointCtx;
     if (c && this.tool === 'node') this.editPoint((p, i) => E.moveAnchor(p, i, p.anchors[i].x + dx * k, p.anchors[i].y + dy * k), 'Move point');
     else if (this.sel.length) this.editShapes(this.sel, (s) => moveShape(s, dx * k, dy * k), 'Move');
+    this.setMoving(this.sel, 300);
   }
 
   // ── render ──

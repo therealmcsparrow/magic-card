@@ -61,7 +61,15 @@ export interface Doc {
 
 export const MAX_BOX = 4096;
 let seq = 0;
-export const uid = (p = 's'): string => `${p}${(++seq).toString(36)}`;
+const reserved = new Set<string>();
+/** Ids that a loaded drawing already uses: uid() never hands them out again. */
+export const reserveIds = (ids: Iterable<string>): void => void [...ids].forEach((i) => reserved.add(i));
+export const uid = (p = 's'): string => {
+  let id: string;
+  do id = `${p}${(++seq).toString(36)}`;
+  while (reserved.has(id));
+  return id;
+};
 
 export const blankDoc = (name = ''): Doc => ({ name, vb: { x: 0, y: 0, w: 24, h: 24 }, shapes: [], groups: [] });
 export const is24 = (d: Doc): boolean => d.vb.w === 24 && d.vb.h === 24;
@@ -493,12 +501,16 @@ export const bytesOf = (s: string): number => (typeof TextEncoder !== 'undefined
 
 export const toPathData = (paths: EditPath[]): PathData => paths.filter((p) => p.anchors.length > 1).map((p) => E.fromEdit(p));
 
+/** Writes one shape's element itself (image mode: paint variables, id and name). */
+export type OwnElement = (s: Shape, d: string) => string;
+
 /** The SVG elements of one shape: one, or two when its fill and stroke differ in accent. */
-function shapeElements(s: Shape, decimals: number): string[] {
+function shapeElements(s: Shape, decimals: number, own?: OwnElement): string[] {
   const data = toPathData(s.paths);
   if (!data.length) return [];
   const d = T.tidyPath(data, { decimals });
   if (!d) return [];
+  if (own) return [own(s, d)];
   const fillOn = s.fill !== 'none';
   const strokeOn = s.stroke !== 'none' && s.width > 0;
   const strokeAttrs = attr('stroke', 'currentColor') + attr('stroke-width', r2(s.width)) + (s.cap !== 'butt' ? attr('stroke-linecap', s.cap) : '') + (s.join !== 'miter' ? attr('stroke-linejoin', s.join) : '');
@@ -510,11 +522,11 @@ function shapeElements(s: Shape, decimals: number): string[] {
 }
 
 /** The document as SVG markup (not yet through the sanitiser). Hidden layers and groups are left out; groups nest as bare <g>. */
-export function toSvg(d: Doc, decimals = 2): string {
+export function toSvg(d: Doc, decimals = 2, own?: OwnElement): string {
   const emit = (list: TNode[]): string =>
     list
       .map((n) => {
-        if (n.s) return n.s.hidden ? '' : shapeElements(n.s, decimals).join('');
+        if (n.s) return n.s.hidden ? '' : shapeElements(n.s, decimals, own).join('');
         const inner = d.groups.find((g) => g.id === n.id)?.hidden ? '' : emit(n.kids!);
         return inner && `<g>${inner}</g>`;
       })

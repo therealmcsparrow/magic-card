@@ -32,7 +32,7 @@ const ROOT = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const DEBT_REL = 'tools/es-syntax-debt.json';
 
 /** Editor-side files: the animation studio, the theme editor and the card editor with the chunks only it loads. Everything else is the card. */
-const EDITOR_SIDE = /^magic-card-(animation-studio|theme-editor|editor|icon-library|layer-editor|look-editor|path-canvas|path-tools|shape-editor|svg-editor|transfer)\.js$/;
+const EDITOR_SIDE = /^magic-card-(animation-studio|theme-editor|editor|icon-library|layer-editor|look-editor|path-canvas|path-tools|shape-editor|svg-editor|image-editor|transfer)\.js$/;
 export const isEditorSide = (name) => EDITOR_SIDE.test(name);
 
 /** Accepted guarded uses: file -> tokens -> string literals the file must still hold (the polyfill's property names). */

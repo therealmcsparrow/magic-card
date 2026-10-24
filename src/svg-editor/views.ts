@@ -37,10 +37,10 @@ const dOf = (s: Shape): string => {
 const paintVar = (p: Paint): string => (p === 'none' ? 'none' : p === 'main' ? 'var(--m)' : 'var(--a)');
 
 /** The shapes as SVG nodes painted with --m (Main) and --a (Accent), set by the parent. */
-export function artNodes(d: Doc, onlyVisible = true): TemplateResult[] {
+export function artNodes(d: Doc, onlyVisible = true, moving?: ReadonlySet<string>): TemplateResult[] {
   return d.shapes
     .filter((s) => !onlyVisible || !isOff(d, s, 'hidden'))
-    .map((s) => svg`<path d=${dOf(s)} style=${`fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}`}></path>`);
+    .map((s) => svg`<path d=${dOf(s)} style=${`fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}${moving?.has(s.id) ? ';will-change:transform' : ''}`}></path>`);
 }
 
 const viewBox = (d: Doc): string => `${d.vb.x} ${d.vb.y} ${d.vb.w} ${d.vb.h}`;
@@ -190,10 +190,11 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 // ── the layer ──
 
 export function renderEditor(ed: McSvgEditor): TemplateResult {
-  return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
+  return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? t('Image editor') : t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${skipLinks(ed)} ${topBar(ed)}
-    ${ed.stage === 'edit' ? workspace(ed) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${t('The icon editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
+    ${skipLinks(ed)} ${ed.img ? ed.img.topBar() : topBar(ed)}
+    ${ed.stage === 'edit' ? (ed.img?.readOnly ? ed.img.viewer() : workspace(ed)) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('Loading the image editor') : t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('The image editor could not load. Check your connection and try again.') : t('The icon editor could not load. Check your connection and try again.'))}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
+    ${ed.img?.dialogs()}
     ${ed.startOpen ? startWindow(ed) : nothing}
     ${ed.dlg === 'save' ? saveWin(ed) : nothing} ${ed.dlg === 'single' ? singleWin(ed) : nothing} ${ed.leaving ? leaveWin(ed) : nothing} ${ed.newAsk ? newWin(ed) : nothing} ${ed.xfer ? xferWin(ed) : nothing}
     ${ed.dlg === 'poly' ? polyWin(ed) : nothing} ${ed.dlg === 'help' ? helpPop(ed) : nothing} ${ed.pvOpen ? previewPop(ed) : nothing}
@@ -428,7 +429,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
     ${rail(ed)}
     ${ed.picker ? picker(ed) : nothing}
     ${left ? leftPanel(ed) : nothing}
-    <section class="center" aria-label=${t('Icon editor')}>
+    <section class="center" aria-label=${ed.img ? t('Image editor') : t('Icon editor')}>
       ${floatBar(ed)}
       <div class="stagebox">
       <div
@@ -443,7 +444,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
         <mc-path-canvas
           underlay
           role="group"
-          aria-label=${t('Icon canvas')}
+          aria-label=${ed.img ? t('Image canvas') : t('Icon canvas')}
           .frame=${ed.doc.vb}
           .paths=${ed.cvPaths}
           .paint=${ed.flat.paint}
@@ -505,23 +506,23 @@ function floatBar(ed: McSvgEditor): TemplateResult {
     const label = k === 'combine' && ed.boolBusy ? t('Working…') : k === 'align' ? t('Align') : k === 'combine' ? t(BOOL_OPS.union) : t('Path');
     return html`<button type="button" class="btn btn-secondary btn-sm" data-menu=${k} aria-haspopup="menu" aria-expanded=${aria(ed.menu?.key === k)} aria-busy=${busy ? 'true' : nothing} @click=${(e: Event) => ed.toolMenu(k, e.currentTarget as HTMLElement)}>${label}</button>`;
   };
-  return html`<div class="toolbar" role="toolbar" aria-label=${t('Icon canvas')}>
+  return html`<div class="toolbar" role="toolbar" aria-label=${ed.img ? t('Image canvas') : t('Icon canvas')}>
     ${btn(t('Zoom out'), 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(t('Zoom in'), 'add', () => ed.zoomBy(1.25), { keys: '=' })}${btn(t('Fit to view'), 'fitToScreenOutline', () => ed.fitView(), { keys: '0' })}
-    <button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('Preview')}</button>
+    ${ed.img ? nothing : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('Preview')}</button>`}
     ${btn(t('Grid {size}', { size: ed.grid }), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true })}${btn(t('Snap to grid'), 'magnet', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
     <span role="separator" aria-orientation="vertical"></span>
     ${menuBtn('align')}${menuBtn('combine')}${menuBtn('path')}
   </div>`;
 }
 
-function artLayer(ed: McSvgEditor): TemplateResult {
+export function artLayer(ed: McSvgEditor): TemplateResult {
   const v = ed.view;
   const f = ed.doc.vb;
   const live = ed.liveShape?.shape;
   return html`<svg class="art" aria-hidden="true" style=${ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)'}>
     <g transform=${`translate(${v.x} ${v.y}) scale(${v.zoom})`}>
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
-      ${guard([ed.doc.shapes, ed.doc.groups], () => artNodes(ed.doc))}
+      ${guard([ed.doc.shapes, ed.doc.groups, ed.moving], () => artNodes(ed.doc, true, ed.moving))}
       ${live ? svg`<g class="ghost">${artNodes({ ...ed.doc, shapes: [live] })}</g>` : nothing}
       ${ed.pt?.res?.doc ? svg`<g class="pvw">${ed.pt.res.prev.map((s) => svg`<path d=${dOf(s)}></path>`)}</g>` : nothing}
     </g>
@@ -614,8 +615,8 @@ function nudgePad(ed: McSvgEditor): TemplateResult | typeof nothing {
 function leftPanel(ed: McSvgEditor): TemplateResult {
   return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} aria-label=${t('Panel')} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
     ${ed.overlay ? html`<div class="sheet-head">${btn(t('Close'), 'close', () => (ed.overlay = false))}</div>` : nothing}
-    ${seg({ role: 'radiogroup', label: t('Panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('Layers') }, { value: 'library', label: t('Library') }], onChange: (p) => ed.openPanel(p) })}
-    ${ed.panel === 'layers' ? layersPanel(ed) : libraryPanel(ed)}
+    ${ed.img ? nothing : seg({ role: 'radiogroup', label: t('Panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('Layers') }, { value: 'library', label: t('Library') }], onChange: (p) => ed.openPanel(p) })}
+    ${ed.panel === 'layers' || ed.img ? layersPanel(ed) : libraryPanel(ed)}
   </aside>`;
 }
 
@@ -680,8 +681,10 @@ function inspector(ed: McSvgEditor): TemplateResult {
 }
 
 function gridChips(ed: McSvgEditor): TemplateResult {
-  const items: Array<[string, string]> = [...GRID_CHIPS.map((g): [string, string] => [String(g), String(g)]), ['custom', t('Custom')]];
-  const cur = ed.gridCustom ? 'custom' : GRID_CHIPS.includes(ed.grid) ? String(ed.grid) : 'custom';
+  const chips = ed.img?.grid.chips ?? GRID_CHIPS;
+  const [lo, hi] = ed.img ? [ed.img.grid.min, ed.img.grid.max] : [GRID_MIN, GRID_MAX];
+  const items: Array<[string, string]> = [...chips.map((g): [string, string] => [String(g), String(g)]), ['custom', t('Custom')]];
+  const cur = ed.gridCustom ? 'custom' : chips.includes(ed.grid) ? String(ed.grid) : 'custom';
   const pickChip = (k: string): void => {
     if (k === 'custom') {
       ed.gridCustom = true;
@@ -696,7 +699,7 @@ function gridChips(ed: McSvgEditor): TemplateResult {
           id: 'grid-custom',
           label: t('Custom grid size'),
           control: html`<span class="row-u"
-            ><input id="grid-custom" class="input" type="number" inputmode="decimal" step="0.05" min=${GRID_MIN} max=${GRID_MAX} data-field="grid-custom" aria-invalid=${ed.gridMsg?.error ? 'true' : 'false'} aria-describedby="gs-m" .value=${fmt(ed.grid)} @input=${(e: Event) => ed.typeGrid((e.target as HTMLInputElement).value, false)} @change=${(e: Event) => {
+            ><input id="grid-custom" class="input" type="number" inputmode="decimal" step="0.05" min=${lo} max=${hi} data-field="grid-custom" aria-invalid=${ed.gridMsg?.error ? 'true' : 'false'} aria-describedby="gs-m" .value=${fmt(ed.grid)} @input=${(e: Event) => ed.typeGrid((e.target as HTMLInputElement).value, false)} @change=${(e: Event) => {
               const el = e.target as HTMLInputElement;
               ed.typeGrid(el.value, true);
               if (!ed.gridMsg?.error) el.value = fmt(ed.grid);
@@ -712,12 +715,12 @@ function documentSection(ed: McSvgEditor): TemplateResult {
   return html`${group(
       t('Document'),
       html`<p class="help">${t('Nothing selected. Pick a layer, or click a shape.')}</p>
-        ${dualSwitch(ed)} ${gridChips(ed)}
-        ${chk('sw-safe', t('Show 20 x 20 safe area'), ed.safe, (v) => { ed.safe = v; ed.checks(); })}
+        ${ed.img ? nothing : dualSwitch(ed)} ${gridChips(ed)}
+        ${ed.img ? nothing : chk('sw-safe', t('Show 20 x 20 safe area'), ed.safe, (v) => { ed.safe = v; ed.checks(); })}
         ${chk('sw-nudge', t('Show nudge pad'), ed.nudgePad, (v) => (ed.nudgePad = v))}`,
       3,
     )}
-    ${group(
+    ${ed.img ? nothing : group(
       t('Tidy'),
       html`${pick('tidy-decimals', t('Decimals'), ed.decimals, [0, 1, 2, 3].map((k) => [k, String(k)]), (v) => { ed.decimals = parseInt(v, 10); ed.refresh(); })}
         <p class="help">${t('Fewer decimals make a smaller icon. Hidden layers are not saved.')}</p>
