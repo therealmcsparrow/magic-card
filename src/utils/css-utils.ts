@@ -12,9 +12,8 @@ const ENTITY_WORD = /(?<![\w-])entity(?: \d+(?:\.\d+)?%)?(?![\w-])/g;
 
 /** A colour value with its entity colours (`entity`, `entity N%`, one per side in a list) written as CSS; undefined without one. */
 function entityList(v: unknown): string | undefined {
-  if (typeof v !== 'string' || v.length > 256 || !v.includes('entity')) return undefined;
-  const css = v.replace(ENTITY_WORD, (m) => entityColorCss(m) ?? m);
-  return css === v ? undefined : css;
+  const css = typeof v === 'string' ? v.replace(ENTITY_WORD, (m) => entityColorCss(m) ?? m) : v;
+  return css === v ? undefined : (css as string);
 }
 
 /** Bare-number units: lengths px, times s (css-design-map), border length % (a share of the side, like its default). */

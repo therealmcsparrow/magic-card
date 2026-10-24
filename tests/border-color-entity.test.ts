@@ -24,10 +24,6 @@ describe('border_color with entity colours', () => {
     expect(designUsesEntityColor(D({ border_color: 'red entity' }))).toBe(true);
     expect(designUsesEntityColor(D({ border_color: 'var(--entity-x) red' }))).toBe(false);
   });
-  it('an oversized value is left alone', () => {
-    const long = 'entity '.repeat(100);
-    expect(designToStyle(D({ border_color: long }))).toContain(long.trim());
-  });
 });
 
 type El = HTMLElement & Record<string, unknown> & { updateComplete: Promise<unknown>; shadowRoot: ShadowRoot };
