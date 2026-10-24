@@ -1,29 +1,39 @@
 import type { SvgImageApi } from '../contracts/svg-image';
-import { onDemandChunks } from '../utils/lazy-chunks';
 import type { ImageShell, ImageUi } from './image-seam';
 
 /*
  * Loads the image-editor chunk (magic-card-image-editor.js) for an image source, together with the svg-image chunk
  * whose api it uses for every sanitiser, thumbnail and download. The only import() of the image-editor chunk. An icon
  * source never calls this. null on failure or after 8 s; the next call tries again.
+ * The svg-image chunk is imported here, not read from the card's chunk table: the table is in magic-card.js, and a
+ * reference to it from an editor chunk would cost the entry bytes. Both imports name the same chunk, so the chunk file
+ * is fetched once and its state (the image cache) is the one the cards use.
  */
 
 const TIMEOUT_MS = 8000;
 type Entry = (shell: ImageShell, api: SvgImageApi) => ImageUi;
+interface Loaded {
+  create: Entry;
+  api: SvgImageApi;
+}
 
-/** The svg-image chunk's api once its chunk is installed. */
-export const imageApi = (): SvgImageApi | undefined => (onDemandChunks['svg-image'].module() as { api?: SvgImageApi } | undefined)?.api;
+let pending: Promise<Loaded | null> | undefined;
+let api: SvgImageApi | undefined;
 
-let pending: Promise<Entry | null> | undefined;
+/** The svg-image chunk's api once loadImageEditor() resolved. */
+export const imageApi = (): SvgImageApi | undefined => api;
 
 export function loadImageEditor(): Promise<Entry | null> {
   pending ??= Promise.race([
-    Promise.all([onDemandChunks['svg-image'].load(), import(/* webpackChunkName: "image-editor" */ '../image-editor/chunk')]).then(([ok, m]) => (ok && imageApi() ? (m.createImageExt as Entry) : null)),
+    Promise.all([import(/* webpackChunkName: "svg-image" */ '../svg-image/chunk'), import(/* webpackChunkName: "image-editor" */ '../image-editor/chunk')]).then(([images, editor]) => {
+      api = images.api;
+      return { create: editor.createImageExt as Entry, api: images.api };
+    }),
     new Promise<null>((resolve) => setTimeout(() => resolve(null), TIMEOUT_MS)),
   ]).then(
-    (e) => {
-      if (!e) pending = undefined;
-      return e;
+    (l) => {
+      if (!l) pending = undefined;
+      return l;
     },
     (err: unknown) => {
       pending = undefined;
@@ -31,10 +41,11 @@ export function loadImageEditor(): Promise<Entry | null> {
       return null;
     },
   );
-  return pending;
+  return pending.then((l) => l?.create ?? null);
 }
 
 /** Tests: forget the shared promise. */
 export function __resetImageEditorForTests(): void {
   pending = undefined;
+  api = undefined;
 }
