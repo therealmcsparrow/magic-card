@@ -2,13 +2,15 @@ import type { HomeAssistant } from '../types';
 import type { LayerAnchor, LayerBlend } from './layer-placement';
 
 /*
- * Contract: card background stack ("Card backdrop" in the UI). Version 1.1.0.
+ * Contract: card background stack ("Card backdrop" in the UI). Version 1.2.0.
  * At most 4 layers; pan/zoom on images and camera snapshots only. Covers pan_zoom.pause_when_idle,
  * stale_badge and the badge host, status reason `stale`, page-hidden pause, first-paint fade, low power,
  * floor-safe CSS, blend scope, blur max 24 px and the performance rules (layer-placement 1.0.0
  * "Performance rules" bind here too). The layer-placement runtime and <mc-bg-stack> are part of
  * magic-card.js; the 'layers' chunk carries only the motion and refresh part (BgStackFx).
  * `to <side>` gradient heads; CardAppearanceOverrides has `background_layers`; card pause stops the stack.
+ * 1.2.0: an image layer's `image` and `states` values may be library image references (svg-image 1.0.0), drawn live
+ * by <mc-svg-image> from the svg-image chunk ("Library images" below).
  *
  * Seam: magic-card.js defines <mc-bg-stack> at load and renders it as the first child of .mc-card-content
  * when the resolved card config has a non-empty `background_layers`. It draws colour, gradient, pattern
@@ -31,20 +33,23 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *       opacity: 0-100            default 100
  *       blend: LayerBlend         default normal (scope: layer-placement "Blend scope")
  *       # image
- *       image: url | media-source id | /local/...   "One picture"; with `states` it is "Any other state"
+ *       image: url | media-source id | /local/... | mcu-image:<id>
+ *                                 "One picture"; with `states` it is "Any other state"
  *       entity: entity id         "Follows a device": picture from `attribute`; omitted = the card
  *                                 entity (entity-scope 1.x effective card entity), so `states` alone works
  *       attribute: string         default entity_picture
- *       states: { <state>: image } "Changes with state": exact state match, else `image`, else next layer
+ *       states: { <state>: image } "Changes with state": exact state match, else `image`, else next layer;
+ *                                 each value may be any `image` form, library references included
  *       refresh: seconds          camera.* only; default 10, minimum 5; snapshot re-fetched while on
  *                                 screen, page visible and card not paused (cache-busting query)
  *       stale_badge: boolean      camera.* only; default true. See "Stale snapshots".
  *       position: LayerAnchor | "<x>% <y>%"   default center
  *       size: cover | contain | auto | "<n>%"  default cover
- *       repeat: no-repeat | repeat | repeat-x | repeat-y   default no-repeat; ignored with cover
+ *       repeat: no-repeat | repeat | repeat-x | repeat-y   default no-repeat; ignored with cover and for
+ *                                 library images
  *       blur: 0-24 px             image only (BLUR_MAX); above 12 is "heavy" in the cost meter;
  *                                 bleed 3 x blur on each side inside the clip
- *       pan_zoom:                 image only (pictures and camera snapshots; never live streams)
+ *       pan_zoom:                 image only (pictures, library images and camera snapshots; never live streams)
  *         from: 100-200 (%)       default 100
  *         to: 100-200 (%)         default 115
  *         focus: LayerAnchor      default center; where the framing ends
@@ -94,6 +99,24 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *   pictures); the stack never builds an authenticated URL itself and adds no network request
  *   other than the image fetches the browser makes. GDPR: images stay inside the user's HA.
  *
+ * ── Library images (svg-image 1.0.0) ──
+ * A layer's current value (from `image`, a `states` match or the followed attribute) that starts with
+ * IMAGE_REF_PREFIX is a live layer:
+ * - it never goes to host.resolveImage, safeImageUrl or a CSS url(); the stack calls host.needImage() (starts the
+ *   svg-image chunk; the card shows the chunk's failure notice if it fails) and treats the reference as the
+ *   layer's shown value without a decode (status `ok`);
+ * - the picture box (.img > .pic) holds `<mc-svg-image .ref .hass .layer .at>` instead of a background-image; the
+ *   element is keyed by the reference like a URL, so the crossfade between two values, the first-paint fade,
+ *   reduced motion, pause and pan / zoom on .pic work as for pictures (a swap between two library images keeps
+ *   two elements for the 300 ms fade, then one);
+ * - a hass update re-renders a stack only when a layer's source signature changed, or when a live layer is shown
+ *   (so its element receives `hass`); stacks without a live layer keep the old rule;
+ * - the element, not the stack, reports a missing drawing: status `error`, reason `image-missing`;
+ * - decorative like every layer: the stack is aria-hidden, the drawing gets no accessible name, overlays and
+ *   descriptions are image module features.
+ * The stack tests the prefix only and holds no other library-image code; IMAGE_REF_RE, the sanitiser and the
+ * drawing are the chunk's.
+ *
  * ── Motion and timers (BgStackFx, chunk 'layers'; pan / zoom, camera refresh) ──
  * Pan / zoom is a CSS keyframe animation of `transform` (scale + translate toward `focus`) on the
  * image element only, no requestAnimationFrame; filter, position offsets and background-position
@@ -121,12 +144,13 @@ import type { LayerAnchor, LayerBlend } from './layer-placement';
  *
  * ── Errors for the editor ──
  * The element fires `mc-bg-layer-status` (bubbles, composed) with BgLayerStatus whenever a layer's
- * status changes; the studio maps `reason` to the sentences it shows. The
- * dashboard ignores it.
+ * status changes; the studio maps `reason` to the sentences it shows (`image-missing`: the library
+ * image is missing, deleted or unreadable). <mc-svg-image> in a live layer fires the same event for
+ * its layer. The dashboard ignores it.
  */
 
-export const BG_STACK_CONTRACT = '1.1.0';
-export const BG_STACK_CONTRACT_REVISION = 5;
+export const BG_STACK_CONTRACT = '1.2.0';
+export const BG_STACK_CONTRACT_REVISION = 6;
 export { MAX_BACKGROUND_LAYERS, BG_LAYER_STATUS_EVENT } from './bg-stack.needs';
 /** pause_when_idle: motion rests this long after the last input. */
 export const IDLE_PAUSE_MS = 120_000;
@@ -194,6 +218,8 @@ export interface BgStackHost {
   lowPower(): boolean;
   /** Card-namespace text for the pill, e.g. "Not updated 4 min" (i18n 1.0.0 in magic-card.js). */
   staleText(seconds: number): string;
+  /** A live layer is shown: start the svg-image chunk and mark it met for the card's failure notice (idempotent). */
+  needImage(): void;
 }
 
 /** <mc-bg-stack> properties set by magic-card.js. */
@@ -205,7 +231,7 @@ export interface BgStackElementProps {
   preview?: 'play' | 'start' | 'end';
 }
 
-export type BgLayerProblem = 'entity-missing' | 'no-picture' | 'no-state-image' | 'load-failed' | 'snapshot-failed' | 'stale';
+export type BgLayerProblem = 'entity-missing' | 'no-picture' | 'no-state-image' | 'load-failed' | 'snapshot-failed' | 'stale' | 'image-missing';
 
 export interface BgLayerStatus {
   /** YAML index. */
@@ -236,6 +262,7 @@ export interface BgStackItem {
   hasStates: boolean;
   pz?: BgPanZoom;
   camera: boolean;
+  /** A URL, or a library image reference for a live layer. */
   base?: string;
   shown?: string;
   prev?: string;
@@ -256,7 +283,7 @@ export interface BgStackView extends HTMLElement {
   items: BgStackItem[];
   host?: BgStackHost;
   preview?: 'play' | 'start' | 'end';
-  /** Decode `url` (a cache-busted form of `base` for a refresh) and swap it in. */
+  /** Decode `url` (a cache-busted form of `base` for a refresh) and swap it in; a library reference swaps in without a decode. */
   load(item: BgStackItem, base: string, url?: string): Promise<void>;
   status(item: BgStackItem, status: BgLayerStatus['status'], reason?: BgLayerProblem, detail?: string | number): void;
   requestUpdate(): void;
