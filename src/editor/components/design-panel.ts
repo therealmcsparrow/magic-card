@@ -980,7 +980,7 @@ export class DesignPanel extends LitElement {
               .corners=${!!p.sides?.corners}
               .units=${p.units ?? ['px', 'em', 'rem', '%']}
               .options=${(p.options ?? []).map((o) => ({ value: o.value, label: lt(o.label) }))}
-              .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || ''}
+              .inherited=${(p.tabState && !this._builtin(p.key) && this._inherited(p.key)) || (p.key === 'border_width' && this._getActiveDesign().border_length ? '2px' : '')}
               .onChange=${(updates: Record<string, unknown>) => this._handlePropertyChange(p.key, String(updates[p.key] ?? ''))}
             ></mc-box-field>
           `)}`,

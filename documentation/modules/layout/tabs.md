@@ -31,7 +31,7 @@ The Design tab of a tabs module has a Tab bar section. Its keys style the bar, t
 
 The keys work with every `tab_style` (default, pills and underline). A key that is not set leaves that part of the bar as it was before these keys existed, so a tabs module that uses none of them looks exactly as before. A key with a value the editor does not accept is ignored.
 
-The Typography section of the Design tab (`font_family`, `font_size`, `font_weight`, `font_style`, `font_variant`, `color`, `text_align`, `text_decoration`, `text_transform`, `text_indent`, `text_overflow`, `text_shadow`, `line_height`, `letter_spacing`, `word_spacing`, `white_space`, `word_break` and `overflow_wrap`) styles the tab buttons only. It does not reach the content of the tabs. The `tab_` keys above, and the per-state fields, override it. A font weight set there also replaces the weights the underline style gives the tabs (500, and 700 for the active tab), unless `tab_font_weight` is set. The same keys in the Hover view of the Design tab style the tab buttons while the pointer is over the module. A gradient colour paints the tab labels. On the active pill, and on a tab while its own background shows (`tab_background`, or the background of the hover, active or disabled state), the label uses the first colour of the gradient instead. Without that background the label keeps the gradient.
+The Typography section of the Design tab (`font_family`, `font_size`, `font_weight`, `font_style`, `font_variant`, `color`, `text_align`, `text_decoration`, `text_transform`, `text_indent`, `text_overflow`, `text_shadow`, `line_height`, `letter_spacing`, `word_spacing`, `white_space`, `word_break` and `overflow_wrap`) styles the tab buttons only. It does not reach the content of the tabs. The `tab_` keys above, and the per-state fields, override it. A font weight set there also replaces the weight the underline style gives the tabs (500), unless `tab_font_weight` is set. The same keys in the Hover view of the Design tab style the tab buttons while the pointer is over the module. A gradient colour paints the tab labels. On the active pill, and on a tab while its own background shows (`tab_background`, or the background of the hover, active or disabled state), the label uses the first colour of the gradient instead. Without that background the label keeps the gradient.
 
 A conditional design rule can set any of these keys, and the rule's value replaces the base value while the rule matches. In the Hover view, the tab keys change only the tab states described in [Tab states](#tab-states); its Typography keys style the tab buttons, as described above.
 
@@ -42,6 +42,7 @@ In the editor, the Tab bar section of the Design tab groups these keys into five
 | `tab_bar_background` | colour | not set | Background of the bar. |
 | `tab_bar_border_color` | 1 to 4 colours, one per side | not set | Colour of the line round the bar. One colour, or one for each side in the order top, right, bottom, left. |
 | `tab_bar_border_width` | 1 to 4 lengths from 0 to 32, no % | not set | Width of that line. One length, or one for each side in the same order. |
+| `tab_bar_border_style` | 1 to 4 border style words, one per side | not set | Style of that line, for example `solid`, `dashed` or `none`. |
 | `tab_bar_padding` | 1 to 4 lengths, each up to 256 | not set | Space inside the bar, round the tabs. |
 | `tab_bar_position` | `top`, `bottom` | `top` | Puts the bar above or below the content. Keyboard focus follows the visual order. |
 | `tab_align` | `start`, `center`, `end`, `stretch` | `start` | Places the tabs in the bar. `stretch` makes the tabs fill the bar. |
@@ -124,9 +125,17 @@ design:
 
 ### The active line
 
-The active tab has no separate indicator. The line under it is the tab's border. Its colour is `tab_border_color` in `tab_active`. Unless `tab_border_width` or `tab_border_color` is set, the active tab's line is its bottom edge only, so it sits under the tab. Once either is set, every tab has a border on all four sides, and the active tab differs only in its `tab_active` settings. With `tab_bar_position: bottom`, the line stays on the tab's bottom edge.
+The active tab has no indicator, text colour or fill of its own. Without `tab_active` settings it looks like the other tabs, in every tab style. To mark it, set the keys of `tab_active`, for example a `tab_border_color` for a line, a `tab_color` or a `tab_background`. Unless `tab_border_width` or `tab_border_color` is set, the active tab's line is its bottom edge only, so it sits under the tab. Once either is set, every tab has a border on all four sides, and the active tab differs only in its `tab_active` settings. With `tab_bar_position: bottom`, the line stays on the tab's bottom edge.
 
 In Pills, the tabs have no bottom line of their own, so the active tab's border colour shows only in a border on all four sides. That needs `tab_border_width` or `tab_border_color` to be set.
+
+### The bar line
+
+The bar keeps its own line under the tabs (1px by default, 2px in Underline, none in Pills). Change it with `tab_bar_border_width`, `tab_bar_border_color` and `tab_bar_border_style`, one value for all sides or one per side. A width of `0` or the style `none` removes the line in every tab style.
+
+### Border section of the Design tab
+
+On a tabs module the Border width, Border style and Border colour of the Design tab (and of the Hover view) draw on the tab buttons, not round the tabs box. A `tab_border_` key wins over them. Border radius and Box shadow stay on the box.
 
 ### Disabled tabs
 

@@ -557,6 +557,7 @@ export interface DesignConfig {
   tab_bar_background?: string;
   /** One to four lengths, as in CSS border-width */
   tab_bar_border_width?: string;
+  tab_bar_border_style?: string;
   /** One to four colours, in CSS side order */
   tab_bar_border_color?: string;
   tab_bar_padding?: string;

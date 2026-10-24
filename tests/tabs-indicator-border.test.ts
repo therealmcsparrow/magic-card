@@ -119,3 +119,57 @@ describe('Design > Border on a tabs module styles the tab buttons, not the tabs 
     expect(wrapper).toContain('box-shadow');
   });
 });
+
+describe('an active tab without tab_active fields looks like the other tabs', () => {
+  it('no rule of the card sheet sets the label colour, background or weight of the active tab button', () => {
+    const own = card.filter((r) => /\.mc-tab-button\.active/.test(r.sel) && /(^|;|\s)(color|background|font-weight)\s*:/.test(r.decl));
+    expect(own, own.map((r) => `${r.sel}{${r.decl}}`).join('\n')).toEqual([]);
+  });
+  it('Pills has no fill rule for the active tab', () => {
+    const fill = card.filter((r) => /data-style='pills'\] \.mc-tab-button\.active/.test(r.sel));
+    expect(fill).toEqual([]);
+  });
+});
+
+describe('the bar line (tab_bar_border_*)', () => {
+  it('is the card sheet default on .mc-tabs-header in every style, untouched without a bar key', () => {
+    const line = card.filter((r) => /(^|\*\/ )(\.mc-tabs\[data-style='underline'\] )?\.mc-tabs-header$/.test(r.sel) && /border-bottom/.test(r.decl));
+    expect(line.map((r) => r.decl).join(' ')).toContain('1px solid var(--mc-border)');
+    expect(line.map((r) => r.decl).join(' ')).toContain('2px solid var(--mc-border)');
+    expect(tabLook({}).tokens).not.toContain('bar-border');
+  });
+  it('tab_bar_border_style becomes --mc-tb-bs on the bar border token, one to four words', () => {
+    const look = tabLook({ tab_bar_border_style: 'none' });
+    expect(look.vars['--mc-tb-bs']).toBe('none');
+    expect(look.tokens).toContain('bar-border');
+    expect(tabLook({ tab_bar_border_style: 'solid none none none' }).vars['--mc-tb-bs']).toBe('solid none none none');
+    expect(tabLook({ tab_bar_border_style: 'wavy' }).vars['--mc-tb-bs']).toBeUndefined();
+    expect(tabLook({ tab_bar_border_style: 'solid '.repeat(40) }).vars['--mc-tb-bs']).toBeUndefined();
+  });
+  it('width 0 and style none are values of the bar rule, which targets the bar only', () => {
+    expect(tabLook({ tab_bar_border_width: '0' }).vars['--mc-tb-bw']).toBe('0px');
+    const rules = tabsSheet.filter((r) => r.sel.includes("~='bar-border'"));
+    expect(rules.length).toBeGreaterThan(0);
+    for (const r of rules) {
+      expect(r.sel).toMatch(/\.mc-tabs-header$/);
+      expect(r.decl).not.toMatch(/\.mc-tab-button/);
+    }
+    expect(rules.map((r) => r.decl).join(' ')).toContain('border-style:var(--mc-tb-bs,solid)');
+  });
+  it('width, colour and style per side reach the tabs element as variables for the bar', async () => {
+    const c = await mountCard(
+      cardConfig([tabsModule({ tab_bar_border_width: '0 0 2px 0', tab_bar_border_style: 'none none dashed none', tab_bar_border_color: 'red' }, 'underline')]),
+      makeHass({}),
+    );
+    const bar = c.shadowRoot!.querySelector('.mc-tabs')!;
+    const style = bar.getAttribute('style') ?? '';
+    expect(style).toContain('--mc-tb-bw:0px 0px 2px 0px');
+    expect(style).toContain('--mc-tb-bs:none none dashed none');
+    expect(style).toContain('--mc-tb-bc:red');
+    expect(c.shadowRoot!.querySelector('.mc-module-wrapper')!.getAttribute('style') ?? '').not.toMatch(/border/);
+  });
+  it('a nested tabs module does not inherit the bar variables', () => {
+    expect(tabsStyles.cssText).toContain('--mc-tb-bs');
+    expect(tabsStyles.cssText.match(/--mc-tb-bs:\s*initial|--mc-tb-bs[^;}]*initial/)).not.toBeNull();
+  });
+});

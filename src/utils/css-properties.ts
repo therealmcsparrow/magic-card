@@ -171,9 +171,9 @@ export const CSS_SECTORS: CssSector[] = [
       prop('border_right', 'border-right', lm('Border right'), 'text'),
       prop('border_bottom', 'border-bottom', lm('Border bottom'), 'text'),
       prop('border_left', 'border-left', lm('Border left'), 'text'),
-      prop('border_width', 'border-width', lm('Border width'), 'unit'),
-      { ...prop('border_style', 'border-style', lm('Border style'), 'select', BORDER_STYLE_OPTS), emptyLabel: lm('Solid when width is set') },
-      prop('border_color', 'border-color', lm('Border colour'), 'color'),
+      { ...prop('border_width', 'border-width', lm('Border width'), 'sides'), sides: { cell: 'length' }, units: ['px', 'em', 'rem'] },
+      { ...prop('border_style', 'border-style', lm('Border style'), 'sides', BORDER_STYLE_OPTS), sides: { cell: 'style' } },
+      { ...prop('border_color', 'border-color', lm('Border colour'), 'sides'), sides: { cell: 'color' } },
       option('border_length', lm('Border length'), 'unit', {
         units: ['%', 'px'],
         help: lm('Shorten the border line, e.g. 40% for a short accent line.'),
@@ -421,6 +421,7 @@ export const CSS_SECTORS: CssSector[] = [
       tb('tab_bar_background', lm('Bar background'), 'color', { subgroup: 'bar' }),
       tb('tab_bar_border_color', lm('Bar border colour'), 'sides', { sides: { cell: 'color' }, subgroup: 'bar' }),
       tb('tab_bar_border_width', lm('Bar border width'), 'sides', { sides: { cell: 'length' }, units: ['px', 'em', 'rem'], subgroup: 'bar' }),
+      tb('tab_bar_border_style', lm('Bar border style'), 'sides', { sides: { cell: 'style' }, options: [...BORDER_STYLE_OPTS, { label: lm('Hidden'), value: 'hidden' }], subgroup: 'bar' }),
       tb('tab_bar_padding', lm('Bar padding'), 'text', { help: TAB_LENGTHS_HELP, subgroup: 'bar' }),
       tb('tab_gap', lm('Gap between tabs'), 'unit', { units: PCT, subgroup: 'bar' }),
       tb('tab_animation', lm('Tab switch animation'), 'segmented', {

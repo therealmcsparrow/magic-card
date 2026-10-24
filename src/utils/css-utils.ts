@@ -100,7 +100,7 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
   const gradient = parseGradient(design.color)?.stops[0];
 
   for (const [key, cssProperty] of Object.entries(ALL_CSS_MAP)) {
-    if ((control && CONTROL_KEYS.has(key)) || (tabs && isTabType(key))) continue;
+    if ((control && CONTROL_KEYS.has(key)) || (tabs && (isTabType(key) || BORDER_KEYS.includes(key)))) continue;
     let value = gradient && key === 'color' ? gradient : rec[key];
     if (typeof value === 'string' && IMAGE_KEYS.has(key)) value = mediaCssImage(undefined, value);
     if (value !== undefined && typeof value === 'string' && value !== '') {
@@ -108,7 +108,7 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
     }
   }
 
-  const borderStyle = control ? undefined : defaultBorderStyle(rec);
+  const borderStyle = control || tabs ? undefined : defaultBorderStyle(rec);
   if (borderStyle) parts.push(`border-style: ${borderStyle}`);
 
   // Module text that sets its own colour (button label, info value, ...) reads this, so the
@@ -278,9 +278,11 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
   const list = (style: string) => splitDeclarations(hoverSafe(style)).filter((d) => d.includes(':')).map(important);
   const decls = list(designToStyle(hover as DesignConfig, target.control, target.parts, target.tabs));
   const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
-  if (!decls.length && !bar.length) return '';
-  const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
+  // the Border fields of a tabs module draw on its tab buttons
+  const buttons = target.tabs ? list(designToStyle(Object.fromEntries(BORDER_KEYS.map((k) => [k, hover[k as keyof DesignConfig]])) as DesignConfig)) : [];
+  if (!decls.length && !bar.length && !buttons.length) return '';
+  const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));
   const extra: string[] = [];
   const { shape, borderLength } = target;
@@ -297,6 +299,7 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
     decls.push(...splitDeclarations(borderLength.style).map(important));
     if (color) extra.push(`${sel} > .mc-border-fx > i { border-color: ${color} !important; }`);
   }
+  if (buttons.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header>.mc-tab-button { ${buttons.join('; ')}; }`);
   if (bar.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header { ${bar.join('; ')}; }`);
   return [decls.length && `${sel} { ${decls.join('; ')}; }`, ...extra].filter(Boolean).join(' ');
 }

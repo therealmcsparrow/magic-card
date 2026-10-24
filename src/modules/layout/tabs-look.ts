@@ -86,6 +86,7 @@ export const TAB_KEYS: readonly string[] = [
   ...COLOURS.map((c) => c[0]),
   'tab_bar_border_color',
   'tab_disabled_tabs',
+  'tab_bar_border_style',
   ...LENGTHS.map((c) => c[0]),
   ...TAB_FIELDS.map((c) => c[0]),
   ...CHOICES.map((c) => c[0]),
@@ -262,12 +263,17 @@ export function tabLook(design: unknown, phase = 0, style = 'default'): TabLook 
   }
   const barBorder = colours(d.tab_bar_border_color);
   if (barBorder) put('--mc-tb-bc', barBorder, 'bar-border');
+  const barSides = styles(d.tab_bar_border_style);
+  if (barSides) put('--mc-tb-bs', barSides, 'bar-border');
   for (const [key, prop, token, most, max, pct] of LENGTHS) {
     const l = length(d[key], most, max, pct);
     if (l) put(prop, l, token);
   }
+  // the Design > Border fields are the base look of the tab buttons; a valid tab_border key wins
+  const base: Record<string, unknown> = { ...d };
+  for (const [k, kind] of [['width', 'bw'], ['style', 'bs'], ['color', 'sides']] as const) if (parse(kind, d[`tab_border_${k}`]) === undefined) base[`tab_border_${k}`] = d[`border_${k}`];
   for (const [key, kind, suffix, token] of TAB_FIELDS) {
-    const v = parse(kind, d[key]);
+    const v = parse(kind, base[key]);
     if (v) put(`--mc-tt-${suffix}`, v, token);
     if (v && kind === 'sides') focusColour(vars, 'tt', v);
   }

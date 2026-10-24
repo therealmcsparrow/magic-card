@@ -44,7 +44,7 @@ const VARIANTS: ReadonlyArray<readonly [string, string, string]> = [
 ];
 
 const MORE: ReadonlyArray<readonly [string, string, string]> = [
-  ['bar-border', BAR, 'border-style:solid;border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
+  ['bar-border', BAR, 'border-style:var(--mc-tb-bs,solid);border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
   ['color', DIRECT, 'color:var(--mc-tt-c)'],
   ['bg', DIRECT, `background:var(--mc-tt-bg);${SOLID}`],
   ['border', TAB, 'border-style:var(--mc-tt-bs,solid);border-width:var(--mc-tt-bw,1px);border-color:var(--mc-tt-bc,var(--mc-border))'],
@@ -128,7 +128,7 @@ const KEYFRAMES = [0, 1]
 
 // Every variable a rule reads would otherwise reach a nested tabs module through inheritance.
 const NESTED_VARS = [
-  '--mc-tb-bw', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
+  '--mc-tb-bw', '--mc-tb-bs', '--mc-tb-bc', '--mc-tb-bg', '--mc-tb-pad', '--mc-tb-gap',
   '--mc-tt-an', '--mc-tt-fc', '--mc-th-fc', '--mc-ta-fc', '--mc-td-fc',
   ...['tt', 'th', 'ta', 'td'].flatMap((p) => TAB_FIELDS.map((f) => `--mc-${p}-${f[2]}`)),
   ...['m', 'i', 'n', 'om', 'oi', 'on'].map((k) => `--mc-th-anim-${k}`),

@@ -5,9 +5,9 @@ The Borders & outlines section of the [Design tab](README.md), in the Style grou
 | UI label | YAML key | Field | Values |
 | --- | --- | --- | --- |
 | Border radius | `border_radius`, `border_top_left_radius`, `border_top_right_radius`, `border_bottom_right_radius`, `border_bottom_left_radius` | Box | Length or `%` per corner |
-| Border width | `border_width` | Unit | Length; one to four values in Custom |
-| Border style | `border_style` | Select | `none`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` |
-| Border color | `border_color` | Colour | Any CSS colour, `entity`, `entity N%` |
+| Border width | `border_width` | Four sides | One to four lengths, in the CSS shorthand order |
+| Border style | `border_style` | Four sides | One to four of `none`, `solid`, `dashed`, `dotted`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| Border color | `border_color` | Four sides | One to four CSS colours; `entity` and `entity N%` in YAML |
 | Border length | `border_length` | Unit (`%`, `px`) | See [Border length](#border-length) |
 | Alignment | `border_length_align` | Segmented | `start`, `center` (default), `end` |
 | Sides | `border_length_sides` | Select | All (not set), `top`, `right`, `bottom`, `left` |
@@ -22,7 +22,7 @@ The Borders & outlines section of the [Design tab](README.md), in the Style grou
 
 ## Border style default
 
-Border style starts on "Solid when width is set". A border with a width but no style is drawn solid. In plain CSS such a border would be invisible, so the card adds `border-style: solid` for the sides that have a width and no style. Pick `none` to hide it.
+Border style starts on "Not set". A border with a width but no style is drawn solid. In plain CSS such a border would be invisible, so the card adds `border-style: solid` for the sides that have a width and no style. Pick `none` to hide it.
 
 ```yaml
 design:
