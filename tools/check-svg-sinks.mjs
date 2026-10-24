@@ -1,14 +1,21 @@
-// SVG sink gate. Every chunk of the card bundle that holds an SVG sink must hold the
-// sanitiser (src/icons/svg-sanitize.ts, statically imported) itself, or every chain of parent chunks from magic-card.js to
-// it must pass through a chunk that does (a shared chunk, lazy-module LAZY_SHARED_CHUNK_FILES, loads beside its user and is not a parent); never only in a sibling, never behind its own import().
+// SVG sink gate. Every chunk of the card bundle that holds an SVG sink must hold the sanitiser that sink is paired with
+// (statically imported) itself, or every chain of parent chunks from magic-card.js to it must pass through a chunk that
+// does (a shared chunk, lazy-module LAZY_SHARED_CHUNK_FILES, loads beside its user and is not a parent); never only in a
+// sibling, never behind its own import().
 //
-// A sink is a source module that (a) calls unsafeSVG() / imports lit's unsafe-svg directive, or (b) imports the sanitiser
-// (it handles untrusted SVG), found by scanning src/**/*.ts, plus the modules named in tools/svg-sinks.json `sinks`.
+// The sanitisers are src/icons/svg-sanitize.ts (icons, own SVG) and src/svg-image/sanitize.ts (library images).
+// A sink is a source module that (a) calls unsafeSVG() / imports lit's unsafe-svg directive, (b) value-imports a
+// sanitiser (it handles untrusted SVG), or (c) creates a Blob of type image/svg+xml (a blob: URL has its creator's origin,
+// so an SVG blob opened as a page runs script in HA's origin); found by scanning src/**/*.ts, plus the modules named in
+// tools/svg-sinks.json `sinks`. Each sink is paired with one sanitiser: the one it value-imports, else the one
+// tools/svg-sinks.json names for it, else svg-sanitize.
 // The built graph (node_modules/.cache/magic-card/entry-graph.json, production build, with `parents`) is then checked:
-//   1. every chunk that holds a sink holds the sanitiser itself or in an ancestor chunk (a chunk's parents are loaded
-//      before it, so a static import is always satisfied there; --strict wants the chunk itself);
+//   1. every chunk that holds a sink holds its paired sanitiser itself or in an ancestor chunk (a chunk's parents are
+//      loaded before it, so a static import is always satisfied there; --strict wants the chunk itself); a sink chunk
+//      with no parents and no paired sanitiser fails;
 //   2. no chunk holds the sanitiser only in a sibling: that is the same test, it fails by 1;
-//   3. the svg-icon chunk exists, holds mc-svg-icon.ts and icon-source.ts, and the entry (magic-card.js) holds neither.
+//   3. the svg-icon chunk exists, holds mc-svg-icon.ts and icon-source.ts, and the entry (magic-card.js) holds neither;
+//   4. the entry holds no module of src/svg-image/, and only the svg-image chunk holds the image sanitiser.
 //
 // Usage: node tools/check-svg-sinks.mjs [--strict] [stats.json]    check the last production build
 //        node tools/check-svg-sinks.mjs --self-test                the rule against synthetic graphs
@@ -21,6 +28,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATS_DEFAULT = path.join(root, 'node_modules/.cache/magic-card/entry-graph.json');
 const RULES_REL = 'tools/svg-sinks.json';
 export const SANITIZER = './src/icons/svg-sanitize.ts';
+export const IMAGE_SANITIZER = './src/svg-image/sanitize.ts';
+export const SANITIZERS = [SANITIZER, IMAGE_SANITIZER];
+const IMAGE_DIR = './src/svg-image/';
 const ENTRY = 'magic-card.js';
 
 const CONTRACT_REL = 'src/contracts/lazy-module.ts';
@@ -59,16 +69,46 @@ const walk = (dir, out = []) => {
   return out;
 };
 
-/** True when a source text is an SVG sink: unsafeSVG, or a value import of the sanitiser. */
-export const isSinkSource = (text) =>
-  /lit\/directives\/unsafe-svg|\bunsafeSVG\s*\(/.test(text) || /^import\s+(?!type\b)[^;]*from\s+'[^']*svg-sanitize'/m.test(text);
+// A value import (not `import type`) and its specifier, one per statement.
+const IMPORT_RE = /^import\s+(?!type\b)[^;]*?\bfrom\s+'([^']+)'/gm;
 
-export const sinksInSources = (srcDir = path.join(root, 'src')) =>
+/** Module ids ('./src/...') a source text value-imports, relative specifiers resolved against `module`. */
+export const valueImports = (text, module = './src/x.ts') => {
+  const out = [];
+  for (const m of text.matchAll(IMPORT_RE)) {
+    if (!m[1].startsWith('.')) continue;
+    out.push(`./${path.posix.join(path.posix.dirname(module.slice(2)), m[1])}`);
+  }
+  return out;
+};
+
+const SANITIZER_BASE = { 'image': IMAGE_SANITIZER.replace(/\.ts$/, ''), 'icon': SANITIZER.replace(/\.ts$/, '') };
+
+/** The sanitiser a source text value-imports: IMAGE_SANITIZER, SANITIZER, or undefined (the library one wins). */
+export const importedSanitizer = (text, module = './src/x.ts') => {
+  const got = valueImports(text, module);
+  return got.includes(SANITIZER_BASE.image) ? IMAGE_SANITIZER : got.includes(SANITIZER_BASE.icon) ? SANITIZER : undefined;
+};
+
+/** True when a source text creates a Blob of type image/svg+xml. */
+export const makesSvgBlob = (text) => /\bnew\s+Blob\s*\(/.test(text) && text.includes('image/svg+xml');
+
+/** True when a source text is an SVG sink: unsafeSVG, a value import of a sanitiser, or an image/svg+xml Blob. */
+export const isSinkSource = (text, module) =>
+  /lit\/directives\/unsafe-svg|\bunsafeSVG\s*\(/.test(text) || importedSanitizer(text, module) !== undefined || makesSvgBlob(text);
+
+/** Sanitiser module a sink source is paired with: what it imports, else `named`, else svg-sanitize. */
+export const pairedSanitizer = (text, module, named) => importedSanitizer(text, module) ?? named ?? SANITIZER;
+
+/** { module, sanitiser } for every sink module in the sources. `named`: module -> sanitiser from tools/svg-sinks.json. */
+export const sinksInSources = (srcDir = path.join(root, 'src'), named = new Map()) =>
   walk(srcDir)
-    .filter((f) => path.relative(srcDir, f).replace(/\\/g, '/') !== 'icons/svg-sanitize.ts')
-    .filter((f) => isSinkSource(readFileSync(f, 'utf8')))
-    .map((f) => `./src/${path.relative(srcDir, f).replace(/\\/g, '/')}`)
-    .sort();
+    .map((f) => ({ f, module: `./src/${path.relative(srcDir, f).replace(/\\/g, '/')}` }))
+    .filter(({ module }) => !SANITIZERS.includes(module))
+    .map(({ f, module }) => ({ module, text: readFileSync(f, 'utf8') }))
+    .filter(({ module, text }) => isSinkSource(text, module))
+    .map(({ module, text }) => ({ module, sanitiser: pairedSanitizer(text, module, named.get(module)) }))
+    .sort((a, b) => (a.module < b.module ? -1 : 1));
 
 // ── the rule (pure) ──────────────────────────────────────────────────────────
 
@@ -115,39 +155,47 @@ const ancestors = (chunk, byId, shared) => {
 };
 
 /**
- * The sanitiser is installed before the chunk runs on EVERY path to it: the chunk holds it, or it has parents and each
+ * The sanitiser `san` is installed before the chunk runs on EVERY path to it: the chunk holds it, or it has parents and each
  * one is available. A child's import() is code inside its parent, so what a parent holds is installed first. A chunk with a
  * parent that lacks it (a second parent, a sibling, an entry without it) fails: one good ancestor on one path is not enough.
  */
-const available = (chunk, byId, shared, seen = new Set()) => {
-  if ((chunk.modules ?? []).includes(SANITIZER)) return true;
+const available = (chunk, byId, shared, san, seen = new Set()) => {
+  if ((chunk.modules ?? []).includes(san)) return true;
   const parents = loaders(chunk, byId, shared);
   if (!parents.length || seen.has(chunk.id)) return false;
   seen.add(chunk.id);
   return parents.every((id) => {
     const p = byId.get(id);
-    return !!p && available(p, byId, shared, new Set(seen));
+    return !!p && available(p, byId, shared, san, new Set(seen));
   });
 };
 
 const label = (c) => (c.files ?? []).find((f) => f.endsWith('.js')) ?? (c.names ?? []).join('+') ?? String(c.id);
 
-/** Returns { problems, notes }. `sinks`: module names; `strict`: the sanitiser must sit in the sink's own chunk. */
+/** A sink as { module, sanitiser }; a bare module name is paired with the icon sanitiser. */
+const asSink = (s) => (typeof s === 'string' ? { module: s, sanitiser: SANITIZER } : { module: s.module, sanitiser: s.sanitiser ?? SANITIZER });
+
+/** Returns { problems, notes }. `sinks`: module names or { module, sanitiser }; `strict`: the sanitiser must sit in the sink's own chunk. */
 export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFiles(), modules, read }) => {
   const problems = sharedChunkProblems({ chunks, shared, ...(modules ? { modules } : {}), ...(read ? { read } : {}) });
   const notes = [];
   const byId = new Map(chunks.map((c) => [c.id, c]));
+  const pairs = sinks.map(asSink);
   for (const c of chunks) {
     const here = new Set(c.modules ?? []);
-    const held = sinks.filter((s) => here.has(s));
+    const held = pairs.filter((s) => here.has(s.module));
     if (!held.length) continue;
-    if (here.has(SANITIZER)) {
-      notes.push(`${label(c)}: ${held.length} sink module${held.length === 1 ? '' : 's'}, sanitiser in the same chunk`);
-      continue;
+    for (const san of [...new Set(held.map((s) => s.sanitiser))].sort()) {
+      const mine = held.filter((s) => s.sanitiser === san);
+      const count = `${mine.length} sink module${mine.length === 1 ? '' : 's'}`;
+      if (here.has(san)) {
+        notes.push(`${label(c)}: ${count} paired with ${san}, sanitiser in the same chunk`);
+        continue;
+      }
+      const from = ancestors(c, byId, shared).find((a) => (a.modules ?? []).includes(san));
+      if (from && !strict && available(c, byId, shared, san)) notes.push(`${label(c)}: ${count} paired with ${san}, sanitiser from the ancestor chunk ${label(from)} (not a copy, and on every path to this chunk; strict mode wants one in this chunk)`);
+      else problems.push(`${label(c)} holds ${mine[0].module}${mine.length > 1 ? ` and ${mine.length - 1} more` : ''} without ${san}${from ? (strict ? ' in the same chunk (only in ' + label(from) + ')' : ' on every path (only in ' + label(from) + ', not in each parent)') : ' in the chunk or an ancestor'}`);
     }
-    const from = ancestors(c, byId, shared).find((a) => (a.modules ?? []).includes(SANITIZER));
-    if (from && !strict && available(c, byId, shared)) notes.push(`${label(c)}: ${held.length} sink module${held.length === 1 ? '' : 's'}, sanitiser from the ancestor chunk ${label(from)} (not a copy, and on every path to this chunk; strict mode wants one in this chunk)`);
-    else problems.push(`${label(c)} holds ${held[0]}${held.length > 1 ? ` and ${held.length - 1} more` : ''} without ${SANITIZER}${from ? (strict ? ' in the same chunk (only in ' + label(from) + ')' : ' on every path (only in ' + label(from) + ', not in each parent)') : ' in the chunk or an ancestor'}`);
   }
   const icon = chunks.find((c) => (c.names ?? []).includes('svg-icon'));
   if (!icon) problems.push('no svg-icon chunk in the build');
@@ -157,6 +205,11 @@ export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFi
     }
   const entry = chunks.find((c) => c.entry && (c.files ?? []).includes(ENTRY));
   if (entry) for (const m of ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts']) if ((entry.modules ?? []).includes(m)) problems.push(`${ENTRY} holds ${m} (it belongs in the svg-icon chunk; a plain icon needs only <ha-icon>)`);
+  const inEntry = (entry?.modules ?? []).filter((m) => m.startsWith(IMAGE_DIR));
+  if (inEntry.length) problems.push(`${ENTRY} holds ${inEntry[0]}${inEntry.length > 1 ? ` and ${inEntry.length - 1} more` : ''} (library images belong in the svg-image chunk)`);
+  for (const c of chunks) {
+    if ((c.modules ?? []).includes(IMAGE_SANITIZER) && !(c.names ?? []).includes('svg-image')) problems.push(`${label(c)} holds ${IMAGE_SANITIZER}; only the svg-image chunk may (editors reach it through its api)`);
+  }
   return { problems, notes };
 };
 
@@ -168,6 +221,9 @@ const selfTest = () => {
   const entry = { id: 0, entry: true, files: ['magic-card.js'], names: ['magic-card'], modules: ['./src/index.ts'] };
   const icon = { id: 1, parents: [0], files: ['magic-card-svg-icon.js'], names: ['svg-icon'], modules: ['./src/icons/mc-svg-icon.ts', './src/icons/icon-source.ts', S] };
   const particles = { id: 2, parents: [0], files: ['magic-card-particles.js'], names: ['particles'], modules: ['./src/particles/svg.ts', S] };
+  const IS = IMAGE_SANITIZER;
+  const imageSink = { module: './src/svg-image/export.ts', sanitiser: IS };
+  const imageChunk = { id: 9, parents: [0], files: ['magic-card-svg-image.js'], names: ['svg-image'], modules: ['./src/svg-image/export.ts', IS] };
   const PATH_CORE = sharedChunkFiles()[0];
   const cases = [
     ['sanitiser in each sink chunk passes', { chunks: [entry, icon, particles], sinks }, 0],
@@ -191,6 +247,15 @@ const selfTest = () => {
     ['a shared module with an import() fails', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => "const x = import('./x');" }, 1],
     ['a shared chunk with exactly its module and no import() passes', { chunks: [entry, { id: 8, parents: [0], files: [PATH_CORE.replace('.js', '.cb8d4820.js')], names: ['path-core'], modules: ['./src/path/core.ts'] }, icon, particles], sinks, read: () => 'export const a = 1;' }, 0],
     ['sanitiser two chunks up passes', { chunks: [{ ...entry, modules: ['./src/index.ts', S] }, { id: 5, parents: [0], files: ['magic-card-editor.js'], names: ['editor'], modules: [] }, { ...icon, parents: [5], modules: icon.modules.filter((m) => m !== S) }, particles], sinks }, 0],
+    ['an image sink beside the image sanitiser in its chunk passes', { chunks: [entry, icon, particles, imageChunk], sinks: [...sinks, imageSink] }, 0],
+    ['an image sink behind the icon sanitiser only fails (pairing)', { chunks: [entry, icon, particles, { ...imageChunk, modules: ['./src/svg-image/export.ts', S] }], sinks: [...sinks, imageSink] }, 1],
+    ['an image sink with no parent chunk and no image sanitiser fails', { chunks: [entry, icon, particles, { id: 9, parents: [], files: ['magic-card-svg-image.js'], names: ['svg-image'], modules: ['./src/svg-image/export.ts'] }], sinks: [...sinks, imageSink] }, 1],
+    ['an image sink under a parent that holds the image sanitiser passes', { chunks: [entry, icon, particles, imageChunk, { id: 10, parents: [9], files: ['magic-card-image-editor.js'], names: ['image-editor'], modules: ['./src/image-editor/x.ts'] }], sinks: [...sinks, imageSink, { module: './src/image-editor/x.ts', sanitiser: IS }] }, 0],
+    ['a sink named for the image sanitiser in a chunk without it fails even beside the icon sanitiser', { chunks: [entry, icon, particles, { id: 9, parents: [0], files: ['magic-card-x.js'], names: ['x'], modules: ['./src/x.ts', S] }], sinks: [...sinks, { module: './src/x.ts', sanitiser: IS }] }, 1],
+    ['a sink with both sanitisers is checked against its own pairing', { chunks: [entry, icon, particles, { id: 9, parents: [0], files: ['magic-card-svg-image.js'], names: ['svg-image'], modules: ['./src/x.ts', S, IS] }], sinks: [...sinks, { module: './src/x.ts', sanitiser: IS }] }, 0],
+    ['the entry holding a svg-image module fails', { chunks: [{ ...entry, modules: ['./src/index.ts', './src/svg-image/client.ts'] }, icon, particles], sinks }, 1],
+    ['the image sanitiser in a chunk that is not svg-image fails', { chunks: [entry, icon, particles, { id: 9, parents: [0], files: ['magic-card-image-editor.js'], names: ['image-editor'], modules: [IS] }], sinks }, 1],
+    ['a missing svg-image chunk is not an error', { chunks: [entry, icon, particles], sinks }, 0],
   ];
   let bad = 0;
   for (const [name, input, want] of cases) {
@@ -216,21 +281,33 @@ const selfTest = () => {
   }
   // the source scan
   const scan = [
-    ["import { unsafeSVG } from 'lit/directives/unsafe-svg.js';", true],
-    ["import { sanitizeSvg } from '../icons/svg-sanitize';", true],
-    ["import { SVG_MAX_BYTES, sanitizeSvg } from './svg-sanitize';", true],
-    ["import type { SanitizedSvg } from './svg-sanitize';", false],
-    ["const x = svg`<g>${unsafeSVG(own)}</g>`;", true],
-    ["import { html } from 'lit';", false],
+    ["import { unsafeSVG } from 'lit/directives/unsafe-svg.js';", './src/a.ts', true, SANITIZER],
+    ["import { sanitizeSvg } from '../icons/svg-sanitize';", './src/x/a.ts', true, SANITIZER],
+    ["import { SVG_MAX_BYTES, sanitizeSvg } from './svg-sanitize';", './src/icons/a.ts', true, SANITIZER],
+    ["import type { SanitizedSvg } from './svg-sanitize';", './src/icons/a.ts', false, SANITIZER],
+    ["const x = svg`<g>${unsafeSVG(own)}</g>`;", './src/a.ts', true, SANITIZER],
+    ["import { html } from 'lit';", './src/a.ts', false, SANITIZER],
+    ["import { sanitizeImage } from './sanitize';", './src/svg-image/export.ts', true, IMAGE_SANITIZER],
+    ["import { sanitizeImage } from '../svg-image/sanitize';", './src/image-editor/a.ts', true, IMAGE_SANITIZER],
+    ["import { sanitizeImage } from '../svg-image/sanitize';\nimport { sanitizeSvg } from '../icons/svg-sanitize';", './src/image-editor/a.ts', true, IMAGE_SANITIZER],
+    ["import type { SanitizedImage } from '../svg-image/sanitize';", './src/image-editor/a.ts', false, SANITIZER],
+    ["import { sanitize } from './sanitize';", './src/other/a.ts', false, SANITIZER],
+    ["const u = URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' }));", './src/a.ts', true, SANITIZER],
+    ["const b = new Blob([text], { type: 'application/json' });", './src/a.ts', false, SANITIZER],
+    ["const t = 'image/svg+xml';", './src/a.ts', false, SANITIZER],
   ];
-  for (const [text, want] of scan) {
-    if (isSinkSource(text) !== want) {
+  for (const [text, module, want, san] of scan) {
+    if (isSinkSource(text, module) !== want || (want && pairedSanitizer(text, module) !== san)) {
       bad++;
-      console.error(`self-test FAIL: scan of ${JSON.stringify(text)} (expected ${want})`);
+      console.error(`self-test FAIL: scan of ${JSON.stringify(text)} (expected ${want} paired with ${san})`);
     }
   }
+  if (pairedSanitizer("const u = new Blob([a], { type: 'image/svg+xml' });", './src/a.ts', IMAGE_SANITIZER) !== IMAGE_SANITIZER) {
+    bad++;
+    console.error('self-test FAIL: a sink the rules file names for the image sanitiser is paired with it');
+  }
   if (bad) process.exit(1);
-  console.log(`svg-sinks self-test: ${cases.length + parseCases.length + scan.length} cases ok`);
+  console.log(`svg-sinks self-test: ${cases.length + parseCases.length + scan.length + 1} cases ok`);
 };
 
 const main = () => {
@@ -241,7 +318,10 @@ const main = () => {
   const rules = readJson(path.join(root, RULES_REL), RULES_REL);
   const stats = readJson(file ? path.resolve(file) : STATS_DEFAULT, 'entry-graph stats');
   if (!stats.chunks?.length || !stats.chunks.some((c) => 'parents' in c)) throw new Error('the stats have no chunk parents (run a production build: npm run build)');
-  const sinks = [...new Set([...sinksInSources(), ...(rules.sinks ?? [])])].sort();
+  const listed = (rules.sinks ?? []).map(asSink);
+  const named = new Map(listed.map((x) => [x.module, x.sanitiser]));
+  const found = sinksInSources(path.join(root, 'src'), named);
+  const sinks = [...new Map([...listed, ...found].map((x) => [x.module, x])).values()].sort((x, y) => (x.module < y.module ? -1 : 1));
   const { problems, notes } = evaluate({ chunks: stats.chunks, sinks, strict });
   for (const n of notes) console.log(`svg-sinks: ${n}`);
   if (problems.length) {
