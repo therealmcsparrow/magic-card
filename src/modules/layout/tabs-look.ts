@@ -1,4 +1,5 @@
-import { cssLengths, safeColor, str, unitOpacity } from '../../utils/safe-css';
+import { str, unitOpacity } from '../../utils/safe-css';
+import { colour, colours, length, splitTop, styles } from '../../utils/tab-border';
 
 /*
  * The tab_ design keys of a tabs module as custom properties plus `data-mc-tab` tokens. Every value
@@ -55,8 +56,6 @@ const STATES: ReadonlyArray<readonly [string, string]> = [
   ['tab_disabled', 'd'],
 ];
 const WEIGHT = /^(?:normal|bold|[1-9]00)$/;
-// The border-style words (safe-css has the same list; a second user there would add a function to the card bundle).
-const BORDER_STYLE = /^(?:none|hidden|solid|dashed|dotted|double|groove|ridge|inset|outset)$/;
 const TRANSFORM = /^(?:none|uppercase|lowercase|capitalize)$/;
 
 /** Read as aliases of tab_active.tab_color, .tab_background and .tab_border_color (the border is the fill for Pills). */
@@ -65,9 +64,6 @@ const LEGACY = ['tab_active_color', 'tab_active_background', 'tab_indicator_colo
 const FAMILY = /^(?:[\w -]+|"[\w -]+"|'[\w -]+')$/;
 const FAMILY_MAX = 128;
 const SHADOW_MAX = 128;
-/** Border sides or corners, and the longest list of colours or style words. */
-const SIDES = 4;
-const SIDES_MAX = 256;
 const SHADOW_LAYERS = 2;
 
 /** Keyword keys: the word is the token suffix; the first word of each list is the default and adds no token. */
@@ -99,17 +95,6 @@ export const LEGACY_TAB_KEYS: readonly string[] = LEGACY;
 
 const word = (v: unknown): string => (typeof v === 'number' && Number.isFinite(v) ? String(v) : str(v)?.toLowerCase() ?? '');
 
-/** A colour the browser also accepts as a colour (where it can tell), never one with a function outside the allow-list. */
-function colour(v: unknown): string | undefined {
-  const c = safeColor(v);
-  return c && (typeof CSS === 'undefined' || typeof CSS.supports !== 'function' || CSS.supports('color', c)) ? c : undefined;
-}
-
-function length(v: unknown, most: number, max: number, pct: boolean): string | undefined {
-  const s = cssLengths(v, most);
-  return s && s.split(' ').every((t) => parseFloat(t) <= max && (pct || !t.endsWith('%'))) ? s : undefined;
-}
-
 const SIGNED = /^(-?(?:\d+(?:\.\d+)?|\.\d+))(px|em|rem)?$/;
 
 /** One signed length in px, em or rem (a bare number is px), at most `px` px or `rel` em / rem; rebuilt from the number. */
@@ -119,24 +104,6 @@ function signed(t: string, px: number, rel: number): string | undefined {
   const n = Number(m[1]);
   const unit = m[2] ?? 'px';
   return Math.abs(n) <= (unit === 'px' ? px : rel) ? `${n}${unit}` : undefined;
-}
-
-/** Splits at depth 0 on a comma or on whitespace, so a colour function keeps its own commas and spaces. */
-function splitTop(s: string, sep: ',' | ' '): string[] {
-  const out: string[] = [];
-  let depth = 0;
-  let from = 0;
-  for (let i = 0; i <= s.length; i++) {
-    const ch = s[i];
-    if (ch === '(') depth++;
-    else if (ch === ')') depth--;
-    if (i === s.length || (depth === 0 && (sep === ',' ? ch === ',' : /\s/.test(ch)))) {
-      const part = s.slice(from, i).trim();
-      if (part) out.push(part);
-      from = i + 1;
-    }
-  }
-  return out;
 }
 
 /** `none`, or one or two layers of `[inset] x y [blur [spread]] [colour]`; rebuilt from the parsed parts. */
@@ -171,25 +138,6 @@ function shadow(v: unknown): string | undefined {
     out.push([inset ? 'inset' : '', ...lens, paint ?? ''].filter(Boolean).join(' '));
   }
   return out.join(', ');
-}
-
-/** One to four colours, one per side in CSS order; one colour is read exactly as any other colour. */
-function colours(v: unknown): string | undefined {
-  const s = str(v);
-  if (!s || s.length > SIDES_MAX) return undefined;
-  const parts = splitTop(s, ' ');
-  if (parts.length === 1) return colour(s);
-  if (parts.length > SIDES) return undefined;
-  const out = parts.map(colour);
-  return out.every(Boolean) ? out.join(' ') : undefined;
-}
-
-/** One to four border-style words, one per side in CSS order. */
-function styles(v: unknown): string | undefined {
-  const s = str(v)?.toLowerCase();
-  if (!s || s.length > SIDES_MAX) return undefined;
-  const parts = s.split(/\s+/);
-  return parts.length <= SIDES && parts.every((w) => BORDER_STYLE.test(w)) ? parts.join(' ') : undefined;
 }
 
 /** One value of one per-tab key, checked against its grammar; undefined when it fails. */
@@ -241,15 +189,6 @@ function parse(kind: Kind, v: unknown): string | undefined {
 function focusColour(vars: Record<string, string>, prefix: string, list: string): void {
   const first = splitTop(list, ' ');
   if (first.length > 1) vars[`--mc-${prefix}-fc`] = first[0];
-}
-
-/** The hover Border width, style and colour of a tabs module as declarations for its tab buttons; each value passes the same checks as tab_border_*. */
-export function tabBorderStyle(d: unknown): string {
-  const r = plain(d) ?? {};
-  const width = parse('bw', r.border_width);
-  const style = parse('bs', r.border_style) ?? (width ? 'solid' : undefined);
-  const color = parse('sides', r.border_color);
-  return [width && `border-width: ${width}`, style && `border-style: ${style}`, color && `border-color: ${color}`].filter(Boolean).join('; ');
 }
 
 const plain = (v: unknown): Record<string, unknown> | undefined => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);

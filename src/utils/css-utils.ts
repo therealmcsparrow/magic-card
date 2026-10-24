@@ -5,7 +5,7 @@ import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
 import { buttonPartDecls } from './button-parts';
-import { tabBorderStyle } from '../modules/layout/tabs-look';
+import { tabBorderStyle } from './tab-border';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
