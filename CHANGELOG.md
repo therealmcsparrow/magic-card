@@ -4,15 +4,19 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.6 (2026-10-24)
 
 ### Changed
--   **An active tab has no look of its own.** Without `tab_active` settings the active tab looks like the other tabs: no line under it, no accent text colour and no Pills fill. Set the `tab_active` keys to mark it. The bar's own line stays. See [The active line](documentation/modules/layout/tabs.md#the-active-line).
--   **Border width, style and colour take one to four values.** The Design tab shows them as the four-side field, like padding. On a tabs module they draw on the tab buttons, in the base design and in the Hover view.
+-   **An active tab has no look of its own.** Without `tab_active` settings the active tab looks like the other tabs: no line under it, no accent text colour, no heavier weight in Underline and no Pills fill. Dashboards that relied on the old default marking will see the active tab blend in. Set the `tab_active` keys to mark it. The bar's own line stays. See [The active line](documentation/modules/layout/tabs.md#the-active-line).
+-   **Border width, style and colour on a tabs module draw on the tab buttons.** In the Design tab and in the Hover view, the Border width, Border style and Border colour fields now style each tab button instead of the box around the tabs. A `tab_border_` key still wins over them. The `border` shorthand and the `border_top`, `border_right`, `border_bottom` and `border_left` keys stay on the tabs box. See [Tabs](documentation/modules/layout/tabs.md).
+-   **Border width, style and colour take one to four values.** The Design tab shows them as a four-side field, like padding, and the colour of each side can follow an entity. See [Borders and outlines](documentation/design/borders.md).
 
 ### Added
 -   **Bar border style.** `tab_bar_border_style` sets the style of the tab bar's line per side. A width of 0 or the style `none` removes the line in every tab style. See [The bar line](documentation/modules/layout/tabs.md#the-bar-line).
--   **Colour picker pipette and formats.** The colour popup picks a colour from the screen where the browser offers it, and switches the field between HEXA, RGBA, HSLA and OKLCH. Save writes the chosen format.
+-   **Colour picker pipette and formats.** The colour popup picks a colour from the screen where the browser offers it, and switches the field between HEXA, RGBA, HSLA and OKLCH. Save writes the chosen format. The colour text field selects its text on focus. See [Design](documentation/design/README.md).
+
+### Fixed
+-   **Long colour and border lists are read up to a cap, in linear time.** A very long list of border values or entity colours no longer slows the editor or the card.
 
 ## 2026.10.12-beta.5 (2026-10-24)
 
