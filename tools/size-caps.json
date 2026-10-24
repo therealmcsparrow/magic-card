@@ -59,8 +59,8 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 980992,
-      "ceiling": 980992,
+      "raw": 982016,
+      "ceiling": 982016,
       "note": "Card editor. 958 KiB, measured 980,057."
     },
     "magic-card-icon-animator.js": {
@@ -167,6 +167,11 @@
       "raw": 23552,
       "ceiling": 40960,
       "note": "Library images: the image sanitiser, the image client, <mc-svg-image> and the editors' thumbnail, export and fragment functions. 23 KiB, measured 21,659 + 5 %, rounded up to 1 KiB. The contract ceiling is 40,960 B (SVG_IMAGE_CHUNK_CEILING)."
+    },
+    "magic-card-image-tools.js": {
+      "raw": 29696,
+      "ceiling": 32768,
+      "note": "Library image field and its picker (editor-only chunk, contract image-editor 1.0.0, child of the card editor). 29 KiB, measured 27,702 + 5 %, rounded up to 1 KiB. The contract ceiling is 32,768 B (IMAGE_TOOLS_CHUNK_CEILING)."
     },
     "magic-card-anim.js": {
       "raw": 89088,
@@ -555,6 +560,18 @@
       "field": "/entry/br/cap",
       "from": 72123,
       "to": 72404
+    },
+    {
+      "id": "editor-raw-982016",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 980992,
+      "to": 982016
+    },
+    {
+      "id": "editor-ceiling-982016",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 980992,
+      "to": 982016
     }
   ]
 }

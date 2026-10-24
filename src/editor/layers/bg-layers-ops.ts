@@ -100,6 +100,10 @@ export function setImageSource(layer: BackgroundLayerConfig, source: ImageSource
   return next as unknown as BackgroundLayerConfig;
 }
 
+/** The layer draws a library image (its picture or any state's): Repeat does not apply to it. */
+export const usesLibraryImage = (layer: BackgroundLayerConfig): boolean =>
+  [layer.image, ...stateRows(layer).map(([, v]) => v)].some((v) => typeof v === 'string' && v.startsWith('mcu-image:'));
+
 export const isCameraEntity = (e: string | undefined): boolean => typeof e === 'string' && e.startsWith('camera.');
 
 // ── state rows ("Changes with state") ──
@@ -168,6 +172,7 @@ export function statusSentence(s: BgLayerStatus, layer: BackgroundLayerConfig | 
       return layer?.image
         ? t('No picture for state {state}. The Any other state picture is used.', { state: detail })
         : t('No picture for state {state}. No "Any other state" picture is set, so the next layer is shown.', { state: detail });
+    case 'image-missing': return t('This image is no longer in the library.');
     case 'load-failed': return t('The picture could not be loaded. The next layer is shown.');
     case 'snapshot-failed': return t('Snapshot failed. The last good frame stays visible.');
     case 'stale': return t('Not updated {n} min', { n: staleMinutes(Number(s.detail) || 0) });

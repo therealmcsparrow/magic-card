@@ -235,6 +235,12 @@ icon-library	Centre	Center
 icon-library	Centre bulb	Center bulb
 icon-library	LED strip colour chase	LED strip color chase
 controls	{name} colour	{name} color
+image-tools	Accent colour	Accent color
+image-tools	Colours	Colors
+image-tools	Main and Accent follow the colours you set for this card.	Main and Accent follow the colors you set for this card.
+image-tools	Main colour	Main color
+image-tools	Thumbnails show the saved colours. On the card the live parts change with their devices.	Thumbnails show the saved colors. On the card the live parts change with their devices.
+image-tools	To change colours, use live parts in one picture. To swap pictures, use states.	To change colors, use live parts in one picture. To swap pictures, use states.
 look-editor	Auto works with brightness and colour temperature sliders.	Auto works with brightness and color temperature sliders.
 look-editor	Auto, from the light's colour	Auto, from the light's color
 look-editor	Border colour	Border color

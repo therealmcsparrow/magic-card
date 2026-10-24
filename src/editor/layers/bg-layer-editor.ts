@@ -14,7 +14,8 @@ import { m, t } from './i18n';
 import { toYaml } from '../../utils/yaml-utils';
 import { parseGradient } from '../../utils/gradient';
 import { LAYER_TYPES } from './bg-layers-model';
-import { isCameraEntity, imageSource, setImageSource, setStateRow, removeStateRow, renameStateRow, stateRows, switchType, type ImageSource } from './bg-layers-ops';
+import { isCameraEntity, imageSource, setImageSource, setStateRow, removeStateRow, renameStateRow, stateRows, switchType, usesLibraryImage, type ImageSource } from './bg-layers-ops';
+import { withImageTools } from '../image-tools-loader';
 import type { PanPreview } from './bg-status';
 import { blendTiles, chevron, lyrSeg, lyrSlider, lyrSwitch } from './controls';
 import { isAnchor } from './placement-model';
@@ -101,6 +102,18 @@ export function customPercent(layer: BackgroundLayerConfig): number {
 
 // ── image ──
 
+/** The library image field (the plain media picker until its chunk is there); `on` gets the new value, '' for none. */
+function imageField(h: EditorHost, value: string, compact: boolean, label: string, hint: boolean, on: (value: string) => void): TemplateResult {
+  const plain = (): TemplateResult => html`<mc-media-picker .hass=${h.hass} .value=${value} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => on(String(e.detail.value))}></mc-media-picker>`;
+  return withImageTools(
+    () => html`<mc-library-image-field .hass=${h.hass} .value=${value} .context=${'background'} .compact=${compact} .label=${label} .statesHint=${hint} @image-change=${(e: CustomEvent<{ keys: { image?: string } }>) => {
+      e.stopPropagation();
+      on(String(e.detail.keys.image ?? ''));
+    }}></mc-library-image-field>`,
+    plain,
+  );
+}
+
 function renderSource(h: EditorHost, layer: BackgroundLayerConfig, i: number): TemplateResult {
   const src = imageSource(layer);
   const items: ReadonlyArray<{ value: ImageSource; label: string }> = [
@@ -114,7 +127,7 @@ function renderSource(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
     <span class="lbl">${t('Source')}</span>
     ${lyrSeg(t('Source'), src, items, (v) => h.swap(i, setImageSource(layer, v), t('Source changed.')), 'source')}
     ${src === 'picture'
-      ? html`<mc-media-picker .hass=${h.hass} .value=${layer.image ?? ''} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => h.patch(i, { image: String(e.detail.value) || undefined })}></mc-media-picker>`
+      ? imageField(h, layer.image ?? '', false, '', false, (v) => h.patch(i, { image: v || undefined }))
       : html`<div>
           <label>${t('Device')}</label>
           <mc-entity-picker .hass=${h.hass} .value=${entity} .placeholder=${src === 'state' ? t("Leave empty to use the card's device") : 'entity_id'} @value-changed=${(e: CustomEvent) => h.patch(i, { entity: src === 'state' ? String(e.detail.value) || undefined : String(e.detail.value) })}></mc-entity-picker>
@@ -159,9 +172,9 @@ function renderStates(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
   return html`<div class="states">
     <datalist id=${listId}>${hints.map((s) => html`<option value=${s}></option>`)}</datalist>
     ${rows.map(
-      ([state, image]) => html`<div class="state-row" data-state=${state}>
+      ([state, image], at) => html`<div class="state-row" data-state=${state}>
         <label>${t('When state is')}<input class="lyr-input input" list=${listId} .value=${state} @change=${(e: Event) => h.swap(i, renameStateRow(layer, state, val(e)), t('State renamed.'))} /></label>
-        <mc-media-picker .hass=${h.hass} .value=${image} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => h.patch(i, setStateRow(layer, state, String(e.detail.value)))}></mc-media-picker>
+        ${imageField(h, image, true, `${t('When state is')} ${state}`, at === 0 && usesLibraryImage(layer), (v) => h.patch(i, setStateRow(layer, state, v)))}
         <button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="remove-state" aria-label=${t('Remove state {state}', { state })} @click=${() => h.patch(i, removeStateRow(layer, state))}>${t('Remove')}</button>
       </div>`,
     )}
@@ -177,7 +190,7 @@ function renderStates(h: EditorHost, layer: BackgroundLayerConfig, i: number): T
     <div class="acts"><button type="button" class="lyr-btn btn btn-secondary btn-sm" data-act="add-state" @click=${() => h.addBlankRow(i)}>${t('Add state')}</button></div>
     <div>
       <span class="lbl">${t('Any other state')}</span>
-      <mc-media-picker .hass=${h.hass} .value=${layer.image ?? ''} .mediaType=${'image'} @value-changed=${(e: CustomEvent) => h.patch(i, { image: String(e.detail.value) || undefined })}></mc-media-picker>
+      ${imageField(h, layer.image ?? '', true, t('Any other state'), !rows.length && usesLibraryImage(layer), (v) => h.patch(i, { image: v || undefined }))}
     </div>
     <p class="help">${t('Pictures change but text stays. Darken behind text works for all of them. On a wall tablet seen from across the room, use large text.')}</p>
   </div>`;
@@ -201,7 +214,7 @@ function renderFit(h: EditorHost, layer: BackgroundLayerConfig, i: number): Temp
           : nothing}
       </div>
     </div>
-    ${kind !== 'cover'
+    ${kind !== 'cover' && !usesLibraryImage(layer)
       ? html`<div>
           <label for=${h.idOf(i, 'repeat')}>${t('Repeat')}</label>
           <select class="lyr-input input" id=${h.idOf(i, 'repeat')} @change=${(e: Event) => h.patch(i, { repeat: val(e) === 'no-repeat' ? undefined : (val(e) as BackgroundLayerConfig['repeat']) })}>

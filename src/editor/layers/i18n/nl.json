@@ -198,6 +198,7 @@
   "Thickness": "Dikte",
   "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).": "Dit kleurverloop kan niet worden getoond. Gebruik linear-gradient(180deg, red, blue) of radial-gradient(circle, red, blue).",
   "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.": "Dit kleurverloop heeft CSS die de editor niet kan tekenen. Kies hierboven een snel kleurverloop om de editor te gebruiken.",
+  "This image is no longer in the library.": "Deze afbeelding staat niet meer in de bibliotheek.",
   "This layer has no action, so it only blocks taps.": "Deze laag heeft geen actie en blokkeert dus alleen tikken.",
   "This module keeps its own action.": "Deze module behoudt zijn eigen actie.",
   "This rule does not change the backgrounds.": "Deze regel verandert de achtergronden niet.",

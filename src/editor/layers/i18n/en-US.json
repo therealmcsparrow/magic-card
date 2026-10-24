@@ -199,6 +199,7 @@
   "Thickness": "Thickness",
   "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).": "This gradient cannot be shown. Use linear-gradient(180deg, red, blue) or radial-gradient(circle, red, blue).",
   "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.": "This gradient has CSS the editor cannot draw. Pick a quick gradient above to use the editor.",
+  "This image is no longer in the library.": "This image is no longer in the library.",
   "This layer has no action, so it only blocks taps.": "This layer has no action, so it only blocks taps.",
   "This module keeps its own action.": "This module keeps its own action.",
   "This rule does not change the backgrounds.": "This rule does not change the backgrounds.",

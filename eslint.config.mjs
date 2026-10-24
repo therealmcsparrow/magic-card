@@ -14,6 +14,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/editor/components/icon-animator/loader.ts',
   'src/editor/components/preset-catalogue-loader.ts',
   'src/editor/custom/icon-host.ts',
+  'src/editor/image-tools-loader.ts',
   'src/editor/layers/layer-editor-loader.ts',
   'src/editor/look-editor-loader.ts',
   'src/editor/transfer-loader.ts',

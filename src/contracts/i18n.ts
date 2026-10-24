@@ -246,6 +246,7 @@ export const I18N_MODULES = {
   'preset-catalogue': { bundle: 'magic-card-preset-catalogue.js', folders: ['src/preset-catalogue'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
   'controls': { bundle: 'magic-card-controls.js', folders: ['src/modules/controls/dropdown-view.ts', 'src/modules/controls/light-view.ts', 'src/modules/controls/spinbox-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
   'modules-extra': { bundle: 'magic-card-modules-extra.js', folders: ['src/modules/advanced/custom-card-view.ts', 'src/modules/advanced/forecast-view.ts', 'src/modules/content/camera-view.ts', 'src/modules/content/graphs-view.ts', 'src/modules/layout/tabs-view.ts'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: true },
+  'image-tools': { bundle: 'magic-card-image-tools.js', folders: ['src/image-tools'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'look-editor': { bundle: 'magic-card-look-editor.js', folders: ['src/look-editor'], tables: 'inline', status: 'complete', slice: 'flow-slider-styles', dashboard: false },
   'theme-presets': { bundle: 'magic-card-theme-presets.js', folders: ['src/theme-editor/presets'], tables: 'inline', status: 'complete', slice: 'I10', dashboard: false },
 } as const satisfies Record<string, I18nModuleEntry>;
