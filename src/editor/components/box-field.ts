@@ -29,12 +29,15 @@ const CORNER_META: Record<Side, { label: MessageId; icon: string }> = {
 /** What a side holds in shorthand mode: a length, a colour or a word from `options` (a border style). */
 export type SideCell = 'length' | 'color' | 'style';
 
+/** Longest shorthand read; a config value can come from an import. */
+const TOKENS_MAX = 256;
+
 /** A CSS shorthand split at spaces outside parentheses (`rgb(1, 2, 3) red` is two values). */
-function tokens(raw: string): string[] {
+export function tokens(raw: string): string[] {
   const out: string[] = [];
   let depth = 0;
   let cur = '';
-  for (const ch of raw.trim()) {
+  for (const ch of raw.slice(0, TOKENS_MAX).trim()) {
     if (ch === '(') depth++;
     else if (ch === ')') depth = Math.max(0, depth - 1);
     if (/\s/.test(ch) && depth === 0) {

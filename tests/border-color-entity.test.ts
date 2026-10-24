@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import '../src/editor/components/box-field';
 import '../src/editor/components/design-panel';
+import { tokens } from '../src/editor/components/box-field';
 import { designToStyle, designUsesEntityColor } from '../src/utils/css-utils';
 import type { DesignConfig } from '../src/types';
 
@@ -23,6 +24,21 @@ describe('border_color with entity colours', () => {
   it('the design counts as using the entity colour', () => {
     expect(designUsesEntityColor(D({ border_color: 'red entity' }))).toBe(true);
     expect(designUsesEntityColor(D({ border_color: 'var(--entity-x) red' }))).toBe(false);
+  });
+});
+
+describe('long colour lists', () => {
+  it('a very long list is read up to a cap, in linear time', () => {
+    const t0 = performance.now();
+    const list = tokens('entity 10% '.repeat(200000));
+    expect(performance.now() - t0).toBeLessThan(200);
+    expect(list.length).toBeLessThanOrEqual(64);
+    expect(list[0]).toBe('entity 10%');
+  });
+  it('a colour list over the cap is left as written, with no entity colour', () => {
+    const long = `entity ${'red '.repeat(100)}`;
+    expect(designToStyle(D({ border_color: long }))).not.toContain('--mc-entity-color');
+    expect(designUsesEntityColor(D({ border_color: long }))).toBe(false);
   });
 });
 
