@@ -23,6 +23,9 @@ const FORCED_OFF = `${TAB}[data-mc-force='disabled']:not(.active)`;
 /** The icon element of a tab: <ha-icon>, or <mc-svg-icon> when it draws effects or an own icon. */
 const ICONS = (sel: string): string[] => [`${sel} ha-icon`, `${sel} mc-svg-icon`];
 
+/** A label that sits on a background of its own is not clipped to a gradient. */
+const SOLID = '-webkit-text-fill-color:currentcolor';
+
 /** Rules gated on one token: [token, descendant selector, declarations]. */
 const RULES: ReadonlyArray<readonly [string, string, string]> = [
   ['bar-bg', BAR, 'background:var(--mc-tb-bg)'],
@@ -43,7 +46,7 @@ const VARIANTS: ReadonlyArray<readonly [string, string, string]> = [
 const MORE: ReadonlyArray<readonly [string, string, string]> = [
   ['bar-border', BAR, 'border-style:solid;border-width:var(--mc-tb-bw,1px);border-color:var(--mc-tb-bc,var(--mc-border))'],
   ['color', DIRECT, 'color:var(--mc-tt-c)'],
-  ['bg', DIRECT, 'background:var(--mc-tt-bg)'],
+  ['bg', DIRECT, `background:var(--mc-tt-bg);${SOLID}`],
   ['border', TAB, 'border-style:var(--mc-tt-bs,solid);border-width:var(--mc-tt-bw,1px);border-color:var(--mc-tt-bc,var(--mc-border))'],
 ];
 
@@ -79,7 +82,7 @@ const BORDER_EDGE = `.mc-tabs[data-style='underline'][data-mc-tab~='bar-border']
 /** What each field of TAB_FIELDS sets on a state (`p`: h, a or d); `icon` ones go on the tab's icon element. */
 const STATE_DECLS: Record<string, (p: string) => string> = {
   c: (p) => `color:var(--mc-t${p}-c)`,
-  bg: (p) => `background:var(--mc-t${p}-bg)`,
+  bg: (p) => `background:var(--mc-t${p}-bg);${SOLID}`,
   bc: (p) => `border-color:var(--mc-t${p}-bc)`,
   // a width needs a style to show; the base look's style, else solid
   bw: (p) => `border-width:var(--mc-t${p}-bw);border-style:var(--mc-t${p}-bs,var(--mc-tt-bs,solid))`,
@@ -153,20 +156,11 @@ const TYPE =
 
 // A gradient colour of the design (--mc-text-paint on the tab bar) paints the tab labels, as it paints the text of other modules.
 // The tab buttons paint the gradient themselves, so a tab_ bar background stays under them. A tab with a background of its own
-// (the active pill, or a tab_background in a state) cannot clip a gradient to its text; its label keeps the text colour.
-const PAINTED = '>.mc-tabs-header[style*=--mc-text-paint]>.mc-tab-button';
-const OWN_BG = (token: string, suffix: string): string => `.mc-tabs[data-style][data-mc-tab~='${token}']${PAINTED}${suffix}`;
-const KEEP = [
-  `.mc-tabs[data-style=pills]${PAINTED}.active`,
-  OWN_BG('bg', ':not(.active)'),
-  OWN_BG('h-bg', ":not(.active):not([aria-disabled='true'])"),
-  OWN_BG('a-bg', '.active'),
-  OWN_BG('d-bg', ":not(.active)[aria-disabled='true']"),
-  OWN_BG('d-bg', "[data-mc-force='disabled']:not(.active)"),
-].join(',');
+// (the active pill, or a tab_background in a state) cannot clip a gradient to its text; the background rules set the label
+// back to its text colour, so it follows exactly the states in which that background shows.
 const PAINT =
   '@supports (-webkit-background-clip:text){.mc-tabs-header[style*=--mc-text-paint] .mc-tab-button{background-image:var(--mc-text-paint);-webkit-background-clip:text;-webkit-text-fill-color:transparent}' +
-  `${KEEP}{-webkit-text-fill-color:currentcolor}}`;
+  `.mc-tabs[data-style=pills]${ACTIVE}{${SOLID}}}`;
 
 // The order matters: equal specificity, the later rule wins. Base, then hover, active, disabled.
 export const tabsStyles = unsafeCSS(
