@@ -9,7 +9,7 @@ import { tabsMinHeight } from '../lazy-heights';
 
 /** Tabbed container (its view is in the modules-extra chunk): metadata, defaults and the box shown until the view arrives. */
 class TabsModule extends BaseLazyStub {
-  readonly metadata: LazyStubMetadata = { type: 'tabs' };
+  readonly metadata: LazyStubMetadata = { type: 'tabs', tabBar: true };
 
   createDefault(): TabsModuleConfig {
     return {

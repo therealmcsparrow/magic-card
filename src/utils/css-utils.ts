@@ -298,7 +298,7 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
     if (color) extra.push(`${sel} > .mc-border-fx > i { border-color: ${color} !important; }`);
   }
   if (bar.length) extra.push(`${sel}>.mc-tabs>.mc-tabs-header { ${bar.join('; ')}; }`);
-  return [`${sel} { ${decls.join('; ')}; }`, ...extra].join(' ');
+  return [decls.length && `${sel} { ${decls.join('; ')}; }`, ...extra].filter(Boolean).join(' ');
 }
 
 export function resolveConditionalDesign(

@@ -25,6 +25,9 @@ export default defineConfig({
   },
   test: {
     environment: 'happy-dom',
+    // the full parallel run loads every core: heavy shape, path and editor tests can take well over the 5 s default
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     include: ['tests/**/*.test.ts'],
     // writes the git-ignored src/<folder>/i18n/messages.gen.ts files the i18n modules import
     globalSetup: ['tools/i18n/vitest-global-setup.mjs'],

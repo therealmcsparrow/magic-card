@@ -17,10 +17,12 @@ export interface MagicModuleMetadata {
   icon: string;
   /** Entity-scope: false = card module (never inherits), a list = domains accepted when inherited, absent = any. */
   inherit?: EntityInherit;
+  /** The Typography keys of the design style the module's tab bar (its tab buttons), not its content. */
+  tabBar?: boolean;
 }
 
-/** What a lazy stub carries in magic-card.js: the type and the entity-scope rule. The rest is added by the editor chunk (src/editor/modules/lazy-metadata.ts). */
-export type LazyStubMetadata = Pick<MagicModuleMetadata, 'type' | 'inherit'> & Partial<MagicModuleMetadata>;
+/** What a lazy stub carries in magic-card.js: the type, the entity-scope rule and tabBar. The rest is added by the editor chunk (src/editor/modules/lazy-metadata.ts). */
+export type LazyStubMetadata = Pick<MagicModuleMetadata, 'type' | 'inherit' | 'tabBar'> & Partial<MagicModuleMetadata>;
 
 export interface MagicModule {
   readonly metadata: MagicModuleMetadata;
