@@ -12,6 +12,8 @@ import type { ItemMeta } from './mcu-library';
  *   magic_card_utils/images_save   { image: SavedImageInput, base_updated_at? } -> { image: ImageSummary }
  *   magic_card_utils/images_delete { image_id }                        -> {}                           (unknown id: success)
  *   subscribe_library events: { action: 'saved', kind: 'images', image: ImageEventSummary } | { action: 'deleted', kind: 'images', id }
+ * images_get with more than MAX_IMAGE_GET_IDS ids answers the error IMAGE_ERR_TOO_MANY ('too_many'), with no partial
+ * result; an empty ids list is invalid_format. Callers split longer lists into calls of at most MAX_IMAGE_GET_IDS.
  * Ids: chosen by the editor when an image is first saved (the slug of its name, made unique) and never changed;
  * rename saves the same id with a new name. A save of an id that exists without base_updated_at is a conflict.
  * Size: UTF-8 bytes of svg + compact JSON of bindings <= IMAGE_MAX_BYTES (counted on the text, not the file); over it
@@ -40,6 +42,9 @@ export const MAX_IMAGE_BOX = 4096;
 export const IMAGES_MIN_CONTRACT_REVISION = 6;
 export const BINDING_COLOUR_RE = /^(#[0-9a-fA-F]{3,8}|theme:[a-z0-9][a-z0-9-]{0,63}|main|accent|entity)$/;
 export const THUMB_RE = /^data:image\/(png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
+
+/** images_get error code for more than MAX_IMAGE_GET_IDS ids. */
+export const IMAGE_ERR_TOO_MANY = 'too_many';
 
 export type BindingSet = 'fill' | 'stroke' | 'opacity' | 'visible';
 export type BindingValue = string | number | boolean;

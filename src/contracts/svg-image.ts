@@ -69,14 +69,16 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * ── Reading images (any logged-in user) ──
  *   - Through hass.callWS on the card's own logged-in connection: magic_card_utils/images_get { ids } (at most
  *     IMAGE_MAX_GET_IDS per call; requests in one animation frame are batched). Non-admin users read; they never
- *     write. The provider script is not used for reads.
+ *     write. The provider script is not used for reads. The card never sends more ids than that, so it never meets
+ *     the server's `too_many` error (mcu-library-images IMAGE_ERR_TOO_MANY).
  *   - Cache: in page memory only, one entry per (id, updated_at): the sanitised drawing as an inert <template> (the
  *     sanitiser strips in the parsed tree and moves the nodes in; no serialise and re-parse) plus the markup string for
  *     editors. Each element clones the template. No localStorage, IndexedDB or Cache API (a floor plan is not left on
  *     the device).
- *   - The first sanitise of an item runs after the card's first paint (next animation frame), behind the waiting
- *     state. Template clones into elements are queued page-wide: at most one cold clone (first draw of an element)
- *     per animation frame, so many cards showing one drawing never make one long task.
+ *   - The first sanitise of an item runs after the card's first paint (gated on the next animation frame), behind the
+ *     waiting state. Heavy steps (sanitise, cold clone) are queued page-wide: at most one per animation frame, so many
+ *     cards showing one drawing never make one long task. A draw step directly follows the sanitise step of its own
+ *     data.
  *   - Freshness: `mcu-library-changed` { kind: 'images', ids } from the provider drops those ids and redraws every
  *     element showing them (module and background alike). On a websocket reconnect (connection 'ready') the chunk
  *     calls images_list once and refetches only ids whose updated_at changed. Without the provider, an edit shows
@@ -85,16 +87,34 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  *     for an id that a fresh images_list does not hold, nor after `unknown_command` or `unauthorized`; those wait for
  *     a provider event naming the id, a reconnect or a page reload. The retry is silent.
  *
+ * ── Render budget (Chromium, 4x CPU throttle, the 256 KiB / 1920x1080 / 300-layer fixture, N >= 10 runs) ──
+ * Every line is judged on the median of the runs; p95 is reported with each measurement.
+ *   - The card's own first paint is not delayed at all (sanitise and clone run after it, behind the waiting state).
+ *   - Cold first element (nothing cached; from images_get data in hand to the drawing in the element plus one frame):
+ *     median under COLD_FIRST_MEDIAN_MAX_MS, and p95 under COLD_FIRST_P95_MAX_MS.
+ *   - Further element of a cached item: median under CACHE_HIT_MEDIAN_MAX_MS.
+ *   - Binding apply (script, style and layout, 20 targets): median at most BINDING_APPLY_MEDIAN_MAX_MS.
+ *   - Idle 5 s with a drawing on screen: equal to the card without it.
+ * When a cold median reaches COLD_FIRST_MEDIAN_MAX_MS, the first remedy is to drop the frame gate before the
+ * sanitise step when the requesting card has already painted (the images_get answer arrives after the card's paint),
+ * keeping the one-heavy-step-per-frame queue. The card's paint stays undelayed in every case.
+ *
  * ── <mc-svg-image> ──
  * Properties: ref (string), hass, colors ({ main?, accent? } design colour values), fit ('contain' | 'cover' |
  * 'fill' | 'none'), entity (the module's effective entity, for `entity` colour values), description (string),
  * stateSummary (boolean), layer (BackgroundLayerConfig; set only by <mc-bg-stack>), at (the layer's YAML index).
  * Properties set before the chunk defines the element are kept (the element reads them on upgrade).
+ * Status (every mode): read-only `status` (SvgImageStatus: 'waiting' until the first outcome, then 'ready' when drawn
+ * or 'missing' in the missing-picture state; a retry or provider event can move it either way), reflected as the
+ * host attribute `status`. Each change away from 'waiting' fires SVG_IMAGE_STATUS_EVENT on the host, not bubbling,
+ * not composed, detail { status }. The image view uses it for its missing state; the dashboard needs nothing else.
  * Shadow root: a stage box with the drawing's aspect ratio, sized inside the host by `fit` (contain: largest box
  * that fits, centred; cover: smallest box that covers, clipped by the host; fill: the host box, drawing stretched
  * with preserveAspectRatio none; none: viewBox units as CSS px, centred, clipped). The drawing (a clone of the cached
  * template) is put in the stage once per (id, updated_at); its ids are scoped by the shadow root and looked up with
  * ShadowRoot.getElementById (ids may hold "."). A <slot> in the stage holds overlays, beside the drawing's <svg>.
+ * The host fills the box its parent gives it (height 100 %, size container); the parent gives it a box (the image
+ * module's aspect_ratio, the layer's picture box).
  * Colours: Main is var(--mc-image-main), Accent var(--mc-image-accent); the host sets both from `colors` (design
  * colour values through the card's colour helper; defaults var(--primary-text-color) and var(--accent-color)).
  * Theme colours are var(--<name>) and inherit from the card, card-level themes and card_mod variables included.
@@ -122,12 +142,13 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * colors, description, stateSummary and overlays do not apply: Main and Accent take their defaults, the drawing's
  * <svg> is always aria-hidden and no state list is rendered (the stack host is aria-hidden; backgrounds are
  * decorative). Bindings apply exactly as in the image module.
- * Status for the editor: the element fires bg-stack BG_LAYER_STATUS_EVENT (bubbles, composed) with index = `at`:
- * { status: 'error', reason: 'image-missing' } when it enters the missing-picture state, { status: 'ok' } when it has
- * drawn. The dashboard ignores it.
+ * Status for the editor: besides SVG_IMAGE_STATUS_EVENT, the element fires bg-stack BG_LAYER_STATUS_EVENT (bubbles,
+ * composed) with index = `at`: { status: 'error', reason: 'image-missing' } when it enters the missing-picture state,
+ * { status: 'ok' } when it has drawn. The dashboard ignores it.
  * State swaps: when a layer's `states` or `image` hold several references, the element prefetches the other
  * references of its `layer` (at most MAX_LAYER_PREFETCH distinct ids, at idle time after its own first draw) into the
- * page cache, so a swap is a cache hit (S1: 44 ms at 4x for the 256 KiB fixture, inside the stack's 300 ms crossfade).
+ * page cache, so a swap is a cache hit (measured 44 ms at 4x for the 256 KiB fixture, inside the stack's 300 ms
+ * crossfade).
  *
  * ── Image sanitiser (browser; Magic Card Utils checks the same lists on save) ──
  * Input: a string of at most IMAGE_MAX_BYTES UTF-8 bytes (refused before parsing, `too_large`). Then, still before
@@ -140,8 +161,9 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * 1..MAX_IMAGE_BOX); root width / height dropped. At most IMAGE_MAX_NODES elements and IMAGE_MAX_DEPTH nesting, else
  * refused. Hostile tests cover both the XML parse and the text/html fallback parse.
  * Kept: elements in IMAGE_ELEMENTS, attributes in IMAGE_ATTRIBUTES (no namespaced names), values by these rules:
- *   - paint (fill, stroke, stop-color): none | currentColor | a colour (hex or the colour functions the icon
- *     sanitiser allows) | url(#id) | var(--name) | var(--name, <hex>) with name matching THEME_VAR_NAME_RE;
+ *   - paint (fill, stroke, stop-color): none | currentColor | a colour (hex, a CSS colour keyword of 3 to 20 ASCII
+ *     letters, or the colour functions the icon sanitiser allows) | url(#id) | var(--name) | var(--name, <hex>) with
+ *     name matching THEME_VAR_NAME_RE;
  *   - transform / gradientTransform: the transform list functions only;
  *   - font-family: one of IMAGE_FONT_FAMILIES (anything else becomes sans-serif); no @font-face exists anywhere;
  *   - id: IMAGE_ID_RE; data-name: plain text, at most 80 characters;
@@ -193,7 +215,7 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  */
 
 export const SVG_IMAGE_CONTRACT = '1.0.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 3;
+export const SVG_IMAGE_CONTRACT_REVISION = 4;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -202,6 +224,7 @@ export const SVG_IMAGE_CHUNK = 'svg-image';
 export const SVG_IMAGE_CHUNK_FILE = 'magic-card-svg-image.js';
 export const SVG_IMAGE_CHUNK_CEILING = 40 * 1024;
 export const SVG_IMAGE_TAG = 'mc-svg-image';
+export const SVG_IMAGE_STATUS_EVENT = 'mc-svg-image-status';
 
 /**
  * Whole magic-card.js change for this contract (bytes after gzip level 9 / Brotli quality 11, Linux build).
@@ -216,6 +239,12 @@ export const IMAGE_RETRY_MAX_MS = 30 * 60_000;
 export const IMAGE_SKELETON_MS = 10_000;
 export const BINDING_MIN_INTERVAL_MS = 334;
 export const MAX_LAYER_PREFETCH = 4;
+
+/** Render budget lines (see "Render budget"); test and QA thresholds, not runtime values. */
+export const COLD_FIRST_MEDIAN_MAX_MS = 200;
+export const COLD_FIRST_P95_MAX_MS = 300;
+export const CACHE_HIT_MEDIAN_MAX_MS = 100;
+export const BINDING_APPLY_MEDIAN_MAX_MS = 4;
 
 /** Same numbers as mcu-library-images IMAGE_MAX_BYTES and MAX_IMAGE_BOX. */
 export const IMAGE_MAX_BYTES = 256 * 1024;
@@ -292,6 +321,13 @@ export interface ImageModuleImageKeys {
   modules?: ImageOverlay[];
 }
 
+/** <mc-svg-image> status, as property, host attribute and SVG_IMAGE_STATUS_EVENT detail. */
+export type SvgImageStatus = 'waiting' | 'ready' | 'missing';
+
+export interface SvgImageStatusDetail {
+  status: Exclude<SvgImageStatus, 'waiting'>;
+}
+
 /** <mc-svg-image> properties. */
 export interface SvgImageElementProps {
   ref: string;
@@ -305,6 +341,8 @@ export interface SvgImageElementProps {
   layer?: BackgroundLayerConfig;
   /** With `layer`: its YAML index, for the status event. */
   at?: number;
+  /** Read-only (see "Status"). */
+  readonly status: SvgImageStatus;
 }
 
 /** Entry helper (src/utils/svg-image-loader.ts): start the chunk and tell the render it was met. */
