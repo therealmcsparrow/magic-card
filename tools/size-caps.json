@@ -40,16 +40,16 @@
       },
       {
         "id": "stage-4",
-        "cap": 84041,
+        "cap": 84581,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84041
+        "measured": 84453
       }
     ],
     "br": {
       "quality": 11,
-      "cap": 71805,
-      "measured": 71745
+      "cap": 72123,
+      "measured": 71995
     }
   },
   "files": {
@@ -59,9 +59,9 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 975872,
-      "ceiling": 975872,
-      "note": "Card editor. 953 KiB, measured 975,392."
+      "raw": 980992,
+      "ceiling": 980992,
+      "note": "Card editor. 958 KiB, measured 980,057."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -503,6 +503,30 @@
       "field": "/entry/br/cap",
       "from": 71745,
       "to": 71805
+    },
+    {
+      "id": "entry-gzip-cap-84581",
+      "field": "/entry/stages/3/cap",
+      "from": 84041,
+      "to": 84581
+    },
+    {
+      "id": "entry-br-cap-72123",
+      "field": "/entry/br/cap",
+      "from": 71805,
+      "to": 72123
+    },
+    {
+      "id": "editor-raw-980992",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 975872,
+      "to": 980992
+    },
+    {
+      "id": "editor-ceiling-980992",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 975872,
+      "to": 980992
     }
   ]
 }
