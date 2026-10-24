@@ -894,12 +894,6 @@ const magicCardLocalStyles = css`
     transition: all var(--mc-transition-duration);
   }
 
-  /* the label follows the design colour; the underline / pill keeps the accent */
-  .mc-tab-button.active {
-    color: var(--mc-design-color, var(--mc-primary));
-    border-bottom-color: var(--mc-primary);
-  }
-
   .mc-tab-button ha-icon,
   .mc-tab-button mc-svg-icon {
     --mdc-icon-size: 16px;
@@ -915,11 +909,6 @@ const magicCardLocalStyles = css`
     border-radius: var(--mc-radius-md);
   }
 
-  .mc-tabs[data-style='pills'] .mc-tab-button.active {
-    background: var(--mc-primary);
-    color: var(--mc-design-color, var(--text-primary-color, #fff));
-  }
-
   /* Tab style: underline */
   .mc-tabs[data-style='underline'] .mc-tabs-header {
     border-bottom: 2px solid var(--mc-border);
@@ -928,10 +917,6 @@ const magicCardLocalStyles = css`
   .mc-tabs[data-style='underline'] .mc-tab-button {
     border-bottom-width: 3px;
     font-weight: 500;
-  }
-
-  .mc-tabs[data-style='underline'] .mc-tab-button.active {
-    font-weight: 700;
   }
 
   .mc-clock {
