@@ -48,7 +48,7 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 71745,
+      "cap": 71805,
       "measured": 71745
     }
   },
@@ -497,6 +497,12 @@
       "field": "/entry/br/cap",
       "from": 71658,
       "to": 71745
+    },
+    {
+      "id": "entry-br-cap-71805",
+      "field": "/entry/br/cap",
+      "from": 71745,
+      "to": 71805
     }
   ]
 }
