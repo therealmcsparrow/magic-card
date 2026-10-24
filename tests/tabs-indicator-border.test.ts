@@ -7,10 +7,10 @@ import { tabLook } from '../src/modules/layout/tabs-look';
 import { designToStyle, hoverRule } from '../src/utils/css-utils';
 
 /*
- * Regression (CEO report): the tabs module drew an indicator line under the active tab by itself, the Design > Border
- * section drew around the tabs box, and borders of the tab states must reach the tab buttons only.
- * Suspected: src/css/css.ts (.mc-tab-button.active border-bottom-color, underline border widths), src/utils/css-utils.ts
- * (designToStyle / hoverRule with `tabs`), src/card/magic-card.ts (metadata.tabBar), tabs-styles.ts.
+ * The tabs module draws no indicator of its own on the active tab, the Design > Border section styles the tab buttons
+ * instead of the tabs box, and borders of the tab states reach the tab buttons only.
+ * Covers src/css/css.ts, src/utils/css-utils.ts (designToStyle / hoverRule with `tabs`), src/card/magic-card.ts
+ * (metadata.tabBar) and tabs-styles.ts.
  */
 afterEach(() => {
   document.body.innerHTML = '';
@@ -86,10 +86,18 @@ describe('Design > Border on a tabs module styles the tab buttons, not the tabs 
     border_width: '3px', border_style: 'dashed', border_color: 'blue',
     border_top: '1px solid red', border_right: '1px solid red', border_bottom: '1px solid red', border_left: '1px solid red', border: '1px solid red',
   } as never;
-  it('designToStyle for a tabs module leaves every border key off the wrapper', () => {
-    const wrapper = designToStyle({ ...(border as object), padding: 8 } as never, undefined, false, true);
+  it('designToStyle for a tabs module leaves the border width, style and colour off the wrapper', () => {
+    const wrapper = designToStyle({ border_width: '3px', border_style: 'dashed', border_color: 'blue', padding: 8 } as never, undefined, false, true);
     expect(wrapper).toContain('padding: 8px');
-    expect(wrapper).not.toMatch(/border-(width|style|color|top|right|bottom|left)|(^|;\s*)border:/);
+    expect(wrapper).not.toMatch(/border-(width|style|color)/);
+  });
+  it('the border shorthands stay on the wrapper, in the base and in the hover, and never reach the buttons', () => {
+    const wrapper = designToStyle(border, undefined, false, true);
+    expect(wrapper).toContain('border-top: 1px solid red');
+    expect(wrapper).toMatch(/(^|;\s*)border: 1px solid red/);
+    const rule = hoverRule('m', { border: '1px solid red', border_left: '2px solid blue' } as never, { tabs: true });
+    expect(rule).toMatch(/\[data-mc-hover="m"\]:hover \{[^}]*border: 1px solid red/);
+    expect(rule).not.toContain('.mc-tab-button');
   });
   it('another module keeps its border on the wrapper', () => {
     expect(designToStyle(border)).toContain('border-width: 3px');
@@ -113,6 +121,28 @@ describe('Design > Border on a tabs module styles the tab buttons, not the tabs 
     expect(rule).toContain('.mc-tabs-header');
     expect(rule).toContain('blue');
   });
+  it('the hover border of the buttons is rebuilt from the allow-listed width, style and colour', () => {
+    const rule = hoverRule('m', { border_width: '2px 0', border_style: 'dashed', border_color: 'red blue' } as never, { tabs: true });
+    expect(rule).toContain('border-width: 2px 0px !important');
+    expect(rule).toContain('border-style: dashed !important');
+    expect(rule).toContain('border-color: red blue !important');
+  });
+  it('a hover border written as declaration text adds nothing to the button rule', () => {
+    const rule = hoverRule('m', { border_color: 'red; background:url(https://x)', border_style: 'solid}', border_width: '2px /*' } as never, { tabs: true });
+    expect(rule).not.toMatch(/url\(|background|\/\*/);
+    expect(rule).not.toContain('.mc-tab-button');
+  });
+  it('a bad style or colour in the hover is dropped one by one', () => {
+    const rule = hoverRule('m', { border_width: '2px', border_style: 'wavy', border_color: 'red; x:y' } as never, { tabs: true });
+    expect(rule).toContain('border-width: 2px !important');
+    expect(rule).not.toMatch(/wavy|x:y/);
+  });
+  it('hostile Design border values on a tabs module reach no variable and no wrapper declaration', () => {
+    const look = tabLook({ border_color: 'red; background:url(//x)', border_style: 'solid}', border_width: '2px;color:red' });
+    expect(Object.keys(look.vars).filter((k) => /^--mc-tt-(bc|bs|bw)$/.test(k))).toEqual([]);
+    const wrapper = designToStyle({ border_color: 'red; background:url(//x)', border_style: 'solid}' } as never, undefined, false, true);
+    expect(wrapper).not.toMatch(/border-(color|style)/);
+  });
   it('border radius and shadow stay with the box', () => {
     const wrapper = designToStyle({ border_radius: '12px', box_shadow: '0 0 4px red' } as never, undefined, false, true);
     expect(wrapper).toContain('border-radius: 12px');
@@ -124,6 +154,14 @@ describe('an active tab without tab_active fields looks like the other tabs', ()
   it('no rule of the card sheet sets the label colour, background or weight of the active tab button', () => {
     const own = card.filter((r) => /\.mc-tab-button\.active/.test(r.sel) && /(^|;|\s)(color|background|font-weight)\s*:/.test(r.decl));
     expect(own, own.map((r) => `${r.sel}{${r.decl}}`).join('\n')).toEqual([]);
+  });
+  it('a gradient colour paints every tab label alike: no solid label rule for the active pill', () => {
+    const solid = tabsSheet.filter((r) => /pills/.test(r.sel) && /\.active/.test(r.sel) && /text-fill-color/.test(r.decl) && !/data-mc-tab~='a-/.test(r.sel));
+    expect(solid, solid.map((r) => r.sel).join('\n')).toEqual([]);
+  });
+  it('Underline with a font size gives the active tab no weight of its own', () => {
+    const weight = tabsSheet.filter((r) => /\.mc-tab-button\.active/.test(r.sel) && /font-weight/.test(r.decl) && !/data-mc-tab~='a-/.test(r.sel));
+    expect(weight, weight.map((r) => r.sel).join('\n')).toEqual([]);
   });
   it('Pills has no fill rule for the active tab', () => {
     const fill = card.filter((r) => /data-style='pills'\] \.mc-tab-button\.active/.test(r.sel));
@@ -145,6 +183,11 @@ describe('the bar line (tab_bar_border_*)', () => {
     expect(tabLook({ tab_bar_border_style: 'solid none none none' }).vars['--mc-tb-bs']).toBe('solid none none none');
     expect(tabLook({ tab_bar_border_style: 'wavy' }).vars['--mc-tb-bs']).toBeUndefined();
     expect(tabLook({ tab_bar_border_style: 'solid '.repeat(40) }).vars['--mc-tb-bs']).toBeUndefined();
+  });
+  it('tab_bar_border_style refuses text that is more than style words', () => {
+    for (const bad of ['solid;}', 'solid url(x)', 'solid; background:red', 'solid /* x */', '}solid{']) {
+      expect(tabLook({ tab_bar_border_style: bad }).vars['--mc-tb-bs'], bad).toBeUndefined();
+    }
   });
   it('width 0 and style none are values of the bar rule, which targets the bar only', () => {
     expect(tabLook({ tab_bar_border_width: '0' }).vars['--mc-tb-bw']).toBe('0px');

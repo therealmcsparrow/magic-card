@@ -5,14 +5,17 @@ import { entityColorCss, isEntityColor } from './entity-color';
 import { parseGradient } from './gradient';
 import { mediaCssImage } from './media';
 import { buttonPartDecls } from './button-parts';
+import { tabBorderStyle } from '../modules/layout/tabs-look';
 
 const ALL_CSS_MAP = buildDesignToCssMap();
 
+/** Longest colour list searched for entity colours. */
+const ENTITY_MAX = 256;
 const ENTITY_WORD = /(?<![\w-])entity(?: \d+(?:\.\d+)?%)?(?![\w-])/g;
 
 /** A colour value with its entity colours (`entity`, `entity N%`, one per side in a list) written as CSS; undefined without one. */
 function entityList(v: unknown): string | undefined {
-  const css = typeof v === 'string' ? v.replace(ENTITY_WORD, (m) => entityColorCss(m) ?? m) : v;
+  const css = typeof v === 'string' && v.length <= ENTITY_MAX ? v.replace(ENTITY_WORD, (m) => entityColorCss(m) ?? m) : v;
   return css === v ? undefined : (css as string);
 }
 
@@ -67,6 +70,7 @@ export function designUsesEntityColor(design: DesignConfig | undefined): boolean
   return Array.isArray(rec.conditional) && rec.conditional.some((r) => designUsesEntityColor(r?.design));
 }
 
+const TAB_BORDER_KEYS = ['border_width', 'border_style', 'border_color'];
 const BORDER_KEYS = ['border', 'border_top', 'border_right', 'border_bottom', 'border_left', 'border_width', 'border_style', 'border_color'];
 
 /** The border a button / dropdown control draws when the design writes none (width, style, colour). */
@@ -108,7 +112,7 @@ export function designToStyle(input?: DesignConfig, control?: ControlLook, butto
   const gradient = parseGradient(design.color)?.stops[0];
 
   for (const [key, cssProperty] of Object.entries(ALL_CSS_MAP)) {
-    if ((control && CONTROL_KEYS.has(key)) || (tabs && (isTabType(key) || BORDER_KEYS.includes(key)))) continue;
+    if ((control && CONTROL_KEYS.has(key)) || (tabs && (isTabType(key) || TAB_BORDER_KEYS.includes(key)))) continue;
     let value = gradient && key === 'color' ? gradient : rec[key];
     if (typeof value === 'string' && IMAGE_KEYS.has(key)) value = mediaCssImage(undefined, value);
     if (value !== undefined && typeof value === 'string' && value !== '') {
@@ -287,8 +291,8 @@ export function hoverRule(id: string, hover: Partial<DesignConfig> | undefined, 
   const decls = list(designToStyle(hover as DesignConfig, target.control, target.parts, target.tabs));
   const bar = target.tabs ? list(tabTypeStyle(hover)) : [];
   const h = (resolveEntityColors(designNumbersToCss(hover as DesignConfig)) || {}) as Record<string, unknown>;
-  // the Border fields of a tabs module draw on its tab buttons
-  const buttons = target.tabs ? list(designToStyle(Object.fromEntries(BORDER_KEYS.map((k) => [k, hover[k as keyof DesignConfig]])) as DesignConfig)) : [];
+  // the Border width, style and colour of a tabs module draw on its tab buttons, rebuilt by the tab look's own parsers
+  const buttons = target.tabs ? list(tabBorderStyle(hover)) : [];
   if (!decls.length && !bar.length && !buttons.length) return '';
   const sel = `[data-mc-hover="${id.replace(/["\\]/g, '\\$&')}"]:hover`;
   const color = nonEmpty(h.border_color) && hoverSafe(nonEmpty(h.border_color)!.replace(/;/g, ''));

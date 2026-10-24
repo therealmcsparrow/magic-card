@@ -17,7 +17,7 @@ export interface MagicModuleMetadata {
   icon: string;
   /** Entity-scope: false = card module (never inherits), a list = domains accepted when inherited, absent = any. */
   inherit?: EntityInherit;
-  /** The Typography keys of the design style the module's tab bar (its tab buttons), not its content. */
+  /** The Typography keys and the Border width, style and colour of the design style the module's tab buttons, not its content. */
   tabBar?: boolean;
 }
 

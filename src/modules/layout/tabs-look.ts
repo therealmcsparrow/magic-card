@@ -243,6 +243,15 @@ function focusColour(vars: Record<string, string>, prefix: string, list: string)
   if (first.length > 1) vars[`--mc-${prefix}-fc`] = first[0];
 }
 
+/** The hover Border width, style and colour of a tabs module as declarations for its tab buttons; each value passes the same checks as tab_border_*. */
+export function tabBorderStyle(d: unknown): string {
+  const r = plain(d) ?? {};
+  const width = parse('bw', r.border_width);
+  const style = parse('bs', r.border_style) ?? (width ? 'solid' : undefined);
+  const color = parse('sides', r.border_color);
+  return [width && `border-width: ${width}`, style && `border-style: ${style}`, color && `border-color: ${color}`].filter(Boolean).join('; ');
+}
+
 const plain = (v: unknown): Record<string, unknown> | undefined => (v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
 
 /**
