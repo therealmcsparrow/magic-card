@@ -1632,7 +1632,7 @@ export class MagicCard extends LitElement {
   private _failNotices(config: MagicCardConfig, rest: unknown) {
     const names = [...failedChunkNames()].filter((n) => {
       if (n in LAZY_FEATURES) return !SLOT_NOTICE_CHUNKS.includes(n) && (LAZY_FEATURES[n as keyof typeof LAZY_FEATURES].needs(config) || this._met.has(n));
-      return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' && this._customShape;
+      return n === 'anim-runtime' ? this._v2Need : n === 'particles' ? this._pNeed : n === 'shape-custom' ? this._customShape : this._met.has(n);
     });
     return names.length
       ? html`${rest}${names.map((n) => chunkNotice(n in lazyChunks ? lazyChunks[n as keyof typeof lazyChunks] : onDemandChunks[n as keyof typeof onDemandChunks]))}`

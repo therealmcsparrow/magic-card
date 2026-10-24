@@ -59,7 +59,8 @@
       "refresh": "snapshot refresh timer",
       "stale_badge": "snapshot refresh timer"
     },
-    "camera_entity_is_feature": true
+    "camera_entity_is_feature": true,
+    "library_image_prefix": "mcu-image:"
   },
   "module_layer": {
     "keys": ["fill", "anchor", "offset_x", "offset_y", "opacity", "blur", "blend", "click_through", "scrim"],
@@ -126,6 +127,7 @@
     },
     "layer_fx": { "chunk": "layers", "reserve": "overlay" },
     "svg_icon": { "chunk": "svg-icon", "reserve": "default" },
+    "library_image": { "chunk": "svg-image", "reserve": "none" },
     "seasonal_preset": { "chunk": "seasonal", "reserve": "configured" }
   },
   "seasonal_preset_ids": ["winter", "spring", "summer", "autumn", "christmas", "new_year", "valentine", "easter", "halloween", "weather", "daynight", "snow", "rain", "storm", "sun", "clouds", "fog", "wind", "night", "dusk"],

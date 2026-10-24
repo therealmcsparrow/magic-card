@@ -7,18 +7,19 @@ import { lazyChunk, type LazyChunkControl, type LazyImporter } from './lazy-chun
 import { provideParticlesChunk } from './particles-loader';
 import { provideShapeChunk } from './shape-custom-loader';
 import { provideSvgIconChunk } from './svg-icon-loader';
+import { provideSvgImageChunk } from './svg-image-loader';
 
 type AnimModule = typeof AnimChunk;
 type FlowsModule = typeof FlowsChunk;
 type ControlsModule = typeof ControlsChunk;
 
 /*
- * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the three chunks that load
- * on demand (the animation runtime, particles and the custom shape builder; no needs() row, because only the render
- * knows). Nothing else calls import() for these entries (contract lazy-module 1.4.0 "import() sites"). Output file
+ * The chunk table: one lazyChunk() per LazyChunkName, each with its literal import(), and the four chunks that load
+ * on demand (the animation runtime, particles, the custom shape builder and the library image drawing; no needs() row,
+ * because only the render knows). Nothing else calls import() for these entries (contract lazy-module 1.4.0 "import() sites"). Output file
  * names come from the webpackChunkName: dist/magic-card-<name>.js.
  *
- * Only the card bundle imports this file. The three loaders (src/utils/*-loader.ts) get their chunk from a slot filled
+ * Only the card bundle imports this file. The loaders (src/utils/*-loader.ts) get their chunk from a slot filled
  * at the end of this file instead of importing it: the animation studio bundle imports one of them, and this table
  * would pull every card chunk entry into that bundle's chunk graph (the studio and several chunks grew by 8 to 60 KB).
  */
@@ -97,11 +98,13 @@ export const onDemandChunks = {
   'anim-runtime': lazyChunk('anim-runtime', viaAnim((a) => a.importRuntime)),
   particles: lazyChunk('particles', viaAnim((a) => a.importParticles)),
   'shape-custom': lazyChunk('shape-custom', () => import(/* webpackChunkName: "shape-custom" */ './shape-custom')),
+  'svg-image': lazyChunk('svg-image', () => import(/* webpackChunkName: "svg-image" */ '../svg-image/chunk')),
 };
 provideRuntimeChunk(afterAnim(onDemandChunks['anim-runtime']));
 provideParticlesChunk(afterAnim(onDemandChunks.particles));
 provideShapeChunk(onDemandChunks['shape-custom']);
 provideSvgIconChunk(lazyChunks['svg-icon']);
+provideSvgImageChunk(onDemandChunks['svg-image']);
 
 /** window.MagicCard.loadSeasonal: true once <mc-seasonal> and <mc-seasonal-deco> are defined. */
 export const loadSeasonal = (): Promise<boolean> => lazyChunks.seasonal.load();

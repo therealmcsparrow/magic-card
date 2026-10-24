@@ -18,7 +18,8 @@ import { currentFx, liveStacks } from './fx-slot';
  * - pan / zoom, camera refresh, the stale state and the idle, visibility and reduced-motion wiring belong to
  *   the BgStackRun that fx-slot.ts hands over (host.observeOffscreen sets `offscreen`); without it a picture
  *   shows unscaled and a camera layer keeps its first frame;
- * - a decode that resolves after disconnect, or for an older source, writes nothing.
+ * - a decode that resolves after disconnect, or for an older source, writes nothing;
+ * - a value that starts with `mcu-image:` is a library image: never a URL, never decoded, drawn by <mc-svg-image> (the chunk's).
  */
 
 const TAG = 'mc-bg-stack';
@@ -71,6 +72,9 @@ class StyleSet extends Directive {
   }
 }
 const sty = directive(StyleSet);
+
+/** IMAGE_REF_PREFIX of svg-image 1.0.0, written out: importing the contract file would put its allow-lists in magic-card.js. */
+const isRef = (v: string): boolean => v.startsWith('mcu-image:');
 
 const srcKey = (s: Src): string => `${s.url ?? ''}|${s.pending ? 1 : 0}|${s.problem ?? ''}|${s.detail ?? ''}`;
 
@@ -170,7 +174,8 @@ export class McBgStack extends LitElement implements BgStackView {
 
   protected shouldUpdate(changed: PropertyValues): boolean {
     // a hass push only re-renders when a layer's own picture source changed
-    if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0;
+    // (a shown library image takes every push: its element reads hass)
+    if (this.hasUpdated && changed.size === 1 && changed.has('hass')) return this._signature() !== this._sig0 || this.items.some((i) => i.shown && isRef(i.shown));
     return true;
   }
 
@@ -254,6 +259,7 @@ export class McBgStack extends LitElement implements BgStackView {
       }
     }
     if (typeof value !== 'string' || !value.trim()) return { problem: 'no-picture', detail: ent };
+    if (isRef(value)) return { url: value };
     const resolved = host.resolveImage(this.hass, value);
     if (resolved === undefined) return { pending: true };
     const url = safeImageUrl(resolved, location.href);
@@ -307,6 +313,15 @@ export class McBgStack extends LitElement implements BgStackView {
   /** Decode `url` (default `base`) off the DOM, then swap it in. A refresh passes a cache-busted `url`. */
   async load(i: Item, base: string, url: string = base): Promise<void> {
     const gen = ++i.gen;
+    if (isRef(url)) {
+      // a library image: the chunk draws it, nothing to decode
+      i.loading = false;
+      this.host?.needImage();
+      this._swap(i, url);
+      this.status(i, 'ok');
+      this.requestUpdate();
+      return;
+    }
     i.loading = true;
     i.lastTry = Date.now();
     if (!i.shown) this.status(i, 'loading');
@@ -394,12 +409,15 @@ export class McBgStack extends LitElement implements BgStackView {
   private _pic(i: Item, url: string, still: boolean): TemplateResult {
     const c = i.cfg;
     const size = sizeCss(c.size);
-    const style: Record<string, string> = {
-      'background-image': cssUrl(url),
-      'background-position': positionCss(c.position),
-      'background-size': size,
-      'background-repeat': repeatCss(c.repeat, size),
-    };
+    const live = isRef(url);
+    const style: Record<string, string> = live
+      ? {}
+      : {
+          'background-image': cssUrl(url),
+          'background-position': positionCss(c.position),
+          'background-size': size,
+          'background-repeat': repeatCss(c.repeat, size),
+        };
     // the still frame under a moving picture of the same URL fading in stays unscaled
     const pz = still ? undefined : i.pz;
     if (pz) {
@@ -410,7 +428,9 @@ export class McBgStack extends LitElement implements BgStackView {
         '--d': `${pz.duration}s`, '--dir': pz.alternate ? 'alternate' : 'normal',
       });
     }
-    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}></div></div>`;
+    return html`<div class="img"><div class=${pz ? 'pic pz' : 'pic'} data-pz=${pz ? (this._run?.motion(pz) ?? nothing) : nothing} ${sty(style)}>${
+      live ? html`<mc-svg-image .ref=${url} .hass=${this.hass} .layer=${c} .at=${i.index}></mc-svg-image>` : nothing
+    }</div></div>`;
   }
 }
 

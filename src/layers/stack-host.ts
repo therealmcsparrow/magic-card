@@ -29,7 +29,7 @@ export function createStackHost(card: { hass?: HomeAssistant; renderRoot: Parent
     badgeHost: () => card.renderRoot.querySelector<HTMLElement>('.mc-bg-badge') ?? undefined,
     lowPower,
     staleText: (seconds) => t('Not updated {n} min', { n: Math.max(1, Math.round(seconds / 60)) }),
-    needImage: () => needSvgImage(ctx() as Parameters<typeof needSvgImage>[0]),
+    needImage: () => needSvgImage(ctx()),
   };
 }
 

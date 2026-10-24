@@ -234,6 +234,9 @@ export function classifyConfig(config, keys) {
       else if (!bgKeys.has(k)) unknown(`${path}.${k}`, `background_layers.${k}`);
     }
     if (typeof layer.entity === 'string' && layer.entity.startsWith('camera.') && bk.camera_entity_is_feature) feature(`${path}.entity`, 'layer-camera', F.layer_fx);
+    // a library image reference (image, a state value): drawn by the svg-image chunk, which the render starts
+    const refs = [['image', layer.image], ...(isObj(layer.states) ? Object.entries(layer.states).map(([k, v]) => [`states.${k}`, v]) : [])];
+    for (const [k, v] of refs) if (typeof v === 'string' && v.startsWith(bk.library_image_prefix)) feature(`${path}.${k}`, 'layer-library-image', F.library_image);
   }
 
   function bgLayers(path, list) {

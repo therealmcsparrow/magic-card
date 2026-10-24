@@ -3,13 +3,19 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.6.0.
+ * Contract: lazy modules and lazy card chunks. Version 1.7.0.
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
  * - The six older chunks without install() also carry BUILD and their loaders refuse a mismatch through
  *   sameBuild() (section "Build-checked older chunks", SAME_BUILD_CHUNK_FILES, SameBuildModule). The four
  *   lazyChunk() chunks of that group are unchanged.
+ * - OnDemandChunkName includes 'svg-image' (dist/magic-card-svg-image.js, ceiling SVG_IMAGE_CHUNK_CEILING, chunk entry
+ *   src/svg-image/chunk.ts, contract svg-image 1.0.0). It has no needs() row: a render that meets a library image
+ *   reference (an image module, or a background layer whose current value starts with `mcu-image:`) starts it through
+ *   needSvgImage(ctx) (src/utils/svg-image-loader.ts, slot filled by src/utils/lazy-chunks.ts) and tells the card with
+ *   metChunk('svg-image'), so a failed load shows the chunk's failure notice. A card without such a reference never
+ *   requests it.
  * - LazyChunkName includes 'flow-look' and 'slider-look' (dist/magic-card-flow-look.js,
  *   dist/magic-card-slider-look.js). They serve no module type: each fills a slot from install()
  *   (src/card/flow-look-slot.ts, src/modules/controls/slider-look-slot.ts; contracts flow-look 1.0.0 and
@@ -309,8 +315,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   lazyChunk() is debt.
  */
 
-export const LAZY_MODULE_CONTRACT = '1.6.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 19;
+export const LAZY_MODULE_CONTRACT = '1.7.0';
+export const LAZY_MODULE_CONTRACT_REVISION = 20;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -430,7 +436,7 @@ export interface SameBuildModule {
  * Chunks a render starts when it meets the need, with no needs() row (only the render knows whether a
  * document has a rig or a particle simulation): dist/magic-card-<name>.js. They load through lazyChunk() too.
  */
-export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom';
+export type OnDemandChunkName = 'anim-runtime' | 'particles' | 'shape-custom' | 'svg-image';
 
 /** One lazily loaded chunk (src/utils/lazy-chunk.ts). */
 export interface LazyChunk {
