@@ -1,6 +1,7 @@
 import type { CustomShapeOptions } from './custom-shape';
 import type { ShapeOptions } from '../types';
 import type { SavedIconInput, SavedShape } from './mcu-library';
+import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
 
 /*
@@ -318,6 +319,15 @@ import type { BooleanOp } from './path-booleans';
  * - The entry button must stay enabled while the chunk loads (a disabled button drops focus, and focus
  *   returns to the opener, or its `data-focus-key` replacement).
  *
+ * ── Image mode (1.1.0, revision 6) ──
+ * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.0.0 holds
+ * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that
+ * chunk, and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing
+ * canvas as the image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg,
+ * saved }), downloads ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete)
+ * when hass.user.is_admin is false or the library is missing. Layers being dragged, moved by handles or nudged
+ * carry `will-change: transform` until the gesture ends.
+ *
  * ── Hosts: 'card' and 'mcu' ──
  * 'card' (default) is everything above. 'mcu' = hosted by the Magic Card Utils panel (mcu-library 1.0.0
  * "Editors in the panel"): no card, no module, no entity, no HA dialog.
@@ -431,9 +441,9 @@ import type { BooleanOp } from './path-booleans';
  *   loader.ts).
  */
 
-export const SVG_EDITOR_CONTRACT_VERSION = '1.0.0';
+export const SVG_EDITOR_CONTRACT_VERSION = '1.1.0';
 /** Revision number of the element classes (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
-export const SVG_EDITOR_CONTRACT_REVISION = 5;
+export const SVG_EDITOR_CONTRACT_REVISION = 6;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 /**
  * Elements of the card editor chunk (module-editor contract) that the SVG editor uses by tag, never by import:
@@ -491,7 +501,13 @@ export type SvgEditorSource =
   | { kind: 'blank' }
   | { kind: 'icon'; icon: string }
   | { kind: 'svg'; svg: string }
-  | { kind: 'library'; id: string };
+  | { kind: 'library'; id: string }
+  /** Image mode (image-editor 1.0.0). No size: the canvas-size step opens first. */
+  | { kind: 'image-blank'; width?: number; height?: number }
+  /** A library image. */
+  | { kind: 'image'; id: string }
+  /** A file opened as a new image. */
+  | { kind: 'image-svg'; svg: string };
 
 /** What the host tells the editor about the module, for the notice. */
 export interface SvgEditorModuleFacts {
@@ -507,11 +523,11 @@ export interface SvgEditorModuleFacts {
 }
 
 export interface SvgSaveDetail {
-  target: 'module' | 'library';
-  /** sanitizeSvg output. */
+  target: 'module' | 'library' | 'image-library';
+  /** sanitizeSvg output; for target 'image-library' the sanitised image markup. */
   svg: string;
-  /** target 'library': the stored item (as the server returned it). */
-  saved?: SavedIconInput;
+  /** target 'library': the stored item (as the server returned it). target 'image-library': what was sent to images_save. */
+  saved?: SavedIconInput | SavedImageInput;
   /** target 'library': also keep an inline copy in the card (custom_icons). */
   keepCopy?: boolean;
 }
