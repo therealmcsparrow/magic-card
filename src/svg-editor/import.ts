@@ -39,7 +39,7 @@ const KEEP = new Set(['svg', 'g', 'path', 'circle', 'ellipse', 'rect', 'line', '
 const NOT_DRAWN = new Set(['defs', 'clippath', 'mask', 'lineargradient', 'radialgradient', 'stop', 'title']);
 const NONE = /^(none|transparent)$/i;
 const PLAIN = /^(currentcolor|inherit|black|#0{3}|#0{6})$/i;
-const emptyNotes = (): ImportNotes => ({ dropped: { script: 0, image: 0, link: 0, other: 0 }, transforms: false, colours: false, opacity: false });
+export const emptyNotes = (): ImportNotes => ({ dropped: { script: 0, image: 0, link: 0, other: 0 }, transforms: false, colours: false, opacity: false });
 
 function parse(text: string): Element | undefined {
   if (typeof DOMParser === 'undefined') return undefined;
@@ -93,8 +93,11 @@ function nameKind(tag: string): ShapeType {
   return tag === 'rect' ? 'rect' : tag === 'circle' || tag === 'ellipse' ? 'ellipse' : tag === 'line' ? 'line' : tag === 'polygon' || tag === 'polyline' ? 'polygon' : 'path';
 }
 
-/** Read the sanitiser's markup into shapes. */
-function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: string, image = false): Doc {
+/**
+ * Read the sanitiser's markup into shapes. `image` (image mode) maps a paint value to a tone, or undefined when it is not
+ * one of the two; layer ids and names are then kept from the markup.
+ */
+export function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: string, image?: (paint: string) => Paint | undefined): Doc {
   const doc = blankDoc(name);
   const vb = viewBox.split(/\s+/).map(Number);
   if (vb.length === 4 && vb.every(Number.isFinite)) doc.vb = { x: vb[0], y: vb[1], w: vb[2], h: vb[3] };
@@ -102,11 +105,10 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
   if (!root) return doc;
   const groups: Group[] = [];
   const used = new Set<string>();
-  /** Image mode: the card's variables are the two tones; any other paint is not kept. */
   const tone = (v: string): Paint => {
-    const m = /^var\(\s*--mc-image-(main|accent)\s*\)$/.exec(v);
-    if (m) return m[1] as Paint;
-    if (!NONE.test(v)) notes.colours = true;
+    const own = image?.(v);
+    if (own) return own;
+    if (!NONE.test(v) && !PLAIN.test(v)) notes.colours = true;
     return NONE.test(v) ? 'none' : 'main';
   };
 
@@ -116,19 +118,11 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
     const p: Inherit = { ...inh };
     const f = get('fill');
     if (f !== undefined) {
-      if (image) p.fill = tone(f);
-      else {
-        p.fill = NONE.test(f) ? 'none' : 'main';
-        if (!NONE.test(f) && !PLAIN.test(f)) notes.colours = true;
-      }
+      p.fill = tone(f);
     }
     const st = get('stroke');
     if (st !== undefined) {
-      if (image) p.stroke = tone(st);
-      else {
-        p.stroke = NONE.test(st) ? 'none' : 'main';
-        if (!NONE.test(st) && !PLAIN.test(st)) notes.colours = true;
-      }
+      p.stroke = tone(st);
     }
     const w = parseFloat(get('stroke-width') ?? '');
     if (Number.isFinite(w) && w >= 0) p.width = w;
@@ -171,7 +165,7 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
     if (!paths.length) return;
     const sw = p.width * Math.sqrt(Math.abs(mm[0] * mm[3] - mm[1] * mm[2]));
     const stroke: Paint = p.stroke !== 'none' && sw > 0 ? p.stroke : 'none';
-    const own = image ? el.getAttribute('id') : null;
+    const own = image && el.getAttribute('id');
     const keep = own && !used.has(own) ? own : undefined;
     if (keep) used.add(keep);
     doc.shapes.push(
@@ -194,15 +188,6 @@ function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: s
   const rootInh = inherit(root, ROOT);
   for (const c of root.children) walk(c, rm, rootInh, undefined, 0);
   return pruneGroups({ ...doc, groups });
-}
-
-/** A library image (already through the image sanitiser) as a document; `all` is false when parts of it cannot be edited yet. */
-export function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean } {
-  const notes = emptyNotes();
-  const doc = readMarkup(markup, viewBox, notes, name, true);
-  const root = parse(markup);
-  const extra = !!root?.querySelector('text,linearGradient,radialGradient,clipPath,lineargradient,radialgradient,clippath,mask,use,image,[opacity],[fill-opacity],[stroke-opacity]');
-  return { doc, all: !notes.colours && !notes.opacity && !extra };
 }
 
 export function importSvg(text: string, name = 'My icon'): ImportResult {

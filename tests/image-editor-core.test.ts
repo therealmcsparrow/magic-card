@@ -1,6 +1,8 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import * as chunk from '../src/path-canvas/index';
 import { bind } from '../src/svg-editor/bind';
+import { bindKit } from '../src/image-editor/kit';
+import { imageKit } from '../src/svg-editor/image-kit';
 import { freeImageId, imageSlug } from '../src/image-editor/ids';
 import { kibShown, meterLevel, savedBytes } from '../src/image-editor/meter';
 import { gridFor, keepRatio, outsideCount, presetOf, readSize } from '../src/image-editor/canvas';
@@ -10,7 +12,10 @@ import { api } from '../src/svg-image/chunk';
 import { IMAGE_MAX_BYTES } from '../src/contracts/mcu-library-images';
 import { blankDoc, newShape } from '../src/svg-editor/model';
 
-beforeAll(() => bind(chunk as never));
+beforeAll(() => {
+  bind(chunk as never);
+  bindKit(imageKit);
+});
 
 const SVG = '<svg viewBox="0 0 100 50"><path id="a" data-name="Roof" d="M0 0H10V10Z" fill="var(--mc-image-main)"/></svg>';
 

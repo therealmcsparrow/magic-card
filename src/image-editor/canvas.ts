@@ -1,5 +1,6 @@
 import { IMAGE_CANVAS_MIN, IMAGE_CANVAS_PRESETS } from '../contracts/image-editor';
-import { shapeBox, type Doc } from '../svg-editor/model';
+import type { Doc } from '../svg-editor/model';
+import { K } from './kit';
 import { MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
 
 /** Drawing grid sizes for big canvases; the default is the longest side / 48, rounded to the nearest of these. */
@@ -39,7 +40,7 @@ export function readSize(w: string, h: string): { ok: true; w: number; h: number
 export function outsideCount(d: Doc, w: number, h: number): number {
   const { x, y } = d.vb;
   return d.shapes.filter((s) => {
-    const b = shapeBox(s);
+    const b = K.shapeBox(s);
     return !!b && (b.x < x - 0.01 || b.y < y - 0.01 || b.x + b.w > x + w + 0.01 || b.y + b.h > y + h + 0.01);
   }).length;
 }

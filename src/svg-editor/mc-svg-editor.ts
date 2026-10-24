@@ -1,4 +1,4 @@
-import { LitElement, adoptStyles, type PropertyValues, type TemplateResult } from 'lit';
+import { LitElement, type PropertyValues, type TemplateResult } from 'lit';
 import type { History, PathCanvasChunk, PathChange, PathContext, PathPaint, PathSelection, PathTransform, TransformBox } from '../contracts/path-canvas';
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { UiPopoverElement, UiToastElement, UiWindowElement } from '../contracts/ui-kit';
@@ -63,12 +63,13 @@ import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './
 import { editorStyles } from './styles';
 import type { LocaleHassLike } from '../contracts/i18n';
 import { setI18nLocale } from '../i18n/runtime';
-import { t } from './i18n';
+import { locale, t } from './i18n';
 import { svgErrorKind } from '../icons/svg-error';
 import { PRIM, ARRANGE, BOOL_OPS, PT_NAME } from './names';
 import { DRAW_TOOLS, Gestures, type Live, type StageHost, type Tool, type ToolOpts } from './tools';
 import { renderEditor } from './views';
 import { imageApi, loadImageEditor } from './image-loader';
+import { imageKit } from './image-kit';
 import type { ImageShell, ImageUi } from './image-seam';
 
 /*
@@ -138,11 +139,6 @@ export class McSvgEditor extends LitElement implements StageHost {
   pvAccent = MCU_PREVIEW_ACCENT;
   get mcu(): boolean {
     return this.host === 'mcu';
-  }
-
-  /** Library writes are allowed: Magic Card Utils is present and the user is an administrator (the server enforces it too). */
-  get canWrite(): boolean {
-    return this.libraryAvailable && !!this.hass && (this.hass as { user?: { is_admin?: boolean } }).user?.is_admin === true;
   }
 
   stage: Stage = 'loading';
@@ -335,9 +331,10 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.stage = 'fail';
       return;
     }
-    const img = create(this as unknown as ImageShell, api);
+    const img = create(this as unknown as ImageShell, api, imageKit);
     this.img = img;
-    adoptStyles(this.renderRoot as ShadowRoot, [...editorStyles, ...img.styles]);
+    const root = this.renderRoot as ShadowRoot;
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...img.styles.flatMap((s) => s.styleSheet ?? [])];
     const doc = await img.open(this.source);
     if (!doc) {
       this.stage = 'fail';
@@ -877,7 +874,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     } else if (final && Number.isFinite(n)) {
       this.grid = Math.min(hi, Math.max(lo, n));
       this.gridMsg = { text: t('Grid size set to {size}, the nearest allowed size.', { size: this.grid }), error: false };
-    } else this.gridMsg = { text: g ? t('Use {min} to {max}.', { min: lo, max: hi }) : t('Use 0.1 to 12.'), error: true };
+    } else this.gridMsg = { text: t('Use {min} to {max}.', { min: lo.toLocaleString(locale()), max: hi.toLocaleString(locale()) }), error: true };
   }
 
   /** The polygon window's way back: the options and the tool as they were when it opened. */
@@ -1223,6 +1220,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   escape(e: KeyboardEvent): void {
     e.preventDefault();
     e.stopPropagation();
+    if (this.img?.close()) return;
     if (this.newAsk) return this.closeNew();
     if (this.startOpen) return this.closeStart();
     if (this.picker) {
@@ -1488,12 +1486,6 @@ export class McSvgEditor extends LitElement implements StageHost {
   markSaved(): void {
     this.baseline = toSvg(this.base);
     this.dirty = false;
-  }
-
-  /** A menu under `opener` whose picks go to the image editor. */
-  openMenu(items: MenuEntry[], opener: HTMLElement): void {
-    const r = opener.getBoundingClientRect();
-    this.menu = { items, at: [r.left, r.bottom], touch: false, opener, key: 'xfer' };
   }
 
   get libraryMissing(): boolean {

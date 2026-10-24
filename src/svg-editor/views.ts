@@ -190,7 +190,7 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 // ── the layer ──
 
 export function renderEditor(ed: McSvgEditor): TemplateResult {
-  return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? t('Image editor') : t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
+  return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? ed.img.title : t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
     ${skipLinks(ed)} ${ed.img ? ed.img.topBar() : topBar(ed)}
     ${ed.stage === 'edit' ? (ed.img?.readOnly ? ed.img.viewer() : workspace(ed)) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('Loading the image editor') : t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('The image editor could not load. Check your connection and try again.') : t('The icon editor could not load. Check your connection and try again.'))}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
@@ -429,7 +429,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
     ${rail(ed)}
     ${ed.picker ? picker(ed) : nothing}
     ${left ? leftPanel(ed) : nothing}
-    <section class="center" aria-label=${ed.img ? t('Image editor') : t('Icon editor')}>
+    <section class="center" aria-label=${ed.img ? ed.img.title : t('Icon editor')}>
       ${floatBar(ed)}
       <div class="stagebox">
       <div
@@ -444,7 +444,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
         <mc-path-canvas
           underlay
           role="group"
-          aria-label=${ed.img ? t('Image canvas') : t('Icon canvas')}
+          aria-label=${ed.img ? ed.img.canvasLabel : t('Icon canvas')}
           .frame=${ed.doc.vb}
           .paths=${ed.cvPaths}
           .paint=${ed.flat.paint}
@@ -506,7 +506,7 @@ function floatBar(ed: McSvgEditor): TemplateResult {
     const label = k === 'combine' && ed.boolBusy ? t('Working…') : k === 'align' ? t('Align') : k === 'combine' ? t(BOOL_OPS.union) : t('Path');
     return html`<button type="button" class="btn btn-secondary btn-sm" data-menu=${k} aria-haspopup="menu" aria-expanded=${aria(ed.menu?.key === k)} aria-busy=${busy ? 'true' : nothing} @click=${(e: Event) => ed.toolMenu(k, e.currentTarget as HTMLElement)}>${label}</button>`;
   };
-  return html`<div class="toolbar" role="toolbar" aria-label=${ed.img ? t('Image canvas') : t('Icon canvas')}>
+  return html`<div class="toolbar" role="toolbar" aria-label=${ed.img ? ed.img.canvasLabel : t('Icon canvas')}>
     ${btn(t('Zoom out'), 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(t('Zoom in'), 'add', () => ed.zoomBy(1.25), { keys: '=' })}${btn(t('Fit to view'), 'fitToScreenOutline', () => ed.fitView(), { keys: '0' })}
     ${ed.img ? nothing : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('Preview')}</button>`}
     ${btn(t('Grid {size}', { size: ed.grid }), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true })}${btn(t('Snap to grid'), 'magnet', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}

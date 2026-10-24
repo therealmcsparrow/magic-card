@@ -3,9 +3,9 @@ import { IMAGE_CANVAS_MIN, IMAGE_CANVAS_PRESETS } from '../contracts/image-edito
 import { IMAGE_MAX_BYTES, MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
 import { glyph } from '../ui-kit/glyphs';
 import { button, chip, field, notice, switchRow, tiles } from '../ui-kit/templates';
-import { artLayer } from '../svg-editor/views';
 import type { McSvgEditor } from '../svg-editor/mc-svg-editor';
-import { isOff, removeShapes, type Doc, type Shape } from '../svg-editor/model';
+import type { Doc, Shape } from '../svg-editor/model';
+import { K } from './kit';
 import type { ImageExt } from './chunk';
 import { outsideCount, readSize } from './canvas';
 import { t } from './i18n';
@@ -56,7 +56,7 @@ export function topBar(x: ImageExt): TemplateResult {
         ? html`${s.layout === 'compact' ? button({ label: t('Layers'), variant: 'secondary', size: z, pressed: s.overlay, onClick: () => (s.overlay = !s.overlay) }) : nothing}${button({ label: t('Undo'), glyph: 'undo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Z', disabledReason: s.hist?.canUndo ? undefined : t('Undo'), onClick: () => s.undo() })}${button({ label: t('Redo'), glyph: 'redo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Shift+Z', disabledReason: s.hist?.canRedo ? undefined : t('Redo'), onClick: () => s.redo() })}
           ${button({ label: t('Canvas size'), variant: 'secondary', size: z, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) })}
           ${button({ label: t('Export file'), variant: 'secondary', size: z, disabledReason: s.out.svg ? undefined : t('Nothing to export yet.'), onClick: () => x.download() })}
-          ${button({ label: t('More'), variant: 'secondary', size: z, haspopup: 'menu', onClick: (e) => s.openMenu(x.menuItems(), e.currentTarget as HTMLElement) })}
+          ${button({ label: t('More'), variant: 'secondary', size: z, haspopup: 'menu', onClick: (e) => x.openMenu(e.currentTarget as HTMLElement) })}
           ${button({ label: t('Save'), glyph: 'check', variant: 'primary', size: z, keys: saveKey(), disabledReason: empty ? t('Draw something first') : x.busy ? t('Saving…') : undefined, onClick: () => x.save() })}
           <span class="sr">${mac() ? t('Save, Command+S') : t('Save, Control+S')}</span>`
         : edit
@@ -147,7 +147,7 @@ export function detailsWin(x: ImageExt): TemplateResult {
 
 /** Layers that carry the most anchors, then the hidden ones: what the Too big window offers. */
 const weight = (s: Shape): number => s.paths.reduce((n, p) => n + p.anchors.length, 0);
-const hiddenOf = (d: Doc): Shape[] => d.shapes.filter((s) => isOff(d, s, 'hidden'));
+const hiddenOf = (d: Doc): Shape[] => d.shapes.filter((s) => K.isOff(d, s, 'hidden'));
 
 export function tooBigWin(x: ImageExt): TemplateResult {
   const sh = x.shell;
@@ -182,7 +182,7 @@ export function tooBigWin(x: ImageExt): TemplateResult {
             variant: 'secondary',
             size: 'md',
             onClick: () => {
-              sh.apply(removeShapes(sh.base, hidden.map((s) => s.id)), 'Delete hidden layers');
+              sh.apply(K.removeShapes(sh.base, hidden.map((s) => s.id)), 'Delete hidden layers');
               sh.showToast(t('{c, plural, one {Deleted # hidden layer.} other {Deleted # hidden layers.}}', { c: hidden.length }), { label: t('Undo'), run: () => sh.undo() });
               close();
             },
@@ -214,7 +214,7 @@ export function viewer(x: ImageExt): TemplateResult {
       </div>
       <div class="stagebox">
         <div class="stage tool-hand" @pointerdown=${s.cap.down} @pointermove=${s.onStageMove} @pointerup=${s.onStageUp} @pointercancel=${s.onStageUp}>
-          ${artLayer(s as unknown as McSvgEditor)}
+          ${K.artLayer(s as unknown as McSvgEditor)}
           <mc-path-canvas role="group" aria-label=${t('Image canvas')} .frame=${s.doc.vb} .paths=${s.flat.paths} .paint=${locked} .mode=${'select'} .snap=${{ enabled: false, grid: s.grid, anchors: false, frame: false, safeArea: false }} .pixelGrid=${false} .maxPaths=${512} .kinds=${['corner', 'smooth']} @mc-path-view=${s.onView}></mc-path-canvas>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import type { SvgImageApi } from '../contracts/svg-image';
+import type { Kit } from '../image-editor/kit';
 import type { ImageShell, ImageUi } from './image-seam';
 
 /*
@@ -11,7 +12,7 @@ import type { ImageShell, ImageUi } from './image-seam';
  */
 
 const TIMEOUT_MS = 8000;
-type Entry = (shell: ImageShell, api: SvgImageApi) => ImageUi;
+type Entry = (shell: ImageShell, api: SvgImageApi, kit: Kit) => ImageUi;
 interface Loaded {
   create: Entry;
   api: SvgImageApi;

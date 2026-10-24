@@ -11,11 +11,7 @@ import type { Doc } from './model';
  * ImageShell is the part of the shell the chunk may use. Nothing here is a public contract: both folders move together.
  */
 
-export type ImageShell = Omit<McSvgEditor, 'hass' | 'host' | 'canWrite'> &
-  ImageEditorHost & {
-    /** Opens the shell's menu under `opener`; a pick comes back to ImageUi.pick(). */
-    openMenu(items: MenuEntry[], opener: HTMLElement): void;
-  };
+export type ImageShell = Omit<McSvgEditor, 'hass' | 'host'> & Omit<ImageEditorHost, 'canWrite'>;
 
 export interface ImageUi extends ImageEditorExt {
   /** Extra styles the shell adopts after its own. */
@@ -25,8 +21,13 @@ export interface ImageUi extends ImageEditorExt {
   readonly grid: { chips: readonly number[]; min: number; max: number };
   /** A window of the image editor is open: the layer's own keys wait. */
   readonly modal: boolean;
+  /** Names of the editor and its canvas for screen readers. */
+  readonly title: string;
+  readonly canvasLabel: string;
   /** Why open() gave no document, in words. */
   readonly problem?: string;
+  /** Escape: close the open window, true when there was one. */
+  close(): boolean;
   /** The first document is showing. */
   ready(): void;
   download(): void;

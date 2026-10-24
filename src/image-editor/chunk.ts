@@ -6,9 +6,8 @@ import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
 import type { SvgImageApi } from '../contracts/svg-image';
 import type { Out } from '../svg-editor/mc-svg-editor';
 import type { ImageShell, ImageUi } from '../svg-editor/image-seam';
-import { readImage } from '../svg-editor/import';
-import { blankDoc, pointCount, reserveIds, round2, toSvg, type Doc, type Paint, type Shape } from '../svg-editor/model';
-import { slug } from '../svg-editor/library';
+import type { Doc, Paint, Shape } from '../svg-editor/model';
+import { K, bindKit, type Kit } from './kit';
 import { DEFAULT_PRESET, IMAGE_GRID_MIN, IMAGE_GRID_STEPS, gridFor, keepRatio, outsideCount, presetOf, readSize, sideOk } from './canvas';
 import { t } from './i18n';
 import { ImageError, fetchImage, listImages, storeImage, type ImageHass } from './library';
@@ -42,6 +41,19 @@ export interface DetailsDlg {
   description: string;
   more: boolean;
   error?: string;
+}
+
+const tone = (v: string): Paint | undefined => {
+  const m = /^var\(\s*--mc-image-(main|accent)\s*\)$/.exec(v);
+  return m ? (m[1] as Paint) : /^(none|transparent)$/i.test(v) ? 'none' : undefined;
+};
+
+/** A library image (already through the image sanitiser) as a document; `all` is false when parts of it cannot be edited yet. */
+function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean } {
+  const notes = K.emptyNotes();
+  const doc = K.readMarkup(markup, viewBox, notes, name, tone);
+  const extra = !!new DOMParser().parseFromString(markup, 'image/svg+xml').querySelector('text,linearGradient,radialGradient,clipPath,mask,use,image,[opacity],[fill-opacity],[stroke-opacity]');
+  return { doc, all: !notes.colours && !notes.opacity && !extra };
 }
 
 // eslint-disable-next-line no-control-regex
@@ -80,8 +92,13 @@ export class ImageExt implements ImageUi {
     return this.shell.hass as unknown as ImageHass | undefined;
   }
 
+  /** Library writes are allowed: Magic Card Utils is present and the user is an administrator (the server enforces it too). */
+  get canWrite(): boolean {
+    return this.shell.libraryAvailable && (this.shell.hass as { user?: { is_admin?: boolean } } | undefined)?.user?.is_admin === true;
+  }
+
   get readOnly(): boolean {
-    return !this.shell.canWrite || this.denied || this.lossy;
+    return !this.canWrite || this.denied || this.lossy;
   }
 
   /** Why the editor is view-only, in plain words. */
@@ -93,6 +110,14 @@ export class ImageExt implements ImageUi {
 
   private get noLibrary(): boolean {
     return !this.shell.libraryAvailable;
+  }
+
+  get title(): string {
+    return t('Image editor');
+  }
+
+  get canvasLabel(): string {
+    return t('Image canvas');
   }
 
   get modal(): boolean {
@@ -126,7 +151,7 @@ export class ImageExt implements ImageUi {
         this.problem = t('That file has no shapes an image can use.');
         return undefined;
       }
-      reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
+      K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
       if (s.stripped.length) this.pending.push({ kind: 'warn', text: t('Removed parts an image cannot use. Everything else was kept.'), detail: s.stripped });
       if (!r.all) this.pending.push({ kind: 'warn', text: t('Some parts of this file, such as text, gradients or transparency, cannot be edited yet. They were left out.') });
       return r.doc;
@@ -152,7 +177,7 @@ export class ImageExt implements ImageUi {
       return undefined;
     }
     const r = readImage(s.markup, s.viewBox, item.name);
-    reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
+    K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
     this.id = item.id;
     this.updatedAt = item.updated_at;
     this.stored = item.bindings ?? [];
@@ -176,7 +201,7 @@ export class ImageExt implements ImageUi {
   }
 
   private canvasDoc(w: number, h: number): Doc {
-    return { ...blankDoc(''), vb: { x: 0, y: 0, w, h } };
+    return { ...K.blankDoc(''), vb: { x: 0, y: 0, w, h } };
   }
 
   private sanitiseText(e: string): string {
@@ -193,7 +218,7 @@ export class ImageExt implements ImageUi {
     return (
       ` id="${s.id}"${name ? ` data-name="${name}"` : ''} fill="${paint(s.fill)}"` +
       (s.fill !== 'none' && s.rule === 'evenodd' ? ' fill-rule="evenodd"' : '') +
-      (strokeOn ? ` stroke="${paint(s.stroke)}" stroke-width="${round2(s.width)}"${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
+      (strokeOn ? ` stroke="${paint(s.stroke)}" stroke-width="${K.round2(s.width)}"${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
     );
   }
 
@@ -206,9 +231,9 @@ export class ImageExt implements ImageUi {
   }
 
   buildOut(doc: Doc, decimals: number): Out {
-    const points = pointCount(doc);
+    const points = K.pointCount(doc);
     const vb = `${doc.vb.x} ${doc.vb.y} ${doc.vb.w} ${doc.vb.h}`;
-    const raw = toSvg(doc, decimals, (s, d) => `<path d="${d}"${this.serialiseLayer(s)}/>`);
+    const raw = K.toSvg(doc, decimals, (s, d) => `<path d="${d}"${this.serialiseLayer(s)}/>`);
     if (!/<path/.test(raw)) return { bytes: 0, error: 'empty', points, viewBox: vb };
     const s = this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
@@ -532,9 +557,15 @@ export class ImageExt implements ImageUi {
     const url = URL.createObjectURL(b);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${slug(this.name || t('My image'))}.svg`;
+    a.download = `${K.slug(this.name || t('My image'))}.svg`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  /** The More menu under its button; a pick comes back to pick(). */
+  openMenu(opener: HTMLElement): void {
+    const r = opener.getBoundingClientRect();
+    this.shell.menu = { items: this.menuItems(), at: [r.left, r.bottom], touch: false, opener, key: 'xfer' };
   }
 
   menuItems(): MenuEntry[] {
@@ -549,6 +580,15 @@ export class ImageExt implements ImageUi {
   pick(id: string): void {
     if (id === 'copy') this.openDetails('copy');
     else if (id === 'duplicate') this.openDetails('duplicate');
+  }
+
+  close(): boolean {
+    if (this.big) this.big = undefined;
+    else if (this.details) return this.closeDetails(), true;
+    else if (this.size) return this.closeSize(), true;
+    else return false;
+    this.shell.requestUpdate();
+    return true;
   }
 
   dispose(): void {
@@ -571,6 +611,7 @@ export class ImageExt implements ImageUi {
   }
 }
 
-export function createImageExt(shell: ImageShell, api: SvgImageApi): ImageUi {
+export function createImageExt(shell: ImageShell, api: SvgImageApi, kit: Kit): ImageUi {
+  bindKit(kit);
   return new ImageExt(shell, api);
 }

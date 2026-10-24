@@ -143,6 +143,47 @@ describe('image editor: opening', () => {
     expect(text(el)).not.toContain('Use a number from 16 to 4096.');
   });
 
+  it('Escape closes the canvas size window and keeps the editor; Apply changes the canvas and the grid', async () => {
+    const { hass } = wire();
+    const el = await open({ kind: 'image-blank', width: 640, height: 480 }, hass);
+    button(el, 'Canvas size')!.click();
+    await settle(el);
+    expect(qa(el, 'mc-ui-window').length).toBe(1);
+    el.renderRoot.querySelector('.layer')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await settle(el);
+    expect(qa(el, 'mc-ui-window').length).toBe(0);
+    expect(el.stage).toBe('edit');
+    button(el, 'Canvas size')!.click();
+    await settle(el);
+    win(el, '1:1 · 1024 x 1024')!.click();
+    await settle(el);
+    win(el, 'Apply')!.click();
+    await settle(el);
+    expect(el.doc.vb).toMatchObject({ w: 1024, h: 1024 });
+    expect(el.grid).toBe(20);
+    expect(qa(el, 'mc-ui-window').length).toBe(0);
+  });
+
+  it('warns before cutting off layers and applies on the second press', async () => {
+    const { hass } = wire();
+    const el = await open({ kind: 'image', id: 'ground-floor' }, hass);
+    button(el, 'Canvas size')!.click();
+    await settle(el);
+    el.renderRoot.querySelector<HTMLButtonElement>('#size-keep')!.click();
+    await settle(el);
+    type(el, 'size-w', '300');
+    type(el, 'size-h', '300');
+    await settle(el);
+    win(el, 'Apply')!.click();
+    await settle(el);
+    expect(text(el)).toContain('2 layers sit outside the new canvas. They are kept but will be cut off.');
+    expect(el.doc.vb.w).toBe(1920);
+    win(el, 'Apply anyway')!.click();
+    await settle(el);
+    expect(el.doc.vb).toMatchObject({ w: 300, h: 300 });
+    expect(el.doc.shapes).toHaveLength(2);
+  });
+
   it('keeps the ratio while typing a width', async () => {
     const { hass } = wire();
     const el = await open({ kind: 'image-blank' }, hass);
