@@ -1,0 +1,18 @@
+{
+  "Connection {n} is not valid, so it was left out.": "Koppeling {n} is niet geldig, dus is weggelaten.",
+  "Create copy": "Kopie maken",
+  "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.": "{name} verwijderen? Kaarten die de afbeelding gebruiken tonen dat ze ontbreekt. Dit kan niet ongedaan worden gemaakt.",
+  "Duplicate {name}": "{name} dupliceren",
+  "Duplicated as {name}.": "Gedupliceerd als {name}.",
+  "Export all images": "Alle afbeeldingen exporteren",
+  "Name for the copy of {name}": "Naam voor de kopie van {name}",
+  "New image": "Nieuwe afbeelding",
+  "Only the first {max} connections were kept.": "Alleen de eerste {max} koppelingen zijn bewaard.",
+  "The image could not be read.": "De afbeelding kon niet worden gelezen.",
+  "The image holds markup that is not allowed.": "De afbeelding bevat markup die niet is toegestaan.",
+  "The image is larger than {kb} KB.": "De afbeelding is groter dan {kb} KB.",
+  "View {name}": "{name} bekijken",
+  "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# koppeling} other {# koppelingen}}",
+  "{name} copy": "{name} kopie",
+  "{n} KB": "{n} KB"
+}

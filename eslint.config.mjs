@@ -26,6 +26,7 @@ const REGISTERED_IMPORT_SITES = [
   'src/shape-editor/loader.ts',
   'src/svg-editor/image-loader.ts',
   'src/svg-editor/loader.ts',
+  'src/transfer/image-transfer-loader.ts',
   'src/theme-editor/presets/loader.ts',
 ];
 
@@ -83,6 +84,22 @@ export default tseslint.config(
   {
     files: REGISTERED_IMPORT_SITES,
     rules: { 'no-restricted-syntax': 'off' },
+  },
+  {
+    // svg-image contract: the editor-side chunks reach the library-image api only through import() of
+    // the svg-image chunk entry in the registered sites; value imports of src/svg-image/** and of the chunk table stay out.
+    files: ['src/transfer/**/*.ts', 'src/image-transfer/**/*.ts', 'src/svg-editor/**/*.ts', 'src/image-editor/**/*.ts', 'src/image-tools/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { group: ['**/svg-image/*'], allowTypeImports: true, message: 'Reach the library-image api through import() of the svg-image chunk in a registered site; only type imports from src/svg-image are allowed here.' },
+            { group: ['**/utils/lazy-chunks'], allowTypeImports: true, message: 'Editor chunks do not import the chunk table; it would add export getters to magic-card.js.' },
+          ],
+        },
+      ],
+    },
   },
   {
     // The manifest check: its own override, one site, import() plus webpackIgnore.

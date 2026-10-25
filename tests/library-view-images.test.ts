@@ -67,6 +67,7 @@ async function mount(be: ReturnType<typeof backend>, props: Partial<LibraryView>
   Object.assign(el, { context: 'mcu-panel' }, narrow ? { kinds: ['image'] } : {}, { hass: { user: { is_admin: admin }, callWS: be.callWS, connection: { subscribeMessage: async () => () => {} } } }, props);
   document.body.append(el);
   await flush();
+  for (let i = 0; i < 100 && el.shadowRoot!.textContent!.includes('Loading...'); i++) await new Promise((r) => setTimeout(r, 20));
   await el.updateComplete;
   return el;
 }

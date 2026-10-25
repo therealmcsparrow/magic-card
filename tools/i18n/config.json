@@ -11,6 +11,7 @@
     "path-tools": { "dir": "src/path-tools/i18n", "roots": ["src/path-tools"] },
     "shape-editor": { "dir": "src/shape-editor/i18n", "roots": ["src/shape-editor"] },
     "transfer": { "dir": "src/transfer/i18n", "roots": ["src/transfer"] },
+    "image-transfer": { "dir": "src/image-transfer/i18n", "roots": ["src/image-transfer"] },
     "anim-studio": { "dir": "src/anim-studio/i18n", "roots": ["src/anim-studio"] },
     "icon-animator": { "dir": "src/icon-anim/i18n", "roots": ["src/icon-anim", "src/editor/components/icon-animator"] },
     "theme-editor": { "dir": "src/theme-editor/i18n", "roots": ["src/theme-editor"] },

@@ -2,14 +2,18 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { CustomShapeOptions } from './custom-shape';
 import type { ThemeDoc } from './theme-editor';
 import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
-import type { ImageBinding } from './mcu-library-images';
+import type { ImageBinding, ImageSummary } from './mcu-library-images';
 import type { SvgImageApi } from './svg-image';
 
 /*
- * Contract: preset files (export / import) and the transfer chunk. Version 1.1.0.
+ * Contract: preset files (export / import) and the transfer chunk. Version 1.2.0.
+ * 1.2.0 (1.1.0 was never released): the image code of the transfer chunk lives in its own child chunk, image-transfer
+ * (below); parseTransfer's opts.images is that chunk's reader (ImageReader) instead of the sanitiser. The file format
+ * is unchanged.
  * 1.1.0 (additive): kind 'image' (below), HOST_KINDS['mcu-panel'] gains it, LibrarySource.isSaved knows 'images',
  * LibraryOpenDetail.kind gains 'image', parseTransfer takes opts.images, TRANSFER_CHUNK_CEILING is 65 KiB.
- * The view reads and writes images through the images_* commands itself (a host's `source` is not asked for images).
+ * The view reads and writes images through the images_* commands (in the image-transfer chunk; a host's `source` is
+ * not asked for images).
  * Host 'mcu-panel' (the Magic Card Utils panel's Library tab, mcu-library 1.0.0) for <mc-library-view>,
  * with New / Edit actions that fire `mc-library-open`.
  * <mc-library-view> reads saved icons and shapes
@@ -35,7 +39,7 @@ import type { SvgImageApi } from './svg-image';
  *       name: Sunrise               1..80 chars after trim
  *       author: Alex                optional, 1..AUTHOR_MAX_CHARS
  *       description: ...            optional, 1..DESCRIPTION_MAX_CHARS
- *       keywords: [sun, morning]    optional, icons only (<= 10 words of 1..32 chars)
+ *       keywords: [sun, morning]    optional, icons and images only (<= 10 words of 1..32 chars)
  *       data: { ... }               per kind, below
  * Writing: always `items` (a list, even for one item), keys in the order above, YAML through
  * toYaml (noRefs: no anchors or aliases are ever written), JSON with 2-space indent. No timestamps,
@@ -83,22 +87,24 @@ import type { SvgImageApi } from './svg-image';
  *
  * ── Images (kind image) ──
  * data: { svg, view_box, bindings? } (ImageData): the saved image without id, name, author, description, keywords,
- * thumb and timestamps (those are item fields or are made again). Items may carry `keywords` like icons. Reading:
- * svg goes through opts.images.sanitizeImage (the svg-image chunk's api; the transfer chunk holds no SVG sink and no
- * sanitiser of its own), everything it removes is listed as svg_removed notes (element or element@attribute), an item
- * it refuses is refused whole and listed. view_box is taken from the sanitised drawing. svg + compact bindings <=
- * IMAGE_MAX_BYTES, else the item is refused. bindings: at most MAX_IMAGE_BINDINGS (the rest is dropped, over_cap);
- * each entry is kept only when its target is an element id of the drawing, its entity looks like an entity id, its
- * `set` is a BindingSet, it has at most MAX_BINDING_RULES rules each with a state or above / below and a value that
- * fits the set (colour per BINDING_COLOUR_RE for fill and stroke, 0..100 for opacity, boolean for visible), the same
- * for `default`, and no earlier entry has the same (target, set). A dropped entry is listed (dropped_value, path
- * data.bindings[n]). Without opts.images the file is refused (the host loads the svg-image chunk first). Nothing in the
- * import path draws the markup.
+ * thumb and timestamps (those are item fields or are made again). Items may carry `keywords` like icons. Reading
+ * (ImageReader.readImage, in the image-transfer chunk): svg goes through the svg-image api's sanitizeImage (the
+ * transfer and image-transfer chunks hold no SVG sink and no sanitiser of their own), everything it removes is listed
+ * as svg_removed notes (element or element@attribute), an item it refuses is refused whole and listed. view_box is
+ * taken from the sanitised drawing. svg + compact bindings <= IMAGE_MAX_BYTES, else the item is refused. bindings: at
+ * most MAX_IMAGE_BINDINGS (the rest is dropped, over_cap); each entry is kept only when its target is an element id of
+ * the drawing, its entity looks like an entity id, its `set` is a BindingSet, it has at most MAX_BINDING_RULES rules
+ * each with a state or above / below and a value that fits the set (colour per BINDING_COLOUR_RE for fill and stroke,
+ * 0..100 for opacity, boolean for visible), the same for `default`, and no earlier entry has the same (target, set). A
+ * dropped entry is listed (dropped_value, path data.bindings[n]). Keys of data other than svg, view_box and bindings
+ * are dropped and listed (dropped_key). Without opts.images every image item is refused with the "checker did not
+ * load" note (the host loads the image-transfer chunk first). Nothing in the import path draws the markup.
  * Image envelopes are JSON only: a YAML text of kind image is refused ("Image files are JSON"), and export of images
  * writes JSON only. Files and texts over MAX_IMPORT_BYTES / MAX_IMPORT_CHARS are read only when the text is JSON (first
  * character `{`) and its marker says kind image, up to MAX_IMAGE_IMPORT_BYTES; the YAML parser never sees them. The
  * bounded copy of that large JSON path allows MAX_IMAGE_IMPORT_NODES visits and MAX_IMAGE_IMPORT_BYTES characters
- * (JSON has no aliases, so the expansion is the file itself); depth, keys and number rules are unchanged.
+ * (JSON has no aliases, so the expansion is the file itself); depth, keys and number rules are unchanged. These
+ * bounds run in the transfer chunk, before any image code is asked.
  * checkFileSize(file) takes the name: a .json file up to MAX_IMAGE_IMPORT_BYTES passes, anything else is held to
  * MAX_IMPORT_BYTES.
  * Hosts: 'mcu-panel' (Images tab and Library tab) accepts images; the card editor's library view does when its kinds
@@ -109,7 +115,8 @@ import type { SvgImageApi } from './svg-image';
  * Edit (View for a non-admin; fires LIBRARY_OPEN_EVENT in 'mcu-panel'), Duplicate (images_get, then images_save under
  * a new name and a new id, then Edit), Rename, Delete, export of selected or all images (images_list, then images_get
  * in chunks of MAX_IMAGE_GET_IDS) and Import (images_save per item; a thumbnail is made through the svg-image api).
- * A non-admin sees the list, View and Export; no other action is drawn.
+ * A non-admin sees the list, View and Export; no other action is drawn. The view keeps the markup, focus and
+ * messages of these actions; the commands, the row text and the image-only words come from ImageTransfer.
  * `static contractRevision` of <mc-library-view> is at least IMAGES_MIN_CONTRACT_REVISION.
  *
  * ── Other inputs read (C5) ──
@@ -180,9 +187,49 @@ import type { SvgImageApi } from './svg-image';
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
- * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING (65 KiB =
- * 66,560 B). Over the ceiling means a parent module got copied in (check
- * js-yaml first) or the library view grew.
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most TRANSFER_CHUNK_CEILING (65 KiB = 66,560 B; the ceiling
+ * stays, the image code lives in the image-transfer chunk). Over the ceiling means a parent module got
+ * copied in (check js-yaml first), the library view grew, or image code came back (it belongs in image-transfer).
+ * The transfer chunk holds no image command call (images_*), no binding check and no image-only message; it keeps
+ * the kind name, the large-JSON bounds, the image refusals that run before image code is loaded ("Image files are
+ * JSON", the 8 MB refusal, where to import, "checker did not load", the install hint) and the count plural.
+ * It never imports src/utils/lazy-chunks.ts or src/svg-image/** (types excepted).
+ *
+ * ── The image-transfer chunk (image import, export and library actions) ──
+ * A child lazy chunk of transfer: webpackChunkName IMAGE_TRANSFER_CHUNK -> dist/IMAGE_TRANSFER_CHUNK_FILE, chunk entry
+ * src/image-transfer/chunk.ts exporting `createImageTransfer: CreateImageTransfer`. One import() site:
+ * IMAGE_TRANSFER_LOADER (src/transfer/image-transfer-loader.ts, in eslint.config.mjs REGISTERED_IMPORT_SITES). That
+ * file is also one of svg-image SVG_IMAGE_EDITOR_IMPORT_SITES: it imports both chunks together (Promise.all of the
+ * svg-image chunk entry and the image-transfer chunk entry), then calls createImageTransfer(svgImage.api, kit) once.
+ * Loader rules: memoised while pending and once loaded; resolves undefined (never rejects) on import failure, after
+ * LOAD_TIMEOUT_MS, or when the result's `revision` is not IMAGE_TRANSFER_REVISION; undefined clears the memo so the
+ * next call retries. A sync getter returns the loaded ImageTransfer or undefined (used for invalidate()).
+ * Who loads it, and when:
+ *   - <mc-transfer-panel> before parseTransfer when the text says kind image and the host accepts images (as today),
+ *     passing the result as opts.images; when it resolves undefined the read is refused with "checker did not load";
+ *   - <mc-library-view> when it lists kind image (before images_list); when it resolves undefined the view shows its
+ *     error state with Try again. Other kinds never load it; a dashboard never fetches it.
+ * Boundary (what the chunk may import): src/contracts/** (types, and constants the transfer chunk already used, so
+ * the entry gains no export), src/i18n/runtime.ts (its own namespace) and its own folder. Nothing from src/transfer/**
+ * (the kit below hands those helpers over once), src/svg-image/** (the api is handed in), src/utils/lazy-chunks.ts,
+ * src/editor/** or lit. It defines no element and renders no template: the library view keeps all markup.
+ * Sinks (the svg-image contract's rule): no SVG or HTML sink of any kind: no unsafeSVG / unsafeHTML, no innerHTML, no
+ * DOMParser, no Blob, no createObjectURL, no <img> or URL built from markup. Thumbnails come only from
+ * api.thumbnail and are sent only when they match THUMB_RE; the sanitiser runs only as api.sanitizeImage.
+ * check-svg-sinks covers the chunk like any other (it has no parent that holds the image sanitiser, so any sink
+ * fails the pairing).
+ * Strings: i18n namespace 'image-transfer' (tables inline in the chunk, folder src/image-transfer, en-US and nl
+ * complete, baseline 0). It holds the messages of ImageReader.readImage (could not be read, larger than {kb} KB,
+ * markup not allowed, connection {n} not valid, only the first {max} connections) and the IMAGE_TRANSFER_TEXT words.
+ * Messages the two chunks share stay in 'transfer' and reach the chunk through the kit (dropped key, removed part,
+ * element and attribute names). A message is in one namespace only.
+ * Errors: every command method rejects with the server's error unchanged (`code` kept: unauthorized, conflict,
+ * library_full, too_large, unknown_command) and with an Error whose message is 'gone' when images_get returns no item;
+ * the view maps them as it does for other kinds. Every method that writes calls api.invalidate for the ids it wrote.
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most IMAGE_TRANSFER_CHUNK_CEILING. The split adds one
+ * chunk-table entry to magic-card.js (about 18 B gzip); nothing else of it is in the entry, and the entry caps stay as
+ * they are. Measured on a Linux build like CI, with check-chunk-dups, check-entry-graph, check-svg-sinks and
+ * check-es-syntax (editor side) passing.
  *
  * ── Accessibility (WCAG 2.2 AA, our bar) ──
  * The file control is a real <input type=file> behind a labelled button ("Choose a file"), accept
@@ -193,7 +240,7 @@ import type { SvgImageApi } from './svg-image';
  * existing Escape guards apply).
  */
 
-export const TRANSFER_CONTRACT_VERSION = '1.1.0';
+export const TRANSFER_CONTRACT_VERSION = '1.2.0';
 /** File format marker value written by this version. */
 export const TRANSFER_FORMAT = '1.0';
 export const TRANSFER_MAJOR = 1;
@@ -204,6 +251,15 @@ export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
 export const TRANSFER_CHUNK_CEILING = 65 * 1024; // 66,560 B
 export const LOAD_TIMEOUT_MS = 8000;
+
+export const IMAGE_TRANSFER_CHUNK = 'image-transfer';
+export const IMAGE_TRANSFER_CHUNK_FILE = 'magic-card-image-transfer.js';
+/** Hard ceiling of the image-transfer chunk (image reader, image commands, image words). */
+export const IMAGE_TRANSFER_CHUNK_CEILING = 16 * 1024; // 16,384 B
+/** The one import() site of the image-transfer chunk. */
+export const IMAGE_TRANSFER_LOADER = 'src/transfer/image-transfer-loader.ts';
+/** ImageTransfer.revision the loader accepts. */
+export const IMAGE_TRANSFER_REVISION = 1;
 
 export const MAX_IMPORT_BYTES = 1024 * 1024;
 export const MAX_IMPORT_CHARS = 1024 * 1024;
@@ -395,11 +451,20 @@ export type ParseResult<K extends TransferKind = TransferKind> =
 
 export type ClashChoice = 'replace' | 'keep-both';
 
+/** One image item read from a file: the kept data and its notes, or a refusal with its notes. */
+export type ImageKindResult = { ok: true; data: ImageData; notes: TransferNote[] } | { ok: false; notes: TransferNote[] };
+
+/** What parseTransfer asks for image items (ImageTransfer passes itself). */
+export interface ImageReader {
+  /** `index` is the item's place in the file (for notes); `data` is the bounded copy's `data` value. Pure, synchronous. */
+  readImage(index: number, data: unknown): ImageKindResult;
+}
+
 /** What window.MagicCard.loadTransfer() / loadTransfer() resolves to. */
 export interface TransferChunk {
   version: typeof TRANSFER_CONTRACT_VERSION | string;
   /** Pure and synchronous: steps 1-5 above plus per-kind validation. */
-  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: Pick<SvgImageApi, 'sanitizeImage'> }): ParseResult;
+  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult;
   serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string;
   /** "Copy as HA theme". */
   haThemeYaml(name: string, doc: ThemeDoc): string;
@@ -408,6 +473,63 @@ export interface TransferChunk {
   /** Custom element tags the chunk defines (customElements.get guarded). */
   tags: { panel: 'mc-transfer-panel'; library: 'mc-library-view' };
 }
+
+/** Helpers and shared messages the transfer chunk hands the image-transfer chunk once (it imports none of them). */
+export interface ImageTransferKit {
+  note(code: TransferNoteCode, item: number, path: string, message: string): TransferNote;
+  /** dropped_key note with the transfer chunk's "is not a preset field" message; `path` e.g. "data.thumb". */
+  droppedKey(item: number, path: string): TransferNote;
+  /** svg_removed note: "Removed {what}." / "(n times)". */
+  removedNote(item: number, count: number, what: string): TransferNote;
+  /** Readable names for a stripped element / attribute (a script, a <use> reference, the event handler onload...). */
+  elementWhat(name: string): string;
+  attributeWhat(name: string): string;
+  slug(name: string, fallback: string): string;
+  uniqueId(id: string, taken: (id: string) => boolean): string;
+}
+
+/** The logged-in connection the commands go through. */
+export interface ImageTransferHass {
+  callWS(msg: Record<string, unknown>): Promise<unknown>;
+}
+
+/**
+ * Image-only words of the library view, in the image-transfer namespace:
+ * export_all "Export all images", new "New image", view "View {name}", duplicate "Duplicate {name}",
+ * copy_label "Name for the copy of {name}", copy_name "{name} copy", create_copy "Create copy",
+ * delete_confirm "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
+ * duplicated "Duplicated as {name}."
+ */
+export const IMAGE_TRANSFER_TEXT = ['export_all', 'new', 'view', 'duplicate', 'copy_label', 'copy_name', 'create_copy', 'delete_confirm', 'duplicated'] as const;
+export type ImageTransferText = (typeof IMAGE_TRANSFER_TEXT)[number];
+
+/** What createImageTransfer returns: the image side of <mc-transfer-panel> and <mc-library-view>. */
+export interface ImageTransfer extends ImageReader {
+  revision: typeof IMAGE_TRANSFER_REVISION;
+  /** images_list; `missing` for unknown_command or no connection, `error` otherwise. */
+  list(hass: ImageTransferHass): Promise<LibraryListing<ImageSummary>>;
+  /** Saved images as export items (images_get in chunks of MAX_IMAGE_GET_IDS; no thumb, no timestamps), in `ids` order. */
+  exportItems(hass: ImageTransferHass, ids: readonly string[]): Promise<TransferItem<'image'>[]>;
+  /** images_get, then images_save with the new name and base_updated_at of what was read. */
+  rename(hass: ImageTransferHass, id: string, name: string): Promise<void>;
+  /** images_get, then images_save under uniqueId(slug(name, 'image'), taken) without base_updated_at; resolves the new id. */
+  duplicate(hass: ImageTransferHass, id: string, name: string, taken: (id: string) => boolean): Promise<string>;
+  /** images_delete. */
+  remove(hass: ImageTransferHass, id: string): Promise<void>;
+  /**
+   * One imported item: a thumbnail through api.thumbnail (THUMB_SIDE_PX, THUMB_MAX_BYTES; sent only when it matches
+   * THUMB_RE, left out when the browser cannot make one), then images_save; `baseUpdatedAt` when it replaces a saved id.
+   */
+  save(hass: ImageTransferHass, item: TransferItem<'image'>, baseUpdatedAt?: string): Promise<void>;
+  /** api.invalidate (the view calls it after an import batch). */
+  invalidate(ids: readonly string[]): void;
+  /** A row's thumbnail (only a THUMB_RE data URL, else undefined) and its id-line text after the id ("12 KB · 3 connections"). */
+  row(summary: ImageSummary): { thumb?: string; meta: string };
+  text(key: ImageTransferText, args?: Record<string, string | number>): string;
+}
+
+/** The image-transfer chunk entry's export. `api` is the svg-image chunk's, `kit` the transfer chunk's helpers. */
+export type CreateImageTransfer = (api: SvgImageApi, kit: ImageTransferKit) => ImageTransfer;
 
 /**
  * <mc-transfer-panel> (all hosts): properties `host: TransferHost`, `mode: 'import' | 'export'`,

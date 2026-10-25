@@ -14,6 +14,7 @@ import {
 } from '../contracts/preset-transfer';
 import type {
   ClashChoice,
+  ImageReader,
   ParseResult,
   TransferFormat,
   TransferItem,
@@ -23,7 +24,6 @@ import type {
   TransferSource,
 } from '../contracts/preset-transfer';
 import type { ThemeDoc } from '../contracts/theme-editor';
-import type { SvgImageApi } from '../contracts/svg-image';
 import { VERSION } from '../version';
 import { detectOther, looksLikeSvg, svgItem } from './detect';
 import type { Detected } from './detect';
@@ -31,7 +31,6 @@ import { uniqueId } from './ids';
 import { t } from './i18n';
 import { readAnimation } from './kinds/animation';
 import { readIcon } from './kinds/icon';
-import { readImage } from './kinds/image';
 import { readShape } from './kinds/shape';
 import { readTheme } from './kinds/theme';
 import { safeParse } from './safe-parse';
@@ -41,7 +40,6 @@ import type { KindResult, Raw } from './types';
 export { checkFileSize } from './safe-parse';
 
 const KINDS: readonly TransferKind[] = ['animation', 'theme', 'shape', 'icon', 'image'];
-type Images = Pick<SvgImageApi, 'sanitizeImage'>;
 const ITEM_KEYS = ['id', 'name', 'author', 'description', 'keywords', 'data'];
 const HEADER_KEYS = [TRANSFER_MARKER_KEY, 'kind', 'generator', 'items', 'item'];
 
@@ -64,7 +62,7 @@ function formatOf(v: unknown): { major: number; minor: number } | undefined {
   return m ? { major: +m[1], minor: +(m[2] ?? 0) } : undefined;
 }
 
-function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: Images): KindResult {
+function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader): KindResult {
   switch (kind) {
     case 'animation':
       return readAnimation(index, id, name, data);
@@ -73,13 +71,13 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
     case 'shape':
       return readShape(index, data);
     case 'image':
-      return readImage(index, data, images);
+      return images ? images.readImage(index, data) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
     default:
       return readIcon(index, data);
   }
 }
 
-function buildItems(found: Detected, images?: Images): { items: TransferItem[]; notes: TransferNote[] } {
+function buildItems(found: Detected, images?: ImageReader): { items: TransferItem[]; notes: TransferNote[] } {
   const { kind } = found;
   const items: TransferItem[] = [];
   const notes: TransferNote[] = [];
@@ -158,7 +156,7 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
 }
 
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
-export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: Images }): ParseResult {
+export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult {
   // over 1 MB only a JSON text is looked at (an image envelope); safeParse decides the rest
   if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
   const notes: TransferNote[] = [];

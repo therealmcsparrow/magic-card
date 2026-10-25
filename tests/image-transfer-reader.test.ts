@@ -2,11 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { parseTransfer, serialiseTransfer } from '../src/transfer/envelope';
 import { checkFileSize, safeParse } from '../src/transfer/safe-parse';
 import { sanitizeImage } from '../src/svg-image/sanitize';
+import { createImageTransfer } from '../src/image-transfer/chunk';
+import { imageTransferKit } from '../src/transfer/image-transfer-loader';
 import { HOST_KINDS, TRANSFER_CHUNK_CEILING } from '../src/contracts/preset-transfer';
 import { IMAGE_MAX_BYTES } from '../src/contracts/mcu-library-images';
 import { MAX_IMAGE_IMPORT_BYTES } from '../src/contracts/image-editor';
 
-const images = { sanitizeImage };
+const images = createImageTransfer({ sanitizeImage } as never, imageTransferKit);
 const SVG = '<svg viewBox="0 0 100 50"><path id="roof" data-name="Roof" d="M0 0H10V10Z" fill="var(--mc-image-main)"/><circle id="lamp" cx="5" cy="5" r="2" fill="#ff0"/></svg>';
 const env = (items: unknown[], kind = 'image') => JSON.stringify({ magic_card_export: '1.0', kind, items });
 const item = (data: Record<string, unknown>, extra: Record<string, unknown> = {}) => ({ id: 'house', name: 'House', data: { svg: SVG, view_box: '0 0 100 50', ...data }, ...extra });

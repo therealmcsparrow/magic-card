@@ -238,6 +238,7 @@ export const I18N_MODULES = {
   'path-tools': { bundle: 'magic-card-path-tools.js', folders: ['src/path-tools'], tables: 'inline', status: 'complete', slice: 'I4', dashboard: false },
   'shape-editor': { bundle: 'magic-card-shape-editor.js', folders: ['src/shape-editor'], tables: 'inline', status: 'complete', slice: 'I5', dashboard: false },
   transfer: { bundle: 'magic-card-transfer.js', folders: ['src/transfer'], tables: 'inline', status: 'complete', slice: 'I6', dashboard: false },
+  'image-transfer': { bundle: 'magic-card-image-transfer.js', folders: ['src/image-transfer'], tables: 'inline', status: 'complete', slice: 'image', dashboard: false },
   'anim-studio': { bundle: 'magic-card-animation-studio.js', folders: ['src/anim-studio'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'icon-animator': { bundle: 'magic-card-icon-animator.js', folders: ['src/icon-anim (editor files)', 'src/editor/components/icon-animator'], tables: 'inline', status: 'complete', slice: 'I7', dashboard: false },
   'theme-editor': { bundle: 'magic-card-theme-editor.js', folders: ['src/theme-editor (minus presets)'], tables: 'inline', status: 'complete', slice: 'I8', dashboard: false },

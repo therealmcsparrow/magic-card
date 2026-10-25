@@ -1,0 +1,18 @@
+{
+  "Connection {n} is not valid, so it was left out.": "Connection {n} is not valid, so it was left out.",
+  "Create copy": "Create copy",
+  "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.": "Delete {name}? Cards that use it show that the image is missing. This cannot be undone.",
+  "Duplicate {name}": "Duplicate {name}",
+  "Duplicated as {name}.": "Duplicated as {name}.",
+  "Export all images": "Export all images",
+  "Name for the copy of {name}": "Name for the copy of {name}",
+  "New image": "New image",
+  "Only the first {max} connections were kept.": "Only the first {max} connections were kept.",
+  "The image could not be read.": "The image could not be read.",
+  "The image holds markup that is not allowed.": "The image holds markup that is not allowed.",
+  "The image is larger than {kb} KB.": "The image is larger than {kb} KB.",
+  "View {name}": "View {name}",
+  "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# connection} other {# connections}}",
+  "{name} copy": "{name} copy",
+  "{n} KB": "{n} KB"
+}

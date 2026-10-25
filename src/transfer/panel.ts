@@ -9,7 +9,7 @@ import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
 import { count } from './count';
-import { loadImageApi } from './image-api';
+import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
 
 /*
@@ -109,10 +109,10 @@ export class TransferPanel extends LitElement {
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
     const ok = await Promise.all([need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
-    // an image file is checked by the svg-image chunk, so that chunk is loaded before the text is read
+    // an image file is checked by the image-transfer chunk, so that chunk is loaded before the text is read
     const asksImages = /"kind"\s*:\s*"image"/.test(text);
     const wantsImages = asksImages && this._kinds().includes('image');
-    const images = wantsImages ? await loadImageApi() : undefined;
+    const images = wantsImages ? await loadImageTransfer() : undefined;
     this._res =
       ok.every(Boolean) && (images || !wantsImages)
         ? parseTransfer(text, { accept: this._kinds(), fileName, images })
