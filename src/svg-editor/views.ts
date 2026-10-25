@@ -618,7 +618,7 @@ function leftPanel(ed: McSvgEditor): TemplateResult {
   return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} aria-label=${t('Panel')} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
     ${ed.overlay ? html`<div class="sheet-head">${btn(t('Close'), 'close', () => (ed.overlay = false))}</div>` : nothing}
     ${ed.img ? nothing : seg({ role: 'radiogroup', label: t('Panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('Layers') }, { value: 'library', label: t('Library') }], onChange: (p) => ed.openPanel(p) })}
-    ${ed.panel === 'layers' || ed.img ? layersPanel(ed) : libraryPanel(ed)}
+    ${ed.panel === 'layers' || ed.img ? guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed)) : libraryPanel(ed)}
   </aside>`;
 }
 

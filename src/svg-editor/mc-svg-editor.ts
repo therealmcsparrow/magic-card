@@ -106,6 +106,8 @@ export type Stage = 'loading' | 'fail' | 'start' | 'edit';
 export type CanvasEl = HTMLElement & { fit(): void; view: { zoom: number; pan: Pt }; setView(z: number, p: Pt): void; focusAnchor(p: number, a: number): void; selection?: PathSelection };
 
 const DEFAULT_OPTS: ToolOpts = { r: 0, sides: 5, inner: 0.5, star: false, prim: 'rounded-rect' };
+/** What a frame of a move or resize gesture changes. */
+const FRAME_KEYS = new Set(['doc', 'moving', 'view', 'cvSel', 'out', 'dirty']);
 const FIELD_TAGS = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 
 export class McSvgEditor extends LitElement implements StageHost {
@@ -472,8 +474,11 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   // ── canvas bridge ──
 
+  private cv?: CanvasEl;
+
   canvas(): CanvasEl | null {
-    return this.renderRoot?.querySelector<CanvasEl>('mc-path-canvas') ?? null;
+    if (!this.cv?.isConnected) this.cv = this.renderRoot?.querySelector<CanvasEl>('mc-path-canvas') ?? undefined;
+    return this.cv ?? null;
   }
 
   /** The document as canvas paths: one per subpath, the layer it belongs to, and how the canvas treats each. */
@@ -492,9 +497,19 @@ export class McSvgEditor extends LitElement implements StageHost {
     return { paths, map, paint };
   }
 
-  setDoc(doc: Doc): void {
+  /** A drag or handle gesture is moving the document: the layers list keeps what it shows until the gesture ends. */
+  private hot = false;
+  private thaw = false;
+  /** Changes whenever the layers list has to show the document again. */
+  listKey: object = {};
+
+  /** `live`: a frame of a gesture that only moves or resizes layers; the commit that ends it (or any other edit) passes false. */
+  setDoc(doc: Doc, live = false): void {
+    if (this.hot && !live) this.thaw = true;
+    this.hot = live;
     this.doc = doc;
     this.flat = this.makeFlat(doc);
+    if (this.thaw) this.requestUpdate();
   }
 
   /** The canvas gets its paths, and a blank trailing path while the pen waits to start a new one. */
@@ -545,7 +560,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const doc = this.reconcile(paths);
     if (!doc) return;
     if (!commit) this.setMoving(this.sel);
-    this.setDoc(doc);
+    this.setDoc(doc, !commit);
     this.syncPen();
     if (commit) this.commit(label);
   };
@@ -604,7 +619,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     const m = d.matrix;
     const to: Box = { x: m[0] * from.x + m[4], y: m[3] * from.y + m[5], w: m[0] * from.w, h: m[3] * from.h };
     const rot = d.kind === 'rotate';
-    this.setDoc(mapShapes(this.base, sel.map((s) => s.id), (s) => (rot ? { ...transformShape(s, m), angle: round2(((s.angle ?? 0) + (d.angle ?? 0)) % 360) } : setShapeBox(s, from, to))));
+    this.setDoc(mapShapes(this.base, sel.map((s) => s.id), (s) => (rot ? { ...transformShape(s, m), angle: round2(((s.angle ?? 0) + (d.angle ?? 0)) % 360) } : setShapeBox(s, from, to))), !d.commit);
     if (d.commit) this.commit(d.label, d.source === 'keyboard' ? d.label : undefined);
   };
 
@@ -1928,7 +1943,8 @@ export class McSvgEditor extends LitElement implements StageHost {
       }
     }
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
-    this.openOverlays();
+    // a gesture frame changes the drawing only: nothing can have opened since the last update
+    if (!(this.hot && changed.size > 0 && [...changed.keys()].every((k) => FRAME_KEYS.has(k as string)))) this.openOverlays();
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 
@@ -1951,6 +1967,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   }
 
   protected willUpdate(changed: PropertyValues): void {
+    if (this.thaw || (changed.has('doc') && !this.hot)) {
+      this.thaw = false;
+      this.listKey = {};
+    }
     if (changed.has('hass') && this.hass) setI18nLocale(this.hass as LocaleHassLike);
     if (changed.has('dlg') && this.dlg && !changed.get('dlg')) this.dlgReturn = deepActive();
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
