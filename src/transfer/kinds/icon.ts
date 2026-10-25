@@ -26,6 +26,13 @@ function parseSvg(input: string): Element[] {
   return [...doc.getElementsByTagName('*')];
 }
 
+/** What a sanitiser removed, in words (shared with the image kind). */
+export const elementWhat = (n: string): string => (n === 'script' ? t('a script') : n === 'use' ? t('a <use> reference') : `<${n}>`);
+export const attributeWhat = (n: string): string =>
+  n.startsWith('on') ? t('the event handler {name}', { name: n }) : /(^|:)href$/.test(n) ? t('a link ({name})', { name: n }) : n === 'style' ? t('a style attribute') : t('the attribute {name}', { name: n });
+export const removedNote = (index: number, count: number, what: string): TransferNote =>
+  note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count, what }));
+
 /** What the sanitiser took out: element and attribute names present in the input but not in its result. */
 export function svgRemovals(input: string, markup: string, index: number): TransferNote[] {
   const before = parseSvg(input);
@@ -43,14 +50,8 @@ export function svgRemovals(input: string, markup: string, index: number): Trans
     }
   }
   const notes: TransferNote[] = [];
-  for (const [n, c] of els) {
-    const what = n === 'script' ? t('a script') : n === 'use' ? t('a <use> reference') : `<${n}>`;
-    notes.push(note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count: c, what })));
-  }
-  for (const [n, c] of attrs) {
-    const what = n.startsWith('on') ? t('the event handler {name}', { name: n }) : /(^|:)href$/.test(n) ? t('a link ({name})', { name: n }) : n === 'style' ? t('a style attribute') : t('the attribute {name}', { name: n });
-    notes.push(note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count: c, what })));
-  }
+  for (const [n, c] of els) notes.push(removedNote(index, c, elementWhat(n)));
+  for (const [n, c] of attrs) notes.push(removedNote(index, c, attributeWhat(n)));
   return notes;
 }
 

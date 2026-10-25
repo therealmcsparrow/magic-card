@@ -23,6 +23,7 @@ import type {
   TransferSource,
 } from '../contracts/preset-transfer';
 import type { ThemeDoc } from '../contracts/theme-editor';
+import type { SvgImageApi } from '../contracts/svg-image';
 import { VERSION } from '../version';
 import { detectOther, looksLikeSvg, svgItem } from './detect';
 import type { Detected } from './detect';
@@ -30,6 +31,7 @@ import { uniqueId } from './ids';
 import { t } from './i18n';
 import { readAnimation } from './kinds/animation';
 import { readIcon } from './kinds/icon';
+import { readImage } from './kinds/image';
 import { readShape } from './kinds/shape';
 import { readTheme } from './kinds/theme';
 import { safeParse } from './safe-parse';
@@ -38,7 +40,8 @@ import type { KindResult, Raw } from './types';
 
 export { checkFileSize } from './safe-parse';
 
-const KINDS: readonly TransferKind[] = ['animation', 'theme', 'shape', 'icon'];
+const KINDS: readonly TransferKind[] = ['animation', 'theme', 'shape', 'icon', 'image'];
+type Images = Pick<SvgImageApi, 'sanitizeImage'>;
 const ITEM_KEYS = ['id', 'name', 'author', 'description', 'keywords', 'data'];
 const HEADER_KEYS = [TRANSFER_MARKER_KEY, 'kind', 'generator', 'items', 'item'];
 
@@ -49,7 +52,9 @@ const WHERE = (kind: TransferKind): string =>
       ? t('Theme files are imported in Magic Card Utils > Themes.')
       : kind === 'shape'
         ? t('Shape files are imported in the card editor (My shapes) or the shape editor.')
-        : t('Icon files are imported in the card editor (My icons) or the SVG editor.');
+        : kind === 'image'
+          ? t('Image files are imported in Magic Card Utils > Images.')
+          : t('Icon files are imported in the card editor (My icons) or the SVG editor.');
 
 const refuse = (refusal: TransferRefusal, message: string): ParseResult => ({ ok: false, refusal, message });
 
@@ -59,7 +64,7 @@ function formatOf(v: unknown): { major: number; minor: number } | undefined {
   return m ? { major: +m[1], minor: +(m[2] ?? 0) } : undefined;
 }
 
-function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown): KindResult {
+function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: Images): KindResult {
   switch (kind) {
     case 'animation':
       return readAnimation(index, id, name, data);
@@ -67,12 +72,14 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
       return readTheme(index, data);
     case 'shape':
       return readShape(index, data);
+    case 'image':
+      return readImage(index, data, images);
     default:
       return readIcon(index, data);
   }
 }
 
-function buildItems(found: Detected): { items: TransferItem[]; notes: TransferNote[] } {
+function buildItems(found: Detected, images?: Images): { items: TransferItem[]; notes: TransferNote[] } {
   const { kind } = found;
   const items: TransferItem[] = [];
   const notes: TransferNote[] = [];
@@ -114,7 +121,7 @@ function buildItems(found: Detected): { items: TransferItem[]; notes: TransferNo
     text('author', AUTHOR_MAX_CHARS);
     text('description', DESCRIPTION_MAX_CHARS);
     if (raw.keywords !== undefined) {
-      if (kind !== 'icon') itemNotes.push(note('dropped_key', i, 'keywords', t('Only icons have keywords, so they were left out.')));
+      if (kind !== 'icon' && kind !== 'image') itemNotes.push(note('dropped_key', i, 'keywords', t('Only icons and images have keywords, so they were left out.')));
       else {
         const list = Array.isArray(raw.keywords) ? raw.keywords : [];
         const keep = list.filter((w): w is string => typeof w === 'string' && w.trim().length >= 1 && w.trim().length <= 32).map((w) => w.trim()).slice(0, 10);
@@ -122,7 +129,7 @@ function buildItems(found: Detected): { items: TransferItem[]; notes: TransferNo
         if (keep.length) item.keywords = keep;
       }
     }
-    const r = readKind(kind, i, id, name, raw.data);
+    const r = readKind(kind, i, id, name, raw.data, images);
     if (!r.ok) {
       notes.push(...itemNotes, ...r.notes);
       return;
@@ -151,8 +158,9 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
 }
 
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
-export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string }): ParseResult {
-  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
+export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: Images }): ParseResult {
+  // over 1 MB only a JSON text is looked at (an image envelope); safeParse decides the rest
+  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
   const notes: TransferNote[] = [];
   let found: Detected | undefined;
   let marker: Raw | undefined;
@@ -183,7 +191,7 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
   if (!opts.accept.includes(found.kind)) return refuse('wrong_kind', WHERE(found.kind));
   if (found.items.length > MAX_IMPORT_ITEMS) return refuse('too_many_items', t('This file holds more than {max} items, so it was not read.', { max: MAX_IMPORT_ITEMS }));
 
-  const built = buildItems(found);
+  const built = buildItems(found, opts.images);
   notes.push(...built.notes);
   if (!built.items.length) {
     const why = notes.filter((n) => n.code === 'invalid_item').slice(0, 3).map((n) => n.message).join(' ');

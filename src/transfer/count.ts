@@ -10,6 +10,8 @@ export function count(n: number, kind: TransferKind): string {
       return t('{n, plural, one {# theme} other {# themes}}', { n });
     case 'shape':
       return t('{n, plural, one {# shape} other {# shapes}}', { n });
+    case 'image':
+      return t('{n, plural, one {# image} other {# images}}', { n });
     default:
       return t('{n, plural, one {# icon} other {# icons}}', { n });
   }

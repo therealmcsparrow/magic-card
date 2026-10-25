@@ -9,6 +9,7 @@ import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
 import { count } from './count';
+import { loadImageApi } from './image-api';
 import { locale, t } from './i18n';
 
 /*
@@ -67,6 +68,8 @@ export class TransferPanel extends LitElement {
   @property({ attribute: false }) exportItems?: { kind: TransferKind; items: TransferItem[] };
   @property({ attribute: false }) taken: (kind: TransferKind, id: string) => boolean = () => false;
   @property({ type: Boolean }) hasLibrary = true;
+  /** Narrows the kinds the host accepts (the library view on its Images tab passes ['image']). */
+  @property({ attribute: false }) accept?: readonly TransferKind[];
   /** (optional) Ids another library holds (renamed on import) and names the target already shows (numbered on import). */
   @property({ attribute: false }) reserved?: (kind: TransferKind, id: string) => boolean;
   @property({ attribute: false }) takenName?: (kind: TransferKind, name: string) => boolean;
@@ -77,6 +80,15 @@ export class TransferPanel extends LitElement {
   @state() private _done = '';
 
   private _fileName = '';
+
+  private _kinds(): readonly TransferKind[] {
+    return this.accept ?? HOST_KINDS[this.host];
+  }
+
+  /** Images are written as JSON only. */
+  private _fmt(): TransferFormat {
+    return this.exportItems?.kind === 'image' ? 'json' : this._format;
+  }
 
   focusHeading(): void {
     void this.updateComplete.then(() => this.renderRoot.querySelector<HTMLElement>('h3')?.focus());
@@ -97,9 +109,14 @@ export class TransferPanel extends LitElement {
     // v2 fields and particle simulations are checked by validators that live in lazy chunks of the card; load them first
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
     const ok = await Promise.all([need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
-    this._res = ok.every(Boolean)
-      ? parseTransfer(text, { accept: HOST_KINDS[this.host], fileName })
-      : { ok: false, refusal: 'limits', message: t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
+    // an image file is checked by the svg-image chunk, so that chunk is loaded before the text is read
+    const asksImages = /"kind"\s*:\s*"image"/.test(text);
+    const wantsImages = asksImages && this._kinds().includes('image');
+    const images = wantsImages ? await loadImageApi() : undefined;
+    this._res =
+      ok.every(Boolean) && (images || !wantsImages)
+        ? parseTransfer(text, { accept: this._kinds(), fileName, images })
+        : { ok: false, refusal: 'limits', message: wantsImages ? t('The checker for images did not load, so this image was not read.') : t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
     this._choice = 'keep-both';
     this.focusResult();
   }
@@ -151,13 +168,15 @@ export class TransferPanel extends LitElement {
   // ── import ──
   private _import(): TemplateResult {
     const r = this._res;
-    const accept = HOST_KINDS[this.host].includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
+    const kinds = this._kinds();
+    const images = kinds.length === 1 && kinds[0] === 'image';
+    const accept = images ? '.json' : kinds.includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
     return html`
       <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('Import {items}', { items: count(r.items.length, r.kind) }) : t('This file was not imported')) : t('Import presets')}</h3></div>
       <div class="bar">
         ${button({ label: t('Choose a file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
-        <span class="help">${t('{types}, up to 1 MB', { types: accept.replace(/\./g, '').replace(/,/g, ', ') })}</span>
+        <span class="help">${images ? t('JSON, up to 8 MB') : t('{types}, up to 1 MB', { types: accept.replace(/\./g, '').replace(/,/g, ', ') })}</span>
       </div>
       <div class="field">
         <div class="field-head"><label for="paste">${t('Or paste the text')}</label></div>
@@ -187,7 +206,7 @@ export class TransferPanel extends LitElement {
     const local = notes.filter((n) => n.code === 'local_path');
     const rest = notes.filter((n) => !KEPT(n) && n.code !== 'local_path');
     const clashes = r.items.filter((i) => this.taken(r.kind, i.id));
-    const blocked = r.kind === 'theme' && !this.hasLibrary;
+    const blocked = (r.kind === 'theme' || r.kind === 'image') && !this.hasLibrary;
     const name = (n: TransferNote): string => (r.items[n.item] ? `${r.items[n.item].name}: ` : '');
     const hosts = [...new Set(kept.flatMap((n) => n.hosts ?? []))];
     return html`
@@ -208,15 +227,15 @@ export class TransferPanel extends LitElement {
         : nothing}
       ${local.length ? html`<p class="help">${t("{n, plural, one {# value points to a file on the sharer's Home Assistant (url(/local/...)). It may not exist on your system.} other {# values point to files on the sharer's Home Assistant (url(/local/...)). They may not exist on your system.}}", { n: local.length })}</p>` : nothing}
       ${rest.length
-        ? html`<details class="cond">
+        ? html`<details class="cond" ?open=${r.kind === 'image'}>
             <summary>${t('{n, plural, one {# note} other {# notes}}', { n: rest.length })}</summary>
             <ul>
               ${rest.map((n) => html`<li>${name(n)}${n.message}</li>`)}
             </ul>
           </details>`
         : nothing}
-      ${r.kind !== 'theme' && !this.hasLibrary ? html`<p class="help">${t('Magic Card Utils is not installed, so these are saved as copies inside this card.')}</p>` : nothing}
-      ${blocked ? notice({ tone: 'error', text: t('Update Magic Card Utils to keep theme presets.') }) : nothing}
+      ${r.kind !== 'theme' && r.kind !== 'image' && !this.hasLibrary ? html`<p class="help">${t('Magic Card Utils is not installed, so these are saved as copies inside this card.')}</p>` : nothing}
+      ${blocked ? notice({ tone: 'error', text: r.kind === 'image' ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.') : t('Update Magic Card Utils to keep theme presets.') }) : nothing}
       ${clashes.length
         ? html`<div class="field">
             <div class="field-head"><span class="lbl">${t('{n, plural, one {{items} already exists} other {{items} already exist}}', { n: clashes.length, items: count(clashes.length, r.kind) })}</span></div>
@@ -244,16 +263,16 @@ export class TransferPanel extends LitElement {
   // ── export ──
   private _text(): string {
     const e = this.exportItems;
-    return e ? serialiseTransfer(e.kind, e.items, this._format) : '';
+    return e ? serialiseTransfer(e.kind, e.items, this._fmt()) : '';
   }
 
   private _name(): string {
     const e = this.exportItems!;
-    return `magic-card-${e.kind}${e.items.length === 1 ? `-${e.items[0].id}` : `s-${e.items.length}`}.${this._format === 'json' ? 'json' : 'yaml'}`;
+    return `magic-card-${e.kind}${e.items.length === 1 ? `-${e.items[0].id}` : `s-${e.items.length}`}.${this._fmt() === 'json' ? 'json' : 'yaml'}`;
   }
 
   private _download(): void {
-    const url = URL.createObjectURL(new Blob([this._text()], { type: this._format === 'json' ? 'application/json' : 'text/plain' }));
+    const url = URL.createObjectURL(new Blob([this._text()], { type: this._fmt() === 'json' ? 'application/json' : 'text/plain' }));
     const a = document.createElement('a');
     a.href = url;
     a.download = this._name();
@@ -278,7 +297,9 @@ export class TransferPanel extends LitElement {
     const text = this._text();
     return html`
       <div class="group-head"><h3 tabindex="-1">${t('Export {items}', { items: count(e.items.length, e.kind) })}</h3></div>
-      <div class="field">
+      ${e.kind === 'image'
+        ? nothing
+        : html`<div class="field">
         <div class="field-head"><span class="lbl">${t('File format')}</span></div>
         ${seg({
           role: 'radiogroup',
@@ -290,7 +311,7 @@ export class TransferPanel extends LitElement {
           ],
           onChange: (f) => (this._format = f),
         })}
-      </div>
+      </div>`}
       ${e.items.some((i) => i.author) ? html`<p class="help">${t('The author name is saved in the file. Check it before you share the file.')}</p>` : nothing}
       <textarea id="out" class="input" readonly aria-label=${t('Export text')} .value=${text} @focus=${(ev: Event) => (ev.target as HTMLTextAreaElement).select()}></textarea>
       <div class="bar">

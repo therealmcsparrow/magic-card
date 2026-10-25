@@ -8,12 +8,17 @@ import { animLibrary } from '../utils/anim-hooks';
 import { animationDocList } from '../utils/custom-animations';
 import { CMD, LIBRARY_CHANGED_EVENT } from '../contracts/mcu-library';
 import type { ItemMeta, SavedIcon, SavedShape, SavedThemePreset } from '../contracts/mcu-library';
+import { IMAGES_MIN_CONTRACT_REVISION, IMAGE_CMD, MAX_IMAGES, MAX_IMAGE_GET_IDS, THUMB_MAX_BYTES, THUMB_RE } from '../contracts/mcu-library-images';
+import type { ImageSummary, SavedImage } from '../contracts/mcu-library-images';
+import { THUMB_SIDE_PX } from '../contracts/image-editor';
 import type { ThemePresetStore } from '../contracts/theme-editor';
 import { HOST_KINDS, LIBRARY_OPEN_EVENT } from '../contracts/preset-transfer';
-import type { LibraryListing, LibraryOpenDetail, LibrarySource, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
+import type { ImageData, LibraryListing, LibraryOpenDetail, LibrarySource, LibraryViewContext, TransferItem, TransferKind } from '../contracts/preset-transfer';
 import { SVG_EDITOR_CONTRACT_REVISION } from '../contracts/svg-editor';
 import { setI18nLocale } from '../i18n/runtime';
 import { count } from './count';
+import { imageApi } from './image-api';
+import { slug, uniqueId } from './ids';
 import { locale, t } from './i18n';
 import './panel';
 import type { TransferPanel } from './panel';
@@ -42,7 +47,7 @@ type Status = 'loading' | 'ok' | 'missing' | 'error';
 
 const SAVE_ANIM = 'magic_card_utils/save_animation';
 const DEL_ANIM = 'magic_card_utils/delete_animation';
-const LABEL = (kind: TransferKind): string => (kind === 'animation' ? t('Animations') : kind === 'shape' ? t('Shapes') : kind === 'icon' ? t('Icons') : t('Theme presets'));
+const LABEL = (kind: TransferKind): string => (kind === 'animation' ? t('Animations') : kind === 'shape' ? t('Shapes') : kind === 'icon' ? t('Icons') : kind === 'image' ? t('Images') : t('Theme presets'));
 const rest = (o: object): Record<string, unknown> => {
   const { id: _i, name: _n, created_at: _c, updated_at: _u, ...r } = o as Record<string, unknown>;
   void [_i, _n, _c, _u];
@@ -55,7 +60,8 @@ const DEFAULT_KINDS: TransferKind[] = ['animation', 'shape', 'icon'];
 const codeOf = (e: unknown): string => String((e as { code?: string })?.code ?? '');
 
 /** The source used when the host passes none: the mcu-library commands, with the ids of the last lists remembered. */
-function commandSource(): LibrarySource {
+type CommandSource = LibrarySource & { listImages(hass: unknown): Promise<LibraryListing<ImageSummary>>; getImages(hass: unknown, ids: string[]): Promise<SavedImage[]> };
+function commandSource(): CommandSource {
   const known: Record<string, Set<string> | undefined> = {};
   const ws = (h: unknown, msg: Record<string, unknown>): Promise<Record<string, never[]>> => (h as LibraryHass).callWS(msg);
   const list = async (h: unknown, type: string, key: string): Promise<LibraryListing<never>> => {
@@ -71,15 +77,21 @@ function commandSource(): LibrarySource {
     listIcons: (h) => list(h, CMD.iconsList, 'icons'),
     listShapes: (h) => list(h, CMD.shapesList, 'shapes'),
     getIcon: (h, id) => ws(h, { type: CMD.iconsGet, ids: [id] }).then((r) => (r?.icons?.[0] as SavedIcon | undefined), () => undefined),
+    listImages: (h) => list(h, IMAGE_CMD.list, 'images'),
+    getImages: async (h, ids) => {
+      const out: SavedImage[] = [];
+      for (let i = 0; i < ids.length; i += MAX_IMAGE_GET_IDS) out.push(...(((await ws(h, { type: IMAGE_CMD.get, ids: ids.slice(i, i + MAX_IMAGE_GET_IDS) }))?.images ?? []) as unknown as SavedImage[]));
+      return out;
+    },
     isSaved: (kind, id) => !!known[kind]?.has(id),
-    reset: () => (known.icons = known.shapes = undefined) as never,
+    reset: () => (known.icons = known.shapes = known.images = undefined) as never,
   };
 }
 
 @customElement('mc-library-view')
 export class LibraryView extends LitElement {
   /** The Magic Card Utils panel gates on this (svg-editor contract), so the Library tab needs no SVG editor fetch. */
-  static contractRevision = SVG_EDITOR_CONTRACT_REVISION;
+  static contractRevision = Math.max(SVG_EDITOR_CONTRACT_REVISION, IMAGES_MIN_CONTRACT_REVISION);
   // kit parts plus layout only (contract ui-kit 1.0.0: a screen styles its own layout, never a kit class)
   static styles = [
     editorTokens,
@@ -100,6 +112,14 @@ export class LibraryView extends LitElement {
         gap: 8px;
         align-items: center;
       }
+      .thumb {
+        width: 40px;
+        height: 40px;
+        flex: none;
+        object-fit: contain;
+        border-radius: 6px;
+        background: var(--secondary-background-color);
+      }
     `,
   ];
 
@@ -117,9 +137,13 @@ export class LibraryView extends LitElement {
   @property({ attribute: false }) source?: LibrarySource;
   /** A host's extra for a row: a leading node (a thumbnail) and a short text after the id. Read on every render; absent = none. */
   @property({ attribute: false }) rowExtra?: (kind: TransferKind, id: string) => { thumb?: Node; meta?: string } | undefined;
-  private _own?: LibrarySource;
+  private _own?: CommandSource;
   private get _src(): LibrarySource {
     return this.source ?? (this._own ??= commandSource());
+  }
+  /** Images always go through the images commands. */
+  private get _img(): CommandSource {
+    return (this._own ??= commandSource());
   }
 
   /** 'mcu-panel': the Magic Card Utils Library tab (all four kinds, no "This card", New / Edit fire mc-library-open). */
@@ -131,7 +155,7 @@ export class LibraryView extends LitElement {
   @state() private _status: Status = 'loading';
   @state() private _rows: Row[] = [];
   @state() private _sel = new Set<string>();
-  @state() private _edit?: { id: string; kind: 'rename' | 'delete' };
+  @state() private _edit?: { id: string; kind: 'rename' | 'delete' | 'duplicate' };
   @state() private _msg = '';
   @state() private _bad = false;
   private _opener?: HTMLElement;
@@ -190,7 +214,7 @@ export class LibraryView extends LitElement {
     return this.context === 'mcu-panel';
   }
 
-  private _open(kind: 'icon' | 'shape', id?: string): void {
+  private _open(kind: 'icon' | 'shape' | 'image', id?: string): void {
     this.dispatchEvent(new CustomEvent<LibraryOpenDetail>(LIBRARY_OPEN_EVENT, { detail: id ? { kind, id } : { kind }, bubbles: true, composed: true }));
   }
 
@@ -223,13 +247,17 @@ export class LibraryView extends LitElement {
         } catch {
           status = 'error';
         }
+    } else if (kind === 'image') {
+      const l = await this._img.listImages(this.hass);
+      status = l.state;
+      rows = l.items.map((i) => row(i.id, i.name, i, i.keywords));
     } else {
       const l = await (kind === 'icon' ? this._src.listIcons(this.hass) : this._src.listShapes(this.hass));
       status = l.state;
       rows = (l.items as Array<{ id: string; name: string; keywords?: string[] }>).map((i) => row(i.id, i.name, i, i.keywords));
     }
     if (seq !== this._seq) return;
-    if (status === 'missing' && this.inline && !this._panelCtx && this._source === 'mcu' && kind !== 'theme' && !this._switched) {
+    if (status === 'missing' && this.inline && !this._panelCtx && this._source === 'mcu' && kind !== 'theme' && kind !== 'image' && !this._switched) {
       // no Magic Card Utils: the card's own copies are all there is to list
       this._switched = true;
       this._source = 'card';
@@ -242,7 +270,7 @@ export class LibraryView extends LitElement {
 
   private _go(kind: TransferKind, source: Source): void {
     this._kind = kind;
-    this._source = source;
+    this._source = kind === 'image' ? 'mcu' : source;
     this._sel = new Set();
     this._edit = undefined;
     this._q = '';
@@ -328,7 +356,12 @@ export class LibraryView extends LitElement {
       const k = this._kind;
       if (k === 'animation') await this._call({ type: SAVE_ANIM, animation: { ...(r.src as object), name } });
       else if (k === 'theme') await this.presets!.save({ ...rest(r.src as SavedThemePreset), id: r.id, name } as never, (r.src as SavedThemePreset).updated_at);
-      else {
+      else if (k === 'image') {
+        const full = (await this._img.getImages(this.hass, [r.id]))[0];
+        if (!full) throw new Error('gone');
+        await this._call({ type: IMAGE_CMD.save, image: { ...rest(full), id: r.id, name }, base_updated_at: full.updated_at });
+        this._changed([r.id]);
+      } else {
         const full = k === 'icon' ? await this._src.getIcon(this.hass, r.id) : (r.src as SavedShape);
         if (!full) throw new Error('gone');
         const key = k === 'icon' ? 'icon' : 'shape';
@@ -341,12 +374,41 @@ export class LibraryView extends LitElement {
     }
   }
 
+  /** The svg-image chunk, when this page has it, forgets what it cached for the ids. */
+  private _changed(ids: string[]): void {
+    imageApi()?.invalidate(ids);
+  }
+
+  /** Duplicate: the saved image again under a new name and a new id; the editor opens on it. */
+  private async _duplicate(r: Row, raw: string): Promise<void> {
+    const name = raw.trim();
+    if (!name || name.length > 80) {
+      this._bad = true;
+      this._msg = t('The name must be 1 to 80 characters.');
+      return;
+    }
+    try {
+      const full = (await this._img.getImages(this.hass, [r.id]))[0];
+      if (!full) throw new Error('gone');
+      const id = uniqueId(slug(name, 'image'), (x) => this._rows.some((o) => o.id === x));
+      await this._call({ type: IMAGE_CMD.save, image: { ...rest(full), id, name } });
+      this._changed([id]);
+      await this._after(t('Duplicated as {name}.', { name }));
+      if (this._panelCtx) this._open('image', id);
+    } catch (e) {
+      this._fail(e);
+    }
+  }
+
   private async _delete(r: Row): Promise<void> {
     try {
       const k = this._kind;
       if (k === 'animation') await this._call({ type: DEL_ANIM, animation_id: r.id });
       else if (k === 'theme') await this.presets!.remove(r.id);
-      else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
+      else if (k === 'image') {
+        await this._call({ type: IMAGE_CMD.remove, image_id: r.id });
+        this._changed([r.id]);
+      } else await this._call(k === 'icon' ? { type: CMD.iconsDelete, icon_id: r.id } : { type: CMD.shapesDelete, shape_id: r.id });
       await this._after(t('Deleted {name}.', { name: r.name }));
       // the row is gone: focus goes to the search field
       void this.updateComplete.then(() => (this.renderRoot as ShadowRoot).getElementById('q')?.focus());
@@ -360,6 +422,16 @@ export class LibraryView extends LitElement {
     const kind = this._kind;
     const pick = this._rows.filter((r) => (this._sel.size ? this._sel.has(r.id) : true));
     const items: TransferItem[] = [];
+    if (kind === 'image') {
+      try {
+        const full = await this._img.getImages(this.hass, pick.map((r) => r.id));
+        for (const f of full) items.push({ id: f.id, name: f.name, ...meta(f), ...(f.keywords?.length ? { keywords: f.keywords } : {}), data: { svg: f.svg, view_box: f.view_box, ...(f.bindings?.length ? { bindings: f.bindings } : {}) } } as never);
+      } catch (e) {
+        return this._fail(e);
+      }
+      this._panel = { mode: 'export', exportItems: { kind, items } };
+      return;
+    }
     for (const r of pick) {
       const base = { id: r.id, name: r.name };
       const s = r.src as Record<string, unknown>;
@@ -390,6 +462,7 @@ export class LibraryView extends LitElement {
     let ok = 0;
     let full = 0;
     let bad = 0;
+    const api = kind === 'image' ? imageApi() : undefined;
     for (const it of items) {
       try {
         const m = { id: it.id, name: it.name, ...meta(it) };
@@ -397,6 +470,17 @@ export class LibraryView extends LitElement {
         if (kind === 'animation') await this._call({ type: SAVE_ANIM, animation: { ...d, id: it.id, name: it.name } });
         else if (kind === 'theme') await this.presets!.save({ ...m, doc: d } as never);
         else if (kind === 'shape') await this._call({ type: CMD.shapesSave, shape: { ...m, shape: d } });
+        else if (kind === 'image') {
+          const { svg, view_box, bindings } = it.data as ImageData;
+          const thumb = await api?.thumbnail(svg, THUMB_SIDE_PX, THUMB_MAX_BYTES).catch(() => undefined);
+          // an id the library already holds is replaced, which the command wants named by the version it is replacing
+          const old = this._rows.find((r) => r.id === it.id)?.src as ImageSummary | undefined;
+          await this._call({
+            type: IMAGE_CMD.save,
+            image: { ...m, ...(it.keywords ? { keywords: it.keywords } : {}), view_box, svg, ...(bindings ? { bindings } : {}), ...(thumb && THUMB_RE.test(thumb) ? { thumb } : {}) },
+            ...(old ? { base_updated_at: old.updated_at } : {}),
+          });
+        }
         else await this._call({ type: CMD.iconsSave, icon: { ...m, ...(it.keywords ? { keywords: it.keywords } : {}), svg: d.svg, path: d.path ?? '', ...(d.secondary_path ? { secondary_path: d.secondary_path } : {}), view_box: d.view_box ?? '0 0 24 24' } });
         ok++;
       } catch (err) {
@@ -405,6 +489,7 @@ export class LibraryView extends LitElement {
       }
     }
     this._panel = undefined;
+    if (kind === 'image') this._changed(items.map((i) => i.id));
     await this._after([t('Imported {ok} of {total}.', { ok, total: items.length }), full ? t('{n} did not fit: the library is full.', { n: full }) : '', bad ? t('{n} could not be saved.', { n: bad }) : ''].filter(Boolean).join(' '));
   }
 
@@ -426,7 +511,7 @@ export class LibraryView extends LitElement {
     return html`
       <div class="wrap" lang=${locale()}>
         ${this._kinds.length > 1 ? seg({ role: 'tablist', label: t('Kind'), value: this._kind, items: this._kinds.map((k) => ({ value: k, label: LABEL(k) })), onChange: (k) => this._go(k, this._source) }) : nothing}
-        ${this._kind === 'theme' || this._panelCtx
+        ${this._kind === 'theme' || this._kind === 'image' || this._panelCtx
           ? nothing
           : seg({
               role: 'radiogroup',
@@ -440,15 +525,17 @@ export class LibraryView extends LitElement {
             })}
         ${field({
           id: 'q',
-          label: t('{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} other {Search theme presets}}', { kind: this._kind }),
+          label: t('{kind, select, animation {Search animations} shape {Search shapes} icon {Search icons} image {Search images} other {Search theme presets}}', { kind: this._kind }),
           control: html`<div class="with-icon"><ha-icon icon="mdi:magnify"></ha-icon><input id="q" class="input" type="search" .value=${this._q} @input=${(e: Event) => (this._q = (e.target as HTMLInputElement).value)} /></div>`,
         })}
         <div class="bar">
-          ${button({ label: this._sel.size ? t('Export {n} selected', { n: this._sel.size }) : t('Export all'), icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
+          ${button({ label: this._sel.size ? t('Export {n} selected', { n: this._sel.size }) : this._kind === 'image' ? t('Export all images') : t('Export all'), icon: 'mdi:export-variant', disabled: !shown.length, onClick: (e) => ask('export', () => void this._export())(e) })}
           ${this._panelCtx && (this._kind === 'icon' || this._kind === 'shape') ? button({ label: this._kind === 'icon' ? t('New icon') : t('New shape'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open(this._kind as 'icon' | 'shape') }) : nothing}
-          ${can || this.inline ? button({ label: t('Import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
+          ${this._panelCtx && this._kind === 'image' && can ? button({ label: t('New image'), variant: 'primary', icon: 'mdi:plus', onClick: () => this._open('image') }) : nothing}
+          ${can || (this.inline && this._kind !== 'image') ? button({ label: t('Import'), icon: 'mdi:import', onClick: ask('import') }) : nothing}
         </div>
         ${this.inline && this._source === 'card' ? html`<p class="help">${t('Imported items are saved in this card.')}</p>` : nothing}
+        ${this._kind === 'image' && this._status === 'ok' && this._rows.length >= MAX_IMAGES ? html`<p class="help">${t('The library is full.')}</p>` : nothing}
         ${this._msg ? notice({ tone: this._bad ? 'error' : 'success', text: this._msg, transient: true }) : nothing}
         <div role="status" aria-live="polite" class="help">${this._msg ? '' : this._status === 'ok' ? count(shown.length, this._kind) : ''}</div>
         ${this._body(shown, can)}
@@ -471,6 +558,7 @@ export class LibraryView extends LitElement {
           >
             <mc-transfer-panel
               host=${this._panelCtx ? 'mcu-panel' : 'card-editor'}
+              .accept=${this._kind === 'image' ? ['image'] : HOST_KINDS[this._panelCtx ? 'mcu-panel' : 'card-editor'].filter((k) => k !== 'image')}
               .mode=${p.mode}
               .exportItems=${p.exportItems}
               .taken=${this._taken}
@@ -489,25 +577,34 @@ export class LibraryView extends LitElement {
     const s = this._status;
     if (s === 'loading') return html`<p class="help">${t('Loading...')}</p>`;
     if (s === 'missing' || s === 'error') {
-      const older = this._kind === 'theme' ? t('Update Magic Card Utils to keep theme presets.') : t('Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.');
+      const older = this._kind === 'theme' ? t('Update Magic Card Utils to keep theme presets.') : this._kind === 'image' ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.') : t('Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.');
       return empty({
         icon: 'mdi:cloud-off-outline',
         title: s === 'error' ? t('Could not reach Magic Card Utils. Your work is safe.') : older,
         action: s === 'error' ? { label: t('Try again'), onClick: () => { this._src.reset(); void this._load(); } } : undefined,
       });
     }
-    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('{kind, select, animation {No animations match "{q}".} shape {No shapes match "{q}".} icon {No icons match "{q}".} other {No theme presets match "{q}".}}', { kind: this._kind, q: this._q }) : t('{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} other {No theme presets here yet.}}', { kind: this._kind }) });
+    if (!shown.length) return empty({ icon: 'mdi:tray-remove', title: this._q ? t('{kind, select, animation {No animations match "{q}".} shape {No shapes match "{q}".} icon {No icons match "{q}".} image {No images match "{q}".} other {No theme presets match "{q}".}}', { kind: this._kind, q: this._q }) : t('{kind, select, animation {No animations here yet.} shape {No shapes here yet.} icon {No icons here yet.} image {No images here yet.} other {No theme presets here yet.}}', { kind: this._kind }) });
     return html`<div class="rows" role="list">${shown.map((r) => this._item(r, can))}</div>`;
   }
 
   private _item(r: Row, can: boolean): TemplateResult {
     const e = this._edit?.id === r.id ? this._edit.kind : undefined;
-    const set = (kind: 'rename' | 'delete' | undefined) => () => {
-      const back = `.acts button:nth-last-child(${this._edit?.kind === 'delete' ? 1 : 2})`;
+    const set = (kind: 'rename' | 'delete' | 'duplicate' | undefined) => () => {
+      const back = `.acts button:nth-last-child(${this._edit?.kind === 'delete' ? 1 : this._edit?.kind === 'duplicate' ? 3 : 2})`;
       this._edit = kind ? { id: r.id, kind } : undefined;
-      this._fr(r.id, kind ? (kind === 'rename' ? '.input' : ':scope > button:last-child') : back);
+      this._fr(r.id, kind ? (kind === 'delete' ? ':scope > button:last-child' : '.input') : back);
     };
-    const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape');
+    const edit = this._panelCtx && !e && (this._kind === 'icon' || this._kind === 'shape' || this._kind === 'image');
+    const image = this._kind === 'image' ? (r.src as ImageSummary) : undefined;
+    const keyed = (run: (v: string) => void) => (ev: KeyboardEvent): void => {
+      if (ev.key === 'Enter') run((ev.target as HTMLInputElement).value);
+      if (ev.key === 'Escape') {
+        ev.stopPropagation();
+        set(undefined)();
+      }
+    };
+
     const check = {
       label: t('Select {name}', { name: r.name }),
       checked: this._sel.has(r.id),
@@ -520,28 +617,37 @@ export class LibraryView extends LitElement {
     };
     const act = (label: string, icon: string, onClick: () => void, variant?: 'danger') => ({ label, icon, iconOnly: true as const, variant, onClick });
     const x = this.rowExtra?.(this._kind, r.id);
+    const full = this._rows.length >= MAX_IMAGES;
+    const typed = (ev: Event): string => (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value;
+    const thumb = image?.thumb && THUMB_RE.test(image.thumb) ? html`<img class="thumb" src=${image.thumb} alt="" loading="lazy" />` : undefined;
+    const sub = image
+      ? [r.id, t('{n} KB', { n: Math.max(1, Math.round(image.bytes / 1024)) }), image.bindings ? t('{n, plural, one {# connection} other {# connections}}', { n: image.bindings }) : ''].filter(Boolean).join(' · ')
+      : x?.meta
+        ? `${r.id} · ${x.meta}`
+        : r.id;
+    const input = (aria: string, value: string, run: (v: string) => void) => html`<input class="input" aria-label=${aria} .value=${value} maxlength="80" @keydown=${keyed(run)} />`;
     return row({
       id: r.id,
       name: r.name,
-      sub: x?.meta ? `${r.id} · ${x.meta}` : r.id,
-      lead: x?.thumb,
+      sub,
+      lead: thumb ?? x?.thumb,
       check,
       content:
         e === 'rename'
-          ? html`<input class="input" aria-label=${t('New name for {name}', { name: r.name })} .value=${r.name} maxlength="80" @keydown=${(ev: KeyboardEvent) => {
-              if (ev.key === 'Enter') void this._rename(r, (ev.target as HTMLInputElement).value);
-              if (ev.key === 'Escape') {
-                ev.stopPropagation();
-                set(undefined)();
-              }
-            }} />`
-          : undefined,
-      actions: [...(edit ? [act(t('Edit {name}', { name: r.name }), 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape', r.id))] : []), ...(can && !e ? [act(t('Rename {name}', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('Delete {name}', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : [])],
+          ? input(t('New name for {name}', { name: r.name }), r.name, (v) => void this._rename(r, v))
+          : e === 'duplicate'
+            ? input(t('Name for the copy of {name}', { name: r.name }), t('{name} copy', { name: r.name }), (v) => void this._duplicate(r, v))
+            : undefined,
+      actions: [
+        ...(edit ? [act(image && !this._admin ? t('View {name}', { name: r.name }) : t('Edit {name}', { name: r.name }), image && !this._admin ? 'mdi:eye-outline' : 'mdi:pencil-outline', () => this._open(this._kind as 'icon' | 'shape' | 'image', r.id))] : []),
+        ...(can && !e && image ? [{ ...act(t('Duplicate {name}', { name: r.name }), 'mdi:content-copy', set('duplicate')), disabled: full }] : []),
+        ...(can && !e ? [act(t('Rename {name}', { name: r.name }), 'mdi:rename-box', set('rename')), act(t('Delete {name}', { name: r.name }), 'mdi:delete-outline', set('delete'), 'danger')] : []),
+      ],
       trail:
-        e === 'rename'
-          ? html`${button({ label: t('Save'), size: 'sm', onClick: (ev) => void this._rename(r, (ev.currentTarget as HTMLElement).closest('.row')!.querySelector<HTMLInputElement>('.input')!.value) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
+        e === 'rename' || e === 'duplicate'
+          ? html`${button({ label: e === 'rename' ? t('Save') : t('Create copy'), size: 'sm', onClick: (ev) => void (e === 'rename' ? this._rename(r, typed(ev)) : this._duplicate(r, typed(ev))) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
           : e === 'delete'
-            ? html`<span class="help" role="alert">${this._kind === 'theme' ? t('Delete {name}? Themes you applied stay.', { name: r.name }) : t('Delete {name}? Cards that use it keep their own copy, or show the default.', { name: r.name })}</span>
+            ? html`<span class="help" role="alert">${this._kind === 'theme' ? t('Delete {name}? Themes you applied stay.', { name: r.name }) : this._kind === 'image' ? t('Delete {name}? Cards that use it show that the image is missing. This cannot be undone.', { name: r.name }) : t('Delete {name}? Cards that use it keep their own copy, or show the default.', { name: r.name })}</span>
                 ${button({ label: t('Delete'), variant: 'danger', size: 'sm', onClick: () => void this._delete(r) })}${button({ label: t('Cancel'), variant: 'text', size: 'sm', onClick: set(undefined) })}`
             : undefined,
     });

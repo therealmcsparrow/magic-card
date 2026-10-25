@@ -2,9 +2,14 @@ import type { AnimationDoc } from '../anim-studio/model';
 import type { CustomShapeOptions } from './custom-shape';
 import type { ThemeDoc } from './theme-editor';
 import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
+import type { ImageBinding } from './mcu-library-images';
+import type { SvgImageApi } from './svg-image';
 
 /*
- * Contract: preset files (export / import) and the transfer chunk. Version 1.0.0.
+ * Contract: preset files (export / import) and the transfer chunk. Version 1.1.0.
+ * 1.1.0 (additive): kind 'image' (below), HOST_KINDS['mcu-panel'] gains it, LibrarySource.isSaved knows 'images',
+ * LibraryOpenDetail.kind gains 'image', parseTransfer takes opts.images, TRANSFER_CHUNK_CEILING is 65 KiB.
+ * The view reads and writes images through the images_* commands itself (a host's `source` is not asked for images).
  * Host 'mcu-panel' (the Magic Card Utils panel's Library tab, mcu-library 1.0.0) for <mc-library-view>,
  * with New / Edit actions that fire `mc-library-open`.
  * <mc-library-view> reads saved icons and shapes
@@ -23,7 +28,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * ── Envelope (the file format; public once released, semver from then on) ──
  * One file holds one kind and one or more items. YAML or JSON, same object:
  *   magic_card_export: "1.0"       format marker + "major.minor" (TRANSFER_FORMAT)
- *   kind: animation | theme | shape | icon
+ *   kind: animation | theme | shape | icon | image
  *   generator: "Magic Card 2026.10.11"   optional, informative only, never read back
  *   items:
  *     - id: sunrise                 LIBRARY_ID_RE (animations: ANIMATION_ID_RE, the same pattern)
@@ -73,6 +78,39 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  *   listed; view_box four finite numbers, else taken from the sanitised svg. A missing or dropped
  *   path is saved as '' with the note "Open it in the SVG editor and save to show it in Home
  *   Assistant's own cards" (the HA form is computed by the SVG editor, not by this chunk).
+ *
+ * - image: { svg, view_box, bindings? }, see "Images" below.
+ *
+ * ── Images (kind image) ──
+ * data: { svg, view_box, bindings? } (ImageData): the saved image without id, name, author, description, keywords,
+ * thumb and timestamps (those are item fields or are made again). Items may carry `keywords` like icons. Reading:
+ * svg goes through opts.images.sanitizeImage (the svg-image chunk's api; the transfer chunk holds no SVG sink and no
+ * sanitiser of its own), everything it removes is listed as svg_removed notes (element or element@attribute), an item
+ * it refuses is refused whole and listed. view_box is taken from the sanitised drawing. svg + compact bindings <=
+ * IMAGE_MAX_BYTES, else the item is refused. bindings: at most MAX_IMAGE_BINDINGS (the rest is dropped, over_cap);
+ * each entry is kept only when its target is an element id of the drawing, its entity looks like an entity id, its
+ * `set` is a BindingSet, it has at most MAX_BINDING_RULES rules each with a state or above / below and a value that
+ * fits the set (colour per BINDING_COLOUR_RE for fill and stroke, 0..100 for opacity, boolean for visible), the same
+ * for `default`, and no earlier entry has the same (target, set). A dropped entry is listed (dropped_value, path
+ * data.bindings[n]). Without opts.images the file is refused (the host loads the svg-image chunk first). Nothing in the
+ * import path draws the markup.
+ * Image envelopes are JSON only: a YAML text of kind image is refused ("Image files are JSON"), and export of images
+ * writes JSON only. Files and texts over MAX_IMPORT_BYTES / MAX_IMPORT_CHARS are read only when the text is JSON (first
+ * character `{`) and its marker says kind image, up to MAX_IMAGE_IMPORT_BYTES; the YAML parser never sees them. The
+ * bounded copy of that large JSON path allows MAX_IMAGE_IMPORT_NODES visits and MAX_IMAGE_IMPORT_BYTES characters
+ * (JSON has no aliases, so the expansion is the file itself); depth, keys and number rules are unchanged.
+ * checkFileSize(file) takes the name: a .json file up to MAX_IMAGE_IMPORT_BYTES passes, anything else is held to
+ * MAX_IMPORT_BYTES.
+ * Hosts: 'mcu-panel' (Images tab and Library tab) accepts images; the card editor's library view does when its kinds
+ * hold 'image' (the view then passes accept ['image'] to <mc-transfer-panel>, property `accept`, which narrows the
+ * host's kinds); a view on any other kind refuses an image file with where to import it. Importing needs Magic Card
+ * Utils and an admin; without it the panel shows the install hint and never offers the import.
+ * Library view: images are listed with thumbnail (THUMB_RE data URLs only), size and number of connections; actions
+ * Edit (View for a non-admin; fires LIBRARY_OPEN_EVENT in 'mcu-panel'), Duplicate (images_get, then images_save under
+ * a new name and a new id, then Edit), Rename, Delete, export of selected or all images (images_list, then images_get
+ * in chunks of MAX_IMAGE_GET_IDS) and Import (images_save per item; a thumbnail is made through the svg-image api).
+ * A non-admin sees the list, View and Export; no other action is drawn.
+ * `static contractRevision` of <mc-library-view> is at least IMAGES_MIN_CONTRACT_REVISION.
  *
  * ── Other inputs read (C5) ──
  * Detection order on the parsed value: (1) object with `magic_card_export` -> envelope; (2) the
@@ -142,8 +180,8 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
- * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING (62 KiB =
- * 63,488 B). Over the ceiling means a parent module got copied in (check
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB; hard ceiling TRANSFER_CHUNK_CEILING (65 KiB =
+ * 66,560 B). Over the ceiling means a parent module got copied in (check
  * js-yaml first) or the library view grew.
  *
  * ── Accessibility (WCAG 2.2 AA, our bar) ──
@@ -155,7 +193,7 @@ import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
  * existing Escape guards apply).
  */
 
-export const TRANSFER_CONTRACT_VERSION = '1.0.0';
+export const TRANSFER_CONTRACT_VERSION = '1.1.0';
 /** File format marker value written by this version. */
 export const TRANSFER_FORMAT = '1.0';
 export const TRANSFER_MAJOR = 1;
@@ -164,7 +202,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
-export const TRANSFER_CHUNK_CEILING = 62 * 1024; // 63,488 B
+export const TRANSFER_CHUNK_CEILING = 65 * 1024; // 66,560 B
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const MAX_IMPORT_BYTES = 1024 * 1024;
@@ -174,6 +212,8 @@ export const MAX_IMPORT_DEPTH = 64;
 export const MAX_YAML_ALIASES = 256;
 export const MAX_IMPORT_EXPANDED_CHARS = 2 * 1024 * 1024;
 export const MAX_IMPORT_ITEMS = 200;
+/** Visits allowed to the bounded copy of a large image envelope (JSON only). */
+export const MAX_IMAGE_IMPORT_NODES = 1_000_000;
 export const IMPORT_REFUSE_MS = 1000;
 
 export const AUTHOR_MAX_CHARS = 80;
@@ -232,7 +272,7 @@ export function contactsOtherHost(value: string): boolean {
 export const LOCAL_PATH_RE = /url\(\s*["']?\/(?!\/)/i;
 export const CARD_MOD_KEY_RE = /^card-mod-/i;
 
-export type TransferKind = 'animation' | 'theme' | 'shape' | 'icon';
+export type TransferKind = 'animation' | 'theme' | 'shape' | 'icon' | 'image';
 export type TransferFormat = 'yaml' | 'json';
 export type TransferHost = 'card-editor' | 'shape-editor' | 'svg-editor' | 'animation-studio' | 'theme-editor' | 'mcu-panel';
 
@@ -243,7 +283,7 @@ export const HOST_KINDS: Readonly<Record<TransferHost, readonly TransferKind[]>>
   'svg-editor': ['icon'],
   'animation-studio': ['animation'],
   'theme-editor': ['theme'],
-  'mcu-panel': ['icon', 'shape', 'animation', 'theme'],
+  'mcu-panel': ['icon', 'shape', 'image', 'animation', 'theme'],
 };
 
 /** A saved-item list as the library source answers it. */
@@ -258,7 +298,7 @@ export interface LibrarySource {
   listShapes(hass: unknown): Promise<LibraryListing<SavedShape>>;
   getIcon(hass: unknown, id: string): Promise<SavedIcon | undefined>;
   /** Whether the last list holds this id (false while no list is loaded). */
-  isSaved(kind: 'icons' | 'shapes', id: string): boolean;
+  isSaved(kind: 'icons' | 'shapes' | 'images', id: string): boolean;
   /** Forget cached lists. */
   reset(): void;
 }
@@ -268,7 +308,7 @@ export type LibraryViewContext = 'card-editor' | 'mcu-panel';
 /** Fired by the library view in 'mcu-panel': New (no id) or Edit of an icon or shape. */
 export const LIBRARY_OPEN_EVENT = 'mc-library-open';
 export interface LibraryOpenDetail {
-  kind: 'icon' | 'shape';
+  kind: 'icon' | 'shape' | 'image';
   /** Absent = New. */
   id?: string;
 }
@@ -280,11 +320,18 @@ export interface IconData {
   view_box?: string;
 }
 
+export interface ImageData {
+  svg: string;
+  view_box: string;
+  bindings?: ImageBinding[];
+}
+
 export interface TransferDataByKind {
   animation: Omit<AnimationDoc, 'id' | 'name'>;
   theme: ThemeDoc;
   shape: Omit<CustomShapeOptions, 'ref'>;
   icon: IconData;
+  image: ImageData;
 }
 
 export interface TransferItem<K extends TransferKind = TransferKind> {
@@ -292,7 +339,7 @@ export interface TransferItem<K extends TransferKind = TransferKind> {
   name: string;
   author?: string;
   description?: string;
-  /** Icons only. */
+  /** Icons and images only. */
   keywords?: string[];
   data: TransferDataByKind[K];
 }
@@ -352,7 +399,7 @@ export type ClashChoice = 'replace' | 'keep-both';
 export interface TransferChunk {
   version: typeof TRANSFER_CONTRACT_VERSION | string;
   /** Pure and synchronous: steps 1-5 above plus per-kind validation. */
-  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string }): ParseResult;
+  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: Pick<SvgImageApi, 'sanitizeImage'> }): ParseResult;
   serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string;
   /** "Copy as HA theme". */
   haThemeYaml(name: string, doc: ThemeDoc): string;

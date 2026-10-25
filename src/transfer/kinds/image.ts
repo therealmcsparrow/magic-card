@@ -1,0 +1,77 @@
+import { BINDING_COLOUR_RE, IMAGE_MAX_BYTES } from '../../contracts/mcu-library-images';
+import type { BindingRule, ImageBinding } from '../../contracts/mcu-library-images';
+import type { ImageData, TransferNote } from '../../contracts/preset-transfer';
+import { MAX_BINDING_RULES, MAX_IMAGE_BINDINGS } from '../../contracts/svg-image';
+import type { SvgImageApi } from '../../contracts/svg-image';
+import { t } from '../i18n';
+import { compactBytes, isObj, note } from '../types';
+import type { KindResult, Raw } from '../types';
+import { attributeWhat, elementWhat, removedNote } from './icon';
+
+const DATA_KEYS = ['svg', 'view_box', 'bindings'];
+const SETS: readonly string[] = ['fill', 'stroke', 'opacity', 'visible'];
+const ENTITY_RE = /^[a-z0-9_]+\.[a-z0-9_]+$/;
+const TEXT_MAX = 255;
+
+const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const text = (v: unknown): v is string => typeof v === 'string' && v.length >= 1 && v.length <= TEXT_MAX;
+
+/** One connection with only the fields it may hold, or undefined when it cannot be kept. */
+function bindingOf(raw: unknown, ids: ReadonlySet<string>): ImageBinding | undefined {
+  if (!isObj(raw)) return undefined;
+  const { target, entity, set, rules, attribute } = raw;
+  const fits = (v: unknown): boolean => (set === 'visible' ? typeof v === 'boolean' : set === 'opacity' ? num(v) && v >= 0 && v <= 100 : typeof v === 'string' && BINDING_COLOUR_RE.test(v));
+  if (!text(target) || !ids.has(target) || !text(entity) || !ENTITY_RE.test(entity) || !SETS.includes(set as string) || !Array.isArray(rules) || rules.length > MAX_BINDING_RULES) return undefined;
+  if ((attribute !== undefined && !text(attribute)) || (raw.default !== undefined && !fits(raw.default))) return undefined;
+  const kept: BindingRule[] = [];
+  for (const r of rules) {
+    if (!isObj(r) || !fits(r.value) || (r.state !== undefined && !text(r.state)) || [r.above, r.below].some((v) => v !== undefined && !num(v))) return undefined;
+    if (r.state === undefined && r.above === undefined && r.below === undefined) return undefined;
+    kept.push(Object.fromEntries(['state', 'above', 'below', 'value'].filter((k) => r[k] !== undefined).map((k) => [k, r[k]])) as unknown as BindingRule);
+  }
+  return Object.fromEntries(Object.entries({ target, entity, attribute, set, rules: kept, default: raw.default }).filter(([, v]) => v !== undefined)) as unknown as ImageBinding;
+}
+
+function bindingsOf(index: number, raw: unknown, ids: ReadonlySet<string>, notes: TransferNote[]): ImageBinding[] {
+  const out: ImageBinding[] = [];
+  const seen = new Set<string>();
+  const list = Array.isArray(raw) ? raw : [undefined];
+  for (let i = 0; i < list.length; i++) {
+    if (out.length >= MAX_IMAGE_BINDINGS) {
+      notes.push(note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
+      break;
+    }
+    const b = bindingOf(list[i], ids);
+    if (b && !seen.has(`${b.target} ${b.set}`)) {
+      seen.add(`${b.target} ${b.set}`);
+      out.push(b);
+    } else notes.push(note('dropped_value', index, `data.bindings[${i}]`, t('Connection {n} is not valid, so it was left out.', { n: i + 1 })));
+  }
+  return out;
+}
+
+/** An image item: the drawing is sanitised by the svg-image chunk (what it removes is listed), connections are checked. */
+export function readImage(index: number, data: unknown, images: Pick<SvgImageApi, 'sanitizeImage'> | undefined): KindResult<ImageData> {
+  const bad = (message: string): KindResult<ImageData> => ({ ok: false, notes: [note('invalid_item', index, 'data.svg', message)] });
+  if (!isObj(data) || typeof data.svg !== 'string') return bad(t('The image could not be read.'));
+  if (!images) return bad(t('The checker for images did not load, so this image was not read.'));
+  const notes: TransferNote[] = [];
+  for (const k of Object.keys(data as Raw)) if (!DATA_KEYS.includes(k)) notes.push(note('dropped_key', index, `data.${k}`, t('"{key}" is not a preset field, so it was left out.', { key: k })));
+
+  const s = images.sanitizeImage(data.svg);
+  if (s.error || !s.markup) return bad(s.error === 'too_large' ? t('The image is larger than {kb} KB.', { kb: IMAGE_MAX_BYTES / 1024 }) : s.error === 'unsafe_markup' ? t('The image holds markup that is not allowed.') : t('The image could not be read.'));
+  const gone = new Map<string, number>();
+  for (const x of s.stripped) gone.set(x, (gone.get(x) ?? 0) + 1);
+  for (const [name, count] of gone) {
+    const [el, attr] = name.split('@');
+    notes.push(removedNote(index, count, attr ? attributeWhat(attr) : elementWhat(el)));
+  }
+
+  const out: ImageData = { svg: s.markup, view_box: s.viewBox };
+  if (data.bindings !== undefined) {
+    const list = bindingsOf(index, data.bindings, new Set(s.ids), notes);
+    if (list.length) out.bindings = list;
+  }
+  if (new TextEncoder().encode(out.svg).length + (out.bindings ? compactBytes(out.bindings) : 0) > IMAGE_MAX_BYTES) return bad(t('The image is larger than {kb} KB.', { kb: IMAGE_MAX_BYTES / 1024 }));
+  return { ok: true, data: out, notes };
+}
