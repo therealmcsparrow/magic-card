@@ -40,11 +40,26 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  *   - <mc-svg-image> (defined in install()), for the image module and for background layers,
  *   - the binding engine,
  *   - every SVG sink that handles library-image markup for the editor chunks: thumbnails, export files and imported
- *     parts (api below). The image-editor, image-tools and transfer chunks hold no SVG sink: no unsafeSVG, no Blob of
- *     type image/svg+xml, no import of the sanitiser.
- * It exports `api: SvgImageApi`, the one copy of the client state; editors reach it through
- * onDemandChunks['svg-image'].load() and module().api, never by importing src/svg-image/.
- * Who loads it, both through needSvgImage(ctx) (below):
+ *     parts (api below). The image-editor, image-tools, transfer and image-transfer chunks hold no SVG sink: no
+ *     unsafeSVG, no Blob of type image/svg+xml, no import of the sanitiser.
+ * It exports `api: SvgImageApi`, the one copy of the client state. There are two ways in, and no others:
+ *   - card side (magic-card.js and the card chunks): onDemandChunks['svg-image'] (load(), then module().api), through
+ *     needSvgImage(ctx) or the control itself;
+ *   - editor side: a dynamic import of the chunk entry in one of SVG_IMAGE_EDITOR_IMPORT_SITES, each also listed in
+ *     eslint.config.mjs REGISTERED_IMPORT_SITES. The call is an import() of '../svg-image/chunk' carrying the magic
+ *     comment webpackChunkName "svg-image" (the same name as the onDemandChunks line), and the caller reads `api`
+ *     only. An editor-side chunk never imports src/utils/lazy-chunks.ts: a chunk that reads an export of an entry
+ *     module makes webpack add export getters for it to magic-card.js.
+ * Why the direct import keeps the entry clean and the state shared: with the same chunk name webpack resolves both
+ * import() calls to the one chunk (no second copy; check-chunk-dups), whose id and file name are already in the
+ * runtime's chunk table because of the onDemandChunks line, so a new site adds bytes only to the chunk that holds it.
+ * Every editor chunk runs on the magic-card.js runtime (none carries its own), whose module cache holds one instance
+ * of src/svg-image/chunk.ts: the cache and the client are the ones the cards use. An editor-side importer never calls
+ * install(); <mc-svg-image> is defined only through the card's control (lazy-module), whose state a direct import
+ * does not touch (a later load() by a card resolves from the module cache and installs).
+ * Outside src/svg-image/, files import src/svg-image/** with `import type` only. A static value import would copy the
+ * sanitiser into the importing chunk, which check-svg-sinks refuses.
+ * Who loads it for cards, both through needSvgImage(ctx) (below):
  *   - the image view (modules-extra chunk) when its `image` matches IMAGE_REF_RE;
  *   - <mc-bg-stack> (magic-card.js) through host.needImage() when a layer's current value starts with IMAGE_REF_PREFIX.
  * A card without a library image reference never requests the chunk and never lists images.
@@ -160,6 +175,14 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * Parsed with DOMParser as image/svg+xml (text/html fallback, inert). Root <svg> with a valid viewBox (width and height
  * 1..MAX_IMAGE_BOX); root width / height dropped. At most IMAGE_MAX_NODES elements and IMAGE_MAX_DEPTH nesting, else
  * refused. Hostile tests cover both the XML parse and the text/html fallback parse.
+ * One result for both parses: a drawing the XML parse does not take (a root <svg> without xmlns, for one) and the
+ * text/html fallback reads goes through the same walk and the same lists, so it is stripped and listed exactly like
+ * the same drawing with xmlns. A <script> (or any other dropped part) in a drawing without xmlns is removed and named
+ * in `stripped`; it never turns the whole drawing into an error. Elements the HTML parser moves out of the root <svg>
+ * (foreign-content breakout, e.g. a <p> or <img> inside the drawing) are not kept and are named in `stripped` too.
+ * `empty` means nothing drawable is left after the walk, and that result still carries `stripped`. Each hostile
+ * fixture runs with and without xmlns and must give the same error (or none) and the same `stripped` names; a fixture
+ * with breakout tags may keep less in the fallback, never more.
  * Kept: elements in IMAGE_ELEMENTS, attributes in IMAGE_ATTRIBUTES (no namespaced names), values by these rules:
  *   - paint (fill, stroke, stop-color): none | currentColor | a colour (hex, a CSS colour keyword of 3 to 20 ASCII
  *     letters, or the colour functions the icon sanitiser allows) | url(#id) | var(--name) | var(--name, <hex>) with
@@ -215,7 +238,7 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  */
 
 export const SVG_IMAGE_CONTRACT = '1.0.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 4;
+export const SVG_IMAGE_CONTRACT_REVISION = 5;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -225,6 +248,9 @@ export const SVG_IMAGE_CHUNK_FILE = 'magic-card-svg-image.js';
 export const SVG_IMAGE_CHUNK_CEILING = 40 * 1024;
 export const SVG_IMAGE_TAG = 'mc-svg-image';
 export const SVG_IMAGE_STATUS_EVENT = 'mc-svg-image-status';
+
+/** The only editor-side files that import() the svg-image chunk entry (see "Chunk"); each reads `api` only. */
+export const SVG_IMAGE_EDITOR_IMPORT_SITES: readonly string[] = ['src/svg-editor/image-loader.ts', 'src/transfer/image-transfer-loader.ts'];
 
 /**
  * Whole magic-card.js change for this contract (bytes after gzip level 9 / Brotli quality 11, Linux build).
@@ -293,7 +319,10 @@ export interface SanitizedImage {
   viewBox: string;
   /** Element ids present (binding targets). */
   ids: string[];
-  /** What was dropped, as `element` or `element@attribute` names, for the import summary. */
+  /**
+   * What was dropped, as `element` or `element@attribute` names, for the import summary. The same names for a drawing
+   * with or without xmlns; also filled when the error is `empty`.
+   */
   stripped: string[];
   error?: 'too_large' | 'unsafe_markup' | 'not_svg' | 'too_complex' | 'empty' | 'bad_viewbox';
   /** UTF-8 size of the input, for the message. */
