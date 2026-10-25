@@ -42,6 +42,8 @@ const TRANSFORM_FNS = new Set(['matrix', 'translate', 'scale', 'rotate', 'skewx'
 
 const DENY_RE = new RegExp(IMAGE_TEXT_DENY.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'i');
 
+const SCRIPT_TAG_RE = /<script[\s/>]/i;
+const STYLE_TAG_RE = /<style[\s/>]/i;
 const MAX_VALUE = 2000;
 const MAX_PAINT = 200;
 const MAX_TRANSFORM_FNS = 16;
@@ -196,43 +198,77 @@ function viewBoxOf(raw: string | null): string | undefined {
   return p.join(' ');
 }
 
-function parseDocument(text: string): Element | undefined {
+class Refused extends Error {}
+
+/** A copy of a well-formed tree whose unprefixed elements are in the SVG namespace, as if the root had declared xmlns. */
+function inSvgNamespace(doc: Document, src: Element, depth: number): Element {
+  if (depth > IMAGE_MAX_DEPTH + 1) throw new Refused();
+  const out = doc.createElementNS(src.namespaceURI ?? SVG_NS, src.localName);
+  for (const a of Array.from(src.attributes)) out.setAttributeNS(a.namespaceURI, a.name, a.value);
+  for (let c = src.firstChild; c; c = c.nextSibling) {
+    if (c.nodeType === 1) out.appendChild(inSvgNamespace(doc, c as Element, depth + 1));
+    else if (c.nodeType === 3) out.appendChild(doc.createTextNode((c as Text).data));
+  }
+  return out;
+}
+
+/** The root <svg> of a text and the names of elements the html parser moved out of it. */
+function parseDocument(text: string): { root: Element; moved: string[] } | undefined {
   const parser = new DOMParser();
   try {
     const doc = parser.parseFromString(text, 'image/svg+xml');
     const root = doc.documentElement;
-    if (root && root.localName === 'svg' && root.namespaceURI === SVG_NS && !doc.getElementsByTagName('parsererror').length) return root;
-  } catch {
+    if (root && root.localName === 'svg' && !doc.getElementsByTagName('parsererror').length) {
+      if (root.namespaceURI === SVG_NS) return { root, moved: [] };
+      // a well-formed drawing without xmlns goes through the same walk as one with it
+      if (root.namespaceURI === null) return { root: inSvgNamespace(doc, root, 0), moved: [] };
+    }
+  } catch (e) {
+    if (e instanceof Refused) throw e;
     // fall through to the html parse
   }
   try {
-    const first = parser.parseFromString(text, 'text/html').body?.firstElementChild;
-    if (first && first.localName === 'svg' && first.namespaceURI === SVG_NS) return first;
+    const body = parser.parseFromString(text, 'text/html').body;
+    const first = body?.firstElementChild;
+    if (first && first.localName === 'svg' && first.namespaceURI === SVG_NS) {
+      const moved: string[] = [];
+      for (let e = first.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(e.localName);
+      // some html parsers drop a script or style (and what follows it) without a node; the text still tells
+      if (SCRIPT_TAG_RE.test(text) && !moved.includes('script')) moved.push('script');
+      if (STYLE_TAG_RE.test(text) && !moved.includes('style')) moved.push('style');
+      return { root: first, moved };
+    }
   } catch {
     // not markup
   }
   return undefined;
 }
 
-class Refused extends Error {}
-
 /**
  * Parses and cleans in the parsed tree (no second document, no serialise and re-parse). The returned root is detached from
  * any page and inert until a caller puts it in a document.
  */
-export function parseImage(markup: string, options: SanitizeOptions = {}): ParsedImage | { error: ImageError; bytes: number } {
+export function parseImage(markup: string, options: SanitizeOptions = {}): ParsedImage | { error: ImageError; bytes: number; stripped: string[] } {
   const text0 = typeof markup === 'string' ? markup : '';
-  if (text0.length > IMAGE_MAX_BYTES) return { error: 'too_large', bytes: byteLength(text0) };
+  if (text0.length > IMAGE_MAX_BYTES) return { error: 'too_large', bytes: byteLength(text0), stripped: [] };
   const bytes = byteLength(text0);
-  if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes };
+  if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes, stripped: [] };
   const text = options.file ? stripProlog(text0) : text0;
-  if (DENY_RE.test(text)) return { error: 'unsafe_markup', bytes };
-  const root = text.trim() ? parseDocument(text) : undefined;
-  if (!root) return { error: 'not_svg', bytes };
+  if (DENY_RE.test(text)) return { error: 'unsafe_markup', bytes, stripped: [] };
+  let parsed: ReturnType<typeof parseDocument>;
+  try {
+    parsed = text.trim() ? parseDocument(text) : undefined;
+  } catch (e) {
+    if (e instanceof Refused) return { error: 'too_complex', bytes, stripped: [] };
+    throw e;
+  }
+  if (!parsed) return { error: 'not_svg', bytes, stripped: [] };
+  const { root } = parsed;
   const viewBox = viewBoxOf(root.getAttribute('viewBox'));
-  if (!viewBox) return { error: 'bad_viewbox', bytes };
+  if (!viewBox) return { error: 'bad_viewbox', bytes, stripped: [] };
 
   const stripped = new Set<string>();
+  for (const name of parsed.moved) if (stripped.size < MAX_STRIPPED) stripped.add(name);
   const ids = new Set<string>();
   const drop = (what: string): void => {
     if (stripped.size < MAX_STRIPPED) stripped.add(what);
@@ -287,10 +323,10 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
     root.removeAttribute('height');
     walk(root, 0, false);
   } catch (e) {
-    if (e instanceof Refused) return { error: 'too_complex', bytes };
+    if (e instanceof Refused) return { error: 'too_complex', bytes, stripped: [...stripped] };
     throw e;
   }
-  if (!drawable) return { error: 'empty', bytes };
+  if (!drawable) return { error: 'empty', bytes, stripped: [...stripped] };
   root.setAttribute('viewBox', viewBox);
   return { root, viewBox, ids: [...ids], stripped: [...stripped], bytes };
 }
@@ -323,7 +359,7 @@ export function serializeImage(root: Element): string {
 /** Sanitises a drawing to markup. The result of a refused or empty text has no markup. */
 export function sanitizeImage(markup: string, options: SanitizeOptions = {}): SanitizedImage {
   const r = parseImage(markup, options);
-  if ('error' in r) return { markup: '', viewBox: '', ids: [], stripped: [], error: r.error, bytes: r.bytes };
+  if ('error' in r) return { markup: '', viewBox: '', ids: [], stripped: r.stripped, error: r.error, bytes: r.bytes };
   return { markup: serializeImage(r.root), viewBox: r.viewBox, ids: r.ids, stripped: r.stripped, bytes: r.bytes };
 }
 
