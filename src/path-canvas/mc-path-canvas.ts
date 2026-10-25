@@ -1453,11 +1453,7 @@ export class PathCanvas extends LitElement {
       <rect class="frame" x=${fr.x} y=${fr.y} width=${fr.w} height=${fr.h}></rect>
       ${grid ? svg`<path class="grid" d=${grid}></path>` : nothing}
       ${sa ? svg`<rect class="safe" x=${fr.x + sa} y=${fr.y + sa} width=${Math.max(0, fr.w - sa * 2)} height=${Math.max(0, fr.h - sa * 2)}></rect>` : nothing}
-      ${this.paths.map((p, i) => {
-        const pt = this.paint[i];
-        const cls = edit ? `outline${p.closed && !pt?.fill ? ' wash' : ''}${i === ap ? '' : ' dim'}` : '';
-        return guard([p, p.anchors, p.anchors.length, p.closed, pt?.hidden, pt?.fill, pt?.stroke, pt?.strokeWidth, pt?.fillRule, cls], () => this.drawPath(i, cls));
-      })}
+      ${this.paths.map((p, i) => this.drawPath(i, edit ? `outline${p.closed && !this.paint[i]?.fill ? ' wash' : ''}${i === ap ? '' : ' dim'}` : ''))}
     </g>`;
   }
 
