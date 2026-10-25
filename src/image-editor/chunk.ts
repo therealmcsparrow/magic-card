@@ -17,6 +17,8 @@ import { freeImageId } from './ids';
 import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
 import { lookRows, handles, paintRow, type Which } from './paint-ui';
+import { anchorOf, blank, boxFor, readText, textAttrs, textBody, nameOf, type TextData } from './text';
+import { addText, addTextButton, textNode, textRows } from './text-ui';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
 /*
@@ -51,11 +53,11 @@ const tone = (v: string): Paint => toneOf(v) ?? (/^(none|transparent)$/i.test(v)
 /** The id of a layer's gradient in the canvas. */
 export const gradientRef = (s: Shape, k: 'fill' | 'stroke'): string => `cg-${s.id}-${k[0]}`;
 
-/** Parts the editor cannot keep: text, clipping, masks, copies, opacity of a group or of a fill or stroke alone. */
-const LOSSY = 'text,tspan,clipPath,mask,use,image,[clip-path],[mask],[fill-opacity],[stroke-opacity],g[opacity],svg[opacity]';
+/** Parts the editor cannot keep: clipping, masks, copies, opacity of a group or of a fill or stroke alone. Text it cannot keep is found by readText. */
+const LOSSY = 'clipPath,mask,use,image,[clip-path],[mask],[fill-opacity],[stroke-opacity],g[opacity],svg[opacity]';
 
 /** The paints, opacity and dashes of one element, put on its layer; `f.v` is set when something in it cannot be kept. */
-function lookOf(el: Element, s: Shape, xml: Document, f: Flag): Shape {
+function lookOf(el: Element, s: Shape, xml: Document, f: Flag, texts: Map<string, TextData>): Shape {
   const inherited = (k: string): string | undefined => {
     for (let e: Element | null = el; e; e = e.parentElement) {
       const v = e.getAttribute(k);
@@ -88,6 +90,11 @@ function lookOf(el: Element, s: Shape, xml: Document, f: Flag): Shape {
     if (look.dash && Number.isFinite(off) && off) look.offset = off;
   }
   if (look.opacity === 100) delete look.opacity;
+  const words = texts.get(el.getAttribute('data-mc-text') ?? '');
+  if (words) {
+    look.text = words;
+    if (!el.hasAttribute('data-name')) s = { ...s, name: nameOf(words.s, t('Text')) };
+  }
   return Object.keys(look).length ? { ...s, look } : s;
 }
 
@@ -96,7 +103,29 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
   const notes = K.emptyNotes();
   const xml = new DOMParser().parseFromString(markup, 'image/svg+xml');
   const flag: Flag = { v: !!xml.querySelector(LOSSY) };
-  const doc = K.readMarkup(markup, viewBox, notes, name, tone, (el, s) => lookOf(el, s, xml, flag));
+  const texts = new Map<string, TextData>();
+  const els = [...xml.querySelectorAll('text')];
+  if (xml.querySelector('parsererror') && /<text[\s>]/i.test(markup)) flag.v = true;
+  // each text becomes a rectangle with the same paint and place, carrying a number that finds its words again
+  els.forEach((el, i) => {
+    const r = readText(el, flag);
+    if (!r) return;
+    const b = boxFor(r.at, r.t);
+    const box = xml.createElementNS(el.namespaceURI, 'rect');
+    for (const k of ['id', 'data-name', 'fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-dashoffset', 'opacity']) {
+      const v = el.getAttribute(k);
+      if (v !== null) box.setAttribute(k, v);
+    }
+    box.setAttribute('x', String(b.x));
+    box.setAttribute('y', String(b.y));
+    box.setAttribute('width', String(b.w));
+    box.setAttribute('height', String(b.h));
+    box.setAttribute('data-mc-text', String(i));
+    texts.set(String(i), r.t);
+    el.replaceWith(box);
+  });
+  const src = texts.size ? new XMLSerializer().serializeToString(xml) : markup;
+  const doc = K.readMarkup(src, viewBox, notes, name, tone, (el, s) => lookOf(el, s, xml, flag, texts));
   return { doc, all: !flag.v };
 }
 
@@ -205,7 +234,7 @@ export class ImageExt implements ImageUi {
       }
       K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
       if (s.stripped.length) this.pending.push({ kind: 'warn', text: t('Removed parts an image cannot use. Everything else was kept.'), detail: s.stripped });
-      if (!r.all) this.pending.push({ kind: 'warn', text: t('Some parts of this file, such as text, gradients or transparency, cannot be edited yet. They were left out.') });
+      if (!r.all) this.pending.push({ kind: 'warn', text: t('Some parts of this file, such as clipping or transparency, cannot be edited yet. They were left out.') });
       return r.doc;
     }
     if (src.kind !== 'image') return undefined;
@@ -266,12 +295,23 @@ export class ImageExt implements ImageUi {
     const s = layer as Shape;
     const name = esc(s.name);
     const on = s.stroke !== 'none' && s.width > 0;
+    const words = s.look?.text;
+    const box = words && K.shapeBox(s);
     return (
       ` id="${s.id}"${name ? ` data-name="${name}"` : ''}` +
       layerPaint(s, () => K.shapeBox(s), this.gradients, this.gradientId) +
-      (s.fill !== 'none' && s.rule === 'evenodd' ? ' fill-rule="evenodd"' : '') +
-      (on ? `${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
+      (words && box ? `${on ? ' stroke-linejoin="round"' : ''}${textAttrs(words, anchorOf(box, words))}` : '') +
+      (!words && s.fill !== 'none' && s.rule === 'evenodd' ? ' fill-rule="evenodd"' : '') +
+      (!words && on ? `${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
     );
+  }
+
+  /** One layer's element: a path, or its words as <text> (nothing for an empty text). */
+  private element(s: Shape, d: string): string {
+    const words = s.look?.text;
+    const box = words && K.shapeBox(s);
+    if (!words || !box) return `<path d="${d}"${this.serialiseLayer(s)}/>`;
+    return blank(words) ? '' : `<text${this.serialiseLayer(s)}>${textBody(words, anchorOf(box, words))}</text>`;
   }
 
   importParts(): unknown[] {
@@ -294,9 +334,9 @@ export class ImageExt implements ImageUi {
       while (taken.has(id));
       return id;
     };
-    const body = K.toSvg(doc, decimals, (s, d) => `<path d="${d}"${this.serialiseLayer(s)}/>`);
+    const body = K.toSvg(doc, decimals, (s, d) => this.element(s, d));
     const raw = this.gradients.length ? body.replace(/^(<svg[^>]*>)/, `$1<defs>${this.gradients.join('')}</defs>`) : body;
-    if (!/<path/.test(raw)) return { bytes: 0, error: 'empty', points, viewBox: vb };
+    if (!/<(?:path|text)/.test(raw)) return { bytes: 0, error: 'empty', points, viewBox: vb };
     const s = this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
     const bytes = savedBytes(s.markup, this.stored);
@@ -327,6 +367,22 @@ export class ImageExt implements ImageUi {
 
   handles(): TemplateResult | undefined {
     return handles(this) as TemplateResult | undefined;
+  }
+
+  node(s: Shape): TemplateResult | undefined {
+    return textNode(this, s);
+  }
+
+  text(s: Shape): TemplateResult | undefined {
+    return textRows(this, s);
+  }
+
+  addText(): void {
+    addText(this);
+  }
+
+  addTextButton(): TemplateResult {
+    return addTextButton(this);
   }
 
   style(s: Shape): string {

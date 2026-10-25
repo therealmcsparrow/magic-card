@@ -41,7 +41,7 @@ const paintVar = (p: Paint): string => (p === 'none' ? 'none' : p === 'main' ? '
 export function artNodes(d: Doc, onlyVisible = true, moving?: ReadonlySet<string>, img?: ImageUi): TemplateResult[] {
   return d.shapes
     .filter((s) => !onlyVisible || !isOff(d, s, 'hidden'))
-    .map((s) => svg`<path d=${dOf(s)} style=${`${img ? img.style(s) : `fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)}`};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}${moving?.has(s.id) ? ';will-change:transform' : ''}`}></path>`);
+    .map((s) => img?.node(s) ?? svg`<path d=${dOf(s)} style=${`${img ? img.style(s) : `fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)}`};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}${moving?.has(s.id) ? ';will-change:transform' : ''}`}></path>`);
 }
 
 const viewBox = (d: Doc): string => `${d.vb.x} ${d.vb.y} ${d.vb.w} ${d.vb.h}`;
@@ -629,7 +629,7 @@ function layersPanel(ed: McSvgEditor): TemplateResult {
   return html`<div class="layers">
     ${ed.doc.shapes.length ? layerTree(ed) : html`<p class="help">${t('No layers yet.')}</p>`}
     <div class="acts">
-      ${btn(t('Add group'), 'group', () => ed.group(), { disabled: ed.sel.length < 2 || blocked })}${btn(t('Duplicate'), 'contentCopy', () => ed.duplicate(), { disabled: !some, keys: 'Control+D' })}${btn(t('Delete'), 'delete', () => ed.deleteSelected(), { disabled: !some })}
+      ${ed.img?.addTextButton()}${btn(t('Add group'), 'group', () => ed.group(), { disabled: ed.sel.length < 2 || blocked })}${btn(t('Duplicate'), 'contentCopy', () => ed.duplicate(), { disabled: !some, keys: 'Control+D' })}${btn(t('Delete'), 'delete', () => ed.deleteSelected(), { disabled: !some })}
       ${btn(t('Select all'), 'selectAll', () => ed.select(ed.doc.shapes.map((x) => x.id)), { keys: 'Control+A' })}${button({ label: t('Move to…'), glyph: 'swapVertical', iconOnly: true, size: 'sm', haspopup: 'menu', expanded: !!ed.menu && ed.menu.opener.getAttribute('aria-label') === t('Move to…'), disabledReason: one ? undefined : t('Move to…'), onClick: (e) => one && ed.moveMenuOpen(e.currentTarget as HTMLElement) })}
       ${btn(t('Move up'), 'arrowUp', () => one && ed.reorder(one, 1), { disabled: !one })}${btn(t('Move down'), 'arrowDown', () => one && ed.reorder(one, -1), { disabled: !one })}
     </div>
@@ -763,6 +763,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       one ? field({ id: 'sh-name', label: t('Rename'), control: html`<input id="sh-name" class="input" type="text" .value=${one.name} @change=${(e: Event) => ed.renameShape(one.id, (e.target as HTMLInputElement).value)} />` }) : nothing,
       3,
     )}
+    ${ed.img?.text(first)}
     ${group(
       t('Position and size'),
       html`<div class="grid2">

@@ -326,6 +326,7 @@
   "Tab": "Tab",
   "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.": "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.",
   "Tag": "Tag",
+  "Text cannot be combined with other layers.": "Text cannot be combined with other layers.",
   "That file has no shapes an icon can use.": "That file has no shapes an icon can use.",
   "The SVG is larger than 32 KB.": "The SVG is larger than 32 KB.",
   "The SVG is too complex.": "The SVG is too complex.",

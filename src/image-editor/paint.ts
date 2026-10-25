@@ -1,3 +1,5 @@
+import type { TextData } from './text';
+
 /*
  * Paints of an image layer beyond Main, Accent and None: a hex or theme colour, a gradient, opacity and dashes. A layer keeps
  * these in `look`; its `fill` and `stroke` then stay on the placeholder Main so every other tool still sees a painted layer.
@@ -36,6 +38,8 @@ export interface Look {
   opacity?: number;
   dash?: number[];
   offset?: number;
+  /** A text layer: its words and type (see text.ts). */
+  text?: TextData;
 }
 
 export interface Box {

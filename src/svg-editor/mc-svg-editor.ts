@@ -1341,6 +1341,11 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.flip(code === 'KeyH' ? 'h' : 'v');
       return;
     }
+    if (code === 'KeyT' && this.img && !e.shiftKey) {
+      e.preventDefault();
+      this.img.addText();
+      return;
+    }
     const t = TOOL_KEYS[code];
     if (t && !e.shiftKey && !(code === 'KeyH' && (this.tool === 'node' || this.tool === 'pen'))) {
       e.preventDefault();

@@ -45,6 +45,7 @@ export const kindOf = (s: Shape, k: Which): Kind => kindOfValue(paintOf(s, k));
 /** A look with its empty parts left out; undefined when nothing is left. */
 function tidy(l: Look): Look | undefined {
   const o: Look = {};
+  if (l.text !== undefined) o.text = l.text;
   if (l.fill !== undefined) o.fill = l.fill;
   if (l.stroke !== undefined) o.stroke = l.stroke;
   if (l.opacity !== undefined && l.opacity < 100) o.opacity = l.opacity;
@@ -90,7 +91,7 @@ const kindItems = (): Array<[Kind, string]> => [
 
 // ── small controls ──
 
-function pick(id: string, label: string, value: string, items: Array<[string, string]>, on: (v: string) => void): TemplateResult {
+export function pick(id: string, label: string, value: string, items: Array<[string, string]>, on: (v: string) => void): TemplateResult {
   return field({
     id,
     label,
@@ -101,7 +102,7 @@ function pick(id: string, label: string, value: string, items: Array<[string, st
   });
 }
 
-function num(id: string, label: string, value: number, on: (n: number) => void, o: { min?: number; max?: number; step?: number } = {}): TemplateResult {
+export function num(id: string, label: string, value: number, on: (n: number) => void, o: { min?: number; max?: number; step?: number } = {}): TemplateResult {
   return field({
     id,
     label,

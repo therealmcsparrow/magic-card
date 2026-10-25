@@ -42,6 +42,13 @@ export interface ImageUi extends ImageEditorExt {
   more(s: Shape): TemplateResult;
   /** Gradient handles over the selected layer. */
   handles(): TemplateResult | undefined;
+  /** A layer the canvas draws itself (text), else undefined and the layer is a path. */
+  node(s: Shape): TemplateResult | undefined;
+  /** The Text section of a text layer's inspector, else undefined. */
+  text(s: Shape): TemplateResult | undefined;
+  /** Adds a text layer; the button for the layer list and the T key. */
+  addText(): void;
+  addTextButton(): TemplateResult;
   /** The canvas's gradient definitions. */
   defs(doc: Doc): TemplateResult[];
   /** The drawing as text for the changed-since-saved check, paints included. */

@@ -326,6 +326,7 @@
   "Tab": "Tab",
   "Tab walks the points. [ and ] jump to the previous or next point. Arrows move it. Enter edits its X and Y.": "Tab loopt langs de punten. [ en ] springen naar het vorige of volgende punt. Pijltjes verplaatsen het. Enter bewerkt de X en Y.",
   "Tag": "Label",
+  "Text cannot be combined with other layers.": "Tekst kan niet met andere lagen worden gecombineerd.",
   "That file has no shapes an icon can use.": "Dat bestand bevat geen vormen die een pictogram kan gebruiken.",
   "The SVG is larger than 32 KB.": "De SVG is groter dan 32 KB.",
   "The SVG is too complex.": "De SVG is te complex.",

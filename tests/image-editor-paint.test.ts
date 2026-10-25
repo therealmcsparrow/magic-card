@@ -96,7 +96,7 @@ describe('image paints: opening a library image', () => {
   });
 
   it.each([
-    ['text', '<svg viewBox="0 0 400 300"><path id="a" d="M0 0H20V20H0Z" fill="#fff"/><text id="t" x="1" y="1">Hi</text></svg>'],
+    ['text with a transform', '<svg viewBox="0 0 400 300"><path id="a" d="M0 0H20V20H0Z" fill="#fff"/><text id="t" x="1" y="1" transform="rotate(5)">Hi</text></svg>'],
     ['a clip path', '<svg viewBox="0 0 400 300"><defs><clipPath id="c"><rect width="5" height="5"/></clipPath></defs><path id="a" d="M0 0H20V20H0Z" clip-path="url(#c)"/></svg>'],
     ['fill opacity', '<svg viewBox="0 0 400 300"><path id="a" d="M0 0H20V20H0Z" fill="#fff" fill-opacity="0.5"/></svg>'],
     ['group opacity', '<svg viewBox="0 0 400 300"><g opacity="0.5"><path id="a" d="M0 0H20V20H0Z"/></g></svg>'],

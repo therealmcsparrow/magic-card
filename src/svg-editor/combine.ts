@@ -24,6 +24,8 @@ export interface BoolState {
   openLayers: number;
   /** One operand with 2+ closed subpaths (Combine merges its parts). */
   merge: boolean;
+  /** Selected text layers: they are never operands. */
+  text: number;
 }
 
 export function boolState(d: Doc, sel: readonly string[]): BoolState {
@@ -32,11 +34,13 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
   let nLocked = 0;
   let openOnly = 0;
   let openLayers = 0;
+  let text = 0;
   for (const s of d.shapes) {
     if (!sel.includes(s.id)) continue;
     const isLocked = isOff(d, s, 'locked');
     const isHidden = isOff(d, s, 'hidden');
-    if (isLocked || isHidden) {
+    if (s.look?.text) text++;
+    else if (isLocked || isHidden) {
       leftOut++;
       if (isLocked) nLocked++;
     } else if (closedOf(s)) operands.push(s);
@@ -45,13 +49,14 @@ export function boolState(d: Doc, sel: readonly string[]): BoolState {
       openOnly += openOf(s);
     }
   }
-  return { operands, leftOut, lockedOnly: leftOut > 0 && nLocked === leftOut, openOnly, openLayers, merge: operands.length === 1 && closedOf(operands[0]) >= 2 };
+  return { operands, leftOut, lockedOnly: leftOut > 0 && nLocked === leftOut, openOnly, openLayers, merge: operands.length === 1 && closedOf(operands[0]) >= 2, text };
 }
 
 /** Why the operation can not run, or undefined when it can. First match wins. */
 export function boolReason(st: BoolState, op: BooleanOp): string | undefined {
   const n = st.operands.length;
   if (n >= 2 || (n === 1 && op === 'union' && st.merge)) return undefined;
+  if (st.text) return t('Text cannot be combined with other layers.');
   if (n === 1) return t('Select a second shape.');
   if (st.openLayers) return t('Select closed shapes. Open lines have no area.');
   return t('Select two or more closed shapes.');
