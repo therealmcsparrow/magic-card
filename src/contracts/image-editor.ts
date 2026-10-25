@@ -59,15 +59,25 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   - Reference underlay: "Reference picture" picks a local file. Before reading it: file.type is a raster type in
  *     REFERENCE_TYPES and file.size <= REFERENCE_MAX_FILE_BYTES, else refused with a plain reason. A picture with a
  *     side over REFERENCE_MAX_SIDE is scaled down in the browser (never refused for its pixel count). Shown behind the
- *     canvas with opacity 0..100, position, scale, rotation (degrees) and a hide toggle. The picture is held as an
- *     object URL in page memory and revoked when the editor closes; it is never written to the document, the markup,
- *     the history, the save payload, the export file, localStorage or any request. Only the alignment numbers
+ *     canvas with opacity 0..100, position, scale, rotation (degrees) and a hide toggle. The picture is decoded
+ *     (createImageBitmap) and drawn into a <canvas> in page memory, and the bitmap is closed; no object URL, data: URL
+ *     or other URL is ever made for it. Remove picture and closing the editor set that canvas to 0 x 0 and drop it.
+ *     The picture is never written to the document, the markup, the history, the save payload, the export file,
+ *     localStorage or any request. Only the alignment numbers
  *     (x, y, scale, rotation, opacity) are kept in localStorage under REFERENCE_ALIGN_KEY_PREFIX + image id, and
  *     applied when a picture is picked again for that image.
- *   - Import: .svg files through api.sanitizeImage(text, { file: true }); the import summary lists stripped parts;
- *     text, tspan and gradients open as text layers and gradient paints; anything not editable stays as one locked
- *     "Imported part" layer with its own id, drawn from api.fragment(). A locked part can be bound for opacity and
- *     visibility only; colour and outline colour show the reason ("This part keeps its own colours").
+ *   - Import: .svg files (type or name, and size <= MAX_IMAGE_IMPORT_BYTES, checked before the text is read) through
+ *     api.sanitizeImage(text, { file: true }). The import summary names each kind of stripped part once, without
+ *     counts ("Removed scripts, event handlers."), or says nothing was removed. Text, tspan and gradients open as
+ *     text layers and gradient paints. Nothing drawable is dropped: each run of adjacent sibling elements the editor
+ *     cannot edit becomes one locked "Imported part" layer, in its place in the stacking order, with its own id (the
+ *     element's id when it matches IMAGE_ID_RE and is free, else a new one) and a data-name. It is drawn on the
+ *     canvas from api.fragment() and saved as its sanitised markup; defs it references are kept once in the saved
+ *     <defs>. A locked part can be selected, renamed, reordered, hidden and deleted; it cannot be reshaped, moved or
+ *     repainted, and booleans skip it with the reason shown. The summary's second line says such parts are kept as
+ *     locked layers. Library images are read the same way, so an image with such parts opens editable. A locked part
+ *     can be bound for opacity and visibility only; colour and outline colour show the reason ("This part keeps its
+ *     own colours").
  *   - Bindings panel (Entity tab of a selected layer): entity picker, attribute (optional), what changes (colour,
  *     outline colour, visibility, opacity), rules list (state equals / number range -> value), default value, a live
  *     preview against the current hass, and "Test with state" to preview a state without changing anything, with a
@@ -128,7 +138,7 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  */
 
 export const IMAGE_EDITOR_CONTRACT = '1.0.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 3;
+export const IMAGE_EDITOR_CONTRACT_REVISION = 4;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
