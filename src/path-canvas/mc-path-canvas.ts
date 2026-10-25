@@ -28,7 +28,7 @@ import {
   type TransformBox,
 } from '../contracts/path-canvas';
 import { cursorFor } from './cursor';
-import { MAX_ANCHORS, type AnchorKind, type Box, type EditPath, type Pt } from '../contracts/path-model';
+import { MAX_ANCHORS, type Anchor, type AnchorKind, type Box, type EditPath, type Pt } from '../contracts/path-model';
 import { append, canAdd, fromEdit, insertAt, isSmooth, nearestOnPath, serialize, setClosed, setHandle } from '../path/edit';
 import { flatten } from '../path/core';
 import { canvasStyles } from './styles';
@@ -63,7 +63,21 @@ import { IDENTITY, angleOf, boxMatrix, placeHandles, resizeBy, rotateMatrix, rot
 
 /** History step names the hosts merge and compare on (for example 'Cancel'). They are keys, never shown: hosts say "Undo" in the language. */
 const STEP = { close: 'Close path', add: 'Add point', rotate: 'Rotate', scale: 'Scale', cancel: 'Cancel' } as const;
+
 import { anchorsInRect, effectiveKind, moveAll, moveSet, removeSet, stopIndex, stops, toggleKind } from './ops';
+
+/**
+ * Path data per path object. The canvas is controlled and a host replaces a path to change it, so an
+ * unchanged object keeps its text; the anchor list and closed flag are checked as well.
+ */
+const dCache = new WeakMap<EditPath, { a: Anchor[]; n: number; c: boolean; d: string }>();
+const pathData = (p: EditPath): string => {
+  const h = dCache.get(p);
+  if (h && h.a === p.anchors && h.n === p.anchors.length && h.c === p.closed) return h.d;
+  const d = serialize(p);
+  dCache.set(p, { a: p.anchors, n: p.anchors.length, c: p.closed, d });
+  return d;
+};
 
 /*
  * <mc-path-canvas> (contract path-canvas 1.0.0). Controlled: it renders `paths` and every edit
@@ -1416,7 +1430,7 @@ export class PathCanvas extends LitElement {
     const p = this.paths[i];
     const pt = this.paint[i];
     if (pt?.hidden || !p.anchors.length) return nothing;
-    const d = serialize(p);
+    const d = pathData(p);
     return svg`<path d=${d} fill=${pt?.fill ?? 'none'} stroke=${pt?.stroke ?? 'none'} stroke-width=${pt?.strokeWidth ?? 1} fill-rule=${pt?.fillRule ?? 'nonzero'}></path>${cls ? svg`<path class=${cls} d=${d}></path>` : nothing}`;
   }
 
