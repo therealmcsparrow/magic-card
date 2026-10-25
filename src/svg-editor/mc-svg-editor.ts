@@ -388,7 +388,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.note = undefined;
     this.base = doc;
     this.setDoc(doc);
-    this.baseline = toSvg(doc);
+    this.baseline = this.stamp(doc);
     this.sel = [];
     this.dual = false;
     this.cvSel = undefined;
@@ -779,11 +779,16 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.say(label);
   }
 
+  /** What "changed since saved" compares: the drawing, with an image's paints. */
+  private stamp(d: Doc): string {
+    return this.img ? this.img.stamp(d) : toSvg(d);
+  }
+
   /** Output, meter and Home Assistant form of the committed document. */
   refresh(): void {
     this.flatBase = this.makeFlat(this.base);
     this.out = this.buildOut(this.base);
-    this.dirty = toSvg(this.base) !== this.baseline;
+    this.dirty = this.stamp(this.base) !== this.baseline;
     if (this.img) {
       this.img.changed(this.out);
       this.checks();
@@ -1484,7 +1489,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The saved drawing is the current one (image mode). */
   markSaved(): void {
-    this.baseline = toSvg(this.base);
+    this.baseline = this.stamp(this.base);
     this.dirty = false;
   }
 

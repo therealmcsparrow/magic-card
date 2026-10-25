@@ -10,6 +10,7 @@ import { groupBlocked, layerTree, subject } from './layers';
 import { glyph, type GlyphName } from '../ui-kit/glyphs';
 import { button, chip, empty, field, notice, row, sectionHead, seg, switchRow, tiles, toolbar } from '../ui-kit/templates';
 import { byId, isOff, round2, shapeBox, type Doc, type Paint, type Shape } from './model';
+import type { ImageUi } from './image-seam';
 import type { Banner, McSvgEditor } from './mc-svg-editor';
 import { apply, cancel, change, panelState } from './pathtools';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
@@ -37,10 +38,10 @@ const dOf = (s: Shape): string => {
 const paintVar = (p: Paint): string => (p === 'none' ? 'none' : p === 'main' ? 'var(--m)' : 'var(--a)');
 
 /** The shapes as SVG nodes painted with --m (Main) and --a (Accent), set by the parent. */
-export function artNodes(d: Doc, onlyVisible = true, moving?: ReadonlySet<string>): TemplateResult[] {
+export function artNodes(d: Doc, onlyVisible = true, moving?: ReadonlySet<string>, img?: ImageUi): TemplateResult[] {
   return d.shapes
     .filter((s) => !onlyVisible || !isOff(d, s, 'hidden'))
-    .map((s) => svg`<path d=${dOf(s)} style=${`fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}${moving?.has(s.id) ? ';will-change:transform' : ''}`}></path>`);
+    .map((s) => svg`<path d=${dOf(s)} style=${`${img ? img.style(s) : `fill:${paintVar(s.fill)};stroke:${paintVar(s.stroke)}`};stroke-width:${s.width};stroke-linecap:${s.cap};stroke-linejoin:${s.join};fill-rule:${s.rule}${moving?.has(s.id) ? ';will-change:transform' : ''}`}></path>`);
 }
 
 const viewBox = (d: Doc): string => `${d.vb.x} ${d.vb.y} ${d.vb.w} ${d.vb.h}`;
@@ -467,6 +468,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
           @mc-path-context=${ed.onContext}
         ></mc-path-canvas>
         ${overLayer(ed)}
+        ${ed.img?.handles()}
         ${ed.doc.shapes.length === 0 && !ed.liveShape ? html`<div class="hint">${empty({ title: t('Nothing here yet'), text: t('Pick a tool on the left, or press P to draw.') })}</div>` : nothing}
       </div>
       ${banners(ed)}
@@ -522,8 +524,8 @@ export function artLayer(ed: McSvgEditor): TemplateResult {
   return html`<svg class="art" aria-hidden="true" style=${ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)'}>
     <g transform=${`translate(${v.x} ${v.y}) scale(${v.zoom})`}>
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
-      ${guard([ed.doc.shapes, ed.doc.groups, ed.moving], () => artNodes(ed.doc, true, ed.moving))}
-      ${live ? svg`<g class="ghost">${artNodes({ ...ed.doc, shapes: [live] })}</g>` : nothing}
+      ${guard([ed.doc.shapes, ed.doc.groups, ed.moving], () => svg`${ed.img ? svg`<defs>${ed.img.defs(ed.doc)}</defs>` : nothing}${artNodes(ed.doc, true, ed.moving, ed.img)}`)}
+      ${live ? svg`<g class="ghost">${artNodes({ ...ed.doc, shapes: [live] }, true, undefined, ed.img)}</g>` : nothing}
       ${ed.pt?.res?.doc ? svg`<g class="pvw">${ed.pt.res.prev.map((s) => svg`<path d=${dOf(s)}></path>`)}</g>` : nothing}
     </g>
   </svg>`;
@@ -784,9 +786,9 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
       : nothing}
     ${group(
       t('Fill and stroke'),
-      html`${dualSwitch(ed)}
-        <div class="field"><div class="field-head"><span class="lbl">${t('Fill')}</span></div>${segc(t('Fill'), first.fill, paintItems(ed.dualOn), (v) => ed.setPaint('fill', v))}</div>
-        <div class="field"><div class="field-head"><span class="lbl">${t('Stroke')}</span></div>${segc(t('Stroke'), first.stroke, paintItems(ed.dualOn), (v) => ed.setPaint('stroke', v))}</div>
+      html`${ed.img ? nothing : dualSwitch(ed)}
+        ${ed.img ? ed.img.paint(first, 'fill') : html`<div class="field"><div class="field-head"><span class="lbl">${t('Fill')}</span></div>${segc(t('Fill'), first.fill, paintItems(ed.dualOn), (v) => ed.setPaint('fill', v))}</div>`}
+        ${ed.img ? ed.img.paint(first, 'stroke') : html`<div class="field"><div class="field-head"><span class="lbl">${t('Stroke')}</span></div>${segc(t('Stroke'), first.stroke, paintItems(ed.dualOn), (v) => ed.setPaint('stroke', v))}</div>`}
         <p class="help">${t('Main follows the entity colour. Accent follows the card\'s secondary colour. Colours come from the card, so the icon can change with state.')}</p>
         ${first.stroke !== 'none'
           ? html`<div class="grid2">
@@ -794,7 +796,8 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
               ${pick('st-cap', t('Cap'), first.cap, [['butt', t('Flat')], ['round', t('Round')], ['square', t('Square')]], (v) => ed.patch({ cap: v as Shape['cap'] }, 'Stroke cap'))}
               ${pick('st-join', t('Join'), first.join, [['miter', t('Sharp')], ['round', t('Round')], ['bevel', t('Bevel')]], (v) => ed.patch({ join: v as Shape['join'] }, 'Stroke join'))}
             </div>`
-          : nothing}`,
+          : nothing}
+        ${ed.img ? ed.img.more(first) : nothing}`,
     )}
     ${group(
       t('Layer'),

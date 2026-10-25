@@ -14,8 +14,10 @@ import { ImageError, fetchImage, listImages, storeImage, type ImageHass } from '
 import { kibShown, meterLevel, savedBytes, type MeterLevel } from './meter';
 import { buildSave, type Built } from './save';
 import { freeImageId } from './ids';
+import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
-import { detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
+import { lookRows, handles, paintRow, type Which } from './paint-ui';
+import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
 /*
  * The image-only half of <mc-svg-editor> (contract image-editor 1.0.0): what the shell asks of an ImageUi at the places
@@ -43,17 +45,59 @@ export interface DetailsDlg {
   error?: string;
 }
 
-const tone = (v: string): Paint | undefined => {
-  const m = /^var\(\s*--mc-image-(main|accent)\s*\)$/.exec(v);
-  return m ? (m[1] as Paint) : /^(none|transparent)$/i.test(v) ? 'none' : undefined;
-};
+/** Main, Accent and none are the layer's own paints; any other value is read by lookOf (the layer then keeps Main as its placeholder). */
+const tone = (v: string): Paint => toneOf(v) ?? (/^(none|transparent)$/i.test(v) ? 'none' : 'main');
+
+/** The id of a layer's gradient in the canvas. */
+export const gradientRef = (s: Shape, k: 'fill' | 'stroke'): string => `cg-${s.id}-${k[0]}`;
+
+/** Parts the editor cannot keep: text, clipping, masks, copies, opacity of a group or of a fill or stroke alone. */
+const LOSSY = 'text,tspan,clipPath,mask,use,image,[clip-path],[mask],[fill-opacity],[stroke-opacity],g[opacity],svg[opacity]';
+
+/** The paints, opacity and dashes of one element, put on its layer; `f.v` is set when something in it cannot be kept. */
+function lookOf(el: Element, s: Shape, xml: Document, f: Flag): Shape {
+  const inherited = (k: string): string | undefined => {
+    for (let e: Element | null = el; e; e = e.parentElement) {
+      const v = e.getAttribute(k);
+      if (v !== null) return v.trim();
+    }
+    return undefined;
+  };
+  const box = K.shapeBox(s) ?? { x: 0, y: 0, w: 0, h: 0 };
+  const rich = (k: 'fill' | 'stroke'): Rich | undefined => {
+    const v = inherited(k);
+    return s[k] === 'none' || v === undefined || toneOf(v) || tone(v) === 'none' ? undefined : readPaint(v, xml, box, f);
+  };
+  const look: Look = {};
+  const fill = rich('fill');
+  const stroke = rich('stroke');
+  if (fill !== undefined) look.fill = fill;
+  if (stroke !== undefined) look.stroke = stroke;
+  const op = el.getAttribute('opacity');
+  if (op !== null) {
+    const n = Number(op);
+    if (n >= 0 && n <= 1) look.opacity = Math.round(n * 100);
+    else f.v = true;
+  }
+  const dash = inherited('stroke-dasharray');
+  if (s.stroke !== 'none' && dash && dash !== 'none') {
+    const d = parseDash(dash);
+    if (d === 'bad') f.v = true;
+    else if (d.length) look.dash = d;
+    const off = Number(inherited('stroke-dashoffset') ?? 0);
+    if (look.dash && Number.isFinite(off) && off) look.offset = off;
+  }
+  if (look.opacity === 100) delete look.opacity;
+  return Object.keys(look).length ? { ...s, look } : s;
+}
 
 /** A library image (already through the image sanitiser) as a document; `all` is false when parts of it cannot be edited yet. */
 function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean } {
   const notes = K.emptyNotes();
-  const doc = K.readMarkup(markup, viewBox, notes, name, tone);
-  const extra = !!new DOMParser().parseFromString(markup, 'image/svg+xml').querySelector('text,linearGradient,radialGradient,clipPath,mask,use,image,[opacity],[fill-opacity],[stroke-opacity]');
-  return { doc, all: !notes.colours && !notes.opacity && !extra };
+  const xml = new DOMParser().parseFromString(markup, 'image/svg+xml');
+  const flag: Flag = { v: !!xml.querySelector(LOSSY) };
+  const doc = K.readMarkup(markup, viewBox, notes, name, tone, (el, s) => lookOf(el, s, xml, flag));
+  return { doc, all: !flag.v };
 }
 
 // eslint-disable-next-line no-control-regex
@@ -82,6 +126,14 @@ export class ImageExt implements ImageUi {
   taken?: Set<string>;
   private pending: Array<{ kind: 'warn' | 'info'; text: string; detail?: string[] }> = [];
   private back?: HTMLElement;
+  private colours = false;
+  /** The paint whose gradient handles show, and the field with a message under it. */
+  which: Which = 'fill';
+  problemAt?: string;
+  dashList?: string;
+  dragging = false;
+  private gradients: string[] = [];
+  private gradientId = (): string => 'grad1';
 
   constructor(
     readonly shell: ImageShell,
@@ -212,13 +264,13 @@ export class ImageExt implements ImageUi {
 
   serialiseLayer(layer: unknown): string {
     const s = layer as Shape;
-    const paint = (p: Paint): string => (p === 'none' ? 'none' : p === 'main' ? 'var(--mc-image-main)' : 'var(--mc-image-accent)');
     const name = esc(s.name);
-    const strokeOn = s.stroke !== 'none' && s.width > 0;
+    const on = s.stroke !== 'none' && s.width > 0;
     return (
-      ` id="${s.id}"${name ? ` data-name="${name}"` : ''} fill="${paint(s.fill)}"` +
+      ` id="${s.id}"${name ? ` data-name="${name}"` : ''}` +
+      layerPaint(s, () => K.shapeBox(s), this.gradients, this.gradientId) +
       (s.fill !== 'none' && s.rule === 'evenodd' ? ' fill-rule="evenodd"' : '') +
-      (strokeOn ? ` stroke="${paint(s.stroke)}" stroke-width="${K.round2(s.width)}"${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
+      (on ? `${s.cap !== 'butt' ? ` stroke-linecap="${s.cap}"` : ''}${s.join !== 'miter' ? ` stroke-linejoin="${s.join}"` : ''}` : '')
     );
   }
 
@@ -233,12 +285,69 @@ export class ImageExt implements ImageUi {
   buildOut(doc: Doc, decimals: number): Out {
     const points = K.pointCount(doc);
     const vb = `${doc.vb.x} ${doc.vb.y} ${doc.vb.w} ${doc.vb.h}`;
-    const raw = K.toSvg(doc, decimals, (s, d) => `<path d="${d}"${this.serialiseLayer(s)}/>`);
+    this.gradients = [];
+    const taken = new Set(doc.shapes.map((s) => s.id));
+    let n = 0;
+    this.gradientId = () => {
+      let id: string;
+      do id = `grad${++n}`;
+      while (taken.has(id));
+      return id;
+    };
+    const body = K.toSvg(doc, decimals, (s, d) => `<path d="${d}"${this.serialiseLayer(s)}/>`);
+    const raw = this.gradients.length ? body.replace(/^(<svg[^>]*>)/, `$1<defs>${this.gradients.join('')}</defs>`) : body;
     if (!/<path/.test(raw)) return { bytes: 0, error: 'empty', points, viewBox: vb };
     const s = this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
     const bytes = savedBytes(s.markup, this.stored);
     return { svg: s.markup, bytes, error: bytes > IMAGE_MAX_BYTES ? 'over' : undefined, points, viewBox: s.viewBox };
+  }
+
+  /** The same change to every selected layer, each judged on its own (locked layers stay as they are). */
+  edit(f: (s: Shape) => Shape, label: string, merge?: string): void {
+    this.shell.editShapes(this.shell.sel, f, label, merge);
+  }
+
+  /** The colour popup lives in the card editor's chunk; ask for it once. */
+  needColours(): void {
+    if (this.colours) return;
+    this.colours = true;
+    void window.MagicCard?.loadEditor?.()
+      ?.then(() => customElements.whenDefined('mc-color-picker'))
+      .then(() => this.shell.requestUpdate());
+  }
+
+  paint(s: Shape, k: Which): TemplateResult {
+    return paintRow(this, s, k);
+  }
+
+  more(s: Shape): TemplateResult {
+    return lookRows(this, s);
+  }
+
+  handles(): TemplateResult | undefined {
+    return handles(this) as TemplateResult | undefined;
+  }
+
+  style(s: Shape): string {
+    const css = (k: 'fill' | 'stroke'): string => {
+      const v = paintOf(s, k);
+      return typeof v === 'string' ? cssOf(v) : `url(#${gradientRef(s, k)})`;
+    };
+    const l = s.look;
+    return (
+      `fill:${css('fill')};stroke:${css('stroke')}` +
+      (l?.opacity !== undefined && l.opacity < 100 ? `;opacity:${l.opacity / 100}` : '') +
+      (stroked(s) && l?.dash?.length ? `;stroke-dasharray:${dashText(l.dash)};stroke-dashoffset:${l.offset ?? 0}` : '')
+    );
+  }
+
+  defs(doc: Doc): TemplateResult[] {
+    return canvasDefs(doc);
+  }
+
+  stamp(doc: Doc): string {
+    return K.toSvg(doc) + doc.shapes.map((s) => (s.look ? JSON.stringify(s.look) : '')).join('|');
   }
 
   blockReason(out: Out): string | undefined {

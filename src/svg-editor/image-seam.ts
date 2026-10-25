@@ -3,7 +3,7 @@ import type { ImageEditorExt, ImageEditorHost } from '../contracts/image-editor'
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { SvgEditorSource } from '../contracts/svg-editor';
 import type { McSvgEditor, Out } from './mc-svg-editor';
-import type { Doc } from './model';
+import type { Doc, Shape } from './model';
 
 /*
  * What <mc-svg-editor> and the image-editor chunk know about each other (types only, no code). The shell holds an
@@ -34,6 +34,18 @@ export interface ImageUi extends ImageEditorExt {
   /** The document to begin with, or undefined when the source could not be opened (the shell shows the start dialog's error state). */
   open(src: SvgEditorSource): Promise<Doc | undefined>;
   buildOut(doc: Doc, decimals: number): Out;
+  /** CSS of one layer's fill, stroke, opacity and dashes on the canvas. */
+  style(s: Shape): string;
+  /** The Fill or Stroke control of a layer (the kind of paint and what it needs). */
+  paint(s: Shape, k: 'fill' | 'stroke'): TemplateResult;
+  /** Opacity and the outline's dashes. */
+  more(s: Shape): TemplateResult;
+  /** Gradient handles over the selected layer. */
+  handles(): TemplateResult | undefined;
+  /** The canvas's gradient definitions. */
+  defs(doc: Doc): TemplateResult[];
+  /** The drawing as text for the changed-since-saved check, paints included. */
+  stamp(doc: Doc): string;
   blockReason(out: Out): string | undefined;
   /** Called after every refresh with the committed document, for the size announcements. */
   changed(out: Out): void;

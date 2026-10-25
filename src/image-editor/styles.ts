@@ -76,6 +76,71 @@ export const imageStyles = css`
     cursor: pointer;
     padding-block: 6px;
   }
+  .paint {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .grad {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .grad-strip {
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid var(--mc-divider, rgba(127, 127, 127, 0.4));
+  }
+  .stops {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .stop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    align-items: end;
+    padding: 6px 8px;
+    border: 1px solid var(--mc-divider, rgba(127, 127, 127, 0.3));
+    border-radius: 6px;
+  }
+  .stop > :nth-child(n + 2) {
+    grid-column: 1 / -1;
+  }
+  .stop > .icon-btn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .gh {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .gh-pt {
+    position: absolute;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    padding: 0;
+    border-radius: 50%;
+    border: 2px solid #1f2933;
+    background: #fff;
+    box-shadow: 0 0 0 2px #fff;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .gh-pt::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+  }
+  .gh-pt:focus-visible {
+    outline: 3px solid var(--mc-focus, #03a9f4);
+    outline-offset: 3px;
+  }
   .vw {
     position: relative;
     flex: 1;

@@ -1,4 +1,4 @@
-import { html, nothing, type TemplateResult } from 'lit';
+import { html, nothing, svg, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_MIN, IMAGE_CANVAS_PRESETS } from '../contracts/image-editor';
 import { IMAGE_MAX_BYTES, MAX_IMAGE_BOX } from '../contracts/mcu-library-images';
 import { glyph } from '../ui-kit/glyphs';
@@ -6,10 +6,11 @@ import { button, chip, field, notice, switchRow, tiles } from '../ui-kit/templat
 import type { McSvgEditor } from '../svg-editor/mc-svg-editor';
 import type { Doc, Shape } from '../svg-editor/model';
 import { K } from './kit';
-import type { ImageExt } from './chunk';
+import { gradientRef, type ImageExt } from './chunk';
 import { outsideCount, readSize } from './canvas';
 import { t } from './i18n';
 import { kibShown, meterLevel } from './meter';
+import { ACCENT, MAIN, cssOf, gradGeo, paintOf, stopsOf, type Box, type Grad } from './paint';
 
 /* The image editor's templates: functions of the ImageExt (state lives there). */
 
@@ -199,7 +200,10 @@ export function viewer(x: ImageExt): TemplateResult {
   const s = x.shell;
   const sel = s.sel.length === 1 ? s.doc.shapes.find((l) => l.id === s.sel[0]) : undefined;
   const locked = s.flat.paths.map(() => ({ fill: 'none' as const, stroke: 'none' as const, locked: true }));
-  const paint = (p: string): string => (p === 'none' ? t('None') : p === 'main' ? t('Main') : t('Accent'));
+  const paint = (l: Shape, k: 'fill' | 'stroke'): string => {
+    const v = paintOf(l, k);
+    return v === 'none' ? t('None') : v === MAIN ? t('Main') : v === ACCENT ? t('Accent') : typeof v === 'string' ? v : v.t === 'linear' ? t('Linear gradient') : t('Radial gradient');
+  };
   return html`<div class="vw">
     <aside class="left" aria-label=${t('Layers')}>
       <h2 class="sr">${t('Layers')}</h2>
@@ -222,9 +226,33 @@ export function viewer(x: ImageExt): TemplateResult {
     <aside class="insp" aria-label=${t('Inspector')}>
       <h2>${sel ? sel.name : t('Image')}</h2>
       ${sel
-        ? html`<p>${t('Fill: {paint}', { paint: paint(sel.fill) })}</p><p>${t('Outline: {paint}', { paint: paint(sel.stroke) })}</p>`
+        ? html`<p>${t('Fill: {paint}', { paint: paint(sel, 'fill') })}</p><p>${t('Outline: {paint}', { paint: paint(sel, 'stroke') })}</p>`
         : html`<p class="help">${t('{w} x {h} units. Pick a layer to read its details.', { w: s.doc.vb.w, h: s.doc.vb.h })}</p>`}
       ${button({ label: t('Close'), variant: 'primary', size: 'md', onClick: () => s.back() })}
     </aside>
   </div>`;
+}
+
+// ── canvas ──
+
+const gradientNode = (g: Grad, id: string, b: Box): TemplateResult => {
+  const n = gradGeo(g, b);
+  const stops = stopsOf(g).map((s) => svg`<stop offset=${s.o} style=${`stop-color:${cssOf(s.c)}${s.a !== undefined && s.a < 1 ? `;stop-opacity:${s.a}` : ''}`}></stop>`);
+  return g.t === 'linear'
+    ? svg`<linearGradient id=${id} gradientUnits="userSpaceOnUse" x1=${n[0]} y1=${n[1]} x2=${n[2]} y2=${n[3]}>${stops}</linearGradient>`
+    : svg`<radialGradient id=${id} gradientUnits="userSpaceOnUse" cx=${n[0]} cy=${n[1]} r=${n[2]}>${stops}</radialGradient>`;
+};
+
+/** The gradients of every layer, in drawing units like the saved file (ids per layer and paint). */
+export function canvasDefs(d: Doc): TemplateResult[] {
+  const out: TemplateResult[] = [];
+  for (const s of d.shapes) {
+    const b = s.look && K.shapeBox(s);
+    if (b)
+      for (const k of ['fill', 'stroke'] as const) {
+        const v = paintOf(s, k);
+        if (typeof v !== 'string') out.push(gradientNode(v, gradientRef(s, k), b));
+      }
+  }
+  return out;
 }

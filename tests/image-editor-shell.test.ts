@@ -216,7 +216,7 @@ describe('image editor: opening', () => {
 
   it('a file opened as an image keeps its shapes and says what was left out', async () => {
     const { hass } = wire();
-    const svg = '<svg viewBox="0 0 100 50"><switch/><path d="M0 0H40V40Z" fill="#ff0000"/></svg>';
+    const svg = '<svg viewBox="0 0 100 50"><switch/><path d="M0 0H40V40Z" fill="currentColor"/></svg>';
     const el = await open({ kind: 'image-svg', svg }, hass);
     expect(el.stage).toBe('edit');
     expect(el.doc.shapes.length).toBe(1);
@@ -226,7 +226,7 @@ describe('image editor: opening', () => {
 
   it('a file that is only a script has nothing to draw and is refused with a reason', async () => {
     const { hass } = wire();
-    const el = await open({ kind: 'image-svg', svg: '<svg viewBox="0 0 100 50"><script>alert(1)</script><path d="M0 0H40V40Z"/></svg>' }, hass);
+    const el = await open({ kind: 'image-svg', svg: '<svg viewBox="0 0 100 50"><script>alert(1)</script></svg>' }, hass);
     expect(el.stage).toBe('fail');
     expect(text(el)).toContain('That file has no shapes an image can use.');
   });

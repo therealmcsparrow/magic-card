@@ -97,7 +97,7 @@ function nameKind(tag: string): ShapeType {
  * Read the sanitiser's markup into shapes. `image` (image mode) maps a paint value to a tone, or undefined when it is not
  * one of the two; layer ids and names are then kept from the markup.
  */
-export function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: string, image?: (paint: string) => Paint | undefined): Doc {
+export function readMarkup(markup: string, viewBox: string, notes: ImportNotes, name: string, image?: (paint: string) => Paint | undefined, each?: (el: Element, s: Shape) => Shape): Doc {
   const doc = blankDoc(name);
   const vb = viewBox.split(/\s+/).map(Number);
   if (vb.length === 4 && vb.every(Number.isFinite)) doc.vb = { x: vb[0], y: vb[1], w: vb[2], h: vb[3] };
@@ -168,19 +168,18 @@ export function readMarkup(markup: string, viewBox: string, notes: ImportNotes, 
     const own = image && el.getAttribute('id');
     const keep = own && !used.has(own) ? own : undefined;
     if (keep) used.add(keep);
-    doc.shapes.push(
-      newShape('path', paths, {
-        ...(keep ? { id: keep } : {}),
-        name: (image && el.getAttribute('data-name')) || nameFor(doc, k),
-        fill: fill !== 'none' && p.accent ? 'accent' : fill,
-        stroke: stroke !== 'none' && p.accent ? 'accent' : stroke,
-        width: round2(sw) || 1,
-        cap: p.cap,
-        join: p.join,
-        rule: p.rule,
-        group,
-      }),
-    );
+    const made = newShape('path', paths, {
+      ...(keep ? { id: keep } : {}),
+      name: (image && el.getAttribute('data-name')) || nameFor(doc, k),
+      fill: fill !== 'none' && p.accent ? 'accent' : fill,
+      stroke: stroke !== 'none' && p.accent ? 'accent' : stroke,
+      width: round2(sw) || 1,
+      cap: p.cap,
+      join: p.join,
+      rule: p.rule,
+      group,
+    });
+    doc.shapes.push(each ? each(el, made) : made);
   };
 
   const rm = parseTransform(root.getAttribute('transform'));

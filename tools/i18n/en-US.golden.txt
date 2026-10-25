@@ -109,6 +109,16 @@ svg-editor	Rotate 90 degrees anticlockwise	Rotate 90 degrees counterclockwise
 svg-editor	This module will use your drawing instead of {icon}. Colours, Draw and Morph effects keep working on it.	This module will use your drawing instead of {icon}. Colors, Draw and Morph effects keep working on it.
 svg-editor	This module will use your drawing. Colours, Draw and Morph effects keep working on it.	This module will use your drawing. Colors, Draw and Morph effects keep working on it.
 svg-editor	Use two colours: Main and Accent.	Use two colors: Main and Accent.
+image-editor	Centre X (%)	Center X (%)
+image-editor	Centre Y (%)	Center Y (%)
+image-editor	Custom colour	Custom color
+image-editor	Gradient centre	Gradient center
+image-editor	Stop {n} colour	Stop {n} color
+image-editor	Theme colour	Theme color
+image-editor	Use a colour like #3f6fb5.	Use a color like #3f6fb5.
+image-editor	Use a name that starts with two dashes, like --my-colour.	Use a name that starts with two dashes, like --my-color.
+image-editor	{name} colour	{name} color
+image-editor	{paint} colour	{paint} color
 shape-editor	Centre	Center
 shape-editor	Maximise	Maximize
 shape-editor	Pen cancelled.	Pen canceled.

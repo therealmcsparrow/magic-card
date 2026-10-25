@@ -3,6 +3,7 @@ import { flatten, parsePath } from '../path/core';
 import { t } from './i18n';
 import { MAX_GROUP_DEPTH, type SvgArrange, type TreePlace } from '../contracts/svg-editor';
 import { D, E, T } from './bind';
+import type { Look } from '../image-editor/paint';
 
 /*
  * The icon document: layers (shapes) over one artboard. Shapes are immutable values (every edit makes a
@@ -40,6 +41,8 @@ export interface Shape {
   group?: string;
   /** Paint is still the tool's default: closing a pen path turns it into a fill. */
   auto?: boolean;
+  /** Image layers: colours, gradients, opacity and dashes beyond Main and Accent (the image editor reads and writes it). */
+  look?: Look;
 }
 
 export interface Group {
