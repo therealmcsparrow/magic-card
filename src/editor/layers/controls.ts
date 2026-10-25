@@ -1,4 +1,5 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
+import { shownValue } from '../../ui-kit/templates/shown-value';
 import { LAYER_BLENDS, type LayerBlend } from '../../contracts/layer-placement';
 import { m, t } from './i18n';
 
@@ -27,15 +28,32 @@ export function lyrSwitch(id: string, label: string, checked: boolean, on: (v: b
 
 /** A range with a number field beside it, clamped to min..max. */
 export function lyrSlider(id: string, label: string, value: number, min: number, max: number, unit: string, on: (v: number) => void): TemplateResult {
+  const clamp = (n: number): number => Math.max(min, Math.min(max, Math.round(n)));
+  /** Shows one value in the range, its spoken text and the number field of the row the event came from. */
+  const mirror = (e: Event, n: number, typing = false): void => {
+    const row = (e.target as HTMLElement).closest('.inline');
+    const r = row?.querySelector<HTMLInputElement>('input[type="range"]');
+    const f = row?.querySelector<HTMLInputElement>('input[type="number"]');
+    if (r) r.value = String(n);
+    if (f && !typing) f.value = String(n);
+    r?.setAttribute('aria-valuetext', `${n}${unit}`);
+  };
+  const preview = (e: Event): void => {
+    const raw = (e.target as HTMLInputElement).value;
+    if (raw !== '' && Number.isFinite(Number(raw))) mirror(e, clamp(Number(raw)), (e.target as HTMLInputElement).type === 'number');
+  };
   const set = (e: Event): void => {
     const n = Number((e.target as HTMLInputElement).value);
-    if (Number.isFinite(n)) on(Math.max(min, Math.min(max, Math.round(n))));
+    if (!Number.isFinite(n)) return;
+    const v = clamp(n);
+    mirror(e, v);
+    on(v);
   };
   return html`<div>
     <label for=${id}>${label}</label>
     <div class="inline">
-      <input class="lyr-range" id=${id} type="range" min=${min} max=${max} step="1" .value=${String(value)} aria-valuetext=${`${value}${unit}`} @change=${set} />
-      <input class="lyr-input input" type="number" min=${min} max=${max} step="1" aria-label=${t('{label} value', { label })} .value=${String(value)} @change=${set} />
+      <input class="lyr-range" id=${id} type="range" min=${min} max=${max} step="1" .value=${shownValue(String(value))} aria-valuetext=${shownValue(`${value}${unit}`)} @input=${preview} @change=${set} />
+      <input class="lyr-input input" type="number" min=${min} max=${max} step="1" aria-label=${t('{label} value', { label })} .value=${shownValue(String(value))} @input=${preview} @change=${set} />
       <span aria-hidden="true">${unit}</span>
     </div>
   </div>`;

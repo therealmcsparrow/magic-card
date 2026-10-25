@@ -1,5 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { shownValue } from './shown-value';
 import type { KitSliderOptions } from '../../contracts/ui-kit';
 
 /*
@@ -13,9 +14,21 @@ export interface SliderOptions extends KitSliderOptions {
   disabled?: boolean;
 }
 
-const val = (e: Event): number => Number((e.target as HTMLInputElement).value);
-
 export function slider(o: SliderOptions): TemplateResult {
+  /** The row's two fields show one value: an input mirrors into the other field, a commit also clamps it and reports. */
+  const sync = (e: Event, commit: boolean): void => {
+    const f = e.target as HTMLInputElement;
+    const n = Number(f.value);
+    if (f.value === '' || !Number.isFinite(n)) return;
+    const v = Math.max(o.min, Math.min(o.max, n));
+    [...f.parentElement!.querySelectorAll('input')].find((i) => i !== f)!.value = String(v);
+    if (commit) {
+      f.value = String(v);
+      o.onChange(v);
+    } else if (f.type === 'range') o.onInput(v);
+  };
+  const mirror = (e: Event): void => sync(e, false);
+  const commit = (e: Event): void => sync(e, true);
   return html`<div class="slider-row">
     <label for=${o.id}>${o.label}</label>
     <input
@@ -24,11 +37,11 @@ export function slider(o: SliderOptions): TemplateResult {
       min=${o.min}
       max=${o.max}
       step=${o.step}
-      .value=${String(o.value)}
+      .value=${shownValue(String(o.value))}
       aria-valuetext=${ifDefined(o.valueText)}
       ?disabled=${o.disabled}
-      @input=${(e: Event) => o.onInput(val(e))}
-      @change=${(e: Event) => o.onChange(val(e))}
+      @input=${mirror}
+      @change=${commit}
     />
     <input
       class="input"
@@ -37,9 +50,10 @@ export function slider(o: SliderOptions): TemplateResult {
       max=${o.max}
       step=${o.step}
       aria-label=${o.numberLabel ?? o.label}
-      .value=${String(o.value)}
+      .value=${shownValue(String(o.value))}
       ?disabled=${o.disabled}
-      @change=${(e: Event) => o.onChange(val(e))}
+      @input=${mirror}
+      @change=${commit}
     />
     ${o.unit ? html`<span aria-hidden="true">${o.unit}</span>` : nothing}
   </div>`;

@@ -109,6 +109,7 @@ export class BoxField extends LitElement {
 
   @property({ attribute: false }) design: DesignConfig = {};
   @property({ attribute: false }) onChange!: (updates: Record<string, unknown>) => void;
+  /** The design key of the box (`padding`); empty when the sides are the plain keys top, right, bottom and left (the position offsets). */
   @property({ type: String }) baseName: string = 'padding';
   /** One design key holding a 1 to 4 value shorthand (`baseName`), instead of one key per side. */
   @property({ type: Boolean }) shorthand = false;
@@ -132,6 +133,7 @@ export class BoxField extends LitElement {
   @state() private _link?: boolean;
 
   private _getSuffixKey(baseName: string, suffix: string): string {
+    if (!baseName) return suffix;
     // Handle border-radius special naming
     if (baseName === 'border_radius') {
       const suffixMap: Record<string, string> = {
@@ -165,7 +167,7 @@ export class BoxField extends LitElement {
    * are re-emitted (when non-empty) so clearing the shorthand never drops them.
    */
   private _emitSides(values: Partial<Record<Side, string>>): void {
-    const updates: Record<string, unknown> = { [this.baseName]: undefined };
+    const updates: Record<string, unknown> = this.baseName ? { [this.baseName]: undefined } : {};
     const sh = this._shorthandSides();
     for (const side of SIDES) {
       if (values[side] !== undefined) updates[this._getSuffixKey(this.baseName, side)] = values[side];
