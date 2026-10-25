@@ -99,3 +99,24 @@ describe('path canvas serialise cache', () => {
     expect(ds(el)).toHaveLength(1);
   });
 });
+
+describe('path canvas paint changes', () => {
+  const fills = (el: El): string[] => [...el.shadowRoot!.querySelectorAll('svg path[d^="M"]:not(.outline)')].map((p) => p.getAttribute('fill') ?? '');
+  it('follows fill, hidden and the edit class while the path objects stay the same', async () => {
+    const a = sq();
+    const b = sq(6);
+    const el = await mount([a, b]);
+    el.paint = [{ fill: 'red' }, { fill: 'blue' }];
+    await el.updateComplete;
+    expect(fills(el)).toEqual(['red', 'blue']);
+    el.paint = [{ fill: 'green' }, { fill: 'blue' }];
+    await el.updateComplete;
+    expect(fills(el)).toEqual(['green', 'blue']);
+    el.paint = [{ fill: 'green', hidden: true }, { fill: 'blue' }];
+    await el.updateComplete;
+    expect(fills(el)).toEqual(['blue']);
+    el.mode = 'select';
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelectorAll('svg path.outline').length).toBe(1);
+  });
+});
