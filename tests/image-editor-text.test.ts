@@ -159,16 +159,21 @@ describe('text layers: adding', () => {
     expect((el.renderRoot as ShadowRoot).activeElement).toBe(c);
   });
 
-  it('the T key adds one too, and not while typing in a field', async () => {
+  it('the T key picks the Text tool and adds nothing, and not while typing in a field', async () => {
     const { el } = await open(ONE);
     const stage = $<HTMLElement>(el, '.stage');
     stage.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyT', key: 't', bubbles: true, composed: true }));
     await settle(el);
-    expect(texts(el)).toHaveLength(1);
-    const c = $<HTMLTextAreaElement>(el, '#tx-content');
-    c.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyT', key: 't', bubbles: true, composed: true }));
+    expect(el.tool).toBe('text');
+    expect(texts(el)).toHaveLength(0);
+    el.tool = 'select';
+    const c = $<HTMLElement>(el, '.stage');
+    const f = document.createElement('textarea');
+    c.append(f);
+    f.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyT', key: 't', bubbles: true, composed: true }));
     await settle(el);
-    expect(texts(el)).toHaveLength(1);
+    expect(el.tool).toBe('select');
+    f.remove();
   });
 
   it('is not offered when the image is view-only', async () => {

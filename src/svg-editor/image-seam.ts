@@ -57,6 +57,10 @@ export interface ImageUi extends ImageEditorExt {
   railTool(): KitButtonOptions;
   /** What the Text tool does, for the help list. */
   readonly hint: string;
+  /** The reference picture behind the canvas (first child of the stage), else undefined. */
+  underlay(): TemplateResult | undefined;
+  /** The picture is showing: the board lets it through. */
+  readonly hasRef: boolean;
   /** The canvas's gradient definitions. */
   defs(doc: Doc): TemplateResult[];
   /** The drawing as text for the changed-since-saved check, paints included. */

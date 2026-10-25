@@ -437,14 +437,14 @@ function workspace(ed: McSvgEditor): TemplateResult {
       ${floatBar(ed)}
       <div class="stagebox">
       <div
-        class=${`stage tool-${ed.tool}`}
+        class=${`stage tool-${ed.tool}${ed.img?.hasRef ? ' has-ref' : ''}`}
         @pointerdown=${ed.cap.down}
         @pointermove=${ed.onStageMove}
         @pointerup=${ed.onStageUp}
         @pointercancel=${ed.onStageUp}
         @keydown=${ed.cap.key}
       >
-        ${artLayer(ed)}
+        ${ed.img?.underlay()}${artLayer(ed)}
         <mc-path-canvas
           underlay
           role="group"

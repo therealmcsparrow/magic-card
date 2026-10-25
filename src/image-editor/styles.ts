@@ -213,4 +213,73 @@ export const imageStyles = css`
   .vw .view-note {
     padding: 8px 12px;
   }
+  .stage.has-ref .board {
+    fill: none;
+    stroke: var(--mc-divider, rgba(127, 127, 127, 0.5));
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .ref {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .ref-pic {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+  }
+  .ref-pic canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .ref-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 12px;
+    background: var(--mc-surface);
+  }
+  .ref-panel {
+    display: grid;
+    gap: 8px;
+    padding: 8px 12px;
+    max-height: 40vh;
+    overflow: auto;
+    background: var(--mc-surface);
+    border-bottom: 1px solid var(--mc-divider, rgba(127, 127, 127, 0.25));
+  }
+  .ref-panel h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  .ref-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .ref-op {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ref-op input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  @media (pointer: coarse) {
+    .ref-panel .btn,
+    .ref-pill .btn {
+      min-height: 44px;
+    }
+  }
 `;

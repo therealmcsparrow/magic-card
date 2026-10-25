@@ -22,6 +22,9 @@ import { lookRows, handles, paintRow, type Which } from './paint-ui';
 import { anchorOf, blank, boxFor, readText, textAttrs, textBody, nameOf, type TextData } from './text';
 import { addText, addTextButton, textNode, textRows } from './text-ui';
 import { cancelField, disposeField, place, textField, type TextField } from './text-tool';
+import { FRESH, decodePicture, dispose as disposeRef, matchShape, moved, underlay, type Align, type Picture } from './reference';
+import { closePanel } from './reference-ui';
+import { importWin, summary, type Imported } from './importer';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
 /*
@@ -156,7 +159,16 @@ export class ImageExt implements ImageUi {
   level?: MeterLevel;
   /** Ids already in the library (loaded when a name dialog opens). */
   taken?: Set<string>;
-  private pending: Array<{ kind: 'warn' | 'info'; text: string; detail?: string[] }> = [];
+  /** The reference picture (held in page memory only), its alignment, and what its panel shows. */
+  ref?: Picture;
+  shown = true;
+  align: Align = FRESH;
+  refOpen = false;
+  msg?: string;
+  note?: string;
+  decode: (f: Blob) => Promise<Picture> = decodePicture;
+  /** The import summary window. */
+  imp?: Imported;
   private back?: HTMLElement;
   private colours = false;
   /** The paint whose gradient handles show, and the field with a message under it. */
@@ -208,7 +220,7 @@ export class ImageExt implements ImageUi {
   }
 
   get modal(): boolean {
-    return !!(this.size || this.details || this.big);
+    return !!(this.size || this.details || this.big || this.imp);
   }
 
   get name(): string {
@@ -228,19 +240,12 @@ export class ImageExt implements ImageUi {
       return doc;
     }
     if (src.kind === 'image-svg') {
-      const s = this.api.sanitizeImage(src.svg, { file: true });
-      if (s.error) {
-        this.problem = this.sanitiseText(s.error);
+      const r = this.fromFile(src.svg, t('My image'));
+      if (typeof r === 'string') {
+        this.problem = r;
         return undefined;
       }
-      const r = readImage(s.markup, s.viewBox, t('My image'));
-      if (!r.doc.shapes.length) {
-        this.problem = t('That file has no shapes an image can use.');
-        return undefined;
-      }
-      K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
-      if (s.stripped.length) this.pending.push({ kind: 'warn', text: t('Removed parts an image cannot use. Everything else was kept.'), detail: s.stripped });
-      if (!r.all) this.pending.push({ kind: 'warn', text: t('Some parts of this file, such as clipping or transparency, cannot be edited yet. They were left out.') });
+      this.imp = summary(undefined, r.stripped, r.all);
       return r.doc;
     }
     if (src.kind !== 'image') return undefined;
@@ -255,6 +260,54 @@ export class ImageExt implements ImageUi {
       this.problem = this.problemText(e);
       return undefined;
     }
+  }
+
+  /** A file's markup through the sanitiser and the reader: the document, or the reason it gave nothing. */
+  private fromFile(text: string, name: string): { doc: Doc; all: boolean; stripped: string[] } | string {
+    const s = this.api.sanitizeImage(text, { file: true });
+    if (s.error) return this.sanitiseText(s.error);
+    const r = readImage(s.markup, s.viewBox, name);
+    if (!r.doc.shapes.length) return t('That file has no shapes an image can use.');
+    K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
+    return { ...r, stripped: s.stripped };
+  }
+
+  /** An imported file replaces the drawing as one undoable step. */
+  importSvg(text: string, name: string): void {
+    const sh = this.shell;
+    const r = this.fromFile(text, sh.doc.name);
+    if (typeof r === 'string') {
+      this.imp = { name, kinds: [], partial: false, error: r };
+      return;
+    }
+    sh.apply(r.doc, 'Import SVG file');
+    sh.grid = gridFor(r.doc.vb.w, r.doc.vb.h);
+    this.imp = summary(name, r.stripped, r.all);
+    sh.showToast(t("Imported '{name}'.", { name }), { label: t('Undo'), run: () => sh.undo() });
+    sh.requestUpdate();
+    sh.fitView();
+  }
+
+  closeImport(): void {
+    this.imp = undefined;
+    this.shell.requestUpdate();
+    this.restoreFocus();
+  }
+
+  get hasRef(): boolean {
+    return !!this.ref && this.shown;
+  }
+
+  underlay(): TemplateResult | undefined {
+    return underlay(this);
+  }
+
+  /** Canvas size window with the picture's shape applied but not committed. */
+  matchSize(): void {
+    if (!this.ref) return;
+    if (!this.size) this.openSize(this.shell.renderRoot.querySelector<HTMLElement>('#ref-btn') ?? undefined);
+    const m = matchShape(this.ref, this.align.r, this.shell.doc.vb);
+    this.setSize({ preset: 'custom', w: String(m.w), h: String(m.h), keep: true });
   }
 
   private fromStored(item: SavedImage): Doc | undefined {
@@ -280,10 +333,6 @@ export class ImageExt implements ImageUi {
     sh.safe = false;
     sh.grid = gridFor(sh.doc.vb.w, sh.doc.vb.h);
     if (this.readOnly) sh.tool = 'hand';
-    if (this.pending.length) {
-      sh.banners = this.pending.map((b, i) => ({ id: `note${i}`, kind: b.kind, text: b.text, detail: b.detail }));
-      this.pending = [];
-    }
     this.shell.requestUpdate();
   }
 
@@ -389,6 +438,7 @@ export class ImageExt implements ImageUi {
       label: t('Text'),
       icon: 'mdi:format-text',
       iconOnly: true,
+      keys: 'T',
       pressed: sh.tool === 'text',
       onClick: () => {
         sh.setTool('text');
@@ -636,6 +686,7 @@ export class ImageExt implements ImageUi {
       const sum = await storeImage(this.hass, { ...built.input, ...(meta.keywords ? { keywords: meta.keywords } : {}) }, isNew ? undefined : this.updatedAt);
       const was = this.id;
       this.id = sum.id;
+      moved(this, was);
       this.updatedAt = sum.updated_at;
       this.meta = { keywords: meta.keywords, author: meta.author, description: meta.description };
       this.details = undefined;
@@ -644,10 +695,10 @@ export class ImageExt implements ImageUi {
       sh.markSaved();
       sh.fire('mc-svg-save', { target: 'image-library', svg: built.input.svg, saved: built.input } satisfies SvgSaveDetail);
       if (copy && was) {
-        sh.showToast(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }), undefined, 8000);
+        sh.showToast(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }) + this.refNote(), undefined, 8000);
         sh.say(t("Saved as '{name}'. The original is unchanged.", { name: meta.name }));
       } else {
-        sh.showToast(t("Saved '{name}'.", { name: meta.name }), undefined, 6000);
+        sh.showToast(t("Saved '{name}'.", { name: meta.name }) + this.refNote(), undefined, 6000);
         sh.say(t('Saved'));
       }
       this.restoreFocus();
@@ -657,6 +708,10 @@ export class ImageExt implements ImageUi {
       this.busy = false;
       sh.requestUpdate();
     }
+  }
+
+  private refNote(): string {
+    return this.ref ? ` ${t('The reference picture was not saved.')}` : '';
   }
 
   /** Duplicate: the stored version under a new id, then the editor shows the copy. */
@@ -767,16 +822,20 @@ export class ImageExt implements ImageUi {
     return [
       { id: 'img:copy', label: t('Save as a copy…'), reason: sh.out.svg ? undefined : t('Draw something first') },
       { id: 'img:duplicate', label: t('Duplicate…'), reason: need ?? (sh.dirty ? t('Save your changes first.') : undefined) },
+      { id: 'img:import', label: t('Import an SVG file…') },
     ];
   }
 
   pick(id: string): void {
     if (id === 'copy') this.openDetails('copy');
     else if (id === 'duplicate') this.openDetails('duplicate');
+    else if (id === 'import') this.shell.renderRoot.querySelector<HTMLInputElement>('#img-import')?.click();
   }
 
   close(): boolean {
     if (this.field) return cancelField(this), true;
+    if (this.imp) return this.closeImport(), true;
+    if (this.refOpen) return closePanel(this), true;
     if (this.big) this.big = undefined;
     else if (this.details) return this.closeDetails(), true;
     else if (this.size) return this.closeSize(), true;
@@ -786,7 +845,8 @@ export class ImageExt implements ImageUi {
   }
 
   dispose(): void {
-    this.size = this.details = this.big = undefined;
+    this.size = this.details = this.big = this.imp = undefined;
+    disposeRef(this);
     disposeField(this);
   }
 
@@ -799,6 +859,7 @@ export class ImageExt implements ImageUi {
   }
 
   dialogs(): TemplateResult | undefined {
+    if (this.imp) return importWin(this);
     if (this.size) return sizeWin(this);
     if (this.details) return detailsWin(this);
     if (this.big) return tooBigWin(this);

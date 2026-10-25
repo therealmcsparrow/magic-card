@@ -10,6 +10,8 @@ import { gradientRef, type ImageExt } from './chunk';
 import { outsideCount, readSize } from './canvas';
 import { t } from './i18n';
 import { kibShown, meterLevel } from './meter';
+import { importFile } from './importer';
+import { refButton, refPanel, refPill } from './reference-ui';
 import { ACCENT, MAIN, cssOf, gradGeo, paintOf, stopsOf, type Box, type Grad } from './paint';
 
 /* The image editor's templates: functions of the ImageExt (state lives there). */
@@ -56,6 +58,7 @@ export function topBar(x: ImageExt): TemplateResult {
       ${edit && !ro
         ? html`${s.layout === 'compact' ? button({ label: t('Layers'), variant: 'secondary', size: z, pressed: s.overlay, onClick: () => (s.overlay = !s.overlay) }) : nothing}${button({ label: t('Undo'), glyph: 'undo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Z', disabledReason: s.hist?.canUndo ? undefined : t('Undo'), onClick: () => s.undo() })}${button({ label: t('Redo'), glyph: 'redo', iconOnly: true, size: z, variant: 'secondary', keys: 'Control+Shift+Z', disabledReason: s.hist?.canRedo ? undefined : t('Redo'), onClick: () => s.redo() })}
           ${button({ label: t('Canvas size'), variant: 'secondary', size: z, haspopup: 'dialog', onClick: (e) => x.openSize(e.currentTarget as HTMLElement) })}
+          ${refButton(x, sm)}
           ${button({ label: t('Export file'), variant: 'secondary', size: z, disabledReason: s.out.svg ? undefined : t('Nothing to export yet.'), onClick: () => x.download() })}
           ${button({ label: t('More'), variant: 'secondary', size: z, haspopup: 'menu', onClick: (e) => x.openMenu(e.currentTarget as HTMLElement) })}
           ${button({ label: t('Save'), glyph: 'check', variant: 'primary', size: z, keys: saveKey(), disabledReason: empty ? t('Draw something first') : x.busy ? t('Saving…') : undefined, onClick: () => x.save() })}
@@ -65,6 +68,14 @@ export function topBar(x: ImageExt): TemplateResult {
           : nothing}
     </header>
     ${edit && !ro ? meter(x) : nothing}
+    ${edit && !ro
+      ? html`<input id="img-import" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
+          const i = e.target as HTMLInputElement;
+          const f = i.files?.[0];
+          i.value = '';
+          if (f) void importFile(x, f);
+        }} />${refPill(x)}${refPanel(x)}`
+      : nothing}
     ${x.conflict
       ? html`<div class="img-notice notice warn" role="alert">${glyph('alertCircle', 20)}<div class="body"><p>${t('This image was changed somewhere else.')}</p><div class="actions">${button({ label: t('Save as a copy'), variant: 'text', size: 'sm', onClick: () => x.openDetails('copy') })}${button({ label: t('Reload'), variant: 'text', size: 'sm', onClick: () => void x.reload() })}</div></div></div>`
       : nothing}`;
@@ -110,6 +121,7 @@ export function sizeWin(x: ImageExt): TemplateResult {
       <div class="sizes">${side('w', t('Width'))}${side('h', t('Height'))}</div>
       ${switchRow({ id: 'size-keep', label: t('Keep ratio'), checked: s.keep, onChange: (v) => x.setSize({ keep: v }) })}
       <p class="help">${t('{min} to {max} pixels per side.', { min: String(IMAGE_CANVAS_MIN), max: String(MAX_IMAGE_BOX) })}</p>
+      ${x.ref ? button({ label: t('Match reference picture'), variant: 'secondary', size: 'sm', onClick: () => x.matchSize() }) : nothing}
       ${create ? nothing : html`<p class="help">${t("Cards that set their own shape keep it. In each card's image field, choose 'Use the drawing's shape' to follow the new one.")}</p>`}
       ${s.warned && outside ? notice({ tone: 'warn', text: t('{c, plural, one {# layer sits} other {# layers sit}} outside the new canvas. They are kept but will be cut off.', { c: outside }) }) : nothing}
     </div>

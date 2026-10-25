@@ -55,7 +55,7 @@ export function addText(x: ImageExt): void {
 }
 
 export function addTextButton(x: ImageExt): TemplateResult {
-  return button({ label: t('Add text'), glyph: 'add', size: 'sm', keys: 'T', onClick: () => addText(x) });
+  return button({ label: t('Add text'), glyph: 'add', size: 'sm', onClick: () => addText(x) });
 }
 
 /** The layer on the canvas: <text> with the same attributes the saved file holds, so both draw alike. */

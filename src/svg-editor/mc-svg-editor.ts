@@ -1343,7 +1343,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     if (code === 'KeyT' && this.img && !e.shiftKey) {
       e.preventDefault();
-      this.img.addText();
+      this.setTool('text');
+      this.say(this.img.hint);
       return;
     }
     const t = TOOL_KEYS[code];

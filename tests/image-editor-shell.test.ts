@@ -220,7 +220,7 @@ describe('image editor: opening', () => {
     const el = await open({ kind: 'image-svg', svg }, hass);
     expect(el.stage).toBe('edit');
     expect(el.doc.shapes.length).toBe(1);
-    expect(text(el)).toContain('Removed parts an image cannot use.');
+    expect(text(el)).toContain('Removed other parts an image cannot use.');
     expect(text(el)).toContain('cannot be edited yet');
   });
 
