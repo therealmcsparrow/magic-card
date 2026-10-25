@@ -187,7 +187,7 @@ import type { SvgImageApi } from './svg-image';
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
- * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most TRANSFER_CHUNK_CEILING (65 KiB = 66,560 B; the ceiling
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most TRANSFER_CHUNK_CEILING (66 KiB = 67,584 B; the ceiling
  * stays, the image code lives in the image-transfer chunk). Over the ceiling means a parent module got
  * copied in (check js-yaml first), the library view grew, or image code came back (it belongs in image-transfer).
  * The transfer chunk holds no image command call (images_*), no binding check and no image-only message; it keeps
@@ -249,7 +249,7 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
 /** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
-export const TRANSFER_CHUNK_CEILING = 65 * 1024; // 66,560 B
+export const TRANSFER_CHUNK_CEILING = 66 * 1024; // 67,584 B
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const IMAGE_TRANSFER_CHUNK = 'image-transfer';

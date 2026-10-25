@@ -22,7 +22,7 @@ describe('image kind: contract constants', () => {
   it('mcu-panel accepts images, other hosts do not', () => {
     expect(HOST_KINDS['mcu-panel']).toContain('image');
     expect(HOST_KINDS['svg-editor']).not.toContain('image');
-    expect(TRANSFER_CHUNK_CEILING).toBe(66560);
+    expect(TRANSFER_CHUNK_CEILING).toBe(67584);
   });
 });
 

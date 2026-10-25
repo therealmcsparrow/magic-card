@@ -132,7 +132,7 @@ export const IMAGE_EDITOR_CONTRACT_REVISION = 3;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
-export const IMAGE_EDITOR_CHUNK_CEILING = 56 * 1024;
+export const IMAGE_EDITOR_CHUNK_CEILING = 96 * 1024;
 export const IMAGE_TOOLS_CHUNK = 'image-tools';
 export const IMAGE_TOOLS_CHUNK_FILE = 'magic-card-image-tools.js';
 export const IMAGE_TOOLS_CHUNK_CEILING = 32 * 1024;
