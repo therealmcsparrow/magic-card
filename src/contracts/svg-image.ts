@@ -266,7 +266,7 @@ export const IMAGE_SKELETON_MS = 10_000;
 export const BINDING_MIN_INTERVAL_MS = 334;
 export const MAX_LAYER_PREFETCH = 4;
 
-/** Render budget lines (see "Render budget"); test and QA thresholds, not runtime values. */
+/** Render budget lines (see "Render budget"); measured limits for tests, not runtime values. */
 export const COLD_FIRST_MEDIAN_MAX_MS = 200;
 export const COLD_FIRST_P95_MAX_MS = 300;
 export const CACHE_HIT_MEDIAN_MAX_MS = 100;
