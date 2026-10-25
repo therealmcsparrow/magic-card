@@ -40,10 +40,10 @@
       },
       {
         "id": "stage-4",
-        "cap": 84677,
+        "cap": 84741,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84675
+        "measured": 84711
       }
     ],
     "br": {
@@ -109,9 +109,9 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 158720,
-      "ceiling": 158720,
-      "note": "SVG editor. 155 KiB. Measured 152,791 + 5 % would round to 160,768, which is higher, so the cap stays at 155 KiB."
+      "raw": 161792,
+      "ceiling": 161792,
+      "note": "SVG editor. 158 KiB, measured 159,945 with the image mode seam."
     },
     "magic-card-shape-editor.js": {
       "raw": 105472,
@@ -572,6 +572,24 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 980992,
       "to": 982016
+    },
+    {
+      "id": "entry-gzip-cap-84741",
+      "field": "/entry/stages/3/cap",
+      "from": 84677,
+      "to": 84741
+    },
+    {
+      "id": "svg-editor-raw-161792",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 158720,
+      "to": 161792
+    },
+    {
+      "id": "svg-editor-ceiling-161792",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 158720,
+      "to": 161792
     }
   ]
 }
