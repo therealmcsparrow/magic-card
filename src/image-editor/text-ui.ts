@@ -1,4 +1,5 @@
 import { html, nothing, svg, type TemplateResult } from 'lit';
+import type { Pt } from '../contracts/path-model';
 import { IMAGE_MAX_TEXT_CHARS } from '../contracts/svg-image';
 import type { Shape } from '../svg-editor/model';
 import { button, field, fieldHelpId, sectionHead, seg } from '../ui-kit/templates';
@@ -22,17 +23,23 @@ export function retext(s: Shape, patch: Partial<TextData>): Shape {
   return { ...s, name: auto ? nameOf(r.t.s, t('Text')) : s.name, paths: boxPaths(r.box), look: { ...s.look, text: r.t } };
 }
 
-/** A new text layer in the middle of what the editor shows (the middle of the drawing when the view is elsewhere). */
-export function newText(x: ImageExt): Shape {
+/** The middle of what the editor shows (the middle of the drawing when the view is elsewhere). */
+export function middle(x: ImageExt): Pt {
   const sh = x.shell;
   const vb = sh.doc.vb;
-  const td: TextData = { s: t('Text'), z: defaultSize(vb.w, vb.h), w: 400, a: 'start', f: 'sans-serif' };
   const r = sh.canvas()?.getBoundingClientRect();
-  let p = r && r.width > 0 ? sh.point({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }) : sh.centre();
-  if (!(p[0] > vb.x && p[0] < vb.x + vb.w && p[1] > vb.y && p[1] < vb.y + vb.h)) p = sh.centre();
+  const p = r && r.width > 0 ? sh.point({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }) : sh.centre();
+  return p[0] > vb.x && p[0] < vb.x + vb.w && p[1] > vb.y && p[1] < vb.y + vb.h ? p : sh.centre();
+}
+
+/** A new text layer: centred on the middle of the view, or with its top left corner at `at`. */
+export function newText(x: ImageExt, at?: Pt, words?: string): Shape {
+  const vb = x.shell.doc.vb;
+  const td: TextData = { s: words ?? t('Text'), z: defaultSize(vb.w, vb.h), w: 400, a: 'start', f: 'sans-serif' };
   const b = boxFor([0, 0], td);
-  const box = { ...b, x: r2(p[0] - b.w / 2), y: r2(p[1] - b.h / 2) };
-  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, td.s), look: { text: td } });
+  const p = at ?? middle(x);
+  const box = at ? { ...b, x: r2(p[0]), y: r2(p[1]) } : { ...b, x: r2(p[0] - b.w / 2), y: r2(p[1] - b.h / 2) };
+  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, t('Text')), look: { text: td } });
 }
 
 /** Add a text layer and put the cursor in its Content field, selected, so typing replaces the placeholder words. */

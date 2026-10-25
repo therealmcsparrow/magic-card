@@ -117,6 +117,35 @@ export const imageStyles = css`
     inset: 0;
     pointer-events: none;
   }
+  .txf {
+    position: absolute;
+    z-index: 3;
+    box-sizing: border-box;
+    width: 248px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 8px;
+    background: var(--mc-surface);
+    box-shadow: var(--mc-shadow-float);
+    pointer-events: auto;
+  }
+  .txf textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+  .txf .help {
+    margin: 0;
+  }
+  .txf .btn {
+    min-height: 44px;
+  }
+  .txf .actions {
+    display: flex;
+    gap: 8px;
+  }
   .gh-pt {
     position: absolute;
     box-sizing: border-box;

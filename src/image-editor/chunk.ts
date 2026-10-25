@@ -1,7 +1,9 @@
-import type { TemplateResult } from 'lit';
+import { html, type TemplateResult } from 'lit';
 import { IMAGE_CANVAS_PRESETS, IMAGE_EDITOR_CONTRACT_REVISION } from '../contracts/image-editor';
 import { IMAGE_MAX_BYTES, MAX_IMAGES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
 import type { MenuEntry } from '../contracts/path-canvas';
+import type { KitButtonOptions } from '../contracts/ui-kit';
+import type { Pt } from '../contracts/path-model';
 import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
 import type { SvgImageApi } from '../contracts/svg-image';
 import type { Out } from '../svg-editor/mc-svg-editor';
@@ -19,6 +21,7 @@ import { imageStyles } from './styles';
 import { lookRows, handles, paintRow, type Which } from './paint-ui';
 import { anchorOf, blank, boxFor, readText, textAttrs, textBody, nameOf, type TextData } from './text';
 import { addText, addTextButton, textNode, textRows } from './text-ui';
+import { cancelField, disposeField, place, textField, type TextField } from './text-tool';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
 /*
@@ -161,6 +164,9 @@ export class ImageExt implements ImageUi {
   problemAt?: string;
   dashList?: string;
   dragging = false;
+  /** The Text tool's field while it is open, and the listener that keeps it in view above a soft keyboard. */
+  field?: TextField;
+  viewport?: () => void;
   private gradients: string[] = [];
   private gradientId = (): string => 'grad1';
 
@@ -366,7 +372,29 @@ export class ImageExt implements ImageUi {
   }
 
   handles(): TemplateResult | undefined {
-    return handles(this) as TemplateResult | undefined;
+    return html`${handles(this)}${textField(this)}`;
+  }
+
+  place(p?: Pt): void {
+    place(this, p);
+  }
+
+  get hint(): string {
+    return t('Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.');
+  }
+
+  railTool(): KitButtonOptions {
+    const sh = this.shell;
+    return {
+      label: t('Text'),
+      icon: 'mdi:format-text',
+      iconOnly: true,
+      pressed: sh.tool === 'text',
+      onClick: () => {
+        sh.setTool('text');
+        sh.say(this.hint);
+      },
+    };
   }
 
   node(s: Shape): TemplateResult | undefined {
@@ -748,6 +776,7 @@ export class ImageExt implements ImageUi {
   }
 
   close(): boolean {
+    if (this.field) return cancelField(this), true;
     if (this.big) this.big = undefined;
     else if (this.details) return this.closeDetails(), true;
     else if (this.size) return this.closeSize(), true;
@@ -758,6 +787,7 @@ export class ImageExt implements ImageUi {
 
   dispose(): void {
     this.size = this.details = this.big = undefined;
+    disposeField(this);
   }
 
   topBar(): TemplateResult {

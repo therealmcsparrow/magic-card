@@ -1,6 +1,8 @@
 import type { CSSResult, TemplateResult } from 'lit';
 import type { ImageEditorExt, ImageEditorHost } from '../contracts/image-editor';
 import type { MenuEntry } from '../contracts/path-canvas';
+import type { Pt } from '../contracts/path-model';
+import type { KitButtonOptions } from '../contracts/ui-kit';
 import type { SvgEditorSource } from '../contracts/svg-editor';
 import type { McSvgEditor, Out } from './mc-svg-editor';
 import type { Doc, Shape } from './model';
@@ -49,6 +51,12 @@ export interface ImageUi extends ImageEditorExt {
   /** Adds a text layer; the button for the layer list and the T key. */
   addText(): void;
   addTextButton(): TemplateResult;
+  /** The Text tool: a click or tap puts the on-canvas field at the point, Enter on the canvas in the middle. */
+  place(p?: Pt): void;
+  /** The Text tool's button for the tool rail. */
+  railTool(): KitButtonOptions;
+  /** What the Text tool does, for the help list. */
+  readonly hint: string;
   /** The canvas's gradient definitions. */
   defs(doc: Doc): TemplateResult[];
   /** The drawing as text for the changed-since-saved check, paints included. */

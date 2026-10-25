@@ -115,6 +115,7 @@ image-editor	Centre Y (%)	Center Y (%)
 image-editor	Custom colour	Custom color
 image-editor	Gradient centre	Gradient center
 image-editor	Stop {n} colour	Stop {n} color
+image-editor	Text cancelled.	Text canceled.
 image-editor	Theme colour	Theme color
 image-editor	Use a colour like #3f6fb5.	Use a color like #3f6fb5.
 image-editor	Use a name that starts with two dashes, like --my-colour.	Use a name that starts with two dashes, like --my-color.

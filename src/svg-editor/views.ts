@@ -388,16 +388,19 @@ function rail(ed: McSvgEditor): TemplateResult {
     label: t('Tools'),
     orientation: ed.layout === 'stacked' ? 'horizontal' : 'vertical',
     kind: 'rail',
-    items: TOOLS.map(([t, g, k]) => ({
-      label: toolName(t),
-      glyph: g,
-      iconOnly: true,
-      pressed: ed.tool === t,
-      keys: k,
-      haspopup: t === 'shapes' ? ('dialog' as const) : undefined,
-      expanded: t === 'shapes' ? ed.picker : undefined,
-      onClick: () => (t === 'shapes' && ed.tool === t && ed.picker ? ed.closePicker() : ed.setTool(t)),
-    })),
+    items: [
+      ...TOOLS.map(([t, g, k]) => ({
+        label: toolName(t),
+        glyph: g,
+        iconOnly: true,
+        pressed: ed.tool === t,
+        keys: k,
+        haspopup: t === 'shapes' ? ('dialog' as const) : undefined,
+        expanded: t === 'shapes' ? ed.picker : undefined,
+        onClick: () => (t === 'shapes' && ed.tool === t && ed.picker ? ed.closePicker() : ed.setTool(t)),
+      })),
+      ...(ed.img ? [ed.img.railTool()] : []),
+    ],
   });
 }
 
@@ -496,6 +499,8 @@ function hintFor(ed: McSvgEditor): string {
       return t('Drag to move the view. Scroll to move, Ctrl and scroll to zoom.');
     case 'knife':
       return t('Drag across shapes to cut them along the whole line. Arrows move the crosshair, Enter sets an end.');
+    case 'text':
+      return ed.img?.hint ?? '';
     default:
       return t('Drag a box, or click two corners. Without a mouse: arrows move the crosshair, Enter sets a corner.');
   }

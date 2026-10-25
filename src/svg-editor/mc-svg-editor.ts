@@ -1448,6 +1448,10 @@ export class McSvgEditor extends LitElement implements StageHost {
     void openTool(this, 'knife', [a, b]);
   }
 
+  placeText(p?: Pt): void {
+    this.img?.place(p);
+  }
+
   panBy(dx: number, dy: number): void {
     const c = this.canvas();
     if (!c) return;
@@ -2008,7 +2012,7 @@ export const GRID_MAX = 12;
 const TOOL_KEYS: Record<string, Tool> = { KeyV: 'select', KeyA: 'node', KeyP: 'pen', KeyR: 'rect', KeyE: 'ellipse', KeyL: 'line', KeyG: 'polygon', KeyS: 'shapes', KeyB: 'free', KeyH: 'hand', KeyK: 'knife' };
 
 export const toolName = (tool: Tool): string =>
-  ({ select: t('Select'), node: t('Edit points'), pen: t('Pen'), rect: t('Rectangle'), ellipse: t('Ellipse'), line: t('Line'), polygon: t('Polygon or star'), shapes: t('Shapes'), free: t('Freehand'), hand: t('Hand'), knife: t(PT_NAME.knife) })[tool];
+  ({ select: t('Select'), node: t('Edit points'), pen: t('Pen'), rect: t('Rectangle'), ellipse: t('Ellipse'), line: t('Line'), polygon: t('Polygon or star'), shapes: t('Shapes'), free: t('Freehand'), hand: t('Hand'), knife: t(PT_NAME.knife), text: '' })[tool];
 
 /** Bytes as KB, for a {size} argument (the runtime formats numbers in the user's number format). */
 export const kbOf = (bytes: number): number => bytes / 1024;
