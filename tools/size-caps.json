@@ -84,9 +84,9 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-theme-editor.js": {
-      "raw": 277504,
-      "ceiling": 277504,
-      "note": "271 KiB, measured 263,917 + 5 %, rounded up to 1 KiB."
+      "raw": 286720,
+      "ceiling": 286720,
+      "note": "280 KiB, measured 284,670 with the panel lips (Linux build, docker node 24.22.0)."
     },
     "magic-card-theme-presets.js": {
       "raw": 31744,
@@ -539,6 +539,18 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 980992,
       "to": 1000448
+    },
+    {
+      "id": "theme-editor-raw-286720",
+      "field": "/files/magic-card-theme-editor.js/raw",
+      "from": 277504,
+      "to": 286720
+    },
+    {
+      "id": "theme-editor-ceiling-286720",
+      "field": "/files/magic-card-theme-editor.js/ceiling",
+      "from": 277504,
+      "to": 286720
     }
   ]
 }
