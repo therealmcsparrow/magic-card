@@ -5,7 +5,7 @@ import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
 
 /*
- * Contract: svg editor. Version 1.0.0.
+ * Contract: svg editor. Version 1.1.0.
  *
  * SVG editor and shape editor hosts. Two lazy chunks of the magic-card entry, each loaded by the
  * card-editor chunk (never by magic-card.js, which gains 0 B from them):
@@ -319,7 +319,7 @@ import type { BooleanOp } from './path-booleans';
  * - The entry button must stay enabled while the chunk loads (a disabled button drops focus, and focus
  *   returns to the opener, or its `data-focus-key` replacement).
  *
- * ── Image mode (1.1.0, revision 6) ──
+ * ── Image mode ──
  * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.0.0 holds
  * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that
  * chunk, and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing

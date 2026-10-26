@@ -78,6 +78,25 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *     locked layers. Library images are read the same way, so an image with such parts opens editable. A locked part
  *     can be bound for opacity and visibility only; colour and outline colour show the reason ("This part keeps its
  *     own colours").
+ *   - Imported part, saved form (part of the stored image format; reopening depends on it): each visible locked part
+ *     layer is written as one group
+ *       <g id="<layer id>" class="IMAGE_PART_CLASS" data-name="<layer name>"> <the part's markup> </g>
+ *     in its place in the stacking order. id is the layer id (IMAGE_ID_RE); class is exactly IMAGE_PART_CLASS and is the
+ *     only attribute that marks a part; data-name is the layer name with < > " & \ and control characters removed, at
+ *     most 80 characters. Inside it, the part's markup is the held elements with the attributes of the groups that
+ *     were above them in the source wrapped round them as plain <g> elements. The definitions (clip paths, masks,
+ *     gradients, and the ones those refer to) that the written parts use are written once each in the root <defs>.
+ *     Reopening: a <g> whose class attribute is exactly IMAGE_PART_CLASS, at any depth the reader walks, is read back
+ *     as one locked part layer whose content is the group's children, with the group's id and data-name as the
+ *     layer's id and name; it is never joined to a neighbouring part. Any other class value has no meaning. On cards
+ *     the group is a plain <g> (the card sanitiser keeps `class`; no style refers to it). Bindings on a part target
+ *     the group's id (opacity and visibility only).
+ *   - Part-data limit: the total of all part layers' markup plus, for each part, the definitions it uses (a definition
+ *     shared by several parts is counted once per part that uses it) is at most IMAGE_PART_DATA_MAX, counted as
+ *     string length (UTF-16 code units). Over it, nothing is turned into part layers: a library image opens view-only
+ *     with the editor's view-only reason ("This image has parts that this editor cannot change yet, so it opens for
+ *     viewing only."), and an SVG import is refused with "That file cannot be used as an image." and changes nothing.
+ *     The check covers the sum of every part, the last one included.
  *   - Bindings panel (Entity tab of a selected layer): entity picker, attribute (optional), what changes (colour,
  *     outline colour, visibility, opacity), rules list (state equals / number range -> value), default value, a live
  *     preview against the current hass, and "Test with state" to preview a state without changing anything, with a
@@ -138,7 +157,7 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  */
 
 export const IMAGE_EDITOR_CONTRACT = '1.0.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 4;
+export const IMAGE_EDITOR_CONTRACT_REVISION = 5;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
@@ -161,6 +180,11 @@ export const IMAGE_THEME_COLOURS: readonly string[] = [
 ];
 export const THUMB_SIDE_PX = 320;
 export const MAX_IMAGE_IMPORT_BYTES = 8 * 1024 * 1024;
+
+/** The class value that marks a saved imported part group (see "Imported part, saved form"). */
+export const IMAGE_PART_CLASS = 'mc-part';
+/** Most part data one image may turn into part layers, as string length (see "Part-data limit"): twice mcu-library-images IMAGE_MAX_BYTES. */
+export const IMAGE_PART_DATA_MAX = 2 * 256 * 1024;
 
 /** New image ids: the slug of the name. */
 export const IMAGE_ID_SLUG = /^[a-z0-9](?:[a-z0-9-]{0,47})$/;

@@ -186,7 +186,9 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * Kept: elements in IMAGE_ELEMENTS, attributes in IMAGE_ATTRIBUTES (no namespaced names), values by these rules:
  *   - paint (fill, stroke, stop-color): none | currentColor | a colour (hex, a CSS colour keyword of 3 to 20 ASCII
  *     letters, or the colour functions the icon sanitiser allows) | url(#id) | var(--name) | var(--name, <hex>) with
- *     name matching THEME_VAR_NAME_RE;
+ *     name matching THEME_VAR_NAME_RE. A var() fallback is a hex colour (#rgb to #rrggbbaa) and nothing else: no
+ *     colour keyword, no colour function, no nested var(). This is the Magic Card Utils VAR_RE rule; a paint with
+ *     any other fallback is dropped and listed like any other refused value, so it never reaches a save;
  *   - transform / gradientTransform: the transform list functions only;
  *   - font-family: one of IMAGE_FONT_FAMILIES (anything else becomes sans-serif); no @font-face exists anywhere;
  *   - id: IMAGE_ID_RE; data-name: plain text, at most 80 characters;
@@ -197,6 +199,10 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * pattern, animate*, set, event attributes, style attributes, href / xlink:href, external or cross-origin url().
  * The editor import and the transfer import show the list; the card renders silently. A result with nothing
  * drawable is an error. The card sanitises every markup it receives from the library before its first render.
+ * Output: the sanitiser's serialiser writes xmlns="http://www.w3.org/2000/svg" (mcu-library-images IMAGE_ROOT_XMLNS) on
+ * the root <svg> and on no other element. Everything the sanitiser and its serialiser emit passes Magic Card Utils
+ * validation unchanged (mcu-library-images, "Card output passes"); a shared conformance test saves real serialiser
+ * output through the server's validate_image.
  *
  * ── Bindings (inside the saved image) ──
  * SavedImage.bindings: at most MAX_IMAGE_BINDINGS entries, each targeting an element id of the markup. A target may
@@ -253,8 +259,8 @@ export const SVG_IMAGE_STATUS_EVENT = 'mc-svg-image-status';
 export const SVG_IMAGE_EDITOR_IMPORT_SITES: readonly string[] = ['src/svg-editor/image-loader.ts', 'src/transfer/image-transfer-loader.ts'];
 
 /**
- * Whole magic-card.js change for this contract (bytes after gzip level 9 / Brotli quality 11, Linux build).
- * The approved ceiling: base 84,453 gz / 72,020 br plus these = caps of at most 84,677 gz / 72,404 br.
+ * Most the whole magic-card.js change for this contract may add (bytes after gzip level 9 / Brotli quality 11, Linux
+ * build). The entry caps themselves are in tools/size-caps.json.
  */
 export const ENTRY_DELTA_MAX_GZIP = 224;
 export const ENTRY_DELTA_MAX_BR = 384;

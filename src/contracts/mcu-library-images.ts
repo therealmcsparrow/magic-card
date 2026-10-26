@@ -20,6 +20,13 @@ import type { ItemMeta } from './mcu-library';
  * the server answers invalid_format with errors [{ path: 'svg', message: 'too_large', bytes, limit }]. A new id beyond
  * MAX_IMAGES -> library_full. The editor checks both before it sends and names the size ("312 KB of 256 KB") or the
  * count.
+ * Root namespace: the root <svg> (the first opening tag) may carry the attribute xmlns with exactly the value
+ * IMAGE_ROOT_XMLNS. xmlns with any other value, xmlns on any other element and every xmlns:* name are refused
+ * (invalid_format), like any attribute outside the allow-list.
+ * Card output passes the server: every markup the card's image sanitiser and serialiser emit (sanitizeImage output,
+ * the editor's save payload, a transfer import, a Duplicate) passes the server validation unchanged. A shared
+ * conformance test sends real serialiser output through the server's validate_image; a card change that emits a new
+ * element, attribute or value form changes this contract and the server in the same release.
  * Bindings: at most one binding per (target, set); a second one is invalid_format.
  * Provider: forwards image events as window `mcu-library-changed` { kind: 'images', ids: [id] }; nothing else.
  * Panel: tab 'images' after 'shapes' (MCU_PANEL_TABS); the Library tab lists images too.
@@ -42,6 +49,8 @@ export const MAX_IMAGE_BOX = 4096;
 export const IMAGES_MIN_CONTRACT_REVISION = 6;
 export const BINDING_COLOUR_RE = /^(#[0-9a-fA-F]{3,8}|theme:[a-z0-9][a-z0-9-]{0,63}|main|accent|entity)$/;
 export const THUMB_RE = /^data:image\/(png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
+/** The one xmlns value the server takes, on the root <svg> only. */
+export const IMAGE_ROOT_XMLNS = 'http://www.w3.org/2000/svg';
 
 /** images_get error code for more than MAX_IMAGE_GET_IDS ids. */
 export const IMAGE_ERR_TOO_MANY = 'too_many';
