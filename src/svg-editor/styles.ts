@@ -2,6 +2,7 @@ import { css, type CSSResult } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives } from '../ui-kit/css/primitives';
 import { kitCss } from '../ui-kit/css/extras';
+import { kitLip } from '../ui-kit/css/lip';
 
 /*
  * Styles of <mc-svg-editor> (contract svg-editor 1.0.0, ui-kit 1.0.0). The look is the kit's: Core's tokens, the card
@@ -14,6 +15,7 @@ export const editorStyles: CSSResult[] = [
   editorTokens,
   editorPrimitives,
   ...kitCss,
+  kitLip,
   css`
     :host {
       --art-accent: #d9622b;
@@ -165,19 +167,63 @@ export const editorStyles: CSSResult[] = [
 
     /* the working area */
     .work {
+      --lw: 260px;
+      --iw: 340px;
+      --lx: 0px;
+      --lg: 0px;
       position: relative;
       flex: 1;
       min-height: 0;
       display: grid;
-      grid-template-columns: 56px 260px minmax(0, 1fr) 340px;
+      grid-template-columns: 56px var(--lt, var(--lw)) minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail left center insp';
+      overflow: hidden;
     }
     [data-layout='mid'] .work {
-      grid-template-columns: 56px 240px minmax(0, 1fr) 320px;
+      --lw: 240px;
+      --iw: 320px;
     }
     [data-layout='compact'] .work {
-      grid-template-columns: 56px minmax(0, 1fr) 300px;
+      --iw: 300px;
+      grid-template-columns: 56px minmax(0, 1fr) var(--it, var(--iw));
       grid-template-areas: 'rail center insp';
+    }
+    /* touch: a lip's longer hit area stays off the stage, so a hidden lip is pulled 4 px to the edge and a shown one 20 px into its panel */
+    @media (pointer: coarse) {
+      .work {
+        --lx: 20px;
+        --lg: 4px;
+      }
+    }
+    /*
+     * A hidden panel gives its track to the stage, keeping a 40 px gutter for its lip, but keeps its own width,
+     * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
+     */
+    .no-side {
+      --lt: 40px;
+    }
+    .no-insp {
+      --it: 40px;
+    }
+    .left {
+      --mc-lip-off: -100%;
+    }
+    .insp {
+      --mc-lip-off: 100%;
+    }
+    .left[data-lip='hidden'] {
+      width: var(--lw);
+      justify-self: start;
+    }
+    .insp[data-lip='hidden'] {
+      width: var(--iw);
+      justify-self: end;
+    }
+    .left[data-lip='shown'] {
+      padding-inline-end: calc(28px + var(--lx));
+    }
+    .insp[data-lip='shown'] {
+      padding-inline-start: calc(28px + var(--lx));
     }
     [data-layout='stacked'] .work {
       display: flex;
@@ -206,6 +252,8 @@ export const editorStyles: CSSResult[] = [
     }
     /* the kit turns the rail into a row under 800 px of viewport; here the layer's own width decides */
     .work > .rail {
+      position: relative;
+      z-index: 1;
       grid-area: rail;
       flex-direction: column;
       width: 56px;

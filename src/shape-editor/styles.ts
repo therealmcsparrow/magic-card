@@ -1,6 +1,7 @@
 import { css, type CSSResult } from 'lit';
 import { editorTokens } from '../css/editor-system';
 import { editorPrimitives, kitCss } from '../ui-kit';
+import { kitLip } from '../ui-kit/css/lip';
 
 /*
  * Styles of <mc-shape-studio>: the card editor's tokens and primitives plus the kit parts (contract ui-kit 1.0.0),
@@ -20,9 +21,18 @@ const layout: CSSResult = css`
 .layer:focus{outline:none}
 h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
-.work{flex:1;min-height:0;display:grid;grid-template-columns:240px minmax(0,1fr) 340px;grid-template-areas:'left center insp'}
-[data-layout=mid] .work{grid-template-columns:220px minmax(0,1fr) 320px}
-[data-layout=compact] .work{grid-template-columns:minmax(0,1fr) 300px;grid-template-areas:'center insp'}
+.work{--lw:240px;--iw:340px;--lx:0px;--lg:0px;position:relative;flex:1;min-height:0;display:grid;grid-template-columns:var(--lt,var(--lw)) minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'left center insp';overflow:hidden}
+[data-layout=mid] .work{--lw:220px;--iw:320px}
+[data-layout=compact] .work{--iw:300px;grid-template-columns:minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'center insp'}
+@media(pointer:coarse){.work{--lx:20px;--lg:4px}}
+.no-side{--lt:40px}
+.no-insp{--it:40px}
+.left{--mc-lip-off:-100%}
+.insp{--mc-lip-off:100%}
+.left[data-lip=hidden]{width:var(--lw);justify-self:start}
+.insp[data-lip=hidden]{width:var(--iw);justify-self:end}
+.left[data-lip=shown]{padding-inline-end:calc(28px + var(--lx))}
+.insp[data-lip=shown]{padding-inline-start:calc(28px + var(--lx))}
 [data-layout=stacked] .work{display:flex;flex-direction:column;overflow:auto}
 [data-layout=stacked] .center{order:1;flex:none;overflow:visible}
 [data-layout=stacked] .left,[data-layout=stacked] .insp,.left>*{flex:none}
@@ -32,7 +42,7 @@ h2,h3,h4,p,ul{margin:0}
 .left{grid-area:left;border-right:1px solid var(--mc-divider)}
 [data-layout=compact] .left{display:none}
 [data-layout=compact] .topbar .title,[data-layout=stacked] .topbar .title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-[data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:56px;bottom:0;left:0;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
+[data-layout=compact] .left.sheet{display:flex;position:absolute;z-index:10;top:0;bottom:0;left:0;width:min(80vw,280px);box-shadow:var(--mc-shadow-float)}
 .insp{grid-area:insp;border-left:1px solid var(--mc-divider)}
 .center{grid-area:center;display:flex;flex-direction:column;min-width:0;min-height:0}
 .stagewrap{flex:1;min-height:0;display:flex}
@@ -109,4 +119,4 @@ details>summary{min-height:32px;cursor:pointer;font-size:.8125rem}
 @media(forced-colors:active){.ctiles [aria-checked=true],.cmini [aria-checked=true],.pv[aria-pressed=true]{outline:2px solid Highlight}.handle{stroke:Highlight}}
 `;
 
-export const studioStyles: CSSResult[] = [editorTokens, editorPrimitives, ...kitCss, layout];
+export const studioStyles: CSSResult[] = [editorTokens, editorPrimitives, ...kitCss, kitLip, layout];

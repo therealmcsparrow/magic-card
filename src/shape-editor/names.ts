@@ -141,6 +141,7 @@ export const SHORTCUTS: MessageId[] = [
   m('V is Select. P is Pen.'),
   m('Ctrl+Z undoes, Ctrl+Shift+Z redoes, Ctrl+S saves.'),
   m('Right-click, long-press, the Menu key or Shift+F10 opens Outline actions.'),
+  m('Show or hide panels: Ctrl+\\ or ⌘\\'),
   m('Esc closes a window, then ends a drawing.'),
 ];
 
