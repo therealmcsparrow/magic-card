@@ -39,13 +39,15 @@ const ser = (e: Element): string => new XMLSerializer().serializeToString(e).rep
 /** Clipping, masks and transparency of a fill, a stroke or a whole group are not something the editor can write back. */
 const lossy = (e: Element): boolean => e.matches('[clip-path]:not([clip-path=none]),[mask]:not([mask=none]),[fill-opacity],[stroke-opacity],g[opacity],svg[opacity]');
 
+const escAttr = (v: string): string => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
 /** The attributes of every group above `el` that carries any, from the outside in. */
 export function contextOf(el: Element): string[] {
   const out: string[] = [];
   for (let e = el.parentElement; e; e = e.parentElement) {
     const a = [...e.attributes]
       .filter((x) => !SKIP.test(x.name))
-      .map((x) => ` ${x.name}="${x.value}"`)
+      .map((x) => ` ${x.name}="${escAttr(x.value)}"`)
       .join('');
     if (a) out.unshift(a);
   }
@@ -158,8 +160,10 @@ export function partNode(x: ImageExt, s: Shape): TemplateResult | undefined {
   if (!p) return undefined;
   let nodes = drawn.get(p);
   if (!nodes) {
-    const root = x.api.fragment(`<svg xmlns="${NS}" viewBox="0 0 1 1"><defs>${[...p.d.values()].join('')}</defs>${p.m}</svg>`)?.firstElementChild;
-    if (root) prepare(root);
+    const first = x.api.fragment(`<svg xmlns="${NS}" viewBox="0 0 1 1"><defs>${[...p.d.values()].join('')}</defs>${p.m}</svg>`)?.firstElementChild;
+    if (first) prepare(first);
+    // the prefixes were written into the cleaned nodes, so what is drawn is cleaned once more, last
+    const root = first ? x.api.fragment(new XMLSerializer().serializeToString(first))?.firstElementChild : undefined;
     nodes = root ? [...root.childNodes] as Element[] : [];
     drawn.set(p, nodes as Element[]);
   }

@@ -98,9 +98,11 @@ export class ImageView implements ModuleView {
           .stateSummary=${c.state_summary === true}
           @mc-svg-image-status=${onDrawingStatus}
         ></mc-svg-image>
-        <div class="mc-image-fallback mc-image-error" style="flex-direction: column; gap: 4px;">
-          <ha-icon icon="mdi:image-off"></ha-icon>
-          <span>${t('Picture not available')}</span>
+        <div class="mc-image-fallback mc-image-error">
+          <span class="mc-image-missing" style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; background: var(--card-background-color, #fff); color: var(--primary-text-color, #212121);">
+            <ha-icon icon="mdi:image-off"></ha-icon>
+            <span>${t('Picture not available')}</span>
+          </span>
         </div>
       </div>
     `;

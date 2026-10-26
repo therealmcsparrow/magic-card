@@ -48,11 +48,13 @@ const MAX_VALUE = 2000;
 const MAX_PAINT = 200;
 const MAX_TRANSFORM_FNS = 16;
 const MAX_STRIPPED = 100;
+const MAX_NAME = 40;
+const short = (name: string): string => (name.length > MAX_NAME ? name.slice(0, MAX_NAME) : name);
 
 const HEX_RE = /^#[0-9a-fA-F]{3,8}$/;
 const WORD_RE = /^[A-Za-z]{3,20}$/;
 const URL_REF_RE = /^url\(#([A-Za-z][\w.-]{0,63})\)$/;
-const VAR_RE = /^var\(\s*(--[a-z0-9][a-z0-9-]{0,63})\s*(?:,\s*(#[0-9a-fA-F]{3,8}|[A-Za-z]{3,20})\s*)?\)$/;
+const VAR_RE = /^var\(\s*(--[a-z0-9][a-z0-9-]{0,63})\s*(?:,\s*(#[0-9a-fA-F]{3,8})\s*)?\)$/;
 const FN_RE = /([A-Za-z-]+)\s*\(/g;
 const COLOR_CHARS_RE = /^[\w\s.,%/#()+-]+$/;
 const LENGTH_RE = /^[\s\d.,eE+%a-zA-Z-]+$/;
@@ -232,7 +234,7 @@ function parseDocument(text: string): { root: Element; moved: string[] } | undef
     const first = body?.firstElementChild;
     if (first && first.localName === 'svg' && first.namespaceURI === SVG_NS) {
       const moved: string[] = [];
-      for (let e = first.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(e.localName);
+      for (let e = first.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(short(e.localName));
       // some html parsers drop a script or style (and what follows it) without a node; the text still tells
       if (SCRIPT_TAG_RE.test(text) && !moved.includes('script')) moved.push('script');
       if (STYLE_TAG_RE.test(text) && !moved.includes('style')) moved.push('style');
@@ -291,7 +293,7 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
       }
       if (v === undefined) {
         el.removeAttributeNode(a);
-        if (a.name !== 'xmlns' && !a.name.startsWith('xmlns:')) drop(`${local}@${a.name}`);
+        if (a.name !== 'xmlns' && !a.name.startsWith('xmlns:')) drop(`${short(local)}@${short(a.name)}`);
       } else if (v !== a.value) a.value = v;
     }
     const textual = TEXT_PARENTS.has(local);
@@ -302,7 +304,7 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
       if (c.nodeType === 1) {
         const child = c as Element;
         if (child.namespaceURI !== SVG_NS || !ELEMENTS.has(child.localName)) {
-          drop(child.localName);
+          drop(short(child.localName));
           el.removeChild(child);
           continue;
         }

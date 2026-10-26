@@ -42,9 +42,12 @@ const decodedBytes = (dataUrl: string): number => dataUrl.length;
 
 /** A raster thumbnail (data:image/webp, else png) of sanitised markup, longest side `side`, at most `maxBytes`. */
 export async function thumbnail(markup: string, side: number, maxBytes: number): Promise<string | undefined> {
-  const r = parseImage(markup);
+  const first = parseImage(markup);
+  if ('error' in first) return undefined;
+  resolveVars(first.root);
+  // the colours were swapped in the cleaned tree, so what is drawn is cleaned once more, last
+  const r = parseImage(serializeImage(first.root));
   if ('error' in r) return undefined;
-  resolveVars(r.root);
   const url = URL.createObjectURL(new Blob([serializeImage(r.root)], { type: SVG_TYPE }));
   try {
     const img = new Image();

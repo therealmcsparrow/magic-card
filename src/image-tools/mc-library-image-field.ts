@@ -25,6 +25,14 @@ const DESCRIPTION_MAX = 500;
 const COUNT_FROM = 450;
 const LIST_SHOWN = 8;
 
+/**
+ * What a pick leaves for the field that shows it. The form around the field can be drawn again when the image is set, which
+ * replaces the field: the new one then takes focus on its Choose button and says what was set, once.
+ */
+let carry: { id: string; context: FieldContext; msg: string; until: number } | undefined;
+const CARRY_MS = 3000;
+const taken = new WeakSet<object>();
+
 export class McLibraryImageField extends LitElement {
   static styles = [
     editorSystem,
@@ -181,6 +189,17 @@ export class McLibraryImageField extends LitElement {
     void this._loadImage();
   }
 
+  protected updated(): void {
+    const c = carry;
+    if (!c || !this.isConnected || Date.now() > c.until) return;
+    if (c.id !== this._id || c.context !== this.context || taken.has(this)) return;
+    const choose = this.shadowRoot?.querySelector<HTMLElement>('[data-act=choose]');
+    if (!choose || this._picking) return;
+    taken.add(this);
+    this._msg = c.msg;
+    choose.focus();
+  }
+
   private async _load(): Promise<void> {
     const list = await listImages(this.hass);
     this._list = list;
@@ -233,7 +252,9 @@ export class McLibraryImageField extends LitElement {
     this._emit(keys);
     this._mode = 'library';
     this._picking = false;
-    this._say(t('Image set: {name}.', { name }) + (shapeSet ? ' ' + t('Card shape set to {shape}.', { shape: String(keys.aspect_ratio) }) : ''));
+    const said = t('Image set: {name}.', { name }) + (shapeSet ? ' ' + t('Card shape set to {shape}.', { shape: String(keys.aspect_ratio) }) : '');
+    this._say(said);
+    carry = { id, context: this.context, msg: said, until: Date.now() + CARRY_MS };
     this._focusChoose();
   }
 

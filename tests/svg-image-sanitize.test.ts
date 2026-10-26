@@ -311,3 +311,59 @@ describe('sanitizeImage: with and without xmlns', () => {
     }
   });
 });
+
+describe('sanitizeImage: var() fallbacks are hex only', () => {
+  const paint = (v: string, ns = true) => {
+    const inner = `<path d="M0 0L5 5" fill="${v}"/><path d="M1 1L9 9" stroke="#000"/>`;
+    return ns ? wrap(inner) : `<svg viewBox="0 0 10 10">${inner}</svg>`;
+  };
+  it.each([true, false])('keeps a hex fallback (xmlns %s)', (ns) => {
+    for (const v of ['var(--x, #f00)', 'var(--x,#ff0000)', 'var(--x, #ff000080)', 'var(--x)']) {
+      const out = sanitizeImage(paint(v, ns));
+      expect(out.markup).toContain(`fill="${v}"`);
+      expect(out.stripped).toEqual([]);
+    }
+  });
+  it.each([true, false])('drops and lists a keyword, function or nested fallback (xmlns %s)', (ns) => {
+    const bad = ['var(--x, red)', 'var(--x, rgb(1,2,3))', 'var(--x, var(--y))', 'var(--x, #ff)', 'var(--x, #fffffffff)', 'var(--x, #f00 red)', 'var(--x, url(#a))', 'var(--x, #f00', 'var(--x, red) red', 'VAR(--x, red)', 'var(--x,)', 'var(--x, transparent)'];
+    for (const v of bad) {
+      const out = sanitizeImage(paint(v, ns));
+      expect(out.markup, v).not.toMatch(/fill=/);
+      expect(out.stripped, v).toContain('path@fill');
+    }
+  });
+});
+
+describe('sanitizeImage: the root namespace', () => {
+  const body = '<path d="M0 0L5 5"/><g><path d="M1 1L2 2"/></g>';
+  it('writes xmlns once, lower-case, on the root only, and keeps it stable', () => {
+    for (const input of [wrap(body), `<svg viewBox="0 0 10 10">${body}</svg>`]) {
+      const out = sanitizeImage(input);
+      expect(out.markup.match(/xmlns/g)).toHaveLength(1);
+      expect(out.markup.startsWith('<svg xmlns="http://www.w3.org/2000/svg"')).toBe(true);
+      expect(sanitizeImage(out.markup).markup).toBe(out.markup);
+    }
+  });
+  it('removes xmlns from a child, a prefixed declaration and another value', () => {
+    const out = sanitizeImage('<svg xmlns="http://www.w3.org/2000/svg" xmlns:x="http://evil/x" viewBox="0 0 10 10"><g xmlns="http://www.w3.org/2000/svg"><path d="M0 0L5 5" XMLNS="x"/></g></svg>');
+    expect(out.markup.match(/xmlns/gi)).toHaveLength(1);
+    expect(out.markup).not.toContain('xmlns:');
+    expect(out.markup).not.toContain('evil');
+    const other = sanitizeImage('<svg xmlns="http://evil/ns" viewBox="0 0 10 10"><path d="M0 0L5 5"/></svg>');
+    expect(other.markup).not.toContain('evil');
+  });
+});
+
+describe('sanitizeImage: names listed as removed', () => {
+  it('cuts a very long element or attribute name', () => {
+    const long = 'a'.repeat(5000);
+    const out = sanitizeImage(wrap(`<${long}/><path d="M0 0L5 5" ${long}="1"/>`));
+    expect(out.stripped.length).toBeGreaterThan(0);
+    for (const name of out.stripped) for (const part of name.split('@')) expect(part.length).toBeLessThanOrEqual(40);
+  });
+  it('cuts a long name the html parser moved out', () => {
+    const long = 'b'.repeat(5000);
+    const out = sanitizeImage(`<svg viewBox="0 0 10 10"><path d="M0 0L5 5"/><p>x<${long}>`);
+    for (const name of out.stripped) expect(name.length).toBeLessThanOrEqual(40);
+  });
+});

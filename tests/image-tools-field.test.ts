@@ -450,3 +450,60 @@ describe('compact (a state row)', () => {
     expect(text(el)).toContain('This image is no longer in the library.');
   });
 });
+
+describe('when the form around the field is drawn again after a pick', () => {
+  async function pickerOf(el: Field) {
+    await click(el, '[data-act=choose]');
+    const p = $(el, 'mc-image-picker')!;
+    for (let i = 0; i < 8; i++) {
+      await Promise.resolve();
+      await (p as never as { updateComplete: Promise<unknown> }).updateComplete;
+    }
+    return p;
+  }
+  /** The editor behind the field draws its form again on image-change: the field is replaced by a new one. */
+  async function mountReplaced(context: 'module' | 'background') {
+    const holder = document.createElement('div');
+    document.body.append(holder);
+    const make = (value: string): Field => {
+      const f = document.createElement('mc-library-image-field') as Field;
+      Object.assign(f, { hass: makeHass(), value, context, module: {} });
+      f.addEventListener('image-change', (e) => {
+        const next = make(String((e as CustomEvent).detail.keys.image));
+        holder.replaceChildren(next);
+      });
+      return f;
+    };
+    const first = make('');
+    holder.append(first);
+    await flush(first);
+    return { holder, current: () => holder.firstElementChild as Field };
+  }
+
+  it.each(['module', 'background'] as const)('puts focus on the new Choose button and says "Image set" in a status (%s)', async (context) => {
+    const { current } = await mountReplaced(context);
+    const first = current();
+    ($(first, '[data-act=choose]') as HTMLElement).focus();
+    const p = await pickerOf(first);
+    p.dispatchEvent(new CustomEvent('pick', { detail: { id: 'garden' } }));
+    await flush(first);
+    const now = current();
+    expect(now).not.toBe(first);
+    await flush(now);
+    expect(now.shadowRoot!.activeElement).toBe($(now, '[data-act=choose]'));
+    expect($(now, '[data-act=choose]')!.textContent!.trim()).toBe('Choose');
+    expect($(now, '[role=status]')!.textContent).toContain('Image set: Garden.');
+    expect($(now, '[role=status]')!.getAttribute('aria-live') ?? 'polite').not.toBe('off');
+  });
+
+  it('does not move focus into a field that was drawn for another image', async () => {
+    const { current } = await mountReplaced('module');
+    const first = current();
+    const p = await pickerOf(first);
+    p.dispatchEvent(new CustomEvent('pick', { detail: { id: 'garden' } }));
+    await flush(first);
+    const other = await mount({ value: 'mcu-image:garden', context: 'background' });
+    expect(document.activeElement).not.toBe(other.el);
+    expect($(other.el, '[role=status]')!.textContent).toBe('');
+  });
+});

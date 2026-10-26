@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fileBlob, fragment, thumbnail } from '../src/svg-image/export';
+import { sanitizeImage } from '../src/svg-image/sanitize';
 import { bindingValue } from '../src/svg-image/binding-value';
 import { api } from '../src/svg-image/chunk';
 import { THUMB_RE } from '../src/contracts/mcu-library-images';
@@ -73,6 +74,7 @@ describe('thumbnail', () => {
     expect(text).not.toContain('--mc-image-accent');
     expect(text).toContain('#0f0');
     expect(text).not.toContain('var(');
+    expect(sanitizeImage(text).markup).toBe(text);
   });
 
   it('lowers quality, then size, then falls back to png until it fits maxBytes', async () => {

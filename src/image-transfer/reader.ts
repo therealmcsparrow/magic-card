@@ -37,7 +37,9 @@ function bindingsOf(kit: ImageTransferKit, index: number, raw: unknown, ids: Rea
   const out: ImageBinding[] = [];
   const seen = new Set<string>();
   const list = Array.isArray(raw) ? raw : [undefined];
-  for (let i = 0; i < list.length; i++) {
+  // an untrusted list is read only so far: past this many entries the rest is left out under one note
+  const reach = Math.min(list.length, MAX_IMAGE_BINDINGS * 2);
+  for (let i = 0; i < reach; i++) {
     if (out.length >= MAX_IMAGE_BINDINGS) {
       notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
       break;
@@ -48,6 +50,7 @@ function bindingsOf(kit: ImageTransferKit, index: number, raw: unknown, ids: Rea
       out.push(b);
     } else notes.push(kit.note('dropped_value', index, `data.bindings[${i}]`, t('Connection {n} is not valid, so it was left out.', { n: i + 1 })));
   }
+  if (reach < list.length && out.length < MAX_IMAGE_BINDINGS) notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
   return out;
 }
 

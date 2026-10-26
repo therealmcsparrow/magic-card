@@ -101,6 +101,19 @@ describe('image kind: reading', () => {
     expect(out.notes.some((n) => n.code === 'over_cap')).toBe(true);
   });
 
+  it('stops reading a hostile 8 MB list of invalid connections and keeps the notes few', () => {
+    const junk = Array.from({ length: 430_000 }, () => 'not a connection');
+    const text = env([item({ bindings: junk })]);
+    expect(text.length).toBeGreaterThan(7_000_000);
+    expect(text.length).toBeLessThan(MAX_IMAGE_IMPORT_BYTES);
+    const t0 = Date.now();
+    const out = ok(read(text));
+    expect(Date.now() - t0).toBeLessThan(5000);
+    expect(out.notes.length).toBeLessThanOrEqual(200);
+    expect(out.notes.some((n) => n.code === 'over_cap')).toBe(true);
+    expect(out.items[0].data).not.toHaveProperty('bindings');
+  });
+
   it('counts bindings in the size limit', () => {
     const rules = Array.from({ length: 16 }, (_, i) => ({ state: `s${i}`, value: '#ffffff' }));
     const ids = Array.from({ length: 64 }, (_, i) => `p${i}`);

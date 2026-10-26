@@ -96,6 +96,11 @@ describe('image module with a library image', () => {
     expect(fallback.querySelector('ha-icon')!.getAttribute('icon')).toBe('mdi:image-off');
     expect(fallback.textContent).toContain('Picture not available');
     expect(fallback.textContent).not.toContain('gone');
+    // the words sit on their own backing, so any card background behind the box leaves them readable
+    const chip = fallback.querySelector<HTMLElement>('.mc-image-missing')!;
+    expect(chip.getAttribute('style')).toMatch(/background: var\(--card-background-color, #fff\)/);
+    expect(chip.getAttribute('style')).toMatch(/[^-]color: var\(--primary-text-color, #212121\)/);
+    expect(chip.textContent).toContain('Picture not available');
     expect(getComputedStyle(el(card)!).display).toBe('none');
   });
 
