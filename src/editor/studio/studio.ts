@@ -398,7 +398,7 @@ export class Studio extends LitElement {
           <button
             type="button"
             class="icon-btn layers-toggle"
-            aria-label=${this._showLayers ? t('Hide layers') : t('Show layers')}
+            aria-label=${t('Layers')}
             title=${t('Layers')}
             aria-controls="layers"
             aria-expanded=${this._showLayers ? 'true' : 'false'}

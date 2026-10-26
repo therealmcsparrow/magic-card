@@ -138,6 +138,13 @@ describe('renderBoxField shorthand round-trip', () => {
     return { el, out };
   }
 
+  it('names the group with the field label', async () => {
+    const { el } = await field('8px');
+    const group = el.shadowRoot!.querySelector('[role="group"]')!;
+    const labelId = group.getAttribute('aria-labelledby')!;
+    expect(el.shadowRoot!.getElementById(labelId)!.textContent).toBe('Padding');
+  });
+
   it('writes mixed units back as a shorthand', async () => {
     const { el, out } = await field('8px 1rem 8px 1rem');
     changeUnit(el, 'Right', '%');

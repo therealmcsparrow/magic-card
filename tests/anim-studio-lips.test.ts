@@ -45,6 +45,15 @@ describe('animation studio panel lips', () => {
   });
   afterEach(() => vi.restoreAllMocks());
 
+  it('keeps the Inspector name while a layer is selected', async () => {
+    const t = await open(1440);
+    (t.el as unknown as { _selection: unknown })._selection = { kind: 'target', target: 'part:clapper', targets: ['part:clapper'] };
+    await t.settle();
+    expect((t.el as unknown as { _selection: { kind: string } })._selection.kind).toBe('target');
+    expect(t.root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
+    expect(lip(t.root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+  });
+
   it('has a lip for Layers and one for the Inspector, in tab order, and a status region from the first render', async () => {
     const t = await open(1440);
     expect(lip(t.root, 'layers').getAttribute('aria-label')).toBe('Layers panel');

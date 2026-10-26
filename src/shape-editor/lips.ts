@@ -16,7 +16,7 @@ export function lipSpecs(): PanelLipSpec[] {
 }
 
 export function lipStrings(locale: string): PanelLipStrings {
-  const hintOne = t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
+  const hintOne = t('The {noun} is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
   return {
     locale,
     hidden: t('{panels} hidden', { panels: '{panels}' }),

@@ -826,7 +826,7 @@ describe('11 geometry helpers', () => {
   });
 });
 
-describe('fix round 1: lip focus, Escape on the lip, touch extension', () => {
+describe('lip focus, Escape on the lip, touch extension', () => {
   it('a click focuses the lip, so the shortcut works after a pointer click in WebKit', async () => {
     const el = await mount();
     const lip = lipOf(el, 'layers');

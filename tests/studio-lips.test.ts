@@ -131,9 +131,12 @@ describe('card studio lip leftovers', () => {
     expect(chev.getAttribute('width')).toBe('16');
     expect(chev.getAttribute('aria-hidden')).toBe('true');
     expect(btn.getAttribute('aria-expanded')).toBe('false');
+    expect(btn.getAttribute('aria-label')).toBe('Layers');
     expect(btn.dataset.open).toBe('false');
     btn.click();
     await el.updateComplete;
+    expect(btn.getAttribute('aria-expanded')).toBe('true');
+    expect(btn.getAttribute('aria-label')).toBe('Layers');
     expect(btn.dataset.open).toBe('true');
     const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
     expect(css).toMatch(/\.layers-toggle\[data-open='true'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
