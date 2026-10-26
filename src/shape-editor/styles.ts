@@ -21,18 +21,18 @@ const layout: CSSResult = css`
 .layer:focus{outline:none}
 h2,h3,h4,p,ul{margin:0}
 .msg{display:grid;justify-items:center;gap:8px;padding:24px;text-align:center}
-.work{--lw:240px;--iw:340px;--lx:0px;--lg:0px;position:relative;flex:1;min-height:0;display:grid;grid-template-columns:var(--lt,var(--lw)) minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'left center insp';overflow:hidden}
+.work{--lw:240px;--iw:340px;--lx:0px;--lg:0px;--mc-lip-pull:var(--lg);position:relative;flex:1;min-height:0;display:grid;grid-template-columns:var(--lt,var(--lw)) minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'left center insp';overflow:hidden}
 [data-layout=mid] .work{--lw:220px;--iw:320px}
 [data-layout=compact] .work{--iw:300px;grid-template-columns:minmax(0,1fr) var(--it,var(--iw));grid-template-areas:'center insp'}
 @media(pointer:coarse){.work{--lx:20px;--lg:4px}}
-.no-side{--lt:40px}
-.no-insp{--it:40px}
+.no-side{--lt:calc(40px + var(--lg))}
+.no-insp{--it:calc(40px + var(--lg))}
 .left{--mc-lip-off:-100%}
 .insp{--mc-lip-off:100%}
 .left[data-lip=hidden]{width:var(--lw);justify-self:start}
 .insp[data-lip=hidden]{width:var(--iw);justify-self:end}
-.left[data-lip=shown]{padding-inline-end:calc(28px + var(--lx))}
-.insp[data-lip=shown]{padding-inline-start:calc(28px + var(--lx))}
+.left[data-lip=shown],.left[data-lip=hidden]{padding-inline-end:calc(28px + var(--lx))}
+.insp[data-lip=shown],.insp[data-lip=hidden]{padding-inline-start:calc(28px + var(--lx))}
 [data-layout=stacked] .work{display:flex;flex-direction:column;overflow:auto}
 [data-layout=stacked] .center{order:1;flex:none;overflow:visible}
 [data-layout=stacked] .left,[data-layout=stacked] .insp,.left>*{flex:none}

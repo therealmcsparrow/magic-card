@@ -44,7 +44,7 @@ For path and sequence animations the column lists Element and Icon, with Moves o
 
 Layers and the inspector each have an edge button on their inner side while they sit beside the stage. Press it to hide the panel: the stage takes its width, and the button stays at the window edge. Press it again to show the panel with its selection and scroll position. The hidden panel keeps its settings and does not change the animation.
 
-Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. The shortcut works while focus is in the studio.
+Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. The shortcut works while focus is in the studio. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
 
 If you collapsed Layers in an earlier version, it opens hidden once, with a short hint, and the studio then remembers the new setting instead.
 

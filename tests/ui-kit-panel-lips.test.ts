@@ -825,3 +825,157 @@ describe('11 geometry helpers', () => {
     expect(LIP_GEOMETRY['shape-studio']).toBe('gutter');
   });
 });
+
+describe('fix round 1: lip focus, Escape on the lip, touch extension', () => {
+  it('a click focuses the lip, so the shortcut works after a pointer click in WebKit', async () => {
+    const el = await mount();
+    const lip = lipOf(el, 'layers');
+    expect(el.shadowRoot!.activeElement).toBeNull();
+    lip.click();
+    await flush(el);
+    expect(el.shadowRoot!.activeElement).toBe(lipOf(el, 'layers'));
+  });
+
+  it('the click decides from the state at click time', async () => {
+    const el = await mount();
+    const lip = lipOf(el, 'layers');
+    el.lips.hide('layers');
+    lip.click();
+    await flush(el);
+    expect(el.lips.state('layers')).toBe('shown');
+  });
+
+  it('Escape on a lip that carries the hint dismisses the hint and the key goes no further', async () => {
+    localStorage.setItem(PANEL_MEMORY_PREFIX + 'card-studio', 'layers');
+    const el = await mount();
+    const outside = vi.fn();
+    document.body.addEventListener('keydown', outside);
+    const lip = lipOf(el, 'layers');
+    expect(lip.getAttribute('aria-describedby')).toBeTruthy();
+    lip.focus();
+    const e = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true });
+    lip.dispatchEvent(e);
+    await flush(el);
+    document.body.removeEventListener('keydown', outside);
+    expect(e.defaultPrevented).toBe(true);
+    expect(outside).not.toHaveBeenCalled();
+    expect(el.shadowRoot!.querySelector('.lip-hint')).toBeNull();
+    expect(localStorage.getItem(PANEL_HINT_PREFIX + 'card-studio')).toBe('1');
+    expect(el.shadowRoot!.activeElement).toBe(lipOf(el, 'layers'));
+  });
+
+  it('Escape on a lip without a hint is left alone', async () => {
+    const el = await mount();
+    const outside = vi.fn();
+    document.body.addEventListener('keydown', outside);
+    const e = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true });
+    lipOf(el, 'layers').dispatchEvent(e);
+    document.body.removeEventListener('keydown', outside);
+    expect(e.defaultPrevented).toBe(false);
+    expect(outside).toHaveBeenCalled();
+  });
+
+  it('the touch extension adds what the 1 px border takes, so the target is a full 44 px', () => {
+    const css = kitLip.cssText.replace(/\s+/g, ' ');
+    expect(css).toMatch(/\.lip\[data-side='start'\]::after \{ left: 100%; width: 21px; \}/);
+    expect(css).toMatch(/\.lip\[data-side='end'\]::after \{ right: 100%; width: 21px; \}/);
+    expect(css).toMatch(/\.lip\[aria-expanded='false'\]::after \{ width: calc\(17px \+ var\(--mc-lip-pull, 0px\)\); \}/);
+  });
+});
+
+describe('ScrollbarWatch and the shortcut in Preview', () => {
+  const sized = (offsetWidth: number, clientWidth: number): HTMLElement => {
+    const el = document.createElement('div');
+    Object.defineProperty(el, 'offsetWidth', { value: offsetWidth, configurable: true });
+    Object.defineProperty(el, 'clientWidth', { value: clientWidth, configurable: true });
+    return el;
+  };
+  type Created = { observed: Element[]; disconnect: ReturnType<typeof vi.fn> };
+  function stubObserver(): { made: Created[]; restore: () => void } {
+    const made: Created[] = [];
+    const original = globalThis.ResizeObserver;
+    globalThis.ResizeObserver = class {
+      private rec: Created = { observed: [], disconnect: vi.fn() };
+      constructor() {
+        made.push(this.rec);
+      }
+      observe(el: Element): void {
+        this.rec.observed.push(el);
+      }
+      unobserve(): void {}
+      disconnect(): void {
+        this.rec.disconnect();
+      }
+    } as unknown as typeof ResizeObserver;
+    return { made, restore: () => void (globalThis.ResizeObserver = original) };
+  }
+
+  it('an equal measurement requests no update and does not call onChange', async () => {
+    const host = await mount();
+    const onChange = vi.fn();
+    const watch = new ScrollbarWatch(host, onChange);
+    const scroller = sized(800, 785);
+    watch.watch(scroller);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const request = vi.spyOn(host, 'requestUpdate');
+    watch.watch(scroller);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(request).not.toHaveBeenCalled();
+    expect(watch.width).toBe(15);
+  });
+
+  it('a changed element list replaces the observer, an unchanged one keeps it', async () => {
+    const stub = stubObserver();
+    try {
+      const host = await mount();
+      const watch = new ScrollbarWatch(host);
+      const a = sized(800, 800);
+      const b = sized(900, 900);
+      watch.watch(a, b);
+      watch.watch(a, b);
+      expect(stub.made).toHaveLength(1);
+      watch.watch(a);
+      expect(stub.made).toHaveLength(2);
+      expect(stub.made[0].disconnect).toHaveBeenCalled();
+      expect(stub.made[1].observed).toEqual([a]);
+    } finally {
+      stub.restore();
+    }
+  });
+
+  it('without ResizeObserver, watch() still measures and a null scroller reads 0', async () => {
+    const original = globalThis.ResizeObserver;
+    // @ts-expect-error removing the API for this test
+    delete globalThis.ResizeObserver;
+    try {
+      const host = await mount();
+      const watch = new ScrollbarWatch(host);
+      watch.watch(sized(800, 783));
+      expect(watch.width).toBe(17);
+      watch.watch(null);
+      expect(watch.width).toBe(0);
+    } finally {
+      globalThis.ResizeObserver = original;
+    }
+  });
+
+  it('in Preview the shortcut is prevented and changes, announces, writes and fires nothing', async () => {
+    const el = await mount();
+    const changes = vi.fn();
+    el.addEventListener(PANEL_CHANGE_EVENT, changes);
+    el.lips.suspended = true;
+    await flush(el);
+    const e = key({});
+    q(el, 'main').dispatchEvent(e);
+    await frame();
+    await flush(el);
+    expect(e.defaultPrevented).toBe(true);
+    expect(changes).not.toHaveBeenCalled();
+    expect(status(el)).toBe('');
+    expect(localStorage.getItem(PANEL_MEMORY_PREFIX + 'card-studio')).toBeNull();
+    el.lips.suspended = false;
+    await flush(el);
+    expect(el.lips.state('layers')).toBe('shown');
+    expect(el.lips.state('inspector')).toBe('shown');
+  });
+});

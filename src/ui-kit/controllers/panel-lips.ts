@@ -349,6 +349,14 @@ export class PanelLips implements ReactiveController, PanelLipsController {
     if (inside) this.lipEl(spec.id)?.focus();
   }
 
+  /** Escape on the lip that carries the hint dismisses the hint and goes no further. */
+  private onLipKey(e: KeyboardEvent, spec: PanelLipSpec): void {
+    if (e.key !== 'Escape') return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.closeHint(spec);
+  }
+
   private hintTemplate(spec: PanelLipSpec): TemplateResult {
     const hiddenCols = this.panels.filter((p) => this.state(p.id) === 'hidden');
     const s = this.strings;
@@ -390,10 +398,13 @@ export class PanelLips implements ReactiveController, PanelLipsController {
         aria-label=${spec.name}
         title=${hiddenNow ? spec.showLabel : spec.hideLabel}
         aria-describedby=${ifDefined(showHint ? `${spec.controls}-hint` : undefined)}
-        @click=${() => {
+        @click=${(e: Event) => {
+          // WebKit does not focus a button on a mouse click; the shortcut needs focus inside the host
+          (e.currentTarget as HTMLElement | null)?.focus();
           this.remembered = null;
-          this.apply([id], !hiddenNow, 'lip');
+          this.apply([id], this.state(id) === 'shown', 'lip');
         }}
+        @keydown=${showHint ? (e: KeyboardEvent) => this.onLipKey(e, spec) : nothing}
       >${CHEVRON}</button>${showHint ? this.hintTemplate(spec) : nothing}`;
   }
 

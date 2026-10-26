@@ -171,6 +171,7 @@ export const editorStyles: CSSResult[] = [
       --iw: 340px;
       --lx: 0px;
       --lg: 0px;
+      --mc-lip-pull: var(--lg);
       position: relative;
       flex: 1;
       min-height: 0;
@@ -200,10 +201,10 @@ export const editorStyles: CSSResult[] = [
      * so its content never reflows and a nested scroller keeps its place. It slides off its edge.
      */
     .no-side {
-      --lt: 40px;
+      --lt: calc(40px + var(--lg));
     }
     .no-insp {
-      --it: 40px;
+      --it: calc(40px + var(--lg));
     }
     .left {
       --mc-lip-off: -100%;
@@ -219,10 +220,12 @@ export const editorStyles: CSSResult[] = [
       width: var(--iw);
       justify-self: end;
     }
-    .left[data-lip='shown'] {
+    .left[data-lip='shown'],
+    .left[data-lip='hidden'] {
       padding-inline-end: calc(28px + var(--lx));
     }
-    .insp[data-lip='shown'] {
+    .insp[data-lip='shown'],
+    .insp[data-lip='hidden'] {
       padding-inline-start: calc(28px + var(--lx));
     }
     [data-layout='stacked'] .work {

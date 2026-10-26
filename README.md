@@ -186,7 +186,7 @@ A floating bar next to the selected module moves it up or down, duplicates it, d
 
 The card studio, the animation studio, the SVG editor, the shape studio and the theme editor have side panels. Where a panel sits as a column beside the canvas or the preview, it has an edge button on its inner side. Press the button to hide the panel. The canvas then takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
 
--   Ctrl+\ (Cmd+\ on a Mac) hides the side panels of the editor you are working in if any of them is shown. When they are all hidden, it shows again the panels it hid last.
+-   Ctrl+\ (Cmd+\ on a Mac) hides the side panels of the editor you are working in if any of them is shown. When they are all hidden, it shows again the panels it hid last. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
 -   Each editor remembers its hidden panels on this device. Other editors and other devices are not affected.
 -   When an editor opens with a panel hidden, a short hint explains the button and the shortcut, once. Press Got it to close it.
 -   Where a panel is an overlay, a sheet, a slide-over or a block above or below the canvas, it has no edge button and keeps its own control.

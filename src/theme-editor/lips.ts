@@ -8,7 +8,7 @@ function shortcutKeys(): string {
 
 /** The lip of the Variables pane: fixed name, noun for announcements, and the tooltips. */
 export function lipSpecs(): PanelLipSpec[] {
-  const keys = ` (${shortcutKeys()})`;
+  const keys = shortcutKeys();
   return [
     {
       id: 'variables',
@@ -16,8 +16,8 @@ export function lipSpecs(): PanelLipSpec[] {
       controls: 'vars-pane',
       name: t('Variables panel'),
       noun: t('variables'),
-      hideLabel: t('Hide {noun}', { noun: t('variables') }) + keys,
-      showLabel: t('Show {noun}', { noun: t('variables') }) + keys,
+      hideLabel: t('Hide {noun} ({keys})', { noun: t('variables'), keys }),
+      showLabel: t('Show {noun} ({keys})', { noun: t('variables'), keys }),
     },
   ];
 }

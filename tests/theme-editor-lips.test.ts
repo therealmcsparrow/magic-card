@@ -76,6 +76,7 @@ describe('theme editor panel lip', () => {
     const { root } = await openEditor(1280);
     const l = lip(root)!;
     expect(l.getAttribute('aria-label')).toBe('Variables panel');
+    expect(root.getElementById('vars-pane')!.getAttribute('aria-label')).toBe('Variables panel');
     expect(l.getAttribute('aria-expanded')).toBe('true');
     const pane = root.querySelector<HTMLElement>('#vars-pane')!;
     expect(pane.dataset.lip).toBe('shown');

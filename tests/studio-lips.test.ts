@@ -38,6 +38,9 @@ describe('card studio panel lips', () => {
     const { root } = await mount();
     expect(lip(root, 'layers').getAttribute('aria-label')).toBe('Layers panel');
     expect(lip(root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(root.getElementById('layers')!.getAttribute('aria-label')).toBe('Layers panel');
+    expect(root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
+    expect(lip(root, 'layers').title).toBe('Hide layers (Ctrl+\\)');
     expect(root.querySelector('.lip-status[role="status"]')).not.toBeNull();
     expect(root.querySelector<HTMLElement>('#layers')!.dataset.lip).toBe('shown');
     expect(root.querySelector<HTMLElement>('#inspector')!.dataset.lip).toBe('shown');

@@ -1056,6 +1056,7 @@ export class DesignPanel extends LitElement {
             html`
               <mc-box-field
                 .design=${sub.design}
+                .label=${lt(p.label)}
                 .onChange=${(updates: Record<string, unknown>) => sub.write({ ...sub.design, ...updates })}
                 .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
               ></mc-box-field>
@@ -1066,6 +1067,7 @@ export class DesignPanel extends LitElement {
           html`
             <mc-box-field
               .design=${this.design}
+              .label=${lt(p.label)}
               .onChange=${(updates: Record<string, unknown>) =>
                 // a side edit on a template-linked card un-syncs the whole box field (shorthand + sides)
                 this.onChange(this.hasTemplate ? { ...updates, _markNotSynced: p.key } : updates)}

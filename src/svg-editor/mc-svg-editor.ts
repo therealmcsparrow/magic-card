@@ -231,6 +231,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   private lipLocale = 'en';
   /** Width of the scrollbar of the side panel, whose inner edge carries its lip. */
   readonly bar = new ScrollbarWatch(this);
+  private barSig = '';
 
   hist?: History<Doc>;
   chunk?: PathCanvasChunk;
@@ -1860,7 +1861,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
     this.openOverlays();
-    this.bar.watch(this.renderRoot.querySelector<HTMLElement>('.left'), this.renderRoot.querySelector<HTMLElement>('.work'));
+    const barSig = `${this.stage}|${this.layout}|${this.overlay}|${this.lips.state('side')}|${this.lips.state('inspector')}`;
+    if (barSig !== this.barSig) {
+      this.barSig = barSig;
+      this.bar.watch(this.renderRoot.querySelector<HTMLElement>('.left'), this.renderRoot.querySelector<HTMLElement>('.work'));
+    }
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 

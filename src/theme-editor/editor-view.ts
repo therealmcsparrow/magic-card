@@ -1192,7 +1192,7 @@ export class McteEditorView extends LitElement {
       const lips = this._lips;
       const hidden = lips.isHidden('variables');
       return html`<div class="cols ${hidden ? 'no-vars' : ''}" style="--mc-lip-at-start: ${hidden ? '0px' : 'var(--vw)'}">
-        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('Variables')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
+        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('Variables panel')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
         ${lips.lip('variables')}
         <section class="pane prev" role="region" aria-label=${t('Preview')}>${this._previewPanel()}</section>
       </div>`;

@@ -82,8 +82,8 @@ describe('Shape studio panel lips', () => {
     const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
     expect(style).toMatch(/--mc-lip-at-end:\s*calc\(0px - var\(--lg\)\)/);
     expect(style).toMatch(/--mc-lip-at-start:\s*calc\(var\(--lw\) - 24px - var\(--lx\) - 0px - 1px\)/);
-    expect(css()).toMatch(/\.no-side\{[^}]*--lt:40px/);
-    expect(css()).toMatch(/\.no-insp\{[^}]*--it:40px/);
+    expect(css()).toMatch(/\.no-side\{[^}]*--lt:calc\(40px \+ var\(--lg\)\)/);
+    expect(css()).toMatch(/\.no-insp\{[^}]*--it:calc\(40px \+ var\(--lg\)\)/);
   });
 
   it('a hidden panel keeps its own width and is never squeezed to 0', () => {
@@ -147,5 +147,18 @@ describe('Shape studio panel lips', () => {
     const el = await mount('nl');
     await setLayout(el, 'wide');
     expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspectorpaneel');
+  });
+
+  it('the panel padding that clears the lip applies shown and hidden, so a hidden panel never reflows', () => {
+    expect(css()).toMatch(/\.left\[data-lip=shown\],\.left\[data-lip=hidden\]\{padding-inline-end:calc\(28px \+ var\(--lx\)\)/);
+    expect(css()).toMatch(/\.insp\[data-lip=shown\],\.insp\[data-lip=hidden\]\{padding-inline-start:calc\(28px \+ var\(--lx\)\)/);
+    expect(css()).toMatch(/--mc-lip-pull:var\(--lg\)/);
+  });
+
+  it('each panel carries the name of its lip', async () => {
+    const el = await mount();
+    await setLayout(el, 'wide');
+    expect(q(el, '#side')!.getAttribute('aria-label')).toBe(lip(el, 'side').getAttribute('aria-label'));
+    expect(q(el, '#inspector')!.getAttribute('aria-label')).toBe(lip(el, 'inspector').getAttribute('aria-label'));
   });
 });

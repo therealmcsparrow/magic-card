@@ -10,20 +10,25 @@ import type { KitTemplate } from './ui-kit';
  * no revision change.
  *
  * ── Files ──
- *   src/ui-kit/controllers/panel-lips.ts   PanelLips (implements PanelLipsController), exported from
- *                                          src/ui-kit/controllers/index.ts and so from src/ui-kit/index.ts
- *   src/ui-kit/css/lip.ts                  kitLip (CSSResult), exported from src/ui-kit/css/index.ts;
- *                                          not part of kitCss: only the editors with lips import it
- * Neither file holds module-level mutable state; every bit of state lives on the controller instance.
- * kitLip writes rules for LIP_CLASSES; the selector scan (ui-kit test 5) treats them like KIT_CLASSES.
- * kitLip does not depend on kitBase or kitButton (the animation studio does not load them all).
+ *   src/ui-kit/controllers/panel-lips.ts       PanelLips (implements PanelLipsController), exported from
+ *                                              src/ui-kit/controllers/index.ts and so from src/ui-kit/index.ts
+ *   src/ui-kit/controllers/scrollbar-width.ts  ScrollbarWatch and scrollbarWidth (see "Scrollbar
+ *                                              measurement"), exported from src/ui-kit/controllers/index.ts
+ *                                              and so from src/ui-kit/index.ts; hosts import them from the
+ *                                              kit (the index or this file), never copy them
+ *   src/ui-kit/css/lip.ts                      kitLip (CSSResult), exported from src/ui-kit/css/index.ts;
+ *                                              not part of kitCss: only the editors with lips import it
+ * None of these files holds module-level mutable state; every bit of state lives on the controller
+ * instances. kitLip writes rules for LIP_CLASSES; the selector scan (ui-kit test 5) treats them like
+ * KIT_CLASSES. kitLip does not depend on kitBase or kitButton (the animation studio does not load them all).
  *
  * ── Columns only ──
  * A panel has a lip only while it sits as a column beside the canvas or preview. The host says which
  * panels are columns right now through columns(); a panel that is an overlay, sheet, slide-over, tab or
  * stacked block is 'off': no lip, the remembered hidden state is not applied (the panel keeps its narrow
  * control) and stays remembered for when the panel is a column again. `suspended` (the card studio's
- * Preview) turns every panel 'off' and ignores the shortcut.
+ * Preview) turns every panel 'off'; the shortcut then changes nothing but is still prevented (see
+ * "Shortcut").
  *
  * ── States and the host's DOM ──
  * state(id): 'off' | 'shown' | 'hidden'. The host binds on the panel element:
@@ -53,10 +58,11 @@ import type { KitTemplate } from './ui-kit';
  *   c. display: none, only for a host that does not slide the panel (no --mc-lip-off); the slide and the
  *      visibility delay do not run then.
  * Forbidden: width 0, max-width 0, min-width: 0 with the content reflowing, or any track or flex basis
- * that narrows the panel element itself.
- * The host also saves the scrollTop of the scrollers it can reach (its own panel scroller) on hide and
- * restores it on show, as extra insurance; a scroller inside another element's shadow root relies on the
- * kept width above.
+ * that narrows the panel element itself. Everything that sets the panel's content box (width, padding,
+ * border) has the same value for [data-lip=shown] and [data-lip=hidden].
+ * Hosts do not save or restore scrollTop on hide or show. Because the hidden panel stays mounted at its
+ * own width, the browser keeps the scroll position of every scroller inside it, including one inside a
+ * child shadow root (Test 2).
  *
  * ── Direction ──
  * `dir` is 'ltr' or 'rtl', read from getComputedStyle(host).direction on hostConnected, restore() and
@@ -126,35 +132,56 @@ import type { KitTemplate } from './ui-kit';
  *     sits at the panel's inner edge inside the panel's column, never over the stage. The stage never
  *     has a lip, its ::after extension or a hint over it, so a handle at the stage edge stays reachable.
  *   card-studio, anim-studio: 'overlay'. Canvas content keeps 24 px padding; no handle sits in the lip's
- *     band (column handles are only on inner gutters of a row, .sel-frame is pointer-events: none).
- *     Accepted trade-off, shown at the Plan Gate: on a full-width card (Wide, Panel) the coarse-pointer
- *     ::after (44 px) covers the card's outer 20 px in a 56-72 px band, and the hidden tab (28 px) its
- *     outer 4 px on any pointer; clicks there hit the lip. A float bar flush at its 8 px margin can cover
- *     up to 12 px of the visible tab; the rest and the extension stay reachable. If this is refused, the
- *     fallback is 'gutter' for these two editors (canvas exactly 780 at 820 px, no spare).
+ *     band (column handles are only on inner gutters of a row, .sel-frame is pointer-events: none). On a
+ *     full-width card (Wide, Panel) the coarse-pointer ::after (44 px) covers the card's outer 20 px in a
+ *     56-72 px band, and the hidden tab (28 px) its outer 4 px on any pointer; clicks there hit the lip.
+ *     A float bar flush at its 8 px margin can cover up to 12 px of the visible tab; the rest and the
+ *     extension stay reachable.
  *   svg-editor, shape-studio: 'gutter'. Their .stage has no padding and overflow: hidden, and SVG handles
  *     reach the stage edge; they cannot sit above an outside lip.
- *   theme-editor: 'overlay'. Its preview has no edit handles; the builder confirms that in the browser
- *     pass, else it switches to 'gutter' (additive, the same token values).
- * Measurement (both models): scrollbar width = scroller.offsetWidth - scroller.clientWidth, taken from a
- * ResizeObserver on that scroller (and on the grid container), for the scroller that touches the lip's
- * edge at the lip's vertical middle. Overlay scrollbars measure 0. The measured scroller has no inline
- * border; a host whose scroller has one subtracts the computed border-left-width and border-right-width.
- * No `scrollbar-gutter` (Chromium 94, Safari 18.2, both above the floor) and no hard-coded width. The
- * observer is created in hostConnected (or connectedCallback) and disconnected in hostDisconnected.
+ *   theme-editor: 'overlay'. Its preview has no edit handles.
+ * Measurement (both models): scrollbar width = scroller.offsetWidth - scroller.clientWidth minus the
+ * scroller's computed border-left-width and border-right-width, for the scroller that touches the lip's
+ * edge at the lip's vertical middle. Overlay scrollbars measure 0. No `scrollbar-gutter` (Chromium 94,
+ * Safari 18.2, both above the floor) and no hard-coded width. Hosts measure with ScrollbarWatch (below)
+ * and set --mc-lip-at-* from its `width`; they do not keep their own measuring code.
  * Success metric, measured at 820 x 1180 (iPad portrait, overlay scrollbars) with every column panel the
  * editor has there hidden:
  *   card-studio, anim-studio   canvas >= 780 px (O+ gives 820; 803-805 with a classic 15-17 px bar,
  *                              which only appears on desktop widths >= 900)
  *   svg-editor, shape-studio   layout 'compact' (641-900 px: 56 px rail, stage, 300 px inspector; the
  *                              side panel is an overlay there, so only the inspector has a lip). The
- *                              stage is 820 - 56 - 40 = 724 px (464 with the inspector shown). The 780 px
- *                              target does not apply: 764 is the most this layout allows without a lip.
+ *                              stage is 820 - 56 - 40 = 724 px (464 with the inspector shown); 764 px
+ *                              is the widest stage this layout allows.
  *                              Metric: hiding the inspector gives the stage its width minus LIP_GUTTER_PX
  *                              (+260 px at compact, +280 at mid, +300 at wide), and no stage pixel lies
  *                              under the lip, its extension or the hint.
  *   theme-editor               the preview gains the variables panel's full width.
  * In every editor: the lip covers 0 px of any scrollbar, with a 0, 15 and 17 px bar.
+ *
+ * ── Scrollbar measurement (src/ui-kit/controllers/scrollbar-width.ts) ──
+ * General kit helpers, not tied to PanelLips; source-shared like the controller.
+ *   scrollbarWidth(el: HTMLElement): number
+ *     max(0, round(el.offsetWidth - el.clientWidth - inline borders)). The borders come from
+ *     getComputedStyle(el) inside a try; when it throws they count as 0. Each call reads layout.
+ *   class ScrollbarWatch implements ReactiveController
+ *     constructor(host: ReactiveControllerHost, onChange?: (width: number) => void)
+ *       Adds itself to host with addController().
+ *     width: number
+ *       The last measured width; 0 until the first measurement, and 0 for a null scroller.
+ *     watch(scroller: HTMLElement | null, ...also: Array<HTMLElement | null>): void
+ *       Measures `scroller` at once. When the list of non-null elements (scroller first, then `also`,
+ *       e.g. the grid container) differs from the last call, it disconnects the old ResizeObserver and
+ *       observes the new list with one new observer that re-measures `scroller` on every resize. Where
+ *       ResizeObserver is missing it only measures on watch(). An unchanged list keeps the observer.
+ *     A measurement equal to `width` does nothing. A different one sets `width`, calls onChange(width)
+ *     and requests one host update.
+ *     hostDisconnected(): disconnects the observer and forgets the elements; the next watch() after a
+ *       reconnect sets it up again.
+ *   The observer follows size changes on its own, so a host calls watch() when the scroller or the
+ *   container element may have changed (first render, a layout or columns change). Calling it on every
+ *   update is allowed but forces a layout each time; a host whose updates run per frame (drags) gates
+ *   the call.
  *
  * ── Status region ──
  * status() renders one visually hidden <div class="lip-status" role="status" aria-live="polite"
@@ -193,6 +220,9 @@ import type { KitTemplate } from './ui-kit';
  * calls preventDefault() whenever the key matches, also when it has nothing to toggle.
  * Scope: only panels that are columns now and have a lip (state 'shown' or 'hidden'). 'off' panels
  * (overlays, sheets, slide-overs, tabs, stacked, suspended) are never opened, closed or counted.
+ * Suspended (Preview): the owning controller still calls preventDefault() on a match, as with any match
+ * that has nothing to toggle, so Ctrl+\ never reaches the browser or HA while the editor is open. It
+ * changes, announces, writes and fires nothing, and the remembered set is kept; handleKey returns true.
  * Action: when any column panel is shown, the controller remembers which column panels were shown and
  * hides them all. When none is shown, it shows the remembered ones that are columns now; when nothing is
  * remembered (or none of them is a column now), it shows all column panels. The remembered set is held
@@ -262,15 +292,15 @@ import type { KitTemplate } from './ui-kit';
  *    aria-controls set; focus stays on the lip; no status text after a lip toggle.
  * 2. A hidden panel keeps its DOM node, scrollTop and selection; data-lip and inert set; not focusable.
  *    Run once more with the inert attribute ignored (removed after render): still not focusable.
- *    Kept width: the hidden panel's offsetWidth (or its computed width for variant c) equals its shown
- *    width, and a nested scroller inside a child shadow root (like mc-inspector) at scrollTop 1000 reads
- *    1000 after hide and show, with a row at index 50 at the same on-screen offset. jsdom cannot show
- *    the WebKit loss, so the same check runs once in WebKit 27 in the browser pass (:18142 or above).
+ *    Kept width: the hidden panel's offsetWidth (or its computed width for variant c) and its content
+ *    width equal their shown values, and a nested scroller inside a child shadow root (like mc-inspector)
+ *    at scrollTop 1000 reads 1000 after hide and show, with a row at index 50 at the same on-screen
+ *    offset. jsdom cannot show the WebKit loss, so the same check runs once in WebKit 27 in a browser.
  * 3. Shortcut from a text field and from a nested shadow root; repeat, isComposing and defaultPrevented
  *    ignored; Shift + Ctrl + \ and Alt + Ctrl + \ do nothing; any shown -> all hide, none shown -> the
  *    remembered set shows (layers hidden by lip, key, key: layers hidden, inspector shown); a lip click
- *    clears the remembered set; 'off' panels and suspended are untouched; with no lip it prevents the key
- *    but announces nothing, writes nothing, fires nothing.
+ *    clears the remembered set; 'off' panels are untouched; with no lip, and while suspended, it prevents
+ *    the key but changes nothing, announces nothing, writes nothing, fires nothing.
  *    Capture: the key typed in an element inside the host that adds `keydown -> stopPropagation` on
  *    itself (as ha-code-editor does) still toggles, with Ctrl and with Meta; the listener is added and
  *    removed with { capture: true }.
@@ -289,7 +319,7 @@ import type { KitTemplate } from './ui-kit';
  *    panel writes nothing.
  * 6. Hiding the focused panel (lip and shortcut) moves focus to its lip; reveal() resolves after the
  *    update.
- * 7. Import scan unchanged: magic-card.js reaches neither file.
+ * 7. Import scan unchanged: magic-card.js reaches none of the three files.
  * 8. kitLip text: left/right appear before inset-inline-*, :focus before :focus-visible, a
  *    [data-dir=rtl] rule for placement and for the slide, no :dir(, no `translate:` property, no
  *    color-mix(, no scrollbar-gutter, no selector list mixing :focus-visible with another selector, a
@@ -301,12 +331,14 @@ import type { KitTemplate } from './ui-kit';
  *    fallback, one hint for two hidden panels, aria-describedby while shown, dismissed by its button,
  *    Escape (consumed) and any show, flag "1" written, other flag values read as unseen, blocked storage
  *    shows it again, focus returns to the lip.
- * 11. Geometry (per host, browser pass; the measurement helper also in unit tests with stubbed sizes):
- *    scrollbar width = offsetWidth - clientWidth (minus inline borders), updated by ResizeObserver when
- *    the bar appears or goes; the lip covers 0 px of a 0, 15 and 17 px bar; observer disconnected on
- *    disconnect. 'gutter' hosts: with a panel hidden the gutter track is LIP_GUTTER_PX and the lip's box
- *    (with ::after) does not intersect the stage's box. 'overlay' hosts: the lip's z-index is below the
- *    float bar's. The success metric above at 820 x 1180, per editor.
+ * 11. Geometry (per host in a browser; ScrollbarWatch and scrollbarWidth also in unit tests with stubbed
+ *    sizes): scrollbar width = offsetWidth - clientWidth minus inline borders, never below 0; an equal
+ *    measurement requests no update and does not call onChange; a changed element list replaces the
+ *    observer, an unchanged one keeps it; no ResizeObserver: watch() still measures; observer
+ *    disconnected on disconnect. The lip covers 0 px of a 0, 15 and 17 px bar. 'gutter' hosts: with a
+ *    panel hidden the gutter track is LIP_GUTTER_PX and the lip's box (with ::after) does not intersect
+ *    the stage's box. 'overlay' hosts: the lip's z-index is below the float bar's. The success metric
+ *    above at 820 x 1180, per editor.
  */
 
 /** localStorage key prefix; the editor id follows. */
@@ -433,7 +465,7 @@ export interface PanelLipsController {
   setPanels(panels: readonly PanelLipSpec[], strings: PanelLipStrings): void;
   /** Which panels are columns now; call before render (willUpdate). Unchanged input requests nothing. */
   columns(map: Readonly<Record<string, boolean>>): void;
-  /** True: every panel 'off', no lips, shortcut ignored. */
+  /** True: every panel 'off', no lips; a matching shortcut is still prevented and changes nothing. */
   suspended: boolean;
   state(id: string): PanelState;
   isHidden(id: string): boolean;
@@ -454,4 +486,20 @@ export interface PanelLipsController {
   handleKey(e: KeyboardEvent): boolean;
   /** Re-read the memory, the hint flag and dir (for an editor element that stays connected between opens). */
   restore(): void;
+}
+
+/** src/ui-kit/controllers/scrollbar-width.ts: inline scrollbar width of `el` in px (see "Scrollbar measurement"). */
+export type ScrollbarWidthFn = (el: HTMLElement) => number;
+
+/**
+ * ScrollbarWatch (src/ui-kit/controllers/scrollbar-width.ts):
+ *   new ScrollbarWatch(host: ReactiveControllerHost, onChange?: (width: number) => void)
+ * Adds itself to the host; behaviour under "Scrollbar measurement".
+ */
+export interface ScrollbarWatchController {
+  /** Last measured width in px; 0 before the first measurement and for a null scroller. */
+  width: number;
+  /** Measure `scroller` now; (re)observe scroller and `also` when that element list changed. */
+  watch(scroller: HTMLElement | null, ...also: Array<HTMLElement | null>): void;
+  hostDisconnected(): void;
 }

@@ -203,6 +203,7 @@ export class McShapeStudio extends LitElement {
   private lipLocale = 'en';
   /** Width of the scrollbar of the side panel, whose inner edge carries its lip. */
   private readonly bar = new ScrollbarWatch(this);
+  private barSig = '';
 
   // ── lifecycle ──
 
@@ -287,7 +288,11 @@ export class McShapeStudio extends LitElement {
       this.shadowRoot?.querySelector<HTMLElement>('.left [role=tab][aria-selected=true]')?.focus();
     }
     this.dataset.layout = this.layout;
-    this.bar.watch(this.shadowRoot?.querySelector<HTMLElement>('.left') ?? null, this.shadowRoot?.querySelector<HTMLElement>('.work') ?? null);
+    const barSig = `${this.ready}|${this.layout}|${this.sheet}|${this.side}|${this.lips.state('side')}|${this.lips.state('inspector')}`;
+    if (barSig !== this.barSig) {
+      this.barSig = barSig;
+      this.bar.watch(this.shadowRoot?.querySelector<HTMLElement>('.left') ?? null, this.shadowRoot?.querySelector<HTMLElement>('.work') ?? null);
+    }
     const sw = this.shadowRoot?.querySelector('.stage')?.clientWidth ?? 0;
     if (sw && sw !== this.stageW) this.stageW = sw;
     // a window opens the first time it renders; it closes through close() so focus goes back to its opener
@@ -1320,9 +1325,9 @@ ${this.lips.status()}
 <div class="skips">${btn(t('Skip to canvas'), () => this.focusTo('.stage mc-path-canvas, .stage svg'))}${this.pointSel !== undefined ? btn(t('Skip to point fields'), () => this.focusTo('#fx')) : nothing}${btn(t('Skip to inspector'), () => void this.lips.reveal('inspector').then(() => this.focusTo('.insp button, .insp input')))}</div>
 ${this.top(title)}
 ${!this.ready ? html`<div class="msg" role=${this.failed ? 'alert' : 'status'}>${this.failed ? html`<p>${t('The shape editor could not load. Check your connection and try again.')}</p>${btn(t('Try again'), () => void this.boot())}` : t('Loading the shape editor')}</div>` : html`<div class="work${this.lips.isHidden('side') ? ' no-side' : ''}${this.lips.isHidden('inspector') ? ' no-insp' : ''}" style=${lipTokens(this.lips.state('side'), this.lips.state('inspector'), this.bar.width)}>
-<aside class="left ${this.sheet ? 'sheet' : ''}" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${this.side === 'messages' ? t('Messages') : inPath ? t('Points') : t('Outline')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}
+<aside class="left ${this.sheet ? 'sheet' : ''}" id="side" ?inert=${this.lips.isHidden('side')} data-lip=${this.lips.state('side')} data-dir=${this.lips.dir} aria-label=${t('Side panel')}>${this.sideTabs()}${this.side === 'messages' ? this.msgList() : html`${this.host === 'mcu' ? nothing : seg('', [['outline', inPath ? t('Points') : t('Outline')], ['library', t('Library')]], this.panel, (p) => this.showPanel(p), true)}${this.panel === 'library' ? this.libPanel() : inPath && this.doc.mode === 'path' ? this.pointRows() : this.cornerRows()}`}</aside>${this.lips.lip('side')}
 <main class="center"><div class="stagewrap">${inPath ? this.rail() : nothing}${this.stage()}</div></main>
-${this.lips.lip('inspector')}<aside class="insp" id="inspector" ?inert=${this.lips.isHidden('inspector')} data-lip=${this.lips.state('inspector')} data-dir=${this.lips.dir} aria-label=${t('Inspector')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
+${this.lips.lip('inspector')}<aside class="insp" id="inspector" ?inert=${this.lips.isHidden('inspector')} data-lip=${this.lips.state('inspector')} data-dir=${this.lips.dir} aria-label=${t('Inspector panel')}>${inPath ? this.pathInspector() : this.cornersInspector()}</aside>
 </div>`}
 ${this.menu ? html`<mc-ui-menu .items=${this.menu.items} .label=${this.menu.kind === 'xfer' ? t('Export / Import') : t('Outline actions')} .at=${this.menu.at} .anchor=${this.menu.anchor} .align=${this.menu.anchor ? 'end' : 'start'} .touch=${this.menu.touch} .opener=${this.menu.opener} @mc-menu-pick=${(e: CustomEvent<{ id: string }>) => this.onPick(e)} @mc-menu-close=${(e: CustomEvent<{ reason: string }>) => this.onMenuClose(e)}></mc-ui-menu>` : nothing}
 <mc-ui-popover id="pv-pop" .label=${t('Preview')} @mc-popover-close=${() => (this.pvOpen = false)}>${this.pvOpen ? this.previews() : nothing}</mc-ui-popover>

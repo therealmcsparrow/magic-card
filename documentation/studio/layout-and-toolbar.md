@@ -49,7 +49,7 @@ The inspector tabs depend on what is selected:
 Layers and the inspector each have an edge button on their inner side while they sit beside the canvas. Press it to hide the panel. The canvas takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
 
 -   A hidden panel keeps its settings, and nothing changes in the card or the undo history.
--   Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. It works from any field in the Studio, except while Preview is on.
+-   Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. It works from any field in the Studio, except while Preview is on. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
 -   The Studio remembers which panels are hidden on this device and opens with them hidden. Other devices are not affected.
 -   The first time the Studio opens with a panel hidden, a short hint explains the button and the shortcut. Press Got it to close it.
 -   Edit on a layer, or a rename that needs the Layers list, shows a hidden panel again.

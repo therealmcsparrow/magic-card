@@ -8,9 +8,9 @@ export function shortcutKeys(): string {
 
 /** The lip of each side panel: a fixed name, a noun for announcements, and the tooltips. */
 export function lipSpecs(): PanelLipSpec[] {
-  const keys = ` (${shortcutKeys()})`;
+  const keys = shortcutKeys();
   const spec = (id: string, side: 'start' | 'end', name: string, noun: string): PanelLipSpec => ({
-    id, side, controls: id, name, noun, hideLabel: t('Hide {noun}', { noun }) + keys, showLabel: t('Show {noun}', { noun }) + keys,
+    id, side, controls: id, name, noun, hideLabel: t('Hide {noun} ({keys})', { noun, keys }), showLabel: t('Show {noun} ({keys})', { noun, keys }),
   });
   return [spec('side', 'start', t('Side panel'), t('side panel')), spec('inspector', 'end', t('Inspector panel'), t('inspector'))];
 }

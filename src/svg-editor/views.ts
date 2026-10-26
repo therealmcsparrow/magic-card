@@ -614,7 +614,7 @@ function nudgePad(ed: McSvgEditor): TemplateResult | typeof nothing {
 // ── left panel ──
 
 function leftPanel(ed: McSvgEditor): TemplateResult {
-  return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} id="side" aria-label=${t('Panel')} ?inert=${ed.lips.isHidden('side')} data-lip=${ed.lips.state('side')} data-dir=${ed.lips.dir} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
+  return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} id="side" aria-label=${t('Layers and library panel')} ?inert=${ed.lips.isHidden('side')} data-lip=${ed.lips.state('side')} data-dir=${ed.lips.dir} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
     ${ed.overlay ? html`<div class="sheet-head">${btn(t('Close'), 'close', () => (ed.overlay = false))}</div>` : nothing}
     ${seg({ role: 'radiogroup', label: t('Panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('Layers') }, { value: 'library', label: t('Library') }], onChange: (p) => ed.openPanel(p) })}
     ${ed.panel === 'layers' ? layersPanel(ed) : libraryPanel(ed)}
@@ -675,7 +675,7 @@ function libraryPanel(ed: McSvgEditor): TemplateResult {
 
 function inspector(ed: McSvgEditor): TemplateResult {
   const sel = ed.selected;
-  return html`<aside class="insp" id="inspector" aria-label=${t('Inspector')} ?inert=${ed.lips.isHidden('inspector')} data-lip=${ed.lips.state('inspector')} data-dir=${ed.lips.dir}>
+  return html`<aside class="insp" id="inspector" aria-label=${t('Inspector panel')} ?inert=${ed.lips.isHidden('inspector')} data-lip=${ed.lips.state('inspector')} data-dir=${ed.lips.dir}>
     ${ed.pointCtx ? pointSection(ed) : nothing}
     ${sel.length ? shapeSections(ed, sel) : html`${ed.pt ? pathSection(ed) : nothing}${documentSection(ed)}`}
   </aside>`;

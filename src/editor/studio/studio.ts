@@ -36,12 +36,12 @@ function shortcutKeys(): string {
 
 /** The lip of each side panel: fixed name, noun for announcements, and the tooltips. */
 function lipSpecs(): PanelLipSpec[] {
-  const keys = ` (${shortcutKeys()})`;
+  const keys = shortcutKeys();
   return [
     { id: 'layers', side: 'start', controls: 'layers', name: t('Layers panel'), noun: t('layers'),
-      hideLabel: t('Hide {noun}', { noun: t('layers') }) + keys, showLabel: t('Show {noun}', { noun: t('layers') }) + keys },
+      hideLabel: t('Hide {noun} ({keys})', { noun: t('layers'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('layers'), keys }) },
     { id: 'inspector', side: 'end', controls: 'inspector', name: t('Inspector panel'), noun: t('inspector'),
-      hideLabel: t('Hide {noun}', { noun: t('inspector') }) + keys, showLabel: t('Show {noun}', { noun: t('inspector') }) + keys },
+      hideLabel: t('Hide {noun} ({keys})', { noun: t('inspector'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('inspector'), keys }) },
   ];
 }
 
@@ -111,6 +111,7 @@ export class Studio extends LitElement {
   private _lipLocale = 'en';
   /** Width of the scrollbar the lips face (the canvas or the YAML scroller), measured. */
   private readonly _bar = new ScrollbarWatch(this);
+  private _barSig = '';
   private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 901px)') : undefined;
   private readonly _wideInspector = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 641px)') : undefined;
   private _onViewport = (): void => this.requestUpdate();
@@ -215,6 +216,10 @@ export class Studio extends LitElement {
 
   /** The scroller on the canvas side of the lips: the canvas in Form mode and Preview, the YAML view otherwise. */
   private _watchScrollbar(retry = true): void {
+    // only a layout change moves the scroller; its size changes are the observer's
+    const sig = `${this.open}|${this._state?.editorMode}|${this._live}|${this._lips.state('layers')}|${this._lips.state('inspector')}|${retry}`;
+    if (retry && sig === this._barSig) return;
+    if (retry) this._barSig = sig;
     const root = this.shadowRoot;
     const canvas = root?.querySelector<StudioCanvas>('mc-studio-canvas');
     const inner = canvas?.shadowRoot?.querySelector<HTMLElement>('.canvas');
@@ -490,7 +495,7 @@ export class Studio extends LitElement {
               ${this._renderTopbar(s, mode)}
               <div class="workspace ${live ? 'live' : ''} ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''}"
                 style=${this._lipTokens()}>
-                <nav class="panel layers" id="layers" aria-label=${t('Layers')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
+                <nav class="panel layers" id="layers" aria-label=${t('Layers panel')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
                   data-lip=${lips.state('layers')} data-dir=${lips.dir}>
                   <div class="panel-title">
                     <h2>${t('Layers')}</h2>
@@ -515,7 +520,7 @@ export class Studio extends LitElement {
                     : nothing}
                 </div>
                 ${lips.lip('inspector')}
-                <aside class="panel inspector" id="inspector" aria-label=${t('Inspector')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
+                <aside class="panel inspector" id="inspector" aria-label=${t('Inspector panel')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
                   data-lip=${lips.state('inspector')} data-dir=${lips.dir}>
                   <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
                 </aside>

@@ -49,6 +49,8 @@ describe('animation studio panel lips', () => {
     const t = await open(1440);
     expect(lip(t.root, 'layers').getAttribute('aria-label')).toBe('Layers panel');
     expect(lip(t.root, 'inspector').getAttribute('aria-label')).toBe('Inspector panel');
+    expect(t.root.getElementById('layers')!.getAttribute('aria-label')).toBe('Layers panel');
+    expect(t.root.getElementById('inspector')!.getAttribute('aria-label')).toBe('Inspector panel');
     expect(lip(t.root, 'layers').getAttribute('aria-expanded')).toBe('true');
     expect(t.root.querySelector('.lip-status[role="status"]')).not.toBeNull();
     const layers = t.root.querySelector<HTMLElement>('#layers')!;

@@ -92,8 +92,8 @@ describe('SVG editor panel lips', () => {
     const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
     expect(style).toMatch(/--mc-lip-at-start:\s*calc\(56px - var\(--lg\)\)/);
     expect(style).toMatch(/--mc-lip-at-end:\s*calc\(0px - var\(--lg\)\)/);
-    expect(css()).toMatch(/\.no-side\s*\{[^}]*--lt:\s*40px/);
-    expect(css()).toMatch(/\.no-insp\s*\{[^}]*--it:\s*40px/);
+    expect(css()).toMatch(/\.no-side\s*\{[^}]*--lt:\s*calc\(40px \+ var\(--lg\)\)/);
+    expect(css()).toMatch(/\.no-insp\s*\{[^}]*--it:\s*calc\(40px \+ var\(--lg\)\)/);
   });
 
   it('a shown lip sits inside its panel, clear of the stage and of the panel scrollbar', async () => {
@@ -198,5 +198,22 @@ describe('SVG editor panel lips', () => {
   it('takes the Dutch names in a Dutch interface', async () => {
     const el = await open(document.body, 'nl');
     expect(lip(el, 'inspector').getAttribute('aria-label')).toBe('Inspectorpaneel');
+  });
+
+  it('the panel padding that clears the lip applies shown and hidden, so a hidden panel never reflows', () => {
+    const flat = css().replace(/\s+/g, ' ');
+    expect(flat).toMatch(/\.left\[data-lip='shown'\], \.left\[data-lip='hidden'\] \{ padding-inline-end: calc\(28px \+ var\(--lx\)\);/);
+    expect(flat).toMatch(/\.insp\[data-lip='shown'\], \.insp\[data-lip='hidden'\] \{ padding-inline-start: calc\(28px \+ var\(--lx\)\);/);
+  });
+
+  it('the hidden gutter grows by the pull-out and the pull-out reaches the lip extension', () => {
+    const flat = css().replace(/\s+/g, ' ');
+    expect(flat).toMatch(/--mc-lip-pull: var\(--lg\)/);
+  });
+
+  it('each panel carries the name of its lip', async () => {
+    const el = await open();
+    expect(q(el, '#side')!.getAttribute('aria-label')).toBe(lip(el, 'side').getAttribute('aria-label'));
+    expect(q(el, '#inspector')!.getAttribute('aria-label')).toBe(lip(el, 'inspector').getAttribute('aria-label'));
   });
 });

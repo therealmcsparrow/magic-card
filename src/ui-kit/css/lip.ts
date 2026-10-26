@@ -132,7 +132,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.15);
   }
 
-  /* touch: an invisible extension on the canvas side makes the target 44 px wide and at least 72 px tall */
+  /* touch: an invisible extension on the canvas side makes the target 44 px wide (the border takes 1 px of the padding box) and at least 72 px tall; --mc-lip-pull is how far a window-edge lip is pulled out of the window */
   @media (pointer: coarse) {
     .lip::after {
       content: '';
@@ -143,11 +143,11 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     }
     .lip[data-side='start']::after {
       left: 100%;
-      width: 20px;
+      width: 21px;
     }
     .lip[data-side='end']::after {
       right: 100%;
-      width: 20px;
+      width: 21px;
     }
     .lip[data-side='start'][data-dir='rtl']::after {
       left: auto;
@@ -158,7 +158,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
       left: 100%;
     }
     .lip[aria-expanded='false']::after {
-      width: 16px;
+      width: calc(17px + var(--mc-lip-pull, 0px));
     }
     /* a window-edge lip can be inset (iPad edge swipes) */
     .lip[aria-expanded='false'][data-side='start'] {

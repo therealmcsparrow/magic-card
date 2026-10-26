@@ -202,12 +202,12 @@ function shortcutKeys(): string {
 
 /** The lip of each side panel: fixed name, noun for announcements, and the tooltips. */
 function lipSpecs(): PanelLipSpec[] {
-  const keys = ` (${shortcutKeys()})`;
+  const keys = shortcutKeys();
   return [
     { id: 'layers', side: 'start', controls: 'layers', name: t('Layers panel'), noun: t('layers'),
-      hideLabel: t('Hide {noun}', { noun: t('layers') }) + keys, showLabel: t('Show {noun}', { noun: t('layers') }) + keys },
+      hideLabel: t('Hide {noun} ({keys})', { noun: t('layers'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('layers'), keys }) },
     { id: 'inspector', side: 'end', controls: 'inspector', name: t('Inspector panel'), noun: t('inspector'),
-      hideLabel: t('Hide {noun}', { noun: t('inspector') }) + keys, showLabel: t('Show {noun}', { noun: t('inspector') }) + keys },
+      hideLabel: t('Hide {noun} ({keys})', { noun: t('inspector'), keys }), showLabel: t('Show {noun} ({keys})', { noun: t('inspector'), keys }) },
   ];
 }
 
@@ -1904,7 +1904,7 @@ export class AnimationStudio extends LitElement {
         </section>`,
     );
     const lips = this._lips;
-    return html`<nav class="layers" id="layers" aria-label=${t('Layers')} ?inert=${lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
+    return html`<nav class="layers" id="layers" aria-label=${t('Layers panel')} ?inert=${lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
       <div class="layers-head">
         <h2>${t('Layers')}</h2>
       </div>
@@ -2125,7 +2125,7 @@ export class AnimationStudio extends LitElement {
           }
         </div>
         ${lips.lip('inspector')}
-        <aside class="inspector" id="inspector" tabindex="-1" ?inert=${lips.isHidden('inspector')} data-lip=${lips.state('inspector')} data-dir=${lips.dir} aria-label=${this._selection.kind === 'none' ? t('Animation settings') : t('Inspector')}>
+        <aside class="inspector" id="inspector" tabindex="-1" ?inert=${lips.isHidden('inspector')} data-lip=${lips.state('inspector')} data-dir=${lips.dir} aria-label=${t('Inspector panel')}>
           ${this._renderInspector(d)}
         </aside>
         ${slide && this._inspOpen ? html`<div class="insp-scrim" @click=${() => (this._inspOpen = false)}></div>` : nothing}
