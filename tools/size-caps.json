@@ -593,6 +593,18 @@
       "field": "/entry/br/cap",
       "from": 72123,
       "to": 72251
+    },
+    {
+      "id": "editor-ceiling-980992-to-1003520",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 980992,
+      "to": 1003520
+    },
+    {
+      "id": "editor-raw-980992-to-1003520",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 980992,
+      "to": 1003520
     }
   ]
 }
