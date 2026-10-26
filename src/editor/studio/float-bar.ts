@@ -74,3 +74,14 @@ function insideCorner(frame: Box, bar: Size, viewport: Box): { top: number; left
     left: clamp(frame.left + frame.width - bar.width - GAP, vLeft, vRight - bar.width),
   };
 }
+
+/**
+ * Boxes of the panel lips beside the canvas, in the canvas content box, so a bar spot never sits on one.
+ * `root` is the tree the lips render in (the studio's shadow root); `toLocal` maps a screen rect to that box.
+ */
+export function lipBoxes(root: ParentNode, toLocal: (r: DOMRect) => Box): Box[] {
+  return [...root.querySelectorAll<HTMLElement>('.lip')]
+    .map((el) => el.getBoundingClientRect())
+    .filter((r) => r.width && r.height)
+    .map(toLocal);
+}

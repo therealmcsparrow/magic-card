@@ -877,8 +877,8 @@ describe('lip focus, Escape on the lip, touch extension', () => {
 
   it('the touch extension adds what the 1 px border takes, so the target is a full 44 px', () => {
     const css = kitLip.cssText.replace(/\s+/g, ' ');
-    expect(css).toMatch(/\.lip\[data-side='start'\]::after \{ left: 100%; width: 21px; \}/);
-    expect(css).toMatch(/\.lip\[data-side='end'\]::after \{ right: 100%; width: 21px; \}/);
+    expect(css).toMatch(/\.lip\[data-side='start'\]::after \{ left: 100%; width: 17px; \}/);
+    expect(css).toMatch(/\.lip\[data-side='end'\]::after \{ right: 100%; width: 17px; \}/);
     expect(css).toMatch(/\.lip\[aria-expanded='false'\]::after \{ width: calc\(17px \+ var\(--mc-lip-pull, 0px\)\); \}/);
   });
 });

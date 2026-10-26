@@ -5,7 +5,7 @@ import type { EditorStateManager } from '../state/editor-state';
 import type { MagicCard } from '../../card/magic-card';
 import { CARD_TAG } from '../../utils/constants';
 import { editorSystem } from '../../css/editor-stack';
-import { findFloatBarSpot } from './float-bar';
+import { findFloatBarSpot, lipBoxes } from './float-bar';
 import { ItemMenu, LongPress, itemMenuStyles } from './item-menu';
 import {
   ModuleSelection,
@@ -988,6 +988,8 @@ export class StudioCanvas extends LitElement {
         .map((el) => el.getBoundingClientRect())
         .filter((r) => r.width || r.height)
         .map(toLocal);
+      // the panel lips overlay the canvas edges: the bar keeps off them
+      obstacles.push(...lipBoxes(this.getRootNode() as ParentNode, toLocal));
       const viewport = {
         top: canvas.scrollTop,
         left: canvas.scrollLeft,
