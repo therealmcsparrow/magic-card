@@ -99,8 +99,8 @@ describe('SVG editor panel lips', () => {
   it('a shown lip sits inside its panel, clear of the stage and of the panel scrollbar', async () => {
     const el = await open();
     const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
-    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(56px \+ var\(--lw\) - 24px - var\(--lx\) - 0px\)/);
-    expect(style).toMatch(/--mc-lip-at-end:\s*calc\(var\(--iw\) - 24px - var\(--lx\)\)/);
+    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(56px \+ var\(--lw\) - 24px - var\(--lx\) - 0px - 1px\)/);
+    expect(style).toMatch(/--mc-lip-at-end:\s*calc\(var\(--iw\) - 24px - var\(--lx\) - 1px\)/);
   });
 
   it('a hidden panel keeps its own width and is never squeezed to 0', () => {

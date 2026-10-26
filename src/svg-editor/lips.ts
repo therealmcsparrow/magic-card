@@ -38,7 +38,7 @@ export function lipStrings(locale: string): PanelLipStrings {
  * a shown one sits inside its panel at the inner edge, clear of the panel's scrollbar and of the stage.
  */
 export function lipTokens(side: 'shown' | 'hidden' | 'off', insp: 'shown' | 'hidden' | 'off', bar: number): string {
-  const start = side === 'hidden' ? 'calc(56px - var(--lg))' : `calc(56px + var(--lw) - 24px - var(--lx) - ${bar}px)`;
-  const end = insp === 'hidden' ? 'calc(0px - var(--lg))' : 'calc(var(--iw) - 24px - var(--lx))';
+  const start = side === 'hidden' ? 'calc(56px - var(--lg))' : `calc(56px + var(--lw) - 24px - var(--lx) - ${bar}px - 1px)`;
+  const end = insp === 'hidden' ? 'calc(0px - var(--lg))' : 'calc(var(--iw) - 24px - var(--lx) - 1px)';
   return `--mc-lip-at-start: ${start}; --mc-lip-at-end: ${end}`;
 }
