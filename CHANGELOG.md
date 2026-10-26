@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.7 (2026-10-26)
 
 ### Added
 -   **Side panels hide.** The card studio, the animation studio, the SVG editor (pre-release), the shape studio (pre-release) and the theme editor (from 1024 px wide) get an edge button on each side panel that sits beside the canvas or preview. Press it to hide the panel: the canvas or preview takes the width. Press it again to show the panel with its selection and scroll position. Only the button stays at the window edge. Hiding a panel does not change the card or the undo history. See [Studio layout](documentation/studio/layout-and-toolbar.md#hiding-the-side-panels).
