@@ -7,6 +7,10 @@ import type { StructureOutline } from './structure-outline';
 import type { Selection } from './selection';
 import { selectionKey } from './selection';
 import { kitTopbar } from '../../ui-kit/css/extras';
+import { kitLip } from '../../ui-kit/css/lip';
+import { PanelLips } from '../../ui-kit/controllers/panel-lips';
+import { ScrollbarWatch } from '../../ui-kit/controllers/scrollbar-width';
+import type { PanelLipSpec, PanelLipStrings } from '../../contracts/ui-kit';
 import { editorSystem } from '../../css/editor-stack';
 import type { StudioCanvas } from './studio-canvas';
 import { CanvasWidth, CanvasWidthOption, DetectedView, OPTION_IDS, OPTION_LABELS, OPTION_NAMES, autoWidth, detectView, overrideWidth } from './view-detect';
@@ -24,6 +28,36 @@ const MODES: Array<{ id: EditorMode; label: MessageId }> = [
   { id: 'form', label: m('Form') },
   { id: 'yaml', label: m('YAML') },
 ];
+
+/** Ctrl+\ on most systems, the command key on Apple ones. */
+function shortcutKeys(): string {
+  return /Mac|iPhone|iPad/.test(navigator.platform || '') ? '⌘\\' : 'Ctrl+\\';
+}
+
+/** The lip of each side panel: fixed name, noun for announcements, and the tooltips. */
+function lipSpecs(): PanelLipSpec[] {
+  const keys = ` (${shortcutKeys()})`;
+  return [
+    { id: 'layers', side: 'start', controls: 'layers', name: t('Layers panel'), noun: t('layers'),
+      hideLabel: t('Hide {noun}', { noun: t('layers') }) + keys, showLabel: t('Show {noun}', { noun: t('layers') }) + keys },
+    { id: 'inspector', side: 'end', controls: 'inspector', name: t('Inspector panel'), noun: t('inspector'),
+      hideLabel: t('Hide {noun}', { noun: t('inspector') }) + keys, showLabel: t('Show {noun}', { noun: t('inspector') }) + keys },
+  ];
+}
+
+function lipStrings(locale: string): PanelLipStrings {
+  const hintOne = t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' });
+  return {
+    locale,
+    hidden: t('{panels} hidden', { panels: '{panels}' }),
+    shown: t('{panels} shown', { panels: '{panels}' }),
+    hintOne,
+    hintMany: t('Some panels are hidden, as you left them. Use the arrows on the edges to show them.'),
+    hintMigrated: hintOne,
+    hintShortcut: t('Shortcut: {keys}', { keys: shortcutKeys() }),
+    gotIt: t('Got it'),
+  };
+}
 
 function isTyping(e: Event): boolean {
   const t = e.composedPath()[0];
@@ -68,6 +102,19 @@ export class Studio extends LitElement {
   /** The Escape that left Preview also raises a dialog `cancel` in the same task: that one must not close the studio. */
   private _swallowCancel = false;
 
+  /** Panel lips: hide and show Layers and Inspector, remembered per device; Ctrl/Cmd + \ toggles the column panels. */
+  private readonly _lips = new PanelLips(this, {
+    editor: 'card-studio',
+    panels: lipSpecs(),
+    strings: lipStrings('en'),
+  });
+  private _lipLocale = 'en';
+  /** Width of the scrollbar the lips face (the canvas or the YAML scroller), measured. */
+  private readonly _bar = new ScrollbarWatch(this);
+  private readonly _wideLayers = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 901px)') : undefined;
+  private readonly _wideInspector = typeof window !== 'undefined' ? window.matchMedia?.('(min-width: 641px)') : undefined;
+  private _onViewport = (): void => this.requestUpdate();
+
   private _unsubscribe?: () => void;
   private _subscribedTo?: EditorStateManager;
   private _focusSel: string | null = null;
@@ -84,11 +131,15 @@ export class Studio extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this._wideLayers?.addEventListener?.('change', this._onViewport);
+    this._wideInspector?.addEventListener?.('change', this._onViewport);
     if (this.stateManager && !this._unsubscribe) this._subscribe();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
+    this._wideLayers?.removeEventListener?.('change', this._onViewport);
+    this._wideInspector?.removeEventListener?.('change', this._onViewport);
     this._unsubscribe?.();
     this._unsubscribe = undefined;
     this._subscribedTo = undefined;
@@ -99,7 +150,21 @@ export class Studio extends LitElement {
     // The view is read when the studio opens, and again when `lovelace` arrives later.
     if ((changed.has('open') && this.open) || changed.has('lovelace')) this._detect();
     // every opening and closing starts in editing (here, so it costs no second update)
-    if (changed.has('open')) this._live = false;
+    if (changed.has('open')) {
+      this._live = false;
+      if (this.open) this._lips.restore();
+    }
+    const language = this.hass?.locale?.language ?? 'en';
+    if (language !== this._lipLocale) {
+      this._lipLocale = language;
+      this._lips.setPanels(lipSpecs(), lipStrings(language));
+    }
+    // a panel has a lip only while it is a column beside the canvas (the layout breakpoints below)
+    this._lips.suspended = this._live;
+    this._lips.columns({
+      layers: this.open && (this._wideLayers?.matches ?? true),
+      inspector: this.open && (this._wideInspector?.matches ?? true),
+    });
   }
 
   private _detect(): void {
@@ -134,6 +199,29 @@ export class Studio extends LitElement {
       this.shadowRoot?.querySelector<HTMLElement>(this._focusSel)?.focus();
       this._focusSel = null;
     }
+    this._watchScrollbar();
+  }
+
+  /**
+   * Where the lips sit, measured from each window edge: a shown panel's lip at its inner edge, a hidden
+   * panel's at the window edge. The canvas scrollbar is at the inline end, so the end lip stays clear of it.
+   */
+  private _lipTokens(): string {
+    const lips = this._lips;
+    const start = lips.isHidden('layers') ? '0px' : 'var(--lpw)';
+    const end = lips.isHidden('inspector') ? '0px' : 'var(--ipw)';
+    return `--mc-lip-at-start: ${start}; --mc-lip-at-end: calc(${end} + ${this._bar.width}px)`;
+  }
+
+  /** The scroller on the canvas side of the lips: the canvas in Form mode and Preview, the YAML view otherwise. */
+  private _watchScrollbar(retry = true): void {
+    const root = this.shadowRoot;
+    const canvas = root?.querySelector<StudioCanvas>('mc-studio-canvas');
+    const inner = canvas?.shadowRoot?.querySelector<HTMLElement>('.canvas');
+    // the canvas renders on its own schedule: look again once it has
+    if (canvas && !inner && retry) void canvas.updateComplete.then(() => this._watchScrollbar(false));
+    const scroller = inner ?? root?.querySelector<HTMLElement>('.center-alt') ?? null;
+    this._bar.watch(scroller, root?.querySelector<HTMLElement>('.workspace') ?? null);
   }
 
   private _syncOpen(): void {
@@ -157,7 +245,9 @@ export class Studio extends LitElement {
   /** Layers "Edit": the module is selected; hide the Layers overlay (narrow) and focus the inspector. */
   private _onEditModule = (): void => {
     if (this._showLayers && window.matchMedia?.('(max-width: 900px)').matches) this._showLayers = false;
-    this.inspector?.focusInspector();
+    // Edit is an explicit "edit this": a hidden Inspector column comes back first
+    if (this._lips.isHidden('inspector')) void this._lips.reveal('inspector').then(() => this.inspector?.focusInspector());
+    else this.inspector?.focusInspector();
   };
 
   /** Rename from the canvas menu: the Layers field (the overlay opens when narrow); focus returns to the canvas. */
@@ -168,6 +258,7 @@ export class Studio extends LitElement {
       this._showLayers = true;
       this._layersForRename = true;
     }
+    if (this._lips.isHidden('layers')) await this._lips.reveal('layers');
     await this.updateComplete;
     this.shadowRoot?.querySelector<StructureOutline>('mc-structure-outline')?.startRename(selectionKey(d.sel), d.returnFocus);
   };
@@ -381,6 +472,7 @@ export class Studio extends LitElement {
     const mode: EditorMode = s?.editorMode === 'yaml' ? 'yaml' : 'form';
     const mods = s ? countModules(s.config) : 0;
     const live = this._live;
+    const lips = this._lips;
 
     return html`
       <dialog
@@ -390,11 +482,14 @@ export class Studio extends LitElement {
         @close=${this._onNativeClose}
         @keydown=${this._onKeydown}
       >
+        ${this._lips.status()}
         ${s && sm && this.open
           ? html`
               ${this._renderTopbar(s, mode)}
-              <div class="workspace ${live ? 'live' : ''}">
-                <nav class="panel layers" id="layers" aria-label=${t('Layers')} ?hidden=${live} ?inert=${live}>
+              <div class="workspace ${live ? 'live' : ''} ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''}"
+                style=${this._lipTokens()}>
+                <nav class="panel layers" id="layers" aria-label=${t('Layers')} ?hidden=${live} ?inert=${live || lips.isHidden('layers')}
+                  data-lip=${lips.state('layers')} data-dir=${lips.dir}>
                   <div class="panel-title">
                     <h2>${t('Layers')}</h2>
                     <span class="chip is-count">${t('{mods, plural, one {# module} other {# modules}}', { mods })}</span>
@@ -402,6 +497,7 @@ export class Studio extends LitElement {
                   <mc-structure-outline .stateManager=${sm} variant="layers" @mc-edit-module=${this._onEditModule}
                     @mc-status=${this._onStatus} @mc-rename-done=${this._onRenameDone}></mc-structure-outline>
                 </nav>
+                ${lips.lip('layers')}
                 <div class="center">
                   ${mode === 'form' || live
                     ? html`<mc-studio-canvas .stateManager=${sm} .hass=${this.hass} .width=${this._width} .live=${live} @mc-match-view=${this._onMatchView}
@@ -416,7 +512,9 @@ export class Studio extends LitElement {
                       `
                     : nothing}
                 </div>
-                <aside class="panel inspector" aria-label=${t('Inspector')} ?hidden=${live} ?inert=${live}>
+                ${lips.lip('inspector')}
+                <aside class="panel inspector" id="inspector" aria-label=${t('Inspector')} ?hidden=${live} ?inert=${live || lips.isHidden('inspector')}
+                  data-lip=${lips.state('inspector')} data-dir=${lips.dir}>
                   <mc-inspector .stateManager=${sm} .hass=${this.hass} variant="studio"></mc-inspector>
                 </aside>
               </div>
@@ -431,6 +529,7 @@ export class Studio extends LitElement {
   static styles = [
     editorSystem,
     kitTopbar,
+    kitLip,
     css`
       :host {
         display: contents;
@@ -539,10 +638,35 @@ export class Studio extends LitElement {
 
       /* workspace */
       .workspace {
+        --lpw: 240px;
+        --ipw: 340px;
         position: relative;
         display: grid;
-        grid-template-columns: 240px minmax(0, 1fr) 340px;
+        grid-template-columns: var(--lw, var(--lpw)) minmax(0, 1fr) var(--iw, var(--ipw));
         min-height: 0;
+      }
+      /*
+       * A hidden panel gives its track to the canvas but keeps its own width, so its content never reflows
+       * and a nested scroller keeps its place (WebKit loses it in a 0 px item). It slides off its edge.
+       */
+      .no-layers {
+        --lw: 0px;
+      }
+      .no-inspector {
+        --iw: 0px;
+      }
+      .layers {
+        --mc-lip-off: -100%;
+      }
+      .inspector {
+        --mc-lip-off: 100%;
+      }
+      .layers[data-lip='hidden'] {
+        width: var(--lpw);
+      }
+      .inspector[data-lip='hidden'] {
+        width: var(--ipw);
+        justify-self: end;
       }
       .panel {
         background: var(--mc-surface);
@@ -604,12 +728,14 @@ export class Studio extends LitElement {
 
       @media (max-width: 1180px) {
         .workspace {
-          grid-template-columns: 220px minmax(0, 1fr) 320px;
+          --lpw: 220px;
+          --ipw: 320px;
         }
       }
       @media (max-width: 900px) {
         .workspace {
-          grid-template-columns: minmax(0, 1fr) min(340px, 100%);
+          --ipw: 340px;
+          grid-template-columns: minmax(0, 1fr) var(--iw, var(--ipw));
         }
         .layers {
           display: none;
