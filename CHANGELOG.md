@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.8 (2026-10-26)
 
 ### Added
 -   **Library images.** Draw a picture in the image editor, save it to the Magic Card Utils library, and show it in an image module (Choose an image, Draw a new image, Edit image) or as a background layer, including per-state backgrounds. A YAML reference such as `image: mcu-image:<id>` holds the picture's address, not the drawing. See [Library images](documentation/images/README.md).
