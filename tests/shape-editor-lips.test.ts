@@ -81,7 +81,7 @@ describe('Shape studio panel lips', () => {
     await setLayout(el, 'wide');
     const style = q<HTMLElement>(el, '.work')!.getAttribute('style')!;
     expect(style).toMatch(/--mc-lip-at-end:\s*calc\(0px - var\(--lg\)\)/);
-    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(var\(--lw\) - 24px - var\(--lx\) - 0px - 1px\)/);
+    expect(style).toMatch(/--mc-lip-at-start:\s*calc\(var\(--lw\) - 28px - var\(--lx\) - 0px - 1px\)/);
     expect(css()).toMatch(/\.no-side\{[^}]*--lt:calc\(40px \+ var\(--lg\)\)/);
     expect(css()).toMatch(/\.no-insp\{[^}]*--it:calc\(40px \+ var\(--lg\)\)/);
   });

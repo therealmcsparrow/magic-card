@@ -91,22 +91,23 @@ import type { KitTemplate } from './ui-kit';
  *   A click decides from the state at click time. After a toggle by the lip, focus stays on the lip
  *   (the click calls focus() on the lip, so a browser that does not focus a clicked button still does).
  *   A lip toggle never uses the status region. Escape on the lip: see "Hint".
- * - Look (colours only from KIT_TOKENS; the chevron points the way the panel will move and mirrors in RTL):
- *     shown    24 x 56 px, fill --mc-surface, 16 px chevron --mc-text-2, edge 1 px solid --mc-text-2;
+ * - Look (colours only from KIT_TOKENS; the chevron points the way the panel will move and mirrors in RTL).
+ *   One size in both states, 28 x 72 px with an 18 px chevron, in every editor; only the colours change:
+ *     shown    fill --mc-surface, chevron --mc-text-2, edge 1 px solid --mc-text-2;
  *              hover (hover: hover) fill --mc-surface-2, edge and chevron --mc-text; pressed fill
  *              --mc-accent-tint, chevron --mc-accent-ink; focus ring 2 px --mc-focus, outline-offset -3px
- *     hidden   28 x 72 px, fill --mc-accent-fill, 18 px chevron --mc-on-accent, edge 1 px solid
+ *     hidden   fill --mc-accent-fill, chevron --mc-on-accent, edge 1 px solid
  *              --mc-text-2; hover and pressed darken with `box-shadow: inset 0 0 0 100vmax rgba(0,0,0,.15)`
  *              (no color-mix(), Chromium 111); focus ring 2 px --mc-on-accent, outline-offset -4px
  *   The edge and chevron reach 3:1 against the panel and the canvas in light and dark.
  * - Hit area, fine pointer (mouse, trackpad, pen with hover), at any zoom level: the visible tab is the
- *   target, 24 x 56 px shown and 28 x 72 px hidden. That meets WCAG 2.5.8 (at least 24 x 24 CSS px);
- *   page zoom scales the tab with everything else, so it stays 24 x 56 and 28 x 72 CSS px at 200 %.
+ *   target, 28 x 72 px shown and hidden. That meets WCAG 2.5.8 (at least 24 x 24 CSS px);
+ *   page zoom scales the tab with everything else, so it stays 28 x 72 CSS px at 200 %.
  *   There is no extension on a fine pointer, so the lip covers nothing of the canvas beside it.
  * - Hit area, coarse pointer (@media (pointer: coarse)): a transparent ::after on the canvas side makes
  *   the target 44 px wide and at least 72 px tall. It starts at the tab's padding edge, so the tab's
  *   1 px edge counts once:
- *     shown    ::after width 21px                                   (24 - 1 + 21 = 44)
+ *     shown    ::after width 17px                                   (28 - 1 + 17 = 44)
  *     hidden   ::after width calc(17px + var(--mc-lip-pull, 0px))   (28 - 1 + 17 = 44, plus the pull)
  *   --mc-lip-pull (default 0) is how far the host pulls a window-edge (hidden) lip out of the window.
  *   The hidden extension grows by the same length, so the part of the target inside the window stays
@@ -155,9 +156,9 @@ import type { KitTemplate } from './ui-kit';
  *   card-studio, anim-studio: 'overlay'. Canvas content keeps 24 px padding; no handle sits in the lip's
  *     band (column handles are only on inner gutters of a row, .sel-frame is pointer-events: none). On a
  *     full-width card (Wide, Panel) the coarse-pointer ::after (44 px) covers the card's outer 20 px in a
- *     56-72 px band, and the hidden tab (28 px) its outer 4 px on any pointer; clicks there hit the lip.
- *     A float bar flush at its 8 px margin can cover up to 12 px of the visible tab; the rest and the
- *     extension stay reachable.
+ *     72 px band, and the tab (28 px, shown or hidden) its outer 4 px on any pointer; clicks there hit the
+ *     lip. The float bar treats each lip as an obstacle when it picks a spot, so it never covers one; with
+ *     no free spot it docks.
  *   svg-editor, shape-studio: 'gutter'. Their .stage has no padding and overflow: hidden, and SVG handles
  *     reach the stage edge; they cannot sit above an outside lip. On a coarse pointer each pulls its
  *     window-edge lip out by its --lg spacing (4 px; 0 on a fine pointer) and sets --mc-lip-pull: var(--lg)
@@ -373,7 +374,7 @@ import type { KitTemplate } from './ui-kit';
  *    disconnected on disconnect. The lip covers 0 px of a 0, 15 and 17 px bar. Coarse pointer: the
  *    on-screen hit area (tab plus ::after) is 44 px wide, at least 72 px tall, for shown and hidden lips
  *    in every editor, including a hidden lip pulled out by --mc-lip-pull. Fine pointer, also at 200 %
- *    zoom: the hit area is the tab, 24 x 56 shown and 28 x 72 hidden. 'gutter' hosts: with a panel
+ *    zoom: the hit area is the tab, 28 x 72 shown and hidden. 'gutter' hosts: with a panel
  *    hidden the gutter track is LIP_GUTTER_PX plus --mc-lip-pull and the lip's box (with ::after) does
  *    not intersect the stage's box. 'overlay' hosts: the lip's z-index is below the float bar's. The
  *    success metric above at 820 x 1180, per editor.

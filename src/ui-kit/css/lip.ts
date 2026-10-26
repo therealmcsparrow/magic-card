@@ -15,8 +15,8 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     box-sizing: border-box;
     display: grid;
     place-items: center;
-    width: 24px;
-    height: 56px;
+    width: 28px;
+    height: 72px;
     margin: 0;
     padding: 0;
     border: 1px solid var(--mc-text-2);
@@ -27,20 +27,14 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     -webkit-tap-highlight-color: transparent;
   }
   .lip svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     pointer-events: none;
   }
   .lip[aria-expanded='false'] {
-    width: 28px;
-    height: 72px;
     border-color: var(--mc-text-2);
     background: var(--mc-accent-fill);
     color: var(--mc-on-accent);
-  }
-  .lip[aria-expanded='false'] svg {
-    width: 18px;
-    height: 18px;
   }
 
   /* placement: the physical value first, then the logical one */
@@ -132,7 +126,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.15);
   }
 
-  /* touch: an invisible extension on the canvas side makes the target 44 px wide (the border takes 1 px of the padding box) and at least 72 px tall; --mc-lip-pull is how far a window-edge lip is pulled out of the window */
+  /* touch: an invisible extension on the canvas side makes the target 44 px wide (28 - 1 for the border + 17) and at least 72 px tall; --mc-lip-pull is how far a window-edge lip is pulled out of the window */
   @media (pointer: coarse) {
     .lip::after {
       content: '';
@@ -143,11 +137,11 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     }
     .lip[data-side='start']::after {
       left: 100%;
-      width: 21px;
+      width: 17px;
     }
     .lip[data-side='end']::after {
       right: 100%;
-      width: 21px;
+      width: 17px;
     }
     .lip[data-side='start'][data-dir='rtl']::after {
       left: auto;
@@ -253,7 +247,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
       min-height: 44px;
     }
   }
-  /* 8 px from the 28 px hidden tab, with a notch towards it */
+  /* 8 px from the 28 px tab, with a notch towards it */
   .lip-hint::before {
     content: '';
     position: absolute;
