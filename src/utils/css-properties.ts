@@ -79,6 +79,10 @@ export interface CssPropertyDef {
   subgroup?: string;
   /** Number field bounds: min, max and step. */
   range?: [number, number, number];
+  /** Every design key this field edits, when more than its own (the position offsets). */
+  keys?: string[];
+  /** A key the field before it edits: it has no field of its own. */
+  part?: boolean;
 }
 
 export interface CssSector {
@@ -228,10 +232,10 @@ export const CSS_SECTORS: CssSector[] = [
     icon: 'mdi:page-layout-body',
     properties: [
       prop('position', 'position', lm('Position'), 'select', POSITION_OPTS),
-      prop('top', 'top', lm('Top'), 'unit'),
-      prop('right', 'right', lm('Right'), 'unit'),
-      prop('bottom', 'bottom', lm('Bottom'), 'unit'),
-      prop('left', 'left', lm('Left'), 'unit'),
+      { ...prop('top', 'top', lm('Offsets'), 'box'), keys: ['top', 'right', 'bottom', 'left'] },
+      { ...prop('right', 'right', lm('Right'), 'unit'), part: true },
+      { ...prop('bottom', 'bottom', lm('Bottom'), 'unit'), part: true },
+      { ...prop('left', 'left', lm('Left'), 'unit'), part: true },
       prop('inset', 'inset', lm('Inset'), 'unit'),
       prop('display', 'display', lm('Display'), 'select', DISPLAY_OPTS),
       prop('visibility', 'visibility', lm('Visibility'), 'select', VISIBILITY_OPTS),

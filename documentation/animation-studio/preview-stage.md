@@ -28,9 +28,7 @@ The kind editors have their own pages: [Keyframes](keyframes.md), [Particles](pa
 
 ## Layers
 
-The Layers column is 240 px wide, or 224 px when the studio is less than 1100 px wide. Collapse layers (the double arrow in its header) shrinks it to a rail of icons, and Expand layers opens it again. When the studio is less than 1000 px wide, the column starts as a rail. The studio remembers your choice in this browser.
-
-The rail shows the targets as icons, then a button for each panel of the column: Card parts, Icon parts and Shapes. A panel button opens the column and scrolls to that panel.
+The Layers column is 240 px wide, or 224 px when the studio is less than 1100 px wide. Its edge button hides it and shows it again; the stage takes the width of a hidden column. See [Hiding the panels](#hiding-the-panels). The studio remembers whether Layers is hidden in this browser.
 
 For a keyframes animation the column holds three panels:
 
@@ -41,6 +39,14 @@ For a keyframes animation the column holds three panels:
 Click a row to select that target. The timeline then shows its lanes, and the inspector shows its settings. Ctrl, Cmd or Shift adds a target to the selection or takes it out. Click the selected row again to clear the selection.
 
 For path and sequence animations the column lists Element and Icon, with Moves on the one the animation moves. A particles animation shows "Particles play on the whole element."
+
+### Hiding the panels
+
+Layers and the inspector each have an edge button on their inner side while they sit beside the stage. Press it to hide the panel: the stage takes its width, and the button stays at the window edge. Press it again to show the panel with its selection and scroll position. The hidden panel keeps its settings and does not change the animation.
+
+Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. The shortcut works while focus is in the studio. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons.
+
+If you collapsed Layers in an earlier version, it opens hidden once, with a short hint, and the studio then remembers the new setting instead.
 
 ## Stage and timeline
 
@@ -65,7 +71,7 @@ The inspector is 320 px wide (288 px when the studio is less than 1100 px wide) 
 | Nothing | The kind editor for particles, paths and sequences, then the animation settings (Animation, Timing, What moves), then [States](states-and-values.md#state-clips) |
 | Keyframes on the timeline | The [keyframe inspector](keyframes.md#keyframe-inspector) |
 | A part or group | The [part inspector](parts.md#animating-a-part) with its pivot (a part preset's pivot when there is one, see [Preset pivots](parts.md#preset-pivots)), [Part presets](icon-mode.md#part-presets) and [Value bindings](states-and-values.md#value-bindings) |
-| Element or Icon | What the animation moves, with Move the icon instead (or Move the element instead) and Origin, then Value bindings. Icon without parts also gets Icon parts with Split icon, so you can split it while the Layers column is a rail. |
+| Element or Icon | What the animation moves, with Move the icon instead (or Move the element instead) and Origin, then Value bindings. Icon without parts also gets Icon parts with Split icon, so you can split it from the inspector even while Layers is hidden. |
 | A card part (Name, State, Background) | Value bindings |
 | A drawn shape, or a drawing tool | The [shape inspector](drawing.md#the-shape-inspector) or the tool's options |
 
@@ -129,8 +135,8 @@ The studio is made for a desktop and works on a tablet:
 -   Everything uses pointer events, so a finger or pen works like a mouse. Handles and points on the stage have touch targets of at least 24 px at any stage scale.
 -   Every action has a button. Nothing depends on hovering.
 -   On the timeline a finger drag scrolls the lanes. Hold for 400 ms and then drag to select keyframes with a box. A quick tap clears the selection.
--   Below 1000 px of width the Layers column starts as a rail. Its panel buttons open the column at Card parts, Icon parts or Shapes.
--   Below 900 px the inspector slides over the editor instead of taking a column. The Inspector button in the top bar opens it, and selecting keyframes opens it too. Selecting a target, a part on the stage or a drawing tool keeps the stage in view. The focus moves into the inspector when it opens. Tap outside it, or press Escape, to close it; Escape puts the focus back on the Inspector button.
+-   The Layers column has its edge button at every width, so a narrow window can give the stage the whole width.
+-   Below 900 px the inspector slides over the editor instead of taking a column, and it has no edge button. The Inspector button in the top bar opens it, and selecting keyframes opens it too. Selecting a target, a part on the stage or a drawing tool keeps the stage in view. The focus moves into the inspector when it opens. Tap outside it, or press Escape, to close it; Escape puts the focus back on the Inspector button.
 
 There is no phone layout.
 
@@ -169,5 +175,6 @@ When someone saves the open animation elsewhere and you have no unsaved changes,
 | Ctrl+Y or Ctrl+Shift+Z | Editor | Redo, not while typing in a field |
 | Space | Editor | Play or pause the preview, not on a button or in a field |
 | Escape | Editor | Back to the animation settings (the focus goes to the inspector), or close the sliding inspector |
+| Ctrl+\ | Editor | Hide or show Layers and the inspector (see [Hiding the panels](#hiding-the-panels)) |
 
 The shortcuts don't work while a window (delete, import, export, presets, unsaved changes, Save as icon, Import SVG) is open. The timeline, the parts list, the pivot handle on the stage (see [Pivots](parts.md#pivots)), the drawing tools, the path editor and the sequence steps have keys of their own, listed on their pages.

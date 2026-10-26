@@ -416,6 +416,7 @@ export function renderBoxField(
         .onChange=${(updates: Record<string, unknown>) =>
           onChange(applyBoxFieldUpdates(value, baseName, updates))}
         .baseName=${baseName}
+        .label=${label}
       ></mc-box-field>
     </div>
   `;

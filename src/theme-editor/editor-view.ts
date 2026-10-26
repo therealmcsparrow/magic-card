@@ -6,6 +6,9 @@ import type { SavedThemePreset } from '../contracts/mcu-library';
 import type { IncludeStatus, ThemeBackend, ThemeBackendError, ThemeDoc, ThemeMode } from '../contracts/theme-editor';
 import { CATALOGUE_GROUPS, entryByName, groupEntries, kindOf } from './catalogue/index';
 import { glyph } from '../ui-kit/glyphs';
+import { kitLip } from '../ui-kit/css/lip';
+import { PanelLips } from '../ui-kit/controllers/panel-lips';
+import { lipSpecs, lipStrings } from './lips';
 import { outsideOf } from './outside';
 import { cloneDoc, docErrors, isDirty, previewVars, removeVar, resolveTheme, setVar, validateValue } from './model';
 import type { DocError } from './model';
@@ -192,6 +195,9 @@ export class McteEditorView extends LitElement {
   private _usedLink = false;
   private _pinned = new Set<string>();
 
+  /** Panel lip: hides and shows the Variables pane beside the preview (wide layout only), remembered per device. */
+  private readonly _lips = new PanelLips(this, { editor: 'theme-editor', panels: lipSpecs(), strings: lipStrings('en') });
+  private _lipLocale = 'en';
   private _ro?: ResizeObserver;
   private _stackRo?: ResizeObserver;
   private _unsub?: () => void;
@@ -257,6 +263,13 @@ export class McteEditorView extends LitElement {
   }
 
   protected willUpdate(changed: PropertyValues): void {
+    const language = locale();
+    if (language !== this._lipLocale) {
+      this._lipLocale = language;
+      this._lips.setPanels(lipSpecs(), lipStrings(language));
+    }
+    // the pane has a lip only while it is a column beside the preview; below 1024 px it is a tab
+    this._lips.columns({ variables: !!this.draft && this._layout === 'wide' });
     if (changed.has('draft') && this.draft) this._load(this.draft);
     if (changed.has('hass') && isTrialActive() && getTrial()?.name === this._name) syncTrialMode(this._doc, this.hass);
   }
@@ -1176,8 +1189,11 @@ export class McteEditorView extends LitElement {
     const layout = this._layout;
     const sticky = this._sticky;
     if (layout === 'wide') {
-      return html`<div class="cols">
-        <section class="pane vars" role="region" aria-label=${t('Variables')}>${this._varsPanel()}</section>
+      const lips = this._lips;
+      const hidden = lips.isHidden('variables');
+      return html`<div class="cols ${hidden ? 'no-vars' : ''}" style="--mc-lip-at-start: ${hidden ? '0px' : 'var(--vw)'}">
+        <section class="pane vars" id="vars-pane" role="region" aria-label=${t('Variables panel')} ?inert=${hidden} data-lip=${lips.state('variables')} data-dir=${lips.dir}>${this._varsPanel()}</section>
+        ${lips.lip('variables')}
         <section class="pane prev" role="region" aria-label=${t('Preview')}>${this._previewPanel()}</section>
       </div>`;
     }
@@ -1250,6 +1266,7 @@ export class McteEditorView extends LitElement {
         ${this._body()}
       </div>
       <p class="sr-only" role="status">${this._msg}</p>
+      ${this._lips.status()}
       <mc-ui-toast .offset=${this._trial ? 88 : 16} @mc-toast-action=${() => this._toastRun?.()}></mc-ui-toast>
       ${this._dialog()}
       <mcte-preset-dialog .backend=${this.backend} .mine=${this.mine} .include=${this.include}></mcte-preset-dialog>
@@ -1258,6 +1275,7 @@ export class McteEditorView extends LitElement {
 
   static styles = [
     base,
+    kitLip,
     css`
       :host {
         display: block;
@@ -1375,7 +1393,19 @@ export class McteEditorView extends LitElement {
         flex: 1 1 auto;
         min-height: 0;
         display: grid;
-        grid-template-columns: minmax(360px, 440px) 1fr;
+        --vw: 440px;
+        position: relative;
+        grid-template-columns: var(--cw, var(--vw)) minmax(0, 1fr);
+      }
+      /* the hidden pane gives its track to the preview but keeps its own width, so its content never reflows */
+      .no-vars {
+        --cw: 0px;
+      }
+      .vars {
+        --mc-lip-off: -100%;
+      }
+      .vars[data-lip='hidden'] {
+        width: var(--vw);
       }
       .pane {
         display: grid;

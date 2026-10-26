@@ -1,4 +1,4 @@
-import { LitElement, html, css, TemplateResult } from 'lit';
+import { LitElement, html, css, nothing, TemplateResult, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DesignConfig } from '../../types';
 import { editorSystem } from '../../css/editor-stack';
@@ -92,6 +92,15 @@ export class BoxField extends LitElement {
         display: grid;
         gap: 8px;
       }
+      .box-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
       .box-grid.one-col {
         grid-template-columns: minmax(0, 1fr);
       }
@@ -109,6 +118,7 @@ export class BoxField extends LitElement {
 
   @property({ attribute: false }) design: DesignConfig = {};
   @property({ attribute: false }) onChange!: (updates: Record<string, unknown>) => void;
+  /** The design key of the box (`padding`); empty when the sides are the plain keys top, right, bottom and left (the position offsets). */
   @property({ type: String }) baseName: string = 'padding';
   /** One design key holding a 1 to 4 value shorthand (`baseName`), instead of one key per side. */
   @property({ type: Boolean }) shorthand = false;
@@ -128,10 +138,19 @@ export class BoxField extends LitElement {
   @property({ type: String }) entityColor = '';
 
   @state() private _linked = false;
+
+  protected willUpdate(changed: PropertyValues): void {
+    // Undo, Redo or another edit can bring the sides apart again: the link follows the config
+    if (changed.has('design') && this._linked) {
+      const first = this._getValue('top');
+      if (SIDES.some((side) => this._getValue(side) !== first)) this._linked = false;
+    }
+  }
   /** Shorthand mode: the user chose Same on all sides (unset: linked until the sides differ). */
   @state() private _link?: boolean;
 
   private _getSuffixKey(baseName: string, suffix: string): string {
+    if (!baseName) return suffix;
     // Handle border-radius special naming
     if (baseName === 'border_radius') {
       const suffixMap: Record<string, string> = {
@@ -165,7 +184,7 @@ export class BoxField extends LitElement {
    * are re-emitted (when non-empty) so clearing the shorthand never drops them.
    */
   private _emitSides(values: Partial<Record<Side, string>>): void {
-    const updates: Record<string, unknown> = { [this.baseName]: undefined };
+    const updates: Record<string, unknown> = this.baseName ? { [this.baseName]: undefined } : {};
     const sh = this._shorthandSides();
     for (const side of SIDES) {
       if (values[side] !== undefined) updates[this._getSuffixKey(this.baseName, side)] = values[side];
@@ -303,8 +322,10 @@ export class BoxField extends LitElement {
 
   protected render(): TemplateResult {
     const linkedOne = this.shorthand && this._shLinked;
+    const named = !linkedOne && !!this.label;
     return html`
-      <div class="box">
+      <div class="box" role=${named ? 'group' : nothing} aria-labelledby=${named ? 'box-label' : nothing}>
+        ${named ? html`<span class="box-label" id="box-label">${this.label}</span>` : nothing}
         ${linkedOne
           ? this._renderCell('top', 'all', this.label)
           : html`<div class="box-grid ${this.shorthand && this.cell !== 'length' ? 'one-col' : ''}">${SIDES.map((side) => this._renderSide(side))}</div>`}

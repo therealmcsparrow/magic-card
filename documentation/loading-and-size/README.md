@@ -1,20 +1,8 @@
-# Loading and size
+# Loading and updates
 
-Magic Card splits its code into files. `magic-card.js` is the only file a dashboard loads at once. The other files load from the same folder when a card, or the editor, needs them. A plain card, with no animation, icon effect, flow, pop-up, pause button, template, ring or moving backdrop, downloads only the card file.
+Magic Card loads its files from one folder. `magic-card.js` is the only file a dashboard loads at once. The other files load from the same folder when a card, or the editor, needs them. A plain card, with no animation, icon effect, flow, pop-up, pause button, template, ring or moving backdrop, loads only the card file.
 
 The table under [Loading the other files](../../README.md#loading-the-other-files) in the main README lists which file each feature needs.
-
-## Sizes
-
-These are the sizes of `magic-card.js`, the card file, in the current release, measured on a clean build. Gzip uses level 9 and Brotli uses quality 11.
-
-| Copy of `magic-card.js` | Before the size work | Now |
-| --- | ---: | ---: |
-| Brotli (`.br`) | 129,897 B | 69,894 B |
-| gzip (`.gz`) | 156,490 B | 81,825 B |
-| Uncompressed | 503,361 B | 256,616 B |
-
-A browser downloads the Brotli or gzip copy it accepts, so a viewer receives the first two rows, not the uncompressed file.
 
 ## When a part cannot load
 
@@ -60,6 +48,6 @@ If the browser does not allow the card to use storage, a pause lasts only for th
 
 ## After an update
 
-Update through HACS, then hard refresh the browser. HACS does not delete the files of an earlier release. Once the update is done, you can delete the older hashed chunk files that the new release no longer uses. Keep every file of the new release.
+Update through HACS, then hard refresh the browser. HACS does not delete the files of an earlier release. Once the update is done, you can delete the older files that the new release no longer uses. Keep every file of the new release.
 
 For a manual install, copy the whole new release, including the `.br` and `.gz` copies. When you replace a file, replace or delete its three copies together, because an old `.br` file is sent in place of a new `.js` file.

@@ -58,6 +58,9 @@ import {
   type Shape,
 } from './model';
 import { endDrag, stepOrder, groupBlocked, moveMenu, type DragState } from './layers';
+import { PanelLips } from '../ui-kit/controllers/panel-lips';
+import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
+import { lipSpecs, lipStrings } from './lips';
 import { alignItems, combineItems, emptyMenu, pathItems, pointMenu, runMenu, shapeMenu, xferItems } from './menu';
 import { cancel as ptCancel, later as ptLater, openTool, type PtState } from './pathtools';
 import { editorStyles } from './styles';
@@ -232,6 +235,13 @@ export class McSvgEditor extends LitElement implements StageHost {
   private menuAt = 0;
   private tk = '';
   private tv?: TransformBox;
+
+  /** Panel lips: hide and show the side panel and the inspector, remembered per device; Ctrl/Cmd + backslash toggles the column panels. */
+  readonly lips = new PanelLips(this, { editor: 'svg-editor', panels: lipSpecs(), strings: lipStrings('en') });
+  private lipLocale = 'en';
+  /** Width of the scrollbar of the side panel, whose inner edge carries its lip. */
+  readonly bar = new ScrollbarWatch(this);
+  private barSig = '';
 
   hist?: History<Doc>;
   chunk?: PathCanvasChunk;
@@ -1830,6 +1840,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   startLibrary(): void {
     this.begin(this.blankStart());
     this.openPanel('library');
+    void this.lips.reveal('side');
   }
 
   async startFile(file?: File): Promise<void> {
@@ -1966,6 +1977,11 @@ export class McSvgEditor extends LitElement implements StageHost {
     if (changed.has('menu') && this.menu) this.renderRoot.querySelector<HTMLElement & { show?(): void }>('mc-ui-menu')?.show?.();
     // a gesture frame changes the drawing only: nothing can have opened since the last update
     if (!(this.hot && changed.size > 0 && [...changed.keys()].every((k) => FRAME_KEYS.has(k as string)))) this.openOverlays();
+    const barSig = `${this.stage}|${this.layout}|${this.overlay}|${this.lips.state('side')}|${this.lips.state('inspector')}`;
+    if (barSig !== this.barSig) {
+      this.barSig = barSig;
+      this.bar.watch(this.renderRoot.querySelector<HTMLElement>('.left'), this.renderRoot.querySelector<HTMLElement>('.work'));
+    }
     if (changed.has('picker') && this.picker) this.renderRoot.querySelector<HTMLElement>('.picker [role=radio][tabindex="0"]')?.focus();
   }
 
@@ -1993,6 +2009,14 @@ export class McSvgEditor extends LitElement implements StageHost {
       this.listKey = {};
     }
     if (changed.has('hass') && this.hass) setI18nLocale(this.hass as LocaleHassLike);
+    const language = (this.hass as LocaleHassLike | undefined)?.locale?.language ?? 'en';
+    if (language !== this.lipLocale) {
+      this.lipLocale = language;
+      this.lips.setPanels(lipSpecs(), lipStrings(language));
+    }
+    // a panel has a lip only while it is a column beside the stage; the side panel is a sheet in the compact layout
+    const editing = this.stage === 'edit' && !this.img;
+    this.lips.columns({ side: editing && (this.layout === 'wide' || this.layout === 'mid'), inspector: editing && this.layout !== 'stacked' });
     if (changed.has('dlg') && this.dlg && !changed.get('dlg')) this.dlgReturn = deepActive();
     if (changed.has('tool') || changed.has('sel')) this.syncPen();
     if (this.pt && (changed.has('sel') || changed.has('doc'))) ptLater(this);
@@ -2004,7 +2028,7 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** Focus the first and last focusable of the layer (the sentinels keep Tab inside it). */
   wrapFocus(end: boolean): void {
-    const list = [...this.renderRoot.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select, textarea, [tabindex="0"]')].filter((el) => !el.classList.contains('sentinel') && !el.closest('[hidden]') && el.getClientRects().length > 0);
+    const list = [...this.renderRoot.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select, textarea, [tabindex="0"]')].filter((el) => !el.classList.contains('sentinel') && !el.closest('[hidden], [data-lip="hidden"]') && el.getClientRects().length > 0);
     (end ? list[list.length - 1] : list[0])?.focus();
   }
 

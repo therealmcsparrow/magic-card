@@ -5,10 +5,7 @@ The Positioning & layout section of the [Design tab](README.md), in the Layout g
 | UI label | YAML key | Field | Values |
 | --- | --- | --- | --- |
 | Position | `position` | Select | `static`, `relative`, `absolute`, `fixed`, `sticky` |
-| Top | `top` | Unit | Length, `%`, Custom |
-| Right | `right` | Unit | Length, `%`, Custom |
-| Bottom | `bottom` | Unit | Length, `%`, Custom |
-| Left | `left` | Unit | Length, `%`, Custom |
+| Offsets | `top`, `right`, `bottom`, `left` | Box (four sides) | One value per side. Same on all sides sets all four to one value. |
 | Inset | `inset` | Unit | One value, or one to four in Custom |
 | Display | `display` | Select | `block`, `inline`, `inline-block`, `flex`, `inline-flex`, `grid`, `inline-grid`, `none`, `contents` |
 | Visibility | `visibility` | Select | `visible`, `hidden`, `collapse` |
@@ -23,6 +20,8 @@ The Positioning & layout section of the [Design tab](README.md), in the Layout g
 | Pointer events | `pointer_events` | Select | `auto`, `none` |
 
 Nothing is set by default.
+
+The four offsets are one box, Offsets, with a field for each side. Each side is saved under its own key (`top`, `right`, `bottom` or `left`), and the editor does not write the `inset` shorthand for them. To give all four sides the same value, use the Same on all sides link under the box. The Inset field below is separate and still works as before.
 
 ```yaml
 design:

@@ -1,5 +1,5 @@
 /*
- * Contract: ui kit. Version 1.1.0.
+ * Contract: ui kit. Version 1.2.0.
  * The card editor (src/editor/ + src/css/editor-system) is the base look; the kit is extracted FROM it
  * (single source), not designed in parallel, so every screen has the same look and feel.
  *
@@ -33,6 +33,9 @@
  *   UiChoiceGroupElement below). Tile and chip groups use MANUAL activation: aria-pressed buttons in
  *   role=group with a roving tabindex; arrows, Home and End move focus only; Space, Enter or a click
  *   select.
+ * - Panel lips (./ui-kit-lips): the PanelLips controller and the kitLip part hide and show an editor's
+ *   side panels, remember that per device and per editor, and own the Ctrl/Cmd + \ shortcut. Controller
+ *   and CSS only; no element changes, so UI_KIT_CONTRACT_REVISION stays.
  *
  * ── Module and placement ──
  * Module `ui-kit`, folder src/ui-kit/. NOT Core. Three layers, all shared at SOURCE level:
@@ -111,6 +114,8 @@
  *             + .result-note modifier: result of an action, cleared on the next edit), .empty,
  *             .toast (inverse chip look, used by UI_TOAST_TAG and by the MCU CSS-only copy)
  * kitSlider   .slider-row (new: label, range, number field, unit)
+ * kitLip      .lip (panel lip button, data-side start | end) and [data-lip=hidden] (visibility, pointer
+ *             events, motion); reads LIP_TOKENS; not in kitCss, imported by the editors with lips
  * kitMenu     .menu (popover menu look; used by UI_MENU_TAG and by MenuPopover callers)
  * kitWindow   .win-* classes used inside UI_WINDOW_TAG's shadow root (exported for the gallery)
  * editorLegacy (mc-* classes of the 30 module editors): moved to src/ui-kit/css/legacy.ts. Bundled into
@@ -132,7 +137,8 @@
  * MenuPopover (moved from src/editor/components/menu-popover.ts, unchanged API), RovingFocus
  * (toolbar, rail, seg, tree rows: arrows, Home/End, one tab stop), EscGuard (the three-layer Escape
  * rule of svg-editor 1.0.0: stopPropagation so HA's card dialog does not close), LongPress (from the
- * path canvas gesture, 8 px cancel rule).
+ * path canvas gesture, 8 px cancel rule), PanelLips (side panel lips, memory and shortcut; see
+ * ./ui-kit-lips).
  *
  * ── Tests ──
  * 1. Gallery page: every part and element in every state (default, hover, focus-visible, pressed,
@@ -159,9 +165,12 @@
  * 5. Selector scan: no kit class rule outside src/ui-kit/ (allow list for layout-only modifiers).
  * 6. Window scan: every `<mc-ui-window` in src/ whose variant is not 'alert' sets movable,
  *    resizable and maximizable and binds all four placement labels.
+ * 7. Panel lips: the tests listed in ./ui-kit-lips.
  */
 
-export const UI_KIT_CONTRACT_VERSION = '1.1.0';
+export * from './ui-kit-lips';
+
+export const UI_KIT_CONTRACT_VERSION = '1.2.0';
 export const UI_KIT_CONTRACT_REVISION = 5;
 
 export const UI_MENU_TAG = 'mc-ui-menu';
@@ -180,7 +189,7 @@ export const KIT_CLASSES = [
   'field', 'field-head', 'lbl', 'help', 'input', 'select', 'unit', 'with-icon', 'with-action', 'field-action',
   'color', 'swatch', 'field-reset', 'check', 'switch', 'switch-row', 'chip', 'seg', 'tiles', 'tile',
   'group', 'group-head', 'sectors', 'sector', 'sector-btn', 'sector-body', 'rows', 'row',
-  'toolbar', 'rail', 'topbar', 'notice', 'result-note', 'toast', 'empty', 'slider-row', 'menu',
+  'toolbar', 'rail', 'topbar', 'notice', 'result-note', 'toast', 'empty', 'slider-row', 'menu', 'lip',
 ] as const;
 export type KitClass = (typeof KIT_CLASSES)[number];
 
@@ -206,7 +215,7 @@ export const NEW_TOKENS = [
  *   --mc-radius-xl    16px            window, sheet (top corners)
  *   --mc-ease         .15s ease-out   colour, border and shadow transitions (0s under reduced motion)
  *   --mc-shadow-dialog 0 24px 64px rgba(0,0,0,.22), 0 4px 12px rgba(0,0,0,.1)
- * (--mc-hit itself, 40px / 44px, is Core.)
+ * (--mc-hit itself, 40px / 44px, is Core.) The lip's layout tokens are LIP_TOKENS (./ui-kit-lips).
  */
 export const KIT_SCOPED_TOKENS = [
   '--mc-hit-sm', '--mc-hit-xs', '--mc-radius-tag', '--mc-radius-seg', '--mc-radius-xl', '--mc-ease',

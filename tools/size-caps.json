@@ -59,8 +59,8 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 982016,
-      "ceiling": 982016,
+      "raw": 1003520,
+      "ceiling": 1003520,
       "note": "Card editor. 958 KiB, measured 980,057."
     },
     "magic-card-icon-animator.js": {
@@ -84,8 +84,8 @@
       "note": "26 KiB, measured 24,406 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-theme-editor.js": {
-      "raw": 277504,
-      "ceiling": 277504,
+      "raw": 286720,
+      "ceiling": 286720,
       "note": "271 KiB, measured 263,917 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-theme-presets.js": {
@@ -114,8 +114,8 @@
       "note": "SVG editor. 159 KiB, measured 161,847 with the image mode seam and lock hook (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
-      "raw": 105472,
-      "ceiling": 105472,
+      "raw": 109568,
+      "ceiling": 109568,
       "note": "Shape editor. 103 KiB."
     },
     "magic-card-layers.js": {
@@ -549,6 +549,84 @@
       "to": 980992
     },
     {
+      "id": "editor-raw-1000448",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 980992,
+      "to": 1000448
+    },
+    {
+      "id": "editor-ceiling-1000448",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 980992,
+      "to": 1000448
+    },
+    {
+      "id": "theme-editor-raw-286720",
+      "field": "/files/magic-card-theme-editor.js/raw",
+      "from": 277504,
+      "to": 286720
+    },
+    {
+      "id": "theme-editor-ceiling-286720",
+      "field": "/files/magic-card-theme-editor.js/ceiling",
+      "from": 277504,
+      "to": 286720
+    },
+    {
+      "id": "editor-raw-1003520",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 1000448,
+      "to": 1003520
+    },
+    {
+      "id": "editor-ceiling-1003520",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 1000448,
+      "to": 1003520
+    },
+    {
+      "id": "svg-editor-raw-162816",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 158720,
+      "to": 162816
+    },
+    {
+      "id": "svg-editor-ceiling-162816",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 158720,
+      "to": 162816
+    },
+    {
+      "id": "shape-editor-raw-109568",
+      "field": "/files/magic-card-shape-editor.js/raw",
+      "from": 105472,
+      "to": 109568
+    },
+    {
+      "id": "shape-editor-ceiling-109568",
+      "field": "/files/magic-card-shape-editor.js/ceiling",
+      "from": 105472,
+      "to": 109568
+    },
+    {
+      "id": "entry-br-cap-72251",
+      "field": "/entry/br/cap",
+      "from": 72123,
+      "to": 72251
+    },
+    {
+      "id": "editor-ceiling-980992-to-1003520",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 980992,
+      "to": 1003520
+    },
+    {
+      "id": "editor-raw-980992-to-1003520",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 980992,
+      "to": 1003520
+    },
+    {
       "id": "modules-extra-raw-51200",
       "field": "/files/magic-card-modules-extra.js/raw",
       "from": 49152,
@@ -645,13 +723,13 @@
       "to": 86016
     },
     {
-      "id": "svg-editor-raw-162816",
+      "id": "svg-editor-raw-162816-from-161792",
       "field": "/files/magic-card-svg-editor.js/raw",
       "from": 161792,
       "to": 162816
     },
     {
-      "id": "svg-editor-ceiling-162816",
+      "id": "svg-editor-ceiling-162816-from-161792",
       "field": "/files/magic-card-svg-editor.js/ceiling",
       "from": 161792,
       "to": 162816

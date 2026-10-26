@@ -16,6 +16,7 @@ import { apply, cancel, change, panelState } from './pathtools';
 import { GRID_CHIPS, GRID_MAX, GRID_MIN, kbOf, toolName } from './mc-svg-editor';
 import { freeId } from './library';
 import { locale, t } from './i18n';
+import { lipTokens } from './lips';
 import { ARRANGE, BOOL_OPS, HELP_KEYS, PRIM } from './names';
 import type { Tool } from './tools';
 
@@ -193,7 +194,7 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? ed.img.title : t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${skipLinks(ed)} ${ed.img ? ed.img.topBar() : topBar(ed)}
+    ${ed.lips.status()} ${skipLinks(ed)} ${ed.img ? ed.img.topBar() : topBar(ed)}
     ${ed.stage === 'edit' ? (ed.img?.readOnly ? ed.img.viewer() : workspace(ed)) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('Loading the image editor') : t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('The image editor could not load. Check your connection and try again.') : t('The icon editor could not load. Check your connection and try again.'))}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.img?.dialogs()}
     ${ed.startOpen ? startWindow(ed) : nothing}
@@ -215,7 +216,7 @@ function skipLinks(ed: McSvgEditor): TemplateResult | typeof nothing {
   return html`<nav class="skips">
     ${btn(t('Skip to canvas'), undefined, go('mc-path-canvas'), { text: true })}
     ${ed.pointCtx ? btn(t('Skip to point fields'), undefined, go('[data-field="px"]'), { text: true }) : nothing}
-    ${btn(t('Skip to inspector'), undefined, go('.insp input, .insp button'), { text: true })}
+    ${btn(t('Skip to inspector'), undefined, () => void ed.lips.reveal('inspector').then(() => go('.insp input, .insp button')()), { text: true })}
   </nav>`;
 }
 
@@ -429,10 +430,11 @@ function picker(ed: McSvgEditor): TemplateResult {
 function workspace(ed: McSvgEditor): TemplateResult {
   const stacked = ed.layout === 'stacked';
   const left = ed.layout === 'wide' || ed.layout === 'mid' || stacked || ed.overlay;
-  return html`<div class=${`work${ed.overlay ? ' ov' : ''}`}>
+  const lips = ed.lips;
+  return html`<div class=${`work${ed.overlay ? ' ov' : ''}${lips.isHidden('side') ? ' no-side' : ''}${lips.isHidden('inspector') ? ' no-insp' : ''}`} style=${lipTokens(lips.state('side'), lips.state('inspector'), ed.bar.width)}>
     ${rail(ed)}
     ${ed.picker ? picker(ed) : nothing}
-    ${left ? leftPanel(ed) : nothing}
+    ${left ? leftPanel(ed) : nothing}${left ? lips.lip('side') : nothing}
     <section class="center" aria-label=${ed.img ? ed.img.title : t('Icon editor')}>
       ${floatBar(ed)}
       <div class="stagebox">
@@ -480,7 +482,7 @@ function workspace(ed: McSvgEditor): TemplateResult {
       </div>
       ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${nudgePad(ed)}
     </section>
-    ${inspector(ed)}
+    ${lips.lip('inspector')}${inspector(ed)}
   </div>`;
 }
 
@@ -621,7 +623,7 @@ function nudgePad(ed: McSvgEditor): TemplateResult | typeof nothing {
 // ── left panel ──
 
 function leftPanel(ed: McSvgEditor): TemplateResult {
-  return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} aria-label=${t('Panel')} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
+  return html`<aside class=${`left${ed.overlay ? ' sheet' : ''}`} id="side" aria-label=${t('Layers and library panel')} ?inert=${ed.lips.isHidden('side')} data-lip=${ed.lips.state('side')} data-dir=${ed.lips.dir} role=${ed.overlay ? 'dialog' : nothing} aria-modal=${ed.overlay ? 'false' : nothing}>
     ${ed.overlay ? html`<div class="sheet-head">${btn(t('Close'), 'close', () => (ed.overlay = false))}</div>` : nothing}
     ${ed.img ? nothing : seg({ role: 'radiogroup', label: t('Panel'), full: true, value: ed.panel, items: [{ value: 'layers', label: t('Layers') }, { value: 'library', label: t('Library') }], onChange: (p) => ed.openPanel(p) })}
     ${ed.panel === 'layers' || ed.img ? guard([ed.listKey, ed.sel, ed.cur, ed.drag, ed.tmsg, ed.renaming, ed.menu, ed.layout, ed.tool], () => layersPanel(ed)) : libraryPanel(ed)}
@@ -682,7 +684,7 @@ function libraryPanel(ed: McSvgEditor): TemplateResult {
 
 function inspector(ed: McSvgEditor): TemplateResult {
   const sel = ed.selected;
-  return html`<aside class="insp" aria-label=${t('Inspector')}>
+  return html`<aside class="insp" id="inspector" aria-label=${t('Inspector panel')} ?inert=${ed.lips.isHidden('inspector')} data-lip=${ed.lips.state('inspector')} data-dir=${ed.lips.dir}>
     ${ed.pointCtx ? pointSection(ed) : nothing}
     ${sel.length ? shapeSections(ed, sel) : html`${ed.pt ? pathSection(ed) : nothing}${documentSection(ed)}`}
   </aside>`;

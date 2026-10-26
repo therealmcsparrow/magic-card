@@ -104,6 +104,7 @@ export const HELP_KEYS: MessageId[] = [
   m('Arrows move, Shift+arrows move far, Alt+arrows move 0.1'),
   m('[ and ] previous and next point, C corner or smooth, H handle, Delete removes'),
   m('Ctrl+D duplicate, Ctrl+G group, Shift+H and Shift+V flip'),
+  m('Show or hide panels: Ctrl+\\ or ⌘\\'),
   m('In a number field Ctrl+Z undoes the field. Press Enter first to undo the editor.'),
   m('On a Mac, Tab reaches buttons only when full keyboard access is on.'),
 ];

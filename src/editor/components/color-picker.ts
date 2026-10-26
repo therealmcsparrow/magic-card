@@ -501,6 +501,11 @@ export class ColorPicker extends LitElement {
     return m && (this.allowAttribute || !m[1]) ? { attr: m[1], opacity: Math.min(100, Number(m[2] ?? 100)) } : undefined;
   }
 
+  /** Shows the held value in a number field: a number past the end, or an empty field left behind. */
+  private _show(e: Event, n: number): void {
+    (e.target as HTMLInputElement).value = String(Math.round(n));
+  }
+
   protected render(): TemplateResult {
     const entity = this.allowEntity ? this._entityValue() : undefined;
     const g = this.gradient ? editableGradient(this.value, this.gradient === 'css') : undefined;
@@ -601,9 +606,13 @@ export class ColorPicker extends LitElement {
                 aria-label=${t('Hue')}
                 .value=${Math.round(this._hsva.h).toString()}
                 @input=${(e: InputEvent) => {
-                  const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._setHsva({ ...this._hsva, h: Math.max(0, Math.min(360, v)) });
+                  const v = parseInt((e.target as HTMLInputElement).value);
+                  if (Number.isNaN(v)) return;
+                  const h = Math.max(0, Math.min(360, v));
+                  this._setHsva({ ...this._hsva, h });
+                  this._show(e, h);
                 }}
+                @change=${(e: Event) => this._show(e, this._hsva.h)}
               />
             </div>
 
@@ -631,9 +640,13 @@ export class ColorPicker extends LitElement {
                 aria-label=${t('Opacity percent')}
                 .value=${Math.round(this._hsva.a * 100).toString()}
                 @input=${(e: InputEvent) => {
-                  const v = parseInt((e.target as HTMLInputElement).value) || 0;
-                  this._setHsva({ ...this._hsva, a: Math.max(0, Math.min(100, v)) / 100 });
+                  const v = parseInt((e.target as HTMLInputElement).value);
+                  if (Number.isNaN(v)) return;
+                  const a = Math.max(0, Math.min(100, v));
+                  this._setHsva({ ...this._hsva, a: a / 100 });
+                  this._show(e, a);
                 }}
+                @change=${(e: Event) => this._show(e, this._hsva.a * 100)}
               />
             </div>
 

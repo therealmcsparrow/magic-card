@@ -69,6 +69,8 @@ const TAB_STATES: TabState[] = ['tab_active', 'tab_disabled'];
 /** Keys of the old Active tab fields; the first edit in the Active tab view moves them into `tab_active`. */
 const LEGACY_ACTIVE_KEYS = ['tab_active_color', 'tab_active_background', 'tab_indicator_color'];
 
+/** The design keys a field edits. */
+const keysOf = (p: CssPropertyDef): string[] => p.keys ?? propertyKeys(p.key);
 const isRec = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const isStr = (v: unknown): v is string => typeof v === 'string' && v !== '';
 
@@ -562,13 +564,13 @@ export class DesignPanel extends LitElement {
     if (p.key === 'background_color' && this._getValue(p.key)) return true;
     // an empty object (a linked row's `shape_options: {}` marker) is not a value
     const empty = (v: unknown) => v === undefined || v === '' || (!!v && typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length);
-    return propertyKeys(p.key).some((k) => !empty(rec[k]));
+    return keysOf(p).some((k) => !empty(rec[k]));
   }
 
   /** Design keys a property owns: a box field's sides, the animation list with its legacy keys. */
   private _keysOf(p: CssPropertyDef): string[] {
     if (p.key === 'background_color' && this._getValue(p.key) !== (this._getActiveDesign().background_color || '')) return ['background_color', 'background'];
-    return p.type === 'animations' ? Object.keys(animationsUpdate([])) : propertyKeys(p.key);
+    return p.type === 'animations' ? Object.keys(animationsUpdate([])) : keysOf(p);
   }
 
   /**
@@ -696,9 +698,9 @@ export class DesignPanel extends LitElement {
     const rec = this._getActiveDesign();
     // A box property counts once whether it is set as a shorthand or per side.
     return sector.properties.filter((p) =>
-      p.type === 'animations'
+      p.part ? false : p.type === 'animations'
         ? readAnimations(rec as DesignConfig).length > 0
-        : propertyKeys(p.key).some((k) => rec[k] !== undefined && rec[k] !== ''),
+        : keysOf(p).some((k) => rec[k] !== undefined && rec[k] !== ''),
     ).length;
   }
 
@@ -715,7 +717,7 @@ export class DesignPanel extends LitElement {
     const hover = this._isHoverView();
     const base = this._activeView === 'default';
     const state = this._viewParts().state;
-    const properties = all.filter((p) => this._isVisible(p) && !(p.baseOnly && !base) && !(state && !p.tabState) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
+    const properties = all.filter((p) => !p.part && this._isVisible(p) && !(p.baseOnly && !base) && !(state && !p.tabState) && !(hover && ((p.virtual && !p.hover) || NO_HOVER_TYPES.has(p.type))));
     if (!this._searchQuery) return properties;
     const q = fold(this._searchQuery);
     return properties.filter(
@@ -723,6 +725,7 @@ export class DesignPanel extends LitElement {
         fold(lt(p.label)).includes(q) ||
         p.cssProperty.toLowerCase().includes(q) ||
         p.key.toLowerCase().includes(q) ||
+        (p.keys ?? []).some((k) => k.includes(q)) ||
         p.key.replace(/_/g, ' ').includes(q) ||
         (BOX_LONGHANDS[p.key] || []).some(
           (l) => l.cssProperty.includes(q) || l.key.includes(q),
@@ -1053,8 +1056,9 @@ export class DesignPanel extends LitElement {
             html`
               <mc-box-field
                 .design=${sub.design}
+                .label=${lt(p.label)}
                 .onChange=${(updates: Record<string, unknown>) => sub.write({ ...sub.design, ...updates })}
-                .baseName=${p.key as 'padding' | 'margin' | 'border_radius'}
+                .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
               ></mc-box-field>
             `,
           );
@@ -1063,10 +1067,11 @@ export class DesignPanel extends LitElement {
           html`
             <mc-box-field
               .design=${this.design}
+              .label=${lt(p.label)}
               .onChange=${(updates: Record<string, unknown>) =>
                 // a side edit on a template-linked card un-syncs the whole box field (shorthand + sides)
                 this.onChange(this.hasTemplate ? { ...updates, _markNotSynced: p.key } : updates)}
-              .baseName=${p.key as 'padding' | 'margin' | 'border_radius'}
+              .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
             ></mc-box-field>
           `,
           syncIndicator,

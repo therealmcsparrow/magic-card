@@ -272,7 +272,7 @@ export const studioStyles: CSSResult[] = [
       --insp-w: 320px;
       position: relative;
       display: grid;
-      grid-template-columns: var(--layers-w) minmax(0, 1fr) var(--insp-w);
+      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr) var(--iw, var(--insp-w));
       min-height: 0;
       min-width: 0;
       overflow: hidden;
@@ -281,14 +281,34 @@ export const studioStyles: CSSResult[] = [
       --layers-w: 224px;
       --insp-w: 288px;
     }
-    .workspace.dense:not(.rail) {
+    .workspace.dense {
       --layers-w: 208px;
     }
-    .workspace.rail {
-      --layers-w: 52px;
-    }
     .workspace.slide {
-      grid-template-columns: var(--layers-w) minmax(0, 1fr);
+      grid-template-columns: var(--lw, var(--layers-w)) minmax(0, 1fr);
+    }
+    /*
+     * A hidden panel gives its track to the stage but keeps its own width, so its content never reflows and a
+     * nested scroller keeps its place (WebKit loses it in a 0 px item). It slides off its edge.
+     */
+    .no-layers {
+      --lw: 0px;
+    }
+    .no-inspector {
+      --iw: 0px;
+    }
+    .layers {
+      --mc-lip-off: -100%;
+    }
+    .inspector {
+      --mc-lip-off: 100%;
+    }
+    .layers[data-lip='hidden'] {
+      width: var(--layers-w);
+    }
+    .inspector[data-lip='hidden'] {
+      width: var(--insp-w);
+      justify-self: end;
     }
     .layers {
       display: grid;
@@ -307,10 +327,6 @@ export const studioStyles: CSSResult[] = [
       padding: 4px 6px 4px 16px;
       border-bottom: 1px solid var(--mc-divider);
     }
-    .layers.rail .layers-head {
-      justify-content: center;
-      padding: 4px;
-    }
     .layers-head h2 {
       flex: 1;
       margin: 0;
@@ -324,9 +340,6 @@ export const studioStyles: CSSResult[] = [
       overflow-y: auto;
       overscroll-behavior: contain;
       padding: 8px;
-    }
-    .layers.rail .layers-body {
-      padding: 6px;
     }
     .layers-note,
     .layers-help {
@@ -353,12 +366,6 @@ export const studioStyles: CSSResult[] = [
     .layer-group:focus {
       outline: none;
     }
-    /* the rail's buttons that open the column at a panel, under the targets */
-    .rail-panels {
-      margin-top: 6px;
-      padding-top: 6px;
-      border-top: 1px solid var(--mc-divider);
-    }
     .layer-group > .panel {
       display: block;
     }
@@ -384,10 +391,6 @@ export const studioStyles: CSSResult[] = [
       font-weight: 500;
       text-align: left;
       transition: background-color 0.15s ease-out;
-    }
-    .layers.rail .layer {
-      justify-content: center;
-      padding: 0;
     }
     .layer ha-icon {
       --mdc-icon-size: 18px;

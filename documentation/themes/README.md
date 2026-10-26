@@ -20,4 +20,8 @@ The editor writes ordinary Home Assistant theme files. A saved theme works witho
 -   [Try, revert and use](trying-and-using.md): Try on dashboard, Revert, and Use this theme.
 -   [Files and limits](files.md): where files go, names, read-only themes and Copy to edit, deleting, and what the editor does not do yet.
 
+## Hiding the Variables pane
+
+At 1024 px wide and more, the Variables pane sits beside the preview. Its edge button on the inner side hides the pane, so the preview takes its width; press it again to show the pane as it was. Ctrl+\ (Cmd+\ on a Mac) hides or shows the pane. On keyboard layouts that type \ with AltGr, such as German and Dutch, the shortcut types the character instead, so use the edge buttons. The editor remembers the choice on this device, and a hidden pane opens hidden with a short hint. Below 1024 px, Variables and Preview are tabs, and there is no button.
+
 Related: [Magic Card Utils panel](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/panel/README.md) and the [Magic Card Utils WebSocket API](https://github.com/therealmcsparrow/magic-card-utils/blob/main/documentation/api/README.md) for the commands the editor uses.
