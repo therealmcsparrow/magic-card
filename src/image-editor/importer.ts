@@ -45,6 +45,16 @@ export async function importFile(x: ImageExt, file: File): Promise<void> {
   x.shell.requestUpdate();
 }
 
+/** The question before a file takes the place of a drawing that has content. */
+export function replaceWin(x: ImageExt): TemplateResult {
+  return html`<mc-ui-window variant="alert" size="m" heading=${t('Replace your drawing?')} closeLabel=${t('Close')} @mc-window-close=${() => x.cancelReplace()}>
+    <div class="dlg"><p>${t("Importing '{name}' replaces everything on the canvas. You can undo it.", { name: x.replacing!.name })}</p></div>
+    <div slot="footer" class="foot">
+      ${button({ label: t('Keep my drawing'), variant: 'text', size: 'md', onClick: () => x.cancelReplace() })}${button({ label: t('Replace'), variant: 'danger', size: 'md', onClick: () => x.confirmReplace() })}
+    </div>
+  </mc-ui-window>`;
+}
+
 export function importWin(x: ImageExt): TemplateResult {
   const i = x.imp!;
   const done = (): void => x.closeImport();

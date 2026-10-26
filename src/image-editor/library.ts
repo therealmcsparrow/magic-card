@@ -13,17 +13,24 @@ export class ImageError extends Error {
     public problem: ImageProblem,
     public bytes?: number,
     public limit?: number,
+    /** The library's own reason for refusing the markup, and the denied word when that was the reason. */
+    public detail?: string,
+    public word?: string,
   ) {
     super(problem);
   }
 }
 
 function fail(e: unknown): never {
-  const err = e as { code?: string; errors?: Array<{ message?: string; bytes?: number; limit?: number }> };
+  const err = e as { code?: string; errors?: Array<{ message?: string; bytes?: number; limit?: number; word?: string }> };
   const big = err?.errors?.find((x) => x.message === 'too_large');
   if (err?.code === 'invalid_format' && big) throw new ImageError('too_large', big.bytes, big.limit);
   const c = err?.code ?? '';
-  throw new ImageError(c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : c === 'invalid_format' ? 'invalid' : 'unreachable');
+  if (c === 'invalid_format') {
+    const first = err.errors?.find((x) => x.message === 'forbidden_text') ?? err.errors?.[0];
+    throw new ImageError('invalid', undefined, undefined, first?.message === 'forbidden_text' ? undefined : first?.message, first?.message === 'forbidden_text' ? first.word : undefined);
+  }
+  throw new ImageError(c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : 'unreachable');
 }
 
 async function call<T>(hass: ImageHass | undefined, msg: Record<string, unknown>): Promise<T> {

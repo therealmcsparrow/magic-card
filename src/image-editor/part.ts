@@ -1,4 +1,5 @@
 import { html, svg, type TemplateResult } from 'lit';
+import { IMAGE_PART_CLASS } from '../contracts/image-editor';
 import type { EditPath } from '../contracts/path-model';
 import type { Shape } from '../svg-editor/model';
 import type { ImageExt } from './chunk';
@@ -33,7 +34,7 @@ const NS = 'http://www.w3.org/2000/svg';
 const SKIP = /^(?:id|data-name|class|viewBox|preserveAspectRatio|x|y|width|height|xmlns.*)$|:/;
 const NOT_DRAWN = /^(?:defs|clipPath|mask|linearGradient|radialGradient|title)$/;
 const PREFIX = 'mc-part-';
-const CLASS = 'mc-part';
+const CLASS = IMAGE_PART_CLASS;
 const ser = (e: Element): string => new XMLSerializer().serializeToString(e).replace(/ xmlns="[^"]*"/, '');
 
 /** Clipping, masks and transparency of a fill, a stroke or a whole group are not something the editor can write back. */
@@ -145,12 +146,24 @@ export function partDefs(shapes: readonly Shape[]): string[] {
 
 const drawn = new WeakMap<Part, Element[]>();
 
+/** Names of 56 characters or fewer keep their name behind the prefix; a longer one (ids may have 64) is shortened to a fixed-length digest, the same way every time. */
+function prefixed(id: string): string {
+  if (id.length <= 64 - PREFIX.length) return PREFIX + id;
+  let a = 5381;
+  let b = 52711;
+  for (let i = 0; i < id.length; i++) {
+    a = (Math.imul(a, 33) ^ id.charCodeAt(i)) >>> 0;
+    b = (Math.imul(b, 31) + id.charCodeAt(i)) >>> 0;
+  }
+  return PREFIX + a.toString(36) + b.toString(36);
+}
+
 /** Ids and classes of a part never reach the editor's own lookups: ids get a prefix (and the references to them), classes go. */
 function prepare(e: Element): void {
   const id = e.getAttribute('id');
-  if (id) e.setAttribute('id', PREFIX + id);
+  if (id) e.setAttribute('id', prefixed(id));
   e.removeAttribute('class');
-  for (const a of [...e.attributes]) if (a.value.includes('url(#')) a.value = a.value.replace(/url\(#/g, `url(#${PREFIX}`);
+  for (const a of [...e.attributes]) if (a.value.includes('url(#')) a.value = a.value.replace(/url\(#([^)\s]+)\)/g, (_m, ref: string) => `url(#${prefixed(ref)})`);
   [...e.children].forEach(prepare);
 }
 

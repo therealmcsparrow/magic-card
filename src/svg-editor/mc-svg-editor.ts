@@ -1165,8 +1165,15 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   /** The same change to every selected layer. */
   patch(p: Partial<Shape>, label: string, merge?: string): void {
-    if ('locked' in p || 'hidden' in p) this.apply(mapShapes(this.doc, this.sel, (s) => ({ ...s, ...p })), label, merge);
-    else this.editShapes(this.sel, (s) => ({ ...s, ...p }), label, merge);
+    if ('locked' in p || 'hidden' in p) {
+      // a layer the editor keeps locked (an imported part) says so and is left out: no step is made for it
+      const ids = this.sel.filter((id) => {
+        const why = p.locked === false && this.img?.lockNote(byId(this.doc, id)!);
+        if (why) this.say(why);
+        return !why;
+      });
+      if (ids.length) this.apply(mapShapes(this.doc, ids, (s) => ({ ...s, ...p })), label, merge);
+    } else this.editShapes(this.sel, (s) => ({ ...s, ...p }), label, merge);
   }
 
   option(patch: Partial<Pick<Shape, 'r' | 'sides' | 'inner'>>): void {

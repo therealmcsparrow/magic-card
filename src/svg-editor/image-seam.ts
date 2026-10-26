@@ -63,6 +63,8 @@ export interface ImageUi extends ImageEditorExt {
   readonly hasRef: boolean;
   /** The canvas's gradient definitions. */
   defs(doc: Doc): TemplateResult[];
+  /** Why a layer's lock cannot be changed, else undefined. */
+  lockNote(s: Shape): string | undefined;
   /** The drawing as text for the changed-since-saved check, paints included. */
   stamp(doc: Doc): string;
   blockReason(out: Out): string | undefined;

@@ -12,6 +12,8 @@ import { FONTS, anchorOf, blank, boxFor, boxPaths, changed, cleanText, defaultSi
 /* Text layers in the editor: adding one, the canvas node, and the Text section of the inspector. */
 
 const COUNT_FROM = 1900;
+export const TEXT_FILL = '#ffffff';
+export const TEXT_OUTLINE = '#1f2933';
 const r2 = (n: number): number => Math.round(n * 100) / 100;
 
 /** The layer with its text changed by `patch`; its box is rebuilt round the same anchor, and a name made from the words follows them. */
@@ -39,7 +41,8 @@ export function newText(x: ImageExt, at?: Pt, words?: string): Shape {
   const b = boxFor([0, 0], td);
   const p = at ?? middle(x);
   const box = at ? { ...b, x: r2(p[0]), y: r2(p[1]) } : { ...b, x: r2(p[0] - b.w / 2), y: r2(p[1] - b.h / 2) };
-  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, t('Text')), look: { text: td } });
+  // white words with a dark outline stay readable on the default Main fill, on a bare board and on a card background
+  return K.newShape('path', boxPaths(box), { name: nameOf(td.s, t('Text')), stroke: 'main', width: r2(td.z / 24), look: { text: td, fill: TEXT_FILL, stroke: TEXT_OUTLINE } });
 }
 
 /** Add a text layer and put the cursor in its Content field, selected, so typing replaces the placeholder words. */

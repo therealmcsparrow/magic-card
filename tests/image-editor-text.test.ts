@@ -151,7 +151,7 @@ describe('text layers: adding', () => {
     expect(t[0].look!.text).toMatchObject({ s: 'Text', z: 19, w: 400, a: 'start', f: 'sans-serif' });
     expect(t[0].name).toBe('Text');
     expect(t[0].fill).toBe('main');
-    expect(t[0].stroke).toBe('none');
+    expect(t[0].look).toMatchObject({ fill: '#ffffff', stroke: '#1f2933' });
     const b = el.unionBox!;
     expect(b.x + b.w / 2).toBeGreaterThan(150);
     expect(b.x + b.w / 2).toBeLessThan(250);

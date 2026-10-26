@@ -42,12 +42,17 @@ const settle = async (el: Ed): Promise<void> => {
 };
 const $ = <T extends Element>(el: Ed, sel: string): T | null => el.renderRoot.querySelector<T>(sel);
 const win = (el: Ed, label: string): HTMLButtonElement | undefined => [...el.renderRoot.querySelectorAll<HTMLButtonElement>('mc-ui-window button')].find((b) => b.textContent!.trim() === label);
-async function give(el: Ed, name: string, text: string, type = 'image/svg+xml', size?: number): Promise<void> {
+async function give(el: Ed, name: string, text: string, type = 'image/svg+xml', size?: number, replace = false): Promise<void> {
   const f = new File([text], name, { type });
   if (size !== undefined) Object.defineProperty(f, 'size', { value: size });
   const input = $<HTMLInputElement>(el, '#img-import')!;
   Object.defineProperty(input, 'files', { value: [f], configurable: true });
   input.dispatchEvent(new Event('change', { bubbles: true }));
+  if (replace) {
+    await until(() => !!(el.img as unknown as ImageExt).replacing);
+    await settle(el);
+    win(el, 'Replace')!.click();
+  }
   await until(() => !!(el.img as unknown as ImageExt).imp);
   await settle(el);
 }
@@ -95,9 +100,9 @@ describe('Import an SVG file', () => {
   });
 
   it('is one undo step', async () => {
-    const { el } = await open({ kind: 'image-svg', svg: ONE });
-    (el.img as unknown as ImageExt).closeImport();
-    await give(el, 'clean.svg', CLEAN);
+    const { el, ext } = await open({ kind: 'image-svg', svg: ONE });
+    ext.closeImport();
+    await give(el, 'clean.svg', CLEAN, 'image/svg+xml', undefined, true);
     expect(el.doc.vb.w).toBe(800);
     el.undo();
     await settle(el);

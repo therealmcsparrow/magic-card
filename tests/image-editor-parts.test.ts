@@ -277,7 +277,8 @@ describe('imported part layers: the layer list and the inspector', () => {
     const { el } = await open(WITH_PART);
     const row = el.renderRoot.querySelector('[role=treeitem][data-id="win"]')!;
     expect(row).toBeTruthy();
-    expect(row.querySelector('button[aria-pressed="true"][aria-label^="Unlock"]')).toBeTruthy();
+    expect(row.querySelector('button[aria-label="Imported part stays locked: imported parts cannot be edited."]')).toBeTruthy();
+    expect(row.querySelector('button[aria-label^="Unlock"]')).toBeNull();
     el.select(['win']);
     await settle(el);
     expect(el.renderRoot.querySelector('#fill-kind')).toBeNull();
@@ -307,8 +308,8 @@ describe('imported part layers: the layer list and the inspector', () => {
     await settle(el);
     expect(el.sel).toEqual(['win']);
     expect(row.getAttribute('aria-selected')).toBe('true');
-    const lock = row.querySelector<HTMLButtonElement>('button[aria-label^="Unlock"]')!;
-    expect(lock.getAttribute('aria-label')).toBe('Unlock Imported part');
+    const lock = row.querySelector<HTMLButtonElement>('button[aria-label*="stays locked"]')!;
+    expect(lock.getAttribute('aria-label')).toBe('Imported part stays locked: imported parts cannot be edited.');
   });
 });
 

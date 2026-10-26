@@ -49,6 +49,15 @@ export function cleanText(raw: string): string {
   return out;
 }
 
+/** Words Magic Card Utils refuses anywhere in an image, text and layer names included. */
+const REFUSED = ['javascript:', 'vbscript:', '@import', 'expression('];
+
+/** The first refused word that `s` holds (any case, line breaks and tabs inside it ignored), else undefined. */
+export function refusedWord(s: string): string | undefined {
+  const low = s.toLowerCase().replace(/[\t\n\r]/g, '');
+  return REFUSED.find((w) => low.includes(w));
+}
+
 /** The layer's default name for these words: the first line, cut at 24 characters ("Text" when empty). */
 export function nameOf(s: string, fallback: string): string {
   const first = linesOf(s).map((l) => l.trim()).find(Boolean) ?? '';

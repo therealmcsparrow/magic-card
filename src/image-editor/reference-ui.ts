@@ -51,7 +51,7 @@ export function refPanel(x: ImageExt): TemplateResult | typeof nothing {
   const f = sh.doc.vb;
   const step = Math.max(1, Math.round(Math.max(f.w, f.h) / 200));
   const nudge = (label: string, dx: number, dy: number): TemplateResult => button({ label, size: 'sm', variant: 'secondary', onClick: () => setAlign(x, { x: x.align.x + dx, y: x.align.y + dy }) });
-  return html`<section id="ref-panel" class="ref-panel" aria-labelledby="ref-h">
+  return html`<div class="ref-dock"><section id="ref-panel" class="ref-panel" aria-labelledby="ref-h">
     <h2 id="ref-h">${t('Reference picture')}</h2>
     <p class="help">${t('For tracing only. The picture is never saved.')}</p>
     <input id="ref-file" type="file" hidden accept=${REFERENCE_TYPES.join(',')} @change=${(e: Event) => {
@@ -84,5 +84,5 @@ export function refPanel(x: ImageExt): TemplateResult | typeof nothing {
           <p class="help">${t('Alignment is remembered on this device for this image. The picture is not.')}</p>
           <div class="ref-row">${button({ label: t('Remove picture'), variant: 'danger', size: 'sm', onClick: () => remove(x) })}</div>`
       : html`<p class="help">${t('Reference pictures are not kept. Pick it again if you reopen the image.')}</p>`}
-  </section>`;
+  </section></div>`;
 }

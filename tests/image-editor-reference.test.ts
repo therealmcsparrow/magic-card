@@ -330,7 +330,7 @@ describe('Reference picture: alignment', () => {
   });
 });
 
-describe('Reference picture: never saved (AC4)', () => {
+describe('Reference picture: never saved', () => {
   it('leaves no blob:, data: or pixel data in the payload, the export, the document or storage', async () => {
     const urls = vi.spyOn(URL, 'createObjectURL');
     const fetchSpy = vi.fn();

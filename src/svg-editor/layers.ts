@@ -333,6 +333,7 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
   const name = item.name;
   const hid = !!item.hidden;
   const lck = !!item.locked;
+  const why = s && ed.img?.lockNote(s);
   const dr = ed.drag;
   const tab = k === cur ? 0 : -1;
   const off = groupChain(d, r.parent).some((x) => x.hidden || x.locked);
@@ -382,7 +383,7 @@ function rowView(ed: McSvgEditor, r: TreeRow, cur: string, unsafe: Set<string>):
       ed.toggleGroup(g.id);
     }) : nothing}
     ${ib(hid ? t('Show {name}', { name }) : t('Hide {name}', { name }), '', hid ? 'eyeOffOutline' : 'eyeOn', toggle({ hidden: !hid }, 'Hide'), hid)}
-    ${ib(lck ? t('Unlock {name}', { name }) : t('Lock {name}', { name }), '', lck ? 'lock' : 'lockOpenVariant', toggle({ locked: !lck }, 'Lock'), lck)}
+    ${ib(why ?? (lck ? t('Unlock {name}', { name }) : t('Lock {name}', { name })), '', lck ? 'lock' : 'lockOpenVariant', why ? (e) => (e.stopPropagation(), ed.say(why)) : toggle({ locked: !lck }, 'Lock'), why ? undefined : lck)}
     ${ed.renaming === k
       ? html`<input class="rename input" type="text" .value=${name} @click=${(e: Event) => e.stopPropagation()} @keydown=${(e: KeyboardEvent) => renameKey(e, ed, k)} @blur=${(e: Event) => ed.renameShape(k, (e.target as HTMLInputElement).value)} />`
       : html`<span class="nm" title=${name}>${name}</span>`}

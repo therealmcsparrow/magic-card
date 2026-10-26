@@ -1,5 +1,5 @@
 import { html, type TemplateResult } from 'lit';
-import { IMAGE_CANVAS_PRESETS, IMAGE_EDITOR_CONTRACT_REVISION } from '../contracts/image-editor';
+import { IMAGE_CANVAS_PRESETS, IMAGE_EDITOR_CONTRACT_REVISION, IMAGE_PART_DATA_MAX } from '../contracts/image-editor';
 import { IMAGE_MAX_BYTES, MAX_IMAGES, MAX_IMAGE_BOX, type ImageBinding, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
 import type { MenuEntry } from '../contracts/path-canvas';
 import type { KitButtonOptions } from '../contracts/ui-kit';
@@ -19,12 +19,12 @@ import { freeImageId } from './ids';
 import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
 import { lookRows, handles, paintRow, type Which } from './paint-ui';
-import { anchorOf, blank, boxFor, readText, textAttrs, textBody, nameOf, type TextData } from './text';
+import { anchorOf, blank, boxFor, readText, refusedWord, textAttrs, textBody, nameOf, type TextData } from './text';
 import { addText, addTextButton, textNode, textRows } from './text-ui';
 import { cancelField, disposeField, place, textField, type TextField } from './text-tool';
 import { FRESH, decodePicture, dispose as disposeRef, matchShape, moved, underlay, type Align, type Picture } from './reference';
 import { closePanel } from './reference-ui';
-import { importWin, summary, type Imported } from './importer';
+import { importWin, replaceWin, summary, type Imported } from './importer';
 import { contextOf, layerOf, lift, partColours, plain, partDefs, partNode, partOut, partRows, type Held } from './part';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
@@ -52,6 +52,8 @@ export interface DetailsDlg {
   description: string;
   more: boolean;
   error?: string;
+  /** What went wrong with the save itself (not with the name). */
+  fault?: string;
 }
 
 /** Main, Accent and none are the layer's own paints; any other value is read by lookOf (the layer then keeps Main as its placeholder). */
@@ -148,11 +150,11 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
   let used = 0;
   const close = (): void => {
     if (!run) return;
-    // what the parts hold, definitions included once for each part that uses them, stays within twice the size of an image
-    if (used > 2 * IMAGE_MAX_BYTES) flag.v = true;
     const l = flag.v ? run.at : layerOf(run.at, run.held, xml, doc.vb, shapes.filter((x) => x.look?.part).length + 1);
     const p = l.look?.part;
+    // what the parts hold, definitions included once for each part that uses them, the part just made counted too
     if (p) used += p.m.length + [...p.d.values()].reduce((n, d) => n + d.length, 0);
+    if (used > IMAGE_PART_DATA_MAX) flag.v = true;
     shapes.push(l);
     run = undefined;
   };
@@ -200,6 +202,8 @@ export class ImageExt implements ImageUi {
   decode: (f: Blob) => Promise<Picture> = decodePicture;
   /** The import summary window. */
   imp?: Imported;
+  /** A file ready to replace a drawing that has content: waits for the answer. */
+  replacing?: { doc: Doc; stripped: string[]; name: string };
   private back?: HTMLElement;
   private colours = false;
   /** The paint whose gradient handles show, and the field with a message under it. */
@@ -251,7 +255,7 @@ export class ImageExt implements ImageUi {
   }
 
   get modal(): boolean {
-    return !!(this.size || this.details || this.big || this.imp);
+    return !!(this.size || this.details || this.big || this.imp || this.replacing);
   }
 
   get name(): string {
@@ -312,6 +316,30 @@ export class ImageExt implements ImageUi {
       this.imp = { name, kinds: [], kept: false, error: r };
       return;
     }
+    if (sh.doc.shapes.length) {
+      this.replacing = { ...r, name };
+      sh.requestUpdate();
+      return;
+    }
+    this.useFile(r, name);
+  }
+
+  /** The answer to the replace question: use the file. */
+  confirmReplace(): void {
+    const r = this.replacing;
+    this.replacing = undefined;
+    if (r) this.useFile(r, r.name);
+    this.restoreFocus();
+  }
+
+  cancelReplace(): void {
+    this.replacing = undefined;
+    this.shell.requestUpdate();
+    this.restoreFocus();
+  }
+
+  private useFile(r: { doc: Doc; stripped: string[] }, name: string): void {
+    const sh = this.shell;
     sh.apply(r.doc, 'Import SVG file');
     sh.grid = gridFor(r.doc.vb.w, r.doc.vb.h);
     this.imp = summary(name, r.stripped, r.doc);
@@ -461,6 +489,11 @@ export class ImageExt implements ImageUi {
     place(this, p);
   }
 
+  /** Why a layer's lock stays as it is (an imported part cannot be unlocked), else undefined. */
+  lockNote(s: Shape): string | undefined {
+    return s.look?.part ? t('{name} stays locked: imported parts cannot be edited.', { name: s.name }) : undefined;
+  }
+
   get hint(): string {
     return t('Text tool. Click or tap where the text goes, or press Enter to start in the middle. Type, then press Enter or Done.');
   }
@@ -538,9 +571,6 @@ export class ImageExt implements ImageUi {
     const was = this.level;
     this.level = l;
     if (was && was !== l && (l === 'big' || l === 'full')) this.shell.say(this.sentence(out.bytes));
-    // an imported part keeps its place and shape: Unlock changes nothing before the next edit can start
-    const sh = this.shell;
-    if (sh.doc.shapes.some((s) => s.look?.part && !s.locked)) sh.setDoc({ ...sh.doc, shapes: sh.doc.shapes.map((s) => (s.look?.part ? { ...s, locked: true } : s)) });
   }
 
   // ── canvas size ──
@@ -592,6 +622,7 @@ export class ImageExt implements ImageUi {
       sh.begin(this.canvasDoc(r.w, r.h));
       this.size = undefined;
       this.ready();
+      this.restoreFocus();
       return;
     }
     const out = outsideCount(sh.doc, r.w, r.h);
@@ -627,8 +658,24 @@ export class ImageExt implements ImageUi {
       sh.requestUpdate();
       return;
     }
+    const bad = this.refusedText();
+    if (bad) {
+      sh.select([bad.id]);
+      sh.note = { tone: 'error', lines: [bad.why] };
+      sh.requestUpdate();
+      return;
+    }
     if (!this.id || !this.name) return this.openDetails('first');
     void this.write({ id: this.id, name: this.name, ...this.meta }, false);
+  }
+
+  /** The first layer whose words or name hold text the library refuses to store (it would refuse the whole image). */
+  private refusedText(): { id: string; why: string } | undefined {
+    for (const s of this.shell.doc.shapes) {
+      const word = refusedWord(s.look?.text?.s ?? '') ?? refusedWord(s.name);
+      if (word) return { id: s.id, why: t('The library does not accept the text "{word}", in the layer "{name}". Change it, then save again.', { word, name: s.name }) };
+    }
+    return undefined;
   }
 
   openDetails(mode: DetailsDlg['mode'], opener?: HTMLElement): void {
@@ -641,8 +688,9 @@ export class ImageExt implements ImageUi {
 
   setDetails(patch: Partial<DetailsDlg>): void {
     if (!this.details) return;
-    this.details = { error: undefined, ...this.details, ...patch };
+    this.details = { error: undefined, fault: undefined, ...this.details, ...patch };
     if (!('error' in patch)) this.details.error = undefined;
+    if (!('fault' in patch)) this.details.fault = undefined;
     this.shell.requestUpdate();
   }
 
@@ -774,7 +822,8 @@ export class ImageExt implements ImageUi {
   }
 
   private problemText(e: unknown): string {
-    const p = e instanceof ImageError ? e.problem : 'unreachable';
+    const err = e instanceof ImageError ? e : undefined;
+    const p = err?.problem ?? 'unreachable';
     return p === 'readonly'
       ? t('You can look at this image but not change it. Ask an administrator.')
       : p === 'conflict'
@@ -782,9 +831,13 @@ export class ImageExt implements ImageUi {
         : p === 'full'
           ? t('The library is full (200 images). Delete one to add another.')
           : p === 'too_large'
-            ? t('Too big to save')
+            ? t('Too big to save: {used} KiB of 256 KiB.', { used: kibShown(err?.bytes ?? this.shell.out.bytes) })
             : p === 'invalid'
-              ? t('The library could not accept this image. Tidy it and try again.')
+              ? err?.word
+                ? t('The library does not accept the text "{word}". Change it, then save again.', { word: err.word })
+                : err?.detail
+                  ? t('The library refused this image: {reason}', { reason: err.detail })
+                  : t('The library refused this image. Use Export file to keep a copy.')
               : p === 'missing'
                 ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.')
                 : t('Could not reach Magic Card Utils. Your work is safe.');
@@ -810,7 +863,9 @@ export class ImageExt implements ImageUi {
         sh.tool = 'hand';
       }
     }
-    sh.note = { tone: 'error', lines: [this.problemText(e)] };
+    const why = this.problemText(e);
+    if (this.details) this.setDetails({ fault: why });
+    else sh.note = { tone: 'error', lines: [why] };
   }
 
   /** Conflict: keep this drawing as a new image, or load the stored one. */
@@ -856,7 +911,7 @@ export class ImageExt implements ImageUi {
     const sh = this.shell;
     const need = this.id ? undefined : t('Save the image first.');
     return [
-      { id: 'img:copy', label: t('Save as a copy…'), reason: sh.out.svg ? undefined : t('Draw something first') },
+      { id: 'img:copy', label: t('Save as a copy…'), reason: sh.out.svg ? this.refusedText()?.why : t('Draw something first') },
       { id: 'img:duplicate', label: t('Duplicate…'), reason: need ?? (sh.dirty ? t('Save your changes first.') : undefined) },
       { id: 'img:import', label: t('Import an SVG file…') },
     ];
@@ -870,6 +925,7 @@ export class ImageExt implements ImageUi {
 
   close(): boolean {
     if (this.field) return cancelField(this), true;
+    if (this.replacing) return this.cancelReplace(), true;
     if (this.imp) return this.closeImport(), true;
     if (this.refOpen) return closePanel(this), true;
     if (this.big) this.big = undefined;
@@ -881,7 +937,7 @@ export class ImageExt implements ImageUi {
   }
 
   dispose(): void {
-    this.size = this.details = this.big = this.imp = undefined;
+    this.size = this.details = this.big = this.imp = this.replacing = undefined;
     disposeRef(this);
     disposeField(this);
   }
@@ -895,6 +951,7 @@ export class ImageExt implements ImageUi {
   }
 
   dialogs(): TemplateResult | undefined {
+    if (this.replacing) return replaceWin(this);
     if (this.imp) return importWin(this);
     if (this.size) return sizeWin(this);
     if (this.details) return detailsWin(this);

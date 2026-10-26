@@ -355,6 +355,16 @@ export const editorStyles: CSSResult[] = [
     .stage > .hint .empty {
       background: var(--mc-surface);
     }
+    .stagebox > .opts {
+      position: absolute;
+      z-index: 4;
+      top: 12px;
+      inset-inline-end: 12px;
+      padding: 8px;
+      border-radius: var(--mc-radius);
+      background: var(--mc-surface);
+      box-shadow: var(--mc-shadow-float);
+    }
     .opts,
     .pointbar,
     .pad {

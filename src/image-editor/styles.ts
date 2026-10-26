@@ -30,14 +30,14 @@ export const imageStyles = css`
     background: var(--mc-warn, #b26a00);
   }
   .img-meter.is-over .bar > span {
-    background: var(--mc-error, #b3261e);
+    background: var(--mc-error-ink, #b3261e);
   }
   .img-meter .sentence {
     flex: 1 1 240px;
     min-width: 0;
   }
   .img-meter.is-over .sentence {
-    color: var(--mc-error, #b3261e);
+    color: var(--mc-error-ink, #b3261e);
     font-weight: 600;
   }
   .img-meter .kib {
@@ -243,14 +243,27 @@ export const imageStyles = css`
     padding: 2px 12px;
     background: var(--mc-surface);
   }
+  /* the panel floats over the workspace: opening it never changes the size of the canvas, so Fit to view keeps working */
+  .ref-dock {
+    position: relative;
+    z-index: 12;
+    height: 0;
+  }
   .ref-panel {
+    position: absolute;
+    top: 4px;
+    inset-inline-end: 12px;
+    box-sizing: border-box;
+    width: min(440px, calc(100% - 24px));
     display: grid;
     gap: 8px;
     padding: 8px 12px;
-    max-height: 40vh;
+    max-height: min(60vh, 520px);
     overflow: auto;
     background: var(--mc-surface);
-    border-bottom: 1px solid var(--mc-divider, rgba(127, 127, 127, 0.25));
+    border: 1px solid var(--mc-divider, rgba(127, 127, 127, 0.25));
+    border-radius: 8px;
+    box-shadow: var(--mc-shadow-float);
   }
   .ref-panel h2 {
     margin: 0;

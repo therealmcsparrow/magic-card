@@ -144,6 +144,7 @@ export function detailsWin(x: ImageExt): TemplateResult {
       ${input('img-name', t('Name'), d.name, (v) => set({ name: v }), { error: d.error, required: true, max: 80 })}
       <p class="help id-line">${t('The address is mcu-image:{id}. It cannot be changed later.', { id: x.idFor(d.name) })}</p>
       <p class="help">${t('Name is the only thing you need.')}</p>
+      ${d.fault ? notice({ tone: 'error', text: d.fault }) : nothing}
       <details class="more" ?open=${d.more} @toggle=${(e: Event) => (d.more = (e.target as HTMLDetailsElement).open)}>
         <summary>${t('More details')}</summary>
         ${input('img-keywords', t('Keywords'), d.keywords, (v) => set({ keywords: v }))}

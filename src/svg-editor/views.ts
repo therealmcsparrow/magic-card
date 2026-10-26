@@ -476,8 +476,9 @@ function workspace(ed: McSvgEditor): TemplateResult {
       </div>
       ${banners(ed)}
       ${resultNote(ed)}
+      ${toolOptions(ed)}
       </div>
-      ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${toolOptions(ed)} ${nudgePad(ed)}
+      ${ed.layout !== 'wide' && ed.layout !== 'mid' ? pointBar(ed) : nothing} ${nudgePad(ed)}
     </section>
     ${inspector(ed)}
   </div>`;
@@ -811,7 +812,7 @@ function shapeSections(ed: McSvgEditor, sel: Shape[]): TemplateResult {
         ${pick('ly-rule', t('Fill rule'), first.rule, [['nonzero', t('Solid')], ['evenodd', t('Holes where shapes overlap')]], (v) => ed.patch({ rule: v as Shape['rule'] }, 'Fill rule'))}
         <p class="help">${t('Use holes when overlapping parts should cut each other out.')}</p>
         ${chk('sw-hidden', t('Hidden'), !!first.hidden, (v) => ed.patch({ hidden: v }, 'Hide'))}
-        ${chk('sw-locked', t('Locked'), !!first.locked, (v) => ed.patch({ locked: v }, 'Lock'))}`,
+        ${chk('sw-locked', t('Locked'), !!first.locked, (v) => ed.patch({ locked: v }, 'Lock'), ed.img?.lockNote(first))}`,
     )}`;
 }
 
