@@ -109,9 +109,9 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 162816,
-      "ceiling": 162816,
-      "note": "SVG editor. 159 KiB, measured 161,847 with the image mode seam and lock hook (Linux build, docker node 24.22.0)."
+      "raw": 169984,
+      "ceiling": 169984,
+      "note": "SVG editor. 166 KiB, measured 165,668 with the image mode seam and the panel lips (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
       "raw": 109568,
@@ -124,9 +124,9 @@
       "note": "Motion and refresh part of <mc-bg-stack> (pan / zoom, camera refresh, stale state). 5 KiB, measured 4,836 + 5 %; ceiling 24,576 (lazy-module 1.4.0)."
     },
     "magic-card-layer-editor.js": {
-      "raw": 88064,
-      "ceiling": 88064,
-      "note": "Layer editor panels (editor-only chunk, contract layer-editor 1.0.0). 86 KiB, measured 83,543 + 5 %. The contract ceiling is 114,688 B; the ceiling here is the current cap."
+      "raw": 89088,
+      "ceiling": 89088,
+      "note": "Layer editor. 87 KiB, measured 88,320 with the library image field (Linux build, docker node 24.22.0)."
     },
     "magic-card-slider.js": {
       "raw": 97280,
@@ -739,6 +739,54 @@
       "field": "/files/magic-card-image-editor.js/raw",
       "from": 86016,
       "to": 95232
+    },
+    {
+      "id": "svg-editor-raw-169984",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 162816,
+      "to": 169984
+    },
+    {
+      "id": "svg-editor-ceiling-169984",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 162816,
+      "to": 169984
+    },
+    {
+      "id": "layer-editor-raw-89088",
+      "field": "/files/magic-card-layer-editor.js/raw",
+      "from": 88064,
+      "to": 89088
+    },
+    {
+      "id": "layer-editor-ceiling-89088",
+      "field": "/files/magic-card-layer-editor.js/ceiling",
+      "from": 88064,
+      "to": 89088
+    },
+    {
+      "id": "entry-gzip-cap-84581-to-84741",
+      "field": "/entry/stages/3/cap",
+      "from": 84581,
+      "to": 84741
+    },
+    {
+      "id": "entry-br-cap-72251-to-72404",
+      "field": "/entry/br/cap",
+      "from": 72251,
+      "to": 72404
+    },
+    {
+      "id": "transfer-ceiling-63488-to-67584",
+      "field": "/files/magic-card-transfer.js/ceiling",
+      "from": 63488,
+      "to": 67584
+    },
+    {
+      "id": "transfer-raw-63488-to-67584",
+      "field": "/files/magic-card-transfer.js/raw",
+      "from": 63488,
+      "to": 67584
     }
   ]
 }
