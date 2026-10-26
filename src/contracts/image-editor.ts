@@ -2,7 +2,10 @@ import type { HomeAssistant } from '../types';
 import type { ImageBinding, SavedImageInput } from './mcu-library-images';
 
 /*
- * Contract: image editing. Version 1.0.0.
+ * Contract: image editing. Version 1.1.0.
+ * 1.1.0 (additive): the image start window opens an SVG file or pasted SVG as a new image (section "Image start
+ * window"); file and text intake go through svg-intake 1.0.0; library calls come through the shell's kit (section
+ * "Library calls").
  * Full drawings are edited in the existing <mc-svg-editor> (svg-editor 1.1.0) in image mode. Image-only parts live in two
  * editor chunks so the svg-editor chunk grows only by the seam:
  *   - image-editor (dist/magic-card-image-editor.js, entry src/image-editor/chunk.ts): a child of the svg-editor chunk
@@ -42,6 +45,31 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   tool, two fingers pan and pinch-zoom, a Pan tool exists for one-finger panning, and the layer list selects any
  *   layer as the fallback for small parts. On-canvas text has on-screen Done and Cancel.
  *
+ * ── Image start window ──
+ *   The window that opens for an 'image-blank' source without a size (the canvas-size step: presets, custom W x H)
+ *   also offers, as real buttons in its tab order:
+ *   - Open file: a labelled button in front of an <input type=file accept=".svg,image/svg+xml">. The file goes through
+ *     svg-intake readFile(file, IMAGE_SVG_INTAKE): type (.svg or image/svg+xml), then File.size <= MAX_IMAGE_IMPORT_BYTES
+ *     (8 MB) before the text is read, then file.text(). Refusals use Import's words ("Choose an SVG file.", "That file
+ *     is too big to open (over 8 MB). Try a smaller copy.", and "The file could not be read." for 'unreadable').
+ *   - Paste SVG: a labelled multi-line text field with a "Use this SVG" button (no clipboard API needed, so it works
+ *     on http:// LAN installs; a Paste button that reads the clipboard may sit next to it where the API exists). The
+ *     text goes through svg-intake refuseText(text, MAX_IMAGE_IMPORT_BYTES) ('empty' -> "Paste the SVG code first.").
+ *   Both then open the existing { kind: 'image-svg', svg: text } source. That source is read exactly like Import:
+ *   api.sanitizeImage(text, { file: true }), then the import summary and the locked-part rules below; the sanitiser's
+ *   IMAGE_MAX_BYTES (256 KiB) still applies after the 8 MB file gate, so a 2 MB file passes the gate and is then
+ *   refused by the sanitiser with its size message. A refusal keeps the start window open with the reason in its
+ *   role=alert line and changes nothing; the window, the shell and the image editor never parse, rewrite or draw the
+ *   text before the sanitiser, and it never reaches unsafeSVG. The same file gives the same drawing and summary here,
+ *   through Import and through the Magic Card Utils Images import (preset-transfer 1.3.0, "SVG files as images").
+ *   Keyboard: every control reachable by Tab, visible focus, 24 x 24 px targets; results in the polite live region.
+ *
+ * ── Library calls ──
+ *   The image-editor chunk makes no WebSocket call of its own: images_list, images_get, images_save and images_delete
+ *   go through the call helper and error map the shell hands over in its kit (src/svg-editor/library.ts, mcu-library
+ *   1.1.0). Every reply is unknown and narrowed before use; `unauthorized` gives the read-only path; the server's
+ *   require_admin is the control, a hidden button is not. Both profiles word library errors the same way.
+ *
  * ── ImageEditorExt (what image-editor gives the shell) ──
  *   - Canvas size step and Canvas size action (presets, custom W x H, keep ratio, content stays where it is). Cards
  *     that already wrote an aspect_ratio keep it; the card field offers to update it (below).
@@ -66,7 +94,8 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *     localStorage or any request. Only the alignment numbers
  *     (x, y, scale, rotation, opacity) are kept in localStorage under REFERENCE_ALIGN_KEY_PREFIX + image id, and
  *     applied when a picture is picked again for that image.
- *   - Import: .svg files (type or name, and size <= MAX_IMAGE_IMPORT_BYTES, checked before the text is read) through
+ *   - Import: .svg files (svg-intake readFile with IMAGE_SVG_INTAKE: type or name, and size <= MAX_IMAGE_IMPORT_BYTES,
+ *     checked before the text is read) through
  *     api.sanitizeImage(text, { file: true }). The import summary names each kind of stripped part once, without
  *     counts ("Removed scripts, event handlers."), or says nothing was removed. Text, tspan and gradients open as
  *     text layers and gradient paints. Nothing drawable is dropped: each run of adjacent sibling elements the editor
@@ -152,12 +181,12 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   one item or all images ("Export all"); import re-sanitises every item (stripped parts listed), checks bindings,
  *   and saves through images_save (clash: Replace / Keep both). No versions are kept. Envelopes with image items are
  *   JSON only and may be up to MAX_IMAGE_IMPORT_BYTES; other envelopes keep MAX_IMPORT_BYTES. Plain .svg files open
- *   in the editor instead. Without Magic Card Utils, importing an image is refused with the install hint (cards keep
- *   no copy).
+ *   in the editor, and since preset-transfer 1.3.0 also import as images where the panel accepts images only. Without
+ *   Magic Card Utils, importing an image is refused with the install hint (cards keep no copy).
  */
 
-export const IMAGE_EDITOR_CONTRACT = '1.0.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 5;
+export const IMAGE_EDITOR_CONTRACT = '1.1.0';
+export const IMAGE_EDITOR_CONTRACT_REVISION = 6;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
@@ -179,6 +208,7 @@ export const IMAGE_THEME_COLOURS: readonly string[] = [
   '--state-icon-color', '--error-color', '--warning-color', '--success-color', '--info-color',
 ];
 export const THUMB_SIDE_PX = 320;
+/** The file gate for .svg files and pasted SVG opened as images; sanitizeImage's IMAGE_MAX_BYTES applies after it. */
 export const MAX_IMAGE_IMPORT_BYTES = 8 * 1024 * 1024;
 
 /** The class value that marks a saved imported part group (see "Imported part, saved form"). */

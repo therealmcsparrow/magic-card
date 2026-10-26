@@ -3,10 +3,13 @@ import type { CustomShapeOptions } from './custom-shape';
 import type { ThemeDoc } from './theme-editor';
 import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
 import type { ImageBinding, ImageSummary } from './mcu-library-images';
-import type { SvgImageApi } from './svg-image';
+import type { SanitizeOptions, SvgImageApi } from './svg-image';
 
 /*
- * Contract: preset files (export / import) and the transfer chunk. Version 1.2.0.
+ * Contract: preset files (export / import) and the transfer chunk. Version 1.3.0.
+ * 1.3.0 (additive): where the panel accepts images only, a .svg file or pasted <svg text is one image item (section
+ * "SVG files as images"); ImageReader.readImage takes options ({ file: true } for that item; IMAGE_TRANSFER_REVISION
+ * 2); the panel reads files through svg-intake 1.0.0 (section "Safe parsing", step 1). The file format is unchanged.
  * 1.2.0 (1.1.0 was never released): the image code of the transfer chunk lives in its own child chunk, image-transfer
  * (below); parseTransfer's opts.images is that chunk's reader (ImageReader) instead of the sanitiser. The file format
  * is unchanged.
@@ -101,12 +104,11 @@ import type { SvgImageApi } from './svg-image';
  * load" note (the host loads the image-transfer chunk first). Nothing in the import path draws the markup.
  * Image envelopes are JSON only: a YAML text of kind image is refused ("Image files are JSON"), and export of images
  * writes JSON only. Files and texts over MAX_IMPORT_BYTES / MAX_IMPORT_CHARS are read only when the text is JSON (first
- * character `{`) and its marker says kind image, up to MAX_IMAGE_IMPORT_BYTES; the YAML parser never sees them. The
- * bounded copy of that large JSON path allows MAX_IMAGE_IMPORT_NODES visits and MAX_IMAGE_IMPORT_BYTES characters
- * (JSON has no aliases, so the expansion is the file itself); depth, keys and number rules are unchanged. These
- * bounds run in the transfer chunk, before any image code is asked.
- * checkFileSize(file) takes the name: a .json file up to MAX_IMAGE_IMPORT_BYTES passes, anything else is held to
- * MAX_IMPORT_BYTES.
+ * character `{`) and its marker says kind image, or, where the panel accepts images only, when it is SVG (section "SVG
+ * files as images"), up to MAX_IMAGE_IMPORT_BYTES; the YAML parser never sees them. The bounded copy of that large JSON
+ * path allows MAX_IMAGE_IMPORT_NODES visits and MAX_IMAGE_IMPORT_BYTES characters (JSON has no aliases, so the expansion
+ * is the file itself); depth, keys and number rules are unchanged. These bounds run in the transfer chunk, before any
+ * image code is asked.
  * Hosts: 'mcu-panel' (Images tab and Library tab) accepts images; the card editor's library view does when its kinds
  * hold 'image' (the view then passes accept ['image'] to <mc-transfer-panel>, property `accept`, which narrows the
  * host's kinds); a view on any other kind refuses an image file with where to import it. Importing needs Magic Card
@@ -119,12 +121,34 @@ import type { SvgImageApi } from './svg-image';
  * messages of these actions; the commands, the row text and the image-only words come from ImageTransfer.
  * `static contractRevision` of <mc-library-view> is at least IMAGES_MIN_CONTRACT_REVISION.
  *
+ * ── SVG files as images ──
+ * Where the panel's accepted kinds (the host's HOST_KINDS narrowed by `accept`) are exactly ['image'] (the Magic Card
+ * Utils Images tab; a library view on kind image, also its Import in the Library tab):
+ *   - the file control's accept attribute is ".json,.svg"; an .svg file passes the file gate up to
+ *     MAX_IMAGE_IMPORT_BYTES (8 MB, checked on File.size before reading, step 1 below); pasted text that looksLikeSvg
+ *     is read up to MAX_IMAGE_IMPORT_BYTES characters;
+ *   - text that looksLikeSvg (svg-intake 1.0.0: an .svg file name, or text whose first element is <svg) becomes one
+ *     image item, source 'svg': id = slug(stem, 'image') (the slug icons use), name = the file name (or "image") cut
+ *     to 80 characters, data { svg: text }. The YAML and JSON parsers never see it;
+ *   - it is read by opts.images.readImage(0, { svg: text }, { file: true }), which calls
+ *     api.sanitizeImage(text, { file: true }): svg-image file mode (BOM, XML declaration, comments and a DOCTYPE
+ *     without "[" removed; a DOCTYPE with an internal subset refused), then IMAGE_MAX_BYTES and the rest of the image
+ *     sanitiser. view_box comes from the sanitised drawing. An item the sanitiser refuses (too_large, unsafe_markup,
+ *     not_svg, too_complex, empty, bad_viewbox) is refused with readImage's messages; stripped parts are listed as
+ *     svg_removed notes. Without opts.images the item is refused with "checker did not load";
+ *   - the result for a file equals the image editor's import of the same file (same sanitised markup, same stripped
+ *     list, same refusal), which a test checks on the hostile corpus;
+ *   - clashes, Replace / Keep both and images_save are as for envelope items.
+ * The transfer chunk neither parses nor rewrites the markup and never value-imports src/svg-image/**. In every other
+ * host an .svg stays kind icon exactly as before (sanitizeSvg, ICON_MAX_BYTES), and image envelopes stay JSON only.
+ *
  * ── Other inputs read (C5) ──
  * Detection order on the parsed value: (1) object with `magic_card_export` -> envelope; (2) the
  * studio's 2026.10.x export: a list of AnimationDocs, one AnimationDoc, an id-keyed map of them, or
  * a card config with `custom_animations` -> kind animation (ids and names from the docs); (3) text
  * whose first element is <svg (after an optional XML prolog / comments; or a .svg file name) ->
- * kind icon, one item, id = slug of the file name (or "icon"), name = file name; (4) a plain Home
+ * kind icon, one item, id = slug of the file name (or "icon"), name = file name; where the panel accepts images
+ * only, kind image instead (section "SVG files as images"); (4) a plain Home
  * Assistant theme file: a top-level map whose values are all objects of theme variables
  * (THEME_VAR_RE keys or `modes`) -> kind theme, one item per top-level key (id = slug, name =
  * key). Anything else: "This is not a Magic Card preset file."
@@ -132,8 +156,12 @@ import type { SvgImageApi } from './svg-image';
  * ("Theme files are imported in Magic Card Utils > Themes").
  *
  * ── Safe parsing (untrusted input, C6) ──
- * 1. Files over MAX_IMPORT_BYTES are refused before reading (File.size); pasted text over
- *    MAX_IMPORT_CHARS is refused before parsing.
+ * 1. Files go through svg-intake 1.0.0 readFile with the transfer chunk's transferIntake(accept) policy, so they are
+ *    refused before reading (File.size): .json up to MAX_IMAGE_IMPORT_BYTES; .yaml / .yml up to MAX_IMPORT_BYTES; .svg
+ *    up to MAX_IMAGE_IMPORT_BYTES where the accepted kinds are exactly ['image'], else MAX_IMPORT_BYTES; any other
+ *    file as kind 'other' up to MAX_IMPORT_BYTES (the parser decides what it is). Extension first, then MIME type.
+ *    The refusal words are the existing ones ("larger than 1 MB", the 8 MB refusal). Pasted text over
+ *    MAX_IMPORT_CHARS is refused before parsing, except the large image texts above.
  * 2. Trimmed text starting with { or [ -> JSON.parse first; on a JSON error, YAML below.
  * 3. YAML: js-yaml load (one document; a second document is an error) with SAFE_YAML_SCHEMA =
  *    CORE_SCHEMA only: no merge key `<<`, no timestamps, no binary, no custom tags (any !tag is a
@@ -205,8 +233,9 @@ import type { SvgImageApi } from './svg-image';
  * LOAD_TIMEOUT_MS, or when the result's `revision` is not IMAGE_TRANSFER_REVISION; undefined clears the memo so the
  * next call retries. A sync getter returns the loaded ImageTransfer or undefined (used for invalidate()).
  * Who loads it, and when:
- *   - <mc-transfer-panel> before parseTransfer when the text says kind image and the host accepts images (as today),
- *     passing the result as opts.images; when it resolves undefined the read is refused with "checker did not load";
+ *   - <mc-transfer-panel> before parseTransfer when the text says kind image, or is SVG where the panel accepts images
+ *     only, and the host accepts images, passing the result as opts.images; when it resolves undefined the read is
+ *     refused with "checker did not load";
  *   - <mc-library-view> when it lists kind image (before images_list); when it resolves undefined the view shows its
  *     error state with Try again. Other kinds never load it; a dashboard never fetches it.
  * Boundary (what the chunk may import): src/contracts/** (types, and constants the transfer chunk already used, so
@@ -233,14 +262,15 @@ import type { SvgImageApi } from './svg-image';
  *
  * ── Accessibility (WCAG 2.2 AA, our bar) ──
  * The file control is a real <input type=file> behind a labelled button ("Choose a file"), accept
- * ".yaml,.yml,.json,.svg" (per host); the paste box is a labelled <textarea>; "Read" runs the
+ * ".yaml,.yml,.json,.svg" (per host; ".json,.svg" where the panel accepts images only); the paste box is a labelled
+ * <textarea>; "Read" runs the
  * parse. The summary sits in a role=status live region (polite) and its heading takes focus;
  * refusals use role=alert. The clash choice is a radio group. Everything works by keyboard alone,
  * no drag, and reflows at 320 CSS px (200 % zoom). Escape closes the transfer panel (the hosts'
  * existing Escape guards apply).
  */
 
-export const TRANSFER_CONTRACT_VERSION = '1.2.0';
+export const TRANSFER_CONTRACT_VERSION = '1.3.0';
 /** File format marker value written by this version. */
 export const TRANSFER_FORMAT = '1.0';
 export const TRANSFER_MAJOR = 1;
@@ -259,7 +289,7 @@ export const IMAGE_TRANSFER_CHUNK_CEILING = 16 * 1024; // 16,384 B
 /** The one import() site of the image-transfer chunk. */
 export const IMAGE_TRANSFER_LOADER = 'src/transfer/image-transfer-loader.ts';
 /** ImageTransfer.revision the loader accepts. */
-export const IMAGE_TRANSFER_REVISION = 1;
+export const IMAGE_TRANSFER_REVISION = 2;
 
 export const MAX_IMPORT_BYTES = 1024 * 1024;
 export const MAX_IMPORT_CHARS = 1024 * 1024;
@@ -290,7 +320,7 @@ export function decodeCssEscapes(value: string): string {
     .replace(/\\([0-9a-f]{1,6})[ \t\n\r\f]?|\\([\s\S])/gi, (_m, hex: string | undefined, ch: string | undefined) => {
       if (hex === undefined) return ch ?? '';
       const cp = parseInt(hex, 16);
-      return cp > 0 && cp <= 0x10ffff && (cp < 0xd800 || cp > 0xdfff) ? String.fromCodePoint(cp) : '�';
+      return cp > 0 && cp <= 0x10ffff && (cp < 0xd800 || cp > 0xdfff) ? String.fromCodePoint(cp) : '\uFFFD';
     });
 }
 
@@ -456,8 +486,12 @@ export type ImageKindResult = { ok: true; data: ImageData; notes: TransferNote[]
 
 /** What parseTransfer asks for image items (ImageTransfer passes itself). */
 export interface ImageReader {
-  /** `index` is the item's place in the file (for notes); `data` is the bounded copy's `data` value. Pure, synchronous. */
-  readImage(index: number, data: unknown): ImageKindResult;
+  /**
+   * `index` is the item's place in the file (for notes); `data` is the bounded copy's `data` value, or { svg } for an
+   * SVG file read as an image. `options` goes to api.sanitizeImage unchanged: { file: true } only for that SVG item
+   * (section "SVG files as images"), never for envelope items. Pure, synchronous.
+   */
+  readImage(index: number, data: unknown, options?: SanitizeOptions): ImageKindResult;
 }
 
 /** What window.MagicCard.loadTransfer() / loadTransfer() resolves to. */
