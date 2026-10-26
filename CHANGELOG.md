@@ -4,7 +4,7 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
-## Unreleased
+## 2026.10.12-beta.9 (2026-10-26)
 
 ### Changed
 -   **One size for the side panel buttons.** The edge button that hides or shows a side panel is now the same size in both states, 28 by 72 pixels with an 18 pixel arrow, in the card studio, the animation studio, the SVG editor, the shape studio and the theme editor. It used to shrink to 24 by 56 pixels while its panel was shown. The module toolbar in the card studio now keeps clear of these buttons.
