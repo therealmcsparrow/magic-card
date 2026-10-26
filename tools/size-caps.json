@@ -59,9 +59,9 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 1000448,
-      "ceiling": 1000448,
-      "note": "Card editor. 977 KiB, measured 999,739 with the panel lips in the card studio (Linux build, docker node 24.22.0)."
+      "raw": 1003520,
+      "ceiling": 1003520,
+      "note": "Card editor. 980 KiB, measured 1,001,085 with the panel lips (Linux build, docker node 24.22.0)."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -109,14 +109,14 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 158720,
-      "ceiling": 158720,
-      "note": "SVG editor. 155 KiB. Measured 152,791 + 5 % would round to 160,768, which is higher, so the cap stays at 155 KiB."
+      "raw": 162816,
+      "ceiling": 162816,
+      "note": "SVG editor. 159 KiB, measured 160,159 with the panel lips (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
-      "raw": 105472,
-      "ceiling": 105472,
-      "note": "Shape editor. 103 KiB."
+      "raw": 109568,
+      "ceiling": 109568,
+      "note": "Shape editor. 107 KiB, measured 106,937 with the panel lips (Linux build, docker node 24.22.0)."
     },
     "magic-card-layers.js": {
       "raw": 5120,
@@ -551,6 +551,42 @@
       "field": "/files/magic-card-theme-editor.js/ceiling",
       "from": 277504,
       "to": 286720
+    },
+    {
+      "id": "editor-raw-1003520",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 1000448,
+      "to": 1003520
+    },
+    {
+      "id": "editor-ceiling-1003520",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 1000448,
+      "to": 1003520
+    },
+    {
+      "id": "svg-editor-raw-162816",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 158720,
+      "to": 162816
+    },
+    {
+      "id": "svg-editor-ceiling-162816",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 158720,
+      "to": 162816
+    },
+    {
+      "id": "shape-editor-raw-109568",
+      "field": "/files/magic-card-shape-editor.js/raw",
+      "from": 105472,
+      "to": 109568
+    },
+    {
+      "id": "shape-editor-ceiling-109568",
+      "field": "/files/magic-card-shape-editor.js/ceiling",
+      "from": 105472,
+      "to": 109568
     }
   ]
 }
