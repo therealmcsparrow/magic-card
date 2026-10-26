@@ -513,7 +513,7 @@ export class AnimationStudio extends LitElement {
     const w = ws.getBoundingClientRect();
     const s = stage.getBoundingClientRect();
     if (!w.height || !s.height) return;
-    // half the hidden tab (36 px) plus the 8 px margin keep it on screen at any split
+    // half the tab (36 px) plus the 8 px margin keep it on screen at any split
     const mid = s.top - w.top + s.height / 2;
     const top = Math.round(Math.min(Math.max(mid, 44), Math.max(44, w.height - 44)));
     if (top !== this._lipTop) this._lipTop = top;
