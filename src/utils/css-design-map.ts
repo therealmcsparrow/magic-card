@@ -38,6 +38,7 @@ export const BOX_LONGHANDS: Record<string, Array<{ key: string; cssProperty: str
 /** Design keys edited (and synced with a template) together with another one: the shape and its options. */
 const GROUPED_KEYS: Record<string, string[]> = {
   shape: ['shape_options'],
+  top: ['right', 'bottom', 'left'],
 };
 
 /** Design keys a property covers: itself plus its per-side longhands (box properties) or grouped keys. */

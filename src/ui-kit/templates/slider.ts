@@ -19,7 +19,10 @@ export function slider(o: SliderOptions): TemplateResult {
   const sync = (e: Event, commit: boolean): void => {
     const f = e.target as HTMLInputElement;
     const n = Number(f.value);
-    if (f.value === '' || !Number.isFinite(n)) return;
+    if (f.value === '' || !Number.isFinite(n)) {
+      if (commit) f.value = String(o.value);
+      return;
+    }
     const v = Math.max(o.min, Math.min(o.max, n));
     [...f.parentElement!.querySelectorAll('input')].find((i) => i !== f)!.value = String(v);
     if (commit) {

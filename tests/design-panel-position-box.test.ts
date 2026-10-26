@@ -104,3 +104,14 @@ describe('Design > Position insets as a four-side box', () => {
     expect(el.shadowRoot!.querySelector('mc-unit-field[data-key="inset"]')).not.toBeNull();
   });
 });
+
+describe('Design search finds the Offsets box', () => {
+  for (const q of ['left', 'right', 'bottom', 'top']) {
+    it(`"${q}" shows the box`, async () => {
+      const { el } = await mount({});
+      (el as unknown as { _searchQuery: string })._searchQuery = q;
+      await el.updateComplete;
+      expect(box(el)).toBeTruthy();
+    });
+  }
+});

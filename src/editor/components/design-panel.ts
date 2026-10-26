@@ -725,6 +725,7 @@ export class DesignPanel extends LitElement {
         fold(lt(p.label)).includes(q) ||
         p.cssProperty.toLowerCase().includes(q) ||
         p.key.toLowerCase().includes(q) ||
+        (p.keys ?? []).some((k) => k.includes(q)) ||
         p.key.replace(/_/g, ' ').includes(q) ||
         (BOX_LONGHANDS[p.key] || []).some(
           (l) => l.cssProperty.includes(q) || l.key.includes(q),
@@ -1056,7 +1057,7 @@ export class DesignPanel extends LitElement {
               <mc-box-field
                 .design=${sub.design}
                 .onChange=${(updates: Record<string, unknown>) => sub.write({ ...sub.design, ...updates })}
-                .baseName=${p.key === 'top' ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
+                .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
               ></mc-box-field>
             `,
           );
@@ -1068,7 +1069,7 @@ export class DesignPanel extends LitElement {
               .onChange=${(updates: Record<string, unknown>) =>
                 // a side edit on a template-linked card un-syncs the whole box field (shorthand + sides)
                 this.onChange(this.hasTemplate ? { ...updates, _markNotSynced: p.key } : updates)}
-              .baseName=${p.key === 'top' ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
+              .baseName=${p.keys ? '' : (p.key as 'padding' | 'margin' | 'border_radius')}
             ></mc-box-field>
           `,
           syncIndicator,
