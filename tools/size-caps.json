@@ -109,9 +109,9 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 161792,
-      "ceiling": 161792,
-      "note": "SVG editor. 158 KiB, measured 159,945 with the image mode seam."
+      "raw": 162816,
+      "ceiling": 162816,
+      "note": "SVG editor. 159 KiB, measured 161,847 with the image mode seam and lock hook (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
       "raw": 105472,
@@ -159,9 +159,9 @@
       "note": "45 KiB, measured 44,642 + 1 %, rounded up to 1 KiB. The chunk carries its own copy of the SVG sanitiser, so it loads without the anim chunk. Icon source, <mc-svg-icon>, the SVG sanitiser, the mcu: library client and the icon effect renderers. The contract ceiling is 65,536 B (lazy-module LAZY_CHUNK_CEILINGS)."
     },
     "magic-card-image-editor.js": {
-      "raw": 86016,
+      "raw": 95232,
       "ceiling": 98304,
-      "note": "Image editor: canvas size, save path, size meter, view-only workspace, paints and gradients. A child of the SVG editor chunk. 84 KiB, measured 81,563 with text layers, the reference picture and SVG import (Linux build, docker node 24.22.0). The contract ceiling is 98,304 B (IMAGE_EDITOR_CHUNK_CEILING), room for text, the reference picture and the bindings panel."
+      "note": "Image editor: canvas size, save path, size meter, view-only workspace, paints and gradients. A child of the SVG editor chunk. 93 KiB, measured 89,785 with text layers, the reference picture, SVG import, imported parts and the save checks (Linux build, docker node 24.22.0). The contract ceiling is 98,304 B (IMAGE_EDITOR_CHUNK_CEILING), room for text, the reference picture and the bindings panel."
     },
     "magic-card-svg-image.js": {
       "raw": 23552,
@@ -643,6 +643,24 @@
       "field": "/files/magic-card-image-editor.js/raw",
       "from": 68608,
       "to": 86016
+    },
+    {
+      "id": "svg-editor-raw-162816",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 161792,
+      "to": 162816
+    },
+    {
+      "id": "svg-editor-ceiling-162816",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 161792,
+      "to": 162816
+    },
+    {
+      "id": "image-editor-raw-95232",
+      "field": "/files/magic-card-image-editor.js/raw",
+      "from": 86016,
+      "to": 95232
     }
   ]
 }
