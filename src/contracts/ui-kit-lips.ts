@@ -36,7 +36,11 @@ import type { KitTemplate } from './ui-kit';
  * and renders lip(id) as the panel's sibling in the same grid container: directly after a 'start' panel,
  * directly before an 'end' panel, so the tab order follows the visual order. lip(id) returns lit
  * `nothing` while 'off'. The lip is the same button node in both states (fixed template position), so
- * focus survives a toggle. If the panel element has an accessible name of its own, it is spec.name.
+ * focus survives a toggle.
+ * Panel name: if the panel element has an accessible name of its own (aria-label or aria-labelledby), it
+ * is exactly spec.name, in every editor, layout and selection state, so the lip and the panel it controls
+ * read the same. A host never gives the panel a name that changes with the selection; a host whose name
+ * must change (a locale change) passes new specs through setPanels() and binds the same spec.name.
  * The host also renders status() once in its root template, unconditionally, from the first render.
  * A hidden panel stays mounted (selection, scroll position, open sections and field drafts are kept):
  * kitLip sets `visibility: hidden` and `pointer-events: none` on [data-lip=hidden]. Visibility carries
@@ -78,9 +82,15 @@ import type { KitTemplate } from './ui-kit';
  *   aria-expanded (true while shown). `title` is the pointer tooltip and the accessible description and
  *   swaps between hideLabel and showLabel (e.g. "Hide layers (Ctrl+\)"). The kit holds no strings. No
  *   aria-keyshortcuts (the shortcut acts on all panels; each editor lists it in its own shortcut help).
+ * - Tooltip text: the host builds hideLabel and showLabel each from one translatable message that holds
+ *   the whole sentence with the placeholders {noun} and {keys} (en: "Hide {noun} ({keys})" and
+ *   "Show {noun} ({keys})"; {keys} is the editor's shortcut text, e.g. "Ctrl+\" or "⌘\"), so a
+ *   translation can reorder the parts. The host never joins translated pieces with fixed text.
  * - Enter and Space toggle (native button); activation is `click` only, with no pointerdown, pointer
  *   capture or drag handler, so a touch drag that starts on the lip scrolls or pans as anywhere else.
- *   After a toggle by the lip, focus stays on the lip. A lip toggle never uses the status region.
+ *   A click decides from the state at click time. After a toggle by the lip, focus stays on the lip
+ *   (the click calls focus() on the lip, so a browser that does not focus a clicked button still does).
+ *   A lip toggle never uses the status region. Escape on the lip: see "Hint".
  * - Look (colours only from KIT_TOKENS; the chevron points the way the panel will move and mirrors in RTL):
  *     shown    24 x 56 px, fill --mc-surface, 16 px chevron --mc-text-2, edge 1 px solid --mc-text-2;
  *              hover (hover: hover) fill --mc-surface-2, edge and chevron --mc-text; pressed fill
@@ -89,9 +99,18 @@ import type { KitTemplate } from './ui-kit';
  *              --mc-text-2; hover and pressed darken with `box-shadow: inset 0 0 0 100vmax rgba(0,0,0,.15)`
  *              (no color-mix(), Chromium 111); focus ring 2 px --mc-on-accent, outline-offset -4px
  *   The edge and chevron reach 3:1 against the panel and the canvas in light and dark.
- * - Hit area: on a fine pointer the visible tab is the target (24 px wide or more, WCAG 2.5.8). Under
- *   @media (pointer: coarse) a transparent ::after extends it on the canvas side to 44 px wide and at
- *   least 72 px tall, and --mc-lip-edge-gap (default 0) insets a window-edge lip.
+ * - Hit area, fine pointer (mouse, trackpad, pen with hover), at any zoom level: the visible tab is the
+ *   target, 24 x 56 px shown and 28 x 72 px hidden. That meets WCAG 2.5.8 (at least 24 x 24 CSS px);
+ *   page zoom scales the tab with everything else, so it stays 24 x 56 and 28 x 72 CSS px at 200 %.
+ *   There is no extension on a fine pointer, so the lip covers nothing of the canvas beside it.
+ * - Hit area, coarse pointer (@media (pointer: coarse)): a transparent ::after on the canvas side makes
+ *   the target 44 px wide and at least 72 px tall. It starts at the tab's padding edge, so the tab's
+ *   1 px edge counts once:
+ *     shown    ::after width 21px                                   (24 - 1 + 21 = 44)
+ *     hidden   ::after width calc(17px + var(--mc-lip-pull, 0px))   (28 - 1 + 17 = 44, plus the pull)
+ *   --mc-lip-pull (default 0) is how far the host pulls a window-edge (hidden) lip out of the window.
+ *   The hidden extension grows by the same length, so the part of the target inside the window stays
+ *   44 px. --mc-lip-edge-gap (default 0) insets a window-edge lip.
  * - z-index: var(--mc-lip-z, 4), never above LIP_Z_MAX. In the card studio the float bar and the column
  *   handles are z-index 5 in the same stacking context and stay above the lip and its extension. The lip
  *   is above the canvas content and the scroller next to it.
@@ -126,11 +145,13 @@ import type { KitTemplate } from './ui-kit';
  *     inner edge; while hidden, it lies over the canvas at the window edge (or the tool rail's edge).
  *     In both states the host adds the measured width of the scrollbar the lip faces, so the lip never
  *     sits on a scrollbar. The canvas gets the whole freed track.
- *   'gutter' (model G40): while a column panel is hidden, the host keeps a real LIP_GUTTER_PX (40 px)
- *     track at that edge, beside the stage, and the lip lies in it (--mc-lip-at-* = rail edge or window
- *     edge plus the scrollbar width, which is 0 for a stage with overflow: hidden). While shown, the lip
- *     sits at the panel's inner edge inside the panel's column, never over the stage. The stage never
- *     has a lip, its ::after extension or a hint over it, so a handle at the stage edge stays reachable.
+ *   'gutter' (model G40): while a column panel is hidden, the host keeps a real track at that edge,
+ *     beside the stage, and the lip lies in it (--mc-lip-at-* = rail edge or window edge plus the
+ *     scrollbar width, which is 0 for a stage with overflow: hidden). The track is LIP_GUTTER_PX (40 px)
+ *     plus the host's --mc-lip-pull, so the hidden lip and its coarse-pointer extension stay inside the
+ *     gutter. While shown, the lip sits at the panel's inner edge inside the panel's column, never over
+ *     the stage. The stage never has a lip, its ::after extension or a hint over it, so a handle at the
+ *     stage edge stays reachable.
  *   card-studio, anim-studio: 'overlay'. Canvas content keeps 24 px padding; no handle sits in the lip's
  *     band (column handles are only on inner gutters of a row, .sel-frame is pointer-events: none). On a
  *     full-width card (Wide, Panel) the coarse-pointer ::after (44 px) covers the card's outer 20 px in a
@@ -138,24 +159,28 @@ import type { KitTemplate } from './ui-kit';
  *     A float bar flush at its 8 px margin can cover up to 12 px of the visible tab; the rest and the
  *     extension stay reachable.
  *   svg-editor, shape-studio: 'gutter'. Their .stage has no padding and overflow: hidden, and SVG handles
- *     reach the stage edge; they cannot sit above an outside lip.
+ *     reach the stage edge; they cannot sit above an outside lip. On a coarse pointer each pulls its
+ *     window-edge lip out by its --lg spacing (4 px; 0 on a fine pointer) and sets --mc-lip-pull: var(--lg)
+ *     on its working box, so the hidden gutter is 44 px there and 40 px on a fine pointer.
  *   theme-editor: 'overlay'. Its preview has no edit handles.
  * Measurement (both models): scrollbar width = scroller.offsetWidth - scroller.clientWidth minus the
  * scroller's computed border-left-width and border-right-width, for the scroller that touches the lip's
  * edge at the lip's vertical middle. Overlay scrollbars measure 0. No `scrollbar-gutter` (Chromium 94,
  * Safari 18.2, both above the floor) and no hard-coded width. Hosts measure with ScrollbarWatch (below)
  * and set --mc-lip-at-* from its `width`; they do not keep their own measuring code.
- * Success metric, measured at 820 x 1180 (iPad portrait, overlay scrollbars) with every column panel the
- * editor has there hidden:
+ * Success metric, measured at 820 x 1180 (iPad portrait, overlay scrollbars, coarse pointer) with every
+ * column panel the editor has there hidden:
  *   card-studio, anim-studio   canvas >= 780 px (O+ gives 820; 803-805 with a classic 15-17 px bar,
  *                              which only appears on desktop widths >= 900)
  *   svg-editor, shape-studio   layout 'compact' (641-900 px: 56 px rail, stage, 300 px inspector; the
  *                              side panel is an overlay there, so only the inspector has a lip). The
- *                              stage is 820 - 56 - 40 = 724 px (464 with the inspector shown); 764 px
- *                              is the widest stage this layout allows.
- *                              Metric: hiding the inspector gives the stage its width minus LIP_GUTTER_PX
- *                              (+260 px at compact, +280 at mid, +300 at wide), and no stage pixel lies
- *                              under the lip, its extension or the hint.
+ *                              stage is 820 - 56 - 44 = 720 px on the coarse pointer (724 with a fine
+ *                              pointer at the same width; 464 with the inspector shown); 764 px is the
+ *                              widest stage this layout allows.
+ *                              Metric: hiding the inspector gives the stage its width minus the gutter
+ *                              (fine pointer +260 px at compact, +280 at mid, +300 at wide; 4 px less
+ *                              on a coarse pointer), and no stage pixel lies under the lip, its
+ *                              extension or the hint.
  *   theme-editor               the preview gains the variables panel's full width.
  * In every editor: the lip covers 0 px of any scrollbar, with a 0, 15 and 17 px bar.
  *
@@ -272,10 +297,15 @@ import type { KitTemplate } from './ui-kit';
  * column panel is hidden; else strings.hintMany. .lip-hint-keys is hidden under @media (hover: none).
  * The lip carries aria-describedby to the hint while it shows. Not modal, no focus move, no timer; Tab
  * reaches its button right after the lip. A hint pending for an 'off' panel waits until it is a column.
- * Dismissed by its button, by Escape inside the hint (preventDefault and stopPropagation, so the editor
- * and HA's dialog keep their Escape) or by any show (lip, shortcut, reveal). Focus inside the hint at
- * dismissal moves to its lip. Dismissal writes PANEL_HINT_PREFIX + editor = "1"; only exactly "1" reads
- * as seen. Same try/catch rule as the memory; blocked storage shows the hint on each such open.
+ * Dismissed by its button, by Escape inside the hint, by Escape on the lip that carries the hint, or by
+ * any show (lip, shortcut, reveal). Both Escape cases call preventDefault and stopPropagation, so that
+ * Escape does not also close the editor or HA's dialog. The kit binds the lip's Escape handling only
+ * while the hint shows: Escape on a lip without a hint (or after the hint is gone) is not handled,
+ * prevented or stopped by the kit and reaches the editor as before. This is kit behaviour, so it is the
+ * same in all five editors; no host adds its own Escape handling to a lip. Focus inside the hint at
+ * dismissal moves to its lip; focus on the lip stays there. Dismissal writes PANEL_HINT_PREFIX + editor
+ * = "1"; only exactly "1" reads as seen. Same try/catch rule as the memory; blocked storage shows the
+ * hint on each such open.
  * Look: kitLip only (it does not rely on kitButton): --mc-surface fill, 1 px --mc-text-2 edge,
  * --mc-shadow-float, text --mc-text, 8 px from the lip on the canvas side with a notch towards it, max
  * width min(260px, var(--mc-lip-hint-max, 260px)), its button at least --mc-hit high (44 px coarse).
@@ -289,7 +319,8 @@ import type { KitTemplate } from './ui-kit';
  *
  * ── Tests ──
  * 1. Toggle by click, Enter and Space; aria-expanded and title swap while aria-label stays spec.name;
- *    aria-controls set; focus stays on the lip; no status text after a lip toggle.
+ *    aria-controls set; focus stays on the lip (also when the click itself does not focus it); no status
+ *    text after a lip toggle.
  * 2. A hidden panel keeps its DOM node, scrollTop and selection; data-lip and inert set; not focusable.
  *    Run once more with the inert attribute ignored (removed after render): still not focusable.
  *    Kept width: the hidden panel's offsetWidth (or its computed width for variant c) and its content
@@ -323,22 +354,32 @@ import type { KitTemplate } from './ui-kit';
  * 8. kitLip text: left/right appear before inset-inline-*, :focus before :focus-visible, a
  *    [data-dir=rtl] rule for placement and for the slide, no :dir(, no `translate:` property, no
  *    color-mix(, no scrollbar-gutter, no selector list mixing :focus-visible with another selector, a
- *    z-index no higher than LIP_Z_MAX. dir=rtl host: data-dir is rtl on the lip.
+ *    z-index no higher than LIP_Z_MAX; inside @media (pointer: coarse) the ::after widths 21px (shown)
+ *    and calc(17px + var(--mc-lip-pull, 0px)) (hidden), and no ::after extension outside it.
+ *    dir=rtl host: data-dir is rtl on the lip.
  * 9. Status region: present and empty after the first render (also suspended); shortcut text names the
  *    changed panels in declared order with the list format; the same shortcut twice is announced twice;
  *    strings.locale "x_" (and Intl.ListFormat removed) still announces, joined with ", ".
  * 10. Hint: shows for stored and fallback state only (not after a hide in this visit), migrated text for
  *    fallback, one hint for two hidden panels, aria-describedby while shown, dismissed by its button,
- *    Escape (consumed) and any show, flag "1" written, other flag values read as unseen, blocked storage
- *    shows it again, focus returns to the lip.
+ *    Escape inside it (consumed), Escape on its lip (consumed, focus stays on the lip) and any show, flag
+ *    "1" written, other flag values read as unseen, blocked storage shows it again, focus returns to the
+ *    lip. Escape on a lip without a hint, and on the same lip after dismissal: defaultPrevented false,
+ *    propagation not stopped, no panel changes.
  * 11. Geometry (per host in a browser; ScrollbarWatch and scrollbarWidth also in unit tests with stubbed
  *    sizes): scrollbar width = offsetWidth - clientWidth minus inline borders, never below 0; an equal
  *    measurement requests no update and does not call onChange; a changed element list replaces the
  *    observer, an unchanged one keeps it; no ResizeObserver: watch() still measures; observer
- *    disconnected on disconnect. The lip covers 0 px of a 0, 15 and 17 px bar. 'gutter' hosts: with a
- *    panel hidden the gutter track is LIP_GUTTER_PX and the lip's box (with ::after) does not intersect
- *    the stage's box. 'overlay' hosts: the lip's z-index is below the float bar's. The success metric
- *    above at 820 x 1180, per editor.
+ *    disconnected on disconnect. The lip covers 0 px of a 0, 15 and 17 px bar. Coarse pointer: the
+ *    on-screen hit area (tab plus ::after) is 44 px wide, at least 72 px tall, for shown and hidden lips
+ *    in every editor, including a hidden lip pulled out by --mc-lip-pull. Fine pointer, also at 200 %
+ *    zoom: the hit area is the tab, 24 x 56 shown and 28 x 72 hidden. 'gutter' hosts: with a panel
+ *    hidden the gutter track is LIP_GUTTER_PX plus --mc-lip-pull and the lip's box (with ::after) does
+ *    not intersect the stage's box. 'overlay' hosts: the lip's z-index is below the float bar's. The
+ *    success metric above at 820 x 1180, per editor.
+ * 12. Host strings and names, per editor: each panel element with an accessible name of its own has
+ *    exactly spec.name (in the animation studio with and without a selection); hideLabel and showLabel
+ *    come from one message each with {noun} and {keys} in every shipped locale.
  */
 
 /** localStorage key prefix; the editor id follows. */
@@ -353,7 +394,7 @@ export const PANEL_CHANGE_EVENT = 'mc-panels-change';
 export const LIP_MOTION_MS = 200;
 /** Attribute the controller sets on its host while connected; marks a lip owner for nested shortcut handling. */
 export const LIP_HOST_ATTR = 'data-mc-lips';
-/** Width of the lip column in the 'gutter' model, px. */
+/** Width of the lip column in the 'gutter' model, px; the host adds its --mc-lip-pull. */
 export const LIP_GUTTER_PX = 40;
 /** Highest z-index a lip may use (the card studio's float bar and column handles are 5). */
 export const LIP_Z_MAX = 4;
@@ -371,7 +412,7 @@ export const PANEL_IDS: Readonly<Record<PanelEditorId, readonly string[]>> = {
   'theme-editor': ['variables'],
 };
 
-/** 'overlay': model O+ (lip over the canvas, inset by the scrollbar). 'gutter': model G40 (own 40 px track). */
+/** 'overlay': model O+ (lip over the canvas, inset by the scrollbar). 'gutter': model G40 (own 40 px track plus the pull). */
 export type LipGeometry = 'overlay' | 'gutter';
 
 /** Geometry model per editor (see "Geometry per editor"). */
@@ -389,7 +430,7 @@ export const LIP_CLASSES = ['lip', 'lip-hint', 'lip-hint-keys', 'lip-status'] as
 /** Layout tokens kitLip reads; the host sets them, the part carries var() fallbacks. */
 export const LIP_TOKENS = [
   '--mc-lip-at-start', '--mc-lip-at-end', '--mc-lip-top', '--mc-lip-ms', '--mc-lip-off',
-  '--mc-lip-edge-gap', '--mc-lip-hint-max', '--mc-lip-z',
+  '--mc-lip-edge-gap', '--mc-lip-hint-max', '--mc-lip-z', '--mc-lip-pull',
 ] as const;
 
 export type PanelSide = 'start' | 'end';
@@ -402,13 +443,13 @@ export interface PanelLipSpec {
   side: PanelSide;
   /** DOM id of the panel element in the same shadow root (aria-controls). */
   controls: string;
-  /** Fixed accessible name (aria-label) in both states, e.g. "Layers panel". */
+  /** Fixed accessible name (aria-label) in both states, e.g. "Layers panel"; the panel's own name, if it has one, is the same. */
   name: string;
   /** Lower-case noun for announcements and the hint, e.g. "layers", "side panel". */
   noun: string;
-  /** Tooltip (title) while shown, e.g. "Hide layers (Ctrl+\)". */
+  /** Tooltip (title) while shown, from one message with {noun} and {keys}, e.g. "Hide layers (Ctrl+\)". */
   hideLabel: string;
-  /** Tooltip (title) while hidden, e.g. "Show layers (Ctrl+\)". */
+  /** Tooltip (title) while hidden, from one message with {noun} and {keys}, e.g. "Show layers (Ctrl+\)". */
   showLabel: string;
 }
 
