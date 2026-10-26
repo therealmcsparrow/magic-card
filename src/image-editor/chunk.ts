@@ -25,6 +25,7 @@ import { cancelField, disposeField, place, textField, type TextField } from './t
 import { FRESH, decodePicture, dispose as disposeRef, matchShape, moved, underlay, type Align, type Picture } from './reference';
 import { closePanel } from './reference-ui';
 import { importWin, summary, type Imported } from './importer';
+import { contextOf, layerOf, lift, partColours, plain, partDefs, partNode, partOut, partRows, type Held } from './part';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
 /*
@@ -58,9 +59,6 @@ const tone = (v: string): Paint => toneOf(v) ?? (/^(none|transparent)$/i.test(v)
 
 /** The id of a layer's gradient in the canvas. */
 export const gradientRef = (s: Shape, k: 'fill' | 'stroke'): string => `cg-${s.id}-${k[0]}`;
-
-/** Parts the editor cannot keep: clipping, masks, copies, opacity of a group or of a fill or stroke alone. Text it cannot keep is found by readText. */
-const LOSSY = 'clipPath,mask,use,image,[clip-path],[mask],[fill-opacity],[stroke-opacity],g[opacity],svg[opacity]';
 
 /** The paints, opacity and dashes of one element, put on its layer; `f.v` is set when something in it cannot be kept. */
 function lookOf(el: Element, s: Shape, xml: Document, f: Flag, texts: Map<string, TextData>): Shape {
@@ -104,16 +102,20 @@ function lookOf(el: Element, s: Shape, xml: Document, f: Flag, texts: Map<string
   return Object.keys(look).length ? { ...s, look } : s;
 }
 
-/** A library image (already through the image sanitiser) as a document; `all` is false when parts of it cannot be edited yet. */
+/**
+ * A library image (already through the image sanitiser) as a document. Each run of adjacent elements the editor cannot edit
+ * becomes one locked layer (see part.ts); `all` is false only when the markup did not parse as XML.
+ */
 function readImage(markup: string, viewBox: string, name: string): { doc: Doc; all: boolean } {
   const notes = K.emptyNotes();
   const xml = new DOMParser().parseFromString(markup, 'image/svg+xml');
-  const flag: Flag = { v: !!xml.querySelector(LOSSY) };
+  const flag: Flag = { v: false };
   const texts = new Map<string, TextData>();
-  const els = [...xml.querySelectorAll('text')];
   if (xml.querySelector('parsererror') && /<text[\s>]/i.test(markup)) flag.v = true;
+  K.reserveIds([...xml.querySelectorAll('[id]')].map((e) => e.id));
+  const held = lift(xml, (el) => !!readText(el, { v: false }));
   // each text becomes a rectangle with the same paint and place, carrying a number that finds its words again
-  els.forEach((el, i) => {
+  [...xml.querySelectorAll('text')].forEach((el, i) => {
     const r = readText(el, flag);
     if (!r) return;
     const b = boxFor(r.at, r.t);
@@ -130,13 +132,42 @@ function readImage(markup: string, viewBox: string, name: string): { doc: Doc; a
     texts.set(String(i), r.t);
     el.replaceWith(box);
   });
-  const src = texts.size ? new XMLSerializer().serializeToString(xml) : markup;
-  const doc = K.readMarkup(src, viewBox, notes, name, tone, (el, s) => lookOf(el, s, xml, flag, texts));
-  return { doc, all: !flag.v };
+  const runs = new Map<string, Held>();
+  const src = held.size || texts.size ? new XMLSerializer().serializeToString(xml) : markup;
+  const doc = K.readMarkup(src, viewBox, notes, name, tone, (el, s) => {
+    const lifted = held.get(el.getAttribute('data-mc-part') ?? '');
+    const f: Flag = { v: false };
+    const r = lifted ? s : lookOf(el, s, xml, f, texts);
+    if (lifted || f.v) runs.set(s.id, lifted ?? { el, ctx: contextOf(el) });
+    return r;
+  });
+  if (!runs.size) return { doc, all: !flag.v };
+  // adjacent parts in the same group, under groups with the same attributes, are one layer
+  const shapes: Shape[] = [];
+  let run: { at: Shape; held: Held[] } | undefined;
+  let used = 0;
+  const close = (): void => {
+    if (!run) return;
+    // what the parts hold, definitions included once for each part that uses them, stays within twice the size of an image
+    if (used > 2 * IMAGE_MAX_BYTES) flag.v = true;
+    const l = flag.v ? run.at : layerOf(run.at, run.held, xml, doc.vb, shapes.filter((x) => x.look?.part).length + 1);
+    const p = l.look?.part;
+    if (p) used += p.m.length + [...p.d.values()].reduce((n, d) => n + d.length, 0);
+    shapes.push(l);
+    run = undefined;
+  };
+  for (const s of doc.shapes) {
+    const h = runs.get(s.id);
+    if (h && run && !h.own && !run.held[0].own && run.at.group === s.group && run.held[0].ctx.join() === h.ctx.join()) run.held.push(h);
+    else {
+      close();
+      if (h) run = { at: s, held: [h] };
+      else shapes.push(s);
+    }
+  }
+  close();
+  return { doc: { ...doc, shapes }, all: !flag.v };
 }
-
-// eslint-disable-next-line no-control-regex
-const esc = (s: string): string => s.replace(/[<>"&\\\u0000-\u001f]/g, '').slice(0, 80);
 
 export class ImageExt implements ImageUi {
   readonly revision = IMAGE_EDITOR_CONTRACT_REVISION;
@@ -245,7 +276,7 @@ export class ImageExt implements ImageUi {
         this.problem = r;
         return undefined;
       }
-      this.imp = summary(undefined, r.stripped, r.all);
+      this.imp = summary(undefined, r.stripped, r.doc);
       return r.doc;
     }
     if (src.kind !== 'image') return undefined;
@@ -263,13 +294,14 @@ export class ImageExt implements ImageUi {
   }
 
   /** A file's markup through the sanitiser and the reader: the document, or the reason it gave nothing. */
-  private fromFile(text: string, name: string): { doc: Doc; all: boolean; stripped: string[] } | string {
+  private fromFile(text: string, name: string): { doc: Doc; stripped: string[] } | string {
     const s = this.api.sanitizeImage(text, { file: true });
     if (s.error) return this.sanitiseText(s.error);
     const r = readImage(s.markup, s.viewBox, name);
     if (!r.doc.shapes.length) return t('That file has no shapes an image can use.');
+    if (!r.all) return t('That file cannot be used as an image.');
     K.reserveIds([...r.doc.shapes.map((x) => x.id), ...r.doc.groups.map((x) => x.id)]);
-    return { ...r, stripped: s.stripped };
+    return { doc: r.doc, stripped: s.stripped };
   }
 
   /** An imported file replaces the drawing as one undoable step. */
@@ -277,12 +309,12 @@ export class ImageExt implements ImageUi {
     const sh = this.shell;
     const r = this.fromFile(text, sh.doc.name);
     if (typeof r === 'string') {
-      this.imp = { name, kinds: [], partial: false, error: r };
+      this.imp = { name, kinds: [], kept: false, error: r };
       return;
     }
     sh.apply(r.doc, 'Import SVG file');
     sh.grid = gridFor(r.doc.vb.w, r.doc.vb.h);
-    this.imp = summary(name, r.stripped, r.all);
+    this.imp = summary(name, r.stripped, r.doc);
     sh.showToast(t("Imported '{name}'.", { name }), { label: t('Undo'), run: () => sh.undo() });
     sh.requestUpdate();
     sh.fitView();
@@ -348,7 +380,7 @@ export class ImageExt implements ImageUi {
 
   serialiseLayer(layer: unknown): string {
     const s = layer as Shape;
-    const name = esc(s.name);
+    const name = plain(s.name);
     const on = s.stroke !== 'none' && s.width > 0;
     const words = s.look?.text;
     const box = words && K.shapeBox(s);
@@ -381,7 +413,7 @@ export class ImageExt implements ImageUi {
     const points = K.pointCount(doc);
     const vb = `${doc.vb.x} ${doc.vb.y} ${doc.vb.w} ${doc.vb.h}`;
     this.gradients = [];
-    const taken = new Set(doc.shapes.map((s) => s.id));
+    const taken = new Set(doc.shapes.flatMap((s) => [s.id, ...(s.look?.part?.i ?? [])]));
     let n = 0;
     this.gradientId = () => {
       let id: string;
@@ -389,9 +421,10 @@ export class ImageExt implements ImageUi {
       while (taken.has(id));
       return id;
     };
-    const body = K.toSvg(doc, decimals, (s, d) => this.element(s, d));
-    const raw = this.gradients.length ? body.replace(/^(<svg[^>]*>)/, `$1<defs>${this.gradients.join('')}</defs>`) : body;
-    if (!/<(?:path|text)/.test(raw)) return { bytes: 0, error: 'empty', points, viewBox: vb };
+    const body = K.toSvg(doc, decimals, (s, d) => (s.look?.part ? partOut(s, s.look.part) : this.element(s, d)));
+    const defs = [...this.gradients, ...partDefs(doc.shapes)];
+    const raw = defs.length ? body.replace(/^(<svg[^>]*>)/, `$1<defs>${defs.join('')}</defs>`) : body;
+    if (!/<(?:path|text)/.test(raw) && !doc.shapes.some((s) => s.look?.part && !s.hidden)) return { bytes: 0, error: 'empty', points, viewBox: vb };
     const s = this.api.sanitizeImage(raw);
     if (s.error) return { bytes: s.bytes, error: s.error === 'too_large' ? 'over' : 'invalid', message: s.error, points, viewBox: vb };
     const bytes = savedBytes(s.markup, this.stored);
@@ -413,11 +446,11 @@ export class ImageExt implements ImageUi {
   }
 
   paint(s: Shape, k: Which): TemplateResult {
-    return paintRow(this, s, k);
+    return s.look?.part ? (k === 'fill' ? partColours() : html``) : paintRow(this, s, k);
   }
 
   more(s: Shape): TemplateResult {
-    return lookRows(this, s);
+    return s.look?.part ? html`` : lookRows(this, s);
   }
 
   handles(): TemplateResult | undefined {
@@ -448,11 +481,11 @@ export class ImageExt implements ImageUi {
   }
 
   node(s: Shape): TemplateResult | undefined {
-    return textNode(this, s);
+    return partNode(this, s) ?? textNode(this, s);
   }
 
   text(s: Shape): TemplateResult | undefined {
-    return textRows(this, s);
+    return partRows(s) ?? textRows(this, s);
   }
 
   addText(): void {
@@ -481,7 +514,7 @@ export class ImageExt implements ImageUi {
   }
 
   stamp(doc: Doc): string {
-    return K.toSvg(doc) + doc.shapes.map((s) => (s.look ? JSON.stringify(s.look) : '')).join('|');
+    return K.toSvg(doc) + doc.shapes.map((s, i) => (s.look?.part ? JSON.stringify([i, s.id, s.name, s.group, s.hidden]) : s.look ? JSON.stringify(s.look) : '')).join('|');
   }
 
   blockReason(out: Out): string | undefined {
@@ -505,6 +538,9 @@ export class ImageExt implements ImageUi {
     const was = this.level;
     this.level = l;
     if (was && was !== l && (l === 'big' || l === 'full')) this.shell.say(this.sentence(out.bytes));
+    // an imported part keeps its place and shape: Unlock changes nothing before the next edit can start
+    const sh = this.shell;
+    if (sh.doc.shapes.some((s) => s.look?.part && !s.locked)) sh.setDoc({ ...sh.doc, shapes: sh.doc.shapes.map((s) => (s.look?.part ? { ...s, locked: true } : s)) });
   }
 
   // ── canvas size ──

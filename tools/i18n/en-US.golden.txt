@@ -117,6 +117,7 @@ image-editor	Gradient centre	Gradient center
 image-editor	Stop {n} colour	Stop {n} color
 image-editor	Text cancelled.	Text canceled.
 image-editor	Theme colour	Theme color
+image-editor	This part keeps its own colours.	This part keeps its own colors.
 image-editor	Use a colour like #3f6fb5.	Use a color like #3f6fb5.
 image-editor	Use a name that starts with two dashes, like --my-colour.	Use a name that starts with two dashes, like --my-color.
 image-editor	{name} colour	{name} color

@@ -103,11 +103,12 @@ describe('image paints: opening a library image', () => {
     ['a colour keyword', '<svg viewBox="0 0 400 300"><path id="a" d="M0 0H20V20H0Z" fill="currentColor"/></svg>'],
     ['a gradient transform', `<svg viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" x2="1" gradientTransform="rotate(30)"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient></defs><path id="a" d="M0 0H20V20H0Z" fill="url(#g)"/></svg>`],
     ['an unknown gradient', '<svg viewBox="0 0 400 300"><path id="a" d="M0 0H20V20H0Z" fill="url(#nope)"/></svg>'],
-  ])('still opens view-only for %s, with the reason', async (_n, svg) => {
+  ])('opens %s editable, with the part kept as a locked layer', async (_n, svg) => {
     const { el } = await open(svg);
     expect(el.stage).toBe('edit');
-    expect(el.img!.readOnly).toBe(true);
-    expect(text(el)).toContain('cannot change yet');
+    expect(el.img!.readOnly).toBe(false);
+    expect(el.doc.shapes.some((s) => s.locked && s.look?.part)).toBe(true);
+    expect(text(el)).not.toContain('cannot change yet');
   });
 });
 

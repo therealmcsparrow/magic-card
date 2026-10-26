@@ -2,6 +2,7 @@ import { html, nothing, type TemplateResult } from 'lit';
 import { MAX_IMAGE_IMPORT_BYTES } from '../contracts/image-editor';
 import { button } from '../ui-kit/templates';
 import { t } from './i18n';
+import type { Doc } from '../svg-editor/model';
 import type { ImageExt } from './chunk';
 
 /* Importing an .svg file: what the sanitiser took out, and the window that says so. */
@@ -11,8 +12,8 @@ export interface Imported {
   name?: string;
   /** What was removed (kinds, not counts: the sanitiser lists each part once). */
   kinds: string[];
-  /** Parts the editor cannot edit yet were left out. */
-  partial: boolean;
+  /** Parts the editor cannot edit are kept as locked layers. */
+  kept: boolean;
   /** A file that gave nothing to draw: the reason, with no Continue. */
   error?: string;
 }
@@ -27,8 +28,8 @@ export function removedKinds(stripped: readonly string[]): string[] {
   return [...kinds];
 }
 
-export function summary(name: string | undefined, stripped: readonly string[], all: boolean): Imported {
-  return { name, kinds: removedKinds(stripped), partial: !all };
+export function summary(name: string | undefined, stripped: readonly string[], doc: Doc): Imported {
+  return { name, kinds: removedKinds(stripped), kept: doc.shapes.some((s) => s.look?.part) };
 }
 
 /** Checks the file before reading it; returns the reason it is refused. */
@@ -39,7 +40,7 @@ export function refuse(f: { name: string; type: string; size: number }): string 
 
 export async function importFile(x: ImageExt, file: File): Promise<void> {
   const why = refuse(file);
-  if (why) x.imp = { name: file.name, kinds: [], partial: false, error: why };
+  if (why) x.imp = { name: file.name, kinds: [], kept: false, error: why };
   else x.importSvg(await file.text(), file.name);
   x.shell.requestUpdate();
 }
@@ -51,7 +52,7 @@ export function importWin(x: ImageExt): TemplateResult {
   return html`<mc-ui-window variant=${i.error ? 'alert' : 'dialog'} size="m" heading=${i.name ? t("Imported '{name}'", { name: i.name }) : t('Imported file')} closeLabel=${t('Close')} @mc-window-close=${done}>
     <div class="dlg">
       ${i.error ? html`<p role="alert">${i.error}</p>` : html`<p>${i.kinds.length ? t('Removed {list}.', { list: i.kinds.join(', ') }) : t('Nothing was removed.')}</p>`}
-      ${i.partial ? html`<p class="help">${t('Some parts of this file, such as clipping or transparency, cannot be edited yet. They were left out.')}</p>` : nothing}
+      ${i.kept ? html`<p class="help">${t('Some parts cannot be edited, such as clipped ones. They are kept as locked layers.')}</p>` : nothing}
     </div>
     <div slot="footer" class="foot">
       ${i.error ? html`${button({ label: t('Close'), variant: 'text', size: 'md', onClick: done })}${button({ label: t('Choose another file'), variant: 'primary', size: 'md', onClick: more })}` : button({ label: t('Continue'), variant: 'primary', size: 'md', onClick: done })}

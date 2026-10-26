@@ -1,3 +1,4 @@
+import type { Part } from './part';
 import type { TextData } from './text';
 
 /*
@@ -40,6 +41,8 @@ export interface Look {
   offset?: number;
   /** A text layer: its words and type (see text.ts). */
   text?: TextData;
+  /** An imported part: a locked layer that keeps its own markup (see part.ts). */
+  part?: Part;
 }
 
 export interface Box {

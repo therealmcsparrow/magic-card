@@ -214,14 +214,14 @@ describe('image editor: opening', () => {
     expect(text(el)).toContain('This image is no longer in the library.');
   });
 
-  it('a file opened as an image keeps its shapes and says what was left out', async () => {
+  it('a file opened as an image keeps its shapes and says what was removed and what is kept', async () => {
     const { hass } = wire();
     const svg = '<svg viewBox="0 0 100 50"><switch/><path d="M0 0H40V40Z" fill="currentColor"/></svg>';
     const el = await open({ kind: 'image-svg', svg }, hass);
     expect(el.stage).toBe('edit');
     expect(el.doc.shapes.length).toBe(1);
     expect(text(el)).toContain('Removed other parts an image cannot use.');
-    expect(text(el)).toContain('cannot be edited yet');
+    expect(text(el)).toContain('kept as locked layers');
   });
 
   it('a file that is only a script has nothing to draw and is refused with a reason', async () => {

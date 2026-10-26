@@ -125,11 +125,12 @@ describe('text layers: opening a library image', () => {
     ['text in other units', '<svg viewBox="0 0 400 300"><text id="t" x="1" y="1" font-size="2em">Hi</text></svg>'],
     ['text with a clip path next to it', '<svg viewBox="0 0 400 300"><defs><clipPath id="c"><rect width="5" height="5"/></clipPath></defs><text id="t" x="1" y="1" clip-path="url(#c)">Hi</text></svg>'],
     ['text next to a part that is still unsupported', `<svg viewBox="0 0 400 300"><text id="t" x="1" y="1">Hi</text><path id="a" d="M0 0H20V20H0Z" fill="#fff" fill-opacity="0.5"/></svg>`],
-  ])('keeps %s view-only, with the reason', async (_n, svg) => {
+  ])('keeps %s as a locked layer, editable', async (_n, svg) => {
     const { el } = await open(svg);
     expect(el.stage).toBe('edit');
-    expect(el.img!.readOnly).toBe(true);
-    expect(text(el)).toContain('cannot change yet');
+    expect(el.img!.readOnly).toBe(false);
+    expect(el.doc.shapes.some((s) => s.locked && s.look?.part)).toBe(true);
+    expect(text(el)).not.toContain('cannot change yet');
   });
 
   it('shows text in the view-only workspace too', async () => {
