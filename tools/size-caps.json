@@ -48,8 +48,8 @@
     ],
     "br": {
       "quality": 11,
-      "cap": 72123,
-      "measured": 71995
+      "cap": 72251,
+      "measured": 72126
     }
   },
   "files": {
@@ -587,6 +587,12 @@
       "field": "/files/magic-card-shape-editor.js/ceiling",
       "from": 105472,
       "to": 109568
+    },
+    {
+      "id": "entry-br-cap-72251",
+      "field": "/entry/br/cap",
+      "from": 72123,
+      "to": 72251
     }
   ]
 }
