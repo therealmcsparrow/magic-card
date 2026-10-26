@@ -444,7 +444,8 @@ export class AnimationStudio extends LitElement {
     // the automatic split: on open and resize; an edit only grows the timeline (no jumping stage)
     const prev = changed.get('_doc') as AnimationDoc | undefined;
     // (the layers column opening or closing changes the timeline's width: lanes or its keyframe list)
-    if (changed.has('_height') || changed.has('_width') || this._lipsChanged() || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
+    const lipMoved = this._lipsChanged();
+    if (changed.has('_height') || changed.has('_width') || lipMoved || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
     else if (changed.has('_doc')) this._autoSplit(true);
     // the slide-over takes the focus when it opens (its scrim covers the rest)
     if (changed.has('_inspOpen') && this._inspOpen && this._slideOver) this._focusSel ??= 'aside.inspector';
@@ -454,7 +455,8 @@ export class AnimationStudio extends LitElement {
       const id = shapes[shapes.length - 1].id;
       void this._revealShape(id);
     }
-    this._placeLips();
+    // measured when the layout can have moved (not on each playhead tick)
+    if (lipMoved || changed.has('_view') || changed.has('_width') || changed.has('_height') || changed.has('_split') || changed.has('_stageRect') || changed.has('_doc')) this._placeLips();
     // the inspector shows something else: start at its top (its head in view); edits of the same
     // key or target keep the scroll
     if (changed.has('_selection') && selectionSubject(changed.get('_selection') as StudioSelection | undefined) !== selectionSubject(this._selection)) {
