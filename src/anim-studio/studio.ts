@@ -29,7 +29,7 @@ import { NO_SELECTION, PANELS, panelsFor, type PanelSpec, type PreviewChangeDeta
 import { TILES, type PreviewTile } from './tiles';
 import type { TargetRef } from './model';
 import { ORIGIN_GRID, ORIGIN_NAMES, TIMELINE_NARROW, laneTimes, targetIcon, targetLabel, timelineTracks, tkeyExists, usedLanes } from './editors/keyframes-utils';
-import { docSizeError, paintOrder } from './editors/draw-utils';
+import { docSizeError } from './editors/draw-utils';
 import { EMPTY_LAYER_VIEW, type LayerView, type LayerViewChangeDetail } from '../contracts/studio-layers';
 import { applyLayerView, hiddenCount, pruneLayerView, selectionKeys, selectionLocked } from './layer-view';
 import { lockBanner, lockBannerStyles } from './editors/lock-banner';
@@ -38,6 +38,10 @@ import type { UiMenuElement, UiMenuEntry, UiMenuPick, UiWindowElement } from '..
 import { deepActive, studioWindow } from './window';
 import { validationText } from './validation-text';
 import { sectionHead } from '../ui-kit/templates/layout';
+import { kitLip } from '../ui-kit/css/lip';
+import { PanelLips } from '../ui-kit/controllers/panel-lips';
+import { ScrollbarWatch } from '../ui-kit/controllers/scrollbar-width';
+import type { PanelLipSpec, PanelLipStrings } from '../contracts/ui-kit';
 import { seg } from '../ui-kit/templates/choice';
 import type { CataloguePreset, PresetPickDetail, PresetTileSource } from '../contracts/preset-catalogue';
 import { builtinTileSources } from './preset-grid';
@@ -105,7 +109,7 @@ const DIRECTIONS: Array<{ value: AnimationDirection; label: MessageId }> = [
   { value: 'alternate', label: m('Alternate') },
   { value: 'alternate-reverse', label: m('Alternate reverse') },
 ];
-/** Section icons of the inspector and layers panels (sections and rail buttons need one). */
+/** Section icons of the inspector and layers panels. */
 const PANEL_ICON: Record<string, string> = {
   'mc-anim-states-panel': 'mdi:state-machine',
   'mc-anim-key-inspector': 'mdi:key-variant',
@@ -178,7 +182,7 @@ const errorText = (err: unknown): { message: string; errors: FieldError[] } => {
 export const SPLIT_KEY = 'mcas-split';
 /** Collapsed inspector sections (JSON list of ids). */
 export const SECTIONS_KEY = 'mcas-sections';
-/** The layers column: 'rail' (the user collapsed it) or 'open'; unset: open. */
+/** The earlier Layers choice, 'rail' (collapsed) or 'open': read once to carry a collapsed column over to the panel lips. */
 export const LAYERS_KEY = 'mcas-layers';
 export const SPLIT_DEFAULT = 0.4;
 /** The stage and the timeline each keep at least this height (px). */
@@ -190,6 +194,35 @@ export const SPLIT_MIN_PX = 160;
 export const RAIL_BELOW = 1000;
 export const COMPACT_BELOW = 1100;
 export const SLIDE_BELOW = 900;
+
+/** Ctrl+\ on most systems, the command key on Apple ones. */
+function shortcutKeys(): string {
+  return /Mac|iPhone|iPad/.test(navigator.platform || '') ? '⌘\\' : 'Ctrl+\\';
+}
+
+/** The lip of each side panel: fixed name, noun for announcements, and the tooltips. */
+function lipSpecs(): PanelLipSpec[] {
+  const keys = ` (${shortcutKeys()})`;
+  return [
+    { id: 'layers', side: 'start', controls: 'layers', name: t('Layers panel'), noun: t('layers'),
+      hideLabel: t('Hide {noun}', { noun: t('layers') }) + keys, showLabel: t('Show {noun}', { noun: t('layers') }) + keys },
+    { id: 'inspector', side: 'end', controls: 'inspector', name: t('Inspector panel'), noun: t('inspector'),
+      hideLabel: t('Hide {noun}', { noun: t('inspector') }) + keys, showLabel: t('Show {noun}', { noun: t('inspector') }) + keys },
+  ];
+}
+
+function lipStrings(language: string): PanelLipStrings {
+  return {
+    locale: language,
+    hidden: t('{panels} hidden', { panels: '{panels}' }),
+    shown: t('{panels} shown', { panels: '{panels}' }),
+    hintOne: t('The {noun} panel is hidden, as you left it. Use the arrow on the edge to show it.', { noun: '{noun}' }),
+    hintMany: t('Some panels are hidden, as you left them. Use the arrows on the edges to show them.'),
+    hintMigrated: t('The layers panel is hidden, as you collapsed it before. Use the arrow on the edge to show it.'),
+    hintShortcut: t('Shortcut: {keys}', { keys: shortcutKeys() }),
+    gotIt: t('Got it'),
+  };
+}
 
 function readStore(key: string): string | null {
   try {
@@ -268,7 +301,7 @@ const labelsLoad = labelsReady().then((ok) => (labelsState = ok ? 'ready' : 'fai
 const LABELS_FAILED = 'The studio texts (magic-card-i18n-labels.js) could not be loaded. Reload the page.';
 
 export class AnimationStudio extends LitElement {
-  static styles = [...studioStyles, lockBannerStyles];
+  static styles = [...studioStyles, kitLip, lockBannerStyles];
 
   @property({ attribute: false }) hass?: Record<string, unknown>;
   /** The library: documents as a list or by id (the panel passes `{ [id]: doc }`). */
@@ -309,9 +342,30 @@ export class AnimationStudio extends LitElement {
   @state() private _tile: PreviewTile = 'icon';
   /** The stage's share of the centre column (0-1). */
   @state() private _split = readSplit();
-  /** The user's layers column choice; unset: open (compact rows below RAIL_BELOW). */
-  @state() private _layersPref = readStore(LAYERS_KEY) as 'rail' | 'open' | null;
-  /** The studio's own width (rail and slide-over breakpoints). */
+  /** Panel lips: hide and show Layers and the Inspector column, remembered per device; Ctrl/Cmd + \ toggles the column panels. */
+  private readonly _lips = new PanelLips(this, {
+    editor: 'anim-studio',
+    panels: lipSpecs(),
+    strings: lipStrings('en'),
+    // the earlier Collapse layers choice is carried over once, then forgotten
+    fallback: () => {
+      const old = readStore(LAYERS_KEY);
+      if (old === null) return null;
+      try {
+        localStorage.removeItem(LAYERS_KEY);
+      } catch {
+        /* storage is blocked: nothing was kept either */
+      }
+      return old === 'rail' ? ['layers'] : null;
+    },
+  });
+  private _lipLocale = 'en';
+  private _lipSig = '';
+  /** Width of the scrollbar the Inspector lip faces (the stage's), measured. */
+  private readonly _bar = new ScrollbarWatch(this);
+  /** The lips' vertical centre: the middle of the stage row, kept inside the working box. */
+  @state() private _lipTop?: number;
+  /** The studio's own width (compact-rows and slide-over breakpoints). */
   @state() private _width = 0;
   @state() private _height = 0;
   /** The user set the split (dragged, keys, or remembered): no automatic split. */
@@ -324,8 +378,6 @@ export class AnimationStudio extends LitElement {
   /** loadEditor() was asked for (once per element). */
   private _editorRequested = false;
   private _splitDrag?: { pointerId: number };
-  /** A rail button opened the layers column: bring this panel's section into view. */
-  private _revealPanel?: string;
   /** What `dirty` was last computed for (identity of the open and the stored document). */
   private _dirtyFor?: { doc: AnimationDoc; saved: AnimationDoc | null; value: boolean };
   /** The state before a drag's first transient change (a drag that ends there leaves no undo step). */
@@ -351,6 +403,14 @@ export class AnimationStudio extends LitElement {
     }
     // WCAG 3.1.2: the studio's language, for a screen reader (the inherited language is the page's)
     if (this.lang !== locale()) this.lang = locale();
+    const language = locale();
+    if (language !== this._lipLocale) {
+      this._lipLocale = language;
+      this._lips.setPanels(lipSpecs(), lipStrings(language));
+    }
+    // a panel has a lip only while it is a column: Layers always, the Inspector unless it slides over
+    const editing = this._view === 'editor' && !!this._doc;
+    this._lips.columns({ layers: editing, inspector: editing && !this._slideOver });
     if (changed.has('library')) this._docs = libraryDocs(this.library);
     if (changed.has('library') || changed.has('_docs')) {
       this._lookup = (id: string) => this._docs.get(id);
@@ -384,7 +444,7 @@ export class AnimationStudio extends LitElement {
     // the automatic split: on open and resize; an edit only grows the timeline (no jumping stage)
     const prev = changed.get('_doc') as AnimationDoc | undefined;
     // (the layers column opening or closing changes the timeline's width: lanes or its keyframe list)
-    if (changed.has('_height') || changed.has('_width') || changed.has('_layersPref') || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
+    if (changed.has('_height') || changed.has('_width') || this._lipsChanged() || changed.has('_view') || (changed.has('_doc') && prev?.id !== this._doc?.id)) this._autoSplit();
     else if (changed.has('_doc')) this._autoSplit(true);
     // the slide-over takes the focus when it opens (its scrim covers the rest)
     if (changed.has('_inspOpen') && this._inspOpen && this._slideOver) this._focusSel ??= 'aside.inspector';
@@ -394,12 +454,7 @@ export class AnimationStudio extends LitElement {
       const id = shapes[shapes.length - 1].id;
       void this._revealShape(id);
     }
-    if (this._revealPanel) {
-      const sec = this.shadowRoot?.querySelector<HTMLElement>(`.layer-group[data-panel="${this._revealPanel}"]`);
-      this._revealPanel = undefined;
-      sec?.scrollIntoView?.({ block: 'start' });
-      sec?.focus({ preventScroll: true });
-    }
+    this._placeLips();
     // the inspector shows something else: start at its top (its head in view); edits of the same
     // key or target keep the scroll
     if (changed.has('_selection') && selectionSubject(changed.get('_selection') as StudioSelection | undefined) !== selectionSubject(this._selection)) {
@@ -436,6 +491,39 @@ export class AnimationStudio extends LitElement {
       if (!now || now === document.body) this._opener.focus({ preventScroll: true });
       this._opener = undefined;
     }
+  }
+
+  /** The hidden panels changed since the last call: the timeline's width changed with them. */
+  private _lipsChanged(): boolean {
+    const sig = `${this._lips.state('layers')}${this._lips.state('inspector')}`;
+    const changed = sig !== this._lipSig;
+    this._lipSig = sig;
+    return changed;
+  }
+
+  /** Where the lips sit: the stage row's middle, and the scrollbar the Inspector lip faces. */
+  private _placeLips(): void {
+    const root = this.shadowRoot;
+    const ws = root?.querySelector<HTMLElement>('.workspace');
+    const stage = root?.querySelector<HTMLElement>('mcas-stage');
+    this._bar.watch(stage ?? null, ws ?? null);
+    if (!ws || !stage) return;
+    const w = ws.getBoundingClientRect();
+    const s = stage.getBoundingClientRect();
+    if (!w.height || !s.height) return;
+    // half the hidden tab (36 px) plus the 8 px margin keep it on screen at any split
+    const mid = s.top - w.top + s.height / 2;
+    const top = Math.round(Math.min(Math.max(mid, 44), Math.max(44, w.height - 44)));
+    if (top !== this._lipTop) this._lipTop = top;
+  }
+
+  /** Lip positions from each window edge: a shown panel's lip at its inner edge, a hidden panel's at the edge. */
+  private _lipTokens(): string {
+    const lips = this._lips;
+    const start = lips.isHidden('layers') ? '0px' : 'var(--layers-w)';
+    const end = lips.isHidden('inspector') ? '0px' : 'var(--insp-w)';
+    const top = this._lipTop === undefined ? '' : `; --mc-lip-top: ${this._lipTop}px`;
+    return `--mc-lip-at-start: ${start}; --mc-lip-at-end: calc(${end} + ${this._bar.width}px)${top}`;
   }
 
   connectedCallback(): void {
@@ -1267,31 +1355,13 @@ export class AnimationStudio extends LitElement {
 
   // ── layout v2: sections, layers, inspector, splitter ──
 
-  private get _rail(): boolean {
-    // the icons-only rail is the user's choice ("Collapse layers"); a narrow window gets the compact list
-    return this._layersPref === 'rail';
-  }
-
   /** Narrower layers and inspector columns, so the timeline keeps its lanes (1000 to 1100 px). */
   private get _compact(): boolean {
     return this._width > 0 && this._width < COMPACT_BELOW && !this._slideOver;
   }
 
-  /** A rail button: open the layers column at that panel's section. */
-  private _openLayers(tag: string): void {
-    this._layersPref = 'open';
-    writeStore(LAYERS_KEY, 'open');
-    this._revealPanel = tag;
-  }
-
   private get _slideOver(): boolean {
     return this._width > 0 && this._width < SLIDE_BELOW;
-  }
-
-  private _toggleRail(): void {
-    const next = this._rail ? 'open' : 'rail';
-    this._layersPref = next;
-    writeStore(LAYERS_KEY, next);
   }
 
   private _setSelection(sel: StudioSelection): void {
@@ -1713,14 +1783,14 @@ export class AnimationStudio extends LitElement {
     if (growOnly ? split < this._split - 0.002 : Math.abs(split - this._split) > 0.002) this._split = split;
   }
 
-  /** Scroll the layers column to a (new) shape's row or rail button, once it is rendered. */
+  /** Scroll the layers column to a (new) shape's row, once it is rendered. */
   private async _revealShape(id: string): Promise<void> {
     await this.updateComplete;
     const nav = this.shadowRoot?.querySelector('nav.layers');
     const panels = [...(nav?.querySelectorAll<HTMLElement & { updateComplete?: Promise<unknown> }>('mc-anim-shapes-layers, mc-anim-shapes-under-layers') ?? [])];
     await Promise.all(panels.map((p) => p.updateComplete));
     const panel = panels.find((p) => p.shadowRoot?.querySelector(`li[data-id="${id}"]`)) ?? panels[0];
-    const row = panel?.shadowRoot?.querySelector<HTMLElement>(`li[data-id="${id}"]`) ?? nav?.querySelector<HTMLElement>(`[data-shape="${id}"]`);
+    const row = panel?.shadowRoot?.querySelector<HTMLElement>(`li[data-id="${id}"]`);
     row?.scrollIntoView?.({ block: 'nearest' });
   }
 
@@ -1769,8 +1839,8 @@ export class AnimationStudio extends LitElement {
     return out;
   }
 
-  private _renderLayerList(d: AnimationDoc, rail: boolean): TemplateResult {
-    if (d.kind === 'particles') return rail ? html`` : html`<p class="help layers-note">${t('Particles play on the whole element.')}</p>`;
+  private _renderLayerList(d: AnimationDoc): TemplateResult {
+    if (d.kind === 'particles') return html`<p class="help layers-note">${t('Particles play on the whole element.')}</p>`;
     const tile = TILES.find((t) => t.id === this._tile);
     const sel = this._selection;
     const keyed = (tg: TargetRef) =>
@@ -1789,17 +1859,12 @@ export class AnimationStudio extends LitElement {
             class="layer ${off ? 'off' : ''}"
             data-target=${tg}
             aria-pressed=${on ? 'true' : 'false'}
-            aria-label=${rail ? title : nothing}
             title=${title}
             @click=${(e: MouseEvent) => this._pickLayer(tg, e.ctrlKey || e.metaKey || e.shiftKey)}
           >
             <ha-icon icon=${targetIcon(tg)}></ha-icon>
-            ${
-              rail
-                ? nothing
-                : html`<span class="layer-name">${label}</span> ${main && moves(d) ? html`<span class="chip is-accent layer-main">${t('Moves')}</span>` : nothing}
-                    ${n ? html`<span class="layer-count" title=${t('{count, plural, one {# keyframe} other {# keyframes}}', { count: n })}>${n}</span>` : nothing}`
-            }
+            <span class="layer-name">${label}</span> ${main && moves(d) ? html`<span class="chip is-accent layer-main">${t('Moves')}</span>` : nothing}
+            ${n ? html`<span class="layer-count" title=${t('{count, plural, one {# keyframe} other {# keyframes}}', { count: n })}>${n}</span>` : nothing}
           </button>
         </li>`;
       })}
@@ -1827,69 +1892,25 @@ export class AnimationStudio extends LitElement {
   }
 
   private _renderLayers(d: AnimationDoc): TemplateResult {
-    const rail = this._rail;
     const specs = panelsFor('layers', d, this._selection).filter((p) => editorDefined(p.tag));
     // shapes over, icon parts, shapes under, card parts: each under its own heading, in panel order (LAYERS_ORDER)
-    const panels = rail
-      ? []
-      : specs.map(
-          (p) =>
-            html`<section class="layer-group" data-panel=${p.tag} aria-label=${t(p.title)} tabindex="-1">
-              <h3 class="layer-head">${t(p.title)}</h3>
-              ${this._editorEl(p.tag, d, { cls: 'panel panel-layers', panel: true })}
-            </section>`,
-        );
-    // the rail: the targets as icons, then a button per panel that opens the column at it
-    const opens = rail && specs.length
-      ? html`<ul class="layer-list rail-panels" role="list" aria-label=${t('Open in the layers column')}>
-          ${specs.map(
-            (p) => html`<li>
-              <button
-                type="button"
-                class="layer rail-open"
-                data-open=${p.tag}
-                aria-label=${t('Open {title}', { title: t(p.title) })}
-                title=${t(p.title)}
-                @click=${() => this._openLayers(p.tag)}
-              >
-                <ha-icon icon=${PANEL_ICON[p.tag] ?? 'mdi:layers-outline'}></ha-icon>
-              </button>
-            </li>`,
-          )}
-        </ul>`
-      : nothing;
-    // drawn shapes stay findable in the rail: one button each, top of the paint order first
-    const drawn = rail && d.kind === 'keyframes' ? paintOrder(d.rig?.shapes ?? []).reverse() : [];
-    const shapesRail = drawn.length
-      ? html`<ul class="layer-list rail-shapes" role="list" aria-label=${t('Shapes')}>
-          ${drawn.map((s) => {
-            const t = `shape:${s.id}` as TargetRef;
-            const on = this._selection.target === t || !!this._selection.targets?.includes(t);
-            return html`<li>
-              <button type="button" class="layer" data-shape=${s.id} aria-pressed=${on ? 'true' : 'false'} aria-label=${s.name} title=${s.name} @click=${(e: MouseEvent) => this._pickLayer(t, e.ctrlKey || e.metaKey || e.shiftKey)}>
-                <ha-icon icon="mdi:vector-polyline"></ha-icon>
-              </button>
-            </li>`;
-          })}
-        </ul>`
-      : nothing;
-    return html`<nav class="layers ${rail ? 'rail' : ''}" aria-label=${t('Layers')}>
+    const panels = specs.map(
+      (p) =>
+        html`<section class="layer-group" data-panel=${p.tag} aria-label=${t(p.title)} tabindex="-1">
+          <h3 class="layer-head">${t(p.title)}</h3>
+          ${this._editorEl(p.tag, d, { cls: 'panel panel-layers', panel: true })}
+        </section>`,
+    );
+    const lips = this._lips;
+    return html`<nav class="layers" id="layers" aria-label=${t('Layers')} ?inert=${lips.isHidden('layers')} data-lip=${lips.state('layers')} data-dir=${lips.dir}>
       <div class="layers-head">
-        ${rail ? nothing : html`<h2>${t('Layers')}</h2>`}
-        <button
-          type="button"
-          class="icon-btn sm rail-toggle"
-          aria-expanded=${rail ? 'false' : 'true'}
-          aria-label=${rail ? t('Expand layers') : t('Collapse layers')}
-          title=${rail ? t('Expand layers') : t('Collapse layers')}
-          @click=${() => this._toggleRail()}
-        >
-          <ha-icon icon=${rail ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left'}></ha-icon>
-        </button>
+        <h2>${t('Layers')}</h2>
       </div>
-      <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('Hide, solo and lock only change this preview.')}</p>` : html`${this._renderLayerList(d, rail)}${opens}${shapesRail}`}</div>
-    </nav>`;
+      <div class="layers-body">${panels.length ? html`${panels}<p class="help layers-help">${t('Hide, solo and lock only change this preview.')}</p>` : this._renderLayerList(d)}</div>
+    </nav>
+    ${lips.lip('layers')}`;
   }
+
 
   // ── inspector ──
 
@@ -1965,7 +1986,7 @@ export class AnimationStudio extends LitElement {
     // Element / Icon: what the animation moves (and "Move the icon instead") comes first
     const own = sel.kind === 'target' && (sel.target === 'element' || sel.target === 'icon');
     const lead = own && moves(d) ? this._renderFallback(d) : nothing;
-    // the Icon target of an icon without parts: split it right here (the layers column may be a rail)
+    // the Icon target of an icon without parts: split it right here (the layers column may be hidden)
     const split =
       sel.kind === 'target' && sel.target === 'icon' && d.kind === 'keyframes' && !d.rig?.parts?.length && editorDefined(PARTS_LAYERS)
         ? this._section('split-icon', t('Icon parts'), PANEL_ICON[PARTS_LAYERS], this._editorEl(PARTS_LAYERS, d, { cls: 'panel panel-inspector', panel: true }))
@@ -1988,7 +2009,7 @@ export class AnimationStudio extends LitElement {
     const dirty = this.dirty;
     const panel = KIND_EDITORS[d.kind].place === 'panel';
     const slide = this._slideOver;
-    const rail = this._rail;
+    const lips = this._lips;
     const lv = this._viewOf(d);
     const playing = this._playable ?? d;
     const hidden = hiddenCount(playing, lv);
@@ -2055,7 +2076,8 @@ export class AnimationStudio extends LitElement {
         @preview-change=${this._onPreviewChange}
         @layer-view-change=${this._onLayerView}
         @emitter-change=${this._onEmitter}
-        class="workspace ${rail ? 'rail' : ''} ${this._compact ? 'compact' : ''} ${this._width > 0 && this._width < RAIL_BELOW ? 'dense' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
+        style=${this._lipTokens()}
+        class="workspace ${lips.isHidden('layers') ? 'no-layers' : ''} ${lips.isHidden('inspector') ? 'no-inspector' : ''} ${this._compact ? 'compact' : ''} ${this._width > 0 && this._width < RAIL_BELOW ? 'dense' : ''} ${slide ? 'slide' : ''} ${slide && this._inspOpen ? 'insp-open' : ''}"
       >
         ${this._renderLayers(d)}
         <div class="center ${panel ? 'with-panel' : ''}" style="--split: ${this._split}">
@@ -2100,7 +2122,8 @@ export class AnimationStudio extends LitElement {
               : nothing
           }
         </div>
-        <aside class="inspector" id="inspector" tabindex="-1" aria-label=${this._selection.kind === 'none' ? t('Animation settings') : t('Inspector')}>
+        ${lips.lip('inspector')}
+        <aside class="inspector" id="inspector" tabindex="-1" ?inert=${lips.isHidden('inspector')} data-lip=${lips.state('inspector')} data-dir=${lips.dir} aria-label=${this._selection.kind === 'none' ? t('Animation settings') : t('Inspector')}>
           ${this._renderInspector(d)}
         </aside>
         ${slide && this._inspOpen ? html`<div class="insp-scrim" @click=${() => (this._inspOpen = false)}></div>` : nothing}
@@ -2254,6 +2277,7 @@ export class AnimationStudio extends LitElement {
       <div class="shell" data-view=${d ? 'editor' : 'library'}>${d ? this._renderEditor(d) : this._renderLibrary()}</div>
       ${this._renderDialog()}
       <div class="sr-only" role="status" aria-live="polite">${this._status}</div>
+      ${this._lips.status()}
       ${this._status ? html`<div class="toast" aria-hidden="true">${this._status}</div>` : nothing}
     `;
   }
