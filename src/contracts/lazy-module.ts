@@ -3,10 +3,13 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.7.0.
+ * Contract: lazy modules and lazy card chunks. Version 1.8.0.
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
+ * 1.8.0 (additive): the animation studio bundle loads path-canvas (section "path-canvas from the animation studio").
+ * LAZY_MODULE_CONTRACT becomes '1.8.0' and LAZY_MODULE_CONTRACT_REVISION 21 in the change that ships the studio's
+ * path-canvas load, never before.
  * - The six older chunks without install() also carry BUILD and their loaders refuse a mismatch through
  *   sameBuild() (section "Build-checked older chunks", SAME_BUILD_CHUNK_FILES, SameBuildModule). The four
  *   lazyChunk() chunks of that group are unchanged.
@@ -33,6 +36,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * - Section "Editor-side chunks": chunk 'layer-editor' (magic-card-layer-editor.js, layer-editor 1.0.0),
  *   loaded by the editor chunk, and 'look-editor' (magic-card-look-editor.js, contract look-editor 1.0.0,
  *   loaded by src/editor/look-editor-loader.ts, its own loader, not in LazyChunkName).
+ * - Section "path-canvas from the animation studio": the studio bundle reaches the path-canvas chunk through
+ *   src/path-canvas/loader.ts only; one chunk file, two runtimes, a guarded define and a revision check.
  * - Needs table, config-walk, styles adoption, timeout, retry and failure notice (sections after "Tests"):
  *   the anim-runtime, particles and shape-custom loaders go through lazyChunk(). whenReady callbacks
  *   survive a failure. OnDemandChunkName and the notice element are described in sections "Failure, retry
@@ -310,12 +315,34 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   longer an import() site. Editor side: the
  *   existing loaders (transfer, preset-catalogue, icon-animator, look-editor, layer-editor,
  *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
- *   i18n tables) are registered sites. The ESLint rule (no-restricted-syntax ImportExpression with an
- *   override for the registered files) fails any other import(). Moving editor loaders onto
+ *   i18n tables) are registered sites. path-canvas is reached from the svg-editor and shape-editor chunks and from
+ *   the animation studio bundle, all through src/path-canvas/loader.ts. The ESLint rule (no-restricted-syntax
+ *   ImportExpression with an override for the registered files) fails any other import(). Moving editor loaders onto
  *   lazyChunk() is debt.
+ *
+ * ── path-canvas from the animation studio ──
+ * - Imports: the studio bundle value-imports src/path-canvas/loader.ts (loadPathCanvas) and nothing else from
+ *   src/path-canvas/; type imports from src/contracts/path-canvas.ts are free. The loader's literal import() is the
+ *   only import() of the chunk: the studio adds no second one. An import scan test over src/anim-studio/** fails on
+ *   any other value import from src/path-canvas/ and on any import() of the chunk entry.
+ * - One chunk file, two runtimes: the card runtime (which loads the svg-editor and shape-editor chunks) and the studio
+ *   runtime each evaluate their own instance of the chunk's modules. webpack leaves a module out of a chunk only when
+ *   every parent holds it, so modules that only the card-side parents held are now copied into the chunk.
+ *   tools/check-chunk-dups.mjs must show that none of those copies is stateful (the i18n runtime, the ui-kit
+ *   registries).
+ * - Define: the element define stays guarded by customElements.get(PATH_CANVAS_TAG), and whichever runtime defines it
+ *   first wins. The studio uses overlay mode only when customElements.get(PATH_CANVAS_TAG).contractRevision >=
+ *   PATH_CANVAS_OVERLAY_REVISION (src/contracts/path-canvas.ts). Otherwise it keeps its own Draw overlay, and nothing
+ *   breaks.
+ * - Public path: in the studio the chunk URL resolves through the studio's public path (src/anim-studio/public-path.ts).
+ * - Failure: a failed load in the studio shows "Couldn't load the drawing tools. Try again." with a Try again button
+ *   that calls loadPathCanvas() again and changes nothing else.
+ * - Ceilings: this version changes no ceiling. The path-canvas and studio sizes are measured from a Linux build.
  */
 
+/** '1.8.0' when the studio's path-canvas load ships (see the version note at the top). */
 export const LAZY_MODULE_CONTRACT = '1.7.0';
+/** 21 when the studio's path-canvas load ships. */
 export const LAZY_MODULE_CONTRACT_REVISION = 20;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
