@@ -6,7 +6,7 @@ export interface ImageHass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;
 }
 
-export type ImageProblem = 'missing' | 'readonly' | 'conflict' | 'full' | 'invalid' | 'too_large' | 'unreachable';
+export type ImageProblem = 'missing' | 'readonly' | 'conflict' | 'full' | 'invalid' | 'too_large' | 'failed' | 'unreachable';
 
 export class ImageError extends Error {
   constructor(
@@ -30,7 +30,7 @@ function fail(e: unknown): never {
     const first = err.errors?.find((x) => x.message === 'forbidden_text') ?? err.errors?.[0];
     throw new ImageError('invalid', undefined, undefined, first?.message === 'forbidden_text' ? undefined : first?.message, first?.message === 'forbidden_text' ? first.word : undefined);
   }
-  throw new ImageError(c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : 'unreachable');
+  throw new ImageError(c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : c ? 'failed' : 'unreachable');
 }
 
 async function call<T>(hass: ImageHass | undefined, msg: Record<string, unknown>): Promise<T> {

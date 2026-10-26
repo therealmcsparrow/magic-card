@@ -37,20 +37,26 @@ function bindingsOf(kit: ImageTransferKit, index: number, raw: unknown, ids: Rea
   const out: ImageBinding[] = [];
   const seen = new Set<string>();
   const list = Array.isArray(raw) ? raw : [undefined];
-  // an untrusted list is read only so far: past this many entries the rest is left out under one note
-  const reach = Math.min(list.length, MAX_IMAGE_BINDINGS * 2);
-  for (let i = 0; i < reach; i++) {
-    if (out.length >= MAX_IMAGE_BINDINGS) {
-      notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
-      break;
-    }
+  // every entry is looked at once; only the first few left-out entries get a note of their own, the rest are counted
+  let named = 0;
+  let unnamed = 0;
+  let over = false;
+  for (let i = 0; i < list.length; i++) {
     const b = bindingOf(list[i], ids);
     if (b && !seen.has(`${b.target} ${b.set}`)) {
+      if (out.length >= MAX_IMAGE_BINDINGS) {
+        over = true;
+        continue;
+      }
       seen.add(`${b.target} ${b.set}`);
       out.push(b);
-    } else notes.push(kit.note('dropped_value', index, `data.bindings[${i}]`, t('Connection {n} is not valid, so it was left out.', { n: i + 1 })));
+    } else if (named < MAX_IMAGE_BINDINGS) {
+      named++;
+      notes.push(kit.note('dropped_value', index, `data.bindings[${i}]`, t('Connection {n} is not valid, so it was left out.', { n: i + 1 })));
+    } else unnamed++;
   }
-  if (reach < list.length && out.length < MAX_IMAGE_BINDINGS) notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
+  if (unnamed) notes.push(kit.note('dropped_value', index, 'data.bindings', t('{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}', { n: unnamed })));
+  if (over) notes.push(kit.note('over_cap', index, 'data.bindings', t('Only the first {max} connections were kept.', { max: MAX_IMAGE_BINDINGS })));
   return out;
 }
 

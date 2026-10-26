@@ -4,6 +4,7 @@ import { THEME_VAR_NAME_RE } from '../contracts/svg-image';
 import type { Shape } from '../svg-editor/model';
 import { button, field, slider } from '../ui-kit/templates';
 import type { ImageExt } from './chunk';
+import { glyph } from '../ui-kit/glyphs';
 import { t } from './i18n';
 import { K } from './kit';
 import {
@@ -221,15 +222,19 @@ function stopRow(x: ImageExt, k: Which, g: Grad, i: number): TemplateResult {
     ${num(`${id}-pos`, t('Stop {n} position (%)', { n }), st.o * 100, (v) => setStop({ o: Math.min(1, Math.max(0, Math.round(v * 10) / 1000)) }, 'Stop position', `stop${i}`), { min: 0, max: 100, step: 1 })}
     ${pick(`${id}-kind`, t('Stop {n} colour', { n }), kind, stopColourItems(), (v) => set(v === 'main' ? MAIN : v === 'accent' ? ACCENT : v === 'colour' ? (kind === 'colour' ? st.c : BLUE) : kind === 'theme' ? st.c : 'var(--primary-color)'))}
     ${solidBody(x, id, t('Stop {n} colour', { n }), kind, st.c, set)}
-    ${button({
-      label: t('Remove stop {n}', { n }),
-      glyph: 'delete',
-      iconOnly: true,
-      size: 'sm',
-      disabledReason: g.s.length <= 2 ? t('A gradient needs at least 2 stops.') : undefined,
-      onClick: () => editGrad(x, k, (q) => ({ ...q, s: q.s.filter((_, j) => j !== i) }), 'Remove stop'),
-    })}
+    ${removeStop(x, k, g, i)}
   </div>`;
+}
+
+/** The remove button of a stop; when it cannot be used the reason is its description, not only a tooltip. */
+function removeStop(x: ImageExt, k: Which, g: Grad, i: number): TemplateResult {
+  const n = i + 1;
+  const label = t('Remove stop {n}', { n });
+  const why = g.s.length <= 2 ? t('A gradient needs at least 2 stops.') : undefined;
+  const id = `rm-${k}-${i}`;
+  return html`<button type="button" class="icon-btn sm" aria-label=${label} title=${why ? `${label}. ${why}` : label} aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? `${id}-why` : nothing} @click=${() => {
+    if (!why) editGrad(x, k, (q) => ({ ...q, s: q.s.filter((_, j) => j !== i) }), 'Remove stop');
+  }}>${glyph('delete', 20)}</button>${why ? html`<span id=${`${id}-why`} class="sr">${why}</span>` : nothing}`;
 }
 
 /** The gradient CSS the strip under the stops shows (the editor's own tones for Main and Accent). */
@@ -416,7 +421,9 @@ export function handles(x: ImageExt): TemplateResult | typeof nothing {
           e.preventDefault();
           e.stopPropagation();
           const step = e.shiftKey ? 10 : 1;
-          move(p, [p.at[0] + dx * step, p.at[1] + dy * step], false, `handle-${p.key}`);
+          const to: [number, number] = [p.at[0] + dx * step, p.at[1] + dy * step];
+          move(p, to, false, `handle-${p.key}`);
+          sh.say(t('{label}: x {x}, y {y}', { label: p.label, x: Math.round(to[0]), y: Math.round(to[1]) }));
         }}
       ></button>`,
     )}

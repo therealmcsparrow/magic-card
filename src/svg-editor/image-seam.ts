@@ -70,6 +70,12 @@ export interface ImageUi extends ImageEditorExt {
   blockReason(out: Out): string | undefined;
   /** Called after every refresh with the committed document, for the size announcements. */
   changed(out: Out): void;
+  /** A shape the user just drew, with the image editor's defaults (outline, opacity over a reference picture). */
+  fresh(s: Shape): { shape: Shape; note?: string };
+  /** Inline style for the canvas's Main and Accent colours when the editor shows them differently, else undefined. */
+  artColours(): string | undefined;
+  /** The toolbar's "As on a card" toggle. */
+  previewButton(): TemplateResult;
   topBar(): TemplateResult;
   dialogs(): TemplateResult | undefined;
   viewer(): TemplateResult;

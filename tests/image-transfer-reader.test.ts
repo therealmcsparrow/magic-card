@@ -101,7 +101,7 @@ describe('image kind: reading', () => {
     expect(out.notes.some((n) => n.code === 'over_cap')).toBe(true);
   });
 
-  it('stops reading a hostile 8 MB list of invalid connections and keeps the notes few', () => {
+  it('reads a hostile 8 MB list of invalid connections in linear time with few notes', () => {
     const junk = Array.from({ length: 430_000 }, () => 'not a connection');
     const text = env([item({ bindings: junk })]);
     expect(text.length).toBeGreaterThan(7_000_000);
@@ -109,9 +109,34 @@ describe('image kind: reading', () => {
     const t0 = Date.now();
     const out = ok(read(text));
     expect(Date.now() - t0).toBeLessThan(5000);
-    expect(out.notes.length).toBeLessThanOrEqual(200);
-    expect(out.notes.some((n) => n.code === 'over_cap')).toBe(true);
+    expect(out.notes.length).toBeLessThanOrEqual(80);
+    const counted = out.notes.find((n) => n.code === 'dropped_value' && n.path === 'data.bindings');
+    expect(counted?.message).toMatch(/^429.936 more/);
+    expect(out.notes.some((n) => n.code === 'over_cap')).toBe(false);
     expect(out.items[0].data).not.toHaveProperty('bindings');
+  });
+
+  it('keeps a valid connection that comes after thousands of invalid ones, and says nothing false about the cap', () => {
+    const svg = '<svg viewBox="0 0 10 10"><path id="late" d="M0 0L5 5"/></svg>';
+    const junk = Array.from({ length: 300 }, () => 'nope');
+    const good = { target: 'late', entity: 'light.a', set: 'fill', rules: [{ state: 'on', value: 'main' }] };
+    const out = ok(read(env([item({ svg, bindings: [...junk, good] })])));
+    expect((out.items[0].data as { bindings: unknown[] }).bindings).toHaveLength(1);
+    expect(out.notes.some((n) => n.code === 'over_cap')).toBe(false);
+    expect(out.notes.filter((n) => n.path === 'data.bindings')).toHaveLength(1);
+    expect(out.notes.filter((n) => /^data\.bindings\[/.test(n.path))).toHaveLength(64);
+  });
+
+  it('notes the cap only when a valid 65th connection exists, even after invalid entries', () => {
+    const ids = Array.from({ length: 66 }, (_, i) => `p${i}`);
+    const svg = `<svg viewBox="0 0 10 10">${ids.map((id) => `<path id="${id}" d="M0 0L5 5"/>`).join('')}</svg>`;
+    const mk = (target: string) => ({ target, entity: 'light.a', set: 'fill', rules: [{ state: 'on', value: 'main' }] });
+    const exact = ok(read(env([item({ svg, bindings: [...ids.slice(0, 64).map(mk), 'x', 'y'] })])));
+    expect((exact.items[0].data as { bindings: unknown[] }).bindings).toHaveLength(64);
+    expect(exact.notes.some((n) => n.code === 'over_cap')).toBe(false);
+    const over = ok(read(env([item({ svg, bindings: [...Array.from({ length: 130 }, () => 'x'), ...ids.map(mk)] })])));
+    expect((over.items[0].data as { bindings: unknown[] }).bindings).toHaveLength(64);
+    expect(over.notes.filter((n) => n.code === 'over_cap')).toHaveLength(1);
   });
 
   it('counts bindings in the size limit', () => {

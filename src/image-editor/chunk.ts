@@ -18,7 +18,8 @@ import { buildSave, type Built } from './save';
 import { freeImageId } from './ids';
 import { cssOf, dashText, layerPaint, paintOf, parseDash, readPaint, stroked, toneOf, type Flag, type Look, type Rich } from './paint';
 import { imageStyles } from './styles';
-import { lookRows, handles, paintRow, type Which } from './paint-ui';
+import { button } from '../ui-kit/templates';
+import { lookRows, handles, paintRow, withLook, type Which } from './paint-ui';
 import { anchorOf, blank, boxFor, readText, refusedWord, textAttrs, textBody, nameOf, type TextData } from './text';
 import { addText, addTextButton, textNode, textRows } from './text-ui';
 import { cancelField, disposeField, place, textField, type TextField } from './text-tool';
@@ -57,6 +58,9 @@ export interface DetailsDlg {
 }
 
 /** Main, Accent and none are the layer's own paints; any other value is read by lookOf (the layer then keeps Main as its placeholder). */
+/** Layer opacity (percent) of a shape drawn while a reference picture shows, so the picture stays visible through it. */
+const REF_OPACITY = 60;
+
 const tone = (v: string): Paint => toneOf(v) ?? (/^(none|transparent)$/i.test(v) ? 'none' : 'main');
 
 /** The id of a layer's gradient in the canvas. */
@@ -189,6 +193,8 @@ export class ImageExt implements ImageUi {
   details?: DetailsDlg;
   big?: { bytes: number; limit?: number };
   kibOpen = false;
+  /** The canvas draws Main and Accent the way a card does with its entity off. */
+  asCard = false;
   level?: MeterLevel;
   /** Ids already in the library (loaded when a name dialog opens). */
   taken?: Set<string>;
@@ -394,6 +400,60 @@ export class ImageExt implements ImageUi {
     sh.grid = gridFor(sh.doc.vb.w, sh.doc.vb.h);
     if (this.readOnly) sh.tool = 'hand';
     this.shell.requestUpdate();
+    if (this.size) this.focusShape();
+    else this.landFocus();
+  }
+
+  /** The Canvas size window opens on the shape that is chosen, not on the first one. */
+  private focusShape(): void {
+    const sh = this.shell;
+    void sh.updateComplete.then(() => setTimeout(() => sh.renderRoot.querySelector<HTMLElement>('mc-ui-window .tile[aria-checked="true"]')?.focus({ preventScroll: true }), 0));
+  }
+
+  /** After the next draw: focus goes to the canvas unless it is already somewhere inside the editor. */
+  private landFocus(): void {
+    const sh = this.shell;
+    void sh.updateComplete.then(async () => {
+      // the canvas element takes its focus stop (tabindex) in its own first render
+      await (sh.canvas() as unknown as { updateComplete?: Promise<unknown> } | null)?.updateComplete;
+      const inside = (): boolean => {
+        try {
+          return !!(sh.renderRoot as ShadowRoot).activeElement;
+        } catch {
+          // focus sits in a tree that is gone
+          return false;
+        }
+      };
+      if (sh.isConnected && !inside()) sh.canvas()?.focus({ preventScroll: true });
+    });
+  }
+
+  /** A new shape as this editor draws it: a thin outline in the Accent colour so shapes stay apart on a card, and room for a shown reference picture to show through. */
+  fresh(s: Shape): { shape: Shape; note?: string } {
+    if (s.look || s.fill === 'none' || s.stroke !== 'none' || s.type === 'line') return { shape: s };
+    const vb = this.shell.doc.vb;
+    const out: Shape = { ...s, stroke: 'accent', width: Math.max(2, Math.round(Math.max(vb.w, vb.h) / 500)) };
+    if (this.ref && this.shown) return { shape: withLook(out, { opacity: REF_OPACITY }), note: t('Opacity set to {pct} % so the reference picture shows through. Change it in Opacity.', { pct: REF_OPACITY }) };
+    return { shape: out };
+  }
+
+  /** The canvas colours of Main and Accent while "As on a card" is on. */
+  artColours(): string | undefined {
+    return this.asCard ? '--m: var(--state-inactive-color, #9e9e9e); --a: var(--accent-color, #ff9800)' : undefined;
+  }
+
+  previewButton(): TemplateResult {
+    return button({
+      label: t('As on a card'),
+      size: 'sm',
+      variant: 'secondary',
+      pressed: this.asCard,
+      onClick: () => {
+        this.asCard = !this.asCard;
+        this.shell.say(this.asCard ? t('Showing the drawing as on a card, with the entity off.') : t('Showing the drawing in the editor colours.'));
+        this.shell.requestUpdate();
+      },
+    });
   }
 
   private canvasDoc(w: number, h: number): Doc {
@@ -580,6 +640,7 @@ export class ImageExt implements ImageUi {
     this.back = opener;
     this.size = { mode: 'apply', preset: presetOf(v.w, v.h), w: String(v.w), h: String(v.h), keep: true, warned: false };
     this.shell.requestUpdate();
+    this.focusShape();
   }
 
   setSize(patch: Partial<SizeDlg>, edited?: 'w' | 'h'): void {
@@ -840,7 +901,9 @@ export class ImageExt implements ImageUi {
                   : t('The library refused this image. Use Export file to keep a copy.')
               : p === 'missing'
                 ? t('Images need Magic Card Utils. It is installed through HACS, like Magic Card.')
-                : t('Could not reach Magic Card Utils. Your work is safe.');
+                : p === 'failed'
+                  ? t('Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.')
+                  : t('Could not reach Magic Card Utils. Your work is safe.');
   }
 
   private fail(e: unknown): void {
@@ -850,6 +913,7 @@ export class ImageExt implements ImageUi {
         this.details = undefined;
         this.conflict = true;
         sh.say(t('This image was changed somewhere else.'));
+        this.landFocus();
         return;
       }
       if (e.problem === 'too_large') {
@@ -861,6 +925,7 @@ export class ImageExt implements ImageUi {
         this.details = undefined;
         this.denied = e.problem === 'readonly' || this.denied;
         sh.tool = 'hand';
+        this.landFocus();
       }
     }
     const why = this.problemText(e);

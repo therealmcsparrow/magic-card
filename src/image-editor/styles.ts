@@ -149,9 +149,9 @@ export const imageStyles = css`
   .gh-pt {
     position: absolute;
     box-sizing: border-box;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
     padding: 0;
     border-radius: 50%;
     border: 2px solid #1f2933;
@@ -293,6 +293,31 @@ export const imageStyles = css`
     .ref-panel .btn,
     .ref-pill .btn {
       min-height: 44px;
+    }
+  }
+  /* the editor's own panels name grid areas of the full workspace; the view-only grid has none */
+  .vw > .left,
+  .vw > .center,
+  .vw > .insp {
+    grid-area: auto;
+  }
+  .topbar .nm-label {
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+  .left .layers {
+    min-width: 0;
+  }
+  .left .layers .help {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  @media (forced-colors: active) {
+    [aria-pressed='true'],
+    [aria-checked='true'],
+    [aria-selected='true'] {
+      outline: 3px solid Highlight;
+      outline-offset: -3px;
     }
   }
 `;

@@ -13,6 +13,7 @@
   "The image is larger than {kb} KB.": "De afbeelding is groter dan {kb} KB.",
   "View {name}": "{name} bekijken",
   "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# koppeling} other {# koppelingen}}",
+  "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}": "{n, plural, one {# andere koppeling is niet geldig, dus is weggelaten.} other {# andere koppelingen zijn niet geldig, dus zijn weggelaten.}}",
   "{name} copy": "{name} kopie",
   "{n} KB": "{n} KB"
 }

@@ -28,8 +28,9 @@ function meter(x: ImageExt): TemplateResult {
   const pct = Math.min(100, (bytes / IMAGE_MAX_BYTES) * 100);
   return html`<div class=${`img-meter is-${l}`}>
     <div class="bar" role="meter" aria-label=${t('Image size')} aria-valuemin="0" aria-valuemax="256" aria-valuenow=${Math.min(used, 256)} aria-valuetext=${t('{used} of 256 KiB, {word}', { used, word: x.word(l) })}><span style=${`width:${pct}%`}></span></div>
-    <p class="sentence">${l === 'small' ? nothing : glyph(l === 'big' ? 'information' : 'alertCircle', 18)} ${x.sentence(bytes)}${x.bindings().length ? html` ${t('Includes connections.')}` : nothing}</p>
-    ${l === 'over' ? html`<p class="sr" role="alert">${t('Too big to save.')}</p>` : nothing}
+    ${l === 'over'
+      ? html`<p class="sentence" role="alert">${glyph('alertCircle', 18)} ${x.sentence(bytes)}${x.bindings().length ? html` ${t('Includes connections.')}` : nothing}</p>`
+      : html`<p class="sentence">${l === 'small' ? nothing : glyph(l === 'big' ? 'information' : 'alertCircle', 18)} ${x.sentence(bytes)}${x.bindings().length ? html` ${t('Includes connections.')}` : nothing}</p>`}
     <button type="button" class="btn btn-text btn-sm" aria-expanded=${aria(x.kibOpen)} aria-controls="kib" @click=${() => ((x.kibOpen = !x.kibOpen), x.shell.requestUpdate())}>${t('What is KiB?')}</button>
     ${x.kibOpen ? html`<p id="kib" class="kib help">${t('KiB is a kibibyte, a little over a thousand characters. 256 KiB is about a quarter of a megabyte.')}</p>` : nothing}
   </div>`;
@@ -48,7 +49,8 @@ export function topBar(x: ImageExt): TemplateResult {
       <h1 class=${tight ? 'title sr' : 'title'}>${t('Image editor')}</h1>
       ${edit && !ro
         ? html`<div class="nm-field">
-            <div class="name"><input class="input" type="text" maxlength="80" aria-label=${t('Image name')} .value=${s.doc.name} @change=${(e: Event) => s.apply({ ...s.doc, name: (e.target as HTMLInputElement).value }, 'Rename image', 'name')} /></div>
+            <label class=${tight ? 'sr' : 'nm-label'} for="img-title-name">${t('Image name')}</label>
+            <div class="name"><input id="img-title-name" class="input" type="text" maxlength="80" .value=${s.doc.name} @change=${(e: Event) => s.apply({ ...s.doc, name: (e.target as HTMLInputElement).value }, 'Rename image', 'name')} /></div>
             ${x.id ? chip({ label: s.dirty ? t('Changed since saved') : t('Saved'), tone: s.dirty ? 'warn' : undefined }) : nothing}
           </div>`
         : edit

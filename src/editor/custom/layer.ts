@@ -52,11 +52,12 @@ function refocus(chain: Element[], key: string): void {
   }
 }
 
-/** Mount `el` in the top layer; returns the function that removes it (`back`: where focus returns, see refocus). */
-export function openLayer(el: HTMLElement, back?: { from: Element; key: string }, onEscape?: () => void): () => void {
+/** Mount `el` in the top layer; returns the function that removes it (`back`: where focus returns, see refocus; `label`: the name of the layer's own dialog, which would otherwise be unnamed above the editor's). */
+export function openLayer(el: HTMLElement, back?: { from: Element; key: string }, onEscape?: () => void, label?: string): () => void {
   const chain = back ? parents(back.from) : [];
   const dlg = document.createElement('dialog');
   dlg.className = 'mc-editor-layer';
+  if (label) dlg.setAttribute('aria-label', label);
   dlg.style.cssText = STYLE;
   dlg.addEventListener('cancel', (e) => e.preventDefault());
   const stop = (e: KeyboardEvent): void => {

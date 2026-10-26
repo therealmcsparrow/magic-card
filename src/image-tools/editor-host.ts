@@ -3,6 +3,7 @@ import type { SavedImageInput } from '../contracts/mcu-library-images';
 import { openLayer } from '../editor/custom/layer';
 import { loadSvgEditor } from '../editor/custom/loaders';
 import type { HomeAssistant } from '../types';
+import { t } from './i18n';
 
 /*
  * The card editor's side of the SVG editor in image mode (svg-editor 1.1.0): "Draw a new image" and "Edit image" open
@@ -33,6 +34,6 @@ export async function openImageEditor(o: ImageEditorOpen): Promise<'opened' | 'f
     close();
   });
   el.addEventListener('mc-svg-close', () => close());
-  close = openLayer(el, { from: o.from, key: 'image-field' });
+  close = openLayer(el, { from: o.from, key: 'image-field' }, undefined, t('Image editor'));
   return 'opened';
 }

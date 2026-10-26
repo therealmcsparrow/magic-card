@@ -293,8 +293,8 @@ describe('Reference picture: alignment', () => {
   it('nudges with buttons and Fit to canvas centres it at the size that fits', async () => {
     const { el, ext } = await open();
     await choose(el, ext, file('plan.png', 'image/png'));
-    btn(el, 'Right')!.click();
-    btn(el, 'Down')!.click();
+    btn(el, 'Move picture right')!.click();
+    btn(el, 'Move picture down')!.click();
     await settle(el);
     expect(ext.align.x).toBeGreaterThan(0);
     expect(ext.align.y).toBeGreaterThan(0);

@@ -944,12 +944,14 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.updateComplete.then(() => this.canvas()?.focus({ preventScroll: true }));
   }
 
-  addShape(s: Shape): void {
+  addShape(drawn: Shape): void {
+    const made = this.img?.fresh(drawn);
+    const s = made?.shape ?? drawn;
     this.apply({ ...this.doc, shapes: [...this.doc.shapes, s] }, `Draw ${s.name}`);
     if (this.tool !== 'shapes') this.tool = 'select';
     this.flat = this.makeFlat(this.doc);
     this.select([s.id]);
-    this.say(t('{name} added.', { name: s.name }));
+    this.say(t('{name} added.', { name: s.name }) + (made?.note ? ` ${made.note}` : ''));
   }
 
   editShapes(ids: string[], f: (s: Shape) => Shape, label: string, merge?: string): void {
@@ -1491,8 +1493,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   say(text: string): void {
     if (!text) return;
     clearTimeout(this.liveTimer);
+    // emptied first, so the same words said twice are announced twice
+    this.live = '';
     this.liveTimer = setTimeout(() => {
-      this.live = this.live === text ? `${text} ` : text;
+      this.live = text;
     }, 50);
   }
 

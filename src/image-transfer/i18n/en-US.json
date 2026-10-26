@@ -13,6 +13,7 @@
   "The image is larger than {kb} KB.": "The image is larger than {kb} KB.",
   "View {name}": "View {name}",
   "{n, plural, one {# connection} other {# connections}}": "{n, plural, one {# connection} other {# connections}}",
+  "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}": "{n, plural, one {# more connection is not valid, so it was left out.} other {# more connections are not valid, so they were left out.}}",
   "{name} copy": "{name} copy",
   "{n} KB": "{n} KB"
 }

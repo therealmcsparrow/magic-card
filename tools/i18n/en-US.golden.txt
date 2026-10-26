@@ -114,6 +114,7 @@ image-editor	Centre X (%)	Center X (%)
 image-editor	Centre Y (%)	Center Y (%)
 image-editor	Custom colour	Custom color
 image-editor	Gradient centre	Gradient center
+image-editor	Showing the drawing in the editor colours.	Showing the drawing in the editor colors.
 image-editor	Stop {n} colour	Stop {n} color
 image-editor	Text cancelled.	Text canceled.
 image-editor	Theme colour	Theme color

@@ -516,7 +516,7 @@ function floatBar(ed: McSvgEditor): TemplateResult {
   };
   return html`<div class="toolbar" role="toolbar" aria-label=${ed.img ? ed.img.canvasLabel : t('Icon canvas')}>
     ${btn(t('Zoom out'), 'minus', () => ed.zoomBy(0.8), { keys: '-' })}<span class="zoom" aria-live="off">${Math.round((ed.view.zoom / (ed.fitZoom || ed.view.zoom || 1)) * 100)}%</span>${btn(t('Zoom in'), 'add', () => ed.zoomBy(1.25), { keys: '=' })}${btn(t('Fit to view'), 'fitToScreenOutline', () => ed.fitView(), { keys: '0' })}
-    ${ed.img ? nothing : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('Preview')}</button>`}
+    ${ed.img ? ed.img.previewButton() : html`<button type="button" class="btn btn-secondary btn-sm" data-pv aria-expanded=${aria(ed.pvOpen)} aria-controls="pv" @click=${() => (ed.pvOpen = !ed.pvOpen)}>${t('Preview')}</button>`}
     ${btn(t('Grid {size}', { size: ed.grid }), 'grid', () => (ed.pixelGrid = !ed.pixelGrid), { pressed: ed.pixelGrid, keys: "Control+'", text: true })}${btn(t('Snap to grid'), 'magnet', () => (ed.snapOn = !ed.snapOn), { pressed: ed.snapOn, keys: 'Control+;' })}
     <span role="separator" aria-orientation="vertical"></span>
     ${menuBtn('align')}${menuBtn('combine')}${menuBtn('path')}
@@ -527,7 +527,7 @@ export function artLayer(ed: McSvgEditor): TemplateResult {
   const v = ed.view;
   const f = ed.doc.vb;
   const live = ed.liveShape?.shape;
-  return html`<svg class="art" aria-hidden="true" style=${ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)'}>
+  return html`<svg class="art" aria-hidden="true" style=${ed.img?.artColours() ?? (ed.mcu ? `--m:${ed.pvMain};--a:${ed.pvAccent}` : '--m: var(--mc-text, #212121); --a: var(--art-accent)')}>
     <g transform=${`translate(${v.x} ${v.y}) scale(${v.zoom})`}>
       <rect class="board" x=${f.x} y=${f.y} width=${f.w} height=${f.h}></rect>
       ${guard([ed.doc.shapes, ed.doc.groups, ed.moving], () => svg`${ed.img ? svg`<defs>${ed.img.defs(ed.doc)}</defs>` : nothing}${artNodes(ed.doc, true, ed.moving, ed.img)}`)}
