@@ -2,6 +2,7 @@
 
 -   [Top bar](#top-bar)
 -   [Workspace](#workspace)
+-   [Hiding the side panels](#hiding-the-side-panels)
 -   [Narrow screens](#narrow-screens)
 -   [YAML mode](#yaml-mode)
 -   [Sync with the pane editor](#sync-with-the-pane-editor)
@@ -42,6 +43,18 @@ The inspector tabs depend on what is selected:
 | Row | General, Actions, Conditions, Design |
 | Column | General, Conditions, Design |
 | Module | The tabs the module type has, in the order General, Actions, Conditions, Design |
+
+## Hiding the side panels
+
+Layers and the inspector each have an edge button on their inner side while they sit beside the canvas. Press it to hide the panel. The canvas takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
+
+-   A hidden panel keeps its settings, and nothing changes in the card or the undo history.
+-   Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown. When both are hidden, it shows again the panels it hid last. It works from any field in the Studio, except while Preview is on.
+-   The Studio remembers which panels are hidden on this device and opens with them hidden. Other devices are not affected.
+-   The first time the Studio opens with a panel hidden, a short hint explains the button and the shortcut. Press Got it to close it.
+-   Edit on a layer, or a rename that needs the Layers list, shows a hidden panel again.
+-   Where a panel is an overlay (900 px or less) or sits below the canvas (640 px or less), it has no edge button. The Layers button and the inspector keep their own controls there.
+-   Preview hides both panels, so their buttons are not shown while it is on. See [Preview](preview.md).
 
 ## Narrow screens
 

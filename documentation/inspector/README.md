@@ -62,6 +62,10 @@ The inspector remembers the last tab per kind of selection. Select another modul
 -   The card's Design tab is a shorter list of card-level fields. See [Card: Design tab](card-design.md).
 -   The card's Flows tab lists the animated flow lines between modules. Selecting a flow on the studio canvas opens this tab with that flow expanded. See [Flows](../flows/README.md).
 
+## Sliders and number fields
+
+A slider in the editor and its number field always show the same value. Drag the slider and the number follows; type a number and the slider follows. When you leave the number field with a value outside the slider's range, both show the nearest limit.
+
 ## Template-linked cards
 
 When the card is linked to a template, fields show a sync indicator. Changing a field makes it a local override; the indicator lets you go back to the template value. Row and column design edits make the whole `design` of that row or column an override, and editing a row's actions makes its whole `actions` an override. A row's column widths have their own sync indicator, on the row's Column widths field and on each column's Width field. On the card, the shape and its options sync as one field. For layout modules, the list of child modules is synced as one list: the inspector shows whether it follows the template and offers Reset to template when it does not. Tabs and row-module columns are part of that list. The card's Design tab lists the template's animations, which you can hide or replace on this card (see [Template animations](card-design.md#template-animations)). See [Templates](../editor/templates.md) for the rest.

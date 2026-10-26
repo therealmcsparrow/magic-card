@@ -73,6 +73,11 @@ The editor shows warnings for curved shapes. For example, it warns that older br
 
 Each value is a field with a label. You can reach every field with the keyboard, and the focus is always visible.
 
+## Side panels
+
+Above 900 px wide, the left sidebar (Draw and Messages) sits beside the canvas and the inspector sits on the right. Each has an edge button on its inner side. Press it to hide the panel, so the canvas takes its width; press it again to show the panel as it was. Ctrl+\ (Cmd+\ on a Mac) hides both when either is shown, and shows again the panels it hid last. The editor remembers hidden panels on this device.
+
+Between 641 and 900 px the inspector keeps its edge button, and the sidebar opens from the toolbar with no edge button. At 640 px and below the panels stack under the canvas, with no edge buttons.
 ## Related
 
 -   [Custom shapes in cards](custom-shapes-in-cards.md): the YAML for `shape: custom`, saved shapes by `ref`, and what an older browser shows.

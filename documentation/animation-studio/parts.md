@@ -23,7 +23,7 @@ The quickest start is New animation, then Icon animation…: pick an icon or a l
 
 ## Splitting an icon
 
-The Icon parts panel is in the Layers column. Until the icon is split it shows "Split the icon to animate its shapes one by one: a bell's clapper, a fan's blades." The same panel shows in the inspector when you select the Icon target, so you can split the icon while the Layers column is a rail.
+The Icon parts panel is in the Layers column. Until the icon is split it shows "Split the icon to animate its shapes one by one: a bell's clapper, a fan's blades." The same panel shows in the inspector when you select the Icon target, so you can split the icon while Layers is hidden.
 
 1.  Icon to split holds the preview tile's icon by default (`mdi:bell-ring` on the Icon tile) and follows the tile until you choose another icon. It is the same icon picker as in the card editor: pick an icon from the list or type an id. Until Magic Card has loaded on the page it is a plain text field.
 2.  Split icon resolves the icon and makes one part per separate shape, named Part 1, Part 2 and so on.

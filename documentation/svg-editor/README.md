@@ -26,6 +26,12 @@ Warnings (for example an icon that reaches outside the safe area), import messag
 -   [Path tools](path-tools.md): outline stroke, offset, simplify, join, split and knife.
 -   [Import and export](import-and-export.md): importing SVG files, icon sets, copying as a Home Assistant path, saving to the library and using an icon in a card.
 
+## Side panels
+
+Above 900 px wide, the Layers and Library panel sits on the left of the canvas and the inspector on the right. Each has an edge button on its inner side. Press it to hide the panel, so the canvas takes its width; press it again to show the panel as it was, with the same selection. Ctrl+\ (Cmd+\ on a Mac) hides both panels when either is shown, and shows again the panels it hid last. The editor remembers hidden panels on this device.
+
+Between 641 and 900 px the inspector keeps its edge button, and the Layers and Library panel opens as a sheet from the toolbar with no edge button. At 640 px and below, the panels stack under the canvas and have no edge buttons. The tool rail and the top bar stay as they are at every width.
+
 ## Limits
 
 -   The markup of an icon is at most 32 KB. Save is blocked above that, with a message that shows the size.

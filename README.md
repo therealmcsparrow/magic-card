@@ -18,6 +18,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   25 module types for content, controls, layout and advanced use (see [Modules](#modules)).
 -   Pane editor with a structure outline, an inspector, Form and YAML modes, and undo and redo.
 -   Studio: a full-screen editor with layers, a clickable live canvas and keyboard shortcuts. The canvas is Narrow, Wide or Panel wide, picked from the dashboard view the card sits in. Preview runs the card on the canvas as it runs on the dashboard, with live actions, and Escape returns to editing.
+-   Side panels in the editors (card studio, animation studio, SVG editor, shape studio and theme editor) hide with an edge button, and Ctrl+\ hides or shows them all. Each editor remembers its hidden panels on this device. See [Hiding the side panels](#hiding-the-side-panels).
 -   Tabs with states: style the active tab, the tab under the pointer and disabled tabs, in the base design and in conditional rules, with every tab setting in each state. Set per-side borders and corners, a different icon when a tab is active, and icon and tab animations per state. Disabled tabs stay visible but cannot be opened. See [Tabs](documentation/modules/layout/tabs.md#tab-states).
 -   Item menus: right-click, long-press or Shift+F10 on any row, column, module or tab, in the tree and on the Studio canvas. Their actions are grouped into submenus. Copy its YAML, copy and paste a module (also into another card), replace a module with another type of the same kind, wrap it in a layout, hide it on the dashboard or give it a layer name that only the editor shows.
 -   Design panel for every card, row, column and module: spacing, borders, typography, backgrounds, flexbox, grid and more, including entity colours and conditional design rules. The card itself has a border (width, style and colour), margin, opacity and backdrop filter.
@@ -67,15 +68,15 @@ The current release is 2026.10.11.
 5.  Find Magic Card in the list and download it.
 6.  If HACS did not add the resource itself, go to Settings, Dashboards, Resources and add `url: /hacsfiles/magic-card/magic-card.js` with `type: module` (JavaScript module).
 
-HACS also downloads the other 37 files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
+HACS also downloads the other files of the release into the same folder. Magic Card loads each one from there when a card or editor needs it. The table under [Loading the other files](#loading-the-other-files) lists them.
 
 ### Manual
 
-1.  Download the 38 `.js` files from the [latest release](https://github.com/therealmcsparrow/magic-card/releases), together with the `.js.br` and `.js.gz` file next to each one (114 files in all). The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
+1.  Download every file of the [latest release](https://github.com/therealmcsparrow/magic-card/releases): each `.js` file together with its `.js.br` and `.js.gz` copy. The table under [Loading the other files](#loading-the-other-files) lists the `.js` files.
 2.  Copy every file to `config/www/`, including the `.br` and `.gz` copies. Leave none out.
 3.  Add the resource `url: /local/magic-card.js` with `type: module` (JavaScript module).
 
-Each `.js.br` and `.js.gz` file is a compressed copy of the `.js` file beside it. Home Assistant sends the copy the browser accepts, so a dashboard downloads about 70 KB of `magic-card.js` with Brotli, or about 82 KB with gzip. When you update by hand, copy the whole new release and replace or delete the three files of a name together. If an old `.br` stays behind, Home Assistant keeps sending it in place of the new `.js`.
+Keep the three files of each name together: `magic-card.js`, `magic-card.js.br` and `magic-card.js.gz`, and the same for every other file. When you update by hand, copy the whole new release and replace or delete all three files of a name together. If an old `.br` or `.gz` file stays behind, Home Assistant can keep sending it in place of the new `.js`.
 
 Only `magic-card.js` is a resource. The other files load from the same folder when something needs them. A dashboard downloads only the files its cards use. Without a file, the feature it belongs to shows a message and the rest of the card still works.
 
@@ -119,7 +120,7 @@ Only `magic-card.js` is a resource. The other files load from the same folder wh
 | `magic-card-look-editor.js` | The flow and slider look editors in the card editor. Dashboards never load it. |
 | `magic-card-layer-editor.js` | The Card backdrop layer editor in the card editor. Dashboards never load it. |
 
-Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard loads at once. Uncompressed it is 256,616 B, down from 503,361 B before the size work, because the rarely used parts moved into the other files. Most files carry a short hash in their name, such as `magic-card-anim.06551dee.js`. The table shows the names without the hash, and the hash stays in the name when you copy the file.
+Keep every file of the release in one folder. `magic-card.js` is the only file a dashboard loads at once. Some file names carry a short code after the main name, such as `magic-card-anim.06551dee.js`. The table leaves the code out, so copy each file under its full name.
 
 ### Loading
 
@@ -129,7 +130,7 @@ Keep all 38 files in one folder. `magic-card.js` is the only file a dashboard lo
 
 Update through HACS, then hard refresh the browser (Ctrl+Shift+R, or Cmd+Shift+R on macOS). In the companion app, clear the frontend cache under Settings, Companion app, Troubleshooting. Home Assistant caches resources, so an old version can keep running until you do this.
 
-HACS does not delete the files of an earlier release. After an update you can delete the older hashed files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
+HACS does not delete the files of an earlier release. After an update you can delete the older files in the folder HACS manages (the folder behind `/hacsfiles/magic-card/`) that the new release no longer uses. Keep every file of the new release. For a manual install, the same applies to the folder `config/www/`.
 
 ## The editor
 
@@ -173,13 +174,23 @@ Keyboard in the outline: Up, Down, Home and End move focus between items, and En
 
 Open it with Open studio. It is a full-screen dialog with:
 
--   Layers on the left: the same outline as the pane editor, with an Add module row under every column. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas.
+-   Layers on the left: the same outline as the pane editor, with an Add module row under every column. Its edge button hides it so the canvas can take the width. At 900 px wide or less, Layers is an overlay you open with the Layers button, and at 640 px or less the inspector moves below the canvas. See [Hiding the side panels](#hiding-the-side-panels).
 -   A live canvas in the middle that renders the real card with your Home Assistant data. Click a module, column, row or the card background to select it. A click on the dotted area around the card also selects the card. Hovering previews what a click selects. Actions do not fire on the canvas, except in Preview (see [Preview](documentation/studio/preview.md)). The selection has one colour per level: grey for the card, orange for rows, green for columns and the theme accent colour for modules.
 -   The inspector on the right, with the same tabs as in the pane editor. Its header and tab bar stay at the top while the settings below them scroll, and a tab switch starts the settings at the top.
 -   A canvas width switch: Narrow (400 px), Wide (800 px) and Panel (the whole canvas). When the Studio opens it picks the width that matches the dashboard view: masonry, sections (scaled to the card's columns), panel or sidebar. Pick another width to override it, and Match view to go back. See [Canvas width](documentation/studio/device-widths.md).
 -   The Form and YAML switch, the template bar, undo and redo buttons, and the Preview button. Preview runs the card as on the dashboard, with live actions. It hides the layers and the inspector, and the Form and YAML switch, the template bar, undo and redo are off until you leave it. See [Preview](documentation/studio/preview.md).
 
 A floating bar next to the selected module moves it up or down, duplicates it, deletes it, or adds a flow line from it: choose Add flow from here, then click the module the flow goes to (Escape cancels). The new flow opens in Card settings, Flows. Click a flow line on the canvas to select it there; the selected flow is highlighted on the canvas. Connecting on the canvas needs a mouse or touch; with a keyboard, use the Flows tab in Card settings.
+
+### Hiding the side panels
+
+The card studio, the animation studio, the SVG editor, the shape studio and the theme editor have side panels. Where a panel sits as a column beside the canvas or the preview, it has an edge button on its inner side. Press the button to hide the panel. The canvas then takes the width the panel gave up, and the button stays at the window edge. Press it again to show the panel with the same selection and scroll position.
+
+-   Ctrl+\ (Cmd+\ on a Mac) hides the side panels of the editor you are working in if any of them is shown. When they are all hidden, it shows again the panels it hid last.
+-   Each editor remembers its hidden panels on this device. Other editors and other devices are not affected.
+-   When an editor opens with a panel hidden, a short hint explains the button and the shortcut, once. Press Got it to close it.
+-   Where a panel is an overlay, a sheet, a slide-over or a block above or below the canvas, it has no edge button and keeps its own control.
+-   The theme editor shows its Variables pane beside the preview at 1024 px and wider. Below that, Variables and Preview are tabs, and there is no button.
 
 Keyboard shortcuts:
 
@@ -193,6 +204,7 @@ Keyboard shortcuts:
 | Shift+F10 or the Menu key | Open the selection's item menu (canvas focused) |
 | F2 | Rename the selection in Layers (canvas focused) |
 | Escape | On the canvas: select the parent (module, column, row, card), or close the studio when the card is selected. While adding a flow it cancels. In Preview, it closes a dialog opened from the card first, then leaves Preview; it never closes the studio while Preview is on. |
+| Ctrl/Cmd+\ | Hide or show the Layers and the inspector (see [Hiding the side panels](#hiding-the-side-panels)) |
 | Arrow keys, Home, End in Layers | Move between items |
 
 The canvas shortcuts work once the canvas has focus; it gets focus when the studio opens and when you click the card. Escape is handled by the innermost thing that uses it: an open menu or picker closes first, then the Layers overlay on a narrow screen. Outside Preview, Escape in Layers, the inspector or the top bar closes the studio.
@@ -452,7 +464,7 @@ The animation studio is a full-screen editor for your own animations. It runs in
 -   Four kinds: keyframes on a timeline with an easing curve editor, particles, motion along a path you draw on the preview, and sequences of animations one after another.
 -   Particles: a mix of up to four shapes with weights (circle, square, triangle, star, heart, ring, streak, spark, an icon, an emoji or your own SVG), 13 flows, ranges for speed, size, opacity, spin, start delay and lifetime, and a seed with a Shuffle button for new random paths. Physics adds gravity in any direction, drag and turbulence, collisions with the card's edges or its icon or text, and child particles that spawn on a hit or at the end of a particle's life.
 -   Baked loop or Live simulation: a baked loop works out every path once in the studio and plays it as CSS, so dashboards run no script for it. Live simulation runs the physics on every dashboard that shows the card and uses more CPU. It runs only while the card is on screen.
--   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. It works on a tablet.
+-   A layout that fits the window: Layers on the left, the stage and the timeline in the middle with a splitter between them, and an inspector on the right that shows what you selected. Layers and the inspector each hide with an edge button, so the stage can take the full width. It works on a tablet.
 -   A timeline with a group of lanes per target, zoom up to 1000%, snapping, multi-select and group drag, easing per property, and copy and paste between lanes and targets.
 -   Icon parts: split an icon into its shapes, group and merge them, set pivots, and animate each part, with draw-on and motion paths. A part preset's pivot shows on the stage and in the inspector, where you can move it or reset it to the part's own.
 -   Icon animations: New animation, then Icon animation…, splits any icon for you, or starts from one of 192 animations in the icon library (search, a domain filter and live thumbnails). Part presets animate a part, group or shape with one click, with parameters for duration share, delay, intensity and direction.

@@ -4,6 +4,23 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Side panels hide.** The card studio, the animation studio, the SVG editor (pre-release), the shape studio (pre-release) and the theme editor (from 1024 px wide) get an edge button on each side panel that sits beside the canvas or preview. Press it to hide the panel: the canvas or preview takes the width. Press it again to show the panel with its selection and scroll position. Only the button stays at the window edge. Hiding a panel does not change the card or the undo history. See [Studio layout](documentation/studio/layout-and-toolbar.md#hiding-the-side-panels).
+-   **Ctrl+\ (Cmd+\ on a Mac)** hides the side panels of the editor you are working in if any is shown, and otherwise shows again the panels it hid last. It also works from a text field.
+-   **Hidden panels are remembered per editor, per device.** An editor opens with the panels hidden that you left hidden there. Storage that the browser blocks keeps every panel shown, without an error.
+-   **A one-time hint** explains the button and the shortcut the first time an editor opens with a panel hidden.
+
+### Changed
+-   **Animation studio: Collapse layers is replaced.** The Collapse layers button and its icon rail are gone. Layers has the same edge button as the other panels. A Layers panel you collapsed before opens hidden once, with a hint, and the new setting is remembered from then on. See [Editor and preview stage](documentation/animation-studio/preview-stage.md#hiding-the-panels).
+-   **Position offsets are one box.** The Positioning & layout section of the Design tab shows Top, Right, Bottom and Left as one four-side Offsets box with a Same on all sides link. Each side is still saved as its own key (`top`, `right`, `bottom`, `left`), so existing cards do not change. Searching the Design tab for Right or Left no longer finds a field; search for Offsets. See [Positioning and layout](documentation/design/positioning.md).
+-   **An explicit Edit brings a hidden Inspector back.** Edit on a layer in the card studio shows the Inspector first. A plain click on the canvas does not.
+
+### Fixed
+-   **Sliders and number fields stay in step.** Dragging a slider in the editor moves its number field as you drag. Typing a number moves the slider. A value outside the range is pulled back to the nearest limit when you leave the field, in both.
+-   **Colour picker hue and opacity can be retyped.** Clearing the Hue or Opacity field leaves it empty, so you can type a new value. A number above the limit (360 for hue, 100 for opacity) is shown at the limit at once. See [Picker windows](documentation/editor/picker-windows.md#colour-window).
+
 ## 2026.10.12-beta.6 (2026-10-24)
 
 ### Changed
