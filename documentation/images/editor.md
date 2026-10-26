@@ -22,6 +22,7 @@ The editor has the same tools as the icon editor: shapes, the pen, path booleans
 - Undo and Redo work on every change.
 - Zoom in and Zoom out change the view. Fit to view shows the whole canvas.
 - The Layers list can be used with the keyboard: arrow keys move between layers and Enter selects one.
+- The Rectangle options panel floats over the canvas. Opening it does not move the drawing.
 
 ## Colours and paints
 
@@ -35,6 +36,10 @@ Each fill and outline can use:
 
 Opacity fades the whole layer. A dashed outline takes up to 8 numbers separated by spaces, such as `8 4`.
 
+New closed shapes (rectangles, ellipses, polygons, stars, freehand shapes and closed pen paths) start with a thin outline in Accent. Lines and text do not.
+
+**As on a card** is a toggle in the canvas toolbar. It shows Main and Accent the way a card shows them when its entity is off. It changes only what you see on the canvas. The saved colours stay the same.
+
 The drawing looks the same in the editor and on the card.
 
 ## Text
@@ -43,6 +48,7 @@ Choose Add text, then click or tap where the text goes. Press Enter to start in 
 
 - Enter adds the text. Shift+Enter starts a new line. Esc cancels.
 - A text layer has a font, size, weight, italic, alignment and letter spacing.
+- New text is white with a thin dark outline.
 - Text uses fonts that are already on the device. Nothing is downloaded, so it can look a little different on another device.
 - A text layer can hold up to 2048 characters.
 
@@ -53,10 +59,12 @@ A reference picture is a photo or drawing you trace over. It appears behind the 
 - The picture stays in your browser while you edit. It is never saved with the image, never sent to Home Assistant, and never put in an exported file.
 - Alignment is remembered on this device for this image. The picture is not.
 - If you reopen the image, pick the picture again.
+- A shape you draw while the picture shows starts at 60 % opacity, so the picture shows through. The status line says so. Change it in Opacity. The 60 % is saved with the image unless you change it.
+- The Reference picture panel floats over the canvas, so the drawing does not move when it opens. At high zoom the panel scrolls inside the editor.
 
 ## Import an SVG file
 
-Choose Import an SVG file. Importing replaces everything on the canvas, and you can undo it.
+Choose Import an SVG file. If the canvas already has content, the editor asks **Replace your drawing?** with two choices: Keep my drawing, which is the default, and Replace. Escape keeps your drawing too. A replaced drawing can be brought back with Undo. A file the editor refuses is not imported, so the question is not asked.
 
 The editor keeps what it can use and removes what it cannot. After the import, a summary says what was removed, for example "Removed scripts, event handlers." If nothing was removed, it says so.
 
@@ -72,7 +80,10 @@ Some parts cannot be edited, such as clipped parts, parts with masks, and parts 
 
 - keeps its own colours,
 - can be renamed, reordered, hidden and deleted,
-- cannot be moved, resized, rotated or repainted.
+- cannot be moved, resized, rotated or repainted,
+- stays locked. Its lock button and the Locked switch in the Inspector say why.
+
+Trying to unlock an imported part changes nothing and adds no undo step. The editor says that the part stays locked, for example "Imported part 1 stays locked: imported parts cannot be edited."
 
 If a summary says some parts were kept as locked layers, those layers still draw the same as in the original file.
 
@@ -106,12 +117,17 @@ Other save options:
 - **Duplicate** and **Save as a copy** save the drawing under a new name. The editor then works on the copy, and the original stays as it was. A toast confirms: "Saved as '{name}'. The original is unchanged."
 - **Export file** saves the drawing to a file on your device. Check the file before you share it. See [Privacy and your images](privacy.md#export-files).
 
-If the library refuses a save, the editor says why:
+If a save fails, the Save window shows the reason in words and stays open, so your drawing is not lost. The reason is one of these:
 
-- The drawing is over 256 KiB. The Too big window opens and shows the size.
-- The library is full (200 images). Delete one to add another.
-- Another administrator changed the image. Choose Save as a copy to keep your work, or Reload to see their version.
-- The library does not accept a word in a text layer. The editor names the layer and the word, so you can change it.
+- **Too big to save: 270 KiB of 256 KiB.** The drawing is over the limit. Simplify it, then save again.
+- **The library is full (200 images). Delete one to add another.** The library holds at most 200 images.
+- **The library does not accept the text "javascript:", in the layer "Title". Change it, then save again.** The library refuses some words in text layers. The Save window names the word and, where it can find it, the layer.
+- **This image was changed somewhere else.** Choose Save as a copy to keep your work, or Reload to see the other version.
+- **You can look at this image but not change it. Ask an administrator.** Your account is view-only.
+- **The library refused this image: {reason}.** The library gave a reason. If it gave none, the editor says "The library refused this image. Use Export file to keep a copy."
+- **Magic Card Utils reported an error and did not finish. Your work is safe. Use Export file to keep a copy.** The library reported an error the editor does not know.
+- **Could not reach Magic Card Utils. Your work is safe.** The editor could not reach the library at all.
+- **Images need Magic Card Utils. It is installed through HACS, like Magic Card.** Install Magic Card Utils first.
 
 ## View only
 
