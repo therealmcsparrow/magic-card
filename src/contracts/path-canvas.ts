@@ -2,19 +2,26 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
 import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-kit';
 
 /*
- * Contract: path canvas. Version 1.0.0.
+ * Contract: path canvas. Version 1.1.0.
+ * 1.1.0 (additive): overlay mode (section "Overlay mode") for a host that draws a live stage under the canvas, and the
+ * animation studio bundle as a third loader. PATH_CANVAS_CONTRACT_VERSION becomes '1.1.0' and
+ * PATH_CANVAS_CONTRACT_REVISION 8 in the change that ships overlay mode, never before (a host reads the revision to know
+ * what the defined element can do).
  * Hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard (`[` / `]`, H, fine step, Enter to
  * fields, C and double-click for the kind), Esc cancels a drag, imports over MAX_ANCHORS stay
  * editable, drag performance with large paths.
  *
  * One editing surface for anchors and handles, used by the SVG editor (many subpaths in a fixed
- * viewBox) and the shape editor (one closed subpath in a resizable box with anchored coordinates).
+ * viewBox), the shape editor (one closed subpath in a resizable box with anchored coordinates) and the
+ * animation studio's Draw tools (overlay mode over the live stage).
  *
  * Implementation: module `path-canvas`, folder src/path-canvas/, lazy chunk PATH_CANVAS_CHUNK_FILE
  * (webpackChunkName PATH_CANVAS_CHUNK). Loaded with import() by the svg-editor and shape-editor
- * chunks only; never by magic-card.js, never by the card-editor chunk statically. The chunk defines
+ * chunks and by the animation studio bundle, each through src/path-canvas/loader.ts, the only import() of the chunk;
+ * never by magic-card.js, never by the card-editor chunk statically. The chunk defines
  * one element, PATH_CANVAS_TAG (guarded by customElements.get), and its module exports
- * PathCanvasChunk below. Uses path-model 1.0.0. Imports nothing from src/anim-studio/,
+ * PathCanvasChunk below. The element class has `static contractRevision` (= PATH_CANVAS_CONTRACT_REVISION). Uses
+ * path-model 1.0.0. Imports nothing from src/anim-studio/,
  * src/editor/, src/svg-editor/, src/shape-editor/ or src/path-booleans/.
  *
  * The chunk exports `pathDraw` (path-model PathDraw, incl. the new primitives): the shape editor draws
@@ -158,11 +165,39 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   aria-roledescription "drawing canvas" and the host's aria-label / aria-describedby.
  * - Visuals follow DESIGN.md editor tokens (src/css/editor-system); focus is always visible.
  *
+ * ── Overlay mode ──
+ * For a host that draws something live under the canvas and owns the view (the animation studio over its stage).
+ * Every rule above holds unless this section says otherwise; with `overlay` unset nothing changes.
+ * - `overlay` (property and boolean attribute) implies `underlay`: ground and frame are unpainted.
+ * - View: the host owns it. No zoom or pan gestures (pinch, two-finger drag, wheel, Ctrl+wheel, Space+drag,
+ *   middle-drag); =, +, - and 0 are not handled and bubble; `mc-path-view` is never emitted.
+ * - `placement` (CanvasPlacement): the rectangle, in CSS px relative to the element's top-left corner, that `frame`
+ *   maps onto. It replaces fit(): with `placement` set, fit() does nothing, and a new `placement` re-maps at once
+ *   without an event (the host sets it on every stage resize or layout change). Each axis scales on its own
+ *   (frame.width onto placement.width, frame.height onto placement.height). When the two scales differ by more than
+ *   1 %, the rotate handle and the Rotation slider are not drawn even if `transform.rotate` is true (a rotation is
+ *   not a rotation on screen then). Hit sizes, slop, snap reach, the loupe and handle sizes stay in CSS px. Without
+ *   `placement` in overlay mode the frame fills the element.
+ * - Pointer: the ground passes the pointer through to what is under the element (pointer-events none on the
+ *   ground), so the host's stage stays clickable. Only anchors, handles, the transform box and its handles, and path
+ *   bodies and segment bands take the pointer, and in 'add' mode the area inside the placement rectangle does too (a
+ *   tap places a point). No marquee in overlay mode: Ctrl/Cmd+A and the hidden listbox select several anchors. A
+ *   press on the passed-through ground does not clear the selection; the host does (Esc on the canvas still does).
+ * - `units` (CanvasUnits, default unset): the unit the loupe label, the listbox and the live region name after each
+ *   number ("x 19 %, y 9 %", "x 120 px, y 40 px"). Unset keeps today's bare numbers.
+ * - Grid: `pixelGrid` false, or `gridStep` 0, draws no grid and snaps to none.
+ * - Menu: the host sets `contextMenu` true only when customElements.get(UI_MENU_TAG) is defined in its page; with
+ *   no menu element the canvas keeps the browser's behaviour, and every action keeps its button.
+ * - Keyboard, focus, the listbox, the live region, reduced motion, snapping (except the grid rule above) and the
+ *   events other than `mc-path-view` are unchanged. The host still renders skip links before and after the canvas.
+ * - Speed: a point drag of a path with up to 64 anchors over a live stage keeps 60 frames per second on the 4x
+ *   throttled profile; the large-path rule above still holds.
+ *
  * Events (bubbling, composed):
  * - `mc-path-change` detail PathChange. `commit` false while dragging, true on pointer up / key up /
  *   any non-drag edit. Hosts push one history step per commit (a drag is one step).
  * - `mc-path-select` detail PathSelection.
- * - `mc-path-view` detail { zoom, pan }: the host may keep it for the next open.
+ * - `mc-path-view` detail { zoom, pan }: the host may keep it for the next open (never in overlay mode).
  * - `mc-path-fields` detail { path, anchor }: Enter on a focused anchor.
  * - `mc-path-limit` detail { path, max: MAX_ANCHORS }: an add was refused at the cap.
  * - `mc-path-transform` detail PathTransform: a scale or rotate from the transform box or its keys.
@@ -186,11 +221,19 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * unselected path selects it first; long-press opens at 500 ms and 8 px of movement turns it into a
  * drag; ContextMenu and Shift+F10 emit once (dedupe of the following contextmenu); contextMenu false
  * leaves contextmenu alone; menu roles, keys, typeahead, submenu open / close, reason on an unavailable
- * item, viewport clamp at 320 px, focus return to the opener; import scan unchanged.
+ * item, viewport clamp at 320 px, focus return to the opener; import scan unchanged. Overlay mode: no
+ * wheel, pinch or key zoom and no mc-path-view; `placement` maps frame points to CSS px per axis and fit() is a
+ * no-op; a ground press reaches an element under the canvas and leaves the selection; an anchor press does not
+ * pass through; 'add' takes a press inside the placement; `units` '%' and 'px' in the loupe, listbox and live
+ * region; gridStep 0 draws no line; rotate handle hidden under unequal axis scales; static contractRevision.
  */
 
+/** '1.1.0' when overlay mode ships (see the version note at the top). */
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
+/** 8 when overlay mode ships; hosts that need overlay mode check the defined element's static contractRevision. */
 export const PATH_CANVAS_CONTRACT_REVISION = 7;
+/** The first revision with overlay mode. */
+export const PATH_CANVAS_OVERLAY_REVISION = 8;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';
 export const PATH_CANVAS_CHUNK_FILE = 'magic-card-path-canvas.js';
@@ -222,6 +265,17 @@ export const LONG_PRESS_SLOP_PX = 8;
 export const CONTEXT_DEDUPE_MS = 500;
 /** What may be edited. 'view' = render only (thumbnails, previews). */
 export type CanvasMode = 'view' | 'select' | 'nodes' | 'add';
+
+/** Overlay mode: where the frame sits inside the element, in CSS px from its top-left corner. */
+export interface CanvasPlacement {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** Overlay mode: the unit named after coordinates in the loupe, the listbox and announcements. */
+export type CanvasUnits = 'px' | '%';
 
 export interface SnapConfig {
   enabled: boolean;
@@ -343,6 +397,12 @@ export interface PathCanvasElement extends HTMLElement {
   gridStep?: number;
   /** Boolean attribute; ground and frame are transparent, the host draws underneath. */
   underlay?: boolean;
+  /** Boolean attribute; overlay mode (section "Overlay mode"). Implies `underlay`. */
+  overlay?: boolean;
+  /** Overlay mode: the frame's rectangle inside the element, in CSS px; replaces fit(). */
+  placement?: CanvasPlacement;
+  /** Overlay mode: the unit named after coordinates. */
+  units?: CanvasUnits;
   /** At most this many subpaths (shape editor: 1; 2 while a boolean operand or a pen outline is pending). */
   maxPaths: number;
   /** Anchor kinds offered. */
@@ -354,7 +414,7 @@ export interface PathCanvasElement extends HTMLElement {
   rotateLabel?: string;
   /** Emit `mc-path-context` and prevent the browser menu on the drawing surface. Default false. */
   contextMenu?: boolean;
-  /** Fit the frame into the element. */
+  /** Fit the frame into the element (does nothing while `placement` is set). */
   fit(): void;
   /** Move keyboard focus to an anchor (the host's Points list, Esc from a field). */
   focusAnchor(path: number, anchor: number): void;
