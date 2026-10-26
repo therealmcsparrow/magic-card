@@ -397,10 +397,12 @@ export class Studio extends LitElement {
             title=${t('Layers')}
             aria-controls="layers"
             aria-expanded=${this._showLayers ? 'true' : 'false'}
+            data-open=${this._showLayers ? 'true' : 'false'}
+            data-dir=${this._lips.dir}
             ?hidden=${live}
             @click=${() => { this._showLayers = !this._showLayers; }}
           >
-            <ha-icon icon="mdi:layers-outline"></ha-icon>
+            <ha-icon icon="mdi:layers-outline"></ha-icon><svg class="opener-chevron" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"></path></svg>
           </button>
           <span class="vr" aria-hidden="true"></span>
           <div class="title">
@@ -603,6 +605,18 @@ export class Studio extends LitElement {
       .layers-toggle {
         display: none;
       }
+      /* the opener's chevron points the way the Layers panel moves, as a lip's does: in when closed, back when open; right to left mirrors both */
+      .layers-toggle .opener-chevron {
+        flex: none;
+        margin-inline-start: 2px;
+      }
+      .layers-toggle[data-open='true'] .opener-chevron,
+      .layers-toggle[data-dir='rtl'] .opener-chevron {
+        transform: scaleX(-1);
+      }
+      .layers-toggle[data-open='true'][data-dir='rtl'] .opener-chevron {
+        transform: none;
+      }
       .more-info-host {
         display: contents;
       }
@@ -751,7 +765,13 @@ export class Studio extends LitElement {
           display: block;
         }
         .layers-toggle {
-          display: inline-grid;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+          width: auto;
+          min-width: 40px;
+          padding-inline: 8px;
         }
         /* the label drops out of sight, the button keeps its name; the notice takes its own line under the buttons */
         .preview-toggle .lbl {

@@ -109,3 +109,31 @@ describe('card studio panel lips', () => {
     expect(css).not.toMatch(/\[data-lip='hidden'\]\s*\{[^}]*(?:max-)?width:\s*0[;\s]/);
   });
 });
+
+describe('card studio lip leftovers', () => {
+  it('the keyboard help names the panel shortcut for both systems', async () => {
+    const { root } = await mount();
+    const canvas = root.querySelector('mc-studio-canvas') as HTMLElement & { updateComplete: Promise<unknown> };
+    await canvas.updateComplete;
+    const hint = canvas.shadowRoot!.querySelector('#canvas-hint')!;
+    expect(hint.textContent).toMatch(/Show or hide panels:/);
+    const keys = [...hint.querySelectorAll('kbd')].map((k) => k.textContent);
+    expect(keys.slice(-4)).toEqual(['Ctrl', '\\', '⌘', '\\']);
+  });
+
+  it('the Layers opener carries a 16 px chevron that points the way the panel comes from and mirrors in RTL', async () => {
+    const { el, root } = await mount();
+    const btn = root.querySelector<HTMLElement>('.layers-toggle')!;
+    const chev = btn.querySelector<SVGElement>('svg.opener-chevron')!;
+    expect(chev.getAttribute('width')).toBe('16');
+    expect(chev.getAttribute('aria-hidden')).toBe('true');
+    expect(btn.getAttribute('aria-expanded')).toBe('false');
+    expect(btn.dataset.open).toBe('false');
+    btn.click();
+    await el.updateComplete;
+    expect(btn.dataset.open).toBe('true');
+    const css = (Studio.styles as Array<{ cssText: string }>).map((s) => s.cssText).join('\n');
+    expect(css).toMatch(/\.layers-toggle\[data-open='true'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
+    expect(css).toMatch(/\.layers-toggle\[data-dir='rtl'\] \.opener-chevron[^{]*\{[^}]*scaleX\(-1\)/s);
+  });
+});

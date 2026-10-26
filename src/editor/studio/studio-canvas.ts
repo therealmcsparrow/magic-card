@@ -1394,6 +1394,10 @@ export class StudioCanvas extends LitElement {
           remove: html`<kbd>${t('Del')}</kbd>`,
           menu: html`<kbd>Shift</kbd> + <kbd>F10</kbd>`,
         })}
+        ${tx('Show or hide panels: {ctrl} or {cmd}.', {
+          ctrl: html`<kbd>Ctrl</kbd> + <kbd>\\</kbd>`,
+          cmd: html`<kbd>⌘</kbd> + <kbd>\\</kbd>`,
+        })}
       </p>`}
       <p class="status-capsule" role="status" ?data-on=${!!this._status && !this._connectFrom}>${this._status}</p>
       ${this._itemMenu.render()}
