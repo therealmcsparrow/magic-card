@@ -4,6 +4,17 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Library images.** Draw a picture in the image editor, save it to the Magic Card Utils library, and show it in an image module (Choose an image, Draw a new image, Edit image) or as a background layer, including per-state backgrounds. A YAML reference such as `image: mcu-image:<id>` holds the picture's address, not the drawing. See [Library images](documentation/images/README.md).
+-   **Image editor.** Canvas sizes (1:1, 4:3, 16:9, 9:16 and custom up to 4096 pixels), the icon editor's tools, Main, Accent, theme and custom colours, linear and radial gradients, opacity, dashed outlines, text layers, a reference picture that is never saved, and an SVG import with a summary of what was removed. Parts the editor cannot change are kept as locked layers.
+-   **Image size and limits.** A size meter shows how close a drawing is to 256 KiB. The library holds up to 200 images. Save as a copy, Duplicate and Export file work from the editor.
+-   **Missing picture.** An image module that points to a deleted library image shows "Picture not available" and keeps its layout.
+
+### Security
+-   **SVG from the library is sanitised.** Scripts, event handlers, embedded pictures, external links and cross-origin `url()` values are removed on import, on save and when a card draws the image.
+
 ## 2026.10.12-beta.6 (2026-10-24)
 
 ### Changed

@@ -47,6 +47,7 @@ This README is an overview. The [documentation](documentation/README.md) folder 
 -   Shape editor and custom shapes (pre-release): corners with their own type and size, a free outline with the pen, combined shapes, saved shapes, and `shape: custom` in YAML. See [Shape editor](documentation/shape-editor/README.md).
 -   Presets and sharing (pre-release): save animations, theme presets, icons and shapes in the Magic Card Utils library, and export them to a versioned YAML or JSON file that anyone can import with safety checks. See [Presets and the library](documentation/presets/README.md).
 -   Animation studio layers (pre-release): hide, solo and lock parts in the preview, keyframe layers in one stack, particle layers, and several emitters, each drawn in front of or behind the card. See [Layers](documentation/animation-studio/layers.md).
+-   Library images (needs Magic Card Utils): draw pictures in the image editor, trace over a photo or floor plan, import SVG files, and show a library image in an image module or as a background behind the content. See [Images](documentation/images/README.md).
 -   Languages: English (UK), English (US) and Dutch. Magic Card follows the language in your Home Assistant profile. The Dutch text was drafted with machine help and has not been checked by a professional translator. See [Languages](documentation/languages/README.md).
 -   Built to WCAG 2.2 AA, with keyboard routes for every drag and labelled fields. See [Accessibility](documentation/accessibility/README.md).
 
@@ -1070,6 +1071,14 @@ rows:
                     background_color: "#1b5e20"
                     color: white
 ```
+
+## Images
+
+Library images are drawings you make in the Magic Card image editor and save to the Magic Card Utils library. A dashboard can show one in an image module, or as a background behind the content. The library holds up to 200 images, and each image can be up to 256 KiB.
+
+Library images need the Magic Card Utils integration, installed through HACS like Magic Card. Everyone who can log in to Home Assistant can see them. Only administrators can create or change them.
+
+The [Images](documentation/images/README.md) section covers the editor, the image and background options, the YAML form `mcu-image:<id>`, and [privacy](documentation/images/privacy.md).
 
 ## Sharing and privacy
 
