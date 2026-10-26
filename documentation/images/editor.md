@@ -62,6 +62,12 @@ A reference picture is a photo or drawing you trace over. It appears behind the 
 - A shape you draw while the picture shows starts at 60 % opacity, so the picture shows through. The status line says so. Change it in Opacity. The 60 % is saved with the image unless you change it.
 - The Reference picture panel floats over the canvas, so the drawing does not move when it opens. At high zoom the panel scrolls inside the editor.
 
+## Start from an SVG file
+
+When you draw a new image, the first window asks for a canvas size. It also has an **Open file** button. Choose an .svg file and the editor opens it as your drawing, with no blank canvas first. The file is cleaned and read in the same way as Import an SVG file, below, and the same summary says what was removed.
+
+If a file cannot be opened, the window stays open and says why, for example "That file is too big to open (over 8 MB). Try a smaller copy." or "That drawing is over 256 KiB." You can then choose another file or pick a canvas size. A file can be up to 8 MB to be opened, but the cleaned drawing must still fit in 256 KiB, like every image.
+
 ## Import an SVG file
 
 Choose Import an SVG file. If the canvas already has content, the editor asks **Replace your drawing?** with two choices: Keep my drawing, which is the default, and Replace. Escape keeps your drawing too. A replaced drawing can be brought back with Undo. A file the editor refuses is not imported, so the question is not asked.

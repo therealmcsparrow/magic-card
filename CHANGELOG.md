@@ -4,6 +4,11 @@ All notable changes to Magic Card. Dates are release dates (UTC). Detailed docum
 
 Magic Card uses calendar versions: year, month and a release number within the month.
 
+## Unreleased
+
+### Added
+-   **Open an SVG file as an image.** The Images tab of the Magic Card Utils panel now takes a plain .svg file next to a .json preset file, and the first window of the image editor has an **Open file** button. Both clean the file the same way as Import in the image editor. An .svg file can be up to 8 MB to be opened, and the cleaned image must still fit in 256 KiB. See [Library images](documentation/images/README.md).
+
 ## 2026.10.12-beta.9 (2026-10-26)
 
 ### Changed

@@ -110,8 +110,11 @@ export class TransferPanel extends LitElement {
     const need = (re: RegExp, load: () => Promise<unknown>): Promise<unknown> => (re.test(text) ? load() : Promise.resolve(true));
     const ok = await Promise.all([need(/\b(?:rig|tracks|clips|bindings)\b/, loadRuntime), need(/\bsim\b/, loadParticles)]);
     // an image file is checked by the image-transfer chunk, so that chunk is loaded before the text is read
-    const asksImages = /"kind"\s*:\s*"image"/.test(text);
-    const wantsImages = asksImages && this._kinds().includes('image');
+    const kinds = this._kinds();
+    const onlyImages = kinds.length === 1 && kinds[0] === 'image';
+    // images only: an .svg file, or text with an <svg tag near its start, is one image (the prolog is short, so a bounded look is enough)
+    const asksImages = /"kind"\s*:\s*"image"/.test(text) || (onlyImages && (/\.svg$/i.test(fileName ?? '') || /<svg/i.test(text.slice(0, 4096))));
+    const wantsImages = asksImages && kinds.includes('image');
     const images = wantsImages ? await loadImageTransfer() : undefined;
     this._res =
       ok.every(Boolean) && (images || !wantsImages)
@@ -125,7 +128,7 @@ export class TransferPanel extends LitElement {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    const refused = checkFileSize(file);
+    const refused = checkFileSize(file, this._kinds());
     if (refused && !refused.ok) {
       this._res = { ok: false, refusal: refused.refusal, message: refused.message };
       this.focusResult();
@@ -170,13 +173,13 @@ export class TransferPanel extends LitElement {
     const r = this._res;
     const kinds = this._kinds();
     const images = kinds.length === 1 && kinds[0] === 'image';
-    const accept = images ? '.json' : kinds.includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
+    const accept = images ? '.json,.svg' : kinds.includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
     return html`
       <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('Import {items}', { items: count(r.items.length, r.kind) }) : t('This file was not imported')) : t('Import presets')}</h3></div>
       <div class="bar">
         ${button({ label: t('Choose a file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
-        <span class="help">${images ? t('JSON, up to 8 MB') : t('{types}, up to 1 MB', { types: accept.replace(/\./g, '').replace(/,/g, ', ') })}</span>
+        <span class="help">${images ? t('JSON or SVG, up to 8 MB') : t('{types}, up to 1 MB', { types: accept.replace(/\./g, '').replace(/,/g, ', ') })}</span>
       </div>
       <div class="field">
         <div class="field-head"><label for="paste">${t('Or paste the text')}</label></div>

@@ -55,7 +55,7 @@
   "Imported items are saved in this card.": "Imported items are saved in this card.",
   "Imported {ok} of {total}.": "Imported {ok} of {total}.",
   "It changed while you were looking. The list is reloaded; try again.": "It changed while you were looking. The list is reloaded; try again.",
-  "JSON, up to 8 MB": "JSON, up to 8 MB",
+  "JSON or SVG, up to 8 MB": "JSON or SVG, up to 8 MB",
   "Keep both": "Keep both",
   "Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.": "Keep your own items on every dashboard with the free Magic Card Utils add-on. Until then they stay in this card.",
   "Kind": "Kind",

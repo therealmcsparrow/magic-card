@@ -55,6 +55,14 @@ Icons are cleaned the same way as icons in the SVG editor. Scripts, links to oth
 
 Animations and shapes import into a card as copies, when you do not have Magic Card Utils.
 
+## Add an SVG file as an image
+
+On the Images tab of the Magic Card Utils panel, **Import** takes a .json preset file or a plain .svg file. An .svg file becomes one image. Its name is the file name, and its address is made from the name, for example `roof-plan.svg` becomes `roof-plan`. You can paste the SVG code into the box too.
+
+The file is cleaned like every image: scripts, event handlers, links to other sites and embedded pictures are removed and listed in the summary, and a file with a document type that declares its own entities is refused. An .svg file can be up to 8 MB to be read, but the cleaned image must be 256 KiB or less, like every image. The image editor gives the same result when you open the same file there.
+
+Elsewhere in Magic Card an .svg file still imports as an icon.
+
 ## Import into a card
 
 In a card, **Library** then **This card** imports into that card, not into the library. The import compares the file with the card's own copies.

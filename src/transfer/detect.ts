@@ -36,13 +36,14 @@ export function looksLikeSvg(text: string, fileName?: string): boolean {
   }
 }
 
-export function svgItem(text: string, fileName?: string): Detected {
+/** One item from an svg text and its file name: an icon, or an image where the panel accepts images only. */
+export function svgItem(text: string, fileName?: string, kind: 'icon' | 'image' = 'icon'): Detected {
   const base = (fileName ?? '').replace(/^.*[\\/]/, '');
   const stem = base.replace(/\.svg$/i, '');
   return {
-    kind: 'icon',
+    kind,
     source: 'svg',
-    items: [{ id: slug(stem, 'icon'), name: (base || 'icon').slice(0, 80), data: { svg: text } }],
+    items: [{ id: slug(stem, kind), name: (base || kind).slice(0, 80), data: { svg: text } }],
   };
 }
 

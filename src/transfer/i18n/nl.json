@@ -168,7 +168,7 @@
   "Image files are imported in Magic Card Utils > Images.": "Afbeeldingsbestanden importeer je in Magic Card Utils > Afbeeldingen.",
   "Images": "Afbeeldingen",
   "Images need Magic Card Utils. It is installed through HACS, like Magic Card.": "Afbeeldingen hebben Magic Card Utils nodig. Je installeert het via HACS, net als Magic Card.",
-  "JSON, up to 8 MB": "JSON, tot 8 MB",
+  "JSON or SVG, up to 8 MB": "JSON of SVG, tot 8 MB",
   "Only icons and images have keywords, so they were left out.": "Alleen pictogrammen en afbeeldingen hebben trefwoorden, dus ze zijn weggelaten.",
   "The checker for images did not load, so this image was not read.": "De controle voor afbeeldingen is niet geladen, dus deze afbeelding is niet gelezen.",
   "This file is larger than 8 MB, so it was not read.": "Dit bestand is groter dan 8 MB, dus het is niet gelezen.",

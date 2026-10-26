@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { IMAGE_TRANSFER_REVISION } from '../src/contracts/preset-transfer';
 
 const mode = vi.hoisted(() => ({ value: 'throw' as 'throw' | 'revision' | 'ok' }));
 vi.mock('../src/image-transfer/chunk', async (original) => {
@@ -41,7 +42,7 @@ describe('the image-transfer loader', () => {
     expect(imageTransfer()).toBeUndefined();
     mode.value = 'ok';
     const ix = await loadImageTransfer();
-    expect(ix?.revision).toBe(1);
+    expect(ix?.revision).toBe(IMAGE_TRANSFER_REVISION);
     expect(imageTransfer()).toBe(ix);
     expect(await loadImageTransfer()).toBe(ix);
   });
