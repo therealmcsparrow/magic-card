@@ -121,6 +121,8 @@ export class EditorStateManager {
   /** False while the card editor is detached: pending icon follows wait (follow-icon.ts). */
   attached = true;
   private dragEnd = 0;
+  /** True once the drag in progress has pushed its undo entry. */
+  private dragUndone = false;
   private dragPace?: ReturnType<typeof setTimeout>;
   /** The newest config of a drag that has not gone out yet. */
   private dragNext?: MagicCardConfig;
@@ -159,8 +161,9 @@ export class EditorStateManager {
     if (more) this.dragPace = setTimeout(() => this.dragSend(), EDITOR_DRAG_SEND_MS);
   }
 
-  /** A slider moved: for a moment after this, config-changed goes out right away and then about every EDITOR_DRAG_SEND_MS, the last value included. */
+  /** A slider moved: for a moment after this, only the first write of the drag is undoable; config-changed goes out right away and then about every EDITOR_DRAG_SEND_MS, the last value included. */
   sliderMoved(): void {
+    if (Date.now() >= this.dragEnd) this.dragUndone = false;
     this.dragEnd = Date.now() + EDITOR_DRAG_IDLE_MS;
   }
 
@@ -257,8 +260,9 @@ export class EditorStateManager {
 
   updateConfig(config: MagicCardConfig, recordUndo = true): void {
     const prev = this.state.config;
-    if (recordUndo) {
+    if (recordUndo && !(Date.now() < this.dragEnd && this.dragUndone)) {
       this.undoRedo.push(this.state.config);
+      this.dragUndone = Date.now() < this.dragEnd;
     }
     // kept copies of saved icons and shapes nothing uses any more go (library.ts; not while typing YAML)
     const cloned = deepClone(config);

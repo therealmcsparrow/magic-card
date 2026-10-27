@@ -29,6 +29,9 @@ export function lyrSwitch(id: string, label: string, checked: boolean, on: (v: b
 /** Slider writes waiting for the next animation frame, by slider; the latest value wins. */
 const pending = new Map<Element, { frame: number; v: number; on: (v: number) => void }>();
 
+/** The value a slider last wrote while it moved, until its release; the release skips a write that repeats it. */
+const written = new WeakMap<Element, number>();
+
 /** Drops every frame still waiting for a slider inside `root`; a host calls this when it leaves the page. */
 export function cancelSliderFrames(root: ParentNode | null | undefined): void {
   for (const [slider, p] of pending) {
@@ -49,7 +52,7 @@ export function lyrSlider(id: string, label: string, value: number, min: number,
     const row = target.closest('.inline');
     const r = row?.querySelector<HTMLInputElement>('.lyr-range');
     const f = row?.querySelector<HTMLInputElement>('input[type="number"]');
-    if (r) r.value = String(v);
+    if (r) (r as { value: unknown }).value = r.localName === 'ha-slider' ? v : String(v);
     if (f && !typing) f.value = String(v);
     r?.setAttribute('aria-valuetext', `${v}${unit}`);
     return v;
@@ -66,17 +69,20 @@ export function lyrSlider(id: string, label: string, value: number, min: number,
       p.on = on;
       return;
     }
-    const w = { v, on, frame: requestAnimationFrame(() => (pending.delete(slider), w.on(w.v))) };
+    const w = { v, on, frame: requestAnimationFrame(() => (pending.delete(slider), written.set(slider, w.v), w.on(w.v))) };
     pending.set(slider, w);
   };
-  /** Release or a typed number: write the final value once, in place of a pending frame. */
+  /** Release or a typed number: write the final value once, in place of a pending frame; nothing when the last frame already wrote it. */
   const set = (e: Event): void => {
     const v = show(e);
     if (v === undefined) return;
-    const p = pending.get(e.target as Element);
+    const slider = e.target as Element;
+    const p = pending.get(slider);
     if (p) cancelAnimationFrame(p.frame);
-    pending.delete(e.target as Element);
-    on(v);
+    pending.delete(slider);
+    const again = !p && written.get(slider) === v;
+    written.delete(slider);
+    if (!again) on(v);
   };
   const slider = customElements.get('ha-slider')
     ? html`<ha-slider class="lyr-range" id=${id} label=${label} min=${min} max=${max} step="1" .value=${value} aria-label=${label} aria-valuetext=${shownValue(`${value}${unit}`)} @input=${move} @change=${set}></ha-slider>`
