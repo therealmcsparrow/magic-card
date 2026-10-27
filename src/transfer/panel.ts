@@ -4,7 +4,8 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { editorTokens } from '../css/editor-system';
 import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
-import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
+import type { ClashChoice, ImageReader, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
+import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
@@ -116,7 +117,10 @@ export class TransferPanel extends LitElement {
     // images only: an .svg file, or text whose first element is <svg (the test parseTransfer uses), is one image
     const asksImages = /"kind"\s*:\s*"image"/.test(text) || (onlyImages && looksLikeSvg(text, fileName));
     const wantsImages = asksImages && kinds.includes('image');
-    const images = wantsImages ? await loadImageTransfer() : undefined;
+    const loadedImages = wantsImages ? await loadImageTransfer() : undefined;
+    // an .svg file is opened here, so its styles are resolved; images inside a preset file are not (only { file: true } items take the resolver)
+    const css = loadedImages && onlyImages && looksLikeSvg(text, fileName) ? await loadSvgCss() : undefined;
+    const images: ImageReader | undefined = loadedImages && css ? { readImage: (index, data, options) => loadedImages.readImage(index, data, options?.file ? { ...options, css } : options) } : loadedImages;
     this._res =
       ok.every(Boolean) && (images || !wantsImages)
         ? parseTransfer(text, { accept: this._kinds(), fileName, images })

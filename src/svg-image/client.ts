@@ -278,7 +278,7 @@ export async function getImage(id: string, ws: CallWS): Promise<(SavedImage & { 
   if (!('entry' in r)) return undefined;
   const { saved, template, viewBox, ids, stripped, bytes } = r.entry;
   const root = template.content.firstElementChild;
-  return { ...saved, sanitized: { markup: root ? serializeImage(root) : '', viewBox, ids, stripped, bytes } };
+  return { ...saved, sanitized: { markup: serializeImage(root), viewBox, ids, stripped, bytes } };
 }
 
 export function __resetImageClientForTests(): void {

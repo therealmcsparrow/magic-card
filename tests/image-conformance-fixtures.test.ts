@@ -6,6 +6,7 @@ import { __resetIconSourceForTests } from '../src/icons/icon-source';
 import { __resetImageEditorForTests } from '../src/svg-editor/image-loader';
 import type { McSvgEditor } from '../src/svg-editor/mc-svg-editor';
 import { sanitizeImage } from '../src/svg-image/sanitize';
+import { resolveCss } from '../src/svg-safety';
 
 /*
  * Real card output for the server's conformance test. Each input is opened in the image editor and saved (the
@@ -31,7 +32,7 @@ const svg = (inner: string): string => `<svg viewBox="0 0 400 300">${inner}</svg
 
 /** The drawing an opened .svg file gives after the sanitiser has resolved its styles (what the editor imports and saves). */
 const resolved = (file: string): string => {
-  const r = sanitizeImage(file, { file: true });
+  const r = sanitizeImage(file, { file: true, css: resolveCss });
   if (r.error) throw new Error(`fixture refused: ${r.error}`);
   return r.markup;
 };

@@ -14,6 +14,8 @@ import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
 import type { BooleanOp } from '../contracts/path-booleans';
 import { loadPathCanvas } from '../path-canvas/loader';
+import { loadSvgCss } from '../svg-safety/css-loader';
+import type { SvgCssResolve } from '../contracts/svg-safety';
 import { alignMoves, centreMove, distributeMoves, fitBox, itemsOf, matchMove, safeBox, union, type Item, type Move } from './arrange';
 import { boolNote, boolReason, boolState, operandsOf, withResult } from './combine';
 import { bind, E } from './bind';
@@ -252,6 +254,8 @@ export class McSvgEditor extends LitElement implements StageHost {
   gestures = new Gestures(this);
   private baseline = '';
   private started = false;
+  /** The CSS paint resolver, loaded in start() before any text the user brings in is read; undefined when it did not load. */
+  private css?: SvgCssResolve;
   private opener?: { el: HTMLElement; key?: string; root: Node };
   private dialogs: Array<[HTMLDialogElement, EventListener]> = [];
   private ro?: ResizeObserver;
@@ -317,7 +321,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.stage = 'loading';
     const src = this.source;
     const imageLoad = src.kind === 'image' || src.kind === 'image-blank' || src.kind === 'image-svg' ? loadImageEditor() : undefined;
-    const chunk = await loadPathCanvas();
+    // the resolver is for the SVG text a user brings in; an image source opens through the image editor, which loads its own
+    const [chunk, css] = await Promise.all([loadPathCanvas(), imageLoad ? undefined : loadSvgCss()]);
+    this.css = css;
     if (!chunk) {
       this.stage = 'fail';
       return;
@@ -428,8 +434,9 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
   }
 
-  openSvg(text: string, name: string, first = false): boolean {
-    const r = importSvg(text, name);
+  /** `stored`: the text is a saved library icon (already clean), so it is read without the CSS resolver. */
+  openSvg(text: string, name: string, first = false, stored = false): boolean {
+    const r = importSvg(text, name, stored ? undefined : this.css);
     if (r.error || !r.doc) {
       this.startError = this.errorText(r.error);
       this.startMode = this.startMode ?? 'paste';
@@ -459,7 +466,7 @@ export class McSvgEditor extends LitElement implements StageHost {
   async openLibrary(id: string): Promise<void> {
     try {
       const item = await getIcon(this.hass, id);
-      if (item && this.openSvg(item.svg, item.name, true)) {
+      if (item && this.openSvg(item.svg, item.name, true, true)) {
         this.saved = { item, svg: this.out.svg ?? '' };
         return;
       }

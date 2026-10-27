@@ -31,8 +31,10 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   (arrange, scanFills, layer CSS) are part of magic-card.js and draw from the first render, so a static
  *   backdrop or a layered module does not load this chunk; its ceiling is 24 KiB.
  * - Section "Editor-side chunks": chunk 'layer-editor' (magic-card-layer-editor.js, layer-editor 1.0.0),
- *   loaded by the editor chunk, and 'look-editor' (magic-card-look-editor.js, contract look-editor 1.0.0,
- *   loaded by src/editor/look-editor-loader.ts, its own loader, not in LazyChunkName).
+ *   loaded by the editor chunk, 'look-editor' (magic-card-look-editor.js, contract look-editor 1.0.0,
+ *   loaded by src/editor/look-editor-loader.ts, its own loader, not in LazyChunkName) and 'svg-css'
+ *   (magic-card-svg-css.js, the CSS paint resolver of svg-safety 1.2.0, loaded by src/svg-safety/css-loader.ts,
+ *   its own loader, only where a user opens or imports an SVG; no card render and no render chunk ever loads it).
  * - Needs table, config-walk, styles adoption, timeout, retry and failure notice (sections after "Tests"):
  *   the anim-runtime, particles and shape-custom loaders go through lazyChunk(). whenReady callbacks
  *   survive a failure. OnDemandChunkName and the notice element are described in sections "Failure, retry
@@ -61,7 +63,7 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   transfer view and the icon animator read through animLibrary().
  * - LazyChunkName includes 'svg-icon' (dist/magic-card-svg-icon.js, ceiling 65,536 B, chunk entry
  *   src/icons/chunk.ts). It holds the icon source (packs, the `mcu:` library client, own SVG),
- *   <mc-svg-icon> and the SVG sanitiser. Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`,
+ *   <mc-svg-icon> and the SVG sanitiser (without the CSS paint resolver). Its needs() is src/icons/needs.ts (`custom_icons`, `icon_fx`,
  *   `svg`, any icon reference that is not a plain MDI id). A plain icon never loads it: renderIcon keeps
  *   <ha-icon>, no request. RenderContext has the optional `metChunk(name)`: a render that meets a feature
  *   whose chunk is not ready (a predicate miss, backstop rule 3) tells the card, which then shows that
@@ -158,7 +160,8 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  * marked.setOptions at module top level, in the entry or in any file only the chunk contains. All of
  * that happens in install(). Reason: a cached magic-card.js of another release can still load a
  * chunk file next to it (the files of older releases stay on disk); evaluating it must be
- * harmless, and install() is never called on a mismatch.
+ * harmless, and install() is never called on a mismatch. The svg-css entry is the one chunk entry
+ * without install(): it defines nothing and fills no slot (section "Editor-side chunks").
  *
  * ── Rendering rules (registry wrapper around a LazyModuleStub) ──
  * 1. View provided: `view.renderPreview(config, hass)`, same output as before the split.
@@ -198,6 +201,27 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   layer-editor 1.0.0.
  * - 'look-editor' -> magic-card-look-editor.js, loader src/editor/look-editor-loader.ts. Contract
  *   look-editor 1.0.0. It keeps its own loader and is not in EditorLazyChunkName.
+ * - 'svg-css' -> SVG_CSS_CHUNK_FILE (magic-card-svg-css.js), ceiling SVG_CSS_CHUNK_CEILING, entry
+ *   src/svg-safety/css-chunk.ts (exports svg-safety SvgCssChunk: BUILD and resolveCss, no install()), loader
+ *   src/svg-safety/css-loader.ts `loadSvgCss(): Promise<SvgCssResolve | undefined>`. Contract svg-safety 1.2.0,
+ *   sections "Where the resolver runs", "Loading the resolver" and "Sink pairing". It keeps its own loader and is not
+ *   in EditorLazyChunkName: svg-safety imports nothing from src/utils, so the loader does not use lazyChunk() or
+ *   sameBuild(); it compares BUILD with the build define itself (the theme-presets pattern), races the import against
+ *   svg-safety SVG_CSS_LOAD_TIMEOUT_MS and never retries. Failure (rejection, timeout, other build) resolves
+ *   undefined with one console.warn; the caller then sanitises without the resolver (styles dropped, as before it
+ *   existed). No failure notice, no part name, no needs() row, no manifest lookup.
+ *   Who loads it: only the files in svg-safety SVG_CSS_OPEN_SITES (the SVG editor, the image editor, the studio's
+ *   Draw import and the transfer panel), each when a user opens or imports an SVG. Its parent chunks are the chunks
+ *   webpack places those files in (today svg-editor, image-editor, transfer and animation-studio); magic-card.js and
+ *   the card chunks (svg-icon, svg-image, anim, anim-runtime, particles and every LazyChunkName) are never its parent
+ *   and hold neither the loader nor the resolver.
+ *   Content: src/svg-safety/css.ts plus whatever of src/svg-safety/ only css.ts needs that not every parent already
+ *   holds; webpack leaves the rest to the parents. It has no import() of its own, so it is never a parent.
+ *   SVG sinks: the chunk holds no sink and no sanitiser, and its export takes a parsed Element and returns an outcome,
+ *   never markup, so it is never a path from user text to a sink. Its only caller is a sanitiser, between parse and
+ *   walk, in the same call that then walks and serialises; the sanitiser's walk and serialiser stay the one pairing
+ *   for every sink. tools/check-svg-sinks.mjs checks the chunk on the built graph (no sink, no sanitiser, no async
+ *   child, only src/svg-safety and src/contracts modules; absent from the card chunks above).
  *
  * ── Tests ──
  * `__setLazyImporterForTests(name, importer | undefined)` replaces one chunk import and forgets its
@@ -310,14 +334,15 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   longer an import() site. Editor side: the
  *   existing loaders (transfer, preset-catalogue, icon-animator, look-editor, layer-editor,
  *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
- *   i18n tables) are registered sites. path-canvas is reached from the svg-editor and shape-editor chunks, both
+ *   i18n tables) are registered sites, and so is src/svg-safety/css-loader.ts, the one import() of 'svg-css'.
+ *   path-canvas is reached from the svg-editor and shape-editor chunks, both
  *   through src/path-canvas/loader.ts. The ESLint rule (no-restricted-syntax
  *   ImportExpression with an override for the registered files) fails any other import(). Moving editor loaders onto
  *   lazyChunk() is debt.
  */
 
 export const LAZY_MODULE_CONTRACT = '1.7.0';
-export const LAZY_MODULE_CONTRACT_REVISION = 20;
+export const LAZY_MODULE_CONTRACT_REVISION = 21;
 
 /** webpackChunkName of each chunk; the file is dist/magic-card-<name>.js. */
 export type LazyChunkName = 'slider' | 'seasonal' | 'markdown' | 'modules-extra' | 'controls' | 'flows' | 'pause' | 'popup' | 'decor' | 'flow-look' | 'slider-look' | 'layers' | 'svg-icon' | 'anim' | 'templates';
@@ -405,6 +430,12 @@ export const EDITOR_LAZY_CHUNK_CEILINGS: Record<EditorLazyChunkName, number> = {
   /** Panels about 75 KB + layer-editor i18n tables (en-GB ids, en-US, nl) about 20 KB. */
   'layer-editor': 114_688,
 };
+
+/** The svg-css chunk (section "Editor-side chunks"): the CSS paint resolver, loaded only where an SVG is opened. */
+export const SVG_CSS_CHUNK = 'svg-css';
+export const SVG_CSS_CHUNK_FILE = 'magic-card-svg-css.js';
+/** Same meaning as LAZY_CHUNK_CEILINGS. The resolver (src/svg-safety/css.ts) is about 10 KiB minified. */
+export const SVG_CSS_CHUNK_CEILING = 16_384;
 
 /** What every chunk entry exports. */
 export interface LazyChunkModule {

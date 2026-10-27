@@ -8,7 +8,7 @@ import {
   type SanitizedImage,
   type SanitizeOptions,
 } from '../contracts/svg-image';
-import { resolveCss } from '../svg-safety/css';
+import type { SanitisedImageMarkup } from '../contracts/svg-reader';
 import { cleanImageValue } from '../svg-safety/image-values';
 import { parseLenient } from '../svg-safety/parse';
 import { IMAGE_POLICY } from '../svg-safety/policy-image';
@@ -22,7 +22,9 @@ import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values
  * inert text/html document) and the values go through the shared rules of src/svg-safety. Threats covered: script and
  * event execution, external loads through url() or href, entity and DOCTYPE tricks, CDATA and comments that hide markup,
  * CSS escapes inside style text, and resource exhaustion by size, nesting, node count or style amplification. Style
- * attributes and <style> rules are not kept: their paint declarations become plain attributes (src/svg-safety).
+ * attributes and <style> rules are not kept. When an editor opens a file it passes the CSS resolver (`css`, with
+ * `file: true`; src/svg-safety/css-loader.ts) and their paint declarations become plain attributes first; without it they
+ * are dropped and listed, and a CDATA section is refused. The markup this module returns is the only branded markup.
  */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -138,7 +140,7 @@ function inSvgNamespace(doc: Document, src: Element, depth: number): Element {
 }
 
 /** The root <svg> of a text, the names of elements the html parser moved out of it, and whether a <style> was lost there. */
-function parseDocument(text: string): { root: Element; moved: string[]; styleLost: boolean } | undefined {
+function parseDocument(text: string, resolving: boolean): { root: Element; moved: string[]; styleLost: boolean } | undefined {
   let parsed = parseLenient(text, (r) => r.namespaceURI === SVG_NS || r.namespaceURI === null);
   if (!parsed) return undefined;
   if (parsed.via === 'xml') {
@@ -159,7 +161,8 @@ function parseDocument(text: string): { root: Element; moved: string[]; styleLos
   for (let e = root.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(short(e.localName));
   // some html parsers drop a script or style (and what follows it) without a node; the text still tells
   if (SCRIPT_TAG_RE.test(text) && !moved.includes('script')) moved.push('script');
-  return { root, moved, styleLost: STYLE_TAG_RE.test(text) && !moved.includes('style') && !root.getElementsByTagName('style').length };
+  // a <style> the resolver reads and consumes is listed by it; without a resolver the walk drops it, so any <style> in the text is listed
+  return { root, moved, styleLost: STYLE_TAG_RE.test(text) && !moved.includes('style') && (!resolving || !root.getElementsByTagName('style').length) };
 }
 
 /**
@@ -171,11 +174,12 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   if (text0.length > IMAGE_MAX_BYTES) return { error: 'too_large', bytes: sizeOf(text0), stripped: [] };
   const bytes = sizeOf(text0);
   if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes, stripped: [] };
-  const text = options.file ? unwrapStyleCdata(stripProlog(text0)) : text0;
+  const resolving = !!options.file && !!options.css;
+  const text = options.file ? (resolving ? unwrapStyleCdata(stripProlog(text0)) : stripProlog(text0)) : text0;
   if (DENY_RE.test(text)) return { error: 'unsafe_markup', bytes, stripped: [] };
   let parsed: ReturnType<typeof parseDocument>;
   try {
-    parsed = text.trim() ? parseDocument(text) : undefined;
+    parsed = text.trim() ? parseDocument(text, resolving) : undefined;
   } catch (e) {
     if (e instanceof Refused) return { error: 'too_complex', bytes, stripped: [] };
     throw e;
@@ -192,9 +196,16 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
     if (stripped.size < MAX_STRIPPED) stripped.add(what);
   };
   if (parsed.styleLost) drop('style');
-  const resolved = resolveCss(root, IMAGE_POLICY);
-  if (resolved.status !== 'ok') return { error: 'too_complex', bytes, stripped: [...stripped] };
-  for (const name of resolved.dropped) drop(name);
+  if (resolving) {
+    let resolved: ReturnType<NonNullable<SanitizeOptions['css']>>;
+    try {
+      resolved = options.css!(root, IMAGE_POLICY);
+    } catch {
+      return { error: 'too_complex', bytes, stripped: [...stripped] };
+    }
+    if (resolved.status !== 'ok') return { error: 'too_complex', bytes, stripped: [...stripped] };
+    for (const name of resolved.dropped) drop(name);
+  }
   let nodes = 0;
   let drawable = false;
 
@@ -253,8 +264,11 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   return { root, viewBox, ids: [...ids], stripped: [...stripped], bytes };
 }
 
-/** A cleaned tree as markup: attributes and text escaped, the namespace on the root. */
-export function serializeImage(root: Element): string {
+const brand = (markup: string): SanitisedImageMarkup => markup as SanitisedImageMarkup;
+
+/** A cleaned tree as markup: attributes and text escaped, the namespace on the root. No tree gives empty markup. */
+export function serializeImage(root: Element | null): SanitisedImageMarkup {
+  if (!root) return brand('');
   const out: string[] = [];
   const emit = (el: Element, top: boolean): void => {
     out.push(`<${el.localName}`);
@@ -272,15 +286,15 @@ export function serializeImage(root: Element): string {
     out.push(`</${el.localName}>`);
   };
   emit(root, true);
-  return out.join('');
+  return brand(out.join(''));
 }
 
 /** Sanitises a drawing to markup. The result of a refused or empty text has no markup. */
 export function sanitizeImage(markup: string, options: SanitizeOptions = {}): SanitizedImage {
   const r = parseImage(markup, options);
-  if ('error' in r) return { markup: '', viewBox: '', ids: [], stripped: r.stripped, error: r.error, bytes: r.bytes };
+  if ('error' in r) return { markup: serializeImage(null), viewBox: '', ids: [], stripped: r.stripped, error: r.error, bytes: r.bytes };
   const out = serializeImage(r.root);
-  if (sizeOf(out) > IMAGE_MAX_BYTES) return { markup: '', viewBox: '', ids: [], stripped: r.stripped, error: 'too_large', bytes: sizeOf(out) };
+  if (sizeOf(out) > IMAGE_MAX_BYTES) return { markup: serializeImage(null), viewBox: '', ids: [], stripped: r.stripped, error: 'too_large', bytes: sizeOf(out) };
   return { markup: out, viewBox: r.viewBox, ids: r.ids, stripped: r.stripped, bytes: r.bytes };
 }
 

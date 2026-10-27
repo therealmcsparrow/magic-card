@@ -9,7 +9,7 @@
  * Anything unresolvable gives `undefined`: the caller keeps rendering `<ha-icon>` (never blank).
  */
 
-import { sanitizeSvg, SanitizedSvg, StrokeShape, TOO_COMPLEX } from './svg-sanitize';
+import { sanitizeSvg, SanitizedSvg, StrokeShape, svgFailure, TOO_COMPLEX } from './svg-sanitize';
 
 export type { StrokeShape };
 
@@ -157,7 +157,7 @@ function sanitize(svgText: string): SanitizedSvg {
     return sanitizeSvg(svgText);
   } catch {
     // Anything the parser / walk can't handle (stack, odd DOM): rejected once, cached like any error.
-    return { markup: '', viewBox: '0 0 24 24', paths: [], accentPaths: [], strokes: [], error: TOO_COMPLEX };
+    return svgFailure(TOO_COMPLEX);
   }
 }
 

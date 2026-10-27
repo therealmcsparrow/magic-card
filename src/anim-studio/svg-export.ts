@@ -1,4 +1,5 @@
 import { multiply, parseTransform, shapePath, type Matrix } from '../icons/svg-geometry';
+import type { SvgCssResolve } from '../contracts/svg-safety';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_CAPS, safeCssValue, type AnimationDoc } from './model';
 import { PART_ID_RE, V2_CAPS, type Rig, type RigShape } from './model-v2';
@@ -190,8 +191,9 @@ function importPaint(v: string | undefined): string | undefined {
  * centred). Ids: the element's own when it is a valid, free part id, else `shape-<n>`. `taken`:
  * ids already in the rig; `room`: how many shapes still fit.
  */
-export function importSvgFile(text: string, viewBox: string, taken: string[] = [], room: number = V2_CAPS.shapes): RigShape[] | { error: string } {
-  const r = sanitizeSvg(text);
+/** `css`: the CSS paint resolver of an open site, passed on to the sanitiser and used by nothing else. */
+export function importSvgFile(text: string, viewBox: string, taken: string[] = [], room: number = V2_CAPS.shapes, css?: SvgCssResolve): RigShape[] | { error: string } {
+  const r = sanitizeSvg(text, { css });
   if (r.error) return { error: r.error };
   const root = parseMarkup(r.markup);
   if (!root) return { error: 'No <svg> element found.' };
@@ -265,8 +267,8 @@ export function importSvgFile(text: string, viewBox: string, taken: string[] = [
  * the old one (`fromViewBox`, default the rig's), everything kept is rescaled into it: shape paths and
  * stroke widths, own-geometry parts (wrapped in a transform), pivots, and track motion paths.
  */
-export function rigFromSvgIcon(doc: AnimationDoc, text: string, fromViewBox?: string): AnimationDoc | { error: string } {
-  const r = sanitizeSvg(text);
+export function rigFromSvgIcon(doc: AnimationDoc, text: string, fromViewBox?: string, css?: SvgCssResolve): AnimationDoc | { error: string } {
+  const r = sanitizeSvg(text, { css });
   if (r.error) return { error: r.error };
   const old = doc.rig ?? { parts: [] };
   const from = parseViewBox(fromViewBox ?? rigViewBox(old)).join(' ');

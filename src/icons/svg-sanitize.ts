@@ -1,10 +1,9 @@
-import { resolveCss } from '../svg-safety/css';
+import type { SanitisedIconMarkup } from '../contracts/svg-reader';
+import type { SvgCssOption } from '../contracts/svg-safety';
 import { parseLenient } from '../svg-safety/parse';
 import { ICON_MAX_BYTES, ICON_MAX_DEPTH, ICON_POLICY } from '../svg-safety/policy-icon';
 import { byteLength, cleanIconValue, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 import { fmt, multiply, num, parseTransform, shapePath, transformPath, type Matrix } from './svg-geometry';
-
-export { multiply, parseTransform, shapePath, type Matrix } from './svg-geometry';
 
 /*
  * Own SVG icons: user markup reduced to an allowlist of drawing elements and attributes, plus the shapes as path data for
@@ -13,7 +12,8 @@ export { multiply, parseTransform, shapePath, type Matrix } from './svg-geometry
  * foreignObject, event handlers, links / `href`, animation elements or external url(). Styles are not kept as CSS: the
  * paint declarations of style attributes and <style> rules (fill, stroke, stop-color, the opacities and the stroke and
  * rule properties) become plain presentation attributes, a gradient's href gives it the stops it inherits, and every
- * other style part is dropped. Threats covered: script and event execution, external loads through url() or href, CSS
+ * other style part is dropped. That resolution runs only when the caller passes the resolver as `css` (an editor opening a
+ * file; src/svg-safety/css-loader.ts); without it style attributes and <style> rules are dropped. Threats covered: script and event execution, external loads through url() or href, CSS
  * escapes and comments that hide a token, and resource exhaustion by size, nesting or style amplification.
  */
 
@@ -28,8 +28,8 @@ export interface StrokeShape {
 }
 
 export interface SanitizedSvg {
-  /** The cleaned `<svg viewBox>…</svg>` (no xmlns); empty on error. */
-  markup: string;
+  /** The cleaned `<svg viewBox>…</svg>` (no xmlns); empty on error. Branded here, in the sanitiser, and nowhere else. */
+  markup: SanitisedIconMarkup;
   viewBox: string;
   /** Filled shapes as path data (transforms applied), without the accent ones. */
   paths: string[];
@@ -81,7 +81,10 @@ function viewBoxOf(root: Element): string {
 }
 
 export const TOO_COMPLEX = 'The SVG is too complex.';
-const fail = (error: string): SanitizedSvg => ({ markup: '', viewBox: DEFAULT_VIEWBOX, paths: [], accentPaths: [], strokes: [], error });
+const brand = (markup: string): SanitisedIconMarkup => markup as SanitisedIconMarkup;
+
+/** The result of a refused SVG: no markup, no shapes and the reason. */
+export const svgFailure = (error: string): SanitizedSvg => ({ markup: brand(''), viewBox: DEFAULT_VIEWBOX, paths: [], accentPaths: [], strokes: [], error });
 
 /** Paint state inherited down the tree (presentation attributes; SVG defaults: filled, no stroke). */
 interface Paint {
@@ -116,14 +119,20 @@ function paintOf(el: Element, parent: Paint): Paint {
   };
 }
 
-export function sanitizeSvg(input: string): SanitizedSvg {
+export function sanitizeSvg(input: string, options: SvgCssOption = {}): SanitizedSvg {
   const text = typeof input === 'string' ? input : '';
-  if (byteLength(text) > SVG_MAX_BYTES) return fail('The SVG is larger than 32 KB.');
+  if (byteLength(text) > SVG_MAX_BYTES) return svgFailure('The SVG is larger than 32 KB.');
   const root = parseLenient(text)?.root;
-  if (!root) return fail('No <svg> element found.');
+  if (!root) return svgFailure('No <svg> element found.');
 
   const viewBox = viewBoxOf(root);
-  if (resolveCss(root, ICON_POLICY).status !== 'ok') return fail(TOO_COMPLEX);
+  if (options.css) {
+    try {
+      if (options.css(root, ICON_POLICY).status !== 'ok') return svgFailure(TOO_COMPLEX);
+    } catch {
+      return svgFailure(TOO_COMPLEX);
+    }
+  }
   const paths: string[] = [];
   const accentPaths: string[] = [];
   const strokes: StrokeShape[] = [];
@@ -188,7 +197,7 @@ export function sanitizeSvg(input: string): SanitizedSvg {
   const rootMatrix = parseTransform(safeValue('transform', root.getAttribute('transform') ?? '') ?? null);
   const rootPaint = paintOf(root, ROOT_PAINT);
   const inner = [...root.children].map((c) => walk(c, rootMatrix, true, false, rootPaint, 1)).join('');
-  if (tooDeep) return fail(TOO_COMPLEX);
-  if (!paths.length && !accentPaths.length && !strokes.length) return fail('The SVG has no shapes to draw.');
-  return { markup: `<svg viewBox="${viewBox}"${attrs(root, true)}>${inner}</svg>`, viewBox, paths, accentPaths, strokes, ...(eo.paths || eo.accent ? { evenodd: eo } : {}) };
+  if (tooDeep) return svgFailure(TOO_COMPLEX);
+  if (!paths.length && !accentPaths.length && !strokes.length) return svgFailure('The SVG has no shapes to draw.');
+  return { markup: brand(`<svg viewBox="${viewBox}"${attrs(root, true)}>${inner}</svg>`), viewBox, paths, accentPaths, strokes, ...(eo.paths || eo.accent ? { evenodd: eo } : {}) };
 }

@@ -16,10 +16,18 @@
 //   2. no chunk holds the sanitiser only in a sibling: that is the same test, it fails by 1;
 //   3. the svg-icon chunk exists, holds mc-svg-icon.ts and icon-source.ts, and the entry (magic-card.js) holds neither;
 //   4. the entry holds no module of src/svg-image/, and only the svg-image chunk holds the image sanitiser;
-//   5. every chunk that holds a src/svg-safety module also holds a sanitiser.
+//   5. every chunk that holds a src/svg-safety module also holds a sanitiser, except the svg-css chunk and a chunk whose
+//      only src/svg-safety module is css-loader.ts;
+//   6. the svg-css chunk (the CSS paint resolver) holds no sink, no sanitiser, no parse.ts, no async child and only
+//      src/svg-safety and src/contracts modules; css.ts and css-chunk.ts sit in no other chunk; magic-card.js and the
+//      svg-icon, svg-image, anim, anim-runtime and particles chunks hold neither css.ts nor css-loader.ts; when a chunk
+//      holds css-loader.ts the build has an svg-css chunk that holds css.ts and css-chunk.ts.
 // The sources are checked for the svg-safety boundary: src/svg-safety/** is value-imported (import, bare import, export …
-// from, import()) only by the two sanitisers and by itself; it value-imports only itself and src/contracts/**, and is
-// never an SVG sink; a cast to a Sanitised…Markup brand is made in the two sanitisers only.
+// from, import()) only by the two sanitisers and by itself, except css-loader.ts, which the files of SVG_CSS_OPEN_SITES
+// (src/contracts/svg-safety.ts) may also value-import and which is all they may take from there; the sanitisers import
+// neither css.ts nor css-loader.ts; css.ts is value-imported only by css-chunk.ts and index.ts, css-chunk.ts only by
+// css-loader.ts; nothing outside src/svg-safety/ value-imports its index.ts; src/svg-safety value-imports only itself and
+// src/contracts/** and is never an SVG sink; a cast to a Sanitised…Markup brand is made in the two sanitisers only.
 //
 // Usage: node tools/check-svg-sinks.mjs [--strict] [stats.json]    check the last production build
 //        node tools/check-svg-sinks.mjs --self-test                the rule against synthetic graphs
@@ -38,6 +46,17 @@ const IMAGE_DIR = './src/svg-image/';
 const ENTRY = 'magic-card.js';
 
 const CONTRACT_REL = 'src/contracts/lazy-module.ts';
+const SAFETY_CONTRACT_REL = 'src/contracts/svg-safety.ts';
+
+/** The files that may call loadSvgCss, read from SVG_CSS_OPEN_SITES in the svg-safety contract (as './src/...' module ids). */
+export const openSites = (file = path.join(root, SAFETY_CONTRACT_REL)) => parseOpenSites(readFileSync(file, 'utf8'), file);
+
+export const parseOpenSites = (text, file = SAFETY_CONTRACT_REL) => {
+  const block = /^export const SVG_CSS_OPEN_SITES\b[^=]*=\s*\[([^\]]*)\]/m.exec(text);
+  const sites = block ? [...block[1].matchAll(/'(src\/[^']+\.ts)'/g)].map((m) => `./${m[1]}`) : [];
+  if (!sites.length) throw new Error(`no SVG_CSS_OPEN_SITES in ${file}`);
+  return sites;
+};
 
 /** File names of the shared chunks, read from LAZY_SHARED_CHUNK_FILES in the lazy-module contract. */
 export const sharedChunkFiles = (file = path.join(root, CONTRACT_REL)) => parseSharedChunkFiles(readFileSync(file, 'utf8'), file);
@@ -148,14 +167,23 @@ export const valueImports = (text, module = './src/x.ts') =>
 export const SAFETY_DIR = './src/svg-safety';
 const CONTRACTS_DIR = './src/contracts/';
 const inSafety = (m) => m === SAFETY_DIR || m.startsWith(`${SAFETY_DIR}/`);
+/** A resolved specifier or built module id as a module path without extension (the folder is its index). */
+const bare = (m) => (m === SAFETY_DIR ? `${SAFETY_DIR}/index` : m.replace(/\.ts$/, ''));
+export const SVG_CSS_LOADER = `${SAFETY_DIR}/css-loader.ts`;
+export const SVG_CSS_RESOLVER = `${SAFETY_DIR}/css.ts`;
+export const SVG_CSS_ENTRY = `${SAFETY_DIR}/css-chunk.ts`;
+const SAFETY_INDEX = `${SAFETY_DIR}/index.ts`;
+const CARD_CHUNK_NAMES = ['svg-icon', 'svg-image', 'anim', 'anim-runtime', 'particles'];
 const BRAND_CAST_RE = /\bas\s+Sanitised(?:Icon|Image)?Markup\b|<\s*Sanitised(?:Icon|Image)?Markup\s*>\s*[\w(]/;
 
 /**
  * Problems with who may use src/svg-safety, from { module, text } source pairs: only the two sanitisers and other
- * svg-safety modules value-import it; svg-safety value-imports only itself and src/contracts and is never an SVG sink;
- * a cast to a Sanitised…Markup brand is made in the sanitisers only.
+ * svg-safety modules value-import it, the sanitisers never css.ts, css-loader.ts or index.ts; css-loader.ts alone is also
+ * open to the `sites` (SVG_CSS_OPEN_SITES); css.ts is imported by css-chunk.ts and index.ts only, css-chunk.ts by
+ * css-loader.ts only; svg-safety value-imports only itself and src/contracts and is never an SVG sink; a cast to a
+ * Sanitised…Markup brand is made in the sanitisers only.
  */
-export const boundaryProblems = (modules) => {
+export const boundaryProblems = (modules, sites = openSites()) => {
   const problems = [];
   for (const { module, text } of modules) {
     const code = stripComments(text);
@@ -166,8 +194,19 @@ export const boundaryProblems = (modules) => {
         if (!inSafety(resolved[i]) && !resolved[i].startsWith(CONTRACTS_DIR)) problems.push(`${module} value-imports '${spec}': src/svg-safety may import only itself and src/contracts`);
       });
       if (/lit\/directives\/unsafe-svg|\bunsafeSVG\s*\(/.test(code) || makesSvgBlob(code)) problems.push(`${module} is an SVG sink: src/svg-safety must never be one`);
-    } else if (!SANITIZERS.includes(module)) {
-      for (const target of resolved) if (inSafety(target)) problems.push(`${module} value-imports ${target}: only the two SVG sanitisers may`);
+      for (const target of resolved.map(bare)) {
+        if (target === bare(SVG_CSS_RESOLVER) && module !== SVG_CSS_ENTRY && module !== SAFETY_INDEX) problems.push(`${module} value-imports ${target}: only css-chunk.ts and index.ts may`);
+        if (target === bare(SVG_CSS_ENTRY) && module !== SVG_CSS_LOADER) problems.push(`${module} value-imports ${target}: only css-loader.ts may (through its import())`);
+      }
+    } else if (SANITIZERS.includes(module)) {
+      for (const target of resolved.filter(inSafety).map(bare)) {
+        if (target === bare(SVG_CSS_RESOLVER) || target === bare(SVG_CSS_LOADER) || target === bare(SVG_CSS_ENTRY) || target === bare(SAFETY_INDEX)) problems.push(`${module} value-imports ${target}: a sanitiser takes the resolver as its css option and imports none of css.ts, css-loader.ts, css-chunk.ts and index.ts`);
+      }
+    } else {
+      for (const target of resolved.filter(inSafety)) {
+        if (bare(target) === bare(SVG_CSS_LOADER) && sites.includes(module)) continue;
+        problems.push(`${module} value-imports ${target}: ${sites.includes(module) ? 'an open site may take only css-loader.ts from src/svg-safety' : bare(target) === bare(SVG_CSS_LOADER) ? 'only the files of SVG_CSS_OPEN_SITES may' : 'only the two SVG sanitisers may'}`);
+      }
     }
     if (!SANITIZERS.includes(module) && BRAND_CAST_RE.test(code)) problems.push(`${module} casts to a Sanitised…Markup brand: only the two SVG sanitisers may`);
   }
@@ -268,6 +307,33 @@ const label = (c) => (c.files ?? []).find((f) => f.endsWith('.js')) ?? (c.names 
 /** A sink as { module, sanitiser }; a bare module name is paired with the icon sanitiser. */
 const asSink = (s) => (typeof s === 'string' ? { module: s, sanitiser: SANITIZER } : { module: s.module, sanitiser: s.sanitiser ?? SANITIZER });
 
+const isCssChunk = (c) => (c.names ?? []).includes('svg-css');
+
+/** Problems with the svg-css chunk (the CSS paint resolver) and with who holds its modules, from the built graph. */
+export const cssChunkProblems = (chunks, pairs) => {
+  const problems = [];
+  const holds = (c, m) => (c.modules ?? []).includes(m);
+  const sinkModules = new Set(pairs.map((s) => s.module));
+  for (const c of chunks.filter(isCssChunk)) {
+    for (const m of c.modules ?? []) {
+      if (SANITIZERS.includes(m)) problems.push(`${label(c)} holds the sanitiser ${m}: the resolver chunk holds no sanitiser`);
+      else if (sinkModules.has(m)) problems.push(`${label(c)} holds the SVG sink ${m}: the resolver chunk holds none`);
+      else if (m === `${SAFETY_DIR}/parse.ts`) problems.push(`${label(c)} holds ${m}: the resolver chunk holds no DOMParser call`);
+      else if (!inSafety(m) && !m.startsWith(CONTRACTS_DIR)) problems.push(`${label(c)} holds ${m}: the resolver chunk holds only src/svg-safety and src/contracts modules`);
+    }
+    const child = chunks.find((o) => (o.parents ?? []).includes(c.id));
+    if (child) problems.push(`${label(c)} is the parent of ${label(child)}: the resolver chunk has no async child`);
+    if (!holds(c, SVG_CSS_RESOLVER) || !holds(c, SVG_CSS_ENTRY)) problems.push(`${label(c)} does not hold both css.ts and css-chunk.ts`);
+  }
+  for (const c of chunks.filter((x) => !isCssChunk(x))) {
+    for (const m of [SVG_CSS_RESOLVER, SVG_CSS_ENTRY]) if (holds(c, m)) problems.push(`${label(c)} holds ${m}: only the svg-css chunk may`);
+    const card = c.entry ? (c.files ?? []).includes(ENTRY) : (c.names ?? []).some((n) => CARD_CHUNK_NAMES.includes(n));
+    if (card && holds(c, SVG_CSS_LOADER)) problems.push(`${label(c)} holds ${SVG_CSS_LOADER}: the card and its render chunks never load the resolver`);
+  }
+  if (chunks.some((c) => holds(c, SVG_CSS_LOADER)) && !chunks.some(isCssChunk)) problems.push('a chunk holds css-loader.ts but the build has no svg-css chunk');
+  return problems;
+};
+
 /** Returns { problems, notes }. `sinks`: module names or { module, sanitiser }; `strict`: the sanitiser must sit in the sink's own chunk. */
 export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFiles(), modules, read }) => {
   const problems = sharedChunkProblems({ chunks, shared, ...(modules ? { modules } : {}), ...(read ? { read } : {}) });
@@ -302,8 +368,10 @@ export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFi
   if (inEntry.length) problems.push(`${ENTRY} holds ${inEntry[0]}${inEntry.length > 1 ? ` and ${inEntry.length - 1} more` : ''} (library images belong in the svg-image chunk)`);
   for (const c of chunks) {
     const safety = (c.modules ?? []).filter(inSafety);
+    if (isCssChunk(c) || (safety.length && safety.every((m) => m === SVG_CSS_LOADER))) continue;
     if (safety.length && !SANITIZERS.some((san) => (c.modules ?? []).includes(san))) problems.push(`${label(c)} holds ${safety[0]}${safety.length > 1 ? ` and ${safety.length - 1} more` : ''} without an SVG sanitiser (src/svg-safety belongs in the chunks of the sanitisers)`);
   }
+  problems.push(...cssChunkProblems(chunks, pairs));
   for (const c of chunks) {
     if ((c.modules ?? []).includes(IMAGE_SANITIZER) && !(c.names ?? []).includes('svg-image')) problems.push(`${label(c)} holds ${IMAGE_SANITIZER}; only the svg-image chunk may (editors reach it through its api)`);
   }
@@ -438,10 +506,41 @@ const selfTest = () => {
   }
   // the svg-safety boundary in the sources
   const SAN = 'src/icons/svg-sanitize.ts';
+  const SITES = ['./src/svg-editor/mc-svg-editor.ts', './src/image-editor/chunk.ts', './src/anim-studio/editors/draw-svg-dialog.ts', './src/transfer/panel.ts'];
   const mod = (module, text) => ({ module: `./${module}`, text });
   const boundary = [
-    ['a sanitiser may value-import svg-safety', [mod(SAN, "import { cleanValue } from '../svg-safety';")], 0],
-    ['the image sanitiser may value-import svg-safety', [mod('src/svg-image/sanitize.ts', "import { cleanValue } from '../svg-safety';")], 0],
+    ['a sanitiser may value-import svg-safety', [mod(SAN, "import { cleanValue } from '../svg-safety/clean';")], 0],
+    ['the image sanitiser may value-import svg-safety', [mod('src/svg-image/sanitize.ts', "import { cleanValue } from '../svg-safety/clean';")], 0],
+    ['a sanitiser importing the resolver fails', [mod(SAN, "import { resolveCss } from '../svg-safety/css';")], 1],
+    ['the image sanitiser importing the resolver fails', [mod('src/svg-image/sanitize.ts', 'import { resolveCss } from "../svg-safety/css";')], 1],
+    ['a sanitiser importing the loader fails', [mod(SAN, "import { loadSvgCss } from '../svg-safety/css-loader';")], 1],
+    ['a sanitiser importing the chunk entry fails', [mod(SAN, "const c = import('../svg-safety/css-chunk');")], 1],
+    ['a sanitiser importing the index fails', [mod(SAN, "import { resolveCss } from '../svg-safety';")], 1],
+    ['a sanitiser re-exporting the resolver fails', [mod('src/svg-image/sanitize.ts', "export { resolveCss } from '../svg-safety/css';")], 1],
+    ['a sanitiser importing a type of the resolver is free', [mod(SAN, "import type { SvgCssResolve } from '../contracts/svg-safety';")], 0],
+    ['an open site value-importing the loader passes', [mod('src/svg-editor/mc-svg-editor.ts', "import { loadSvgCss } from '../svg-safety/css-loader';")], 0],
+    ['each open site may import the loader', SITES.map((s) => mod(s.slice(2), "import { loadSvgCss } from '../svg-safety/css-loader';")), 0],
+    ['an open site with a double-quoted loader import passes', [mod('src/transfer/panel.ts', 'import { loadSvgCss } from "../svg-safety/css-loader";')], 0],
+    ['an open site taking the resolver fails', [mod('src/transfer/panel.ts', "import { resolveCss } from '../svg-safety/css';")], 1],
+    ['an open site taking the index fails', [mod('src/image-editor/chunk.ts', "import { resolveCss } from '../svg-safety';")], 1],
+    ['an open site taking a value rule fails', [mod('src/image-editor/chunk.ts', "import { cleanValue } from '../svg-safety/clean';")], 1],
+    ['an open site re-exporting the loader passes', [mod('src/image-editor/chunk.ts', "export { loadSvgCss } from '../svg-safety/css-loader';")], 0],
+    ['an open site with a dynamic import of the loader passes', [mod('src/image-editor/chunk.ts', "const l = import('../svg-safety/css-loader');")], 0],
+    ['an open site with a bare import of the resolver fails', [mod('src/image-editor/chunk.ts', "import '../svg-safety/css';")], 1],
+    ['an open site with a type import of svg-safety is free', [mod('src/image-editor/chunk.ts', "import type { SvgPolicy } from '../svg-safety';")], 0],
+    ['a module that is no open site importing the loader fails', [mod('src/svg-editor/layers.ts', "import { loadSvgCss } from '../svg-safety/css-loader';")], 1],
+    ['a card module importing the loader fails', [mod('src/icons/mc-svg-icon.ts', "import { loadSvgCss } from '../svg-safety/css-loader';")], 1],
+    ['a dynamic import of the loader outside the sites fails', [mod('src/icons/a.ts', "const l = import('../svg-safety/css-loader');")], 1],
+    ['an export-from of the loader outside the sites fails', [mod('src/icons/a.ts', "export * from '../svg-safety/css-loader';")], 1],
+    ['a type import of the loader is free', [mod('src/icons/a.ts', "import type { LoadSvgCss } from '../svg-safety/css-loader';")], 0],
+    ['the loader may import the contracts and its own chunk entry', [mod('src/svg-safety/css-loader.ts', "import { SVG_CSS_LOAD_TIMEOUT_MS } from '../contracts/svg-safety';\nconst c = import(/* webpackChunkName: \"svg-css\" */ './css-chunk');")], 0],
+    ['the chunk entry may import the resolver', [mod('src/svg-safety/css-chunk.ts', "import { resolveCss } from './css';")], 0],
+    ['the index may import the resolver', [mod('src/svg-safety/index.ts', "export { resolveCss } from './css';")], 0],
+    ['another svg-safety module importing the resolver fails', [mod('src/svg-safety/values.ts', "import { resolveCss } from './css';")], 1],
+    ['another svg-safety module importing the chunk entry fails', [mod('src/svg-safety/values.ts', "import { BUILD } from './css-chunk';")], 1],
+    ['the loader importing the resolver fails', [mod('src/svg-safety/css-loader.ts', "import { resolveCss } from './css';")], 1],
+    ['the loader importing another feature fails', [mod('src/svg-safety/css-loader.ts', "import { t } from '../utils/lazy-chunk';")], 1],
+    ['a type import of the resolver is free', [mod('src/svg-safety/values.ts', "import type { SvgCssOutcome } from './css';")], 0],
     ['any other module value-importing svg-safety fails', [mod('src/icons/mc-svg-icon.ts', "import { cleanValue } from '../svg-safety';")], 1],
     ['a re-export from svg-safety fails', [mod('src/icons/a.ts', "export { cleanValue } from '../svg-safety/values';")], 1],
     ['a bare import of svg-safety fails', [mod('src/icons/a.ts', "import '../svg-safety/values';")], 1],
@@ -461,18 +560,53 @@ const selfTest = () => {
     ['a brand cast in a sanitiser is free', [mod(SAN, 'const m = text as SanitisedIconMarkup;')], 0],
     ['a brand cast in a comment is free', [mod('src/svg-io/read.ts', '// text as SanitisedIconMarkup')], 0],
   ];
+  const read = [
+    ['the open sites are read from the contract text', JSON.stringify(parseOpenSites("export const SVG_CSS_OPEN_SITES: readonly string[] = [\n  'src/a/b.ts',\n  'src/c/d.ts',\n];\nexport const X = ['src/e.ts'];")) === JSON.stringify(['./src/a/b.ts', './src/c/d.ts'])],
+    ['the real contract lists the four open sites', JSON.stringify(openSites()) === JSON.stringify(SITES)],
+  ];
+  for (const [name, ok] of read) {
+    if (!ok) {
+      bad++;
+      console.error(`self-test FAIL: ${name}`);
+    }
+  }
   for (const [name, modules, want] of boundary) {
-    const got = boundaryProblems(modules).length;
+    const got = boundaryProblems(modules, SITES).length;
     if (got !== want) {
       bad++;
       console.error(`self-test FAIL: ${name} (expected ${want} problems, got ${got})`);
     }
   }
   // the built graph: a chunk with a svg-safety module holds a sanitiser
+  const LOADER = './src/svg-safety/css-loader.ts';
+  const CSS = './src/svg-safety/css.ts';
+  const CHUNK = './src/svg-safety/css-chunk.ts';
+  const cssChunk = { id: 20, parents: [12, 13], files: ['magic-card-svg-css.js'], names: ['svg-css'], modules: [CSS, CHUNK, './src/svg-safety/values.ts'] };
+  const openChunk = { id: 13, parents: [0], files: ['magic-card-image-editor.js'], names: ['image-editor'], modules: ['./src/image-editor/chunk.ts', LOADER] };
   const rules = [
-    ['a chunk with svg-safety and the icon sanitiser passes', { chunks: [entry, { ...icon, modules: [...icon.modules, './src/svg-safety/css.ts'] }, particles], sinks }, 0],
-    ['a chunk with svg-safety and the image sanitiser passes', { chunks: [entry, icon, particles, { ...imageChunk, modules: [...imageChunk.modules, './src/svg-safety/css.ts'] }], sinks: [...sinks, imageSink] }, 0],
-    ['a chunk with svg-safety and no sanitiser fails', { chunks: [entry, icon, particles, { id: 11, parents: [0], files: ['magic-card-x.js'], names: ['x'], modules: ['./src/svg-safety/css.ts'] }], sinks }, 1],
+    ['a chunk with svg-safety and the icon sanitiser passes', { chunks: [entry, { ...icon, modules: [...icon.modules, './src/svg-safety/values.ts'] }, particles], sinks }, 0],
+    ['a chunk with svg-safety and the image sanitiser passes', { chunks: [entry, icon, particles, { ...imageChunk, modules: [...imageChunk.modules, './src/svg-safety/values.ts'] }], sinks: [...sinks, imageSink] }, 0],
+    ['a chunk with svg-safety and no sanitiser fails', { chunks: [entry, icon, particles, { id: 11, parents: [0], files: ['magic-card-x.js'], names: ['x'], modules: ['./src/svg-safety/values.ts'] }], sinks }, 1],
+    ['a chunk whose only svg-safety module is the loader passes', { chunks: [entry, icon, particles, cssChunk, { id: 12, parents: [0], files: ['magic-card-svg-editor.js'], names: ['svg-editor'], modules: ['./src/svg-editor/x.ts', LOADER] }], sinks }, 0],
+    ['a chunk with the loader and another svg-safety module but no sanitiser fails', { chunks: [entry, icon, particles, cssChunk, { id: 12, parents: [0], files: ['magic-card-svg-editor.js'], names: ['svg-editor'], modules: [LOADER, './src/svg-safety/values.ts'] }], sinks }, 1],
+    ['a chunk with the loader and a sanitiser passes', { chunks: [entry, icon, particles, cssChunk, { id: 12, parents: [0], files: ['magic-card-animation-studio.js'], names: ['animation-studio'], modules: [LOADER, './src/svg-safety/values.ts', S] }], sinks }, 0],
+    ['the svg-css chunk with the resolver, the entry and values passes', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, './src/svg-safety/values.ts', './src/contracts/svg-safety.ts'] }, openChunk], sinks }, 0],
+    ['the svg-css chunk holding a sanitiser fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, S] }, openChunk], sinks }, 1],
+    ['the svg-css chunk holding the image sanitiser fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, IS] }, openChunk], sinks }, 2],
+    ['the svg-css chunk holding a sink fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, './src/particles/svg.ts'] }, openChunk], sinks }, 2],
+    ['the svg-css chunk holding parse.ts fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, './src/svg-safety/parse.ts'] }, openChunk], sinks }, 1],
+    ['the svg-css chunk holding a module of another folder fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CSS, CHUNK, './src/utils/x.ts'] }, openChunk], sinks }, 1],
+    ['the svg-css chunk with an async child fails', { chunks: [entry, icon, particles, cssChunk, openChunk, { id: 14, parents: [20], files: ['magic-card-y.js'], names: ['y'], modules: [] }], sinks }, 1],
+    ['the svg-css chunk without the resolver fails', { chunks: [entry, icon, particles, { ...cssChunk, modules: [CHUNK] }, openChunk], sinks }, 1],
+    ['the resolver in a render chunk fails', { chunks: [entry, { ...icon, modules: [...icon.modules, CSS] }, particles, cssChunk, openChunk], sinks }, 1],
+    ['the resolver in the entry fails', { chunks: [{ ...entry, modules: ['./src/index.ts', CSS] }, icon, particles, cssChunk, openChunk], sinks }, 2],
+    ['the resolver in an editor chunk fails', { chunks: [entry, icon, particles, cssChunk, { ...openChunk, modules: [...openChunk.modules, CSS] }], sinks }, 2],
+    ['the chunk entry in an editor chunk fails', { chunks: [entry, icon, particles, cssChunk, { ...openChunk, modules: [...openChunk.modules, CHUNK] }], sinks }, 2],
+    ['the loader in the entry fails', { chunks: [{ ...entry, modules: ['./src/index.ts', LOADER] }, icon, particles, cssChunk, openChunk], sinks }, 1],
+    ['the loader in the svg-icon chunk fails', { chunks: [entry, { ...icon, modules: [...icon.modules, LOADER] }, particles, cssChunk, openChunk], sinks }, 1],
+    ['the loader in the anim-runtime chunk fails', { chunks: [entry, icon, particles, { id: 15, parents: [0], files: ['magic-card-anim-runtime.js'], names: ['anim-runtime'], modules: [LOADER] }, cssChunk, openChunk], sinks }, 1],
+    ['a loader without an svg-css chunk fails', { chunks: [entry, icon, particles, openChunk], sinks }, 1],
+    ['a build without the loader and without the chunk passes', { chunks: [entry, icon, particles], sinks }, 0],
     ['svg-safety in the entry without a sanitiser fails', { chunks: [{ ...entry, modules: ['./src/index.ts', './src/svg-safety/values.ts'] }, icon, particles], sinks }, 1],
   ];
   for (const [name, input, want] of rules) {
