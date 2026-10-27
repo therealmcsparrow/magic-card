@@ -40,10 +40,10 @@
       },
       {
         "id": "stage-4",
-        "cap": 84741,
+        "cap": 85000,
         "target": 61440,
         "landed_commit": "774abb6",
-        "measured": 84711
+        "measured": 84754
       }
     ],
     "br": {
@@ -109,9 +109,9 @@
       "note": "Path canvas for the SVG and shape editors. 66 KiB, measured 63,552 + 5 %, rounded up to 1 KiB."
     },
     "magic-card-svg-editor.js": {
-      "raw": 169984,
-      "ceiling": 169984,
-      "note": "SVG editor. 166 KiB, measured 165,668 with the image mode seam and the panel lips (Linux build, docker node 24.22.0)."
+      "raw": 171008,
+      "ceiling": 171008,
+      "note": "SVG editor. 167 KiB, measured 170,023 (Linux build, docker node 24.22.0)."
     },
     "magic-card-shape-editor.js": {
       "raw": 109568,
@@ -149,14 +149,14 @@
       "note": "Manifest of the hashed chunk file names, imported only after a chunk failed to load; 2,151 B measured with 33 chunks, cap 3 KiB."
     },
     "magic-card-transfer.js": {
-      "raw": 67584,
-      "ceiling": 67584,
-      "note": "Preset transfer. 66 KiB, measured 66,690 (Linux build, docker node 24.22.0) with the image code in the image-transfer chunk; equals TRANSFER_CHUNK_CEILING (67,584 B)."
+      "raw": 68608,
+      "ceiling": 69632,
+      "note": "Preset transfer. 67 KiB, measured 68,349 (Linux build, docker node 24.22.0)."
     },
     "magic-card-svg-icon.js": {
-      "raw": 46080,
-      "ceiling": 46080,
-      "note": "45 KiB, measured 44,642 + 1 %, rounded up to 1 KiB. The chunk carries its own copy of the SVG sanitiser, so it loads without the anim chunk. Icon source, <mc-svg-icon>, the SVG sanitiser, the mcu: library client and the icon effect renderers. The contract ceiling is 65,536 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "raw": 47104,
+      "ceiling": 47104,
+      "note": "Icon sanitiser. 46 KiB, measured 46,566 (Linux build, docker node 24.22.0)."
     },
     "magic-card-image-editor.js": {
       "raw": 95232,
@@ -164,9 +164,9 @@
       "note": "Image editor: canvas size, save path, size meter, view-only workspace, paints and gradients. A child of the SVG editor chunk. 93 KiB, measured 89,785 with text layers, the reference picture, SVG import, imported parts and the save checks (Linux build, docker node 24.22.0). The contract ceiling is 98,304 B (IMAGE_EDITOR_CHUNK_CEILING), room for text, the reference picture and the bindings panel."
     },
     "magic-card-svg-image.js": {
-      "raw": 23552,
+      "raw": 27648,
       "ceiling": 40960,
-      "note": "Library images: the image sanitiser, the image client, <mc-svg-image> and the editors' thumbnail, export and fragment functions. 23 KiB, measured 21,659 + 5 %, rounded up to 1 KiB. The contract ceiling is 40,960 B (SVG_IMAGE_CHUNK_CEILING)."
+      "note": "Library images: the image sanitiser and image tools. 27 KiB, measured 27,380 (Linux build, docker node 24.22.0)."
     },
     "magic-card-image-transfer.js": {
       "raw": 7168,
@@ -179,9 +179,9 @@
       "note": "Library image field and its picker (editor-only chunk, contract image-editor 1.0.0, child of the card editor). 29 KiB, measured 27,702 + 5 %, rounded up to 1 KiB. The contract ceiling is 32,768 B (IMAGE_TOOLS_CHUNK_CEILING)."
     },
     "magic-card-anim.js": {
-      "raw": 89088,
+      "raw": 91136,
       "ceiling": 94208,
-      "note": "87 KiB, measured 84,236 (clean archive, docker node 24.22.0) + 5 %, rounded up to 1 KiB. Animation resolve, compiler, model, animation library, sequence player, the preset and keyframe tables and the animation rules. The contract ceiling is 94,208 B (lazy-module LAZY_CHUNK_CEILINGS)."
+      "note": "89 KiB, measured 90,746 (Linux build, docker node 24.22.0)."
     },
     "magic-card-flows.js": {
       "raw": 27648,
@@ -257,6 +257,11 @@
       "raw": 17408,
       "ceiling": 17408,
       "note": "i18n icon-library table chunk (contract i18n 1.0.0). 17 KiB, measured 16,482 + 5 %, rounded up to 1 KiB."
+    },
+    "magic-card-svg-css.js": {
+      "raw": 10240,
+      "ceiling": 12288,
+      "note": "CSS paint resolver, loaded only when an SVG is imported or opened. 10 KiB, measured 10,114 (Linux build, docker node 24.22.0)."
     }
   },
   "approved_raises": [
@@ -829,6 +834,60 @@
       "field": "/files/magic-card-layer-editor.js/ceiling",
       "from": 89088,
       "to": 90112
+    },
+    {
+      "id": "svg-icon-ceiling-46080-to-47104",
+      "field": "/files/magic-card-svg-icon.js/ceiling",
+      "from": 46080,
+      "to": 47104
+    },
+    {
+      "id": "svg-icon-raw-46080-to-47104",
+      "field": "/files/magic-card-svg-icon.js/raw",
+      "from": 46080,
+      "to": 47104
+    },
+    {
+      "id": "svg-image-raw-23552-to-27648",
+      "field": "/files/magic-card-svg-image.js/raw",
+      "from": 23552,
+      "to": 27648
+    },
+    {
+      "id": "anim-raw-89088-to-91136",
+      "field": "/files/magic-card-anim.js/raw",
+      "from": 89088,
+      "to": 91136
+    },
+    {
+      "id": "svg-editor-ceiling-169984-to-171008",
+      "field": "/files/magic-card-svg-editor.js/ceiling",
+      "from": 169984,
+      "to": 171008
+    },
+    {
+      "id": "svg-editor-raw-169984-to-171008",
+      "field": "/files/magic-card-svg-editor.js/raw",
+      "from": 169984,
+      "to": 171008
+    },
+    {
+      "id": "entry-gzip-cap-84741-to-85000",
+      "field": "/entry/stages/3/cap",
+      "from": 84741,
+      "to": 85000
+    },
+    {
+      "id": "transfer-raw-67584-to-68608",
+      "field": "/files/magic-card-transfer.js/raw",
+      "from": 67584,
+      "to": 68608
+    },
+    {
+      "id": "transfer-ceiling-67584-to-69632",
+      "field": "/files/magic-card-transfer.js/ceiling",
+      "from": 67584,
+      "to": 69632
     }
   ]
 }

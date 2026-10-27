@@ -340,7 +340,7 @@ function startPanel(ed: McSvgEditor): TemplateResult {
             help: t('{size} KB', { size: kbOf(new TextEncoder().encode(ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '').length) }),
             control: html`<textarea id="start-paste" class="input" rows="6" aria-describedby="start-paste-help" @input=${() => ed.requestUpdate()}></textarea>`,
           })}
-          <div class="acts">${btn(t('Import'), undefined, () => ed.openSvg(ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '', t('My icon')), { text: true, size: 'md', variant: 'primary' })}</div>
+          <div class="acts">${btn(t('Import'), undefined, () => void ed.importText(ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '', t('My icon')), { text: true, size: 'md', variant: 'primary' })}</div>
         </div>`
       : nothing}
     ${ed.startError ? html`<p class="help error" role="alert">${ed.startError}</p>` : nothing}

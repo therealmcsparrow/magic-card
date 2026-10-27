@@ -2,7 +2,9 @@ import { LitElement, html, css, svg, nothing, type TemplateResult, type Property
 import { customElement, property, state } from 'lit/decorators.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { editorSystem } from '../../css/editor-stack';
+import type { SvgCssResolve } from '../../contracts/svg-safety';
 import type { UiWindowElement } from '../../contracts/ui-kit';
+import { loadSvgCss } from '../../svg-safety/css-loader';
 import { seg } from '../../ui-kit/templates/choice';
 import { deepActive, studioWindow } from '../window';
 import { validationText } from '../validation-text';
@@ -259,6 +261,12 @@ export class AnimSvgDialog extends LitElement {
   /** Copying failed: the text to select and copy by hand. */
   @state() private _manual?: { label: string; text: string };
 
+  /** The CSS paint resolver for the file being imported; set by _ready(), passed on to the sanitiser and used by nothing else. */
+  private _css?: SvgCssResolve;
+  private _cssLoad?: Promise<void>;
+  /** Counts the texts taken in, so a text whose load was overtaken by another is dropped. */
+  private _textSeq = 0;
+  private _taking?: Promise<void>;
   private _importMemo?: { text: string; doc: AnimationDoc; viewBox: string; r: RigShape[] | { error: string } };
   private _exportMemo?: { doc?: AnimationDoc; pieces: ExportPiece[]; viewBox: string; text: string; error?: string; clean: string };
   private _srcMemo?: { text: string; error?: string };
@@ -277,7 +285,8 @@ export class AnimSvgDialog extends LitElement {
   /** Open "Import SVG", optionally with a file's text already read. */
   openImport(text = '', fileName = ''): void {
     this._mode = 'import';
-    this._text = text;
+    this._text = '';
+    void this._take(text);
     this._fileName = fileName;
     this._status = '';
     this._error = '';
@@ -336,9 +345,37 @@ export class AnimSvgDialog extends LitElement {
     return this._animMemo;
   }
 
+  /** Loads the resolver once for this dialog (undefined when it did not load). */
+  private _ready(): Promise<void> {
+    return (this._cssLoad ??= loadSvgCss().then((css) => {
+      this._css = css;
+    }));
+  }
+
+  /** The imported text, set only after the resolver has settled: nothing is sanitised, shown or remembered before that. */
+  private _take(text: string): Promise<void> {
+    const seq = ++this._textSeq;
+    const done = (): void => {
+      if (seq === this._textSeq) this._text = text;
+    };
+    if (!text) {
+      done();
+      return Promise.resolve();
+    }
+    const p = this._ready().then(done);
+    this._taking = p;
+    return p;
+  }
+
+  /** Settled once a text taken in has been set (the resolver has loaded) and shown. */
+  override async getUpdateComplete(): Promise<boolean> {
+    await this._taking;
+    return super.getUpdateComplete();
+  }
+
   /** Why the imported file can't be the icon (sanitiser verdict), once per text. */
   private _sourceError(): string | undefined {
-    if (this._srcMemo?.text !== this._text) this._srcMemo = { text: this._text, error: sanitizeSvg(this._text).error };
+    if (this._srcMemo?.text !== this._text) this._srcMemo = { text: this._text, error: sanitizeSvg(this._text, { css: this._css }).error };
     return this._srcMemo.error;
   }
 
@@ -389,7 +426,7 @@ export class AnimSvgDialog extends LitElement {
     const m = this._importMemo;
     if (m && m.text === this._text && m.doc === this.doc && m.viewBox === this.viewBox) return m.r;
     const room = V2_CAPS.shapes - (this.doc.rig?.shapes?.length ?? 0);
-    const r = importSvgFile(this._text, this.viewBox, rigIds(this.doc), room);
+    const r = importSvgFile(this._text, this.viewBox, rigIds(this.doc), room, this._css);
     this._importMemo = { text: this._text, doc: this.doc, viewBox: this.viewBox, r };
     return r;
   }
@@ -405,12 +442,12 @@ export class AnimSvgDialog extends LitElement {
     const r = await readSvgFile(file);
     if ('error' in r) {
       this._error = validationText(r.error);
-      this._text = '';
+      void this._take('');
       return;
     }
     this._error = '';
-    this._text = r.text;
     this._fileName = file.name;
+    await this._take(r.text);
   }
 
   private _drop(e: DragEvent): void {
@@ -439,7 +476,7 @@ export class AnimSvgDialog extends LitElement {
 
   private _useAsIcon(): void {
     if (!this.doc) return;
-    const r = rigFromSvgIcon(this.doc, this._text, this.viewBox);
+    const r = rigFromSvgIcon(this.doc, this._text, this.viewBox, this._css);
     if ('error' in r) {
       this._error = validationText(r.error);
       return;
@@ -638,7 +675,7 @@ export class AnimSvgDialog extends LitElement {
             </div>`}
       </div>
       <div slot="footer" class="foot">
-        ${this._text ? html`<button type="button" class="btn btn-text again" @click=${() => (this._text = '')}>${t('Choose another')}</button><span class="grow"></span>` : html`<span class="grow"></span>`}
+        ${this._text ? html`<button type="button" class="btn btn-text again" @click=${() => void this._take('')}>${t('Choose another')}</button><span class="grow"></span>` : html`<span class="grow"></span>`}
         <button type="button" class="btn btn-secondary use-icon" ?disabled=${!this._text || !!this._sourceError()} @click=${() => this._useAsIcon()}>
           <ha-icon icon="mdi:star-four-points-outline"></ha-icon>${t('Use as icon')}
         </button>

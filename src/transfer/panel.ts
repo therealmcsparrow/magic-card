@@ -5,6 +5,7 @@ import { editorTokens } from '../css/editor-system';
 import { button, editorPrimitives, glyph, kitCss, notice, seg } from '../ui-kit';
 import { HOST_KINDS } from '../contracts/preset-transfer';
 import type { ClashChoice, ParseResult, TransferFormat, TransferHost, TransferItem, TransferKind, TransferNote } from '../contracts/preset-transfer';
+import { loadSvgCss } from '../svg-safety/css-loader';
 import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
@@ -116,10 +117,12 @@ export class TransferPanel extends LitElement {
     // images only: an .svg file, or text whose first element is <svg (the test parseTransfer uses), is one image
     const asksImages = /"kind"\s*:\s*"image"/.test(text) || (onlyImages && looksLikeSvg(text, fileName));
     const wantsImages = asksImages && kinds.includes('image');
-    const images = wantsImages ? await loadImageTransfer() : undefined;
+    // an SVG text is opened here as an icon or an image, so its styles are resolved; preset files never take the resolver
+    const wantsCss = looksLikeSvg(text, fileName) && (kinds.includes('icon') || onlyImages);
+    const [images, css] = await Promise.all([wantsImages ? loadImageTransfer() : undefined, wantsCss ? loadSvgCss() : undefined]);
     this._res =
       ok.every(Boolean) && (images || !wantsImages)
-        ? parseTransfer(text, { accept: this._kinds(), fileName, images })
+        ? parseTransfer(text, { accept: this._kinds(), fileName, images, css })
         : { ok: false, refusal: 'limits', message: wantsImages ? t('The checker for images did not load, so this image was not read.') : t('The checker for these animations did not load, so the file was not read. Check your connection and try again.') };
     this._choice = 'keep-both';
     this.focusResult();

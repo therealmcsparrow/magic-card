@@ -4,6 +4,7 @@ import type { ThemeDoc } from './theme-editor';
 import type { IconSummary, SavedIcon, SavedShape } from './mcu-library';
 import type { ImageBinding, ImageSummary } from './mcu-library-images';
 import type { SanitizeOptions, SvgImageApi } from './svg-image';
+import type { SvgCssResolve } from './svg-safety';
 
 /*
  * Contract: preset files (export / import) and the transfer chunk. Version 1.3.0 (TRANSFER_CONTRACT_VERSION).
@@ -78,6 +79,9 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *   listed; view_box four finite numbers, else taken from the sanitised svg. A missing or dropped
  *   path is saved as '' with the note "Open it in the SVG editor and save to show it in Home
  *   Assistant's own cards" (the HA form is computed by the SVG editor, not by this chunk).
+ *   An icon read from SVG text (a .svg file or pasted SVG, not an envelope item) goes through
+ *   sanitizeSvg(svg, { css }) when parseTransfer has opts.css, so its style colours are kept; its removal list then
+ *   leaves out what the resolver consumed (section "SVG text and the CSS paint resolver").
  *
  * - image: { svg, view_box, bindings? }, see "Images" below.
  *
@@ -125,19 +129,51 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *     that prolog is), becomes one image item, source 'svg': id = slug(stem, 'image') (the slug icons use), name = the
  *     file name (or "image") cut to 80 characters, data { svg: text }. The YAML and JSON parsers never see it. The
  *     panel loads the image-transfer chunk on the same test, so every such text reaches the image checker;
- *   - it is read by opts.images.readImage(0, { svg: text }, { file: true }), which calls
- *     api.sanitizeImage(text, { file: true }): svg-image file mode (BOM, XML declaration, comments and a DOCTYPE
- *     without "[" removed; a DOCTYPE with an internal subset refused), then IMAGE_MAX_BYTES and the rest of the image
- *     sanitiser. view_box comes from the sanitised drawing. An item the sanitiser refuses (too_large, unsafe_markup,
- *     not_svg, too_complex, empty, bad_viewbox) is refused with readImage's messages; stripped parts are listed as
- *     svg_removed notes. Without opts.images the item is refused with "checker did not load";
- *   - for an SVG file the result equals the image editor's import of the same file (same sanitised markup, same
- *     stripped list, same refusal), which a test checks on the hostile corpus. A file named .svg that holds JSON is
- *     refused by both and imports in neither: here with the name message (section "File names"), in the image editor
- *     by its sanitiser, with the image editor's own words;
+ *   - it is read by opts.images.readImage(0, { svg: text }, { file: true, css }), which calls
+ *     api.sanitizeImage(text, { file: true, css }): `css` is parseTransfer's opts.css, absent when the svg-css chunk did
+ *     not load (section "SVG text and the CSS paint resolver"); svg-image file mode (BOM, XML declaration, comments and
+ *     a DOCTYPE without "[" removed; a DOCTYPE with an internal subset refused), then IMAGE_MAX_BYTES and the rest of
+ *     the image sanitiser. view_box comes from the sanitised drawing. An item the sanitiser refuses (too_large,
+ *     unsafe_markup, not_svg, too_complex, empty, bad_viewbox) is refused with readImage's messages; stripped parts are
+ *     listed as svg_removed notes. Without opts.images the item is refused with "checker did not load";
+ *   - for an SVG file the result equals the image editor's import of the same file with the same resolver state (both
+ *     with the resolver, or both without): same sanitised markup, same stripped list, same refusal, which a test checks
+ *     on the hostile corpus. A file named .svg that holds JSON is refused by both and imports in neither: here with the
+ *     name message (section "File names"), in the image editor by its sanitiser, with the image editor's own words;
  *   - clashes, Replace / Keep both and images_save are as for envelope items.
  * The transfer chunk neither parses nor rewrites the markup and never value-imports src/svg-image/**. In every other
  * host an .svg stays kind icon (sanitizeSvg, ICON_MAX_BYTES), and image envelopes stay JSON only.
+ *
+ * ── SVG text and the CSS paint resolver ──
+ * An SVG text the panel reads as one item (source 'svg': a file named .svg, or pasted text that looksLikeSvg; kind
+ * icon, or kind image where the panel accepts images only) is a drawing the user opens, so its style colours are kept
+ * (svg-safety, "CSS paint resolver"). src/transfer/panel.ts is one of svg-safety SVG_CSS_OPEN_SITES.
+ *   - loading: <mc-transfer-panel> calls loadSvgCss() before parseTransfer when looksLikeSvg(text, fileName) and its
+ *     accepted kinds hold 'icon' or are exactly ['image'] (the test parseTransfer uses to make the one item; a load for
+ *     a text parseTransfer then refuses, such as a .json name, is harmless). Where the image-transfer chunk is loaded
+ *     for the same read, both loads start together and the read waits for both. The panel passes the result as
+ *     parseTransfer opts.css and hands it to nothing else; it may keep it in an instance field for the element's
+ *     lifetime, never in module state, and never shows a result read before its load settled.
+ *   - forwarding: parseTransfer and its icon reader only pass opts.css on, and only for that one item: an icon goes
+ *     through sanitizeSvg(svg, { css }), an image through opts.images.readImage(0, { svg: text }, { file: true, css }).
+ *     Neither the transfer nor the image-transfer chunk calls the resolver; parseTransfer stays pure and synchronous.
+ *   - fail safe: loadSvgCss never rejects. On undefined (import failure, SVG_CSS_LOAD_TIMEOUT_MS, another build) the
+ *     panel calls parseTransfer without opts.css and the item reads exactly as without the resolver: styles dropped and
+ *     listed, an image's CDATA style block refused. No notice and no Try again; "checker did not load" stays the
+ *     image-transfer chunk's refusal only.
+ *   - preset files: envelope items (kind icon or image in a .yaml or .json preset) and every other source never take
+ *     the resolver, even when opts.css is set. Their svg is Magic Card's own export, already sanitised, so it holds no
+ *     style attribute or style element and the resolver would change nothing. Keeping preset reads without it keeps
+ *     export-then-import byte-stable whatever the load did, keeps svg-safety's "never a transfer envelope item" one rule
+ *     for both kinds, and a preset file never fetches the svg-css chunk. A hand-written preset with styles reads as it
+ *     always did (styles dropped and listed).
+ *   - notes: an image item lists readImage's `stripped`, which follows svg-safety's listing rule. The icon sanitiser
+ *     returns no list, so the icon reader lists removals by comparing element and attribute names of input and output;
+ *     for an icon read with the resolver it leaves out the style attribute, the style element, and `href` /
+ *     `xlink:href` on linearGradient and radialGradient whose trimmed value starts with `#` (the resolver consumed
+ *     them). Everything else is listed as without the resolver.
+ *   - result: an icon item's svg is sanitizeSvg's markup for the same text (after the mc-f / mc-s marks are taken out)
+ *     with the same resolver state, as in the SVG editor's import of that file.
  *
  * ── Other inputs read (C5) ──
  * Detection order on the parsed value: (1) object with `magic_card_export` -> envelope; (2) the
@@ -224,13 +260,16 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  * Loader rules (as presets/loader.ts): memoised while pending and once loaded; rejects on import
  * failure, after LOAD_TIMEOUT_MS, or when TRANSFER_CONTRACT_VERSION is not major 1; a rejection
  * clears the memo so "Try again" retries.
- * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most TRANSFER_CHUNK_CEILING (66 KiB = 67,584 B; the ceiling
- * stays, the image code lives in the image-transfer chunk). Over the ceiling means a parent module got
- * copied in (check js-yaml first), the library view grew, or image code came back (it belongs in image-transfer).
+ * Size: CAPS entry = measured + 5 %, rounded up to 1 KiB, at most TRANSFER_CHUNK_CEILING (68 KiB = 69,632 B; the image
+ * code lives in the image-transfer chunk, the CSS paint resolver in the svg-css chunk). Over the ceiling means a parent
+ * module got copied in (check js-yaml first), the library view grew, or image or resolver code came back (it belongs
+ * in image-transfer or svg-css).
  * The transfer chunk holds no image command call (images_*), no binding check and no image-only message; it keeps
  * the kind name, the large-JSON bounds, the image refusals that run before image code is loaded ("Image files are
  * JSON", the 8 MB refusal, where to import, "checker did not load", the install hint) and the count plural.
- * It never imports src/utils/lazy-chunks.ts or src/svg-image/** (types excepted).
+ * It never imports src/utils/lazy-chunks.ts or src/svg-image/** (types excepted). From src/svg-safety/ it value-imports
+ * css-loader.ts only, in src/transfer/panel.ts (an svg-safety open site); svg-css is an async child of it and css.ts is
+ * never copied into it.
  *
  * ── The image-transfer chunk (image import, export and library actions) ──
  * A child lazy chunk of transfer: webpackChunkName IMAGE_TRANSFER_CHUNK -> dist/IMAGE_TRANSFER_CHUNK_FILE, chunk entry
@@ -244,7 +283,8 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  * Who loads it, and when:
  *   - <mc-transfer-panel> before parseTransfer when the text says kind image, or is SVG where the panel accepts images
  *     only (the same looksLikeSvg test parseTransfer uses), and the host accepts images, passing the result as
- *     opts.images; when it resolves undefined the read is refused with "checker did not load";
+ *     opts.images; when it resolves undefined the read is refused with "checker did not load". For an SVG text the
+ *     svg-css load starts at the same time (section "SVG text and the CSS paint resolver");
  *   - <mc-library-view> when it lists kind image (before images_list); when it resolves undefined the view shows its
  *     error state with Try again. Other kinds never load it; a dashboard never fetches it.
  * Boundary (what the chunk may import): src/contracts/** (types, and constants the transfer chunk already used, so
@@ -287,8 +327,8 @@ export const TRANSFER_MARKER_KEY = 'magic_card_export';
 
 export const TRANSFER_CHUNK = 'transfer';
 export const TRANSFER_CHUNK_FILE = 'magic-card-transfer.js';
-/** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view). */
-export const TRANSFER_CHUNK_CEILING = 66 * 1024; // 67,584 B
+/** Hard ceiling of the transfer chunk (codec, safe parse, validators, transfer panel, library view, svg-css loader). */
+export const TRANSFER_CHUNK_CEILING = 68 * 1024; // 69,632 B
 export const LOAD_TIMEOUT_MS = 8000;
 
 export const IMAGE_TRANSFER_CHUNK = 'image-transfer';
@@ -497,8 +537,9 @@ export type ImageKindResult = { ok: true; data: ImageData; notes: TransferNote[]
 export interface ImageReader {
   /**
    * `index` is the item's place in the file (for notes); `data` is the bounded copy's `data` value, or { svg } for an
-   * SVG file read as an image. `options` goes to api.sanitizeImage unchanged: { file: true } only for that SVG item
-   * (section "SVG files as images"), never for envelope items. Pure, synchronous.
+   * SVG text read as an image. `options` goes to api.sanitizeImage unchanged: { file: true, css } only for that SVG
+   * item (`css` is parseTransfer's opts.css, absent when it has none; sections "SVG files as images" and "SVG text and
+   * the CSS paint resolver"), never for envelope items. Pure, synchronous.
    */
   readImage(index: number, data: unknown, options?: SanitizeOptions): ImageKindResult;
 }
@@ -506,8 +547,12 @@ export interface ImageReader {
 /** What window.MagicCard.loadTransfer() / loadTransfer() resolves to. */
 export interface TransferChunk {
   version: typeof TRANSFER_CONTRACT_VERSION | string;
-  /** Pure and synchronous: steps 1-5 above plus per-kind validation. */
-  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult;
+  /**
+   * Pure and synchronous: steps 1-5 above plus per-kind validation. `css` (svg-safety loadSvgCss's result, only from
+   * <mc-transfer-panel>) is forwarded to the sanitiser of an item read from SVG text and to nothing else (section "SVG
+   * text and the CSS paint resolver").
+   */
+  parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader; css?: SvgCssResolve }): ParseResult;
   serialiseTransfer<K extends TransferKind>(kind: K, items: TransferItem<K>[], format: TransferFormat): string;
   /** "Copy as HA theme". */
   haThemeYaml(name: string, doc: ThemeDoc): string;

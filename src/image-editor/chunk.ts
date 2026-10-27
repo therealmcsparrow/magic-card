@@ -6,6 +6,8 @@ import type { KitButtonOptions } from '../contracts/ui-kit';
 import type { Pt } from '../contracts/path-model';
 import type { SvgEditorSource, SvgSaveDetail } from '../contracts/svg-editor';
 import type { SvgImageApi } from '../contracts/svg-image';
+import type { SvgCssResolve } from '../contracts/svg-safety';
+import { loadSvgCss } from '../svg-safety/css-loader';
 import type { Out } from '../svg-editor/mc-svg-editor';
 import type { ImageShell, ImageUi } from '../svg-editor/image-seam';
 import type { Doc, Paint, Shape } from '../svg-editor/model';
@@ -184,6 +186,9 @@ export class ImageExt implements ImageUi {
   updatedAt?: string;
   private stored: ImageBinding[] = [];
   private meta: Pick<SavedImageInput, 'keywords' | 'author' | 'description'> = {};
+  /** The CSS paint resolver for files the user opens; set by loadCss() and passed to the image sanitiser as `css`, nowhere else. */
+  private css?: SvgCssResolve;
+  private cssLoad?: Promise<void>;
   denied = false;
   lossy = false;
   problem?: string;
@@ -284,6 +289,7 @@ export class ImageExt implements ImageUi {
       return doc;
     }
     if (src.kind === 'image-svg') {
+      await this.loadCss();
       const r = this.openSvg(src.svg);
       if (typeof r === 'string') {
         this.problem = r;
@@ -303,6 +309,13 @@ export class ImageExt implements ImageUi {
       this.problem = this.problemText(e);
       return undefined;
     }
+  }
+
+  /** Loads the CSS paint resolver once for this editor; a file is read only after this has settled (it resolves undefined on a failed load). */
+  loadCss(): Promise<void> {
+    return (this.cssLoad ??= loadSvgCss().then((css) => {
+      this.css = css;
+    }));
   }
 
   /** The 'image-svg' source: the markup of an opened file through the sanitiser, with the import summary. */
@@ -328,6 +341,7 @@ export class ImageExt implements ImageUi {
         why = t('The file could not be read.');
       }
     }
+    if (!why) await this.loadCss();
     // the window was closed, reopened or answered with Create while the file was being read
     if (win !== this.win || this.size?.mode !== 'create') return;
     const r = why ? why : this.openSvg(text, file.name);
@@ -345,7 +359,7 @@ export class ImageExt implements ImageUi {
 
   /** A file's markup through the sanitiser and the reader: the document, or the reason it gave nothing. */
   private fromFile(text: string, name: string): { doc: Doc; stripped: string[] } | string {
-    const s = this.api.sanitizeImage(text, { file: true });
+    const s = this.api.sanitizeImage(text, { file: true, css: this.css });
     if (s.error) return this.sanitiseText(s.error);
     const r = readImage(s.markup, s.viewBox, name);
     if (!r.doc.shapes.length) return t('That file has no shapes an image can use.');

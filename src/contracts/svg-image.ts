@@ -1,6 +1,8 @@
 import type { CardModule, HomeAssistant } from '../types';
 import type { BackgroundLayerConfig } from './bg-stack';
 import type { ImageBinding, SavedImage } from './mcu-library-images';
+import type { SvgCssOption } from './svg-safety';
+import type { SanitisedImageMarkup } from './svg-reader';
 
 /*
  * Contract: library images on cards. Version 1.0.0.
@@ -36,6 +38,8 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * (lazy-module OnDemandChunkName 'svg-image', literal import() in src/utils/lazy-chunks.ts `onDemandChunks`; no needs()
  * row). Ceiling SVG_IMAGE_CHUNK_CEILING; cap = measured + 5 %, rounded up to 1 KiB. It holds:
  *   - the image sanitiser (src/svg-image/sanitize.ts, statically imported: the chunk's SVG sinks are covered by it),
+ *     without the CSS paint resolver: that code is in the svg-css chunk (svg-safety, "Loading the resolver") and
+ *     reaches the sanitiser only as the `css` option of an open site's call,
  *   - the image client (page-wide cache, batched images_get, change listener, retry),
  *   - <mc-svg-image> (defined in install()), for the image module and for background layers,
  *   - the binding engine,
@@ -168,10 +172,17 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * ── Image sanitiser (browser; Magic Card Utils checks the same lists on save) ──
  * Input: a string of at most IMAGE_MAX_BYTES UTF-8 bytes (refused before parsing, `too_large`). Then, still before
  * parsing, refused (`unsafe_markup`) when the text holds any of IMAGE_TEXT_DENY (case-insensitive; the markup items of
- * Magic Card Utils TEXT_DENY except comments, which the parse drops). With { file: true } (editor and transfer
- * imports of .svg files only) a leading prolog is removed first by a linear scan: a byte order mark, one
- * `<?xml ...?>` declaration, comments, and one `<!DOCTYPE svg ...>` that holds no "[" (no internal subset); a
- * DOCTYPE with "[" is refused. Library markup and card renders never take that option.
+ * Magic Card Utils TEXT_DENY except comments, which the parse drops), with the one file-mode CDATA case below. With
+ * { file: true } (editor and transfer imports of .svg files only) a leading prolog is removed first by a linear scan:
+ * a byte order mark, one `<?xml ...?>` declaration, comments, and one `<!DOCTYPE svg ...>` that holds no "[" (no
+ * internal subset); a DOCTYPE with "[" is refused. Library markup and card renders never take that option.
+ * CDATA in a style element: IMAGE_TEXT_DENY keeps `<![cdata[`. Only with { file: true } and a `css` resolver does the
+ * pre-parse scan accept one exact-case `<![CDATA[` when all of these hold: the text from the previous `<` matches
+ * `^<style(?:[ \t\r\n][^<>]*)?>[ \t\r\n]*$`; the matching `]]>` exists; the content holds no `<`; and only ASCII
+ * whitespace, then `</style`, optional whitespace and `>` follow. Each occurrence is found with indexOf (linear), and an
+ * accepted section reaches the parser as the same text, escaped, so no parser sees a CDATA section. Any other CDATA,
+ * any case variant, a second CDATA in one style element, or CDATA without both { file: true } and `css`:
+ * `unsafe_markup`, as before.
  * Parsed with DOMParser as image/svg+xml (text/html fallback, inert). Root <svg> with a valid viewBox (width and height
  * 1..MAX_IMAGE_BOX); root width / height dropped. At most IMAGE_MAX_NODES elements and IMAGE_MAX_DEPTH nesting, else
  * refused. Hostile tests cover both the XML parse and the text/html fallback parse.
@@ -195,14 +206,39 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  *   - every value: no backslash, `<`, `>`, `//`, comment, `javascript:`, `data:`, `expression(`, `@import`, and every
  *     "(" opens an allowed function;
  *   - text content only inside <text>, <tspan> and <title>, escaped, at most IMAGE_MAX_TEXT_CHARS per element.
- * Dropped and listed (`stripped`): anything else, including script, style, foreignObject, image, use, a, filter,
- * pattern, animate*, set, event attributes, style attributes, href / xlink:href, external or cross-origin url().
+ * Dropped and listed (`stripped`): anything else, including script, foreignObject, image, use, a, filter, pattern,
+ * animate*, set, event attributes, href / xlink:href, external or cross-origin url(); style attributes, style
+ * elements and a gradient's href as in "Styles and gradient href" below.
+ * Styles and gradient href (svg-safety CSS paint resolver):
+ *   - the resolver runs only when the call carries { file: true } and a `css` resolver: an open site's import of a
+ *     file or pasted text (svg-safety, "Where the resolver runs": the site awaits loadSvgCss() and passes its result).
+ *     Library markup, card renders, thumbnails, export and the cache never carry `css`; a `css` without
+ *     { file: true } is ignored. Without it, style attributes, style elements and gradient href are dropped and listed
+ *     by the walk, byte-identical to the corpus before the resolver (the html-fallback `style` listing included).
+ *   - with it, after parse and viewBox, before the walk, the sanitiser runs `css` with IMAGE_POLICY. Allowed
+ *     declarations of style attributes and of simple type, class and id rules in style elements (fill, stroke,
+ *     stop-color, the opacities, the stroke and rule properties of svg-safety SvgCssProperty, local url(#id) gradient
+ *     paint) become plain attributes, which then pass the value rules above like any attribute. CSS paint never takes
+ *     var(). All other CSS (at-rules, other selectors, other properties) is dropped.
+ *   - a linearGradient or radialGradient whose href / xlink:href points at a local gradient gets shallow copies of
+ *     that gradient's stops (svg-safety, "Gradient href"); the href is then removed.
+ *   - listed: `<element>@style` only when one of its declarations was dropped, `style` only when part of a style
+ *     element was dropped, the gradient's href when it did not resolve. Fully resolved parts are not listed. A style
+ *     element the HTML parser moved out of the drawing is listed as `style`.
+ *   - the resolver's too_complex, or a throw from it, is `too_complex`; serialised output over IMAGE_MAX_BYTES is
+ *     `too_large` (Magic Card Utils would refuse it on save).
+ *   - the svg-css chunk did not load (loadSvgCss resolved undefined): the call runs without `css`, as above. The
+ *     import summary then lists the styles as removed; no other message.
+ *   - output never holds a style attribute, a style element, CDATA or a comment. Magic Card Utils keeps refusing all
+ *     of them on save, so a client that skips resolution fails closed.
  * The editor import and the transfer import show the list; the card renders silently. A result with nothing
  * drawable is an error. The card sanitises every markup it receives from the library before its first render.
  * Output: the sanitiser's serialiser writes xmlns="http://www.w3.org/2000/svg" (mcu-library-images IMAGE_ROOT_XMLNS) on
  * the root <svg> and on no other element. Everything the sanitiser and its serialiser emit passes Magic Card Utils
  * validation unchanged (mcu-library-images, "Card output passes"); a shared conformance test saves real serialiser
- * output through the server's validate_image.
+ * output through the server's validate_image. SanitizedImage.markup is SanitisedImageMarkup (svg-reader), created
+ * only in src/svg-image/sanitize.ts: sanitizeImage brands its result and its empty markup, and serializeImage returns
+ * the brand (svg-safety, "Sanitised markup brands").
  *
  * ── Bindings (inside the saved image) ──
  * SavedImage.bindings: at most MAX_IMAGE_BINDINGS entries, each targeting an element id of the markup. A target may
@@ -244,7 +280,7 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  */
 
 export const SVG_IMAGE_CONTRACT = '1.0.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 5;
+export const SVG_IMAGE_CONTRACT_REVISION = 7;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;
@@ -314,14 +350,14 @@ export const MAX_BINDING_RULES = 16;
 export const IMAGE_OVERLAY_TYPES: readonly string[] = ['icon', 'info', 'button'];
 export const MAX_IMAGE_OVERLAYS = 32;
 
-export interface SanitizeOptions {
+export interface SanitizeOptions extends SvgCssOption {
   /** A .svg file the user opened or imported: a leading prolog may be removed first (see above). */
   file?: boolean;
 }
 
 export interface SanitizedImage {
-  /** `<svg viewBox>…</svg>`, empty on error. */
-  markup: string;
+  /** `<svg viewBox>…</svg>`, empty on error. Branded inside the image sanitiser only. */
+  markup: SanitisedImageMarkup;
   viewBox: string;
   /** Element ids present (binding targets). */
   ids: string[];
@@ -387,6 +423,7 @@ type CallWS = (msg: Record<string, unknown>) => Promise<unknown>;
 
 /** What the svg-image chunk exports as `api`. */
 export interface SvgImageApi {
+  /** `options.css` only from an open site, and only with { file: true } (see "Styles and gradient href"). */
   sanitizeImage(markup: string, options?: SanitizeOptions): SanitizedImage;
   /** The library item, sanitised; undefined when missing. Shares the page cache. */
   getImage(id: string, callWS: CallWS): Promise<(SavedImage & { sanitized: SanitizedImage }) | undefined>;

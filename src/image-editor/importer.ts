@@ -41,7 +41,11 @@ export function refuse(f: { name: string; type: string; size: number }): string 
 export async function importFile(x: ImageExt, file: File): Promise<void> {
   const why = refuse(file);
   if (why) x.imp = { name: file.name, kinds: [], kept: false, error: why };
-  else x.importSvg(await file.text(), file.name);
+  else {
+    const text = await file.text();
+    await x.loadCss();
+    x.importSvg(text, file.name);
+  }
   x.shell.requestUpdate();
 }
 

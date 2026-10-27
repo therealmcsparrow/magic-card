@@ -1,6 +1,10 @@
 import type { IconGeometry } from '../icons/icon-source';
-import { multiply, parseTransform, sanitizeSvg, shapePath, SVG_MAX_BYTES, type Matrix } from '../icons/svg-sanitize';
+import { multiply, parseTransform, shapePath, type Matrix } from '../icons/svg-geometry';
+import { sanitizeSvg, SVG_MAX_BYTES, TOO_COMPLEX } from '../icons/svg-sanitize';
 import { parsePath } from '../path/core';
+import { readShapes } from '../svg-io/read';
+import type { ReadResult, ReadShape } from '../contracts/svg-reader';
+import type { SvgCssResolve } from '../contracts/svg-safety';
 import { E } from './bind';
 import { MAX_GROUP_DEPTH } from '../contracts/svg-editor';
 import { blankDoc, closeFilled, newShape, nameFor, pruneGroups, round2, uid, type Cap, type Doc, type Group, type Join, type Paint, type Shape, type ShapeType } from './model';
@@ -53,8 +57,8 @@ function parse(text: string): Element | undefined {
   return [...new DOMParser().parseFromString(text, 'text/html').getElementsByTagName('*')].find((e) => e.localName.toLowerCase() === 'svg');
 }
 
-/** What the sanitiser will drop, counted on the raw text (never used as content). */
-export function scanDropped(text: string): Dropped {
+/** What the sanitiser will drop, counted on the raw text (never used as content). `resolved`: the CSS resolver applies style attributes, <style> elements and `#` gradient links, so they are not counted. */
+export function scanDropped(text: string, resolved = false): Dropped {
   const out: Dropped = { script: 0, image: 0, link: 0, other: 0 };
   const root = parse(text);
   if (!root) return out;
@@ -63,13 +67,15 @@ export function scanDropped(text: string): Dropped {
     if (n === 'script') out.script++;
     else if (n === 'image' || n === 'img') out.image++;
     else if (n === 'use' || n === 'a') out.link++;
+    else if (n === 'style' && resolved) continue;
     else if (!KEEP.has(n)) out.other++;
     else
       for (const a of [...el.attributes]) {
         const k = a.name.toLowerCase();
         if (k.startsWith('on')) out.script++;
-        else if (k === 'href' || k === 'xlink:href') out.link++;
-        else if (k === 'style') out.other++;
+        else if (k === 'href' || k === 'xlink:href') {
+          if (!(resolved && (n === 'lineargradient' || n === 'radialgradient') && a.value.trim().startsWith('#'))) out.link++;
+        } else if (k === 'style' && !resolved) out.other++;
       }
   }
   return out;
@@ -189,16 +195,54 @@ export function readMarkup(markup: string, viewBox: string, notes: ImportNotes, 
   return pruneGroups({ ...doc, groups });
 }
 
-export function importSvg(text: string, name = 'My icon'): ImportResult {
+const toTone = (raw: string | undefined, fallback: Paint): Paint => (raw === undefined ? fallback : NONE.test(raw) ? 'none' : 'main');
+
+/** The editor's document from the reader's shapes: paints become the card's tones, outlines become editable paths. */
+function docFromRead(r: Extract<ReadResult, { ok: true }>, name: string, notes: ImportNotes): Doc {
+  const doc = blankDoc(name);
+  const vb = r.viewBox.split(/\s+/).map(Number);
+  if (vb.length === 4 && vb.every(Number.isFinite)) doc.vb = { x: vb[0], y: vb[1], w: vb[2], h: vb[3] };
+  notes.transforms ||= r.notes.transforms;
+  notes.colours ||= r.notes.colours;
+  notes.opacity ||= r.notes.opacity;
+  if (r.notes.mergedGroups) notes.merged = true;
+  const groups: Group[] = r.groups.map((g, i) => ({ id: uid('g'), name: `Group ${i + 1}`, open: true }));
+  r.groups.forEach((g, i) => {
+    if (g.parent !== undefined) groups[i].parent = groups[g.parent].id;
+  });
+  r.shapes.forEach((x: ReadShape) => {
+    const fill = x.from === 'line' ? 'none' : toTone(x.fill, 'main');
+    const stroke = toTone(x.stroke, 'none');
+    const sw = x.strokeWidth ?? 1;
+    const paths = parsePath(x.d).map((p) => E.toEdit(p)).map((p) => (fill === 'none' ? p : closeFilled(p)));
+    const line = stroke !== 'none' && sw > 0 ? stroke : 'none';
+    doc.shapes.push(
+      newShape('path', paths, {
+        name: nameFor(doc, nameKind(x.from)),
+        fill: fill !== 'none' && x.accent ? 'accent' : fill,
+        stroke: line !== 'none' && x.accent ? 'accent' : line,
+        width: round2(sw) || 1,
+        cap: (x.cap as Cap | undefined) ?? 'butt',
+        join: (x.join as Join | undefined) ?? 'miter',
+        rule: x.evenodd ? 'evenodd' : 'nonzero',
+        group: x.group === undefined ? undefined : groups[x.group].id,
+      }),
+    );
+  });
+  return pruneGroups({ ...doc, groups });
+}
+
+/** `css`: the CSS paint resolver of an open site (src/svg-safety/css-loader.ts), passed on to the sanitiser and used by nothing else. */
+export function importSvg(text: string, name = 'My icon', css?: SvgCssResolve): ImportResult {
   const notes = emptyNotes();
   // size first: the sanitiser's 32 KB limit also protects the two DOM parses below
   if (new TextEncoder().encode(text).length > SVG_MAX_BYTES) return { error: 'The SVG is larger than 32 KB.', notes };
-  notes.dropped = scanDropped(text);
-  const s = sanitizeSvg(text);
+  notes.dropped = scanDropped(text, !!css);
+  const s = sanitizeSvg(text, { css });
   if (s.error) return { error: s.error, notes };
-  const doc = readMarkup(s.markup, s.viewBox, notes, name);
-  if (!doc.shapes.length) return { error: 'The SVG has no shapes to draw.', notes };
-  return { doc, notes };
+  const r = readShapes(s.markup, { viewBox: s.viewBox, keepGroups: true });
+  if (!r.ok) return { error: r.error === 'not_svg' ? NOT_SVG : r.error === 'empty' ? 'The SVG has no shapes to draw.' : TOO_COMPLEX, notes };
+  return { doc: docFromRead(r, name, notes), notes };
 }
 
 /** A document from an icon's geometry (Home Assistant's icon database or an icon pack). */
