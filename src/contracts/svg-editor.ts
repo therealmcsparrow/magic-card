@@ -337,8 +337,11 @@ import type { IntakePolicy } from './svg-intake';
  * ── Profiles (version 1.2.0) ──
  * One shell, two profiles (EditorProfile). The source kind picks it: 'image-blank', 'image' and 'image-svg' -> 'image',
  * every other kind -> 'icon'. It holds for the element's life; read-only is decided on open (image only), not by the
- * profile. The profile objects live in src/svg-editor/profiles.ts, not here: their intake policies are frozen values, and
- * a value import of them from this file would carry them into the card-editor chunk, which imports SVG_EDITOR_TAG.
+ * profile. No profile object exists at run time: the shell draws each profile's top bar and start window in a fixed
+ * code order and calls each profile's intake directly, and tests pin that order to the arrays below (ICON_TOP_BAR,
+ * IMAGE_TOP_BAR, IMAGE_READONLY_TOP_BAR, ICON_START, IMAGE_START). EditorProfile and the lines below say what each
+ * profile sets. This file only imports the intake policy type: a value import of the frozen policies would carry them
+ * into the card-editor chunk, which imports SVG_EDITOR_TAG.
  *   icon:  topBar ICON_TOP_BAR, start ICON_START, intake ICON_SVG_INTAKE, pasteMaxChars ICON_SVG_MAX_FILE_BYTES,
  *          saveTargets 'module' and 'library' (host 'card'), 'library' (host 'mcu').
  *   image: topBar IMAGE_TOP_BAR, readOnlyTopBar IMAGE_READONLY_TOP_BAR, start IMAGE_START, intake IMAGE_SVG_INTAKE,
@@ -367,10 +370,11 @@ import type { IntakePolicy } from './svg-intake';
  * their glyph and drop the word; the bar wraps to two rows at most.
  * Every slot is a button or field of at least 24 x 24 CSS px. An icon-only button has aria-label = the full label,
  * a tooltip of the label and its key, and aria-keyshortcuts where a key exists; no second screen-reader text repeats
- * the key. A button that cannot act yet (Undo with no history, Save with nothing drawn, Done without a required name)
- * stays focusable: aria-disabled="true" with an aria-describedby reason ("Draw something first.", "Give the icon a
- * name."), never the disabled attribute. Menu buttons have aria-haspopup="menu" and aria-expanded; a menu returns
- * focus to its button.
+ * the key. A button that cannot act yet stays focusable: aria-disabled="true", never the disabled attribute, and a
+ * press does nothing. Save with nothing drawn and Done or Save without a required name also get an aria-describedby
+ * reason ("Draw something first.", "Give the icon a name."). Undo and Redo with nothing to undo or redo get no reason
+ * text: their label already says what they would do. Menu buttons have aria-haspopup="menu" and aria-expanded; a menu
+ * returns focus to its button.
  * Shortcuts popover: one popover for both profiles. Its first line names the profile's own keys: icon "Ctrl+Z undo,
  * Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library"; image "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save,
  * T text" (the image chunk's words). The other lines are shared. The read-only image bar has no Shortcuts slot and
@@ -640,7 +644,7 @@ export type TopBarSlot = 'back' | 'title' | 'start' | 'name' | 'undo-redo' | 'si
 /** One entry of the shared start window (section "Profiles"). */
 export type StartEntry = 'blank' | 'icon' | 'canvas-size' | 'paste' | 'open-file' | 'library' | 'import';
 
-/** What one profile sets (objects in src/svg-editor/profiles.ts). */
+/** What one profile sets. No such object exists at run time: the shell follows it in fixed code order (section "Profiles"). */
 export interface EditorProfile {
   readonly name: EditorProfileName;
   readonly topBar: readonly TopBarSlot[];
