@@ -57,8 +57,8 @@ function parse(text: string): Element | undefined {
   return [...new DOMParser().parseFromString(text, 'text/html').getElementsByTagName('*')].find((e) => e.localName.toLowerCase() === 'svg');
 }
 
-/** What the sanitiser will drop, counted on the raw text (never used as content). */
-export function scanDropped(text: string): Dropped {
+/** What the sanitiser will drop, counted on the raw text (never used as content). `resolved`: the CSS resolver applies style attributes, <style> elements and `#` gradient links, so they are not counted. */
+export function scanDropped(text: string, resolved = false): Dropped {
   const out: Dropped = { script: 0, image: 0, link: 0, other: 0 };
   const root = parse(text);
   if (!root) return out;
@@ -67,13 +67,15 @@ export function scanDropped(text: string): Dropped {
     if (n === 'script') out.script++;
     else if (n === 'image' || n === 'img') out.image++;
     else if (n === 'use' || n === 'a') out.link++;
+    else if (n === 'style' && resolved) continue;
     else if (!KEEP.has(n)) out.other++;
     else
       for (const a of [...el.attributes]) {
         const k = a.name.toLowerCase();
         if (k.startsWith('on')) out.script++;
-        else if (k === 'href' || k === 'xlink:href') out.link++;
-        else if (k === 'style') out.other++;
+        else if (k === 'href' || k === 'xlink:href') {
+          if (!(resolved && (n === 'lineargradient' || n === 'radialgradient') && a.value.trim().startsWith('#'))) out.link++;
+        } else if (k === 'style' && !resolved) out.other++;
       }
   }
   return out;
@@ -235,7 +237,7 @@ export function importSvg(text: string, name = 'My icon', css?: SvgCssResolve): 
   const notes = emptyNotes();
   // size first: the sanitiser's 32 KB limit also protects the two DOM parses below
   if (new TextEncoder().encode(text).length > SVG_MAX_BYTES) return { error: 'The SVG is larger than 32 KB.', notes };
-  notes.dropped = scanDropped(text);
+  notes.dropped = scanDropped(text, !!css);
   const s = sanitizeSvg(text, { css });
   if (s.error) return { error: s.error, notes };
   const r = readShapes(s.markup, { viewBox: s.viewBox, keepGroups: true });

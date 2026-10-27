@@ -321,9 +321,8 @@ export class McSvgEditor extends LitElement implements StageHost {
     this.stage = 'loading';
     const src = this.source;
     const imageLoad = src.kind === 'image' || src.kind === 'image-blank' || src.kind === 'image-svg' ? loadImageEditor() : undefined;
-    // the resolver is for the SVG text a user brings in; an image source opens through the image editor, which loads its own
-    const [chunk, css] = await Promise.all([loadPathCanvas(), imageLoad ? undefined : loadSvgCss()]);
-    this.css = css;
+    // the resolver is for the SVG text a user brings in: loaded here only for markup the editor starts from, otherwise when a file or pasted text is opened
+    const [chunk] = await Promise.all([loadPathCanvas(), src.kind === 'svg' ? this.needCss() : undefined]);
     if (!chunk) {
       this.stage = 'fail';
       return;
@@ -432,6 +431,21 @@ export class McSvgEditor extends LitElement implements StageHost {
       default:
         return t('That file has no shapes an icon can use.');
     }
+  }
+
+  private cssTried = false;
+
+  /** Loads the CSS resolver once; it stays undefined when the chunk does not load. */
+  private async needCss(): Promise<void> {
+    if (this.cssTried) return;
+    this.cssTried = true;
+    this.css = await loadSvgCss();
+  }
+
+  /** Opens SVG text a user brought in (a pasted text or a chosen file), after the CSS resolver has loaded. */
+  async importText(text: string, name: string): Promise<boolean> {
+    await this.needCss();
+    return this.openSvg(text, name);
   }
 
   /** `stored`: the text is a saved library icon (already clean), so it is read without the CSS resolver. */
@@ -1858,7 +1872,7 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
     try {
       const text = await file.text();
-      this.openSvg(text, file.name.replace(/.svg$/i, '') || t('My icon'));
+      await this.importText(text, file.name.replace(/.svg$/i, '') || t('My icon'));
     } catch {
       this.startError = t('Could not read that file.');
     }

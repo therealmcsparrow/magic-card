@@ -557,8 +557,11 @@ export function resolveCss(root: Element, policy: SvgPolicy): SvgCssOutcome {
     for (const { el: g } of gradients) {
       if (hrefOf(g) === null) continue;
       let from: Element[] | undefined;
-      if (stopsOf(g).length) from = [];
-      else {
+      if (stopsOf(g).length) {
+        // its own stops win; the href is consumed only when it was a usable gradient reference, any other is left for the walk to drop and list
+        const next = target(g);
+        if (next && STOP_GRADIENTS.includes(nameFor.get(next) ?? '')) from = [];
+      } else {
         const seen = new Set([g]);
         let cur = g;
         for (let hop = 1; hop <= limits.maxHrefHops; hop++) {
