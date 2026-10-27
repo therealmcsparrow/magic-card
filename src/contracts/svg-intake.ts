@@ -11,13 +11,14 @@ import { MAX_IMAGE_IMPORT_BYTES } from './image-editor';
  * src/svg-io/intake.ts. Stateless (no module-level `let`, no cache, policies frozen), so its copies in several chunks
  * hold no state. No DOM access, no element, no SVG sink. Imports src/contracts/** only.
  * Callers and their policy:
- *   - <mc-svg-editor> start window, Open file (icon profile)        ICON_SVG_INTAKE, then sanitizeSvg
- *   - <mc-svg-editor> image start window, Open file (image profile) IMAGE_SVG_INTAKE, then the image-svg source
+ *   - <mc-svg-editor> icon start window, Open file                  ICON_SVG_INTAKE, then sanitizeSvg
+ *   - <mc-svg-editor> image start window, Open file                 IMAGE_SVG_INTAKE, then the image-svg source
  *   - image-editor Import (into the open drawing)                   IMAGE_SVG_INTAKE, then sanitizeImage file mode
  *   - animation studio Draw, Import SVG                             ICON_SVG_INTAKE, then sanitizeSvg
  *   - card editor icon effects, upload                              ICON_SVG_INTAKE, then sanitizeSvg
- *   - <mc-transfer-panel>                                           transferIntake(accept) in the transfer chunk
- *                                                                   (preset-transfer "Safe parsing"), then parseTransfer
+ *   - <mc-transfer-panel>                                           its own file gate, checkFileSize(file, accept) in
+ *                                                                   the transfer chunk (preset-transfer "Safe parsing",
+ *                                                                   step 1), then parseTransfer
  * There is no shared default policy: every call names one.
  *
  * ── refuseFile(file, policy) ──
@@ -38,22 +39,28 @@ import { MAX_IMAGE_IMPORT_BYTES } from './image-editor';
  *
  * ── File names decide ──
  * A file's name decides what its text must be: a file named .svg must hold SVG, and a file named .json must hold JSON.
- * Only pasted text, which has no file name, is detected by its content. A .svg file whose trimmed text starts with
- * `{` or `[` holds JSON, and a .json file whose text looksLikeSvg holds SVG: the caller refuses either one with its own
- * words ("This file is named .svg but holds JSON, not SVG.", "This file is named .json but holds SVG, not JSON."),
- * saves nothing, and never reads the text as the other kind. The check runs on the read text, before any parser or
- * sanitiser sees it. A .svg file that holds neither goes to the sanitiser, which refuses it as not SVG.
+ * Only pasted text, which has no file name, is detected by its content. Each caller words the refusal itself, and a
+ * refused file saves nothing:
+ *   - parseTransfer (every <mc-transfer-panel> host) checks the name on the read text. A .svg file whose text starts
+ *     with `{` or `[` after optional whitespace (a byte order mark included) holds JSON, and a .json file whose text
+ *     looksLikeSvg holds SVG. Either is refused 'not_a_preset_file' with one message, "The name says {want}, but the
+ *     file holds {found}.", where want and found are the literals SVG or JSON, and is never read as the other kind
+ *     (preset-transfer "File names" gives the order of this check and the size bounds).
+ *   - the other callers above take .svg files only and run no name check. Their sanitiser refuses JSON in a .svg file,
+ *     like any other text that is not SVG, as not SVG, in that caller's words; the image editor's sanitiser says
+ *     "This is not valid SVG. Check that it starts with <svg and is closed.".
  *
  * ── looksLikeSvg(text, fileName?) ──
  * True for a .svg file name (case-insensitive). Otherwise true when the text's first element is <svg after optional
  * whitespace, a byte order mark, an XML declaration, a doctype and comments; the scan is linear in the text length.
- * Callers apply "File names decide" first, so a .json file never reaches a sanitiser through this test.
+ * parseTransfer runs the name check first, so a .json file never reaches a sanitiser through this test.
  *
  * ── Hostile tests (first) ──
- * A .svg file of policy maxBytes + 1 is refused without file.text() being called; JSON in a file named .svg and SVG
- * in a file named .json are refused with the name message and reach no parser and no sanitiser; pasted SVG text and
- * pasted JSON text are read as their content says; an unreadable file gives 'unreadable'; a refused file leaves the
- * caller's document unchanged.
+ * A .svg file of policy maxBytes + 1 is refused without file.text() being called; in parseTransfer, JSON in a file
+ * named .svg and SVG in a file named .json are refused with the name message and reach no parser and no sanitiser; in
+ * the other callers, JSON in a file named .svg is refused by the sanitiser as not SVG; pasted SVG text and pasted JSON
+ * text are read as their content says; an unreadable file gives 'unreadable'; a refused file leaves the caller's
+ * document unchanged.
  */
 
 export const SVG_INTAKE_CONTRACT = '1.0.0';

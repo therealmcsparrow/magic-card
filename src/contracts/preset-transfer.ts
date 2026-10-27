@@ -154,14 +154,17 @@ import type { SanitizeOptions, SvgImageApi } from './svg-image';
  *
  * ── File names ──
  * A file's name decides what its text must be: a file named .svg must hold SVG, and a file named .json must hold
- * JSON. Only pasted text, which has no file name, is detected by its content (the order above). Checked on the read
- * text (parseTransfer's fileName), in every host, after the size bounds and before detection:
- *   - a .svg file whose trimmed text starts with `{` or `[` -> refused 'not_a_preset_file', "This file is named .svg
- *     but holds JSON, not SVG.";
- *   - a .json file whose text looksLikeSvg -> refused 'not_a_preset_file', "This file is named .json but holds SVG,
- *     not JSON.".
- * A refused file saves nothing and is never read as the other kind. Files with any other name (.yaml, .yml) are
- * detected by content like pasted text.
+ * JSON. Only pasted text, which has no file name, is detected by its content (the order above). parseTransfer checks
+ * it on the read text (its fileName), in every host. Order: the file gate (step 1 below) has run before the file was
+ * read; then, where the accepted kinds are exactly ['image'], the 8 MB bound on the text (MAX_IMAGE_IMPORT_BYTES);
+ * then this check; then the 1 MB bound (MAX_IMPORT_CHARS) and detection.
+ *   - a .svg file whose text starts with `{` or `[` after optional whitespace (a byte order mark included) holds JSON;
+ *   - a .json file whose text looksLikeSvg holds SVG.
+ * Either is refused 'not_a_preset_file' with one message, "The name says {want}, but the file holds {found}.": want
+ * is the kind the name gives and found the kind the text holds, each the untranslated literal SVG or JSON. A refused
+ * file saves nothing and is never read as the other kind. Files with any other name (.yaml, .yml) are detected by
+ * content like pasted text. The image editor's own routes run no name check: its sanitiser refuses JSON in a .svg
+ * file as not SVG, in its own words (section "SVG files as images").
  *
  * ── Safe parsing (untrusted input, C6) ──
  * 1. A chosen file is refused before it is read (File.size, by its name): .json up to MAX_IMAGE_IMPORT_BYTES; .svg up
