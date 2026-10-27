@@ -3,15 +3,9 @@ import type { ShapeOptions } from '../types';
 import type { SavedIconInput, SavedShape } from './mcu-library';
 import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
-import type { IntakePolicy } from './svg-intake';
 
 /*
- * Contract: svg editor. Version 1.2.0.
- * 1.2.0 (additive): one shell with two profiles, icon and image (EditorProfile, section "Profiles"): one top bar and
- * one start window drawn by the shell from the profile, file and pasted text through svg-intake 1.0.0, and imported
- * markup read into layers by svg-reader 1.0.0. SVG_EDITOR_CONTRACT_VERSION becomes '1.2.0' and
- * SVG_EDITOR_CONTRACT_REVISION 7 in the change that ships the profiles, never before: the element revision tells the
- * Magic Card Utils panel and <mc-library-view> what the editor can do. SVG_EDITOR_MCU_MIN_REVISION stays 5.
+ * Contract: svg editor. Version 1.1.0 (SVG_EDITOR_CONTRACT_VERSION).
  *
  * SVG editor and shape editor hosts. Two lazy chunks of the magic-card entry, each loaded by the
  * card-editor chunk (never by magic-card.js, which gains 0 B from them):
@@ -32,14 +26,14 @@ import type { IntakePolicy } from './svg-intake';
  * on the first use of a path tool, never on open, and imports nothing else from src/path-tools/. The
  * shape editor does not load it.
  *
- * Loaders (window contract, additive, apiVersion stays 1; set by the card-editor chunk when it
+ * Loaders (window contract, apiVersion 1; set by the card-editor chunk when it
  * loads, so magic-card.js does not grow):
  * - window.MagicCard.loadSvgEditor(): Promise<boolean>
  * - window.MagicCard.loadShapeEditor(): Promise<boolean>
  * Memoised; false on failure and retried on the next call (chunk URL rewritten, as the theme
  * presets loader does); 8 s timeout. The Magic Card Utils panel calls window.MagicCard.loadEditor(),
  * then loadSvgEditor() / loadShapeEditor(), and creates the elements with host 'mcu' (section
- * "Hosts"). No new loader, entry or window member: magic-card.js and magic-card-editor.js grow 0 B.
+ * "Hosts"). No other loader, entry or window member: magic-card.js and magic-card-editor.js grow 0 B.
  *
  * ── Shell rules (both hosts) ──
  * - Escape never closes an editor and never reaches Home Assistant's card dialog. Order: end a
@@ -82,8 +76,7 @@ import type { IntakePolicy } from './svg-intake';
  * Save path, always: the document is serialised, passed through sanitizeSvg, tidied (path-model
  * tidy) and checked against SVG_MAX_BYTES; a sanitiser error or the size cap blocks the save with
  * the reason. The markup in the event is the sanitiser's output, never the editor's own string.
- * Pasted / imported SVG goes through sanitizeSvg before it reaches the document (section "Profiles": intake, then
- * the sanitiser, then svg-reader), and the editor
+ * Pasted / imported SVG goes through sanitizeSvg before it reaches the document, and the editor
  * lists what was dropped (customSvgWarning text). A subpath over MAX_ANCHORS imports and stays
  * editable; adding to it is refused (the too-many-points warning, path-canvas mc-path-limit).
  * Library saves also compute `path` / `secondary_path` (mcu-library 1.0.0 "Saved icon path"), show
@@ -293,7 +286,7 @@ import type { IntakePolicy } from './svg-intake';
  * src/ui-kit/css, templates and glyphs) and nothing more: the card-editor chunk that loads it holds
  * the kit, so the chunk grows by no kit code. It defines no element of its own besides <mc-svg-editor>
  * and uses <mc-ui-window>, <mc-ui-popover>, <mc-ui-menu> and <mc-ui-toast>.
- * - Top bar (icon profile, ICON_TOP_BAR): Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) |
+ * - Top bar: Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) |
  *   Undo, Redo | size chip | Export / Import (menu) | Save to library | Done | Shortcuts. The tool rail is the kit rail (a
  *   toolbar: arrows move the focus, a press picks the tool); Align, Combine and Path stay menu buttons after a divider on
  *   the canvas toolbar.
@@ -327,81 +320,23 @@ import type { IntakePolicy } from './svg-intake';
  * - The entry button must stay enabled while the chunk loads (a disabled button drops focus, and focus
  *   returns to the opener, or its `data-focus-key` replacement).
  *
- * ── Profiles ──
- * <mc-svg-editor> is one shell with two profiles (EditorProfile). The source kind picks the profile: 'blank', 'icon',
- * 'svg' and 'library' -> icon; 'image-blank', 'image' and 'image-svg' -> image. A profile is data (slot lists, intake
- * policy, paste limit, save targets) and holds no function; the two profile objects live in src/svg-editor/profiles.ts,
- * frozen, with no module-level state. Read-only is not part of a profile: it is decided on open (image profile: the
- * image chunk's read-only rule in section "Image mode"; the icon profile is never read-only).
- * - Top bar: the shell (src/svg-editor/views.ts) draws the only top bar, with the profile's `topBar` slots in that
- *   order, or its `readOnlyTopBar` when read-only. A slot that is not listed is not drawn. The image chunk draws no top
- *   bar. Slots (TopBarSlot):
- *     back       Back to card editor; Close in host 'mcu', and in the image profile in both hosts.
- *     title      "Icon editor" / "Image editor"; read by screen readers only on narrow layouts.
- *     start      Start from... (opens the start window).
- *     name       the name field ("Icon name" / "Image name", 180 px) with the Saved / Changed since saved chip; read-only
- *                shows the name as text.
- *     undo-redo  Undo and Redo, with their keys.
- *     size       the icon size chip (markup size of 32 KB and the point count). The image size meter is a row under the
- *                bar, drawn in every editable image state, not a slot.
- *     canvas     Canvas size (image profile).
- *     reference  Reference picture (image profile).
- *     preview    Preview / "As on a card". No profile lists it: both sit on the canvas toolbar.
- *     transfer   icon: the Export / Import menu; image: Export file.
- *     more       the More menu (image profile).
- *     save       the library save. A secondary button when the list also holds `done`; without `done` it is the primary
- *                button and carries the platform save key (Control+S, Command+S on macOS). Icon profile in host 'mcu':
- *                not drawn, `done` saves.
- *     done       Done (Save in host 'mcu'), primary, Control+Enter.
- *     shortcuts  the Shortcuts popover.
- *   Narrow layouts keep the rules the bars have today: secondary buttons keep their glyph and lose the word, at most two
- *   rows, and in the compact layout the Layers toggle sits before `undo-redo`. Every slot is a real button or field in
- *   the tab order, at least 24 x 24 CSS px, with a visible focus ring.
- * - Start window: one <mc-ui-window> drawn by the shell with the profile's `start` entries in that order (StartEntry):
- *     blank        Blank, 24 x 24.
- *     icon         An icon (mc-icon-picker, or the plain name field without it).
- *     paste        Paste SVG: a labelled multi-line field and a "Use this SVG" button (no clipboard API needed).
- *     open-file    Open file: a labelled button in front of an <input type=file accept=".svg,image/svg+xml">.
- *     library      My icons (not shown without the library).
- *     import       Import file (the transfer panel).
- *     canvas-size  the image canvas-size form (presets, custom W x H), supplied by the image chunk.
- *   The icon profile opens it from Start from... and, in host 'mcu', once for a new icon; the image profile opens it for
- *   an 'image-blank' source without a size (image-editor 1.1.0 "Image start window").
- * - Intake: open-file reads the file with svg-intake readFile(file, profile.intake) and paste checks the text with
- *   refuseText(text, profile.pasteMaxChars), each before anything else touches the text. Icon profile: ICON_SVG_INTAKE
- *   and ICON_SVG_MAX_FILE_BYTES, then sanitizeSvg. Image profile: IMAGE_SVG_INTAKE and MAX_IMAGE_IMPORT_BYTES, then the
- *   { kind: 'image-svg' } source (api.sanitizeImage file mode; its IMAGE_MAX_BYTES applies after the 8 MB gate).
- *   Refusal codes keep the words each way in uses today; a refusal keeps the start window open with the reason in its
- *   role=alert line and changes nothing. Neither the shell nor the image chunk parses, rewrites or draws the text before
- *   the sanitiser, and it never reaches unsafeSVG.
- * - Reading markup: every way in (start window, Import, paste, a library item) gives the sanitiser's output to
- *   svg-reader readShapes(markup, { viewBox, keepGroups: true }); src/svg-editor/import.ts maps ReadShape and ReadGroup
- *   onto the model and walks no markup itself. The image profile passes the reader's `paint` and `each` hooks from the
- *   image chunk (gradients, theme colours, text, locked parts). Reader codes: 'not_svg' and 'empty' keep today's words;
- *   'too_many' -> "This SVG has too many shapes to edit."; 'too_detailed' -> "This SVG is too detailed to edit.". A
- *   refused read changes nothing. One file gives the same layers through every way in.
- * - Save targets: `saveTargets[host]`. Icon profile: card ['module', 'library'], mcu ['library']; image profile:
- *   ['image-library'] in both hosts. The shell never sends an mc-svg-save target that is not in the list.
- * - Library calls of both profiles go through src/svg-editor/library.ts (mcu-library 1.1.0); the image chunk gets it
- *   through the shell's kit (image-editor 1.1.0 "Library calls"). Both profiles word library errors the same way.
- *
  * ── Image mode ──
- * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image in the image profile (image-editor
- * 1.1.0 holds everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of
- * that chunk, and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing
- * canvas as the image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg,
- * saved }), downloads ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete)
- * when hass.user.is_admin is false or the library is missing. The top bar and the start window are the shell's, drawn
- * from the image profile (section "Profiles"); the image chunk supplies the canvas-size form, the reference picture,
- * the More menu and the size meter row through src/svg-editor/image-seam.ts, an internal seam both folders change
- * together (not part of this contract). Layers being dragged, moved by handles or nudged
- * carry `will-change: transform` until the gesture ends.
+ * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.1.0 holds
+ * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that chunk,
+ * and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing canvas as the
+ * image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg, saved }), downloads
+ * ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete) when hass.user.is_admin is
+ * false or the library is missing. The image chunk draws the top bar, the start window and its other windows through
+ * src/svg-editor/image-seam.ts (ImageUi.topBar(), dialogs()), an internal seam both folders change together (not part
+ * of this contract). Layers being dragged, moved by handles or nudged carry `will-change: transform` until the
+ * gesture ends.
  *
  * ── Hosts: 'card' and 'mcu' ──
  * 'card' (default) is everything above. 'mcu' = hosted by the Magic Card Utils panel (mcu-library 1.0.0
  * "Editors in the panel"): no card, no module, no entity, no HA dialog.
- * - Version: both element classes have `static contractRevision` (= SVG_EDITOR_CONTRACT_REVISION). The
- *   panel needs SVG_EDITOR_MCU_MIN_REVISION or more, else it shows its update message and creates nothing.
+ * - Version: <mc-svg-editor> has `static contractRevision` = SVG_EDITOR_CONTRACT_REVISION and <mc-shape-studio> has
+ *   `static contractRevision` 5. The panel needs SVG_EDITOR_MCU_MIN_REVISION or more, else it shows its update
+ *   message and creates nothing.
  * - Layer: the panel mounts the element in its content area (no <dialog>). The editors' own Escape rule
  *   (layer root) still applies; the panel focuses the element on open and returns focus to the opener.
  * - <mc-svg-editor host="mcu">: source { kind: 'blank' } (New icon) or { kind: 'library', id } with
@@ -411,7 +346,7 @@ import type { IntakePolicy } from './svg-intake';
  *   `conflict` shows "This icon was changed somewhere else." with "Save as a copy" and "Reload". No Keep
  *   a copy switch, no module notice, no "save into the module". After a save `mc-svg-save` { target:
  *   'library', svg, saved } fires and the editor STAYS OPEN ("Saved" announced). `mc-svg-close` after the
- *   existing unsaved-work confirm. Imports go through sanitizeSvg as in 'card' (same boundary).
+ *   unsaved-work confirm. Imports go through sanitizeSvg as in 'card' (same boundary).
  * - Preview colours ('mcu' only): labelled colour inputs "Main preview colour" and "Accent preview
  *   colour" (defaults MCU_PREVIEW_MAIN, MCU_PREVIEW_ACCENT) colour the canvas and the previews. Session
  *   only: never saved, never in the markup, not in browser storage.
@@ -424,7 +359,7 @@ import type { IntakePolicy } from './svg-intake';
  *   asks "Leave without saving?" (Leave, Keep editing), then fires mc-shape-close { done: false }.
  *
  * ── Dual-tone ──
- * The names stay "Main" and "Accent" everywhere. No new model, config or markup field
+ * The names stay "Main" and "Accent" everywhere. No model, config or markup field of its own
  * (Paint is none | main | accent; accent markup is class mc-accent).
  * - A "Dual-tone" switch in the document section. On open it is on when any layer paints Accent (fill
  *   or stroke), else off. Session state.
@@ -510,9 +445,8 @@ import type { IntakePolicy } from './svg-intake';
  *   loader.ts).
  */
 
-/** '1.2.0' when the profiles ship (see the version note at the top). */
 export const SVG_EDITOR_CONTRACT_VERSION = '1.1.0';
-/** Revision number of the element classes (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. 7 when the profiles ship. */
+/** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
 export const SVG_EDITOR_CONTRACT_REVISION = 6;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 /**
@@ -553,15 +487,6 @@ export const HA_SECONDARY_OPACITY = 0.5;
 /** Neutral preview colours in the MCU host (HA's default state icon and accent colours). */
 export const MCU_PREVIEW_MAIN = '#44739e';
 export const MCU_PREVIEW_ACCENT = '#ff9800';
-
-/** Top bar slots of each profile, in screen order (section "Profiles"). */
-export const ICON_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'start', 'name', 'undo-redo', 'size', 'transfer', 'save', 'done', 'shortcuts'];
-export const ICON_READONLY_TOP_BAR: readonly TopBarSlot[] = ['back', 'title'];
-export const IMAGE_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'undo-redo', 'canvas', 'reference', 'transfer', 'more', 'save'];
-export const IMAGE_READONLY_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'transfer'];
-/** Start window entries of each profile, in screen order. */
-export const ICON_START: readonly StartEntry[] = ['blank', 'icon', 'paste', 'open-file', 'library', 'import'];
-export const IMAGE_START: readonly StartEntry[] = ['canvas-size', 'open-file', 'paste'];
 
 /** The shape editor's top-level mode switch. */
 export type ShapeEditorMode = 'corners' | 'free';
@@ -612,42 +537,6 @@ export interface SvgSaveDetail {
 }
 
 export type SvgSaveTarget = SvgSaveDetail['target'];
-
-export type EditorProfileName = 'icon' | 'image';
-
-/** One control of the shell's top bar (section "Profiles"). */
-export type TopBarSlot =
-  | 'back'
-  | 'title'
-  | 'start'
-  | 'name'
-  | 'undo-redo'
-  | 'size'
-  | 'canvas'
-  | 'reference'
-  | 'preview'
-  | 'transfer'
-  | 'more'
-  | 'save'
-  | 'done'
-  | 'shortcuts';
-
-/** One entry of the shell's start window (section "Profiles"). */
-export type StartEntry = 'blank' | 'icon' | 'paste' | 'open-file' | 'library' | 'import' | 'canvas-size';
-
-/** What differs between the icon and the image editor at the shell's edges. Data only; src/svg-editor/profiles.ts holds the two. */
-export interface EditorProfile {
-  readonly name: EditorProfileName;
-  readonly topBar: readonly TopBarSlot[];
-  /** The bar while the editor is read-only (image profile only; the icon profile is never read-only). */
-  readonly readOnlyTopBar: readonly TopBarSlot[];
-  readonly start: readonly StartEntry[];
-  /** svg-intake policy for Open file: ICON_SVG_INTAKE or IMAGE_SVG_INTAKE. */
-  readonly intake: IntakePolicy;
-  /** refuseText limit for Paste SVG: ICON_SVG_MAX_FILE_BYTES or MAX_IMAGE_IMPORT_BYTES. */
-  readonly pasteMaxChars: number;
-  readonly saveTargets: Readonly<Record<SvgEditorHost, readonly SvgSaveTarget[]>>;
-}
 
 export interface ShapeEditorValue {
   shape: 'custom';
