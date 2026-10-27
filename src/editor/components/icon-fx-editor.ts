@@ -8,7 +8,9 @@ import { hasIconFx } from '../../icons/render-icon';
 import { autoDeviceAnim, autoDeviceRule } from '../../icons/device-anim';
 import { ICON_FX_DEFAULTS } from '../../icons/icon-fx';
 import { svgIconApi } from '../../utils/svg-icon-loader';
-import { sanitizeSvg, SVG_MAX_BYTES } from '../../icons/svg-sanitize';
+import { ICON_SVG_INTAKE } from '../../contracts/svg-intake';
+import { sanitizeSvg } from '../../icons/svg-sanitize';
+import { readFile } from '../../svg-io/intake';
 import { fieldReset } from './field-reset';
 import { getFullPath, hasTemplate, isNotSynced, type SyncContext } from '../../utils/sync-path';
 import { cardStateOf as cardState } from '../custom/bridge';
@@ -529,11 +531,11 @@ export class IconFxEditor extends LitElement {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    if (file.size > SVG_MAX_BYTES) {
-      this._svgError = t('The SVG is larger than 32 KB.');
+    const r = await readFile(file, ICON_SVG_INTAKE);
+    if (r.ok) this._applySvg(r.text, true);
+    else {
+      this._svgError = r.code === 'too_large' ? t('The SVG is larger than 32 KB.') : sanitizeSvg('').error;
       this._svgAlert = true;
-    } else {
-      this._applySvg(await file.text(), true);
     }
     try {
       input.value = '';

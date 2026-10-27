@@ -6,10 +6,12 @@ import type { SavedIcon } from '../contracts/mcu-library';
 import type { MagicCardEditorWindowAdditions } from '../contracts/module-editor';
 import type { TransferItem } from '../contracts/preset-transfer';
 import { KEEP_COPY_DEFAULT_MAX_BYTES } from '../contracts/mcu-library';
+import { ICON_SVG_INTAKE } from '../contracts/svg-intake';
 import { MCU_PREVIEW_ACCENT, MCU_PREVIEW_MAIN, SVG_EDITOR_TAG, type SvgAlignEdge, type SvgAlignTarget, type SvgArrange, type SvgEditorHost, type SvgEditorModuleFacts, type SvgEditorSource, type SvgSaveDetail } from '../contracts/svg-editor';
 import type { Anchor, Box, EditPath, PrimitiveKind, Pt } from '../contracts/path-model';
 import { svgIconApi } from '../utils/svg-icon-loader';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
+import { readFile } from '../svg-io/intake';
 import { loadPathBooleans } from '../path-booleans/loader';
 import type { PathTool } from '../contracts/path-tools';
 import type { BooleanOp } from '../contracts/path-booleans';
@@ -1866,13 +1868,13 @@ export class McSvgEditor extends LitElement implements StageHost {
 
   async startFile(file?: File): Promise<void> {
     if (!file) return;
-    if (file.size > SVG_MAX_BYTES) {
-      this.startError = this.errorText('The SVG is larger than 32 KB.');
+    const r = await readFile(file, ICON_SVG_INTAKE);
+    if (!r.ok) {
+      this.startError = r.code === 'unreadable' ? t('Could not read that file.') : this.errorText(r.code === 'too_large' ? 'The SVG is larger than 32 KB.' : 'No <svg> element found.');
       return;
     }
     try {
-      const text = await file.text();
-      await this.importText(text, file.name.replace(/.svg$/i, '') || t('My icon'));
+      await this.importText(r.text, file.name.replace(/.svg$/i, '') || t('My icon'));
     } catch {
       this.startError = t('Could not read that file.');
     }

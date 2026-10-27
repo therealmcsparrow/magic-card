@@ -1,5 +1,3 @@
-import { MAX_IMAGE_IMPORT_BYTES } from './image-editor';
-
 /*
  * Contract: SVG and preset file intake. Version 1.0.0 (SVG_INTAKE_CONTRACT).
  * One front door for files and pasted text that end up in an SVG sanitiser or the preset parser. It checks type and
@@ -68,6 +66,9 @@ export const SVG_INTAKE_CONTRACT = '1.0.0';
 /** Same number as src/icons/svg-sanitize.ts SVG_MAX_BYTES (a test keeps them equal). */
 export const ICON_SVG_MAX_FILE_BYTES = 32 * 1024;
 
+/** Same number as MAX_IMAGE_IMPORT_BYTES in src/contracts/image-editor.ts (a test keeps them equal; a value import would carry that whole file into every chunk that reads an icon file). */
+export const IMAGE_SVG_MAX_FILE_BYTES = 8 * 1024 * 1024;
+
 export type IntakeKind = 'svg' | 'json' | 'yaml' | 'other';
 
 export interface IntakeType {
@@ -109,9 +110,9 @@ export const ICON_SVG_INTAKE: IntakePolicy = Object.freeze({
   types: Object.freeze([Object.freeze({ ...SVG_TYPE, maxBytes: ICON_SVG_MAX_FILE_BYTES })]),
 });
 
-/** Library images: the 8 MB file gate (MAX_IMAGE_IMPORT_BYTES); sanitizeImage's IMAGE_MAX_BYTES still applies after it. */
+/** Library images: the 8 MB file gate (IMAGE_SVG_MAX_FILE_BYTES); sanitizeImage's IMAGE_MAX_BYTES still applies after it. */
 export const IMAGE_SVG_INTAKE: IntakePolicy = Object.freeze({
-  types: Object.freeze([Object.freeze({ ...SVG_TYPE, maxBytes: MAX_IMAGE_IMPORT_BYTES })]),
+  types: Object.freeze([Object.freeze({ ...SVG_TYPE, maxBytes: IMAGE_SVG_MAX_FILE_BYTES })]),
 });
 
 /** What src/svg-io/intake.ts exports. */

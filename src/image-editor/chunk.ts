@@ -27,7 +27,7 @@ import { addText, addTextButton, textNode, textRows } from './text-ui';
 import { cancelField, disposeField, place, textField, type TextField } from './text-tool';
 import { FRESH, decodePicture, dispose as disposeRef, matchShape, moved, underlay, type Align, type Picture } from './reference';
 import { closePanel } from './reference-ui';
-import { importWin, refuse, replaceWin, summary, type Imported } from './importer';
+import { importWin, readSvg, replaceWin, summary, type Imported } from './importer';
 import { contextOf, layerOf, lift, partColours, plain, partDefs, partNode, partOut, partRows, type Held } from './part';
 import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
 
@@ -332,19 +332,11 @@ export class ImageExt implements ImageUi {
   /** Open file in the start window: the file gate, then the same path as the 'image-svg' source. A refusal keeps the window open. */
   async startFile(file: File): Promise<void> {
     const win = ++this.win;
-    let why = refuse(file);
-    let text = '';
-    if (!why) {
-      try {
-        text = await file.text();
-      } catch {
-        why = t('The file could not be read.');
-      }
-    }
-    if (!why) await this.loadCss();
+    const read = await readSvg(file);
+    if (!('error' in read)) await this.loadCss();
     // the window was closed, reopened or answered with Create while the file was being read
     if (win !== this.win || this.size?.mode !== 'create') return;
-    const r = why ? why : this.openSvg(text, file.name);
+    const r = 'error' in read ? read.error : this.openSvg(read.text, file.name);
     if (typeof r === 'string') {
       this.startError = r;
       this.shell.requestUpdate();

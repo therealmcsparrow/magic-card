@@ -27,7 +27,8 @@ import type {
 import type { SvgCssResolve } from '../contracts/svg-safety';
 import type { ThemeDoc } from '../contracts/theme-editor';
 import { VERSION } from '../version';
-import { detectOther, looksLikeSvg, svgItem } from './detect';
+import { looksLikeSvg } from '../svg-io/looks-like-svg';
+import { detectOther, svgItem } from './detect';
 import type { Detected } from './detect';
 import { uniqueId } from './ids';
 import { t } from './i18n';

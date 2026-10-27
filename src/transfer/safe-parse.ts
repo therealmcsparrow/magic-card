@@ -10,6 +10,7 @@ import {
   MAX_YAML_ALIASES,
 } from '../contracts/preset-transfer';
 import type { TransferRefusal } from '../contracts/preset-transfer';
+import { refuseFile } from '../svg-io/intake';
 import { t } from './i18n';
 
 /*
@@ -34,10 +35,12 @@ const DROPPED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
  * an .svg file where the panel accepts images only; the kind is checked once the file is read.
  */
 export function checkFileSize(file: { size: number; name?: string }, accept?: readonly string[]): SafeParse | undefined {
-  const name = file.name ?? '';
-  const json = /\.json$/i.test(name) || (/\.svg$/i.test(name) && accept?.length === 1 && accept[0] === 'image');
-  if (json && file.size > MAX_IMAGE_IMPORT_BYTES) return { ok: false, refusal: 'too_large', message: TOO_LARGE_IMAGES() };
-  return file.size > MAX_IMPORT_BYTES && !json ? { ok: false, refusal: 'too_large', message: TOO_LARGE() } : undefined;
+  const images = accept?.length === 1 && accept[0] === 'image';
+  const refused = refuseFile(
+    { name: file.name ?? '', type: '', size: file.size },
+    { types: [{ kind: 'json', extensions: images ? ['.json', '.svg'] : ['.json'], mimeTypes: [], maxBytes: MAX_IMAGE_IMPORT_BYTES }], other: { maxBytes: MAX_IMPORT_BYTES } },
+  );
+  return refused?.code === 'too_large' ? { ok: false, refusal: 'too_large', message: refused.maxBytes === MAX_IMPORT_BYTES ? TOO_LARGE() : TOO_LARGE_IMAGES() } : undefined;
 }
 
 class Limit extends Error {

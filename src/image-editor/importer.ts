@@ -1,5 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
-import { MAX_IMAGE_IMPORT_BYTES } from '../contracts/image-editor';
+import { IMAGE_SVG_INTAKE } from '../contracts/svg-intake';
+import { readFile } from '../svg-io/intake';
 import { button } from '../ui-kit/templates';
 import { t } from './i18n';
 import type { Doc } from '../svg-editor/model';
@@ -32,19 +33,19 @@ export function summary(name: string | undefined, stripped: readonly string[], d
   return { name, kinds: removedKinds(stripped), kept: doc.shapes.some((s) => s.look?.part) };
 }
 
-/** Checks the file before reading it; returns the reason it is refused. */
-export function refuse(f: { name: string; type: string; size: number }): string | undefined {
-  if (!/\.svg$/i.test(f.name) && f.type !== 'image/svg+xml') return t('Choose an SVG file.');
-  return f.size > MAX_IMAGE_IMPORT_BYTES ? t('That file is too big to open (over 8 MB). Try a smaller copy.') : undefined;
+/** Reads a chosen file after the type and size checks: the text, or the reason it is refused. */
+export async function readSvg(file: File): Promise<{ text: string } | { error: string }> {
+  const r = await readFile(file, IMAGE_SVG_INTAKE);
+  if (r.ok) return { text: r.text };
+  return { error: r.code === 'wrong_type' ? t('Choose an SVG file.') : r.code === 'too_large' ? t('That file is too big to open (over 8 MB). Try a smaller copy.') : t('The file could not be read.') };
 }
 
 export async function importFile(x: ImageExt, file: File): Promise<void> {
-  const why = refuse(file);
-  if (why) x.imp = { name: file.name, kinds: [], kept: false, error: why };
+  const r = await readSvg(file);
+  if ('error' in r) x.imp = { name: file.name, kinds: [], kept: false, error: r.error };
   else {
-    const text = await file.text();
     await x.loadCss();
-    x.importSvg(text, file.name);
+    x.importSvg(r.text, file.name);
   }
   x.shell.requestUpdate();
 }
