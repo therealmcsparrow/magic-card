@@ -15,7 +15,11 @@
 //      with no parents and no paired sanitiser fails;
 //   2. no chunk holds the sanitiser only in a sibling: that is the same test, it fails by 1;
 //   3. the svg-icon chunk exists, holds mc-svg-icon.ts and icon-source.ts, and the entry (magic-card.js) holds neither;
-//   4. the entry holds no module of src/svg-image/, and only the svg-image chunk holds the image sanitiser.
+//   4. the entry holds no module of src/svg-image/, and only the svg-image chunk holds the image sanitiser;
+//   5. every chunk that holds a src/svg-safety module also holds a sanitiser.
+// The sources are checked for the svg-safety boundary: src/svg-safety/** is value-imported (import, bare import, export …
+// from, import()) only by the two sanitisers and by itself; it value-imports only itself and src/contracts/**, and is
+// never an SVG sink; a cast to a Sanitised…Markup brand is made in the two sanitisers only.
 //
 // Usage: node tools/check-svg-sinks.mjs [--strict] [stats.json]    check the last production build
 //        node tools/check-svg-sinks.mjs --self-test                the rule against synthetic graphs
@@ -69,17 +73,105 @@ const walk = (dir, out = []) => {
   return out;
 };
 
-// A value import (not `import type`) and its specifier, one per statement.
-const IMPORT_RE = /^import\s+(?!type\b)[^;]*?\bfrom\s+'([^']+)'/gm;
-
-/** Module ids ('./src/...') a source text value-imports, relative specifiers resolved against `module`. */
-export const valueImports = (text, module = './src/x.ts') => {
-  const out = [];
-  for (const m of text.matchAll(IMPORT_RE)) {
-    if (!m[1].startsWith('.')) continue;
-    out.push(`./${path.posix.join(path.posix.dirname(module.slice(2)), m[1])}`);
+/**
+ * The source without comments. Strings, template literals and regular expression literals are copied as they are, so a
+ * quote inside a comment or a regex cannot hide or invent a statement.
+ */
+export const stripComments = (text) => {
+  let out = '';
+  let last = '';
+  let i = 0;
+  const n = text.length;
+  while (i < n) {
+    const c = text[i];
+    const d = text[i + 1];
+    if (c === '/' && d === '/') {
+      const e = text.indexOf('\n', i);
+      i = e < 0 ? n : e;
+    } else if (c === '/' && d === '*') {
+      const e = text.indexOf('*/', i + 2);
+      i = e < 0 ? n : e + 2;
+      out += ' ';
+    } else if (c === '"' || c === "'" || c === '`') {
+      let j = i + 1;
+      while (j < n && text[j] !== c) {
+        if (text[j] === '\\') j++;
+        else if (c !== '`' && text[j] === '\n') break;
+        j++;
+      }
+      out += text.slice(i, j + 1);
+      i = j + 1;
+      last = c;
+    } else if (c === '/' && /^[(,=:[!&|?{};]?$/.test(last)) {
+      let j = i + 1;
+      let inClass = false;
+      while (j < n && text[j] !== '\n') {
+        if (text[j] === '\\') j++;
+        else if (text[j] === '[') inClass = true;
+        else if (text[j] === ']') inClass = false;
+        else if (text[j] === '/' && !inClass) break;
+        j++;
+      }
+      out += text.slice(i, j + 1);
+      i = j + 1;
+      last = '/';
+    } else {
+      out += c;
+      if (!/\s/.test(c)) last = c;
+      i++;
+    }
   }
   return out;
+};
+
+// Every form that loads a module, one pattern each: `import x from 'a'`, `import 'a'`, `export … from 'a'` and `import('a')`.
+// `import type …` and `export type … from` only name types and are free; `import { type A } from` stays a value import (it
+// keeps a side-effect import under verbatimModuleSyntax), and so does a default import that is named `type`.
+const IMPORT_RE = /(?<![.\w$])import(?![\w$])(?!\s*\()(?!\s*type\b(?!\s+from\b))\s*(?:[^;'"`]*?\bfrom\s*)?(['"])([^'"\n]+)\1/g;
+const EXPORT_RE = /(?<![.\w$])export(?![\w$])(?!\s*type\b(?!\s+from\b))\s*[^;'"`]*?\bfrom\s*(['"])([^'"\n]+)\1/g;
+const DYNAMIC_RE = /(?<![.\w$])import\s*\(\s*(['"`])([^'"`\n]*)\1/g;
+
+/** Specifiers a source text value-imports, as written (comments are skipped). */
+export const valueSpecifiers = (text) => {
+  const code = stripComments(text);
+  return [IMPORT_RE, EXPORT_RE, DYNAMIC_RE].flatMap((re) => [...code.matchAll(re)].map((m) => m[2]));
+};
+
+/** Module ids ('./src/...') a source text value-imports, relative specifiers resolved against `module`. */
+export const valueImports = (text, module = './src/x.ts') =>
+  valueSpecifiers(text)
+    .filter((spec) => spec.startsWith('.'))
+    .map((spec) => `./${path.posix.join(path.posix.dirname(module.slice(2)), spec)}`);
+
+// ── the svg-safety boundary ──
+
+export const SAFETY_DIR = './src/svg-safety';
+const CONTRACTS_DIR = './src/contracts/';
+const inSafety = (m) => m === SAFETY_DIR || m.startsWith(`${SAFETY_DIR}/`);
+const BRAND_CAST_RE = /\bas\s+Sanitised(?:Icon|Image)?Markup\b|<\s*Sanitised(?:Icon|Image)?Markup\s*>\s*[\w(]/;
+
+/**
+ * Problems with who may use src/svg-safety, from { module, text } source pairs: only the two sanitisers and other
+ * svg-safety modules value-import it; svg-safety value-imports only itself and src/contracts and is never an SVG sink;
+ * a cast to a Sanitised…Markup brand is made in the sanitisers only.
+ */
+export const boundaryProblems = (modules) => {
+  const problems = [];
+  for (const { module, text } of modules) {
+    const code = stripComments(text);
+    const specs = valueSpecifiers(code);
+    const resolved = specs.map((spec) => (spec.startsWith('.') ? `./${path.posix.join(path.posix.dirname(module.slice(2)), spec)}` : spec));
+    if (inSafety(module)) {
+      specs.forEach((spec, i) => {
+        if (!inSafety(resolved[i]) && !resolved[i].startsWith(CONTRACTS_DIR)) problems.push(`${module} value-imports '${spec}': src/svg-safety may import only itself and src/contracts`);
+      });
+      if (/lit\/directives\/unsafe-svg|\bunsafeSVG\s*\(/.test(code) || makesSvgBlob(code)) problems.push(`${module} is an SVG sink: src/svg-safety must never be one`);
+    } else if (!SANITIZERS.includes(module)) {
+      for (const target of resolved) if (inSafety(target)) problems.push(`${module} value-imports ${target}: only the two SVG sanitisers may`);
+    }
+    if (!SANITIZERS.includes(module) && BRAND_CAST_RE.test(code)) problems.push(`${module} casts to a Sanitised…Markup brand: only the two SVG sanitisers may`);
+  }
+  return problems;
 };
 
 const SANITIZER_BASE = { 'image': IMAGE_SANITIZER.replace(/\.ts$/, ''), 'icon': SANITIZER.replace(/\.ts$/, '') };
@@ -101,11 +193,12 @@ export const isSinkSource = (text, module) =>
 export const pairedSanitizer = (text, module, named) => importedSanitizer(text, module) ?? named ?? SANITIZER;
 
 /** { module, sanitiser } for every sink module in the sources. `named`: module -> sanitiser from tools/svg-sinks.json. */
-export const sinksInSources = (srcDir = path.join(root, 'src'), named = new Map()) =>
-  walk(srcDir)
-    .map((f) => ({ f, module: `./src/${path.relative(srcDir, f).replace(/\\/g, '/')}` }))
+export const readSources = (srcDir = path.join(root, 'src')) =>
+  walk(srcDir).map((f) => ({ module: `./src/${path.relative(srcDir, f).replace(/\\/g, '/')}`, text: readFileSync(f, 'utf8') }));
+
+export const sinksInSources = (srcDir = path.join(root, 'src'), named = new Map(), sources = readSources(srcDir)) =>
+  sources
     .filter(({ module }) => !SANITIZERS.includes(module))
-    .map(({ f, module }) => ({ module, text: readFileSync(f, 'utf8') }))
     .filter(({ module, text }) => isSinkSource(text, module))
     .map(({ module, text }) => ({ module, sanitiser: pairedSanitizer(text, module, named.get(module)) }))
     .sort((a, b) => (a.module < b.module ? -1 : 1));
@@ -208,6 +301,10 @@ export const evaluate = ({ chunks, sinks, strict = false, shared = sharedChunkFi
   const inEntry = (entry?.modules ?? []).filter((m) => m.startsWith(IMAGE_DIR));
   if (inEntry.length) problems.push(`${ENTRY} holds ${inEntry[0]}${inEntry.length > 1 ? ` and ${inEntry.length - 1} more` : ''} (library images belong in the svg-image chunk)`);
   for (const c of chunks) {
+    const safety = (c.modules ?? []).filter(inSafety);
+    if (safety.length && !SANITIZERS.some((san) => (c.modules ?? []).includes(san))) problems.push(`${label(c)} holds ${safety[0]}${safety.length > 1 ? ` and ${safety.length - 1} more` : ''} without an SVG sanitiser (src/svg-safety belongs in the chunks of the sanitisers)`);
+  }
+  for (const c of chunks) {
     if ((c.modules ?? []).includes(IMAGE_SANITIZER) && !(c.names ?? []).includes('svg-image')) problems.push(`${label(c)} holds ${IMAGE_SANITIZER}; only the svg-image chunk may (editors reach it through its api)`);
   }
   return { problems, notes };
@@ -306,8 +403,87 @@ const selfTest = () => {
     bad++;
     console.error('self-test FAIL: a sink the rules file names for the image sanitiser is paired with it');
   }
+  // value imports: every form that loads a module, none that only names a type
+  const SAFETY = './src/svg-safety/css';
+  const imports = [
+    ["import { resolveCss } from '../svg-safety';", [ './src/svg-safety' ]],
+    ['import { resolveCss } from "../svg-safety/css";', [ SAFETY ]],
+    ["import type { SvgPolicy } from '../svg-safety';", []],
+    ["import { type A, b } from '../svg-safety/css';", [ SAFETY ]],
+    ["import { type A } from '../svg-safety/css';", [ SAFETY ]],
+    ["import '../svg-safety/css';", [ SAFETY ]],
+    ['import "../svg-safety/css";', [ SAFETY ]],
+    ["export { a } from '../svg-safety/css';", [ SAFETY ]],
+    ["export * from '../svg-safety/css';", [ SAFETY ]],
+    ["export * as css from '../svg-safety/css';", [ SAFETY ]],
+    ["export type { A } from '../svg-safety/css';", []],
+    ["export type * from '../svg-safety/css';", []],
+    ["const m = await import('../svg-safety/css');", [ SAFETY ]],
+    ['const m = await import( "../svg-safety/css" );', [ SAFETY ]],
+    ["import {\n  a,\n  b,\n} from '../svg-safety/css';", [ SAFETY ]],
+    ["import type from '../svg-safety/css';", [ SAFETY ]],
+    ["import typeFn from '../svg-safety/css';", [ SAFETY ]],
+    ["// import { a } from '../svg-safety/css';", []],
+    ["/* import('../svg-safety/css') */ const a = 1;", []],
+    ["/**\n * import { a } from '../svg-safety/css';\n */", []],
+    ["const importX = 1; obj.import('../svg-safety/css');", []],
+    ["const re = /['\"]/; const m = import('../svg-safety/css');", [ SAFETY ]],
+  ];
+  for (const [text, want] of imports) {
+    const got = valueImports(text, './src/icons/a.ts');
+    if (JSON.stringify(got) !== JSON.stringify(want)) {
+      bad++;
+      console.error(`self-test FAIL: value imports of ${JSON.stringify(text)} (expected ${JSON.stringify(want)}, got ${JSON.stringify(got)})`);
+    }
+  }
+  // the svg-safety boundary in the sources
+  const SAN = 'src/icons/svg-sanitize.ts';
+  const mod = (module, text) => ({ module: `./${module}`, text });
+  const boundary = [
+    ['a sanitiser may value-import svg-safety', [mod(SAN, "import { cleanValue } from '../svg-safety';")], 0],
+    ['the image sanitiser may value-import svg-safety', [mod('src/svg-image/sanitize.ts', "import { cleanValue } from '../svg-safety';")], 0],
+    ['any other module value-importing svg-safety fails', [mod('src/icons/mc-svg-icon.ts', "import { cleanValue } from '../svg-safety';")], 1],
+    ['a re-export from svg-safety fails', [mod('src/icons/a.ts', "export { cleanValue } from '../svg-safety/values';")], 1],
+    ['a bare import of svg-safety fails', [mod('src/icons/a.ts', "import '../svg-safety/values';")], 1],
+    ['a dynamic import of svg-safety fails', [mod('src/icons/a.ts', "const m = import('../svg-safety/values');")], 1],
+    ['a double-quoted import of svg-safety fails', [mod('src/icons/a.ts', 'import { x } from "../svg-safety/values";')], 1],
+    ['a type import of svg-safety is free', [mod('src/icons/a.ts', "import type { SvgPolicy } from '../svg-safety';")], 0],
+    ['the contract file is free', [mod('src/icons/a.ts', "import { SVG_SAFETY_CONTRACT } from '../contracts/svg-safety';")], 0],
+    ['svg-safety modules may import each other and the contracts', [mod('src/svg-safety/css.ts', "import { onlyFunctions } from './values';\nimport { IMAGE_ID_RE } from '../contracts/svg-image';\nimport type { X } from 'lit';")], 0],
+    ['svg-safety importing a package fails', [mod('src/svg-safety/css.ts', "import { html } from 'lit';")], 1],
+    ['svg-safety importing another feature fails', [mod('src/svg-safety/css.ts', "import { fmt } from '../icons/svg-geometry';")], 1],
+    ['svg-safety re-exporting another feature fails', [mod('src/svg-safety/index.ts', "export { fmt } from '../icons/svg-geometry';")], 1],
+    ['svg-safety calling unsafeSVG fails', [mod('src/svg-safety/css.ts', 'const a = unsafeSVG(x);')], 1],
+    ['svg-safety making an svg Blob fails', [mod('src/svg-safety/css.ts', "const b = new Blob([a], { type: 'image/svg+xml' });")], 1],
+    ['a brand cast outside the sanitisers fails', [mod('src/svg-io/read.ts', 'const m = text as SanitisedIconMarkup;')], 1],
+    ['a double cast to a brand fails', [mod('src/svg-io/read.ts', 'const m = text as unknown as SanitisedImageMarkup;')], 1],
+    ['a brand used as a type is free', [mod('src/svg-io/read.ts', 'export const read = (m: SanitisedMarkup) => m;')], 0],
+    ['a brand cast in a sanitiser is free', [mod(SAN, 'const m = text as SanitisedIconMarkup;')], 0],
+    ['a brand cast in a comment is free', [mod('src/svg-io/read.ts', '// text as SanitisedIconMarkup')], 0],
+  ];
+  for (const [name, modules, want] of boundary) {
+    const got = boundaryProblems(modules).length;
+    if (got !== want) {
+      bad++;
+      console.error(`self-test FAIL: ${name} (expected ${want} problems, got ${got})`);
+    }
+  }
+  // the built graph: a chunk with a svg-safety module holds a sanitiser
+  const rules = [
+    ['a chunk with svg-safety and the icon sanitiser passes', { chunks: [entry, { ...icon, modules: [...icon.modules, './src/svg-safety/css.ts'] }, particles], sinks }, 0],
+    ['a chunk with svg-safety and the image sanitiser passes', { chunks: [entry, icon, particles, { ...imageChunk, modules: [...imageChunk.modules, './src/svg-safety/css.ts'] }], sinks: [...sinks, imageSink] }, 0],
+    ['a chunk with svg-safety and no sanitiser fails', { chunks: [entry, icon, particles, { id: 11, parents: [0], files: ['magic-card-x.js'], names: ['x'], modules: ['./src/svg-safety/css.ts'] }], sinks }, 1],
+    ['svg-safety in the entry without a sanitiser fails', { chunks: [{ ...entry, modules: ['./src/index.ts', './src/svg-safety/values.ts'] }, icon, particles], sinks }, 1],
+  ];
+  for (const [name, input, want] of rules) {
+    const got = evaluate(input).problems.length;
+    if (got !== want) {
+      bad++;
+      console.error(`self-test FAIL: ${name} (expected ${want} problems, got ${got})`);
+    }
+  }
   if (bad) process.exit(1);
-  console.log(`svg-sinks self-test: ${cases.length + parseCases.length + scan.length + 1} cases ok`);
+  console.log(`svg-sinks self-test: ${cases.length + parseCases.length + scan.length + imports.length + boundary.length + rules.length + 1} cases ok`);
 };
 
 const main = () => {
@@ -320,9 +496,11 @@ const main = () => {
   if (!stats.chunks?.length || !stats.chunks.some((c) => 'parents' in c)) throw new Error('the stats have no chunk parents (run a production build: npm run build)');
   const listed = (rules.sinks ?? []).map(asSink);
   const named = new Map(listed.map((x) => [x.module, x.sanitiser]));
-  const found = sinksInSources(path.join(root, 'src'), named);
+  const sources = readSources(path.join(root, 'src'));
+  const found = sinksInSources(path.join(root, 'src'), named, sources);
   const sinks = [...new Map([...listed, ...found].map((x) => [x.module, x])).values()].sort((x, y) => (x.module < y.module ? -1 : 1));
   const { problems, notes } = evaluate({ chunks: stats.chunks, sinks, strict });
+  problems.push(...boundaryProblems(sources));
   for (const n of notes) console.log(`svg-sinks: ${n}`);
   if (problems.length) {
     for (const p of problems) console.error(`svg-sinks: ${p}`);

@@ -1,155 +1,47 @@
 import {
-  IMAGE_ATTRIBUTES,
-  IMAGE_ELEMENTS,
-  IMAGE_FONT_FAMILIES,
-  IMAGE_ID_RE,
   IMAGE_MAX_BYTES,
   IMAGE_MAX_DEPTH,
   IMAGE_MAX_NODES,
   IMAGE_MAX_TEXT_CHARS,
   IMAGE_TEXT_DENY,
   MAX_IMAGE_BOX,
-  THEME_VAR_NAME_RE,
   type SanitizedImage,
   type SanitizeOptions,
 } from '../contracts/svg-image';
+import { resolveCss } from '../svg-safety/css';
+import { cleanImageValue } from '../svg-safety/image-values';
+import { parseLenient } from '../svg-safety/parse';
+import { IMAGE_POLICY } from '../svg-safety/policy-image';
+import { byteLength, escapeAttr, escapeText, kindOf } from '../svg-safety/values';
 
 /*
  * The image sanitiser (contract svg-image 1.0.0, "Image sanitiser"). User and library markup is reduced to an allow-list
  * of drawing elements and attributes; nothing that runs or fetches survives. The text is capped by length before any
  * pattern runs, the markup items of IMAGE_TEXT_DENY are refused before the parser sees the text, and every value check
- * is a scan or a regular expression over a value of bounded length.
+ * is a scan or a regular expression over a value of bounded length. The parse is the browser's own (XML first, then an
+ * inert text/html document) and the values go through the shared rules of src/svg-safety. Threats covered: script and
+ * event execution, external loads through url() or href, entity and DOCTYPE tricks, CDATA and comments that hide markup,
+ * CSS escapes inside style text, and resource exhaustion by size, nesting, node count or style amplification. Style
+ * attributes and <style> rules are not kept: their paint declarations become plain attributes (src/svg-safety).
  */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const ELEMENTS = new Set(IMAGE_ELEMENTS);
-const FONTS = new Set(IMAGE_FONT_FAMILIES);
+const ELEMENTS = new Set(IMAGE_POLICY.elements);
 const TEXT_PARENTS = new Set(['text', 'tspan', 'title']);
 const SHAPES = new Set(['path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon', 'text']);
 const NOT_DRAWN = new Set(['defs', 'clipPath', 'mask', 'linearGradient', 'radialGradient']);
-
-const PAINT = new Set(['fill', 'stroke', 'stop-color']);
-const TRANSFORMS = new Set(['transform', 'gradientTransform']);
-const REFERENCES = new Set(['clip-path', 'mask']);
-const KEYWORDS = new Set([
-  'stroke-linecap', 'stroke-linejoin', 'fill-rule', 'clip-rule', 'spreadMethod', 'gradientUnits', 'clipPathUnits', 'maskUnits',
-  'maskContentUnits', 'visibility', 'vector-effect', 'paint-order', 'font-style', 'font-weight', 'text-anchor', 'dominant-baseline',
-  'preserveAspectRatio',
-]);
-
-const COLOR_FNS = new Set(['rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color', 'color-mix']);
-const TRANSFORM_FNS = new Set(['matrix', 'translate', 'scale', 'rotate', 'skewx', 'skewy']);
 
 const DENY_RE = new RegExp(IMAGE_TEXT_DENY.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'i');
 
 const SCRIPT_TAG_RE = /<script[\s/>]/i;
 const STYLE_TAG_RE = /<style[\s/>]/i;
-const MAX_VALUE = 2000;
-const MAX_PAINT = 200;
-const MAX_TRANSFORM_FNS = 16;
+const STYLE_OPEN_RE = /^<style(?:[ \t\r\n][^<>]*)?>[ \t\r\n]*$/;
 const MAX_STRIPPED = 100;
 const MAX_NAME = 40;
 const short = (name: string): string => (name.length > MAX_NAME ? name.slice(0, MAX_NAME) : name);
 
-const HEX_RE = /^#[0-9a-fA-F]{3,8}$/;
-const WORD_RE = /^[A-Za-z]{3,20}$/;
-const URL_REF_RE = /^url\(#([A-Za-z][\w.-]{0,63})\)$/;
-const VAR_RE = /^var\(\s*(--[a-z0-9][a-z0-9-]{0,63})\s*(?:,\s*(#[0-9a-fA-F]{3,8})\s*)?\)$/;
-const FN_RE = /([A-Za-z-]+)\s*\(/g;
-const COLOR_CHARS_RE = /^[\w\s.,%/#()+-]+$/;
-const LENGTH_RE = /^[\s\d.,eE+%a-zA-Z-]+$/;
-const KEYWORD_RE = /^[A-Za-z0-9\s-]{1,40}$/;
-const PATH_RE = /^[MmLlHhVvCcSsQqTtAaZz\d\s.,eE+-]*$/;
-const NUMBERS_RE = /^[\s\d.,eE+%-]*$/;
-const ARGS_RE = /^[\s\d.,eE+-]*$/;
-const CLASS_TOKEN_RE = /^[\w-]{1,64}$/;
-// eslint-disable-next-line no-control-regex
-const DATA_NAME_RE = /^[^<>"&\\\u0000-\u001f]{1,80}$/;
 // eslint-disable-next-line no-control-regex
 const CONTROL_RE = /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g;
-
-/** True for a paint value the contract allows. The value is at most MAX_PAINT characters here. */
-function paintOk(v: string): boolean {
-  if (v.length > MAX_PAINT) return false;
-  if (HEX_RE.test(v) || WORD_RE.test(v) || URL_REF_RE.test(v)) return true;
-  const m = VAR_RE.exec(v);
-  if (m) return THEME_VAR_NAME_RE.test(m[1]);
-  if (!COLOR_CHARS_RE.test(v) || v.includes('//') || v.includes('/*')) return false;
-  const opens = v.split('(').length - 1;
-  const fns = [...v.matchAll(FN_RE)];
-  return fns.length === opens && fns.length > 0 && fns.every((f) => COLOR_FNS.has(f[1].toLowerCase()));
-}
-
-/** A transform list: only the transform functions with numeric arguments, at most MAX_TRANSFORM_FNS of them. */
-function transformOk(v: string): boolean {
-  const n = v.length;
-  let i = 0;
-  let count = 0;
-  for (;;) {
-    while (i < n && (v[i] === ' ' || v[i] === ',' || v[i] === '\t' || v[i] === '\n' || v[i] === '\r')) i++;
-    if (i >= n) return count > 0;
-    let j = i;
-    while (j < n && /[A-Za-z]/.test(v[j])) j++;
-    if (!TRANSFORM_FNS.has(v.slice(i, j).toLowerCase()) || v[j] !== '(') return false;
-    const close = v.indexOf(')', j);
-    if (close < 0 || !ARGS_RE.test(v.slice(j + 1, close)) || ++count > MAX_TRANSFORM_FNS) return false;
-    i = close + 1;
-  }
-}
-
-const enum Kind { Path, Points, Paint, Transform, Reference, Font, Id, DataName, Class, Length, Keyword }
-
-/** Every allowed attribute name with the rule its value follows. */
-const KINDS = new Map<string, Kind>(
-  IMAGE_ATTRIBUTES.map((name) => [
-    name,
-    name === 'd' ? Kind.Path
-    : name === 'points' ? Kind.Points
-    : PAINT.has(name) ? Kind.Paint
-    : TRANSFORMS.has(name) ? Kind.Transform
-    : REFERENCES.has(name) ? Kind.Reference
-    : name === 'font-family' ? Kind.Font
-    : name === 'id' ? Kind.Id
-    : name === 'data-name' ? Kind.DataName
-    : name === 'class' ? Kind.Class
-    : KEYWORDS.has(name) ? Kind.Keyword
-    : Kind.Length,
-  ]),
-);
-
-/** The cleaned value of an attribute of the given kind, or undefined when it must go. */
-function cleanValue(kind: Kind, raw: string): string | undefined {
-  if (kind === Kind.Path) return raw.length <= IMAGE_MAX_BYTES && PATH_RE.test(raw) ? raw : undefined;
-  if (kind === Kind.Points) return raw.length <= IMAGE_MAX_BYTES && NUMBERS_RE.test(raw) ? raw : undefined;
-  if (raw.length > MAX_VALUE) return undefined;
-  // every branch below is an allow-list that cannot pass a backslash, "<", ">", "//", a comment, "javascript:", "data:",
-  // "expression(" or "@import", and a "(" only where the branch names the function
-  const v = raw.charCodeAt(0) <= 32 || raw.charCodeAt(raw.length - 1) <= 32 ? raw.trim() : raw;
-  switch (kind) {
-    case Kind.Length:
-      return LENGTH_RE.test(v) ? v : undefined;
-    case Kind.Paint:
-      return paintOk(v) ? v : undefined;
-    case Kind.Keyword:
-      return KEYWORD_RE.test(v) ? v : undefined;
-    case Kind.Transform:
-      return transformOk(v) ? v : undefined;
-    case Kind.Reference:
-      return v === 'none' || URL_REF_RE.test(v) ? v : undefined;
-    case Kind.Font: {
-      const low = v.toLowerCase();
-      return FONTS.has(low) ? low : 'sans-serif';
-    }
-    case Kind.Id:
-      return IMAGE_ID_RE.test(v) ? v : undefined;
-    case Kind.DataName:
-      return DATA_NAME_RE.test(v) ? v : undefined;
-    default: {
-      const tokens = v.split(/\s+/).filter((t) => CLASS_TOKEN_RE.test(t));
-      return tokens.length ? tokens.join(' ') : undefined;
-    }
-  }
-}
 
 /** A leading prolog of an opened .svg file, removed by one linear scan (BOM, one XML declaration, comments, one DOCTYPE without "["). */
 function stripProlog(text: string): string {
@@ -178,6 +70,37 @@ function stripProlog(text: string): string {
   return text.slice(i);
 }
 
+const isBlank = (c: string | undefined): boolean => c === ' ' || c === '\t' || c === '\r' || c === '\n';
+
+/**
+ * File mode: each exact-case CDATA section that is the whole content of a style element becomes the same text as plain
+ * escaped character data, so the parsers never see a CDATA section. The section must follow the element's start tag, hold
+ * no "<" and be followed by only white space and the end tag. Any other CDATA stays and is refused by the deny scan. Each
+ * occurrence is found with indexOf, so the scan is linear.
+ */
+function unwrapStyleCdata(text: string): string {
+  const parts: string[] = [];
+  let from = 0;
+  let end = -2;
+  for (let p = text.indexOf('<![CDATA['); p >= 0; p = text.indexOf('<![CDATA[', p + 9)) {
+    const open = text.lastIndexOf('<', p - 1);
+    if (open < 0 || !STYLE_OPEN_RE.test(text.slice(open, p))) continue;
+    if (end < p + 9) end = text.indexOf(']]>', p + 9);
+    if (end < 0) break;
+    const lt = text.indexOf('<', p + 9);
+    if (lt >= 0 && lt < end) continue;
+    let q = end + 3;
+    while (isBlank(text[q])) q++;
+    if (!text.startsWith('</style', q)) continue;
+    q += 7;
+    while (isBlank(text[q])) q++;
+    if (text[q] !== '>') continue;
+    parts.push(text.slice(from, p), escapeText(text.slice(p + 9, end)));
+    from = end + 3;
+  }
+  return parts.length ? parts.join('') + text.slice(from) : text;
+}
+
 export interface ParsedImage {
   root: Element;
   viewBox: string;
@@ -188,8 +111,8 @@ export interface ParsedImage {
 export type ImageError = NonNullable<SanitizedImage['error']>;
 
 /** UTF-8 size of a text; a text far over the cap is not encoded (its length is already a lower bound). */
-function byteLength(text: string): number {
-  return text.length > IMAGE_MAX_BYTES * 4 ? text.length : new TextEncoder().encode(text).length;
+function sizeOf(text: string): number {
+  return text.length > IMAGE_MAX_BYTES * 4 ? text.length : byteLength(text);
 }
 
 function viewBoxOf(raw: string | null): string | undefined {
@@ -214,36 +137,29 @@ function inSvgNamespace(doc: Document, src: Element, depth: number): Element {
   return out;
 }
 
-/** The root <svg> of a text and the names of elements the html parser moved out of it. */
-function parseDocument(text: string): { root: Element; moved: string[] } | undefined {
-  const parser = new DOMParser();
-  try {
-    const doc = parser.parseFromString(text, 'image/svg+xml');
-    const root = doc.documentElement;
-    if (root && root.localName === 'svg' && !doc.getElementsByTagName('parsererror').length) {
-      if (root.namespaceURI === SVG_NS) return { root, moved: [] };
-      // a well-formed drawing without xmlns goes through the same walk as one with it
-      if (root.namespaceURI === null) return { root: inSvgNamespace(doc, root, 0), moved: [] };
+/** The root <svg> of a text, the names of elements the html parser moved out of it, and whether a <style> was lost there. */
+function parseDocument(text: string): { root: Element; moved: string[]; styleLost: boolean } | undefined {
+  let parsed = parseLenient(text, (r) => r.namespaceURI === SVG_NS || r.namespaceURI === null);
+  if (!parsed) return undefined;
+  if (parsed.via === 'xml') {
+    // a well-formed drawing without xmlns goes through the same walk as one with it
+    if (parsed.root.namespaceURI === SVG_NS) return { root: parsed.root, moved: [], styleLost: false };
+    try {
+      return { root: inSvgNamespace(parsed.doc, parsed.root, 0), moved: [], styleLost: false };
+    } catch (e) {
+      if (e instanceof Refused) throw e;
+      // a tree that cannot be rebuilt goes to the html parse
+      parsed = parseLenient(text, () => false);
+      if (!parsed) return undefined;
     }
-  } catch (e) {
-    if (e instanceof Refused) throw e;
-    // fall through to the html parse
   }
-  try {
-    const body = parser.parseFromString(text, 'text/html').body;
-    const first = body?.firstElementChild;
-    if (first && first.localName === 'svg' && first.namespaceURI === SVG_NS) {
-      const moved: string[] = [];
-      for (let e = first.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(short(e.localName));
-      // some html parsers drop a script or style (and what follows it) without a node; the text still tells
-      if (SCRIPT_TAG_RE.test(text) && !moved.includes('script')) moved.push('script');
-      if (STYLE_TAG_RE.test(text) && !moved.includes('style')) moved.push('style');
-      return { root: first, moved };
-    }
-  } catch {
-    // not markup
-  }
-  return undefined;
+  const { root, doc } = parsed;
+  if (root !== doc.body?.firstElementChild || root.namespaceURI !== SVG_NS) return undefined;
+  const moved: string[] = [];
+  for (let e = root.nextElementSibling; e && moved.length < MAX_STRIPPED; e = e.nextElementSibling) moved.push(short(e.localName));
+  // some html parsers drop a script or style (and what follows it) without a node; the text still tells
+  if (SCRIPT_TAG_RE.test(text) && !moved.includes('script')) moved.push('script');
+  return { root, moved, styleLost: STYLE_TAG_RE.test(text) && !moved.includes('style') && !root.getElementsByTagName('style').length };
 }
 
 /**
@@ -252,10 +168,10 @@ function parseDocument(text: string): { root: Element; moved: string[] } | undef
  */
 export function parseImage(markup: string, options: SanitizeOptions = {}): ParsedImage | { error: ImageError; bytes: number; stripped: string[] } {
   const text0 = typeof markup === 'string' ? markup : '';
-  if (text0.length > IMAGE_MAX_BYTES) return { error: 'too_large', bytes: byteLength(text0), stripped: [] };
-  const bytes = byteLength(text0);
+  if (text0.length > IMAGE_MAX_BYTES) return { error: 'too_large', bytes: sizeOf(text0), stripped: [] };
+  const bytes = sizeOf(text0);
   if (bytes > IMAGE_MAX_BYTES) return { error: 'too_large', bytes, stripped: [] };
-  const text = options.file ? stripProlog(text0) : text0;
+  const text = options.file ? unwrapStyleCdata(stripProlog(text0)) : text0;
   if (DENY_RE.test(text)) return { error: 'unsafe_markup', bytes, stripped: [] };
   let parsed: ReturnType<typeof parseDocument>;
   try {
@@ -275,19 +191,23 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   const drop = (what: string): void => {
     if (stripped.size < MAX_STRIPPED) stripped.add(what);
   };
+  if (parsed.styleLost) drop('style');
+  const resolved = resolveCss(root, IMAGE_POLICY);
+  if (resolved.status !== 'ok') return { error: 'too_complex', bytes, stripped: [...stripped] };
+  for (const name of resolved.dropped) drop(name);
   let nodes = 0;
   let drawable = false;
 
   const walk = (el: Element, depth: number, hidden: boolean): void => {
     if (depth > IMAGE_MAX_DEPTH) throw new Refused();
     const local = el.localName;
-    // an allowed name holds no ":", so namespaced attributes (xlink:href, xmlns:*) are not in KINDS and go
+    // an allowed name holds no ":", so namespaced attributes (xlink:href, xmlns:*) have no kind and go
     const attrs = el.attributes;
     for (let i = attrs.length - 1; i >= 0; i--) {
       const a = attrs[i];
-      const kind = KINDS.get(a.name);
-      let v = kind === undefined ? undefined : cleanValue(kind, a.value);
-      if (v !== undefined && kind === Kind.Id) {
+      const kind = kindOf(IMAGE_POLICY, a.name);
+      let v = kind === undefined ? undefined : cleanImageValue(kind, a.value, IMAGE_POLICY);
+      if (v !== undefined && kind === 'id') {
         if (ids.has(v)) v = undefined;
         else ids.add(v);
       }
@@ -333,16 +253,13 @@ export function parseImage(markup: string, options: SanitizeOptions = {}): Parse
   return { root, viewBox, ids: [...ids], stripped: [...stripped], bytes };
 }
 
-const escText = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const escAttr = (s: string): string => escText(s).replace(/"/g, '&quot;');
-
 /** A cleaned tree as markup: attributes and text escaped, the namespace on the root. */
 export function serializeImage(root: Element): string {
   const out: string[] = [];
   const emit = (el: Element, top: boolean): void => {
     out.push(`<${el.localName}`);
     if (top) out.push(` xmlns="${SVG_NS}"`);
-    for (const a of Array.from(el.attributes)) out.push(` ${a.name}="${escAttr(a.value)}"`);
+    for (const a of Array.from(el.attributes)) out.push(` ${a.name}="${escapeAttr(a.value)}"`);
     if (!el.firstChild) {
       out.push('/>');
       return;
@@ -350,7 +267,7 @@ export function serializeImage(root: Element): string {
     out.push('>');
     for (let c: ChildNode | null = el.firstChild; c; c = c.nextSibling) {
       if (c.nodeType === 1) emit(c as Element, false);
-      else if (c.nodeType === 3) out.push(escText((c as Text).data));
+      else if (c.nodeType === 3) out.push(escapeText((c as Text).data));
     }
     out.push(`</${el.localName}>`);
   };
@@ -362,7 +279,9 @@ export function serializeImage(root: Element): string {
 export function sanitizeImage(markup: string, options: SanitizeOptions = {}): SanitizedImage {
   const r = parseImage(markup, options);
   if ('error' in r) return { markup: '', viewBox: '', ids: [], stripped: r.stripped, error: r.error, bytes: r.bytes };
-  return { markup: serializeImage(r.root), viewBox: r.viewBox, ids: r.ids, stripped: r.stripped, bytes: r.bytes };
+  const out = serializeImage(r.root);
+  if (sizeOf(out) > IMAGE_MAX_BYTES) return { markup: '', viewBox: '', ids: [], stripped: r.stripped, error: 'too_large', bytes: sizeOf(out) };
+  return { markup: out, viewBox: r.viewBox, ids: r.ids, stripped: r.stripped, bytes: r.bytes };
 }
 
 /** The cleaned tree in an inert <template>, ready to be cloned into stages. */

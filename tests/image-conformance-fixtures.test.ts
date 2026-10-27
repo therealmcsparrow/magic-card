@@ -29,12 +29,33 @@ const settle = async (el: Ed): Promise<void> => {
 };
 const svg = (inner: string): string => `<svg viewBox="0 0 400 300">${inner}</svg>`;
 
+/** The drawing an opened .svg file gives after the sanitiser has resolved its styles (what the editor imports and saves). */
+const resolved = (file: string): string => {
+  const r = sanitizeImage(file, { file: true });
+  if (r.error) throw new Error(`fixture refused: ${r.error}`);
+  return r.markup;
+};
+const XMLNS = 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
+
 const CASES: Record<string, string> = {
   paints: svg('<rect id="r1" x="10" y="10" width="80" height="60" fill="#ff0000" stroke="#00ff00" stroke-width="3" opacity="0.5" transform="rotate(10 50 40)"/><circle id="c1" cx="200" cy="100" r="40" fill="var(--primary-color, #03a9f4)" stroke="var(--accent-color)"/><ellipse id="e1" cx="300" cy="200" rx="40" ry="20" fill="#abc" fill-opacity="0.4"/>'),
   gradients: svg('<defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="var(--primary-color, #000)" stop-opacity="0.5"/></linearGradient><radialGradient id="g2" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#f00"/><stop offset="1" stop-color="#00f"/></radialGradient></defs><rect id="r1" x="0" y="0" width="200" height="100" fill="url(#g1)"/><circle id="c1" cx="300" cy="150" r="60" fill="url(#g2)"/>'),
   text: svg('<text id="t1" x="20" y="60" font-size="32" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle" fill="#112233"><tspan x="20" dy="0">First line &amp; more</tspan><tspan x="20" dy="38">Second &lt;line&gt; &quot;two&quot;</tspan></text><path id="p1" d="M0 200L100 250L50 290z" fill="#334455"/>'),
   paths: svg('<path id="p1" d="M10 10C 20 20, 40 20, 50 10S 80 0 90 10" fill="none" stroke="#123456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 2"/><polygon id="pg" points="0,0 10,0 10,10" fill="#fa0"/><polyline id="pl" points="1 2 3 4 5 6" stroke="#000" fill="none"/><line id="l1" x1="0" y1="0" x2="50" y2="50" stroke="#999"/><g id="grp" data-name="Group &gt; one"><rect id="in" x="5" y="5" width="9" height="9" fill="#eee"/></g>'),
   imported_part: svg('<defs><clipPath id="c"><rect x="0" y="0" width="50" height="50"/></clipPath></defs><path id="a" data-name="First" d="M0 0H100V100H0Z" fill="#ff0000"/><rect id="win" x="10" y="10" width="80" height="80" fill="#0000ff" clip-path="url(#c)"/><path id="b" data-name="Last" d="M200 0H300V100H200Z" fill="#00ff00"/>'),
+  illustrator_style_cdata: resolved(`<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" ${XMLNS} viewBox="0 0 400 300" style="enable-background:new 0 0 400 300;" xml:space="preserve">
+<style type="text/css"><![CDATA[
+	.st0{fill:#FF0000;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+]]></style>
+<rect id="r1" class="st0" x="10" y="10" width="80" height="60"/><path id="p1" class="st1" d="M120 20L200 80L140 120z"/></svg>`),
+  inkscape_style_attributes: resolved(`<svg ${XMLNS} viewBox="0 0 400 300"><defs><linearGradient id="base"><stop offset="0" style="stop-color:#ff0000;stop-opacity:1"/><stop offset="1" style="stop-color:#0000ff;stop-opacity:0.5"/></linearGradient><linearGradient id="g2" xlink:href="#base" x1="0" y1="0" x2="1" y2="0"/></defs><rect id="r1" x="10" y="10" width="120" height="80" style="fill:url(#g2);fill-opacity:1;stroke:#000000;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4,2;stroke-opacity:1"/><circle id="c1" cx="220" cy="80" r="40" style="fill:#3366cc;stroke:none"/></svg>`),
+  style_block_cdata: resolved(`<svg ${XMLNS} viewBox="0 0 400 300"><style>
+<![CDATA[
+.a{fill:#336699}.b{fill:none;stroke:#ff8800;stroke-width:4}#ring{stroke-dasharray:6 3}
+]]>
+</style><rect id="r1" class="a" x="10" y="10" width="90" height="60"/><circle id="ring" class="b" cx="200" cy="100" r="50"/></svg>`),
   imported_part_mask_and_group_opacity: svg('<defs><mask id="m"><circle cx="50" cy="50" r="40" fill="#fff"/></mask><linearGradient id="lg"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient></defs><path id="a" d="M0 0H100V100H0Z" fill="#ff0000"/><g id="fx" opacity="0.6"><rect id="x1" x="0" y="0" width="90" height="90" fill="url(#lg)" mask="url(#m)"/><circle id="x2" cx="30" cy="30" r="10" fill="#00f" fill-opacity="0.5"/></g><path id="b" d="M200 0H300V100H200Z" fill="#00ff00"/>'),
 };
 

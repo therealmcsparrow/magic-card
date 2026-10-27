@@ -172,11 +172,11 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * { file: true } (editor and transfer imports of .svg files only) a leading prolog is removed first by a linear scan:
  * a byte order mark, one `<?xml ...?>` declaration, comments, and one `<!DOCTYPE svg ...>` that holds no "[" (no
  * internal subset); a DOCTYPE with "[" is refused. Library markup and card renders never take that option.
- * CDATA in a style element (pending, with the svg-safety CSS paint resolver; until it lands every CDATA is refused):
- * IMAGE_TEXT_DENY keeps `<![cdata[`. Only with { file: true } does the pre-parse scan accept one exact-case
- * `<![CDATA[` when all of these hold: the text from the previous `<` matches `^<style(?:[ \t\r\n][^<>]*)?>[ \t\r\n]*$`;
+ * CDATA in a style element: IMAGE_TEXT_DENY keeps `<![cdata[`. Only with { file: true } does the pre-parse scan accept
+ * one exact-case `<![CDATA[` when all of these hold: the text from the previous `<` matches `^<style(?:[ \t\r\n][^<>]*)?>[ \t\r\n]*$`;
  * the matching `]]>` exists; the content holds no `<`; and only ASCII whitespace, then `</style`, optional whitespace
- * and `>` follow. Each occurrence is found with indexOf (linear). Any other CDATA, any case variant, a second CDATA in
+ * and `>` follow. Each occurrence is found with indexOf (linear), and an accepted section reaches the parser as
+ * the same text, escaped, so no parser sees a CDATA section. Any other CDATA, any case variant, a second CDATA in
  * one style element, or CDATA without { file: true }: `unsafe_markup`, as before.
  * Parsed with DOMParser as image/svg+xml (text/html fallback, inert). Root <svg> with a valid viewBox (width and height
  * 1..MAX_IMAGE_BOX); root width / height dropped. At most IMAGE_MAX_NODES elements and IMAGE_MAX_DEPTH nesting, else
@@ -204,8 +204,7 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * Dropped and listed (`stripped`): anything else, including script, foreignObject, image, use, a, filter, pattern,
  * animate*, set, event attributes, href / xlink:href, external or cross-origin url(); style attributes, style
  * elements and a gradient's href as in "Styles and gradient href" below.
- * Styles and gradient href (pending, with the svg-safety CSS paint resolver; until it lands style attributes, style
- * elements and every href / xlink:href are dropped and listed as above):
+ * Styles and gradient href (svg-safety CSS paint resolver):
  *   - after parse and viewBox, before the walk, on every call, the sanitiser runs svg-safety resolveCss with
  *     IMAGE_POLICY. Allowed declarations of style attributes and of simple type, class and id rules in style elements
  *     (fill, stroke, stop-color, the opacities, the stroke and rule properties of svg-safety SvgCssProperty, local
@@ -267,7 +266,7 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  */
 
 export const SVG_IMAGE_CONTRACT = '1.0.0';
-export const SVG_IMAGE_CONTRACT_REVISION = 5;
+export const SVG_IMAGE_CONTRACT_REVISION = 6;
 
 export const IMAGE_REF_PREFIX = 'mcu-image:';
 export const IMAGE_REF_RE = /^mcu-image:([a-z0-9][a-z0-9_-]{0,63})$/;

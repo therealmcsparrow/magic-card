@@ -1,5 +1,5 @@
 /*
- * Contract: SVG value rules shared by the two sanitisers. Version 1.0.0 (SVG_SAFETY_CONTRACT).
+ * Contract: SVG value rules shared by the two sanitisers. Version 1.1.0 (SVG_SAFETY_CONTRACT).
  * One set of value rules behind src/icons/svg-sanitize.ts (own icons) and src/svg-image/sanitize.ts (library images).
  * The allow-lists stay two: each sanitiser passes its own policy, and the rules only read it. A rule fixed here is
  * fixed for both sanitisers at once, and one hostile corpus covers both.
@@ -32,8 +32,8 @@
  *                                    root that is not svg falls through), then an inert text/html document (nothing in
  *                                    it loads or runs) and its first svg element. Returns which parse gave the root and
  *                                    the document, so the image sanitiser can list elements the HTML parser moved out.
- *   resolveCss(root, policy)         pending (section "CSS paint resolver"): turns allowed paint declarations of style
- *                                    attributes and style elements into presentation attributes, in place.
+ *   resolveCss(root, policy)         section "CSS paint resolver": turns allowed paint declarations of style attributes
+ *                                    and style elements into presentation attributes, in place.
  *   byteLength(text)                 UTF-8 length (TextEncoder; text.length where it is missing).
  *   escapeText(s), escapeAttr(s)     & < > (and " for attributes) as entities, for the serialisers.
  * Errors: no rule throws. Booleans, undefined, 'too_complex' or an SvgCssOutcome only; each sanitiser keeps its own
@@ -47,19 +47,16 @@
  * dropped.
  * Output rule: with its policy, each sanitiser gives byte-identical output to the golden corpus captured before the
  * rules moved (markup, stripped list, error code), for both the XML parse and the text/html fallback, with and
- * without xmlns. A changed corpus line is a security change and goes through security review. When the CSS paint
- * resolver lands, the lines whose input holds a style attribute, a style element, CDATA in a style element (image file
- * mode) or a gradient href change from "dropped" to "resolved or listed"; each such line is named in that change and
- * reviewed one by one. No other line changes.
+ * without xmlns. A changed corpus line is a security change and goes through security review. With the CSS paint
+ * resolver, the lines whose input holds a style attribute, a style element, CDATA in a style element (image file
+ * mode) or a gradient href are "resolved or listed" instead of "dropped"; no other line differs from the corpus.
  *
  * ── What stays in each sanitiser ──
  * The walk, the serialiser, the prolog scan of file mode, the image text-deny scan, viewBox rules, the icon's paint
  * inheritance and path output, the image's namespace rebuild and its `stripped` names. Geometry (matrices, transform
  * parsing, shape outlines) is not a value rule and is not here (svg-reader 1.0.0, "Geometry").
  *
- * ── CSS paint resolver (pending) ──
- * Status: target behaviour, in force from the change that adds its code; this contract's version moves with that
- * code. Until then both sanitisers drop style attributes, style elements and gradient href as before.
+ * ── CSS paint resolver ──
  * Purpose: drawings from Illustrator, Inkscape and Figma keep their colours. Allowed paint declarations become plain
  * presentation attributes; all other CSS is dropped. The resolver never emits CSS text, and never adds an element or
  * attribute the policy does not keep.
@@ -146,7 +143,7 @@
  * Output never holds CDATA, comments, a style attribute or a style element.
  */
 
-export const SVG_SAFETY_CONTRACT = '1.0.0';
+export const SVG_SAFETY_CONTRACT = '1.1.0';
 
 /** How an attribute value is checked. `value` is the icon rule for any other drawing attribute. */
 export type SvgValueKind =
@@ -269,7 +266,7 @@ export interface SvgPolicy {
   /** Deny tokens on top of the shared set, lower-case. */
   readonly denyExtra: readonly string[];
   readonly limits: SvgWalkLimits;
-  /** CSS paint resolver data (pending; see that section). */
+  /** CSS paint resolver data (section "CSS paint resolver"). */
   readonly css: SvgCssPolicy;
 }
 
@@ -282,7 +279,7 @@ export interface SvgSafety {
   cleanValue(kind: SvgValueKind, value: string, policy: SvgPolicy): string | undefined;
   withinLimits(root: Element, limits: SvgWalkLimits): 'ok' | 'too_complex';
   parseLenient(text: string): SvgParse;
-  /** Pending (section "CSS paint resolver"): changes `root` in place. */
+  /** Section "CSS paint resolver": changes `root` in place. */
   resolveCss(root: Element, policy: SvgPolicy): SvgCssOutcome;
   byteLength(text: string): number;
   escapeText(s: string): string;

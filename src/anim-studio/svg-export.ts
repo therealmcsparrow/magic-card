@@ -1,4 +1,5 @@
-import { SVG_MAX_BYTES, multiply, parseTransform, sanitizeSvg, shapePath, type Matrix } from '../icons/svg-sanitize';
+import { multiply, parseTransform, shapePath, type Matrix } from '../icons/svg-geometry';
+import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_CAPS, safeCssValue, type AnimationDoc } from './model';
 import { PART_ID_RE, V2_CAPS, type Rig, type RigShape } from './model-v2';
 import { isFilled, isStroked, mapD, nextShapeId, paintOrder, parseViewBox, pathArea, pathBBox, viewBoxMap } from './editors/draw-utils';
