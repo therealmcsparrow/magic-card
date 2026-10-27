@@ -1,29 +1,39 @@
 /*
- * Contract: SVG and preset file intake. Version 1.0.0 (SVG_INTAKE_CONTRACT).
+ * Contract: SVG and preset file intake. Version 1.1.0 (SVG_INTAKE_CONTRACT).
  * One front door for files and pasted text that end up in an SVG sanitiser or the preset parser. It checks type and
  * size before anything is read, reads the text, and returns codes. It never sanitises, never parses markup and never
  * words a message: every caller sends the text on to its own sanitiser and words the codes in its own i18n namespace,
  * with the words that caller already uses.
  *
  * ── Module ──
- * src/svg-io/intake.ts. Stateless (no module-level `let`, no cache, policies frozen), so its copies in several chunks
- * hold no state. No DOM access, no element, no SVG sink. Imports src/contracts/** only.
+ * Two public files:
+ *   - src/svg-io/intake.ts: refuseFile, readFile, refuseText, and looksLikeSvg re-exported.
+ *   - src/svg-io/looks-like-svg.ts: looksLikeSvg, its own file so a chunk that needs only the content test takes only
+ *     that. A caller may import looksLikeSvg from either file; the transfer chunk (src/transfer/envelope.ts,
+ *     src/transfer/panel.ts) imports looks-like-svg.ts directly.
+ * Both are stateless (no module-level `let`, no cache; the policies this Contract exports are frozen), so their copies
+ * in several chunks hold no state. No DOM access, no element, no SVG sink. intake.ts imports src/contracts/** and
+ * looks-like-svg.ts only; looks-like-svg.ts imports nothing.
  * Callers and their policy:
  *   - <mc-svg-editor> icon start window, Open file                  ICON_SVG_INTAKE, then sanitizeSvg
  *   - <mc-svg-editor> image start window, Open file                 IMAGE_SVG_INTAKE, then the image-svg source
  *   - image-editor Import (into the open drawing)                   IMAGE_SVG_INTAKE, then sanitizeImage file mode
  *   - animation studio Draw, Import SVG                             ICON_SVG_INTAKE, then sanitizeSvg
  *   - card editor icon effects, upload                              ICON_SVG_INTAKE, then sanitizeSvg
- *   - <mc-transfer-panel>                                           its own file gate, checkFileSize(file, accept) in
- *                                                                   the transfer chunk (preset-transfer "Safe parsing",
- *                                                                   step 1), then parseTransfer
+ *   - <mc-transfer-panel>                                           checkFileSize(file, accept) in the transfer chunk
+ *                                                                   (preset-transfer "Safe parsing", step 1): refuseFile
+ *                                                                   with a policy it builds per call (not frozen), by
+ *                                                                   file name only: .json, and .svg when the panel takes
+ *                                                                   images only, up to MAX_IMAGE_IMPORT_BYTES; `other`
+ *                                                                   up to MAX_IMPORT_BYTES. Then parseTransfer
  * There is no shared default policy: every call names one.
  *
  * ── refuseFile(file, policy) ──
  * Order, all before file.text():
  *   1. type: the policy entry whose extensions hold the file name's last extension (case-insensitive); else the first
- *      entry whose mimeTypes hold file.type (lower-case, exact); else `other` when the policy has it; else
- *      'wrong_type'. An empty file.type with an extension no entry lists is 'wrong_type' unless `other` is set.
+ *      entry whose mimeTypes hold file.type (exact match; browsers already give file.type in lower case); else `other`
+ *      when the policy has it; else 'wrong_type'. An empty file.type with an extension no entry lists is 'wrong_type'
+ *      unless `other` is set.
  *   2. size: file.size over the matched entry's maxBytes -> 'too_large'.
  * The returned refusal carries the matched maxBytes for the message ("over 8 MB").
  *
@@ -61,7 +71,7 @@
  * document unchanged.
  */
 
-export const SVG_INTAKE_CONTRACT = '1.0.0';
+export const SVG_INTAKE_CONTRACT = '1.1.0';
 
 /** Same number as src/icons/svg-sanitize.ts SVG_MAX_BYTES (a test keeps them equal). */
 export const ICON_SVG_MAX_FILE_BYTES = 32 * 1024;
