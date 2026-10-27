@@ -22,6 +22,10 @@ Some things we have not tested with real hardware:
 -   Screen reader output for the particle layers list. It works in tests, but a screen reader check is still due.
 -   Older Android WebViews, for custom shapes and markdown. See [Custom shapes in cards](../shape-editor/custom-shapes-in-cards.md#older-browsers-and-older-tablets).
 
+## Known limitation
+
+The backdrop layer sliders use Home Assistant's own slider when your version provides one. Its focus ring is Home Assistant's grey, which has a contrast of about 2.8:1 on white. WCAG 2.2 asks for 3:1. The ring comes from Home Assistant and Magic Card does not change it.
+
 ## Report a problem
 
 Open an issue on [GitHub](https://github.com/therealmcsparrow/magic-card/issues). Say which page, which control and which device or browser you used.
