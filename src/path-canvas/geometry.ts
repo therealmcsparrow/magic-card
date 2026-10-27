@@ -8,9 +8,11 @@ import { HIT_MIN_COARSE, HIT_MIN_FINE, LOUPE_OFFSET_PX, LOUPE_SIZE_PX, SEGMENT_B
  * steps, the touch loupe's place and the texts the canvas reads out. No DOM, no lit.
  */
 
-/** zoom = CSS px per frame unit; (x, y) = where frame coordinate 0, 0 sits in the canvas (CSS px). */
+/** zoom = CSS px per frame unit across (and down, unless `zy` says otherwise); (x, y) = where frame coordinate 0, 0 sits in the canvas (CSS px). */
 export interface View {
   zoom: number;
+  /** CSS px per frame unit down, when it differs from `zoom` (overlay mode on a box that is not square). */
+  zy?: number;
   x: number;
   y: number;
 }
@@ -19,8 +21,8 @@ export const ZOOM_MIN = 0.25;
 export const ZOOM_MAX = 400;
 
 export const clampZoom = (z: number): number => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
-export const toScreen = (v: View, p: Pt): Pt => [v.x + p[0] * v.zoom, v.y + p[1] * v.zoom];
-export const toFrame = (v: View, s: Pt): Pt => [(s[0] - v.x) / v.zoom, (s[1] - v.y) / v.zoom];
+export const toScreen = (v: View, p: Pt): Pt => [v.x + p[0] * v.zoom, v.y + p[1] * (v.zy ?? v.zoom)];
+export const toFrame = (v: View, s: Pt): Pt => [(s[0] - v.x) / v.zoom, (s[1] - v.y) / (v.zy ?? v.zoom)];
 
 /** Zoom to `zoom`, the frame point under the screen point `at` stays where it is. */
 export function zoomAt(v: View, zoom: number, at: Pt): View {

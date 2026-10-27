@@ -38,6 +38,27 @@
  * not an SVG sink. svg-sanitize imports them from there and does not re-export them; the reader, svg-editor and the
  * studio import them from svg-geometry. Geometry is not a value rule, so it stays out of src/svg-safety/ (svg-safety
  * 1.0.0). The icon sanitiser's output is byte-identical to the golden corpus. svg-geometry's Matrix is the type below.
+ *
+ * ── The studio's Draw import ──
+ * importSvgFile (src/anim-studio/svg-export.ts) keeps its signature and reads through readShapes; its own walk, paint
+ * inheritance and per-element matrix code go. Order: sanitizeSvg(text, { css }) first (refusal: its error, as today),
+ * then readShapes(markup, opts) with
+ * - viewBox: the target viewBox, keepGroups: false (a rig shape list is flat);
+ * - matrix: the uniform centred fit as one matrix, [k, 0, 0, k, dx, dy] from draw-utils viewBoxMap(sanitised viewBox,
+ *   target viewBox). ReadShape.strokeWidth already carries every matrix, so stroke widths come out fitted;
+ * - maxShapes: `room` (the shapes that still fit), maxPathChars: room x ANIMATION_CAPS.pathLength, at most
+ *   READ_MAX_PATH_CHARS;
+ * - no `paint` or `each` hook: the studio maps paint afterwards.
+ * Per ReadShape the studio then does what it does today: fill and stroke through its importPaint (safe colours kept,
+ * the rest currentColor), `line` unfilled, an unpainted or flat shape drawn as a hairline stroke, the stroke width
+ * rounded to 3 decimals, cap kept, the outline rounded to the studio's precision (draw-utils mapD with the identity),
+ * the element id kept when it is a free PART_ID_RE id, else the next `shape-<n>`, and a shape over
+ * ANIMATION_CAPS.pathLength refused. Fill rule, joins, opacity, accent and groups are not kept: a rig shape holds none
+ * of them, as today. Error texts: 'not_svg' "No <svg> element found.", 'empty' "The SVG has no shapes to draw.",
+ * 'too_detailed' and a long shape "A shape in the SVG is too detailed (over 8192 characters of path data).",
+ * 'too_many' "The SVG has too many shapes; at most {room} fit." (the reader stops at the cap, so the count is gone).
+ * The corpus test compares the new importSvgFile with today's output: same ids, names, paint and widths, outlines
+ * equal within 0.001 units.
  */
 
 export const SVG_READER_CONTRACT = '1.0.0';

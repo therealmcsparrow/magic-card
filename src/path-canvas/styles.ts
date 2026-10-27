@@ -27,8 +27,18 @@ export const canvasStyles: CSSResult[] = [
       display: none;
     }
     /* The host draws the artwork and the ground underneath (SVG editor): the frame and the ground are see-through. */
-    :host([underlay]) {
+    :host([underlay]),
+    :host([overlay]) {
       background: none;
+    }
+    /* Overlay mode: the host's picture lies under the canvas and takes every press the canvas does not; the canvas listens on the page instead. */
+    :host([overlay]) {
+      pointer-events: none;
+      min-height: 0;
+      border-radius: 0;
+    }
+    :host([overlay]) .rot {
+      pointer-events: auto;
     }
     :host([underlay]) .frame {
       fill: transparent;

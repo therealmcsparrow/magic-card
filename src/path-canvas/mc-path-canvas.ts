@@ -9,6 +9,7 @@ import {
   HIT_MIN_FINE,
   LONG_PRESS_MS,
   LONG_PRESS_SLOP_PX,
+  PATH_CANVAS_CONTRACT_REVISION,
   LOUPE_DELAY_MS,
   LOUPE_SIZE_PX,
   GRID_MIN_PX,
@@ -18,6 +19,8 @@ import {
   SNAP_REACH_COARSE_PX,
   SNAP_REACH_PX,
   type CanvasMode,
+  type CanvasPlacement,
+  type CanvasUnits,
   type ConstrainPoint,
   type PathChange,
   type PathContext,
@@ -132,6 +135,7 @@ const eat = (e: Event): void => {
 
 export class PathCanvas extends LitElement {
   static styles = canvasStyles;
+  static contractRevision = PATH_CANVAS_CONTRACT_REVISION;
 
   @property({ attribute: false }) frame: Box = { x: 0, y: 0, w: 24, h: 24 };
   @property({ attribute: false }) paths: EditPath[] = [];
@@ -151,6 +155,12 @@ export class PathCanvas extends LitElement {
   @property() rotateLabel?: string;
   /** Emit `mc-path-context` and keep the browser menu off the drawing surface. */
   @property({ attribute: false }) contextMenu = false;
+  /** Edit over the host's own picture: see-through, presses pass through, the host owns the view. */
+  @property({ type: Boolean, reflect: true }) overlay = false;
+  /** Overlay mode: where `frame` sits on screen (CSS px from the element's top-left corner). */
+  @property({ attribute: false }) placement?: CanvasPlacement;
+  /** Overlay mode: the unit written after numbers in the texts. */
+  @property() units?: CanvasUnits;
 
   private _nudge?: number;
   private _big?: number;
@@ -232,12 +242,14 @@ export class PathCanvas extends LitElement {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'group');
     if (!this.hasAttribute('aria-roledescription')) this.setAttribute('aria-roledescription', t('drawing canvas'));
     for (const [n, f, c] of this.listeners()) this.addEventListener(n, f as EventListener, c);
+    this.pageListen();
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     for (const [n, f, c] of this.listeners()) this.removeEventListener(n, f as EventListener, c);
     this._ro?.disconnect();
+    this.pageListen(false);
     clearTimeout(this._liveTimer);
     clearTimeout(this._loupeTimer);
     clearTimeout(this._commitTimer);
@@ -251,6 +263,13 @@ export class PathCanvas extends LitElement {
   protected willUpdate(changed: Map<string, unknown>): void {
     if (changed.has('mode')) this.tabIndex = this.mode === 'view' ? -1 : 0;
     if (changed.has('mode') && this.mode !== 'add') this._cross = undefined;
+    const pl = this.placement;
+    if (this.overlay && pl && this.frame.w > 0 && this.frame.h > 0 && (changed.has('overlay') || changed.has('placement') || changed.has('frame'))) {
+      const zx = pl.width / this.frame.w;
+      const zy = pl.height / this.frame.h;
+      this._view = { zoom: zx, zy, x: pl.left - this.frame.x * zx, y: pl.top - this.frame.y * zy };
+      this._viewSet = true;
+    }
   }
 
   protected firstUpdated(): void {
@@ -268,6 +287,7 @@ export class PathCanvas extends LitElement {
   }
 
   protected updated(changed: Map<string, unknown>): void {
+    if (changed.has('overlay')) this.pageListen();
     if (changed.has('frame') && !this._viewSet) this.fit();
     if (this._hoverAt && !this._g && (changed.has('mode') || changed.has('transform') || changed.has('paint') || changed.has('paths'))) this.hoverAt(this._hoverAt);
   }
@@ -276,6 +296,7 @@ export class PathCanvas extends LitElement {
 
   /** Fit the frame into the element. */
   fit(): void {
+    if (this.overlay) return;
     this.measure();
     this._view = fitView(this.frame, this._size[0], this._size[1]);
     this._viewSet = false;
@@ -291,6 +312,7 @@ export class PathCanvas extends LitElement {
 
   /** Restore a view the host kept (zoom in CSS px per unit, pan = where unit 0, 0 sits). */
   setView(zoom: number, pan: Pt): void {
+    if (this.overlay) return;
     this._view = { zoom: clampZoom(zoom), x: pan[0], y: pan[1] };
     this._viewSet = true;
   }
@@ -315,6 +337,21 @@ export class PathCanvas extends LitElement {
     return [e.clientX - (r?.left ?? 0), e.clientY - (r?.top ?? 0)];
   }
 
+  /** A number as the texts say it: 2 decimals and the host's unit. */
+  private n(v: number): string {
+    return rnd(v) + (this.units === '%' ? '%' : this.units ? ' px' : '');
+  }
+
+  /** CSS px as frame units, for snap reach (the finer axis, so a reach never grows past `px` on screen). */
+  private reach(px: number): number {
+    return px / Math.max(this._view.zoom, this._view.zy ?? this._view.zoom);
+  }
+
+  /** Overlay mode with nothing to show against yet. */
+  private blind(): boolean {
+    return this.overlay && !this.placement;
+  }
+
   private coarse(e?: { pointerType?: string }): boolean {
     if (e?.pointerType) return e.pointerType === 'touch';
     return typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -329,6 +366,7 @@ export class PathCanvas extends LitElement {
   }
 
   private emitView(): void {
+    if (this.overlay) return;
     this.emit('mc-path-view', { zoom: this._view.zoom, pan: [this._view.x, this._view.y] as Pt });
   }
 
@@ -364,7 +402,7 @@ export class PathCanvas extends LitElement {
     const p = this.paths[path];
     const a = p?.anchors[i];
     if (!a) return '';
-    return t('Point {n} of {total}, {kind}, x {x}, y {y}', { n: i + 1, total: p.anchors.length, kind: kindWord(a, isSmooth(a)), x: rnd(a.x), y: rnd(a.y) });
+    return t('Point {n} of {total}, {kind}, x {x}, y {y}', { n: i + 1, total: p.anchors.length, kind: kindWord(a, isSmooth(a)), x: this.n(a.x), y: this.n(a.y) });
   }
 
   private describeSel(sel: PathSelection | undefined, prev?: PathSelection): string {
@@ -374,7 +412,7 @@ export class PathCanvas extends LitElement {
     if (sel.handle) {
       const h = p.anchors[sel.handle.anchor]?.[sel.handle.which];
       return h
-        ? t('{which, select, in {In handle of point {n}, x {x}, y {y}.} other {Out handle of point {n}, x {x}, y {y}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1, x: rnd(h[0]), y: rnd(h[1]) })
+        ? t('{which, select, in {In handle of point {n}, x {x}, y {y}.} other {Out handle of point {n}, x {x}, y {y}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1, x: this.n(h[0]), y: this.n(h[1]) })
         : t('{which, select, in {In handle of point {n}.} other {Out handle of point {n}.}}', { which: sel.handle.which, n: sel.handle.anchor + 1 });
     }
     if (sel.anchors.length === 1) return `${this.describeAnchor(sel.path, sel.anchors[0])}.`;
@@ -410,7 +448,7 @@ export class PathCanvas extends LitElement {
   /** The rotate handle's centre in canvas px, or undefined without a box. */
   private rotSpot(coarse = this.coarse()): Pt | undefined {
     const t = this.transform;
-    return t?.rotate && this.mode === 'select' ? rotateSpot(this.boxRect(t.box), coarse ? ROTATE_STEM_COARSE_PX : ROTATE_STEM_PX, coarse ? HIT_MIN_COARSE : HIT_MIN_FINE) : undefined;
+    return t?.rotate && this.mode === 'select' && Math.abs((this._view.zy ?? this._view.zoom) / this._view.zoom - 1) <= 0.01 ? rotateSpot(this.boxRect(t.box), coarse ? ROTATE_STEM_COARSE_PX : ROTATE_STEM_PX, coarse ? HIT_MIN_COARSE : HIT_MIN_FINE) : undefined;
   }
 
   /** Handle targets win over path bodies. */
@@ -434,6 +472,7 @@ export class PathCanvas extends LitElement {
   }
 
   private hitTest(s: Pt, coarse: boolean): Hit {
+    if (this.blind()) return { t: 'none' };
     const bh = this.boxHit(s, coarse);
     if (bh) return bh;
     const v = this._view;
@@ -491,7 +530,7 @@ export class PathCanvas extends LitElement {
     if (!p || p.anchors.length < 2) return undefined;
     const z = this._view.zoom;
     const f = toFrame(this._view, s);
-    const n = nearestOnPath(p, f, [z, z]);
+    const n = nearestOnPath(p, f, [z, this._view.zy ?? z]);
     if (n && n.dist <= bandHalf(coarse)) return { t: 'segment', path: pi, seg: n.seg, at: n.t };
     return undefined;
   }
@@ -504,6 +543,24 @@ export class PathCanvas extends LitElement {
   }
 
   // ── pointer: down ──
+
+  /** Overlay mode: the canvas has no pointer events of its own, so it watches presses on the page and takes the ones on its targets. */
+  private pageListen(on = this.overlay): void {
+    this.ownerDocument.removeEventListener('pointerdown', this._pageDown, true);
+    if (on) this.ownerDocument.addEventListener('pointerdown', this._pageDown, true);
+  }
+
+  private _pageDown = (e: PointerEvent): void => {
+    if (!this.overlay || this.blind() || this.mode === 'view' || e.button !== 0 || e.composedPath().includes(this)) return;
+    const box = this.surface()?.getBoundingClientRect();
+    if (!box) return;
+    const s = this.screenOf(e);
+    if (s[0] < 0 || s[1] < 0 || s[0] > box.width || s[1] > box.height) return;
+    if (this.hitTest(s, this.coarse(e)).t === 'none' && this.mode !== 'add') return;
+    e.stopPropagation();
+    e.preventDefault();
+    this._down(e);
+  };
 
   private _onHostDown = (): void => {
     this._lpDone = false;
@@ -523,7 +580,7 @@ export class PathCanvas extends LitElement {
     if (e.pointerType === 'touch') {
       this._touches.set(e.pointerId, s);
       if (this._touches.size === 2) {
-        this.beginPinch();
+        if (!this.overlay) this.beginPinch();
         return;
       }
       if (this._touches.size > 2) return;
@@ -674,7 +731,7 @@ export class PathCanvas extends LitElement {
           }),
         );
       }
-      out = snapPoint(f, this.sctx(others, 6 / this._view.zoom)).pt;
+      out = snapPoint(f, this.sctx(others, this.reach(6))).pt;
     }
     return out;
   }
@@ -784,7 +841,7 @@ export class PathCanvas extends LitElement {
       return;
     }
     if (g.kind === 'scale' || g.kind === 'rotate') return this.dragBox(g, s, e);
-    const reach = 6 / v.zoom;
+    const reach = this.reach(6);
     if (g.kind === 'anchor' && g.hit.t === 'anchor') {
       const { path: pi, i } = g.hit;
       const sp = g.startPaths[pi];
@@ -876,7 +933,7 @@ export class PathCanvas extends LitElement {
       const f0 = toFrame(v, g.down);
       const edge: Pt = [(h.sx > 0 ? b.x + b.w : b.x) + f[0] - f0[0], (h.sy > 0 ? b.y + b.h : b.y) + f[1] - f0[1]];
       if (this.snap.enabled && !e.ctrlKey && !e.metaKey) {
-        const reach = (this.coarse(e) ? SNAP_REACH_COARSE_PX : SNAP_REACH_PX) / v.zoom;
+        const reach = this.reach(this.coarse(e) ? SNAP_REACH_COARSE_PX : SNAP_REACH_PX);
         const c = this.sctx([], reach);
         for (const i of [0, 1] as const) {
           if (!(i ? h.sy : h.sx)) continue;
@@ -886,7 +943,7 @@ export class PathCanvas extends LitElement {
         }
       }
       nb = scaleBox(b, h.sx, h.sy, edge, { ratio: tf.keepRatio !== e.shiftKey, centre: e.altKey, bounds: tf.bounds });
-      text = t('W {w} H {h}', { w: rnd(nb.w), h: rnd(nb.h) });
+      text = t('W {w} H {h}', { w: this.n(nb.w), h: this.n(nb.h) });
       tr = { kind: 'scale', matrix: boxMatrix(b, nb), size: { w: nb.w, h: nb.h }, commit: false, label: STEP.scale, source: 'pointer' };
     } else return;
     g.tr = tr;
@@ -1055,6 +1112,7 @@ export class PathCanvas extends LitElement {
   }
 
   private _onWheel = (e: WheelEvent): void => {
+    if (this.overlay) return;
     e.preventDefault();
     const unit = e.deltaMode === 1 ? 16 : 1;
     const dx = e.deltaX * unit;
@@ -1104,7 +1162,7 @@ export class PathCanvas extends LitElement {
     if (tgt && (INPUT_TAGS.has(tgt.tagName) || tgt.isContentEditable)) return;
     if (tgt?.classList?.contains('rot') && e.key !== 'Escape') return; // the rotation slider has its own keys
     this._kbd = true;
-    if (e.code === 'Space' || e.key === ' ') {
+    if (!this.overlay && (e.code === 'Space' || e.key === ' ')) {
       this._space = true;
       this.requestUpdate();
       eat(e);
@@ -1128,7 +1186,7 @@ export class PathCanvas extends LitElement {
         eat(e);
         const nb = resizeBy(tb.box, DIRS[e.key][0], DIRS[e.key][1], e.altKey ? this.fineNudge : this.nudge, tb.bounds);
         this.emit<PathTransform>('mc-path-transform', { kind: 'scale', matrix: boxMatrix(tb.box, nb), size: { w: nb.w, h: nb.h }, commit: true, label: STEP.scale, source: 'keyboard' });
-        this.announce(t('W {w} H {h}', { w: rnd(nb.w), h: rnd(nb.h) }), 250);
+        this.announce(t('W {w} H {h}', { w: this.n(nb.w), h: this.n(nb.h) }), 250);
         return;
       }
       if ((e.key === 'a' || e.key === 'A') && this.active() >= 0 && this.mode !== 'select') {
@@ -1141,12 +1199,14 @@ export class PathCanvas extends LitElement {
       return;
     }
     const code = e.code;
-    if (e.key === '=' || e.key === '+') return this.zoomKey(e, 1.25);
-    if (e.key === '-' || e.key === '_') return this.zoomKey(e, 0.8);
-    if (e.key === '0' && !e.shiftKey) {
-      eat(e);
-      this.fit();
-      return;
+    if (!this.overlay) {
+      if (e.key === '=' || e.key === '+') return this.zoomKey(e, 1.25);
+      if (e.key === '-' || e.key === '_') return this.zoomKey(e, 0.8);
+      if (e.key === '0' && !e.shiftKey) {
+        eat(e);
+        this.fit();
+        return;
+      }
     }
     const nodes = this.mode === 'nodes' || this.mode === 'add';
     if (e.key === 'Tab' && nodes) return this.tab(e);
@@ -1261,12 +1321,12 @@ export class PathCanvas extends LitElement {
       eat(e);
       const a = this._cross ?? this.crossStart();
       this._cross = [step(a[0], 0), step(a[1], 1)];
-      this.announce(t('Cursor at x {x}, y {y}. Press Enter to place a point.', { x: rnd(this._cross[0]), y: rnd(this._cross[1]) }), 250);
+      this.announce(t('Cursor at x {x}, y {y}. Press Enter to place a point.', { x: this.n(this._cross[0]), y: this.n(this._cross[1]) }), 250);
       return;
     }
     const p = this.paths[ap];
     if (!p || !this.editable(ap)) {
-      if (!sel) this.panBy(-d[0] * 40, -d[1] * 40, e);
+      if (!sel && !this.overlay) this.panBy(-d[0] * 40, -d[1] * 40, e);
       return;
     }
     if (!sel) return;
@@ -1286,7 +1346,7 @@ export class PathCanvas extends LitElement {
     this.emitChange(list, false, label);
     clearTimeout(this._commitTimer);
     this._commitTimer = setTimeout(() => this.flushPending(), 800);
-    if (sel.anchors.length) this.announce(t('x {x}, y {y}', { x: rnd(q[0]), y: rnd(q[1]) }), 250);
+    if (sel.anchors.length) this.announce(t('x {x}, y {y}', { x: this.n(q[0]), y: this.n(q[1]) }), 250);
   }
 
   private panBy(dx: number, dy: number, e?: Event): void {
@@ -1431,33 +1491,39 @@ export class PathCanvas extends LitElement {
     const pt = this.paint[i];
     if (pt?.hidden || !p.anchors.length) return nothing;
     const d = pathData(p);
-    return svg`<path d=${d} fill=${pt?.fill ?? 'none'} stroke=${pt?.stroke ?? 'none'} stroke-width=${pt?.strokeWidth ?? 1} fill-rule=${pt?.fillRule ?? 'nonzero'}></path>${cls ? svg`<path class=${cls} d=${d}></path>` : nothing}`;
+    return svg`${this.overlay ? nothing : svg`<path d=${d} fill=${pt?.fill ?? 'none'} stroke=${pt?.stroke ?? 'none'} stroke-width=${pt?.strokeWidth ?? 1} fill-rule=${pt?.fillRule ?? 'nonzero'}></path>`}${cls ? svg`<path class=${cls} d=${d}></path>` : nothing}`;
   }
 
   private renderArt(): TemplateResult {
+    if (this.blind()) return svg``;
     const { x, y, zoom } = this._view;
+    const zy = this._view.zy ?? zoom;
     const fr = this.frame;
     const ap = this.active();
     const edit = this.mode !== 'view';
     let grid = '';
-    if (this.pixelGrid) {
-      const step = this.gridStep && this.gridStep > 0 ? this.gridStep : 1;
-      const k = Math.max(1, Math.ceil(GRID_MIN_PX / (step * zoom) - 1e-9), Math.ceil(Math.max(fr.w, fr.h) / (step * 256)));
-      const s = step * k;
-      const at = (i: number): number => Math.round(i * s * 1000) / 1000;
-      for (let i = 1; at(i) < fr.w - 1e-9; i++) grid += `M${fr.x + at(i)} ${fr.y}v${fr.h}`;
-      for (let i = 1; at(i) < fr.h - 1e-9; i++) grid += `M${fr.x} ${fr.y + at(i)}h${fr.w}`;
+    if (this.pixelGrid && this.gridStep !== 0) {
+      const step = this.gridStep > 0 ? this.gridStep : 1;
+      const lines = (len: number, z: number): number[] => {
+        const s = step * Math.max(1, Math.ceil(GRID_MIN_PX / (step * z) - 1e-9), Math.ceil(len / (step * 256)));
+        const out: number[] = [];
+        for (let i = 1; Math.round(i * s * 1000) / 1000 < len - 1e-9; i++) out.push(Math.round(i * s * 1000) / 1000);
+        return out;
+      };
+      for (const a of lines(fr.w, zoom)) grid += `M${fr.x + a} ${fr.y}v${fr.h}`;
+      for (const a of lines(fr.h, zy)) grid += `M${fr.x} ${fr.y + a}h${fr.w}`;
     }
     const sa = this.safeArea;
-    return svg`<g transform="translate(${x} ${y}) scale(${zoom})">
-      <rect class="frame" x=${fr.x} y=${fr.y} width=${fr.w} height=${fr.h}></rect>
+    return svg`<g transform="translate(${x} ${y}) scale(${zoom} ${zy})">
+      ${this.overlay ? nothing : svg`<rect class="frame" x=${fr.x} y=${fr.y} width=${fr.w} height=${fr.h}></rect>`}
       ${grid ? svg`<path class="grid" d=${grid}></path>` : nothing}
       ${sa ? svg`<rect class="safe" x=${fr.x + sa} y=${fr.y + sa} width=${Math.max(0, fr.w - sa * 2)} height=${Math.max(0, fr.h - sa * 2)}></rect>` : nothing}
-      ${this.paths.map((p, i) => this.drawPath(i, edit ? `outline${p.closed && !this.paint[i]?.fill ? ' wash' : ''}${i === ap ? '' : ' dim'}` : ''))}
+      ${this.paths.map((p, i) => this.drawPath(i, edit ? `outline${p.closed && !this.paint[i]?.fill && !this.overlay ? ' wash' : ''}${i === ap ? '' : ' dim'}` : ''))}
     </g>`;
   }
 
   private renderEdit(): TemplateResult | typeof nothing {
+    if (this.blind()) return nothing;
     const v = this._view;
     const ap = this.active();
     const sel = this._sel;
@@ -1473,7 +1539,7 @@ export class PathCanvas extends LitElement {
         const kind = effectiveKind(a);
         const hin = hs ? a.in : undefined;
         const hout = hs ? a.out : undefined;
-        return guard([sp[0], sp[1], kind, on, hin?.[0], hin?.[1], hout?.[0], hout?.[1], v.zoom, v.x, v.y], () => {
+        return guard([sp[0], sp[1], kind, on, hin?.[0], hin?.[1], hout?.[0], hout?.[1], v.zoom, v.zy, v.x, v.y], () => {
           const hl = ([['in', hin], ['out', hout]] as const).map(([w, h]) => {
             if (!h) return nothing;
             const hp = toScreen(v, h);
@@ -1543,8 +1609,8 @@ export class PathCanvas extends LitElement {
     if (!L || !this._loupeOn) return nothing;
     const c = loupeCentre(L.contact, this._size[0]);
     const r = LOUPE_SIZE_PX / 2;
-    const label = `${t('x {x}, y {y}', { x: rnd(L.at[0]), y: rnd(L.at[1]) })}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
-    return html`<div class="loupe" aria-hidden="true" style="left:${c[0] - r}px;top:${c[1] - r}px"><div class="lens"><svg viewBox="0 0 ${r * 2} ${r * 2}"><g transform="translate(${r} ${r}) scale(${this._view.zoom * LOUPE_ZOOM}) translate(${-L.at[0]} ${-L.at[1]})">${this.paths.map((_, i) => this.drawPath(i, 'outline'))}</g><rect class="pt sel" x=${r - 5.5} y=${r - 5.5} width="11" height="11"></rect></svg></div><span class="lbl">${label}</span></div>`;
+    const label = `${t('x {x}, y {y}', { x: this.n(L.at[0]), y: this.n(L.at[1]) })}${this.loupeLabel ? ` ${this.loupeLabel}` : ''}`;
+    return html`<div class="loupe" aria-hidden="true" style="left:${c[0] - r}px;top:${c[1] - r}px"><div class="lens"><svg viewBox="0 0 ${r * 2} ${r * 2}"><g transform="translate(${r} ${r}) scale(${this._view.zoom * LOUPE_ZOOM} ${(this._view.zy ?? this._view.zoom) * LOUPE_ZOOM}) translate(${-L.at[0]} ${-L.at[1]})">${this.paths.map((_, i) => this.drawPath(i, 'outline'))}</g><rect class="pt sel" x=${r - 5.5} y=${r - 5.5} width="11" height="11"></rect></svg></div><span class="lbl">${label}</span></div>`;
   }
 
   private renderList(): TemplateResult | typeof nothing {
