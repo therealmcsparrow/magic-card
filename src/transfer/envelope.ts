@@ -156,22 +156,19 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
   return out;
 }
 
-/**
- * An svg text for the image import: its first element is <svg, or the file is named .svg and its text is not JSON or
- * flow-style YAML (a preset file with the wrong extension is read as what it holds).
- */
-function isSvgText(text: string, fileName?: string): boolean {
-  if (looksLikeSvg(text)) return true;
-  const first = text.trimStart()[0];
-  return !!fileName && /\.svg$/i.test(fileName) && first !== '{' && first !== '[';
-}
-
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
 export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult {
   // images only (the Images tab): an svg text is one image, read by the image checker in file mode
   const imagesOnly = opts.accept.length === 1 && opts.accept[0] === 'image';
   if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('This file is larger than 8 MB, so it was not read.'));
-  const asImage = imagesOnly && typeof text === 'string' && isSvgText(text, opts.fileName);
+  // the file name decides: .svg holds SVG and .json holds JSON; pasted text has no name, so its content decides
+  const name = opts.fileName ?? '';
+  const svgName = /\.svg$/i.test(name);
+  if (svgName ? /^\s*[{[]/.test(text) : /\.json$/i.test(name) && looksLikeSvg(text)) {
+    const want = svgName ? 'SVG' : 'JSON';
+    return refuse('not_a_preset_file', t('The name says {want}, but the file holds {found}.', { found: svgName ? 'JSON' : 'SVG', want }));
+  }
+  const asImage = imagesOnly && typeof text === 'string' && looksLikeSvg(text, opts.fileName);
   // over 1 MB only a JSON text (an image envelope) or an svg image is looked at; safeParse decides the rest
   if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !asImage && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
   const notes: TransferNote[] = [];

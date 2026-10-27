@@ -323,6 +323,8 @@ export class ImageExt implements ImageUi {
         why = t('The file could not be read.');
       }
     }
+    // the window was closed, or Create was pressed, while the file was being read
+    if (this.size?.mode !== 'create') return;
     const r = why ? why : this.openSvg(text, file.name);
     if (typeof r === 'string') {
       this.startError = r;

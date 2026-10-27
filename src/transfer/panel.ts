@@ -9,6 +9,7 @@ import { loadRuntime } from '../utils/anim-runtime-loader';
 import { loadParticles } from '../utils/particles-loader';
 import { checkFileSize, haThemeYaml, parseTransfer, resolveClashes, serialiseTransfer } from './envelope';
 import { count } from './count';
+import { looksLikeSvg } from './detect';
 import { loadImageTransfer } from './image-transfer-loader';
 import { locale, t } from './i18n';
 
@@ -112,8 +113,8 @@ export class TransferPanel extends LitElement {
     // an image file is checked by the image-transfer chunk, so that chunk is loaded before the text is read
     const kinds = this._kinds();
     const onlyImages = kinds.length === 1 && kinds[0] === 'image';
-    // images only: an .svg file, or text with an <svg tag near its start, is one image (the prolog is short, so a bounded look is enough)
-    const asksImages = /"kind"\s*:\s*"image"/.test(text) || (onlyImages && (/\.svg$/i.test(fileName ?? '') || /<svg/i.test(text.slice(0, 4096))));
+    // images only: an .svg file, or text whose first element is <svg (the test parseTransfer uses), is one image
+    const asksImages = /"kind"\s*:\s*"image"/.test(text) || (onlyImages && looksLikeSvg(text, fileName));
     const wantsImages = asksImages && kinds.includes('image');
     const images = wantsImages ? await loadImageTransfer() : undefined;
     this._res =
