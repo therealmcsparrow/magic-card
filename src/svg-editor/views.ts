@@ -194,7 +194,7 @@ function xferWin(ed: McSvgEditor): TemplateResult {
 export function renderEditor(ed: McSvgEditor): TemplateResult {
   return html`<div class="layer" lang=${locale()} role="dialog" aria-modal="true" aria-label=${ed.img ? ed.img.title : t('Icon editor')} data-layout=${ed.layout} @keydown=${ed.onKey} @keyup=${ed.onKeyUp}>
     <span class="sentinel" tabindex="0" @focus=${() => ed.wrapFocus(true)}></span>
-    ${ed.lips.status()} ${skipLinks(ed)} ${ed.img ? ed.img.topBar() : topBar(ed)}
+    ${ed.lips.status()} ${skipLinks(ed)} ${topBar(ed)}
     ${ed.stage === 'edit' ? (ed.img?.readOnly ? ed.img.viewer() : workspace(ed)) : ed.stage === 'loading' ? html`<p class="center-msg" role="status">${ed.source.kind.startsWith('image') ? t('Loading the image editor') : t('Loading the icon editor')}</p>` : html`<div class="center-msg" role="alert"><p>${ed.img?.problem ?? (ed.source.kind.startsWith('image') ? t('The image editor could not load. Check your connection and try again.') : t('The icon editor could not load. Check your connection and try again.'))}</p>${btn(t('Try again'), undefined, () => void ed.start(), { text: true, size: 'md', variant: 'primary' })}</div>`}
     ${ed.img?.dialogs()}
     ${ed.startOpen ? startWindow(ed) : nothing}
@@ -220,43 +220,57 @@ function skipLinks(ed: McSvgEditor): TemplateResult | typeof nothing {
   </nav>`;
 }
 
+const SAVE_KEY = (): string => (/Mac|iPhone|iPad/.test(navigator.platform ?? '') ? 'Meta+S' : 'Control+S');
+
+/** The top bar, slot by slot in the order of ICON_TOP_BAR, IMAGE_TOP_BAR and IMAGE_READONLY_TOP_BAR (DOM, visual and Tab order are the same). */
 function topBar(ed: McSvgEditor): TemplateResult {
+  const img = ed.img;
   const edit = ed.stage === 'edit';
-  const blocked = ed.blockReason;
-  const o = ed.out;
-  const used = kbOf(o.bytes);
-  const zone = o.error === 'over' ? ' is-error' : o.bytes >= 24 * 1024 ? ' is-warn' : '';
-  const needLib = ed.libraryMissing && !ed.mcu;
+  const ro = !!img?.readOnly;
   const sm = ed.layout === 'stacked';
   const z = sm ? 'sm' : 'md';
   // narrow windows (and 200 % zoom): the title is read by screen readers only, secondary buttons keep their glyph and lose the word, so the bar needs two rows at most
   const tight = ed.layout === 'compact' || sm;
-  const why = ed.mcu && edit && !ed.doc.name.trim() ? t('Give the icon a name.') : blocked;
+  const image = ed.source.kind.startsWith('image');
+  const o = ed.out;
+  const zone = o.error === 'over' ? ' is-error' : o.bytes >= 24 * 1024 ? ' is-warn' : '';
+  const needLib = ed.libraryMissing && !ed.mcu;
+  const chip_ = ed.savedLabel;
+  const exported = img ? img.slot('transfer', z, tight) : button({ label: t('Export / Import'), glyph: tight ? 'swapVertical' : undefined, iconOnly: tight, variant: 'secondary', size: z, haspopup: 'menu', expanded: ed.menu?.key === 'xfer', onClick: (e) => ed.xferMenu(e.currentTarget as HTMLElement) });
   return html`<header class="topbar">
-    ${button({ label: ed.mcu ? t('Close') : t('Back to card editor'), glyph: 'arrowLeft', variant: 'secondary', size: z, iconOnly: tight, onClick: () => ed.back() })}
-    <h1 class=${tight ? 'title sr' : 'title'}>${t('Icon editor')}</h1>
-    ${edit ? button({ label: t('Start from…'), glyph: 'fileOutline', variant: 'secondary', size: z, iconOnly: tight, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) }) : nothing}
+    ${button({ label: image || ed.mcu ? t('Close') : t('Back to card editor'), glyph: 'arrowLeft', variant: 'secondary', size: z, iconOnly: tight, onClick: () => ed.back() })}
+    <h1 class=${tight ? 'title sr' : 'title'}>${image ? t('Image editor') : t('Icon editor')}</h1>
+    ${edit && !ro ? button({ label: t('Start from…'), glyph: 'fileOutline', variant: 'secondary', size: z, iconOnly: tight, haspopup: 'dialog', onClick: (e) => ed.openStart(e.currentTarget as HTMLElement) }) : nothing}
     ${edit
-      ? html`<div class="nm-field">
-          <div class="name"
-            ><input class="input" type="text" maxlength="80" aria-label=${t('Icon name')} aria-required=${ed.mcu ? 'true' : nothing} title=${t('Name used in the library')} .value=${ed.doc.name} @change=${(e: Event) => ed.apply({ ...ed.doc, name: (e.target as HTMLInputElement).value }, 'Rename icon', 'name')}
-          /></div>
-          ${ed.saved ? chip({ label: ed.savedCurrent ? t('Saved') : t('Changed since saved'), tone: ed.savedCurrent ? undefined : 'warn' }) : nothing}
-        </div>`
-      : nothing}
-    <span class="spacer"></span>
-    ${edit
-      ? html`${ed.layout === 'compact' ? btn(ed.panel === 'layers' ? t('Layers') : t('Library'), undefined, () => (ed.overlay = !ed.overlay), { text: true, size: z, pressed: ed.overlay }) : nothing}
-          ${btn(t('Undo'), 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z', size: z })}${btn(t('Redo'), 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z', size: z })}
-          <span class=${`chip meter${zone}`} title=${t('Size of the icon markup in your dashboard')}>${t('{size} / 32 KB · {c, plural, one {# point} other {# points}}', { size: o.error === 'empty' ? 0 : used, c: o.points })}${o.bytes >= 4096 && !zone && !tight ? html` · ${t('Heavy for wall tablets')}` : nothing}</span>
-          ${button({ label: t('Export / Import'), glyph: tight ? 'swapVertical' : undefined, iconOnly: tight, variant: 'secondary', size: z, haspopup: 'menu', expanded: ed.menu?.key === 'xfer', onClick: (e) => ed.xferMenu(e.currentTarget as HTMLElement) })}
-          ${ed.mcu ? nothing : html`<button type="button" data-act="save-library" class=${`btn btn-secondary${sm ? ' btn-sm' : ''}`} aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} aria-keyshortcuts="Control+S" @click=${() => !needLib && ed.openSave()}>${t('Save to library')}</button>`}
-          ${needLib ? html`<span id="lib-hint" class="sr">${t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.')}</span>` : nothing}
-          <button type="button" class=${`btn btn-primary${sm ? ' btn-sm' : ''}`} aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} aria-keyshortcuts="Control+Enter" title=${why ?? nothing} @click=${() => ed.done()}>${glyph('check', 18)}${ed.mcu ? t('Save') : t('Done')}</button>
-          ${why ? html`<span id="done-why" class="sr">${why}</span>` : nothing}
+      ? ro
+        ? html`<strong class="title">${ed.doc.name}</strong><span class="spacer"></span>${exported}`
+        : html`<div class="nm-field">
+            <label class=${tight ? 'sr' : 'nm-label'} for="title-name">${img ? img.nameLabel : t('Icon name')}</label>
+            <div class="name"
+              ><input id="title-name" class="input" type="text" maxlength="80" aria-required=${ed.mcu && !img ? 'true' : nothing} title=${img ? nothing : t('Name used in the library')} .value=${ed.doc.name} @change=${(e: Event) => ed.apply({ ...ed.doc, name: (e.target as HTMLInputElement).value }, img ? 'Rename image' : 'Rename icon', 'name')}
+            /></div>
+            ${chip_ ? chip({ label: chip_, tone: chip_ === t('Saved') ? undefined : 'warn' }) : nothing}
+          </div>
+          <span class="spacer"></span>
+          ${ed.layout === 'compact' ? btn(image || ed.panel === 'layers' ? t('Layers') : t('Library'), undefined, () => (ed.overlay = !ed.overlay), { text: true, size: z, pressed: ed.overlay }) : nothing}${btn(t('Undo'), 'undo', () => ed.undo(), { disabled: !ed.hist?.canUndo, keys: 'Control+Z', size: z })}${btn(t('Redo'), 'redo', () => ed.redo(), { disabled: !ed.hist?.canRedo, keys: 'Control+Shift+Z', size: z })}
+          ${img
+            ? html`${img.slot('canvas', z, tight)}${img.slot('reference', z, tight)}${exported}${img.slot('more', z, tight)}${primary(ed, sm)}`
+            : html`<span class=${`chip meter${zone}`} title=${t('Size of the icon markup in your dashboard')}>${t('{size} / 32 KB · {c, plural, one {# point} other {# points}}', { size: o.error === 'empty' ? 0 : kbOf(o.bytes), c: o.points })}${o.bytes >= 4096 && !zone && !tight ? html` · ${t('Heavy for wall tablets')}` : nothing}</span>
+              ${exported}
+              ${ed.mcu ? nothing : html`<button type="button" data-act="save-library" class=${`btn btn-secondary${sm ? ' btn-sm' : ''}`} aria-disabled=${needLib ? 'true' : nothing} aria-describedby=${needLib ? 'lib-hint' : nothing} aria-keyshortcuts="Control+S" @click=${() => !needLib && ed.openSave()}>${t('Save to library')}</button>`}
+              ${needLib ? html`<span id="lib-hint" class="sr">${t('Keep your own icons for every dashboard with the free Magic Card Utils add-on. Until then, what you draw is saved in this card only.')}</span>` : nothing}
+              ${primary(ed, sm)}`}
           ${button({ label: t('Shortcuts'), glyph: 'helpCircle', iconOnly: true, size: z, expanded: ed.dlg === 'help', controls: 'help-pop', keys: '?', onClick: () => (ed.dlg = ed.dlg === 'help' ? undefined : 'help') })}`
       : nothing}
-  </header>`;
+  </header>${edit && !ro ? img?.barTail() : nothing}`;
+}
+
+/** Done (Save in the Magic Card Utils panel and for an image): stays focusable while it cannot act, with its reason read out. */
+function primary(ed: McSvgEditor, sm: boolean): TemplateResult {
+  const img = ed.img;
+  const why = img ? img.saveWhy : ed.mcu && !ed.doc.name.trim() ? t('Give the icon a name.') : ed.blockReason;
+  return html`<button type="button" class=${`btn btn-primary${sm ? ' btn-sm' : ''}`} aria-disabled=${why ? 'true' : nothing} aria-describedby=${why ? 'done-why' : nothing} aria-keyshortcuts=${img ? SAVE_KEY() : 'Control+Enter'} title=${why ?? nothing} @click=${() => ed.done()}>${glyph('check', 18)}${img || ed.mcu ? t('Save') : t('Done')}</button>
+    ${why ? html`<span id="done-why" class="sr">${why}</span>` : nothing}`;
 }
 
 /** A banner follows the document: a kit notice with its actions and a Dismiss button where the message can go away. */
@@ -307,20 +321,37 @@ function startPicked(ed: McSvgEditor, e: CustomEvent<{ value: string }>): void {
   ed.startIcon = String(e.detail?.value ?? '').trim();
 }
 
+type StartPanel = 'icon' | 'paste' | 'canvas-size';
+
+/** A tile that opens its panel opens it and moves the focus to its first field; pressed again it closes the panel and the focus stays on the tile. */
+function toggle(ed: McSvgEditor, panel: StartPanel, e: Event): void {
+  const tile = e.currentTarget as HTMLElement;
+  ed.startMode = ed.startMode === panel ? undefined : panel;
+  void ed.updateComplete.then(() => (ed.startMode ? ed.renderRoot.querySelector<HTMLElement>('#start-panel :is(input, textarea, [tabindex="0"], mc-icon-picker)') : tile)?.focus({ preventScroll: true }));
+}
+
 function startPanel(ed: McSvgEditor): TemplateResult {
-  const tile = (g: GlyphName, name: string, sub: string, on: () => void, pressed?: boolean): TemplateResult =>
-    html`<button type="button" class="tile glyph-only" aria-pressed=${pressed === undefined ? nothing : aria(pressed)} @click=${on}>${glyph(g, 24)}<span>${name}</span><span class="meta">${sub}</span></button>`;
+  const img = ed.img;
+  const tile = (id: string, g: GlyphName, name: string, sub: string, on: (e: Event) => void, panel?: StartPanel): TemplateResult => {
+    const open = ed.startMode === panel;
+    return html`<button type="button" id=${id || nothing} class="tile glyph-only" aria-expanded=${panel ? aria(open) : nothing} aria-controls=${panel ? 'start-panel' : nothing} aria-busy=${id && ed.startBusy ? 'true' : nothing} @click=${on}>${glyph(g, 24)}<span>${name}${panel ? glyph(open ? 'chevronDown' : 'chevronRight', 14) : nothing}</span><span class="meta">${sub}</span></button>`;
+  };
+  const mode = ed.startMode;
+  const pasted = mode === 'paste' ? ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '' : '';
+  const blank = !pasted.trim();
   return html`<div class="start">
     <div class="tiles">
-      ${tile('squareOutline', t('Blank'), t('24 x 24'), () => ed.begin(ed.blankStart()))}
-      ${tile('shapeOutline', t('An icon'), t('Pick MDI or a pack'), () => (ed.startMode = ed.startMode === 'icon' ? undefined : 'icon'), ed.startMode === 'icon')}
-      ${tile('contentPaste', t('Paste SVG'), t('markup'), () => (ed.startMode = ed.startMode === 'paste' ? undefined : 'paste'), ed.startMode === 'paste')}
-      ${tile('fileOutline', t('Open file'), t('.svg'), () => ed.renderRoot.querySelector<HTMLInputElement>('input[type=file]')?.click())}
-      ${ed.libraryMissing ? nothing : tile('bookshelf', t('My icons'), t('Library'), () => ed.startLibrary())}
+      ${img
+        ? tile('', 'squareOutline', t('Blank canvas'), t('Pick a shape'), (e) => toggle(ed, 'canvas-size', e), 'canvas-size')
+        : html`${tile('', 'squareOutline', t('Blank'), t('24 x 24'), () => ed.take(ed.blankStart()))}${tile('', 'shapeOutline', t('An icon'), t('Pick MDI or a pack'), (e) => toggle(ed, 'icon', e), 'icon')}`}
+      ${tile('', 'contentPaste', t('Paste SVG'), t('markup'), (e) => toggle(ed, 'paste', e), 'paste')}
+      ${tile('start-open', 'fileOutline', t('Open file'), ed.startBusy ? t('Reading…') : t('.svg'), () => ed.renderRoot.querySelector<HTMLInputElement>('#start-file')?.click())}
+      ${img || ed.libraryMissing ? nothing : tile('', 'bookshelf', t('My icons'), t('Library'), () => ed.startLibrary())}
     </div>
-    <div class="acts">${button({ label: t('Import file'), glyph: 'folderOpenOutline', variant: 'secondary', size: 'sm', onClick: (e) => ((ed.startOpen = false), void ed.openTransfer('import', e.currentTarget as HTMLElement)) })}</div>
-    <input type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
-    ${ed.startMode === 'icon'
+    ${img ? nothing : html`<div class="acts">${button({ label: t('Import file'), glyph: 'folderOpenOutline', variant: 'secondary', size: 'sm', onClick: (e) => ((ed.startOpen = false), void ed.openTransfer('import', e.currentTarget as HTMLElement)) })}</div>`}
+    <input id="start-file" type="file" accept=".svg,image/svg+xml" hidden @change=${(e: Event) => void ed.startFile((e.target as HTMLInputElement).files?.[0])} />
+    <div id="start-panel">
+    ${mode === 'icon'
       ? html`<form class="startform" @submit=${(e: Event) => {
           e.preventDefault();
           const name = ed.startIcon.trim();
@@ -332,18 +363,32 @@ function startPanel(ed: McSvgEditor): TemplateResult {
           <div class="acts"><button class="btn btn-primary" type="submit" ?disabled=${!ed.startIcon.trim()}>${t('Use this icon')}</button></div>
         </form>`
       : nothing}
-    ${ed.startMode === 'paste'
+    ${mode === 'paste'
       ? html`<div class="startform">
           ${field({
             id: 'start-paste',
             label: t('SVG markup'),
-            help: t('{size} KB', { size: kbOf(new TextEncoder().encode(ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '').length) }),
-            control: html`<textarea id="start-paste" class="input" rows="6" aria-describedby="start-paste-help" @input=${() => ed.requestUpdate()}></textarea>`,
+            help: t('{size} KB', { size: kbOf(new TextEncoder().encode(pasted).length) }),
+            control: html`<textarea id="start-paste" class="input" rows="6" aria-describedby=${blank ? 'start-paste-help start-paste-why' : 'start-paste-help'} aria-invalid=${ed.startError && ed.startAt === 'start-paste-go' ? 'true' : nothing} @input=${() => ed.requestUpdate()}></textarea>`,
           })}
-          <div class="acts">${btn(t('Import'), undefined, () => void ed.importText(ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '', t('My icon')), { text: true, size: 'md', variant: 'primary' })}</div>
+          <div class="acts"><button type="button" id="start-paste-go" class="btn btn-primary" aria-disabled=${blank ? 'true' : nothing} @click=${() => {
+            const text = ed.renderRoot.querySelector<HTMLTextAreaElement>('#start-paste')?.value ?? '';
+            if (text.trim()) void ed.usePaste(text);
+          }}>${t('Use this SVG')}</button></div>
+          ${blank ? html`<span id="start-paste-why" class="sr">${t('Paste some SVG first.')}</span>` : nothing}
         </div>`
       : nothing}
-    ${ed.startError ? html`<p class="help error" role="alert">${ed.startError}</p>` : nothing}
+    ${mode === 'canvas-size'
+      ? html`<div class="startform">
+          ${ed.img!.form()}
+          <div class="acts"><button type="button" id="start-create" class="btn btn-primary" aria-disabled=${ed.img!.formBad ? 'true' : nothing} @click=${() => {
+            const doc = ed.img!.create();
+            if (doc) ed.take(doc);
+          }}>${t('Create')}</button></div>
+        </div>`
+      : nothing}
+    </div>
+    <p id="start-status" class="help error" role="alert">${ed.startError ? glyph('alertCircle', 16) : nothing}${ed.startError ?? ''}</p>
     <p class="help">${t('Pasted and opened files are cleaned first. Scripts, images and links are removed.')}</p>
   </div>`;
 }
@@ -879,7 +924,7 @@ function helpPop(ed: McSvgEditor): TemplateResult {
   return html`<mc-ui-popover id="help-pop" label=${t('Shortcuts')} .align=${'end'} @mc-popover-close=${() => ed.dlg === 'help' && (ed.dlg = undefined)}>
     <div class="pop-body" tabindex="-1">
       <h2 class="title">${t('Shortcuts')}</h2>
-      <ul class="help-list">${hintFor(ed) ? html`<li>${hintFor(ed)}</li>` : nothing}${HELP_KEYS.map((x) => html`<li>${t(x)}</li>`)}</ul>
+      <ul class="help-list">${hintFor(ed) ? html`<li>${hintFor(ed)}</li>` : nothing}<li>${ed.img ? ed.img.keys : t(HELP_KEYS[0])}</li>${HELP_KEYS.slice(1).map((x) => html`<li>${t(x)}</li>`)}</ul>
     </div>
   </mc-ui-popover>`;
 }

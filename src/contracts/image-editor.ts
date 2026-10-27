@@ -2,8 +2,8 @@ import type { HomeAssistant } from '../types';
 import type { ImageBinding, SavedImageInput } from './mcu-library-images';
 
 /*
- * Contract: image editing. Version 1.1.0 (IMAGE_EDITOR_CONTRACT), revision 6 (IMAGE_EDITOR_CONTRACT_REVISION).
- * Full drawings are edited in the existing <mc-svg-editor> (svg-editor 1.1.0) in image mode. Image-only parts live in two
+ * Contract: image editing. Version 1.2.0 (IMAGE_EDITOR_CONTRACT), revision 7 (IMAGE_EDITOR_CONTRACT_REVISION).
+ * Full drawings are edited in the existing <mc-svg-editor> (svg-editor 1.2.0) in image mode. Image-only parts live in two
  * editor chunks so the svg-editor chunk grows only by the seam:
  *   - image-editor (dist/magic-card-image-editor.js, entry src/image-editor/chunk.ts): a child of the svg-editor chunk
  *     (literal import() in src/svg-editor/image-loader.ts, a registered import() site). It exports
@@ -17,9 +17,9 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  * drawn from api.fragment() nodes or <mc-svg-image>; thumbnails come from api.thumbnail(); image export files from
  * api.fileBlob(). Strings: i18n namespace 'image-editor' (en-GB ids, en-US and nl complete).
  *
- * ── In <mc-svg-editor> (svg-editor 1.1.0, SVG_EDITOR_CONTRACT_REVISION 6) ──
+ * ── In <mc-svg-editor> (svg-editor 1.2.0, SVG_EDITOR_CONTRACT_REVISION 7) ──
  *   SvgEditorSource holds three image sources:
- *     { kind: 'image-blank'; width?: number; height?: number }   no size: the canvas-size step opens first
+ *     { kind: 'image-blank'; width?: number; height?: number }   no size: the start window opens with Blank canvas open
  *     { kind: 'image'; id: string }                              a library image
  *     { kind: 'image-svg'; svg: string }                         a file opened as a new image
  *   An image source loads image-editor and svg-image before the first canvas render (the shell shows its loading
@@ -35,6 +35,9 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   Save targets: library only (images have no inline copy). Event detail for image saves:
  *     mc-svg-save { target: 'image-library', saved: SavedImageInput }.
  *   Save shortcut: Control+S, and Command+S on macOS; tooltips name the platform's key.
+ *   Top bar: the shell's bar in IMAGE_TOP_BAR order (IMAGE_READONLY_TOP_BAR when read-only), svg-editor 1.2.0
+ *   "Profiles". The image chunk gives the Canvas size, Reference picture, Export file, More and Save slots and the
+ *   first line of the Shortcuts popover ("Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text").
  *   Hosts: 'mcu' (panel Images tab, Library tab) and 'card' (opened from an image field by <mc-library-image-field>).
  *   Without Magic Card Utils, or for a non-admin user, image mode opens read-only: no Save, Rename or Delete; the
  *   reason is shown (install Magic Card Utils through HACS / ask an administrator).
@@ -42,27 +45,43 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   tool, two fingers pan and pinch-zoom, a Pan tool exists for one-finger panning, and the layer list selects any
  *   layer as the fallback for small parts. On-canvas text has on-screen Done and Cancel.
  *
- * ── Image start window ──
- *   The window that opens for an 'image-blank' source without a size (the canvas-size step: presets, custom W x H)
- *   also offers Open file: a labelled button in its tab order, in front of an <input type=file
- *   accept=".svg,image/svg+xml">, with a help line. The file passes Import's gate before the text is read: the name
- *   ends in .svg or file.type is image/svg+xml, and File.size <= MAX_IMAGE_IMPORT_BYTES (8 MB); then file.text().
- *   Refusals use Import's words ("Choose an SVG file.", "That file is too big to open (over 8 MB). Try a smaller
- *   copy.") and "The file could not be read." when the read fails. When the window was closed, or Create was pressed,
- *   while the file was being read, the result is dropped and the document stays as it is.
- *   The text then goes the way of the { kind: 'image-svg', svg: text } source, which is read exactly like Import:
- *   api.sanitizeImage(text, { file: true }), then the import summary and the locked-part rules below; the sanitiser's
- *   IMAGE_MAX_BYTES (256 KiB) still applies after the 8 MB file gate, so a 2 MB file passes the gate and is then
- *   refused by the sanitiser with its size message. A refusal keeps the start window open with the reason in its
- *   role=alert line and changes nothing; the window, the shell and the image editor never parse, rewrite or draw the
- *   text before the sanitiser, and it never reaches unsafeSVG. The same SVG file gives the same drawing and summary
- *   here, through Import and through the Magic Card Utils Images import (preset-transfer 1.3.0, "SVG files as
- *   images"). A file named .svg that holds JSON is refused here by the sanitiser; the Images import refuses it with
- *   its own name message (preset-transfer "File names").
- *   Keyboard: every control reachable by Tab, visible focus, 24 x 24 px targets; results in the polite live region.
+ * ── Image start window (version 1.2.0) ──
+ *   The shell's start window (svg-editor 1.2.0, "Profiles") with IMAGE_START: Blank canvas, Paste SVG, Open file. It
+ *   opens for an 'image-blank' source without a size, with Blank canvas open, and from Start from... while editing.
+ *   There is no library entry. The image chunk gives the words and the work below; the shell draws the window, the
+ *   tiles, the panels' buttons and the role=alert status line.
+ *   - Blank canvas: the canvas-size form (Shape: IMAGE_CANVAS_PRESETS and Custom as one radio group; Width, Height,
+ *     Keep ratio, "{min} to {max} pixels per side.") and Create, which begins a drawing of that size.
+ *   - Open file: the file passes Import's gate before the text is read: readFile(file, IMAGE_SVG_INTAKE) (svg-intake
+ *     1.1.0; the name ends in .svg or file.type is image/svg+xml, and File.size <= MAX_IMAGE_IMPORT_BYTES (8 MB)).
+ *     Refusals use Import's words ("Choose an SVG file.", "That file is too big to open (over 8 MB). Try a smaller
+ *     copy.") and "The file could not be read." when the read fails.
+ *   - Paste SVG: refuseText(text, IMAGE_SVG_MAX_FILE_BYTES); 'too_large' reads "That SVG is too big to open (over
+ *     8 MB). Try a smaller copy." (An empty paste never gets here: the shell's Use this SVG waits for text.)
+ *   Both then go the way of the { kind: 'image-svg', svg: text } source, which is read exactly like Import: the image
+ *   chunk awaits its loadSvgCss() (src/image-editor/chunk.ts is in SVG_CSS_OPEN_SITES), then
+ *   api.sanitizeImage(text, { file: true, css }), then the reader, the import summary and the locked-part rules below;
+ *   the sanitiser's IMAGE_MAX_BYTES (256 KiB) still applies after the 8 MB gate, so a 2 MB file passes the gate and
+ *   is then refused by the sanitiser with its size message. A refusal keeps the start window open with the reason in
+ *   the status line and changes nothing; the window, the shell and the image editor never parse, rewrite or draw the
+ *   text before the sanitiser, and it never reaches unsafeSVG. The shell hands the pasted or read text to the image
+ *   chunk and sanitises none of it itself. The same SVG gives the same drawing and summary through Open file, Paste
+ *   SVG, Import and the Magic Card Utils Images import (preset-transfer 1.3.0, "SVG files as images"). A file named
+ *   .svg that holds JSON is refused here by the sanitiser; the Images import refuses it with its own name message
+ *   (preset-transfer "File names").
+ *   When the window was closed, reopened, or answered another way (Create, a second file, a paste) while a text was
+ *   being read, the late result is dropped and the document stays as it is.
+ *   Success: the window closes and the import summary window shows ("Imported '{name}'" for a file, "Imported file"
+ *   for a paste; Continue has focus). A new image is named "My image" (a file: its name without .svg). While editing,
+ *   the new drawing replaces the old one as one history step that Undo reverses, and the image keeps its name and
+ *   library id, so Save updates the same item (as Import does).
+ *   Closing the window before the first document exists closes the editor (mc-svg-close { dirty: false }).
+ *   Keyboard: every control reachable by Tab in DOM order, visible focus, 24 x 24 px targets; results in the polite
+ *   live region (focus and Tab rules: svg-editor "Profiles").
  *
  * ── ImageEditorExt (what image-editor gives the shell) ──
- *   - Canvas size step and Canvas size action (presets, custom W x H, keep ratio, content stays where it is). Cards
+ *   - The canvas-size form of the start window's Blank canvas entry and the Canvas size action while editing (its own
+ *     window with Cancel and Apply: presets, custom W x H, keep ratio, content stays where it is). Cards
  *     that already wrote an aspect_ratio keep it; the card field offers to update it (below).
  *   - Paint: None, Main, Accent, hex colour (with alpha), theme colour (IMAGE_THEME_COLOURS list plus a typed
  *     --name), linear and radial gradient (2..8 stops, each stop any of the solid paints, angle or centre/radius
@@ -176,8 +195,8 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   images"). Without Magic Card Utils, importing an image is refused with the install hint (cards keep no copy).
  */
 
-export const IMAGE_EDITOR_CONTRACT = '1.1.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 6;
+export const IMAGE_EDITOR_CONTRACT = '1.2.0';
+export const IMAGE_EDITOR_CONTRACT_REVISION = 7;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';

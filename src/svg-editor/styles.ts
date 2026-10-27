@@ -125,6 +125,10 @@ export const editorStyles: CSSResult[] = [
       padding: 24px;
       overflow: auto;
     }
+    .topbar .nm-label {
+      font-size: 0.8125rem;
+      white-space: nowrap;
+    }
     .topbar .nm-field {
       display: flex;
       align-items: center;
@@ -142,10 +146,27 @@ export const editorStyles: CSSResult[] = [
       display: grid;
       gap: 12px;
     }
+    .start .tiles {
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    }
     .start .tile {
+      min-height: 72px;
       font: inherit;
       font-size: 0.8125rem;
     }
+    .start .tile[aria-expanded='true'] {
+      border-color: var(--mc-accent);
+      background: var(--mc-accent-tint);
+    }
+    .start #start-status:empty {
+      margin-block-start: -12px;
+    }
+    .startform textarea {
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 9em;
+    }
+
     .startform {
       display: grid;
       gap: 8px;

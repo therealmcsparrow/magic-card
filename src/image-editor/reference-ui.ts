@@ -1,5 +1,6 @@
 import { html, nothing, type TemplateResult } from 'lit';
 import { REFERENCE_TYPES } from '../contracts/image-editor';
+import { glyph } from '../ui-kit/glyphs';
 import { button, field, notice, switchRow } from '../ui-kit/templates';
 import { t } from './i18n';
 import type { ImageExt } from './chunk';
@@ -9,8 +10,9 @@ import { fit, pick, remove, reset, setAlign, turn } from './reference';
 
 const aria = (b: boolean): string => (b ? 'true' : 'false');
 
-export function refButton(x: ImageExt, small: boolean): TemplateResult {
-  return html`<button type="button" id="ref-btn" class=${`btn btn-secondary${small ? ' btn-sm' : ''}`} aria-expanded=${aria(x.refOpen)} aria-controls="ref-panel" @click=${() => toggle(x)}>${t('Reference picture')}</button>`;
+export function refButton(x: ImageExt, small: boolean, tight: boolean): TemplateResult {
+  const label = t('Reference picture');
+  return html`<button type="button" id="ref-btn" class=${tight ? `icon-btn${small ? ' sm' : ''}` : `btn btn-secondary${small ? ' btn-sm' : ''}`} aria-label=${tight ? label : nothing} title=${tight ? label : nothing} aria-expanded=${aria(x.refOpen)} aria-controls="ref-panel" @click=${() => toggle(x)}>${glyph('eyeOn', tight ? 20 : 18)}${tight ? nothing : label}</button>`;
 }
 
 export function toggle(x: ImageExt, open = !x.refOpen): void {

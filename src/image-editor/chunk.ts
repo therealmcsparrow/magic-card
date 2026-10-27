@@ -29,7 +29,7 @@ import { FRESH, decodePicture, dispose as disposeRef, matchShape, moved, underla
 import { closePanel } from './reference-ui';
 import { importWin, readSvg, replaceWin, summary, type Imported } from './importer';
 import { contextOf, layerOf, lift, partColours, plain, partDefs, partNode, partOut, partRows, type Held } from './part';
-import { canvasDefs, detailsWin, sizeWin, tooBigWin, topBar, viewer } from './ui';
+import { barTail, canvasDefs, detailsWin, sizeForm, sizeWin, slotView, tooBigWin, viewer } from './ui';
 
 /*
  * The image-only half of <mc-svg-editor> (contract image-editor 1.0.0): what the shell asks of an ImageUi at the places
@@ -195,8 +195,10 @@ export class ImageExt implements ImageUi {
   busy = false;
   conflict = false;
   size?: SizeDlg;
-  /** Why the file chosen in the start window was not opened (the window stays open). */
-  startError?: string;
+  /** The source gave no canvas size: the start window opens first and no drawing exists until it gives one. */
+  asks = false;
+  /** The import summary of the text just read, shown once the drawing it made is showing. */
+  private next?: Imported;
   details?: DetailsDlg;
   big?: { bytes: number; limit?: number };
   kibOpen = false;
@@ -268,7 +270,7 @@ export class ImageExt implements ImageUi {
   }
 
   get modal(): boolean {
-    return !!(this.size || this.details || this.big || this.imp || this.replacing);
+    return !!(this.size?.mode === 'apply' || this.details || this.big || this.imp || this.replacing);
   }
 
   get name(): string {
@@ -284,8 +286,7 @@ export class ImageExt implements ImageUi {
       const h = src.height;
       const known = w !== undefined && h !== undefined && sideOk(w) && sideOk(h);
       const doc = this.canvasDoc(known ? w : DEFAULT_PRESET.width, known ? h : DEFAULT_PRESET.height);
-      if (!known) this.win++;
-      if (!known) this.size = { mode: 'create', preset: DEFAULT_PRESET.ratio, w: String(DEFAULT_PRESET.width), h: String(DEFAULT_PRESET.height), keep: true, warned: false };
+      this.asks = !known;
       return doc;
     }
     if (src.kind === 'image-svg') {
@@ -318,35 +319,45 @@ export class ImageExt implements ImageUi {
     }));
   }
 
-  /** The 'image-svg' source: the markup of an opened file through the sanitiser, with the import summary. */
+  /** The 'image-svg' source and the start window: the markup through the sanitiser and the reader; the import summary shows with the drawing (ready()). */
   private openSvg(text: string, name?: string): Doc | string {
-    const r = this.fromFile(text, t('My image'));
+    const r = this.fromFile(text, name?.replace(/\.svg$/i, '') || t('My image'));
     if (typeof r === 'string') return r;
-    this.imp = summary(name, r.stripped, r.doc);
+    this.next = summary(name, r.stripped, r.doc);
     return r.doc;
   }
 
-  /** Counts start windows and reads: a read that finds another number was answered for an earlier window. */
-  private win = 0;
+  /** A fresh Blank canvas form for the start window. */
+  reset(): void {
+    this.next = undefined;
+    this.size = { mode: 'create', preset: DEFAULT_PRESET.ratio, w: String(DEFAULT_PRESET.width), h: String(DEFAULT_PRESET.height), keep: true, warned: false };
+  }
 
-  /** Open file in the start window: the file gate, then the same path as the 'image-svg' source. A refusal keeps the window open. */
-  async startFile(file: File): Promise<void> {
-    const win = ++this.win;
-    const read = await readSvg(file);
-    if (!('error' in read)) await this.loadCss();
-    // the window was closed, reopened or answered with Create while the file was being read
-    if (win !== this.win || this.size?.mode !== 'create') return;
-    const r = 'error' in read ? read.error : this.openSvg(read.text, file.name);
-    if (typeof r === 'string') {
-      this.startError = r;
-      this.shell.requestUpdate();
-      return;
-    }
-    this.startError = undefined;
-    this.size = undefined;
-    this.shell.begin(r);
-    this.ready();
-    this.restoreFocus();
+  form(): TemplateResult {
+    return this.size ? sizeForm(this) : html``;
+  }
+
+  get formBad(): boolean {
+    return !this.size || !readSize(this.size.w, this.size.h).ok;
+  }
+
+  create(): Doc | undefined {
+    const r = this.size && readSize(this.size.w, this.size.h);
+    return r?.ok ? this.canvasDoc(r.w, r.h) : undefined;
+  }
+
+  /** Open file in the start window: the file gate, then the same path as the 'image-svg' source. */
+  async openFile(file: File): Promise<{ doc: Doc } | string> {
+    const r = await readSvg(file);
+    return 'error' in r ? r.error : this.openText(r.text, file.name);
+  }
+
+  /** Paste SVG in the start window (and the text of an opened file): the CSS resolver first, then the same path as the 'image-svg' source. */
+  async openText(text: string, name?: string): Promise<{ doc: Doc } | string> {
+    this.next = undefined;
+    await this.loadCss();
+    const r = this.openSvg(text, name);
+    return typeof r === 'string' ? r : { doc: r };
   }
 
   /** A file's markup through the sanitiser and the reader: the document, or the reason it gave nothing. */
@@ -417,7 +428,7 @@ export class ImageExt implements ImageUi {
   /** Canvas size window with the picture's shape applied but not committed. */
   matchSize(): void {
     if (!this.ref) return;
-    if (!this.size) this.openSize(this.shell.renderRoot.querySelector<HTMLElement>('#ref-btn') ?? undefined);
+    if (this.size?.mode !== 'apply') this.openSize(this.shell.renderRoot.querySelector<HTMLElement>('#ref-btn') ?? undefined);
     const m = matchShape(this.ref, this.align.r, this.shell.doc.vb);
     this.setSize({ preset: 'custom', w: String(m.w), h: String(m.h), keep: true });
   }
@@ -442,12 +453,15 @@ export class ImageExt implements ImageUi {
   /** Called when the first document is showing. */
   ready(): void {
     const sh = this.shell;
+    this.asks = false;
+    if (this.size?.mode === 'create') this.size = undefined;
+    if (this.next) this.imp = this.next;
+    this.next = undefined;
     sh.safe = false;
     sh.grid = gridFor(sh.doc.vb.w, sh.doc.vb.h);
     if (this.readOnly) sh.tool = 'hand';
     this.shell.requestUpdate();
-    if (this.size) this.focusShape();
-    else this.landFocus();
+    this.landFocus();
   }
 
   /** The Canvas size window opens on the shape that is chosen, not on the first one. */
@@ -712,12 +726,9 @@ export class ImageExt implements ImageUi {
   }
 
   closeSize(): void {
-    this.win++;
-    const create = this.size?.mode === 'create';
     this.size = undefined;
     this.shell.requestUpdate();
-    if (create) this.shell.fire('mc-svg-close', { dirty: false });
-    else this.restoreFocus();
+    this.restoreFocus();
   }
 
   commitSize(): void {
@@ -726,14 +737,6 @@ export class ImageExt implements ImageUi {
     const r = readSize(s.w, s.h);
     if (!r.ok) return;
     const sh = this.shell;
-    if (s.mode === 'create') {
-      this.win++;
-      sh.begin(this.canvasDoc(r.w, r.h));
-      this.size = undefined;
-      this.ready();
-      this.restoreFocus();
-      return;
-    }
     const out = outsideCount(sh.doc, r.w, r.h);
     if (out && !s.warned) {
       this.size = { ...s, warned: true };
@@ -1043,7 +1046,7 @@ export class ImageExt implements ImageUi {
     if (this.refOpen) return closePanel(this), true;
     if (this.big) this.big = undefined;
     else if (this.details) return this.closeDetails(), true;
-    else if (this.size) return this.closeSize(), true;
+    else if (this.size?.mode === 'apply') return this.closeSize(), true;
     else return false;
     this.shell.requestUpdate();
     return true;
@@ -1055,8 +1058,28 @@ export class ImageExt implements ImageUi {
     disposeField(this);
   }
 
-  topBar(): TemplateResult {
-    return topBar(this);
+  slot(slot: Parameters<ImageUi['slot']>[0], size: 'sm' | 'md', tight: boolean): TemplateResult {
+    return slotView(this, slot, size, tight);
+  }
+
+  barTail(): TemplateResult {
+    return barTail(this);
+  }
+
+  get nameLabel(): string {
+    return t('Image name');
+  }
+
+  get keys(): string {
+    return t('Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save, T text');
+  }
+
+  get saveWhy(): string | undefined {
+    return this.shell.out.error === 'empty' ? t('Draw something first') : this.busy ? t('Saving…') : undefined;
+  }
+
+  get tooBig(): string {
+    return t('That SVG is too big to open (over 8 MB). Try a smaller copy.');
   }
 
   viewer(): TemplateResult {
@@ -1066,7 +1089,7 @@ export class ImageExt implements ImageUi {
   dialogs(): TemplateResult | undefined {
     if (this.replacing) return replaceWin(this);
     if (this.imp) return importWin(this);
-    if (this.size) return sizeWin(this);
+    if (this.size?.mode === 'apply') return sizeWin(this);
     if (this.details) return detailsWin(this);
     if (this.big) return tooBigWin(this);
     return undefined;

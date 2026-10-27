@@ -152,8 +152,8 @@ describe('the size meter', () => {
 describe('names and labels', () => {
   it('the Image name field has a visible label tied to it', async () => {
     const { el } = await open(svg(A));
-    const input = root(el).querySelector<HTMLInputElement>('#img-title-name')!;
-    const label = root(el).querySelector<HTMLLabelElement>('label[for=img-title-name]')!;
+    const input = root(el).querySelector<HTMLInputElement>('#title-name')!;
+    const label = root(el).querySelector<HTMLLabelElement>('label[for=title-name]')!;
     expect(input).toBeTruthy();
     expect(label.textContent).toBe('Image name');
     expect(label.classList.contains('sr')).toBe(false);

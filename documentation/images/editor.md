@@ -8,10 +8,12 @@ Only administrators can create or change images. Everyone else sees the same edi
 
 1. Open the Magic Card Utils panel and go to the Images tab.
 2. Choose New image.
-3. Pick a canvas size:
+3. The start window opens with **Blank canvas** open. Pick a shape:
    - 1:1, 4:3, 16:9 or 9:16.
    - Custom, with a width and height from 16 to 4096 pixels. Keep ratio keeps the proportions when you change one side.
 4. Choose Create.
+
+To start from a drawing you already have, choose Paste SVG or Open file instead. See [Start from an SVG file](#start-from-an-svg-file).
 
 The canvas shape sets the shape of the picture on a card. Pixel numbers only set the drawing grid. The image scales to any card.
 
@@ -64,9 +66,18 @@ A reference picture is a photo or drawing you trace over. It appears behind the 
 
 ## Start from an SVG file
 
-When you draw a new image, the first window asks for a canvas size. It also has an **Open file** button. Choose an .svg file and the editor opens it as your drawing, with no blank canvas first. The file is cleaned and read in the same way as Import an SVG file, below, and the same summary says what was removed.
+The window that opens for a new image has three tiles: **Blank canvas**, **Paste SVG** and **Open file**. The same window opens from **Start from…** in the top bar while you draw.
 
-If a file cannot be opened, the window stays open and says why, for example "That file is too big to open (over 8 MB). Try a smaller copy." or "That drawing is over 256 KiB." You can then choose another file or pick a canvas size. A file can be up to 8 MB to be opened, but the cleaned drawing must still fit in 256 KiB, like every image.
+- **Open file** opens the browser's file chooser. Choose an .svg file and the editor opens it as your drawing, with no blank canvas first. A new image takes the file's name without .svg.
+- **Paste SVG** shows a box. Paste the markup, then choose **Use this SVG**. The button waits until there is some text. A pasted drawing is called "My image". Paste works on a page opened over http://, where the browser has no clipboard access, because you paste into the box.
+
+Both are cleaned and read in the same way as Import an SVG file, below, and the same summary says what was removed.
+
+If the file or text cannot be opened, the window stays open and says why in one line under the tiles, for example "That file is too big to open (over 8 MB). Try a smaller copy.", "That SVG is too big to open (over 8 MB). Try a smaller copy." or "That drawing is over 256 KiB." Nothing changes, your pasted text stays in the box, and the focus goes back to the button you used. A file or text can be up to 8 MB to be opened, but the cleaned drawing must still fit in 256 KiB, like every image.
+
+Start from… while you draw replaces your drawing with the new one as one step. Undo brings the old one back, and the image keeps its name, so Save updates the same image. Close or Esc closes the window and leaves the drawing as it is. In a new image, closing the window before the first drawing closes the editor.
+
+In the window, Tab goes through the tiles, the open panel and the window's own buttons, and then to the first tile again. Shift+Tab goes the other way.
 
 ## Import an SVG file
 

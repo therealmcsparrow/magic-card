@@ -3,9 +3,10 @@ import type { ShapeOptions } from '../types';
 import type { SavedIconInput, SavedShape } from './mcu-library';
 import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
+import type { IntakePolicy } from './svg-intake';
 
 /*
- * Contract: svg editor. Version 1.1.0 (SVG_EDITOR_CONTRACT_VERSION).
+ * Contract: svg editor. Version 1.2.0 (SVG_EDITOR_CONTRACT_VERSION), element revision 7 (SVG_EDITOR_CONTRACT_REVISION).
  *
  * SVG editor and shape editor hosts. Two lazy chunks of the magic-card entry, each loaded by the
  * card-editor chunk (never by magic-card.js, which gains 0 B from them):
@@ -287,7 +288,8 @@ import type { BooleanOp } from './path-booleans';
  * the kit, so the chunk grows by no kit code. It defines no element of its own besides <mc-svg-editor>
  * and uses <mc-ui-window>, <mc-ui-popover>, <mc-ui-menu> and <mc-ui-toast>.
  * - Top bar: Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) |
- *   Undo, Redo | size chip | Export / Import (menu) | Save to library | Done | Shortcuts. The tool rail is the kit rail (a
+ *   Undo, Redo | size chip | Export / Import (menu) | Save to library | Done | Shortcuts (ICON_TOP_BAR, section
+ *   "Profiles"). The tool rail is the kit rail (a
  *   toolbar: arrows move the focus, a press picks the tool); Align, Combine and Path stay menu buttons after a divider on
  *   the canvas toolbar.
  * - Start from, Save to library, Leave, Start over, Make N Accent layers Main and Export / Import are <mc-ui-window>s
@@ -321,15 +323,108 @@ import type { BooleanOp } from './path-booleans';
  *   returns to the opener, or its `data-focus-key` replacement).
  *
  * ── Image mode ──
- * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.1.0 holds
+ * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.2.0 holds
  * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that chunk,
  * and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing canvas as the
  * image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg, saved }), downloads
  * ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete) when hass.user.is_admin is
- * false or the library is missing. The image chunk draws the top bar, the start window and its other windows through
- * src/svg-editor/image-seam.ts (ImageUi.topBar(), dialogs()), an internal seam both folders change together (not part
- * of this contract). Layers being dragged, moved by handles or nudged carry `will-change: transform` until the
- * gesture ends.
+ * false or the library is missing. The top bar and the start window are the shell's, drawn from the image profile
+ * (section "Profiles"); the image chunk supplies the image-only slots, the canvas-size form, its own words and the
+ * reading of SVG text, and draws its other windows (dialogs()), all through src/svg-editor/image-seam.ts, an internal
+ * seam both folders change together (not part of this contract). Layers being dragged, moved by handles or nudged carry
+ * `will-change: transform` until the gesture ends.
+ *
+ * ── Profiles (version 1.2.0) ──
+ * One shell, two profiles (EditorProfile). The source kind picks it: 'image-blank', 'image' and 'image-svg' -> 'image',
+ * every other kind -> 'icon'. It holds for the element's life; read-only is decided on open (image only), not by the
+ * profile. The profile objects live in src/svg-editor/profiles.ts, not here: their intake policies are frozen values, and
+ * a value import of them from this file would carry them into the card-editor chunk, which imports SVG_EDITOR_TAG.
+ *   icon:  topBar ICON_TOP_BAR, start ICON_START, intake ICON_SVG_INTAKE, pasteMaxChars ICON_SVG_MAX_FILE_BYTES,
+ *          saveTargets 'module' and 'library' (host 'card'), 'library' (host 'mcu').
+ *   image: topBar IMAGE_TOP_BAR, readOnlyTopBar IMAGE_READONLY_TOP_BAR, start IMAGE_START, intake IMAGE_SVG_INTAKE,
+ *          pasteMaxChars IMAGE_SVG_MAX_FILE_BYTES, saveTargets 'image-library'.
+ * Top bar. The shell draws one bar from profile.topBar (profile.readOnlyTopBar for a read-only image). DOM order =
+ * visual order = Tab order = the array order; no CSS `order`. Before the edit stage (start, loading, load error) the
+ * bar holds back and title only. Slots (TopBarSlot):
+ *   back       "Back to card editor" (icon, host 'card'), "Close" (icon in host 'mcu', image always).
+ *   title      "Icon editor" / "Image editor"; read by screen readers only in the compact and stacked layouts.
+ *   start      "Start from..." opens the start window; when the drawing has content, the "Start over?" confirm
+ *              (Keep editing, Start over) comes first.
+ *   name       the name field with a visible label ("Icon name" / "Image name"), screen-reader only in the compact and
+ *              stacked layouts, and the Saved / Changed since saved chip. The chip takes no focus; a change of it is
+ *              said once in the polite live region. In the read-only bar the name is plain text.
+ *   undo-redo  Undo and Redo, icon-only buttons.
+ *   size       the icon's size chip. The image size meter stays a row under the bar, not a slot.
+ *   canvas     Canvas size (image). reference: Reference picture (image).
+ *   transfer   icon: Export / Import (menu). image: Export file (also in the read-only bar).
+ *   more       More (menu, image).
+ *   save       icon: Save to library, host 'card' only. image: Save, the primary button, Control+S (Command+S on macOS).
+ *   done       icon: Done, the primary button ("Save" in host 'mcu').
+ *   shortcuts  the Shortcuts popover (also the ? key).
+ *   preview    no profile lists it; Preview sits on the canvas toolbar.
+ * In the compact layout a Layers toggle (aria-pressed) sits right before undo-redo in both profiles; it is not a slot.
+ * In the compact and stacked layouts, Back/Close, Start from..., Canvas size, Reference picture, Export and More keep
+ * their glyph and drop the word; the bar wraps to two rows at most.
+ * Every slot is a button or field of at least 24 x 24 CSS px. An icon-only button has aria-label = the full label,
+ * a tooltip of the label and its key, and aria-keyshortcuts where a key exists; no second screen-reader text repeats
+ * the key. A button that cannot act yet (Undo with no history, Save with nothing drawn, Done without a required name)
+ * stays focusable: aria-disabled="true" with an aria-describedby reason ("Draw something first.", "Give the icon a
+ * name."), never the disabled attribute. Menu buttons have aria-haspopup="menu" and aria-expanded; a menu returns
+ * focus to its button.
+ * Shortcuts popover: one popover for both profiles. Its first line names the profile's own keys: icon "Ctrl+Z undo,
+ * Ctrl+Shift+Z redo, Ctrl+Enter Done, Ctrl+S Save to library"; image "Ctrl+Z undo, Ctrl+Shift+Z redo, Ctrl+S Save,
+ * T text" (the image chunk's words). The other lines are shared. The read-only image bar has no Shortcuts slot and
+ * the ? key does nothing there.
+ * Start window. One <mc-ui-window variant="dialog" size="m">, movable, resizable and maximisable, heading "What do you
+ * want to start from?", no footer: Close and Escape cancel, and each panel has its own button. DOM order: the tile row
+ * (profile.start, in order), the Import file button (icon), the open panel, one status line, the note "Pasted and
+ * opened files are cleaned first. Scripts, images and links are removed." Entries (StartEntry):
+ *   blank        icon: "Blank" (24 x 24); starts the drawing at once.
+ *   icon         icon: "An icon"; a panel with the icon picker and "Use this icon".
+ *   canvas-size  image: "Blank canvas" ("Pick a shape"); a panel with the canvas-size form (Shape as one radio group,
+ *                Width, Height, Keep ratio) and "Create". The image chunk gives the form and its words, the shell the
+ *                tile, the panel, the button and the status line. Open when the window first shows. The Canvas size
+ *                action while editing stays the image chunk's own window with Cancel and Apply.
+ *   paste        both: "Paste SVG"; a panel with a labelled textarea "SVG markup" (its size under it) and "Use this
+ *                SVG". The button is aria-disabled with "Paste some SVG first." while the text is empty after trim.
+ *   open-file    both: "Open file"; opens the system chooser (<input type=file accept=".svg,image/svg+xml">).
+ *   library      icon: "My icons", only when the library answered; begins a blank drawing and shows the Library panel.
+ *                The image profile has no library entry: the panel's Images tab and the image field's picker are the
+ *                image lists.
+ *   import       icon: the "Import file" button under the tiles; closes this window and opens the transfer panel.
+ * A panel tile carries aria-expanded and aria-controls (not aria-pressed). At most one panel is open. Opening one
+ * moves focus to its first field; pressing the tile again closes it and focus goes back to the tile.
+ * Focus: the first tile has focus on open (the open panel's first field when the window reopens with a panel open).
+ * Tab walks the tiles, the Import file button, the open panel's fields and button, then the window's own controls,
+ * and wraps to the first tile; Shift+Tab walks back. While the window is open focus is never on BODY or outside it.
+ * Status line: one <p role="alert"> present from the first render, empty until a refusal. A refusal leaves the window
+ * open, the document as it was and the pasted text and size values in their fields, and puts focus on the control
+ * that started it (the Open file tile, or Use this SVG); a paste refusal also sets aria-invalid="true" on the textarea.
+ * Reading a file shows aria-busy on its tile and, after 200 ms, "Reading {name}..." in the polite live region.
+ * A result that arrives after the window was closed, reopened or answered another way is dropped.
+ * Intake, per profile (svg-intake 1.1.0, svg-reader 1.0.0):
+ *   open-file  readFile(file, profile.intake) before the text is read; then the profile's own path below.
+ *   paste      refuseText(text, profile.pasteMaxChars) first: 'empty' -> "Paste some SVG first."; 'too_large' ->
+ *              the profile's too-big words. Then the profile's own path below.
+ *   icon path  the shell awaits loadSvgCss(), then sanitizeSvg(text, { css }) and the reader (svg-editor importSvg).
+ *   image path the shell hands the text to the image chunk and reads none of it itself. The image chunk (an open site,
+ *              svg-safety SVG_CSS_OPEN_SITES) awaits its loadSvgCss(), then api.sanitizeImage(text, { file: true,
+ *              css }), then readShapes with its paint and each hooks, the import summary and the locked-part rules
+ *              (image-editor 1.2.0, "Image start window"): the same path as the 'image-svg' source and Import.
+ * Words: each profile keeps its own refusal words (icon: this editor's file and sanitiser messages; image:
+ * image-editor "Image start window"). Reader codes 'too_many' and 'too_detailed' read "This SVG has too many shapes
+ * to edit." and "This SVG is too detailed to edit."; 'empty' keeps each profile's no-shapes message.
+ * Success: the window closes. The icon profile shows the dropped-items banner, the image profile the import summary
+ * window (Continue has focus). While editing, the new drawing replaces the old one as one history step that Undo
+ * reverses; the drawing keeps its name, and an image keeps its library id, so Save updates the same item. Focus then
+ * goes to Start from...; when the shell opened the window itself (first open, host 'mcu', an 'image-blank' source
+ * without a size) it goes to the canvas and the polite live region says "Drawing opened."
+ * Cancel: with a drawing, closing leaves it unchanged and focus returns to Start from.... An image profile window that
+ * closes before the first document exists closes the editor (mc-svg-close { dirty: false }).
+ * Layout and motion: under 600 px wide (or at 200 % zoom) the window fills the viewport and scrolls vertically only;
+ * the tiles reflow (at least 132 px each), so there is no horizontal scroll at 320 px. With prefers-reduced-motion:
+ * no fade or scale on the window, panels show at once, a busy tile shows the static text "Reading..." and focus moves
+ * without smooth scrolling. There is no recent list: the editors keep nothing in browser storage.
  *
  * ── Hosts: 'card' and 'mcu' ──
  * 'card' (default) is everything above. 'mcu' = hosted by the Magic Card Utils panel (mcu-library 1.0.0
@@ -445,9 +540,9 @@ import type { BooleanOp } from './path-booleans';
  *   loader.ts).
  */
 
-export const SVG_EDITOR_CONTRACT_VERSION = '1.1.0';
+export const SVG_EDITOR_CONTRACT_VERSION = '1.2.0';
 /** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
-export const SVG_EDITOR_CONTRACT_REVISION = 6;
+export const SVG_EDITOR_CONTRACT_REVISION = 7;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 /**
  * Elements of the card editor chunk (module-editor contract) that the SVG editor uses by tag, never by import:
@@ -537,6 +632,35 @@ export interface SvgSaveDetail {
 }
 
 export type SvgSaveTarget = SvgSaveDetail['target'];
+
+/** Section "Profiles": which profile the source kind picks. */
+export type EditorProfileName = 'icon' | 'image';
+/** One place in the shared top bar (section "Profiles"). */
+export type TopBarSlot = 'back' | 'title' | 'start' | 'name' | 'undo-redo' | 'size' | 'canvas' | 'reference' | 'transfer' | 'more' | 'save' | 'done' | 'shortcuts' | 'preview';
+/** One entry of the shared start window (section "Profiles"). */
+export type StartEntry = 'blank' | 'icon' | 'canvas-size' | 'paste' | 'open-file' | 'library' | 'import';
+
+/** What one profile sets (objects in src/svg-editor/profiles.ts). */
+export interface EditorProfile {
+  readonly name: EditorProfileName;
+  readonly topBar: readonly TopBarSlot[];
+  /** The bar of a read-only drawing; absent: the profile never opens read-only. */
+  readonly readOnlyTopBar?: readonly TopBarSlot[];
+  readonly start: readonly StartEntry[];
+  /** Open file goes through readFile(file, intake). */
+  readonly intake: IntakePolicy;
+  /** Paste goes through refuseText(text, pasteMaxChars). */
+  readonly pasteMaxChars: number;
+  readonly saveTargets: readonly SvgSaveTarget[];
+}
+
+/** Top bar order, left to right (DOM, visual and Tab order). */
+export const ICON_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'start', 'name', 'undo-redo', 'size', 'transfer', 'save', 'done', 'shortcuts'];
+export const IMAGE_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'start', 'name', 'undo-redo', 'canvas', 'reference', 'transfer', 'more', 'save', 'shortcuts'];
+export const IMAGE_READONLY_TOP_BAR: readonly TopBarSlot[] = ['back', 'title', 'name', 'transfer'];
+/** Start window tiles in order (DOM, visual and Tab order); 'import' is the button under them. */
+export const ICON_START: readonly StartEntry[] = ['blank', 'icon', 'paste', 'open-file', 'library', 'import'];
+export const IMAGE_START: readonly StartEntry[] = ['canvas-size', 'paste', 'open-file'];
 
 export interface ShapeEditorValue {
   shape: 'custom';
