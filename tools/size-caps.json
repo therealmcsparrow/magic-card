@@ -59,9 +59,9 @@
       "note": "Animation studio the magic-card-utils panel loads. 977 KiB; measured 999,106, so the margin is tight."
     },
     "magic-card-editor.js": {
-      "raw": 1004544,
-      "ceiling": 1004544,
-      "note": "Card editor. 981 KiB, measured 1,003,608."
+      "raw": 1005568,
+      "ceiling": 1005568,
+      "note": "Card editor. 982 KiB, measured 1,004,639."
     },
     "magic-card-icon-animator.js": {
       "raw": 231424,
@@ -799,6 +799,18 @@
       "field": "/files/magic-card-editor.js/ceiling",
       "from": 1003520,
       "to": 1004544
+    },
+    {
+      "id": "editor-raw-1004544-to-1005568",
+      "field": "/files/magic-card-editor.js/raw",
+      "from": 1004544,
+      "to": 1005568
+    },
+    {
+      "id": "editor-ceiling-1004544-to-1005568",
+      "field": "/files/magic-card-editor.js/ceiling",
+      "from": 1004544,
+      "to": 1005568
     }
   ]
 }
