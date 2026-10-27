@@ -339,7 +339,8 @@ export class StudioCanvas extends LitElement {
     if (this.stateManager && !this._unsubscribe) this._subscribe();
     if (this.hasUpdated) this._observe();
     window.addEventListener('resize', this._queuePlace);
-    this.getRootNode().addEventListener('transitionend', this._onLipSlid);
+    this._lipRoot = this.getRootNode();
+    this._lipRoot.addEventListener('transitionend', this._onLipSlid);
     setLayerMeasurer(this._layers.measure);
     void loadLayerEditor(); // prefetch: the Layers here sheet and the design panels live in a lazy chunk
     const stop = onStatus(() => this._applyPreview());
@@ -415,7 +416,8 @@ export class StudioCanvas extends LitElement {
     this._ro?.disconnect();
     this._ro = undefined;
     window.removeEventListener('resize', this._queuePlace);
-    this.getRootNode().removeEventListener('transitionend', this._onLipSlid);
+    this._lipRoot?.removeEventListener('transitionend', this._onLipSlid);
+    this._lipRoot = undefined;
     this._endColumnDrag(false);
     this._itemMenu.close(false);
     this._longPress.cancel();
@@ -917,6 +919,9 @@ export class StudioCanvas extends LitElement {
   };
 
   // ── geometry ──
+
+  /** The node the lip listener sits on; kept because a disconnected element no longer reaches its old root. */
+  private _lipRoot?: Node;
 
   /** A lip that has finished sliding is where the float bar must keep clear of: place the bar again. */
   private _onLipSlid = (e: Event): void => {

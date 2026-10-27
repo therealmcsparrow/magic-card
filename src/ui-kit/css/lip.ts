@@ -188,8 +188,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   @media (prefers-reduced-motion: reduce) {
     [data-lip],
     [data-lip='hidden'],
-    .lip,
-    .lip-hint[data-side] {
+    .lip {
       transition: none;
     }
   }
@@ -212,6 +211,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     font-size: 0.8125rem;
     line-height: 1.4;
     animation: lip-hint-in 160ms ease-out;
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
   }
   .lip-hint p {
     margin: 0 0 8px;
@@ -263,7 +263,6 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   .lip-hint[data-side='start'] {
     left: calc(var(--mc-lip-at-start, 0px) + 36px);
-    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
     inset-inline-start: calc(var(--mc-lip-at-start, 0px) + 36px);
   }
   .lip-hint[data-side='start']::before {
@@ -273,7 +272,6 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   .lip-hint[data-side='end'] {
     right: calc(var(--mc-lip-at-end, 0px) + 36px);
-    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
     inset-inline-end: calc(var(--mc-lip-at-end, 0px) + 36px);
   }
   .lip-hint[data-side='end']::before {
@@ -310,6 +308,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   @media (prefers-reduced-motion: reduce) {
     .lip-hint {
       animation: none;
+      transition: none;
     }
   }
 
