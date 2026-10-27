@@ -279,6 +279,7 @@ export class ImageExt implements ImageUi {
       const h = src.height;
       const known = w !== undefined && h !== undefined && sideOk(w) && sideOk(h);
       const doc = this.canvasDoc(known ? w : DEFAULT_PRESET.width, known ? h : DEFAULT_PRESET.height);
+      if (!known) this.win++;
       if (!known) this.size = { mode: 'create', preset: DEFAULT_PRESET.ratio, w: String(DEFAULT_PRESET.width), h: String(DEFAULT_PRESET.height), keep: true, warned: false };
       return doc;
     }
@@ -312,8 +313,12 @@ export class ImageExt implements ImageUi {
     return r.doc;
   }
 
+  /** Counts start windows and reads: a read that finds another number was answered for an earlier window. */
+  private win = 0;
+
   /** Open file in the start window: the file gate, then the same path as the 'image-svg' source. A refusal keeps the window open. */
   async startFile(file: File): Promise<void> {
+    const win = ++this.win;
     let why = refuse(file);
     let text = '';
     if (!why) {
@@ -323,8 +328,8 @@ export class ImageExt implements ImageUi {
         why = t('The file could not be read.');
       }
     }
-    // the window was closed, or Create was pressed, while the file was being read
-    if (this.size?.mode !== 'create') return;
+    // the window was closed, reopened or answered with Create while the file was being read
+    if (win !== this.win || this.size?.mode !== 'create') return;
     const r = why ? why : this.openSvg(text, file.name);
     if (typeof r === 'string') {
       this.startError = r;
@@ -701,6 +706,7 @@ export class ImageExt implements ImageUi {
   }
 
   closeSize(): void {
+    this.win++;
     const create = this.size?.mode === 'create';
     this.size = undefined;
     this.shell.requestUpdate();
@@ -715,6 +721,7 @@ export class ImageExt implements ImageUi {
     if (!r.ok) return;
     const sh = this.shell;
     if (s.mode === 'create') {
+      this.win++;
       sh.begin(this.canvasDoc(r.w, r.h));
       this.size = undefined;
       this.ready();

@@ -9,6 +9,9 @@ Magic Card uses calendar versions: year, month and a release number within the m
 ### Added
 -   **Open an SVG file as an image.** The Images tab of the Magic Card Utils panel now takes a plain .svg file next to a .json preset file, and the first window of the image editor has an **Open file** button. Both clean the file the same way as Import in the image editor. An .svg file can be up to 8 MB to be opened, and the cleaned image must still fit in 256 KiB. See [Library images](documentation/images/README.md).
 
+### Changed
+-   **A file must hold what its name says.** Every import in the Magic Card Utils panel now refuses an .svg file that holds JSON and a .json file that holds SVG, with the message "The name says JSON, but the file holds SVG." (or the other way round). This includes icon imports: a .json file that holds SVG used to import as an icon and is now refused. Save the SVG as an .svg file, or paste the code into the box, which has no name to check.
+
 ## 2026.10.12-beta.9 (2026-10-26)
 
 ### Changed
