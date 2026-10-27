@@ -124,9 +124,9 @@
       "note": "Motion and refresh part of <mc-bg-stack> (pan / zoom, camera refresh, stale state). 5 KiB, measured 4,836 + 5 %; ceiling 24,576 (lazy-module 1.4.0)."
     },
     "magic-card-layer-editor.js": {
-      "raw": 89088,
-      "ceiling": 89088,
-      "note": "Layer editor. 87 KiB, measured 88,320 with the library image field (Linux build, docker node 24.22.0)."
+      "raw": 90112,
+      "ceiling": 90112,
+      "note": "Layer editor. 88 KiB, measured 89,089 (Linux build, docker node 24.22.0)."
     },
     "magic-card-slider.js": {
       "raw": 97280,
@@ -817,6 +817,18 @@
       "field": "/entry/br/cap",
       "from": 72404,
       "to": 72704
+    },
+    {
+      "id": "layer-editor-raw-89088-to-90112",
+      "field": "/files/magic-card-layer-editor.js/raw",
+      "from": 89088,
+      "to": 90112
+    },
+    {
+      "id": "layer-editor-ceiling-89088-to-90112",
+      "field": "/files/magic-card-layer-editor.js/ceiling",
+      "from": 89088,
+      "to": 90112
     }
   ]
 }
