@@ -1,12 +1,14 @@
+import { K } from './kit';
+import type { LibraryProblem } from '../svg-editor/library';
 import { IMAGE_CMD, type ImageSummary, type SavedImage, type SavedImageInput } from '../contracts/mcu-library-images';
 
-/* The editor's side of the image library (mcu-library 1.1.0 images part). Errors become a few problems the editor can word. */
+/* The editor's side of the image library (mcu-library 1.1.0 images part). The call and its error map are the shared client (handed over through the kit); here a failure becomes an ImageError. */
 
 export interface ImageHass {
   callWS<T>(msg: Record<string, unknown>): Promise<T>;
 }
 
-export type ImageProblem = 'missing' | 'readonly' | 'conflict' | 'full' | 'invalid' | 'too_large' | 'failed' | 'unreachable';
+export type ImageProblem = LibraryProblem | 'too_large' | 'failed';
 
 export class ImageError extends Error {
   constructor(
@@ -21,26 +23,23 @@ export class ImageError extends Error {
   }
 }
 
-function fail(e: unknown): never {
-  const err = e as { code?: string; errors?: Array<{ message?: string; bytes?: number; limit?: number; word?: string }> };
-  const big = err?.errors?.find((x) => x.message === 'too_large');
-  if (err?.code === 'invalid_format' && big) throw new ImageError('too_large', big.bytes, big.limit);
-  const c = err?.code ?? '';
-  if (c === 'invalid_format') {
-    const first = err.errors?.find((x) => x.message === 'forbidden_text') ?? err.errors?.[0];
-    throw new ImageError('invalid', undefined, undefined, first?.message === 'forbidden_text' ? undefined : first?.message, first?.message === 'forbidden_text' ? first.word : undefined);
+const obj = (v: unknown): Record<string, unknown> => (typeof v === 'object' && v ? (v as Record<string, unknown>) : {});
+
+/** The image library's reading of a failure: the size when too large, its reason or the denied word when it refused the markup, `failed` for any other server error. */
+function fault(problem: LibraryProblem, raw?: unknown): ImageError {
+  const err = obj(raw);
+  if (problem === 'invalid') {
+    const list = Array.isArray(err.errors) ? err.errors.map(obj) : [];
+    const big = list.find((x) => x.message === 'too_large');
+    if (big) return new ImageError('too_large', big.bytes as number, big.limit as number);
+    const first = list.find((x) => x.message === 'forbidden_text') ?? list[0];
+    const word = first?.message === 'forbidden_text';
+    return new ImageError('invalid', undefined, undefined, word ? undefined : (first?.message as string), word ? (first.word as string) : undefined);
   }
-  throw new ImageError(c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : c ? 'failed' : 'unreachable');
+  return new ImageError(problem === 'unreachable' && err.code ? 'failed' : problem);
 }
 
-async function call<T>(hass: ImageHass | undefined, msg: Record<string, unknown>): Promise<T> {
-  if (!hass?.callWS) throw new ImageError('missing');
-  try {
-    return await hass.callWS<T>(msg);
-  } catch (e) {
-    return fail(e);
-  }
-}
+const call = <T>(hass: ImageHass | undefined, msg: Record<string, unknown>): Promise<T> => K.libraryCall<T>(hass, msg, fault);
 
 export const listImages = (h?: ImageHass): Promise<ImageSummary[]> => call<{ images: ImageSummary[] }>(h, { type: IMAGE_CMD.list }).then((r) => r.images ?? []);
 

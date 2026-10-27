@@ -1,8 +1,9 @@
 import { CMD, LIBRARY_ID_RE, type IconSummary, type SavedIcon, type SavedIconInput } from '../contracts/mcu-library';
 
 /*
- * The editor's side of the Magic Card Utils library (mcu-library 1.0.0, WebSocket commands). Only the
- * editor calls these; cards never do. Errors are mapped to a few words the panel can show.
+ * The editor's side of the Magic Card Utils library (mcu-library 1.1.0, WebSocket commands). Only the
+ * editors call these; cards never do. This is the one client for the icon and the image calls: it sends the
+ * command and turns every failure into a few words a panel can show. The image editor gets it through its kit.
  */
 
 export interface Hass {
@@ -17,21 +18,23 @@ export class LibraryError extends Error {
   }
 }
 
-function fail(e: unknown): never {
-  const code = (e as { code?: string })?.code ?? '';
-  throw new LibraryError(
-    code === 'unknown_command' ? 'missing' : code === 'unauthorized' ? 'readonly' : code === 'conflict' ? 'conflict' : code === 'library_full' ? 'full' : code === 'invalid_format' ? 'invalid' : 'unreachable',
-  );
+/** What a rejected call means: the server's `error.code` as one of a few problems. */
+export function libraryProblem(e: unknown): LibraryProblem {
+  const c = typeof e === 'object' && e ? (e as { code?: unknown }).code : undefined;
+  return c === 'unknown_command' ? 'missing' : c === 'unauthorized' ? 'readonly' : c === 'conflict' ? 'conflict' : c === 'library_full' ? 'full' : c === 'invalid_format' ? 'invalid' : 'unreachable';
 }
 
-async function call<T>(hass: Hass | undefined, msg: Record<string, unknown>): Promise<T> {
-  if (!hass?.callWS) throw new LibraryError('missing');
+/** One library command. A failure throws what `make` builds from the problem and the server's own error (none when there is no connection). */
+export async function libraryCall<T>(hass: Hass | undefined, msg: Record<string, unknown>, make: (problem: LibraryProblem, raw?: unknown) => Error = (p) => new LibraryError(p)): Promise<T> {
+  if (!hass?.callWS) throw make('missing');
   try {
     return await hass.callWS<T>(msg);
   } catch (e) {
-    return fail(e);
+    throw make(libraryProblem(e), e);
   }
 }
+
+const call = <T>(hass: Hass | undefined, msg: Record<string, unknown>): Promise<T> => libraryCall<T>(hass, msg);
 
 export const listIcons = (h?: Hass): Promise<IconSummary[]> => call<{ icons: IconSummary[] }>(h, { type: CMD.iconsList }).then((r) => r.icons ?? []);
 

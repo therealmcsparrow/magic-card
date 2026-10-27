@@ -22,6 +22,7 @@ export interface Kit {
   emptyNotes: typeof Import.emptyNotes;
   artLayer: typeof Views.artLayer;
   slug: typeof Library.slug;
+  libraryCall: typeof Library.libraryCall;
 }
 
 export let K: Kit;
