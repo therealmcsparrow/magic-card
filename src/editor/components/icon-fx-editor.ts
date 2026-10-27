@@ -496,7 +496,7 @@ export class IconFxEditor extends LitElement {
   // ── custom SVG ──
 
   private _applySvg(text: string, fromUpload = false): void {
-    const err = text.trim() ? customSvgError(text) : undefined;
+    const err = text.trim() ? customSvgError(text) : fromUpload ? NO_SVG_ELEMENT : undefined;
     // A refused upload leaves the markup box as it was; typed text stays so it can be corrected.
     if (err && fromUpload) {
       this._svgError = err;
