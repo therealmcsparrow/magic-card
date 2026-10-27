@@ -51,7 +51,7 @@ When you import a file:
 -   If an item has the same id as one you already have, Magic Card asks you to choose Replace or Keep both. Keep both gives the new item a new id.
 -   The summary lists what was dropped and what was changed. It is read out to screen readers.
 
-A file must hold what its name says. This holds for every preset import, in the Magic Card Utils panel and in the card editor. An .svg file that holds JSON, or a .json file that holds SVG, is refused with a message. A .json file that holds SVG used to import as an icon and is now refused: save it with an .svg name, or paste the code into the box, which has no name to check. File uploads in the image editor, Draw and icon effects take only .svg files and have no name check.
+A file must hold what its name says. This holds for every preset import, in the Magic Card Utils panel and in the card editor. An .svg file that holds JSON, or a .json file that holds SVG, is refused with a message. A .json file that holds SVG used to import as an icon and is now refused: save it with an .svg name, or paste the code into the box, which has no name to check. File uploads in the image editor, Draw and icon effects take only .svg files and have no name check. A file that is not an .svg file is refused without being read, a file that cannot be read gives a message instead of failing silently, and the Library import help line states the 32 KB limit for SVG.
 
 Icons are cleaned the same way as icons in the SVG editor. Scripts, links to other files and similar parts are removed, and the summary lists them.
 

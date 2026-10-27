@@ -6,6 +6,13 @@ Magic Card uses calendar versions: year, month and a release number within the m
 
 ## Unreleased
 
+### Changed
+-   **Files are checked by type before size.** The icon editor start window, the animation studio Draw import and icon effects now refuse a file that is not an .svg file before they read it, and the file size is checked after the type. Icon effects used to take any file name.
+-   **A file that cannot be read says so.** The image editor Import window and icon effects show a message when the browser cannot read a chosen file, instead of failing without a word.
+-   **A refused file changes nothing.** In icon effects, a refused upload no longer puts the file's text into the SVG markup box. In the icon editor start window, a refused file leaves your drawing as it was.
+-   **The image editor Import window.** A refused file now opens a window headed "Could not import the file" instead of "Imported 'name'".
+-   **Library import help.** The help line under Choose a file in the Library import now says an .svg file can be up to 32 KB.
+
 ## 2026.10.12-beta.10 (2026-10-27)
 
 ### Added

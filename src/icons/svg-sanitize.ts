@@ -81,6 +81,8 @@ function viewBoxOf(root: Element): string {
 }
 
 export const TOO_COMPLEX = 'The SVG is too complex.';
+/** The reason given when the text holds no `<svg>` element. */
+export const NO_SVG_ELEMENT = 'No <svg> element found.';
 const brand = (markup: string): SanitisedIconMarkup => markup as SanitisedIconMarkup;
 
 /** The result of a refused SVG: no markup, no shapes and the reason. */
@@ -123,7 +125,7 @@ export function sanitizeSvg(input: string, options: SvgCssOption = {}): Sanitize
   const text = typeof input === 'string' ? input : '';
   if (byteLength(text) > SVG_MAX_BYTES) return svgFailure('The SVG is larger than 32 KB.');
   const root = parseLenient(text)?.root;
-  if (!root) return svgFailure('No <svg> element found.');
+  if (!root) return svgFailure(NO_SVG_ELEMENT);
 
   const viewBox = viewBoxOf(root);
   if (options.css) {

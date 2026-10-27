@@ -6,6 +6,8 @@ This page covers bringing an SVG into the [SVG editor](README.md), getting one o
 
 Paste the SVG markup into the import box, or choose an SVG file. The editor reads the file on your computer. It does not download anything.
 
+The editor checks the file type first, then the size. A file that is not an .svg file is refused with "This is not valid SVG. Check that it starts with <svg and is closed.", and an .svg file over 32 KB with "The SVG is larger than 32 KB." A file the browser cannot read gives "Could not read that file." A refused file changes nothing: the start window stays open and your drawing is as it was.
+
 The editor removes the parts it does not support, and it shows a warning that lists what it removed:
 
 -   Scripts and event handlers.

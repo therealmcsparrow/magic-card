@@ -1874,7 +1874,7 @@ export class McSvgEditor extends LitElement implements StageHost {
       return;
     }
     try {
-      await this.importText(r.text, file.name.replace(/.svg$/i, '') || t('My icon'));
+      await this.importText(r.text, file.name.replace(/\.svg$/i, '') || t('My icon'));
     } catch {
       this.startError = t('Could not read that file.');
     }

@@ -70,7 +70,7 @@ If a file cannot be opened, the window stays open and says why, for example "Tha
 
 ## Import an SVG file
 
-Choose Import an SVG file. If the canvas already has content, the editor asks **Replace your drawing?** with two choices: Keep my drawing, which is the default, and Replace. Escape keeps your drawing too. A replaced drawing can be brought back with Undo. A file the editor refuses is not imported, so the question is not asked.
+Choose Import an SVG file. If the canvas already has content, the editor asks **Replace your drawing?** with two choices: Keep my drawing, which is the default, and Replace. Escape keeps your drawing too. A replaced drawing can be brought back with Undo. A file the editor refuses is not imported, so the question is not asked. The window then has the heading "Could not import the file" and says why, for example "Choose an SVG file." or "The file could not be read."
 
 The editor keeps what it can use and removes what it cannot. After the import, a summary says what was removed, for example "Removed scripts, event handlers." If nothing was removed, it says so.
 

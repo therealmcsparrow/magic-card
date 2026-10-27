@@ -79,6 +79,7 @@
   "Imported '{name}'": "'{name}' geïmporteerd",
   "Imported '{name}'.": "'{name}' geïmporteerd.",
   "Imported file": "Bestand geïmporteerd",
+  "Could not import the file": "Het bestand kon niet worden geïmporteerd",
   "Imported part": "Geïmporteerd onderdeel",
   "Importing '{name}' replaces everything on the canvas. You can undo it.": "Door '{name}' te importeren wordt alles op het canvas vervangen. Je kunt dit ongedaan maken.",
   "Includes connections.": "Inclusief koppelingen.",

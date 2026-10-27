@@ -64,7 +64,7 @@ export function importWin(x: ImageExt): TemplateResult {
   const i = x.imp!;
   const done = (): void => x.closeImport();
   const more = (): void => x.shell.renderRoot.querySelector<HTMLInputElement>('#img-import')?.click();
-  return html`<mc-ui-window variant=${i.error ? 'alert' : 'dialog'} size="m" heading=${i.name ? t("Imported '{name}'", { name: i.name }) : t('Imported file')} closeLabel=${t('Close')} @mc-window-close=${done}>
+  return html`<mc-ui-window variant=${i.error ? 'alert' : 'dialog'} size="m" heading=${i.error ? t('Could not import the file') : i.name ? t("Imported '{name}'", { name: i.name }) : t('Imported file')} closeLabel=${t('Close')} @mc-window-close=${done}>
     <div class="dlg">
       ${i.error ? html`<p role="alert">${i.error}</p>` : html`<p>${i.kinds.length ? t('Removed {list}.', { list: i.kinds.join(', ') }) : t('Nothing was removed.')}</p>`}
       ${i.kept ? html`<p class="help">${t('Some parts cannot be edited, such as clipped ones. They are kept as locked layers.')}</p>` : nothing}

@@ -178,12 +178,14 @@ export class TransferPanel extends LitElement {
     const kinds = this._kinds();
     const images = kinds.length === 1 && kinds[0] === 'image';
     const accept = images ? '.json,.svg' : kinds.includes('icon') ? '.yaml,.yml,.json,.svg' : '.yaml,.yml,.json';
+    const icon = kinds.includes('icon');
+    const types = accept.replace(/\./g, '').replace(/,/g, ', ');
     return html`
       <div class="group-head"><h3 tabindex="-1">${r ? (r.ok ? t('Import {items}', { items: count(r.items.length, r.kind) }) : t('This file was not imported')) : t('Import presets')}</h3></div>
       <div class="bar">
         ${button({ label: t('Choose a file'), icon: 'mdi:file-upload-outline', onClick: () => this.renderRoot.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
         <input type="file" class="sr-only" tabindex="-1" aria-hidden="true" accept=${accept} @change=${this._onFile} />
-        <span class="help">${images ? t('JSON or SVG, up to 8 MB') : t('{types}, up to 1 MB', { types: accept.replace(/\./g, '').replace(/,/g, ', ') })}</span>
+        <span class="help">${images ? t('JSON or SVG, up to 8 MB') : icon ? t('{types}, up to 1 MB; SVG up to 32 KB', { types }) : t('{types}, up to 1 MB', { types })}</span>
       </div>
       <div class="field">
         <div class="field-head"><label for="paste">${t('Or paste the text')}</label></div>
