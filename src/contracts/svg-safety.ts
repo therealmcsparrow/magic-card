@@ -96,16 +96,18 @@
  * CSS text, and never adds an element or attribute the policy does not keep.
  * Where the resolver runs:
  *   - only on import and open: text the user brings in (a file, a paste, the markup an editor starts from) entering an
- *     editor document or a library save, at a call made from one of SVG_CSS_OPEN_SITES. Never in a card render, the
- *     svg-icon, svg-image, anim, anim-runtime or particles chunk, magic-card.js, a library read, a thumbnail, an
- *     export, or a transfer envelope item.
+ *     editor document or a library save, at a call made from one of SVG_CSS_OPEN_SITES. In the transfer panel that is
+ *     an SVG text read as one icon or one image (preset-transfer, "SVG text and the CSS paint resolver"), never an
+ *     item of a preset file. Never in a card render, the svg-icon, svg-image, anim, anim-runtime or particles chunk,
+ *     magic-card.js, a library read, a thumbnail, an export, or a transfer envelope item.
  *   - an open site awaits loadSvgCss() before its first sanitise of user text, then passes the result (or undefined)
  *     as the `css` option: sanitizeSvg(text, { css }) for icons, api.sanitizeImage(text, { file: true, css }) for
  *     images (the image sanitiser ignores `css` without { file: true }). A site may keep the result in an instance
  *     field of its editor or dialog for that element's lifetime, never in module state. It never shows or keeps a
  *     result made before its load settled, never calls the resolver itself and hands it to nothing but a sanitiser
- *     call (directly, or through a function of its own feature that only forwards it, such as svg-editor importSvg or
- *     the studio's importSvgFile).
+ *     call (directly, or through a function of its own feature that only forwards it, such as svg-editor importSvg,
+ *     the studio's importSvgFile, or the transfer chunk's parseTransfer opts.css, which reaches the icon reader's
+ *     sanitizeSvg call and ImageReader.readImage's options).
  *   - inside the sanitiser, `css(root, policy)` runs on the parsed tree after parse and viewBox and before the walk,
  *     the same way for the XML parse and the text/html fallback, with and without xmlns. No style attribute and no
  *     style element: no work. The call sits in a try: a throw counts as too_complex. Without `css` nothing runs and
@@ -178,7 +180,10 @@
  * the attribute.
  * Listing (image `stripped`; the icon counts them with its other dropped parts): `<element>@style` only when at least
  * one of its declarations was dropped; `style` only when a block, rule, at-rule or declaration in a style element was
- * dropped. Fully resolved parts are not listed.
+ * dropped. Fully resolved parts are not listed. The icon sanitiser returns no list of its own: a caller that lists
+ * what an icon lost compares element and attribute names of input and output, and after a call with a resolver leaves
+ * out the parts the resolver consumes (style attributes, style elements, a gradient's `#` href; preset-transfer, "SVG
+ * text and the CSS paint resolver").
  * Gradient href (stop inheritance), on linearGradient and radialGradient only: `href`, else xlink:href (XLink
  * namespace). After an ASCII trim it is exactly `#` + IMAGE_ID_RE. A gradient with no stop children of its own
  * follows the chain (at most maxHrefHops, a visited set; a cycle gives no stops) to the first gradient with stops,
@@ -230,7 +235,8 @@ export const SVG_SAFETY_CONTRACT = '1.2.0';
 
 /**
  * The only files that may call loadSvgCss (value-import src/svg-safety/css-loader.ts): the places where a user opens
- * or imports an SVG into an editor. Adding a file here is a change to this contract.
+ * or imports an SVG into an editor or a library (the transfer panel, for an SVG text read as an icon or an image).
+ * Adding a file here is a change to this contract.
  */
 export const SVG_CSS_OPEN_SITES: readonly string[] = [
   'src/svg-editor/mc-svg-editor.ts',

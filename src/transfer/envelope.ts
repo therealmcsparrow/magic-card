@@ -24,6 +24,7 @@ import type {
   TransferRefusal,
   TransferSource,
 } from '../contracts/preset-transfer';
+import type { SvgCssResolve } from '../contracts/svg-safety';
 import type { ThemeDoc } from '../contracts/theme-editor';
 import { VERSION } from '../version';
 import { detectOther, looksLikeSvg, svgItem } from './detect';
@@ -63,7 +64,7 @@ function formatOf(v: unknown): { major: number; minor: number } | undefined {
   return m ? { major: +m[1], minor: +(m[2] ?? 0) } : undefined;
 }
 
-function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader, file = false): KindResult {
+function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader, file = false, css?: SvgCssResolve): KindResult {
   switch (kind) {
     case 'animation':
       return readAnimation(index, id, name, data);
@@ -72,13 +73,13 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
     case 'shape':
       return readShape(index, data);
     case 'image':
-      return images ? images.readImage(index, data, file ? { file: true } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
+      return images ? images.readImage(index, data, file ? { file: true, css } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
     default:
-      return readIcon(index, data);
+      return readIcon(index, data, css);
   }
 }
 
-function buildItems(found: Detected, images?: ImageReader): { items: TransferItem[]; notes: TransferNote[] } {
+function buildItems(found: Detected, images?: ImageReader, css?: SvgCssResolve): { items: TransferItem[]; notes: TransferNote[] } {
   const { kind } = found;
   const items: TransferItem[] = [];
   const notes: TransferNote[] = [];
@@ -128,7 +129,7 @@ function buildItems(found: Detected, images?: ImageReader): { items: TransferIte
         if (keep.length) item.keywords = keep;
       }
     }
-    const r = readKind(kind, i, id, name, raw.data, images, found.source === 'svg');
+    const r = readKind(kind, i, id, name, raw.data, images, found.source === 'svg', found.source === 'svg' ? css : undefined);
     if (!r.ok) {
       notes.push(...itemNotes, ...r.notes);
       return;
@@ -157,7 +158,7 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
 }
 
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
-export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult {
+export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader; css?: SvgCssResolve }): ParseResult {
   // images only (the Images tab): an svg text is one image, read by the image checker in file mode
   const imagesOnly = opts.accept.length === 1 && opts.accept[0] === 'image';
   if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('This file is larger than 8 MB, so it was not read.'));
@@ -202,7 +203,7 @@ export function parseTransfer(text: string, opts: { accept: readonly TransferKin
   if (!opts.accept.includes(found.kind)) return refuse('wrong_kind', WHERE(found.kind));
   if (found.items.length > MAX_IMPORT_ITEMS) return refuse('too_many_items', t('This file holds more than {max} items, so it was not read.', { max: MAX_IMPORT_ITEMS }));
 
-  const built = buildItems(found, opts.images);
+  const built = buildItems(found, opts.images, opts.css);
   notes.push(...built.notes);
   if (!built.items.length) {
     const why = notes.filter((n) => n.code === 'invalid_item').slice(0, 3).map((n) => n.message).join(' ');

@@ -2,6 +2,7 @@ import { sanitizeSvg } from '../../icons/svg-sanitize';
 import { svgErrorKind } from '../../icons/svg-error';
 import { ICON_MAX_BYTES } from '../../contracts/mcu-library';
 import type { IconData, TransferNote } from '../../contracts/preset-transfer';
+import type { SvgCssResolve } from '../../contracts/svg-safety';
 import { t } from '../i18n';
 import { compactBytes, isObj, note } from '../types';
 import type { KindResult } from '../types';
@@ -33,8 +34,10 @@ export const attributeWhat = (n: string): string =>
 export const removedNote = (index: number, count: number, what: string): TransferNote =>
   note('svg_removed', index, 'data.svg', t('{count, plural, one {Removed {what}.} other {Removed {what} ({count} times).}}', { count, what }));
 
-/** What the sanitiser took out: element and attribute names present in the input but not in its result. */
-export function svgRemovals(input: string, markup: string, index: number): TransferNote[] {
+const GRADIENTS = new Set(['lineargradient', 'radialgradient']);
+
+/** What the sanitiser took out: element and attribute names present in the input but not in its result. With `resolved`, the parts the CSS resolver consumed (styles, gradient href) are not listed. */
+export function svgRemovals(input: string, markup: string, index: number, resolved = false): TransferNote[] {
   const before = parseSvg(input);
   const after = parseSvg(markup);
   const keptEls = new Set(after.map((e) => e.localName.toLowerCase()));
@@ -43,9 +46,10 @@ export function svgRemovals(input: string, markup: string, index: number): Trans
   const attrs = new Map<string, number>();
   for (const el of before) {
     const n = el.localName.toLowerCase();
-    if (n !== 'svg' && !keptEls.has(n)) els.set(n, (els.get(n) ?? 0) + 1);
+    if (n !== 'svg' && !keptEls.has(n) && !(resolved && n === 'style')) els.set(n, (els.get(n) ?? 0) + 1);
     for (const a of el.attributes) {
       const an = a.name.toLowerCase();
+      if (resolved && (an === 'style' || (/(^|:)href$/.test(an) && GRADIENTS.has(n) && a.value.trim().startsWith('#')))) continue;
       if (!IGNORED_ATTRS.test(an) && !keptAttrs.has(an)) attrs.set(an, (attrs.get(an) ?? 0) + 1);
     }
   }
@@ -72,20 +76,20 @@ function svgReason(error: string | undefined): string {
 }
 
 /** Sanitise an icon's markup: the result and everything that was removed. */
-export function cleanSvg(index: number, svg: string): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
+export function cleanSvg(index: number, svg: string, css?: SvgCssResolve): { ok: true; markup: string; viewBox: string; notes: TransferNote[] } | { ok: false; notes: TransferNote[] } {
   // mc-f / mc-s are the sanitiser's own marks: strip them first so an exported icon re-imports unchanged
-  const s = sanitizeSvg(svg.replace(/\bclass\s*=\s*(["'])([^"']*)\1/gi, (_m, q: string, v: string) => `class=${q}${v.split(/\s+/).filter((t) => t !== 'mc-f' && t !== 'mc-s').join(' ')}${q}`));
+  const s = sanitizeSvg(svg.replace(/\bclass\s*=\s*(["'])([^"']*)\1/gi, (_m, q: string, v: string) => `class=${q}${v.split(/\s+/).filter((t) => t !== 'mc-f' && t !== 'mc-s').join(' ')}${q}`), { css });
   if (s.error || !s.markup) return { ok: false, notes: [note('invalid_item', index, 'data.svg', svgReason(s.error))] };
   if (new TextEncoder().encode(s.markup).length > ICON_MAX_BYTES) {
     return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The icon is larger than {kb} KB.', { kb: ICON_MAX_BYTES / 1024 }))] };
   }
-  return { ok: true, markup: s.markup, viewBox: s.viewBox, notes: svgRemovals(svg, s.markup, index) };
+  return { ok: true, markup: s.markup, viewBox: s.viewBox, notes: svgRemovals(svg, s.markup, index, !!css) };
 }
 
 /** An icon item: svg sanitised (removals listed), path patterns and view box checked. */
-export function readIcon(index: number, data: unknown): KindResult<IconData> {
+export function readIcon(index: number, data: unknown, css?: SvgCssResolve): KindResult<IconData> {
   if (!isObj(data) || typeof data.svg !== 'string') return { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The icon has no SVG.'))] };
-  const c = cleanSvg(index, data.svg);
+  const c = cleanSvg(index, data.svg, css);
   if (!c.ok) return c;
   const notes = [...c.notes];
   const out: IconData = { svg: c.markup };
