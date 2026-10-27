@@ -433,13 +433,13 @@ export class McSvgEditor extends LitElement implements StageHost {
     }
   }
 
-  private cssTried = false;
+  private cssLoad?: Promise<void>;
 
-  /** Loads the CSS resolver once; it stays undefined when the chunk does not load. */
-  private async needCss(): Promise<void> {
-    if (this.cssTried) return;
-    this.cssTried = true;
-    this.css = await loadSvgCss();
+  /** Loads the CSS resolver once; every caller awaits the same load. It stays undefined when the chunk does not load. */
+  private needCss(): Promise<void> {
+    return (this.cssLoad ??= loadSvgCss().then((c) => {
+      this.css = c;
+    }));
   }
 
   /** Opens SVG text a user brought in (a pasted text or a chosen file), after the CSS resolver has loaded. */
