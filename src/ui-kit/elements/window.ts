@@ -178,6 +178,7 @@ export class UiWindow extends LitElement {
 
   /** Tab from the last stop goes to the first and Shift+Tab from the first to the last: a modal window left by Tab would hand the focus to the browser's own bar (and BODY). The stops come in the order a browser walks them, through open shadow roots and slots. */
   private _tab(e: KeyboardEvent): void {
+    if (e.defaultPrevented) return;
     const list: HTMLElement[] = [];
     const walk = (n: Node): void => {
       if (!(n instanceof HTMLElement) || n.hasAttribute('hidden')) return;

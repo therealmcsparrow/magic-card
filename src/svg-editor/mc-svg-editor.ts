@@ -523,6 +523,10 @@ export class McSvgEditor extends LitElement implements StageHost {
   /** A start action that was answered another way while the icon resolved (`seq`) is dropped. */
   async openIcon(ref: string, first = false): Promise<boolean> {
     const n = first ? this.seq : ++this.seq;
+    if (!first) {
+      this.startBusy = undefined;
+      clearTimeout(this.readTimer);
+    }
     const g = await svgIconApi()!.resolveIconGeometry(ref.trim());
     if (n !== this.seq) return false;
     if (!g) {
