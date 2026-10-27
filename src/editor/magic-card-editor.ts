@@ -132,6 +132,15 @@ export class MagicCardEditor extends LitElement {
     // (an embedded card's editor, HA form elements, a previewed card asking for more-info or a
     // rebuild) stops here: HA's card dialog would take it as the magic card's config / act on it.
     for (const type of CONTAINED_EVENTS) this.addEventListener(type, this._containEvent);
+    // a slider being dragged (any range or ha-slider below this element): config-changed follows at a steady pace
+    this.addEventListener(
+      'input',
+      (e) => {
+        const el = e.composedPath()[0] as HTMLInputElement;
+        if (el.type === 'range' || el.localName === 'ha-slider') this._stateManager.sliderMoved();
+      },
+      true,
+    );
   }
 
   private _containEvent = (e: Event): void => {
