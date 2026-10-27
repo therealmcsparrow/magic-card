@@ -9,9 +9,16 @@ import {
   parsePath,
   templateCenter,
   templatePath,
+  pathBounds,
+  reversePath,
+  serializePath,
+  setClosed,
+  smoothAll,
+  straightenAll,
+  translatePath,
+  type EditPath,
   type PathTemplateId,
 } from './path-utils';
-import { bounds as pathBounds, reverse as reversePath, serialize as serializePath, setClosed, smoothAll, straightenAll, translate as translatePath, type EditPath } from '../../path/edit';
 import { t, tx, m, type MessageId } from '../i18n';
 
 /*
@@ -63,7 +70,7 @@ function preview(id: PathTemplateId): { d: string; box: string } {
 
 /**
  * The path motion editor's inspector fields (the drawing happens on the stage, in
- * mc-anim-path-overlay): path templates, smooth / straighten / reverse / close / clear, what moves
+ * mc-anim-path-host): path templates, smooth / straighten / reverse / close / clear, what moves
  * (element, icon or particles, with the particles' count, size and colours), units and follow
  * rotation. Editor contract: `.doc` is never changed, every edit is one `doc-change` { doc, label }.
  */

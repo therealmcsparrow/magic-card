@@ -61,13 +61,15 @@ export interface StageInfo {
    * Scale the preview card is drawn at (fit to the area; screen px = card px x scale, from the
    * stage frame's top left). Stage tools sit inside the scaled frame: they divide pointer offsets by
    * it and must counter-scale handles, hit areas and strokes by 1 / scale so touch targets stay
-   * >= 24 screen px (see path-overlay.ts `_u`).
+   * >= 24 screen px. Tools in the `canvas` slot sit outside the scale and use `screen` instead.
    */
   scale: number;
   /** The moving element (or the selected target) in stage px. */
   subject?: { x: number; y: number; width: number; height: number };
   /** The icon's viewBox [x, y, w, h] when the subject is an icon rig. */
   viewBox?: [number, number, number, number];
+  /** The card as drawn (scale and zoom offset included), CSS px from the top-left of the canvas slot. */
+  screen?: { left: number; top: number; width: number; height: number };
 }
 
 /** `preview-change`: the preview's simulated entity. */
