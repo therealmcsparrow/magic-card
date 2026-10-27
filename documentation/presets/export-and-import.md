@@ -51,9 +51,19 @@ When you import a file:
 -   If an item has the same id as one you already have, Magic Card asks you to choose Replace or Keep both. Keep both gives the new item a new id.
 -   The summary lists what was dropped and what was changed. It is read out to screen readers.
 
+A file must hold what its name says. This holds for every preset import, in the Magic Card Utils panel and in the card editor. An .svg file that holds JSON, or a .json file that holds SVG, is refused with a message. A .json file that holds SVG used to import as an icon and is now refused: save it with an .svg name, or paste the code into the box, which has no name to check. File uploads in the image editor, Draw and icon effects take only .svg files and have no name check.
+
 Icons are cleaned the same way as icons in the SVG editor. Scripts, links to other files and similar parts are removed, and the summary lists them.
 
 Animations and shapes import into a card as copies, when you do not have Magic Card Utils.
+
+## Add an SVG file as an image
+
+On the Images tab of the Magic Card Utils panel, **Import** takes a .json preset file or a plain .svg file. An .svg file becomes one image. Its name is the file name, and its address is made from the name, for example `roof-plan.svg` becomes `roof-plan`. A file must hold what its name says: an .svg file that holds JSON, or a .json file that holds SVG, is refused with a message. Pasted text has no name, so Magic Card reads what it holds. You can paste the SVG code into the box too.
+
+The file is cleaned like every image: scripts, event handlers, links to other sites and embedded pictures are removed and listed in the summary, and a file with a document type that declares its own entities is refused. An .svg file can be up to 8 MB to be read, but the cleaned image must be 256 KiB or less, like every image. The image editor gives the same result when you open the same file there.
+
+Elsewhere in Magic Card an .svg file still imports as an icon.
 
 ## Import into a card
 

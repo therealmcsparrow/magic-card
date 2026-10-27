@@ -29,10 +29,13 @@ const LIMITS = (): string => t('This file is too complex to read safely (too man
 const NOT_PARSEABLE = (): string => t('Not valid YAML or JSON.');
 const DROPPED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
-/** Step 1 for a chosen file: refuse before reading it. */
-export function checkFileSize(file: { size: number; name?: string }): SafeParse | undefined {
-  // only a .json file may be larger than 1 MB (image envelopes); its kind is checked once it is read
-  const json = /\.json$/i.test(file.name ?? '');
+/**
+ * Step 1 for a chosen file: refuse before reading it. Only a .json file may be larger than 1 MB (image envelopes), and
+ * an .svg file where the panel accepts images only; the kind is checked once the file is read.
+ */
+export function checkFileSize(file: { size: number; name?: string }, accept?: readonly string[]): SafeParse | undefined {
+  const name = file.name ?? '';
+  const json = /\.json$/i.test(name) || (/\.svg$/i.test(name) && accept?.length === 1 && accept[0] === 'image');
   if (json && file.size > MAX_IMAGE_IMPORT_BYTES) return { ok: false, refusal: 'too_large', message: TOO_LARGE_IMAGES() };
   return file.size > MAX_IMPORT_BYTES && !json ? { ok: false, refusal: 'too_large', message: TOO_LARGE() } : undefined;
 }

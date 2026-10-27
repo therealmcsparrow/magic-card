@@ -2,7 +2,7 @@ import type { AnchorKind, Box, EditPath, PathDraw, PathEdit, PathTidy, Pt } from
 import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-kit';
 
 /*
- * Contract: path canvas. Version 1.0.0.
+ * Contract: path canvas. Version 1.0.0 (PATH_CANVAS_CONTRACT_VERSION).
  * Hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard (`[` / `]`, H, fine step, Enter to
  * fields, C and double-click for the kind), Esc cancels a drag, imports over MAX_ANCHORS stay
  * editable, drag performance with large paths.
@@ -12,12 +12,13 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *
  * Implementation: module `path-canvas`, folder src/path-canvas/, lazy chunk PATH_CANVAS_CHUNK_FILE
  * (webpackChunkName PATH_CANVAS_CHUNK). Loaded with import() by the svg-editor and shape-editor
- * chunks only; never by magic-card.js, never by the card-editor chunk statically. The chunk defines
+ * chunks, each through src/path-canvas/loader.ts, the only import() of the chunk;
+ * never by magic-card.js, never by the card-editor chunk statically. The chunk defines
  * one element, PATH_CANVAS_TAG (guarded by customElements.get), and its module exports
  * PathCanvasChunk below. Uses path-model 1.0.0. Imports nothing from src/anim-studio/,
  * src/editor/, src/svg-editor/, src/shape-editor/ or src/path-booleans/.
  *
- * The chunk exports `pathDraw` (path-model PathDraw, incl. the new primitives): the shape editor draws
+ * The chunk exports `pathDraw` (path-model PathDraw, incl. the primitives): the shape editor draws
  * too (pen, starter outlines), so the draw generators are shared by both editors. Neither editor
  * chunk imports src/path/draw.ts or src/path/edit.ts (with splitChunks false that would copy them:
  * draw 6.2 KB + edit 5.9 KB measured). Element properties: `gridStep` (drawn grid spacing, the SVG
@@ -34,8 +35,7 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * follow the kit look: --mc-hit high (44 on coarse), MDI glyphs, kit tokens. The canvas's styles read
  * the kit tokens (--mc-*) directly.
  *
- * Transform handles, box snapping and the context gesture are additive: no existing property, event
- * or key changes meaning.
+ * Transform box, box snapping, context gesture and menu:
  * - Transform box: property `transform` (TransformBox). In 'select' mode only, the canvas draws the
  *   host's box with eight scale handles (corners, edge midpoints) and, when `rotate`, a rotate handle on
  *   a stem ROTATE_STEM_PX (ROTATE_STEM_COARSE_PX on coarse) above the top centre, below the box when there
@@ -186,10 +186,11 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * unselected path selects it first; long-press opens at 500 ms and 8 px of movement turns it into a
  * drag; ContextMenu and Shift+F10 emit once (dedupe of the following contextmenu); contextMenu false
  * leaves contextmenu alone; menu roles, keys, typeahead, submenu open / close, reason on an unavailable
- * item, viewport clamp at 320 px, focus return to the opener; import scan unchanged.
+ * item, viewport clamp at 320 px, focus return to the opener; the import scan.
  */
 
 export const PATH_CANVAS_CONTRACT_VERSION = '1.0.0';
+/** Revision number of this contract. */
 export const PATH_CANVAS_CONTRACT_REVISION = 7;
 export const PATH_CANVAS_TAG = 'mc-path-canvas';
 export const PATH_CANVAS_CHUNK = 'path-canvas';

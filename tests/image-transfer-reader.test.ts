@@ -167,9 +167,10 @@ describe('image kind: reading', () => {
     expect(!out.ok && out.message).toMatch(/Images/);
   });
 
-  it('does not read a plain .svg as an image', () => {
+  it('reads a plain .svg as one image where only images are accepted, and as an icon elsewhere', () => {
     const out = parseTransfer(SVG, { accept: ['image'], images, fileName: 'a.svg' });
-    expect(out.ok).toBe(false);
+    expect(out.ok && out.kind).toBe('image');
+    expect(parseTransfer(SVG, { accept: ['icon'], images, fileName: 'a.svg' }).ok).toBe(true);
   });
 });
 

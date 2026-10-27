@@ -92,6 +92,21 @@ const enter = (ok: () => void) => (e: KeyboardEvent) => {
   ok();
 };
 
+/** Open file in the start window: a button in front of a hidden file input, and the reason a file was refused. */
+function startFile(x: ImageExt): TemplateResult {
+  return html`<div class="open-file">
+    ${button({ label: t('Open file'), variant: 'secondary', size: 'sm', onClick: (e) => (e.currentTarget as HTMLElement).parentElement!.querySelector<HTMLInputElement>('input[type=file]')!.click() })}
+    <span class="help">${t('Start from an SVG file instead of a blank canvas.')}</span>
+    <input id="img-start-file" type="file" hidden accept=".svg,image/svg+xml" @change=${(e: Event) => {
+      const i = e.target as HTMLInputElement;
+      const f = i.files?.[0];
+      i.value = '';
+      if (f) void x.startFile(f);
+    }} />
+    ${x.startError ? html`<p class="open-error" role="alert">${x.startError}</p>` : nothing}
+  </div>`;
+}
+
 export function sizeWin(x: ImageExt): TemplateResult {
   const s = x.size!;
   const sh = x.shell;
@@ -111,6 +126,7 @@ export function sizeWin(x: ImageExt): TemplateResult {
   return html`<mc-ui-window variant="dialog" size="m" heading=${t('Canvas size')} closeLabel=${t('Close')} @mc-window-close=${() => x.closeSize()}>
     <div class="dlg" @keydown=${enter(go)}>
       <p class="help">${t('Pick a shape. Pixel numbers only set the drawing grid. The image scales to any card.')}</p>
+      ${create ? startFile(x) : nothing}
       ${tiles({
         label: t('Shape'),
         value: s.preset,

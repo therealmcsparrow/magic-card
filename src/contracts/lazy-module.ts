@@ -3,7 +3,7 @@ import type { CardModule, HomeAssistant } from '../types';
 import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
 
 /*
- * Contract: lazy modules and lazy card chunks. Version 1.7.0.
+ * Contract: lazy modules and lazy card chunks. Version 1.7.0 (LAZY_MODULE_CONTRACT).
  * Swiper, the seasonal decoration set, `marked` + markdown and the rarely used modules leave
  * magic-card.js. One mechanism: lazy entries in the module registry, plus the same chunk helper for the
  * seasonal elements (the existing loader pattern).
@@ -310,8 +310,9 @@ import type { LazyStubMetadata, MagicModule } from '../modules/module-types';
  *   longer an import() site. Editor side: the
  *   existing loaders (transfer, preset-catalogue, icon-animator, look-editor, layer-editor,
  *   icon-library, path-canvas, path-tools, svg-booleans, svg-editor, shape-editor, theme-presets,
- *   i18n tables) are registered sites. The ESLint rule (no-restricted-syntax ImportExpression with an
- *   override for the registered files) fails any other import(). Moving editor loaders onto
+ *   i18n tables) are registered sites. path-canvas is reached from the svg-editor and shape-editor chunks, both
+ *   through src/path-canvas/loader.ts. The ESLint rule (no-restricted-syntax
+ *   ImportExpression with an override for the registered files) fails any other import(). Moving editor loaders onto
  *   lazyChunk() is debt.
  */
 

@@ -5,7 +5,7 @@ import type { SavedImageInput } from './mcu-library-images';
 import type { BooleanOp } from './path-booleans';
 
 /*
- * Contract: svg editor. Version 1.1.0.
+ * Contract: svg editor. Version 1.1.0 (SVG_EDITOR_CONTRACT_VERSION).
  *
  * SVG editor and shape editor hosts. Two lazy chunks of the magic-card entry, each loaded by the
  * card-editor chunk (never by magic-card.js, which gains 0 B from them):
@@ -26,14 +26,14 @@ import type { BooleanOp } from './path-booleans';
  * on the first use of a path tool, never on open, and imports nothing else from src/path-tools/. The
  * shape editor does not load it.
  *
- * Loaders (window contract, additive, apiVersion stays 1; set by the card-editor chunk when it
+ * Loaders (window contract, apiVersion 1; set by the card-editor chunk when it
  * loads, so magic-card.js does not grow):
  * - window.MagicCard.loadSvgEditor(): Promise<boolean>
  * - window.MagicCard.loadShapeEditor(): Promise<boolean>
  * Memoised; false on failure and retried on the next call (chunk URL rewritten, as the theme
  * presets loader does); 8 s timeout. The Magic Card Utils panel calls window.MagicCard.loadEditor(),
  * then loadSvgEditor() / loadShapeEditor(), and creates the elements with host 'mcu' (section
- * "Hosts"). No new loader, entry or window member: magic-card.js and magic-card-editor.js grow 0 B.
+ * "Hosts"). No other loader, entry or window member: magic-card.js and magic-card-editor.js grow 0 B.
  *
  * ── Shell rules (both hosts) ──
  * - Escape never closes an editor and never reaches Home Assistant's card dialog. Order: end a
@@ -286,9 +286,10 @@ import type { BooleanOp } from './path-booleans';
  * src/ui-kit/css, templates and glyphs) and nothing more: the card-editor chunk that loads it holds
  * the kit, so the chunk grows by no kit code. It defines no element of its own besides <mc-svg-editor>
  * and uses <mc-ui-window>, <mc-ui-popover>, <mc-ui-menu> and <mc-ui-toast>.
- * - Top bar: Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) | Undo, Redo | size chip |
- *   Export / Import (menu) | Save to library | Done | Shortcuts. The tool rail is the kit rail (a toolbar: arrows move the
- *   focus, a press picks the tool); Align, Combine and Path stay menu buttons after a divider on the canvas toolbar.
+ * - Top bar: Back to card editor (Close in host 'mcu') | title | Start from... | name (180 px) |
+ *   Undo, Redo | size chip | Export / Import (menu) | Save to library | Done | Shortcuts. The tool rail is the kit rail (a
+ *   toolbar: arrows move the focus, a press picks the tool); Align, Combine and Path stay menu buttons after a divider on
+ *   the canvas toolbar.
  * - Start from, Save to library, Leave, Start over, Make N Accent layers Main and Export / Import are <mc-ui-window>s
  *   (the confirmations are alerts, the others movable, resizable and maximisable). Shortcuts and Preview are anchored
  *   <mc-ui-popover>s: Preview is closed by default and the canvas keeps its full height. No hint line, no More actions.
@@ -320,19 +321,22 @@ import type { BooleanOp } from './path-booleans';
  *   returns to the opener, or its `data-focus-key` replacement).
  *
  * ── Image mode ──
- * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.0.0 holds
- * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that
- * chunk, and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing
- * canvas as the image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg,
- * saved }), downloads ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete)
- * when hass.user.is_admin is false or the library is missing. Layers being dragged, moved by handles or nudged
- * carry `will-change: transform` until the gesture ends.
+ * Sources 'image-blank', 'image' and 'image-svg' open the editor on a library image (image-editor 1.1.0 holds
+ * everything image-only; the shell loads it through src/svg-editor/image-loader.ts, the only import() of that chunk,
+ * and gives it ImageEditorHost). Icon sources never load it. In image mode the editor keeps the drawing canvas as the
+ * image's viewBox, saves only to the library (event 'mc-svg-save' { target: 'image-library', svg, saved }), downloads
+ * ext.exportFile() instead of its own Blob, and opens read-only (no Save, Rename or Delete) when hass.user.is_admin is
+ * false or the library is missing. The image chunk draws the top bar, the start window and its other windows through
+ * src/svg-editor/image-seam.ts (ImageUi.topBar(), dialogs()), an internal seam both folders change together (not part
+ * of this contract). Layers being dragged, moved by handles or nudged carry `will-change: transform` until the
+ * gesture ends.
  *
  * ── Hosts: 'card' and 'mcu' ──
  * 'card' (default) is everything above. 'mcu' = hosted by the Magic Card Utils panel (mcu-library 1.0.0
  * "Editors in the panel"): no card, no module, no entity, no HA dialog.
- * - Version: both element classes have `static contractRevision` (= SVG_EDITOR_CONTRACT_REVISION). The
- *   panel needs SVG_EDITOR_MCU_MIN_REVISION or more, else it shows its update message and creates nothing.
+ * - Version: <mc-svg-editor> has `static contractRevision` = SVG_EDITOR_CONTRACT_REVISION and <mc-shape-studio> has
+ *   `static contractRevision` 5. The panel needs SVG_EDITOR_MCU_MIN_REVISION or more, else it shows its update
+ *   message and creates nothing.
  * - Layer: the panel mounts the element in its content area (no <dialog>). The editors' own Escape rule
  *   (layer root) still applies; the panel focuses the element on open and returns focus to the opener.
  * - <mc-svg-editor host="mcu">: source { kind: 'blank' } (New icon) or { kind: 'library', id } with
@@ -342,7 +346,7 @@ import type { BooleanOp } from './path-booleans';
  *   `conflict` shows "This icon was changed somewhere else." with "Save as a copy" and "Reload". No Keep
  *   a copy switch, no module notice, no "save into the module". After a save `mc-svg-save` { target:
  *   'library', svg, saved } fires and the editor STAYS OPEN ("Saved" announced). `mc-svg-close` after the
- *   existing unsaved-work confirm. Imports go through sanitizeSvg as in 'card' (same boundary).
+ *   unsaved-work confirm. Imports go through sanitizeSvg as in 'card' (same boundary).
  * - Preview colours ('mcu' only): labelled colour inputs "Main preview colour" and "Accent preview
  *   colour" (defaults MCU_PREVIEW_MAIN, MCU_PREVIEW_ACCENT) colour the canvas and the previews. Session
  *   only: never saved, never in the markup, not in browser storage.
@@ -355,7 +359,7 @@ import type { BooleanOp } from './path-booleans';
  *   asks "Leave without saving?" (Leave, Keep editing), then fires mc-shape-close { done: false }.
  *
  * ── Dual-tone ──
- * The names stay "Main" and "Accent" everywhere. No new model, config or markup field
+ * The names stay "Main" and "Accent" everywhere. No model, config or markup field of its own
  * (Paint is none | main | accent; accent markup is class mc-accent).
  * - A "Dual-tone" switch in the document section. On open it is on when any layer paints Accent (fill
  *   or stroke), else off. Session state.
@@ -442,7 +446,7 @@ import type { BooleanOp } from './path-booleans';
  */
 
 export const SVG_EDITOR_CONTRACT_VERSION = '1.1.0';
-/** Revision number of the element classes (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
+/** Revision number of <mc-svg-editor> (static contractRevision); the Magic Card Utils panel checks it against SVG_EDITOR_MCU_MIN_REVISION. */
 export const SVG_EDITOR_CONTRACT_REVISION = 6;
 export const SVG_EDITOR_TAG = 'mc-svg-editor';
 /**
@@ -531,6 +535,8 @@ export interface SvgSaveDetail {
   /** target 'library': also keep an inline copy in the card (custom_icons). */
   keepCopy?: boolean;
 }
+
+export type SvgSaveTarget = SvgSaveDetail['target'];
 
 export interface ShapeEditorValue {
   shape: 'custom';

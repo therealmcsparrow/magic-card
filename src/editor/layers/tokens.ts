@@ -219,6 +219,14 @@ export const layerControlCss: CSSResult = css`
     margin: 0;
     background: transparent;
   }
+  ha-slider.lyr-range::part(label) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
   .lyr-range::-webkit-slider-runnable-track {
     height: 8px;
     border-radius: 4px;

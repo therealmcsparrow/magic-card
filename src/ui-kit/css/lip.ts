@@ -25,6 +25,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     font: inherit;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
   }
   .lip svg {
     width: 18px;
@@ -186,7 +187,8 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   @media (prefers-reduced-motion: reduce) {
     [data-lip],
-    [data-lip='hidden'] {
+    [data-lip='hidden'],
+    .lip {
       transition: none;
     }
   }
@@ -209,6 +211,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     font-size: 0.8125rem;
     line-height: 1.4;
     animation: lip-hint-in 160ms ease-out;
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
   }
   .lip-hint p {
     margin: 0 0 8px;
@@ -305,6 +308,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   @media (prefers-reduced-motion: reduce) {
     .lip-hint {
       animation: none;
+      transition: none;
     }
   }
 

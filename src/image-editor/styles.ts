@@ -68,6 +68,17 @@ export const imageStyles = css`
     gap: 8px 12px;
     align-items: start;
   }
+  .open-file {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+  }
+  .open-error {
+    flex: 1 0 100%;
+    margin: 0;
+    color: var(--mc-error-ink, #b3261e);
+  }
   .id-line {
     color: var(--mc-text-secondary, inherit);
     opacity: 0.85;

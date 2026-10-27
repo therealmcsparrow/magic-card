@@ -15,7 +15,7 @@ import { costFromBackdrop, type CostReason } from './cost';
 import { BACKDROP_LOOKS, addBackdropLook, type BackdropLook } from './looks';
 import { layerStyles } from './layer-styles';
 import { layerControlCss } from './tokens';
-import { chevron, lyrSwitch } from './controls';
+import { cancelSliderFrames, chevron, lyrSwitch } from './controls';
 
 /*
  * Card backdrop group: `background_layers`, first entry = front, at most
@@ -77,6 +77,7 @@ export class McBgLayers extends LitElement {
     setPreview(undefined); // the preview belongs to this editor session
     this.removeEventListener('keydown', this._onKey);
     clearTimeout(this._timer);
+    cancelSliderFrames(this.renderRoot);
   }
 
   static styles = [
@@ -108,11 +109,6 @@ export class McBgLayers extends LitElement {
         padding: 10px;
         display: grid;
         gap: 8px;
-      }
-      /* the open row: an accent edge plus a 4 px bar on the leading side, and the chevron turned (not a hue alone) */
-      .row[data-open] {
-        border-color: var(--mc-accent-ink);
-        box-shadow: inset 4px 0 0 var(--mc-accent-fill, #0277bd);
       }
       .r1 {
         display: flex;

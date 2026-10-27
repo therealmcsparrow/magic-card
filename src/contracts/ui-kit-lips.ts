@@ -137,7 +137,9 @@ import type { KitTemplate } from './ui-kit';
  * - Motion: transform uses var(--mc-lip-ms, 200ms), 0s under prefers-reduced-motion: reduce; visibility
  *   switches at the end of a hide and at the start of a show (visibility transition with a delay of
  *   --mc-lip-ms on hide, 0s on show). Grid tracks do not transition (not animatable on the browser floor),
- *   so the canvas resizes at once. The timing is the kit's own --mc-lip-ms with a literal fallback, not an
+ *   so the canvas resizes at once. The lip's own left and right (and the first-open hint's offsets) use the
+ *   same duration and easing, so the lip slides with its panel; under prefers-reduced-motion it does not move
+ *   over time. The timing is the kit's own --mc-lip-ms with a literal fallback, not an
  *   HA animation token.
  *
  * ── Geometry per editor (LIP_GEOMETRY) ──

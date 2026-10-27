@@ -42,7 +42,7 @@ const row = (s: ImageSummary): { thumb?: string; meta: string } => ({
 
 export const createImageTransfer: CreateImageTransfer = (api, kit) => ({
   revision: IMAGE_TRANSFER_REVISION,
-  readImage: (index, data) => readImage(api, kit, index, data),
+  readImage: (index, data, options) => readImage(api, kit, index, data, options),
   ...imageCommands(api, kit),
   row,
   text,

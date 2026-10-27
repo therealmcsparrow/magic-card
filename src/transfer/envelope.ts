@@ -1,5 +1,6 @@
 import { toYaml } from '../utils/yaml-utils';
 import { CUSTOM_PREFIX } from '../anim-studio/model';
+import { MAX_IMAGE_IMPORT_BYTES } from '../contracts/image-editor';
 import { LIBRARY_ID_RE } from '../contracts/mcu-library';
 import {
   AUTHOR_MAX_CHARS,
@@ -62,7 +63,7 @@ function formatOf(v: unknown): { major: number; minor: number } | undefined {
   return m ? { major: +m[1], minor: +(m[2] ?? 0) } : undefined;
 }
 
-function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader): KindResult {
+function readKind(kind: TransferKind, index: number, id: string, name: string, data: unknown, images?: ImageReader, file = false): KindResult {
   switch (kind) {
     case 'animation':
       return readAnimation(index, id, name, data);
@@ -71,7 +72,7 @@ function readKind(kind: TransferKind, index: number, id: string, name: string, d
     case 'shape':
       return readShape(index, data);
     case 'image':
-      return images ? images.readImage(index, data) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
+      return images ? images.readImage(index, data, file ? { file: true } : undefined) : { ok: false, notes: [note('invalid_item', index, 'data.svg', t('The checker for images did not load, so this image was not read.'))] };
     default:
       return readIcon(index, data);
   }
@@ -127,7 +128,7 @@ function buildItems(found: Detected, images?: ImageReader): { items: TransferIte
         if (keep.length) item.keywords = keep;
       }
     }
-    const r = readKind(kind, i, id, name, raw.data, images);
+    const r = readKind(kind, i, id, name, raw.data, images, found.source === 'svg');
     if (!r.ok) {
       notes.push(...itemNotes, ...r.notes);
       return;
@@ -157,13 +158,25 @@ function missingStepRefs(items: TransferItem[]): TransferNote[] {
 
 /** Steps 1-5 of "Safe parsing" plus per-kind validation. Pure and synchronous. */
 export function parseTransfer(text: string, opts: { accept: readonly TransferKind[]; fileName?: string; images?: ImageReader }): ParseResult {
-  // over 1 MB only a JSON text is looked at (an image envelope); safeParse decides the rest
-  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
+  // images only (the Images tab): an svg text is one image, read by the image checker in file mode
+  const imagesOnly = opts.accept.length === 1 && opts.accept[0] === 'image';
+  if (typeof text === 'string' && imagesOnly && text.length > MAX_IMAGE_IMPORT_BYTES) return refuse('too_large', t('This file is larger than 8 MB, so it was not read.'));
+  // the file name decides: .svg holds SVG and .json holds JSON; pasted text has no name, so its content decides
+  const name = opts.fileName ?? '';
+  const svgName = /\.svg$/i.test(name);
+  if (svgName ? /^\s*[{[]/.test(text) : /\.json$/i.test(name) && looksLikeSvg(text)) {
+    const want = svgName ? 'SVG' : 'JSON';
+    return refuse('not_a_preset_file', t('The name says {want}, but the file holds {found}.', { found: svgName ? 'JSON' : 'SVG', want }));
+  }
+  const asImage = imagesOnly && typeof text === 'string' && looksLikeSvg(text, opts.fileName);
+  // over 1 MB only a JSON text (an image envelope) or an svg image is looked at; safeParse decides the rest
+  if (typeof text === 'string' && text.length > MAX_IMPORT_CHARS && !asImage && !/^\s*\{/.test(text)) return refuse('too_large', t('This text is larger than 1 MB, so it was not read.'));
   const notes: TransferNote[] = [];
   let found: Detected | undefined;
   let marker: Raw | undefined;
 
-  if (typeof text === 'string' && looksLikeSvg(text, opts.fileName)) found = svgItem(text, opts.fileName);
+  if (asImage) found = svgItem(text, opts.fileName, 'image');
+  else if (!imagesOnly && typeof text === 'string' && looksLikeSvg(text, opts.fileName)) found = svgItem(text, opts.fileName);
   else {
     const p = safeParse(text);
     if (!p.ok) return refuse(p.refusal, p.message);

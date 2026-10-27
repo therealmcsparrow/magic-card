@@ -2,7 +2,7 @@ import { BINDING_COLOUR_RE, IMAGE_MAX_BYTES } from '../contracts/mcu-library-ima
 import type { BindingRule, ImageBinding } from '../contracts/mcu-library-images';
 import type { ImageData, ImageKindResult, ImageTransferKit, TransferNote } from '../contracts/preset-transfer';
 import { MAX_BINDING_RULES, MAX_IMAGE_BINDINGS } from '../contracts/svg-image';
-import type { SvgImageApi } from '../contracts/svg-image';
+import type { SanitizeOptions, SvgImageApi } from '../contracts/svg-image';
 import { t } from './i18n';
 
 type Raw = Record<string, unknown>;
@@ -61,13 +61,13 @@ function bindingsOf(kit: ImageTransferKit, index: number, raw: unknown, ids: Rea
 }
 
 /** An image item: the drawing is sanitised by the svg-image api (what it removes is listed), connections are checked. */
-export function readImage(api: Pick<SvgImageApi, 'sanitizeImage'>, kit: ImageTransferKit, index: number, data: unknown): ImageKindResult {
+export function readImage(api: Pick<SvgImageApi, 'sanitizeImage'>, kit: ImageTransferKit, index: number, data: unknown, options?: SanitizeOptions): ImageKindResult {
   const bad = (message: string): ImageKindResult => ({ ok: false, notes: [kit.note('invalid_item', index, 'data.svg', message)] });
   if (!isObj(data) || typeof data.svg !== 'string') return bad(t('The image could not be read.'));
   const notes: TransferNote[] = [];
   for (const k of Object.keys(data)) if (!DATA_KEYS.includes(k)) notes.push(kit.droppedKey(index, `data.${k}`));
 
-  const s = api.sanitizeImage(data.svg);
+  const s = api.sanitizeImage(data.svg, options);
   if (s.error || !s.markup) return bad(s.error === 'too_large' ? t('The image is larger than {kb} KB.', { kb: IMAGE_MAX_BYTES / 1024 }) : s.error === 'unsafe_markup' ? t('The image holds markup that is not allowed.') : t('The image could not be read.'));
   const gone = new Map<string, number>();
   for (const x of s.stripped) gone.set(x, (gone.get(x) ?? 0) + 1);

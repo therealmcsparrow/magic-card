@@ -2,7 +2,7 @@ import type { HomeAssistant } from '../types';
 import type { ImageBinding, SavedImageInput } from './mcu-library-images';
 
 /*
- * Contract: image editing. Version 1.0.0.
+ * Contract: image editing. Version 1.1.0 (IMAGE_EDITOR_CONTRACT), revision 6 (IMAGE_EDITOR_CONTRACT_REVISION).
  * Full drawings are edited in the existing <mc-svg-editor> (svg-editor 1.1.0) in image mode. Image-only parts live in two
  * editor chunks so the svg-editor chunk grows only by the seam:
  *   - image-editor (dist/magic-card-image-editor.js, entry src/image-editor/chunk.ts): a child of the svg-editor chunk
@@ -17,14 +17,14 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  * drawn from api.fragment() nodes or <mc-svg-image>; thumbnails come from api.thumbnail(); image export files from
  * api.fileBlob(). Strings: i18n namespace 'image-editor' (en-GB ids, en-US and nl complete).
  *
- * ── svg-editor 1.1.0 (additive; SVG_EDITOR_CONTRACT_REVISION 6) ──
- *   SvgEditorSource gains
+ * ── In <mc-svg-editor> (svg-editor 1.1.0, SVG_EDITOR_CONTRACT_REVISION 6) ──
+ *   SvgEditorSource holds three image sources:
  *     { kind: 'image-blank'; width?: number; height?: number }   no size: the canvas-size step opens first
  *     { kind: 'image'; id: string }                              a library image
  *     { kind: 'image-svg'; svg: string }                         a file opened as a new image
  *   An image source loads image-editor and svg-image before the first canvas render (the shell shows its loading
  *   state; a failed load shows the shell's load error with Retry), then calls createImageExt and hands every
- *   image-only decision to it. Icon sources behave exactly as before and never load image-editor.
+ *   image-only decision to it. Icon sources never load image-editor.
  *   Image mode: canvas = the image's viewBox (presets IMAGE_CANVAS_PRESETS or custom, each side 16..MAX_IMAGE_BOX),
  *   grid default = longest side / 48 rounded to the SVG_GRID_STEPS-like ladder, safe area off, "In Home Assistant"
  *   preview off, icon-only actions hidden (Dual-tone, HA form). Every existing tool (shapes, pen, booleans, align,
@@ -32,7 +32,7 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   mode downloads ext.exportFile(); the shell's own svg Blob is made for icon markup only.
  *   While a layer is dragged, moved by handles or nudged in a burst, the moved elements carry
  *   `will-change: transform`; it is removed when the gesture ends.
- *   Save targets: library only (images have no inline copy). New event detail for image saves:
+ *   Save targets: library only (images have no inline copy). Event detail for image saves:
  *     mc-svg-save { target: 'image-library', saved: SavedImageInput }.
  *   Save shortcut: Control+S, and Command+S on macOS; tooltips name the platform's key.
  *   Hosts: 'mcu' (panel Images tab, Library tab) and 'card' (opened from an image field by <mc-library-image-field>).
@@ -41,6 +41,25 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   Touch and pen: pointer events throughout; the stage has touch-action: none. One finger or a pen uses the active
  *   tool, two fingers pan and pinch-zoom, a Pan tool exists for one-finger panning, and the layer list selects any
  *   layer as the fallback for small parts. On-canvas text has on-screen Done and Cancel.
+ *
+ * ── Image start window ──
+ *   The window that opens for an 'image-blank' source without a size (the canvas-size step: presets, custom W x H)
+ *   also offers Open file: a labelled button in its tab order, in front of an <input type=file
+ *   accept=".svg,image/svg+xml">, with a help line. The file passes Import's gate before the text is read: the name
+ *   ends in .svg or file.type is image/svg+xml, and File.size <= MAX_IMAGE_IMPORT_BYTES (8 MB); then file.text().
+ *   Refusals use Import's words ("Choose an SVG file.", "That file is too big to open (over 8 MB). Try a smaller
+ *   copy.") and "The file could not be read." when the read fails. When the window was closed, or Create was pressed,
+ *   while the file was being read, the result is dropped and the document stays as it is.
+ *   The text then goes the way of the { kind: 'image-svg', svg: text } source, which is read exactly like Import:
+ *   api.sanitizeImage(text, { file: true }), then the import summary and the locked-part rules below; the sanitiser's
+ *   IMAGE_MAX_BYTES (256 KiB) still applies after the 8 MB file gate, so a 2 MB file passes the gate and is then
+ *   refused by the sanitiser with its size message. A refusal keeps the start window open with the reason in its
+ *   role=alert line and changes nothing; the window, the shell and the image editor never parse, rewrite or draw the
+ *   text before the sanitiser, and it never reaches unsafeSVG. The same SVG file gives the same drawing and summary
+ *   here, through Import and through the Magic Card Utils Images import (preset-transfer 1.3.0, "SVG files as
+ *   images"). A file named .svg that holds JSON is refused here by the sanitiser; the Images import refuses it with
+ *   its own name message (preset-transfer "File names").
+ *   Keyboard: every control reachable by Tab, visible focus, 24 x 24 px targets; results in the polite live region.
  *
  * ── ImageEditorExt (what image-editor gives the shell) ──
  *   - Canvas size step and Canvas size action (presets, custom W x H, keep ratio, content stays where it is). Cards
@@ -66,7 +85,8 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *     localStorage or any request. Only the alignment numbers
  *     (x, y, scale, rotation, opacity) are kept in localStorage under REFERENCE_ALIGN_KEY_PREFIX + image id, and
  *     applied when a picture is picked again for that image.
- *   - Import: .svg files (type or name, and size <= MAX_IMAGE_IMPORT_BYTES, checked before the text is read) through
+ *   - Import: .svg files (the name ends in .svg or file.type is image/svg+xml, and File.size <= MAX_IMAGE_IMPORT_BYTES,
+ *     checked before the text is read) through
  *     api.sanitizeImage(text, { file: true }). The import summary names each kind of stripped part once, without
  *     counts ("Removed scripts, event handlers."), or says nothing was removed. Text, tspan and gradients open as
  *     text layers and gradient paints. Nothing drawable is dropped: each run of adjacent sibling elements the editor
@@ -145,19 +165,19 @@ import type { ImageBinding, SavedImageInput } from './mcu-library-images';
  *   The card-editor chunk only loads image-tools and mounts the two elements; it holds none of their code.
  *
  * ── Library view (preset-transfer 1.1.0) ──
- *   TransferKind gains 'image'. <mc-library-view> lists images (thumbnail, name, size, binding count) in the
+ *   TransferKind holds 'image'. <mc-library-view> lists images (thumbnail, name, size, binding count) in the
  *   'mcu-panel' and card contexts; kinds ['image'] for the Images tab and the field picker. Rename = images_save with
  *   the item fetched by images_get (same id); Duplicate = images_get, then images_save under a new name and id;
  *   delete = images_delete; export writes an envelope with kind 'image' items (data = SavedImageInput without thumb),
  *   one item or all images ("Export all"); import re-sanitises every item (stripped parts listed), checks bindings,
  *   and saves through images_save (clash: Replace / Keep both). No versions are kept. Envelopes with image items are
  *   JSON only and may be up to MAX_IMAGE_IMPORT_BYTES; other envelopes keep MAX_IMPORT_BYTES. Plain .svg files open
- *   in the editor instead. Without Magic Card Utils, importing an image is refused with the install hint (cards keep
- *   no copy).
+ *   in the editor and, where the panel accepts images only, import as images (preset-transfer 1.3.0, "SVG files as
+ *   images"). Without Magic Card Utils, importing an image is refused with the install hint (cards keep no copy).
  */
 
-export const IMAGE_EDITOR_CONTRACT = '1.0.0';
-export const IMAGE_EDITOR_CONTRACT_REVISION = 5;
+export const IMAGE_EDITOR_CONTRACT = '1.1.0';
+export const IMAGE_EDITOR_CONTRACT_REVISION = 6;
 
 export const IMAGE_EDITOR_CHUNK = 'image-editor';
 export const IMAGE_EDITOR_CHUNK_FILE = 'magic-card-image-editor.js';
@@ -181,13 +201,13 @@ export const IMAGE_THEME_COLOURS: readonly string[] = [
 export const THUMB_SIDE_PX = 320;
 export const MAX_IMAGE_IMPORT_BYTES = 8 * 1024 * 1024;
 
-/** The class value that marks a saved imported part group (see "Imported part, saved form"). */
-export const IMAGE_PART_CLASS = 'mc-part';
-/** Most part data one image may turn into part layers, as string length (see "Part-data limit"): twice mcu-library-images IMAGE_MAX_BYTES. */
-export const IMAGE_PART_DATA_MAX = 2 * 256 * 1024;
-
 /** New image ids: the slug of the name. */
 export const IMAGE_ID_SLUG = /^[a-z0-9](?:[a-z0-9-]{0,47})$/;
+
+/** The class that marks an imported part's group in the saved markup (section "Imported part, saved form"). */
+export const IMAGE_PART_CLASS = 'mc-part';
+/** Most part data of one image, in UTF-16 code units (section "Part-data limit"). */
+export const IMAGE_PART_DATA_MAX = 2 * 256 * 1024;
 
 export const REFERENCE_TYPES: readonly string[] = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif', 'image/bmp'];
 export const REFERENCE_MAX_FILE_BYTES = 64 * 1024 * 1024;
