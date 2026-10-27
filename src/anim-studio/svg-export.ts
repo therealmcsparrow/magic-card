@@ -1,4 +1,5 @@
-import { multiply, parseTransform, shapePath, type Matrix } from '../icons/svg-geometry';
+import { READ_MAX_PATH_CHARS } from '../contracts/svg-reader';
+import { readShapes } from '../svg-io/read';
 import type { SvgCssResolve } from '../contracts/svg-safety';
 import { SVG_MAX_BYTES, sanitizeSvg } from '../icons/svg-sanitize';
 import { ANIMATION_CAPS, safeCssValue, type AnimationDoc } from './model';
@@ -156,26 +157,17 @@ export function svgFileName(name: string): string {
 
 // ── import ──
 
-const NOT_DRAWN = new Set(['defs', 'clippath', 'mask', 'lineargradient', 'radialgradient', 'title']);
-const SHAPES = new Set(['path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon']);
-
-interface Paint {
-  fill?: string;
-  stroke?: string;
-  width?: number;
-  cap?: string;
-}
+const IMPORT_ERRORS = {
+  not_svg: 'No <svg> element found.',
+  empty: 'The SVG has no shapes to draw.',
+  too_detailed: 'A shape in the SVG is too detailed (over 8192 characters of path data).',
+  too_many: 'The SVG has too many shapes; at most {room} fit.',
+} as const;
 
 /** The path encloses (next to) no area: a line. */
 function isFlat(d: string): boolean {
   const b = pathBBox(d);
   return !b || pathArea(d) < Math.max(b.w, b.h) * 1e-3;
-}
-
-function parseMarkup(markup: string): Element | undefined {
-  if (typeof DOMParser === 'undefined') return undefined;
-  const doc = new DOMParser().parseFromString(markup, 'text/html');
-  return [...doc.getElementsByTagName('*')].find((e) => e.localName.toLowerCase() === 'svg');
 }
 
 /** A paint attribute as a shape colour: safe CSS colours kept, gradients and the rest as currentColor. */
@@ -195,68 +187,40 @@ function importPaint(v: string | undefined): string | undefined {
 export function importSvgFile(text: string, viewBox: string, taken: string[] = [], room: number = V2_CAPS.shapes, css?: SvgCssResolve): RigShape[] | { error: string } {
   const r = sanitizeSvg(text, { css });
   if (r.error) return { error: r.error };
-  const root = parseMarkup(r.markup);
-  if (!root) return { error: 'No <svg> element found.' };
   const map = viewBoxMap(r.viewBox, viewBox);
+  const read = readShapes(r.markup, {
+    viewBox,
+    keepGroups: false,
+    maxShapes: room,
+    maxPathChars: Math.min(room * ANIMATION_CAPS.pathLength, READ_MAX_PATH_CHARS),
+    matrix: [map.k, 0, 0, map.k, map.dx, map.dy],
+  });
+  if (!read.ok) return { error: IMPORT_ERRORS[read.error].replace('{room}', String(room)) };
   const ids = new Set(taken);
   const out: RigShape[] = [];
-  let tooLong = false;
-
-  /** An element's own paint over its parent's, and its matrix. */
-  const own = (el: Element, ctm: Matrix, parent: Paint): { m: Matrix; paint: Paint } => {
-    const attr = (k: string): string | undefined => el.getAttribute(k) ?? undefined;
-    const w = Number.parseFloat(attr('stroke-width') ?? '');
-    return {
-      m: multiply(ctm, parseTransform(el.getAttribute('transform'))),
-      paint: {
-        fill: attr('fill') ?? parent.fill,
-        stroke: attr('stroke') ?? parent.stroke,
-        width: Number.isFinite(w) && w >= 0 ? w : parent.width,
-        cap: attr('stroke-linecap') ?? parent.cap,
-      },
-    };
-  };
-
-  const walk = (el: Element, ctm: Matrix, parent: Paint): void => {
-    const name = el.localName.toLowerCase();
-    if (NOT_DRAWN.has(name)) return;
-    const { m, paint } = own(el, ctm, parent);
-    if (SHAPES.has(name)) {
-      const raw = shapePath(el, name);
-      if (raw) {
-        const scale = Math.sqrt(Math.abs(m[0] * m[3] - m[1] * m[2])) * map.k;
-        const d = mapD(raw, (p) => [(m[0] * p[0] + m[2] * p[1] + m[4]) * map.k + map.dx, (m[1] * p[0] + m[3] * p[1] + m[5]) * map.k + map.dy]);
-        if (d.length > ANIMATION_CAPS.pathLength) tooLong = true;
-        else if (d) {
-          const own = el.getAttribute('id') ?? '';
-          const id = PART_ID_RE.test(own) && !ids.has(own) ? own : nextShapeId([...ids], 'shape');
-          ids.add(id);
-          const s: RigShape = { id, name: own && PART_ID_RE.test(own) ? own : `Shape ${out.length + 1}`, d, layer: 'over' };
-          const fill = name === 'line' ? 'none' : (importPaint(paint.fill) ?? 'currentColor');
-          const stroke = importPaint(paint.stroke);
-          if (stroke && stroke !== 'none') {
-            s.stroke = stroke;
-            s.stroke_width = Math.round((paint.width ?? 1) * scale * 1000) / 1000;
-            if (paint.cap === 'round' || paint.cap === 'butt' || paint.cap === 'square') s.linecap = paint.cap;
-            if (fill !== 'none') s.fill = fill;
-          } else if (fill === 'none' || isFlat(d)) {
-            // unpainted, or a fill with no area (a bare line): drawn by a hairline stroke instead
-            s.stroke = 'currentColor';
-            s.stroke_width = Math.round(Math.max(scale, 0.05) * 1000) / 1000;
-          } else s.fill = fill;
-          out.push(s);
-        }
-      }
-    }
-    for (const c of [...el.children]) walk(c, m, paint);
-  };
-  // the root's own paint and transform reach every shape (Lucide: fill="none" stroke="currentColor")
-  const top = own(root, [1, 0, 0, 1, 0, 0], {});
-  for (const c of [...root.children]) walk(c, top.m, top.paint);
-
-  if (tooLong) return { error: 'A shape in the SVG is too detailed (over 8192 characters of path data).' };
-  if (!out.length) return { error: 'The SVG has no shapes to draw.' };
-  if (out.length > room) return { error: `The SVG has ${out.length} shapes; at most ${room} fit.` };
+  for (const el of read.shapes) {
+    const d = mapD(el.d, (p) => p);
+    if (d.length > ANIMATION_CAPS.pathLength) return { error: IMPORT_ERRORS.too_detailed };
+    if (!d) continue;
+    const own = el.id ?? '';
+    const id = PART_ID_RE.test(own) && !ids.has(own) ? own : nextShapeId([...ids], 'shape');
+    ids.add(id);
+    const s: RigShape = { id, name: own && PART_ID_RE.test(own) ? own : `Shape ${out.length + 1}`, d, layer: 'over' };
+    const fill = el.from === 'line' ? 'none' : (importPaint(el.fill) ?? 'currentColor');
+    const stroke = importPaint(el.stroke);
+    const width = el.strokeWidth ?? 1;
+    if (stroke && stroke !== 'none') {
+      s.stroke = stroke;
+      s.stroke_width = Math.round(width * 1000) / 1000;
+      if (el.cap === 'round' || el.cap === 'butt' || el.cap === 'square') s.linecap = el.cap;
+      if (fill !== 'none') s.fill = fill;
+    } else if (fill === 'none' || isFlat(d)) {
+      // unpainted, or a fill with no area (a bare line): drawn by a hairline stroke instead
+      s.stroke = 'currentColor';
+      s.stroke_width = Math.round(Math.max(map.k, 0.05) * 1000) / 1000;
+    } else s.fill = fill;
+    out.push(s);
+  }
   return out;
 }
 
