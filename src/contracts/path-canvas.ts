@@ -6,8 +6,8 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  * Hit sizes 24 / 44 px, touch drag loupe and grab offset, keyboard (`[` / `]`, H, fine step, Enter to
  * fields, C and double-click for the kind), Esc cancels a drag, imports over MAX_ANCHORS stay
  * editable, drag performance with large paths.
- * - Section "Overlay mode" is the target text of version 1.1.0 (revision 8): editing over a picture the host draws
- *   (see-through ground with pointer pass-through, host-given placement, per-axis scale, units, no grid at gridStep 0).
+ * - Section "Overlay mode" (from 1.1.0, revision 8): editing over a picture the host draws (see-through ground with
+ *   pointer pass-through, host-given placement, per-axis scale, units, no grid at gridStep 0).
  *
  * One editing surface for anchors and handles, used by the SVG editor (many subpaths in a fixed
  * viewBox) and the shape editor (one closed subpath in a resizable box with anchored coordinates).
@@ -96,7 +96,8 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   `opener`; after a pick the host moves focus. Esc that closed the menu is stopped there (editor Esc
  *   order: gesture, then overlay). No motion under reduced motion. No strings of its own: the host passes
  *   every label. The host places the element inside its own layer (shadow root), so focus stays inside.
- * - Size: the chunk measures about 15.1 KB minified (menu 6.0 KB, canvas 9.1 KB). Ceiling 62 KiB = 63,488 B.
+ * - Size: the ceiling is the tools/size-caps.json entry for PATH_CANVAS_CHUNK_FILE (measured + 5 %, rounded up to
+ *   1 KiB); the number lives there only. With overlay mode the chunk stays at or under 70 KiB = 71,680 B.
  *
  * One copy rule: webpack runs with splitChunks false, so a file imported statically by two lazy
  * chunks is copied into both. The editor chunks therefore take the editor-only path-model parts
@@ -160,12 +161,11 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   aria-roledescription "drawing canvas" and the host's aria-label / aria-describedby.
  * - Visuals follow DESIGN.md editor tokens (src/css/editor-system); focus is always visible.
  *
- * ── Overlay mode (target text of version 1.1.0, revision 8) ──
- * This section ships with PATH_CANVAS_CONTRACT_VERSION '1.1.0' and PATH_CANVAS_CONTRACT_REVISION 8; the header and both
- * constants change in the change that ships the code, never before. From then on the element class has
- * `static contractRevision` = PATH_CANVAS_CONTRACT_REVISION. A host that needs overlay mode checks
- * customElements.get(PATH_CANVAS_TAG).contractRevision >= PATH_CANVAS_OVERLAY_REVISION first (absent = an older
- * element, which has no overlay mode). Everything outside this section applies unless a bullet here says otherwise.
+ * ── Overlay mode (from version 1.1.0, revision 8) ──
+ * The element class has `static contractRevision` = PATH_CANVAS_CONTRACT_REVISION. A host that needs overlay mode
+ * checks customElements.get(PATH_CANVAS_TAG).contractRevision >= PATH_CANVAS_OVERLAY_REVISION first (absent = an
+ * element older than 1.1.0, which has no overlay mode). Everything outside this section applies unless a bullet here
+ * says otherwise.
  * Overlay mode lets a host edit paths over a live picture it draws itself (the animation studio's stage). It is on while
  * the boolean property / attribute `overlay` is set.
  * - Ground: `overlay` implies `underlay`. No ground, frame fill or frame outline is painted (a host that wants a board
@@ -235,8 +235,9 @@ import type { UiMenuClose, UiMenuElement, UiMenuEntry, UiMenuPick } from './ui-k
  *   press on an anchor is taken; 'add' takes a press outside the frame; no zoom, pan or mc-path-view; =, + and 0
  *   bubble; the rotate handle and slider hidden at sx / sy 1.02 and shown at 1.005; units text in the listbox, live
  *   region, loupe and readout for '%', 'px' and absent; no grid at gridStep 0 in overlay and in normal mode; handled
- *   keys stopped and Esc with nothing selected bubbling; contractRevision equals PATH_CANVAS_CONTRACT_REVISION. The
- *   drag speed test (browser, 4x profile) checks OVERLAY_DRAG_BUDGET.
+ *   keys stopped and Esc with nothing selected bubbling; contractRevision equals PATH_CANVAS_CONTRACT_REVISION; the
+ *   OVERLAY_DRAG_BUDGET numbers. A drag speed test (browser, 4x profile) checks OVERLAY_DRAG_BUDGET once the Linux
+ *   profile confirms it (bullet "Speed").
  *
  * Events (bubbling, composed):
  * - `mc-path-change` detail PathChange. `commit` false while dragging, true on pointer up / key up /
