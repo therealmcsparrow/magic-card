@@ -25,6 +25,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
     font: inherit;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
   }
   .lip svg {
     width: 18px;
@@ -186,7 +187,9 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   @media (prefers-reduced-motion: reduce) {
     [data-lip],
-    [data-lip='hidden'] {
+    [data-lip='hidden'],
+    .lip,
+    .lip-hint[data-side] {
       transition: none;
     }
   }
@@ -260,6 +263,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   .lip-hint[data-side='start'] {
     left: calc(var(--mc-lip-at-start, 0px) + 36px);
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
     inset-inline-start: calc(var(--mc-lip-at-start, 0px) + 36px);
   }
   .lip-hint[data-side='start']::before {
@@ -269,6 +273,7 @@ export const kitLip: CSSResult = /* @__PURE__ */ css`
   }
   .lip-hint[data-side='end'] {
     right: calc(var(--mc-lip-at-end, 0px) + 36px);
+    transition: left var(--mc-lip-ms, 200ms) ease, right var(--mc-lip-ms, 200ms) ease;
     inset-inline-end: calc(var(--mc-lip-at-end, 0px) + 36px);
   }
   .lip-hint[data-side='end']::before {

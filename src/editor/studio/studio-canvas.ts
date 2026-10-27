@@ -339,6 +339,7 @@ export class StudioCanvas extends LitElement {
     if (this.stateManager && !this._unsubscribe) this._subscribe();
     if (this.hasUpdated) this._observe();
     window.addEventListener('resize', this._queuePlace);
+    this.getRootNode().addEventListener('transitionend', this._onLipSlid);
     setLayerMeasurer(this._layers.measure);
     void loadLayerEditor(); // prefetch: the Layers here sheet and the design panels live in a lazy chunk
     const stop = onStatus(() => this._applyPreview());
@@ -414,6 +415,7 @@ export class StudioCanvas extends LitElement {
     this._ro?.disconnect();
     this._ro = undefined;
     window.removeEventListener('resize', this._queuePlace);
+    this.getRootNode().removeEventListener('transitionend', this._onLipSlid);
     this._endColumnDrag(false);
     this._itemMenu.close(false);
     this._longPress.cancel();
@@ -915,6 +917,11 @@ export class StudioCanvas extends LitElement {
   };
 
   // ── geometry ──
+
+  /** A lip that has finished sliding is where the float bar must keep clear of: place the bar again. */
+  private _onLipSlid = (e: Event): void => {
+    if ((e.target as Element | null)?.classList?.contains('lip')) this._queuePlace();
+  };
 
   private _queuePlace = (): void => {
     if (this._placeQueued) return;
