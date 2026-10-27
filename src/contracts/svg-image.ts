@@ -168,10 +168,16 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  * ── Image sanitiser (browser; Magic Card Utils checks the same lists on save) ──
  * Input: a string of at most IMAGE_MAX_BYTES UTF-8 bytes (refused before parsing, `too_large`). Then, still before
  * parsing, refused (`unsafe_markup`) when the text holds any of IMAGE_TEXT_DENY (case-insensitive; the markup items of
- * Magic Card Utils TEXT_DENY except comments, which the parse drops). With { file: true } (editor and transfer
- * imports of .svg files only) a leading prolog is removed first by a linear scan: a byte order mark, one
- * `<?xml ...?>` declaration, comments, and one `<!DOCTYPE svg ...>` that holds no "[" (no internal subset); a
- * DOCTYPE with "[" is refused. Library markup and card renders never take that option.
+ * Magic Card Utils TEXT_DENY except comments, which the parse drops), with the one file-mode CDATA case below. With
+ * { file: true } (editor and transfer imports of .svg files only) a leading prolog is removed first by a linear scan:
+ * a byte order mark, one `<?xml ...?>` declaration, comments, and one `<!DOCTYPE svg ...>` that holds no "[" (no
+ * internal subset); a DOCTYPE with "[" is refused. Library markup and card renders never take that option.
+ * CDATA in a style element (pending, with the svg-safety CSS paint resolver; until it lands every CDATA is refused):
+ * IMAGE_TEXT_DENY keeps `<![cdata[`. Only with { file: true } does the pre-parse scan accept one exact-case
+ * `<![CDATA[` when all of these hold: the text from the previous `<` matches `^<style(?:[ \t\r\n][^<>]*)?>[ \t\r\n]*$`;
+ * the matching `]]>` exists; the content holds no `<`; and only ASCII whitespace, then `</style`, optional whitespace
+ * and `>` follow. Each occurrence is found with indexOf (linear). Any other CDATA, any case variant, a second CDATA in
+ * one style element, or CDATA without { file: true }: `unsafe_markup`, as before.
  * Parsed with DOMParser as image/svg+xml (text/html fallback, inert). Root <svg> with a valid viewBox (width and height
  * 1..MAX_IMAGE_BOX); root width / height dropped. At most IMAGE_MAX_NODES elements and IMAGE_MAX_DEPTH nesting, else
  * refused. Hostile tests cover both the XML parse and the text/html fallback parse.
@@ -195,8 +201,25 @@ import type { ImageBinding, SavedImage } from './mcu-library-images';
  *   - every value: no backslash, `<`, `>`, `//`, comment, `javascript:`, `data:`, `expression(`, `@import`, and every
  *     "(" opens an allowed function;
  *   - text content only inside <text>, <tspan> and <title>, escaped, at most IMAGE_MAX_TEXT_CHARS per element.
- * Dropped and listed (`stripped`): anything else, including script, style, foreignObject, image, use, a, filter,
- * pattern, animate*, set, event attributes, style attributes, href / xlink:href, external or cross-origin url().
+ * Dropped and listed (`stripped`): anything else, including script, foreignObject, image, use, a, filter, pattern,
+ * animate*, set, event attributes, href / xlink:href, external or cross-origin url(); style attributes, style
+ * elements and a gradient's href as in "Styles and gradient href" below.
+ * Styles and gradient href (pending, with the svg-safety CSS paint resolver; until it lands style attributes, style
+ * elements and every href / xlink:href are dropped and listed as above):
+ *   - after parse and viewBox, before the walk, on every call, the sanitiser runs svg-safety resolveCss with
+ *     IMAGE_POLICY. Allowed declarations of style attributes and of simple type, class and id rules in style elements
+ *     (fill, stroke, stop-color, the opacities, the stroke and rule properties of svg-safety SvgCssProperty, local
+ *     url(#id) gradient paint) become plain attributes, which then pass the value rules above like any attribute. CSS
+ *     paint never takes var(). All other CSS (at-rules, other selectors, other properties) is dropped.
+ *   - a linearGradient or radialGradient whose href / xlink:href points at a local gradient gets shallow copies of
+ *     that gradient's stops (svg-safety, "Gradient href"); the href is then removed.
+ *   - listed: `<element>@style` only when one of its declarations was dropped, `style` only when part of a style
+ *     element was dropped, the gradient's href when it did not resolve. Fully resolved parts are not listed. A style
+ *     element the HTML parser moved out of the drawing is listed as `style`.
+ *   - the resolver's too_complex is `too_complex`; serialised output over IMAGE_MAX_BYTES is `too_large` (Magic Card
+ *     Utils would refuse it on save).
+ *   - output never holds a style attribute, a style element, CDATA or a comment. Magic Card Utils keeps refusing all
+ *     of them on save, so a client that skips resolution fails closed.
  * The editor import and the transfer import show the list; the card renders silently. A result with nothing
  * drawable is an error. The card sanitises every markup it receives from the library before its first render.
  * Output: the sanitiser's serialiser writes xmlns="http://www.w3.org/2000/svg" (mcu-library-images IMAGE_ROOT_XMLNS) on
